@@ -111,7 +111,7 @@
     0.72,
     0.6
    ],
-   "observe": "A flat stone at the high end of the hollow, worn smooth in one small patch. It faces the way in. There is no cushion, no cover, and nothing near enough to hide behind.",
+   "observe": "A flat stone at the high end of the hollow, one patch of it worn to a shine. It faces the only way in, and the ground around it is bare on every side.",
    "on_interact_accomplishment": "saw_the_chieftains_seat",
    "toast": "From here you can see the cut in the turf, the fire, and everyone's hands at once. It was not chosen for comfort."
   },
@@ -125,10 +125,10 @@
    ],
    "display_name": "A Carrying Yoke",
    "sprite": "crate",
-   "observe": "A yoke cut for goblin shoulders, half the height of yours, propped against a stack of empty baskets. The baskets go out full and come back full of water and cut brush.",
+   "observe": "A yoke cut for goblin shoulders, half your height, propped against a stack of baskets. The baskets are wet through and there is cut brush caught in the weave of the top one.",
    "on_interact_accomplishment": "camp_carry_jobs",
    "once_per_waking": true,
-   "once_per_waking_toast": "The baskets are all out. Nothing left to haul until they come back.",
+   "once_per_waking_toast": "Every basket is out and the yoke is lying on the ground. There is nothing to haul here until you have slept.",
    "gold": 2,
    "toast": "You shorten the yoke by two notches and spend the morning hauling water and cut brush. Somebody presses coin into your hand at the end without looking up.",
    "variants": [
@@ -178,9 +178,9 @@
      "camp_larder_filled": 1
     }
    },
-   "observe": "A rack of split poles standing empty over a bed of ash. The hunters look north at the range, and then back at it, and say nothing.",
+   "observe": "A rack of split poles over a bed of cold ash, nothing hanging on it. The hunters stand at the north lip of the hollow with the range in sight above them.",
    "on_interact_accomplishment": "eyed_the_drying_rack",
-   "toast": "The poles are bare and the ash is cold. Hands on the camp's baskets first, the old one signs at you, and then a corusdeer brought down off the range north.",
+   "toast": "You put a hand on the rack and the old one signs at you: baskets first, then a corusdeer down off the range north. The poles stay bare until both are done.",
    "variants": [
     {
      "when": {
@@ -188,7 +188,7 @@
       "corusdeer_culled": 1
      },
      "accomplishment": "camp_larder_filled",
-     "toast": "You hang what you brought back and cut it down thin the way the old one shows you, and by the time the light goes the rack is heavy for the first time this year."
+     "toast": "You hang what you brought back and the old one shows you how thin to cut it. The rack is bowed with the weight of it by the time the light goes."
     }
    ]
   },

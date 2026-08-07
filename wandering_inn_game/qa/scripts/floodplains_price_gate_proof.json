@@ -228,7 +228,7 @@
    "action": "assert_event_absent",
    "type": "toast",
    "payload_contains": {
-    "text": "You go down between the stones sideways, the way the flattened grass says to, and the plains close over the top of you."
+    "text": "You go in sideways and shoulder-first between the two stones. The grass closes over the top of you as you come down."
    }
   },
   {

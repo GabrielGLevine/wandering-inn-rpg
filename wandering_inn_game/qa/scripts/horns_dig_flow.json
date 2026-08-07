@@ -271,7 +271,7 @@
    "name": "journal"
   },
   {
-   "_comment": "== TRAVEL: the ruin seam on its NEW gate ==. Teleport to (37,11) on the floodplains -- the ruin_walkthrough approach cell, one west of ruin_door (38,11) -- then bump east into the door's own (blocked) cell for facing and interact. door_chain_started is NOT banked in this fixture: if the gate had stayed on it, this interact would fall through to the inert 'It doesn't feel like it goes anywhere. Yet.' toast and the run would die here.",
+   "_comment": "== TRAVEL: the ruin seam on its NEW gate ==. Teleport to (37,11) on the floodplains -- the ruin_walkthrough approach cell, one west of ruin_door (38,11) -- then bump east into the door's own (blocked) cell for facing and interact. door_chain_started is NOT banked in this fixture: if the gate had stayed on it, this interact would fall through to the inert 'Behind it the stone is dressed and set close, and nothing moves.' toast and the run would die here.",
    "action": "teleport",
    "map": "floodplains",
    "cell": [

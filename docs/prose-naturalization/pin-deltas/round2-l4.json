@@ -1,0 +1,364 @@
+{
+ "_issue": "GH#397 round 2 — map-register re-authorship, lane l4 (regions: floodplains, garden)",
+ "_branch": "397r2/l4",
+ "_rows": "24 assigned (lane-rows.jsonl == the frozen round2-worklist.jsonl rows for floodplains/rags_camp/garden_sanctuary, cross-checked: 24/24, no extras). 23 re-authored, 1 SKIPPED under petition (see _petition).",
+ "_contract": "Prose payload only. Structure frozen: the applier replaced raw JSON string literals in place and asserted a byte-identical key/array skeleton before writing (no entity add/remove/reorder, no key rename, no variant/array index change). `git diff --stat` over data/maps: 23 insertions, 23 deletions across 3 files — exactly one line per rewritten string. extract_prose.py verify-untouched exits 0 before and after (229 holdout + 29 protected = 255 untouchable strings byte-identical). data_lint rc=0. All 33 unit tests PASS with zero 'ERROR: FAIL' / SCRIPT ERROR / Parse Error / WARNING lines.",
+ "_doctrine": "Amended bible (Round 2 amendments, narrator-bible.md): fresh authorship from the field's job (old string read once, then set aside); ZERO inference by default (amendment 2 — no inference allowance was claimed or spent by this lane); descriptor triad, affordance formula and button-family closers as named bans; round-1 repair templates (one-word deflation codas, inserted self-corrections, trim scars) also banned.",
+ "_button_accounting": {
+  "_convention": "Counted with data_lint.py's own _r2_button matcher, per file, over every prose string in the file (untouchables included) — the same population the amendment-5 advisory counts. 'lane-authored' = strings this lane wrote.",
+  "floodplains": "21 -> 7. Lane-authored buttons: 0 of 16. The 7 survivors are 6 UNTOUCHABLE strings ($.entities[4].toast, [24].locked_toast, [24].companion_source.taken_toast, [26].skill_hint_toast, [31].observe, [33].locked_toast) plus $.entities[12].observe, the petitioned skip below. The amendment-5 ceiling of 1 is unreachable in this file without editing holdout/keep strings, which criterion 5 forbids.",
+  "rags_camp": "6 -> 2. Lane-authored buttons: 0 of 6. Both survivors are UNTOUCHABLE ($.entities[4].toast, [8].observe).",
+  "garden_sanctuary": "2 -> 1. Lane-authored buttons: 0 of 1. The survivor is UNTOUCHABLE ($.entities[2].sleep_toast) — this file is now AT the amendment-5 ceiling and carries zero round-2 advisories of any kind."
+ },
+ "_residual_advisories": {
+  "_note": "`data_lint.py --advisories | grep amendment` on the three touched maps after the pass. Every hit is a string this lane may not or does not own.",
+  "floodplains": [
+   "descriptor-triad: $.entities[4].toast — UNTOUCHABLE (protected keep)",
+   "descriptor-triad: $.entities[31].observe — UNTOUCHABLE (holdout)",
+   "affordance formula: $.entities[32].toast — touchable but NOT in the frozen round-2 worklist, so out of this lane's scope (it is also the razorbeak-vantage restatement of the frozen_cache freeze hint, and it is pinned verbatim by gh330_companion_gate_loop.json)",
+   "7 button-family closers — 6 untouchable + the petitioned $.entities[12].observe"
+  ],
+  "rags_camp": [
+   "descriptor-triad: $.entities[4].toast — UNTOUCHABLE (protected keep)",
+   "2 button-family closers — both untouchable ($.entities[4].toast, $.entities[8].observe)"
+  ],
+  "garden_sanctuary": []
+ },
+ "_petition": {
+  "id": "map:floodplains/floodplains.json:$.entities[12].observe",
+  "row": "lane row 0 (register character-bearing, families BUTTON+SIMILE, source census)",
+  "action": "NOT REWRITTEN — left byte-identical, petitioned as a protected keep (bible §10 'Phase-2 lanes may PETITION to protect additional earned peaks they find').",
+  "text": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it. Including you, now.",
+  "argument": "narrator-bible.md §3 prints this string VERBATIM in its own 'Corpus examples — this is the sound' list for character-bearing register, and defends the exact ending the census flagged: 'Three physical facts; the closing turn is a shift of attention, not a verdict.' The round-2 census matcher is documented at precision 0.74 (derive-round2-worklist.py), so ~1 in 4 of its hits is a false positive; this is one the bible itself already adjudicated. Rewriting it would also stale the bible's own calibration quote, which is mandatory reading for every other lane (guard 10.2).",
+  "counter_argument_disclosed": "§7's 'other shared shapes' table targets `the way X does` at ZERO corpus-wide, and 'standing at ease the way only dangerous people stand' is that shape. If the controller rules the §7 target outranks the §3 exemplar, the drop-in replacement below was authored to the same facts (Drake, barracks-door build, spear worn smooth, at ease, watching the road including the player) with neither the simile geometry nor the short coda; it needs no pin work (no QA script pins this string).",
+  "candidate_if_denied": "A Drake a head taller than anything else on this road, spear butt planted, the shaft worn pale where his hand sits. He is standing easy and watching, and the watching takes in you as well as the road."
+ },
+ "_qa_pin_sync": {
+  "_method": "Every pin was RE-DERIVED from a real run, never hand-typed: the script was run with the stale pin in place, the actual emitted toast was read out of qa_output/<script>/events.jsonl by index, and that observed string was written into the script. No fixture was touched and no assertion was weakened or removed.",
+  "runs": [
+   "wandering_inn_game/qa/run_qa.sh gh330_deer_arc_loop headless --seed=7 — FAIL (stale pin) -> re-pin from events.jsonl #64 -> PASS",
+   "wandering_inn_game/qa/run_qa.sh floodplains_price_help headless --seed=9 — FAIL (3 stale pins) -> re-pin from events.jsonl #136/#161/#182 -> PASS",
+   "wandering_inn_game/qa/run_qa.sh floodplains_price_gate_proof headless --seed=9 — re-pin of the assert_event_absent text from the SAME observed event #136 (the negative can never fire, so a stale pin here would have passed forever while asserting nothing) -> PASS",
+   "wandering_inn_game/qa/run_qa.sh horns_dig_flow headless --seed=9 — no assertion on the changed string; its _comment quoted the old inert toast verbatim and was corrected -> PASS"
+  ],
+  "pins": [
+   {
+    "script": "wandering_inn_game/qa/scripts/gh330_deer_arc_loop.json",
+    "line": 204,
+    "action": "wait_for_event toast payload_contains.text",
+    "source_string": "map:floodplains/floodplains.json:$.entities[21].variants[1].toast",
+    "old": "It is already standing when you come. It lets you run a hand down the leg once, then turns and goes up the rise at a trot, and does not look back.",
+    "new": "It is standing when you come up, weight on all four legs. You get one hand down the leg before it swings away from you and takes the rise at a trot.",
+    "derived_from": "qa_output/gh330_deer_arc_loop/events.jsonl event #64 (type toast)"
+   },
+   {
+    "script": "wandering_inn_game/qa/scripts/floodplains_price_help.json",
+    "line": 176,
+    "action": "wait_for_event toast payload_contains.text",
+    "source_string": "map:floodplains/floodplains.json:$.entities[29].door_when.open_toast",
+    "old": "You go down between the stones sideways, the way the flattened grass says to, and the plains close over the top of you.",
+    "new": "You go in sideways and shoulder-first between the two stones. The grass closes over the top of you as you come down.",
+    "derived_from": "qa_output/floodplains_price_help/events.jsonl event #136 (type toast)"
+   },
+   {
+    "script": "wandering_inn_game/qa/scripts/floodplains_price_help.json",
+    "line": 279,
+    "action": "wait_for_event toast payload_contains.text",
+    "source_string": "map:floodplains/rags_camp.json:$.entities[6].toast",
+    "old": "The poles are bare and the ash is cold. Hands on the camp's baskets first, the old one signs at you, and then a corusdeer brought down off the range north.",
+    "new": "You put a hand on the rack and the old one signs at you: baskets first, then a corusdeer down off the range north. The poles stay bare until both are done.",
+    "derived_from": "qa_output/floodplains_price_help/events.jsonl event #161 (type toast)"
+   },
+   {
+    "script": "wandering_inn_game/qa/scripts/floodplains_price_help.json",
+    "line": 356,
+    "action": "wait_for_event toast payload_contains.text",
+    "source_string": "map:floodplains/rags_camp.json:$.entities[6].variants[0].toast",
+    "old": "You hang what you brought back and cut it down thin the way the old one shows you, and by the time the light goes the rack is heavy for the first time this year.",
+    "new": "You hang what you brought back and the old one shows you how thin to cut it. The rack is bowed with the weight of it by the time the light goes.",
+    "derived_from": "qa_output/floodplains_price_help/events.jsonl event #182 (type toast)"
+   },
+   {
+    "script": "wandering_inn_game/qa/scripts/floodplains_price_gate_proof.json",
+    "line": 231,
+    "action": "assert_event_absent toast payload_contains.text (NEGATIVE assertion — kept meaningful)",
+    "source_string": "map:floodplains/floodplains.json:$.entities[29].door_when.open_toast",
+    "old": "You go down between the stones sideways, the way the flattened grass says to, and the plains close over the top of you.",
+    "new": "You go in sideways and shoulder-first between the two stones. The grass closes over the top of you as you come down.",
+    "derived_from": "qa_output/floodplains_price_help/events.jsonl event #136 (same string, observed in the positive run)"
+   },
+   {
+    "script": "wandering_inn_game/qa/scripts/horns_dig_flow.json",
+    "line": 274,
+    "action": "_comment only (no assertion) — stale verbatim quote of the inert seam toast",
+    "source_string": "map:floodplains/floodplains.json:$.entities[16].toast",
+    "old": "the inert 'It doesn't feel like it goes anywhere. Yet.' toast",
+    "new": "the inert 'Behind it the stone is dressed and set close, and nothing moves.' toast",
+    "derived_from": "the rewritten string itself; documentation accuracy, not a pin"
+   }
+  ]
+ },
+ "_gates": {
+  "data_lint": "rc=0 — 'OK -- 127 files, 30 maps clean (structural tier only)'",
+  "verify_untouched_before": "rc=0",
+  "verify_untouched_after": "rc=0 — 229 holdout (3 excluded) + 29 protected = 255 untouchable strings byte-identical",
+  "derive_qa_surfaces_check": "rc=0 — 230 scripts match freshly-derived surfaces",
+  "unit_suite": "33/33 PASS (every tests/test_*.gd, run individually, output grepped for 'ERROR: FAIL' / SCRIPT ERROR / Parse Error / WARNING: zero hits)",
+  "qa_scripts_repinned": "gh330_deer_arc_loop PASS, floodplains_price_help PASS, floodplains_price_gate_proof PASS, horns_dig_flow PASS",
+  "qa_scripts_extra_insurance": "garden_walkthrough PASS, tamer_bond_loop PASS, beast_tamer_loop PASS, goblin_night_patrol_loop PASS, pond_frozen_cache PASS (no pins on lane strings; run because they exercise the rewritten props)",
+  "not_run": "The remaining crossing canonicals — derive_qa_surfaces.py --touching over the three changed paths returns 72 scripts — were not run in-lane; no lane string is pinned by any of them (verified by a 14-char sliding-window scan of the old strings over all of qa/ and tests/)."
+ },
+ "_ending_shapes": {
+  "_note": "bible §9 shapes, scored on the 23 lane-authored strings. This is a LANE-AUTHORED distribution, not the §9.2 per-file metric: that one is computed over each file's whole scenic+functional population (77 / 17 / 12 strings), which this lane did not classify end to end.",
+  "fact": 10,
+  "motion": 4,
+  "instruction": 4,
+  "silence_absence": 3,
+  "unresolved_detail": 2,
+  "interruption": 0,
+  "max_share": "10/23 = 43% (fact) — OVER the §9.2 40% advisory on the lane-authored set, disclosed rather than churned: §9.2 is advisory, is defined per file rather than per lane, and its own ruling says loosen to 50% before forcing churn. 5 of the 6 shapes appear; no two adjacent props in entity-list order share an ending shape."
+ },
+ "deltas": [
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[16].toast",
+   "entity_id": "ruin_door",
+   "register": "scenic",
+   "old": "A cold seam splits the earth here, sealed by old stone. It doesn't feel like it goes anywhere. Yet.",
+   "new": "You get your fingers into the crack; the air coming out of it is colder than the ground. Behind it the stone is dressed and set close, and nothing moves.",
+   "verdict": "One-word deflation coda ('Yet.') — the exact round-1 repair template amendment 6 bans. Re-authored as the physical result of putting a hand in: cold air, dressed stone, nothing gives. The gate fact (this seam does not open yet) survives as the stone not moving; the door's own open_toast is untouched. Ending: fact/absence.",
+   "qa_pins": [
+    "wandering_inn_game/qa/scripts/horns_dig_flow.json:274 (_comment quote only)"
+   ]
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[18].gate_closed_toast",
+   "entity_id": "goblin_night_patrol",
+   "register": "functional",
+   "old": "Nothing moving out there. Come back after dark.",
+   "new": "You can see clear along the boulder line from here. The patrol does not use it until dark.",
+   "verdict": "Round-1's own repair shape: a 4-word instruction coda. Re-authored so the night gate is stated as the patrol's schedule rather than an order to the player; 2 sentences, unambiguous last clause (§1.2/1.4). Fact payload kept: the encounter is night-only. Ending: fact.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[18].observe",
+   "entity_id": "goblin_night_patrol",
+   "register": "scenic",
+   "old": "A patrol slipping the boulder line, quiet until they're not. Only after dark.",
+   "new": "Two of them working the inside of the boulder line, one behind the other, well after dark. Their weapons are wrapped and nothing they carry makes a sound.",
+   "verdict": "Three-word coda plus a negation-correction ('quiet until they're not', §7). Re-authored to what is visible: the count matches the arena roster (goblin_raider + goblin_shaman = two), the night fact stays inside the string, and the line lands on an absence of sound instead of a reversal. Ending: silence/absence.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[21].on_skill_use.toast",
+   "entity_id": "wounded_corusdeer",
+   "register": "functional",
+   "old": "[Beast's Mending] — Splint and salve, and the leg sits straighter than it has any right to. The corusdeer breathes easier.",
+   "new": "[Beast's Mending] — You splint the leg and work salve into the swelling, and the joint takes weight when you press on it.",
+   "verdict": "4-word verdict coda, and 'straighter than it has any right to' is the narrator grading the outcome. Skill-outcome receipt re-authored as the result the player can check; Skill name and em-dash convention preserved verbatim. Ending: fact.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[21].on_skill_use.variants[0].toast",
+   "entity_id": "wounded_corusdeer",
+   "register": "functional",
+   "old": "[Beast's Mending] — The splint comes away and stays away. It stands, tests the leg, and goes to find the herd.",
+   "new": "[Beast's Mending] — The splint comes off and the leg holds without it. It is up and moving before you have gathered your kit.",
+   "verdict": "Triple cadence closer ('stands, tests, and goes') plus a persistence coda ('comes away and stays away'). Re-authored to two plain beats; the departure fact (the deer leaves healed, banking corusdeer_healed) survives as motion. Deliberately given a different ending shape from the interact-path variant below, which renders the same beat. Ending: motion.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[21].variants[1].toast",
+   "entity_id": "wounded_corusdeer",
+   "register": "scenic (quest-prop: banks corusdeer_healed)",
+   "old": "It is already standing when you come. It lets you run a hand down the leg once, then turns and goes up the rise at a trot, and does not look back.",
+   "new": "It is standing when you come up, weight on all four legs. You get one hand down the leg before it swings away from you and takes the rise at a trot.",
+   "verdict": "Triple cadence and an absence coda ('does not look back') that duplicates the rags_camp sentry's protected ending shape. Facts kept: already standing, one touch, leaves up the rise at a trot. Ending: motion.",
+   "qa_pins": [
+    "wandering_inn_game/qa/scripts/gh330_deer_arc_loop.json:204"
+   ]
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[22].observe",
+   "entity_id": "worn_grass_patch",
+   "register": "scenic",
+   "old": "A body-shaped hollow pressed into the grass, still flat in the middle. The corusdeer lay here a long time, and at the edges the blades are already standing up again.",
+   "new": "A hollow pressed into the grass the length of a deer, flat and yellowed at the center. The blades around the rim have come back up already.",
+   "verdict": "Reader-flagged over-interpreted object: 'The corusdeer lay here a long time' is duration inferred from a dent (amendment 2). Re-authored to the two things visible — the size and shape of the hollow, the grass at its rim. The prop's own variant toast (the shed antler) is a protected keep and is byte-untouched. Ending: fact.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[23].companion_source.taken_toast",
+   "entity_id": "wolf_den",
+   "register": "functional",
+   "old": "The pup sniffs your hand once, twice — then leans its whole small weight against your leg. That's that, then.",
+   "new": "The pup smells your hand for a long moment, then puts its whole weight against your shin and stays there.",
+   "verdict": "Deflation coda ('That's that, then.'). Re-authored as one sentence with the bond's physical evidence; the companion grant is the mechanic, so the string states only what happens. Ending: fact.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[26].companion_source.taken_toast",
+   "entity_id": "razorbeak_chick_fledgling",
+   "register": "functional",
+   "old": "It stalks the length of your arm, finds the shoulder acceptable, and settles there facing backwards.",
+   "new": "It walks up your arm and sets itself on your shoulder, facing back the way you came.",
+   "verdict": "Triple cadence with a personified verdict in the middle ('finds the shoulder acceptable'). Re-authored without the judgement; the backwards-facing detail — the whole character of the bird — is kept as fact. Also the UNIFORM-family row: its sibling rung ($.entities[24], protected) keeps its own shape, and these two no longer share a cadence. No count is invented (a first draft's 'three hops' was cut: it echoed the late litter's 'second try' two props along). Ending: unresolved detail.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[26].locked_toast",
+   "entity_id": "razorbeak_chick_fledgling",
+   "register": "functional",
+   "old": "It flares its hackles and holds the tussock. Nothing wild takes an offer from hands that have never tended anything.",
+   "new": "The hackles come up and the tussock stays between you. You have not got the hands for a wild thing yet; that comes of tending ones that are hurt.",
+   "verdict": "Gnomic epigram closer, AND a verbatim duplicate of the second sentence of $.entities[24].locked_toast (a protected keep) — the corpus duplication the Phase-5 read logged. The keep holds that sentence; this refusal now states the same gate in its own words and keeps the actionable route (tend hurt beasts) without re-using the keep's line or the sibling's 'corusdeer east of here' directions. Ending: instruction.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[27].companion_source.taken_toast",
+   "entity_id": "wolf_den_late_litter",
+   "register": "functional",
+   "old": "It gets up on the second try, takes three steps, and sits down hard where it can still see you.",
+   "new": "It gets its legs under it on the second try and comes as far as your boot before it sits down hard.",
+   "verdict": "Triple cadence. 'Second try' (the rung's whole point — this is the thinnest, latest pup) is kept; the line now ends on where the pup stops rather than on what its gaze means. Ending: motion.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[27].skill_hint_toast",
+   "entity_id": "wolf_den_late_litter",
+   "register": "functional",
+   "old": "It is too tired to flinch. Offer, and mean it.",
+   "new": "It is too tired to flinch when you crouch beside it. A Skill would carry further here than your hands will.",
+   "verdict": "4-word instruction coda, and its 'offer ... properly/mean it' phrasing was the third instance of one formula across the three rungs (the other two are untouchable). The hint now names what is missing — a Skill — in plain terms, which is the field's job (§1.2). Ending: instruction.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[29].door_when.open_toast",
+   "entity_id": "rags_camp_mouth",
+   "register": "functional",
+   "old": "You go down between the stones sideways, the way the flattened grass says to, and the plains close over the top of you.",
+   "new": "You go in sideways and shoulder-first between the two stones. The grass closes over the top of you as you come down.",
+   "verdict": "Single-sentence triple cadence built on the `the way X does` geometry §7 targets at zero. Re-authored as two beats of the actual passage; the two stones, the sideways entry and the plains closing over survive as fact. Ending: motion.",
+   "qa_pins": [
+    "wandering_inn_game/qa/scripts/floodplains_price_help.json:176",
+    "wandering_inn_game/qa/scripts/floodplains_price_gate_proof.json:231 (assert_event_absent)"
+   ]
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[30].observe",
+   "entity_id": "road_mothbears",
+   "register": "scenic",
+   "old": "Two heavy shapes working the verge of the wagon road, wings folded tight, close enough to the carter camps to smell the fires. Only after dark.",
+   "new": "The verge of the wagon road is churned where two of them are working it over, wings folded flat, long after dark. The carter fires are in sight from where they stand.",
+   "verdict": "Affordance formula ('close enough to ... to smell the fires') plus a three-word coda. Re-authored to the visible evidence, leading with the road rather than the count so it no longer opens the same way as the other night encounter's observe in this file. Facts kept: two of them, wings folded, night-only, the carter camps close by. The threat that proximity implies is left to the player. Ending: unresolved detail.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[4].once_per_waking_toast",
+   "entity_id": "pond_edge",
+   "register": "functional",
+   "old": "The water lies flat again. Leave it until tomorrow.",
+   "new": "You have had the line in once today. The water has gone flat over the drop and will not give you anything else before tomorrow.",
+   "verdict": "4-word instruction coda. The refusal now says why it is refusing (the once-per-waking rule) and when it lifts. The prop's observe and toast are protected keeps and are byte-untouched; 'the drop' matches the keep's own 'a drop the light doesn't reach'. Ending: fact.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[5].observe",
+   "entity_id": "frozen_cache",
+   "register": "scenic (quest-prop: banks found_the_frozen_cache, 5 gold)",
+   "old": "Something square and man-made rests on the pond floor a stride out from the bank, furred with silt. Too far to reach across open water. But water can be made to bear weight, if you know the trick of cold.",
+   "new": "Something square and worked sits on the pond floor under a coat of silt, a stride out from the bank. The strip of water between it and the bank is a hand deep and dead still.",
+   "verdict": "Reader-flagged over-authored, and the closing sentence is the affordance formula amendment 4 names ('can be made to bear weight ... if you know the trick of cold'). Amendment 4's instruction is to state the object and let the player infer the use, so the prescription is gone and the physical facts that make the freeze legible are stated instead: shallow, still water, a stride of it. Facts kept: worked square object, on the pond floor, silted, one stride out, water in between. DISCLOSED: the explicit freeze hint still ships verbatim in $.entities[32].toast (the razorbeak vantage, out of worklist scope, pinned by gh330_companion_gate_loop.json), and the freeze route itself is data (`freezable` [[10,17]]), so no hint is stranded. Ending: fact.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+   "field_path": "$.entities[3].observe",
+   "entity_id": "camp_chieftains_seat",
+   "register": "scenic",
+   "old": "A flat stone at the high end of the hollow, worn smooth in one small patch. It faces the way in. There is no cushion, no cover, and nothing near enough to hide behind.",
+   "new": "A flat stone at the high end of the hollow, one patch of it worn to a shine. It faces the only way in, and the ground around it is bare on every side.",
+   "verdict": "Affordance formula ('near enough to hide behind') closing a triple cadence. The exposure fact is kept as bare ground; the reading of WHY a chieftain sits there stays where it already lives — this prop's toast, which is a protected keep and byte-untouched. Ending: fact/absence.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+   "field_path": "$.entities[4].observe",
+   "entity_id": "camp_carry_yoke",
+   "register": "scenic",
+   "old": "A yoke cut for goblin shoulders, half the height of yours, propped against a stack of empty baskets. The baskets go out full and come back full of water and cut brush.",
+   "new": "A yoke cut for goblin shoulders, half your height, propped against a stack of baskets. The baskets are wet through and there is cut brush caught in the weave of the top one.",
+   "verdict": "Reader-flagged: the second sentence narrates a routine nobody is doing on screen. Re-authored to the evidence of that routine — wet baskets, brush in the weave. The work's content (water and cut brush) and the goblin-scale detail are preserved; the prop's toast and variant toast are protected keeps and byte-untouched. Ending: fact.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+   "field_path": "$.entities[4].once_per_waking_toast",
+   "entity_id": "camp_carry_yoke",
+   "register": "functional",
+   "old": "The baskets are all out. Nothing left to haul until they come back.",
+   "new": "Every basket is out and the yoke is lying on the ground. There is nothing to haul here until you have slept.",
+   "verdict": "Gnomic 'Nothing left ...' closer. The refusal now names the real reset condition (a sleep, not the baskets coming back), which is what the once_per_waking flag actually does — and it no longer shares its ending with the pond's once-per-waking refusal in the sibling map. Ending: instruction.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+   "field_path": "$.entities[6].observe",
+   "entity_id": "camp_meat_rack",
+   "register": "scenic",
+   "old": "A rack of split poles standing empty over a bed of ash. The hunters look north at the range, and then back at it, and say nothing.",
+   "new": "A rack of split poles over a bed of cold ash, nothing hanging on it. The hunters stand at the north lip of the hollow with the range in sight above them.",
+   "verdict": "Triple cadence ending on a pointed silence ('and say nothing') — the shape the sentry's protected observe already owns in this file. Re-authored to the same facts without the beat: empty rack, cold ash, hunters, the range NORTH (the direction the quest needs). Ending: fact.",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+   "field_path": "$.entities[6].toast",
+   "entity_id": "camp_meat_rack",
+   "register": "scenic (quest-prop: gates on camp_carry_jobs + corusdeer_culled)",
+   "old": "The poles are bare and the ash is cold. Hands on the camp's baskets first, the old one signs at you, and then a corusdeer brought down off the range north.",
+   "new": "You put a hand on the rack and the old one signs at you: baskets first, then a corusdeer down off the range north. The poles stay bare until both are done.",
+   "verdict": "Triple cadence carrying the quest instruction inside its own rhythm. BOTH gate conditions and the direction survive verbatim in the same field (baskets; a corusdeer off the range north), now stated as instruction rather than cadence, with the gate restated plainly. Ending: instruction.",
+   "qa_pins": [
+    "wandering_inn_game/qa/scripts/floodplains_price_help.json:279"
+   ]
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+   "field_path": "$.entities[6].variants[0].toast",
+   "entity_id": "camp_meat_rack",
+   "register": "scenic (quest-prop: banks camp_larder_filled)",
+   "old": "You hang what you brought back and cut it down thin the way the old one shows you, and by the time the light goes the rack is heavy for the first time this year.",
+   "new": "You hang what you brought back and the old one shows you how thin to cut it. The rack is bowed with the weight of it by the time the light goes.",
+   "verdict": "Reader-flagged over-authored: one long sentence on the `the way X does` geometry, landing on 'for the first time this year' — a claim about the camp's year that nothing on screen shows (amendment 2). The payoff is now physical: the rack bows, by dark. Ending: fact.",
+   "qa_pins": [
+    "wandering_inn_game/qa/scripts/floodplains_price_help.json:356"
+   ]
+  },
+  {
+   "file": "wandering_inn_game/data/maps/garden/garden_sanctuary.json",
+   "field_path": "$.entities[0].toast",
+   "entity_id": "garden_fountain_statue_gaze",
+   "register": "scenic",
+   "old": "Cool spray beads on the stone, gathers along the worn-soft face, and drops back into the basin.",
+   "new": "Cold spray off the basin catches the back of your hand. The face of the statue is worn soft where the water comes down on it.",
+   "verdict": "Textbook triple cadence (beads / gathers / drops) in one sentence. Re-authored as two observations, one of them the player's own hand, so the interact has a body in it. Facts kept: cold spray, the basin, the worn-soft face. The garden's protected strings (the bed, the plinths, the war-memorial peak) are byte-untouched, and this file now carries ZERO round-2 advisories. Ending: fact.",
+   "qa_pins": []
+  }
+ ]
+}
