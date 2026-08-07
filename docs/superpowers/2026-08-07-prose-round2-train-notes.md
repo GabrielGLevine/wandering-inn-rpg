@@ -92,6 +92,20 @@ working ledger.
    note for the POST-read holdout release: that string is a worklist
    row for the next pass, not this one.
 
+8. **Corpus inflation watch (l1 review M11):** l1's 34 rows grew
+   +29.6% in words (~+6.5/string). Check composed inflation across all
+   188 rows at train time; if the corpus balloons, a tightening pass
+   is a taste decision to surface, not an auto-fix.
+9. **Mop-up candidates growing:** unlisted residue (pallass 9,
+   invrisil 8, floodplains 1, riverfarm 3, liscor/inn ~7, dungeon 4)
+   + boulevard `$.entities[7].dialogue[0].text` (ambient line carrying
+   the exact interpretation its observe was cleaned of — the advisory
+   arm skips `text` by design). Decide mop-up lane scope at train.
+10. **l4 freeze-teach ruling REVISED:** the earlier acceptance was
+   based on a false "nothing stranded" claim — [32].toast is
+   companion-gated. Fix wave restores an ungated physical-fact freeze
+   cue in [5].observe itself.
+
 ## Lane status
 
 - ALL SIX LANDED: l1 0775c365 (34), l2 faf2e7b6 (28), l3 b32a40d0
