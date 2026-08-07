@@ -1,7 +1,7 @@
 {
  "biome": "inn",
  "interior_flavor": [
-  "Nothing there. Chalk dust and boot grit, and a floorboard worn pale where people wait to be called.",
+  "Nothing there. The floorboard in front of the desk is walked pale, chalk dust in the grain.",
   "Nothing there. Somewhere behind the desk a drawer shuts."
  ],
  "grid": {
@@ -378,7 +378,7 @@
    "board": true,
    "toast": "The Request Board. Paper three layers deep, new notices pinned straight over the dead ones. A posting pays on turn-in; take one at the Guildmistress's desk so it's logged, and only what you do after counts.",
    "second_visit_toast": "The Request Board. Your slip is still logged at the desk.",
-   "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. — S.S.",
+   "observe": "A card tacked to the board's top rail, ruled and lettered by hand: rates set by the Guild, complaints to the Guildmistress in person. The initials in the corner are S.S.",
    "board_rumors": [
     {
      "_comment": "_interact_board banks banks_accomplishment idempotently (record_accomplishment's own >=1 gate semantics, same as read_the_board's own every-visit bank).",
@@ -408,7 +408,7 @@
      "_comment": "the real quest option lives on renn_hammer.json, gated on this same banked counter.",
      "id": "rumor_lost_hammer",
      "banks_accomplishment": "heard_about_lost_hammer",
-     "copy": "A SCRAP OF PARCHMENT, tacked low, easy to miss. 'LOST: one backup warhammer, plain steel, no love lost between us but I want it back. Ask for Renn. Reward for the honest sort.' The handwriting gets angrier toward the bottom."
+     "copy": "A SCRAP OF PARCHMENT, tacked low and half hidden under the notice above it. 'LOST: one backup warhammer, plain steel, no love lost between us but I want it back. Ask for Renn. Reward for the honest sort.' The bottom line runs downhill off the edge of the paper."
     }
    ]
   },
@@ -423,8 +423,8 @@
    "sprite": "request_board",
    "facing": "right",
    "on_interact_accomplishment": "read_guild_notices",
-   "toast": "A second board, smaller and less official: lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
-   "observe": "Handbills and scraps overlapping the request board's edge. One offers a reward for a plain steel warhammer; the notice pinned over its corner wants a quiet tenant for a back room.",
+   "toast": "The smaller board carries lost gear, rooms going spare, and one duel challenge with nothing written under it. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
+   "observe": "Handbills pinned onto the plaster, the outer ones lapping over the request board's edge. One offers a reward for a plain steel warhammer; half a card under it advertises a back room to let, quiet tenants only.",
    "visual_states": [
     {
      "_comment": "GH#335 item 3: a read prop is SPENT and recedes. Shared tint across every read-once prop in the build; `counter` is this prop's OWN id, never a sibling's shared one.",

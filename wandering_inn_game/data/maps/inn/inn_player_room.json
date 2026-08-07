@@ -2,7 +2,7 @@
  "_comment": "#350: the leased room behind inn_upstairs' hallway_door_a (gated on room_purchased). Walk-in only, no portals row; biome, sprites and floor swatch all reused. Perimeter is walls.segments with a gap at (4,6) for the exit door, so wall cells are never also in `blocked`; `blocked` is empty because nothing here reads solid.",
  "_comment_mood": "NO data/moods.json row yet (that file is the moods lane's this wave), so the grade is identity white at EVERY phase and no gate can catch it -- the row to add is queued verbatim in .lane-progress SEAM 1. player_room_loop's 07_room_night shot is the standing eye-check.",
  "biome": "inn",
- "interior_flavor": "Nothing there — just your own four walls, and the particular quiet of a room nobody else is paying for.",
+ "interior_flavor": "Nothing there. Bare plaster and floorboards, with a thin draught coming off the window frame.",
  "grid": {
   "width": 9,
   "height": 7
@@ -229,7 +229,7 @@
      "when": {
       "room_tier_3": 1
      },
-     "text": "Your own room, the best bedding in the house, and a shut door between you and all of Liscor."
+     "text": "The best bedding in the house is on this bed: thick sheets under a wool blanket, and a pillow that holds its shape."
     }
    ],
    "observe": "Made up tight, corners squared. Lyonette did that, and she will know if you undo it badly."
@@ -256,7 +256,7 @@
    "display_name": "A Writing Desk",
    "sprite": "library_desk",
    "locked_toast": "The desk is yours to use. Nothing on it yet is asking to be done.",
-   "observe": "A narrow desk under the window, one drawer, and a pale ring where somebody set a cup down for a whole winter."
+   "observe": "Narrow desk under the window, one drawer. A pale cup-ring in the varnish."
   },
   {
    "id": "player_room_shelf",
@@ -267,7 +267,7 @@
    ],
    "display_name": "A Shelf, Mostly Empty",
    "sprite": "library_shelf",
-   "locked_toast": "Nothing on the shelves yet. Give it a season.",
+   "locked_toast": "You have nothing yet to put on it. Dust lifts off the front lip when you set your hand down.",
    "observe": "Three shelves and you have filled none of them. The lowest board is loose and slides."
   },
   {

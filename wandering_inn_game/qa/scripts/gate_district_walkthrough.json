@@ -594,7 +594,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Silverfang goods, honest prices. A sign on the cloth says she remembers faces, and debts; the Gnoll shopkeeper herself is off up the row, working a price upward."
+    "text": "The Gnoll who keeps the stall is working a price upward, and the card on the cloth says she remembers faces and debts. Silverfang goods at honest prices, cheapest to the front."
    },
    "timeout_sec": 5
   },

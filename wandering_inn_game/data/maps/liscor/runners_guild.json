@@ -2,7 +2,7 @@
  "_comment": "THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one.",
  "biome": "inn",
  "interior_flavor": [
-  "Nothing there. Slip paper, rope wax, and the smell of somewhere else's mail.",
+  "Nothing there. Blank slips under a stone weight, and a block of rope wax with a thumb-groove worn into it.",
   "Nothing there. A pair of spare boots by the door, laces slack through every eyelet."
  ],
  "grid": {
@@ -207,9 +207,9 @@
    "sprite": "delivery_board",
    "facing": "left",
    "delivery_board": true,
-   "toast": "THE DELIVERY BOARD. Legs and ledgers. Gold by distance, paid on the mark, same-waking terms. Slips at the counter.",
+   "toast": "THE DELIVERY BOARD, in painted letters at the top. Gold by distance, paid on the mark, same-waking terms; take a slip at the counter.",
    "second_visit_toast": "THE DELIVERY BOARD. Your slip's still logged at the counter.",
-   "observe": "Couriers are made here, one run at a time. Start with the market run. — the counter"
+   "observe": "A line chalked on the rail under the board: start with the market run. The slips above it pay more and go further."
   },
   {
    "_comment": "talk_pool-only, no conversation graph, inert-adjacent.",
@@ -257,7 +257,7 @@
    "sprite": "cold_hearth",
    "hearth": true,
    "state_counter": "lit_the_runners_hearth",
-   "observe": "A wide stone hearth, swept out and laid ready: split kindling under a lattice of dry birch, waiting on someone with a light. The mantel above it is worn smooth where wet gloves get slapped down.",
+   "observe": "Inside a wide stone hearth swept down to the brick: split kindling, dry birch laid over it in a lattice. Cold air comes down the flue and stirs the loose bark.",
    "kindle_toast": "[Firefly] — The flame takes the birch on the second breath. Heat crawls out into the room and the stone begins giving it back.",
    "toast": "Split kindling sits laid and ready under dry birch. The hearth is cold, and nobody here carries flint.",
    "visual_states": [
@@ -333,7 +333,7 @@
    "dirty": true,
    "state_counter": "scrubbed_the_runners_table",
    "observe": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. One corner is scrubbed down to bare wood, and the ridges start again an inch from it.",
-   "clean_toast": "[Basic Cleaning] — You take it off in three passes. The dried mud lifts, the grain comes up pale, and the boards stop smelling of the road.",
+   "clean_toast": "[Basic Cleaning] — The dried mud comes off in flakes under the cloth. The grain shows pale, and the road smell goes with it.",
    "toast": "Dried road mud ridges the boards where pack after pack has come down on them. The boards still smell of the road.",
    "visual_states": [
     {

@@ -823,7 +823,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Basic Cleaning] — You take it off in three passes. The dried mud lifts, the grain comes up pale, and the boards stop smelling of the road."
+    "text": "[Basic Cleaning] — The dried mud comes off in flakes under the cloth. The grain shows pale, and the road smell goes with it."
    },
    "timeout_sec": 5
   },

@@ -4291,5 +4291,5 @@ func _check_sleep_toast_variants(scene_config: Dictionary, skill_config: Diction
 	mid.record_accomplishment("room_tier_1")
 	toasts.clear()
 	mid.interact()
-	assert(toasts.size() >= 1 and toasts[0] == "Your own bed, and a mattress that no longer remembers the last guest.",
+	assert(toasts.size() >= 1 and toasts[0] == "The mattress has fresh straw in it and the blanket has been beaten out. It smells of soap and nothing else.",
 		"tier 1 alone reads the tier-1 rung, got: %s" % [toasts])
