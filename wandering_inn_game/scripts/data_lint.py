@@ -50,6 +50,7 @@ data edit:  python3 scripts/data_lint.py   (from wandering_inn_game/).
 from __future__ import annotations
 
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -1249,6 +1250,77 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 		"the rest fall through to field_ambient/refusal by design")
 
 
+_PROSE_KEYS = {"observe", "friendly_line", "copy", "interior_flavor"}
+_R2_RELTURN = re.compile(r",\s*which\b|\bpretending\b|\bassumes?\b|\bwhich is itself\b", re.I)
+_R2_GNOMIC = re.compile(r"^(nothing|everything|every \w+|no \w+) |\b(hates|loves|learns|forgives|remembers|refuses)\b", re.I)
+_R2_TRIPLE = re.compile(r"^[^,.;]{3,45},\s*[^,.;]{3,45},\s*(and|then|the)\b", re.I)
+_R2_PERSIST = re.compile(r",\s*and (?:it|he|she|they|the \w+) (?:will|has(?: not)?|is still|keeps?|stays?)\b|\bnot \w+ since\b", re.I)
+_R2_INTERP = re.compile(r"\b(as if|as though|meant (?:to|for)|some(?:one|body)(?:'s)?|wants?|remembers?|knows|cared?|habit|deliberate(?:ly)?|on purpose|decided|chose)\b", re.I)
+_R2_AFFORD = re.compile(r"\b(good for|enough to|built (?:to|for)|made (?:to|for)|meant (?:to|for)|ready (?:to|for)|waiting (?:to|for)|what it wants is)\b", re.I)
+
+
+def _prose_strings(node, out: list) -> None:
+	if isinstance(node, dict):
+		for k, v in node.items():
+			if isinstance(v, str) and (k in _PROSE_KEYS or k == "toast" or k.endswith("_toast")):
+				out.append(v)
+			else:
+				_prose_strings(v, out)
+	elif isinstance(node, list):
+		for v in node:
+			if isinstance(v, str):
+				return  # bare string lists (interior_flavor) handled by key above
+			_prose_strings(v, out)
+
+
+def _r2_button(text: str) -> bool:
+	ss = [s.strip() for s in re.split(r"(?<=[.!?])\s+", text.strip()) if s.strip()]
+	if not ss:
+		return False
+	fs, prior = ss[-1], len(ss) > 1
+	n = len(fs.split())
+	return bool((prior and n <= 4) or _R2_RELTURN.search(fs)
+		or (_R2_TRIPLE.search(fs) and n >= 8) or (_R2_GNOMIC.search(fs) and n >= 5)
+		or _R2_PERSIST.search(fs)
+		or (prior and _R2_INTERP.search(fs) and not _R2_INTERP.search(" ".join(ss[:-1]))))
+
+
+def advise_prose_templates(maps: dict, advisories: list) -> None:
+	"""GH#397 round 2, bible amendments 3-5 (ADVISORY-FIRST rollout).
+
+	Three narrator-template smells over map prose fields (observe/toast
+	family/friendly_line/copy/interior_flavor -- NOT `text`, which is
+	speech and governed by the dialogue bible): the descriptor-triad
+	shape, the affordance formula, and a per-file BUTTON-closer count
+	over the amendment-5 ceiling of one. The matchers are the tuned
+	round-2 census set (docs/prose-naturalization/derive-round2-worklist.py,
+	precision 0.74 / recall 0.63 vs the Phase-5 reader) -- smoke, not
+	verdicts, which is why this tier reports and never fails. Promotion
+	to hard arms is an issue-close decision (amendment 7)."""
+	for map_id, m in sorted(maps.items()):
+		strings: list = []
+		_prose_strings(m, strings)
+		# interior_flavor is a bare-string list; the recursive walker skips
+		# those to avoid eating talk_pool -- collect it explicitly.
+		for s in m.get("interior_flavor", []) or []:
+			if isinstance(s, str):
+				strings.append(s)
+		buttons = 0
+		for t in strings:
+			if len(t) < 21:
+				continue
+			ss = [x.strip() for x in re.split(r"(?<=[.!?])\s+", t.strip()) if x.strip()]
+			if _r2_button(t):
+				buttons += 1
+			if 2 <= len(ss) <= 4 and _R2_INTERP.search(ss[-1]) and not _R2_INTERP.search(" ".join(ss[:-1])):
+				advisories.append(f"maps/{map_id}: descriptor-triad shape (bible R2 amendment 3): \"{t[:60]}\"")
+			if _R2_AFFORD.search(t):
+				advisories.append(f"maps/{map_id}: affordance formula (bible R2 amendment 4): \"{t[:60]}\"")
+		if buttons > 1:
+			advisories.append(f"maps/{map_id}: {buttons} button-family closers "
+				f"(bible R2 amendment 5 ceiling is 1)")
+
+
 def advise_unlit_sealed_rooms(maps: dict, parsed: dict, advisories: list) -> None:
 	"""The riverfarm_longhouse class: a map with light rows and NO mood card.
 
@@ -1325,6 +1397,8 @@ def main() -> int:
 	check_moods(parsed, maps, errors)
 	advisories: list = []
 	skill_gate_advisories: list = []
+	prose_template_advisories: list = []
+	advise_prose_templates(maps, prose_template_advisories)
 	advise_missing_skill_gates(maps, skill_gate_advisories)
 	advise_unlit_sealed_rooms(maps, parsed, advisories)
 	advise_sub_legible_props(parsed, maps, advisories)
@@ -1353,6 +1427,13 @@ def main() -> int:
 				print(f"data_lint: ADVISORY -- {advisory}")
 		print(f"data_lint: ADVISORY -- {len(skill_gate_advisories)} map(s) show a likely traversal gate "
 			"but carry no skill_gates registry. Report-only, never fails.")
+	if prose_template_advisories:
+		if list_advisories:
+			for advisory in prose_template_advisories:
+				print(f"data_lint: ADVISORY -- {advisory}")
+		print(f"data_lint: ADVISORY -- {len(prose_template_advisories)} narrator-template hit(s) "
+			"(GH#397 R2 bible amendments 3-5); re-run with --advisories to list. "
+			"Report-only, never fails.")
 	for line in report:
 		print(f"data_lint: REPORT -- {line}")
 	return 0

@@ -36,6 +36,51 @@ protected keep is never rewritten *even where it trips a rule in this document*
 
 ---
 
+## Round 2 amendments — 2026-08-07, **RULED** (user accepted controller rec; CHOICE-LOG 2026-08-07)
+
+The Phase-5 blind read (`phase5/phase5-reconciliation.md`) found the
+mechanical tells dead but ONE rhetorical engine alive. These amendments
+govern the round-2 re-authorship of `round2-worklist.jsonl` (188 rows,
+mechanically frozen) and OVERRIDE the sections they name. Everything
+else in this bible stands.
+
+1. **Riverfarm is IN scope.** Its round-1 exclusion reason (the pending
+   #396 redesign) shipped 2026-08-06. The witch_hut saturation lesson
+   in §2 now applies to its own file.
+2. **§2 rule 1 override — ZERO inference by default.** A scenic or
+   functional string states what is physically there. Every inference
+   (what happened here, what someone meant, what a thing is for, what
+   it "wants") now requires either a landmark-registry entry or the
+   file's ONE pre-declared inference allowance — declared in the lane's
+   row plan BEFORE writing, never discovered in the draft. Rule 5's
+   soft target is superseded: zero-inference is no longer a floor
+   fraction, it is the default state.
+3. **Named ban — the descriptor triad.** Two concrete details + one
+   interpretive clause. The SHAPE is banned in scenic and functional
+   regardless of content quality; a third concrete detail is fine, an
+   interpretive turn is not (see 2).
+4. **Named ban — the affordance formula.** "Good for X", "built to X",
+   "waiting to X", "enough to X", "what it wants is X" and kin. State
+   the object; the player infers the use. (Skill-outcome toasts state
+   the RESULT of the use — they are not affordance prose and are
+   unaffected.)
+5. **Per-file button ceiling: ONE.** At most one button-family closer
+   per map file — short deflation coda, relative-clause commentary
+   (", which..."), triple cadence, gnomic epigram, persistence coda
+   ("...and it will hold tomorrow"), personified verdict. The ceiling
+   forces ending-shape diversity; "fact-stop" endings (the sentence
+   just ends when the information does) are the unlimited default.
+6. **The round-1 repair templates are ALSO banned.** One-word deflation
+   codas ("Probably.", "For now."), inserted self-corrections, and
+   stripped-twin deletion scars read as an editing signature. Round 2
+   is FRESH AUTHORSHIP: re-write from the field's job; after the first
+   read, the old sentence may not be consulted. A lane caught trimming
+   instead of re-authoring is a fix-wave finding.
+7. **Enforcement is advisory-first** (same rollout as every prose
+   gate): bans 3–5 ship as `data_lint --advisories` arms in the Task-1
+   commit; promotion to hard arms happens at issue close only if the
+   pass ends with zero legitimate exceptions.
+
 ## 0. Why this is a separate document from the dialogue bible
 
 `docs/dialogue-voice-bible.md` governs **spoken** prose and is authoritative
