@@ -55,6 +55,14 @@ else in this bible stands.
    row plan BEFORE writing, never discovered in the draft. Rule 5's
    soft target is superseded: zero-inference is no longer a floor
    fraction, it is the default state.
+   **Skill-receipt carve-out (RULED at l3 review, 2026-08-07,
+   mirroring amendment 4's):** `on_skill_use`/`skill_uses` toast
+   fields report what the Skill READS — including the non-visible
+   (history, keying, containment, species) — bounded by the canon
+   guard; they spend no allowance. The Skill perceiving the
+   imperceptible is the field's job, not narrator overreach. This
+   retroactively covers the allowances l5/l6 declared on
+   detect-magic-class receipts (harmless over-declarations).
 3. **Named ban — the descriptor triad.** Two concrete details + one
    interpretive clause. The SHAPE is banned in scenic and functional
    regardless of content quality; a third concrete detail is fine, an

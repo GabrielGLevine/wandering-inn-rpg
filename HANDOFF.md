@@ -88,14 +88,24 @@ CHOICE-LOG's 2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
   lacking a DONE/ACTIVE header — checker/format disagreement, needs a
   one-line checker or plan-template fix, NOT a real drift.
 
-## RUNNING (2026-08-07): #397 round 2 — map-register re-authorship
-USER RULED: Option A, maps only (CHOICE-LOG 2026-08-07; issue #397
-comment). Plan COMMITTED:
-docs/superpowers/plans/2026-08-07-prose-round2-397.md. State: waiting
-on usage window (CAUTION at ruling time); NEXT = Task 0 (mechanical
-work-list freeze → round2-worklist.jsonl) + Task 1 (bible amendments,
-Fable-authored) then ~6 Opus lanes. Dialogue is SHIPPED — do not
-re-open Set A.
+## RUNNING (2026-08-07): #397 round 2 — six writing lanes LIVE
+USER RULED: Option A, maps only (CHOICE-LOG 2026-08-07). Plan:
+docs/superpowers/plans/2026-08-07-prose-round2-397.md. Task 0 DONE
+(round2-worklist.jsonl FROZEN, 188 rows, matcher validated vs reader
+tags p=0.74/r=0.63). Task 1 DONE (bible Round-2 amendments RULED +
+data_lint advise_prose_templates, 95 pre-pass hits — drain target).
+Task 2 LIVE: six Opus lanes in /tmp/wi-397r2-l{1..6} (branches
+397r2/l1..l6 off a33e2cf6, overlay+import done, briefs at
+LANE-BRIEF.md, slices at lane-rows.jsonl): l1 invrisil 34, l2 pallass
+28, l3 riverfarm 26, l4 floodplains+garden 24, l5 liscor+inn 37,
+l6 dungeon+ruin+sewers 39. Lanes do NOT commit — controller stages.
+THEN per plan: per-lane adversarial review (method hints: grep diff
+for triad/button/trim scars; diff FIXTURES vs HEAD) → fix waves →
+anchored train issue/397-prose-naturalization-r2 → composed gates →
+Task 4 fresh two-reader blind read (bar: maps midpoint ≤45 AND ≥10
+under that reader's untouched control; both readers must find no
+single surviving engine). Exit met → close PR; not met → STOP, user.
+Dialogue is SHIPPED — do not re-open Set A.
 
 ## 🧑‍⚖️ NEW USER ASKS from this session
 1. ~~#397 round 2 go/no-go~~ RULED 2026-08-07: A-maps-only (above).
