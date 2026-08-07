@@ -137,6 +137,20 @@ working ledger.
    prints on a broken assert). Fold into wi-verifying-changes at
    close: grep BOTH families.
 
+17. **INCIDENT (controller, 2026-08-07 late): street.json fix-wave
+   wipe + recovery.** Controller edited the Olesm string via a python
+   json.dump round-trip (typography ruling: re-dash the baseline
+   restore's ellipses), which reformatted the whole file; the revert
+   (`git checkout --`) then discarded the l5 FIX WAVE's uncommitted
+   street.json hunks — the exact shared-file wipe class
+   wi-running-the-machine documents (2026-07-18). Recovery: fixer
+   agent resumed to re-apply its four street edits byte-identical
+   (one recorded in the pin-delta ledger, one from baseline, two from
+   its context) + the em-dash ruling. Lessons re-armed: (a) NEVER
+   json-reserialize a shipped map file — targeted string edit only;
+   (b) `git diff <file>` and name every hunk before ANY revert of a
+   file that could hold another agent's uncommitted work.
+
 ## Lane status
 
 - ALL SIX LANDED: l1 0775c365 (34), l2 faf2e7b6 (28), l3 b32a40d0
