@@ -26,7 +26,7 @@
   { "action": "screenshot", "name": "00_riverfarm_field_board" },
 
   { "_comment": "== THE REFUSAL: a second take in the SAME waking pays nothing and banks nothing. entity_first_use is keyed `serve:riverfarm_field_board`, and interactions.gd banks that key BEFORE resolving effects, so the refusal can never burn the wage. ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Every hook is bare. Riverfarm doesn't invent work to keep a stranger busy." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Every hook is bare. The board is empty till tomorrow." }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "gold", "equals": 62 },
   { "action": "assert_event_count", "type": "accomplishment_recorded", "payload_contains": { "id": "riverfarm_field_jobs" }, "count": 1 },
 
@@ -37,7 +37,7 @@
   { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [5, 1] } },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "invrisil_errands_run", "count": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You take the top line off the slate and walk it across Invrisil: a package nobody described to you, to a door somebody did. Two gold, and the line is wiped before you're back through the alley." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You take the top line off the slate and walk it across Invrisil, no questions asked at either end. Two gold in your hand, and behind you a wet cloth is already going over the line." }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "gold", "equals": 64 },
   { "action": "screenshot", "name": "01_parlor_errand_slate" },
   { "action": "press", "name": "interact" },
@@ -55,7 +55,7 @@
   { "action": "assert_state", "path": "gold", "equals": 66 },
   { "action": "screenshot", "name": "02_forge_fetch_slips" },
   { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The rack is empty until the next shift files its slips. Pallass does not run two shifts at once." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The rack is empty until the next shift files its slips." }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "gold", "equals": 66 },
 
   { "_comment": "== THE SLEEP: the delivery_loop/board_loop bed precedent (teleport to your_bed, the walk is proven elsewhere). This is what makes the three props REPEATABLE rather than three one-shot coins. ==", "action": "teleport", "map": "inn_upstairs", "cell": [9, 3] },

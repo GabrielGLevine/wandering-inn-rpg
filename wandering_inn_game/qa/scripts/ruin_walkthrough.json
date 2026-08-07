@@ -176,7 +176,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea."
+    "text": "The stone doesn't move. It does not even shift in its cradle, and the court has gone very quiet."
    },
    "timeout_sec": 5
   },

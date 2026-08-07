@@ -91,7 +91,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. Tin is not perishable. The salt packed WITH it is, and it is on the same manifest line. Four cycles, and the exemption was on the paper the whole time."
+    "text": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. The tin is not perishable, the salt packed with it is, and after four cycles both are still on one manifest line, so the exemption covers the crate."
    },
    "timeout_sec": 5
   },

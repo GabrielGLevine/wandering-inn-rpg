@@ -62,7 +62,7 @@
     "to_map": "witch_hollow"
    },
    {
-    "_comment": "R2 SKILL route. detect_magic is the requires_skill GATE and the arm banks ward_scrap_read ONLY -- it must never bank detected_wardwork. trapped_halls.json:355 states the Act V door deliberately withholds a fifth producer because it would cheapen the >=3 threshold its payoff variant reads (qa/fixtures/seal_reward_start.json:31 pins the value at 3). Reading this scrap teaches the same literacy without spending that budget.",
+    "_comment": "detect_magic is the requires_skill GATE and the arm banks ward_scrap_read ONLY -- it must never bank detected_wardwork. The Act V door deliberately withholds a fifth producer of that counter because it would cheapen the >=3 threshold its payoff variant reads (qa/fixtures/seal_reward_start.json pins the value at 3). Reading this scrap teaches the same literacy without spending that budget.",
     "_light_comment": "v0.17 R2 night-readability light. VISUAL-LOG named `hut_hearth_ash`; NOT used -- that prop's own toast says its ash is cold. Ward-green, low, steady, no flicker.",
     "cell": [
      7,
@@ -81,15 +81,15 @@
      "flicker": false,
      "radius": 22
     },
-    "locked_toast": "A palm-sized shard of grey stone on the shelf, cut along one edge with marks you cannot read.",
-    "observe": "A shard of grey stone on the shelf, set down carefully by someone who meant to come back for it.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "on_skill_use": {
      "accomplishment": "ward_scrap_read",
      "lore": true,
-     "toast": "[Detect Magic] \u2014 The shard is one link of a boundary that used to ring the whole thicket. It still pulls, faintly, along the exact line the deer refuse to cross. It was drawn to keep something in, and it has been failing at that for a very long time."
+     "toast": "\u00b6"
     },
     "requires_skill": "detect_magic",
-    "skill_hint_toast": "The scrap hums under the dust, and not the way dust hums.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "hollow_glow_stone"
    },
    {
@@ -100,10 +100,10 @@
     "display_name": "The Stoppered Jars",
     "id": "hut_stoppered_jars",
     "kind": "prop",
-    "observe": "A row of stoppered jars along the top shelf, their labels faded to a suggestion.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_hut_stoppered_jars",
     "sprite": "shelf_bottles",
-    "toast": "Every stopper is waxed and every jar is still full. Whoever kept this house left it ready and never came back for it."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -113,10 +113,10 @@
     "display_name": "The Drying Rack",
     "id": "hut_drying_rack",
     "kind": "prop",
-    "observe": "A rack of bundled stems, dried long past any use.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_hut_drying_rack",
     "sprite": "library_shelf",
-    "toast": "Yarrow, mostly, and a great deal of it. Somebody kept this place stocked for a house they intended to come back to."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -126,10 +126,10 @@
     "display_name": "The Cold Hearth",
     "id": "hut_hearth_ash",
     "kind": "prop",
-    "observe": "Cold ash banked neatly against the back of the hearth.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_hut_hearth_ash",
     "sprite": "cold_hearth",
-    "toast": "The ash is banked the way you bank a fire you mean to wake in the morning. It has been cold for years."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -139,10 +139,10 @@
     "display_name": "The Shutter",
     "id": "hut_shuttered_window",
     "kind": "prop",
-    "observe": "One shutter, latched, with daylight coming through the slats in bars.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_hut_shuttered_window",
     "sprite": "window_blue",
-    "toast": "Latched from the inside, and the hut was shut when you found it. You decide not to work that through any further today."
+    "toast": "\u00b6"
    }
   ],
   "floor_layers": [

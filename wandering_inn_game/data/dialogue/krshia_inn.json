@@ -4,7 +4,7 @@
  "nodes": {
   "greet": {
    "speaker": "Krshia",
-   "text": "A Human inn, and the food does not insult me. I walked up from the stall, and there is nobody haggling in my ear, yes?",
+   "text": "A Human inn, and the food is better than the market's. I walked up from the stall, and there is nobody haggling in my ear, yes?",
    "options": [
     {
      "text": "@bring_her_a_bowl",

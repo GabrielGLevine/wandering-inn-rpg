@@ -403,7 +403,7 @@
    ],
    "display_name": "Erin",
    "sprite": "erin",
-   "observe": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her.",
+   "observe": "A young human, no armor, no weapon, a rag over one shoulder she keeps forgetting she is holding. She talks to the room and to herself in the same breath. She has no idea how strange she is in this world.",
    "friendly_line": "Oh - hi! You've got a good face, you know that? Come in, sit down. I'll find you something warm - on the house, probably. Don't tell Lyonette I said that.",
    "talk_pool": [
     "@erin_shared_2",
@@ -700,7 +700,7 @@
    "display_name": "Lyonette",
    "sprite": "lyonette",
    "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
-   "friendly_line": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. ...It is a small thing. It is not nothing. Sit where you like; I'll bring something hot.",
+   "friendly_line": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. Sit where you like; I'll bring something hot.",
    "talk_pool": [
     "@lyonette_shared"
    ],
@@ -1379,7 +1379,7 @@
     "accomplishment": "witch_craft_used",
     "item": "remedy_draught",
     "remove_item": "dried_yarrow_bundle",
-    "toast": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The steam settles into something kinder."
+    "toast": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The yarrow goes under the lid and the steam thickens over the pot."
    },
    "_comment": "GH#131: on (6,2), a blocked kitchen-counter cell (#116 pattern); approach (6,3) facing up, asserted open by test_sim_core. NOT (2,2) -- test_sim_core walks it. GH#378 arm 2: kettle-on-a-crane, the row's only vertical silhouette; tint retired.",
    "cookware": true
@@ -1394,12 +1394,12 @@
    "display_name": "Chef's Counter",
    "sprite": "counter_left",
    "requires_skill": "advanced_cooking",
-   "skill_hint_toast": "Good stock, better knives, and nobody using either. A real cook could turn this counter into a meal worth naming.",
+   "skill_hint_toast": "Good stock, better knives, and no hands that know what to do with them. You pick up a knife and put it back.",
    "locked_toast": "A working counter, scrubbed and stocked. The kitchen has standards, and they're looking at you.",
    "on_skill_use": {
     "accomplishment": "cooked_meal",
     "item": "fine_meal",
-    "toast": "[Advanced Cooking] — Knife-work first, then the pan, then the part nobody can teach. The plate comes out arguing for seconds."
+    "toast": "[Advanced Cooking] — Knife-work, then the pan, then four minutes you do not look away from, and nothing burns."
    }
   },
   {
@@ -1412,12 +1412,12 @@
    "display_name": "The Good Copper Pan",
    "sprite": "grill",
    "requires_skill": "signature_dish",
-   "skill_hint_toast": "The good copper pan. It's been waiting for a dish that deserves it.",
+   "skill_hint_toast": "Copper, scoured, and heavier than it looks. Not the pan for anything you know how to cook.",
    "locked_toast": "The good copper pan, hung out of easy reach. Erin's rule, probably.",
    "on_skill_use": {
     "accomplishment": "cooked_meal",
     "item": "signature_meal",
-    "toast": "[Signature Dish] — The pan remembers you now. What comes out of it isn't dinner, it's a reputation."
+    "toast": "[Signature Dish] — The pan comes down off its hook for this one. Two tables stop talking when the plate goes past."
    }
   },
   {
@@ -1450,7 +1450,7 @@
    "display_name": "Short-Order Pot",
    "sprite": "short_order_range",
    "requires_skill": "basic_cooking",
-   "skill_hint_toast": "Three plates ordered, one pot of stock. You could stretch it to cover them all. Nothing leaves the kitchen in your hands.",
+   "skill_hint_toast": "Three plates ordered, one pot of stock. Stretched right it would cover them all, but nothing leaves this kitchen in your hands.",
    "locked_toast": "The order's a mess and you haven't the first idea how to stretch it. Not yet.",
    "on_skill_use": {
     "accomplishment": "stretched_the_order",
@@ -1523,7 +1523,7 @@
     "observe": {
      "accomplishment": "read_the_door_runes",
      "lore": true,
-     "toast": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
+     "toast": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating all the way around the jamb. It holds still while you watch it and shifts the moment you look away."
     },
     "detect_magic": {
      "accomplishment": "detected_wardwork",
@@ -1553,7 +1553,7 @@
    "sprite": "pisces",
    "facing": "right",
    "conversation": "door_mounting",
-   "observe": "He has taken his coat off, which for Pisces is manual labour. One hand rests flat on the hauled door's face, the way a physician rests a hand on a patient, and he is listening to something no one else in the room can hear.",
+   "observe": "His coat is off and folded over a chair back. One hand rests flat on the hauled door's face, and he has not spoken since he put it there.",
    "dialogue": [
     {
      "speaker": "Pisces",
@@ -1610,7 +1610,7 @@
       "counter": "door_mounted",
       "at": 1
      },
-     "observe": "The scratching has become a chewing. The Door strains for somewhere it cannot reach yet, and something on the way there has found the gap and has teeth."
+     "observe": "The scratching has become a chewing. Since the Door went up the gap has widened, and there are teeth-marks in the plaster on this side of it."
     }
    ]
   },
@@ -1630,7 +1630,7 @@
    ],
    "display_name": "A Door of Vines",
    "sprite": "garden_door_inner",
-   "observe": "Plaster, old and thin, and a nail with nothing hung on it. If something is meant to be here, it isn't yet.",
+   "observe": "Plaster gone thin and chalky, and one nail driven in at head height.",
    "on_interact_accomplishment": "noticed_the_bare_wall",
    "toast": "Bare wall. A nail with nothing hung on it.",
    "door_when": {
@@ -1658,7 +1658,7 @@
       "at": 1
      },
      "hidden": false,
-     "observe": "A door of living vines, woven shut and breathing faintly of green. It wasn't here before, and it doesn't pretend otherwise."
+     "observe": "A door of living vines, woven shut and breathing faintly of green. The nail is gone, and the plaster with it."
     }
    ]
   },

@@ -549,7 +549,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's, and she fed hers too. Fed. That word keeps recurring.",
+    "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's, and she fed hers too. The two traditions agree that a ward can be fed, and between them they have not produced a word for the practice. I shall be supplying one before the month is out.",
     "options": [
      {
       "text": "Walk me through it again.",

@@ -301,7 +301,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it."
+    "text": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. One person's work, and this door was the first of it.\" He does not look away while he says it."
    },
    "timeout_sec": 5
   },
@@ -322,7 +322,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
+    "text": "Pisces steps back at last. \"The lines run one way. They have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
    },
    "timeout_sec": 5
   },
@@ -334,12 +334,12 @@
    "_comment": "v0.15 A3 (GH#304): THE REVEAL RACE. Both reads are lore-tagged, so their text banks to lore_notes inside the sim's own emit sink -- before the toast queue, the escort dialogue two cells south, or a map change can decide whether it renders. This asserts the Act V facts survive independent of the render, which is the thing the playtest found missing.",
    "action": "assert_state",
    "path": "lore_notes",
-   "contains": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it."
+   "contains": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. One person's work, and this door was the first of it.\" He does not look away while he says it."
   },
   {
    "action": "assert_state",
    "path": "lore_notes",
-   "contains": "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
+   "contains": "Pisces steps back at last. \"The lines run one way. They have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
   },
   {
    "_comment": "And the journal is where a player reads them back: the History tab's Lore section now leads with the world's own lines, newest first, above the item lore. The payload carries the same list the body renders.",
@@ -364,13 +364,13 @@
    "payload_contains": {
     "active_tab": "history",
     "lore_notes": [
-     "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\"",
-     "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it.",
+     "Pisces steps back at last. \"The lines run one way. They have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\"",
+     "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. One person's work, and this door was the first of it.\" He does not look away while he says it.",
      "[Detect Magic] — Light runs under the turf in one long seam, straight through the stone and away west. The hollow is built on a current.",
-     "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away.",
+     "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating all the way around the jamb. It holds still while you watch it and shifts the moment you look away.",
      "[Detect Magic] — The socket still remembers its stone: a slow pulse, counting toward a door that already left. The warding reads near-first: the spiral beside the pedestal, then its far twin.",
-     "Below the pedestal: not treasure. A DOOR — unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
-     "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court.",
+     "Below the pedestal: not treasure. A door, unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
+     "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court.",
      "The fissure Zevara spoke of is down past the gallery. The dark has a direction today."
     ]
    },
@@ -392,7 +392,7 @@
   {
    "action": "assert_state",
    "path": "lore_notes.7",
-   "equals": "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
+   "equals": "Pisces steps back at last. \"The lines run one way. They have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
   },
   {
    "action": "screenshot",

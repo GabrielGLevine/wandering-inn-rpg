@@ -77,7 +77,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea."
+    "text": "The stone doesn't move. It does not even shift in its cradle, and the court has gone very quiet."
    },
    "timeout_sec": 5
   },
@@ -174,7 +174,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "Both spirals hold their light, and the seam under the plinth stops fighting your hand. Whatever the ward was keeping out, it was never the plates — it was whoever hadn't walked them. Ceria, already reaching for rope: 'Ksmvr. Down. Carefully.'"
+    "text": "Both spirals hold their light, and the seam under the plinth stops fighting your hand. The ward wanted the plates walked in order, and now they have been. Ceria, already reaching for rope: 'Ksmvr. Down. Carefully.'"
    },
    "timeout_sec": 5
   },
@@ -233,7 +233,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "Below the pedestal: not treasure. A DOOR — unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+    "text": "Below the pedestal: not treasure. A door, unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
    },
    "timeout_sec": 5
   },

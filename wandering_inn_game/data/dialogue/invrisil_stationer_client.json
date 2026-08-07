@@ -4,7 +4,7 @@
  "nodes": {
   "commission": {
    "speaker": "A Lady with a Ring Box",
-   "text": "I have been sitting in a paper shop for an hour. On this street it is the one room where a woman may hold something closed and nobody asks her to open it. You are the first person to stop at this table.",
+   "text": "I have been sitting in a paper shop for an hour. You are the first person to stop at this table. Nobody asks a woman in a paper shop what she is holding. I learned that young and have relied on it ever since, and I had set this afternoon aside for nobody asking at all.",
    "text_variants": [
     {
      "requires": {
@@ -45,7 +45,7 @@
        "house_answer_given": 1
       }
      },
-     "text": "I answered it in my own hand. Two lines and no apology in either of them. That is the first thing I have signed in eleven years that nobody had to be told about afterwards."
+     "text": "I answered it in my own hand. Two lines and no apology in either of them. Eleven years, and every other thing I signed in them was explained to somebody afterwards. I have been adding that up all morning and the figure does not improve."
     }
    ],
    "options": [

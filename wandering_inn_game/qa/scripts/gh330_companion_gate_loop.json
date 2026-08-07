@@ -209,7 +209,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Turned bones and nothing under them now. The wolf has lost interest, which is its own verdict."
+    "text": "Turned bones and nothing under them now. The wolf noses through once and walks off."
    },
    "timeout_sec": 5
   },
@@ -345,7 +345,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "It wheels out over the pond, hangs, and comes back loud. There is something square and man-made on the bottom, a stride out from the bank — too far to reach across open water, and water can be made to bear weight."
+    "text": "It wheels out over the pond, hangs, and comes back loud. There is a worked square edge under the silt on the bottom, a stride out from the bank — too far to reach across open water, and water can be made to bear weight."
    },
    "timeout_sec": 5
   },

@@ -96,7 +96,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "A Lady with a Ring Box",
-    "text": "I have been sitting in a paper shop for an hour. On this street it is the one room where a woman may hold something closed and nobody asks her to open it. You are the first person to stop at this table."
+    "text": "I have been sitting in a paper shop for an hour. You are the first person to stop at this table. Nobody asks a woman in a paper shop what she is holding. I learned that young and have relied on it ever since, and I had set this afternoon aside for nobody asking at all."
    },
    "timeout_sec": 5
   },
@@ -355,7 +355,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Hedault",
-    "text": "Good. Then it goes on the order in those words and the price changes, downward, because glass takes less holding than a stone does. A mount for glass is not a lesser commission. It is a different one, and I would rather be told than discover it at the bench."
+    "text": "Good. Then it goes on the order in those words and the price changes, downward, because glass takes less holding than a stone does. Glass wants a shallower seat and a thinner ward-line, which is fewer hours and less silver on my side of the cloth. The mount behind me can be finished this afternoon. I would rather be told than discover it at the bench."
    },
    "timeout_sec": 5
   },

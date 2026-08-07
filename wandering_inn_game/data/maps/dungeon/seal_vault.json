@@ -183,7 +183,7 @@
     18,
     7
    ],
-   "observe": "The doorway you came through, seen from the inside: the runes run the same order on this face, which means they were cut to be read from in here. Somebody expected to be standing where you are."
+   "observe": "The doorway you came through, seen from the inside: the runes run the same order on this face. They were cut to be read from in here."
   },
   {
    "_comment": "THE TERMINUS. A container, not an interact-prop, so the open can bank AND grant AND speak in one beat (on_open_accomplishment String|Array + open_toast, the Task 2.3 pedestal keys). seal_resolved banks HERE on the FIGHT path -- reaching what was fed is the resolution, not merely deciding to look. Oblique-Thresk: the wiki is silent on a Warmage's anchor, so the room states only what a resident could see and Pisces reads the rest. Carries the room's key light; three lights on this map, inside world.gd's LIGHT_BUDGET of 8.",
@@ -200,14 +200,14 @@
     0.86,
     1.0
    ],
-   "observe": "A waist-high plinth of the same pale stone as the ruin's, and the same hand's runes wrapped twice around it. Every line points inward. Whatever it holds, it was built to keep holding it.",
+   "observe": "A waist-high plinth of the same pale stone as the ruin's, and the same hand's runes wrapped twice around it. Every line points inward, and none of them come back out.",
    "contains": [
     "seal_anchor_rune"
    ],
    "on_open_accomplishment": [
     "seal_resolved"
    ],
-   "open_toast": "Not a prisoner. An ANCHOR — a twin to the stone the Horns hauled out of the ruin, and it has been drinking the ward's slow pour for three centuries to stay awake. Pisces, hoarse: \"This is why the Door works at all. Somebody left it something to come home to, and then somebody sealed the room and let it drink.\"",
+   "open_toast": "Not a prisoner. An anchor: a twin to the stone the Horns hauled out of the ruin, and it has been drinking the ward's slow pour for three centuries to stay awake. Pisces, hoarse: \"This is why the Door works at all. Somebody left it something to come home to, and then somebody sealed the room and let it drink.\"",
    "light": {
     "color": [
      0.62,
@@ -236,7 +236,7 @@
    ],
    "on_interact_accomplishment": "sensed_something_deeper",
    "toast": "Cut into the slab, in a hand that expected readers: a tally. Ninety-one marks, then a gap, then one more in a different chisel. Nobody came back to make the ninety-third.",
-   "observe": "Someone knelt here long enough to cut a tally into the floor slab, and long enough after that to stop."
+   "observe": "A tally cut low into the floor slab, close in against the wall. It stops well short of the corner."
   }
  ]
 }

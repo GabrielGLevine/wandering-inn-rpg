@@ -129,7 +129,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Krshia",
-    "text": "Hrr. South. Grain, salt, hide-thread, and a cart that does not stop where anyone is counting. You will not say whose hands take it, and I will not ask, yes? I will price it as wool."
+    "text": "Hrr. South. Grain, salt, hide-thread, and a cart that does not stop where anyone is counting. I will not ask whose hands it ends in. On my books it is wool, and you pay the wool price."
    },
    "timeout_sec": 5
   },

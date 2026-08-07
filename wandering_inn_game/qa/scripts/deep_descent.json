@@ -145,7 +145,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark, and left gnawed bones banked around the edge, cracked for their marrow."
+    "text": "A fire-pit ringed with blackened stones, gnawed bones banked around the edge and cracked open for their marrow. Nothing in the ash has been warm for a long time."
    },
    "timeout_sec": 5
   },
@@ -288,7 +288,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered. And that is worse than if they had been."
+    "text": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's."
    },
    "timeout_sec": 5
   },
