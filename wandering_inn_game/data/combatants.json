@@ -1495,27 +1495,6 @@
    ]
   },
   {
-   "_comment": "#398 P1 pond island, MEASURED at 100 seeds: 0.23 vs the warrior2 yardstick (which cannot cross), 0.68 / median 4 vs the runner5_warrior5 entrant -- the entrant cell carries the band. con 26 + damage_reduction 7 buy LENGTH (median 4 vs rock_crab's 3); str 11 / weapon_die 5 keep the bite under rock_crab's str 14 / d10, so length is attrition, not a spike.",
-   "id": "pond_guardian",
-   "power_level": 7.0,
-   "display_name": "Old Pond Crab",
-   "sprite": "rock_crab",
-   "combat_scale": 0.58,
-   "side": "enemy",
-   "stats": {
-    "str": 11,
-    "dex": 6,
-    "con": 26,
-    "int": 3,
-    "wis": 6,
-    "cha": 2
-   },
-   "weapon_die": 5,
-   "damage_reduction": 7,
-   "ai": "melee",
-   "skills": []
-  },
-  {
    "_comment": "Act V: roster-only retint of the ruin_warden rig at seal scale (distinct-id-per-context convention, :401). Stats belong to the seal band -- never retune toward the ruin fight's.",
    "id": "seal_warden",
    "power_level": 18.0,
@@ -1538,6 +1517,107 @@
     "power_strike",
     "slam"
    ]
+  },
+  {
+   "_comment": "#398-P3: one shared guard, two class-disjoint L14 access builds. ai/con RETUNED at review (LOW+M8), measured at con 45 (swordsman/infiltrator win): coward 0.95/0.62 but it fled the cache it guards; guard 0.83/0.15; skirmisher 0.99/0.09; melee 0.87/0.44. Shipped: melee + con 30 = 0.93/0.63. STANDING CONSTRAINT: one guard must clear 0.55 for BOTH, and infiltrator14 is calibrated at ~power 6 vs swordsman14's ~15, so it is tuned to the WEAKER build and the spread is inherent. power_level 16->13 tracks the cut.",
+   "id": "side_vault_construct",
+   "power_level": 13.0,
+   "display_name": "Side-Vault Construct",
+   "sprite": "ruin_warden",
+   "combat_scale": 0.53,
+   "combat_tint": [
+    0.72,
+    0.8,
+    0.88
+   ],
+   "side": "enemy",
+   "stats": {
+    "str": 12,
+    "dex": 11,
+    "con": 30,
+    "int": 7,
+    "wis": 9,
+    "cha": 2
+   },
+   "weapon_die": 5,
+   "damage_reduction": 0,
+   "ai": "melee",
+   "skills": [
+    "power_strike",
+    "slam"
+   ]
+  },
+  {
+   "_comment": "#398 P4 pocket, power 12 (two above T3). Tuned as a pair with factor_clerk_guard; new ids keep every shipped composition isolated.",
+   "id": "factor_enforcer",
+   "power_level": 12.0,
+   "display_name": "The Factor's Enforcer",
+   "sprite": "hired_blade",
+   "combat_scale": 0.28,
+   "combat_tint": [
+    0.42,
+    0.48,
+    0.56
+   ],
+   "side": "enemy",
+   "stats": {
+    "str": 10,
+    "dex": 10,
+    "con": 48,
+    "int": 7,
+    "wis": 7,
+    "cha": 8
+   },
+   "weapon_die": 4,
+   "ai": "melee",
+   "skills": [
+    "power_strike"
+   ]
+  },
+  {
+   "_comment": "#398 P4 pocket, power 13 (three above T3). The low-damage half of the bulky pair.",
+   "id": "factor_clerk_guard",
+   "power_level": 13.0,
+   "display_name": "The Closed-Account Clerk",
+   "sprite": "city_scribe",
+   "combat_tint": [
+    0.62,
+    0.58,
+    0.48
+   ],
+   "side": "enemy",
+   "stats": {
+    "str": 6,
+    "dex": 12,
+    "con": 40,
+    "int": 9,
+    "wis": 8,
+    "cha": 9
+   },
+   "weapon_die": 3,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "#398 P1 pond island, MEASURED at 100 seeds: 0.23 vs the warrior2 yardstick (which cannot cross), 0.68 / median 4 vs the runner5_warrior5 entrant -- the entrant cell carries the band. con 26 + damage_reduction 7 buy LENGTH (median 4 vs rock_crab's 3); str 11 / weapon_die 5 keep the bite under rock_crab's str 14 / d10, so length is attrition, not a spike.",
+   "id": "pond_guardian",
+   "power_level": 7.0,
+   "display_name": "Old Pond Crab",
+   "sprite": "rock_crab",
+   "combat_scale": 0.58,
+   "side": "enemy",
+   "stats": {
+    "str": 11,
+    "dex": 6,
+    "con": 26,
+    "int": 3,
+    "wis": 6,
+    "cha": 2
+   },
+   "weapon_die": 5,
+   "damage_reduction": 7,
+   "ai": "melee",
+   "skills": []
   },
   {
    "_comment": "#398 P5 anchor: power 11 is +3 over ruin_guardian's power-8 region stop. The four cells in sim_combat_batch own tuning and carry the measured numbers; review M4 added `power_strike` to both wards and changed no stat.",
@@ -1592,56 +1672,7 @@
     "guarding_ward",
     "power_strike"
    ],
-   "_comment": "Keeps ruin_ward_b's `guarding_ward` shape; lower str/con/die is what makes the pair a pair.",
-   "_comment": "#398-P3: one shared guard, two class-disjoint L14 access builds. ai/con RETUNED at review (LOW+M8), measured at con 45 (swordsman/infiltrator win): coward 0.95/0.62 but it fled the cache it guards; guard 0.83/0.15; skirmisher 0.99/0.09; melee 0.87/0.44. Shipped: melee + con 30 = 0.93/0.63. STANDING CONSTRAINT: one guard must clear 0.55 for BOTH, and infiltrator14 is calibrated at ~power 6 vs swordsman14's ~15, so it is tuned to the WEAKER build and the spread is inherent. power_level 16->13 tracks the cut.",
-   "id": "side_vault_construct",
-   "power_level": 13.0,
-   "display_name": "Side-Vault Construct",
-   "sprite": "ruin_warden",
-   "combat_scale": 0.53,
-   "combat_tint": [
-    0.72,
-    0.8,
-    0.88
-   ],
-   "side": "enemy",
-   "stats": {
-    "str": 12,
-    "dex": 11,
-    "con": 30,
-    "int": 7,
-    "wis": 9,
-    "cha": 2
-   },
-   "weapon_die": 5,
-   "damage_reduction": 0,
-   "ai": "melee",
-   "skills": ["power_strike", "slam"],
-   "_comment": "#398 P4 pocket, power 12 (two above T3). Tuned as a pair with factor_clerk_guard; new ids keep every shipped composition isolated.",
-   "id": "factor_enforcer",
-   "power_level": 12.0,
-   "display_name": "The Factor's Enforcer",
-   "sprite": "hired_blade",
-   "combat_scale": 0.28,
-   "combat_tint": [0.42, 0.48, 0.56],
-   "side": "enemy",
-   "stats": {"str": 10, "dex": 10, "con": 48, "int": 7, "wis": 7, "cha": 8},
-   "weapon_die": 4,
-   "ai": "melee",
-   "skills": ["power_strike"]
-  },
-  {
-   "_comment": "#398 P4 pocket, power 13 (three above T3). The low-damage half of the bulky pair.",
-   "id": "factor_clerk_guard",
-   "power_level": 13.0,
-   "display_name": "The Closed-Account Clerk",
-   "sprite": "city_scribe",
-   "combat_tint": [0.62, 0.58, 0.48],
-   "side": "enemy",
-   "stats": {"str": 6, "dex": 12, "con": 40, "int": 9, "wis": 8, "cha": 9},
-   "weapon_die": 3,
-   "ai": "melee",
-   "skills": []
+   "_comment": "Keeps ruin_ward_b's `guarding_ward` shape; lower str/con/die is what makes the pair a pair."
   }
  ]
 }

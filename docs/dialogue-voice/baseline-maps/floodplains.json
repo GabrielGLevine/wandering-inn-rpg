@@ -714,25 +714,25 @@
     "display_name": "Inn Sign",
     "id": "inn_sign",
     "kind": "prop",
-    "observe": "The paint is newer than the post it hangs on. Somebody meant it, and means it still.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "read_the_inn_sign",
     "sprite": "inn_sign",
-    "toast": "A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN \u2014 NO KILLING GOBLINS."
+    "toast": "\u00b6"
    },
    {
-    "_comment": "b7 #214c: the fishing affordance \u2014 an item-gated bank prop beside the freezable pond edge ((10,17) itself stays clear for the freeze mechanic). No catch item, no fishing system (CHOICE-LOG): the issue is affordance clarity; banks went_fishing, once per waking. The handline's own lore ('the water starts moving wrong') is the deliberate echo.",
+    "_comment": "b7 #214c: item-gated fishing affordance beside the freezable pond edge -- (10,17) itself stays clear for the freeze mechanic. No catch item, no fishing system (CHOICE-LOG); banks went_fishing, once per waking.",
     "cell": [
      9,
      17
     ],
     "display_name": "Rippled Shallows",
     "id": "pond_edge",
-    "item_hint_toast": "Whatever's under there won't come to bare hands. Lism's shelf had a fisher's handline.",
+    "item_hint_toast": "\u00b6",
     "kind": "prop",
-    "observe": "The pond narrows here over a drop the light doesn't reach. Every so often the water moves wrong, and then it stops, the way a room stops when you walk into it. Whatever keeps this water is not interested in being caught.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "went_fishing",
     "once_per_waking": true,
-    "once_per_waking_toast": "The water's gone still. Whatever considered you today is done considering.",
+    "once_per_waking_toast": "\u00b6",
     "requires_item": "fishers_handline",
     "sprite": "grass_tuft",
     "tint": [
@@ -740,7 +740,7 @@
      0.85,
      0.9
     ],
-    "toast": "You pay out the line into the dark water. Nothing takes it, and nothing was ever going to \u2014 whatever keeps this pool knows the difference between an offer and a hook."
+    "toast": "\u00b6"
    },
    {
     "_comment": "Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast.",
@@ -752,7 +752,7 @@
     "gold": 5,
     "id": "frozen_cache",
     "kind": "prop",
-    "observe": "Something square and man-made rests on the pond floor a stride out from the bank, furred with silt. Too far to reach across open water. But water can be made to bear weight, if you know the trick of cold.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "found_the_frozen_cache",
     "sprite": "crate",
     "tint": [
@@ -760,11 +760,11 @@
      0.78,
      0.9
     ],
-    "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, dry against all odds, a few keepsakes someone drowned here meant never to be found.",
+    "toast": "\u00b6",
     "variants": [
      {
       "gold": 0,
-      "toast": "The strongbox sits open and empty now, holding nothing but pond-light.",
+      "toast": "\u00b6",
       "when": {
        "found_the_frozen_cache": 1
       }
@@ -940,15 +940,15 @@
     "dialogue": [
      {
       "speaker": "Relc",
-      "text": "Road's watched. You're welcome."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Relc",
     "facing": "down",
-    "friendly_line": "Heh. Alright, alright - I like you. You've got the look of someone who buys a guy a drink after. We're good, you and me. Best guardsman in Liscor says so.",
+    "friendly_line": "\u00b6",
     "id": "relc",
     "kind": "npc",
-    "observe": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it. Including you, now.",
+    "observe": "\u00b6",
     "sprite": "relc",
     "talk_pool": [
      "\u00a7",
@@ -1010,14 +1010,14 @@
     ],
     "id": "relc_spar",
     "kind": "encounter",
-    "observe": "Straw and burlap lashed to posts, hacked half to ribbons. Someone drills here often, and hard. The stitching tells you where a real guard would break.",
+    "observe": "\u00b6",
     "on_victory": [
      "sparred_with_relc"
     ],
     "persistent": true,
     "sprite": "training_dummy",
     "trivial": true,
-    "victory_toast": "Relc whistles. \"Not bad for a start. Now go SLEEP on it \u2014 Classes come at the pillow, not the podium. Bed's upstairs at the inn.\""
+    "victory_toast": "\u00b6"
    },
    {
     "cell": [
@@ -1040,24 +1040,24 @@
     "display_name": "Hilltop Cairn",
     "id": "hilltop_cairn",
     "kind": "prop",
-    "locked_toast": "A cairn on a hill. The view is mostly weather.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "scouted_vantage",
-     "toast": "[Eagle Eyes] \u2014 The plains resolve: the gate road, the ruin east past it, and every fold of dead ground a warband could hide in. You'll walk this land differently now."
+     "toast": "\u00b6"
     },
     "requires_skill": "eagle_eyes",
-    "skill_hint_toast": "From up here the floodplains pretend to be a map. Good eyes could read it.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "boulder"
    },
    {
-    "_comment": "LOCKED interface: entry door id `ruin_door` (this entity) pairs with `ruin_exit` on ruin_surface. Task 2.3 moved the door_when gate door_chain_started -> horns_dig_started. MANDATORY, not cosmetic: Task 2.2 retired door_chain_started's only producer and Task 2.4 re-banks it at the MOUNTING (which needs door_retrieved, which needs this door), so the old gate would have deadlocked the seam shut forever for every new save. Old saves reach horns_dig_started through Task 2.6's backfill.",
+    "_comment": "LOCKED interface: entry door id `ruin_door` (this entity) pairs with `ruin_exit` on ruin_surface. The door_when gate is horns_dig_started, NEVER door_chain_started -- that counter's only producer is retired and it is re-banked at the MOUNTING, which needs this door, so the old gate deadlocks the seam shut. Old saves reach horns_dig_started through the Task 2.6 backfill.",
     "cell": [
      38,
      11
     ],
     "display_name": "A Cracked Seam",
     "door_when": {
-     "open_toast": "The seam splits wider at your touch, cold air breathing out of the dark beneath. You step through, into somewhere else.",
+     "open_toast": "\u00b6",
      "requires": {
       "horns_dig_started": 1
      },
@@ -1069,7 +1069,7 @@
     },
     "id": "ruin_door",
     "kind": "prop",
-    "observe": "A hairline crack runs through old, dressed stone half-swallowed by turf \u2014 not natural rock, something built. Cold air breathes up out of it, and it smells of somewhere else.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "found_the_rift_seam",
     "sprite": "ruin_gate",
     "tint": [
@@ -1077,7 +1077,7 @@
      0.6,
      0.68
     ],
-    "toast": "A cold seam splits the earth here, sealed by old stone. It doesn't feel like it goes anywhere. Yet."
+    "toast": "\u00b6"
    },
    {
     "_comment": "`allies`/`ally_requires` mirror every other floodplains fight (goblin_encounter_1/2, chieftains_raid): Relc fields once met_relc is banked, solo before that.",
@@ -1100,11 +1100,11 @@
     ],
     "id": "rock_crab_nest",
     "kind": "encounter",
-    "observe": "Three boulders sit too evenly spaced for the hillside's own tumble, and one of them, you'd swear, just shifted.",
+    "observe": "\u00b6",
     "on_victory": "rock_crabs_culled",
     "respawns": true,
     "sprite": "rock_crab",
-    "tame_refusal_toast": "The crab regards you with all the tameable warmth of a boulder."
+    "tame_refusal_toast": "\u00b6"
    },
    {
     "allies": [
@@ -1128,10 +1128,10 @@
      "goblin_raider",
      "goblin_shaman"
     ],
-    "gate_closed_toast": "Nothing moving out there. Whatever it was keeps day hours, same as everyone sane.",
+    "gate_closed_toast": "\u00b6",
     "id": "goblin_night_patrol",
     "kind": "encounter",
-    "observe": "A patrol slipping the boulder line, quiet until they're not. Only after dark.",
+    "observe": "\u00b6",
     "on_victory": "won_combat",
     "respawns": true,
     "sprite": "goblin_base",
@@ -1165,7 +1165,7 @@
     ],
     "id": "corusdeer_range",
     "kind": "encounter",
-    "observe": "A shape stands too still at the treeline, antlers catching a warmth that isn't sunlight.",
+    "observe": "\u00b6",
     "on_victory": "corusdeer_culled",
     "respawns": true,
     "sprite": "corusdeer"
@@ -1186,7 +1186,7 @@
     ],
     "id": "razorbeak_nest",
     "kind": "encounter",
-    "observe": "A scrape of trampled grass, two long-beaked shapes hunched low over it, watching you watch them.",
+    "observe": "\u00b6",
     "on_victory": "razorbeaks_culled",
     "respawns": true,
     "sprite": "razorbeak"
@@ -1201,16 +1201,16 @@
     "display_name": "Wounded Corusdeer",
     "id": "wounded_corusdeer",
     "kind": "prop",
-    "observe": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you the way anything hurt watches anything larger. It would let patient hands close, and hands that tend enough hurt beasts learn something no drill yard teaches.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "soothed_a_beast",
     "on_skill_use": {
      "accomplishment": "tended_beasts",
      "gold": 2,
-     "toast": "[Beast's Mending] \u2014 Splint and salve, and the leg sits straighter than it has any right to. The corusdeer breathes easier.",
+     "toast": "\u00b6",
      "variants": [
       {
        "accomplishment": "corusdeer_healed",
-       "toast": "[Beast's Mending] \u2014 The splint comes away and stays away. It stands, tests the leg, and goes to find the herd. Your hands knew what to do because of this deer.",
+       "toast": "\u00b6",
        "when": {
         "tended_beasts": 10
        }
@@ -1218,7 +1218,7 @@
      ]
     },
     "once_per_waking": true,
-    "once_per_waking_toast": "It has let you close once today. Don't spend what little trust it has.",
+    "once_per_waking_toast": "\u00b6",
     "present_when": {
      "absent": {
       "corusdeer_healed": 1
@@ -1226,18 +1226,18 @@
     },
     "requires_skill": "beasts_mending",
     "sprite": "corusdeer_wounded",
-    "toast": "You move slow, keep your hands low, and it lets you check the leg. That, from a wild thing, is everything.",
+    "toast": "\u00b6",
     "variants": [
      {
       "accomplishment": "tended_beasts",
-      "toast": "It knows you now. It holds still while you work, and its antlers warm the air between you.",
+      "toast": "\u00b6",
       "when": {
        "soothed_a_beast": 1
       }
      },
      {
       "accomplishment": "corusdeer_healed",
-      "toast": "It is already standing when you come. It lets you run a hand down the leg once, then turns and goes up the rise at a trot, and does not look back.",
+      "toast": "\u00b6",
       "when": {
        "tended_beasts": 10
       }
@@ -1269,7 +1269,7 @@
     "id": "worn_grass_patch",
     "item": "shed_antler",
     "kind": "prop",
-    "observe": "A body-shaped hollow pressed into the grass, going green again at the edges. Something lay here a long time, and then stopped needing to.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "found_the_shed_antler",
     "present_when": {
      "requires": {
@@ -1282,11 +1282,11 @@
      0.82,
      0.55
     ],
-    "toast": "In the flattened grass, shed clean at the base: one antler, oaken-brown fading to a red glow at the tip. It is warm to hold, and stays warm.",
+    "toast": "\u00b6",
     "variants": [
      {
       "item": "",
-      "toast": "Only the hollow in the grass now, and it is filling in.",
+      "toast": "\u00b6",
       "when": {
        "found_the_shed_antler": 1
       }
@@ -1302,15 +1302,15 @@
     "companion_source": {
      "companion_id": "wolf_companion",
      "kind": "tamed",
-     "taken_toast": "The pup sniffs your hand once, twice \u2014 then leans its whole small weight against your leg. That's that, then."
+     "taken_toast": "\u00b6"
     },
     "display_name": "Wolf Den",
     "id": "wolf_den",
     "kind": "prop",
-    "locked_toast": "The pup shrinks back. You don't have the hands for this yet \u2014 hands like that are learned on hurt animals, one at a time. There's a corusdeer down in the grass east of here that would let you start.",
-    "observe": "A scrape under the boulder line, and in it one wolf pup, ribs showing, too young to be alone. The pack that left it is not coming back.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "requires_skill": "lesser_bond",
-    "skill_hint_toast": "It watches your hands. Whatever you mean to offer it, offer it properly.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "river_wolf"
    },
    {
@@ -1322,19 +1322,19 @@
     "companion_source": {
      "companion_id": "razorbeak_companion",
      "kind": "tamed",
-     "taken_toast": "It bites you exactly once, decides you took it well, and climbs your sleeve to glare at the horizon from a better vantage."
+     "taken_toast": "\u00b6"
     },
     "display_name": "Razorbeak Chick",
     "id": "razorbeak_chick",
     "kind": "prop",
-    "locked_toast": "It snaps at your fingers. Fair enough. Nothing wild takes an offer from hands that have never tended anything.",
-    "observe": "A razorbeak chick, blown or chased from the nest scrape, hissing at the whole world from behind a tussock. The nest is close. The parents are not.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "requires_skill": "lesser_bond",
-    "skill_hint_toast": "It stops hissing when you crouch. Interested, then \u2014 if you make the offer the right way.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "razorbeak"
    },
    {
-    "_comment": "GH#332 SPRING LITTER, rung 1 of 3. Tame props are consumed permanently, so a re-bond needs its own row. A rung opens on one more `companion_lost` (banked ONLY by a TAMED downed-clear) and NEVER closes on a counter -- a counter `absent` erased rungs nobody visited. Being TAKEN retires it (`removed_entities`), so rungs COEXIST on distinct cells. `companion: \"\"` = empty slot.",
+    "_comment": "GH#332 SPRING LITTER, rung 1 of 3. Tame props are consumed permanently, so a re-bond needs its own row. A rung opens on one more `companion_lost` (banked ONLY by a TAMED downed-clear) and NEVER closes on a counter. Being TAKEN retires it (`removed_entities`), so rungs COEXIST on distinct cells. `companion: \"\"` = empty slot.",
     "cell": [
      12,
      22
@@ -1342,13 +1342,13 @@
     "companion_source": {
      "companion_id": "wolf_companion",
      "kind": "tamed",
-     "taken_toast": "It walks out of the scrape without being asked and stands on your foot. The pack keeps its own counsel about who leaves with whom."
+     "taken_toast": "\u00b6"
     },
     "display_name": "Spring Litter",
     "id": "wolf_den_spring",
     "kind": "prop",
-    "locked_toast": "The pup watches you the way it watches weather. Hands that can take an offer like this are learned on hurt animals, one at a time.",
-    "observe": "The scrape under the boulder line has been dug out again and re-lined. A season on, and there is a pup in it: bolder than the last one, and entirely unimpressed by you.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "present_when": {
      "companion": "",
      "requires": {
@@ -1356,7 +1356,7 @@
      }
     },
     "requires_skill": "lesser_bond",
-    "skill_hint_toast": "It has not learned to be afraid of hands yet. Make the offer before it does.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "river_wolf"
    },
    {
@@ -1368,13 +1368,13 @@
     "companion_source": {
      "companion_id": "razorbeak_companion",
      "kind": "tamed",
-     "taken_toast": "It stalks the length of your arm, finds the shoulder acceptable, and settles there facing backwards. Somebody has to watch the way you came."
+     "taken_toast": "\u00b6"
     },
     "display_name": "Razorbeak Fledgling",
     "id": "razorbeak_chick_fledgling",
     "kind": "prop",
-    "locked_toast": "It flares its hackles and holds the tussock. Nothing wild takes an offer from hands that have never tended anything.",
-    "observe": "The nest scrape has fledged another. This one has already worked out that the tussock is cover and that you are not, and it is holding both facts against you.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "present_when": {
      "companion": "",
      "requires": {
@@ -1382,7 +1382,7 @@
      }
     },
     "requires_skill": "lesser_bond",
-    "skill_hint_toast": "It goes still when you crouch, which from a razorbeak is an invitation. Make the offer properly.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "razorbeak"
    },
    {
@@ -1394,13 +1394,13 @@
     "companion_source": {
      "companion_id": "wolf_companion",
      "kind": "tamed",
-     "taken_toast": "It leans, the way the first one leaned. You are not being given a replacement. You are being given another one."
+     "taken_toast": "\u00b6"
     },
     "display_name": "Late Litter",
     "id": "wolf_den_late_litter",
     "kind": "prop",
-    "locked_toast": "The pup does not move. Hands that can take an offer like this are learned on hurt animals, one at a time.",
-    "observe": "Late in the season and thin with it, but another scrape further down the boulder line is occupied. Whatever else the floodplains do, they keep doing this.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "present_when": {
      "companion": "",
      "requires": {
@@ -1408,11 +1408,11 @@
      }
     },
     "requires_skill": "lesser_bond",
-    "skill_hint_toast": "It is too tired to flinch. Offer, and mean it.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "river_wolf"
    },
    {
-    "_comment": "b1 #199 'The Chieftain's Price'. Conversation-first (NO trigger radius \u2014 she waits; interact opens rags_meeting; combat only via the betrayal close's start_combat). present_when = the composed conduct+relationship gate (design doc 2026-07-19-b1-rags-design.md section 2; absent arm = never hunted the camp). Interim sprite: rags registry entry reuses the goblin_chieftain sheet reduced+tinted until the c3 bespoke (VISUAL-LOG row). Finding 18: present_when mirrors the encounter requires -- she does not STAND on the rise before the Erin gate; STAYS post-settle (farewell re-talk is pinned, rags_meeting_loop).",
+    "_comment": "b1 #199 'The Chieftain's Price'. Conversation-first: NO trigger radius (she waits; interact opens rags_meeting, combat only via the betrayal close's start_combat). present_when is the composed conduct+relationship gate and MIRRORS the encounter's own requires -- she does not STAND on the rise before the Erin gate, and STAYS post-settle (farewell re-talk is pinned, rags_meeting_loop). Interim sprite: the rags registry entry reuses the goblin_chieftain sheet until the c3 bespoke.",
     "allies": [],
     "arena": "goblin_ambush",
     "cell": [
@@ -1435,10 +1435,10 @@
      "rags",
      "goblin_raider"
     ],
-    "gate_closed_toast": "The small figure on the rise watches you. It does not move to meet you.",
+    "gate_closed_toast": "\u00b6",
     "id": "rags_scouting_party",
     "kind": "encounter",
-    "observe": "A small figure on the rise south, standing very still. It has been watching you for a while, and it wants you to know that.",
+    "observe": "\u00b6",
     "on_victory": [
      "won_combat",
      "drove_off_rags",
@@ -1466,7 +1466,7 @@
     ],
     "display_name": "A Cut in the Turf",
     "door_when": {
-     "open_toast": "You go down between the stones sideways, the way the flattened grass says to, and the plains close over the top of you.",
+     "open_toast": "\u00b6",
      "requires": {
       "rags_meeting_settled": 1
      },
@@ -1478,7 +1478,7 @@
     },
     "id": "rags_camp_mouth",
     "kind": "prop",
-    "observe": "Two low stones lean together where the ground folds away, and the grass between them is beaten flat by small feet. Smoke comes up thin and does not spread.",
+    "observe": "\u00b6",
     "present_when": {
      "absent": {
       "drove_off_rags": 1
@@ -1508,10 +1508,10 @@
      "mothbear_a",
      "mothbear_b"
     ],
-    "gate_closed_toast": "The road's empty in the daylight. Whatever works this verge keeps to the dark.",
+    "gate_closed_toast": "\u00b6",
     "id": "road_mothbears",
     "kind": "encounter",
-    "observe": "Two heavy shapes working the verge of the wagon road, wings folded tight, close enough to the carter camps to smell the fires. Only after dark.",
+    "observe": "\u00b6",
     "on_victory": "mothbears_culled",
     "present_when": {
      "phase": [
@@ -1532,17 +1532,17 @@
     "id": "wolf_scent_cache_floodplains",
     "item": "traveler_charm",
     "kind": "prop",
-    "observe": "A scatter of old bones the wolf will not leave alone. It noses through them, circles, noses again, and looks back at you as though the next part is your job.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "found_wolf_cache_floodplains",
     "present_when": {
      "companion": "wolf_companion"
     },
     "sprite": "gnaw_pile",
-    "toast": "You dig where the wolf keeps insisting. Under the bones, wrapped in rotted cloth: a charm on a cord gone soft with age.",
+    "toast": "\u00b6",
     "variants": [
      {
       "item": "",
-      "toast": "Turned bones and nothing under them now. The wolf has lost interest, which is its own verdict.",
+      "toast": "\u00b6",
       "when": {
        "found_wolf_cache_floodplains": 1
       }
@@ -1558,13 +1558,13 @@
     "display_name": "Rock Over the Pond",
     "id": "razorbeak_vantage_floodplains",
     "kind": "prop",
-    "observe": "A boulder standing clear of the reeds with the whole pond below it. The razorbeak keeps climbing it and screaming at the water, which is either an opinion or a report.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "found_pond_vantage",
     "present_when": {
      "companion": "razorbeak_companion"
     },
     "sprite": "boulder",
-    "toast": "It wheels out over the pond, hangs, and comes back loud. There is something square and man-made on the bottom, a stride out from the bank \u2014 too far to reach across open water, and water can be made to bear weight."
+    "toast": "\u00b6"
    },
    {
     "_comment": "AUTHORED arm only, never a `burnable` tag: flame_jet has no `burns` flag, so no other burnable prop moves. ONE-SHOT via present_when.absent. Off every QA-walked cell, 5 clear of goblin_encounter_1.",
@@ -1575,12 +1575,12 @@
     "display_name": "Corusdeer Carcass",
     "id": "corusdeer_carcass",
     "kind": "prop",
-    "locked_toast": "The meat is good and it will not stay good. Raw and cold, it is no use to you, and you have no way to change that.",
-    "observe": "A young corusdeer down in the grass with its neck wrong, cold hours ago and not yet found by anything with teeth. The hide is whole. The haunches are worth carrying, if you had a way to make them keep.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "on_skill_use": {
      "accomplishment": "cooked_a_kill",
      "item": "seared_venison",
-     "toast": "[Flame Jet] \u2014 You run the lance along the haunch until the fat goes loud and the outside blackens. You cut what will travel and leave the rest to the grass."
+     "toast": "\u00b6"
     },
     "present_when": {
      "absent": {
@@ -1588,8 +1588,70 @@
      }
     },
     "requires_skill": "flame_jet",
-    "skill_hint_toast": "Hauling at it with your hands gets you nothing. Fire is what this wants.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "corusdeer_carcass"
+   },
+   {
+    "_comment": "#398 P1 K5 carrier, on the water cell the approach BUMPS: (13,18) south, (14,19) west and the launch pad (13,20) north all face (13,19). Adjacent to no island cell, so it breaks no crossing. APPENDED LAST: verify-untouched pins prose by positional $.entities[N], so a mid-array insert reds it.",
+    "cell": [
+     13,
+     19
+    ],
+    "display_name": "Pond Reeds",
+    "id": "pond_narrows",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "on_interact_accomplishment": "inspected_pond_narrows",
+    "sprite": "pond_reeds",
+    "toast": "\u00b6"
+   },
+   {
+    "_comment": "#398 P1 island stop, north tip. power_level 7 = +2 over rock_crab. sim_combat_batch gates the runner5_warrior5 ENTRANT cell; the warrior2 yardstick stays MEASURED -- it holds no mode, so it never arrives.",
+    "allies": [],
+    "arena": "boulder_flats",
+    "beast": true,
+    "cell": [
+     11,
+     19
+    ],
+    "display_name": "Old Pond Crab",
+    "enemies": [
+     "pond_guardian"
+    ],
+    "id": "pond_guardian",
+    "kind": "encounter",
+    "observe": "\u00b6",
+    "on_victory": "defeated_pond_guardian",
+    "sprite": "rock_crab"
+   },
+   {
+    "_comment": "#398 P1 reward, west tip. (11,20) is the ONLY stance the crab is fightable from, so the case never spawns under the player. Its observe is the quest hook.",
+    "cell": [
+     10,
+     20
+    ],
+    "display_name": "Weather-Sealed Cache",
+    "id": "pond_cache",
+    "item": "pond_survey_seal",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "on_interact_accomplishment": "opened_pond_cache",
+    "present_when": {
+     "requires": {
+      "defeated_pond_guardian": 1
+     }
+    },
+    "sprite": "pond_cache",
+    "toast": "\u00b6",
+    "variants": [
+     {
+      "item": "",
+      "toast": "\u00b6",
+      "when": {
+       "opened_pond_cache": 1
+      }
+     }
+    ]
    }
   ],
   "floor_layers": [
@@ -2055,6 +2117,38 @@
     "sway": true
    }
   ],
+  "skill_gates": {
+   "pond_island": {
+    "modes": [
+     {
+      "cells": [
+       [
+        12,
+        20
+       ]
+      ],
+      "mechanism": "property",
+      "skill_property": "freezes"
+     },
+     {
+      "from": [
+       13,
+       20
+      ],
+      "mechanism": "blink",
+      "min_range": 2,
+      "to": [
+       11,
+       20
+      ]
+     }
+    ],
+    "rewards": [
+     "pond_cache",
+     "pond_guardian"
+    ]
+   }
+  },
   "unsteady": [
    [
     31,
@@ -2069,7 +2163,7 @@
     6
    ]
   ],
-  "unsteady_toast": "Scree slides out from under your boot and rattles away down the slope. Getting up that needs surer feet than yours.",
+  "unsteady_toast": "\u00b6",
   "walls": {
    "segments": [
     {
@@ -2158,6 +2252,23 @@
      "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
      "tile_px": 16,
      "to": [
+      10,
+      19
+     ],
+     "water": true
+    },
+    {
+     "cap": [
+      1,
+      5
+     ],
+     "from": [
+      12,
+      19
+     ],
+     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+     "tile_px": 16,
+     "to": [
       13,
       19
      ],
@@ -2170,6 +2281,23 @@
      ],
      "from": [
       8,
+      20
+     ],
+     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+     "tile_px": 16,
+     "to": [
+      9,
+      20
+     ],
+     "water": true
+    },
+    {
+     "cap": [
+      1,
+      5
+     ],
+     "from": [
+      12,
       20
      ],
      "sheet": "res://assets/tiles/free_pack/Water_tiles.png",

@@ -31,7 +31,6 @@ const EXPECTED_ITEMS := {
 	"wool_tuft": ["Worth 1 gold"],
 	"shed_antler": ["Worth 6 gold"],
 	"loose_arrow": ["Worth 1 gold"],
-	"sealed_factor_bale": ["Worth 28 gold"],
 	# GH#380/#383 yields: both priceless (never merchandise), so only the
 	# next_fight clause composes.
 	"improvised_cudgel": ["Next fight: +1 damage (single use)"],
@@ -79,7 +78,6 @@ const EXPECTED_ITEMS := {
 	"tonic_of_the_clear_eye": ["Next fight: +1 damage, +2 HP (single use)", "Worth 16 gold"],
 	"construct_core_shard": ["+3 HP", "Reduces every hit taken by 1", "Resonance 2", "Grants [Read the Field] in combat"],
 	"warded_coil_charm": ["+2 HP", "Resonance 1"],
-	"wardwrights_counterweight": ["+2 HP", "Resonance 1", "Grants [Dangersense] in combat"],
 	"kingslayer_fang": ["+1 damage on melee hits", "+1 HP", "Resonance 1", "Grants [Battle Momentum] in combat"],
 	"guardian_ward_fragment": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Grants [Guarding Ward] in combat"],
 	# #398 P5 briar-arch coffer yield. warded_coil_charm's curve (hp_mod 2,
@@ -87,6 +85,8 @@ const EXPECTED_ITEMS := {
 	# price -- so its lines are that fragment's MINUS the reduction clause. The
 	# missing row here was review C2: the suite printed FAIL and still exited 0.
 	"rootbound_ward_token": ["+2 HP", "Resonance 1", "Grants [Guarding Ward] in combat"],
+	"wardwrights_counterweight": ["+2 HP", "Resonance 1", "Grants [Dangersense] in combat"],
+	"sealed_factor_bale": ["Worth 28 gold"],
 	"pond_survey_seal": ["Reduces every hit taken by 1", "Resonance 1"],
 	# 2026-07-26 Act V terminus reward (data/maps/dungeon/seal_vault.json's
 	# vault_anchor_stone). construct_core_shard's curve, guardian_ward's grant,
@@ -259,7 +259,7 @@ const EXPECTED_FIELD_SKILLS := {
 	# hotbar readout falls back to display_name -- description out on the map
 	# while the combat HUD keeps the cost line pinned in EXPECTED_SKILLS.
 	"icy_floor": [],
-	"flame_jet": [],
+	"flame_jet": []
 }
 
 
