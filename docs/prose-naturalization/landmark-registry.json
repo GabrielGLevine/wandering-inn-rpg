@@ -1,5 +1,5 @@
 {
- "_count": 10,
+ "_count": 16,
  "_dispositions": {
   "KEEP-AS-IS": "Ships as written. Do not touch.",
   "RESTAGE": "Keep the beat AND keep the correction. Lose the CAPS and the staging ONLY. Nothing else about the string changes."
@@ -85,6 +85,34 @@
    "why": "The second of mercantile_alleys' two distinct chains -- the only file in the corpus entitled to two beats (§5). Ends on an absence: 'a table with nobody left standing beside it.'"
   },
   {
+   "beat": "counting-room chain payoff (#398 P4)",
+   "display_name": "The Factor's Closed Account",
+   "disposition": "NOT-A-LANDMARK",
+   "field": "victory_toast",
+   "field_path": "$.entities[19].victory_toast",
+   "file": "wandering_inn_game/data/maps/invrisil/mercantile_alleys.json",
+   "holdout": false,
+   "id": "map:invrisil/mercantile_alleys.json:$.entities[19].victory_toast",
+   "protected": false,
+   "source": "heuristic-landmark",
+   "text": "The counting room falls quiet. A sealed bale remains under the desk.",
+   "why": "Heuristic false positive rather than a landmark: two plain physical sentences, no epigram, no inferred agent, ending on a present object ('A sealed bale remains under the desk') that the next beat picks up. It costs the file no landmark budget because it makes no landmark move."
+  },
+  {
+   "beat": "counting-room cache opened (#398 P4)",
+   "display_name": "A Factor-Sealed Bale",
+   "disposition": "NOT-A-LANDMARK",
+   "field": "open_toast",
+   "field_path": "$.entities[20].open_toast",
+   "file": "wandering_inn_game/data/maps/invrisil/mercantile_alleys.json",
+   "holdout": false,
+   "id": "map:invrisil/mercantile_alleys.json:$.entities[20].open_toast",
+   "protected": false,
+   "source": "heuristic-landmark",
+   "text": "The seal parts. The bale is compact enough to carry and valuable enough to explain the locked room.",
+   "why": "The one of the three that genuinely trips round-2 doctrine: 'compact enough to carry and valuable enough to explain the locked room' is the affordance formula twice over (amendment 4) plus an interpretive closer that tells the player what to conclude. RESTAGE = keep the beat (the seal parts, the bale is worth the room) and lose the formula; re-authored on the round-2 train's mop-up commit."
+  },
+  {
    "beat": "the sewer grate descent",
    "display_name": "Sewer Grate",
    "disposition": "KEEP-AS-IS",
@@ -115,6 +143,20 @@
    "why": "RULED at #397 integration: GRANT from the reserve, reserve 4->3. The variant fires only under `when {elevator_pass_stamped: 1}`, so the reversal is earned by a gate the player already passed; the civic text is quoted rather than paraphrased; and the second sentence turns the ordinance onto the object in the player's own pocket. Petitioned by the pallass lane, DEFERRED to close in keeps-petitions/pallass.json, granted here. The string ships BYTE-AS-IS -- KEEP-AS-IS is the whole disposition, and the grant changes the registry and the reserve arithmetic, nothing else. Its heuristic register stays `scenic`: classify_row never saw a landmark here, and papering over that with an override would hide the fact that this beat exists by allocation rather than by rule."
   },
   {
+   "beat": "briar-arch cache opened (#398 P1)",
+   "display_name": "Root-Wrapped Coffer",
+   "disposition": "NOT-A-LANDMARK",
+   "field": "open_toast",
+   "field_path": "$.entities[32].open_toast",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "holdout": false,
+   "id": "map:ruin/ruin_surface.json:$.entities[32].open_toast",
+   "protected": false,
+   "source": "heuristic-landmark",
+   "text": "The coffer opens under the roots. A ward-token rests inside.",
+   "why": "Heuristic false positive, same class as entities[19]: two physical sentences, the second naming what is present ('A ward-token rests inside'). The matcher flags it only because a short final sentence follows a longer one -- the fact-stop shape the bible treats as the unlimited default."
+  },
+  {
    "beat": "the plinth / Door retrieval (base rendering)",
    "display_name": "A Cracked Plinth",
    "disposition": "RESTAGE",
@@ -141,6 +183,48 @@
    "source": "heuristic-landmark",
    "text": "Beneath where the door lay, still seated in its groove: the anchor stone. The Horns left nothing else behind.",
    "why": "The stronger of the two renderings: it spends its landmark allowance on an absence ('The Horns left nothing else behind.'). §4 rule 4's worked example. Do not touch."
+  },
+  {
+   "beat": "collapsed-gallery cache opened (#398 P3) -- shared payoff 1/3",
+   "display_name": "Delver's Strongbox",
+   "disposition": "NOT-A-LANDMARK",
+   "field": "open_toast",
+   "field_path": "$.entities[13].open_toast",
+   "file": "wandering_inn_game/data/maps/sewers/deep_tunnels.json",
+   "holdout": false,
+   "id": "map:sewers/deep_tunnels.json:$.entities[13].open_toast",
+   "protected": false,
+   "source": "heuristic-landmark",
+   "text": "The strongbox yields an old brass clasp, still carrying a steady protective enchantment.",
+   "why": "One beat, three routes. Plain physical statement of what the box yields; the enchantment clause is the item's own property, not narrator inference."
+  },
+  {
+   "beat": "collapsed-gallery cache opened (#398 P3) -- shared payoff 2/3",
+   "display_name": "Delver's Strongbox",
+   "disposition": "NOT-A-LANDMARK",
+   "field": "open_toast",
+   "field_path": "$.entities[14].open_toast",
+   "file": "wandering_inn_game/data/maps/sewers/deep_tunnels.json",
+   "holdout": false,
+   "id": "map:sewers/deep_tunnels.json:$.entities[14].open_toast",
+   "protected": false,
+   "source": "heuristic-landmark",
+   "text": "The strongbox yields an old brass clasp, still carrying a steady protective enchantment.",
+   "why": "Byte-identical to the pick route's by design; see 1/3."
+  },
+  {
+   "beat": "collapsed-gallery cache opened (#398 P3) -- shared payoff 3/3",
+   "display_name": "Delver's Strongbox",
+   "disposition": "NOT-A-LANDMARK",
+   "field": "open_toast",
+   "field_path": "$.entities[15].open_toast",
+   "file": "wandering_inn_game/data/maps/sewers/deep_tunnels.json",
+   "holdout": false,
+   "id": "map:sewers/deep_tunnels.json:$.entities[15].open_toast",
+   "protected": false,
+   "source": "heuristic-landmark",
+   "text": "The strongbox yields an old brass clasp, still carrying a steady protective enchantment.",
+   "why": "Byte-identical to the pick route's by design; see 1/3."
   },
   {
    "beat": "the fissure descent",
