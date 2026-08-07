@@ -1,0 +1,2 @@
+ship_asset_scan: 932 referenced asset paths checked.
+ship_asset_scan: OK -- every referenced asset exists on disk, no pending slots.

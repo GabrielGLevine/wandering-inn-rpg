@@ -116,6 +116,11 @@ const LOADOUT_CELLS := [
 	{"name": "hollow_herb_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["hollow_herb_sachet"]},
 	{"name": "guardian_ward_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["guardian_ward_fragment"]},
 	{"name": "moonhide_fetish_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["moonhide_fetish"]},
+	# #398 P1 review M4: the pond seal was a stat-clone of warded_coil_charm, so it
+	# moved onto flat damage_reduction with NO hp_mod -- the one axis the accessory
+	# pool leaves open. Measured here for the same reason every other unique
+	# accessory above is: a DR carrier changes outcomes when it is worn.
+	{"name": "pond_seal_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["pond_survey_seal"]},
 ]
 
 const ENCOUNTER_CELLS := [
@@ -127,6 +132,10 @@ const ENCOUNTER_CELLS := [
 	{"name": "raskghar_scouts_w2_relc", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": false},
 	{"name": "raskghar_scouts_w2_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": true},
 	{"name": "raskghar_scouts_w5_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior5_mage5", "solo": true},
+	# #398-p2 collapsed-gallery stop: three Shield Spiders are +4 power over
+	# the shipped two-spider sewer nest. At the deep-tunnels build it measures
+	# 0.61 wins / 4 median rounds, inside the standard 0.55-0.95 / 3-12 gate.
+	{"name": "collapsed_gallery_nest_w10_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider", "shield_spider"], "build": "warrior5_mage5", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "crate_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
 	{"name": "crate_scavengers_w1_klbkch", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": false, "ally": "klbkch"},
 	{"name": "supplier_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
@@ -180,6 +189,22 @@ const ENCOUNTER_CELLS := [
 	# Floodplains band; they are recorded in the PR body (RULING A).
 	{"name": "camp_ground_press_t1_rags_ally", "arena": "boulder_flats", "enemies": ["plains_scavenger_a", "plains_scavenger_b", "plains_scavenger_lead"], "build": "warrior2", "ally": "rags_ally", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "camp_ground_press_t1_spear_ally", "arena": "boulder_flats", "enemies": ["plains_scavenger_a", "plains_scavenger_b", "plains_scavenger_lead"], "build": "warrior2", "ally": "goblin_spear_ally", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# #398 P1 pond-island encounter cells. Both solo -- the map entity fields no
+	# ally. TWO cells because a skill-gated pocket has TWO different populations
+	# and only one of them can own a band (region-tiers.md "Gated vs.
+	# measured-only"): the region yardstick is warrior2, but warrior2 CANNOT
+	# REACH this island -- neither a freezes carrier nor [Double Step] is in its
+	# kit -- so gating the yardstick cell would contract a band to a build that
+	# never arrives. The yardstick cell therefore stays MEASURED, in the
+	# rock_crab_nest_t1_solo shape ("do not solo this at warrior2"), and the
+	# GATING AUTHORITY is the entrant build that actually crosses.
+	{"name": "pond_guardian_t1_warrior2_solo", "arena": "boulder_flats", "enemies": ["pond_guardian"], "build": "warrior2", "solo": true},
+	# The gate class made honest: [Double Step] arrives at Runner 5
+	# (completed_delivery 10, classes.json), and a player who ran ten deliveries
+	# on the Floodplains holds a combat class too -- warrior 5 is the same
+	# melee_hit-18 kit both #398 P1 mode fixtures field, so this cell IS the
+	# build the mode-B canonical plays. Tune combatant data only.
+	{"name": "pond_guardian_t1_runner5_warrior5_solo", "arena": "boulder_flats", "enemies": ["pond_guardian"], "build": "t1_runner5_warrior5", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const BOSS_CELLS := [
@@ -203,6 +228,64 @@ const RUIN_CELLS := [
 	# alley_fence_t3_warrior10_solo: retune or rename moves both or the tier
 	# gate reds.
 	{"name": "ruin_guardian_w8_solo", "arena": "ruin_court", "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"], "build": "warrior5_mage5", "solo": true},
+	# #398 P5's +3-band pocket -- BOTH modes open the same field, so both routes
+	# are measured here. Review M4 reset all four numbers; the two dispositions
+	# below are deliberately DIFFERENT and the reason is this file's own doctrine.
+	#
+	# THE WARRIOR CELL IS THE GATED ONE, because it is the only REACHABLE one.
+	# `WICombatAI._act_once` defaults the PC's empty "ai" to the melee profile, so
+	# a real player's PC never casts under autoplay -- the blade route is what an
+	# actual run fights this pocket with. Measured 2026-08-07: 0.84 wins / median
+	# 4 rounds (min 3, max 6), inside the standard 0.55-0.95 / 3-12 gate with
+	# margin at BOTH ends. It was authored at 0.95 -- exactly ON the ceiling, zero
+	# headroom, a red waiting for any unrelated drift -- which is what review M4
+	# caught. The 0.11 of ceiling margin is the fix; the band stays the file-wide
+	# standard rather than a bespoke tight one, so a sibling lane's tuning reds it
+	# for a real reason and not for being 0.01 off a hand-picked number.
+	#
+	# WHAT MOVED to get there: both wards gained `power_strike` and NOTHING ELSE
+	# (no stat, die, or arena edit). They were pure basic-attackers, so a tanky
+	# warrior simply out-attritioned two big HP pools -- 0.95 was the absence of a
+	# threat, not a tuned number. `_act_guard` honors power_strike natively (same
+	# `_power_strike_ready` branch `_act_melee` uses) and the region's own
+	# `ruin_guardian` line already fights with burst, so this is the region's
+	# existing shape rather than a new mechanic. Measured sensitivity, for whoever
+	# retunes next: ward DAMAGE is the wrong lever -- +1 die on both moved the
+	# warrior 0.95->0.93 but the caster 0.70->0.64, and +16 con moved the warrior
+	# to 0.93 while dropping the caster to 0.53. Every buff costs the fragile
+	# build ~3x what it costs the durable one; only the burst branch moved the
+	# warrior alone.
+	{"name": "briar_arch_wards_warrior11_relc", "arena": "ruin_court", "enemies": ["briar_arch_ward_a", "briar_arch_ward_b"], "build": "p5_warrior11", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# THE CASTER CELL IS MEASURED-ONLY, matching every other caster-profile build
+	# in this file (`warrior2_mage2_caster`, `pure_mage10_caster`,
+	# `warrior5_mage5_caster` all carry `gated: false`). The caster profile is a
+	# MEASUREMENT AXIS, not a play configuration -- see the autoplay note above --
+	# so a win-rate gate on it fences something no player can reach. It shipped
+	# GATED, and that was the binding constraint that made the wards untunable:
+	# every ward buff that moved the warrior off its ceiling pushed this cell
+	# toward 0.55, so the pocket was pinned between a false floor and a real
+	# ceiling. Measured 2026-08-07: 0.65 wins / median 4 (min 3, max 5) -- still
+	# comfortably above the standard floor it is no longer held to.
+	# The residual 19-point blade-vs-caster spread (0.84 vs 0.65) is archetype
+	# variance at a fixed level, NOT a pocket defect: it is the same confound
+	# sim_class_parity.gd refuses to gate whole-band spread over. Recorded, not
+	# tuned to zero -- forcing them equal means tuning the wards against a build
+	# no run fights them with.
+	{"name": "briar_arch_wards_mage11_relc", "arena": "ruin_court", "enemies": ["briar_arch_ward_a", "briar_arch_ward_b"], "build": "p5_mage11_caster", "solo": false},
+	# Review M3: the ally-less pair. briar_arch_wards carries `ally_requires:
+	# {met_relc: 1}`, so a run that never met Relc fights this pocket SOLO -- a
+	# real reachable configuration with no cell until now. MEASURED-UNGATED, the
+	# `ruin_guardian_w8_solo` disposition for exactly the same reason: this region
+	# tier is authored around the ally, and its shipped power-8 stop already
+	# measures 0.13 solo. Gating these would either ratify a near-unwinnable band
+	# or force the ally fight to be trivial. They exist so a future tune cannot
+	# move the solo floor silently. Measured 2026-08-07: warrior 0.57 / caster
+	# 0.38, both median 4. Note the warrior solo leg is genuinely WINNABLE, unlike
+	# the power-8 stop's 0.13 -- but 0.57 sits 0.02 off the standard floor, which
+	# is the same zero-margin mistake review M4 just fixed at the other end, so it
+	# stays measured rather than ratified into a band it barely clears.
+	{"name": "briar_arch_wards_warrior11_solo", "arena": "ruin_court", "enemies": ["briar_arch_ward_a", "briar_arch_ward_b"], "build": "p5_warrior11", "solo": true},
+	{"name": "briar_arch_wards_mage11_solo", "arena": "ruin_court", "enemies": ["briar_arch_ward_a", "briar_arch_ward_b"], "build": "p5_mage11_caster", "solo": true},
 ]
 
 const RIVERFARM_CELLS := [
@@ -464,6 +547,9 @@ const INVRISIL_CELLS := [
 	# rest_bravo_a/b's own con/weapon_die in combatants.json, which this lane does
 	# not own -- recorded as a seam, not silently absorbed. Margins 0.08/0.06.
 	{"name": "rest_bravos_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["rest_bravo_a", "rest_bravo_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.85, "win_hi": 0.99, "check_rounds": true},
+	# #398 P4 counting-room pocket. Both new combatants sit 2-3 levels above
+	# Invrisil's 8-10 band; this is the shipped solo composition and arena.
+	{"name": "counting_room_guard_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["factor_enforcer", "factor_clerk_guard"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const BUILDS := [
@@ -481,6 +567,12 @@ const BUILDS := [
 	{"name": "beast_master10_melee", "classes": {"beast_master": 10}, WIKeys.AI: "melee", "matrix": false},
 	{"name": "druid14_caster", "classes": {"druid": 14}, WIKeys.AI: "caster", "matrix": false},
 	{"name": "mage5_necromancer7_caster", "classes": {"mage": 5, "necromancer": 7}, WIKeys.AI: "caster", "matrix": false},
+	# #398 P1: the skill-gated pocket's ENTRANT build. matrix:false -- it exists
+	# for the pond-island cell only, not as a new COMPOSITIONS column. Runner
+	# contributes dex (stat_growth) and, at 5, [Double Step]; the fight itself is
+	# carried by the warrior half, which is why this reads as a real T1-tail
+	# melee build rather than a courier trying to punch a crab.
+	{"name": "t1_runner5_warrior5", "classes": {"runner": 5, "warrior": 5}, "matrix": false},
 	{"name": "warrior5_mage5", "classes": {"warrior": 5, "mage": 5}, "gated": false},
 	{"name": "warrior5_mage5_caster", "classes": {"warrior": 5, "mage": 5}, WIKeys.AI: "caster", "gated": false},
 	{"name": "t3_spellsword9", "classes": {"spellsword": 9}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
@@ -488,6 +580,8 @@ const BUILDS := [
 	{"name": "t3_warrior10", "classes": {"warrior": 10}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "t4_spellsword11_party", "classes": {"spellsword": 11}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "t4_spellsword14_party", "classes": {"spellsword": 14}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+	{"name": "p5_mage11_caster", "classes": {"mage": 11}, WIKeys.AI: "caster", "matrix": false, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+	{"name": "p5_warrior11", "classes": {"warrior": 11}, WIKeys.AI: "melee", "matrix": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	# Second Wind wave (#165): terminal pure-line L14 solo builds. All
 	# matrix:false (they run only in SECOND_WIND_CELLS, cell-selection-tuned --
 	# never in the COMPOSITIONS matrix). Weapons gate the kit where the line is
@@ -565,6 +659,24 @@ const DUNGEON_CELLS := [
 	# The warden at Pallass's T4 build: the shared-level rung proving the warden
 	# sits a band ABOVE the forge golem, not merely later in the story.
 	{"name": "seal_warden_t4_sw11_solo", "arena": "vault", "enemies": ["seal_warden"], "build": "t4_spellsword11_party", "solo": true},
+	# --- #398-P3 pocket lane --- both disjoint access builds fight the same guard.
+	# BANDS RE-MEASURED at the review (M8). The shipped pair carried the default
+	# 0.55-0.95 on both cells and the swordsman measured EXACTLY 0.95: a band
+	# whose upper edge IS the measurement is not an envelope, it is a red waiting
+	# for the next tune. These are measured +/- 0.07 (the repo idiom), against
+	# the re-tuned construct (ai melee, con 30 -- its combatants.json _comment
+	# carries the four-profile measurement that forced the retune):
+	#   swordsman14   win 0.93, median 3 rounds (min 2, max 4) -> 0.86-0.99
+	#   infiltrator14 win 0.63, median 3 rounds (min 3, max 5) -> 0.56-0.70
+	# The swordsman ceiling is clipped to 0.99 rather than 1.00 ON PURPOSE: a
+	# flat 1.00 means the guard stopped being a fight, which is worth a red.
+	# The ~0.30 spread between the cells is INHERENT to one shared guard fought
+	# by two class-disjoint pure-L14 builds (infiltrator14's own bestiary cell is
+	# two sewer_vermin; swordsman14's is three raskghar_scouts) -- the same
+	# ai_kit confound this suite already refuses to gate whole-band, so the two
+	# cells carry per-build envelopes rather than one common band.
+	{"name": "side_vault_construct_t5_swordsman14_solo", "arena": "trapped_halls_snare", "enemies": ["side_vault_construct"], "build": "swordsman14", "solo": true, "win_lo": 0.86, "win_hi": 0.99, "check_rounds": true},
+	{"name": "side_vault_construct_t5_infiltrator14_solo", "arena": "trapped_halls_snare", "enemies": ["side_vault_construct"], "build": "infiltrator14", "solo": true, "win_lo": 0.56, "win_hi": 0.70, "check_rounds": true},
 ]
 
 const BESTIARY_CELLS := [
@@ -955,10 +1067,7 @@ func _init() -> void:
 		var relc_downed := 0
 		var has_relc := not bool(cell.get("solo", false))
 		for seed_v in range(1, RUNS_PER_CELL + 1):
-			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
-			pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
-			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
-			pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
+			var pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
 			var cfgs: Array = [pc]
 			if has_relc:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
@@ -998,6 +1107,9 @@ func _init() -> void:
 			if win_rate < lo or win_rate > hi:
 				any_failed = true
 				printerr("FAIL [ruin / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
+				any_failed = true
+				printerr("FAIL [ruin / %s]: median rounds %d outside 3-12" % [cell["name"], median])
 
 	for cell: Dictionary in RIVERFARM_CELLS:
 		if not _cell_in_range(): continue

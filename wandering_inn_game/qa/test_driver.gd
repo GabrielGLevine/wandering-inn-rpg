@@ -594,6 +594,15 @@ func _execute(step: Dictionary) -> void:
 			await _assert_dialogue_displayed(step)
 		"assert_state":
 			_assert_state(step)
+		"assert_field_skill_absent":
+			# #398 P5 review L5: the NEGATIVE of `press_field_skill`, reading the
+			# very same `field_hotbar_loadout()` source of truth, so a weapon-gated
+			# Skill's absence from the bar is PROVEN rather than inferred from a
+			# downstream refusal. Falsifiable by construction: equip the matching
+			# weapon family in the fixture and this assert reds.
+			var absent_field_skill := String(step["skill"])
+			if (Game.sim.field_hotbar_loadout() as Array).has(absent_field_skill):
+				_fail("assert_field_skill_absent: %s is on the field bar" % absent_field_skill)
 		"assert_event_logged":
 			if not _has_event(String(step["type"]), step.get("payload_contains", {})):
 				_fail("expected event was never emitted: " + String(step["type"]))

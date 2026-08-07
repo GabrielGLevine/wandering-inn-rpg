@@ -1,0 +1,157 @@
+{"payload":{"seed":9},"t":1755,"type":"sim_initialized"}
+{"payload":{},"t":1785,"type":"ui_title_gate_rendered"}
+{"payload":{"continue_enabled":true,"selectable_rows":5},"t":1848,"type":"ui_title_rendered"}
+{"payload":{"bus":"Music","id":"music_title"},"t":1868,"type":"audio_played"}
+{"payload":{"seed":9},"t":1933,"type":"sim_initialized"}
+{"payload":{"reason":""},"t":1935,"type":"game_loaded"}
+{"payload":{"blocked_cells":21,"floor_cells":280,"map":"trapped_halls"},"t":2017,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":2103,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":2103,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":20},"t":2103,"type":"ui_entities_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":2103,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":1,"map":"trapped_halls"},"t":2107,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[2,10],"entity":"warded_side_vault_snare_tell","showing":true},"t":2107,"type":"ui_affordance_rendered"}
+{"payload":{},"t":2107,"type":"world_ready"}
+{"payload":{"bus":"Music","id":"music_trapped_halls"},"t":2134,"type":"audio_played"}
+{"payload":{"bus":"Ambience","id":"ambience_trapped_halls"},"t":2140,"type":"audio_played"}
+{"payload":{"bar_left":451,"expanded":false,"fallback_labels":["AF","STE","FT","DT"],"group_width":378,"readout_lines":["1  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later.","2  [Stealth] — A soft step that slips past watching eyes and clears ground when blades are drawn.","3  [Find Trap] — A practiced eye for the telltale signs of a trap: a loose stone, a taut wire, a floor that doesn't quite match.","4  [Disarm Trap] — Steady hands and a thief's patience: whatever waits to spring, waits a little longer."],"reason":"prior_waking","slot_numbers":["1","2","3","4"],"slots":4,"toggle_label":"Show details [H]"},"t":2146,"type":"ui_field_hotbar_rendered"}
+{"payload":{"map":"trapped_halls","phase":"day"},"t":2146,"type":"ui_mood_applied"}
+{"payload":{"index":-1,"label":"","skill":""},"t":2146,"type":"ui_field_hotbar_selection_rendered"}
+{"payload":{"fits":true,"height":48,"text":"Esc — menu (save/load)   J — journal   I — inventory","width":400},"t":2147,"type":"ui_hint_rendered"}
+{"payload":{"cell":[2,10],"facing":[0,1]},"t":2176,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":2178,"type":"audio_played"}
+{"payload":{"text":"Trace the wire with [Find Trap], then finish the mechanism with [Disarm Trap]. [Greater Strength] could pry the other plate loose instead."},"t":2192,"type":"toast"}
+{"payload":{"text":"Trace the wire with [Find Trap], then finish the mechanism with [Disarm Trap]. [Greater Strength] could pry the other plate loose instead."},"t":2193,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":2194,"type":"audio_played"}
+{"payload":{"context":"exploration","skill":"find_trap","target":"warded_side_vault_snare_tell"},"t":2204,"type":"skill_used"}
+{"payload":{"bus":"SFX","id":"field_skill_used"},"t":2206,"type":"audio_played"}
+{"payload":{"count":1,"id":"warded_vault_snare_found"},"t":2206,"type":"accomplishment_recorded"}
+{"payload":{"bus":"UI","id":"accomplishment_noted"},"t":2206,"type":"audio_played"}
+{"payload":{"cell":[2,10],"entity":"warded_side_vault_snare_release","showing":true},"t":2206,"type":"ui_affordance_rendered"}
+{"payload":{"fallbacks":0,"sprites":20},"t":2206,"type":"ui_entities_rendered"}
+{"payload":{"lore":false,"text":"[Find Trap] — The wire doubles back beneath the warded plate. Its release sits one finger-width inside the seam."},"t":2207,"type":"toast"}
+{"payload":{"text":"[Find Trap] — The wire doubles back beneath the warded plate. Its release sits one finger-width inside the seam."},"t":2213,"type":"ui_toast_rendered"}
+{"payload":{"text":"[Disarm Trap] can still the release you found. [Greater Strength] could pry the other plate loose instead."},"t":2229,"type":"toast"}
+{"payload":{"text":"[Disarm Trap] can still the release you found. [Greater Strength] could pry the other plate loose instead."},"t":2238,"type":"ui_toast_rendered"}
+{"payload":{"context":"exploration","skill":"disarm_trap","target":"warded_side_vault_snare_release"},"t":2255,"type":"skill_used"}
+{"payload":{"count":1,"id":"warded_vault_disarmed"},"t":2255,"type":"accomplishment_recorded"}
+{"payload":{"count":1,"id":"warded_side_vault_open"},"t":2255,"type":"accomplishment_recorded"}
+{"payload":{"cell":[2,10],"entity":"","showing":false},"t":2255,"type":"ui_affordance_rendered"}
+{"payload":{"fallbacks":0,"sprites":18},"t":2255,"type":"ui_entities_rendered"}
+{"payload":{"lore":false,"text":"[Disarm Trap] — You ease the wire off the catch and pin the spring shut. The vault entrance lies clear."},"t":2256,"type":"toast"}
+{"payload":{"text":"[Disarm Trap] — You ease the wire off the catch and pin the spring shut. The vault entrance lies clear."},"t":2263,"type":"ui_toast_rendered"}
+{"payload":{"cell":[2,10]},"t":2280,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_stone"},"t":2281,"type":"audio_played"}
+{"payload":{"cell":[2,11],"entity":"","showing":false},"t":2281,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[2,11]},"t":2296,"type":"player_moved"}
+{"payload":{"cell":[2,12],"entity":"","showing":false},"t":2296,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[2,12]},"t":2313,"type":"player_moved"}
+{"payload":{"cell":[2,13],"entity":"","showing":false},"t":2313,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[3,12]},"t":2329,"type":"player_moved"}
+{"payload":{"cell":[4,12],"entity":"warded_side_vault_construct","showing":true},"t":2329,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[4,12],"facing":[1,0]},"t":2346,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":2346,"type":"audio_played"}
+{"payload":{"arena":"trapped_halls_snare","order":["pc","side_vault_construct"]},"t":3039,"type":"combat_started"}
+{"payload":{"bus":"Music","id":"music_combat"},"t":3051,"type":"audio_played"}
+{"payload":{"arena":"trapped_halls_snare","blocked_cells":2,"floor_cells":96},"t":3058,"type":"ui_arena_rendered"}
+{"payload":{"text":"Your hotbar (number keys) shows the skills your classes and weapon grant."},"t":3060,"type":"ui_combat_hint_rendered"}
+{"payload":{"text":"[You come to every fight whole. Wounds do not follow you out of one.]"},"t":3060,"type":"ui_combat_hint_rendered"}
+{"payload":{},"t":3060,"type":"ui_combat_shown"}
+{"payload":{"map":"trapped_halls_snare","phase":"day"},"t":3060,"type":"ui_mood_applied"}
+{"payload":{"round":1},"t":3060,"type":"round_started"}
+{"payload":{"id":"pc","skill":"shadowstep"},"t":3060,"type":"passive_applied"}
+{"payload":{"ap":4,"id":"pc","move_pool":5},"t":3061,"type":"turn_started"}
+{"payload":{"slots":5},"t":3061,"type":"ui_hotbar_rendered"}
+{"payload":{"slot":0,"text":"Attack — strike an adjacent enemy"},"t":3061,"type":"ui_slot_info_rendered"}
+{"payload":{"cell":[2,3],"id":"pc"},"t":3071,"type":"combatant_moved"}
+{"payload":{"cell":[3,3],"id":"pc"},"t":3072,"type":"combatant_moved"}
+{"payload":{"cell":[4,3],"id":"pc"},"t":3072,"type":"combatant_moved"}
+{"payload":{"cell":[5,3],"id":"pc"},"t":3073,"type":"combatant_moved"}
+{"payload":{"cell":[6,3],"id":"pc"},"t":3074,"type":"combatant_moved"}
+{"payload":{"id":"pc","move_pool":3},"t":3074,"type":"dashed"}
+{"payload":{"bus":"SFX","id":"dash"},"t":3076,"type":"audio_played"}
+{"payload":{"ap":3,"id":"pc"},"t":3076,"type":"ap_changed"}
+{"payload":{"cell":[7,3],"id":"pc"},"t":3077,"type":"combatant_moved"}
+{"payload":{"cell":[8,3],"id":"pc"},"t":3078,"type":"combatant_moved"}
+{"payload":{"cell":[9,3],"id":"pc"},"t":3079,"type":"combatant_moved"}
+{"payload":{"ap":1,"id":"pc"},"t":3079,"type":"ap_changed"}
+{"payload":{"attacker":"pc","damage":11,"hit":true,"melee":true,"target":"side_vault_construct","target_hp":39},"t":3080,"type":"attack_resolved"}
+{"payload":{"attacker":"pc","beat_type":"attack_resolved","damage":11,"hit":true,"melee":true,"target":"side_vault_construct","target_hp":39},"t":3080,"type":"ui_combat_beat"}
+{"payload":{"bus":"SFX","id":"attack_hit"},"t":3080,"type":"audio_played"}
+{"payload":{"id":"pc"},"t":3081,"type":"turn_ended"}
+{"payload":{"ap":4,"id":"side_vault_construct","move_pool":3},"t":3081,"type":"turn_started"}
+{"payload":{"ap":1,"id":"side_vault_construct"},"t":3082,"type":"ap_changed"}
+{"payload":{"actor":"side_vault_construct","skill":"power_strike","target":"pc"},"t":3082,"type":"skill_resolved"}
+{"payload":{"attacker":"side_vault_construct","damage":22,"hit":true,"melee":true,"target":"pc","target_hp":10},"t":3082,"type":"attack_resolved"}
+{"payload":{"id":"side_vault_construct"},"t":3082,"type":"turn_ended"}
+{"payload":{"round":2},"t":3082,"type":"round_started"}
+{"payload":{"id":"pc","skill":"shadowstep"},"t":3082,"type":"passive_applied"}
+{"payload":{"ap":4,"id":"pc","move_pool":5},"t":3082,"type":"turn_started"}
+{"payload":{"actor":"side_vault_construct","beat_type":"skill_resolved","skill":"power_strike","target":"pc"},"t":3082,"type":"ui_combat_beat"}
+{"payload":{"bus":"SFX","id":"skill_cast_physical"},"t":3083,"type":"audio_played"}
+{"payload":{"attacker":"side_vault_construct","beat_type":"attack_resolved","damage":22,"hit":true,"melee":true,"target":"pc","target_hp":10},"t":3083,"type":"ui_combat_beat"}
+{"payload":{"bus":"Voice","id":"pc_hurt"},"t":3085,"type":"audio_played"}
+{"payload":{"slots":5},"t":3085,"type":"ui_hotbar_rendered"}
+{"payload":{"beats":5},"t":3087,"type":"ui_ai_playback_done"}
+{"payload":{"ap":2,"id":"pc"},"t":3091,"type":"ap_changed"}
+{"payload":{"attacker":"pc","damage":12,"hit":true,"melee":true,"target":"side_vault_construct","target_hp":27},"t":3091,"type":"attack_resolved"}
+{"payload":{"attacker":"pc","beat_type":"attack_resolved","damage":12,"hit":true,"melee":true,"target":"side_vault_construct","target_hp":27},"t":3091,"type":"ui_combat_beat"}
+{"payload":{"ap":0,"id":"pc"},"t":3092,"type":"ap_changed"}
+{"payload":{"attacker":"pc","damage":11,"hit":true,"melee":true,"target":"side_vault_construct","target_hp":16},"t":3093,"type":"attack_resolved"}
+{"payload":{"attacker":"pc","beat_type":"attack_resolved","damage":11,"hit":true,"melee":true,"target":"side_vault_construct","target_hp":16},"t":3093,"type":"ui_combat_beat"}
+{"payload":{"id":"pc"},"t":3094,"type":"turn_ended"}
+{"payload":{"ap":4,"id":"side_vault_construct","move_pool":3},"t":3094,"type":"turn_started"}
+{"payload":{"ap":0,"id":"side_vault_construct"},"t":3094,"type":"ap_changed"}
+{"payload":{"cells":[[8,2],[8,3],[8,4],[9,2],[9,3],[9,4],[10,2],[10,3],[10,4]],"id":"side_vault_construct","skill":"slam"},"t":3094,"type":"windup_declared"}
+{"payload":{"bus":"SFX","id":"skill_windup_tell"},"t":3095,"type":"audio_played"}
+{"payload":{"id":"side_vault_construct"},"t":3095,"type":"turn_ended"}
+{"payload":{"round":3},"t":3095,"type":"round_started"}
+{"payload":{"id":"pc","skill":"shadowstep"},"t":3095,"type":"passive_applied"}
+{"payload":{"ap":4,"id":"pc","move_pool":5},"t":3095,"type":"turn_started"}
+{"payload":{"slots":5},"t":3096,"type":"ui_hotbar_rendered"}
+{"payload":{"beats":4},"t":3097,"type":"ui_ai_playback_done"}
+{"payload":{"ap":2,"id":"pc"},"t":3099,"type":"ap_changed"}
+{"payload":{"attacker":"pc","damage":10,"hit":true,"melee":true,"target":"side_vault_construct","target_hp":6},"t":3100,"type":"attack_resolved"}
+{"payload":{"attacker":"pc","beat_type":"attack_resolved","damage":10,"hit":true,"melee":true,"target":"side_vault_construct","target_hp":6},"t":3100,"type":"ui_combat_beat"}
+{"payload":{"ap":0,"id":"pc"},"t":3101,"type":"ap_changed"}
+{"payload":{"attacker":"pc","damage":9,"hit":true,"melee":true,"target":"side_vault_construct","target_hp":0},"t":3101,"type":"attack_resolved"}
+{"payload":{"attacker":"pc","beat_type":"attack_resolved","damage":9,"hit":true,"melee":true,"target":"side_vault_construct","target_hp":0},"t":3101,"type":"ui_combat_beat"}
+{"payload":{"id":"side_vault_construct"},"t":3102,"type":"combatant_downed"}
+{"payload":{"beat_type":"combatant_downed","id":"side_vault_construct"},"t":3102,"type":"ui_combat_beat"}
+{"payload":{"bus":"SFX","id":"downed"},"t":3103,"type":"audio_played"}
+{"payload":{"draw":false,"rounds":3,"victory":true},"t":3103,"type":"combat_finished"}
+{"payload":{"bus":"SFX","id":"victory"},"t":3105,"type":"audio_played"}
+{"payload":{"count":1,"id":"victories"},"t":3116,"type":"accomplishment_recorded"}
+{"payload":{"bus":"UI","id":"accomplishment_noted"},"t":3117,"type":"audio_played"}
+{"payload":{"count":1,"id":"fought_warded_side_vault_construct"},"t":3117,"type":"accomplishment_recorded"}
+{"payload":{"count":1,"id":"warded_side_vault_secured"},"t":3117,"type":"accomplishment_recorded"}
+{"payload":{"fallbacks":0,"sprites":19},"t":3117,"type":"ui_entities_rendered"}
+{"payload":{"count":4,"id":"melee_hit"},"t":3117,"type":"accomplishment_recorded"}
+{"payload":{"id":"warded_side_vault_construct"},"t":3117,"type":"entity_removed"}
+{"payload":{"cell":[4,12],"entity":"","showing":false},"t":3117,"type":"ui_affordance_rendered"}
+{"payload":{"victory":true},"t":3118,"type":"combat_resolved"}
+{"payload":{"housekeeping":true,"text":"Autosaved. (Esc — save/load anytime)"},"t":3118,"type":"toast"}
+{"payload":{"bus":"Music","id":"music_victory"},"t":3128,"type":"audio_played"}
+{"payload":{},"t":3128,"type":"ui_combat_hidden"}
+{"payload":{"map":"trapped_halls","phase":"day"},"t":3128,"type":"ui_mood_applied"}
+{"payload":{"text":"Autosaved. (Esc — save/load anytime)"},"t":3131,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":3131,"type":"audio_played"}
+{"payload":{"cell":[4,12]},"t":3140,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_stone"},"t":3141,"type":"audio_played"}
+{"payload":{"cell":[5,12],"entity":"","showing":false},"t":3141,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[4,13],"facing":[0,1]},"t":3157,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":3158,"type":"audio_played"}
+{"payload":{"cell":[4,13],"entity":"warded_side_vault_cache","showing":true},"t":3158,"type":"ui_affordance_rendered"}
+{"payload":{"context":"exploration","skill":"observe","target":"warded_side_vault_cache"},"t":3174,"type":"skill_used"}
+{"payload":{"bus":"SFX","id":"field_skill_used"},"t":3174,"type":"audio_played"}
+{"payload":{"count":1,"id":"observed_things"},"t":3175,"type":"accomplishment_recorded"}
+{"payload":{"text":"Fine ward-lines leave the cache and run east toward the sealed rune-door deeper in the halls."},"t":3175,"type":"toast"}
+{"payload":{"text":"Fine ward-lines leave the cache and run east toward the sealed rune-door deeper in the halls."},"t":3175,"type":"ui_toast_rendered"}
+{"payload":{"count":1,"id":"warded_side_vault_looted"},"t":3190,"type":"accomplishment_recorded"}
+{"payload":{"cell":[4,13],"entity":"","showing":false},"t":3190,"type":"ui_affordance_rendered"}
+{"payload":{"fallbacks":0,"sprites":17},"t":3190,"type":"ui_entities_rendered"}
+{"payload":{"lore":false,"text":"The cache opens on a released catch. A lead counterweight rests inside, still holding a quiet ward."},"t":3191,"type":"toast"}
+{"payload":{"item":"wardwrights_counterweight","source":"warded_side_vault_cache"},"t":3191,"type":"item_gained"}
+{"payload":{"bus":"SFX","id":"item_pickup"},"t":3192,"type":"audio_played"}
+{"payload":{"text":"Got: Wardwright's Counterweight"},"t":3192,"type":"toast"}
+{"payload":{"text":"The cache opens on a released catch. A lead counterweight rests inside, still holding a quiet ward."},"t":3199,"type":"ui_toast_rendered"}

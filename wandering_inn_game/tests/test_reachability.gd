@@ -178,18 +178,22 @@ func _collect_skill_tally_producers(skills: Dictionary, produced: Dictionary) ->
 
 
 func _collect_scene_producers(scene: Dictionary, produced: Dictionary) -> void:
-	# #348 slice 2: a `state_set` row's counter is authored on the CARRIER, in
+	# #348 slice 2 + #398-p2: a row whose counter is authored on the CARRIER, in
 	# whatever field the row's `counter_key` names -- the property table itself
-	# is the producer registry for those ids.
-	var state_set_keys: Array = []
+	# is the producer registry for those ids. Two shapes: `state_set`
+	# (carrier-sourced by substrate) and any row declaring counter_from "target"
+	# (a row-defaulted verb whose carrier overrides the shared id).
+	var carrier_counter_keys: Array = []
 	for raw_row: Variant in (scene.get("interactions", {}) as Dictionary).get("interactions", []):
 		if not (raw_row is Dictionary):
 			continue
 		var trow := raw_row as Dictionary
-		if String(trow.get("outcome", "")) == "state_set" and String(trow.get("counter_key", "")) != "":
+		if String(trow.get("counter_key", "")) == "":
+			continue
+		if String(trow.get("outcome", "")) == "state_set" or String(trow.get("counter_from", "")) == "target":
 			var tkey := String(trow["counter_key"])
-			if not state_set_keys.has(tkey):
-				state_set_keys.append(tkey)
+			if not carrier_counter_keys.has(tkey):
+				carrier_counter_keys.append(tkey)
 	for map_id: String in scene.get("maps", {}):
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
@@ -213,8 +217,8 @@ func _collect_scene_producers(scene: Dictionary, produced: Dictionary) -> void:
 					if variant is Dictionary:
 						_collect_scalar_producer((variant as Dictionary).get("accomplishment", ""), "%s.variants[%d].accomplishment" % [label, variant_index], produced)
 			_collect_scalar_producer(entity.get("on_enter_accomplishment", ""), label + ".on_enter_accomplishment", produced)
-			for state_key: String in state_set_keys:
-				_collect_scalar_producer(entity.get(state_key, ""), "%s.%s (property table state_set)" % [label, state_key], produced)
+			for carrier_key: String in carrier_counter_keys:
+				_collect_scalar_producer(entity.get(carrier_key, ""), "%s.%s (property table carrier counter)" % [label, carrier_key], produced)
 			# Task 2.3: on_open_accomplishment is String|Array (on_victory contract).
 			var open_banks: Variant = entity.get("on_open_accomplishment", [])
 			for counter: Variant in (open_banks if open_banks is Array else [open_banks]):
@@ -264,10 +268,15 @@ func _collect_scalar_counter(raw_counter: Variant, label: String, consumed: Dict
 	(consumed[counter] as Array).append(label)
 
 
+## #398-P3: a skill/interact arm's `accomplishment` is String|ARRAY (the
+## on_victory/on_open contract WIGame.use_skill now banks over), so "scalar"
+## means one-or-many here. A bare String() over an Array would credit a garbage
+## "['a', 'b']" producer and report both real ids as unproduced.
 func _collect_scalar_producer(raw_counter: Variant, label: String, produced: Dictionary) -> void:
-	var counter := String(raw_counter)
-	if counter != "":
-		_mark_produced(counter, label, produced)
+	for entry: Variant in (raw_counter if raw_counter is Array else [raw_counter]):
+		var counter := String(entry)
+		if counter != "":
+			_mark_produced(counter, label, produced)
 
 
 func _mark_produced(counter: String, label: String, produced: Dictionary) -> void:

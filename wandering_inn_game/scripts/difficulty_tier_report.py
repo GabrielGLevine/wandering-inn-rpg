@@ -66,6 +66,23 @@ EXTREME_MARGIN = 0.10
 # the same self-invalidating shape sim_class_parity.gd's ENVELOPE DRIFT uses for
 # the parity ceilings -- an accepted exception must not outlive its premise.
 EXTREME_FLIP_WHITELIST = {
+    ("ruin / briar_arch_wards_warrior11_relc", "bronze"): {
+        "silver": 0.84,
+        "why":
+            "Same class as alley_fence's bronze entry: an 0.84-Silver gated pocket "
+            "fight saturating at the easiest tier is the difficulty knob working. "
+            "Gold on the same cell reads a real coin, so the fight keeps its shape. "
+            "Lapse range: NOISE 0.05 means Silver > 0.89 lapses this entry upward; "
+            "downward it re-classifies before the lapse check (#398 close).",
+    },
+    ("invrisil / counting_room_guard_t3_warrior10_solo", "bronze"): {
+        "silver": 0.80,
+        "why":
+            "Same class as alley_fence's bronze entry, same region, one row over: "
+            "an 0.80-Silver counting-room guard saturating at Bronze is intended. "
+            "Gold keeps a real coin on the cell. Lapse: Silver > 0.85 lapses "
+            "upward; downward re-classifies as saturation first (#398 close).",
+    },
     ("invrisil / alley_fence_t3_warrior10_solo", "bronze"): {
         "silver": 0.81,
         "why":

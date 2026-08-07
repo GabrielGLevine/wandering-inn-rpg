@@ -56,11 +56,11 @@
    "equals": 5
   },
   {
-   "_comment": "== PHASE 0 LEG A: the floodplains scree chute REFUSES, and it says so. A blocked-with-no-tell hazard reads byte-identically to masonry, which is the defect this wave exists to close, so the map's OWN unsteady_toast is pinned verbatim -- a fallback line firing here instead would mean the map authored nothing.",
+   "_comment": "== PHASE 0 LEG A: the floodplains scree chute REFUSES, and it says so. A blocked-with-no-tell hazard reads byte-identically to masonry, which is the defect this wave exists to close, so the map's OWN unsteady_toast is pinned verbatim -- a fallback line firing here instead would mean the map authored nothing. The 2 slots are DERIVED, not curated: martial_field_start carries no hotbar_loadout, so the bar is AUTO = every fieldable known Skill. Warrior 5 knows both cuts actives; the equipped rusty_sword fields power_strike beside innate basic_cleaning, and spear-family piercing_strikes stays off the bar.",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 1
+    "slots": 2
    }
   },
   {
@@ -577,11 +577,11 @@
    ]
   },
   {
-   "_comment": "Eight field slots: innate basic_cleaning + the four innate verbs + icy_floor, plus warrior L7/L8's own greater_strength/basic_repair. [Even Footing] is deliberately NOT among them -- a passive takes no slot. 8->9: the armed fixture gained basic_cooking (finding 14, the #391 pot read).",
+   "_comment": "Ten field slots, every one DERIVED: martial_field_armed carries no hotbar_loadout, so the bar is AUTO = every fieldable known Skill in known_skills() order (player_skills first, then the class grant table). Slots 1-10: basic_cleaning, broader_shoulders, bar_fighting, rope_work, flame_jet, icy_floor, basic_cooking, power_strike, greater_strength, basic_repair. power_strike enters at 8 because the equipped rusty_sword satisfies its sword family; spear-family piercing_strikes is known and still absent, which is the weapon gate proving itself on an ARMED bar. [Even Footing] is a passive and takes no slot. Slot 10 has no number key -- LEG J below reaches it with the cursor.",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 9
+    "slots": 10
    }
   },
   {
@@ -1005,8 +1005,37 @@
    "steps": 1
   },
   {
-   "action": "press_field_skill",
-   "skill": "basic_repair"
+   "_comment": "[Basic Repair] sits at slot 10, which no number key reaches, so it is cast the way the bar actually offers it: Tab primes slot 1, ONE move_left wraps the cursor backwards through `_move_field_slot_cursor`'s modulo onto slot 10, confirm fires it. Arrows are swallowed while primed, so the player never steps off the faced stringer. This beat IS the cursor-reachability the 10-slot AUTO bar rests on -- if it ever goes red, slot ten is genuinely unreachable, not merely key-less.",
+   "action": "press",
+   "name": "hotbar_prime"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_selection_rendered",
+   "payload_contains": {
+    "index": 0,
+    "skill": "basic_cleaning",
+    "label": "[Basic Cleaning]"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_left"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_selection_rendered",
+   "payload_contains": {
+    "index": 9,
+    "skill": "basic_repair",
+    "label": "[Basic Repair]"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
   },
   {
    "action": "wait_for_event",
@@ -1236,7 +1265,7 @@
    "equals": 27
   },
   {
-   "_comment": "== LEG M: [Flame Jet] cooks the carcass. The AUTHORED arm yields, banks and retires the prop -- and `burned_the_debris` is asserted absent whole-run, which is the standing proof that flame_jet was never given the `burns` flag and therefore never joined the burns x burnable row.",
+   "_comment": "== LEG M: [Flame Jet] cooks the carcass. The carrier's authored `requires_skill` arm outranks the generic burns x burnable property row, so it keeps its own yield, counter and retirement behavior; `burned_the_debris` staying absent proves the generic row did not steal the cast.",
    "action": "teleport",
    "map": "floodplains",
    "cell": [
@@ -1446,7 +1475,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "WHOLE-RUN NEGATIVES: no fight anywhere on this route, and no burn -- the second is the no-`burns`-flag proof.",
+   "_comment": "WHOLE-RUN NEGATIVES: no fight anywhere on this route, and no generic debris burn -- the second proves the carcass's authored arm outranked burns x burnable.",
    "action": "assert_event_absent",
    "type": "combat_started",
    "payload_contains": {}

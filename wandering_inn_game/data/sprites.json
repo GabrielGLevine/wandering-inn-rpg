@@ -870,37 +870,47 @@
   }
  },
  "bar_counter": {
-  "render_scale": 0.25,
+  "_comment": "#398: WAS [256,279,68,44] -- alpha bbox None, FULLY TRANSPARENT, so every counter drew NOTHING (old coords sit past the art in the door/window block). Now a drawn-edge cut of the drawer-front sideboard x0-47/y18-47 (wardrobe starts y48). rs 0.35 keeps the original 1.05x0.66-cell footprint, so no map re-derives. Probe: bbox (0,0,48,30), pad 0/0.",
+  "render_scale": 0.35,
+  "anchor": [
+   0.5,
+   1.0
+  ],
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Furniture.png",
     "frame_size": [
-     68,
-     44
+     48,
+     30
     ],
     "region": [
-     256,
-     279,
-     68,
-     44
+     0,
+     18,
+     48,
+     30
     ],
     "fps": 1
    }
   }
  },
  "barrel": {
-  "render_scale": 0.7,
+  "_comment": "#398: WAS [730,14,19,22] -- 32.5% fill, bbox (8,3)-(19,18) right-CLIPPED, and it caught a small POT, not a barrel, sitting hard right so it drew ~a quarter cell off its own cell. Now the real hooped barrel flush to the crates' right: drawn-edge cut x752-767/y74-95 (crate outline x751, next object x769). rs 1.0 = native 16px grid, matching `crate` -- drawn at one scale side by side. Probe: bbox (0,0,16,22), pad 0/0.",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Furniture.png",
     "frame_size": [
-     19,
+     16,
      22
     ],
     "region": [
-     730,
-     14,
-     19,
+     752,
+     74,
+     16,
      22
     ],
     "fps": 1
@@ -908,38 +918,48 @@
   }
  },
  "crate": {
-  "render_scale": 0.45,
+  "_comment": "#398: WAS [690,71,38,26] -- bbox only (30,2)-(38,25), an 8x23 scrap of the FIRST crate's left plank edge, drawn as a ~14x41 near-black sliver offset right (the anchor centred a frame 81% empty). The sheet draws TWO 16x23 crates flush at x720-751 sharing a DOUBLE divider (x735 = left crate's right outline, x736 = right crate's left) plus a barrel flush at x752 -- one alpha component, so cut on drawn edges, not alpha. Took the CLOSED twin over the open-top left one: meanL 47.3 vs 32.3, 29% vs 48% near-black, and the open one's 10x7 black interior reads as a hole at 1x -- fatal in deep_tunnels (world band 13/255). rs 1.0 = native 16px grid: one cell wide, 0.44-cell overhang UP into air. Probe: bbox (0,0,16,23), pad 0/0; its OPAQUE-CANVAS flag is expected (solid wooden box, not a keyed canvas).",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Furniture.png",
     "frame_size": [
-     38,
-     26
+     16,
+     23
     ],
     "region": [
-     690,
-     71,
-     38,
-     26
+     736,
+     73,
+     16,
+     23
     ],
     "fps": 1
    }
   }
  },
  "stool": {
-  "render_scale": 0.6,
+  "_comment": "#398: WAS [222,323,20,20] -- alpha bbox None, FULLY TRANSPARENT, so all 15 stool placements drew NOTHING. Now the isolated plank-seat stool x112-127/y514-527 (89.3% fill, its own component). rs 0.75 holds the original 0.75-cell width. Probe: bbox (0,0,16,14), pad 0/0.",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   1.0
+  ],
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Furniture.png",
     "frame_size": [
-     20,
-     20
+     16,
+     14
     ],
     "region": [
-     222,
-     323,
-     20,
-     20
+     112,
+     514,
+     16,
+     14
     ],
     "fps": 1
    }
@@ -2728,7 +2748,7 @@
   ]
  },
  "a_shepherd": {
-  "_comment": "OWNED PixelLab v3 (#396 Task 1). A Shepherd -- replaces a_hunter as the riverfarm_village character surface. Brimmed felt hat + long wooden crook ARE the silhouette contract: cold-read at gameplay zoom (4x, VIEW_SIZE 320x180) against human_laborer (Former Headman), citizen_f (A Villager) and the retired a_hunter. Sheet names + animation keys mirror a_hunter exactly (Idle_* / Run_*, directional, side sheet mirrors for west); frame_size, render_scale and anchor are MEASURED rather than copied -- the v3 canvas is 184px, so render_scale 0.3837 lands the 86px figure at a_hunter's 33px on-screen height (citizen_f 30, human_laborer 30.2), and the anchor is the alpha-bbox feet plane 135/184 with x taken from the BOOT span, not the crook-skewed full bbox.",
+  "_comment": "OWNED PixelLab v3 (#396 Task 1). A Shepherd replaces a_hunter as the riverfarm_village character surface. Brimmed felt hat + long wooden crook ARE the silhouette contract, cold-read at gameplay zoom against human_laborer, citizen_f and the retired a_hunter. Sheet names + animation keys mirror a_hunter exactly (Idle_* / Run_*, directional, side sheets mirror west). MEASURED, not copied: the v3 canvas is 184px, so render_scale 0.3837 lands the 86px figure at a_hunter's 33px on-screen height, and the anchor is the alpha-bbox feet plane 135/184 with x from the BOOT span, not the full bbox.",
   "directional": true,
   "render_scale": 0.3837,
   "animations": {
@@ -4687,7 +4707,7 @@
   }
  },
  "dungeon_rubble": {
-  "_comment": "PIL connected-component blob scan, greyish-only filter (low channel saturation, mid-tone): bbox (194,83,11,9), the largest of the three, rgb~(80,83,69) -- a muted grey-olive that already sits close to the dungeon floor's own cast.",
+  "_comment": "Blob-scan pick: a muted grey-olive close to the dungeon floor's own cast.",
   "render_scale": 1.4,
   "shadow": true,
   "animations": {
@@ -6325,6 +6345,64 @@
     "frame_size": [
      32,
      32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "briar_wall": {
+  "_comment": "#398 D2. OWNED PixelLab, 32px not the 64px default: a fine lattice speckles at ship scale. Anchor = alpha bbox 30/32; the 6.1% holes ARE the lattice.",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/briar_wall/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pond_cache": {
+  "_comment": "#398 P1 reward. OWNED PixelLab. Distinct silhouette from `chest`, never a recolor. Anchor = alpha bbox 60/64.",
+  "render_scale": 0.36,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pond_cache/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pond_reeds": {
+  "_comment": "#398 P1 review M2: NOT pond_edge's grass_tuft under a tint (2026-08-02 ruling). Free-Pack Vegetation cattail -- seed-head on a bare stem against grass_tuft's dense 16x16 clump. Alpha bbox IS the region (15x26), so bottom-centre is exact; no override.",
+  "render_scale": 0.7,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Vegetation.png",
+    "region": [
+     145,
+     166,
+     15,
+     26
+    ],
+    "frame_size": [
+     15,
+     26
     ],
     "fps": 1
    }

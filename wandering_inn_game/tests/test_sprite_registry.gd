@@ -376,6 +376,7 @@ func _build_expected_counts() -> Dictionary:
 		"boulder", "tree_big",
 		"mushroom_purple_l", "mushroom_purple_m", "mushroom_purple_s",
 		"inn_roof", "tree_round",
+		"pond_reeds",  ## #398 P1 review M2: single-frame Vegetation.png region crop
 	]:
 		counts["%s/idle" % e3_static] = 1
 	counts["grill/idle"] = 4  ## Grill_01-Sheet 256px / 64px frames
@@ -529,6 +530,11 @@ func _build_expected_counts() -> Dictionary:
 	# GH#184 city gate set (PixelLab statics)
 	counts["city_gatehouse/idle"] = 1
 	counts["city_gate_arch/idle"] = 1
+
+	# GH#398 skill-gated-area carriers (OWNED PixelLab statics, one frame each):
+	# briar_wall is the P5 burns/cuts blocker, pond_cache the P1 island reward.
+	counts["briar_wall/idle"] = 1
+	counts["pond_cache/idle"] = 1
 
 	return counts
 

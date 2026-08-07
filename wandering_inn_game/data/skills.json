@@ -42,8 +42,11 @@
    "id": "power_strike",
    "display_name": "[Power Strike]",
    "contexts": [
-    "combat"
+    "combat",
+    "exploration"
    ],
+   "field": true,
+   "cuts": true,
    "ap_cost": 3,
    "weapon": "sword",
    "icon": "icon_power_strike",
@@ -52,6 +55,7 @@
     "mult": 2.0
    },
    "cooldown_rounds": 2,
+   "field_ambient": "[Power Strike] — You set your feet, then ease off the swing. Nothing here wants cutting.",
    "description": "Everything behind one blow."
   },
   {
@@ -103,7 +107,7 @@
    "description": "A hissing dart of goblin fire."
   },
   {
-   "_comment": "NO `burns` FLAG: it would enroll this in the burns x burnable row and make a combat spell a universal debris-burner. Its one field use is the AUTHORED carcass arm, which wins by dispatch precedence.",
+   "_comment": "`burns` ON (ruling 4) enrolls this combat spell in the burns x burnable row: it IS a universal debris-burner now, the cost the flag was withheld for. Carcass beat survives -- its authored requires_skill arm outranks the property table, so `burned_the_debris` never banks there.",
    "id": "flame_jet",
    "display_name": "[Flame Jet]",
    "contexts": [
@@ -111,6 +115,7 @@
     "exploration"
    ],
    "field": true,
+   "burns": true,
    "ap_cost": 2,
    "mp_cost": 4,
    "element": "fire",
@@ -168,7 +173,7 @@
    "description": "The first spell leaves the fingers before the thought finishes."
   },
   {
-   "_comment": "`toggles_light` puts [Light] on the same footing as the `sneaks` Skills: one flag, one arm, on/off with its own copy on each side. Before v0.16.1 the orb had no off path at all -- a hardcoded id check in field_skills.gd hard-SET the flag, so re-casting while lit did nothing and only sleep() ever cleared it. field_ambient is the ON line, field_ambient_off the OFF line.",
+   "_comment": "`toggles_light` puts [Light] on the same footing as the `sneaks` Skills: one flag, one arm, on/off with its own copy on each side. field_ambient is the ON line, field_ambient_off the OFF line; the placement trap lives at field_skills.gd's `toggles_light` arm.",
    "id": "light",
    "display_name": "[Light]",
    "icon": "icon_light",
@@ -224,8 +229,11 @@
    "id": "piercing_strikes",
    "display_name": "[Piercing Strikes]",
    "contexts": [
-    "combat"
+    "combat",
+    "exploration"
    ],
+   "field": true,
+   "cuts": true,
    "ap_cost": 2,
    "weapon": "spear",
    "icon": "icon_piercing_strikes",
@@ -233,6 +241,7 @@
     "type": "damage_mult",
     "mult": 1.4
    },
+   "field_ambient": "[Piercing Strikes] — You level the spear and hunt for the gap. There is nothing here to put a point through.",
    "description": "Thrusts that seek the seams in any guard."
   },
   {

@@ -681,7 +681,17 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 		entity_first_use[waking_key] = true
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
-	record_accomplishment(String(effect["accomplishment"]))
+	# #398-P3: `accomplishment` is String|ARRAY, the contract `on_victory` /
+	# `on_open_accomplishment` / `requires_item` / `inherits` already carry
+	# ("one open can bank a convergent set atomically" -- the container arm in
+	# interactions.gd). A two-mode skill gate NEEDS it: each mode banks its own
+	# distinct counter AND the shared pocket-open counter the guard's
+	# `encounter_when` reads, and `encounter_when` has no OR arm. A bare
+	# String() over an Array would bank one garbage "[a, b]" id and silently
+	# drop both real ones. Every shipped String authoring resolves to a
+	# one-element list, so the banked stream is byte-identical.
+	for counter: Variant in _as_item_list(effect["accomplishment"]):
+		record_accomplishment(String(counter))
 	# `lore` rides the resolved effect, so a VARIANT can promote a read to the
 	# durable record the base arm does not earn (the wardwork quartet's
 	# lattice payoff is exactly that shape).
@@ -750,6 +760,11 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	_tick_action()
 	var known := known_skills().has(skill_id)
 	var target := entity_at(player_cell + player_facing)
+	if known and bool((skills.get(skill_id, {}) as Dictionary).get(WIKeys.FIELD, false)) \
+			and not _field_skill_weapon_ready(skill_id):
+		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": String(target.get(WIKeys.ID, ""))})
+		_emit(WIEvents.TOAST, {"text": "You need the right weapon equipped to use that out here."})
+		return {}
 	if skill_id == "observe" and not target.is_empty() and (target.get("visual_states", []) as Array).any(func(s: Variant) -> bool: return s is Dictionary and (s as Dictionary).has("observe")):
 		target = target.duplicate(true)
 		target["observe"] = _resolve_observe_text(target)
@@ -1183,7 +1198,7 @@ func field_hotbar_loadout() -> Array:
 	var candidates: Array = []
 	for raw: Variant in known_skills():
 		var id := String(raw)
-		if bool((skills.get(id, {}) as Dictionary).get("field", false)):
+		if _field_skill_available(id):
 			candidates.append(id)
 	var skill_loadout: Array = []
 	for raw: Variant in hotbar_loadout:
@@ -1221,11 +1236,33 @@ func field_hotbar_loadout() -> Array:
 	return bar
 
 
+func _field_skill_available(skill_id: String) -> bool:
+	return bool((skills.get(skill_id, {}) as Dictionary).get(WIKeys.FIELD, false)) \
+		and _field_skill_weapon_ready(skill_id)
+
+
+## EQUIPPED, not carried -- the deliberate contrast with `_holds_weapon_family`,
+## which scans `inventory` for an interact gate. A sword in the pack cuts nothing.
+func _field_skill_weapon_ready(skill_id: String) -> bool:
+	var skill: Dictionary = skills.get(skill_id, {})
+	if not bool(skill.get("cuts", false)):
+		return true
+	var required_family := String(skill.get(WIKeys.WEAPON, ""))
+	if required_family == "":
+		return true
+	var equipped_weapon: Dictionary = item(String(equipped.get(WIKeys.WEAPON, "")))
+	return String(equipped_weapon.get("weapon_family", "")) == required_family
+
+
 ## a7 #208: newly acquired FIELD skills join a CUSTOM loadout automatically
 ## when there is room (AUTO mode — empty loadout — already shows every field
 ## skill, so it needs nothing). Selection stays manual; presence becomes
-## automatic. Cap = 9: the number-key affordance is the bar's honest capacity
-## (CHOICE-LOG). Emits LOADOUT_CHANGED with auto:true per slotted skill.
+## automatic. Cap = 9: nine is the KEY-MAPPED capacity, not the bar's capacity --
+## `hotbar_1`..`hotbar_9` are the only number-key actions in the InputMap, while
+## the bar RENDERS every slot it is given and the Tab cursor (`_move_field_slot_cursor`,
+## wrapping) and a mouse/touch `slot_clicked` reach the overflow ones. Slot ten
+## costs a keystroke, not access (CHOICE-LOG). Emits LOADOUT_CHANGED with
+## auto:true per slotted skill.
 ##
 ## SCOPE, precisely: this bounds what the game adds BY ITSELF. It is not a
 ## ceiling on the bar. `loadout_toggle` is deliberately uncapped — the
@@ -1252,7 +1289,7 @@ func _auto_slot_new_field_skills(known_before: Array) -> void:
 		var id := String(raw)
 		if known_before.has(id):
 			continue
-		if not bool((skills.get(id, {}) as Dictionary).get("field", false)):
+		if not _field_skill_available(id):
 			continue
 		if hotbar_loadout.has(id) or slotted >= AUTO_SLOT_CAP:
 			continue

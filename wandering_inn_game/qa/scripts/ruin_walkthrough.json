@@ -123,10 +123,10 @@
    "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 18,
+    "sprites": 32,
     "fallbacks": 0
    },
-   "_comment": "b10 #204: +2 rune plates. 2026-07-26 (Task 2.3): +1 again -- ceria_dig_camp (4,3) is present here because near_ruin banks horns_dig_started, the same counter that now opens the seam. 2026-07-26 (Task 2.7): +2 more -- the camp's fire (3,3) and crate (5,3) were promoted from unconditional `decor` to presence-gated prop ENTITIES sharing the camp's window, so they now COUNT as rendered sprites in this pre-mount state (near_ruin banks horns_dig_started and no door_mounted). v0.15 T4.3: 12 -> 18, the camp becoming a CAMP -- Yvlon (6,3), Ksmvr (4,4) and four camp observables, all on the same window. `dig_camp_remnant` shares Ceria's own cell on the INVERSE window and is correctly absent from this count."
+   "_comment": "b10 #204: +2 rune plates. 2026-07-26 (Task 2.3): +1 again -- ceria_dig_camp (4,3) is present here because near_ruin banks horns_dig_started, the same counter that now opens the seam. 2026-07-26 (Task 2.7): +2 more -- the camp's fire (3,3) and crate (5,3) were promoted from unconditional `decor` to presence-gated prop ENTITIES sharing the camp's window, so they now COUNT as rendered sprites in this pre-mount state (near_ruin banks horns_dig_started and no door_mounted). v0.15 T4.3: 12 -> 18, the camp becoming a CAMP -- Yvlon (6,3), Ksmvr (4,4) and four camp observables, all on the same window. `dig_camp_remnant` shares Ceria's own cell on the INVERSE window and is correctly absent from this count. #398 P5 (review M1): 18 -> 32, MEASURED then derived, not fitted. The pocket adds fourteen unconditionally-present entities -- ten `briar_arch_rubble_*` collapse stones, the two `briar_arch_*` briar carriers, `briar_arch_dungeon_trace`, and the `briar_arch_wards` encounter (an encounter entity is always present; only its encounter_when is gated, which is why `entity_present` can never prove that gate). `briar_arch_cache` is present_when traced_briar_descent and is correctly OUT of this count, exactly as dig_camp_remnant is. fallbacks:0 is load-bearing: it is the ONLY assertion anywhere in the suite proving the new `briar_wall` sprite actually resolves in the registry -- a missing atlas region renders a fallback box here and reds this pin while every other briar assertion stays green."
   },
   {
    "action": "screenshot",

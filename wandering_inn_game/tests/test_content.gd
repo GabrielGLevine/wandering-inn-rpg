@@ -679,18 +679,21 @@ func _entity_ids(scene: Dictionary) -> Dictionary:
 	return out
 
 
-## #348 slice 2: a `state_set` row banks the counter named by whatever field the
-## row's `counter_key` points at ON THE CARRIER, so the property table is the
-## producer registry for those ids. test_reachability already walks this; THIS
-## walk was the one that did not, which made a `present_when.absent` gate on a
-## repaired/anchored carrier read as an unproduced counter (GH#381/#382).
-func _state_set_counter_keys(scene: Dictionary) -> Array:
+## #348 slice 2 + #398-p2: a row can bank the counter named by whatever field its
+## `counter_key` points at ON THE CARRIER, so the property table is the producer
+## registry for those ids. Two shapes: `state_set` (carrier-sourced by substrate)
+## and any row declaring counter_from "target" (a row-defaulted verb whose
+## carrier overrides the shared id -- the collapsed gallery's shoring). Both are
+## walked here; test_reachability and the two shipped-ids censuses walk the same
+## pair. THIS walk was the one that did not exist, which made a `present_when`
+## gate on a carrier-banked counter read as unproduced (GH#381/#382).
+func _carrier_counter_keys(scene: Dictionary) -> Array:
 	var keys: Array = []
 	for raw_row: Variant in (scene.get("interactions", {}) as Dictionary).get("interactions", []):
 		if not (raw_row is Dictionary):
 			continue
 		var row := raw_row as Dictionary
-		if String(row.get("outcome", "")) != "state_set":
+		if String(row.get("outcome", "")) != "state_set" and String(row.get("counter_from", "")) != "target":
 			continue
 		var key := String(row.get("counter_key", ""))
 		if key != "" and not keys.has(key):
@@ -698,15 +701,21 @@ func _state_set_counter_keys(scene: Dictionary) -> Array:
 	return keys
 
 
+## String|Array -> every id the arm banks (the on_victory/on_open contract).
+func _note_banked(raw: Variant, produced: Dictionary) -> void:
+	for counter: Variant in (raw if raw is Array else [raw]):
+		produced[String(counter)] = true
+
+
 func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> void:
-	var state_set_keys: Array = _state_set_counter_keys(scene)
+	var carrier_counter_keys: Array = _carrier_counter_keys(scene)
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
-			for state_key: String in state_set_keys:
-				var state_counter := String(entity.get(state_key, ""))
-				if state_counter != "":
-					produced[state_counter] = true
+			for carrier_key: String in carrier_counter_keys:
+				var carrier_counter := String(entity.get(carrier_key, ""))
+				if carrier_counter != "":
+					produced[carrier_counter] = true
 			if String(entity.get("kind", "")) == "encounter":
 				# GH#211: combat_banking banks fought_<encounter_id> on every
 				# weighted victory -- a real code-banked producer per encounter.
@@ -717,17 +726,20 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 					produced[String(id)] = true
 			elif victory is String:
 				produced[String(victory)] = true
+			# #398-P3: an arm's `accomplishment` is String|ARRAY (WIGame.use_skill
+			# banks every id), so this scan must walk the list -- a multi-bank arm
+			# would otherwise read as producing "['a', 'b']" and nothing real.
 			if entity.has("on_skill_use"):
 				var skill_use: Dictionary = entity["on_skill_use"]
 				if skill_use.has("accomplishment"):
-					produced[String(skill_use["accomplishment"])] = true
+					_note_banked(skill_use["accomplishment"], produced)
 				for variant: Dictionary in (skill_use.get("variants", []) as Array):
 					if variant.has("accomplishment"):
-						produced[String(variant["accomplishment"])] = true
+						_note_banked(variant["accomplishment"], produced)
 			for sid: String in (entity.get("skill_uses", {}) as Dictionary):
 				var arm: Dictionary = (entity["skill_uses"] as Dictionary)[sid]
 				if arm.has("accomplishment"):
-					produced[String(arm["accomplishment"])] = true
+					_note_banked(arm["accomplishment"], produced)
 			if entity.has("on_interact_accomplishment"):
 				produced[String(entity["on_interact_accomplishment"])] = true
 				for variant: Dictionary in (entity.get("variants", []) as Array):
@@ -1723,11 +1735,15 @@ func _accomplishment_producer_maps(scene: Dictionary, graphs: Dictionary, conver
 			var victory_ids: Array = victory if victory is Array else [victory] if victory is String else []
 			for id: Variant in victory_ids:
 				_mark_producer(out, String(id), map_id)
+			# #398-P3: String|ARRAY, the on_victory/on_open contract above. A bare
+			# String() over an Array raises "Invalid call 'String' constructor"
+			# here rather than silently mis-crediting, which is how this fifth
+			# copy of the producer walk announced itself.
 			if entity.has("on_skill_use") and (entity["on_skill_use"] as Dictionary).has("accomplishment"):
-				_mark_producer(out, String((entity["on_skill_use"] as Dictionary)["accomplishment"]), map_id)
+				_mark_banked_producers(out, (entity["on_skill_use"] as Dictionary)["accomplishment"], map_id)
 			for su_variant: Dictionary in ((entity.get("on_skill_use", {}) as Dictionary).get("variants", []) as Array):
 				if su_variant.has("accomplishment"):
-					_mark_producer(out, String(su_variant["accomplishment"]), map_id)
+					_mark_banked_producers(out, su_variant["accomplishment"], map_id)
 			if entity.has("on_interact_accomplishment"):
 				_mark_producer(out, String(entity["on_interact_accomplishment"]), map_id)
 			for variant: Dictionary in (entity.get("variants", []) as Array):
@@ -1750,6 +1766,12 @@ func _accomplishment_producer_maps(scene: Dictionary, graphs: Dictionary, conver
 						for map_id: String in maps_for_graph:
 							_mark_producer(out, String(effect["accomplishment"]), map_id)
 	return out
+
+
+## #398-P3: the String|Array face of _mark_producer (see the on_open arm).
+func _mark_banked_producers(producer_maps: Dictionary, raw: Variant, map_id: String) -> void:
+	for counter: Variant in (raw if raw is Array else [raw]):
+		_mark_producer(producer_maps, String(counter), map_id)
 
 
 func _mark_producer(producer_maps: Dictionary, accomplishment_id: String, map_id: String) -> void:

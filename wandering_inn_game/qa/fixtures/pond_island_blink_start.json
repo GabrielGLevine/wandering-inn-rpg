@@ -1,0 +1,50 @@
+{
+ "_comment": "#398 P1 mode-B build. Warrior 5 keeps the guardian comparison aligned with the freeze leg; Runner 5 is honestly earned at completed_delivery 10 and is what classes.json grants [Double Step] for -- the same build sim_combat_batch's gated pond_guardian_t1_runner5_warrior5_solo cell measures. Same launch pad and rng_state as mode A, so only the crossing differs.",
+ "version": 6,
+ "state": {
+  "current_map": "floodplains",
+  "player_facing": [
+   0,
+   -1
+  ],
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "melee_hit": 18,
+   "completed_delivery": 10
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "seen_statuses": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 20,
+  "rng_state": "-6393592048753323481",
+  "classes": {
+   "warrior": 5,
+   "runner": 5
+  },
+  "player_cell": [
+   13,
+   20
+  ],
+  "hotbar_loadout": [
+   "double_step"
+  ]
+ }
+}

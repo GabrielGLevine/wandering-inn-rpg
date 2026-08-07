@@ -59,16 +59,19 @@
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 1,
+    "slots": 2,
     "expanded": true,
     "slot_numbers": [
-     "1"
+     "1",
+     "2"
     ],
     "fallback_labels": [
-     "BC"
+     "BC",
+     "PS"
     ],
     "readout_lines": [
-     "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease."
+     "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
+     "2  [Power Strike] — Everything behind one blow."
     ]
    }
   },
@@ -182,7 +185,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== PHASE B: one sleep grants [Tactician] (pre-banked chess_with_olesm) AND [Helper] (Phase A's cleaned_the_inn:1); hotbar re-renders 1 -> 3 field slots ==. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "_comment": "== PHASE B: one sleep grants [Tactician] (pre-banked chess_with_olesm) AND [Helper] (Phase A's cleaned_the_inn:1); the sword-armed hotbar re-renders 2 -> 4 field slots, retaining [Power Strike] ==. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
    "cell": [
@@ -221,7 +224,7 @@
    "action": "wait_for_event",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 3
+    "slots": 4
    },
    "timeout_sec": 5
   },
@@ -244,7 +247,7 @@
    "action": "wait_for_event",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 3,
+    "slots": 4,
     "expanded": true,
     "reason": "player"
    },
@@ -262,7 +265,7 @@
    "action": "wait_for_event",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 3,
+    "slots": 4,
     "expanded": false,
     "reason": "player"
    },
@@ -322,9 +325,9 @@
    "name": "02_hotbar_grown_3slots"
   },
   {
-   "_comment": "Slot 3 is [Appraise Foe] (catalog order: innate basic_cleaning, then helper's basic_cooking, then tactician's observe -- basic_cooking is field-tagged too). Press it facing Erin.",
+   "_comment": "Slot 4 is [Appraise Foe] (catalog order: innate basic_cleaning, sword-gated power_strike, helper's basic_cooking, then tactician's observe). Press it facing Erin.",
    "action": "press",
-   "name": "hotbar_3"
+   "name": "hotbar_4"
   },
   {
    "action": "wait_for_event",
@@ -617,7 +620,7 @@
    "action": "wait_for_event",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 3
+    "slots": 4
    },
    "timeout_sec": 5
   },
@@ -694,7 +697,7 @@
    "action": "wait_for_event",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 3
+    "slots": 4
    },
    "timeout_sec": 5
   },

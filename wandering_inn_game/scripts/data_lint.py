@@ -57,6 +57,8 @@ from pathlib import Path
 from wi_data_lib import DATA
 
 GATE_KEYS = ("door_when", "contains_when", "portal_menu_when", "fence_menu_when")
+SKILL_GATE_MECHANISMS = {"property", "blink", "arm", "social", "endure"}
+SKILL_GATE_NON_SKILL_GATES = {"dialogue", "item", "endure"}
 MOOD_PHASES = ("day", "dusk", "night")
 # world.gd's own SKY_GRADE_EPSILON -- the two must agree or the lint would
 # police a different sealed/sky split than the engine reads.
@@ -155,6 +157,218 @@ def check_maps(maps: dict, errors: list) -> None:
 			elif has_flag and not is_water_sheet:
 				errors.append(f"maps/{map_id}: walls segment {seg.get('from')}–{seg.get('to')} "
 					f"is tagged `water: true` but does not use the water sheet")
+
+
+def _catalog_rows(parsed: dict, filename: str, key: str) -> list:
+	doc = parsed.get(DATA / filename) or {}
+	rows = doc.get(key, []) if isinstance(doc, dict) else []
+	return [row for row in rows if isinstance(row, dict)]
+
+
+def _skill_granters(parsed: dict) -> dict:
+	out: dict[str, set[str]] = {}
+	for cls in _catalog_rows(parsed, "classes.json", "classes"):
+		class_id = str(cls.get("id", ""))
+		for level in cls.get("levels", []):
+			if not isinstance(level, dict):
+				continue
+			for skill_id in level.get("grants", []):
+				out.setdefault(str(skill_id), set()).add(class_id)
+	return out
+
+
+def _mode_named_skills(mode: dict) -> tuple:
+	"""The skill ids the mode DECLARES (`skills` String|Array + `skill`)."""
+	raw = mode.get("skills", [])
+	if isinstance(raw, str):
+		raw = [raw]
+	out = {str(skill_id) for skill_id in raw} if isinstance(raw, list) else set()
+	if isinstance(mode.get("skill"), str):
+		out.add(str(mode["skill"]))
+	return tuple(sorted(out))
+
+
+def _mode_named_props(mode: dict) -> tuple:
+	"""The prop ids the mode DECLARES (`props` String|Array + `prop`)."""
+	raw = mode.get("props", [])
+	if isinstance(raw, str):
+		raw = [raw]
+	out = {str(prop_id) for prop_id in raw} if isinstance(raw, list) else set()
+	if isinstance(mode.get("prop"), str):
+		out.add(str(mode["prop"]))
+	return tuple(sorted(out))
+
+
+def _mode_signature(mode: dict) -> tuple:
+	"""Arm 1's distinctness key.
+
+	#398-P3 review M9 (controller ruling): the key USED to be
+	(mechanism, skill_property), which is honest for a `property` mode -- the
+	property IS how that mode resolves its carriers -- and meaningless for an
+	M-ARM mode, which resolves by named skill and named prop and carries no
+	skill_property at all. P3 answered that by inventing "trapwork"/"force"
+	labels nothing in skills.json carries, i.e. by labeling two modes as
+	distinct rather than by BEING distinct. So `property` keeps its historical
+	key unchanged, and every other mechanism keys on what a player actually
+	needs and touches: (mechanism, skill-or-gate, prop). Two arm modes sharing
+	both the skill set and the prop set are the same mode written twice, and
+	arm 1 now says so.
+
+	NOTE: arm 4 (rewards resolve on this map) stays STRUCTURAL -- it does not
+	and must not attempt reachability. The WALK-based negative QA leg (a
+	perimeter walk asserting player_blocked at the seal cells with
+	reward-absence DERIVED) is the reachability authority for a pocket.
+	"""
+	mechanism = str(mode.get("mechanism", ""))
+	if mechanism == "property":
+		return (mechanism, str(mode.get("skill_property", "")))
+	return (mechanism, _mode_named_skills(mode) or (str(mode.get("gate", "")),),
+		_mode_named_props(mode))
+
+
+def _mode_skill_ids(mode: dict, skills: list, entities: dict) -> set[str]:
+	mechanism = str(mode.get("mechanism", ""))
+	if mechanism == "property":
+		prop = str(mode.get("skill_property", ""))
+		return {str(skill.get("id")) for skill in skills if skill.get(prop) is True}
+	if mechanism == "blink":
+		minimum = int(mode.get("min_range", 0)) if _int_like(mode.get("min_range", 0)) else 0
+		return {str(skill.get("id")) for skill in skills
+			if skill.get("blinks") is True and int(skill.get("blink_range", 0)) >= minimum}
+	out: set[str] = set(_mode_named_skills(mode))
+	for prop_id in _mode_named_props(mode):
+		entity = entities.get(str(prop_id), {})
+		if isinstance(entity.get("requires_skill"), str):
+			out.add(str(entity["requires_skill"]))
+		out.update(str(skill_id) for skill_id in (entity.get("skill_uses", {}) or {}))
+	return out
+
+
+def check_skill_gates(parsed: dict, maps: dict, errors: list) -> None:
+	"""Validate the descriptive two-mode registry; runtime never reads it."""
+	skills = _catalog_rows(parsed, "skills.json", "skills")
+	granters = _skill_granters(parsed)
+	max_blink = max((int(skill.get("blink_range", 0)) for skill in skills
+		if skill.get("blinks") is True), default=0)
+	for map_id, map_doc in sorted(maps.items()):
+		registry = map_doc.get("skill_gates")
+		if registry is None:
+			continue
+		if not isinstance(registry, dict):
+			errors.append(f"maps/{map_id}: skill_gates must be an object")
+			continue
+		grid = map_doc.get("grid", {})
+		entities = {str(entity.get("id", "")): entity
+			for entity in map_doc.get("entities", []) if isinstance(entity, dict)}
+		for gate_id, gate in sorted(registry.items()):
+			label = f"maps/{map_id}: skill_gates.{gate_id}"
+			if not isinstance(gate, dict):
+				errors.append(f"{label} must be an object")
+				continue
+			modes = gate.get("modes")
+			if not isinstance(modes, list) or len(modes) < 2 or not all(isinstance(mode, dict) for mode in modes):
+				errors.append(f"{label} needs at least two object modes")
+				continue
+			signatures = {_mode_signature(mode) for mode in modes}
+			if len(signatures) < 2:
+				errors.append(f"{label} modes need distinct mechanisms, distinct skill properties, "
+					f"or (for a non-property mechanism) a distinct skill-or-gate + prop pair")
+			class_sets: list[frozenset[str]] = []
+			for index, mode in enumerate(modes):
+				mode_label = f"{label}.modes[{index}]"
+				mechanism = str(mode.get("mechanism", ""))
+				if mechanism not in SKILL_GATE_MECHANISMS:
+					errors.append(f"{mode_label} mechanism {mechanism!r} is not one of {sorted(SKILL_GATE_MECHANISMS)}")
+				skill_ids = _mode_skill_ids(mode, skills, entities)
+				class_union = frozenset(class_id for skill_id in skill_ids
+					for class_id in granters.get(skill_id, set()))
+				class_sets.append(class_union)
+				non_skill_gate = mode.get("gate")
+				if non_skill_gate is not None and non_skill_gate not in SKILL_GATE_NON_SKILL_GATES:
+					errors.append(f"{mode_label} gate {non_skill_gate!r} is not one of "
+						f"{sorted(SKILL_GATE_NON_SKILL_GATES)}")
+				if not class_union and non_skill_gate not in SKILL_GATE_NON_SKILL_GATES:
+					errors.append(f"{mode_label} has an empty skill-granter union; declare an explicit "
+						f"non-skill gate with gate: dialogue|item|endure")
+				if mechanism == "property" and not skill_ids:
+					errors.append(f"{mode_label} skill_property {mode.get('skill_property')!r} has no skill carrier")
+				raw_props = _mode_named_props(mode)
+				for prop_id in raw_props:
+					if str(prop_id) not in entities:
+						errors.append(f"{mode_label} prop {prop_id!r} does not resolve on this map")
+				cells = mode.get("cells", [])
+				if not isinstance(cells, list):
+					errors.append(f"{mode_label} cells must be an array")
+					cells = []
+				for key in ("from", "to"):
+					if key in mode:
+						cells = list(cells) + [mode[key]]
+				for cell in cells:
+					if not _cell_shape_ok(cell) or not _in_grid(cell, grid):
+						errors.append(f"{mode_label} cell {cell!r} is not a real cell in this map's grid")
+				if not cells and not raw_props:
+					errors.append(f"{mode_label} names no cell or prop carrier")
+				if mechanism == "blink":
+					minimum = mode.get("min_range")
+					if not _int_like(minimum) or int(minimum) < 1:
+						errors.append(f"{mode_label} min_range {minimum!r} must be a positive integer "
+							f"no greater than shipped blink range {max_blink}")
+					elif int(minimum) > max_blink:
+						errors.append(f"{mode_label} min_range {minimum!r} exceeds shipped blink range {max_blink}")
+			seen_class_sets: dict[frozenset[str], int] = {}
+			duplicate_pairs: list[tuple[int, int, frozenset[str]]] = []
+			for index, class_union in enumerate(class_sets):
+				if class_union in seen_class_sets:
+					duplicate_pairs.append((seen_class_sets[class_union], index, class_union))
+				else:
+					seen_class_sets[class_union] = index
+			for first, second, class_union in duplicate_pairs:
+				errors.append(f"{label} modes[{first}] and [{second}] have identical class unions "
+					f"{sorted(class_union)}; every mode pair must differ")
+			rewards = gate.get("rewards")
+			if not isinstance(rewards, list) or not rewards:
+				errors.append(f"{label} rewards must name at least one same-map entity")
+			elif any(not isinstance(reward, str) or reward not in entities for reward in rewards):
+				missing = [reward for reward in rewards if not isinstance(reward, str) or reward not in entities]
+				errors.append(f"{label} rewards do not resolve on this map: {missing}")
+
+
+def _water_cells(map_doc: dict) -> set[tuple[int, int]]:
+	out = {tuple(map(int, cell)) for cell in map_doc.get("freezable", []) if _cell_shape_ok(cell)}
+	for seg in (map_doc.get("walls", {}) or {}).get("segments", []):
+		if not isinstance(seg, dict) or seg.get("water") is not True:
+			continue
+		start, end = seg.get("from"), seg.get("to")
+		if not _cell_shape_ok(start) or not _cell_shape_ok(end):
+			continue
+		x1, y1, x2, y2 = int(start[0]), int(start[1]), int(end[0]), int(end[1])
+		if x1 == x2:
+			out.update((x1, y) for y in range(min(y1, y2), max(y1, y2) + 1))
+		elif y1 == y2:
+			out.update((x, y1) for x in range(min(x1, x2), max(x1, x2) + 1))
+	return out
+
+
+def advise_missing_skill_gates(maps: dict, advisories: list) -> None:
+	for map_id, map_doc in sorted(maps.items()):
+		if map_doc.get("skill_gates"):
+			continue
+		water = _water_cells(map_doc)
+		blocked = {tuple(map(int, cell)) for cell in map_doc.get("blocked", []) if _cell_shape_ok(cell)} | water
+		blocked.update(tuple(map(int, entity["cell"])) for entity in map_doc.get("entities", [])
+			if isinstance(entity, dict) and _cell_shape_ok(entity.get("cell")))
+		grid = map_doc.get("grid", {})
+		crossing = False
+		for x, y in water:
+			for (dx, dy) in ((1, 0), (0, 1)):
+				a, b = (x - dx, y - dy), (x + dx, y + dy)
+				if _in_grid(a, grid) and _in_grid(b, grid) and a not in blocked and b not in blocked:
+					crossing = True
+		burn_line = any(isinstance(entity, dict) and entity.get("burnable") is True
+			for entity in map_doc.get("entities", []))
+		if crossing or burn_line:
+			kinds = "/".join(part for part, present in (("freezable crossing", crossing), ("burnable blocker", burn_line)) if present)
+			advisories.append(f"maps/{map_id}: {kinds} but no skill_gates registry")
 
 
 def check_portals(parsed: dict, maps: dict, errors: list) -> None:
@@ -667,6 +881,13 @@ PLACEMENTS = ("entity", "cell")
 # "row" = the pair itself owns the line (what a refusal cell is); the other two
 # read `toast_key` off the target entity / the casting skill.
 TOAST_SOURCES = ("skill", "target", "row")
+# The same discriminator for the COUNTER a banking verb writes (#398-p2 review
+# HIGH-1, WIFieldSkills._row_counter). "row" (or the field omitted) = the row's
+# own `counter`, the pre-#398 behavior; "target" = the CARRIER names it, in the
+# field `counter_key` points at, with the row `counter` as the fallback for
+# carriers that author none. No "skill" arm: _outcome_remove_scorch is handed no
+# skill dict, so a caster-sourced counter would resolve to the fallback always.
+COUNTER_SOURCES = ("row", "target")
 # Persistence classes each verb may claim (spec §4.1's table). `immediate` =
 # thaw_cell, which ERASES a frozen_cells entry and creates no timed state of its
 # own; `none` = the verbs that write no world state at all.
@@ -701,7 +922,8 @@ OUTCOME_EMITS_TERRAIN = {"remove_scorch", "freeze_cell", "thaw_cell"}
 # counter field on any other verb is dead data: it is silently dropped at
 # dispatch. The two banking verbs source the id DIFFERENTLY, and the split is
 # deliberate:
-#   remove_scorch -- row-level `counter` (one burn counter for every burnable).
+#   remove_scorch -- row-level `counter` (one burn counter for every burnable),
+#                    OVERRIDABLE per carrier via counter_from:"target" (#398-p2).
 #   state_set     -- row-level `counter_key` NAMING A FIELD ON THE CARRIER, so
 #                    each prop banks its own id. A shared row-level counter
 #                    would make lighting one lamp flip every sibling lamp's
@@ -791,6 +1013,51 @@ def _check_carrier_counters(row: dict, tp: str, label: str, maps: dict, parsed: 
 				"permanent, so a set the world never shows is invisible durable state")
 
 
+def _check_counter_override(row: dict, tp: str, label: str, maps: dict, parsed: dict, errors: list) -> None:
+	"""counter_from:"target" on a ROW-DEFAULTED banking verb (#398-p2 HIGH-1).
+
+	burns x burnable is ONE row over every burnable in the game, so its row-level
+	`counter` made every burn line the same world event: burning the sewers
+	debris banked the id a deep-tunnels strongbox gated on, two maps away. The
+	override lets a carrier name its own id in the field `counter_key` points at.
+	What has to hold, or the override is worse than no override:
+	  * the row still carries a `counter` FALLBACK -- carriers that opt out
+	    (sewers' own debris) must keep banking something, not silently nothing;
+	  * every override id is a REGISTERED accomplishment, the same freeze-list
+	    discipline the row-level `counter` gets (an unregistered id banks into
+	    saves as something no census knows);
+	  * an override is not the row default spelled again -- that reads as an
+	    opt-in while banking the shared id, which is the bug this field fixes.
+	"""
+	key = row.get("counter_key")
+	if not isinstance(key, str) or not key:
+		errors.append(f"interactions.json: {label} declares counter_from 'target' but names no "
+			"'counter_key' -- the field on the carrier that holds its own counter id")
+		return
+	fallback = row.get("counter")
+	if not isinstance(fallback, str) or not fallback:
+		errors.append(f"interactions.json: {label} declares counter_from 'target' with no row-level "
+			f"'counter' fallback -- every carrier authoring no '{key}' would bank nothing at all")
+	shipped = _shipped_accomplishments(parsed)
+	for map_id, entity in _entity_carriers(maps, tp):
+		eid = entity.get("id", "<no id>")
+		if key not in entity:
+			continue  # opted out: the row `counter` fallback answers for this carrier
+		counter = entity.get(key)
+		if not isinstance(counter, str) or not counter:
+			errors.append(f"interactions.json: {label} carrier maps/{map_id}:{eid} declares '{key}' "
+				f"{counter!r} -- an override must be a non-empty accomplishment id")
+			continue
+		if shipped and counter not in shipped:
+			errors.append(f"interactions.json: {label} carrier maps/{map_id}:{eid} banks override "
+				f"'{counter}', which is not in data/shipped_ids.json's accomplishments -- "
+				"regenerate via scripts/generate_shipped_ids.py")
+		if counter == fallback:
+			errors.append(f"interactions.json: {label} carrier maps/{map_id}:{eid} overrides '{key}' "
+				f"with the row's own '{fallback}' -- drop the field instead; a lookalike override "
+				"still banks the shared id and reads in review as if it did not")
+
+
 def _check_row_counter(row: dict, outcome: str, label: str, parsed: dict, errors: list) -> None:
 	"""Spec §5(c): a row's `counter` gets the standard producer/consumer treatment.
 
@@ -807,18 +1074,26 @@ def _check_row_counter(row: dict, outcome: str, label: str, parsed: dict, errors
 	banks one is silently dropped at dispatch, i.e. dead data.
 	"""
 	counter = row.get("counter")
+	counter_from = row.get("counter_from")
 	if outcome not in OUTCOME_BANKS_COUNTER:
-		for dead in ("counter", "counter_key"):
+		for dead in ("counter", "counter_key", "counter_from"):
 			if row.get(dead) not in (None, ""):
 				errors.append(f"interactions.json: {label} outcome '{outcome}' banks no counter, "
 					f"but the row declares {dead} {row[dead]!r} -- dead data (the field is "
 					"dropped at dispatch); drop it or use a counter-banking verb")
 		return
+	if counter_from not in (None, "") and counter_from not in COUNTER_SOURCES:
+		errors.append(f"interactions.json: {label} 'counter_from' must be one of "
+			f"{list(COUNTER_SOURCES)} when present")
 	if outcome in OUTCOME_COUNTER_ON_CARRIER:
+		if counter_from not in (None, ""):
+			errors.append(f"interactions.json: {label} outcome '{outcome}' is carrier-sourced BY "
+				"SUBSTRATE (it has no row-level default to fall back to), so 'counter_from' is dead "
+				"data -- drop it; 'counter_key' alone names the carrier field")
 		return  # handled per carrier by _check_carrier_counters
-	if row.get("counter_key") not in (None, ""):
+	if counter_from != "target" and row.get("counter_key") not in (None, ""):
 		errors.append(f"interactions.json: {label} outcome '{outcome}' banks the ROW's 'counter' -- "
-			"'counter_key' is dead data here (only the carrier-sourced verbs read it)")
+			"'counter_key' is dead data here unless the row declares counter_from 'target'")
 	if counter is None:
 		return  # optional: a burn row may legitimately bank nothing
 	if not isinstance(counter, str) or not counter:
@@ -858,6 +1133,7 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 	doc = parsed[path]
 	skill_props = doc.get("skill_properties")
 	target_props = doc.get("target_properties")
+	staged_target_props = doc.get("staged_target_properties", [])
 	rows = doc.get("interactions")
 	if not (isinstance(skill_props, list) and skill_props
 			and all(isinstance(p, str) for p in skill_props)):
@@ -866,6 +1142,13 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 	if not (isinstance(target_props, dict) and target_props):
 		errors.append("interactions.json: 'target_properties' must be a non-empty {name: placement} map")
 		return
+	if not isinstance(staged_target_props, list) or any(not isinstance(prop, str)
+			for prop in staged_target_props) or len(set(staged_target_props)) != len(staged_target_props):
+		errors.append("interactions.json: 'staged_target_properties' must be a duplicate-free string list")
+		staged_target_props = []
+	for prop in staged_target_props:
+		if prop not in target_props:
+			errors.append(f"interactions.json: staged target property '{prop}' is not registered")
 	if not isinstance(rows, list) or not rows:
 		errors.append("interactions.json: 'interactions' must be a non-empty list of rows")
 		return
@@ -885,7 +1168,11 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 			errors.append(f"interactions.json: skill property '{prop}' is registered but no "
 				"skills.json row carries it -- dead vocabulary")
 	for prop, placement in sorted(target_props.items()):
-		if placement in PLACEMENTS and not _target_property_carriers(maps, prop, placement):
+		carriers = _target_property_carriers(maps, prop, placement) if placement in PLACEMENTS else []
+		if prop in staged_target_props and carriers:
+			errors.append(f"interactions.json: staged target property '{prop}' now has shipped carriers; "
+				"remove it from staged_target_properties")
+		elif placement in PLACEMENTS and not carriers and prop not in staged_target_props:
 			errors.append(f"interactions.json: target property '{prop}' is registered but no "
 				f"map carries it as a {placement} property -- dead vocabulary")
 	seen = set()
@@ -943,10 +1230,12 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 		_check_row_counter(row, outcome, label, parsed, errors)
 		if outcome in OUTCOME_COUNTER_ON_CARRIER:
 			_check_carrier_counters(row, tp, label, maps, parsed, errors)
+		elif outcome in OUTCOME_BANKS_COUNTER and row.get("counter_from") == "target":
+			_check_counter_override(row, tp, label, maps, parsed, errors)
 		# Per-row carrier cross-ref (spec §5b): a row nothing can reach is dead.
 		if sp in skill_props and not _skill_property_carriers(parsed, sp):
 			errors.append(f"interactions.json: {label} has no skill carrier")
-		if not _target_property_carriers(maps, tp, target_props.get(tp, "")):
+		if tp not in staged_target_props and not _target_property_carriers(maps, tp, target_props.get(tp, "")):
 			errors.append(f"interactions.json: {label} has no shipped target carrier")
 	# TOTALITY CENSUS (spec §4.2 tier 3): the whole cross-product, classified.
 	# Report-only by design -- a null cell is the SHIPPED fallthrough
@@ -1018,6 +1307,7 @@ def main() -> int:
 		return 1
 	maps = _compose_maps(parsed, errors)
 	check_maps(maps, errors)
+	check_skill_gates(parsed, maps, errors)
 	# MERGE NOTE (v0.18 W1): this pair is parked HERE, at the top of the check_*
 	# block, and its REPORT print at the very bottom of main() -- both as far as
 	# possible from the advisory region a sibling lane is extending this wave, so
@@ -1034,6 +1324,8 @@ def main() -> int:
 	check_gate_shapes(maps, errors)
 	check_moods(parsed, maps, errors)
 	advisories: list = []
+	skill_gate_advisories: list = []
+	advise_missing_skill_gates(maps, skill_gate_advisories)
 	advise_unlit_sealed_rooms(maps, parsed, advisories)
 	advise_sub_legible_props(parsed, maps, advisories)
 	interacted_props = advise_acted_on_state(maps, advisories)
@@ -1055,6 +1347,12 @@ def main() -> int:
 		print(f"data_lint: ADVISORY -- {len(advisories)}/{interacted_props} props that bank "
 			"an interact accomplishment show no visual change for it (GH#335 item 3); "
 			"re-run with --advisories to list them. Report-only, never fails.")
+	if skill_gate_advisories:
+		if list_advisories:
+			for advisory in skill_gate_advisories:
+				print(f"data_lint: ADVISORY -- {advisory}")
+		print(f"data_lint: ADVISORY -- {len(skill_gate_advisories)} map(s) show a likely traversal gate "
+			"but carry no skill_gates registry. Report-only, never fails.")
 	for line in report:
 		print(f"data_lint: REPORT -- {line}")
 	return 0

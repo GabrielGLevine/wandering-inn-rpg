@@ -1,0 +1,11 @@
+{
+ "_comment": "P2 negative fixture: Act-III backbone and Warrior 5, but no trap kit, [Greater Strength], or burns carrier. The three rubble cells must refuse, the nest must remain unreachable, and the unopened reward cell must be structurally empty.",
+ "version": 5,
+ "state": {
+  "current_map": "deep_tunnels", "player_cell": [13, 1], "player_facing": [1, 0],
+  "classes": {"warrior": 5},
+  "accomplishments": {"reached_liscor": 1, "met_relc": 1, "sparred_with_relc": 1, "heard_about_cisterns": 1, "resolved_the_cisterns": 1, "heard_the_deep_tremor": 1, "won_combat": 1, "melee_hit": 18},
+  "player_skills": ["basic_cleaning"], "removed_entities": [], "dormant_encounters": [], "generalist_classes": [], "started_quests": [], "pending_consolidation": {}, "used_skills": [],
+  "inventory": ["rusty_sword", "leather_jerkin"], "equipped": {"weapon": "rusty_sword", "armor": "leather_jerkin"}, "container_state": {}, "gold": 20, "actions_since_sleep": 0, "rng_state": "-6393592048753323481"
+ }
+}

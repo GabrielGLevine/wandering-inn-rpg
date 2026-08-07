@@ -54,6 +54,11 @@ func _w1_skill_config() -> Dictionary:
 		WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "cleans": true,
 		"field_ambient": "W1 scrub finds nothing worth wiping.",
 	})
+	rows.append({
+		WIKeys.ID: "w1_cut", WIKeys.DISPLAY_NAME: "[W1 Cut]",
+		WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "cuts": true,
+		"field_ambient": "W1 cut finds nothing to clear.",
+	})
 	return {WIKeys.SKILLS: rows}
 
 
@@ -103,19 +108,48 @@ func _w1_scene() -> Dictionary:
 		WIKeys.ID: "w1_bystander", WIKeys.KIND: "npc", WIKeys.CELL: [12, 2],
 		WIKeys.DISPLAY_NAME: "W1 Bystander", "person": true,
 	})
+	ents.append({
+		WIKeys.ID: "w1_briars", WIKeys.KIND: "prop", WIKeys.CELL: [14, 2],
+		WIKeys.DISPLAY_NAME: "W1 Briars", "cuttable": true,
+		"cut_toast": "W1 briars cut toast.",
+	})
+	# #398-p2: the counter-override pair. Same `burnable` row, same `cuttable`
+	# row -- these two name their OWN counters where their siblings above take
+	# the row default, which is the whole point of counter_from:"target".
+	ents.append({
+		WIKeys.ID: "w1_own_thicket", WIKeys.KIND: "prop", WIKeys.CELL: [16, 2],
+		WIKeys.DISPLAY_NAME: "W1 Own-Counter Thicket", "burnable": true,
+		"burn_counter": "w1_burned_its_own",
+		"burn_toast": "W1 own-counter thicket toast.",
+	})
+	ents.append({
+		WIKeys.ID: "w1_own_briars", WIKeys.KIND: "prop", WIKeys.CELL: [18, 2],
+		WIKeys.DISPLAY_NAME: "W1 Own-Counter Briars", "cuttable": true,
+		"cut_counter": "w1_cut_its_own",
+		"cut_toast": "W1 own-counter briars cut toast.",
+	})
 	return scene
 
 
 func _w1_game(scene: Dictionary) -> WIGame:
 	var g := WIGame.new(scene, _w1_skill_config(), _sink, 4242, _combat_config())
+	g.inventory.clear()
+	g.equipped[WIKeys.WEAPON] = ""
 	g.player_skills.append("w1_ice_floor")
 	g.player_skills.append("w1_scorch")
 	g.player_skills.append("w1_scrub")
+	g.player_skills.append("w1_cut")
 	return g
 
 
 func _w1_face(g: WIGame, cell: Vector2i, facing: Vector2i) -> void:
-	g.transition("sewers", cell)
+	_w1_face_on(g, "sewers", cell, facing)
+
+
+## The same seating on ANY map -- the cross-map isolation arms stand in
+## deep_tunnels and then walk the save back to sewers.
+func _w1_face_on(g: WIGame, map_id: String, cell: Vector2i, facing: Vector2i) -> void:
+	g.transition(map_id, cell)
 	g.player_facing = facing
 	_events.clear()
 
@@ -139,12 +173,50 @@ func _init() -> void:
 
 	# --- The table itself: shape, closed vocabularies, mirror contract.
 	var table := _load_json("res://data/interactions.json")
+	var shipped_skills: Array = _load_json("res://data/skills.json")[WIKeys.SKILLS]
+	var shipped_by_id: Dictionary = {}
+	for skill: Dictionary in shipped_skills:
+		shipped_by_id[String(skill[WIKeys.ID])] = skill
+	for cut_skill: String in ["power_strike", "piercing_strikes"]:
+		assert((shipped_by_id[cut_skill][WIKeys.CONTEXTS] as Array) == ["combat", "exploration"]
+			and bool(shipped_by_id[cut_skill][WIKeys.FIELD])
+			and bool(shipped_by_id[cut_skill]["cuts"]),
+			"%s carries the exact dual-context field cuts shape" % cut_skill)
+	assert(bool(shipped_by_id["flame_jet"]["burns"]), "flame_jet carries burns")
 	var w1_rows: Array = table["interactions"]
 	assert(w1_rows.size() >= 1, "the property table carries at least one row")
 	assert(table["outcomes"] == WIFieldSkills.OUTCOMES,
 		"MIRROR CONTRACT: data/interactions.json outcomes must equal WIFieldSkills.OUTCOMES")
 	var w1_skill_props: Array = table["skill_properties"]
 	var w1_target_props: Dictionary = table["target_properties"]
+	var w1_order: Array = w1_rows.map(func(row: Dictionary) -> String:
+		return "%s x %s" % [String(row["skill_property"]), String(row["target_property"])])
+	assert(w1_order == [
+		"burns x burnable", "freezes x freezable", "burns x frozen",
+		"burns x freezable", "burns x hearth", "burns x unlit",
+		"toggles_light x unlit", "cleans x dirty", "freezes x hearth",
+		"freezes x person", "repairs x broken", "anchors x gap",
+		"cuts x cuttable",
+	], "property rows keep their exact shipped order; cuts x cuttable appends last")
+	# COUNTER SHAPE PIN (#398-p2 review HIGH-1). The two row-defaulted banking
+	# rows must BOTH carry the per-carrier override triple -- row `counter`
+	# fallback + counter_from "target" + the carrier field `counter_key` names.
+	# Dropping any leg of it puts every burnable (or every cuttable) in the game
+	# back on one shared world-event id, which is the bug this pin exists for; a
+	# mutation of any of the three values reds here.
+	var w1_counter_shape: Dictionary = {}
+	for row: Dictionary in w1_rows:
+		if String(row["outcome"]) != WIFieldSkills.OUTCOME_REMOVE_SCORCH:
+			assert(not row.has("counter_from"),
+				"only a row-defaulted banking verb may declare counter_from (state_set is carrier-sourced by substrate)")
+			continue
+		w1_counter_shape["%s x %s" % [String(row["skill_property"]), String(row["target_property"])]] = [
+			String(row.get("counter", "")), String(row.get("counter_from", "")), String(row.get("counter_key", "")),
+		]
+	assert(w1_counter_shape == {
+		"burns x burnable": ["burned_the_debris", "target", "burn_counter"],
+		"cuts x cuttable": ["cut_through_growth", "target", "cut_counter"],
+	}, "every remove_scorch row keeps its row-default counter AND its per-carrier override key")
 	for row: Dictionary in w1_rows:
 		assert(w1_skill_props.has(String(row["skill_property"])), "every row's skill property is registered")
 		assert(w1_target_props.has(String(row["target_property"])), "every row's target property is registered")
@@ -228,6 +300,121 @@ func _init() -> void:
 	assert(String(_w1_last("terrain_changed").get("to", "")) == "scorched", "the row's terrain value rides the event")
 	assert(String(_w1_last("toast").get("text", "")) == "W1 thicket toast.",
 		"toast_from=target reads the PROP's authored line")
+
+	var w1_cut := _w1_game(_w1_scene())
+	_w1_face(w1_cut, Vector2i(14, 3), Vector2i.UP)
+	var w1_cut_result := w1_cut.use_skill_field("w1_cut")
+	assert(w1_cut_result.get("burned", "") == "w1_briars",
+		"cuts x cuttable reuses remove_scorch without a sibling verb")
+	assert(w1_cut.find_entity("w1_briars").is_empty(), "the cuttable carrier is removed permanently")
+	assert(int(w1_cut.accomplishments.get("cut_through_growth", 0)) == 1,
+		"the cuts row banks its own row-parameterized counter")
+	assert(String(_w1_last("terrain_changed").get("to", "")) == "cleared",
+		"the cuts row supplies its own terrain value")
+	assert(String(_w1_last("toast").get("text", "")) == "W1 briars cut toast.",
+		"toast_from=target reads the cuttable PROP's authored line")
+
+	# --- PER-TARGET COUNTER OVERRIDE (#398-p2 review HIGH-1), the engine half.
+	# The plain thicket above banked the ROW's `burned_the_debris`; this carrier
+	# names its own id in the field `counter_key` points at and banks THAT, with
+	# nothing spilling onto the shared counter. Same proof on the cuts row, so
+	# the field is table-wide vocabulary and not a burn special case.
+	var w1_own := _w1_game(_w1_scene())
+	_w1_face(w1_own, Vector2i(16, 3), Vector2i.UP)
+	assert(w1_own.use_skill_field("w1_scorch").get("burned", "") == "w1_own_thicket",
+		"a burnable carrier with its own counter still resolves the shared burns row")
+	assert(int(w1_own.accomplishments.get("w1_burned_its_own", 0)) == 1,
+		"counter_from=target banks the CARRIER's own id")
+	assert(int(w1_own.accomplishments.get("burned_the_debris", 0)) == 0,
+		"an overriding carrier banks NOTHING onto the row's shared counter")
+	assert(_w1_types() == ["skill_used", "accomplishment_recorded", "entity_removed", "terrain_changed", "toast"],
+		"the override changes the banked id only -- the remove_scorch stream is byte-identical")
+	assert(String(_w1_last("toast").get("text", "")) == "W1 own-counter thicket toast.",
+		"the overriding carrier still speaks its own burn line")
+	_w1_face(w1_own, Vector2i(18, 3), Vector2i.UP)
+	assert(w1_own.use_skill_field("w1_cut").get("burned", "") == "w1_own_briars",
+		"the cuts row honors the same override vocabulary")
+	assert(int(w1_own.accomplishments.get("w1_cut_its_own", 0)) == 1,
+		"the cuttable carrier's own counter banks")
+	assert(int(w1_own.accomplishments.get("cut_through_growth", 0)) == 0,
+		"the cuts row's shared counter stays untouched by an overriding carrier")
+	# A carrier that authors an EMPTY override falls back to the row counter
+	# rather than banking "" -- the fallback is what keeps sewers' own debris
+	# working while a pocket two maps away overrides.
+	var w1_empty_scene := _w1_scene()
+	for raw_ent: Variant in (w1_empty_scene["maps"]["sewers"]["entities"] as Array):
+		if raw_ent is Dictionary and String((raw_ent as Dictionary).get(WIKeys.ID, "")) == "w1_own_thicket":
+			(raw_ent as Dictionary).erase("burn_counter")
+	var w1_empty := _w1_game(w1_empty_scene)
+	_w1_face(w1_empty, Vector2i(16, 3), Vector2i.UP)
+	assert(w1_empty.use_skill_field("w1_scorch").get("burned", "") == "w1_own_thicket",
+		"a carrier with no override still burns")
+	assert(int(w1_empty.accomplishments.get("burned_the_debris", 0)) == 1,
+		"with no override authored the ROW's counter is the fallback")
+
+	# --- CROSS-MAP ISOLATION (#398-p2 review HIGH-1, the probe made permanent).
+	# burns x burnable is ONE row over every burnable in the game. Before the
+	# override, burning the collapsed gallery's shoring banked the same id the
+	# SEWERS debris banks, so each pocket silently opened the other map's
+	# strongbox. Both directions are pinned, against the REAL shipped maps, with
+	# the nest counter pre-banked so the burn is the ONLY gate left in play.
+	var w1_cross := _w1_game(_w1_scene())
+	w1_cross.record_accomplishment("cleared_collapsed_gallery_nest", 1)
+	_w1_face_on(w1_cross, "deep_tunnels", Vector2i(13, 3), Vector2i.RIGHT)
+	assert(w1_cross.use_skill_field("w1_scorch").get("burned", "") == "collapsed_gallery_shoring",
+		"a burns cast at the tarred shoring resolves the shipped burns row")
+	assert(int(w1_cross.accomplishments.get("burned_the_gallery_shoring", 0)) == 1,
+		"the shoring banks its OWN counter")
+	assert(int(w1_cross.accomplishments.get("burned_the_debris", 0)) == 0,
+		"burning the gallery shoring does NOT bank burned_the_debris")
+	assert(String(w1_cross.entity_at(Vector2i(18, 2)).get(WIKeys.ID, "")) == "collapsed_gallery_strongbox_burn",
+		"the gallery's own strongbox is present once the shoring burned and the nest is clear")
+	w1_cross.transition("sewers", Vector2i(1, 3))
+	assert(w1_cross.entity_at(Vector2i(0, 3)).is_empty(),
+		"the SEWERS nook strongbox stays absent -- a deep-tunnels burn is not a sewers burn")
+	# The mirror direction: the sewers debris still banks the row default, opens
+	# its own nook, and leaves the gallery pocket shut.
+	var w1_cross_back := _w1_game(_w1_scene())
+	w1_cross_back.record_accomplishment("cleared_collapsed_gallery_nest", 1)
+	_w1_face(w1_cross_back, Vector2i(1, 3), Vector2i.UP)
+	assert(w1_cross_back.use_skill_field("w1_scorch").get("burned", "") == "sewer_debris",
+		"the sewers debris keeps resolving the same row")
+	assert(int(w1_cross_back.accomplishments.get("burned_the_debris", 0)) == 1,
+		"the debris authors no override, so the ROW's counter is what banks")
+	assert(int(w1_cross_back.accomplishments.get("burned_the_gallery_shoring", 0)) == 0,
+		"the debris never banks the gallery's id")
+	assert(String(w1_cross_back.entity_at(Vector2i(0, 3)).get(WIKeys.ID, "")) == "nook_strongbox",
+		"the sewers nook opens on its own burn, exactly as it shipped")
+	w1_cross_back.transition("deep_tunnels", Vector2i(13, 4))
+	assert(w1_cross_back.entity_at(Vector2i(18, 2)).is_empty(),
+		"the GALLERY strongbox stays absent -- a sewers burn is not a deep-tunnels burn")
+
+	# Phase-0 review can-fail: the two shipped martial cutters are field
+	# affordances only while their declared weapon family is EQUIPPED.
+	var w1_bare_cut := _w1_game(_w1_scene())
+	w1_bare_cut.player_skills.append("power_strike")
+	_w1_face(w1_bare_cut, Vector2i(14, 3), Vector2i.UP)
+	var w1_bare_result := w1_bare_cut.use_skill_field("power_strike")
+	assert(w1_bare_result.is_empty(), "barehanded power_strike refuses a cuttable target")
+	assert(not w1_bare_cut.find_entity("w1_briars").is_empty(),
+		"barehanded refusal does not remove the cuttable target")
+	assert(int(w1_bare_cut.accomplishments.get("cut_through_growth", 0)) == 0,
+		"barehanded refusal does not bank the cuts counter")
+	assert(_w1_types() == ["skill_no_effect", "toast"],
+		"barehanded refusal emits only skill_no_effect -> toast")
+
+	var w1_armed_cut := _w1_game(_w1_scene())
+	w1_armed_cut.player_skills.append("power_strike")
+	w1_armed_cut.inventory.assign(["rusty_sword"])
+	w1_armed_cut.equipped[WIKeys.WEAPON] = "rusty_sword"
+	_w1_face(w1_armed_cut, Vector2i(14, 3), Vector2i.UP)
+	var w1_armed_result := w1_armed_cut.use_skill_field("power_strike")
+	assert(w1_armed_result.get("burned", "") == "w1_briars",
+		"sword-equipped power_strike resolves the cuts row")
+	assert(w1_armed_cut.find_entity("w1_briars").is_empty(),
+		"armed power_strike removes the cuttable target")
+	assert(int(w1_armed_cut.accomplishments.get("cut_through_growth", 0)) == 1,
+		"armed power_strike banks the cuts counter")
 
 	# --- Precedence (spec §4.3): the authored arm beats the table on its own
 	# entity, even when that entity also carries the target property.

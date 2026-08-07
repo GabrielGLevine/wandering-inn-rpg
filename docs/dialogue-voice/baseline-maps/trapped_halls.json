@@ -1,7 +1,7 @@
 {
  "facts": {},
  "skeleton": {
-  "_comment_gallery": "NORTH GALLERY x14-19 y0-2, sealed by these six + (13,0)/(13,1)/(16,3). Two ways in, neither a spell: [Rope Work] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 is the only quadrant no QA route walks; blocked_cells 6->12, sprites 13->17 re-pin dungeon_peek.",
+  "_comment_gallery": "NORTH GALLERY x14-19 y0-2, sealed by these six + (13,0)/(13,1)/(16,3). Two ways in, neither a spell: [Rope Work] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 is the only quadrant no QA route walks; dungeon_peek's own pin comments carry the live counts.",
   "biome": "dungeon",
   "blocked": [
    [
@@ -170,10 +170,10 @@
     "display_name": "A Loose Flagstone",
     "id": "pressure_plate_a",
     "kind": "prop",
-    "observe": "One flagstone sits a hair proud of its neighbors, the mortar cracked clean around its edge. Stepping square on it feels like a very bad idea.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "triggered_pressure_plate",
     "sprite": "pressure_plate",
-    "toast": "The flagstone gives half an inch under your hand. Somewhere close, something CLICKS. Nothing else happens. This time.",
+    "toast": "\u00b6",
     "visual_states": [
      {
       "tint": [
@@ -190,7 +190,7 @@
    },
    {
     "_comment": "Own graph (ksmvr_plates.json): the guide option is the real beat, gated on `horns_party_formed` (the party must exist to guide). v0.15 T4.3 round 2: last of the six Horns presence rows to move onto horns_dig_started, so the halls stop holding a copy of Ksmvr while the camp holds one. Contract: inn.json's `ceria_inn_returned`.",
-    "_comment_dig": "Retires PERMANENTLY at horns_dig_STARTED (v0.15 T4.3 round 2 tightened it from Task 2.7's horns_dig_joined, once world.gd's dialogue defer made the earlier counter safe to gate on), the same delve-staging split as the approach map's Horns rows -- see dungeon_approach.json's `ceria` row _comment_dig for the contract. Safe for the seal beat either way: seal_kept_reported gates the dig invitation, so neither counter can bank until what_the_seal_kept is done.",
+    "_comment_dig": "Retires PERMANENTLY at horns_dig_STARTED, the delve-staging split the approach map's Horns rows use -- dungeon_approach.json's `ceria` _comment_dig holds the contract and its v0.15 provenance (#398-P3 census trim). Safe either way: seal_kept_reported gates the dig invitation.",
     "cell": [
      7,
      7
@@ -214,17 +214,17 @@
     ],
     "display_name": "A Dart Slit",
     "id": "dart_slit_a",
-    "item_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. Bare hands won't do it \u2014 you'd want a proper kit for this.",
+    "item_hint_toast": "\u00b6",
     "kind": "prop",
-    "locked_toast": "A narrow slit runs along the wall at knee height. Whatever is loaded behind it, you have no idea how to disable it.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "halls_cleared",
      "remove_item": "trap_kit",
-     "toast": "You trace the mechanism with a careful eye, find the catch, and wedge it still with a wax-and-wire pick from the kit. The slit stays dark."
+     "toast": "\u00b6"
     },
     "requires_item": "trap_kit",
     "requires_skill": "observe",
-    "skill_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. This wants a careful, deliberate touch, not a shove.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "dart_slit_tell"
    },
    {
@@ -235,13 +235,13 @@
     "display_name": "Ordinary Flagstones",
     "id": "illusory_floor_a",
     "kind": "prop",
-    "locked_toast": "The floor ahead looks perfectly ordinary. Something about it still itches at the back of your mind.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "spotted_illusory_floor",
-     "toast": "You look again, and this time you see it: the grain runs the wrong way, and no dust has settled in months. That is not floor. That is a very good painting of floor."
+     "toast": "\u00b6"
     },
     "requires_skill": "observe",
-    "skill_hint_toast": "The floor ahead looks exactly like the floor behind you. Somehow, that is the part that bothers you.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "illusory_floor_tell",
     "tint": [
      0.95,
@@ -270,14 +270,14 @@
     "display_name": "A Warded Seam",
     "id": "warded_seam",
     "kind": "prop",
-    "locked_toast": "The stone here looks like all the other stone. It is not.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "detected_wardwork",
      "lore": true,
-     "toast": "[Detect Magic] \u2014 The seam lights up like a badly kept secret: old wardwork, still holding, drawn tight around the floor ahead. Now you know exactly what not to trust."
+     "toast": "\u00b6"
     },
     "requires_skill": "detect_magic",
-    "skill_hint_toast": "Something under the stone hums off-key. Eyes that read mana could say what.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "warded_seam"
    },
    {
@@ -298,7 +298,7 @@
      "snare_ward_b",
      "rift_vermin_c"
     ],
-    "gate_closed_toast": "You give the wire a wide berth. Something in the dark past it has not noticed you yet.",
+    "gate_closed_toast": "\u00b6",
     "id": "snare_nest_slot",
     "kind": "encounter",
     "loot": [
@@ -307,7 +307,7 @@
       "item": "warded_coil_charm"
      }
     ],
-    "observe": "A coil of taut wire lies strung ankle-height between two stones, near-invisible against the dust. Whatever it is rigged to is worse than a stubbed toe.",
+    "observe": "\u00b6",
     "on_victory": [
      "halls_cleared",
      "cleared_halls_by_force"
@@ -347,7 +347,7 @@
     "enemies": [
      "vault_construct"
     ],
-    "gate_closed_toast": "Whatever waits beyond this arch, you are not walking into it yet \u2014 not with the halls still armed, not without the Horns at your back.",
+    "gate_closed_toast": "\u00b6",
     "id": "vault_boss_slot",
     "kind": "encounter",
     "loot": [
@@ -360,7 +360,7 @@
       "item": "tonic_of_the_clear_eye"
      }
     ],
-    "observe": "The hall ends in a sealed archway, and beyond it something vast fills the dark almost completely \u2014 the same shape you glimpsed crouched near the entrance, closer now, utterly still. It is not still the way a statue is still.",
+    "observe": "\u00b6",
     "on_victory": [
      "vault_construct_downed"
     ],
@@ -381,7 +381,7 @@
     ],
     "display_name": "A Sealed Rune-Door",
     "door_when": {
-     "open_toast": "The seal does not resist. It simply stops being a seal \u2014 the runes go quiet in order, one ring at a time, and the door swings in on three centuries of undisturbed air.",
+     "open_toast": "\u00b6",
      "requires": {
       "seal_opened": 1
      },
@@ -398,12 +398,12 @@
      "detect_magic": {
       "accomplishment": "sensed_something_deeper",
       "lore": true,
-      "toast": "[Detect Magic] \u2014 Wardwork, and awake. It does not flare and settle the way a bound ward should. It holds one low steady note, like a breath nobody has to let out, and you have felt that note somewhere else.",
+      "toast": "\u00b6",
       "variants": [
        {
         "accomplishment": "read_the_feeding_ward",
         "lore": true,
-        "toast": "[Detect Magic] \u2014 The ward opens under your sight and does not stop opening. It is not holding anything shut. It is POURING: one direction, one slow measured rate, into whatever the stone is between. It has poured since before the city. Pisces, very quietly: \"Ah. So that is what the others were.\"",
+        "toast": "\u00b6",
         "when": {
          "read_the_seal_runes": 1,
          "seal_descent_agreed": 1
@@ -412,7 +412,7 @@
        {
         "accomplishment": "read_the_feeding_ward",
         "lore": true,
-        "toast": "[Detect Magic] \u2014 Every reading you have taken lines up at once: the inn's frame, the ruin's socket, the seam back down the hall, the hollow west of Riverfarm. Not four wards. One lattice, and this door is where it drains to. Something behind this stone has been drinking Liscor's oldest work since before Liscor. Pisces uses a word you have never heard him use in public.",
+        "toast": "\u00b6",
         "when": {
          "detected_wardwork": 3,
          "read_the_seal_runes": 1,
@@ -423,12 +423,12 @@
      },
      "observe": {
       "accomplishment": "sensed_something_deeper",
-      "toast": "[Observe] \u2014 Worked stone, deliberate, and not one line of it reads like a lock. Whatever this door is for, it is not keeping people out. You would have to stand here longer, with someone who knows more than you do.",
+      "toast": "\u00b6",
       "variants": [
        {
         "accomplishment": "read_the_seal_runes",
         "lore": true,
-        "toast": "[Observe] \u2014 You take the runes in order, the way you would read a sentence. The turns repeat at a fixed interval. The pantry frame does exactly that, at exactly that interval, and this one is worn deeper: it has been doing it longer. Behind you, Pisces says nothing, which from him is applause.",
+        "toast": "\u00b6",
         "when": {
          "seal_descent_agreed": 1,
          "seal_kept_found": 1
@@ -443,12 +443,12 @@
      0.45,
      0.5
     ],
-    "toast": "The passage doesn't end here \u2014 it just goes quiet, past a bend the light doesn't reach. Whatever's back there, this isn't the moment.",
+    "toast": "\u00b6",
     "variants": [
      {
       "accomplishment": "seal_kept_found",
       "lore": true,
-      "toast": "The runes are the same. Not similar \u2014 the same hand, the same order, as the door in the inn's pantry.",
+      "toast": "\u00b6",
       "when": {
        "vault_construct_downed": 1
       }
@@ -456,7 +456,7 @@
      {
       "accomplishment": "read_the_seal_runes",
       "lore": true,
-      "toast": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it.",
+      "toast": "\u00b6",
       "when": {
        "seal_descent_agreed": 1,
        "seal_kept_found": 1
@@ -465,7 +465,7 @@
      {
       "accomplishment": "read_the_feeding_ward",
       "lore": true,
-      "toast": "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\"",
+      "toast": "\u00b6",
       "when": {
        "read_the_seal_runes": 1
       }
@@ -473,7 +473,7 @@
      {
       "accomplishment": "read_the_feeding_ward",
       "lore": false,
-      "toast": "The runes keep their slow one-way order. Pisces has stopped narrating and started counting under his breath, which is worse.",
+      "toast": "\u00b6",
       "when": {
        "read_the_feeding_ward": 1
       }
@@ -499,10 +499,10 @@
     "enemies": [
      "seal_warden"
     ],
-    "gate_closed_toast": "Dust lies on it in an unbroken sheet, the way dust lies on a thing that has not moved in centuries. Leave it that way.",
+    "gate_closed_toast": "\u00b6",
     "id": "seal_warden_alcove",
     "kind": "encounter",
-    "observe": "An alcove beside the sealed door, and something standing in it: ward-stone, shoulder-high, cut in the same hand as the runes. It is not a statue. Statues are not built facing the door they guard.",
+    "observe": "\u00b6",
     "on_victory": [
      "won_combat"
     ],
@@ -524,14 +524,14 @@
     "dialogue": [
      {
       "speaker": "Pisces",
-      "text": "Quietly, if you can manage it. I have lost the count twice already and blamed you both times."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Pisces",
     "facing": "up",
     "id": "pisces_seal_escort",
     "kind": "npc",
-    "observe": "He has not sat down since you got here. One hand hovers a finger's width off the stone, tracking something along it that nobody else in the hall can see, and his lips move without sound.",
+    "observe": "\u00b6",
     "present_when": {
      "requires": {
       "seal_descent_agreed": 1
@@ -558,10 +558,10 @@
      "rift_vermin_a",
      "rift_vermin_c"
     ],
-    "gate_closed_toast": "Rubble and old wardwork still choke this side passage. Whatever's back there can wait until the main halls are actually safe.",
+    "gate_closed_toast": "\u00b6",
     "id": "gallery_vermin_nest",
     "kind": "encounter",
-    "observe": "A narrower passage breaks off from the gauntlet proper, half-choked with fallen stone. Small shapes move in the dark past the rubble \u2014 more than one.",
+    "observe": "\u00b6",
     "on_victory": "gallery_vermin_culled",
     "respawns": true,
     "scales": true,
@@ -575,17 +575,17 @@
     "companion_source": {
      "companion_id": "skeleton_ally",
      "kind": "animated",
-     "taken_toast": "The bones rise and fall into step behind you."
+     "taken_toast": "\u00b6"
     },
     "display_name": "Old Bones",
     "id": "bone_pile_halls",
     "kind": "prop",
-    "observe": "Old bones, settled where they fell. They are not going anywhere. Probably.",
+    "observe": "\u00b6",
     "sprite": "gnaw_pile"
    },
    {
     "_comment": "[Rope Work] CARRIER. `gap` + `state_counter` are the table pair; (13,1) opens. The stub never goes absent, which is what lets visual_states SHOW the line -- a state_set the world never shows is invisible durable state.",
-    "anchor_toast": "[Rope Work] \u2014 You make the line fast to the stub, drop the tail across, and set it taut. The crossing is a crossing now, and it stays one.",
+    "anchor_toast": "\u00b6",
     "cell": [
      13,
      0
@@ -594,8 +594,8 @@
     "gap": true,
     "id": "halls_span_stub",
     "kind": "prop",
-    "locked_toast": "You get a hand on the stub and lean out. Nothing about that gap is jumpable, and nothing about the stub is climbable. What it wants is a rope.",
-    "observe": "A stub of masonry where a walkway used to leave this wall, sheared off clean. The other side is still there, four feet out and a long way down. The stub would hold a line all day.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "sprite": "pedestal",
     "state_counter": "gallery_line_anchored",
     "visual_states": [
@@ -616,8 +616,8 @@
     "display_name": "The Drop",
     "id": "halls_gallery_drop",
     "kind": "prop",
-    "locked_toast": "The floor stops. You put a boot to the lip and gravel goes over the edge and keeps going. Not without something to hold.",
-    "observe": "The floor is simply gone here, one span of it, edge to edge. Dropped stone comes back as a sound and not much of one.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "present_when": {
      "absent": {
       "gallery_line_anchored": 1
@@ -634,11 +634,11 @@
     "display_name": "The Fallen Slab",
     "id": "halls_gallery_slab",
     "kind": "prop",
-    "locked_toast": "You get both hands under the edge and pull until your eyes swim. It rocks an inch and settles back. Heavier than you.",
-    "observe": "One slab off the ceiling, come down whole and standing on its edge across the gap in the wall. Its own weight is the only thing holding it there.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "on_skill_use": {
      "accomplishment": "shouldered_the_slab",
-     "toast": "[Greater Strength] \u2014 You set your shoulder low, take the whole weight on your legs, and walk it aside. Stone grinds on stone and the gallery mouth stands open behind it."
+     "toast": "\u00b6"
     },
     "present_when": {
      "absent": {
@@ -646,7 +646,7 @@
      }
     },
     "requires_skill": "greater_strength",
-    "skill_hint_toast": "Hauling at it idly will not do it. Setting your shoulder to it properly might.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "dungeon_rubble",
     "tint": [
      0.85,
@@ -664,7 +664,7 @@
     "gold": 5,
     "id": "halls_gallery_cache",
     "kind": "prop",
-    "observe": "A strapped case set down against the wall and never picked up again, the leather gone stiff and pale. Whoever put it there meant to come back through the span.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "found_gallery_cache",
     "present_when": {
      "absent": {
@@ -672,7 +672,137 @@
      }
     },
     "sprite": "chest",
-    "toast": "The straps give at a pull. Inside: chalk, a bent square, a coil of good wire, and five gold in a twist of cloth that somebody was saving for the walk home."
+    "toast": "\u00b6"
+   },
+   {
+    "_comment": "#398-P3 review M7: warded_side_vault_open is in the absent set, so a dual-kit player who prys first finds no tell and no release -- you cannot disarm a sprung snare.",
+    "cell": [
+     2,
+     10
+    ],
+    "display_name": "A Warded Snare",
+    "id": "warded_side_vault_snare_tell",
+    "kind": "prop",
+    "locked_toast": "\u00b6",
+    "on_skill_use": {
+     "accomplishment": "warded_vault_snare_found",
+     "toast": "\u00b6"
+    },
+    "present_when": {
+     "absent": {
+      "warded_side_vault_open": 1,
+      "warded_vault_snare_found": 1
+     }
+    },
+    "requires_skill": "find_trap",
+    "skill_hint_toast": "\u00b6",
+    "sprite": "snare_coil"
+   },
+   {
+    "cell": [
+     2,
+     10
+    ],
+    "display_name": "The Snare Release",
+    "id": "warded_side_vault_snare_release",
+    "kind": "prop",
+    "locked_toast": "\u00b6",
+    "on_skill_use": {
+     "_comment": "String|Array: the mode's own counter plus the shared pocket-open counter the guard's encounter_when reads. encounter_when has no OR arm (review B1).",
+     "accomplishment": [
+      "warded_vault_disarmed",
+      "warded_side_vault_open"
+     ],
+     "toast": "\u00b6"
+    },
+    "present_when": {
+     "absent": {
+      "warded_side_vault_open": 1
+     },
+     "requires": {
+      "warded_vault_snare_found": 1
+     }
+    },
+    "requires_skill": "disarm_trap",
+    "skill_hint_toast": "\u00b6",
+    "sprite": "pressure_plate"
+   },
+   {
+    "cell": [
+     7,
+     10
+    ],
+    "display_name": "A Warded Floor Plate",
+    "id": "warded_side_vault_pry_plate",
+    "kind": "prop",
+    "locked_toast": "\u00b6",
+    "on_skill_use": {
+     "accomplishment": [
+      "warded_vault_forced_noisy",
+      "warded_side_vault_open"
+     ],
+     "toast": "\u00b6"
+    },
+    "present_when": {
+     "absent": {
+      "warded_side_vault_open": 1
+     }
+    },
+    "requires_skill": "greater_strength",
+    "skill_hint_toast": "\u00b6",
+    "sprite": "pressure_plate"
+   },
+   {
+    "_comment": "present_when is validator-forbidden on encounters, so it stands visible and inert from first arrival (rift_vermin_leak's pattern) and counts in every sprite pin. encounter_when is the belt to the wall's braces.",
+    "allies": [],
+    "arena": "trapped_halls_snare",
+    "cell": [
+     4,
+     12
+    ],
+    "display_name": "A Warded Construct",
+    "encounter_when": {
+     "requires": {
+      "warded_side_vault_open": 1
+     }
+    },
+    "enemies": [
+     "side_vault_construct"
+    ],
+    "id": "warded_side_vault_construct",
+    "kind": "encounter",
+    "observe": "\u00b6",
+    "on_victory": [
+     "warded_side_vault_secured"
+    ],
+    "sprite": "ruin_warden",
+    "tint": [
+     0.58,
+     0.64,
+     0.76
+    ]
+   },
+   {
+    "cell": [
+     4,
+     13
+    ],
+    "display_name": "The Side-Vault Cache",
+    "id": "warded_side_vault_cache",
+    "item": "wardwrights_counterweight",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "on_interact_accomplishment": "warded_side_vault_looted",
+    "present_when": {
+     "absent": {
+      "warded_side_vault_looted": 1
+     },
+     "requires": {
+      "warded_side_vault_secured": 1
+     }
+    },
+    "sprite": "chest",
+    "toast": "\u00b6"
    }
   ],
   "floor_layers": [
@@ -699,6 +829,45 @@
    "height": 14,
    "width": 20
   },
+  "skill_gates": {
+   "warded_side_vault": {
+    "modes": [
+     {
+      "_comment": "#398-P3 review M9: no skill_property. An M-ARM mode's signature is (mechanism, skill-or-gate, prop); a made-up 'trapwork' label was labeling, not distinctness.",
+      "cells": [
+       [
+        2,
+        10
+       ]
+      ],
+      "mechanism": "arm",
+      "props": [
+       "warded_side_vault_snare_tell",
+       "warded_side_vault_snare_release"
+      ],
+      "skills": [
+       "find_trap",
+       "disarm_trap"
+      ]
+     },
+     {
+      "cells": [
+       [
+        7,
+        10
+       ]
+      ],
+      "mechanism": "arm",
+      "prop": "warded_side_vault_pry_plate",
+      "skill": "greater_strength"
+     }
+    ],
+    "rewards": [
+     "warded_side_vault_construct",
+     "warded_side_vault_cache"
+    ]
+   }
+  },
   "walls": {
    "segments": [
     {
@@ -710,6 +879,47 @@
      "to": [
       9,
       11
+     ]
+    },
+    {
+     "from": [
+      0,
+      10
+     ],
+     "to": [
+      1,
+      10
+     ]
+    },
+    {
+     "from": [
+      3,
+      10
+     ],
+     "to": [
+      6,
+      10
+     ]
+    },
+    {
+     "from": [
+      8,
+      10
+     ],
+     "to": [
+      9,
+      10
+     ]
+    },
+    {
+     "_comment": "#398-P3 review B1 SEAL: the y10 run left the east side open (x10 y12/13 walked straight in). BFS: gates closed reaches nothing in y11-13 x0-8; either mode alone reaches guard and cache.",
+     "from": [
+      9,
+      12
+     ],
+     "to": [
+      9,
+      13
      ]
     }
    ],

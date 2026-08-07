@@ -4,7 +4,46 @@
   "width": 20,
   "height": 14
  },
- "_comment_gallery": "NORTH GALLERY x14-19 y0-2, sealed by these six + (13,0)/(13,1)/(16,3). Two ways in, neither a spell: [Rope Work] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 is the only quadrant no QA route walks; blocked_cells 6->12, sprites 13->17 re-pin dungeon_peek.",
+ "skill_gates": {
+  "warded_side_vault": {
+   "modes": [
+    {
+     "_comment": "#398-P3 review M9: no skill_property. An M-ARM mode's signature is (mechanism, skill-or-gate, prop); a made-up 'trapwork' label was labeling, not distinctness.",
+     "mechanism": "arm",
+     "skills": [
+      "find_trap",
+      "disarm_trap"
+     ],
+     "props": [
+      "warded_side_vault_snare_tell",
+      "warded_side_vault_snare_release"
+     ],
+     "cells": [
+      [
+       2,
+       10
+      ]
+     ]
+    },
+    {
+     "mechanism": "arm",
+     "skill": "greater_strength",
+     "prop": "warded_side_vault_pry_plate",
+     "cells": [
+      [
+       7,
+       10
+      ]
+     ]
+    }
+   ],
+   "rewards": [
+    "warded_side_vault_construct",
+    "warded_side_vault_cache"
+   ]
+  }
+ },
+ "_comment_gallery": "NORTH GALLERY x14-19 y0-2, sealed by these six + (13,0)/(13,1)/(16,3). Two ways in, neither a spell: [Rope Work] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 is the only quadrant no QA route walks; dungeon_peek's own pin comments carry the live counts.",
  "blocked": [
   [
    5,
@@ -60,6 +99,47 @@
     "to": [
      9,
      11
+    ]
+   },
+   {
+    "from": [
+     0,
+     10
+    ],
+    "to": [
+     1,
+     10
+    ]
+   },
+   {
+    "from": [
+     3,
+     10
+    ],
+    "to": [
+     6,
+     10
+    ]
+   },
+   {
+    "from": [
+     8,
+     10
+    ],
+    "to": [
+     9,
+     10
+    ]
+   },
+   {
+    "_comment": "#398-P3 review B1 SEAL: the y10 run left the east side open (x10 y12/13 walked straight in). BFS: gates closed reaches nothing in y11-13 x0-8; either mode alone reaches guard and cache.",
+    "from": [
+     9,
+     12
+    ],
+    "to": [
+     9,
+     13
     ]
    }
   ]
@@ -244,7 +324,7 @@
      "horns_dig_started": 1
     }
    },
-   "_comment_dig": "Retires PERMANENTLY at horns_dig_STARTED (v0.15 T4.3 round 2 tightened it from Task 2.7's horns_dig_joined, once world.gd's dialogue defer made the earlier counter safe to gate on), the same delve-staging split as the approach map's Horns rows -- see dungeon_approach.json's `ceria` row _comment_dig for the contract. Safe for the seal beat either way: seal_kept_reported gates the dig invitation, so neither counter can bank until what_the_seal_kept is done."
+   "_comment_dig": "Retires PERMANENTLY at horns_dig_STARTED, the delve-staging split the approach map's Horns rows use -- dungeon_approach.json's `ceria` _comment_dig holds the contract and its v0.15 provenance (#398-P3 census trim). Safe either way: seal_kept_reported gates the dig invitation."
   },
   {
    "id": "dart_slit_a",
@@ -712,6 +792,136 @@
    "on_interact_accomplishment": "found_gallery_cache",
    "gold": 5,
    "toast": "The straps give at a pull. Inside: chalk, a bent square, a coil of good wire, and five gold in a twist of cloth."
+  },
+  {
+   "id": "warded_side_vault_snare_tell",
+   "kind": "prop",
+   "cell": [
+    2,
+    10
+   ],
+   "display_name": "A Warded Snare",
+   "sprite": "snare_coil",
+   "_comment": "#398-P3 review M7: warded_side_vault_open is in the absent set, so a dual-kit player who prys first finds no tell and no release -- you cannot disarm a sprung snare.",
+   "present_when": {
+    "absent": {
+     "warded_vault_snare_found": 1,
+     "warded_side_vault_open": 1
+    }
+   },
+   "requires_skill": "find_trap",
+   "skill_hint_toast": "Trace the wire with [Find Trap], then finish the mechanism with [Disarm Trap]. [Greater Strength] could pry the other plate loose instead.",
+   "locked_toast": "The wire vanishes into a warded floor plate. [Find Trap] and [Disarm Trap] could quiet it; [Greater Strength] could pry the other plate loose.",
+   "on_skill_use": {
+    "accomplishment": "warded_vault_snare_found",
+    "toast": "[Find Trap] — The wire doubles back beneath the warded plate. Its release sits one finger-width inside the seam."
+   }
+  },
+  {
+   "id": "warded_side_vault_snare_release",
+   "kind": "prop",
+   "cell": [
+    2,
+    10
+   ],
+   "display_name": "The Snare Release",
+   "sprite": "pressure_plate",
+   "present_when": {
+    "requires": {
+     "warded_vault_snare_found": 1
+    },
+    "absent": {
+     "warded_side_vault_open": 1
+    }
+   },
+   "requires_skill": "disarm_trap",
+   "skill_hint_toast": "[Disarm Trap] can still the release you found. [Greater Strength] could pry the other plate loose instead.",
+   "locked_toast": "You found the release but cannot still it. [Disarm Trap] could clear the snare, or [Greater Strength] could pry the other plate loose.",
+   "on_skill_use": {
+    "_comment": "String|Array: the mode's own counter plus the shared pocket-open counter the guard's encounter_when reads. encounter_when has no OR arm (review B1).",
+    "accomplishment": [
+     "warded_vault_disarmed",
+     "warded_side_vault_open"
+    ],
+    "toast": "[Disarm Trap] — You ease the wire off the catch and pin the spring shut. The vault entrance lies clear."
+   }
+  },
+  {
+   "id": "warded_side_vault_pry_plate",
+   "kind": "prop",
+   "cell": [
+    7,
+    10
+   ],
+   "display_name": "A Warded Floor Plate",
+   "sprite": "pressure_plate",
+   "present_when": {
+    "absent": {
+     "warded_side_vault_open": 1
+    }
+   },
+   "requires_skill": "greater_strength",
+   "skill_hint_toast": "Set [Greater Strength] under the plate and pry. [Find Trap] and [Disarm Trap] could quiet the snare beside it instead.",
+   "locked_toast": "The warded plate is pinned hard into the floor. [Greater Strength] could pry it loose; [Find Trap] and [Disarm Trap] could quiet the snare beside it.",
+   "on_skill_use": {
+    "accomplishment": [
+     "warded_vault_forced_noisy",
+     "warded_side_vault_open"
+    ],
+    "toast": "[Greater Strength] — You pry the plate free. The snare lashes against the wall, and the strike rings down the halls."
+   }
+  },
+  {
+   "id": "warded_side_vault_construct",
+   "kind": "encounter",
+   "cell": [
+    4,
+    12
+   ],
+   "display_name": "A Warded Construct",
+   "sprite": "ruin_warden",
+   "tint": [
+    0.58,
+    0.64,
+    0.76
+   ],
+   "arena": "trapped_halls_snare",
+   "enemies": [
+    "side_vault_construct"
+   ],
+   "allies": [],
+   "on_victory": [
+    "warded_side_vault_secured"
+   ],
+   "_comment": "present_when is validator-forbidden on encounters, so it stands visible and inert from first arrival (rift_vermin_leak's pattern) and counts in every sprite pin. encounter_when is the belt to the wall's braces.",
+   "encounter_when": {
+    "requires": {
+     "warded_side_vault_open": 1
+    }
+   },
+   "observe": "A narrow construct stands over the inner cache. Its ward-lines face the cleared plates behind you, and nothing else opens onto this pocket."
+  },
+  {
+   "id": "warded_side_vault_cache",
+   "kind": "prop",
+   "cell": [
+    4,
+    13
+   ],
+   "display_name": "The Side-Vault Cache",
+   "sprite": "chest",
+   "present_when": {
+    "requires": {
+     "warded_side_vault_secured": 1
+    },
+    "absent": {
+     "warded_side_vault_looted": 1
+    }
+   },
+   "observe": "Fine ward-lines leave the cache and run east toward the sealed rune-door deeper in the halls.",
+   "on_interact_accomplishment": "warded_side_vault_looted",
+   "item": "wardwrights_counterweight",
+   "toast": "The cache opens on a released catch. A lead counterweight rests inside, still holding a quiet ward."
   }
  ]
 }

@@ -59,8 +59,9 @@ docstring above):
      every shipped entity today, defensive for tomorrow),
      on_skill_use.accomplishment (+ its `variants` override),
      on_interact_accomplishment (+ its own `variants` override),
-     the property table's `state_set` carrier counters (the field each
-     state_set row's `counter_key` names -- see _state_set_counter_keys),
+     the property table's CARRIER-sourced counters (the field each
+     `counter_key` names, for state_set rows and for rows declaring
+     counter_from "target" -- see _carrier_counter_keys),
      on_open_accomplishment, on_enter_accomplishment, a non-empty talk_pool
      (-> heard_gossip + chatted_with_<id>), board_rumors[].banks_accomplishment.
   4. Dialogue-effect producers: every `{"accomplishment": id}` effect across
@@ -93,7 +94,7 @@ RELEASE = "0.19.0"
 # ---------------------------------------------------------------------------
 STRUCTURAL_LITERALS = [
     "observed_things", "befriended_moments", "deliberate_commerce",
-    "burned_the_debris", "sneaked_past_danger", "read_the_board",
+    "burned_the_debris", "cut_through_growth", "sneaked_past_danger", "read_the_board",
     "read_the_delivery_board", "door_study_sleeps", "door_awakened",
     "watch_runner_pointed", "reached_two_classes", "garden_door_unlocked",
     "post_game", "victories", "melee_hit", "ranged_hit", "spell_cast",
@@ -109,6 +110,7 @@ STRUCTURAL_LITERALS = [
     # line. Same shape in tests/test_shipped_ids.gd.
     "companion_lost",
 ]
+FROZEN_RETIRED_ACCOMPLISHMENTS = ["heard_thicket_keeps"]
 
 
 def catalog_ids(catalog: dict, key: str) -> list:
@@ -119,20 +121,31 @@ def map_ids(scene: dict) -> list:
     return sorted(str(k) for k in scene.get("maps", {}))
 
 
-def _state_set_counter_keys() -> list:
-    """#348 slice 2 census source 3b: `state_set` rows bank a counter authored
-    ON THE CARRIER, under whatever field the row's `counter_key` names. Derived
-    from the table rather than hardcoded, so a new state_set row registers its
-    carriers' counters with zero edits here.
+def _carrier_counter_keys() -> list:
+    """#348 slice 2 census source 3b: table rows whose counter is authored ON THE
+    CARRIER, under whatever field the row's `counter_key` names. Two shapes, one
+    derivation: `state_set` (carrier-sourced by substrate) and, since #398-p2,
+    any row declaring counter_from "target" (a row-defaulted verb whose carriers
+    may override the shared id -- the collapsed gallery's shoring banks its own
+    burn instead of sewers' `burned_the_debris`). Derived from the table rather
+    than hardcoded, so a new row registers its carriers' counters with zero edits
+    here, and DELETING a carrier's field drops the id from the freeze list --
+    which a STRUCTURAL_LITERALS entry would silently prevent.
     """
     table = load_json(DATA / "interactions.json")
     return sorted({str(row["counter_key"]) for row in table.get("interactions", [])
-        if isinstance(row, dict) and row.get("outcome") == "state_set" and row.get("counter_key")})
+        if isinstance(row, dict) and row.get("counter_key")
+        and (row.get("outcome") == "state_set" or row.get("counter_from") == "target")})
+
+
+def _banked_ids(raw) -> list:
+    """String|Array -> the ids it banks (the on_victory/on_open contract)."""
+    return [str(entry) for entry in (raw if isinstance(raw, list) else [raw])]
 
 
 def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: dict, deliveries: dict) -> list:
     out = set(STRUCTURAL_LITERALS)
-    state_set_keys = _state_set_counter_keys()
+    carrier_counter_keys = _carrier_counter_keys()
 
     for skill in skills.get("skills", []):
         if "weapon" in skill:
@@ -153,10 +166,13 @@ def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: 
                 out.add("fought_%s" % str(entity["id"]))
             skill_use = entity.get("on_skill_use", {})
             if "accomplishment" in skill_use:
-                out.add(str(skill_use["accomplishment"]))
+                # #398-P3: String|Array (the on_open_accomplishment contract
+                # below) -- a bare str() over a list would freeze one garbage
+                # "['a', 'b']" id and silently drop the real ones.
+                out.update(_banked_ids(skill_use["accomplishment"]))
             for variant in skill_use.get("variants", []):
                 if "accomplishment" in variant:
-                    out.add(str(variant["accomplishment"]))
+                    out.update(_banked_ids(variant["accomplishment"]))
             # v0.16 close: the per-skill arm map (`skill_uses`) wins over
             # `on_skill_use` at runtime (wi_game.gd:427-433) and test_content
             # already counts its arms as producers (:466-469); omitting it
@@ -165,10 +181,10 @@ def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: 
                 if not isinstance(arm, dict):
                     continue
                 if "accomplishment" in arm:
-                    out.add(str(arm["accomplishment"]))
+                    out.update(_banked_ids(arm["accomplishment"]))
                 for variant in arm.get("variants", []):
                     if "accomplishment" in variant:
-                        out.add(str(variant["accomplishment"]))
+                        out.update(_banked_ids(variant["accomplishment"]))
             if "on_interact_accomplishment" in entity:
                 out.add(str(entity["on_interact_accomplishment"]))
                 for variant in entity.get("variants", []):
@@ -183,9 +199,9 @@ def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: 
                 out.update(str(o) for o in opened_ids)
             if "on_enter_accomplishment" in entity:
                 out.add(str(entity["on_enter_accomplishment"]))
-            for state_key in state_set_keys:
-                if entity.get(state_key):
-                    out.add(str(entity[state_key]))
+            for carrier_key in carrier_counter_keys:
+                if entity.get(carrier_key):
+                    out.add(str(entity[carrier_key]))
             if entity.get("talk_pool"):
                 out.add("heard_gossip")
                 out.add("chatted_with_%s" % entity["id"])
@@ -240,7 +256,8 @@ def build_payload() -> dict:
         "skills": catalog_ids(skills, "skills"),
         "items": catalog_ids(items, "items"),
         "maps": map_ids(scene),
-        "accomplishments": produced_accomplishments(scene, graphs, skills, bounties, deliveries),
+        "accomplishments": sorted(set(produced_accomplishments(scene, graphs, skills, bounties, deliveries))
+            | set(FROZEN_RETIRED_ACCOMPLISHMENTS)),
     }
 
 

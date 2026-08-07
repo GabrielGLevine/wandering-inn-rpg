@@ -1,0 +1,192 @@
+{
+ "_comment": "#398 P1 review H2 PROOF, and the first coverage bounty_pond_keepsakes' found_the_frozen_cache objective has ever had. The shipped strings are asserted against the shipped geometry this wave did not move: the cache sits at (10,18) with water on all four sides, (10,17) is the freezable approach, and the player is STANDING ON THE ICE at (10,17) when 'Kneeling on the ice' fires.",
+ "fixture_save": "pond_frozen_cache_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    16
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     10,
+     17
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    16
+   ]
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "frost_touch"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "frost_touch",
+    "context": "exploration"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "terrain_changed",
+   "payload_contains": {
+    "map": "floodplains",
+    "cell": [
+     10,
+     17
+    ],
+    "to": "ice"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Snap Freeze] — You lay your palm to the water and cold spiders out from it. In a breath the channel locks to grey-white ice, thick enough to bear your weight. It will not last past your next rest."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    17
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     10,
+     18
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    17
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "01_kneeling_on_the_ice"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "found_the_frozen_cache"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, still dry: a few keepsakes and a handful of old coin."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, still dry: a few keepsakes and a handful of old coin. Earned 5 gold."
+   },
+   "timeout_sec": 10,
+   "_comment": "The panel COALESCES the gold payout into the same toast, so the RENDERED line is the prop's text plus 'Earned 5 gold.' -- pinned as it renders, not as it is authored."
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 25
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "pond_survey_seal"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "02_cache_opened"
+  }
+ ]
+}

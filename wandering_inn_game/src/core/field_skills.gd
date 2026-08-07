@@ -303,7 +303,7 @@ func _outcome_remove_scorch(skill_id: String, row: Dictionary, target: Dictionar
 	var burned_cell: Vector2i = target[WIKeys.CELL]
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": burned_id})
 	_mark_skill_used.call(skill_id)
-	var counter := String(row.get("counter", ""))
+	var counter := _row_counter(row, target)
 	if counter != "":
 		_record_accomplishment.call(counter, 1)
 	var burn_toast := _row_toast(row, target, {})
@@ -373,6 +373,29 @@ func _outcome_refuse(skill_id: String, row: Dictionary, target: Dictionary, skil
 	_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": refused_id})
 	_emit(WIEvents.TOAST, {"text": _row_toast(row, target, skill)})
 	return {"refused": skill_id}
+
+
+## Row COUNTER resolution -- `_row_toast`'s mirror, one shape for both sides of
+## the sentence. `counter_from: "target"` says the CARRIER names the
+## accomplishment (`counter_key` is the field to read, exactly as `toast_key`
+## names the field the carrier's line lives in); anything else means the row's
+## own `counter` is the id, which is the pre-#398 behavior. The row `counter`
+## stays the FALLBACK for a carrier that authors no override, so one row can
+## serve a generic blocker AND a pocket that must bank its own id.
+## WHY IT EXISTS (#398-p2 review HIGH-1): burns x burnable is ONE row over every
+## burnable in the game, so a single row-level id made every burn line in every
+## region the same world event -- burning the sewers debris opened a strongbox
+## two maps down, and vice versa. A per-carrier id is the only fix that keeps
+## "a new carrier is data alone" true.
+## NOT USED BY state_set: its counter is carrier-sourced BY SUBSTRATE (spec §4.1
+## -- a shared id would flip every sibling's visual_states), so it has no row
+## default to fall back to and reads `counter_key` unconditionally. Same key
+## name, same meaning: the field on the carrier that names its counter.
+func _row_counter(row: Dictionary, target: Dictionary) -> String:
+	var fallback := String(row.get("counter", ""))
+	if String(row.get("counter_from", "")) != "target":
+		return fallback
+	return String(target.get(String(row.get("counter_key", "")), fallback))
 
 
 ## Row copy resolution: `toast_from` picks WHICH side authors the line --

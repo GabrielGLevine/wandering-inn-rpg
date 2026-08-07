@@ -1,7 +1,7 @@
 {
  "facts": {},
  "skeleton": {
-  "_comment": "Walls: two short rubble columns (x7 top, x4 bottom) that never obstruct the open mid-band (y3-6), so entry->hearth->scouts->warren is always walkable.",
+  "_comment": "Walls: two short rubble columns (x7 top, x4 bottom) that never obstruct the open mid-band (y3-6), so entry->hearth->scouts->warren is always walkable. The x14-19 widening (#398-p2) is a WALLED gallery box -- y0-4 rim, y5-9 solid rock, painted with the cave biome's blocked tile (2,3) -- so the only way in is the three blockers on the x14 face and no reachable cell is empty.",
   "ambience": [
    {
     "preset": "dust_motes",
@@ -38,6 +38,20 @@
      8
     ],
     "sprite": "boulder"
+   },
+   {
+    "cell": [
+     18,
+     1
+    ],
+    "sprite": "spider_web"
+   },
+   {
+    "cell": [
+     18,
+     3
+    ],
+    "sprite": "spider_web"
    }
   ],
   "entities": [
@@ -74,10 +88,10 @@
     "display_name": "Cold Hearth",
     "id": "cold_hearth",
     "kind": "prop",
-    "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. Something sat here in the dark and knew how to keep a fire \u2014 or learned how, the way they say these things learn, when the moon is full and their minds come clear.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "found_cold_hearth",
     "sprite": "cold_hearth",
-    "toast": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark, and left gnawed bones banked around the edge, cracked for their marrow."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -87,10 +101,10 @@
     "display_name": "Gnawed Bones",
     "id": "gnaw_pile",
     "kind": "prop",
-    "observe": "A midden of cracked bones, marrow sucked clean. Gnoll, most of them. A few too large to name. They have been sorted, almost stacked, as though something down here counts its meals and keeps the score.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "found_gnaw_pile",
     "sprite": "gnaw_pile",
-    "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered. And that is worse than if they had been."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -100,12 +114,12 @@
     "companion_source": {
      "companion_id": "skeleton_ally",
      "kind": "animated",
-     "taken_toast": "The bones rise and fall into step behind you."
+     "taken_toast": "\u00b6"
     },
     "display_name": "Old Bones",
     "id": "bone_pile_tunnels",
     "kind": "prop",
-    "observe": "Old bones, settled where they fell. They are not going anywhere. Probably.",
+    "observe": "\u00b6",
     "sprite": "gnaw_pile"
    },
    {
@@ -123,7 +137,7 @@
     ],
     "id": "raskghar_scouts",
     "kind": "encounter",
-    "observe": "Two of them crouch where the tunnel narrows, moon-grey and mountain-shouldered, knuckles to the stone. Their small eyes track you without blinking. Between you and the deeper dark, they are the door \u2014 and the lock.",
+    "observe": "\u00b6",
     "on_victory": [
      "cleared_raskghar_scouts"
     ],
@@ -137,7 +151,7 @@
     ],
     "display_name": "Warren Mouth",
     "door_when": {
-     "open_toast": "The gallery floor slopes down past where the den used to be, into a chamber someone else has clearly been surveying.",
+     "open_toast": "\u00b6",
      "requires": {
       "horns_delve_started": 1
      },
@@ -149,13 +163,13 @@
     },
     "id": "warren_mouth",
     "kind": "prop",
-    "observe": "The passage opens into a vast pillared gallery, its floor packed smooth by generations of pacing feet. Eyes catch your light far back in the dark and slide away. This is where they den, and where the big one waits, breathing slow in the black.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "reached_the_warren",
     "sprite": "warren_mouth",
-    "toast": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren.",
+    "toast": "\u00b6",
     "variants": [
      {
-      "toast": "The gallery is silent now. The pacing tracks are old and dust-softened; nothing breathes in the dark ahead. Past the emptied den, the stone the Watch sealed stands unbroken.",
+      "toast": "\u00b6",
       "when": {
        "cleared_the_warren": 1
       }
@@ -163,7 +177,7 @@
     ],
     "visual_states": [
      {
-      "observe": "Claw-gouges score the pillars, going quiet toward the back. The den is empty \u2014 cleared, then sealed. Whatever the warren was, it is a grave and a door now.",
+      "observe": "\u00b6",
       "when": {
        "at": 1,
        "counter": "cleared_the_warren"
@@ -180,7 +194,7 @@
     "dialogue": [
      {
       "speaker": "Relc",
-      "text": "There it is. Big one first. Questions after."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Relc",
@@ -229,7 +243,7 @@
       "item": "moonhide_fetish"
      }
     ],
-    "observe": "It fills the gallery mouth like a landslide that learned to breathe: upright, moon-grey, a pale mane over shoulders wider than a doorway. Old scars cross its hide, and a Gnoll's picked bones lie stacked at its feet. Its eyes hold on you with something worse than hunger: thought.",
+    "observe": "\u00b6",
     "on_victory": [
      "cleared_the_warren"
     ],
@@ -243,17 +257,185 @@
     "display_name": "A Raskghar Snare",
     "id": "warren_side_snare",
     "kind": "prop",
-    "locked_toast": "Sinew and bone hooks, strung low across the gallery floor. It has the shape of something meant to catch. You don't know how to spring it safely.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "trap_disarmed",
      "gold": 2,
-     "toast": "You work the hooks free of the sinew line and let it fall slack. Wedged in the rig: a couple of coins, old and green with tarnish."
+     "toast": "\u00b6"
     },
     "once_per_waking": true,
-    "once_per_waking_toast": "You've picked this snare clean today. The warren restocks on its own schedule.",
+    "once_per_waking_toast": "\u00b6",
     "requires_skill": "disarm_trap",
-    "skill_hint_toast": "Sinew and bone hooks, strung low across the gallery floor. Whatever set it hunts down here, same as you.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "snare_coil"
+   },
+   {
+    "cell": [
+     14,
+     1
+    ],
+    "display_name": "Mortared Rubble",
+    "id": "collapsed_gallery_rubble",
+    "item_hint_toast": "\u00b6",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "on_interact_accomplishment": "broke_through_gallery_rubble",
+    "present_when": {
+     "absent": {
+      "broke_through_gallery_rubble": 1
+     }
+    },
+    "requires_item": "trap_kit",
+    "sprite": "dungeon_rubble",
+    "toast": "\u00b6"
+   },
+   {
+    "cell": [
+     14,
+     2
+    ],
+    "display_name": "Fallen Beam",
+    "id": "collapsed_gallery_beam",
+    "kind": "prop",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
+    "on_skill_use": {
+     "accomplishment": "shifted_collapsed_gallery_beam",
+     "toast": "\u00b6"
+    },
+    "present_when": {
+     "absent": {
+      "shifted_collapsed_gallery_beam": 1
+     }
+    },
+    "requires_skill": "greater_strength",
+    "skill_hint_toast": "\u00b6",
+    "sprite": "boulder",
+    "tint": [
+     0.55,
+     0.38,
+     0.24
+    ]
+   },
+   {
+    "burn_counter": "burned_the_gallery_shoring",
+    "burn_toast": "\u00b6",
+    "burnable": true,
+    "cell": [
+     14,
+     3
+    ],
+    "display_name": "Tarred Shoring",
+    "id": "collapsed_gallery_shoring",
+    "kind": "prop",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
+    "sprite": "crate",
+    "tint": [
+     0.32,
+     0.24,
+     0.2
+    ]
+   },
+   {
+    "allies": [],
+    "arena": "sewers_nest",
+    "cell": [
+     17,
+     2
+    ],
+    "display_name": "Shield Spider Nest",
+    "enemies": [
+     "shield_spider",
+     "shield_spider",
+     "shield_spider"
+    ],
+    "id": "collapsed_gallery_nest",
+    "kind": "encounter",
+    "observe": "\u00b6",
+    "on_victory": [
+     "cleared_collapsed_gallery_nest"
+    ],
+    "sprite": "shield_spider"
+   },
+   {
+    "cell": [
+     18,
+     2
+    ],
+    "contains": [
+     "old_delvers_clasp"
+    ],
+    "display_name": "Delver's Strongbox",
+    "id": "collapsed_gallery_strongbox_pick",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "on_open_accomplishment": "opened_collapsed_gallery_strongbox",
+    "open_toast": "\u00b6",
+    "present_when": {
+     "absent": {
+      "opened_collapsed_gallery_strongbox": 1
+     },
+     "requires": {
+      "broke_through_gallery_rubble": 1,
+      "cleared_collapsed_gallery_nest": 1
+     }
+    },
+    "sprite": "chest"
+   },
+   {
+    "cell": [
+     18,
+     2
+    ],
+    "contains": [
+     "old_delvers_clasp"
+    ],
+    "display_name": "Delver's Strongbox",
+    "id": "collapsed_gallery_strongbox_strength",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "on_open_accomplishment": "opened_collapsed_gallery_strongbox",
+    "open_toast": "\u00b6",
+    "present_when": {
+     "absent": {
+      "broke_through_gallery_rubble": 1,
+      "opened_collapsed_gallery_strongbox": 1
+     },
+     "requires": {
+      "cleared_collapsed_gallery_nest": 1,
+      "shifted_collapsed_gallery_beam": 1
+     }
+    },
+    "sprite": "chest"
+   },
+   {
+    "_comment": "Gates on the SHORING's own burn_counter, never the burns row's shared burned_the_debris -- sewers' debris banks that one, and this pocket is two maps away.",
+    "cell": [
+     18,
+     2
+    ],
+    "contains": [
+     "old_delvers_clasp"
+    ],
+    "display_name": "Delver's Strongbox",
+    "id": "collapsed_gallery_strongbox_burn",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "on_open_accomplishment": "opened_collapsed_gallery_strongbox",
+    "open_toast": "\u00b6",
+    "present_when": {
+     "absent": {
+      "broke_through_gallery_rubble": 1,
+      "opened_collapsed_gallery_strongbox": 1,
+      "shifted_collapsed_gallery_beam": 1
+     },
+     "requires": {
+      "burned_the_gallery_shoring": 1,
+      "cleared_collapsed_gallery_nest": 1
+     }
+    },
+    "sprite": "chest"
    }
   ],
   "floor_layers": [
@@ -278,7 +460,33 @@
   ],
   "grid": {
    "height": 10,
-   "width": 14
+   "width": 20
+  },
+  "skill_gates": {
+   "collapsed_gallery": {
+    "modes": [
+     {
+      "gate": "item",
+      "mechanism": "arm",
+      "prop": "collapsed_gallery_rubble"
+     },
+     {
+      "mechanism": "arm",
+      "prop": "collapsed_gallery_beam"
+     },
+     {
+      "mechanism": "property",
+      "prop": "collapsed_gallery_shoring",
+      "skill_property": "burns"
+     }
+    ],
+    "rewards": [
+     "collapsed_gallery_nest",
+     "collapsed_gallery_strongbox_pick",
+     "collapsed_gallery_strongbox_strength",
+     "collapsed_gallery_strongbox_burn"
+    ]
+   }
   },
   "walls": {
    "segments": [
@@ -299,6 +507,62 @@
      ],
      "to": [
       4,
+      9
+     ]
+    },
+    {
+     "cap": [
+      2,
+      3
+     ],
+     "from": [
+      14,
+      0
+     ],
+     "to": [
+      19,
+      0
+     ]
+    },
+    {
+     "cap": [
+      2,
+      3
+     ],
+     "from": [
+      19,
+      0
+     ],
+     "to": [
+      19,
+      4
+     ]
+    },
+    {
+     "cap": [
+      2,
+      3
+     ],
+     "from": [
+      14,
+      4
+     ],
+     "to": [
+      19,
+      4
+     ]
+    },
+    {
+     "cap": [
+      2,
+      3
+     ],
+     "from": [
+      14,
+      5
+     ],
+     "to": [
+      19,
       9
      ]
     }

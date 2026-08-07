@@ -1,0 +1,57 @@
+{
+ "_comment": "#398 P4: the counting-room front gate. Bargain is visible-locked so the factor teaches the social route without hiding it; the noisy_entry option reaches one reactive line without changing the route.",
+ "start": "threshold",
+ "nodes": {
+  "threshold": {
+   "speaker": "The Counting-Room Factor",
+   "text": "The room is closed. The front door takes terms, and I set the terms myself. The side shutter opens if you can time the watchman's round. Men have put a shoulder through the rear door before now. The bar back there is ironwood in stone brackets.",
+   "options": [
+    {
+     "text": "The rear bar did not hold.",
+     "requires": {
+      "accomplishment": {
+       "noisy_entry": 1
+      }
+     },
+     "goto": "rear_account"
+    },
+    {
+     "text": "[Bargain] Put the room on my account.",
+     "requires": {
+      "skill": "bargain"
+     },
+     "goto": "terms"
+    },
+    {
+     "text": "Leave the account closed.",
+     "end": true
+    }
+   ]
+  },
+  "rear_account": {
+   "speaker": "The Counting-Room Factor",
+   "text": "That rear bar was expensive. Since you have already put your shoulder through the account, say what you came to say.",
+   "options": [
+    {
+     "text": "Keep the room closed.",
+     "end": true
+    }
+   ]
+  },
+  "terms": {
+   "speaker": "The Counting-Room Factor",
+   "text": "One look, and no hands on the ledgers. Whatever is standing in that room when the door opens is yours to deal with. Say the word and the key comes off my cuff.",
+   "options": [
+    {
+     "text": "Agreed.",
+     "effects": [
+      {
+       "accomplishment": "counting_room_invited"
+      }
+     ],
+     "end": true
+    }
+   ]
+  }
+ }
+}

@@ -15,6 +15,7 @@ const EXPECTED_ITEMS := {
 	"ratici_gray_feather": ["+1 HP", "Resonance 1", "Worth 11 gold"],
 	"ratici_parlor_coin": ["Resonance 1", "Worth 13 gold"],
 	"hedaults_warded_setting": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Worth 45 gold"],
+	"old_delvers_clasp": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Worth 35 gold"],
 	"gnollish_hunting_knife": ["+1 damage on melee hits", "Sword kit replaces other weapon Skills in combat", "Worth 15 gold"],
 	"wool_lined_cloak": ["+3 HP", "Worth 18 gold"],
 	"copper_luck_band": ["+1 HP", "Grants [Dangersense] in combat", "Worth 4 gold"],
@@ -79,6 +80,14 @@ const EXPECTED_ITEMS := {
 	"warded_coil_charm": ["+2 HP", "Resonance 1"],
 	"kingslayer_fang": ["+1 damage on melee hits", "+1 HP", "Resonance 1", "Grants [Battle Momentum] in combat"],
 	"guardian_ward_fragment": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Grants [Guarding Ward] in combat"],
+	# #398 P5 briar-arch coffer yield. warded_coil_charm's curve (hp_mod 2,
+	# damage_reduction 0, resonance 1) plus guardian_ward_fragment's grant, and no
+	# price -- so its lines are that fragment's MINUS the reduction clause. The
+	# missing row here was review C2: the suite printed FAIL and still exited 0.
+	"rootbound_ward_token": ["+2 HP", "Resonance 1", "Grants [Guarding Ward] in combat"],
+	"wardwrights_counterweight": ["+2 HP", "Resonance 1", "Grants [Dangersense] in combat"],
+	"sealed_factor_bale": ["Worth 28 gold"],
+	"pond_survey_seal": ["Reduces every hit taken by 1", "Resonance 1"],
 	# 2026-07-26 Act V terminus reward (data/maps/dungeon/seal_vault.json's
 	# vault_anchor_stone). construct_core_shard's curve, guardian_ward's grant,
 	# no price (one-of-a-kind find, never vendored).
@@ -88,9 +97,9 @@ const EXPECTED_ITEMS := {
 	"hedaults_wardstone": ["+2 HP", "Resonance 2", "Grants [Mana Shield] in combat", "Worth 50 gold"],
 	# v0.16 I1 (#306), inserted at the `hedaults_wardstone` anchor this lane also
 	# uses in items.json (ruling C). EXPECTED_ITEMS is exhaustive both ways, so a
-	# new item id with no row here reds this suite -- and it reds it QUIETLY: the
-	# _check quit(1) is overridden by the trailing quit(0), so the run still
-	# exits 0 and still prints PASS. The zero-noise grep is the only detector.
+	# new item id with no row here reds this suite. It used to red it QUIETLY --
+	# see the `_failed` block at `_check` for the #398 P5 fix that made the exit
+	# code, not just a zero-noise grep, the detector.
 	"plum_silk_locket": ["+1 HP", "Resonance 1", "Worth 30 gold"],
 	"moonhide_fetish": ["+1 damage on melee hits", "+1 HP", "Resonance 1", "Grants [Second Wind] in combat"],
 	"anchor_sliver": ["+4 HP", "Reduces every hit taken by 1", "Resonance 3"],
@@ -250,7 +259,7 @@ const EXPECTED_FIELD_SKILLS := {
 	# hotbar readout falls back to display_name -- description out on the map
 	# while the combat HUD keeps the cost line pinned in EXPECTED_SKILLS.
 	"icy_floor": [],
-	"flame_jet": [],
+	"flame_jet": []
 }
 
 
@@ -264,19 +273,41 @@ func _init() -> void:
 	_test_pending_meal_line()
 	_test_cooldown_clause()
 	_test_forbidden_vocab()
+	if _failed:
+		printerr("FAIL: test_effect_text -- one or more pinned expectations failed (see the FAIL lines above)")
+		quit(1)
+		return
 	print("PASS: WIEffectText generates every shipped line in visible currency only")
 	quit(0)
 
 
-func _check(cond: bool, msg: String) -> void:
-	if not cond:
-		push_error("FAIL: " + msg)
-		quit(1)
+## #398 P5 review C2 (the MASKED-RED class fix): `quit()` in Godot only REQUESTS
+## an exit at the end of the frame -- it does NOT return from the caller. So the
+## old `_check` failure path pushed `ERROR: FAIL ...`, kept running the whole
+## suite, and then hit `_init()`'s trailing `quit(0)`, which overwrote the 1.
+## The run printed PASS and exited 0 with the failure sitting in the log; only a
+## zero-noise grep could see it, which is exactly how the missing
+## `rootbound_ward_token` row above survived a green lane report.
+## The flag makes the EXIT CODE the referee: every `_check` still reports (all
+## failures in one run, not just the first), and `_init()` refuses to print PASS
+## or exit 0 when any of them failed. `_check` now also RETURNS whether it
+## passed, so the few sites that index a Dictionary right after proving the key
+## exists can `continue` instead of erroring on a missing key.
+var _failed := false
+
+
+func _check(cond: bool, msg: String) -> bool:
+	if cond:
+		return true
+	push_error("FAIL: " + msg)
+	_failed = true
+	return false
 
 
 func _load(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-	_check(parsed is Dictionary, "invalid JSON: " + path)
+	if not _check(parsed is Dictionary, "invalid JSON: " + path):
+		return {}
 	return parsed
 
 
@@ -286,7 +317,8 @@ func _test_items_exact() -> void:
 	for item: Dictionary in items:
 		var id := String(item["id"])
 		seen[id] = true
-		_check(EXPECTED_ITEMS.has(id), "item %s has no pinned expectation -- add it to EXPECTED_ITEMS" % id)
+		if not _check(EXPECTED_ITEMS.has(id), "item %s has no pinned expectation -- add it to EXPECTED_ITEMS" % id):
+			continue
 		_check(
 			WIEffectText.item_effect_lines(item) == EXPECTED_ITEMS[id],
 			"item %s lines: got %s want %s" % [id, WIEffectText.item_effect_lines(item), EXPECTED_ITEMS[id]]
@@ -301,7 +333,8 @@ func _test_skills_exact() -> void:
 	for skill: Dictionary in skills:
 		var id := String(skill["id"])
 		seen[id] = true
-		_check(EXPECTED_SKILLS.has(id), "skill %s has no pinned expectation -- add it to EXPECTED_SKILLS" % id)
+		if not _check(EXPECTED_SKILLS.has(id), "skill %s has no pinned expectation -- add it to EXPECTED_SKILLS" % id):
+			continue
 		_check(
 			WIEffectText.skill_effect_lines(skill) == EXPECTED_SKILLS[id],
 			"skill %s lines: got %s want %s" % [id, WIEffectText.skill_effect_lines(skill), EXPECTED_SKILLS[id]]

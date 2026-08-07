@@ -574,10 +574,6 @@
    8
   ],
   [
-   4,
-   8
-  ],
-  [
    5,
    8
   ],
@@ -634,30 +630,6 @@
    9
   ],
   [
-   2,
-   9
-  ],
-  [
-   3,
-   9
-  ],
-  [
-   4,
-   9
-  ],
-  [
-   5,
-   9
-  ],
-  [
-   6,
-   9
-  ],
-  [
-   7,
-   9
-  ],
-  [
    11,
    9
   ],
@@ -699,26 +671,6 @@
   ],
   [
    1,
-   10
-  ],
-  [
-   2,
-   10
-  ],
-  [
-   3,
-   10
-  ],
-  [
-   4,
-   10
-  ],
-  [
-   5,
-   10
-  ],
-  [
-   6,
    10
   ],
   [
@@ -770,55 +722,11 @@
    11
   ],
   [
-   2,
-   11
-  ],
-  [
-   3,
-   11
-  ],
-  [
-   4,
-   11
-  ],
-  [
-   5,
-   11
-  ],
-  [
-   6,
-   11
-  ],
-  [
-   7,
-   11
-  ],
-  [
    0,
    12
   ],
   [
    1,
-   12
-  ],
-  [
-   2,
-   12
-  ],
-  [
-   3,
-   12
-  ],
-  [
-   4,
-   12
-  ],
-  [
-   5,
-   12
-  ],
-  [
-   6,
    12
   ],
   [
@@ -1026,6 +934,34 @@
    }
   }
  ],
+ "skill_gates": {
+  "factor_counting_room": {
+   "rewards": [
+    "counting_room_guard",
+    "counting_room_trade_cache"
+   ],
+   "modes": [
+    {
+     "mechanism": "social",
+     "skill": "bargain",
+     "props": ["counting_room_factor"],
+     "cells": [[4, 8]]
+    },
+    {
+     "mechanism": "arm",
+     "skill": "observe",
+     "props": ["counting_room_watch_gap"],
+     "cells": [[7, 9]]
+    },
+    {
+     "mechanism": "arm",
+     "skill": "greater_strength",
+     "props": ["counting_room_rear_bar"],
+     "cells": [[7, 11]]
+    }
+   ]
+  }
+ },
  "entities": [
   {
    "_comment": "Round-trip pair with boulevard_to_alleys (invrisil_boulevard cell 26,8).",
@@ -1044,7 +980,7 @@
    ]
   },
   {
-   "_comment": "Round-trip pair with parlor_to_alleys (brothers_parlor cell 0,4). v0.16.1 #22: gains a cold slate tint, against warehouse_approach's burgundy on the north wall.",
+   "_comment": "Round-trip pair with parlor_to_alleys (brothers_parlor cell 0,4). Cold slate tint, against warehouse_approach's burgundy on the north wall.",
    "id": "alleys_to_parlor",
    "kind": "door",
    "cell": [
@@ -1065,7 +1001,7 @@
    ]
   },
   {
-   "_comment": "unlike Wilovan/Coyle, none of her effects reference a quest id or a start_combat entity C1 doesn't own (gold/accomplishment only), so the rumor-vending hub + the TALK-path testimony chain's *shape* are safe to ship now",
+   "_comment": "Her effects are gold/accomplishment only -- no quest id, no start_combat entity.",
    "id": "cups",
    "kind": "npc",
    "cell": [
@@ -1158,7 +1094,7 @@
    "locked_toast": "The ledger on the desk reads clean front to back. Finding the one it was written to cover takes an eye you don't have yet."
   },
   {
-   "_comment": "GH#68 (Invrisil quest-stage rework): the SKILL path's Stage 2 gate",
+   "_comment": "The SKILL path's Stage 2 gate.",
    "id": "counting_house_watch",
    "kind": "prop",
    "cell": [
@@ -1181,7 +1117,7 @@
    "locked_toast": "Two men on the door, pacing something. You don't have the eye to time it yet."
   },
   {
-   "_comment": "Plain on_interact_accomplishment, no skill gate (a fighter-built PC must never need [Appraise Foe] to reach a fight). v0.16.1 #22: moved [19,11] -> [18,10] (already-blocked north wall; approach [18,11] is the cell the canonical already teleports to) and hard-retinted to Coyle's burgundy. It used to sit DIRECTLY ABOVE alleys_to_parlor on the same wall column, both on the generic `door` sprite, so the pair read as one double door with adjacent approaches. NOT [16,11] as the triage proposed: row 11 is the map's ONLY through-corridor, so a blocker there strands the east end -- and invrisil_disagreement_stealth STANDS on [16,11] to lift the ledger.",
+   "_comment": "Plain on_interact_accomplishment, no skill gate (a fighter-built PC must never need [Appraise Foe] to reach a fight). At [18,10] on the already-blocked north wall; approach [18,11]. NEVER row 11: the map's ONLY through-corridor, so a blocker there strands the east end, and invrisil_disagreement_stealth stands on [16,11] to lift the ledger.",
    "id": "warehouse_approach",
    "kind": "prop",
    "cell": [
@@ -1200,7 +1136,7 @@
    "toast": "The runner ducks inside, and the gap in the shutters gives you the rest of it: crates stacked to the rafters, more of Coyle's livery than a legitimate warehouse ever needs. The door swings shut on the last of it."
   },
   {
-   "_comment": "matches combatants.json's own wilovan record + sim_combat_batch.gd's `hired_blades_w10_wilovan`/`hired_blades_w10_solo` harness cells (gated 0.6-0.8 with the ally, measured-only solo).",
+   "_comment": "Matches combatants.json's wilovan record + sim_combat_batch.gd's `hired_blades_w10_wilovan`/`hired_blades_w10_solo` cells.",
    "id": "hired_blades",
    "kind": "encounter",
    "cell": [
@@ -1225,7 +1161,7 @@
    "observe": "Three men in burgundy-and-brass doublets, clubs and knives held like men who've used them before. Merchant-livery, not Watch steel — Coyle's, all the way down to the stitching."
   },
   {
-   "_comment": "R6 (#95) trap placement 1/2: alley_footpads_a leftover, the footpad-era's remnant danger post-safe-passage.",
+   "_comment": "Trap placement 1/2: alley_footpads_a leftover, remnant danger post-safe-passage.",
    "id": "alley_footpad_snag_a",
    "once_per_waking": true,
    "once_per_waking_toast": "The line is coiled where you dropped it. The crate it was tied to is open and bare.",
@@ -1246,7 +1182,7 @@
    }
   },
   {
-   "_comment": "Avoidable: (11,12)/(13,12) both clear (y12 blocks only x0-7).",
+   "_comment": "Avoidable: (11,12)/(13,12) both clear. Row 12 blocks x0-1 and x7; x2-6 is the #398 counting-room floor, sealed from the corridor by the x7 wall.",
    "id": "alley_footpad_snag_b",
    "once_per_waking": true,
    "once_per_waking_toast": "Cleaned out — by you, earlier. Nothing behind the bottom crate now but paving.",
@@ -1267,7 +1203,7 @@
    }
   },
   {
-   "_comment": "Wave D-1 (#155): the invrisil SATELLITE bench -- entry [Low-Grade Synthesis] only, gives [Mixer] a second region (an apothecary corner off the boulevard). Placed at (1,6), a top-left corner off every QA path (invrisil_walkthrough walks row6 cols3-10 and row7 cols1-10; approach from (1,7)/(0,6)). Placeholder cauldron sprite (VISUAL-LOG). Banks synthesized_draught like every alchemist bench.",
+   "_comment": "The invrisil SATELLITE alchemy bench -- entry [Low-Grade Synthesis] only, giving [Mixer] a second region. At (1,6), off every QA path; approach from (1,7)/(0,6). Placeholder cauldron sprite (VISUAL-LOG). Banks synthesized_draught.",
    "id": "invrisil_apothecary_bench",
    "kind": "prop",
    "cell": [
@@ -1287,7 +1223,7 @@
    }
   },
   {
-   "_comment": "GH#142: Hedault, Invrisil enchanter (user placement ruling 2026-07-15). CANON-NATIVE Vol 6-7. Sprite: human placeholder + tint, VISUAL-LOG. No shop -- his commerce is the enchant dialogue.",
+   "_comment": "Hedault, Invrisil enchanter. CANON-NATIVE Vol 6-7. Sprite: human placeholder + tint, VISUAL-LOG. No shop -- his commerce is the enchant dialogue.",
    "id": "hedault",
    "kind": "npc",
    "cell": [
@@ -1305,7 +1241,7 @@
    "observe": "A severe man at a spotless corner bench, tools laid out at right angles. He looks at your gear before he looks at your face."
   },
   {
-   "_comment": "v0.16 I1 FIGHT (#306). INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell. Independent of the footpad rigs, so it is correct on a brothers_job_done save. v0.16.1 #11: victory_toast added -- nothing rendered between the fight ending and the Lady's report row, so the player was asked to claim a recovery the game had never shown them. combat_banking's one-shot toast is contract-legal here (the first on_victory id is `original_recovered`, a quest-style String). No item id minted.",
+   "_comment": "INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell, so it is correct on a brothers_job_done save. combat_banking's one-shot victory_toast is contract-legal here: the first on_victory id is `original_recovered`, a quest-style String. No item id minted.",
    "id": "alley_fence_door",
    "kind": "encounter",
    "cell": [
@@ -1331,7 +1267,7 @@
    "victory_toast": "The Fence's strongbox gives up a lady's stone — forty years missing and still warm with someone else's guilt. It goes in your pack like it weighs more than it does."
   },
   {
-   "_comment": "#318 beat 2. present_when keeps him off every shipped fixture's alley.",
+   "_comment": "#318 beat 2; present_when keeps him off every shipped fixture's alley.",
    "id": "alley_seal_broker",
    "kind": "npc",
    "cell": [
@@ -1355,7 +1291,7 @@
    "conversation": "invrisil_seal_broker"
   },
   {
-   "_comment": "#318 beat 2 FIGHT arm, committed from the hub and nowhere else. present_when is FORBIDDEN on encounters and this alley has no spare walkable cell ((4,6) blocks invrisil_walkthrough's row-6 leg; (4,5) puts a man on the building face), so the rig parks hidden on wall cell (5,4), which has no walkable neighbour. start_combat resolves by id and reads neither adjacency nor encounter_when, so `call_them` is the single door. Roster and arena are BOTH shipped: footpad_lookout + footpad_bruiser in mercantile_alley is the alley_footpads_t3_warrior10_solo cell, so no new balance cell is owed.",
+   "_comment": "#318 beat 2 FIGHT arm, committed from the hub only. present_when is FORBIDDEN on encounters, so the rig parks hidden on wall cell (5,4), which has no walkable neighbour. start_combat resolves by id and reads neither adjacency nor encounter_when, so `call_them` is the single door. Roster and arena are BOTH shipped: footpad_lookout + footpad_bruiser in mercantile_alley is the alley_footpads_t3_warrior10_solo cell, so no new balance cell is owed.",
    "id": "broker_hands",
    "kind": "encounter",
    "cell": [
@@ -1377,6 +1313,83 @@
     "seal_block_settled"
    ],
    "victory_toast": "You take the brass off the cloth yourself. Two letters, cut deep, and a table with nobody left standing beside it."
+  },
+  {
+   "_comment": "#398 P4 social gate. Its monotone counter retires the blocker when dialogue ends; (4,8) was static wall before this pocket.",
+   "id": "counting_room_factor",
+   "kind": "npc",
+   "cell": [4, 8],
+   "display_name": "The Counting-Room Factor",
+   "sprite": "city_scribe",
+   "facing": "up",
+   "conversation": "invrisil_counting_factor",
+   "present_when": {"absent": {"counting_room_invited": 1}},
+   "observe": "A factor in a fitted gray coat stands exactly where the front passage narrows. The key at his cuff is meant to be seen."
+  },
+  {
+   "_comment": "#398 P4 quiet gate. Its counter opens the side cell without touching the existing alley route.",
+   "id": "counting_room_watch_gap",
+   "kind": "prop",
+   "cell": [7, 9],
+   "display_name": "A Watched Side Shutter",
+   "sprite": "door",
+   "requires_skill": "observe",
+   "skill_hint_toast": "The watch turns by a pattern. [Appraise Foe] could mark the open breath; the factor or rear bar offers another way.",
+   "locked_toast": "The shutter never stays open long. [Appraise Foe] can find the turn; the factor or the rear bar offers another way.",
+   "present_when": {"absent": {"timed_counting_room_entry": 1}},
+   "observe": "A narrow goods shutter opens onto the side passage. One watcher crosses its view on a fixed turn.",
+   "on_skill_use": {
+    "accomplishment": "timed_counting_room_entry",
+    "toast": "[Appraise Foe] — The watcher turns on the third bell-stroke. You catch the shutter in the breath between one circuit and the next."
+   }
+  },
+  {
+   "_comment": "#398 P4 force gate. noisy_entry is shared with the factor graph's one reactive line.",
+   "id": "counting_room_rear_bar",
+   "kind": "prop",
+   "cell": [7, 11],
+   "display_name": "The Barred Rear Door",
+   "sprite": "door",
+   "requires_skill": "greater_strength",
+   "skill_hint_toast": "The bar is ironwood in stone brackets. [Greater Strength] could shift it; the factor or watch gap offers another way.",
+   "locked_toast": "The rear bar holds. [Greater Strength] can shift it; the factor or the watch gap offers a quieter way.",
+   "present_when": {"absent": {"noisy_entry": 1}},
+   "observe": "An ironwood bar sits deep in stone brackets. Moving it quietly was never part of the design.",
+   "on_skill_use": {
+    "accomplishment": "noisy_entry",
+    "toast": "[Greater Strength] — The bar comes out with half the bracket. The counting room hears exactly how you entered."
+   }
+  },
+  {
+   "_comment": "#398 P4 pocket encounter. Interact-only cannot work behind three disappearing gates, so radius 1 arms once a mode opens and the player crosses in.",
+   "id": "counting_room_guard",
+   "kind": "encounter",
+   "cell": [5, 10],
+   "trigger_radius": 1,
+   "display_name": "The Factor's Closed Account",
+   "sprite": "hired_blade",
+   "arena": "mercantile_alley",
+   "enemies": ["factor_enforcer", "factor_clerk_guard"],
+   "allies": [],
+   "on_victory": "cleared_counting_room_guard",
+   "observe": "A cudgel leaves the desk at the same moment a knife comes out from behind it. The room was closed for a reason.",
+   "victory_toast": "The counting room falls quiet. A sealed bale remains under the desk."
+  },
+  {
+   "_comment": "#398 P4 reward and fence-thread observe hook. Spawns only once the guard clears, so before victory the cell is empty AND sealed behind (7,12).",
+   "id": "counting_room_trade_cache",
+   "kind": "prop",
+   "cell": [3, 11],
+   "display_name": "A Factor-Sealed Bale",
+   "sprite": "crate",
+   "present_when": {
+    "requires": {"cleared_counting_room_guard": 1},
+    "absent": {"claimed_counting_room_goods": 1}
+   },
+   "observe": "The bale's second tally prices the same goods for a back room marked only by a hat and a feather. Someone is feeding the Brothers' fence from this account.",
+   "contains": ["sealed_factor_bale"],
+   "on_open_accomplishment": "claimed_counting_room_goods",
+   "open_toast": "The seal parts. The bale is compact enough to carry and valuable enough to explain the locked room."
   }
  ]
 }

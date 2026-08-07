@@ -1,8 +1,8 @@
 {
- "_comment": "Walls: two short rubble columns (x7 top, x4 bottom) that never obstruct the open mid-band (y3-6), so entry->hearth->scouts->warren is always walkable.",
+ "_comment": "Walls: two short rubble columns (x7 top, x4 bottom) that never obstruct the open mid-band (y3-6), so entry->hearth->scouts->warren is always walkable. The x14-19 widening (#398-p2) is a WALLED gallery box -- y0-4 rim, y5-9 solid rock, painted with the cave biome's blocked tile (2,3) -- so the only way in is the three blockers on the x14 face and no reachable cell is empty.",
  "biome": "cave",
  "grid": {
-  "width": 14,
+  "width": 20,
   "height": 10
  },
  "blocked": [],
@@ -49,6 +49,62 @@
      4,
      9
     ]
+   },
+   {
+    "from": [
+     14,
+     0
+    ],
+    "to": [
+     19,
+     0
+    ],
+    "cap": [
+     2,
+     3
+    ]
+   },
+   {
+    "from": [
+     19,
+     0
+    ],
+    "to": [
+     19,
+     4
+    ],
+    "cap": [
+     2,
+     3
+    ]
+   },
+   {
+    "from": [
+     14,
+     4
+    ],
+    "to": [
+     19,
+     4
+    ],
+    "cap": [
+     2,
+     3
+    ]
+   },
+   {
+    "from": [
+     14,
+     5
+    ],
+    "to": [
+     19,
+     9
+    ],
+    "cap": [
+     2,
+     3
+    ]
    }
   ]
  },
@@ -80,6 +136,20 @@
     6,
     8
    ]
+  },
+  {
+   "sprite": "spider_web",
+   "cell": [
+    18,
+    1
+   ]
+  },
+  {
+   "sprite": "spider_web",
+   "cell": [
+    18,
+    3
+   ]
   }
  ],
  "ambience": [
@@ -88,6 +158,32 @@
    "rect": "all"
   }
  ],
+ "skill_gates": {
+  "collapsed_gallery": {
+   "modes": [
+    {
+     "mechanism": "arm",
+     "gate": "item",
+     "prop": "collapsed_gallery_rubble"
+    },
+    {
+     "mechanism": "arm",
+     "prop": "collapsed_gallery_beam"
+    },
+    {
+     "mechanism": "property",
+     "skill_property": "burns",
+     "prop": "collapsed_gallery_shoring"
+    }
+   ],
+   "rewards": [
+    "collapsed_gallery_nest",
+    "collapsed_gallery_strongbox_pick",
+    "collapsed_gallery_strongbox_strength",
+    "collapsed_gallery_strongbox_burn"
+   ]
+  }
+ },
  "entities": [
   {
    "id": "tunnel_up",
@@ -298,6 +394,174 @@
     "toast": "You work the hooks free of the sinew line and let it fall slack. Wedged in the rig: a couple of coins, old and green with tarnish.",
     "gold": 2
    }
+  },
+  {
+   "id": "collapsed_gallery_rubble",
+   "kind": "prop",
+   "cell": [
+    14,
+    1
+   ],
+   "display_name": "Mortared Rubble",
+   "sprite": "dungeon_rubble",
+   "present_when": {
+    "absent": {
+     "broke_through_gallery_rubble": 1
+    }
+   },
+   "requires_item": "trap_kit",
+   "item_hint_toast": "A sound pick could break the rubble. [Greater Strength] could shift the beam, or fire could take the tarred shoring.",
+   "observe": "Mortared rubble plugs the upper gap. One stone bears fresh pick marks.",
+   "on_interact_accomplishment": "broke_through_gallery_rubble",
+   "toast": "The pick bites into the mortar. You clear a person-wide way through the rubble and keep the tool."
+  },
+  {
+   "id": "collapsed_gallery_beam",
+   "kind": "prop",
+   "cell": [
+    14,
+    2
+   ],
+   "display_name": "Fallen Beam",
+   "sprite": "boulder",
+   "tint": [
+    0.55,
+    0.38,
+    0.24
+   ],
+   "present_when": {
+    "absent": {
+     "shifted_collapsed_gallery_beam": 1
+    }
+   },
+   "requires_skill": "greater_strength",
+   "observe": "A fallen support beam jams the middle gap. It is intact and far too heavy to drag loose by hand.",
+   "locked_toast": "The beam will not move by hand alone. [Greater Strength] could shift it; a sound pick or fire opens another way.",
+   "skill_hint_toast": "Select [Greater Strength] and use it on the beam. A sound pick or fire opens another way.",
+   "on_skill_use": {
+    "accomplishment": "shifted_collapsed_gallery_beam",
+    "toast": "[Greater Strength] — You lift the beam clear and roll it against the wall. The middle passage opens."
+   }
+  },
+  {
+   "id": "collapsed_gallery_shoring",
+   "kind": "prop",
+   "cell": [
+    14,
+    3
+   ],
+   "display_name": "Tarred Shoring",
+   "sprite": "crate",
+   "tint": [
+    0.32,
+    0.24,
+    0.2
+   ],
+   "burnable": true,
+   "burn_counter": "burned_the_gallery_shoring",
+   "observe": "Tar-blackened shoring seals the lower gap. The timber is dry beneath the pitch.",
+   "locked_toast": "Tarred timber seals the lower gap. Fire could take it; a sound pick or [Greater Strength] opens another way.",
+   "burn_toast": "Fire runs through the tarred shoring. The timber drops to ash and leaves the lower passage open."
+  },
+  {
+   "id": "collapsed_gallery_nest",
+   "kind": "encounter",
+   "cell": [
+    17,
+    2
+   ],
+   "display_name": "Shield Spider Nest",
+   "sprite": "shield_spider",
+   "observe": "Shield Spider tracks run beneath the broken gallery and continue toward the lower tunnels.",
+   "arena": "sewers_nest",
+   "enemies": [
+    "shield_spider",
+    "shield_spider",
+    "shield_spider"
+   ],
+   "allies": [],
+   "on_victory": [
+    "cleared_collapsed_gallery_nest"
+   ]
+  },
+  {
+   "id": "collapsed_gallery_strongbox_pick",
+   "kind": "prop",
+   "cell": [
+    18,
+    2
+   ],
+   "display_name": "Delver's Strongbox",
+   "sprite": "chest",
+   "present_when": {
+    "requires": {
+     "broke_through_gallery_rubble": 1,
+     "cleared_collapsed_gallery_nest": 1
+    },
+    "absent": {
+     "opened_collapsed_gallery_strongbox": 1
+    }
+   },
+   "observe": "A compact strongbox lies behind the nest, its brass clasp green at the edges.",
+   "contains": [
+    "old_delvers_clasp"
+   ],
+   "on_open_accomplishment": "opened_collapsed_gallery_strongbox",
+   "open_toast": "The strongbox yields an old brass clasp, still carrying a steady protective enchantment."
+  },
+  {
+   "id": "collapsed_gallery_strongbox_strength",
+   "kind": "prop",
+   "cell": [
+    18,
+    2
+   ],
+   "display_name": "Delver's Strongbox",
+   "sprite": "chest",
+   "present_when": {
+    "requires": {
+     "shifted_collapsed_gallery_beam": 1,
+     "cleared_collapsed_gallery_nest": 1
+    },
+    "absent": {
+     "broke_through_gallery_rubble": 1,
+     "opened_collapsed_gallery_strongbox": 1
+    }
+   },
+   "observe": "A compact strongbox lies behind the nest, its brass clasp green at the edges.",
+   "contains": [
+    "old_delvers_clasp"
+   ],
+   "on_open_accomplishment": "opened_collapsed_gallery_strongbox",
+   "open_toast": "The strongbox yields an old brass clasp, still carrying a steady protective enchantment."
+  },
+  {
+   "_comment": "Gates on the SHORING's own burn_counter, never the burns row's shared burned_the_debris -- sewers' debris banks that one, and this pocket is two maps away.",
+   "id": "collapsed_gallery_strongbox_burn",
+   "kind": "prop",
+   "cell": [
+    18,
+    2
+   ],
+   "display_name": "Delver's Strongbox",
+   "sprite": "chest",
+   "present_when": {
+    "requires": {
+     "burned_the_gallery_shoring": 1,
+     "cleared_collapsed_gallery_nest": 1
+    },
+    "absent": {
+     "broke_through_gallery_rubble": 1,
+     "shifted_collapsed_gallery_beam": 1,
+     "opened_collapsed_gallery_strongbox": 1
+    }
+   },
+   "observe": "A compact strongbox lies behind the nest, its brass clasp green at the edges.",
+   "contains": [
+    "old_delvers_clasp"
+   ],
+   "on_open_accomplishment": "opened_collapsed_gallery_strongbox",
+   "open_toast": "The strongbox yields an old brass clasp, still carrying a steady protective enchantment."
   }
  ]
 }

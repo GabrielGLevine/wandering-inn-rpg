@@ -225,6 +225,14 @@ class TestInteractionsTable(unittest.TestCase):
         self.assertTrue(any("has no skill carrier" in e for e in errors))
         self.assertTrue(any("has no shipped target carrier" in e for e in errors))
 
+    def test_staged_target_property_allows_phase_split_then_lapses(self):
+        table = self._mutated()
+        table["staged_target_properties"] = ["burnable"]
+        errors, _ = self._run(table, maps={"m": {**GRID, "entities": []}})
+        self.assertEqual(errors, [])
+        errors, _ = self._run(table)
+        self.assertTrue(any("now has shipped carriers" in e for e in errors), errors)
+
     def test_duplicate_row_is_unreachable(self):
         table = self._mutated()
         table["interactions"].append(json.loads(json.dumps(table["interactions"][0])))
@@ -299,6 +307,237 @@ class TestInteractionsTable(unittest.TestCase):
         del table["interactions"][0]["counter"]
         errors, _ = self._run(table)
         self.assertEqual(errors, [])
+
+    # --- #398-p2 review HIGH-1: the per-carrier counter override ------------
+    # One row over every burnable in the game was also ONE world-event id, so
+    # burning the sewers debris opened a strongbox two maps down. These arms
+    # police the fix's vocabulary; the engine half is proven in
+    # tests/test_interactions_table.gd.
+    def _override_table(self, **row):
+        table = self._mutated()
+        table["interactions"][0].update({"counter_from": "target",
+            "counter_key": "burn_counter", **row})
+        return table
+
+    def _override_maps(self, **entity):
+        return {"m": {**GRID, "entities": [
+            {"id": "debris", "cell": [0, 0], "burnable": True},
+            {"id": "shoring", "cell": [1, 0], "burnable": True, **entity}]}}
+
+    def test_counter_override_passes_when_registered(self):
+        errors, _ = self._run(self._override_table(),
+            maps=self._override_maps(burn_counter="burned_the_shoring"),
+            shipped={"accomplishments": ["burned_the_debris", "burned_the_shoring"]})
+        self.assertEqual(errors, [])
+
+    def test_counter_override_opt_out_carrier_is_fine(self):
+        # The sewers-debris case: authors no override, keeps the row default.
+        errors, _ = self._run(self._override_table(), maps=self._override_maps())
+        self.assertEqual(errors, [])
+
+    def test_counter_override_needs_a_counter_key(self):
+        table = self._override_table()
+        del table["interactions"][0]["counter_key"]
+        errors, _ = self._run(table, maps=self._override_maps())
+        self.assertTrue(any("names no 'counter_key'" in e for e in errors), errors)
+
+    def test_counter_override_needs_a_row_fallback(self):
+        table = self._override_table()
+        del table["interactions"][0]["counter"]
+        errors, _ = self._run(table, maps=self._override_maps())
+        self.assertTrue(any("no row-level 'counter' fallback" in e for e in errors), errors)
+
+    def test_unregistered_override_id_fails(self):
+        errors, _ = self._run(self._override_table(),
+            maps=self._override_maps(burn_counter="burned_the_shoring"))
+        self.assertTrue(any("banks override 'burned_the_shoring'" in e for e in errors), errors)
+
+    def test_override_that_repeats_the_row_default_fails(self):
+        # A lookalike override reads as isolation in review while banking the
+        # shared id -- exactly the bug, wearing the fix's clothes.
+        errors, _ = self._run(self._override_table(),
+            maps=self._override_maps(burn_counter="burned_the_debris"))
+        self.assertTrue(any("with the row's own 'burned_the_debris'" in e for e in errors), errors)
+
+    def test_bogus_counter_source_fails(self):
+        errors, _ = self._run(self._override_table(counter_from="skill"),
+            maps=self._override_maps())
+        self.assertTrue(any("'counter_from' must be one of" in e for e in errors), errors)
+
+    def test_counter_key_without_counter_from_is_dead_data(self):
+        errors, _ = self._run(self._mutated(row_counter_key="burn_counter"))
+        self.assertTrue(any("dead data here unless the row declares counter_from" in e
+            for e in errors), errors)
+
+    def test_counter_from_on_a_carrier_sourced_verb_is_dead_data(self):
+        # state_set has no row default to fall back to, so the discriminator
+        # would be a lie: its counter is ALWAYS the carrier's.
+        table = self._mutated(
+            target_properties={"hearth": "entity"},
+            interactions=[{
+                "skill_property": "burns", "target_property": "hearth",
+                "outcome": "state_set", "persistence": "permanent",
+                "counter_key": "state_counter", "counter_from": "target",
+                "toast_from": "target", "toast_key": "kindle_toast",
+                "toast_default": "It lights.",
+            }])
+        errors, _ = self._run(table, maps={"m": {**GRID, "entities": [
+            {"id": "brazier", "cell": [0, 0], "hearth": True,
+             "state_counter": "burned_the_debris",
+             "visual_states": [{"when": {"counter": "burned_the_debris", "at": 1}}]}]}})
+        self.assertTrue(any("carrier-sourced BY SUBSTRATE" in e for e in errors), errors)
+
+
+# --- Issue #398 Phase 0: descriptive skill-gate registry --------------------
+SKILL_GATE_PARSED = {
+    data_lint.DATA / "skills.json": {"skills": [
+        {"id": "freeze", "freezes": True},
+        {"id": "blink", "blinks": True, "blink_range": 2},
+        {"id": "cut", "cuts": True},
+    ]},
+    data_lint.DATA / "classes.json": {"classes": [
+        {"id": "mage", "levels": [{"level": 1, "grants": ["freeze"]}]},
+        {"id": "runner", "levels": [{"level": 1, "grants": ["blink"]}]},
+        {"id": "warrior", "levels": [{"level": 1, "grants": ["cut"]}]},
+    ]},
+}
+
+
+def _good_skill_gate_map():
+    return {**GRID, "entities": [
+        {"id": "cache", "cell": [3, 1]},
+        {"id": "guide", "cell": [0, 2]},
+    ], "skill_gates": {"pocket": {
+        "modes": [
+            {"mechanism": "property", "skill_property": "freezes", "cells": [[1, 1]]},
+            {"mechanism": "blink", "min_range": 2, "from": [0, 1], "to": [2, 1]},
+        ],
+        "rewards": ["cache"],
+    }}}
+
+
+def _arm_pair_map():
+    """Two M-ARM modes in the #398-P3 shape: named skill + named prop, and no
+    skill_property anywhere in the registry."""
+    return {**GRID, "entities": [
+        {"id": "cache", "cell": [3, 1]},
+        {"id": "plate_a", "cell": [1, 1], "requires_skill": "freeze"},
+        {"id": "plate_b", "cell": [2, 1], "requires_skill": "cut"},
+    ], "skill_gates": {"pocket": {
+        "modes": [
+            {"mechanism": "arm", "skill": "freeze", "prop": "plate_a", "cells": [[1, 1]]},
+            {"mechanism": "arm", "skill": "cut", "prop": "plate_b", "cells": [[2, 1]]},
+        ],
+        "rewards": ["cache"],
+    }}}
+
+
+class TestSkillGates(unittest.TestCase):
+    def _run(self, map_doc):
+        errors = []
+        data_lint.check_skill_gates(SKILL_GATE_PARSED, {"m": map_doc}, errors)
+        return errors
+
+    def test_good_registry_passes(self):
+        self.assertEqual(self._run(_good_skill_gate_map()), [])
+
+    ARM_1 = "distinct mechanisms"
+
+    def test_arm_1_modes_need_distinct_mechanisms_or_properties(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["modes"][1] = {
+            "mechanism": "property", "skill_property": "freezes", "cells": [[2, 1]]}
+        errors = self._run(doc)
+        self.assertTrue(any(self.ARM_1 in error for error in errors), errors)
+
+    # --- #398-P3 review M9: an M-ARM mode's signature is (mechanism,
+    # skill-or-gate, prop). Two arm modes sharing BOTH are one mode written
+    # twice; sharing only the skill is a real two-carrier gate (the class
+    # overlap is arm 2's call, not arm 1's); and an arm mode carries no
+    # skill_property at all, which is what the invented "trapwork"/"force"
+    # labels were papering over.
+    def test_arm_1_arm_modes_need_no_skill_property(self):
+        doc = _arm_pair_map()
+        for mode in doc["skill_gates"]["pocket"]["modes"]:
+            self.assertNotIn("skill_property", mode)
+        self.assertEqual(self._run(doc), [])
+
+    def test_arm_1_two_arm_modes_sharing_skill_and_prop_go_red(self):
+        doc = _arm_pair_map()
+        doc["skill_gates"]["pocket"]["modes"][1] = {
+            "mechanism": "arm", "skill": "freeze", "prop": "plate_a", "cells": [[2, 1]]}
+        errors = self._run(doc)
+        self.assertTrue(any(self.ARM_1 in error for error in errors), errors)
+
+    def test_arm_1_two_arm_modes_sharing_only_the_skill_stay_distinct(self):
+        doc = _arm_pair_map()
+        doc["skill_gates"]["pocket"]["modes"][1]["skill"] = "freeze"
+        errors = self._run(doc)
+        self.assertFalse(any(self.ARM_1 in error for error in errors), errors)
+        # Clean overall: the carrier unions still differ (plate_b answers
+        # [Cut]), and that judgement is arm 2's, not arm 1's.
+        self.assertEqual(errors, [])
+
+    def test_arm_1_property_mode_signature_is_unchanged(self):
+        """A property mode still keys on its skill_property, carriers ignored."""
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["modes"][1] = {
+            "mechanism": "property", "skill_property": "freezes", "props": ["cache"]}
+        errors = self._run(doc)
+        self.assertTrue(any(self.ARM_1 in error for error in errors), errors)
+        doc["skill_gates"]["pocket"]["modes"][1]["skill_property"] = "cuts"
+        errors = self._run(doc)
+        self.assertFalse(any(self.ARM_1 in error for error in errors), errors)
+
+    def test_arm_2_class_unions_are_pairwise_distinct_across_all_modes(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["modes"].append({
+            "mechanism": "arm", "skill": "freeze", "cells": [[3, 2]]})
+        errors = self._run(doc)
+        self.assertTrue(any("identical class unions" in error for error in errors), errors)
+
+    def test_arm_2_empty_union_needs_explicit_non_skill_gate(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["modes"][1] = {
+            "mechanism": "social", "props": ["guide"]}
+        errors = self._run(doc)
+        self.assertTrue(any("empty skill-granter union" in error and "gate" in error
+            for error in errors), errors)
+        doc["skill_gates"]["pocket"]["modes"][1]["gate"] = "dialogue"
+        self.assertEqual(self._run(doc), [])
+
+    def test_arm_3_carriers_and_blink_range_must_be_real(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["modes"][0]["props"] = ["missing"]
+        doc["skill_gates"]["pocket"]["modes"][0]["cells"] = [[4, 0]]
+        doc["skill_gates"]["pocket"]["modes"][1]["min_range"] = 3
+        errors = self._run(doc)
+        joined = "\n".join(errors)
+        self.assertIn("does not resolve", joined)
+        self.assertIn("not a real cell", joined)
+        self.assertIn("exceeds shipped blink range", joined)
+
+    def test_blink_none_reports_invalid_value_not_exceeded_range(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["modes"][1]["min_range"] = None
+        errors = self._run(doc)
+        self.assertTrue(any("positive integer" in error for error in errors), errors)
+        self.assertFalse(any("None exceeds" in error for error in errors), errors)
+
+    def test_arm_4_rewards_must_resolve_on_the_same_map(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["rewards"] = ["elsewhere"]
+        errors = self._run(doc)
+        self.assertTrue(any("rewards do not resolve" in error for error in errors), errors)
+
+    def test_arm_5_missing_registry_is_report_only(self):
+        map_doc = {**GRID, "entities": [
+            {"id": "brush", "cell": [1, 1], "burnable": True},
+        ]}
+        advisories = []
+        data_lint.advise_missing_skill_gates({"m": map_doc}, advisories)
+        self.assertEqual(len(advisories), 1)
+        self.assertIn("burnable blocker", advisories[0])
 
 
 class TestRealTree(unittest.TestCase):

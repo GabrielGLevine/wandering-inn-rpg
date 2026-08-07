@@ -11,6 +11,38 @@
    17
   ]
  ],
+ "skill_gates": {
+  "pond_island": {
+   "modes": [
+    {
+     "mechanism": "property",
+     "skill_property": "freezes",
+     "cells": [
+      [
+       12,
+       20
+      ]
+     ]
+    },
+    {
+     "mechanism": "blink",
+     "min_range": 2,
+     "from": [
+      13,
+      20
+     ],
+     "to": [
+      11,
+      20
+     ]
+    }
+   ],
+   "rewards": [
+    "pond_cache",
+    "pond_guardian"
+   ]
+  }
+ },
  "_comment_unsteady": "[Even Footing] chute up the east outcrop. (31,4)-(31,6) were ALREADY blocked, so blocked_cells and every route are unchanged. Scree-dressed, not masonry. NOT the pond -- a warrior on open water reads wrong.",
  "unsteady": [
   [
@@ -689,6 +721,23 @@
      19
     ],
     "to": [
+     10,
+     19
+    ],
+    "cap": [
+     1,
+     5
+    ],
+    "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+    "tile_px": 16,
+    "water": true
+   },
+   {
+    "from": [
+     12,
+     19
+    ],
+    "to": [
      13,
      19
     ],
@@ -703,6 +752,23 @@
    {
     "from": [
      8,
+     20
+    ],
+    "to": [
+     9,
+     20
+    ],
+    "cap": [
+     1,
+     5
+    ],
+    "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+    "tile_px": 16,
+    "water": true
+   },
+   {
+    "from": [
+     12,
      20
     ],
     "to": [
@@ -1135,7 +1201,7 @@
    "observe": "The paint is newer than the post it hangs on. The board turns a little in the wind and knocks against it."
   },
   {
-   "_comment": "b7 #214c: the fishing affordance — an item-gated bank prop beside the freezable pond edge ((10,17) itself stays clear for the freeze mechanic). No catch item, no fishing system (CHOICE-LOG): the issue is affordance clarity; banks went_fishing, once per waking. The handline's own lore ('the water starts moving wrong') is the deliberate echo.",
+   "_comment": "b7 #214c: item-gated fishing affordance beside the freezable pond edge -- (10,17) itself stays clear for the freeze mechanic. No catch item, no fishing system (CHOICE-LOG); banks went_fishing, once per waking.",
    "id": "pond_edge",
    "kind": "prop",
    "cell": [
@@ -1465,7 +1531,7 @@
    }
   },
   {
-   "_comment": "LOCKED interface: entry door id `ruin_door` (this entity) pairs with `ruin_exit` on ruin_surface. Task 2.3 moved the door_when gate door_chain_started -> horns_dig_started. MANDATORY, not cosmetic: Task 2.2 retired door_chain_started's only producer and Task 2.4 re-banks it at the MOUNTING (which needs door_retrieved, which needs this door), so the old gate would have deadlocked the seam shut forever for every new save. Old saves reach horns_dig_started through Task 2.6's backfill.",
+   "_comment": "LOCKED interface: entry door id `ruin_door` (this entity) pairs with `ruin_exit` on ruin_surface. The door_when gate is horns_dig_started, NEVER door_chain_started -- that counter's only producer is retired and it is re-banked at the MOUNTING, which needs this door, so the old gate deadlocks the seam shut. Old saves reach horns_dig_started through the Task 2.6 backfill.",
    "id": "ruin_door",
    "kind": "prop",
    "cell": [
@@ -1749,7 +1815,7 @@
    }
   },
   {
-   "_comment": "GH#332 SPRING LITTER, rung 1 of 3. Tame props are consumed permanently, so a re-bond needs its own row. A rung opens on one more `companion_lost` (banked ONLY by a TAMED downed-clear) and NEVER closes on a counter -- a counter `absent` erased rungs nobody visited. Being TAKEN retires it (`removed_entities`), so rungs COEXIST on distinct cells. `companion: \"\"` = empty slot.",
+   "_comment": "GH#332 SPRING LITTER, rung 1 of 3. Tame props are consumed permanently, so a re-bond needs its own row. A rung opens on one more `companion_lost` (banked ONLY by a TAMED downed-clear) and NEVER closes on a counter. Being TAKEN retires it (`removed_entities`), so rungs COEXIST on distinct cells. `companion: \"\"` = empty slot.",
    "id": "wolf_den_spring",
    "kind": "prop",
    "cell": [
@@ -1864,7 +1930,7 @@
     }
    },
    "observe": "A small figure on the rise south, standing very still. It was there before you looked up, and its head turns when you move.",
-   "_comment": "b1 #199 'The Chieftain's Price'. Conversation-first (NO trigger radius — she waits; interact opens rags_meeting; combat only via the betrayal close's start_combat). present_when = the composed conduct+relationship gate (design doc 2026-07-19-b1-rags-design.md section 2; absent arm = never hunted the camp). Interim sprite: rags registry entry reuses the goblin_chieftain sheet reduced+tinted until the c3 bespoke (VISUAL-LOG row). Finding 18: present_when mirrors the encounter requires -- she does not STAND on the rise before the Erin gate; STAYS post-settle (farewell re-talk is pinned, rags_meeting_loop).",
+   "_comment": "b1 #199 'The Chieftain's Price'. Conversation-first: NO trigger radius (she waits; interact opens rags_meeting, combat only via the betrayal close's start_combat). present_when is the composed conduct+relationship gate and MIRRORS the encounter's own requires -- she does not STAND on the rise before the Erin gate, and STAYS post-settle (farewell re-talk is pinned, rags_meeting_loop). Interim sprite: the rags registry entry reuses the goblin_chieftain sheet until the c3 bespoke.",
    "present_when": {
     "requires": {
      "reward_acknowledged": 1,
@@ -2005,6 +2071,68 @@
     "accomplishment": "cooked_a_kill",
     "toast": "[Flame Jet] — You run the lance along the haunch until the fat goes loud and the outside blackens. You cut what will travel and leave the rest to the grass."
    }
+  },
+  {
+   "_comment": "#398 P1 K5 carrier, on the water cell the approach BUMPS: (13,18) south, (14,19) west and the launch pad (13,20) north all face (13,19). Adjacent to no island cell, so it breaks no crossing. APPENDED LAST: verify-untouched pins prose by positional $.entities[N], so a mid-array insert reds it.",
+   "id": "pond_narrows",
+   "kind": "prop",
+   "cell": [
+    13,
+    19
+   ],
+   "display_name": "Pond Reeds",
+   "sprite": "pond_reeds",
+   "observe": "Reeds stand thick in the shallows. Past them the pond pinches once, and the ground beyond that pinch is dry.",
+   "on_interact_accomplishment": "inspected_pond_narrows",
+   "toast": "Round these reeds to the south and the pond pinches to one stride of open water. Freeze that water, or cross it with [Double Step]."
+  },
+  {
+   "_comment": "#398 P1 island stop, north tip. power_level 7 = +2 over rock_crab. sim_combat_batch gates the runner5_warrior5 ENTRANT cell; the warrior2 yardstick stays MEASURED -- it holds no mode, so it never arrives.",
+   "id": "pond_guardian",
+   "kind": "encounter",
+   "beast": true,
+   "cell": [
+    11,
+    19
+   ],
+   "display_name": "Old Pond Crab",
+   "sprite": "rock_crab",
+   "arena": "boulder_flats",
+   "enemies": [
+    "pond_guardian"
+   ],
+   "allies": [],
+   "observe": "An old rock crab holds the dry crown of the island, heavier in the shell than the ones out in the boulder field.",
+   "on_victory": "defeated_pond_guardian"
+  },
+  {
+   "_comment": "#398 P1 reward, west tip. (11,20) is the ONLY stance the crab is fightable from, so the case never spawns under the player. Its observe is the quest hook.",
+   "id": "pond_cache",
+   "kind": "prop",
+   "cell": [
+    10,
+    20
+   ],
+   "display_name": "Weather-Sealed Cache",
+   "sprite": "pond_cache",
+   "present_when": {
+    "requires": {
+     "defeated_pond_guardian": 1
+    }
+   },
+   "observe": "A brass survey seal closes the case. Its stamped route runs on east into the reeds, and the page it belongs to is not in here.",
+   "on_interact_accomplishment": "opened_pond_cache",
+   "toast": "The case opens. Inside is a dry brass survey seal.",
+   "item": "pond_survey_seal",
+   "variants": [
+    {
+     "when": {
+      "opened_pond_cache": 1
+     },
+     "item": "",
+     "toast": "The weather-sealed case is empty."
+    }
+   ]
   }
  ],
  "cover_skip": [
