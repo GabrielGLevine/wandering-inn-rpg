@@ -125,11 +125,26 @@ working ledger.
    were live (docs-only, read-not-write surfaces — no collision, but
    the never-edit-while-delegated rule says don't repeat it).
 
+15. **l5 rulings folded into its fix wave:** "four stalls" leveled to
+   must-fix (invented number, canon guard); Olesm "No pressure. A
+   little pressure." RESTORED from baseline (pre-pass authored voice,
+   census FP on character-bearing — Relc-precedent class); quoted
+   in-world documents are facts (board_rumors content restored);
+   net-word-reduction ordered (l5 ran +38.7%).
+16. **Brief discipline correction (l5 reviewer):** test_sim_core-class
+   suites signal failure via `SCRIPT ERROR|Parse Error|WARNING` grep +
+   `^PASS` presence, NOT "ERROR: FAIL" (rc stays 0 AND PASS still
+   prints on a broken assert). Fold into wi-verifying-changes at
+   close: grep BOTH families.
+
 ## Lane status
 
 - ALL SIX LANDED: l1 0775c365 (34), l2 faf2e7b6 (28), l3 b32a40d0
   (26), l4 d610d430 (23+petition), l5 7335fae3 (37), l6 0808cf3a (39)
-  = 187/188 rows (1 accepted petition). Reviews: l2 DONE (1 Critical
-  self-contradiction + 6 trims + 1 semantic inference — fix wave
-  RUNNING; mechanics/pins/facts all verified clean). l1/l3/l4/l5/l6
-  reviewers running.
+  = 187/188 rows (1 accepted petition).
+- Reviews DONE: l2 (1 Critical), l4 (no Critical, stranded-teach),
+  l1 (no Critical, actionability class), l3 (no Critical, skeleton
+  reuse + rule collision → carve-out), l5 (1 Critical arrow
+  contradiction + invented number). l6 reviewer running.
+- Fix waves: l4 DONE + committed 165ec244 (train-ready).
+  l1/l2/l3/l5 fix waves running.
