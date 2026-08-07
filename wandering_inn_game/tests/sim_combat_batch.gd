@@ -207,9 +207,64 @@ const RUIN_CELLS := [
 	# alley_fence_t3_warrior10_solo: retune or rename moves both or the tier
 	# gate reds.
 	{"name": "ruin_guardian_w8_solo", "arena": "ruin_court", "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"], "build": "warrior5_mage5", "solo": true},
-	# P5's +3-band pocket: fire and blade builds each gate the same field.
-	{"name": "briar_arch_wards_mage11_relc", "arena": "ruin_court", "enemies": ["briar_arch_ward_a", "briar_arch_ward_b"], "build": "p5_mage11_caster", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# #398 P5's +3-band pocket -- BOTH modes open the same field, so both routes
+	# are measured here. Review M4 reset all four numbers; the two dispositions
+	# below are deliberately DIFFERENT and the reason is this file's own doctrine.
+	#
+	# THE WARRIOR CELL IS THE GATED ONE, because it is the only REACHABLE one.
+	# `WICombatAI._act_once` defaults the PC's empty "ai" to the melee profile, so
+	# a real player's PC never casts under autoplay -- the blade route is what an
+	# actual run fights this pocket with. Measured 2026-08-07: 0.84 wins / median
+	# 4 rounds (min 3, max 6), inside the standard 0.55-0.95 / 3-12 gate with
+	# margin at BOTH ends. It was authored at 0.95 -- exactly ON the ceiling, zero
+	# headroom, a red waiting for any unrelated drift -- which is what review M4
+	# caught. The 0.11 of ceiling margin is the fix; the band stays the file-wide
+	# standard rather than a bespoke tight one, so a sibling lane's tuning reds it
+	# for a real reason and not for being 0.01 off a hand-picked number.
+	#
+	# WHAT MOVED to get there: both wards gained `power_strike` and NOTHING ELSE
+	# (no stat, die, or arena edit). They were pure basic-attackers, so a tanky
+	# warrior simply out-attritioned two big HP pools -- 0.95 was the absence of a
+	# threat, not a tuned number. `_act_guard` honors power_strike natively (same
+	# `_power_strike_ready` branch `_act_melee` uses) and the region's own
+	# `ruin_guardian` line already fights with burst, so this is the region's
+	# existing shape rather than a new mechanic. Measured sensitivity, for whoever
+	# retunes next: ward DAMAGE is the wrong lever -- +1 die on both moved the
+	# warrior 0.95->0.93 but the caster 0.70->0.64, and +16 con moved the warrior
+	# to 0.93 while dropping the caster to 0.53. Every buff costs the fragile
+	# build ~3x what it costs the durable one; only the burst branch moved the
+	# warrior alone.
 	{"name": "briar_arch_wards_warrior11_relc", "arena": "ruin_court", "enemies": ["briar_arch_ward_a", "briar_arch_ward_b"], "build": "p5_warrior11", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# THE CASTER CELL IS MEASURED-ONLY, matching every other caster-profile build
+	# in this file (`warrior2_mage2_caster`, `pure_mage10_caster`,
+	# `warrior5_mage5_caster` all carry `gated: false`). The caster profile is a
+	# MEASUREMENT AXIS, not a play configuration -- see the autoplay note above --
+	# so a win-rate gate on it fences something no player can reach. It shipped
+	# GATED, and that was the binding constraint that made the wards untunable:
+	# every ward buff that moved the warrior off its ceiling pushed this cell
+	# toward 0.55, so the pocket was pinned between a false floor and a real
+	# ceiling. Measured 2026-08-07: 0.65 wins / median 4 (min 3, max 5) -- still
+	# comfortably above the standard floor it is no longer held to.
+	# The residual 19-point blade-vs-caster spread (0.84 vs 0.65) is archetype
+	# variance at a fixed level, NOT a pocket defect: it is the same confound
+	# sim_class_parity.gd refuses to gate whole-band spread over. Recorded, not
+	# tuned to zero -- forcing them equal means tuning the wards against a build
+	# no run fights them with.
+	{"name": "briar_arch_wards_mage11_relc", "arena": "ruin_court", "enemies": ["briar_arch_ward_a", "briar_arch_ward_b"], "build": "p5_mage11_caster", "solo": false},
+	# Review M3: the ally-less pair. briar_arch_wards carries `ally_requires:
+	# {met_relc: 1}`, so a run that never met Relc fights this pocket SOLO -- a
+	# real reachable configuration with no cell until now. MEASURED-UNGATED, the
+	# `ruin_guardian_w8_solo` disposition for exactly the same reason: this region
+	# tier is authored around the ally, and its shipped power-8 stop already
+	# measures 0.13 solo. Gating these would either ratify a near-unwinnable band
+	# or force the ally fight to be trivial. They exist so a future tune cannot
+	# move the solo floor silently. Measured 2026-08-07: warrior 0.57 / caster
+	# 0.38, both median 4. Note the warrior solo leg is genuinely WINNABLE, unlike
+	# the power-8 stop's 0.13 -- but 0.57 sits 0.02 off the standard floor, which
+	# is the same zero-margin mistake review M4 just fixed at the other end, so it
+	# stays measured rather than ratified into a band it barely clears.
+	{"name": "briar_arch_wards_warrior11_solo", "arena": "ruin_court", "enemies": ["briar_arch_ward_a", "briar_arch_ward_b"], "build": "p5_warrior11", "solo": true},
+	{"name": "briar_arch_wards_mage11_solo", "arena": "ruin_court", "enemies": ["briar_arch_ward_a", "briar_arch_ward_b"], "build": "p5_mage11_caster", "solo": true},
 ]
 
 const RIVERFARM_CELLS := [
@@ -495,7 +550,7 @@ const BUILDS := [
 	{"name": "t3_warrior10", "classes": {"warrior": 10}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "t4_spellsword11_party", "classes": {"spellsword": 11}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "t4_spellsword14_party", "classes": {"spellsword": 14}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
-	{"name": "p5_mage11_caster", "classes": {"mage": 11}, WIKeys.AI: "caster", "matrix": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+	{"name": "p5_mage11_caster", "classes": {"mage": 11}, WIKeys.AI: "caster", "matrix": false, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "p5_warrior11", "classes": {"warrior": 11}, WIKeys.AI: "melee", "matrix": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	# Second Wind wave (#165): terminal pure-line L14 solo builds. All
 	# matrix:false (they run only in SECOND_WIND_CELLS, cell-selection-tuned --

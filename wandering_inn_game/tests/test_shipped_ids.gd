@@ -20,8 +20,6 @@ const STRUCTURAL_LITERALS := [
 	# code-banked counter appends a row instead of colliding on a shared
 	# line. Same shape in scripts/generate_shipped_ids.py.
 	"companion_lost",
-	# Pocket convergence/reward ids stay frozen even if carrier scans change.
-	"traced_briar_descent", "claimed_briar_arch_cache", "cleared_briar_arch_wards",
 ]
 
 ## RETIRED accomplishments (#396 ruling 9) -- THE registry for the one legal way

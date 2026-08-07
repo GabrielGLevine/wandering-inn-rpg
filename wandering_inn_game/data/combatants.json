@@ -1519,7 +1519,7 @@
    ]
   },
   {
-   "_comment": "#398 P5 encounter anchor: power 11 is +3 over ruin_guardian's power-8 region stop; the paired cells in sim_combat_batch own tuning.",
+   "_comment": "#398 P5 anchor: power 11 is +3 over ruin_guardian's power-8 region stop. The four cells in sim_combat_batch own tuning and carry the measured numbers; review M4 added `power_strike` to both wards and changed no stat.",
    "id": "briar_arch_ward_a",
    "power_level": 11.0,
    "display_name": "Root-Bound Ward",
@@ -1541,7 +1541,9 @@
    },
    "weapon_die": 6,
    "ai": "guard",
-   "skills": []
+   "skills": [
+    "power_strike"
+   ]
   },
   {
    "id": "briar_arch_ward_b",
@@ -1566,8 +1568,10 @@
    "weapon_die": 5,
    "ai": "guard",
    "skills": [
-    "guarding_ward"
-   ]
+    "guarding_ward",
+    "power_strike"
+   ],
+   "_comment": "Keeps ruin_ward_b's `guarding_ward` shape; lower str/con/die is what makes the pair a pair."
   }
  ]
 }

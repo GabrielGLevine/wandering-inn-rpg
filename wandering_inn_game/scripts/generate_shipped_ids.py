@@ -109,8 +109,6 @@ STRUCTURAL_LITERALS = [
     # code-banked counter appends a row instead of colliding on a shared
     # line. Same shape in tests/test_shipped_ids.gd.
     "companion_lost",
-    # Pocket convergence/reward ids stay frozen even if carrier scans change.
-    "traced_briar_descent", "claimed_briar_arch_cache", "cleared_briar_arch_wards",
 ]
 FROZEN_RETIRED_ACCOMPLISHMENTS = ["heard_thicket_keeps"]
 

@@ -6233,7 +6233,8 @@
    ],
    "surfaces": {
     "maps": [
-     "ruin_surface"
+     "ruin_surface",
+     "sewers"
     ],
     "fixtures": [
      "near_briar_arch_fire"
@@ -6295,13 +6296,16 @@
     ],
     "skills": [
      "basic_cleaning",
-     "kindle"
+     "kindle",
+     "piercing_strikes",
+     "power_strike"
     ],
     "dialogue": [],
     "systems": [
      "combat",
      "economy",
-     "exploration"
+     "exploration",
+     "save"
     ]
    }
   },

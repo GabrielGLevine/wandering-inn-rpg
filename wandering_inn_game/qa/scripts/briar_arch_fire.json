@@ -1,5 +1,5 @@
 {
- "_comment": "P5 mode A: a Mage uses [Flame Jet] on the west carrier, enters the pocket, traces the buried dungeon stair, and opens the newly-present cache. The cut counter and combat stay absent.",
+ "_comment": "P5 mode A: a Mage uses [Flame Jet] on the west carrier, enters the pocket, traces the buried dungeon stair, and opens the newly-present cache. Owns the PRIVATE-COUNTER proof (review C1): the arch banks its own burned_the_briar_arch, the burns row's shared burned_the_debris stays absent whole-run, and the run walks the sewers nook_strongbox cell to prove that two-regions-away chest stayed shut. Also owns the ARMED-ADJACENCY proof (review L2): the wards are gate-MET and one cell north, and combat still needs an interact.",
  "fixture_save": "near_briar_arch_fire",
  "starts_at_title": true,
  "steps": [
@@ -66,9 +66,10 @@
    "action": "wait_for_event",
    "type": "accomplishment_recorded",
    "payload_contains": {
-    "id": "burned_the_debris"
+    "id": "burned_the_briar_arch"
    },
-   "timeout_sec": 5
+   "timeout_sec": 5,
+   "_comment": "Review C1: the arch names its OWN burn id via the burns row's counter_from=target override. burned_the_debris is the row DEFAULT the sewers debris still takes -- it opens nook_strongbox in the sewers, so a ruin briar must never bank it."
   },
   {
    "action": "wait_for_event",
@@ -230,6 +231,21 @@
    "name": "01_briar_arch_cache"
   },
   {
+   "_comment": "Review C1 mirror leg: the row-default id must not fire on this map at all.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "burned_the_debris"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cut_the_briar_arch"
+   }
+  },
+  {
    "action": "assert_event_absent",
    "type": "accomplishment_recorded",
    "payload_contains": {
@@ -237,8 +253,66 @@
    }
   },
   {
+   "_comment": "Review L2 (falsifiable replacement for a bare whole-run combat_started-absent): step back onto (10,11) -- the EXACT cell briar_arch_cut interacts from to start this fight -- with traced_briar_descent already banked, so briar_arch_wards' encounter_when is MET and the encounter sits one cell north. A trigger_radius or an on-enter start would fire here; the wards need an explicit interact, so nothing does. `entity_present` cannot carry this proof -- it ignores encounter_when entirely.",
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    11
+   ]
+  },
+  {
    "action": "assert_event_absent",
    "type": "combat_started"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleared_briar_arch_wards"
+   }
+  },
+  {
+   "_comment": "CROSS-MAP LEG (review C1, the collapsed_gallery_burn pattern): sewers' nook_strongbox is present_when burned_the_debris and (0,3) is its cell. A ruin-arch burn must leave that nook shut, so the PC walks THROUGH the cell it would occupy -- a present entity there blocks the step and lands this assert on [1,3].",
+   "action": "teleport",
+   "map": "sewers",
+   "cell": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "sewers"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    0,
+    3
+   ]
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "opened_nook_strongbox"
+   }
   }
  ]
 }

@@ -47,7 +47,7 @@
     "requires": {
      "horns_dig_started": 1
     },
-    "text": "East past the gate road, across the floodplains \u2014 this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."
+    "text": "\u00b6"
    }
   ],
   "biome": "cave",
@@ -120,7 +120,7 @@
     "display_name": "The Horns' Campfire",
     "id": "dig_camp_fire",
     "kind": "prop",
-    "observe": "Banked low and fed on whatever burns down here. Somebody turns it every few hours; the ash is raked, not spilled.",
+    "observe": "\u00b6",
     "present_when": {
      "absent": {
       "door_mounted": 1
@@ -130,7 +130,7 @@
      }
     },
     "sprite": "campfire",
-    "toast": "A cookfire kept small on purpose, ringed with stones somebody carried in. It has been burning longer than a day."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -140,7 +140,7 @@
     "display_name": "Expedition Crate",
     "id": "dig_camp_crate",
     "kind": "prop",
-    "observe": "Rope, spare stakes, a folded tarp, and three days of dried rations for four people. Packed by someone who has done this before.",
+    "observe": "\u00b6",
     "present_when": {
      "absent": {
       "door_mounted": 1
@@ -155,7 +155,7 @@
      0.76,
      0.66
     ],
-    "toast": "The expedition's supply crate, lid roped shut against the damp."
+    "toast": "\u00b6"
    },
    {
     "_comment": "Task 2.3: the Horns' dig camp, present from the invitation (horns_dig_started). Cell (4,3) is off every canonical walked route (ruin_walkthrough walks rows y=1/2/5/13, columns x=2/17/19) and leaves (4,2)/(3,4)/(4,4)/(6,3) open, so the new blocker traps no prior-version save. No talk_pool: the invitation follow-up must open on the FIRST interact. Task 2.7 moved the retirement counter to door_mounted, and it HAD to: door_retrieved banks on the pedestal open, one event BEFORE the reveal toast that quotes Ceria by name, and world.gd reconciles presence live on ACCOMPLISHMENT_RECORDED, so she popped off-screen mid-sentence. Migrated saves see no camp: the Task 2.6 backfill banks door_mounted too.",
@@ -167,7 +167,7 @@
     "dialogue": [
      {
       "speaker": "Ceria",
-      "text": "Mind the survey stakes. We put them there for a reason."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Ceria Springwalker",
@@ -192,9 +192,9 @@
     "display_name": "Weathered Sentinel",
     "id": "ruin_court_statue",
     "kind": "prop",
-    "observe": "A faceless stone sentinel leans over the court, its shield worn smooth by grit and years. The stance still points toward the cracked plinth.",
+    "observe": "\u00b6",
     "sprite": "dungeon_statue",
-    "toast": "The sentinel's face is gone, but its posture survives: shield toward the court, warning anyone who follows its gaze."
+    "toast": "\u00b6"
    },
    {
     "_comment": "OR convergence: pedestal_unsealed banks via guardian court, THIS PLINTH's post-plates arm, or anchor_socket's [Detect Magic] read (the breach beat's three promised routes, live during the dig on horns_dig_joined alone); Pisces TALK/SKILL + the cellar fight arms exist only AFTER the pedestal opens post-restructure -- migrated saves only. Unmet contains_when falls to the locked toast. First open atomically grants anchor_stone + anchor_sliver; repeat idempotent. b10 #204: recovery also needs rune_sequence_done (west plate then east). contains_when also gates horns_dig_joined (horns_dig's pedestal-on-camp order rule); on_open_accomplishment banks [recovered_anchor_stone, pedestal_breached, door_retrieved] TOGETHER so `breach` closes and `haul` opens at the reveal render, never earlier. SPOILER RULE: open_toast IS the reveal; nothing before it on this map names a door.",
@@ -216,7 +216,7 @@
     "display_name": "A Cracked Plinth",
     "id": "anchor_stone_pedestal",
     "kind": "prop",
-    "observe": "A stone rests in a shallow cradle atop the plinth, held there by nothing you can see. Something older than the dust stands close enough to notice you noticing.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "found_the_pedestal",
     "on_open_accomplishment": [
      "recovered_anchor_stone",
@@ -224,12 +224,12 @@
      "door_retrieved"
     ],
     "open_lore": true,
-    "open_toast": "Below the pedestal: not treasure. A DOOR \u2014 unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
+    "open_toast": "\u00b6",
     "open_toast_variants": [
      {
       "_comment": "Task 2.6 fix round 1: the MIGRATED-SAVE arm. save.gd's dig backfill grants door_retrieved without pedestal_unsealed/rune_sequence_done, so that player still breaks the seal and would otherwise be told he has just DISCOVERED the door already hanging in his inn. Gated on door_retrieved, which no fresh player can hold at this instant: this same open is its only producer, and interactions.gd resolves the variant BEFORE on_open_accomplishment banks it.",
       "open_lore": false,
-      "open_toast": "Beneath where the door lay, still seated in its groove: the anchor stone. The Horns left nothing else behind.",
+      "open_toast": "\u00b6",
       "when": {
        "door_retrieved": 1
       }
@@ -241,17 +241,17 @@
      0.7,
      0.75
     ],
-    "toast": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea.",
+    "toast": "\u00b6",
     "variants": [
      {
-      "toast": "The seal is broken, but the warding still holds the stone fast. Two spiral plates flank the court \u2014 the carving beside the pedestal looks like a beginning.",
+      "toast": "\u00b6",
       "when": {
        "pedestal_unsealed": 1
       }
      },
      {
       "_comment": "Task 2.3 presence re-skin: same locked beat, but with the dig around it. Later-satisfied-variant-wins, so this replaces the line above once the player has joined the camp. Toast only -- it banks nothing, because everything the pedestal has to give banks together at the open.",
-      "toast": "The seal is broken and the Horns are already down the gap \u2014 Yvlon bracing, Ksmvr counting rope. The warding still holds the stone fast. Two spiral plates flank the court; Ceria points at the carving beside the pedestal and says that one's a beginning.",
+      "toast": "\u00b6",
       "when": {
        "horns_dig_joined": 1,
        "pedestal_unsealed": 1
@@ -260,7 +260,7 @@
      {
       "_comment": "The PLATES leg of the breach -- the one route needing neither a fight nor a class Skill. Both spirals lit + the camp joined, and this arm BANKS pedestal_unsealed so the next interact opens the container. LAST in the array on purpose (later-satisfied wins) but it can never collide with the two arms above: they require pedestal_unsealed, and once pedestal_unsealed AND rune_sequence_done AND horns_dig_joined are met, contains_when is satisfied and interactions.gd routes to the CONTAINER before any variant resolves. It cannot fire for a pre-camp visitor, so ruin_walkthrough's found_the_pedestal pin is untouched -- and that counter has no consumers, so swapping it costs nothing.",
       "accomplishment": "pedestal_unsealed",
-      "toast": "Both spirals hold their light, and the seam under the plinth stops fighting your hand. Whatever the ward was keeping out, it was never the plates \u2014 it was whoever hadn't walked them. Ceria, already reaching for rope: 'Ksmvr. Down. Carefully.'",
+      "toast": "\u00b6",
       "when": {
        "horns_dig_joined": 1,
        "rune_sequence_done": 1
@@ -270,7 +270,7 @@
     "visual_states": [
      {
       "_comment": "Post-reveal the plinth is a spent, opened thing. Tint + observe swap rather than `hidden`: the plinth still blocks (17,6), and a hidden blocker is the GH#149 invisible-bump class.",
-      "observe": "The cradle on top is empty and the seam beneath it stands open on nothing. Whatever the ruin was built around, the ruin isn't holding it any more.",
+      "observe": "\u00b6",
       "tint": [
        0.5,
        0.5,
@@ -292,16 +292,16 @@
     "display_name": "Anchor-Stone Socket",
     "id": "anchor_socket",
     "kind": "prop",
-    "locked_toast": "A carved socket in the ruin stone. Whatever sat here, someone carried it off.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "detected_wardwork",
      "lore": true,
-     "toast": "[Detect Magic] \u2014 The socket still remembers its stone: a slow pulse, counting toward a door that already left. The warding reads near-first: the spiral beside the pedestal, then its far twin.",
+     "toast": "\u00b6",
      "variants": [
       {
        "accomplishment": "pedestal_unsealed",
        "lore": false,
-       "toast": "[Detect Magic] \u2014 You read the binding the way Pisces reads a page, and the reading is the undoing: the ward was keyed to whatever stood guard here, and a keyed ward answers anyone who can say the key back. The seal lets go. Ceria, from the gap: 'Do that again and I'm putting you on the ledger.'",
+       "toast": "\u00b6",
        "when": {
         "horns_dig_joined": 1
        }
@@ -309,7 +309,7 @@
      ]
     },
     "requires_skill": "detect_magic",
-    "skill_hint_toast": "The socket's empty, but empty like a held breath. The warding reads near-first \u2014 the spiral beside the pedestal, then its far twin.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "pedestal"
    },
    {
@@ -343,7 +343,7 @@
       "item": "guardian_ward_fragment"
      }
     ],
-    "observe": "Stone shaped like a soldier, or close enough that the difference doesn't help you. It hasn't moved since you stepped into this room. That is not the same as harmless.",
+    "observe": "\u00b6",
     "on_victory": [
      "cleared_ruin_guardian",
      "pedestal_unsealed"
@@ -357,7 +357,7 @@
     "visual_states": [
      {
       "_comment": "v0.15 T4.3, the other half of RUIN/MIGRATED-DIORAMA: the plates route, the wardwork route and every migrated save leave this thing standing over a cradle that is already empty. Re-skin, never remove -- deleting it from the migration backfill (the ledger's own first suggestion) would silently strip the chance-1.0 guardian_ward_fragment that Hedault's chain consumes.",
-      "observe": "The stone soldier still stands, and the cradle it stands over is empty. Whatever it was set here to keep was carried out past it and it did not move. A ward outlasts the thing it warded. That is the whole nature of a ward.",
+      "observe": "\u00b6",
       "tint": [
        0.42,
        0.42,
@@ -378,12 +378,12 @@
     "companion_source": {
      "companion_id": "skeleton_ally",
      "kind": "animated",
-     "taken_toast": "The bones rise and fall into step behind you."
+     "taken_toast": "\u00b6"
     },
     "display_name": "Old Bones",
     "id": "bone_pile_ruin",
     "kind": "prop",
-    "observe": "Old bones, settled where they fell. They are not going anywhere. Probably.",
+    "observe": "\u00b6",
     "sprite": "gnaw_pile"
    },
    {
@@ -395,10 +395,10 @@
     "display_name": "A Warded Rune Plate",
     "id": "rune_plate_near",
     "kind": "prop",
-    "observe": "A palm-sized plate set flush beside the pedestal, cut with a spiral that walks inward. Faint warmth, like a banked coal.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "rune_near_pressed",
     "sprite": "pressure_plate",
-    "toast": "The spiral takes the press and holds a dull red glow. Something in the pedestal shifts its weight."
+    "toast": "\u00b6"
    },
    {
     "_comment": "b10 #204 FAR plate = SECOND: banks rune_sequence_done ONLY via the variant (near lit); base = wrong-order cold feedback. Order enforced with zero new sim code. Cell (15,4) chosen in-bounds + off every canonical walked cell (the first two placements collided with the promenade column and the GRID EDGE).",
@@ -409,14 +409,14 @@
     "display_name": "A Warded Rune Plate",
     "id": "rune_plate_far",
     "kind": "prop",
-    "observe": "The near plate's twin, set apart in the rubble, spiral running the other way. Cold, until its partner isn't.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "rune_far_cold",
     "sprite": "pressure_plate",
-    "toast": "Cold stone, unlit. The spiral wants something the press alone doesn't give.",
+    "toast": "\u00b6",
     "variants": [
      {
       "accomplishment": "rune_sequence_done",
-      "toast": "Both spirals light \u2014 red, then a clean white. The pedestal's seam exhales dust.",
+      "toast": "\u00b6",
       "when": {
        "rune_near_pressed": 1
       }
@@ -431,10 +431,10 @@
     ],
     "display_name": "Yvlon Byres",
     "facing": "left",
-    "friendly_line": "\"Good,\" she says, once, and goes back to the rope. From Yvlon that lands about like a hand on the shoulder.",
+    "friendly_line": "\u00b6",
     "id": "yvlon_dig_camp",
     "kind": "npc",
-    "observe": "Armour half off and stacked in the order it goes back on. She has braced the gap's lip with two stakes and a plank, and she tests the plank every time she passes it.",
+    "observe": "\u00b6",
     "present_when": {
      "absent": {
       "door_mounted": 1
@@ -457,10 +457,10 @@
     ],
     "display_name": "Ksmvr",
     "facing": "up",
-    "friendly_line": "\"You are a known quantity now,\" Ksmvr says. \"That is the highest category I have.\"",
+    "friendly_line": "\u00b6",
     "id": "ksmvr_dig_camp",
     "kind": "npc",
-    "observe": "Three coils of rope laid out in exact parallel, and an Antinium re-counting them, because the count is the point and the rope is only the rope.",
+    "observe": "\u00b6",
     "present_when": {
      "absent": {
       "door_mounted": 1
@@ -484,7 +484,7 @@
     "display_name": "The Pinned Sheets",
     "id": "dig_camp_notes",
     "kind": "prop",
-    "observe": "A board of pinned sheets under a scrap of tarp: a plan of the court, a rope tally, and a list of four names with hours beside them. The hours are shared out even.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "read_the_dig_notes",
     "present_when": {
      "absent": {
@@ -495,7 +495,7 @@
      }
     },
     "sprite": "note_pinned",
-    "toast": "Ceria's hand, mostly. The court plan is drawn twice, and the second drawing corrects the first without comment."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -505,7 +505,7 @@
     "display_name": "The Spoil Heap",
     "id": "dig_spoil_heap",
     "kind": "prop",
-    "observe": "Spoil from the gap, sorted into two heaps: worked stone in one, plain rubble in the other. Somebody is keeping every piece a chisel ever touched.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "eyed_the_dig_spoil",
     "present_when": {
      "absent": {
@@ -521,7 +521,7 @@
      0.63,
      0.58
     ],
-    "toast": "Broken stone, sorted by whether anyone shaped it. The carved heap is the smaller one and by a long way the tidier."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -531,7 +531,7 @@
     "display_name": "Coiled Rope",
     "id": "dig_rope_coil",
     "kind": "prop",
-    "observe": "Three lengths of rope, whipped at the ends and hung off a driven stake so that none of it lies in the wet.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "eyed_the_dig_rope",
     "present_when": {
      "absent": {
@@ -547,7 +547,7 @@
      0.76,
      0.58
     ],
-    "toast": "Good rope, dry, coiled by somebody who has watched bad rope let go."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -557,7 +557,7 @@
     "display_name": "Survey Stakes",
     "id": "dig_survey_stakes",
     "kind": "prop",
-    "observe": "Stakes driven at intervals nobody eyeballed, string run between them, chalk numbers on every one. The line stops dead at the mouth of the pedestal court and does not go in.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "eyed_the_survey_stakes",
     "present_when": {
      "absent": {
@@ -573,7 +573,7 @@
      0.74,
      0.6
     ],
-    "toast": "The string is taut. Somebody re-tensions it each morning, which is not a thing four adventurers usually bother to do."
+    "toast": "\u00b6"
    },
    {
     "_comment": "v0.15 T4.3, VISUAL-LOG RUIN/MIGRATED-DIORAMA: a migrated save loads with door_mounted banked and walks into the camp's corner reading as a void. This is the SAME cell Ceria stands on and the windows are provably disjoint (hers requires absent door_mounted; this requires it), so exactly one of the two is ever present.",
@@ -584,7 +584,7 @@
     "display_name": "A Cold Fire-Ring",
     "id": "dig_camp_remnant",
     "kind": "prop",
-    "observe": "Ringed stones around a scatter of white ash, and four flattened squares of ground where bedrolls were. The stakes have been pulled and stacked, the string wound back onto its spool.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "found_the_cold_camp",
     "present_when": {
      "requires": {
@@ -592,7 +592,206 @@
      }
     },
     "sprite": "cold_hearth",
-    "toast": "Cold days ago. They struck the camp properly, filled the pit, and took the rope with them. Whatever the Horns came down here for, they carried it home."
+    "toast": "\u00b6"
+   },
+   {
+    "cell": [
+     8,
+     8
+    ],
+    "display_name": "Collapsed Arch Stone",
+    "id": "briar_arch_rubble_northwest",
+    "kind": "prop",
+    "sprite": "dungeon_rubble"
+   },
+   {
+    "cell": [
+     9,
+     8
+    ],
+    "display_name": "Collapsed Arch Stone",
+    "id": "briar_arch_rubble_north",
+    "kind": "prop",
+    "sprite": "dungeon_rubble"
+   },
+   {
+    "cell": [
+     12,
+     8
+    ],
+    "display_name": "Collapsed Arch Stone",
+    "id": "briar_arch_rubble_northeast",
+    "kind": "prop",
+    "sprite": "dungeon_rubble"
+   },
+   {
+    "cell": [
+     7,
+     12
+    ],
+    "display_name": "Collapsed Arch Stone",
+    "id": "briar_arch_rubble_west",
+    "kind": "prop",
+    "sprite": "dungeon_rubble"
+   },
+   {
+    "cell": [
+     13,
+     10
+    ],
+    "display_name": "Collapsed Arch Stone",
+    "id": "briar_arch_rubble_east_upper",
+    "kind": "prop",
+    "sprite": "dungeon_rubble"
+   },
+   {
+    "cell": [
+     13,
+     11
+    ],
+    "display_name": "Collapsed Arch Stone",
+    "id": "briar_arch_rubble_east_middle",
+    "kind": "prop",
+    "sprite": "dungeon_rubble"
+   },
+   {
+    "cell": [
+     13,
+     12
+    ],
+    "display_name": "Collapsed Arch Stone",
+    "id": "briar_arch_rubble_east_lower",
+    "kind": "prop",
+    "sprite": "dungeon_rubble"
+   },
+   {
+    "cell": [
+     8,
+     12
+    ],
+    "display_name": "Collapsed Arch Stone",
+    "id": "briar_arch_rubble_southwest",
+    "kind": "prop",
+    "sprite": "dungeon_rubble"
+   },
+   {
+    "cell": [
+     9,
+     12
+    ],
+    "display_name": "Collapsed Arch Stone",
+    "id": "briar_arch_rubble_south",
+    "kind": "prop",
+    "sprite": "dungeon_rubble"
+   },
+   {
+    "cell": [
+     12,
+     12
+    ],
+    "display_name": "Collapsed Arch Stone",
+    "id": "briar_arch_rubble_southeast",
+    "kind": "prop",
+    "sprite": "dungeon_rubble"
+   },
+   {
+    "_comment": "PRIVATE counters (review C1): burns x burnable and cuts x cuttable are each ONE row over every carrier in the game, so the row ids (burned_the_debris / cut_through_growth) are world events -- burned_the_debris opens sewers' nook_strongbox, two regions away. Both arch halves name the SAME id per mode: one arch, one opening, either side, so reward gating needs no requires-any idiom. No requires_skill/skill_hint_toast (review L6/K5): one named skill sent a cutter holding the answer into a `skill_unknown: kindle` refusal and taught only [Firefly] holders. locked_toast is the sewer_debris / collapsed_gallery_shoring precedent -- one line, every build, both modes, and the weapon the cut needs.",
+    "burn_counter": "burned_the_briar_arch",
+    "burn_toast": "\u00b6",
+    "burnable": true,
+    "cell": [
+     10,
+     12
+    ],
+    "cut_counter": "cut_the_briar_arch",
+    "cut_toast": "\u00b6",
+    "cuttable": true,
+    "display_name": "Briar-Choked Arch",
+    "id": "briar_arch_west",
+    "kind": "prop",
+    "locked_toast": "\u00b6",
+    "sprite": "briar_wall"
+   },
+   {
+    "_comment": "Same private ids as briar_arch_west -- same arch, same opening, either half.",
+    "burn_counter": "burned_the_briar_arch",
+    "burn_toast": "\u00b6",
+    "burnable": true,
+    "cell": [
+     11,
+     12
+    ],
+    "cut_counter": "cut_the_briar_arch",
+    "cut_toast": "\u00b6",
+    "cuttable": true,
+    "display_name": "Briar-Choked Arch",
+    "id": "briar_arch_east",
+    "kind": "prop",
+    "locked_toast": "\u00b6",
+    "sprite": "briar_wall"
+   },
+   {
+    "cell": [
+     8,
+     10
+    ],
+    "display_name": "A Buried Stair",
+    "id": "briar_arch_dungeon_trace",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "on_interact_accomplishment": "traced_briar_descent",
+    "sprite": "dungeon_rubble",
+    "toast": "\u00b6"
+   },
+   {
+    "allies": [
+     "relc"
+    ],
+    "ally_requires": {
+     "met_relc": 1
+    },
+    "arena": "ruin_court",
+    "cell": [
+     10,
+     10
+    ],
+    "display_name": "Root-Bound Wards",
+    "encounter_when": {
+     "requires": {
+      "traced_briar_descent": 1
+     }
+    },
+    "enemies": [
+     "briar_arch_ward_a",
+     "briar_arch_ward_b"
+    ],
+    "gate_closed_toast": "\u00b6",
+    "id": "briar_arch_wards",
+    "kind": "encounter",
+    "observe": "\u00b6",
+    "on_victory": "cleared_briar_arch_wards",
+    "sprite": "ruin_warden"
+   },
+   {
+    "cell": [
+     12,
+     10
+    ],
+    "contains": [
+     "rootbound_ward_token"
+    ],
+    "display_name": "Root-Wrapped Coffer",
+    "id": "briar_arch_cache",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "on_open_accomplishment": "claimed_briar_arch_cache",
+    "open_toast": "\u00b6",
+    "present_when": {
+     "requires": {
+      "traced_briar_descent": 1
+     }
+    },
+    "sprite": "crate"
    }
   ],
   "floor_layers": [
@@ -618,6 +817,52 @@
   "grid": {
    "height": 14,
    "width": 20
+  },
+  "skill_gates": {
+   "briar_choked_arch": {
+    "modes": [
+     {
+      "cells": [
+       [
+        10,
+        12
+       ],
+       [
+        11,
+        12
+       ]
+      ],
+      "mechanism": "property",
+      "props": [
+       "briar_arch_west",
+       "briar_arch_east"
+      ],
+      "skill_property": "burns"
+     },
+     {
+      "cells": [
+       [
+        10,
+        12
+       ],
+       [
+        11,
+        12
+       ]
+      ],
+      "mechanism": "property",
+      "props": [
+       "briar_arch_west",
+       "briar_arch_east"
+      ],
+      "skill_property": "cuts"
+     }
+    ],
+    "rewards": [
+     "briar_arch_wards",
+     "briar_arch_cache"
+    ]
+   }
   },
   "walls": {
    "segments": [

@@ -1,0 +1,48 @@
+{
+ "_comment": "P5 review L5: near_briar_arch_cut's build MINUS the weapon. Warrior 11 still grants [Power Strike] and [Piercing Strikes], but nothing sword- or spear-family is held, so Phase 0's field weapon gate keeps both off the bar and the cut mode is unreachable rather than merely refused. Armor and accessories stay to keep the build coherent -- the weapon slot is the ONE difference from the mode-B fixture, which is what makes the pair a controlled comparison. No combat on this leg, so the rng_state is inert.",
+ "version": 5,
+ "state": {
+  "current_map": "ruin_surface",
+  "player_cell": [
+   10,
+   13
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 11
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "melee_hit": 68,
+   "horns_dig_started": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}
