@@ -73,10 +73,30 @@ working ledger.
    carries LANE-BRIEF.md + lane-rows.jsonl at its root (committed with
    the lane's work). Strip both from the train before the PR.
 
+## Additional owed items (from reviews)
+
+5. **§6 exemplar quote is cited in TWO places** (l2 review finding 5):
+   narrator-bible §6 rule 2 AND keeps-petitions/riverfarm.json:24
+   argue from the now-rewritten forge_hall locked_toast. Re-point both
+   at a surviving CONSEQUENCE-ANON string when marking the riverfarm
+   petitions RULED.
+6. **extract_prose self-test rc=1 pre-existing** (l6): corpus 915 vs
+   825 ±5% tolerance; three heuristic landmarks lack registry rows
+   (mercantile_alleys [19].victory_toast + [20].open_toast,
+   ruin_surface [32].open_toast — all #398-era strings). Controller:
+   rule dispositions, regenerate registry, refresh the tolerance.
+   Independent of round 2 but gate it before the round-2 PR (self-test
+   red on main is not shippable).
+7. **Deep_tunnels holdout survivor still carries "Probably." coda**
+   (l6) — holdout is frozen until the blind-read control is spent;
+   note for the POST-read holdout release: that string is a worklist
+   row for the next pass, not this one.
+
 ## Lane status
 
-- l2 pallass: LANDED faf2e7b6, reviewer dispatched. 28/28 rows,
-  own-string advisories 0, 6 pins re-derived in 5 scripts, units 33
-  green. Two parked decisions above.
-- l1 invrisil, l3 riverfarm, l4 floodplains+garden, l5 liscor+inn,
-  l6 dungeon+ruin+sewers: running.
+- ALL SIX LANDED: l1 0775c365 (34), l2 faf2e7b6 (28), l3 b32a40d0
+  (26), l4 d610d430 (23+petition), l5 7335fae3 (37), l6 0808cf3a (39)
+  = 187/188 rows (1 accepted petition). Reviews: l2 DONE (1 Critical
+  self-contradiction + 6 trims + 1 semantic inference — fix wave
+  RUNNING; mechanics/pins/facts all verified clean). l1/l3/l4/l5/l6
+  reviewers running.
