@@ -147,4 +147,11 @@ working ledger.
   reuse + rule collision → carve-out), l5 (1 Critical arrow
   contradiction + invented number). l6 reviewer running.
 - Fix waves: l4 DONE + committed 165ec244 (train-ready).
-  l1/l2/l3/l5 fix waves running.
+  l1/l2/l3/l5/l6 fix waves running.
+- l6 review DONE (no Critical; 4 Important: Rope-Work misdirection,
+  invented "ninth turn" in the one field no arm checks, introduced
+  marrow-twin phrasing, falsifiable wall-angle claim). Plate-order
+  fact PROVEN true by construction; west/east _comment proven
+  backwards. New mop-up candidate: wi_game.gd:951 hardcodes the
+  retired "bones rise and fall" line as taken_toast's ENGINE default
+  — outside the corpus, unguarded by any prose gate.
