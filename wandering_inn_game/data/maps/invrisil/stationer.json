@@ -298,7 +298,7 @@
    ],
    "display_name": "The Counter's End",
    "sprite": "counter_right",
-   "observe": "A brass bell nobody rings, a blotter, and a small mirror angled so the man behind the counter can watch the door without appearing to."
+   "observe": "Dust in the dome of the brass bell, a clean blotter under it, and a small mirror screwed to the shelf edge. Look into the mirror and you are looking at the doorway."
   },
   {
    "id": "stationer_wax_tray",
@@ -331,7 +331,7 @@
    ],
    "display_name": "The Scribe's Desk",
    "sprite": "library_desk",
-   "observe": "A desk set at an angle that lets the scribe see the street and the street see nothing. There is a second chair, and it has been sat in recently."
+   "observe": "The desk stands at an angle to the window: the page faces the wall, the scribe faces the street. The second chair is drawn up close on the page side and pushed back at a slant."
   },
   {
    "id": "stationer_stove",
@@ -342,7 +342,7 @@
    ],
    "display_name": "A Small Iron Stove",
    "sprite": "barrel",
-   "observe": "Banked low, kept alive all day. Paper hates damp and this street sits in the river's breath every morning."
+   "observe": "Banked low, with a deep bed of ash under the grate. The paper stacks nearest it stand a hand's width clear of the iron, and the air over the stove plate keeps moving all day."
   }
  ]
 }
