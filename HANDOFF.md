@@ -88,7 +88,29 @@ CHOICE-LOG's 2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
   lacking a DONE/ACTIVE header — checker/format disagreement, needs a
   one-line checker or plan-template fix, NOT a real drift.
 
-## RUNNING (2026-08-07): #397 round 2 — six writing lanes LIVE
+## RUNNING (2026-08-07 late): #397 r2 — reviews DONE, fix waves landing, WINDDOWN
+ALL SIX lane reviews COMPLETE (2 Critical total, both physical
+contradictions, both in fix waves). Controller ledger =
+docs/superpowers/2026-08-07-prose-round2-train-notes.md (rulings 1-16
++ owed items — READ IT FIRST on resume). Lane branches 397r2/l1..l6;
+l4 fix wave LANDED (165ec244, train-ready); l1/l2/l3/l5/l6 fix waves
+were LIVE at winddown — on resume, check each worktree
+/tmp/wi-397r2-l{1,2,3,5,6} for a dirty tree = fix wave landed
+uncommitted (commit it on the lane branch with a fix-wave message;
+briefs + reports in the session transcript, pin-delta ledgers in
+docs/prose-naturalization/pin-deltas/round2-l*.json). THEN: train per
+plan Task 3 (anchored train branch issue/397-prose-naturalization-r2;
+STRIP LANE-BRIEF.md + lane-rows.jsonl from every lane merge — six-way
+root collision otherwise; composed gates; owed items 1-16 from train
+notes incl. §6/§6.2 citation re-points, steam-vent divergence,
+landmark registry regen for 3 unregistered strings + self-test
+tolerance, riverfarm petitions marked RULED, composed 2-sentence-share
++ inflation measure, mop-up decision incl. wi_game.gd:951 engine
+default). Task 4 blind read AFTER train green. Session-close skill
+fold owed: wi-verifying-changes grep discipline (SCRIPT ERROR family
+vs ERROR: FAIL family — l5 reviewer correction, train notes 16).
+
+## superseded RUNNING block (2026-08-07): #397 round 2 — six writing lanes LIVE
 USER RULED: Option A, maps only (CHOICE-LOG 2026-08-07). Plan:
 docs/superpowers/plans/2026-08-07-prose-round2-397.md. Task 0 DONE
 (round2-worklist.jsonl FROZEN, 188 rows, matcher validated vs reader
