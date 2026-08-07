@@ -629,6 +629,24 @@ const DUNGEON_CELLS := [
 	# The warden at Pallass's T4 build: the shared-level rung proving the warden
 	# sits a band ABOVE the forge golem, not merely later in the story.
 	{"name": "seal_warden_t4_sw11_solo", "arena": "vault", "enemies": ["seal_warden"], "build": "t4_spellsword11_party", "solo": true},
+	# --- #398-P3 pocket lane --- both disjoint access builds fight the same guard.
+	# BANDS RE-MEASURED at the review (M8). The shipped pair carried the default
+	# 0.55-0.95 on both cells and the swordsman measured EXACTLY 0.95: a band
+	# whose upper edge IS the measurement is not an envelope, it is a red waiting
+	# for the next tune. These are measured +/- 0.07 (the repo idiom), against
+	# the re-tuned construct (ai melee, con 30 -- its combatants.json _comment
+	# carries the four-profile measurement that forced the retune):
+	#   swordsman14   win 0.93, median 3 rounds (min 2, max 4) -> 0.86-0.99
+	#   infiltrator14 win 0.63, median 3 rounds (min 3, max 5) -> 0.56-0.70
+	# The swordsman ceiling is clipped to 0.99 rather than 1.00 ON PURPOSE: a
+	# flat 1.00 means the guard stopped being a fight, which is worth a red.
+	# The ~0.30 spread between the cells is INHERENT to one shared guard fought
+	# by two class-disjoint pure-L14 builds (infiltrator14's own bestiary cell is
+	# two sewer_vermin; swordsman14's is three raskghar_scouts) -- the same
+	# ai_kit confound this suite already refuses to gate whole-band, so the two
+	# cells carry per-build envelopes rather than one common band.
+	{"name": "side_vault_construct_t5_swordsman14_solo", "arena": "trapped_halls_snare", "enemies": ["side_vault_construct"], "build": "swordsman14", "solo": true, "win_lo": 0.86, "win_hi": 0.99, "check_rounds": true},
+	{"name": "side_vault_construct_t5_infiltrator14_solo", "arena": "trapped_halls_snare", "enemies": ["side_vault_construct"], "build": "infiltrator14", "solo": true, "win_lo": 0.56, "win_hi": 0.70, "check_rounds": true},
 ]
 
 const BESTIARY_CELLS := [

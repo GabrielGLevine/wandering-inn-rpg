@@ -681,7 +681,17 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 		entity_first_use[waking_key] = true
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
-	record_accomplishment(String(effect["accomplishment"]))
+	# #398-P3: `accomplishment` is String|ARRAY, the contract `on_victory` /
+	# `on_open_accomplishment` / `requires_item` / `inherits` already carry
+	# ("one open can bank a convergent set atomically" -- the container arm in
+	# interactions.gd). A two-mode skill gate NEEDS it: each mode banks its own
+	# distinct counter AND the shared pocket-open counter the guard's
+	# `encounter_when` reads, and `encounter_when` has no OR arm. A bare
+	# String() over an Array would bank one garbage "[a, b]" id and silently
+	# drop both real ones. Every shipped String authoring resolves to a
+	# one-element list, so the banked stream is byte-identical.
+	for counter: Variant in _as_item_list(effect["accomplishment"]):
+		record_accomplishment(String(counter))
 	# `lore` rides the resolved effect, so a VARIANT can promote a read to the
 	# durable record the base arm does not earn (the wardwork quartet's
 	# lattice payoff is exactly that shape).

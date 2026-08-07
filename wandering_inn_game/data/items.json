@@ -1206,6 +1206,9 @@
 			"_comment": "#398 P5 loot anchor: unique ruin-pocket accessory on the warded_coil_charm defensive curve; no price because the coffer is its only source.",
 			"id": "rootbound_ward_token",
 			"name": "Rootbound Ward Token",
+			"_comment": "#398-P3 warded side-vault loot anchor.",
+			"id": "wardwrights_counterweight",
+			"name": "Wardwright's Counterweight",
 			"kind": "accessory",
 			"weapon_family": "none",
 			"damage_mod": 0,
@@ -1233,7 +1236,10 @@
 			"price": 35,
 			"abilities": [],
 			"description": "A broad brass cloak clasp etched with a shallow ward. The enchantment turns aside the first edge of a blow.",
-			"lore": "The leather rotted away long ago, but the clasp stayed shut inside a delver's strongbox."
+			"lore": "The leather rotted away long ago, but the clasp stayed shut inside a delver's strongbox.",
+			"abilities": ["dangersense"],
+			"description": "A palm-sized lead weight scored with ward-lines that twitch toward hidden danger.",
+			"lore": "Every trap in the side vault pulled against this weight. Marks on its rim match the sealed rune-door farther east."
 		}
 	]
 }

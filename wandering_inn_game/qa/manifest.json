@@ -6223,31 +6223,32 @@
    }
   },
   {
-   "_comment": "#398 pocket lane P5. Appended last.",
-   "script": "briar_arch_fire",
-   "seed": 9,
-   "fixture": "near_briar_arch_fire",
-   "note": "#398 P5 mode A: a Mage burns the western briar wall, traces the blocked descent shared by both routes, and opens the unique rootbound ward cache. Owns the burn half of the private-counter contract (review C1) plus the cross-map isolation leg and the armed-adjacency proof (review L2); the cut ids and combat stay absent.",
+   "_comment": "#398-P3 lane marker; rows appended last.",
+   "script": "warded_side_vault_rogue",
+   "seed": 1,
+   "fixture": "warded_side_vault_rogue_start",
+   "note": "#398 pocket mode A: [Find Trap] then [Disarm Trap], whose terminal banks BOTH warded_vault_disarmed and the shared warded_side_vault_open the guard's encounter_when reads; then the retuned construct (ai melee, con 30), the dungeon-thread clue, and the unique counterweight",
    "tiers": [
     "full"
    ],
    "surfaces": {
     "maps": [
-     "ruin_surface",
-     "sewers"
+     "trapped_halls"
     ],
     "fixtures": [
-     "near_briar_arch_fire"
+     "warded_side_vault_rogue_start"
     ],
     "skills": [
-     "basic_cleaning",
-     "flame_jet"
+     "disarm_trap",
+     "find_trap",
+     "observe"
     ],
     "dialogue": [],
     "systems": [
      "combat",
      "economy",
-     "exploration"
+     "exploration",
+     "traps"
     ]
    }
   },
@@ -6339,22 +6340,21 @@
   },
   {
    "_comment": "<!-- 398-p2 --> Appended last under the collapsed-gallery lane marker.",
-   "script": "collapsed_gallery_strength",
+   "script": "warded_side_vault_warrior",
    "seed": 9,
-   "fixture": "collapsed_gallery_strength_start",
-   "note": "#398 P2 martial route: a distinct Warrior fixture uses [Greater Strength] on the fallen beam, then clears the same nest and claims the same one-shot reward.",
+   "fixture": "warded_side_vault_warrior_start",
+   "note": "#398 pocket mode B: the noisy [Greater Strength] pry banking warded_vault_forced_noisy plus the same shared warded_side_vault_open, then the same guard and the same unique reward from the other entrance",
    "tiers": [
     "full"
    ],
    "surfaces": {
     "maps": [
-     "deep_tunnels"
+     "trapped_halls"
     ],
     "fixtures": [
-     "collapsed_gallery_strength_start"
+     "warded_side_vault_warrior_start"
     ],
     "skills": [
-     "basic_cleaning",
      "greater_strength",
      "observe"
     ],
@@ -6368,24 +6368,23 @@
   },
   {
    "_comment": "<!-- 398-p2 --> Appended last under the collapsed-gallery lane marker.",
-   "script": "collapsed_gallery_burn",
+   "script": "warded_side_vault_gate_check",
    "seed": 9,
-   "fixture": "collapsed_gallery_burn_start",
-   "note": "#398 P2 property route: [Flame Jet]'s burns flag removes the tarred shoring through the shared property table, then the player clears the nest and claims the strongbox reward. Also the CROSS-MAP isolation leg (review HIGH-1): the shoring banks its OWN burned_the_gallery_shoring via the row's counter_from=target override, burned_the_debris is asserted absent, and the run walks THROUGH the sewers nook cell (0,3) to prove that strongbox stayed shut.",
+   "fixture": "warded_side_vault_gate_start",
+   "note": "#398 pocket negative and the pocket's REACHABILITY AUTHORITY: a kitless Mage walks the seal perimeter and takes player_blocked on all ten y10 threshold cells plus (9,11)/(9,12)/(9,13) from x10 on the east face, refuses at both named modes in place, and DERIVES reward-absence (no counter banks, no combat, nothing gained, player_moved never fires for a pocket cell). No teleport",
    "tiers": [
     "full"
    ],
    "surfaces": {
     "maps": [
-     "deep_tunnels",
-     "sewers"
+     "trapped_halls"
     ],
     "fixtures": [
-     "collapsed_gallery_burn_start"
+     "warded_side_vault_gate_start"
     ],
     "skills": [
-     "basic_cleaning",
-     "flame_jet",
+     "find_trap",
+     "greater_strength",
      "observe"
     ],
     "dialogue": [],

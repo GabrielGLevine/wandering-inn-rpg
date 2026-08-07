@@ -177,6 +177,55 @@ def _skill_granters(parsed: dict) -> dict:
 	return out
 
 
+def _mode_named_skills(mode: dict) -> tuple:
+	"""The skill ids the mode DECLARES (`skills` String|Array + `skill`)."""
+	raw = mode.get("skills", [])
+	if isinstance(raw, str):
+		raw = [raw]
+	out = {str(skill_id) for skill_id in raw} if isinstance(raw, list) else set()
+	if isinstance(mode.get("skill"), str):
+		out.add(str(mode["skill"]))
+	return tuple(sorted(out))
+
+
+def _mode_named_props(mode: dict) -> tuple:
+	"""The prop ids the mode DECLARES (`props` String|Array + `prop`)."""
+	raw = mode.get("props", [])
+	if isinstance(raw, str):
+		raw = [raw]
+	out = {str(prop_id) for prop_id in raw} if isinstance(raw, list) else set()
+	if isinstance(mode.get("prop"), str):
+		out.add(str(mode["prop"]))
+	return tuple(sorted(out))
+
+
+def _mode_signature(mode: dict) -> tuple:
+	"""Arm 1's distinctness key.
+
+	#398-P3 review M9 (controller ruling): the key USED to be
+	(mechanism, skill_property), which is honest for a `property` mode -- the
+	property IS how that mode resolves its carriers -- and meaningless for an
+	M-ARM mode, which resolves by named skill and named prop and carries no
+	skill_property at all. P3 answered that by inventing "trapwork"/"force"
+	labels nothing in skills.json carries, i.e. by labeling two modes as
+	distinct rather than by BEING distinct. So `property` keeps its historical
+	key unchanged, and every other mechanism keys on what a player actually
+	needs and touches: (mechanism, skill-or-gate, prop). Two arm modes sharing
+	both the skill set and the prop set are the same mode written twice, and
+	arm 1 now says so.
+
+	NOTE: arm 4 (rewards resolve on this map) stays STRUCTURAL -- it does not
+	and must not attempt reachability. The WALK-based negative QA leg (a
+	perimeter walk asserting player_blocked at the seal cells with
+	reward-absence DERIVED) is the reachability authority for a pocket.
+	"""
+	mechanism = str(mode.get("mechanism", ""))
+	if mechanism == "property":
+		return (mechanism, str(mode.get("skill_property", "")))
+	return (mechanism, _mode_named_skills(mode) or (str(mode.get("gate", "")),),
+		_mode_named_props(mode))
+
+
 def _mode_skill_ids(mode: dict, skills: list, entities: dict) -> set[str]:
 	mechanism = str(mode.get("mechanism", ""))
 	if mechanism == "property":
@@ -186,20 +235,8 @@ def _mode_skill_ids(mode: dict, skills: list, entities: dict) -> set[str]:
 		minimum = int(mode.get("min_range", 0)) if _int_like(mode.get("min_range", 0)) else 0
 		return {str(skill.get("id")) for skill in skills
 			if skill.get("blinks") is True and int(skill.get("blink_range", 0)) >= minimum}
-	out: set[str] = set()
-	raw_skills = mode.get("skills", [])
-	if isinstance(raw_skills, str):
-		raw_skills = [raw_skills]
-	if isinstance(raw_skills, list):
-		out.update(str(skill_id) for skill_id in raw_skills)
-	if isinstance(mode.get("skill"), str):
-		out.add(str(mode["skill"]))
-	raw_props = mode.get("props", [])
-	if isinstance(raw_props, str):
-		raw_props = [raw_props]
-	if isinstance(mode.get("prop"), str):
-		raw_props = list(raw_props) + [mode["prop"]]
-	for prop_id in raw_props if isinstance(raw_props, list) else []:
+	out: set[str] = set(_mode_named_skills(mode))
+	for prop_id in _mode_named_props(mode):
 		entity = entities.get(str(prop_id), {})
 		if isinstance(entity.get("requires_skill"), str):
 			out.add(str(entity["requires_skill"]))
@@ -232,10 +269,10 @@ def check_skill_gates(parsed: dict, maps: dict, errors: list) -> None:
 			if not isinstance(modes, list) or len(modes) < 2 or not all(isinstance(mode, dict) for mode in modes):
 				errors.append(f"{label} needs at least two object modes")
 				continue
-			signatures = {(str(mode.get("mechanism", "")), str(mode.get("skill_property", "")))
-				for mode in modes}
+			signatures = {_mode_signature(mode) for mode in modes}
 			if len(signatures) < 2:
-				errors.append(f"{label} modes need distinct mechanisms or distinct skill properties")
+				errors.append(f"{label} modes need distinct mechanisms, distinct skill properties, "
+					f"or (for a non-property mechanism) a distinct skill-or-gate + prop pair")
 			class_sets: list[frozenset[str]] = []
 			for index, mode in enumerate(modes):
 				mode_label = f"{label}.modes[{index}]"
@@ -255,12 +292,8 @@ def check_skill_gates(parsed: dict, maps: dict, errors: list) -> None:
 						f"non-skill gate with gate: dialogue|item|endure")
 				if mechanism == "property" and not skill_ids:
 					errors.append(f"{mode_label} skill_property {mode.get('skill_property')!r} has no skill carrier")
-				raw_props = mode.get("props", [])
-				if isinstance(raw_props, str):
-					raw_props = [raw_props]
-				if isinstance(mode.get("prop"), str):
-					raw_props = list(raw_props) + [mode["prop"]]
-				for prop_id in raw_props if isinstance(raw_props, list) else []:
+				raw_props = _mode_named_props(mode)
+				for prop_id in raw_props:
 					if str(prop_id) not in entities:
 						errors.append(f"{mode_label} prop {prop_id!r} does not resolve on this map")
 				cells = mode.get("cells", [])

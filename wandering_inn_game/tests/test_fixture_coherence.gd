@@ -53,6 +53,9 @@ const COMBAT_BAND_FIXTURES := {
 	# (river_wolf_pack_t3_hunter) and has no warrior5_mage5 cell at all.
 	"winter_teeth_night_start": 10,
 	"near_briar_arch_cut": 11,
+	# --- #398-P3 pocket lane --- exact pure-L14 builds used by the two harness cells.
+	"warded_side_vault_rogue_start": 14,
+	"warded_side_vault_warrior_start": 14,
 }
 
 const MAP_REQUIRES := {

@@ -78,6 +78,7 @@ const EXPECTED_ITEMS := {
 	"tonic_of_the_clear_eye": ["Next fight: +1 damage, +2 HP (single use)", "Worth 16 gold"],
 	"construct_core_shard": ["+3 HP", "Reduces every hit taken by 1", "Resonance 2", "Grants [Read the Field] in combat"],
 	"warded_coil_charm": ["+2 HP", "Resonance 1"],
+	"wardwrights_counterweight": ["+2 HP", "Resonance 1", "Grants [Dangersense] in combat"],
 	"kingslayer_fang": ["+1 damage on melee hits", "+1 HP", "Resonance 1", "Grants [Battle Momentum] in combat"],
 	"guardian_ward_fragment": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Grants [Guarding Ward] in combat"],
 	# #398 P5 briar-arch coffer yield. warded_coil_charm's curve (hp_mod 2,
