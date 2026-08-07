@@ -1,0 +1,49 @@
+{
+ "_comment": "P5 blade build: Warrior 11 meets every class threshold and equips the sword-family gnollish_hunting_knife, so [Power Strike] survives the field weapon gate while [Piercing Strikes] does not. rng_state is the derived seed-9 state and governs the live ward fight.",
+ "version": 5,
+ "state": {
+  "current_map": "ruin_surface",
+  "player_cell": [
+   10,
+   13
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 11
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "melee_hit": 68,
+   "horns_dig_started": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

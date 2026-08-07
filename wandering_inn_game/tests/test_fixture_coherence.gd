@@ -52,6 +52,7 @@ const COMBAT_BAND_FIXTURES := {
 	# reference build because river_wolf_pack is measured at t3_warrior10
 	# (river_wolf_pack_t3_hunter) and has no warrior5_mage5 cell at all.
 	"winter_teeth_night_start": 10,
+	"near_briar_arch_cut": 11,
 }
 
 const MAP_REQUIRES := {

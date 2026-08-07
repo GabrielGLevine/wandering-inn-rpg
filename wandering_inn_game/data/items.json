@@ -1201,6 +1201,23 @@
 			"use_effect": { "next_fight": { "hp_mod": 2 } },
 			"description": "Thick cuts off the haunch, blackened outside and still red at the middle, wrapped in a cloth that will never come clean.",
 			"lore": "Corusdeer run hot enough to scorch grass where they bed down, and hunters on the Floodplains say the meat cooks half the way there on its own."
+		},
+		{
+			"_comment": "#398 P5 loot anchor: unique ruin-pocket accessory on the warded_coil_charm defensive curve; no price because the coffer is its only source.",
+			"id": "rootbound_ward_token",
+			"name": "Rootbound Ward Token",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 2,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"abilities": [
+				"guarding_ward"
+			],
+			"description": "A flat stone token webbed in fine roots, its ward-lines visible only where the roots refuse to cross.",
+			"lore": "The token was sealed above a buried stair and left under two kneeling wards. Whatever the old working guarded, it expected danger to come up from below."
 		}
 	]
 }

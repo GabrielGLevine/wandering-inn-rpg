@@ -6221,6 +6221,89 @@
      "save"
     ]
    }
+  },
+  {
+   "_comment": "#398 pocket lane P5. Appended last.",
+   "script": "briar_arch_fire",
+   "seed": 9,
+   "fixture": "near_briar_arch_fire",
+   "note": "#398 P5 mode A: a Mage burns the western briar wall, traces the blocked descent shared by both routes, and opens the unique rootbound ward cache; the cut and encounter outcomes remain absent",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "ruin_surface"
+    ],
+    "fixtures": [
+     "near_briar_arch_fire"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "flame_jet"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "#398 pocket lane P5. Appended last.",
+   "script": "briar_arch_cut",
+   "seed": 9,
+   "fixture": "near_briar_arch_cut",
+   "note": "#398 P5 mode B: a sword-equipped Warrior cuts the western briar wall with [Power Strike], reaches the same dungeon trace, and clears the armed briar-ward encounter; the burn outcome remains absent",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "ruin_surface"
+    ],
+    "fixtures": [
+     "near_briar_arch_cut"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "power_strike"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "#398 pocket lane P5. Appended last.",
+   "script": "briar_arch_locked",
+   "seed": 9,
+   "fixture": "near_briar_arch_locked",
+   "note": "#398 P5 negative: an unskilled arrival receives the authored two-mode refusal, cannot cross the briar wall, and finds the gated cache structurally absent after a QA-only inside probe",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "ruin_surface"
+    ],
+    "fixtures": [
+     "near_briar_arch_locked"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "kindle"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
   }
  ]
 }

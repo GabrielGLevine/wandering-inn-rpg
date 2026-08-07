@@ -1,0 +1,49 @@
+{
+ "_comment": "P5 fire build: a coherent Mage 11 holds [Flame Jet] from the class table and starts south of the briar arch. rng_state is the derived seed-9 state; this leg opens the cache but resolves no combat.",
+ "version": 5,
+ "state": {
+  "current_map": "ruin_surface",
+  "player_cell": [
+   10,
+   13
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "mage": 11
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "learned_magic_from_pisces": 1,
+   "won_combat": 3,
+   "spell_cast": 54,
+   "horns_dig_started": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

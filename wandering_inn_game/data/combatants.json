@@ -1517,6 +1517,57 @@
     "power_strike",
     "slam"
    ]
+  },
+  {
+   "_comment": "#398 P5 encounter anchor: power 11 is +3 over ruin_guardian's power-8 region stop; the paired cells in sim_combat_batch own tuning.",
+   "id": "briar_arch_ward_a",
+   "power_level": 11.0,
+   "display_name": "Root-Bound Ward",
+   "sprite": "ruin_warden",
+   "combat_scale": 0.42,
+   "combat_tint": [
+    0.58,
+    0.86,
+    0.48
+   ],
+   "side": "enemy",
+   "stats": {
+    "str": 15,
+    "dex": 10,
+    "con": 38,
+    "int": 6,
+    "wis": 7,
+    "cha": 2
+   },
+   "weapon_die": 6,
+   "ai": "guard",
+   "skills": []
+  },
+  {
+   "id": "briar_arch_ward_b",
+   "power_level": 11.0,
+   "display_name": "Root-Bound Ward",
+   "sprite": "ruin_warden",
+   "combat_scale": 0.42,
+   "combat_tint": [
+    0.82,
+    0.62,
+    0.38
+   ],
+   "side": "enemy",
+   "stats": {
+    "str": 13,
+    "dex": 10,
+    "con": 34,
+    "int": 8,
+    "wis": 7,
+    "cha": 2
+   },
+   "weapon_die": 5,
+   "ai": "guard",
+   "skills": [
+    "guarding_ward"
+   ]
   }
  ]
 }

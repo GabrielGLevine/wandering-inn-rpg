@@ -22,9 +22,6 @@
   "cookware": "entity",
   "cuttable": "entity"
  },
- "staged_target_properties": [
-  "cuttable"
- ],
  "outcomes": [
   "remove_scorch",
   "freeze_cell",

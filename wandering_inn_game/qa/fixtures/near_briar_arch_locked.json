@@ -1,0 +1,38 @@
+{
+ "_comment": "P5 negative build: no fire or blade Skill, standing at the same south approach as both positive legs. The derived seed-9 state is inert because no combat can start.",
+ "version": 5,
+ "state": {
+  "current_map": "ruin_surface",
+  "player_cell": [
+   10,
+   13
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {},
+  "accomplishments": {
+   "horns_dig_started": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

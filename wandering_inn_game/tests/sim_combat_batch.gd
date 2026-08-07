@@ -203,6 +203,9 @@ const RUIN_CELLS := [
 	# alley_fence_t3_warrior10_solo: retune or rename moves both or the tier
 	# gate reds.
 	{"name": "ruin_guardian_w8_solo", "arena": "ruin_court", "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"], "build": "warrior5_mage5", "solo": true},
+	# P5's +3-band pocket: fire and blade builds each gate the same field.
+	{"name": "briar_arch_wards_mage11_relc", "arena": "ruin_court", "enemies": ["briar_arch_ward_a", "briar_arch_ward_b"], "build": "p5_mage11_caster", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "briar_arch_wards_warrior11_relc", "arena": "ruin_court", "enemies": ["briar_arch_ward_a", "briar_arch_ward_b"], "build": "p5_warrior11", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const RIVERFARM_CELLS := [
@@ -488,6 +491,8 @@ const BUILDS := [
 	{"name": "t3_warrior10", "classes": {"warrior": 10}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "t4_spellsword11_party", "classes": {"spellsword": 11}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "t4_spellsword14_party", "classes": {"spellsword": 14}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+	{"name": "p5_mage11_caster", "classes": {"mage": 11}, WIKeys.AI: "caster", "matrix": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+	{"name": "p5_warrior11", "classes": {"warrior": 11}, WIKeys.AI: "melee", "matrix": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	# Second Wind wave (#165): terminal pure-line L14 solo builds. All
 	# matrix:false (they run only in SECOND_WIND_CELLS, cell-selection-tuned --
 	# never in the COMPOSITIONS matrix). Weapons gate the kit where the line is
@@ -955,10 +960,7 @@ func _init() -> void:
 		var relc_downed := 0
 		var has_relc := not bool(cell.get("solo", false))
 		for seed_v in range(1, RUNS_PER_CELL + 1):
-			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
-			pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
-			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
-			pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
+			var pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
 			var cfgs: Array = [pc]
 			if has_relc:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
@@ -998,6 +1000,9 @@ func _init() -> void:
 			if win_rate < lo or win_rate > hi:
 				any_failed = true
 				printerr("FAIL [ruin / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
+				any_failed = true
+				printerr("FAIL [ruin / %s]: median rounds %d outside 3-12" % [cell["name"], median])
 
 	for cell: Dictionary in RIVERFARM_CELLS:
 		if not _cell_in_range(): continue

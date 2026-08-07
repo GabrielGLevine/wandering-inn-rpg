@@ -107,6 +107,52 @@
    ]
   }
  ],
+ "skill_gates": {
+  "briar_choked_arch": {
+   "modes": [
+    {
+     "mechanism": "property",
+     "skill_property": "burns",
+     "props": [
+      "briar_arch_west",
+      "briar_arch_east"
+     ],
+     "cells": [
+      [
+       10,
+       12
+      ],
+      [
+       11,
+       12
+      ]
+     ]
+    },
+    {
+     "mechanism": "property",
+     "skill_property": "cuts",
+     "props": [
+      "briar_arch_west",
+      "briar_arch_east"
+     ],
+     "cells": [
+      [
+       10,
+       12
+      ],
+      [
+       11,
+       12
+      ]
+     ]
+    }
+   ],
+   "rewards": [
+    "briar_arch_wards",
+    "briar_arch_cache"
+   ]
+  }
+ },
  "entities": [
   {
    "_comment": "Landing cell (2,2) is one cell south of this door, matching the sewer_exit/deep_fissure 'the way back up' convention.",
@@ -606,6 +652,203 @@
    "observe": "Ringed stones around a scatter of white ash, and four flattened squares of ground where bedrolls were. The stakes have been pulled and stacked, the string wound back onto its spool.",
    "on_interact_accomplishment": "found_the_cold_camp",
    "toast": "Cold days ago. They struck the camp properly, filled the pit, took the rope. Nothing left but the ring of stones."
+  },
+  {
+   "id": "briar_arch_rubble_northwest",
+   "kind": "prop",
+   "cell": [
+    8,
+    8
+   ],
+   "display_name": "Collapsed Arch Stone",
+   "sprite": "dungeon_rubble"
+  },
+  {
+   "id": "briar_arch_rubble_north",
+   "kind": "prop",
+   "cell": [
+    9,
+    8
+   ],
+   "display_name": "Collapsed Arch Stone",
+   "sprite": "dungeon_rubble"
+  },
+  {
+   "id": "briar_arch_rubble_northeast",
+   "kind": "prop",
+   "cell": [
+    12,
+    8
+   ],
+   "display_name": "Collapsed Arch Stone",
+   "sprite": "dungeon_rubble"
+  },
+  {
+   "id": "briar_arch_rubble_west",
+   "kind": "prop",
+   "cell": [
+    7,
+    12
+   ],
+   "display_name": "Collapsed Arch Stone",
+   "sprite": "dungeon_rubble"
+  },
+  {
+   "id": "briar_arch_rubble_east_upper",
+   "kind": "prop",
+   "cell": [
+    13,
+    10
+   ],
+   "display_name": "Collapsed Arch Stone",
+   "sprite": "dungeon_rubble"
+  },
+  {
+   "id": "briar_arch_rubble_east_middle",
+   "kind": "prop",
+   "cell": [
+    13,
+    11
+   ],
+   "display_name": "Collapsed Arch Stone",
+   "sprite": "dungeon_rubble"
+  },
+  {
+   "id": "briar_arch_rubble_east_lower",
+   "kind": "prop",
+   "cell": [
+    13,
+    12
+   ],
+   "display_name": "Collapsed Arch Stone",
+   "sprite": "dungeon_rubble"
+  },
+  {
+   "id": "briar_arch_rubble_southwest",
+   "kind": "prop",
+   "cell": [
+    8,
+    12
+   ],
+   "display_name": "Collapsed Arch Stone",
+   "sprite": "dungeon_rubble"
+  },
+  {
+   "id": "briar_arch_rubble_south",
+   "kind": "prop",
+   "cell": [
+    9,
+    12
+   ],
+   "display_name": "Collapsed Arch Stone",
+   "sprite": "dungeon_rubble"
+  },
+  {
+   "id": "briar_arch_rubble_southeast",
+   "kind": "prop",
+   "cell": [
+    12,
+    12
+   ],
+   "display_name": "Collapsed Arch Stone",
+   "sprite": "dungeon_rubble"
+  },
+  {
+   "id": "briar_arch_west",
+   "kind": "prop",
+   "cell": [
+    10,
+    12
+   ],
+   "display_name": "Briar-Choked Arch",
+   "sprite": "briar_wall",
+   "burnable": true,
+   "cuttable": true,
+   "requires_skill": "kindle",
+   "locked_toast": "The western briars choke the arch. Fire can burn them; [Power Strike] or [Piercing Strikes] can cut them.",
+   "skill_hint_toast": "Use [Firefly] or [Flame Jet] to burn the western briars. A sword or spear Skill can cut them.",
+   "burn_toast": "Fire consumes the western briars. One side of the arch is open.",
+   "cut_toast": "Steel cuts the western briars at the roots. One side of the arch is open."
+  },
+  {
+   "id": "briar_arch_east",
+   "kind": "prop",
+   "cell": [
+    11,
+    12
+   ],
+   "display_name": "Briar-Choked Arch",
+   "sprite": "briar_wall",
+   "burnable": true,
+   "cuttable": true,
+   "requires_skill": "kindle",
+   "locked_toast": "The eastern briars choke the arch. Fire can burn them; [Power Strike] or [Piercing Strikes] can cut them.",
+   "skill_hint_toast": "Use [Firefly] or [Flame Jet] to burn the eastern briars. A sword or spear Skill can cut them.",
+   "burn_toast": "Fire consumes the eastern briars. One side of the arch is open.",
+   "cut_toast": "Steel cuts the eastern briars at the roots. One side of the arch is open."
+  },
+  {
+   "id": "briar_arch_dungeon_trace",
+   "kind": "prop",
+   "cell": [
+    8,
+    10
+   ],
+   "display_name": "A Buried Stair",
+   "sprite": "dungeon_rubble",
+   "observe": "A stair drops under the ruin wall, cut with the same inward spirals as the sealed levels. Fresh rubble covers the lower steps.",
+   "on_interact_accomplishment": "traced_briar_descent",
+   "toast": "The stair drops toward the ruin's sealed levels. Fresh rubble stops the descent."
+  },
+  {
+   "id": "briar_arch_wards",
+   "kind": "encounter",
+   "cell": [
+    10,
+    10
+   ],
+   "display_name": "Root-Bound Wards",
+   "sprite": "ruin_warden",
+   "arena": "ruin_court",
+   "enemies": [
+    "briar_arch_ward_a",
+    "briar_arch_ward_b"
+   ],
+   "allies": [
+    "relc"
+   ],
+   "ally_requires": {
+    "met_relc": 1
+   },
+   "encounter_when": {
+    "requires": {
+     "traced_briar_descent": 1
+    }
+   },
+   "gate_closed_toast": "The wards remain folded into the buried stair. Trace the descent before disturbing them.",
+   "observe": "Two smaller ward-figures kneel under the arch, stone limbs netted in living briar. Their faces point down the buried stair.",
+   "on_victory": "cleared_briar_arch_wards"
+  },
+  {
+   "id": "briar_arch_cache",
+   "kind": "prop",
+   "cell": [
+    12,
+    10
+   ],
+   "display_name": "Root-Wrapped Coffer",
+   "sprite": "crate",
+   "present_when": {
+    "requires": {
+     "traced_briar_descent": 1
+    }
+   },
+   "observe": "A stone coffer sits behind the ward-figures, roots grown through its iron bands without splitting them.",
+   "contains": [
+    "rootbound_ward_token"
+   ],
+   "on_open_accomplishment": "claimed_briar_arch_cache",
+   "open_toast": "The coffer opens under the roots. A ward-token rests inside."
   }
  ]
 }
