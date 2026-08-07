@@ -457,7 +457,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The hinge shears off in your hand. Inside: a wax-wrapped roll of coin, dry as the day it was hidden. 6 gold."
+    "text": "The hinge shears off in your hand and the lid comes away with it. Wax-wrapped and still dry under the silt, 6 gold in a roll."
    },
    "timeout_sec": 5
   },

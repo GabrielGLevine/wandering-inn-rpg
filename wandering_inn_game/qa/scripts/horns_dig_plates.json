@@ -77,7 +77,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "The stone doesn't move. It does not even shift in its cradle, and the court has gone very quiet."
+    "text": "You put both hands on the stone and it does not shift in its cradle. The court noise drops away while you are trying."
    },
    "timeout_sec": 5
   },
@@ -174,7 +174,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "Both spirals hold their light, and the seam under the plinth stops fighting your hand. The ward wanted the plates walked in order, and now they have been. Ceria, already reaching for rope: 'Ksmvr. Down. Carefully.'"
+    "text": "Both spirals hold their light and the seam under the plinth gives at a touch. The near plate first, then its far twin: that was the order it took. Ceria says 'Ksmvr. Down. Carefully.' and has the rope off the stake before you have straightened up."
    },
    "timeout_sec": 5
   },

@@ -423,7 +423,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Cold days ago. They struck the camp properly, filled the pit, took the rope. Nothing left but the ring of stones."
+    "text": "The ash inside the stone ring is cold all the way through, and has been for days. The fire-pit is filled in level with the ground, and the rope that was here is gone."
    },
    "timeout_sec": 5
   },

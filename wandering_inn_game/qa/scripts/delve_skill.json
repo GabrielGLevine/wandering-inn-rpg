@@ -55,7 +55,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "A narrow slit runs along the wall at knee height, primed and waiting. A careful, deliberate touch could still it."
+    "text": "A narrow slit at knee height, running the length of the wall. Look at it properly first — there is a mechanism behind it to find."
    },
    "timeout_sec": 5
   },
@@ -108,7 +108,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "You trace the mechanism with a careful eye, find the catch, and wedge it still with a wax-and-wire pick from the kit. The slit stays dark."
+    "text": "You follow the mechanism back to its catch and wedge it there with a wax-and-wire pick from the kit. The slit goes dark, and the kit is spent doing it."
    },
    "timeout_sec": 5
   },
@@ -147,7 +147,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "A narrow slit runs along the wall at knee height, primed and waiting. Bare hands won't do it — you'd want a proper kit for this."
+    "text": "A narrow slit at knee height, with the mechanism seated behind the stone. Bare fingers will not reach the catch; this one takes a trap kit."
    },
    "timeout_sec": 5
   },
