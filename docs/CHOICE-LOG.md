@@ -3420,3 +3420,32 @@ supersession is the record.
     maps baseline. Proven prose-identical (the whole diff is two sprite ids and a
     comment), so re-snapshotting launders nothing and the maps gate is CLEAN
     again for everyone downstream.
+
+## 2026-08-07 — #398 skill-gated areas wave 1 (spec §9 rulings, copied at merge, + wave rulings)
+
+1. Two-mode rule is LINT-ENFORCED via the descriptive skill_gates
+   registry — engine never reads it; QA walk legs are the reachability
+   authority (arm 4 stays structural by design).
+2. Riverfarm pockets deferred to wave 2 behind the #396 merge — now
+   unblocked, filed as #403.
+3. No lockpick skill in wave 1; canon-check + ACK filed as #404.
+4. [Flame Jet] gains burns:true; the universal-debris-burner tension is
+   recorded at the flag with authored-arm precedence preserving the
+   carcass beat.
+5. D4 (M-ENDURE) cut: no overworld HP model exists — needs its own spec.
+6. Spec lived on spec/skill-gated-areas; merged with this PR.
+7. WAVE: cuts is WEAPON-GATED at the field seam (equipped, not carried);
+   the 10-slot armed bar is ACCEPTED — 9 is the KEY-mapped capacity,
+   overflow is cursor/mouse-reachable, proven in-canonical and eye-read.
+8. WAVE: property rows carry per-target counter overrides
+   (counter_from/counter_key mirroring the toast triple) — the
+   cross-map counter-leak class is regression-proven in both directions.
+9. WAVE: on_skill_use.accomplishment widened String|Array (contract
+   alignment with on_victory/on_open; five producer-walk mirrors).
+10. WAVE: STRUCTURAL_LITERALS is for CODE-banked counters only —
+   data-derived ids in the literals list mute the deletion tripwire.
+11. WAVE: negative QA legs WALK and assert player_blocked — teleport
+   bypasses blocking and proves nothing (written into every gate_check).
+12. WAVE: five Codex lanes, five DO-NOT-MERGE reviews, five Opus fix
+   waves — the division (Codex implements, controller gates) held;
+   fixture edits remain the pin-gaming surface (doctrine fold shipped).

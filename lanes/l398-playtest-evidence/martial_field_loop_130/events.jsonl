@@ -1,0 +1,476 @@
+{"payload":{"seed":9},"t":2280,"type":"sim_initialized"}
+{"payload":{},"t":2328,"type":"ui_title_gate_rendered"}
+{"payload":{"continue_enabled":true,"selectable_rows":5},"t":2649,"type":"ui_title_rendered"}
+{"payload":{"bus":"Music","id":"music_title"},"t":2667,"type":"audio_played"}
+{"payload":{"seed":9},"t":2728,"type":"sim_initialized"}
+{"payload":{"reason":""},"t":2731,"type":"game_loaded"}
+{"payload":{"blocked_cells":75,"floor_cells":1040,"map":"floodplains"},"t":2857,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"floodplains"},"t":2941,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":2941,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":23},"t":2941,"type":"ui_entities_rendered"}
+{"payload":{"count":2,"map":"floodplains"},"t":2941,"type":"ui_lights_rendered"}
+{"payload":{"emitters":2,"emitting":0,"map":"floodplains"},"t":2945,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[31,4],"entity":"","showing":false},"t":2945,"type":"ui_affordance_rendered"}
+{"payload":{},"t":2945,"type":"world_ready"}
+{"payload":{"bus":"Music","id":"music_floodplains"},"t":2975,"type":"audio_played"}
+{"payload":{"bus":"Ambience","id":"ambience_floodplains"},"t":2980,"type":"audio_played"}
+{"payload":{"bar_left":509,"expanded":true,"fallback_labels":["BC","PS"],"group_width":262,"readout_lines":["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.","2  [Power Strike] — Everything behind one blow."],"reason":"world_ready","slot_numbers":["1","2"],"slots":2,"toggle_label":"Hide details [H]"},"t":2983,"type":"ui_field_hotbar_rendered"}
+{"payload":{"map":"floodplains","phase":"day"},"t":2983,"type":"ui_mood_applied"}
+{"payload":{"index":-1,"label":"","skill":""},"t":2984,"type":"ui_field_hotbar_selection_rendered"}
+{"payload":{"fits":true,"height":55,"text":"Esc — menu (save/load)   J — journal   I — inventory","width":442},"t":2984,"type":"ui_hint_rendered"}
+{"payload":{"cell":[31,4],"facing":[0,1]},"t":3017,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":3019,"type":"audio_played"}
+{"payload":{"text":"Scree slides out from under your boot and rattles away down the slope. Getting up that needs surer feet than yours."},"t":3019,"type":"toast"}
+{"payload":{"text":"Scree slides out from under your boot and rattles away down the slope. Getting up that needs surer feet than yours."},"t":3020,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":3021,"type":"audio_played"}
+{"payload":{"cell":[4,8],"map":"dungeon_approach"},"t":3905,"type":"map_changed"}
+{"payload":{"housekeeping":true,"text":"Autosaved. (Esc — save/load anytime)"},"t":3905,"type":"toast"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":3907,"type":"audio_played"}
+{"payload":{"bus":"Music","id":"music_dungeon_approach"},"t":3931,"type":"audio_played"}
+{"payload":{"map":"dungeon_approach","phase":"day"},"t":3931,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":8,"floor_cells":192,"map":"dungeon_approach"},"t":3945,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"dungeon_approach"},"t":3977,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":3977,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":9},"t":3977,"type":"ui_entities_rendered"}
+{"payload":{"count":0,"map":"dungeon_approach"},"t":3977,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":1,"map":"dungeon_approach"},"t":3981,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[4,9],"entity":"","showing":false},"t":3981,"type":"ui_affordance_rendered"}
+{"payload":{"text":"Autosaved. (Esc — save/load anytime)"},"t":3997,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":3999,"type":"audio_played"}
+{"payload":{"cell":[4,9],"facing":[0,1]},"t":4047,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":4047,"type":"audio_played"}
+{"payload":{"text":"The spill shifts the moment you put weight on it and keeps shifting. Crossing that takes footing you have not got."},"t":4048,"type":"toast"}
+{"payload":{"text":"The spill shifts the moment you put weight on it and keeps shifting. Crossing that takes footing you have not got."},"t":4413,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":4413,"type":"audio_played"}
+{"payload":{"cell":[16,4],"map":"trapped_halls"},"t":4941,"type":"map_changed"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":4941,"type":"audio_played"}
+{"payload":{"bus":"Music","id":"music_trapped_halls"},"t":4974,"type":"audio_played"}
+{"payload":{"bus":"Ambience","id":"ambience_trapped_halls"},"t":4981,"type":"audio_played"}
+{"payload":{"map":"trapped_halls","phase":"day"},"t":4981,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":21,"floor_cells":280,"map":"trapped_halls"},"t":4982,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":5033,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":5034,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":20},"t":5034,"type":"ui_entities_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":5034,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":1,"map":"trapped_halls"},"t":5037,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[16,5],"entity":"","showing":false},"t":5037,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[16,3],"facing":[0,-1]},"t":5097,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":5097,"type":"audio_played"}
+{"payload":{"cell":[16,3],"entity":"halls_gallery_slab","showing":true},"t":5097,"type":"ui_affordance_rendered"}
+{"payload":{"skill":"greater_strength"},"t":5117,"type":"skill_unknown"}
+{"payload":{"text":"You get both hands under the edge and pull until your eyes swim. It rocks an inch and settles back. Heavier than you."},"t":5117,"type":"toast"}
+{"payload":{"text":"You get both hands under the edge and pull until your eyes swim. It rocks an inch and settles back. Heavier than you."},"t":5118,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":5118,"type":"audio_played"}
+{"payload":{"cell":[12,1],"map":"trapped_halls"},"t":5122,"type":"map_changed"}
+{"payload":{"map":"trapped_halls","phase":"day"},"t":5122,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":21,"floor_cells":280,"map":"trapped_halls"},"t":5124,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":5124,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":5124,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":20},"t":5124,"type":"ui_entities_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":5125,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":1,"map":"trapped_halls"},"t":5129,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[12,0],"entity":"","showing":false},"t":5129,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[13,1],"facing":[1,0]},"t":5198,"type":"player_blocked"}
+{"payload":{"cell":[13,1],"entity":"halls_gallery_drop","showing":true},"t":5198,"type":"ui_affordance_rendered"}
+{"payload":{"skill":""},"t":5218,"type":"skill_unknown"}
+{"payload":{"text":"The floor stops. Gravel goes over the lip when your boot finds it and keeps going, and you are not crossing that without a line."},"t":5218,"type":"toast"}
+{"payload":{"text":"The floor stops. Gravel goes over the lip when your boot finds it and keeps going, and you are not crossing that without a line."},"t":5219,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":5219,"type":"audio_played"}
+{"payload":{"cell":[12,0],"map":"trapped_halls"},"t":5224,"type":"map_changed"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":5224,"type":"audio_played"}
+{"payload":{"map":"trapped_halls","phase":"day"},"t":5224,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":21,"floor_cells":280,"map":"trapped_halls"},"t":5225,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":5226,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":5226,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":20},"t":5226,"type":"ui_entities_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":5226,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":1,"map":"trapped_halls"},"t":5229,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[13,0],"entity":"halls_span_stub","showing":true},"t":5229,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[13,0],"facing":[1,0]},"t":5297,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":5297,"type":"audio_played"}
+{"payload":{"skill":""},"t":5317,"type":"skill_unknown"}
+{"payload":{"text":"You get a hand on the stub and lean out. The gap is too wide to jump and the stub too smooth to climb; what it wants is a rope."},"t":5317,"type":"toast"}
+{"payload":{"text":"You get a hand on the stub and lean out. The gap is too wide to jump and the stub too smooth to climb; what it wants is a rope."},"t":5317,"type":"ui_toast_rendered"}
+{"payload":{"cell":[20,10],"map":"riverfarm_village"},"t":5978,"type":"map_changed"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":5979,"type":"audio_played"}
+{"payload":{"bus":"Music","id":"music_riverfarm_village"},"t":6007,"type":"audio_played"}
+{"payload":{"map":"riverfarm_village","phase":"day"},"t":6007,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":105,"floor_cells":384,"map":"riverfarm_village"},"t":6009,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"riverfarm_village"},"t":6039,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":6039,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":28},"t":6039,"type":"ui_entities_rendered"}
+{"payload":{"count":1,"map":"riverfarm_village"},"t":6039,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":0,"map":"riverfarm_village"},"t":6043,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[21,10],"entity":"","showing":false},"t":6043,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[20,9],"facing":[0,-1]},"t":6104,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":6104,"type":"audio_played"}
+{"payload":{"cell":[20,9],"entity":"riverfarm_bank_washout","showing":true},"t":6104,"type":"ui_affordance_rendered"}
+{"payload":{"skill":""},"t":6124,"type":"skill_unknown"}
+{"payload":{"text":"The bank is cut clean through here, down to brown water. Go the long way round the cottage, or put boards back across it."},"t":6124,"type":"toast"}
+{"payload":{"text":"The bank is cut clean through here, down to brown water. Go the long way round the cottage, or put boards back across it."},"t":6124,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":6124,"type":"audio_played"}
+{"payload":{"cell":[19,10]},"t":6138,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_earth"},"t":6138,"type":"audio_played"}
+{"payload":{"cell":[18,10],"entity":"","showing":false},"t":6138,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[19,9],"facing":[0,-1]},"t":6154,"type":"player_blocked"}
+{"payload":{"cell":[19,9],"entity":"riverfarm_bank_stringer","showing":true},"t":6154,"type":"ui_affordance_rendered"}
+{"payload":{"skill":""},"t":6170,"type":"skill_unknown"}
+{"payload":{"text":"The stringers are sound and the boards are somewhere downriver. Standing here wishing at it will not deck it."},"t":6170,"type":"toast"}
+{"payload":{"text":"The stringers are sound and the boards are somewhere downriver. Standing here wishing at it will not deck it."},"t":6170,"type":"ui_toast_rendered"}
+{"payload":{"cell":[35,21],"map":"floodplains"},"t":7017,"type":"map_changed"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":7017,"type":"audio_played"}
+{"payload":{"bus":"Music","id":"music_floodplains"},"t":7024,"type":"audio_played"}
+{"payload":{"bus":"Ambience","id":"ambience_floodplains"},"t":7025,"type":"audio_played"}
+{"payload":{"map":"floodplains","phase":"day"},"t":7025,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":75,"floor_cells":1040,"map":"floodplains"},"t":7026,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"floodplains"},"t":7039,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":7040,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":23},"t":7040,"type":"ui_entities_rendered"}
+{"payload":{"count":2,"map":"floodplains"},"t":7040,"type":"ui_lights_rendered"}
+{"payload":{"emitters":2,"emitting":0,"map":"floodplains"},"t":7044,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[35,20],"entity":"corusdeer_carcass","showing":true},"t":7044,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[35,20],"facing":[0,-1]},"t":7109,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":7109,"type":"audio_played"}
+{"payload":{"skill":"flame_jet"},"t":7129,"type":"skill_unknown"}
+{"payload":{"text":"The meat is good and it will not stay good. Raw and cold, it is no use to you, and you have no way to change that."},"t":7129,"type":"toast"}
+{"payload":{"text":"The meat is good and it will not stay good. Raw and cold, it is no use to you, and you have no way to change that."},"t":7130,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":7130,"type":"audio_played"}
+{"payload":{},"t":7151,"type":"ui_pause_shown"}
+{"payload":{"bus":"UI","id":"menu_move"},"t":7152,"type":"audio_played"}
+{"payload":{"mode":"load","slots":[{"exists":true,"slot":"manual","summary":"Traveler — Warrior Lv8 — Floodplains"},{"exists":false,"slot":"manual_2","summary":"Empty"},{"exists":false,"slot":"manual_3","summary":"Empty"}]},"t":7202,"type":"ui_slot_picker_rendered"}
+{"payload":{},"t":7217,"type":"ui_slot_picker_hidden"}
+{"payload":{},"t":7217,"type":"ui_pause_hidden"}
+{"payload":{"bus":"UI","id":"menu_confirm"},"t":7219,"type":"audio_played"}
+{"payload":{"seed":9},"t":7262,"type":"sim_initialized"}
+{"payload":{"reason":""},"t":7267,"type":"game_loaded"}
+{"payload":{"blocked_cells":75,"floor_cells":1040,"map":"floodplains"},"t":7293,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"floodplains"},"t":7306,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":7306,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":23},"t":7306,"type":"ui_entities_rendered"}
+{"payload":{"count":2,"map":"floodplains"},"t":7306,"type":"ui_lights_rendered"}
+{"payload":{"emitters":2,"emitting":0,"map":"floodplains"},"t":7310,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[31,4],"entity":"","showing":false},"t":7310,"type":"ui_affordance_rendered"}
+{"payload":{},"t":7310,"type":"world_ready"}
+{"payload":{"map":"floodplains","phase":"day"},"t":7316,"type":"ui_mood_applied"}
+{"payload":{"index":-1,"label":"","skill":""},"t":7317,"type":"ui_field_hotbar_selection_rendered"}
+{"payload":{"bar_left":462,"expanded":true,"fallback_labels":["BC","BS","BF","RW","FJ","IF","BC","PS","GS","BR"],"group_width":726,"readout_lines":["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.","2  [Broader Shoulders] — A load that would bow anyone else rides easy on you, and rides all day.","3  [Bar Fighting] — Any common room is full of weapons. The trick is reaching one before the other fellow does.","4  [Rope Work] — A line made fast at both ends. A gap crossed once stays crossed for whoever comes next.","5  [Flame Jet] — A roaring lance of goblin-fire down the line.","6  [Ice Floor] — The stones glaze over, and footing becomes a rumor. Still water takes it the same way, and holds.","7  [Basic Cooking] — Simple meals come out right, every time.","8  [Power Strike] — Everything behind one blow.","9  [Greater Strength] — Strength enough to shift what was set down to stay put.","10  [Basic Repair] — A break put back the way it was meant to sit, and it stays put."],"reason":"world_ready","slot_numbers":["1","2","3","4","5","6","7","8","9","10"],"slots":10,"toggle_label":"Hide details [H]"},"t":7319,"type":"ui_field_hotbar_rendered"}
+{"payload":{"map":"floodplains","phase":"day"},"t":7319,"type":"ui_mood_applied"}
+{"payload":{"index":-1,"label":"","skill":""},"t":7320,"type":"ui_field_hotbar_selection_rendered"}
+{"payload":{"fits":true,"height":55,"text":"Esc — menu (save/load)   J — journal   I — inventory","width":442},"t":7320,"type":"ui_hint_rendered"}
+{"payload":{"bar_left":509,"expanded":true,"fallback_labels":["BC","BS","BF","RW","FJ","IF","BC","PS","GS","BR"],"group_width":726,"readout_lines":["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.","2  [Broader Shoulders] — A load that would bow anyone else rides easy on you, and rides all day.","3  [Bar Fighting] — Any common room is full of weapons. The trick is reaching one before the other fellow does.","4  [Rope Work] — A line made fast at both ends. A gap crossed once stays crossed for whoever comes next.","5  [Flame Jet] — A roaring lance of goblin-fire down the line.","6  [Ice Floor] — The stones glaze over, and footing becomes a rumor. Still water takes it the same way, and holds.","7  [Basic Cooking] — Simple meals come out right, every time.","8  [Power Strike] — Everything behind one blow.","9  [Greater Strength] — Strength enough to shift what was set down to stay put.","10  [Basic Repair] — A break put back the way it was meant to sit, and it stays put."],"reason":"world_ready","slot_numbers":["1","2","3","4","5","6","7","8","9","10"],"slots":10,"toggle_label":"Hide details [H]"},"t":7337,"type":"ui_field_hotbar_rendered"}
+{"payload":{"cell":[31,4]},"t":7357,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_earth"},"t":7357,"type":"audio_played"}
+{"payload":{"cell":[31,5],"entity":"","showing":false},"t":7357,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[31,5]},"t":7373,"type":"player_moved"}
+{"payload":{"cell":[31,6],"entity":"","showing":false},"t":7373,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[31,6]},"t":7389,"type":"player_moved"}
+{"payload":{"cell":[31,7],"entity":"chieftains_raid","showing":true},"t":7389,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[4,8],"map":"dungeon_approach"},"t":8055,"type":"map_changed"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":8056,"type":"audio_played"}
+{"payload":{"bus":"Music","id":"music_dungeon_approach"},"t":8061,"type":"audio_played"}
+{"payload":{"map":"dungeon_approach","phase":"day"},"t":8061,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":8,"floor_cells":192,"map":"dungeon_approach"},"t":8074,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"dungeon_approach"},"t":8091,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":8091,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":9},"t":8091,"type":"ui_entities_rendered"}
+{"payload":{"count":0,"map":"dungeon_approach"},"t":8091,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":1,"map":"dungeon_approach"},"t":8096,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[4,9],"entity":"","showing":false},"t":8096,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[4,9]},"t":8159,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_stone"},"t":8160,"type":"audio_played"}
+{"payload":{"cell":[4,10],"entity":"","showing":false},"t":8160,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[5,9]},"t":8175,"type":"player_moved"}
+{"payload":{"cell":[6,9],"entity":"","showing":false},"t":8175,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[16,4],"map":"trapped_halls"},"t":8183,"type":"map_changed"}
+{"payload":{"bus":"Music","id":"music_trapped_halls"},"t":8187,"type":"audio_played"}
+{"payload":{"bus":"Ambience","id":"ambience_trapped_halls"},"t":8188,"type":"audio_played"}
+{"payload":{"map":"trapped_halls","phase":"day"},"t":8188,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":21,"floor_cells":280,"map":"trapped_halls"},"t":8189,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":8210,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":8210,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":20},"t":8210,"type":"ui_entities_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":8210,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":1,"map":"trapped_halls"},"t":8213,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[17,4],"entity":"","showing":false},"t":8214,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[16,3],"facing":[0,-1]},"t":8281,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":8282,"type":"audio_played"}
+{"payload":{"cell":[16,3],"entity":"halls_gallery_slab","showing":true},"t":8282,"type":"ui_affordance_rendered"}
+{"payload":{"context":"exploration","skill":"greater_strength","target":"halls_gallery_slab"},"t":8302,"type":"skill_used"}
+{"payload":{"bus":"SFX","id":"field_skill_used"},"t":8303,"type":"audio_played"}
+{"payload":{"count":1,"id":"shouldered_the_slab"},"t":8303,"type":"accomplishment_recorded"}
+{"payload":{"bus":"UI","id":"accomplishment_noted"},"t":8305,"type":"audio_played"}
+{"payload":{"cell":[16,3],"entity":"","showing":false},"t":8305,"type":"ui_affordance_rendered"}
+{"payload":{"fallbacks":0,"sprites":19},"t":8305,"type":"ui_entities_rendered"}
+{"payload":{"lore":false,"text":"[Greater Strength] — You set your shoulder low, take the whole weight on your legs, and walk it aside. Stone grinds on stone and the gallery mouth stands open behind it."},"t":8305,"type":"toast"}
+{"payload":{"text":"[Greater Strength] — You set your shoulder low, take the whole weight on your legs, and walk it aside. Stone grinds on stone and the gallery mouth stands open behind it."},"t":8305,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":8306,"type":"audio_played"}
+{"payload":{"cell":[16,3]},"t":8316,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_stone"},"t":8316,"type":"audio_played"}
+{"payload":{"cell":[16,2],"entity":"","showing":false},"t":8316,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[16,2]},"t":8331,"type":"player_moved"}
+{"payload":{"cell":[16,1],"entity":"","showing":false},"t":8332,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[17,2]},"t":9275,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_stone"},"t":9275,"type":"audio_played"}
+{"payload":{"cell":[18,2],"entity":"","showing":false},"t":9275,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[17,1],"facing":[0,-1]},"t":9285,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":9286,"type":"audio_played"}
+{"payload":{"cell":[17,1],"entity":"halls_gallery_cache","showing":true},"t":9286,"type":"ui_affordance_rendered"}
+{"payload":{"count":1,"id":"found_gallery_cache"},"t":9302,"type":"accomplishment_recorded"}
+{"payload":{"bus":"UI","id":"accomplishment_noted"},"t":9303,"type":"audio_played"}
+{"payload":{"cell":[17,1],"entity":"","showing":false},"t":9303,"type":"ui_affordance_rendered"}
+{"payload":{"fallbacks":0,"sprites":18},"t":9303,"type":"ui_entities_rendered"}
+{"payload":{"lore":false,"text":"The straps give at a pull. Inside: chalk, a bent square, a coil of good wire, and five gold in a twist of cloth."},"t":9303,"type":"toast"}
+{"payload":{"delta":5,"source":"halls_gallery_cache","total":25},"t":9303,"type":"gold_changed"}
+{"payload":{"text":"Earned 5 gold."},"t":9303,"type":"toast"}
+{"payload":{"text":"The straps give at a pull. Inside: chalk, a bent square, a coil of good wire, and five gold in a twist of cloth. Earned 5 gold."},"t":9304,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":9304,"type":"audio_played"}
+{"payload":{"cell":[17,1]},"t":9318,"type":"player_moved"}
+{"payload":{"cell":[17,0],"entity":"","showing":false},"t":9318,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[17,0]},"t":9335,"type":"player_moved"}
+{"payload":{"cell":[17,-1],"entity":"","showing":false},"t":9336,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[16,0]},"t":9352,"type":"player_moved"}
+{"payload":{"cell":[15,0],"entity":"","showing":false},"t":9352,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[15,0]},"t":9368,"type":"player_moved"}
+{"payload":{"cell":[14,0],"entity":"","showing":false},"t":9368,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[14,0]},"t":9386,"type":"player_moved"}
+{"payload":{"cell":[13,0],"entity":"halls_span_stub","showing":true},"t":9386,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[13,0],"facing":[-1,0]},"t":9402,"type":"player_blocked"}
+{"payload":{"context":"exploration","skill":"rope_work","target":"halls_span_stub"},"t":9419,"type":"skill_used"}
+{"payload":{"bus":"SFX","id":"field_skill_used"},"t":9419,"type":"audio_played"}
+{"payload":{"count":1,"id":"gallery_line_anchored"},"t":9419,"type":"accomplishment_recorded"}
+{"payload":{"fallbacks":0,"sprites":17},"t":9420,"type":"ui_entities_rendered"}
+{"payload":{"text":"[Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The line holds your weight and stays where you put it."},"t":9420,"type":"toast"}
+{"payload":{"text":"[Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The line holds your weight and stays where you put it."},"t":9421,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":9421,"type":"audio_played"}
+{"payload":{"cell":[14,1]},"t":9653,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_stone"},"t":9653,"type":"audio_played"}
+{"payload":{"cell":[14,2],"entity":"","showing":false},"t":9653,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[13,1]},"t":9663,"type":"player_moved"}
+{"payload":{"cell":[12,1],"entity":"","showing":false},"t":9663,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[12,1]},"t":9680,"type":"player_moved"}
+{"payload":{"cell":[11,1],"entity":"","showing":false},"t":9680,"type":"ui_affordance_rendered"}
+{"payload":{},"t":9697,"type":"ui_pause_shown"}
+{"payload":{"bus":"UI","id":"menu_move"},"t":9697,"type":"audio_played"}
+{"payload":{"mode":"save","slots":[{"exists":true,"slot":"manual","summary":"Traveler — Warrior Lv8 — Floodplains"},{"exists":false,"slot":"manual_2","summary":"Empty"},{"exists":false,"slot":"manual_3","summary":"Empty"}]},"t":9730,"type":"ui_slot_picker_rendered"}
+{"payload":{},"t":9746,"type":"ui_slot_picker_hidden"}
+{"payload":{},"t":9746,"type":"ui_pause_hidden"}
+{"payload":{"bus":"UI","id":"menu_confirm"},"t":9747,"type":"audio_played"}
+{"payload":{"housekeeping":true,"text":"Game saved."},"t":9747,"type":"toast"}
+{"payload":{"bus":"UI","id":"save_chime"},"t":9747,"type":"audio_played"}
+{"payload":{"text":"Game saved."},"t":9747,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":9748,"type":"audio_played"}
+{"payload":{"cell":[31,3],"map":"floodplains"},"t":9755,"type":"map_changed"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":9756,"type":"audio_played"}
+{"payload":{"bus":"Music","id":"music_floodplains"},"t":9762,"type":"audio_played"}
+{"payload":{"bus":"Ambience","id":"ambience_floodplains"},"t":9763,"type":"audio_played"}
+{"payload":{"map":"floodplains","phase":"day"},"t":9763,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":75,"floor_cells":1040,"map":"floodplains"},"t":9764,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"floodplains"},"t":9777,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":9777,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":23},"t":9777,"type":"ui_entities_rendered"}
+{"payload":{"count":2,"map":"floodplains"},"t":9777,"type":"ui_lights_rendered"}
+{"payload":{"emitters":2,"emitting":0,"map":"floodplains"},"t":9782,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[30,3],"entity":"","showing":false},"t":9782,"type":"ui_affordance_rendered"}
+{"payload":{},"t":9853,"type":"ui_pause_shown"}
+{"payload":{"bus":"UI","id":"menu_move"},"t":9854,"type":"audio_played"}
+{"payload":{"mode":"load","slots":[{"exists":true,"slot":"manual","summary":"Traveler — Warrior Lv8 — Trapped Halls"},{"exists":false,"slot":"manual_2","summary":"Empty"},{"exists":false,"slot":"manual_3","summary":"Empty"}]},"t":9903,"type":"ui_slot_picker_rendered"}
+{"payload":{},"t":9919,"type":"ui_slot_picker_hidden"}
+{"payload":{},"t":9919,"type":"ui_pause_hidden"}
+{"payload":{"bus":"UI","id":"menu_confirm"},"t":9919,"type":"audio_played"}
+{"payload":{"seed":9},"t":9956,"type":"sim_initialized"}
+{"payload":{"reason":""},"t":9959,"type":"game_loaded"}
+{"payload":{"blocked_cells":21,"floor_cells":280,"map":"trapped_halls"},"t":9993,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":10024,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":10024,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":17},"t":10024,"type":"ui_entities_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":10024,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":1,"map":"trapped_halls"},"t":10028,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[11,1],"entity":"","showing":false},"t":10028,"type":"ui_affordance_rendered"}
+{"payload":{},"t":10028,"type":"world_ready"}
+{"payload":{"bus":"Music","id":"music_trapped_halls"},"t":10029,"type":"audio_played"}
+{"payload":{"bus":"Ambience","id":"ambience_trapped_halls"},"t":10029,"type":"audio_played"}
+{"payload":{"map":"trapped_halls","phase":"day"},"t":10030,"type":"ui_mood_applied"}
+{"payload":{"index":-1,"label":"","skill":""},"t":10031,"type":"ui_field_hotbar_selection_rendered"}
+{"payload":{"bar_left":462,"expanded":true,"fallback_labels":["BC","BS","BF","RW","FJ","IF","BC","PS","GS","BR"],"group_width":726,"readout_lines":["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.","2  [Broader Shoulders] — A load that would bow anyone else rides easy on you, and rides all day.","3  [Bar Fighting] — Any common room is full of weapons. The trick is reaching one before the other fellow does.","4  [Rope Work] — A line made fast at both ends. A gap crossed once stays crossed for whoever comes next.","5  [Flame Jet] — A roaring lance of goblin-fire down the line.","6  [Ice Floor] — The stones glaze over, and footing becomes a rumor. Still water takes it the same way, and holds.","7  [Basic Cooking] — Simple meals come out right, every time.","8  [Power Strike] — Everything behind one blow.","9  [Greater Strength] — Strength enough to shift what was set down to stay put.","10  [Basic Repair] — A break put back the way it was meant to sit, and it stays put."],"reason":"world_ready","slot_numbers":["1","2","3","4","5","6","7","8","9","10"],"slots":10,"toggle_label":"Hide details [H]"},"t":10034,"type":"ui_field_hotbar_rendered"}
+{"payload":{"map":"trapped_halls","phase":"day"},"t":10034,"type":"ui_mood_applied"}
+{"payload":{"index":-1,"label":"","skill":""},"t":10034,"type":"ui_field_hotbar_selection_rendered"}
+{"payload":{"fits":true,"height":55,"text":"Esc — menu (save/load)   J — journal   I — inventory","width":442},"t":10035,"type":"ui_hint_rendered"}
+{"payload":{"bar_left":462,"expanded":true,"fallback_labels":["BC","BS","BF","RW","FJ","IF","BC","PS","GS","BR"],"group_width":726,"readout_lines":["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.","2  [Broader Shoulders] — A load that would bow anyone else rides easy on you, and rides all day.","3  [Bar Fighting] — Any common room is full of weapons. The trick is reaching one before the other fellow does.","4  [Rope Work] — A line made fast at both ends. A gap crossed once stays crossed for whoever comes next.","5  [Flame Jet] — A roaring lance of goblin-fire down the line.","6  [Ice Floor] — The stones glaze over, and footing becomes a rumor. Still water takes it the same way, and holds.","7  [Basic Cooking] — Simple meals come out right, every time.","8  [Power Strike] — Everything behind one blow.","9  [Greater Strength] — Strength enough to shift what was set down to stay put.","10  [Basic Repair] — A break put back the way it was meant to sit, and it stays put."],"reason":"world_ready","slot_numbers":["1","2","3","4","5","6","7","8","9","10"],"slots":10,"toggle_label":"Hide details [H]"},"t":10044,"type":"ui_field_hotbar_rendered"}
+{"payload":{"cell":[13,1]},"t":10068,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_stone"},"t":10068,"type":"audio_played"}
+{"payload":{"cell":[14,1],"entity":"","showing":false},"t":10069,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[19,10],"map":"riverfarm_village"},"t":10071,"type":"map_changed"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":10071,"type":"audio_played"}
+{"payload":{"bus":"Music","id":"music_riverfarm_village"},"t":10076,"type":"audio_played"}
+{"payload":{"map":"riverfarm_village","phase":"day"},"t":10076,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":105,"floor_cells":384,"map":"riverfarm_village"},"t":10088,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"riverfarm_village"},"t":10104,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":10104,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":28},"t":10104,"type":"ui_entities_rendered"}
+{"payload":{"count":1,"map":"riverfarm_village"},"t":10104,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":0,"map":"riverfarm_village"},"t":10109,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[20,10],"entity":"","showing":false},"t":10109,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[19,9],"facing":[0,-1]},"t":10180,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":10180,"type":"audio_played"}
+{"payload":{"cell":[19,9],"entity":"riverfarm_bank_stringer","showing":true},"t":10181,"type":"ui_affordance_rendered"}
+{"payload":{"index":0,"label":"[Basic Cleaning]","skill":"basic_cleaning"},"t":10198,"type":"ui_field_hotbar_selection_rendered"}
+{"payload":{"index":9,"label":"[Basic Repair]","skill":"basic_repair"},"t":10214,"type":"ui_field_hotbar_selection_rendered"}
+{"payload":{"context":"exploration","skill":"basic_repair","target":"riverfarm_bank_stringer"},"t":10235,"type":"skill_used"}
+{"payload":{"bus":"SFX","id":"field_skill_used"},"t":10235,"type":"audio_played"}
+{"payload":{"count":1,"id":"bank_planks_mended"},"t":10235,"type":"accomplishment_recorded"}
+{"payload":{"bus":"UI","id":"accomplishment_noted"},"t":10235,"type":"audio_played"}
+{"payload":{"fallbacks":0,"sprites":27},"t":10236,"type":"ui_entities_rendered"}
+{"payload":{"text":"[Basic Repair] — You cut and lay boards across the stringers until the walk is a walk again. It holds when you lean on it, and it will hold tomorrow."},"t":10236,"type":"toast"}
+{"payload":{"index":-1,"label":"","skill":""},"t":10237,"type":"ui_field_hotbar_selection_rendered"}
+{"payload":{"text":"[Basic Repair] — You cut and lay boards across the stringers until the walk is a walk again. It holds when you lean on it, and it will hold tomorrow."},"t":10237,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":10238,"type":"audio_played"}
+{"payload":{"cell":[20,10]},"t":10247,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_earth"},"t":10247,"type":"audio_played"}
+{"payload":{"cell":[21,10],"entity":"","showing":false},"t":10247,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[20,9]},"t":10265,"type":"player_moved"}
+{"payload":{"cell":[20,8],"entity":"","showing":false},"t":10265,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[20,8]},"t":10281,"type":"player_moved"}
+{"payload":{"cell":[20,7],"entity":"","showing":false},"t":10281,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[8,5],"map":"riverfarm_longhouse"},"t":11153,"type":"map_changed"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":11154,"type":"audio_played"}
+{"payload":{"map":"riverfarm_longhouse","phase":"day"},"t":11154,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":33,"floor_cells":70,"map":"riverfarm_longhouse"},"t":11160,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"riverfarm_longhouse"},"t":11163,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":11163,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":4},"t":11163,"type":"ui_entities_rendered"}
+{"payload":{"count":3,"map":"riverfarm_longhouse"},"t":11164,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":0,"map":"riverfarm_longhouse"},"t":11167,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[8,4],"entity":"riverfarm_guest_cot","showing":true},"t":11167,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[8,4],"facing":[0,-1]},"t":11226,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":11226,"type":"audio_played"}
+{"payload":{"text":"Straw tick, borrowed blanket — Riverfarm always finds room for one more."},"t":11246,"type":"toast"}
+{"payload":{"count":1,"id":"slept"},"t":11247,"type":"accomplishment_recorded"}
+{"payload":{"bus":"UI","id":"accomplishment_noted"},"t":11247,"type":"audio_played"}
+{"payload":{"phase":"day","slept":true},"t":11247,"type":"phase_changed"}
+{"payload":{"map":"riverfarm_longhouse","phase":"day"},"t":11247,"type":"ui_mood_applied"}
+{"payload":{"count":0,"map":"riverfarm_longhouse"},"t":11247,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":11247,"type":"ui_companion_rendered"}
+{"payload":{"text":"You sleep soundly."},"t":11248,"type":"toast"}
+{"payload":{"lines":0},"t":11248,"type":"ui_sleep_veil_rendered"}
+{"payload":{"bus":"Music","id":"music_sleep_beat"},"t":11257,"type":"audio_played"}
+{"payload":{},"t":11257,"type":"ui_sleep_veil_finished"}
+{"payload":{"bar_left":462,"expanded":false,"fallback_labels":["BC","BS","BF","RW","FJ","IF","BC","PS","GS","BR"],"group_width":726,"readout_lines":["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.","2  [Broader Shoulders] — A load that would bow anyone else rides easy on you, and rides all day.","3  [Bar Fighting] — Any common room is full of weapons. The trick is reaching one before the other fellow does.","4  [Rope Work] — A line made fast at both ends. A gap crossed once stays crossed for whoever comes next.","5  [Flame Jet] — A roaring lance of goblin-fire down the line.","6  [Ice Floor] — The stones glaze over, and footing becomes a rumor. Still water takes it the same way, and holds.","7  [Basic Cooking] — Simple meals come out right, every time.","8  [Power Strike] — Everything behind one blow.","9  [Greater Strength] — Strength enough to shift what was set down to stay put.","10  [Basic Repair] — A break put back the way it was meant to sit, and it stays put."],"reason":"first_waking","slot_numbers":["1","2","3","4","5","6","7","8","9","10"],"slots":10,"toggle_label":"Show details [H]"},"t":11258,"type":"ui_field_hotbar_rendered"}
+{"payload":{"text":"Straw tick, borrowed blanket — Riverfarm always finds room for one more."},"t":11258,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":11258,"type":"audio_played"}
+{"payload":{"cell":[20,10],"map":"riverfarm_village"},"t":11343,"type":"map_changed"}
+{"payload":{"bus":"Music","id":"music_riverfarm_village"},"t":11344,"type":"audio_played"}
+{"payload":{"map":"riverfarm_village","phase":"day"},"t":11344,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":105,"floor_cells":384,"map":"riverfarm_village"},"t":11345,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"riverfarm_village"},"t":11346,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":11346,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":27},"t":11346,"type":"ui_entities_rendered"}
+{"payload":{"count":1,"map":"riverfarm_village"},"t":11346,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":0,"map":"riverfarm_village"},"t":11349,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[20,9],"entity":"","showing":false},"t":11349,"type":"ui_affordance_rendered"}
+{"payload":{"text":"You sleep soundly."},"t":11357,"type":"ui_toast_rendered"}
+{"payload":{"cell":[20,9]},"t":11415,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_earth"},"t":11416,"type":"audio_played"}
+{"payload":{"cell":[20,8],"entity":"","showing":false},"t":11416,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[12,1],"map":"trapped_halls"},"t":11424,"type":"map_changed"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":11425,"type":"audio_played"}
+{"payload":{"bus":"Music","id":"music_trapped_halls"},"t":11429,"type":"audio_played"}
+{"payload":{"bus":"Ambience","id":"ambience_trapped_halls"},"t":11429,"type":"audio_played"}
+{"payload":{"map":"trapped_halls","phase":"day"},"t":11430,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":21,"floor_cells":280,"map":"trapped_halls"},"t":11430,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":11431,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":11431,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":17},"t":11431,"type":"ui_entities_rendered"}
+{"payload":{"count":0,"map":"trapped_halls"},"t":11431,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":1,"map":"trapped_halls"},"t":11435,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[12,0],"entity":"","showing":false},"t":11435,"type":"ui_affordance_rendered"}
+{"payload":{"text":"New morning. Every key and control is listed under Esc — Settings — Help."},"t":11435,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":11435,"type":"audio_played"}
+{"payload":{"cell":[13,1]},"t":11502,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_stone"},"t":11502,"type":"audio_played"}
+{"payload":{"cell":[14,1],"entity":"","showing":false},"t":11502,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[20,12],"map":"riverfarm_village"},"t":12494,"type":"map_changed"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":12495,"type":"audio_played"}
+{"payload":{"bus":"Music","id":"music_riverfarm_village"},"t":12495,"type":"audio_played"}
+{"payload":{"map":"riverfarm_village","phase":"day"},"t":12495,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":105,"floor_cells":384,"map":"riverfarm_village"},"t":12497,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"riverfarm_village"},"t":12498,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":12498,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":27},"t":12498,"type":"ui_entities_rendered"}
+{"payload":{"count":1,"map":"riverfarm_village"},"t":12498,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":0,"map":"riverfarm_village"},"t":12502,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[21,12],"entity":"","showing":false},"t":12502,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[20,11],"facing":[0,-1]},"t":12563,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":12564,"type":"audio_played"}
+{"payload":{"cell":[20,11],"entity":"riverfarm_bank_load","showing":true},"t":12564,"type":"ui_affordance_rendered"}
+{"payload":{"context":"exploration","skill":"broader_shoulders","target":"riverfarm_bank_load"},"t":12584,"type":"skill_used"}
+{"payload":{"bus":"SFX","id":"field_skill_used"},"t":12584,"type":"audio_played"}
+{"payload":{"count":1,"id":"hauled_heavy_load"},"t":12584,"type":"accomplishment_recorded"}
+{"payload":{"bus":"UI","id":"accomplishment_noted"},"t":12585,"type":"audio_played"}
+{"payload":{"lore":false,"text":"[Broader Shoulders] — You take three at once and walk them up to the shed without stopping. The dray is clear before the second man has picked up his first, and two coins come your way for it."},"t":12585,"type":"toast"}
+{"payload":{"delta":2,"source":"riverfarm_bank_load","total":27},"t":12585,"type":"gold_changed"}
+{"payload":{"text":"Earned 2 gold."},"t":12585,"type":"toast"}
+{"payload":{"text":"[Broader Shoulders] — You take three at once and walk them up to the shed without stopping. The dray is clear before the second man has picked up his first, and two coins come your way for it. Earned 2 gold."},"t":12586,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":12586,"type":"audio_played"}
+{"payload":{"text":"The dray is empty and the shed is full. Nothing more to shift today."},"t":12596,"type":"toast"}
+{"payload":{"cell":[35,21],"map":"floodplains"},"t":12605,"type":"map_changed"}
+{"payload":{"bus":"Music","id":"music_floodplains"},"t":12611,"type":"audio_played"}
+{"payload":{"bus":"Ambience","id":"ambience_floodplains"},"t":12613,"type":"audio_played"}
+{"payload":{"map":"floodplains","phase":"day"},"t":12613,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":75,"floor_cells":1040,"map":"floodplains"},"t":12649,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"floodplains"},"t":12706,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":12707,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":23},"t":12707,"type":"ui_entities_rendered"}
+{"payload":{"count":2,"map":"floodplains"},"t":12707,"type":"ui_lights_rendered"}
+{"payload":{"emitters":2,"emitting":0,"map":"floodplains"},"t":12710,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[35,20],"entity":"corusdeer_carcass","showing":true},"t":12710,"type":"ui_affordance_rendered"}
+{"payload":{"text":"The dray is empty and the shed is full. Nothing more to shift today."},"t":12710,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":12710,"type":"audio_played"}
+{"payload":{"cell":[35,20],"facing":[0,-1]},"t":12782,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":12782,"type":"audio_played"}
+{"payload":{"context":"exploration","skill":"flame_jet","target":"corusdeer_carcass"},"t":12803,"type":"skill_used"}
+{"payload":{"bus":"SFX","id":"field_skill_used"},"t":12803,"type":"audio_played"}
+{"payload":{"count":1,"id":"cooked_a_kill"},"t":12803,"type":"accomplishment_recorded"}
+{"payload":{"cell":[35,20],"entity":"","showing":false},"t":12804,"type":"ui_affordance_rendered"}
+{"payload":{"fallbacks":0,"sprites":22},"t":12804,"type":"ui_entities_rendered"}
+{"payload":{"lore":false,"text":"[Flame Jet] — You run the lance along the haunch until the fat goes loud and the outside blackens. You cut what will travel and leave the rest to the grass."},"t":12804,"type":"toast"}
+{"payload":{"item":"seared_venison","source":"corusdeer_carcass"},"t":12804,"type":"item_gained"}
+{"payload":{"bus":"SFX","id":"item_pickup"},"t":12805,"type":"audio_played"}
+{"payload":{"text":"Got: Seared Venison"},"t":12806,"type":"toast"}
+{"payload":{"text":"[Flame Jet] — You run the lance along the haunch until the fat goes loud and the outside blackens. You cut what will travel and leave the rest to the grass."},"t":13124,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":13125,"type":"audio_played"}
+{"payload":{"cell":[35,20]},"t":13689,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_earth"},"t":13690,"type":"audio_played"}
+{"payload":{"cell":[35,19],"entity":"","showing":false},"t":13690,"type":"ui_affordance_rendered"}
+{"payload":{"text":"Got: Seared Venison"},"t":13691,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":13691,"type":"audio_played"}
+{"payload":{"context":"exploration","skill":"flame_jet","target":""},"t":13700,"type":"skill_used"}
+{"payload":{"bus":"SFX","id":"field_skill_used"},"t":13700,"type":"audio_played"}
+{"payload":{"text":"[Flame Jet] — Fire runs out of your palm, finds nothing worth burning, and dies in the air."},"t":13700,"type":"toast"}
+{"payload":{"text":"Press I — your pack."},"t":13708,"type":"ui_toast_rendered"}
+{"payload":{"cell":[10,16],"map":"floodplains"},"t":13708,"type":"map_changed"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":13708,"type":"audio_played"}
+{"payload":{"map":"floodplains","phase":"day"},"t":13708,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":75,"floor_cells":1040,"map":"floodplains"},"t":13710,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"floodplains"},"t":13722,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":13722,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":22},"t":13722,"type":"ui_entities_rendered"}
+{"payload":{"count":2,"map":"floodplains"},"t":13722,"type":"ui_lights_rendered"}
+{"payload":{"emitters":2,"emitting":0,"map":"floodplains"},"t":13726,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[10,15],"entity":"","showing":false},"t":13726,"type":"ui_affordance_rendered"}
+{"payload":{"text":"[Flame Jet] — Fire runs out of your palm, finds nothing worth burning, and dies in the air."},"t":13751,"type":"ui_toast_rendered"}
+{"payload":{"cell":[10,17],"facing":[0,1]},"t":13800,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":13801,"type":"audio_played"}
+{"payload":{"cell":[10,17],"entity":"","showing":false},"t":13801,"type":"ui_affordance_rendered"}
+{"payload":{"context":"exploration","skill":"icy_floor","target":""},"t":13822,"type":"skill_used"}
+{"payload":{"cell":[10,17],"map":"floodplains","to":"ice"},"t":13822,"type":"terrain_changed"}
+{"payload":{"text":"[Ice Floor] — The spell wants a floor and takes the water instead. Grey ice spreads from the bank in one long crack, thick enough to stand on. It will not last past your next rest."},"t":13823,"type":"toast"}
+{"payload":{"text":"[Ice Floor] — The spell wants a floor and takes the water instead. Grey ice spreads from the bank in one long crack, thick enough to stand on. It will not last past your next rest."},"t":13826,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":13826,"type":"audio_played"}
+{"payload":{"cell":[10,17]},"t":13834,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_earth"},"t":13834,"type":"audio_played"}
+{"payload":{"cell":[10,18],"entity":"frozen_cache","showing":true},"t":13834,"type":"ui_affordance_rendered"}
+{"payload":{"context":"exploration","skill":"bar_fighting","target":""},"t":14047,"type":"skill_used"}
+{"payload":{"bus":"SFX","id":"field_skill_used"},"t":14047,"type":"audio_played"}
+{"payload":{"text":"[Bar Fighting] — Your hand goes looking for something with weight to it. This room has nothing to offer."},"t":14047,"type":"toast"}
+{"payload":{"text":"[Bar Fighting] — Your hand goes looking for something with weight to it. This room has nothing to offer."},"t":14048,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":14048,"type":"audio_played"}

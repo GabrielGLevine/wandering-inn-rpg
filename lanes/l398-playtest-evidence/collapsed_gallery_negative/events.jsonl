@@ -1,0 +1,56 @@
+{"payload":{"seed":9},"t":2266,"type":"sim_initialized"}
+{"payload":{},"t":2318,"type":"ui_title_gate_rendered"}
+{"payload":{"continue_enabled":true,"selectable_rows":5},"t":2614,"type":"ui_title_rendered"}
+{"payload":{"bus":"Music","id":"music_title"},"t":2634,"type":"audio_played"}
+{"payload":{"seed":9},"t":2697,"type":"sim_initialized"}
+{"payload":{"reason":""},"t":2700,"type":"game_loaded"}
+{"payload":{"blocked_cells":51,"floor_cells":200,"map":"deep_tunnels"},"t":2778,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"deep_tunnels"},"t":2837,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":2837,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":13},"t":2837,"type":"ui_entities_rendered"}
+{"payload":{"count":1,"map":"deep_tunnels"},"t":2837,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":1,"map":"deep_tunnels"},"t":2841,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[14,1],"entity":"collapsed_gallery_rubble","showing":true},"t":2841,"type":"ui_affordance_rendered"}
+{"payload":{},"t":2841,"type":"world_ready"}
+{"payload":{"bus":"Music","id":"music_deep_tunnels"},"t":2860,"type":"audio_played"}
+{"payload":{"bar_left":509,"expanded":true,"fallback_labels":["BC","PS"],"group_width":262,"readout_lines":["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.","2  [Power Strike] — Everything behind one blow."],"reason":"world_ready","slot_numbers":["1","2"],"slots":2,"toggle_label":"Hide details [H]"},"t":2864,"type":"ui_field_hotbar_rendered"}
+{"payload":{"map":"deep_tunnels","phase":"day"},"t":2864,"type":"ui_mood_applied"}
+{"payload":{"index":-1,"label":"","skill":""},"t":2864,"type":"ui_field_hotbar_selection_rendered"}
+{"payload":{"fits":true,"height":48,"text":"Esc — menu (save/load)   J — journal   I — inventory","width":400},"t":2864,"type":"ui_hint_rendered"}
+{"payload":{"text":"A sound pick could break the rubble. [Greater Strength] could shift the beam, or fire could take the tarred shoring."},"t":2900,"type":"toast"}
+{"payload":{"text":"A sound pick could break the rubble. [Greater Strength] could shift the beam, or fire could take the tarred shoring."},"t":2901,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":2903,"type":"audio_played"}
+{"payload":{"cell":[14,1],"facing":[1,0]},"t":2912,"type":"player_blocked"}
+{"payload":{"bus":"SFX","id":"player_blocked"},"t":2914,"type":"audio_played"}
+{"payload":{"cell":[13,2]},"t":2929,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_stone"},"t":2930,"type":"audio_played"}
+{"payload":{"cell":[13,3],"entity":"","showing":false},"t":2931,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[14,2],"facing":[1,0]},"t":2946,"type":"player_blocked"}
+{"payload":{"cell":[14,2],"entity":"collapsed_gallery_beam","showing":true},"t":2946,"type":"ui_affordance_rendered"}
+{"payload":{"skill":"greater_strength"},"t":2963,"type":"skill_unknown"}
+{"payload":{"text":"The beam will not move by hand alone. [Greater Strength] could shift it; a sound pick or fire opens another way."},"t":2963,"type":"toast"}
+{"payload":{"text":"The beam will not move by hand alone. [Greater Strength] could shift it; a sound pick or fire opens another way."},"t":2963,"type":"ui_toast_rendered"}
+{"payload":{"cell":[13,3]},"t":2979,"type":"player_moved"}
+{"payload":{"cell":[13,4],"entity":"","showing":false},"t":2979,"type":"ui_affordance_rendered"}
+{"payload":{"cell":[14,3],"facing":[1,0]},"t":2996,"type":"player_blocked"}
+{"payload":{"cell":[14,3],"entity":"collapsed_gallery_shoring","showing":true},"t":2996,"type":"ui_affordance_rendered"}
+{"payload":{"skill":""},"t":3013,"type":"skill_unknown"}
+{"payload":{"text":"Tarred timber seals the lower gap. Fire could take it; a sound pick or [Greater Strength] opens another way."},"t":3013,"type":"toast"}
+{"payload":{"text":"Tarred timber seals the lower gap. Fire could take it; a sound pick or [Greater Strength] opens another way."},"t":3013,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":3013,"type":"audio_played"}
+{"payload":{"cell":[18,1],"map":"deep_tunnels"},"t":3784,"type":"map_changed"}
+{"payload":{"housekeeping":true,"text":"Autosaved. (Esc — save/load anytime)"},"t":3785,"type":"toast"}
+{"payload":{"bus":"SFX","id":"door_transition"},"t":3787,"type":"audio_played"}
+{"payload":{"map":"deep_tunnels","phase":"day"},"t":3787,"type":"ui_mood_applied"}
+{"payload":{"blocked_cells":51,"floor_cells":200,"map":"deep_tunnels"},"t":3788,"type":"ui_map_rendered"}
+{"payload":{"count":0,"map":"deep_tunnels"},"t":3788,"type":"ui_ward_rendered"}
+{"payload":{"active":false},"t":3788,"type":"ui_companion_rendered"}
+{"payload":{"fallbacks":0,"pc_sprite":"pc_human_m","sprites":13},"t":3788,"type":"ui_entities_rendered"}
+{"payload":{"count":1,"map":"deep_tunnels"},"t":3788,"type":"ui_lights_rendered"}
+{"payload":{"emitters":1,"emitting":1,"map":"deep_tunnels"},"t":3792,"type":"ui_ambience_rendered"}
+{"payload":{"cell":[19,1],"entity":"","showing":false},"t":3792,"type":"ui_affordance_rendered"}
+{"payload":{"text":"Autosaved. (Esc — save/load anytime)"},"t":3801,"type":"ui_toast_rendered"}
+{"payload":{"bus":"UI","id":"toast"},"t":3802,"type":"audio_played"}
+{"payload":{"cell":[18,2]},"t":3813,"type":"player_moved"}
+{"payload":{"bus":"SFX","id":"footstep_stone"},"t":3813,"type":"audio_played"}
+{"payload":{"cell":[18,3],"entity":"","showing":false},"t":3814,"type":"ui_affordance_rendered"}

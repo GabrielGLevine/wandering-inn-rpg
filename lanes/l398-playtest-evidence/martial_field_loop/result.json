@@ -1,0 +1,19 @@
+{
+  "events_seen": 475,
+  "failures": [],
+  "passed": true,
+  "screenshots": [
+    "/tmp/wi-398/wandering_inn_game/qa_output/martial_field_loop/00_floodplains_scree_refused.png",
+    "/tmp/wi-398/wandering_inn_game/qa_output/martial_field_loop/01_dungeon_spill_refused.png",
+    "/tmp/wi-398/wandering_inn_game/qa_output/martial_field_loop/02_gallery_shut.png",
+    "/tmp/wi-398/wandering_inn_game/qa_output/martial_field_loop/03_bank_washout_refused.png",
+    "/tmp/wi-398/wandering_inn_game/qa_output/martial_field_loop/04_scree_crossed.png",
+    "/tmp/wi-398/wandering_inn_game/qa_output/martial_field_loop/05_gallery_opened.png",
+    "/tmp/wi-398/wandering_inn_game/qa_output/martial_field_loop/06_line_anchored.png",
+    "/tmp/wi-398/wandering_inn_game/qa_output/martial_field_loop/07_bank_walk_decked.png",
+    "/tmp/wi-398/wandering_inn_game/qa_output/martial_field_loop/08_still_crossable_after_sleep.png",
+    "/tmp/wi-398/wandering_inn_game/qa_output/martial_field_loop/09_carcass_cooked.png",
+    "/tmp/wi-398/wandering_inn_game/qa_output/martial_field_loop/10_ice_floor_field_cast.png"
+  ],
+  "script": "res://qa/scripts/martial_field_loop.json"
+}

@@ -3785,7 +3785,18 @@ FIXED inside the wave and is recorded as fixed.
   `winter_teeth_work/00_hurdles_stacked` | Fix candidates: move both props up a
   row (cheap, but re-derives two canonicals' routes), or give the panel a
   world-clearance rule like the hotbar's `HINT_BAND_CLEARANCE`. Lane C already
-  paid this tax once — the tend prop sits at row 11 for exactly this reason. |
+  paid this tax once — the tend prop sits at row 11 for exactly this reason.
+  **WIDENED (#398 close playtest, 2026-08-07): a second map, and this time it
+  eats a whole pocket.** On `ruin_surface` the briar-arch pocket sits at rows
+  9–12, the camera is bottom-clamped there, and a 6-line expanded readout covers
+  y≈405–570 — which is the pocket's entire interior. In both
+  `lanes/l398-playtest-evidence/briar_arch_fire/00_briar_arch_closed.png` and
+  `01_briar_arch_cache.png` the `briar_arch_wards` figures, the
+  `briar_arch_cache` coffer AND THE PLAYER CHARACTER are all behind the panel;
+  the coffer's own reward toast fires over a frame in which the coffer was never
+  visible. Same on `deep_tunnels` (`collapsed_gallery_pick/…_pick_open.png`,
+  PC behind the panel). This is no longer one map's prop placement — it is the
+  panel needing the world-clearance rule. |
 - [ ] **(P3)** | "Stacked Hurdles" reads as another fence post | `riverfarm_village`
   | `winter_fold_hurdles` borrows `riverfarm_fence_ns`, so the WORK route's
   material cache reads as one more upright beside the pen rail rather than
@@ -3828,8 +3839,8 @@ on one page with the quest-complete toast beside it.
 
 ## #398 Phase 0 — one windowed eye-check OWED at issue close (2026-08-06)
 
-- [ ] **(EYE-GATE, owed)** | a TEN-slot field bar vs the input-hint band |
-  `field_hotbar.gd` `_layout_controls` | #398's weapon gate fields
+- [x] **(EYE-GATE, PAID 2026-08-07 — the bar FITS)** | a TEN-slot field bar vs
+  the input-hint band | `field_hotbar.gd` `_layout_controls` | #398's weapon gate fields
   `[Power Strike]` off an equipped sword, so an armed warrior's AUTO bar grows
   by one and `martial_field_loop`'s armed phase now renders **10 slots**
   (previously 9). Finding 19 is the exact precedent: at NINE slots the centred
@@ -3842,9 +3853,223 @@ on one page with the quest-complete toast beside it.
   a fight with. **Owed:** one windowed `martial_field_loop` capture at the
   armed-phase hotbar assert, read at 1x, at default AND 130% text scale, with
   the keyboard hint label showing. Headless is blind to it — the slot count
-  asserts green either way | (capture at close) | Ruling context: the 10-slot
-  bar is ACCEPTED (slot 10 is cursor/mouse-reachable, number keys stay 1–9);
-  this row is about whether it FITS, not whether it is reachable. |
+  asserts green either way | `lanes/l398-playtest-evidence/martial_field_loop/`
+  `04_scree_crossed` + `crop_04_bar_2x` + `crop_04_hintband_2x`, and
+  `martial_field_loop_130/04_scree_crossed` + `crop_130_bar_2x` |
+  **PAID: it fits at both scales, on both maps, with the keyboard ribbon
+  showing.** Measured from `ui_field_hotbar_rendered`: 10 slots,
+  `group_width` 726 (bar 574 + gap 8 + toggle 144), `bar_left` 420 (dungeon) /
+  462 at 130% — so the clamp is live, the ribbon clears with a visible ~20-30px
+  gap at 100% and ~29px at 130%, and the group's far end lands at 1146 (100%) /
+  1188 (130%), both inside 1280. Slots 9 and 10 both draw their key numerals;
+  at 130% they are MORE legible than at 100% (where the tan-on-tan numeral is
+  the weakest thing on the bar), though "10" starts crowding its own icon.
+  Ruling context held: the 10-slot bar is ACCEPTED (slot 10 is cursor/mouse-
+  reachable, number keys stay 1–9); this row was about whether it FITS.
+  The row's OTHER prediction — "the clamp can push the group right until the far
+  end runs into the bottom-right toast band" — is REAL but is a y-collision, not
+  the x-overrun the row expected; it is split out as its own row below.
+  Adjacent nit seen in the same 130% frame, no row opened: the top-right
+  `Inventory` chip's label reaches the pill's inner border on both sides (fixed
+  144px-class chip, scaling label) — zero padding, no clip. |
+
+- [ ] **(P3, NEW)** | the toast band's bottom scroll-roller eats a hotbar
+  slot's key number once the bar reaches 8+ slots | `field_hotbar.gd` +
+  `message_layer.gd` | The slot row occupies y 658–710 (`offset_top =
+  -SLOT_SIZE.y - CONTROLS_BOTTOM_MARGIN`); the toast panel is bottom-anchored at
+  `TOAST_BOTTOM_DEFAULT -34` on `TOAST_CANVAS_LAYER 12`, above the bar, and its
+  parchment's LEFT ROLLER dips ~28px below the panel body. `TOAST_BAND_RESERVE`
+  is honoured by the READOUT rect only — the slot row has no reserve at all — so
+  every slot whose x falls inside `TOAST_LEFT..TOAST_RIGHT` (808–1256) loses the
+  top of its coin, and the one under the roller loses its numeral outright: at
+  100% text scale slot 8's "8" is GONE and slot 7's is half-cut; at 130% (taller
+  toast, `bar_left` 462) it is slot 7's that vanishes. The toggle pill draws
+  ABOVE the toast and is unaffected, so the bar looks half-eaten rather than
+  uniformly overlapped. Pre-#398 in mechanism (a 9-slot bar reaches x 808 too);
+  #398 is what routinely renders 10 |
+  `lanes/l398-playtest-evidence/martial_field_loop/crop_09_slots7_10_5x.png`
+  (the "8" missing) and `martial_field_loop_130/crop_130_09_toast_vs_slots_5x.png`
+  (the "7" missing) | Related, and the only prior note of it: the v0.18 W1
+  residual bullet "the bottom controls row can still reach the strip's own
+  footprint at 3+ hotbar slots" — this is that bullet, photographed, with the
+  cost named. Cheapest honest fix is a `TOAST_BAND_RESERVE`-style y-clearance on
+  the slot row (or raising the toast to `TOAST_BOTTOM_RAISED` whenever the bar
+  is wide enough to reach the toast's x-band). |
+
+## #398 close machine playtest — new findings (2026-08-07)
+
+Six pockets, windowed, serial, real overlay (Furniture.png md5-matched against
+main before any judgement), every PNG read at 1x plus gamma-boosted companions
+for the two near-black maps. Evidence under
+`lanes/l398-playtest-evidence/<script>/`. **K5 spot-read: uniformly excellent —
+all five pockets' refusal/hint copy names the alternate mode(s) by skill name**
+(pond reeds "Freeze that water, or cross it with [Double Step]"; all three
+gallery faces name pick + [Greater Strength] + fire; the vault snare names
+[Find Trap]/[Disarm Trap] AND the [Greater Strength] pry; the factor's hub node
+names terms, side shutter and rear door in one breath; both briar halves name
+burn AND cut with the weapon condition). A player who arrives holding only the
+second mode is told so, every time.
+
+- [x] **(P2, NEW — the headline) — FIXED 2026-08-07, and the two "lead" regions
+  with it (see the verdict block at the end of this row).** | `crate`'s atlas
+  region is mis-sliced, so
+  every crate in the game renders as a ~14×41 dark sliver | `data/sprites.json`
+  `crate` | `region [690, 71, 38, 26]` on `assets/props/free_pack/Furniture.png`
+  has an alpha bbox of only `(30,2)-(38,25)` — the crate art on that sheet
+  starts at x≈721, so the declared rectangle catches nothing but the left plank
+  edge and the black open-top interior of the first crate. Scaled
+  (`render_scale` 0.45 × the 4× world factor = 1.8) that 8×23 scrap draws as a
+  14×41 near-black bar, offset to the RIGHT of its own cell because the anchor
+  centres the empty 38×26 frame. Long-standing (the region traces to the
+  project-dir-rename commit), and invisible for months because `crate` was only
+  ever background dressing — **but #398 promoted it to reward-container duty on
+  four pocket payoffs**: `floodplains` `frozen_cache`, `deep_tunnels`
+  `collapsed_gallery_shoring`, `mercantile_alleys` `counting_room_trade_cache`,
+  `ruin_surface` `briar_arch_cache`. There are ~40 placements across 17 maps
+  plus 8 arena props plus 3 biome scatter pools |
+  `lanes/l398-playtest-evidence/counting_room_social/crop_crate_sliver_A_8x.png`
+  (the sliver at 8×, unmistakable), `.../crop_crate_sliver_B_8x.png`,
+  `pond_island_freeze/crop_pond_black_bar_6x.png` (the same sliver floating on
+  the pond as the Sunken Cache), `lanes/l398-playtest-evidence/crate_region_8x.png`
+  (the region straight off the sheet) and `crate_neighbourhood_5x.png` (where
+  the art actually is) | Fix is one region: ~`[721, 72, 31, 24]` for the single
+  open crate, or ~`[721, 72, 31, 24]`/`[736, 72, 16, 24]` if the intent was the
+  planked twin. **The same audit flags two more regions on this sheet as FULLY
+  TRANSPARENT — `bar_counter [256,279,68,44]` and `stool [222,323,20,20]`,
+  which would mean they render NOTHING** (used in `adventurers_rest`,
+  `pallass_market`, and `inn`/`guild`/`barracks`/`stationer`/
+  `brothers_parlor`/`riverfarm_longhouse` respectively) — plus `barrel
+  [730,14,19,22]` at 39% fill and offset. Those three were not in this
+  playtest's scenes, so they are a LEAD, not a claim: they want one windowed
+  read of the inn common room and the Rest before anyone edits them.
+  ——— **FIX, 2026-08-07. Four regions re-cut on drawn edges; all three leads
+  CONFIRMED, none refuted.** The neighbourhood is a single alpha component
+  (`x720-767`), so alpha bounds are useless here — the sheet draws two 16×23
+  crates flush at `x720-751` sharing a DOUBLE dark divider (`x735` = the left
+  crate's right outline, `x736` = the right crate's left) with a barrel flush
+  at `x752`. Cuts are therefore on drawn outlines, verified against a per-pixel
+  luminance dump, and every anchor came out of `sprite_alpha_probe.py`:
+
+  | id | region BEFORE → AFTER | frame | rs | cells | anchor | eye-read verdict |
+  |---|---|---|---|---|---|---|
+  | `crate` | `[690,71,38,26]` (bbox `(30,2)-(38,25)`, 18.6% fill) → `[736,73,16,23]` | `[16,23]` | 0.45→1.0 | 1.00×1.44 | `[0.5,1.0]` measured (bbox `(0,0,16,23)`, pad 0/0) | reads as a planked wooden crate at 1× |
+  | `bar_counter` | `[256,279,68,44]` (bbox **None** — 0% fill) → `[0,18,48,30]` | `[48,30]` | 0.25→0.35 | 1.05×0.66 | `[0.5,1.0]` measured (bbox `(0,0,48,30)`) | reads as a counter; drew NOTHING before |
+  | `stool` | `[222,323,20,20]` (bbox **None** — 0% fill) → `[112,514,16,14]` | `[16,14]` | 0.6→0.75 | 0.75×0.66 | `[0.5,1.0]` measured (bbox `(0,0,16,14)`) | reads as a plank stool; drew NOTHING before |
+  | `barrel` | `[730,14,19,22]` (bbox `(8,3)-(19,18)`, 32.5%, right-CLIPPED) → `[752,74,16,22]` | `[16,22]` | 0.7→1.0 | 1.00×1.38 | `[0.5,1.0]` measured (bbox `(0,0,16,22)`) | now a hooped barrel; was a POT, drawn ¼ cell off its own cell |
+
+  **CLOSED vs OPEN crate — the choice, measured.** The row offered either twin.
+  Took the CLOSED planked one (`x736-751`) over the open-top left one
+  (`x720-735`): mean luminance **47.3 vs 32.3**, near-black pixels **29% vs
+  48%**, and at 1× the open crate's 10×7 pure-black interior reads as a *hole
+  or a doorway*, not a container — which is exactly the failure mode this row
+  was opened for, and fatal in `deep_tunnels` (world band 13/255). Both twins
+  rendered at final in-game size on a 64px cell grid with the anchor marked:
+  `lanes/l398-art-evidence/crate_fix/prev_crate_closed_rs1.00.png` vs
+  `prev_crate_open_rs1.00.png`; the sheet itself with pixel rulers at
+  `sheet_crate_neighbourhood_labelled_8x.png` and `sheet_two_crates_14x.png`
+  (the double divider is visible there). `render_scale` 1.0 is the pack's NATIVE 16px grid, so the
+  crate is exactly one cell wide and its 0.44-cell overhang goes UP into air.
+
+  **Both "render NOTHING" leads CONFIRMED, and the cause is the same for both:**
+  `[256,279,…]` and `[222,323,…]` both land in `Furniture.png`'s door/window
+  block, past the right edge of all art on those rows — they were never near a
+  counter or a stool. The two counters and the stool now render:
+  `lanes/l398-art-evidence/inn_leads/02_the_common_hall.png` +
+  `crop_bar_counter_7_1_8x.png` (cell (7,1), "The Counter") +
+  `crop_stool_8x.png` (cell (8,4)) + `crop_row1_counter_barrel_5x.png`
+  (counter, barrel and shelf in one strip). The `barrel` lead is CONFIRMED
+  worse than stated: not merely 39% fill but the wrong OBJECT (a small pot) and
+  off-anchor — see `crop_barrel_8x.png`, in the counting room
+  `lanes/l398-art-evidence/crate_fix/crop_barrel_insitu_6x.png`, and the
+  before/after pair `prev_barrel_BEFORE_pot_rs0.70.png` (anchor dot sits OUTSIDE
+  the art) vs `prev_barrel_AFTER_hooped_rs1.00.png`. Counter and stool at final
+  size: `prev_barcounter_sideboard_rs0.35.png`, `prev_stool_bench_rs0.75.png`.
+  Crate evidence: `lanes/l398-art-evidence/crate_fix/`
+  `01_counting_room_trade_bale.png` + `crop_trade_cache_5x.png` (the trade
+  cache at 5×, unmistakably a crate) + `crop_crates_pair_5x.png` (two crates in
+  one frame) + `00_counting_room_factor.png` (the room at 1×).
+  **The size increase was checked against the Relc lesson, and it is CLEAN.**
+  `crate` backs 8 arena cover props and went from 0.22×0.64 to 1.00×1.44 cells,
+  so the risk was a tall prop sprawling over combatants' HP bars. Shot the board:
+  `lanes/l398-art-evidence/combat_check/04_forge_hall_board_mid_combat.png` +
+  `crop_board_crates_vs_bars_3x.png` — three crates and the golem's `70/70` bar
+  in one frame, zero occlusion, no `combat_scale` override needed. That capture
+  also **closes the carried "`forge_hall` board's `crate` cover still reads as
+  small dark posts rather than crates" bullet** (the residual list above, cited
+  to this very screenshot): they now read as crates. Field equivalent, crate and
+  barrel side by side: `combat_check/01_south_square_scavengers.png`.
+  Gates: `data_lint` 0 · `test_sprite_registry` PASS post-import, 0 warnings ·
+  `counting_room_social` / `pond_frozen_cache` / `collapsed_gallery_pick` /
+  `briar_arch_fire` all PASS headless @ seed 9 · `adventurers_rest_loop`,
+  `collapsed_gallery_negative`, `crate_fight`, `pallass_standards_fight` all
+  PASS windowed @ seed 9 · `comment_census --check` 0 (the four `_comment`
+  bodies had to be trimmed — the repo DATA comment ratio sits at 14.97% against
+  a 15.00% cap, so a verbose sprites.json note is now a GATE, not free prose).
+  Overlay `Furniture.png` md5-censused against main (`a10c8fd5…`) BEFORE
+  measuring. |
+
+- [ ] **(P2, NEW)** | the collapsed gallery's three entrance faces do not read
+  as three things — two of them read as nothing | `deep_tunnels` (14,1)/(14,2)/
+  (14,3) | At the locked state, world-band mean luminance is 13/255 (p90 12.9),
+  and at 1x the entrance column is black. Boosted 4× the three resolve as: a
+  pale grey lump (`dungeon_rubble`, "Mortared Rubble"), a brown rounded lump
+  (`boulder` at tint [0.55,0.38,0.24], "Fallen Beam" — it reads as a rock, not
+  as a beam: no length, no timber, no direction), and the `crate` sliver above
+  at tint [0.32,0.24,0.2] ("Tarred Shoring" — invisible, and its visible pixels
+  sit at the RIGHT EDGE of the interact reticle rather than inside it, so the
+  reticle frames bare floor). It is P2 and not P1 only because the K5 copy
+  carries the whole pocket: each face's refusal names all three verbs, so a
+  player is never stuck — but nothing on screen distinguishes the three |
+  `lanes/l398-playtest-evidence/collapsed_gallery_negative/collapsed_gallery_locked.png`,
+  `crop_three_props_raw_4x.png` (what the player sees) vs
+  `crop_three_props_boost_4x.png` (what is actually there) | Order of work:
+  the `crate` region above fixes the shoring for free; the beam wants a long
+  canted timber silhouette rather than a tinted boulder; the darkness itself is
+  the carried "darkest cave grade" condition, not a new row.
+  **PARTIALLY PAID 2026-08-07 by the `crate` region fix — the SHORING half is
+  done, the row stays open on the other two.** Re-shot windowed
+  (`collapsed_gallery_negative`, seed 9): the Tarred Shoring now draws a full
+  crate silhouette CENTRED INSIDE its interact reticle — the row's sharpest
+  complaint ("its visible pixels sit at the RIGHT EDGE of the reticle … so the
+  reticle frames bare floor") is gone, because that offset was the empty 38×26
+  frame, not the tint. It is now legible as a crate at 1× despite a 25.7/255
+  world band. What did NOT change: the tint `[0.32,0.24,0.2]` still crushes it
+  to a near-black box, so "three faces, three things" is still unmet — the
+  remaining work is the BEAM's silhouette and the tint grade, not any region.
+  Evidence `lanes/l398-art-evidence/crate_fix/collapsed_gallery_locked.png`,
+  `crop_shoring_crate_reticle_7x.png` (raw 1× crop at 7×, crate inside the
+  reticle brackets) and `crop_shoring_crate_reticle_7x_boost.png` (same, ×4.5). |
+
+- [ ] **(P3, NEW)** | the floodplains pond does not read as water, and the
+  island does not read as an island | `floodplains` (8–13, 17–21) | Flat cobalt
+  rectangles with one diagonal stripe, razor 64px edges against the grass, no
+  shore, no depth grade, no shimmer at this cap — at gameplay zoom it reads as
+  blue floor tiles laid on the field. The re-sited island is a 3-cell notch
+  ((10,20),(11,20),(11,19)) of the SAME grass texture as the mainland, so the
+  destination reads as a gap in the blue rather than as land in water, and the
+  guardian's own observe ("holds the dry crown of the island") has nothing on
+  screen to point at | `lanes/l398-playtest-evidence/pond_island_freeze/`
+  `crop_pond_island_2x.png`, `01_freeze_landing.png` | Same family as the
+  already-open Invrisil plaza razor-edge row (wang transition tiles) and the
+  #30 flat-fill history; the island half additionally wants a bank/shore cell
+  so the crown is visibly dry. |
+
+- **POSITIVE — the bespoke ice plate lands, and it lands under the player.**
+  The (P1) ICE TILE row's residual (a) (`world.gd` off `WATER_SHEET`+`ICE_TINT`,
+  onto `assets/tiles/ice/ice_floor_tiles.png` at (0,0)) is verifiably DONE:
+  `ICE_TINT` is gone from `world.gd` and the frozen cell renders as an opaque
+  pale plate with a rime rim and white fracture seams — unmistakably a
+  different SURFACE from the water beside it, at 1x, in the same frame, and
+  still readable with the PC standing on it. Evidence
+  `pond_island_freeze/01_freeze_landing.png` (frozen (12,20) beside open water)
+  and `pond_frozen_cache/crop_frozen_cache_4x.png` (the PC on the plate).
+  Residual (b) — the "the channel locks to grey-white ice" wording in
+  `skills.json` `frost_touch.freeze_toast` and the two `interactions.json` thaw
+  lines — is UNCHANGED and now fires on a POND, where "channel" is the wrong
+  noun. Still ship-safe: `frost_touch` remains a QA-fixture-only grant (no
+  shipped class carries `freezes`; the pond's player-reachable mode is
+  [Double Step]), so the row's ordering RULE is not yet violated. The row stays
+  open on (b) alone.
 
 ## #398 P3 — the warded side vault: two art asks OWED (2026-08-07)
 
@@ -3865,7 +4090,22 @@ a shade variant never reads as a separate thing, distinct silhouettes do.
   **Owed:** one windowed `warded_side_vault_warrior` capture at
   `00_warrior_vault_open`, plus one `dungeon_peek` at
   `04_trapped_halls_landing`, read at 1x — do the three plates read as three
-  things? | (capture at close) |
+  things? | **EYE-CHECK PAID 2026-08-07 — CONFIRMED, and the shot is worse than
+  the row's own framing.** The named captures were the wrong ones: all three
+  props carry `absent: warded_side_vault_open`, so by `00_*_vault_open` they are
+  already consumed and the frame is empty. `warded_side_vault_gate_check`
+  `00_both_modes_locked` is the frame that holds them, and it puts BOTH live
+  plates on ONE screen three rows apart: (6,7) "A Loose Flagstone" (step on it
+  and it fires) and (7,10) "A Warded Floor Plate" (heave it) are PIXEL-IDENTICAL
+  — same grey cracked slab, no tint difference, no furniture. Only the reticle
+  and the observe text separate them, and the reticle follows facing, so at rest
+  nothing does. Mitigating: (2,10) shows `snare_coil` (a distinct wire ring)
+  until [Find Trap] banks, so the third plate only appears after the first is
+  solved — the row's "three at once" never happens; two-at-once does, in one
+  frame. Severity stands at art-ask, not blocker. Evidence
+  `lanes/l398-playtest-evidence/warded_side_vault_gate_check/`
+  `00_both_modes_locked.png` + `crop_two_plates_boost_3x.png` (the two slabs
+  side by side) + `crop_snare_coil_boost_4x.png` (the coil that DOES read) |
 - [ ] **(ART, owed)** | the construct is `ruin_warden` at a warden tint |
   `data/combatants.json` `side_vault_construct`, `trapped_halls.json`
   `warded_side_vault_construct` | The entity carries `tint [0.58,0.64,0.76]` on
@@ -3877,4 +4117,18 @@ a shade variant never reads as a separate thing, distinct silhouettes do.
   dedicated sprite; the tints stay as grade, never as identity. **Owed:** one
   windowed `warded_side_vault_rogue` capture at `00_rogue_vault_open` (field
   read) and one at the combat board, read beside a `ruin_guardian` fight |
-  (capture at close) |
+  **EYE-CHECK PAID 2026-08-07 — split verdict.** It DOES read as a guard: at 1x
+  in a 15.7/255 world band it is the largest, most legible thing on screen, a
+  clear heavy armoured silhouette, and a player will read "something is standing
+  in the doorway" without help. It does NOT read as a *warded vault mechanism*
+  distinct from the ruin's own wardens — `seal_warden_alcove` (19,6) is the SAME
+  `ruin_warden` rig at tint [0.42,0.42,0.46] and sits in the SAME FRAME as the
+  vault construct at [0.58,0.64,0.76], so the one screenshot contains two
+  identical silhouettes in two shades: the tint-is-not-disambiguation case,
+  photographed. Art ask stands as written (silhouette pass, tints as grade).
+  Combat-board half not shot — the rogue route's fight resolves headless-fast
+  and the script takes no board frame; it needs a `screenshot` step added inside
+  the combat window before that half can be judged. Evidence
+  `lanes/l398-playtest-evidence/warded_side_vault_rogue/00_rogue_vault_open.png`
+  + `boosted_00.png`, and both wardens in one frame at
+  `warded_side_vault_gate_check/00_both_modes_locked.png` |
