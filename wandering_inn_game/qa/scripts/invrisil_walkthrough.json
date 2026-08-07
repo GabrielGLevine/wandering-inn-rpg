@@ -470,7 +470,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. The frontage behind it is one narrow door and a clean window. Everything that actually moves through this firm goes round the side, on wagons, after dark."
+    "text": "Every door standing open on this building is round the side, facing the alley. The frontage keeps one narrow door and one clean window. The board hanging over them is burgundy and brass, lettered COYLE AND SONS."
    },
    "timeout_sec": 5
   },

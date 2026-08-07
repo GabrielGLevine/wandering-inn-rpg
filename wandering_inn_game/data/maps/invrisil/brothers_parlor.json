@@ -313,7 +313,7 @@
    "display_name": "Wilovan",
    "sprite": "wilovan",
    "facing": "down",
-   "observe": "A Gnoll in a vest cut sharper than his manners need to be, tall hat squared like it's holding a rank. He watches the room's exits before he watches you.",
+   "observe": "A Gnoll in a tailored vest, tall hat on indoors, both hands in view on the table. He looked at the door behind you before he looked at your face.",
    "friendly_line": "He inclines the hat half an inch — a genuine courtesy, not a performance of one. \"A pleasure,\" he says.",
    "talk_pool": [
     "Evening. Might I say, {addr}, you carry yourself like a person things happen to. We collect a few of those.",
@@ -416,7 +416,7 @@
     0.82
    ],
    "facing": "left",
-   "observe": "A broad man in a bowler hat, playing solitaire like the deck owes him money. Politely, though.",
+   "observe": "A broad man dealing solitaire with a bowler still on his head. He squares each card to the one under it before he sets down the next.",
    "talk_pool": [
     "Evenin'. The cards are friendly here. The stakes, somewhat less so.",
     "House rule: hats stay on. You'll know the exception when you see it, and you'll want to be elsewhere for it."
@@ -437,7 +437,7 @@
     0.7
    ],
    "facing": "right",
-   "observe": "A Gnoll with a folded coat over one arm, keeping polite company with the hat stand and the door.",
+   "observe": "A Gnoll on his feet beside the door, a folded coat over one arm. The coat is cut for a smaller man.",
    "talk_pool": [
     "The cots? For gentlemen between engagements. Which is all of us, officially.",
     "Mind the rug. A fellow scuffed it once. The apology took longer than the mending."
@@ -453,7 +453,7 @@
    "display_name": "A Quiet Gentleman",
    "sprite": "drake_patron",
    "facing": "left",
-   "observe": "A Drake on a stool with his back to the wall, minding the shelf and the chest the way other men mind a fire.",
+   "observe": "A Drake with his back to the wall, on a stool, the good shelf and the banded chest both in front of him. When you look at the chest, he is already looking at you.",
    "talk_pool": [
     "Mm.",
     "The shelf's spoken for, friend. Marker-holders and upward."
@@ -490,7 +490,7 @@
    ],
    "display_name": "The Good Shelf",
    "sprite": "shelf_bottles",
-   "observe": "Bottles arranged by loyalty rather than label. The top row is for after jobs that went well."
+   "observe": "Two rows of bottles, the bottom row opened and the corks shoved back in crooked. On the top row the wax over every neck is unbroken."
   },
   {
    "id": "parlor_keg_a",
@@ -535,7 +535,7 @@
    ],
    "display_name": "A Stool",
    "sprite": "stool",
-   "observe": "The wobbly one. Guests get it first."
+   "observe": "One leg is a finger short of the other three. A folded playing card is wedged under it, and the stool still rocks when you touch it."
   },
   {
    "id": "card_stool_b",
@@ -589,7 +589,7 @@
    ],
    "display_name": "A Cot",
    "sprite": "bed",
-   "observe": "Army-neat. Corners squared, blanket tight, and no dent in the pillow at all."
+   "observe": "Blanket drawn flat, corners folded square. The pillow sits at the head end without a dent in it."
   },
   {
    "id": "parlor_cot_b",
@@ -636,7 +636,7 @@
       "brothers_marker": 1
      },
      "gold": 3,
-     "toast": "Marker-holder's rate. A longer line, a door further out of the way, and three gold for it instead of two."
+     "toast": "The line you take off the slate runs longer this time, out to a door further out of the way. The marker makes it three gold; without it the walk pays two."
     }
    ]
   }

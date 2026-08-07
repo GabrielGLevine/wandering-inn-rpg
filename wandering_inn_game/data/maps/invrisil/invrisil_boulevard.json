@@ -1210,7 +1210,7 @@
      "text": "A porter's barrow, half-unloaded, and a man in no hurry to finish the other half."
     }
    ],
-   "observe": "The barrow is half empty and he is in no hurry about the other half. He has the arms for a faster day and has decided against one.",
+   "observe": "Half the barrow's load is on the pavement, half is still roped on. The porter sits on the shaft with his sleeves rolled and watches the street move past him.",
    "talk_pool": [
     "Half now, half after. That's the arrangement, and after is a long word.",
     "Everything in this city arrives on a barrow. Nobody who buys it has ever seen one.",
@@ -1276,7 +1276,7 @@
    "dialogue": [
     {
      "speaker": "",
-     "text": "Mustard-brown coat, city boots, the specific walk of a man pretending he isn't lost."
+     "text": "A man in a mustard-brown coat passes you going east, and passes you again going west a minute later."
     }
    ],
    "observe": "Mustard-brown coat, good city boots, and a third pass down the same twenty yards of colonnade.",
@@ -1368,7 +1368,7 @@
     0.55,
     0.45
    ],
-   "observe": "Stacked shipping crates, waist-high, the kind of cover a man leans on to watch a street without looking like he's watching it.",
+   "observe": "Shipping crates stacked waist-high against the wall, and a gap between two stacks where the dust on the top edge has been rubbed off.",
    "on_interact_accomplishment": "coyle_operation_found",
    "toast": "You circle the block twice before it clicks. The modest COYLE AND SONS sign faces the boulevard; the two wagons idling round the side face the alley, and the men loading them count every crate twice."
   },
@@ -1414,7 +1414,7 @@
    },
    "trigger_radius": 1,
    "observe": "Two shapes peel off the shadowed colonnade, unhurried, the way people move when they've done this before. Only after dark.",
-   "gate_closed_toast": "Nothing under the colonnade but shadow. Come back after dark.",
+   "gate_closed_toast": "Shadow under the colonnade and nobody in it. Come back when it is dark.",
    "visual_states": [
     {
      "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
@@ -1457,7 +1457,7 @@
     1
    ],
    "display_name": "A Glazier's Front",
-   "observe": "A pane goes up onto the rack on edge, coin-thin, and the glazier lines his eye along it to the street.",
+   "observe": "The glazier sets a pane on edge in the rack and puts his eye to the top edge of it, sighting down the street through the glass.",
    "hide_sprite": true
   },
   {
@@ -1479,7 +1479,7 @@
     1
    ],
    "display_name": "A Narrow Teahouse",
-   "observe": "Three tables, steam on the glass, and a chalk line of prices that assumes you already know what smoke-leaf costs in Invrisil.",
+   "observe": "Three tables behind glass gone opaque with steam. On a slate by the door smoke-leaf is chalked at a price by the ounce and no grade beside it.",
    "hide_sprite": true
   },
   {
@@ -1497,7 +1497,7 @@
     0.42,
     0.38
    ],
-   "observe": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. The frontage behind it is one narrow door and a clean window. Everything that actually moves through this firm goes round the side, on wagons, after dark."
+   "observe": "Every door standing open on this building is round the side, facing the alley. The frontage keeps one narrow door and one clean window. The board hanging over them is burgundy and brass, lettered COYLE AND SONS."
   },
   {
    "_comment": "v0.16 I1 (#306): kind flips prop -> door in place on the SAME already-blocked cell (20,1), id and `observe` byte-identical, so invrisil_walkthrough's player_blocked + [Observe] + toast pins stay exact. hide_sprite dropped so the facade reads enterable.",
@@ -1533,7 +1533,7 @@
    },
    "observe": "Every front on this stretch has stopped pretending to be busy. A wheel-track runs through the wet marble, wider than a trade wagon lays and far too clean, and it is already curving away three streets north.",
    "on_interact_accomplishment": "carriage_passed",
-   "toast": "Pink lacquer, gone before you turned your head. The fronts on this stretch take a moment to remember they were busy, and not one of them looks north after it."
+   "toast": "Pink lacquer and a black wheel-rim, already past the end of the colonnade by the time your head comes round. The calling starts again a beat later, one shopfront at a time down the row."
   }
  ],
  "cover_skip": [
