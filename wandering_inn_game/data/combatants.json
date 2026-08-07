@@ -1495,6 +1495,27 @@
    ]
   },
   {
+   "_comment": "#398 P1 pond island, MEASURED at 100 seeds: 0.23 vs the warrior2 yardstick (which cannot cross), 0.68 / median 4 vs the runner5_warrior5 entrant -- the entrant cell carries the band. con 26 + damage_reduction 7 buy LENGTH (median 4 vs rock_crab's 3); str 11 / weapon_die 5 keep the bite under rock_crab's str 14 / d10, so length is attrition, not a spike.",
+   "id": "pond_guardian",
+   "power_level": 7.0,
+   "display_name": "Old Pond Crab",
+   "sprite": "rock_crab",
+   "combat_scale": 0.58,
+   "side": "enemy",
+   "stats": {
+    "str": 11,
+    "dex": 6,
+    "con": 26,
+    "int": 3,
+    "wis": 6,
+    "cha": 2
+   },
+   "weapon_die": 5,
+   "damage_reduction": 7,
+   "ai": "melee",
+   "skills": []
+  },
+  {
    "_comment": "Act V: roster-only retint of the ruin_warden rig at seal scale (distinct-id-per-context convention, :401). Stats belong to the seal band -- never retune toward the ruin fight's.",
    "id": "seal_warden",
    "power_level": 18.0,

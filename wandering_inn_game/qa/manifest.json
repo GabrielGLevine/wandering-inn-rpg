@@ -6253,30 +6253,28 @@
    }
   },
   {
-   "_comment": "<!-- 398-lane-p4 --> Appended last under the pocket marker.",
-   "script": "counting_room_social",
+   "_comment": "<!-- 398-p1 --> APPENDED LAST under the pond-island lane marker.",
+   "script": "pond_island_freeze",
    "seed": 9,
-   "fixture": "counting_room_social_start",
-   "note": "#398 P4 social route: [Bargain] factor gate, destination-node proof, live tuned guard fight, and trade-bale claim",
+   "fixture": "pond_island_freeze_start",
+   "note": "#398 P1 mode A on the re-sited island: the reeds carrier answers the bump the launch pad (13,20) makes, [Snap Freeze] opens the narrows (12,20), and the retuned +2-band guardian and victory-gated unique cache pay out",
    "tiers": [
     "full"
    ],
    "surfaces": {
     "maps": [
-     "mercantile_alleys"
+     "floodplains"
     ],
     "fixtures": [
-     "counting_room_social_start"
+     "pond_island_freeze_start"
     ],
     "skills": [
-     "basic_cleaning"
+     "basic_cleaning",
+     "frost_touch"
     ],
-    "dialogue": [
-     "invrisil_counting_factor"
-    ],
+    "dialogue": [],
     "systems": [
      "combat",
-     "dialogue",
      "economy",
      "exploration"
     ]
@@ -6314,24 +6312,24 @@
    }
   },
   {
-   "_comment": "<!-- 398-p2 --> Appended last under the collapsed-gallery lane marker.",
-   "script": "collapsed_gallery_pick",
+   "_comment": "<!-- 398-p1 --> APPENDED LAST under the pond-island lane marker.",
+   "script": "pond_island_blink",
    "seed": 9,
-   "fixture": "collapsed_gallery_pick_start",
-   "note": "#398 P2 item route: a held trap-kit pick opens the mortared rubble without being consumed, the Shield Spider nest is observed and cleared, and the one-shot strongbox yields Old Delver's Clasp.",
+   "fixture": "pond_island_blink_start",
+   "note": "#398 P1 mode B: the honest Runner 5 build crosses exactly the one water cell (12,20) from the same launch pad and reaches the same guardian and unique cache; frozen_cells stays empty whole-run",
    "tiers": [
     "full"
    ],
    "surfaces": {
     "maps": [
-     "deep_tunnels"
+     "floodplains"
     ],
     "fixtures": [
-     "collapsed_gallery_pick_start"
+     "pond_island_blink_start"
     ],
     "skills": [
      "basic_cleaning",
-     "observe"
+     "double_step"
     ],
     "dialogue": [],
     "systems": [
@@ -6342,24 +6340,23 @@
    }
   },
   {
-   "_comment": "<!-- 398-p2 --> Appended last under the collapsed-gallery lane marker.",
-   "script": "warded_side_vault_warrior",
+   "_comment": "<!-- 398-p1 --> APPENDED LAST under the pond-island lane marker.",
+   "script": "pond_island_negative",
    "seed": 9,
-   "fixture": "warded_side_vault_warrior_start",
-   "note": "#398 pocket mode B: the noisy [Greater Strength] pry banking warded_vault_forced_noisy plus the same shared warded_side_vault_open, then the same guard and the same unique reward from the other entrance",
+   "fixture": "pond_island_negative_start",
+   "note": "#398 P1 negative: neither mode leaves the launch pad; the narrows answers with a block and nothing, the reeds carrier answers from that SAME cell naming freeze and [Double Step], and no guardian/cache reward fires",
    "tiers": [
     "full"
    ],
    "surfaces": {
     "maps": [
-     "trapped_halls"
+     "floodplains"
     ],
     "fixtures": [
-     "warded_side_vault_warrior_start"
+     "pond_island_negative_start"
     ],
     "skills": [
-     "greater_strength",
-     "observe"
+     "basic_cleaning"
     ],
     "dialogue": [],
     "systems": [
@@ -6426,24 +6423,24 @@
    }
   },
   {
-   "_comment": "<!-- 398-lane-p4 --> Appended last under the pocket marker.",
-   "script": "counting_room_quiet",
+   "_comment": "<!-- 398-p1 --> APPENDED LAST under the pond-island lane marker.",
+   "script": "pond_frozen_cache",
    "seed": 9,
-   "fixture": "near_invrisil_stealth",
-   "note": "#398 P4 quiet route: [Appraise Foe] times the side shutter, the live alley ambush is resolved on the opened cell, then the tuned guard and the trade-bale claim",
+   "fixture": "pond_frozen_cache_start",
+   "note": "#398 P1 review H2: the SHIPPED frozen_cache beat, and the first coverage bounty_pond_keepsakes' found_the_frozen_cache objective has had. Proves the shipped strings against the shipped geometry -- (10,17) frozen, the player STANDING on it at (10,17), 'Kneeling on the ice' firing off (10,18), gold 20 -> 25",
    "tiers": [
     "full"
    ],
    "surfaces": {
     "maps": [
-     "mercantile_alleys"
+     "floodplains"
     ],
     "fixtures": [
-     "near_invrisil_stealth"
+     "pond_frozen_cache_start"
     ],
     "skills": [
      "basic_cleaning",
-     "observe"
+     "frost_touch"
     ],
     "dialogue": [],
     "systems": [

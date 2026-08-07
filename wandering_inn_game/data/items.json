@@ -1253,7 +1253,20 @@
 			"abilities": [],
 			"price": 28,
 			"description": "A compact bale of dyed silk, brass findings, and sealed spice packets. Every tie carries the same counting-house stamp.",
-			"lore": "The outer tally is an honest wholesale account. A second set of marks sends part of the stock toward a back-room fence under somebody else's terms."
+			"lore": "The outer tally is an honest wholesale account. A second set of marks sends part of the stock toward a back-room fence under somebody else's terms.",
+			"_comment": "#398 P1 loot, unpriced (construct_core_shard precedent). Review M4: +2 HP / Resonance 1 cloned warded_coil_charm and three shipped charms, so the seal took the pool's one open axis -- flat DR, NO hp_mod. Under guardian_ward_fragment; sidegrade, not upgrade. `pond_seal_solo` measures it.",
+			"id": "pond_survey_seal",
+			"name": "Pond Survey Seal",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 1,
+			"resonance": 1,
+			"tier": "enchanted",
+			"abilities": [],
+			"description": "A palm-sized brass seal on a cord, heavy enough to turn a glancing edge, green at the rim and dry beneath its fitted lid.",
+			"lore": "The stamped survey line ends at the pond island. A second mark points east into the reeds, and the page it belongs to is not with it."
 		}
 	]
 }

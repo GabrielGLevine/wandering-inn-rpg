@@ -376,6 +376,7 @@ func _build_expected_counts() -> Dictionary:
 		"boulder", "tree_big",
 		"mushroom_purple_l", "mushroom_purple_m", "mushroom_purple_s",
 		"inn_roof", "tree_round",
+		"pond_reeds",  ## #398 P1 review M2: single-frame Vegetation.png region crop
 	]:
 		counts["%s/idle" % e3_static] = 1
 	counts["grill/idle"] = 4  ## Grill_01-Sheet 256px / 64px frames

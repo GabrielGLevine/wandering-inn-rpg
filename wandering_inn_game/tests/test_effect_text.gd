@@ -87,6 +87,7 @@ const EXPECTED_ITEMS := {
 	# price -- so its lines are that fragment's MINUS the reduction clause. The
 	# missing row here was review C2: the suite printed FAIL and still exited 0.
 	"rootbound_ward_token": ["+2 HP", "Resonance 1", "Grants [Guarding Ward] in combat"],
+	"pond_survey_seal": ["Reduces every hit taken by 1", "Resonance 1"],
 	# 2026-07-26 Act V terminus reward (data/maps/dungeon/seal_vault.json's
 	# vault_anchor_stone). construct_core_shard's curve, guardian_ward's grant,
 	# no price (one-of-a-kind find, never vendored).

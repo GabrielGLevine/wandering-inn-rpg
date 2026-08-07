@@ -1,0 +1,49 @@
+{
+ "_comment": "#398 P1 mode-A build. Warrior 5 supplies the on-band combat kit; frost_touch is a disclosed exploration-only fixture affordance (near_sewers precedent, and the same one test_traversal_seams uses) so the leg proves the any-freezes property carrier without fielding an [Ice Mage] 10. Starts on the island's LAUNCH PAD (13,20), the cell the reeds carrier is faced from. rng_state is derived so the retuned guardian is actually beaten at the pinned seed.",
+ "version": 6,
+ "state": {
+  "current_map": "floodplains",
+  "player_facing": [
+   0,
+   -1
+  ],
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "melee_hit": 18
+  },
+  "player_skills": [
+   "basic_cleaning",
+   "frost_touch"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "seen_statuses": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 20,
+  "rng_state": "-6393592048753323481",
+  "classes": {
+   "warrior": 5
+  },
+  "player_cell": [
+   13,
+   20
+  ],
+  "hotbar_loadout": [
+   "frost_touch"
+  ]
+ }
+}
