@@ -111,7 +111,7 @@
     0.72,
     0.6
    ],
-   "observe": "At the top of the hollow there is one flat stone, a patch of its surface rubbed smooth. The cut in the turf runs straight up to it, and the ground on all sides of it is bare.",
+   "observe": "At the top of the hollow there is one flat stone, a patch of its surface rubbed smooth. The cut in the turf runs straight up to it. The ground on all sides is bare.",
    "on_interact_accomplishment": "saw_the_chieftains_seat",
    "toast": "From here you can see the cut in the turf, the fire, and everyone's hands at once. It was not chosen for comfort."
   },
@@ -125,10 +125,10 @@
    ],
    "display_name": "A Carrying Yoke",
    "sprite": "crate",
-   "observe": "The yoke leaning on the basket stack was cut for goblin shoulders and stands about waist-high on you. The baskets are dark with water to the rim, and bits of cut brush are still snagged in the top one's weave.",
+   "observe": "The yoke leaning on the basket stack was cut for goblin shoulders and stands about waist-high on you. The baskets are dark with water to the rim. Cut brush is still snagged in the top one's weave.",
    "on_interact_accomplishment": "camp_carry_jobs",
    "once_per_waking": true,
-   "once_per_waking_toast": "Every basket is out and the yoke is lying on the ground. There is nothing to haul here until you have slept.",
+   "once_per_waking_toast": "The baskets are all out and the yoke is on the ground; nothing to haul here until you have slept.",
    "gold": 2,
    "toast": "You shorten the yoke by two notches and spend the morning hauling water and cut brush. Somebody presses coin into your hand at the end without looking up.",
    "variants": [
@@ -178,7 +178,7 @@
      "camp_larder_filled": 1
     }
    },
-   "observe": "A rack of split poles over a bed of cold ash, nothing hanging on it. The hunters stand at the north lip of the hollow with the range in sight above them.",
+   "observe": "A rack of split poles over cold ash, nothing hanging on it. The hunters stand at the north lip of the hollow, the range in sight above them.",
    "on_interact_accomplishment": "eyed_the_drying_rack",
    "toast": "You put a hand on the rack and the old one signs at you: baskets first, then a corusdeer down off the range north. The poles stay bare until both are done.",
    "variants": [
