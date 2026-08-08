@@ -88,27 +88,62 @@ CHOICE-LOG's 2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
   lacking a DONE/ACTIVE header — checker/format disagreement, needs a
   one-line checker or plan-template fix, NOT a real drift.
 
-## RUNNING (2026-08-07 late): #397 r2 — reviews DONE, fix waves landing, WINDDOWN
-ALL SIX lane reviews COMPLETE (2 Critical total, both physical
-contradictions, both in fix waves). Controller ledger =
-docs/superpowers/2026-08-07-prose-round2-train-notes.md (rulings 1-16
-+ owed items — READ IT FIRST on resume). Lane branches 397r2/l1..l6;
-l4 fix wave LANDED (165ec244, train-ready); l1/l2/l3/l5/l6 fix waves
-were LIVE at winddown — on resume, check each worktree
-/tmp/wi-397r2-l{1,2,3,5,6} for a dirty tree = fix wave landed
-uncommitted (commit it on the lane branch with a fix-wave message;
-briefs + reports in the session transcript, pin-delta ledgers in
-docs/prose-naturalization/pin-deltas/round2-l*.json). THEN: train per
-plan Task 3 (anchored train branch issue/397-prose-naturalization-r2;
-STRIP LANE-BRIEF.md + lane-rows.jsonl from every lane merge — six-way
-root collision otherwise; composed gates; owed items 1-16 from train
-notes incl. §6/§6.2 citation re-points, steam-vent divergence,
-landmark registry regen for 3 unregistered strings + self-test
-tolerance, riverfarm petitions marked RULED, composed 2-sentence-share
-+ inflation measure, mop-up decision incl. wi_game.gd:951 engine
-default). Task 4 blind read AFTER train green. Session-close skill
-fold owed: wi-verifying-changes grep discipline (SCRIPT ERROR family
-vs ERROR: FAIL family — l5 reviewer correction, train notes 16).
+## DONE (2026-08-08): #397 CLOSED — prose naturalization, round 2 (PR #407, 40ec63ef)
+
+The issue that failed its own exit read in round 1 now PASSES it. Full
+narrative in the PR body; 21 rulings in CHOICE-LOG; read evidence in
+docs/prose-naturalization/round2-read/{adjudication.md,results.json}.
+
+**Exit read (the gate):** two fresh context-free readers, ONE shuffled
+234-row packet (120 revised rows -- the same ids Phase 5 scored -- plus
+114 untouched holdout rows as control, no role signal). Revised 39.4 /
+39.2 mean (34.0 median both); control 63.6 / 61.6; margin +24.2 / +22.4
+against a bar of >=10. Two opposite framings agreed within 0.2 points.
+
+**The adjudication worth knowing:** both readers named a surviving
+engine (the "withheld-agent closer"), which reads as a FAIL. The key
+showed its core specimens were 15/15 CONTROL rows, and the hostile
+reader's own counter-case -- rows it could NOT reconcile with the engine
+-- was 9/9 REVISED. The engine is real and lives entirely in prose the
+pass was never allowed to touch. Ruled MET with the letter-vs-purpose
+discrepancy recorded, not resolved silently.
+
+**NOT met, surfaced not buried:** criterion 9 ending-shape variety
+(`fact` endings 60-62% vs a ~35% ceiling) -- a direct consequence of the
+zero-inference default. Both readers, asked directly, said the corpus
+does NOT read uniformly plain. Folded into #406 rather than chased,
+because chasing it means re-adding the inference the pass removes.
+
+**Shape of the work:** 188-row mechanically frozen worklist; 6 writing
+lanes -> 6 adversarial reviews (2 Critical, both lane-authored physical
+contradictions) -> 6 fix waves; then a CONTROLLER-ORDERED cadence
+rebalance when composed measurement showed the pass had traded the
+button-closer engine for a two-sentence fact-stop cadence (60.1% ->
+73.4%; rebalanced to 39.9%, largest single shape now BELOW the original
+corpus at 43.6%); then a 5-dimension whole-branch review (18 findings
+raised, 13 refuted, 5 confirmed -- 3 of them controller errors,
+including a HOLDOUT VIOLATION where a mop-up edited a frozen control
+string because verify-untouched ran before the edit and not after).
+
+**Composed bar at merge:** sweep ALL 230 green no grep hits, units 0
+reds, data_lint / verify-untouched / extract_prose self-test rc=0 (was
+4 FAILURES), both voice gates CLEAN, census within ceiling, all seven
+CI checks green including the docs-drift check that had been red all
+session. Row accounting exact: 186 changed + the 2 deliberately frozen
++ 6 individually ruled off-worklist.
+
+**Follow-up #406 FILED** (holdout release + residue drain): the holdout
+is now both spent as a control and the carrier of nearly all remaining
+engine, so it needs re-authoring behind a FRESHLY DRAWN control. Folds
+in the 8 named residue rows, the "Nothing there." template family, and
+the shape-variety work -- one pass, one fresh control, one read.
+
+**Skill folds shipped:** dual failure-marker grep (assert-suites print
+`^PASS` with rc=0 while an assertion is broken), sweep-vs-QA_RESULT
+discrimination + import-before-regate, gates-run-AFTER-every-edit-wave,
+never JSON-reserialize shipped data, `[ci-full]` on the FINAL head,
+verify squashes by TREE not `git cherry`, one-shuffled-packet blind
+reads.
 
 ## superseded RUNNING block (2026-08-07): #397 round 2 — six writing lanes LIVE
 USER RULED: Option A, maps only (CHOICE-LOG 2026-08-07). Plan:
@@ -129,8 +164,10 @@ under that reader's untouched control; both readers must find no
 single surviving engine). Exit met → close PR; not met → STOP, user.
 Dialogue is SHIPPED — do not re-open Set A.
 
-## 🧑‍⚖️ NEW USER ASKS from this session
-1. ~~#397 round 2 go/no-go~~ RULED 2026-08-07: A-maps-only (above).
+## 🧑‍⚖️ USER-HELD DECISIONS (all four still open)
+1. ~~#397 round 2~~ SHIPPED 2026-08-08 (PR #407, exit read passed).
+   **#406 (holdout release) needs a go/park call** — it is the natural
+   next prose slice and nothing else is queued behind it.
 2. **[Rope Work] ACK still pending** (pre-existing).
 3. **v0.19.0 tag re-cut + deploy** still user's call; this session
    merged FOUR PRs to main unreleased per directive (#399, #401,
