@@ -298,7 +298,7 @@
    ],
    "display_name": "The Counter's End",
    "sprite": "counter_right",
-   "observe": "Dust in the dome of the brass bell, a clean blotter under it, and a small mirror screwed to the shelf edge. Look into the mirror and you are looking at the doorway."
+   "observe": "Dust in the dome of the brass bell, a clean blotter under it, and a small mirror screwed to the shelf edge. In the mirror you are looking at the doorway."
   },
   {
    "id": "stationer_wax_tray",
@@ -331,7 +331,7 @@
    ],
    "display_name": "The Scribe's Desk",
    "sprite": "library_desk",
-   "observe": "The desk sits at an angle to the window: the page faces the wall, the scribe faces the street. On the page side there is a second chair, pushed back from the desk and left at a slant."
+   "observe": "The desk sits at an angle to the window. The page faces the wall, the scribe faces the street. A second chair stands on the page side, pushed back and left at a slant."
   },
   {
    "id": "stationer_stove",
@@ -342,7 +342,7 @@
    ],
    "display_name": "A Small Iron Stove",
    "sprite": "barrel",
-   "observe": "The fire is low and the ash under the grate is deep. The nearest stacks of paper stand a hand's width off the iron."
+   "observe": "The fire is low, the ash under the grate deep. The nearest stacks of paper stand a hand's width off the iron."
   }
  ]
 }
