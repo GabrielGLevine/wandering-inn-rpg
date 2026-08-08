@@ -3,7 +3,7 @@
  "_issue": "GH#397 Phase 2",
  "_lane": "397/riverfarm (the final region lane, on the composed tree)",
  "_note": "The exception record for the region the phase-4 baseline called the worst standing: every string this lane KEPT against a rule in narrator-bible.md, with its ground, plus the disclosures that are NOT keep requests. Bound to {file, field_path, exact_text}, never line numbers, matching protected-keeps.json. THIS FILE IS A RECORD, NOT AN INPUT: no tool reads it, extract_prose.py does not merge it, and it confers no protection by itself. A granted petition becomes protection only when the controller folds it into protected-keeps-extra.json. Every one of the six is byte-untouched by this lane, so there is no post-pass pin question on any of them.",
- "_ruling_source": "UNRULED — written by the lane, awaiting the controller. Three of the six (the mill notch exemplar, and the two CONSEQUENCE-ANON strings) rest on rulings ALREADY made elsewhere in this pass and are close to mechanical; the §1.4 length exception has a twice-granted precedent in the same pass; the §7 functional-negation keep and the shutter PEAK are genuine judgement calls.",
+ "_ruling_source": "RULED 2026-08-07 by the controller on the #397 round-2 train. Every petition carries a ruling + ruling_why. 3 DENIED (rewrite stands), 2 GRANTED (byte-untouched), 1 MOOT (self-resolved by compression). Supersedes the UNRULED round-1 state.",
  "_python": "3.12.3",
  "_count": 6,
  "petitions": [
@@ -14,16 +14,22 @@
    "exact_text": "Somebody has cut a notch for every flood since before the village had a headman, and built the shelf a hand above the worst of them.",
    "ground": "§6 rule 1 PERMITTED-CLASS KEEP — and the strongest possible ground: this exact string is the bible's OWN worked exemplar for §6 rule 1, quoted verbatim in narrator-bible.md ('Permitted: riverfarm/riverfarm_mill.json · toast — \"Somebody has cut a notch for every flood...\" The notches are there; the height is measurable.'). The anonymous agent is an ACTION the evidence shows (cut notches, a measured shelf height), never a motive or a feeling. Left byte-untouched. It is 1 of the 5 anon-4 hits this lane deliberately did not remove, and removing it to hit a number would have deleted the bible's own illustration of the rule.",
    "rule": "narrator-bible.md §6 rule 1 (exemplar, verbatim)",
-   "byte_untouched_by_lane": true
+   "byte_untouched_by_lane": true,
+   "ruling": "DENIED — rewrite stands",
+   "ruling_why": "On the frozen round-2 worklist (BUTTON+TRIAD). The re-authored form keeps the flood-record fact under the file's ONE declared inference allowance and drops the anonymous agent and the one-sentence button. The petition's ground was that §6 quoted this string as its rule-1 exemplar; that citation moved with the pass.",
+   "ruled_on": "2026-08-07 (round-2 train, controller)"
   },
   {
    "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_longhouse.json",
    "field_path": "$.entities[1].observe",
    "entity_id": "riverfarm_guest_cot",
    "exact_text": "A straw-tick pallet against the wall, blanket already turned down for whoever needs it.",
-   "ground": "§6.2 CONSEQUENCE-ANON, the class RULED permitted at the pallass petition and amended into §6 at #397 integration. 'for whoever needs it' points FORWARD at a hypothetical future guest, so nothing is claimed about anybody who was here — there is no microhistory and no invented motive. It states what the turned-down blanket is FOR, which is the prop's affordance (a sleep site). Exactly the pallass_forge_hall precedent ('Guessing here costs somebody a week') with warmth instead of cost. Left byte-untouched; the counter still scores anon_agent 1, and per the ruling the counter is wrong here.",
+   "ground": "§6.2 CONSEQUENCE-ANON, the class RULED permitted at the pallass petition and amended into §6 at #397 integration. 'for whoever needs it' points FORWARD at a hypothetical future guest, so nothing is claimed about anybody who was here — there is no microhistory and no invented motive. It states what the turned-down blanket is FOR, which is the prop's affordance (a sleep site). Formerly argued from the pallass_forge_hall precedent ('Guessing here costs somebody a week'); that string was re-authored by round 2, and THIS string is now §6.2's exemplar in its place. Left byte-untouched; the counter still scores anon_agent 1, and per the ruling the counter is wrong here.",
    "rule": "narrator-bible.md §6 rule 2 (CONSEQUENCE-ANON, permitted class)",
-   "byte_untouched_by_lane": true
+   "byte_untouched_by_lane": true,
+   "ruling": "GRANTED — byte-untouched",
+   "ruling_why": "CONSEQUENCE-ANON, forward-pointing 'whoever'. Never on the worklist, never edited. PROMOTED: this string is now §6.2's live permitted exemplar, replacing the pallass_forge_hall quote the round-2 pass re-authored.",
+   "ruled_on": "2026-08-07 (round-2 train, controller)"
   },
   {
    "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
@@ -32,7 +38,10 @@
    "exact_text": "You get one sack up and your back tells you about the other eleven. This is a job for somebody built for it.",
    "ground": "§6.2 CONSEQUENCE-ANON, second instance. 'This is a job for somebody built for it' names whoever COULD do the lift, not somebody who did anything — a Skill gate stated as a person-shaped requirement, which is how the game's own [Broader Shoulders] refusal reads to a player. Same class as the pallass forge-hall gauge refusal. Left byte-untouched.",
    "rule": "narrator-bible.md §6 rule 2 (CONSEQUENCE-ANON, permitted class)",
-   "byte_untouched_by_lane": true
+   "byte_untouched_by_lane": true,
+   "ruling": "DENIED — rewrite stands",
+   "ruling_why": "The petition's own ground ('a job for somebody built for it') is the affordance formula verbatim, which amendment 4 bans outright — the ground was superseded by doctrine written after the petition. The eleven-sack count survives, and the fix wave additionally restored the skill-need cue this field owes the player.",
+   "ruled_on": "2026-08-07 (round-2 train, controller)"
   },
   {
    "file": "wandering_inn_game/data/maps/riverfarm/witch_hut.json",
@@ -41,7 +50,10 @@
    "exact_text": "[Detect Magic] — The shard is one link of a boundary that used to ring the whole thicket. It still pulls, faintly, along the exact line the deer refuse to cross. It was drawn to keep something in, and it has been failing at that for a very long time.",
    "ground": "LENGTH EXCEPTION §1.4: three sentences in functional/skill-outcome, where the ceiling is two. Petitioned on the precedent already GRANTED twice in this pass for the same shape — dungeon/trapped_halls.json's `skill_uses.detect_magic` arms, granted at 4 and 5 sentences on the ground that the comparison IS the reveal's proof. Here sentence 2 is the physical proof (the pull follows the exact line the deer refuse to cross, which is the thicket chain's own observable) and sentence 3 is the lore the chain pays out. The prop's `_comment` records that this arm deliberately banks ward_scrap_read and NEVER detected_wardwork, so it can teach ward literacy without spending the Act V >=3-producer threshold: it is the region's only ward-literacy teach, and a sentence cut here costs the chain lore it has no second source for. Left byte-untouched. Its ONLY live coverage is thicket_keeps_skill (seed 9), which pins it verbatim and is green.",
    "rule": "narrator-bible.md §1.4 (petition with the string in hand)",
-   "byte_untouched_by_lane": true
+   "byte_untouched_by_lane": true,
+   "ruling": "MOOT — petition self-resolved",
+   "ruling_why": "Petitioned as a §1.4 three-sentence length exception; the re-authored form is two sentences, so the exception is no longer needed. Under the amendment-2 Skill-receipt carve-out the fix wave restored both lore facts (containment, long failure) that the first rewrite had attenuated.",
+   "ruled_on": "2026-08-07 (round-2 train, controller)"
   },
   {
    "file": "wandering_inn_game/data/maps/riverfarm/witch_hut.json",
@@ -50,7 +62,10 @@
    "exact_text": "The scrap hums under the dust, and not the way dust hums.",
    "ground": "§7 NEGATION KEEP IN FUNCTIONAL REGISTER — a counter-invisible one, disclosed rather than quietly kept. 'and not the way dust hums' is a correction geometry that NEITHER regex fires on (neg_correction 0, the_way_x 0), and §7.1 says zero negation in functional register. It is kept on §7's own ratified keep-criterion, which outranks the count when it applies: the scene actively invites the wrong assumption (a dusty shelf in a derelict hut, where a hum reads as nothing), and the correction is the information that routes the player to [Detect Magic] — the prop's `requires_skill`. Every de-negated rewrite tried was worse: 'The scrap hums under the dust. Dust does not hum.' is the two-beat reversal §1 forbids outright. Left byte-untouched. NOTE: it is also 1 of the region's 6 'the way X' instances, a family whose allowance is consumed by the PROTECTED ash keep in this same file (guard §10.2) — so this is the family's one deliberate survivor, and the lane cut two others.",
    "rule": "narrator-bible.md §7 (keep-criterion-as-function) + §7.1",
-   "byte_untouched_by_lane": true
+   "byte_untouched_by_lane": true,
+   "ruling": "GRANTED — byte-untouched",
+   "ruling_why": "Not a worklist row; never edited by the pass.",
+   "ruled_on": "2026-08-07 (round-2 train, controller)"
   },
   {
    "file": "wandering_inn_game/data/maps/riverfarm/witch_hut.json",
@@ -59,7 +74,10 @@
    "exact_text": "Latched from the inside, and the hut was shut when you found it. You decide not to work that through any further today.",
    "ground": "PEAK, and the answer to the §10 worry about this exact file. narrator-bible.md §10 names witch_hut as THE anti-template case study and quotes a 'lazy fix' draft that flattens all five props — including this shutter, as 'One shutter, latched. Daylight comes through the slats. The latch is on the inside.' This lane rewrote three of the file's strings and left this one alone deliberately: it is the file's one surviving interpretive move besides the protected ash, and it is NOT the microhistory family the ash consumes — nothing is claimed about an absent agent. 'Latched from the inside, and the hut was shut when you found it' is a PRESENT physical contradiction, and 'You decide not to work that through any further today' DECLINES the inference instead of drawing it, which is §2.3 (the reader assembles the meaning) delivered as a refusal. Smoke 1, under every threshold. Petitioned so a later pass reading the file's newly-plain neighbours cannot 'finish the job' on it.",
    "rule": "narrator-bible.md §10 guard 2 + §2.3",
-   "byte_untouched_by_lane": true
+   "byte_untouched_by_lane": true,
+   "ruling": "DENIED — rewrite stands",
+   "ruling_why": "Petitioned as a PEAK. The old close ('You decide not to work that through any further today') is the narrator-declining-out-loud deflection the Phase-5 readers named as a surviving template; a peak may not be built out of the tell the pass exists to remove. The re-authored form keeps the same beat as evidence ('Dust lies along the sill, unbroken.') — the reader draws the conclusion the old string announced it was declining to draw.",
+   "ruled_on": "2026-08-07 (round-2 train, controller)"
   }
  ],
  "recorded_not_fixed": [

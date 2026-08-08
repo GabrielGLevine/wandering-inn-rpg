@@ -41,7 +41,7 @@
   {"action":"assert_event_logged","type":"player_blocked","payload_contains":{"cell":[3,11]}},
   {"action":"press","name":"interact"},
   {"action":"wait_for_event","type":"item_gained","payload_contains":{"item":"sealed_factor_bale","source":"counting_room_trade_cache"},"timeout_sec":5},
-  {"action":"wait_for_event","type":"ui_toast_rendered","payload_contains":{"text":"The seal parts. The bale is compact enough to carry and valuable enough to explain the locked room."},"timeout_sec":5},
+  {"action":"wait_for_event","type":"ui_toast_rendered","payload_contains":{"text":"The seal parts on a bale of dyed silk, brass findings and sealed spice packets, every tie under the same counting-house stamp."},"timeout_sec":5},
   {"action":"assert_state","path":"accomplishments.claimed_counting_room_goods","equals":1},
   {"action":"assert_event_absent","type":"accomplishment_recorded","payload_contains":{"id":"timed_counting_room_entry"}},
   {"action":"assert_event_absent","type":"accomplishment_recorded","payload_contains":{"id":"counting_room_invited"}}

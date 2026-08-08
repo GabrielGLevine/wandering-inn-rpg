@@ -188,8 +188,8 @@
      "door_mounted": 1
     }
    },
-   "observe": "Banked low and fed on what burns down here. The ash lies raked in a ring, and the coals are still working.",
-   "toast": "A cookfire kept small on purpose, ringed with stones carried in from outside. It has been burning longer than a day."
+   "observe": "Banked low and raked back into a ring, still throwing heat when you hold a hand over the coals.",
+   "toast": "A cookfire two hands wide, ringed with stones that did not come out of this ruin. The ash under it is deeper than one night's burning."
   },
   {
    "id": "dig_camp_crate",
@@ -256,7 +256,7 @@
    "toast": "The sentinel's face is gone. The posture survives: shield raised toward the court."
   },
   {
-   "_comment": "OR convergence: pedestal_unsealed banks via guardian court, THIS PLINTH's post-plates arm, or anchor_socket's [Detect Magic] read (the breach beat's three promised routes, live during the dig on horns_dig_joined alone); Pisces TALK/SKILL + the cellar fight arms exist only AFTER the pedestal opens post-restructure -- migrated saves only. Unmet contains_when falls to the locked toast. First open atomically grants anchor_stone + anchor_sliver; repeat idempotent. b10 #204: recovery also needs rune_sequence_done (west plate then east). contains_when also gates horns_dig_joined (horns_dig's pedestal-on-camp order rule); on_open_accomplishment banks [recovered_anchor_stone, pedestal_breached, door_retrieved] TOGETHER so `breach` closes and `haul` opens at the reveal render, never earlier. SPOILER RULE: open_toast IS the reveal; nothing before it on this map names a door.",
+   "_comment": "OR convergence: pedestal_unsealed banks via guardian court, THIS PLINTH's post-plates arm, or anchor_socket's [Detect Magic] read (the breach beat's three promised routes, live during the dig on horns_dig_joined alone); Pisces TALK/SKILL + the cellar fight arms exist only AFTER the pedestal opens post-restructure -- migrated saves only. Unmet contains_when falls to the locked toast. First open atomically grants anchor_stone + anchor_sliver; repeat idempotent. b10 #204: recovery also needs rune_sequence_done -- NEAR plate rune_plate_near (16,6) FIRST, then FAR rune_plate_far (15,4), i.e. east then west (x increases east). contains_when also gates horns_dig_joined (horns_dig's pedestal-on-camp order rule); on_open_accomplishment banks [recovered_anchor_stone, pedestal_breached, door_retrieved] TOGETHER so `breach` closes and `haul` opens at the reveal render, never earlier. SPOILER RULE: open_toast IS the reveal; nothing before it on this map names a door.",
    "id": "anchor_stone_pedestal",
    "kind": "prop",
    "cell": [
@@ -300,7 +300,7 @@
     }
    ],
    "on_interact_accomplishment": "found_the_pedestal",
-   "toast": "The stone doesn't move. It does not even shift in its cradle, and the court has gone very quiet.",
+   "toast": "You put both hands on the stone and it does not shift in its cradle. The court noise drops away while you try.",
    "variants": [
     {
      "when": {
@@ -323,7 +323,7 @@
       "horns_dig_joined": 1
      },
      "accomplishment": "pedestal_unsealed",
-     "toast": "Both spirals hold their light, and the seam under the plinth stops fighting your hand. The ward wanted the plates walked in order, and now they have been. Ceria, already reaching for rope: 'Ksmvr. Down. Carefully.'"
+     "toast": "Both spirals hold their light and the seam under the plinth gives at a touch — near plate first, then its far twin. Ceria says 'Ksmvr. Down. Carefully.' and has the rope off the stake before you have straightened up."
     }
    ],
    "visual_states": [
@@ -366,7 +366,7 @@
       },
       "accomplishment": "pedestal_unsealed",
       "lore": false,
-      "toast": "[Detect Magic] — The ward was keyed to the guardian that stood here, and the key still works: the seal lets go. Ceria, from the gap: 'Do that again and I'm putting you on the ledger.'"
+      "toast": "[Detect Magic] — The ward reads as a lock cut to the guardian's shape, and the shape still fits: the seal lets go under your hand. Ceria calls up from the gap: 'Do that again and I'm putting you on the ledger.'"
      }
     ]
    }
@@ -441,9 +441,9 @@
    "companion_source": {
     "companion_id": "skeleton_ally",
     "kind": "animated",
-    "taken_toast": "The bones rise and fall into step behind you."
+    "taken_toast": "The bones knit themselves upright and take a place at your shoulder."
    },
-   "observe": "Old bones, settled where they fell. They are not going anywhere. Probably."
+   "observe": "A ribcage and a scatter of long bones, weathered to the grey-white of the ruin stone around them."
   },
   {
    "id": "rune_plate_near",
@@ -578,7 +578,7 @@
      "door_mounted": 1
     }
    },
-   "observe": "Spoil from the gap, sorted into two heaps: worked stone in one, plain rubble in the other. Every piece a chisel ever touched is in the first.",
+   "observe": "Spoil out of the gap, dropped in two heaps: chisel-marked stone in one, plain rubble in the other.",
    "on_interact_accomplishment": "eyed_the_dig_spoil",
    "toast": "Broken stone in two heaps, worked and unworked. The worked heap is smaller, and still being added to."
   },
@@ -606,7 +606,7 @@
    },
    "observe": "Three lengths of rope, whipped at the ends and hung off a driven stake so that none of it lies in the wet.",
    "on_interact_accomplishment": "eyed_the_dig_rope",
-   "toast": "Good rope, dry, and not a frayed strand in it."
+   "toast": "Three coils of rope, dry the whole way through and not a frayed strand in the lot."
   },
   {
    "id": "dig_survey_stakes",
@@ -651,7 +651,7 @@
    },
    "observe": "Ringed stones around a scatter of white ash, and four flattened squares of ground where bedrolls were. The stakes have been pulled and stacked, the string wound back onto its spool.",
    "on_interact_accomplishment": "found_the_cold_camp",
-   "toast": "Cold days ago. They struck the camp properly, filled the pit, took the rope. Nothing left but the ring of stones."
+   "toast": "The ash in the stone ring has been cold for days. The fire-pit is filled in level with the ground, and the rope that was here is gone."
   },
   {
    "id": "briar_arch_rubble_northwest",

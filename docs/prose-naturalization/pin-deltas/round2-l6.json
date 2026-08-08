@@ -1,0 +1,712 @@
+{
+ "_issue": "GH#397 round 2 — lane l6 (dungeon, ruin, sewers)",
+ "_lane": "397r2/l6",
+ "_contract": "Prose payload only, 39 rows from lane-rows.jsonl re-authored in place. `git diff -U0` over data/maps changes ONLY the 39 authored string lines (39 insertions / 39 deletions, 6 files) -- no entity add/remove/reorder, no key rename, no gating change. extract_prose.py verify-untouched exits 0 before and after (229 holdout + 29 protected = 255 untouchable strings byte-identical). data_lint.py rc=0. Corpus round-2 narrator-template advisories 95 -> 88; every residual hit in the six touched files belongs to a string this lane may not edit (protected keep, holdout, landmark disposition, or a row outside the frozen worklist).",
+ "_pin_derivation": "Each pin below was re-derived from a REAL run, never hand-guessed: the pin string was replaced with the newly authored text and the owning QA script was then run headless at its manifest seed. TestDriver's payload_contains is a subset match on the live emitted toast, so a pin that did not match the real text fails the step -- a green run IS the derivation. All 10 owning scripts returned QA_RESULT: PASS with zero SCRIPT ERROR / Parse Error / WARNING lines. No fixture and no route/assertion structure was edited; only the pinned prose strings changed (21 pin sites over 10 scripts).",
+ "_counts": {
+  "rows_rewritten": 39,
+  "files_touched_data": 6,
+  "qa_scripts_repinned": 10,
+  "pin_sites_updated": 21,
+  "fix_wave_rows_reauthored": 9,
+  "fix_wave_comments_corrected": 1,
+  "fix_wave_pin_sites_updated": 6,
+  "fix_wave_scripts_repinned": 4
+ },
+ "scripts": {
+  "arc_flow": {
+   "seed": 9,
+   "command": "wandering_inn_game/qa/run_qa.sh arc_flow headless --seed=9",
+   "run_result": "PASS",
+   "pins": [
+    {
+     "row_id": "map:sewers/deep_tunnels.json:$.entities[1].toast",
+     "entity_id": "cold_hearth",
+     "pin_sites": 1,
+     "old": "A fire-pit ringed with blackened stones, gnawed bones banked around the edge and cracked open for their marrow. Nothing in the ash has been warm for a long time.",
+     "new": "A pit at the middle of the stone ring, the ash in it dead to the bottom. Bones banked up against the stones, every one of them opened for the marrow.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "A fire-pit inside a ring of blackened stones, with gnawed bones banked up against the ring and split lengthwise for the marrow. There is no heat left anywhere in the ash.",
+     "fix_wave_repinned": true
+    },
+    {
+     "row_id": "map:sewers/deep_tunnels.json:$.entities[2].toast",
+     "entity_id": "gnaw_pile",
+     "pin_sites": 1,
+     "old": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's.",
+     "new": "Cracked bones in a heap, dry and light in the hand. Most of them Gnoll; one of them a Drake's.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "A heap of gnawed bones, split along their length for the marrow. Some of them are Gnoll, and one of them is a Drake's.",
+     "fix_wave_repinned": true
+    }
+   ]
+  },
+  "deep_descent": {
+   "seed": 9,
+   "command": "wandering_inn_game/qa/run_qa.sh deep_descent headless --seed=9",
+   "run_result": "PASS",
+   "pins": [
+    {
+     "row_id": "map:sewers/deep_tunnels.json:$.entities[1].toast",
+     "entity_id": "cold_hearth",
+     "pin_sites": 1,
+     "old": "A fire-pit ringed with blackened stones, gnawed bones banked around the edge and cracked open for their marrow. Nothing in the ash has been warm for a long time.",
+     "new": "A pit at the middle of the stone ring, the ash in it dead to the bottom. Bones banked up against the stones, every one of them opened for the marrow.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "A fire-pit inside a ring of blackened stones, with gnawed bones banked up against the ring and split lengthwise for the marrow. There is no heat left anywhere in the ash.",
+     "fix_wave_repinned": true
+    },
+    {
+     "row_id": "map:sewers/deep_tunnels.json:$.entities[2].toast",
+     "entity_id": "gnaw_pile",
+     "pin_sites": 1,
+     "old": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's.",
+     "new": "Cracked bones in a heap, dry and light in the hand. Most of them Gnoll; one of them a Drake's.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "A heap of gnawed bones, split along their length for the marrow. Some of them are Gnoll, and one of them is a Drake's.",
+     "fix_wave_repinned": true
+    }
+   ]
+  },
+  "delve_skill": {
+   "seed": 1,
+   "command": "wandering_inn_game/qa/run_qa.sh delve_skill headless --seed=1",
+   "run_result": "PASS",
+   "pins": [
+    {
+     "row_id": "map:dungeon/trapped_halls.json:$.entities[3].item_hint_toast",
+     "entity_id": "dart_slit_a",
+     "pin_sites": 1,
+     "old": "A narrow slit runs along the wall at knee height, primed and waiting. Bare hands won't do it — you'd want a proper kit for this.",
+     "new": "A narrow slit at knee height, with the mechanism seated behind the stone. Bare fingers will not reach the catch; this one takes a trap kit.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    },
+    {
+     "row_id": "map:dungeon/trapped_halls.json:$.entities[3].on_skill_use.toast",
+     "entity_id": "dart_slit_a",
+     "pin_sites": 1,
+     "old": "You trace the mechanism with a careful eye, find the catch, and wedge it still with a wax-and-wire pick from the kit. The slit stays dark.",
+     "new": "You follow the mechanism back to its catch and wedge it there with a wax-and-wire pick from the kit. The slit goes dark, and the kit is spent doing it.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    },
+    {
+     "row_id": "map:dungeon/trapped_halls.json:$.entities[3].skill_hint_toast",
+     "entity_id": "dart_slit_a",
+     "pin_sites": 1,
+     "old": "A narrow slit runs along the wall at knee height, primed and waiting. A careful, deliberate touch could still it.",
+     "new": "A narrow slit at knee height, running the length of the wall. Look at it properly first — there is a mechanism behind it to find.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    }
+   ]
+  },
+  "door_chain_talk": {
+   "seed": 9,
+   "command": "wandering_inn_game/qa/run_qa.sh door_chain_talk headless --seed=9",
+   "run_result": "PASS",
+   "pins": [
+    {
+     "row_id": "map:ruin/ruin_surface.json:$.entities[17].toast",
+     "entity_id": "dig_camp_remnant",
+     "pin_sites": 1,
+     "old": "Cold days ago. They struck the camp properly, filled the pit, took the rope. Nothing left but the ring of stones.",
+     "new": "The ash inside the stone ring is cold all the way through, and has been for days. The fire-pit is filled in level with the ground, and the rope that was here is gone.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "The ash is cold through and has been for days. They filled the pit in before they went and pulled the rope off its stake; only the ring of stones still stands where the fire was.",
+     "fix_wave_repinned": true
+    }
+   ]
+  },
+  "dungeon_peek": {
+   "seed": 9,
+   "command": "wandering_inn_game/qa/run_qa.sh dungeon_peek headless --seed=9",
+   "run_result": "PASS",
+   "pins": [
+    {
+     "row_id": "map:dungeon/trapped_halls.json:$.entities[1].toast",
+     "entity_id": "pressure_plate_a",
+     "pin_sites": 1,
+     "old": "The flagstone gives half an inch under your hand. Somewhere close, a catch clicks. Nothing else happens.",
+     "new": "The flagstone drops half an inch under your palm. A catch clicks somewhere back inside the wall, and nothing comes of it.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    },
+    {
+     "row_id": "map:dungeon/trapped_halls.json:$.entities[3].item_hint_toast",
+     "entity_id": "dart_slit_a",
+     "pin_sites": 1,
+     "old": "A narrow slit runs along the wall at knee height, primed and waiting. Bare hands won't do it — you'd want a proper kit for this.",
+     "new": "A narrow slit at knee height, with the mechanism seated behind the stone. Bare fingers will not reach the catch; this one takes a trap kit.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    },
+    {
+     "row_id": "map:dungeon/trapped_halls.json:$.entities[3].skill_hint_toast",
+     "entity_id": "dart_slit_a",
+     "pin_sites": 1,
+     "old": "A narrow slit runs along the wall at knee height, primed and waiting. A careful, deliberate touch could still it.",
+     "new": "A narrow slit at knee height, running the length of the wall. Look at it properly first — there is a mechanism behind it to find.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    },
+    {
+     "row_id": "map:dungeon/trapped_halls.json:$.entities[4].on_skill_use.toast",
+     "entity_id": "illusory_floor_a",
+     "pin_sites": 1,
+     "old": "You look again, and this time you see it: the grain runs the wrong way, and no dust has settled in months. What you are looking at is a very good painting of floor.",
+     "new": "You look properly, and the floor ahead stops matching the floor behind: the grain runs crossways, and the paint edge stops a finger short of the wall. Months of dust lie on everything down here except that patch.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    },
+    {
+     "row_id": "map:dungeon/trapped_halls.json:$.entities[6].gate_closed_toast",
+     "entity_id": "snare_nest_slot",
+     "pin_sites": 1,
+     "old": "You give the wire a wide berth. Past it, something has walked the dust into a track, and walked the track both ways.",
+     "new": "You step wide around the wire. The dust past it is trodden into a track and the track runs both ways; leave the passage until the delve is under way.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    }
+   ]
+  },
+  "horns_dig_plates": {
+   "seed": 9,
+   "command": "wandering_inn_game/qa/run_qa.sh horns_dig_plates headless --seed=9",
+   "run_result": "PASS",
+   "pins": [
+    {
+     "row_id": "map:ruin/ruin_surface.json:$.entities[5].toast",
+     "entity_id": "anchor_stone_pedestal",
+     "pin_sites": 1,
+     "old": "The stone doesn't move. It does not even shift in its cradle, and the court has gone very quiet.",
+     "new": "You put both hands on the stone and it does not shift in its cradle. The court noise drops away while you are trying.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    },
+    {
+     "row_id": "map:ruin/ruin_surface.json:$.entities[5].variants[2].toast",
+     "entity_id": "anchor_stone_pedestal",
+     "pin_sites": 1,
+     "old": "Both spirals hold their light, and the seam under the plinth stops fighting your hand. The ward wanted the plates walked in order, and now they have been. Ceria, already reaching for rope: 'Ksmvr. Down. Carefully.'",
+     "new": "Both spirals hold their light and the seam under the plinth gives at a touch. The near plate first, then its far twin: that was the order it took. Ceria says 'Ksmvr. Down. Carefully.' and has the rope off the stake before you have straightened up.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    }
+   ]
+  },
+  "martial_field_loop": {
+   "seed": 9,
+   "command": "wandering_inn_game/qa/run_qa.sh martial_field_loop headless --seed=9",
+   "run_result": "PASS",
+   "pins": [
+    {
+     "row_id": "map:dungeon/trapped_halls.json:$.entities[13].locked_toast",
+     "entity_id": "halls_span_stub",
+     "pin_sites": 1,
+     "old": "You get a hand on the stub and lean out. The gap is too wide to jump and the stub too smooth to climb; what it wants is a rope.",
+     "new": "You get a hand on the stub and lean out over the gap. Set a rope here — it is too wide to jump and too smooth to climb.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    },
+    {
+     "row_id": "map:dungeon/trapped_halls.json:$.entities[14].locked_toast",
+     "entity_id": "halls_gallery_drop",
+     "pin_sites": 1,
+     "old": "The floor stops. Gravel goes over the lip when your boot finds it and keeps going, and you are not crossing that without a line.",
+     "new": "The floor stops dead and starts again a span out, with the dark going down between. No rope goes anywhere from this lip. The line has to be run from the stub of the broken span.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "The floor stops at a clean edge and picks up again a span out, with nothing but air between. You will need a line run from this edge to the other to get across.",
+     "fix_wave_repinned": true
+    }
+   ]
+  },
+  "property_seams": {
+   "seed": 9,
+   "command": "wandering_inn_game/qa/run_qa.sh property_seams headless --seed=9",
+   "run_result": "PASS",
+   "pins": [
+    {
+     "row_id": "map:sewers/sewers.json:$.entities[14].toast",
+     "entity_id": "nook_strongbox",
+     "pin_sites": 1,
+     "old": "The hinge shears off in your hand. Inside: a wax-wrapped roll of coin, dry as the day it was hidden. 6 gold.",
+     "new": "The hinge shears off in your hand and the lid comes away with it. Wax-wrapped and still dry under the silt, 6 gold in a roll.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    }
+   ]
+  },
+  "ruin_walkthrough": {
+   "seed": 9,
+   "command": "wandering_inn_game/qa/run_qa.sh ruin_walkthrough headless --seed=9",
+   "run_result": "PASS",
+   "pins": [
+    {
+     "row_id": "map:ruin/ruin_surface.json:$.entities[5].toast",
+     "entity_id": "anchor_stone_pedestal",
+     "pin_sites": 1,
+     "old": "The stone doesn't move. It does not even shift in its cradle, and the court has gone very quiet.",
+     "new": "You put both hands on the stone and it does not shift in its cradle. The court noise drops away while you are trying.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    }
+   ]
+  },
+  "sewers_walkthrough": {
+   "seed": 9,
+   "command": "wandering_inn_game/qa/run_qa.sh sewers_walkthrough headless --seed=9",
+   "run_result": "PASS",
+   "pins": [
+    {
+     "row_id": "map:sewers/sewers.json:$.entities[1].burn_toast",
+     "entity_id": "sewer_debris",
+     "pin_sites": 2,
+     "old": "[Firefly] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash, the nook stands open, and the pale glint turns out to be a strongbox handle.",
+     "new": "[Firefly] — The tarred rope takes the flame first and the pile goes after it. The nook stands open behind the ash, with the handle of an iron strongbox showing at the back of it.",
+     "new_present_in_live_script": true,
+     "old_absent_from_live_script": true
+    }
+   ]
+  }
+ },
+ "rows": [
+  {
+   "row_id": "map:dungeon/dungeon_approach.json:$.entities[0].observe",
+   "file": "wandering_inn_game/data/maps/dungeon/dungeon_approach.json",
+   "field_path": "$.entities[0].observe",
+   "entity_id": "dungeon_wardstone",
+   "old": "A way out of here, warded into the stone before the passage was ever choked. The vein through it is the same coin-gold as the stones above.",
+   "new": "The way out of here is cut into the wall stone, ward-lines deep in the face of it. Coin-gold veins the rock, the same gold that runs the courses overhead.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:dungeon/dungeon_approach.json:$.entities[2].observe",
+   "file": "wandering_inn_game/data/maps/dungeon/dungeon_approach.json",
+   "field_path": "$.entities[2].observe",
+   "entity_id": "dormant_guardian_marker",
+   "old": "A carved shape crouches against the far wall, limbs folded, its eyeless face turned to the floor. It has not moved since you noticed it.",
+   "new": "A carved figure crouches against the far wall, knees drawn up and arms folded in, its eyeless face bowed at the floor. It stays exactly as it is for as long as you stand there.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:dungeon/seal_vault.json:$.entities[1].observe",
+   "file": "wandering_inn_game/data/maps/dungeon/seal_vault.json",
+   "field_path": "$.entities[1].observe",
+   "entity_id": "vault_anchor_stone",
+   "old": "A waist-high plinth of the same pale stone as the ruin's, and the same hand's runes wrapped twice around it. Every line points inward, and none of them come back out.",
+   "new": "A waist-high plinth in the ruin's own pale stone, two turns of runes cut around it in the hand that cut the ruin's. The lines all run inward and not one of them comes back out.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[10].dialogue[0].text",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[10].dialogue[0].text",
+   "entity_id": "pisces_seal_escort",
+   "old": "Quietly, if you can manage it. I have lost the count twice already and blamed you both times.",
+   "new": "Quiet, for a moment. I am tracing a line I cannot see. If I lose it I will blame you, and we will both know I am lying.",
+   "pinned_by": [],
+   "round2_first_pass_new": "Do not talk to me for a moment. I am at the ninth turn of it and I would rather not begin again.",
+   "fix_wave": "fix-wave finding 2 (BLOCKING): 'the ninth turn of it' invented a number with no referent anywhere in the map, the quest or pisces_seal.json -- canon-guard violation. Re-authored with NO count. This row is SPEECH (`dialogue[].text`), so docs/dialogue-voice-bible.md governs, not this bible: restored Pisces's staccato self-deprecating register and the original's self-blaming joke class (the shipped pisces_magic idiom 'Do not let me forget the rope; I will pretend I never needed reminding'), not narrator prose and not a flat imperative."
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[12].companion_source.taken_toast",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[12].companion_source.taken_toast",
+   "entity_id": "bone_pile_halls",
+   "old": "The bones rise and fall into step behind you.",
+   "new": "The bones stand joint by joint and follow a pace behind you.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[12].observe",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[12].observe",
+   "entity_id": "bone_pile_halls",
+   "old": "Old bones, settled where they fell. They are not going anywhere. Probably.",
+   "new": "Old bones, dry and disjointed, lying out in the open on bare flagstone.",
+   "pinned_by": [],
+   "round2_first_pass_new": "Old bones, dry and disjointed, lying in the angle where the wall meets the floor.",
+   "fix_wave": "fix-wave finding 4 (BLOCKING): geometrically false. bone_pile_halls sits at (18,11); every walls.segments run in trapped_halls.json is in x0-9 / y10-13, and the only nearby non-floor cell is the blocked dungeon_rubble decor at (16,11), two cells west. No wall is adjacent, so there is no wall/floor angle to lie in. Re-authored to the true geometry: open flagstone floor."
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[13].locked_toast",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[13].locked_toast",
+   "entity_id": "halls_span_stub",
+   "old": "You get a hand on the stub and lean out. The gap is too wide to jump and the stub too smooth to climb; what it wants is a rope.",
+   "new": "You get a hand on the stub and lean out over the gap. Set a rope here — it is too wide to jump and too smooth to climb.",
+   "pinned_by": [
+    "martial_field_loop"
+   ]
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[14].locked_toast",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[14].locked_toast",
+   "entity_id": "halls_gallery_drop",
+   "old": "The floor stops. Gravel goes over the lip when your boot finds it and keeps going, and you are not crossing that without a line.",
+   "new": "The floor stops dead and starts again a span out, with the dark going down between. No rope goes anywhere from this lip. The line has to be run from the stub of the broken span.",
+   "pinned_by": [
+    "martial_field_loop"
+   ],
+   "round2_first_pass_new": "The floor stops at a clean edge and picks up again a span out, with nothing but air between. You will need a line run from this edge to the other to get across.",
+   "fix_wave": "fix-wave finding 1 (BLOCKING): the round-2 refusal said 'a line run from this edge to the other', which misdirects -- halls_gallery_drop carries NO `gap` property, so the interactions.json anchors->gap row can never fire on it. The only [Rope Work] anchor in the file is halls_span_stub (13,0) (gap:true, state_counter gallery_line_anchored), interactable from (12,0)/(14,0). Re-authored to point at the broken span's stub, which is where the line actually gets set."
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[1].toast",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[1].toast",
+   "entity_id": "pressure_plate_a",
+   "old": "The flagstone gives half an inch under your hand. Somewhere close, a catch clicks. Nothing else happens.",
+   "new": "The flagstone drops half an inch under your palm. A catch clicks somewhere back inside the wall, and nothing comes of it.",
+   "pinned_by": [
+    "dungeon_peek"
+   ]
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[3].item_hint_toast",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[3].item_hint_toast",
+   "entity_id": "dart_slit_a",
+   "old": "A narrow slit runs along the wall at knee height, primed and waiting. Bare hands won't do it — you'd want a proper kit for this.",
+   "new": "A narrow slit at knee height, with the mechanism seated behind the stone. Bare fingers will not reach the catch; this one takes a trap kit.",
+   "pinned_by": [
+    "delve_skill",
+    "dungeon_peek"
+   ]
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[3].on_skill_use.toast",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[3].on_skill_use.toast",
+   "entity_id": "dart_slit_a",
+   "old": "You trace the mechanism with a careful eye, find the catch, and wedge it still with a wax-and-wire pick from the kit. The slit stays dark.",
+   "new": "You follow the mechanism back to its catch and wedge it there with a wax-and-wire pick from the kit. The slit goes dark, and the kit is spent doing it.",
+   "pinned_by": [
+    "delve_skill"
+   ]
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[3].skill_hint_toast",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[3].skill_hint_toast",
+   "entity_id": "dart_slit_a",
+   "old": "A narrow slit runs along the wall at knee height, primed and waiting. A careful, deliberate touch could still it.",
+   "new": "A narrow slit at knee height, running the length of the wall. Look at it properly first — there is a mechanism behind it to find.",
+   "pinned_by": [
+    "delve_skill",
+    "dungeon_peek"
+   ]
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[4].on_skill_use.toast",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[4].on_skill_use.toast",
+   "entity_id": "illusory_floor_a",
+   "old": "You look again, and this time you see it: the grain runs the wrong way, and no dust has settled in months. What you are looking at is a very good painting of floor.",
+   "new": "You look properly, and the floor ahead stops matching the floor behind: the grain runs crossways, and the paint edge stops a finger short of the wall. Months of dust lie on everything down here except that patch.",
+   "pinned_by": [
+    "dungeon_peek"
+   ]
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[6].gate_closed_toast",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[6].gate_closed_toast",
+   "entity_id": "snare_nest_slot",
+   "old": "You give the wire a wide berth. Past it, something has walked the dust into a track, and walked the track both ways.",
+   "new": "You step wide around the wire. The dust past it is trodden into a track and the track runs both ways; leave the passage until the delve is under way.",
+   "pinned_by": [
+    "dungeon_peek"
+   ]
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[8].skill_uses.observe.toast",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[8].skill_uses.observe.toast",
+   "entity_id": "seal_kept_door",
+   "old": "[Observe] — Worked stone, cut deliberate. Not one line of it reads like a lock, and nothing here tells you what it is for.",
+   "new": "[Observe] — Tool marks in every line of it, top to bottom, and not one line that reads as a lock. The face of it says nothing about what the door is for.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[9].gate_closed_toast",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[9].gate_closed_toast",
+   "entity_id": "seal_warden_alcove",
+   "old": "Dust lies on it in an unbroken sheet, the way dust lies on a thing that has not moved in centuries. Leave it that way.",
+   "new": "Dust lies over it in one unbroken sheet, and the sheet is centuries thick. Leave the dust where it is.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:dungeon/trapped_halls.json:$.entities[9].observe",
+   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+   "field_path": "$.entities[9].observe",
+   "entity_id": "seal_warden_alcove",
+   "old": "An alcove beside the sealed door, and something standing in it: ward-stone, shoulder-high, cut in the same hand as the runes. It is not a statue.",
+   "new": "An alcove beside the sealed door, and something standing in it: ward-stone, shoulder-high, cut in the hand that cut the runes. Its shoulders and its knees carry seams, and no statue in this dungeon has those.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:ruin/ruin_surface.json:$.entities[14].observe",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "field_path": "$.entities[14].observe",
+   "entity_id": "dig_spoil_heap",
+   "old": "Spoil from the gap, sorted into two heaps: worked stone in one, plain rubble in the other. Every piece a chisel ever touched is in the first.",
+   "new": "Spoil out of the gap, dropped in two heaps: worked stone in one, plain rubble in the other. Chisel marks decide which heap a piece lands in.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:ruin/ruin_surface.json:$.entities[15].toast",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "field_path": "$.entities[15].toast",
+   "entity_id": "dig_rope_coil",
+   "old": "Good rope, dry, and not a frayed strand in it.",
+   "new": "Three coils of rope, dry the whole way through and not a frayed strand in the lot.",
+   "pinned_by": [],
+   "round2_first_pass_new": "Three coils of hemp, dry all through and not a frayed strand among them.",
+   "fix_wave": "fix-wave finding 9 (MINOR): 'hemp' was invented -- nothing in ruin_surface.json, items.json or the horns_dig chain names the rope's material. Material dropped; the count of three coils (the fact payload) stays."
+  },
+  {
+   "row_id": "map:ruin/ruin_surface.json:$.entities[17].toast",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "field_path": "$.entities[17].toast",
+   "entity_id": "dig_camp_remnant",
+   "old": "Cold days ago. They struck the camp properly, filled the pit, took the rope. Nothing left but the ring of stones.",
+   "new": "The ash inside the stone ring is cold all the way through, and has been for days. The fire-pit is filled in level with the ground, and the rope that was here is gone.",
+   "pinned_by": [
+    "door_chain_talk"
+   ],
+   "round2_first_pass_new": "The ash is cold through and has been for days. They filled the pit in before they went and pulled the rope off its stake; only the ring of stones still stands where the fire was.",
+   "fix_wave": "fix-wave finding 8 (MINOR): two collisions with this entity's own UNCHANGED observe. (a) 'pulled the rope off its stake' implied a still-driven stake while the observe says 'The stakes have been pulled and stacked'; the stake claim is gone and the rope is simply absent. (b) 'only the ring of stones still stands' claimed exclusivity while the observe still shows four flattened bedroll squares; the exclusivity claim is gone. Facts kept: ash cold for days, pit filled, rope taken, stone ring present."
+  },
+  {
+   "row_id": "map:ruin/ruin_surface.json:$.entities[1].observe",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "field_path": "$.entities[1].observe",
+   "entity_id": "dig_camp_fire",
+   "old": "Banked low and fed on what burns down here. The ash lies raked in a ring, and the coals are still working.",
+   "new": "Banked low and raked back into a ring. Heat still comes up off the coals when you put a hand over them.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:ruin/ruin_surface.json:$.entities[1].toast",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "field_path": "$.entities[1].toast",
+   "entity_id": "dig_camp_fire",
+   "old": "A cookfire kept small on purpose, ringed with stones carried in from outside. It has been burning longer than a day.",
+   "new": "A cookfire the size of two hands, ringed with stones that did not come out of this ruin. The ash beneath it is deeper than one night's burning.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:ruin/ruin_surface.json:$.entities[5].toast",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "field_path": "$.entities[5].toast",
+   "entity_id": "anchor_stone_pedestal",
+   "old": "The stone doesn't move. It does not even shift in its cradle, and the court has gone very quiet.",
+   "new": "You put both hands on the stone and it does not shift in its cradle. The court noise drops away while you are trying.",
+   "pinned_by": [
+    "horns_dig_plates",
+    "ruin_walkthrough"
+   ]
+  },
+  {
+   "row_id": "map:ruin/ruin_surface.json:$.entities[5].variants[2].toast",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "field_path": "$.entities[5].variants[2].toast",
+   "entity_id": "anchor_stone_pedestal",
+   "old": "Both spirals hold their light, and the seam under the plinth stops fighting your hand. The ward wanted the plates walked in order, and now they have been. Ceria, already reaching for rope: 'Ksmvr. Down. Carefully.'",
+   "new": "Both spirals hold their light and the seam under the plinth gives at a touch. The near plate first, then its far twin: that was the order it took. Ceria says 'Ksmvr. Down. Carefully.' and has the rope off the stake before you have straightened up.",
+   "pinned_by": [
+    "horns_dig_plates"
+   ]
+  },
+  {
+   "row_id": "map:ruin/ruin_surface.json:$.entities[6].on_skill_use.variants[0].toast",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "field_path": "$.entities[6].on_skill_use.variants[0].toast",
+   "entity_id": "anchor_socket",
+   "old": "[Detect Magic] — The ward was keyed to the guardian that stood here, and the key still works: the seal lets go. Ceria, from the gap: 'Do that again and I'm putting you on the ledger.'",
+   "new": "[Detect Magic] — The ward reads as a lock with the guardian's shape cut into it, and the shape still fits: the seal lets go under your hand. Ceria calls up from the gap: 'Do that again and I'm putting you on the ledger.'",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:ruin/ruin_surface.json:$.entities[8].companion_source.taken_toast",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "field_path": "$.entities[8].companion_source.taken_toast",
+   "entity_id": "bone_pile_ruin",
+   "old": "The bones rise and fall into step behind you.",
+   "new": "The bones knit themselves upright and take a place at your shoulder.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:ruin/ruin_surface.json:$.entities[8].observe",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "field_path": "$.entities[8].observe",
+   "entity_id": "bone_pile_ruin",
+   "old": "Old bones, settled where they fell. They are not going anywhere. Probably.",
+   "new": "A ribcage and a scatter of long bones, weathered to the grey-white of the ruin stone around them.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:sewers/deep_tunnels.json:$.entities[1].toast",
+   "file": "wandering_inn_game/data/maps/sewers/deep_tunnels.json",
+   "field_path": "$.entities[1].toast",
+   "entity_id": "cold_hearth",
+   "old": "A fire-pit ringed with blackened stones, gnawed bones banked around the edge and cracked open for their marrow. Nothing in the ash has been warm for a long time.",
+   "new": "A pit at the middle of the stone ring, the ash in it dead to the bottom. Bones banked up against the stones, every one of them opened for the marrow.",
+   "pinned_by": [
+    "arc_flow",
+    "deep_descent"
+   ],
+   "round2_first_pass_new": "A fire-pit inside a ring of blackened stones, with gnawed bones banked up against the ring and split lengthwise for the marrow. There is no heat left anywhere in the ash.",
+   "fix_wave": "fix-wave finding 3 (BLOCKING), half A: the round-2 pass INTRODUCED twin phrasing between this toast ('split lengthwise for the marrow') and gnaw_pile's ('split along their length for the marrow') where the round-1 originals were differentiated ('cracked open for their marrow' / 'splintered for their marrow'). This half is rebuilt distinctly -- 'opened for the marrow', hearth-first framing (pit, stone ring, dead ash) -- and the gnaw_pile half takes the 'cracked' idiom instead."
+  },
+  {
+   "row_id": "map:sewers/deep_tunnels.json:$.entities[2].toast",
+   "file": "wandering_inn_game/data/maps/sewers/deep_tunnels.json",
+   "field_path": "$.entities[2].toast",
+   "entity_id": "gnaw_pile",
+   "old": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's.",
+   "new": "Cracked bones in a heap, dry and light in the hand. Most of them Gnoll; one of them a Drake's.",
+   "pinned_by": [
+    "arc_flow",
+    "deep_descent"
+   ],
+   "round2_first_pass_new": "A heap of gnawed bones, split along their length for the marrow. Some of them are Gnoll, and one of them is a Drake's.",
+   "fix_wave": "fix-wave finding 3 (BLOCKING), half B: aligned to this entity's OWN unchanged observe idiom, which says 'A midden of cracked bones' -- the round-2 toast had drifted to 'split along their length'. Both facts stay in-field (Gnoll majority, one Drake). Differentiated from the cold_hearth toast, which now uses 'opened for the marrow'."
+  },
+  {
+   "row_id": "map:sewers/deep_tunnels.json:$.entities[4].observe",
+   "file": "wandering_inn_game/data/maps/sewers/deep_tunnels.json",
+   "field_path": "$.entities[4].observe",
+   "entity_id": "raskghar_scouts",
+   "old": "Two of them crouch where the tunnel narrows, moon-grey and mountain-shouldered, knuckles to the stone. Their small eyes track you without blinking. Behind them the tunnel keeps going down.",
+   "new": "Two of them, down on their knuckles where the tunnel narrows: moon-grey, shouldered like the rock behind them. Their eyes hold on you and the tunnel keeps dropping away past their feet.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:sewers/deep_tunnels.json:$.entities[5].observe",
+   "file": "wandering_inn_game/data/maps/sewers/deep_tunnels.json",
+   "field_path": "$.entities[5].observe",
+   "entity_id": "warren_mouth",
+   "old": "The passage opens into a vast pillared gallery, its floor packed smooth by generations of pacing feet. Eyes catch your light far back in the dark and slide away. This is where they den, and where the big one waits, breathing slow in the black.",
+   "new": "The passage opens into a pillared gallery with no far wall in your light. The floor is packed smooth and hollowed along the lines the pacing takes. Far back, eyes pick up the light and are gone before you can count them.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:sewers/deep_tunnels.json:$.entities[8].once_per_waking_toast",
+   "file": "wandering_inn_game/data/maps/sewers/deep_tunnels.json",
+   "field_path": "$.entities[8].once_per_waking_toast",
+   "entity_id": "warren_side_snare",
+   "old": "You've picked this snare clean today. Nothing has been re-rigged since.",
+   "new": "You cleared this snare earlier today. There is nothing left in the rig to take.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:sewers/sewers.json:$.entities[12].once_per_waking_toast",
+   "file": "wandering_inn_game/data/maps/sewers/sewers.json",
+   "field_path": "$.entities[12].once_per_waking_toast",
+   "entity_id": "sewer_nest_snag",
+   "old": "Nothing else glints in the nest today.",
+   "new": "You had the wire off its catch once already today. The silt under it is picked over.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:sewers/sewers.json:$.entities[14].toast",
+   "file": "wandering_inn_game/data/maps/sewers/sewers.json",
+   "field_path": "$.entities[14].toast",
+   "entity_id": "nook_strongbox",
+   "old": "The hinge shears off in your hand. Inside: a wax-wrapped roll of coin, dry as the day it was hidden. 6 gold.",
+   "new": "The hinge shears off in your hand and the lid comes away with it. Wax-wrapped and still dry under the silt, 6 gold in a roll.",
+   "pinned_by": [
+    "property_seams"
+   ]
+  },
+  {
+   "row_id": "map:sewers/sewers.json:$.entities[1].burn_toast",
+   "file": "wandering_inn_game/data/maps/sewers/sewers.json",
+   "field_path": "$.entities[1].burn_toast",
+   "entity_id": "sewer_debris",
+   "old": "[Firefly] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash, the nook stands open, and the pale glint turns out to be a strongbox handle.",
+   "new": "[Firefly] — The tarred rope takes the flame first and the pile goes after it. The nook stands open behind the ash, with the handle of an iron strongbox showing at the back of it.",
+   "pinned_by": [
+    "sewers_walkthrough"
+   ]
+  },
+  {
+   "row_id": "map:sewers/sewers.json:$.entities[4].observe",
+   "file": "wandering_inn_game/data/maps/sewers/sewers.json",
+   "field_path": "$.entities[4].observe",
+   "entity_id": "sunken_crate",
+   "old": "A market crate, swollen and burst, washed down through a grate above. Nothing left inside it but silt.",
+   "new": "A market crate, swollen and split at the seams, sitting where the grate overhead dropped it. Silt fills it to the brim and there is nothing under the silt.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:sewers/sewers.json:$.entities[5].observe",
+   "file": "wandering_inn_game/data/maps/sewers/sewers.json",
+   "field_path": "$.entities[5].observe",
+   "entity_id": "spider_silk",
+   "old": "Cable-thick silk, black-and-silver banded, stretched wall to wall. Not a house spider's work. Something with a shield on its back spun this, and recently.",
+   "new": "Cable-thick silk in black-and-silver bands, stretched wall to wall. Shield Spiders band their silk like that, and this run of it is new.",
+   "pinned_by": []
+  },
+  {
+   "row_id": "map:sewers/sewers.json:$.entities[7].observe",
+   "file": "wandering_inn_game/data/maps/sewers/sewers.json",
+   "field_path": "$.entities[7].observe",
+   "entity_id": "shield_spiders",
+   "old": "Two of them, banded carapaces catching the moss-light, waiting where the silk is thickest. Their legs test the air toward you. Behind them the tunnel drops away, and more eyes catch the light down there than you want to count.",
+   "new": "Two of them where the silk runs thickest, banded carapaces picking up the moss-light. Their forelegs come off the ground and test the air in your direction. Past them the tunnel drops away, and there are more eyes down there than you are going to stand and count.",
+   "pinned_by": [],
+   "round2_first_pass_new": "Two of them where the silk runs thickest, banded carapaces picking up the moss-light. Their forelegs come off the ground and test the air in your direction. Past them the tunnel drops away, and there are more eyes down there than these two.",
+   "fix_wave": "fix-wave finding 7 (MINOR): 'more eyes down there than these two' deflated the threat to a bare arithmetic comparison. Restored the magnitude dodge of the round-1 original's class ('than you want to count'), written fresh rather than reverted verbatim."
+  },
+  {
+   "row_id": "map:sewers/sewers.json:$.entities[9].observe",
+   "file": "wandering_inn_game/data/maps/sewers/sewers.json",
+   "field_path": "$.entities[9].observe",
+   "entity_id": "deep_fissure",
+   "old": "The floor gave way here, not long ago: a raw crack breathing air colder and older than the sewers ever hold. The claw-scores on its lip all point one way: down.",
+   "new": "The floor here has dropped away into a crack with no bottom in sight. Cold air comes up out of it, colder and drier than anything the sewer holds. The lip is raked with claw-scores, all of them running the same way, down.",
+   "pinned_by": [],
+   "round2_first_pass_new": "The floor here has dropped into a raw-edged crack with no wear on the lip. Cold air comes up out of it, colder and drier than the sewer. The claw-scores along the edge all rake the same way, downward.",
+   "fix_wave": "fix-wave finding 6 (MINOR): 'no wear on the lip' contradicted this entity's own UNCHANGED toast, 'gouges raked deep into the stone lip'. The wear claim is dropped and the lip is now described as raked with the claw-scores that the toast asserts; the cold-air and downward-direction facts are unchanged."
+  }
+ ],
+ "_fix_wave": {
+  "when": "2026-08-07, after the adversarial review of 0808cf3a",
+  "scope": "9 authored strings re-authored + 1 `_comment` corrected. Findings 1-4 BLOCKING, 5-10 MINOR. Explicitly LEFT ALONE per the review: deep_tunnels[3] observe (holdout; the 'Probably.' coda is the blind-control artifact and is mandatory), trapped_halls[9] observe no-statue warning (ruled grounded), trapped_halls[1] toast 'back inside the wall' (ruled fine), wi_game.gd:951 engine default (controller-side at train).",
+  "contract_amendment": "The round-1 contract line above said `git diff -U0` over data/maps touches ONLY authored string lines. This fix wave ALSO edits one non-player-facing `_comment` (ruin_surface $.entities[5]._comment, finding 5) -- a documentation correction, not prose, not extracted by extract_prose.py and not linted by data_lint's R2 arms. Still no entity add/remove/reorder, no key rename, no gating change.",
+  "comment_correction": {
+   "field_path": "$.entities[5]._comment",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "old_fragment": "b10 #204: recovery also needs rune_sequence_done (west plate then east).",
+   "new_fragment": "b10 #204: recovery also needs rune_sequence_done -- NEAR plate rune_plate_near (16,6) FIRST, then FAR rune_plate_far (15,4), i.e. east then west (x increases east).",
+   "why": "finding 5 (MINOR): the comment said 'west plate then east', which is backwards. x increases east, so the NEAR plate (16,6) is EAST of the FAR plate (15,4); rune_plate_near's own _comment says 'NEAR plate = FIRST in sequence' and rune_plate_far banks rune_sequence_done only via its rune_near_pressed variant. The player-facing strings were already correct (entities[5].variants[2].toast 'The near plate first, then its far twin'; entities[6].skill_hint_toast 'The warding reads near-first'), so only the author-facing comment was misleading."
+  },
+  "inference_allowance_accounting": {
+   "finding": "10 (MINOR): allowance accounting.",
+   "declared_in_round_1_of_the_lane": 4,
+   "retroactively_free": "map:ruin/ruin_surface.json:$.entities[6].on_skill_use.variants[0].toast -- a [Detect Magic] `on_skill_use` RECEIPT. Bible round-2 amendment 2's Skill-receipt carve-out (RULED at l3 review, 2026-08-07) says on_skill_use/skill_uses toast fields report what the Skill READS, including the non-visible (history, keying, containment, species), bounded by the canon guard, and spend NO allowance. The amendment names this case explicitly: 'This retroactively covers the allowances l5/l6 declared on detect-magic-class receipts (harmless over-declarations).'",
+   "actually_spent": 3,
+   "of_a_ceiling_of": 4,
+   "note": "The l6 declaration was a harmless over-declaration, not a miss: it was made before the carve-out was ruled. Net: the lane spent 3 of 4 file allowances, and no file in the lane is over its ONE-per-file ceiling."
+  },
+  "gates": {
+   "verify_untouched": "rc=0 -- 229 holdout (3 excluded) + 29 protected = 255 untouchable strings byte-identical to their pins.",
+   "data_lint": "rc=0. 88 corpus-wide R2 narrator-template advisories -- byte-identical to the pre-fix-wave baseline, so ZERO advisories are attributable to a fix-wave string. Residual hits in the six touched files (trapped_halls 4 buttons, ruin_surface 2 buttons + 1 triad, deep_tunnels 2 buttons, sewers 2 buttons + 1 triad + 1 affordance, seal_vault 1 triad) all belong to strings this lane may not edit (protected keep, holdout, or a row outside the frozen worklist); none is a string the lane authored.",
+   "qa": "All 10 lane pin carriers re-run FOREGROUND and SEQUENTIAL at their manifest seeds after the fix wave: arc_flow s9, deep_descent s9, delve_skill s1, door_chain_talk s9, dungeon_peek s9, horns_dig_plates s9, martial_field_loop s9, property_seams s9, ruin_walkthrough s9, sewers_walkthrough s9 -- every one QA_RESULT: PASS with passed:true, failures:[], and zero SCRIPT ERROR / Parse Error / WARNING lines.",
+   "pin_derivation": "The 6 changed pin sites were re-derived from REAL runs, never hand-guessed: the new string was written into both the map and the owning script, then the script was run headless at its seed. payload_contains is a subset match on the live emitted toast, so a pin that did not match the live text fails the step -- the green run IS the derivation. A repo-wide scan of qa/scripts/, qa/fixtures/ and tests/*.gd for any >=20-char chunk of the 9 superseded strings returns 0 hits, so no partial pin was left stale."
+  }
+ }
+}

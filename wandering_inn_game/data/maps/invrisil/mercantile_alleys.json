@@ -1022,7 +1022,7 @@
    "dialogue": [
     {
      "speaker": "Cups",
-     "text": "Tea's free. Rumor's a gold the cup."
+     "text": "Tea's on the house. Word costs a gold, and I pour that by the cup too."
     }
    ]
   },
@@ -1042,7 +1042,7 @@
     "footpad_bruiser"
    ],
    "on_victory": "cleared_footpads_a",
-   "observe": "Two figures loitering with the specific stillness of people about to stop pretending they're not waiting for you.",
+   "observe": "Two figures where the alley bends, one standing, one crouched at the wall, and neither has moved since the alley mouth showed them to you.",
    "allies": [],
    "respawns": true
   },
@@ -1158,7 +1158,7 @@
     "wilovan_will_fight": 1
    },
    "on_victory": "forced_confession",
-   "observe": "Three men in burgundy-and-brass doublets, clubs and knives held like men who've used them before. Merchant-livery, not Watch steel — Coyle's, all the way down to the stitching."
+   "observe": "Three men shoulder to shoulder across the passage, burgundy and brass at collar and cuff — Coyle's livery. Clubs and knives in their hands, and no Watch steel among them."
   },
   {
    "_comment": "Trap placement 1/2: alley_footpads_a leftover, remnant danger post-safe-passage.",
@@ -1173,7 +1173,7 @@
    "display_name": "A Cutpurse's Snag-Line",
    "sprite": "snare_coil",
    "requires_skill": "disarm_trap",
-   "skill_hint_toast": "A snag-line at ankle height, tied crate to drainpipe — old footpad work, meant to trip a running mark. Worth clearing.",
+   "skill_hint_toast": "A line at ankle height, drawn tight from crate to drainpipe; careful hands would start at the knot on the crate end.",
    "locked_toast": "A taut line crosses the alley at ankle height, tied off crate to drainpipe. You can't see how to clear it safely.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
@@ -1185,7 +1185,7 @@
    "_comment": "Avoidable: (11,12)/(13,12) both clear. Row 12 blocks x0-1 and x7; x2-6 is the #398 counting-room floor, sealed from the corridor by the x7 wall.",
    "id": "alley_footpad_snag_b",
    "once_per_waking": true,
-   "once_per_waking_toast": "Cleaned out — by you, earlier. Nothing behind the bottom crate now but paving.",
+   "once_per_waking_toast": "The crates sit flat where you left them, the space behind the bottom one bare paving.",
    "kind": "prop",
    "cell": [
     12,
@@ -1194,7 +1194,7 @@
    "display_name": "A Rigged Crate Stack",
    "sprite": "crate",
    "requires_skill": "disarm_trap",
-   "skill_hint_toast": "A stack of crates wedged just wrong, top-heavy and set to come down on whoever pulls from the bottom. Old footpad mischief.",
+   "skill_hint_toast": "One low oak wedge takes the whole lean, shaved flat where it faces out. Pulling at the crates will not do it; working that wedge out might.",
    "locked_toast": "The crate stack looks ordinary until you notice the angle: top-heavy, wedged to fall. The wedge is set low, where you would have to reach in under the weight.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
@@ -1215,7 +1215,7 @@
    "requires_skill": "low_grade_synthesis",
    "skill_hint_toast": "A cramped apothecary corner, the burner free and the bench rented by the hour. You would need the working to use either.",
    "locked_toast": "A back-alley apothecary's bench, crowded with someone else's half-finished work. None of it means anything to you.",
-   "observe": "Shelves of labelled jars, a rented burner, and a hand-lettered card: WORKING SPACE, BY THE HOUR, NO CREDIT.",
+   "observe": "Jars in rows with labels turned out, a burner on the bench with a scorch ring under it. The card over the shelf is hand-lettered: WORKING SPACE, BY THE HOUR, NO CREDIT.",
    "on_skill_use": {
     "accomplishment": "synthesized_draught",
     "item": "crude_draught",
@@ -1263,7 +1263,7 @@
      "heirloom_commission_started": 1
     }
    },
-   "gate_closed_toast": "A back door with no handle on this side. Nothing about it is any of your business tonight.",
+   "gate_closed_toast": "The back door has no handle on this side; you have nothing to bring through it.",
    "victory_toast": "The Fence's strongbox gives up a lady's stone — forty years missing and still warm with someone else's guilt. It goes in your pack like it weighs more than it does."
   },
   {
@@ -1324,7 +1324,7 @@
    "facing": "up",
    "conversation": "invrisil_counting_factor",
    "present_when": {"absent": {"counting_room_invited": 1}},
-   "observe": "A factor in a fitted gray coat stands exactly where the front passage narrows. The key at his cuff is meant to be seen."
+   "observe": "The front passage narrows to one man's width, and the man is in it: fitted gray coat, hands behind him. The key on his cuff-chain hangs outside the sleeve."
   },
   {
    "_comment": "#398 P4 quiet gate. Its counter opens the side cell without touching the existing alley route.",
@@ -1386,10 +1386,10 @@
     "requires": {"cleared_counting_room_guard": 1},
     "absent": {"claimed_counting_room_goods": 1}
    },
-   "observe": "The bale's second tally prices the same goods for a back room marked only by a hat and a feather. Someone is feeding the Brothers' fence from this account.",
+   "observe": "Two tallies pinned to the bale, the same goods priced twice. The second carries no buyer's name — a hat and a feather inked in the corner. Under it a delivery line: the plain door at the alley's end.",
    "contains": ["sealed_factor_bale"],
    "on_open_accomplishment": "claimed_counting_room_goods",
-   "open_toast": "The seal parts. The bale is compact enough to carry and valuable enough to explain the locked room."
+   "open_toast": "The seal parts on a bale of dyed silk, brass findings and sealed spice packets, every tie under the same counting-house stamp."
   }
  ]
 }

@@ -173,7 +173,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "You go down between the stones sideways, the way the flattened grass says to, and the plains close over the top of you."
+    "text": "You go in sideways and shoulder-first between the two stones. The grass closes over the top of you as you come down."
    },
    "timeout_sec": 5
   },
@@ -276,7 +276,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The poles are bare and the ash is cold. Hands on the camp's baskets first, the old one signs at you, and then a corusdeer brought down off the range north."
+    "text": "You put a hand on the rack and the old one signs at you: baskets first, then a corusdeer down off the range north. The poles stay bare until both are done."
    },
    "timeout_sec": 5
   },
@@ -353,7 +353,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "You hang what you brought back and cut it down thin the way the old one shows you, and by the time the light goes the rack is heavy for the first time this year."
+    "text": "You bring the carcass down to the poles, and the old one pinches finger and thumb nearly shut to show you the thickness. Hanging all of it takes until the light goes."
    },
    "timeout_sec": 5
   },

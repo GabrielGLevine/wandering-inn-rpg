@@ -1344,12 +1344,24 @@ def write_holdout_blind(rows, hold_ids, outdir, excluded=frozenset()):
 
 
 # ---- landmark registry (fix I10) --------------------------------------------
-# All nine landmark strings, each with ONE disposition. Lanes get zero
-# discretion beyond it: KEEP-AS-IS means the string ships as written;
-# RESTAGE means keep the beat and keep the correction, and lose the CAPS and
-# the staging ONLY. Nothing here may be flattened, and nothing here may be
-# rewritten past its disposition. Landmark is the scarce register (§4/§5 of
-# the bible) and this file is its ledger.
+# Every string the landmark heuristic selects, each with ONE disposition.
+# Lanes get zero discretion beyond it:
+#   KEEP-AS-IS      ships as written; a real landmark beat, protected.
+#   RESTAGE         keep the beat AND the correction, lose the CAPS and the
+#                   staging ONLY. Exactly the two CAPS-staged beats; the
+#                   self-test pins that pair by id.
+#   NOT-A-LANDMARK  (added 2026-08-07, round-2 train) the heuristic selected
+#                   it, the controller ruled it is not a landmark: it makes no
+#                   landmark move, so it earns NO landmark protection and
+#                   consumes NO beat budget. Ordinary register doctrine
+#                   applies to it like any other string -- which is the point,
+#                   because one of them (mercantile_alleys[20].open_toast)
+#                   trips amendment 4 and is scheduled for re-authorship.
+#                   Before this value existed the only way to record such a
+#                   row was to mislabel it as a protected beat.
+# Nothing here may be flattened, and nothing here may be rewritten past its
+# disposition. Landmark is the scarce register (§4/§5 of the bible) and this
+# file is its ledger.
 LANDMARK_DISPOSITIONS = {
     "map:dungeon/seal_vault.json:$.entities[1].open_toast": {
         "disposition": "RESTAGE",
@@ -1416,6 +1428,65 @@ LANDMARK_DISPOSITIONS = {
         "why": "The second of mercantile_alleys' two distinct chains -- the "
                "only file in the corpus entitled to two beats (§5). Ends on "
                "an absence: 'a table with nobody left standing beside it.'",
+    },
+    # --- #398-era strings, ruled 2026-08-07 with the round-2 train. The
+    # skill-gated-pockets wave (#398) and the riverfarm redesign (#396) both
+    # shipped map prose after this issue's Phase-0 audit froze, so three new
+    # strings reached the landmark HEURISTIC with no ruling. Ruling them is a
+    # controller act; the heuristic flags candidates, it does not adjudicate.
+    "map:invrisil/mercantile_alleys.json:$.entities[19].victory_toast": {
+        "disposition": "NOT-A-LANDMARK",
+        "beat": "counting-room chain payoff (#398 P4)",
+        "why": "Heuristic false positive rather than a landmark: two plain "
+               "physical sentences, no epigram, no inferred agent, ending on "
+               "a present object ('A sealed bale remains under the desk') "
+               "that the next beat picks up. It costs the file no landmark "
+               "budget because it makes no landmark move.",
+    },
+    "map:invrisil/mercantile_alleys.json:$.entities[20].open_toast": {
+        "disposition": "NOT-A-LANDMARK",
+        "beat": "counting-room cache opened (#398 P4)",
+        "why": "The one of the three that genuinely trips round-2 doctrine: "
+               "'compact enough to carry and valuable enough to explain the "
+               "locked room' is the affordance formula twice over (amendment "
+               "4) plus an interpretive closer that tells the player what to "
+               "conclude. Ruled NOT-A-LANDMARK so ordinary doctrine applies: "
+               "the round-2 mop-up kept the beat (the seal parts, the goods "
+               "are plainly worth a locked room) and dropped the formula by "
+               "showing the silk, brass and spice instead of asserting value.",
+    },
+    # The collapsed-gallery strongbox is ONE beat on THREE route-entities
+    # (#398 P3: pick / strength / burn are three ways into the same cache).
+    # The identical payoff text is deliberate -- the reward must read the same
+    # whichever Skill opened it -- so this consumes ONE beat of the file's
+    # budget, not three, and the identity is a ruling rather than a duplication
+    # defect. (The anti-duplication gate does not walk open_toast; if it is
+    # ever widened to, these three ids are its first sanctioned exemption.)
+    "map:sewers/deep_tunnels.json:$.entities[13].open_toast": {
+        "disposition": "NOT-A-LANDMARK",
+        "beat": "collapsed-gallery cache opened (#398 P3) -- shared payoff 1/3",
+        "why": "One beat, three routes. Plain physical statement of what the "
+               "box yields; the enchantment clause is the item's own property, "
+               "not narrator inference.",
+    },
+    "map:sewers/deep_tunnels.json:$.entities[14].open_toast": {
+        "disposition": "NOT-A-LANDMARK",
+        "beat": "collapsed-gallery cache opened (#398 P3) -- shared payoff 2/3",
+        "why": "Byte-identical to the pick route's by design; see 1/3.",
+    },
+    "map:sewers/deep_tunnels.json:$.entities[15].open_toast": {
+        "disposition": "NOT-A-LANDMARK",
+        "beat": "collapsed-gallery cache opened (#398 P3) -- shared payoff 3/3",
+        "why": "Byte-identical to the pick route's by design; see 1/3.",
+    },
+    "map:ruin/ruin_surface.json:$.entities[32].open_toast": {
+        "disposition": "NOT-A-LANDMARK",
+        "beat": "briar-arch cache opened (#398 P1)",
+        "why": "Heuristic false positive, same class as entities[19]: two "
+               "physical sentences, the second naming what is present ('A "
+               "ward-token rests inside'). The matcher flags it only because "
+               "a short final sentence follows a longer one -- the fact-stop "
+               "shape the bible treats as the unlimited default.",
     },
 }
 
@@ -3339,14 +3410,25 @@ def self_test():
     d = [r for r in rows if r["corpus"] == "dialogue"]
     m = [r for r in rows if r["corpus"] == "maps"]
     dw, mw = sum(r["word_count"] for r in d), sum(r["word_count"] for r in m)
+    # The MAP baselines moved after the issue froze: #396 (riverfarm redesign)
+    # and #398 (five skill-gated pockets) both shipped map prose between the
+    # Phase-0 audit and round 2. Refreshed 2026-08-07 with the round-2 train,
+    # deliberately and with provenance -- the issue's own figures (825 / 18.5k)
+    # stay recorded here because they are what its percentages were computed
+    # against. The tolerance is NOT widened: this still trips on a runaway, it
+    # just measures drift from the last ruled baseline instead of from a
+    # historical one. Refreshing it is a controller act, never a lane's.
+    MAP_STRINGS_BASELINE = 915    # issue's frozen audit: 825
+    MAP_WORDS_BASELINE = 20322    # issue's frozen audit: 18500
     check("dialogue strings within 5% of issue's 1482",
           abs(len(d) - 1482) / 1482 < 0.05, f"{len(d)}")
     check("dialogue words within 5% of issue's 24.5k",
           abs(dw - 24500) / 24500 < 0.05, f"{dw}")
-    check("map strings within 5% of issue's 825",
-          abs(len(m) - 825) / 825 < 0.05, f"{len(m)}")
-    check("map words within 8% of issue's 18.5k",
-          abs(mw - 18500) / 18500 < 0.08, f"{mw}")
+    check(f"map strings within 5% of ruled baseline {MAP_STRINGS_BASELINE}",
+          abs(len(m) - MAP_STRINGS_BASELINE) / MAP_STRINGS_BASELINE < 0.05,
+          f"{len(m)}")
+    check(f"map words within 8% of ruled baseline {MAP_WORDS_BASELINE}",
+          abs(mw - MAP_WORDS_BASELINE) / MAP_WORDS_BASELINE < 0.08, f"{mw}")
 
     # 2b. the option-effect toasts the gate does not walk (fix I1)
     eff = [r for r in d if r["field"] == "toast"]
@@ -3666,9 +3748,9 @@ def self_test():
     check("no disposition is recorded for a non-landmark string",
           not (set(LANDMARK_DISPOSITIONS) - lm_ids),
           str(sorted(set(LANDMARK_DISPOSITIONS) - lm_ids)[:3]))
-    check("dispositions are KEEP-AS-IS or RESTAGE only",
+    check("dispositions are KEEP-AS-IS, RESTAGE or NOT-A-LANDMARK only",
           {v["disposition"] for v in LANDMARK_DISPOSITIONS.values()}
-          <= {"KEEP-AS-IS", "RESTAGE"})
+          <= {"KEEP-AS-IS", "RESTAGE", "NOT-A-LANDMARK"})
     check("the two CAPS-staged landmarks are the RESTAGE pair",
           {i for i, v in LANDMARK_DISPOSITIONS.items()
            if v["disposition"] == "RESTAGE"}

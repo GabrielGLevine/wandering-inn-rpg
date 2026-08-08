@@ -948,7 +948,15 @@ func _animate_field(skill_id: String, skill: Dictionary, target: Dictionary) -> 
 	companion = String(source["companion_id"])
 	companion_source = kind
 	_emit(WIEvents.COMPANION_CHANGED, {"id": companion, "active": true, "reason": kind})
-	_emit(WIEvents.TOAST, {"text": String(source.get("taken_toast", "The bones rise and fall into step behind you."))})
+	# GH#397 r2: this default USED to hold authored prose ("The bones rise and
+	# fall into step behind you.") -- a fourth copy of a line the pass
+	# de-duplicated everywhere else, living in code where no prose gate can
+	# see it. Player-facing prose belongs in data/maps where extract_prose,
+	# the voice gate and the duplication gate all walk it. data_lint now
+	# REQUIRES taken_toast on every companion_source, so this branch is
+	# unreachable in shipped data; the string here is a deliberately
+	# non-scenic diagnostic, not a line anyone should ever read in play.
+	_emit(WIEvents.TOAST, {"text": String(source.get("taken_toast", "It follows you."))})
 	return {"animated": target_id, "companion": companion, "source": kind}
 
 

@@ -169,3 +169,63 @@ working ledger.
   backwards. New mop-up candidate: wi_game.gd:951 hardcodes the
   retired "bones rise and fall" line as taken_toast's ENGINE default
   — outside the corpus, unguarded by any prose gate.
+
+## 18. CONTROLLER RULING (train, 2026-08-07): CADENCE REBALANCE BEFORE THE BLIND READ
+
+Composed measurement, 188 worklist rows, base a33e2cf6 vs train:
+
+| | base | train |
+|---|---|---|
+| words | 4202 | 5227 (**+24.4%**) |
+| 1-sentence rows | 43 | 26 |
+| 2-sentence rows | 113 | **138** |
+| 2-sentence share | 60.1% | **73.4%** |
+
+The pass killed the button-closer engine and grew a NEW one: a
+two-sentence fact-stop cadence on three of every four re-authored
+rows. Both Phase-5 readers named "uniform plainness is itself a
+machine signature" as a detectable tell, and round 1's whole lesson is
+that a corpus-wide rhythm reads as authored no matter how clean each
+sentence is. Shipping this to the blind read would spend the decisive
+instrument on a corpus with a known defect.
+
+RULED: a cadence rebalance wave runs BEFORE Task 4. Targets:
+- 2-sentence share **≤55%** over the 188 rows (below base's 60.1%,
+  because base was already mode-heavy and the pass must not merely
+  restore the old shape).
+- Net words **DOWN** vs the train (rebalance by CUTTING — merge or
+  drop a sentence — never by padding; that fixes cadence and
+  inflation with one move).
+- No row may re-acquire a banned shape (button/triad/affordance/
+  one-word coda) to hit the number; the advisory arms stay at zero
+  attributable hits.
+- Facts, pins, and untouchables are governed exactly as in the
+  writing wave; ruled rows (Relc, Olesm) stay frozen.
+
+## 19. Cadence wave attempt 1 died on the session limit; relaunched lean
+
+Six parallel Opus rebalancers burned ~622k subagent tokens and hit the
+session cap with 0 of 6 landing. c3 had partial uncommitted edits
+(stashed on its branch, recoverable, unverified — DO NOT trust or
+merge them without a fresh gate). Relaunch (`wwyyk82e0`) is leaner by
+design: the per-lane verify agent is dropped and lanes no longer run
+the full unit bar or the 230-script sweep — the controller runs those
+ONCE on the composed train, which is the real gate anyway (a lane's
+green attaches to its own tree). Per-lane share targets are weighted
+so the worst offenders do the most work (c1 82%→45, c5 84%→45,
+c4 79%→45, c6 69%→50, c3 65%→50, c2 57%→50).
+
+Lesson worth keeping: fanning six writing agents that each run a full
+verification bar is the expensive shape. Lanes should verify what only
+they can (their own strings, their own pins); everything composed
+belongs to the controller.
+
+## 20. Task-4 instrument built ahead of the corpus being final
+
+`docs/prose-naturalization/round2-read/build-blind-sets.py`. Two fixes
+over Phase 5: one shuffled packet (no set boundary, so the control's
+role cannot leak the way C's header did), and the revised rows are the
+SAME 120 map ids Phase 5 scored, making the reads comparable row for
+row. Control = 114 untouched holdout map rows, all ten regions, the
+three exclusions honoured. Generated outputs are NOT committed — the
+sample must be built from the final corpus at read time.

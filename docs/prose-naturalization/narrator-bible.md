@@ -491,11 +491,20 @@ somewhere else.
      agent**: nothing is claimed about anybody who was here, so there is no
      microhistory and no invented motive. It states a cost, which is
      information the player acts on.
-     - Permitted: `pallass/pallass_forge_hall.json · locked_toast` — "Heat,
-       metal, and a gauge you cannot read. Guessing here costs somebody a
-       week." *`somebody` is whoever would pay for the mistake, not somebody
-       who did something. The counter still scores `anon_agent 1` here; the
-       counter is wrong, and this class is how the bible says so.*
+     - Permitted: `riverfarm/riverfarm_longhouse.json · observe` — "A
+       straw-tick pallet against the wall, blanket already turned down for
+       whoever needs it." *`whoever` points FORWARD at a hypothetical future
+       guest; nothing is claimed about anybody who was here. The counter
+       still scores `anon_agent 1` here; the counter is wrong, and this class
+       is how the bible says so.*
+       **(Exemplar replaced 2026-08-07, round-2 train.** The original —
+       `pallass_forge_hall · locked_toast`, "Guessing here costs somebody a
+       week." — was on the round-2 worklist for tripping amendments 3 and 5,
+       and its re-authored form states the cost without any indefinite at
+       all, so it no longer demonstrates this class. A doctrine document may
+       not cite prose the corpus has moved past: when a pass re-authors an
+       exemplar, the citation moves with it in the same PR. The riverfarm
+       keeps-petition that argued from the old quote is re-pointed here too.)*
      - Still forbidden, for contrast: the same word pointing BACKWARD at an
        agent the evidence does not show — "Somebody wanted this hidden."
        *That is rule 1's motive claim, and closing on it is this rule.*

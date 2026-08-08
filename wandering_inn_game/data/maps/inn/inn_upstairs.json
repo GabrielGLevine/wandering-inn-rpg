@@ -248,13 +248,13 @@
      "when": {
       "room_tier_1": 1
      },
-     "text": "Your own bed, and a mattress that no longer remembers the last guest."
+     "text": "The mattress has fresh straw in it and the blanket has been beaten out. It smells of soap and nothing else."
     },
     {
      "when": {
       "room_tier_2": 1
      },
-     "text": "Your own bed, thick blankets, and a shutter that actually closes."
+     "text": "Thick bedding now, and a shutter that latches shut — the wind off the floodplains stops at the window."
     },
     {
      "when": {

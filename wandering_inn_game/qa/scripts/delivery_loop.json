@@ -98,7 +98,7 @@
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [14, 3] },
   { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Silverfang goods, honest prices. The plains-wool bolt you carried up sits shelved at eye level, already half-sold by the yard. She moves what's good — and remembers who brought it." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The plains-wool bolt you carried up stands at eye level on the near stand. Cut into, half gone by the yard. A customer has the end of it in both hands, arguing the price down." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "screenshot", "name": "04a_stall_ack_toast" },
   { "action": "move", "direction": "right", "steps": 1 },

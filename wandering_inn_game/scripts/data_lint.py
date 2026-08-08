@@ -747,6 +747,24 @@ def check_gate_shapes(maps: dict, errors: list) -> None:
 			_walk_gates(entity, map_id, entity.get("id", "<no id>"), errors)
 
 
+def check_companion_toasts(maps: dict, errors: list) -> None:
+	"""GH#397 r2: every companion_source must carry its OWN taken_toast.
+
+	wi_game._animate falls back to a hardcoded string when this is missing.
+	Prose living in engine code is invisible to extract_prose, the voice gate
+	and the duplication gate -- which is how a line the #397 pass retired
+	everywhere else survived as a fourth copy in wi_game.gd. Requiring the
+	field here makes that fallback unreachable in shipped data, so the class
+	cannot recur rather than the one string being corrected."""
+	for map_id, m in sorted(maps.items()):
+		for entity in m.get("entities", []):
+			source = entity.get("companion_source")
+			if isinstance(source, dict) and not str(source.get("taken_toast", "")).strip():
+				errors.append(f"maps/{map_id}: entity '{entity.get('id', '<no id>')}' has a "
+					"companion_source with no taken_toast -- authored prose would fall back to "
+					"the engine default in wi_game.gd, where no prose gate can see it")
+
+
 def _mood_triples(card: dict, label: str, errors: list):
 	"""Return (day, dusk, night) as float triples, or None once reported."""
 	out = []
@@ -1394,6 +1412,7 @@ def main() -> int:
 	check_skill_icons(parsed, errors)
 	check_talk_banks(maps, errors)
 	check_gate_shapes(maps, errors)
+	check_companion_toasts(maps, errors)
 	check_moods(parsed, maps, errors)
 	advisories: list = []
 	skill_gate_advisories: list = []

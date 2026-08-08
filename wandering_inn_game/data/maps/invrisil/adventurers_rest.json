@@ -320,7 +320,7 @@
    ],
    "display_name": "A Rack of Retired Kit",
    "sprite": "library_shelf",
-   "observe": "Bows, a cracked buckler, one very good spear. Nothing here was donated. Each piece has a name cut into it somewhere, and the house has put no card under any of them."
+   "observe": "Two bows and the cracked buckler sit along the top rail, one very good spear standing under them. A name is cut into every piece — the bow stave, the spear haft, the inside of the buckler's grip. Not one piece carries a card from the house."
   },
   {
    "id": "rest_bar_counter_l",
@@ -372,7 +372,7 @@
    },
    "observe": "Nine pegs. Eight have hats. The third from the left is empty, and wiped clean where the others carry a season of dust.",
    "on_interact_accomplishment": "hat_hook_set",
-   "toast": "You hang your hat on the third peg, brim out. Across the room a man sets his cup down and lets you see him look at you."
+   "toast": "Your hat goes onto the third peg, brim out — nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you."
   },
   {
    "_comment": "#204 plate FAR = SECOND: banks handoff_quiet ONLY via the variant (hook first); base is wrong-order cold feedback. Zero new sim code.",
@@ -398,7 +398,7 @@
       "hat_hook_set": 1
      },
      "accomplishment": "handoff_quiet",
-     "toast": "The coat is already over the chair back. You lay yours beside it, lift the wrong one on the way past, and the hearth chairs stay exactly as full as they were."
+     "toast": "Your coat goes over the chair back with the package folded into it, beside the one already hanging, and the other coat is over your arm two steps from the door."
     }
    ]
   },
@@ -412,7 +412,7 @@
    ],
    "display_name": "Two at the Far Table",
    "sprite": "hired_blade",
-   "observe": "Two men at the far table who arrived together, ordered separately, and have been agreeing with each other about nothing for an hour.",
+   "observe": "Two men have the far table between them; one faces the room, the jug at their elbows still full to the neck.",
    "arena": "merchant_warehouse",
    "enemies": [
     "rest_bravo_a",
@@ -425,7 +425,7 @@
      "hat_job_taken": 1
     }
    },
-   "gate_closed_toast": "Two men at the far table, talking to each other. Nothing here for you tonight."
+   "gate_closed_toast": "Two heads together at the far table, voices kept under the room — no business of yours with them yet."
   },
   {
    "_comment": "#318 beat 3. ORIGINAL UNNAMED ARCHETYPE, never Ressa and never Reynold (spec section 2). `invrisil_lady_client`, not the House Factor's `city_scribe`: two scribe silhouettes in one room read as one person twice, and this rig cannot read as a traveler.",

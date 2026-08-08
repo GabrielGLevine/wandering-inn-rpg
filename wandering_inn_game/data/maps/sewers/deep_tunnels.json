@@ -221,7 +221,7 @@
    "sprite": "cold_hearth",
    "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. It lies in layers — lit, burned down, lit again, four or five times over.",
    "on_interact_accomplishment": "found_cold_hearth",
-   "toast": "A fire-pit ringed with blackened stones, gnawed bones banked around the edge and cracked open for their marrow. Nothing in the ash has been warm for a long time."
+   "toast": "A pit at the middle of the stone ring, the ash dead to the bottom. Bones banked against the stones, every one opened for the marrow."
   },
   {
    "id": "gnaw_pile",
@@ -234,7 +234,7 @@
    "sprite": "gnaw_pile",
    "observe": "A midden of cracked bones, marrow sucked clean. They have been sorted by size, almost stacked. Gnoll, most of them; a few too large to name.",
    "on_interact_accomplishment": "found_gnaw_pile",
-   "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's."
+   "toast": "Cracked bones in a heap, dry and light in the hand. Most of them Gnoll; one a Drake's."
   },
   {
    "id": "bone_pile_tunnels",
@@ -262,7 +262,7 @@
    ],
    "display_name": "Raskghar Scouts",
    "sprite": "raskghar_scout",
-   "observe": "Two of them crouch where the tunnel narrows, moon-grey and mountain-shouldered, knuckles to the stone. Their small eyes track you without blinking. Behind them the tunnel keeps going down.",
+   "observe": "A pair of them down on their knuckles where the tunnel narrows, moon-grey and shouldered like the rock. Their eyes hold on you; the floor keeps falling away past their feet.",
    "arena": "cave_mouth",
    "enemies": [
     "raskghar_scout",
@@ -283,7 +283,7 @@
    ],
    "display_name": "Warren Mouth",
    "sprite": "warren_mouth",
-   "observe": "The passage opens into a vast pillared gallery, its floor packed smooth by generations of pacing feet. Eyes catch your light far back in the dark and slide away. This is where they den, and where the big one waits, breathing slow in the black.",
+   "observe": "The passage opens into a pillared gallery with no far wall in your light. The floor is packed smooth, hollowed along the pacing lines. Far back, eyes pick up the light and are gone before you count them.",
    "on_interact_accomplishment": "reached_the_warren",
    "variants": [
     {
@@ -378,7 +378,7 @@
   {
    "id": "warren_side_snare",
    "once_per_waking": true,
-   "once_per_waking_toast": "You've picked this snare clean today. Nothing has been re-rigged since.",
+   "once_per_waking_toast": "You cleared this snare earlier today. The rig has nothing left to take.",
    "kind": "prop",
    "cell": [
     9,

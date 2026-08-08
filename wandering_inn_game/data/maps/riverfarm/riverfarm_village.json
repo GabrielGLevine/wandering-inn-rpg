@@ -1249,7 +1249,7 @@
    ],
    "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ew",
-   "observe": "Low fence rail, bordering the tilled rows."
+   "observe": "Two bars and a post. The tilled rows start a stride past it."
   },
   {
    "id": "riverfarm_fence_ew_4_9",
@@ -1260,7 +1260,7 @@
    ],
    "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ew",
-   "observe": "Low fence rail, bordering the tilled rows."
+   "observe": "The rail carries on east, and a pair of sparrows lift off the top bar to settle again three posts down."
   },
   {
    "_comment": "absent on herd_rerouted, twins at (8,9)/(9,9) present; these cells also left `blocked`/`cover_skip` (map array beats presence).",
@@ -1336,7 +1336,7 @@
    ],
    "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ns",
-   "observe": "Low fence rail, bordering the tilled rows."
+   "observe": "The top rail is rubbed bare along one stretch, and it gives a dry knock when you set a hand on it."
   },
   {
    "id": "riverfarm_fence_ns_2_7",
@@ -1358,7 +1358,7 @@
    ],
    "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ns",
-   "observe": "Low fence rail, bordering the tilled rows."
+   "observe": "A low rail on the west boundary of the rows. Bindweed has taken the near post to the top and stopped there."
   },
   {
    "id": "riverfarm_headman",
@@ -1554,7 +1554,7 @@
     0.58,
     0.62
    ],
-   "observe": "A worn marker stone at the village's heart, a weather-softened spiral cut into its face. Attunement is what a marker like this is for. Show a door the right stone and it learns the place, and can open onto it ever after.",
+   "observe": "The stone stands at the middle of the village, a spiral cut into its weathered face. Attunement works like this: show a door the right stone and the door learns the place, and can open onto it ever after. The grass at its base is worn to bare dirt.",
    "portal_menu": true,
    "portal_menu_when": {
     "requires": {
@@ -1614,7 +1614,7 @@
     ]
    },
    "trigger_radius": 1,
-   "observe": "Eyes catch the light at the field's edge, gone again when you look straight at them. Only after dark.",
+   "observe": "After dark the field's edge has eyes in it, low to the ground and catching the light. Look straight at them and they go out. They are back as soon as your eye moves off.",
    "gate_closed_toast": "Stubble, a fence post, and daylight. One patch of grass lies flat, and the dew is gone off it.",
    "visual_states": [
     {
@@ -1789,7 +1789,7 @@
    "state_counter": "bank_planks_mended",
    "observe": "Two stringers still run out along the bank from the cottage corner, and the decking between them is gone — lifted by a flood and never replaced. The beams are sound. It is boards it wants.",
    "locked_toast": "The stringers are sound and the boards are somewhere downriver. Standing here wishing at it will not deck it.",
-   "repair_toast": "[Basic Repair] — You cut and lay boards across the stringers until the walk is a walk again. It holds when you lean on it, and it will hold tomorrow.",
+   "repair_toast": "[Basic Repair] — You cut boards to the span and lay them across the stringers: the walk takes your weight end to end.",
    "visual_states": [
     {
      "when": {
@@ -1830,9 +1830,9 @@
    "sprite": "barrel",
    "requires_skill": "broader_shoulders",
    "once_per_waking": true,
-   "once_per_waking_toast": "The dray is empty and the shed is full. Nothing more to shift today.",
-   "observe": "Grain sacks stacked off a dray at the bank head, waiting on however many trips it takes. Two men are looking at them the way you look at a long afternoon.",
-   "locked_toast": "You get one sack up and your back tells you about the other eleven. This is a job for somebody built for it.",
+   "once_per_waking_toast": "The dray stands empty and the shed is stacked to the door — no more work at the bank head until tomorrow.",
+   "observe": "Grain sacks off a dray at the bank head, a dozen of them on the boards, with two men looking at the stack, hands on their hips.",
+   "locked_toast": "The first sack moves. The eleven behind it need a strength you have not learned yet.",
    "skill_hint_toast": "Dragging them one at a time will take all day. Carrying them properly would not.",
    "on_skill_use": {
     "accomplishment": "hauled_heavy_load",
@@ -1858,7 +1858,7 @@
      "fold_rebuilt": 1
     }
    },
-   "observe": "Hazel hurdles, cut and stacked. Enough to double the fold, if someone puts the day in.",
+   "observe": "Hazel hurdles cut and stacked against the pen rail, as many again as the fold already has standing.",
    "on_interact_accomplishment": "fold_rebuilt",
    "toast": "You put the day in. Double hurdles, drained ground, a gate that hangs true. The fold holds a wolf out now, not just sheep in."
   },
@@ -1902,7 +1902,7 @@
      "craft_tended": 1
     }
    },
-   "observe": "The third lamb, the one that would not bear weight. Someone has to sit with it long enough to matter.",
+   "observe": "The third lamb, lying apart from the other two with the bad foreleg held up off the straw.",
    "on_interact_accomplishment": "craft_tended",
    "toast": "You sit with it past the point that's useful and into the point that counts. It sleeps. You notice you were humming."
   }

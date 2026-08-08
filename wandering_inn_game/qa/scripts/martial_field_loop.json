@@ -271,7 +271,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The floor stops. Gravel goes over the lip when your boot finds it and keeps going, and you are not crossing that without a line."
+    "text": "The floor stops dead and starts again a span out, the dark going down between. No rope goes anywhere from this lip \u2014 the line runs from the stub of the broken span."
    },
    "timeout_sec": 5
   },
@@ -316,7 +316,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "You get a hand on the stub and lean out. The gap is too wide to jump and the stub too smooth to climb; what it wants is a rope."
+    "text": "You get a hand on the stub and lean out over the gap — too wide to jump, too smooth to climb, so set a rope here."
    },
    "timeout_sec": 5
   },
@@ -1058,7 +1058,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Basic Repair] — You cut and lay boards across the stringers until the walk is a walk again. It holds when you lean on it, and it will hold tomorrow."
+    "text": "[Basic Repair] — You cut boards to the span and lay them across the stringers: the walk takes your weight end to end."
    },
    "timeout_sec": 5
   },
@@ -1247,7 +1247,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The dray is empty and the shed is full. Nothing more to shift today."
+    "text": "The dray stands empty and the shed is stacked to the door — no more work at the bank head until tomorrow."
    },
    "timeout_sec": 5
   },

@@ -1220,7 +1220,7 @@
    "item_hint_toast": "Whatever's under there won't come to bare hands. Lism's shelf had a fisher's handline.",
    "on_interact_accomplishment": "went_fishing",
    "once_per_waking": true,
-   "once_per_waking_toast": "The water lies flat again. Leave it until tomorrow.",
+   "once_per_waking_toast": "You have had the line in once today, and the water over the drop has gone flat until tomorrow.",
    "toast": "You pay out the line into the dark water. Nothing takes it, and nothing was ever going to — whatever keeps this pool knows the difference between an offer and a hook."
   },
   {
@@ -1238,7 +1238,7 @@
     0.78,
     0.9
    ],
-   "observe": "Something square and man-made rests on the pond floor a stride out from the bank, furred with silt. Too far to reach across open water. But water can be made to bear weight, if you know the trick of cold.",
+   "observe": "Something square and worked lies under silt on the pond floor, a stride out from the bank. The water between it and the bank is a hand deep and dead still. In the bank's shade the surface has already gone to a skin of ice.",
    "on_interact_accomplishment": "found_the_frozen_cache",
    "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, still dry: a few keepsakes and a handful of old coin.",
    "gold": 5,
@@ -1547,7 +1547,7 @@
    ],
    "observe": "A hairline crack runs through old, dressed stone half-swallowed by turf — not natural rock, something built. Cold air breathes up out of it, and it smells of somewhere else.",
    "on_interact_accomplishment": "found_the_rift_seam",
-   "toast": "A cold seam splits the earth here, sealed by old stone. It doesn't feel like it goes anywhere. Yet.",
+   "toast": "You get your fingers into the crack; the air coming out is colder than the ground. Behind it the stone is dressed and set close, and nothing moves.",
    "door_when": {
     "requires": {
      "horns_dig_started": 1
@@ -1614,8 +1614,8 @@
     ]
    },
    "trigger_radius": 1,
-   "observe": "A patrol slipping the boulder line, quiet until they're not. Only after dark.",
-   "gate_closed_toast": "Nothing moving out there. Come back after dark.",
+   "observe": "Two of them working inside the boulder line, one behind the other, well after dark. Their weapons are wrapped and nothing they carry makes a sound.",
+   "gate_closed_toast": "The boulder line is clear from here — the patrol does not use it until dark.",
    "visual_states": [
     {
      "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
@@ -1721,13 +1721,13 @@
       "tended_beasts": 10
      },
      "accomplishment": "corusdeer_healed",
-     "toast": "It is already standing when you come. It lets you run a hand down the leg once, then turns and goes up the rise at a trot, and does not look back."
+     "toast": "It is standing when you come up, weight on all four legs. You get one hand down the leg before it swings away from you and takes the rise at a trot."
     }
    ],
    "requires_skill": "beasts_mending",
    "on_skill_use": {
     "accomplishment": "tended_beasts",
-    "toast": "[Beast's Mending] — Splint and salve, and the leg sits straighter than it has any right to. The corusdeer breathes easier.",
+    "toast": "[Beast's Mending] — You splint the leg and work salve into the swelling, and the joint takes weight when you press on it.",
     "gold": 2,
     "variants": [
      {
@@ -1735,7 +1735,7 @@
        "tended_beasts": 10
       },
       "accomplishment": "corusdeer_healed",
-      "toast": "[Beast's Mending] — The splint comes away and stays away. It stands, tests the leg, and goes to find the herd."
+      "toast": "[Beast's Mending] — The splint comes off and the leg holds; it is up and moving before you have gathered your kit."
      }
     ]
    }
@@ -1760,7 +1760,7 @@
      "corusdeer_healed": 1
     }
    },
-   "observe": "A body-shaped hollow pressed into the grass, still flat in the middle. The corusdeer lay here a long time, and at the edges the blades are already standing up again.",
+   "observe": "A hollow pressed into the grass the length of a deer, flat and yellowed at the center, the blades around the rim already back up.",
    "on_interact_accomplishment": "found_the_shed_antler",
    "toast": "In the flattened grass, shed clean at the base: one antler, oaken-brown fading to a red glow at the tip. It is warm to hold, and stays warm.",
    "item": "shed_antler",
@@ -1791,7 +1791,7 @@
    "companion_source": {
     "companion_id": "wolf_companion",
     "kind": "tamed",
-    "taken_toast": "The pup sniffs your hand once, twice — then leans its whole small weight against your leg. That's that, then."
+    "taken_toast": "The pup smells your hand for a long moment, then puts its whole weight against your shin and stays there."
    }
   },
   {
@@ -1859,11 +1859,11 @@
    "observe": "The nest scrape has fledged another. It puts the tussock between you and itself, and screams from behind it.",
    "requires_skill": "lesser_bond",
    "skill_hint_toast": "It goes still when you crouch, which from a razorbeak is an invitation. Make the offer properly.",
-   "locked_toast": "It flares its hackles and holds the tussock. Nothing wild takes an offer from hands that have never tended anything.",
+   "locked_toast": "The hackles come up and the tussock stays between you. You have not got the hands for a wild thing yet; those come of tending hurt ones.",
    "companion_source": {
     "companion_id": "razorbeak_companion",
     "kind": "tamed",
-    "taken_toast": "It stalks the length of your arm, finds the shoulder acceptable, and settles there facing backwards."
+    "taken_toast": "It walks up your arm and sets itself on your shoulder, facing back the way you came."
    }
   },
   {
@@ -1884,12 +1884,12 @@
    },
    "observe": "Late in the season and thin with it, but another scrape further down the boulder line is occupied. Fresh-dug, by the earth thrown out behind it.",
    "requires_skill": "lesser_bond",
-   "skill_hint_toast": "It is too tired to flinch. Offer, and mean it.",
+   "skill_hint_toast": "You crouch beside the scrape and it does not lift its head: put the offer where it lies, because it is not coming up to meet you.",
    "locked_toast": "The pup does not move. Hands that can take an offer like this are learned on hurt animals, one at a time.",
    "companion_source": {
     "companion_id": "wolf_companion",
     "kind": "tamed",
-    "taken_toast": "It gets up on the second try, takes three steps, and sits down hard where it can still see you."
+    "taken_toast": "It gets its legs under it on the second try and comes as far as your boot before it sits down hard."
    }
   },
   {
@@ -1967,7 +1967,7 @@
      5,
      7
     ],
-    "open_toast": "You go down between the stones sideways, the way the flattened grass says to, and the plains close over the top of you."
+    "open_toast": "You go in sideways and shoulder-first between the two stones. The grass closes over the top of you as you come down."
    }
   },
   {
@@ -1999,7 +1999,7 @@
     ]
    },
    "trigger_radius": 1,
-   "observe": "Two heavy shapes working the verge of the wagon road, wings folded tight, close enough to the carter camps to smell the fires. Only after dark.",
+   "observe": "The wagon road's verge is churned where two of them work it over, wings folded flat, long after dark. The carter fires are in sight from where they stand.",
    "gate_closed_toast": "The road's empty in the daylight. Whatever works this verge keeps to the dark.",
    "on_victory": "mothbears_culled"
   },

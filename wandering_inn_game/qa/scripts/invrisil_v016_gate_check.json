@@ -239,7 +239,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "A back door with no handle on this side. Nothing about it is any of your business tonight."
+    "text": "The back door has no handle on this side; you have nothing to bring through it."
    },
    "timeout_sec": 5
   },
@@ -304,7 +304,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Two men at the far table, talking to each other. Nothing here for you tonight."
+    "text": "Two heads together at the far table, voices kept under the room — no business of yours with them yet."
    },
    "timeout_sec": 5
   },

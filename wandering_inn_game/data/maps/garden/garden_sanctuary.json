@@ -360,7 +360,7 @@
    "display_name": "The Fountain Statue",
    "sprite": "garden_fountain_statue",
    "hide_sprite": true,
-   "toast": "Cool spray beads on the stone, gathers along the worn-soft face, and drops back into the basin.",
+   "toast": "Cold spray off the basin catches the back of your hand; the statue's face is worn soft where the water comes down.",
    "observe": "The stonework is older than the door you came through, and the pose is a dancer's: arms up, one heel lifted, nothing in either hand."
   },
   {
