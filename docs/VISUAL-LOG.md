@@ -4132,3 +4132,31 @@ a shade variant never reads as a separate thing, distinct silhouettes do.
   `lanes/l398-playtest-evidence/warded_side_vault_rogue/00_rogue_vault_open.png`
   + `boosted_00.png`, and both wardens in one frame at
   `warded_side_vault_gate_check/00_both_modes_locked.png` |
+
+## 2026-08-08 — user playtest: Floodplains (3 findings, 2 generalize corpus-wide)
+1. **P2 — frozen_cache renders as a dry crate ON the pond** (10,18).
+   Prose says "on the pond floor under a coat of silt"; sprite is plain
+   `crate`, newly BOLD since #398's atlas fix (was an invisible sliver).
+   Art/prose contradiction class: needs a submerged/silted variant or
+   water-tint treatment, not a prose fix. Same "suddenly visible art"
+   class as the #398 bar_counter/stool fixes — eye-test those rooms too.
+2. **DESIGN RULING (user): discovery over instruction.** floodplains
+   [34].toast "Freeze that water, or cross it with [Double Step]" is too
+   explicit — player should learn through exploration. Generalizes to
+   the whole #398 K5 explicit-menu class (scan attached in HANDOFF):
+   trapped_halls [17-19], mercantile_alleys [17-18], ruin_surface
+   [28-29], deep_tunnels [9-11] (worst: "Select [Greater Strength] and
+   use it on the beam" — pure UI-speak). Supersedes #398's explicit-
+   teaching stance; re-author as diegetic capability cues (the round-2
+   l3 idiom: "takes strength you have not learned yet"), never skill
+   menus. [Skill] — receipt toasts are NOT in scope (outcome convention).
+3. **P2 — pond island reads land-connected** (diagonal contact at its
+   SE corner). Fix by widening water/pond so the island is fully ringed;
+   route re-derivation owed on pond_island_freeze/pond_island_blink +
+   pond_frozen_cache. Mechanical diagonal-scan inconclusive — eye-test
+   the class: frozen_cache one-cell water strip, rope-gap lips
+   (trapped_halls 13,0/13,1), briar-arch mouths, counting-room seal.
+4. **P3 — decor crate/barrel scatter** reads random where unstaged:
+   floodplains 4 (field/pond context — worst), street 10 (north wall
+   line — eye-test), den_shop/forge_hall 2 each; mill/longhouse/alleys
+   read plausibly staged. Audit placement context, not the sprite.
