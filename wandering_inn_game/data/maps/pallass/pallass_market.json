@@ -358,7 +358,7 @@
    ],
    "display_name": "Market Stall",
    "sprite": "market_stall_pallass",
-   "observe": "First of three stalls in a row, and the counter comes to the same height as the next two. A civic inspector's initials are burned into the corner post.",
+   "observe": "First of three stalls in a row, its counter at the same height as the next two. A civic inspector's initials are burned into the corner post.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
    "toast": "Goods in rows, each with a chalked price card leaning against it. The card at the end of the row is turned face down."
   },
@@ -449,7 +449,7 @@
    "sprite": "bar_counter",
    "observe": "The window ledge is worn smooth where a thousand wrists have rested, waiting on a stamp. A stencilled plate lists the posted fees.",
    "on_interact_accomplishment": "leaned_on_the_permit_counter",
-   "toast": "You put your weight on the ledge, and on the far side of the glass a clerk stamps a form, drops it beside her inkwell and rings the bell."
+   "toast": "You put your weight on the ledge, and beyond the glass a clerk stamps a form, drops it beside her inkwell and rings the bell."
   },
   {
    "_comment": "Static `dialogue` = no-graph fallback only.",
@@ -530,7 +530,7 @@
    "on_skill_use": {
     "accomplishment": "scouted_vantage",
     "gold": 1,
-    "toast": "[Eagle Eyes] — The haze thins: nine tiers of stall rows and patrol routes below the rail. Two floors down, a dropped coin purse sits on a ledge with its drawstring still knotted."
+    "toast": "[Eagle Eyes] — The haze thins: nine tiers of stall rows and patrol routes below the rail. Two floors down, a dropped coin purse on a ledge, its drawstring still knotted."
    }
   },
   {
@@ -651,7 +651,7 @@
    "sprite": "alchemy_still",
    "requires_skill": "mineral_distillation",
    "skill_hint_toast": "A retort over a banked fire, a mineral wash already loaded. A distiller could boil it down to salts.",
-   "locked_toast": "A grey wash sits half-way up the dark glass, the coals beneath it cold. Reducing it to salts is a distiller's job, not yours.",
+   "locked_toast": "A grey wash sits half-way up the dark glass over cold coals; reducing it to salts is a distiller's job, not yours.",
    "observe": "A distilling retort, its bulb crusted white at the neck where the salts climb as the wash boils away.",
    "on_skill_use": {
     "accomplishment": "synthesized_draught",
@@ -790,7 +790,7 @@
    ],
    "display_name": "The Dray Rank",
    "sprite": "market_stall_wood",
-   "observe": "Low carts for hire in a rank, shafts down on the stone. A tier number and a rate are chalked on every tailboard. The queue board at the head of the rank stands with no one at it.",
+   "observe": "Low carts for hire in a rank, shafts down on the stone. A tier number and a rate chalked on every tailboard. The queue board at the head of the rank has no one at it.",
    "on_interact_accomplishment": "shipment_leg_carried",
    "once_per_waking": true,
    "once_per_waking_toast": "Every cart on the rank is out. The next rotation brings them back.",

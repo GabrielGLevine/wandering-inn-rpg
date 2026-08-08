@@ -274,7 +274,7 @@
    "sprite": "shelf_bottles",
    "observe": "Jars in a rank, labels in a hand that got neater partway along the shelf and then went back to how it was.",
    "on_interact_accomplishment": "eyed_the_den_spice_shelf",
-   "toast": "Tier stamps on the jar shoulders. Half of them are numbers your permit does not reach. The keeper watches you read them and goes back to her tally."
+   "toast": "Tier stamps on the jar shoulders, half of them numbers your permit does not reach. The keeper watches you read them and goes back to her tally."
   },
   {
    "id": "den_shop_hatchling_bench",
