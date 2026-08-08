@@ -424,7 +424,7 @@
    "facing": "right",
    "on_interact_accomplishment": "read_guild_notices",
    "toast": "The smaller board carries lost gear, rooms going spare, and one duel challenge with nothing written under it. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
-   "observe": "Handbills pinned onto the plaster, the outer ones lapping over the request board's edge. One offers a reward for a plain steel warhammer; half a card under it advertises a back room to let, quiet tenants only.",
+   "observe": "Handbills pinned onto the plaster, the outer ones lapping over the request board's edge. One offers a reward for a plain steel warhammer. Half a card under it advertises a back room to let, quiet tenants only.",
    "visual_states": [
     {
      "_comment": "GH#335 item 3: a read prop is SPENT and recedes. Shared tint across every read-once prop in the build; `counter` is this prop's OWN id, never a sibling's shared one.",

@@ -1324,7 +1324,7 @@
     0.75,
     0.4
    ],
-   "observe": "Round loaves stacked four high, the top ones still steaming through their cloth. The chalk board carries today's price, and a higher one under it for after the fourth bell.",
+   "observe": "Round loaves stacked four high, the top ones steaming through their cloth, today's price on the chalk board and a higher one under it for after the fourth bell.",
    "on_interact_accomplishment": "browsed_bread_stall",
    "toast": "Warm bread smell over the whole row. No one's minding the stall this exact moment. The loaves aren't going anywhere without a fight."
   },
@@ -1363,14 +1363,14 @@
    ],
    "display_name": "Krshia's Stall",
    "sprite": "market_stall_silverfang",
-   "observe": "A card propped against the near stack warns that the seller remembers faces. Silverfang goods: cheap tin and cord at the front edge, bolts of plains wool set back behind them.",
+   "observe": "A card propped against the near stack warns that the seller remembers faces. Silverfang goods: cheap tin and cord at the front edge. Bolts of plains wool set back behind them.",
    "variants": [
     {
      "_comment": "b7 #207 delivery ack — the wool bolt the player carried is shelved and selling (prop recipient: no talk_pool, the interact toast IS the ack surface; a toast variant so every player sees it without a skill).",
      "when": {
       "delivered_delivery_krshia_wool": 1
      },
-     "toast": "The plains-wool bolt you carried up stands at eye level on the near stand, cut into and already half gone by the yard. A customer has the end of it in both hands, arguing the price down."
+     "toast": "The plains-wool bolt you carried up stands at eye level on the near stand. Cut into, half gone by the yard. A customer has the end of it in both hands, arguing the price down."
     }
    ],
    "on_interact_accomplishment": "browsed_market",
@@ -1591,7 +1591,7 @@
    "display_name": "Krshia",
    "person": true,
    "sprite": "krshia",
-   "observe": "Fur brushed flat at the shoulder where a strap sits, ears up and turning at every voice in the row. She looks at your boots and your hands before your face, and she does not hurry about it.",
+   "observe": "Fur brushed flat at the shoulder where a strap sits. Ears up, turning at every voice in the row. She looks at your boots and your hands before your face, and does not hurry about it.",
    "friendly_line": "You have a warm way about you, and warmth I can trade with. Come - for you, I will call it a fair price, and I will mean it. This is not nothing, from me.",
    "facing": "right",
    "talk_pool": [

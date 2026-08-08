@@ -209,7 +209,7 @@
    "delivery_board": true,
    "toast": "THE DELIVERY BOARD, in painted letters at the top. Gold by distance, paid on the mark, same-waking terms; take a slip at the counter.",
    "second_visit_toast": "THE DELIVERY BOARD. Your slip's still logged at the counter.",
-   "observe": "A line chalked on the rail under the board: start with the market run. The slips above it pay more and go further."
+   "observe": "Chalked on the rail under the board: start with the market run. The slips above it pay more and go further."
   },
   {
    "_comment": "talk_pool-only, no conversation graph, inert-adjacent.",
@@ -257,7 +257,7 @@
    "sprite": "cold_hearth",
    "hearth": true,
    "state_counter": "lit_the_runners_hearth",
-   "observe": "Inside a wide stone hearth swept down to the brick: split kindling, dry birch laid over it in a lattice. Cold air comes down the flue and stirs the loose bark.",
+   "observe": "A wide stone hearth swept to the brick: split kindling, dry birch laid over it in a lattice. Cold air comes down the flue and stirs the loose bark.",
    "kindle_toast": "[Firefly] — The flame takes the birch on the second breath. Heat crawls out into the room and the stone begins giving it back.",
    "toast": "Split kindling sits laid and ready under dry birch. The hearth is cold, and nobody here carries flint.",
    "visual_states": [
@@ -333,7 +333,7 @@
    "dirty": true,
    "state_counter": "scrubbed_the_runners_table",
    "observe": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. One corner is scrubbed down to bare wood, and the ridges start again an inch from it.",
-   "clean_toast": "[Basic Cleaning] — The dried mud comes off in flakes under the cloth. The grain shows pale, and the road smell goes with it.",
+   "clean_toast": "[Basic Cleaning] — The dried mud flakes off under the cloth, the grain showing pale and the road smell going with it.",
    "toast": "Dried road mud ridges the boards where pack after pack has come down on them. The boards still smell of the road.",
    "visual_states": [
     {
