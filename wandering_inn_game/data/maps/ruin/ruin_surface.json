@@ -188,8 +188,8 @@
      "door_mounted": 1
     }
    },
-   "observe": "Banked low and raked back into a ring. Heat still comes up off the coals when you put a hand over them.",
-   "toast": "A cookfire the size of two hands, ringed with stones that did not come out of this ruin. The ash beneath it is deeper than one night's burning."
+   "observe": "Banked low and raked back into a ring, still throwing heat when you hold a hand over the coals.",
+   "toast": "A cookfire two hands wide, ringed with stones that did not come out of this ruin. The ash under it is deeper than one night's burning."
   },
   {
    "id": "dig_camp_crate",
@@ -300,7 +300,7 @@
     }
    ],
    "on_interact_accomplishment": "found_the_pedestal",
-   "toast": "You put both hands on the stone and it does not shift in its cradle. The court noise drops away while you are trying.",
+   "toast": "You put both hands on the stone and it does not shift in its cradle. The court noise drops away while you try.",
    "variants": [
     {
      "when": {
@@ -323,7 +323,7 @@
       "horns_dig_joined": 1
      },
      "accomplishment": "pedestal_unsealed",
-     "toast": "Both spirals hold their light and the seam under the plinth gives at a touch. The near plate first, then its far twin: that was the order it took. Ceria says 'Ksmvr. Down. Carefully.' and has the rope off the stake before you have straightened up."
+     "toast": "Both spirals hold their light and the seam under the plinth gives at a touch — near plate first, then its far twin. Ceria says 'Ksmvr. Down. Carefully.' and has the rope off the stake before you have straightened up."
     }
    ],
    "visual_states": [
@@ -366,7 +366,7 @@
       },
       "accomplishment": "pedestal_unsealed",
       "lore": false,
-      "toast": "[Detect Magic] — The ward reads as a lock with the guardian's shape cut into it, and the shape still fits: the seal lets go under your hand. Ceria calls up from the gap: 'Do that again and I'm putting you on the ledger.'"
+      "toast": "[Detect Magic] — The ward reads as a lock cut to the guardian's shape, and the shape still fits: the seal lets go under your hand. Ceria calls up from the gap: 'Do that again and I'm putting you on the ledger.'"
      }
     ]
    }
@@ -578,7 +578,7 @@
      "door_mounted": 1
     }
    },
-   "observe": "Spoil out of the gap, dropped in two heaps: worked stone in one, plain rubble in the other. Chisel marks decide which heap a piece lands in.",
+   "observe": "Spoil out of the gap, dropped in two heaps: chisel-marked stone in one, plain rubble in the other.",
    "on_interact_accomplishment": "eyed_the_dig_spoil",
    "toast": "Broken stone in two heaps, worked and unworked. The worked heap is smaller, and still being added to."
   },
@@ -651,7 +651,7 @@
    },
    "observe": "Ringed stones around a scatter of white ash, and four flattened squares of ground where bedrolls were. The stakes have been pulled and stacked, the string wound back onto its spool.",
    "on_interact_accomplishment": "found_the_cold_camp",
-   "toast": "The ash inside the stone ring is cold all the way through, and has been for days. The fire-pit is filled in level with the ground, and the rope that was here is gone."
+   "toast": "The ash in the stone ring has been cold for days. The fire-pit is filled in level with the ground, and the rope that was here is gone."
   },
   {
    "id": "briar_arch_rubble_northwest",
