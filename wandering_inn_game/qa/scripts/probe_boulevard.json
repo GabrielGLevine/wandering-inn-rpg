@@ -1,0 +1,42 @@
+{
+ "fixture_save": "invrisil_hat_start",
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    22,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "alley_door_east"
+  },
+  {
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    10,
+    3
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "north_facades"
+  }
+ ]
+}
