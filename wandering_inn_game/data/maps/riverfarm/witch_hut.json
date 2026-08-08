@@ -165,8 +165,8 @@
    "sprite": "door",
    "to_map": "witch_hollow",
    "to_cell": [
-    1,
-    5
+    3,
+    8
    ]
   },
   {

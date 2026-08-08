@@ -944,20 +944,41 @@
     {
      "mechanism": "social",
      "skill": "bargain",
-     "props": ["counting_room_factor"],
-     "cells": [[4, 8]]
+     "props": [
+      "counting_room_factor"
+     ],
+     "cells": [
+      [
+       4,
+       8
+      ]
+     ]
     },
     {
      "mechanism": "arm",
      "skill": "observe",
-     "props": ["counting_room_watch_gap"],
-     "cells": [[7, 9]]
+     "props": [
+      "counting_room_watch_gap"
+     ],
+     "cells": [
+      [
+       7,
+       9
+      ]
+     ]
     },
     {
      "mechanism": "arm",
      "skill": "greater_strength",
-     "props": ["counting_room_rear_bar"],
-     "cells": [[7, 11]]
+     "props": [
+      "counting_room_rear_bar"
+     ],
+     "cells": [
+      [
+       7,
+       11
+      ]
+     ]
     }
    ]
   }
@@ -976,7 +997,7 @@
    "to_map": "invrisil_boulevard",
    "to_cell": [
     25,
-    8
+    2
    ]
   },
   {
@@ -1318,25 +1339,39 @@
    "_comment": "#398 P4 social gate. Its monotone counter retires the blocker when dialogue ends; (4,8) was static wall before this pocket.",
    "id": "counting_room_factor",
    "kind": "npc",
-   "cell": [4, 8],
+   "cell": [
+    4,
+    8
+   ],
    "display_name": "The Counting-Room Factor",
    "sprite": "city_scribe",
    "facing": "up",
    "conversation": "invrisil_counting_factor",
-   "present_when": {"absent": {"counting_room_invited": 1}},
+   "present_when": {
+    "absent": {
+     "counting_room_invited": 1
+    }
+   },
    "observe": "The front passage narrows to one man's width, and the man is in it: fitted gray coat, hands behind him. The key on his cuff-chain hangs outside the sleeve."
   },
   {
    "_comment": "#398 P4 quiet gate. Its counter opens the side cell without touching the existing alley route.",
    "id": "counting_room_watch_gap",
    "kind": "prop",
-   "cell": [7, 9],
+   "cell": [
+    7,
+    9
+   ],
    "display_name": "A Watched Side Shutter",
    "sprite": "door",
    "requires_skill": "observe",
    "skill_hint_toast": "The watch turns by a pattern. [Appraise Foe] could mark the open breath; the factor or rear bar offers another way.",
    "locked_toast": "The shutter never stays open long. [Appraise Foe] can find the turn; the factor or the rear bar offers another way.",
-   "present_when": {"absent": {"timed_counting_room_entry": 1}},
+   "present_when": {
+    "absent": {
+     "timed_counting_room_entry": 1
+    }
+   },
    "observe": "A narrow goods shutter opens onto the side passage. One watcher crosses its view on a fixed turn.",
    "on_skill_use": {
     "accomplishment": "timed_counting_room_entry",
@@ -1347,13 +1382,20 @@
    "_comment": "#398 P4 force gate. noisy_entry is shared with the factor graph's one reactive line.",
    "id": "counting_room_rear_bar",
    "kind": "prop",
-   "cell": [7, 11],
+   "cell": [
+    7,
+    11
+   ],
    "display_name": "The Barred Rear Door",
    "sprite": "door",
    "requires_skill": "greater_strength",
    "skill_hint_toast": "The bar is ironwood in stone brackets. [Greater Strength] could shift it; the factor or watch gap offers another way.",
    "locked_toast": "The rear bar holds. [Greater Strength] can shift it; the factor or the watch gap offers a quieter way.",
-   "present_when": {"absent": {"noisy_entry": 1}},
+   "present_when": {
+    "absent": {
+     "noisy_entry": 1
+    }
+   },
    "observe": "An ironwood bar sits deep in stone brackets. Moving it quietly was never part of the design.",
    "on_skill_use": {
     "accomplishment": "noisy_entry",
@@ -1364,12 +1406,18 @@
    "_comment": "#398 P4 pocket encounter. Interact-only cannot work behind three disappearing gates, so radius 1 arms once a mode opens and the player crosses in.",
    "id": "counting_room_guard",
    "kind": "encounter",
-   "cell": [5, 10],
+   "cell": [
+    5,
+    10
+   ],
    "trigger_radius": 1,
    "display_name": "The Factor's Closed Account",
    "sprite": "hired_blade",
    "arena": "mercantile_alley",
-   "enemies": ["factor_enforcer", "factor_clerk_guard"],
+   "enemies": [
+    "factor_enforcer",
+    "factor_clerk_guard"
+   ],
    "allies": [],
    "on_victory": "cleared_counting_room_guard",
    "observe": "A cudgel leaves the desk at the same moment a knife comes out from behind it. The room was closed for a reason.",
@@ -1379,15 +1427,24 @@
    "_comment": "#398 P4 reward and fence-thread observe hook. Spawns only once the guard clears, so before victory the cell is empty AND sealed behind (7,12).",
    "id": "counting_room_trade_cache",
    "kind": "prop",
-   "cell": [3, 11],
+   "cell": [
+    3,
+    11
+   ],
    "display_name": "A Factor-Sealed Bale",
    "sprite": "crate",
    "present_when": {
-    "requires": {"cleared_counting_room_guard": 1},
-    "absent": {"claimed_counting_room_goods": 1}
+    "requires": {
+     "cleared_counting_room_guard": 1
+    },
+    "absent": {
+     "claimed_counting_room_goods": 1
+    }
    },
    "observe": "Two tallies pinned to the bale, the same goods priced twice. The second carries no buyer's name — a hat and a feather inked in the corner. Under it a delivery line: the plain door at the alley's end.",
-   "contains": ["sealed_factor_bale"],
+   "contains": [
+    "sealed_factor_bale"
+   ],
    "on_open_accomplishment": "claimed_counting_room_goods",
    "open_toast": "The seal parts on a bale of dyed silk, brass findings and sealed spice packets, every tie under the same counting-house stamp."
   }

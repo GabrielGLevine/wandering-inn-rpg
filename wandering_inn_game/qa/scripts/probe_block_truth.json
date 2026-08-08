@@ -1,0 +1,90 @@
+{
+ "fixture_save": "invrisil_hat_start",
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    9,
+    8
+   ]
+  },
+  {
+   "_comment": "west end: up into (9,7) must BLOCK",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    8
+   ]
+  },
+  {
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    11,
+    6
+   ]
+  },
+  {
+   "_comment": "roof row y6 must be WALKABLE now: step west along it",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    6
+   ]
+  },
+  {
+   "_comment": "down from roof row into wall row must BLOCK",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    6
+   ]
+  },
+  {
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    16,
+    9
+   ]
+  },
+  {
+   "_comment": "cottage_b west column now walkable; east into (17,9)? art starts ~16.75 so (17,9) blocked",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    9
+   ]
+  }
+ ]
+}

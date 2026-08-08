@@ -3,36 +3,210 @@
  "fixture_save": "near_riverfarm",
  "starts_at_title": true,
  "steps": [
-  {"action":"wait_for_event","type":"ui_title_gate_rendered","timeout_sec":5},
-  {"action":"press","name":"confirm"},
-  {"action":"wait_for_event","type":"ui_title_rendered","timeout_sec":5},
-  {"action":"move","direction":"down","steps":1},
-  {"action":"press","name":"confirm"},
-  {"action":"wait_for_event","type":"game_loaded","timeout_sec":5},
-  {"action":"wait_for_event","type":"world_ready","timeout_sec":5},
-
-  {"_comment":"Mouse leg: start at the real hollow door landing. Only [3,8] is a legal cardinal neighbor; the first click walks there without interacting.","action":"teleport","map":"witch_hollow","cell":[10,11]},
-  {"action":"click","cell":[3,7]},
-  {"action":"wait_for_event","type":"player_moved","payload_contains":{"cell":[3,8]},"timeout_sec":5},
-  {"action":"wait_frames","frames":3},
-  {"action":"assert_state","path":"player_cell","equals":[3,8]},
-  {"action":"assert_event_absent","type":"accomplishment_recorded","payload_contains":{"id":"observed_witch_cottage"}},
-  {"action":"screenshot","name":"01_mouse_reaches_cottage"},
-  {"action":"click","cell":[3,7]},
-  {"action":"wait_for_event","type":"accomplishment_recorded","payload_contains":{"id":"observed_witch_cottage","count":1},"timeout_sec":5},
-  {"action":"wait_for_event","type":"ui_toast_rendered","payload_contains":{"text":"The door's shut. Ask her out here instead."},"timeout_sec":5},
-  {"action":"assert_state","path":"accomplishments.observed_witch_cottage","equals":1},
-  {"action":"wait_frames","frames":10},
-  {"action":"screenshot","name":"02_mouse_interacts_with_cottage"},
-
-  {"_comment":"Keyboard leg: the blocked up-step faces the cottage without moving, then interact resolves through the normal world input path.","action":"teleport","map":"witch_hollow","cell":[3,8]},
-  {"action":"move","direction":"up","steps":1},
-  {"action":"assert_event_logged","type":"player_blocked","payload_contains":{"cell":[3,7],"facing":[0,-1]}},
-  {"action":"assert_state","path":"player_cell","equals":[3,8]},
-  {"action":"press","name":"interact"},
-  {"action":"wait_for_event","type":"accomplishment_recorded","payload_contains":{"id":"observed_witch_cottage","count":2},"timeout_sec":5},
-  {"action":"wait_for_event","type":"ui_toast_rendered","payload_contains":{"text":"The door's shut. Ask her out here instead."},"timeout_sec":5},
-  {"action":"assert_state","path":"accomplishments.observed_witch_cottage","equals":2},
-  {"action":"screenshot","name":"03_keyboard_interacts_with_cottage"}
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Mouse leg: start at the real hollow door landing. Only [3,8] is a legal cardinal neighbor; the first click walks there without interacting.",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    10,
+    11
+   ]
+  },
+  {
+   "action": "click",
+   "cell": [
+    3,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     3,
+     8
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    8
+   ]
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "observed_witch_hut"
+   },
+   "_comment": "r4: reaching the door must not bank the on_enter counter — only entering does"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_mouse_reaches_cottage"
+  },
+  {
+   "_comment": "r4 2026-08-08: the cottage IS the witch_hut door now (user ruling: one building; observed_witch_cottage RETIRED). Mouse leg: click the door, enter, prove the on_enter bank, walk back out via the interior exit.",
+   "action": "click",
+   "cell": [
+    3,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "witch_hut"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_witch_hut"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.observed_witch_hut",
+   "equals": 1
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "02_mouse_enters_cottage"
+  },
+  {
+   "action": "click",
+   "cell": [
+    4,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "witch_hollow"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    8
+   ]
+  },
+  {
+   "_comment": "Keyboard leg: bump faces the door without moving, interact enters; the bank is per-entry (count 2).",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     3,
+     7
+    ],
+    "facing": [
+     0,
+     -1
+    ]
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "witch_hut"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.observed_witch_hut",
+   "equals": 2
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "03_keyboard_enters_cottage"
+  }
  ]
 }

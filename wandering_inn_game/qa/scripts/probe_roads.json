@@ -1,0 +1,58 @@
+{
+ "fixture_save": "invrisil_hat_start",
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    20,
+    14
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 25
+  },
+  {
+   "action": "screenshot",
+   "name": "road_offshoot_crate"
+  },
+  {
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    6,
+    6
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 25
+  },
+  {
+   "action": "screenshot",
+   "name": "inn_and_road_east"
+  },
+  {
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    11,
+    22
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 25
+  },
+  {
+   "action": "screenshot",
+   "name": "pond_island_after"
+  }
+ ]
+}

@@ -4086,7 +4086,8 @@
    "surfaces": {
     "maps": [
      "inn",
-     "witch_hollow"
+     "witch_hollow",
+     "witch_hut"
     ],
     "fixtures": [
      "near_riverfarm"

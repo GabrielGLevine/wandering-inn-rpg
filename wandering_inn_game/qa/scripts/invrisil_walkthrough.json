@@ -516,6 +516,25 @@
    "name": "01d_alley_mouth"
   },
   {
+   "_comment": "r4 (#410 ruled): alley door moved to the drawn mouth at (26,2); approach up the east side and bump-face it",
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    25,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
    "action": "press",
    "name": "interact"
   },
@@ -1043,8 +1062,9 @@
    "path": "player_cell",
    "equals": [
     25,
-    8
-   ]
+    2
+   ],
+   "_comment": "r4: symmetric return drop beside the mouth"
   },
   {
    "_comment": "== SHOT 06: the facade band framed. Up 6 to (25,2) [the northmost walkable row], left 11 to mid-street (14,2) -- the camera centers the player, putting the fix wave's assembled facade (glass line y=1, plaster y=0/-1, cornice y=-2, pilasters, punched doors) directly above center-frame. Day phase: the facade is a materials read, not a light read. ==",
@@ -1172,9 +1192,10 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    27,
+    25,
     2
-   ]
+   ],
+   "_comment": "r4: (26,2) is the alley door, (27,2) blocked behind it — the pace stops at the mouth"
   },
   {
    "action": "move",
@@ -1288,22 +1309,17 @@
    "equals": "night"
   },
   {
-   "_comment": "== SHOT 07: the alleys' lantern pools at night. The grind ends at (27,2). Left 2 to (25,2), down 6 to (25,8), bump RIGHT at the door (26,8), interact -> alleys (1,7) -- still sneaking, so the re-armed footpads_a zone stays quiet. Right 2 + up 1 to (3,6), directly under the (3,5) sconce's pool. REVIEW ROUND 2: this leg used to descend column 27 -- i.e. BEHIND #9's new east wall -- and approach the door from the east, which is how the wall shipped as a free-standing screen. [27,3] seals the lane's north end, so the approach is the same column-25 one BEAT 4 already uses. ==",
+   "_comment": "== SHOT 07 (r4): night re-entry via the mouth door at (26,2). Clamp-normalize first: right-26 pins against the door column from anywhere on row 2, so the approach is position-independent regardless of where the phase-grind ended.",
    "action": "move",
-   "direction": "left",
-   "steps": 2
-  },
-  {
-   "action": "move",
-   "direction": "down",
-   "steps": 6
+   "direction": "right",
+   "steps": 26
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
     25,
-    8
+    2
    ]
   },
   {

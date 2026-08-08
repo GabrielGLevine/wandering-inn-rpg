@@ -193,14 +193,6 @@
   [
    7,
    10
-  ],
-  [
-   1,
-   3
-  ],
-  [
-   2,
-   3
   ]
  ],
  "floor_layers": [
@@ -379,7 +371,7 @@
   },
   {
    "id": "witch_cottage_prop",
-   "kind": "prop",
+   "kind": "door",
    "cell": [
     3,
     7
@@ -387,8 +379,6 @@
    "display_name": "The Witch's Cottage",
    "sprite": "witch_cottage",
    "observe": "A mossy, sagging roof, a crooked chimney, and one window that's always lit no matter the hour.",
-   "on_interact_accomplishment": "observed_witch_cottage",
-   "toast": "The door's shut. Ask her out here instead.",
    "light": {
     "color": [
      1.0,
@@ -398,7 +388,13 @@
     "energy": 0.7,
     "radius": 28,
     "flicker": true
-   }
+   },
+   "to_map": "witch_hut",
+   "to_cell": [
+    4,
+    6
+   ],
+   "on_enter_accomplishment": "observed_witch_hut"
   },
   {
    "id": "hollow_glow_1",
@@ -723,29 +719,6 @@
     "toast": "You work the knot loose one bramble at a time, careful of the thorns. Snagged in the weave: a coin, tarnished green from the damp.",
     "gold": 1
    }
-  },
-  {
-   "_comment": "A separate door, so witch_cottage_prop [3,7] and witch_cottage_reachability.json stay untouched. [1,7]'s only free cardinal neighbour is [1,8]. sprite `door`, NOT witch_cottage: that art is 5x5 cells and would redraw the cottage two cells away. No `light`: the cottage prop is this map's only one. Tint = sunlit timber: hollow-green vanished against the treeline.",
-   "id": "witch_hut_door",
-   "kind": "door",
-   "cell": [
-    1,
-    4
-   ],
-   "display_name": "The Old Hut",
-   "sprite": "codex_hut",
-   "tint": [
-    1.18,
-    1.02,
-    0.78
-   ],
-   "observe": "A second house at the hollow's west edge, smaller than the cottage, half its roof fallen in. The door stands open on the dark, and shallow marks cross the lintel in a line worn nearly smooth.",
-   "to_map": "witch_hut",
-   "to_cell": [
-    4,
-    6
-   ],
-   "on_enter_accomplishment": "observed_witch_hut"
   },
   {
    "id": "thicket_line_den",

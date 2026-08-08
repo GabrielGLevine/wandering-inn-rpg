@@ -20,7 +20,7 @@
   { "action": "assert_state", "path": "player_cell", "equals": [3, 11] },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "riverfarm_field_jobs", "count": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You take a scrap off its hook and spend the morning behind it. Ditching, mostly. The village pays coin because coin is the thing it has least of, and it pays on the day." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You take a scrap off its hook and spend the morning behind it. Ditching, mostly. The pay is small coin, counted out the same day." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "assert_state", "path": "gold", "equals": 62 },
   { "action": "screenshot", "name": "00_riverfarm_field_board" },

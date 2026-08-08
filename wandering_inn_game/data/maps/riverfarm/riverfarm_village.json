@@ -82,22 +82,6 @@
   ],
   [
    10,
-   6
-  ],
-  [
-   11,
-   6
-  ],
-  [
-   12,
-   6
-  ],
-  [
-   13,
-   6
-  ],
-  [
-   10,
    7
   ],
   [
@@ -113,10 +97,6 @@
    7
   ],
   [
-   3,
-   6
-  ],
-  [
    4,
    6
   ],
@@ -129,10 +109,6 @@
    6
   ],
   [
-   3,
-   7
-  ],
-  [
    4,
    7
   ],
@@ -143,10 +119,6 @@
   [
    6,
    7
-  ],
-  [
-   16,
-   8
   ],
   [
    17,
@@ -159,10 +131,6 @@
   [
    19,
    8
-  ],
-  [
-   16,
-   9
   ],
   [
    17,
@@ -427,6 +395,10 @@
   [
    17,
    11
+  ],
+  [
+   9,
+   7
   ]
  ],
  "_comment_cover_skip": "cover_skip mirrors blocked here because every blocked cell has building, fence, earthwork, or river art; sim blocking is unchanged.",
@@ -489,22 +461,6 @@
   ],
   [
    10,
-   6
-  ],
-  [
-   11,
-   6
-  ],
-  [
-   12,
-   6
-  ],
-  [
-   13,
-   6
-  ],
-  [
-   10,
    7
   ],
   [
@@ -520,10 +476,6 @@
    7
   ],
   [
-   3,
-   6
-  ],
-  [
    4,
    6
   ],
@@ -536,10 +488,6 @@
    6
   ],
   [
-   3,
-   7
-  ],
-  [
    4,
    7
   ],
@@ -550,10 +498,6 @@
   [
    6,
    7
-  ],
-  [
-   16,
-   8
   ],
   [
    17,
@@ -566,10 +510,6 @@
   [
    19,
    8
-  ],
-  [
-   16,
-   9
   ],
   [
    17,
@@ -1628,7 +1568,7 @@
    "once_per_waking": true,
    "once_per_waking_toast": "Every hook is bare. The board is empty till tomorrow.",
    "gold": 2,
-   "toast": "You take a scrap off its hook and spend the morning behind it. Ditching, mostly. The village pays coin because coin is the thing it has least of, and it pays on the day.",
+   "toast": "You take a scrap off its hook and spend the morning behind it. Ditching, mostly. The pay is small coin, counted out the same day.",
    "variants": [
     {
      "when": {

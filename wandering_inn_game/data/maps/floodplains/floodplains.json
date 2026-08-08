@@ -60,7 +60,23 @@
  ],
  "unsteady_toast": "Scree slides out from under your boot and rattles away down the slope. Getting up that needs surer feet than yours.",
  "_comment": "`goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
- "blocked": [[20, 12], [29, 24], [33, 24], [34, 23], 
+ "blocked": [
+  [
+   20,
+   12
+  ],
+  [
+   29,
+   24
+  ],
+  [
+   33,
+   24
+  ],
+  [
+   34,
+   23
+  ],
   [
    4,
    2
@@ -789,7 +805,7 @@
      21
     ],
     "to": [
-     11,
+     12,
      21
     ],
     "cap": [
@@ -1511,7 +1527,9 @@
    "sprite": "boulder",
    "contains": [
     "traveler_charm"
-   ]
+   ],
+   "observe": "Old dressed stones, half-sunk, older than the inn behind them. In a chest-high niche someone has left a charm on a leather cord, beside two worn coins and a dried sprig.",
+   "open_toast": "You lift the charm from the niche. The coins and the sprig stay where travelers set them."
   },
   {
    "id": "hilltop_cairn",

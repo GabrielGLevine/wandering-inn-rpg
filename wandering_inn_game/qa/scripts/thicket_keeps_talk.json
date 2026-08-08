@@ -172,18 +172,19 @@
    ]
   },
   {
-   "_comment": "r3: hut door now (1,4); walk (1,8)->(1,5), bump-face, enter",
+   "_comment": "r4: cottage IS the door at (3,7); from (1,8) go east to (3,8)",
    "action": "move",
-   "direction": "up",
-   "steps": 3
+   "direction": "right",
+   "steps": 2
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    1,
-    5
-   ]
+    3,
+    8
+   ],
+   "_comment": "r4: exit to_cell (3,8)"
   },
   {
    "action": "move",
@@ -318,10 +319,10 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    1,
-    5
+    3,
+    8
    ],
-   "_comment": "r3: exit to_cell now (1,5)"
+   "_comment": "r4: exit to_cell (3,8)"
   },
   {
    "_comment": "== REPORT == same waking, pool spent, so one interact opens riverfarm_hunter directly.",

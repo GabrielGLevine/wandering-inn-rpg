@@ -59,15 +59,15 @@
    ]
   },
   {
+   "_comment": "r4: village portal auto-fires at spawn; player stands at hollow (1,8). East to the cottage door (3,7), bump-face, enter.",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
    "action": "move",
    "direction": "up",
    "steps": 1
-  },
-  {
-   "_comment": "r3: hut door now (1,4); walk (1,8)->(1,5), bump-face, enter",
-   "action": "move",
-   "direction": "up",
-   "steps": 3
   },
   {
    "action": "press",
@@ -411,10 +411,10 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    1,
-    5
+    3,
+    8
    ],
-   "_comment": "r3: exit to_cell now (1,5)"
+   "_comment": "r4: exit to_cell (3,8)"
   },
   {
    "_comment": "== REPORT == the hunter has not been talked to in this run, so first interact = talk_pool line, second opens riverfarm_hunter.",

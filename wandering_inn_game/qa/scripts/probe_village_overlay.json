@@ -1,0 +1,49 @@
+{
+ "fixture_save": "invrisil_hat_start",
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    11,
+    10
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 20
+  },
+  {
+   "action": "toggle_overlay"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "village_overlay"
+  },
+  {
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    17,
+    11
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 20
+  },
+  {
+   "action": "screenshot",
+   "name": "cottage_b_overlay"
+  }
+ ]
+}
