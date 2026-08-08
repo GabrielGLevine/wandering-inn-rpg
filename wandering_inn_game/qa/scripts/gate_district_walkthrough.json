@@ -455,7 +455,7 @@
    "payload_contains": {
     "map": "street",
     "floor_cells": 640,
-    "blocked_cells": 112
+    "blocked_cells": 119
    }
   },
   {

@@ -39,7 +39,7 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "riverfarm_longhouse", "cell": [5, 5] }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "riverfarm_longhouse" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": { "map": "riverfarm_longhouse", "floor_cells": 70, "blocked_cells": 33 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": { "map": "riverfarm_longhouse", "floor_cells": 70, "blocked_cells": 36 }, "timeout_sec": 5 },
   { "_comment": "3 entities (longhouse_exit, riverfarm_guest_cot, riverfarm_headman_ledger) + the PC's own sprite = 4.", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 4, "fallbacks": 0 }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "observed_riverfarm_longhouse" }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "riverfarm_longhouse" },

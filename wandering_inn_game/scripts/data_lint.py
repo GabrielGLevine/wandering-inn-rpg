@@ -747,6 +747,29 @@ def check_gate_shapes(maps: dict, errors: list) -> None:
 			_walk_gates(entity, map_id, entity.get("id", "<no id>"), errors)
 
 
+SOLID_DECOR_SPRITES = ("crate", "barrel")
+
+
+def check_solid_decor_blocks(maps: dict, errors: list) -> None:
+	"""User playtest ruling 2026-08-08: solid props are solid. Decor is
+	non-blocking BY CONTRACT (world.gd _build_decor), so a crate or barrel
+	placed as decor is walk-through unless its cell is in the map's
+	`blocked` list -- and a player clips through what plainly reads as a
+	solid object. A decor cell shared with an entity is exempt (the entity
+	owns the cell's physics, e.g. street's peddler crate)."""
+	for map_id, m in sorted(maps.items()):
+		blocked = {tuple(c) for c in m.get("blocked", [])}
+		ent_cells = {tuple(e.get("cell", [])) for e in m.get("entities", []) if e.get("cell")}
+		for d in m.get("decor", []) or []:
+			spr = str(d.get("sprite", ""))
+			if not any(s in spr for s in SOLID_DECOR_SPRITES):
+				continue
+			c = tuple(d.get("cell", []))
+			if c and c not in blocked and c not in ent_cells:
+				errors.append(f"maps/{map_id}: solid decor '{spr}' at {list(c)} is walk-through -- "
+					"add the cell to `blocked` (solid props are solid; user ruling 2026-08-08)")
+
+
 def check_companion_toasts(maps: dict, errors: list) -> None:
 	"""GH#397 r2: every companion_source must carry its OWN taken_toast.
 
@@ -1413,6 +1436,7 @@ def main() -> int:
 	check_talk_banks(maps, errors)
 	check_gate_shapes(maps, errors)
 	check_companion_toasts(maps, errors)
+	check_solid_decor_blocks(maps, errors)
 	check_moods(parsed, maps, errors)
 	advisories: list = []
 	skill_gate_advisories: list = []

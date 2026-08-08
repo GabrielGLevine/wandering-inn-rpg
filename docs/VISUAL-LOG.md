@@ -4160,3 +4160,16 @@ a shade variant never reads as a separate thing, distinct silhouettes do.
    floodplains 4 (field/pond context — worst), street 10 (north wall
    line — eye-test), den_shop/forge_hall 2 each; mill/longhouse/alleys
    read plausibly staged. Audit placement context, not the sprite.
+
+## 2026-08-08 — user playtest round 2: solidity + prop variety
+1. **FIXED same-day: solid decor now blocks.** Decor is non-blocking by
+   engine contract; crate/barrel decor on floodplains (4), street (7),
+   longhouse (3) was walk-through. Cells added to `blocked`;
+   check_solid_decor_blocks data_lint arm added (prove-it-can-fail
+   verified) so the class cannot recur. Street (1,5) exempt — shares
+   the cell with the peddler entity, which already blocks. Three
+   blocked_cells count pins re-derived; --touching sweep 108/108 green.
+2. **OPEN (art): crate/barrel overuse** — floodplains, Liscor, goblin-
+   ambush arena all lean on the same two sprites. Source prop variety
+   from owned packs first (catalog→index→assembly-guide workflow),
+   PixelLab fallback (subscription full). Filed as an issue.
