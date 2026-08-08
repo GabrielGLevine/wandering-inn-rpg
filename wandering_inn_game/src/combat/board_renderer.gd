@@ -91,7 +91,13 @@ const SPARKS_TTL := 0.7  # frees the one-shot GPUParticles2D safely past its 0.4
 ## `biome` tag). Pool order matters only in that it's stable input to
 ## `_blocked_prop_index` — do not reorder without re-screenshotting.
 const BLOCKED_PROPS_BY_BIOME := {
-	"street": ["crate", "barrel"],
+	## #408: kept in sync with data/biomes.json street.blocked_props, which
+	## OVERRIDES this row (`_arena_blocked_pool` prefers the biome file and
+	## only falls back here). Both were ["crate", "barrel"], which is why
+	## every street-biome arena put a crate or a barrel on all four of its
+	## blocked cells. Divergence here is invisible in play, so the two move
+	## together.
+	"street": ["rubble_pile", "firewood_stack", "crate", "barrel"],
 	"cave": ["boulder", "mushroom_purple_s"],
 	## witch_hollow: the exploration map's bent-tree-ring identity must
 	## survive into the briar fights. `hollow_bent_tree` is the map's own

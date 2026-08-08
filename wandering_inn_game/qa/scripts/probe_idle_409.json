@@ -1,0 +1,66 @@
+{
+ "fixture_save": "invrisil_hat_start",
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    21,
+    9
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "boulevard_a"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 50
+  },
+  {
+   "action": "screenshot",
+   "name": "boulevard_b"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 50
+  },
+  {
+   "action": "screenshot",
+   "name": "boulevard_c"
+  },
+  {
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "alleys_a"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 50
+  },
+  {
+   "action": "screenshot",
+   "name": "alleys_b"
+  }
+ ]
+}

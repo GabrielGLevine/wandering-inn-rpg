@@ -117,18 +117,20 @@
    ],
    "decor": [
     {
-     "sprite": "crate",
+     "sprite": "rubble_pile",
      "cell": [
       -1,
       3
-     ]
+     ],
+     "_comment": "#408 prop variety: was `crate`. Arena dressing sits OUTSIDE the 12x8 grid, so this is [t]"
     },
     {
-     "sprite": "barrel",
+     "sprite": "battle_debris",
      "cell": [
       12,
       4
-     ]
+     ],
+     "_comment": "#408 prop variety: was `barrel`. A splintered shield and a snapped spear put the fight [t]"
     },
     {
      "sprite": "tree_big",
@@ -637,18 +639,20 @@
    ],
    "decor": [
     {
-     "sprite": "crate",
+     "sprite": "rubble_pile",
      "cell": [
       -1,
       3
-     ]
+     ],
+     "_comment": "#408 prop variety: was `crate`. Arena dressing sits OUTSIDE the 12x8 grid, so this is [t]"
     },
     {
-     "sprite": "barrel",
+     "sprite": "battle_debris",
      "cell": [
       12,
       4
-     ]
+     ],
+     "_comment": "#408 prop variety: was `barrel`. A splintered shield and a snapped spear put the fight [t]"
     },
     {
      "sprite": "tree_big",
