@@ -1450,9 +1450,10 @@ LANDMARK_DISPOSITIONS = {
                "'compact enough to carry and valuable enough to explain the "
                "locked room' is the affordance formula twice over (amendment "
                "4) plus an interpretive closer that tells the player what to "
-               "conclude. RESTAGE = keep the beat (the seal parts, the bale "
-               "is worth the room) and lose the formula; re-authored on the "
-               "round-2 train's mop-up commit.",
+               "conclude. Ruled NOT-A-LANDMARK so ordinary doctrine applies: "
+               "the round-2 mop-up kept the beat (the seal parts, the goods "
+               "are plainly worth a locked room) and dropped the formula by "
+               "showing the silk, brass and spice instead of asserting value.",
     },
     # The collapsed-gallery strongbox is ONE beat on THREE route-entities
     # (#398 P3: pick / strength / burn are three ways into the same cache).

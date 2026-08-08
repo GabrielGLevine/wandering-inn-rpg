@@ -1389,7 +1389,7 @@
    "observe": "Two tallies pinned to the bale, the same goods priced twice. The second carries no buyer's name — a hat and a feather inked in the corner. Under it a delivery line: the plain door at the alley's end.",
    "contains": ["sealed_factor_bale"],
    "on_open_accomplishment": "claimed_counting_room_goods",
-   "open_toast": "The seal parts. The bale is compact enough to carry and valuable enough to explain the locked room."
+   "open_toast": "The seal parts on a bale of dyed silk, brass findings and sealed spice packets, every tie under the same counting-house stamp."
   }
  ]
 }

@@ -498,7 +498,7 @@
    "sprite": "steam_vent",
    "observe": "A bronze floor grate breathing white steam, the flags around it carrying a beat up through your boots.",
    "on_interact_accomplishment": "heard_the_machine_below",
-   "toast": "Warm, damp air. A rhythm underneath it, too even to be weather."
+   "toast": "Warm damp air, and a beat coming up through the flags under your boots."
   },
   {
    "id": "grand_lift_forge",
