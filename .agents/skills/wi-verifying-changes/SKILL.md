@@ -242,3 +242,48 @@ interact effects via the `accomplishment` key, never
   must be judged on-screen, not per-row: the evidence bar is "who
   vanishes while the player watches", never "is each row's gate
   locally sensible".
+
+## Two failure-marker families — grep BOTH (2026-08-07, #397 r2)
+GDScript suites do NOT share one failure marker, and picking the wrong
+grep produces a confident false PASS:
+- `assert`-based suites (`test_sim_core` class) print
+  `SCRIPT ERROR: Assertion failed: ...` and **still print `^PASS` with
+  rc=0**. Grepping only `ERROR: FAIL` reports them green while an
+  assertion is broken (caught by a reviewer, not by the harness).
+- Hand-rolled suites print `ERROR: FAIL` and set rc.
+The bar for any unit claim: `grep -E "SCRIPT ERROR|Parse Error|ERROR: FAIL"`
+is 0 **AND** a `^PASS` line is present. rc alone lies in both directions.
+
+## `QA_RESULT: PASS` inside a script the SWEEP failed = look at the environment
+The sweep applies its own grep discipline over each script's log, so a
+script can pass its own assertions and still be counted FAILED on
+`ERROR: Error loading resource` lines. When a mass failure (126/230)
+includes `load_gate`/`title_flow`/`playtest_boot` AND the individual
+runs pass, it is never the content:
+- **the import cache is the first suspect.** A merge that delivers new
+  image assets needs `godot --headless --path wandering_inn_game --import`
+  in the MAIN tree before the re-gate; individual runs survive on
+  fallback_art, the sweep does not. (#390's assets reached main via a
+  train merge and the local `.godot` never imported them.)
+- Read a failing script's own `ci_sweep_logs/<name>.log` BEFORE
+  theorising. The `QA_RESULT` line and the `result.json` in that log
+  discriminate content failure from environment failure in one read.
+- Corollary already documented and re-confirmed: do not edit the tree
+  while a sweep runs — but if the failure set is IDENTICAL across two
+  runs, concurrency is disproven and the cause is real.
+
+## Gates run AFTER the edit, not once per session (2026-08-07, cost a real violation)
+`verify-untouched` was run clean before a controller mop-up and never
+after it; the mop-up edited a frozen holdout string and the gate built
+for exactly that never saw the change. A whole-branch reviewer found it.
+Any gate whose job is "X did not move" must be re-run after EVERY edit
+wave, including the controller's own — controller edits are the least
+reviewed code in the pipeline and the most likely to skip their gate.
+
+## Never JSON-reserialize a shipped data file
+`json.load` + `json.dump` on a map file reformatted 1,952 lines to apply
+a one-word fix; the revert of that reformat then destroyed another
+agent's uncommitted work in the same file (the shared-file wipe class).
+Edit shipped JSON with targeted string replacement, assert the match
+count is exactly 1, and check `git diff --stat` shows the line count you
+intended before going further.

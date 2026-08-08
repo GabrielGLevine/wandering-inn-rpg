@@ -273,3 +273,36 @@ suite (test_sim_core) was the one not picked; and exact-array pins on
 derived surfaces (active_leads) live in SIM tests too, not only QA
 scripts — grep tests/ for the surface (active_leads, lead_lines) before
 landing rows that grow it.
+
+## `[ci-full]` belongs on the FINAL head, not the head you prepared (2026-08-07)
+Amending `[ci-full]`, then pushing one more commit (a CHOICE-LOG fold),
+left a head without the flag: `gh pr checks` reported "no checks
+reported on the branch", the sweep/parity contexts were never created,
+and the PR was unmergeable against the six required checks. Re-amend
+and force-push the ACTUAL final head. Discipline: add `[ci-full]` as
+the LAST action before opening the PR, and if any commit lands after
+it, re-check `git log -1 --pretty=%s | grep -c ci-full` before waiting
+on checks.
+
+## Verify a squash merge by TREE, never by `git cherry` (2026-08-07)
+After a squash, `git cherry main <lane>` reports every lane commit as
+unmerged (patch-ids differ by construction) — on a 12-lane train that
+reads as 240 stranded commits and invites a panic re-merge. The real
+check is one line:
+`[ "$(git rev-parse <train-tip>^{tree})" = "$(git rev-parse HEAD^{tree})" ]`
+Identical trees prove the squash landed everything. Keep `git cherry`
+for NON-squash lane tips (its documented use: catching a lane whose
+final review-fix commit never made the merge).
+
+## Blind-read instruments: ONE shuffled packet, roles joined afterwards
+When a pass must be judged by readers, do not hand them separate
+"revised" and "control" files — a Phase-5 read leaked the control's
+identity through a generated header and its reasoning had to be
+discounted. Ship one shuffled packet with identical formatting and no
+set boundary, keep the key controller-side, and join scores to roles
+only after the sheets return. The payoff is decisive: when both #397
+round-2 readers named a surviving rhetorical engine (which reads as a
+FAIL), the key showed its core specimens were 15/15 CONTROL rows and
+the hostile reader's own counter-case was 9/9 REVISED. A separated
+design cannot produce that discrimination, and the criterion would have
+been adjudicated on vibes instead of evidence.
