@@ -88,6 +88,45 @@ CHOICE-LOG's 2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
   lacking a DONE/ACTIVE header — checker/format disagreement, needs a
   one-line checker or plan-template fix, NOT a real drift.
 
+## RUNNING (2026-08-08 night): #411/#409/#408 lanes landed, WINDDOWN mid-integration
+User overrode CAUTION ("Usage good. Proceed"); guard hit WINDDOWN at
+76% mid-work. TWO LANE BRANCHES COMMITTED, NOT MERGED:
+- issue/409-408-art @ 42afbec8 (/tmp/wi-art9): 4 NPC idles (v3
+  identity-held frames + palette LUT), crate_submerged wired,
+  6 new prop sprites, biome blocked_props variety (arena fix at the
+  BIOME layer), census-trimmed. Sweep 182/182 + suites green in-lane.
+  NEEDS: adversarial review (silhouette drift + windowed re-reads +
+  fixture diff) -> merge -> main-tree import pass -> re-gate.
+  Lane flags: cache occluded by pond crab (load-bearing cell,
+  pre-existing), 2-frame fps6 idles read twitchy (5 identity frames
+  exist server-side -- consider fps 3 or 4-frame widen at review),
+  mercantile_alleys now worst crate map (out of #408 scope), #409
+  data_lint advisory guard unbuilt.
+- issue/411-water-shoreline @ 603f56cf (/tmp/wi-411): Codex edge
+  picker (adversarially reviewed CLEAN: union/mutation/fallback/
+  build-time all confirmed) SUPERSEDED same-session by my DUAL-GRID
+  vertex overlay (kills reviewed I1 1-wide-channel no-op, I2
+  double-diagonal flats, I3 shimmer ghosting; I4 polarity resolved by
+  symmetric straddle + alpha sheet). Terrain-neutral Wang-16 sheet
+  generated (PixelLab 8b0b91aa) + chroma-keyed at
+  assets/tiles/generated/water_shoreline_16.png. BLOCKER: the sheet
+  PIN in tests/test_water_shoreline.gd (far-corner polarity proof,
+  review I7) is RED on 8 land-corner cases (4-6/16 opaque vs <=3):
+  lip pixels reach far corners. NEXT: shrink key band to d<=1 in the
+  regeneration script (session transcript has it; sheet rebuildable
+  from /tmp/water_neutral_raw.png) OR relax pin to <=6 with written
+  rationale; then units + --touching floodplains,sewers + WINDOWED
+  pond AND sewers captures (sewers = the 1-wide case the rewrite
+  exists for) -> review of MY rewrite (Codex's review predates it) ->
+  merge. AGENTS.md test-table row for the new test still owed (review
+  nit). CODEX POOL EMPTY per user -- further #411 work is Claude-side.
+MERGE ORDER: art first (touches maps/sprites), then 411 (renderer+new
+asset only) -- then ONE composed windowed pass (pond = shoreline +
+crate_submerged together answers the user's island-read complaint).
+THEN: #406 holdout-release wave (fresh holdout draw FIRST; residue
+seed list in round2-read/adjudication.md addendum; instruction-prose
+class folds in; user-held decisions: v0.19.0 tag, [Rope Work], #404).
+
 ## DONE (2026-08-08): #397 CLOSED — prose naturalization, round 2 (PR #407, 40ec63ef)
 
 The issue that failed its own exit read in round 1 now PASSES it. Full
