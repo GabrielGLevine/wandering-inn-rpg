@@ -104,3 +104,40 @@ before that pass begins. The holdout also still contains the round-1 tells the
 pass removed elsewhere — including one string carrying the banned "Probably."
 coda — because it was frozen throughout. Releasing the holdout for
 re-authorship is now unblocked and is the obvious next slice of prose work.
+
+## Addendum — Fable verification of leg 3 (2026-08-07, second controller)
+
+The "ten citations, ten control rows" line above audits only the readers'
+HEADLINE specimens. A full role-map of every row reader 2 cites:
+
+| citation group | control | revised | revised rows |
+|---|--:|--:|---|
+| (a) house simile | 9 | 0 | — |
+| "most naked" engine instances | 6 | 0 | — |
+| (b) deferral stinger ("yet") | 10 | 3 | 22, 170, 212 |
+| (c) "Nothing there." micro-beat | 2 | 4 | 12, 71, 94, 171 |
+| (d) paired-contrast punch | 4 | 1 | 138 |
+| (e) crafting-hint frame | 6 | 1 | 212 |
+| **counter-case (ANTI-engine exemplars)** | **0** | **9** | 87, 120, 183, 203, 23, 104, 194, 207, 218 |
+
+Three consequences:
+1. The engine's CORE (the simile grammar + every "naked" instance) is
+   15/15 control — the headline ruling stands, on stronger evidence.
+2. The strongest datum in the whole read went unrecorded above: reader 2's
+   counter-case — the rows it explicitly could NOT reconcile with the
+   engine, "its opposite" — is **9 of 9 revised**. The hostile reader,
+   blind to roles, sorted the pass's output into the anti-engine pile.
+3. There IS a small named residue on the revised side: 8 rows across four
+   secondary patterns. The "yet"-stingers and crafting-hint rows are
+   partly the FUNCTIONAL register doing its ruled job (refusals must cue
+   the unlock); the "Nothing there." family is a real pre-existing house
+   template round 2 only partially drained. These 8 rows are the seed
+   work-list for the follow-up pass — recorded here so they are not
+   rediscovered from scratch.
+
+Fable ruling: leg 3 CONFIRMED MET. Recommendation refined: do NOT run
+"ending-shape variety" as its own slice. Fold it, the 8 residue rows, and
+the "Nothing there." family into the HOLDOUT-RELEASE pass — the holdout
+now carries essentially all of the corpus's remaining engine, must be
+re-authored regardless, and the control is spent, so that pass needs a
+fresh holdout drawn first anyway. One pass, one fresh control, one read.
