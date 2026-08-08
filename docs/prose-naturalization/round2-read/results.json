@@ -1,0 +1,93 @@
+{
+ "_note": "GH#397 round-2 exit blind read. Two context-free readers scored ONE shuffled 234-row packet; neither could see the revised/control split. Scores joined to the key AFTER the fact.",
+ "readers": [
+  {
+   "framing": "Context-free blind reader, single cold pass top-to-bottom for a gut number, then a second pass assigning tell-families a",
+   "midpoint_all_reported": 51,
+   "ending_shape_histogram_all": "fact 97 (41.5%) | verdict 31 (13.2%) | motion 26 (11.1%) | epigram 25 (10.7%) | unresolved 22 (9.4%) | instruction 15 (6.4%) | joke 11 (4.7%) | silence 4 (1.7%) | reversal 3 (1.3%) | interruption 0 (0.0%). CRITERION 9 FAILS: `fact` is 41.5%, over the ~35% ceiling. But read the failure correctly \u2014 it is not that the corpus is flat. The `fact` bucket is genuinely the natural terminus for object desc",
+   "structural_verdict": "YES \u2014 there is one engine, and it runs through roughly a third of the corpus. I will name it: THE WITHHELD-AGENT CLOSER. Two or three sentences of clean, concrete, well-observed physical detail; then a final short sentence that (a) names an absent or invisible intelligence \u2014 \"whatever\", \"someone\", \"somebody\", \"nobody\", \"whoever\" \u2014 and (b) tells you what the preceding detail means, usually by negation, at a higher level of abstraction than anything actually visible. Setup is observed; payoff is asserted. The move is the same whether the subject is a pond, a bin of failed blades, or a street vendor's brass block.\n\nThree rows:\n- Row 34: \"You pay out the line into the dark water. Nothing takes it, and nothing was ever going to \u2014 whatever keeps this pool knows the difference between an offer and a hook.\"\n- Row 185: \"Nine blades in the bin, all from one hand, all failed on the same measure. Somebody up here is doing careful work and failing it the same way every time.\"\n- Row 206: \"A folding table rented by the day, a cloth over it, and a brass block sitting on the cloth with two letters cut into the face. He has not covered it, because covering a thing is how a street learns you have one.\"\n\nThe same engine with the agent removed and only the negation left is rows 47 (\"That's not an accident\"), 98 (\"It was not chosen for comfort\"), 130 (\"The cups are chipped. The ears are not\"), 233 (\"That is not the same as harmless\") \u2014 four rows, four different objects, one sentence.\n\nNow the question you asked me to answer explicitly: DOES THE CORPUS READ UNIFORMLY PLAIN? No. It does not. That failure mode is not present here and I want to be unambiguous about it, because the numbers could be misread that way. There is a real plain register \u2014 76 rows at or below 35, and the best of them (218, 120, 87, 117, 183, 194) are not merely inoffensive, they are doing the harder thing of showing evidence and declining to interpret it. There is genuine variation in sentence length, in whether the string addresses the player, in whether anything is inferred at all. Row 38 is clumsy. Row 59 is a fragment that does not quite work. Row 203 shrugs. That is texture, and a flat monoculture would not have it.\n\nThe failure is the opposite one, and it is narrower and more fixable than flatness: the corpus has two registers, plain and closed, and the closed register is too large to read as exceptional. 43 rows at or above 76 means a player meets a full-pressure aphorism roughly every fifth object they examine. At that density the closers stop functioning as peaks and become the house style \u2014 which is precisely the rubric's \"reviewers naming preserved high-style lines as intentional peaks rather than the default register\" test, and it is the test this sample fails. I independently marked only 7 of those 43 as earning it. The other 36 are the same trick at lower voltage: a shelf, a door, a rope, a counter, each granted its own small thesis. Cut or flatten twenty of them and the seven that remain would land like the discoveries they are meant to be. Left as they are, row 39's genuine revelation sounds like row 154's drink counter.\n\nSecondary structural note: the ending-shape histogram fails criterion 9 on `fact` at 41.5%, but that is the benign failure. The diagnostic one is that verdict+epigram+reversal = 25.2% and are all the same shape wearing three labels, while `interruption` is 0 and `silence` is 4. Nothing in 234 strings is ever cut off, left genuinely hanging, or allowed to be boring on purpose. Every string finishes its sentence.",
+   "revised": {
+    "n": 120,
+    "mean": 39.4,
+    "median": 34.0,
+    "share_ge76": 5.0,
+    "share_le35": 51.7,
+    "button_pct": 9.2,
+    "no_family_pct": 71.7,
+    "closer_shapes_pct": 8.3,
+    "top_shapes": {
+     "fact": 72,
+     "motion": 21,
+     "instruction": 10,
+     "verdict": 6
+    }
+   },
+   "control": {
+    "n": 114,
+    "mean": 63.6,
+    "median": 68.0,
+    "share_ge76": 32.5,
+    "share_le35": 12.3,
+    "button_pct": 57.9,
+    "no_family_pct": 20.2,
+    "closer_shapes_pct": 43.0,
+    "top_shapes": {
+     "verdict": 25,
+     "fact": 25,
+     "epigram": 23,
+     "unresolved": 18
+    }
+   },
+   "delta_control_minus_revised": 24.2
+  },
+  {
+   "framing": "Hostile blind reader, context-free. I opened only /tmp/397r2-read/sample.txt and /tmp/397r2-read/rubric.md \u2014 no repo fil",
+   "midpoint_all_reported": 50,
+   "ending_shape_histogram_all": "fact 103 (44.0%) | verdict 25 (10.7%) | motion 24 (10.3%) | unresolved 23 (9.8%) | epigram 23 (9.8%) | instruction 16 (6.8%) | joke 11 (4.7%) | reversal 5 (2.1%) | silence 3 (1.3%) | interruption 1 (0.4%). FAILS criterion 9: \"fact\" is 44.0%, over the ~35% ceiling. But read the failure correctly \u2014 it is not the ornate monoculture the rubric fears. It is the opposite: the plain-observation ending is",
+   "structural_verdict": "YES \u2014 there is one engine, and it runs through roughly a third of the corpus. Name: THE WITHHELD-AGENCY TURN. The move is: lay out plain, checkable physical detail, then close with one short clause that converts that detail into a claim about an intention you cannot see \u2014 an absent person's motive, an unseen creature's disposition, an institution's character, or your own not-yet-competence. The clause is keyed almost every time by one of four words: \"whatever\", \"someone/somebody/nobody\", \"not\", or \"yet\".\n\nThree rows:\n\u2014 Row 1: \"Every so often the water moves wrong, and then it stops, the way a room stops when you walk into it. Whatever keeps this water is not interested in being caught.\"\n\u2014 Row 185: \"Nine blades in the bin, all from one hand, all failed on the same measure. Somebody up here is doing careful work and failing it the same way every time.\"\n\u2014 Row 206: \"...a brass block sitting on the cloth with two letters cut into the face. He has not covered it, because covering a thing is how a street learns you have one.\"\n\nEach is the same machine: evidence, then a verdict about a mind that is not present to be checked. Row 185 is the purest specimen \u2014 the second sentence adds no information the first did not carry; it exists to re-describe the bin at a higher level of abstraction, which the rubric names as the button's tell.\n\nThe engine has five reusable sub-recipes, and I can state each with rows:\n(a) THE HOUSE SIMILE \u2014 \"X the way Y does\" / \"in the way Y is\" / \"in the tone of a man who\": rows 1, 41 (\"identical in the way coins from one mint are identical\"), 107, 116 (\"watching the crowd the way a stranger watches weather\"), 131 (\"the way patient things do\"), 144, 172 (\"in the tone of a man crossing an item off a ledger\"), 205 (\"the way people move when they've done this before\"). Plus its \"like a \u2014\" variant at 131 (\"like a closed argument\") and 209 (\"like a badly kept secret\"). Ten rows, one grammar. This is the single most mechanical fingerprint in the sample.\n(b) THE DEFERRAL STINGER \u2014 a sentence fragment appended to withhold competence: \"Yet.\" (51, 85), \"Not yet.\" (132), \"For now.\" (53), \"yet\" clause-final (22, 79, 92, 125, 150, 153, 170, 212), \"Only after dark.\" (205). Fourteen rows ending on the same promise.\n(c) \"NOTHING THERE.\" + COMPENSATORY MICRO-BEAT \u2014 rows 12, 71, 75, 94, 171, 184. Six rows, one template, six fills. A no-op string is never allowed to simply be a no-op; each buys back its emptiness with a small sensory gift.\n(d) THE PAIRED-CONTRAST PUNCH \u2014 bare parallelism doing button work with no abstract noun: 130 (\"The cups are chipped. The ears are not.\"), 133 (\"Still four silver. Still an insult.\"), 138 (\"Not asleep. Not far from it.\"), 96 (\"Slightly fuller, slightly further from the door.\"), 89 (\"This is not nothing, from me.\").\n(e) THE CRAFTING-HINT FRAME \u2014 \"Someone who knows X could Y\": 26, 110, 152, 229, plus its second person form at 169, 212, 132. Every workstation in the game is introduced by the same sentence with the noun swapped.\n\nNOW THE COUNTER-CASE, which I am obliged to make and which is substantial. The engine does NOT run through the corpus; it runs through part of it. 76 rows (32.5%) score <=35, and 116 rows (49.6%) carry no family flag at all. A large stratum lays out physical evidence and then simply stops, refusing the inference the engine exists to supply: row 87 (bottom row of bottles opened and re-corked crooked, top row's wax unbroken \u2014 and no sentence telling you what that means), row 120 (fire low, ash deep, paper stacks a hand's width off the iron \u2014 the danger is never named), row 183 (slag heaped just under a fresh painted line, brush marks still crisp \u2014 no verdict about whoever painted it), row 203 (labels in a hand that got neater partway along the shelf and then went back to how it was \u2014 the funniest observation in the sample, and it is left entirely unexplained), rows 23, 104, 194, 207, 218. These are not the engine at low power; they are its opposite, and there are enough of them to be a deliberate second register rather than a remainder. I could not reconcile them with the engine and I am not going to pretend I could.\n\nDOES THE CORPUS READ UNIFORMLY PLAIN? No \u2014 explicitly and emphatically no, and this needs saying because it is the failure mode the rubric warns is most likely. There is no flat \"plain fact + physical action\" monoculture here. The distribution is bimodal, with a genuinely plain stratum around 25 and a genuinely ornate stratum around 80 and a thin middle, and the low tail is 2.4x the high tail. Reading top to bottom, the register visibly changes between neighbours: 87 (24) sits beside 89 (78); 134 (18) beside 131 (88); 218 (20) beside 219 (72). That variance is the corpus's best defence and it is real.\n\nThe one place uniformity does bite is the ending-shape histogram: \"fact\" at 44% breaks the 35% ceiling. But that is plainness of ENDING, not of register \u2014 the plain stratum genuinely does end on observation almost every time, and the nine other shapes are crowded into the buttoned minority. So the accurate verdict is not \"uniformly plain\" and not \"uniformly ornate.\" It is: two registers, cleanly separated, with the entire rhetorical apparatus loaded into one of them. If someone disguised a machine here, they did it by writing a second voice rather than by sanding down the first \u2014 and the first voice is still fully legible wherever it appears, most nakedly at rows 144, 34, 107, 206, 172 and 131.",
+   "revised": {
+    "n": 120,
+    "mean": 39.2,
+    "median": 34.0,
+    "share_ge76": 3.3,
+    "share_le35": 51.7,
+    "button_pct": 10.8,
+    "no_family_pct": 61.7,
+    "closer_shapes_pct": 6.7,
+    "top_shapes": {
+     "fact": 75,
+     "motion": 18,
+     "instruction": 11,
+     "unresolved": 4
+    }
+   },
+   "control": {
+    "n": 114,
+    "mean": 61.6,
+    "median": 65.0,
+    "share_ge76": 24.6,
+    "share_le35": 12.3,
+    "button_pct": 61.4,
+    "no_family_pct": 15.8,
+    "closer_shapes_pct": 39.5,
+    "top_shapes": {
+     "fact": 28,
+     "epigram": 22,
+     "verdict": 21,
+     "unresolved": 19
+    }
+   },
+   "delta_control_minus_revised": 22.4
+  }
+ ],
+ "engine_specimens_role": {
+  "1": "control",
+  "34": "control",
+  "47": "control",
+  "98": "control",
+  "130": "control",
+  "185": "control",
+  "206": "control",
+  "233": "control"
+ }
+}

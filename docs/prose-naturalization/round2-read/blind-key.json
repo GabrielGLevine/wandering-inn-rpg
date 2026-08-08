@@ -1,0 +1,1180 @@
+{
+ "_note": "Round-2 blind read key. Readers never see this. `role` is the only thing that distinguishes a revised row from an untouched control row; the sample file itself is a single shuffled list with no set boundary.",
+ "_shuffle_seed": 3970202,
+ "_counts": {
+  "revised": 120,
+  "control": 114
+ },
+ "rows": {
+  "1": {
+   "id": "map:floodplains/floodplains.json:$.entities[4].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "2": {
+   "id": "map:liscor/street.json:$.entities[19].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "3": {
+   "id": "map:pallass/pallass_forge.json:$.entities[6].observe",
+   "role": "revised",
+   "phase5_row": 38
+  },
+  "4": {
+   "id": "map:riverfarm/riverfarm_mill.json:$.entities[5].toast",
+   "role": "revised",
+   "phase5_row": 2
+  },
+  "5": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[17].on_skill_use.toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "6": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[1].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "7": {
+   "id": "map:sewers/deep_tunnels.json:$.entities[3].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "8": {
+   "id": "map:dungeon/dungeon_approach.json:$.unsteady_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "9": {
+   "id": "map:pallass/pallass_market.json:$.entities[0].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "10": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[8].variants[3].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "11": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[13].anchor_toast",
+   "role": "revised",
+   "phase5_row": 70
+  },
+  "12": {
+   "id": "map:pallass/pallass_forge_hall.json:$.interior_flavor[0]",
+   "role": "revised",
+   "phase5_row": 25
+  },
+  "13": {
+   "id": "map:liscor/runners_guild.json:$.entities[5].observe",
+   "role": "revised",
+   "phase5_row": 21
+  },
+  "14": {
+   "id": "map:pallass/pallass_forge.json:$.entities[17].toast",
+   "role": "revised",
+   "phase5_row": 36
+  },
+  "15": {
+   "id": "map:inn/inn.json:$.entities[36].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "16": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[13].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "17": {
+   "id": "map:pallass/pallass_market.json:$.entities[9].toast",
+   "role": "revised",
+   "phase5_row": 118
+  },
+  "18": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[27].once_per_waking_toast",
+   "role": "revised",
+   "phase5_row": 61
+  },
+  "19": {
+   "id": "map:inn/inn.json:$.entities[7].dialogue[0].text",
+   "role": "control",
+   "phase5_row": null
+  },
+  "20": {
+   "id": "map:invrisil/mercantile_alleys.json:$.entities[10].on_skill_use.toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "21": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[2].observe",
+   "role": "revised",
+   "phase5_row": 55
+  },
+  "22": {
+   "id": "map:inn/inn_player_room.json:$.entities[4].locked_toast",
+   "role": "revised",
+   "phase5_row": 106
+  },
+  "23": {
+   "id": "map:pallass/pallass_den_shop.json:$.entities[5].observe",
+   "role": "revised",
+   "phase5_row": 107
+  },
+  "24": {
+   "id": "map:ruin/ruin_surface.json:$.entities[15].observe",
+   "role": "revised",
+   "phase5_row": 48
+  },
+  "25": {
+   "id": "map:liscor/street.json:$.entities[2].friendly_line",
+   "role": "control",
+   "phase5_row": null
+  },
+  "26": {
+   "id": "map:pallass/pallass_market.json:$.entities[17].skill_hint_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "27": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[14].skill_hint_toast",
+   "role": "revised",
+   "phase5_row": 30
+  },
+  "28": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[3].locked_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "29": {
+   "id": "map:floodplains/rags_camp.json:$.entities[4].observe",
+   "role": "revised",
+   "phase5_row": 88
+  },
+  "30": {
+   "id": "map:pallass/pallass_den_shop.json:$.entities[1].friendly_line",
+   "role": "control",
+   "phase5_row": null
+  },
+  "31": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[15].observe",
+   "role": "revised",
+   "phase5_row": 4
+  },
+  "32": {
+   "id": "map:invrisil/invrisil_boulevard.json:$.entities[8].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "33": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[8].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "34": {
+   "id": "map:floodplains/floodplains.json:$.entities[4].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "35": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[30].observe",
+   "role": "revised",
+   "phase5_row": 104
+  },
+  "36": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[4].observe",
+   "role": "revised",
+   "phase5_row": 47
+  },
+  "37": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[12].companion_source.taken_toast",
+   "role": "revised",
+   "phase5_row": 116
+  },
+  "38": {
+   "id": "map:invrisil/adventurers_rest.json:$.entities[10].variants[0].toast",
+   "role": "revised",
+   "phase5_row": 9
+  },
+  "39": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[8].skill_uses.detect_magic.variants[0].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "40": {
+   "id": "map:ruin/ruin_surface.json:$.entities[3].dialogue[0].text",
+   "role": "revised",
+   "phase5_row": 92
+  },
+  "41": {
+   "id": "map:liscor/street.json:$.entities[21].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "42": {
+   "id": "map:floodplains/floodplains.json:$.entities[33].locked_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "43": {
+   "id": "map:inn/inn_upstairs.json:$.entities[5].locked_toast",
+   "role": "revised",
+   "phase5_row": 103
+  },
+  "44": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[5].observe",
+   "role": "revised",
+   "phase5_row": 98
+  },
+  "45": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[16].toast",
+   "role": "revised",
+   "phase5_row": 15
+  },
+  "46": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[21].observe",
+   "role": "revised",
+   "phase5_row": 24
+  },
+  "47": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[17].skill_hint_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "48": {
+   "id": "map:ruin/ruin_surface.json:$.entities[5].variants[0].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "49": {
+   "id": "map:inn/inn.json:$.entities[4].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "50": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[25].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "51": {
+   "id": "map:inn/inn.json:$.entities[23].locked_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "52": {
+   "id": "map:floodplains/floodplains.json:$.entities[22].variants[0].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "53": {
+   "id": "map:dungeon/dungeon_approach.json:$.entities[1].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "54": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[23].observe",
+   "role": "revised",
+   "phase5_row": 62
+  },
+  "55": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[26].observe",
+   "role": "revised",
+   "phase5_row": 37
+  },
+  "56": {
+   "id": "map:pallass/pallass_forge_hall.json:$.entities[0].observe",
+   "role": "revised",
+   "phase5_row": 57
+  },
+  "57": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[29].repair_toast",
+   "role": "revised",
+   "phase5_row": 112
+  },
+  "58": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[12].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "59": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[4].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "60": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[8].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "61": {
+   "id": "map:liscor/street.json:$.entities[13].observe",
+   "role": "revised",
+   "phase5_row": 72
+  },
+  "62": {
+   "id": "map:pallass/pallass_market.json:$.entities[13].once_per_waking_toast",
+   "role": "revised",
+   "phase5_row": 97
+  },
+  "63": {
+   "id": "map:invrisil/brothers_parlor.json:$.entities[4].observe",
+   "role": "revised",
+   "phase5_row": 23
+  },
+  "64": {
+   "id": "map:sewers/sewers.json:$.entities[12].on_skill_use.toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "65": {
+   "id": "map:ruin/ruin_surface.json:$.entities[5].open_toast_variants[0].open_toast",
+   "role": "revised",
+   "phase5_row": 74
+  },
+  "66": {
+   "id": "map:liscor/guild.json:$.entities[2].board_rumors[4].copy",
+   "role": "revised",
+   "phase5_row": 81
+  },
+  "67": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[22].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "68": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[10].observe",
+   "role": "revised",
+   "phase5_row": 1
+  },
+  "69": {
+   "id": "map:pallass/pallass_forge.json:$.entities[11].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "70": {
+   "id": "map:pallass/pallass_forge.json:$.entities[13].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "71": {
+   "id": "map:liscor/guild.json:$.interior_flavor[0]",
+   "role": "revised",
+   "phase5_row": 82
+  },
+  "72": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[22].once_per_waking_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "73": {
+   "id": "map:inn/inn_upstairs.json:$.entities[1].observe",
+   "role": "revised",
+   "phase5_row": 28
+  },
+  "74": {
+   "id": "map:invrisil/mercantile_alleys.json:$.entities[15].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "75": {
+   "id": "map:pallass/pallass_den_shop.json:$.interior_flavor[1]",
+   "role": "control",
+   "phase5_row": null
+  },
+  "76": {
+   "id": "map:ruin/ruin_surface.json:$.entities[11].observe",
+   "role": "revised",
+   "phase5_row": 114
+  },
+  "77": {
+   "id": "map:inn/inn.json:$.entities[11].dialogue[0].text",
+   "role": "control",
+   "phase5_row": null
+  },
+  "78": {
+   "id": "map:floodplains/floodplains.json:$.entities[5].observe",
+   "role": "revised",
+   "phase5_row": 29
+  },
+  "79": {
+   "id": "map:floodplains/floodplains.json:$.entities[25].skill_hint_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "80": {
+   "id": "map:sewers/sewers.json:$.entities[3].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "81": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[10].dialogue[0].text",
+   "role": "revised",
+   "phase5_row": 45
+  },
+  "82": {
+   "id": "map:pallass/pallass_market.json:$.entities[19].observe",
+   "role": "revised",
+   "phase5_row": 99
+  },
+  "83": {
+   "id": "map:sewers/sewers.json:$.entities[9].door_when.open_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "84": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[6].gate_closed_toast",
+   "role": "revised",
+   "phase5_row": 14
+  },
+  "85": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[13].locked_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "86": {
+   "id": "map:liscor/barracks.json:$.entities[2].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "87": {
+   "id": "map:invrisil/brothers_parlor.json:$.entities[9].observe",
+   "role": "revised",
+   "phase5_row": 64
+  },
+  "88": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[16].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "89": {
+   "id": "map:liscor/street.json:$.entities[13].friendly_line",
+   "role": "control",
+   "phase5_row": null
+  },
+  "90": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[29].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "91": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[28].variants[0].toast",
+   "role": "revised",
+   "phase5_row": 113
+  },
+  "92": {
+   "id": "map:garden/garden_sanctuary.json:$.entities[5].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "93": {
+   "id": "map:pallass/pallass_forge.json:$.entities[10].toast",
+   "role": "revised",
+   "phase5_row": 46
+  },
+  "94": {
+   "id": "map:pallass/pallass_forge.json:$.interior_flavor[1]",
+   "role": "revised",
+   "phase5_row": 73
+  },
+  "95": {
+   "id": "map:pallass/pallass_den_shop.json:$.entities[4].toast",
+   "role": "revised",
+   "phase5_row": 75
+  },
+  "96": {
+   "id": "map:invrisil/brothers_parlor.json:$.entities[11].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "97": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[11].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "98": {
+   "id": "map:floodplains/rags_camp.json:$.entities[3].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "99": {
+   "id": "map:pallass/pallass_market.json:$.entities[1].dialogue[0].text",
+   "role": "control",
+   "phase5_row": null
+  },
+  "100": {
+   "id": "map:pallass/pallass_forge.json:$.entities[18].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "101": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[15].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "102": {
+   "id": "map:pallass/pallass_den_shop.json:$.entities[0].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "103": {
+   "id": "map:pallass/pallass_market.json:$.entities[6].observe",
+   "role": "revised",
+   "phase5_row": 40
+  },
+  "104": {
+   "id": "map:floodplains/floodplains.json:$.entities[22].observe",
+   "role": "revised",
+   "phase5_row": 87
+  },
+  "105": {
+   "id": "map:liscor/barracks.json:$.entities[4].once_per_waking_toast",
+   "role": "revised",
+   "phase5_row": 13
+  },
+  "106": {
+   "id": "map:dungeon/dungeon_approach.json:$.entities[0].observe",
+   "role": "revised",
+   "phase5_row": 3
+  },
+  "107": {
+   "id": "map:liscor/street.json:$.entities[2].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "108": {
+   "id": "map:riverfarm/riverfarm_mill.json:$.entities[1].observe",
+   "role": "revised",
+   "phase5_row": 8
+  },
+  "109": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[11].gate_closed_toast",
+   "role": "revised",
+   "phase5_row": 84
+  },
+  "110": {
+   "id": "map:inn/inn.json:$.entities[23].skill_hint_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "111": {
+   "id": "map:sewers/sewers.json:$.entities[14].toast",
+   "role": "revised",
+   "phase5_row": 117
+  },
+  "112": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[8].skill_uses.observe.toast",
+   "role": "revised",
+   "phase5_row": 44
+  },
+  "113": {
+   "id": "map:pallass/pallass_den_shop.json:$.entities[2].skill_hint_toast",
+   "role": "revised",
+   "phase5_row": 96
+  },
+  "114": {
+   "id": "map:invrisil/invrisil_boulevard.json:$.entities[6].dialogue[0].text",
+   "role": "revised",
+   "phase5_row": 90
+  },
+  "115": {
+   "id": "map:liscor/runners_guild.json:$.entities[4].observe",
+   "role": "revised",
+   "phase5_row": 53
+  },
+  "116": {
+   "id": "map:invrisil/invrisil_boulevard.json:$.entities[11].dialogue[0].text",
+   "role": "control",
+   "phase5_row": null
+  },
+  "117": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[4].on_skill_use.toast",
+   "role": "revised",
+   "phase5_row": 42
+  },
+  "118": {
+   "id": "map:floodplains/floodplains.json:$.entities[31].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "119": {
+   "id": "map:liscor/street.json:$.entities[12].visual_states[0].observe",
+   "role": "revised",
+   "phase5_row": 18
+  },
+  "120": {
+   "id": "map:invrisil/stationer.json:$.entities[10].observe",
+   "role": "revised",
+   "phase5_row": 34
+  },
+  "121": {
+   "id": "map:riverfarm/riverfarm_mill.json:$.entities[6].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "122": {
+   "id": "map:invrisil/adventurers_rest.json:$.entities[10].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "123": {
+   "id": "map:pallass/pallass_forge.json:$.entities[15].observe",
+   "role": "revised",
+   "phase5_row": 10
+  },
+  "124": {
+   "id": "map:sewers/deep_tunnels.json:$.entities[3].companion_source.taken_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "125": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[0].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "126": {
+   "id": "map:invrisil/mercantile_alleys.json:$.entities[9].on_skill_use.toast",
+   "role": "revised",
+   "phase5_row": 115
+  },
+  "127": {
+   "id": "map:inn/inn.json:$.entities[0].dialogue[0].text",
+   "role": "revised",
+   "phase5_row": 119
+  },
+  "128": {
+   "id": "map:invrisil/invrisil_boulevard.json:$.entities[2].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "129": {
+   "id": "map:inn/inn.json:$.entities[1].friendly_line",
+   "role": "revised",
+   "phase5_row": 5
+  },
+  "130": {
+   "id": "map:invrisil/mercantile_alleys.json:$.entities[2].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "131": {
+   "id": "map:liscor/street.json:$.entities[3].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "132": {
+   "id": "map:sewers/sewers.json:$.entities[8].locked_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "133": {
+   "id": "map:liscor/guild.json:$.entities[4].dialogue[0].text",
+   "role": "control",
+   "phase5_row": null
+  },
+  "134": {
+   "id": "map:ruin/ruin_surface.json:$.entities[11].friendly_line",
+   "role": "revised",
+   "phase5_row": 58
+  },
+  "135": {
+   "id": "map:liscor/runners_guild.json:$.entities[6].clean_toast",
+   "role": "revised",
+   "phase5_row": 12
+  },
+  "136": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[6].observe",
+   "role": "revised",
+   "phase5_row": 79
+  },
+  "137": {
+   "id": "map:inn/inn.json:$.entities[24].on_skill_use.toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "138": {
+   "id": "map:liscor/runners_guild.json:$.entities[3].observe",
+   "role": "revised",
+   "phase5_row": 20
+  },
+  "139": {
+   "id": "map:floodplains/floodplains.json:$.entities[24].companion_source.taken_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "140": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[25].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "141": {
+   "id": "map:pallass/pallass_forge.json:$.entities[2].toast",
+   "role": "revised",
+   "phase5_row": 31
+  },
+  "142": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[15].locked_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "143": {
+   "id": "map:invrisil/mercantile_alleys.json:$.entities[13].gate_closed_toast",
+   "role": "revised",
+   "phase5_row": 63
+  },
+  "144": {
+   "id": "map:inn/inn_upstairs.json:$.entities[5].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "145": {
+   "id": "map:inn/inn_upstairs.json:$.entities[1].visual_states[0].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "146": {
+   "id": "map:liscor/guild.json:$.entities[2].board_rumors[1].copy",
+   "role": "revised",
+   "phase5_row": 11
+  },
+  "147": {
+   "id": "map:sewers/sewers.json:$.entities[3].toast",
+   "role": "revised",
+   "phase5_row": 27
+  },
+  "148": {
+   "id": "map:dungeon/dungeon_approach.json:$.entities[7].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "149": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[24].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "150": {
+   "id": "map:garden/garden_sanctuary.json:$.entities[3].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "151": {
+   "id": "map:pallass/pallass_forge_hall.json:$.entities[6].observe",
+   "role": "revised",
+   "phase5_row": 26
+  },
+  "152": {
+   "id": "map:pallass/pallass_market.json:$.entities[18].skill_hint_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "153": {
+   "id": "map:inn/inn_player_room.json:$.entities[3].locked_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "154": {
+   "id": "map:invrisil/brothers_parlor.json:$.entities[7].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "155": {
+   "id": "map:pallass/pallass_forge.json:$.entities[18].toast",
+   "role": "revised",
+   "phase5_row": 94
+  },
+  "156": {
+   "id": "map:invrisil/brothers_parlor.json:$.entities[6].observe",
+   "role": "revised",
+   "phase5_row": 52
+  },
+  "157": {
+   "id": "map:liscor/street.json:$.entities[4].dialogue[0].text",
+   "role": "control",
+   "phase5_row": null
+  },
+  "158": {
+   "id": "map:pallass/pallass_market.json:$.entities[5].on_skill_use.toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "159": {
+   "id": "map:liscor/barracks.json:$.entities[4].observe",
+   "role": "revised",
+   "phase5_row": 56
+  },
+  "160": {
+   "id": "map:pallass/pallass_market.json:$.entities[5].skill_hint_toast",
+   "role": "revised",
+   "phase5_row": 50
+  },
+  "161": {
+   "id": "map:pallass/pallass_market.json:$.entities[26].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "162": {
+   "id": "map:pallass/pallass_forge.json:$.entities[3].observe",
+   "role": "revised",
+   "phase5_row": 65
+  },
+  "163": {
+   "id": "map:floodplains/rags_camp.json:$.entities[7].observe",
+   "role": "revised",
+   "phase5_row": 51
+  },
+  "164": {
+   "id": "map:ruin/ruin_surface.json:$.entities[5].variants[2].toast",
+   "role": "revised",
+   "phase5_row": 69
+  },
+  "165": {
+   "id": "map:dungeon/seal_vault.json:$.entities[2].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "166": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[12].observe",
+   "role": "revised",
+   "phase5_row": 85
+  },
+  "167": {
+   "id": "map:ruin/ruin_surface.json:$.entities[14].toast",
+   "role": "revised",
+   "phase5_row": 54
+  },
+  "168": {
+   "id": "map:floodplains/rags_camp.json:$.entities[4].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "169": {
+   "id": "map:floodplains/floodplains.json:$.entities[15].skill_hint_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "170": {
+   "id": "map:pallass/pallass_market.json:$.entities[20].locked_toast",
+   "role": "revised",
+   "phase5_row": 68
+  },
+  "171": {
+   "id": "map:liscor/barracks.json:$.interior_flavor[1]",
+   "role": "revised",
+   "phase5_row": 91
+  },
+  "172": {
+   "id": "map:invrisil/invrisil_boulevard.json:$.entities[4].friendly_line",
+   "role": "control",
+   "phase5_row": null
+  },
+  "173": {
+   "id": "map:floodplains/floodplains.json:$.entities[30].gate_closed_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "174": {
+   "id": "map:inn/inn.json:$.entities[16].dialogue[0].text",
+   "role": "revised",
+   "phase5_row": 93
+  },
+  "175": {
+   "id": "map:inn/inn.json:$.entities[27].observe",
+   "role": "revised",
+   "phase5_row": 80
+  },
+  "176": {
+   "id": "map:sewers/deep_tunnels.json:$.entities[4].observe",
+   "role": "revised",
+   "phase5_row": 77
+  },
+  "177": {
+   "id": "map:inn/inn_player_room.json:$.entities[2].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "178": {
+   "id": "map:invrisil/brothers_parlor.json:$.entities[5].observe",
+   "role": "revised",
+   "phase5_row": 43
+  },
+  "179": {
+   "id": "map:ruin/ruin_surface.json:$.entities[12].observe",
+   "role": "revised",
+   "phase5_row": 59
+  },
+  "180": {
+   "id": "map:riverfarm/witch_hut.json:$.entities[1].on_skill_use.toast",
+   "role": "revised",
+   "phase5_row": 83
+  },
+  "181": {
+   "id": "map:invrisil/brothers_parlor.json:$.entities[1].observe",
+   "role": "revised",
+   "phase5_row": 105
+  },
+  "182": {
+   "id": "map:riverfarm/riverfarm_mill.json:$.entities[4].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "183": {
+   "id": "map:pallass/pallass_forge.json:$.entities[12].observe",
+   "role": "revised",
+   "phase5_row": 39
+  },
+  "184": {
+   "id": "map:liscor/street.json:$.interior_flavor[2]",
+   "role": "control",
+   "phase5_row": null
+  },
+  "185": {
+   "id": "map:pallass/pallass_forge.json:$.entities[16].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "186": {
+   "id": "map:invrisil/adventurers_rest.json:$.entities[9].toast",
+   "role": "revised",
+   "phase5_row": 6
+  },
+  "187": {
+   "id": "map:floodplains/floodplains.json:$.entities[26].skill_hint_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "188": {
+   "id": "map:riverfarm/witch_hut.json:$.entities[2].observe",
+   "role": "revised",
+   "phase5_row": 120
+  },
+  "189": {
+   "id": "map:sewers/sewers.json:$.entities[5].observe",
+   "role": "revised",
+   "phase5_row": 41
+  },
+  "190": {
+   "id": "map:floodplains/rags_camp.json:$.entities[8].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "191": {
+   "id": "map:floodplains/floodplains.json:$.entities[26].companion_source.taken_toast",
+   "role": "revised",
+   "phase5_row": 33
+  },
+  "192": {
+   "id": "map:liscor/street.json:$.entities[6].observe",
+   "role": "revised",
+   "phase5_row": 71
+  },
+  "193": {
+   "id": "map:ruin/ruin_surface.json:$.entities[2].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "194": {
+   "id": "map:inn/inn.json:$.entities[26].observe",
+   "role": "revised",
+   "phase5_row": 89
+  },
+  "195": {
+   "id": "map:invrisil/invrisil_boulevard.json:$.entities[8].dialogue[0].text",
+   "role": "control",
+   "phase5_row": null
+  },
+  "196": {
+   "id": "map:invrisil/brothers_parlor.json:$.entities[8].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "197": {
+   "id": "map:inn/inn.json:$.entities[29].visual_states[1].observe",
+   "role": "revised",
+   "phase5_row": 100
+  },
+  "198": {
+   "id": "map:floodplains/floodplains.json:$.entities[24].locked_toast",
+   "role": "revised",
+   "phase5_row": 17
+  },
+  "199": {
+   "id": "map:inn/inn_player_room.json:$.entities[1].observe",
+   "role": "revised",
+   "phase5_row": 86
+  },
+  "200": {
+   "id": "map:inn/inn.json:$.entities[1].dialogue[0].text",
+   "role": "control",
+   "phase5_row": null
+  },
+  "201": {
+   "id": "map:pallass/pallass_market.json:$.entities[26].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "202": {
+   "id": "map:ruin/ruin_surface.json:$.entities[5].visual_states[0].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "203": {
+   "id": "map:pallass/pallass_den_shop.json:$.entities[4].observe",
+   "role": "revised",
+   "phase5_row": 111
+  },
+  "204": {
+   "id": "map:liscor/barracks.json:$.entities[1].dialogue[0].text",
+   "role": "revised",
+   "phase5_row": 35
+  },
+  "205": {
+   "id": "map:invrisil/invrisil_boulevard.json:$.entities[14].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "206": {
+   "id": "map:invrisil/mercantile_alleys.json:$.entities[14].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "207": {
+   "id": "map:ruin/ruin_surface.json:$.entities[1].toast",
+   "role": "revised",
+   "phase5_row": 19
+  },
+  "208": {
+   "id": "map:pallass/pallass_forge.json:$.entities[0].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "209": {
+   "id": "map:dungeon/trapped_halls.json:$.entities[5].on_skill_use.toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "210": {
+   "id": "map:pallass/pallass_market.json:$.entities[13].locked_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "211": {
+   "id": "map:floodplains/floodplains.json:$.entities[31].toast",
+   "role": "revised",
+   "phase5_row": 76
+  },
+  "212": {
+   "id": "map:sewers/sewers.json:$.entities[8].skill_hint_toast",
+   "role": "revised",
+   "phase5_row": 22
+  },
+  "213": {
+   "id": "map:invrisil/invrisil_boulevard.json:$.entities[18].observe",
+   "role": "revised",
+   "phase5_row": 16
+  },
+  "214": {
+   "id": "map:sewers/deep_tunnels.json:$.entities[8].once_per_waking_toast",
+   "role": "revised",
+   "phase5_row": 60
+  },
+  "215": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[3].observe",
+   "role": "revised",
+   "phase5_row": 49
+  },
+  "216": {
+   "id": "map:floodplains/rags_camp.json:$.entities[6].variants[0].toast",
+   "role": "revised",
+   "phase5_row": 67
+  },
+  "217": {
+   "id": "map:ruin/ruin_surface.json:$.entities[17].toast",
+   "role": "revised",
+   "phase5_row": 102
+  },
+  "218": {
+   "id": "map:invrisil/invrisil_boulevard.json:$.entities[9].dialogue[0].text",
+   "role": "revised",
+   "phase5_row": 7
+  },
+  "219": {
+   "id": "map:invrisil/mercantile_alleys.json:$.entities[2].dialogue[0].text",
+   "role": "revised",
+   "phase5_row": 101
+  },
+  "220": {
+   "id": "map:floodplains/floodplains.json:$.entities[23].locked_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "221": {
+   "id": "map:liscor/street.json:$.entities[16].on_skill_use.toast",
+   "role": "revised",
+   "phase5_row": 109
+  },
+  "222": {
+   "id": "map:garden/garden_sanctuary.json:$.entities[2].sleep_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "223": {
+   "id": "map:sewers/deep_tunnels.json:$.entities[5].observe",
+   "role": "revised",
+   "phase5_row": 95
+  },
+  "224": {
+   "id": "map:riverfarm/witch_hollow.json:$.entities[21].observe",
+   "role": "revised",
+   "phase5_row": 78
+  },
+  "225": {
+   "id": "map:pallass/pallass_forge.json:$.entities[9].toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "226": {
+   "id": "map:floodplains/floodplains.json:$.entities[3].toast",
+   "role": "revised",
+   "phase5_row": 110
+  },
+  "227": {
+   "id": "map:liscor/street.json:$.entities[7].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "228": {
+   "id": "map:riverfarm/riverfarm_village.json:$.entities[31].on_skill_use.toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "229": {
+   "id": "map:pallass/pallass_market.json:$.entities[19].skill_hint_toast",
+   "role": "control",
+   "phase5_row": null
+  },
+  "230": {
+   "id": "map:inn/inn.json:$.entities[28].visual_states[0].observe",
+   "role": "revised",
+   "phase5_row": 32
+  },
+  "231": {
+   "id": "map:invrisil/mercantile_alleys.json:$.entities[8].observe",
+   "role": "revised",
+   "phase5_row": 66
+  },
+  "232": {
+   "id": "map:invrisil/mercantile_alleys.json:$.entities[2].friendly_line",
+   "role": "control",
+   "phase5_row": null
+  },
+  "233": {
+   "id": "map:ruin/ruin_surface.json:$.entities[7].observe",
+   "role": "control",
+   "phase5_row": null
+  },
+  "234": {
+   "id": "map:ruin/ruin_surface.json:$.entities[5].observe",
+   "role": "revised",
+   "phase5_row": 108
+  }
+ }
+}

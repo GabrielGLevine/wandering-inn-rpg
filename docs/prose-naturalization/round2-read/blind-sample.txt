@@ -1,0 +1,474 @@
+MAP PROSE SAMPLE
+
+234 strings of environmental/object prose from a game, one per
+numbered line, in no particular order. Score each per the rubric you
+were given. Whitespace is normalised to one line; nothing else is
+changed.
+
+  1. The pond narrows here over a drop the light doesn't reach. Every so often the water moves wrong, and then it stops, the way a room stops when you walk into it. Whatever keeps this water is not interested in being caught.
+
+  2. A worn marker stone, older than the buildings that grew up around it. Nobody living remembers who set it, or why it sits exactly here.
+
+  3. A Drake in a leather apron scarred through in three places, both forearms banded with old burn-marks — her eyes on the billet's colour, her free hand finding the tongs without looking.
+
+  4. Each notch is a flood with its year cut underneath, the oldest running back past the village's first headman; the shelf clears the highest notch by a hand.
+
+  5. [Detect Magic] — Light runs under the turf in one long seam, straight through the stone and away west. The hollow is built on a current.
+
+  6. One long thatch ridge, twice the width of any cottage. Smoke curls from a vent at the peak even in daylight.
+
+  7. Old bones, settled where they fell. They are not going anywhere. Probably.
+
+  8. The spill shifts the moment you put weight on it and keeps shifting. Crossing that takes footing you have not got.
+
+  9. Cold, precise stone, and not as blank as it looks. Something the shape of a door is being held in it, patiently, for later.
+
+ 10. The runes keep their slow one-way order. Pisces has stopped narrating and started counting under his breath, which is worse.
+
+ 11. [Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The line holds your weight and stays where you put it.
+
+ 12. Nothing there. Quench water and hammer scale, under a wall of work that all passed.
+
+ 13. A brass lamp bracketed to the wall over the slip rack, glass sooted at the top and dry as bone. Tip the reservoir and nothing moves in it.
+
+ 14. One crate of tin, den shop, market tier. Logged three cycles running and carried none of them. Beside it, chalked in a tidier hand: HELD, QUEUE.
+
+ 15. The inn's room register, open to today. Lyonette's handwriting could win awards; the prices underneath it could start fights.
+
+ 16. A stub of masonry where a walkway used to leave this wall, sheared off clean. The other side is still there, four feet out and a long way down. The stub would hold a line all day.
+
+ 17. You put your weight on the ledge, and beyond the glass a clerk stamps a form, drops it beside her inkwell and rings the bell.
+
+ 18. The lambs have had their handling for today. Crowd them now and you undo it.
+
+ 19. Off the clock, for once. Don't tell the Guild I remember how to sit down.
+
+ 20. You brace the stack and ease the wedge free by hand. Behind the bottom crate: a couple of coins someone forgot to collect.
+
+ 21. Clay-daub walls, a low thatch roof. A washing line strung between two posts.
+
+ 22. Dust lifts off the front lip under your hand, and you have nothing yet to put on it.
+
+ 23. A bench cut down to knee height, three sets of claw-marks along the front edge at three different heights.
+
+ 24. Three lengths of rope, whipped at the ends and hung off a driven stake so that none of it lies in the wet.
+
+ 25. Zevara's shoulders come down a fraction. Huh. Civil, and no bribe. You would not believe how short that list is. Go on through. And, thank you. Genuinely.
+
+ 26. Xif's spare bench, scrubbed and stocked. A low flame and a steady hand would turn it into something.
+
+ 27. The cauldron is lit and the water is already moving. Stir it properly and there is a remedy in it.
+
+ 28. A narrow slit runs along the wall at knee height. Whatever is loaded behind it, you have no idea how to disable it.
+
+ 29. The yoke leaning on the basket stack was cut for goblin shoulders and stands about waist-high on you. The baskets are dark with water to the rim. Cut brush is still snagged in the top one's weave.
+
+ 30. She pushes a bowl of salted something across the counter at you without being asked, and takes the coin for it without apologising.
+
+ 31. Cold wax and old wicks, set in two rows along the threshold, each stub burned down as far as the next.
+
+ 32. Olive work clothes, ink to the second knuckle, and a satchel worn flat on one side from the same walk every day.
+
+ 33. Weathered planks, sound underfoot. The current runs steady past the end of it.
+
+ 34. You pay out the line into the dark water. Nothing takes it, and nothing was ever going to — whatever keeps this pool knows the difference between an offer and a hook.
+
+ 35. Where the decking used to be there is a scoured trench down to the water, wider than a stride and undercut on both lips.
+
+ 36. A tree grown out sideways over the path. You go under it with your head down.
+
+ 37. The bones stand joint by joint and follow a pace behind you.
+
+ 38. Your coat goes over the chair back with the package folded into it, beside the one already hanging, and the other coat is over your arm two steps from the door.
+
+ 39. [Detect Magic] — The ward opens under your sight and does not stop opening. It is not holding anything shut. It is POURING: one direction, one slow measured rate, into whatever the stone is between. It has poured since before the city. Pisces, very quietly: "Ah. So that is what the others were."
+
+ 40. Mind the survey stakes. We put them there for a reason.
+
+ 41. Another Worker, identical to the first in the way coins from one mint are identical. It sweeps the same three cobbles until they answer for something.
+
+ 42. The meat is good and it will not stay good. Raw and cold, it is no use to you, and you have no way to change that.
+
+ 43. Locked, and Lyonette has the only key. The handle turns a quarter of the way and stops.
+
+ 44. A stone-ringed well, rope worn smooth by years of hauling. The water's clean this far from the blight talk.
+
+ 45. The straps give at a pull. Inside: chalk, a bent square, a coil of good wire, and five gold in a twist of cloth.
+
+ 46. The stone stands at the middle of the village, a spiral cut into its weathered face. Attunement works like this: show a door the right stone and the door learns the place, and can open onto it ever after. The grass at its base is worn to bare dirt.
+
+ 47. The stone sits where the ground feels heaviest. That's not an accident.
+
+ 48. The seal is broken, but the warding still holds the stone fast. Two spiral plates flank the court — the carving beside the pedestal looks like a beginning.
+
+ 49. Faded arcane script. You can't read a word of it. Whoever penned this knew magic you don't. Someone in the city must.
+
+ 50. A plank of hooks at the fence line, each hook holding a scrap with a task on it and no name. Ditching, thatch, a fence a cow disagrees with. The scraps come down about as fast as they go up.
+
+ 51. You don't know your way around a stew pot. Yet.
+
+ 52. Only the hollow in the grass now, and it is filling in.
+
+ 53. The stone doesn't budge. Whatever's on the other side stays sealed. For now.
+
+ 54. A second house at the hollow's west edge, smaller than the cottage, half its roof fallen in. The door stands open on the dark, and shallow marks cross the lintel in a line worn nearly smooth.
+
+ 55. The mill's ground-floor door, set into the base of the tower on the river side. The sluice hums even with the wheel pinned.
+
+ 56. The hall door, propped with a wedge nobody has ever removed. Past it, the tier's noise resumes.
+
+ 57. [Basic Repair] — You cut boards to the span and lay them across the stringers: the walk takes your weight end to end.
+
+ 58. Low fence rail, bordering the tilled rows.
+
+ 59. Sails turning slow in whatever wind there is. The grinding floor above the wheat fields.
+
+ 60. The passage doesn't end here — it just goes quiet, past a bend the light doesn't reach. Whatever's back there, this isn't the moment.
+
+ 61. Fur brushed flat at the shoulder where a strap sits. Ears up, turning at every voice in the row. She looks at your boots and your hands before your face, and does not hurry about it.
+
+ 62. The haze has closed back over the tiers below; come back to the rail after a night's sleep.
+
+ 63. A broad man dealing solitaire with a bowler still on his head, squaring each card to the one under it before he sets down the next.
+
+ 64. You ease the wire off its catch and coil it loose. A few scavenged links clatter free, worth a coin or two melted down.
+
+ 65. Beneath where the door lay, still seated in its groove: the anchor stone. The Horns left nothing else behind.
+
+ 66. A SCRAP OF PARCHMENT, tacked low and half hidden under the notice above it. 'LOST: one backup warhammer, plain steel, no love lost between us but I want it back. Ask for Renn. Reward for the honest sort.' The bottom line runs downhill off the edge of the paper.
+
+ 67. A narrow break in the treeline, west of the fields. The light changes past the first few trees.
+
+ 68. A stone taller than it should be able to stand on its own, glowing faint purple at the seams.
+
+ 69. The water is warmer than the room around it. Something went in here not long ago.
+
+ 70. A bronze rail along the tier's open edge, polished bright by a hundred people leaning on the same stretch of it while they waited on the cage. Below it the shaft goes down past where the light gives up.
+
+ 71. Nothing there. The floorboard in front of the desk is walked pale, chalk dust in the grain.
+
+ 72. The briar holds nothing new today.
+
+ 73. Shut, and the card slot in the frame is empty.
+
+ 74. Two men paid by the week whether they work or not, and plainly out of practice.
+
+ 75. Nothing there. Something small breathes behind the bench and decides to keep still.
+
+ 76. Armour half off and stacked in the order it goes back on. She has braced the gap's lip with two stakes and a plank, and she tests the plank every time she passes it.
+
+ 77. I am not queueing. I happen to be seated near where a queue would form.
+
+ 78. Something square and worked lies under silt on the pond floor, a stride out from the bank. The water between it and the bank is a hand deep and dead still. In the bank's shade the surface has already gone to a skin of ice.
+
+ 79. It has not learned to be afraid of hands yet. Make the offer before it does.
+
+ 80. A carved stone boundary marker, Drake glyphs worn shallow. It counts cisterns and sluice-gates in a hand two centuries dead. Someone scratched a newer mark beside it: a spider, hastily.
+
+ 81. Quiet, for a moment. I am tracing a line I cannot see. If I lose it I will blame you, and we will both know I am lying.
+
+ 82. A distilling retort, its bulb crusted white at the neck where the salts climb as the wash boils away.
+
+ 83. You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above.
+
+ 84. You step wide around the wire. The dust past it is trodden into a track running both ways; leave the passage until the delve is under way.
+
+ 85. Something's meant to go in this, cooked properly. You don't know your way around a stew pot. Yet.
+
+ 86. Watch Captain's desk. Empty, same as every other time you've walked past it.
+
+ 87. Two rows of bottles, the bottom row opened, the corks shoved back in crooked. The top row's wax is unbroken over every neck.
+
+ 88. Low fence rail, bordering the tilled rows.
+
+ 89. You have a warm way about you, and warmth I can trade with. Come - for you, I will call it a fair price, and I will mean it. This is not nothing, from me.
+
+ 90. Two stringers still run out along the bank from the cottage corner, and the decking between them is gone — lifted by a flood and never replaced. The beams are sound. It is boards it wants.
+
+ 91. Turned earth, filled in and gone quiet. The wolf walks past it now.
+
+ 92. A stone plinth at the far end of the row, otherwise unremarkable, waiting on whatever the inn hasn't settled yet.
+
+ 93. Cold iron, every bar cut to the same length as the one beside it. The strapping doesn't give under your hand.
+
+ 94. Nothing there. Scale on the flags and the smell of hot iron.
+
+ 95. Tier stamps on the jar shoulders, half of them numbers your permit does not reach. The keeper watches you read them and goes back to her tally.
+
+ 96. Its brother. Slightly fuller, slightly further from the door.
+
+ 97. Low fence rail, bordering the tilled rows.
+
+ 98. From here you can see the cut in the turf, the fire, and everyone's hands at once. It was not chosen for comfort.
+
+ 99. State your business and your sponsor. Everyone's business goes through this window eventually.
+
+100. A pallet strapped and tagged and standing exactly where it has stood for three cycles, one hand's width outside the loading square.
+
+101. One slab off the ceiling, come down whole and standing on its edge across the gap in the wall. Its own weight is the only thing holding it there.
+
+102. The shopfront door, hung so it swings shut on its own. Past it, the market tier goes back to being civic.
+
+103. Counter, awning and placard all to the tier's spec, the third of three in a row. The awning's edge ticks up and down where the canvas has come loose from a grommet.
+
+104. A hollow pressed into the grass the length of a deer, flat and yellowed at the center, the blades around the rim already back up.
+
+105. Your arm is done for today. The shafts are out of the straw and back in the quiver.
+
+106. The way out is cut into the wall stone, ward-lines deep in its face and coin-gold veining the rock the same as the courses overhead.
+
+107. Oldblood Drake, light scales, a scar down the left of her jaw she's long past explaining. She reads the gate the way a clerk reads a ledger: every figure accounted for, and every one of them a suspect.
+
+108. A thin man with a hazel stick in each hand, laying them side by side against the light.
+
+109. Rubble and old wardwork still choke this side passage. It can wait until the main halls are clear.
+
+110. The stew's at the turn. Someone who knows a pot could bring it home.
+
+111. The hinge shears off in your hand and the lid comes away with it. Wax-wrapped and dry under the silt, 6 gold in a roll.
+
+112. [Observe] — Tool marks in every line of it from top to bottom, and not one of them reads as a lock or says what the door is for.
+
+113. The forms are stacked in filing order, oldest at the bottom — appraise the stack and the clause comes out of it.
+
+114. Blue-grey wool, city cut. She has already looked past you.
+
+115. A wide stone hearth swept to the brick: split kindling, dry birch laid over it in a lattice. Cold air comes down the flue and stirs the loose bark.
+
+116. A Gnoll traveler, tan road-cloak, watching the crowd the way a stranger watches weather.
+
+117. You look properly and the floor ahead stops matching the floor behind: grain crossways, paint edge a finger short of the wall, months of dust everywhere but that patch.
+
+118. A scatter of old bones the wolf will not leave alone. It noses through them, circles, noses again, and looks back at you as though the next part is your job.
+
+119. The phial crate you eased down the rungs is gone from the ledge below. The stone where it sat is clear — nothing broke on the way down.
+
+120. The fire is low, the ash under the grate deep. The nearest stacks of paper stand a hand's width off the iron.
+
+121. Split tallies. One half stays with the mill, one half goes home with the household, and neither can be altered alone.
+
+122. A coat over the chair back, good cloth, nobody in it. The table has two cups and one of them has been sitting there since before you arrived.
+
+123. A wide iron-strapped door wedged open on the sill, and past it the hall runs hotter and louder than the tier does.
+
+124. The bones rise and fall into step behind you.
+
+125. Just raised earth. Whatever it's for, nobody's finished it yet.
+
+126. You unhook the line and coil it loose. Two coins sit in the crate it was tied to, still folded in a scrap of cloth.
+
+127. Welcome to The Wandering Inn! Mind giving that table a wipe?
+
+128. A gap in the row of shopfronts, three strides wide and going darker the further in it goes. A stride past the wall line the paving changes underfoot, boulevard marble to whatever the alleys were laid with.
+
+129. Lyonette sets the cloth down and stops counting cutlery. Most people talk straight past me. Sit where you like — I'll bring something hot.
+
+130. A tea-tray harness worn shiny at the left shoulder — she pours right-handed and listens left-eared. The cups are chipped. The ears are not.
+
+131. An Antinium of Liscor's Watch — dark chitin, four arms, antennae, twin swords worn at the hips like a closed argument. He stands still the way patient things do.
+
+132. The ledge overlooks the nest: a perfect vantage, if you had the eye to read one. You don't, quite. Not yet.
+
+133. Still four silver. Still an insult.
+
+134. "Good," she says, once, and goes back to the rope.
+
+135. [Basic Cleaning] — The dried mud flakes off under the cloth, the grain showing pale and the road smell going with it.
+
+136. Bundled and stacked before the rain, with the cut ends turned in.
+
+137. [Basic Cooking] — You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot.
+
+138. A Gnoll runner, propped against the wall by the stool, legs out, boots still laced. Not asleep. Not far from it.
+
+139. It bites you exactly once, decides you took it well, and climbs your sleeve to glare at the horizon from a better vantage.
+
+140. You take a scrap off its hook and spend the morning behind it. Ditching, mostly. The village pays coin because coin is the thing it has least of, and it pays on the day.
+
+141. The bench ticks twice under your hand as it cools, and the racks above it are empty down to the pegs.
+
+142. You get both hands under the edge and pull until your eyes swim. It rocks an inch and settles back. Heavier than you.
+
+143. The back door has no handle on this side; you have nothing to bring through it.
+
+144. Lyonette's door, shut the way she shuts most things: completely, and without discussion. Whatever the room looks like behind it, you'll have to imagine it; she's not one to leave doors, or herself, half open.
+
+145. Your name in the card slot, in Lyonette's ruled hand, and the key for it somewhere in your pack.
+
+146. A LETTER, sealed in wax gone slightly soft from handling, addressed to no one by name. Inside: impeccable handwriting regrets to inform you of a small disagreement in Invrisil concerning a mutual acquaintance's good name, and would consider it a personal favor — and a professional one — if a stranger to the city might look into it. The witch at Riverfarm keeps the stones, should the distance prove an obstacle. Signed only with a small drawing of a hat. The Guildmistress's clerk says it arrived by very ordinary post, which is itself the strangest part.
+
+147. An old Drake drainage marker, its glyphs half-swallowed by grime. You can just make out a map of channels — and a fresh scratch, shaped like a spider, gouged over the third cistern.
+
+148. Silk threads catch the light along the gallery's south wall, thick as rope, all leading back to one dark seam in the stone.
+
+149. Bracken pressed flat in a hollow under the northern trees, and the smell of something that has been eating well.
+
+150. A stone plinth, swept clean, facing the axis like the others. Whatever belongs here hasn't been carried up from below yet.
+
+151. A grid of finished pieces the width of the wall, one to a slot: a wired civic tag on each, smith's mark and measure, no price.
+
+152. A drip-still set for magic-water. Someone who knows the working could draw a clean solvent from it.
+
+153. The desk is yours to use. Nothing on it yet is asking to be done.
+
+154. A drink counter kept cleaner than the law would ever ask it to be.
+
+155. You walk the pallet the last hand's width onto the loading square and square the strapping after it. The attendant looks at the load, then writes an hour beside it on the cage slate.
+
+156. A Drake on a stool with the banded chest at his back and the good shelf across the room. Look at the chest and he is already looking at you.
+
+157. One moment; three columns into a tally. Say hello properly and I'll lose my place gladly.
+
+158. [Advanced Cooking] — You cook on a stranger's fire in a city of critics, and the critics go quiet.
+
+159. A straw-packed target lashed to a post, set against the wall where a stray shot won't find a person. Scored through in a tight cluster at chest height, and the post rocks when you test it.
+
+160. The stallkeeper's burner is free between rushes. Cook a proper meal on it.
+
+161. It goes up off the crates and comes back screaming about the west end. The two standing things down there step aside for anyone whose permit is already filed — and the office that files it is the counter four stalls behind you.
+
+162. A bronze floor grate breathing white steam, the flags around it carrying a beat up through your boots.
+
+163. The poles are bowed under strips cut thin and even, and the ash beneath has been banked warm to hold the smoke in them.
+
+164. Both spirals hold their light and the seam under the plinth gives at a touch — near plate first, then its far twin. Ceria says 'Ksmvr. Down. Carefully.' and has the rope off the stake before you have straightened up.
+
+165. Cut into the slab, in a hand that expected readers: a tally. Ninety-one marks, then a gap, then one more in a different chisel. Nobody came back to make the ninety-third.
+
+166. Another of the ring-stones, humming faintly if you hold still.
+
+167. Broken stone in two heaps, worked and unworked. The worked heap is smaller, and still being added to.
+
+168. You shorten the yoke by two notches and spend the morning hauling water and cut brush. Somebody presses coin into your hand at the end without looking up.
+
+169. From up here the floodplains pretend to be a map. Good eyes could read it.
+
+170. Xif's own bench, the burner under it already lit. You have no true synthesis to put over that flame.
+
+171. Nothing there. A shield knocks against its peg down the corridor, then goes quiet.
+
+172. He offers a smile with the price tag still visible on the underside. "Charming," he allows, in the tone of a man crossing an item off a ledger.
+
+173. The road's empty in the daylight. Whatever works this verge keeps to the dark.
+
+174. Warm here. Two doors. I counted.
+
+175. Coat off and folded over the chair back, sleeves turned up past the elbow. One palm stays flat on the door's face while his other hand taps a count against his thigh.
+
+176. A pair of them down on their knuckles where the tunnel narrows, moon-grey and shouldered like the rock. Their eyes hold on you; the floor keeps falling away past their feet.
+
+177. A plain footlocker at the head of the bed, hasp and no lock. Everything you own would rattle around in it.
+
+178. A Gnoll on his feet beside the door, a folded coat over one arm — a coat cut for a smaller man.
+
+179. Three coils of rope laid out in exact parallel, and an Antinium re-counting them.
+
+180. [Detect Magic] — What is left here is one link of a boundary that once closed around the whole thicket. Its pull still faces inward, along the exact line the deer refuse to cross. It was drawn to keep something in; it stopped doing that a very long time ago.
+
+181. A Gnoll in a tailored vest, tall hat on indoors, both hands in view on the table. He looked at the door behind you before your face.
+
+182. The pinned sluice carries three seasons of high-water scratches, and each one sits higher than the last.
+
+183. Cooled slag and cracked crucible shards, heaped to just under a line painted on the flagstones around the pile. The paint is fresh, the brush marks still crisp.
+
+184. Nothing there. Someone leans out an upstairs shutter, decides you are nothing, and pulls it to.
+
+185. Nine blades in the bin, all from one hand, all failed on the same measure. Somebody up here is doing careful work and failing it the same way every time.
+
+186. Your hat goes onto the third peg, brim out — nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you.
+
+187. It goes still when you crouch, which from a razorbeak is an invitation. Make the offer properly.
+
+188. The top shelf holds a row of stoppered jars with nothing left readable on the labels.
+
+189. Cable-thick silk in black-and-silver bands, stretched wall to wall. Shield Spiders band their silk like that, and this run is new.
+
+190. Three of them stand on the lip of the hollow where it is easiest to come down, looking at the racks and doing arithmetic. Nobody in the camp is pretending not to have noticed.
+
+191. It walks up your arm and sets itself on your shoulder, facing back the way you came.
+
+192. Round loaves stacked four high, the top ones steaming through their cloth, today's price on the chalk board and a higher one under it for after the fourth bell.
+
+193. Rope, spare stakes, a folded tarp, and three days of dried rations for four people. Packed by someone who has done this before.
+
+194. Six planks, one strap hinge, a latch worn pale on the thumb side, and a warped bottom edge that lets a draught through smelling of onions.
+
+195. Olive work clothes, ink-stained cuffs. A clerk between one ledger and the next.
+
+196. Rings from a hundred glasses, sanded out and earned back.
+
+197. A door of living vines, woven shut and breathing faintly of green. The nail is gone, and the plaster with it.
+
+198. It snaps at your fingers. Fair enough. Nothing wild takes an offer from hands that have never tended anything.
+
+199. Made up tight, corners squared. Lyonette did that, and she will know if you undo it badly.
+
+200. Mind the floors, they're just done.
+
+201. Empty crates stacked a head above the awnings behind the stalls. The razorbeak has decided they belong to the razorbeak, and no stallkeeper has argued yet.
+
+202. The cradle on top is empty and the seam beneath it stands open on nothing. Whatever the ruin was built around, the ruin isn't holding it any more.
+
+203. Jars in a rank, labels in a hand that got neater partway along the shelf and then went back to how it was.
+
+204. Barracks is Watch business only. State yours.
+
+205. Two shapes peel off the shadowed colonnade, unhurried, the way people move when they've done this before. Only after dark.
+
+206. A folding table rented by the day, a cloth over it, and a brass block sitting on the cloth with two letters cut into the face. He has not covered it, because covering a thing is how a street learns you have one.
+
+207. A cookfire two hands wide, ringed with stones that did not come out of this ruin. The ash under it is deeper than one night's burning.
+
+208. A workbench of calipers, weights, and chalk lines — every tool squared to the bench edge. The Magus is up at the office when he is not down here.
+
+209. [Detect Magic] — The seam lights up like a badly kept secret: old wardwork, still holding, drawn tight around the floor ahead. Now you know exactly what not to trust.
+
+210. The rail, the drop, the haze. Pallass keeps its details above your pay grade.
+
+211. You dig where the wolf keeps insisting. Under the bones, wrapped in rotted cloth: a charm on a cord gone soft with age.
+
+212. A perfect vantage over the nest, for a trained eye.
+
+213. Three tables behind glass gone opaque with steam. On the slate by the door, smoke-leaf is chalked at a price by the ounce, no grade beside it.
+
+214. You cleared this snare earlier today. The rig has nothing left to take.
+
+215. A second cottage, smaller, its thatch newer than its neighbor's.
+
+216. You bring the carcass down to the poles, and the old one pinches finger and thumb nearly shut to show you the thickness. Hanging all of it takes until the light goes.
+
+217. The ash in the stone ring has been cold for days. The fire-pit is filled in level with the ground, and the rope that was here is gone.
+
+218. A man in a mustard-brown coat passes you going east, then passes you going west a minute later.
+
+219. Tea's on the house. Word costs a gold, and I pour that by the cup too.
+
+220. The pup shrinks back. You don't have the hands for this yet — hands like that are learned on hurt animals, one at a time. There's a corusdeer down in the grass east of here that would let you start.
+
+221. [Light] — The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf.
+
+222. Somewhere, a door shuts softly. The garden doesn't dim.
+
+223. The passage opens into a pillared gallery with no far wall in your light. The floor is packed smooth, hollowed along the pacing lines. Far back, eyes pick up the light and are gone before you count them.
+
+224. The trees thin out this way. Open fields past the last few trunks.
+
+225. Bench hours, to the quarter. Nobody up here works a minute they can't account for.
+
+226. A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN — NO KILLING GOBLINS.
+
+227. A road-peddler behind a folding stall, half his stock still roped for travel. Everything he sells says somewhere else.
+
+228. [Broader Shoulders] — You take three at once and walk them up to the shed without stopping. The dray is clear before the second man has picked up his first, and two coins come your way for it.
+
+229. A retort over a banked fire, a mineral wash already loaded. A distiller could boil it down to salts.
+
+230. The scratching has become a chewing. Since the Door went up the gap has widened, and there are teeth-marks in the plaster on this side of it.
+
+231. Three men shoulder to shoulder across the passage, burgundy and brass at collar and cuff — Coyle's livery. Clubs and knives in their hands, and no Watch steel among them.
+
+232. She pours you a cup without being asked. "On the house," she says, "which is the only kind of trade I ever regret."
+
+233. Stone shaped like a soldier, or close enough that the difference doesn't help you. It hasn't moved since you stepped into this room. That is not the same as harmless.
+
+234. A stone rests in a shallow cradle atop the plinth, held there by nothing you can see.
