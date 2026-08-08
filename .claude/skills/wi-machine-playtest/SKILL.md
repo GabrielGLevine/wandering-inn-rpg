@@ -83,3 +83,29 @@ from capture gating). Do NOT idle-pad shots anymore — the old
 ~90-frame workaround hides real timing bugs. `line_display_ab` is the
 canonical proof; an empty line panel in a fresh capture is now REAL
 missing content, report it.
+
+## The blocking-vs-art gap (user playtest 2026-08-08 — four missed findings)
+Screenshot reads judge what IS drawn; they cannot see the blocking grid,
+so a whole defect class sailed through machine playtests: phantom
+blocked cells beside buildings (longhouse, cottage_a), walk-through
+solid decor, invisible interactable props, and a building overlapping
+another building's cells. Discipline now:
+- **Every new/changed map gets a `probe_<map>` windowed capture**
+  (teleport + wait_frames 30 + screenshot; keep probes UNREGISTERED in
+  qa/scripts/probe_*.json — they never join the sweep). Read the PNG
+  with player eyes AND against the map's blocked list: name every
+  blocked cell you cannot see art for, and every drawn solid you could
+  walk through.
+- **data_lint owns the mechanical half**: check_solid_decor_blocks +
+  check_spriteless_entities (hard), advise_undressed_blocked +
+  advise_transparent_regions (advisory). Drain the advisories for any
+  map you touch; the footprint model is approximate where art lives in
+  floor/wall sheets.
+- **Static-NPC check**: two captures a few seconds apart; an NPC
+  byte-identical across both has no idle animation (13 shipped that
+  way — #409).
+- **Route asserts encode door positions silently**: a bump-stop route
+  (walk until the door entity blocks you) keeps "passing" as a no-op
+  when the door moves — the player sails through where the stop used
+  to be. When an entity moves, grep scripts for its OLD cell AND for
+  moves that relied on bumping it.
