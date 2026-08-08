@@ -260,7 +260,7 @@
    ],
    "display_name": "The Slack Tub",
    "sprite": "barrel",
-   "observe": "A scum ring goes right around the inside of the tub three fingers above the water, and the water below it is grey with scale under an unbroken skin of oil.",
+   "observe": "A scum ring runs right around the inside of the tub three fingers above the water: below it, grey with scale under an unbroken skin of oil.",
    "on_interact_accomplishment": "eyed_the_slack_tub",
    "toast": "You touch the surface. Warm all the way down, and this tub has not been cold in years. The oil skin closes back over where your finger went."
   },
@@ -299,7 +299,7 @@
    ],
    "display_name": "The Pattern Wall",
    "sprite": "library_shelf",
-   "observe": "A grid of finished pieces the width of the wall, one to a slot. Each has a wired civic tag on it, giving a smith's mark and a measure but no price.",
+   "observe": "A grid of finished pieces the width of the wall, one to a slot: a wired civic tag on each, smith's mark and measure, no price.",
    "on_interact_accomplishment": "eyed_the_pattern_wall",
    "toast": "Every piece on the wall passed. You count the tags: four different smiths, four different answers, one standard."
   },

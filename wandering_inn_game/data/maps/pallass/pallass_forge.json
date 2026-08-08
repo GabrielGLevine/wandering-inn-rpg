@@ -496,7 +496,7 @@
    ],
    "display_name": "Steam Vent",
    "sprite": "steam_vent",
-   "observe": "A bronze floor grate breathing white steam in slow pushes. The flags around it carry a beat you can feel through your boots.",
+   "observe": "A bronze floor grate breathing white steam, the flags around it carrying a beat up through your boots.",
    "on_interact_accomplishment": "heard_the_machine_below",
    "toast": "Warm, damp air. A rhythm underneath it, too even to be weather."
   },
@@ -566,7 +566,7 @@
     0.38
    ],
    "facing": "left",
-   "observe": "A Drake in a leather apron scarred through in three places, both forearms banded with old burn-marks. Her eyes stay on the colour of the billet; her free hand finds the tongs without going to look for them.",
+   "observe": "A Drake in a leather apron scarred through in three places, both forearms banded with old burn-marks — her eyes on the billet's colour, her free hand finding the tongs without looking.",
    "friendly_line": "She sets the hammer down long enough to look at you properly. The billet on the anvil goes a shade darker while she does.",
    "talk_pool": [
     "Bench is rated for a working day at a time. It gets one, and not a bell more.",
@@ -625,7 +625,7 @@
     0.44
    ],
    "facing": "down",
-   "observe": "The lift coat is brass-buttoned to the throat, and the Drake wearing it keeps one hand along the gate lever without closing on it. He calls the quarter bell a beat before the cage comes up into the frame.",
+   "observe": "The lift coat brass-buttoned to the throat, the Drake keeps one hand along the gate lever without closing on it, and he calls the quarter bell a beat before the cage comes up.",
    "friendly_line": "He tips two fingers off the gate lever. \"Quarter bell,\" he says, and puts them back.",
    "talk_pool": [
     "Down at the quarter bell, up at the half. If you aren't sure which, wait. The bell is sure.",
@@ -716,7 +716,7 @@
     0.76,
     0.82
    ],
-   "observe": "Bar stock in strapped bundles, sorted by gauge. Wrist-thick at the bottom of the rack, pencil-thin at the top. The paper tag on each bundle gives a tier number and a bench number.",
+   "observe": "Bar stock in strapped bundles, sorted by gauge. Wrist-thick at the bottom of the rack, pencil-thin at the top. The paper tag on each gives a tier number and a bench number.",
    "on_interact_accomplishment": "eyed_the_billet_rack",
    "toast": "Cold iron, every bar cut to the same length as the one beside it. The strapping doesn't give under your hand."
   },
@@ -753,7 +753,7 @@
     0.28,
     0.29
    ],
-   "observe": "Cooled slag and cracked crucible shards, heaped to just under a line painted on the flagstones around the pile. Fresh paint on the line, the brush marks still crisp at the edges.",
+   "observe": "Cooled slag and cracked crucible shards, heaped to just under a line painted on the flagstones around the pile. The paint is fresh, the brush marks still crisp.",
    "on_interact_accomplishment": "eyed_the_slag_heap",
    "toast": "Glassy black waste, still holding a little of the day's heat. Even the refuse up here has a level marked on it."
   },
