@@ -3462,3 +3462,47 @@ descriptor triad and affordance formula become named bans, per-file
 button-closer ceilings. Exit = fresh two-reader blind read, maps set
 scored against a like-for-like untouched control, not the original
 auditor's scale.
+
+## 2026-08-07/08 — #397 round 2 (map-register re-authorship): rulings
+
+1. **Brief criterion 8 "zero round-2 ADVISORY hits" adjudicated:** Lane's OWN strings contribute zero hits; protected keeps and holdout strings carry button closers that exceed per-file ceiling and are untouchable. Lane reporting string-by-string proof of own-string zero = CLEAN. Residual hits on untouchables are train-time inventory, not lane findings.
+
+2. **l4's Relc petition ACCEPTED (wave autonomy):** floodplains `$.entities[12].observe` stays as written — character-bearing, bible §3 defends the exact ending as a MODEL, census matcher's 0.74 precision makes this a legible false positive. Removing defended peaks is the flattening danger the issue names.
+
+3. **l4's frozen-cache trade ACCEPTED:** `[5].observe` losing the water-bearing affordance line is safe — hint ships verbatim in `[32].toast` and freeze route is data; amendment 4 wins where it and the fact rule against each other AND the fact survives elsewhere in the same map.
+
+4. **l3's four round-1 petition collisions RULED (controller):** (a) mill `[5].toast` rewrite ACCEPTED; (b) village `[31].locked_toast` rewrite ACCEPTED, petition DENIED (superseded by amendment 4); (c) witch_hut `[1].on_skill_use.toast` ACCEPTED, petition MOOT after compression; (d) witch_hut `[5].toast` rewrite ACCEPTED, petition DENIED (old close is narrator-deflection template, rewrite keeps beat as evidence). Mark riverfarm petitions RULED.
+
+5. **§6 exemplar quote cited in TWO places; re-point both:** bible §6 rule 2 AND keeps-petitions/riverfarm.json both argue from now-rewritten forge_hall locked_toast. Re-point both at a surviving CONSEQUENCE-ANON string at train time.
+
+6. **extract_prose self-test rc=1 pre-existing:** corpus 915 vs 825 ±5% tolerance; three heuristic landmarks lack registry rows (mercantile_alleys [19],[20]; ruin_surface [32] — all #398-era strings). Rule dispositions, regenerate registry, refresh tolerance. Gate before round-2 PR (self-test red on main unshippable).
+
+7. **Deep_tunnels holdout survivor "Probably." coda:** Holdout frozen until blind-read control is spent. Note for POST-read holdout release: string is worklist row for next pass, not this one.
+
+8. **Corpus inflation watch (l1 review M11):** l1's 34 rows grew +29.6% in words (~+6.5/string). Check composed inflation across all 188 rows at train time; if balloons, tightening pass is taste decision to surface, not auto-fix.
+
+9. **Mop-up candidates growing:** unlisted residue (pallass 9, invrisil 8, floodplains 1, riverfarm 3, liscor/inn ~7, dungeon 4) + boulevard `$.entities[7].dialogue[0].text` (ambient line carrying exact interpretation observe was cleaned of). Decide mop-up scope at train.
+
+10. **l4 freeze-teach ruling REVISED:** Earlier acceptance based on false "nothing stranded" claim — [32].toast is companion-gated. Fix wave restores ungated physical-fact freeze cue in [5].observe itself.
+
+11. **Amendment-2 Skill-receipt carve-out RULED + committed (l3 review):** on_skill_use/skill_uses toasts report what the Skill reads, no allowance spent, canon guard bounds. Resolves promotion-time rule collision; retro-covers l5/l6's over-declarations.
+
+12. **Matcher recall gaps recorded (l1 I6, l3 M5):** Persistence coda variant "and the <NP with modifiers> keeps..." and bare "wants" as affordance evade the arms. Note at promotion decision; arms stay smoke, not verdicts.
+
+13. **Sentence-shape convergence is cross-lane risk (l3 I3: 62%→81%; l2 review 68%):** Fix waves instructed to rebalance. Measure composed two-sentence share over all re-authored rows vs 65% baseline — if pass TIGHTENED distribution, that is new mechanical tell for blind read.
+
+14. **Process note:** Merged main into lane worktrees while fix waves live (docs-only surfaces, no collision). Never repeat this — don't edit while delegated.
+
+15. **l5 rulings folded into fix wave:** "four stalls" leveled to must-fix (invented number); Olesm "No pressure..." RESTORED (pre-pass authored voice, census FP on character-bearing — Relc precedent); quoted in-world documents are facts (board_rumors restored); net-word-reduction ordered (l5 +38.7%).
+
+16. **Brief discipline correction (l5 reviewer):** test_sim_core suites signal failure via `SCRIPT ERROR|Parse Error|WARNING` grep + `^PASS` presence, NOT "ERROR: FAIL" (rc=0 AND PASS still prints on broken assert). Fold into wi-verifying-changes at close.
+
+17. **INCIDENT (controller, 2026-08-07 late): street.json fix-wave wipe + recovery:** Controller json.dump round-trip to fix em-dashes reformatted whole file; revert discarded l5 FIX WAVE's uncommitted hunks. Recovery: fixer agent re-applied four street edits byte-identical + ruling. Lessons: (a) NEVER json-reserialize shipped map file — targeted edit only; (b) `git diff <file>` and name hunks before ANY revert of file holding uncommitted work.
+
+18. **CADENCE REBALANCE BEFORE THE BLIND READ (ruling 18, controller):** Composed train: base 60.1% two-sentence share → train 73.4% (+24.4% words). Pass killed button-closer engine, grew new fact-stop cadence on 3/4 re-authored rows. "Uniform plainness is itself a machine signature" (Phase-5 readers). Spending decisive instrument on corpus with known defect. **Ruled:** cadence rebalance wave BEFORE Task 4. Targets: 2-sentence share ≤55% (below base's 60.1%), net words DOWN (cut sentences, never pad), no row re-acquires banned shapes, facts/pins/untouchables governed as before, ruled rows (Relc, Olesm) frozen.
+
+19. **Leg 3: letter-vs-purpose discrepancy (read adjudication, Fable verification):** Both readers named THE WITHHELD-AGENT CLOSER (identical move, opposite framings). Every specimen reader offered is a control row: the engine's CORE is 15/15 control (house-simile grammar + every 'most naked' instance); the hostile reader's own counter-case, the rows it could NOT reconcile with the engine, is 9/9 REVISED. Engine is real, both detected accurately, lives entirely in prose pass never opened. Revised corpus does not run it: closer-endings 8.3-6.7% vs control 43.0-39.5%, BUTTON 9.2% vs control 57.9%. Criterion as written drafted for Phase 5 design; under mixed packet inference no longer holds. **Ruled MET.** Discrepancy recorded rather than resolved silently.
+
+20. **Criterion 9 (ending-shape variety) NOT MET; HOLDOUT-RELEASE fold (adjudication + Fable refinement):** Revised corpus shows 60-62% `fact` endings — direct consequence of amendment 2's zero-inference default (not a design failure). Readers directly asked: "DOES THE CORPUS READ UNIFORMLY PLAIN? No... genuine variation in sentence length." Reader 1 judged fact-bucket overshoot benign; real diagnostic is absence of interruption/silence shapes (nothing ever cut off or allowed to hang). **Recommendation refined:** Do NOT run ending-shape variety as separate slice. Fold it, the 8 residue rows from verification addendum, and "Nothing there." family into HOLDOUT-RELEASE pass — holdout carries essentially all remaining corpus engine, must be re-authored regardless. One pass, one fresh control, one read. Leg 3 CONFIRMED MET on stronger evidence (15/15 control simile core).
+
+21. **Follow-up filed as #406** (holdout release + residue drain): the spent control, the 8 named residue rows, the 'Nothing there.' family and the shape-variety work ship as ONE pass behind a freshly drawn holdout.
