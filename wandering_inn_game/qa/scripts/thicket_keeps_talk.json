@@ -163,7 +163,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== THE HUT ROUND TRIP (this script owns it) == witch_hut_door sits at witch_hollow (1,7) and is blocked, so 'move up' from (1,8) faces it without stepping. [1,7]/[1,8] sit outside the pinned cottage cluster entirely, so witch_cottage_reachability's own cells are untouched.",
+   "_comment": "== THE HUT ROUND TRIP (this script owns it) == witch_hut_door sits at witch_hollow (1,4) (moved 2026-08-08 off the cottage overlap) and is blocked, so 'move up' from (1,8) faces it without stepping. [1,7]/[1,8] sit outside the pinned cottage cluster entirely, so witch_cottage_reachability's own cells are untouched.",
    "action": "teleport",
    "map": "witch_hollow",
    "cell": [
@@ -172,17 +172,23 @@
    ]
   },
   {
+   "_comment": "r3: hut door now (1,4); walk (1,8)->(1,5), bump-face, enter",
    "action": "move",
    "direction": "up",
-   "steps": 1
+   "steps": 3
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
     1,
-    8
+    5
    ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
   },
   {
    "action": "press",
@@ -313,8 +319,9 @@
    "path": "player_cell",
    "equals": [
     1,
-    8
-   ]
+    5
+   ],
+   "_comment": "r3: exit to_cell now (1,5)"
   },
   {
    "_comment": "== REPORT == same waking, pool spent, so one interact opens riverfarm_hunter directly.",

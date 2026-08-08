@@ -747,6 +747,133 @@ def check_gate_shapes(maps: dict, errors: list) -> None:
 			_walk_gates(entity, map_id, entity.get("id", "<no id>"), errors)
 
 
+def check_spriteless_entities(maps: dict, errors: list) -> None:
+	"""User playtest 2026-08-08 (Invrisil): four prose props had NO sprite --
+	blocking, interactable, and invisible. Sometimes that is intended (the
+	boulevard storefronts sit against facade art painted in the wall sheet),
+	so the contract is EXPLICIT: an entity with no sprite must either carry
+	`invisible: true` (with a _comment saying where its art actually lives)
+	or be an encounter (combat entities render their combatants, not a map
+	sprite). Anything else is the invisible-interactable-cell bug class."""
+	for map_id, m in sorted(maps.items()):
+		for e in m.get("entities", []):
+			if e.get("sprite") or e.get("kind") == "encounter" or e.get("invisible") is True:
+				continue
+			errors.append(f"maps/{map_id}: entity '{e.get('id','<no id>')}' has no sprite and no "
+				"invisible:true marker -- an invisible interactable/blocking cell (user ruling 2026-08-08)")
+
+
+def _sprite_footprint_cells(sprite_id: str, cell, sprites: dict):
+	"""Cells a sprite's rendered rect plausibly covers, from frame_size *
+	render_scale around the anchor. Approximate on purpose -- advisory tier."""
+	e = sprites.get(sprite_id) or {}
+	anim = (e.get("animations") or {}).get("idle") or {}
+	fs = anim.get("frame_size")
+	if not fs:
+		reg = e.get("region") or [0, 0, 32, 32]
+		fs = reg[2:4] if len(reg) >= 4 else [32, 32]
+	rs = float(e.get("render_scale", 1.0))
+	an = e.get("anchor", [0.5, 1.0])
+	w, h = fs[0] * rs, fs[1] * rs
+	ax, ay = (cell[0] + 0.5) * 32, (cell[1] + 1) * 32
+	left, right = ax - an[0] * w, ax + (1 - an[0]) * w
+	top, bottom = ay - an[1] * h, ay + (1 - an[1]) * h
+	out = set()
+	for cx in range(int(left // 32), int(right // 32) + 1):
+		for cy in range(int(top // 32), int(bottom // 32) + 1):
+			out.add((cx, cy))
+	return out
+
+
+def advise_transparent_regions(parsed: dict, advisories: list) -> None:
+	"""The #398 bar_counter class: an atlas `region` that is fully (or almost
+	fully) transparent renders NOTHING, silently -- the entity blocks and
+	interacts as an invisible cell. Scans every region-based sprite's pixels;
+	needs PIL, degrades to silence without it. Advisory (manual-first)."""
+	try:
+		from PIL import Image
+	except ImportError:
+		return
+	sprites_path = DATA / "sprites.json"
+	if not sprites_path.exists():
+		return
+	sprites = json.loads(sprites_path.read_text())
+	cache = {}
+	for sid, e in sprites.items():
+		if not isinstance(e, dict):
+			continue
+		anim = (e.get("animations") or {}).get("idle") or {}
+		reg = anim.get("region") or e.get("region")
+		sheet = anim.get("sheet") or e.get("sheet")
+		if not (reg and sheet and len(reg) == 4):
+			continue
+		path = str(sheet).replace("res://", str(DATA.parent) + "/")
+		if path not in cache:
+			try:
+				cache[path] = Image.open(path).convert("RGBA")
+			except Exception:
+				cache[path] = None
+		img = cache[path]
+		if img is None:
+			continue
+		crop = img.crop((reg[0], reg[1], reg[0] + reg[2], reg[1] + reg[3]))
+		alpha = crop.getchannel("A")
+		opaque = sum(1 for a in alpha.getdata() if a > 16)
+		total = reg[2] * reg[3]
+		if total and opaque / total < 0.05:
+			advisories.append(f"sprites.json '{sid}': atlas region {reg} is "
+				f"{100 - round(opaque / total * 100)}% transparent -- renders (nearly) nothing "
+				"(#398 bar_counter class)")
+
+
+def advise_undressed_blocked(maps: dict, parsed: dict, advisories: list) -> None:
+	"""User playtest 2026-08-08 (Riverfarm longhouse): blocked cells with no
+	visual owner read as invisible walls. A blocked cell should be inside
+	some drawn thing's footprint: a wall segment, an entity or decor
+	sprite's rendered rect, water/unsteady (they dress themselves), or an
+	edge cell (maps fade at borders). Footprints are approximate, so this
+	REPORTS and never fails."""
+	sprites_path = DATA / "sprites.json"
+	sprites = json.loads(sprites_path.read_text()) if sprites_path.exists() else {}
+	for map_id, m in sorted(maps.items()):
+		dressed = set()
+		walls = m.get("walls") or {}
+		for seg in (walls.get("segments") or []):
+			if isinstance(seg, dict):
+				r = seg.get("rect")
+				if r and len(r) == 4:
+					for x in range(r[0], r[2] + 1):
+						for y in range(r[1], r[3] + 1):
+							dressed.add((x, y))
+				for c in seg.get("cells", []) or []:
+					dressed.add(tuple(c))
+		for c in m.get("freezable", []) or []:
+			dressed.add(tuple(c))
+		for c in m.get("unsteady", []) or []:
+			dressed.add(tuple(c))
+		for layer in ("entities", "decor"):
+			for e in m.get(layer, []) or []:
+				cell = e.get("cell")
+				if cell and e.get("sprite"):
+					dressed |= _sprite_footprint_cells(str(e["sprite"]), cell, sprites)
+				elif cell:
+					dressed.add(tuple(cell))
+		xs = [c[0] for c in dressed] or [0]
+		ys = [c[1] for c in dressed] or [0]
+		max_x, max_y = max(xs), max(ys)
+		naked = []
+		for c in m.get("blocked", []) or []:
+			tc = tuple(c)
+			if tc in dressed:
+				continue
+			if tc[0] <= 0 or tc[1] <= 0 or tc[0] >= max_x or tc[1] >= max_y:
+				continue
+			naked.append(tc)
+		if naked:
+			advisories.append(f"maps/{map_id}: {len(naked)} blocked cell(s) with no visual owner "
+				f"(invisible walls): {sorted(naked)[:8]}")
+
+
 SOLID_DECOR_SPRITES = ("crate", "barrel")
 
 
@@ -1437,11 +1564,14 @@ def main() -> int:
 	check_gate_shapes(maps, errors)
 	check_companion_toasts(maps, errors)
 	check_solid_decor_blocks(maps, errors)
+	check_spriteless_entities(maps, errors)
 	check_moods(parsed, maps, errors)
 	advisories: list = []
 	skill_gate_advisories: list = []
 	prose_template_advisories: list = []
 	advise_prose_templates(maps, prose_template_advisories)
+	advise_undressed_blocked(maps, parsed, advisories)
+	advise_transparent_regions(parsed, advisories)
 	advise_missing_skill_gates(maps, skill_gate_advisories)
 	advise_unlit_sealed_rooms(maps, parsed, advisories)
 	advise_sub_legible_props(parsed, maps, advisories)

@@ -1458,7 +1458,9 @@
    ],
    "display_name": "A Glazier's Front",
    "observe": "The glazier sets a pane on edge in the rack and puts his eye to the top edge, sighting down the street through the glass.",
-   "hide_sprite": true
+   "hide_sprite": true,
+   "invisible": true,
+   "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)"
   },
   {
    "id": "boulevard_cordwainer",
@@ -1469,7 +1471,9 @@
    ],
    "display_name": "A Cordwainer's Bench",
    "observe": "Boots on pegs, sorted by wear. The pair in the window has walked to Pallass and back, if the sign is honest.",
-   "hide_sprite": true
+   "hide_sprite": true,
+   "invisible": true,
+   "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)"
   },
   {
    "id": "boulevard_teahouse",
@@ -1480,7 +1484,9 @@
    ],
    "display_name": "A Narrow Teahouse",
    "observe": "Three tables behind glass gone opaque with steam. On the slate by the door, smoke-leaf is chalked at a price by the ounce, no grade beside it.",
-   "hide_sprite": true
+   "hide_sprite": true,
+   "invisible": true,
+   "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)"
   },
   {
    "_comment": "v0.16.1 #17: the sign the game TALKS about now exists. coyle_operation_lookout's toast and Wilovan both name COYLE AND SONS; a repo-wide grep found those two prose hits and nothing else. The nearest art was an anonymous `coin_shop_sign` DECOR row at [22,1] with no id, name or observe -- deleted and re-expressed here on the blocked facade row (the boulevard_stationer pattern; no walkable cell lost). INTERIM ART by directive: existing sprite, burgundy-and-brass tint (Coyle's livery). Bespoke art rides the art PR. No on_interact_accomplishment -- it would mint a shipped id for a read the vantage prop already banks.",
@@ -1533,7 +1539,9 @@
    },
    "observe": "Every front on this stretch has stopped pretending to be busy. A wheel-track runs through the wet marble, wider than a trade wagon lays and far too clean, and it is already curving away three streets north.",
    "on_interact_accomplishment": "carriage_passed",
-   "toast": "Pink lacquer and a black wheel-rim, past the end of the colonnade before your head comes round; the calling starts again a beat later, one shopfront at a time down the row."
+   "toast": "Pink lacquer and a black wheel-rim, past the end of the colonnade before your head comes round; the calling starts again a beat later, one shopfront at a time down the row.",
+   "invisible": true,
+   "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)"
   }
  ],
  "cover_skip": [

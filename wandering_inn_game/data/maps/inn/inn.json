@@ -1510,12 +1510,8 @@
       "counter": "door_mounted",
       "at": 1
      },
-     "sprite": "pantry_door_runes",
-     "tint": [
-      0.82,
-      0.86,
-      1.0
-     ]
+     "sprite": "anchor_waystone",
+     "_comment": "r3 2026-08-08: mounted state = the city endpoints' anchor_waystone arch (user continuity ruling; was pantry_door_runes+tint)"
     }
    ],
    "_comment_consolidation": "Pantry-door consolidation (user FEEL verdict 2026-07-19): the runes + wardwork props FOLDED into the door. visual_states swaps in the runed-door sprite once the Magical Door is MOUNTED (garden_door at-pattern, render-only). Task 2.4 moved the counter to door_mounted and added a cold `tint` -- the TINT/observe-swap idiom, NOT `hidden`, which is render-only and would leave an invisible blocker mid-floor (#149's class). Deliberately NO `observe` override: `skill_uses` is routed BEFORE the generic observe arm (field_skills.gd dispatch order), so the field would be shadowed and an override here would be inert copy dressed as a live surface. skill_uses carries BOTH reads: [Observe] banks read_the_door_runes, [Detect Magic] banks detected_wardwork. Old saves reach door_mounted through Task 2.6's backfill.",
