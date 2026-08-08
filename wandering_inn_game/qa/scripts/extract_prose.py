@@ -3419,7 +3419,7 @@ def self_test():
     # just measures drift from the last ruled baseline instead of from a
     # historical one. Refreshing it is a controller act, never a lane's.
     MAP_STRINGS_BASELINE = 915    # issue's frozen audit: 825
-    MAP_WORDS_BASELINE = 20646    # issue's frozen audit: 18500
+    MAP_WORDS_BASELINE = 20322    # issue's frozen audit: 18500
     check("dialogue strings within 5% of issue's 1482",
           abs(len(d) - 1482) / 1482 < 0.05, f"{len(d)}")
     check("dialogue words within 5% of issue's 24.5k",

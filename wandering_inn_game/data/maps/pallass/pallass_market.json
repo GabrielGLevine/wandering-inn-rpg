@@ -650,7 +650,7 @@
    "display_name": "Distilling Retort",
    "sprite": "alchemy_still",
    "requires_skill": "mineral_distillation",
-   "skill_hint_toast": "A retort over cold coals, a mineral wash already loaded. A distiller could boil it down to salts.",
+   "skill_hint_toast": "A retort over a banked fire, a mineral wash already loaded. A distiller could boil it down to salts.",
    "locked_toast": "A grey wash sits half-way up the dark glass over cold coals; reducing it to salts is a distiller's job, not yours.",
    "observe": "A distilling retort, its bulb crusted white at the neck where the salts climb as the wash boils away.",
    "on_skill_use": {

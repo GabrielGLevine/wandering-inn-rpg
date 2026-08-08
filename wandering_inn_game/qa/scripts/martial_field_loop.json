@@ -271,7 +271,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The floor stops dead and starts again a span out, the dark going down between. No rope goes anywhere from this lip. Run the line from the stub of the broken span."
+    "text": "The floor stops dead and starts again a span out, the dark going down between. No rope goes anywhere from this lip \u2014 the line runs from the stub of the broken span."
    },
    "timeout_sec": 5
   },

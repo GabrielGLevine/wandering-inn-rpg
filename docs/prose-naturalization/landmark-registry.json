@@ -109,8 +109,8 @@
    "id": "map:invrisil/mercantile_alleys.json:$.entities[20].open_toast",
    "protected": false,
    "source": "heuristic-landmark",
-   "text": "The seal parts. The bale is compact enough to carry and valuable enough to explain the locked room.",
-   "why": "The one of the three that genuinely trips round-2 doctrine: 'compact enough to carry and valuable enough to explain the locked room' is the affordance formula twice over (amendment 4) plus an interpretive closer that tells the player what to conclude. RESTAGE = keep the beat (the seal parts, the bale is worth the room) and lose the formula; re-authored on the round-2 train's mop-up commit."
+   "text": "The seal parts on a bale of dyed silk, brass findings and sealed spice packets, every tie under the same counting-house stamp.",
+   "why": "The one of the three that genuinely trips round-2 doctrine: 'compact enough to carry and valuable enough to explain the locked room' is the affordance formula twice over (amendment 4) plus an interpretive closer that tells the player what to conclude. Ruled NOT-A-LANDMARK so ordinary doctrine applies: the round-2 mop-up kept the beat (the seal parts, the goods are plainly worth a locked room) and dropped the formula by showing the silk, brass and spice instead of asserting value."
   },
   {
    "beat": "the sewer grate descent",

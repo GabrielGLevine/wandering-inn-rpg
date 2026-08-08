@@ -742,7 +742,7 @@
     }
    },
    "observe": "The floor is simply gone here, one span of it, edge to edge. Dropped stone comes back as a sound and not much of one.",
-   "locked_toast": "The floor stops dead and starts again a span out, the dark going down between. No rope goes anywhere from this lip. Run the line from the stub of the broken span."
+   "locked_toast": "The floor stops dead and starts again a span out, the dark going down between. No rope goes anywhere from this lip — the line runs from the stub of the broken span."
   },
   {
    "_comment": "[Greater Strength] carrier. on_skill_use has NO remove_entity verb (dialogue-side only), so permanence is present_when.absent on the arm's own monotone counter.",

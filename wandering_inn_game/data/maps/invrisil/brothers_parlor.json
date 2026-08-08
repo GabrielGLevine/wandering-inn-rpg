@@ -453,7 +453,7 @@
    "display_name": "A Quiet Gentleman",
    "sprite": "drake_patron",
    "facing": "left",
-   "observe": "A Drake on a stool, back to the wall, the good shelf and the banded chest in front of him. Look at the chest and he is already looking at you.",
+   "observe": "A Drake on a stool with the banded chest at his back and the good shelf across the room. Look at the chest and he is already looking at you.",
    "talk_pool": [
     "Mm.",
     "The shelf's spoken for, friend. Marker-holders and upward."
