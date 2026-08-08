@@ -959,7 +959,7 @@ func _build_water_shimmer() -> void:
 		if not (raw_seg is Dictionary):
 			continue
 		var seg := raw_seg as Dictionary
-		if String(seg.get("sheet", "")) != WATER_SHEET:
+		if not bool(seg.get("water", false)) or String(seg.get("sheet", "")) != WATER_SHEET:
 			continue
 		var cells: Array[Vector2i] = WIGame.segment_cells(seg)
 		if cells.is_empty():
@@ -976,14 +976,23 @@ func _build_water_shimmer() -> void:
 			_water_material = mat
 			_apply_motion_settings()
 		var cap_raw: Array = seg.get("cap", [1, 5])
-		var coord := Vector2i(int(cap_raw[0]), int(cap_raw[1]))
+		var cap := Vector2i(int(cap_raw[0]), int(cap_raw[1]))
+		# Shimmer animates OPEN WATER ONLY (review I3): the moving overlay must
+		# never carry the shoreline, or the animated bank ghosts against the
+		# static one and the UV wobble drags atlas neighbours into the tile.
 		for cell: Vector2i in cells:
-			overlay.set_cell(cell, 0, coord)
+			overlay.set_cell(cell, 0, cap)
 		painted = true
 	if overlay == null:
 		return
 	if painted:
 		_field_root.add_child(overlay)
+		# Static banks draw ABOVE the shimmering water, from the terrain-neutral
+		# generated sheet; land side is transparent so the map's own ground
+		# shows through (issue #411 second pass).
+		var shoreline := WITileBoardBuilder.build_shoreline_overlay(segments, WISpriteRegistry)
+		if shoreline != null:
+			_field_root.add_child(shoreline)
 	else:
 		_water_material = null
 		overlay.queue_free()
