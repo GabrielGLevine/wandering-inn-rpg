@@ -1058,7 +1058,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Basic Repair] — You cut boards to the span and lay them across the stringers. The walk takes your weight from one end to the other."
+    "text": "[Basic Repair] — You cut boards to the span and lay them across the stringers: the walk takes your weight end to end."
    },
    "timeout_sec": 5
   },
@@ -1247,7 +1247,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The dray stands empty and the shed is stacked to the door. The bank head has no more work in it until tomorrow."
+    "text": "The dray stands empty and the shed is stacked to the door — no more work at the bank head until tomorrow."
    },
    "timeout_sec": 5
   },

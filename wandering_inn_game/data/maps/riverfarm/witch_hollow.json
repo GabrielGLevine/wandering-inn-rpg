@@ -565,7 +565,7 @@
     "accomplishment": "blight_lifted",
     "toast": "[Observe] — Look at it squarely and the knot resolves into a price, tied off and unpaid. You pay it where you stand, and the pull goes out of the briar all across the hollow."
    },
-   "observe": "Root and briar have grown into a single knot at the middle of the standing stones. The strands are all pulled tight, each toward whichever stone stands closest."
+   "observe": "Root and briar have grown into a single knot at the middle of the standing stones, the strands all pulled tight, each toward whichever stone stands closest."
   },
   {
    "id": "leyline_stone",
@@ -747,7 +747,7 @@
     1.02,
     0.78
    ],
-   "observe": "At the hollow's west edge stands a second house, smaller than the cottage, with half its roof fallen in. The door is open on the dark, and shallow marks cross the lintel in a line worn nearly smooth.",
+   "observe": "A second house at the hollow's west edge, smaller than the cottage, half its roof fallen in. The door stands open on the dark, and shallow marks cross the lintel in a line worn nearly smooth.",
    "to_map": "witch_hut",
    "to_cell": [
     4,
