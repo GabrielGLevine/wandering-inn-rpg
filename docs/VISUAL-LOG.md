@@ -4173,3 +4173,18 @@ a shade variant never reads as a separate thing, distinct silhouettes do.
    ambush arena all lean on the same two sprites. Source prop variety
    from owned packs first (catalog→index→assembly-guide workflow),
    PixelLab fallback (subscription full). Filed as an issue.
+
+## 2026-08-08 — playtest r3 batch SHIPPED (e5616496) + follow-ups
+FIXED same-day: Old Hut re-sited off Eloise's cottage (windowed
+before/after in qa_output/probe_hollow/), longhouse + cottage_a phantom
+blocked columns removed (engine's cover_skip assert caught the coupled
+rows), spriteless props got the invisible:true convention, inn's
+mounted Magical Door now the city arch (user continuity ruling),
+flower_tiny's 100%-transparent region re-measured (was rendering
+nothing on street + floodplains). Three lint arms guard the classes.
+OPEN: #409 idle sheets (13 static NPCs — needs PixelLab art lane),
+#410 alley-door placement (route re-derivation is the real cost),
+frozen_cache submerged-sprite treatment (earlier finding, still open),
+pond-island geometry (still open), explicit-instruction prose class
+(folds into #406), undressed-blocked advisory inventory (8 maps —
+drain map-by-map, footprint model approximate on layer-drawn art).
