@@ -62,10 +62,6 @@
  "_comment": "`goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
  "blocked": [
   [
-   20,
-   12
-  ],
-  [
    29,
    24
   ],
@@ -316,14 +312,6 @@
      [
       11,
       5
-     ],
-     [
-      11,
-      4
-     ],
-     [
-      11,
-      3
      ]
     ]
    },
@@ -1008,13 +996,6 @@
    ]
   },
   {
-   "sprite": "crate",
-   "cell": [
-    20,
-    12
-   ]
-  },
-  {
    "sprite": "bush_green",
    "cell": [
     8,
@@ -1098,6 +1079,14 @@
     34,
     23
    ]
+  },
+  {
+   "sprite": "gnaw_pile",
+   "cell": [
+    22,
+    13
+   ],
+   "_comment": "r4 roads ruling: the offshoot IS the mothbear verge (night encounter); this is its DAY tell -- evidence, not instruction (user discovery ruling 2026-08-08)"
   }
  ],
  "scatter": [

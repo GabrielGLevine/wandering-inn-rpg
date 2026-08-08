@@ -4188,3 +4188,24 @@ frozen_cache submerged-sprite treatment (earlier finding, still open),
 pond-island geometry (still open), explicit-instruction prose class
 (folds into #406), undressed-blocked advisory inventory (8 maps —
 drain map-by-map, footprint model approximate on layer-drawn art).
+
+## 2026-08-08 — playtest r4 + roads (12dfe830 + roads commit)
+FIXED: Eloise has ONE cottage (yellow hut deleted, cottage IS the
+witch_hut door; observed_witch_cottage ceased to exist — reachability
+tripwire rejected a consumerless retirement); alley enters at the
+DRAWN mouth (26,2) with the walk-behind strip blocked and symmetric
+return drop; pond island fully water-ringed; longhouse re-laid
+empirically (wall row only, west end closed) + both cottages' phantom
+columns; nonsense coin line rewritten; charm rock grounded (traveler's
+offering niche); Wilovan census corrected (#409 → 4 truly static, all
+Invrisil); ROADS: east inn stub ends at the annex, verge offshoot
+noise-crate deleted + daytime gnaw-scatter tell added (the offshoot's
+destination is the NIGHT mothbear encounter — evidence over
+instruction per user ruling).
+OPEN/ESCALATED: pond WATER READS AS FLAT BLUE SQUARES (no shoreline/
+bank treatment — the island fix is data-correct but the read needs
+edge tiles; renderer draws water segments as uniform fill). Applies to
+every water feature. Needs an art/renderer slice — filing.
+STILL OPEN: frozen_cache dry-crate-on-water sprite, #409 idles, #410
+closed by the r4 door move (verify + close), explicit-instruction
+prose class (→ #406).
