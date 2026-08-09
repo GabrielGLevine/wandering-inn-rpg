@@ -653,3 +653,16 @@ wandering_inn_game/qa/ci_sweep.sh                                  # full canoni
 numbered adjudication ledger through v0.13.0 — lives in this file's git
 history and the merged PR bodies; pre-2026-07-05 material in the frozen
 archive repo at docs/archive/HANDOFF-archive-2026-07.md.)*
+
+## QUEUED TOOLING (retrospective, 2026-08-09 — build next session)
+1. `scripts/preflight.sh`: ONE command = data_lint + verify-untouched +
+   extract_prose self-test + test_sprite_registry (+ optional --full for
+   units). Run at EVERY wave close. Rationale: verify-untouched drift
+   sat hidden across two waves and the ice-sink bug across many,
+   because per-gate memory is the weak link — make the bundle the habit.
+2. Pre-commit hook staleness self-check: worktree hooks outlive main
+   hook edits; a stale hook blocked a commit and caused a
+   merged-wrong-tip repair. One-line version compare + warning.
+3. Coyle & Sons sign emblem repaint (crate+cartwheel reads as a prop):
+   PixelLab inpaint to monogram/lettering — one generation + windowed.
+4. Parlor music EAR-GATE: hydrogene_east_town picked; user verdict.
