@@ -69,9 +69,6 @@ jobs:
       - name: Check model-neutral guidance mirrors
         run: python3 scripts/sync_agent_guidance.py
 
-      - name: Check comment economy
-        run: python3 scripts/comment_census.py --check
-
       # GH#276: engine-free structural lint over data/** — the only
       # pre-Godot CI signal for data edits (ci.yml jobs are parallel, so
       # ci_sweep's own pre-flight can't short-circuit the Godot jobs).

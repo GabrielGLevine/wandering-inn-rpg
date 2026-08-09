@@ -38,11 +38,10 @@ if touches '^wandering_inn_game/data/'; then
 		python3 "$ROOT/wandering_inn_game/scripts/data_lint.py" 2>&1 | tail -20
 		fail=1
 	fi
-	if ! python3 "$ROOT/scripts/comment_census.py" --check >/dev/null 2>&1; then
-		say "pre-commit BLOCK: comment census over target (target <=15.0% DATA):"
-		python3 "$ROOT/scripts/comment_census.py" --check 2>&1 | grep -E '^(GDSCRIPT|DATA)' || true
-		fail=1
-	fi
+	# Comment census gate REMOVED (user ruling 2026-08-09): the ceiling tax
+	# forced mechanical trims that twice mangled load-bearing docs; token
+	# savings did not justify the encumbrance. comment_census.py remains as
+	# an informational tool (run it by hand if bloat is suspected).
 fi
 
 # --- Skill-mirror sync: canonical .agents/skills vs .claude mirror.
