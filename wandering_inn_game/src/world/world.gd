@@ -965,8 +965,12 @@ func _build_water_shimmer() -> void:
 		if cells.is_empty():
 			continue
 		if overlay == null:
-			var tile_px := int(seg.get("tile_px", 16))
-			overlay = WITileBoardBuilder.make_tile_layer(_field_root, WATER_SHEET, tile_px, WISpriteRegistry)
+			# Shimmer paints from the terrain-neutral generated sheet so open
+			# water matches the shoreline overlay's palette exactly -- the old
+			# per-segment cap tile is fully covered and only feeds fallback.
+			overlay = WITileBoardBuilder.make_tile_layer(
+				_field_root, WITileBoardBuilder.SHORELINE_SHEET,
+				WITileBoardBuilder.SHORELINE_TILE_PX, WISpriteRegistry)
 			var mat := ShaderMaterial.new()
 			mat.shader = WATER_SHIMMER_SHADER
 			overlay.material = mat
@@ -975,13 +979,13 @@ func _build_water_shimmer() -> void:
 			# the freshly built overlay.
 			_water_material = mat
 			_apply_motion_settings()
-		var cap_raw: Array = seg.get("cap", [1, 5])
-		var cap := Vector2i(int(cap_raw[0]), int(cap_raw[1]))
 		# Shimmer animates OPEN WATER ONLY (review I3): the moving overlay must
 		# never carry the shoreline, or the animated bank ghosts against the
 		# static one and the UV wobble drags atlas neighbours into the tile.
+		# Interior coord (2,1) is the generated sheet's all-water tile; its
+		# atlas neighbours are also water, so the UV wobble stays on water.
 		for cell: Vector2i in cells:
-			overlay.set_cell(cell, 0, cap)
+			overlay.set_cell(cell, 0, WITileBoardBuilder.SHORELINE_WANG_COORDS[15])
 		painted = true
 	if overlay == null:
 		return

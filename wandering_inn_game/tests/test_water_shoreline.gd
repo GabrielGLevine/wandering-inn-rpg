@@ -97,21 +97,25 @@ func _sheet_pin() -> void:
 		if bits == 15:
 			continue  # interior tile: all-water, no polarity to prove
 		var coord: Vector2i = WITileBoardBuilder.SHORELINE_WANG_COORDS[bits]
-		# Sample each corner's OUTERMOST 4x4 block: the Wang transition curve
-		# (size 0.25) legitimately wanders past quadrant midlines, but it never
-		# reaches the tile's far corners -- so water far-corners must be near
-		# fully opaque and land far-corners near fully transparent. This is
-		# the boundary-shape-agnostic polarity proof.
+		# Sample each corner's EXTREME 3x3 block. The Wang transition here is
+		# 0.25, so a LAND corner is a small blob hugging the tile corner
+		# itself -- inset sampling misses it entirely and reads the water body
+		# instead (that mistake burned three pin iterations, 2026-08-09; the
+		# raw-sheet derivation then matched the metadata 16/16 at the extreme
+		# corners). After keying, a land blob is transparent and water reaches
+		# its corners, so: land extreme-corner mostly transparent, water
+		# extreme-corner mostly opaque. Thin seam lines along tile edges
+		# cannot dominate a 3x3 majority.
 		for corner_idx in range(4):
 			var corner_bit: int = [1, 2, 4, 8][corner_idx]
-			var qx: int = [0, 12, 0, 12][corner_idx]
-			var qy: int = [0, 0, 12, 12][corner_idx]
+			var qx: int = [0, 13, 0, 13][corner_idx]
+			var qy: int = [0, 0, 13, 13][corner_idx]
 			var opaque := 0
-			for py in range(4):
-				for px in range(4):
+			for py in range(3):
+				for px in range(3):
 					if img.get_pixel(coord.x * 16 + qx + px, coord.y * 16 + qy + py).a > 0.1:
 						opaque += 1
 			if bits & corner_bit:
-				_check(opaque >= 13, "bits=%d %s water far-corner %d painted (%d/16)" % [bits, coord, corner_bit, opaque])
+				_check(opaque >= 6, "bits=%d %s water corner %d painted (%d/9)" % [bits, coord, corner_bit, opaque])
 			else:
-				_check(opaque <= 3, "bits=%d %s land far-corner %d transparent (%d/16)" % [bits, coord, corner_bit, opaque])
+				_check(opaque <= 3, "bits=%d %s land corner %d transparent (%d/9)" % [bits, coord, corner_bit, opaque])
