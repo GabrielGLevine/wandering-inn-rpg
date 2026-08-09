@@ -877,14 +877,15 @@ def advise_undressed_blocked(maps: dict, parsed: dict, advisories: list) -> None
 ## GH#408 extends this set with the prop-variety props that REPLACED crates
 ## and barrels -- the swap has to inherit the solidity of what it replaced or
 ## the pass would have quietly turned solid dressing walk-through. Matching is
-## by SUBSTRING, so "crate" already covers "crate_submerged"; it is listed
-## anyway because a reader should not have to derive that. `battle_debris` is
+## by SUBSTRING, so a variant id is covered by its stem. `battle_debris` is
 ## the deliberate omission: flat ground scatter, walkable, and the arena
 ## dressing it dresses sits outside the playable grid regardless.
+## #409 review L6 + H2: `crate_submerged` is GONE -- the sprite it named was
+## deleted when frozen_cache went invisible:true, and it was never reachable
+## from here anyway (this arm scans DECOR rows; frozen_cache is an entity).
 SOLID_DECOR_SPRITES = (
 	"crate",
 	"barrel",
-	"crate_submerged",
 	"grain_sacks",
 	"basket_stack",
 	"firewood_stack",

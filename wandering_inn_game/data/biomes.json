@@ -58,7 +58,7 @@
   ],
   "blocked_tile_px": 16,
   "interior_flavor": "Nothing there. Cart ruts worn into the flagstones, one groove deeper than its pair.",
-  "_comment_blocked_props": "#408: was ['crate','barrel [t]"
+  "_comment_blocked_props": "#408: was ['crate','barrel']. Blocked cells in this biome used to alternate between exactly two props, so every obstacle cluster read as the same crate-and-barrel pair; rubble_pile and firewood_stack widen the rotation without changing what a blocked cell MEANS (all four are solid)."
  },
  "cave": {
   "footstep_family": "stone",

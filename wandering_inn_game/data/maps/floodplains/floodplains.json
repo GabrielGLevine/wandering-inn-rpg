@@ -1065,7 +1065,7 @@
     29,
     24
    ],
-   "_comment": "#408 prop variety: was `cr [t]"
+   "_comment": "#408 prop variety: was `crate`. Sacked grain at the gate-side yard reads as goods waiting on a cart rather than a fourth identical box. Cell stays in `blocked` (grain_sacks is solid)."
   },
   {
    "sprite": "barrel",
@@ -1073,7 +1073,7 @@
     33,
     24
    ],
-   "_comment": "#408 prop variety: the ONE [t]"
+   "_comment": "#408 prop variety: the ONE barrel kept in this yard. The pass swapped its neighbours, not the whole row -- a yard of nothing but barrels was the problem, a yard with no barrel at all is a different one."
   },
   {
    "sprite": "firewood_stack",
@@ -1232,7 +1232,8 @@
    "toast": "You pay out the line into the dark water. Nothing takes it, and nothing was ever going to — whatever keeps this pool knows the difference between an offer and a hook."
   },
   {
-   "_comment": "Interact-only, banks `foun [t]",
+   "_comment": "Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast.",
+   "_comment_409_h2": "#409 review H2, user root-cause ruling 2026-08-09: this prop carries NO sprite. The cache lies submerged under a coat of silt a stride out from the bank -- a legible box drawn on the water contradicts the fiction, and the pond crab overlaps this cell from every approach regardless of what art sits here. Discovery never needed a sprite: the bank-side `observe` foreshadows it, the pond_narrows toast teaches the freeze route, and the adjacency affordance marker fires when the player stands on the frozen strip at (10,17). This is exactly the case invisible:true exists for. BOTH keys are required and they are not redundant: `hide_sprite` is the RENDERER contract (world.gd `_build_entities` / `_reconcile_entity_presence` skip the visual entirely) and `invisible` is the data_lint marker (check_spriteless_entities). Dropping a sprite and setting only `invisible` leaves the entity_visual_factory fallback ColorRect on screen -- a flat PROP_COLOR block, which is how this first landed and what the pond probe caught. Same pairing as boulevard_glazier / boulevard_teahouse / boulevard_cordwainer.",
    "id": "frozen_cache",
    "kind": "prop",
    "cell": [
@@ -1240,7 +1241,8 @@
     18
    ],
    "display_name": "Sunken Cache",
-   "sprite": "crate_submerged",
+   "hide_sprite": true,
+   "invisible": true,
    "observe": "Something square and worked lies under silt on the pond floor, a stride out from the bank. The water between it and the bank is a hand deep and dead still. In the bank's shade the surface has already gone to a skin of ice.",
    "on_interact_accomplishment": "found_the_frozen_cache",
    "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, still dry: a few keepsakes and a handful of old coin.",

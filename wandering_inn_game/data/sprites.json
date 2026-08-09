@@ -5781,7 +5781,8 @@
     ],
     "fps": 6
    }
-  }
+  },
+  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's."
  },
  "master_coyle": {
   "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig, burgundy-and-gold merchant livery his own copy names. Feet plane 95/128.",
@@ -5802,7 +5803,8 @@
     ],
     "fps": 6
    }
-  }
+  },
+  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's."
  },
  "hedault": {
   "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig; he no longer shares the Headman's laborer rig with his own alley's footpads.",
@@ -5823,7 +5825,8 @@
     ],
     "fps": 6
    }
-  }
+  },
+  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's."
  },
  "city_scribe": {
   "_comment": "v0.16.1 art wave: shared clerk rig for anonymous ledger-keepers (extras may share; named characters may not).",
@@ -5844,7 +5847,8 @@
     ],
     "fps": 6
    }
-  }
+  },
+  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's."
  },
  "city_runner": {
   "_comment": "v0.16.1 art wave: shared courier rig (pack + satchel + papers) for errand-runners; extras may share this one.",
@@ -6408,27 +6412,8 @@
    }
   }
  },
- "crate_submerged": {
-  "_comment": "#408/#409 wave 2026-08-08 [t]",
-  "render_scale": 0.36,
-  "anchor": [
-   0.4922,
-   0.9062
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/sprites/crate_submerged/Idle-Sheet.png",
-    "frame_size": [
-     64,
-     64
-    ],
-    "fps": 1
-   }
-  }
- },
  "grain_sacks": {
-  "_comment": "#408/#409 wave 2026-08-08 [t]",
+  "_comment": "#408 prop-variety pass 2026-08-08 (OWNED PixelLab 1-direction object, 64px, tag wi409-408). render_scale 0.4 is the floor-prop default -- 64px at 0.4 reads ~0.8 cell, so it fills its cell without swallowing a neighbour. anchor.y from the alpha bbox's lowest opaque row (60/64), not the frame bottom. Solid: carries a SOLID_DECOR_SPRITES entry in scripts/data_lint.py, so every decor cell using it must also be in its map's `blocked` list.",
   "render_scale": 0.4,
   "anchor": [
    0.5,
@@ -6447,7 +6432,7 @@
   }
  },
  "basket_stack": {
-  "_comment": "#408/#409 wave 2026-08-08 [t]",
+  "_comment": "#408 prop-variety pass 2026-08-08 (OWNED PixelLab 1-direction object, 64px, tag wi409-408). render_scale 0.4 is the floor-prop default -- 64px at 0.4 reads ~0.8 cell, so it fills its cell without swallowing a neighbour. anchor.y from the alpha bbox's lowest opaque row (62/64), not the frame bottom. Solid: SOLID_DECOR_SPRITES entry, blocked-cell contract as above.",
   "render_scale": 0.4,
   "anchor": [
    0.4922,
@@ -6466,7 +6451,7 @@
   }
  },
  "firewood_stack": {
-  "_comment": "#408/#409 wave 2026-08-08 [t]",
+  "_comment": "#408 prop-variety pass 2026-08-08 (OWNED PixelLab 1-direction object, 64px, tag wi409-408). render_scale 0.4 is the floor-prop default -- 64px at 0.4 reads ~0.8 cell, so it fills its cell without swallowing a neighbour. anchor.y from the alpha bbox's lowest opaque row (62/64), not the frame bottom. Solid: SOLID_DECOR_SPRITES entry, blocked-cell contract as above.",
   "render_scale": 0.4,
   "anchor": [
    0.5078,
@@ -6485,7 +6470,7 @@
   }
  },
  "rubble_pile": {
-  "_comment": "#408/#409 wave 2026-08-08 [t]",
+  "_comment": "#408 prop-variety pass 2026-08-08 (OWNED PixelLab 1-direction object, 64px, tag wi409-408). render_scale 0.4 is the floor-prop default -- 64px at 0.4 reads ~0.8 cell, so it fills its cell without swallowing a neighbour. anchor.y from the alpha bbox's lowest opaque row (58/64), not the frame bottom. Solid: SOLID_DECOR_SPRITES entry, blocked-cell contract as above.",
   "render_scale": 0.4,
   "anchor": [
    0.4844,
@@ -6504,7 +6489,7 @@
   }
  },
  "battle_debris": {
-  "_comment": "#408/#409 wave 2026-08-08 [t]",
+  "_comment": "#408 prop-variety pass 2026-08-08 (OWNED PixelLab 1-direction object, 64px, tag wi409-408). render_scale 0.4 is the floor-prop default -- 64px at 0.4 reads ~0.8 cell, so it fills its cell without swallowing a neighbour. anchor.y from the alpha bbox's lowest opaque row (60/64), not the frame bottom. NOT solid and NO shadow: flat ground scatter you walk over, deliberately absent from SOLID_DECOR_SPRITES. Used only as off-grid arena dressing (goblin_ambush / goblin_ambush_tutorial), never on a playable cell.",
   "render_scale": 0.4,
   "anchor": [
    0.5391,

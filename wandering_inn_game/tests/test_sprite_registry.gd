@@ -509,12 +509,14 @@ func _build_expected_counts() -> Dictionary:
 
 	## v0.16.1 art wave: idle-only PixelLab v3 rigs, one frame per facing.
 	## GH#409: the four Invrisil rigs the corrected census found TRULY static
-	## now carry a 2-frame breathing idle per facing (frame 0 is the shipped
-	## rest pose, byte-identical -- see sprites.json). `city_runner` was not in
-	## that census and stays a 1-frame rig.
+	## now carry a breathing idle per facing (frame 0 is the shipped rest
+	## pose, byte-identical -- see sprites.json). #409 review H3 widened them
+	## from 2 to the FAMILY STANDARD 4 frames @ fps 6: a 2-frame loop is a
+	## 3 Hz toggle, not a breath, and 41 other rigs already ship 4.
+	## `city_runner` was not in that census and stays a 1-frame rig.
 	for idle_breathing_rig: String in ["invrisil_lady_client", "master_coyle", "hedault",
 			"city_scribe"]:
-		counts["%s/idle" % idle_breathing_rig] = 2
+		counts["%s/idle" % idle_breathing_rig] = 4
 	counts["city_runner/idle"] = 1
 	counts["coyle_shop_sign/idle"] = 1
 
@@ -542,10 +544,12 @@ func _build_expected_counts() -> Dictionary:
 	counts["pond_cache/idle"] = 1
 
 	# GH#408 prop-variety pass (OWNED PixelLab statics, one frame each). The
-	# first five are SOLID and carry a matching SOLID_DECOR_SPRITES entry in
+	# first four are SOLID and carry a matching SOLID_DECOR_SPRITES entry in
 	# scripts/data_lint.py; `battle_debris` is flat ground scatter and stays
 	# walkable, which is why it is deliberately absent from that set.
-	for variety_prop: String in ["crate_submerged", "grain_sacks", "basket_stack",
+	# #409 review H2: `crate_submerged` is GONE -- floodplains' frozen_cache
+	# is invisible:true (submerged under silt), so no sprite backs it.
+	for variety_prop: String in ["grain_sacks", "basket_stack",
 			"firewood_stack", "rubble_pile", "battle_debris"]:
 		counts["%s/idle" % variety_prop] = 1
 

@@ -551,7 +551,7 @@
    ]
   },
   {
-   "_comment": "#408 prop variety: was `ba [t]",
+   "_comment": "#408 prop variety: was `barrel`. Sacked grain opens the market row with something a Liscor stallholder would actually be selling. Cell stays in `blocked` (grain_sacks is solid).",
    "sprite": "grain_sacks",
    "cell": [
     2,

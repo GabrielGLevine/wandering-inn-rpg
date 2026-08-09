@@ -24,7 +24,7 @@
   },
   {
    "action": "wait_frames",
-   "frames": 50
+   "frames": 20
   },
   {
    "action": "screenshot",
@@ -32,7 +32,7 @@
   },
   {
    "action": "wait_frames",
-   "frames": 50
+   "frames": 20
   },
   {
    "action": "screenshot",
@@ -56,11 +56,12 @@
   },
   {
    "action": "wait_frames",
-   "frames": 50
+   "frames": 20
   },
   {
    "action": "screenshot",
    "name": "alleys_b"
   }
- ]
+ ],
+ "_comment": "#409 idle probe. Two-plus captures per map, spaced 20 engine frames = NOMINALLY 2 animation ticks at fps 6. The gap matters: a 4-frame idle repeats every 4 ticks, so any gap that is a multiple of 4 makes a WORKING animation photograph as frozen. 2 is the safe target -- one tick of scheduler jitter either way lands on 1 or 3, never 0. (The original 50-frame gap was 5 ticks, chosen when the idles were 2 frames and only ODDNESS mattered; after the #409-review widening to 4 frames it drifted to 4 ticks between the 2nd and 3rd boulevard captures and produced two byte-identical PNGs.)"
 }
