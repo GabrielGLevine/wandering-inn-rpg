@@ -287,3 +287,24 @@ agent's uncommitted work in the same file (the shared-file wipe class).
 Edit shipped JSON with targeted string replacement, assert the match
 count is exactly 1, and check `git diff --stat` shows the line count you
 intended before going further.
+
+## Preflight bundle (retrospective tooling, 2026-08-09)
+`scripts/preflight.sh` = data_lint + verify-untouched + extract_prose
+self-test + surfaces --check + mirrors + doc-drift + test_sprite_registry
+(`--full` adds every unit suite). RUN IT AT EVERY WAVE CLOSE — per-gate
+memory is the weak link (verify-untouched drift hid across two waves;
+the ice-sink bug across many). The bundle is the habit; the gates are
+the details.
+
+## Two disciplines the same retrospective bought
+- **Ground truth before iteration:** one diagnostic dump (pixels, step
+  lists, event traces) BEFORE any tuning loop. The sheet-polarity pin
+  burned four blind threshold rounds that one pixel dump solved; route
+  edits misfired twice before printing the actual steps. If you are
+  adjusting a parameter for the second time without having LOOKED at
+  the artifact, stop and look.
+- **Read the verifier's contract before editing its inputs:** a broken
+  holdout pin got its ID rewritten — but ids KEY the frozen inventory,
+  and the docstring said so; the sanctioned mechanism (exclusions) was
+  two paragraphs down. Cost two rounds. The gate's own documentation is
+  the first read, not the last.
