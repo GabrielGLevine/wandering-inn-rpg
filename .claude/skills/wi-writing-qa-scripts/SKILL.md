@@ -273,3 +273,13 @@ gating. Consequences for authors: never hand-pad waits "for settle"
 `line_display_ab` is the canonical regression proof (interact at
 world_ready+0 must render); `ui_dialogue_rendered` alone is still not
 display proof — pair it with a windowed shot or a hold assertion.
+
+## Deletion re-indexes everything after it (2026-08-09, broke a holdout pin)
+The append-LAST rule for new entities has a mirror: DELETING an entity
+shifts every later index down one, silently breaking every positional
+pin ($.entities[N] paths in holdout/keeps/QA payloads) past it. The r4
+cottage merge deleted witch_hut_door and a holdout pin two slots later
+dangled for two waves until verify-untouched ran again. When an entity
+must die: grep the repo for the map's `entities[` paths at HIGHER
+indices, migrate each with a recorded path-migration (text asserted
+byte-identical), and run verify-untouched IN THE SAME COMMIT.

@@ -8,9 +8,9 @@
  "_python": "3.12.3",
  "_reserved_named_work": {
   "map:dungeon/trapped_halls.json:$.entities[8].skill_uses.observe.variants[0].toast": "issue-named: the `which from X is Y` shape plus the narrator supplying the interpretation the player should have made",
-  "map:dungeon/trapped_halls.json:$.entities[9].observe": "issue-named: partial keep — the threat warning stays, the reframe-for-effect second sentence is the work (bible §7)",
-  "map:garden/garden_sanctuary.json:$.entities[0].observe": "issue-named: forbidden inference — neither the joy nor the intent is visible, only a dancer's pose (bible §6 rule 1)",
-  "map:liscor/street.json:$.entities[12].observe": "controller-named: four negation-correction shapes stacked in one scenic string at closer 1 — the shape the counter-only queue could not see",
+  "map:dungeon/trapped_halls.json:$.entities[9].observe": "issue-named: partial keep \u2014 the threat warning stays, the reframe-for-effect second sentence is the work (bible \u00a77)",
+  "map:garden/garden_sanctuary.json:$.entities[0].observe": "issue-named: forbidden inference \u2014 neither the joy nor the intent is visible, only a dancer's pose (bible \u00a76 rule 1)",
+  "map:liscor/street.json:$.entities[12].observe": "controller-named: four negation-correction shapes stacked in one scenic string at closer 1 \u2014 the shape the counter-only queue could not see",
   "map:pallass/pallass_den_shop.json:$.entities[6].toast": "issue-named button: two excellent specific sentences, then a third that tells the reader what to think about them"
  },
  "_reserved_unresolved": [],
@@ -251,7 +251,7 @@
   "map:riverfarm/witch_hollow.json:$.entities[17].on_skill_use.toast",
   "map:riverfarm/witch_hollow.json:$.entities[17].skill_hint_toast",
   "map:riverfarm/witch_hollow.json:$.entities[22].once_per_waking_toast",
-  "map:riverfarm/witch_hollow.json:$.entities[24].observe",
+  "map:riverfarm/witch_hollow.json:$.entities[23].observe",
   "map:ruin/ruin_surface.json:$.entities[2].observe",
   "map:ruin/ruin_surface.json:$.entities[5].variants[0].toast",
   "map:ruin/ruin_surface.json:$.entities[5].visual_states[0].observe",
@@ -262,5 +262,13 @@
   "map:sewers/sewers.json:$.entities[3].observe",
   "map:sewers/sewers.json:$.entities[8].locked_toast",
   "map:sewers/sewers.json:$.entities[9].door_when.open_toast"
+ ],
+ "_path_migrations": [
+  {
+   "from": "map:riverfarm/witch_hollow.json:$.entities[24].observe",
+   "to": "map:riverfarm/witch_hollow.json:$.entities[23].observe",
+   "date": "2026-08-09",
+   "why": "witch_hut_door (was entities[23]) deleted by the r4 cottage merge; every later entity re-indexed -1. Text byte-identical (asserted at migration). The append-last rule extends to DELETIONS."
+  }
  ]
 }
