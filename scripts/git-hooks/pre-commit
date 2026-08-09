@@ -21,8 +21,8 @@ ROOT="$(git rev-parse --show-toplevel)"
 # loudly when this file differs from main's version (never block on it --
 # the diff might BE the change being committed).
 if command -v git >/dev/null 2>&1; then
-	_main_hook=$(git -C "$ROOT" show main:scripts/git-hooks/pre-commit 2>/dev/null || true)
-	if [ -n "$_main_hook" ] && ! printf '%s' "$_main_hook" | diff -q - "$ROOT/scripts/git-hooks/pre-commit" >/dev/null 2>&1; then
+	if git -C "$ROOT" rev-parse -q --verify main:scripts/git-hooks/pre-commit >/dev/null 2>&1 && \
+	   ! git -C "$ROOT" diff --quiet main -- scripts/git-hooks/pre-commit 2>/dev/null; then
 		echo "pre-commit NOTE: this hook differs from main's copy -- if you are in a worktree, merge main before trusting gate results." >&2
 	fi
 fi
