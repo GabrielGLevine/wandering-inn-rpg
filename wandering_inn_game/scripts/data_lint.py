@@ -874,7 +874,22 @@ def advise_undressed_blocked(maps: dict, parsed: dict, advisories: list) -> None
 				f"(invisible walls): {sorted(naked)[:8]}")
 
 
-SOLID_DECOR_SPRITES = ("crate", "barrel")
+## GH#408 extends this set with the prop-variety props that REPLACED crates
+## and barrels -- the swap has to inherit the solidity of what it replaced or
+## the pass would have quietly turned solid dressing walk-through. Matching is
+## by SUBSTRING, so "crate" already covers "crate_submerged"; it is listed
+## anyway because a reader should not have to derive that. `battle_debris` is
+## the deliberate omission: flat ground scatter, walkable, and the arena
+## dressing it dresses sits outside the playable grid regardless.
+SOLID_DECOR_SPRITES = (
+	"crate",
+	"barrel",
+	"crate_submerged",
+	"grain_sacks",
+	"basket_stack",
+	"firewood_stack",
+	"rubble_pile",
+)
 
 
 def check_solid_decor_blocks(maps: dict, errors: list) -> None:

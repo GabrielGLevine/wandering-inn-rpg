@@ -44,6 +44,8 @@
    4
   ],
   "blocked_props": [
+   "rubble_pile",
+   "firewood_stack",
    "crate",
    "barrel"
   ],
@@ -55,7 +57,8 @@
    0
   ],
   "blocked_tile_px": 16,
-  "interior_flavor": "Nothing there. Cart ruts worn into the flagstones, one groove deeper than its pair."
+  "interior_flavor": "Nothing there. Cart ruts worn into the flagstones, one groove deeper than its pair.",
+  "_comment_blocked_props": "#408: was ['crate','barrel [t]"
  },
  "cave": {
   "footstep_family": "stone",

@@ -4209,3 +4209,57 @@ every water feature. Needs an art/renderer slice — filing.
 STILL OPEN: frozen_cache dry-crate-on-water sprite, #409 idles, #410
 closed by the r4 door move (verify + close), explicit-instruction
 prose class (→ #406).
+
+## 2026-08-08 — #409 idles + #408 prop variety + the pond-cache fix (art lane)
+FIXED, all three with windowed evidence in `wandering_inn_game/qa_output/`:
+
+1. **#409 — the four truly static Invrisil NPCs now breathe.**
+   `city_scribe`, `hedault`, `invrisil_lady_client`, `master_coyle` each
+   got a 2-frame idle per facing. Frame 0 is the previously shipped rest
+   pose, BYTE-IDENTICAL; frame 1 comes from PixelLab v2
+   `animate-character` **mode=v3** run against the same account-side rig
+   the sheets were generated from. The obvious route — the
+   `breathing-idle` TEMPLATE — was tried first and rejected: it
+   regenerates the figure rather than posing it, and the scribe came back
+   without his ledger. Because v3's reference frame is byte-identical to
+   the rotation image, the rotation→shipped colour LUT that the v0.17
+   `palette_unify` pass left behind is EXACT, so frame 1 remaps onto the
+   shipped palette with **0 colours outside it**. Evidence:
+   `probe_idle_409/` — captures spaced 50 engine frames apart (an ODD
+   number of 6 fps animation ticks; a 2-second gap would have been an
+   even number and every NPC would have matched while working perfectly).
+   All four visibly change: coyle 2488 px, the Lady 1984, the scribe
+   1283, hedault 3392.
+2. **Carried fix — the Sunken Cache no longer floats.** floodplains
+   `frozen_cache` (10,18) was the DRY `crate` sprite under a pale-blue
+   tint while its own observe line puts it "on the pond floor under a
+   coat of silt". New `crate_submerged`: a box sunk to half height inside
+   a ring of silt ripples. The tint is gone with it — per the
+   tint-is-not-disambiguation directive a shade variant is not a
+   different thing, so the fix had to be silhouette.
+   **STILL OPEN (pre-existing, NOT introduced here):** the Old Pond Crab
+   at (11,19) is a ~2.5-cell sprite whose footprint covers (10,18) from
+   every camera angle, so the cache reads clearly only once the crab is
+   killed. Evidence: `probe_props_408/floodplains_pond_cache.png`.
+3. **#408 — prop variety.** Six owned PixelLab props added
+   (`crate_submerged`, `grain_sacks`, `basket_stack`, `firewood_stack`,
+   `rubble_pile`, `battle_debris`). Liscor street went from 10
+   crate/barrel decor rows to 3 (the peddler's own crate, plus one
+   deliberate storage pair); floodplains' gate run went 3 → 1; the
+   goblin-ambush arena's crate and barrel became rubble and skirmish
+   debris. Every swap reuses a cell that was ALREADY in `blocked` and
+   every solid replacement joined `SOLID_DECOR_SPRITES`, so no
+   blocked_cells count pin moved.
+   **The arena's real culprit was not the decor.** `data/biomes.json`
+   `street.blocked_props` (and its board_renderer fallback twin) was
+   `["crate","barrel"]`, and EVERY street-biome arena renders its four
+   blocked cells from that pool — four crates and barrels every fight,
+   which is what the user actually saw. Widened to
+   `["rubble_pile","firewood_stack","crate","barrel"]`. Evidence:
+   `probe_arena_408/goblin_ambush_dressing.png` (before: 2 crates + 2
+   barrels on the board; after: 2 firewood stacks + 1 crate + 1 barrel).
+
+OPEN, deliberately not taken here: `mercantile_alleys` is now the
+worst remaining crate map (3 decor + 3 entities + 1 barrel = 7). It is an
+Invrisil map and #408 names only floodplains / Liscor / the arena, so it
+was left alone rather than scope-crept.

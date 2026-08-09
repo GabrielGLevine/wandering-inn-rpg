@@ -19,3 +19,24 @@ assets/sprites/corusdeer_carcass/Idle-Sheet.png
     v019-l4-silhouettes). PixelLab outputs are user-owned and
     redistributable per its terms of service — the same footing as the
     shipped cauldron/witch_cauldron/corusdeer rigs.
+
+assets/sprites/crate_submerged/Idle-Sheet.png
+assets/sprites/grain_sacks/Idle-Sheet.png
+assets/sprites/basket_stack/Idle-Sheet.png
+assets/sprites/firewood_stack/Idle-Sheet.png
+assets/sprites/rubble_pile/Idle-Sheet.png
+assets/sprites/battle_debris/Idle-Sheet.png
+    PixelLab generations (1-direction object pack, 64px, 2026-08-08, tag
+    wi409-408) for GH#408's prop-variety pass and the carried pond-cache
+    fix. PixelLab outputs are user-owned and redistributable per its terms
+    of service — same footing as every other owned PixelLab sheet above.
+
+assets/sprites/city_scribe/Idle_{Down,Side,Up}-Sheet.png   (frame 1 only)
+assets/sprites/hedault/Idle_{Down,Side,Up}-Sheet.png       (frame 1 only)
+assets/sprites/master_coyle/Idle_{Down,Side,Up}-Sheet.png  (frame 1 only)
+assets/sprites/invrisil_lady_client/Idle_{Down,Side,Up}-Sheet.png (frame 1 only)
+    GH#409. Frame 0 of each sheet is the previously shipped rest pose,
+    byte-identical. Frame 1 is a PixelLab v2 animate-character (mode=v3)
+    breathing frame generated from the SAME account-side character rig the
+    original sheet came from, then colour-mapped onto the shipped sheet's
+    own palette. Same PixelLab ownership terms as the rest of this file.

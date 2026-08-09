@@ -1,0 +1,106 @@
+{
+ "fixture_save": "invrisil_hat_start",
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "street_market_row"
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    16,
+    3
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "street_market_row_east"
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    6,
+    12
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "street_storage_pair"
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    24,
+    16
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "street_southeast"
+  },
+  {
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    31,
+    20
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "floodplains_gate_approach"
+  },
+  {
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    10,
+    17
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "floodplains_pond_cache"
+  }
+ ]
+}

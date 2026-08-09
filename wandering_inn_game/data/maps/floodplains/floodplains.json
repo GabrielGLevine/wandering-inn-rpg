@@ -1060,25 +1060,28 @@
    "sway": true
   },
   {
-   "sprite": "crate",
+   "sprite": "grain_sacks",
    "cell": [
     29,
     24
-   ]
+   ],
+   "_comment": "#408 prop variety: was `cr [t]"
   },
   {
    "sprite": "barrel",
    "cell": [
     33,
     24
-   ]
+   ],
+   "_comment": "#408 prop variety: the ONE [t]"
   },
   {
-   "sprite": "crate",
+   "sprite": "firewood_stack",
    "cell": [
     34,
     23
-   ]
+   ],
+   "_comment": "#408 prop variety: was `crate`. Cell stays in `blocked` (firewood_stack is solid)."
   },
   {
    "sprite": "gnaw_pile",
@@ -1229,7 +1232,7 @@
    "toast": "You pay out the line into the dark water. Nothing takes it, and nothing was ever going to — whatever keeps this pool knows the difference between an offer and a hook."
   },
   {
-   "_comment": "Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast.",
+   "_comment": "Interact-only, banks `foun [t]",
    "id": "frozen_cache",
    "kind": "prop",
    "cell": [
@@ -1237,12 +1240,7 @@
     18
    ],
    "display_name": "Sunken Cache",
-   "sprite": "crate",
-   "tint": [
-    0.62,
-    0.78,
-    0.9
-   ],
+   "sprite": "crate_submerged",
    "observe": "Something square and worked lies under silt on the pond floor, a stride out from the bank. The water between it and the bank is a hand deep and dead still. In the bank's shade the surface has already gone to a skin of ice.",
    "on_interact_accomplishment": "found_the_frozen_cache",
    "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, still dry: a few keepsakes and a handful of old coin.",

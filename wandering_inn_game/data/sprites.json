@@ -5779,7 +5779,7 @@
      124,
      124
     ],
-    "fps": 4
+    "fps": 6
    }
   }
  },
@@ -5800,7 +5800,7 @@
      128,
      128
     ],
-    "fps": 4
+    "fps": 6
    }
   }
  },
@@ -5821,7 +5821,7 @@
      124,
      124
     ],
-    "fps": 4
+    "fps": 6
    }
   }
  },
@@ -5842,7 +5842,7 @@
      124,
      124
     ],
-    "fps": 4
+    "fps": 6
    }
   }
  },
@@ -6403,6 +6403,119 @@
     "frame_size": [
      15,
      26
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "crate_submerged": {
+  "_comment": "#408/#409 wave 2026-08-08 [t]",
+  "render_scale": 0.36,
+  "anchor": [
+   0.4922,
+   0.9062
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/crate_submerged/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "grain_sacks": {
+  "_comment": "#408/#409 wave 2026-08-08 [t]",
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/grain_sacks/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "basket_stack": {
+  "_comment": "#408/#409 wave 2026-08-08 [t]",
+  "render_scale": 0.4,
+  "anchor": [
+   0.4922,
+   0.9688
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/basket_stack/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "firewood_stack": {
+  "_comment": "#408/#409 wave 2026-08-08 [t]",
+  "render_scale": 0.4,
+  "anchor": [
+   0.5078,
+   0.9688
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/firewood_stack/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "rubble_pile": {
+  "_comment": "#408/#409 wave 2026-08-08 [t]",
+  "render_scale": 0.4,
+  "anchor": [
+   0.4844,
+   0.9062
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/rubble_pile/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "battle_debris": {
+  "_comment": "#408/#409 wave 2026-08-08 [t]",
+  "render_scale": 0.4,
+  "anchor": [
+   0.5391,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/battle_debris/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
     ],
     "fps": 1
    }

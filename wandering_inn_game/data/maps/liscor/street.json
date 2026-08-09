@@ -34,7 +34,35 @@
    "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
   ]
  },
- "blocked": [[2, 1], [7, 1], [5, 10], [6, 10], [25, 8], [8, 17], [24, 18], 
+ "blocked": [
+  [
+   2,
+   1
+  ],
+  [
+   7,
+   1
+  ],
+  [
+   5,
+   10
+  ],
+  [
+   6,
+   10
+  ],
+  [
+   25,
+   8
+  ],
+  [
+   8,
+   17
+  ],
+  [
+   24,
+   18
+  ],
   [
    10,
    1
@@ -523,14 +551,16 @@
    ]
   },
   {
-   "sprite": "barrel",
+   "_comment": "#408 prop variety: was `ba [t]",
+   "sprite": "grain_sacks",
    "cell": [
     2,
     1
    ]
   },
   {
-   "sprite": "crate",
+   "_comment": "#408 prop variety: was `crate`. Woven market baskets read as Liscor's own trade rather than generic storage. Cell stays in `blocked` (basket_stack is solid).",
+   "sprite": "basket_stack",
    "cell": [
     7,
     1
@@ -558,7 +588,8 @@
    ]
   },
   {
-   "sprite": "barrel",
+   "_comment": "#408 prop variety: was `barrel`. Second basket stack mid-row: repetition is diegetic in a market, a third barrel was not. Cell stays in `blocked`.",
+   "sprite": "basket_stack",
    "cell": [
     13,
     1
@@ -586,7 +617,8 @@
    ]
   },
   {
-   "sprite": "crate",
+   "_comment": "#408 prop variety: was `crate`. Split firewood at the row's far end. Cell stays in `blocked` (firewood_stack is solid).",
+   "sprite": "firewood_stack",
    "cell": [
     17,
     1
@@ -924,21 +956,24 @@
    ]
   },
   {
-   "sprite": "crate",
+   "_comment": "#408 prop variety: was `crate`. Cell stays in `blocked`.",
+   "sprite": "firewood_stack",
    "cell": [
     25,
     8
    ]
   },
   {
-   "sprite": "barrel",
+   "_comment": "#408 prop variety: was `barrel`. Cell stays in `blocked`.",
+   "sprite": "basket_stack",
    "cell": [
     8,
     17
    ]
   },
   {
-   "sprite": "crate",
+   "_comment": "#408 prop variety: was `crate`. Cell stays in `blocked`.",
+   "sprite": "grain_sacks",
    "cell": [
     24,
     18
