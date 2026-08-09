@@ -37,7 +37,7 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_save.gd
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_content.gd
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_sprite_registry.gd
-/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_water_shoreline.gd   # #411 dual-grid shoreline mapping + generated-sheet polarity pin
+	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_water_shoreline.gd   # #411 dual-grid shoreline mapping + generated-sheet polarity pin
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_combat_visuals.gd
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_audio_data.gd
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_effect_text.gd  # M-LEGIBILITY L1: WIEffectText exact lines + drift tripwires + forbidden-vocab

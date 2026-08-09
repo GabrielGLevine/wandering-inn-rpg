@@ -39,8 +39,11 @@ static func water_neighbor_mask(cell: Vector2i, water_cells: Dictionary) -> int:
 ## a real tile -- the mapping is a total function, so strips, necks and
 ## double-diagonal cells are ordinary cases, not fallbacks.
 ##
-## Sheet: assets/tiles/generated/water_shoreline_16.png (PixelLab Wang-16,
-## chroma-keyed; provenance in the test's sheet pin). Corner bits below say
+## Sheet: assets/tiles/generated/water_shoreline_16.png -- PixelLab
+## create_topdown_tileset id 8b0b91aa-194b-4aee-921f-e8d97d9aea90 (water ->
+## flat-magenta upper, transition 0.25 "dark wet waterline lip", 16px,
+## lineless, basic shading), then chroma-keyed: blue-dominant kept,
+## magenta family -> alpha, dark lip kept within 2px of bright water. Corner bits below say
 ## which of the vertex's 4 cells are WATER: NW=1, NE=2, SW=4, SE=8.
 const SHORELINE_SHEET := "res://assets/tiles/generated/water_shoreline_16.png"
 const SHORELINE_TILE_PX := 16
@@ -69,8 +72,9 @@ static func vertex_water_bits(vertex: Vector2i, water_cells: Dictionary) -> int:
 
 
 ## Builds the half-offset shoreline overlay for a map's water segments.
-## Returns null when the map has no water. The overlay is STATIC (no shimmer
-## material) -- animated water must never drag the banks (review I3).
+## Returns null when the map has no water. The caller owns the material:
+## the world attaches the shimmer shader to THIS layer (single-copy water,
+## so animation cannot ghost -- review M1/M2 resolution 2026-08-09).
 static func build_shoreline_overlay(segments: Array, registry) -> TileMapLayer:
 	var water_cells := water_segment_cell_set(segments)
 	if water_cells.is_empty():
@@ -87,7 +91,7 @@ static func build_shoreline_overlay(segments: Array, registry) -> TileMapLayer:
 				continue
 			seen[vertex] = true
 			var bits := vertex_water_bits(vertex, water_cells)
-			if bits == 0 or bits == 15:
+			if bits == 0:
 				continue
 			layer.set_cell(vertex, 0, SHORELINE_WANG_COORDS[bits])
 	return layer

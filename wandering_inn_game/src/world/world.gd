@@ -819,6 +819,10 @@ func _rebuild_field() -> void:
 	# forget the old sprite's state too.
 	_sneak_tinted = false
 	_ice_overlay = null
+	# H1 (review 2026-08-09): _entities_root must die with the rebuild too --
+	# a stale pointer here passed the parent check while queued for deletion
+	# and move_child sank the ice overlay under the freshly built floor.
+	_entities_root = null
 	_field_blocked_prop_plan.clear()
 	# Drop every light registered for the OLD map before
 	# any new one is spawned below -- the old map's holders (and their light
@@ -951,56 +955,26 @@ func _build_field_blocked_props() -> void:
 
 
 func _build_water_shimmer() -> void:
+	# ONE dual-grid layer carries ALL visible water: interior tiles at
+	# all-water vertices plus bank tiles at shore vertices, from the
+	# terrain-neutral generated sheet, with the shimmer shader on the whole
+	# layer (amplitude retuned for the 64px atlas -- see the shader). The
+	# old per-cell cap layer beneath is fully covered and feeds nothing.
+	# Ghosting is impossible: no second copy of any bank exists. Banks sway
+	# ~1px with the water, which reads as lapping; reduce-motion stops the
+	# clock and the whole surface goes static (review M1+M2 resolution).
 	var walls_cfg: Dictionary = _current_map_cfg().get("walls", {})
 	var segments: Array = walls_cfg.get("segments", [])
-	var overlay: TileMapLayer
-	var painted := false
-	for raw_seg: Variant in segments:
-		if not (raw_seg is Dictionary):
-			continue
-		var seg := raw_seg as Dictionary
-		if not bool(seg.get("water", false)) or String(seg.get("sheet", "")) != WATER_SHEET:
-			continue
-		var cells: Array[Vector2i] = WIGame.segment_cells(seg)
-		if cells.is_empty():
-			continue
-		if overlay == null:
-			# Shimmer paints from the terrain-neutral generated sheet so open
-			# water matches the shoreline overlay's palette exactly -- the old
-			# per-segment cap tile is fully covered and only feeds fallback.
-			overlay = WITileBoardBuilder.make_tile_layer(
-				_field_root, WITileBoardBuilder.SHORELINE_SHEET,
-				WITileBoardBuilder.SHORELINE_TILE_PX, WISpriteRegistry)
-			var mat := ShaderMaterial.new()
-			mat.shader = WATER_SHIMMER_SHADER
-			overlay.material = mat
-			# Held so reduce-motion can stop (and restart) this clock without a
-			# map rebuild; the assignment below applies the CURRENT setting to
-			# the freshly built overlay.
-			_water_material = mat
-			_apply_motion_settings()
-		# Shimmer animates OPEN WATER ONLY (review I3): the moving overlay must
-		# never carry the shoreline, or the animated bank ghosts against the
-		# static one and the UV wobble drags atlas neighbours into the tile.
-		# Interior coord (2,1) is the generated sheet's all-water tile; its
-		# atlas neighbours are also water, so the UV wobble stays on water.
-		for cell: Vector2i in cells:
-			overlay.set_cell(cell, 0, WITileBoardBuilder.SHORELINE_WANG_COORDS[15])
-		painted = true
+	var overlay := WITileBoardBuilder.build_shoreline_overlay(segments, WISpriteRegistry)
 	if overlay == null:
-		return
-	if painted:
-		_field_root.add_child(overlay)
-		# Static banks draw ABOVE the shimmering water, from the terrain-neutral
-		# generated sheet; land side is transparent so the map's own ground
-		# shows through (issue #411 second pass).
-		var shoreline := WITileBoardBuilder.build_shoreline_overlay(segments, WISpriteRegistry)
-		if shoreline != null:
-			_field_root.add_child(shoreline)
-	else:
 		_water_material = null
-		overlay.queue_free()
-
+		return
+	var mat := ShaderMaterial.new()
+	mat.shader = WATER_SHIMMER_SHADER
+	overlay.material = mat
+	_water_material = mat
+	_apply_motion_settings()
+	_field_root.add_child(overlay)
 
 func _build_ice_overlay() -> void:
 	var frozen: Array = Game.sim.frozen_cells_json().get(Game.sim.current_map, [])
@@ -1022,7 +996,7 @@ func _paint_ice_cell(cell: Vector2i) -> void:
 		# walls and water (all earlier siblings), below everything that walks.
 		_ice_overlay.z_index = 0
 		_field_root.add_child(_ice_overlay)
-		if _entities_root != null and _entities_root.get_parent() == _field_root:
+		if _entities_root != null and not _entities_root.is_queued_for_deletion() and _entities_root.get_parent() == _field_root:
 			_field_root.move_child(_ice_overlay, _entities_root.get_index())
 	_ice_overlay.set_cell(cell, 0, ICE_CAP_COORD)
 

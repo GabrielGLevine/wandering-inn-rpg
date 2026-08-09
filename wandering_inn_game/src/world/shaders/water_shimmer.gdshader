@@ -25,12 +25,12 @@ shader_type canvas_item;
 // WASM-safe: sin/cos + one texture() sample, all core GLES3/Compatibility ops.
 
 uniform float speed : hint_range(0.0, 5.0) = 1.0;
-uniform float amplitude : hint_range(0.0, 0.05) = 0.015;
+uniform float amplitude : hint_range(0.0, 0.05) = 0.02;
 
 void fragment() {
 	vec2 uv = UV;
-	uv.x += sin(uv.y * 12.0 + TIME * speed) * amplitude;
-	uv.y += cos(uv.x * 12.0 + TIME * speed * 0.8) * amplitude;
+	uv.x += sin(uv.y * 3.0 + TIME * speed) * amplitude;
+	uv.y += cos(uv.x * 3.0 + TIME * speed * 0.8) * amplitude;
 	// PILOT FIX (B4): multiply by the incoming COLOR — it carries the
 	// vertex color/modulate chain (incl. WIAtmosphere's CanvasModulate).
 	// The bare texture() assignment made the pond IGNORE the mood grade,

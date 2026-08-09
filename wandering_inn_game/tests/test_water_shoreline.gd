@@ -25,6 +25,7 @@ func _init() -> void:
 	_one_wide_channel()
 	_cross_segment_union()
 	_sheet_pin()
+	_layer_contract()
 	if _failed:
 		push_error("ERROR: FAIL water shoreline")
 	else:
@@ -119,3 +120,18 @@ func _sheet_pin() -> void:
 				_check(opaque >= 6, "bits=%d %s water corner %d painted (%d/9)" % [bits, coord, corner_bit, opaque])
 			else:
 				_check(opaque <= 3, "bits=%d %s land corner %d transparent (%d/9)" % [bits, coord, corner_bit, opaque])
+
+
+func _layer_contract() -> void:
+	# Source-slice pins (L5): the water-layer contract lives in world.gd and
+	# nothing else asserts it. Guard the H1 fix and the single-layer design.
+	var src := FileAccess.get_file_as_string("res://src/world/world.gd")
+	_check(src.contains("_entities_root = null"),
+		"rebuild nulls _entities_root (H1: stale pointer sank the ice overlay)")
+	_check(src.contains("not _entities_root.is_queued_for_deletion()"),
+		"ice move_child guard rejects dying nodes (H1)")
+	_check(src.contains("overlay.material = mat"),
+		"the dual-grid water layer carries the shimmer material (single-copy water)")
+	var builder := FileAccess.get_file_as_string("res://src/world/tile_board_builder.gd")
+	_check(not builder.contains("bits == 15:\n\t\t\t\tcontinue"),
+		"interior vertices paint (all-water tiles are part of the single layer)")
