@@ -4321,3 +4321,15 @@ OPEN, deliberately not taken here: `mercantile_alleys` is now the
 worst remaining crate map (3 decor + 3 entities + 1 barrel = 7). It is an
 Invrisil map and #408 names only floodplains / Liscor / the arena, so it
 was left alone rather than scope-crept.
+
+## 2026-08-09 — art + shoreline waves MERGED (3832558f): pond answer complete
+Composed pond capture: banked water (dual-grid neutral shoreline),
+island ringed, correct palette, crab guarding, NO box — the cache is
+invisible+hide_sprite by ROOT-CAUSE ruling (fiction hides it; prose +
+freeze route + adjacency marker carry discovery). 4-frame idles on the
+four static NPCs; arena debris off the tree line; prop-variety census
+paid. Pre-existing HIGH fixed: ice no longer sinks under the floor on
+map re-entry (freeze→leave→return probe proves it). Deviation logged:
+both lanes merged direct to main during a stale-hook untangle instead
+of via PRs — work fully gated (2 reviews + fix waves + composed
+230/230), issues closed with evidence comments instead of PR bodies.
