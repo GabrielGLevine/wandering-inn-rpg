@@ -245,15 +245,21 @@ Dialogue is SHIPPED — do not re-open Set A.
    #402, #405).
 4. **#404 lockpick canon-ACK** (wave-2 gate).
 
-## QUEUE (updated 2026-08-07, post-#398)
-- **#403 wave-2 riverfarm pockets** — unblocked (#396 merged); next
-  execute item after the user asks clear.
-- **#404 lockpick canon-ACK** — user gate, then small.
-- **#400** (#390 carried art rows) + VISUAL-LOG P2/P3 rows from the
-  #398 playtest — parallel art lane candidate (PixelLab at full).
-- **#397 round 2** — gated on user go/no-go (ask 1 above).
-- v0.19.0 tag re-cut at a merge commit + deploy — USER'S CALL, not done.
-- Docs-drift checker vs plan-header format — one-line fix, unowned.
+## QUEUE (updated 2026-08-09 — post-#397-close, retrospective tooling shipped)
+Tree CLEAN on main, all gates green (`scripts/preflight.sh` = ALL GREEN).
+Next sessions, in rough order:
+- **#406 holdout-release prose wave** — FIRST STEP is the fresh holdout
+  draw with INVERTED eligibility (see the NEXT UP block below): old
+  holdout 114 rows become WORK; r2-authored rows are control-eligible.
+- **#403 wave-2 riverfarm pockets** — unblocked, self-contained.
+- **#412 martial exploration re-scope** — keep/cut/move table needs USER
+  SIGN-OFF before any data change. #413 [Dangersense] follows it.
+- **#414 steel-thread full-game windowed playtest** — instrument + run.
+- **#400** (#390 carried art rows) + VISUAL-LOG P2/P3 rows — parallel
+  art lane candidate (PixelLab at full).
+- USER-HELD: v0.19.0 tag re-cut + deploy; [Rope Work] ACK; #404
+  lockpick canon-ACK; parlor music ear-gate (hydrogene_east_town in);
+  Coyle sign repaint verdict (VISUAL-LOG r5); #412 table sign-off.
 - PR #393 closed for now (work parked on issue/195-audio-profile-pass).
   #371 deferred per user.
 
@@ -654,15 +660,16 @@ numbered adjudication ledger through v0.13.0 — lives in this file's git
 history and the merged PR bodies; pre-2026-07-05 material in the frozen
 archive repo at docs/archive/HANDOFF-archive-2026-07.md.)*
 
-## QUEUED TOOLING (retrospective, 2026-08-09 — build next session)
-1. `scripts/preflight.sh`: ONE command = data_lint + verify-untouched +
-   extract_prose self-test + test_sprite_registry (+ optional --full for
-   units). Run at EVERY wave close. Rationale: verify-untouched drift
-   sat hidden across two waves and the ice-sink bug across many,
-   because per-gate memory is the weak link — make the bundle the habit.
-2. Pre-commit hook staleness self-check: worktree hooks outlive main
-   hook edits; a stale hook blocked a commit and caused a
-   merged-wrong-tip repair. One-line version compare + warning.
-3. Coyle & Sons sign emblem repaint (crate+cartwheel reads as a prop):
-   PixelLab inpaint to monogram/lettering — one generation + windowed.
-4. Parlor music EAR-GATE: hydrogene_east_town picked; user verdict.
+## RETROSPECTIVE TOOLING — DONE (built 2026-08-09)
+1. `scripts/preflight.sh` SHIPPED: data_lint + verify-untouched +
+   extract_prose self-test + surfaces --check + guidance mirrors +
+   doc-drift + test_sprite_registry; `--full` adds every unit suite
+   (dual grep discipline built in). Proven ALL GREEN on main. **Run at
+   EVERY wave close** — folded into wi-verifying-changes.
+2. Pre-commit hook staleness self-check SHIPPED: warns (never blocks)
+   when the running hook differs from main's copy. Self-demonstrated on
+   its own first commit.
+3. Coyle & Sons sign emblem: PixelLab inpaint (crate+cartwheel → gold
+   C&S monogram) — see VISUAL-LOG r5 row for verdict/state.
+4. Parlor music EAR-GATE still USER-HELD: hydrogene_east_town swapped
+   in; user verdict pending.

@@ -4346,3 +4346,4 @@ FILED: Coyle & Sons sign — the art is a proper hanging sign but its
 EMBLEM is a crate+cartwheel (haulage mark) that reads as a floating
 crate prop now that crates are interactive; needs an emblem re-paint
 (monogram/lettering), not a new sign.
+| 2026-08-09 | invrisil_boulevard | Coyle & Sons sign repainted: crate+cartwheel emblem → gold "C&S" monogram (PixelLab inpaint, zero pixels changed outside emblem mask). Windowed read SKIPPED (usage); verdict = user's next boulevard look. | P2 | AWAITING EYE |
