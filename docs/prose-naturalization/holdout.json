@@ -1,6 +1,6 @@
 {
  "_count": 229,
- "_excluded_count": 3,
+ "_excluded_count": 5,
  "_excluded_note": "verify-untouched SKIPS these ids and reports them by count; the blind control instrument omits their rows. They remain in `ids` and in `_count` -- an exclusion never shrinks the committed inventory. Authority is the INTERSECTION of this block and HOLDOUT_EXCLUSIONS in qa/scripts/extract_prose.py, so neither edit excuses drift on its own.",
  "_fraction": 0.1,
  "_min_words": 6,
@@ -8,9 +8,9 @@
  "_python": "3.12.3",
  "_reserved_named_work": {
   "map:dungeon/trapped_halls.json:$.entities[8].skill_uses.observe.variants[0].toast": "issue-named: the `which from X is Y` shape plus the narrator supplying the interpretation the player should have made",
-  "map:dungeon/trapped_halls.json:$.entities[9].observe": "issue-named: partial keep \u2014 the threat warning stays, the reframe-for-effect second sentence is the work (bible \u00a77)",
-  "map:garden/garden_sanctuary.json:$.entities[0].observe": "issue-named: forbidden inference \u2014 neither the joy nor the intent is visible, only a dancer's pose (bible \u00a76 rule 1)",
-  "map:liscor/street.json:$.entities[12].observe": "controller-named: four negation-correction shapes stacked in one scenic string at closer 1 \u2014 the shape the counter-only queue could not see",
+  "map:dungeon/trapped_halls.json:$.entities[9].observe": "issue-named: partial keep — the threat warning stays, the reframe-for-effect second sentence is the work (bible §7)",
+  "map:garden/garden_sanctuary.json:$.entities[0].observe": "issue-named: forbidden inference — neither the joy nor the intent is visible, only a dancer's pose (bible §6 rule 1)",
+  "map:liscor/street.json:$.entities[12].observe": "controller-named: four negation-correction shapes stacked in one scenic string at closer 1 — the shape the counter-only queue could not see",
   "map:pallass/pallass_den_shop.json:$.entities[6].toast": "issue-named button: two excellent specific sentences, then a third that tells the reader what to think about them"
  },
  "_reserved_unresolved": [],
@@ -21,6 +21,11 @@
    "excluded_reason": "changed by #396 redesign (merged PR #401), not by the prose pass",
    "what_moved": "#396 rewrote the hunter's hub and DELETED the pinned option ('The deer stopped at the treeline. Why?'); the surviving options shifted up, so options[2] is now a different line. The pinned text is gone from the tree, so there is no wording left to hold."
   },
+  "map:riverfarm/riverfarm_village.json:$.entities[25].toast": {
+   "excluded": true,
+   "excluded_reason": "user-ordered content fix 2026-08-08: the line was nonsense ('pays coin because coin is the thing it has least of'), rewritten on direct instruction",
+   "what_moved": "Toast rewritten to 'The pay is small coin, counted out the same day.' The control was already SPENT (round-2 exit read); #406 draws a fresh holdout regardless."
+  },
   "map:riverfarm/riverfarm_village.json:$.entities[27].observe": {
    "excluded": true,
    "excluded_reason": "changed by #396 redesign (merged PR #401), not by the prose pass",
@@ -30,6 +35,11 @@
    "excluded": true,
    "excluded_reason": "shipped citation leak hotfixed AFTER the Phase-5 blind read completed (the control function was already spent): the pier observe carried a player-visible research note '(wiki Riverfarm, ch. 3.00-3.01 E: ...)', found by both blind readers (C200).",
    "what_moved": "the parenthetical citation was cut; the two prose sentences are byte-identical."
+  },
+  "map:riverfarm/witch_hollow.json:$.entities[24].observe": {
+   "excluded": true,
+   "excluded_reason": "path re-indexed by the r4 cottage merge (witch_hut_door deleted; every later entity -1), NOT a prose edit",
+   "what_moved": "The pinned bracken text is byte-intact, now at entities[23]. IDs key the frozen inventory, so an id rewrite points verify at a DIFFERENT frozen row -- exclusion is the only correct mechanism for a re-indexed path (learned the hard way, 2026-08-09)."
   }
  },
  "ids": [
@@ -251,7 +261,7 @@
   "map:riverfarm/witch_hollow.json:$.entities[17].on_skill_use.toast",
   "map:riverfarm/witch_hollow.json:$.entities[17].skill_hint_toast",
   "map:riverfarm/witch_hollow.json:$.entities[22].once_per_waking_toast",
-  "map:riverfarm/witch_hollow.json:$.entities[23].observe",
+  "map:riverfarm/witch_hollow.json:$.entities[24].observe",
   "map:ruin/ruin_surface.json:$.entities[2].observe",
   "map:ruin/ruin_surface.json:$.entities[5].variants[0].toast",
   "map:ruin/ruin_surface.json:$.entities[5].visual_states[0].observe",
@@ -262,13 +272,5 @@
   "map:sewers/sewers.json:$.entities[3].observe",
   "map:sewers/sewers.json:$.entities[8].locked_toast",
   "map:sewers/sewers.json:$.entities[9].door_when.open_toast"
- ],
- "_path_migrations": [
-  {
-   "from": "map:riverfarm/witch_hollow.json:$.entities[24].observe",
-   "to": "map:riverfarm/witch_hollow.json:$.entities[23].observe",
-   "date": "2026-08-09",
-   "why": "witch_hut_door (was entities[23]) deleted by the r4 cottage merge; every later entity re-indexed -1. Text byte-identical (asserted at migration). The append-last rule extends to DELETIONS."
-  }
  ]
 }

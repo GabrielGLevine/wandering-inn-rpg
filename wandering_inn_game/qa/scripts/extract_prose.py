@@ -1280,6 +1280,26 @@ def make_holdout(rows, reserved_ids, blind_ids):
 HOLDOUT_EXCLUDED_REASON = ("changed by #396 redesign (merged PR #401), not by "
                            "the prose pass")
 HOLDOUT_EXCLUSIONS = {
+    "map:riverfarm/witch_hollow.json:$.entities[24].observe": {
+        "excluded": True,
+        "excluded_reason": "path re-indexed by the r4 cottage merge "
+                           "(witch_hut_door deleted; every later entity -1), "
+                           "NOT a prose edit",
+        "what_moved": "The pinned bracken text is byte-intact, now at "
+                      "entities[23]. IDs key the frozen inventory, so an id "
+                      "rewrite points verify at a DIFFERENT frozen row -- "
+                      "exclusion is the only correct mechanism for a "
+                      "re-indexed path (learned the hard way, 2026-08-09).",
+    },
+    "map:riverfarm/riverfarm_village.json:$.entities[25].toast": {
+        "excluded": True,
+        "excluded_reason": "user-ordered content fix 2026-08-08: the line was "
+                           "nonsense ('pays coin because coin is the thing it "
+                           "has least of'), rewritten on direct instruction",
+        "what_moved": "Toast rewritten to 'The pay is small coin, counted out "
+                      "the same day.' The control was already SPENT (round-2 "
+                      "exit read); #406 draws a fresh holdout regardless.",
+    },
     "map:riverfarm/riverfarm_village.json:$.entities[27].observe": {
         "excluded": True,
         "excluded_reason": HOLDOUT_EXCLUDED_REASON,
