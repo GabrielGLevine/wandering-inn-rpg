@@ -551,7 +551,7 @@
    ]
   },
   {
-   "_comment": "#408 prop variety: was `barrel`. Gate-end of the market row -- a carter's sacks, not a [t]",
+   "_comment": "#408 prop variety: was `ba [t]",
    "sprite": "grain_sacks",
    "cell": [
     2,
@@ -1387,7 +1387,7 @@
     0.78,
     0.62
    ],
-   "_comment": "Finding 13: he wore `hired_blade`, a COMBATANT rig, forbidden on a friendly. Shares [t]"
+   "_comment": "Finding 13: he wore `hired_blade`, a COMBATANT rig, forbidden on a friendly. Shares `human_laborer` with the drayman (anonymous extras may); dusty tint keeps the two distinct."
   },
   {
    "id": "krshia_stall",

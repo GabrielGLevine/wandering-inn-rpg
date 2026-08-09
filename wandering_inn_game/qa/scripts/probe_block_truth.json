@@ -17,7 +17,8 @@
   {
    "action": "move",
    "direction": "up",
-   "steps": 1
+   "steps": 1,
+   "_comment": "west end: up into (9,7) must BLOCK"
   },
   {
    "action": "assert_state",
@@ -38,7 +39,8 @@
   {
    "action": "move",
    "direction": "left",
-   "steps": 1
+   "steps": 1,
+   "_comment": "roof row y6 must be WALKABLE now: step west along it"
   },
   {
    "action": "assert_state",
@@ -51,7 +53,8 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 1
+   "steps": 1,
+   "_comment": "down from roof row into wall row must BLOCK"
   },
   {
    "action": "assert_state",
@@ -72,7 +75,8 @@
   {
    "action": "move",
    "direction": "right",
-   "steps": 1
+   "steps": 1,
+   "_comment": "cottage_b west column now walkable; east into (17,9)? art starts ~16.75 so (17,9) blocked"
   },
   {
    "action": "assert_state",

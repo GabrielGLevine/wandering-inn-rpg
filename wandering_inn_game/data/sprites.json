@@ -389,7 +389,7 @@
   }
  },
  "warded_seam": {
-  "_comment": "#224: owned PixelLab art -- violet-glinting seam through stone tiles; trapped_halls [t]",
+  "_comment": "#224: owned PixelLab art -- violet-glinting seam through stone tiles; trapped_halls warded_seam's own tell (shared illusory_floor_tell before, muddying the two trap classes).",
   "render_scale": 0.4,
   "anchor": [
    0.5,
@@ -598,7 +598,7 @@
   }
  },
  "cellar_wardwork": {
-  "_comment": "#198: owned PixelLab art -- pale-blue ward sigil worked into dark planks; replaces the [t]",
+  "_comment": "#198: owned PixelLab art -- pale-blue ward sigil worked into dark planks; replaces the dusty_scroll stand-in on the cellar_wardwork entity (the [Detect Magic] hint target).",
   "render_scale": 0.4,
   "anchor": [
    0.5,
@@ -617,7 +617,7 @@
   }
  },
  "pantry_door_runes": {
-  "_comment": "#198: owned PixelLab art -- rune-carved door jamb with faint green glyphs; replaces the [t]",
+  "_comment": "#198: owned PixelLab art -- rune-carved door jamb with faint green glyphs; replaces the dusty_scroll stand-in on the pantry_door_runes entity (the door-chain SKILL-leg prop).",
   "render_scale": 0.4,
   "anchor": [
    0.5,
@@ -711,7 +711,7 @@
   }
  },
  "witch_kettle_hook": {
-  "_comment": "OWNED PixelLab. Kettle on a tall crane -- the kitchen row's only vertical silhouette, [t]",
+  "_comment": "OWNED PixelLab. Kettle on a tall crane -- the kitchen row's only vertical silhouette, which is what separates it from both pots at 1x. Anchor: alpha bbox centre 26/64, feet 59/64.",
   "render_scale": 0.45,
   "anchor": [
    0.4062,
@@ -1635,7 +1635,7 @@
   }
  },
  "icon_invisibility": {
-  "_comment": "Hand-drawn 2-tone glyph (icon_sneak's exact palette): a figure dissolving at its right [t]",
+  "_comment": "Hand-drawn 2-tone glyph (icon_sneak's exact palette): a figure dissolving at its right edge -- the second stealth verb gets its own icon instead of reusing [Stealth]'s boot.",
   "animations": {
    "idle": {
     "sheet": "res://assets/ui/icons/icon_invisibility.png",
@@ -4351,7 +4351,7 @@
   }
  },
  "plaza_fountain": {
-  "_comment": "'The Adventurer's Fountain' -- ORIGINAL, canon-ALIGNED with Invrisil's 'City of [t]",
+  "_comment": "'The Adventurer's Fountain' -- ORIGINAL, canon-ALIGNED with Invrisil's 'City of Adventurers' epithet (wiki lists no named plaza fountain); see handoff.md's canon-flags section.",
   "render_scale": 0.6,
   "shadow": true,
   "anchor": [
@@ -5763,7 +5763,7 @@
   }
  },
  "invrisil_lady_client": {
-  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig. Idle-only (she never walks); feet plane [t]",
+  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig. Idle-only (she never walks); feet plane 92/124, 61 rows -> 30/61.",
   "directional": true,
   "render_scale": 0.4918,
   "anchor": [
@@ -5784,7 +5784,7 @@
   }
  },
  "master_coyle": {
-  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig, burgundy-and-gold merchant livery his own [t]",
+  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig, burgundy-and-gold merchant livery his own copy names. Feet plane 95/128.",
   "directional": true,
   "render_scale": 0.4839,
   "anchor": [
@@ -5805,7 +5805,7 @@
   }
  },
  "hedault": {
-  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig; he no longer shares the Headman's laborer [t]",
+  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig; he no longer shares the Headman's laborer rig with his own alley's footpads.",
   "directional": true,
   "render_scale": 0.4918,
   "anchor": [
@@ -5826,7 +5826,7 @@
   }
  },
  "city_scribe": {
-  "_comment": "v0.16.1 art wave: shared clerk rig for anonymous ledger-keepers (extras may share; [t]",
+  "_comment": "v0.16.1 art wave: shared clerk rig for anonymous ledger-keepers (extras may share; named characters may not).",
   "directional": true,
   "render_scale": 0.4839,
   "anchor": [

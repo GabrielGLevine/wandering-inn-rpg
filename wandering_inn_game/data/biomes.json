@@ -58,7 +58,7 @@
   ],
   "blocked_tile_px": 16,
   "interior_flavor": "Nothing there. Cart ruts worn into the flagstones, one groove deeper than its pair.",
-  "_comment_blocked_props": "#408: was ['crate','barrel'] -- and this pool, not the authored decor, is where the [t]"
+  "_comment_blocked_props": "#408: was ['crate','barrel [t]"
  },
  "cave": {
   "footstep_family": "stone",

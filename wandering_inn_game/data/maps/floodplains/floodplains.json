@@ -1065,7 +1065,7 @@
     29,
     24
    ],
-   "_comment": "#408 prop variety: was `crate`. The Liscor gate approach was a crate/barrel/crate run; [t]"
+   "_comment": "#408 prop variety: was `cr [t]"
   },
   {
    "sprite": "barrel",
@@ -1073,7 +1073,7 @@
     33,
     24
    ],
-   "_comment": "#408 prop variety: the ONE crate/barrel left on this map, kept on purpose -- with sacks [t]"
+   "_comment": "#408 prop variety: the ONE [t]"
   },
   {
    "sprite": "firewood_stack",
@@ -1232,7 +1232,7 @@
    "toast": "You pay out the line into the dark water. Nothing takes it, and nothing was ever going to — whatever keeps this pool knows the difference between an offer and a hook."
   },
   {
-   "_comment": "Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast. #408 carried [t]",
+   "_comment": "Interact-only, banks `foun [t]",
    "id": "frozen_cache",
    "kind": "prop",
    "cell": [
