@@ -996,7 +996,7 @@
    "sprite": "door",
    "to_map": "invrisil_boulevard",
    "to_cell": [
-    25,
+    26,
     2
    ]
   },

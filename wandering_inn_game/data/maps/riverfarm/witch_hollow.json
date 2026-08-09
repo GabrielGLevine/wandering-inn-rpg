@@ -619,29 +619,7 @@
     }
    ],
    "_comment_visual_states": "Visual states are order-sensitive: later satisfied entries override; dusk swaps sprite, while night also applies the legibility tint.",
-   "visual_states": [
-    {
-     "when": {
-      "phase": [
-       "dusk"
-      ]
-     },
-     "sprite": "riverfarm_witch_young"
-    },
-    {
-     "when": {
-      "phase": [
-       "night"
-      ]
-     },
-     "sprite": "riverfarm_witch_young",
-     "tint": [
-      2.0,
-      2.0,
-      2.0
-     ]
-    }
-   ]
+   "_comment_night": "user ruling 2026-08-09: the dusk/night young-witch swap is BANKED, not shipped -- cool but confusing; regular sprite at all phases. Banked idea recorded in VISUAL-LOG."
   },
   {
    "_comment": "#396: ally removed -- nobody local walks you to the hollow. Solo sim gates in sim_combat_batch.gd. hunter_will_come still fields the shepherd at river_wolf_pack (village) only.",

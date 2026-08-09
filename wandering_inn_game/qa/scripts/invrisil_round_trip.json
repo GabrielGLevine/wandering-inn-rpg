@@ -227,7 +227,8 @@
    "equals": [
     25,
     2
-   ]
+   ],
+   "_comment": "outbound approach: clamp/walk still lands here; step onto (26,2) then bump the edge door"
   },
   {
    "action": "move",
@@ -305,13 +306,18 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    25,
+    26,
     2
    ],
    "_comment": "r4: return drop beside the mouth"
   },
   {
-   "_comment": "r4: drop is at the mouth now; rejoin the old row-8 lane",
+   "_comment": "drop (26,2) is a pocket (east wall 26,3..6): west one first, then the old lane",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
    "action": "move",
    "direction": "down",
    "steps": 6

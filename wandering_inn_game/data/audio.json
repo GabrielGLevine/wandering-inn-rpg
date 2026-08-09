@@ -898,7 +898,7 @@
     "map": "brothers_parlor"
    },
    "_comment": "v0.16.1 #13 (GH#133 iter 3): 113.5s bed -- LENGTH is a selection criterion; an 11s sting reads as a loop bug. peaceful_night stays on music_sleep_beat only.",
-   "stream": "res://assets/audio/music/junkala_encounter_witches.ogg",
+   "stream": "res://assets/audio/music/hydrogene_east_town.ogg",
    "bus": "Music",
    "volume_db": -8.0,
    "loop": true

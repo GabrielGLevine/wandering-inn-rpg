@@ -552,10 +552,6 @@
   ],
   [
    27,
-   2
-  ],
-  [
-   27,
    4
   ],
   [
@@ -1108,7 +1104,7 @@
    "id": "boulevard_to_alleys",
    "kind": "door",
    "cell": [
-    26,
+    27,
     2
    ],
    "display_name": "Into the Alleys",

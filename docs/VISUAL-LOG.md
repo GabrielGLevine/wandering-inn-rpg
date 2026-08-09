@@ -4333,3 +4333,16 @@ map re-entry (freeze→leave→return probe proves it). Deviation logged:
 both lanes merged direct to main during a stale-hook untangle instead
 of via PRs — work fully gated (2 reviews + fix waves + composed
 230/230), issues closed with evidence comments instead of PR bodies.
+
+## 2026-08-09 — user minors r5 (three fixed, one filed) + BANKED idea
+FIXED: alley mouth extends to the map edge (door at 27,2; pocket-lane
+route re-derivations in both invrisil scripts); Brothers' parlor music
+was junkala_encounter_witches (an encounter bed — hence the combat
+feel) → hydrogene_east_town, EAR-GATE: user verdict wanted; Eloise's
+dusk/night young-witch sprite swap REMOVED (user: cool but confusing).
+BANKED IDEA: the night-transformation visual — revisit when it can be
+taught properly.
+FILED: Coyle & Sons sign — the art is a proper hanging sign but its
+EMBLEM is a crate+cartwheel (haulage mark) that reads as a floating
+crate prop now that crates are interactive; needs an emblem re-paint
+(monogram/lettering), not a new sign.
