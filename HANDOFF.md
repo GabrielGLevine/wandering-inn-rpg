@@ -127,6 +127,38 @@ THEN: #406 holdout-release wave (fresh holdout draw FIRST; residue
 seed list in round2-read/adjudication.md addendum; instruction-prose
 class folds in; user-held decisions: v0.19.0 tag, [Rope Work], #404).
 
+## DONE (2026-08-09): #408/#409/#411 CLOSED + census gate removed
+Art wave (4-frame identity-held idles, prop variety, biome-layer arena
+fix) + dual-grid shoreline (terrain-neutral generated sheet with a
+polarity-proving sheet pin; sewers un-no-op'd) + pre-existing HIGH
+ice-sink fix (freeze->leave->return probe proves it) all MERGED
+(3832558f, fb4147d2) and pushed; composed bar sweep 230/230, units 0
+reds; composed pond capture = banked water, island, crab, NO box.
+ROOT-CAUSE ruling (user): the pond cache sprite was deleted outright —
+the fiction hides it (invisible + hide_sprite; renderer trap:
+invisible:true is lint-only). Census gate REMOVED entirely (user
+ruling; comment_census.py is informational only). Deviation on record:
+both lanes merged direct to main during a stale-hook untangle instead
+of PR flow — fully gated, issues closed with evidence comments; do not
+repeat. Holdout gates re-greened via TWO proper exclusions (code ∩
+artifact): the r4 deletion re-index + the user-ordered coin-line fix
+(first attempt migrated the pin id — WRONG, ids key the frozen
+inventory; lesson in the commit + skill fold).
+
+## NEXT UP: #406 holdout-release prose wave (fresh session recommended)
+Everything is green and merged; the wave starts clean. Sequence per
+issue #406: (1) DESIGN + IMPLEMENT the fresh-holdout draw — the
+eligibility logic must INVERT round-1's reservations (old holdout 114
+rows become WORK; r2-authored rows become control-eligible; reserve
+out keeps + the new worklist), commit the fresh holdout BEFORE any
+authoring; (2) freeze the worklist mechanically (old holdout rows +
+the 8 residue rows in round2-read/adjudication.md Addendum + the
+"Nothing there." family + interruption/silence shape work);
+(3) region lanes -> reviews -> fix waves -> anchored train;
+(4) exit read: round-2 instrument design (one shuffled packet, fresh
+control, roles joined after) with the same bar. USER-HELD: v0.19.0
+tag (~14 PRs/merges unreleased), [Rope Work] ACK, #404 lockpick.
+
 ## DONE (2026-08-08): #397 CLOSED — prose naturalization, round 2 (PR #407, 40ec63ef)
 
 The issue that failed its own exit read in round 1 now PASSES it. Full
