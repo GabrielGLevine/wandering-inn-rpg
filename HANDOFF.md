@@ -145,19 +145,23 @@ artifact): the r4 deletion re-index + the user-ordered coin-line fix
 (first attempt migrated the pin id — WRONG, ids key the frozen
 inventory; lesson in the commit + skill fold).
 
-## NEXT UP: #406 holdout-release prose wave (fresh session recommended)
-Everything is green and merged; the wave starts clean. Sequence per
-issue #406: (1) DESIGN + IMPLEMENT the fresh-holdout draw — the
-eligibility logic must INVERT round-1's reservations (old holdout 114
-rows become WORK; r2-authored rows become control-eligible; reserve
-out keeps + the new worklist), commit the fresh holdout BEFORE any
-authoring; (2) freeze the worklist mechanically (old holdout rows +
-the 8 residue rows in round2-read/adjudication.md Addendum + the
-"Nothing there." family + interruption/silence shape work);
-(3) region lanes -> reviews -> fix waves -> anchored train;
-(4) exit read: round-2 instrument design (one shuffled packet, fresh
-control, roles joined after) with the same bar. USER-HELD: v0.19.0
-tag (~14 PRs/merges unreleased), [Rope Work] ACK, #404 lockpick.
+## NEXT UP: low-usage batch #400/#403/#404/#412/#413/#414 (planned 2026-08-09)
+**#406 PARKED per user ruling 2026-08-09** — out of scope; its old
+NEXT-UP sequence (fresh-holdout draw with inverted eligibility etc.)
+lives in the issue body + this file's git history; resume from there
+whenever unparked. Note on issue: holdout count stale by two sanctioned
+exclusions.
+Plan: docs/superpowers/plans/2026-08-09-low-usage-batch-400-403-404-412-413-414.md.
+Shape: Phase 0 = ONE Fable decision packet (#412 keep/cut/move table +
+#413 Dangersense spec + #404 lockpick name) → single user sitting.
+Phase 1 (user-independent, parallel): Lane A #414 steel-thread script,
+Lane B #400 carried rows. Phase 2 (post sign-off): 412-apply merges
+FIRST, then #403 pockets ∥ #413 Dangersense (anchored rows). Close:
+composed train + preflight --full + ONE steel-thread windowed run as
+the batch's composed eye-read. Implementation Opus/Codex (re-check
+Codex window — read EMPTY 2026-08-08); Fable = packet + adjudication.
+Triage 2026-08-09: #403 comment adds the sequence-after-#412 gate;
+#412 body's #TBD ref fixed to #413.
 
 ## DONE (2026-08-08): #397 CLOSED — prose naturalization, round 2 (PR #407, 40ec63ef)
 
@@ -247,16 +251,19 @@ Dialogue is SHIPPED — do not re-open Set A.
 
 ## QUEUE (updated 2026-08-09 — post-#397-close, retrospective tooling shipped)
 Tree CLEAN on main, all gates green (`scripts/preflight.sh` = ALL GREEN).
-Next sessions, in rough order:
-- **#406 holdout-release prose wave** — FIRST STEP is the fresh holdout
-  draw with INVERTED eligibility (see the NEXT UP block below): old
-  holdout 114 rows become WORK; r2-authored rows are control-eligible.
-- **#403 wave-2 riverfarm pockets** — unblocked, self-contained.
-- **#412 martial exploration re-scope** — keep/cut/move table needs USER
-  SIGN-OFF before any data change. #413 [Dangersense] follows it.
-- **#414 steel-thread full-game windowed playtest** — instrument + run.
-- **#400** (#390 carried art rows) + VISUAL-LOG P2/P3 rows — parallel
-  art lane candidate (PixelLab at full).
+Next sessions, in rough order (batch plan in NEXT UP block below):
+- **Phase 0: decision packet** (#412 table + #413 spec + #404 name) —
+  Fable inline, no code, one user sitting.
+- **Phase 1: #414 steel-thread + #400 carried rows** — parallel lanes,
+  user-independent, Opus/Codex.
+- **Phase 2 (after #412 sign-off): 412-apply → #403 pockets ∥ #413
+  Dangersense.**
+- **Close: composed train + ONE steel-thread windowed run** (= batch
+  eye-read) + VISUAL-LOG drain.
+- **#406 PARKED** (user 2026-08-09) — do not start; resume state in
+  issue body + NEXT UP note.
+- VISUAL-LOG P2/P3 rows ride Lane B where same-surface, else stay
+  parked rows.
 - USER-HELD: v0.19.0 tag re-cut + deploy; [Rope Work] ACK; #404
   lockpick canon-ACK; parlor music ear-gate (hydrogene_east_town in);
   Coyle sign repaint verdict (VISUAL-LOG r5); #412 table sign-off.
