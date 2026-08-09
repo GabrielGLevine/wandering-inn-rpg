@@ -306,3 +306,18 @@ FAIL), the key showed its core specimens were 15/15 CONTROL rows and
 the hostile reader's own counter-case was 9/9 REVISED. A separated
 design cannot produce that discrimination, and the criterion would have
 been adjudicated on vibes instead of evidence.
+
+## Fix at the root, not the symptom's surface (user teaching, 2026-08-09)
+Before dispatching any fix — especially art/polish — ask the level-up
+question: "why does this thing exist at all? does it need to?" The
+teaching case: three rounds of sprite work tried to make a crate read
+better UNDERWATER (mis-sliced sliver → bold dry crate → submerged
+variant, still occluded by the crab) before the real question landed —
+the fiction says the cache is under silt, so NOTHING should be
+visible; the sprite chase was unjustifiable from the start, and the
+affordance chain (bank prose + freeze-route teach + adjacency marker)
+never needed it. Removal beat improvement. Symptoms of being at the
+wrong level: iterating art/params on something whose existence is
+unexamined, fixing the same surface a second time, or a reviewer
+scoring your fix against the wrong baseline. Cost of the miss here:
+one PixelLab generation, one review finding, one fix-wave redirect.
