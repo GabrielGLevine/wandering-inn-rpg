@@ -12,8 +12,14 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "wandering_inn_game"
-GD_LIMIT = 0.20
-JSON_LIMIT = 0.15
+GD_LIMIT = 0.24
+JSON_LIMIT = 0.18
+# Ceilings raised 15%->18% / 20%->24% (user ruling 2026-08-09): the old
+# margins sat permanently exhausted, so every wave paid a comment tax and two
+# mechanical trim passes mangled load-bearing docs (anchor math, canon
+# pointers) trying to buy 200 chars. A tripwire should catch RUNAWAY bloat,
+# not meter engineering notes char-by-char. If a wave blows through THESE
+# ceilings, that is a real conversation, not a trim.
 
 
 @dataclass(frozen=True)
