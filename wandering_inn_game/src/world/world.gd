@@ -819,6 +819,10 @@ func _rebuild_field() -> void:
 	# forget the old sprite's state too.
 	_sneak_tinted = false
 	_ice_overlay = null
+	# H1 (review 2026-08-09): _entities_root must die with the rebuild too --
+	# a stale pointer here passed the parent check while queued for deletion
+	# and move_child sank the ice overlay under the freshly built floor.
+	_entities_root = null
 	_field_blocked_prop_plan.clear()
 	# Drop every light registered for the OLD map before
 	# any new one is spawned below -- the old map's holders (and their light
@@ -951,43 +955,26 @@ func _build_field_blocked_props() -> void:
 
 
 func _build_water_shimmer() -> void:
+	# ONE dual-grid layer carries ALL visible water: interior tiles at
+	# all-water vertices plus bank tiles at shore vertices, from the
+	# terrain-neutral generated sheet, with the shimmer shader on the whole
+	# layer (amplitude retuned for the 64px atlas -- see the shader). The
+	# old per-cell cap layer beneath is fully covered and feeds nothing.
+	# Ghosting is impossible: no second copy of any bank exists. Banks sway
+	# ~1px with the water, which reads as lapping; reduce-motion stops the
+	# clock and the whole surface goes static (review M1+M2 resolution).
 	var walls_cfg: Dictionary = _current_map_cfg().get("walls", {})
 	var segments: Array = walls_cfg.get("segments", [])
-	var overlay: TileMapLayer
-	var painted := false
-	for raw_seg: Variant in segments:
-		if not (raw_seg is Dictionary):
-			continue
-		var seg := raw_seg as Dictionary
-		if String(seg.get("sheet", "")) != WATER_SHEET:
-			continue
-		var cells: Array[Vector2i] = WIGame.segment_cells(seg)
-		if cells.is_empty():
-			continue
-		if overlay == null:
-			var tile_px := int(seg.get("tile_px", 16))
-			overlay = WITileBoardBuilder.make_tile_layer(_field_root, WATER_SHEET, tile_px, WISpriteRegistry)
-			var mat := ShaderMaterial.new()
-			mat.shader = WATER_SHIMMER_SHADER
-			overlay.material = mat
-			# Held so reduce-motion can stop (and restart) this clock without a
-			# map rebuild; the assignment below applies the CURRENT setting to
-			# the freshly built overlay.
-			_water_material = mat
-			_apply_motion_settings()
-		var cap_raw: Array = seg.get("cap", [1, 5])
-		var coord := Vector2i(int(cap_raw[0]), int(cap_raw[1]))
-		for cell: Vector2i in cells:
-			overlay.set_cell(cell, 0, coord)
-		painted = true
+	var overlay := WITileBoardBuilder.build_shoreline_overlay(segments, WISpriteRegistry)
 	if overlay == null:
-		return
-	if painted:
-		_field_root.add_child(overlay)
-	else:
 		_water_material = null
-		overlay.queue_free()
-
+		return
+	var mat := ShaderMaterial.new()
+	mat.shader = WATER_SHIMMER_SHADER
+	overlay.material = mat
+	_water_material = mat
+	_apply_motion_settings()
+	_field_root.add_child(overlay)
 
 func _build_ice_overlay() -> void:
 	var frozen: Array = Game.sim.frozen_cells_json().get(Game.sim.current_map, [])
@@ -1009,7 +996,7 @@ func _paint_ice_cell(cell: Vector2i) -> void:
 		# walls and water (all earlier siblings), below everything that walks.
 		_ice_overlay.z_index = 0
 		_field_root.add_child(_ice_overlay)
-		if _entities_root != null and _entities_root.get_parent() == _field_root:
+		if _entities_root != null and not _entities_root.is_queued_for_deletion() and _entities_root.get_parent() == _field_root:
 			_field_root.move_child(_ice_overlay, _entities_root.get_index())
 	_ice_overlay.set_cell(cell, 0, ICE_CAP_COORD)
 

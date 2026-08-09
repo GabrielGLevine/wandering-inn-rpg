@@ -1,6 +1,100 @@
 class_name WITileBoardBuilder
 
 const CELL := 16
+const _WATER_NEIGHBORS := [
+	[Vector2i(0, -1), 1], [Vector2i(1, -1), 2],
+	[Vector2i(1, 0), 4], [Vector2i(1, 1), 8],
+	[Vector2i(0, 1), 16], [Vector2i(-1, 1), 32],
+	[Vector2i(-1, 0), 64], [Vector2i(-1, -1), 128],
+]
+const _WATER_CARDINALS := 1 | 4 | 16 | 64
+const _WATER_DIAGONALS := 2 | 8 | 32 | 128
+
+
+static func water_segment_cell_set(segments: Array) -> Dictionary:
+	var water_cells := {}
+	for raw_segment: Variant in segments:
+		if not (raw_segment is Dictionary) or not bool((raw_segment as Dictionary).get("water", false)):
+			continue
+		for cell: Vector2i in WIGame.segment_cells(raw_segment as Dictionary):
+			water_cells[cell] = true
+	return water_cells
+
+
+static func water_neighbor_mask(cell: Vector2i, water_cells: Dictionary) -> int:
+	var mask := 0
+	for neighbor: Array in _WATER_NEIGHBORS:
+		if water_cells.has(cell + (neighbor[0] as Vector2i)):
+			mask |= int(neighbor[1])
+	return mask
+
+
+## DUAL-GRID SHORELINE (issue #411, second pass after the windowed read).
+## Per-cell edge tiles cannot render 1-wide channels (no sheet has a
+## water-strip-with-two-lips tile -- the sewers were a no-op) and the pack's
+## bank tiles carry foreign grass. Instead: a HALF-OFFSET overlay paints one
+## tile per cell VERTEX, corners sampled from the 4 cells that meet there,
+## from a terrain-neutral generated sheet (water + waterline lip, land side
+## TRANSPARENT so each map's own ground shows through). Every corner combo is
+## a real tile -- the mapping is a total function, so strips, necks and
+## double-diagonal cells are ordinary cases, not fallbacks.
+##
+## Sheet: assets/tiles/generated/water_shoreline_16.png -- PixelLab
+## create_topdown_tileset id 8b0b91aa-194b-4aee-921f-e8d97d9aea90 (water ->
+## flat-magenta upper, transition 0.25 "dark wet waterline lip", 16px,
+## lineless, basic shading), then chroma-keyed: blue-dominant kept,
+## magenta family -> alpha, dark lip kept within 2px of bright water. Corner bits below say
+## which of the vertex's 4 cells are WATER: NW=1, NE=2, SW=4, SE=8.
+const SHORELINE_SHEET := "res://assets/tiles/generated/water_shoreline_16.png"
+const SHORELINE_TILE_PX := 16
+## bits(water corners) -> atlas coord. 0 (no water) is never painted;
+## 15 (all water) is skipped -- the base water layer already covers it.
+const SHORELINE_WANG_COORDS := {
+	1: Vector2i(3, 3), 2: Vector2i(0, 2), 4: Vector2i(0, 0), 8: Vector2i(1, 3),
+	3: Vector2i(1, 2), 12: Vector2i(3, 0), 5: Vector2i(3, 2), 10: Vector2i(1, 0),
+	6: Vector2i(2, 3), 9: Vector2i(0, 1),
+	7: Vector2i(3, 1), 11: Vector2i(2, 2), 13: Vector2i(2, 0), 14: Vector2i(1, 1),
+	15: Vector2i(2, 1),
+}
+
+
+static func vertex_water_bits(vertex: Vector2i, water_cells: Dictionary) -> int:
+	var bits := 0
+	if water_cells.has(vertex + Vector2i(-1, -1)):
+		bits |= 1
+	if water_cells.has(vertex + Vector2i(0, -1)):
+		bits |= 2
+	if water_cells.has(vertex + Vector2i(-1, 0)):
+		bits |= 4
+	if water_cells.has(vertex + Vector2i(0, 0)):
+		bits |= 8
+	return bits
+
+
+## Builds the half-offset shoreline overlay for a map's water segments.
+## Returns null when the map has no water. The caller owns the material:
+## the world attaches the shimmer shader to THIS layer (single-copy water,
+## so animation cannot ghost -- review M1/M2 resolution 2026-08-09).
+static func build_shoreline_overlay(segments: Array, registry) -> TileMapLayer:
+	var water_cells := water_segment_cell_set(segments)
+	if water_cells.is_empty():
+		return null
+	var layer := TileMapLayer.new()
+	layer.tile_set = registry.tile_set_for(SHORELINE_SHEET, SHORELINE_TILE_PX)
+	layer.scale = Vector2(float(CELL) / float(SHORELINE_TILE_PX), float(CELL) / float(SHORELINE_TILE_PX))
+	layer.position = Vector2(-CELL / 2.0, -CELL / 2.0)
+	var seen := {}
+	for cell: Vector2i in water_cells:
+		for corner: Vector2i in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]:
+			var vertex: Vector2i = cell + corner
+			if seen.has(vertex):
+				continue
+			seen[vertex] = true
+			var bits := vertex_water_bits(vertex, water_cells)
+			if bits == 0:
+				continue
+			layer.set_cell(vertex, 0, SHORELINE_WANG_COORDS[bits])
+	return layer
 
 
 ## CONTRACT: map id + cell only; field cover never consumes gameplay RNG.
@@ -177,7 +271,8 @@ static func build_walls(parent: Node2D, walls_cfg: Dictionary, grid: Vector2i, b
 			for x in grid.x:
 				layer.set_cell(Vector2i(x, y), 0, coord)
 		parent.add_child(layer)
-	for raw_seg: Variant in walls_cfg.get("segments", []):
+	var segments: Array = walls_cfg.get("segments", [])
+	for raw_seg: Variant in segments:
 		if not (raw_seg is Dictionary):
 			continue
 		var seg := raw_seg as Dictionary
