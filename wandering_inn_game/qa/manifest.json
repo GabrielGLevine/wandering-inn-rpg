@@ -2780,6 +2780,7 @@
    "surfaces": {
     "maps": [
      "brothers_parlor",
+     "enchanter_shop",
      "inn",
      "invrisil_boulevard",
      "mercantile_alleys"
@@ -2790,6 +2791,7 @@
     "skills": [
      "basic_cleaning",
      "observe",
+     "pick_lock",
      "quick_movement",
      "sneak"
     ],

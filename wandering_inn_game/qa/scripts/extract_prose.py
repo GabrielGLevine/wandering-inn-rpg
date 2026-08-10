@@ -1454,6 +1454,26 @@ LANDMARK_DISPOSITIONS = {
     # shipped map prose after this issue's Phase-0 audit froze, so three new
     # strings reached the landmark HEURISTIC with no ruling. Ruling them is a
     # controller act; the heuristic flags candidates, it does not adjudicate.
+    # --- #423 (lane H, this wave). The enchanter work-room's reward beat is a
+    # NEW string that reached the heuristic (classify_row: landmark/payoff) with
+    # no ruling, exactly like the three #398-era strings above. LANE-PROPOSED,
+    # controller may downgrade to NOT-A-LANDMARK: the lane cannot ship preflight
+    # green with an unruled landmark, and this is the honest reading of the
+    # string rather than the cheap one.
+    "map:invrisil/enchanter_work_room.json:$.entities[1].open_toast": {
+        "disposition": "KEEP-AS-IS",
+        "beat": "the work-room case opened (#423, the [Pick Lock] debut's payoff)",
+        "why": "The ONE beat this file exists to deliver, and the file's only "
+               "claim (\u00a75's one-beat-per-file norm, not the two-beat "
+               "exception mercantile_alleys holds). It makes a real landmark "
+               "move rather than an inventory statement: the turn is 'all "
+               "other people's property except one thing', which is what makes "
+               "taking the gauge legitimate on BOTH modes of the gate instead "
+               "of theft, and it closes on the present object the player then "
+               "receives. No affordance formula, no interpretive closer, no "
+               "inferred agent. Costs the \u00a75 reserve nothing -- it is a "
+               "heuristic-landmark row, not a controller grant.",
+    },
     "map:invrisil/mercantile_alleys.json:$.entities[19].victory_toast": {
         "disposition": "NOT-A-LANDMARK",
         "beat": "counting-room chain payoff (#398 P4)",

@@ -425,6 +425,254 @@
    "name": "01c_boulevard_stationer"
   },
   {
+   "_comment": "== #423 BEAT 3c: HEDAULT'S SHOP, the fifth boulevard shopfront and the first one you can walk INTO. Right 2 along the open row 2 to (22,2), bump north into the new door on the blocked facade row, and cross. This leg is the region canonical's answer to the whole issue: the enchanter is no longer a figure in a dead-end alley corner that only a hand-placed fixture could face. ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    22,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     1
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "enchanter_shop"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "01f_enchanter_shop_entered"
+  },
+  {
+   "_comment": "The work-room door read, free at this fixture: this PC holds no rogue line, so [Pick Lock] is not on the bar and the door answers with SKILL_UNKNOWN and its own locked_toast. The refusal is structural -- the map does not change.",
+   "action": "assert_field_skill_absent",
+   "skill": "pick_lock"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     8,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "payload_contains": {
+    "skill": "pick_lock"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The lock is better than the door. You get as far as knowing that, and no further."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "enchanter_shop"
+  },
+  {
+   "action": "screenshot",
+   "name": "01g_work_room_locked"
+  },
+  {
+   "_comment": "THE #423 PROOF IN THE REGION CANONICAL: walk the shop floor to Hedault and speak to him from a cell a player can actually stand on. Left 6 to (2,4), bump north into (2,3).",
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     2,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Hedault"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01h_hedault_reachable"
+  },
+  {
+   "_comment": "Back out the way we came in and return to (20,2), so every downstream leg's cell arithmetic is byte-unchanged.",
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     6,
+     8
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    22,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    20,
+    2
+   ]
+  },
+  {
    "action": "move",
    "direction": "right",
    "steps": 3
