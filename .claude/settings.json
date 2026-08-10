@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(gh release edit:*)"
+      "Bash(gh release edit:*)",
+      "Bash(gh pr merge:*)"
     ]
   },
   "hooks": {
