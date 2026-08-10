@@ -1,5 +1,5 @@
 {
- "_comment": "GH#336 -- THE Skills-tab redesign canonical. Loads inn_guests_start (Mage 2 / Warrior 5 / Helper 5 / Tactician 1 / Diplomat 1 plus Innate) via title Continue, opens the journal on the Skills tab and proves the rebuilt body end to end: CATEGORY is the outer axis (`skill_categories`, WIGame.SKILL_CATEGORY_ORDER with empty buckets dropped), each Skill renders EXACTLY ONCE in its primary-use bucket (`skill_row_ids` pinned verbatim -- 21 rows, 21 distinct ids), class demotes to per-row provenance while the class-primary `skill_groups` payload key survives untouched for the Classes strip, and the checkbox is HONEST: it assigns on a Combat - Active row and on an Exploration - Active row (collapsing the AUTO field bar 5 -> 1), and REFUSES on a Combat - Passive row that reaches no bar at all. No combat anywhere; the fixture's own rng_state governs, seed 3 held for convention with this fixture's other users.",
+ "_comment": "GH#336 -- THE Skills-tab redesign canonical. Loads inn_guests_start (Mage 2 / Warrior 5 / Helper 5 / Tactician 1 / Diplomat 1 plus Innate) via title Continue, opens the journal on the Skills tab and proves the rebuilt body end to end: CATEGORY is the outer axis (`skill_categories`, WIGame.SKILL_CATEGORY_ORDER with empty buckets dropped), each Skill renders EXACTLY ONCE in its primary-use bucket (`skill_row_ids` pinned verbatim -- 22 rows, 22 distinct ids), class demotes to per-row provenance while the class-primary `skill_groups` payload key survives untouched for the Classes strip, and the checkbox is HONEST: it assigns on a Combat - Active row and on an Exploration - Active row (collapsing the AUTO field bar 7 -> 1), and REFUSES on a Combat - Passive row that reaches no bar at all. No combat anywhere; the fixture's own rng_state governs, seed 3 held for convention with this fixture's other users.",
  "fixture_save": "inn_guests_start",
  "starts_at_title": true,
  "steps": [
@@ -68,7 +68,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Skills tab. THE category-grouping assertion: `skill_categories` is the rendered heading order (WIGame.SKILL_CATEGORY_ORDER, empty buckets dropped -- this save holds no Exploration - Passive Skill, so only three headings draw), `skill_row_ids` is the flattened cursor order the body draws and `_flatten_skill_ids` walks in lockstep, and `skill_count` is its length. Pinning the array VERBATIM is also the dedupe proof: 21 rows for 21 distinct ids, no id twice. `skill_groups` is unchanged and still class-primary -- the Classes strip at the top of the tab is what draws it now, and pinning both side by side is the proof that the payload's class contract survived the body rebuild (spec traps R4/R5).",
+   "_comment": "Skills tab. THE category-grouping assertion: `skill_categories` is the rendered heading order (WIGame.SKILL_CATEGORY_ORDER, empty buckets dropped -- this save holds no Exploration - Passive Skill, so only three headings draw), `skill_row_ids` is the flattened cursor order the body draws and `_flatten_skill_ids` walks in lockstep, and `skill_count` is its length. Pinning the array VERBATIM is also the dedupe proof: 22 rows for 22 distinct ids, no id twice. `skill_groups` is unchanged and still class-primary -- the Classes strip at the top of the tab is what draws it now, and pinning both side by side is the proof that the payload's class contract survived the body rebuild (spec traps R4/R5).",
    "action": "press",
    "name": "move_right"
   },
@@ -77,7 +77,7 @@
    "type": "ui_journal_shown",
    "payload_contains": {
     "active_tab": "skills",
-    "skill_count": 21,
+    "skill_count": 22,
     "skill_categories": [
      "Combat — Active",
      "Combat — Passive",
@@ -93,7 +93,6 @@
      "calming_touch",
      "quick_cast",
      "mana_shield",
-     "basic_swordwork",
      "tough_body",
      "counter_strike",
      "battle_momentum",
@@ -102,7 +101,9 @@
      "battlefield_awareness",
      "basic_cleaning",
      "light",
+     "basic_swordwork",
      "basic_cooking",
+     "basic_repair",
      "observe",
      "charming_smile"
     ],
@@ -123,7 +124,7 @@
    "name": "00_skills_tab_categories"
   },
   {
-   "_comment": "HONEST CHECKBOX, positive half: row 0 is [Frost Bolt], a Mage strike with a real AP cost -- Combat - Active, so it reaches the combat bar and its checkbox is true. Confirm assigns it for real. The emit order pinned here IS the contract field_skills_loop established: loadout_changed -> ui_field_hotbar_rendered -> ui_journal_loadout_rendered, synchronous. THE FIELD BAR MUST STAY AT 5 ACROSS THIS ASSIGN: one shared hotbar_loadout intersects BOTH bars, so a combat-only kit used to blank the exploration bar (5 -> 0) on the first tick this tab invites. An empty intersection now falls back to AUTO. A 0 here is the regression.",
+   "_comment": "HONEST CHECKBOX, positive half: row 0 is [Frost Bolt], a Mage strike with a real AP cost -- Combat - Active, so it reaches the combat bar and its checkbox is true. Confirm assigns it for real. The emit order pinned here IS the contract field_skills_loop established: loadout_changed -> ui_field_hotbar_rendered -> ui_journal_loadout_rendered, synchronous. THE FIELD BAR MUST STAY AT 7 ACROSS THIS ASSIGN: one shared hotbar_loadout intersects BOTH bars, so a combat-only kit used to blank the exploration bar (7 -> 0) on the first tick this tab invites. An empty intersection now falls back to AUTO. A 0 here is the regression.",
    "action": "press",
    "name": "confirm"
   },
@@ -190,7 +191,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "HONEST CHECKBOX, the half that IS the bug: row 9 is [Basic Swordwork], an ap_cost-0 combat passive. It reaches NO bar -- not the combat one (no AP cost, so combat_hud never lists it) and not the field one (no `field: true`) -- so the redesigned tab draws a category glyph where the box used to be, and a confirm/tap on it REFUSES. Before this, ticking it parked it on hotbar_loadout forever with nothing to show for it, on 41 of 119 catalog entries. `slottable:false` is the rendered fact; the unchanged loadout_changed count right below is the state fact.",
+   "_comment": "HONEST CHECKBOX, the refusal half: row 9 is [Tough Body], an ap_cost-0 combat passive. It reaches NO bar, so the redesigned tab draws a category glyph where the box used to be and a confirm/tap on it REFUSES. `slottable:false` is the rendered fact; the unchanged loadout_changed count right below is the state fact.",
    "action": "click_journal_skill",
    "flat_index": 9
   },
@@ -198,7 +199,7 @@
    "action": "wait_for_event",
    "type": "ui_journal_loadout_rendered",
    "payload_contains": {
-    "skill": "basic_swordwork",
+    "skill": "tough_body",
     "assigned": false,
     "cursor_index": 9,
     "slottable": false
@@ -210,7 +211,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Basic Swordwork] is always on — passives don't take a slot."
+    "text": "[Tough Body] is always on — passives don't take a slot."
    },
    "timeout_sec": 5
   },
@@ -224,9 +225,9 @@
    "name": "03_passive_refusal_toast"
   },
   {
-   "_comment": "...and the exploration half of the honest checkbox: row 16 is [Basic Cleaning] (Exploration - Active), which reaches the FIELD bar. Assigning it collapses the AUTO five-slot bar to the one curated slot -- the same intersect-and-reorder contract field_skills_loop pins, reached here through the categorized tab.",
+   "_comment": "...and the exploration half of the honest checkbox: row 15 is [Basic Cleaning] (Exploration - Active), which reaches the FIELD bar. Assigning it collapses the AUTO seven-slot bar to the one curated slot -- the same intersect-and-reorder contract field_skills_loop pins, reached here through the categorized tab.",
    "action": "click_journal_skill",
-   "flat_index": 16
+   "flat_index": 15
   },
   {
    "action": "wait_for_event",
@@ -254,7 +255,7 @@
    "payload_contains": {
     "skill": "basic_cleaning",
     "assigned": true,
-    "cursor_index": 16,
+    "cursor_index": 15,
     "slottable": true
    },
    "timeout_sec": 5
@@ -266,7 +267,7 @@
   {
    "_comment": "Restore the AUTO baseline this script ends on.",
    "action": "click_journal_skill",
-   "flat_index": 16
+   "flat_index": 15
   },
   {
    "action": "wait_for_event",
@@ -280,7 +281,7 @@
    "_comment": "CURSOR-FOLLOW, the other half of the scroll contract. 00_skills_tab_categories proves the tab OPENS on its own header (kit note, controls line, passive-glyph legend) instead of scrolling past it. This leg proves following still happens when needed: the cursor walks to the LAST row, far below the fold, and the panel scrolls it in.",
    "action": "move",
    "direction": "down",
-   "steps": 20
+   "steps": 21
   },
   {
    "action": "screenshot",

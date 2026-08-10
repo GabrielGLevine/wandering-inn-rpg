@@ -1,5 +1,5 @@
 {
- "_comment": "P5 negative leg, two phases off two fixtures. PHASE 0 (near_briar_arch_locked, no fire and no blade Skill): the two-mode teaching refusal, the impassable briar cell, the wards REFUSING on their own encounter_when (review L2 -- the falsifiable gate proof; `entity_present` ignores encounter_when, so only the gate_closed_toast can carry it), and the structurally absent cache. PHASE 1 (near_briar_arch_unarmed, review L5): a Warrior 11 who KNOWS [Power Strike] but holds no sword or spear -- the Skill is off the field bar entirely and the arch still refuses.",
+ "_comment": "P5 negative leg, three phases off existing fixtures. PHASE 0 (near_briar_arch_locked, no fire and no blade Skill): the two-mode teaching refusal, impassable briar, encounter_when refusal, and absent cache. PHASE 1 (near_briar_arch_unarmed): a Warrior 11 knows [Basic Swordwork] but holds no sword, so the field_weapon gate keeps it off the bar. PHASE 2 (near_briar_arch_cut): the sword-armed control proves the same Skill is present.",
  "fixture_save": "near_briar_arch_locked",
  "starts_at_title": true,
  "steps": [
@@ -44,7 +44,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The western briars choke the arch. [Firefly] or [Flame Jet] burns them; [Power Strike] or [Piercing Strikes] cuts them with the matching weapon in hand."
+    "text": "The western briars choke the arch. [Firefly] or [Flame Jet] burns them; [Basic Swordwork] cuts them with the matching weapon in hand."
    },
    "timeout_sec": 5,
    "_comment": "Review L6/K5: ONE locked_toast reaches EVERY build (the sewer_debris / collapsed_gallery_shoring precedent) and names both modes plus the weapon the cut needs. The old requires_skill:kindle steered the hint arm so only [Firefly] holders were taught, and a cutter holding the answer was told it lacked kindle."
@@ -53,7 +53,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "The western briars choke the arch. [Firefly] or [Flame Jet] burns them; [Power Strike] or [Piercing Strikes] cuts them with the matching weapon in hand."
+    "text": "The western briars choke the arch. [Firefly] or [Flame Jet] burns them; [Basic Swordwork] cuts them with the matching weapon in hand."
    },
    "timeout_sec": 5
   },
@@ -263,16 +263,12 @@
    "equals": ""
   },
   {
-   "_comment": "THE L5 PROOF: warrior 11 grants [Power Strike] (near_briar_arch_cut casts it off this exact class level), but Phase 0's field weapon gate keeps it OFF the bar with no sword in hand -- so the cut mode is not merely refused downstream, it is unreachable. Read from the same field_hotbar_loadout() that press_field_skill uses; equipping the knife in the fixture reds it.",
+   "_comment": "THE L5 PROOF: warrior 11 grants [Basic Swordwork], but its field_weapon:sword gate keeps it OFF the bar with no sword equipped. Read from the same field_hotbar_loadout() that press_field_skill uses; PHASE 2 is the armed positive control.",
    "action": "assert_field_skill_absent",
-   "skill": "power_strike"
+   "skill": "basic_swordwork"
   },
   {
-   "action": "assert_field_skill_absent",
-   "skill": "piercing_strikes"
-  },
-  {
-   "_comment": "And the gate still refuses, with the same two-mode line that names the weapon this build lacks.",
+   "_comment": "The gate still refuses, with the same two-mode line that names the sword this build lacks.",
    "action": "press",
    "name": "interact"
   },
@@ -280,7 +276,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The western briars choke the arch. [Firefly] or [Flame Jet] burns them; [Power Strike] or [Piercing Strikes] cuts them with the matching weapon in hand."
+    "text": "The western briars choke the arch. [Firefly] or [Flame Jet] burns them; [Basic Swordwork] cuts them with the matching weapon in hand."
    },
    "timeout_sec": 5
   },
@@ -347,6 +343,69 @@
   {
    "action": "assert_event_absent",
    "type": "combat_started"
+  },
+  {
+   "_comment": "== PHASE 2 == swap in the existing sword-armed twin. Exact bar contents make the positive control falsifiable: changing field_weapon away from sword removes [Basic Swordwork] and reds this pin.",
+   "action": "install_fixture",
+   "fixture": "near_briar_arch_cut",
+   "slot": "manual"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.weapon",
+   "equals": "gnollish_hunting_knife"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 3,
+    "readout_lines": [
+     "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
+     "2  [Basic Swordwork] — Steadier hands with any blade.",
+     "3  [Greater Strength] — Strength enough to shift what was set down to stay put."
+    ]
+   }
   }
  ]
 }

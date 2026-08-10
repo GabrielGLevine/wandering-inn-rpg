@@ -114,8 +114,9 @@ func _check_filter_agreement(skills: Dictionary) -> void:
 	assert(sim_source.contains("if _field_skill_available(id):"),
 		"field_hotbar_loadout must consume the shared live field-eligibility helper")
 	assert(sim_source.contains("and _field_skill_weapon_ready(skill_id)")
+		and sim_source.contains("skill.get(\"field_weapon\", skill.get(WIKeys.WEAPON, \"\"))")
 		and sim_source.contains("String(equipped_weapon.get(\"weapon_family\", \"\")) == required_family"),
-		"live field eligibility must preserve equipped weapon-family gating")
+		"live field eligibility must preserve field-only weapon-family gating with combat-key fallback")
 
 
 ## `bar` says which bar a tick on the row actually moves. `hotbar_loadout` is
@@ -296,7 +297,8 @@ func _check_auto_bar_cap() -> void:
 	for id: String in g.skills:
 		var skill := g.skills[id] as Dictionary
 		if bool(skill.get("field", false)) \
-				and not (bool(skill.get("cuts", false)) and String(skill.get(WIKeys.WEAPON, "")) != ""):
+				and not (bool(skill.get("cuts", false)) \
+				and String(skill.get("field_weapon", skill.get(WIKeys.WEAPON, ""))) != ""):
 			field_ids.append(id)
 	assert(field_ids.size() > WIGame.AUTO_SLOT_CAP,
 		"fixture: the shipped catalog must carry more than %d field Skills for the over-cap case to be reachable at all" % WIGame.AUTO_SLOT_CAP)

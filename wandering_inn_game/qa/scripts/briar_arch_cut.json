@@ -1,5 +1,5 @@
 {
- "_comment": "P5 mode B: a sword-equipped Warrior uses [Power Strike] on the west carrier, reaches the same buried stair, and wins the armed +3-band ward encounter. Owns the CUT half of the private-counter proof (review C1): the arch banks cut_the_briar_arch, and both the cuts row's shared cut_through_growth and the burns row's burned_the_debris stay absent whole-run.",
+ "_comment": "P5 mode B: a sword-equipped Warrior uses [Basic Swordwork] on the west carrier, reaches the same buried stair, and wins the armed +3-band ward encounter. Owns the CUT half of the private-counter proof (review C1): the arch banks cut_the_briar_arch, and both the cuts row's shared cut_through_growth and the burns row's burned_the_debris stay absent whole-run.",
  "fixture_save": "near_briar_arch_cut",
  "starts_at_title": true,
  "steps": [
@@ -38,13 +38,13 @@
   },
   {
    "action": "press_field_skill",
-   "skill": "power_strike"
+   "skill": "basic_swordwork"
   },
   {
    "action": "wait_for_event",
    "type": "skill_used",
    "payload_contains": {
-    "skill": "power_strike",
+    "skill": "basic_swordwork",
     "context": "exploration",
     "target": "briar_arch_west"
    },

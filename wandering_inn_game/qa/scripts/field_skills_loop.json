@@ -67,11 +67,11 @@
     ],
     "fallback_labels": [
      "BC",
-     "PS"
+     "BS"
     ],
     "readout_lines": [
      "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
-     "2  [Power Strike] — Everything behind one blow."
+     "2  [Basic Swordwork] — Steadier hands with any blade."
     ]
    }
   },
@@ -185,7 +185,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== PHASE B: one sleep grants [Tactician] (pre-banked chess_with_olesm) AND [Helper] (Phase A's cleaned_the_inn:1); the sword-armed hotbar re-renders 2 -> 4 field slots, retaining [Power Strike] ==. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "_comment": "== PHASE B: one sleep grants [Tactician] (pre-banked chess_with_olesm) AND [Helper] (Phase A's cleaned_the_inn:1); the sword-armed hotbar re-renders 2 -> 4 field slots, retaining [Basic Swordwork] ==. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
    "cell": [
@@ -325,7 +325,7 @@
    "name": "02_hotbar_grown_3slots"
   },
   {
-   "_comment": "Slot 4 is [Appraise Foe] (catalog order: innate basic_cleaning, sword-gated power_strike, helper's basic_cooking, then tactician's observe). Press it facing Erin.",
+   "_comment": "Slot 4 is [Appraise Foe] (catalog order: innate basic_cleaning, sword-gated basic_swordwork, helper's basic_cooking, then tactician's observe). Press it facing Erin.",
    "action": "press",
    "name": "hotbar_4"
   },
@@ -417,9 +417,9 @@
    "greater_than": 0.0
   },
   {
-   "_comment": "POSITIVE CONTROL for the pan/tap latch (v0.15 Task 2.1 fix round 1). The drag above must NOT toggle a skill -- that negative is pinned below, where `loadout: [\"observe\"]` is a SINGLE-element list any stray toggle breaks. This is the other half: a STATIONARY press still reaches meta_clicked and still toggles. GH#336 re-pin, twice over: (1) the categorized body is TALLER (a Classes strip plus four category headings), so the drag's own release point (0.25 of body height) now lands on a heading -- not a row, and headings are deliberately non-focusable -- and the tap is aimed explicitly at 0.52 (measured band ~0.47-0.57, re-derive by sweeping at_height_fraction if the Skills body ever changes height again), which lands on [Basic Cleaning], now row 5 of the Exploration - Active bucket rather than row 0 of Innate. (2) the OFF direction is driven by `click_journal_skill` on the SAME row instead of a second tap at the same point: a slottable toggle rebuilds the body follow-cursor, so the post-toggle scroll moves the row out from under a repeated geometric tap. One tap-driven toggle is all the latch needs to prove; the index-addressed unassign restores the empty-loadout baseline every pin below depends on.",
+   "_comment": "POSITIVE CONTROL for the pan/tap latch (v0.15 Task 2.1 fix round 1). The drag above must NOT toggle a skill -- that negative is pinned below, where `loadout: [\"observe\"]` is a SINGLE-element list any stray toggle breaks. This is the other half: a STATIONARY press still reaches meta_clicked and still toggles. The tap is aimed explicitly at 0.48, which lands on [Basic Cleaning], row 4 after [Basic Swordwork] moved from Combat - Passive to Exploration - Active. The OFF direction uses `click_journal_skill` on the same row because a slottable toggle rebuilds the body follow-cursor and moves the row out from under a repeated geometric tap.",
    "action": "tap_journal_body",
-   "at_height_fraction": 0.52
+   "at_height_fraction": 0.48
   },
   {
    "action": "wait_for_event",
@@ -439,14 +439,14 @@
    "payload_contains": {
     "skill": "basic_cleaning",
     "assigned": true,
-    "cursor_index": 5,
+    "cursor_index": 4,
     "slottable": true
    },
    "timeout_sec": 5
   },
   {
    "action": "click_journal_skill",
-   "flat_index": 5
+   "flat_index": 4
   },
   {
    "action": "wait_for_event",
@@ -464,13 +464,17 @@
    "payload_contains": {
     "skill": "basic_cleaning",
     "assigned": false,
-    "cursor_index": 5,
+    "cursor_index": 4,
     "slottable": true
    },
    "timeout_sec": 5
   },
   {
-   "_comment": "GH#336 re-pin: the tap legs above left the cursor on [Basic Cleaning] (row 5); two more downs reach [Appraise Foe] at row 7, the last row of the Exploration - Active bucket. It was six downs from row 0 back when the tab was class-primary.",
+   "_comment": "The tap legs above leave the cursor on [Basic Cleaning] (row 4); three downs reach [Appraise Foe] at row 7, the last row of the Exploration - Active bucket.",
+   "action": "press",
+   "name": "move_down"
+  },
+  {
    "action": "press",
    "name": "move_down"
   },

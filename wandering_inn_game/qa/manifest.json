@@ -962,12 +962,14 @@
    "surfaces": {
     "maps": [
      "inn",
-     "inn_upstairs"
+     "inn_upstairs",
+     "riverfarm_village"
     ],
     "fixtures": [],
     "skills": [
      "basic_cleaning",
-     "basic_cooking"
+     "basic_cooking",
+     "basic_repair"
     ],
     "dialogue": [
      "patron_serving"
@@ -1104,7 +1106,6 @@
     ],
     "fixtures": [],
     "skills": [
-     "basic_swordwork",
      "tough_body"
     ],
     "dialogue": [
@@ -1188,7 +1189,7 @@
     ],
     "skills": [
      "basic_cleaning",
-     "power_strike"
+     "basic_swordwork"
     ],
     "dialogue": [
      "erin_errand"
@@ -5015,7 +5016,8 @@
     ],
     "systems": [
      "combat",
-     "dialogue"
+     "dialogue",
+     "exploration"
     ]
    }
   },
@@ -5787,6 +5789,7 @@
     "skills": [
      "basic_cleaning",
      "basic_cooking",
+     "basic_repair",
      "basic_swordwork",
      "battle_momentum",
      "battlefield_awareness",
@@ -6025,7 +6028,6 @@
     "skills": [
      "bar_fighting",
      "basic_cleaning",
-     "basic_repair",
      "broader_shoulders",
      "flame_jet",
      "greater_strength",
@@ -6701,7 +6703,7 @@
     ],
     "skills": [
      "basic_cleaning",
-     "power_strike"
+     "basic_swordwork"
     ],
     "dialogue": [],
     "systems": [
@@ -6728,9 +6730,8 @@
     ],
     "skills": [
      "basic_cleaning",
-     "kindle",
-     "piercing_strikes",
-     "power_strike"
+     "basic_swordwork",
+     "kindle"
     ],
     "dialogue": [],
     "systems": [

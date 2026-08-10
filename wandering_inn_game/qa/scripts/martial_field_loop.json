@@ -56,7 +56,7 @@
    "equals": 5
   },
   {
-   "_comment": "== PHASE 0 LEG A: the floodplains scree chute REFUSES, and it says so. A blocked-with-no-tell hazard reads byte-identically to masonry, which is the defect this wave exists to close, so the map's OWN unsteady_toast is pinned verbatim -- a fallback line firing here instead would mean the map authored nothing. The 2 slots are DERIVED, not curated: martial_field_start carries no hotbar_loadout, so the bar is AUTO = every fieldable known Skill. Warrior 5 knows both cuts actives; the equipped rusty_sword fields power_strike beside innate basic_cleaning, and spear-family piercing_strikes stays off the bar.",
+   "_comment": "== PHASE 0 LEG A: the floodplains scree chute REFUSES, and it says so. The 2 slots are DERIVED, not curated: martial_field_start carries no hotbar_loadout, so the bar is AUTO = every fieldable known Skill. The equipped rusty_sword fields basic_swordwork beside innate basic_cleaning; the retracted combat strikes never enter the field pool.",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
@@ -577,11 +577,11 @@
    ]
   },
   {
-   "_comment": "Ten field slots, every one DERIVED: martial_field_armed carries no hotbar_loadout, so the bar is AUTO = every fieldable known Skill in known_skills() order (player_skills first, then the class grant table). Slots 1-10: basic_cleaning, broader_shoulders, bar_fighting, rope_work, flame_jet, icy_floor, basic_cooking, power_strike, greater_strength, basic_repair. power_strike enters at 8 because the equipped rusty_sword satisfies its sword family; spear-family piercing_strikes is known and still absent, which is the weapon gate proving itself on an ARMED bar. [Even Footing] is a passive and takes no slot. Slot 10 has no number key -- LEG J below reaches it with the cursor.",
+   "_comment": "Nine field slots, every one DERIVED: martial_field_armed carries no hotbar_loadout, so the bar is AUTO in known_skills() order. Slots 1-9: basic_cleaning, broader_shoulders, bar_fighting, rope_work, flame_jet, icy_floor, basic_cooking, basic_swordwork, greater_strength. The sword satisfies basic_swordwork's field_weapon gate; power_strike/piercing_strikes are combat-only, and basic_repair now belongs to Helper L2. [Even Footing] is passive and takes no slot.",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 10
+    "slots": 9
    }
   },
   {
@@ -979,118 +979,7 @@
    ]
   },
   {
-   "_comment": "== LEG J: [Basic Repair] decks the bank walk, and the one-cell corridor opens for good.",
-   "action": "teleport",
-   "map": "riverfarm_village",
-   "cell": [
-    19,
-    10
-   ]
-  },
-  {
-   "action": "wait_for_event",
-   "type": "map_changed",
-   "payload_contains": {
-    "map": "riverfarm_village"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_frames",
-   "frames": 5
-  },
-  {
-   "action": "move",
-   "direction": "up",
-   "steps": 1
-  },
-  {
-   "_comment": "[Basic Repair] sits at slot 10, which no number key reaches, so it is cast the way the bar actually offers it: Tab primes slot 1, ONE move_left wraps the cursor backwards through `_move_field_slot_cursor`'s modulo onto slot 10, confirm fires it. Arrows are swallowed while primed, so the player never steps off the faced stringer. This beat IS the cursor-reachability the 10-slot AUTO bar rests on -- if it ever goes red, slot ten is genuinely unreachable, not merely key-less.",
-   "action": "press",
-   "name": "hotbar_prime"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_field_hotbar_selection_rendered",
-   "payload_contains": {
-    "index": 0,
-    "skill": "basic_cleaning",
-    "label": "[Basic Cleaning]"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "move_left"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_field_hotbar_selection_rendered",
-   "payload_contains": {
-    "index": 9,
-    "skill": "basic_repair",
-    "label": "[Basic Repair]"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "skill_used",
-   "payload_contains": {
-    "skill": "basic_repair",
-    "target": "riverfarm_bank_stringer"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "bank_planks_mended"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "toast",
-   "payload_contains": {
-    "text": "[Basic Repair] — You cut boards to the span and lay them across the stringers: the walk takes your weight end to end."
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "timeout_sec": 5
-  },
-  {
-   "action": "move",
-   "direction": "right",
-   "steps": 1
-  },
-  {
-   "action": "move",
-   "direction": "up",
-   "steps": 2
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    20,
-    8
-   ]
-  },
-  {
-   "action": "screenshot",
-   "name": "07_bank_walk_decked"
-  },
-  {
-   "_comment": "== LEG K: SLEEP. `state_set` is the PERMANENT persistence class, so unlike a frozen channel neither the deck nor the line comes back up overnight. warrior 8 with melee_hit 40 is one short of L9, so this sleep grants nothing and cannot perturb a pin.",
+   "_comment": "== LEG K: SLEEP. `state_set` is permanent, so the anchored gallery line stays open overnight. Warrior 8 with melee_hit 40 is one short of L9, so this sleep grants nothing.",
    "action": "teleport",
    "map": "riverfarm_longhouse",
    "cell": [
@@ -1133,38 +1022,8 @@
   },
   {
    "action": "assert_state",
-   "path": "accomplishments.bank_planks_mended",
-   "equals": 1
-  },
-  {
-   "action": "assert_state",
    "path": "accomplishments.gallery_line_anchored",
    "equals": 1
-  },
-  {
-   "action": "teleport",
-   "map": "riverfarm_village",
-   "cell": [
-    20,
-    10
-   ]
-  },
-  {
-   "action": "wait_frames",
-   "frames": 5
-  },
-  {
-   "action": "move",
-   "direction": "up",
-   "steps": 1
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    20,
-    9
-   ]
   },
   {
    "action": "teleport",
@@ -1193,7 +1052,7 @@
   },
   {
    "action": "screenshot",
-   "name": "08_still_crossable_after_sleep"
+   "name": "07_line_still_crossable_after_sleep"
   },
   {
    "_comment": "== LEG L: [Broader Shoulders] hauls the dray, and the SECOND haul the same waking is refused without paying twice -- the once_per_waking arm on the use_skill seam.",

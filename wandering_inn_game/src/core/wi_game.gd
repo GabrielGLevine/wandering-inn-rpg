@@ -1255,7 +1255,8 @@ func _field_skill_weapon_ready(skill_id: String) -> bool:
 	var skill: Dictionary = skills.get(skill_id, {})
 	if not bool(skill.get("cuts", false)):
 		return true
-	var required_family := String(skill.get(WIKeys.WEAPON, ""))
+	# Field-only gates stay separate so they cannot leak into WICombatBuild's combat kit filtering.
+	var required_family := String(skill.get("field_weapon", skill.get(WIKeys.WEAPON, "")))
 	if required_family == "":
 		return true
 	var equipped_weapon: Dictionary = item(String(equipped.get(WIKeys.WEAPON, "")))

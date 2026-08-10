@@ -110,6 +110,10 @@ func _init() -> void:
 	for sk: String in ["basic_swordwork", "tough_body", "power_strike", "piercing_strikes", "counter_strike", "battle_momentum", "quick_movement", "second_wind", "dangersense"]:
 		assert(swordsman10.has(sk), "swordsman 10 inherits warrior grant %s" % sk)
 	assert(swordsman10.has("quick_slash") and swordsman10.has("flash_cut"), "swordsman 10 keeps its own L10 grants")
+	assert(WIProgression.granted_skills({"helper": 2}, catalog).has("basic_repair"),
+		"Helper L2 grants Basic Repair")
+	assert(not WIProgression.granted_skills({"warrior": 8}, catalog).has("basic_repair"),
+		"Warrior L8 no longer grants Basic Repair")
 	assert(not swordsman10.has("frost_bolt"), "swordsman does not inherit mage")
 
 	var spellsword14 := WIProgression.granted_skills({"spellsword": 14}, catalog)
