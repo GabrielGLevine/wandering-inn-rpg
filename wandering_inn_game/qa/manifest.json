@@ -796,6 +796,7 @@
      "street"
     ],
     "fixtures": [
+     "v1_format",
      "v2_format"
     ],
     "skills": [
@@ -3226,7 +3227,10 @@
      "inn"
     ],
     "fixtures": [
-     "thread_lattice_loop_start"
+     "garden_quiet",
+     "garden_relay_armed",
+     "thread_lattice_loop_start",
+     "thread_lattice_retired"
     ],
     "skills": [
      "basic_cleaning"
@@ -4382,6 +4386,7 @@
      "street"
     ],
     "fixtures": [
+     "climax_sealed_start",
      "near_riverfarm"
     ],
     "skills": [
@@ -5935,6 +5940,7 @@
      "inn_upstairs"
     ],
     "fixtures": [
+     "player_room_night",
      "player_room_start"
     ],
     "skills": [
@@ -6075,11 +6081,13 @@
      "trapped_halls"
     ],
     "fixtures": [
+     "martial_field_armed",
      "martial_field_start"
     ],
     "skills": [
      "bar_fighting",
      "basic_cleaning",
+     "basic_cooking",
      "broader_shoulders",
      "flame_jet",
      "greater_strength",
@@ -6260,6 +6268,8 @@
      "witch_hollow"
     ],
     "fixtures": [
+     "makings_forced_start",
+     "makings_graduate_start",
      "makings_start"
     ],
     "skills": [
@@ -6944,7 +6954,9 @@
      "ruin_surface"
     ],
     "fixtures": [
-     "near_briar_arch_locked"
+     "near_briar_arch_cut",
+     "near_briar_arch_locked",
+     "near_briar_arch_unarmed"
     ],
     "skills": [
      "basic_cleaning",
