@@ -88,7 +88,26 @@ CHOICE-LOG's 2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
   lacking a DONE/ACTIVE header — checker/format disagreement, needs a
   one-line checker or plan-template fix, NOT a real drift.
 
-## RUNNING (2026-08-09): low-usage batch #400/#403/#404/#412/#413/#414
+## RUNNING (2026-08-10 morning): batch back half — first train MERGED
+
+**MERGED to main:** #412 (PR #419, field_weapon mechanism, CHOICE-LOG
+22/25/26), #400 (PR #416, floors + night knob + dialogue separation),
+#414 (PR #415, steel-thread instrument). All three issues CLOSED via
+PRs; game-tree parity verified per lane. #404 closed earlier
+([Pick Lock] ruled).
+**IN FLIGHT:** PR #418 (lane C freeze pocket, partial #403) — CI-red
+fixes pushed (ferry-tally effect-text pin + QA-notes regen, 84d7dd8e),
+checks watch armed, merge on green. Lane D #413 Dangersense LIVE on
+Codex (worktree /Users/gabriel/wi-lane-d, branched POST-merge so it
+has the 412 pool + #400 world.gd; brief + report land on disk).
+**NEXT:** briar pocket lane (witch_hollow, closes #403) dispatches
+after #418 merges (shared items.json/manifest appends). Then close:
+composed re-gates + preflight --full + steel-thread WINDOWED run (the
+batch eye-read) + VISUAL-LOG drain + user-held items (v0.19.0 tag
+overwrite, grimalkin two-palette continuity call, pond-sprite twin
+read).
+
+## superseded RUNNING (2026-08-09): low-usage batch #400/#403/#404/#412/#413/#414
 
 Plan: docs/superpowers/plans/2026-08-09-low-usage-batch-400-403-404-412-413-414.md
 (#406 PARKED per user ruling). Checkpoint tag **v0.19.0 stored LOCAL at

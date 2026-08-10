@@ -4063,13 +4063,10 @@ second mode is told so, every time.
   still readable with the PC standing on it. Evidence
   `pond_island_freeze/01_freeze_landing.png` (frozen (12,20) beside open water)
   and `pond_frozen_cache/crop_frozen_cache_4x.png` (the PC on the plate).
-  Residual (b) — the "the channel locks to grey-white ice" wording in
-  `skills.json` `frost_touch.freeze_toast` and the two `interactions.json` thaw
-  lines — is UNCHANGED and now fires on a POND, where "channel" is the wrong
-  noun. Still ship-safe: `frost_touch` remains a QA-fixture-only grant (no
-  shipped class carries `freezes`; the pond's player-reachable mode is
-  [Double Step]), so the row's ordering RULE is not yet violated. The row stays
-  open on (b) alone.
+  **#403 Lane C fix wave 1 — residual (b) CLOSED:** both interaction-table
+  toasts exposed by Riverfarm's 45 freezable cells now use water-generic,
+  one-sentence copy (`data_lint.py` clean); `frost_touch.freeze_toast` remains
+  unchanged under the controller's M4 granter-less informational ruling.
 
 ## #398 P3 — the warded side vault: two art asks OWED (2026-08-07)
 

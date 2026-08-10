@@ -1,0 +1,43 @@
+{
+ "_comment": "#403 mode A. No existing Riverfarm fixture combines an ice_mage build with a pocket-side start. This is an honest Ice Mage 10 state: classes.json grants [Ice Floor] through the held class, spell_cast 45 meets its progression threshold, and the one-slot loadout exposes only the route under test. The Riverfarm portal-awakening backbone is copied from riverfarm_skill_start. Starts three walked cells west of the freeze launch pad; no teleport action is used.",
+ "version": 6,
+ "state": {
+  "current_map": "riverfarm_village",
+  "player_cell": [17, 7],
+  "player_facing": [1, 0],
+  "classes": {"ice_mage": 10},
+  "accomplishments": {
+   "met_relc": 1,
+   "learned_magic_from_pisces": 1,
+   "spell_cast": 45,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "catalyst_delivered": 1,
+   "riverfarm_attuned": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
+  },
+  "player_skills": ["basic_cleaning"],
+  "hotbar_loadout": ["icy_floor"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "seen_statuses": [],
+  "inventory": ["rusty_sword"],
+  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 20,
+  "rng_state": "-6393592048753323481"
+ }
+}

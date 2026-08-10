@@ -87,6 +87,8 @@ const EXPECTED_ITEMS := {
 	"rootbound_ward_token": ["+2 HP", "Resonance 1", "Grants [Guarding Ward] in combat"],
 	"wardwrights_counterweight": ["+2 HP", "Resonance 1", "Grants [Dangersense] in combat"],
 	"sealed_factor_bale": ["Worth 28 gold"],
+	"riverfarm_ferry_tally": ["Worth 28 gold"],
+	"hollow_thorn_tally": ["Worth 28 gold"],
 	"pond_survey_seal": ["Reduces every hit taken by 1", "Resonance 1"],
 	# 2026-07-26 Act V terminus reward (data/maps/dungeon/seal_vault.json's
 	# vault_anchor_stone). construct_core_shard's curve, guardian_ward's grant,

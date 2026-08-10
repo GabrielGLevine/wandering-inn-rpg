@@ -5,6 +5,76 @@
   "width": 24,
   "height": 16
  },
+ "_comment_river_islet": "#403 freeze-beat pocket. Every river cell remains freezable except the three-cell dry islet at x22/y7-9; the bespoke ice renderer is already live before this player-facing freeze route. Mode A crosses (21,7) with the ice kit; mode B [Double Step]s from (20,8) to (22,8).",
+ "freezable": [
+  [21, 0],
+  [21, 1],
+  [21, 2],
+  [21, 3],
+  [21, 4],
+  [21, 5],
+  [21, 6],
+  [21, 7],
+  [21, 8],
+  [21, 9],
+  [21, 10],
+  [21, 11],
+  [21, 12],
+  [21, 13],
+  [21, 14],
+  [21, 15],
+  [22, 0],
+  [22, 1],
+  [22, 2],
+  [22, 3],
+  [22, 4],
+  [22, 5],
+  [22, 6],
+  [22, 10],
+  [22, 11],
+  [22, 12],
+  [22, 13],
+  [22, 14],
+  [22, 15],
+  [23, 0],
+  [23, 1],
+  [23, 2],
+  [23, 3],
+  [23, 4],
+  [23, 5],
+  [23, 6],
+  [23, 7],
+  [23, 8],
+  [23, 9],
+  [23, 10],
+  [23, 11],
+  [23, 12],
+  [23, 13],
+  [23, 14],
+  [23, 15]
+ ],
+ "skill_gates": {
+  "riverfarm_river_islet": {
+   "modes": [
+    {
+     "mechanism": "property",
+     "skill_property": "freezes",
+     "cells": [
+      [21, 7]
+     ]
+    },
+    {
+     "mechanism": "blink",
+     "min_range": 2,
+     "from": [20, 8],
+     "to": [22, 8]
+    }
+   ],
+   "rewards": [
+    "riverfarm_islet_cache"
+   ]
+  }
+ },
  "talk_banks": {
   "riverfarm_headman_shared": [
    "We don't truck with witches here. Didn't used to, anyway.",
@@ -262,18 +332,6 @@
   ],
   [
    22,
-   7
-  ],
-  [
-   22,
-   8
-  ],
-  [
-   22,
-   9
-  ],
-  [
-   22,
    10
   ],
   [
@@ -401,7 +459,7 @@
    7
   ]
  ],
- "_comment_cover_skip": "cover_skip mirrors blocked here because every blocked cell has building, fence, earthwork, or river art; sim blocking is unchanged.",
+ "_comment_cover_skip": "cover_skip mirrors blocked here because every blocked cell has building, fence, earthwork, or river art. The three dry-islet cells at x22/y7-9 are absent from both lists and use their own floor layer.",
  "cover_skip": [
   [
    7,
@@ -641,18 +699,6 @@
   ],
   [
    22,
-   7
-  ],
-  [
-   22,
-   8
-  ],
-  [
-   22,
-   9
-  ],
-  [
-   22,
    10
   ],
   [
@@ -817,6 +863,23 @@
      0,
      3,
      16
+    ]
+   }
+  },
+  {
+   "_pick": "#403 Riverfarm river-islet dry crown. Appended after the water band so these three cells read as ground, while x21/x23 remain visible water around them.",
+   "sheet": "res://assets/tiles/floor_tiles_12/grass_02.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     22,
+     7,
+     1,
+     3
     ]
    }
   }
@@ -1797,6 +1860,36 @@
    "observe": "The third lamb, lying apart from the other two with the bad foreleg held up off the straw.",
    "on_interact_accomplishment": "craft_tended",
    "toast": "You sit with it past the point that's useful and into the point that counts. It sleeps. You notice you were humming."
+  },
+  {
+   "_comment": "#403 discovery carrier, appended after all shipped entities. It sits off the actual launch pads, so it cannot open or block either route; four cardinal neighbors remain open for old-save safety.",
+   "id": "riverfarm_islet_narrows",
+   "kind": "prop",
+   "cell": [
+    18,
+    6
+   ],
+   "display_name": "Flood-Torn Reeds",
+   "sprite": "pond_reeds",
+   "observe": "Reeds combed flat toward the bank. Downstream, the current leaves one narrow stride between the village ground and a dry green crown.",
+   "contains": [],
+   "open_toast": "The river narrows beside the dock. [Ice Floor] can make the near water bear weight; [Double Step] can clear it from the lower bank."
+  },
+  {
+   "_comment": "#403 pocket reward, appended last. Saved container_state makes the unique tool one-shot without a new accomplishment id; its observe is the pocket's journal hook.",
+   "id": "riverfarm_islet_cache",
+   "kind": "prop",
+   "cell": [
+    22,
+    9
+   ],
+   "display_name": "Pitch-Sealed Lockbox",
+   "sprite": "pond_cache",
+   "observe": "A ferryman's tally is stamped into the lid: Riverfarm above a line of downstream landings, one of them scored out hard enough to split the brass.",
+   "contains": [
+    "riverfarm_ferry_tally"
+   ],
+   "open_toast": "The pitch seal parts. A brass ferry tally lies dry inside, its downstream marks cut deep enough to follow."
   }
  ]
 }
