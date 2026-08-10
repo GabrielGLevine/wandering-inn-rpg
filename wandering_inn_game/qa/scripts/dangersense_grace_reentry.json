@@ -1,0 +1,112 @@
+{
+ "_comment": "Issue #421 items I3 + M2 -- THE ORDER PROOF for the [Dangersense] world overlay across a GH#374 defeat grace. Route: stand at (23,10) with both night regions rendered -> step DOWN into road_mothbears' radius-1 square -> the ambush fires and the region set tears down (ui_dangersense_cleared, M2's teardown observable; before #421 an emptied overlay emitted nothing at all and QA could not tell 'the warning went away' from 'the feature was never wired') -> LOSE the fight -> Continue reloads auto_pre_combat at (23,11) with the invisible exit grace armed, so the mothbear region is correctly ABSENT while the grace suppresses the ambush -> step UP out of the radius: the grace lapses inside _check_trigger_radius and the warning square must come back ON THAT STEP. That last wait is I3's whole subject: move_player emits player_moved BEFORE the proximity pass, so before the encounter_grace_ended seam the overlay reconciled against pre-lapse ward state and the region only reappeared one step later -- the step back IN, simultaneously with the ambush. The combat_started count is pinned at 1 across that reveal to prove the warning arrived while the player was still safe, then at 2 after the deliberate step back in.",
+ "fixture_save": "dangersense_grace_start",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {
+   "_comment": "Both live night regions, deterministically sorted by encounter id -- the same pinned geometry dangersense_field_loop holds, re-read here as the BEFORE picture of the teardown. ORDER TRAP: the first reconcile rides _rebuild_field and lands BETWEEN game_loaded and world_ready, so this wait must sit above the world_ready one or the since-cursor steps straight past it.",
+   "action": "wait_for_event",
+   "type": "ui_dangersense_rendered",
+   "payload_contains": {
+    "map": "floodplains",
+    "regions": [
+     {"encounter": "goblin_night_patrol", "cell": [10, 21], "radius": 1},
+     {"encounter": "road_mothbears", "cell": [23, 12], "radius": 1}
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"action": "assert_state", "path": "phase", "equals": "night"},
+  {"action": "assert_state", "path": "classes.rogue", "equals": 4},
+  {"action": "assert_state", "path": "player_cell", "equals": [23, 10]},
+  {"action": "assert_field_skill_absent", "skill": "dangersense"},
+  {
+   "_comment": "== M2: step into the radius, the ambush fires, and the overlay's region set goes EMPTY. `cleared` names both encounters that were being warned about a beat earlier.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5},
+  {
+   "action": "wait_for_event",
+   "type": "ui_dangersense_cleared",
+   "payload_contains": {
+    "map": "floodplains",
+    "cleared": ["goblin_night_patrol", "road_mothbears"]
+   },
+   "timeout_sec": 5
+  },
+  {"action": "combat_autoplay", "max_turns": 300},
+  {
+   "_comment": "The weaponless level-5 build loses to the T3 mothbear pair; defeat_ally_alive's reload idiom follows (confirm -> ui_combat_hidden -> game_loaded off the auto_pre_combat slot, no game_reset).",
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {"victory": false, "draw": false},
+   "timeout_sec": 30
+  },
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "assert_event_absent", "type": "game_reset"},
+  {"action": "assert_state", "path": "current_map", "equals": "floodplains"},
+  {
+   "_comment": "auto_pre_combat is written AT combat_started, so the reload lands INSIDE the radius at (23,11) with the grace armed -- and the overlay honestly shows no warning for a fight that cannot currently spring.",
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [23, 11]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dangersense_rendered",
+   "payload_contains": {
+    "map": "floodplains",
+    "regions": [
+     {"encounter": "goblin_night_patrol", "cell": [10, 21], "radius": 1}
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== I3: THE EXIT STEP. Leaving the radius lapses the grace inside _check_trigger_radius, which runs AFTER move_player's player_moved -- so the warning square must be restored by the post-check encounter_grace_ended beat, not one step later.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {"action": "assert_state", "path": "player_cell", "equals": [23, 10]},
+  {
+   "action": "wait_for_event",
+   "type": "ui_dangersense_rendered",
+   "payload_contains": {
+    "map": "floodplains",
+    "regions": [
+     {"encounter": "goblin_night_patrol", "cell": [10, 21], "radius": 1},
+     {"encounter": "road_mothbears", "cell": [23, 12], "radius": 1}
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "STILL ONE fight so far: the warning came back while the player stood safely outside the square. That is the whole difference the fix makes -- pre-fix this reveal and the second combat_started landed on the SAME step.",
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "count": 1
+  },
+  {"action": "screenshot", "name": "00_warning_restored_before_reentry"},
+  {
+   "_comment": "== and the ambush is genuinely armed again: walking back in springs it, exactly as GH#374 intends.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
+  {"action": "assert_event_count", "type": "combat_started", "count": 2}
+ ]
+}

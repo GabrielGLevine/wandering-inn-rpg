@@ -4,6 +4,53 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## RUNNING (2026-08-10): reachability wave — #417+#421 MERGED (PRs #425/#426); QUIESCE checkpoint
+
+Plan: docs/superpowers/plans/2026-08-10-reachability-wave-417-421-423-424.md
+(3b18a421, CHOICE-LOG 28-30). Guard hit WINDDOWN (session 72%, reset
+~141m from 2026-08-10 ~15:00); state below is the resume point.
+- **#417 lane T: COMPLETE.** PR #425 GREEN 6/6 required (drift fail =
+  advisory, header already fixed on main). Review CLEAN, fix wave
+  applied (array-form fixture_save). **MERGE BLOCKED by permission
+  classifier — USER must merge or allow `gh pr merge`.**
+- **#421 lane O: COMPLETE.** PR #426 all 7 checks GREEN. Review CLEAN
+  (1 Minor adjudicated: UI_DANGERSENSE_CLEARED is SAME-MAP-ONLY by
+  ruling, comments narrowed). **Awaits user merge too.**
+- **#424 lane R: fix wave 1 done** (2e877742, branch pushed): predicate
+  widened 269→379/472 w/ full denominator line, DESIGN_WAIVERS
+  (broker_hands), detector rc honesty, gate-carrier lint arm, I-4
+  blocker-faceability. Re-review of the fix delta LANDED: 3 Important
+  (PROP_ARM_KEYS mirror w/ no tripwire + 8/9 stale citations;
+  state_set traversal seams missing from the carrier join — rope_work/
+  basic_repair de-grants report ZERO; clearing vocab half-hardcoded,
+  no-else placement drop) + 3 Minor. **FIX WAVE 2 PARKED at WINDDOWN:
+  full adjudicated brief at /tmp/wi-424/FIX2-BRIEF.md** (reviewer
+  prototyped every fix; includes one narrowly-authorized src const
+  move). Dispatch it on resume, then R PR.
+- **#423 lane H: 2 commits pushed** (issue/423-hedault-shop @
+  497c0c91): enchanter_shop + enchanter_work_room maps, boulevard door
+  (22,1), Hedault (2,3) 3 standable neighbours, pick_lock rogue L2 via
+  requires_skill/on_skill_use seam (ZERO src), two-mode back room
+  (pick OR setting_commissioned trust-beat), enchanters_true_gauge
+  reward (wardstone withdrawn — real GH#142 orphan), 2 fixtures +
+  6 scripts re-anchored (old fixtures stood PC ON a door cell —
+  impossible cell, worse than briefed). NEEDS_CONTEXT x2: [Pick Lock]
+  icon (icon_open_doors INTERIM, VISUAL-LOG row) + door-audit verdict
+  NO CONVERSION. **LANE TAIL UNDONE (guard stop):** route growth
+  (invrisil_walkthrough + steel_thread), 3 designed can-fail proofs
+  (report §9), wide --touching sweep, preflight, CHOICE-LOG fold.
+- **RESUME ORDER (post-reset):** (1) DONE — #425+#426 squash-merged
+  (gh pr merge now allowlisted); lane T files verified byte-exact on
+  main; (2) lane-R fix wave 2 (brief /tmp/wi-424/FIX2-BRIEF.md) → R PR
+  (rebase/regen manifest on new main first); (3) resume lane-H agent for the tail; (4) H
+  adversarial review + fix wave → PR; (5) composed close: merge R+H,
+  REMOVE the hedault waiver from test_interactable_reachability.gd on
+  the composed tree + rerun suite, re-gates + preflight --full +
+  steel-thread windowed (shop leg) + VISUAL-LOG + ledger + surface:
+  GH#142 wardstone 40g-bead root cause (balance, user), orphan drain
+  follow-up issue (improvised_cudgel, solid_oak_spear,
+  riverfarm_hunter.agreed, hedaults_wardstone), [Pick Lock] icon call.
+
 ## DONE (2026-08-05): anti-duplication gate LIVE (PR #395, unmerged)
 
 `check_prose_duplication` in data_lint HARD-FAILS: (a) any prose string

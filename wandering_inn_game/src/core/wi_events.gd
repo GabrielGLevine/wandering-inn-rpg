@@ -23,6 +23,16 @@ const TERRAIN_CHANGED := &"terrain_changed"
 const SNEAK_STARTED := &"sneak_started"
 const SNEAK_ENDED := &"sneak_ended"
 const WARD_PLACED := &"ward_placed"
+## GH#374's invisible defeat grace LAPSED -- the player walked out of the
+## encounter's trigger radius and the suppression ended, so the ambush is armed
+## again. Emitted from inside `_check_trigger_radius`, i.e. AFTER the proximity
+## pass has already mutated `warded_encounters`. #421 I3: `move_player` emits
+## PLAYER_MOVED *before* that pass, so a presentation layer reconciling on the
+## move alone always reads PRE-step ward state and can only learn about the
+## lapse one step late -- which, for the [Dangersense] overlay, meant the
+## warning square appeared on the very step the ambush fired instead of before
+## it. This is the post-check beat that layer listens to.
+const ENCOUNTER_GRACE_ENDED := &"encounter_grace_ended"
 const COMPANION_CHANGED := &"companion_changed"
 const LOADOUT_CHANGED := &"loadout_changed"
 
@@ -150,6 +160,24 @@ const UI_SNEAK_RENDERED := &"ui_sneak_rendered"
 const UI_TELEPORT_RENDERED := &"ui_teleport_rendered"
 const UI_WARD_RENDERED := &"ui_ward_rendered"
 const UI_DANGERSENSE_RENDERED := &"ui_dangersense_rendered"
+## #421 M2, TEARDOWN OBSERVABILITY: the [Dangersense] region set went from
+## non-empty to EMPTY **on the map the player is already standing on** --
+## combat opening (the field hides), an encounter going dormant or warded
+## (a defeat banks both), the live set emptying for any other same-map reason.
+## UI_DANGERSENSE_RENDERED alone is unfalsifiable about disappearance (it
+## simply stops firing), so QA could not pin WHEN a warning stopped being
+## shown. `cleared` carries the encounter ids that were being warned about a
+## beat earlier.
+##
+## TRAP -- MAP TRANSITIONS DO NOT EMIT THIS, AND MUST NOT BE MADE TO.
+## `world.gd::_rebuild_field` wipes `_dangersense_state` BEFORE the
+## post-rebuild reconcile runs, so a crossing reaches that reconcile with an
+## already-empty previous set and short-circuits on empty-vs-empty with no
+## snapshot left to report. That is the ruling, not an oversight: MAP_CHANGED
+## is the contract signal for cross-map teardown, and a cleared emit on every
+## crossing would be noise plus pin churn. Pin MAP_CHANGED for cross-map
+## teardown; pin this for same-map teardown only.
+const UI_DANGERSENSE_CLEARED := &"ui_dangersense_cleared"
 const UI_COMPANION_RENDERED := &"ui_companion_rendered"
 const UI_SLEEP_VEIL_RENDERED := &"ui_sleep_veil_rendered"
 const UI_SLEEP_VEIL_FINISHED := &"ui_sleep_veil_finished"
