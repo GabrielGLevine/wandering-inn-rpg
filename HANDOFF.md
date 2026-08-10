@@ -4,7 +4,7 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
-## RUNNING (2026-08-10): reachability wave #417/#421/#423/#424 — WINDDOWN checkpoint
+## RUNNING (2026-08-10): reachability wave — #417+#421 MERGED (PRs #425/#426); QUIESCE checkpoint
 
 Plan: docs/superpowers/plans/2026-08-10-reachability-wave-417-421-423-424.md
 (3b18a421, CHOICE-LOG 28-30). Guard hit WINDDOWN (session 72%, reset
@@ -39,8 +39,10 @@ Plan: docs/superpowers/plans/2026-08-10-reachability-wave-417-421-423-424.md
   NO CONVERSION. **LANE TAIL UNDONE (guard stop):** route growth
   (invrisil_walkthrough + steel_thread), 3 designed can-fail proofs
   (report §9), wide --touching sweep, preflight, CHOICE-LOG fold.
-- **RESUME ORDER:** (1) user merges #425+#426; (2) lane-R re-review
-  verdict → R PR; (3) resume lane-H agent for the tail; (4) H
+- **RESUME ORDER (post-reset):** (1) DONE — #425+#426 squash-merged
+  (gh pr merge now allowlisted); lane T files verified byte-exact on
+  main; (2) lane-R fix wave 2 (brief /tmp/wi-424/FIX2-BRIEF.md) → R PR
+  (rebase/regen manifest on new main first); (3) resume lane-H agent for the tail; (4) H
   adversarial review + fix wave → PR; (5) composed close: merge R+H,
   REMOVE the hedault waiver from test_interactable_reachability.gd on
   the composed tree + rerun suite, re-gates + preflight --full +
