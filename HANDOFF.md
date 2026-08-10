@@ -124,6 +124,14 @@ deploy; user overwrites it if the batch lands in-window).
   [0,0,26,11], forge_hall [0,0,12,9], inn_upstairs [7,1,4,6]),
   screenshot target inn_walkthrough/02_erin_dialogue (player (7,3)
   facing up, Erin (7,2) facing down), then PR.
+- **Lane C #403 PARTIAL dispatched during quiesce (user-sanctioned,
+  Codex budget):** worktree /Users/gabriel/wi-lane-c (branch
+  issue/403-riverfarm-pockets), FREEZE-BEAT POCKET ONLY — witch_hollow
+  briar pocket DEFERRED (cut mode depends on 412 landing). Brief at
+  LANE-BRIEF.md there; report lands on disk at
+  /Users/gabriel/wi-lane-c/LANE-REPORT.md (self-contained, no live
+  orchestrator needed). Lane D still parked: world.gd is held
+  uncommitted by lane B.
 - **QUIESCE 2026-08-09 (session 86%, reset ~3h):** state saved; chained
   wakeups armed. On resume: usage_status --fresh, then act on whichever
   lane reports landed (review verdicts → fix waves → PRs; 412 merge;
