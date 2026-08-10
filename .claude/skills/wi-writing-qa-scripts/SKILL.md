@@ -283,3 +283,15 @@ dangled for two waves until verify-untouched ran again. When an entity
 must die: grep the repo for the map's `entities[` paths at HIGHER
 indices, migrate each with a recorded path-migration (text asserted
 byte-identical), and run verify-untouched IN THE SAME COMMIT.
+
+## Negative legs pin CREATED state; new items pin their tables (2026-08-10)
+- A pocket/gate negative leg asserting `player_blocked` on a cell that
+  was ALREADY blocked on main is INERT — it passes with the whole
+  feature deleted. Pin state the diff CREATED (a new blocked cell, an
+  exact rendered blocked-count with a can-fail comment, a perimeter
+  walk of new geometry). Prove it: the pocket-deletion mutation must
+  red the leg.
+- Every new items.json row needs its `test_effect_text.gd`
+  EXPECTED_ITEMS pin IN THE SAME CHANGE — the table is exhaustive both
+  ways and reds CI, not just local runs. Generalize: grep tests/ for
+  every data surface you append to before running gates.

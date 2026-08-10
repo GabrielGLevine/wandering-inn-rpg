@@ -170,3 +170,19 @@ counter and nothing else is the violation class (the Wounded Corusdeer,
 pre-#330). When adding a class/level: name each counter's producers and
 what ELSE each one does; a producer with no second function needs one
 designed before the rung ships.
+
+## Field-vs-combat gating split + real blast radius (2026-08-10, #412)
+- **Never add `weapon:` to gate a skill's FIELD use** —
+  `WICombatBuild.weapon_gated_kit` consumes `weapon` and strips
+  mismatched skills from the COMBAT kit, passives included (a
+  `weapon:"sword"` on [Basic Swordwork] would nerf spear warriors' hit
+  passive). Field gating uses `field_weapon` (consumed only by
+  `_field_skill_weapon_ready`; inert without `cuts:true`). Trap comment
+  lives at that function.
+- **A skill-pool change's blast radius is NOT an id-grep.** Enumerate:
+  (a) id refs, (b) DISPLAY-NAME pins ("[Power Strike] — ..." in
+  readout_lines/comments across qa/scripts), (c) player-facing prose
+  naming the skill (map locked_toasts, hints, dialogue), (d) tests/
+  pins (exhaustive tables red on any pool change), (e) derived hotbar
+  slot pins. #412 STOPped three times on surfaces (b) and (c) that the
+  id-grep missed.

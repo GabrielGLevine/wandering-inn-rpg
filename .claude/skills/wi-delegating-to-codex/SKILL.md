@@ -79,3 +79,19 @@ checks, and the merge decision stay controller-side.
 - Brief format: issue number + numbered acceptance criteria + the specific
   QA scripts/seeds that must stay green + "list every criterion you did NOT
   meet" (forces the clause-drop failure mode into the open).
+
+## Forwarder strands + direct dispatch + evidence honesty (2026-08-10)
+- The codex-rescue forwarder can STRAND by backgrounding a wait for a
+  notification that never reaches subagents (three occurrences in one
+  batch). Preferred: dispatch the companion DIRECTLY from the main
+  thread, backgrounded, from the lane worktree cwd (allowlist rule
+  `Bash(node /Users/gabriel/.claude/plugins/cache/openai-codex/*)`
+  exists in settings.local.json). A killed client leaves a stale
+  running lock — `cancel` from the same cwd clears it.
+- Briefs must demand QUOTED-ONLY-OBSERVED evidence: one lane reported
+  a "98/98 FAILED (CA-cert)" gate that was actually green, another
+  self-reported reds that were sandbox-only (Trash perms, CA lookup).
+  Controller re-runs the decisive gates regardless; treat lane
+  gate-verdict prose as claims, not evidence.
+- Codex sandbox cannot open windows or write normal user://; windowed
+  acceptance and those two unit suites are ALWAYS controller-side.
