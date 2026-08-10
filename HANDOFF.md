@@ -88,7 +88,32 @@ CHOICE-LOG's 2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
   lacking a DONE/ACTIVE header — checker/format disagreement, needs a
   one-line checker or plan-template fix, NOT a real drift.
 
-## RUNNING (2026-08-08 night): #411/#409/#408 lanes landed, WINDDOWN mid-integration
+## RUNNING (2026-08-09): low-usage batch #400/#403/#404/#412/#413/#414
+
+Plan: docs/superpowers/plans/2026-08-09-low-usage-batch-400-403-404-412-413-414.md
+(#406 PARKED per user ruling). Checkpoint tag **v0.19.0 stored LOCAL at
+ffd0f960** (pre-batch head, deliberately NOT pushed — push triggers
+deploy; user overwrites it if the batch lands in-window).
+- **Phase 0 DONE:** decision packet committed (26c7f12a) + posted to
+  #412/#413/#404. AWAITING USER: #412 table + cut-mode fork (Option A =
+  move cuts carrier to [Basic Swordwork]), [Basic Repair]→helper L2,
+  #413 rogue-L4 + passive ACK, #404 [Lockpicking] ACK. Key facts:
+  dangersense already exists (combat ctx) + warrior L5 already grants
+  it; NO attested lockpick skill ≤ Book 17 on the wiki.
+- **Phase 1 LIVE (Codex, its own pool — week was 0%):** Lane A #414
+  steel-thread in worktree /Users/gabriel/wi-lane-a (branch
+  issue/414-steel-thread); Lane B #400 carried rows in
+  /Users/gabriel/wi-lane-b (issue/400-carried-rows). Briefs at each
+  worktree's LANE-BRIEF.md; asset overlay copied (185 payloads each).
+  Codex does NOT commit — controller commits/reviews/merges. NEXT on
+  lane return: adversarial review per lane (method hints in briefs),
+  fix wave, PR per issue, [ci-full] on final head.
+- **Phase 2 (blocked on packet sign-off):** 412-apply merges FIRST,
+  then #403 pockets ∥ #413 Dangersense (anchored-append).
+- **Close:** merge train + preflight --full + steel-thread WINDOWED run
+  (the batch's single composed eye-read) + VISUAL-LOG drain for #400.
+
+## superseded RUNNING block (2026-08-08 night): #411/#409/#408 — ALL LANDED (see DONE 2026-08-09 below)
 User overrode CAUTION ("Usage good. Proceed"); guard hit WINDDOWN at
 76% mid-work. TWO LANE BRANCHES COMMITTED, NOT MERGED:
 - issue/409-408-art @ 42afbec8 (/tmp/wi-art9): 4 NPC idles (v3
