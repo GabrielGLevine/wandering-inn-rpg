@@ -88,7 +88,25 @@ CHOICE-LOG's 2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
   lacking a DONE/ACTIVE header — checker/format disagreement, needs a
   one-line checker or plan-template fix, NOT a real drift.
 
-## RUNNING (2026-08-10 morning): batch back half — first train MERGED
+## DONE (2026-08-10): LOW-USAGE BATCH CLOSED — all six issues shipped
+
+#400/#403/#404/#412/#413/#414 all CLOSED (PRs #415/#416/#418/#419/#420/
+#422, each 7/7 checks + adversarial review + fix wave; per-issue record
+in the PR bodies). Composed main: import pass + preflight --full ALL
+GREEN + steel-thread WINDOWED PASS (62-shot album at
+wandering_inn_game/qa_output/steel_thread/, 19 maps, Dangersense
+overlay visible live). Follow-ups filed: #417, #421. VISUAL-LOG
+drained; skills folded (blast-radius, created-state negative legs,
+codex direct dispatch). Lane worktrees/branches cleaned.
+**USER-HELD:** v0.19.0 tag overwrite + deploy (tag sits LOCAL at
+ffd0f960 = pre-batch; overwrite with `git tag -f v0.19.0 && git push -f
+origin v0.19.0` when satisfied) · grimalkin two-palette continuity ·
+pond-sprite twin eye-read · [Rope Work] ACK · parlor-music ear-gate ·
+Coyle sign verdict.
+**Watch line:** `wandering_inn_game/qa/run_qa.sh steel_thread windowed
+--seed=9` (~5 min headless-measured + settle; 62 scenes).
+
+## superseded RUNNING (2026-08-10 morning): batch back half — first train MERGED
 
 **MERGED to main:** #412 (PR #419, field_weapon mechanism, CHOICE-LOG
 22/25/26), #400 (PR #416, floors + night knob + dialogue separation),
