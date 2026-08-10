@@ -177,6 +177,7 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `watch_donation_loop` | 7 | full | `near_watch_donation` | GH#92 D3: Ashgrave supply-fund donation -> repeatable gold sink banks donated_watch_supplies |
 | `second_wind_loop` | 9 | full | `near_second_wind` | swordsman L13 -> organic L14 -> [Crescent Cut] grant lands in a live fight |
 | `dialogue_numkey_loop` | 7 | full | `near_room_upgrade` | GH#171: number keys select dialogue options; no field-cast leak; purchase via keypress |
+| `enchanter_work_room` | 7 | full | `near_hedault` | #423 the [Pick Lock] debut and the two-mode rule's proof -- refusal (no skill, no key), the pick, then Hedault's own trust arm; identical contents on both open paths, every gate counter created by the run |
 | `hedault_enchant_loop` | 7 | full | `near_hedault` | GH#142: Hedault enchant swap -- fee paid, base consumed (equipped-unequip path unit-pinned), variant granted |
 | `gate_visual_check` | 9 | full | `gate_visual_start` | GH#184: Liscor gatehouse + street arch render and the gate transition survives (windowed screenshots; headless-honest asserts) |
 | `credits_visual_check` | 9 | full | `—` | GH#147/About: Settings Credits panel renders 4 sections + 2 links (windowed screenshot of the panel incl. Back row) |

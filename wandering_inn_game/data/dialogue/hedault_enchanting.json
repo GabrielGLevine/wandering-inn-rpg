@@ -120,6 +120,26 @@
       }
      },
      "goto": "heirloom_bench"
+    },
+    {
+     "_comment": "#423 THE VIRTUOUS PATH (user directive: a legitimate route to the locked contents must exist). Appended LAST and accomplishment-gated on the finished commission, so it is HIDDEN at every shipped fixture -- invrisil_v016_gate_check's whole-array hub pin and spine_reach's blind `move down 5` both stay exact, zero re-pins. Banks the SAME `enchanter_work_room_opened` the [Pick Lock] arm banks, so the work-room and its contents are identical on both paths; the counter is the door's own door_when gate, so the pick arm and this arm are the same door and cannot drift apart.",
+     "text": "\"You kept saying 'the bench behind me.' I'd like to see it.\"",
+     "requires": {
+      "accomplishment": {
+       "setting_commissioned": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "enchanter_work_room_opened": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "enchanter_work_room_opened"
+      }
+     ],
+     "goto": "work_room_opened"
     }
    ]
   },
@@ -160,6 +180,17 @@
    "options": [
     {
      "text": "Understood.",
+     "end": true
+    }
+   ]
+  },
+  "work_room_opened": {
+   "speaker": "Hedault",
+   "_comment": "#423. He is not being warm; he is being exact. The trust is stated as a fact about the transaction, the rules are restated, and the reward is named as the one object in there that nobody has a claim on -- which is what makes taking it legitimate rather than theft.",
+   "text": "You said the true thing about that stone before I had to find it at the bench, which almost nobody does. The partition door is off the latch from today. The rules in there are the rules out here: nothing with a tag on it leaves, because it is not mine to lend. The brass gauge on top of the case carries no tag and no order waits on it. I keep a second.",
+   "options": [
+    {
+     "text": "\"Understood.\"",
      "end": true
     }
    ]

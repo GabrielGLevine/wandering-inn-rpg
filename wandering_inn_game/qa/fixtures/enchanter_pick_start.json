@@ -1,5 +1,5 @@
 {
- "_comment": "GH#142 fixture, RE-ANCHORED by #423: 40 gold + the hunters fang, standing on the enchanter_shop landing cell (6,7) -- the open cell north of the shop door, five moves from Hedault and NOT adjacent to him. The old shape stood the PC on the alleys door cell (0,7) already facing him, which is precisely the pre-staged adjacency #423 exists to delete: the script now WALKS (up 3, left 4, bump north into 2,3).",
+ "_comment": "#423 THE [Pick Lock] DEBUT FIXTURE. near_hedault's backbone, standing on the same enchanter_shop landing (6,7) -- no staged adjacency to anything, and NO gate state pre-granted: enchanter_work_room_opened and took_enchanters_gauge are both absent, so every counter the canonical asserts is one the run CREATES. The rogue line is grant-derived and honest: rogue 2 needs recovered_crate_watch (gained_by) and sneaked_past_danger 2 (the L2 requires this task did NOT move), and [Pick Lock] arrives as the L2 grant -- player_skills is untouched, so nothing is hand-granted. Zero combat, so the cloned rng_state is inert.",
  "_comment_task_2_6": "2026-07-27 main-quest restructure (Task 2.6 fix round 1): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined. This fixture holds door_awakened WITHOUT door_chain_started, so neither end of the Task 2.4 chain arm caught it and the sweep missed it; test_fixture_coherence now enforces door_awakened -> door_mounted (the far attunement is performed on the door the dig hauled home) and reads the RAW on-disk counters, so save.gd's dig backfill can no longer migrate this shape into passing. recovered_anchor_stone was already banked here and stays -- the wave rule only says it is never REQUIRED. Full rule: door_chain_fight_start.json's _comment_task_2_4. No rng re-derivation: the loaded state is identical to what the backfill was already producing at load, and none of these counters gates anything this fixture's script touches.",
  "version": 6,
  "state": {
@@ -13,7 +13,8 @@
    -1
   ],
   "classes": {
-   "warrior": 10
+   "warrior": 10,
+   "rogue": 2
   },
   "accomplishments": {
    "reached_liscor": 1,
@@ -36,7 +37,9 @@
    "horns_dig_joined": 1,
    "pedestal_breached": 1,
    "door_retrieved": 1,
-   "door_mounted": 1
+   "door_mounted": 1,
+   "recovered_crate_watch": 1,
+   "sneaked_past_danger": 2
   },
   "player_skills": [
    "basic_cleaning"

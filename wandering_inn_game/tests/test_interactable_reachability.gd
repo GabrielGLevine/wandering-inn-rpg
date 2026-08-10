@@ -62,11 +62,9 @@ extends SceneTree
 ## firing FAILS the suite -- retirement is forced, never optional, so the
 ## exemption cannot outlive the bug and quietly cover the next one.
 const KNOWN_DEFECT_WAIVERS := {
-	# waiver removed by #423 -- Hedault stands at mercantile_alleys (0,6) with
-	# no orthogonally-adjacent standable cell, so his shop dialogue is shipped
-	# content no walking player can open. #423 rebuilds the Invrisil alleys +
-	# enchanter shop and lands him somewhere a player can face.
-	"mercantile_alleys/hedault": "walk-unreachable today; #423 owns the layout fix",
+	# Empty since #423 landed Hedault walk-reachable in his enchanter shop --
+	# the suite's first stale-waiver retirement, forced by CI on the composed
+	# tree exactly as designed. Add rows ONLY with a named owning issue.
 }
 
 ## NOT defects: content DELIBERATELY parked out of walking reach, each row

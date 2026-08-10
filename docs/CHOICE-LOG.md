@@ -3588,3 +3588,70 @@ auditor's scale.
     a python mirror of walkability would drift). Promotion to hard-fail
     per category once the shipped set is clean. Detector proof: the
     suite must flag pre-#423 Hedault.
+
+### 28-H — #423 lane-side implementation calls (lane H, under ruling 28)
+
+Ruling 28 fixed the WHAT; these are the four calls the lane made
+executing it. All four are recorded in the data's own `_comment`s and in
+`/tmp/wi-423/LANE-REPORT.md`; each is controller-reversible.
+
+28-H.1 **The gate is ONE prop carrying both `door_when` and
+  `requires_skill`** — `interactions.gd` checks door_when (line 93) before
+  requires_skill (line 159), so the pick, the trust arm and the refusal
+  are three behaviours of one entity, with one counter
+  (`enchanter_work_room_opened`) and one cell. Chosen for that: no second
+  entity, no presence bookkeeping, and the two modes cannot drift apart
+  because they are literally the same door.
+  **CORRECTION (#423 review I2):** the lane originally justified this by
+  claiming the `present_when` build was UNSAFE — that a same-map dialogue
+  bank would leave a stale sprite because nothing reconciles presence on
+  `ACCOMPLISHMENT_RECORDED`. **That was false and is withdrawn.**
+  `world.gd:1833-1843` reconciles presence on `ACCOMPLISHMENT_RECORDED`
+  (GH#150), deferring an in-dialogue bank to `DIALOGUE_ENDED`, and
+  `wi_game.gd:1084-1091` states outright that same-map banks are SAFE for
+  `present_when`. The `present_when` build (the counting_room_* idiom)
+  would have worked. The built mechanism stands on its own merits; the
+  rejected alternative was rejected for a reason that did not exist, and
+  no general "prefer door_when" lesson follows from it. AGENTS.md's stale
+  clause (the source of the error) was corrected in the same commit.
+
+28-H.2 **Virtuous mode = `a_setting_for_a_lady` completion**
+  (`setting_commissioned`), the first of the brief's two candidates. One
+  hub option appended LAST and accomplishment-gated, so it is hidden at
+  every shipped fixture — `invrisil_v016_gate_check`'s whole-array hub
+  pin and `spine_reach`'s blind `move down 5` both stayed exact, zero
+  re-pins.
+
+28-H.3 **`hedaults_wardstone` stays UNWIRED; a new item carries the
+  reward.** Band audit: the wardstone is a resonance-2 `mana_shield`
+  combat carrier at 50g behind a 40g fee — gifting it free behind a lock
+  misbands the reward and undercuts the enchant loop's own gold sink.
+  `enchanters_true_gauge` is banded field-for-field on
+  `sealed_factor_bale` / `riverfarm_ferry_tally` (mundane tool, 28g, all
+  combat modifiers zero, so no balance-harness surface). ROOT CAUSE of
+  the orphan found and NOT taken: GH#142's 40g wardstone-bead option
+  grants `hedaults_warded_setting`, the FRAGMENT trade's output, so the
+  1:1 base→variant mapping is broken at exactly one row. Re-pointing it
+  changes a shipped purchasable's stats (res 1→2, DR 1→0, +mana_shield)
+  — balance-touching, controller's call.
+
+28-H.4 **Existing-door audit: NO CONVERSION** (the brief's default
+  stands). `inn_upstairs` hallway doors gate nothing; `lyonette_door`
+  gates nothing and its only honest second mode is a named ally handing
+  over her bedroom key; `barracks` `cell_door` gates a deliberately
+  empty cell and its second mode is a jailbreak's worth of Watch design.
+  The first good second placement is a cache authored with both modes
+  from the start, not a retrofit.
+
+28-H.5 **[Pick Lock] icon = `icon_open_doors`, INTERIM** (reuse-with-
+  precedent branch; precedent Basic Swordwork on `icon_power_strike`,
+  ruling 26). The icon set ships no lock/pick/key glyph in 196 files and
+  every rogue-line icon collides on one hotbar ([Stealth] L1,
+  [Pick Lock] L2, [Find Trap] L3, [Disarm Trap] L5 are one PC's bar).
+  VISUAL-LOG row filed; the bespoke-icon call is the controller's.
+
+28-H.6 **Landmark disposition, LANE-PROPOSED:** the work-room case's
+  `open_toast` reached the prose landmark heuristic unruled (preflight
+  hard-fails on that). Ruled KEEP-AS-IS — one beat for a brand-new file,
+  the §5 norm, costing the reserve nothing (heuristic-landmark row, not
+  a controller grant). Controller may downgrade to NOT-A-LANDMARK.

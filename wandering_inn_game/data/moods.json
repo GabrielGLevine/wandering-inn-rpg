@@ -384,6 +384,46 @@
    "vignette": 0.3,
    "lights_by_day": true
   },
+  "enchanter_shop": {
+   "_comment": "#423. Sealed room (day == dusk == night), so the flame owns the warmth and the grade never tips warm: a shade COOLER than the stationer's paper-warm, which is what ward-light on grey cloth reads as.",
+   "day": [
+    0.68,
+    0.72,
+    0.82
+   ],
+   "dusk": [
+    0.68,
+    0.72,
+    0.82
+   ],
+   "night": [
+    0.68,
+    0.72,
+    0.82
+   ],
+   "vignette": 0.32,
+   "lights_by_day": true
+  },
+  "enchanter_work_room": {
+   "_comment": "#423. The room behind the lock: the shop's own card, one step down in value -- one sconce, no window, and nothing here is for sale.",
+   "day": [
+    0.6,
+    0.64,
+    0.76
+   ],
+   "dusk": [
+    0.6,
+    0.64,
+    0.76
+   ],
+   "night": [
+    0.6,
+    0.64,
+    0.76
+   ],
+   "vignette": 0.42,
+   "lights_by_day": true
+  },
   "adventurers_rest": {
    "_comment": "Common-hall amber, one notch under the inn's: a bigger hearth in a smaller room.",
    "day": [

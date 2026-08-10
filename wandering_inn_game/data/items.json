@@ -1346,6 +1346,22 @@
       "lore": "One landing has been scored out until the brass split. The remaining marks still make a usable river route."
     },
     {
+      "_comment": "#423 the enchanter work-room reward, banded FIELD-FOR-FIELD against sealed_factor_bale / riverfarm_ferry_tally: mundane tool, 28g, every combat modifier zero, so the reward carries no balance-harness surface and both modes of the debut gate can hand it over without a tuning argument. Deliberately NOT hedaults_wardstone (the GH#142 True-Set Wardstone) -- that is a resonance-2 mana_shield carrier priced behind a 40g fee, and gifting it here would misband the reward and undercut the enchant loop's own gold sink.",
+      "id": "enchanters_true_gauge",
+      "name": "Enchanter's True Gauge",
+      "kind": "tool",
+      "weapon_family": "none",
+      "damage_mod": 0,
+      "hp_mod": 0,
+      "damage_reduction": 0,
+      "resonance": 0,
+      "tier": "mundane",
+      "abilities": [],
+      "price": 28,
+      "description": "A brass beam-gauge the length of a finger, its fulcrum notch filed and refiled until it read the same twice.",
+      "lore": "He keeps two, and will tell you unprompted that the second exists because the first was once wrong."
+    },
+    {
       "_comment": "#403 Witch Hollow briar-pocket reward. Tier-3 mundane special at the shipped Riverfarm ferry-tally / counting-room 28g band; no combat modifiers, so it adds no balance-harness surface.",
       "id": "hollow_thorn_tally",
       "name": "Hollow Thorn Tally",

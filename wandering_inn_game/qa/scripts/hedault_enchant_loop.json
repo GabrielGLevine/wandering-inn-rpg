@@ -1,5 +1,5 @@
 {
- "_comment": "GH#142: Hedault enchant swap. Pool bark then conversation (two interacts); rendered options at this fixture: fang enchant (held+affordable), 'Just looking.' -- charm/wardstone rows are requires.item-hidden... VERIFY: requires.item unmet = hidden or locked? The loop asserts by TEXT, robust either way. Enchant: gold -35, fang swapped for hedaults_hunters_fang; fight proves eagle_eyes folds.",
+ "_comment": "GH#142: Hedault enchant swap, RE-ANCHORED to enchanter_shop by #423 — the fixture lands on the enchanter_shop landing cell (6,7) -- the open cell north of the shop door and the run WALKS five moves to reach him, instead of booting already adjacent. Pool bark then conversation (two interacts); rendered options at this fixture: fang enchant (held+affordable), 'Just looking.' — charm/wardstone rows are requires.item gates and render visible-LOCKED (dialogue.gd hides only PROGRESS-gated requires). The loop asserts by TEXT, robust either way. Enchant: gold -35, fang swapped for hedaults_hunters_fang.",
  "fixture_save": "near_hedault",
  "starts_at_title": true,
  "steps": [
@@ -35,6 +35,48 @@
    "action": "wait_for_event",
    "type": "world_ready",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "#423 THE WALK, not a staged adjacency. The fixture lands on the enchanter_shop landing cell (6,7) -- the open cell north of the shop door; this leg walks the floor to (2,4) and bumps north into Hedault at (2,3). The player_blocked is the whole point of the issue: he now HAS a standable orthogonal neighbour and it is reachable from the door, which the mercantile_alleys (0,6) placement never had.",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     2,
+     3
+    ]
+   }
   },
   {
    "action": "press",

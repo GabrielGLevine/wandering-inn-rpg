@@ -383,7 +383,7 @@
 			},
 			"levels": [
 				{ "level": 1, "requires": {}, "grants": ["sneak"] },
-				{ "level": 2, "requires": { "sneaked_past_danger": 2 }, "grants": [] },
+				{ "_comment": "#423 (CHOICE-LOG 28): the empty slot takes [Pick Lock]. `requires` is UNCHANGED -- the level's own threshold is not this task's to move; the ladder now reads sneak / pick_lock / find_trap / dangersense / disarm_trap.", "level": 2, "requires": { "sneaked_past_danger": 2 }, "grants": ["pick_lock"] },
 				{ "level": 3, "requires": { "sneaked_past_danger": 4 }, "grants": ["find_trap"] },
 				{ "level": 4, "requires": { "sneaked_past_danger": 7 }, "grants": ["dangersense"] },
 				{ "level": 5, "requires": { "sneaked_past_danger": 10 }, "grants": ["disarm_trap"] },

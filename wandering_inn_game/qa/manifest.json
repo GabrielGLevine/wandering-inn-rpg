@@ -2585,7 +2585,7 @@
    ],
    "surfaces": {
     "maps": [
-     "mercantile_alleys",
+     "enchanter_shop",
      "pallass_market",
      "riverfarm_village",
      "street",
@@ -2780,6 +2780,7 @@
    "surfaces": {
     "maps": [
      "brothers_parlor",
+     "enchanter_shop",
      "inn",
      "invrisil_boulevard",
      "mercantile_alleys"
@@ -2790,6 +2791,7 @@
     "skills": [
      "basic_cleaning",
      "observe",
+     "pick_lock",
      "quick_movement",
      "sneak"
     ],
@@ -4724,6 +4726,41 @@
    }
   },
   {
+   "script": "enchanter_work_room",
+   "seed": 7,
+   "fixture": "near_hedault",
+   "note": "#423 the [Pick Lock] debut and the two-mode rule's proof -- refusal (no skill, no key), the pick, then Hedault's own trust arm; identical contents on both open paths, every gate counter created by the run",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "enchanter_shop",
+     "enchanter_work_room"
+    ],
+    "fixtures": [
+     "enchanter_key_start",
+     "enchanter_pick_start",
+     "near_hedault"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "pick_lock"
+    ],
+    "dialogue": [
+     "hedault_enchanting"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "save"
+    ]
+   }
+  },
+  {
    "script": "hedault_enchant_loop",
    "seed": 7,
    "fixture": "near_hedault",
@@ -4733,7 +4770,7 @@
    ],
    "surfaces": {
     "maps": [
-     "mercantile_alleys"
+     "enchanter_shop"
     ],
     "fixtures": [
      "near_hedault"
@@ -5142,7 +5179,7 @@
    ],
    "surfaces": {
     "maps": [
-     "mercantile_alleys"
+     "enchanter_shop"
     ],
     "fixtures": [
      "hedault_fragment_start"
@@ -5227,7 +5264,7 @@
    ],
    "surfaces": {
     "maps": [
-     "mercantile_alleys",
+     "enchanter_shop",
      "stationer"
     ],
     "fixtures": [
@@ -5259,7 +5296,7 @@
    ],
    "surfaces": {
     "maps": [
-     "mercantile_alleys",
+     "enchanter_shop",
      "stationer"
     ],
     "fixtures": [
@@ -5409,6 +5446,7 @@
    "surfaces": {
     "maps": [
      "adventurers_rest",
+     "enchanter_shop",
      "invrisil_boulevard",
      "mercantile_alleys"
     ],
