@@ -3,6 +3,7 @@
 fixtures per check) + clean-on-HEAD subprocess proof. Run manually:
     python3 scripts/tests/test_data_lint.py -v"""
 
+import copy
 import json
 import subprocess
 import sys
@@ -538,6 +539,140 @@ class TestSkillGates(unittest.TestCase):
         data_lint.advise_missing_skill_gates({"m": map_doc}, advisories)
         self.assertEqual(len(advisories), 1)
         self.assertIn("burnable blocker", advisories[0])
+
+
+class TestContentReachability(unittest.TestCase):
+    """GH#424 -- the orphan graph, proven able to fail in every category.
+
+    The mutations are IN MEMORY, over a copy of the real parsed tree: shipped
+    data is never touched, and each case is the real check answering a real
+    (broken) catalog rather than a toy fixture that could drift from it.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.errors = []
+        cls.parsed = data_lint.check_wellformed(cls.errors)
+        cls.maps = data_lint._compose_maps(cls.parsed, cls.errors)
+        assert not cls.errors, cls.errors
+
+    def _run(self, mutate=None):
+        parsed = copy.deepcopy(self.parsed)
+        maps = data_lint._compose_maps(parsed, [])
+        if mutate is not None:
+            mutate(parsed, maps)
+        advisories = []
+        counts = data_lint.check_content_reachability(parsed, maps, advisories)
+        return counts, advisories
+
+    def test_head_tree_findings_are_the_known_set(self):
+        counts, advisories = self._run()
+        self.assertEqual(counts.get("map orphan", 0), 0, advisories)
+        orphans = [line for line in advisories if line.startswith("[skill orphan]")]
+        self.assertEqual(len(orphans), 2, orphans)
+        self.assertTrue(any("'kindle'" in line for line in orphans), orphans)
+        self.assertTrue(any("'frost_touch'" in line for line in orphans), orphans)
+        # The code-grant allowlist covers the boons, so they must NOT show up
+        # -- and no allowlist row may be reporting drift on a clean tree.
+        self.assertFalse([line for line in advisories if line.startswith("[code-grant drift]")], advisories)
+        for boon in data_lint.SKILL_CODE_GRANTS:
+            self.assertFalse([line for line in advisories if f"'{boon}'" in line], boon)
+
+    def test_orphaning_a_granted_skill_is_caught(self):
+        # `frost_bolt` is granted by mage L1 on HEAD. Strip every grant of it
+        # and the check must say so -- the can-fail proof for the skill arm.
+        def mutate(parsed, _maps):
+            for cls in parsed[data_lint.DATA / "classes.json"]["classes"]:
+                for level in cls.get("levels", []):
+                    level["grants"] = [s for s in level.get("grants", []) if s != "frost_bolt"]
+                evolution = cls.get("evolution") or {}
+                if "balanced_grants" in evolution:
+                    evolution["balanced_grants"] = [
+                        s for s in evolution["balanced_grants"] if s != "frost_bolt"]
+        counts, advisories = self._run(mutate)
+        # frost_bolt is in combatant kits too, so ungranting it demotes it to
+        # the enemy-kit category -- reachable, but no longer learnable.
+        self.assertIn("[enemy-kit only] skills.json 'frost_bolt'",
+            "\n".join(advisories))
+        self.assertEqual(counts["enemy-kit only"], 4)
+
+    def test_orphaning_a_class_only_skill_reports_as_orphan(self):
+        def mutate(parsed, _maps):
+            for cls in parsed[data_lint.DATA / "classes.json"]["classes"]:
+                for level in cls.get("levels", []):
+                    level["grants"] = [s for s in level.get("grants", []) if s != "quick_cast"]
+        counts, advisories = self._run(mutate)
+        self.assertTrue(any(line.startswith("[skill orphan]") and "'quick_cast'" in line
+            for line in advisories), advisories)
+        self.assertEqual(counts["skill orphan"], 3)
+
+    def test_orphaning_an_item_is_caught(self):
+        def mutate(parsed, maps):
+            for map_doc in maps.values():
+                for entity in map_doc.get("entities", []):
+                    if isinstance(entity, dict):
+                        entity.pop("contains", None)
+                        entity.pop("loot", None)
+                        entity.pop("item", None)
+            for path in list(parsed):
+                if path.parent.name == "dialogue":
+                    for node in (parsed[path].get("nodes", {}) or {}).values():
+                        for option in node.get("options", []):
+                            option["effects"] = [e for e in option.get("effects", [])
+                                if not (isinstance(e, dict) and "item" in e)]
+            parsed[data_lint.DATA / "fence_stock.json"]["stock"] = []
+        counts, _ = self._run(mutate)
+        self.assertGreater(counts["item orphan"], 40)
+
+    def test_stale_code_grant_row_reports_drift(self):
+        advisories = []
+        granted = data_lint._code_grants(
+            {"no_such_content_id_anywhere": ("src/core/wi_game.gd", 1, "synthetic row")},
+            "skill", advisories)
+        self.assertEqual(granted, set())
+        self.assertEqual(len(advisories), 1)
+        self.assertIn("is granted nowhere in", advisories[0])
+
+    def test_moved_code_grant_row_reports_a_repin(self):
+        content_id, (rel, line_no, _note) = sorted(data_lint.SKILL_CODE_GRANTS.items())[0]
+        advisories = []
+        granted = data_lint._code_grants({content_id: (rel, line_no + 500, "moved row")},
+            "skill", advisories)
+        self.assertEqual(granted, {content_id})
+        self.assertIn("repin the row", advisories[0])
+
+    def test_unreachable_dialogue_node_is_caught(self):
+        def mutate(parsed, _maps):
+            for path in list(parsed):
+                if path.parent.name != "dialogue":
+                    continue
+                for node in (parsed[path].get("nodes", {}) or {}).values():
+                    for option in node.get("options", []):
+                        option.pop("goto", None)
+        counts, _ = self._run(mutate)
+        self.assertGreater(counts["dialogue node orphan"], 100)
+
+    def test_severed_door_graph_is_caught(self):
+        def mutate(parsed, maps):
+            for map_doc in maps.values():
+                map_doc["entities"] = [entity for entity in map_doc.get("entities", [])
+                    if not (isinstance(entity, dict) and (
+                        "to_map" in entity or "door_when" in entity
+                        or entity.get("portal_menu") or entity.get("portal_menu_when")))]
+        counts, advisories = self._run(mutate)
+        # Everything but the start map: the graph has no edges left at all.
+        self.assertEqual(counts["map orphan"], len(self.maps) - 1)
+        self.assertTrue(all("is named by no door" in line
+            for line in advisories if line.startswith("[map orphan]")), advisories)
+
+    def test_nested_door_when_transition_counts_as_an_edge(self):
+        # street's sewer_grate carries its to_map/to_cell INSIDE door_when.
+        # A key-path scan would miss it and call `sewers` unplayable.
+        counts, _ = self._run()
+        self.assertEqual(counts.get("map orphan", 0), 0)
+        pairs = []
+        data_lint._walk_pairs(self.maps["street"]["entities"], "to_map", "to_cell", pairs)
+        self.assertIn("sewers", {row["to_map"] for row in pairs})
 
 
 class TestRealTree(unittest.TestCase):
