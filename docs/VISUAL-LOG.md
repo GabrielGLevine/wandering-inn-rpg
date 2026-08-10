@@ -4344,3 +4344,35 @@ EMBLEM is a crate+cartwheel (haulage mark) that reads as a floating
 crate prop now that crates are interactive; needs an emblem re-paint
 (monogram/lettering), not a new sign.
 | 2026-08-09 | invrisil_boulevard | Coyle & Sons sign repainted: crate+cartwheel emblem → gold "C&S" monogram (PixelLab inpaint, zero pixels changed outside emblem mask). Windowed read SKIPPED (usage); verdict = user's next boulevard look. | P2 | AWAITING EYE |
+
+## 2026-08-10 — low-usage batch close: #400 carried rows DRAINED (PR #416)
+
+All five carried #390 rows resolved and windowed-verified from the lane
+tree (albums in lane qa_output/, composed re-read via the steel-thread
+run):
+- Pallass tier debug-checkerboard → REPLACED (root-cause: placeholder,
+  not a retune) with neutral dressed stone; verified
+  03_pallass_market_arrival.
+- Pallass blue-brick forge-identity bleed → floors now neutral cobbled
+  flags; forge identity carried by molten channel/furnace light;
+  verified 07_forge_tier_arrival.
+- inn_upstairs floor seam → overlay REMOVED (surface should not exist);
+  continuous plank floor; verified 01_upstairs_hallway.
+- Night read-hierarchy inversion → per-layer night_attenuation
+  (entities 0.78 on street/mercantile_alleys, construction-time
+  application); people out-pop weeds; verified mood_sheet_night
+  04_street.
+- Face-to-face sprite merge → adjacency-only dialogue separation
+  (10px/side, restore-before-flush); verified inn_walkthrough
+  02_erin_dialogue.
+- Pallass market green-creature clash → map-local Grimalkin tint
+  [0.78,0.70,0.72]. OPEN USER CALL: same named NPC renders untinted in
+  the inn (~25% brighter) — continuity verdict owed at batch review.
+
+New rows from this batch:
+- [ ] USER CALL: Grimalkin two-palette continuity (above).
+- [ ] USER EYE-READ: witch_hollow/riverfarm pockets reuse
+  pond_reeds/pond_cache sprites — pocket #2/#3 read as pocket #1's
+  twins (reviewer flag; steel-thread album covers all three regions).
+- [ ] Basic Swordwork reuses icon_power_strike (CHOICE-LOG 26 ruling,
+  precedent kindle/flame_jet) — future icon-differentiation pass.
