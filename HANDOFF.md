@@ -151,6 +151,14 @@ deploy; user overwrites it if the batch lands in-window).
   /Users/gabriel/wi-lane-c/LANE-REPORT.md (self-contained, no live
   orchestrator needed). Lane D still parked: world.gd is held
   uncommitted by lane B.
+  **LANDED + WIP-COMMITTED 68956ed7 (pushed):** freeze pocket
+  (riverfarm_village + items.json + 2 new fixtures + 3 QA legs
+  islet_freeze/islet_blink/islet_negative, seed 9). 98/98 selective
+  gameplay green, mutation proof shown, no STOPs. REMAINING: read
+  LANE-REPORT.md fully, adversarial review (modes/gates/rewards +
+  negative-leg walks + new-fixture audit — new fixtures WERE authorized
+  by brief), fix wave, crops, PR. Note: lane touched items.json
+  (reward rows — check anchored-append).
 - **QUIESCE 2026-08-09 (session 86%, reset ~3h):** state saved; chained
   wakeups armed. On resume: usage_status --fresh, then act on whichever
   lane reports landed (review verdicts → fix waves → PRs; 412 merge;
