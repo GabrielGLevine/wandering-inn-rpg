@@ -3528,3 +3528,15 @@ auditor's scale.
     Explicit-Skill-Use passive-conversion doctrine does not apply). Name
     reserved; no shipped pocket uses it yet — first use rides a future
     locked-door pocket, not this batch.
+
+25. **412-apply STOP adjudications (controller, wave-autonomy):** (a) Packet
+    blast-radius was id-grep only; display-name hotbar pins
+    ("[Power Strike] — ...") found in 6 more QA scripts + unit suites —
+    scope extended to controller-verified complete list; fixtures ruled
+    UNTOUCHED (re-pin in script assertions only); full unit bar added.
+    (b) basic_swordwork field-gating: `weapon:"sword"` would strip the +5
+    hit passive from non-sword warriors in combat (weapon_gated_kit filters
+    passives too — combat_build.gd:14). Ruled NEW `field_weapon` key,
+    consumed only by _field_skill_weapon_ready (one-line src edit,
+    authorized narrowly); field cut requires a blade, combat kit untouched.
+    Surface-at-close item for the user.
