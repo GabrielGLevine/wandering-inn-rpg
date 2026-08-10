@@ -4376,3 +4376,21 @@ New rows from this batch:
   twins (reviewer flag; steel-thread album covers all three regions).
 - [ ] Basic Swordwork reuses icon_power_strike (CHOICE-LOG 26 ruling,
   precedent kindle/flame_jet) — future icon-differentiation pass.
+
+## 2026-08-10 — user batch review verdicts + v0.19.0 pre-tag findings
+
+- Grimalkin two-palette: RULED minor follow-up (this section is the
+  row) — unify the market tint vs inn-guest read in a future pass.
+- Pond-sprite pocket twins: RULED FINE (user).
+- Parlor music ear-gate: PASSED (user).
+- [ ] Static figure: `coyle_runner_trail` prop (invrisil_boulevard
+  (20,13), "A Hurrying Runner", city_runner sprite) reads frozen — a
+  "hurrying" figure that never moves. Idle frames or re-expression as
+  a non-figure clue (skid marks / dropped satchel) in the next art
+  pass.
+- Hedault unreachable → superseded by user ruling: proper indoor shop
+  off the main square (issue filed; not a tag blocker — pre-existing,
+  QA loops reach him via fixture stage only).
+- Coyle crate toast reworded (was narrating the north-square sign from
+  the south-square crate) — grounded in the crates + points at the
+  frontage; invrisil_walkthrough pin re-derived, canonical green.

@@ -286,7 +286,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "You circle the block twice before it clicks. The modest COYLE AND SONS sign faces the boulevard; the two wagons idling round the side face the alley, and the men loading them count every crate twice."
+    "text": "The stacks against this wall wear the same burgundy brand as the frontage up the square. Out there, COYLE AND SONS keeps one modest door; back here the wagons idle and the men loading them count every crate twice."
    },
    "timeout_sec": 5
   },
