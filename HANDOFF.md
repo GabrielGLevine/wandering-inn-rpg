@@ -101,11 +101,35 @@ deploy; user overwrites it if the batch lands in-window).
   user's name) — **#404 CLOSED**. Key facts: dangersense already exists
   (combat ctx) + warrior L5 already grants it; no attested lockpick
   skill ≤ Book 17 on the wiki.
-- **412-apply LIVE (Codex):** worktree /Users/gabriel/wi-lane-412
-  (branch issue/412-martial-rescope), brief at LANE-BRIEF.md. Merges
-  BEFORE lanes C/D. Lane A #414 reported DONE (steel_thread.json +
-  manifest row + STEEL-THREAD.md, headless PASS seed 9, can-fail
-  proven) — adversarial review RUNNING.
+- **Lane A #414 DONE through review + fix wave: PR #415 OPEN** ([ci-full]
+  head 5c39e50c). Merges with the close train. Windowed run + album =
+  batch-close eye-read (controller-owned).
+- **412-apply RUNNING (Codex session 019fe906-c300-7933-84d8-581e17271734,
+  worktree /Users/gabriel/wi-lane-412):** three STOPs adjudicated
+  (CHOICE-LOG 25 + three ADJUDICATION ADDENDA in LANE-BRIEF.md there;
+  key ruling: NEW `field_weapon` key + one authorized line in
+  _field_skill_weapon_ready — combat kit untouched). Full
+  implementation pass in flight. On return: adversarial review (trace
+  field_weapon gate + fixture diff), fix wave, then MERGE FIRST before
+  C/D.
+- **Lane B #400 implementation COMPLETE (uncommitted in
+  /Users/gabriel/wi-lane-b):** 9-file diff + new test_world_visuals.gd.
+  Full 12-criterion report received; unmet items = sandbox CA-cert
+  wrapper only (87/87 --touching, 14/14 smoke, all canonicals green on
+  gameplay results). Adversarial reviewer (Opus) RUNNING on the
+  worktree — do NOT commit the worktree until it returns (its git-diff
+  reads depend on the uncommitted state). After review: fix wave if
+  needed, WIP/final commit, controller windowed crops at the report's
+  rectangles (pallass_market [0,0,26,11]+[16,1,5,6], pallass_forge
+  [0,0,26,11], forge_hall [0,0,12,9], inn_upstairs [7,1,4,6]),
+  screenshot target inn_walkthrough/02_erin_dialogue (player (7,3)
+  facing up, Erin (7,2) facing down), then PR.
+- **QUIESCE 2026-08-09 (session 86%, reset ~3h):** state saved; chained
+  wakeups armed. On resume: usage_status --fresh, then act on whichever
+  lane reports landed (review verdicts → fix waves → PRs; 412 merge;
+  then C/D dispatch — C/D briefs not yet written; #403 = 1-2 riverfarm
+  pockets per #398 spec post-412 pool; #413 = per signed spec, rogue L4
+  + passive aura + render overlay from trigger radii).
 - **Phase 1 LIVE (Codex, its own pool — week was 0%):** Lane A #414
   steel-thread in worktree /Users/gabriel/wi-lane-a (branch
   issue/414-steel-thread); Lane B #400 carried rows in
