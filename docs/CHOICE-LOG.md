@@ -3551,3 +3551,11 @@ auditor's scale.
     applies (starting Warrior sees an opaque bracket until first
     sword-armed field cast). --touching install_fixture blindness filed
     as #417.
+
+27. **[Rope Work] → [Rope Arrow] (user overrule, 2026-08-10):** the
+    canon name's only citation is Vol 8/9-era (spoiler-cutoff rule 5
+    blocked it); user ruled it not a significant spoiler and overruled.
+    Bracket string renamed across skills/interactions/trapped_halls/QA
+    pins; id stays `rope_work`. The last invented-name ACK is cleared —
+    every shipped [Skill] name is now attested or user-ruled
+    ([Pick Lock]).

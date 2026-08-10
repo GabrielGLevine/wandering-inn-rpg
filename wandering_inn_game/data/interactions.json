@@ -151,7 +151,7 @@
    "counter_key": "state_counter",
    "toast_from": "target",
    "toast_key": "anchor_toast",
-   "toast_default": "[Rope Work] — You make the line fast and set it taut across. The crossing stays a crossing."
+   "toast_default": "[Rope Arrow] — You make the line fast and set it taut across. The crossing stays a crossing."
   },
   {
    "skill_property": "cuts",

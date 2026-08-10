@@ -43,7 +43,7 @@
    ]
   }
  },
- "_comment_gallery": "NORTH GALLERY x14-19 y0-2, sealed by these six + (13,0)/(13,1)/(16,3). Two ways in, neither a spell: [Rope Work] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 is the only quadrant no QA route walks; dungeon_peek's own pin comments carry the live counts.",
+ "_comment_gallery": "NORTH GALLERY x14-19 y0-2, sealed by these six + (13,0)/(13,1)/(16,3). Two ways in, neither a spell: [Rope Arrow] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 is the only quadrant no QA route walks; dungeon_peek's own pin comments carry the live counts.",
  "blocked": [
   [
    5,
@@ -703,7 +703,7 @@
    "observe": "Old bones, dry and disjointed, lying out in the open on bare flagstone."
   },
   {
-   "_comment": "[Rope Work] CARRIER. `gap` + `state_counter` are the table pair; (13,1) opens. The stub never goes absent, which is what lets visual_states SHOW the line -- a state_set the world never shows is invisible durable state.",
+   "_comment": "[Rope Arrow] CARRIER. `gap` + `state_counter` are the table pair; (13,1) opens. The stub never goes absent, which is what lets visual_states SHOW the line -- a state_set the world never shows is invisible durable state.",
    "id": "halls_span_stub",
    "kind": "prop",
    "cell": [
@@ -716,7 +716,7 @@
    "state_counter": "gallery_line_anchored",
    "observe": "A stub of masonry where a walkway used to leave this wall, sheared off clean. The other side is still there, four feet out and a long way down. The stub would hold a line all day.",
    "locked_toast": "You get a hand on the stub and lean out over the gap — too wide to jump, too smooth to climb, so set a rope here.",
-   "anchor_toast": "[Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The line holds your weight and stays where you put it.",
+   "anchor_toast": "[Rope Arrow] — You make the line fast to the stub, drop the tail across, and set it taut. The line holds your weight and stays where you put it.",
    "visual_states": [
     {
      "when": {

@@ -1789,15 +1789,15 @@
    "icon": "icon_basic_repair"
   },
   {
-   "_comment": "`anchors` keys the anchors x gap -> state_set row. INVENTED NAME (canon [Rope Arrow] is past the spoiler bar): pin the ID, never the bracket string, so a rename stays a one-string diff.",
+   "_comment": "`anchors` keys the anchors x gap -> state_set row. ATTESTED [Rope Arrow] (Halrac/Nailren, Interlude - Adventurers Pt.2); spoiler-bar overruled by user 2026-08-10 (CHOICE-LOG 27). ID stays rope_work -- pin the ID, never the bracket string.",
    "id": "rope_work",
-   "display_name": "[Rope Work]",
+   "display_name": "[Rope Arrow]",
    "contexts": [
     "exploration"
    ],
    "field": true,
    "anchors": true,
-   "field_ambient": "[Rope Work] — You pay out a length and look for something to make it fast to. Nothing here will hold a line.",
+   "field_ambient": "[Rope Arrow] — You pay out a length and look for something to make it fast to. Nothing here will hold a line.",
    "description": "A line made fast at both ends. A gap crossed once stays crossed for whoever comes next.",
    "icon": "icon_rope_work"
   }

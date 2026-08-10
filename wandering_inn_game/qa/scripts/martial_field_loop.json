@@ -1,5 +1,5 @@
 {
- "_comment": "THE MARTIAL EXPLORATION CANONICAL (GH#380/#381/#382/#383). Two halves off two fixtures: phase 0 boots martial_field_start (warrior 5, none of the verbs) and walks every REFUSAL -- the unsteady bump on both maps with each map's OWN authored line, the four property/authored carriers answering their locked_toast, the carcass answering skill_unknown; phase 1 swaps in martial_field_armed through the pause-Load path (thread_lattice_loop's idiom) and walks the same seams as a holder. PIN DISCIPLINE (#382 ruling 1): every skill assertion keys on the SKILL ID and the event payload's ids, never on a bracketed display_name, so renaming [Rope Work] stays a one-string diff. No combat anywhere in the route.",
+ "_comment": "THE MARTIAL EXPLORATION CANONICAL (GH#380/#381/#382/#383). Two halves off two fixtures: phase 0 boots martial_field_start (warrior 5, none of the verbs) and walks every REFUSAL -- the unsteady bump on both maps with each map's OWN authored line, the four property/authored carriers answering their locked_toast, the carcass answering skill_unknown; phase 1 swaps in martial_field_armed through the pause-Load path (thread_lattice_loop's idiom) and walks the same seams as a holder. PIN DISCIPLINE (#382 ruling 1): every skill assertion keys on the SKILL ID and the event payload's ids, never on a bracketed display_name, so renaming [Rope Arrow] stays a one-string diff. No combat anywhere in the route.",
  "fixture_save": "martial_field_start",
  "starts_at_title": true,
  "steps": [
@@ -577,7 +577,7 @@
    ]
   },
   {
-   "_comment": "Nine field slots, every one DERIVED: martial_field_armed carries no hotbar_loadout, so the bar is AUTO in known_skills() order. Slots 1-9 are [Basic Cleaning], [Broader Shoulders], [Bar Fighting], [Rope Work], [Flame Jet], [Ice Floor], [Basic Cooking], [Basic Swordwork], [Greater Strength], exactly as readout_lines pins below. The sword satisfies basic_swordwork's field_weapon gate; power_strike/piercing_strikes are combat-only, and basic_repair now belongs to Helper L2. [Even Footing] is passive and takes no slot.",
+   "_comment": "Nine field slots, every one DERIVED: martial_field_armed carries no hotbar_loadout, so the bar is AUTO in known_skills() order. Slots 1-9 are [Basic Cleaning], [Broader Shoulders], [Bar Fighting], [Rope Arrow], [Flame Jet], [Ice Floor], [Basic Cooking], [Basic Swordwork], [Greater Strength], exactly as readout_lines pins below. The sword satisfies basic_swordwork's field_weapon gate; power_strike/piercing_strikes are combat-only, and basic_repair now belongs to Helper L2. [Even Footing] is passive and takes no slot.",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
@@ -586,7 +586,7 @@
      "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
      "2  [Broader Shoulders] — A load that would bow anyone else rides easy on you, and rides all day.",
      "3  [Bar Fighting] — Any common room is full of weapons. The trick is reaching one before the other fellow does.",
-     "4  [Rope Work] — A line made fast at both ends. A gap crossed once stays crossed for whoever comes next.",
+     "4  [Rope Arrow] — A line made fast at both ends. A gap crossed once stays crossed for whoever comes next.",
      "5  [Flame Jet] — A roaring lance of goblin-fire down the line.",
      "6  [Ice Floor] — The stones glaze over, and footing becomes a rumor. Still water takes it the same way, and holds.",
      "7  [Basic Cooking] — Simple meals come out right, every time.",
@@ -752,7 +752,7 @@
    "equals": 25
   },
   {
-   "_comment": "== LEG H: [Rope Work]. Cast at the STUB (the carrier that carries `gap` + state_counter and never goes absent), and the DROP is the cell that opens -- the run leaves the gallery through it. Pinned by skill id and entity id, never by the bracketed name the ACK could still change.",
+   "_comment": "== LEG H: [Rope Arrow]. Cast at the STUB (the carrier that carries `gap` + state_counter and never goes absent), and the DROP is the cell that opens -- the run leaves the gallery through it. Pinned by skill id and entity id, never by the bracketed name the ACK could still change.",
    "action": "move",
    "direction": "up",
    "steps": 2
@@ -819,7 +819,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The line holds your weight and stays where you put it."
+    "text": "[Rope Arrow] — You make the line fast to the stub, drop the tail across, and set it taut. The line holds your weight and stays where you put it."
    },
    "timeout_sec": 5
   },
