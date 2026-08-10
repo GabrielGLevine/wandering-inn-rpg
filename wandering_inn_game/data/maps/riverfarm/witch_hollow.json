@@ -7,6 +7,10 @@
  },
  "blocked": [
   [
+   11,
+   1
+  ],
+  [
    0,
    0
   ],
@@ -193,6 +197,26 @@
   [
    7,
    10
+  ],
+  [
+   10,
+   1
+  ],
+  [
+   10,
+   2
+  ],
+  [
+   10,
+   3
+  ],
+  [
+   10,
+   4
+  ],
+  [
+   10,
+   5
   ]
  ],
  "floor_layers": [
@@ -265,6 +289,41 @@
    ]
   }
  ],
+ "skill_gates": {
+  "hollow_briar_pocket": {
+   "modes": [
+    {
+     "mechanism": "property",
+     "skill_property": "burns",
+     "props": [
+      "hollow_briar_gate"
+     ],
+     "cells": [
+      [
+       11,
+       5
+      ]
+     ]
+    },
+    {
+     "mechanism": "property",
+     "skill_property": "cuts",
+     "props": [
+      "hollow_briar_gate"
+     ],
+     "cells": [
+      [
+       11,
+       5
+      ]
+     ]
+    }
+   ],
+   "rewards": [
+    "hollow_briar_cache"
+   ]
+  }
+ },
  "entities": [
   {
    "id": "hollow_tree_0",
@@ -724,6 +783,40 @@
      "heard_thicket_keeps": 1
     }
    }
+  },
+  {
+   "_comment": "#403 briar pocket gate, appended last. Private per-target counters keep both property-table modes isolated from every other briar carrier; the five-cell authored wall seals the northeast edge so this is the pocket's only entrance.",
+   "id": "hollow_briar_gate",
+   "kind": "prop",
+   "cell": [
+    11,
+    5
+   ],
+   "display_name": "Briar-Choked Hollow",
+   "sprite": "briar_wall",
+   "burnable": true,
+   "cuttable": true,
+   "burn_counter": "burned_hollow_briar_gate",
+   "cut_counter": "cut_hollow_briar_gate",
+   "locked_toast": "Briars knot the narrow hollow shut. [Firefly] or [Flame Jet] can burn them; [Basic Swordwork] can cut them with a sword in hand.",
+   "burn_toast": "Fire races through the dry briar and opens the narrow hollow.",
+   "cut_toast": "Steel severs the briar at its old knots and opens the narrow hollow."
+  },
+  {
+   "_comment": "#403 pocket reward, appended last. The one-shot container state owns collection; its observe is the pocket's journal hook toward the hollow's deeper collector bed.",
+   "id": "hollow_briar_cache",
+   "kind": "prop",
+   "cell": [
+    11,
+    2
+   ],
+   "display_name": "Briar-Wrapped Satchel",
+   "sprite": "crate",
+   "observe": "A waxed satchel hangs above the thorns. Shaved-horn tallies inside mark this briar bed, then another circle beside the deeper collector nest.",
+   "contains": [
+    "hollow_thorn_tally"
+   ],
+   "open_toast": "The waxed flap gives. A thorn-marked tally bundle lies inside, its next circle cut beside the deeper briars."
   }
  ]
 }

@@ -1344,6 +1344,22 @@
       "price": 28,
       "description": "A pitch-darkened brass tally stamped with Riverfarm and a line of downstream landings.",
       "lore": "One landing has been scored out until the brass split. The remaining marks still make a usable river route."
+    },
+    {
+      "_comment": "#403 Witch Hollow briar-pocket reward. Tier-3 mundane special at the shipped Riverfarm ferry-tally / counting-room 28g band; no combat modifiers, so it adds no balance-harness surface.",
+      "id": "hollow_thorn_tally",
+      "name": "Hollow Thorn Tally",
+      "kind": "tool",
+      "weapon_family": "none",
+      "damage_mod": 0,
+      "hp_mod": 0,
+      "damage_reduction": 0,
+      "resonance": 0,
+      "tier": "mundane",
+      "abilities": [],
+      "price": 28,
+      "description": "A bundle of shaved-horn tallies, each edge notched into the shape of a different briar bed.",
+      "lore": "The first circle matches the narrow hollow. The next is cut beside the deeper collector nest, and three more marks continue beyond the bundle's broken thong."
     }
   ]
 }

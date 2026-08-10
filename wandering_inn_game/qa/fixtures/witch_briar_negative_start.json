@@ -1,0 +1,42 @@
+{
+ "_comment": "#403 Witch Hollow briar negative. Honest Helper 1 holds neither the Mage burns carrier nor the Warrior cuts carrier. The portal-awakening backbone makes the direct Witch Hollow position reachable. Starts three walked cells south of the newly-created gate; the script never teleports.",
+ "version": 6,
+ "state": {
+  "current_map": "witch_hollow",
+  "player_cell": [11, 9],
+  "player_facing": [0, -1],
+  "classes": {"helper": 1},
+  "accomplishments": {
+   "met_relc": 1,
+   "cleaned_the_inn": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "catalyst_delivered": 1,
+   "riverfarm_attuned": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
+  },
+  "player_skills": ["basic_cleaning"],
+  "hotbar_loadout": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "seen_statuses": [],
+  "inventory": ["rusty_sword"],
+  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 20,
+  "rng_state": "-6393592048753323481"
+ }
+}
