@@ -6627,6 +6627,90 @@
    }
   },
   {
+   "_comment": "<!-- 403-riverfarm-islet --> ANCHORED after the pond-island negative row.",
+   "script": "riverfarm_islet_freeze",
+   "seed": 9,
+   "fixture": "riverfarm_islet_freeze_start",
+   "note": "#403 Riverfarm islet mode A: the Ice Mage's real [Ice Floor] freezes the near river cell, the player walks onto the dry crown, and the one-shot ferry-tally cache pays out",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "riverfarm_islet_freeze_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "icy_floor"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 403-riverfarm-islet --> ANCHORED after the mode-A row.",
+   "script": "riverfarm_islet_blink",
+   "seed": 9,
+   "fixture": "pond_island_blink_start",
+   "note": "#403 Riverfarm islet mode B: the honest Runner 5 [Double Step] crosses from the lower bank to the same dry crown without freezing any cell, then claims the same one-shot cache",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "pond_island_blink_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "double_step"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 403-riverfarm-islet --> ANCHORED after the mode-B row.",
+   "script": "riverfarm_islet_negative",
+   "seed": 9,
+   "fixture": "riverfarm_islet_negative_start",
+   "note": "#403 Riverfarm islet negative: a hotbar-bearing build with neither crossing mode pins the dry crown's rendered blocked-cell delta, walks to both river refusal cells, and earns no traversal, ice, or reward",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "riverfarm_islet_negative_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
    "_comment": "<!-- 398-p1 --> APPENDED LAST under the pond-island lane marker.",
    "script": "pond_frozen_cache",
    "seed": 9,

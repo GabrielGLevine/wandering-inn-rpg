@@ -62,7 +62,7 @@
    "persistence": "immediate",
    "terrain": "water",
    "toast_from": "row",
-   "toast_default": "[Firefly] — You hold the flame low over the ice. It sags, greys, then drops away into black water. The channel runs open again."
+   "toast_default": "[Firefly] — Heat hollows the ice until it gives way to open water."
   },
   {
    "skill_property": "burns",
@@ -70,7 +70,7 @@
    "outcome": "refuse",
    "persistence": "none",
    "toast_from": "row",
-   "toast_default": "[Firefly] — The flame gutters the moment it nears the water. Steam ghosts off the surface and the channel takes it back. Fire has nothing to hold here."
+   "toast_default": "[Firefly] — The flame dies over open water because there is nothing solid for it to catch."
   },
   {
    "skill_property": "burns",

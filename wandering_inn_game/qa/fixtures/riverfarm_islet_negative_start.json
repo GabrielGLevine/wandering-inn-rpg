@@ -26,6 +26,7 @@
    "door_mounted": 1
   },
   "player_skills": ["basic_cleaning"],
+  "hotbar_loadout": ["basic_cleaning"],
   "removed_entities": [],
   "dormant_encounters": [],
   "generalist_classes": [],
