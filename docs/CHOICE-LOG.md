@@ -3540,3 +3540,14 @@ auditor's scale.
     consumed only by _field_skill_weapon_ready (one-line src edit,
     authorized narrowly); field cut requires a blade, combat kit untouched.
     Surface-at-close item for the user.
+
+26. **412-apply review adjudications (controller):** Critical
+    cursor-reachability proof (deleted LEG J) restored into
+    flame_pillar_loop's 11-slot bar. Ruled-accepted disclosures:
+    (a) basic_swordwork reuses icon_power_strike (kindle/flame_jet
+    precedent; future icon-differentiation pass logged); (b) GH#334
+    pre-reveal of basic_swordwork reversed — correct re-derivation, the
+    skill now has a field activation path so standard reveal flow
+    applies (starting Warrior sees an opaque bracket until first
+    sword-armed field cast). --touching install_fixture blindness filed
+    as #417.
