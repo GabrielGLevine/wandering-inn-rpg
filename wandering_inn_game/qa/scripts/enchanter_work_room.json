@@ -1,0 +1,756 @@
+{
+ "_comment": "#423 THE [Pick Lock] DEBUT CANONICAL, and the two-mode rule's proof. THREE phases off three saves, each swapped in through the real pause-menu Load path. PHASE 0 (near_hedault, no rogue line, no commission): the work-room door refuses through use_skill's SKILL_UNKNOWN + the prop's own locked_toast, and the map never changes. PHASE 1 (enchanter_pick_start, rogue 2): the bare interact HINTS (interact never auto-casts), the field cast opens the lock, the SAME interact then transitions, and the case hands over enchanters_true_gauge exactly once (a second interact answers 'Empty.'). PHASE 2 (enchanter_key_start, the finished commission and NO rogue line at all): [Pick Lock] is not even on the bar, Hedault opens the door himself off his own trust arm, and the room hands over the SAME id -- which is what 'contents identical on both paths' has to mean to be worth anything. Every gate counter is CREATED by the run: no fixture pre-holds enchanter_work_room_opened or took_enchanters_gauge, and no fixture pre-stages adjacency to anything. Zero combat (asserted).",
+ "fixture_save": "near_hedault",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== PHASE 0: THE REFUSAL == near_hedault is the honest no-skill/no-key save: warrior 10, no rogue line, setting_commissioned unbanked. It boots on the shop's own landing cell (6,7) -- not beside anything.",
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "enchanter_shop"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "assert_field_skill_absent",
+   "skill": "pick_lock"
+  },
+  {
+   "_comment": "Walk the shop floor to the work-room door's only approach, (8,4), and bump north into (8,3).",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     8,
+     3
+    ]
+   }
+  },
+  {
+   "_comment": "Bare interact with the gate unmet and the Skill unknown: interactions.gd falls through to use_skill, which emits SKILL_UNKNOWN and speaks the prop's own locked_toast. No hint, no bank, no transition.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "payload_contains": {
+    "skill": "pick_lock"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The lock is better than the door. You get as far as knowing that, and no further."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE REFUSAL IS STRUCTURAL: the door never opened, so the map never changed.",
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "enchanter_shop"
+  },
+  {
+   "action": "screenshot",
+   "name": "00_work_room_refused"
+  },
+  {
+   "_comment": "== PHASE 1: THE [Pick Lock] MODE == swap in the rogue save through the real pause-menu Load path (martial_field_loop's idiom).",
+   "action": "install_fixture",
+   "fixture": "enchanter_pick_start",
+   "slot": "manual"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "enchanter_shop"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "_comment": "Grant-derived, not hand-granted: rogue 2 is on disk, [Pick Lock] is its L2 grant, and press_field_skill below fails loud if the skill is not really on the derived bar.",
+   "action": "assert_state",
+   "path": "classes.rogue",
+   "equals": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     8,
+     3
+    ]
+   }
+  },
+  {
+   "_comment": "THE EXPLICIT-SKILL-USE DIRECTIVE (2026-07-10): a KNOWN required Skill hints toward the hotbar. Interact never auto-casts, so this interact still does not open the door.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Three wards and a shallow throw, and every scratch on the plate says the key goes in at an angle. Working it would take the picks and the patience."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "enchanter_shop"
+  },
+  {
+   "_comment": "THE DEBUT CAST.",
+   "action": "press_field_skill",
+   "skill": "pick_lock"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "pick_lock"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "enchanter_work_room_opened"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Pick Lock] — Three wards, lifted one at a time, and the shallow throw goes over on the fourth breath. The door comes off the frame quietly, which is the only way it was ever going to be worth doing."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Same prop, same interact: door_when is now met, so interactions.gd takes the transition arm BEFORE the requires_skill arm. No presence flip, so nothing needed re-rendering.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "enchanter_work_room"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    4
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "01_work_room_picked"
+  },
+  {
+   "_comment": "The room's own walk: (3,4) landing -> (2,4) -> (2,3), then bump north into the case at (2,2). Every entity in here has a standable orthogonal neighbour reachable from the landing, which is the #424 contract this lane owes.",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     2,
+     2
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "enchanters_true_gauge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "took_enchanters_gauge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The case is all other people's property except one thing: a brass beam-gauge, worn past its own markings, that no order in the book is waiting on."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "enchanters_true_gauge"
+  },
+  {
+   "action": "screenshot",
+   "name": "02_gauge_taken_by_pick"
+  },
+  {
+   "_comment": "ONE-SHOT: container_state has the case flagged, so a second interact answers 'Empty.' and hands over nothing.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Empty."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "enchanters_true_gauge"
+   },
+   "count": 1
+  },
+  {
+   "_comment": "== PHASE 2: THE VIRTUOUS PATH == swap in the finished-commission save. Same landing, same room, same contents -- and no lock is ever touched.",
+   "action": "install_fixture",
+   "fixture": "enchanter_key_start",
+   "slot": "manual"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "enchanter_shop"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "_comment": "STRUCTURALLY skill-free: this PC holds no rogue line at all, so [Pick Lock] is not on the field bar and the pick mode is unreachable rather than merely unused.",
+   "action": "assert_field_skill_absent",
+   "skill": "pick_lock"
+  },
+  {
+   "_comment": "Walk to Hedault the same way every other re-anchored loop does: up 3, left 4, bump north into (2,3).",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     2,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Hedault"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "hedault_enchanting",
+    "entity": "hedault"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "text": "State the item and keep your hands where I can see them. First I appraise. Then I correct, if correction is warranted, and I charge exactly what the work is worth."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Row 6: the three enchant rows and the fragment row render visible-LOCKED, 'Just looking.' is 5, the heirloom row is hidden by setting_commissioned, and the trust arm is the appended last row.",
+   "action": "click_dialogue_option",
+   "option": 6
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "enchanter_work_room_opened"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "text": "You said the true thing about that stone before I had to find it at the bench, which almost nobody does. The partition door is off the latch from today. The rules in there are the rules out here: nothing with a tag on it leaves, because it is not mine to lend. The brass gauge on top of the case carries no tag and no order waits on it. I keep a second."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "From (2,4) straight along the y=4 lane to the work-room door's approach.",
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     8,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "enchanter_work_room"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    4
+   ]
+  },
+  {
+   "_comment": "The room's own walk: (3,4) landing -> (2,4) -> (2,3), then bump north into the case at (2,2). Every entity in here has a standable orthogonal neighbour reachable from the landing, which is the #424 contract this lane owes.",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     2,
+     2
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "enchanters_true_gauge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "took_enchanters_gauge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The case is all other people's property except one thing: a brass beam-gauge, worn past its own markings, that no order in the book is waiting on."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "enchanters_true_gauge"
+  },
+  {
+   "action": "screenshot",
+   "name": "03_gauge_taken_by_trust"
+  },
+  {
+   "_comment": "IDENTICAL CONTENTS, the two-mode rule's actual assertion: the virtuous path's own item_gained is the second in the run, and it names the same id the pick handed over.",
+   "action": "assert_event_count",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "enchanters_true_gauge"
+   },
+   "count": 2
+  },
+  {
+   "_comment": "Out the way we came in: (2,3) -> (2,4) -> (3,4), bump south into the work-room's own door.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     3,
+     5
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "enchanter_shop"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  }
+ ]
+}

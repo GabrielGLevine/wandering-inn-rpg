@@ -214,12 +214,12 @@
 			]
 		},
 		{
-			"_comment": "v0.16 I1 (#306). Giver is the stationer client (ruling 1). `resolve` is a travel beat (producers on mercantile_alleys, giver on stationer) so it names the alleys; `report` produces on the giver's own map.",
+			"_comment": "v0.16 I1 (#306). Giver is the stationer client (ruling 1). `resolve` is a travel beat (giver on stationer) so it names where the work is; #423 moved two of its three producers with Hedault -- the truth/assist arms are now in enchanter_shop, the fence arm is still off mercantile_alleys -- so the beat names his shop, which is where every route starts. `report` produces on the giver's own map.",
 			"id": "a_setting_for_a_lady",
 			"title": "A Setting for a Lady",
 			"region": "Invrisil",
 			"beats": [
-				{ "id": "resolve", "description": "Hedault keeps a bench in the alleys and will not set the stone until somebody says the true thing about it. Tell him, read the ward at his bench, or find out who took the original.", "complete_when_any": { "heirloom_truth_kept": 1, "setting_assisted": 1, "original_recovered": 1 } },
+				{ "id": "resolve", "description": "Hedault keeps a shop off the main square and will not set the stone until somebody says the true thing about it. Tell him, read the ward at his bench, or find out who took the original.", "complete_when_any": { "heirloom_truth_kept": 1, "setting_assisted": 1, "original_recovered": 1 } },
 				{ "id": "report", "description": "Go back to the Lady with the ring box and tell her how it ended.", "complete_when": { "setting_commissioned": 1 } }
 			],
 			"_resolution_order": "Weakest claim first (src/core/quests.gd:82-87); LAST MATCH WINS among real rungs, so a completionist reads as the strongest deed: setting_assisted (you helped) < heirloom_truth_kept (you brokered the truth) < original_recovered (you brought back the real stone). No \"\"-fallback rung -- the handover option is gated on holding at least one route counter, so setting_commissioned cannot bank without one.",

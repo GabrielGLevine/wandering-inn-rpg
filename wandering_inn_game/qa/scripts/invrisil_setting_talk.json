@@ -202,9 +202,9 @@
   },
   {
    "action": "teleport",
-   "map": "mercantile_alleys",
+   "map": "enchanter_shop",
    "cell": [
-    0,
+    6,
     7
    ]
   },
@@ -212,13 +212,24 @@
    "action": "wait_for_event",
    "type": "map_changed",
    "payload_contains": {
-    "map": "mercantile_alleys"
+    "map": "enchanter_shop"
    },
    "timeout_sec": 5
   },
   {
    "action": "wait_frames",
    "frames": 5
+  },
+  {
+   "_comment": "#423: Hedault lives in enchanter_shop now. The teleport lands on the shop's own door cell (6,7) -- NOT beside him -- and this walks the floor to (2,4) before bumping north into his (2,3).",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
   },
   {
    "action": "move",
@@ -230,8 +241,8 @@
    "type": "player_blocked",
    "payload_contains": {
     "cell": [
-     0,
-     6
+     2,
+     3
     ]
    }
   },

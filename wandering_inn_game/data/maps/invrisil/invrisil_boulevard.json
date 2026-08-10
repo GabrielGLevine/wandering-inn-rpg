@@ -1583,6 +1583,23 @@
    ]
   },
   {
+   "_comment": "#423: Hedault's shop gets a real frontage on the main square. Row 1 is blocked x0-27, so promoting this facade cell to a door costs no walkable cell (the boulevard_stationer / boulevard_to_adventurers_rest pattern). Cell (22,1) chosen from the open 19..27 band, clear of the stationer's own door at (20,1) and of COYLE AND SONS at (23,1); the approach and landing cell is (22,2), open plaza.",
+   "id": "boulevard_enchanter_shop",
+   "kind": "door",
+   "cell": [
+    22,
+    1
+   ],
+   "display_name": "An Enchanter's Frontage",
+   "sprite": "door",
+   "observe": "One narrow window with one piece in it and a great deal of room around the piece. The card in the corner gives an appraisal fee, an hour, and no adjectives at all.",
+   "to_map": "enchanter_shop",
+   "to_cell": [
+    6,
+    7
+   ]
+  },
+  {
    "_comment": "#318 the world event, felt-not-seen: the carriage is gone and only the street's reaction is on screen. Facade row prop, the boulevard_glazier idiom (hide_sprite, bumped from the row below).",
    "id": "boulevard_carriage_wake",
    "kind": "prop",

@@ -1,11 +1,11 @@
 {
- "_comment": "b6 #221: near_hedault sibling holding the guardian_ward_fragment \u2014 the trade-by-choice leg.",
+ "_comment": "b6 #221: near_hedault sibling holding the guardian_ward_fragment -- the trade-by-choice leg. RE-ANCHORED by #423 to the enchanter_shop landing (6,7); adjacency is walked, never staged.",
  "_comment_task_2_6": "2026-07-27 main-quest restructure (Task 2.6 fix round 1): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined. This fixture holds door_awakened WITHOUT door_chain_started, so neither end of the Task 2.4 chain arm caught it and the sweep missed it; test_fixture_coherence now enforces door_awakened -> door_mounted (the far attunement is performed on the door the dig hauled home) and reads the RAW on-disk counters, so save.gd's dig backfill can no longer migrate this shape into passing. recovered_anchor_stone was already banked here and stays -- the wave rule only says it is never REQUIRED. Full rule: door_chain_fight_start.json's _comment_task_2_4. No rng re-derivation: the loaded state is identical to what the backfill was already producing at load, and none of these counters gates anything this fixture's script touches.",
  "version": 6,
  "state": {
-  "current_map": "mercantile_alleys",
+  "current_map": "enchanter_shop",
   "player_cell": [
-   0,
+   6,
    7
   ],
   "player_facing": [

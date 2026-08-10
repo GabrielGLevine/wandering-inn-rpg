@@ -1,0 +1,343 @@
+{
+ "_comment": "#423: Hedault's own shop, indoors off the boulevard (user ruling 2026-08-10). Schema modelled on stationer.json -- small interior, perimeter is walls.segments so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each with a matching decor row. Biome + every sprite reused, zero biomes.json edits. No floor_layers: the brothers_parlor biome default is the plain interior board, which is neither the parlor's parquet nor the stationer's pale swatch -- a bespoke enchanter floor is a VISUAL-LOG art follow-up, not a blind region pick. THE POINT OF THE MAP: Hedault stands at (2,3) with THREE orthogonally-adjacent standable cells -- (1,3), (3,3), (2,4) -- every one of them walk-reachable from the shop door's landing at (6,7). The alleys placement he came from had none, which is issue #423.",
+ "biome": "brothers_parlor",
+ "grid": {
+  "width": 12,
+  "height": 9
+ },
+ "blocked": [],
+ "walls": {
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     11,
+     0
+    ],
+    "cap": [
+     14,
+     6
+    ],
+    "face": [
+     14,
+     7
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     11,
+     1
+    ],
+    "to": [
+     11,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     1,
+     8
+    ],
+    "to": [
+     5,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     7,
+     8
+    ],
+    "to": [
+     10,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "_comment": "The work-room partition, west arm: seals x7 at y1..y2 so the back pocket (x8..10, y1..2) has exactly ONE opening.",
+    "from": [
+     7,
+     1
+    ],
+    "to": [
+     7,
+     2
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "_comment": "The partition's south arm. The gap it leaves at (8,3) is the work-room door -- the [Pick Lock] debut gate.",
+    "from": [
+     9,
+     3
+    ],
+    "to": [
+     10,
+     3
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "sprite": "sconce",
+   "cell": [
+    3,
+    1
+   ],
+   "light": {
+    "color": [
+     0.78,
+     0.86,
+     1.0
+    ],
+    "energy": 0.8,
+    "radius": 32,
+    "flicker": false
+   }
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    9,
+    4
+   ],
+   "light": {
+    "color": [
+     0.78,
+     0.86,
+     1.0
+    ],
+    "energy": 0.7,
+    "radius": 26,
+    "flicker": false
+   }
+  },
+  {
+   "sprite": "window_blue",
+   "cell": [
+    6,
+    1
+   ]
+  },
+  {
+   "sprite": "rug_woven_cream",
+   "cell": [
+    4,
+    5
+   ],
+   "tint": [
+    0.92,
+    0.95,
+    1.0
+   ]
+  }
+ ],
+ "ambience": [
+  {
+   "preset": "dust_motes",
+   "rect": "all",
+   "phase": [
+    "dusk",
+    "night"
+   ]
+  }
+ ],
+ "skill_gates": {
+  "enchanter_work_room": {
+   "_comment": "Descriptive registry (runtime never reads it): the work-room's TWO modes, contents identical. Mode 0 is the [Pick Lock] debut. Mode 1 is the virtuous path -- Hedault opens the door himself once the lady's commission is settled (hedault_enchanting's `work_room` arm), which is why it declares the non-skill `dialogue` gate rather than a skill union.",
+   "rewards": [
+    "enchanter_work_room_door"
+   ],
+   "modes": [
+    {
+     "mechanism": "arm",
+     "skill": "pick_lock",
+     "props": [
+      "enchanter_work_room_door"
+     ],
+     "cells": [
+      [
+       8,
+       4
+      ]
+     ]
+    },
+    {
+     "mechanism": "social",
+     "gate": "dialogue",
+     "props": [
+      "hedault"
+     ],
+     "cells": [
+      [
+       2,
+       4
+      ]
+     ]
+    }
+   ]
+  }
+ },
+ "entities": [
+  {
+   "_comment": "Round-trip pair with boulevard_enchanter_shop (invrisil_boulevard cell 22,1). Landing (6,7) is the open cell directly north of this door -- standable, off every prop, and the start of every walk in this map's QA legs.",
+   "id": "enchanter_shop_exit",
+   "kind": "door",
+   "cell": [
+    6,
+    8
+   ],
+   "display_name": "Out to the Boulevard",
+   "sprite": "door",
+   "to_map": "invrisil_boulevard",
+   "to_cell": [
+    22,
+    2
+   ]
+  },
+  {
+   "_comment": "#423: Hedault relocated from mercantile_alleys (0,6), where north and west were blocked, the bench sat east and the door cell sat south -- no standable cell could face him. Here (1,3)/(3,3)/(2,4) are all open and all reachable from (6,7). His talk_pool and `conversation` MOVED with him verbatim (not copied -- the alleys row is deleted in the same edit, so the anti-duplication gate stays satisfied).",
+   "id": "hedault",
+   "kind": "npc",
+   "cell": [
+    2,
+    3
+   ],
+   "display_name": "Hedault",
+   "sprite": "hedault",
+   "facing": "down",
+   "conversation": "hedault_enchanting",
+   "talk_pool": [
+    "Appraisal is free to watch and expensive to interrupt.",
+    "Do not touch the workbench. Do not touch the wares. Ideally, do not touch anything, including me.",
+    "Half this city's 'enchantments' are paint. The other half are apologies. I sell neither."
+   ],
+   "observe": "A severe man at a spotless corner bench, tools laid out at right angles. He looks at your gear before he looks at your face."
+  },
+  {
+   "_comment": "The enchanting bench fiction, brought in off the street. Sprite reuses the shipped temper_bench; a bespoke enchanter's bench is a VISUAL-LOG art follow-up.",
+   "id": "enchanter_workbench",
+   "kind": "prop",
+   "cell": [
+    2,
+    2
+   ],
+   "display_name": "The Workbench",
+   "sprite": "temper_bench",
+   "observe": "Every tool on it lies square to the edge, and the one gap in the row is tool-shaped and clean. Whatever belongs there is in his hand."
+  },
+  {
+   "id": "enchanter_ward_shelf",
+   "kind": "prop",
+   "cell": [
+    1,
+    1
+   ],
+   "display_name": "The Ward Shelf",
+   "sprite": "library_shelf",
+   "observe": "Finished pieces, each on its own square of grey cloth, each with the cloth squared to the shelf edge. Nothing is priced where a customer can read it from the door."
+  },
+  {
+   "id": "enchanter_display_case",
+   "kind": "prop",
+   "cell": [
+    4,
+    1
+   ],
+   "display_name": "The Front Case",
+   "sprite": "shelf_bottles",
+   "observe": "Glass, and behind the glass a great deal of empty velvet. Four pieces are out, spaced far enough apart that you look at each one on its own."
+  },
+  {
+   "id": "enchanter_order_book",
+   "kind": "prop",
+   "cell": [
+    5,
+    1
+   ],
+   "display_name": "The Order Book",
+   "sprite": "library_desk",
+   "observe": "Names down the left, work down the middle, and a third column of dates in a smaller hand. Half the dates have a second date beside them, later, and underlined."
+  },
+  {
+   "id": "enchanter_refusal_tray",
+   "kind": "prop",
+   "cell": [
+    1,
+    5
+   ],
+   "display_name": "A Tray of Returned Work",
+   "sprite": "crate",
+   "observe": "Pieces somebody else enchanted, tagged and stacked for collection. The tags carry no verdict on them, only a name and an hour."
+  },
+  {
+   "_comment": "#423 THE [Pick Lock] DEBUT GATE, and the shape that keeps the two modes honest. `door_when` and `requires_skill` on ONE prop: interactions.gd checks door_when FIRST (line 93), so once `enchanter_work_room_opened` banks -- by the pick OR by Hedault's own arm -- this same interact becomes the transition, with no presence flip and therefore no same-map render ghost (the GH#104 class). Unmet + skill unknown falls through to use_skill's SKILL_UNKNOWN + locked_toast; unmet + skill known answers with skill_hint_toast (the explicit-Skill-use directive: interact never auto-casts).",
+   "id": "enchanter_work_room_door",
+   "kind": "prop",
+   "cell": [
+    8,
+    3
+   ],
+   "display_name": "The Work-Room Door",
+   "sprite": "door",
+   "requires_skill": "pick_lock",
+   "observe": "A plain door in a plain partition, and a lock on it worth more than the door is. Three brass wards on the escutcheon, and the wear around the keyhole is all on one side.",
+   "skill_hint_toast": "Three wards and a shallow throw, and every scratch on the plate says the key goes in at an angle. Working it would take the picks and the patience.",
+   "locked_toast": "The lock is better than the door. You get as far as knowing that, and no further.",
+   "on_skill_use": {
+    "accomplishment": "enchanter_work_room_opened",
+    "toast": "[Pick Lock] — Three wards, lifted one at a time, and the shallow throw goes over on the fourth breath. The door comes off the frame quietly, which is the only way it was ever going to be worth doing."
+   },
+   "door_when": {
+    "requires": {
+     "enchanter_work_room_opened": 1
+    },
+    "to_map": "enchanter_work_room",
+    "to_cell": [
+     3,
+     4
+    ],
+    "open_toast": "The work-room door swings in on a room that smells of hot metal and cold stone."
+   }
+  }
+ ]
+}

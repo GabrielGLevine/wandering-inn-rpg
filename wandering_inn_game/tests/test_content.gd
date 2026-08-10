@@ -1702,6 +1702,11 @@ const LANDMARK_TOKENS := {
 	# "adventurer" (not "rest") is deliberate: _description_names_place is a
 	# lowercase substring test, and "rest" matches interest/restore/arrested.
 	"stationer": ["stationer", "invrisil"],
+	# #423: Hedault's own shop is the third boulevard interior, and it took two of
+	# a_setting_for_a_lady's three resolve producers with him -- so the beat that
+	# used to name the alleys now names his shop off the square.
+	"enchanter_shop": ["shop", "square", "invrisil"],
+	"enchanter_work_room": ["work room", "shop", "invrisil"],
 	"adventurers_rest": ["adventurer", "invrisil"],
 	"brothers_parlor": ["parlor"],
 	"dungeon_approach": ["dungeon"],

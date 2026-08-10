@@ -1244,22 +1244,16 @@
    }
   },
   {
-   "_comment": "Hedault, Invrisil enchanter. CANON-NATIVE Vol 6-7. Sprite: human placeholder + tint, VISUAL-LOG. No shop -- his commerce is the enchant dialogue.",
-   "id": "hedault",
-   "kind": "npc",
+   "_comment": "#423 re-dress: Hedault moved to his own shop off the boulevard (enchanter_shop), so (0,6) is bare and WALKABLE for the first time -- which also gives invrisil_apothecary_bench at (1,6) a second approach. This card is the diegetic pointer for a player who knew the old pitch. It sits on (0,5), already in `blocked`, so no walkable cell is lost (the boulevard facade pattern); its approach is (0,6).",
+   "id": "alley_enchanter_card",
+   "kind": "prop",
    "cell": [
     0,
-    6
+    5
    ],
-   "display_name": "Hedault",
-   "sprite": "hedault",
-   "conversation": "hedault_enchanting",
-   "talk_pool": [
-    "Appraisal is free to watch and expensive to interrupt.",
-    "Do not touch the workbench. Do not touch the wares. Ideally, do not touch anything, including me.",
-    "Half this city's 'enchantments' are paint. The other half are apologies. I sell neither."
-   ],
-   "observe": "A severe man at a spotless corner bench, tools laid out at right angles. He looks at your gear before he looks at your face."
+   "display_name": "A Card on the Alley Wall",
+   "sprite": "price_board",
+   "observe": "A card nailed to the brick where a bench used to stand. The lettering squares its corners and wastes no words: APPRAISAL AND CORRECTION, AT THE FRONTAGE ON THE SQUARE. THE ALLEY RATE IS WITHDRAWN."
   },
   {
    "_comment": "INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell, so it is correct on a brothers_job_done save. combat_banking's one-shot victory_toast is contract-legal here: the first on_victory id is `original_recovered`, a quest-style String. No item id minted.",

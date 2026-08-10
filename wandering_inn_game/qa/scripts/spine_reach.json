@@ -600,13 +600,24 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== THE INVRISIL CAPSTONE == Hedault (mercantile_alleys 0,6). Teleport to (0,7), bump up to face him; he carries a talk_pool, so two interacts (hedault_enchant_loop's own approach). His three enchant rows and the fragment row are requires.item/gold gates -- VISIBLE-LOCKED, never hidden (dialogue.gd's _progress_gated hides only accomplishment/board/delivery/once_per_waking legs), so the hub shows six rows and the new arm is the last.",
+   "_comment": "== THE INVRISIL CAPSTONE == Hedault (enchanter_shop 2,3 as of #423). Teleport to the shop door cell (6,7), walk up 3 / left 4, bump west-north into him; he carries a talk_pool, so two interacts (hedault_enchant_loop's own approach). His three enchant rows and the fragment row are requires.item/gold gates -- VISIBLE-LOCKED, never hidden (dialogue.gd's _progress_gated hides only accomplishment/board/delivery/once_per_waking legs), so the hub shows six rows and the new arm is the last.",
    "action": "teleport",
-   "map": "mercantile_alleys",
+   "map": "enchanter_shop",
    "cell": [
-    0,
+    6,
     7
    ]
+  },
+  {
+   "_comment": "#423: the teleport lands on the shop's own door cell (6,7), NOT beside him; walk to (2,4) then bump north into (2,3).",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
   },
   {
    "action": "move",

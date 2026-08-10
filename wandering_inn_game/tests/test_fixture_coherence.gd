@@ -87,6 +87,13 @@ const MAP_REQUIRES := {
 	# v0.16 Invrisil (#306): both interiors are reachable only off
 	# invrisil_boulevard, which already carries exactly this pair.
 	"stationer": ["door_awakened", "invrisil_attuned"],
+	# #423: the enchanter's shop is a third boulevard interior, same pair. Its
+	# work room sits behind enchanter_work_room_door's own door_when, whose only
+	# keys are the [Pick Lock] arm and Hedault's trust arm -- both bank
+	# enchanter_work_room_opened, so a fixture standing in there without it is a
+	# position no player can occupy (the seal_vault / rags_camp precedent).
+	"enchanter_shop": ["door_awakened", "invrisil_attuned"],
+	"enchanter_work_room": ["door_awakened", "invrisil_attuned", "enchanter_work_room_opened"],
 	"adventurers_rest": ["door_awakened", "invrisil_attuned"],
 	"brothers_parlor": ["door_awakened", "invrisil_attuned"],
 	"pallass_market": ["door_awakened", "pallass_attuned"],
