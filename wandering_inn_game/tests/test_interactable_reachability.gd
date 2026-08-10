@@ -3,9 +3,19 @@ extends SceneTree
 ## GH#424 (CHOICE-RULING 30, architecture split): the CELL-LEVEL half of the
 ## reachability wave. `data_lint.check_content_reachability` owns the ID-level
 ## graph (a Skill nothing grants, an item nothing hands out, a dialogue node
-## nothing gotos, a map no door reaches). It deliberately stops at ids, because
-## walkability is a SIM PREDICATE and the #413 lesson is that a sim predicate
-## re-derived in a second language drifts from the engine and then lies.
+## nothing gotos, a map no door reaches) AND the gate-carrier join (whether a
+## LEARNABLE Skill still clears each burnable/cuttable/freezable gate -- review
+## I-3). It stops at ids on purpose, because walkability is a SIM PREDICATE and
+## the #413 lesson is that a sim predicate re-derived in a second language
+## drifts from the engine and then lies.
+##
+## THE DIVISION, stated once so neither side grows into the other:
+##   * lint  -- CAPABILITY. Which Skills can a player actually learn, and does
+##              every gate still have a live carrier among them?
+##   * suite -- GEOMETRY under maximum capability. Given every Skill, is there
+##              anywhere to STAND? That is why `_open_the_world` below grants
+##              everything and never asks whether a grant path exists: asking
+##              would be re-deriving the lint's graph in GDScript.
 ##
 ## So this suite never re-derives anything: it boots the REAL `WIGame` over the
 ## REAL `WISceneCatalog.compose()` catalog, binds every shipped map through the
@@ -23,16 +33,16 @@ extends SceneTree
 ## BEST-CASE WORLD, ON PURPOSE (`_open_the_world`). "Unreachable" has to mean
 ## unreachable in EVERY state a player can get into, or the suite just
 ## rediscovers the game's own design: a skill-gated pocket (#398) is SUPPOSED to
-## be walled off until you own the Skill, and a cold-boot flood reports all
-## seven of them as defects. So the flood runs over the world at its most open:
-## every Skill known, every freezable cell already ice, every `present_when`
-## entity absent (they are all conditional by construction -- a wall that comes
-## and goes is not a wall), and every `burnable`/`cuttable` blocker cleared
-## (those flags exist precisely so a Skill removes them). What survives that is
-## permanent geometry -- static `blocked` cells, wall segments, and props that
-## are simply always there -- and content boxed in by permanent geometry is
-## content no state of the game can reach. Hedault is the shipped example: a
-## static wall, an always-present bench and an always-present door.
+## be walled off until you own the Skill, and a cold-boot flood reported five of
+## them as defects on this lane's first run. So the flood runs over the world at
+## its most open: every Skill known, every freezable cell already ice, every
+## `present_when` entity absent (they are all conditional by construction -- a
+## wall that comes and goes is not a wall), and every `burnable`/`cuttable`
+## blocker cleared (those flags exist precisely so a Skill removes them). What
+## survives that is permanent geometry -- static `blocked` cells, wall segments,
+## and props that are simply always there -- and content boxed in by permanent
+## geometry is content no state of the game can reach. Hedault is the shipped
+## example: a static wall, an always-present bench and an always-present door.
 ##
 ## The opening is done through the ENGINE's own hooks (`erase_entity_silent`,
 ## `set_frozen_cells_json`, `player_skills`) so `is_cell_blocked` stays the one
@@ -48,6 +58,9 @@ extends SceneTree
 ## pair), every `portals.json` row landing here, and `scene_root`'s own start
 ## cell for the start map.
 
+## DEFECTS, waived because a named issue is fixing them. A row here that stops
+## firing FAILS the suite -- retirement is forced, never optional, so the
+## exemption cannot outlive the bug and quietly cover the next one.
 const KNOWN_DEFECT_WAIVERS := {
 	# waiver removed by #423 -- Hedault stands at mercantile_alleys (0,6) with
 	# no orthogonally-adjacent standable cell, so his shop dialogue is shipped
@@ -56,13 +69,44 @@ const KNOWN_DEFECT_WAIVERS := {
 	"mercantile_alleys/hedault": "walk-unreachable today; #423 owns the layout fix",
 }
 
-## The interactable predicate, held deliberately tight (the issue's wording):
-## an NPC, anything carrying a conversation, anything that banks an interact,
-## and every door. Ambient `observe`/`toast`-only scenery is NOT in scope -- a
-## bookshelf you can only look at from across a counter is set dressing, not a
-## content dead end, and folding ~350 of them in would drown the signal.
-const CONVERSATION_KEYS: Array[String] = ["conversation", "dialogue"]
-const INTERACT_KEYS: Array[String] = ["on_interact_accomplishment"]
+## NOT defects: content DELIBERATELY parked out of walking reach, each row
+## backed by the entity's own `_comment` in the map file. Different semantics
+## from the list above on purpose (review I-1): these are permanent, so an
+## unfired row is NOT an error -- the day the layout changes and the entity
+## becomes reachable, nothing is broken and nothing needs saying.
+const DESIGN_WAIVERS := {
+	# mercantile_alleys.broker_hands `_comment`: "#318 beat 2 FIGHT arm,
+	# committed from the hub only. present_when is FORBIDDEN on encounters, so
+	# the rig parks hidden on wall cell (5,4), which has no walkable neighbour.
+	# start_combat resolves by id and reads neither adjacency nor
+	# encounter_when, so `call_them` is the single door."
+	"mercantile_alleys/broker_hands": "dialogue-committed encounter rig, parked hidden by design (#318 beat 2)",
+}
+
+## THE INTERACTABLE PREDICATE = every arm `WIInteractions.dispatch` actually has
+## (src/core/interactions.gd:63-190). Held to the dispatch table rather than to
+## a taste call, so "is this content?" is answered by the code that answers the
+## player. The `npc`, `door` and `encounter` kinds dispatch whole; a `prop`
+## dispatches on whichever of these keys it carries. A prop with NONE of them
+## falls through to the bare `_use_skill("")` refusal -- ambient scenery, and
+## excluded, but COUNTED and reported so the exclusion is never silent.
+const PROP_ARM_KEYS: Array[String] = [
+	"sleep",                       # interactions.gd:81  -- beds
+	"board",                       # interactions.gd:86  -- bounty board
+	"delivery_board",              # interactions.gd:88  -- delivery board
+	"contains",                    # interactions.gd:90  -- containers
+	"door_when",                   # interactions.gd:92  -- door-shaped props
+	"portal_menu",                 # interactions.gd:99  -- Magical Door carriers
+	"fence_menu",                  # interactions.gd:105 -- Ratici's register
+	"on_interact_accomplishment",  # interactions.gd:107 -- the plain interact
+	"requires_skill",              # interactions.gd:157 -- the skill-hint arm
+	"on_skill_use",                # the Skill-arm props (use_skill target)
+	"skill_uses",                  # per-Skill arm map
+	"cookware",                    # GH#391: any pot answers any cooking Skill
+	"conversation",                # npc/encounter dialogue, also on props
+	"dialogue",
+]
+const INTERACTABLE_KINDS: Array[String] = ["npc", "door", "encounter"]
 
 var _events: Array = []
 
@@ -95,11 +139,17 @@ func _init() -> void:
 	var game := WIGame.new(scene, _load_json("res://data/skills.json"), _sink, 12345, _combat_config())
 	var maps: Dictionary = scene["maps"]
 	var seeds := _arrival_cells(scene)
-	_open_the_world(game, maps)
+	var blockers := _open_the_world(game, maps)
 
 	var failures: Array[String] = []
 	var waivers_fired: Dictionary = {}
+	var design_waived := 0
+	var reported: Dictionary = {}
+	var total := 0
 	var checked := 0
+	var ambient := 0
+	var malformed := 0
+	var gates_checked := 0
 	var maps_flooded := 0
 	for map_id: String in maps:
 		var map_doc: Dictionary = maps[map_id]
@@ -120,43 +170,74 @@ func _init() -> void:
 			if not (raw is Dictionary):
 				continue
 			var entity := raw as Dictionary
+			total += 1
+			if not _has_cell(entity):
+				# Review M-5: never drop a row silently. check_maps fails hard on
+				# a malformed cell, so this counter should read 0 forever -- and
+				# if it ever does not, the PASS line says so out loud.
+				malformed += 1
+				continue
 			if not _is_interactable(entity):
+				ambient += 1
 				continue
 			checked += 1
-			var cell := Vector2i(int(entity["cell"][0]), int(entity["cell"][1]))
+			var cell := _cell_of(entity)
+			var key := "%s/%s" % [map_id, String(entity.get("id", "?"))]
 			if _has_adjacent_stand(reachable, cell):
 				continue
-			var key := "%s/%s" % [map_id, String(entity.get("id", "?"))]
+			if DESIGN_WAIVERS.has(key):
+				design_waived += 1
+				continue
 			if KNOWN_DEFECT_WAIVERS.has(key):
 				waivers_fired[key] = true
 				continue
+			reported[key] = true
 			failures.append("%s (%s at %d,%d): no orthogonally-adjacent reachable standable cell -- interact() can never face it"
 				% [key, String(entity.get("kind", "?")), cell.x, cell.y])
+		# Review I-4: a GATE you cannot stand next to seals its own pocket. The
+		# blocker was erased before the flood, so `reachable` is exactly "the
+		# world with this obstacle gone" -- if nothing borders it even then, no
+		# player can ever aim the clearing Skill at it.
+		for blocker: Dictionary in blockers.get(map_id, []):
+			gates_checked += 1
+			var bcell: Vector2i = blocker["cell"]
+			var bkey := "%s/%s" % [map_id, String(blocker["id"])]
+			if _has_adjacent_stand(reachable, bcell) or reported.has(bkey) or DESIGN_WAIVERS.has(bkey) or KNOWN_DEFECT_WAIVERS.has(bkey):
+				continue
+			reported[bkey] = true
+			failures.append("%s (%s gate at %d,%d): no orthogonally-adjacent standable cell even with the gate itself removed -- nothing can ever clear it, so whatever it seals is unreachable"
+				% [bkey, String(blocker["why"]), bcell.x, bcell.y])
 
 	# A waiver that stopped firing is a waiver hiding nothing, and leaving it in
 	# would let the SAME defect ship again silently the day someone re-breaks the
 	# layout. Retirement is forced, not optional -- when #423 lands, this arm is
-	# what reds until the row is deleted.
+	# what reds until the row is deleted. DESIGN_WAIVERS deliberately has no such
+	# arm: a permanent park that becomes reachable is not news.
 	for key: String in KNOWN_DEFECT_WAIVERS:
 		if not waivers_fired.has(key):
 			failures.append("KNOWN_DEFECT_WAIVERS['%s'] is stale: the entity IS reachable now -- delete the row" % key)
 
-	_check_detector(scene)
+	# Review I-2: the control's own verdict joins `failures` instead of
+	# asserting in its own frame. A failed assert inside a helper aborts that
+	# frame only, so the run walked on to quit(0) and printed PASS over a broken
+	# detector -- the exact #396 lane-d shape this suite documents elsewhere.
+	failures.append_array(_detector_failures(scene))
 
 	if not failures.is_empty():
 		print("test_interactable_reachability: %d failure(s)" % failures.size())
 		for line: String in failures:
 			print("INTERACT_REACH_FAIL " + line)
-	# Asserted in _init's OWN frame: a failed assert inside a helper aborts that
-	# frame only and the run walks on to quit(0), printing PASS over a real
-	# failure (the #396 lane-d finding, same shape as test_reachability.gd:43).
+	# Asserted in _init's OWN frame, for that same reason.
 	assert(failures.is_empty(), "walk-unreachable interactable(s): " + ", ".join(failures))
-	print("PASS: interactable adjacency — %d interactables across %d maps, all orthogonally reachable (%d waived)"
-		% [checked, maps_flooded, waivers_fired.size()])
+	print("PASS: interactable adjacency — checked %d/%d catalog entities across %d maps (excluded %d: %d ambient scenery with no dispatch arm, %d malformed cell), %d gate blockers, %d known-defect waiver(s), %d design waiver(s)"
+		% [checked, total, maps_flooded, ambient + malformed, ambient, malformed, gates_checked, waivers_fired.size(), design_waived])
+	print("test_interactable_reachability: DISCLOSURE — blink traversal is unmodelled (review M-6): a pocket whose ONLY way in is [Double Step]/[Flash Step] would false-red here. None ships today; every shipped blink mode is a SECOND mode beside a property or arm mode.")
 	quit(0)
 
 
 ## Put the world in its most-open state, through the engine's own hooks only.
+## Returns map_id -> Array of {id, cell, why} for every blocker it erased, so
+## the caller can hold each gate to the same adjacency rule (review I-4).
 ## Three moves, each answering one class of temporary obstacle:
 ##   1. every Skill known -- [Even Footing]'s passive read (is_cell_blocked ->
 ##      _even_footing_crosses) crosses `unsteady` cells for a PC who has it.
@@ -170,7 +251,16 @@ func _init() -> void:
 ## `_maps[..]["freezable"]` is read straight off the loader on purpose: it is
 ## the set the ENGINE built (map `freezable` list PLUS every cell of a
 ## `water: true` wall segment), so this file never expands a segment itself.
-func _open_the_world(game: WIGame, maps: Dictionary) -> void:
+##
+## NOT MODELLED (review M-6, deliberate, disclosed in the output): BLINK. A
+## `blinks` Skill jumps the PC over blocked cells entirely, which no flood step
+## can express, so a pocket whose only entrance is a blink would false-red.
+## Nothing ships in that shape -- every `mechanism: "blink"` row in a map's
+## `skill_gates` registry is the SECOND mode beside a property or arm mode that
+## this flood does model -- and modelling it means teaching the flood to hop,
+## which is re-deriving a sim rule. Revisit if a blink-only pocket ever ships.
+func _open_the_world(game: WIGame, maps: Dictionary) -> Dictionary:
+	var blockers: Dictionary = {}
 	for raw: Variant in _load_json("res://data/skills.json").get("skills", []):
 		if raw is Dictionary:
 			game.player_skills.append(String((raw as Dictionary)[WIKeys.ID]))
@@ -181,31 +271,56 @@ func _open_the_world(game: WIGame, maps: Dictionary) -> void:
 			cells.append([cell.x, cell.y])
 		if not cells.is_empty():
 			frozen[map_id] = cells
+		blockers[map_id] = []
 		for raw: Variant in (maps[map_id] as Dictionary).get("entities", []):
 			if not (raw is Dictionary):
 				continue
 			var entity := raw as Dictionary
-			if entity.has("present_when") or bool(entity.get("burnable", false)) or bool(entity.get("cuttable", false)):
-				game.erase_entity_silent(String(entity.get("id", "")))
+			if not _has_cell(entity):
+				continue
+			var why := ""
+			if bool(entity.get("burnable", false)) or bool(entity.get("cuttable", false)):
+				why = "burnable/cuttable"
+			elif entity.has("present_when"):
+				why = "present_when"
+			if why == "":
+				continue
+			(blockers[map_id] as Array).append({
+				"id": String(entity.get("id", "?")), "cell": _cell_of(entity), "why": why,
+			})
+			game.erase_entity_silent(String(entity.get("id", "")))
 	game.set_frozen_cells_json(frozen)
+	return blockers
 
 
-## kind:"npc" | carries a conversation | banks an interact | is a door (top-level
-## `kind:"door"`, or the `door_when` props that are doors in everything but the
-## kind field -- street's sewer_grate is the shipped example).
+func _has_cell(entity: Dictionary) -> bool:
+	return entity.get("cell") is Array and (entity["cell"] as Array).size() == 2
+
+
+func _cell_of(entity: Dictionary) -> Vector2i:
+	return Vector2i(int(entity["cell"][0]), int(entity["cell"][1]))
+
+
+## Every arm `WIInteractions.dispatch` has -- see PROP_ARM_KEYS above.
 func _is_interactable(entity: Dictionary) -> bool:
-	if not (entity.get("cell") is Array and (entity["cell"] as Array).size() == 2):
+	if not _has_cell(entity):
 		return false
-	var kind := String(entity.get("kind", ""))
-	if kind == "npc" or kind == "door":
+	if INTERACTABLE_KINDS.has(String(entity.get("kind", ""))):
 		return true
-	if entity.has("door_when"):
-		return true
-	for key: String in CONVERSATION_KEYS:
-		if String(entity.get(key, "")) != "":
-			return true
-	for key: String in INTERACT_KEYS:
-		if entity.has(key):
+	for key: String in PROP_ARM_KEYS:
+		var value: Variant = entity.get(key, null)
+		if value == null:
+			continue
+		if value is String:
+			if String(value) != "":
+				return true
+		elif value is Dictionary:
+			if not (value as Dictionary).is_empty():
+				return true
+		elif value is Array:
+			if not (value as Array).is_empty():
+				return true
+		elif bool(value):
 			return true
 	return false
 
@@ -287,17 +402,25 @@ func _collect_transitions(node: Variant, out: Array) -> void:
 ## So: take a real map, wall the four neighbours of a real interactable in a
 ## SYNTHETIC copy of the catalog, and prove the detector says so. Never touches
 ## shipped data -- the mutation lives in an in-memory Dictionary.
-func _check_detector(scene: Dictionary) -> void:
+##
+## RETURNS its verdict (review I-2) rather than asserting: an assert in here
+## aborts this frame only, prints SCRIPT ERROR, and lets `_init` run on to
+## quit(0) -- rc 0 with PASS on a broken detector, which is worse than no
+## control at all.
+func _detector_failures(scene: Dictionary) -> Array[String]:
+	var out: Array[String] = []
 	var scene_copy: Dictionary = scene.duplicate(true)
 	var maps: Dictionary = scene_copy["maps"]
 	var probe_map := "inn"
 	var probe: Dictionary = {}
 	for raw: Variant in (maps[probe_map] as Dictionary)["entities"]:
-		if raw is Dictionary and _is_interactable(raw as Dictionary) and String((raw as Dictionary).get("kind", "")) == "npc":
+		if raw is Dictionary and String((raw as Dictionary).get("kind", "")) == "npc" and _has_cell(raw as Dictionary):
 			probe = raw as Dictionary
 			break
-	assert(not probe.is_empty(), "detector control needs an NPC on the %s map" % probe_map)
-	var cell := Vector2i(int(probe["cell"][0]), int(probe["cell"][1]))
+	if probe.is_empty():
+		out.append("DETECTOR CONTROL: no NPC on the %s map to probe with" % probe_map)
+		return out
+	var cell := _cell_of(probe)
 	var blocked: Array = (maps[probe_map] as Dictionary).get("blocked", []).duplicate(true)
 	for step: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
 		blocked.append([cell.x + step.x, cell.y + step.y])
@@ -306,7 +429,10 @@ func _check_detector(scene: Dictionary) -> void:
 	_open_the_world(walled, maps)
 	var seeds := _arrival_cells(scene_copy)
 	var reachable := _flood(walled, probe_map, seeds.get(probe_map, []))
-	assert(not reachable.is_empty(), "detector control: the synthetic %s flood still has to start" % probe_map)
-	assert(not _has_adjacent_stand(reachable, cell),
-		"DETECTOR CONTROL: walling every neighbour of %s/%s must make it unreachable -- the flood is over-reporting"
+	if reachable.is_empty():
+		out.append("DETECTOR CONTROL: the synthetic %s flood never started, so it proves nothing" % probe_map)
+		return out
+	if _has_adjacent_stand(reachable, cell):
+		out.append("DETECTOR CONTROL: walling every neighbour of %s/%s must make it unreachable -- the flood is over-reporting"
 			% [probe_map, String(probe.get("id", "?"))])
+	return out

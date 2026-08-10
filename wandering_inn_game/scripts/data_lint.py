@@ -1599,6 +1599,21 @@ ITEM_CODE_GRANTS = {
 }
 
 
+def _grants_on_line(line: str, content_id: str) -> bool:
+	"""A CODE line naming the id as a string literal.
+
+	Review M-1: a naive `content_id in line` also accepts a COMMENT that merely
+	mentions the id -- so deleting a grant and leaving its comment behind would
+	have kept the allowlist row looking live, which is the one thing the
+	read-back exists to prevent. Both halves matter: the line must not be a
+	comment, and the id must appear quoted (a bare substring also matches a
+	longer identifier that happens to contain it).
+	"""
+	if line.strip().startswith("#"):
+		return False
+	return f'"{content_id}"' in line or f"'{content_id}'" in line
+
+
 def _code_grants(allowlist: dict, kind: str, advisories: list) -> set:
 	"""Ids the allowlist covers, with each pinned file:line read back."""
 	granted = set()
@@ -1609,10 +1624,10 @@ def _code_grants(allowlist: dict, kind: str, advisories: list) -> set:
 			advisories.append(f"[code-grant drift] {kind} '{content_id}' pins "
 				f"{rel}:{line_no}, which no longer exists")
 			continue
-		if 1 <= line_no <= len(lines) and content_id in lines[line_no - 1]:
+		if 1 <= line_no <= len(lines) and _grants_on_line(lines[line_no - 1], content_id):
 			granted.add(content_id)
 			continue
-		hits = [n for n, text in enumerate(lines, 1) if content_id in text]
+		hits = [n for n, text in enumerate(lines, 1) if _grants_on_line(text, content_id)]
 		if hits:
 			granted.add(content_id)
 			advisories.append(f"[code-grant drift] {kind} '{content_id}' ({note}) "
@@ -1708,6 +1723,84 @@ def _item_sources(parsed: dict, maps: dict) -> dict:
 	return out
 
 
+# The property-table outcomes that OPEN A WAY THROUGH. `remove_scorch` deletes
+# the blocking entity (burns x burnable, cuts x cuttable) and `freeze_cell`
+# turns blocking water into a standable ice tile. `thaw_cell` is deliberately
+# absent: it turns ice back into water, which re-blocks.
+CLEARING_OUTCOMES = {"remove_scorch", "freeze_cell"}
+
+
+def _check_gate_carriers(parsed: dict, maps: dict, learnable: set, report) -> None:
+	"""Review I-3 -- the JOIN the two halves of #424 were missing.
+
+	The skill arm above answers "can a player ever learn this Skill". The
+	GDScript adjacency suite answers "can a player stand next to this thing,
+	assuming every Skill". Neither one asks the question BETWEEN them: the
+	pocket behind a burnable briar is only reachable if some LEARNABLE Skill
+	carries `burns`. Today `flame_jet`/`basic_swordwork`/`icy_floor` are granted
+	and `kindle`/`frost_touch` are the orphans, so every gate still has a live
+	carrier -- but de-granting the last live carrier of a property would silently
+	seal every pocket behind it, and nothing would have said so.
+
+	Deliberately a LINT arm, not a suite arm (controller ruling): the grant graph
+	is already computed here, in this language, and re-deriving it in GDScript is
+	the #413 mistake. The suite keeps flooding with every Skill known -- its job
+	is geometry under maximum capability, and this is the capability half.
+
+	The clearing vocabulary is read from interactions.json, never hardcoded, so a
+	new property/outcome row is policed the day it ships.
+	"""
+	table = parsed.get(DATA / "interactions.json") or {}
+	placements = table.get("target_properties", {}) or {}
+	carriers_of: dict[str, set[str]] = {}
+	for row in table.get("interactions", []):
+		if not isinstance(row, dict) or str(row.get("outcome", "")) not in CLEARING_OUTCOMES:
+			continue
+		target_prop = str(row.get("target_property", ""))
+		skill_prop = str(row.get("skill_property", ""))
+		carriers_of.setdefault(target_prop, set()).update(_skill_property_carriers(parsed, skill_prop))
+
+	for target_prop, carriers in sorted(carriers_of.items()):
+		live = sorted(carriers & learnable)
+		if live:
+			continue
+		blocked_by = ", ".join(sorted(carriers)) or "nothing"
+		if placements.get(target_prop) == "entity":
+			for map_id, entity in _entity_carriers(maps, target_prop):
+				report("gate carrier orphan", f"maps/{map_id}: '{entity.get('id', '<no id>')}' is "
+					f"`{target_prop}` but no LEARNABLE Skill clears it -- the only carriers "
+					f"({blocked_by}) are themselves unreachable, so whatever is behind it is sealed")
+		elif target_prop == "freezable":
+			# The one cell-placed clearing property. `_water_cells` is the same
+			# helper advise_missing_skill_gates uses, so the freezable list and
+			# the water-tagged wall segments both count.
+			for map_id, map_doc in sorted(maps.items()):
+				if not _water_cells(map_doc):
+					continue
+				report("gate carrier orphan", f"maps/{map_id}: carries freezable water but no "
+					f"LEARNABLE Skill freezes it -- the only carriers ({blocked_by}) are "
+					"themselves unreachable, so every crossing over that water is shut")
+
+	for map_id, map_doc in sorted(maps.items()):
+		registry = map_doc.get("skill_gates")
+		if not isinstance(registry, dict):
+			continue
+		entities = {str(e.get("id", "")): e for e in map_doc.get("entities", []) if isinstance(e, dict)}
+		skills = _catalog_rows(parsed, "skills.json", "skills")
+		for pocket_id, pocket in sorted(registry.items()):
+			if not isinstance(pocket, dict):
+				continue
+			for index, mode in enumerate(pocket.get("modes", [])):
+				if not isinstance(mode, dict):
+					continue
+				mode_skills = _mode_skill_ids(mode, skills, entities)
+				if not mode_skills or (mode_skills & learnable):
+					continue  # a gate mode naming no skill is check_skill_gates' business
+				report("gate carrier orphan", f"maps/{map_id}: skill_gates['{pocket_id}'].modes[{index}] "
+					f"({mode.get('mechanism', '?')}) resolves only to unreachable Skill(s) "
+					f"{', '.join(sorted(mode_skills))} -- this way into the pocket is shut")
+
+
 def check_content_reachability(parsed: dict, maps: dict, advisories: list) -> dict:
 	"""GH#424 -- content with no acquisition path, found systematically.
 
@@ -1790,6 +1883,10 @@ def check_content_reachability(parsed: dict, maps: dict, advisories: list) -> di
 				f"{', '.join(sorted(unreachable_item_grants[skill_id]))}, is itself unreachable)")
 		report("skill orphan", f"skills.json '{skill_id}' is granted by no class level, no evolution "
 			f"table, no reachable item ability, no starting kit and no code grant{trailer}")
+
+	# ---- gate carriers (review I-3): the JOIN between the two halves above
+	learnable = set(granted) | skill_code
+	_check_gate_carriers(parsed, maps, learnable, report)
 
 	# ---- dialogue nodes
 	for path, doc in sorted(parsed.items()):
@@ -1887,7 +1984,16 @@ def main() -> int:
 	advise_sub_legible_props(parsed, maps, advisories)
 	interacted_props = advise_acted_on_state(maps, advisories)
 	reachability_advisories: list = []
-	reachability_counts = check_content_reachability(parsed, maps, reachability_advisories)
+	reachability_counts: dict = {}
+	try:
+		reachability_counts = check_content_reachability(parsed, maps, reachability_advisories)
+	except Exception as err:  # noqa: BLE001 -- review M-2
+		# An ADVISORY tier must never be able to change the verdict, and a
+		# traceback on stdout reads exactly like a lint failure to whoever is
+		# staring at a sweep. It degrades to one honest line instead: the tier
+		# is unavailable, everything else still ran, rc semantics untouched.
+		reachability_advisories = [f"check crashed: {type(err).__name__}: {err}"]
+		reachability_counts = {}
 	elapsed_ms = (time.monotonic() - start) * 1000
 	if errors:
 		for e in errors:

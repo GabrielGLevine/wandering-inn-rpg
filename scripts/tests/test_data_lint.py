@@ -606,6 +606,50 @@ class TestContentReachability(unittest.TestCase):
             for line in advisories), advisories)
         self.assertEqual(counts["skill orphan"], 3)
 
+    def test_gate_carrier_arm_is_clean_on_head(self):
+        counts, _ = self._run()
+        self.assertEqual(counts.get("gate carrier orphan", 0), 0)
+
+    def _degrant(self, skill_id):
+        def mutate(parsed, _maps):
+            for cls in parsed[data_lint.DATA / "classes.json"]["classes"]:
+                for level in cls.get("levels", []):
+                    level["grants"] = [s for s in level.get("grants", []) if s != skill_id]
+                evolution = cls.get("evolution") or {}
+                if "balanced_grants" in evolution:
+                    evolution["balanced_grants"] = [
+                        s for s in evolution["balanced_grants"] if s != skill_id]
+        return mutate
+
+    def test_degranting_the_last_burns_carrier_seals_every_briar(self):
+        # `burns` ships two carriers: flame_jet (granted) and kindle (an
+        # orphan). De-grant flame_jet and NOTHING learnable clears a burnable
+        # blocker any more -- every briar seals whatever is behind it, and this
+        # is the arm that says so. The review I-3 case, exactly.
+        counts, advisories = self._run(self._degrant("flame_jet"))
+        sealed = [line for line in advisories if line.startswith("[gate carrier orphan]")]
+        self.assertGreater(counts["gate carrier orphan"], 0, advisories)
+        self.assertTrue(any("briar_arch_west" in line for line in sealed), sealed)
+
+    def test_degranting_the_last_freezes_carrier_seals_the_water(self):
+        _counts, advisories = self._run(self._degrant("icy_floor"))
+        sealed = [line for line in advisories if line.startswith("[gate carrier orphan]")]
+        self.assertTrue(any("freezable water" in line for line in sealed), sealed)
+        # pond_island's first mode is a `property` mode on `freezes`, so the
+        # skill_gates half must light up on the same mutation.
+        self.assertTrue(any("skill_gates['pond_island']" in line for line in sealed), sealed)
+
+    def test_comment_mentioning_the_id_is_not_a_grant(self):
+        # Review M-1: the read-back must not be satisfied by a comment that
+        # merely names the id -- that is exactly how a deleted grant would keep
+        # its allowlist row looking alive.
+        self.assertFalse(data_lint._grants_on_line(
+            '\t# grants "sworn_fang_boon" here', "sworn_fang_boon"))
+        self.assertFalse(data_lint._grants_on_line(
+            "\tvar x := sworn_fang_boon_other", "sworn_fang_boon"))
+        self.assertTrue(data_lint._grants_on_line(
+            '\tpc_skills.append("sworn_fang_boon")', "sworn_fang_boon"))
+
     def test_orphaning_an_item_is_caught(self):
         def mutate(parsed, maps):
             for map_doc in maps.values():
