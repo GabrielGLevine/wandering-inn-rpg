@@ -40,6 +40,14 @@ func _function_body(source: String, function_name: String) -> String:
 	return source.get_slice("func %s(" % function_name, 1).get_slice("\nfunc ", 0)
 
 
+func _function_source(source: String, function_name: String) -> String:
+	var start := source.find("func %s(" % function_name)
+	if start == -1:
+		return ""
+	var finish := source.find("\nfunc ", start + 5)
+	return source.substr(start) if finish == -1 else source.substr(start, finish - start)
+
+
 func _cleared_terrain_visual_contract_holds(source: String) -> bool:
 	var handler := _function_body(source, "_on_domain_event")
 	var terrain_arm := handler.get_slice("elif type == WIEvents.TERRAIN_CHANGED:", 1).get_slice("\n\telif type", 0)
@@ -548,6 +556,48 @@ func _dialogue_defer_contract_holds(source: String) -> bool:
 	return _function_body(source, "_rebuild_field").find("_presence_reconcile_deferred = false") != -1
 
 
+func _night_layer_attenuation_wiring_holds(source: String) -> bool:
+	var make_body := _function_body(source, "_make_entity_visual")
+	var legibility_body := _function_body(source, "_apply_field_legibility")
+	var decor_body := _function_body(source, "_build_decor")
+	var scatter_body := _function_body(source, "_build_scatter")
+	var validity_guard := legibility_body.find("if not is_instance_valid(raw_holder):")
+	var holder_cast := legibility_body.find("raw_holder as Node2D")
+	return source.find('const MOOD_LAYERS: Array[String] = ["entities", "decor", "scatter"]') != -1 \
+		and make_body.find("_track_mood_layer_visual") != -1 \
+		and make_body.find("mood_layer") != -1 \
+		and make_body.find("_atmosphere.apply_current_layer_modulate(holder, mood_layer)") != -1 \
+		and legibility_body.find("layer_night_modulate") != -1 \
+		and validity_guard != -1 and holder_cast > validity_guard \
+		and legibility_body.find("_mood_layer_visuals[layer] = live_holders") != -1 \
+		and decor_body.find('"decor"') != -1 \
+		and scatter_body.find('"scatter"') != -1
+
+
+func _dialogue_separation_contract_holds(source: String) -> bool:
+	var begin_body := _function_body(source, "_begin_dialogue_separation")
+	var restore_body := _function_body(source, "_restore_dialogue_separation")
+	var handler := _function_body(source, "_on_domain_event")
+	var started_arm := handler.get_slice("elif type == WIEvents.DIALOGUE_STARTED:", 1).get_slice("\n\telif type", 0)
+	var ended_arm := handler.get_slice("elif type == WIEvents.DIALOGUE_ENDED:", 1).get_slice("\n\telif type", 0)
+	var affordance_body := _function_body(source, "_reconcile_faced_affordance")
+	return source.find("const DIALOGUE_SEPARATION_PX := 10.0") != -1 \
+		and begin_body.find('payload.get("entity"') != -1 \
+		and begin_body.find("_is_cardinal_adjacent") != -1 \
+		and begin_body.find("Game.sim.player_facing") == -1 \
+		and begin_body.find("_facing_vector") == -1 \
+		and begin_body.find("_player_visual.position -= nudge") != -1 \
+		and begin_body.find("speaker_visual.position += nudge") != -1 \
+		and restore_body.find("player_position") != -1 \
+		and restore_body.find("speaker_position") != -1 \
+		and started_arm.find("_begin_dialogue_separation(payload)") != -1 \
+		and ended_arm.find("_restore_dialogue_separation()") != -1 \
+		and ended_arm.find("_restore_dialogue_separation()") < ended_arm.find("_flush_deferred_presence_reconcile()") \
+		and source.find("WIEvents.DIALOGUE_STARTED,\n\tWIEvents.DIALOGUE_ENDED") != -1 \
+		and affordance_body.find("if trigger == WIEvents.DIALOGUE_STARTED:") != -1 \
+		and affordance_body.find("dialogue_open = true") != -1
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var source := FileAccess.get_file_as_string("res://src/world/world.gd")
@@ -602,6 +652,14 @@ func _init() -> void:
 			"dialogue-defer contract must reject deletion of: %s" % deleted_defer_clause)
 	assert(not _dialogue_defer_contract_holds(source.replace("_reconcile_entity_presence_or_defer()", "_reconcile_entity_presence()")),
 		"dialogue-defer contract must reject the ACCOMPLISHMENT_RECORDED arm calling the reconciler directly (the photographed defect)")
+	assert(_night_layer_attenuation_wiring_holds(source),
+		"moods.json night attenuation must reach entity, decor, and scatter holders through World")
+	assert(not _night_layer_attenuation_wiring_holds(source.replace("layer_night_modulate", "disconnected_layer_modulate")),
+		"night layer attenuation contract must fail when the atmosphere lookup is disconnected")
+	assert(_dialogue_separation_contract_holds(source),
+		"adjacent face-to-face dialogue must separate both holders and restore before the presence flush")
+	assert(not _dialogue_separation_contract_holds(source.replace("_restore_dialogue_separation()", "_missing_dialogue_restore()")),
+		"dialogue separation contract must fail when restoration is disconnected")
 
 	assert(_y_sort_contract_holds(source, factory_source),
 		"entity Y-sort overrides need numeric catalog fallback, holder bias, zero-shift sprite/shadow cancellation, and entity-only plumbing")
@@ -671,6 +729,49 @@ func _init() -> void:
 	assert(atmo.phase_light_energy("night", false) == 1.0
 		and atmo.phase_light_energy("night", true) == 1.0,
 		"dusk/night are unchanged either way -- the opt-out is a FLOOR, never an override")
+	var street_grade := Color(0.2, 0.26, 0.54)
+	var street_layer: Color = atmo.layer_night_modulate("street", "night", "entities")
+	var street_effective := street_grade * street_layer
+	assert(street_layer != Color.WHITE and street_effective.is_equal_approx(Color(0.376, 0.4228, 0.6412)),
+		"street's authored entity attenuation must retain 78% of its night grade")
+	assert(atmo.layer_night_modulate("street", "day", "entities") == Color.WHITE,
+		"layer attenuation is night-only; day remains byte-identical")
+	assert(atmo.layer_night_modulate("street", "night", "no_such_layer") == Color.WHITE,
+		"an unauthored layer falls back to identity")
+	var moods: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moods.json"))
+	assert((moods["moods"]["mercantile_alleys"]["night"] as Array) == [0.2, 0.26, 0.54],
+		"mercantile alleys must open the same real dusk-to-night gap as street")
+	# Fresh-build behavior, not a source needle: compile World's real construction
+	# choke point and run it twice through the real visual factory, as the player
+	# and later companion builds do. The whole-field pass cannot rescue either.
+	atmo.call("_set_layer_context", "street", "night")
+	var build_script := GDScript.new()
+	build_script.source_code = """extends Node
+const PROP_COLOR := Color(0.55, 0.55, 0.58)
+const MOOD_LAYERS: Array[String] = [\"entities\", \"decor\", \"scatter\"]
+var _visual_factory: WIEntityVisualFactory
+var _entities_root := Node2D.new()
+var _atmosphere: Variant
+var _mood_layer_visuals := {\"entities\": [], \"decor\": [], \"scatter\": []}
+func _init(atmosphere: Variant) -> void:
+	_atmosphere = atmosphere
+	_visual_factory = WIEntityVisualFactory.new(16.0, null)
+	add_child(_entities_root)
+func _spawn_light(_holder: Node2D, _light: Dictionary) -> void:
+	pass
+%s
+%s
+""" % [_function_source(source, "_make_entity_visual"), _function_source(source, "_track_mood_layer_visual")]
+	assert(build_script.reload() == OK, "World construction behavior harness failed to compile")
+	var builder: Node = build_script.new(atmo)
+	root.add_child(builder)
+	var player_holder: Node2D = builder.call("_make_entity_visual", Vector2i(1, 1), "", [], Color.WHITE)
+	var companion_holder: Node2D = builder.call("_make_entity_visual", Vector2i(1, 2), "", [], Color.WHITE)
+	assert(player_holder.modulate.is_equal_approx(street_layer),
+		"a freshly constructed night-map player holder must receive the current entity-layer attenuation")
+	assert(companion_holder.modulate.is_equal_approx(street_layer),
+		"a companion constructed later in the same night-map pass must receive the same attenuation immediately")
+	builder.queue_free()
 	assert(atmo.map_lights_by_day("seal_vault"),
 		"seal_vault is sealed -- no sky, so its ward light is the room's only source at any hour")
 	assert(not atmo.map_lights_by_day("inn") and not atmo.map_lights_by_day("street"),

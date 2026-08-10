@@ -12,6 +12,7 @@ const MOODS_PATH := "res://data/moods.json"
 ## returned boost to each entity sprite's self_modulate (floor untouched).
 const FIELD_LEGIBILITY_TARGET := 0.5
 const FIELD_LEGIBILITY_MAX_BOOST := 1.9
+const NIGHT_ATTENUATION_KEY := "night_attenuation"
 
 static var _moods_cache: Dictionary = {}
 
@@ -35,6 +36,8 @@ var vignette_node: ColorRect
 
 var _in_arena_override := false
 var _active_arena_id := ""
+var _layer_map_id := ""
+var _layer_phase := "day"
 
 
 func _ready() -> void:
@@ -77,6 +80,43 @@ func field_entity_boost() -> float:
 	return clampf(FIELD_LEGIBILITY_TARGET / maxf(avg, 0.05), 1.0, FIELD_LEGIBILITY_MAX_BOOST)
 
 
+## A retained value of 1.0 keeps the whole night grade; 0.0 compensates it
+## back to identity. The returned local modulate composes with CanvasModulate,
+## so one render layer can lift without changing the map-wide grade.
+static func night_attenuation_modulate(rgb: Color, retained: float) -> Color:
+	var target := Color.WHITE.lerp(rgb, clampf(retained, 0.0, 1.0))
+	return Color(
+		target.r / maxf(rgb.r, 0.05),
+		target.g / maxf(rgb.g, 0.05),
+		target.b / maxf(rgb.b, 0.05),
+		1.0
+	)
+
+
+static func layer_night_modulate(map_id: String, phase: String, layer: String) -> Color:
+	if phase != "night":
+		return Color.WHITE
+	var mood: Dictionary = (_moods_data().get("moods", {}) as Dictionary).get(map_id, {})
+	var by_layer: Variant = mood.get(NIGHT_ATTENUATION_KEY, {})
+	if not (by_layer is Dictionary) or not (by_layer as Dictionary).has(layer):
+		return Color.WHITE
+	var rgb: Array = mood.get("night", [1.0, 1.0, 1.0])
+	assert(rgb.size() == 3, "moods.json malformed night rgb for %s" % map_id)
+	return night_attenuation_modulate(
+		Color(float(rgb[0]), float(rgb[1]), float(rgb[2])),
+		float((by_layer as Dictionary)[layer])
+	)
+
+
+func _set_layer_context(map_id: String, phase: String) -> void:
+	_layer_map_id = map_id
+	_layer_phase = phase
+
+
+func apply_current_layer_modulate(holder: CanvasItem, layer: String) -> void:
+	holder.modulate = layer_night_modulate(_layer_map_id, _layer_phase, layer)
+
+
 func phase_now() -> String:
 	return Game.sim.phase()
 
@@ -87,6 +127,7 @@ func apply_map(map_id: String, phase: String) -> void:
 
 
 func apply(map_id: String, phase: String) -> void:
+	_set_layer_context(map_id, phase)
 	var mood: Dictionary = (_moods_data().get("moods", {}) as Dictionary).get(map_id, {})
 	var rgb: Array = mood.get(phase, [1.0, 1.0, 1.0])
 	assert(rgb is Array and rgb.size() == 3,

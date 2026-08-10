@@ -148,6 +148,8 @@ const VIGNETTE_SHADER := preload("res://src/world/shaders/vignette.gdshader")
 const VIEW_SIZE := Vector2(320.0, 180.0)
 const SKIRT_MARGIN_CELLS := 20
 const FIELD_BLOCKED_PROP_BUDGET := 200
+const DIALOGUE_SEPARATION_PX := 10.0
+const MOOD_LAYERS: Array[String] = ["entities", "decor", "scatter"]
 
 var _field_root: Node2D
 ## Y-sort-enabled holder for entity/player/decor visuals only (floor tile
@@ -192,6 +194,8 @@ var _player_tween: Tween
 var _player_tween_is_move := false
 var _camera_ctl: WICameraController
 var _entity_visuals: Dictionary = {}
+var _mood_layer_visuals: Dictionary = {}
+var _dialogue_separation: Dictionary = {}
 var _field_blocked_prop_plan: Dictionary = {}
 var _journal: Node
 var _pause_menu: Node
@@ -645,6 +649,46 @@ func _emit_affordance_rendered(showing: bool, cell: Vector2i, entity_id: String)
 	ObservableBus.emit_domain_event(WIEvents.UI_AFFORDANCE_RENDERED, state.duplicate(true))
 
 
+func _begin_dialogue_separation(payload: Dictionary) -> void:
+	var source_id := String(payload.get("entity", ""))
+	var raw_ent: Variant = Game.sim.entities.get(source_id, null)
+	var raw_speaker: Variant = _entity_visuals.get(source_id, null)
+	if not (raw_ent is Dictionary) or not is_instance_valid(raw_speaker) or not is_instance_valid(_player_visual):
+		return
+	var ent := raw_ent as Dictionary
+	if String(ent.get("kind", "")) != "npc":
+		return
+	var speaker_cell := ent.get("cell", Vector2i.ZERO) as Vector2i
+	var delta := speaker_cell - Game.sim.player_cell
+	if not _is_cardinal_adjacent(Game.sim.player_cell, speaker_cell):
+		return
+	var speaker_visual := raw_speaker as Node2D
+	_kill_player_tween()
+	_player_visual.position = Vector2(Game.sim.player_cell) * CELL
+	_dialogue_separation = {
+		"player": _player_visual,
+		"player_position": _player_visual.position,
+		"speaker": speaker_visual,
+		"speaker_position": speaker_visual.position,
+	}
+	var nudge := Vector2(delta) * DIALOGUE_SEPARATION_PX
+	_player_visual.position -= nudge
+	speaker_visual.position += nudge
+
+
+func _restore_dialogue_separation() -> void:
+	if _dialogue_separation.is_empty():
+		return
+	var saved := _dialogue_separation
+	_dialogue_separation = {}
+	var raw_player: Variant = saved.get("player", null)
+	if is_instance_valid(raw_player):
+		(raw_player as Node2D).position = saved["player_position"] as Vector2
+	var raw_speaker: Variant = saved.get("speaker", null)
+	if is_instance_valid(raw_speaker):
+		(raw_speaker as Node2D).position = saved["speaker_position"] as Vector2
+
+
 ## Pulse is suppressed under reduce-motion AND under any driven run
 ## (`_presentation_delay`'s QA/headless collapse) -- the second half matters as
 ## much as the first: an oscillating alpha would make every windowed screenshot
@@ -799,6 +843,12 @@ func _rebuild_field() -> void:
 	for child: Node in _field_root.get_children():
 		child.queue_free()
 	_entity_visuals.clear()
+	# MIRROR CONTRACT: scripts/data_lint.py's NIGHT_ATTENUATION_LAYERS must
+	# carry this exact set, or shipped data can name a layer World never applies.
+	_mood_layer_visuals = {}
+	for mood_layer: String in MOOD_LAYERS:
+		_mood_layer_visuals[mood_layer] = []
+	_dialogue_separation = {}
 	# GH#335: field furniture, freed with everything else above -- the
 	# end-of-rebuild reconcile rebuilds it against the new map.
 	_affordance_cursor = null
@@ -851,7 +901,6 @@ func _rebuild_field() -> void:
 	_build_scatter(_current_map_cfg().get("scatter", []))
 	var render_counts := {"sprites": 0, "fallbacks": 0}
 	_count_visual(_build_entities(), render_counts)
-	_apply_field_legibility()  # a5 #205
 	var player_cfg: Dictionary = WIDataRegistry.scene_config()["player"]
 	var pc_sprite := _pc_variant_sprite(String(player_cfg.get("sprite", "")))
 	_player_visual = _make_entity_visual(
@@ -863,6 +912,7 @@ func _rebuild_field() -> void:
 	_player_sprite = _first_sprite_child(_player_visual)
 	_play_player_anim("idle")
 	_count_visual(_player_visual, render_counts)
+	_apply_field_legibility()  # a5 #205 + per-layer night attenuation
 	_reconcile_pc_light()
 	_reconcile_sneak_visual()
 	_reconcile_ward_visuals()
@@ -951,7 +1001,9 @@ func _build_floor() -> void:
 func _build_field_blocked_props() -> void:
 	for cell: Vector2i in _field_blocked_prop_plan:
 		var sprite_id := String(_field_blocked_prop_plan[cell])
-		_entities_root.add_child(_visual_factory.make_blocked_prop(cell, sprite_id))
+		var holder := _visual_factory.make_blocked_prop(cell, sprite_id)
+		_entities_root.add_child(holder)
+		_track_mood_layer_visual(holder, "decor")
 
 
 func _build_water_shimmer() -> void:
@@ -1040,7 +1092,7 @@ func _build_decor(decor_list: Array) -> void:
 		if sprite_id == "" or not WISpriteRegistry.has_sprite(sprite_id):
 			continue
 		var cell := Vector2i(int(entry["cell"][0]), int(entry["cell"][1]))
-		_make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)))
+		_make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)), null, "decor")
 
 
 func _build_scatter(specs: Array) -> void:
@@ -1082,7 +1134,7 @@ func _build_scatter(specs: Array) -> void:
 				var pick: Variant = pool[int(_scatter_hash(seed_v, cell, 31) * pool.size()) % pool.size()]
 				var sprite_id := String(pick)
 				if WISpriteRegistry.has_sprite(sprite_id):
-					_make_entity_visual(cell, sprite_id, spec.get("tint", []), PROP_COLOR, "", {}, sway)
+					_make_entity_visual(cell, sprite_id, spec.get("tint", []), PROP_COLOR, "", {}, sway, null, "scatter")
 
 
 static func _scatter_hash(seed_v: int, cell: Vector2i, salt: int) -> float:
@@ -1132,21 +1184,34 @@ func exit_combat_camera() -> void:
 
 ## a5 #205: brighten field interactable sprites on dark-mood maps so
 ## encounters/props/NPCs stay separable from the floor before [Light] (the
-## floor/mood grade is untouched — only these entity holders' self_modulate
+## floor/mood grade is untouched — only these entity holders' modulate
 ## lifts, mirroring the combat board's own legibility floor). Boost = 1.0 is
 ## a no-op on bright maps, so their render is byte-identical. Re-runs on
 ## every UI_MOOD_APPLIED, so a dusk->night darkening re-lifts automatically.
 func _apply_field_legibility() -> void:
 	if _atmosphere == null:
 		return
+	for layer: String in _mood_layer_visuals:
+		var layer_modulate := _atmosphere.layer_night_modulate(
+			Game.sim.current_map, _atmosphere.phase_now(), layer
+		)
+		var live_holders: Array = []
+		for raw_holder: Variant in (_mood_layer_visuals[layer] as Array):
+			if not is_instance_valid(raw_holder):
+				continue
+			var layer_holder := raw_holder as Node2D
+			layer_holder.modulate = layer_modulate
+			live_holders.append(layer_holder)
+		_mood_layer_visuals[layer] = live_holders
 	# holder.modulate (NOT self_modulate — the holder draws nothing; modulate
 	# INHERITS to the sprite/ColorRect/shadow children and composes with the
 	# sprite's own tint, exactly as the combat board's leaf-node boost does).
 	var boost := _atmosphere.field_entity_boost()
-	var m := Color(boost, boost, boost, 1.0)
+	var boost_modulate := Color(boost, boost, boost, 1.0)
 	for id: String in _entity_visuals.keys():
 		var holder := _entity_visuals[id] as Node2D
 		if holder != null:
+			var m := holder.modulate * boost_modulate
 			holder.modulate = m
 
 
@@ -1399,6 +1464,7 @@ func _make_entity_visual(
 	light: Dictionary = {},
 	sway: bool = false,
 	field_y_sort_bias_override: Variant = null,
+	mood_layer: String = "entities",
 ) -> Node2D:
 	# Construction lives in WIEntityVisualFactory (#194b seam 1); this wrapper
 	# owns what needs World state: light spawning (_atmosphere/_light_count)
@@ -1407,7 +1473,14 @@ func _make_entity_visual(
 	if not light.is_empty():
 		_spawn_light(holder, light)
 	_entities_root.add_child(holder)
+	_track_mood_layer_visual(holder, mood_layer)
+	_atmosphere.apply_current_layer_modulate(holder, mood_layer)
 	return holder
+
+
+func _track_mood_layer_visual(holder: Node2D, mood_layer: String) -> void:
+	assert(mood_layer in MOOD_LAYERS, "unknown mood render layer: " + mood_layer)
+	(_mood_layer_visuals[mood_layer] as Array).append(holder)
 
 
 func _spawn_light(holder: Node2D, light: Dictionary) -> void:
@@ -1704,7 +1777,15 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			return
 		_refresh_entities_watching_counter(String(payload.get("id", "")))
 		_reconcile_entity_presence_or_defer()
+	elif type == WIEvents.DIALOGUE_STARTED:
+		_begin_dialogue_separation(payload)
+		_disarm_field_slot()
 	elif type == WIEvents.DIALOGUE_ENDED:
+		# TRAP (ORDER): restore the adjacency-only 10px offsets BEFORE the
+		# deferred presence flush. Dialogue effects may retire or replace the
+		# speaker, and that flush may free its holder; restoring later would
+		# cast a dead object and strand the player at the temporary offset.
+		_restore_dialogue_separation()
 		# The defer's flush point -- see _presence_reconcile_deferred's contract.
 		_flush_deferred_presence_reconcile()
 	elif type == WIEvents.ITEM_GAINED:
@@ -1785,7 +1866,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 					_spawn_burn_poof(tc_cell)
 				"cleared":
 					_spawn_burn_poof(tc_cell)
-	elif type in [WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED, WIEvents.COMBAT_STARTED, WIEvents.DIALOGUE_STARTED]:
+	elif type in [WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED, WIEvents.COMBAT_STARTED]:
 		# The first five are exactly the events
 		# `field_hotbar.gd`'s `_render()` re-derives the slot LIST on -- the
 		# pad cursor here must reset alongside it (a stale index could point

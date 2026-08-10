@@ -106,6 +106,24 @@
    }
   ]
  },
+ "floor_layers": [
+  {
+   "_pick": "The forge annex shares the tier's neutral cobbled flags; work surfaces and furnace light carry the room, not blue brick.",
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     9,
+     22
+    ],
+    [
+     9,
+     23
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
  "decor": [
   {
    "sprite": "forge_station",

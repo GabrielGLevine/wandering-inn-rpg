@@ -188,7 +188,23 @@
  },
  "floor_layers": [
   {
-   "_comment": "MAP/PALLASS-FORGE-FLOOR: wall rows 0-1 and the walkable brick were one texture. Row 2 takes the slate band row 9 uses, framing the floor dark top and bottom. No blocking moves.",
+   "_pick": "Neutral cobbled flags replace the blue all-cell brick; molten metal, furnace light and scale carry forge identity.",
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     9,
+     22
+    ],
+    [
+     9,
+     23
+    ]
+   ],
+   "cells": "all"
+  },
+  {
+   "_comment": "Slate rows 2 and 9 frame the neutral working floor at top and bottom. No blocking moves.",
    "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
    "tile_px": 16,
    "coords": [

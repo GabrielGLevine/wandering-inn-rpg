@@ -61,6 +61,9 @@ GATE_KEYS = ("door_when", "contains_when", "portal_menu_when", "fence_menu_when"
 SKILL_GATE_MECHANISMS = {"property", "blink", "arm", "social", "endure"}
 SKILL_GATE_NON_SKILL_GATES = {"dialogue", "item", "endure"}
 MOOD_PHASES = ("day", "dusk", "night")
+# MIRROR CONTRACT: src/world/world.gd's MOOD_LAYERS must carry this exact
+# set, or lint can approve a layer the renderer never applies.
+NIGHT_ATTENUATION_LAYERS = {"entities", "decor", "scatter"}
 # world.gd's own SKY_GRADE_EPSILON -- the two must agree or the lint would
 # police a different sealed/sky split than the engine reads.
 SKY_GRADE_EPSILON = 0.01
@@ -1003,7 +1006,19 @@ def check_moods(parsed: dict, maps: dict, errors: list) -> None:
 		triples = _mood_triples(card, label, errors)
 		if triples is None:
 			continue
+		attenuation = card.get("night_attenuation", {})
+		if not isinstance(attenuation, dict):
+			errors.append(f"moods.json: '{map_id}' night_attenuation must be a layer dictionary")
+		else:
+			for layer, retained in attenuation.items():
+				if layer not in NIGHT_ATTENUATION_LAYERS:
+					errors.append(f"moods.json: '{map_id}' night_attenuation has unknown layer '{layer}'")
+				if isinstance(retained, bool) or not isinstance(retained, (int, float)) or not 0.0 <= retained <= 1.0:
+					errors.append(f"moods.json: '{map_id}' night_attenuation.{layer} must be in [0,1]")
 		day, dusk, night = triples
+		if attenuation and min(night) < 0.05:
+			errors.append(f"moods.json: '{map_id}' uses night_attenuation but night has a channel "
+				f"below 0.05 ({min(night):.3f}) -- the renderer's divisor clamp would change its authored ratio")
 		temps = [rgb[0] - rgb[2] for rgb in triples]
 		values = [sum(rgb) / 3.0 for rgb in triples]
 		has_sky = any(abs(day[i] - dusk[i]) > SKY_GRADE_EPSILON for i in range(3))
