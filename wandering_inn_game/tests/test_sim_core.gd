@@ -2738,7 +2738,7 @@ func _init() -> void:
 		"a second same-waking mend is spent -- the curve cannot be ground at one prop between sleeps")
 
 	var affinity_scene := WISceneCatalog.compose()
-	(affinity_scene["maps"]["floodplains"]["entities"] as Array).append({
+	var affinity_encounter := {
 		WIKeys.ID: "test_beast_ambush",
 		WIKeys.KIND: "encounter",
 		WIKeys.CELL: [33, 23],
@@ -2747,13 +2747,18 @@ func _init() -> void:
 		"arena": "goblin_ambush",
 		"enemies": ["goblin_raider"],
 		"trigger_radius": 2,
-	})
+	}
+	(affinity_scene["maps"]["floodplains"]["entities"] as Array).append(affinity_encounter)
 	var gAffinityOff := WIGame.new(affinity_scene, wave_b_skill_config, _sink, 12345, combat_config)
+	assert(gAffinityOff.effective_trigger_radius(affinity_encounter) == 2,
+		"the shared public radius read keeps a non-holder beast's authored radius")
 	gAffinityOff.transition("floodplains", Vector2i(33, 20))
 	assert(gAffinityOff.move_player(Vector2i.DOWN), "control walks to dist 2")
 	assert(gAffinityOff.combat != null, "without [Wild Affinity] the beast ambush triggers at its authored radius")
 	var gAffinityOn := WIGame.new(affinity_scene, wave_b_skill_config, _sink, 12345, combat_config)
 	gAffinityOn.player_skills.append("wild_affinity")
+	assert(gAffinityOn.effective_trigger_radius(affinity_encounter) == 1,
+		"the shared public radius read applies [Wild Affinity]'s reduction")
 	gAffinityOn.transition("floodplains", Vector2i(33, 20))
 	assert(gAffinityOn.move_player(Vector2i.DOWN), "affinity walks to dist 2")
 	assert(gAffinityOn.combat == null, "[Wild Affinity] shrinks the beast ambush radius by 1")
@@ -2762,6 +2767,8 @@ func _init() -> void:
 	var gPeace := WIGame.new(affinity_scene, wave_b_skill_config, _sink, 12345, combat_config)
 	gPeace.player_skills.append("wild_affinity")
 	gPeace.player_skills.append("peace_of_the_wild")
+	assert(gPeace.effective_trigger_radius(affinity_encounter) == 0,
+		"the shared public radius read clamps [Peace of the Wild]'s reduction at zero")
 	gPeace.transition("floodplains", Vector2i(33, 20))
 	assert(gPeace.move_player(Vector2i.DOWN), "peace walks to dist 2")
 	assert(gPeace.move_player(Vector2i.DOWN), "peace walks to dist 1")

@@ -163,6 +163,8 @@ var _player_sprite: AnimatedSprite2D
 var _player_anim_token := 0
 var _companion_visual: Node2D
 var _ward_visuals: Array[Node2D] = []
+var _dangersense_overlay: WIDangersenseOverlay
+var _dangersense_state: Array[Dictionary] = []
 var _pc_light: PointLight2D
 var _sneak_tinted := false
 ## The id of the LAST `sneaks: true`-tagged skill whose
@@ -863,6 +865,8 @@ func _rebuild_field() -> void:
 	_player_sprite = null
 	_companion_visual = null
 	_ward_visuals.clear()
+	_dangersense_overlay = null
+	_dangersense_state.clear()
 	_pc_light = null
 	# See `_sneak_tinted`'s own doc comment -- the fresh
 	# `_player_sprite` built below is always untinted, so the tracker must
@@ -887,6 +891,7 @@ func _rebuild_field() -> void:
 	_build_floor()
 	_build_water_shimmer()
 	_build_ice_overlay()
+	_build_dangersense_overlay()
 	_entities_root = Node2D.new()
 	_entities_root.y_sort_enabled = true
 	_field_root.add_child(_entities_root)
@@ -1063,6 +1068,61 @@ func _reconcile_ice_overlay() -> void:
 		_ice_overlay.queue_free()
 		_ice_overlay = null
 	_build_ice_overlay()
+
+
+func _build_dangersense_overlay() -> void:
+	_dangersense_overlay = WIDangersenseOverlay.new(float(CELL))
+	_field_root.add_child(_dangersense_overlay)
+	_apply_dangersense_night_compensation()
+	_reconcile_dangersense_overlay()
+
+
+func _field_mode_active() -> bool:
+	return Game.sim != null and Game.sim.combat == null and _field_root.visible
+
+
+func _apply_dangersense_night_compensation() -> void:
+	if _dangersense_overlay == null or not is_instance_valid(_dangersense_overlay) or _atmosphere == null:
+		return
+	var compensation := WIAtmosphere.night_attenuation_modulate(
+		_atmosphere.color, WIDangersenseOverlay.NIGHT_GRADE_RETAINED
+	)
+	_dangersense_overlay.apply_night_grade(compensation, _atmosphere.phase_now())
+
+
+func _live_dangersense_encounters() -> Array:
+	var encounters: Array = []
+	for raw: Variant in Game.sim.entities.values():
+		var encounter := raw as Dictionary
+		var encounter_id := String(encounter.get("id", ""))
+		if not encounter.has("encounter_when") or not encounter.has("trigger_radius"):
+			continue
+		if not Game.sim.entity_present(encounter) \
+				or Game.sim.dormant_encounters.has(encounter_id) \
+				or Game.sim.warded_encounters.has(encounter_id) \
+				or not Game.sim.encounter_gate_met(encounter):
+			continue
+		encounters.append(encounter)
+	return encounters
+
+
+func _reconcile_dangersense_overlay() -> void:
+	if _dangersense_overlay == null or not is_instance_valid(_dangersense_overlay) or Game.sim == null:
+		return
+	var regions := _dangersense_overlay.rebuild(
+		_live_dangersense_encounters(),
+		Game.sim.known_skills().has("dangersense"),
+		_field_mode_active(),
+		Game.sim.effective_trigger_radius,
+	)
+	if regions == _dangersense_state:
+		return
+	_dangersense_state.assign(regions)
+	if not regions.is_empty():
+		ObservableBus.emit_domain_event(WIEvents.UI_DANGERSENSE_RENDERED, {
+			"map": Game.sim.current_map,
+			"regions": regions,
+		})
 
 
 func _spawn_burn_poof(cell: Vector2i) -> void:
@@ -1738,6 +1798,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_play_player_anim("walk")
 		_queue_player_idle()
 		_pan_camera_to_player()
+		_reconcile_dangersense_overlay()
 	elif type == WIEvents.PLAYER_BLOCKED:
 		_bump_player_visual()
 	elif type == WIEvents.PLAYER_TELEPORTED:
@@ -1761,11 +1822,14 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		if visual != null:
 			visual.queue_free()
 			_entity_visuals.erase(String(payload["id"]))
+		_reconcile_dangersense_overlay()
 	elif type == WIEvents.COMBAT_STARTED:
 		_field_root.visible = false
+		_reconcile_dangersense_overlay()
 	elif type == WIEvents.UI_COMBAT_HIDDEN:
 		_field_root.visible = true
 		_refresh_entities_watching_dormant()
+		_reconcile_dangersense_overlay()
 	elif type == WIEvents.ACCOMPLISHMENT_RECORDED:
 		# CONTRACT (#119, stale-cover guard — stated once here, shared by the
 		# ENTITY_REMOVED/ITEM_GAINED/PHASE_CHANGED arms): while the transition
@@ -1777,6 +1841,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			return
 		_refresh_entities_watching_counter(String(payload.get("id", "")))
 		_reconcile_entity_presence_or_defer()
+		_reconcile_dangersense_overlay()
 	elif type == WIEvents.DIALOGUE_STARTED:
 		_begin_dialogue_separation(payload)
 		_disarm_field_slot()
@@ -1813,6 +1878,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_reconcile_sneak_visual()
 	elif type == WIEvents.WARD_PLACED:
 		_reconcile_ward_visuals()
+		_reconcile_dangersense_overlay()
 	elif type == WIEvents.COMPANION_CHANGED:
 		_reconcile_companion_visual()
 		# GH#330 R4: the EXISTENCE half, same shape as the PHASE_CHANGED arm
@@ -1821,6 +1887,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# follower sprite appears (a tame is same-map by construction).
 		if not _map_transition_stale_cover():
 			_reconcile_entity_presence()
+			_reconcile_dangersense_overlay()
 	elif type == WIEvents.UI_MOOD_APPLIED:
 		# Mood grade just landed (fresh map or a phase crossing) — re-lift the
 		# field interactables against the new darkness (a5 #205). Skip while a
@@ -1829,6 +1896,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# UI_COMBAT_HIDDEN re-show re-applies).
 		if not _map_transition_stale_cover() and Game.sim.combat == null:
 			_apply_field_legibility()
+			_apply_dangersense_night_compensation()
 	elif type == WIEvents.PHASE_CHANGED:
 		if _map_transition_stale_cover():
 			return
@@ -1848,6 +1916,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# flipped, same-map, no MAP_CHANGED required (the ghost
 		# `entity_present`'s doc comment used to disclose).
 		_reconcile_entity_presence()
+		_reconcile_dangersense_overlay()
 	elif type == WIEvents.TERRAIN_CHANGED:
 		if String(payload.get("map", "")) == Game.sim.current_map:
 			var tc_cell := Vector2i(int(payload["cell"][0]), int(payload["cell"][1]))
@@ -1872,6 +1941,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# pad cursor here must reset alongside it (a stale index could point
 		# past a shrunk list, or at a now-different skill on a same-size one).
 		_disarm_field_slot()
+		_reconcile_dangersense_overlay()
 
 
 func _move_player_visual(target: Vector2) -> void:

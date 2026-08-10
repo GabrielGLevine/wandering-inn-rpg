@@ -216,10 +216,12 @@
    "description": "Breath returns, and the body remembers it can go on."
   },
   {
+   "_comment": "PASSIVE: combat behavior stays on effect.type=dangersense; exploration adds a held-only world warning with no `field` marker and therefore no hotbar slot, matching [Even Footing]'s passive schema.",
    "id": "dangersense",
    "display_name": "[Dangersense]",
    "contexts": [
-    "combat"
+    "combat",
+    "exploration"
    ],
    "ap_cost": 0,
    "effect": {

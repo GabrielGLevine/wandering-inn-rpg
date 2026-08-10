@@ -1,0 +1,35 @@
+{
+ "_comment": "Issue #413 holder proof. Loads an honest Rogue L4 night-floodplains fixture at (9,24), proves [Dangersense] stays off the field hotbar, pins the world render event's exact regions to the existing goblin_night_patrol and road_mothbears trigger_radius rows, then WALKS up/right/right to (11,23). Every walked cell stays Chebyshev distance 2 from goblin_night_patrol (10,21): the route approaches and skirts its revealed radius-1 square without entering it, and combat_started remains absent.",
+ "fixture_save": "dangersense_holder_start",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"action": "assert_state", "path": "phase", "equals": "night"},
+  {"action": "assert_field_skill_absent", "skill": "dangersense"},
+  {"action": "assert_state", "path": "classes.rogue", "equals": 4},
+  {"action": "move", "direction": "up", "steps": 1},
+  {"action": "move", "direction": "right", "steps": 2},
+  {"action": "assert_state", "path": "player_cell", "equals": [11, 23]},
+  {
+   "action": "assert_event_count",
+   "type": "ui_dangersense_rendered",
+   "count": 1,
+   "payload_contains": {
+    "map": "floodplains",
+    "regions": [
+     {"encounter": "goblin_night_patrol", "cell": [10, 21], "radius": 1},
+     {"encounter": "road_mothbears", "cell": [23, 12], "radius": 1}
+    ]
+   }
+  },
+  {"action": "screenshot", "name": "dangersense_skirt"},
+  {"action": "wait_frames", "frames": 2},
+  {"action": "assert_event_absent", "type": "combat_started"}
+ ]
+}

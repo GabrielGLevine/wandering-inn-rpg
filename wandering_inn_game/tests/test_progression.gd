@@ -4,6 +4,15 @@ extends SceneTree
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/classes.json"))
+	var skills_catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills.json"))
+	var dangersense: Dictionary = {}
+	for skill: Dictionary in skills_catalog.get("skills", []):
+		if String(skill.get("id", "")) == "dangersense":
+			dangersense = skill
+			break
+	assert((dangersense.get("contexts", []) as Array) == ["combat", "exploration"],
+		"[Dangersense] keeps combat context and adds exploration")
+	assert(not dangersense.has("field"), "[Dangersense] is passive-while-held, never a field-hotbar cast")
 
 	var l1 := WIProgression.granted_skills({"warrior": 1}, catalog)
 	assert(l1 == ["basic_swordwork", "tough_body", "power_strike", "piercing_strikes"], "L1 grants in catalog order")
@@ -28,6 +37,8 @@ func _init() -> void:
 	var mage_l1 := WIProgression.granted_skills({"mage": 1}, catalog)
 	assert(mage_l1.has("frost_bolt") and mage_l1.has("quick_cast"), "mage L1 grants frost_bolt + quick_cast")
 	assert(WIProgression.granted_skills({"mage": 7}, catalog).has("detect_magic"), "mage L7 grants detect_magic while L11 remains sparse")
+	assert(not WIProgression.granted_skills({"rogue": 3}, catalog).has("dangersense"), "Rogue L3 does not grant [Dangersense] early")
+	assert(WIProgression.granted_skills({"rogue": 4}, catalog).has("dangersense"), "Rogue L4 grants [Dangersense]")
 
 	assert(WIProgression.check_class_gains({}, {"completed_delivery": 2}, catalog) == ["runner"], "two completed deliveries grant runner")
 	assert(WIProgression.check_class_gains({}, {"witch_lessons": 1}, catalog) == ["hedge_witch"], "one witch lesson grants hedge witch")

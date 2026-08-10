@@ -385,7 +385,7 @@
 				{ "level": 1, "requires": {}, "grants": ["sneak"] },
 				{ "level": 2, "requires": { "sneaked_past_danger": 2 }, "grants": [] },
 				{ "level": 3, "requires": { "sneaked_past_danger": 4 }, "grants": ["find_trap"] },
-				{ "level": 4, "requires": { "sneaked_past_danger": 7 }, "grants": [] },
+				{ "level": 4, "requires": { "sneaked_past_danger": 7 }, "grants": ["dangersense"] },
 				{ "level": 5, "requires": { "sneaked_past_danger": 10 }, "grants": ["disarm_trap"] },
 				{ "level": 6, "requires": { "sneaked_past_danger": 14 }, "grants": [] },
 				{ "level": 7, "requires": { "sneaked_past_danger": 18 }, "grants": ["sudden_strike"] },

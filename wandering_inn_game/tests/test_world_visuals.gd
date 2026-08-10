@@ -598,13 +598,99 @@ func _dialogue_separation_contract_holds(source: String) -> bool:
 		and affordance_body.find("dialogue_open = true") != -1
 
 
+func _dangersense_world_contract_holds(source: String, overlay_source: String, sim_source: String) -> bool:
+	var build := _function_body(source, "_build_dangersense_overlay")
+	var gate := _function_body(source, "_field_mode_active")
+	var live := _function_body(source, "_live_dangersense_encounters")
+	var reconcile := _function_body(source, "_reconcile_dangersense_overlay")
+	var compensate := _function_body(source, "_apply_dangersense_night_compensation")
+	var rebuild := _function_body(source, "_rebuild_field")
+	var overlay_rebuild := _function_body(overlay_source, "rebuild")
+	var sim_radius := _function_body(sim_source, "effective_trigger_radius")
+	var sim_trigger := _function_body(sim_source, "_check_trigger_radius")
+	return overlay_rebuild.find("radius_read.call(encounter)") != -1 \
+		and overlay_rebuild.find('encounter["trigger_radius"]') == -1 \
+		and overlay_rebuild.find('encounter.has("encounter_when")') != -1 \
+		and overlay_rebuild.find("holder_has_skill and field_mode") != -1 \
+		and build.find("WIDangersenseOverlay.new") != -1 \
+		and gate.find("Game.sim.combat == null") != -1 \
+		and gate.find("_field_root.visible") != -1 \
+		and live.find("Game.sim.entity_present(encounter)") != -1 \
+		and live.find("Game.sim.dormant_encounters") != -1 \
+		and live.find("Game.sim.warded_encounters") != -1 \
+		and live.find("Game.sim.encounter_gate_met(encounter)") != -1 \
+		and source.find("func _dangersense_encounter_gate_met") == -1 \
+		and reconcile.find('Game.sim.known_skills().has("dangersense")') != -1 \
+		and reconcile.find("Game.sim.effective_trigger_radius") != -1 \
+		and reconcile.find("WIEvents.UI_DANGERSENSE_RENDERED") != -1 \
+		and compensate.find("WIAtmosphere.night_attenuation_modulate") != -1 \
+		and _function_body(source, "_on_domain_event").find("_apply_dangersense_night_compensation()") != -1 \
+		and sim_radius.find("_wild_affinity_reduction(ent)") != -1 \
+		and sim_trigger.find("effective_trigger_radius(ent)") != -1 \
+		and rebuild.find("_build_dangersense_overlay()") < rebuild.find("_entities_root = Node2D.new()")
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var source := FileAccess.get_file_as_string("res://src/world/world.gd")
 	var builder_source := FileAccess.get_file_as_string("res://src/world/tile_board_builder.gd")
 	var factory_source := FileAccess.get_file_as_string("res://src/world/entity_visual_factory.gd")
+	var dangersense_source := FileAccess.get_file_as_string("res://src/world/dangersense_overlay.gd")
+	var sim_source := FileAccess.get_file_as_string("res://src/core/wi_game.gd")
 	assert(not source.is_empty(), "world.gd must exist")
 	assert(not factory_source.is_empty(), "entity_visual_factory.gd must exist (#194b seam 1)")
+	assert(not dangersense_source.is_empty(), "dangersense_overlay.gd must exist")
+	assert(not sim_source.is_empty(), "wi_game.gd must exist")
+	var danger_overlay := WIDangersenseOverlay.new(16.0)
+	root.add_child(danger_overlay)
+	var authored_radius := func(encounter: Dictionary) -> int: return int(encounter["trigger_radius"])
+	var danger_rows: Array = [
+		{"id": "z_danger", "kind": "encounter", "cell": [10, 21], "trigger_radius": 1, "encounter_when": {"phase": ["night"]}},
+		{"id": "a_danger", "kind": "encounter", "cell": [4, 5], "trigger_radius": 2, "encounter_when": {"requires": {"armed": 1}}},
+		{"id": "plain_encounter", "kind": "encounter", "cell": [1, 1], "trigger_radius": 4},
+	]
+	assert(danger_overlay.rebuild(danger_rows, false, true, authored_radius).is_empty() and not danger_overlay.visible,
+		"a non-holder gets no warning regions")
+	assert(danger_overlay.rebuild(danger_rows, true, false, authored_radius).is_empty() and not danger_overlay.visible,
+		"a holder outside field mode gets no warning regions")
+	var warning_regions := danger_overlay.rebuild(danger_rows, true, true, authored_radius)
+	assert((warning_regions as Array).size() == 2 and String(warning_regions[0]["encounter"]) == "a_danger",
+		"a field-mode holder gets only encounter_when proximity regions, deterministically sorted")
+	assert(danger_overlay.region_rect(warning_regions[1]) == Rect2(144, 320, 48, 48),
+		"radius 1 draws the exact 3x3 Chebyshev trigger square from the encounter cell")
+	var affinity_game := WIGame.new(
+		WISceneCatalog.compose(),
+		JSON.parse_string(FileAccess.get_file_as_string("res://data/skills.json")),
+		func(_type: String, _payload: Dictionary) -> void: pass,
+		1,
+	)
+	affinity_game.player_skills.append("wild_affinity")
+	var affinity_regions := danger_overlay.rebuild([{
+		"id": "affinity_beast",
+		"kind": "encounter",
+		"beast": true,
+		"cell": [7, 8],
+		"trigger_radius": 2,
+		"encounter_when": {"phase": ["night"]},
+	}], true, true, affinity_game.effective_trigger_radius)
+	assert(affinity_regions[0]["radius"] == 1
+		and danger_overlay.region_rect(affinity_regions[0]).size == Vector2(48, 48),
+		"[Wild Affinity] must render the shared reduced radius-1 square, never authored radius 2")
+	var floodplains_night := Color(0.25, 0.3, 0.8)
+	var floodplains_compensation := Color(4.0, 10.0 / 3.0, 1.25)
+	danger_overlay.apply_night_grade(floodplains_compensation, "night")
+	assert((WIDangersenseOverlay.EDGE_COLOR * danger_overlay.modulate * floodplains_night).is_equal_approx(WIDangersenseOverlay.EDGE_COLOR),
+		"night compensation must deliver the authored warning edge through CanvasModulate")
+	danger_overlay.apply_night_grade(floodplains_night, "day")
+	assert(danger_overlay.modulate == Color.WHITE, "day must keep the warning overlay byte-identical")
+	assert(_dangersense_world_contract_holds(source, dangersense_source, sim_source),
+		"[Dangersense] must use shared sim radius/gate reads, night compensation, and held+field-mode gating")
+	assert(not _dangersense_world_contract_holds(
+		source,
+		dangersense_source.replace("radius_read.call(encounter)", 'encounter["trigger_radius"]'),
+		sim_source,
+	), "[Dangersense] wiring contract must reject a raw authored-radius read")
+	danger_overlay.queue_free()
 	assert(_cleared_terrain_visual_contract_holds(source),
 		"terrain=cleared must reuse the shipped removal poof used by scorched")
 	assert(not _cleared_terrain_visual_contract_holds(source.replace(

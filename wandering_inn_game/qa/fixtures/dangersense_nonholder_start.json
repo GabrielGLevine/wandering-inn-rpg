@@ -1,0 +1,39 @@
+{
+ "_comment": "Issue #413 non-holder control, identical route/story basis to dangersense_holder_start except it stops honestly at Rogue L3: sneaked_past_danger 4 and classes{rogue:3}. Rogue L3 grants [Find Trap] but not [Dangersense]; Warrior remains L1. The same night floodplains position and walked perimeter route therefore isolate the held-skill predicate without changing map, phase, encounter data, or starting geometry.",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [9, 24],
+  "player_facing": [0, -1],
+  "classes": {
+   "warrior": 1,
+   "rogue": 3
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "asked_about_crate": 1,
+   "recovered_crate_watch": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "persuaded_someone": 1,
+   "sneaked_past_danger": 4
+  },
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": ["crate_scavengers"],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword", "relcs_spare_spear"],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 1000,
+  "rng_state": "-1966449618399012673"
+ }
+}

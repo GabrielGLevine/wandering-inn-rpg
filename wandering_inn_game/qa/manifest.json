@@ -3778,6 +3778,58 @@
    }
   },
   {
+   "script": "dangersense_field_loop",
+   "seed": 9,
+   "fixture": "dangersense_holder_start",
+   "note": "Issue #413: Rogue L4 [Dangersense] passive world overlay -- exact existing night trigger radii rendered, passive absent from hotbar, and a walked radius-skirt reaches (11,23) with no combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "dangersense_holder_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "dangersense"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "dangersense_nonholder_loop",
+   "seed": 9,
+   "fixture": "dangersense_nonholder_start",
+   "note": "Issue #413 negative gate: identical night floodplains route at Rogue L3 emits no Dangersense overlay and starts no combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "dangersense_nonholder_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "dangersense"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "shaman_zone_loop",
    "seed": 9,
    "fixture": "goblin_night_patrol_start",
