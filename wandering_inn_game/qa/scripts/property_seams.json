@@ -76,7 +76,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Firefly] — The flame gutters the moment it nears the water. Steam ghosts off the surface and the channel takes it back. Fire has nothing to hold here."
+    "text": "[Firefly] — The flame dies over open water because there is nothing solid for it to catch."
    },
    "timeout_sec": 5
   },
@@ -259,7 +259,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Firefly] — You hold the flame low over the ice. It sags, greys, then drops away into black water. The channel runs open again."
+    "text": "[Firefly] — Heat hollows the ice until it gives way to open water."
    },
    "timeout_sec": 5
   },
