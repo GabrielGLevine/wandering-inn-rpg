@@ -19,8 +19,14 @@ Plan: docs/superpowers/plans/2026-08-10-reachability-wave-417-421-423-424.md
 - **#424 lane R: fix wave 1 done** (2e877742, branch pushed): predicate
   widened 269→379/472 w/ full denominator line, DESIGN_WAIVERS
   (broker_hands), detector rc honesty, gate-carrier lint arm, I-4
-  blocker-faceability. Focused re-review of the fix delta RUNNING
-  (PROP_ARM_KEYS drift-tripwire question). PR after it lands.
+  blocker-faceability. Re-review of the fix delta LANDED: 3 Important
+  (PROP_ARM_KEYS mirror w/ no tripwire + 8/9 stale citations;
+  state_set traversal seams missing from the carrier join — rope_work/
+  basic_repair de-grants report ZERO; clearing vocab half-hardcoded,
+  no-else placement drop) + 3 Minor. **FIX WAVE 2 PARKED at WINDDOWN:
+  full adjudicated brief at /tmp/wi-424/FIX2-BRIEF.md** (reviewer
+  prototyped every fix; includes one narrowly-authorized src const
+  move). Dispatch it on resume, then R PR.
 - **#423 lane H: 2 commits pushed** (issue/423-hedault-shop @
   497c0c91): enchanter_shop + enchanter_work_room maps, boulevard door
   (22,1), Hedault (2,3) 3 standable neighbours, pick_lock rogue L2 via
