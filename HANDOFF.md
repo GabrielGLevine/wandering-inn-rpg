@@ -4,26 +4,44 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
-## RUNNING (2026-08-10): reachability wave #417/#421/#423/#424
+## RUNNING (2026-08-10): reachability wave #417/#421/#423/#424 — WINDDOWN checkpoint
 
 Plan: docs/superpowers/plans/2026-08-10-reachability-wave-417-421-423-424.md
-(committed 3b18a421 with CHOICE-LOG 28-30). User directives: [Pick Lock]
-debut in Hedault's shop WITH a virtuous-path route to the contents;
-systemic interactability check folded into #424.
-- **Phase 1 LIVE (3 Opus lanes, worktrees, overlay copied):**
-  T=#417 /tmp/wi-417 (derive_qa_surfaces install_fixture walk + manifest
-  regen; MERGES FIRST), O=#421 /tmp/wi-421 (I3 reconcile-after-check,
-  M2 teardown event, M5 dup-arm collapse, M4 combat canonical,
-  [Firefly] strip from 3 locked_toasts per ruling 29), R=#424
-  /tmp/wi-424 (data_lint advisory grant-path graph + test_reachability
-  GDScript suite, Hedault waiver, ruling 30 split).
-- **Phase 2 (after T merges):** lane H #423 — enchanter_shop interior +
-  boulevard door (north wall y=1, x 19-27 open), Hedault + bench move,
-  alleys re-dress, pick_lock skill (rogue L2) + locked back room
-  (two-mode: pick OR Hedault trust-beat key), QA loop/fixture
-  re-anchors walk-reachable, removes the #424 waiver.
-- Close: composed re-gates + preflight --full + steel-thread windowed
-  (route grows shop leg) + VISUAL-LOG + ledger.
+(3b18a421, CHOICE-LOG 28-30). Guard hit WINDDOWN (session 72%, reset
+~141m from 2026-08-10 ~15:00); state below is the resume point.
+- **#417 lane T: COMPLETE.** PR #425 GREEN 6/6 required (drift fail =
+  advisory, header already fixed on main). Review CLEAN, fix wave
+  applied (array-form fixture_save). **MERGE BLOCKED by permission
+  classifier — USER must merge or allow `gh pr merge`.**
+- **#421 lane O: COMPLETE.** PR #426 all 7 checks GREEN. Review CLEAN
+  (1 Minor adjudicated: UI_DANGERSENSE_CLEARED is SAME-MAP-ONLY by
+  ruling, comments narrowed). **Awaits user merge too.**
+- **#424 lane R: fix wave 1 done** (2e877742, branch pushed): predicate
+  widened 269→379/472 w/ full denominator line, DESIGN_WAIVERS
+  (broker_hands), detector rc honesty, gate-carrier lint arm, I-4
+  blocker-faceability. Focused re-review of the fix delta RUNNING
+  (PROP_ARM_KEYS drift-tripwire question). PR after it lands.
+- **#423 lane H: 2 commits pushed** (issue/423-hedault-shop @
+  497c0c91): enchanter_shop + enchanter_work_room maps, boulevard door
+  (22,1), Hedault (2,3) 3 standable neighbours, pick_lock rogue L2 via
+  requires_skill/on_skill_use seam (ZERO src), two-mode back room
+  (pick OR setting_commissioned trust-beat), enchanters_true_gauge
+  reward (wardstone withdrawn — real GH#142 orphan), 2 fixtures +
+  6 scripts re-anchored (old fixtures stood PC ON a door cell —
+  impossible cell, worse than briefed). NEEDS_CONTEXT x2: [Pick Lock]
+  icon (icon_open_doors INTERIM, VISUAL-LOG row) + door-audit verdict
+  NO CONVERSION. **LANE TAIL UNDONE (guard stop):** route growth
+  (invrisil_walkthrough + steel_thread), 3 designed can-fail proofs
+  (report §9), wide --touching sweep, preflight, CHOICE-LOG fold.
+- **RESUME ORDER:** (1) user merges #425+#426; (2) lane-R re-review
+  verdict → R PR; (3) resume lane-H agent for the tail; (4) H
+  adversarial review + fix wave → PR; (5) composed close: merge R+H,
+  REMOVE the hedault waiver from test_interactable_reachability.gd on
+  the composed tree + rerun suite, re-gates + preflight --full +
+  steel-thread windowed (shop leg) + VISUAL-LOG + ledger + surface:
+  GH#142 wardstone 40g-bead root cause (balance, user), orphan drain
+  follow-up issue (improvised_cudgel, solid_oak_spear,
+  riverfarm_hunter.agreed, hedaults_wardstone), [Pick Lock] icon call.
 
 ## DONE (2026-08-05): anti-duplication gate LIVE (PR #395, unmerged)
 
