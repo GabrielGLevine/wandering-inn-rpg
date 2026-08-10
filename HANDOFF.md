@@ -124,6 +124,17 @@ deploy; user overwrites it if the batch lands in-window).
   [0,0,26,11], forge_hall [0,0,12,9], inn_upstairs [7,1,4,6]),
   screenshot target inn_walkthrough/02_erin_dialogue (player (7,3)
   facing up, Erin (7,2) facing down), then PR.
+  **REVIEW LANDED (during quiesce): sub-tasks 1-2 sound, sub-task 3
+  REFUTED** (C1: 8px total vs ~14px overlap; C2: facing predicate
+  misses 41/62 NPCs — facing is static data). FIX WAVE 1 adjudicated +
+  dispatched to Codex (--resume-last, wi-lane-b): drop facing predicate,
+  adjacency-only + 10px/side; attenuation applied at holder
+  construction (root-cause); mercantile_alleys night triple darkened;
+  behavioral test pins; lint divisor floor; M4 grimalkin two-palette
+  continuity = USER CALL at close (VISUAL-LOG-worthy). Report lands at
+  wi-lane-b/LANE-REPORT-FIX1.md. Full review text in this session's
+  transcript; verdict summary: all gates green, findings were
+  gate-invisible.
 - **Lane C #403 PARTIAL dispatched during quiesce (user-sanctioned,
   Codex budget):** worktree /Users/gabriel/wi-lane-c (branch
   issue/403-riverfarm-pockets), FREEZE-BEAT POCKET ONLY — witch_hollow
