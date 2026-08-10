@@ -321,3 +321,25 @@ wrong level: iterating art/params on something whose existence is
 unexamined, fixing the same surface a second time, or a reviewer
 scoring your fix against the wrong baseline. Cost of the miss here:
 one PixelLab generation, one review finding, one fix-wave redirect.
+
+## Asserted-not-measured lane claims (2026-08-10, three in one lane)
+The #423 lane shipped three false claims with one shape: a PROPERTY was
+asserted where a MEASUREMENT was owed — "(0,6) is walkable" (never
+flood-filled; the cell was islanded and the lane's own new prop was
+unreachable, the issue's exact defect class re-shipped), "present_when
+doesn't reconcile on ACCOMPLISHMENT_RECORDED" (quoted a stale AGENTS.md
+clause instead of reading world.gd), and "advisory count unchanged"
+(counted output lines, not the census). Briefs and reviews: any claim
+about reachability, presence semantics, or a lint count must name the
+measurement that produced it (flood-fill vs the loader's blocking
+model, the source line of the reconciler, a base-archive census diff).
+A reviewer's first move on such claims is to re-measure, not re-read.
+
+## Stale-waiver retirement is a COMPOSED-TREE event (2026-08-10)
+test_interactable_reachability's KNOWN_DEFECT_WAIVERS red on the #428
+MERGE commit in CI — the fixing lane's branch predated the suite, so
+the waiver deletion could not live on either parent. The move: merge
+main INTO the lane branch, delete the row, re-verify composed locally
+(import pass first — merged trees carry unimported class_name .gd),
+push, let the required checks re-run. Plan the waiver retirement as a
+branch commit, not a post-merge fix.
