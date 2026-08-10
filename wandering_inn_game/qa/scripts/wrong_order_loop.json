@@ -464,7 +464,7 @@
    "_comment": "GH#211: the kitchen-path resolution grant (cooked_meal/served_customer) levels Helper at this sleep -- no longer a quiet one.",
    "type": "toast",
    "payload_contains": {
-    "text": "[Helper Level 2] (+1 Max HP) — you start every fight full."
+    "text": "[Helper Level 2] — unlocked [Basic Repair] (+1 Max HP) — you start every fight full."
    },
    "timeout_sec": 5
   },

@@ -1027,11 +1027,11 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Issue #79: a grant-less level-up (Helper L2 grants nothing) previously announced nothing felt -- helper's con growth now states its own +1 Max HP instead of a bare bracket.",
+   "_comment": "Helper L2 now carries [Basic Repair], so the level-up announces the unlock beside its felt growth.",
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Helper Level 2] (+1 Max HP) — you start every fight full."
+    "text": "[Helper Level 2] — unlocked [Basic Repair] (+1 Max HP) — you start every fight full."
    },
    "timeout_sec": 5
   },
@@ -1156,6 +1156,107 @@
    "action": "assert_state",
    "path": "gold",
    "equals": 7
+  },
+  {
+   "_comment": "Helper L2 is the new [Basic Repair] owner. Its AUTO bar is basic_cleaning, basic_cooking, basic_repair; cast slot 3 on the Riverfarm stringer and walk the repaired span.",
+   "action": "assert_event_logged",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 3,
+    "readout_lines": [
+     "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
+     "2  [Basic Cooking] — Simple meals come out right, every time.",
+     "3  [Basic Repair] — A break put back the way it was meant to sit, and it stays put."
+    ]
+   }
+  },
+  {
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [19, 10]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {"map": "riverfarm_village"},
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "hotbar_3"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_repair",
+    "target": "riverfarm_bank_stringer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {"id": "bank_planks_mended"},
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Basic Repair] — You cut boards to the span and lay them across the stringers: the walk takes your weight end to end."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [20, 8]
+  },
+  {
+   "_comment": "The Riverfarm repair is a permanent bank, not a waking flag: sleep on the inn's real bed, wait through the veil, then require bank_planks_mended to survive unchanged.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [9, 2]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.bank_planks_mended",
+   "equals": 1
   }
  ]
 }

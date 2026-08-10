@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #58: Tab-primed field-hotbar selection loop. Same title-Continue opening as field_skills_loop (near_tactician fixture: warrior L1 at the inn, [Basic Cleaning] innate + sword-gated [Power Strike] off the equipped rusty_sword, 2-slot bar). Proves: the bar renders (slots:2); Tab primes the keyboard cursor onto slot 0 (a ui_field_hotbar_selection_rendered event, index 0, label \"[Basic Cleaning]\"); move_right steps to slot 1 and a second move_right WRAPS back to slot 0, with the player's cell provably unchanged across both -- arrows never reach Game.sim.move_player while primed; Esc disarms (selection event index -1, both skill/label empty); Tab re-primes (proves disarm didn't wedge the seam); confirm on the faced dirty_table fires the EXACT SAME stream field_skills_loop's number-key press does (skill_used{basic_cleaning,dirty_table} + cleaned_the_inn + toast) -- the number-key-equivalence exit criterion -- and activation's own one-shot disarm is proven by the trailing index:-1 selection event.",
+ "_comment": "Issue #58: Tab-primed field-hotbar selection loop. Same title-Continue opening as field_skills_loop (near_tactician fixture: warrior L1 at the inn, [Basic Cleaning] innate + sword-gated [Basic Swordwork] off the equipped rusty_sword, 2-slot bar). Proves: the bar renders (slots:2); Tab primes the keyboard cursor onto slot 0 (a ui_field_hotbar_selection_rendered event, index 0, label \"[Basic Cleaning]\"); move_right steps to slot 1 and a second move_right WRAPS back to slot 0, with the player's cell provably unchanged across both -- arrows never reach Game.sim.move_player while primed; Esc disarms (selection event index -1, both skill/label empty); Tab re-primes (proves disarm didn't wedge the seam); confirm on the faced dirty_table fires the EXACT SAME stream field_skills_loop's number-key press does (skill_used{basic_cleaning,dirty_table} + cleaned_the_inn + toast) -- the number-key-equivalence exit criterion -- and activation's own one-shot disarm is proven by the trailing index:-1 selection event.",
  "fixture_save": "near_tactician",
  "starts_at_title": true,
  "steps": [
@@ -55,14 +55,14 @@
    ]
   },
   {
-   "_comment": "near_tactician equips the rusty_sword, so the bar renders innate [Basic Cleaning] plus sword-gated [Power Strike].",
+   "_comment": "near_tactician equips the rusty_sword, so the bar renders innate [Basic Cleaning] plus sword-gated [Basic Swordwork].",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
     "slots": 2,
     "readout_lines": [
      "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
-     "2  [Power Strike] — Everything behind one blow."
+     "2  [Basic Swordwork] — Steadier hands with any blade."
     ]
    }
   },
@@ -124,7 +124,7 @@
    "name": "00_hotbar_primed_label"
   },
   {
-   "_comment": "== move_right STEPS to the second slot, and arrows never reach Game.sim.move_player while primed == the selection moves to [Power Strike] while the player's cell stays unchanged.",
+   "_comment": "== move_right STEPS to the second slot, and arrows never reach Game.sim.move_player while primed == the selection moves to [Basic Swordwork] while the player's cell stays unchanged.",
    "action": "press",
    "name": "move_right"
   },
@@ -133,8 +133,8 @@
    "type": "ui_field_hotbar_selection_rendered",
    "payload_contains": {
     "index": 1,
-    "skill": "power_strike",
-    "label": "[Power Strike]"
+    "skill": "basic_swordwork",
+    "label": "[Basic Swordwork]"
    },
    "timeout_sec": 5
   },

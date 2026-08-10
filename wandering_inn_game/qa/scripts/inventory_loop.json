@@ -834,7 +834,7 @@
    }
   },
   {
-   "_comment": "Knowledge != fieldability: even with the spear equipped (power_strike gated out of the live kit), the journal still lists BOTH warrior grants -- skills_journal is never weapon-filtered. skill_count 5 (1 innate + 4 warrior). GH#334 note 9 rides here too: `revealed_skills` is the exact set of PASSIVES the level-1 Warrior holds -- basic_swordwork and tough_body, both ap_cost 0 combat skills with no activation path anywhere in the game, so `used_skills` could never come to contain them and their authored descriptions used to be permanently unreachable (a bare '[Lesser Stamina]'-shaped row, forever). They now render revealed from the moment they are granted. The ACTIVATABLE members of the same list stay opaque: power_strike/piercing_strikes (ap_cost > 0) and basic_cleaning (field:true) are absent because this run never cast any of them -- combat_autoplay drives the PC on the melee profile, which only ever attacks. That contrast IS the proof the reveal gate still exists; a regression that pre-revealed everything would fail here, not just a regression that revealed nothing.",
+   "_comment": "Knowledge != fieldability: even with the spear equipped (power_strike gated out of the live combat kit), the journal still lists every Warrior grant -- skills_journal is never weapon-filtered. skill_count 5 (1 innate + 4 warrior). `revealed_skills` is the exact set of always-on passives the level-1 Warrior holds: tough_body only. The activatable members stay opaque because this run never cast them: power_strike/piercing_strikes have AP costs, while basic_swordwork and basic_cleaning are field-active. That contrast proves the reveal gate still exists.",
    "action": "press",
    "name": "journal"
   },
@@ -848,7 +848,6 @@
     ],
     "skill_count": 5,
     "revealed_skills": [
-     "basic_swordwork",
      "tough_body"
     ]
    },

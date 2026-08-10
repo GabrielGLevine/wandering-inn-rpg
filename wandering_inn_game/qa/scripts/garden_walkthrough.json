@@ -60,15 +60,14 @@
    }
   },
   {
-   "_comment": "Boot hotbar: 3 slots -- [Basic Cleaning], spear-gated [Piercing Strikes], [Appraise Foe]. [Basic Cooking] joins at sleep, moving [Appraise Foe] 3 -> 4.",
+   "_comment": "Boot hotbar: 2 slots -- [Basic Cleaning] and [Appraise Foe]. Sword-gated [Basic Swordwork] stays out with the spear equipped; [Basic Cooking] joins at sleep, moving [Appraise Foe] 2 -> 3.",
    "action": "wait_for_event",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 3,
+    "slots": 2,
     "readout_lines": [
      "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
-     "2  [Piercing Strikes] — Thrusts that seek the seams in any guard.",
-     "3  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."
+     "2  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."
     ]
    },
    "timeout_sec": 5
@@ -209,16 +208,15 @@
    }
   },
   {
-   "_comment": "The grant reached the armed field hotbar: [Basic Cooking] joins live, 3 -> 4 slots.",
+   "_comment": "The grant reached the armed field hotbar: [Basic Cooking] joins live, 2 -> 3 slots.",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 4,
+    "slots": 3,
     "readout_lines": [
      "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
-     "2  [Piercing Strikes] — Thrusts that seek the seams in any guard.",
-     "3  [Basic Cooking] — Simple meals come out right, every time.",
-     "4  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."
+     "2  [Basic Cooking] — Simple meals come out right, every time.",
+     "3  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."
     ]
    }
   },
@@ -388,10 +386,10 @@
   },
   {
    "action": "press",
-   "name": "hotbar_4"
+   "name": "hotbar_3"
   },
   {
-   "_comment": "Hotbar slot 4 is [Appraise Foe] after [Basic Cleaning], spear-gated [Piercing Strikes], and [Basic Cooking].",
+   "_comment": "Hotbar slot 3 is [Appraise Foe] after [Basic Cleaning] and [Basic Cooking]; sword-gated [Basic Swordwork] remains absent with the spear equipped.",
    "action": "wait_for_event",
    "type": "skill_used",
    "payload_contains": {
@@ -437,7 +435,7 @@
   },
   {
    "action": "press",
-   "name": "hotbar_4"
+   "name": "hotbar_3"
   },
   {
    "action": "wait_for_event",

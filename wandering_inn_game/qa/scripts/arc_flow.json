@@ -962,12 +962,12 @@
    }
   },
   {
-   "_comment": "THE SEAL'S LIGHT TRANSITION rides this sleep: 8 veil lines (v019-L2: 5 -> 8, one per warrior L6/L7/L8 grant the GH#380 martial slate put on levels the arc's own fights already cross -- the span itself is unchanged), re-derived from the run's own events.jsonl -- four progression lines the arc's fights earned (Warrior 6, Warrior 7, Warrior 8, Diplomat 2) plus the GDI's seal beat. GH#337 (skill cooldowns) added the fourth: power_strike now fires every other round, and the plain attacks the melee AI falls through to on the off rounds each bank their own `melee_hit`, so a fixed arc of fights earns MORE Warrior levels than it used to, appended under the black when post_game banks. Before Phase 8 this sleep rendered 3.",
+   "_comment": "THE SEAL'S LIGHT TRANSITION rides this sleep: 7 veil lines, re-derived from the run's own events.jsonl -- Warrior 6 and 7 each carry a Skill unlock, Warrior 8 now carries level growth only, Diplomat 2 advances, and the GDI's seal beat lands with them. The span itself is unchanged; moving [Basic Repair] to Helper L2 removes only Warrior 8's former unlock line.",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "lines": 8
+    "lines": 7
    }
   },
   {

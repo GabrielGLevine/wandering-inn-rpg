@@ -177,11 +177,17 @@ func _init() -> void:
 	var shipped_by_id: Dictionary = {}
 	for skill: Dictionary in shipped_skills:
 		shipped_by_id[String(skill[WIKeys.ID])] = skill
-	for cut_skill: String in ["power_strike", "piercing_strikes"]:
-		assert((shipped_by_id[cut_skill][WIKeys.CONTEXTS] as Array) == ["combat", "exploration"]
-			and bool(shipped_by_id[cut_skill][WIKeys.FIELD])
-			and bool(shipped_by_id[cut_skill]["cuts"]),
-			"%s carries the exact dual-context field cuts shape" % cut_skill)
+	for combat_only_skill: String in ["power_strike", "piercing_strikes"]:
+		assert((shipped_by_id[combat_only_skill][WIKeys.CONTEXTS] as Array) == ["combat"]
+			and not shipped_by_id[combat_only_skill].has(WIKeys.FIELD)
+			and not shipped_by_id[combat_only_skill].has("cuts")
+			and not shipped_by_id[combat_only_skill].has("field_ambient"),
+			"%s carries the exact combat-only shape" % combat_only_skill)
+	assert((shipped_by_id["basic_swordwork"][WIKeys.CONTEXTS] as Array) == ["combat", "exploration"]
+		and bool(shipped_by_id["basic_swordwork"][WIKeys.FIELD])
+		and bool(shipped_by_id["basic_swordwork"]["cuts"])
+		and String(shipped_by_id["basic_swordwork"].get("field_weapon", "")) == "sword",
+		"basic_swordwork carries the exact dual-context sword-gated field cuts shape")
 	assert(bool(shipped_by_id["flame_jet"]["burns"]), "flame_jet carries burns")
 	var w1_rows: Array = table["interactions"]
 	assert(w1_rows.size() >= 1, "the property table carries at least one row")
@@ -389,13 +395,13 @@ func _init() -> void:
 	assert(w1_cross_back.entity_at(Vector2i(18, 2)).is_empty(),
 		"the GALLERY strongbox stays absent -- a sewers burn is not a deep-tunnels burn")
 
-	# Phase-0 review can-fail: the two shipped martial cutters are field
-	# affordances only while their declared weapon family is EQUIPPED.
+	# The shipped martial cutter is a field affordance only while its declared
+	# field weapon family is EQUIPPED; combat weapon gating remains separate.
 	var w1_bare_cut := _w1_game(_w1_scene())
-	w1_bare_cut.player_skills.append("power_strike")
+	w1_bare_cut.player_skills.append("basic_swordwork")
 	_w1_face(w1_bare_cut, Vector2i(14, 3), Vector2i.UP)
-	var w1_bare_result := w1_bare_cut.use_skill_field("power_strike")
-	assert(w1_bare_result.is_empty(), "barehanded power_strike refuses a cuttable target")
+	var w1_bare_result := w1_bare_cut.use_skill_field("basic_swordwork")
+	assert(w1_bare_result.is_empty(), "barehanded Basic Swordwork refuses a cuttable target")
 	assert(not w1_bare_cut.find_entity("w1_briars").is_empty(),
 		"barehanded refusal does not remove the cuttable target")
 	assert(int(w1_bare_cut.accomplishments.get("cut_through_growth", 0)) == 0,
@@ -404,17 +410,17 @@ func _init() -> void:
 		"barehanded refusal emits only skill_no_effect -> toast")
 
 	var w1_armed_cut := _w1_game(_w1_scene())
-	w1_armed_cut.player_skills.append("power_strike")
+	w1_armed_cut.player_skills.append("basic_swordwork")
 	w1_armed_cut.inventory.assign(["rusty_sword"])
 	w1_armed_cut.equipped[WIKeys.WEAPON] = "rusty_sword"
 	_w1_face(w1_armed_cut, Vector2i(14, 3), Vector2i.UP)
-	var w1_armed_result := w1_armed_cut.use_skill_field("power_strike")
+	var w1_armed_result := w1_armed_cut.use_skill_field("basic_swordwork")
 	assert(w1_armed_result.get("burned", "") == "w1_briars",
-		"sword-equipped power_strike resolves the cuts row")
+		"sword-equipped Basic Swordwork resolves the cuts row")
 	assert(w1_armed_cut.find_entity("w1_briars").is_empty(),
-		"armed power_strike removes the cuttable target")
+		"armed Basic Swordwork removes the cuttable target")
 	assert(int(w1_armed_cut.accomplishments.get("cut_through_growth", 0)) == 1,
-		"armed power_strike banks the cuts counter")
+		"armed Basic Swordwork banks the cuts counter")
 
 	# --- Precedence (spec §4.3): the authored arm beats the table on its own
 	# entity, even when that entity also carries the target property.

@@ -246,6 +246,7 @@ const EXPECTED_SKILLS := {
 ## sweeps the WHOLE catalog for field silence, so a new effect type that is not
 ## in `_COMBAT_ONLY_EFFECT_TYPES` reds this suite before it can reach a player.
 const EXPECTED_FIELD_SKILLS := {
+	"basic_swordwork": [],
 	"sneak": [],
 	"invisibility": [],
 	"double_step": [],

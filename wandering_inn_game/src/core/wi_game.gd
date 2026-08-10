@@ -1253,9 +1253,15 @@ func _field_skill_available(skill_id: String) -> bool:
 ## which scans `inventory` for an interact gate. A sword in the pack cuts nothing.
 func _field_skill_weapon_ready(skill_id: String) -> bool:
 	var skill: Dictionary = skills.get(skill_id, {})
+	# `field_weapon` is deliberately inert without `cuts: true`; ordinary field
+	# Skills never acquire an equipment gate merely by carrying that metadata.
 	if not bool(skill.get("cuts", false)):
 		return true
-	var required_family := String(skill.get(WIKeys.WEAPON, ""))
+	# Prefer the field-only `field_weapon` key, falling back to combat's `weapon`
+	# key for existing cutters. Adding `weapon: "sword"` to Basic Swordwork is
+	# the exact combat nerf this split prevents: WICombatBuild.weapon_gated_kit
+	# consumes `weapon` and strips mismatched Skills even when they are passives.
+	var required_family := String(skill.get("field_weapon", skill.get(WIKeys.WEAPON, "")))
 	if required_family == "":
 		return true
 	var equipped_weapon: Dictionary = item(String(equipped.get(WIKeys.WEAPON, "")))

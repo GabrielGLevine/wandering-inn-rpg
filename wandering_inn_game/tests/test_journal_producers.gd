@@ -14,6 +14,26 @@ extends SceneTree
 var _events: Array = []
 
 
+class CursorHotbarProbe:
+	extends Node
+
+	var skills: Array = []
+	var selected := -1
+
+	func _init(field_skills: Array) -> void:
+		skills = field_skills.duplicate()
+
+	func slot_count() -> int:
+		return skills.size()
+
+	func set_selected(index: int) -> void:
+		selected = index
+
+	func skill_for_slot(slot: int) -> String:
+		var index := slot - 1
+		return "" if index < 0 or index >= skills.size() else String(skills[index])
+
+
 func _sink(type: String, payload: Dictionary) -> void:
 	_events.append({"type": type, "payload": payload})
 
@@ -40,6 +60,21 @@ func _new_game() -> WIGame:
 func _read(path: String) -> String:
 	assert(FileAccess.file_exists(path), "missing source file " + path)
 	return FileAccess.get_file_as_string(path)
+
+
+func _world_cursor_probe() -> Node:
+	var raw := _read("res://src/world/world.gd")
+	var marker := "func _move_field_slot_cursor(delta: int) -> void:\n"
+	var method_start := raw.find(marker)
+	var method_end := raw.find("\n\n", method_start)
+	assert(method_start >= 0 and method_end > method_start,
+		"world.gd cursor method moved; re-anchor the behavioral extraction")
+	var script := GDScript.new()
+	script.source_code = "extends Node\nvar _field_hotbar: Node\nvar _field_slot_index := -1\n\n" \
+		+ raw.substr(method_start, method_end - method_start) + "\n"
+	var err := script.reload()
+	assert(err == OK, "world.gd cursor-method extraction failed to compile: %d" % err)
+	return script.new() as Node
 
 
 func _init() -> void:
@@ -114,8 +149,9 @@ func _check_filter_agreement(skills: Dictionary) -> void:
 	assert(sim_source.contains("if _field_skill_available(id):"),
 		"field_hotbar_loadout must consume the shared live field-eligibility helper")
 	assert(sim_source.contains("and _field_skill_weapon_ready(skill_id)")
+		and sim_source.contains("skill.get(\"field_weapon\", skill.get(WIKeys.WEAPON, \"\"))")
 		and sim_source.contains("String(equipped_weapon.get(\"weapon_family\", \"\")) == required_family"),
-		"live field eligibility must preserve equipped weapon-family gating")
+		"live field eligibility must preserve field-only weapon-family gating with combat-key fallback")
 
 
 ## `bar` says which bar a tick on the row actually moves. `hotbar_loadout` is
@@ -296,7 +332,8 @@ func _check_auto_bar_cap() -> void:
 	for id: String in g.skills:
 		var skill := g.skills[id] as Dictionary
 		if bool(skill.get("field", false)) \
-				and not (bool(skill.get("cuts", false)) and String(skill.get(WIKeys.WEAPON, "")) != ""):
+				and not (bool(skill.get("cuts", false)) \
+				and String(skill.get("field_weapon", skill.get(WIKeys.WEAPON, ""))) != ""):
 			field_ids.append(id)
 	assert(field_ids.size() > WIGame.AUTO_SLOT_CAP,
 		"fixture: the shipped catalog must carry more than %d field Skills for the over-cap case to be reachable at all" % WIGame.AUTO_SLOT_CAP)
@@ -313,6 +350,28 @@ func _check_auto_bar_cap() -> void:
 	var bar: Array = g.field_hotbar_loadout()
 	assert(bar == field_ids,
 		"AUTO renders EVERY field Skill (%d), got %d -- a clip here deletes earned Skills from the field, it does not tidy the bar" % [field_ids.size(), bar.size()])
+
+	# KEYLESS-SLOT REACHABILITY PROOF. Slots ten and above have no number key,
+	# but they are not unreachable: the real world cursor wraps onto them. Keep
+	# the >=10 premise explicit so a shrinking field pool reds here instead of
+	# silently turning this into another ordinary numbered-slot wrap test.
+	assert(bar.size() >= 10,
+		"cursor-wrap premise: synthetic AUTO field bar must reach a keyless slot, got %d" % bar.size())
+	var cursor_hotbar := CursorHotbarProbe.new(bar)
+	var world := _world_cursor_probe()
+	world.set("_field_hotbar", cursor_hotbar)
+	world.set("_field_slot_index", 0)
+	world.call("_move_field_slot_cursor", -1)
+	var wrapped_index := int(world.get("_field_slot_index"))
+	assert(wrapped_index == bar.size() - 1 and cursor_hotbar.selected == wrapped_index,
+		"one backwards move from primed index 0 must wrap onto the final keyless slot")
+	assert(cursor_hotbar.skill_for_slot(wrapped_index + 1) == String(bar[wrapped_index]),
+		"wrapped cursor must select the final Skill derived from the built field bar")
+	world.call("_move_field_slot_cursor", 1)
+	assert(int(world.get("_field_slot_index")) == 0 and cursor_hotbar.selected == 0,
+		"one forwards move from the final keyless slot must wrap back to index 0")
+	world.free()
+	cursor_hotbar.free()
 
 	# A CUSTOM loadout is honoured in full for the same reason, and because
 	# `loadout_toggle` is the player's explicit curation: the redesigned tab IS

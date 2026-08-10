@@ -961,7 +961,7 @@ func _init() -> void:
 	# every class whose empty levels this walk crosses; what this line pins now is
 	# that a multi-level span lists EVERY unlock in level order beside its own
 	# felt growth.
-	assert(span_toast == "[Warrior Level 5 → 9] — unlocked [Even Footing], [Greater Strength], [Basic Repair] (+4 Max HP, +2 damage) — you start every fight full.", "multi-level batch lists every unlock in level order beside the span's felt growth")
+	assert(span_toast == "[Warrior Level 5 → 9] — unlocked [Even Footing], [Greater Strength] (+4 Max HP, +2 damage) — you start every fight full.", "multi-level batch lists every unlock in level order beside the span's felt growth")
 	g16.record_accomplishment("won_combat", 3)
 	_events.clear()
 	g16.sleep()
@@ -2941,10 +2941,10 @@ func _init() -> void:
 	assert(_count("skill_used") == 0, "unknown field skill does nothing")
 
 	var g_nf := WIGame.new(scene_p1, skills_p1, _sink, 12345)
-	g_nf.player_skills.append("power_strike")  # field-tagged, but weapon-gated
-	assert(g_nf.known_skills().has("power_strike"), "power_strike is known for this case")
+	g_nf.player_skills.append("basic_swordwork")  # field-tagged, but field-weapon-gated
+	assert(g_nf.known_skills().has("basic_swordwork"), "basic_swordwork is known for this case")
 	_events.clear()
-	var nf := g_nf.use_skill_field("power_strike")
+	var nf := g_nf.use_skill_field("basic_swordwork")
 	assert(nf.is_empty(), "weapon-gated field skill is refused while unarmed")
 	assert(_count("skill_no_effect") == 1, "weapon-gated refusal emits skill_no_effect")
 	assert(_count("toast") == 1, "weapon-gated refusal toasts")
@@ -3277,12 +3277,19 @@ func _init() -> void:
 	assert(gLoad.field_hotbar_loadout() == ["basic_cleaning", "basic_cooking", "observe"], "unarmed AUTO field order is byte-stable: innate, helper, tactician")
 	gLoad.inventory.assign(["rusty_sword"])
 	gLoad.equipped[WIKeys.WEAPON] = "rusty_sword"
-	assert(gLoad.field_hotbar_loadout() == ["basic_cleaning", "power_strike", "basic_cooking", "observe"],
-		"equipped sword exposes only the matching cuts skill")
+	assert(gLoad.field_hotbar_loadout() == ["basic_cleaning", "basic_swordwork", "basic_cooking", "observe"],
+		"equipped sword exposes Basic Swordwork as the martial field cutter")
 	gLoad.inventory.assign(["relcs_spare_spear"])
 	gLoad.equipped[WIKeys.WEAPON] = "relcs_spare_spear"
-	assert(gLoad.field_hotbar_loadout() == ["basic_cleaning", "piercing_strikes", "basic_cooking", "observe"],
-		"equipped spear exposes only the matching cuts skill")
+	assert(gLoad.field_hotbar_loadout() == ["basic_cleaning", "basic_cooking", "observe"],
+		"equipped spear excludes sword-only Basic Swordwork from the field bar")
+	var spear_combat_kit := WICombatBuild.weapon_gated_kit(
+		WIProgression.granted_skills({"warrior": 1}, combat_config["classes"]),
+		"spear", gLoad.skills)
+	assert(spear_combat_kit.has("basic_swordwork"),
+		"field_weapon never gates Basic Swordwork out of a spear warrior's combat kit")
+	assert(spear_combat_kit.has("piercing_strikes") and not spear_combat_kit.has("power_strike"),
+		"combat weapon gating still uses the combat-only weapon key")
 	gLoad.inventory.clear()
 	gLoad.equipped[WIKeys.WEAPON] = ""
 
@@ -4188,10 +4195,9 @@ func _check_unactivatable_skills_pre_revealed(scene_config: Dictionary, skill_co
 			var entry := raw_skill as Dictionary
 			by_id[String(entry[WIKeys.ID])] = entry
 
-	# Both skills a level-1 Warrior starts with are ap_cost-0 combat passives.
-	# Before this ruling they rendered as a bare "[Basic Swordwork]" for the
-	# whole run, on a save that had never used anything.
-	for passive_id: String in ["basic_swordwork", "tough_body"]:
+	# Tough Body is the level-1 Warrior's always-on passive. Basic Swordwork now
+	# has a field activation path and therefore remains behind the reveal gate.
+	for passive_id: String in ["tough_body"]:
 		assert(by_id.has(passive_id), "fixture: warrior L1 grants %s" % passive_id)
 		var passive := by_id[passive_id] as Dictionary
 		assert(bool(passive["revealed"]),
@@ -4203,7 +4209,7 @@ func _check_unactivatable_skills_pre_revealed(scene_config: Dictionary, skill_co
 
 	# ...and the gate still EXISTS for everything with a way in. This is the
 	# half a regression that pre-revealed the whole catalog would break.
-	for activatable_id: String in ["power_strike", "piercing_strikes", "basic_cleaning"]:
+	for activatable_id: String in ["basic_swordwork", "power_strike", "piercing_strikes", "basic_cleaning"]:
 		assert(by_id.has(activatable_id), "fixture: %s is in the level-1 Warrior journal" % activatable_id)
 		assert(not bool((by_id[activatable_id] as Dictionary)["revealed"]),
 			"activatable skill %s must stay opaque until it is actually used" % activatable_id)

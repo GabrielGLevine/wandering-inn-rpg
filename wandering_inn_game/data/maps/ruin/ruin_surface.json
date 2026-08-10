@@ -767,7 +767,7 @@
    "cuttable": true,
    "burn_counter": "burned_the_briar_arch",
    "cut_counter": "cut_the_briar_arch",
-   "locked_toast": "The western briars choke the arch. [Firefly] or [Flame Jet] burns them; [Power Strike] or [Piercing Strikes] cuts them with the matching weapon in hand.",
+   "locked_toast": "The western briars choke the arch. [Firefly] or [Flame Jet] burns them; [Basic Swordwork] cuts them with the matching weapon in hand.",
    "burn_toast": "Fire consumes the western briars. One side of the arch is open.",
    "cut_toast": "Steel cuts the western briars at the roots. One side of the arch is open."
   },
@@ -785,7 +785,7 @@
    "cuttable": true,
    "burn_counter": "burned_the_briar_arch",
    "cut_counter": "cut_the_briar_arch",
-   "locked_toast": "The eastern briars choke the arch. [Firefly] or [Flame Jet] burns them; [Power Strike] or [Piercing Strikes] cuts them with the matching weapon in hand.",
+   "locked_toast": "The eastern briars choke the arch. [Firefly] or [Flame Jet] burns them; [Basic Swordwork] cuts them with the matching weapon in hand.",
    "burn_toast": "Fire consumes the eastern briars. One side of the arch is open.",
    "cut_toast": "Steel cuts the eastern briars at the roots. One side of the arch is open."
   },

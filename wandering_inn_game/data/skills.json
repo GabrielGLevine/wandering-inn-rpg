@@ -15,14 +15,20 @@
   {
    "id": "basic_swordwork",
    "display_name": "[Basic Swordwork]",
+   "icon": "icon_power_strike",
    "contexts": [
-    "combat"
+    "combat",
+    "exploration"
    ],
+   "field": true,
+   "cuts": true,
+   "field_weapon": "sword",
    "ap_cost": 0,
    "effect": {
     "type": "hit_bonus",
     "amount": 5
    },
+   "field_ambient": "[Basic Swordwork] — You test the blade's balance, but nothing nearby calls for steel.",
    "description": "Steadier hands with any blade."
   },
   {
@@ -42,11 +48,8 @@
    "id": "power_strike",
    "display_name": "[Power Strike]",
    "contexts": [
-    "combat",
-    "exploration"
+    "combat"
    ],
-   "field": true,
-   "cuts": true,
    "ap_cost": 3,
    "weapon": "sword",
    "icon": "icon_power_strike",
@@ -55,7 +58,6 @@
     "mult": 2.0
    },
    "cooldown_rounds": 2,
-   "field_ambient": "[Power Strike] — You set your feet, then ease off the swing. Nothing here wants cutting.",
    "description": "Everything behind one blow."
   },
   {
@@ -229,11 +231,8 @@
    "id": "piercing_strikes",
    "display_name": "[Piercing Strikes]",
    "contexts": [
-    "combat",
-    "exploration"
+    "combat"
    ],
-   "field": true,
-   "cuts": true,
    "ap_cost": 2,
    "weapon": "spear",
    "icon": "icon_piercing_strikes",
@@ -241,7 +240,6 @@
     "type": "damage_mult",
     "mult": 1.4
    },
-   "field_ambient": "[Piercing Strikes] — You level the spear and hunt for the gap. There is nothing here to put a point through.",
    "description": "Thrusts that seek the seams in any guard."
   },
   {
