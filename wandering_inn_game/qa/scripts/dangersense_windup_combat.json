@@ -1,0 +1,69 @@
+{
+ "_comment": "Issue #421 M4: the FIRST live canonical for combat-context [Dangersense]. data/skills.json gives the skill contexts [combat, exploration] and one effect id for both; #413 gave the exploration half two canonicals and left the combat half covered by data pins alone. In combat the skill is the reason a telegraphed [Slam] paints its blast footprint on the board: combat_playback captures `_ui.dangersense` at ENQUEUE time off the fielded pc's own skill list and the windup_danger terrain overlay is applied ONLY when that read is true. So the pinned pair here is the sim beat (windup_declared, side_vault_construct/slam, exact cells) and its rendering confirmation (ui_terrain_rendered kind=windup_danger over the SAME cells). CAN-FAIL: that ui_terrain_rendered pin is the holder gate itself -- delete or invert the dangersense read in combat_playback.gd, or drop the skill from the build, and this script reds while the fight still resolves identically. The always-paint mutation is the complementary case and is already refereed at unit level by test_combat_visuals' false/true windup pair.",
+ "fixture_save": "dangersense_windup_start",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"action": "assert_state", "path": "current_map", "equals": "trapped_halls"},
+  {"action": "assert_state", "path": "player_cell", "equals": [3, 12]},
+  {"action": "assert_state", "path": "classes.infiltrator", "equals": 14},
+  {
+   "_comment": "PASSIVE, both halves: held and doing work, yet never a field-hotbar cast (the [Even Footing] schema this skill was authored against).",
+   "action": "assert_field_skill_absent",
+   "skill": "dangersense"
+  },
+  {
+   "_comment": "Bump-move into the guard's cell to set facing off a real blocked move (the walkthroughs' idiom), then commit.",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {"action": "assert_state", "path": "player_cell", "equals": [3, 12]},
+  {"action": "press", "name": "interact"},
+  {"action": "wait_for_event", "type": "combat_started", "payload_contains": {"arena": "trapped_halls_snare"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5},
+  {
+   "_comment": "The holder read the combat overlay is gated on, taken from the FIELDED combatant rather than from the fixture -- an Infiltrator holds [Dangersense] by inheritance from the Rogue ladder's L4 grant.",
+   "action": "assert_state",
+   "path": "combat.combatants.pc.skills",
+   "contains": "dangersense"
+  },
+  {"action": "combat_autoplay", "max_turns": 200},
+  {"action": "wait_for_event", "type": "combat_finished", "payload_contains": {"victory": true}, "timeout_sec": 30},
+  {
+   "_comment": "THE SIM BEAT: the construct spends a round gathering, and the payload freezes the 3x3 footprint the blow will land on.",
+   "action": "assert_event_logged",
+   "type": "windup_declared",
+   "payload_contains": {
+    "id": "side_vault_construct",
+    "skill": "slam",
+    "cells": [[8, 2], [8, 3], [8, 4], [9, 2], [9, 3], [9, 4], [10, 2], [10, 3], [10, 4]]
+   }
+  },
+  {
+   "_comment": "THE DANGERSENSE HALF: the same nine cells painted on the board, under the windup_danger kind board_renderer reserves for this skill. A non-holder gets the feed line and the caster flash and NOTHING here.",
+   "action": "assert_event_logged",
+   "type": "ui_terrain_rendered",
+   "payload_contains": {
+    "kind": "windup_danger",
+    "cells": [[8, 2], [8, 3], [8, 4], [9, 2], [9, 3], [9, 4], [10, 2], [10, 3], [10, 4]]
+   }
+  },
+  {
+   "_comment": "Issue #76's telegraph tell rides the same beat -- proves the windup actually played rather than being inferred from a payload.",
+   "action": "assert_event_logged",
+   "type": "audio_played",
+   "payload_contains": {"id": "skill_windup_tell"}
+  },
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5},
+  {"action": "assert_state", "path": "accomplishments.warded_side_vault_secured", "equals": 1},
+  {"action": "screenshot", "name": "00_windup_danger_painted"}
+ ]
+}
