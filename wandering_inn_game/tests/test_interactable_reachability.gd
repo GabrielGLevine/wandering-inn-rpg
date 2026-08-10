@@ -83,29 +83,18 @@ const DESIGN_WAIVERS := {
 	"mercantile_alleys/broker_hands": "dialogue-committed encounter rig, parked hidden by design (#318 beat 2)",
 }
 
-## THE INTERACTABLE PREDICATE = every arm `WIInteractions.dispatch` actually has
-## (src/core/interactions.gd:63-190). Held to the dispatch table rather than to
-## a taste call, so "is this content?" is answered by the code that answers the
-## player. The `npc`, `door` and `encounter` kinds dispatch whole; a `prop`
-## dispatches on whichever of these keys it carries. A prop with NONE of them
-## falls through to the bare `_use_skill("")` refusal -- ambient scenery, and
-## excluded, but COUNTED and reported so the exclusion is never silent.
-const PROP_ARM_KEYS: Array[String] = [
-	"sleep",                       # interactions.gd:81  -- beds
-	"board",                       # interactions.gd:86  -- bounty board
-	"delivery_board",              # interactions.gd:88  -- delivery board
-	"contains",                    # interactions.gd:90  -- containers
-	"door_when",                   # interactions.gd:92  -- door-shaped props
-	"portal_menu",                 # interactions.gd:99  -- Magical Door carriers
-	"fence_menu",                  # interactions.gd:105 -- Ratici's register
-	"on_interact_accomplishment",  # interactions.gd:107 -- the plain interact
-	"requires_skill",              # interactions.gd:157 -- the skill-hint arm
-	"on_skill_use",                # the Skill-arm props (use_skill target)
-	"skill_uses",                  # per-Skill arm map
-	"cookware",                    # GH#391: any pot answers any cooking Skill
-	"conversation",                # npc/encounter dialogue, also on props
-	"dialogue",
-]
+## THE INTERACTABLE PREDICATE = every arm `WIInteractions.dispatch` actually
+## has. The `npc`, `door` and `encounter` kinds dispatch whole; a `prop`
+## dispatches on whichever of `WIInteractions.PROP_ARM_KEYS` it carries. A prop
+## with NONE of them falls through to the bare `_use_skill("")` refusal --
+## ambient scenery, excluded, but COUNTED and reported so it is never silent.
+##
+## The key list is NOT copied here (review I-1): it lives on WIInteractions,
+## beside the match block it describes, and a python tripwire in
+## scripts/tests/test_data_lint.py re-extracts the arms from interactions.gd's
+## OWN text and asserts the const still equals them. A second hand-copy here --
+## with hand-maintained line citations that were already 8-for-8 stale -- is the
+## exact drift that contract exists to prevent.
 const INTERACTABLE_KINDS: Array[String] = ["npc", "door", "encounter"]
 
 var _events: Array = []
@@ -205,8 +194,19 @@ func _init() -> void:
 			if _has_adjacent_stand(reachable, bcell) or reported.has(bkey) or DESIGN_WAIVERS.has(bkey) or KNOWN_DEFECT_WAIVERS.has(bkey):
 				continue
 			reported[bkey] = true
-			failures.append("%s (%s gate at %d,%d): no orthogonally-adjacent standable cell even with the gate itself removed -- nothing can ever clear it, so whatever it seals is unreachable"
-				% [bkey, String(blocker["why"]), bcell.x, bcell.y])
+			# Review-minor: the two blocker classes clear by DIFFERENT means, so
+			# they must not share a sentence. A burnable/cuttable gate is cleared
+			# by a Skill AIMED at it from an adjacent cell, so no adjacent cell
+			# means no cast is possible -- a hard defect. A `present_when` blocker
+			# clears when a world counter banks, which needs no adjacency at all;
+			# what its missing neighbour costs is the ability to interact with the
+			# thing itself while it is there.
+			if String(blocker["why"]) == "burnable/cuttable":
+				failures.append("%s (burnable/cuttable gate at %d,%d): no orthogonally-adjacent standable cell even with the gate itself removed -- no Skill can ever be aimed at it, so whatever it seals is unreachable"
+					% [bkey, bcell.x, bcell.y])
+			else:
+				failures.append("%s (present_when blocker at %d,%d): no orthogonally-adjacent standable cell even with the blocker itself removed -- its counter may still flip it, but nothing on this map can be interacted with from beside it"
+					% [bkey, bcell.x, bcell.y])
 
 	# A waiver that stopped firing is a waiver hiding nothing, and leaving it in
 	# would let the SAME defect ship again silently the day someone re-breaks the
@@ -301,13 +301,13 @@ func _cell_of(entity: Dictionary) -> Vector2i:
 	return Vector2i(int(entity["cell"][0]), int(entity["cell"][1]))
 
 
-## Every arm `WIInteractions.dispatch` has -- see PROP_ARM_KEYS above.
+## Every arm `WIInteractions.dispatch` has -- see WIInteractions.PROP_ARM_KEYS.
 func _is_interactable(entity: Dictionary) -> bool:
 	if not _has_cell(entity):
 		return false
 	if INTERACTABLE_KINDS.has(String(entity.get("kind", ""))):
 		return true
-	for key: String in PROP_ARM_KEYS:
+	for key: String in WIInteractions.PROP_ARM_KEYS:
 		var value: Variant = entity.get(key, null)
 		if value == null:
 			continue
