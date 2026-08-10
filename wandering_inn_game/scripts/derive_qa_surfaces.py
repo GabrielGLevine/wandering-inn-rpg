@@ -15,7 +15,8 @@ ids) so an unrelated string that happens to collide is never mistaken for
 a reference. Fixtures come from BOTH the harness pre-seed (`fixture_save`/
 `legacy_seed`/the manifest row's `fixture`) AND every mid-script
 `install_fixture` action's `fixture` (#417) -- each of those is loaded for
-real, so each one's map/skills enrich the surface exactly like the pre-seed's. "systems" is the one taxonomy that needs an authored marker
+real, so each one's map/skills enrich the surface exactly like the
+pre-seed's. "systems" is the one taxonomy that needs an authored marker
 table (the game has no per-system metadata to mine beyond skills.json's
 coarse combat/exploration "contexts") -- everything else is pure lookup.
 
@@ -166,17 +167,34 @@ def _collect_signals(node, keys: set, values: set, path_equals: list) -> None:
 			_collect_signals(item, keys, values, path_equals)
 
 
+def _fixture_save_names(spec) -> list[str]:
+	"""A script's `fixture_save` normalized to the fixture name(s) it seeds.
+	qa/test_driver.gd's _install_fixture_saves() accepts BOTH a bare String and
+	an ARRAY of {fixture, slot} Dictionaries (test_driver.gd:146-153). No script
+	uses the array form today, but reading it as a plain string silently dropped
+	EVERY fixture such a script seeds -- the same false-safe #417 fixed for
+	install_fixture, just waiting for the first author to use the shape the
+	driver already supports. Anything else (the driver's own _fail case) names
+	nothing."""
+	if isinstance(spec, str):
+		return [spec] if spec else []
+	if isinstance(spec, list):
+		return [e["fixture"] for e in spec
+			if isinstance(e, dict) and isinstance(e.get("fixture"), str) and e["fixture"]]
+	return []
+
+
 def _collect_installed_fixtures(node, out: set) -> None:
 	"""#417: a mid-script `install_fixture` action swaps a DIFFERENT fixture
 	into a save slot and loads it -- that fixture is every bit as real a
 	dependency as `fixture_save`/`legacy_seed`, but it used to be invisible
 	here, so `--touching qa/fixtures/<it>.json` selected NOTHING (a false-safe:
 	briar_arch_locked installs near_briar_arch_cut in PHASE 2 while its row
-	named only near_briar_arch_locked). Walks the whole parsed script rather
-	than just `steps[*]` so any future nesting shape (a step list inside a
-	branch/repeat container) is covered by construction; "_comment" is skipped
-	exactly as in _collect_signals, so prose naming a fixture can never leak a
-	tag."""
+	named only near_briar_arch_locked). Recurses through the step tree it is
+	handed (the call site passes `script["steps"]`) rather than scanning only
+	its top level, so a step nested inside any future container shape is
+	covered by construction; "_comment" is skipped at every level exactly as
+	in _collect_signals, so prose naming a fixture can never leak a tag."""
 	if isinstance(node, dict):
 		if node.get("action") == "install_fixture":
 			fixture = node.get("fixture")
@@ -207,13 +225,15 @@ def derive_surfaces_for(entry: dict, known_maps: set, known_skills: set,
 
 	# #111: `legacy_seed` (a pre-rename user-dir fixture placed by run_qa.sh)
 	# is a real fixture dependency, same as fixture_save.
-	seed_fixture = script.get("fixture_save") or script.get("legacy_seed") or entry.get("fixture")
+	seed_fixtures = _fixture_save_names(script.get("fixture_save"))
+	if not seed_fixtures:
+		fallback = script.get("legacy_seed") or entry.get("fixture")
+		if isinstance(fallback, str) and fallback:
+			seed_fixtures = [fallback]
 	maps = {v for v in values if v in known_maps}
 	skills = {v for v in values if v in known_skills}
 	dialogue = {v for v in values if v in known_dialogue}
-	fixtures: set = set()
-	if isinstance(seed_fixture, str) and seed_fixture:
-		fixtures.add(seed_fixture)
+	fixtures: set = set(seed_fixtures)
 	# #417: mid-script install_fixture swaps count as fixture dependencies too.
 	_collect_installed_fixtures(script.get("steps", []), fixtures)
 
@@ -274,7 +294,10 @@ def fixture_field_disagreements() -> list[tuple[str, str, str]]:
 	script had moved to thicket_legacy_start. Rule: when BOTH are present they
 	must MATCH. One side absent stays legal (a script may carry fixture_save
 	with no row field, and a row may name the fixture for a script that seeds
-	via `legacy_seed`), so this only ever fires on a real contradiction."""
+	via `legacy_seed`), so this only ever fires on a real contradiction. Array-
+	form `fixture_save` (test_driver.gd:148-153) seeds several fixtures at once,
+	so the row agrees when it names ANY of them; for the string form that is
+	byte-identically the old `own != row` test."""
 	manifest = _load(MANIFEST_PATH)
 	out: list[tuple[str, str, str]] = []
 	for entry in manifest["scripts"]:
@@ -283,9 +306,9 @@ def fixture_field_disagreements() -> list[tuple[str, str, str]]:
 		script_path = os.path.join(SCRIPTS_DIR, f"{name}.json")
 		if not row or not os.path.isfile(script_path):
 			continue
-		own = _load(script_path).get("fixture_save")
-		if own and own != row:
-			out.append((name, str(row), str(own)))
+		own = _fixture_save_names(_load(script_path).get("fixture_save"))
+		if own and row not in own:
+			out.append((name, str(row), ", ".join(own)))
 	return out
 
 
