@@ -4413,3 +4413,18 @@ New rows from this batch:
   enchanter's bench — bespoke art follow-up.
 - [ ] `alley_enchanter_card` (mercantile_alleys 0,5) reuses
   `price_board` for a nailed-up shop card.
+
+## 2026-08-10 — reachability-wave close: composed windowed eye-read (steel_thread seed 9, 63 plates)
+
+- [x] WAVE PROOF: `06bb_enchanter_shop_the_bench_you_can_reach.png` —
+  Hedault stands on open floor with the player adjacent; the exact
+  defect (#423) visibly closed in the composed run.
+- [ ] `enchanter_shop` right half reads SPARSE — one floating lamp glow
+  over empty boards; wants shelving/stock dressing on a future art
+  pass (interiors shipped deliberately lean; user eye-call).
+- [ ] Work-room door legibility: the blue-framed panel sprite reads as
+  a WINDOW at a glance; the locked-door affordance is carried by the
+  toast, not the art. Candidate for a bespoke door sprite alongside
+  the [Pick Lock] icon row above.
+- [ ] The center floor mat's pale texture reads as a dropped sheet of
+  paper at 1x zoom. Low priority.
