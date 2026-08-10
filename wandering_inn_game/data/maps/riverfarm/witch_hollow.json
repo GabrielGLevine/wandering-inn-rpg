@@ -798,7 +798,7 @@
    "cuttable": true,
    "burn_counter": "burned_hollow_briar_gate",
    "cut_counter": "cut_hollow_briar_gate",
-   "locked_toast": "Briars knot the narrow hollow shut. [Firefly] or [Flame Jet] can burn them; [Basic Swordwork] can cut them with a sword in hand.",
+   "locked_toast": "Briars knot the narrow hollow shut. [Flame Jet] can burn them; [Basic Swordwork] can cut them with a sword in hand.",
    "burn_toast": "Fire races through the dry briar and opens the narrow hollow.",
    "cut_toast": "Steel severs the briar at its old knots and opens the narrow hollow."
   },

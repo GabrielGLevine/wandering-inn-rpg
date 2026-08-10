@@ -1117,11 +1117,27 @@ func _reconcile_dangersense_overlay() -> void:
 	)
 	if regions == _dangersense_state:
 		return
+	# #421 M2: the ids we WERE warning about, captured before the state swap --
+	# an empty new set is a teardown, and a teardown that emits nothing is
+	# invisible to QA (the old shape simply stopped firing
+	# UI_DANGERSENSE_RENDERED, which no assertion can distinguish from "the
+	# feature was never wired"). Every producer of an empty set routes through
+	# here -- combat opening, the field hiding, an encounter going
+	# dormant/warded, a map with nothing to warn about -- so one emit site
+	# covers them all.
+	var cleared: Array[String] = []
+	for region: Dictionary in _dangersense_state:
+		cleared.append(String(region.get("encounter", "")))
 	_dangersense_state.assign(regions)
 	if not regions.is_empty():
 		ObservableBus.emit_domain_event(WIEvents.UI_DANGERSENSE_RENDERED, {
 			"map": Game.sim.current_map,
 			"regions": regions,
+		})
+	elif not cleared.is_empty():
+		ObservableBus.emit_domain_event(WIEvents.UI_DANGERSENSE_CLEARED, {
+			"map": Game.sim.current_map,
+			"cleared": cleared,
 		})
 
 
@@ -1824,8 +1840,27 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_entity_visuals.erase(String(payload["id"]))
 		_reconcile_dangersense_overlay()
 	elif type == WIEvents.COMBAT_STARTED:
+		# TRAP (#421 M5, and the reason this arm carries `_disarm_field_slot()`
+		# rather than the `type in [...]` list at the bottom of this chain):
+		# COMBAT_STARTED used to appear in BOTH, and this is an if/elif chain --
+		# the first match wins, so the list's copy was DEAD ON ARRIVAL. It was
+		# added by "Disarm the primed cursor when combat or a conversation
+		# opens", whose combat half therefore never ran, and #413 then hung a
+		# second `_reconcile_dangersense_overlay()` off the same dead branch.
+		# One live path now. Do NOT re-add COMBAT_STARTED to that list to "also"
+		# get the hotbar reset -- it will silently do nothing again.
 		_field_root.visible = false
+		_disarm_field_slot()
 		_reconcile_dangersense_overlay()
+	elif type == WIEvents.ENCOUNTER_GRACE_ENDED:
+		# #421 I3: the GH#374 defeat grace just lapsed inside
+		# `_check_trigger_radius`, which runs AFTER move_player's PLAYER_MOVED.
+		# The reconcile on that move already ran against the pre-lapse ward, so
+		# without this arm the warning square for the encounter the player just
+		# walked out of stays hidden until the next step -- the step back IN,
+		# which springs the ambush. See the event's own doc comment.
+		if not _map_transition_stale_cover():
+			_reconcile_dangersense_overlay()
 	elif type == WIEvents.UI_COMBAT_HIDDEN:
 		_field_root.visible = true
 		_refresh_entities_watching_dormant()
@@ -1935,11 +1970,15 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 					_spawn_burn_poof(tc_cell)
 				"cleared":
 					_spawn_burn_poof(tc_cell)
-	elif type in [WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED, WIEvents.COMBAT_STARTED]:
-		# The first five are exactly the events
+	elif type in [WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED]:
+		# These are exactly the events
 		# `field_hotbar.gd`'s `_render()` re-derives the slot LIST on -- the
 		# pad cursor here must reset alongside it (a stale index could point
 		# past a shrunk list, or at a now-different skill on a same-size one).
+		# COMBAT_STARTED belongs here by intent but CANNOT live here: it is
+		# claimed by its own arm higher up the chain (#421 M5 -- read that
+		# arm's TRAP before touching this list), which now owns both the
+		# disarm and the reconcile.
 		_disarm_field_slot()
 		_reconcile_dangersense_overlay()
 

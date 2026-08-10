@@ -23,6 +23,16 @@ const TERRAIN_CHANGED := &"terrain_changed"
 const SNEAK_STARTED := &"sneak_started"
 const SNEAK_ENDED := &"sneak_ended"
 const WARD_PLACED := &"ward_placed"
+## GH#374's invisible defeat grace LAPSED -- the player walked out of the
+## encounter's trigger radius and the suppression ended, so the ambush is armed
+## again. Emitted from inside `_check_trigger_radius`, i.e. AFTER the proximity
+## pass has already mutated `warded_encounters`. #421 I3: `move_player` emits
+## PLAYER_MOVED *before* that pass, so a presentation layer reconciling on the
+## move alone always reads PRE-step ward state and can only learn about the
+## lapse one step late -- which, for the [Dangersense] overlay, meant the
+## warning square appeared on the very step the ambush fired instead of before
+## it. This is the post-check beat that layer listens to.
+const ENCOUNTER_GRACE_ENDED := &"encounter_grace_ended"
 const COMPANION_CHANGED := &"companion_changed"
 const LOADOUT_CHANGED := &"loadout_changed"
 
@@ -150,6 +160,13 @@ const UI_SNEAK_RENDERED := &"ui_sneak_rendered"
 const UI_TELEPORT_RENDERED := &"ui_teleport_rendered"
 const UI_WARD_RENDERED := &"ui_ward_rendered"
 const UI_DANGERSENSE_RENDERED := &"ui_dangersense_rendered"
+## #421 M2, TEARDOWN OBSERVABILITY: the [Dangersense] region set went from
+## non-empty to EMPTY -- combat opened, the field hid, the encounter went
+## dormant/warded, the holder left the map. UI_DANGERSENSE_RENDERED alone is
+## unfalsifiable about disappearance (it simply stops firing), so QA could not
+## pin WHEN a warning stopped being shown. `cleared` carries the encounter ids
+## that were being warned about a beat earlier.
+const UI_DANGERSENSE_CLEARED := &"ui_dangersense_cleared"
 const UI_COMPANION_RENDERED := &"ui_companion_rendered"
 const UI_SLEEP_VEIL_RENDERED := &"ui_sleep_veil_rendered"
 const UI_SLEEP_VEIL_FINISHED := &"ui_sleep_veil_finished"

@@ -516,6 +516,23 @@ func _check_trigger_radius(skipped_ids: Array[String] = []) -> void:
 			# math is pure, so a warded encounter's event stream is unchanged.
 			if _has_exit_grace(ent_id):
 				warded_encounters.erase(ent_id)
+				# #421 I3, THE POST-CHECK BEAT. `move_player` emits PLAYER_MOVED
+				# BEFORE calling this function, so every listener that reconciles
+				# on the move alone sees the ward state as it was BEFORE this
+				# erase. The [Dangersense] overlay is one: without this event it
+				# kept the encounter hidden for the whole exit step and only
+				# revealed the warning square on the next step INTO the radius --
+				# the same step that springs the ambush, i.e. a warning that
+				# arrives with the thing it warns about. Emitted here, at the
+				# mutation, rather than at the end of `move_player`: this is the
+				# only ward-state change the proximity pass makes, so a
+				# per-move heartbeat would be noise, and `_blink_field`'s own
+				# call gets the same correctness for free.
+				_emit(WIEvents.ENCOUNTER_GRACE_ENDED, {
+					"encounter": ent_id,
+					"map": current_map,
+					"cell": [ent_cell.x, ent_cell.y],
+				})
 			continue
 		if warded_encounters.has(ent_id):
 			continue

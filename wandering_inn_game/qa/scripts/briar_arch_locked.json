@@ -44,7 +44,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The western briars choke the arch. [Firefly] or [Flame Jet] burns them; [Basic Swordwork] cuts them with the matching weapon in hand."
+    "text": "The western briars choke the arch. [Flame Jet] burns them; [Basic Swordwork] cuts them with the matching weapon in hand."
    },
    "timeout_sec": 5,
    "_comment": "Review L6/K5: ONE locked_toast reaches EVERY build (the sewer_debris / collapsed_gallery_shoring precedent) and names both modes plus the weapon the cut needs. The old requires_skill:kindle steered the hint arm so only [Firefly] holders were taught, and a cutter holding the answer was told it lacked kindle."
@@ -53,7 +53,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "The western briars choke the arch. [Firefly] or [Flame Jet] burns them; [Basic Swordwork] cuts them with the matching weapon in hand."
+    "text": "The western briars choke the arch. [Flame Jet] burns them; [Basic Swordwork] cuts them with the matching weapon in hand."
    },
    "timeout_sec": 5
   },
@@ -276,7 +276,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The western briars choke the arch. [Firefly] or [Flame Jet] burns them; [Basic Swordwork] cuts them with the matching weapon in hand."
+    "text": "The western briars choke the arch. [Flame Jet] burns them; [Basic Swordwork] cuts them with the matching weapon in hand."
    },
    "timeout_sec": 5
   },

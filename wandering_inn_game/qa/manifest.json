@@ -6959,6 +6959,62 @@
      "save"
     ]
    }
+  },
+  {
+   "_comment": "#421 lane marker; rows appended last.",
+   "script": "dangersense_grace_reentry",
+   "seed": 9,
+   "fixture": "dangersense_grace_start",
+   "note": "#421 I3/M2: the world overlay across a GH#374 defeat grace -- teardown (ui_dangersense_cleared) when the ambush opens, region correctly absent while the grace holds, and the warning restored on the EXIT step (post-check encounter_grace_ended) with the second combat_started still one step away",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "dangersense_grace_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "dangersense"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "dangersense_windup_combat",
+   "seed": 1,
+   "fixture": "dangersense_windup_start",
+   "note": "#421 M4: the first live canonical for combat-context [Dangersense] -- a telegraphed [Slam] declares and the holder-gated windup_danger board overlay paints the same nine cells",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "dangersense_windup_start"
+    ],
+    "skills": [
+     "dangersense",
+     "observe",
+     "slam"
+    ],
+    "dialogue": [],
+    "systems": [
+     "audio",
+     "combat",
+     "exploration"
+    ]
+   }
   }
  ]
 }
