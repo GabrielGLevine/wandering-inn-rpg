@@ -102,9 +102,10 @@ codex direct dispatch). Lane worktrees/branches cleaned.
 31406011609 green: full asset-overlay QA gate + wasm + butler to itch
 + desktop exports). Post-tag playtest verdicts applied pre-tag (crate
 toast, VISUAL-LOG rows); #423 Hedault shop + #424 orphan lint filed.
-**USER-HELD (remaining):** · grimalkin two-palette continuity ·
-pond-sprite twin eye-read · [Rope Work] ACK · parlor-music ear-gate ·
-Coyle sign verdict.
+**Batch-review verdicts (user, 2026-08-10):** parlor music PASSED ·
+pond twins FINE · Coyle sign reads well (crate toast fixed pre-tag) ·
+grimalkin → VISUAL-LOG follow-up row. **USER-HELD (remaining):**
+[Rope Work] ACK only.
 **Watch line:** `wandering_inn_game/qa/run_qa.sh steel_thread windowed
 --seed=9` (~5 min headless-measured + settle; 62 scenes).
 
