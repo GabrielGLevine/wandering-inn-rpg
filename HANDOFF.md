@@ -104,8 +104,9 @@ codex direct dispatch). Lane worktrees/branches cleaned.
 toast, VISUAL-LOG rows); #423 Hedault shop + #424 orphan lint filed.
 **Batch-review verdicts (user, 2026-08-10):** parlor music PASSED ·
 pond twins FINE · Coyle sign reads well (crate toast fixed pre-tag) ·
-grimalkin → VISUAL-LOG follow-up row. **USER-HELD (remaining):**
-[Rope Work] ACK only.
+grimalkin → VISUAL-LOG follow-up row. **USER-HELD: none** — [Rope Work] resolved 2026-08-10 as [Rope Arrow]
+(user overruled the spoiler block, CHOICE-LOG 27; on main post-v0.19.0,
+rides the next tag).
 **Watch line:** `wandering_inn_game/qa/run_qa.sh steel_thread windowed
 --seed=9` (~5 min headless-measured + settle; 62 scenes).
 
