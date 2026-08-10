@@ -135,6 +135,14 @@ deploy; user overwrites it if the batch lands in-window).
   wi-lane-b/LANE-REPORT-FIX1.md. Full review text in this session's
   transcript; verdict summary: all gates green, findings were
   gate-invisible.
+  **FIX WAVE 1 LANDED + WIP-COMMITTED 4fec8fa8 (pushed,
+  issue/400-carried-rows).** All fixes in, gameplay gates green (CA
+  wrapper artifact only). REMAINING for lane B close: controller
+  windowed crops (rectangles above) + Erin dialogue-separation
+  screenshot + PR with [ci-full]. Note from fix report: the call-order
+  RED was superseded by the construction-time root fix (call order no
+  longer load-bearing) — accepted reasoning, spot-check the behavioral
+  assert at review of the PR.
 - **Lane C #403 PARTIAL dispatched during quiesce (user-sanctioned,
   Codex budget):** worktree /Users/gabriel/wi-lane-c (branch
   issue/403-riverfarm-pockets), FREEZE-BEAT POCKET ONLY — witch_hollow
