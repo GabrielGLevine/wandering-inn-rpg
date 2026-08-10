@@ -1,6 +1,9 @@
 # Decision packet: #412 martial re-scope · #413 [Dangersense] · #404 lockpick name
 
-> Status: **AWAITING USER SIGN-OFF** (Phase 0 of the 2026-08-09 low-usage batch)
+> Status: **SIGNED OFF** (user, 2026-08-09): #412 table + cut-mode **Option A**;
+> [Basic Repair] → helper L2; #413 rogue L4 + passive aura APPROVED; #404 name
+> ruled **[Pick Lock]** (user's name, replacing proposed [Lockpicking]) as an
+> ACTIVE skill — deliberate cast, not passive; Explicit-Skill-Use compatible.
 
 One sitting, three decisions. Phase 2 (412-apply, #403 pockets, #413 build)
 waits on this packet; Phase 1 (#414 steel-thread, #400 carried rows) is

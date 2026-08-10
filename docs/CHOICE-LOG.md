@@ -3506,3 +3506,25 @@ auditor's scale.
 20. **Criterion 9 (ending-shape variety) NOT MET; HOLDOUT-RELEASE fold (adjudication + Fable refinement):** Revised corpus shows 60-62% `fact` endings — direct consequence of amendment 2's zero-inference default (not a design failure). Readers directly asked: "DOES THE CORPUS READ UNIFORMLY PLAIN? No... genuine variation in sentence length." Reader 1 judged fact-bucket overshoot benign; real diagnostic is absence of interruption/silence shapes (nothing ever cut off or allowed to hang). **Recommendation refined:** Do NOT run ending-shape variety as separate slice. Fold it, the 8 residue rows from verification addendum, and "Nothing there." family into HOLDOUT-RELEASE pass — holdout carries essentially all remaining corpus engine, must be re-authored regardless. One pass, one fresh control, one read. Leg 3 CONFIRMED MET on stronger evidence (15/15 control simile core).
 
 21. **Follow-up filed as #406** (holdout release + residue drain): the spent control, the 8 named residue rows, the 'Nothing there.' family and the shape-variety work ship as ONE pass behind a freshly drawn holdout.
+
+## 2026-08-09 — low-usage batch Phase 0 sign-off (user rulings)
+
+22. **#412 martial re-scope SIGNED (user):** table as proposed — [Greater
+    Strength] KEEP, [Power Strike] + [Piercing Strikes] RETRACT field,
+    [Basic Repair] MOVE warrior L8 → helper L2. Cut-mode fork ruled
+    **Option A**: `cuts` carrier moves to [Basic Swordwork] (gains field +
+    cuts + exploration context); briar cut mode re-anchors there. Full
+    blast-radius enumeration in the Phase-0 packet
+    (docs/superpowers/specs/2026-08-09-martial-rescope-and-dangersense-decisions.md).
+
+23. **#413 [Dangersense] APPROVED (user):** rogue L4 grant (warrior L5
+    already live) + passive-while-held aura ([Even Footing] schema
+    precedent); render-layer warning regions from existing encounter
+    trigger radii, field mode only.
+
+24. **#404 lockpick name ruled [Pick Lock] (user):** user's name over the
+    proposed [Lockpicking], conditioned on it being an ACTIVE skill
+    (deliberate cast — lockpicking is not a tiresome repeated active, so
+    Explicit-Skill-Use passive-conversion doctrine does not apply). Name
+    reserved; no shipped pocket uses it yet — first use rides a future
+    locked-door pocket, not this batch.
