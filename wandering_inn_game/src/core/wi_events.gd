@@ -161,11 +161,22 @@ const UI_TELEPORT_RENDERED := &"ui_teleport_rendered"
 const UI_WARD_RENDERED := &"ui_ward_rendered"
 const UI_DANGERSENSE_RENDERED := &"ui_dangersense_rendered"
 ## #421 M2, TEARDOWN OBSERVABILITY: the [Dangersense] region set went from
-## non-empty to EMPTY -- combat opened, the field hid, the encounter went
-## dormant/warded, the holder left the map. UI_DANGERSENSE_RENDERED alone is
-## unfalsifiable about disappearance (it simply stops firing), so QA could not
-## pin WHEN a warning stopped being shown. `cleared` carries the encounter ids
-## that were being warned about a beat earlier.
+## non-empty to EMPTY **on the map the player is already standing on** --
+## combat opening (the field hides), an encounter going dormant or warded
+## (a defeat banks both), the live set emptying for any other same-map reason.
+## UI_DANGERSENSE_RENDERED alone is unfalsifiable about disappearance (it
+## simply stops firing), so QA could not pin WHEN a warning stopped being
+## shown. `cleared` carries the encounter ids that were being warned about a
+## beat earlier.
+##
+## TRAP -- MAP TRANSITIONS DO NOT EMIT THIS, AND MUST NOT BE MADE TO.
+## `world.gd::_rebuild_field` wipes `_dangersense_state` BEFORE the
+## post-rebuild reconcile runs, so a crossing reaches that reconcile with an
+## already-empty previous set and short-circuits on empty-vs-empty with no
+## snapshot left to report. That is the ruling, not an oversight: MAP_CHANGED
+## is the contract signal for cross-map teardown, and a cleared emit on every
+## crossing would be noise plus pin churn. Pin MAP_CHANGED for cross-map
+## teardown; pin this for same-map teardown only.
 const UI_DANGERSENSE_CLEARED := &"ui_dangersense_cleared"
 const UI_COMPANION_RENDERED := &"ui_companion_rendered"
 const UI_SLEEP_VEIL_RENDERED := &"ui_sleep_veil_rendered"

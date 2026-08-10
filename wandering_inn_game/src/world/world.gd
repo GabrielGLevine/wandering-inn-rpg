@@ -1121,10 +1121,19 @@ func _reconcile_dangersense_overlay() -> void:
 	# an empty new set is a teardown, and a teardown that emits nothing is
 	# invisible to QA (the old shape simply stopped firing
 	# UI_DANGERSENSE_RENDERED, which no assertion can distinguish from "the
-	# feature was never wired"). Every producer of an empty set routes through
-	# here -- combat opening, the field hiding, an encounter going
-	# dormant/warded, a map with nothing to warn about -- so one emit site
-	# covers them all.
+	# feature was never wired"). One emit site covers every SAME-MAP producer
+	# of an empty set: combat opening (the field hides), an encounter going
+	# dormant or warded, the live set emptying for any other reason while the
+	# player stays put.
+	#
+	# TRAP -- A MAP TRANSITION NEVER REACHES THIS BRANCH. `_rebuild_field`
+	# clears `_dangersense_state` (:869) BEFORE building the fresh overlay and
+	# reconciling against it, so a crossing arrives with an already-empty
+	# previous set and returns at the `regions == _dangersense_state`
+	# short-circuit above with nothing left to snapshot. Do NOT "fix" that by
+	# hoisting the snapshot above the short-circuit or by emitting from the
+	# rebuild path: MAP_CHANGED is the contract signal for cross-map teardown,
+	# and a cleared emit on every crossing is noise plus pin churn.
 	var cleared: Array[String] = []
 	for region: Dictionary in _dangersense_state:
 		cleared.append(String(region.get("encounter", "")))
