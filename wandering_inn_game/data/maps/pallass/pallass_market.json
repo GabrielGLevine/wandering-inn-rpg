@@ -145,6 +145,30 @@
  },
  "floor_layers": [
   {
+   "_pick": "Neutral dressed stone replaces the biome's saturated all-cell slab; Pallass identity stays in the tier wall, bronze fixtures, white lamps and void rim.",
+   "sheet": "res://assets/tiles/castle/Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     4,
+     11
+    ],
+    [
+     5,
+     11
+    ],
+    [
+     6,
+     11
+    ],
+    [
+     4,
+     12
+    ]
+   ],
+   "cells": "all"
+  },
+  {
    "coords": [
     0,
     3
@@ -480,6 +504,11 @@
    ],
    "display_name": "Grimalkin",
    "sprite": "grimalkin",
+   "tint": [
+    0.78,
+    0.7,
+    0.72
+   ],
    "facing": "down",
    "conversation": "pallass_grimalkin",
    "dialogue": [

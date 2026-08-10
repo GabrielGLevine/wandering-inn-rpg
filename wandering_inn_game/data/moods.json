@@ -46,6 +46,9 @@
     0.26,
     0.54
    ],
+   "night_attenuation": {
+    "entities": 0.78
+   },
    "vignette": 0.44
   },
   "floodplains": {
@@ -332,10 +335,13 @@
     0.66
    ],
    "night": [
-    0.34,
-    0.39,
-    0.66
+    0.2,
+    0.26,
+    0.54
    ],
+   "night_attenuation": {
+    "entities": 0.78
+   },
    "vignette": 0.42
   },
   "brothers_parlor": {
