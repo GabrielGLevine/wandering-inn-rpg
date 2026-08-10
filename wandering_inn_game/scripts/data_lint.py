@@ -35,13 +35,21 @@ Checks:
      has zero exemptions -- keep it that way.
   7. mood language    -- moods.json keys must name a real map/arena, and each
      card must obey the v0.17 R2 lighting language (see check_moods).
+  8. content reachability (ADVISORY, GH#424) -- the orphan graph: a Skill no
+     class/item/kit/code path grants, an item nothing hands out, a dialogue
+     node nothing gotos, a map no door or portal names. ID LEVEL ONLY, by
+     ruling 30 -- cell-level walkability belongs to the Godot suite
+     (tests/test_interactable_reachability.gd) and is never re-derived here.
 
 ADVISORIES (v0.17 L3, GH#335 item 3) are a SECOND, non-failing tier. They
 never touch the exit code and can never break a sweep, because they measure a
 DESIGN gap, not a defect: an advisory row is a question ("should this have
 persistent state?"), and plenty of honest answers are "no". A hard error would
 force 90-odd waivers and teach everyone to stop reading the output. Default
-output is one summary line; `--advisories` prints the full list.
+output is one summary line; `--advisories` prints the full list. The GH#424
+reachability tier is the one exception: it lists unconditionally, because it is
+a handful of rows by construction and an unread orphan is the exact failure it
+exists to catch.
 
 Wiring: ci_sweep.sh pre-flight (fails the sweep before any Godot boot) and
 ci.yml's leak-check job (the no-Godot CI lane). Run standalone after any
@@ -55,7 +63,7 @@ import sys
 import time
 from pathlib import Path
 
-from wi_data_lib import DATA
+from wi_data_lib import DATA, GAME_ROOT
 
 GATE_KEYS = ("door_when", "contains_when", "portal_menu_when", "fence_menu_when")
 SKILL_GATE_MECHANISMS = {"property", "blink", "arm", "social", "endure"}
@@ -1565,6 +1573,407 @@ def advise_acted_on_state(maps: dict, advisories: list) -> int:
 	return total
 
 
+# --- GH#424 content reachability (ADVISORY) ---------------------------------
+#
+# CODE-GRANT ALLOWLISTS. Some content is handed out by GDScript, not by data,
+# so the data graph alone would call it orphaned. Each row pins the exact
+# granting line; `_code_grants` READS that line back and reports when it stops
+# naming the id, so an allowlist row can never quietly outlive the code that
+# earned it (a stale exemption is the failure mode that makes a lint useless).
+# Adding a row means: find the grant, read it, pin it here.
+SKILL_CODE_GRANTS = {
+	# The three hidden combat carriers. They are never learnable and never
+	# appear on a player-facing record by design: the visible Skill is the
+	# ordinary granted one, and the *_boon rider is folded into a combatant kit
+	# at roster-build time (folding it onto the PC record would buff the PC).
+	"sworn_fang_boon": ("src/core/wi_game.gd", 2289,
+		"[Sworn Fang: Ride Together] folds it into the PC kit while a companion rides"),
+	"basic_command_boon": ("src/core/wi_game.gd", 2300,
+		"[Animals: Basic Command] folds it onto the COMPANION's kit"),
+	"pack_bond_boon": ("src/core/wi_game.gd", 2302,
+		"[Pack Bond] folds it onto the COMPANION's kit"),
+}
+ITEM_CODE_GRANTS = {
+	"flarepepper_powder": ("src/core/wi_game.gd", 2639,
+		"[Supplies: Flarepepper Powder] restocks one per rest"),
+}
+
+
+def _grants_on_line(line: str, content_id: str) -> bool:
+	"""A CODE line naming the id as a string literal.
+
+	Review M-1: a naive `content_id in line` also accepts a COMMENT that merely
+	mentions the id -- so deleting a grant and leaving its comment behind would
+	have kept the allowlist row looking live, which is the one thing the
+	read-back exists to prevent. Both halves matter: the line must not be a
+	comment, and the id must appear quoted (a bare substring also matches a
+	longer identifier that happens to contain it).
+	"""
+	if line.strip().startswith("#"):
+		return False
+	return f'"{content_id}"' in line or f"'{content_id}'" in line
+
+
+def _code_grants(allowlist: dict, kind: str, advisories: list) -> set:
+	"""Ids the allowlist covers, with each pinned file:line read back."""
+	granted = set()
+	for content_id, (rel, line_no, note) in sorted(allowlist.items()):
+		try:
+			lines = (GAME_ROOT / rel).read_text().splitlines()
+		except OSError:
+			advisories.append(f"[code-grant drift] {kind} '{content_id}' pins "
+				f"{rel}:{line_no}, which no longer exists")
+			continue
+		if 1 <= line_no <= len(lines) and _grants_on_line(lines[line_no - 1], content_id):
+			granted.add(content_id)
+			continue
+		hits = [n for n, text in enumerate(lines, 1) if _grants_on_line(text, content_id)]
+		if hits:
+			granted.add(content_id)
+			advisories.append(f"[code-grant drift] {kind} '{content_id}' ({note}) "
+				f"moved from {rel}:{line_no} to {rel}:{hits[0]} -- repin the row")
+		else:
+			advisories.append(f"[code-grant drift] {kind} '{content_id}' ({note}) "
+				f"is granted nowhere in {rel} any more -- the row is stale and the "
+				f"{kind} may be orphaned for real")
+	return granted
+
+
+def _walk_pairs(node, key_a: str, key_b: str, out: list) -> None:
+	"""Every dict anywhere under `node` carrying BOTH keys.
+
+	Recursive because a map transition is top-level on a `kind:"door"` row but
+	nested inside `door_when` on the door-shaped props (street's sewer_grate),
+	and could nest one level deeper tomorrow. Matching the PAIR rather than a
+	key path finds a new nesting site the day it ships.
+	"""
+	if isinstance(node, list):
+		for child in node:
+			_walk_pairs(child, key_a, key_b, out)
+	elif isinstance(node, dict):
+		if key_a in node and key_b in node:
+			out.append(node)
+		for child in node.values():
+			_walk_pairs(child, key_a, key_b, out)
+
+
+def _as_list(value) -> list:
+	if isinstance(value, str):
+		return [value]
+	return value if isinstance(value, list) else []
+
+
+def _item_sources(parsed: dict, maps: dict) -> dict:
+	"""item id -> the authored sites that can put it in a player's pack."""
+	out: dict[str, set[str]] = {}
+
+	def add(item_id, label: str) -> None:
+		if isinstance(item_id, str) and item_id:
+			out.setdefault(item_id, set()).add(label)
+
+	player = (parsed.get(DATA / "scene_root.json") or {}).get("player", {})
+	for item_id in _as_list(player.get("inventory")):
+		add(item_id, "scene_root.inventory")
+	for item_id in (player.get("equipped", {}) or {}).values():
+		add(item_id, "scene_root.equipped")
+
+	def arm(node, label: str) -> None:
+		if not isinstance(node, dict):
+			return
+		add(node.get("item"), label)
+		for variant in _as_list(node.get("variants")):
+			if isinstance(variant, dict):
+				add(variant.get("item"), label + ".variants")
+
+	for map_id, map_doc in sorted(maps.items()):
+		for entity in map_doc.get("entities", []):
+			if not isinstance(entity, dict):
+				continue
+			label = f"maps/{map_id}.{entity.get('id', '<no id>')}"
+			add(entity.get("item"), label)
+			arm(entity.get("on_skill_use"), label + ".on_skill_use")
+			for skill_id, skill_arm in (entity.get("skill_uses", {}) or {}).items():
+				arm(skill_arm, f"{label}.skill_uses[{skill_id}]")
+			for key in ("contains", "loot"):
+				payload = entity.get(key)
+				rows = [payload] if isinstance(payload, (str, dict)) else _as_list(payload)
+				for row in rows:
+					if isinstance(row, str):
+						add(row, f"{label}.{key}")
+					elif isinstance(row, dict):
+						add(row.get("item"), f"{label}.{key}")
+
+	for path, doc in sorted(parsed.items()):
+		if path.parent.name != "dialogue" or not isinstance(doc, dict):
+			continue
+		for node_id, node in (doc.get("nodes", {}) or {}).items():
+			for option in node.get("options", []):
+				for effect in option.get("effects", []):
+					if isinstance(effect, dict):
+						add(effect.get("item"), f"dialogue/{path.stem}.{node_id}")
+
+	for row in _catalog_rows(parsed, "fence_stock.json", "stock"):
+		add(row.get("item"), f"fence_stock.{row.get('id', '<no id>')}")
+	for row in _catalog_rows(parsed, "deliveries.json", "deliveries"):
+		add((row.get("parcel") or {}).get("item_id"), f"deliveries.{row.get('id', '<no id>')}.parcel")
+	# A cooking-family Skill's `cookware_use` arm is a real item faucet (any pot
+	# answers any cooking Skill since GH#391), so it grants like a prop arm.
+	for skill in _catalog_rows(parsed, "skills.json", "skills"):
+		arm(skill.get("cookware_use"), f"skills.{skill.get('id', '<no id>')}.cookware_use")
+	return out
+
+
+# EVERY property-table outcome, classified. A set of "the ones that clear" was
+# the review finding: it silently answered "no" for anything it had not heard
+# of, so `state_set` -- the outcome behind BOTH shipped traversal seams
+# (anchors x gap = rope over the span stub, repairs x broken = the mended bank
+# stringer) -- was excluded by omission rather than by argument, and a new
+# outcome would have been excluded the same quiet way.
+#   clears    -- the interaction opens/changes the thing; a live carrier matters
+#   re-blocks -- it closes a way rather than opening one (thaw: ice -> water)
+#   inert     -- it is a refusal; there is nothing to carry
+OUTCOME_CLASS = {
+	"remove_scorch": "clears",   # burns x burnable, cuts x cuttable: deletes the blocker
+	"freeze_cell": "clears",     # freezes x freezable: blocking water -> standable ice
+	"state_set": "clears",       # the traversal seams + hearth/lamp/mud state flips
+	"thaw_cell": "re-blocks",    # burns x frozen: ice -> water
+	"refuse": "inert",           # the authored "no", carrier-free by definition
+}
+CLEARING_OUTCOMES = {outcome for outcome, kind in OUTCOME_CLASS.items() if kind == "clears"}
+# Cell-placed properties this check knows how to enumerate. `frozen` is the
+# thaw target and never classified "clears", so it needs no enumerator.
+CELL_PROPERTY_ENUMERATORS = {"freezable": _water_cells, "frozen": _water_cells}
+
+
+def _check_gate_carriers(parsed: dict, maps: dict, learnable: set, report) -> None:
+	"""Review I-3 -- the JOIN the two halves of #424 were missing.
+
+	The skill arm above answers "can a player ever learn this Skill". The
+	GDScript adjacency suite answers "can a player stand next to this thing,
+	assuming every Skill". Neither one asks the question BETWEEN them: the
+	pocket behind a burnable briar is only reachable if some LEARNABLE Skill
+	carries `burns`. Today `flame_jet`/`basic_swordwork`/`icy_floor` are granted
+	and `kindle`/`frost_touch` are the orphans, so every gate still has a live
+	carrier -- but de-granting the last live carrier of a property would silently
+	seal every pocket behind it, and nothing would have said so.
+
+	Deliberately a LINT arm, not a suite arm (controller ruling): the grant graph
+	is already computed here, in this language, and re-deriving it in GDScript is
+	the #413 mistake. The suite keeps flooding with every Skill known -- its job
+	is geometry under maximum capability, and this is the capability half.
+
+	The clearing vocabulary is read from interactions.json, never hardcoded, and
+	OUTCOME_CLASS must cover that file's `outcomes` list EXACTLY (the
+	WIFieldSkills.OUTCOMES mirror-contract shape) -- a new outcome is reported
+	unclassified rather than silently treated as "does not clear".
+	"""
+	table = parsed.get(DATA / "interactions.json") or {}
+	placements = table.get("target_properties", {}) or {}
+	shipped_outcomes = {str(o) for o in table.get("outcomes", [])}
+	if shipped_outcomes and shipped_outcomes != set(OUTCOME_CLASS):
+		drift = sorted(shipped_outcomes ^ set(OUTCOME_CLASS))
+		report("unclassified outcome", "interactions.json `outcomes` and data_lint.OUTCOME_CLASS "
+			f"disagree on {', '.join(drift)} -- classify it (clears / re-blocks / inert) before "
+			"this arm can judge anything that uses it")
+	carriers_of: dict[str, set[str]] = {}
+	for row in table.get("interactions", []):
+		if not isinstance(row, dict) or str(row.get("outcome", "")) not in CLEARING_OUTCOMES:
+			continue
+		target_prop = str(row.get("target_property", ""))
+		skill_prop = str(row.get("skill_property", ""))
+		carriers_of.setdefault(target_prop, set()).update(_skill_property_carriers(parsed, skill_prop))
+
+	for target_prop, carriers in sorted(carriers_of.items()):
+		live = sorted(carriers & learnable)
+		if live:
+			continue
+		blocked_by = ", ".join(sorted(carriers)) or "nothing"
+		placement = placements.get(target_prop)
+		if placement == "entity":
+			for map_id, entity in _entity_carriers(maps, target_prop):
+				report("gate carrier orphan", f"maps/{map_id}: '{entity.get('id', '<no id>')}' is "
+					f"`{target_prop}` but no LEARNABLE Skill acts on it -- the only carriers "
+					f"({blocked_by}) are themselves unreachable, so that interaction is dead and "
+					"anything it gates stays shut")
+		elif placement == "cell" and target_prop in CELL_PROPERTY_ENUMERATORS:
+			# `_water_cells` is the same helper advise_missing_skill_gates uses,
+			# so the map's `freezable` list AND its water-tagged wall segments
+			# both count.
+			enumerate_cells = CELL_PROPERTY_ENUMERATORS[target_prop]
+			for map_id, map_doc in sorted(maps.items()):
+				if not enumerate_cells(map_doc):
+					continue
+				report("gate carrier orphan", f"maps/{map_id}: carries `{target_prop}` cells but no "
+					f"LEARNABLE Skill acts on them -- the only carriers ({blocked_by}) are "
+					"themselves unreachable, so every crossing over them is shut")
+		else:
+			# NEVER drop a computed orphan on the floor (the review's no-else
+			# finding): an unknown or unenumerable placement is itself the news.
+			report("gate carrier orphan", f"target property `{target_prop}` has no LEARNABLE carrier "
+				f"(only {blocked_by}), and this check cannot list its carriers: placement is "
+				f"{placement!r}, which is neither an `entity` flag nor a cell class it knows how to "
+				"enumerate. Teach CELL_PROPERTY_ENUMERATORS or fix the placement")
+
+	for map_id, map_doc in sorted(maps.items()):
+		registry = map_doc.get("skill_gates")
+		if not isinstance(registry, dict):
+			continue
+		entities = {str(e.get("id", "")): e for e in map_doc.get("entities", []) if isinstance(e, dict)}
+		skills = _catalog_rows(parsed, "skills.json", "skills")
+		for pocket_id, pocket in sorted(registry.items()):
+			if not isinstance(pocket, dict):
+				continue
+			for index, mode in enumerate(pocket.get("modes", [])):
+				if not isinstance(mode, dict):
+					continue
+				mode_skills = _mode_skill_ids(mode, skills, entities)
+				if not mode_skills or (mode_skills & learnable):
+					continue  # a gate mode naming no skill is check_skill_gates' business
+				report("gate carrier orphan", f"maps/{map_id}: skill_gates['{pocket_id}'].modes[{index}] "
+					f"({mode.get('mechanism', '?')}) resolves only to unreachable Skill(s) "
+					f"{', '.join(sorted(mode_skills))} -- this way into the pocket is shut")
+
+
+def check_content_reachability(parsed: dict, maps: dict, advisories: list) -> dict:
+	"""GH#424 -- content with no acquisition path, found systematically.
+
+	Generalizes the [Firefly] finding: a Skill nothing grants, an item nothing
+	hands out, a dialogue node nothing gotos and a map no door opens are all the
+	same defect class, and all four are derivable from the JSON alone.
+
+	ADVISORY tier by ruling 30, for the tier's usual reason: some answers are
+	honestly "no". Dead-but-honest content is a real design position (the
+	`kindle` Skill row ships deliberately, its grant path deferred to the
+	class-expansion wave), and an enemy-kit Skill is not orphaned at all -- it
+	is REACHABLE, as something pointed at you, which is why it reports as its
+	own category rather than as a defect. Promotion to hard-fail per category is
+	the follow-up, once a category's shipped set is clean.
+
+	SCOPE LINE (ruling 30, the #413 lesson): this is an ID-LEVEL graph and stops
+	there. The door graph asks "does any door name this map", never "can a
+	player walk to that door" -- cell-level walkability is a sim predicate, and
+	tests/test_interactable_reachability.gd owns it over the real loader.
+
+	Returns {category: count} for the caller's summary line.
+	"""
+	found: dict[str, int] = {}
+
+	def report(category: str, line: str) -> None:
+		found[category] = found.get(category, 0) + 1
+		advisories.append(f"[{category}] {line}")
+
+	# ---- items (first: an ability on an unreachable item is not a grant path)
+	item_rows = {str(row.get("id", "")): row for row in _catalog_rows(parsed, "items.json", "items")}
+	item_sources = _item_sources(parsed, maps)
+	item_code = _code_grants(ITEM_CODE_GRANTS, "item", advisories)
+	reachable_items = (set(item_sources) & set(item_rows)) | (item_code & set(item_rows))
+	for item_id in sorted(set(item_rows) - reachable_items):
+		report("item orphan", f"items.json '{item_id}' ({item_rows[item_id].get('kind', '?')}) "
+			"is in no shop, container, loot table, reward effect, Skill arm or parcel, "
+			"and no code grant claims it")
+
+	# ---- skills
+	skill_rows = {str(row.get("id", "")): row for row in _catalog_rows(parsed, "skills.json", "skills")}
+	granted: dict[str, set[str]] = {}
+
+	def grant(skill_id, label: str) -> None:
+		if isinstance(skill_id, str) and skill_id:
+			granted.setdefault(skill_id, set()).add(label)
+
+	for cls in _catalog_rows(parsed, "classes.json", "classes"):
+		class_id = cls.get("id", "<no id>")
+		for level in cls.get("levels", []):
+			if isinstance(level, dict):
+				for skill_id in _as_list(level.get("grants")):
+					grant(skill_id, f"classes.{class_id} L{level.get('level', '?')}")
+		for skill_id in _as_list((cls.get("evolution") or {}).get("balanced_grants")):
+			grant(skill_id, f"classes.{class_id}.evolution.balanced_grants")
+	for skill_id in _as_list(((parsed.get(DATA / "scene_root.json") or {}).get("player", {})).get("skills")):
+		grant(skill_id, "scene_root.player.skills")
+	for item_id in sorted(reachable_items):
+		for skill_id in _as_list(item_rows.get(item_id, {}).get("abilities")):
+			grant(skill_id, f"items.{item_id}.abilities")
+	unreachable_item_grants: dict[str, set[str]] = {}
+	for item_id in sorted(set(item_rows) - reachable_items):
+		for skill_id in _as_list(item_rows[item_id].get("abilities")):
+			unreachable_item_grants.setdefault(skill_id, set()).add(item_id)
+	kits: dict[str, set[str]] = {}
+	for row in _catalog_rows(parsed, "combatants.json", "combatants"):
+		for skill_id in _as_list(row.get("skills")):
+			kits.setdefault(str(skill_id), set()).add(str(row.get("id", "<no id>")))
+	skill_code = _code_grants(SKILL_CODE_GRANTS, "skill", advisories)
+	for skill_id in sorted(skill_rows):
+		if skill_id in granted or skill_id in skill_code:
+			continue
+		if skill_id in kits:
+			report("enemy-kit only", f"skills.json '{skill_id}' is fielded only by combatant(s) "
+				f"{', '.join(sorted(kits[skill_id]))} -- reachable as something pointed AT the "
+				"player, never learnable (a category, not a defect, unless a class meant to grant it)")
+			continue
+		trailer = ""
+		if skill_id in unreachable_item_grants:
+			trailer = (" (its only would-be granter, item(s) "
+				f"{', '.join(sorted(unreachable_item_grants[skill_id]))}, is itself unreachable)")
+		report("skill orphan", f"skills.json '{skill_id}' is granted by no class level, no evolution "
+			f"table, no reachable item ability, no starting kit and no code grant{trailer}")
+
+	# ---- gate carriers (review I-3): the JOIN between the two halves above
+	learnable = set(granted) | skill_code
+	_check_gate_carriers(parsed, maps, learnable, report)
+
+	# ---- dialogue nodes
+	for path, doc in sorted(parsed.items()):
+		if path.parent.name != "dialogue" or not isinstance(doc, dict):
+			continue
+		nodes = doc.get("nodes")
+		if not isinstance(nodes, dict):
+			continue
+		start = str(doc.get("start", ""))
+		if start not in nodes:
+			continue  # check_dialogue already fails hard on a missing/absent start
+		seen: set = set()
+		stack = [start]
+		while stack:
+			node_id = stack.pop()
+			if node_id in seen:
+				continue
+			seen.add(node_id)
+			for option in nodes[node_id].get("options", []):
+				goto = str(option.get("goto", "")) if isinstance(option, dict) else ""
+				if goto in nodes and goto not in seen:
+					stack.append(goto)
+		for node_id in sorted(set(nodes) - seen):
+			report("dialogue node orphan", f"dialogue/{path.stem}: node '{node_id}' is the target of "
+				"no option `goto` and is not the start node -- nothing can ever play it")
+
+	# ---- map door graph (ID LEVEL ONLY -- see the scope line above)
+	adjacency: dict[str, set[str]] = {}
+	portal_hosts = set()
+	for map_id, map_doc in sorted(maps.items()):
+		exits: list = []
+		_walk_pairs(map_doc.get("entities", []), "to_map", "to_cell", exits)
+		adjacency[map_id] = {str(row["to_map"]) for row in exits}
+		for entity in map_doc.get("entities", []):
+			if isinstance(entity, dict) and (entity.get("portal_menu") or entity.get("portal_menu_when")):
+				portal_hosts.add(map_id)
+	portal_destinations = {str(row.get("map", "")) for row in _catalog_rows(parsed, "portals.json", "portals")}
+	for map_id in portal_hosts:
+		adjacency[map_id] |= portal_destinations
+	start_map = str((parsed.get(DATA / "scene_root.json") or {}).get("start_map", ""))
+	seen = set()
+	stack = [start_map] if start_map in maps else []
+	while stack:
+		map_id = stack.pop()
+		if map_id in seen:
+			continue
+		seen.add(map_id)
+		stack.extend(adjacency.get(map_id, set()))
+	for map_id in sorted(set(maps) - seen):
+		report("map orphan", f"maps/{map_id} is named by no door `to_map`, no door_when prop and no "
+			f"portals.json row reachable from '{start_map}' -- nothing in it is playable")
+	return found
+
+
 def main() -> int:
 	start = time.monotonic()
 	list_advisories = "--advisories" in sys.argv
@@ -1607,6 +2016,20 @@ def main() -> int:
 	advise_unlit_sealed_rooms(maps, parsed, advisories)
 	advise_sub_legible_props(parsed, maps, advisories)
 	interacted_props = advise_acted_on_state(maps, advisories)
+	reachability_advisories: list = []
+	reachability_counts: dict = {}
+	try:
+		reachability_counts = check_content_reachability(parsed, maps, reachability_advisories)
+	except Exception as err:  # noqa: BLE001 -- review M-2
+		# An ADVISORY tier must never be able to change the verdict, and a
+		# traceback on stdout reads exactly like a lint failure to whoever is
+		# staring at a sweep. It degrades to one honest line instead: the tier
+		# is unavailable, everything else still ran, rc semantics untouched.
+		# APPEND, never reassign: the check reports as it goes, so a crash
+		# halfway through still has real findings banked -- reassigning threw
+		# away exactly the rows that were about to explain the crash.
+		reachability_advisories.append(f"check crashed: {type(err).__name__}: {err}")
+		reachability_counts = {}
 	elapsed_ms = (time.monotonic() - start) * 1000
 	if errors:
 		for e in errors:
@@ -1638,6 +2061,22 @@ def main() -> int:
 		print(f"data_lint: ADVISORY -- {len(prose_template_advisories)} narrator-template hit(s) "
 			"(GH#397 R2 bible amendments 3-5); re-run with --advisories to list. "
 			"Report-only, never fails.")
+	if reachability_advisories:
+		# UNCONDITIONALLY listed, unlike the tiers above, and that is the whole
+		# point of GH#424: this tier is a handful of rows by construction (an
+		# orphan is a mistake, not a population), and an orphan nobody reads is
+		# exactly the [Firefly] failure this check exists to prevent. The day it
+		# grows a wall, the fix is to clean the content, not to hide the list.
+		for advisory in reachability_advisories:
+			print(f"data_lint: ADVISORY -- reachability {advisory}")
+		# Only when there is a tally to print. On a crash the counts are empty
+		# and the summary degenerated to "content reachability (GH#424): .
+		# Report-only" -- a dangling line that read like a formatting bug at the
+		# exact moment the reader needed to trust the output.
+		if reachability_counts:
+			print("data_lint: ADVISORY -- content reachability (GH#424): "
+				+ "; ".join(f"{count} {category}" for category, count in sorted(reachability_counts.items()))
+				+ ". Report-only, never fails.")
 	for line in report:
 		print(f"data_lint: REPORT -- {line}")
 	return 0
