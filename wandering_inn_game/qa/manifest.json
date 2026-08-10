@@ -6713,6 +6713,88 @@
    }
   },
   {
+   "_comment": "<!-- 403-witch-briar --> ANCHORED after the Riverfarm-islet negative row.",
+   "script": "witch_briar_burn",
+   "seed": 9,
+   "fixture": "witch_briar_burn_start",
+   "note": "#403 Witch Hollow mode A: an honest Mage 2 walks to the new briar gate, burns it with [Flame Jet], enters the sealed edge pocket, and claims the one-shot thorn-tally cache",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "witch_briar_burn_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "flame_jet"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 403-witch-briar --> ANCHORED after the burn-mode row.",
+   "script": "witch_briar_cut",
+   "seed": 9,
+   "fixture": "witch_briar_cut_start",
+   "note": "#403 Witch Hollow mode B: an honest Warrior 1 with an equipped sword walks to the same gate, cuts it with [Basic Swordwork] through field_weapon:sword, enters the pocket, and claims the same cache",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "witch_briar_cut_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "basic_swordwork"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 403-witch-briar --> ANCHORED after the cut-mode row.",
+   "script": "witch_briar_negative",
+   "seed": 9,
+   "fixture": "witch_briar_negative_start",
+   "note": "#403 Witch Hollow negative: an honest Helper build walks to the newly-created gate, pins the pocket's five-cell rendered-blocking delta and the gate-cell refusal, and earns neither opening mode nor reward",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "witch_briar_negative_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
    "_comment": "<!-- 398-p1 --> APPENDED LAST under the pond-island lane marker.",
    "script": "pond_frozen_cache",
    "seed": 9,
