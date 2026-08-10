@@ -112,6 +112,17 @@ deploy; user overwrites it if the batch lands in-window).
   implementation pass in flight. On return: adversarial review (trace
   field_weapon gate + fixture diff), fix wave, then MERGE FIRST before
   C/D.
+  **LANDED + WIP-COMMITTED e495ed13 (pushed):** 25 files. 201/201
+  touching + 14/14 smoke gameplay green; 32/34 units (2 sandbox-env
+  reds: test_save_rename/test_settings user:// writes — RERUN
+  CONTROLLER-SIDE before merge); three can-fail proofs incl. spear
+  combat isolation. REVIEW FOCUS: field_weapon gate trace in
+  wi_game.gd, fixture diff vs HEAD (must be zero), and the lane ALSO
+  edited qa/manifest.json + work_loop.json + wrong_order_loop.json —
+  beyond my enumeration, allowed by the standing rail, VERIFY their
+  disposition rows in the report before trusting. MERGE ORDER: this
+  lane FIRST, then witch_hollow briar pocket (deferred #403 half) +
+  lane D (#413) dispatchable.
 - **Lane B #400 implementation COMPLETE (uncommitted in
   /Users/gabriel/wi-lane-b):** 9-file diff + new test_world_visuals.gd.
   Full 12-criterion report received; unmet items = sandbox CA-cert
