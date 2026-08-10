@@ -12,7 +12,10 @@ path/equals) -- "_comment" prose is never scanned, so authored narrative
 text can never leak a false tag. maps/skills are cross-checked against the
 live catalogs (data/skeleton_scene.json's "maps" keys, data/skills.json's
 ids) so an unrelated string that happens to collide is never mistaken for
-a reference. "systems" is the one taxonomy that needs an authored marker
+a reference. Fixtures come from BOTH the harness pre-seed (`fixture_save`/
+`legacy_seed`/the manifest row's `fixture`) AND every mid-script
+`install_fixture` action's `fixture` (#417) -- each of those is loaded for
+real, so each one's map/skills enrich the surface exactly like the pre-seed's. "systems" is the one taxonomy that needs an authored marker
 table (the game has no per-system metadata to mine beyond skills.json's
 coarse combat/exploration "contexts") -- everything else is pure lookup.
 
@@ -163,6 +166,31 @@ def _collect_signals(node, keys: set, values: set, path_equals: list) -> None:
 			_collect_signals(item, keys, values, path_equals)
 
 
+def _collect_installed_fixtures(node, out: set) -> None:
+	"""#417: a mid-script `install_fixture` action swaps a DIFFERENT fixture
+	into a save slot and loads it -- that fixture is every bit as real a
+	dependency as `fixture_save`/`legacy_seed`, but it used to be invisible
+	here, so `--touching qa/fixtures/<it>.json` selected NOTHING (a false-safe:
+	briar_arch_locked installs near_briar_arch_cut in PHASE 2 while its row
+	named only near_briar_arch_locked). Walks the whole parsed script rather
+	than just `steps[*]` so any future nesting shape (a step list inside a
+	branch/repeat container) is covered by construction; "_comment" is skipped
+	exactly as in _collect_signals, so prose naming a fixture can never leak a
+	tag."""
+	if isinstance(node, dict):
+		if node.get("action") == "install_fixture":
+			fixture = node.get("fixture")
+			if isinstance(fixture, str) and fixture:
+				out.add(fixture)
+		for k, v in node.items():
+			if k == "_comment":
+				continue
+			_collect_installed_fixtures(v, out)
+	elif isinstance(node, list):
+		for item in node:
+			_collect_installed_fixtures(item, out)
+
+
 def derive_surfaces_for(entry: dict, known_maps: set, known_skills: set,
 		skill_contexts: dict, known_dialogue: set) -> dict:
 	script_name = entry["script"]
@@ -179,13 +207,17 @@ def derive_surfaces_for(entry: dict, known_maps: set, known_skills: set,
 
 	# #111: `legacy_seed` (a pre-rename user-dir fixture placed by run_qa.sh)
 	# is a real fixture dependency, same as fixture_save.
-	fixture_name = script.get("fixture_save") or script.get("legacy_seed") or entry.get("fixture")
+	seed_fixture = script.get("fixture_save") or script.get("legacy_seed") or entry.get("fixture")
 	maps = {v for v in values if v in known_maps}
 	skills = {v for v in values if v in known_skills}
 	dialogue = {v for v in values if v in known_dialogue}
-	fixtures = [fixture_name] if fixture_name else []
+	fixtures: set = set()
+	if isinstance(seed_fixture, str) and seed_fixture:
+		fixtures.add(seed_fixture)
+	# #417: mid-script install_fixture swaps count as fixture dependencies too.
+	_collect_installed_fixtures(script.get("steps", []), fixtures)
 
-	if fixture_name:
+	for fixture_name in sorted(fixtures):
 		fixture_path = os.path.join(FIXTURES_DIR, f"{fixture_name}.json")
 		if os.path.isfile(fixture_path):
 			state = _load(fixture_path).get("state", {})
@@ -214,7 +246,7 @@ def derive_surfaces_for(entry: dict, known_maps: set, known_skills: set,
 
 	return {
 		"maps": sorted(maps),
-		"fixtures": sorted(fixtures),
+		"fixtures": sorted(fixtures),  # #417: seeded + mid-script install_fixture
 		"skills": sorted(skills),
 		"dialogue": sorted(dialogue),
 		"systems": sorted(systems),
