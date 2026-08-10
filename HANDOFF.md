@@ -94,12 +94,18 @@ Plan: docs/superpowers/plans/2026-08-09-low-usage-batch-400-403-404-412-413-414.
 (#406 PARKED per user ruling). Checkpoint tag **v0.19.0 stored LOCAL at
 ffd0f960** (pre-batch head, deliberately NOT pushed — push triggers
 deploy; user overwrites it if the batch lands in-window).
-- **Phase 0 DONE:** decision packet committed (26c7f12a) + posted to
-  #412/#413/#404. AWAITING USER: #412 table + cut-mode fork (Option A =
-  move cuts carrier to [Basic Swordwork]), [Basic Repair]→helper L2,
-  #413 rogue-L4 + passive ACK, #404 [Lockpicking] ACK. Key facts:
-  dangersense already exists (combat ctx) + warrior L5 already grants
-  it; NO attested lockpick skill ≤ Book 17 on the wiki.
+- **Phase 0 SIGNED (user, same day — CHOICE-LOG 22-24):** #412 table +
+  cut-mode **Option A** ([Basic Swordwork] gains field+cuts, both
+  strikes retract field), [Basic Repair]→helper L2, #413 rogue L4 +
+  passive APPROVED, #404 name ruled **[Pick Lock]** (ACTIVE skill,
+  user's name) — **#404 CLOSED**. Key facts: dangersense already exists
+  (combat ctx) + warrior L5 already grants it; no attested lockpick
+  skill ≤ Book 17 on the wiki.
+- **412-apply LIVE (Codex):** worktree /Users/gabriel/wi-lane-412
+  (branch issue/412-martial-rescope), brief at LANE-BRIEF.md. Merges
+  BEFORE lanes C/D. Lane A #414 reported DONE (steel_thread.json +
+  manifest row + STEEL-THREAD.md, headless PASS seed 9, can-fail
+  proven) — adversarial review RUNNING.
 - **Phase 1 LIVE (Codex, its own pool — week was 0%):** Lane A #414
   steel-thread in worktree /Users/gabriel/wi-lane-a (branch
   issue/414-steel-thread); Lane B #400 carried rows in
