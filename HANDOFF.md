@@ -4,6 +4,27 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## RUNNING (2026-08-10): reachability wave #417/#421/#423/#424
+
+Plan: docs/superpowers/plans/2026-08-10-reachability-wave-417-421-423-424.md
+(committed 3b18a421 with CHOICE-LOG 28-30). User directives: [Pick Lock]
+debut in Hedault's shop WITH a virtuous-path route to the contents;
+systemic interactability check folded into #424.
+- **Phase 1 LIVE (3 Opus lanes, worktrees, overlay copied):**
+  T=#417 /tmp/wi-417 (derive_qa_surfaces install_fixture walk + manifest
+  regen; MERGES FIRST), O=#421 /tmp/wi-421 (I3 reconcile-after-check,
+  M2 teardown event, M5 dup-arm collapse, M4 combat canonical,
+  [Firefly] strip from 3 locked_toasts per ruling 29), R=#424
+  /tmp/wi-424 (data_lint advisory grant-path graph + test_reachability
+  GDScript suite, Hedault waiver, ruling 30 split).
+- **Phase 2 (after T merges):** lane H #423 — enchanter_shop interior +
+  boulevard door (north wall y=1, x 19-27 open), Hedault + bench move,
+  alleys re-dress, pick_lock skill (rogue L2) + locked back room
+  (two-mode: pick OR Hedault trust-beat key), QA loop/fixture
+  re-anchors walk-reachable, removes the #424 waiver.
+- Close: composed re-gates + preflight --full + steel-thread windowed
+  (route grows shop leg) + VISUAL-LOG + ledger.
+
 ## DONE (2026-08-05): anti-duplication gate LIVE (PR #395, unmerged)
 
 `check_prose_duplication` in data_lint HARD-FAILS: (a) any prose string
