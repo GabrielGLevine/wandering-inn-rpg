@@ -11,6 +11,38 @@ extends RefCounted
 ## resolution; state dicts (social_talked/entity_first_use/container_state)
 ## are passed by reference at dispatch and mutated in place.
 
+## GH#424 review I-1: the `prop` arms of `dispatch`, published so a reader can
+## answer "what does interacting with this prop DO?" without re-reading the
+## match block, and so a test can hold that answer to the source.
+##
+## MIRROR CONTRACT (the WIFieldSkills.OUTCOMES shape, policed by
+## scripts/tests/test_data_lint.py::TestPropArmKeys): the first nine are the
+## keys read off `target` inside the `"prop":` case below, and the tripwire
+## re-extracts them from THIS FILE's own text -- adding an arm to `dispatch`
+## without adding it here reds, and vice versa. The last five are the
+## use_skill-target keys: a prop carrying one is AIMED AT by a Skill rather than
+## dispatched to directly (WIGame.use_skill, not this match block), so they are
+## invisible to that extraction and are listed -- and asserted -- separately.
+##
+## DECLARATION ONLY. Nothing in this file reads it; `dispatch` is untouched.
+const PROP_ARM_KEYS: Array[String] = [
+	"sleep",
+	"board",
+	"delivery_board",
+	"contains",
+	"door_when",
+	"portal_menu",
+	"fence_menu",
+	"on_interact_accomplishment",
+	"requires_skill",
+	# use_skill targets -- see the note above
+	"on_skill_use",
+	"skill_uses",
+	"cookware",
+	"conversation",
+	"dialogue",
+]
+
 var _event_sink: Callable
 var _accomplishment_gate_met: Callable
 var _record_accomplishment: Callable

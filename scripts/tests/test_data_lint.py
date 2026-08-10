@@ -5,6 +5,7 @@ fixtures per check) + clean-on-HEAD subprocess proof. Run manually:
 
 import copy
 import json
+import re
 import subprocess
 import sys
 import unittest
@@ -631,10 +632,48 @@ class TestContentReachability(unittest.TestCase):
         self.assertGreater(counts["gate carrier orphan"], 0, advisories)
         self.assertTrue(any("briar_arch_west" in line for line in sealed), sealed)
 
+    def test_outcome_class_covers_the_shipped_outcome_vocabulary(self):
+        # The WIFieldSkills.OUTCOMES mirror-contract shape (its GDScript twin is
+        # test_interactions_table.gd:194). A new outcome REDS here until someone
+        # classifies it, instead of being silently treated as "does not clear" --
+        # which is exactly how `state_set`, and with it BOTH shipped traversal
+        # seams, went missing from the first cut of this arm.
+        table = self.parsed[data_lint.DATA / "interactions.json"]
+        self.assertEqual(set(data_lint.OUTCOME_CLASS), {str(o) for o in table["outcomes"]})
+        self.assertEqual(data_lint.CLEARING_OUTCOMES,
+            {"remove_scorch", "freeze_cell", "state_set"})
+
+    def test_degranting_rope_work_seals_the_span_stub(self):
+        # `anchors x gap -> state_set`: rope_work is the only carrier, and the
+        # span stub is how the trapped_halls gallery is crossed.
+        _counts, advisories = self._run(self._degrant("rope_work"))
+        sealed = [line for line in advisories if line.startswith("[gate carrier orphan]")]
+        self.assertTrue(any("halls_span_stub" in line for line in sealed), sealed)
+
+    def test_degranting_basic_repair_seals_the_bank_stringer(self):
+        # `repairs x broken -> state_set`: basic_repair is the only carrier.
+        _counts, advisories = self._run(self._degrant("basic_repair"))
+        sealed = [line for line in advisories if line.startswith("[gate carrier orphan]")]
+        self.assertTrue(any("riverfarm_bank_stringer" in line for line in sealed), sealed)
+
+    def test_unknown_placement_is_reported_not_dropped(self):
+        # The review's no-else finding: a computed orphan whose placement is
+        # neither `entity` nor an enumerable cell class used to fall off the end
+        # of the if/elif and vanish.
+        def mutate(parsed, _maps):
+            table = parsed[data_lint.DATA / "interactions.json"]
+            table["target_properties"]["burnable"] = "somewhere_new"
+            for cls in parsed[data_lint.DATA / "classes.json"]["classes"]:
+                for level in cls.get("levels", []):
+                    level["grants"] = [s for s in level.get("grants", []) if s != "flame_jet"]
+        _counts, advisories = self._run(mutate)
+        sealed = [line for line in advisories if line.startswith("[gate carrier orphan]")]
+        self.assertTrue(any("'somewhere_new'" in line for line in sealed), sealed)
+
     def test_degranting_the_last_freezes_carrier_seals_the_water(self):
         _counts, advisories = self._run(self._degrant("icy_floor"))
         sealed = [line for line in advisories if line.startswith("[gate carrier orphan]")]
-        self.assertTrue(any("freezable water" in line for line in sealed), sealed)
+        self.assertTrue(any("carries `freezable` cells" in line for line in sealed), sealed)
         # pond_island's first mode is a `property` mode on `freezes`, so the
         # skill_gates half must light up on the same mutation.
         self.assertTrue(any("skill_gates['pond_island']" in line for line in sealed), sealed)
@@ -717,6 +756,90 @@ class TestContentReachability(unittest.TestCase):
         pairs = []
         data_lint._walk_pairs(self.maps["street"]["entities"], "to_map", "to_cell", pairs)
         self.assertIn("sewers", {row["to_map"] for row in pairs})
+
+
+class TestPropArmKeys(unittest.TestCase):
+    """GH#424 review I-1 -- WIInteractions.PROP_ARM_KEYS held to dispatch itself.
+
+    The const used to be a hand-copy inside the test suite, carrying hand-typed
+    `# interactions.gd:NN` citations that were ALL eight stale. A comment cannot
+    police a match block. This does: it re-extracts the arms from the `"prop":`
+    case's own text and fails when the two disagree in either direction.
+    """
+
+    INTERACTIONS_GD = REPO_ROOT / "wandering_inn_game" / "src" / "core" / "interactions.gd"
+
+    # Keys the `"prop":` case reads off `target` that are NOT arms -- each one
+    # rides an arm rather than opening one, and each is listed with its reason
+    # so growing this list is an argument, never a shrug.
+    NOT_AN_ARM = {
+        "sleep_toast": "copy for the sleep arm",
+        "contains_when": "gate on the contains arm",
+        "portal_menu_when": "gate on the portal_menu arm",
+        "fence_menu_when": "gate on the fence_menu arm",
+        "requires_weapon_family": "gate on the plain-interact arm",
+        "requires_item": "gate on the plain-interact arm",
+        "item_hint_toast": "refusal copy for those two gates",
+        "once_per_waking": "rate limit on the plain-interact arm",
+        "once_per_waking_toast": "copy for that rate limit",
+        "skill_hint_toast": "copy for the requires_skill arm",
+        "toast": "payload of the plain-interact arm",
+        "lore": "payload flag of the plain-interact arm",
+        "gold": "payload of the plain-interact arm",
+        "item": "payload of the plain-interact arm",
+        "variants": "payload resolution of the plain-interact arm",
+    }
+    # Arms a prop is AIMED AT through WIGame.use_skill rather than dispatched
+    # to, so they never appear in the match block and cannot be extracted.
+    USE_SKILL_TARGET_KEYS = {"on_skill_use", "skill_uses", "cookware", "conversation", "dialogue"}
+
+    def _source(self):
+        return self.INTERACTIONS_GD.read_text().splitlines()
+
+    def _sole_index(self, lines, token):
+        hits = [n for n, line in enumerate(lines) if line.strip() == token]
+        self.assertEqual(len(hits), 1, f"{token!r} must be a unique whole-line marker, got {hits}")
+        return hits[0]
+
+    def _extracted_arms(self):
+        lines = self._source()
+        start = self._sole_index(lines, '"prop":')
+        end = self._sole_index(lines, '"encounter":')
+        self.assertLess(start, end, "the prop case must precede the encounter case")
+        body = "\n".join(lines[start + 1:end])
+        return set(re.findall(r'target\.(?:get|has)\(\s*"([a-z_]+)"', body))
+
+    def _declared_keys(self):
+        text = self.INTERACTIONS_GD.read_text()
+        # Split on "= [" rather than the const name: `Array[String]` carries a
+        # `]` of its own, and slicing on that returned an empty list -- which
+        # would have made every comparison below vacuously agree.
+        block = text.split("const PROP_ARM_KEYS", 1)[1].split("= [", 1)[1].split("\n]", 1)[0]
+        return re.findall(r'"([a-z_]+)"', block)
+
+    def test_every_extracted_key_is_an_arm_or_a_named_non_arm(self):
+        extracted = self._extracted_arms()
+        self.assertGreater(len(extracted), 20, extracted)
+        unaccounted = extracted - set(self.NOT_AN_ARM) - set(self._declared_keys())
+        self.assertEqual(unaccounted, set(),
+            "dispatch's prop case reads key(s) that are neither declared in "
+            "WIInteractions.PROP_ARM_KEYS nor named in NOT_AN_ARM -- a new arm "
+            "shipped without joining the reachability predicate")
+
+    def test_declared_const_equals_extracted_arms_plus_use_skill_targets(self):
+        declared = self._declared_keys()
+        self.assertEqual(len(declared), len(set(declared)), f"duplicate key in the const: {declared}")
+        residual = self._extracted_arms() - set(self.NOT_AN_ARM)
+        self.assertEqual(set(declared), residual | self.USE_SKILL_TARGET_KEYS,
+            "WIInteractions.PROP_ARM_KEYS has drifted from dispatch's own text")
+        # Pin the shape too, so a shrinking extraction cannot quietly agree with
+        # a shrinking const.
+        self.assertEqual(len(residual), 9, sorted(residual))
+
+    def test_not_an_arm_rows_are_all_live(self):
+        extracted = self._extracted_arms()
+        stale = sorted(set(self.NOT_AN_ARM) - extracted)
+        self.assertEqual(stale, [], f"NOT_AN_ARM row(s) no longer read by dispatch: {stale}")
 
 
 class TestRealTree(unittest.TestCase):

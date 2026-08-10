@@ -1723,11 +1723,26 @@ def _item_sources(parsed: dict, maps: dict) -> dict:
 	return out
 
 
-# The property-table outcomes that OPEN A WAY THROUGH. `remove_scorch` deletes
-# the blocking entity (burns x burnable, cuts x cuttable) and `freeze_cell`
-# turns blocking water into a standable ice tile. `thaw_cell` is deliberately
-# absent: it turns ice back into water, which re-blocks.
-CLEARING_OUTCOMES = {"remove_scorch", "freeze_cell"}
+# EVERY property-table outcome, classified. A set of "the ones that clear" was
+# the review finding: it silently answered "no" for anything it had not heard
+# of, so `state_set` -- the outcome behind BOTH shipped traversal seams
+# (anchors x gap = rope over the span stub, repairs x broken = the mended bank
+# stringer) -- was excluded by omission rather than by argument, and a new
+# outcome would have been excluded the same quiet way.
+#   clears    -- the interaction opens/changes the thing; a live carrier matters
+#   re-blocks -- it closes a way rather than opening one (thaw: ice -> water)
+#   inert     -- it is a refusal; there is nothing to carry
+OUTCOME_CLASS = {
+	"remove_scorch": "clears",   # burns x burnable, cuts x cuttable: deletes the blocker
+	"freeze_cell": "clears",     # freezes x freezable: blocking water -> standable ice
+	"state_set": "clears",       # the traversal seams + hearth/lamp/mud state flips
+	"thaw_cell": "re-blocks",    # burns x frozen: ice -> water
+	"refuse": "inert",           # the authored "no", carrier-free by definition
+}
+CLEARING_OUTCOMES = {outcome for outcome, kind in OUTCOME_CLASS.items() if kind == "clears"}
+# Cell-placed properties this check knows how to enumerate. `frozen` is the
+# thaw target and never classified "clears", so it needs no enumerator.
+CELL_PROPERTY_ENUMERATORS = {"freezable": _water_cells, "frozen": _water_cells}
 
 
 def _check_gate_carriers(parsed: dict, maps: dict, learnable: set, report) -> None:
@@ -1747,11 +1762,19 @@ def _check_gate_carriers(parsed: dict, maps: dict, learnable: set, report) -> No
 	the #413 mistake. The suite keeps flooding with every Skill known -- its job
 	is geometry under maximum capability, and this is the capability half.
 
-	The clearing vocabulary is read from interactions.json, never hardcoded, so a
-	new property/outcome row is policed the day it ships.
+	The clearing vocabulary is read from interactions.json, never hardcoded, and
+	OUTCOME_CLASS must cover that file's `outcomes` list EXACTLY (the
+	WIFieldSkills.OUTCOMES mirror-contract shape) -- a new outcome is reported
+	unclassified rather than silently treated as "does not clear".
 	"""
 	table = parsed.get(DATA / "interactions.json") or {}
 	placements = table.get("target_properties", {}) or {}
+	shipped_outcomes = {str(o) for o in table.get("outcomes", [])}
+	if shipped_outcomes and shipped_outcomes != set(OUTCOME_CLASS):
+		drift = sorted(shipped_outcomes ^ set(OUTCOME_CLASS))
+		report("unclassified outcome", "interactions.json `outcomes` and data_lint.OUTCOME_CLASS "
+			f"disagree on {', '.join(drift)} -- classify it (clears / re-blocks / inert) before "
+			"this arm can judge anything that uses it")
 	carriers_of: dict[str, set[str]] = {}
 	for row in table.get("interactions", []):
 		if not isinstance(row, dict) or str(row.get("outcome", "")) not in CLEARING_OUTCOMES:
@@ -1765,21 +1788,31 @@ def _check_gate_carriers(parsed: dict, maps: dict, learnable: set, report) -> No
 		if live:
 			continue
 		blocked_by = ", ".join(sorted(carriers)) or "nothing"
-		if placements.get(target_prop) == "entity":
+		placement = placements.get(target_prop)
+		if placement == "entity":
 			for map_id, entity in _entity_carriers(maps, target_prop):
 				report("gate carrier orphan", f"maps/{map_id}: '{entity.get('id', '<no id>')}' is "
-					f"`{target_prop}` but no LEARNABLE Skill clears it -- the only carriers "
-					f"({blocked_by}) are themselves unreachable, so whatever is behind it is sealed")
-		elif target_prop == "freezable":
-			# The one cell-placed clearing property. `_water_cells` is the same
-			# helper advise_missing_skill_gates uses, so the freezable list and
-			# the water-tagged wall segments both count.
+					f"`{target_prop}` but no LEARNABLE Skill acts on it -- the only carriers "
+					f"({blocked_by}) are themselves unreachable, so that interaction is dead and "
+					"anything it gates stays shut")
+		elif placement == "cell" and target_prop in CELL_PROPERTY_ENUMERATORS:
+			# `_water_cells` is the same helper advise_missing_skill_gates uses,
+			# so the map's `freezable` list AND its water-tagged wall segments
+			# both count.
+			enumerate_cells = CELL_PROPERTY_ENUMERATORS[target_prop]
 			for map_id, map_doc in sorted(maps.items()):
-				if not _water_cells(map_doc):
+				if not enumerate_cells(map_doc):
 					continue
-				report("gate carrier orphan", f"maps/{map_id}: carries freezable water but no "
-					f"LEARNABLE Skill freezes it -- the only carriers ({blocked_by}) are "
-					"themselves unreachable, so every crossing over that water is shut")
+				report("gate carrier orphan", f"maps/{map_id}: carries `{target_prop}` cells but no "
+					f"LEARNABLE Skill acts on them -- the only carriers ({blocked_by}) are "
+					"themselves unreachable, so every crossing over them is shut")
+		else:
+			# NEVER drop a computed orphan on the floor (the review's no-else
+			# finding): an unknown or unenumerable placement is itself the news.
+			report("gate carrier orphan", f"target property `{target_prop}` has no LEARNABLE carrier "
+				f"(only {blocked_by}), and this check cannot list its carriers: placement is "
+				f"{placement!r}, which is neither an `entity` flag nor a cell class it knows how to "
+				"enumerate. Teach CELL_PROPERTY_ENUMERATORS or fix the placement")
 
 	for map_id, map_doc in sorted(maps.items()):
 		registry = map_doc.get("skill_gates")
@@ -1992,7 +2025,10 @@ def main() -> int:
 		# traceback on stdout reads exactly like a lint failure to whoever is
 		# staring at a sweep. It degrades to one honest line instead: the tier
 		# is unavailable, everything else still ran, rc semantics untouched.
-		reachability_advisories = [f"check crashed: {type(err).__name__}: {err}"]
+		# APPEND, never reassign: the check reports as it goes, so a crash
+		# halfway through still has real findings banked -- reassigning threw
+		# away exactly the rows that were about to explain the crash.
+		reachability_advisories.append(f"check crashed: {type(err).__name__}: {err}")
 		reachability_counts = {}
 	elapsed_ms = (time.monotonic() - start) * 1000
 	if errors:
@@ -2033,9 +2069,14 @@ def main() -> int:
 		# grows a wall, the fix is to clean the content, not to hide the list.
 		for advisory in reachability_advisories:
 			print(f"data_lint: ADVISORY -- reachability {advisory}")
-		print("data_lint: ADVISORY -- content reachability (GH#424): "
-			+ "; ".join(f"{count} {category}" for category, count in sorted(reachability_counts.items()))
-			+ ". Report-only, never fails.")
+		# Only when there is a tally to print. On a crash the counts are empty
+		# and the summary degenerated to "content reachability (GH#424): .
+		# Report-only" -- a dangling line that read like a formatting bug at the
+		# exact moment the reader needed to trust the output.
+		if reachability_counts:
+			print("data_lint: ADVISORY -- content reachability (GH#424): "
+				+ "; ".join(f"{count} {category}" for category, count in sorted(reachability_counts.items()))
+				+ ". Report-only, never fails.")
 	for line in report:
 		print(f"data_lint: REPORT -- {line}")
 	return 0
