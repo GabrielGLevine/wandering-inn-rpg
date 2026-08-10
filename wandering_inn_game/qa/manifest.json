@@ -955,7 +955,7 @@
   {
    "script": "work_loop",
    "seed": 9,
-   "note": "inn work-loop, Helper leg (chores -> class_gained -> level 2)",
+   "note": "inn work-loop, Helper leg (chores -> class_gained -> level 2), then [Basic Repair] decks the Riverfarm bank walk and survives sleep",
    "tiers": [
     "full"
    ],
@@ -6010,7 +6010,7 @@
   {
    "script": "martial_field_loop",
    "seed": 9,
-   "note": "GH#380/#381/#382/#383: THE martial exploration canonical -- every refusal at warrior 5 (both unsteady lines, four locked_toasts, the carcass), then the armed half through pause-Load: [Even Footing] crosses both placements, [Greater Strength] opens the gallery, [Rope Work] rigs the drop and the run leaves through it, [Basic Repair] decks the bank walk, and both state_set seams survive a save round-trip AND a sleep; [Broader Shoulders]' waking cap, [Flame Jet]'s one-shot authored carcass arm outranking the generic burns x burnable row (burned_the_debris remains absent), and [Ice Floor] cast out of combat",
+   "note": "GH#380/#381/#382/#383: THE martial exploration canonical -- every refusal at warrior 5 (both unsteady lines, four locked_toasts, the carcass), then the armed half through pause-Load: [Even Footing] crosses both placements, [Greater Strength] opens the gallery, and [Rope Work] rigs the drop and leaves through it; that remaining state_set seam survives a save round-trip and one post-sleep crossing. Also pins [Broader Shoulders]' waking cap, [Flame Jet]'s authored carcass arm outranking burns x burnable (burned_the_debris absent), and [Ice Floor] out of combat.",
    "tiers": [
     "full"
    ],
@@ -6717,7 +6717,7 @@
    "script": "briar_arch_locked",
    "seed": 9,
    "fixture": "near_briar_arch_locked",
-   "note": "#398 P5 negative, two phases: the one two-mode refusal every build receives, the impassable briar cell, the wards refusing on their own encounter_when (review L2), the structurally absent cache, then a Warrior 11 holding [Power Strike] with no sword proving the field weapon gate keeps it off the bar entirely (review L5).",
+   "note": "#398 P5 negative, three phases: the two-mode refusal, impassable briar, encounter_when ward refusal and absent cache; then a Warrior 11's [Basic Swordwork] is absent without its field_weapon family and present on the sword-armed control's exact bar (review L5).",
    "tiers": [
     "full"
    ],

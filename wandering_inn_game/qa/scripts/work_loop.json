@@ -1232,6 +1232,31 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [20, 8]
+  },
+  {
+   "_comment": "The Riverfarm repair is a permanent bank, not a waking flag: sleep on the inn's real bed, wait through the veil, then require bank_planks_mended to survive unchanged.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [9, 2]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.bank_planks_mended",
+   "equals": 1
   }
  ]
 }

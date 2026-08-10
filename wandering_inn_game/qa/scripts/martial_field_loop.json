@@ -577,11 +577,22 @@
    ]
   },
   {
-   "_comment": "Nine field slots, every one DERIVED: martial_field_armed carries no hotbar_loadout, so the bar is AUTO in known_skills() order. Slots 1-9: basic_cleaning, broader_shoulders, bar_fighting, rope_work, flame_jet, icy_floor, basic_cooking, basic_swordwork, greater_strength. The sword satisfies basic_swordwork's field_weapon gate; power_strike/piercing_strikes are combat-only, and basic_repair now belongs to Helper L2. [Even Footing] is passive and takes no slot.",
+   "_comment": "Nine field slots, every one DERIVED: martial_field_armed carries no hotbar_loadout, so the bar is AUTO in known_skills() order. Slots 1-9 are [Basic Cleaning], [Broader Shoulders], [Bar Fighting], [Rope Work], [Flame Jet], [Ice Floor], [Basic Cooking], [Basic Swordwork], [Greater Strength], exactly as readout_lines pins below. The sword satisfies basic_swordwork's field_weapon gate; power_strike/piercing_strikes are combat-only, and basic_repair now belongs to Helper L2. [Even Footing] is passive and takes no slot.",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 9
+    "slots": 9,
+    "readout_lines": [
+     "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
+     "2  [Broader Shoulders] — A load that would bow anyone else rides easy on you, and rides all day.",
+     "3  [Bar Fighting] — Any common room is full of weapons. The trick is reaching one before the other fellow does.",
+     "4  [Rope Work] — A line made fast at both ends. A gap crossed once stays crossed for whoever comes next.",
+     "5  [Flame Jet] — A roaring lance of goblin-fire down the line.",
+     "6  [Ice Floor] — The stones glaze over, and footing becomes a rumor. Still water takes it the same way, and holds.",
+     "7  [Basic Cooking] — Simple meals come out right, every time.",
+     "8  [Basic Swordwork] — Steadier hands with any blade.",
+     "9  [Greater Strength] — Strength enough to shift what was set down to stay put."
+    ]
    }
   },
   {
