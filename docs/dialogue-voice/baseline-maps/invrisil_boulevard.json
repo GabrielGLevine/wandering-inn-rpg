@@ -719,6 +719,66 @@
    [
     27,
     3
+   ],
+   [
+    26,
+    7
+   ],
+   [
+    26,
+    8
+   ],
+   [
+    26,
+    9
+   ],
+   [
+    27,
+    4
+   ],
+   [
+    27,
+    5
+   ],
+   [
+    27,
+    6
+   ],
+   [
+    27,
+    7
+   ],
+   [
+    27,
+    8
+   ],
+   [
+    27,
+    9
+   ],
+   [
+    27,
+    10
+   ],
+   [
+    27,
+    11
+   ],
+   [
+    27,
+    12
+   ],
+   [
+    27,
+    13
+   ],
+   [
+    27,
+    14
+   ],
+   [
+    27,
+    15
    ]
   ],
   "cover_skip": [
@@ -1348,7 +1408,7 @@
     "facing": "right",
     "id": "invrisil_anchor_stone",
     "kind": "prop",
-    "observe": "The Liscor stones were rougher. This one has been handled by people with better manners; it barely shows the wear.",
+    "observe": "\u00b6",
     "portal_menu": true,
     "portal_menu_when": {
      "requires": {
@@ -1361,7 +1421,7 @@
      0.66,
      0.4
     ],
-    "toast": "A plain grey stone, out of place against the marble \u2014 until you notice the coin-gold vein running through it, and the frame of light waiting just under the surface."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -1371,26 +1431,26 @@
     "display_name": "The Rooftop Line",
     "id": "rooftop_line",
     "kind": "prop",
-    "locked_toast": "Slate roofs and chimney smoke. The city keeps its second story to itself.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "scouted_vantage",
-     "toast": "[Eagle Eyes] \u2014 The rooftop line resolves into a second city: runners' shortcuts, a watcher over Coyle's block, and two gentlemen who are always politely elsewhere."
+     "toast": "\u00b6"
     },
     "requires_skill": "eagle_eyes",
-    "skill_hint_toast": "The rooftops run straighter than the streets. Somebody up there knows it.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "riverfarm_fence_ew"
    },
    {
     "_comment": "Landing (1,7) sits inside the alleys' own west corridor, open + off every blocked/entity cell there. v0.16.1 #9: this was a free-standing `door` on open paving -- rows 2..15 had no wall east of x=24, so the city's only alley entrance had plaza on all four sides. There is a building there now (x=26 masonry, sealed east at [27,3], floor_layer 6 behind it) and this entity is the BREAK in it: hide_sprite, so the three-cell gap at y7..9 is what the player reads. TRAP: row 2 stays open x0..27 (invrisil_walkthrough paces it to grind to night), so the north end seals at [27,3], never [26,2] -- without that one cell the masonry is a SCREEN, the lane behind it open off the plaza at (27,2).",
     "cell": [
-     26,
-     8
+     27,
+     2
     ],
     "display_name": "Into the Alleys",
     "hide_sprite": true,
     "id": "boulevard_to_alleys",
     "kind": "door",
-    "observe": "A gap in the row of shopfronts, three strides wide and going darker the further in it goes. A stride past the wall line the paving changes underfoot, boulevard marble to whatever the alleys were laid with.",
+    "observe": "\u00b6",
     "sprite": "door",
     "to_cell": [
      1,
@@ -1407,7 +1467,7 @@
     "display_name": "The Adventurer's Rest",
     "id": "boulevard_to_adventurers_rest",
     "kind": "door",
-    "observe": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Half the silver in this city drinks here and none of it says so out loud.",
+    "observe": "\u00b6",
     "sprite": "door",
     "to_cell": [
      6,
@@ -1424,15 +1484,15 @@
     "dialogue": [
      {
       "speaker": "Master Coyle",
-      "text": "Browsing, or selling?"
+      "text": "\u00b6"
      }
     ],
     "display_name": "Master Coyle",
     "facing": "left",
-    "friendly_line": "He offers a smile with the price tag still visible on the underside. \"Charming,\" he allows, in the tone of a man crossing an item off a ledger.",
+    "friendly_line": "\u00b6",
     "id": "master_coyle",
     "kind": "npc",
-    "observe": "Coin-gold trim on a merchant's collar, rings enough to case a fist. He totals you before you've said a word \u2014 cheaply, by the look on his face.",
+    "observe": "\u00b6",
     "sprite": "master_coyle",
     "talk_pool": [
      "\u00a7",
@@ -1482,14 +1542,14 @@
     "dialogue": [
      {
       "speaker": "",
-      "text": "A woman in a rose-dyed cloak checks a folded slip of paper against a shopfront number, unimpressed by both."
+      "text": "\u00b6"
      }
     ],
     "display_name": "A Rose-Cloaked Shopper",
     "facing": "down",
     "id": "invrisil_extra_1",
     "kind": "npc",
-    "observe": "She holds the slip at arm's length, then the shopfront number, then the slip again. Whatever address she was given, this street declines to be it.",
+    "observe": "\u00b6",
     "sprite": "citizen_f",
     "talk_pool": [
      "\u00a7",
@@ -1510,14 +1570,14 @@
     "dialogue": [
      {
       "speaker": "",
-      "text": "Blue-grey wool, city cut. She doesn't look at you. Nobody here looks at anybody."
+      "text": "\u00b6"
      }
     ],
     "display_name": "A Woman in City Wool",
     "facing": "left",
     "id": "invrisil_extra_2",
     "kind": "npc",
-    "observe": "Blue-grey wool, cut the way this city cuts it, and a walking pace she has no intention of breaking for you or anyone.",
+    "observe": "\u00b6",
     "sprite": "citizen_f",
     "talk_pool": [
      "\u00a7",
@@ -1538,14 +1598,14 @@
     "dialogue": [
      {
       "speaker": "",
-      "text": "A porter's barrow, half-unloaded, and a man in no hurry to finish the other half."
+      "text": "\u00b6"
      }
     ],
     "display_name": "A Porter at His Barrow",
     "facing": "right",
     "id": "invrisil_extra_3",
     "kind": "npc",
-    "observe": "The barrow is half empty and he is in no hurry about the other half. He has the arms for a faster day and has decided against one.",
+    "observe": "\u00b6",
     "sprite": "human_laborer",
     "talk_pool": [
      "\u00a7",
@@ -1579,14 +1639,14 @@
     "dialogue": [
      {
       "speaker": "",
-      "text": "Olive work clothes, ink-stained cuffs. A clerk between one ledger and the next."
+      "text": "\u00b6"
      }
     ],
     "display_name": "A Clerk Between Errands",
     "facing": "down",
     "id": "invrisil_extra_4",
     "kind": "npc",
-    "observe": "Olive work clothes, ink to the second knuckle, and a satchel worn flat on one side from the same walk every day.",
+    "observe": "\u00b6",
     "sprite": "city_scribe",
     "talk_pool": [
      "\u00a7",
@@ -1607,14 +1667,14 @@
     "dialogue": [
      {
       "speaker": "",
-      "text": "Mustard-brown coat, city boots, the specific walk of a man pretending he isn't lost."
+      "text": "\u00b6"
      }
     ],
     "display_name": "A Man Who Isn't Lost",
     "facing": "up",
     "id": "invrisil_extra_5",
     "kind": "npc",
-    "observe": "Mustard-brown coat, good city boots, and the specific unhurried circling of a man who will not be asking anybody.",
+    "observe": "\u00b6",
     "sprite": "hired_blade",
     "talk_pool": [
      "\u00a7",
@@ -1635,14 +1695,14 @@
     "dialogue": [
      {
       "speaker": "",
-      "text": "Plum silk, a little too fine for the errand she's running. She counts her change twice."
+      "text": "\u00b6"
      }
     ],
     "display_name": "A Lady in Plum Silk",
     "facing": "left",
     "id": "invrisil_extra_6",
     "kind": "npc",
-    "observe": "Plum silk a season past its moment, worn on an errand that plainly sits beneath it. She counts the change twice and does not hide the second count.",
+    "observe": "\u00b6",
     "sprite": "invrisil_lady_client",
     "talk_pool": [
      "\u00a7",
@@ -1675,14 +1735,14 @@
     "dialogue": [
      {
       "speaker": "",
-      "text": "A Gnoll traveler, tan road-cloak, watching the crowd the way a stranger watches weather."
+      "text": "\u00b6"
      }
     ],
     "display_name": "A Gnoll Traveler",
     "facing": "right",
     "id": "invrisil_extra_7",
     "kind": "npc",
-    "observe": "A tan road-cloak with the dust still in the weave, and a Gnoll under it reading the crowd the way you would read weather coming.",
+    "observe": "\u00b6",
     "sprite": "gnoll_traveler",
     "talk_pool": [
      "\u00a7",
@@ -1703,7 +1763,7 @@
     "display_name": "A Good Vantage",
     "id": "coyle_operation_lookout",
     "kind": "prop",
-    "observe": "Stacked shipping crates, waist-high, the kind of cover a man leans on to watch a street without looking like he's watching it.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "coyle_operation_found",
     "sprite": "crate",
     "tint": [
@@ -1711,7 +1771,7 @@
      0.55,
      0.45
     ],
-    "toast": "You circle the block twice before it clicks: the modest COYLE AND SONS sign out front doesn't match the two wagons idling round the side, or the men counting crates like men who've been shorted before. Whatever Coyle's really running out of, the front door is the least of it."
+    "toast": "\u00b6"
    },
    {
     "_comment": "GH#68 (Invrisil quest-stage rework): the FIGHT path's Stage 2 tailing chain, first leg.",
@@ -1722,7 +1782,7 @@
     "display_name": "A Hurrying Runner",
     "id": "coyle_runner_trail",
     "kind": "prop",
-    "observe": "A runner ducks out Coyle's side door with a ledger under one arm, moving with the particular haste of someone who'd rather not be noticed leaving.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "spotted_the_runner",
     "sprite": "city_runner",
     "tint": [
@@ -1730,7 +1790,7 @@
      0.45,
      0.4
     ],
-    "toast": "You fall in a comfortable distance behind. The runner doesn't loop, doesn't double back \u2014 just walks like a man with somewhere specific to be, heading for the alleys off the boulevard's east end."
+    "toast": "\u00b6"
    },
    {
     "allies": [],
@@ -1749,10 +1809,10 @@
      "footpad_lookout",
      "footpad_bruiser"
     ],
-    "gate_closed_toast": "Nothing under the colonnade but shadow. Whoever works this corner keeps night hours only.",
+    "gate_closed_toast": "\u00b6",
     "id": "boulevard_night_footpads",
     "kind": "encounter",
-    "observe": "Two shapes peel off the shadowed colonnade, unhurried, the way people move when they've done this before. Only after dark.",
+    "observe": "\u00b6",
     "on_victory": "won_combat",
     "respawns": true,
     "sprite": "human_laborer",
@@ -1785,12 +1845,13 @@
     ],
     "id": "boulevard_duel_ring",
     "kind": "encounter",
-    "observe": "A chalked ring on the cobbles, two of Coyle's regulars leaning against the wall beside it, already sizing you up.",
+    "observe": "\u00b6",
     "on_victory": "boulevard_duels_won",
     "respawns": true,
     "sprite": "human_laborer"
    },
    {
+    "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)",
     "cell": [
      6,
      1
@@ -1798,10 +1859,12 @@
     "display_name": "A Glazier's Front",
     "hide_sprite": true,
     "id": "boulevard_glazier",
+    "invisible": true,
     "kind": "prop",
-    "observe": "Panes racked like coins on edge. The glazier watches the street through his own stock, which is either pride or advertising."
+    "observe": "\u00b6"
    },
    {
+    "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)",
     "cell": [
      15,
      1
@@ -1809,10 +1872,12 @@
     "display_name": "A Cordwainer's Bench",
     "hide_sprite": true,
     "id": "boulevard_cordwainer",
+    "invisible": true,
     "kind": "prop",
-    "observe": "Boots on pegs, sorted by wear. The pair in the window has walked to Pallass and back, if the sign is honest. Signs here mostly are."
+    "observe": "\u00b6"
    },
    {
+    "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)",
     "cell": [
      7,
      1
@@ -1820,8 +1885,9 @@
     "display_name": "A Narrow Teahouse",
     "hide_sprite": true,
     "id": "boulevard_teahouse",
+    "invisible": true,
     "kind": "prop",
-    "observe": "Three tables, steam on the glass, and a chalk line of prices that assumes you already know what smoke-leaf costs in Invrisil."
+    "observe": "\u00b6"
    },
    {
     "_comment": "v0.16.1 #17: the sign the game TALKS about now exists. coyle_operation_lookout's toast and Wilovan both name COYLE AND SONS; a repo-wide grep found those two prose hits and nothing else. The nearest art was an anonymous `coin_shop_sign` DECOR row at [22,1] with no id, name or observe -- deleted and re-expressed here on the blocked facade row (the boulevard_stationer pattern; no walkable cell lost). INTERIM ART by directive: existing sprite, burgundy-and-brass tint (Coyle's livery). Bespoke art rides the art PR. No on_interact_accomplishment -- it would mint a shipped id for a read the vantage prop already banks.",
@@ -1832,7 +1898,7 @@
     "display_name": "Coyle and Sons",
     "id": "boulevard_coyle_front",
     "kind": "prop",
-    "observe": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. The frontage behind it is one narrow door and a clean window. Everything that actually moves through this firm goes round the side, on wagons, after dark.",
+    "observe": "\u00b6",
     "sprite": "coyle_shop_sign",
     "tint": [
      0.72,
@@ -1849,7 +1915,7 @@
     "display_name": "A Stationer's Window",
     "id": "boulevard_stationer",
     "kind": "door",
-    "observe": "Ruled paper in three weights, ink in four, and a card offering a scribe by the hour in a hand that is itself the advertisement. Half the contracts argued about on this street were bought here first, quietly, by both sides.",
+    "observe": "\u00b6",
     "sprite": "door",
     "to_cell": [
      6,
@@ -1858,7 +1924,25 @@
     "to_map": "stationer"
    },
    {
+    "_comment": "#423: Hedault's shop gets a real frontage on the main square. Row 1 is blocked x0-27, so promoting this facade cell to a door costs no walkable cell (the boulevard_stationer / boulevard_to_adventurers_rest pattern). Cell (22,1) chosen from the open 19..27 band, clear of the stationer's own door at (20,1) and of COYLE AND SONS at (23,1); the approach and landing cell is (22,2), open plaza.",
+    "cell": [
+     22,
+     1
+    ],
+    "display_name": "An Enchanter's Frontage",
+    "id": "boulevard_enchanter_shop",
+    "kind": "door",
+    "observe": "\u00b6",
+    "sprite": "door",
+    "to_cell": [
+     6,
+     7
+    ],
+    "to_map": "enchanter_shop"
+   },
+   {
     "_comment": "#318 the world event, felt-not-seen: the carriage is gone and only the street's reaction is on screen. Facade row prop, the boulevard_glazier idiom (hide_sprite, bumped from the row below).",
+    "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)",
     "cell": [
      11,
      1
@@ -1866,15 +1950,16 @@
     "display_name": "The Street, Suddenly Quiet",
     "hide_sprite": true,
     "id": "boulevard_carriage_wake",
+    "invisible": true,
     "kind": "prop",
-    "observe": "Every front on this stretch has stopped pretending to be busy. A wheel-track runs through the wet marble, wider than a trade wagon lays and far too clean, and it is already curving away three streets north.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "carriage_passed",
     "present_when": {
      "requires": {
       "house_card_shown": 1
      }
     },
-    "toast": "Pink lacquer, gone before you turned your head. The boulevard takes a moment to remember it was doing something, and nobody on it says the name out loud."
+    "toast": "\u00b6"
    }
   ],
   "floor_layers": [

@@ -4394,3 +4394,22 @@ New rows from this batch:
 - Coyle crate toast reworded (was narrating the north-square sign from
   the south-square crate) — grounded in the crates + points at the
   frontage; invrisil_walkthrough pin re-derived, canonical green.
+
+## 2026-08-10 — #423 Hedault's Enchanter shop (lane H)
+
+- [ ] ART CALL: [Pick Lock] ships with **`icon_open_doors` as INTERIM
+  art**. The icon set carries no lock/pick/key glyph (196 files, all
+  registered), and every rogue-line icon would collide on one hotbar
+  ([Stealth] L1, [Pick Lock] L2, [Find Trap] L3, [Disarm Trap] L5 are
+  all held by the same PC). Precedent for the reuse: Basic Swordwork on
+  `icon_power_strike` (CHOICE-LOG 26). Controller owns the bespoke-icon
+  call — this row is the standing ask.
+- [ ] `enchanter_shop` / `enchanter_work_room` ship with NO
+  `floor_layers`: they inherit the `brothers_parlor` biome default
+  rather than take a blind, unverified region pick. A distinct
+  enchanter floor swatch is an art follow-up (needs a windowed verify).
+- [ ] `enchanter_workbench` / `work_room_proof_bench` reuse the shipped
+  `temper_bench` (Pallass forge). Reads as a workbench, is not an
+  enchanter's bench — bespoke art follow-up.
+- [ ] `alley_enchanter_card` (mercantile_alleys 0,5) reuses
+  `price_board` for a nailed-up shop card.

@@ -1,0 +1,178 @@
+{
+ "facts": {},
+ "skeleton": {
+  "_comment": "#423: the room behind Hedault's lock -- the gated AREA the [Pick Lock] debut opens (user directive: true use of [Pick Lock] is access to gated areas, and a legitimate route must exist). Reached ONLY through enchanter_shop's `enchanter_work_room_door`, whose door_when requires `enchanter_work_room_opened`; that counter has exactly two producers, the pick and Hedault's own trust arm, and the room is identical on both. Small interior, stationer.json schema. Every entity here has at least one orthogonally-adjacent standable cell reachable from the (3,4) landing.",
+  "ambience": [
+   {
+    "phase": [
+     "dusk",
+     "night"
+    ],
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "brothers_parlor",
+  "blocked": [],
+  "decor": [
+   {
+    "cell": [
+     4,
+     1
+    ],
+    "light": {
+     "color": [
+      0.72,
+      0.82,
+      1.0
+     ],
+     "energy": 0.9,
+     "flicker": false,
+     "radius": 30
+    },
+    "sprite": "sconce"
+   }
+  ],
+  "entities": [
+   {
+    "_comment": "Round-trip pair with enchanter_shop's enchanter_work_room_door (8,3). The return landing (8,4) is the open cell directly south of it.",
+    "cell": [
+     3,
+     5
+    ],
+    "display_name": "Back into the Shop",
+    "id": "work_room_exit",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     8,
+     4
+    ],
+    "to_map": "enchanter_shop"
+   },
+   {
+    "_comment": "#423 THE REWARD, one-shot through container_state (a second interact answers 'Empty.'). Band: field-for-field against sealed_factor_bale / riverfarm_ferry_tally -- mundane tool, 28g, every combat modifier zero, so the reward carries no balance-harness surface. Deliberately NOT hedaults_wardstone: that id is the GH#142 True-Set Wardstone, a resonance-2 mana_shield combat carrier priced at 50g behind a 40g fee, and handing it out free behind a lock would both misband the reward and undercut the enchant loop's own gold sink. Its orphan advisory is a separate finding (see LANE-REPORT).",
+    "cell": [
+     2,
+     2
+    ],
+    "contains": [
+     "enchanters_true_gauge"
+    ],
+    "display_name": "A Case of Finished Work",
+    "id": "work_room_finished_work",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "on_open_accomplishment": "took_enchanters_gauge",
+    "open_toast": "\u00b6",
+    "sprite": "chest"
+   },
+   {
+    "cell": [
+     5,
+     2
+    ],
+    "display_name": "The Proofing Bench",
+    "id": "work_room_proof_bench",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "sprite": "temper_bench"
+   },
+   {
+    "cell": [
+     5,
+     4
+    ],
+    "display_name": "A Wall of Weights",
+    "id": "work_room_ledger_wall",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "sprite": "library_shelf"
+   }
+  ],
+  "grid": {
+   "height": 6,
+   "width": 8
+  },
+  "walls": {
+   "segments": [
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "face": [
+      14,
+      7
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      7,
+      0
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      0,
+      1
+     ],
+     "to": [
+      0,
+      5
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      7,
+      1
+     ],
+     "to": [
+      7,
+      5
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      1,
+      5
+     ],
+     "to": [
+      2,
+      5
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      4,
+      5
+     ],
+     "to": [
+      6,
+      5
+     ]
+    }
+   ],
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16
+  }
+ }
+}

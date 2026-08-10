@@ -155,6 +155,11 @@
    "digits": [],
    "propnouns": []
   },
+  "$.nodes.hub.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
   "$.nodes.hub.text": {
    "brackets": [],
    "digits": [],
@@ -166,6 +171,16 @@
    "propnouns": []
   },
   "$.nodes.work_done.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.work_room_opened.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.work_room_opened.text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -441,12 +456,43 @@
        }
       },
       "text": "\u00a7"
+     },
+     {
+      "_comment": "#423 THE VIRTUOUS PATH (user directive: a legitimate route to the locked contents must exist). Appended LAST and accomplishment-gated on the finished commission, so it is HIDDEN at every shipped fixture -- invrisil_v016_gate_check's whole-array hub pin and spine_reach's blind `move down 5` both stay exact, zero re-pins. Banks the SAME `enchanter_work_room_opened` the [Pick Lock] arm banks, so the work-room and its contents are identical on both paths; the counter is the door's own door_when gate, so no presence flips and there is no same-map render ghost.",
+      "effects": [
+       {
+        "accomplishment": "enchanter_work_room_opened"
+       }
+      ],
+      "goto": "work_room_opened",
+      "hide_when": {
+       "accomplishment": {
+        "enchanter_work_room_opened": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "setting_commissioned": 1
+       }
+      },
+      "text": "\u00a7"
      }
     ],
     "speaker": "Hedault",
     "text": "\u00a7"
    },
    "work_done": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Hedault",
+    "text": "\u00a7"
+   },
+   "work_room_opened": {
+    "_comment": "#423. He is not being warm; he is being exact. The trust is stated as a fact about the transaction, the rules are restated, and the reward is named as the one object in there that nobody has a claim on -- which is what makes taking it legitimate rather than theft.",
     "options": [
      {
       "end": true,

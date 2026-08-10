@@ -1,0 +1,362 @@
+{
+ "facts": {
+  "$.entities[1].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "#423: Hedault's own shop, indoors off the boulevard (user ruling 2026-08-10). Schema modelled on stationer.json -- small interior, perimeter is walls.segments so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each with a matching decor row. Biome + every sprite reused, zero biomes.json edits. No floor_layers: the brothers_parlor biome default is the plain interior board, which is neither the parlor's parquet nor the stationer's pale swatch -- a bespoke enchanter floor is a VISUAL-LOG art follow-up, not a blind region pick. THE POINT OF THE MAP: Hedault stands at (2,3) with THREE orthogonally-adjacent standable cells -- (1,3), (3,3), (2,4) -- every one of them walk-reachable from the shop door's landing at (6,7). The alleys placement he came from had none, which is issue #423.",
+  "ambience": [
+   {
+    "phase": [
+     "dusk",
+     "night"
+    ],
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "brothers_parlor",
+  "blocked": [],
+  "decor": [
+   {
+    "cell": [
+     3,
+     1
+    ],
+    "light": {
+     "color": [
+      0.78,
+      0.86,
+      1.0
+     ],
+     "energy": 0.8,
+     "flicker": false,
+     "radius": 32
+    },
+    "sprite": "sconce"
+   },
+   {
+    "cell": [
+     9,
+     4
+    ],
+    "light": {
+     "color": [
+      0.78,
+      0.86,
+      1.0
+     ],
+     "energy": 0.7,
+     "flicker": false,
+     "radius": 26
+    },
+    "sprite": "sconce"
+   },
+   {
+    "cell": [
+     6,
+     1
+    ],
+    "sprite": "window_blue"
+   },
+   {
+    "cell": [
+     4,
+     5
+    ],
+    "sprite": "rug_woven_cream",
+    "tint": [
+     0.92,
+     0.95,
+     1.0
+    ]
+   }
+  ],
+  "entities": [
+   {
+    "_comment": "Round-trip pair with boulevard_enchanter_shop (invrisil_boulevard cell 22,1). Landing (6,7) is the open cell directly north of this door -- standable, off every prop, and the start of every walk in this map's QA legs.",
+    "cell": [
+     6,
+     8
+    ],
+    "display_name": "Out to the Boulevard",
+    "id": "enchanter_shop_exit",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     22,
+     2
+    ],
+    "to_map": "invrisil_boulevard"
+   },
+   {
+    "_comment": "#423: Hedault relocated from mercantile_alleys (0,6), where north and west were blocked, the bench sat east and the door cell sat south -- no standable cell could face him. Here (1,3)/(3,3)/(2,4) are all open and all reachable from (6,7). His talk_pool and `conversation` MOVED with him verbatim (not copied -- the alleys row is deleted in the same edit, so the anti-duplication gate stays satisfied).",
+    "cell": [
+     2,
+     3
+    ],
+    "conversation": "hedault_enchanting",
+    "display_name": "Hedault",
+    "facing": "down",
+    "id": "hedault",
+    "kind": "npc",
+    "observe": "\u00b6",
+    "sprite": "hedault",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ]
+   },
+   {
+    "_comment": "The enchanting bench fiction, brought in off the street. Sprite reuses the shipped temper_bench; a bespoke enchanter's bench is a VISUAL-LOG art follow-up.",
+    "cell": [
+     2,
+     2
+    ],
+    "display_name": "The Workbench",
+    "id": "enchanter_workbench",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "sprite": "temper_bench"
+   },
+   {
+    "cell": [
+     1,
+     1
+    ],
+    "display_name": "The Ward Shelf",
+    "id": "enchanter_ward_shelf",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "sprite": "library_shelf"
+   },
+   {
+    "cell": [
+     4,
+     1
+    ],
+    "display_name": "The Front Case",
+    "id": "enchanter_display_case",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "sprite": "shelf_bottles"
+   },
+   {
+    "cell": [
+     5,
+     1
+    ],
+    "display_name": "The Order Book",
+    "id": "enchanter_order_book",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "sprite": "library_desk"
+   },
+   {
+    "cell": [
+     1,
+     5
+    ],
+    "display_name": "A Tray of Returned Work",
+    "id": "enchanter_refusal_tray",
+    "kind": "prop",
+    "observe": "\u00b6",
+    "sprite": "crate"
+   },
+   {
+    "_comment": "#423 THE [Pick Lock] DEBUT GATE, and the shape that keeps the two modes honest. `door_when` and `requires_skill` on ONE prop: interactions.gd checks door_when FIRST (line 93), so once `enchanter_work_room_opened` banks -- by the pick OR by Hedault's own arm -- this same interact becomes the transition, with no presence flip and therefore no same-map render ghost (the GH#104 class). Unmet + skill unknown falls through to use_skill's SKILL_UNKNOWN + locked_toast; unmet + skill known answers with skill_hint_toast (the explicit-Skill-use directive: interact never auto-casts).",
+    "cell": [
+     8,
+     3
+    ],
+    "display_name": "The Work-Room Door",
+    "door_when": {
+     "open_toast": "\u00b6",
+     "requires": {
+      "enchanter_work_room_opened": 1
+     },
+     "to_cell": [
+      3,
+      4
+     ],
+     "to_map": "enchanter_work_room"
+    },
+    "id": "enchanter_work_room_door",
+    "kind": "prop",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
+    "on_skill_use": {
+     "accomplishment": "enchanter_work_room_opened",
+     "toast": "\u00b6"
+    },
+    "requires_skill": "pick_lock",
+    "skill_hint_toast": "\u00b6",
+    "sprite": "door"
+   }
+  ],
+  "grid": {
+   "height": 9,
+   "width": 12
+  },
+  "skill_gates": {
+   "enchanter_work_room": {
+    "_comment": "Descriptive registry (runtime never reads it): the work-room's TWO modes, contents identical. Mode 0 is the [Pick Lock] debut. Mode 1 is the virtuous path -- Hedault opens the door himself once the lady's commission is settled (hedault_enchanting's `work_room` arm), which is why it declares the non-skill `dialogue` gate rather than a skill union.",
+    "modes": [
+     {
+      "cells": [
+       [
+        8,
+        4
+       ]
+      ],
+      "mechanism": "arm",
+      "props": [
+       "enchanter_work_room_door"
+      ],
+      "skill": "pick_lock"
+     },
+     {
+      "cells": [
+       [
+        2,
+        4
+       ]
+      ],
+      "gate": "dialogue",
+      "mechanism": "social",
+      "props": [
+       "hedault"
+      ]
+     }
+    ],
+    "rewards": [
+     "enchanter_work_room_door"
+    ]
+   }
+  },
+  "walls": {
+   "segments": [
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "face": [
+      14,
+      7
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      11,
+      0
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      0,
+      1
+     ],
+     "to": [
+      0,
+      8
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      11,
+      1
+     ],
+     "to": [
+      11,
+      8
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      1,
+      8
+     ],
+     "to": [
+      5,
+      8
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      7,
+      8
+     ],
+     "to": [
+      10,
+      8
+     ]
+    },
+    {
+     "_comment": "The work-room partition, west arm: seals x7 at y1..y2 so the back pocket (x8..10, y1..2) has exactly ONE opening.",
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      7,
+      1
+     ],
+     "to": [
+      7,
+      2
+     ]
+    },
+    {
+     "_comment": "The partition's south arm. The gap it leaves at (8,3) is the work-room door -- the [Pick Lock] debut gate.",
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      9,
+      3
+     ],
+     "to": [
+      10,
+      3
+     ]
+    }
+   ],
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16
+  }
+ }
+}

@@ -1,20 +1,5 @@
 {
  "facts": {
-  "$.entities[12].talk_pool[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[12].talk_pool[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[12].talk_pool[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[14].talk_pool[0]": {
    "brackets": [],
    "digits": [],
@@ -953,8 +938,8 @@
     "kind": "door",
     "sprite": "door",
     "to_cell": [
-     25,
-     8
+     26,
+     2
     ],
     "to_map": "invrisil_boulevard"
    },
@@ -1202,22 +1187,16 @@
     "sprite": "alchemy_bench"
    },
    {
-    "_comment": "Hedault, Invrisil enchanter. CANON-NATIVE Vol 6-7. Sprite: human placeholder + tint, VISUAL-LOG. No shop -- his commerce is the enchant dialogue.",
+    "_comment": "#423 re-dress: Hedault moved to his own shop off the boulevard (enchanter_shop), so (0,6) is bare and WALKABLE for the first time -- which also gives invrisil_apothecary_bench at (1,6) a second approach. This card is the diegetic pointer for a player who knew the old pitch. It sits on (0,5), already in `blocked`, so no walkable cell is lost (the boulevard facade pattern); its approach is (0,6).",
     "cell": [
      0,
-     6
+     5
     ],
-    "conversation": "hedault_enchanting",
-    "display_name": "Hedault",
-    "id": "hedault",
-    "kind": "npc",
+    "display_name": "A Card on the Alley Wall",
+    "id": "alley_enchanter_card",
+    "kind": "prop",
     "observe": "\u00b6",
-    "sprite": "hedault",
-    "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7"
-    ]
+    "sprite": "price_board"
    },
    {
     "_comment": "INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell, so it is correct on a brothers_job_done save. combat_banking's one-shot victory_toast is contract-legal here: the first on_victory id is `original_recovered`, a quest-style String. No item id minted.",
