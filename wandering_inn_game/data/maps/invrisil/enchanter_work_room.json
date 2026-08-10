@@ -133,7 +133,7 @@
    ]
   },
   {
-   "_comment": "#423 THE REWARD, one-shot through container_state (a second interact answers 'Empty.'). Band: field-for-field against sealed_factor_bale / riverfarm_ferry_tally -- mundane tool, 28g, every combat modifier zero, so the reward carries no balance-harness surface. Deliberately NOT hedaults_wardstone: that id is the GH#142 True-Set Wardstone, a resonance-2 mana_shield combat carrier priced at 50g behind a 40g fee, and handing it out free behind a lock would both misband the reward and undercut the enchant loop's own gold sink. Its orphan advisory is a separate finding (see LANE-REPORT).",
+   "_comment": "#423 THE REWARD, one-shot through container_state (a second interact answers 'Empty.'). I3 (review): this container banks NO accomplishment. `container_state[id]` is the actual one-shot -- the counter it used to mint (`took_enchanters_gauge`) gated nothing, was consumed by nothing, and duplicated what the pack and container_state already record, so it was a permanent shipped id bought for nothing. Dropping it also puts `open_toast` back in the FUNCTIONAL register (extract_prose classify_row keys the landmark call on field + `banks`, never on wording), which is where a plain collection receipt belongs. Band: field-for-field against sealed_factor_bale / riverfarm_ferry_tally -- mundane tool, 28g, every combat modifier zero, so the reward carries no balance-harness surface. Deliberately NOT hedaults_wardstone: that id is the GH#142 True-Set Wardstone, a resonance-2 mana_shield combat carrier priced behind a 40g fee, and handing it out free behind a lock would both misband the reward and undercut the enchant loop's gold sink. Its orphan advisory is a separate finding (see LANE-REPORT).",
    "id": "work_room_finished_work",
    "kind": "prop",
    "cell": [
@@ -142,12 +142,11 @@
    ],
    "display_name": "A Case of Finished Work",
    "sprite": "chest",
-   "observe": "Finished commissions waiting on collection, each one squared to the next. On top, loose, the small brass thing he actually works by.",
+   "observe": "Finished commissions waiting on collection, each one squared to the next. A brass gauge sits loose on top of them, small and much older than anything under it.",
    "contains": [
     "enchanters_true_gauge"
    ],
-   "on_open_accomplishment": "took_enchanters_gauge",
-   "open_toast": "The case is all other people's property except one thing: a brass beam-gauge, worn past its own markings, that no order in the book is waiting on."
+   "open_toast": "Under the lid the case is all other people's property, tagged and waiting. The brass gauge on top carries no tag."
   },
   {
    "id": "work_room_proof_bench",
@@ -169,7 +168,7 @@
    ],
    "display_name": "A Wall of Weights",
    "sprite": "library_shelf",
-   "observe": "Standard weights on pegs, smallest to largest, and beside them a written column of what each one measured last time it was checked against the others."
+   "observe": "Standard weights hang on pegs from smallest to largest. Beside them a written column records what each one measured when it was last checked against the others."
   }
  ]
 }

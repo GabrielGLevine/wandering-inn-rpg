@@ -3595,20 +3595,25 @@ Ruling 28 fixed the WHAT; these are the four calls the lane made
 executing it. All four are recorded in the data's own `_comment`s and in
 `/tmp/wi-423/LANE-REPORT.md`; each is controller-reversible.
 
-28-H.1 **`door_when` on the gate prop, NOT `present_when`.** The
-  counting_room_* idiom (a blocker prop that vanishes when its counter
-  banks) was the obvious build and is WRONG here: the virtuous mode
-  banks its counter from a conversation the player has while standing
-  on that same map, and `world.gd` reconciles presence only on
-  `MAP_CHANGED` / `PHASE_CHANGED`, never on `ACCOMPLISHMENT_RECORDED`
-  (the GH#104 block). It would have shipped a stale sprite over an
-  already-open door — the machine-green/player-truth gap #423 exists to
-  close. Instead ONE prop carries BOTH `door_when` and `requires_skill`:
-  `interactions.gd` checks door_when (line 93) before requires_skill
-  (line 159), so the pick, the trust arm and the refusal are three
-  behaviours of one entity, presence never flips, and nothing needs
-  re-rendering. Generalizable: prefer `door_when` for any gate whose key
-  can be banked on the gate's own map.
+28-H.1 **The gate is ONE prop carrying both `door_when` and
+  `requires_skill`** — `interactions.gd` checks door_when (line 93) before
+  requires_skill (line 159), so the pick, the trust arm and the refusal
+  are three behaviours of one entity, with one counter
+  (`enchanter_work_room_opened`) and one cell. Chosen for that: no second
+  entity, no presence bookkeeping, and the two modes cannot drift apart
+  because they are literally the same door.
+  **CORRECTION (#423 review I2):** the lane originally justified this by
+  claiming the `present_when` build was UNSAFE — that a same-map dialogue
+  bank would leave a stale sprite because nothing reconciles presence on
+  `ACCOMPLISHMENT_RECORDED`. **That was false and is withdrawn.**
+  `world.gd:1833-1843` reconciles presence on `ACCOMPLISHMENT_RECORDED`
+  (GH#150), deferring an in-dialogue bank to `DIALOGUE_ENDED`, and
+  `wi_game.gd:1084-1091` states outright that same-map banks are SAFE for
+  `present_when`. The `present_when` build (the counting_room_* idiom)
+  would have worked. The built mechanism stands on its own merits; the
+  rejected alternative was rejected for a reason that did not exist, and
+  no general "prefer door_when" lesson follows from it. AGENTS.md's stale
+  clause (the source of the error) was corrected in the same commit.
 
 28-H.2 **Virtuous mode = `a_setting_for_a_lady` completion**
   (`setting_commissioned`), the first of the brief's two candidates. One

@@ -1,5 +1,5 @@
 {
- "_count": 17,
+ "_count": 16,
  "_dispositions": {
   "KEEP-AS-IS": "Ships as written. Do not touch.",
   "RESTAGE": "Keep the beat AND keep the correction. Lose the CAPS and the staging ONLY. Nothing else about the string changes."
@@ -55,20 +55,6 @@
    "source": "heuristic-landmark",
    "text": "The seam splits wider at your touch, cold air breathing out of the dark beneath. You step through, into somewhere else.",
    "why": "Two sentences, ends on motion into somewhere else. Landmark register spent about as cheaply as it can be."
-  },
-  {
-   "beat": "the work-room case opened (#423, the [Pick Lock] debut's payoff)",
-   "display_name": "A Case of Finished Work",
-   "disposition": "KEEP-AS-IS",
-   "field": "open_toast",
-   "field_path": "$.entities[1].open_toast",
-   "file": "wandering_inn_game/data/maps/invrisil/enchanter_work_room.json",
-   "holdout": false,
-   "id": "map:invrisil/enchanter_work_room.json:$.entities[1].open_toast",
-   "protected": false,
-   "source": "heuristic-landmark",
-   "text": "The case is all other people's property except one thing: a brass beam-gauge, worn past its own markings, that no order in the book is waiting on.",
-   "why": "The ONE beat this file exists to deliver, and the file's only claim (§5's one-beat-per-file norm, not the two-beat exception mercantile_alleys holds). It makes a real landmark move rather than an inventory statement: the turn is 'all other people's property except one thing', which is what makes taking the gauge legitimate on BOTH modes of the gate instead of theft, and it closes on the present object the player then receives. No affordance formula, no interpretive closer, no inferred agent. Costs the §5 reserve nothing -- it is a heuristic-landmark row, not a controller grant."
   },
   {
    "beat": "Invrisil chain payoff 1 (the recovered stone)",

@@ -424,6 +424,10 @@
     5
    ],
    [
+    0,
+    6
+   ],
+   [
     1,
     5
    ],
@@ -830,6 +834,14 @@
   ],
   "decor": [
    {
+    "_comment": "#423: Hedault stood on (0,6) and blocked it. With him gone the cell would render as alley floor that no player can ever reach -- (0,5) is wall, (0,7) is the boulevard door entity and (1,6) is the apothecary bench, so the nook is an island. Crated shut and added to `blocked`, so it reads as a stuffed dead corner instead of phantom floor. Blocking is byte-identical to the pre-#423 map.",
+    "cell": [
+     0,
+     6
+    ],
+    "sprite": "crate"
+   },
+   {
     "cell": [
      5,
      8
@@ -1187,9 +1199,9 @@
     "sprite": "alchemy_bench"
    },
    {
-    "_comment": "#423 re-dress: Hedault moved to his own shop off the boulevard (enchanter_shop), so (0,6) is bare and WALKABLE for the first time -- which also gives invrisil_apothecary_bench at (1,6) a second approach. This card is the diegetic pointer for a player who knew the old pitch. It sits on (0,5), already in `blocked`, so no walkable cell is lost (the boulevard facade pattern); its approach is (0,6).",
+    "_comment": "#423 re-dress + reachability fix. Hedault moved to his own shop off the boulevard (enchanter_shop); this card is the diegetic pointer for a player who knew the old pitch. It sits on (4,5), already in `blocked`, so no walkable cell is lost (the boulevard facade pattern), and its approach (4,6) is open corridor reachable from the alleys landing (1,7). FIRST SITING WAS (0,5), which was READABLE FROM NOWHERE -- its only neighbour (0,6) is islanded by the (0,7) door entity and the (1,6) bench. Same defect class as the Hedault placement this issue exists to fix; caught in review.",
     "cell": [
-     0,
+     4,
      5
     ],
     "display_name": "A Card on the Alley Wall",

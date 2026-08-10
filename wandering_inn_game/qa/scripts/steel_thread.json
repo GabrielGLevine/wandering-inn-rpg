@@ -2376,7 +2376,7 @@
    "frames": 240
   },
   {
-   "_comment": "== #423 TOLERANT MAJOR-MAP LEG: enchanter_shop; map/cell only, no interior-data pins. ONE plate, the album's standard 240-frame hold -- the work room behind the lock takes no plate here because this album's PC holds neither the rogue line nor the commission, so it is structurally unreachable at this save. ==",
+   "_comment": "== #423 TOLERANT MAJOR-MAP LEG: enchanter_shop; map/cell only, no interior-data pins. ONE plate, the album's standard 240-frame hold. Plate id is 06bb so it sorts between 06b (alleys) and the pre-existing 06c (pallass market) without renaming an unrelated plate -- the work room behind the lock takes no plate here because this album's PC holds neither the rogue line nor the commission, so it is structurally unreachable at this save. ==",
    "action": "teleport",
    "map": "enchanter_shop",
    "cell": [
@@ -2425,7 +2425,7 @@
   },
   {
    "action": "screenshot",
-   "name": "06c_enchanter_shop_the_bench_you_can_reach"
+   "name": "06bb_enchanter_shop_the_bench_you_can_reach"
   },
   {
    "action": "wait_frames",

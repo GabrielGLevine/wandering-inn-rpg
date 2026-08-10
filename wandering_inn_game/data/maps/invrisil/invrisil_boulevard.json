@@ -1592,7 +1592,7 @@
    ],
    "display_name": "An Enchanter's Frontage",
    "sprite": "door",
-   "observe": "One narrow window with one piece in it and a great deal of room around the piece. The card in the corner gives an appraisal fee, an hour, and no adjectives at all.",
+   "observe": "One narrow window with one piece in it and a great deal of room around the piece. The card in the corner gives an appraisal fee and an hour, with no adjectives anywhere on it.",
    "to_map": "enchanter_shop",
    "to_cell": [
     6,

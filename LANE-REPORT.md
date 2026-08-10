@@ -37,11 +37,20 @@ foreground; nothing is claimed green that was not run. See §9.
 * `hedault` deleted from `mercantile_alleys`; `talk_pool`, `observe` and
   `conversation` **moved verbatim** (not copied — the anti-duplication gate
   would have caught a copy).
-* (0,6) is walkable for the first time, which also gives
-  `invrisil_apothecary_bench` (1,6) a second approach.
-* Re-dress: `alley_enchanter_card` on the already-blocked wall cell (0,5),
-  sprite `price_board`, approach (0,6) — a diegetic pointer at the new
-  frontage for a player who knew the old pitch. Cups untouched.
+* **CORRECTED (review C1).** The original text here claimed "(0,6) is
+  walkable for the first time, which also gives
+  `invrisil_apothecary_bench` (1,6) a second approach". **That was false.**
+  (0,6) is an ISLAND: (0,5) is wall, (0,7) is the boulevard door entity and
+  (1,6) is the bench — all three block, so with Hedault gone the cell was
+  reachable-looking floor no player could ever stand on. Fixed: (0,6) is
+  now crated shut and in `blocked`, so blocking is byte-identical to the
+  pre-#423 map and the nook reads as a stuffed dead corner. The bench keeps
+  its one real approach, (1,7), exactly as before.
+* Re-dress: `alley_enchanter_card` on the already-blocked wall cell **(4,5)**,
+  sprite `price_board`, approach **(4,6)** — open corridor, reachable from
+  the alleys landing (1,7). Cups untouched. **First siting was (0,5), whose
+  only neighbour was that island — a new instance of the exact #423 defect,
+  caught in review (C1), not by me.**
 
 ### [Pick Lock]
 * `skills.json`: id `pick_lock`, `[Pick Lock]`, `contexts:["exploration"]`,
@@ -110,7 +119,8 @@ before it arrived:
   `sealed_factor_bale` / `riverfarm_ferry_tally`: `kind: tool`, mundane, 28g,
   `damage_mod/hp_mod/damage_reduction/resonance` all 0. No balance-harness
   surface. Lives in `work_room_finished_work` (2,2), one-shot via
-  `container_state` (`on_open_accomplishment: took_enchanters_gauge`).
+  `container_state`. (It banked `on_open_accomplishment:
+  took_enchanters_gauge` until review I3 — see T5.)
 
 ### invrisil_apothecary_bench disposition (audit, per brief)
 **LEFT IN THE ALLEYS.** References audited: zero QA scripts, zero fixtures,
@@ -120,7 +130,9 @@ nothing is pinned to *this* placement — moving it would have been free
 mechanically. It stays on fiction: it is a **rented-by-the-hour apothecary
 corner** ("WORKING SPACE, BY THE HOUR, NO CREDIT"), which is the opposite of
 Hedault's shop, and he would not keep someone else's alchemy burner in it. It
-also gained a second approach from this lane (0,6 is now walkable).
+is UNCHANGED by this lane: its one real approach was and still is (1,7).
+(An earlier draft of this report claimed it "gained a second approach"
+from (0,6); see the C1 correction in §1 — that cell is an island.)
 
 ---
 
@@ -311,8 +323,11 @@ obligation is met by construction and asserted by run:
   reachable from its map's landing cell: shop props at (1,1)/(4,1)/(5,1) from
   y=2; (1,5) from (1,4)/(2,5); the gate prop (8,3) from (8,4); work-room props
   (2,2) from (2,3), (5,2) from (5,3), (5,4) from (4,4)/(6,4).
-* `alley_enchanter_card` (0,5) from (0,6), which this lane *created* by moving
-  Hedault out.
+* `alley_enchanter_card` **(4,5) from (4,6)** — open corridor, reachable
+  from the alleys landing (1,7). **CORRECTED (review C1):** this bullet
+  originally read "(0,5) from (0,6), which this lane *created* by moving
+  Hedault out", asserting a reachable approach cell that does not exist.
+  Flood-fill proof is in T8 below.
 The controller removes the suite's hedault waiver at composed-merge.
 
 ---
@@ -328,9 +343,12 @@ The controller removes the suite's hedault waiver at composed-merge.
    `test_fixture_coherence` arm ("no fixture stands on a blocked cell") would
    catch the whole class; sibling material for #424.
 3. **Maps voice baseline is stale on 12 untouched maps** (§5).
-4. **`present_when` + a same-map dialogue bank is a ghost factory** — worth a
-   line in the skill library: prefer `door_when` for any gate whose key can be
-   banked while the player is standing on that map.
+4. **WITHDRAWN (review I2).** This slot held a proposed skill-library
+   lesson — "`present_when` + a same-map dialogue bank is a ghost factory,
+   prefer `door_when`". It was **false**: `world.gd:1833-1843` reconciles
+   presence on `ACCOMPLISHMENT_RECORDED` (GH#150) and `wi_game.gd:1084-1091`
+   states same-map banks are SAFE. Nothing goes to the skill library from
+   this lane on that subject. See T9.
 
 ---
 
@@ -411,7 +429,7 @@ work I could not verify. Outstanding, in the order I would resume:
 
 # TAIL (resumed after usage-window reset) — §9 closed
 
-Commit: `<tail>` on the same branch. Everything in report §9 is now done
+Commit: `aa398d96` on the same branch. Everything in report §9 is now done
 except one item proven PRE-EXISTING (see T4). No rebase; base is still
 `aef1fe82`.
 
@@ -617,3 +635,221 @@ lane-proposed landmark disposition. Ruling 28 itself is untouched.
 * **`hedaults_wardstone` re-point** (balance-touching, controller call).
 * **The pre-existing doc-drift and the 12 stale maps-voice baselines**
   (§5) — both flagged, neither laundered.
+
+---
+---
+
+# FIX WAVE 1 (adversarial review: 1 Critical, 3 Important, 3 Minor)
+
+All seven adjudications applied in one commit. Base is still `aef1fe82`;
+no rebase. Every claim below was re-verified, not re-asserted.
+
+## T8. C1 — I shipped a new #423-class defect. FIXED.
+
+`alley_enchanter_card` was sited at mercantile_alleys **(0,5)**, whose only
+non-wall neighbour is **(0,6)** — and (0,6) is an **island**: (0,5) is wall,
+**(0,7) is the `alleys_to_boulevard` door entity**, and **(1,6) is
+`invrisil_apothecary_bench`**. `WIGame.is_cell_blocked` blocks on every
+present entity, doors included, so the card was readable from nowhere. This
+is the exact defect the issue exists to fix, re-committed by me one cell
+over, and my report asserted the opposite twice. The reviewer is right and
+I was wrong; both falsified claims are struck in place (§1, §6) rather than
+quietly edited.
+
+**Fix, two parts:**
+1. Card re-sited to **(4,5)** (already in `blocked`, so no walkable cell is
+   lost — the boulevard facade pattern), approach **(4,6)**, open corridor
+   reachable from the alleys landing (1,7). `observe` re-aimed at the
+   alley's north side to match.
+2. **(0,6) crated shut** and added to `blocked`. Hedault used to block that
+   cell; emptying it would have left reachable-*looking* floor no player can
+   stand on — the M5 defect class, in the alleys. Blocking is now
+   byte-identical to the pre-#423 map.
+
+**Flood-fill proof** (reviewer's model: `blocked` ∪ every `walls.segments`
+cell ∪ every present entity's cell; BFS from each map's real landing):
+
+```
+enchanter_shop      landing (6,7)   reachable=53  UNREACHABLE ENTITIES: none  PHANTOM FLOOR: none
+enchanter_work_room landing (3,4)   reachable=21  UNREACHABLE ENTITIES: none  PHANTOM FLOOR: none
+invrisil_boulevard  (22,2)+(4,8)    reachable=342 UNREACHABLE ENTITIES: none  PHANTOM FLOOR: none
+mercantile_alleys   landing (1,7)   reachable=41
+    UNREACHABLE ENTITIES: broker_hands (5,4), counting_room_guard (5,10),
+                          counting_room_trade_cache (3,11)
+    PHANTOM FLOOR: the 18 counting-room pocket cells
+```
+Same script against a clean `git archive` of base `aef1fe82`:
+```
+BASE mercantile_alleys  landing (1,7)  reachable=41
+    UNREACHABLE ENTITIES: hedault (0,6), broker_hands (5,4),
+                          counting_room_guard (5,10), counting_room_trade_cache (3,11)
+    PHANTOM FLOOR: the same 18 cells
+```
+Reachable-cell count identical (41); the unreachable set goes **4 → 3**,
+losing exactly `hedault` — the one entity #424's waiver covers — and adding
+nothing. The residual three plus the 18 phantom cells are the **#398
+counting-room pocket**, sealed behind `counting_room_factor` /
+`_watch_gap` / `_rear_bar`, all `present_when: {absent: …}` props that
+vanish when their mode is spent: correct by design, pre-existing, byte-
+identical to base. **The composed-tree suite should pass with only the
+hedault waiver removed.**
+
+## T9. I2 — my `present_when` rejection rationale was FALSE. WITHDRAWN.
+
+Verified in my own tree, not taken on trust:
+* `src/world/world.gd:1833-1843` — the `ACCOMPLISHMENT_RECORDED` arm calls
+  `_refresh_entities_watching_counter(...)` **and
+  `_reconcile_entity_presence_or_defer()`** behind the stale-cover guard
+  (GH#150), deferring an in-dialogue bank to `DIALOGUE_ENDED`.
+* `src/core/wi_game.gd:1084-1091` — `entity_present`'s doc states it
+  outright: *"Same-map banks are SAFE for present_when since world.gd's
+  `_reconcile_entity_presence` began running on ACCOMPLISHMENT_RECORDED."*
+
+So the `present_when` build (the counting_room_* idiom) would have worked.
+The **built mechanism stays** — one prop carrying both `door_when` and
+`requires_skill` is sound on its own merits (one prop, one counter, one
+cell; the two modes cannot drift apart) — but everything I wrote about
+*why the alternative was rejected* is deleted:
+
+* **(a)** `AGENTS.md`'s GH#104 block — the clause I mis-cited — now carries
+  a **SUPERSEDED** note pointing at both file:line facts. That stale
+  sentence is the source of the error and would have misled the next lane
+  the same way.
+* **(b)** `CHOICE-LOG 28-H.1` rewritten to the true rationale, with the
+  correction stated in the entry itself. **The "Generalizable: prefer
+  `door_when`…" lesson is DELETED** (`grep "Generalizable: prefer"` → no
+  hits).
+* **(c)** Report §7 finding 4 (the proposed skill-library line) withdrawn
+  in place.
+* Also purged: the same false claim in `enchanter_work_room_door`'s
+  `_comment`, the dialogue arm's `_comment`, and the `AGENTS.md` seed-table
+  row (`grep "render ghost" data/ AGENTS.md` → no lane hits).
+
+## T10. I3 — my landmark self-ruling REVERSED, base accounting restored.
+
+The reviewer is right that a lane must not rule its own landmark, and right
+that mine broke the arithmetic (a 10th ruled string against an unmoved
+`LANDMARK_BEATS_SPENT_BASE`, no rule-4 swap). My KEEP-AS-IS row is deleted
+from `extract_prose.py` outright.
+
+**Mechanism note, because it changes what "reword below the register"
+means:** `classify_row` decides the landmark call **structurally** —
+`if f == "open_toast": if ctx["banks"]: return "landmark","payoff"` — and
+`ctx["banks"]` is `_accs(entity)`, the entity's accomplishment keys.
+**Wording cannot move it.** The lever is the bank, so:
+
+* `work_room_finished_work` now banks **nothing**.
+  `on_open_accomplishment: took_enchanters_gauge` is gone. This is not a
+  dodge, it is the honest reading: `container_state[id]` is the actual
+  one-shot (the "Empty." leg proves it), and the counter gated nothing, was
+  consumed by nothing, and duplicated what the pack and `container_state`
+  already record — a permanent shipped id bought for nothing.
+* `open_toast` re-worded down into the receipt register it now occupies
+  (`functional`/`traversal`): *"Under the lid the case is all other
+  people's property, tagged and waiting. The brass gauge on top carries no
+  tag."* No new beat.
+* Registry regenerated through the sanctioned path only:
+```
+landmarks: 16 rows -> docs/prose-naturalization/landmark-registry.json
+  KEEP-AS-IS=8 NOT-A-LANDMARK=6 RESTAGE=2 | beats 9/12 spent, 3 in reserve (1 grant)
+self-test: PASS
+```
+```
+git diff --stat aef1fe82 -- docs/prose-naturalization/ wandering_inn_game/qa/scripts/extract_prose.py
+  (empty — both are byte-identical to base)
+```
+`_count` 16 and `_reserve` diff clean against the base archive. The
+canonical dropped its two `took_enchanters_gauge` waits and re-pinned the
+open toast; it still proves the one-shot through "Empty." +
+`assert_event_count`.
+
+## T11. I4 — 5 closer violations added, count misreported. FIXED to base+0.
+
+I reported "advisory counts unchanged" by reading the *number of advisory
+lines*, not the census. The reviewer read the census: **base 50 → my tree
+52 narrator-template hits**, with `enchanter_shop` at 3 button-family
+closers and `enchanter_work_room` at 2 against a ceiling of 1, plus a 4th
+closer pushed onto `invrisil_boulevard`. All six named strings reworded:
+
+| string | why it tripped `_r2_button` | now |
+|---|---|---|
+| `enchanter_ward_shelf.observe` | last sentence opened "Nothing " (`_R2_GNOMIC`) | price chalked under the cloth |
+| `enchanter_order_book.observe` | `_R2_TRIPLE` (`x, y, and z`, n≥8) | one comma, no triad |
+| `enchanter_work_room_door.on_skill_use.toast` | ", which" (`_R2_RELTURN`) | closes on the plain fact |
+| `work_room_finished_work.observe` | `_R2_TRIPLE` | recast as one clause |
+| `work_room_ledger_wall.observe` | `_R2_TRIPLE` | split, no triad |
+| `boulevard_enchanter_shop.observe` | `_R2_TRIPLE` | one comma |
+
+Per-map census, mine vs a clean base archive:
+```
+enchanter_shop        buttons 3 -> 0   (ceiling 1: RESPECTED, no advisory)
+enchanter_work_room   buttons 2 -> 0   (ceiling 1: RESPECTED, no advisory)
+invrisil_boulevard    buttons 4 -> 3, afford 1   == BASE (3,1,0) exactly
+mercantile_alleys     buttons 4, triad 1         == BASE (4,0,1) exactly
+TEMPLATE-HIT TOTAL    52 -> 50         == BASE 50   (+0 template debt)
+```
+```
+diff <base --advisories | grep button-family> <mine>  -> BUTTON-FAMILY ADVISORIES: IDENTICAL TO BASE
+diff <base --advisories | grep 'amendment [34]'> <mine> -> TRIAD/AFFORDANCE ADVISORIES: IDENTICAL TO BASE
+data_lint: ADVISORY -- 50 narrator-template hit(s)   (was 52)
+```
+
+## T12. M5 / M6 / M7
+
+* **M5** — the shop's 3×2 area behind the partition (8..10, 1..2) was floor
+  no player could ever stand on, and my `_comment` claiming "exactly ONE
+  opening" was false (the (8,3) door prop blocks the only gap). **Walled
+  solid**: new segments (8,1)-(10,1) and (8,2)-(10,2), so the partition
+  reads as the back of the building — the work room is its own map, reached
+  through the (8,3) doorway. Both `_comment`s corrected; the flood-fill in
+  T8 now reports **PHANTOM FLOOR: none** for the shop.
+* **M6** — the steel_thread plate collided with the pre-existing
+  `06c_pallass_market_green_creature_clash`. Renamed
+  **`06bb_enchanter_shop_the_bench_you_can_reach`**: `"06b_" < "06bb" <
+  "06c_"` lexically, so the album still reads in fire order and no
+  unrelated plate is renumbered.
+* **M7** — six "door cell (6,7)" mislabels fixed across 7 files. (6,7) is
+  the **landing**; (6,8) and (0,7) are the doors. All now use
+  `near_hedault.json`'s wording: *"the enchanter_shop landing cell (6,7) —
+  the open cell north of the shop door"*. `grep "door cell (6,7)"` → no hits.
+
+## T13. Re-gates after fix wave 1
+
+```
+scripts/derive_qa_surfaces.py            -> wrote surfaces for 239 script(s)
+python3 scripts/data_lint.py             -> OK, 129 files, 32 maps clean; 50 template hits (base 50)
+advisories diff vs base archive          -> button-family IDENTICAL; triad/affordance IDENTICAL
+
+voice gate --maps   (re-frozen, 4 touched maps)
+  pass enchanter_shop / enchanter_work_room / invrisil_boulevard / mercantile_alleys   hard=0 warn=0 anti=0
+voice gate dialogue (re-frozen)
+  pass hedault_enchanting.json   hard=0 warn=0 anti=0
+
+enchanter_work_room     seed 7 -> PASS      hedault_enchant_loop    seed 7 -> PASS
+hedault_fragment_loop   seed 7 -> PASS      invrisil_setting_skill  seed 9 -> PASS
+invrisil_setting_talk   seed 9 -> PASS      invrisil_v016_gate_check seed 9 -> PASS
+spine_reach             seed 9 -> PASS      invrisil_walkthrough    seed 9 -> PASS
+steel_thread            seed 9 -> PASS
+
+qa/ci_sweep.sh --tier smoke   -> ci_sweep: ALL 14 script(s) green, no grep hits
+full unit bar, all 33 tests/test_*.gd -> ALL PASS (supersedes the reviewer's 13)
+scripts/preflight.sh:
+  ok data_lint | ok verify-untouched | ok extract_prose self-test
+  ok qa surfaces --check | ok guidance mirrors | ok unit test_sprite_registry
+  FAIL doc drift  <- "plan lacks DONE/ACTIVE header", reproduces identically on
+                     base aef1fe82; the plan doc is coordinator-owned and this
+                     lane has never opened it. Disclosed only, per instruction.
+```
+
+## T14. What this review changed about the lane's own claims
+
+Three things I asserted turned out to be false, and all three were the same
+failure mode — **asserting a property instead of measuring it**:
+the card's approach cell (never flood-filled), the reconciler's behaviour
+(quoted from AGENTS.md instead of read from `world.gd`), and the advisory
+count (counted advisory *lines*, not census hits). The flood-fill script
+and the base-archive advisory diff used above are both cheap and are now in
+the report; they are what should have produced those three claims the first
+time. The one un-audited surface that remains is **windowed eyes** — the
+two interiors and the four new screenshots have still only ever run
+headless (VISUAL-LOG rows filed).

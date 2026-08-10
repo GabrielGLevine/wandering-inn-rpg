@@ -178,7 +178,7 @@
     "sprite": "crate"
    },
    {
-    "_comment": "#423 THE [Pick Lock] DEBUT GATE, and the shape that keeps the two modes honest. `door_when` and `requires_skill` on ONE prop: interactions.gd checks door_when FIRST (line 93), so once `enchanter_work_room_opened` banks -- by the pick OR by Hedault's own arm -- this same interact becomes the transition, with no presence flip and therefore no same-map render ghost (the GH#104 class). Unmet + skill unknown falls through to use_skill's SKILL_UNKNOWN + locked_toast; unmet + skill known answers with skill_hint_toast (the explicit-Skill-use directive: interact never auto-casts).",
+    "_comment": "#423 THE [Pick Lock] DEBUT GATE, and the shape that keeps the two modes honest. `door_when` and `requires_skill` on ONE prop: interactions.gd checks door_when FIRST (line 93), so once `enchanter_work_room_opened` banks -- by the pick OR by Hedault's own arm -- this same interact becomes the transition. One prop, one counter, one cell, so the two modes cannot drift apart. Unmet + skill unknown falls through to use_skill's SKILL_UNKNOWN + locked_toast; unmet + skill known answers with skill_hint_toast (the explicit-Skill-use directive: interact never auto-casts). NOTE (#423 review I2): a `present_when` build would ALSO have been correct -- world.gd reconciles presence on ACCOMPLISHMENT_RECORDED since GH#150 and same-map banks are safe (wi_game.gd's entity_present doc). The lane's original claim to the contrary is withdrawn.",
     "cell": [
      8,
      3
@@ -325,7 +325,7 @@
      ]
     },
     {
-     "_comment": "The work-room partition, west arm: seals x7 at y1..y2 so the back pocket (x8..10, y1..2) has exactly ONE opening.",
+     "_comment": "The work-room partition, west arm.",
      "cap": [
       14,
       6
@@ -340,7 +340,36 @@
      ]
     },
     {
-     "_comment": "The partition's south arm. The gap it leaves at (8,3) is the work-room door -- the [Pick Lock] debut gate.",
+     "_comment": "M5 (review): the 3x2 area behind the partition is SOLID MASS, not a room. The work room is its own map; leaving these cells as floor rendered a walkable-looking pocket no player could ever enter. Walled in both rows so the partition reads as the back of the building.",
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      8,
+      1
+     ],
+     "to": [
+      10,
+      1
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      8,
+      2
+     ],
+     "to": [
+      10,
+      2
+     ]
+    },
+    {
+     "_comment": "The partition's south arm. The gap it leaves at (8,3) carries the work-room door -- the [Pick Lock] debut gate. That gap is a DOORWAY, not an opening: the door prop blocks the cell, and what lies through it is a separate map.",
      "cap": [
       14,
       6

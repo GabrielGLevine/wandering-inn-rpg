@@ -122,7 +122,7 @@
      "goto": "heirloom_bench"
     },
     {
-     "_comment": "#423 THE VIRTUOUS PATH (user directive: a legitimate route to the locked contents must exist). Appended LAST and accomplishment-gated on the finished commission, so it is HIDDEN at every shipped fixture -- invrisil_v016_gate_check's whole-array hub pin and spine_reach's blind `move down 5` both stay exact, zero re-pins. Banks the SAME `enchanter_work_room_opened` the [Pick Lock] arm banks, so the work-room and its contents are identical on both paths; the counter is the door's own door_when gate, so no presence flips and there is no same-map render ghost.",
+     "_comment": "#423 THE VIRTUOUS PATH (user directive: a legitimate route to the locked contents must exist). Appended LAST and accomplishment-gated on the finished commission, so it is HIDDEN at every shipped fixture -- invrisil_v016_gate_check's whole-array hub pin and spine_reach's blind `move down 5` both stay exact, zero re-pins. Banks the SAME `enchanter_work_room_opened` the [Pick Lock] arm banks, so the work-room and its contents are identical on both paths; the counter is the door's own door_when gate, so the pick arm and this arm are the same door and cannot drift apart.",
      "text": "\"You kept saying 'the bench behind me.' I'd like to see it.\"",
      "requires": {
       "accomplishment": {

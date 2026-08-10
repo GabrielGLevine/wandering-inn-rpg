@@ -85,7 +85,7 @@
     ]
    },
    {
-    "_comment": "The work-room partition, west arm: seals x7 at y1..y2 so the back pocket (x8..10, y1..2) has exactly ONE opening.",
+    "_comment": "The work-room partition, west arm.",
     "from": [
      7,
      1
@@ -100,7 +100,36 @@
     ]
    },
    {
-    "_comment": "The partition's south arm. The gap it leaves at (8,3) is the work-room door -- the [Pick Lock] debut gate.",
+    "_comment": "M5 (review): the 3x2 area behind the partition is SOLID MASS, not a room. The work room is its own map; leaving these cells as floor rendered a walkable-looking pocket no player could ever enter. Walled in both rows so the partition reads as the back of the building.",
+    "from": [
+     8,
+     1
+    ],
+    "to": [
+     10,
+     1
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     8,
+     2
+    ],
+    "to": [
+     10,
+     2
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "_comment": "The partition's south arm. The gap it leaves at (8,3) carries the work-room door -- the [Pick Lock] debut gate. That gap is a DOORWAY, not an opening: the door prop blocks the cell, and what lies through it is a separate map.",
     "from": [
      9,
      3
@@ -274,7 +303,7 @@
    ],
    "display_name": "The Ward Shelf",
    "sprite": "library_shelf",
-   "observe": "Finished pieces, each on its own square of grey cloth, each with the cloth squared to the shelf edge. Nothing is priced where a customer can read it from the door."
+   "observe": "Finished pieces, each on its own square of grey cloth, each with the cloth squared to the shelf edge. The price is chalked on the underside of the cloth, out of sight from the door."
   },
   {
    "id": "enchanter_display_case",
@@ -296,7 +325,7 @@
    ],
    "display_name": "The Order Book",
    "sprite": "library_desk",
-   "observe": "Names down the left, work down the middle, and a third column of dates in a smaller hand. Half the dates have a second date beside them, later, and underlined."
+   "observe": "Names down the left, work down the middle, and a third column of dates in a smaller hand. Half the dates carry a second date beside them in the same hand, later and underlined."
   },
   {
    "id": "enchanter_refusal_tray",
@@ -310,7 +339,7 @@
    "observe": "Pieces somebody else enchanted, tagged and stacked for collection. The tags carry no verdict on them, only a name and an hour."
   },
   {
-   "_comment": "#423 THE [Pick Lock] DEBUT GATE, and the shape that keeps the two modes honest. `door_when` and `requires_skill` on ONE prop: interactions.gd checks door_when FIRST (line 93), so once `enchanter_work_room_opened` banks -- by the pick OR by Hedault's own arm -- this same interact becomes the transition, with no presence flip and therefore no same-map render ghost (the GH#104 class). Unmet + skill unknown falls through to use_skill's SKILL_UNKNOWN + locked_toast; unmet + skill known answers with skill_hint_toast (the explicit-Skill-use directive: interact never auto-casts).",
+   "_comment": "#423 THE [Pick Lock] DEBUT GATE, and the shape that keeps the two modes honest. `door_when` and `requires_skill` on ONE prop: interactions.gd checks door_when FIRST (line 93), so once `enchanter_work_room_opened` banks -- by the pick OR by Hedault's own arm -- this same interact becomes the transition. One prop, one counter, one cell, so the two modes cannot drift apart. Unmet + skill unknown falls through to use_skill's SKILL_UNKNOWN + locked_toast; unmet + skill known answers with skill_hint_toast (the explicit-Skill-use directive: interact never auto-casts). NOTE (#423 review I2): a `present_when` build would ALSO have been correct -- world.gd reconciles presence on ACCOMPLISHMENT_RECORDED since GH#150 and same-map banks are safe (wi_game.gd's entity_present doc). The lane's original claim to the contrary is withdrawn.",
    "id": "enchanter_work_room_door",
    "kind": "prop",
    "cell": [
@@ -325,7 +354,7 @@
    "locked_toast": "The lock is better than the door. You get as far as knowing that, and no further.",
    "on_skill_use": {
     "accomplishment": "enchanter_work_room_opened",
-    "toast": "[Pick Lock] — Three wards, lifted one at a time, and the shallow throw goes over on the fourth breath. The door comes off the frame quietly, which is the only way it was ever going to be worth doing."
+    "toast": "[Pick Lock] — Three wards, lifted one at a time, and the shallow throw goes over on the fourth breath. The door comes off the frame without a sound."
    },
    "door_when": {
     "requires": {

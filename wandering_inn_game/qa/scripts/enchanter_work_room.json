@@ -1,5 +1,5 @@
 {
- "_comment": "#423 THE [Pick Lock] DEBUT CANONICAL, and the two-mode rule's proof. THREE phases off three saves, each swapped in through the real pause-menu Load path. PHASE 0 (near_hedault, no rogue line, no commission): the work-room door refuses through use_skill's SKILL_UNKNOWN + the prop's own locked_toast, and the map never changes. PHASE 1 (enchanter_pick_start, rogue 2): the bare interact HINTS (interact never auto-casts), the field cast opens the lock, the SAME interact then transitions, and the case hands over enchanters_true_gauge exactly once (a second interact answers 'Empty.'). PHASE 2 (enchanter_key_start, the finished commission and NO rogue line at all): [Pick Lock] is not even on the bar, Hedault opens the door himself off his own trust arm, and the room hands over the SAME id -- which is what 'contents identical on both paths' has to mean to be worth anything. Every gate counter is CREATED by the run: no fixture pre-holds enchanter_work_room_opened or took_enchanters_gauge, and no fixture pre-stages adjacency to anything. Zero combat (asserted).",
+ "_comment": "#423 THE [Pick Lock] DEBUT CANONICAL, and the two-mode rule's proof. THREE phases off three saves, each swapped in through the real pause-menu Load path. PHASE 0 (near_hedault, no rogue line, no commission): the work-room door refuses through use_skill's SKILL_UNKNOWN + the prop's own locked_toast, and the map never changes. PHASE 1 (enchanter_pick_start, rogue 2): the bare interact HINTS (interact never auto-casts), the field cast opens the lock, the SAME interact then transitions, and the case hands over enchanters_true_gauge exactly once (a second interact answers 'Empty.'). PHASE 2 (enchanter_key_start, the finished commission and NO rogue line at all): [Pick Lock] is not even on the bar, Hedault opens the door himself off his own trust arm, and the room hands over the SAME id -- which is what 'contents identical on both paths' has to mean to be worth anything. Every gate counter is CREATED by the run: no fixture pre-holds enchanter_work_room_opened, and the case banks no counter at all -- container_state is the one-shot (I3 review), and no fixture pre-stages adjacency to anything. Zero combat (asserted).",
  "fixture_save": "near_hedault",
  "starts_at_title": true,
  "steps": [
@@ -37,7 +37,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== PHASE 0: THE REFUSAL == near_hedault is the honest no-skill/no-key save: warrior 10, no rogue line, setting_commissioned unbanked. It boots on the shop's own landing cell (6,7) -- not beside anything.",
+   "_comment": "== PHASE 0: THE REFUSAL == near_hedault is the honest no-skill/no-key save: warrior 10, no rogue line, setting_commissioned unbanked. It boots on the enchanter_shop landing cell (6,7) -- the open cell north of the shop door -- not beside anything.",
    "action": "assert_state",
    "path": "current_map",
    "equals": "enchanter_shop"
@@ -276,7 +276,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Pick Lock] — Three wards, lifted one at a time, and the shallow throw goes over on the fourth breath. The door comes off the frame quietly, which is the only way it was ever going to be worth doing."
+    "text": "[Pick Lock] — Three wards, lifted one at a time, and the shallow throw goes over on the fourth breath. The door comes off the frame without a sound."
    },
    "timeout_sec": 5
   },
@@ -353,17 +353,9 @@
   },
   {
    "action": "wait_for_event",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "took_enchanters_gauge"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The case is all other people's property except one thing: a brass beam-gauge, worn past its own markings, that no order in the book is waiting on."
+    "text": "Under the lid the case is all other people's property, tagged and waiting. The brass gauge on top carries no tag."
    },
    "timeout_sec": 5
   },
@@ -662,17 +654,9 @@
   },
   {
    "action": "wait_for_event",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "took_enchanters_gauge"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The case is all other people's property except one thing: a brass beam-gauge, worn past its own markings, that no order in the book is waiting on."
+    "text": "Under the lid the case is all other people's property, tagged and waiting. The brass gauge on top carries no tag."
    },
    "timeout_sec": 5
   },

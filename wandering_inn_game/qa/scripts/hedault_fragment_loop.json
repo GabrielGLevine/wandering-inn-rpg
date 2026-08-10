@@ -1,5 +1,5 @@
 {
- "_comment": "b6 #221: the guardian-fragment trade BY CHOICE — hub shows the yield preview (effect_lines) on the unlocked slot-4 option; trade consumes the fragment, grants hedaults_warded_setting (the pre-#423 comment named hedaults_wardstone, which this arm has never granted — see LANE-REPORT's orphan finding), banks traded_guardian_fragment, reads the oblique door-chain lore node; re-open proves the one-shot hide. #423 RE-ANCHOR: the fixture now lands on the enchanter_shop door cell and the run WALKS to him.",
+ "_comment": "b6 #221: the guardian-fragment trade BY CHOICE — hub shows the yield preview (effect_lines) on the unlocked slot-4 option; trade consumes the fragment, grants hedaults_warded_setting (the pre-#423 comment named hedaults_wardstone, which this arm has never granted — see LANE-REPORT's orphan finding), banks traded_guardian_fragment, reads the oblique door-chain lore node; re-open proves the one-shot hide. #423 RE-ANCHOR: the fixture now lands on the enchanter_shop landing cell (6,7) -- the open cell north of the shop door and the run WALKS to him.",
  "fixture_save": "hedault_fragment_start",
  "starts_at_title": true,
  "steps": [
@@ -37,7 +37,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "#423 THE WALK, not a staged adjacency. The fixture lands on the shop's own door cell (6,7); this leg walks the floor to (2,4) and bumps north into Hedault at (2,3). The player_blocked is the whole point of the issue: he now HAS a standable orthogonal neighbour and it is reachable from the door, which the mercantile_alleys (0,6) placement never had.",
+   "_comment": "#423 THE WALK, not a staged adjacency. The fixture lands on the enchanter_shop landing cell (6,7) -- the open cell north of the shop door; this leg walks the floor to (2,4) and bumps north into Hedault at (2,3). The player_blocked is the whole point of the issue: he now HAS a standable orthogonal neighbour and it is reachable from the door, which the mercantile_alleys (0,6) placement never had.",
    "action": "move",
    "direction": "up",
    "steps": 3
