@@ -98,9 +98,11 @@ wandering_inn_game/qa_output/steel_thread/, 19 maps, Dangersense
 overlay visible live). Follow-ups filed: #417, #421. VISUAL-LOG
 drained; skills folded (blast-radius, created-state negative legs,
 codex direct dispatch). Lane worktrees/branches cleaned.
-**USER-HELD:** v0.19.0 tag overwrite + deploy (tag sits LOCAL at
-ffd0f960 = pre-batch; overwrite with `git tag -f v0.19.0 && git push -f
-origin v0.19.0` when satisfied) · grimalkin two-palette continuity ·
+**v0.19.0 SHIPPED 2026-08-10** (tag at 9032b05f, release run
+31406011609 green: full asset-overlay QA gate + wasm + butler to itch
++ desktop exports). Post-tag playtest verdicts applied pre-tag (crate
+toast, VISUAL-LOG rows); #423 Hedault shop + #424 orphan lint filed.
+**USER-HELD (remaining):** · grimalkin two-palette continuity ·
 pond-sprite twin eye-read · [Rope Work] ACK · parlor-music ear-gate ·
 Coyle sign verdict.
 **Watch line:** `wandering_inn_game/qa/run_qa.sh steel_thread windowed
