@@ -1,0 +1,39 @@
+{
+ "_comment": "Issue #413 holder fixture. Starts from near_rogue's real Missing Crate WATCH resolution (met/sparred/given spear plus asked/recovered/found/returned/persuaded, crate_scavengers removed), then carries the honest Rogue progression thresholds through L4: sneaked_past_danger 7 and classes{rogue:4}. Warrior stays L1, so Rogue L4 is the only source of [Dangersense] under test. The player has walked back to the floodplains and stands at (9,24), three Chebyshev cells south-west of goblin_night_patrol (10,21); actions_since_sleep 1000 makes its existing night-only encounter_when gate live. The script walks to distance 2 and across three cells of the radius-1 perimeter without entering it. rng_state is the shared seed-1-derived state used by goblin_night_patrol_start; no combat resolves, so it is outcome-inert.",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [9, 24],
+  "player_facing": [0, -1],
+  "classes": {
+   "warrior": 1,
+   "rogue": 4
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "asked_about_crate": 1,
+   "recovered_crate_watch": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "persuaded_someone": 1,
+   "sneaked_past_danger": 7
+  },
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": ["crate_scavengers"],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword", "relcs_spare_spear"],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 1000,
+  "rng_state": "-1966449618399012673"
+ }
+}

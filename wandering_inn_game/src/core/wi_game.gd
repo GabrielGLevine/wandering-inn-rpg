@@ -115,7 +115,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	# data/interactions.json into it) -- INJECTED, never read from disk here, so
 	# core stays pure and a hand-built scene_config can run with no table at all.
 	_field_skills = WIFieldSkills.new(sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _toggle_light, _blink_field, _ward_field, _animate_field, _door_openable, scene_config.get("interactions", {}), accomplishment_count)
-	_interactions = WIInteractions.new(sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup, _has_required_items)
+	_interactions = WIInteractions.new(sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, encounter_gate_met, start_combat, pickup, _has_required_items)
 	_sleep_beat = WISleepBeat.new(sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
 	_banking = WICombatBanking.new(sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
 	rng.seed = rng_seed
@@ -499,14 +499,14 @@ func _check_trigger_radius(skipped_ids: Array[String] = []) -> void:
 		# encounter can be absent-until-armed instead of standing around inert.
 		if not entity_present(ent):
 			continue
-		if not _encounter_gate_met(ent):
+		if not encounter_gate_met(ent):
 			continue
 		var ent_id := String(ent[WIKeys.ID])
 		if dormant_encounters.has(ent_id) or skipped_ids.has(ent_id):
 			continue
 		var ent_cell: Vector2i = ent[WIKeys.CELL]
 		var dist := maxi(absi(player_cell.x - ent_cell.x), absi(player_cell.y - ent_cell.y))
-		if dist > int(ent["trigger_radius"]) - _wild_affinity_reduction(ent):
+		if dist > effective_trigger_radius(ent):
 			# GH#374: THE EXIT. Leaving the radius is what ends the defeat grace
 			# -- the player has walked away from the fight they lost, so the next
 			# approach is a fresh decision and springs the ambush again. Real
@@ -836,13 +836,17 @@ func _wild_affinity_reduction(ent: Dictionary) -> int:
 	return 0
 
 
+func effective_trigger_radius(ent: Dictionary) -> int:
+	return maxi(0, int(ent.get("trigger_radius", 0)) - _wild_affinity_reduction(ent))
+
+
 func _blink_bypassed_encounters(start: Vector2i, crossed: Array[Vector2i], destination: Vector2i) -> Array[String]:
 	var bypassed: Array[String] = []
 	for ent: Dictionary in entities.values():
 		if String(ent.get(WIKeys.KIND, "")) != "encounter" or not ent.has("trigger_radius"):
 			continue
 		var ent_id := String(ent[WIKeys.ID])
-		if dormant_encounters.has(ent_id) or warded_encounters.has(ent_id) or not _encounter_gate_met(ent):
+		if dormant_encounters.has(ent_id) or warded_encounters.has(ent_id) or not encounter_gate_met(ent):
 			continue
 		var ent_cell: Vector2i = ent[WIKeys.CELL]
 		var radius := int(ent["trigger_radius"])
@@ -876,7 +880,7 @@ func _ward_field(skill_id: String, skill: Dictionary, faced_cell: Vector2i) -> D
 		if String(ent.get(WIKeys.KIND, "")) != "encounter" or not ent.has("trigger_radius"):
 			continue
 		var ent_id := String(ent[WIKeys.ID])
-		if dormant_encounters.has(ent_id) or not _encounter_gate_met(ent):
+		if dormant_encounters.has(ent_id) or not encounter_gate_met(ent):
 			continue
 		var ent_cell: Vector2i = ent[WIKeys.CELL]
 		# GH#374: the defeat grace is INVISIBLE to the charm. "The charm already
@@ -1098,7 +1102,7 @@ func _present_gate_met(when: Dictionary) -> bool:
 	# (#247 review IMPORTANT-1). Behavior-preserving for the phase-only
 	# entities that ship today (a mismatched phase still returns false; a
 	# matched phase falls through to the other gates, of which they have
-	# none). NOTE: _encounter_gate_met keeps its own phase early-return
+	# none). NOTE: encounter_gate_met keeps its own phase early-return
 	# (no encounter combines phase with another key; out of scope here).
 	if when.has("phase") and not (when["phase"] as Array).has(phase()):
 		return false
@@ -1138,7 +1142,7 @@ func _present_gate_met(when: Dictionary) -> bool:
 	return true
 
 
-func _encounter_gate_met(ent: Dictionary) -> bool:
+func encounter_gate_met(ent: Dictionary) -> bool:
 	var when: Dictionary = ent.get("encounter_when", {})
 	if when.is_empty():
 		return true
