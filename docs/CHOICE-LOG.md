@@ -3559,3 +3559,32 @@ auditor's scale.
     pins; id stays `rope_work`. The last invented-name ACK is cleared —
     every shipped [Skill] name is now attested or user-ruled
     ([Pick Lock]).
+
+## 2026-08-10 — reachability wave (#417/#421/#423/#424) rulings
+
+28. **#423 [Pick Lock] implementation (controller, wave-autonomy; user
+    directive rides the dispatch):** grant = rogue L2 (empty slot;
+    class-expansion spec adds new classes only, shipped rogue table
+    unclaimed). Debut = locked back room in Hedault's new shop, with a
+    LEGITIMATE unlock path earned through Hedault's own content
+    (two-mode rule; contents identical on both paths — user directive:
+    virtuous-path players must be able to reach whatever the lock
+    guards). Additional [Pick Lock] modes only on existing gates whose
+    fiction is a literal lock — bars/tripwires/wedged crates are not
+    pickable.
+
+29. **#421 [Firefly] hint fix (controller):** strip "[Firefly]" from the
+    three locked_toast hints that advertise an unobtainable skill
+    (witch_hollow x1, ruin_surface x2). kindle's skill row and its
+    use-copy (sewers burn_toast, runners_guild kindle_toasts) STAY —
+    dead-but-honest; a grant path is class-expansion-wave work, not a
+    hint fix.
+
+30. **#424 architecture split (controller):** grant-path orphan graph
+    (skills/items/dialogue-entry/door-graph) lands in data_lint as
+    ADVISORY tier with an allowlist for code-granted ids; cell-level
+    interactable adjacency/reachability lands as a GDScript unit suite
+    over the REAL loader (sim-truth — the #413 never-re-derive lesson;
+    a python mirror of walkability would drift). Promotion to hard-fail
+    per category once the shipped set is clean. Detector proof: the
+    suite must flag pre-#423 Hedault.
