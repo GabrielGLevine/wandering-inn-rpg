@@ -808,8 +808,11 @@ class TestReachabilityPromotion(unittest.TestCase):
 
     def test_promoted_categories_are_the_drained_three(self):
         # The membership IS the contract. `map orphan` and `enemy-kit only`
-        # must stay OUT: both have honest "yes, deliberately" answers, and
-        # promoting either would red the shipped tree on a design position.
+        # stay OUT on the reason data_lint.py's own constant gives, not on a
+        # tally: a parked region and an enemy-fielded Skill are design
+        # positions with honest "yes, deliberately" answers. (Both shipped
+        # sets happen to be empty today -- that is not why they are advisory,
+        # and citing it would make the tier drift the day one is not.)
         self.assertEqual(set(data_lint.HARD_FAIL_REACHABILITY_CATEGORIES),
             {"item orphan", "dialogue node orphan", "skill orphan"})
 
@@ -858,6 +861,28 @@ class TestReachabilityPromotion(unittest.TestCase):
         self.assertEqual(rc, 1)
         self.assertIn("FAIL -- reachability [skill orphan]", text)
         self.assertIn("frost_touch", text)
+
+    def test_a_failing_run_still_prints_the_advisory_rows(self):
+        # Review LOW-2: a promoted row says something is unreachable; the
+        # un-promoted `gate carrier orphan` join is what says WHAT it sealed.
+        # The failing branch returns early, so the listing has to happen BEFORE
+        # the return or the explanation is lost on exactly the run that needs
+        # it. De-grant every `burns` carrier: the skill rows red the build and
+        # the join must still name the briar they shut.
+        original = data_lint.check_content_reachability
+
+        def patched(parsed, maps, advisories):
+            for cls in parsed[data_lint.DATA / "classes.json"]["classes"]:
+                for level in cls.get("levels", []):
+                    level["grants"] = [s for s in level.get("grants", [])
+                        if s not in ("flame_jet", "kindle")]
+            return original(parsed, maps, advisories)
+
+        rc, text = self._main_rc("check_content_reachability", patched)
+        self.assertEqual(rc, 1)
+        self.assertIn("FAIL -- reachability [skill orphan]", text)
+        self.assertIn("ADVISORY -- reachability [gate carrier orphan]", text)
+        self.assertIn("briar_arch_west", text)
 
     def test_a_crash_inside_the_check_can_never_promote(self):
         # The crash row carries no `[category]` prefix, so the tier's

@@ -2078,6 +2078,16 @@ def main() -> int:
 	if errors:
 		for e in errors:
 			print(f"data_lint: FAIL -- {e}", file=sys.stderr)
+		# The reachability advisories go out even on a FAIL, and BEFORE the
+		# return. The promoted rows say a Skill/item/node is unreachable; the
+		# un-promoted `gate carrier orphan` join is what says WHAT that sealed
+		# (which pocket, which briar, which crossing). Suppressing it on the
+		# failing run hid the explanation at exactly the moment it was needed,
+		# and made a promoted red harder to diagnose than the advisory it
+		# replaced. Kept unconditional for the same reason the tier lists
+		# unconditionally: it is a handful of rows by construction.
+		for advisory in reachability_advisories:
+			print(f"data_lint: ADVISORY -- reachability {advisory}", file=sys.stderr)
 		print(f"data_lint: {len(errors)} error(s) in {elapsed_ms:.0f}ms "
 			"(structural tier only -- the Godot gates still apply).", file=sys.stderr)
 		return 1
