@@ -3655,3 +3655,16 @@ executing it. All four are recorded in the data's own `_comment`s and in
   hard-fails on that). Ruled KEEP-AS-IS — one beat for a brand-new file,
   the §5 norm, costing the reserve nothing (heuristic-landmark row, not
   a controller grant). Controller may downgrade to NOT-A-LANDMARK.
+
+31. **Orphan skill wiring (user order 2026-08-10; design controller):**
+    kindle [Firefly] → hedge_witch L2 (hearth-flame craft register; burns
+    union widens to {flame_jet, kindle}); frost_touch [Snap Freeze] →
+    Eloise dialogue grant gated on winter_answered (quest payoff teaches
+    a non-combat skill; freezes union widens beyond ice_mage; shipped
+    dialogue-effect skill-grant mechanism). riverfarm_hunter.agreed
+    RETIRED by user order, overruling the #396 "deleting it buys
+    nothing" keep. Rejected: kindle → mage (redundant beside flame_jet
+    L2); frost_touch → ice_mage L11 (redundant same-line); item-carried
+    grants for either (class/dialogue paths are lint-visible and
+    fiction-anchored). Item orphans NOT included — user ruling pending
+    (wardstone id-swap, cudgel yield, oak spear source).
