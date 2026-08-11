@@ -245,12 +245,9 @@ r3–r5 playtest waves — gone from this file.
   `enchanter_workbench` / `work_room_proof_bench` reuse Pallass forge's
   `temper_bench`; `alley_enchanter_card` reuses `price_board`. Each wants
   bespoke art + windowed verify.
-- [ ] **(P3)** `enchanter_shop`'s right half reads SPARSE — one floating lamp glow
-  over empty boards. Interiors shipped deliberately lean; wants shelving/stock
-  dressing (user eye-call).
-- [ ] **(P3)** Enchanter work-room door's blue-framed panel sprite reads as
-  WINDOW at glance — locked-door affordance carried by toast, not
-  art. Candidate for bespoke door sprite alongside [Pick Lock] icon.
+- [x] **(P3)** ~~Shop right half SPARSE~~ FIXED 2026-08-11: `enchanter_stock_shelf` (8,1) + `enchanter_vial_case` (10,1), two distinct silhouettes (PixelLab). Windowed verify below.
+- [x] **(P3)** ~~Enchanter work-room door reads as WINDOW~~ FIXED 2026-08-11: bespoke `door_locked_heavy` (dark planks, iron banding, brass latch; PixelLab, license-notes verdict). Dark-heavy read verified in enchanter_work_room/00 vs the blue exit door.
+- [ ] **(P4)** `door_locked_heavy` unoccluded eye-read pending: the only canonical showing it has the PC + interact reticle over the door center; brass-latch legibility verified at render scale from the sheet, not in-scene. Next windowed pass that walks the shop unoccluded closes this.
 - [ ] **(P3)** Interiors phase-invariant (clock invisible indoors);
   day identity brightness-only with no hue; sewers ladder is scribble at 1×.
 - [ ] **(P4)** `crate` carries three lane props whose copy far more specific
@@ -277,11 +274,7 @@ r3–r5 playtest waves — gone from this file.
 - [ ] **(P4)** `gentleman_bowler` ("A broad man in a bowler hat") wears
   `hired_blade` — goatee, burgundy coat, no bowler. Reads well in den of
   gentleman thieves, but hat only in prose.
-- [ ] **(P4)** [Pick Lock] ships on `icon_open_doors` as INTERIM art — icon set
-  carries no lock/pick/key glyph (196 files) and every rogue-line icon would
-  collide on one hotbar ([Stealth] L1, [Pick Lock] L2, [Find Trap] L3,
-  [Disarm Trap] L5 on same PC). Same standing ask as [Basic Swordwork] reusing
-  `icon_power_strike` (CHOICE-LOG 26). Controller owns bespoke-icon call.
+- [x] **(P4)** ~~[Pick Lock] on `icon_open_doors` INTERIM~~ FIXED 2026-08-11: bespoke `icon_pick_lock` (gold padlock + pick, 16x16). Rogue-line siblings (sneak/find_trap/disarm_trap) already distinct.
 - [ ] **(P4)** Undressed-blocked advisory inventory across 8 maps — drain
   map-by-map; footprint model approximate on layer-drawn art.
 - [ ] **(P4)** Enchanter shop's centre floor mat reads as dropped sheet of

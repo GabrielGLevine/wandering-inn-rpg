@@ -6505,5 +6505,75 @@
     "fps": 1
    }
   }
+ },
+ "icon_pick_lock": {
+  "_comment": "#423 follow-up (VISUAL-LOG 2026-08-10): bespoke [Pick Lock] icon replacing the icon_open_doors INTERIM reuse. OWNED PixelLab 1-direction object (64px, tag pick-lock-icon, source frame 56d68454/5), nearest-neighbor to 16x16 to match the icon set.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_pick_lock.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "door_locked_heavy": {
+  "_comment": "#423 follow-up: the work-room LOCKED door (VISUAL-LOG row: prior door sprite read as WINDOW). OWNED PixelLab 1-direction object (64px, tag workroom-door). render_scale 0.3 matches the shipped `door` footprint (58px bbox -> ~17px ~= 1 cell wide); anchor.y from alpha bbox lowest opaque row (63/64). Iron banding + brass lock plate carry the locked affordance in ART, not just toast.",
+  "render_scale": 0.3,
+  "anchor": [
+   0.5,
+   0.9844
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/door_locked_heavy/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "enchanter_stock_shelf": {
+  "_comment": "#423 follow-up (shop right-half dressing, user eye-call). OWNED PixelLab 1-direction object (64px, tag enchanter-shelf). 56x62 bbox at 0.4 reads ~1.4x1.6 cells (library_shelf-class standing furniture); anchor.y 63/64.",
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.9844
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/enchanter_stock_shelf/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "enchanter_vial_case": {
+  "_comment": "#423 follow-up (shop right-half dressing). OWNED PixelLab 1-direction object (64px, tag enchanter-shelf, tall-narrow silhouette deliberately DISTINCT from enchanter_stock_shelf -- tint-is-not-disambiguation). 25x62 bbox at 0.45 reads ~11x28px, above the 10px thin-sprite floor; anchor.y 63/64.",
+  "render_scale": 0.45,
+  "anchor": [
+   0.5,
+   0.9844
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/enchanter_vial_case/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
  }
 }

@@ -905,10 +905,10 @@
    "description": "Steady hands and a thief's patience: whatever waits to spring, waits a little longer."
   },
   {
-   "_comment": "#423 (CHOICE-LOG 28). ACTIVE exploration field skill -- deliberate cast through the field hotbar, never an auto-cast on interact (CHOICE-LOG 24 condition). Rides the shipped requires_skill + on_skill_use seam verbatim, exactly like [Disarm Trap]: zero engine, zero interactions.json row (it carries no skill_property, so the emergent property table never sees it). CANON-VERDICT: ATTESTED ([Pick Lock] is a named Thief/Rogue Skill in the wiki's Skills index). ICON: reuses icon_open_doors as INTERIM art -- the icon set ships no lock/pick glyph, and every rogue-line icon (sneak/find_trap/disarm_trap) would collide on the same hotbar. Precedent: Basic Swordwork reusing icon_power_strike (CHOICE-LOG 26). VISUAL-LOG row filed; controller owns the bespoke-icon call.",
+   "_comment": "#423 (CHOICE-LOG 28). ACTIVE exploration field skill -- deliberate cast through the field hotbar, never an auto-cast on interact (CHOICE-LOG 24 condition). Rides the shipped requires_skill + on_skill_use seam verbatim, exactly like [Disarm Trap]: zero engine, zero interactions.json row (it carries no skill_property, so the emergent property table never sees it). CANON-VERDICT: ATTESTED ([Pick Lock] is a named Thief/Rogue Skill in the wiki's Skills index). ICON: bespoke icon_pick_lock (PixelLab, 2026-08-11) -- replaced the icon_open_doors INTERIM reuse; VISUAL-LOG row ticked.",
    "id": "pick_lock",
    "display_name": "[Pick Lock]",
-   "icon": "icon_open_doors",
+   "icon": "icon_pick_lock",
    "contexts": [
     "exploration"
    ],

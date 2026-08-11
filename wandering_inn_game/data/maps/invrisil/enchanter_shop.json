@@ -339,6 +339,28 @@
    "observe": "Pieces somebody else enchanted, tagged and stacked for collection. The tags carry no verdict on them, only a name and an hour."
   },
   {
+   "id": "enchanter_stock_shelf",
+   "kind": "prop",
+   "cell": [
+    8,
+    1
+   ],
+   "display_name": "The Stock Shelf",
+   "sprite": "enchanter_stock_shelf",
+   "observe": "Rows of stoppered vials, blue and violet, each labelled in the same small hand. About one in five gives off its own light."
+  },
+  {
+   "id": "enchanter_vial_case",
+   "kind": "prop",
+   "cell": [
+    10,
+    1
+   ],
+   "display_name": "The Vial Case",
+   "sprite": "enchanter_vial_case",
+   "observe": "A narrow case of long-necked vials, corked and waxed. The top shelf stands empty, dusted, waiting."
+  },
+  {
    "_comment": "#423 THE [Pick Lock] DEBUT GATE, and the shape that keeps the two modes honest. `door_when` and `requires_skill` on ONE prop: interactions.gd checks door_when FIRST (line 93), so once `enchanter_work_room_opened` banks -- by the pick OR by Hedault's own arm -- this same interact becomes the transition. One prop, one counter, one cell, so the two modes cannot drift apart. Unmet + skill unknown falls through to use_skill's SKILL_UNKNOWN + locked_toast; unmet + skill known answers with skill_hint_toast (the explicit-Skill-use directive: interact never auto-casts). NOTE (#423 review I2): a `present_when` build would ALSO have been correct -- world.gd reconciles presence on ACCOMPLISHMENT_RECORDED since GH#150 and same-map banks are safe (wi_game.gd's entity_present doc). The lane's original claim to the contrary is withdrawn.",
    "id": "enchanter_work_room_door",
    "kind": "prop",
@@ -347,7 +369,7 @@
     3
    ],
    "display_name": "The Work-Room Door",
-   "sprite": "door",
+   "sprite": "door_locked_heavy",
    "requires_skill": "pick_lock",
    "observe": "A plain door in a plain partition, and a lock on it worth more than the door is. Three brass wards on the escutcheon, and the wear around the keyhole is all on one side.",
    "skill_hint_toast": "Three wards and a shallow throw, and every scratch on the plate says the key goes in at an angle. Working it would take the picks and the patience.",

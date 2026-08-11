@@ -254,6 +254,11 @@ func _build_expected_counts() -> Dictionary:
 	counts["ratici/idle"] = 4
 	counts["ratici/walk"] = 6
 	counts["hat_stand/idle"] = 1
+	# #423 art follow-ups (2026-08-11): bespoke Pick Lock icon + enchanter set
+	counts["icon_pick_lock/idle"] = 1
+	counts["door_locked_heavy/idle"] = 1
+	counts["enchanter_stock_shelf/idle"] = 1
+	counts["enchanter_vial_case/idle"] = 1
 
 	for icon_id: String in [
 		"icon_appraise_goods", "icon_called_shot", "icon_directed_strike",
