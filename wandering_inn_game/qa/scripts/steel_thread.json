@@ -13557,12 +13557,1236 @@
    "equals": 1
   },
   {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "== ACT V, 'What the Seal Was Feeding' == the descent is agreed and the Door still does not reach the dungeon. sleep_beat.gd:166 wants TWO nights with door_awakened AND heard_pisces_second_door both held before dungeon_attuned banks (second_door_study_sleeps >= 2), and the run's last sleep predates the second-door conversation -- so the counter stands at 0 and Act V opens by spending two nights on it. Route is this script's own proven stair line (steps 1152-1162)."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Your own bed."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "phase": "day"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Night two, taken from the same cell -- the door_awakened block's own back-to-back idiom upstream. THIS one crosses the threshold."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Your own bed."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "id": "dungeon_attuned"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The Door hums against the wardwork below the city. Somewhere under Liscor, something answers it now."
+   },
+   "_comment": "GH#271's nudge: the bank used to be silent and the Dungeon row just appeared in the menu. lore:true, so it is read-backable in the journal."
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.dungeon_attuned",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "second_door_study_sleeps",
+   "equals": 2
+  },
+  {
+   "action": "press",
+   "name": "journal",
+   "_comment": "ENDING-SPOILER CHECK, from the live run rather than a fixture: the Act V page is on screen with the seal unresolved, and nothing on it names what the seal holds."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "act_id": "act_v"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_00_journal_act_v"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "== THE DESCENT == bump the pantry door to face it. Menu rows exclude the current map, so from the inn they read 0 Liscor, 1 Riverfarm, 2 Invrisil, 3 Pallass, 4 the Dungeon -- the new last row, and the first time this run has had five."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "portal_menu"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "dungeon_approach"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The light dims into torchlit stone, and the deep hush of the dungeon closes back around you. You know this quiet."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_01_dungeon_approach"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 11,
+   "_comment": "Row 6 is the clear lane east: the Horns' three cells are row 5 and retired at horns_dig_started anyway, and the rubble band is row 9."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "trapped_halls"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3,
+   "_comment": "== DOWN THE HALLS == halls_cleared is banked but every trap prop still OCCUPIES its cell, so the lane is dungeon_peek's own walked line: stop short of the flagstone (6,7), go up and over on row 5 past the dart slit (10,5), drop back to row 7, then row 8 around the illusory floor (14,7) and the warded seam (15,7). Nothing here is interacted with."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    5
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_02_down_the_halls"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "(14,7) is the illusory floor and still blocks; row 8 carries us east."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "(17,8) is the snare encounter's cell -- live (horns_delve_started held) and interact-only, so it blocks the row without ever triggering. Row 7 is the way through to the door's one approach cell."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    7
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_03_at_the_seal"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump-to-face the sealed rune-door (19,7). seal_kept_found is banked from the delve, so LATER-SATISFIED-WINS lands the descent variant, not the vault one."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "read_the_seal_runes"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_seal_was_feeding"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. One person's work, and this door was the first of it.\" He does not look away while he says it."
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "== READING 2 == the same interact one state later. The staging is why no main-line beat sits behind a Skill the build might not own."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "read_the_feeding_ward"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Pisces steps back at last. \"The lines run one way. They have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "text": "Pisces steps back at last. \"The lines run one way. They have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
+   },
+   "_comment": "The toast QUEUE drains in order; without this the shot catches the rune-read line still on screen."
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_04_the_feeding_ward"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "== THE CHOICE == the escort (19,8) carries `dialogue`, not `talk_pool`, so there is no pool line to clear even on a fresh waking: the graph opens on the first interact."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "pisces_seal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "at_the_door rows here: 0 the choice, 1 'Take your moment.' The OR-bridge row is hide_when-retired, both readings being held."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull, and correct, and I resent both qualities. Or \u2014 if your hands are equal to it, which remains unproven \u2014 you re-cut the ward yourself and it holds another age without a keeper. I dislike most of these. I will be copying the outer lines while you decide."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_05_the_choice"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "the_choice row 0 is the OPEN. Rows 2/3 are Skill gates and tease visibly; gates never hide a fork here."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "seal_opened"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever objects to this. Something will. Expect a guardian."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "== THE WARDEN == encounter_when is met the instant seal_opened banks, and trigger_radius 1 off the alcove (19,6) makes (18,7) unskippable. *** KNOWN RED, 2026-08-11, seed 9, TWICE: the continuous build LOSES here and the run stops at the combat_finished pin below. Measured, not guessed -- warden 142 HP (con 112, power_level 18, tough_body/power_strike/slam) landing 28-30 a hit; the PC at warrior 12 / mage 2 / diplomat 4 has 56 max HP and combat_autoplay puts out ~29 a round on basic melee. Two warden hits kill; the PC needs five clean rounds. The gap is ~2.5x and no seed closes it. This build also has NO [Sneak] on the field bar (the alcove's own sneak-past affordance is unreachable), and the_choice's two Skill forks are [Hedge Remedy]/[Detect Magic], neither of which it holds -- so the OPEN fork is the only fork this route can take, and it is not survivable. NOT worked around here on purpose: the fight IS the balance question, and grinding, seed-shopping or re-routing the finale would all have hidden it. Everything below is authored from seal_open.json (steps 81-119) and runs the moment the warden or the build is retuned. ***"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.seal_warden.alive",
+   "equals": true
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_06_the_warden"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_07_warden_down"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "== THE SEAL OPENS == the same door, a different mechanism: door_when is checked ahead of the interact arm, so the open_toast fires BEFORE the map rebuild. Pin the domain toast, never its ui_toast_rendered."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The seal does not resist. It simply stops being a seal \u2014 the runes go quiet in order, one ring at a time, and the door swings in on three centuries of undisturbed air."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "seal_vault"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "seal_vault"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_08_the_vault"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5,
+   "_comment": "== THE ANCHOR == east along row 4, the aisle between the statue pairs, then bump the plinth (8,4)."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "seal_anchor_rune"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "seal_resolved"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_seal_was_feeding"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Not a prisoner. An anchor: a twin to the stone the Horns hauled out of the ruin, and it has been drinking the ward's slow pour for three centuries to stay awake. Pisces, hoarse: \"This is why the Door works at all. Somebody left it something to come home to, and then somebody sealed the room and let it drink.\""
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_09_the_anchor"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_comment": "The room's second read, down the aisle to the cut slab (5,7). The path avoids (7,6), which the statue pair blocks."
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Cut into the slab, in a hand that expected readers: a tally. Ninety-one marks, then a gap, then one more in a different chisel. Nobody came back to make the ninety-third."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_10_the_tally"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3,
+   "_comment": "== BACK OUT == the return door (1,4) lands on the approach cell we walked in from. The warden does not respawn, so nothing re-triggers."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "trapped_halls"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    7
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_11_back_in_the_halls"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2,
+   "_comment": "== HOME ON FOOT, THEN ON THE DOOR == out along row 9, the halls' one clear run, to the return door (1,7)."
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "dungeon_approach"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 11,
+   "_comment": "The dungeon-side carrier: dungeon_wardstone (2,5), whose portal_menu_when gates on the counter last night banked. It shipped one-way (GH#334 note 20) and this is the run that closes the loop."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "portal_menu"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Rows from down here: 0 Liscor, 1 The Wandering Inn, 2 Riverfarm, 3 Invrisil, 4 Pallass -- the Dungeon row is the excluded current map."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Warm air, woodsmoke, the creak of the pantry door settling shut behind you. You're back, and you didn't walk here."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "== THE LAST NIGHT == seal_resolved banked at a CONTAINER, with no conversation behind it, so the dialogue-end curtain never fires on this path. The veil's sleep hook is the second delivery point and the one that cannot be routed around -- and nothing between the vault and this bed opened a conversation, which is the filtered hook's own negative proof, taken in passing."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Your own bed."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_gdi_epilogue_rendered",
+   "timeout_sec": 15
+  },
+  {
+   "action": "screenshot",
+   "name": "09_epilogue"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 300
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.seal_resolved",
+   "equals": 1,
+   "_comment": "== THE END =="
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.seal_opened",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.read_the_seal_runes",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.read_the_feeding_ward",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.dungeon_attuned",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.finale_played",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_upstairs"
+  },
+  {
    "action": "assert_event_absent",
    "type": "accomplishment_recorded",
    "payload_contains": {
-    "id": "dungeon_attuned"
-   },
-   "_comment": "Act V's own gate stays UNBANKED: dungeon_attuned needs two sleeps past door_awakened with heard_pisces_second_door held, and this segment ends without spending one."
+    "id": "seal_kept_fed"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "seal_rewarded"
+   }
   }
  ]
 }
