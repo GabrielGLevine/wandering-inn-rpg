@@ -18,7 +18,19 @@ or superseded session blocks.
   map `wandering_inn_game/docs/ARCHITECTURE.md`, makes QA inventories derive
   from `qa/manifest.json`, updates/syncs affected `wi-*` skills, and condenses
   this file plus `docs/CHOICE-LOG.md` with regression guards.
-- No issue implementation lane is recorded as active. The exact next action on
+- ACTIVE (2026-08-11, Fable session): #423 art follow-ups — user ordered the
+  VISUAL-LOG trio ([Pick Lock] bespoke icon, work-room door sprite,
+  shop-right-half dressing). Three PixelLab 16-candidate packs QUEUED on the
+  subscription, awaiting review post-usage-reset (get_object inline):
+  icon 56d68454-7755-4ded-98ee-dc454770bf2d · door
+  babe3af1-1870-4fea-b81d-7027de0be15a · shelf
+  3811696a-00c3-467c-8df2-f1dc545917c4. Resume: select primary+alternate per
+  pack → icon_pick_lock.png 16x16 (nearest-neighbor from 64) + skills.json
+  icon swap → door/shelf sprites.json entries (alpha-bbox anchor,
+  render_scale windowed-verified) → work-room door swap + shop dressing rows
+  → license-notes verdict append → tick 3 VISUAL-LOG rows → windowed reads
+  (both interiors + hotbar) → --touching/smoke/units.
+- No other issue implementation lane is recorded as active. The exact next action on
   this tree is to review and commit the housekeeping bundle without dropping
   unrelated edits. `scripts/preflight.sh --full` is green on the composed
   working tree (2026-08-10).
