@@ -410,7 +410,7 @@ def self_test():
         mf = md / "m.json"
         mf.write_text(json.dumps(old_map)); snapshot_file(mf, mb, maps_mode=True)
         # The baseline above is POST-mask. A PRE-mask baseline (what
-        # docs/dialogue-voice/baseline-maps actually is) must normalize forward
+        # qa/baselines/dialogue-voice/maps actually is) must normalize forward
         # to the same thing -- that equality is what makes the shipped baseline
         # usable unchanged, so assert it rather than trusting it.
         pre_mask = {"skeleton": json.loads(json.dumps(old_map)),

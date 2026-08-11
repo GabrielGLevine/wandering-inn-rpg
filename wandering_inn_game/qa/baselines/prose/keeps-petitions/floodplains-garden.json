@@ -1,0 +1,69 @@
+{
+ "_region": "floodplains + garden",
+ "_issue": "GH#397 Phase 2",
+ "_lane": "397/floodplains-garden",
+ "_note": "Lane petitions under narrator-bible.md §10 (\"Phase-2 lanes may PETITION to protect additional earned peaks they find\") plus the disclosure floors the fix wave was told to record rather than fix. Bound to {file, field_path, exact_text} -- never to line numbers, which re-point silently after a reformat. PEAK rows are candidates for protected-keeps.json at integration (a keep OUTRANKS every rule it trips, §10.2, and CONSUMES the relevant budget). LENGTH-EXCEPTION rows are §1.4 loosenings on named strings only, not blanket relaxations. Both granted strings are BYTE-UNTOUCHED by the lane and by this fix wave; every exact_text below was resolved from the live post-fix branch via extract_prose.live_text.",
+ "_ruling_source": "docs/superpowers/specs/2026-08-05-wave2-rulings-and-fix-specs.md -- \"## Floodplains+garden lane\": \"Petitions RULED: yoke line keep -- GRANT (present-behaviour inference, pallass den-shop argument; paid for by the [7] dedupe); wild-snap locked_toast 3-sentence exception -- GRANT (two-word middle beat; gate requirement carried by three sibling toasts)\". The fix wave's LOW-4 disclosure item corrects the sibling count -- see `correction` on the second grant.",
+ "_python": "3.12.3",
+ "granted": [
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+   "field_path": "$.entities[4].variants[0].toast",
+   "entity_id": "camp_carry_yoke",
+   "exact_text": "The yoke has been left out on your side of the fire. Nobody says anything about it, and nobody moves it back.",
+   "kind": "PEAK",
+   "ruling": "GRANTED",
+   "gate": "variant `when` { \"camp_carry_jobs\": 3 } -- only fires for a player who has hauled for the camp three times",
+   "ground": "The terminal beat of the camp's repeatable-work chain, and the only string in either map file where the goblins register the player as one of theirs. The inference is present behaviour by people who are on stage -- the camp leaves the yoke where the player left it and says nothing about it -- not an absent agent's motive: the pallass den-shop argument (protected-keeps-extra.json, `pallass_den_shop $.entities[5].toast`), where audible/visible present behaviour was ruled outside §6's reach. The two `nobody`s are present-indefinites under the adopted RE_ANON split, not inferred absent agents, and they are what makes the acceptance wordless. Counter profile is deliberately recorded because the grant is a judgement AGAINST the counters: anon_agent 2, closer_score 1, neg_correction 0, sentences 2.",
+   "paid_for_by": "The file's budget was cleared by the $.entities[7].toast dedupe. That string carried the same acceptance beat in weaker form at BASE (\"Nobody moves the rack aside when you pass it now.\") and was the yoke line's only competitor in the file; the lane rewrote it once and this fix wave re-shaped it again (M2 move C), so the beat now lands once, on the prop the player earned it at."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[24].locked_toast",
+   "entity_id": "razorbeak_chick",
+   "exact_text": "It snaps at your fingers. Fair enough. Nothing wild takes an offer from hands that have never tended anything.",
+   "kind": "LENGTH-EXCEPTION §1.4",
+   "ruling": "GRANTED",
+   "ground": "Three sentences against the functional ceiling of two (§1.4, which loosens only by petition with the string in hand -- this is that petition). The middle sentence is TWO WORDS: \"Fair enough.\" It is the player-side acknowledgement that the refusal is the animal's right, and it is why the gate refusal does not read as a scolding. The other two sentences are the observed behaviour and the requirement, both load-bearing; there is nothing to compress. Counters see nothing here (anon 0, neg 0, closer 0) -- the row exists only because the sentence count is 3.",
+   "correction": "The ruling as written said the gate requirement is \"carried by three sibling toasts\". The count is FOUR siblings, in two paraphrase families, and each family's requirement sentence is VERBATIM rather than paraphrased: (A) $.entities[25].locked_toast and $.entities[27].locked_toast both end \"Hands that can take an offer like this are learned on hurt animals, one at a time.\" -- byte-identical to each other; (B) $.entities[24].locked_toast and $.entities[26].locked_toast both end \"Nothing wild takes an offer from hands that have never tended anything.\" -- byte-identical to each other. Family A additionally cannot be unified from inside the lane: the HOLDOUT $.entities[23].locked_toast carries the same clause in longer form (\"hands like that are learned on hurt animals, one at a time\") and is byte-frozen. The exception stands on the two-word middle beat, unaffected by the recount; the recount is recorded so a later pass does not 'discover' the repetition and treat it as lane drift. The repetition is the gate's own contract language -- one requirement, stated the same way at every rung of the same ladder -- and unifying it would cost the player the confirmation that all four rungs gate on the same thing."
+  }
+ ],
+ "recorded_floors": [
+  {
+   "floor": "one narrator, two treatments of the same gate refusal",
+   "kind": "RECORDED -- NOT FIXED",
+   "strings": [
+    {
+     "field_path": "$.entities[18].gate_closed_toast",
+     "entity_id": "goblin_night_patrol",
+     "exact_text": "Nothing moving out there. Come back after dark.",
+     "state": "REWRITTEN by the lane (BASE: \"Nothing moving out there. Whatever it was keeps day hours, same as everyone sane.\")",
+     "tells": "anon_agent 0, closer_score 0, sentences 2"
+    },
+    {
+     "field_path": "$.entities[30].gate_closed_toast",
+     "entity_id": "road_mothbears",
+     "exact_text": "The road's empty in the daylight. Whatever works this verge keeps to the dark.",
+     "state": "HOLDOUT -- byte-frozen, untouchable by Phase 2/3 (holdout.json)",
+     "tells": "anon_agent 1, closer_score 0, sentences 2"
+    }
+   ],
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "detail": "Two night-gate refusals on the same map, in the same field, from the same narrator, now in two different registers: e18 is plain §1 functional prose and e30 is atmospheric with an anonymous agent (\"Whatever works this verge\"). A player who tries both gates in one night reads the inconsistency, and it is the lane's doing only in the sense that the lane fixed the half it was allowed to touch.",
+   "why_unification_is_impossible": "e30 is in the holdout draw. Editing a holdout string destroys the Phase-5 revised-vs-holdout comparison the whole pass is graded on (holdout.json _note: \"UNTOUCHABLE by Phase 2/3\"), and verify-untouched fails loud on it. Leaving e18 at BASE instead would have preserved consistency by declining the lane's own assignment -- the gate refusal was a named demotion candidate. Neither arm of the choice is free; the lane took the one that does the work and this row is the cost.",
+   "for_phase_5": "Expect the pair to read inconsistently and attribute it to the holdout draw, not to lane drift. If a post-Phase-5 pass ever unfreezes the holdout, e30 is the string to bring to e18's register -- not the reverse."
+  },
+  {
+   "floor": "the which-from appraisal geometry cannot be reduced in this lane",
+   "kind": "RECORDED -- NOT FIXED",
+   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+   "field_path": "$.entities[26].skill_hint_toast",
+   "entity_id": "razorbeak_chick_fledgling",
+   "exact_text": "It goes still when you crouch, which from a razorbeak is an invitation. Make the offer properly.",
+   "state": "HOLDOUT -- byte-frozen, untouchable by Phase 2/3 (holdout.json)",
+   "detail": "\"which from X is Y\" is a corpus-wide narrator template. This is the fg lane's only instance, it sits in the holdout, and it is therefore a hard floor: the lane's which-from count cannot go below 1 no matter what it rewrites. Two independent blindnesses stack on it. (1) The HOLDOUT freeze. (2) The COUNTER: extract_prose's RE_WHICH_FROM is `which\\s+(?:from|for|in)\\s+\\w+\\s+(?:is|was|counts|passes)`, which allows exactly ONE word between the preposition and the verb -- \"which from a razorbeak is\" has two, so the tell scores which_from 0 in inventory.jsonl. The construction is present and the smoke detector does not see it, which is §10's \"gaming the counters\" case arriving unbidden.",
+   "sibling_context": "The adjacent rung's hint arm, $.entities[25].skill_hint_toast (\"It has not learned to be afraid of hands yet. Make the offer before it does.\"), is ALSO holdout, so both hint arms of the spring-litter ladder are frozen and the lane could not differentiate the pair either.",
+   "out_of_lane_instances": "As of BASE 65f6e321 the same geometry appears in three other regions' files, none of them this lane's to touch: dungeon/trapped_halls.json $.entities[8].skill_uses.observe.variants[0].toast (\"which from him is applause\" -- since rewritten on 397/empty-regions), invrisil/brothers_parlor.json (\"which from that house is a standing ovation\"), pallass/pallass_forge.json (\"which from him is a kindness and a schedule at once\"). Whether what survives is worth a corpus-wide sweep is a Phase-4 question, not a lane one; recorded here so the fg count is not read as a lane artefact."
+  }
+ ]
+}

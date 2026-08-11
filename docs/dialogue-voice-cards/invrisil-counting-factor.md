@@ -5,7 +5,7 @@ counting-room pocket off `mercantile_alleys`). **Singleton cluster by rule 2**:
 the nearest register is the `invrisil-steward` family, but that cluster already
 carries a T2 speaker (`invrisil_rest_factor.json`, re-tiered T2 publican), and
 two T2 speakers may never share a cluster. Sited next to it in
-`docs/dialogue-voice/clusters.json` so the family reads together.
+`docs/dialogue-voice-cards/clusters.json` so the family reads together.
 
 **Tier T2** (bible §3): avg 9–13 words/sentence, subordinate clauses ≤1 per
 three sentences, no `;`, `:` only for prices and lists, `!` never (he is not

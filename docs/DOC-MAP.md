@@ -1,6 +1,6 @@
 # Documentation map
 
-> Last verified: **2026-08-10** (AGENTS architecture split audit).
+> Last verified: **2026-08-11** (docs/lanes cruft purge).
 
 The GitHub issue board is the work queue. Documentation records current
 contracts, decisions, or history; a plan file never reopens completed work.
@@ -18,7 +18,9 @@ contracts, decisions, or history; a plan file never reopens completed work.
 | `docs/design/character-profiles-staging.md` | Compatibility pointer to live profiles and archived expansion source | Pointer stub; never add profiles here |
 | `docs/design/dialogue-drafts/home_region_2/` | Unshipped Home-Region II copy | Live staging |
 | `docs/design/dialogue-drafts/pools/` | Shared pool drafts with explicit open seams | Live staging; audit at consumption |
-| `docs/design/*.md` | City identity, canon verdicts, spoiler cutoff | Current unless the file says otherwise |
+| `docs/design/*.md` | City identity, canon verdicts, spoiler cutoff, narrator bible, prose review rubric | Current unless the file says otherwise |
+| `docs/dialogue-voice-bible.md`, `docs/dialogue-voice-cards/` | Dialogue writing contract: bible, per-cluster cards, cluster manifest, 11-tell critique | Current writing authority; a card overrides the bible on conflict |
+| `docs/steam/` | Store-page capsules, screenshots, submission checklist | Current release assets |
 | `docs/superpowers/specs/` | Approved designs, explorations, and decision records | Dated design authority; a header may refine lifecycle, but GitHub owns current scheduling |
 | `docs/superpowers/plans/` | Execution instructions | Header says `DONE` or `ACTIVE`; only ACTIVE is open work |
 | `docs/archive/design/` | Shipped/superseded art and assembly direction | Archive; do not execute as current instructions |
@@ -28,7 +30,8 @@ contracts, decisions, or history; a plan file never reopens completed work.
 | `wandering_inn_game/docs/QA-SCRIPT-NOTES.md` | Generated canonical QA inventory | Generated from `qa/manifest.json`; exact routes live in `qa/scripts/` |
 | `wandering_inn_game/qa/MACHINE-PLAYTEST.md` | Player-eyes screenshot playtest protocol | Current QA procedure |
 | `wandering_inn_game/qa/playtest_saves/` | Organic player-save regression snapshots | Retained QA evidence; not canonical fixtures |
-| `docs/reports/`, `.superpowers/` | Generated reports, ledgers, screenshots | Gitignored; never bootstrap authority |
+| `wandering_inn_game/qa/baselines/` | Frozen corpora the prose and dialogue-voice gates diff against | Gate fixtures, not docs; see its README for which files are pins vs derivatives |
+| `docs/reports/`, `.superpowers/`, `lanes/`, `LANE-*.md` | Generated reports, ledgers, screenshots, lane briefs and evidence | Gitignored; never bootstrap authority |
 
 ## Drift checks
 

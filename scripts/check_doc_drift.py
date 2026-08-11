@@ -13,22 +13,48 @@ ROOT = Path(__file__).resolve().parents[1]
 def main() -> int:
 	errors: list[str] = []
 	doc_map = ROOT / "docs" / "DOC-MAP.md"
-	if not doc_map.exists() or "Last verified: **2026-08-10**" not in doc_map.read_text():
+	if not doc_map.exists() or "Last verified: **2026-08-11**" not in doc_map.read_text():
 		errors.append("docs/DOC-MAP.md missing its verified-date marker")
 
 	# docs/ROADMAP.md UN-RETIRED 2026-07-17: recreated deliberately as the
 	# living milestone doc (roadmap-ownership directive); it was retired when
 	# planning moved to GitHub issues, but issue boards don't hold the
 	# next-release SHAPE -- the roadmap does.
+	# The second group (2026-08-11 cruft purge) is wave byproduct, not
+	# documentation: lane briefs/reports/evidence and the two finished
+	# prose/voice-pass working corpora. Gitignore stops the accidental commit;
+	# this stops a deliberate one. Gate fixtures live in qa/baselines/ now.
 	for retired in (
 		"GOAL-CHAIN.md",
 		"docs/FULL-GAME-PLAYTEST.md",
 		"docs/superpowers/successor-briefs",
 		"docs/archive/HANDOVER-FABLE-TO-OPUS-2026-07-02.md",
+		"LANE-BRIEF.md",
+		"LANE-REPORT.md",
+		"lanes",
+		"docs/dialogue-voice",
+		"docs/prose-naturalization",
 	):
 		path = ROOT / retired
-		if path.is_file() or (path.is_dir() and any(child.is_file() for child in path.rglob("*"))):
+		stray = [c for c in path.rglob("*") if c.is_file() and "__pycache__" not in c.parts]
+		if path.is_file() or stray:
 			errors.append(f"retired documentation still present: {retired}")
+
+	# docs/superpowers/ top level is subdirectories only. Loose files there are
+	# how dispatch briefs and wave notes accumulated (398-lane-brief.md,
+	# 398-phase0-brief.md, prose-round2-train-notes.md, ...): a spec belongs in
+	# specs/, an execution plan in plans/, and a brief belongs in git history.
+	superpowers = ROOT / "docs" / "superpowers"
+	allowed_dirs = {"plans", "specs", "spike", "consultant"}
+	for child in sorted(superpowers.iterdir()):
+		if child.name.startswith("."):
+			continue
+		if child.is_file():
+			errors.append(
+				f"loose file at docs/superpowers/ top level: {child.name} "
+				"(specs/ for design, plans/ for execution, git history for briefs)")
+		elif child.name not in allowed_dirs:
+			errors.append(f"unexpected docs/superpowers/ subdirectory: {child.name}")
 
 	readme = (ROOT / "README.md").read_text()
 	if "https://gabrielglevine.github.io/wandering-inn-rpg/" not in readme:

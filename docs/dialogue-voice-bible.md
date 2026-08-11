@@ -1,8 +1,8 @@
 # Dialogue Voice Bible — de-AI pass (W1, authoritative)
 
 **Date:** 2026-08-03 · **Author:** Fable (W1 adjudicating voice)
-**Scope:** all 71 files in `wandering_inn_game/data/dialogue/` · **Spec:** `docs/superpowers/specs/2026-08-03-dialogue-voice-pass-design.md` · **Rubric:** `docs/dialogue-voice/critique-2026-08-03.md`
-**Manifest:** `docs/dialogue-voice/clusters.json` (finalized by this document; 36 clusters). Constraint cards: `docs/dialogue-voice-cards/<cluster-id>.md` — your card overrides this bible where they conflict; this bible overrides your taste everywhere else.
+**Scope:** all 71 files in `wandering_inn_game/data/dialogue/` · **Spec:** `docs/superpowers/specs/2026-08-03-dialogue-voice-pass-design.md` · **Rubric:** `docs/dialogue-voice-cards/critique-2026-08-03.md`
+**Manifest:** `docs/dialogue-voice-cards/clusters.json` (finalized by this document; 36 clusters). Constraint cards: `docs/dialogue-voice-cards/<cluster-id>.md` — your card overrides this bible where they conflict; this bible overrides your taste everywhere else.
 
 Canon guard: Book 17 spoiler bar, game advertises Vol 7. Write **"Magical Door"**, never the Vol-9 name. Never change facts, names, numbers, directions, item names, or quest instructions — reword them, keep them findable in the same node.
 
@@ -241,7 +241,7 @@ Explicit zeros worth naming: the Witch (her fix is concrete detail, not balance)
 
 ## 6. Final tier/cluster assignments
 
-The finalized manifest is `docs/dialogue-voice/clusters.json` (36 clusters; every dialogue file in exactly one). Moves from the provisional spec table, all logged in the manifest changelog:
+The finalized manifest is `docs/dialogue-voice-cards/clusters.json` (36 clusters; every dialogue file in exactly one). Moves from the provisional spec table, all logged in the manifest changelog:
 
 - `invrisil_hired_scribe`, `invrisil_rest_factor`, `invrisil_fixer`, `patron_serving` → **T2** (trade-register speakers; also breaks Invrisil/inn uniform-literacy blocks — critique tell #10)
 - `pallass_forge_clerk` → **T3** (procedural-formal functionary; keeps him dull-formal, not witty)

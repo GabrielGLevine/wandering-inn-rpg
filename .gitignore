@@ -400,10 +400,32 @@ docs/*_api_key.txt
 # Session-local scratch (unified-repo transition 2026-07-07)
 .superpowers/
 
-# Generated session docs (never commit; see docs/README.md)
+# Session and wave implementation artifacts (never commit; see docs/README.md).
+# docs/ holds references, records, and state -- NOT the byproducts of a wave.
+# Lane briefs, lane reports, per-lane evidence, and generated run reports are
+# working files: git history is their archive, so they are ignored by pattern
+# rather than curated after the fact.
 /MORNING_SUMMARY*.md
 /NIGHT-GOAL*.md
+/LANE-BRIEF*.md
+/LANE-REPORT*.md
+/lanes/
+/*-evidence/
 docs/reports/
+docs/**/*-evidence/
+docs/**/report-*.json
 /dist/
 /art-feel-review/
 .lane-progress.md
+
+# Regenerated QA baseline derivatives. The hand-authored pins beside them
+# (inventory.jsonl, holdout.json, protected-keeps*.json, landmark-registry.json,
+# classification-overrides.json) ARE committed -- gates read those.
+# See wandering_inn_game/qa/baselines/README.md.
+wandering_inn_game/qa/baselines/prose/inventory-classified/
+wandering_inn_game/qa/baselines/prose/inventory-summary.md
+wandering_inn_game/qa/baselines/prose/phase4-report.*
+wandering_inn_game/qa/baselines/prose/sample-*.txt
+wandering_inn_game/qa/baselines/prose/sample-key.json
+wandering_inn_game/qa/baselines/prose/round2-*
+wandering_inn_game/qa/baselines/prose/pin-deltas/

@@ -1,3 +1,0 @@
-data_lint: OK -- 126 files, 30 maps clean in 37ms (structural tier only -- Godot gates still apply).
-data_lint: ADVISORY -- 89/111 props that bank an interact accomplishment show no visual change for it (GH#335 item 3); re-run with --advisories to list them. Report-only, never fails.
-data_lint: REPORT -- interactions.json: totality census 12/60 cells authored (6 skill x 10 target properties); the rest fall through to field_ambient/refusal by design

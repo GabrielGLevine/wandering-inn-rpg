@@ -63,7 +63,7 @@ def test_architecture_history_receives_displaced_project_context() -> None:
 
 def test_document_map_describes_the_split_authorities() -> None:
 	text = (ROOT / "docs" / "DOC-MAP.md").read_text()
-	assert "Last verified: **2026-08-10**" in text
+	assert "Last verified: **2026-08-11**" in text
 	assert "QA seed table" not in text
 	assert "bootstrap contracts, authority map, commands, architecture boundaries" in text
 	assert "Detailed current mechanisms, history, and rationale" in text

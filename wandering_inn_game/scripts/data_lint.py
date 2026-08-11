@@ -1503,7 +1503,7 @@ def advise_prose_templates(maps: dict, advisories: list) -> None:
 	speech and governed by the dialogue bible): the descriptor-triad
 	shape, the affordance formula, and a per-file BUTTON-closer count
 	over the amendment-5 ceiling of one. The matchers are the tuned
-	round-2 census set (docs/prose-naturalization/derive-round2-worklist.py,
+	round-2 census set (#397 round-2 census derivation,
 	precision 0.74 / recall 0.63 vs the Phase-5 reader) -- smoke, not
 	verdicts, which is why this tier reports and never fails. Promotion
 	to hard arms is an issue-close decision (amendment 7)."""

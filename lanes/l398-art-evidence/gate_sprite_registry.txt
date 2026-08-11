@@ -1,6 +1,0 @@
-Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
-
-[fallback_art] missing sheet: res://assets/__nonexistent_tile__.png
-[fallback_art] missing sheet: res://assets/__nonexistent_sprite__.png
-[fallback_art] missing sheet: res://assets/__nonexistent_region__.png
-PASS: sprite registry catalog builds SpriteFrames
