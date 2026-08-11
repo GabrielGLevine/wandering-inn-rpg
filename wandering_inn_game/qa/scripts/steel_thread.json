@@ -2882,6 +2882,1208 @@
    "action": "wait_for_event",
    "type": "ui_journal_hidden",
    "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "== ACT III: THE SUMMONS ==. Out of bed and all the way to the Liscor gate on foot: upstairs hall -> stairs_down -> inn taproom -> inn_door -> floodplains -> liscor_gate. No teleport, no fixture; this is the same walk Act II did in reverse."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump stairs_down (1,2) to face it -- doors block, so the step turns without moving."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump inn_door (15,3)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "liscor_gate (31,25) -- the last step already left us facing down onto it."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Zevara holds the gatehouse at (2,6). Drop to the y4 lane and come at her from above."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump-move into Zevara's cell: blocked, so it only sets facing. Never trust facing carried over from a walk."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "NEW WAKING: the first interact with a pool-carrying NPC spends her rotating line and nothing else. Her pool is on the cisterns-neutral stage by now."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Second interact this waking opens the graph."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_act_iii_00_zevara_summons"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Hub cursor -> visible row 1, 'You sent a runner for me?'. Row 0 is 'Long shift?', row 2 is 'Just getting my bearings.' -- that is the WHOLE visible list here. dialogue.gd:_visible_options drops progress-gated (accomplishment) requires ENTIRELY rather than rendering them locked, so the unearned 'It's done.' and the chatted_with_zevara>=2 rows are absent, not greyed."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "There you are. The cisterns crew found something under the new grates: tunnels nobody dug, going down past where their lanterns reached. Olesm's maps say they shouldn't exist. You've been down there. You're going again, this time for the Watch."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "summons node row 0 = 'Then I'll go down.' -- THIS is the row that carries the heard_the_deep_tremor effect; the hub row above only walks you to it."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_the_deep_tremor"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "something_beneath",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "Good. See Olesm before you climb down. He's been up since the second bell drawing what shouldn't be there, and he'll want you carrying it. Relc goes with you. I will put him on the roster as your escort and sign it before you are past the gate."
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "summons_send: row 0 loops to the hub, row 1 ('On it.') ends. Close clean."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "To the sewer grate (16,11): sidestep Zevara's column, drop to the clear y7 lane, run east, then come down the x16 column so we arrive at the approach cell (16,10) already facing DOWN."
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    10
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9,
+   "_comment": "West wall column to the y11 walkway (the two water channels span x3-16 on y5/y9), then east to the fissure's approach cell."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump deep_fissure (8,12) -- a present entity blocks its cell, so this only turns us to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "06_act_iii_01_deep_fissure"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "door_when gate is MET (heard_the_deep_tremor banked at the gatehouse). NOTE: the door_when arm short-circuits BEFORE on_interact_accomplishment, so found_the_fissure never banks on this path -- pin the open_toast instead."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "06_act_iii_02_deep_tunnels_landing"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "Cold Hearth (5,4) flavor read: down the landing column, east along y4, bump the hearth."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "found_cold_hearth"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "A pit at the middle of the stone ring, the ash dead to the bottom. Bones banked against the stones, every one opened for the marrow."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Raskghar scouts (8,4) bar the way east. The hearth plugs y4, so route over the top on y3 and drop onto them."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "06_act_iii_03_scout_field"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_act_iii_04_raskghar_scouts"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Dismiss the banner -- resolve_combat runs on the dismiss."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleared_raskghar_scouts"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Gnawed Bones (9,6) flavor read: the scout cell still blocks, so step east first and come down the x9 column."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "found_gnaw_pile"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Cracked bones in a heap, dry and light in the hand. Most of them Gnoll; one a Drake's."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2,
+   "_comment": "Warren Mouth (12,5). Interacting it banks reached_the_warren, which is also what conjures Relc's field cameo at (11,4)."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "reached_the_warren"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_act_iii_05_warren_mouth"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Past the threshold to the Awakened Raskghar (12,7): the warren_mouth prop plugs (12,5), so go under it and bump the boss from (12,6)."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "The encounter carries a conversation (relc_descent), so the veto beat opens BEFORE combat."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "relc_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_act_iii_06_relc_veto"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Row 0 = [Go together.]: banks relc_joined_descent (the boss's ally_requires) and starts the fight with Relc fielded. Our PC is a low warrior/mage -- the join is not optional at this level."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "screenshot",
+   "name": "06_act_iii_07_boss_fight"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleared_the_warren"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "something_beneath",
+    "beat": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "screenshot",
+   "name": "06_act_iii_08_warren_cleared"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_comment": "Climb out the way we came in. cleared_the_warren retires Relc's cameo from (11,4), so the x11 column is walkable now; y3 runs clear from x11 back to the landing column."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 9
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump tunnel_up (2,1)."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    12
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "tunnel_up lands ON the fissure cell (8,12). Step off it and retrace the y11 walkway to the ladder."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 9
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "sewer_exit ladder (2,1) -- the last upward step left us facing it."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4,
+   "_comment": "Back to the gatehouse on the y7 lane."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Re-face Zevara."
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "SAME WAKING as the summons -- social_talked only clears on sleep, so her pool line is spent and this single interact opens the graph directly."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Hub cursor -> visible row 1, \"It's done. The thing under the city won't be climbing up.\" The summons row is hide_when-retired by heard_the_deep_tremor, so this row moved UP into slot 1."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "raskghar_sealed"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "something_beneath"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "06_act_iii_09_report_zevara"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "seal node: row 0 loops to the hub, row 1 ('Captain.') ends."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.raskghar_sealed",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Home to the inn bed: the gate at (0,3), floodplains, inn_door, stairs_up, and the room."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     14,
+     3
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "First sleep after the seal: sleep_beat.gd:156 banks post_game (deliberately toast-less -- the Grand Design voices it under the veil instead)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "id": "post_game"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.post_game",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "06_act_iii_10_post_seal_sleep"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
   }
  ]
 }
