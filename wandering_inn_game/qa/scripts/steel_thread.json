@@ -5237,6 +5237,2137 @@
    "action": "assert_state",
    "path": "accomplishments.seal_kept_reported",
    "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.seal_kept_reported",
+   "equals": 1,
+   "_comment": "== ACT IV: THE DIG AND THE DOOR ==. seal_kept_reported is what unbolts Ceria's dig invitation at the inn, so the segment opens by walking home from Olesm's desk."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 28,
+   "_comment": "Street -> gate -> floodplains -> inn, the walked chain."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     14,
+     3
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6,
+   "_comment": "Ceria took the inn corner at (8,6) with her team the moment the gallery was reported. yvlon_inn now stands on (2,3), so the west end of the y3 lane is closed -- come down the x8 column instead."
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump Ceria."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "The inn Ceria row DOES carry a talk_pool (unlike her dungeon_approach row), and this is her first interact this waking, so the pool line lands first."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Ceria Springwalker"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "ceria_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Ceria",
+    "text": "It was guarding a door. Wonderful. Somebody left a construct in the dark to watch one door, and we still don't know what's on the other side."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "'Go on.' is hide_when-retired by horns_party_formed, so the invitation row is visible row 0 and the cursor is already on it."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "horns_dig"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "horns_dig_started"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Ceria",
+    "text": "Word travels. Yes \u2014 there's a ruin out past the floodplains, and under it a level nobody's opened since before Liscor had walls. We hit the seal three days ago. Yvlon can't cut it, and the one mage in this city who could read it works for himself and charges accordingly. We need one more pair of hands."
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Take the 'What's down there?' branch first, then rejoin the directions node from it."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Ceria",
+    "text": "If I knew, I wouldn't need a dig. Whatever it is, someone sealed it on purpose and did a very good job. Usually that means valuable or it means dangerous. I plan the camp for dangerous."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Ceria",
+    "text": "East past the gate road, across the floodplains \u2014 follow the survey stakes. Ask for me at the camp. And bring your own rope."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2,
+   "_comment": "Back out the inn door: horns_dig_started retired all three Horns from the taproom on the dialogue-close flush, so the y3 lane is clear again."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23,
+   "_comment": "Floodplains east: the y6 lane past the gate lane, down to the y8 lane, then the x37 column to the ruin seam's approach cell."
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    37,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump ruin_door (38,11)."
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "door_when requires horns_dig_started -- banked at the inn a minute ago. This seam was inert on every earlier pass."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The seam splits wider at your touch, cold air breathing out of the dark beneath. You step through, into somewhere else."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "ruin_surface"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "East past the gate road, across the floodplains \u2014 this is the ruin. Survey stakes, a banked fire, washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2,
+   "_comment": "The camp holds the northwest corner. Row 2 is clear above it; bump south into Ceria at (4,3)."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "The camp Ceria row has NO talk_pool -- the invitation follow-up opens on the first interact."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "ceria_dig_camp"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Ceria",
+    "text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger \u2014 half the pages are about what they didn't bring out. It's in my tent, filed with the survey maps."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_06_dig_camp"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Row 0 = \"Let's open it up.\" EMISSION ORDER TRAP: an end:true option tears the graph down BEFORE its effects resolve, so dialogue_ended has to be waited on first or the since-cursor lands past the banks."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "horns_dig_joined"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "horns_dig",
+    "beat": 1
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 15,
+   "_comment": "To the pedestal court: row 2 east to the x19 column, down it to the y8 lane, then west onto the guardian. The court's own props plug x14-18 on rows 4-6, so the outer lap is the only clean approach."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    19,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    19,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_comment": "Bump ruin_guardian (17,8)."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_07_ruin_guardian"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player",
+   "_comment": "Relc fields off the encounter's met_relc ally_requires -- earned back in Act I."
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "pedestal_unsealed"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "The rune pair, NEAR (16,6) then FAR (15,4) -- the shipped order. Round the plinth on the west side: (18,7) -> (15,7) -> (15,5) -> (17,5)."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump the plinth (17,6)."
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "The re-skinned locked variant: unsealed + joined puts the Horns in the toast, and it still banks nothing -- everything the plinth has to give lands on the open itself."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The seal is broken and the Horns are already down the gap \u2014 Yvlon bracing, Ksmvr counting rope. The warding still holds the stone fast. Two spiral plates flank the court; Ceria points at the carving beside the pedestal and says that one's a beginning."
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump rune_plate_near (16,6)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "rune_near_pressed"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump rune_plate_far (15,4). Its bank rides a variant gated on the near plate, so this order is load-bearing."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "rune_sequence_done"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump the plinth again -- all three contains_when counters are live now, so the interact routes to the CONTAINER."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "anchor_stone",
+    "source": "anchor_stone_pedestal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "recovered_anchor_stone"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "pedestal_breached"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "horns_dig",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "door_retrieved"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Below the pedestal: not treasure. A door, unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Below the pedestal: not treasure. A door, unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_08_the_reveal"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "anchor_stone"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3,
+   "_comment": "Haul home: the y2 lane back west to the ruin's own exit."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump ruin_exit (2,1)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    37,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     14,
+     3
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_comment": "Pisces has the door up against the pantry frame at (13,5)."
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump Pisces."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "pisces_mounting carries no talk_pool, so door_mounting opens on the first interact."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "door_mounting"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Mounted and hinged. Observe \u2014 already holding a hop to Liscor's gate district, and nobody has offered it so much as a rune of encouragement. It works. The next test is range."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_09_the_mounting"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Row 0 = 'How far can it actually go?' -- the branch that also renders the far-attunement setup."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Farther than Liscor. The wardwork is straining for distance; set a palm to the frame and you can feel the pull. But push it unattuned and things we did not invite will leak through. So we attune it properly. Krshia stocks the catalysts, and I have already started on the calculations for our half of the work."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "'Then let's start.' banks door_mounted, completes horns_dig, and AUTO-STARTS door_that_goes_elsewhere -- the reshaped chain has no start option anywhere."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "door_mounted"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "horns_dig"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "Pisces's window closed on the counter he just banked, so (13,5) is walkable. Bump east into the pantry door: portal_menu_when opens at door_mounted, so the picker replaces the flavor toast from here on."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "portal_menu"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "From the inn the attuned list is [Liscor - the Gate District, Let it be]: the inn's own row is excluded as the current map and the three far rows still gate on their own attunement counters."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Cold light, gone as fast as it came. The gate district's noise rushes back in around you."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3,
+   "_comment": "GOLD/PACING: the catalyst is 18g and the run holds 34. Detour to the gatehouse FIRST -- Zevara's standing Watch bounties have three unclaimed rows sitting on work this run already did (crate, cisterns, warren), worth 17g together, and her hub only opens them once chatted_with_zevara reaches 2, which this waking's pool line supplies."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump Zevara (2,6)."
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "First interact with Zevara this waking: pool line, and it takes chatted_with_zevara 1 -> 2."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4,
+   "_comment": "Visible hub: 0 'Long shift?', 1 'Just getting my bearings.', 2 oldblood, 3 oath, 4 'You pay for jobs?'. The three quest rows are all hide_when-retired now."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "Good. The Watch posts standing bounties on anything that made a file cross my desk. You clear it and claim it here. I sign it. Keep the receipts honest. The Council audits the ledger every month."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Claim 1/3: the Market Street scavengers (+3). Each claim hide_whens its own row, so the next claim is always visible row 0."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "claimed_bounty_crate"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "Signed. Mind the ink, it's still wet."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "'Anything else on the books?' -> back to the bounty list."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "Good. The Watch posts standing bounties on anything that made a file cross my desk. You clear it and claim it here. I sign it. Keep the receipts honest. The Council audits the ledger every month."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Claim 2/3: the cistern nest (+4)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "claimed_bounty_cisterns"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "Signed. Mind the ink, it's still wet."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "Good. The Watch posts standing bounties on anything that made a file cross my desk. You clear it and claim it here. I sign it. Keep the receipts honest. The Council audits the ledger every month."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Claim 3/3: the Awakened Raskghar (+10)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "claimed_bounty_warren"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "Signed. Mind the ink, it's still wet."
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 51,
+   "_comment": "GOLD/PACING: 34 -> 51 in one gatehouse stop. This is the segment's single largest earning detour and it cost about twenty walked cells; the Watch bounty ledger is where a player who did Acts II-III already has their Act IV budget waiting."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2,
+   "_comment": "Krshia's stall (13,2), up the y3 lane."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump Krshia."
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "First interact with Krshia this waking: pool line (chatted_with_krshia 2 -> 3)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Krshia"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Hub visible row 0 = \"What's on the stall today?\" -- the crate rows are all hide_when-retired and the friend's-price rows need chatted_with_krshia 4, so they are DROPPED."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Krshia",
+    "text": "Silverfang goods. Best in Liscor, and I will hear no argument on it. Cheapest at the front, the good stock where a browsing hand drifts. Coin on the counter and it is yours. No discounts, no haggling. I remember faces."
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4,
+   "_comment": "Stall rows 0-3 are the plain stock, 4 = 'Show me the charms.' The four friend's-price twins are accomplishment-gated and dropped."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Krshia",
+    "text": "The charmed stock costs more because it does more. Wear too much of it at once and it starts to argue with itself, so choose with sense. Coin on the counter, same as the rest."
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6,
+   "_comment": "Charms rows 0-5 are the ordinary charms (all gold-gated, so all VISIBLE, locked or not); 6 is the piece under the far cloth. The Pallass stone is row 8 in the file but is accomplishment-gated on pallass_sponsored and therefore dropped -- it comes back in the Pallass segment."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "resonant_catalyst"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "bought_catalyst"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 33,
+   "_comment": "GOLD/PACING: 51 -> 33 on the catalyst."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Krshia",
+    "text": "That one, I do not ask questions about. Silverfang trade brings stranger things than that through Liscor. It came in under the wool two winters back and it has sat under that cloth since. Yours now. Wrap it before you carry it. It hums against tin, yes?"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Pisces keeps the Guild steps at (30,4). Drop to the y4 lane -- the y3 lane is plugged by an Antinium worker at (24,3)."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump Pisces."
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "First interact with Pisces this waking: pool line (chatted_with_pisces 1 -> 2)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "pisces_magic"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "Visible hub: 0 'Walk me through it again.', 1 'Never mind.', 2 the pantry-door consult, 3 the catalyst hand-over, 4 the sealed wardwork, 5 the other art, 6 the Horns question. Rows needing chatted_with_pisces 3 are still dropped at 2."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "A door that changes its mind about where it goes. How very like this city \u2014 even the fixtures have moods. You could bleed for my curiosity, if that is your instrument. You could attempt to talk me into caring, which has been done, rarely. Or prove you can read a ward without my help, and I will be forced to take you seriously. Choose, and do not waste my morning."
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Row 1 = 'Come look at it yourself.' The TALK fork: no cellar fight, no [Observe] the build may not own."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "You want me to walk into someone's pantry and grope at a wild ward with my bare senses. No. I have wards of my own I would rather keep."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "A glance. Hm. If it truly reads as spatial and not necrotic, I could examine it without touching a thing. Fine \u2014 for the intellectual insult of not knowing. Do not mistake this for a favor."
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "Row 0 is the [Charming Smile] leg (skill gate -> rendered LOCKED, not dropped, so it still occupies a row); row 2 is the paid leg."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "door_understood"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere",
+    "beat": 2
+   },
+   "_comment": "door_that_goes_elsewhere's beats complete IN ORDER: bought_catalyst banked at Krshia emitted NOTHING because the consult beat ahead of it was still open. Buying the catalyst early is legal but silent -- the buy beat only closes here, when door_understood unblocks it, and the engine emits the LAST completed index only."
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 28,
+   "_comment": "GOLD/PACING: 33 -> 28. The consult's talk fork costs 5g without [Charming Smile]; the free alternative is the cellar leak fight at the inn, which this run passes over to keep the segment's fight count at spec."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "A spatial anchor. Crude. Fascinating. Whoever built your inn, adventurer, built it on something that remembers being elsewhere."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "SAME WAKING: his pool line is spent, so this single interact reopens the graph at the hub."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "pisces_magic"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "The consult row is hide_when-retired by door_understood and the recap row by recovered_anchor_stone, so row 2 is now 'I have the stone and Krshia's catalyst.'"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "catalyst_delivered"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere",
+    "beat": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Then the scholarship is done and the tedium begins. Keep both near the door, and rest. Rest is the instruction; I am aware of how it sounds. Attunement is a residency \u2014 the frame learns the stone the way a house learns its family: overnight, and more than once. Sleep. Let the inn do the part no [Mage] can rush."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6,
+   "_comment": "Home by the Door: the street's own anchor stone stands at (30,10), one east of the arrival cell."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "portal_menu"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "From the street the list is [The Wandering Inn, Let it be]."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "Up to bed. The y8 lane is the only clear west run now: rift_vermin_leak stands on (9,7) from the mounting onward, and yvlon_inn_returned holds (2,3)."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Sleep 1/3 -- a silent study beat. sleep_beat.gd:160 counts door_study_sleeps only while door_understood + recovered_anchor_stone + bought_catalyst all hold."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Your own bed."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "phase": "day"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Sleep 2/3 -- still silent."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Your own bed."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "phase": "day"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Sleep 3/3 -- the awakening."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Your own bed."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "door_awakened"
+   },
+   "_comment": "Fires synchronously inside this sleep(), strictly BEFORE the veil's deferred coverage event -- waited on first for since-marker ordering."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "lines": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.door_awakened",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "door_study_sleeps",
+   "equals": 3
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_10_door_awakened"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "8th waking. The spine quest does not auto-start: pisces_magic's door_awakened row is its only producer, so walk back to the Guild steps and report the awakening."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "portal_menu"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "The list grew a Riverfarm row on the awakening, but Liscor is still row 0."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "NEW WAKING: pool line first (chatted_with_pisces 2 -> 3)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "pisces_magic"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3,
+   "_comment": "Visible hub at chatted_with_pisces 3: 0 'Walk me through it again.', 1 'Never mind.', 2 the swordsman row (newly ungated by the third chat), 3 the sealed wardwork, 4 the other art, 5 'The Door woke.', 6 the Horns question. Take the wardwork row FIRST -- it banks heard_pisces_second_door, Act V's own gate on the dungeon attunement sleeps, and it is earned here rather than at the descent ask."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_pisces_second_door"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "The same hand, then, on both sides of the city. Two workings, one wardwright, and no version of that I can make boring. I should very much like to read that wardwork myself \u2014 after you have slept. My notes on our frame want reorganizing before I stand in front of its sibling."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "'Back to the top.' -> the hub, one row shorter."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4,
+   "_comment": "The wardwork row is spent, so 'The Door woke. It reaches past Liscor now.' has moved up to row 4."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "where_the_door_reaches"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "spine_started"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "The Door will show you how far it wants to go. And somewhere under this city is wardwork by the same hand, still fed, still waiting. I intend to understand both. Go \u2014 see where it reaches."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6,
+   "_comment": "Back to the inn by the street anchor stone; the Riverfarm hop is taken from the pantry frame itself."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "portal_menu"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 28
   }
  ]
 }
