@@ -136,3 +136,16 @@ warden/vault beats).
    spine build eats two mandatory footpad fights across four crossings.
 5. `lattice_witch_lore` gating (`price_of_a_favor_reported` +
    `spine_started`) forces three village↔hollow round trips.
+6. **The Seal Warden's OPEN fork is unwinnable by the continuous
+   build** (measured: PC 56 HP / ~29 DPR vs warden 142 HP / 28-30 per
+   hit — death in 5 rounds, three identical runs at seed 9), and NONE
+   of the authored non-fight resolutions is reachable by it:
+   [Sneak] (rogue — gated on `recovered_crate_watch`, a fork this run
+   closed by force), [Hedge Remedy] (hedge_witch), [Detect Magic]
+   (mage L7). A diplomat-7 PC with three social Skills has nothing to
+   spend at `the_choice`. The run completes via mage L5
+   [Invisibility] (spell_cast 13, manual combat casts only —
+   autoplay never casts) and the alcove's authored sneak-past, which
+   reaches the same vault ending. Melee-only spines have NO
+   resolution; finale assumes spellsword-scale power or one of three
+   specific skills.
