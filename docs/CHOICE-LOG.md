@@ -3680,3 +3680,15 @@ executing it. All four are recorded in the data's own `_comment`s and in
     (c) solid_oak_spear: stocked in the barracks spare_kit_crate
     (matches its own lore; zero-mod, spear-family carrier). All three
     ride the #430 wiring lane.
+
+33. **CHOICE-LOG 31 correction (frost_touch):** the ruled "shipped
+    dialogue-effect skill-grant mechanism" DOES NOT EXIST — lane W's
+    STOP was correct (charming_smile/detect_magic rows are requires
+    GATES, not grants; dialogue_choose has no skill verb; player_skills
+    written only at init/load). Re-ruled: frost_touch → **hedge_witch
+    L4 class grant** (empty slot; hedge_witch is Eloise's line, gained
+    through the_makings, so the winter-craft fiction survives; pure
+    data). Rejected: building a dialogue skill-grant verb (new sim
+    capability, not worth it for one grant); item-carried ability
+    (active field cast via item abilities is unproven schema).
+    skill-orphan category promotes to hard-fail once wired.
