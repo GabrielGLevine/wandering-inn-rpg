@@ -3692,3 +3692,16 @@ executing it. All four are recorded in the data's own `_comment`s and in
     capability, not worth it for one grant); item-carried ability
     (active field cast via item abilities is unproven schema).
     skill-orphan category promotes to hard-fail once wired.
+
+34. **Cudgel production ruled UNBOUNDED-on-precedent (controller, #429
+    review):** the lane's "#330 duplicate refusal bounds it" premise
+    was FALSE (refusal bounds carrying; use_item erases and the arm
+    re-arms; _merge_pending_meal SUMS damage_mod — reviewer proved a
+    2-cast stack live). Accepted anyway because the identical
+    consumable-next_fight loop already ships on the same map's food
+    props (inn_chef_counter fine_meal, inn_copper_pan signature_meal).
+    Comments corrected to the honest statement. The stacking
+    next_fight-faucet CLASS (food props + cudgel, uncapped, summed)
+    is surfaced as its own balance issue rather than patched in
+    orphan-drain scope — root-cause doctrine: the class predates this
+    wire.
