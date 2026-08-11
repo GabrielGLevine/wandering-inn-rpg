@@ -28,6 +28,13 @@ run "extract_prose self-test" python3 "$ROOT/wandering_inn_game/qa/scripts/extra
 run "qa surfaces --check"  python3 "$ROOT/wandering_inn_game/scripts/derive_qa_surfaces.py" --check
 run "guidance mirrors"     python3 "$ROOT/scripts/sync_agent_guidance.py"
 run "doc drift"            python3 "$ROOT/scripts/check_doc_drift.py"
+# GH#429 review LOW-3: the python suites gate the TOOLING -- every data_lint
+# tier's own can-fail proof, the reachability promotion fences, the usage/asset
+# guards. Nothing invoked them on a schedule, which is how four
+# SKILL/ITEM_CODE_GRANTS pins sat rotted-red on main across two waves: the
+# allowlist read-back was shouting into a suite no gate ran. Cheap (~8s, no
+# Godot boot), so it belongs in the FAST tier rather than behind --full.
+run "python tool suites"   python3 -m pytest -q "$ROOT/scripts/tests"
 # one Godot suite always: the registry catches missing sheets/regions/uids
 unit() { # unit <name> -- grep discipline: SCRIPT ERROR|Parse Error|ERROR: FAIL == 0 AND ^PASS present
 	local name="$1" out bad pas

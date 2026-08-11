@@ -761,6 +761,14 @@
     "gold": 1,
     "toast": "[Basic Cleaning] — The table is spotless."
    },
+   "_comment_skill_uses": "The taproom's [Bar Fighting] furniture seam. `skill_uses` outranks `requires_skill`+`on_skill_use` for its own key only, so the Helper chore arm is untouched. PRODUCE-ONLY and UNBOUNDED, exactly like every other inn food prop -- inn_chef_counter and inn_copper_pan run the identical consumable-next_fight loop on this same map (signature_meal even carries the same damage_mod 1), and that precedent is what this is accepted on (CHOICE-LOG 34). The #330 duplicate refusal bounds CARRYING, never producing: use_item erases the cudgel and the arm re-arms, and _merge_pending_meal SUMS damage_mod. `once_per_waking` is still refused here on its own ground -- it is an ENTITY flag and would cap the Helper chore arm this table also carries.",
+   "skill_uses": {
+    "bar_fighting": {
+     "accomplishment": "armed_the_common_room",
+     "item": "improvised_cudgel",
+     "toast": "[Bar Fighting] — The table's near leg has been loose since spring. You put a boot to the frame, take the weight on the turn, and walk off holding it."
+    }
+   },
    "visual_states": [
     {
      "when": {

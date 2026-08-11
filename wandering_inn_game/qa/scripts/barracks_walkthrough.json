@@ -638,6 +638,28 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "== GH#429 THE SPEAR SOURCE == solid_oak_spear shipped with no acquisition path at all; the crate is its own lore's home (the yard behind this building). Appended SECOND in `contains`, so the whetstone pair above is byte-unchanged and this is a pure addition. One open, both items -- container_state makes it one-shot.",
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "solid_oak_spear"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Got: Solid Oak Spear"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "solid_oak_spear"
+  },
+  {
    "action": "screenshot",
    "name": "09_spare_kit_crate"
   },

@@ -467,15 +467,15 @@
     "dialogue": [
      {
       "speaker": "Erin",
-      "text": "Welcome to The Wandering Inn! Mind giving that table a wipe?"
+      "text": "\u00b6"
      }
     ],
     "display_name": "Erin",
     "facing": "down",
-    "friendly_line": "Oh - hi! You've got a good face, you know that? Come in, sit down. I'll find you something warm - on the house, probably. Don't tell Lyonette I said that.",
+    "friendly_line": "\u00b6",
     "id": "erin",
     "kind": "npc",
-    "observe": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her.",
+    "observe": "\u00b6",
     "sprite": "erin",
     "talk_pool": [
      "@erin_shared_2",
@@ -762,15 +762,15 @@
     "dialogue": [
      {
       "speaker": "Lyonette",
-      "text": "Mind the floors, they're just done."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Lyonette",
     "facing": "left",
-    "friendly_line": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. ...It is a small thing. It is not nothing. Sit where you like; I'll bring something hot.",
+    "friendly_line": "\u00b6",
     "id": "lyonette",
     "kind": "npc",
-    "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
+    "observe": "\u00b6",
     "sprite": "lyonette",
     "talk_pool": [
      "@lyonette_shared"
@@ -808,6 +808,7 @@
     ]
    },
    {
+    "_comment_skill_uses": "The taproom's [Bar Fighting] furniture seam. `skill_uses` outranks `requires_skill`+`on_skill_use` for its own key only, so the Helper chore arm is untouched. PRODUCE-ONLY and UNBOUNDED, exactly like every other inn food prop -- inn_chef_counter and inn_copper_pan run the identical consumable-next_fight loop on this same map (signature_meal even carries the same damage_mod 1), and that precedent is what this is accepted on (CHOICE-LOG 34). The #330 duplicate refusal bounds CARRYING, never producing: use_item erases the cudgel and the arm re-arms, and _merge_pending_meal SUMS damage_mod. `once_per_waking` is still refused here on its own ground -- it is an ENTITY flag and would cap the Helper chore arm this table also carries.",
     "cell": [
      5,
      4
@@ -819,10 +820,17 @@
     "on_skill_use": {
      "accomplishment": "cleaned_the_inn",
      "gold": 1,
-     "toast": "[Basic Cleaning] \u2014 The table is spotless."
+     "toast": "\u00b6"
     },
     "requires_skill": "basic_cleaning",
-    "skill_hint_toast": "The table's a mess of rings and crumbs. It wants a proper wipe-down.",
+    "skill_hint_toast": "\u00b6",
+    "skill_uses": {
+     "bar_fighting": {
+      "accomplishment": "armed_the_common_room",
+      "item": "improvised_cudgel",
+      "toast": "\u00b6"
+     }
+    },
     "sprite": "dirty_table",
     "visual_states": [
      {
@@ -865,11 +873,11 @@
     "kind": "prop",
     "on_interact_accomplishment": "read_dusty_scroll",
     "sprite": "dusty_scroll",
-    "toast": "Faded arcane script. You can't read a word of it. Whoever penned this knew magic you don't. Someone in the city must.",
+    "toast": "\u00b6",
     "variants": [
      {
       "accomplishment": "deciphered_dusty_scroll",
-      "toast": "With what Pisces beat into you, the faded script stops being noise: it is a warding treatise, old and patient, and it keeps circling one subject. A door. Bound, sealed, and fed \u2014 somewhere close. He would want to see this.",
+      "toast": "\u00b6",
       "when": {
        "learned_magic_from_pisces": 1
       }
@@ -886,10 +894,10 @@
     "kind": "prop",
     "on_skill_use": {
      "accomplishment": "lit_the_common_room",
-     "toast": "[Light] \u2014 A steady white orb settles into the lantern's glass."
+     "toast": "\u00b6"
     },
     "requires_skill": "light",
-    "skill_hint_toast": "The wick's dry and ready. All it wants is a light that doesn't need a match.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "unlit_lantern",
     "visual_states": [
      {
@@ -925,7 +933,7 @@
     "dialogue": [
      {
       "speaker": "Hungry Patron",
-      "text": "Innkeeper! Anyone?"
+      "text": "\u00b6"
      }
     ],
     "display_name": "Hungry Patron",
@@ -950,7 +958,7 @@
     "dialogue": [
      {
       "speaker": "Selys",
-      "text": "Off the clock, for once. Don't tell the Guild I remember how to sit down."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Selys",
@@ -987,7 +995,7 @@
     "dialogue": [
      {
       "speaker": "Krshia",
-      "text": "The market can keep until morning. A good bowl and a warm fire, yes?"
+      "text": "\u00b6"
      }
     ],
     "display_name": "Krshia",
@@ -1024,7 +1032,7 @@
     "dialogue": [
      {
       "speaker": "Olesm",
-      "text": "One night off. I have already mapped every exit twice. It is a sickness."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Olesm",
@@ -1061,7 +1069,7 @@
     "dialogue": [
      {
       "speaker": "Pisces",
-      "text": "I am not queueing. I happen to be seated near where a queue would form."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Pisces",
@@ -1101,7 +1109,7 @@
     "dialogue": [
      {
       "speaker": "Pisces",
-      "text": "I am not queueing. I happen to be seated near where a queue would form."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Pisces",
@@ -1141,7 +1149,7 @@
     "dialogue": [
      {
       "speaker": "Relc",
-      "text": "Off shift. Good chair, good fire. The wall can hold itself up for one night."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Relc",
@@ -1178,7 +1186,7 @@
     "dialogue": [
      {
       "speaker": "Zevara",
-      "text": "Nobody has found me yet. Do not be the one who does."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Zevara",
@@ -1218,7 +1226,7 @@
     "dialogue": [
      {
       "speaker": "Zevara",
-      "text": "Nobody has found me yet. Do not be the one who does."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Zevara",
@@ -1258,7 +1266,7 @@
     "dialogue": [
      {
       "speaker": "Klbkch",
-      "text": "Off duty. I am told this is a thing a person can be."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Klbkch",
@@ -1295,7 +1303,7 @@
     "dialogue": [
      {
       "speaker": "Rags",
-      "text": "Warm here. Two doors. I counted."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Rags",
@@ -1338,7 +1346,7 @@
     "dialogue": [
      {
       "speaker": "Wilovan",
-      "text": "Evening, {addr}. No business tonight, you'll be glad to hear."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Wilovan",
@@ -1378,7 +1386,7 @@
     "dialogue": [
      {
       "speaker": "Grimalkin",
-      "text": "Sit down properly if you are going to sit."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Grimalkin",
@@ -1419,10 +1427,10 @@
     "kind": "prop",
     "on_interact_accomplishment": "delivered_item",
     "once_per_waking": true,
-    "once_per_waking_toast": "The tables are covered. Nothing more to carry out until tomorrow.",
+    "once_per_waking_toast": "\u00b6",
     "render_scale": 0.5,
     "sprite": "table_brown",
-    "toast": "You carry the laden tray out to the tables."
+    "toast": "\u00b6"
    },
    {
     "_comment": "GH#131: on (6,2), a blocked kitchen-counter cell (#116 pattern); approach (6,3) facing up, asserted open by test_sim_core. NOT (2,2) -- test_sim_core walks it. GH#378 arm 2: kettle-on-a-crane, the row's only vertical silhouette; tint retired.",
@@ -1433,18 +1441,18 @@
     "cookware": true,
     "display_name": "Hearth-Side Kettle",
     "id": "inn_witch_kettle",
-    "item_hint_toast": "The kettle wants yarrow before it gives anything back.",
+    "item_hint_toast": "\u00b6",
     "kind": "prop",
-    "locked_toast": "A kettle, singing low. It's just a kettle, unless you know otherwise.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "witch_craft_used",
      "item": "remedy_draught",
      "remove_item": "dried_yarrow_bundle",
      "requires_item": "dried_yarrow_bundle",
-     "toast": "[Hedge Remedy] \u2014 The inn's kettle does in a pinch, just like she said. The steam settles into something kinder."
+     "toast": "\u00b6"
     },
     "requires_skill": "hedge_remedy",
-    "skill_hint_toast": "The kettle's on. The inn won't mind one more thing brewing, so long as it means well.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "witch_kettle_hook"
    },
    {
@@ -1455,14 +1463,14 @@
     "display_name": "Chef's Counter",
     "id": "inn_chef_counter",
     "kind": "prop",
-    "locked_toast": "A working counter, scrubbed and stocked. The kitchen has standards, and they're looking at you.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "cooked_meal",
      "item": "fine_meal",
-     "toast": "[Advanced Cooking] \u2014 Knife-work first, then the pan, then the part nobody can teach. The plate comes out arguing for seconds."
+     "toast": "\u00b6"
     },
     "requires_skill": "advanced_cooking",
-    "skill_hint_toast": "Good stock, better knives, and nobody using either. A real cook could turn this counter into a meal worth naming.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "counter_left"
    },
    {
@@ -1473,14 +1481,14 @@
     "display_name": "The Good Copper Pan",
     "id": "inn_copper_pan",
     "kind": "prop",
-    "locked_toast": "The good copper pan, hung out of easy reach. Erin's rule, probably.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "cooked_meal",
      "item": "signature_meal",
-     "toast": "[Signature Dish] \u2014 The pan remembers you now. What comes out of it isn't dinner, it's a reputation."
+     "toast": "\u00b6"
     },
     "requires_skill": "signature_dish",
-    "skill_hint_toast": "The good copper pan. It's been waiting for a dish that deserves it.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "grill"
    },
    {
@@ -1493,14 +1501,14 @@
     "display_name": "Stew Pot",
     "id": "stew_pot",
     "kind": "prop",
-    "locked_toast": "You don't know your way around a stew pot. Yet.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "cooked_meal",
      "item": "hot_meal",
-     "toast": "[Basic Cooking] \u2014 The stew comes out rich and hot."
+     "toast": "\u00b6"
     },
     "requires_skill": "basic_cooking",
-    "skill_hint_toast": "The stew's at the turn. Someone who knows a pot could bring it home.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "cauldron"
    },
    {
@@ -1513,13 +1521,13 @@
     "display_name": "Short-Order Pot",
     "id": "short_order",
     "kind": "prop",
-    "locked_toast": "The order's a mess and you haven't the first idea how to stretch it. Not yet.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "stretched_the_order",
-     "toast": "[Basic Cooking] \u2014 You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot."
+     "toast": "\u00b6"
     },
     "requires_skill": "basic_cooking",
-    "skill_hint_toast": "Three plates ordered, one pot of stock. You could stretch it to cover them all. Nothing leaves the kitchen in your hands.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "short_order_range"
    },
    {
@@ -1550,7 +1558,7 @@
     "door_flavor_target": true,
     "id": "pantry_door",
     "kind": "prop",
-    "observe": "A plain plank door, warped at the bottom from a hundred winters. Nothing about it looks like it goes anywhere but the pantry.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_the_pantry_door",
     "portal_menu": true,
     "portal_menu_when": {
@@ -1558,24 +1566,24 @@
       "door_mounted": 1
      }
     },
-    "skill_hint_toast": "The frame and the old marks under its paint both want a trained eye \u2014 and maybe more than one kind.",
+    "skill_hint_toast": "\u00b6",
     "skill_uses": {
      "detect_magic": {
       "accomplishment": "detected_wardwork",
       "lore": true,
-      "toast": "[Detect Magic] \u2014 The old wardwork wakes just enough to be read: someone bound this cellar's door long before it learned to go elsewhere."
+      "toast": "\u00b6"
      },
      "observe": {
       "accomplishment": "read_the_door_runes",
       "lore": true,
-      "toast": "[Observe] \u2014 The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
+      "toast": "\u00b6"
      }
     },
     "sprite": "door",
-    "toast": "Onions, a sack of soft potatoes, a shelf of jarred somethings gone dusty. The pantry door, same as it's always been.",
+    "toast": "\u00b6",
     "variants": [
      {
-      "toast": "The find leans against the pantry frame, unhung, with the old plank door stacked out of the way behind the flour sacks. Pisces has not stopped circling it since the wagon. Ask him about it.",
+      "toast": "\u00b6",
       "when": {
        "door_retrieved": 1
       }
@@ -1583,12 +1591,8 @@
     ],
     "visual_states": [
      {
-      "sprite": "pantry_door_runes",
-      "tint": [
-       0.82,
-       0.86,
-       1.0
-      ],
+      "_comment": "r3 2026-08-08: mounted state = the city endpoints' anchor_waystone arch (user continuity ruling; was pantry_door_runes+tint)",
+      "sprite": "anchor_waystone",
       "when": {
        "at": 1,
        "counter": "door_mounted"
@@ -1606,14 +1610,14 @@
     "dialogue": [
      {
       "speaker": "Pisces",
-      "text": "A moment. I am counting the ward's repeats, and you are extremely countable."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Pisces",
     "facing": "right",
     "id": "pisces_mounting",
     "kind": "npc",
-    "observe": "He has taken his coat off, which for Pisces is manual labour. One hand rests flat on the hauled door's face, the way a physician rests a hand on a patient, and he is listening to something no one else in the room can hear.",
+    "observe": "\u00b6",
     "present_when": {
      "absent": {
       "door_mounted": 1
@@ -1650,7 +1654,7 @@
     ],
     "id": "rift_vermin_leak",
     "kind": "encounter",
-    "observe": "Something scratches behind the pantry wall, patient and small. Probably nothing. Probably.",
+    "observe": "\u00b6",
     "on_victory": [
      "cleared_the_leak",
      "door_understood",
@@ -1669,7 +1673,7 @@
     ],
     "visual_states": [
      {
-      "observe": "The scratching has become a chewing. The Door strains for somewhere it cannot reach yet, and something on the way there has found the gap and has teeth.",
+      "observe": "\u00b6",
       "when": {
        "at": 1,
        "counter": "door_mounted"
@@ -1686,7 +1690,7 @@
     ],
     "display_name": "A Door of Vines",
     "door_when": {
-     "open_toast": "The vines part like a curtain, and the light beyond doesn't flicker.",
+     "open_toast": "\u00b6",
      "requires": {
       "garden_door_unlocked": 1
      },
@@ -1698,7 +1702,7 @@
     },
     "id": "garden_door",
     "kind": "prop",
-    "observe": "Plaster, old and thin, and a nail with nothing hung on it. If something is meant to be here, it isn't yet.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "noticed_the_bare_wall",
     "present_when": {
      "requires": {
@@ -1706,7 +1710,7 @@
      }
     },
     "sprite": "garden_door_inner",
-    "toast": "Bare wall. A nail with nothing hung on it.",
+    "toast": "\u00b6",
     "visual_states": [
      {
       "hidden": true,
@@ -1717,7 +1721,7 @@
      },
      {
       "hidden": false,
-      "observe": "A door of living vines, woven shut and breathing faintly of green. It wasn't here before, and it doesn't pretend otherwise.",
+      "observe": "\u00b6",
       "when": {
        "at": 1,
        "counter": "garden_door_unlocked"
@@ -1735,7 +1739,7 @@
     "dialogue": [
      {
       "speaker": "Ceria Springwalker",
-      "text": "Ask me about the vault again and I'll start charging Pisces rent."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Ceria Springwalker",
@@ -1777,7 +1781,7 @@
     "dialogue": [
      {
       "speaker": "Yvlon Byres",
-      "text": "My arm's still fine."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Yvlon Byres",
@@ -1818,7 +1822,7 @@
     "dialogue": [
      {
       "speaker": "Ksmvr",
-      "text": "I am still counting exits. There are still two."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Ksmvr",
@@ -1860,7 +1864,7 @@
     "dialogue": [
      {
       "speaker": "Ceria Springwalker",
-      "text": "Ask me about the vault again and I'll start charging Pisces rent."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Ceria Springwalker",
@@ -1898,7 +1902,7 @@
     "dialogue": [
      {
       "speaker": "Yvlon Byres",
-      "text": "My arm's still fine."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Yvlon Byres",
@@ -1936,7 +1940,7 @@
     "dialogue": [
      {
       "speaker": "Ksmvr",
-      "text": "I am still counting exits. There are still two."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Ksmvr",
@@ -1975,7 +1979,7 @@
     "display_name": "Room Register",
     "id": "inn_room_ledger",
     "kind": "npc",
-    "observe": "The inn's room register, open to today. Lyonette's handwriting could win awards; the prices underneath it could start fights.",
+    "observe": "\u00b6",
     "sprite": "inn_room_ledger"
    }
   ],

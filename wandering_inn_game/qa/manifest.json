@@ -688,7 +688,9 @@
      "near_hedge_witch"
     ],
     "skills": [
-     "basic_cleaning"
+     "basic_cleaning",
+     "frost_touch",
+     "kindle"
     ],
     "dialogue": [],
     "systems": [
@@ -7062,6 +7064,62 @@
     "systems": [
      "audio",
      "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "taproom_cudgel_loop",
+   "seed": 9,
+   "fixture": "taproom_cudgel_start",
+   "note": "#429: the [Bar Fighting] yield -- improvised_cudgel comes off the taproom table, the duplicate refusal is its whole bound, and the same prop's [Basic Cleaning] chore arm still answers (skill_uses must never shadow the arm it does not name)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "taproom_cudgel_start"
+    ],
+    "skills": [
+     "bar_fighting",
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "hedault_wardstone_loop",
+   "seed": 7,
+   "fixture": "hedault_wardstone_start",
+   "note": "#429: the wardstone chain -- bead 16g + 40g fee yields hedaults_wardstone (ruling 32a's id swap), fee and consume asserted so only the granted id moved",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "enchanter_shop"
+    ],
+    "fixtures": [
+     "hedault_wardstone_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "hedault_enchanting"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
      "exploration"
     ]
    }

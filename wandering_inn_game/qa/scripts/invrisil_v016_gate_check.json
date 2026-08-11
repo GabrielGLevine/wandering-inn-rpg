@@ -157,8 +157,8 @@
      {
       "effect_lines": [
        "+2 HP",
-       "Reduces every hit taken by 1",
-       "Resonance 1"
+       "Resonance 2",
+       "Grants [Mana Shield] in combat"
       ],
       "locked": true,
       "requirement": "costs 40 gold",

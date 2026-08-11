@@ -1,15 +1,5 @@
 {
  "facts": {
-  "$.nodes.agreed.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.nodes.agreed.text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.hub.options[0].text": {
    "brackets": [
     "[Offer to stand the night watch with him.]"
@@ -247,22 +237,6 @@
  },
  "skeleton": {
   "nodes": {
-   "agreed": {
-    "_comment": "#396: DEAD -- nothing gotos it (the hub's ask gotos watch_agreed); kept because deleting it buys nothing.",
-    "options": [
-     {
-      "effects": [
-       {
-        "accomplishment": "hunter_will_come"
-       }
-      ],
-      "end": true,
-      "text": "\u00a7"
-     }
-    ],
-    "speaker": "A Shepherd",
-    "text": "\u00a7"
-   },
    "hub": {
     "options": [
      {

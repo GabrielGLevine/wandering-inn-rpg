@@ -1,0 +1,45 @@
+{
+ "_comment": "GH#429 fixture: an established Helper 4 (cleaned_the_inn 10 is L4's own requires_any leg, so [Bar Fighting] is EARNED, never hand-granted) standing on the inn's open floor at (2,3). The run WALKS to the taproom table -- no pre-staged adjacency. Gear/economy mirror near_room_upgrade; rng_state reuses its derived value (no combat in this script).",
+ "version": 6,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   2,
+   3
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 2,
+   "helper": 4
+  },
+  "accomplishments": {
+   "cleaned_the_inn": 10,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "reached_liscor": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {
+   "weapon": "",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 0,
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": []
+ }
+}
