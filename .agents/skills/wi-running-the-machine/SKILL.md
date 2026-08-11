@@ -94,6 +94,20 @@ with the merge — skipping it reads as a total-cascade compile failure
 (64/64 red on a correct tree, 2026-07-07). Corollary: capture the
 sweep's exit code explicitly and read the verdict line before pushing —
 never pipe the sweep into `tail` inside the same `&&` chain as the push.
+**Push the lane branch ref AT SPAWN, and after every lane commit
+(2026-08-10, two near-losses in one day).** Parallel sessions clean up
+"finished" worktrees with `git worktree remove` — which also deletes the
+branch ref if it was never pushed, leaving the lane's commits as
+gc-eligible loose objects (lanes R and H both survived only because a
+resuming agent re-anchored refs from raw SHAs before any gc). Worktree
+location does not save you (/tmp or home — the remover follows the
+worktree list). The remote ref is the lane's durability: `git push -u
+origin <branch>` immediately after `git worktree add`, and lane briefs
+say push-after-every-commit. Corollary for controllers running beside a
+possibly-concurrent session: before diagnosing "my worktree vanished",
+check `gh pr list`/`gh run list` — the other session may have merged
+and cleaned your lane already; reconcile before re-doing work.
+
 **Lane worktrees get the REAL asset overlay at dispatch (user directive
 2026-07-07: placeholders are for the public repo only — local dev uses real
 assets).** A fresh worktree has zero overlay files; the controller copies

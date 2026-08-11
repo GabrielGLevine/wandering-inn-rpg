@@ -4,19 +4,13 @@ Live current-state doc. Per-issue narrative in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Fresh session read order: wi-start-here.
 
-## RUNNING (2026-08-11): #429 orphan drain — lane W live
+## DONE (2026-08-11): #429 ORPHAN DRAIN CLOSED (PR #433)
 
-All six wires ORDERED (user 2026-08-10; CHOICE-LOG 31-32, consolidated
-onto #429; #430 closed as dup): kindle→hedge_witch L2,
-frost_touch→Eloise teach gated winter_answered, riverfarm_hunter.agreed
-retired, wardstone bead-option id swap, cudgel bar_fighting yield prop,
-oak spear in spare_kit_crate; then advisory→hard-fail promotion
-(skills/items/dialogue). Lane W: Opus in /Users/gabriel/wi-lane-429
-(branch issue/429-orphan-drain pushed at spawn — the two near-loss
-worktree wipes today are why refs now push at spawn). On return:
-adversarial review → fix wave → PR [ci-full] → merge. Session-crossing
-note: PR #431 was this session's unknowing duplicate of #427 (closed);
-parallel-session merge history reconciled.
+Six wires + hard-fail promotion; full record in PR #433 body + ledger
+2026-08-11 entry + CHOICE-LOG 31-34. Follow-up #432 filed (unbounded
+next_fight stacking class — needs a user balance ruling). pytest suites
+now a preflight gate. Skill fold: lane refs push at spawn. USER-HELD:
+#432 ruling; [Pick Lock] icon + shop eye-calls (VISUAL-LOG 2026-08-10).
 
 ## DONE (2026-08-10 evening): REACHABILITY WAVE — #417/#421/#423/#424 ALL CLOSED (PRs #425-#428)
 
