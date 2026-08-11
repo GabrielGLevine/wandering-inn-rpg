@@ -1,77 +1,90 @@
 # Wandering Inn RPG Handoff
 
-Live current-state doc. Per-issue narrative lives in merged PR bodies
+Live current-state doc. Per-issue narrative in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
-history in git. Read order for a fresh session: wi-start-here.
+history in git. Fresh session read order: wi-start-here.
+
+## RUNNING (2026-08-11): #429 orphan drain — lane W live
+
+All six wires ORDERED (user 2026-08-10; CHOICE-LOG 31-32, consolidated
+onto #429; #430 closed as dup): kindle→hedge_witch L2,
+frost_touch→Eloise teach gated winter_answered, riverfarm_hunter.agreed
+retired, wardstone bead-option id swap, cudgel bar_fighting yield prop,
+oak spear in spare_kit_crate; then advisory→hard-fail promotion
+(skills/items/dialogue). Lane W: Opus in /Users/gabriel/wi-lane-429
+(branch issue/429-orphan-drain pushed at spawn — the two near-loss
+worktree wipes today are why refs now push at spawn). On return:
+adversarial review → fix wave → PR [ci-full] → merge. Session-crossing
+note: PR #431 was this session's unknowing duplicate of #427 (closed);
+parallel-session merge history reconciled.
 
 ## DONE (2026-08-10 evening): REACHABILITY WAVE — #417/#421/#423/#424 ALL CLOSED (PRs #425-#428)
 
-User dispatch "address #417-424" with two directives folded in: [Pick
-Lock]'s locked contents keep a virtuous-path route, and the
-Hedault-class reachability defect gets a systemic check. Full per-issue
-narrative in the four PR bodies; rulings CHOICE-LOG 28-30 (+28-H).
-- **#417** (PR #425): derive_qa_surfaces walks install_fixture (+ the
-  array-form fixture_save sibling hole); 11 new manifest rows.
-- **#421** (PR #426): grace-end reconcile event (warning now renders
-  one step BEFORE the re-ambush), UI_DANGERSENSE_CLEARED (same-map-only
-  by ruling), dead COMBAT_STARTED arm collapsed, first combat-context
-  dangersense canonical, [Firefly] stripped from the 3 lying hints.
-- **#424** (PR #427): advisory content-reachability lint (orphan graph
-  + gate-carrier join incl. state_set traversal seams) + sim-truth
+User dispatch "address #417-424", two directives folded in: [Pick
+Lock] locked contents keep virtuous-path route, Hedault-class
+reachability defect gets systemic check. Per-issue narrative in four PR
+bodies; rulings CHOICE-LOG 28-30 (+28-H).
+- **#417** (PR #425): derive_qa_surfaces walks install_fixture (+ array-form
+  fixture_save sibling hole); 11 new manifest rows.
+- **#421** (PR #426): grace-end reconcile event (warning renders one step
+  BEFORE re-ambush), UI_DANGERSENSE_CLEARED (same-map-only by ruling),
+  dead COMBAT_STARTED arm collapsed, first combat-context dangersense
+  canonical, [Firefly] stripped from 3 lying hints.
+- **#424** (PR #427): advisory content-reachability lint (orphan graph +
+  gate-carrier join incl. state_set traversal seams) + sim-truth
   interactable-adjacency suite (384/485 entities, 32 maps; beyond
   Hedault ZERO adjacency defects). Findings → **#429 orphan drain**
   (kindle, frost_touch, 3 item orphans, 1 dead node, GH#142 bead root
   cause).
-- **#423** (PR #428): Hedault's indoor Enchanter shop off the
-  boulevard (22,1) + work room; **[Pick Lock] debut** (rogue L2, one
-  data-only door_when+requires_skill prop; pick OR the rogue-free
+- **#423** (PR #428): Hedault indoor Enchanter shop off boulevard (22,1) +
+  work room; **[Pick Lock] debut** (rogue L2, one data-only
+  door_when+requires_skill prop; pick OR rogue-free
   setting_commissioned trust beat; contents identical). Review caught
-  the lane re-shipping the issue's own defect class (C1 unreachable
-  card prop — fixed, flood-fill-proven) + a false present_when
-  rationale (AGENTS.md stale clause SUPERSEDED) + a landmark
-  self-ruling (REVERSED, registry byte-identical to base).
+  lane re-shipping issue own defect class (C1 unreachable card prop —
+  fixed, flood-fill-proven) + false present_when rationale (AGENTS.md
+  stale clause SUPERSEDED) + landmark self-ruling (REVERSED, registry
+  byte-identical to base).
 - **Close bar:** composed main preflight --full ALL GREEN; steel-thread
-  WINDOWED PASS seed 9 (63 plates, shop plate 06bb); first
-  stale-waiver forced retirement fired in CI on the merge commit and
-  was retired ON the branch (skill fold shipped). Worktrees/branches
-  cleaned.
+  WINDOWED PASS seed 9 (63 plates, shop plate 06bb); first stale-waiver
+  forced retirement fired in CI on merge commit, retired ON branch
+  (skill fold shipped). Worktrees/branches cleaned.
 - **USER-HELD:** GH#142 wardstone-bead yield (balance call, in #429);
   [Pick Lock] bespoke icon + work-room door sprite + shop-dressing
-  eye-calls (VISUAL-LOG 2026-08-10 block). All wave work is on main
-  UNRELEASED — rides the next tag with [Rope Arrow].
+  eye-calls (VISUAL-LOG 2026-08-10 block). All wave work on main
+  UNRELEASED — rides next tag with [Rope Arrow].
 
 ## DONE (2026-08-05): anti-duplication gate LIVE (PR #395, unmerged)
 
 `check_prose_duplication` in data_lint HARD-FAILS: (a) any prose string
->20 chars duplicated in the dialogue corpus or maps talk corpus, (b) any
-raw copy of an already-banked line ("use the @ref"). Both failure modes
+>20 chars duplicated in dialogue corpus or maps talk corpus, (b) any
+raw copy of already-banked line ("use the @ref"). Both failure modes
 probe-verified. Bank plumbing it flushed out, all shipped in e9aea87c:
 - `data/maps/_shared_talk.json` — CROSS-map talk bank file (7 banks);
   `WISceneCatalog._expand_talk_banks` falls back local -> shared
-  (shadowing a shared name = lint error). Python mirror + lint resolve
+  (shadowing shared name = lint error). Python mirror + lint resolve
   identically.
-- Splice hazard ruled: a solo line matching one MEMBER of a multi-line
-  bank cannot ref-swap (ref splices the whole bank) — split the member
-  into its own 1-line bank (street.json krshia_corusdeer precedent).
+- Splice hazard ruled: solo line matching one MEMBER of multi-line bank
+  cannot ref-swap (ref splices whole bank) — split member into own
+  1-line bank (street.json krshia_corusdeer precedent).
 - Dict-form text_variants expansion hole fixed (WIDialogueBanks +
   wi_data_lib); ksmvr_plates/selys_delivery stragglers banked.
 - Voice gate maps mode walks _shared_talk banks as prose; BOTH baselines
   re-frozen (repo-root docs/dialogue-voice/{baseline,baseline-maps} —
-  NOT wandering_inn_game/docs, easy to snapshot to the wrong place).
+  NOT wandering_inn_game/docs, easy to snapshot to wrong place).
 - test_sim_core ack-precedence rows now come from compose(), not raw
   disk (raw rows carry @refs post-migration).
 Proofs: both corpora byte-identical through expansion vs pre-migration
 baselines; 33 unit suites PASS; sweep 207/207; leak_check clean.
 
-**PR #395 note:** another session's Riverfarm spec/plan commits
-(c14efafb, 9044b9d0, 9554a334) were local-only on this branch and rode
-along with the push. They are spec/plan docs only.
+**PR #395 note:** another session Riverfarm spec/plan commits
+(c14efafb, 9044b9d0, 9554a334) were local-only on this branch, rode
+along with push. Spec/plan docs only.
 
 ## DONE (2026-08-06): the 390/396/397 execution session (Fable)
 
 Three issues executed across ~4 usage windows, ~50 Opus lanes/reviewers,
-every lane adversarially reviewed + fix-waved. Full per-issue narrative
-in the merged PR bodies; rulings in CHOICE-LOG (entries 1-23) +
+every lane adversarially reviewed + fix-waved. Per-issue narrative in
+merged PR bodies; rulings in CHOICE-LOG (entries 1-23) +
 docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md.
 
 - **#390 CLOSED** (PR #399): Wilovan combat set + Tier 2/3 drain;
@@ -82,34 +95,34 @@ docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md.
   registry, machine playtest 6/6, playtest states at
   qa/playtest_saves/2026-08-06-396-riverfarm/. Four new VISUAL-LOG rows
   carried (legend-band occlusion etc. — need route re-derivation).
-- **#397 OPEN, PR #402 landed the corpus pass** (NOT closing): Phases
-  0-4 complete + riverfarm; all engineering criteria green (sweep
-  207/207, units 33/33, voice gates CLEAN, 29 keeps, advisory metrics).
+- **#397 OPEN, PR #402 landed corpus pass** (NOT closing): Phases 0-4
+  complete + riverfarm; all engineering criteria green (sweep 207/207,
+  units 33/33, voice gates CLEAN, 29 keeps, advisory metrics).
   **Phase 5 blind read: EXIT NOT MET** — two independent readers put
   revised prose at 45/52 vs untouched control 53 (original audit scale:
-  85); the surviving engine is closer-templates + over-interpreted
-  objects in the MAP register. ROUND-2 DECISION IS THE USER'S:
+  85); surviving engine is closer-templates + over-interpreted objects
+  in MAP register. ROUND-2 DECISION IS USER'S:
   docs/prose-naturalization/phase5/phase5-reconciliation.md (rec:
   map-register-only re-authorship under zero-inference scenery default).
 
 ## DONE (2026-08-07): #398 CLOSED — skill-gated pocket areas, wave 1 (PR #405, 289d05e5)
 
-Five pockets shipped, each teaching one field skill through a
-gate → payoff loop. Full narrative in the PR body; rulings in
-CHOICE-LOG's 2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
+Five pockets shipped, each teaching one field skill through
+gate → payoff loop. Narrative in PR body; rulings in CHOICE-LOG
+2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
 - Descriptive `skill_gates` registry + 5 data_lint arms; two-mode rule
-  lint-enforced, QA walk legs stay the reachability authority
-  (negative legs WALK and assert player_blocked — never teleport).
-- cuts WEAPON-GATED at the field seam (one predicate, three call
-  sites); 10-slot armed bar ACCEPTED (windowed fit proof paid).
-- Per-target counter overrides (counter_from/counter_key) kill the
+  lint-enforced, QA walk legs stay reachability authority (negative legs
+  WALK and assert player_blocked — never teleport).
+- cuts WEAPON-GATED at field seam (one predicate, three call sites);
+  10-slot armed bar ACCEPTED (windowed fit proof paid).
+- Per-target counter overrides (counter_from/counter_key) kill
   cross-map counter-leak class; on_skill_use.accomplishment widened
   String|Array; RETIRED_ACCOMPLISHMENTS + staged_target_properties.
-- Machine playtest headline: crate atlas region was a mis-sliced
-  sliver GAME-WIDE; bar_counter + stool drew NOTHING (invisible inn
-  furniture); barrel was a pot. All four fixed by measurement,
-  eye-read + windowed, combat-board regression clean (also closed the
-  carried forge_hall cover row).
+- Machine playtest headline: crate atlas region was mis-sliced sliver
+  GAME-WIDE; bar_counter + stool drew NOTHING (invisible inn
+  furniture); barrel was a pot. All four fixed by measurement, eye-read
+  + windowed, combat-board regression clean (also closed carried
+  forge_hall cover row).
 - Process: five Codex lanes → five DO-NOT-MERGE reviews (each a
   different structural hole) → Opus fix waves. Division held. Doctrine
   fold (failure mode 6: STOP-suppression two-strikes) shipped to main
@@ -120,16 +133,16 @@ CHOICE-LOG's 2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
   230/230, voice gates CLEAN, verify-untouched 0, census 14.97%.
 - Follow-ups filed: #403 (wave-2 riverfarm pockets, now unblocked),
   #404 (lockpick canon-ACK). Playtest P2/P3 art rows in VISUAL-LOG.
-- Known cosmetic: "Docs drift" advisory check reds on the 398 plan
-  lacking a DONE/ACTIVE header — checker/format disagreement, needs a
-  one-line checker or plan-template fix, NOT a real drift.
+- Known cosmetic: "Docs drift" advisory check reds on 398 plan lacking
+  DONE/ACTIVE header — checker/format disagreement, needs one-line
+  checker or plan-template fix, NOT real drift.
 
 ## DONE (2026-08-10): LOW-USAGE BATCH CLOSED — all six issues shipped
 
 #400/#403/#404/#412/#413/#414 all CLOSED (PRs #415/#416/#418/#419/#420/
 #422, each 7/7 checks + adversarial review + fix wave; per-issue record
-in the PR bodies). Composed main: import pass + preflight --full ALL
-GREEN + steel-thread WINDOWED PASS (62-shot album at
+in PR bodies). Composed main: import pass + preflight --full ALL GREEN +
+steel-thread WINDOWED PASS (62-shot album at
 wandering_inn_game/qa_output/steel_thread/, 19 maps, Dangersense
 overlay visible live). Follow-ups filed: #417, #421. VISUAL-LOG
 drained; skills folded (blast-radius, created-state negative legs,
@@ -141,8 +154,8 @@ toast, VISUAL-LOG rows); #423 Hedault shop + #424 orphan lint filed.
 **Batch-review verdicts (user, 2026-08-10):** parlor music PASSED ·
 pond twins FINE · Coyle sign reads well (crate toast fixed pre-tag) ·
 grimalkin → VISUAL-LOG follow-up row. **USER-HELD: none** — [Rope Work] resolved 2026-08-10 as [Rope Arrow]
-(user overruled the spoiler block, CHOICE-LOG 27; on main post-v0.19.0,
-rides the next tag).
+(user overruled spoiler block, CHOICE-LOG 27; on main post-v0.19.0,
+rides next tag).
 **Watch line:** `wandering_inn_game/qa/run_qa.sh steel_thread windowed
 --seed=9` (~5 min headless-measured + settle; 62 scenes).
 
@@ -156,8 +169,8 @@ PRs; game-tree parity verified per lane. #404 closed earlier
 **IN FLIGHT:** PR #418 (lane C freeze pocket, partial #403) — CI-red
 fixes pushed (ferry-tally effect-text pin + QA-notes regen, 84d7dd8e),
 checks watch armed, merge on green. Lane D #413 Dangersense LIVE on
-Codex (worktree /Users/gabriel/wi-lane-d, branched POST-merge so it
-has the 412 pool + #400 world.gd; brief + report land on disk).
+Codex (worktree /Users/gabriel/wi-lane-d, branched POST-merge so it has
+412 pool + #400 world.gd; brief + report land on disk).
 **NEXT:** briar pocket lane (witch_hollow, closes #403) dispatches
 after #418 merges (shared items.json/manifest appends). Then close:
 composed re-gates + preflight --full + steel-thread WINDOWED run (the
@@ -170,16 +183,16 @@ read).
 Plan: docs/superpowers/plans/2026-08-09-low-usage-batch-400-403-404-412-413-414.md
 (#406 PARKED per user ruling). Checkpoint tag **v0.19.0 stored LOCAL at
 ffd0f960** (pre-batch head, deliberately NOT pushed — push triggers
-deploy; user overwrites it if the batch lands in-window).
+deploy; user overwrites it if batch lands in-window).
 - **Phase 0 SIGNED (user, same day — CHOICE-LOG 22-24):** #412 table +
   cut-mode **Option A** ([Basic Swordwork] gains field+cuts, both
   strikes retract field), [Basic Repair]→helper L2, #413 rogue L4 +
   passive APPROVED, #404 name ruled **[Pick Lock]** (ACTIVE skill,
-  user's name) — **#404 CLOSED**. Key facts: dangersense already exists
+  user name) — **#404 CLOSED**. Key facts: dangersense already exists
   (combat ctx) + warrior L5 already grants it; no attested lockpick
-  skill ≤ Book 17 on the wiki.
+  skill ≤ Book 17 on wiki.
 - **Lane A #414 DONE through review + fix wave: PR #415 OPEN** ([ci-full]
-  head 5c39e50c). Merges with the close train. Windowed run + album =
+  head 5c39e50c). Merges with close train. Windowed run + album =
   batch-close eye-read (controller-owned).
 - **412-apply RUNNING (Codex session 019fe906-c300-7933-84d8-581e17271734,
   worktree /Users/gabriel/wi-lane-412):** three STOPs adjudicated
@@ -194,24 +207,24 @@ deploy; user overwrites it if the batch lands in-window).
   reds: test_save_rename/test_settings user:// writes — RERUN
   CONTROLLER-SIDE before merge); three can-fail proofs incl. spear
   combat isolation. REVIEW FOCUS: field_weapon gate trace in
-  wi_game.gd, fixture diff vs HEAD (must be zero), and the lane ALSO
+  wi_game.gd, fixture diff vs HEAD (must be zero), and lane ALSO
   edited qa/manifest.json + work_loop.json + wrong_order_loop.json —
-  beyond my enumeration, allowed by the standing rail, VERIFY their
-  disposition rows in the report before trusting. MERGE ORDER: this
-  lane FIRST, then witch_hollow briar pocket (deferred #403 half) +
-  lane D (#413) dispatchable.
+  beyond my enumeration, allowed by standing rail, VERIFY their
+  disposition rows in report before trusting. MERGE ORDER: this lane
+  FIRST, then witch_hollow briar pocket (deferred #403 half) + lane D
+  (#413) dispatchable.
 - **Lane B #400 implementation COMPLETE (uncommitted in
   /Users/gabriel/wi-lane-b):** 9-file diff + new test_world_visuals.gd.
   Full 12-criterion report received; unmet items = sandbox CA-cert
   wrapper only (87/87 --touching, 14/14 smoke, all canonicals green on
-  gameplay results). Adversarial reviewer (Opus) RUNNING on the
-  worktree — do NOT commit the worktree until it returns (its git-diff
-  reads depend on the uncommitted state). After review: fix wave if
-  needed, WIP/final commit, controller windowed crops at the report's
-  rectangles (pallass_market [0,0,26,11]+[16,1,5,6], pallass_forge
-  [0,0,26,11], forge_hall [0,0,12,9], inn_upstairs [7,1,4,6]),
-  screenshot target inn_walkthrough/02_erin_dialogue (player (7,3)
-  facing up, Erin (7,2) facing down), then PR.
+  gameplay results). Adversarial reviewer (Opus) RUNNING on worktree —
+  do NOT commit worktree until it returns (its git-diff reads depend on
+  uncommitted state). After review: fix wave if needed, WIP/final
+  commit, controller windowed crops at report rectangles (pallass_market
+  [0,0,26,11]+[16,1,5,6], pallass_forge [0,0,26,11], forge_hall
+  [0,0,12,9], inn_upstairs [7,1,4,6]), screenshot target
+  inn_walkthrough/02_erin_dialogue (player (7,3) facing up, Erin (7,2)
+  facing down), then PR.
   **REVIEW LANDED (during quiesce): sub-tasks 1-2 sound, sub-task 3
   REFUTED** (C1: 8px total vs ~14px overlap; C2: facing predicate
   misses 41/62 NPCs — facing is static data). FIX WAVE 1 adjudicated +
@@ -220,25 +233,25 @@ deploy; user overwrites it if the batch lands in-window).
   construction (root-cause); mercantile_alleys night triple darkened;
   behavioral test pins; lint divisor floor; M4 grimalkin two-palette
   continuity = USER CALL at close (VISUAL-LOG-worthy). Report lands at
-  wi-lane-b/LANE-REPORT-FIX1.md. Full review text in this session's
+  wi-lane-b/LANE-REPORT-FIX1.md. Full review text in this session
   transcript; verdict summary: all gates green, findings were
   gate-invisible.
   **FIX WAVE 1 LANDED + WIP-COMMITTED 4fec8fa8 (pushed,
   issue/400-carried-rows).** All fixes in, gameplay gates green (CA
   wrapper artifact only). REMAINING for lane B close: controller
   windowed crops (rectangles above) + Erin dialogue-separation
-  screenshot + PR with [ci-full]. Note from fix report: the call-order
-  RED was superseded by the construction-time root fix (call order no
-  longer load-bearing) — accepted reasoning, spot-check the behavioral
-  assert at review of the PR.
+  screenshot + PR with [ci-full]. Note from fix report: call-order RED
+  was superseded by construction-time root fix (call order no longer
+  load-bearing) — accepted reasoning, spot-check behavioral assert at
+  review of PR.
 - **Lane C #403 PARTIAL dispatched during quiesce (user-sanctioned,
   Codex budget):** worktree /Users/gabriel/wi-lane-c (branch
   issue/403-riverfarm-pockets), FREEZE-BEAT POCKET ONLY — witch_hollow
   briar pocket DEFERRED (cut mode depends on 412 landing). Brief at
   LANE-BRIEF.md there; report lands on disk at
   /Users/gabriel/wi-lane-c/LANE-REPORT.md (self-contained, no live
-  orchestrator needed). Lane D still parked: world.gd is held
-  uncommitted by lane B.
+  orchestrator needed). Lane D still parked: world.gd held uncommitted
+  by lane B.
   **LANDED + WIP-COMMITTED 68956ed7 (pushed):** freeze pocket
   (riverfarm_village + items.json + 2 new fixtures + 3 QA legs
   islet_freeze/islet_blink/islet_negative, seed 9). 98/98 selective
@@ -257,14 +270,14 @@ deploy; user overwrites it if the batch lands in-window).
   steel-thread in worktree /Users/gabriel/wi-lane-a (branch
   issue/414-steel-thread); Lane B #400 carried rows in
   /Users/gabriel/wi-lane-b (issue/400-carried-rows). Briefs at each
-  worktree's LANE-BRIEF.md; asset overlay copied (185 payloads each).
+  worktree LANE-BRIEF.md; asset overlay copied (185 payloads each).
   Codex does NOT commit — controller commits/reviews/merges. NEXT on
   lane return: adversarial review per lane (method hints in briefs),
   fix wave, PR per issue, [ci-full] on final head.
 - **Phase 2 (blocked on packet sign-off):** 412-apply merges FIRST,
   then #403 pockets ∥ #413 Dangersense (anchored-append).
 - **Close:** merge train + preflight --full + steel-thread WINDOWED run
-  (the batch's single composed eye-read) + VISUAL-LOG drain for #400.
+  (batch single composed eye-read) + VISUAL-LOG drain for #400.
 
 ## superseded RUNNING block (2026-08-08 night): #411/#409/#408 — ALL LANDED (see DONE 2026-08-09 below)
 User overrode CAUTION ("Usage good. Proceed"); guard hit WINDDOWN at
@@ -307,26 +320,26 @@ class folds in; user-held decisions: v0.19.0 tag, [Rope Work], #404).
 
 ## DONE (2026-08-09): #408/#409/#411 CLOSED + census gate removed
 Art wave (4-frame identity-held idles, prop variety, biome-layer arena
-fix) + dual-grid shoreline (terrain-neutral generated sheet with a
+fix) + dual-grid shoreline (terrain-neutral generated sheet with
 polarity-proving sheet pin; sewers un-no-op'd) + pre-existing HIGH
 ice-sink fix (freeze->leave->return probe proves it) all MERGED
 (3832558f, fb4147d2) and pushed; composed bar sweep 230/230, units 0
 reds; composed pond capture = banked water, island, crab, NO box.
-ROOT-CAUSE ruling (user): the pond cache sprite was deleted outright —
-the fiction hides it (invisible + hide_sprite; renderer trap:
+ROOT-CAUSE ruling (user): pond cache sprite deleted outright —
+fiction hides it (invisible + hide_sprite; renderer trap:
 invisible:true is lint-only). Census gate REMOVED entirely (user
-ruling; comment_census.py is informational only). Deviation on record:
-both lanes merged direct to main during a stale-hook untangle instead
+ruling; comment_census.py informational only). Deviation on record:
+both lanes merged direct to main during stale-hook untangle instead
 of PR flow — fully gated, issues closed with evidence comments; do not
 repeat. Holdout gates re-greened via TWO proper exclusions (code ∩
-artifact): the r4 deletion re-index + the user-ordered coin-line fix
-(first attempt migrated the pin id — WRONG, ids key the frozen
-inventory; lesson in the commit + skill fold).
+artifact): r4 deletion re-index + user-ordered coin-line fix
+(first attempt migrated pin id — WRONG, ids key frozen
+inventory; lesson in commit + skill fold).
 
 ## NEXT UP: low-usage batch #400/#403/#404/#412/#413/#414 (planned 2026-08-09)
 **#406 PARKED per user ruling 2026-08-09** — out of scope; its old
 NEXT-UP sequence (fresh-holdout draw with inverted eligibility etc.)
-lives in the issue body + this file's git history; resume from there
+lives in issue body + this file git history; resume from there
 whenever unparked. Note on issue: holdout count stale by two sanctioned
 exclusions.
 Plan: docs/superpowers/plans/2026-08-09-low-usage-batch-400-403-404-412-413-414.md.
@@ -336,65 +349,65 @@ Phase 1 (user-independent, parallel): Lane A #414 steel-thread script,
 Lane B #400 carried rows. Phase 2 (post sign-off): 412-apply merges
 FIRST, then #403 pockets ∥ #413 Dangersense (anchored rows). Close:
 composed train + preflight --full + ONE steel-thread windowed run as
-the batch's composed eye-read. Implementation Opus/Codex (re-check
-Codex window — read EMPTY 2026-08-08); Fable = packet + adjudication.
-Triage 2026-08-09: #403 comment adds the sequence-after-#412 gate;
-#412 body's #TBD ref fixed to #413.
+batch composed eye-read. Implementation Opus/Codex (re-check Codex
+window — read EMPTY 2026-08-08); Fable = packet + adjudication.
+Triage 2026-08-09: #403 comment adds sequence-after-#412 gate; #412
+body #TBD ref fixed to #413.
 
 ## DONE (2026-08-08): #397 CLOSED — prose naturalization, round 2 (PR #407, 40ec63ef)
 
-The issue that failed its own exit read in round 1 now PASSES it. Full
-narrative in the PR body; 21 rulings in CHOICE-LOG; read evidence in
+Issue that failed its own exit read in round 1 now PASSES it. Narrative
+in PR body; 21 rulings in CHOICE-LOG; read evidence in
 docs/prose-naturalization/round2-read/{adjudication.md,results.json}.
 
 **Exit read (the gate):** two fresh context-free readers, ONE shuffled
-234-row packet (120 revised rows -- the same ids Phase 5 scored -- plus
+234-row packet (120 revised rows -- same ids Phase 5 scored -- plus
 114 untouched holdout rows as control, no role signal). Revised 39.4 /
 39.2 mean (34.0 median both); control 63.6 / 61.6; margin +24.2 / +22.4
-against a bar of >=10. Two opposite framings agreed within 0.2 points.
+against bar of >=10. Two opposite framings agreed within 0.2 points.
 
 **The adjudication worth knowing:** both readers named a surviving
-engine (the "withheld-agent closer"), which reads as a FAIL. The key
-showed its core specimens were 15/15 CONTROL rows, and the hostile
-reader's own counter-case -- rows it could NOT reconcile with the engine
--- was 9/9 REVISED. The engine is real and lives entirely in prose the
-pass was never allowed to touch. Ruled MET with the letter-vs-purpose
-discrepancy recorded, not resolved silently.
+engine (the "withheld-agent closer"), which reads as FAIL. Key showed
+its core specimens were 15/15 CONTROL rows, and hostile reader own
+counter-case -- rows it could NOT reconcile with the engine -- was 9/9
+REVISED. Engine is real and lives entirely in prose the pass was never
+allowed to touch. Ruled MET with letter-vs-purpose discrepancy
+recorded, not resolved silently.
 
 **NOT met, surfaced not buried:** criterion 9 ending-shape variety
-(`fact` endings 60-62% vs a ~35% ceiling) -- a direct consequence of the
-zero-inference default. Both readers, asked directly, said the corpus
-does NOT read uniformly plain. Folded into #406 rather than chased,
-because chasing it means re-adding the inference the pass removes.
+(`fact` endings 60-62% vs ~35% ceiling) -- direct consequence of
+zero-inference default. Both readers, asked directly, said corpus does
+NOT read uniformly plain. Folded into #406 rather than chased, because
+chasing it means re-adding the inference the pass removes.
 
 **Shape of the work:** 188-row mechanically frozen worklist; 6 writing
 lanes -> 6 adversarial reviews (2 Critical, both lane-authored physical
-contradictions) -> 6 fix waves; then a CONTROLLER-ORDERED cadence
+contradictions) -> 6 fix waves; then CONTROLLER-ORDERED cadence
 rebalance when composed measurement showed the pass had traded the
-button-closer engine for a two-sentence fact-stop cadence (60.1% ->
-73.4%; rebalanced to 39.9%, largest single shape now BELOW the original
-corpus at 43.6%); then a 5-dimension whole-branch review (18 findings
+button-closer engine for two-sentence fact-stop cadence (60.1% ->
+73.4%; rebalanced to 39.9%, largest single shape now BELOW original
+corpus at 43.6%); then 5-dimension whole-branch review (18 findings
 raised, 13 refuted, 5 confirmed -- 3 of them controller errors,
-including a HOLDOUT VIOLATION where a mop-up edited a frozen control
-string because verify-untouched ran before the edit and not after).
+including HOLDOUT VIOLATION where mop-up edited frozen control string
+because verify-untouched ran before the edit and not after).
 
 **Composed bar at merge:** sweep ALL 230 green no grep hits, units 0
 reds, data_lint / verify-untouched / extract_prose self-test rc=0 (was
 4 FAILURES), both voice gates CLEAN, census within ceiling, all seven
-CI checks green including the docs-drift check that had been red all
-session. Row accounting exact: 186 changed + the 2 deliberately frozen
-+ 6 individually ruled off-worklist.
+CI checks green including docs-drift check that had been red all
+session. Row accounting exact: 186 changed + 2 deliberately frozen + 6
+individually ruled off-worklist.
 
-**Follow-up #406 FILED** (holdout release + residue drain): the holdout
-is now both spent as a control and the carrier of nearly all remaining
-engine, so it needs re-authoring behind a FRESHLY DRAWN control. Folds
-in the 8 named residue rows, the "Nothing there." template family, and
-the shape-variety work -- one pass, one fresh control, one read.
+**Follow-up #406 FILED** (holdout release + residue drain): holdout is
+now both spent as control and carrier of nearly all remaining engine,
+so needs re-authoring behind FRESHLY DRAWN control. Folds in 8 named
+residue rows, "Nothing there." template family, and shape-variety work
+-- one pass, one fresh control, one read.
 
 **Skill folds shipped:** dual failure-marker grep (assert-suites print
-`^PASS` with rc=0 while an assertion is broken), sweep-vs-QA_RESULT
+`^PASS` with rc=0 while assertion broken), sweep-vs-QA_RESULT
 discrimination + import-before-regate, gates-run-AFTER-every-edit-wave,
-never JSON-reserialize shipped data, `[ci-full]` on the FINAL head,
+never JSON-reserialize shipped data, `[ci-full]` on FINAL head,
 verify squashes by TREE not `git cherry`, one-shuffled-packet blind
 reads.
 
@@ -413,23 +426,22 @@ THEN per plan: per-lane adversarial review (method hints: grep diff
 for triad/button/trim scars; diff FIXTURES vs HEAD) → fix waves →
 anchored train issue/397-prose-naturalization-r2 → composed gates →
 Task 4 fresh two-reader blind read (bar: maps midpoint ≤45 AND ≥10
-under that reader's untouched control; both readers must find no
+under that reader untouched control; both readers must find no
 single surviving engine). Exit met → close PR; not met → STOP, user.
 Dialogue is SHIPPED — do not re-open Set A.
 
 ## 🧑‍⚖️ USER-HELD DECISIONS (all four still open)
 1. ~~#397 round 2~~ SHIPPED 2026-08-08 (PR #407, exit read passed).
-   **#406 (holdout release) needs a go/park call** — it is the natural
-   next prose slice and nothing else is queued behind it.
+   **#406 (holdout release) needs go/park call** — natural next prose
+   slice and nothing else queued behind it.
 2. **[Rope Work] ACK still pending** (pre-existing).
-3. **v0.19.0 tag re-cut + deploy** still user's call; this session
-   merged FOUR PRs to main unreleased per directive (#399, #401,
-   #402, #405).
+3. **v0.19.0 tag re-cut + deploy** still user call; this session merged
+   FOUR PRs to main unreleased per directive (#399, #401, #402, #405).
 4. **#404 lockpick canon-ACK** (wave-2 gate).
 
 ## QUEUE (updated 2026-08-09 — post-#397-close, retrospective tooling shipped)
 Tree CLEAN on main, all gates green (`scripts/preflight.sh` = ALL GREEN).
-Next sessions, in rough order (batch plan in NEXT UP block below):
+Next sessions, rough order (batch plan in NEXT UP block below):
 - **Phase 0: decision packet** (#412 table + #413 spec + #404 name) —
   Fable inline, no code, one user sitting.
 - **Phase 1: #414 steel-thread + #400 carried rows** — parallel lanes,
@@ -450,84 +462,84 @@ Next sessions, in rough order (batch plan in NEXT UP block below):
 
 ## DONE (2026-08-05): #388 map talk_pool voice pass — WHOLE CORPUS CLEAN
 
-The maps mode is live in `qa/scripts/dialogue_voice_gate.py` (`--maps`):
-walks talk_pool/talk_pool_stages lines, freezes pool SIZE AND ORDER in the
-skeleton (talk_pool_stages is last-match-wins, so a reorder is a behavior
+Maps mode live in `qa/scripts/dialogue_voice_gate.py` (`--maps`):
+walks talk_pool/talk_pool_stages lines, freezes pool SIZE AND ORDER in
+skeleton (talk_pool_stages is last-match-wins, so reorder is behavior
 change), attributes speakers by entity id. Baseline committed at
 `docs/dialogue-voice/baseline-maps/`; run
 `python3 qa/scripts/dialogue_voice_gate.py check --maps --baseline
 docs/dialogue-voice/baseline-maps` after ANY map-prose edit. MANUAL for now
-(not in ci_sweep pre-flight) — same rollout as the dialogue gate had.
+(not in ci_sweep pre-flight) — same rollout as dialogue gate had.
 
-The funded slice (street 97, inn 93, boulevard 33, parlor 23) got the full
-cold-read; the rump turned out to be 5 hard tells across 3 maps, fixed in
-the same pass — the whole 30-map corpus is CLEAN (anti=6 of 30 budget).
-The Zevara tell-6 closer the issue named is dead. Kept deliberately:
-Erin's Earth idioms (she is from Earth), Ratici's 'heretofore' malapropism,
-Pisces's staccato, Olesm's tricolon-as-tactician. The quiet gentleman's
-"..." line became "Mm." (a bark renders it; pure ellipsis is a hard tell).
+Funded slice (street 97, inn 93, boulevard 33, parlor 23) got full
+cold-read; rump turned out to be 5 hard tells across 3 maps, fixed in
+same pass — whole 30-map corpus CLEAN (anti=6 of 30 budget).
+Zevara tell-6 closer the issue named is dead. Kept deliberately:
+Erin Earth idioms (she is from Earth), Ratici 'heretofore' malapropism,
+Pisces staccato, Olesm tricolon-as-tactician. Quiet gentleman "..."
+line became "Mm." (bark renders it; pure ellipsis is hard tell).
 Pin-syncs: bed_nudge_loop, thread_lattice_loop, invrisil_walkthrough,
 invrisil_disagreement_talk, wilovan_address_f — all green; sweep 207/207.
 
 ## DONE (2026-08-05, second sitting): findings 16-21 resolved
 
-- **16** road_mothbears stood on the road all day as an invisible blocking
+- **16** road_mothbears stood on road all day as invisible blocking
   square ("come back at night"). present_when now phase-gates EXISTENCE
-  (safe since #392); by day the verge is genuinely empty.
-- **17** TWO y-sort fixes: the ice overlay's z_index=1 was canvas-GLOBAL and
-  drew the cap OVER a player standing on frozen water -> z=0 (windowed
-  proof: property_seams 03_standing_on_the_ice). The scree spill at 0.9
-  overhung its cell north and painted over the player -> 0.5 = exactly one
-  cell, zero overhang.
-- **18** rags_scouting_party no longer appears before the Erin gate
-  (present_when mirrors the encounter requires). She STAYS post-settle --
-  the farewell re-talk is canonical-pinned (rags_meeting_loop taught me
-  that; the first cut had an absent arm and broke 4 canonicals).
+  (safe since #392); by day verge is genuinely empty.
+- **17** TWO y-sort fixes: ice overlay z_index=1 was canvas-GLOBAL and
+  drew cap OVER player standing on frozen water -> z=0 (windowed proof:
+  property_seams 03_standing_on_the_ice). Scree spill at 0.9 overhung
+  its cell north and painted over player -> 0.5 = exactly one cell,
+  zero overhang.
+- **18** rags_scouting_party no longer appears before Erin gate
+  (present_when mirrors encounter requires). She STAYS post-settle --
+  farewell re-talk is canonical-pinned (rags_meeting_loop taught me
+  that; first cut had absent arm and broke 4 canonicals).
 - **19** phase glyph REMOVED (user verdict: environment says it), event +
-  pins excised; hotbar group now clamps clear of the input-hint ribbon
+  pins excised; hotbar group now clamps clear of input-hint ribbon
   (HINT_BAND_CLEARANCE, windowed proof at 9 slots).
-- **20** all six martial icons regenerated in the shipped flat bright
+- **20** all six martial icons regenerated in shipped flat bright
   single-object language (v1s were muddy 32px miniatures).
-- **21** guild_notice_wall reuses the request_board prop (its art read as a
+- **21** guild_notice_wall reuses request_board prop (its art read as
   giant scroll).
 
 Gates: data_lint OK, census RC=0, 33/33 units, ci_sweep ALL 207 green.
 
 ## DONE (2026-08-05): playtest fix wave — all 15 findings resolved (Fable)
 
-All 14 sitting findings + the prop-legibility directive (finding 15), fixed on
-`v0.19-wave-2`. Full detail in the two fix-wave commits; the short version:
+All 14 sitting findings + prop-legibility directive (finding 15), fixed on
+`v0.19-wave-2`. Detail in two fix-wave commits; short version:
 
-- **Engine was never broken.** Findings 1/5 were a CONTENT gap (pond had 1
-  freezable cell of ~23) plus an oversold brief. USER RULING now structural:
+- **Engine was never broken.** Findings 1/5 were CONTENT gap (pond had 1
+  freezable cell of ~23) plus oversold brief. USER RULING now structural:
   ALL water is freezable — loader derives `freezable` from `water: true`
   walls segments; data_lint holds tag⇔sheet lockstep; test_sim_core tripwire
-  freezes a never-hand-listed pond cell.
+  freezes never-hand-listed pond cell.
 - **Finding 3:** six icons generated + wired; data_lint.check_skill_icons
   hard-fails any field skill without one; KNOWN_ICONLESS_SKILLS shrank to
   combat-only.
 - **Findings 11/13 (the trap):** dialogue options measured by FONT METRICS at
-  real width (first-fit used to read ~2245px for a 4-option hub), panel caps
+  real width (first-fit used to read ~2245px for 4-option hub), panel caps
   at 684 + scrolling options region, cursor scrolls into view. Esc-escape
-  REFUSED (choices carry commit effects). d2_shop_shot repaired, runs at the
-  130% step where the trap lived, pins panel geometry, PROMOTED into the
-  sweep (207). The "huge empty toast" = the unbounded panel at 130%.
+  REFUSED (choices carry commit effects). d2_shop_shot repaired, runs at
+  130% step where trap lived, pins panel geometry, PROMOTED into sweep
+  (207). "Huge empty toast" = unbounded panel at 130%.
 - **Finding 6:** pause was CanvasLayer 1 under combat chrome — now layer 20,
   scrim 0.70. **Finding 9:** new MenuInk dark-ink variation for parchment
   menus (Menu stays cream for dark surfaces).
-- **Finding 2:** corusdeer wounded/dead were tints of the live sprite. The
-  bespoke carcass sprite EXISTED UNWIRED (another cross-lane handoff miss);
-  wired it; generated a lying wounded pose. Three states, three silhouettes.
-- **Finding 7:** the sodden-timber nook was EMPTY — now foreshadowed
+- **Finding 2:** corusdeer wounded/dead were tints of live sprite. Bespoke
+  carcass sprite EXISTED UNWIRED (another cross-lane handoff miss);
+  wired it; generated lying wounded pose. Three states, three silhouettes.
+- **Finding 7:** sodden-timber nook was EMPTY — now foreshadowed
   (observe glint), named (burn_toast), paid (6-gold strongbox, present_when
-  the burn counter), pinned in property_seams.
-- **Findings 4/15:** the chute was 9.6px pebbles; now a legible rubble spill
+  burn counter), pinned in property_seams.
+- **Findings 4/15:** chute was 9.6px pebbles; now legible rubble spill
   (Rocks.png cluster @0.9). NEW data_lint advisory: any map-referenced sprite
-  rendering under 10px flags (the "third of a tile" floor).
+  rendering under 10px flags ("third of a tile" floor).
 - **Finding 8:** defeat nudge lines reflavored (voice-bible register).
 - **Finding 12:** Pisces idle regenerated stiller. **Finding 13:** peddler
-  stopped wearing the hired_blade COMBATANT rig; identity + observe added.
-- **Finding 10:** NO CHANGE — canon Octavia Cotton is a dark-skinned
+  stopped wearing hired_blade COMBATANT rig; identity + observe added.
+- **Finding 10:** NO CHANGE — canon Octavia Cotton is dark-skinned
   Stitch-girl; profile entry added so regenerations hold it.
 - **Finding 14:** martial_field_armed +basic_cooking (loop re-pinned 8→9).
 
@@ -538,18 +550,18 @@ chute+icons, kitchen. PR #394 updated; v0.19.0 still LOCAL-ONLY.
 ## DONE (2026-08-04): v0.19 (wave-2) — "the world answers the hand" — SHIPPED
 
 **Tagged v0.19.0.** 19 of 20 issues closed; #348 stays open by design (its
-close condition is the K5 discovery playtest, below). #390 filed for the
-#385 Tier 2/3 art carry. v0.20 milestone now holds #371, #388, #390.
+close condition is K5 discovery playtest, below). #390 filed for #385
+Tier 2/3 art carry. v0.20 milestone now holds #371, #388, #390.
 
-Thesis: every verb the player aims at the world lands on something real and
+Thesis: every verb player aims at world lands on something real and
 visibly resolves. Built forward (property layer #387, martial verbs
-#380-#383, feedback tells #335) and repaired backward (the eight blind-
-playtest findings #372-#379, each the same defect stated differently).
+#380-#383, feedback tells #335) and repaired backward (eight blind-
+playtest findings #372-#379, each same defect stated differently).
 
 Planning: two Fable passes (spec audit of all 22 issues + holistic shape),
 reconciled in `docs/superpowers/plans/2026-08-04-v019-wave2-plan.md`. Each
-issue carries its audit as a GitHub comment; **where audit and issue body
-disagree, the audit wins.** 14 rulings in the CHOICE-LOG close block.
+issue carries its audit as GitHub comment; **where audit and issue body
+disagree, audit wins.** 14 rulings in CHOICE-LOG close block.
 
 **Structure that worked: phase 0 landed EVERY `src/core` edit first**, in two
 disjoint worktrees, so phase 1 could fan six lanes wide over pure
@@ -557,36 +569,36 @@ data/copy/UI/art. Eight lane merges, ZERO conflicts. Repeat this shape.
 
 **Structure that leaked: cross-lane handoffs.** Three defects were each a
 handoff where both lanes did their own half correctly and nobody closed the
-seam — the ice tile shipped dead (L4 made it, L5 owned the wiring), the
-kitchen tint survived (L3 held it for L4's sprites, which landed), and
-`journal_categories` went unpinned when L2's data changed a script L5 owned.
-The train caught all three, by luck as much as design. **Next wave: name the
+seam — ice tile shipped dead (L4 made it, L5 owned wiring), kitchen tint
+survived (L3 held it for L4 sprites, which landed), and
+`journal_categories` went unpinned when L2 data changed a script L5 owned.
+Train caught all three, by luck as much as design. **Next wave: name the
 counterpart lane in each brief and make handoff-closure an explicit train
 step.**
 
 **Dual adversarial review is load-bearing, not ceremony.** Lanes reported
 fully green (33/33 units, 205/205 canonicals) and reviewers still found: a
 `state_set` that was not actually permanent (its one-way guard read
-`entity_first_use`, which `sleep()` clears, so an already-set carrier replayed
+`entity_first_use`, which `sleep()` clears, so already-set carrier replayed
 first-time copy and re-banked a SAVE-PERSISTED counter once per sleep,
 unbounded); a `thaw_cell` leaving ice painted over open water; a ward grace
-that overwrote a player's paid-for [Hearthward] charm; consolidation going
-mouse-dead at 5+ field slots; and the Serve `source_hint` clipping at both
+that overwrote player paid-for [Hearthward] charm; consolidation going
+mouse-dead at 5+ field slots; and Serve `source_hint` clipping at both
 accessibility text scales. **Every BLOCK came from a different lens** — single-
 lens review would have missed one.
 
 **Open for you:**
-1. **[Rope Work]** — the invented name is the one item still wanting an ACK.
-   Pinned by id, so a rename is a one-string diff.
+1. **[Rope Work]** — invented name is one item still wanting ACK.
+   Pinned by id, so rename is one-string diff.
 2. **PixelLab top-up** — $1.53 and 0 subscription generations. Six bespoke rig
-   rows are carried unfunded (#390). Money is yours to decide.
-3. **K5 discovery playtest** — the post-tag event that closes #348 and decides
-   slice 3. A stranger plays; the question is whether they FIND the property
+   rows carried unfunded (#390). Money is yours to decide.
+3. **K5 discovery playtest** — post-tag event that closes #348 and decides
+   slice 3. Stranger plays; question is whether they FIND the property
    layer without being told.
 4. Standing: [Perfect Reduction] fence-vs-grant, Raskghar ear-gate, #253.
 
 ## DONE (2026-08-04): dialogue voice pass — SHIPPED via `voice-pass` branch PR
-All 71 dialogue files de-AI'd per the 2026-08-03 critique. Six waves
+All 71 dialogue files de-AI'd per 2026-08-03 critique. Six waves
 (Fable bible/cards → 36-cluster rewrite → cold-reader detection →
 Fable reconciliation → fix wave → Fable terminal adjudication SHIP).
 Corpus: antithesis 62→2, typography tells 0, worst-lines dead, barks
@@ -625,66 +637,66 @@ one-party-at-a-time canonical groups), #372 (Floodplains
 tutorializing defeat text) from user playtest notes.
 
 ### Board hygiene (2026-08-04) — martial picks DECIDED, orphaned deferrals filed
-User directive: get the martial work on the board so it isn't lost.
-Found: the martial exploration [Skills] doc was tracked in NO issue —
+User directive: get martial work on board so it isn't lost.
+Found: martial exploration [Skills] doc tracked in NO issue —
 design doc + CHOICE-LOG rulings + morning-queue item only, invisible to
-`gh issue list`, and the largest unscheduled body of work on the project.
+`gh issue list`, and largest unscheduled body of work on project.
 Picks MADE under wave-autonomy (all revocable, rationale in CHOICE-LOG
 "2026-08-04 — board hygiene"): **#380** wave-1 = [Even Footing],
 [Greater Strength], [Broader Shoulders], [Durable Picks], [Bar Fighting]
-+ the [Ice Floor] grant (four data-only; Even Footing is one passive
-cell-class read; pairs with Ice Floor deliberately — mage makes the ice,
++ [Ice Floor] grant (four data-only; Even Footing is one passive
+cell-class read; pairs with Ice Floor deliberately — mage makes ice,
 martial crosses it). Split on distinct blockers: **#381** [Basic Repair]
 (needs #348 slice 2), **#382** [Rope Work] (INVENTED name, only item
-still wanting a user ACK), **#383** [Flame Jet]→corpse (four-part
-package; yield can't be a table row per spec §6). Tier C stays behind
+still wanting user ACK), **#383** [Flame Jet]→corpse (four-part
+package; yield can't be table row per spec §6). Tier C stays behind
 #335, unchanged. Closes v018-close rulings #8 and #9.
-**#384** files three v0.18-close items that were deferred "to the board"
-and never actually filed: #360 extreme-flip triage, ai_kit-stratified
+**#384** files three v0.18-close items deferred "to the board" and
+never actually filed: #360 extreme-flip triage, ai_kit-stratified
 parity envelope (until it exists there is NO class-balance gate, only
 monotonicity), W3 acts.json row.
-Morning-queue item 1 struck through — it no longer blocks.
-TRAP for anyone reading the martial doc: cite skills by NAME. Its `#N`
+Morning-queue item 1 struck through — no longer blocks.
+TRAP for anyone reading martial doc: cite skills by NAME. Its `#N`
 row numbers drift between its own sections AND read as GitHub issue refs
 without being them (doc "#19 [Detect Flaw]" is not GH#19). Only #348 and
 #335 in that doc are real issue numbers.
 PROCESS: "deferred to the board" is not a filing. Two waves produced six
-such items and zero issues. A close isn't done until every DEFERRED/board
-line in its adjudication block has an issue number beside it.
+such items and zero issues. Close isn't done until every DEFERRED/board
+line in its adjudication block has issue number beside it.
 
 ### Blind machine-playtest triage (2026-08-03) — #373-#379 filed, user takes next wave
 Four blind browser-agent reports (v0.16.1, 2026-08-02 + three legs
-2026-08-03). Every claim re-verified against HEAD before filing; the
-already-fixed and the agent-artifact halves were dropped, not filed.
-**#373 (blocker, S, successor-ready)** — combat's empty-target mode is
+2026-08-03). Every claim re-verified against HEAD before filing;
+already-fixed and agent-artifact halves dropped, not filed.
+**#373 (blocker, S, successor-ready)** — combat empty-target mode is
 sticky: `_input_target` (combat_screen.gd:1017-1032) swallows movement
-actions and `targeting_controller.enter()` never auto-cancels on an empty
-candidate list, so Attack-with-no-target parks the player in a modal state
+actions and `targeting_controller.enter()` never auto-cancels on empty
+candidate list, so Attack-with-no-target parks player in modal state
 that eats every key but Esc. ONE bug behind both reported symptoms
 ("movement fails silently" + "no target in reach"); ~8 repros across three
-sessions; the agent's zone-of-control theory is wrong.
+sessions; agent zone-of-control theory is wrong.
 **#374 (bug, S, successor-ready — REWRITTEN 2026-08-03 on user ruling)** —
-the ambush gating Liscor is INTENDED; the original gate-geometry framing
+ambush gating Liscor is INTENDED; original gate-geometry framing
 was wrong and is withdrawn. Real defect: Continue-after-Defeat restores
-the `auto_pre_combat` slot written at COMBAT_STARTED (game.gd:82-86 →
-combat_screen.gd:946), which is BY CONSTRUCTION a cell inside the
-encounter's trigger radius — so the next step re-fires the fight you just
-lost. Also explains the "respawn moves between deaths" report (the slot is
+`auto_pre_combat` slot written at COMBAT_STARTED (game.gd:82-86 →
+combat_screen.gd:946), which is BY CONSTRUCTION a cell inside
+encounter trigger radius — so next step re-fires fight you just
+lost. Also explains "respawn moves between deaths" report (slot is
 rewritten per fight; deterministic, but unnamed). Fix seam:
-`warded_encounters` (wi_game.gd:72, checked :368) gains an exit-clearing
+`warded_encounters` (wi_game.gd:72, checked :368) gains exit-clearing
 entry on defeat load — wake where you fell, encounter stays live, walking
-away works first try. Lands WITH #372 (copy half of the same beat).
+away works first try. Lands WITH #372 (copy half of same beat).
 **#375 (S)** —
-`inn_sign` at [6,6] blocks a third of the GH#185-widened facade; move to
-[5,6]. Carries a stale-comment one-liner (world.gd:148 claims
+`inn_sign` at [6,6] blocks third of GH#185-widened facade; move to
+[5,6]. Carries stale-comment one-liner (world.gd:148 claims
 clamped-follow is unexercised; floodplains 40x26 exercises it).
 **#376 (art)** — `your_bed` and `inn_chest` read as each other; BOTH
-playtests made the identical inversion, and v0.17's relc_spar toast now
+playtests made identical inversion, and v0.17 relc_spar toast now
 points at "bed" explicitly. Directive case: tint-is-not-disambiguation.
 **#377 (S)** — pause_menu builds no scrim; combat HP text bleeds through
 "Abandon to Last Save". **#378 (M)** — seven Serve options gate on
 `hot_meal`, whose only producer needs `basic_cooking`; same issue carries
-the three-cauldrons-one-silhouette tint debt the entity comment admits.
+three-cauldrons-one-silhouette tint debt the entity comment admits.
 **#379 (S, copy)** — Resonance is shipped/save-persisted/sleep-grown and
 explained nowhere; open question in all four reports.
 Already fixed, do NOT re-open: save-less Continue (greyed), sleep-is-the-verb
@@ -692,8 +704,8 @@ signposting (relc_spar toast), journal scroll (#216 slice 2), unlabelled
 creation cards (deliberate, hotfix #3), single-tile inn door (GH#185).
 Agent artifacts, discounted with evidence: missable toasts (`_toast_seconds`
 scales; 0.4s cap is QA-mode only), "attack only works orthogonally"
-(`is_adjacent` is Chebyshev, diagonals included), walked-off-screen past the
-map edge (camera clamp is correct; the agent admits it could not identify
+(`is_adjacent` is Chebyshev, diagonals included), walked-off-screen past
+map edge (camera clamp is correct; agent admits it could not identify
 its own sprite).
 
 ## Current state (2026-08-03, overnight session close — v0.17.0 SHIPPED, v0.18.0 closing)
@@ -702,19 +714,19 @@ its own sprite).
 flight (freeze 12 adds/0 removals, CHOICE-LOG 12-ruling block, focused
 playtest running, tag v0.18.0 per ruling #12).**
 v0.18 wave-1 content: #348 slice-1 substrate (proven byte-identical
-inert; ice-floor works as pure data; Flame-Jet corpse deferred to the
-skill-picks package), #347 prototype behind flag (demo state for the
+inert; ice-floor works as pure data; Flame-Jet corpse deferred to
+skill-picks package), #347 prototype behind flag (demo state for
 naming read), #318 nobility thread (Magnolia felt-never-seen,
-spec-first, "Five Families" REFUSED on spoiler grounds), the whole
+spec-first, "Five Families" REFUSED on spoiler grounds), whole
 playtest hotfix head + #359 looping clock (first waking byte-identical),
 Wave-D Alchemist+Druid (Priest parked) + rung-4 restored (4-step ladder
 0.92>0.84>0.69>0.61) + #360 harnesses (difficulty tiers monotone clean
-0/141; parity measured, envelope deliberately unratified on the ai_kit
+0/141; parity measured, envelope deliberately unratified on ai_kit
 confound).
 **MORNING QUEUE: wandering_inn_game/qa/playtest_saves/2026-08-03-v018-morning/README.md
 — one doc, six items, load lines included** (martial picks, [Perfect
 Reduction] fence-vs-grant, bestowal naming/rarity, moods eye-items,
-new classes in play, lease gate). Wave-2 shape follows the picks.
+new classes in play, lease gate). Wave-2 shape follows picks.
 Incidents this session (all gate-caught, all logged): core-purity seam
 reversal, hook-BLOCK-swallowed recurrence, import-rule x3 (now covers
 image assets + train pulls).
@@ -722,10 +734,10 @@ image assets + train pulls).
 Process lessons this session (fold candidates for wi-running-the-machine
 / wi-verifying-changes / wi-machine-playtest):
 1. Pre-commit hook BLOCK swallowed by `tail -1` — three commits
-   silently never happened; branch pushed a stale head. Read commit
+   silently never happened; branch pushed stale head. Read commit
    success from rc + `git log`, never hook chatter.
 2. Composed census ceiling bit AGAIN (15.0% exact, ~70 chars over
-   after merge): comment-trim is the cure; census slack belongs in the
+   after merge): comment-trim is cure; census slack belongs in
    pre-merge checklist for every content-heavy train.
 3. Canonical QA scripts FAIL under guessed seeds and under
    several-windowed-runs-in-one-loop: pinned seeds via ci_sweep/
@@ -741,13 +753,13 @@ Process lessons this session (fold candidates for wi-running-the-machine
 0. **If this session died mid-close:** close/v018 branch holds
    everything; resume: playtest verdict → close PR → checks-as-own-step
    → merge → tag v0.18.0 → Release/Pages watch → worktree cleanup.
-1. **MORNING QUEUE — the six-item README above.** Wave-2 dispatches
-   after the picks (skill package: martial picks + ice_floor + the
-   Flame-Jet corpse arm + [Perfect Reduction] ruling + bestowal
-   direction + remaining W4 debt incl. Pisces re-window).
+1. **MORNING QUEUE — six-item README above.** Wave-2 dispatches
+   after picks (skill package: martial picks + ice_floor + Flame-Jet
+   corpse arm + [Perfect Reduction] ruling + bestowal direction +
+   remaining W4 debt incl. Pisces re-window).
 2. Board: #348 open (slice 2+), #347 open (migration behind rulings),
    #360 open (flip-gate triage + stratified envelope), #359/#134/#318
-   close via the train PRs.
+   close via train PRs.
 3. **Riverfarm redesign SPEC'D, not implemented** (user rulings
    2026-08-05: Hunter-of-Noelictus confusion). Grew from surface swap to
    full redesign:
@@ -756,20 +768,20 @@ Process lessons this session (fold candidates for wi-running-the-machine
    character swap, ids frozen; (B) new quest `a_winter_of_teeth` replaces
    what_the_thicket_keeps (retired for new saves, legacy completable);
    (C) briar fights lose ally + solo sim re-gate, wolf-night ally stays;
-   (D) new Eloise quest `the_makings` wraps the [Hedge Witch] grant.
+   (D) new Eloise quest `the_makings` wraps [Hedge Witch] grant.
    Lanes + file ownership in spec. Issue #396 FILED. PLAN COMMITTED:
    docs/superpowers/plans/2026-08-05-riverfarm-redesign-396.md (12 tasks,
-   4 lanes, quests.json integrator-owned). DO NOT IMPLEMENT until the
+   4 lanes, quests.json integrator-owned). DO NOT IMPLEMENT until
    currently-active code session lands; then fresh branch off main
-   (issue/396-riverfarm-redesign), cherry-pick the spec/plan doc commits
-   if the #388 branch hasn't merged.
+   (issue/396-riverfarm-redesign), cherry-pick spec/plan doc commits
+   if #388 branch hasn't merged.
 
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)
 
-- **⭐ WAVE-2 EAR/EYE GATES (land with the wave close)**: (1) Raskghar
+- **⭐ WAVE-2 EAR/EYE GATES (land with wave close)**: (1) Raskghar
   fight music swap — profiled HydroGene winner wired, ear-gate state
-  ships; THIRD strike if it reads wrong, say the word and the runner-up
+  ships; THIRD strike if it reads wrong, say the word and runner-up
   wires (#200 history). (2) RESOLVED 2026-08-02: user reversed —
   Pisces IS a Horn (#349, v0.17); he still starts in Liscor
   independent. (3) Hero-art
@@ -779,34 +791,34 @@ Process lessons this session (fold candidates for wi-running-the-machine
 - **⭐ THE FULL SITTING — 14 states + 1 paper read, ~1hr** (v0.16 bundle +
   v0.15 carryover + organic Riverfarm run, ALL in
   qa/playtest_saves/2026-07-28-v016-bundle/README.md — one doc, load
-  lines included). Supersedes the separate v0.15 bundle entry below.
+  lines included). Supersedes separate v0.15 bundle entry below.
   Original v0.16 detail: (states
-  named in docs/VISUAL-LOG.md close section): (1) the goblin-ally fight —
-  the wave's marquee moment; does fighting BESIDE Rags land? (2) the
-  witch-hut door post-fix at dusk — readable enough, or does the hut want
-  bespoke art (it is currently a freestanding frame)? (3) the Lady's
-  three-node arc — does the nobility register read as intended? (4) den
-  shop warmth vs the tier's stone (the region's counterweight room). (5)
-  line_stalker pair overlap — creature or two-headed bug? (6) GOSSIP
-  LADDERS (adjudication ask, balance-bound): heard_gossip ceiling 39→48
-  while [Diplomat]/[Innkeeper] rungs stand still — recommend scaling
-  gossip rungs with the talkable census (or scoping the pace claim);
-  numbers in CHOICE-LOG close block. (7) quest payoff toasts (#325) —
-  ship the hotfix now or bundle to v0.17?
+  named in docs/VISUAL-LOG.md close section): (1) goblin-ally fight —
+  wave marquee moment; does fighting BESIDE Rags land? (2) witch-hut
+  door post-fix at dusk — readable enough, or does hut want bespoke art
+  (currently freestanding frame)? (3) Lady three-node arc — does
+  nobility register read as intended? (4) den shop warmth vs tier stone
+  (region counterweight room). (5) line_stalker pair overlap — creature
+  or two-headed bug? (6) GOSSIP LADDERS (adjudication ask,
+  balance-bound): heard_gossip ceiling 39→48 while
+  [Diplomat]/[Innkeeper] rungs stand still — recommend scaling gossip
+  rungs with talkable census (or scoping pace claim); numbers in
+  CHOICE-LOG close block. (7) quest payoff toasts (#325) — ship hotfix
+  now or bundle to v0.17?
 
 - **⭐ THE v0.15 PLAYTEST-STATE BUNDLE — six asks, one sitting.** Top of
-  docs/VISUAL-LOG.md's Open list, each with a prepared-state name and a
+  docs/VISUAL-LOG.md Open list, each with prepared-state name and
   load/do/judge line: (1) camouflage tints; (2) Ruin Warden at 3.51 cells;
-  (3) toast over an open journal; (4) `pallass_market`/`pallass_forge`
-  lights by day; (5) Grimalkin in the inn (measurement refuted the scale
-  claim — lever is seat or art); (6) the finale's paced lines (the one ask
+  (3) toast over open journal; (4) `pallass_market`/`pallass_forge`
+  lights by day; (5) Grimalkin in inn (measurement refuted scale
+  claim — lever is seat or art); (6) finale paced lines (one ask
   no agent can answer).
 - **#195 Ove Melaa audio listen** (~30 files) → wiring pass after.
 - **#211 challenge-weighted leveling FEEL** (shipped flag-on; knobs data).
 - **3 Rags reads** (b1 content: meeting/mercy/betrayal voice).
 - Standing visual asks: vault-fight windup overlay (brightened ~2.5x, no
   in-fight windowed read); rock-crab relc_downed band 0.62 vs infeasible
-  ~0.5 (frontier in the combatant _comment).
+  ~0.5 (frontier in combatant _comment).
 - Economy ledger pass someday: ~82g three-city travel spend (#65).
 - Lore-gated: #134 Wave-D classes, #141 [Acolyte]→[Priest].
 - User-deferred: #253 itch/mobile Import Save picker. Pre-existing flake:
@@ -825,13 +837,13 @@ wandering_inn_game/qa/ci_sweep.sh                                  # full canoni
 ```
 
 - Godot **4.7.stable** at `/usr/local/bin/godot`; 4.6.2 preserved at
-  `/Applications/Godot4.6.app` for the frozen v2 only.
-- PixelLab via the `pixellab` MCP server (pipeline + traps in
+  `/Applications/Godot4.6.app` for frozen v2 only.
+- PixelLab via `pixellab` MCP server (pipeline + traps in
   wi-art-and-sprites); ~$2.7 overage credits as of 2026-07-20.
 - Web QA deps installed (export templates 4.7, Playwright chromium,
   qa/web/node_modules). `potential_assets/` is gitignored — never
   commit it.
-- **Windowed-exit flake**: ~1/3 windowed runs print an ObjectDB leak
+- **Windowed-exit flake**: ~1/3 windowed runs print ObjectDB leak
   notice AFTER `QA_RESULT: PASS` (audio teardown race, pre-existing,
   never headless, results unaffected) — do not re-diagnose. Godot 4.7
   also rarely SIGABRTs at shutdown (cosmetic; if phantom FAILs appear
@@ -840,10 +852,10 @@ wandering_inn_game/qa/ci_sweep.sh                                  # full canoni
   (no mapfile; `${ARR[@]+"${ARR[@]}"}` for empty arrays under set -u);
   zsh does not word-split unquoted vars.
 
-*(Older narrative — closed milestones, the 2026-07 wave logs, and the
-numbered adjudication ledger through v0.13.0 — lives in this file's git
-history and the merged PR bodies; pre-2026-07-05 material in the frozen
-archive repo at docs/archive/HANDOFF-archive-2026-07.md.)*
+*(Older narrative — closed milestones, 2026-07 wave logs, numbered
+adjudication ledger through v0.13.0 — lives in this file git history
+and merged PR bodies; pre-2026-07-05 material in frozen archive repo at
+docs/archive/HANDOFF-archive-2026-07.md.)*
 
 ## RETROSPECTIVE TOOLING — DONE (built 2026-08-09)
 1. `scripts/preflight.sh` SHIPPED: data_lint + verify-untouched +
@@ -852,7 +864,7 @@ archive repo at docs/archive/HANDOFF-archive-2026-07.md.)*
    (dual grep discipline built in). Proven ALL GREEN on main. **Run at
    EVERY wave close** — folded into wi-verifying-changes.
 2. Pre-commit hook staleness self-check SHIPPED: warns (never blocks)
-   when the running hook differs from main's copy. Self-demonstrated on
+   when running hook differs from main copy. Self-demonstrated on
    its own first commit.
 3. Coyle & Sons sign emblem: PixelLab inpaint (crate+cartwheel → gold
    C&S monogram) — see VISUAL-LOG r5 row for verdict/state.
