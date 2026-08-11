@@ -1,0 +1,70 @@
+{
+ "_comment": "GH#429 fixture: near_hedault with the witch's wardstone bead carried in place of the fang, gold held at exactly 40 so the ledger runs 40 -> 0. Eloise sells the bead and this save already holds blight_lifted + riverfarm_attuned, so carrying one is a reachable position. Same landing cell (6,7) and the same five-move walk -- never boots adjacent to Hedault.",
+ "version": 6,
+ "state": {
+  "current_map": "enchanter_shop",
+  "player_cell": [
+   6,
+   7
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 10
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "won_combat": 1,
+   "melee_hit": 57,
+   "door_awakened": 1,
+   "catalyst_delivered": 1,
+   "invrisil_attuned": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "blight_lifted": 1,
+   "riverfarm_attuned": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "witch_wardstone_bead",
+   "invrisil_attunement_stone"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 1000,
+  "times_slept": 22,
+  "board_last_seen_times_slept": 22,
+  "gold": 40,
+  "rng_state": "4397686605447780332"
+ },
+ "_comment_lineage": "Counters/rng_state copied verbatim from near_hedault (see its own comment for the door-chain shape); no combat in this script, so no rng re-derivation."
+}

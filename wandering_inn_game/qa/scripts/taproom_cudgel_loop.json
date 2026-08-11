@@ -1,0 +1,33 @@
+{
+ "_comment": "GH#429 THE [Bar Fighting] YIELD, and the one-prop-two-arms proof. improvised_cudgel shipped with no source at all; the taproom table is the craft-bench seam that gives it one. `skill_uses` outranks `requires_skill`+`on_skill_use` for its OWN key only, so this run casts BOTH verbs at the same entity and pins both outcomes -- cudgel then chore. The bound is the #330 duplicate refusal, not a waking cap: a second [Bar Fighting] cast on a full pack refuses and banks nothing (`once_per_waking` is an ENTITY flag and would have capped the Helper chore curve too). Walks to the table; the fixture never boots adjacent.",
+ "fixture_save": "taproom_cudgel_start",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"_comment": "== THE WALK == (2,3) -> (2,4) -> east until the table's own cell refuses the step. A present entity blocks its own cell, so the bump both proves the table is there and leaves the PC facing it.", "action": "move", "direction": "down", "steps": 1},
+  {"action": "assert_state", "path": "player_cell", "equals": [2, 4]},
+  {"action": "move", "direction": "right", "steps": 3},
+  {"action": "assert_state", "path": "player_cell", "equals": [4, 4]},
+  {"action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [5, 4]}},
+  {"_comment": "== THE YIELD == press_field_skill hard-fails when the id is not on the bar, so this step also proves helper L4 really grants [Bar Fighting].", "action": "press_field_skill", "skill": "bar_fighting"},
+  {"action": "wait_for_event", "type": "skill_used", "payload_contains": {"skill": "bar_fighting", "context": "exploration", "target": "dirty_table"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "armed_the_common_room"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "item_gained", "payload_contains": {"item": "improvised_cudgel"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Bar Fighting] — The table's near leg has been loose since spring. You put a boot to the frame, take the weight on the turn, and walk off holding it."}, "timeout_sec": 5},
+  {"action": "assert_state", "path": "inventory", "contains": "improvised_cudgel"},
+  {"_comment": "== THE BOUND == inventory never stacks, so a produce-only uncapped arm refuses BEFORE it banks anything (wi_game.gd's dup guard). The count assert is the real fence: one cudgel per pack, forever.", "action": "press_field_skill", "skill": "bar_fighting"},
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "Your pack already holds one of those. No sense making a second you cannot carry."}, "timeout_sec": 5},
+  {"action": "assert_event_count", "type": "item_gained", "payload_contains": {"item": "improvised_cudgel"}, "count": 1},
+  {"action": "assert_event_count", "type": "accomplishment_recorded", "payload_contains": {"id": "armed_the_common_room"}, "count": 1},
+  {"_comment": "== THE CHORE ARM, UNSHADOWED == the same entity, its OTHER verb. requires_skill+on_skill_use still answers basic_cleaning, which is the regression this pin exists for: a skill_uses map must never swallow the arm it does not name.", "action": "press_field_skill", "skill": "basic_cleaning"},
+  {"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "cleaned_the_inn"}, "timeout_sec": 5},
+  {"_comment": "The RENDERED line merges the gold row (gold_once_per_waking is still unspent this waking), which is why it is pinned whole rather than as the bare arm toast.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Basic Cleaning] — The table is spotless. Earned 1 gold."}, "timeout_sec": 5},
+  {"action": "assert_event_absent", "type": "combat_started"}
+ ]
+}
