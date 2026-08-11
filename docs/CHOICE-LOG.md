@@ -3668,3 +3668,15 @@ executing it. All four are recorded in the data's own `_comment`s and in
     grants for either (class/dialogue paths are lint-visible and
     fiction-anchored). Item orphans NOT included — user ruling pending
     (wardstone id-swap, cudgel yield, oak spear source).
+
+32. **Item-orphan rulings (user, 2026-08-10): all three as recommended.**
+    (a) hedaults_wardstone: the hedault_enchanting 40g bead option's
+    grant id SWAPS from hedaults_warded_setting to hedaults_wardstone —
+    the GH#142 chain as authored (bead 16g + fee 40g → True-Set
+    Wardstone, mana_shield; wardwrights_counterweight precedent covers
+    item-carried combat skills). The warded_setting remains the
+    fragment-commission product only. (b) improvised_cudgel: wired as a
+    [Bar Fighting] on_skill_use yield on an inn taproom furniture prop.
+    (c) solid_oak_spear: stocked in the barracks spare_kit_crate
+    (matches its own lore; zero-mod, spear-family carrier). All three
+    ride the #430 wiring lane.
