@@ -568,7 +568,7 @@
 			},
 			"levels": [
 				{ "level": 1, "requires": {}, "grants": ["hedge_remedy"] },
-				{ "level": 2, "requires": { "witch_craft_used": 2 }, "grants": [] },
+				{ "_comment": "kindle [Firefly] = hearth-flame craft register. Widens the `burns` carrier union to {flame_jet, kindle}; data_lint's gate-carrier join reads that union.", "level": 2, "requires": { "witch_craft_used": 2 }, "grants": ["kindle"] },
 				{ "level": 3, "requires": { "witch_craft_used": 4 }, "grants": ["witchs_warding"] },
 				{ "level": 4, "requires": { "witch_craft_used": 7 }, "grants": [] },
 				{ "level": 5, "requires": { "witch_craft_used": 10 }, "grants": ["hearthward_charm"] },

@@ -216,22 +216,6 @@
     }
    ]
   },
-  "agreed": {
-   "speaker": "A Shepherd",
-   "text": "Figured. Bring your own bandages. I've got enough of my own to worry about.",
-   "options": [
-    {
-     "text": "Deal.",
-     "effects": [
-      {
-       "accomplishment": "hunter_will_come"
-      }
-     ],
-     "end": true
-    }
-   ],
-   "_comment": "#396: DEAD -- nothing gotos it (the hub's ask gotos watch_agreed); kept because deleting it buys nothing."
-  },
   "thicket_brief": {
    "speaker": "A Shepherd",
    "text": "Corusdeer. Whole herd came down off the north road. Stopped dead at the old line in the thicket. Wouldn't cross. Wouldn't spook. Turned and walked back the way they came. Something taught this herd that line. Two lambs I lost this spring. Something with thorns for teeth took them. So no. I'm not walking in there on my own.",

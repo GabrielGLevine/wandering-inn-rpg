@@ -307,9 +307,11 @@
     0.42,
     0.3
    ],
+   "_comment": "ORDER IS CONTRACT: field_whetstone stays FIRST -- barracks_walkthrough waits on its item_gained/toast pair before anything else. solid_oak_spear appended second (yard-turned practice spear, its own lore's home).",
    "observe": "A second kit crate, shoved into the corner and never reshelved. The sergeant's own tally probably missed it.",
    "contains": [
-    "field_whetstone"
+    "field_whetstone",
+    "solid_oak_spear"
    ]
   },
   {

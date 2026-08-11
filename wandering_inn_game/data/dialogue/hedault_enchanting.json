@@ -45,6 +45,7 @@
      "goto": "work_done"
     },
     {
+     "_comment": "Bead 16g + 40g fee -> hedaults_wardstone (mana_shield). Fee/consume semantics untouched; only the granted id differs from the fragment arm, which keeps hedaults_warded_setting as its own product.",
      "text": "The wardstone bead. Set it true. (40 gold)",
      "requires": {
       "item": "witch_wardstone_bead",
@@ -58,7 +59,7 @@
        "remove_item": "witch_wardstone_bead"
       },
       {
-       "item": "hedaults_warded_setting"
+       "item": "hedaults_wardstone"
       }
      ],
      "goto": "work_done"

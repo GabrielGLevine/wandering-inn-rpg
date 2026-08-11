@@ -761,6 +761,14 @@
     "gold": 1,
     "toast": "[Basic Cleaning] — The table is spotless."
    },
+   "_comment_skill_uses": "The taproom's [Bar Fighting] furniture seam. `skill_uses` outranks `requires_skill`+`on_skill_use` for its own key only, so the Helper chore arm is untouched. PRODUCE-ONLY and UNCAPPED on purpose: `once_per_waking` is an ENTITY flag and would cap the chore arm the Helper curve is built on; the bound is the #330 duplicate refusal (one cudgel carried at a time), stew_pot's own shape.",
+   "skill_uses": {
+    "bar_fighting": {
+     "accomplishment": "armed_the_common_room",
+     "item": "improvised_cudgel",
+     "toast": "[Bar Fighting] — The table's near leg has been loose since spring. You put a boot to the frame, take the weight on the turn, and walk off holding it."
+    }
+   },
    "visual_states": [
     {
      "when": {

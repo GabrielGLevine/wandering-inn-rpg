@@ -35,11 +35,13 @@ Checks:
      has zero exemptions -- keep it that way.
   7. mood language    -- moods.json keys must name a real map/arena, and each
      card must obey the v0.17 R2 lighting language (see check_moods).
-  8. content reachability (ADVISORY, GH#424) -- the orphan graph: a Skill no
+  8. content reachability (GH#424, MIXED TIER) -- the orphan graph: a Skill no
      class/item/kit/code path grants, an item nothing hands out, a dialogue
      node nothing gotos, a map no door or portal names. ID LEVEL ONLY, by
      ruling 30 -- cell-level walkability belongs to the Godot suite
      (tests/test_interactable_reachability.gd) and is never re-derived here.
+     Per-category tier: HARD_FAIL_REACHABILITY_CATEGORIES have been drained and
+     now fail the run; everything else stays advisory. See that constant.
 
 ADVISORIES (v0.17 L3, GH#335 item 3) are a SECOND, non-failing tier. They
 never touch the exit code and can never break a sweep, because they measure a
@@ -49,7 +51,8 @@ force 90-odd waivers and teach everyone to stop reading the output. Default
 output is one summary line; `--advisories` prints the full list. The GH#424
 reachability tier is the one exception: it lists unconditionally, because it is
 a handful of rows by construction and an unread orphan is the exact failure it
-exists to catch.
+exists to catch -- and its drained categories have since been PROMOTED out of
+the advisory tier entirely (HARD_FAIL_REACHABILITY_CATEGORIES).
 
 Wiring: ci_sweep.sh pre-flight (fails the sweep before any Godot boot) and
 ci.yml's leak-check job (the no-Godot CI lane). Run standalone after any
@@ -1573,7 +1576,30 @@ def advise_acted_on_state(maps: dict, advisories: list) -> int:
 	return total
 
 
-# --- GH#424 content reachability (ADVISORY) ---------------------------------
+# --- GH#424 content reachability --------------------------------------------
+#
+# PROMOTION (GH#429). A reachability category leaves the advisory tier and
+# fails the run once its shipped set is EMPTY -- the criterion #429 states:
+# advisory while the answer can honestly be "this ships dead on purpose", hard
+# once nothing dead is left, so the next orphan is a regression rather than a
+# question. Draining is the price of admission; a waiver is not.
+#   `item orphan`          -- drained by #429 (wardstone bead swap, cudgel
+#                             yield, oak spear in the barracks crate).
+#   `dialogue node orphan` -- drained by #429 (riverfarm_hunter.agreed retired).
+# STILL ADVISORY, and why:
+#   `skill orphan`     -- `frost_touch` is undrained. Its ruled wiring (an
+#                         Eloise dialogue grant) has no shipped mechanism: the
+#                         dialogue effect loop has no `skill` verb and
+#                         `player_skills` is written only at init/load, so no
+#                         DATA edit can grant a Skill. Promote this row the
+#                         moment that grant lands and the row goes away.
+#   `map orphan`       -- ruled advisory by #429; a parked region is a design
+#                         position, not a defect.
+#   `enemy-kit only`   -- a category, never a defect (reachable AT the player).
+#   `gate carrier orphan` -- joins the two halves; follows the skill arm.
+# A crash inside the check can never promote anything: the crash row carries no
+# `[category]` prefix, so it stays advisory and the rc contract holds.
+HARD_FAIL_REACHABILITY_CATEGORIES = frozenset({"item orphan", "dialogue node orphan"})
 #
 # CODE-GRANT ALLOWLISTS. Some content is handed out by GDScript, not by data,
 # so the data graph alone would call it orphaned. Each row pins the exact
@@ -2030,6 +2056,20 @@ def main() -> int:
 		# away exactly the rows that were about to explain the crash.
 		reachability_advisories.append(f"check crashed: {type(err).__name__}: {err}")
 		reachability_counts = {}
+	# PROMOTED categories move to `errors` (rc 1); the rest keep the advisory
+	# tier's contract. Split on the `[category]` prefix `report` writes -- a row
+	# without one (the crash line, a code-grant drift note) can never promote.
+	promoted_rows: list = []
+	kept_advisories: list = []
+	for row in reachability_advisories:
+		category = row[1:row.index("]")] if row.startswith("[") and "]" in row else ""
+		if category in HARD_FAIL_REACHABILITY_CATEGORIES:
+			promoted_rows.append(row)
+		else:
+			kept_advisories.append(row)
+	reachability_advisories = kept_advisories
+	for row in promoted_rows:
+		errors.append(f"reachability {row}")
 	elapsed_ms = (time.monotonic() - start) * 1000
 	if errors:
 		for e in errors:
@@ -2076,7 +2116,9 @@ def main() -> int:
 		if reachability_counts:
 			print("data_lint: ADVISORY -- content reachability (GH#424): "
 				+ "; ".join(f"{count} {category}" for category, count in sorted(reachability_counts.items()))
-				+ ". Report-only, never fails.")
+				+ ". Advisory categories only -- "
+				+ ", ".join(sorted(HARD_FAIL_REACHABILITY_CATEGORIES))
+				+ " are promoted and fail the run.")
 	for line in report:
 		print(f"data_lint: REPORT -- {line}")
 	return 0
