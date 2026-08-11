@@ -1332,6 +1332,1556 @@
   {
    "action": "wait_frames",
    "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "== ACT II: MAKE A PLACE == Pisces first: lessons by the Guild steps. Row y4 is the clear east-west lane."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 28
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Facing right from the walk: Pisces (30,4). First interact absorbs the S4 pool line."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "pisces_magic"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_act_ii_00_pisces_lessons"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Greet option 0 banks met_pisces."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "met_pisces"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "lesson_mana -> lesson_casting."
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "lesson_casting -> lesson_light."
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "'I'm ready. Show me the words.'"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "learned_magic_from_pisces"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 16,
+   "_comment": "West along y4 to Krshia's column."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump-face Krshia (13,2) from (13,3)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Krshia"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Fresh hub: the pitch. Starts missing_crate."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "missing_crate"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "asked_about_crate"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "'accepted' node: index 1 \"I'll find it.\" closes."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12,
+   "_comment": "West along y3 to the gate, out to the floodplains, home to the inn."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "Inn arrival (14,3) -> Erin (7,2): bump-face from (7,3)."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Erin"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "erin_errand"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Option 0 takes the package; starts the_errand."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "the_errand"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5,
+   "_comment": "To the stairs lane: (7,3) -> (2,3) -> stairs -> bed."
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Sleep: learned_magic_from_pisces banked -> [Mage]."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "class": "mage"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "[Mage] class gained! \u2014 [Frost Bolt], [Quick Cast], [Light]"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "text": "[Mage] class gained! \u2014 [Frost Bolt], [Quick Cast], [Light]"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.mage",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "04_act_ii_01_mage_gained"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "Down and out east: bed -> stairs -> inn -> floodplains -> street."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Guild door (28,2): east on y4, then up its column."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 27
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "guild"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    10
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "04_act_ii_02_guild_interior"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 5,
+   "_comment": "Selys at the counter (8,2), guild_interior route."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Selys"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "selys_delivery"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Hand over the package."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "the_errand",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Reward fork index 0 KEEPS the courier fee (+5g) \u2014 the spine's purchases need coin (CHOICE-LOG)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "the_errand"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "kept_reward"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Post-completion hub: index 1 '(Leave.)' closes (donor idiom)."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 7,
+   "_comment": "Out of the guild."
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    27,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump-face Olesm (29,3)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Olesm"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "olesm_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "Hub: 0 chess, 1 [Tactician] (locked), 2 'You look worried'."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "cisterns"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_about_cisterns"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 16,
+   "_comment": "South square: crate_scavengers (12,16) via Krshia's column."
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "screenshot",
+   "name": "04_act_ii_03_south_square_scavengers"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "04_act_ii_04_crate_fight_mage_kit"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "combat_autoplay"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "missing_crate",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "crate_scavengers"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "recovered_crate_force"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_comment": "Report to Krshia: reverse route up the column."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 10
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "New waking since the crate ask: Krshia's S4 pool line absorbs the first interact."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Krshia"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Post-fight: 'Your crate's accounted for.'"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "missing_crate",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "missing_crate"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4,
+   "_comment": "Down to the grate (16,11): approach (16,10) arriving southbound."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    10
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "04_act_ii_05_sewers_descent"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9,
+   "_comment": "Nest: shield_spiders (15,10), approach from (15,11)."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "04_act_ii_06_cistern_nest_fight"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "combat_autoplay"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "cisterns",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "shield_spiders"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleared_the_nest"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 13,
+   "_comment": "Back up the ladder, report to Olesm."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 9
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 14
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "olesm_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3,
+   "_comment": "Hub at report time (cisterns hint row hidden)."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "cisterns_reported"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "cisterns",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "cisterns"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 28,
+   "_comment": "Home to the inn for the night: west on the clear y4 lane, then the gate at (0,3)."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Sleep. Two classes + 3 quests done: the tremor pointer fires and something_beneath starts."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "id": "something_beneath"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "text": "A Watch runner is looking for you."
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "watch_runner_pointed"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "05_act_iii_00_tremor_pointer"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "journal",
+   "_comment": "Journal read: Act pacing evidence for the observer."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_act_iii_01_journal_acts"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
   }
  ]
 }
