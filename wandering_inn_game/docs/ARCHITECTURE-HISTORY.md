@@ -1,20 +1,25 @@
 # Architecture History
 
-> Historical design record, last audited **2026-07-13**. It explains why;
-> it is not the current work queue or the current-state authority.
+> Historical design record, last audited **2026-08-10**. It explains why;
+> it is not the current work queue or the current-state authority. The
+> compact machine-oriented current-architecture map is `ARCHITECTURE.md`.
+> Insertion: tail — chronological; new sections append at end of file.
 
 This is the detailed, verbatim per-milestone architecture record for
-`wandering_inn_game/`. `../AGENTS.md` keeps one current-state
-summary paragraph per live system, each pointing here for the full
-mechanism writeup, rollout narrative, and the reasoning behind design
-decisions. Read this when you need the "why" behind a system, not just
-the "what" — for day-to-day work, `../AGENTS.md` alone should suffice.
+`wandering_inn_game/`. `../AGENTS.md` is the compact bootstrap authority:
+operating contracts, source locations, architecture boundaries, commands,
+and durable traps. This file owns the displaced mechanism writeups, rollout
+narrative, and decision rationale. Read it when a change needs the "why" or
+the complete contract behind an AGENTS boundary.
 
 Sections are in roughly chronological (milestone) order. A `[RESOLVED ...]`
 or similar bracketed note inside a block means the 2026-07-07 guidance
 accuracy audit found and fixed a stale claim in that block; the rest of
 each block is preserved as originally written, including author framing,
-task names, and self-references to "this task"/"this block".
+task names, and self-references to "this task"/"this block". The final
+2026-08-10 split audit is a curated current-mechanism delta: it records systems
+that postdate this chronological record and names the destination of context
+removed from AGENTS.md.
 
 ---
 
@@ -1546,3 +1551,203 @@ sleeps, the awakening beat, and the portal menu itself.
   advance the counter), the full interact/travel/return-trip flow against
   a real `WIGame` instance, and a save round-trip of `door_study_sleeps`
   via the ordinary `accomplishments` path.
+
+---
+
+## 2026-08-10 AGENTS.md split audit
+
+The project AGENTS file had grown into a 160 KB mixture of bootstrap rules,
+current architecture, QA inventory, rollout narrative, and incident history.
+The 2026-08-10 split reduced it to the contracts and routing information every
+agent needs on every turn. This section is the landing record for the detailed
+context removed in that split.
+
+No volatile inventory moved here:
+
+- QA script names, seeds, fixtures, tiers, and notes remain authoritative in
+  `../qa/manifest.json`; `QA-SCRIPT-NOTES.md` is its generated human index.
+- Unit names remain discovered from `../tests/test_*.gd` by
+  `../../scripts/preflight.sh --full`.
+- Save version, licensed-asset count, and comment ceilings remain in their code
+  authorities rather than being copied into prose.
+
+### Displaced-context destination map
+
+| Removed AGENTS material | Durable destination |
+|---|---|
+| Sim purity, ObservableBus, Game autoload, presentation, TestDriver, combat and story foundations | "Core systems (M0-M3)" above |
+| Classless onboarding and earned Warrior start | "Onboarding rev classless-start" above |
+| Equipment, resonance gear, atmosphere, field hotbar, effect-text formatter | Existing M4+ milestone blocks above |
+| Request board, delivery board, [Ice Floor], Magical Door | Their named sections above |
+| QA script names/seeds/purposes | `QA-SCRIPT-NOTES.md`, generated from `../qa/manifest.json` |
+| Later combat, persistence, settings, audio, and world-reactivity mechanisms | Post-audit delta below |
+| Operational failure traps | "Operational traps migrated from AGENTS.md" below |
+
+This matrix is also the maintenance boundary: AGENTS may link here, but detailed
+mechanism history does not move back into mandatory bootstrap context.
+
+### Post-audit combat extensions
+
+The chronological record ends with the first live `[Ice Floor]` implementation.
+The combat architecture subsequently grew along four existing seams rather than
+adding parallel engines:
+
+- **Shared area derivation.** `WISkillEffects._radius_area` is the common
+  Chebyshev-radius cell derivation for persistent `icy_floor` terrain and
+  instant `blast_damage`. `[Flame Pillar]` uses `blast_damage`: it applies the
+  existing multi-target damage shape to every living occupant in the derived
+  area, including allies and the caster, but writes no terrain or status state.
+  `[Ice Floor]` writes terrain, applies statuses, and expires at round rollover.
+  Both use ordinary enemy selection; the target's cell anchors the area.
+- **Weapon range is data.** Combatants carry `weapon_range`, threaded for the
+  PC from the equipped weapon. `WICombat.in_weapon_range` is the shared attack
+  gate: melee preserves the old adjacency rule, while range greater than one
+  requires Chebyshev distance within range plus line of sight. Attack targeting
+  reads the same gate. Bow basic attacks do not provoke melee ripostes, but do
+  bank the ranged-hit accomplishment used by the Archer path.
+- **Windups freeze geometry, not victims.** An effect with
+  `windup_rounds: 1` declares now and resolves at the caster's next turn.
+  Declaration spends the skill cost, freezes the affected cells, and emits
+  `WINDUP_DECLARED`; resolution hits whoever occupies those cells then. Killing
+  the caster prevents resolution through ordinary dead-turn skipping. The
+  caster is excluded by id from its own physical windup, while every other ally
+  or enemy in the cells remains vulnerable. Combat state, including windups,
+  is not serialized.
+- **[Dangersense] is presentation-gated information.** Everyone receives the
+  windup feed line and caster flash. Only a PC holding `dangersense` gets the
+  persistent `windup_danger` board overlay. The overlay reuses the board
+  renderer's add/expire terrain machinery without coupling it to
+  `WICombat.terrain`; live coverage belongs to `dangersense_windup_combat`.
+- **AI profiles compose existing verbs.** `skirmisher` attacks then retreats,
+  `guard` moves toward its lowest-HP ally until a foe is adjacent, and `coward`
+  retreats below its HP threshold before rallying toward an ally when cornered.
+  They call the same attack, move, dash, and skill methods as the original
+  melee/ranged/caster profiles. Area-skill selection later made enemy-cast
+  `[Ice Floor]` and blast effects live; no separate enemy effect engine exists.
+
+Two testability contracts from the removed gotchas remain important. First,
+the PC combatant's empty AI profile defaults to melee, so `combat_autoplay`
+does not prove that a player spell or line-skill refusal is reachable; player
+input QA or direct combat contracts must carry those proofs. Second, PC death
+ends combat immediately even if an ally lives. Combat-data changes therefore
+re-run the manifest-pinned defeat and ally canonicals instead of trusting an
+old seed or a win that an ally completed after the PC fell.
+
+### Persistence, defeat rewind, and settings
+
+`WISave` remains a pure serializer/migrator; its current version is read from
+`src/core/save.gd`, never from guidance. At this audit the migration chain has
+grown through the slept-counter backfill, fractional challenge-bank state, and
+the durable lore-notes record. Migration steps compose in order, reject versions
+outside the supported range, and rewrite deprecated ids through the explicit
+mapping carried beside the serializer.
+
+Save safety now separates player-facing slots from hidden recovery slots:
+
+- Three manual slots share pure `WISave.metadata` summaries. The pause menu
+  owns interactive slot choice; title Continue intentionally remains the
+  one-action newest-save path.
+- `auto` is the ordinary checkpoint. A New Game rotates the previous `auto` to
+  hidden `auto_prev` before the new run's first autosave, and the overwrite
+  confirmation collapses only under QA.
+- `auto_pre_combat` is written at the exact pre-fight boundary and is the true
+  defeat rewind target. Ordinary Abandon and pause Load continue to use `auto`.
+- Dialogue-committed fights snapshot on `PRE_COMBAT_CHOICE`, before option
+  effects and before the combat RNG draw. A guard suppresses the later
+  `COMBAT_STARTED` snapshot for that same fight, so losing rewinds the committing
+  choice and its accomplishments rather than preserving a half-chosen branch.
+- `PHASE_CHANGED` participates in autosave triggers so a quiet sleep cannot be
+  lost merely because it granted no class/level-shaped event.
+
+The defeat interstitial is presentation over already-restored state. Only the
+true defeat path passes `reason: "defeat"` through `GAME_LOADED`; the sleep veil
+then offers retry or title without changing sim resolution. Headless QA emits
+the rendered coverage event and collapses the interactive wait.
+
+`WISettings` owns fullscreen, text scale, and reduce motion in
+`user://settings.cfg`; `WIAudio` owns volume sections in the same file. Each
+writer reloads before saving so independently held `ConfigFile` instances do
+not clobber the other's sections. Settings are configuration, not save data,
+and survive reset/load by construction. Text scaling always derives theme sizes
+from base constants; fixed panel pixel budgets do not scale because they
+describe the real on-screen rectangles. Reduce motion gates board shake/flash
+effects at their shared presentation seams. The settings panel is shared by
+title and pause, and its controls reference is derived from `WIInputHints`
+rather than copied labels.
+
+### World presentation, reactivity, and audio
+
+The field hotbar remains the overworld view of known `field: true` skills.
+Number keys fire a slot directly. Tab primes a selection cursor shared with
+controller cycling: left/right wrap the selection, up/down are swallowed so the
+player cannot drift, confirm fires, and cancel or a direct number press disarms.
+Selection changes have their own rendered event, distinct from slot-list changes.
+
+World presence gates now reconcile in place. `phase` is a dialogue and
+`present_when` context value, and `PHASE_CHANGED` runs both appearance refresh
+and same-map presence reconciliation so an NPC can appear/disappear without a
+door transition. Accomplishment-driven same-map presence is also safe:
+`ACCOMPLISHMENT_RECORDED` refreshes watched visuals and reconciles presence,
+deferring the operation until `DIALOGUE_ENDED` when the bank occurs inside the
+conversation that owns the entity. Appearance refresh and existence
+reconciliation remain separate operations.
+
+Inventory gained two reusable consumable shapes without a second item engine.
+Combat healing resolves through the existing skill-effect healer for a flat AP
+cost; a field `next_fight` item banks a one-shot modifier consumed when the next
+player combatant is built. Consumables erase their carried item id on success.
+Combat hotbar item entries are explicit `item:<id>` loadout tokens so adding a
+catalog item cannot silently renumber the automatic skill kit.
+
+`WIAudio` is data-driven from `data/audio.json`: event rows subset-match bus
+payloads, music rows are first-match-wins, and round-robin variants use a
+presentation counter rather than gameplay RNG. Dialogue ducking changes the
+Music bus relative to the user's own slider with a re-entrancy depth counter.
+PC hurt/death barks use a separate Voice bus. Headless mode applies target bus
+levels directly because tween timing is not wall-clock-stable there.
+
+Web QA now serves exports from a real local HTTP server with correct MIME types.
+The earlier Playwright route interception path was removed because
+AudioWorklet module fetches occur outside page-level routing and could fail
+silently. The runner treats console/page errors and missing successful worklet
+requests in the server access log as failures in addition to the QA script's
+own result. Touch-capable browser contexts are a runner mode; engine-internal
+mouse injection and real DOM touch dispatch remain distinct proof surfaces.
+
+Wrapped-line budgeting is a cross-panel contract, not a copy heuristic. Combat
+feed entries are evicted by measured visual lines; dialogue and combat readout
+strings truncate only on screen. Rendered-event payloads retain the full source
+text for exact QA. `Label` and `RichTextLabel` use different theme keys and line
+separation math, so their fitting helpers stay separate.
+
+### Operational traps migrated from AGENTS.md
+
+- `CanvasLayer` has no `modulate`; tint or fade child canvas items.
+- `ResourceLoader.load()` can return a non-null script that cannot instantiate.
+  Load gates check `Script.can_instantiate()` as well as nullness.
+- Bare `--script` runs do not instantiate project autoloads. Core and unit code
+  cannot use bare autoload identifiers.
+- A declared `ext_resource` is not wiring; verify a node/property consumes it.
+- New `.gd` files ship with generated `.uid` sidecars and require an import
+  pass when the class-name cache changes.
+- Transparent sprite padding moves the apparent feet plane. Measure alpha
+  bounds, set the anchor from the feet rather than frame bottom, and verify
+  adjacency in a windowed read.
+- A direct state-mutation test does not prove the gameplay trigger invokes it.
+  Contract-test the call path or exercise it through declarative QA.
+- A domain event does not prove a player saw anything. Player-visible work also
+  requires its `ui_*_rendered` confirmation and an on-screen read.
+- A lambda captured by a long-lived `RefCounted` module can retain ObjectDB
+  instances at exit. Long-lived injected callbacks use bound methods; transient
+  sort/filter lambdas are fine.
+- JSON coordinates may parse as floats while code-authored cells are ints.
+  Normalize through `int()` or `Vector2i` before strict array comparison.
+- Screenshot diffs compare RGB. Same-alpha RGBA images can produce a false
+  "identical" result under alpha-only difference behavior.
+- A missing QA `result.json` is failure even when the Godot process exits zero;
+  it means the run quit before the driver finished.
+
+These are architecture/verification contracts with durable failure modes. Task
+provenance, individual seed values, suite counts, comment ceilings, and other
+volatile operational inventories stay in git, manifests, generated indexes, or
+their enforcing code rather than being duplicated here.

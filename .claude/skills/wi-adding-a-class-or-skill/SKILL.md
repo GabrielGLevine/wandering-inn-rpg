@@ -113,8 +113,8 @@ of these BEFORE the first test boot; each is a separate hand-maintained pin:
    for EVERY held class (check the class's actual gained_by id — mage is
    `learned_magic_from_pisces`, NOT used_magic) and level-consistent curve
    counters incl. inherited requires (mage L2+ needs won_combat).
-5. `qa/manifest.json` + `wandering_inn_game/AGENTS.md` canonical seed table —
-   BOTH, same seeds, or ci_sweep FATALs on drift.
+5. `qa/manifest.json` — the single source for QA scripts, seeds, fixtures,
+   tiers, args, and notes.
 6. `scripts/derive_qa_surfaces.py` then (repo root) `scripts/render_qa_notes.py
    --write` — in that order, after manifest edits.
 7. Code-banked counters → STRUCTURAL_LITERALS in BOTH

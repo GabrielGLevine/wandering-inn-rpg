@@ -23,14 +23,10 @@
 #
 # --- CANONICAL LIST (ARCH-1) -------------------------------------------------
 # qa/manifest.json is the ONE source of truth (script/seed/fixture/note per
-# entry). This script parses it (python3) instead of carrying a hardcoded
-# array. wandering_inn_game/AGENTS.md's "Canonical QA seed table" is generated
-# FROM the manifest for human reading — the drift check below (startup, every
-# invocation) parses that table back out of AGENTS.md and hard-fails the sweep
-# if its script/seed set disagrees with the manifest, so the two can never
-# silently drift apart again (consultant finding 4). Peek-only utilities
-# (title_peek, street_peek) are intentionally excluded from both. A seed of
-# "none"/null means the script takes no --seed.
+# entry). This script parses it instead of carrying a hardcoded array.
+# docs/QA-SCRIPT-NOTES.md is the generated human index; CI checks it via
+# scripts/render_qa_notes.py. Peek-only utilities are excluded from the
+# manifest. A seed of "none"/null means the script takes no --seed.
 set -u
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -39,7 +35,6 @@ SCRIPTS_DIR="$HERE/scripts"
 LOGDIR="$HERE/../qa_output/ci_sweep_logs"
 PER_SCRIPT_TIMEOUT="${CI_SWEEP_TIMEOUT:-240}"
 MANIFEST="$HERE/manifest.json"
-AGENTS_MD="$HERE/../AGENTS.md"
 
 # A full sweep regenerates every artifact anyway — start from a clean slate
 # so qa_output/.godot_home never balloon across sessions (the regular flush
@@ -113,84 +108,9 @@ if [ "${#CANON[@]}" -eq 0 ]; then
 	exit 1
 fi
 
-# --- Drift check: AGENTS.md's canonical seed table must agree with the
-# manifest (script + seed set) or the sweep hard-fails with the diff printed.
-# This is the "two hand-synced sources of truth" gap (consultant finding 4) —
-# the manifest is authoritative; AGENTS.md's table is documentation generated
-# from it, and this check is what keeps it honest going forward.
-DRIFT_OUTPUT="$(MANIFEST_PATH="$MANIFEST" AGENTS_MD_PATH="$AGENTS_MD" python3 - <<'PY'
-import json, os, re, sys
-
-manifest_path = os.environ["MANIFEST_PATH"]
-agents_md_path = os.environ["AGENTS_MD_PATH"]
-
-with open(manifest_path) as f:
-	manifest = json.load(f)
-manifest_pairs = set()
-for entry in manifest["scripts"]:
-	seed = entry["seed"]
-	manifest_pairs.add((entry["script"], "none" if seed is None else str(seed)))
-
-if not os.path.isfile(agents_md_path):
-	print(f"ci_sweep: FATAL — AGENTS.md not found at {agents_md_path}", file=sys.stderr)
-	sys.exit(1)
-
-with open(agents_md_path) as f:
-	lines = f.readlines()
-
-table_pairs = set()
-in_table = False
-row_re = re.compile(r"^\|\s*`([a-zA-Z0-9_]+)`\s*\|\s*([^|]+?)\s*\|")
-for line in lines:
-	stripped = line.strip()
-	if stripped == "| script | seed | purpose |":
-		in_table = True
-		continue
-	if not in_table:
-		continue
-	if stripped.startswith("|---"):
-		continue
-	if not stripped.startswith("|"):
-		break
-	m = row_re.match(stripped)
-	if not m:
-		break
-	name = m.group(1)
-	seed_cell = m.group(2)
-	seed_token = seed_cell.split()[0].strip(chr(96))
-	table_pairs.add((name, seed_token))
-
-if not table_pairs:
-	print("ci_sweep: FATAL — could not locate/parse AGENTS.md's canonical seed table", file=sys.stderr)
-	sys.exit(1)
-
-only_manifest = sorted(manifest_pairs - table_pairs)
-only_table = sorted(table_pairs - manifest_pairs)
-if only_manifest or only_table:
-	print("ci_sweep: FATAL — qa/manifest.json and AGENTS.md's canonical seed table have DRIFTED:", file=sys.stderr)
-	if only_manifest:
-		print("  in manifest.json but not (or mismatched seed in) AGENTS.md table:", file=sys.stderr)
-		for name, seed in only_manifest:
-			print(f"    {name}:{seed}", file=sys.stderr)
-	if only_table:
-		print("  in AGENTS.md table but not (or mismatched seed in) manifest.json:", file=sys.stderr)
-		for name, seed in only_table:
-			print(f"    {name}:{seed}", file=sys.stderr)
-	sys.exit(1)
-
-sys.exit(0)
-PY
-)"
-DRIFT_RC=$?
-if [ "$DRIFT_RC" -ne 0 ]; then
-	echo "$DRIFT_OUTPUT" >&2
-	exit 1
-fi
-
 # --- Tier drift check: every entry >=1 tier, every tier name known, smoke
 # is a structural SUBSET of full (never a script tagged smoke-not-full).
-# Runs on every invocation, same as the manifest/AGENTS.md check above —
-# tiering must never silently drift once curated (ARCH-1 QA-tiering task).
+# Runs on every invocation; tiering must never silently drift once curated.
 TIER_PAIRS="$(MANIFEST_PATH="$MANIFEST" python3 - <<'PY'
 import json, os, sys
 

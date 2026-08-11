@@ -1,3 +1,8 @@
+# Visual log (game-scoped)
+
+Insertion: tail — append new rows/dated sections at end of file; closing a
+row deletes it in place. Root drain directive: `docs/VISUAL-LOG.md`.
+
 - blink afterimage reads FAINT in windowed stills (blink_bypass_loop
   00_blink_streak) — mechanically proven + reduced-motion covered, but
   the streak could take one brightness/length step if playtest agrees

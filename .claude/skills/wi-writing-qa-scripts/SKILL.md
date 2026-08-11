@@ -6,8 +6,9 @@ description: Use when writing a new declarative QA playtest script, extending an
 # Writing QA Scripts
 
 Scripts are JSON in `qa/scripts/<name>.json`, run by `qa/test_driver.gd`
-(`_execute`) via `qa/run_qa.sh <name> headless --seed=N` (seed table:
-`wandering_inn_game/AGENTS.md`).
+(`_execute`) via `qa/run_qa.sh <name> headless --seed=N`. Seeds, fixtures,
+tiers, and notes come from `qa/manifest.json`; the generated human index is
+`docs/QA-SCRIPT-NOTES.md`.
 
 ## Top-level fields
 | Field | Shape | Meaning |
@@ -123,11 +124,11 @@ Combat is deterministic per seed; every script reaching combat needs a
 pinned, PER-SCRIPT seed row (fixture-based scripts: the fixture rng_state
 governs instead — see FIXTURE-FIRST above; e.g. `level_up_loop` is a
 fixture loop whose rng 9 overrides --seed). A failing first-picked seed is
-a seed-search task. Register a new canonical in `wandering_inn_game/qa/manifest.json` (THE
-single source of truth — ci_sweep.sh parses it and hard-fails at startup
-if AGENTS.md's compact seed table drifts from it) AND add the matching
-row to AGENTS.md's compact table (the drift check enforces the pair).
-Per-script routing history: `wandering_inn_game/docs/QA-SCRIPT-NOTES.md`.
+a seed-search task. Register a new canonical once in
+`wandering_inn_game/qa/manifest.json` (THE single source of truth parsed by
+`ci_sweep.sh`), then run `derive_qa_surfaces.py` and
+`scripts/render_qa_notes.py --write`. Per-script routing index:
+`wandering_inn_game/docs/QA-SCRIPT-NOTES.md`.
 Assert both the domain event AND its `ui_*_rendered` confirmation for any
 player-visible feature.
 
@@ -148,7 +149,8 @@ player-visible feature.
 - Expecting `combat_autoplay` to show a PC spell cast — see
   `wi-adding-an-encounter`'s autoplay gotcha.
 - Asserting only the domain event, skipping the `ui_*_rendered` half.
-- Adding a script without a seed-table row in `AGENTS.md`.
+- Adding a script without a complete `qa/manifest.json` row or without
+  regenerating surfaces and QA notes.
 - Authoring a fixture without ever loading it in a run.
 - Comparing JSON-parsed coordinate Arrays directly with int cell Arrays.
 - Using a cumulative event assertion to prove a repeated post-action emission.

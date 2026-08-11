@@ -8,6 +8,8 @@
 > action); incremental work ships max fidelity —
 > best-candidate sprites from in-hand packs, never rectangles or recolours.
 
+Insertion: tail — append new rows at end of file; closing a row deletes it
+in place (same commit as the fix).
 Format: `- [ ] **(Pn)** AREA — defect — evidence — fix direction`.
 Close row = delete it in same commit as fix, cite evidence
 in commit/PR body.

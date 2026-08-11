@@ -1,6 +1,6 @@
 # Documentation map
 
-> Last verified: **2026-07-13** (issue #103).
+> Last verified: **2026-08-10** (AGENTS architecture split audit).
 
 The GitHub issue board is the work queue. Documentation records current
 contracts, decisions, or history; a plan file never reopens completed work.
@@ -8,9 +8,10 @@ contracts, decisions, or history; a plan file never reopens completed work.
 | Location | Purpose | Authority / lifecycle |
 |---|---|---|
 | `AGENTS.md` | Repository bootstrap, invariants, workflow | Current; canonical for all agents |
-| `wandering_inn_game/AGENTS.md` | Game architecture, commands, QA seed table, gotchas | Current; seed table is manifest-checked |
+| `wandering_inn_game/AGENTS.md` | Game bootstrap contracts, authority map, commands, architecture boundaries, gotchas | Current; compact mandatory context |
 | `CLAUDE.md`, `wandering_inn_game/CLAUDE.md` | Claude Code discovery adapters | Generated policy: small pointers only |
 | `HANDOFF.md` | Live queue, taste gates, unresolved choices, environment notes | Current-state only; shipped narrative belongs in git history |
+| `docs/CHOICE-LOG.md` | Compact index of unresolved and still-governing rulings | Amend in place; implementation narrative belongs in PR bodies/git history |
 | `docs/README.md` | Documentation directory guide | Current |
 | `docs/VISUAL-LOG.md` | Open visual debt and taste observations | Current; prune resolved entries |
 | `docs/design/character-profiles.md` | Shipped character voice/art contract | Current writing authority |
@@ -22,7 +23,8 @@ contracts, decisions, or history; a plan file never reopens completed work.
 | `docs/superpowers/plans/` | Execution instructions | Header says `DONE` or `ACTIVE`; only ACTIVE is open work |
 | `docs/archive/design/` | Shipped/superseded art and assembly direction | Archive; do not execute as current instructions |
 | `docs/archive/staging/` | Consumed copy, profiles, and generated-candidate provenance | Archive; shipped data is authoritative |
-| `wandering_inn_game/docs/ARCHITECTURE-HISTORY.md` | Detailed mechanism history and rationale | Historical; current summary lives in game `AGENTS.md` |
+| `wandering_inn_game/docs/ARCHITECTURE.md` | Machine-oriented structural map: layers, module registry, data catalog, seams, extension recipes | Current; session-bootstrap architecture authority |
+| `wandering_inn_game/docs/ARCHITECTURE-HISTORY.md` | Detailed current mechanisms, history, and rationale | On-demand mechanism authority; current boundaries live in game `AGENTS.md` |
 | `wandering_inn_game/docs/QA-SCRIPT-NOTES.md` | Generated canonical QA inventory | Generated from `qa/manifest.json`; exact routes live in `qa/scripts/` |
 | `wandering_inn_game/qa/MACHINE-PLAYTEST.md` | Player-eyes screenshot playtest protocol | Current QA procedure |
 | `wandering_inn_game/qa/playtest_saves/` | Organic player-save regression snapshots | Retained QA evidence; not canonical fixtures |

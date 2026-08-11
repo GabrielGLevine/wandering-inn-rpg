@@ -1,5 +1,8 @@
 # Roadmap (living doc — controller-owned, updated at milestone boundaries)
 
+Insertion: head within the relevant fixed section (Shipped is newest-first);
+section order itself is stable.
+
 ## Shipped (compressed ledger; per-issue detail in merged PR bodies)
 
 - **v0.16.1 — 2026-07-29, the playtest wave.** All 26 findings from the

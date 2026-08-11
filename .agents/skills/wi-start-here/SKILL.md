@@ -13,16 +13,18 @@ Details: wi-shipping. The pre-transition private repo (underscored
 name) is a frozen read-only archive.
 
 ## Read order (every fresh session)
-1. `HANDOFF.md` — live state, playtest results, open decisions. **Trust its
-   "next step" over your own guess.**
-2. `wandering_inn_game/AGENTS.md` — architecture, commands, the canonical
-   QA seed table, gotchas. The active project is `wandering_inn_game/` only.
-3. `.superpowers/sdd/progress.md` (ledger, gitignored) — tail = exact position.
-4. **GitHub Issues/Milestones = the plan** (transitioned 2026-07-07):
+1. `wandering_inn_game/AGENTS.md` — operating contracts, authority map,
+   commands, architecture boundaries, and durable gotchas. The active project
+   is `wandering_inn_game/` only.
+2. **GitHub Issues/Milestones = the plan** (transitioned 2026-07-07):
    `gh issue list -R GabrielGLevine/wandering-inn-rpg --milestone <name>`
    — each issue body is a dispatch-grade brief (goal/sources/scope/danger
    list/verification/exit). `docs/DOC-MAP.md` maps current authority versus
    retained design and provenance records; git history holds retired plans.
+3. `HANDOFF.md` — live state, user-held decisions, and in-flight ownership.
+   Open visual/playtest observations live in `docs/VISUAL-LOG.md`; the board
+   remains the queue authority.
+4. `.superpowers/sdd/progress.md` (ledger, gitignored) — tail = exact position.
 5. Run `scripts/usage_status.sh`; it queries and caches the active provider's
    own capacity (Claude CLI or Codex app-server), failing soft when unavailable.
    All providers keep the shared lane and integration discipline.
@@ -39,7 +41,8 @@ name) is a frozen read-only archive.
   no percentages, no merged-level numbers in prompts). Results only.
 - **Canon from the wiki** (`wiki.wanderinginn.com` mirror), never invented.
 - **Tune data, never sim.** The balance harness is the numbers authority.
-- **All work on `main`.** Commit verified units with clear messages.
+- **Issue work closes through a PR.** Use `issue/<n>-<slug>`; non-issue
+  guidance/ledger housekeeping may commit directly to `main`.
 
 ## Which skill do I need?
 | Task | Skill |
@@ -54,17 +57,17 @@ name) is a frozen read-only archive.
 | New NPC dialogue / quest / choice gating | wi-adding-dialogue-and-quests |
 | Sprites, icons, tiles, asset packs | wi-art-and-sprites |
 | An external PR arrives (triage/review/test/merge) | wi-handling-prs |
-| Drive the editor/live game via godot-ai MCP | wi-godot-mcp |
 
 ## Library governance
-`.agents/skills/` is the tracked, model-neutral source. Edit it only with
-issue-scoped evidence, then regenerate provider mirrors with
+`.agents/skills/` is the tracked, model-neutral source. Make evidence-backed
+edits there, then regenerate provider mirrors with
 `python3 scripts/sync_agent_guidance.py --write`; CI rejects drift.
 
 ## Escalate to the user (never guess)
 Design/taste/canon-ambiguity calls, balance-bound changes, anything
 irreversible or outward-facing (publishing, licenses, purchases), and any
-playtest-feel verdict. Queue in HANDOFF with options + a recommendation.
+playtest-feel verdict. Queue unresolved rulings in HANDOFF with options + a
+recommendation; put eye/ear observations in `docs/VISUAL-LOG.md`.
 
 
 ## Where things live (path traps that cost real retries, 2026-07-17)

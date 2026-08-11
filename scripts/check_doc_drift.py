@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def main() -> int:
 	errors: list[str] = []
 	doc_map = ROOT / "docs" / "DOC-MAP.md"
-	if not doc_map.exists() or "Last verified: **2026-07-13**" not in doc_map.read_text():
+	if not doc_map.exists() or "Last verified: **2026-08-10**" not in doc_map.read_text():
 		errors.append("docs/DOC-MAP.md missing its verified-date marker")
 
 	# docs/ROADMAP.md UN-RETIRED 2026-07-17: recreated deliberately as the

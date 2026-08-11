@@ -23,7 +23,7 @@ carries it as the only pre-Godot CI signal.
 | You changed… | Run (all from repo root) |
 |---|---|
 | Any `.gd` / any code | `load_gate` + smoke + the QA scripts touching that surface |
-| `src/core/**` (sim) | ALL unit suites (16 as of M-GEAR close -- count `tests/test_*.gd`, never trust a hardcoded number) + FULL canonical QA sweep |
+| `src/core/**` (sim) | `scripts/preflight.sh --full` (discovers every `tests/test_*.gd`) + FULL canonical QA sweep |
 | `data/combatants.json` / `skills.json` / `classes.json` / arenas | balance harness + full sweep + **seed check** (below) |
 | `data/maps/<region>/<map>.json` (maps) | selective sweep (`ci_sweep.sh --touching <path>`) minimum, full sweep + re-derive any path-walking scripts you broke |
 | `data/sprites.json` / new sprite assets / icon gen | **`test_sprite_registry` MINIMUM** (it pins per-animation frame counts — new entries need expected-count rows) + windowed read. `ci_sweep.sh` runs QA scripts, NOT units — a sprites.json add can leave this suite silently red for days (PF-wave incident 2026-07-06, caught by the public repo's first CI run, not locally) |
@@ -36,12 +36,12 @@ carries it as the only pre-Godot CI signal.
 wandering_inn_game/qa/run_qa.sh load_gate headless
 /usr/local/bin/godot --headless --path wandering_inn_game --quit   # grep WARNING
 
-# One QA script (seed table: wandering_inn_game/AGENTS.md — seeds are PER SCRIPT)
+# One QA script (seed: qa/manifest.json — seeds are PER SCRIPT)
 wandering_inn_game/qa/run_qa.sh <script> headless --seed=<seed>
 wandering_inn_game/qa/run_qa.sh <script> windowed --seed=<seed>   # + screenshots
 
-# Unit suite (run individually; see AGENTS.md list)
-/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_sim_core.gd
+# Complete discovered unit suite
+scripts/preflight.sh --full
 
 # Balance harness (data-tuning authority; gated cells 0.55–0.95 win, medians 3–12)
 /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
@@ -58,7 +58,7 @@ the event log; `*.png` (windowed) for what a player sees.
   each moved arm (level_up_loop carries zero class_gained events;
   work_loop/social_loop are the class-gain carriers).
 - **A "pre-existing failure" claim needs a HEALTHY-OVERLAY proof, never a
-  git-stash proof.** Overlay assets (the manifest's 174 licensed paths) are
+  git-stash proof.** Overlay assets (all paths in the manifest) are
   gitignored — `git stash` is structurally blind to them, so "stashed my
   changes, still fails, therefore pre-existing" is invalid whenever the
   failing test reads assets. Proven wrong in practice (2026-07-12): a lane's
@@ -69,7 +69,8 @@ the event log; `*.png` (windowed) for what a player sees.
   worktree, md5-census the overlay against main before trusting the tree.
 - **Seed check after combat-data changes:** fights are deterministic per seed;
   changing combat data can flip canonical outcomes. Re-run every combat script
-  at its pinned seed (table in AGENTS.md). A failed script may need a seed
+  at its pinned seed (`qa/manifest.json`; generated index in
+  `docs/QA-SCRIPT-NOTES.md`). A failed script may need a seed
   re-derivation — that's a real task, not a one-value edit.
 - **A failed `assert` HANGS the run** (SceneTree scripts idle forever). Wrap
   runs: `perl -e 'alarm 45; exec @ARGV' /usr/local/bin/godot ...`. macOS has
@@ -135,7 +136,7 @@ sweep; any tree edit after launch invalidates the run — kill and
 relaunch, never rationalize.
 
 ## The full sweep CANNOT run foreground in one subagent shell call
-A 60+-script `ci_sweep.sh` exceeds any single Bash-call budget, so the
+The full `ci_sweep.sh` exceeds any single Bash-call budget, so the
 harness ALWAYS promotes it to background — and a subagent waiting for
 that background notification is stranded (it never arrives; the #1
 recurring stall, 7 instances by 2026-07-08). The working idiom for
@@ -147,9 +148,9 @@ get real notifications — the trap is subagent-side only.
 
 
 ### Sim cell tuning: never rerun the full batch per iteration
-`WI_CELL_COUNT_ONLY=1` prints the cell count; `WI_CELL_RANGE=LO:HI` (0-based,
-inclusive) runs just your cells — find your block's indexes once and iterate
-on the range (a full 111-cell batch is ~4 min; a 3-cell range is seconds).
+`WI_CELL_COUNT_ONLY=1` prints the current cell count;
+`WI_CELL_RANGE=LO:HI` (0-based, inclusive) runs just your cells — find your
+block's indexes once and iterate on the range.
 Full batch runs ONCE at the end as the gate, not per tuning iteration.
 
 

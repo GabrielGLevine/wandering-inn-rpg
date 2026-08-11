@@ -28,8 +28,10 @@ description: Use when executing any Wandering Inn RPG task end-to-end — implem
    context (traps/contracts added), deferrals. The PR body is the durable
    per-issue record: future sessions read `gh pr view`, not commit
    archaeology. Squash-merge after CI is green. **Ledger one entry**; keep
-   HANDOFF current-state only (RUNNING/QUEUE — per-issue narrative lives
-   in the PR). Non-issue housekeeping still commits direct to main.
+   HANDOFF current-state only (current work/user holds/queue — per-issue
+   narrative lives in the PR). Fold durable rulings into the existing
+   CHOICE-LOG sections; do not append review chronology. Non-issue
+   housekeeping still commits direct to main.
 
 ## Dispatching reviewers (they earn their cost only with method hints)
 Prompt must include: the commit/range, "read wandering_inn_game/AGENTS.md
@@ -124,9 +126,9 @@ outside the tree (scratchpad) and land them with the dependency, or they
 break parallel lanes' gates.
 
 ## Godot MCP — RETIRED (2026-07-06)
-The godot-ai addon + MCP were removed from the repo (barely used; the
-windowed-QA screenshot loop covered every visual need). wi-godot-mcp is
-deleted. All verification + visual reads = headless/windowed CLI per
+The godot-ai addon, MCP, and its routing skill were removed from the repo
+(barely used; the windowed-QA screenshot loop covered every visual need).
+All verification + visual reads = headless/windowed CLI per
 wi-verifying-changes. If editor-driven look-dev is ever wanted again,
 re-evaluate fresh — do not resurrect the old setup from history.
 
@@ -262,13 +264,15 @@ works; do not "fix" that by enabling it without a user ruling.
 ## Anchored-append merge trains (v0.16, four content lanes)
 When multiple lanes append to the same shipped arrays/consts, assign
 each lane a NAMED anchor row it does not share (quests[], combatants[],
-manifest scripts[], moods keys, LANDMARK_TOKENS, seed table, test-file
+manifest scripts[], moods keys, LANDMARK_TOKENS, manifest rows, test-file
 locals get lane prefixes) — the v0.16 train composed four lanes with
 only TWO content seams, both at the one unanchored boundary. Union
-conflicts (CHOICE-LOG/VISUAL-LOG/HANDOFF appends) resolve
-ours-then-theirs mechanically; generated files (scene-dynamism report,
-QA notes) are never hand-merged — take either side, REGENERATE on the
-composed tree, commit the regen. Squash-merges resurrect
+conflicts in VISUAL-LOG append rows may resolve as a union. HANDOFF and
+CHOICE-LOG are replacement/index documents: rebase on the current versions,
+replace stale state, and fold rulings into existing sections instead of
+mechanically concatenating both sides. Generated files (scene-dynamism report,
+QA notes) are never hand-merged — take either side, REGENERATE on the composed
+tree, commit the regen. Squash-merges resurrect
 convention-untracked files silently (two lanes re-added the lane
 ledger after it was deliberately untracked) — enforce local-only
 conventions with .gitignore, not convention.

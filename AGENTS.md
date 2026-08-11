@@ -7,8 +7,8 @@ This file provides model-neutral guidance to development agents working in this 
 **This PUBLIC repo is the one working repo** (unified 2026-07-07 —
 every commit is public on push; there is no private working copy).
 A fresh session positions itself in this order:
-1. This file, then `wandering_inn_game/AGENTS.md` (architecture,
-   commands, canonical QA seed table, gotchas).
+1. This file, then `wandering_inn_game/AGENTS.md` (operating contracts,
+   source-of-truth map, commands, architecture boundaries, gotchas).
 2. **The GitHub board is the work queue**: `gh issue list -R
    GabrielGLevine/wandering-inn-rpg` (milestones = the roadmap ladder;
    every issue body is a dispatch-grade brief; the Projects board is
@@ -38,8 +38,8 @@ wi-running-the-machine cycle.
 
 ## Licensed assets & secrets (the unified-repo discipline)
 
-- 160 licensed asset paths (see `wandering_inn_game/assets_manifest.json`)
-  are NOT in this repo — local dev overlays them via
+- Paths listed in `wandering_inn_game/assets_manifest.json` are NOT in this
+  repo — local dev overlays them via
   `scripts/fetch_private_assets.sh` (game boots on committed
   placeholder fallbacks without them). They're covered by a GENERATED
   `.gitignore` block; `scripts/leak_check.sh` runs first in CI and
@@ -54,7 +54,14 @@ wi-running-the-machine cycle.
 
 - `main` is the integration branch and there are no long-lived feature branches. **Worktree lanes ARE allowed** (user directive 2026-07-06; see the `wi-running-the-machine` skill's hardened merge rules): parallel execution lanes may run in isolated worktrees (`Agent isolation:"worktree"`) when their surfaces are disjoint, and the controller merges + re-gates on `main`. Maps live in `data/maps/<region>/<map>.json` (issue #100 split) — content lanes touching different region dirs are genuinely disjoint; only same-region map edits still serialize.
 - **Issue closes go through a PR** (user directive 2026-07-15): work an issue on branch `issue/<n>-<slug>`, open the PR with `.github/PULL_REQUEST_TEMPLATE/issue-close.md` filled (choices made, validation evidence, player-visible proof, new agent context, deferrals), squash-merge after CI + review. The PR body is the durable per-issue record — HANDOFF.md stays current-state only (RUNNING/QUEUE/flags), and future sessions read `gh pr list/view` instead of raw commit history. Non-issue housekeeping (HANDOFF edits, VISUAL-LOG drains, ledger, typo-class fixes) may still commit direct to main. Lanes merge into the issue branch; only the PR merges to main.
-- **Comment economy:** keep compressed traps, contracts, constraints, ordering dependencies, and payload shapes. Delete provenance, review stories, code restatement, and duplicated rationale. `scripts/comment_census.py --check` enforces GDScript ≤20% comment lines and game-data `_comment` text ≤15% of JSON characters.
+- **Log-doc placement is deterministic:** every log/ledger doc (`HANDOFF.md`,
+  `docs/CHOICE-LOG.md`, `docs/ROADMAP.md`, both `VISUAL-LOG.md`s,
+  `wandering_inn_game/docs/ARCHITECTURE-HISTORY.md`) declares `Insertion: head`
+  or `Insertion: tail` in its opening lines. New entries go exactly there —
+  head = immediately after the header preamble, tail = end of file; never
+  mid-file. In-place updates to an existing entry stay in place. Readers and
+  diff reviewers may assume new content sits at the declared end.
+- **Comment economy:** keep compressed traps, contracts, constraints, ordering dependencies, and payload shapes. Delete provenance, review stories, code restatement, and duplicated rationale. `scripts/comment_census.py --check` owns and enforces the current ceilings; do not duplicate its constants in guidance.
 - Lore/canon reference (character names, races, skills, locations) comes from the Wandering Inn Wiki — treat it as source of truth when adding new content, not invented flavor.
 - **Stat grammar (softened 2026-07-13, user directive):** the game's visible currency is race, class, level, [Skills], HP/MP/AP, damage numbers, and gear; raw attribute scores (STR/DEX/etc.) stay out of player-facing text *by default*. The convention is baked into the core (`test_effect_text`'s visible-currency tier + forbidden-vocab tripwires enforce it), so it does NOT need restating in briefs, issue templates, or reviews — and sensible exceptions for item/description clarity are allowed when diegetic phrasing would genuinely be worse (update the tripwire in the same commit). Spirit stands; the hard ban does not.
 - When implementing Godot systems, check for a matching `godot-prompter:*` skill before writing code (dialogue-system, resource-pattern, scene-organization, godot-ui, godot-testing, ability-system, etc.) — this repo uses GodotPrompter alongside Superpowers; the workflow skill (brainstorming/planning/subagent-driven-development) governs *process*, GodotPrompter skills govern Godot-specific implementation patterns.
