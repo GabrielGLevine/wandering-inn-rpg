@@ -1586,20 +1586,24 @@ def advise_acted_on_state(maps: dict, advisories: list) -> int:
 #   `item orphan`          -- drained by #429 (wardstone bead swap, cudgel
 #                             yield, oak spear in the barracks crate).
 #   `dialogue node orphan` -- drained by #429 (riverfarm_hunter.agreed retired).
+#   `skill orphan`         -- drained by #429 (kindle -> hedge_witch L2;
+#                             frost_touch -> hedge_witch L4, ruling 33). A
+#                             Skill nothing grants is a build break now, not a
+#                             question -- the [Firefly] finding this whole
+#                             check was generalized from cannot recur silently.
 # STILL ADVISORY, and why:
-#   `skill orphan`     -- `frost_touch` is undrained. Its ruled wiring (an
-#                         Eloise dialogue grant) has no shipped mechanism: the
-#                         dialogue effect loop has no `skill` verb and
-#                         `player_skills` is written only at init/load, so no
-#                         DATA edit can grant a Skill. Promote this row the
-#                         moment that grant lands and the row goes away.
 #   `map orphan`       -- ruled advisory by #429; a parked region is a design
 #                         position, not a defect.
 #   `enemy-kit only`   -- a category, never a defect (reachable AT the player).
-#   `gate carrier orphan` -- joins the two halves; follows the skill arm.
+#   `gate carrier orphan` -- the JOIN arm. It reports a property whose carriers
+#                         are all unlearnable, which now implies a promoted
+#                         `skill orphan` row that reds first; kept advisory so
+#                         the join keeps explaining WHAT sealed rather than
+#                         doubling the verdict.
 # A crash inside the check can never promote anything: the crash row carries no
 # `[category]` prefix, so it stays advisory and the rc contract holds.
-HARD_FAIL_REACHABILITY_CATEGORIES = frozenset({"item orphan", "dialogue node orphan"})
+HARD_FAIL_REACHABILITY_CATEGORIES = frozenset({
+	"item orphan", "dialogue node orphan", "skill orphan"})
 #
 # CODE-GRANT ALLOWLISTS. Some content is handed out by GDScript, not by data,
 # so the data graph alone would call it orphaned. Each row pins the exact

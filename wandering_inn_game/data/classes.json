@@ -570,7 +570,7 @@
 				{ "level": 1, "requires": {}, "grants": ["hedge_remedy"] },
 				{ "_comment": "kindle [Firefly] = hearth-flame craft register. Widens the `burns` carrier union to {flame_jet, kindle}; data_lint's gate-carrier join reads that union.", "level": 2, "requires": { "witch_craft_used": 2 }, "grants": ["kindle"] },
 				{ "level": 3, "requires": { "witch_craft_used": 4 }, "grants": ["witchs_warding"] },
-				{ "level": 4, "requires": { "witch_craft_used": 7 }, "grants": [] },
+				{ "_comment": "frost_touch [Snap Freeze] = winter-craft register, stilling water. Widens the `freezes` carrier union to {icy_floor, frost_touch}; data_lint's gate-carrier join reads that union.", "level": 4, "requires": { "witch_craft_used": 7 }, "grants": ["frost_touch"] },
 				{ "level": 5, "requires": { "witch_craft_used": 10 }, "grants": ["hearthward_charm"] },
 				{ "level": 6, "requires": { "witch_craft_used": 14 }, "grants": [] },
 				{ "level": 7, "requires": { "witch_craft_used": 18 }, "grants": ["evil_eye"] },

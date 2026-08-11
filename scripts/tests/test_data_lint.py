@@ -571,15 +571,14 @@ class TestContentReachability(unittest.TestCase):
     def test_head_tree_findings_are_the_known_set(self):
         counts, advisories = self._run()
         self.assertEqual(counts.get("map orphan", 0), 0, advisories)
-        orphans = [line for line in advisories if line.startswith("[skill orphan]")]
-        # GH#429 drained `kindle` (hedge_witch L2). `frost_touch` is the ONE
-        # survivor and the reason the skill category is still advisory.
-        self.assertEqual(len(orphans), 1, orphans)
-        self.assertTrue(any("'frost_touch'" in line for line in orphans), orphans)
-        # GH#429 drained every item and the one dead dialogue node, which is
-        # what earned those two categories their promotion.
-        for drained in ("[item orphan]", "[dialogue node orphan]"):
-            self.assertFalse([line for line in advisories if line.startswith(drained)], drained)
+        # GH#429 drained all three promoted categories: kindle -> hedge_witch
+        # L2 and frost_touch -> hedge_witch L4 (ruling 33) closed the skill arm,
+        # the three item wirings closed the item arm, and riverfarm_hunter.agreed
+        # was retired. Every promoted category must read EMPTY on a clean tree,
+        # or the shipped build reds -- which is the whole point of promoting it.
+        for drained in data_lint.HARD_FAIL_REACHABILITY_CATEGORIES:
+            self.assertFalse([line for line in advisories
+                if line.startswith(f"[{drained}]")], (drained, advisories))
         # The code-grant allowlist covers the boons, so they must NOT show up
         # -- and no allowlist row may be reporting drift on a clean tree.
         self.assertFalse([line for line in advisories if line.startswith("[code-grant drift]")], advisories)
@@ -612,8 +611,9 @@ class TestContentReachability(unittest.TestCase):
         counts, advisories = self._run(mutate)
         self.assertTrue(any(line.startswith("[skill orphan]") and "'quick_cast'" in line
             for line in advisories), advisories)
-        # quick_cast + frost_touch (GH#429 drained kindle out of this tally).
-        self.assertEqual(counts["skill orphan"], 2)
+        # quick_cast ALONE: GH#429 drained both shipped skill orphans, so the
+        # mutation's own victim is the entire tally.
+        self.assertEqual(counts["skill orphan"], 1)
 
     def test_gate_carrier_arm_is_clean_on_head(self):
         counts, _ = self._run()
@@ -687,7 +687,10 @@ class TestContentReachability(unittest.TestCase):
         self.assertTrue(any("'somewhere_new'" in line for line in sealed), sealed)
 
     def test_degranting_the_last_freezes_carrier_seals_the_water(self):
-        _counts, advisories = self._run(self._degrant("icy_floor"))
+        # `freezes` ships two carriers and GH#429 ruling 33 granted the second:
+        # icy_floor (ice_mage) and frost_touch (hedge_witch L4). Both must go
+        # before the water can seal -- the burns pair's own shape.
+        _counts, advisories = self._run(self._degrant("icy_floor", "frost_touch"))
         sealed = [line for line in advisories if line.startswith("[gate carrier orphan]")]
         self.assertTrue(any("carries `freezable` cells" in line for line in sealed), sealed)
         # pond_island's first mode is a `property` mode on `freezes`, so the
@@ -803,11 +806,12 @@ class TestReachabilityPromotion(unittest.TestCase):
         rc, _ = self._main_rc()
         self.assertEqual(rc, 0)
 
-    def test_promoted_categories_are_the_drained_two(self):
-        # The membership IS the contract: `skill orphan` must stay out until
-        # frost_touch has a grant, or the shipped tree reds on a known gap.
+    def test_promoted_categories_are_the_drained_three(self):
+        # The membership IS the contract. `map orphan` and `enemy-kit only`
+        # must stay OUT: both have honest "yes, deliberately" answers, and
+        # promoting either would red the shipped tree on a design position.
         self.assertEqual(set(data_lint.HARD_FAIL_REACHABILITY_CATEGORIES),
-            {"item orphan", "dialogue node orphan"})
+            {"item orphan", "dialogue node orphan", "skill orphan"})
 
     def test_de_wiring_an_item_hard_fails(self):
         original = data_lint._item_sources
@@ -831,11 +835,28 @@ class TestReachabilityPromotion(unittest.TestCase):
         self.assertIn("FAIL -- reachability [dialogue node orphan]", text)
 
     def test_an_advisory_category_still_cannot_change_the_verdict(self):
-        # frost_touch is a live skill orphan on HEAD and the run is green.
-        # That IS the proof the un-promoted categories kept their tier.
+        # `enemy-kit only` rows are live on HEAD (slam, raskghar_maul,
+        # flame_bolt) and the run is green. That IS the proof the un-promoted
+        # categories kept their tier when the third category was promoted.
         rc, text = self._main_rc()
         self.assertEqual(rc, 0)
-        self.assertIn("ADVISORY -- reachability [skill orphan]", text)
+        self.assertIn("ADVISORY -- reachability [enemy-kit only]", text)
+
+    def test_de_granting_a_skill_hard_fails(self):
+        # Ruling 33's own regression fence: with the skill arm promoted, the
+        # [Firefly] finding this whole check generalizes cannot recur quietly.
+        original = data_lint.check_content_reachability
+
+        def patched(parsed, maps, advisories):
+            for cls in parsed[data_lint.DATA / "classes.json"]["classes"]:
+                for level in cls.get("levels", []):
+                    level["grants"] = [s for s in level.get("grants", [])
+                        if s != "frost_touch"]
+            return original(parsed, maps, advisories)
+
+        rc, text = self._main_rc("check_content_reachability", patched)
+        self.assertEqual(rc, 1)
+        self.assertIn("FAIL -- reachability [skill orphan]", text)
         self.assertIn("frost_touch", text)
 
     def test_a_crash_inside_the_check_can_never_promote(self):
