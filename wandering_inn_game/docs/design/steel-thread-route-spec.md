@@ -102,13 +102,37 @@ boss, vault construct (likely), wolves night watch, forge hall, Seal
 Warden. Seal resolution = `seal_opened` (matches old album's
 warden/vault beats).
 
-## Known holes to resolve at build time (not blockers)
+## Holes as resolved at build time (2026-08-11, Acts I–IV built)
 
-- Exact `horns_delve_started` trigger surface (guild vs inn dialogue).
-- `a_winter_of_teeth` (night-watch wolves) start trigger — proximity vs
-  quest start; the fixture name suggests a prepared night state, the
-  continuous run must arrive at night or trigger organically.
-- Whether `vault_construct_downed` has a no-fight alternative (spec
-  says fight is one of three paths; take whichever keeps `seal_kept_found`).
-- `witch_hollow` entry gating from riverfarm_village (walked door).
-- Epilogue's exact event name (old script tail is the donor).
+- `horns_delve_started`: Olesm at street (29,3), post_game-gated
+  Watch-notice option (+5g), starts `what_the_seal_kept`.
+- `a_winter_of_teeth` night-watch fight is NOT schedulable on a portal
+  route: `river_wolf_pack` gates on phase:night and phase derives from
+  `actions_since_sleep` vs a 900-action threshold. The run takes the
+  TRACK leg (`pack_traced`) instead.
+- Grimalkin's "fitness examination" is a PAID READING (8g), not a
+  fight — the calibration-fight branch assumed above does not exist.
+- Hedault's reading gates on `brothers_job_done` + `spine_started` —
+  the "Hedault first" ordering above is not playable.
+- Second class arrived as [Mage] via Pisces' lessons (not the scroll);
+  [Diplomat] later formed from the guided-Ksmvr resolution grant and
+  is LOAD-BEARING: `price_of_a_favor`'s mediate path needs [Calming
+  Touch], and the fight alternative loses at warrior 12.
+- Epilogue: final sleep at the bed → `ui_sleep_veil_finished` →
+  `ui_gdi_epilogue_rendered`.
+
+## Reachability/balance findings ledger (for the observation debrief)
+
+1. Act III XP is a lump: whole act fought at warrior 2, w2→w11 at the
+   closing sleep veil.
+2. Act IV economy: Pallass costs 46g end-to-end; the spine arrives
+   underfunded and needs three earning detours (Zevara back-bounties
+   +17, Wilovan courier +25 — gated BEHIND `brothers_job_done`, Krshia
+   potion buyback +18). Refusing Coyle's 40g extortion (per content
+   design) IS the funding gap.
+3. `price_of_a_favor` unresolvable on a pure warrior/mage build (see
+   Diplomat note above).
+4. Invrisil alleys cannot be crossed clean without [Stealth]; the
+   spine build eats two mandatory footpad fights across four crossings.
+5. `lattice_witch_lore` gating (`price_of_a_favor_reported` +
+   `spine_started`) forces three village↔hollow round trips.
