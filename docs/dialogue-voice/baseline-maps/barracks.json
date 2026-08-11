@@ -109,14 +109,14 @@
     "dialogue": [
      {
       "speaker": "Sergeant Ashgrave",
-      "text": "Barracks is Watch business only. State yours."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Sergeant Ashgrave",
     "facing": "down",
     "id": "duty_sergeant",
     "kind": "npc",
-    "observe": "A belt-slate at his hip, chalk stub worn to a nub, already a line into today's tally. Rust-brown scales, no plate for a desk posting \u2014 he'd rather be finishing the count than talking to you.",
+    "observe": "\u00b6",
     "person": true,
     "sprite": "royal_soldier",
     "talk_pool": [
@@ -161,10 +161,10 @@
     "display_name": "Zevara's Desk",
     "id": "zevara_desk",
     "kind": "prop",
-    "observe": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it. The gate keeps her busier than her own office does.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "saw_zevaras_desk",
     "sprite": "library_desk",
-    "toast": "Watch Captain's desk. Empty, same as every other time you've walked past it."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -174,8 +174,8 @@
     "display_name": "The Cell",
     "id": "cell_door",
     "kind": "prop",
-    "locked_toast": "Barred, and empty behind the bars. You can tell by the quiet. Whatever ends up in here hasn't happened yet.",
-    "observe": "A single holding cell, iron-barred, straw swept into one corner. Duty-mundane, like everything else in this building \u2014 until it isn't.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "sprite": "door",
     "tint": [
      0.5,
@@ -192,12 +192,12 @@
     "display_name": "Archery Butt",
     "id": "archery_butt",
     "item": "loose_arrow",
-    "item_hint_toast": "Nothing to shoot with. A bow in hand would do it.",
+    "item_hint_toast": "\u00b6",
     "kind": "prop",
-    "observe": "A straw-packed target lashed to a post, set against the wall where a stray shot won't find a person. Scored through in a tight cluster, more or less \u2014 somebody here takes the drills seriously.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "ranged_hit",
     "once_per_waking": true,
-    "once_per_waking_toast": "You have shot your quiver dry for today. The straw will keep.",
+    "once_per_waking_toast": "\u00b6",
     "requires_weapon_family": "bow",
     "sprite": "training_dummy",
     "tint": [
@@ -205,20 +205,22 @@
      0.75,
      0.45
     ],
-    "toast": "You put an arrow in the straw. Not bad, for someone who still flinches at the draw."
+    "toast": "\u00b6"
    },
    {
+    "_comment": "ORDER IS CONTRACT: field_whetstone stays FIRST -- barracks_walkthrough waits on its item_gained/toast pair before anything else. solid_oak_spear appended second (yard-turned practice spear, its own lore's home).",
     "cell": [
      4,
      6
     ],
     "contains": [
-     "field_whetstone"
+     "field_whetstone",
+     "solid_oak_spear"
     ],
     "display_name": "An Overlooked Kit Crate",
     "id": "spare_kit_crate",
     "kind": "prop",
-    "observe": "A second kit crate, shoved into the corner and never reshelved. The sergeant's own tally probably missed it.",
+    "observe": "\u00b6",
     "sprite": "crate",
     "tint": [
      0.5,
@@ -237,7 +239,7 @@
     "display_name": "A Watch Veteran's Letter",
     "id": "note_watch_veteran",
     "kind": "prop",
-    "observe": "A folded half-letter, tucked behind a loose board. Someone started writing it and never finished.",
+    "observe": "\u00b6",
     "on_open_accomplishment": "found_watch_veteran_note",
     "sprite": "note_pinned",
     "tint": [
@@ -257,7 +259,7 @@
     "display_name": "A Ward-Charm Scrap",
     "id": "note_old_dread",
     "kind": "prop",
-    "observe": "A scrap of paper pinned low, tucked behind a loose board same as the letter across the room.",
+    "observe": "\u00b6",
     "on_open_accomplishment": "found_old_dread_note",
     "sprite": "note_pinned",
     "tint": [
@@ -298,8 +300,8 @@
    "width": 14
   },
   "interior_flavor": [
-   "Nothing there. Stone, kit racks, and the smell of oil worked into wood over years.",
-   "Nothing there. A shield knocks against its peg down the corridor, then goes quiet."
+   "\u00b6",
+   "\u00b6"
   ],
   "walls": {
    "segments": [
