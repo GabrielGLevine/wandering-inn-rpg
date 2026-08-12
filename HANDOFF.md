@@ -48,6 +48,12 @@ or superseded session blocks.
   AFTER #437's dual-policy sim table exists (tuning harness); steel-thread
   Act V reauthors last (currently completes via the sneak-past — honest
   record of today's balance until the retune lands).
+- QUEUED: **[Spellspear] lane (#449, user-ruled 2026-08-12)** — evolved-
+  lineage consolidation class; FULL implementable spec in the #449
+  comment (consolidation row, sparse-table class, flavored skill twins
+  + icons, registration matrix, canonical, sim row, steel-thread
+  no-change verify). Purely additive; wiki-verify the name before id
+  freeze. Dispatch when usage allows (parked at WINDDOWN, fable band).
 - QUEUED: **playthrough engine** (#438 tracking; #436 oracle → #435
   checkpoints → #437 pre-sim → #434 itinerary compiler; all knowledge
   embedded in the issues + the wi-writing-qa-scripts lessons section).

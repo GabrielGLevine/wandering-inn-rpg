@@ -27,6 +27,17 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### Steel thread and item abilities (2026-08-11)
 
+- **Evolved lineages consolidate into unique classes (user ruling,
+  2026-08-12, #449).** Spearmaster + mage does NOT lineage-carry into
+  [Spellsword]; it consolidates into its own class — [Spellspear]
+  (name pending a wiki verify before id freeze; [Magic Spearmaster]
+  was the alternative) — spellsword-baselined consolidation skills,
+  spear-flavored, lineage kit via inherits. This is #347's
+  high-level-unique-class case realized on the existing static
+  machinery; rejected alternatives: consolidation recipes accepting
+  evolved parents into the SAME target (erases lineage identity),
+  and evolution deferring while consolidation is in reach. Full
+  implementable spec on #449.
 - **The warden wakes for every descent; endings stay three-path
   (2026-08-12).** #437's measurements refuted the "warden stat wall"
   (competent-policy WIN 0.73 at the shipped build; 0.77 at band) — so
