@@ -1,5 +1,8 @@
 # Continuous Steel Thread Implementation Plan
 
+> **Status: DONE (2026-08-11).** All acts green at seed 9; findings in
+> `wandering_inn_game/docs/design/steel-thread-route-spec.md`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Rewrite `qa/scripts/steel_thread.json` as ONE continuous playthrough — single PC, title screen → epilogue, every state reached by an in-game event from the previous state (no `install_fixture`, no `teleport`).
