@@ -338,3 +338,40 @@ byte-identical), and run verify-untouched IN THE SAME COMMIT.
   failures[] list can flatter a broken run; read the FIRST divergence
   and events.jsonl, not the count. Deliberately-failing `assert_state`
   probes are a cheap state-dump idiom (many unknowns per run).
+
+## Instruments and traps from the balance-program wave (2026-08-12)
+- **New driver actions:** `dump_state {label}` (emits `qa_state_dump` to
+  events.jsonl in a PASSING run — the sanctioned probe idiom) and
+  `dump_checkpoint {slot}` (WISave → user saves + copy-out to
+  qa_output/<script>/; refuses in combat/dialogue/consolidation).
+  `run_qa.sh --checkpoint-at=N[,N…]` checkpoints an existing script
+  WITHOUT editing it (defers past combat/dialogue to the next quiet
+  step). `fixture_save` accepts a PATH, so scratch scripts load
+  checkpoints straight from qa_output/. Fail-fast: `--fail-fast` flag /
+  `QA_FAIL_FAST=1` / `"fail_fast": true` — stops at first failure;
+  every failure line now carries a state dump (map/cell/gold/dialogue
+  options+cursor/combat roster).
+- **The oracle answers before you run:** `qa/oracle.gd` (see
+  qa/STEEL-THREAD.md) — `visible_options` (with cursor_index AND
+  authored_index + why dropped rows dropped), `path` (BFS → driver-shape
+  move steps + bump approach), `state`, `field_bar`, `known_skills`,
+  `portal_rows`, `inventory`. Derive dialogue cursors and walk routes
+  from it, not from red runs.
+- **Worktree trap:** `cd /Users/gabriel/wandering-inn-rpg && godot
+  --path wandering_inn_game` silently runs the MAIN repo from inside a
+  worktree — verify `git rev-parse --show-toplevel` before any
+  godot/qa command in a lane. A fresh worktree/merge also needs
+  `godot --headless --import` or new class_names parse-error.
+- **`--script` runs:** autoloads exist at `_initialize()`, not
+  `_init()`; a failed `assert()` does NOT stop the run and a trailing
+  PASS line still prints — only the SCRIPT ERROR grep catches it.
+- **Falsifiable dialogue-gate pins:** most hub gates pair a `requires`
+  with a `hide_when` on the SAME counter (one row appears, one
+  disappears — net row count unchanged). Pin a gate WITHOUT a paired
+  hide_when, or pin text, never row counts.
+- **Balance doctrine (CHOICE-LOG 2026-08-12):** QA proves
+  completability, sims prove balance. Never tune an encounter to green
+  an autoplay pin; re-fixture the canonical at/over band instead.
+  Tuning target = competent policy at band ∈ [0.55, 0.85]
+  (`qa/combat_policies.gd`, `tests/sim_spine_viability.gd`,
+  `docs/design/balance-bands-and-policy.md`).
