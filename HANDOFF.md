@@ -28,6 +28,15 @@ or superseded session blocks.
   rc 0, import pass done. License verdict appended (license-notes,
   local). Alternates parked server-side (tags pick-lock-icon /
   workroom-door / enchanter-shelf).
+- RUNNING (2026-08-11, Fable session): **balance program wave 1**. Fable
+  frontload done: #441 filed (re-fixture decoupling), band draft +
+  competent-policy spec committed (`docs/design/balance-bands-and-policy.md`,
+  a9c3fbde). Three lanes in flight: qa-tooling-436-435 (oracle,
+  fail-fast, dump_state, checkpoints), sim-table-437 (combat_policies.gd
+  dumb+competent, spine viability table + calibration gate + the
+  spellsword-14 warden verdict that scopes #440), and a read-only #441
+  enumeration. Controller gates + merges; next: re-fixture wave (#441),
+  then #439 retunes, #440, Act V reauthor.
 - QUEUED: **balance program** (#439 per-act leveling bands -> #440 Warden
   chokepoint retune, user rulings 2026-08-11; CHOICE-LOG entry). Sequenced
   AFTER #437's dual-policy sim table exists (tuning harness); steel-thread
