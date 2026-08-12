@@ -81,3 +81,33 @@ Calibration acceptance (ground truth from the shipped steel thread):
   (2.5× gap exceeds resource use).
 - gallery_vermin_nest vs same: floor LOSS, competent WIN.
 - Act III scouts/boss vs w2+Relc: floor WIN (3-4 rounds).
+
+## Measured results (2026-08-12, spine-viability-table.md; adjudicated)
+
+| Act climax | Band build | floor | competent | verdict |
+|---|---|---|---|---|
+| I gate ambush | w2 | 0.98 | 0.98 | trivial — retune |
+| II cistern nest | w3/m2 | 1.00 | 1.00 | trivial — retune |
+| III awakened boss | w5/m4 | 0.92 | 1.00 | trivial at band — retune |
+| IV vault construct | w7/m6 | 0.59 | 0.75 | IN WINDOW — leave |
+| V seal warden | ss14 | 0.61 | 0.77 | IN WINDOW — leave |
+
+**Tuning window (the #439 target, set here):** each act climax lands
+competent-at-band in **[0.55, 0.85]**; floor-at-band MAY lose (that is
+the decoupling working, not a defect). Retune scope is therefore
+**Acts I–III climaxes only** — IV and V are already fair.
+
+**Prediction refuted, accepted:** "warden vs shipped build, competent
+LOSS" measured WIN 0.73 (ablation: [Piercing Strikes] 0.73→0.50;
+warden's windup cadence + [Counter Strike] do the rest). The warden
+was never a stat wall for a resource-using player — the steel-thread
+wall was floor-policy + an empty pack (the run sold its own draughts
+BECAUSE autoplay never drinks — the ratchet reshaped inventory, not
+just tuning) + the amulet carried unequipped (equipping it alone moves
+floor 0.48→0.69). #440 is bypass rework ONLY; zero warden stat work.
+
+Also measured, for later waves: multiclass stat dilution (Act V spine
+build runs 0.69 stat efficiency — ~30% of growth pays for breadth;
+a real design lever, not a bug); [Second Wind] has no cooldown/
+once-per-fight bound (filed separately); `gallery_vermin_nest`
+rank-scales into gold against the Act V build.
