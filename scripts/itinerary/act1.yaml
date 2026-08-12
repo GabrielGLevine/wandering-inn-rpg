@@ -1,0 +1,25 @@
+- act: i
+  nodes:
+    - id: act1.floodplains.outbound
+      goto: {map: floodplains, cell: [11, 13]}
+    - id: act1.relc.meet
+      talk:
+        npc: relc
+        at: floodplains
+        choose_path:
+          - Just a traveler. Staying at the inn, heading for Liscor.
+          - I'll behave.
+      why: Meet the road's guardsman without accepting his combat-gated spar.
+    - id: act1.floodplains.return
+      goto: {map: inn, cell: [7, 3]}
+    - id: act1.erin.errand-entry
+      talk:
+        npc: erin
+        at: inn
+        choose_path:
+          - Just passing through.
+      why: Enter Erin's real errand conversation, then take its harmless exit.
+    - id: act1.bed.approach
+      goto: {map: inn_upstairs, cell: [9, 1]}
+    - id: act1.sleep
+      sleep: {expect_levels: false}

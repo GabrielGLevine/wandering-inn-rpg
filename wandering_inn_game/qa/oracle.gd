@@ -40,6 +40,7 @@ const QUERIES := {
 	"visible_options": "<graph_id> [<node_id>] -- rows dialogue.gd would SHOW under this state",
 	"path": "<map> <x,y> <x,y> -- BFS over the map's blocked grid + entity cells",
 	"state": "<dot.path> -- anything WIGame.snapshot() reaches (omit for the whole snapshot)",
+	"progression_preview": "-- class gains, levels, consolidation, and evolution outcomes at the next sleep",
 	"field_bar": "-- field_hotbar_loadout() with slot numbers and number-key reachability",
 	"known_skills": "-- known_skills() split by source (innate / class grant / worn)",
 	"portal_rows": "-- portals.json x accomplishments x current-map exclusion",
@@ -61,6 +62,10 @@ const DIRECTIONS := {
 
 func _initialize() -> void:
 	var args := _parse_args(OS.get_cmdline_user_args())
+	var queries_path := String(args.get("queries", ""))
+	if queries_path != "":
+		_run_batch(queries_path, String(args.get("save", "")), String(args.get("out", "")))
+		return
 	var query := String(args.get("query", "")).strip_edges()
 	var out_path := String(args.get("out", ""))
 	var answer: Dictionary
@@ -91,6 +96,8 @@ func _initialize() -> void:
 			answer = _q_path(sim, rest)
 		"state":
 			answer = _q_state(sim, rest)
+		"progression_preview":
+			answer = _q_progression_preview(sim)
 		"field_bar":
 			answer = _q_field_bar(sim)
 		"known_skills":
@@ -135,7 +142,7 @@ func _parse_args(argv: PackedStringArray) -> Dictionary:
 	return out
 
 
-func _emit(answer: Dictionary, out_path: String) -> void:
+func _emit(answer: Variant, out_path: String) -> void:
 	var text := JSON.stringify(answer)
 	if out_path != "":
 		var f := FileAccess.open(out_path, FileAccess.WRITE)
@@ -143,6 +150,72 @@ func _emit(answer: Dictionary, out_path: String) -> void:
 			f.store_string(text)
 			f.close()
 	print("ORACLE_JSON: " + text)
+
+
+## Batch mode deliberately rebuilds a sim per row. It amortizes process boot
+## without letting one query leak mutations into the next. Rows are either a
+## query String or `{query, save?}`; the command's `--save` is the fallback.
+func _run_batch(path: String, default_save: String, out_path: String) -> void:
+	if not FileAccess.file_exists(path):
+		_emit([{"error": "no such queries file: %s" % path}], out_path)
+		quit(1)
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (parsed is Array):
+		_emit([{"error": "queries file must be a JSON array: %s" % path}], out_path)
+		quit(1)
+		return
+	var answers: Array = []
+	var failed := false
+	for raw: Variant in parsed:
+		var request: Dictionary = raw if raw is Dictionary else {"query": String(raw)}
+		var query := String(request.get("query", "")).strip_edges()
+		if query.is_empty():
+			answers.append({"error": "batch query is empty"})
+			failed = true
+			continue
+		var tokens := query.split(" ", false)
+		var verb := String(tokens[0])
+		var rest: Array = []
+		for i in range(1, tokens.size()):
+			rest.append(String(tokens[i]))
+		if not QUERIES.has(verb):
+			answers.append({"error": "unknown query: %s" % verb, "known": QUERIES.keys()})
+			failed = true
+			continue
+		var sim_or_error: Variant = _load_sim(String(request.get("save", default_save)))
+		if sim_or_error is Dictionary:
+			answers.append(sim_or_error)
+			failed = true
+			continue
+		var answer := _answer_query(sim_or_error as WIGame, verb, rest)
+		answer["query"] = verb
+		answers.append(answer)
+		failed = failed or answer.has("error")
+	_emit(answers, out_path)
+	quit(1 if failed else 0)
+
+
+func _answer_query(sim: WIGame, verb: String, rest: Array) -> Dictionary:
+	match verb:
+		"visible_options":
+			return _q_visible_options(sim, rest)
+		"path":
+			return _q_path(sim, rest)
+		"state":
+			return _q_state(sim, rest)
+		"progression_preview":
+			return _q_progression_preview(sim)
+		"field_bar":
+			return _q_field_bar(sim)
+		"known_skills":
+			return _q_known_skills(sim)
+		"portal_rows":
+			return _q_portal_rows(sim)
+		"inventory":
+			return _q_inventory(sim)
+		_:
+			return {"error": "unhandled query: " + verb}
 
 
 ## Returns a WIGame, or a Dictionary describing why it could not.
@@ -409,6 +482,47 @@ func _q_state(sim: WIGame, argv: Array) -> Dictionary:
 			return {"error": "path not found: %s" % path,
 				"available": (cur as Dictionary).keys() if cur is Dictionary else null}
 	return {"path": path, "value": cur}
+
+
+## This is the sleep beat's own progression ordering, evaluated on copies:
+## gains at level 1, all eligible level-ups, consolidation before evolution.
+## A consolidation offer defers evolution in the real beat, so candidates are
+## reported separately and `evolutions` stays empty while the modal is armed.
+func _q_progression_preview(sim: WIGame) -> Dictionary:
+	var catalog: Dictionary = sim._combat_config.get("classes", {})
+	var before: Dictionary = sim.classes.duplicate(true)
+	var classes: Dictionary = before.duplicate(true)
+	var generalist: Array = sim.generalist_classes.duplicate()
+	var class_gains := WIProgression.check_class_gains(classes, sim.accomplishments, catalog)
+	for class_id: String in class_gains:
+		classes[class_id] = 1
+	var level_ups := WIProgression.check_level_ups(classes, sim.accomplishments, catalog)
+	for gain: Dictionary in level_ups:
+		classes[String(gain["class"])] = int(gain["level"])
+	var consolidation := sim.pending_consolidation.duplicate(true)
+	if consolidation.is_empty():
+		consolidation = WIProgression.check_consolidation(classes, catalog)
+	var candidates := WIProgression.check_evolutions(classes, sim.accomplishments, catalog, generalist)
+	var evolutions: Array = []
+	if consolidation.is_empty():
+		evolutions = candidates
+		for outcome: Dictionary in evolutions:
+			var class_id := String(outcome["class"])
+			if outcome.has("to"):
+				classes.erase(class_id)
+				classes[String(outcome["to"])] = int(outcome["level"])
+			elif bool(outcome.get("generalist", false)) and not generalist.has(class_id):
+				generalist.append(class_id)
+	return {
+		"classes_before": before,
+		"classes_after": classes,
+		"generalist_classes_after": generalist,
+		"class_gains": class_gains,
+		"level_ups": level_ups,
+		"consolidation": consolidation,
+		"evolutions": evolutions,
+		"deferred_evolutions": candidates if not consolidation.is_empty() else [],
+	}
 
 
 ## Worn-accessory abilities are known WHILE WORN (ruling 2026-08-11), so the bar
