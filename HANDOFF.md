@@ -28,21 +28,20 @@ or superseded session blocks.
   rc 0, import pass done. License verdict appended (license-notes,
   local). Alternates parked server-side (tags pick-lock-icon /
   workroom-door / enchanter-shelf).
-- ACTIVE (2026-08-11, Fable session): **continuous steel thread rebuild**,
-  branch `steel-thread-continuous`. User directive: steel_thread.json must be
-  ONE continuous playthrough (single PC, no install_fixture/teleport, true act
-  order — the old stitched album played regions before the warren and mixed
-  four PC iterations). Plan: `docs/superpowers/plans/2026-08-11-continuous-steel-thread.md`;
-  route spec: `wandering_inn_game/docs/design/steel-thread-route-spec.md`.
-  Acts I+II committed GREEN at seed 9 (495 steps). Act III delegated to an
-  Opus lane (in flight); Act IV brief staged (session scratchpad
-  `act4-brief.md`); Act V after. Then docs (STEEL-THREAD.md rewrite +
-  CHOICE-LOG: rewrite-in-place, kept_reward for spine gold, fight paths for
-  leveling) and double-headless + windowed observation run for the user.
-  Key new idiom (fold into wi-writing-qa-scripts at close): NPC pool line on
-  a NEW waking absorbs the first interact — use interact / wait dialogue_line /
-  interact; also patch-hygiene: re-read JSON after programmatic edits, never
-  print success outside the match loop.
+- DONE (2026-08-11, Fable session): **continuous steel thread rebuilt and
+  merged** (`ceefd357` + follow-ups on main). One PC, title → epilogue,
+  true act order, zero install_fixture/teleport (grep-gated), 2448 steps,
+  seed 9, headless ~55s ×2 green, windowed observation run completed
+  green (72 captures, 14-line epilogue). Companion ruling shipped: worn-
+  accessory abilities are known while worn (known_skills fold + field-bar
+  re-render on equip + honest effect-text qualifier; sim_core/effect_text
+  pins and data_lint code-grant anchors repinned). Findings ledger for
+  the user's pacing/reachability debrief:
+  `wandering_inn_game/docs/design/steel-thread-route-spec.md` (warden
+  wall + autoplay competence gap, Act III XP lump, Act IV economy
+  squeeze, Diplomat load-bearing, alleys need [Stealth]). Known
+  pre-existing red, NOT this wave's: `d3_inventory_shot` (fails on an
+  unmodified tree too — inventory pin drift; triage separately).
 - No other issue implementation lane is recorded as active. The exact next action on
   this tree is to review and commit the housekeeping bundle without dropping
   unrelated edits. `scripts/preflight.sh --full` is green on the composed
