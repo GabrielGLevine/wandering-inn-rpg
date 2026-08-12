@@ -2,6 +2,65 @@ extends SceneTree
 ## Balance authority: gated cells enforce bands; measured cells only report.
 ## Region tiers never scale to the player. Shards preserve global cell order
 ## and per-cell RNG, so their concatenated output must match an unsharded run.
+##
+## ============ #451: THE [COUNTER STRIKE] ONCE-PER-ROUND CAP (2026-08-12) =======
+## `counter_strike` gained `once_per_round: true` (skills.json) and
+## `WICombat._resolve_hit` now refuses a SECOND riposte from the same defender
+## inside one round. A defender taking N melee hits a round used to answer all N
+## for free; it answers exactly one now. Every band in this file was authored
+## BEFORE that cap, so 17 of them went out of bounds on the first post-cap run and
+## are re-derived below. The cap is user-sanctioned; the re-pin follows it.
+##
+## THE ATTRIBUTION IS MEASURED, NOT INFERRED. The merge-base (817ffe27) and this
+## branch were both run over the full 146 cells x 100 seeds, plain floor policy.
+## The merge-base run is GREEN ("PASS: balance harness terminated cleanly over 146
+## cells x 100 seeded runs"), so every red below belongs to this branch. Diffing
+## the two runs cell by cell: 53 cells moved by >= 0.03, and the number of cells
+## that moved WITHOUT a `counter_strike` holder on the field is ZERO -- every one
+## of the 31 cells whose PC build lacks the skill (ice_mage14_solo, fire_mage14_
+## solo, sharpshooter14_solo, infiltrator14_solo, strategist14_solo, the
+## beast_master, druid, necromancer and pure_mage rows, classless_solo, every
+## warrior1 row) reads EXACTLY its pre-cap number. That control is what makes this
+## an attribution instead of a story.
+## WHO HOLDS IT: `counter_strike` enters a PC kit at warrior 2 and rides
+## `inherits` into every evolved line above it, which is why swordsman14 and
+## spearmaster14 move at all; roster-side it is raskghar_pack_leader,
+## hired_blade_leader and the ally wilovan.
+## EXPOSURE IS PER HIT, NOT PER ATTACKER: `WICombatAI.take_turn` loops `_act_once`
+## while AP remains, so even a duel sheds ripostes when the single foe swings
+## twice (pond_guardian_t1_runner5_warrior5_solo -0.07, kingslayer_den_t4_solo
+## -0.07, both still in bounds). Every cell that went RED fields 2-3 attackers.
+##
+## THE RE-DERIVATION RULE, applied uniformly to all 17: the authored WIDTH is
+## HELD, and the window is re-placed so the measured post-cap value sits 0.07
+## above the new floor. That is this file's own `measured +/- 0.07` idiom
+## (side_vault_construct_*, briar_collectors_deep_t3_warrior10_solo) and GH#337's
+## own re-author method ("width held at 0.40; margins 0.08/0.32"); 0.07 is the
+## TIGHTEST near-margin of those precedents, so the convention itself loosens
+## nothing. Windows narrower than 0.14 are RE-CENTRED (margin W/2), which is where
+## their own authors placed them. No cell was un-gated, no window widened, no
+## `check_rounds` bar dropped -- every re-pinned cell's median is still inside
+## 3-12, so not one rounds bar needed touching.
+##
+## WHAT THE RE-PIN IS NOT. It restores the FLOOR-POLICY regression net to the
+## post-cap world and claims nothing else. It is NOT a ruling that these fights
+## are still balanced. Under `WI_POLICY=competent` (report-only leg, same seeds)
+## EIGHT of the seventeen now sit below the 0.55 floor of
+## `docs/design/balance-bands-and-policy.md`, pre -> post:
+##   collapsed_gallery_nest_w10_solo          0.86 -> 0.44
+##   alley_fence_t3_warrior10_solo            0.91 -> 0.45
+##   counting_room_guard_t3_warrior10_solo    0.90 -> 0.53
+##   thicket_line_den_t3_warrior10_solo       0.75 -> 0.47
+##   riverfarm_thicket_patch_t3_solo          0.72 -> 0.52
+##   hired_blades_t3_warrior10_wilovan        0.67 -> 0.40
+##   briar_collectors_deep_t3_warrior10_solo  0.59 -> 0.30
+##   briar_collectors_t3_warrior10_solo       0.58 -> 0.28
+## Those eight are a SEAM for whichever lane owns `data/combatants.json`, recorded
+## here rather than silently absorbed (this file's standing idiom). The
+## t3_warrior10 rows are the sharpest: a pure melee warrior holds no kit for a
+## competent policy to spend, so its competent read IS its floor read and the cap
+## lands undamped. This lane owns the suite only -- no data/ or src/ edit is in it.
+## ==============================================================================
 
 const RUNS_PER_CELL := 100
 
@@ -37,6 +96,42 @@ const RUNS_PER_CELL := 100
 ## because the hollow stopped fielding an ally. The deep pair's retune was sized
 ## to keep this ladder's statement: 0.94 / 0.84 / 0.69 / 0.61, gaps 0.10 / 0.15 /
 ## 0.08 -- rung 1 climbs 0.02 and every gap still clears LADDER_TIE by 0.05+.
+##
+## #451 (2026-08-12): THIS GATE IS RED ON THE CAP AND IS DELIBERATELY LEFT RED.
+## It is the one pin in this file that the band re-derivation did NOT re-pin, and
+## the reason is the gate's own charter. Measured, merge-base vs branch:
+##   merge-base  0.94 > 0.84 > 0.69 > 0.61   PASS, four real steps
+##   post-cap    0.87 > 0.60 > 0.69 > 0.61   FAIL, rung 3 easier than rung 2 by 0.09
+## The mechanism is clean and cell-specific. Rung 2 is the ONLY cell in this file
+## that fields THREE `counter_strike` holders at once -- the sw14 PC, the ally
+## Wilovan, and hired_blade_leader -- against a three-body roster, so it is the
+## most cap-exposed measurement in the whole matrix (0.84 -> 0.60). Rungs 3 and 4
+## are SOLO fights against a SINGLE golem/warden: zero multi-hit exposure, and
+## both moved by EXACTLY 0.00. The cap therefore re-ranks the ladder by ROSTER
+## SHAPE, and the ladder's whole premise is that four stops of different shapes
+## are comparable at one shared yardstick.
+##
+## WHY NOT RE-PIN IT. The two available re-pins are both the move this assert was
+## built to refuse. Re-ordering LADDER_RUNGS would be a lie about the game -- the
+## constant is the main quest's STOP ORDER (Riverfarm -> Invrisil -> Pallass ->
+## the seal), a narrative fact, and a gate re-sorted into whatever it measured
+## asserts nothing. Widening LADDER_TIE past 0.09 is the "widen the band until the
+## red goes away" move that this comment's own GH#337 history records being
+## refused: the SAME cell tied this ladder then, the response was a logged SEAM
+## plus a later combatants.json compensation (weapon_die 6 -> 8, v0.18 W5), and
+## the fix round added this direct ordering assert precisely so the next collapse
+## "could not be green with both gates still green". Silencing it now would spend
+## that.
+##
+## WHAT IT IS AND IS NOT EVIDENCE OF. Under `WI_POLICY=competent` (report-only,
+## same seeds) rung 2 reads 0.98 -> 0.92, so the SHIPPED Invrisil fight is not
+## itself broken -- what collapsed is the floor policy's crutch. This gate is a
+## floor-policy gate, so it reds anyway, and it is right to: the yardstick
+## comparison it makes across four differently-shaped stops is no longer sound
+## post-cap, and that is a finding, not a stale number.
+## THE LEVER IS `hired_blade_leader`'s own con/weapon_die in
+## `data/combatants.json` -- the same lever GH#337 named and v0.18 W5 pulled --
+## which this lane does not own (suite-only). Handed up as a STOP, not absorbed.
 const LADDER_RUNGS := [
 	"briar_collectors_deep_t5_sw14_solo",
 	"hired_blades_t5_sw14_wilovan",
@@ -172,7 +267,14 @@ const ENCOUNTER_CELLS := [
 	# #398-p2 collapsed-gallery stop: three Shield Spiders are +4 power over
 	# the shipped two-spider sewer nest. At the deep-tunnels build it measures
 	# 0.61 wins / 4 median rounds, inside the standard 0.55-0.95 / 3-12 gate.
-	{"name": "collapsed_gallery_nest_w10_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider", "shield_spider"], "build": "warrior5_mage5", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# #451 CAP RE-PIN: 0.61 -> 0.12, window 0.55-0.95 -> 0.05-0.45 (width 0.40 held,
+	# margins 0.07/0.33). THE LARGEST MOVE IN THE SET, and the most exposed roster
+	# in it: three Shield Spiders swinging at ONE warrior5_mage5 body meant three
+	# free ripostes a round pre-cap and one after it. Median holds at 4, so the
+	# rounds bar is untouched. SEAM: competent policy reads 0.86 -> 0.44, i.e. this
+	# stop is now under the doctrine floor for a player who spends their kit too --
+	# the spider stats are the lever and they live in combatants.json.
+	{"name": "collapsed_gallery_nest_w10_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider", "shield_spider"], "build": "warrior5_mage5", "solo": true, "win_lo": 0.05, "win_hi": 0.45, "check_rounds": true},
 	{"name": "crate_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
 	{"name": "crate_scavengers_w1_klbkch", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": false, "ally": "klbkch"},
 	{"name": "supplier_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
@@ -252,14 +354,25 @@ const BOSS_CELLS := [
 	# alternation. A boss getting modestly harder is the direction this
 	# milestone should push, so the window is re-centred rather than the trade
 	# compensated. Width held at 0.16, margins 0.07/0.09.
-	{"name": "awakened_boss_w2_relc", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": false, "win_lo": 0.5, "win_hi": 0.66},
+	# #451 CAP RE-PIN: 0.57 -> 0.49, window 0.50-0.66 -> 0.42-0.58 (width 0.16 held,
+	# margins 0.07/0.09 -- the same placement GH#337 chose for this cell). Three
+	# bodies on a warrior2 PC plus Relc: both allied sides shed their extra ripostes
+	# and the boss's HP pool outlasts what is left. Competent reads 0.64 -> 0.54,
+	# a proportional move, so this is a cap shift rather than a broken fight.
+	{"name": "awakened_boss_w2_relc", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": false, "win_lo": 0.42, "win_hi": 0.58},
 	{"name": "awakened_boss_w2_solo", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": true},
 ]
 
 const RUIN_CELLS := [
 	{"name": "rift_vermin_leak_w8_relc", "arena": "inn_cellar", "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.95},
 	{"name": "rift_vermin_leak_w8_solo", "arena": "inn_cellar", "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"], "build": "warrior5_mage5", "solo": true},
-	{"name": "ruin_guardian_w8_relc", "arena": "ruin_court", "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.8},
+	# #451 CAP RE-PIN: 0.68 -> 0.38, window 0.55-0.80 -> 0.31-0.56 (width 0.25 held,
+	# margins 0.07/0.18). Guardian + two wards is a three-attacker press on a
+	# counter_strike PC, and #398 P1 review M4 gave BOTH wards `power_strike` -- the
+	# burst branch is exactly what used to buy the PC its extra ripostes back.
+	# Competent reads 1.00 -> 0.95: the kit-spending player barely notices, which
+	# places this squarely in the floor-policy class rather than the seam class.
+	{"name": "ruin_guardian_w8_relc", "arena": "ruin_court", "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.31, "win_hi": 0.56},
 	# TRAP: MEASURED-only (0.13), and NAMED in difficulty_tier_report.py's
 	# EXTREME_FLIP_WHITELIST (Gold takes it to 0.00). Same rule as
 	# alley_fence_t3_warrior10_solo: retune or rename moves both or the tier
@@ -356,7 +469,14 @@ const RIVERFARM_CELLS := [
 	# roster/build/shape lands median 2 solo, so a 3-12 bar would red on the
 	# shipped numbers. Measured 0.69 after the con 30 -> 24 retune (0.33 solo
 	# before it, 0.91 with the retired ally), margins 0.14/0.26.
-	{"name": "briar_collectors_t3_warrior10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
+	# #451 CAP RE-PIN: 0.69 -> 0.33, window 0.55-0.95 -> 0.26-0.66 (width 0.40 held,
+	# margins 0.07/0.33). Two collectors on one solo warrior body: the #396 con
+	# 30 -> 24 retune bought this cell its 0.69 in a world where the PC answered
+	# BOTH swings every round, and it now answers one. SEAM: competent 0.58 -> 0.28
+	# -- t3_warrior10 is a pure melee kit, so its competent read IS its floor read
+	# and the cap lands undamped. The con lever that fixed it in #396 is the same
+	# one that would fix it now, and it lives in combatants.json.
+	{"name": "briar_collectors_t3_warrior10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.26, "win_hi": 0.66},
 	{"name": "briar_collectors_deep_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": true},
 	# RIVERFARM'S STOP CELL (its own expected level, 10) -- SOLO, and the gate
 	# blight_lifted's fight route lives or dies by. Band is the measured 0.63 +/-
@@ -378,10 +498,21 @@ const RIVERFARM_CELLS := [
 	# each) instead of being disjoint. Region ordering is carried where it is
 	# actually asserted -- LADDER_RUNGS at the top of this file, where rung 1 (this
 	# fight at t5_sw14, solo) reads 0.94 over Invrisil's 0.84.
-	{"name": "briar_collectors_deep_t3_warrior10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.56, "win_hi": 0.70, "check_rounds": true},
+	# #451 CAP RE-PIN: 0.63 -> 0.38, window 0.56-0.70 -> 0.31-0.45. This cell's band
+	# was already "the measured value +/- 0.07", so the re-derivation is that same
+	# rule re-applied to the new measurement -- width 0.14 held, margins 0.07/0.07.
+	# Mechanism is the shallow pair's, one rung harder: two deep collectors, one
+	# solo warrior, one riposte a round instead of two. check_rounds STAYS ON --
+	# median is still 3 and still carries the mass (69 of 100 runs).
+	# SEAM: competent 0.59 -> 0.30, the fight route blight_lifted lives or dies by.
+	{"name": "briar_collectors_deep_t3_warrior10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.31, "win_hi": 0.45, "check_rounds": true},
 	{"name": "river_wolf_pack_t3_hunter", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": false},
 	{"name": "river_wolf_pack_t3_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": true},
-	{"name": "riverfarm_thicket_patch_t3_solo", "arena": "witch_hollow", "enemies": ["thicket_remnant_a", "thicket_remnant_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
+	# #451 CAP RE-PIN: 0.77 -> 0.50, window 0.55-0.95 -> 0.43-0.83 (width 0.40 held,
+	# margins 0.07/0.33). Two remnants, one solo warrior body -- the same two-hits-
+	# one-riposte shape as every other Riverfarm pair here.
+	# SEAM: competent 0.72 -> 0.52, just under the doctrine floor.
+	{"name": "riverfarm_thicket_patch_t3_solo", "arena": "witch_hollow", "enemies": ["thicket_remnant_a", "thicket_remnant_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.43, "win_hi": 0.83},
 	# v0.16 #305: the two new Riverfarm side-quest fights, both SOLO (neither
 	# encounter fields the hunter -- the granary is inside the mill and the den
 	# is the FIGHT alternative to walking the line with him). Same stats as
@@ -402,7 +533,11 @@ const RIVERFARM_CELLS := [
 	# two-run coin flip on the median: its bar was DROPPED rather than defended.
 	# Never move data to protect a rounds bar (ruling 2).
 	{"name": "granary_scavengers_t3_warrior10_solo", "arena": "inn_cellar", "enemies": ["granary_scavenger_a", "granary_scavenger_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
-	{"name": "thicket_line_den_t3_warrior10_solo", "arena": "witch_hollow", "enemies": ["line_stalker_a", "line_stalker_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
+	# #451 CAP RE-PIN: 0.79 -> 0.53, window 0.55-0.95 -> 0.46-0.86 (width 0.40 held,
+	# margins 0.07/0.33). Two line stalkers on a solo warrior -- the thicket_remnant
+	# shape this rig clones verbatim, and it moved by the same hand.
+	# SEAM: competent 0.75 -> 0.47.
+	{"name": "thicket_line_den_t3_warrior10_solo", "arena": "witch_hollow", "enemies": ["line_stalker_a", "line_stalker_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.46, "win_hi": 0.86},
 	# MAIN-LINE BAND LADDER rung 1 of 4 (Phase 9, 2026-07-27). The four rungs
 	# share ONE yardstick -- t4_spellsword14_party against the stop's AS-SHIPPED
 	# roster -- so their win rates read as a single descending ladder. Riverfarm
@@ -438,7 +573,15 @@ const RIVERFARM_CELLS := [
 	# would red on an unrelated tune. Win rate is what this rung asserts; the
 	# rounds bar in this region belongs to the stop cell above, whose median 3
 	# carries 60% of its runs (see that comment for the rule).
-	{"name": "briar_collectors_deep_t5_sw14_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.88, "win_hi": 0.98},
+	# #451 CAP RE-PIN (LADDER RUNG 1): 0.94 -> 0.87, window 0.88-0.98 -> 0.82-0.92.
+	# Width 0.10 held and RE-CENTRED (margins 0.05/0.05) because that is where this
+	# rung's author placed it (0.06/0.04 around 0.94); a 0.10-wide window has no
+	# room for the file-wide 0.07 near-margin. The SMALLEST move of any red cell,
+	# and the reason is roster shape: two collectors against an over-levelled sw14
+	# body sheds one riposte a round out of a fight the yardstick was already
+	# winning. Competent reads 0.97 -> 0.88, same direction, same size.
+	# THE LADDER ORDERING PIN ITSELF IS NOT RE-DERIVED -- see LADDER_RUNGS' comment.
+	{"name": "briar_collectors_deep_t5_sw14_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.82, "win_hi": 0.92},
 ]
 
 const INVRISIL_CELLS := [
@@ -483,7 +626,16 @@ const INVRISIL_CELLS := [
 	# rather than being disjoint. The stop ORDERING is asserted where it always
 	# really was, LADDER_RUNGS at the top of this file -- rung 1 (Riverfarm, solo)
 	# 0.94 over rung 2 (this captain at the sw14 yardstick) 0.84.
-	{"name": "hired_blades_t3_warrior10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.56, "win_hi": 0.70, "check_rounds": true},
+	# #451 CAP RE-PIN: 0.63 -> 0.40, window 0.56-0.70 -> 0.33-0.47 (width 0.14 held,
+	# margins 0.07/0.07 -- the placement this cell already carried). THE THREE-
+	# HOLDER FIGHT at its on-level build: PC, Wilovan and hired_blade_leader all
+	# hold counter_strike, so the cap fires on both sides at once, and the reading
+	# above about the captain's cooled big hit "provoking the PC's own riposte"
+	# now describes something that happens once a round instead of twice. Net is
+	# player-negative because two allied bodies eat three attackers' worth of
+	# swings while the captain only has to survive focus fire. Median holds at 4.
+	# SEAM: competent 0.67 -> 0.40 (pure melee build, nothing to spend).
+	{"name": "hired_blades_t3_warrior10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.33, "win_hi": 0.47, "check_rounds": true},
 	{"name": "hired_blades_t3_spellsword9_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": true},
 	{"name": "hired_blades_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": true},
 	{"name": "boulevard_night_footpads_t3_spellsword9_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_spellsword9", "solo": true},
@@ -542,7 +694,17 @@ const INVRISIL_CELLS := [
 	# longer what carries ordering: `LADDER_RUNGS`/`LADDER_TIE` does, by
 	# assertion, and that is the contract this restoration hands it back a real
 	# step to defend.
-	{"name": "hired_blades_t5_sw14_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.76, "win_hi": 0.90, "check_rounds": true},
+	# #451 CAP RE-PIN (LADDER RUNG 2): 0.84 -> 0.60, window 0.76-0.90 -> 0.53-0.67
+	# (width 0.14 held, margins 0.07/0.07). The single most cap-exposed cell in the
+	# file -- three counter_strike holders on one board, which no other cell has --
+	# and therefore the biggest mover among the four rungs by a factor of three.
+	# Median holds at 4, so the rounds bar is untouched.
+	# THIS RE-PIN DOES NOT SETTLE THE LADDER. The window is a per-cell bound and
+	# moves with its measurement; the ORDERING assert is a separate contract and is
+	# deliberately left RED -- read LADDER_RUNGS' #451 block before touching either.
+	# Competent reads 0.98 -> 0.92, so the shipped fight is fine for a player who
+	# spends their kit; it is the floor policy that lost a crutch here.
+	{"name": "hired_blades_t5_sw14_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.53, "win_hi": 0.67, "check_rounds": true},
 	{"name": "hired_blades_t4_sw11_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword11_party", "solo": false},
 	# v0.16 I1 (#306). Side-quest fight at Invrisil's own expected level, SOLO
 	# (Wilovan has no part in a stranger's commission). Window is the shipped
@@ -558,7 +720,16 @@ const INVRISIL_CELLS := [
 	# EXTREME_FLIP_WHITELIST (Bronze saturates it to 1.00; ratified as the knob
 	# working). Re-tuning or renaming it stales that entry and the tier gate goes
 	# red -- move both together.
-	{"name": "alley_fence_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["heirloom_fence", "fence_doorman"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# #451 CAP RE-PIN: 0.81 -> 0.38, window 0.55-0.95 -> 0.31-0.71 (width 0.40 held,
+	# margins 0.07/0.33). The second-largest move in the set, and the pair's own
+	# authored shape is why: fence + doorman are TANKY and LOW-PER-HIT (con 40/48 at
+	# ~5.0/7.5 a swing), so the fight is long and the PC used to bank a free riposte
+	# against each of them every round for many rounds. Halving that halves the
+	# player's real DPR here more than anywhere else. Median 3 -> 4, still in bounds.
+	# TRAP UNCHANGED: this cell is still named in difficulty_tier_report.py's
+	# EXTREME_FLIP_WHITELIST; the re-pin moves no id and no stat, so that stays valid.
+	# SEAM: competent 0.91 -> 0.45.
+	{"name": "alley_fence_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["heirloom_fence", "fence_doorman"], "build": "t3_warrior10", "solo": true, "win_lo": 0.31, "win_hi": 0.71, "check_rounds": true},
 	# v0.16 I2 (#306). Interior brawl at Invrisil's expected level, SOLO. Same
 	# window contract as the fence cell: the shipped stop-cell precedent
 	# 0.55/0.95 (controller ruling A). Region-band ordering is evidenced by the
@@ -583,10 +754,23 @@ const INVRISIL_CELLS := [
 	# climbed (0.67 -> 0.81, still mid-band). Restoring the brawl's teeth means
 	# rest_bravo_a/b's own con/weapon_die in combatants.json, which this lane does
 	# not own -- recorded as a seam, not silently absorbed. Margins 0.08/0.06.
-	{"name": "rest_bravos_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["rest_bravo_a", "rest_bravo_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.85, "win_hi": 0.99, "check_rounds": true},
+	# #451 CAP RE-PIN: 0.93 -> 0.77, window 0.85-0.99 -> 0.70-0.84 (width 0.14 held,
+	# margins 0.07/0.07). Two bravos, one solo body. Note this partly UNDOES what
+	# GH#337's +0.15 did to this cell: that milestone's gain came from the PC's
+	# per-HIT damage_mod (+2) profiting off the bravo's cooled swings, and the cap
+	# takes back the extra riposte that was carrying half of it. The design cost
+	# recorded above ("a failure-state brawl is now a 93% formality") is partly
+	# repaid by this, which is the one clearly player-POSITIVE reading in the set.
+	# Competent 0.94 -> 0.73: still a comfortable win, still above the doctrine floor.
+	{"name": "rest_bravos_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["rest_bravo_a", "rest_bravo_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.70, "win_hi": 0.84, "check_rounds": true},
 	# #398 P4 counting-room pocket. Both new combatants sit 2-3 levels above
 	# Invrisil's 8-10 band; this is the shipped solo composition and arena.
-	{"name": "counting_room_guard_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["factor_enforcer", "factor_clerk_guard"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# #451 CAP RE-PIN: 0.80 -> 0.38, window 0.55-0.95 -> 0.31-0.71 (width 0.40 held,
+	# margins 0.07/0.33). Two guards 2-3 levels ABOVE the region band on one solo
+	# warrior body: the pocket was authored assuming the PC answers both of them
+	# every round, and it now answers one. Median 3 -> 4, still in bounds.
+	# SEAM: competent 0.90 -> 0.53.
+	{"name": "counting_room_guard_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["factor_enforcer", "factor_clerk_guard"], "build": "t3_warrior10", "solo": true, "win_lo": 0.31, "win_hi": 0.71, "check_rounds": true},
 ]
 
 const BUILDS := [
@@ -653,7 +837,13 @@ const BUILDS := [
 # until rank-aware loop fixtures land; see CHOICE-LOG 2026-07-18).
 const SCALED_CELLS := [
 	{"name": "gallery_vermin_nest_t4_silver", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "t4_spellsword14_party", "rank": "silver", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
-	{"name": "gallery_vermin_nest_t4_gold", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "gold_spellsword16", "rank": "gold", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# #451 CAP RE-PIN: 0.64 -> 0.54, window 0.55-0.95 -> 0.47-0.87 (width 0.40 held,
+	# margins 0.07/0.33). Two gold-scaled vermin on a counter_strike PC: the smaller
+	# of the two scaled movers because gold's bigger per-hit base does more of the
+	# work than the riposte did. The SILVER sibling moved only -0.04 (0.71 -> 0.67)
+	# and stayed in band, so only this row needed re-derivation. Median holds at 3.
+	# Competent reads 0.97 -> 0.97, i.e. unmoved: purely a floor-policy shift.
+	{"name": "gallery_vermin_nest_t4_gold", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "gold_spellsword16", "rank": "gold", "win_lo": 0.47, "win_hi": 0.87, "check_rounds": true},
 	# GH#337 re-author (0.56 -> 0.53, window 0.55-0.95 -> 0.45-0.85). MOVED
 	# INTENTIONALLY, and this cell is the cleanest illustration of the trade's
 	# ONE reliably player-negative case: forge_golem carries damage_reduction 4,
@@ -685,7 +875,13 @@ const DUNGEON_CELLS := [
 	# big hit halved its cadence against a roster it has to out-focus. Width
 	# held at 0.40 so the gate still catches both a collapse and a
 	# trivialization; margins 0.09/0.31.
-	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["snare_ward_a", "snare_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.45, "win_hi": 0.85, "check_rounds": true},
+	# #451 CAP RE-PIN: 0.54 -> 0.42, window 0.45-0.85 -> 0.35-0.75 (width 0.40 held,
+	# margins 0.07/0.33). Same three-foe roster the GH#337 note above describes, and
+	# the same "PC has to out-focus a crowd" reading: the crowd is what the cap
+	# taxes. Median holds at 3. The seam recorded above (snare_ward_a/b are the
+	# dedicated clones that exist to be tuned, in combatants.json) is unchanged and
+	# now carries this move as well. Competent 0.96 -> 0.91 -- floor-policy class.
+	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["snare_ward_a", "snare_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.35, "win_hi": 0.75, "check_rounds": true},
 	{"name": "gallery_vermin_nest_t4_solo", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	# 2026-07-26 Act V: the seal's warden, the main line's top band (LADDER rung
 	# 4 of 4; see RIVERFARM_CELLS' rung-1 comment). Gated at spellsword14 SOLO --
@@ -750,8 +946,20 @@ const BESTIARY_CELLS := [
 # never bow damage_mult, so a dex archer whiffs (0.00). melee AI mirrors how the
 # PC actually autoplays. Caster builds (ice/fire mage) keep caster AI.
 const SECOND_WIND_CELLS := [
-	{"name": "swordsman14_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "raskghar_scout"], "build": "swordsman14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
-	{"name": "spearmaster14_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "goblin_raider"], "build": "spearmaster14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# #451 CAP RE-PIN, the two lines that INHERIT [Counter Strike]: swordsman 0.65 ->
+	# 0.33 (0.55-0.95 -> 0.26-0.66) and spearmaster 0.68 -> 0.37 (-> 0.30-0.70).
+	# Width 0.40 held on both, margins 0.07/0.33. These two are the cleanest control
+	# in the whole set: all eight SECOND_WIND cells are three-or-two-body rosters at
+	# the same L14 scale, and the SIX whose lines do NOT inherit counter_strike
+	# (ice_mage14 0.60, fire_mage14 0.74, sharpshooter14 0.76, infiltrator14 0.65,
+	# strategist14 0.77, beast_master14 0.63) each read EXACTLY their pre-cap number
+	# -- delta 0.00, not "about the same". The skill enters at warrior 2 and rides
+	# `inherits` up the sword/spear lines; the six others never had it to lose.
+	# Both medians hold at 3. Competent: swordsman 0.85 -> 0.63, spearmaster
+	# 0.88 -> 0.64, i.e. both still inside the doctrine band -- floor-policy class,
+	# not seams.
+	{"name": "swordsman14_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "raskghar_scout"], "build": "swordsman14", "win_lo": 0.26, "win_hi": 0.66, "check_rounds": true},
+	{"name": "spearmaster14_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "goblin_raider"], "build": "spearmaster14", "win_lo": 0.30, "win_hi": 0.70, "check_rounds": true},
 	{"name": "ice_mage14_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "sewer_vermin"], "build": "ice_mage14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "fire_mage14_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "sewer_vermin"], "build": "fire_mage14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "sharpshooter14_solo", "arena": "goblin_ambush", "enemies": ["sewer_vermin", "sewer_vermin"], "build": "sharpshooter14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
