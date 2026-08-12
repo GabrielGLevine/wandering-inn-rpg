@@ -53,6 +53,20 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   gate is bypassable. The worn-abilities systems mechanic itself stands;
   the finale's exposure to it goes. Sequenced: bands → warden retune →
   steel-thread Act V reauthored to fight at band.
+- **The warden wakes for every descent (user scope ruling, 2026-08-11,
+  shipped #440).** #437 measured the warden's stats FAIR at band, so
+  #440 is bypass rework and ZERO stat work: its trigger moved from
+  `seal_opened` (the fight fork alone) to `read_the_feeding_ward`, and
+  all three authored endings — open / keep fed / re-ward — are preserved
+  verbatim as POST-FIGHT resolutions behind a `seal_warden_downed` gate
+  on Pisces' choice row. Rejected: removing a fork, or retuning the
+  warden. Sneak becomes an in-fight edge, never a skip — the stance
+  still slips the trigger radius, but the seal door refuses while the
+  warden stands, and an encounter authored `sneak_ambush` entered while
+  sneaking hands the PC the first turn of round 1 (position only, no
+  stat). `door_when` was deliberately NOT gated on the new counter: it
+  would be inert behind the choice gate, and `seal_opened` is a frozen
+  shipped id whose existing holders carry nothing to satisfy it.
 
 
 - **The steel thread is continuous (user directive).** One PC, title to

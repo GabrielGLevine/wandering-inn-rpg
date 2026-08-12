@@ -131,10 +131,13 @@ const FINALE_REGION_LINES: Array[Array] = [
 ]
 ## ONE path close, LAST MATCH WINS — so this table's ORDER IS THE PRECEDENCE
 ## RULE, and `seal_opened` sits first on purpose. Act V's deliberate
-## no-dead-end hatch lets a player break the seal, fail the warden, and still
-## resolve through Olesm or the re-ward, which leaves them holding
-## `seal_opened` AND a resolution counter; the resolution is the true state,
-## so it must overwrite. `seal_kept_fed` and `seal_rewarded` can never
+## no-dead-end hatch lets a player break the seal, walk back out of the vault
+## without touching the anchor, and still resolve through Olesm or the re-ward,
+## which leaves them holding `seal_opened` AND a resolution counter; the
+## resolution is the true state, so it must overwrite. (#440 narrowed the
+## hatch's ENTRY, never the hatch: the warden is now down before `seal_opened`
+## can bank at all, so "opened it and lost the fight" is no longer one of the
+## ways a player arrives here. Every other route in is unchanged.) `seal_kept_fed` and `seal_rewarded` can never
 ## co-occur (both their dialogue entries carry hide_when seal_resolved), so
 ## their relative order is inert — it follows the plan's stated precedence.
 const FINALE_CLOSE_LINES: Array[Array] = [

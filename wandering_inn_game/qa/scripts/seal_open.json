@@ -1,5 +1,5 @@
 {
- "_comment": "2026-07-26 Act V canonical, THE FIGHT PATH (one script per path, the door_chain_talk/fight/scout precedent). Loads seal_open_start (spellsword14 + the tuned gear, Act V already the derived act) via title Continue. Flow: the descent ask at Pisces' elbow on Market Street (banks seal_descent_agreed, starts what_the_seal_was_feeding, and CLOSES the pilgrimage spine's own `return` beat) -> teleport into trapped_halls (dungeon_peek's own teleport precedent; this route's subject is the seal, not the walk down) -> the SKILL-FREE reading, two bare interacts on seal_kept_door: Pisces matches the hand (read_the_seal_runes), then names the appetite (read_the_feeding_ward) -> his choice conversation -> WE OPEN IT (seal_opened) -> stepping to the door's only approach cell wakes the warden through its trigger_radius -> the tuned solo fight -> the door transitions for real (door_when) -> the vault: the anchor's open banks seal_resolved, grants the rubbing, and completes the quest. Fixture rng_state (seed 1) governs the warden fight and OVERRIDES --seed. FINALE LEG (Phase 8): this path's ending is delivered by the SLEEP hook, because its resolution banks at a container and never at a dialogue -- the run proves the curtain is silent on the walk out and rolls at the bed. It also carries the dialogue-filter NEGATIVE: an unrelated conversation (the peddler) opens and closes with the finale owed and draws no curtain.",
+ "_comment": "2026-07-26 Act V canonical, THE FIGHT PATH (one script per path, the door_chain_talk/fight/scout precedent), RE-CHOREOGRAPHED BY #440 around the combat chokepoint. Loads seal_open_start (spellsword14 + the tuned gear, Act V already the derived act) via title Continue. Flow: the descent ask at Pisces' elbow on Market Street (banks seal_descent_agreed, starts what_the_seal_was_feeding, and CLOSES the pilgrimage spine's own `return` beat) -> teleport into trapped_halls (dungeon_peek's own teleport precedent; this route's subject is the seal, not the walk down) -> the SKILL-FREE reading, two bare interacts on seal_kept_door: Pisces matches the hand (read_the_seal_runes), then names the appetite (read_the_feeding_ward), which is now also what ARMS THE WARDEN -> #440 NEGATIVE 1: a third interact on the same door, from the same cell, REFUSES in voice and moves nobody (walked, no teleport; the created state is the armed warden, not the shut door) -> #440 NEGATIVE 2: the escort's hub with the resolution row GONE and the signpost row in its place, whole-list pinned -> stepping back onto the door's approach cell springs the warden through its trigger_radius, with seal_opened asserted absent (the fight happens BEFORE any ending, which is the whole ruling) -> the solo fight -> the SAME hub, one row swapped, now offering the choice -> WE OPEN IT (seal_opened) -> the door's door_when transitions into seal_vault -> the anchor's open banks seal_resolved, grants seal_anchor_rune, completes the quest and fires its resolution_paths grant. Fixture rng_state (seed 1) governs the warden fight and OVERRIDES --seed. FINALE LEG (Phase 8): this path's ending is delivered by the SLEEP hook, because its resolution banks at a container and never at a dialogue -- the run proves the curtain is silent on the walk out and rolls at the bed. It also carries the dialogue-filter NEGATIVE: an unrelated conversation (the peddler) opens and closes with the finale owed and draws no curtain.",
  "fixture_save": "seal_open_start",
  "starts_at_title": true,
  "steps": [
@@ -373,7 +373,235 @@
    "name": "04_the_feeding_ward"
   },
   {
-   "_comment": "== THE CHOICE == back down to (18,8) and bump right into the escort (19,8). No talk_pool on that row, so the graph opens on the first interact.",
+   "_comment": "#440 NEGATIVE LEG 1, THE REFUSAL, and the state the change CREATED. The PC has not moved: the ward-read was taken from (18,7) facing the door, and the same interact one state later is the whole leg. Before #440 this state served the plain repeat-read line ('The runes keep their slow one-way order...'); the warden now wakes on the reading, so what the door serves instead is a refusal, and the vault is on the far side of a fight. Walked, never teleported: (18,7) is the door's only approach cell and the run reached it on foot from (18,8).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Your hand stops a finger off the runes. In the alcove beside them the ward-stone has shifted its weight, and Pisces does not look up from his copying. \"That first. I would rather not be interrupted mid-sentence.\""
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Your hand stops a finger off the runes. In the alcove beside them the ward-stone has shifted its weight, and Pisces does not look up from his copying. \"That first. I would rather not be interrupted mid-sentence.\""
+   },
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "THE PROOF: an interact on the seal door with the warden alive moves nobody anywhere.",
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "trapped_halls"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    7
+   ]
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "seal_vault"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "04b_the_door_refuses"
+  },
+  {
+   "_comment": "== THE CHOICE IS SHUT == back down to (18,8) and bump right into the escort (19,8). Stepping DOWN leaves the trigger radius, so the warden does not spring here -- it springs on the way back up, which is the leg after this one.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pisces_seal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#440 NEGATIVE LEG 2, THE GATE. WHOLE-LIST option pin at the hub with the ward read and the warden standing: the resolution row is GONE (accomplishment gates hide, and its gate now compounds seal_warden_downed), and in its place is the signpost row that says why. The OR-bridge row is hide_when-retired, the ward fact being held. Delete the seal_warden_downed leg from that gate and this pin reds with a three-row list.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "A feeding ward. Under a city. Cut by whoever cut the frame you eat breakfast beside. I need a moment, and then I need a decision, and I would rather it were yours.",
+    "options": [
+     {
+      "text": "Something in that alcove is watching us.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Take your moment.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04c_the_choice_is_shut"
+  },
+  {
+   "_comment": "Row 0 is the signpost. He names the thing in the alcove and sends the player at it; the node banks NOTHING, because the only producer of seal_warden_downed is the fight itself.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "I know. It woke the moment I said out loud what this ward has been doing, which I intend to take as a compliment. It belongs to the door, not to the dungeon: three centuries in a niche with the dust settling on it, left here against exactly one thing happening, and it has just happened. Whatever we decide about the seal, we decide it past that. Deal with it and I will hold the reading open while you do."
+   }
+  },
+  {
+   "_comment": "Row 0 'Then it goes down first.' (end: true).",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "_comment": "== THE WARDEN WAKES FOR THE DESCENT == stepping back onto (18,7) puts the player one cell off the alcove (19,6). #440 moved encounter_when onto read_the_feeding_ward, which this run banked two legs ago, so trigger_radius 1 springs the fight with no interact and BEFORE any ending is chosen. Revert that trigger to seal_opened and this wait times out: the seal is still shut.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.seal_warden.alive",
+   "equals": true
+  },
+  {
+   "_comment": "NEGATIVE: the fight happens with the seal still shut. Under the shipped order this counter banked BEFORE the warden woke; under #440 it cannot exist yet.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "seal_opened"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "06_the_warden"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "_comment": "on_victory banks on the combat DISMISS, so the counter and the quest's `guardian` beat land after this press, not on combat_finished.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "seal_warden_downed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "what_the_seal_was_feeding"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "07_warden_down"
+  },
+  {
+   "_comment": "== AND NOW THE CHOICE == the same two cells, the same escort, one dead warden later. The signpost row is hide_when-retired and the resolution row has appeared in its place: same list length, swapped row, which is the positive half of the gate pin above.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -413,29 +641,53 @@
   },
   {
    "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "A feeding ward. Under a city. Cut by whoever cut the frame you eat breakfast beside. I need a moment, and then I need a decision, and I would rather it were yours.",
+    "options": [
+     {
+      "text": "So what do we do about a door that eats?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Take your moment.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
+   "action": "wait_for_event",
    "type": "ui_dialogue_shown",
    "timeout_sec": 5
   },
   {
-   "_comment": "at_the_door rows now: 0 the choice ('So what do we do about a door that eats?'), 1 'Take your moment.' The OR-bridge is hide_when-retired, the ward fact already being held.",
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
   {
    "action": "wait_for_event",
    "type": "dialogue_node",
+   "timeout_sec": 5,
    "payload_contains": {
     "speaker": "Pisces",
     "text": "We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull, and correct, and I resent both qualities. Or — if your hands are equal to it, which remains unproven — you re-cut the ward yourself and it holds another age without a keeper. I dislike most of these. I will be copying the outer lines while you decide."
-   },
-   "timeout_sec": 5
+   }
   },
   {
    "action": "screenshot",
    "name": "05_the_choice"
   },
   {
-   "_comment": "the_choice rows: 0 open, 1 fed, 2 [Hedge Remedy] VISIBLE-LOCKED, 3 [Detect Magic] (this line inherits the mage grant, so it renders unlocked -- confirmed in the windowed read), 4 not yet. Skill gates tease; they never hide. Row 0 is the open, which is the fork this canonical takes.",
+   "_comment": "the_choice rows are UNCHANGED by #440: 0 open, 1 fed, 2 [Hedge Remedy] VISIBLE-LOCKED, 3 [Detect Magic] (this line inherits the mage grant, so it renders unlocked), 4 not yet. All three endings survive the chokepoint; they are simply reached through it. Row 0 is the open.",
    "action": "press",
    "name": "confirm"
   },
@@ -450,11 +702,11 @@
   {
    "action": "wait_for_event",
    "type": "dialogue_node",
+   "timeout_sec": 5,
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever objects to this. Something will. Expect a guardian."
-   },
-   "timeout_sec": 5
+    "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever else objects to this. The alcove was the first answer to that question. I would not assume it was the only one."
+   }
   },
   {
    "action": "press",
@@ -471,61 +723,24 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== THE WARDEN WAKES == stepping back onto (18,7) puts the player one cell off the alcove (19,6). encounter_when is met now, so trigger_radius 1 starts the fight without an interact -- the seal broke and the thing that guards it noticed.",
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "_comment": "== THE SEAL OPENS == back up to (18,7). The warden is gone for good (no respawns flag), so nothing springs on the way. Then the same door, the same interact, an entirely different mechanism: door_when is checked ahead of the interact arm, so this transitions instead of refusing. Its open_toast fires BEFORE the map rebuild (interactions.gd's door_when branch order), the sewer_grate/deep_fissure precedent -- so the DOMAIN toast is asserted here, never its ui_toast_rendered.",
    "action": "move",
    "direction": "up",
    "steps": 1
   },
   {
-   "action": "wait_for_event",
-   "type": "combat_started",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_combat_shown",
-   "timeout_sec": 5
-  },
-  {
    "action": "assert_state",
-   "path": "combat.combatants.seal_warden.alive",
-   "equals": true
+   "path": "player_cell",
+   "equals": [
+    18,
+    7
+   ]
   },
   {
-   "action": "screenshot",
-   "name": "06_the_warden"
-  },
-  {
-   "action": "combat_autoplay",
-   "max_turns": 300
-  },
-  {
-   "action": "wait_for_event",
-   "type": "combat_finished",
-   "payload_contains": {
-    "victory": true
-   },
-   "timeout_sec": 30
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_combat_hidden",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_frames",
-   "frames": 5
-  },
-  {
-   "action": "screenshot",
-   "name": "07_warden_down"
-  },
-  {
-   "_comment": "== THE SEAL OPENS == the same door, the same interact, an entirely different mechanism: door_when is checked ahead of the interact arm, so this transitions instead of reading. Its open_toast fires BEFORE the map rebuild (interactions.gd's door_when branch order), the sewer_grate/deep_fissure precedent -- so the DOMAIN toast is asserted here, never its ui_toast_rendered.",
    "action": "move",
    "direction": "right",
    "steps": 1

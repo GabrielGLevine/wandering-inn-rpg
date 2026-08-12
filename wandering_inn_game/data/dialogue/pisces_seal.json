@@ -23,7 +23,7 @@
      "text": "A feeding ward. Under a city. Cut by whoever cut the frame you eat breakfast beside. I need a moment, and then I need a decision, and I would rather it were yours."
     },
     {
-     "_comment": "One arm per outcome, appended after the reading arms so last-match-wins leaves him standing in the ending the player chose. seal_kept_fed sits LAST on purpose: it is the only outcome another path can be layered on top of (a player who opened the seal and could not finish the warden can still fund the keeper), and the fed line is the true state in that case.",
+     "_comment": "One arm per outcome, appended after the reading arms so last-match-wins leaves him standing in the ending the player chose. seal_kept_fed sits LAST on purpose: it is the only outcome another path can be layered on top of (a player who opened the seal and then walked back out of the vault without touching the anchor can still fund the keeper), and the fed line is the true state in that case. #440 narrowed how that state is REACHED -- the warden is down before seal_opened can bank, so 'opened it and lost the fight' is gone -- but the layering itself is untouched.",
      "requires": {
       "accomplishment": {
        "seal_opened": 1

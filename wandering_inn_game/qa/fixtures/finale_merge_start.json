@@ -21,6 +21,7 @@
    "bought_catalyst": 1,
    "brothers_job_done": 1,
    "brothers_marker": 1,
+   "catalyst_delivered": 1,
    "cisterns_reported": 1,
    "cleared_brothers_name": 1,
    "cleared_halls_by_force": 1,
@@ -28,7 +29,6 @@
    "coyle_operation_found": 1,
    "crate_returned": 1,
    "door_awakened": 1,
-   "catalyst_delivered": 1,
    "door_chain_started": 1,
    "door_mounted": 1,
    "door_retrieved": 1,
@@ -74,6 +74,8 @@
    "reached_liscor": 1,
    "reached_two_classes": 1,
    "read_the_board": 1,
+   "read_the_feeding_ward": 1,
+   "read_the_seal_runes": 1,
    "recovered_anchor_stone": 1,
    "resolved_the_cisterns": 1,
    "riverfarm_attuned": 1,
@@ -81,6 +83,7 @@
    "seal_kept_found": 1,
    "seal_kept_reported": 1,
    "seal_resolved": 1,
+   "seal_warden_downed": 1,
    "second_door_study_sleeps": 2,
    "sensed_something_deeper": 1,
    "sparred_with_relc": 1,
@@ -95,7 +98,9 @@
   "player_skills": [
    "basic_cleaning"
   ],
-  "removed_entities": [],
+  "removed_entities": [
+   "seal_warden_alcove"
+  ],
   "dormant_encounters": [],
   "generalist_classes": [],
   "started_quests": [
