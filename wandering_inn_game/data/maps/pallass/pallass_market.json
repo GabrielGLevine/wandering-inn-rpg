@@ -580,6 +580,19 @@
    ],
    "allies": [],
    "respawns": true,
+   "visual_states": [
+    {
+     "when": {
+      "dormant": true
+     },
+     "sprite": "dormant_guardian_statue",
+     "tint": [
+      0.68,
+      0.68,
+      0.72
+     ]
+    }
+   ],
    "observe": "Two grey shapes stand either side of an unclaimed stall, carved plating catching the tier's flat light, neither one moving.",
    "on_victory": "watchgolems_culled"
   },

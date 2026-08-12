@@ -1593,6 +1593,14 @@
     "met_relc": 1
    },
    "respawns": true,
+   "visual_states": [
+    {
+     "when": {
+      "dormant": true
+     },
+     "hidden": true
+    }
+   ],
    "observe": "Three boulders sit too evenly spaced for the hillside's own tumble, and one of them, you'd swear, just shifted.",
    "on_victory": "rock_crabs_culled"
   },
@@ -1635,6 +1643,12 @@
       ]
      },
      "hidden": true
+    },
+    {
+     "when": {
+      "dormant": true
+     },
+     "hidden": true
     }
    ],
    "on_victory": "won_combat"
@@ -1657,6 +1671,19 @@
    ],
    "allies": [],
    "respawns": true,
+   "visual_states": [
+    {
+     "when": {
+      "dormant": true
+     },
+     "sprite": "corusdeer_carcass",
+     "tint": [
+      0.72,
+      0.7,
+      0.66
+     ]
+    }
+   ],
    "observe": "A shape stands too still at the treeline, antlers catching a warmth that isn't sunlight.",
    "on_victory": "corusdeer_culled"
   },
@@ -1678,6 +1705,14 @@
    ],
    "allies": [],
    "respawns": true,
+   "visual_states": [
+    {
+     "when": {
+      "dormant": true
+     },
+     "hidden": true
+    }
+   ],
    "observe": "A scrape of trampled grass, two long-beaked shapes hunched low over it, watching you watch them.",
    "on_victory": "razorbeaks_culled"
   },
@@ -1997,6 +2032,14 @@
    ],
    "allies": [],
    "respawns": true,
+   "visual_states": [
+    {
+     "when": {
+      "dormant": true
+     },
+     "hidden": true
+    }
+   ],
    "encounter_when": {
     "phase": [
      "night"

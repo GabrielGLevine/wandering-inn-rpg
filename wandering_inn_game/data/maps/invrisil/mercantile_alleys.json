@@ -1077,7 +1077,15 @@
    "on_victory": "cleared_footpads_a",
    "observe": "Two figures where the alley bends, one standing, one crouched at the wall, and neither has moved since the alley mouth showed them to you.",
    "allies": [],
-   "respawns": true
+   "respawns": true,
+   "visual_states": [
+    {
+     "when": {
+      "dormant": true
+     },
+     "hidden": true
+    }
+   ]
   },
   {
    "_comment": "`alley_footpads_b`, the pair's second placement (east corridor, toward the parlor door).",
@@ -1098,7 +1106,15 @@
    "on_victory": "cleared_footpads_b",
    "observe": "The second pair, closer to the counting-house door — same trick, same stillness, better light to see it by.",
    "allies": [],
-   "respawns": true
+   "respawns": true,
+   "visual_states": [
+    {
+     "when": {
+      "dormant": true
+     },
+     "hidden": true
+    }
+   ]
   },
   {
    "id": "counting_house_ledger",

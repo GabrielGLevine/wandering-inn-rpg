@@ -395,16 +395,16 @@
    }
   },
   {
-   "_comment": "== #423 BEAT 3c: HEDAULT'S SHOP, the fifth boulevard shopfront and the first one you can walk INTO. Right 2 along the open row 2 to (22,2), bump north into the new door on the blocked facade row, and cross. This leg is the region canonical's answer to the whole issue: the enchanter is no longer a figure in a dead-end alley corner that only a hand-placed fixture could face. ==",
+   "_comment": "== #423/#444 BEAT 3c: HEDAULT'S SHOP, the fifth boulevard shopfront and the first one you can walk INTO. Right 5 along the open row 2 to (25,2), bump north into the door on the blocked facade row, and cross. This leg is the region canonical's answer to the whole issue: the enchanter is no longer a figure in a dead-end alley corner that only a hand-placed fixture could face. ==",
    "action": "move",
    "direction": "right",
-   "steps": 2
+   "steps": 5
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    22,
+    25,
     2
    ]
   },
@@ -418,7 +418,7 @@
    "type": "player_blocked",
    "payload_contains": {
     "cell": [
-     22,
+     25,
      1
     ]
    }
@@ -625,14 +625,14 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    22,
+    25,
     2
    ]
   },
   {
    "action": "move",
    "direction": "left",
-   "steps": 2
+   "steps": 5
   },
   {
    "action": "assert_state",

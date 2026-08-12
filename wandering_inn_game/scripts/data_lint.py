@@ -46,6 +46,9 @@ Checks:
      reachable through a consolidation's parent lines and their evolution
      targets has an authored target class inheriting that exact pair, or an
      explicit `_exempt` row with a non-empty rationale.
+ 10. respawn visuals -- every respawning encounter authors a dormant visual
+     state, so combat_banking's dormant interval cannot leave its live marker
+     unchanged until the next sleep.
 
 ADVISORIES (v0.17 L3, GH#335 item 3) are a SECOND, non-failing tier. They
 never touch the exit code and can never break a sweep, because they measure a
@@ -158,6 +161,15 @@ def check_maps(maps: dict, errors: list) -> None:
 			elif not _in_grid(cell, grid):
 				errors.append(f"maps/{map_id}: entity '{eid}' cell "
 					f"{cell} out of grid {w}x{h}")
+			if entity.get("kind") == "encounter" and entity.get("respawns") is True:
+				states = entity.get("visual_states")
+				has_dormant_state = isinstance(states, list) and any(isinstance(state, dict)
+					and isinstance(state.get("when"), dict)
+					and state["when"].get("dormant") is True
+					for state in states)
+				if not has_dormant_state:
+					errors.append(f"maps/{map_id}: entity '{eid}' respawns but has no "
+						"visual_states row with when.dormant=true")
 		# Playtest fix wave (user ruling 2026-08-04): ALL water is freezable.
 		# The loader derives `freezable` from walls segments tagged
 		# `water: true`; this arm keeps the tag in lockstep with the water

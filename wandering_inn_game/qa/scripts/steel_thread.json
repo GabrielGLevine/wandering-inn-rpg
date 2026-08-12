@@ -10774,14 +10774,14 @@
   {
    "action": "move",
    "direction": "left",
-   "steps": 4,
+   "steps": 1,
    "_comment": "Hedault's shop is the fifth frontage on the boulevard's north face. His reading gates on brothers_job_done AND spine_started, so it could not have been taken on the way in."
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    22,
+    25,
     2
    ]
   },
@@ -10789,7 +10789,7 @@
    "action": "move",
    "direction": "up",
    "steps": 1,
-   "_comment": "Bump boulevard_enchanter_shop (22,1)."
+   "_comment": "Bump boulevard_enchanter_shop (25,1)."
   },
   {
    "action": "press",
@@ -10992,14 +10992,14 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    22,
+    25,
     2
    ]
   },
   {
    "action": "move",
    "direction": "left",
-   "steps": 17
+   "steps": 20
   },
   {
    "action": "assert_state",
