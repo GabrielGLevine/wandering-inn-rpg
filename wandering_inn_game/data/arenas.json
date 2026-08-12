@@ -720,8 +720,8 @@
      "requires_any_class": true,
      "requires_ally": "relc",
      "line": "Relc: Real ones this time. Stay behind me if you have to. You slept, so check your numbers: 3 and up are your [Skills] now. Earned, not given.",
-     "fallback_line": "Relc: Real ones this time. Stay behind me if you have to. No numbers yet — you haven't slept. Win this, then get back to the inn and sleep. That's when the real stuff shows up.",
-     "solo_fallback_line": "The Design tallies what you do; it writes classes and levels while you sleep — keep doing what you want to become."
+     "fallback_line": "Relc: Real ones this time. Stay behind me if you have to. No numbers yet \u2014 you haven't slept. Win this, then get back to the inn and sleep. That's when the real stuff shows up.",
+     "solo_fallback_line": "The Design tallies what you do; it writes classes and levels while you sleep \u2014 keep doing what you want to become."
     },
     {
      "id": "skill_aim",
@@ -1633,7 +1633,7 @@
    ]
   },
   {
-   "_comment": "Vault requires at least 4 player spawns. WICombat indexes spawn arrays without a bounds guard; the PC plus three Horns consumes indices 0-3 and fewer entries crashes. GH#349: a 5th seat is deliberately NOT cut -- see docs/CHOICE-LOG.md. #451: [6,4] is a rendered fallen-column cover cell; routing the construct around it restores the band-competent fight window after Counter Strike's once-per-round cap without changing either combatant stats or the solo warden read.",
+   "_comment": "Vault requires at least 4 player spawns. WICombat indexes spawn arrays without a bounds guard; the PC plus three Horns consumes indices 0-3 and fewer entries crashes. GH#349: a 5th seat is deliberately NOT cut -- see docs/CHOICE-LOG.md. #451: [6,4] is a blocked cover cell (renders as the fallback wall tile -- the dungeon biome has no cover prop pool; VISUAL-LOG row tracks the art); routing the construct around it restores the band-competent fight window after Counter Strike's once-per-round cap without changing combatant stats. The vault arena also hosts the seal-warden fight -- warden rows were A/B-probed with this cell removed before merge (see PR #451-lane body).",
    "id": "vault",
    "biome": "dungeon",
    "grid": {
@@ -1648,10 +1648,6 @@
     [
      5,
      5
-    ],
-    [
-     6,
-     4
     ],
     [
      7,
