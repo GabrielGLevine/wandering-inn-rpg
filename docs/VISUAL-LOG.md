@@ -323,4 +323,4 @@ r3–r5 playtest waves — gone from this file.
 - [ ] Windowed capture stalled once mid-run (`invrisil_hat_quiet`): reached
   last banked counter, hung before final screenshot; alarm killed
   `run_qa.sh` but left godot child alive. Kill + re-run passed. Headless
-  unaffected.
+  unaffected.- [ ] **(P3)** dangersense aura (#446) — user eye-gate pending on REAL art overlay at night: breathing read, radius-edge tellability, night contrast (analytical ~3.7:1; worktree windowed read passed vocabulary check on fallback art only) — load per qa/playtest_saves/2026-08-12-446-dangersense-aura/README.md
