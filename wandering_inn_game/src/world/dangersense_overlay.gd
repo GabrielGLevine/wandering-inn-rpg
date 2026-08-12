@@ -1,6 +1,17 @@
 class_name WIDangersenseOverlay
 extends Node2D
 
+# Night-legibility derivation (#446 gate, audited 2026-08-12): worst case is a
+# black night-graded ground; night compensation (NIGHT_GRADE_RETAINED) renders
+# the aura at authored colors, so the visible stack at minimum pulse (x0.94) is
+# core 0.075 over haze 0.22 over band alphas below -> composite contrast ~3.7:1
+# against black, vs the ~1.52:1 failure bar from #413. Re-derive against these
+# constants if any alpha or the night-grade wiring changes.
+# Radius-honesty tripwire: the n=3.2 superellipse reaches only ~80.5% of the
+# half-extents on diagonals. At shipped radii (max 2) corner trigger cells stay
+# partially tinted; an encounter with trigger radius >= 5 would leave its
+# corner cells fully untinted — revisit the exponent or add a corner wash
+# before shipping any such encounter.
 const CORE_COLOR := Color(0.94, 0.38, 0.16, 0.075)
 const AURA_EDGE_COLOR := Color(1.0, 0.75, 0.38, 0.1)
 const EDGE_COLOR := Color(1.0, 0.75, 0.38, 0.34)
