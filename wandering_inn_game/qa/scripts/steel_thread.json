@@ -5665,17 +5665,13 @@
    "type": "ui_inventory_shown",
    "timeout_sec": 5,
    "payload_contains": {
-    "items": 7
+    "items": 6
    }
   },
   {
    "action": "press",
    "name": "move_down",
-   "_comment": "Oracle `inventory` at this state: 0 rusty_sword, 1 spear, 2 mending_draught, 3 moonhide_fetish, 4 moon_bone_amulet, 5 construct_core_shard, 6 tonic. Four downs to the amulet."
-  },
-  {
-   "action": "press",
-   "name": "move_down"
+   "_comment": "Oracle `inventory` at this state: 0 rusty_sword, 1 spear, 2 moonhide_fetish, 3 moon_bone_amulet, 4 construct_core_shard, 5 tonic. FOUR downs to the shard -- the pack is one shorter than the pre-#442 run because the competent policy now actually drinks the mending draught in the delve (largest-heal-wins, hit-aware trigger)."
   },
   {
    "action": "press",
@@ -12371,10 +12367,9 @@
    }
   },
   {
-   "action": "move",
-   "direction": "down",
-   "steps": 1,
-   "_comment": "GOLD/PACING: ONE sale, not three. The picker lists sellables in inventory order -- 0 mending_draught, 1 tonic_of_the_clear_eye, 2 remedy_draught -- and both draughts STAY in the pack. The old thread fenced all three for 18 gold with the reason written in: 'combat_autoplay never drinks anything.' That is no longer true (this run drives every fight on the competent policy, which drinks the best carried draught under 35% max HP), and the #437 table named the sale as one of the three things that made the finale unwinnable. The tonic is the one piece of real dead weight: its use_effect is a next_fight buff with no `heal` key, so the policy's draught pick never reaches for it."
+   "action": "wait_frames",
+   "frames": 3,
+   "_comment": "GOLD/PACING: ONE sale, and the picker opens ON it. Sellables list in inventory order and the mending draught is no longer in the pack -- the competent policy drank it in the delve once #442 made [Second Wind] once-per-fight -- so row 0 is the vault tonic and row 1 is the remedy draught, which STAYS. The old thread fenced every consumable for 18 gold with the reason written in: combat_autoplay never drinks anything. It does now, and #437 named the sale as one of the three things that made the finale unwinnable. The tonic is the one piece of real dead weight: its use_effect is a next_fight buff with no heal key, so the policy never reaches for it."
   },
   {
    "action": "press",
@@ -12424,13 +12419,8 @@
   {
    "action": "assert_state",
    "path": "inventory",
-   "contains": "mending_draught",
+   "contains": "remedy_draught",
    "_comment": "Falsifiable half of the ruling: the pack still carries a heal into Pallass and the descent."
-  },
-  {
-   "action": "assert_state",
-   "path": "inventory",
-   "contains": "remedy_draught"
   },
   {
    "action": "assert_state",
@@ -14088,17 +14078,13 @@
    "type": "ui_inventory_shown",
    "timeout_sec": 5,
    "payload_contains": {
-    "items": 14
+    "items": 13
    }
   },
   {
    "action": "press",
    "name": "move_down",
-   "_comment": "Oracle `inventory` here: 0 rusty_sword, 1 spear, 2 mending_draught, 3 moonhide_fetish, 4 moon_bone_amulet, 5 construct_core_shard, 6 remedy_draught, then the quest tokens. Confirming an EQUIPPED row unequips it (inventory.gd:601)."
-  },
-  {
-   "action": "press",
-   "name": "move_down"
+   "_comment": "Oracle `inventory` here: 0 rusty_sword, 1 spear, 2 moonhide_fetish, 3 moon_bone_amulet, 4 construct_core_shard, 5 remedy_draught, 6 guardian_ward_fragment, then the quest tokens. Confirming an EQUIPPED row unequips it (inventory.gd:601)."
   },
   {
    "action": "press",
@@ -15379,25 +15365,36 @@
    "action": "move",
    "direction": "down",
    "steps": 2,
-   "_comment": "== THE LAST NIGHT == seal_resolved banked at a CONTAINER, with no conversation behind it, so the dialogue-end curtain never fires on this path. The veil's sleep hook is the second delivery point and the one that cannot be routed around -- and nothing between the vault and this bed opened a conversation, which is the filtered hook's own negative proof, taken in passing."
+   "_comment": "== THE LAST NIGHT == seal_resolved banked at a CONTAINER, with no conversation behind it, so the dialogue-end curtain never fires on this path. The veil's sleep hook is the second delivery point and the one that cannot be routed around. Oracle-derived route to the stairs at this waking: the y8 lane is closed west of x4, so cross at x8 and take y7 in."
   },
   {
    "action": "move",
    "direction": "left",
-   "steps": 11
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    2,
-    8
+    1,
+    7
    ]
   },
   {
    "action": "move",
-   "direction": "left",
-   "steps": 1
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump stairs_up (1,8)."
   },
   {
    "action": "press",
