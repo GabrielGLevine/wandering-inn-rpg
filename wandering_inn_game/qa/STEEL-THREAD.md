@@ -24,13 +24,11 @@ warren) is superseded; git history retains it.
 
 Reauthored 2026-08-12 against the retuned game (#437/#441/#439/#440): the
 itinerary now carries a leveling diet that arrives at each act's climax in
-band, and every fight runs on the competent policy. 2568 steps.
+band, and every fight runs on the competent policy. **2567 steps, GREEN
+end to end at seed 9** — title gate to GDI epilogue, Seal Warden included.
 
-Measured headless wall time at seed 9: **~4 min** to the Act V warden
-(red runs stall on timeouts). `events_seen` across two consecutive runs:
-**10509 / 10500**. Both stop at the same step (2448 of 2568) with the
-same combat state — warden 6/142, PC down, round 5 — so the red is
-deterministic, not a flake. See "Open red" below.
+Measured headless wall time at seed 9: **~5 min**. `events_seen` across
+two consecutive green runs: **10995 / 11000**.
 
 ## Every fight runs `policy: competent` (ruling, 2026-08-12)
 
@@ -46,6 +44,21 @@ on a PC cast **in combat**; the floor policy never casts, so no
 continuous run under `dumb` can level a caster past 2 however long it
 plays. The pre-reauthor thread's Act III climax fought at combined level
 **2** for exactly that reason.
+
+**Policy amendment, 2026-08-12 (controller), and what it did to this run.**
+The survive step now prices the WORST single hit (`potential_damage` — top
+face, skill multiplier, no miss discount), takes the largest heal
+regardless of source (a +8 draught beats a +4 ward), and allows a second
+survive action inside the death band; and #442 gave [Second Wind]
+`once_per_fight`. Two visible consequences here, both of which moved
+pins:
+
+- The PC now actually **drinks in the delve**, so the pack that reaches
+  Act IV is one item shorter. Every inventory-cursor count downstream
+  (the outfitting beat, the Krshia buyback picker, the descent kit)
+  shifted by one row and was re-derived off the oracle.
+- The finale flipped. The same fight that died in round 5 holding two
+  undrunk draughts now **wins in round 9** (see the tape below).
 
 ## What this instrument is for
 
@@ -90,6 +103,7 @@ hide.
 | End Act III (`raskghar_sealed`) | warrior 9, mage 2 | 11 | 8–10 | 16 | 4 |
 | End Act IV (`seal_descent_agreed`) | spearmaster 14, mage 6, diplomat 4 | 24 | 12–14 | 4 | 8 |
 | At the Seal Warden | spearmaster 14, mage 6, diplomat 7, trader 2 | 29 | 14–16 | 4 | 10 |
+| End of run (epilogue) | spearmaster 15, mage 6, diplomat 7, trader 2 | 30 | — | 4 | 11 |
 
 Climax builds (the number the bands actually govern — levels resolve in
 `sleep()`, so a climax is fought at the *previous* night's build):
@@ -102,7 +116,7 @@ Climax builds (the number the bands actually govern — levels resolve in
 | III awakened boss (+ third scout, with Relc) | warrior 5 / mage 2 | 8–10 | win |
 | IV vault construct | spearmaster ~12 / mage 3 | 12–14 | win |
 | IV ruin guardian | spearmaster 12 / mage 3 + core shard | — | win |
-| V seal warden | spearmaster 14 / mage 6 / dip 7 / trader 2 | 14–16 | **LOSS, round 5, warden 6/142** |
+| V seal warden | spearmaster 14 / mage 6 / dip 7 / trader 2 | 14–16 | **win, round 9, PC ends on 2 HP** |
 
 ### The diet, per act (what was added and why)
 
@@ -132,8 +146,20 @@ Gold ledger: Act IV opens at 36 (Olesm 5 + 15, Zevara's three back
 bounties +17, Selys's once-per-waking board pick +5, the Act II supplier's
 +2) and closes at 4, with Pallass's 46g and the two 18g travel-stones paid
 in full. All movements are `GOLD/PACING`-tagged in-script. The Krshia
-buyback now sells **only** the vault tonic (+8), not the healing draughts
-— see the [Second Wind] finding below.
+buyback now sells **only** the vault tonic (+8) — the one item the policy
+provably never reaches for, its `use_effect` being a `next_fight` buff
+with no `heal` key. The remedy draught stays in the pack and is drunk in
+round 3 of the finale.
+
+**No further diet was added, deliberately.** The plan after the first
+(red) pass was to take the pre-descent diet to band-top, spearmaster
+15–16, to buy the missing ~20 HP. #442 plus the policy amendment bought
+it instead, and a diet extension is not free: every added fight consumes
+rng draws before `WICombat.new(..., rng.randi())`, which re-rolls the
+finale's whole stream. That was measured — inserting a
+`gallery_vermin_nest` detour in Act IV moved the warden's remaining HP
+from 6 to 58–61 without moving the PC's level. Adding grind to a run
+that is green at band FLOOR would have traded a proof for a coin flip.
 
 ## Deliberate choices (see docs/CHOICE-LOG.md)
 
@@ -153,58 +179,63 @@ buyback now sells **only** the vault tonic (+8), not the healing draughts
   turn of round 1, pinned by both the ambush toast and
   `combat.round == 1` at the PC's opening turn.
 
-## Open red: the Seal Warden (2026-08-12)
+## The Seal Warden, fight tape (seed 9)
 
-The run is green from the title gate through the two readings, the
-watcher beat, the cloaked approach and the ambush — 2447 of 2568 steps —
-and then **loses the warden at round 5 with the warden on 6 of 142 HP**.
-The 121 unrun steps are the vault, anchor, tally, walk back, final sleep
-and epilogue, unchanged from the previously-green shipped tail.
+**Win, 9 rounds, PC ends on 2 of 47 HP; warden 0 of 142.** Every
+resource in the pack was spent. Round by round:
 
-This is a balance finding, not a scripting one, and it is reproducible:
+| Rd | PC | Warden |
+|---|---|---|
+| 1 | ambush turn: basic, 14 | power strike 28 (PC 36) |
+| 2 | [Second Wind] +8, [Piercing Strikes] 21 | windup |
+| 3 | **remedy draught +3**, [Spear Flurry] **43** | slam 10, power strike 18 (PC 21) |
+| 4 | [Guarding Ward] +4 ×2 | windup |
+| 5 | [Guarding Ward] +4, [Piercing Strikes] 20 | slam 8, power strike 16 (PC 11) |
+| 6–8 | [Guarding Ward] +4 ×2 per round | slam 6, one power strike MISSES |
+| 9 | [Guarding Ward] +4, [Piercing Strikes] 23, basic 14 → **kill** | slam 10, power strike 24 (PC 2) |
 
-- The build that arrives is **spearmaster 14 / mage 6 / diplomat 7 /
-  trader 2 — 29 combined levels and 47 max HP**. The band table's Act V
-  row assumes 14–16 *focused* (spellsword-shape). #437's 0.77 was
-  measured on that focused build with tuned gear; the real spine arrives
-  with twice the levels and two-thirds the stat efficiency. **Breadth,
-  not level count, is what the Act V band is actually asking for.**
-- **The consolidation gap is structural.** Spellsword needs warrior 10 +
-  mage 10. [Warrior] evolves into [Spearmaster] at 10 on
-  `spear_skill_used` dominance — with Relc's spear in hand from Act I,
-  that is the only reachable shape — and the consolidation reads
-  *warrior*, so it can never fire. Mage reaches 6, not 10, because the
-  competent policy only casts when the cast out-damages the swing and a
-  1.4×/2.0×/2.6× spear kit always beats a level-6 frost bolt. No sane
-  diet reaches spellsword 14 on this spine.
-- **[Second Wind] eats the pack.** The policy's survive step is
-  "[Second Wind] if in kit and affordable, *else* the best carried
-  draught", with one survive action per turn. [Second Wind] has no
-  cooldown and no once-per-fight bound, so it is *always* the pick and
-  the draught branch is unreachable for any holder. The run carried two
-  8-HP draughts into the warden and drank neither; it healed 8 twice
-  from [Second Wind] instead and died 6 damage short. Give [Second Wind]
-  a bound (already filed) and the same fight has 16 more HP in it.
-- **The survive-first rule costs the kill.** On rounds 4 and 5 the policy
-  spent 2 AP on [Second Wind] and had only 1 left, so it swung
-  [Piercing Strikes] (1.4×, 18–21) where the unspent turn affords
-  [Spear Flurry] (2.6×, 39). Either round-5 flurry ends the fight. That
-  sub-optimality is the tuning reference behaving exactly as specified —
-  and it is worth the finale.
-- Measured alternatives, all still losses at seed 9: amulet + moonhide
-  fetish (warden 14 HP left); amulet + ward fragment (6 left); the same
-  with an added `gallery_vermin_nest` detour in Act IV (58–61 left — the
-  detour's rng draws reshuffle the warden's stream, they do not raise
-  the build). No purchasable armour closes it either: the economy funds
-  the spine's 82g of mandatory purchases with 4g to spare, and the two
-  armours in the game cost 20 (peddler gambeson, damage reduction 1) and
-  24 (Krshia's jerkin, hp+4) — each worth about 5 HP across the fight,
-  against a ~15 HP shortfall.
+Reading it: [Second Wind] fires **once** (#442 holding), the draught is
+reached on round 3 (the amended largest-heal-wins + hit-aware trigger —
+the pre-amendment policy carried it undrunk to a round-5 death), and the
+ward fragment's [Guarding Ward] carries the middle of the fight. The
+warden's windup cadence is what makes that survivable: the PC's pure-heal
+rounds land on the rounds the warden spends winding up.
 
-Re-seeding does not fix it and costs the ledger: seeds 1, 2 and 5 red
+**The margin is 2 HP and that is the finding.** The run is green at the
+band FLOOR, not comfortably inside the band, and it is green only because
+every one of #440 (fight instead of skip), #442 ([Second Wind] bounded),
+the policy amendment (hit-aware, largest-heal-wins, second survive action)
+and two worn-not-carried rewards landed. Treat a red here after any
+combat-data edit as the fight asking for a band decision, not the script
+asking for a fix.
+
+## Still open after the program
+
+- **The consolidation gap is structural — filed-issue candidate.**
+  Spellsword needs warrior 10 + mage 10. [Warrior] evolves into
+  [Spearmaster] at 10 on `spear_skill_used` dominance — with Relc's spear
+  in hand from Act I that is the only reachable shape — and the
+  consolidation reads *warrior*, so **the evolution orphans the PC's
+  spellsword eligibility permanently**. Mage reaches 6, not 10, because
+  the competent policy only casts when the cast out-damages the swing and
+  a 1.4×/2.0×/2.6× spear kit always beats a level-6 frost bolt. No sane
+  diet on this spine reaches spellsword 14. Either consolidations accept
+  evolved parents, or the Act V band stops being stated as a
+  spellsword-shape.
+- **Level count is not the Act V band.** The run arrives at 29 combined
+  levels and 47 max HP against a band written for 14–16 *focused*;
+  #437's 0.77 was measured on that focused build with tuned gear. The
+  band wants focused-equivalent power, and should say so.
+- **The economy has no room for armour.** It funds the spine's 82g of
+  mandatory purchases with 4g to spare; the two armours in the game cost
+  20 (peddler gambeson, damage reduction 1) and 24 (Krshia's jerkin,
+  hp+4). A player who wants to be armoured for the finale has to skip
+  something the spine needs.
+
+Seed 9 is load-bearing and not casually swappable: seeds 1, 2 and 5 red
 *earlier* (the Act II nest at 1 and 5; a gold pin at 2, because
-`supplier_scavengers`' 2g loot is a 50% roll and every `GOLD/PACING` pin
-is therefore seed-derived).
+`supplier_scavengers`' 2g loot is a 50% roll, which makes every
+`GOLD/PACING` pin seed-derived).
 
 ## Dropped/kept coverage vs the stitched album
 

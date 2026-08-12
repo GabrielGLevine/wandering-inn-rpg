@@ -127,13 +127,17 @@ The reauthored thread (`qa/STEEL-THREAD.md`) re-reads the list below.
 
 **RESOLVED by the program:**
 
-- **6, the warden wall** — resolved as a *mechanism*, not as a bypass.
-  #437 refuted the stat-wall reading (competent WIN 0.73 at the shipped
-  build) and #440 moved `encounter_when` onto `read_the_feeding_ward`, so
-  the warden wakes for every descent and all three endings became
-  post-fight resolutions. The sneak is now an ambush **edge** the thread
-  takes and pins, not the skip it used to be. What survives of finding 6
-  is a *build* problem, not an encounter one — see "still open" below.
+- **6, the warden wall — RESOLVED, and the thread now beats it.** #437
+  refuted the stat-wall reading, #440 moved `encounter_when` onto
+  `read_the_feeding_ward` (the warden wakes for every descent; all three
+  endings became post-fight resolutions and the sneak became an ambush
+  **edge** the thread takes and pins), #442 bounded [Second Wind] to
+  once per fight, and the 2026-08-12 policy amendment made the survive
+  step hit-aware and largest-heal-wins. With all four landed the
+  continuous run wins the finale at seed 9 in 9 rounds, ending on 2 of
+  47 HP with every carried resource spent. **Zero warden stat work was
+  done at any point.** The margin is thin by design-accident, not by
+  design — see "still open".
 - **The autoplay ratchet** — resolved at the driver. `combat_autoplay`
   takes `"policy": "competent"` (this wave), the thread runs every fight
   on it, and CHOICE-LOG 2026-08-12 rules that QA proves completability
@@ -156,20 +160,39 @@ The reauthored thread (`qa/STEEL-THREAD.md`) re-reads the list below.
   cost two footpad fights without [Stealth]) — unchanged.
 - **5** (`lattice_witch_lore` forces three village↔hollow trips) —
   unchanged.
-- **NEW: the Act V band asks for a shape no spine reaches.** The thread
-  arrives at the warden with 29 combined levels and 47 max HP and loses
-  by 6 warden HP. Spellsword 14 is structurally unreachable ([Warrior]
-  evolves to [Spearmaster] at 10 and the consolidation reads *warrior*),
-  and multiclass dilution means 29 diluted levels are weaker than the
-  band's 14–16 focused ones. Either the consolidation must accept
-  evolved parents, or the Act V band must be restated in terms of
-  focused-equivalent power rather than level count.
-- **NEW: [Second Wind] makes carried draughts unreachable** for the
-  competent policy (survive step prefers the skill, one survive action
-  per turn, no cooldown on the skill). The bound was already filed by
-  #439; the finale is the case that makes it matter.
-- **#442, #448 and the `d3_inventory_shot` drift** — untouched by this
-  program.
+- **NEW, and the biggest one: the [Spearmaster] evolution orphans
+  spellsword eligibility. FILED-ISSUE CANDIDATE.** Spellsword's
+  consolidation floor reads *warrior* 10 + *mage* 10. [Warrior] evolves
+  into [Spearmaster] at 10 on `spear_skill_used` dominance, and with
+  Relc's spear gifted in Act I that is the only shape a martial spine
+  reaches — so by the time the mage half could qualify, the warrior half
+  no longer exists under that name and the consolidation can never fire.
+  The continuous run confirms it end to end: spearmaster 15 / mage 6 at
+  the epilogue, `pending_consolidation` never set, on a route that took
+  every piece of on-spine content. The fix direction is a design call
+  (consolidations accepting evolved parents, or evolution deferring while
+  a consolidation is in reach), but as the data stands an authored
+  endgame shape is unreachable by construction — worth an issue of its
+  own rather than a line in this ledger.
+- **NEW: the Act V band is stated in the wrong unit.** The thread arrives
+  at 29 combined levels and 47 max HP against a band written for 14–16
+  *focused*; #437's 0.77 was measured on the focused build with tuned
+  gear, and the measured multiclass dilution (0.69 stat efficiency) means
+  those are not the same power. The run wins with 2 HP to spare — at
+  band FLOOR by the current wording, and nowhere near it by the wording's
+  intent. Restate the band in focused-equivalent terms.
+- **NEW: the economy cannot afford armour.** It funds the spine's 82g of
+  mandatory purchases with 4g to spare; the two armours in the game cost
+  20 (peddler gambeson, damage reduction 1) and 24 (Krshia's jerkin,
+  hp+4). Being armoured for the finale means skipping something the
+  spine needs.
+- **RESOLVED by #442 + the policy amendment: [Second Wind] made carried
+  draughts unreachable** for the competent policy (survive preferred the
+  unbounded skill; one survive action per turn). `once_per_fight` plus
+  largest-heal-wins fixed it — the finale's round-3 remedy draught is the
+  proof, and the delve now drinks too (which shortened the pack and moved
+  three inventory-cursor pins).
+- **#448 and the `d3_inventory_shot` drift** — untouched by this program.
 
 ## Reachability/balance findings ledger (for the observation debrief)
 
