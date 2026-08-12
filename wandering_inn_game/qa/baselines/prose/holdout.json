@@ -1,6 +1,6 @@
 {
  "_count": 229,
- "_excluded_count": 5,
+ "_excluded_count": 7,
  "_excluded_note": "verify-untouched SKIPS these ids and reports them by count; the blind control instrument omits their rows. They remain in `ids` and in `_count` -- an exclusion never shrinks the committed inventory. Authority is the INTERSECTION of this block and HOLDOUT_EXCLUSIONS in qa/scripts/extract_prose.py, so neither edit excuses drift on its own.",
  "_fraction": 0.1,
  "_min_words": 6,
@@ -16,10 +16,20 @@
  "_reserved_unresolved": [],
  "_seed": 398,
  "excluded": {
+  "dlg:pisces_seal.json:$.nodes.fork_open.text": {
+   "excluded": true,
+   "excluded_reason": "content fix forced by #440's re-choreography, not a prose edit: the warden now wakes at the READING and every ending is a post-fight resolution, so the pinned line's closing promise ('Something will. Expect a guardian.') was being spoken to a player standing over the guardian's rubble.",
+   "what_moved": "the first clause is unchanged; the two closing sentences become 'The alcove was the first answer to that question. I would not assume it was the only one.' -- same voice, same length class, and the foreshadow survives without lying about the fight the player just finished."
+  },
   "dlg:riverfarm_hunter.json:$.nodes.hub.options[2].text": {
    "excluded": true,
    "excluded_reason": "changed by #396 redesign (merged PR #401), not by the prose pass",
    "what_moved": "#396 rewrote the hunter's hub and DELETED the pinned option ('The deer stopped at the treeline. Why?'); the surviving options shifted up, so options[2] is now a different line. The pinned text is gone from the tree, so there is no wording left to hold."
+  },
+  "map:dungeon/trapped_halls.json:$.entities[8].variants[3].toast": {
+   "excluded": true,
+   "excluded_reason": "changed by #396 redesign (merged PR #401), not by the prose pass",
+   "what_moved": "path re-indexed, NOT a prose edit. #440 inserted the seal door's warden-alive REFUSAL rung at variants[3] (later-satisfied-wins forces it ABOVE the rung that restores the plain repeat-read on seal_warden_downed, so it cannot be appended). The pinned text ('The runes keep their slow one-way order...') is byte-intact, now at variants[4]. IDs key the frozen inventory, so an id rewrite would point verify at a DIFFERENT frozen row -- exclusion is the only correct mechanism for a re-indexed path (witch_hollow entities[24] precedent)."
   },
   "map:riverfarm/riverfarm_village.json:$.entities[25].toast": {
    "excluded": true,

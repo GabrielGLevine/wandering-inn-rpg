@@ -33,6 +33,8 @@ consolidated 14-16 build under the competent policy should land in the
 challenging-but-winnable range. If it does, #440 is mostly the bypass
 rework, not a stat change — validate before touching warden numbers.
 
+Answered below, and #440 shipped accordingly.
+
 ## Consolidation note
 
 Spellsword floor is 14 (both parents 10+). The Act IV band therefore
@@ -111,3 +113,23 @@ build runs 0.69 stat efficiency — ~30% of growth pays for breadth;
 a real design lever, not a bug); [Second Wind] has no cooldown/
 once-per-fight bound (filed separately); `gallery_vermin_nest`
 rank-scales into gold against the Act V build.
+
+### #440 landed as bypass rework: the warden's three canonical rows
+
+`data/combatants.json` and `data/arenas.json` are byte-identical across
+#440. Moving the trigger onto the reading means all three Act V
+canonicals now fight the warden, so the suite carries three DUMB-policy
+rows at each fixture's own pinned rng — the completability half of the
+doctrine, not a second balance instrument:
+
+| Canonical | Build (combined) | Result |
+|---|---|---|
+| `seal_open` | spellsword 14 + tuned gear (14) | win, 4 rounds, PC ends 31 HP |
+| `seal_fed` | w5/m5/d1, no armor (11) | win, 6 rounds, PC ends 9 HP |
+| `seal_reward` | w5/m5/n1, no armor (11) | win, 6 rounds, PC ends 9 HP |
+
+The two 9-HP margins are a FIXTURE problem, not an encounter problem:
+both saves sit three-plus levels under the Act V band, which is this
+table's own work order showing up as data. #439 fixes them by bringing
+the fixtures to band. A red on either is the fixture asking to be
+levelled — never the warden asking to be nerfed.

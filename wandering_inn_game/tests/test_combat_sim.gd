@@ -2508,5 +2508,48 @@ func _init() -> void:
 				"at 1.0 the reported damage is unchanged from before the rider")
 	assert(checked_cd8b >= 5, "the 1.0 loop has to land real hits too")
 
+	# GH#440 THE SNEAK EDGE (WICombat.grant_ambush). The whole contract, and its
+	# fence: the PC acts first, the roster is otherwise untouched, and the call
+	# is refused once the fight has started so nothing can reorder a live round.
+	# The seed is chosen so INITIATIVE ITSELF puts the PC second -- otherwise the
+	# reorder assertion would pass with grant_ambush deleted.
+	var amb_seed := -1
+	for candidate in 200:
+		var probe := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+				_cfgs(["pc", "seal_warden"]), _load("res://data/skills.json"), _sink, candidate)
+		if String(probe.turn_order[0]) != "pc":
+			amb_seed = candidate
+			break
+	assert(amb_seed >= 0, "no seed in 0..199 rolls the warden ahead of the PC -- the fence below would be vacuous")
+	var amb := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "seal_warden"]), _load("res://data/skills.json"), _sink, amb_seed)
+	var order_before: Array = amb.turn_order.duplicate()
+	assert(String(order_before[0]) == "seal_warden", "control: initiative put the warden first at this seed")
+	var hp_before: int = int(amb.combatants["seal_warden"][WIKeys.HP])
+	assert(amb.grant_ambush("pc"), "grant_ambush reports the PC is first")
+	assert(String(amb.turn_order[0]) == "pc", "the ambush moves the PC to the front of round 1")
+	assert(amb.turn_order.size() == order_before.size(), "the ambush moves nobody out of the fight")
+	for who: Variant in order_before:
+		assert(amb.turn_order.has(String(who)), "every combatant is still in the order")
+	assert(int(amb.combatants["seal_warden"][WIKeys.HP]) == hp_before,
+		"the edge is POSITION ONLY -- it must never touch a stat (#440 ships zero stat work)")
+	assert(not amb.grant_ambush("nobody_here"), "an unknown actor is refused")
+	_events.clear()
+	amb.begin()
+	assert(String(amb.get_active()) == "pc", "and the PC is the actor the fight actually opens on")
+	var opened := false
+	for e_amb: Dictionary in _events:
+		if String(e_amb["type"]) == "combat_started":
+			opened = true
+			assert(String((e_amb["payload"]["order"] as Array)[0]) == "pc",
+				"COMBAT_STARTED reports the ambushed order, which is what the QA pin reads")
+	assert(opened, "combat_started fired")
+	assert(not amb.grant_ambush("pc"), "and it is refused once the fight is running -- no reordering a live round")
+	var plain := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "seal_warden"]), _load("res://data/skills.json"), _sink, amb_seed)
+	plain.begin()
+	assert(plain.turn_order == order_before,
+		"and an unambushed fight at the same seed is byte-identical -- the hook is opt-in, never a global initiative change")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)
