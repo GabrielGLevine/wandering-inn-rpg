@@ -68,9 +68,20 @@ or superseded session blocks.
   rebase onto main (data_lint.py/test_data_lint.py collide with B1's
   merged arm — additive both, trivial), suites re-run, PR, controller
   windowed reads (facade row + 5 spent states). A-M1 gate: machinery PASS, act1.yaml REFUTED as
-  sliver — rework dispatched. CODEX IN FLIGHT (own pool, keep running):
-  A rework (lane-a-434), C0.5+C1 xhigh (lane-c0-451: instability
-  root-cause FIRST then measure+repair ActIII/IV), E3 #446 DONE (report in, WIP cd1dc4d3, gate
+  sliver — rework dispatched. C0.5+C1 REPORT IN (lane-c0-451, bfgybvs2c output; UNGATED —
+  gate post-reset with the usual adversarial workflow): claims all 5
+  reference climaxes in-window post-repair; steel thread RE-DERIVED to
+  seed 37 (seed 9 loses Act II nest now; warden tape 5 rounds PC 47/47 —
+  SCRUTINIZE vs prior 9-round 2/47 margin); canonicals re-derived:
+  relc_descent_rewind (Sewer Bat pin), invrisil_walkthrough (Warrior 3
+  toast). WALL list for user batch: Innkeeper I-V, Scout I-V, Ranger
+  I/II/IV/V, Druid I/IV + Druid CEILING drift (.93/.88/.97 over 0.85) —
+  three-pillars adjudication. 13 floor-policy defeats + 17 legacy matrix
+  cells ruled-acceptable, not tuned. MERGE ORDER RULING: C lands BEFORE
+  E1 (C's thread re-derivation predates E1's door move); after C merges,
+  E1 re-derives ONLY its steel_thread/walkthrough hunks on the composed
+  tree, map/data changes stand. CODEX IN FLIGHT (own pool):
+  A rework (lane-a-434), E3 #446 DONE (report in, WIP cd1dc4d3, gate
   workflow STOPPED mid-run — resume wf_2b89e91a-95c from scriptPath in
   session workflows dir). B2 #450 STOPPED CORRECTLY pre-edit (report in
   bl87zgeje output): needs TWO controller/user rulings — (1)
