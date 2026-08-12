@@ -25,6 +25,21 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ## Current product and system rulings
 
+### Sol wave ≥434 — controller calls under wave autonomy (2026-08-12)
+
+- **#444 fix shape:** ship option 1 only (move Hedault's frontage door out of
+  the [23,1] sign adjacency into the open facade band). Option 3 (bespoke
+  enchanter sign) deferred to a VISUAL-LOG follow-up if the windowed read still
+  misleads; option 2 (real Coyle door) rejected here — it belongs to the Coyle
+  quest line, not a polish lane.
+- **#451 scope:** once-per-round cap at L2 ships alone. [Improved Counter
+  Strike] is NOT shipped this wave — the lane reports a martial-table
+  recommendation and the reopen stays a controller/user adjudication.
+- **#452 B1 exemption posture:** every inventoried orphan pair ships as
+  `_exempt` pending the user's naming pass (spearmaster×mage exempt-annotated
+  as resolved-by-#449); nothing is scaffolded into existence silently and main
+  goes green immediately.
+
 ### Steel thread and item abilities (2026-08-11)
 
 - **#347 doctrine RATIFIED (user, 2026-08-12).** "Authored uniques,

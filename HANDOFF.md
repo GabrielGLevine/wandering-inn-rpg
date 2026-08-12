@@ -54,12 +54,18 @@ or superseded session blocks.
   + icons, registration matrix, canonical, sim row, steel-thread
   no-change verify). Purely additive; wiki-verify the name before id
   freeze. Dispatch when usage allows (parked at WINDDOWN, fable band).
-- QUEUED FOR SOL: **wave ≥434** — plan at docs/superpowers/plans/
-  2026-08-12-sol-wave-434-plus.md (lanes, ownership, gates, user-gate
-  batching; posted to #438). Rulings landed 2026-08-12: #347 RATIFIED
-  (+combination rule, spec flipped), #448 ruled (solo ~0.35-0.45, new
-  composition, with-Relc untouched), #453 filed (cross-class re-verify).
-  Dispatch A-M1 + B1 + C1 in parallel when usage allows.
+- RUNNING (2026-08-12, Fable controller): **wave ≥434 Day-1 lanes live** —
+  plan at docs/superpowers/plans/2026-08-12-sol-wave-434-plus.md. Four Codex
+  (gpt-5.6-sol, effort high) lanes dispatched in parallel worktrees under
+  `.claude/worktrees/`: lane-a-434 (#434 M1, branch issue/434-compiler-m1),
+  lane-b1-452 (#452 layer-2 validator + ORPHAN-INVENTORY.md, branch
+  issue/452-lineage-validator), lane-c0-451 (#451 once-per-round cap, branch
+  issue/451-counterstrike-cap), lane-e1-443 (#443+#444, branch
+  issue/443-444-invrisil-polish). Briefs = CODEX-BRIEF.md in each worktree
+  root. Controller gates every close (fixture diff vs HEAD, decisive gates
+  re-run controller-side, windowed reads controller-side). Wave-autonomy
+  rulings logged in CHOICE-LOG (§Sol wave ≥434). Next after C0 lands:
+  B2 (#450) + C1-C3 + E3/E4; then B3 (#449) + E2 + B4; D last.
 - QUEUED: **#452 codify #347** (user-directed 2026-08-12): lineage-
   completeness validator (build FIRST — inventories all orphaned pairs,
   protects main at commit time), consolidation scaffolder, doctrine
