@@ -1206,6 +1206,18 @@ func known_skills() -> Array:
 		for sk: Variant in WIProgression.granted_skills(classes, _combat_config["classes"], generalist_classes):
 			if not out.has(String(sk)):
 				out.append(String(sk))
+	# Steel-thread ruling (2026-08-11, user): abilities on EQUIPPED accessories
+	# are known while worn, not combat-only. fold_abilities() already granted
+	# them inside combat builds; this closes the field half so a worn
+	# moon_bone_amulet can cloak the walk to the seal-warden alcove's authored
+	# sneak-past. Field usability still filters through _field_skill_available
+	# (contexts/field flags), so combat-only abilities like [Second Wind] gain
+	# nothing here. Copy contract: effect_text drops the "in combat" qualifier
+	# exactly for field-capable abilities.
+	for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
+		for raw_ability: Variant in (item(String(equipped.get(slot_name, ""))).get(WIKeys.ABILITIES, []) as Array):
+			if not out.has(String(raw_ability)):
+				out.append(String(raw_ability))
 	return out
 
 

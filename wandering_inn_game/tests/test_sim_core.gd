@@ -1686,10 +1686,15 @@ func _init() -> void:
 	ab1.transition("street", Vector2i(4, 3))
 	ab1.pickup("test_relic", "test")
 	assert(ab1.equip("test_relic"), "equip the synthetic relic")
-	assert(not ab1.known_skills().has("invisibility"), "abilities never leak into known_skills() before combat")
+	# Steel-thread ruling (2026-08-11, user): worn-accessory abilities ARE
+	# known while equipped -- the moon_bone_amulet's [Invisibility] cloaks the
+	# walk to the seal-warden alcove's authored sneak-past. The old "never leak
+	# before combat" contract is superseded; the invariants that REMAIN are:
+	# unworn items grant nothing, and abilities never persist into
+	# player_skills.
+	assert(ab1.known_skills().has("invisibility"), "worn-accessory ability joins known_skills() (steel-thread ruling)")
 	assert(ab1.start_combat("goblin_encounter_2"), "combat starts with the relic equipped")
 	assert((ab1.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("invisibility"), "the relic's ability folds into the PC's combat kit at start_combat")
-	assert(not ab1.known_skills().has("invisibility"), "abilities still absent from known_skills() -- combat-only, not a real class/skill grant")
 	assert(not ab1.player_skills.has("invisibility"), "abilities never touch player_skills -- no persistence leak")
 	assert(int(ab1.combat.combatants["pc"][WIKeys.MAX_MP]) > 0, "the granted invisibility's mp_cost composes max_mp for free (WICombat._init's any-mp_cost-skill scan)")
 
@@ -1699,7 +1704,7 @@ func _init() -> void:
 	var ab_restored := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_ability)
 	assert(WISave.apply(ab_restored, ab_save_data), "the relic-equipped save round-trips")
 	assert(ab_restored.equipped.get("accessory_1", "") == "test_relic", "the relic itself round-trips as plain equipped state (unaffected by R3)")
-	assert(not ab_restored.known_skills().has("invisibility"), "a freshly-loaded game still shows no ability leak in known_skills()")
+	assert(ab_restored.known_skills().has("invisibility"), "a freshly-loaded game keeps the worn relic ability known (steel-thread ruling: known-while-worn round-trips through plain equipped state)")
 
 	var item_graph := {
 		"start": "n1",

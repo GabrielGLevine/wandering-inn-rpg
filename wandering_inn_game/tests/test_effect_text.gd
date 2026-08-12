@@ -23,7 +23,7 @@ const EXPECTED_ITEMS := {
 	"hunters_fang_talisman": ["+1 damage on melee hits", "Resonance 1", "Worth 14 gold"],
 	"phosphor_pendant": ["+3 HP", "Resonance 1", "Worth 20 gold"],
 	"stonescale_talisman": ["Reduces every hit taken by 1", "Resonance 2", "Grants [Tough Body] in combat", "Worth 35 gold"],
-	"moon_bone_amulet": ["+1 damage on melee hits", "+3 HP", "Resonance 2", "Grants [Invisibility] in combat"],
+	"moon_bone_amulet": ["+1 damage on melee hits", "+3 HP", "Resonance 2", "Grants [Invisibility]"],
 	"watch_token": [],
 	"brothers_marker": [],
 	"field_whetstone": ["Worth 5 gold"],
@@ -97,7 +97,7 @@ const EXPECTED_ITEMS := {
 	# no price (one-of-a-kind find, never vendored).
 	"seal_anchor_rune": ["+3 HP", "Reduces every hit taken by 1", "Resonance 2", "Grants [Guarding Ward] in combat"],
 	"hedaults_traveler_charm": ["+3 HP", "Resonance 1", "Grants [Dangersense] in combat", "Worth 18 gold"],
-	"hedaults_hunters_fang": ["+1 damage on melee hits", "Resonance 1", "Grants [Eagle Eyes] in combat", "Worth 45 gold"],
+	"hedaults_hunters_fang": ["+1 damage on melee hits", "Resonance 1", "Grants [Eagle Eyes]", "Worth 45 gold"],
 	"hedaults_wardstone": ["+2 HP", "Resonance 2", "Grants [Mana Shield] in combat", "Worth 50 gold"],
 	# v0.16 I1 (#306), inserted at the `hedaults_wardstone` anchor this lane also
 	# uses in items.json (ruling C). EXPECTED_ITEMS is exhaustive both ways, so a
