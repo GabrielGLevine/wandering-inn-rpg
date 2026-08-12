@@ -28,20 +28,20 @@ or superseded session blocks.
   rc 0, import pass done. License verdict appended (license-notes,
   local). Alternates parked server-side (tags pick-lock-icon /
   workroom-door / enchanter-shelf).
-- RUNNING (2026-08-12, Fable session): **balance program wave 2**.
-  Shipped+merged: #436/#435 (oracle, fail-fast, checkpoints; 7ea553f2)
-  and #437 (policies + viability table; f5fcbbcc — calibration green,
-  warden "stat wall" REFUTED: competent-policy WIN 0.73 at shipped
-  build; tuning window [0.55,0.85] set; retune scope = Acts I-III only).
-  #442 filed ([Second Wind] unbounded). Rulings in CHOICE-LOG: warden
-  wakes every descent, three endings post-fight. Two lanes in flight:
-  balance-439-441 (retune Acts I-III climaxes + re-fixture affected
-  canonicals + CI calibration + caster-spine check) and warden-440
-  (chokepoint rework, zero stat work). KNOWN/EXPECTED: steel_thread
-  goes red at retuned fights after merges — final sequenced lane is
-  the full steel-thread reauthor with band-reaching side content
-  (Acts II-V affected, not just V). Skill library updated (instruments
-  + traps).
+- RUNNING (2026-08-12, Fable session): **balance program wave 3 (final)**.
+  SHIPPED+MERGED: #440 (warden wakes every descent, endings post-fight,
+  sneak=24-line ambush edge; 14f4c558) and #439/#441 (Acts I-III into
+  window via composition-only retunes, stat blocks frozen as sim
+  instruments; 8 canonicals re-fixtured, zero seed searches; d951e0d1).
+  Eagle-Eyes pin blast radius fixed (3 canonicals). #448 filed (Relc
+  veto = trap choice at band, user design question). preflight --full
+  ALL GREEN on merged main. IN FLIGHT: steel-thread-band lane — driver
+  gains combat_autoplay {policy: competent} (required: mage L3+ banks
+  on spell_cast, dumb autoplay never casts), then full reauthor to band
+  with side-content diets, warden fight, consolidation attempt; ends
+  with double-green + windowed observation run. Known reds on main
+  until it lands: steel_thread (by design), d3_inventory_shot
+  (pre-existing drift, untriaged).
 - QUEUED: **balance program** (#439 per-act leveling bands -> #440 Warden
   chokepoint retune, user rulings 2026-08-11; CHOICE-LOG entry). Sequenced
   AFTER #437's dual-policy sim table exists (tuning harness); steel-thread
