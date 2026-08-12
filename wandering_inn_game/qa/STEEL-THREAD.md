@@ -27,8 +27,10 @@ itinerary now carries a leveling diet that arrives at each act's climax in
 band, and every fight runs on the competent policy. 2568 steps.
 
 Measured headless wall time at seed 9: **~4 min** to the Act V warden
-(red runs stall on timeouts). Latest run: `events_seen` **10509**, 2447
-of 2568 steps green — see "Open red" below.
+(red runs stall on timeouts). `events_seen` across two consecutive runs:
+**10509 / 10500**. Both stop at the same step (2448 of 2568) with the
+same combat state — warden 6/142, PC down, round 5 — so the red is
+deterministic, not a flake. See "Open red" below.
 
 ## Every fight runs `policy: competent` (ruling, 2026-08-12)
 
