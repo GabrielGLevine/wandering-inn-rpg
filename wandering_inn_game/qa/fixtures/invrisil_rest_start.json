@@ -62,8 +62,7 @@
    "brothers_marker": 1
   },
   "player_skills": [
-   "basic_cleaning",
-   "observe"
+   "basic_cleaning"
   ],
   "removed_entities": [
    "alley_footpads_a",

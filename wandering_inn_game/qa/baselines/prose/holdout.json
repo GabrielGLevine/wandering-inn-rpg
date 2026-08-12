@@ -1,6 +1,6 @@
 {
  "_count": 229,
- "_excluded_count": 7,
+ "_excluded_count": 8,
  "_excluded_note": "verify-untouched SKIPS these ids and reports them by count; the blind control instrument omits their rows. They remain in `ids` and in `_count` -- an exclusion never shrinks the committed inventory. Authority is the INTERSECTION of this block and HOLDOUT_EXCLUSIONS in qa/scripts/extract_prose.py, so neither edit excuses drift on its own.",
  "_fraction": 0.1,
  "_min_words": 6,
@@ -16,6 +16,11 @@
  "_reserved_unresolved": [],
  "_seed": 398,
  "excluded": {
+  "map:inn/inn_upstairs.json:$.entities[1].visual_states[0].observe": {
+   "excluded": true,
+   "excluded_reason": "#450's approved scope fix retires standalone flavor reads from action-bearing props",
+   "what_moved": "hallway_door_a keeps its locked/open interaction but no longer carries an Appraise-only ownership read."
+  },
   "dlg:pisces_seal.json:$.nodes.fork_open.text": {
    "excluded": true,
    "excluded_reason": "content fix forced by #440's re-choreography, not a prose edit: the warden now wakes at the READING and every ending is a post-fight resolution, so the pinned line's closing promise ('Something will. Expect a guardian.') was being spoken to a player standing over the guardian's rubble.",

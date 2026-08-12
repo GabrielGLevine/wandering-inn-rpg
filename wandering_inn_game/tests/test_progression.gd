@@ -77,6 +77,10 @@ func _init() -> void:
 	var tac_l2 := WIProgression.check_level_ups({"tactician": 1}, {"observed_things": 3}, catalog)
 	assert(tac_l2.size() == 1 and tac_l2[0]["class"] == "tactician" and tac_l2[0]["level"] == 2, "tactician L2 pending on observed_things")
 	assert(WIProgression.check_level_ups({"tactician": 1}, {"observed_things": 2}, catalog).is_empty(), "below observed_things threshold = no tactician level")
+	assert(WIProgression.check_level_ups({"tactician": 5}, {"observed_things": 20, "tactic_used": 3}, catalog).is_empty(), "tactician L6 needs both appraisal and landed tactics")
+	var tac_l6 := WIProgression.check_level_ups({"tactician": 5}, {"observed_things": 20, "tactic_used": 4}, catalog)
+	assert(tac_l6.size() == 1 and int(tac_l6[0]["level"]) == 6, "tactician L6 clears at observed 20 + tactic 4")
+	assert(WIProgression.granted_skills({"diplomat": 5}, catalog).has("observe"), "diplomat L5 shares Appraise Foe without moving soothing_presence")
 
 	assert(WIProgression.check_class_gains({}, {"persuaded_someone": 1}, catalog).is_empty(), "persuasion alone (no gossip volume) does not grant diplomat")
 	assert(WIProgression.check_class_gains({}, {"heard_gossip": 5}, catalog).is_empty(), "gossip alone (never persuaded) does not grant diplomat")

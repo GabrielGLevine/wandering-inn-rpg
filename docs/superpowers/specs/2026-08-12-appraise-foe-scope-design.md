@@ -163,3 +163,15 @@ The class-expansion spec's pending [Eagle Eyes] name ACK is unrelated and stays 
 - #445 — "You don't know how to do that yet." on 102 armless props (closed by §1)
 - #446 — [Dangersense] overlay reads as a HUD box (out of scope)
 - #441 / #437 — balance program, re-fixturing and spine viability (owns §3 finals)
+
+## Amendments (2026-08-12 controller rulings)
+
+1. `[Evil Eye]` is a field-capable Skill and carries its own occult ambient line.
+   The ordinary field dispatcher accepts it; no Skill-id special case is added.
+2. Free reads apply only to armless scenery. Action-bearing props keep their plain
+   interaction and retire standalone flavor reads. The pressure plate is instead
+   readable through `[Find Trap]`, the established trap-perception surface.
+3. Passive tactic-family Skills tally when their effect procs; active tactic-family
+   Skills tally when used. Every source is capped at one `tactic_used` tally per
+   fight, without changing the `ap_cost > 0` activation gate or converting passive
+   Skills into active ones.

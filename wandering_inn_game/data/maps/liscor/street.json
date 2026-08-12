@@ -1583,7 +1583,7 @@
    "observe": "Rust holds the bars, not a lock. The draft coming up through them is steady and cold, and it carries the sound of water moving somewhere further in.",
    "visual_states": [
     {
-     "_comment": "b7 #207 delivery ack — the fragile phial crate the player lowered was collected intact (prop recipient: the observe IS the ack surface; door_when behavior untouched).",
+     "_comment": "b7 #207 delivery ack — retained as authored state prose; as an action-bearing grate it is no longer an Appraise/free-read surface.",
      "when": {
       "counter": "delivered_delivery_grate_phials",
       "at": 1

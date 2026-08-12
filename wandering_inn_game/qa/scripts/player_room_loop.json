@@ -79,27 +79,6 @@
    "timeout_sec": 5
   },
   {
-   "action": "press_field_skill",
-   "skill": "observe"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "skill_used",
-   "payload_contains": {
-    "skill": "observe",
-    "target": "hallway_door_a"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "toast",
-   "payload_contains": {
-    "text": "Shut, and the card slot in the frame is empty."
-   },
-   "timeout_sec": 5
-  },
-  {
    "action": "screenshot",
    "name": "00_door_shut"
   },
@@ -471,28 +450,7 @@
    "steps": 1
   },
   {
-   "_comment": "== (4) THE GATE, OPEN == same cell, same key, same entity. The observe swings to its room_purchased visual_states variant (the ownership tell -- no owned-door sprite exists yet), then the interact takes door_when's arm instead of the locked one.",
-   "action": "press_field_skill",
-   "skill": "observe"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "skill_used",
-   "payload_contains": {
-    "skill": "observe",
-    "target": "hallway_door_a"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "toast",
-   "payload_contains": {
-    "text": "Your name in the card slot, in Lyonette's ruled hand, and the key for it somewhere in your pack."
-   },
-   "timeout_sec": 5
-  },
-  {
+   "_comment": "== (4) THE GATE, OPEN == same cell, same key, same entity. As an action-bearing door it opens directly; its retired standalone read cannot delay or replace the transition.",
    "action": "press",
    "name": "interact"
   },
@@ -586,27 +544,6 @@
     1,
     2
    ]
-  },
-  {
-   "action": "press_field_skill",
-   "skill": "observe"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "skill_used",
-   "payload_contains": {
-    "skill": "observe",
-    "target": "player_room_bed"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "toast",
-   "payload_contains": {
-    "text": "Made up tight, corners squared. Lyonette did that, and she will know if you undo it badly."
-   },
-   "timeout_sec": 5
   },
   {
    "action": "press",

@@ -505,7 +505,7 @@
    "payload_contains": {
     "slots": 1,
     "readout_lines": [
-     "1  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."
+     "1  [Appraise Foe] — A measuring look that reads a living opponent and files the threat away for later."
     ]
    },
    "timeout_sec": 5
@@ -662,7 +662,7 @@
    "payload_contains": {
     "slots": 1,
     "readout_lines": [
-     "1  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."
+     "1  [Appraise Foe] — A measuring look that reads a living opponent and files the threat away for later."
     ]
    },
    "timeout_sec": 5

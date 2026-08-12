@@ -166,12 +166,16 @@ func begin() -> void:
 
 func _apply_passives(c: Dictionary) -> void:
 	for sk: String in c[WIKeys.SKILLS]:
-		var effect: Dictionary = skills.get(sk, {}).get(WIKeys.EFFECT, {})
+		var skill: Dictionary = skills.get(sk, {})
+		var effect: Dictionary = skill.get(WIKeys.EFFECT, {})
 		match String(effect.get(WIKeys.TYPE, "")):
 			"hp_bonus":
 				c[WIKeys.MAX_HP] += int(effect[WIKeys.AMOUNT])
 			"hit_bonus":
 				c["hit_bonus"] += int(effect[WIKeys.AMOUNT])
+				if String(skill.get("family", "")) == "tactic":
+					_tally_skill_use(String(c[WIKeys.ID]), skill)
+					_mark_skill_used(String(c[WIKeys.ID]), sk)
 
 
 func _roll_initiative() -> void:
@@ -811,6 +815,9 @@ func _move_pool_bonus_total(c: Dictionary) -> int:
 		if String(effect.get(WIKeys.TYPE, "")) == "move_pool_bonus":
 			total += int(effect.get(WIKeys.AMOUNT, 0))
 			_emit(WIEvents.PASSIVE_APPLIED, {"id": String(c[WIKeys.ID]), "skill": sk})
+			if String(s.get("family", "")) == "tactic":
+				_tally_skill_use(String(c[WIKeys.ID]), s)
+				_mark_skill_used(String(c[WIKeys.ID]), sk)
 	return total
 
 
@@ -965,6 +972,10 @@ func _tally(actor_id: String, counter: String) -> void:
 
 
 func _tally_skill_use(actor_id: String, skill: Dictionary) -> void:
+	var skill_id := String(skill.get(WIKeys.ID, ""))
+	if String(skill.get("family", "")) == "tactic" \
+			and not (used_skills_tally.get(actor_id, {}) as Dictionary).has(skill_id):
+		_tally(actor_id, "tactic_used")
 	if skill.has(WIKeys.WEAPON):
 		_tally(actor_id, "%s_skill_used" % String(skill[WIKeys.WEAPON]))
 	if skill.has("element"):

@@ -1,5 +1,5 @@
 {
- "_comment": "8b R3 (issue #11) 'The Price of a Favor' SKILL path -- NO combat (the interact-only briar_collectors/briar_collectors_deep are never engaged). Loads riverfarm_skill_start ([Helper]/[Mage]/[Tactician] L1, 11,10 facing up beside the headman). Full loop: GIVE (headman) -> the gauntlet in sequence (basic_cooking the offering -> [Light] the threshold candles -> [Observe] the true knot, each via the SAME requires_skill/on_skill_use interact seam cisterns_scout's nest_ledge uses) -- the LAST step (the true knot) IS the SKILL path's own blight_lifted convergence, no separate report needed (unlike cisterns_scout/wrong_order's single-skill-action precedent, which needed one) -- then REPORT to the headman (price_of_a_favor_reported -> quest_completed).",
+ "_comment": "8b R3 (issue #11) 'The Price of a Favor' SKILL path -- NO combat. Loads riverfarm_skill_start with the honest Hedge Witch L7 threshold for [Evil Eye]. Full loop: GIVE -> [Basic Cooking] the offering -> [Light] the candles -> [Evil Eye] the true knot -> REPORT.",
  "fixture_save": "riverfarm_skill_start",
  "starts_at_title": true,
  "steps": [
@@ -255,7 +255,7 @@
    "name": "02_lit_the_candles"
   },
   {
-   "_comment": "== GAUNTLET 3/3: observe the true knot (hollow_true_knot, 8,10) -- the SKILL path's OWN blight_lifted producer, no separate report needed. Teleport to (8,11), bump up, interact routes through use_skill(observe, ...). ==",
+   "_comment": "== GAUNTLET 3/3: turn [Evil Eye] on the true knot (hollow_true_knot, 8,10) -- the Hedge Witch path's own blight_lifted producer. ==",
    "action": "teleport",
    "map": "witch_hollow",
    "cell": [
@@ -270,13 +270,13 @@
   },
   {
    "action": "press_field_skill",
-   "skill": "observe"
+   "skill": "evil_eye"
   },
   {
    "action": "wait_for_event",
    "type": "skill_used",
    "payload_contains": {
-    "skill": "observe",
+    "skill": "evil_eye",
     "target": "hollow_true_knot"
    },
    "timeout_sec": 5

@@ -204,10 +204,38 @@ static func _rout(combat: WICombat) -> void:
 			combat.apply_damage(cid, 9999, "pc", true)
 
 
+func _check_armless_prop_reads(scene_config: Dictionary, skill_config: Dictionary) -> void:
+	var game := WIGame.new(scene_config, skill_config, _sink, 12345)
+	var checked := 0
+	var flavored := 0
+	for map_cfg: Dictionary in (scene_config["maps"] as Dictionary).values():
+		for entity: Dictionary in map_cfg.get("entities", []):
+			if String(entity.get(WIKeys.KIND, "")) != "prop":
+				continue
+			if WIInteractions.PROP_ARM_KEYS.any(func(key: String) -> bool: return entity.has(key)):
+				continue
+			checked += 1
+			_events.clear()
+			game._interactions.dispatch(entity, {}, {}, {})
+			assert(_count(WIEvents.SKILL_UNKNOWN) == 0,
+				"armless prop %s must never fall through to the empty-Skill refusal" % String(entity[WIKeys.ID]))
+			var own_text := String(entity.get("observe", ""))
+			if own_text == "":
+				continue
+			flavored += 1
+			var expected_text := String(entity.get("locked_toast", own_text))
+			assert(_toast_texts() == [expected_text],
+				"armless prop %s must emit its exact authored flavor" % String(entity[WIKeys.ID]))
+	assert(checked == 102, "the reusable #445 surface guard covers all 102 armless shipped props")
+	assert(flavored == 88, "88 armless props currently carry an authored free-read line")
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var scene_config := WISceneCatalog.compose()
 	var skill_config := _load_json("res://data/skills.json")
+	_check_armless_prop_reads(scene_config, skill_config)
+	_events.clear()
 	var game := WIGame.new(scene_config, skill_config, _sink, 12345)
 	_check_chronicle_facts(scene_config, skill_config)
 	_check_lore_notes(scene_config, skill_config)
@@ -808,6 +836,11 @@ func _init() -> void:
 		guard11 += 1
 	assert(cb11.get_active() == "pc", "cycled back to pc's turn")
 	assert(cb11.attack("goblin_raider"), "pc lands a second melee hit")
+	# Generation is pinned at each real proc in test_combat_sim; this deposit
+	# pin proves the new counter follows the unchanged adversity/banking seam.
+	var pc_action_tally: Dictionary = cb11.action_tally.get("pc", {})
+	pc_action_tally["tactic_used"] = 1
+	cb11.action_tally["pc"] = pc_action_tally
 	_rout(cb11)
 	assert(cb11.finished and cb11.outcome["victory"], "forced victory")
 	_events.clear()
@@ -815,6 +848,7 @@ func _init() -> void:
 	assert(g11.accomplishment_count("melee_hit") == 2, "melee hits banked on victory")
 	assert(g11.accomplishment_count("spell_cast") == 1, "spell cast banked on victory")
 	assert(g11.accomplishment_count("ice_cast") == 1, "element counter banked on victory")
+	assert(g11.accomplishment_count("tactic_used") == 1, "tactic_used banks through the combat action-tally path")
 	assert(g11.accomplishment_count("won_combat") == 1, "on_victory records still fire")
 	assert(g11.used_skills.has("frost_bolt"), "combat use_skill records into used_skills")
 	var melee_events := 0
@@ -1318,27 +1352,25 @@ func _init() -> void:
 	assert(gGuard.start_combat("goblin_encounter_2"), "garden sim guard control: start_combat still works normally off the garden map")
 
 	var gMem := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345)
-	gMem.player_skills.append("observe")
-	assert(gMem.known_skills().has("observe"), "memorial observe test: [Appraise Foe] known")
 	gMem.bind_map_silent("garden_sanctuary", Vector2i(6, 2))
 	gMem.player_facing = Vector2i.UP  # faces memorial_plot_warren at (6,1)
 	_events.clear()
-	var before_res := gMem.use_skill_field("observe")
-	assert(before_res.get("observed", "") == "memorial_plot_warren", "memorial observe: pre-claim appraise targets the plot")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A stone plinth, swept clean, facing the axis like the others. Whatever belongs here hasn't been carried up from below yet."), "memorial observe: pre-claim reads the WAITING plinth line, not the remembrance")
-	assert(gMem.accomplishment_count("cleared_the_warren") == 0, "memorial observe: appraising the plinth never itself banks the story beat")
+	var before_res := gMem.interact()
+	assert(before_res.get("read", "") == "memorial_plot_warren", "memorial read: pre-claim interact targets the plot")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A stone plinth, swept clean, facing the axis like the others. Whatever belongs here hasn't been carried up from below yet."), "memorial read: pre-claim prints the WAITING plinth line, not the remembrance")
+	assert(gMem.accomplishment_count("cleared_the_warren") == 0, "memorial read never itself banks the story beat")
 
 	gMem.accomplishments["cleared_the_warren"] = 1
 	_events.clear()
-	var after_res := gMem.use_skill_field("observe")
-	assert(after_res.get("observed", "") == "memorial_plot_warren", "memorial observe: post-claim appraise still targets the same plot")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]).begins_with("A gnoll carved in stone")), "memorial observe: post-claim reads the gnoll's remembrance line")
+	var after_res := gMem.interact()
+	assert(after_res.get("read", "") == "memorial_plot_warren", "memorial read: post-claim interact still targets the same plot")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]).begins_with("A gnoll carved in stone")), "memorial read: post-claim resolves the gnoll's remembrance line")
 
 	gMem.bind_map_silent("garden_sanctuary", Vector2i(10, 2))
 	gMem.player_facing = Vector2i.UP  # faces memorial_plot_wrong_order at (10,1)
 	_events.clear()
-	gMem.use_skill_field("observe")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A stone plinth at the far end of the row, otherwise unremarkable, waiting on whatever the inn hasn't settled yet."), "memorial observe: a sibling plot's own counter being unbanked reads ITS waiting line, unaffected by cleared_the_warren above")
+	gMem.interact()
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A stone plinth at the far end of the row, otherwise unremarkable, waiting on whatever the inn hasn't settled yet."), "memorial read: a sibling plot's own counter being unbanked reads ITS waiting line, unaffected by cleared_the_warren above")
 
 	var gReg := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345)
 	gReg.player_skills.append("observe")
@@ -1346,7 +1378,8 @@ func _init() -> void:
 	gReg.player_facing = Vector2i.LEFT  # faces dirty_table at (5,4)
 	_events.clear()
 	gReg.use_skill_field("observe")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You watch. Details surface."), "memorial observe regression guard: a visual_states prop with no observe override (dirty_table) keeps the generic [Appraise Foe] fallback")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "[Appraise Foe] — Nothing here is going to fight you."), "appraise regression guard: ordinary scenery takes the scoped ambient")
+	assert(gReg.accomplishment_count("observed_things") == 0, "ordinary scenery appraisal banks nothing")
 
 	var e1 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(e1.inventory.has("rusty_sword"), "PC starts carrying the starter sword")
@@ -2987,10 +3020,10 @@ func _init() -> void:
 	g_obs.player_facing = Vector2i.LEFT  # faces the dirty_table prop (no `observe` string)
 	_events.clear()
 	var ob2 := g_obs.use_skill_field("observe")
-	assert(not ob2.is_empty() and ob2.has("observed"), "observe on an unlabelled entity still resolves")
+	assert(ob2.get("ambient", "") == "observe", "appraise on scenery resolves through its scoped ambient")
 	var ob2_toast: Dictionary = _events[_events.size() - 1]
-	assert(ob2_toast["payload"]["text"] == "You watch. Details surface.", "generic observe fallback string")
-	assert(g_obs.accomplishment_count("observed_things") == 2, "generic-fallback observe still banks observed_things")
+	assert(ob2_toast["payload"]["text"] == "[Appraise Foe] — Nothing here is going to fight you.", "scenery appraisal explains the living-target scope")
+	assert(g_obs.accomplishment_count("observed_things") == 1, "scenery appraisal banks no observed_things")
 
 	g_obs.player_cell = Vector2i(2, 3)
 	g_obs.player_facing = Vector2i.DOWN
@@ -2999,7 +3032,49 @@ func _init() -> void:
 	var oba := g_obs.use_skill_field("observe")
 	assert(oba.get("ambient", "") == "observe", "empty-cell observe -> ambient result")
 	assert(_count("accomplishment_recorded") == 0, "empty-cell observe banks no accomplishment")
-	assert(g_obs.accomplishment_count("observed_things") == 2, "observed_things unchanged by an ambient (empty-cell) observe")
+	assert(g_obs.accomplishment_count("observed_things") == 1, "observed_things unchanged by an ambient (empty-cell) observe")
+
+	# #450 trap re-adjudication: danger reads stay Skill-gated and each arm
+	# resolves through the same real map/use_skill seam with its own prose.
+	var pressure_read := WIGame.new(scene_config, skill_config, _sink, 12345)
+	pressure_read.player_skills.append("find_trap")
+	pressure_read.bind_map_silent("trapped_halls", Vector2i(5, 7))
+	pressure_read.player_facing = Vector2i.RIGHT
+	_events.clear()
+	pressure_read.use_skill_field("find_trap")
+	assert(pressure_read.accomplishment_count("spotted_pressure_plate") == 1, "[Find Trap] is the pressure plate's danger-read surface")
+	assert(_toast_texts() == ["[Find Trap] — One flagstone sits a hair proud of its neighbors. The clean mortar crack marks the plate before your weight can."], "pressure plate read uses trap-perception prose")
+
+	var illusory_toasts := {
+		"find_trap": "[Find Trap] — The mortar has no depth and the dust has no weight. There is no floor inside the painted boundary.",
+		"keen_eye": "[Keen Eye] — Grain crosses the wrong way, paint stops a finger short, and months of dust avoid one perfect patch.",
+		"observe": "[Appraise Foe] — The false floor turns this passage into a kill lane. The safe line hugs the wall where an ambusher would stand.",
+	}
+	for trap_skill: String in illusory_toasts:
+		var floor_read := WIGame.new(scene_config, skill_config, _sink, 12345)
+		floor_read.player_skills.append(trap_skill)
+		floor_read.bind_map_silent("trapped_halls", Vector2i(13, 7))
+		floor_read.player_facing = Vector2i.RIGHT
+		_events.clear()
+		floor_read.use_skill_field(trap_skill)
+		assert(floor_read.accomplishment_count("spotted_illusory_floor") == 1, "%s reads the illusory floor" % trap_skill)
+		assert(_toast_texts() == [illusory_toasts[trap_skill]], "%s keeps its distinct illusory-floor register" % trap_skill)
+
+	var slit_toasts := {
+		"find_trap": "[Find Trap] — A hair-thin draw wire runs behind the slit. You wedge its catch with wax and wire; the slit goes dark and the kit is spent.",
+		"observe": "[Appraise Foe] — The slit owns the corridor from knee to throat. You pick the one dead angle, jam the catch there, and spend the kit doing it.",
+	}
+	for slit_skill: String in slit_toasts:
+		var slit_read := WIGame.new(scene_config, skill_config, _sink, 12345)
+		slit_read.player_skills.append(slit_skill)
+		slit_read.inventory.append("trap_kit")
+		slit_read.bind_map_silent("trapped_halls", Vector2i(9, 5))
+		slit_read.player_facing = Vector2i.RIGHT
+		_events.clear()
+		slit_read.use_skill_field(slit_skill)
+		assert(slit_read.accomplishment_count("halls_cleared") == 1, "%s disarms the dart slit" % slit_skill)
+		assert(_toast_texts() == [slit_toasts[slit_skill]], "%s keeps its distinct dart-slit register" % slit_skill)
+		assert(not slit_read.inventory.has("trap_kit"), "%s spends the trap kit" % slit_skill)
 
 	var social_scene := {
 		"start_map": "plaza",
@@ -3601,8 +3676,9 @@ func _init() -> void:
 	gAck.record_accomplishment("delivered_delivery_grate_phials")
 	_events.clear()
 	gAck.use_skill_field("observe")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "The phial crate you eased down the rungs is gone from the ledge below. The stone where it sat is clear — nothing broke on the way down."),
-		"the grate's delivered observe override renders (the only ack surface its door_when leaves reachable)")
+	assert(_toast_texts() == ["[Appraise Foe] — Nothing here is going to fight you."],
+		"the action-bearing sewer grate retires its standalone read and takes scoped appraisal ambient")
+	assert(gAck.accomplishment_count("observed_things") == 0, "appraising the sewer grate banks no observation")
 
 	# --- b7 #212: the bond-path rumor keys on the Tamer chain's entry
 	# counter (no canonical fixture banks soothed_a_beast outside the tamer
