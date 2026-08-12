@@ -1,5 +1,5 @@
 {
- "_comment": "GH#156 Druid consolidation fixture: Beast Master 10 + Mage 11 meet the pinned 10/21 gate; merged floor derives to 14 (max(ceil(2*21/3), 11)). Counters are level-coherent: tended_beasts 36 (beast_master L10), spell_cast 54 (mage L11), plus both gained_by banks.",
+ "_comment": "GH#156 Druid consolidation fixture: Beast Master 10 + Mage 11 meet the pinned 10/21 gate; merged floor derives to 14 (max(ceil(2*21/3), 11)). Counters are level-coherent: tended_beasts 36 (beast_master L10), spell_cast 54 (mage L11), plus both gained_by banks. #441 RE-FIXTURE (2026-08-12): the proof fight is the gate-road ambush, which #439 retuned from raider+shaman to TWO raiders + shaman. A 21-level PC with EMPTY HANDS lost it under `combat_autoplay` -- the levels were never the problem, the bare fists were. Knife + jerkin equipped; class levels, counters and the 10/21 consolidation gate this fixture exists to prove are all untouched.",
  "version": 6,
  "state": {
   "current_map": "inn_upstairs",
@@ -30,10 +30,13 @@
   "started_quests": [],
   "pending_consolidation": {},
   "used_skills": [],
-  "inventory": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin"
+  ],
   "equipped": {
-   "weapon": "",
-   "armor": ""
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin"
   },
   "container_state": {},
   "actions_since_sleep": 0,

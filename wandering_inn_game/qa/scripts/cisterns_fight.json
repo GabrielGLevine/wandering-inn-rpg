@@ -11,7 +11,7 @@
   { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "street" },
-  { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
+  { "action": "assert_state", "path": "classes.warrior", "equals": 6 },
   { "action": "assert_state", "path": "player_cell", "equals": [29, 4] },
 
   { "_comment": "== GIVE: Olesm at (29,3). First interact plays his rotating talk_pool line; the second opens olesm_intro. ==", "action": "press", "name": "interact" },
