@@ -28,6 +28,11 @@ or superseded session blocks.
   rc 0, import pass done. License verdict appended (license-notes,
   local). Alternates parked server-side (tags pick-lock-icon /
   workroom-door / enchanter-shelf).
+- QUEUED: **balance program** (#439 per-act leveling bands -> #440 Warden
+  chokepoint retune, user rulings 2026-08-11; CHOICE-LOG entry). Sequenced
+  AFTER #437's dual-policy sim table exists (tuning harness); steel-thread
+  Act V reauthors last (currently completes via the sneak-past — honest
+  record of today's balance until the retune lands).
 - QUEUED: **playthrough engine** (#438 tracking; #436 oracle → #435
   checkpoints → #437 pre-sim → #434 itinerary compiler; all knowledge
   embedded in the issues + the wi-writing-qa-scripts lessons section).
