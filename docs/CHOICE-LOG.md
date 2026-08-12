@@ -27,6 +27,18 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### Steel thread and item abilities (2026-08-11)
 
+- **Combat chokepoints are sanctioned leveling gates (user ruling,
+  2026-08-11 debrief).** Acts must require leveling progress: an
+  unwinnable spine encounter is the intended signal to do side content
+  (#439 per-act bands). The Seal Warden is the climactic chokepoint —
+  its item bypass (worn [Invisibility] sneak-past) is a defect, not a
+  feature; every player fights it (#440). This REFINES the three-pillars
+  directive: pillars govern breadth of viable playstyles, not that every
+  gate is bypassable. The worn-abilities systems mechanic itself stands;
+  the finale's exposure to it goes. Sequenced: bands → warden retune →
+  steel-thread Act V reauthored to fight at band.
+
+
 - **The steel thread is continuous (user directive).** One PC, title to
   epilogue, true act order, zero `install_fixture`/`teleport` (grep-gated);
   rewritten in place — the stitched six-fixture album misrepresented act
