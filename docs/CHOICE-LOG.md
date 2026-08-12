@@ -35,6 +35,17 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   shipped endings (open / fed / re-ward) become post-fight resolutions,
   and sneak holders get an in-fight edge, never a skip. Preserves the
   v0.14 three-path seal conclusion AND the chokepoint directive.
+  Shipped mechanism: the alcove's `encounter_when` reads
+  `read_the_feeding_ward` and its `on_victory` banks
+  `seal_warden_downed`, which the choice row compounds onto its
+  ward-fact gate. Two durable constraints fall out. (1) The seal door's
+  `door_when` is deliberately NOT gated on the new counter: it would be
+  inert behind the choice gate, and `seal_opened` is a frozen shipped id
+  whose existing holders carry nothing to satisfy a second gate — the
+  refusal a player meets is a `variants` rung, not a closed door. (2) A
+  save holding any resolution counter without `seal_warden_downed` is
+  unreachable and `test_fixture_coherence` now fails it, so the bypass
+  cannot be reopened by a fixture edit.
 - **QA proves completability; sims prove balance (user finding,
   2026-08-11).** Dumb-autoplay victory pins had become a balance
   ratchet: retunes that make a pinned fight autoplay-losable red CI, so
@@ -53,21 +64,6 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   gate is bypassable. The worn-abilities systems mechanic itself stands;
   the finale's exposure to it goes. Sequenced: bands → warden retune →
   steel-thread Act V reauthored to fight at band.
-- **The warden wakes for every descent (user scope ruling, 2026-08-11,
-  shipped #440).** #437 measured the warden's stats FAIR at band, so
-  #440 is bypass rework and ZERO stat work: its trigger moved from
-  `seal_opened` (the fight fork alone) to `read_the_feeding_ward`, and
-  all three authored endings — open / keep fed / re-ward — are preserved
-  verbatim as POST-FIGHT resolutions behind a `seal_warden_downed` gate
-  on Pisces' choice row. Rejected: removing a fork, or retuning the
-  warden. Sneak becomes an in-fight edge, never a skip — the stance
-  still slips the trigger radius, but the seal door refuses while the
-  warden stands, and an encounter authored `sneak_ambush` entered while
-  sneaking hands the PC the first turn of round 1 (position only, no
-  stat). `door_when` was deliberately NOT gated on the new counter: it
-  would be inert behind the choice gate, and `seal_opened` is a frozen
-  shipped id whose existing holders carry nothing to satisfy it.
-
 
 - **The steel thread is continuous (user directive).** One PC, title to
   epilogue, true act order, zero `install_fixture`/`teleport` (grep-gated);
