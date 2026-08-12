@@ -2344,10 +2344,17 @@ func start_combat(entity_id: String) -> bool:
 	var scale_rank := player_rank() if bool(entity.get("scales", false)) else "bronze"
 	for enemy: Variant in entity.get("enemies", []):
 		cfgs.append(WIBountyScaling.scale_enemy((by_id[String(enemy)] as Dictionary).duplicate(true), scale_rank))
+	# GH#440: read the stance BEFORE breaking it. An encounter authored
+	# `sneak_ambush` converts a live sneak into the fight's opening instead of a
+	# way around the fight -- see WICombat.grant_ambush. Every other encounter
+	# reads false here and its event stream is byte-identical.
+	var ambush := sneaking and bool(entity.get("sneak_ambush", false))
 	_break_sneak()
 	_pending_encounter = entity_id
 	combat = WICombat.new(arena, cfgs, skills_config_raw(), _combat_event_relay, rng.randi())
 	combat.difficulty_damage_taken_mult = difficulty_damage_taken_mult
+	if ambush and combat.grant_ambush("pc"):
+		_emit(WIEvents.TOAST, {"text": "It is still turning toward the sound when you reach it. The first move is yours."})
 	combat.begin()
 	return true
 

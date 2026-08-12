@@ -4108,6 +4108,107 @@ func _init() -> void:
 	assert(skip_find.accomplishment_count("read_the_feeding_ward") == 1,
 		"third interact banks the ward-read, the staged narration intact behind the fix")
 
+	# ================= GH#440: THE SEAL WARDEN IS A CHOKEPOINT =================
+	# Three claims the canonical cannot make cheaply, all at the sim layer.
+	var w440_cfg := {
+		"combatants": _load_json("res://data/combatants.json"),
+		"classes": _load_json("res://data/classes.json"),
+		"arenas": _load_json("res://data/arenas.json"),
+		"items": _load_json("res://data/items.json"),
+	}
+	var _w440_arm := func(seed_v: int) -> WIGame:
+		var g440 := WIGame.new(WISceneCatalog.compose(), skill_config, _sink, seed_v, w440_cfg)
+		g440.player_skills.append("sneak")
+		g440.record_accomplishment("vault_construct_downed")
+		g440.record_accomplishment("seal_descent_agreed")
+		g440.record_accomplishment("seal_kept_found")
+		g440.record_accomplishment("read_the_seal_runes")
+		g440.transition("trapped_halls", Vector2i(18, 8))
+		return g440
+
+	# 1. THE TRIGGER MOVED. The reading is what wakes it: with the runes matched
+	#    but the ward unread the alcove is inert and (18,7) is just the door's
+	#    approach cell, and one interact at the door later the same step springs
+	#    the fight. Both halves matter -- the first is what keeps a curious Act IV
+	#    visit safe, the second is the chokepoint itself.
+	var inert := _w440_arm.call(4440) as WIGame
+	inert.move_player(Vector2i.UP)
+	assert(inert.player_cell == Vector2i(18, 7) and inert.combat == null,
+		"before the ward is read the warden is inert and the door's approach cell is safe")
+	inert.move_player(Vector2i.RIGHT)  # blocked by the door prop; sets facing
+	inert.interact()
+	assert(inert.accomplishment_count("read_the_feeding_ward") == 1, "the interact banks the ward-read")
+	inert.move_player(Vector2i.DOWN)
+	assert(inert.combat == null, "stepping OUT of the radius does not spring it")
+	inert.move_player(Vector2i.UP)
+	assert(inert.combat != null and inert.combat.combatants.has("seal_warden"),
+		"and stepping back onto the approach cell now springs the warden -- it wakes for the descent, not for the open")
+
+	# 2. SNEAK IS NOT A SKIP. The stance still slips the radius (and still pays
+	#    sneaked_past_danger), but the door on the far side refuses in voice and
+	#    the vault stays on the other side of it.
+	var slip := _w440_arm.call(4441) as WIGame
+	slip.move_player(Vector2i.UP)
+	slip.move_player(Vector2i.RIGHT)
+	slip.interact()
+	assert(slip.accomplishment_count("read_the_feeding_ward") == 1, "ward read")
+	slip.use_skill_field("sneak")
+	assert(slip.sneaking, "[Stealth] is up")
+	slip.move_player(Vector2i.DOWN)
+	slip.move_player(Vector2i.UP)
+	assert(slip.combat == null, "a sneaking player still slips the armed radius")
+	assert(slip.accomplishment_count("sneaked_past_danger") >= 1,
+		"and is still credited for it -- the slip is real, it just does not lead anywhere")
+	slip.move_player(Vector2i.RIGHT)  # blocked by the door prop; re-faces it after the step up
+	_events.clear()
+	slip.interact()
+	assert(slip.current_map == "trapped_halls",
+		"THE CHOKEPOINT: the seal door refuses while the warden stands -- no map change, no vault")
+	assert(_toast_texts().any(func(t: String) -> bool: return t.contains("I would rather not be interrupted mid-sentence")),
+		"and it refuses in voice, with the line the reading state created")
+
+	# 3. THE SNEAK EDGE. Walking up to the alcove unheard and taking it on turns
+	#    the stance into the fight's opening: the PC acts first, and nothing else
+	#    about the fight moves. SEED 4444 IS LOAD-BEARING -- it is a seed whose
+	#    INITIATIVE rolls the warden first (the fence at the bottom of this block
+	#    proves it), so "pc acts first" here cannot be the coin-flip agreeing.
+	var edge := _w440_arm.call(4444) as WIGame
+	edge.move_player(Vector2i.UP)
+	edge.move_player(Vector2i.RIGHT)
+	edge.interact()
+	edge.use_skill_field("sneak")
+	for step: Vector2i in [Vector2i.LEFT, Vector2i.UP, Vector2i.UP, Vector2i.RIGHT, Vector2i.RIGHT]:
+		edge.move_player(step)
+	assert(edge.player_cell == Vector2i(19, 5) and edge.combat == null,
+		"the alcove's only interact cell is reached unheard (19,5), inside the radius the stance just absorbed")
+	edge.move_player(Vector2i.DOWN)  # blocked by the encounter; sets facing
+	assert(edge.player_facing == Vector2i.DOWN and edge.player_cell == Vector2i(19, 5), "facing the alcove")
+	_events.clear()
+	edge.interact()
+	assert(edge.combat != null, "taking it on opens the fight")
+	assert(String(edge.combat.turn_order[0]) == "pc",
+		"THE EDGE: a sneaking approach hands the PC the first turn of round 1")
+	assert(_toast_texts().any(func(t: String) -> bool: return t.contains("The first move is yours")),
+		"and the player is told why")
+	assert(not edge.sneaking, "the stance still drops when the blades come out")
+	# The fence: the same interact WITHOUT the stance is the plain fight, so the
+	# edge cannot be an accidental global buff on every interact-started combat.
+	var plain440 := _w440_arm.call(4444) as WIGame
+	plain440.move_player(Vector2i.UP)
+	plain440.move_player(Vector2i.RIGHT)
+	plain440.interact()
+	plain440.use_skill_field("sneak")
+	for step2: Vector2i in [Vector2i.LEFT, Vector2i.UP, Vector2i.UP, Vector2i.RIGHT, Vector2i.RIGHT]:
+		plain440.move_player(step2)
+	plain440.use_skill_field("sneak")
+	assert(not plain440.sneaking, "[Stealth] toggled back off at the same cell")
+	plain440.move_player(Vector2i.DOWN)
+	_events.clear()
+	plain440.interact()
+	assert(plain440.combat != null, "the unsneaked interact still opens the fight")
+	assert(String(plain440.combat.turn_order[0]) == "seal_warden",
+		"and initiative decides it -- at this seed the warden opens, which is what the ambush above overrode")
+
 	print("PASS: sim core behaves correctly")
 	quit(0)
 

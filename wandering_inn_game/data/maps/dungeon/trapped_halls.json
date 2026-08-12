@@ -535,8 +535,17 @@
      "toast": "Pisces steps back at last. \"The lines run one way. They have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
     },
     {
+     "_comment_refusal": "#440 THE CHOKEPOINT'S REFUSAL. The reading is what wakes the warden (its encounter_when), so from this state until the alcove is down, reaching for the door is reaching past a live guardian -- this line is what a player who slipped by it under [Stealth] gets instead of a way through. `variants` cannot express `absent`, so the ordering carries the negation: the rung below re-matches on seal_warden_downed and restores the plain repeat-read. Nothing here banks a new counter; the plain interact still re-banks read_the_feeding_ward exactly as it did before.",
      "when": {
       "read_the_feeding_ward": 1
+     },
+     "accomplishment": "read_the_feeding_ward",
+     "lore": false,
+     "toast": "Your hand stops a finger off the runes. In the alcove beside them the ward-stone has shifted its weight, and Pisces does not look up from his copying. \"That first. I would rather not be interrupted mid-sentence.\""
+    },
+    {
+     "when": {
+      "seal_warden_downed": 1
      },
      "accomplishment": "read_the_feeding_ward",
      "lore": false,
@@ -586,7 +595,7 @@
      ]
     }
    },
-   "_comment_door": "Act V beat 3, the FIGHT path. door_when is checked BEFORE the interact arm (interactions.gd prop branch order), so once seal_opened banks this stops being a thing to read and becomes a way through. seal_opened banks ONLY on Pisces' open-it fork, so the TALK and SKILL paths leave this door shut forever, as #270 requires.",
+   "_comment_door": "Act V beat 3, the FIGHT path. door_when is checked BEFORE the interact arm (interactions.gd prop branch order), so once seal_opened banks this stops being a thing to read and becomes a way through. seal_opened banks ONLY on Pisces' open-it fork, so the TALK and SKILL paths leave this door shut forever, as #270 requires. #440: `requires` deliberately stays seal_opened ALONE and does NOT gain seal_warden_downed. It would be inert -- the open fork itself is now gated on the warden being down (pisces_seal at_the_door), so no reachable state holds seal_opened with the warden standing -- and it would be a HAZARD: seal_opened is a frozen shipped id, and a released save that already flattened the warden carries no seal_warden_downed to satisfy a second gate, which would wall that player out of their own vault forever. The refusal the player actually meets is the variants rung above.",
    "door_when": {
     "requires": {
      "seal_opened": 1
@@ -600,7 +609,7 @@
    }
   },
   {
-   "_comment": "Act V: THE SEAL'S WARDEN. present_when is validator-forbidden on encounters, so it stands here from first arrival, VISIBLE AND INERT (the rift_vermin_leak pattern) with its own observe + gate_closed_toast. encounter_when arms it on seal_opened alone, which only the FIGHT fork banks. trigger_radius 1 makes it UNSKIPPABLE on that fork -- (18,7) is the only walkable approach to the door and sits one cell off; a sneaking player still slips by and banks sneaked_past_danger. CELL (19,6) is reachable only from (19,5), so it blocks no route, and it is NOT (18,7), which delve_fight stands on. Roster: `seal_warden`, a distinct id per combatants.json:401.",
+   "_comment": "Act V: THE SEAL'S WARDEN, and (#440) the act's COMBAT CHOKEPOINT. present_when is validator-forbidden on encounters, so it stands here from first arrival, VISIBLE AND INERT (the rift_vermin_leak pattern) with its own observe + gate_closed_toast. #440 MOVED encounter_when from seal_opened (the FIGHT fork alone) to read_the_feeding_ward: the reading is what reveals a guardian, so the warden now wakes for EVERY descent and stands between the reader and all three authored endings, which pisces_seal's the_choice gates on seal_warden_downed. trigger_radius 1 means (18,7), the door's only walkable approach, springs it. CELL (19,6) is reachable only from (19,5), so it blocks no route, and it is NOT (18,7), which delve_fight stands on. Roster: `seal_warden`, a distinct id per combatants.json:401 -- stats and arena UNTOUCHED by #440 (#437 measured them fair at band).",
    "id": "seal_warden_alcove",
    "kind": "encounter",
    "cell": [
@@ -620,13 +629,16 @@
    ],
    "allies": [],
    "trigger_radius": 1,
-   "_comment_victory": "on_victory is the ENGINE DEFAULT spelled out (test_combat_data requires the key on every encounter): the warden banks no story counter. Act V's resolution belongs to the room behind it -- vault_anchor_stone's open banks seal_resolved -- so sneaking past and flattening it reach the same beat at different cost.",
+   "_comment_sneak": "#440 THE SNEAK EDGE, and the reason sneaking is no longer a way around the finale. The engine's proximity pass still lets a sneaking player slip through the radius (and bank sneaked_past_danger), but the door on the far side now refuses -- so the slip buys position, never the vault. `sneak_ambush` is what turns that position into the fight's opening: an interact on this encounter while `sneaking` hands the PC the first turn of round 1 outright (WIGame.start_combat -> WICombat.grant_ambush). Nothing else moves: no stat, no arena, no lost enemy action. The alcove is interactable only from (19,5), itself inside the radius, so the ambush is available exactly to a player who chose to walk up to it unheard.",
+   "sneak_ambush": true,
+   "_comment_victory": "#440: the warden used to bank NOTHING but the engine-default won_combat, because Act V's resolution lived entirely in the room behind it. It is the chokepoint now, so it banks a named counter FIRST (test_combat_data forbids the fractional won_combat in slot 0 for victory_toast carriers; ordering it first here matches every other named-victory encounter). `seal_warden_downed` is the gate all three endings and the quest's `guardian` beat read.",
    "on_victory": [
+    "seal_warden_downed",
     "won_combat"
    ],
    "encounter_when": {
     "requires": {
-     "seal_opened": 1
+     "read_the_feeding_ward": 1
     }
    },
    "gate_closed_toast": "Dust lies over it in one unbroken sheet centuries thick; leave it where it is.",

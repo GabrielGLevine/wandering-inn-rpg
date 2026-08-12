@@ -98,7 +98,16 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 		return {}
 	var is_door_transition := String(target[WIKeys.KIND]) == "door" \
 			or (target.has("door_when") and _door_gate_met(target["door_when"] as Dictionary))
-	if not is_door_transition:
+	# GH#440: an encounter authored `sneak_ambush` is the one target whose SNEAK
+	# STATE is part of what the interact means -- WIGame.start_combat reads it
+	# for the ambush and breaks it itself one line later, so breaking it here
+	# would erase the edge before the fight could see it. Scoped by the data key,
+	# so every other interact (including every other encounter) still drops the
+	# stance exactly where it always did.
+	var reads_sneak := String(target[WIKeys.KIND]) == "encounter" \
+			and bool(target.get("sneak_ambush", false)) \
+			and bool(_encounter_gate_met.call(target))
+	if not is_door_transition and not reads_sneak:
 		_break_sneak.call()
 	match String(target[WIKeys.KIND]):
 		"npc":
