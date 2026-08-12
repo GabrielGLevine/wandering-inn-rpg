@@ -41,7 +41,7 @@ or superseded session blocks.
   Filed for the user: #448 (Relc veto trap choice), #449 (evolution
   orphans consolidation — end-to-end evidence in the run), plus two #439
   follow-ups recorded on #449 (dilution-stated bands; 4g finale economy).
-  Pre-existing red still open: d3_inventory_shot (inventory pin drift,
+  #451 parked by user (Counter Strike power level, ablation data attached). Pre-existing red still open: d3_inventory_shot (inventory pin drift,
   predates the program). Windowed observation run launched for the user.
 - QUEUED: **balance program** (#439 per-act leveling bands -> #440 Warden
   chokepoint retune, user rulings 2026-08-11; CHOICE-LOG entry). Sequenced

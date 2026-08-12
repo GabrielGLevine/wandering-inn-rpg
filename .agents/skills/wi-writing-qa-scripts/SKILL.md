@@ -369,6 +369,10 @@ byte-identical), and run verify-untouched IN THE SAME COMMIT.
   with a `hide_when` on the SAME counter (one row appears, one
   disappears — net row count unchanged). Pin a gate WITHOUT a paired
   hide_when, or pin text, never row counts.
+- **`sim_spine_viability` writes its table doc ONLY under
+  `WI_SPINE_WRITE=1`** — without it you diff the stale doc against
+  itself (cost one phantom ablation). The run's stdout always carries
+  the fresh rows; parse the log, or set the env var.
 - **Balance doctrine (CHOICE-LOG 2026-08-12):** QA proves
   completability, sims prove balance. Never tune an encounter to green
   an autoplay pin; re-fixture the canonical at/over band instead.
