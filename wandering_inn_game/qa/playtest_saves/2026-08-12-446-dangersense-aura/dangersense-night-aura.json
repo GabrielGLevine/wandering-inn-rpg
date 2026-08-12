@@ -1,0 +1,39 @@
+{
+ "_comment": "Issue #446 prepared eye-gate state. Derived from the coherence-valid dangersense_holder_start fixture: honest Rogue L4 [Dangersense], night floodplains, and the player at (11,23), one safe cell south of goblin_night_patrol's radius-1 edge. road_mothbears is dormant so exactly one live warning region is staged on screen. This is a prepared Playtest State, not a canonical QA fixture; the #413 canonicals remain untouched.",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [11, 23],
+  "player_facing": [0, -1],
+  "classes": {
+   "warrior": 1,
+   "rogue": 4
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "asked_about_crate": 1,
+   "recovered_crate_watch": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "persuaded_someone": 1,
+   "sneaked_past_danger": 7
+  },
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": ["crate_scavengers"],
+  "dormant_encounters": ["road_mothbears"],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword", "relcs_spare_spear"],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 1000,
+  "rng_state": "-1966449618399012673"
+ }
+}
