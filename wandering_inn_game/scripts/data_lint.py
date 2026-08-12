@@ -1616,15 +1616,15 @@ SKILL_CODE_GRANTS = {
 	# appear on a player-facing record by design: the visible Skill is the
 	# ordinary granted one, and the *_boon rider is folded into a combatant kit
 	# at roster-build time (folding it onto the PC record would buff the PC).
-	"sworn_fang_boon": ("src/core/wi_game.gd", 2306,
+	"sworn_fang_boon": ("src/core/wi_game.gd", 2318,
 		"[Sworn Fang: Ride Together] folds it into the PC kit while a companion rides"),
-	"basic_command_boon": ("src/core/wi_game.gd", 2317,
+	"basic_command_boon": ("src/core/wi_game.gd", 2329,
 		"[Animals: Basic Command] folds it onto the COMPANION's kit"),
-	"pack_bond_boon": ("src/core/wi_game.gd", 2319,
+	"pack_bond_boon": ("src/core/wi_game.gd", 2331,
 		"[Pack Bond] folds it onto the COMPANION's kit"),
 }
 ITEM_CODE_GRANTS = {
-	"flarepepper_powder": ("src/core/wi_game.gd", 2655,
+	"flarepepper_powder": ("src/core/wi_game.gd", 2667,
 		"[Supplies: Flarepepper Powder] restocks one per rest"),
 }
 
