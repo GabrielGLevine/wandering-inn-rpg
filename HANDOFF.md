@@ -28,20 +28,21 @@ or superseded session blocks.
   rc 0, import pass done. License verdict appended (license-notes,
   local). Alternates parked server-side (tags pick-lock-icon /
   workroom-door / enchanter-shelf).
-- RUNNING (2026-08-12, Fable session): **balance program wave 3 (final)**.
-  SHIPPED+MERGED: #440 (warden wakes every descent, endings post-fight,
-  sneak=24-line ambush edge; 14f4c558) and #439/#441 (Acts I-III into
-  window via composition-only retunes, stat blocks frozen as sim
-  instruments; 8 canonicals re-fixtured, zero seed searches; d951e0d1).
-  Eagle-Eyes pin blast radius fixed (3 canonicals). #448 filed (Relc
-  veto = trap choice at band, user design question). preflight --full
-  ALL GREEN on merged main. IN FLIGHT: steel-thread-band lane — driver
-  gains combat_autoplay {policy: competent} (required: mage L3+ banks
-  on spell_cast, dumb autoplay never casts), then full reauthor to band
-  with side-content diets, warden fight, consolidation attempt; ends
-  with double-green + windowed observation run. Known reds on main
-  until it lands: steel_thread (by design), d3_inventory_shot
-  (pre-existing drift, untriaged).
+- DONE (2026-08-12, Fable session): **balance program complete** (#434 is
+  the one open engine piece). Shipped across three waves: oracle/
+  fail-fast/checkpoints (#436/#435), dual-policy sim table + calibration
+  (#437), Acts I-III retunes into the [0.55,0.85] window + 8 canonical
+  re-fixtures (#439/#441), warden chokepoint (#440: wakes every descent,
+  endings post-fight, sneak = ambush edge), [Second Wind] once_per_fight
+  (#442), competent-policy survive amendments (hit-aware potential_damage,
+  largest-heal-wins, death-band second action). Steel thread REAUTHORED
+  and GREEN at band: 2567 steps, seed 9, x3 verified (events 10995/11000/
+  10995), warden falls in 9 rounds with every resource spent (PC 2/47).
+  Filed for the user: #448 (Relc veto trap choice), #449 (evolution
+  orphans consolidation — end-to-end evidence in the run), plus two #439
+  follow-ups recorded on #449 (dilution-stated bands; 4g finale economy).
+  Pre-existing red still open: d3_inventory_shot (inventory pin drift,
+  predates the program). Windowed observation run launched for the user.
 - QUEUED: **balance program** (#439 per-act leveling bands -> #440 Warden
   chokepoint retune, user rulings 2026-08-11; CHOICE-LOG entry). Sequenced
   AFTER #437's dual-policy sim table exists (tuning harness); steel-thread
