@@ -28,15 +28,20 @@ or superseded session blocks.
   rc 0, import pass done. License verdict appended (license-notes,
   local). Alternates parked server-side (tags pick-lock-icon /
   workroom-door / enchanter-shelf).
-- RUNNING (2026-08-11, Fable session): **balance program wave 1**. Fable
-  frontload done: #441 filed (re-fixture decoupling), band draft +
-  competent-policy spec committed (`docs/design/balance-bands-and-policy.md`,
-  a9c3fbde). Three lanes in flight: qa-tooling-436-435 (oracle,
-  fail-fast, dump_state, checkpoints), sim-table-437 (combat_policies.gd
-  dumb+competent, spine viability table + calibration gate + the
-  spellsword-14 warden verdict that scopes #440), and a read-only #441
-  enumeration. Controller gates + merges; next: re-fixture wave (#441),
-  then #439 retunes, #440, Act V reauthor.
+- RUNNING (2026-08-12, Fable session): **balance program wave 2**.
+  Shipped+merged: #436/#435 (oracle, fail-fast, checkpoints; 7ea553f2)
+  and #437 (policies + viability table; f5fcbbcc — calibration green,
+  warden "stat wall" REFUTED: competent-policy WIN 0.73 at shipped
+  build; tuning window [0.55,0.85] set; retune scope = Acts I-III only).
+  #442 filed ([Second Wind] unbounded). Rulings in CHOICE-LOG: warden
+  wakes every descent, three endings post-fight. Two lanes in flight:
+  balance-439-441 (retune Acts I-III climaxes + re-fixture affected
+  canonicals + CI calibration + caster-spine check) and warden-440
+  (chokepoint rework, zero stat work). KNOWN/EXPECTED: steel_thread
+  goes red at retuned fights after merges — final sequenced lane is
+  the full steel-thread reauthor with band-reaching side content
+  (Acts II-V affected, not just V). Skill library updated (instruments
+  + traps).
 - QUEUED: **balance program** (#439 per-act leveling bands -> #440 Warden
   chokepoint retune, user rulings 2026-08-11; CHOICE-LOG entry). Sequenced
   AFTER #437's dual-policy sim table exists (tuning harness); steel-thread
