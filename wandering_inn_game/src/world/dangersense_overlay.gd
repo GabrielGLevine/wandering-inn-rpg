@@ -1,18 +1,35 @@
 class_name WIDangersenseOverlay
 extends Node2D
 
-const FILL_COLOR := Color(1.0, 0.25, 0.2, 0.34)
-const EDGE_COLOR := Color(1.0, 0.5, 0.34, 0.92)
-const EDGE_WIDTH := 1.0
-const CORNER_TICK := 5.0
+const CORE_COLOR := Color(0.94, 0.38, 0.16, 0.075)
+const AURA_EDGE_COLOR := Color(1.0, 0.75, 0.38, 0.1)
+const EDGE_COLOR := Color(1.0, 0.75, 0.38, 0.34)
+const EDGE_HAZE_COLOR := Color(1.0, 0.75, 0.38, 0.22)
+const EDGE_WIDTH := 2.5
+const EDGE_HAZE_WIDTH := 5.0
+const AURA_BANDS := 7
+const AURA_INNER_EXTENT := 0.18
+const AURA_EXPONENT := 3.2
+const AURA_SEGMENTS := 48
+const PULSE_PERIOD_SECONDS := 6.4
+const PULSE_ALPHA_AMPLITUDE := 0.06
+const PULSE_DISTANCE_PHASE := 0.65
 const NIGHT_GRADE_RETAINED := 0.0
 
 var regions: Array[Dictionary] = []
 var _cell_size := 16.0
+var _pulse_elapsed := 0.0
 
 
 func _init(cell_size: float = 16.0) -> void:
 	_cell_size = cell_size
+
+
+func _process(delta: float) -> void:
+	if not visible or regions.is_empty():
+		return
+	_pulse_elapsed = fmod(_pulse_elapsed + delta, PULSE_PERIOD_SECONDS)
+	queue_redraw()
 
 
 func rebuild(encounters: Array, holder_has_skill: bool, field_mode: bool, radius_read: Callable) -> Array[Dictionary]:
@@ -66,20 +83,44 @@ func region_rect(region: Dictionary) -> Rect2:
 
 func _draw() -> void:
 	for region: Dictionary in regions:
-		var rect := region_rect(region)
-		draw_rect(rect, FILL_COLOR, true)
-		var edge := Rect2(rect.position + Vector2(0.5, 0.5), rect.size - Vector2.ONE)
-		draw_rect(edge, EDGE_COLOR, false, EDGE_WIDTH)
-		_draw_corner_ticks(edge)
+		_draw_aura(region_rect(region))
 
 
-func _draw_corner_ticks(rect: Rect2) -> void:
-	var left := rect.position.x
-	var right := rect.end.x
-	var top := rect.position.y
-	var bottom := rect.end.y
-	for corner: Vector2 in [Vector2(left, top), Vector2(right, top), Vector2(right, bottom), Vector2(left, bottom)]:
-		var horizontal := CORNER_TICK if corner.x == left else -CORNER_TICK
-		var vertical := CORNER_TICK if corner.y == top else -CORNER_TICK
-		draw_line(corner, corner + Vector2(horizontal, 0), EDGE_COLOR, EDGE_WIDTH)
-		draw_line(corner, corner + Vector2(0, vertical), EDGE_COLOR, EDGE_WIDTH)
+func _draw_aura(rect: Rect2) -> void:
+	var center := rect.get_center()
+	var half_extents := rect.size * 0.5
+	var pulse_phase := TAU * _pulse_elapsed / PULSE_PERIOD_SECONDS
+	for band: int in AURA_BANDS:
+		var inward := float(band) / float(AURA_BANDS - 1)
+		var extent := lerpf(1.0, AURA_INNER_EXTENT, inward)
+		var color := AURA_EDGE_COLOR.lerp(CORE_COLOR, inward)
+		var distance_phase := pulse_phase - extent * PULSE_DISTANCE_PHASE
+		color.a *= 1.0 + sin(distance_phase) * PULSE_ALPHA_AMPLITUDE
+		draw_colored_polygon(_superellipse(center, half_extents * extent), color)
+	var edge_pulse := 1.0 + sin(pulse_phase - PULSE_DISTANCE_PHASE) * PULSE_ALPHA_AMPLITUDE
+	var edge_haze := EDGE_HAZE_COLOR
+	var edge_core := EDGE_COLOR
+	edge_haze.a *= edge_pulse
+	edge_core.a *= edge_pulse
+	# Half-width inset makes the haze's outer feather end at the trigger extent.
+	var edge_points := _superellipse(
+		center,
+		half_extents - Vector2.ONE * EDGE_HAZE_WIDTH * 0.5,
+	)
+	edge_points.append(edge_points[0])
+	draw_polyline(edge_points, edge_haze, EDGE_HAZE_WIDTH, true)
+	draw_polyline(edge_points, edge_core, EDGE_WIDTH, true)
+
+
+func _superellipse(center: Vector2, half_extents: Vector2) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	for i: int in AURA_SEGMENTS:
+		var angle := TAU * float(i) / float(AURA_SEGMENTS)
+		var cosine := cos(angle)
+		var sine := sin(angle)
+		var x := signf(cosine) * pow(absf(cosine), 2.0 / AURA_EXPONENT)
+		var y := signf(sine) * pow(absf(sine), 2.0 / AURA_EXPONENT)
+		points.append(center + Vector2(x * half_extents.x, y * half_extents.y))
+	# The outer contour uses region_rect's exact half-extents: every point
+	# stays inside the shared trigger rect and its cardinal points touch it.
+	return points
