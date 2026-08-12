@@ -54,6 +54,29 @@ or superseded session blocks.
   + icons, registration matrix, canonical, sim row, steel-thread
   no-change verify). Purely additive; wiki-verify the name before id
   freeze. Dispatch when usage allows (parked at WINDDOWN, fable band).
+- QUIESCE SNAPSHOT (2026-08-12, session-window pause; resume here): Day-1
+  CLOSED+GATED: B1 MERGED (PR #454; note: squash carried the 41-commit
+  local backlog — granular history on local branch main-pre-454-archive).
+  C0 gate PASS (cap verified; sim-harness RUN-INSTABILITY found: 2 stable
+  modes, run-1-after-fresh-import matches pre-cap values — root-cause
+  dispatched). E1 gate: one defect (exit-cell seam), FIXED controller-side,
+  verify run done?, WIP committed 50a4a4b8; needs rebase onto main +
+  windowed reads + PR. A-M1 gate: machinery PASS, act1.yaml REFUTED as
+  sliver — rework dispatched. CODEX IN FLIGHT (own pool, keep running):
+  A rework (lane-a-434), C0.5+C1 xhigh (lane-c0-451: instability
+  root-cause FIRST then measure+repair ActIII/IV), E3 #446 DONE (report in, WIP cd1dc4d3, gate
+  workflow STOPPED mid-run — resume wf_2b89e91a-95c from scriptPath in
+  session workflows dir). B2 #450 STOPPED CORRECTLY pre-edit (report in
+  bl87zgeje output): needs TWO controller/user rulings — (1)
+  hollow_true_knot route closes unless [Evil Eye] gains field use;
+  (2) spec mismatch: 3/5 tactic-family Skills passive+un-slottable
+  (combat activation requires ap_cost>0, wi_game.gd:2101), only
+  [Chosen Blow]/[Instantaneous Barrage] can produce tactic_used.
+  Controller adjudicates post-reset, then re-dispatch B2 resume-last. E3 eye-gate + E1 windowed reads pending.
+  User-ask batch so far: 26 orphan names (#452 comment), Coyle bounty
+  re-arm (#443 report), oracle dispatch-duplication follow-up. Next
+  after resume: E3 gate resume, E1 rebase+PR, then lane closes as they
+  land; E4 after E1; C2/C3 after C1; B3/B4 after B2+C; D last.
 - RUNNING (2026-08-12, Fable controller): **wave ≥434 Day-1 lanes live** —
   plan at docs/superpowers/plans/2026-08-12-sol-wave-434-plus.md. Four Codex
   (gpt-5.6-sol, effort high) lanes dispatched in parallel worktrees under
