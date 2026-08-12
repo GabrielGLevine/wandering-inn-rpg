@@ -27,6 +27,14 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### Steel thread and item abilities (2026-08-11)
 
+- **QA proves completability; sims prove balance (user finding,
+  2026-08-11).** Dumb-autoplay victory pins had become a balance
+  ratchet: retunes that make a pinned fight autoplay-losable red CI, so
+  fights stay winnable by the weakest policy and ship ~a tier easier
+  than intended. Doctrine: pinned combat canonicals fixture at/over
+  band so the dumb policy wins deterministically; encounter difficulty
+  is tuned against #437's competent-policy-at-band column. Never tune
+  an encounter to green an autoplay pin.
 - **Combat chokepoints are sanctioned leveling gates (user ruling,
   2026-08-11 debrief).** Acts must require leveling progress: an
   unwinnable spine encounter is the intended signal to do side content
