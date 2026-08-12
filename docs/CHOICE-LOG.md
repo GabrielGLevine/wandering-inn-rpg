@@ -27,6 +27,14 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### Steel thread and item abilities (2026-08-11)
 
+- **The warden wakes for every descent; endings stay three-path
+  (2026-08-12).** #437's measurements refuted the "warden stat wall"
+  (competent-policy WIN 0.73 at the shipped build; 0.77 at band) — so
+  #440 does zero stat work. The chokepoint ruling is satisfied
+  structurally: the fight fires before `the_choice` resolves, all three
+  shipped endings (open / fed / re-ward) become post-fight resolutions,
+  and sneak holders get an in-fight edge, never a skip. Preserves the
+  v0.14 three-path seal conclusion AND the chokepoint directive.
 - **QA proves completability; sims prove balance (user finding,
   2026-08-11).** Dumb-autoplay victory pins had become a balance
   ratchet: retunes that make a pinned fight autoplay-losable red CI, so
