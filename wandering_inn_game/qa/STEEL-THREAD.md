@@ -96,6 +96,82 @@ ruin, riverfarm village/hollow/longhouse, invrisil boulevard/alleys/
 enchanter shop, pallass market/forge, dungeon, vault. Night-watch wolf fight
 replaced by the track leg (night phase unschedulable on a portal route).
 
+## Authoring a new segment: checkpoints (GH#435)
+
+The 2026-08-11 rebuild paid the whole prefix back on every fix — late-Act
+iteration meant re-walking Acts I–IV, ~50s per green attempt plus 5–30s of
+timeout stall per red, roughly ten times over the warden work. Checkpoints
+remove that. They are **scaffolding**: derived from the continuous run
+itself, used only to iterate, and gone before the proof run. This is not
+the stitched-album mistake (which shipped fixture loads as *part* of the
+run, breaking continuity and PC identity) — nothing here ever enters
+`steel_thread.json`, and the grep gate stays the mechanical proof.
+
+**1. Dump a checkpoint at the segment boundary.** No edit to
+`steel_thread.json` — the flag checkpoints it from outside:
+
+```bash
+wandering_inn_game/qa/run_qa.sh steel_thread headless --seed=9 --checkpoint-at=1200
+# QA_CHECKPOINT: step_1200 -> .../qa_output/steel_thread/checkpoint_step_1200.json (step 1199, street (29, 4))
+```
+
+A step landing mid-combat or mid-dialogue defers to the next quiet step
+and says so (`QA_CHECKPOINT_DEFERRED`) — `WISave.serialize` captures
+neither, so a checkpoint taken there would be a fixture that lies. The
+in-script equivalent is the `dump_checkpoint {slot}` step action, which
+*refuses* in those states instead of deferring (you chose the spot).
+
+**2. Iterate the new segment as a scratch script.** Checkpoints are ordinary
+WISave files — same format as `qa/fixtures/*`, `rng_state` rides along as a
+String so seed continuity holds — and `fixture_save` accepts a **path** as
+well as a bare fixture name, so the scratch script points straight at the
+artifact and nothing lands in `qa/fixtures/` (where
+`test_fixture_coherence` would validate a throwaway as a shipped story
+position):
+
+```json
+{
+ "fixture_save": "res://qa_output/steel_thread/checkpoint_step_1200.json",
+ "starts_at_title": true,
+ "steps": [ "…title gate → Continue…", "…the new segment…" ]
+}
+```
+
+Name it `qa/scripts/tmp_*.json`, run it with `--fail-fast` so the first
+divergence stops the run instead of the tail executing against wrecked
+state, and iterate. Measured: the step-1200 resume above loads and asserts
+in **~1.5s** against ~20–55s for the prefix.
+
+**3. Splice the proven segment into `steel_thread.json`** and delete the
+scratch script and its `qa_output/` directory.
+
+**4. Purity proof:** one full continuous run, plus the grep gate above
+(must print 0). Checkpoints never ship inside the final script.
+
+### Answering questions without a run (GH#436)
+
+Two instruments replace the deliberately-failing-`assert_state` probe:
+
+```bash
+# what the panel will actually show at this node, under THIS save
+godot --headless --path wandering_inn_game --script res://qa/oracle.gd -- \
+    --save=res://qa_output/steel_thread/checkpoint_step_1200.json \
+    --query="visible_options erin_errand hub"
+# route + paste-ready driver `move` steps, and the bump direction for a
+# blocked (occupied) target cell
+… --query="path inn 13,6 7,2"
+… --query="field_bar"      # equipment-dependent; an equip renumbers hotbar_N
+```
+
+Answers arrive as one `ORACLE_JSON:` line. Other queries: `state <dot.path>`,
+`known_skills`, `portal_rows`, `inventory`; `--query help` lists them.
+
+Inside a run, the `dump_state {label}` action emits a `qa_state_dump` event
+carrying the full snapshot, field bar, open-dialogue rows and combat roster
+— readable from `qa_output/<script>/events.jsonl` in a **passing** run,
+where the old probe idiom needed a failing one. Every failure line now
+carries a compact `state={…}` suffix for the same reason.
+
 ## Known limitation
 
 `events_seen` may vary between identical seed-9 runs; `combat_autoplay`
