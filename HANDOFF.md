@@ -145,6 +145,12 @@ Current open work, grouped by gate rather than guessed priority:
 - **Product work:** #406 prose holdout release/residue drain; #371 v0.20 inn
   visitor scheduling; #348 remaining property-based Skill interactions; #347
   dynamic Class creation.
+- **Playtest triage 2026-08-12 (filed, undispatched):** #458 companion swap
+  permanently exhausts the old bond (post-#332 gap, verified in code — the
+  `released` reason never banks/re-supplies); #459 companion follower sprites
+  are idle-only, need 4-direction walks (PixelLab path); #460 enemy archetype
+  variety, first target a mid-fight summoner (needs design pass; balance pins
+  will move).
 - **Deferred/environment:** #253 itch/mobile Import Save picker; #140
   intermittent Metal/windowed screenshot corruption; #19 Steam packaging.
 
