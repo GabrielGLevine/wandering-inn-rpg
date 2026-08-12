@@ -297,3 +297,44 @@ byte-identical), and run verify-untouched IN THE SAME COMMIT.
   EXPECTED_ITEMS pin IN THE SAME CHANGE — the table is exhaustive both
   ways and reds CI, not just local runs. Generalize: grep tests/ for
   every data surface you append to before running gates.
+
+## Continuous steel-thread lessons (2026-08-11 rebuild)
+- **New-waking pool line:** the FIRST interact with a pool-carrying NPC
+  after any sleep emits only `dialogue_line`. Idiom: interact → wait
+  `dialogue_line {speaker}` → interact → wait `dialogue_started`.
+  `social_talked` clears ONLY in `sleep()` — same-waking revisits open
+  the graph on the first interact across any number of map hops. NPCs
+  carrying `dialogue` (not `talk_pool`), e.g. `pisces_seal_escort`, are
+  exempt: the graph opens on the first interact even on a fresh waking.
+- **Panel-teardown input window:** a press within a closing panel's
+  teardown frames (pool-line panel, dialogue end) is silently eaten —
+  wait_frames ~30 before the next press. Two reds bought this.
+- **`_visible_options` DROPS accomplishment-gated rows** (not "locked");
+  only skill/item/gold gates render locked. Count cursor moves against
+  the graph JSON evaluated under CURRENT accomplishments.
+- **Routing hub rows carry no effects** — banks live on the destination
+  node's rows. Pin the destination `dialogue_node` text, then confirm.
+  `quest_beat_completed` payloads are 1-indexed, complete in order, and
+  only the LAST completed index is emitted; beat events fire
+  synchronously BETWEEN an option's own effects.
+- **`door_when` short-circuits `on_interact_accomplishment`** — pin the
+  open_toast/map_changed, never the accomplishment, on gated travel
+  props. Transitions bypass blocking: arrival can land ON a prop's cell;
+  step off before re-approaching.
+- **`on_victory` story counters bank on the combat DISMISS** (before
+  `ui_combat_hidden`); an `end:true` option tears the panel down
+  (`dialogue_ended` → `ui_dialogue_hidden`) BEFORE its effects resolve.
+- **Worn-accessory abilities are known while worn** (ruling 2026-08-11):
+  equips can change the field bar (`ITEM_EQUIPPED` re-render), prop
+  skill gates, and dialogue skill gates. Sneak survives door transitions
+  only; any non-door interact breaks it.
+- **Patch hygiene:** edit scripts with one build-load-append-dump pass,
+  `json.dump(..., indent=1)`; RE-READ the file and assert the steps
+  landed at the intended indices before running; never print success
+  outside the match loop (five phantom "patches" in a row shipped
+  no-ops and burned four runs before the miss was caught).
+- **The driver continues past failures** — steps after a red run against
+  whatever state the failure left (even a defeat-reload), so a short
+  failures[] list can flatter a broken run; read the FIRST divergence
+  and events.jsonl, not the count. Deliberately-failing `assert_state`
+  probes are a cheap state-dump idiom (many unknowns per run).
