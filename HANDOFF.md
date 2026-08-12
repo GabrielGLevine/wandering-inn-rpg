@@ -54,6 +54,11 @@ or superseded session blocks.
   + icons, registration matrix, canonical, sim row, steel-thread
   no-change verify). Purely additive; wiki-verify the name before id
   freeze. Dispatch when usage allows (parked at WINDDOWN, fable band).
+- QUEUED: **#434 itinerary compiler — DESIGN COMPLETE** (user-directed
+  Fable frontload 2026-08-12): full engine design at
+  wandering_inn_game/docs/design/itinerary-compiler-design.md + #434
+  comment. Four lane-sized milestones (M1 spine → M4 Mage variant);
+  implementation is delegable cold. Dispatch M1 when usage allows.
 - QUEUED: **playthrough engine** (#438 tracking; #436 oracle → #435
   checkpoints → #437 pre-sim → #434 itinerary compiler; all knowledge
   embedded in the issues + the wi-writing-qa-scripts lessons section).
