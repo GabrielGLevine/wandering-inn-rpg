@@ -145,7 +145,7 @@ const ROSTER := [
 	{
 		"id": "act3_awakened_boss", "act": "III", "beat": 15, "map": "sewers/deep_tunnels", "entity": "awakened_boss",
 		"ship": "ship_act3", "band": "band_act3", "draughts": [],
-		"bypasses": "None (act climax). `relc_descent` is a veto beat, not an out: [Go together] banks `relc_joined_descent`, which is the boss's `ally_requires` — refusing fights it SOLO.",
+		"bypasses": "None (act climax). `relc_descent` is a veto beat, not an out: [Go together] banks `relc_joined_descent`, which is the boss's `ally_requires` — refusing fights it SOLO. #439 WARNING, measured not inferred: the retuned pack (Awakened + 3 scouts) reads WIN 0.69 at band WITH Relc and **LOSS 0.06 at the same band without him**. The veto is now effectively a refusal to win the act, not a harder cut of it; pre-retune the same solo read was 0.37. Raised for the #440/veto lane — this lane did not touch the fork.",
 	},
 	{
 		"id": "act4_vault_construct", "act": "IV", "beat": 20, "map": "dungeon/trapped_halls", "entity": "vault_boss_slot",
@@ -192,10 +192,19 @@ const CALIBRATION := [
 		"why": "measured: the same build loses to power-9.8 trash under autoplay"},
 	{"row": "act5_gallery_vermin_nest", "column": "ship", "policy": "competent", "want": "WIN",
 		"why": "measured: hand-winnable — the gap IS the competence gap"},
-	{"row": "act3_raskghar_scouts", "column": "ship", "policy": "dumb", "want": "WIN",
-		"why": "the shipped run won it under autoplay at warrior 2 (steel_thread.json step 582)"},
-	{"row": "act3_awakened_boss", "column": "ship", "policy": "dumb", "want": "WIN",
-		"why": "the shipped run won it under autoplay at warrior 2 with Relc (step 624)"},
+	# SUPERSEDED BY DATA, NOT BY DISAGREEMENT. Both rows measured WIN before
+	# #439, and that WIN was the finding: an act CLIMAX beaten by the weakest
+	# policy six to eight levels under band gates nothing. #439 retuned the two
+	# encounters (deep_tunnels.json: the pair's second body is now a [Raskghar
+	# Pack-Leader]; the Awakened's pack gained a third scout), so the shipped
+	# w2/m1 kit is now BELOW the fight, which is the intended shape. The
+	# expectation moved because the CONTENT moved -- never because the
+	# measurement disagreed. steel_thread.json steps 582/624 are red until its
+	# Act III leg is reauthored (sequenced follow-up lane).
+	{"row": "act3_raskghar_scouts", "column": "ship", "policy": "dumb", "want": "LOSS",
+		"why": "#439 retune: pre-retune this was WIN 0.78 at warrior 2 (steel_thread.json step 582) — the ratchet. Post-retune the under-band kit loses, and the act gates"},
+	{"row": "act3_awakened_boss", "column": "ship", "policy": "dumb", "want": "LOSS",
+		"why": "#439 retune: pre-retune this was WIN 0.60 at warrior 2 with Relc (step 624) — the ratchet. Post-retune the under-band kit loses, and the act gates"},
 ]
 
 ## PREDICTIONS, kept separate from CALIBRATION and deliberately NOT asserted.
@@ -547,7 +556,7 @@ func _render() -> String:
 	out.append("## Reading the table")
 	out.append("")
 	out.append("- **floor LOSS / competent WIN** — a competence wall, not a difficulty wall. The fight is fair; the script cannot play it. `act5_gallery_vermin_nest` is the archetype.")
-	out.append("- **floor LOSS / competent LOSS** — a real wall. Either the build is under band or the encounter is over it. Per CHOICE-LOG 2026-08-11 that is the INTENDED shape of an act climax: an unwinnable spine encounter is the signal to go level. **No row in this table is currently that shape** — see the refuted prediction above.")
+	out.append("- **floor LOSS / competent LOSS** — a real wall. Either the build is under band or the encounter is over it. Per CHOICE-LOG 2026-08-11 that is the INTENDED shape of an act climax: an unwinnable spine encounter is the signal to go level. **No row in either table is currently that shape** — and after #439 that reads as a result rather than as the complaint it was. The three retuned Acts I–III rows now sit at floor LOSS / competent WIN against the SHIPPED under-band kit: the act gates a player who does not spend their kit, and opens for one who does. Where the pre-#439 tables showed floor WIN at six to eight levels under band, they now show floor LOSS.")
 	out.append("- **floor WIN at a build far under band** — the ratchet. The fight is beatable by the weakest policy at the lowest kit, so it is not gating anything.")
 	out.append("- **bypasses** — 'unwinnable but bypassable' reads differently from 'wall'. The gate half of the column is derived from the map entity at generation time; the authored-resolution half is maintained in `ROSTER`.")
 	return "\n".join(out)
@@ -592,9 +601,9 @@ func _findings() -> String:
 		"4. **The Act V spine build is weaker than the debrief recorded.** Four classes totalling 23 levels model to **%d max HP / %.1f DPR** against the warden, not the debrief's 56 / ~29. `derived_stat_bonuses` scales raw growth by `power_multiplier` (effective_power / total levels = %.2f here), so warrior 12's +12 con and +12 str arrive as +8 each; the debrief's pair is an UNDILUTED warrior-12 read. Roughly 30%% of the spine build's stat growth is paid for breadth — which is the pressure consolidation exists to relieve, and a direct #439 input: an unconsolidated multiclass PC does not reach its combined level's power. Note the direction: the build modelled here is the WEAKER of the two, so nothing in this table overstates spine viability." % [
 			_act5_max_hp, _act5_dpr, _act5_efficiency],
 		"",
-		"5. **Act III is the ratchet, visible.** Scouts %s and boss %s under the FLOOR policy at warrior 2 — an act CLIMAX beaten by the weakest possible play at six to eight levels below the band the act is supposed to deliver (8–10). It is gating nothing. Compare the same fights at band: %s and %s." % [
+		"5. **Act III WAS the ratchet; #439 closed it.** Before the retune, scouts measured WIN 0.78 / 3 rd and boss WIN 0.60 / 5 rd under the FLOOR policy at warrior 2 — an act CLIMAX beaten by the weakest possible play six to eight levels below the band the act was supposed to deliver. The retune was COMPOSITION, not stats: the warren-mouth pair's second body is now a [Raskghar Pack-Leader], and the Awakened's pack gained a third scout. The boss's OWN numbers were left alone on evidence — a probe at con 30/40/48 and str 18/22 moved the band read only 1.00 / 0.98 / 0.92, because a lone high-HP target is grind the party chews through, not pressure it has to survive; a fourth body took the same fight to 0.69. Today the shipped w2/m1 kit measures %s and %s, and the same two fights at band read %s and %s under the COMPETENT policy — inside the [0.55, 0.85] tuning window, with the act gating below it." % [
 			_cell_text(scouts["ship_dumb"]), _cell_text(boss["ship_dumb"]),
-			_cell_text(scouts["band_dumb"]), _cell_text(boss["band_dumb"])],
+			_cell_text(scouts["band_competent"]), _cell_text(boss["band_competent"])],
 		"",
 		"6. **The gallery nest is a pure competence wall.** Floor %s, competent %s at the same build and the same (empty) pack. Nothing about the encounter is unfair; the script simply cannot play it. It is also `scales: true`, and the Act V build's effective power puts it in the GOLD band (+50%% enemy HP, +2 damage) — the trash got a rank promotion the run never noticed." % [
 			_cell_text(vermin["ship_dumb"]), _cell_text(vermin["ship_competent"])],

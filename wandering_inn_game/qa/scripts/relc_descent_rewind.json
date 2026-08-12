@@ -237,7 +237,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "THE #89 COMPOSITION GUARD: went_alone banked AND relc_joined_descent still absent -- ally_requires unmet, roster genuinely solo. assert_state cannot express key-absence, so the roster proof is the EXACT 4-combatant initiative order (rng_state-pinned, _loosely_equal arrays are exact element-wise): boss + 2 scouts + pc, NO relc -- contrast the JOIN fight's 5-slot order above.",
+   "_comment": "THE #89 COMPOSITION GUARD: went_alone banked AND relc_joined_descent still absent -- ally_requires unmet, roster genuinely solo. assert_state cannot express key-absence, so the roster proof is the EXACT 5-combatant initiative order (rng_state-pinned, _loosely_equal arrays are exact element-wise): boss + 3 scouts + pc, NO relc -- contrast the JOIN fight's 6-slot order above. #439 re-pin: the Awakened's pack gained raskghar_scout_3 in the Act III climax retune, and initiative seats it AFTER pc at this rng_state. This is a composition pin, not an outcome pin -- the fight's own result is unchanged (the warrior:1 PC still dies).",
    "action": "wait_for_event",
    "type": "combat_started",
    "payload_contains": {
@@ -245,7 +245,8 @@
      "raskghar_awakened",
      "raskghar_scout",
      "raskghar_scout_2",
-     "pc"
+     "pc",
+     "raskghar_scout_3"
     ]
    },
    "timeout_sec": 5

@@ -257,6 +257,26 @@
    "skills": []
   },
   {
+   "_comment": "#439 Act II CLIMAX RETUNE. The cistern nest's third body -- what the entity's own observe line already promises behind the visible pair ('more eyes catch the light down there than you want to count'), so the roster grew without the prose moving. FICTION FLOOR (binding on any future retune): STRICTLY dominates a plain shield_spider on every axis (str 14>9, con 28>17, weapon_die 7>4) and stays STRICTLY UNDER the Act III boss on every axis (str 14<18, con 28<30, and HP is 20+con so 48 < the Awakened's 50). The con was 32 in the first pass and that made an Act II side-nest guard tougher-skinned than the act climax two acts later; str carries the threat instead. ART DEBT (docs/VISUAL-LOG.md): shares the `shield_spider` sheet at a larger combat_scale; a bespoke silhouette is owed, because scale alone is a tint-grade tell.",
+   "id": "shield_spider_matriarch",
+   "power_level": 7.5,
+   "display_name": "Shield Spider Matriarch",
+   "sprite": "shield_spider",
+   "combat_scale": 0.42,
+   "side": "enemy",
+   "stats": {
+    "str": 15,
+    "dex": 11,
+    "con": 28,
+    "int": 3,
+    "wis": 8,
+    "cha": 2
+   },
+   "weapon_die": 7,
+   "ai": "melee",
+   "skills": []
+  },
+  {
    "_comment": "Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, generic-diegetic per the spec. T5.1 DARK-ARENA: combat_scale 0.56 = 1.26 cells (36 idle_side bbox rows x 0.17 / CELL 16), tint warm off the blue-grey grade. Board-only, sim untouched.",
    "id": "sewer_vermin",
    "power_level": 3.0,
@@ -300,6 +320,29 @@
    "weapon_die": 5,
    "ai": "melee",
    "skills": []
+  },
+  {
+   "_comment": "#439 Act III RETUNE. The second half of the warren-mouth PAIR (the entity's observe line says 'Two of them', so the fight was retuned by RANK, not by count). Canon-plausible: Raskghar bands run under a leader, and the warren's door is not held by two interchangeable scouts. FICTION FLOOR (binding on any future retune): strictly dominates raskghar_scout (str 15>11, con 24>14, weapon_die 6>5) and stays strictly UNDER raskghar_awakened (str 15<18, con 24<30). [Counter Strike] is the point of the row: a melee-first player who just trades swings pays for it, which is the competence the Act III band is supposed to have bought. ART DEBT (docs/VISUAL-LOG.md): shares the `raskghar_scout` sheet at a larger combat_scale pending a bespoke silhouette.",
+   "id": "raskghar_pack_leader",
+   "power_level": 7.0,
+   "display_name": "Raskghar Pack-Leader",
+   "sprite": "raskghar_scout",
+   "combat_scale": 0.72,
+   "side": "enemy",
+   "stats": {
+    "str": 15,
+    "dex": 10,
+    "con": 24,
+    "int": 4,
+    "wis": 8,
+    "cha": 4
+   },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": [
+    "power_strike",
+    "counter_strike"
+   ]
   },
   {
    "_comment": "The Awakened Raskghar BOSS -- canon (a Raskghar that ate a Gnoll's heart, permanently smarter, matches a Level-20 warrior).",

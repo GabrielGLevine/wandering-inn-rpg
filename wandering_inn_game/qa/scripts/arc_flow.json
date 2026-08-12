@@ -962,12 +962,12 @@
    }
   },
   {
-   "_comment": "THE SEAL'S LIGHT TRANSITION rides this sleep: 7 veil lines, re-derived from the run's own events.jsonl -- Warrior 6 and 7 each carry a Skill unlock, Warrior 8 now carries level growth only, Diplomat 2 advances, and the GDI's seal beat lands with them. The span itself is unchanged; moving [Basic Repair] to Helper L2 removes only Warrior 8's former unlock line.",
+   "_comment": "THE SEAL'S LIGHT TRANSITION rides this sleep: 4 veil lines, re-derived from the run's own events.jsonl -- Warrior 10, Warrior 11, Diplomat 2, and the GDI's seal beat. #441 re-derivation (2026-08-12): this pin was 7 when near_act3 started at Warrior 5 and the arc's banked counters walked it 6->7->8 here. The re-fixture starts at Warrior 9 + Diplomat 1 (Act III band top) with the melee_hit ledger that level honestly requires, so the same arc's banking now spends its rungs at 10 and 11 instead. A build-dependent count, re-derived from the run, not a contract that moved.",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "lines": 7
+    "lines": 4
    }
   },
   {
@@ -1029,11 +1029,11 @@
    }
   },
   {
-   "_comment": "assert_event_logged, not wait_for_event: sleep_beat emits the fallback toast DURING sleep(), which is before the deferred veil render the cursor just passed.",
+   "_comment": "assert_event_logged, not wait_for_event: sleep_beat emits its non-veil line DURING sleep(), which is before the deferred veil render the cursor just passed. #441 re-derivation (2026-08-12): this used to pin the 'You sleep soundly.' FALLBACK. The re-fixtured run reaches Warrior 10 at the seal sleep, so the bed now has something true to say instead -- the evolution nudge, fired because the L10 threshold is met with neither weapon-skill counter dominant. The once-ness proof this step belongs to is NOT weakened: it rests on the EMPTY veil above (lines 0 -- the GDI's seal beat does not re-render) and on the ui_gdi_epilogue_rendered count of 0 below. What moved is which non-seal line the bed speaks, and it is pinned rather than dropped so the swap cannot go unnoticed.",
    "action": "assert_event_logged",
    "type": "toast",
    "payload_contains": {
-    "text": "You sleep soundly."
+    "text": "Your hands haven't chosen sword or spear yet."
    }
   },
   {
