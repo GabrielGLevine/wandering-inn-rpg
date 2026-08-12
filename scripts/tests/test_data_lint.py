@@ -147,6 +147,80 @@ class TestBrokenFixtures(unittest.TestCase):
         self.assertEqual(self._errs(data_lint.check_gate_shapes, maps), [])
 
 
+class TestLineageCompleteness(unittest.TestCase):
+    def _catalog(self, exemptions=None, extra_classes=None, extra_rules=None):
+        classes = [
+            {"id": "a", "evolution": {"targets": {"used_a": "a2"}}},
+            {"id": "a2", "inherits": "a"},
+            {"id": "b", "evolution": {"targets": {"used_b": "b2"}}},
+            {"id": "b2", "inherits": "b"},
+            {"id": "ab", "inherits": ["a", "b"]},
+        ]
+        classes.extend(extra_classes or [])
+        rules = [{
+            "id": "ab", "target": "ab",
+            # Evolution targets are deliberately omitted: the validator must
+            # derive reachable held members rather than trust a hand list.
+            "parent_lines": [["a"], ["b"]],
+        }]
+        rules.extend(extra_rules or [])
+        rules.extend(exemptions or [])
+        return {data_lint.DATA / "classes.json": {
+            "classes": classes, "consolidations": rules,
+        }}
+
+    def _run(self, **kwargs):
+        errors = []
+        data_lint.check_lineage_completeness(self._catalog(**kwargs), errors)
+        return errors
+
+    def test_evolution_targets_are_enumerated_and_missing_pairs_fail(self):
+        errors = self._run()
+        self.assertEqual(len(errors), 3, errors)
+        joined = "\n".join(errors)
+        for pair in [("a", "b2"), ("a2", "b"), ("a2", "b2")]:
+            self.assertIn(f"'{pair[0]}' x '{pair[1]}'", joined)
+        self.assertNotIn("'a' x 'b',", joined)
+
+    def test_reasoned_exemptions_make_the_reachable_matrix_complete(self):
+        exemptions = [
+            {"_exempt": ["a", "b2"], "rationale": "awaiting ruling"},
+            {"_exempt": ["a2", "b"], "rationale": "awaiting ruling"},
+            {"_exempt": ["a2", "b2"], "rationale": "awaiting ruling"},
+        ]
+        self.assertEqual(self._run(exemptions=exemptions), [])
+
+    def test_exact_authored_target_resolves_an_evolved_pair(self):
+        exemptions = [
+            {"_exempt": ["a", "b2"], "rationale": "awaiting ruling"},
+            {"_exempt": ["a2", "b2"], "rationale": "awaiting ruling"},
+        ]
+        errors = self._run(
+            exemptions=exemptions,
+            extra_classes=[{"id": "a2b", "inherits": ["a2", "b"]}],
+            extra_rules=[{"id": "a2b", "target": "a2b",
+                "parent_lines": [["a2"], ["b"]]}],
+        )
+        self.assertEqual(errors, [])
+
+    def test_exemption_requires_rationale(self):
+        errors = self._run(exemptions=[
+            {"_exempt": ["a", "b2"], "rationale": ""},
+            {"_exempt": ["a2", "b"], "rationale": "awaiting ruling"},
+            {"_exempt": ["a2", "b2"], "rationale": "awaiting ruling"},
+        ])
+        self.assertTrue(any("requires a non-empty rationale" in error for error in errors), errors)
+
+    def test_stale_exemption_fails_when_target_lands(self):
+        errors = self._run(exemptions=[
+            {"_exempt": ["a", "b"], "rationale": "stale"},
+            {"_exempt": ["a", "b2"], "rationale": "awaiting ruling"},
+            {"_exempt": ["a2", "b"], "rationale": "awaiting ruling"},
+            {"_exempt": ["a2", "b2"], "rationale": "awaiting ruling"},
+        ])
+        self.assertTrue(any("stale _exempt row" in error for error in errors), errors)
+
+
 # --- W1 / issue #348: the interactions-table tier ---------------------------
 W1_TABLE = {
     "skill_properties": ["burns"],
