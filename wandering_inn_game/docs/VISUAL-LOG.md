@@ -26,3 +26,20 @@ row deletes it in place. Root drain directive: `docs/VISUAL-LOG.md`.
   horizontal timber/beam prop at cave scale; the [Greater Strength] mode
   is the only one whose blocker has no sprite of its own.
 
+## 2026-08-12 — #439 Act I-III climax retune
+
+- **Two new combatant rows ride an existing sheet.**
+  `shield_spider_matriarch` shares the `shield_spider` rig and
+  `raskghar_pack_leader` shares `raskghar_scout`; each is separated from
+  its base row only by a larger `combat_scale` (0.30 -> 0.42, 0.64 ->
+  0.72) and a distinct `display_name`. Scale-plus-name is the same grade
+  of tell as a tint, and unlike the roster's other sheet reuse
+  (`ruin_warden`, `bat`) these two stand ON THE BOARD BESIDE the row
+  they borrow from — the cistern nest fields two Shield Spiders and the
+  Matriarch, the warren mouth fields a Scout and the Pack-Leader — so
+  this is the disambiguation case, not the reuse-across-scenes case.
+  Ask: one bulkier eight-leg silhouette for the Matriarch (a broader
+  carapace reads at 16px) and one Raskghar carrying a visible mark of
+  rank for the Pack-Leader. Until then the size step is doing work it
+  cannot fully carry.
+
