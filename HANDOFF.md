@@ -54,6 +54,16 @@ or superseded session blocks.
   + icons, registration matrix, canonical, sim row, steel-thread
   no-change verify). Purely additive; wiki-verify the name before id
   freeze. Dispatch when usage allows (parked at WINDDOWN, fable band).
+- PROVIDER SHIFT (2026-08-12, user notice): Codex pool ~7% left. B2 (#450)
+  stays running to completion; ALL Sol work after it moves to Opus 5
+  subagents (Agent tool, model opus) under the same brief+gate discipline
+  — E1 door-leg re-derivation in the seed-37 thread, E4, C2, C3, B3, B4,
+  E2 verify, Lane D. Controller (Fable) stays gates/adjudication only.
+- WAVE STATE (2026-08-12 evening): PRs open w/ CI watchers: #455 (E3
+  aura, gated+windowed-read PASS), #456 (Lane C: cap+harness+repair,
+  gated, warden A/B ratified, probe-race fixed cb9ecf45), #457 (A-M1
+  compiler, gated PASS after sliver refutation+rework). Merge order: C
+  before E1's close-out. B1 merged (#454).
 - QUIESCE SNAPSHOT (2026-08-12, session-window pause; resume here): Day-1
   CLOSED+GATED: B1 MERGED (PR #454; note: squash carried the 41-commit
   local backlog — granular history on local branch main-pre-454-archive).
