@@ -28,6 +28,12 @@ or superseded session blocks.
   rc 0, import pass done. License verdict appended (license-notes,
   local). Alternates parked server-side (tags pick-lock-icon /
   workroom-door / enchanter-shelf).
+- QUEUED: **playthrough engine** (#438 tracking; #436 oracle → #435
+  checkpoints → #437 pre-sim → #434 itinerary compiler; all knowledge
+  embedded in the issues + the wi-writing-qa-scripts lessons section).
+  Acceptance milestone: Mage-focused steel-thread variant as an
+  itinerary diff. Pieces 1-3 are hour-scale and Codex/Opus-delegable;
+  #434 is day-scale (Fable specs, Sol implements per doctrine).
 - DONE (2026-08-11, Fable session): **continuous steel thread rebuilt and
   merged** (`ceefd357` + follow-ups on main). One PC, title → epilogue,
   true act order, zero install_fixture/teleport (grep-gated), 2448 steps,
