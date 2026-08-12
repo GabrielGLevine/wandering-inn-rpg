@@ -60,12 +60,14 @@ or superseded session blocks.
   C0 gate PASS (cap verified; sim-harness RUN-INSTABILITY found: 2 stable
   modes, run-1-after-fresh-import matches pre-cap values — root-cause
   dispatched). E1 gate: exit-cell seam FIXED controller-side (WIP
-  50a4a4b8) BUT steel_thread now RED at the tail: the +3-tick longer
-  exit walk desyncs the phase clock downstream (PC stranded
-  deep_tunnels/dusk step 2559+, late accomplishments unbanked; walkthrough
-  + data_lint green; seam steps 1819-20 themselves pass). Per rng
-  doctrine: re-derive remainder from first divergence, NO draw-surgery —
-  dispatch Sol resume in lane-e1-443 post-reset with x2 re-verify. A-M1 gate: machinery PASS, act1.yaml REFUTED as
+  50a4a4b8) and FULLY GREEN — the suspected tail desync was a controller
+  verify-run error (steel_thread run WITHOUT --seed=9 fail-fasts at step
+  655 in combat and cascades; ALWAYS pass the seed explicitly). Sol
+  re-verified: steel_thread x2 passed 2567/2567, walkthrough 266/266,
+  zero script edits, teleport/install_fixture grep 0. E1 remaining:
+  rebase onto main (data_lint.py/test_data_lint.py collide with B1's
+  merged arm — additive both, trivial), suites re-run, PR, controller
+  windowed reads (facade row + 5 spent states). A-M1 gate: machinery PASS, act1.yaml REFUTED as
   sliver — rework dispatched. CODEX IN FLIGHT (own pool, keep running):
   A rework (lane-a-434), C0.5+C1 xhigh (lane-c0-451: instability
   root-cause FIRST then measure+repair ActIII/IV), E3 #446 DONE (report in, WIP cd1dc4d3, gate
