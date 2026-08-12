@@ -54,6 +54,12 @@ or superseded session blocks.
   + icons, registration matrix, canonical, sim row, steel-thread
   no-change verify). Purely additive; wiki-verify the name before id
   freeze. Dispatch when usage allows (parked at WINDDOWN, fable band).
+- QUEUED: **#452 codify #347** (user-directed 2026-08-12): lineage-
+  completeness validator (build FIRST — inventories all orphaned pairs,
+  protects main at commit time), consolidation scaffolder, doctrine
+  ratification (spec EXPLORATION->RATIFIED needs user go), skill-library
+  method section, sim-roster derivation. #449's [Spellspear] = the
+  validator's first satisfied row + scaffolder golden.
 - QUEUED: **#434 itinerary compiler — DESIGN COMPLETE** (user-directed
   Fable frontload 2026-08-12): full engine design at
   wandering_inn_game/docs/design/itinerary-compiler-design.md + #434
