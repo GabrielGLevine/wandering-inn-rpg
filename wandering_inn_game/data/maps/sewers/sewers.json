@@ -302,7 +302,7 @@
    ]
   },
   {
-   "_comment": "Interact-only (no trigger_radius) so C3's SKILL path can [Appraise Foe] the nest without triggering combat.",
+   "_comment": "Interact-only (no trigger_radius) so C3's SKILL path can [Appraise Foe] the nest without triggering combat. #439 Act II CLIMAX RETUNE: the roster is now the visible pair PLUS the matriarch the observe line already promises ('more eyes down there than you will stand and count') -- the prose is unchanged because it already described this fight. Measured competent-at-band: 0.78 with Klbkch; w2 one band below is 0.25 LOSS.",
    "id": "shield_spiders",
    "kind": "encounter",
    "cell": [
@@ -315,7 +315,8 @@
    "arena": "sewers_nest",
    "enemies": [
     "shield_spider",
-    "shield_spider"
+    "shield_spider",
+    "shield_spider_matriarch"
    ],
    "allies": [
     "klbkch"

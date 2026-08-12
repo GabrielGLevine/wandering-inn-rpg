@@ -253,7 +253,7 @@
    "observe": "Old bones, settled where they fell. They are not going anywhere. Probably."
   },
   {
-   "_comment": "a Raskghar scout PAIR barring the way to the warren.",
+   "_comment": "a Raskghar scout PAIR barring the way to the warren. #439 Act III RETUNE: still a PAIR (the observe line says so), but the second of them is now a [Raskghar Pack-Leader] -- retuned by RANK, not by count, so the prose holds. Solo, no ally slot, no authored bypass. Measured competent-at-band: 0.70 at w5/m4 (band-top w5/m5 0.73); w3/m2 one band below is 0.44 LOSS.",
    "id": "raskghar_scouts",
    "kind": "encounter",
    "cell": [
@@ -266,7 +266,7 @@
    "arena": "cave_mouth",
    "enemies": [
     "raskghar_scout",
-    "raskghar_scout"
+    "raskghar_pack_leader"
    ],
    "allies": [],
    "on_victory": [
@@ -342,7 +342,7 @@
    ]
   },
   {
-   "_comment": "Conversation precedes combat. Join alone banks relc_joined_descent for ally_requires; solo never does. Victory banks cleared_the_warren, not raskghar_sealed; respawns=false. Balance: BOSS_CELLS gates warrior2+Relc 0.6-0.75; solo measured.",
+   "_comment": "Conversation precedes combat. Join alone banks relc_joined_descent for ally_requires; solo never does. Victory banks cleared_the_warren, not raskghar_sealed; respawns=false. Balance: BOSS_CELLS gates warrior2+Relc 0.6-0.75; solo measured. #439 Act III CLIMAX RETUNE: a THIRD scout joins the Awakened's pack. The escort is the lever and the boss's own stats are untouched -- measured directly (sim probe, 2026-08-12): con 30->40->48 and str 18->22 move the band read only 1.00 -> 0.98 -> 0.92, because a single big target is HP the party grinds, not pressure it must survive. A fourth body moves it to 0.69. Measured competent-at-band: 0.69 at w5/m4 (band-top w5/m5 0.78); w3/m2 one band below is 0.42 LOSS. VETO PATH: solo at band is 0.06 -- see docs/design/spine-viability-table.md's Act III note.",
    "id": "awakened_boss",
    "kind": "encounter",
    "cell": [
@@ -356,6 +356,7 @@
    "arena": "deep_warren",
    "enemies": [
     "raskghar_awakened",
+    "raskghar_scout",
     "raskghar_scout",
     "raskghar_scout"
    ],

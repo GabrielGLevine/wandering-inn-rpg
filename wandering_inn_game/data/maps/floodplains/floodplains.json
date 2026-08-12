@@ -1311,6 +1311,7 @@
    "on_enter_accomplishment": "reached_liscor"
   },
   {
+   "_comment": "#439 Act I CLIMAX RETUNE: a SECOND raider joins the shaman's pair. Two goblins was never an ambush; a raiding band with a hex-thrower behind it is. No prose moves (the entity carries no observe line) and the arena's four enemy spawns already seat it. Measured competent-at-band: w1 0.69 / w2 0.80, classless 0.30 LOSS (docs/design/spine-viability-table.md).",
    "id": "goblin_encounter_1",
    "kind": "encounter",
    "cell": [
@@ -1322,6 +1323,7 @@
    "sprite": "goblin_base",
    "arena": "goblin_ambush_tutorial",
    "enemies": [
+    "goblin_raider",
     "goblin_raider",
     "goblin_shaman"
    ],

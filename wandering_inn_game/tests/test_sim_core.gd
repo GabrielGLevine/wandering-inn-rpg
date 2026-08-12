@@ -190,6 +190,20 @@ func _land_pc_hit(g: WIGame) -> void:
 	assert(cb.attack("goblin_raider"), "guaranteed melee hit lands")
 
 
+## Wipe the enemy side of a live combat, by LIVE ROSTER rather than by a
+## hand-kept id list. Every call site below used to name `goblin_raider` and
+## `goblin_shaman` literally, which quietly meant "the whole enemy side of
+## goblin_encounter_1" -- until #439's Act I climax retune added a second
+## raider, at which point the wipes stopped being wipes, `resolve_combat()`
+## found a survivor, and asserts about victory/loot/reset read as engine
+## regressions. Reading the roster makes the intent ("rout them") explicit and
+## survives the next composition change.
+static func _rout(combat: WICombat) -> void:
+	for cid: String in combat.combatants.keys():
+		if String((combat.combatants[cid] as Dictionary)[WIKeys.SIDE]) != "player":
+			combat.apply_damage(cid, 9999, "pc", true)
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var scene_config := WISceneCatalog.compose()
@@ -452,8 +466,7 @@ func _init() -> void:
 	assert((g.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("power_strike"), "pc skills from class grants")
 	assert(not (g.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("counter_strike"), "no L2 skills at L1")
 
-	g.combat.apply_damage("goblin_raider", 999, "pc", true)
-	g.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	_rout(g.combat)
 	assert(g.combat.finished and g.combat.outcome["victory"], "forced victory")
 	g.resolve_combat()
 	assert(g.combat == null, "combat cleared")
@@ -499,8 +512,7 @@ func _init() -> void:
 	assert(gsp2.start_dialogue("goblin_parley", "goblin_encounter_2"), "parley starts")
 	assert(gsp2.dialogue_choose(0), "Draw steel chosen")
 	assert(gsp2.combat != null, "fight starts")
-	gsp2.combat.apply_damage("goblin_raider", 999, "pc", true)
-	gsp2.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	_rout(gsp2.combat)
 	assert(gsp2.combat.finished and gsp2.combat.outcome["victory"], "forced victory")
 	gsp2.resolve_combat()
 	assert(gsp2.accomplishment_count("won_combat") == 1 and gsp2.accomplishment_count("street_cleared") == 1, "fight path still banks its own pair")
@@ -539,8 +551,7 @@ func _init() -> void:
 	g2.player_facing = Vector2i.RIGHT
 	g2.interact()
 	assert(g2.combat != null, "warband starts combat (no conversation yet)")
-	g2.combat.apply_damage("goblin_raider", 999, "pc", true)
-	g2.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	_rout(g2.combat)
 	g2.resolve_combat()
 	assert(g2.accomplishment_count("won_combat") == 1 and g2.accomplishment_count("street_cleared") == 1, "array on_victory records all")
 
@@ -571,8 +582,7 @@ func _init() -> void:
 	assert(g4.start_dialogue("test_conv", "erin"), "restart")
 	assert(g4.dialogue_choose(0), "fight option")
 	assert(g4.dialogue == null and g4.combat != null, "dialogue ended then combat started")
-	g4.combat.apply_damage("goblin_raider", 999, "pc", true)
-	g4.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	_rout(g4.combat)
 	_events.clear()
 	g4.resolve_combat()
 	assert(_count("combat_resolved") == 1, "combat_resolved emitted on victory")
@@ -798,8 +808,7 @@ func _init() -> void:
 		guard11 += 1
 	assert(cb11.get_active() == "pc", "cycled back to pc's turn")
 	assert(cb11.attack("goblin_raider"), "pc lands a second melee hit")
-	cb11.apply_damage("goblin_raider", 9999, "pc", true)
-	cb11.apply_damage("goblin_shaman", 9999, "pc", true)
+	_rout(cb11)
 	assert(cb11.finished and cb11.outcome["victory"], "forced victory")
 	_events.clear()
 	g11.resolve_combat()
@@ -845,8 +854,7 @@ func _init() -> void:
 			applied2 = e["payload"]
 	assert(not bool(applied2.get("first_seen", false)), "cast 2's status_applied is NOT first_seen (once-only property: no second toast)")
 	assert(String(applied2.get("status_text", "")) == "", "a repeat application carries no glossary text (nothing new to formatting-cost)")
-	cbS.apply_damage("goblin_raider", 9999, "pc", true)
-	cbS.apply_damage("goblin_shaman", 9999, "pc", true)
+	_rout(cbS)
 	assert(cbS.finished and cbS.outcome["victory"], "status test: fight 1 forced victory")
 	gStatus.resolve_combat()
 	assert(gStatus.seen_statuses == (["slowed"] as Array[String]), "resolve_combat does not re-merge or duplicate seen_statuses")
@@ -873,8 +881,7 @@ func _init() -> void:
 	(g12.combat.combatants["pc"][WIKeys.SKILLS] as Array).append("frost_bolt")
 	g12.combat.combatants["pc"][WIKeys.MP] = 10
 	assert(g12.combat.use_skill("frost_bolt", "goblin_raider"), "pc casts an ice spell in the trivial fight")
-	g12.combat.apply_damage("goblin_raider", 9999, "pc", true)
-	g12.combat.apply_damage("goblin_shaman", 9999, "pc", true)
+	_rout(g12.combat)
 	g12.resolve_combat()
 	assert(g12.accomplishment_count("melee_hit") == 0, "trivial encounter banks no counters")
 	assert(g12.accomplishment_count("spell_cast") == 0, "trivial encounter banks no spell_cast counter either")
@@ -887,8 +894,7 @@ func _init() -> void:
 	assert(g13.start_combat("goblin_encounter_2"), "arena-trivial combat starts")
 	g13.combat.arena_config["trivial"] = true
 	_land_pc_hit(g13)
-	g13.combat.apply_damage("goblin_raider", 9999, "pc", true)
-	g13.combat.apply_damage("goblin_shaman", 9999, "pc", true)
+	_rout(g13.combat)
 	g13.resolve_combat()
 	assert(g13.accomplishment_count("melee_hit") == 0, "trivial arena banks no counters")
 	assert(g13.accomplishment_count("won_combat") == 1, "on_victory records unaffected by arena flag")
@@ -976,8 +982,7 @@ func _init() -> void:
 	g17.transition("floodplains", Vector2i(27, 18))
 	assert(g17.start_combat("goblin_encounter_2"), "respawning combat starts")
 	_land_pc_hit(g17)
-	g17.combat.apply_damage("goblin_raider", 9999, "pc", true)
-	g17.combat.apply_damage("goblin_shaman", 9999, "pc", true)
+	_rout(g17.combat)
 	_events.clear()
 	g17.resolve_combat()
 	assert(g17.entities.has("goblin_encounter_2"), "respawning encounter stays on the map")
@@ -991,8 +996,7 @@ func _init() -> void:
 	assert(g17.dormant_encounters.is_empty(), "sleep re-arms respawners")
 	assert(g17.start_combat("goblin_encounter_2"), "re-armed encounter fights again")
 	_land_pc_hit(g17)
-	g17.combat.apply_damage("goblin_raider", 9999, "pc", true)
-	g17.combat.apply_damage("goblin_shaman", 9999, "pc", true)
+	_rout(g17.combat)
 	g17.resolve_combat()
 	assert(g17.accomplishment_count("won_combat") == 2, "second win records again")
 	assert(g17.accomplishment_count("melee_hit") == 2, "second win banks counters again")
@@ -1002,8 +1006,7 @@ func _init() -> void:
 	gp1.transition("floodplains", Vector2i(27, 18))
 	assert(gp1.start_combat("goblin_encounter_2"), "persistent combat starts")
 	_land_pc_hit(gp1)
-	gp1.combat.apply_damage("goblin_raider", 9999, "pc", true)
-	gp1.combat.apply_damage("goblin_shaman", 9999, "pc", true)
+	_rout(gp1.combat)
 	_events.clear()
 	gp1.resolve_combat()
 	assert(gp1.entities.has("goblin_encounter_2"), "persistent encounter stays on the map")
@@ -1017,8 +1020,7 @@ func _init() -> void:
 	gp2.transition("floodplains", Vector2i(27, 18))
 	assert(gp2.start_combat("goblin_encounter_2"), "non-persistent combat starts")
 	_land_pc_hit(gp2)
-	gp2.combat.apply_damage("goblin_raider", 9999, "pc", true)
-	gp2.combat.apply_damage("goblin_shaman", 9999, "pc", true)
+	_rout(gp2.combat)
 	_events.clear()
 	gp2.resolve_combat()
 	assert(not gp2.entities.has("goblin_encounter_2"), "non-persistent encounter removed as today")
@@ -1454,8 +1456,7 @@ func _init() -> void:
 	assert(not e1.equip("leather_jerkin"), "equip refuses mid-combat (field-only action)")
 	assert(not e1.unequip("weapon"), "unequip refuses mid-combat (field-only action)")
 	assert(_events.is_empty(), "mid-combat equip/unequip attempts emit nothing")
-	e1.combat.apply_damage("goblin_raider", 999, "pc", true)
-	e1.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	_rout(e1.combat)
 	e1.resolve_combat()
 
 	var cc_g1: Dictionary = combat_config.duplicate(true)
@@ -1829,8 +1830,7 @@ func _init() -> void:
 	L1a.record_accomplishment("met_relc")
 	L1a.transition("floodplains", Vector2i(20, 12))
 	assert(L1a.start_combat("goblin_encounter_1"), "loot determinism: instance A starts encounter_1")
-	L1a.combat.apply_damage("goblin_raider", 999, "pc", true)
-	L1a.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	_rout(L1a.combat)
 	L1a.resolve_combat()
 	var l1a_dropped := L1a.inventory.has("crude_blade")
 
@@ -1838,8 +1838,7 @@ func _init() -> void:
 	L1b.record_accomplishment("met_relc")
 	L1b.transition("floodplains", Vector2i(20, 12))
 	assert(L1b.start_combat("goblin_encounter_1"), "loot determinism: instance B starts encounter_1")
-	L1b.combat.apply_damage("goblin_raider", 999, "pc", true)
-	L1b.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	_rout(L1b.combat)
 	L1b.resolve_combat()
 	var l1b_dropped := L1b.inventory.has("crude_blade")
 	assert(l1a_dropped == l1b_dropped, "same run seed + same encounter id -> identical loot roll outcome across independent instances")
@@ -1848,13 +1847,11 @@ func _init() -> void:
 	L2both.record_accomplishment("met_relc")
 	L2both.transition("floodplains", Vector2i(20, 12))
 	assert(L2both.start_combat("goblin_encounter_1"), "loot independence: both-fights instance starts encounter_1")
-	L2both.combat.apply_damage("goblin_raider", 999, "pc", true)
-	L2both.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	_rout(L2both.combat)
 	L2both.resolve_combat()
 	L2both.transition("floodplains", Vector2i(27, 18))
 	assert(L2both.start_combat("goblin_encounter_2"), "loot independence: both-fights instance starts encounter_2 after encounter_1")
-	L2both.combat.apply_damage("goblin_raider", 999, "pc", true)
-	L2both.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	_rout(L2both.combat)
 	L2both.resolve_combat()
 	var both_e2_dropped := L2both.inventory.has("chipped_spear")
 
@@ -1862,8 +1859,7 @@ func _init() -> void:
 	L2solo.record_accomplishment("met_relc")
 	L2solo.transition("floodplains", Vector2i(27, 18))
 	assert(L2solo.start_combat("goblin_encounter_2"), "loot independence: solo instance starts encounter_2 directly")
-	L2solo.combat.apply_damage("goblin_raider", 999, "pc", true)
-	L2solo.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	_rout(L2solo.combat)
 	L2solo.resolve_combat()
 	var solo_e2_dropped := L2solo.inventory.has("chipped_spear")
 	assert(both_e2_dropped == solo_e2_dropped, "encounter_2's loot roll is independent of whether encounter_1 already rolled -- different encounter ids draw from separate streams")
@@ -1873,8 +1869,7 @@ func _init() -> void:
 	L3.transition("floodplains", Vector2i(20, 12))
 	assert(L3.start_combat("goblin_encounter_1"), "loot rng isolation: instance starts combat")
 	var rng_state_after_start := L3.rng.state
-	L3.combat.apply_damage("goblin_raider", 999, "pc", true)
-	L3.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	_rout(L3.combat)
 	L3.resolve_combat()
 	assert(L3.rng.state == rng_state_after_start, "a loot roll consumes ZERO draws from the live sim rng stream")
 
