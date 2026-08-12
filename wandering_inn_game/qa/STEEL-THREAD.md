@@ -22,9 +22,30 @@ Album lands in `wandering_inn_game/qa_output/steel_thread/`. Captures hold
 17 teleports, four incompatible PC iterations, regions played before the
 warren) is superseded; git history retains it.
 
-Measured headless wall time at seed 9: **~55s** (clean pass; red runs
-stall on timeouts). `events_seen` across two consecutive runs:
-9950 / 9954.
+Reauthored 2026-08-12 against the retuned game (#437/#441/#439/#440): the
+itinerary now carries a leveling diet that arrives at each act's climax in
+band, and every fight runs on the competent policy. 2568 steps.
+
+Measured headless wall time at seed 9: **~4 min** to the Act V warden
+(red runs stall on timeouts). `events_seen` across two consecutive runs:
+**10509 / 10500**. Both stop at the same step (2448 of 2568) with the
+same combat state — warden 6/142, PC down, round 5 — so the red is
+deterministic, not a flake. See "Open red" below.
+
+## Every fight runs `policy: competent` (ruling, 2026-08-12)
+
+`combat_autoplay` steps in this script all carry `"policy": "competent"`,
+which drives the PC through `WICombatPolicies` (`qa/combat_policies.gd`)
+instead of `WICombatAI`. The instrument now models a **resource-using
+player** — the same reference the bands are tuned against
+(`docs/design/balance-bands-and-policy.md`).
+
+This is not a nicety, it is what makes the thread able to measure
+progression at all. [Mage] 3+ levels on `spell_cast`, which only tallies
+on a PC cast **in combat**; the floor policy never casts, so no
+continuous run under `dumb` can level a caster past 2 however long it
+plays. The pre-reauthor thread's Act III climax fought at combined level
+**2** for exactly that reason.
 
 ## What this instrument is for
 
@@ -60,21 +81,59 @@ hide.
    (opened), the Seal Warden, the vault, anchor, tally, the walk back,
    final sleep, GDI epilogue
 
-## PC trajectory at act boundaries (seed 9)
+## PC trajectory at act boundaries (seed 9, reauthored)
 
-| Boundary | Classes | Gold | Waking |
+| Boundary | Classes | Combined | Band | Gold | Waking |
+|---|---|---|---|---|---|
+| End Act I (`reached_liscor`) | warrior 1 | 1 | 1–2 | 2 | 1 |
+| End Act II (`cisterns_reported`) | warrior 5, mage 2 | 7 | 4–6 | 10 | 3 |
+| End Act III (`raskghar_sealed`) | warrior 9, mage 2 | 11 | 8–10 | 16 | 4 |
+| End Act IV (`seal_descent_agreed`) | spearmaster 14, mage 6, diplomat 4 | 24 | 12–14 | 4 | 8 |
+| At the Seal Warden | spearmaster 14, mage 6, diplomat 7, trader 2 | 29 | 14–16 | 4 | 10 |
+
+Climax builds (the number the bands actually govern — levels resolve in
+`sleep()`, so a climax is fought at the *previous* night's build):
+
+| Climax | Fought at | Band | Result |
 |---|---|---|---|
-| End Act I | warrior 1 | 2 | 2 |
-| End Act II | warrior ~2, mage 1 | 8 | 4 |
-| End Act III | warrior 11, mage 2 | 14 | 5 |
-| End Act IV | warrior 12, mage 2, diplomat 4 | 12 | 8 |
-| End of run | warrior 12, mage 2, diplomat 7, trader 2 | 12 | 10 |
+| I gate-road ambush | warrior 1 | 1–2 | win |
+| II cistern nest (+ matriarch) | warrior 5 / mage 2 | 4–6 | win, round 3 |
+| III raskghar scouts (+ pack leader) | warrior 5 / mage 2 | 8–10 | win |
+| III awakened boss (+ third scout, with Relc) | warrior 5 / mage 2 | 8–10 | win |
+| IV vault construct | spearmaster ~12 / mage 3 | 12–14 | win |
+| IV ruin guardian | spearmaster 12 / mage 3 + core shard | — | win |
+| V seal warden | spearmaster 14 / mage 6 / dip 7 / trader 2 | 14–16 | **LOSS, round 5, warden 6/142** |
 
-Act IV gold ledger (three forced earning detours, all `GOLD/PACING`-tagged
-in-script): 14 → … → 12; Zevara back-bounties +17, Wilovan courier +25
-(only unlockable after `brothers_job_done`), Krshia potion buyback +18
-(autoplay never drinks — the potions were dead weight). Pallass costs 46g
-end to end.
+### The diet, per act (what was added and why)
+
+- **Act I** — unchanged. Verified green under `policy: competent`; the
+  retuned two-raider ambush is still a win at warrior 1.
+- **Act II** — **one added night and one added fight**. The old thread
+  walked from Krshia's counter straight to the grate and met the retuned
+  nest at warrior 3 / mage 1: a three-round death. The reauthor adds the
+  street's `supplier_scavengers` (5,16) — authored side content the
+  stitched route walked past — and then a night at the inn. The night is
+  the whole fix: `melee_hit` 23 and `won_combat` 3 were already banked
+  and *unspent*, because levels only resolve in `sleep()`. One night
+  converts them to [Warrior] 5 + [Mage] 2. Cost: 1 fight, 1 sleep,
+  ~130 walked cells.
+- **Act III** — **nothing added**. The Act II night carries the act:
+  scouts, warren mouth and the Awakened all clear at warrior 5 / mage 2
+  with Relc kept. (The veto solo fork stays untaken; #439 measured it at
+  0.06.)
+- **Act IV** — **no fights added; two rewards finally worn.** After
+  Olesm's fifteen the run equips the vault's `construct_core_shard`
+  (hp+3, damage reduction 1) — which is what turns the ruin guardian
+  from a round-2 death into a win. This is #437's finding 7 (the
+  carried-but-unworn upgrade) applied as route.
+- **Act V** — the amulet comes on at the descent (see below).
+
+Gold ledger: Act IV opens at 36 (Olesm 5 + 15, Zevara's three back
+bounties +17, Selys's once-per-waking board pick +5, the Act II supplier's
++2) and closes at 4, with Pallass's 46g and the two 18g travel-stones paid
+in full. All movements are `GOLD/PACING`-tagged in-script. The Krshia
+buyback now sells **only** the vault tonic (+8), not the healing draughts
+— see the [Second Wind] finding below.
 
 ## Deliberate choices (see docs/CHOICE-LOG.md)
 
@@ -83,10 +142,69 @@ end to end.
   pacing findings).
 - Quest forks: crate + cisterns by force (leveling counters), halls by
   Ksmvr's plates (talk), the favor mediated, Coyle exposed, the seal
-  OPENED — with the warden passed by the alcove's authored sneak-past:
-  the run equips Zevara's moon_bone_amulet ([Invisibility], known-while-
-  worn per the 2026-08-11 ruling) rather than fighting a measured
-  2.5×-overweight fight. Epilogue renders 14 GDI lines.
+  OPENED.
+- Act V kit: resonance capacity grows to 3 at the catalyst attunement
+  sleeps, so the descent swaps the core shard off for Zevara's
+  `moon_bone_amulet` (2) beside the ruin guardian's
+  `guardian_ward_fragment` (1) — +6 HP, +1 damage, 1 damage reduction,
+  and [Invisibility] in the kit. Under #440 the cloak is no longer a way
+  *around* the finale: the run casts it, walks the alcove's trigger
+  radius unheard, and spends the stance on `sneak_ambush` — the first
+  turn of round 1, pinned by both the ambush toast and
+  `combat.round == 1` at the PC's opening turn.
+
+## Open red: the Seal Warden (2026-08-12)
+
+The run is green from the title gate through the two readings, the
+watcher beat, the cloaked approach and the ambush — 2447 of 2568 steps —
+and then **loses the warden at round 5 with the warden on 6 of 142 HP**.
+The 121 unrun steps are the vault, anchor, tally, walk back, final sleep
+and epilogue, unchanged from the previously-green shipped tail.
+
+This is a balance finding, not a scripting one, and it is reproducible:
+
+- The build that arrives is **spearmaster 14 / mage 6 / diplomat 7 /
+  trader 2 — 29 combined levels and 47 max HP**. The band table's Act V
+  row assumes 14–16 *focused* (spellsword-shape). #437's 0.77 was
+  measured on that focused build with tuned gear; the real spine arrives
+  with twice the levels and two-thirds the stat efficiency. **Breadth,
+  not level count, is what the Act V band is actually asking for.**
+- **The consolidation gap is structural.** Spellsword needs warrior 10 +
+  mage 10. [Warrior] evolves into [Spearmaster] at 10 on
+  `spear_skill_used` dominance — with Relc's spear in hand from Act I,
+  that is the only reachable shape — and the consolidation reads
+  *warrior*, so it can never fire. Mage reaches 6, not 10, because the
+  competent policy only casts when the cast out-damages the swing and a
+  1.4×/2.0×/2.6× spear kit always beats a level-6 frost bolt. No sane
+  diet reaches spellsword 14 on this spine.
+- **[Second Wind] eats the pack.** The policy's survive step is
+  "[Second Wind] if in kit and affordable, *else* the best carried
+  draught", with one survive action per turn. [Second Wind] has no
+  cooldown and no once-per-fight bound, so it is *always* the pick and
+  the draught branch is unreachable for any holder. The run carried two
+  8-HP draughts into the warden and drank neither; it healed 8 twice
+  from [Second Wind] instead and died 6 damage short. Give [Second Wind]
+  a bound (already filed) and the same fight has 16 more HP in it.
+- **The survive-first rule costs the kill.** On rounds 4 and 5 the policy
+  spent 2 AP on [Second Wind] and had only 1 left, so it swung
+  [Piercing Strikes] (1.4×, 18–21) where the unspent turn affords
+  [Spear Flurry] (2.6×, 39). Either round-5 flurry ends the fight. That
+  sub-optimality is the tuning reference behaving exactly as specified —
+  and it is worth the finale.
+- Measured alternatives, all still losses at seed 9: amulet + moonhide
+  fetish (warden 14 HP left); amulet + ward fragment (6 left); the same
+  with an added `gallery_vermin_nest` detour in Act IV (58–61 left — the
+  detour's rng draws reshuffle the warden's stream, they do not raise
+  the build). No purchasable armour closes it either: the economy funds
+  the spine's 82g of mandatory purchases with 4g to spare, and the two
+  armours in the game cost 20 (peddler gambeson, damage reduction 1) and
+  24 (Krshia's jerkin, hp+4) — each worth about 5 HP across the fight,
+  against a ~15 HP shortfall.
+
+Re-seeding does not fix it and costs the ledger: seeds 1, 2 and 5 red
+*earlier* (the Act II nest at 1 and 5; a gold pin at 2, because
+`supplier_scavengers`' 2g loot is a 50% roll and every `GOLD/PACING` pin
+is therefore seed-derived).
 
 ## Dropped/kept coverage vs the stitched album
 
@@ -95,6 +213,22 @@ garden_sanctuary, barracks, runners_guild interiors. Kept on-spine: inn_upstairs
 ruin, riverfarm village/hollow/longhouse, invrisil boulevard/alleys/
 enchanter shop, pallass market/forge, dungeon, vault. Night-watch wolf fight
 replaced by the track leg (night phase unschedulable on a portal route).
+
+Added by the 2026-08-12 reauthor: the street's `supplier_scavengers`
+(Act II side fight), the Act II inn night, the Act IV outfitting beat
+(core shard), the Act V descent kit swap, and the whole #440 warden
+sequence (watcher beat → cloaked approach → ambush → post-fight choice).
+Fights are now **12**, up from 8. Evaluated and left out:
+`gallery_vermin_nest` (rank-scaled Act IV detour — it banks
+`spear_skill_used` but did not move the level at the descent, and it
+lengthens the run by 27 steps) and `kingslayer_den`.
+
+New album beats: `04_act_ii_04b_supplier_crew`-era shots are covered by
+the existing crate frames; added are
+`07_act_iv_05b_core_shard_worn`, `08_act_v_00b_descent_kit`,
+`08_act_v_05_the_watcher`, `08_act_v_06_cloaked_approach`,
+`08_act_v_07_the_seal_warden`, `08_act_v_07b_warden_down` and
+`08_act_v_05b_the_choice`.
 
 ## Authoring a new segment: checkpoints (GH#435)
 

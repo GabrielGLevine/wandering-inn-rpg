@@ -56,6 +56,14 @@ var items_by_id: Dictionary = {}
 ## array, so a fight's draughts are finite exactly as a run's pack is.
 var carried: Dictionary = {}
 
+## Optional sink for the drink action. UNSET (the sim harnesses) → the policy
+## calls `WIItems.resolve_use` itself, because a bare-combat harness has no
+## WIGame to hold a pack. SET (the QA driver's `policy: competent` autoplay) →
+## the policy calls it with the item id and lets the live game own the whole
+## transaction: inventory erase, `item_used` event, toast. Either way the
+## effect arithmetic is `WIItems`', never a copy of it.
+var use_item_fn: Callable = Callable()
+
 ## Ids the competent policy drives. Everything else -- every enemy, every ally
 ## -- keeps its shipped profile. The PC-side kit gap is the whole subject.
 var driven: Dictionary = {"pc": true}
@@ -176,8 +184,12 @@ func _drink_best_draught(combat: WICombat, id: String, c: Dictionary) -> bool:
 	if best_index < 0:
 		return false
 	var item_id := String(pack[best_index])
-	var result := WIItems.resolve_use(items_by_id[item_id], combat)
-	if not bool(result.get("ok", false)):
+	var ok := false
+	if use_item_fn.is_valid():
+		ok = bool(use_item_fn.call(item_id))
+	else:
+		ok = bool(WIItems.resolve_use(items_by_id[item_id], combat).get("ok", false))
+	if not ok:
 		return false
 	pack.remove_at(best_index)
 	carried[id] = pack

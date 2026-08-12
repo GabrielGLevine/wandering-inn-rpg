@@ -674,7 +674,8 @@
   },
   {
    "action": "combat_autoplay",
-   "max_turns": 200
+   "max_turns": 200,
+   "policy": "competent"
   },
   {
    "action": "wait_for_event",
@@ -1241,7 +1242,8 @@
   },
   {
    "action": "combat_autoplay",
-   "max_turns": 300
+   "max_turns": 300,
+   "policy": "competent"
   },
   {
    "action": "wait_for_event",
@@ -2262,7 +2264,8 @@
    "frames": 240
   },
   {
-   "action": "combat_autoplay"
+   "action": "combat_autoplay",
+   "policy": "competent"
   },
   {
    "action": "wait_for_event",
@@ -2401,6 +2404,392 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "== ACT II SIDE WORK: the supplier's crew (5,16) ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    15
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump the encounter cell (5,16): blocked, so the step only sets facing."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "action": "combat_autoplay",
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "strongarmed_the_supplier"
+   }
+  },
+  {
+   "_comment": "== ACT II, NIGHT TWO ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "_comment": "back out to the grate",
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    3
+   ]
+  },
+  {
    "action": "move",
    "direction": "down",
    "steps": 4,
@@ -2507,7 +2896,8 @@
    "frames": 240
   },
   {
-   "action": "combat_autoplay"
+   "action": "combat_autoplay",
+   "policy": "competent"
   },
   {
    "action": "wait_for_event",
@@ -2615,6 +3005,24 @@
     29,
     4
    ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Olesm"
+   },
+   "_comment": "NEW WAKING (Act II now sleeps between the crate and the cisterns): social_talked cleared in sleep(), so Olesm's first interact spends his rotating pool line and nothing else."
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30,
+   "_comment": "Panel-teardown input window: a press inside the closing pool panel is eaten."
   },
   {
    "action": "press",
@@ -3393,7 +3801,8 @@
   },
   {
    "action": "combat_autoplay",
-   "max_turns": 200
+   "max_turns": 200,
+   "policy": "competent"
   },
   {
    "action": "wait_for_event",
@@ -3637,7 +4046,8 @@
   },
   {
    "action": "combat_autoplay",
-   "max_turns": 200
+   "max_turns": 200,
+   "policy": "competent"
   },
   {
    "action": "wait_for_event",
@@ -4285,8 +4695,8 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 6,
-   "_comment": "Hub cursor -> visible row 6, 'That Watch notice -- the gallery survey. I'll take it.' (requires post_game). Visible list under CURRENT state: 0 chess board, 1 [Appraise Foe] weak point (skill gate renders LOCKED, still visible), 2 'Zevara sent me', 3 'It's dead', 4 leave, 5 'You run half this city', 6 the Watch notice. The cisterns rows are hide_when-retired, and the chatted_with_olesm>=3 / bounty / seal_kept_found rows are accomplishment-gated and therefore DROPPED, not locked."
+   "steps": 8,
+   "_comment": "Hub cursor -> visible row 8, the Watch-notice row (requires post_game). It was row 6 before the Act II night: the extra Olesm report pushed chatted_with_olesm to 3, which un-drops rows 7-8 (his ambition, and the chess invite -- gold-gated, so LOCKED but visible) ahead of it. The cursor counts the VISIBLE list; the quest_started pin two steps down is what proves the row."
   },
   {
    "action": "press",
@@ -4311,7 +4721,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 19,
+   "equals": 21,
    "_comment": "GOLD/PACING: 14 -> 19. Olesm's retainer is the segment's first income; the spine still needs 54g of purchases (catalyst 18 + travel-stone 18 + Pallass stone 18)."
   },
   {
@@ -4815,7 +5225,8 @@
   },
   {
    "action": "combat_autoplay",
-   "max_turns": 200
+   "max_turns": 200,
+   "policy": "competent"
   },
   {
    "action": "wait_for_event",
@@ -5167,8 +5578,8 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 6,
-   "_comment": "Hub row 6 again, but a different row: the Watch-notice row is hide_when-retired by horns_delve_started and 'The gallery. It's done' has appeared behind seal_kept_found, so the visible list is the same length with the last entry swapped."
+   "steps": 8,
+   "_comment": "Hub cursor -> visible row 8, the seal-kept report row. Oracle-derived at this exact state: the Watch-notice row is hide_when-retired by horns_delve_started, but the Act II night's extra Olesm report pushed chatted_with_olesm to 3, which un-drops rows 7-8 (his ambition, and the chess invite -- gold-gated, so LOCKED but visible) ahead of it. The destination pin two steps down is what proves the row."
   },
   {
    "action": "press",
@@ -5193,7 +5604,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 34,
+   "equals": 36,
    "_comment": "GOLD/PACING: 19 -> 34 on Olesm's fifteen. Spine purchases still cost 54g total; the Zevara warren bounty (+10) and board work are the planned top-ups."
   },
   {
@@ -5245,10 +5656,86 @@
    "_comment": "== ACT IV: THE DIG AND THE DOOR ==. seal_kept_reported is what unbolts Ceria's dig invitation at the inn, so the segment opens by walking home from Olesm's desk."
   },
   {
+   "_comment": "== PUT THE REWARD ON (GEAR/PACING) == The #437 viability table's finding 7: the old thread carried Zevara's amulet from Act III to the finale WITHOUT WEARING IT, and equipping it alone moved the warden read 0.48 -> 0.69. A player who has just watched a construct nearly take the party puts on the enchanted thing in their pack. Resonance 2 of 2, so it is the whole budget until the catalyst sleeps grow it; its [Invisibility] is a KIT entry from here on, which the competent policy spends as an escape under 35% HP and which Act V's alcove reads as the ambush edge.",
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "items": 7
+   }
+  },
+  {
+   "action": "press",
+   "name": "move_down",
+   "_comment": "Oracle `inventory` at this state: 0 rusty_sword, 1 spear, 2 mending_draught, 3 moonhide_fetish, 4 moon_bone_amulet, 5 construct_core_shard, 6 tonic. Four downs to the amulet."
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "construct_core_shard"
+   }
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_1",
+   "equals": "construct_core_shard"
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_05b_core_shard_worn"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
    "action": "move",
    "direction": "left",
    "steps": 28,
    "_comment": "Street -> gate -> floodplains -> inn, the walked chain."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    4
+   ]
   },
   {
    "action": "move",
@@ -5734,7 +6221,8 @@
   },
   {
    "action": "combat_autoplay",
-   "max_turns": 300
+   "max_turns": 300,
+   "policy": "competent"
   },
   {
    "action": "wait_for_event",
@@ -6443,7 +6931,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 51,
+   "equals": 53,
    "_comment": "GOLD/PACING: 34 -> 51 in one gatehouse stop. This is the segment's single largest earning detour and it cost about twenty walked cells; the Watch bounty ledger is where a player who did Acts II-III already has their Act IV budget waiting."
   },
   {
@@ -6563,7 +7051,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 33,
+   "equals": 35,
    "_comment": "GOLD/PACING: 51 -> 33 on the catalyst."
   },
   {
@@ -6731,7 +7219,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 28,
+   "equals": 30,
    "_comment": "GOLD/PACING: 33 -> 28. The consult's talk fork costs 5g without [Charming Smile]; the free alternative is the cellar leak fight at the inn, which this run passes over to keep the segment's fight count at spec."
   },
   {
@@ -6886,25 +7374,36 @@
    "action": "move",
    "direction": "down",
    "steps": 2,
-   "_comment": "Up to bed. The y8 lane is the only clear west run now: rift_vermin_leak stands on (9,7) from the mounting onward, and yvlon_inn_returned holds (2,3)."
+   "_comment": "Up to bed. Oracle-derived at this exact waking: the y8 lane no longer runs clear to the west wall (the taproom's guest rotation moved with the added Act II night), so the route drops to y8, crosses to x8, and takes y7 the rest of the way to the stairs."
   },
   {
    "action": "move",
    "direction": "left",
-   "steps": 11
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    2,
-    8
+    1,
+    7
    ]
   },
   {
    "action": "move",
-   "direction": "left",
-   "steps": 1
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump stairs_up (1,8)."
   },
   {
    "action": "press",
@@ -7095,7 +7594,8 @@
   {
    "action": "move",
    "direction": "right",
-   "steps": 1
+   "steps": 3,
+   "_comment": "Oracle-derived at this waking: taproom traffic closes both the y7 and the y8 lanes at different columns, so the run zig-zags y7 -> y8 -> y6 to reach the pantry door."
   },
   {
    "action": "move",
@@ -7105,20 +7605,17 @@
   {
    "action": "move",
    "direction": "right",
-   "steps": 11
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    13,
-    8
-   ]
+   "steps": 6
   },
   {
    "action": "move",
    "direction": "up",
    "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
   },
   {
    "action": "assert_state",
@@ -7367,7 +7864,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 28
+   "equals": 30
   },
   {
    "action": "assert_state",
@@ -8121,7 +8618,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 10,
+   "equals": 12,
    "_comment": "GOLD/PACING: 28 -> 10. The Pallass stone (another 18g) is still ahead and Riverfarm has no purse big enough for it; the Invrisil leg has to pay for Pallass."
   },
   {
@@ -8480,7 +8977,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 12
+   "equals": 14
   },
   {
    "action": "move",
@@ -9059,7 +9556,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 10,
+   "equals": 12,
    "_comment": "GOLD/PACING: 12 -> 10 on two cups of rumor. They are not flavour: bought_rumor_from_cups 2 plus coyle_operation_found is what opens her favour row, which is the only door to the testimony this build can reach."
   },
   {
@@ -9169,7 +9666,8 @@
   },
   {
    "action": "combat_autoplay",
-   "max_turns": 300
+   "max_turns": 300,
+   "policy": "competent"
   },
   {
    "action": "wait_for_event",
@@ -9255,7 +9753,8 @@
   },
   {
    "action": "combat_autoplay",
-   "max_turns": 300
+   "max_turns": 300,
+   "policy": "competent"
   },
   {
    "action": "wait_for_event",
@@ -9910,7 +10409,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 10,
+   "equals": 12,
    "_comment": "GOLD/PACING: the extortion fork would have paid 40g and settled the whole Pallass bill. Refusing it is what makes the Pallass stone a problem."
   },
   {
@@ -11313,7 +11812,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 35,
+   "equals": 37,
    "_comment": "GOLD/PACING: 10 -> 35. The Brothers' courier run is the single job that makes the Pallass paperwork payable; without it the run stalls at the tier clerk's window."
   },
   {
@@ -11637,7 +12136,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 40
+   "equals": 42
   },
   {
    "action": "wait_for_event",
@@ -11717,7 +12216,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 30
+   "equals": 32
   },
   {
    "action": "wait_for_event",
@@ -11872,94 +12371,14 @@
    }
   },
   {
-   "action": "press",
-   "name": "confirm",
-   "_comment": "The picker is rebuilt from sellable_items() on every open and the sold row leaves the list, so the next thing to sell is always visible row 0."
-  },
-  {
-   "action": "wait_for_event",
-   "type": "item_lost",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "item": "mending_draught"
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "gold_changed",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "delta": 5,
-    "total": 35,
-    "source": "krshia_sell"
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "speaker": "Krshia",
-    "text": "Half its worth, paid straight \u2014 I don't forget a fair trade any more than an unfair one. Sold."
-   }
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_ended",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_hidden",
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_started",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "conversation": "krshia_crate"
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_shown",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_frames",
-   "frames": 3
-  },
-  {
    "action": "move",
    "direction": "down",
-   "steps": 4
+   "steps": 1,
+   "_comment": "GOLD/PACING: ONE sale, not three. The picker lists sellables in inventory order -- 0 mending_draught, 1 tonic_of_the_clear_eye, 2 remedy_draught -- and both draughts STAY in the pack. The old thread fenced all three for 18 gold with the reason written in: 'combat_autoplay never drinks anything.' That is no longer true (this run drives every fight on the competent policy, which drinks the best carried draught under 35% max HP), and the #437 table named the sale as one of the three things that made the finale unwinnable. The tonic is the one piece of real dead weight: its use_effect is a next_fight buff with no `heal` key, so the policy's draught pick never reaches for it."
   },
   {
    "action": "press",
    "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "speaker": "Krshia",
-    "text": "Let me see what you're carrying."
-   }
-  },
-  {
-   "action": "press",
-   "name": "confirm",
-   "_comment": "The picker is rebuilt from sellable_items() on every open and the sold row leaves the list, so the next thing to sell is always visible row 0."
   },
   {
    "action": "wait_for_event",
@@ -11975,92 +12394,7 @@
    "timeout_sec": 5,
    "payload_contains": {
     "delta": 8,
-    "total": 43,
-    "source": "krshia_sell"
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "speaker": "Krshia",
-    "text": "Half its worth, paid straight \u2014 I don't forget a fair trade any more than an unfair one. Sold."
-   }
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_ended",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_hidden",
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_started",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "conversation": "krshia_crate"
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_shown",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_frames",
-   "frames": 3
-  },
-  {
-   "action": "move",
-   "direction": "down",
-   "steps": 4
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "speaker": "Krshia",
-    "text": "Let me see what you're carrying."
-   }
-  },
-  {
-   "action": "press",
-   "name": "confirm",
-   "_comment": "The picker is rebuilt from sellable_items() on every open and the sold row leaves the list, so the next thing to sell is always visible row 0."
-  },
-  {
-   "action": "wait_for_event",
-   "type": "item_lost",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "item": "remedy_draught"
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "gold_changed",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "delta": 5,
-    "total": 48,
+    "total": 40,
     "source": "krshia_sell"
    }
   },
@@ -12089,9 +12423,20 @@
   },
   {
    "action": "assert_state",
+   "path": "inventory",
+   "contains": "mending_draught",
+   "_comment": "Falsifiable half of the ruling: the pack still carries a heal into Pallass and the descent."
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "remedy_draught"
+  },
+  {
+   "action": "assert_state",
    "path": "gold",
-   "equals": 48,
-   "_comment": "GOLD/PACING: 30 -> 48 by fencing the two spare healing draughts and the vault's tonic at Krshia's counter. Combat_autoplay never drinks anything, so the run was carrying 18 gold of dead weight; without the buyback the Pallass paperwork does not close."
+   "equals": 40,
+   "_comment": "GOLD/PACING: 32 -> 40 on the tonic alone. The old thread left this counter with 48 and an empty pack; this one leaves with 40 and two heals, and the Pallass papers (18 stone + 8 examination + 3 permit) still clear with change. The Act II supplier bounty (+2) and NOT buying the peddler gambeson are what absorbed the ten gold the draughts used to raise."
   },
   {
    "action": "press",
@@ -12184,7 +12529,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 30
+   "equals": 22
   },
   {
    "action": "wait_for_event",
@@ -12420,7 +12765,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 28,
+   "equals": 20,
    "_comment": "GOLD/PACING: the stamp itself is 2g on top of the 10g sponsorship and the 18g stone."
   },
   {
@@ -12568,7 +12913,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 23
+   "equals": 15
   },
   {
    "action": "wait_for_event",
@@ -12650,7 +12995,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 15
+   "equals": 7
   },
   {
    "action": "press",
@@ -12761,7 +13106,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 12,
+   "equals": 4,
    "_comment": "GOLD/PACING: 46 gold spent between the Guild desk and this window. The Walled City is the most expensive thing in the run by a distance."
   },
   {
@@ -13489,7 +13834,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 12
+   "equals": 4
   },
   {
    "action": "assert_state",
@@ -13560,25 +13905,36 @@
    "action": "move",
    "direction": "down",
    "steps": 2,
-   "_comment": "== ACT V, 'What the Seal Was Feeding' == the descent is agreed and the Door still does not reach the dungeon. sleep_beat.gd:166 wants TWO nights with door_awakened AND heard_pisces_second_door both held before dungeon_attuned banks (second_door_study_sleeps >= 2), and the run's last sleep predates the second-door conversation -- so the counter stands at 0 and Act V opens by spending two nights on it. Route is this script's own proven stair line (steps 1152-1162)."
+   "_comment": "== ACT V, 'What the Seal Was Feeding' == the descent is agreed and the Door still does not reach the dungeon. sleep_beat.gd:166 wants TWO nights with door_awakened AND heard_pisces_second_door both held before dungeon_attuned banks. Oracle-derived route to the stairs at this waking: y8 west to x8, then y7 the rest of the way."
   },
   {
    "action": "move",
    "direction": "left",
-   "steps": 11
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    2,
-    8
+    1,
+    7
    ]
   },
   {
    "action": "move",
-   "direction": "left",
-   "steps": 1
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump stairs_up (1,8)."
   },
   {
    "action": "press",
@@ -13723,14 +14079,22 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "== THE DESCENT KIT == Resonance capacity grew to 3 at the catalyst attunement sleeps (`resonance_grown`), which is exactly enough for the moon-bone amulet (2) beside the moonhide fetish (1) -- so the vault's core shard comes OFF. That is the trade the finale wants: the shard is +3 HP and a point of damage reduction against a warden that hits for 28-30 (a point it barely notices), while the amulet is +3 HP, +1 damage and [Invisibility] in the kit -- which the competent policy spends as an escape under 35% HP, and which the alcove reads as the cloaked approach. Per #440 the cloak is an EDGE, not a skip: the warden wakes for every descent now, and the choice does not resolve until it is down.",
    "action": "press",
-   "name": "inventory",
-   "_comment": "== ZEVARA'S REWARD, FINALLY WORN == The moon_bone_amulet (Act III loot) carries ability [Invisibility] (hp+3, resonance 2/2). FINDING kept in docs/design/steel-thread-route-spec.md: the OPEN fork's warden fight is unwinnable by this build (50-56 HP vs 142 HP, 28-30 per hit); the alcove's authored sneak-past is the reachable resolution, and its key has been in the pack since the warren."
+   "name": "inventory"
   },
   {
    "action": "wait_for_event",
    "type": "ui_inventory_shown",
-   "timeout_sec": 5
+   "timeout_sec": 5,
+   "payload_contains": {
+    "items": 14
+   }
+  },
+  {
+   "action": "press",
+   "name": "move_down",
+   "_comment": "Oracle `inventory` here: 0 rusty_sword, 1 spear, 2 mending_draught, 3 moonhide_fetish, 4 moon_bone_amulet, 5 construct_core_shard, 6 remedy_draught, then the quest tokens. Confirming an EQUIPPED row unequips it (inventory.gd:601)."
   },
   {
    "action": "press",
@@ -13743,6 +14107,34 @@
   {
    "action": "press",
    "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "construct_core_shard"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_unequipped",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "slot": "accessory_1"
+   }
+  },
+  {
+   "action": "press",
+   "name": "move_up"
   },
   {
    "action": "wait_for_event",
@@ -13767,12 +14159,70 @@
   },
   {
    "action": "press",
+   "name": "move_down",
+   "_comment": "4 -> 7, the ruin guardian's ward fragment (accessory, hp+2, damage reduction 1, resonance 1, ability [Guarding Ward]). It takes the last point of resonance ahead of the moonhide fetish because a warden that lands 26-28 a swing is answered by reduction, not by the fetish's +1 damage -- and this is the second reward the old thread carried to the finale without wearing."
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "guardian_ward_fragment"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "guardian_ward_fragment",
+    "slot": "accessory_2"
+   }
+  },
+  {
+   "action": "press",
    "name": "inventory"
   },
   {
    "action": "wait_for_event",
    "type": "ui_inventory_hidden",
    "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_1",
+   "equals": "moon_bone_amulet"
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_2",
+   "equals": "guardian_ward_fragment"
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_3",
+   "equals": "",
+   "_comment": "Resonance 3 of 3 -- the third slot cannot be filled, which is the budget doing its job."
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_00b_descent_kit"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
   },
   {
    "action": "move",
@@ -13813,7 +14263,8 @@
   {
    "action": "move",
    "direction": "right",
-   "steps": 1
+   "steps": 3,
+   "_comment": "Oracle-derived at this waking: taproom traffic closes both the y7 and the y8 lanes at different columns, so the run zig-zags y7 -> y8 -> y6 to reach the pantry door."
   },
   {
    "action": "move",
@@ -13823,20 +14274,17 @@
   {
    "action": "move",
    "direction": "right",
-   "steps": 11
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    13,
-    8
-   ]
+   "steps": 6
   },
   {
    "action": "move",
    "direction": "up",
    "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
   },
   {
    "action": "assert_state",
@@ -14200,12 +14648,13 @@
    "timeout_sec": 5,
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull, and correct, and I resent both qualities. Or \u2014 if your hands are equal to it, which remains unproven \u2014 you re-cut the ward yourself and it holds another age without a keeper. I dislike most of these. I will be copying the outer lines while you decide."
-   }
+    "text": "I know. It woke the moment I said out loud what this ward has been doing, which I intend to take as a compliment. It belongs to the door, not to the dungeon: three centuries in a niche with the dust settling on it, left here against exactly one thing happening, and it has just happened. Whatever we decide about the seal, we decide it past that. Deal with it and I will hold the reading open while you do."
+   },
+   "_comment": "#440: at_the_door's visible list here is [\"Something in that alcove is watching us.\", \"Take your moment.\"] -- the reading row is hide_when-retired by read_the_feeding_ward and the CHOICE row has not appeared yet, because it now requires seal_warden_downed. The warden wakes for every descent; there is no order of operations that reaches an ending around it."
   },
   {
    "action": "screenshot",
-   "name": "08_act_v_05_the_choice"
+   "name": "08_act_v_05_the_watcher"
   },
   {
    "action": "wait_frames",
@@ -14214,28 +14663,7 @@
   {
    "action": "press",
    "name": "confirm",
-   "_comment": "the_choice row 0 is the OPEN. Rows 2/3 are Skill gates and tease visibly; gates never hide a fork here."
-  },
-  {
-   "action": "wait_for_event",
-   "type": "accomplishment_recorded",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "id": "seal_opened"
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "speaker": "Pisces",
-    "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever objects to this. Something will. Expect a guardian."
-   }
-  },
-  {
-   "action": "press",
-   "name": "confirm"
+   "_comment": "the_watcher row 0, \"Then it goes down first.\" -- an end:true row."
   },
   {
    "action": "wait_for_event",
@@ -14250,12 +14678,12 @@
   {
    "action": "wait_frames",
    "frames": 30,
-   "_comment": "Settle after the pisces_seal close: a press inside the panel's teardown window is eaten (same phantom as the pool-line lesson)."
+   "_comment": "Panel-teardown window: a press inside the closing panel is eaten."
   },
   {
    "action": "press_field_skill",
    "skill": "invisibility",
-   "_comment": "== PAST THE ALCOVE == [Invisibility] from the worn amulet: sneak suppresses the warden's trigger (wi_game.gd:539); the seal door is a door transition, which preserves sneak (interactions.gd:99)."
+   "_comment": "== THE CLOAKED APPROACH == [Invisibility] comes from the worn moon-bone amulet (hotbar_4 at this loadout, oracle `field_bar`). Under #440 the cloak is no longer a way PAST the alcove -- the seal door refuses on the far side until the warden is down -- it is the way to reach the alcove unheard, which `sneak_ambush` converts into the first turn of round 1."
   },
   {
    "action": "wait_for_event",
@@ -14280,11 +14708,244 @@
   },
   {
    "action": "screenshot",
-   "name": "08_act_v_06_past_the_alcove"
+   "name": "08_act_v_06_cloaked_approach"
   },
   {
    "action": "wait_frames",
    "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2,
+   "_comment": "(18,8) -> (18,6), the alcove's only walkable approach (oracle `path`). (18,6) is inside the encounter's trigger_radius 1, and only the live sneak keeps the proximity pass from springing the fight on the way in."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "sneaking",
+   "equals": true,
+   "_comment": "Falsifiable: walking the radius did NOT break the stance, which is what makes the next interact an ambush rather than an ordinary opening."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump the alcove (19,6): blocked, so it only sets facing."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "It is still turning toward the sound when you reach it. The first move is yours."
+   },
+   "_comment": "THE AMBUSH EDGE, pinned: wi_game.gd reads the stance BEFORE breaking it and calls WICombat.grant_ambush. This toast is the only observable difference between a cloaked and an uncloaked opening -- no stat, no arena, no lost enemy action."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "arena": "vault"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.round",
+   "equals": 1,
+   "_comment": "The PC's first turn IS round 1's first turn -- the ambush, read off the engine rather than off the toast."
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_07_the_seal_warden"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "seal_warden_downed"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_07b_warden_down"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "_comment": "== THE CHOICE, NOW REACHABLE == back down to the escort at (19,8).",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "pisces_seal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "at_the_door with the warden down: the watcher row is hide_when-retired and the choice row has appeared in its place, so the visible list is again two long and the choice is row 0."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull, and correct, and I resent both qualities. Or \u2014 if your hands are equal to it, which remains unproven \u2014 you re-cut the ward yourself and it holds another age without a keeper. I dislike most of these. I will be copying the outer lines while you decide."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_05b_the_choice"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "the_choice row 0 is the OPEN. Rows 2/3 are Skill gates and tease visibly; gates never hide a fork here. All three endings survive the chokepoint -- they are resolutions AFTER the fight now, not alternatives to it."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "seal_opened"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever else objects to this. The alcove was the first answer to that question. I would not assume it was the only one."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
   },
   {
    "action": "move",
@@ -14303,7 +14964,7 @@
    "action": "move",
    "direction": "right",
    "steps": 1,
-   "_comment": "== THE SEAL OPENS == the same door, a different mechanism: door_when is checked ahead of the interact arm, so the open_toast fires BEFORE the map rebuild. Pin the domain toast, never its ui_toast_rendered."
+   "_comment": "== THE SEAL OPENS == the same door, a different mechanism: door_when is checked ahead of the interact arm, so the open_toast fires BEFORE the map rebuild. Pin the domain toast, never its ui_toast_rendered. No cloak this time -- the alcove is empty."
   },
   {
    "action": "press",

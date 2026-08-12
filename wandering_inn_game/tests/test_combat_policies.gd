@@ -14,6 +14,16 @@ extends SceneTree
 
 var _events: Array = []
 
+## Stand-in for the driver's `WIGame.combat_use_item`: records the id it was
+## handed and reports whatever `_sink_item_ok` says, without healing anyone.
+var _sink_calls: Array = []
+var _sink_item_ok := true
+
+
+func _record_item_use(item_id: String) -> bool:
+	_sink_calls.append(item_id)
+	return _sink_item_ok
+
 
 func _sink(type: String, payload: Dictionary) -> void:
 	_events.append({"type": type, "payload": payload})
@@ -328,6 +338,104 @@ func _init() -> void:
 	assert(wins[WICombatPolicies.COMPETENT] >= wins[WICombatPolicies.DUMB],
 		"competent must never be worse than the floor on the same roster (dumb %d, competent %d of 20)" % [
 			wins[WICombatPolicies.DUMB], wins[WICombatPolicies.COMPETENT]])
+
+	# --- 10. the QA driver arm: `combat_autoplay {"policy": "competent"}` -----
+	# The steel thread runs every fight on the competent policy, because [Mage]
+	# 3+ banks on `spell_cast` and the floor policy never casts. Two halves are
+	# pinned here: the pack sink the driver installs, and the driver source
+	# itself compiling with its autoloads stubbed (the CI trap in
+	# wi-writing-qa-scripts: a new reference inside test_driver.gd breaks the
+	# UNIT job while every QA run stays green).
+
+	# 10a. `use_item_fn` takes the drink away from the harness. The sink here
+	# reports success without healing, so if the policy ALSO ran
+	# `WIItems.resolve_use` the HP would move and this would red.
+	_sink_calls.clear()
+	var sunk := WICombatPolicies.new(WICombatPolicies.COMPETENT)
+	sunk.items_by_id = items_by_id
+	sunk.carried = {"pc": ["mending_draught", "mending_draught"]}
+	sunk.use_item_fn = _record_item_use
+	var sk_combat := WICombat.new(goblin_ambush, _cfgs(catalog, ["pc", "goblin_raider"]), skills, _quiet, 3)
+	sk_combat.begin()
+	var sk_pc: Dictionary = sk_combat.combatants["pc"]
+	sk_pc[WIKeys.SKILLS] = []
+	sk_pc[WIKeys.MAX_HP] = 100
+	sk_pc[WIKeys.HP] = 20
+	while sk_combat.get_active() != "pc":
+		WICombatAI.take_turn(sk_combat)
+	var sunk_hp_before := int(sk_pc[WIKeys.HP])
+	sunk.take_turn(sk_combat)
+	assert(_sink_calls == ["mending_draught"],
+		"the driver's pack sink receives the item id (got %s)" % [_sink_calls])
+	assert(int(sk_combat.combatants["pc"][WIKeys.HP]) == sunk_hp_before,
+		"with a sink installed the policy does NOT also resolve the item itself")
+	assert((sunk.carried["pc"] as Array).size() == 1,
+		"a sunk drink still leaves the policy's pack view in step with the game's")
+	# A sink that REFUSES (the live `combat_use_item` returning false — item not
+	# in the pack, no AP) must not consume the pack entry either.
+	_sink_calls.clear()
+	_sink_item_ok = false
+	sunk.carried = {"pc": ["mending_draught"]}
+	var refuse := WICombat.new(goblin_ambush, _cfgs(catalog, ["pc", "goblin_raider"]), skills, _quiet, 3)
+	refuse.begin()
+	var refuse_pc: Dictionary = refuse.combatants["pc"]
+	refuse_pc[WIKeys.SKILLS] = []
+	refuse_pc[WIKeys.MAX_HP] = 100
+	refuse_pc[WIKeys.HP] = 20
+	while refuse.get_active() != "pc":
+		WICombatAI.take_turn(refuse)
+	sunk.take_turn(refuse)
+	assert((sunk.carried["pc"] as Array).size() == 1,
+		"a refused drink leaves the pack intact and the turn still resolves")
+	assert(refuse.finished or refuse.get_active() != "pc", "a refused drink still ends the turn")
+	_sink_item_ok = true
+
+	# 10b. The arm exists, defaults to the floor, and rejects a typo instead of
+	# silently running dumb. Source-level because the arm needs a live Game.
+	var driver_src := FileAccess.get_file_as_string("res://qa/test_driver.gd")
+	assert(driver_src.find("func _combat_autoplay(max_turns: int, policy: String = WICombatPolicies.DUMB)") != -1,
+		"combat_autoplay's policy parameter must default to the floor policy")
+	assert(driver_src.find("String(step.get(\"policy\", WICombatPolicies.DUMB))") != -1,
+		"the combat_autoplay step arm must read `policy` and default to dumb")
+	assert(driver_src.find("combat_autoplay: unknown policy") != -1,
+		"an unknown policy name must fail the step, not fall through to dumb")
+	assert(driver_src.count("\"combat_autoplay\":") == 1,
+		"combat_autoplay must have exactly one driver arm (a duplicate SHADOWS silently)")
+	var stubbed := GDScript.new()
+	stubbed.source_code = driver_src.replace(
+		"extends Node",
+		"extends Node\n\nvar ObservableBus: Variant = null\nvar QAPaths: Variant = null\nvar Game: Variant = null\nvar WICombatAI: Variant = null\nvar WISettings: Variant = null\nvar WIDebugOverlay: Variant = null",
+	)
+	assert(stubbed.reload() == OK,
+		"test_driver.gd must still compile with its autoloads stubbed (CI's unit job compiles exactly this copy)")
+
+	# 10c. The driver's own construction, driven to completion, twice. This is
+	# the arm's contract: a competent-policy fight terminates and reproduces.
+	var arm_prints: Array = []
+	for _repeat in 2:
+		var arm_policy := WICombatPolicies.new(WICombatPolicies.COMPETENT)
+		arm_policy.items_by_id = items_by_id
+		arm_policy.carried = {"pc": ["mending_draught"]}
+		arm_policy.use_item_fn = _record_item_use
+		var arm := WICombat.new(cave_mouth, _cfgs(catalog, ["pc", "raskghar_scout", "raskghar_scout"]), skills, _quiet, 9)
+		arm.begin()
+		arm.combatants["pc"][WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(
+			WIProgression.granted_skills({"warrior": 5, "mage": 4}, classes), "spear", skills_by_id)
+		arm.combatants["pc"][WIKeys.MAX_MP] = 16
+		arm.combatants["pc"][WIKeys.MP] = 16
+		# The driver's loop: only the PC's turns route through the policy;
+		# everyone else is the shipped AI, exactly as in `_combat_autoplay`.
+		var arm_guard := 0
+		while not arm.finished and arm_guard < 2000:
+			arm_guard += 1
+			if String(arm.combatants[arm.get_active()]["side"]) == "player":
+				arm_policy.take_turn(arm)
+			else:
+				WICombatAI.take_turn(arm)
+		assert(arm.finished, "the driver-shaped competent fight terminates")
+		arm_prints.append(_fingerprint(arm))
+	assert(arm_prints[0] == arm_prints[1],
+		"the driver arm is deterministic at a fixed seed:\n  %s\n  %s" % [arm_prints[0], arm_prints[1]])
 
 	print("PASS: combat policies -- dumb is autoplay, competent spends the kit, both deterministic")
 	quit(0)

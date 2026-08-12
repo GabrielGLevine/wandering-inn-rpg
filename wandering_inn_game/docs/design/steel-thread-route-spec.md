@@ -121,6 +121,56 @@ warden/vault beats).
 - Epilogue: final sleep at the bed → `ui_sleep_veil_finished` →
   `ui_gdi_epilogue_rendered`.
 
+## Findings ledger status after the balance program (2026-08-12)
+
+The reauthored thread (`qa/STEEL-THREAD.md`) re-reads the list below.
+
+**RESOLVED by the program:**
+
+- **6, the warden wall** — resolved as a *mechanism*, not as a bypass.
+  #437 refuted the stat-wall reading (competent WIN 0.73 at the shipped
+  build) and #440 moved `encounter_when` onto `read_the_feeding_ward`, so
+  the warden wakes for every descent and all three endings became
+  post-fight resolutions. The sneak is now an ambush **edge** the thread
+  takes and pins, not the skip it used to be. What survives of finding 6
+  is a *build* problem, not an encounter one — see "still open" below.
+- **The autoplay ratchet** — resolved at the driver. `combat_autoplay`
+  takes `"policy": "competent"` (this wave), the thread runs every fight
+  on it, and CHOICE-LOG 2026-08-12 rules that QA proves completability
+  while sims prove balance. The concrete symptom the ratchet caused —
+  "no continuous run can level a caster past [Mage] 2, because
+  `spell_cast` only tallies on a PC cast and the floor policy never
+  casts" — is gone: the reauthored run reaches [Mage] 6.
+- **1, the Act III XP lump** — resolved by route, not by data. Act III
+  is now fought at warrior 5 / mage 2 instead of warrior 2, because the
+  Act II night spends counters that were being banked and carried. The
+  lump was never an XP-rate problem: it was a *sleep placement* problem.
+- **2, the Act IV economy** — still tight, but it closes without fencing
+  the pack: Olesm 20, Zevara 17, Selys's board pick 5, Wilovan 25, the
+  Riverfarm field board 2, the Act II supplier 2, and one tonic sale 8
+  pay all 82g of mandatory purchases with 4g left.
+
+**STILL OPEN:**
+
+- **3** (`price_of_a_favor` needs [Diplomat]) and **4** (Invrisil alleys
+  cost two footpad fights without [Stealth]) — unchanged.
+- **5** (`lattice_witch_lore` forces three village↔hollow trips) —
+  unchanged.
+- **NEW: the Act V band asks for a shape no spine reaches.** The thread
+  arrives at the warden with 29 combined levels and 47 max HP and loses
+  by 6 warden HP. Spellsword 14 is structurally unreachable ([Warrior]
+  evolves to [Spearmaster] at 10 and the consolidation reads *warrior*),
+  and multiclass dilution means 29 diluted levels are weaker than the
+  band's 14–16 focused ones. Either the consolidation must accept
+  evolved parents, or the Act V band must be restated in terms of
+  focused-equivalent power rather than level count.
+- **NEW: [Second Wind] makes carried draughts unreachable** for the
+  competent policy (survive step prefers the skill, one survive action
+  per turn, no cooldown on the skill). The bound was already filed by
+  #439; the finale is the case that makes it matter.
+- **#442, #448 and the `d3_inventory_shot` drift** — untouched by this
+  program.
+
 ## Reachability/balance findings ledger (for the observation debrief)
 
 1. Act III XP is a lump: whole act fought at warrior 2, w2→w11 at the
