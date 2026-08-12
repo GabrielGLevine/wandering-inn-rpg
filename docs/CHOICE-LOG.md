@@ -27,6 +27,17 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### Steel thread and item abilities (2026-08-11)
 
+- **#347 doctrine RATIFIED (user, 2026-08-12).** "Authored uniques,
+  derived triggers" is standing policy, plus the combination rule:
+  every consolidation-eligible lineage pair (evolved lines included)
+  resolves to a unique authored target class. Enforcement machinery is
+  #452; generative-at-runtime stays NO-BUILD per the spec's four fatal
+  grounds.
+- **Relc's veto branches to a hard solo fight, not a wall (user
+  ruling, 2026-08-12, #448).** Target ~0.35-0.45 competent-at-band via
+  a DIFFERENT solo composition — and explicitly must NOT trivialize
+  the with-Relc fight (current 0.70 stands). The veto is a hard-mode
+  choice, not a trap and not a free skip.
 - **Evolved lineages consolidate into unique classes (user ruling,
   2026-08-12, #449).** Spearmaster + mage does NOT lineage-carry into
   [Spellsword]; it consolidates into its own class — [Spellspear]

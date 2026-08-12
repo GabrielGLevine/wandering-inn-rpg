@@ -1,6 +1,11 @@
 # Dynamic Class Creation — bestowed unique classes (issue #347)
 
-Status: EXPLORATION SPEC (v0.17 L7 deliverable, user directive 2026-08-02).
+Status: **RATIFIED** (user, 2026-08-12 — was EXPLORATION SPEC, v0.17 L7
+deliverable). Standing doctrine, with one combination rule added at
+ratification: **every consolidation-eligible lineage pair — evolved
+lines included — resolves to a unique authored target class**
+([Spellsword]/[Spellspear] pattern; #449 is the precedent case, #452
+builds the enforcement machinery).
 VERDICT: **BUILD-REDUCED** — authored class records selected by derived
 portfolio predicates ("authored uniques, derived triggers"). Generative
 class assembly is a NO-BUILD, argued in §2. Nothing here ships in v0.17;
