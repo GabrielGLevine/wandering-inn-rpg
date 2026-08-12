@@ -148,7 +148,7 @@
       "effect_lines": [
        "+1 damage on melee hits",
        "Resonance 1",
-       "Grants [Eagle Eyes] in combat"
+       "Grants [Eagle Eyes]"
       ],
       "locked": true,
       "requirement": "costs 35 gold",
