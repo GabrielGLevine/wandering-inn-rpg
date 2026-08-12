@@ -75,6 +75,43 @@ var _ladder_rates := {}
 var _difficulty_mult := 1.0
 var _tier_sweep := false
 
+## #437 (b) — THE POLICY HOOK, the tier hook's exact twin and for the same
+## reason: the cells, builds, rosters and per-family setup all live here, so a
+## second driver would clone all of them and drift.
+##
+## `WI_POLICY=competent` swaps the PC's turn driver from today's autoplay
+## (`WICombatAI`, the melee profile that never casts, never drinks and never
+## uses [Second Wind]) to `qa/combat_policies.gd`'s competent policy. Enemies
+## and allies are untouched in BOTH legs — the gap this measures is PC-side kit
+## handling, not enemy AI.
+##
+## UNSET = byte-identical to before this hook existed: the default policy is
+## `dumb`, and `WICombatPolicies.take_turn` on `dumb` is a straight delegation
+## to `WICombatAI.take_turn`, the call that used to sit at each of these twelve
+## sites. `tests/test_combat_policies.gd` pins that equivalence over seeded
+## fights rather than trusting the delegation by eye.
+##
+## REPORT-ONLY, structurally, exactly like the tier sweep: every band in this
+## file was authored against the floor policy, so asserting them against a
+## policy that spends the kit would red the matrix wholesale. A competent leg
+## prints its FAIL lines as the report they are and exits 0. The plain
+## (env-unset) run is the only one that asserts, and it is unchanged. Balance
+## AT band is proven by `tests/sim_spine_viability.gd`, not here.
+##
+## The matrix has no inventory model, so a competent leg here carries NO
+## draughts: it measures casting, [Second Wind] and reach discipline only. The
+## draught column belongs to the viability table, whose rows know what the run
+## was actually holding.
+var _policy: WICombatPolicies = null
+var _policy_sweep := false
+
+func _take_turn(combat: WICombat) -> void:
+	if _policy == null:
+		WICombatAI.take_turn(combat)
+		return
+	_policy.take_turn(combat)
+
+
 func _cell_in_range() -> bool:
 	_cell_idx += 1
 	if _range_lo < 0:
@@ -743,7 +780,11 @@ func _matrix_build_count() -> int:
 	return count
 
 
-func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dictionary, skills_by_id: Dictionary, items_by_id: Dictionary) -> Dictionary:
+## STATIC since #437: `tests/sim_spine_viability.gd` preloads this script and
+## assembles its roster's PCs through this exact function. A viability row and
+## a matrix cell that name the same build must BE the same combatant, and the
+## only way to guarantee that is one function. It reads no instance state.
+static func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dictionary, skills_by_id: Dictionary, items_by_id: Dictionary) -> Dictionary:
 	var pc: Dictionary = pc_template.duplicate(true)
 	pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
 	pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes_catalog)
@@ -790,6 +831,13 @@ func _init() -> void:
 		assert(_difficulty_mult > 0.0, "WI_DIFFICULTY_MULT must be a positive float (0.75 Bronze / 1.0 Silver / 1.3 Gold)")
 		_tier_sweep = true
 		print("[tier-sweep] difficulty_damage_taken_mult=%.2f -- REPORT ONLY (every band in this file is authored at Silver 1.0)" % _difficulty_mult)
+
+	var policy_env := OS.get_environment("WI_POLICY")
+	if policy_env != "" and policy_env != WICombatPolicies.DUMB:
+		assert(policy_env == WICombatPolicies.COMPETENT, "WI_POLICY must be 'dumb' or 'competent'")
+		_policy = WICombatPolicies.new(policy_env)
+		_policy_sweep = true
+		print("[policy-sweep] pc turn driver=%s -- REPORT ONLY (every band in this file is authored against the floor policy)" % policy_env)
 
 	var range_env := OS.get_environment("WI_CELL_RANGE")
 	if range_env != "":
@@ -839,7 +887,7 @@ func _init() -> void:
 				var guard := 0
 				while not combat.finished and guard < 2000:
 					guard += 1
-					WICombatAI.take_turn(combat)
+					_take_turn(combat)
 				assert(combat.finished, "%s/%s fight %d did not terminate" % [comp["name"], build["name"], seed_v])
 				if combat.outcome["victory"]:
 					wins += 1
@@ -906,7 +954,7 @@ func _init() -> void:
 			var guard := 0
 			while not combat.finished and guard < 2000:
 				guard += 1
-				WICombatAI.take_turn(combat)
+				_take_turn(combat)
 			assert(combat.finished, "loadout %s fight %d did not terminate" % [cell["name"], seed_v])
 			if combat.outcome["victory"]:
 				wins += 1
@@ -973,7 +1021,7 @@ func _init() -> void:
 			var guard := 0
 			while not combat.finished and guard < 2000:
 				guard += 1
-				WICombatAI.take_turn(combat)
+				_take_turn(combat)
 			assert(combat.finished, "encounter %s fight %d did not terminate" % [cell["name"], seed_v])
 			if combat.outcome["victory"]:
 				wins += 1
@@ -1028,7 +1076,7 @@ func _init() -> void:
 			var guard := 0
 			while not combat.finished and guard < 2000:
 				guard += 1
-				WICombatAI.take_turn(combat)
+				_take_turn(combat)
 			assert(combat.finished, "boss %s fight %d did not terminate" % [cell["name"], seed_v])
 			if combat.outcome["victory"]:
 				wins += 1
@@ -1078,7 +1126,7 @@ func _init() -> void:
 			var guard := 0
 			while not combat.finished and guard < 2000:
 				guard += 1
-				WICombatAI.take_turn(combat)
+				_take_turn(combat)
 			assert(combat.finished, "ruin %s fight %d did not terminate" % [cell["name"], seed_v])
 			if combat.outcome["victory"]:
 				wins += 1
@@ -1131,7 +1179,7 @@ func _init() -> void:
 			var guard := 0
 			while not combat.finished and guard < 2000:
 				guard += 1
-				WICombatAI.take_turn(combat)
+				_take_turn(combat)
 			assert(combat.finished, "riverfarm %s fight %d did not terminate" % [cell["name"], seed_v])
 			if combat.outcome["victory"]:
 				wins += 1
@@ -1185,7 +1233,7 @@ func _init() -> void:
 			var guard := 0
 			while not combat.finished and guard < 2000:
 				guard += 1
-				WICombatAI.take_turn(combat)
+				_take_turn(combat)
 			assert(combat.finished, "invrisil %s fight %d did not terminate" % [cell["name"], seed_v])
 			if combat.outcome["victory"]:
 				wins += 1
@@ -1243,7 +1291,7 @@ func _init() -> void:
 			var guard := 0
 			while not combat.finished and guard < 2000:
 				guard += 1
-				WICombatAI.take_turn(combat)
+				_take_turn(combat)
 			assert(combat.finished, "party %s fight %d did not terminate" % [cell["name"], seed_v])
 			if combat.outcome["victory"]:
 				wins += 1
@@ -1296,7 +1344,7 @@ func _init() -> void:
 			var guard := 0
 			while not combat.finished and guard < 2000:
 				guard += 1
-				WICombatAI.take_turn(combat)
+				_take_turn(combat)
 			assert(combat.finished, "dungeon %s fight %d did not terminate" % [cell["name"], seed_v])
 			if combat.outcome["victory"]:
 				wins += 1
@@ -1342,7 +1390,7 @@ func _init() -> void:
 			var guard := 0
 			while not combat.finished and guard < 2000:
 				guard += 1
-				WICombatAI.take_turn(combat)
+				_take_turn(combat)
 			assert(combat.finished, "bestiary %s fight %d did not terminate" % [cell["name"], seed_v])
 			if combat.outcome["victory"]:
 				wins += 1
@@ -1413,7 +1461,7 @@ func _init() -> void:
 			var guard := 0
 			while not combat.finished and guard < 2000:
 				guard += 1
-				WICombatAI.take_turn(combat)
+				_take_turn(combat)
 			assert(combat.finished, "second_wind %s fight %d did not terminate" % [cell["name"], seed_v])
 			if combat.outcome["victory"]:
 				wins += 1
@@ -1465,7 +1513,7 @@ func _init() -> void:
 			var guard := 0
 			while not combat.finished and guard < 2000:
 				guard += 1
-				WICombatAI.take_turn(combat)
+				_take_turn(combat)
 			assert(combat.finished, "scaled %s fight %d did not terminate" % [cell["name"], seed_v])
 			if combat.outcome["victory"]:
 				wins += 1
@@ -1527,6 +1575,16 @@ func _init() -> void:
 	if _tier_sweep:
 		print("[tier-sweep] mult=%.2f complete over %d cells x %d seeded runs — any FAIL lines above are the REPORT, not a regression" % [
 			_difficulty_mult, total_cells, RUNS_PER_CELL,
+		])
+		quit(0)
+		return
+
+	# #437 (b). Same disposition, same reason: a competent leg is a READ against
+	# bands that were authored for the floor policy, so its FAIL lines are the
+	# per-cell report and never the process's exit code.
+	if _policy_sweep:
+		print("[policy-sweep] policy=%s complete over %d cells x %d seeded runs — any FAIL lines above are the REPORT, not a regression" % [
+			_policy.policy, total_cells, RUNS_PER_CELL,
 		])
 		quit(0)
 		return

@@ -42,6 +42,10 @@ Checks:
      (tests/test_interactable_reachability.gd) and is never re-derived here.
      Per-category tier: HARD_FAIL_REACHABILITY_CATEGORIES have been drained and
      now fail the run; everything else stays advisory. See that constant.
+  9. consolidation lineage completeness (GH#452) -- every held-class pair
+     reachable through a consolidation's parent lines and their evolution
+     targets has an authored target class inheriting that exact pair, or an
+     explicit `_exempt` row with a non-empty rationale.
 
 ADVISORIES (v0.17 L3, GH#335 item 3) are a SECOND, non-failing tier. They
 never touch the exit code and can never break a sweep, because they measure a
@@ -1624,7 +1628,7 @@ SKILL_CODE_GRANTS = {
 		"[Pack Bond] folds it onto the COMPANION's kit"),
 }
 ITEM_CODE_GRANTS = {
-	"flarepepper_powder": ("src/core/wi_game.gd", 2667,
+	"flarepepper_powder": ("src/core/wi_game.gd", 2674,
 		"[Supplies: Flarepepper Powder] restocks one per rest"),
 }
 
@@ -2004,6 +2008,125 @@ def check_content_reachability(parsed: dict, maps: dict, advisories: list) -> di
 	return found
 
 
+def _lineage_members(seed_ids, classes_by_id: dict) -> tuple:
+	"""Ordered evolution closure for one consolidation parent line."""
+	out = []
+	pending = list(seed_ids) if isinstance(seed_ids, list) else []
+	while pending:
+		class_id = pending.pop(0)
+		if not isinstance(class_id, str) or not class_id or class_id in out:
+			continue
+		out.append(class_id)
+		cls = classes_by_id.get(class_id, {})
+		targets = (cls.get("evolution", {}) or {}).get("targets", {})
+		if isinstance(targets, dict):
+			pending.extend(targets.values())
+	return tuple(out)
+
+
+def _inheritance_pair(cls: dict) -> frozenset:
+	raw = cls.get("inherits", [])
+	if isinstance(raw, str):
+		raw = [raw]
+	if not isinstance(raw, list):
+		return frozenset()
+	return frozenset(value for value in raw if isinstance(value, str) and value)
+
+
+def check_lineage_completeness(parsed: dict, errors: list) -> None:
+	"""Require one authored consolidation target or a reasoned exemption per
+	reachable held-pair. Target identity is exact inheritance, not merely a broad
+	runtime row: [Spellsword] inherits warrior+mage and cannot silently stand in
+	for an evolved pair such as spearmaster+mage."""
+	doc = parsed.get(DATA / "classes.json") or {}
+	if not isinstance(doc, dict):
+		return
+	classes = [row for row in doc.get("classes", []) if isinstance(row, dict)]
+	classes_by_id = {row.get("id"): row for row in classes
+		if isinstance(row.get("id"), str) and row.get("id")}
+	rows = [row for row in doc.get("consolidations", []) if isinstance(row, dict)]
+	rules = [row for row in rows if "_exempt" not in row]
+
+	reachable: dict[frozenset, tuple] = {}
+	expanded_rules = []
+	for row in rules:
+		lines = row.get("parent_lines", [])
+		label = str(row.get("id", row.get("target", "<unnamed>")))
+		if not (isinstance(lines, list) and len(lines) == 2
+				and all(isinstance(line, list) and line for line in lines)):
+			errors.append(f"lineage completeness: consolidation '{label}' must have exactly "
+				"two non-empty parent_lines")
+			continue
+		members_a = _lineage_members(lines[0], classes_by_id)
+		members_b = _lineage_members(lines[1], classes_by_id)
+		expanded_rules.append((row, members_a, members_b))
+		for parent_a in members_a:
+			for parent_b in members_b:
+				key = frozenset((parent_a, parent_b))
+				if len(key) != 2:
+					errors.append(f"lineage completeness: consolidation '{label}' reaches "
+						f"the same class on both parent lines: '{parent_a}'")
+					continue
+				reachable.setdefault(key, (parent_a, parent_b, label))
+
+	exemptions: dict[frozenset, str] = {}
+	for row in rows:
+		if "_exempt" not in row:
+			continue
+		pair = row.get("_exempt")
+		rationale = row.get("rationale")
+		if not (isinstance(pair, list) and len(pair) == 2
+				and all(isinstance(value, str) and value for value in pair)
+				and pair[0] != pair[1]):
+			errors.append("lineage completeness: `_exempt` must be two distinct class ids")
+			continue
+		key = frozenset(pair)
+		if not isinstance(rationale, str) or not rationale.strip():
+			errors.append(f"lineage completeness: _exempt '{pair[0]}' x '{pair[1]}' "
+				"requires a non-empty rationale")
+			continue
+		if key in exemptions:
+			errors.append(f"lineage completeness: duplicate _exempt row for "
+				f"'{pair[0]}' x '{pair[1]}'")
+			continue
+		exemptions[key] = rationale.strip()
+
+	resolved: dict[frozenset, set] = {}
+	for key, pair_info in reachable.items():
+		parent_a, parent_b, _label = pair_info
+		for row, members_a, members_b in expanded_rules:
+			matches_lines = ((parent_a in members_a and parent_b in members_b)
+				or (parent_b in members_a and parent_a in members_b))
+			if not matches_lines:
+				continue
+			target_id = row.get("target")
+			target = classes_by_id.get(target_id, {})
+			if _inheritance_pair(target) == key:
+				resolved.setdefault(key, set()).add(target_id)
+
+	for key, targets in sorted(resolved.items(), key=lambda item: sorted(item[0])):
+		if len(targets) > 1:
+			parents = sorted(key)
+			errors.append(f"lineage completeness: '{parents[0]}' x '{parents[1]}' maps "
+				f"to multiple target classes: {', '.join(sorted(targets))}")
+
+	for key, (parent_a, parent_b, label) in reachable.items():
+		if resolved.get(key):
+			if key in exemptions:
+				errors.append(f"lineage completeness: stale _exempt row for "
+					f"'{parent_a}' x '{parent_b}' -- an authored target now resolves it")
+			continue
+		if key not in exemptions:
+			errors.append(f"lineage orphan: consolidation '{label}' reaches held pair "
+				f"'{parent_a}' x '{parent_b}', but no target class inherits that exact "
+				"pair and no reasoned _exempt row exists")
+
+	for key in exemptions.keys() - reachable.keys():
+		parents = sorted(key)
+		errors.append(f"lineage completeness: stale _exempt row for "
+			f"'{parents[0]}' x '{parents[1]}' -- no consolidation reaches that pair")
+
+
 def main() -> int:
 	start = time.monotonic()
 	list_advisories = "--advisories" in sys.argv
@@ -2036,6 +2159,7 @@ def main() -> int:
 	check_solid_decor_blocks(maps, errors)
 	check_spriteless_entities(maps, errors)
 	check_moods(parsed, maps, errors)
+	check_lineage_completeness(parsed, errors)
 	advisories: list = []
 	skill_gate_advisories: list = []
 	prose_template_advisories: list = []

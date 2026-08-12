@@ -1,5 +1,5 @@
 {
- "_comment": "The deep_descent canonical fixture. Sewers, standing at (8,11) facing DOWN onto the deep_fissure (8,12), with `heard_the_deep_tremor` PRE-BANKED so the fissure's door_when gate is MET and interacting it descends to deep_tunnels (climax_chain's tremor beat -- Zevara's post-Act-II summons -- banks that key for real; this fixture stands in for it). Warrior L5 (an Act III-strength PC) with rusty_sword equipped clears the interact-only raskghar_scouts route-fight SOLO at the pinned fixture rng_state; the party/veto + the Awakened BOSS are climax_chain's own scope, so deep_descent fields NO ally and STOPS at the warren_mouth (the 'warren door' -- the boss is wired there instead). heard_about_cisterns/resolved_the_cisterns mark Act II done. rng_state governs the scout autoplay (overrides --seed, same contract as near_sewers). TRAP: rng_state is a properly-derived state (.seed=1, captured .state = -1966449618399012673), never hand-typed -- WISave restores .state directly, not .seed. Every fight in this fixture's run is unaffected by rng_state choice.",
+ "_comment": "The deep_descent canonical fixture. Sewers, standing at (8,11) facing DOWN onto the deep_fissure (8,12), with `heard_the_deep_tremor` PRE-BANKED so the fissure's door_when gate is MET and interacting it descends to deep_tunnels (climax_chain's tremor beat -- Zevara's post-Act-II summons -- banks that key for real; this fixture stands in for it). #441 RE-FIXTURE (2026-08-12): warrior L5 / rusty_sword became warrior L10 with the Act III kit (Krshia's hunting knife, a jerkin, and the two shop charms -- all Act II-purchasable, nothing anachronistic). #439 retuned the warren-mouth pair into the [0.55,0.85] competent-at-band window and this script drives the FLOOR policy, which loses at band by design; 10 is the TOP of the Act III band (8-10). Measured floor WIN 0.80 / 3 rd over 60 seeds, against 0.30 for the old L5-with-a-rusty-sword shape. The L10 build cannot trip an evolution here: warrior's offer fires at SLEEP and this route never sleeps. It clears the interact-only raskghar_scouts route-fight SOLO at the pinned fixture rng_state; the party/veto + the Awakened BOSS are climax_chain's own scope, so deep_descent fields NO ally and STOPS at the warren_mouth (the 'warren door' -- the boss is wired there instead). heard_about_cisterns/resolved_the_cisterns mark Act II done. rng_state governs the scout autoplay (overrides --seed, same contract as near_sewers). TRAP: rng_state is a properly-derived state (.seed=1, captured .state = -1966449618399012673), never hand-typed -- WISave restores .state directly, not .seed. Every fight in this fixture's run is unaffected by rng_state choice.",
  "version": 5,
  "state": {
   "current_map": "sewers",
@@ -12,7 +12,7 @@
    1
   ],
   "classes": {
-   "warrior": 5
+   "warrior": 10
   },
   "accomplishments": {
    "reached_liscor": 1,
@@ -24,7 +24,7 @@
    "resolved_the_cisterns": 1,
    "heard_the_deep_tremor": 1,
    "won_combat": 1,
-   "melee_hit": 18
+   "melee_hit": 57
   },
   "player_skills": [
    "basic_cleaning",
@@ -37,11 +37,17 @@
   "pending_consolidation": {},
   "used_skills": [],
   "inventory": [
-   "rusty_sword"
+   "rusty_sword",
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
   ],
   "equipped": {
-   "weapon": "rusty_sword",
-   "armor": ""
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
   },
   "container_state": {},
   "actions_since_sleep": 0,

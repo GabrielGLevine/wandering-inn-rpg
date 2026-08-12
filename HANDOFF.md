@@ -28,11 +28,49 @@ or superseded session blocks.
   rc 0, import pass done. License verdict appended (license-notes,
   local). Alternates parked server-side (tags pick-lock-icon /
   workroom-door / enchanter-shelf).
+- DONE (2026-08-12, Fable session): **balance program complete** (#434 is
+  the one open engine piece). Shipped across three waves: oracle/
+  fail-fast/checkpoints (#436/#435), dual-policy sim table + calibration
+  (#437), Acts I-III retunes into the [0.55,0.85] window + 8 canonical
+  re-fixtures (#439/#441), warden chokepoint (#440: wakes every descent,
+  endings post-fight, sneak = ambush edge), [Second Wind] once_per_fight
+  (#442), competent-policy survive amendments (hit-aware potential_damage,
+  largest-heal-wins, death-band second action). Steel thread REAUTHORED
+  and GREEN at band: 2567 steps, seed 9, x3 verified (events 10995/11000/
+  10995), warden falls in 9 rounds with every resource spent (PC 2/47).
+  Filed for the user: #448 (Relc veto trap choice), #449 (evolution
+  orphans consolidation — end-to-end evidence in the run), plus two #439
+  follow-ups recorded on #449 (dilution-stated bands; 4g finale economy).
+  #451 parked by user (Counter Strike power level, ablation data attached). Pre-existing red still open: d3_inventory_shot (inventory pin drift,
+  predates the program). Windowed observation run launched for the user.
 - QUEUED: **balance program** (#439 per-act leveling bands -> #440 Warden
   chokepoint retune, user rulings 2026-08-11; CHOICE-LOG entry). Sequenced
   AFTER #437's dual-policy sim table exists (tuning harness); steel-thread
   Act V reauthors last (currently completes via the sneak-past — honest
   record of today's balance until the retune lands).
+- QUEUED: **[Spellspear] lane (#449, user-ruled 2026-08-12)** — evolved-
+  lineage consolidation class; FULL implementable spec in the #449
+  comment (consolidation row, sparse-table class, flavored skill twins
+  + icons, registration matrix, canonical, sim row, steel-thread
+  no-change verify). Purely additive; wiki-verify the name before id
+  freeze. Dispatch when usage allows (parked at WINDDOWN, fable band).
+- QUEUED FOR SOL: **wave ≥434** — plan at docs/superpowers/plans/
+  2026-08-12-sol-wave-434-plus.md (lanes, ownership, gates, user-gate
+  batching; posted to #438). Rulings landed 2026-08-12: #347 RATIFIED
+  (+combination rule, spec flipped), #448 ruled (solo ~0.35-0.45, new
+  composition, with-Relc untouched), #453 filed (cross-class re-verify).
+  Dispatch A-M1 + B1 + C1 in parallel when usage allows.
+- QUEUED: **#452 codify #347** (user-directed 2026-08-12): lineage-
+  completeness validator (build FIRST — inventories all orphaned pairs,
+  protects main at commit time), consolidation scaffolder, doctrine
+  ratification (spec EXPLORATION->RATIFIED needs user go), skill-library
+  method section, sim-roster derivation. #449's [Spellspear] = the
+  validator's first satisfied row + scaffolder golden.
+- QUEUED: **#434 itinerary compiler — DESIGN COMPLETE** (user-directed
+  Fable frontload 2026-08-12): full engine design at
+  wandering_inn_game/docs/design/itinerary-compiler-design.md + #434
+  comment. Four lane-sized milestones (M1 spine → M4 Mage variant);
+  implementation is delegable cold. Dispatch M1 when usage allows.
 - QUEUED: **playthrough engine** (#438 tracking; #436 oracle → #435
   checkpoints → #437 pre-sim → #434 itinerary compiler; all knowledge
   embedded in the issues + the wi-writing-qa-scripts lessons section).

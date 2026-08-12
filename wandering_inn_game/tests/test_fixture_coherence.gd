@@ -302,6 +302,17 @@ func _check_monotone_chains(name: String, game: WIGame, data: Dictionary) -> voi
 		_fail(name, "seal_kept_reported banked without seal_kept_found -- Olesm's report option is gated on the find beat")
 	if int(accs.get("seal_kept_found", 0)) >= 1 and int(accs.get("vault_construct_downed", 0)) < 1:
 		_fail(name, "seal_kept_found banked without vault_construct_downed -- the deeper door only opens past the guardian")
+	# GH#440, THE CHOKEPOINT HELD AT THE FIXTURE LAYER. The Seal Warden wakes on
+	# the reading, and every one of Act V's three endings is gated behind putting
+	# it down (pisces_seal's the_choice row), so a save holding a resolution
+	# without seal_warden_downed is a state no player can reach -- and is exactly
+	# the shape a future fixture edit would take to quietly reopen the bypass
+	# this issue closed.
+	if int(accs.get("seal_warden_downed", 0)) >= 1 and int(accs.get("read_the_feeding_ward", 0)) < 1:
+		_fail(name, "seal_warden_downed banked without read_the_feeding_ward -- the reading IS the warden's encounter_when, so it cannot have been fought first")
+	for resolution: String in ["seal_resolved", "seal_opened", "seal_kept_fed", "seal_rewarded"]:
+		if int(accs.get(resolution, 0)) >= 1 and int(accs.get("seal_warden_downed", 0)) < 1:
+			_fail(name, "%s banked without seal_warden_downed -- Act V's endings are POST-FIGHT resolutions (#440 chokepoint)" % resolution)
 	if int(accs.get("garden_door_unlocked", 0)) >= 1:
 		if int(accs.get("reached_two_classes", 0)) < 1:
 			_fail(name, "garden_door_unlocked banked without reached_two_classes -- _garden_earn_met() requires Act III")

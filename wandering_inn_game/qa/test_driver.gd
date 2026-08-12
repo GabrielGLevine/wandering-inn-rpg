@@ -62,6 +62,20 @@ var _events_seen: Array = []
 var _screenshots: PackedStringArray = []
 var _wait_cursor := 0
 var _wants_creation_ui := false
+## GH#436 fail-fast. OFF by default: the sweep wants every failure a run can
+## show. ON for AUTHORING, because the driver otherwise CONTINUES past a red and
+## every later step runs against whatever state the failure left -- including a
+## defeat-reload after a lost fight -- which is how a genuinely broken run
+## reported a single flattering failure (Act V lane, 2026-08-11). Set by
+## `--fail-fast=1`, `QA_FAIL_FAST=1`, or `"fail_fast": true` in the script root.
+var _fail_fast := false
+var _aborted := false
+var _step_index := 0
+var _steps_run := 0
+var _steps_total := 0
+## GH#435 `--checkpoint-at=N[,N...]`: 1-based step numbers still owed a
+## checkpoint. Serviced after each step, deferred past combat/dialogue.
+var _checkpoint_pending: Array[int] = []
 
 
 func active() -> bool:
@@ -113,6 +127,11 @@ func _ready() -> void:
 	if _script_path.is_empty():
 		set_process(false)
 		return
+	_fail_fast = _truthy(String(QAPaths.user_args().get("fail-fast", ""))) \
+			or _truthy(OS.get_environment("QA_FAIL_FAST"))
+	for raw: String in String(QAPaths.user_args().get("checkpoint-at", "")).split(",", false):
+		if raw.strip_edges().is_valid_int():
+			_checkpoint_pending.append(int(raw.strip_edges()))
 	ObservableBus.domain_event.connect(_on_domain_event)
 	_run.call_deferred()
 
@@ -131,11 +150,23 @@ func _run() -> void:
 		return
 	_wants_creation_ui = bool(parsed.get("creation_ui", false))
 	real_paging = bool(parsed.get("qa_real_paging", false))
+	_fail_fast = _fail_fast or bool(parsed.get("fail_fast", false))
 	_install_fixture_saves(parsed.get("fixture_save"))
 	if not bool(parsed.get("starts_at_title", false)):
 		await _skip_title()
-	for step: Dictionary in parsed["steps"]:
-		await _execute(step)
+	var steps: Array = parsed["steps"]
+	_steps_total = steps.size()
+	for i: int in steps.size():
+		_step_index = i
+		_steps_run = i + 1
+		await _execute(steps[i] as Dictionary)
+		_service_checkpoints(i + 1)
+		if _fail_fast and not _failures.is_empty():
+			_aborted = true
+			print("QA_FAIL_FAST: aborted at step %d/%d (action=%s) -- %d step(s) NOT run" % [
+				i + 1, _steps_total, String((steps[i] as Dictionary).get("action", "?")),
+				_steps_total - (i + 1)])
+			break
 	_finish()
 
 
@@ -157,7 +188,15 @@ func _install_fixture_saves(spec: Variant) -> void:
 	for entry: Dictionary in entries:
 		var fixture := String(entry["fixture"])
 		var slot := String(entry.get("slot", "manual"))
-		var src_path := "res://qa/fixtures/%s.json" % fixture
+		# GH#435: a bare name still resolves under qa/fixtures/, but a PATH
+		# (anything with a slash or a .json suffix) is taken literally, so a
+		# scratch authoring script can point `fixture_save` straight at a
+		# `dump_checkpoint` artifact in qa_output/ without a throwaway file
+		# landing in qa/fixtures/ -- where test_fixture_coherence would then
+		# validate it as if it were a shipped story position.
+		var src_path := fixture
+		if not (fixture.contains("/") or fixture.ends_with(".json")):
+			src_path = "res://qa/fixtures/%s.json" % fixture
 		if not FileAccess.file_exists(src_path):
 			_fail("fixture_save: no such fixture: " + fixture)
 			continue
@@ -685,7 +724,10 @@ func _execute(step: Dictionary) -> void:
 		"assert_world_labels_in_view":
 			_assert_world_labels_in_view(step)
 		"combat_autoplay":
-			await _combat_autoplay(int(step.get("max_turns", 200)))
+			await _combat_autoplay(
+				int(step.get("max_turns", 200)),
+				String(step.get("policy", WICombatPolicies.DUMB))
+			)
 		"load_all_resources":
 			_load_all_resources()
 		"teleport":
@@ -729,6 +771,28 @@ func _execute(step: Dictionary) -> void:
 			if reload_ok != reload_expect:
 				_fail("reload_data returned %s, expected %s" % [reload_ok, reload_expect])
 			await get_tree().process_frame
+			await get_tree().process_frame
+		"dump_state":
+			# GH#436: the SANCTIONED form of the deliberately-failing
+			# `assert_state` probe. That idiom answered ONE unknown per full run
+			# and reported it as a failure string; this answers all of them, in
+			# a PASSING run, on the bus -- so it lands in events.jsonl
+			# (`grep qa_state_dump`) and in _events_seen, where
+			# `assert_event_logged` can pin it if a script wants the probe
+			# itself to be the assertion.
+			ObservableBus.emit_domain_event("qa_state_dump", {
+				"label": String(step.get("label", "")),
+				"step": _step_index,
+				"snapshot": Game.sim.snapshot(),
+				"field_bar": Game.sim.field_hotbar_loadout(),
+				"known_skills": Game.sim.known_skills(),
+				"dialogue": _dialogue_dump(),
+				"combat": _combat_dump(),
+			})
+			await get_tree().process_frame
+		"dump_checkpoint":
+			# GH#435: authoring scaffolding, never shipped inside a script.
+			_dump_checkpoint(String(step.get("slot", "checkpoint")))
 			await get_tree().process_frame
 		_:
 			_fail("unknown action: " + String(step["action"]))
@@ -1104,16 +1168,62 @@ func _assert_world_labels_in_view(step: Dictionary) -> void:
 			return
 
 
-func _combat_autoplay(max_turns: int) -> void:
+## `policy` selects who drives the PC's turns. Default `dumb` IS `WICombatAI`
+## — the melee profile every pre-2026-08-12 victory pin was authored against,
+## kept as the default so no existing script changes behaviour.
+##
+## `competent` swaps in `WICombatPolicies` (qa/combat_policies.gd, #437): the
+## same instrument the balance sims tune against, now drivable from a QA run.
+## The steel thread runs ALL its fights on it, because the floor policy never
+## casts and [Mage] levels 3+ bank on `spell_cast` — a continuous run under
+## `dumb` cannot level a caster past 2 no matter how long it plays
+## (docs/design/balance-bands-and-policy.md; CHOICE-LOG 2026-08-12).
+##
+## Ally and enemy turns are untouched in BOTH modes: they never reach this
+## loop (their `ai` is non-empty) and `WICombatPolicies.driven` only names the
+## PC, so enemies keep their shipped profiles exactly as in the game.
+func _combat_autoplay(max_turns: int, policy: String = WICombatPolicies.DUMB) -> void:
+	if policy != WICombatPolicies.DUMB and policy != WICombatPolicies.COMPETENT:
+		_fail("combat_autoplay: unknown policy %s (expected dumb|competent)" % policy)
+		return
+	# One instance per FIGHT: the pack it spends is re-read from the live
+	# inventory each time, so draughts bought between fights are carried and
+	# draughts drunk are gone for good.
+	var driver_policy: WICombatPolicies = null
+	if policy == WICombatPolicies.COMPETENT:
+		driver_policy = _competent_policy()
 	for i in max_turns:
 		var combat: WICombat = Game.sim.combat
 		if combat == null or combat.finished:
 			return
 		var active: Dictionary = combat.combatants[combat.get_active()]
 		if String(active["side"]) == "player" and String(active["ai"]) == "":
-			WICombatAI.take_turn(combat)
+			if driver_policy != null:
+				driver_policy.take_turn(combat)
+			else:
+				WICombatAI.take_turn(combat)
 		await get_tree().process_frame
 	_fail("combat_autoplay: combat did not finish within %d turns" % max_turns)
+
+
+## Seed the competent policy from the LIVE run: its pack is the PC's actual
+## inventory, and drinking routes through `WIGame.combat_use_item` — the same
+## call the hotbar's item slot makes — so the item leaves the real pack and
+## emits `item_used` + its toast, instead of the sim harness's stand-in.
+func _competent_policy() -> WICombatPolicies:
+	var p := WICombatPolicies.new(WICombatPolicies.COMPETENT)
+	var by_id := {}
+	for raw: Variant in Game.sim.inventory:
+		var item_id := String(raw)
+		if by_id.has(item_id):
+			continue
+		var rec: Dictionary = Game.sim.item(item_id)
+		if not rec.is_empty():
+			by_id[item_id] = rec
+	p.items_by_id = by_id
+	p.carried = {"pc": Array(Game.sim.inventory).duplicate()}
+	p.use_item_fn = Callable(Game.sim, "combat_use_item")
+	return p
 
 
 func _loosely_equal(a: Variant, b: Variant) -> bool:
@@ -1164,17 +1274,173 @@ func _load_all_resources() -> void:
 		_fail("load gate scanned zero resources — scan is broken")
 
 
+func _truthy(raw: String) -> bool:
+	return raw.strip_edges().to_lower() in ["1", "true", "yes", "on"]
+
+
+## GH#436. Every failure line carries the state that produced it. Previously
+## only the dialogue-timeout arm printed anything situational (its subset +
+## event cursor), so every other red -- a blocked move, a missing toast, a
+## wrong `assert_state` -- arrived with no answer to "where was the PC, what
+## panel was open, what fight was live", and the next question cost a full
+## re-run. Kept to ONE line and deliberately shallow (option TEXT, not the
+## whole option dicts; roster hp/side, not the combat snapshot) because
+## `load_all_resources` alone can raise dozens of failures.
+func _state_dump() -> Dictionary:
+	if Game == null or Game.sim == null:
+		return {"sim": "none"}
+	var sim: WIGame = Game.sim
+	var out := {
+		"step": _step_index,
+		"map": sim.current_map,
+		"cell": [sim.player_cell.x, sim.player_cell.y],
+		"facing": [sim.player_facing.x, sim.player_facing.y],
+		"gold": sim.gold,
+		"phase": sim.phase(),
+	}
+	var dlg := _dialogue_dump()
+	if not dlg.is_empty():
+		out["dialogue"] = dlg
+	var cbt := _combat_dump()
+	if not cbt.is_empty():
+		out["combat"] = cbt
+	return out
+
+
+## The open conversation as the PLAYER sees it: the visible option rows (the
+## only list a `move` step walks) plus the panel's live cursor. The cursor is
+## read off DialoguePanel because it lives in the view, not the sim -- and it is
+## the number a wrapped mis-count silently corrupts.
+func _dialogue_dump() -> Dictionary:
+	if Game == null or Game.sim == null or Game.sim.dialogue == null:
+		return {}
+	var walker: WIDialogue = Game.sim.dialogue
+	var texts: Array = []
+	for row: Dictionary in walker.current_options():
+		texts.append("%s%s" % ["[LOCKED] " if bool(row.get("locked", false)) else "", String(row.get("text", ""))])
+	var out := {"node": walker.current_id, "finished": walker.finished, "options": texts}
+	var panel := get_tree().root.find_child("DialoguePanel", true, false)
+	if panel != null:
+		out["cursor"] = panel.get("_cursor")
+	return out
+
+
+func _combat_dump() -> Dictionary:
+	if Game == null or Game.sim == null or Game.sim.combat == null:
+		return {}
+	var combat: WICombat = Game.sim.combat
+	var roster: Array = []
+	for id: String in combat.combatants:
+		var c: Dictionary = combat.combatants[id]
+		roster.append("%s(%s hp=%s/%s%s)" % [id, String(c[WIKeys.SIDE]), c[WIKeys.HP],
+				c[WIKeys.MAX_HP], "" if bool(c[WIKeys.ALIVE]) else " DEAD"])
+	return {
+		"round": combat.round_number,
+		"active": combat.get_active() if not combat.turn_order.is_empty() else "",
+		"finished": combat.finished,
+		"roster": roster,
+	}
+
+
+## GH#435 -- can a checkpoint be taken right now? `WISave.serialize` captures
+## neither combat nor dialogue nor a pending consolidation, so a checkpoint
+## taken inside one would resume as "the moment before, minus the panel": a
+## fixture that lies. Same three states `save_manual` refuses, for the same
+## reason.
+func _sim_quiet() -> bool:
+	return Game != null and Game.sim != null and Game.sim.combat == null \
+			and Game.sim.dialogue == null and Game.sim.pending_consolidation.is_empty()
+
+
+## GH#435. `run_qa.sh` already gives every run an isolated HOME, so the sim's own
+## `user://saves/<slot>.json` write is invisible the moment the run ends -- the
+## COPY-OUT into `qa_output/<script>/` is what makes a checkpoint survive to be
+## the next iteration's `fixture_save`. Returns success; the caller decides
+## whether a refusal is a failure (the explicit action) or a reason to wait (the
+## `--checkpoint-at` flag).
+func _write_checkpoint(slot: String) -> bool:
+	var text := JSON.stringify(WISave.serialize(Game.sim))
+	DirAccess.make_dir_recursive_absolute("user://saves")
+	var slot_file := FileAccess.open("user://saves/%s.json" % slot, FileAccess.WRITE)
+	if slot_file == null:
+		_fail("checkpoint(%s): could not write user://saves/%s.json" % [slot, slot])
+		return false
+	slot_file.store_string(text)
+	slot_file.close()
+	DirAccess.make_dir_recursive_absolute(_out_dir)
+	var copy_path := _out_dir.path_join("checkpoint_%s.json" % slot)
+	var copy_file := FileAccess.open(copy_path, FileAccess.WRITE)
+	if copy_file == null:
+		_fail("checkpoint(%s): could not copy out to %s" % [slot, copy_path])
+		return false
+	copy_file.store_string(text)
+	copy_file.close()
+	print("QA_CHECKPOINT: %s -> %s (step %d, %s %s)" % [slot, copy_path, _step_index,
+			Game.sim.current_map, str(Game.sim.player_cell)])
+	ObservableBus.emit_domain_event("qa_checkpoint_dumped", {
+		"slot": slot,
+		"path": copy_path,
+		"step": _step_index,
+		"map": Game.sim.current_map,
+		"cell": [Game.sim.player_cell.x, Game.sim.player_cell.y],
+	})
+	return true
+
+
+## The explicit `dump_checkpoint {slot}` action: the author chose this spot, so a
+## refusal is a scripting error and says so.
+func _dump_checkpoint(slot: String) -> void:
+	if Game == null or Game.sim == null:
+		_fail("dump_checkpoint: no live sim")
+		return
+	if not _sim_quiet():
+		_fail("dump_checkpoint(%s): refused -- serialize() captures no combat/dialogue/consolidation, so the checkpoint would not be the state you are standing in" % slot)
+		return
+	_write_checkpoint(slot)
+
+
+## GH#435, the flag half: `--checkpoint-at=N[,N...]` checkpoints an EXISTING
+## continuous script at step N without editing it -- which matters because the
+## script being iterated is usually the one whose purity is the deliverable
+## (steel_thread's grep gate), and an authoring edit there is exactly what
+## must not happen.
+##
+## A requested step can land mid-fight or mid-conversation, where a checkpoint
+## is not takeable. Rather than failing the run (a diagnostic aid that reds a
+## green canonical is a bad trade, and under --fail-fast it would abort it), the
+## request DEFERS to the first quiet step after N and the artifact records the
+## step it actually landed on. Still owed at the end of the run = a real
+## failure: the author asked for a checkpoint and has none.
+func _service_checkpoints(step_number: int) -> void:
+	if _checkpoint_pending.is_empty() or not _sim_quiet():
+		return
+	var due: Array[int] = []
+	for want: int in _checkpoint_pending:
+		if step_number >= want:
+			due.append(want)
+	for want: int in due:
+		_checkpoint_pending.erase(want)
+		if _write_checkpoint("step_%d" % want) and step_number != want:
+			print("QA_CHECKPOINT_DEFERRED: step %d was inside combat/dialogue; taken at step %d instead" % [want, step_number])
+
+
 func _fail(msg: String) -> void:
-	_failures.append(msg)
+	_failures.append("%s | state=%s" % [msg, JSON.stringify(_state_dump())])
 
 
 func _finish() -> void:
+	if not _checkpoint_pending.is_empty() and not _aborted:
+		_fail("checkpoint-at: never found a quiet step for %s -- the whole tail of the run was inside combat/dialogue" % str(_checkpoint_pending))
 	var result := {
 		"passed": _failures.is_empty(),
 		"failures": Array(_failures),
 		"screenshots": Array(_screenshots),
 		"events_seen": _events_seen.size(),
 		"script": _script_path,
+		"fail_fast": _fail_fast,
+		"aborted": _aborted,
+		"steps_run": _steps_run,
+		"steps_total": _steps_total,
 	}
 	DirAccess.make_dir_recursive_absolute(_out_dir)
 	var f := FileAccess.open(_out_dir.path_join("result.json"), FileAccess.WRITE)

@@ -121,6 +121,79 @@ warden/vault beats).
 - Epilogue: final sleep at the bed → `ui_sleep_veil_finished` →
   `ui_gdi_epilogue_rendered`.
 
+## Findings ledger status after the balance program (2026-08-12)
+
+The reauthored thread (`qa/STEEL-THREAD.md`) re-reads the list below.
+
+**RESOLVED by the program:**
+
+- **6, the warden wall — RESOLVED, and the thread now beats it.** #437
+  refuted the stat-wall reading, #440 moved `encounter_when` onto
+  `read_the_feeding_ward` (the warden wakes for every descent; all three
+  endings became post-fight resolutions and the sneak became an ambush
+  **edge** the thread takes and pins), #442 bounded [Second Wind] to
+  once per fight, and the 2026-08-12 policy amendment made the survive
+  step hit-aware and largest-heal-wins. With all four landed the
+  continuous run wins the finale at seed 9 in 9 rounds, ending on 2 of
+  47 HP with every carried resource spent. **Zero warden stat work was
+  done at any point.** The margin is thin by design-accident, not by
+  design — see "still open".
+- **The autoplay ratchet** — resolved at the driver. `combat_autoplay`
+  takes `"policy": "competent"` (this wave), the thread runs every fight
+  on it, and CHOICE-LOG 2026-08-12 rules that QA proves completability
+  while sims prove balance. The concrete symptom the ratchet caused —
+  "no continuous run can level a caster past [Mage] 2, because
+  `spell_cast` only tallies on a PC cast and the floor policy never
+  casts" — is gone: the reauthored run reaches [Mage] 6.
+- **1, the Act III XP lump** — resolved by route, not by data. Act III
+  is now fought at warrior 5 / mage 2 instead of warrior 2, because the
+  Act II night spends counters that were being banked and carried. The
+  lump was never an XP-rate problem: it was a *sleep placement* problem.
+- **2, the Act IV economy** — still tight, but it closes without fencing
+  the pack: Olesm 20, Zevara 17, Selys's board pick 5, Wilovan 25, the
+  Riverfarm field board 2, the Act II supplier 2, and one tonic sale 8
+  pay all 82g of mandatory purchases with 4g left.
+
+**STILL OPEN:**
+
+- **3** (`price_of_a_favor` needs [Diplomat]) and **4** (Invrisil alleys
+  cost two footpad fights without [Stealth]) — unchanged.
+- **5** (`lattice_witch_lore` forces three village↔hollow trips) —
+  unchanged.
+- **NEW, and the biggest one: the [Spearmaster] evolution orphans
+  spellsword eligibility. FILED-ISSUE CANDIDATE.** Spellsword's
+  consolidation floor reads *warrior* 10 + *mage* 10. [Warrior] evolves
+  into [Spearmaster] at 10 on `spear_skill_used` dominance, and with
+  Relc's spear gifted in Act I that is the only shape a martial spine
+  reaches — so by the time the mage half could qualify, the warrior half
+  no longer exists under that name and the consolidation can never fire.
+  The continuous run confirms it end to end: spearmaster 15 / mage 6 at
+  the epilogue, `pending_consolidation` never set, on a route that took
+  every piece of on-spine content. The fix direction is a design call
+  (consolidations accepting evolved parents, or evolution deferring while
+  a consolidation is in reach), but as the data stands an authored
+  endgame shape is unreachable by construction — worth an issue of its
+  own rather than a line in this ledger.
+- **NEW: the Act V band is stated in the wrong unit.** The thread arrives
+  at 29 combined levels and 47 max HP against a band written for 14–16
+  *focused*; #437's 0.77 was measured on the focused build with tuned
+  gear, and the measured multiclass dilution (0.69 stat efficiency) means
+  those are not the same power. The run wins with 2 HP to spare — at
+  band FLOOR by the current wording, and nowhere near it by the wording's
+  intent. Restate the band in focused-equivalent terms.
+- **NEW: the economy cannot afford armour.** It funds the spine's 82g of
+  mandatory purchases with 4g to spare; the two armours in the game cost
+  20 (peddler gambeson, damage reduction 1) and 24 (Krshia's jerkin,
+  hp+4). Being armoured for the finale means skipping something the
+  spine needs.
+- **RESOLVED by #442 + the policy amendment: [Second Wind] made carried
+  draughts unreachable** for the competent policy (survive preferred the
+  unbounded skill; one survive action per turn). `once_per_fight` plus
+  largest-heal-wins fixed it — the finale's round-3 remedy draught is the
+  proof, and the delve now drinks too (which shortened the pack and moved
+  three inventory-cursor pins).
+- **#448 and the `d3_inventory_shot` drift** — untouched by this program.
+
 ## Reachability/balance findings ledger (for the observation debrief)
 
 1. Act III XP is a lump: whole act fought at warrior 2, w2→w11 at the

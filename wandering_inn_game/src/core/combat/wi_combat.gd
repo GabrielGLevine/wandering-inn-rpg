@@ -133,6 +133,29 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 	_roll_initiative()
 
 
+## GH#440, THE SNEAK EDGE. An encounter authored `sneak_ambush` and entered while
+## the field `sneaking` stance is up hands `actor_id` the first turn of round 1
+## outright, in place of whatever initiative rolled. That is the WHOLE effect: no
+## bonus damage, no free action, no stat touched, and the enemy loses nothing but
+## the coin-flip -- so [Stealth]/[Invisibility] buy a real opening on the game's
+## chokepoint fight without buying a way around it (the alcove's own door refuses
+## while it stands). Must be called BEFORE `begin()`, so COMBAT_STARTED reports
+## the order the fight actually runs in and the QA pin sees it.
+func grant_ambush(actor_id: String) -> bool:
+	if finished or round_number != 0 or not combatants.has(actor_id):
+		return false
+	var at := turn_order.find(actor_id)
+	if at < 0:
+		return false
+	# An actor who already rolled first is left where it is and still reports
+	# true: the guarantee is "you act first", not "the order was rewritten", and
+	# the caller's acknowledgement must not depend on the initiative roll.
+	if at > 0:
+		turn_order.remove_at(at)
+		turn_order.insert(0, actor_id)
+	return true
+
+
 func begin() -> void:
 	_emit(WIEvents.COMBAT_STARTED, {"order": turn_order.duplicate(), "arena": arena_id})
 	_start_round()

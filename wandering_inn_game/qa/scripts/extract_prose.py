@@ -1327,6 +1327,36 @@ HOLDOUT_EXCLUSIONS = {
         "what_moved": "the parenthetical citation was cut; the two prose "
                       "sentences are byte-identical.",
     },
+    # --- GH#440 (Seal Warden chokepoint), two ids, two different causes ------
+    "map:dungeon/trapped_halls.json:$.entities[8].variants[3].toast": {
+        "excluded": True,
+        "excluded_reason": HOLDOUT_EXCLUDED_REASON,
+        "what_moved": "path re-indexed, NOT a prose edit. #440 inserted the "
+                      "seal door's warden-alive REFUSAL rung at variants[3] "
+                      "(later-satisfied-wins forces it ABOVE the rung that "
+                      "restores the plain repeat-read on seal_warden_downed, "
+                      "so it cannot be appended). The pinned text ('The runes "
+                      "keep their slow one-way order...') is byte-intact, now "
+                      "at variants[4]. IDs key the frozen inventory, so an id "
+                      "rewrite would point verify at a DIFFERENT frozen row -- "
+                      "exclusion is the only correct mechanism for a "
+                      "re-indexed path (witch_hollow entities[24] precedent).",
+    },
+    "dlg:pisces_seal.json:$.nodes.fork_open.text": {
+        "excluded": True,
+        "excluded_reason": "content fix forced by #440's re-choreography, not "
+                           "a prose edit: the warden now wakes at the READING "
+                           "and every ending is a post-fight resolution, so "
+                           "the pinned line's closing promise ('Something "
+                           "will. Expect a guardian.') was being spoken to a "
+                           "player standing over the guardian's rubble.",
+        "what_moved": "the first clause is unchanged; the two closing "
+                      "sentences become 'The alcove was the first answer to "
+                      "that question. I would not assume it was the only "
+                      "one.' -- same voice, same length class, and the "
+                      "foreshadow survives without lying about the fight the "
+                      "player just finished.",
+    },
 }
 EXCLUSIONS_NOTE = (
     "verify-untouched SKIPS these ids and reports them by count; the blind "

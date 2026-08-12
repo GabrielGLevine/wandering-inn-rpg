@@ -26,18 +26,24 @@ const ACT_ENDS := [10, 22, 36]
 
 ## Per-archetype act schedules. fights: rotation of composition indexes into
 ## COMPS, one fight per waking (rotation wraps). chores: flat per-waking
-## civil banks. Rosters are REAL shipped cells (sim_combat_batch names);
+## civil banks. Rosters are REAL shipped cells (sim_combat_batch names) and
+## are kept in lockstep with the map entities they mirror — #439's Act I/II/III
+## climax retune moved three of them (goblin_ambush +1 raider, shield_spiders
+## +matriarch, raskghar_scouts scout + pack-leader), because an XP-budget model
+## fed pre-retune rosters answers a question about content that no longer
+## ships. The docstring's legacy-arm baseline above (warrior 6/14/16, caster
+## 7/15/16, helper 10/21/26) predates that move.
 ## on_victory MIRRORS the in-game encounter's field (several Act-I fights
 ## bank won_combat explicitly — warrior/mage L2 gate on it); ally=relc on
 ## the cells the balance harness tunes WITH Relc.
 const COMPS := [
 	{"name": "crate_scavengers", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "on_victory": ["recovered_crate_force", "found_the_crate"]},
-	{"name": "goblin_ambush", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "on_victory": ["won_combat", "sign_defended"], "ally": "relc"},
+	{"name": "goblin_ambush", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider", "goblin_shaman"], "on_victory": ["won_combat", "sign_defended"], "ally": "relc"},
 	{"name": "rock_crab_nest", "arena": "boulder_flats", "enemies": ["rock_crab"], "on_victory": ["rock_crabs_culled"], "ally": "relc"},
 	{"name": "sewer_vermin", "arena": "sewers_nest", "enemies": ["sewer_vermin", "sewer_vermin"], "on_victory": ["cleared_sewer_vermin"]},
-	{"name": "shield_spiders", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "on_victory": ["cleared_the_nest", "resolved_the_cisterns"], "ally": "relc"},
+	{"name": "shield_spiders", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider", "shield_spider_matriarch"], "on_victory": ["cleared_the_nest", "resolved_the_cisterns"], "ally": "relc"},
 	{"name": "chieftains_raid", "arena": "cave_mouth", "enemies": ["goblin_chieftain", "goblin_raider", "cave_spider"], "on_victory": ["won_combat"], "ally": "relc"},
-	{"name": "raskghar_scouts", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "on_victory": ["cleared_raskghar_scouts"]},
+	{"name": "raskghar_scouts", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_pack_leader"], "on_victory": ["cleared_raskghar_scouts"]},
 	{"name": "goblin_night_patrol", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "on_victory": ["won_combat"]},
 ]
 

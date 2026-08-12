@@ -127,7 +127,7 @@ const EXPECTED_SKILLS := {
 	"sneak": ["1 AP — +2 move cells this turn"],
 	"invisibility": ["1 AP, 3 MP — become impossible to target for 3 rounds (breaks if you deal damage)"],
 	"quick_movement": ["+1 move cell every turn"],
-	"second_wind": ["2 AP — restore 8 HP to yourself"],
+	"second_wind": ["2 AP — restore 8 HP to yourself. Once per fight."],
 	"dangersense": [],
 	"piercing_strikes": ["2 AP — ×1.4 damage"],
 	"quick_slash": ["1 AP — ×0.7 damage"],

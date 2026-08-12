@@ -27,6 +27,47 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### Steel thread and item abilities (2026-08-11)
 
+- **#347 doctrine RATIFIED (user, 2026-08-12).** "Authored uniques,
+  derived triggers" is standing policy, plus the combination rule:
+  every consolidation-eligible lineage pair (evolved lines included)
+  resolves to a unique authored target class. Enforcement machinery is
+  #452; generative-at-runtime stays NO-BUILD per the spec's four fatal
+  grounds.
+- **Relc's veto branches to a hard solo fight, not a wall (user
+  ruling, 2026-08-12, #448).** Target ~0.35-0.45 competent-at-band via
+  a DIFFERENT solo composition — and explicitly must NOT trivialize
+  the with-Relc fight (current 0.70 stands). The veto is a hard-mode
+  choice, not a trap and not a free skip.
+- **Evolved lineages consolidate into unique classes (user ruling,
+  2026-08-12, #449).** Spearmaster + mage does NOT lineage-carry into
+  [Spellsword]; it consolidates into its own class — [Spellspear]
+  (name pending a wiki verify before id freeze; [Magic Spearmaster]
+  was the alternative) — spellsword-baselined consolidation skills,
+  spear-flavored, lineage kit via inherits. This is #347's
+  high-level-unique-class case realized on the existing static
+  machinery; rejected alternatives: consolidation recipes accepting
+  evolved parents into the SAME target (erases lineage identity),
+  and evolution deferring while consolidation is in reach. Full
+  implementable spec on #449.
+- **The warden wakes for every descent; endings stay three-path
+  (2026-08-12).** #437's measurements refuted the "warden stat wall"
+  (competent-policy WIN 0.73 at the shipped build; 0.77 at band) — so
+  #440 does zero stat work. The chokepoint ruling is satisfied
+  structurally: the fight fires before `the_choice` resolves, all three
+  shipped endings (open / fed / re-ward) become post-fight resolutions,
+  and sneak holders get an in-fight edge, never a skip. Preserves the
+  v0.14 three-path seal conclusion AND the chokepoint directive.
+  Shipped mechanism: the alcove's `encounter_when` reads
+  `read_the_feeding_ward` and its `on_victory` banks
+  `seal_warden_downed`, which the choice row compounds onto its
+  ward-fact gate. Two durable constraints fall out. (1) The seal door's
+  `door_when` is deliberately NOT gated on the new counter: it would be
+  inert behind the choice gate, and `seal_opened` is a frozen shipped id
+  whose existing holders carry nothing to satisfy a second gate — the
+  refusal a player meets is a `variants` rung, not a closed door. (2) A
+  save holding any resolution counter without `seal_warden_downed` is
+  unreachable and `test_fixture_coherence` now fails it, so the bypass
+  cannot be reopened by a fixture edit.
 - **QA proves completability; sims prove balance (user finding,
   2026-08-11).** Dumb-autoplay victory pins had become a balance
   ratchet: retunes that make a pinned fight autoplay-losable red CI, so
@@ -45,7 +86,6 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   gate is bypassable. The worn-abilities systems mechanic itself stands;
   the finale's exposure to it goes. Sequenced: bands → warden retune →
   steel-thread Act V reauthored to fight at band.
-
 
 - **The steel thread is continuous (user directive).** One PC, title to
   epilogue, true act order, zero `install_fixture`/`teleport` (grep-gated);

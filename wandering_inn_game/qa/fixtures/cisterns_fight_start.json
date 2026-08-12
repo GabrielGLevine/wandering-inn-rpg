@@ -1,17 +1,19 @@
 {
- "_comment": "Quest 1 FIGHT path start. post_tutorial shape (warrior L1, met/sparred/given_spear, rusty_sword equipped) standing next to Olesm at the Guild frontage -- cell (29,4) facing UP so the first interact opens olesm_intro (Olesm at 29,3). heard_about_cisterns is NOT banked and the quest is NOT started -- the script proves the full give -> grate -> descend -> clear the nest -> report -> completion loop honestly. rng_state re-derived: the nest now correctly fields BOTH shield_spiders (same-id roster dedup fix), a genuinely harder solo warrior-L1 fight than the old 1-spider collapse, so this state is one of the real winning draws for that fight (fixture rng overrides --seed). Issue #69: `chatted_with_klbkch: 1` added so cisterns_fight's own canonical proves the real ally gate live (shield_spiders now fields Klbkch, not Relc) -- plausible on this exact story position (the gate plaza is on the way from the street's arrival cell to the Guild frontage). rng_state re-verified still resolves a win with Klbkch fielded (extra roster entry shifts initiative-order rng draws). GH#337 re-derived again, seed 9 -> 11 (power_strike's new cadence flipped the draw).",
+ "_comment": "Quest 1 FIGHT path start. #441 RE-FIXTURE (2026-08-12): the build is now warrior L6 carrying the full Act II kit (spear, jerkin, both charms). #439 retuned the cistern nest into the [0.55,0.85] competent-at-band window, and this script drives the FLOOR policy (`combat_autoplay`), which loses at band BY DESIGN -- so the canonical's build moves, never the encounter. 6 is the TOP of the Act II band (4-6) in docs/design/balance-bands-and-policy.md, so this is at-band-with-kit and not an over-levelling dodge: measured floor WIN 0.91 / 4 rd over 100 seeded sims of this exact roster and build (same harness shape as tests/sim_spine_viability.gd), against 0.01 for the old warrior-L1 shape against the retuned nest. Standing next to Olesm at the Guild frontage -- cell (29,4) facing UP so the first interact opens olesm_intro (Olesm at 29,3). heard_about_cisterns is NOT banked and the quest is NOT started -- the script proves the full give -> grate -> descend -> clear the nest -> report -> completion loop honestly. rng_state re-derived: the nest now correctly fields BOTH shield_spiders (same-id roster dedup fix), a genuinely harder solo warrior-L1 fight than the old 1-spider collapse, so this state is one of the real winning draws for that fight (fixture rng overrides --seed). Issue #69: `chatted_with_klbkch: 1` added so cisterns_fight's own canonical proves the real ally gate live (shield_spiders now fields Klbkch, not Relc) -- plausible on this exact story position (the gate plaza is on the way from the street's arrival cell to the Guild frontage). rng_state re-verified still resolves a win with Klbkch fielded (extra roster entry shifts initiative-order rng draws). GH#337 re-derived again, seed 9 -> 11 (power_strike's new cadence flipped the draw).",
  "version": 5,
  "state": {
   "current_map": "street",
   "player_cell": [29, 4],
   "player_facing": [0, -1],
-  "classes": { "warrior": 1 },
+  "classes": { "warrior": 6 },
   "accomplishments": {
    "reached_liscor": 1,
    "met_relc": 1,
    "sparred_with_relc": 1,
    "given_spear_by_relc": 1,
-   "chatted_with_klbkch": 1
+   "chatted_with_klbkch": 1,
+   "won_combat": 1,
+   "melee_hit": 25
   },
   "player_skills": ["basic_cleaning"],
   "removed_entities": [],
@@ -20,8 +22,19 @@
   "started_quests": [],
   "pending_consolidation": {},
   "used_skills": [],
-  "inventory": ["rusty_sword", "relcs_spare_spear"],
-  "equipped": { "weapon": "rusty_sword", "armor": "" },
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "relcs_spare_spear",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
   "container_state": {},
   "actions_since_sleep": 0,
   "rng_state": "6334680398940262529"

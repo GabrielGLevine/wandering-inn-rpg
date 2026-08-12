@@ -23,7 +23,7 @@
      "text": "A feeding ward. Under a city. Cut by whoever cut the frame you eat breakfast beside. I need a moment, and then I need a decision, and I would rather it were yours."
     },
     {
-     "_comment": "One arm per outcome, appended after the reading arms so last-match-wins leaves him standing in the ending the player chose. seal_kept_fed sits LAST on purpose: it is the only outcome another path can be layered on top of (a player who opened the seal and could not finish the warden can still fund the keeper), and the fed line is the true state in that case.",
+     "_comment": "One arm per outcome, appended after the reading arms so last-match-wins leaves him standing in the ending the player chose. seal_kept_fed sits LAST on purpose: it is the only outcome another path can be layered on top of (a player who opened the seal and then walked back out of the vault without touching the anchor can still fund the keeper), and the fed line is the true state in that case. #440 narrowed how that state is REACHED -- the warden is down before seal_opened can bank, so 'opened it and lost the fight' is gone -- but the layering itself is untouched.",
      "requires": {
       "accomplishment": {
        "seal_opened": 1
@@ -70,11 +70,27 @@
      "goto": "the_appetite"
     },
     {
-     "_comment": "2026-07-26 Act V beat 3, THE CHOICE. One entry, three forks inside, so the decision is made in one place and reads as a decision. Gated on the ward fact (never on which Skill read it) and hidden once resolved.",
-     "text": "So what do we do about a door that eats?",
+     "_comment": "#440 THE CHOKEPOINT ROW. Accomplishment gates HIDE, so without this row a player who has read the ward and not yet dealt with the alcove would find the hub silently one row short and no reason given. It is the signpost for the gate on the row below, and it retires the moment the warden is down.",
+     "text": "Something in that alcove is watching us.",
      "requires": {
       "accomplishment": {
        "read_the_feeding_ward": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "seal_warden_downed": 1
+      }
+     },
+     "goto": "the_watcher"
+    },
+    {
+     "_comment": "2026-07-26 Act V beat 3, THE CHOICE. One entry, three forks inside, so the decision is made in one place and reads as a decision. Gated on the ward fact (never on which Skill read it) and hidden once resolved. #440: seal_warden_downed JOINS that gate (one accomplishment dict, ANDed by _meets_progress) -- the warden wakes on the reading and stands between the reader and every ending, so all three forks are now POST-FIGHT resolutions. The counter can never precede read_the_feeding_ward (it is the encounter's own arming gate), so the compound cannot reorder the beats.",
+     "text": "So what do we do about a door that eats?",
+     "requires": {
+      "accomplishment": {
+       "read_the_feeding_ward": 1,
+       "seal_warden_downed": 1
       }
      },
      "hide_when": {
@@ -87,6 +103,21 @@
     {
      "text": "Take your moment.",
      "end": true
+    }
+   ]
+  },
+  "the_watcher": {
+   "_comment": "#440. The chokepoint's one node: it names the wall, says why it is there, and sends the player at it. It banks NOTHING -- the only producer of seal_warden_downed is the alcove's own on_victory, so no conversation can talk past the fight. Both exits are ungated (softlock guard) and neither ends the arc.",
+   "speaker": "Pisces",
+   "text": "I know. It woke the moment I said out loud what this ward has been doing, which I intend to take as a compliment. It belongs to the door, not to the dungeon: three centuries in a niche with the dust settling on it, left here against exactly one thing happening, and it has just happened. Whatever we decide about the seal, we decide it past that. Deal with it and I will hold the reading open while you do.",
+   "options": [
+    {
+     "text": "Then it goes down first.",
+     "end": true
+    },
+    {
+     "text": "One thing at a time. Where were we?",
+     "goto": "at_the_door"
     }
    ]
   },
@@ -130,9 +161,9 @@
    ]
   },
   "fork_open": {
-   "_comment": "seal_opened is banked on the OPTION, not here, so the door and the warden arm the instant the decision is made. He does not come into the fight: the ward re-seals the moment nobody holds the reading open, which is also why the harness cell is SOLO.",
+   "_comment": "seal_opened is banked on the OPTION, not here, so the door opens the instant the decision is made. #440 RE-CHOREOGRAPHED: the warden no longer arms here (it armed at the reading and is already down, or this row would not have rendered), so the old line's 'Expect a guardian' promised a fight the player has just finished. He still does not come through: the ward re-seals the moment nobody holds the reading open, which is why the harness cell stays SOLO.",
    "speaker": "Pisces",
-   "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever objects to this. Something will. Expect a guardian.",
+   "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever else objects to this. The alcove was the first answer to that question. I would not assume it was the only one.",
    "options": [
     {
      "text": "Understood.",

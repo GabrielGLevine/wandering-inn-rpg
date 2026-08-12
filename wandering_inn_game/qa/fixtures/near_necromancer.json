@@ -1,5 +1,5 @@
 {
- "_comment": "Fixture-banked threshold: studied_necromancy has no producer until the dialogue lane. won_combat 3 + death_cast 4 let the gain sleep walk Necromancer to L3 and field Bone Dart + Deathbolt immediately; Warrior 2 + Relc stabilize the proof fight.",
+ "_comment": "Fixture-banked threshold: studied_necromancy has no producer until the dialogue lane. won_combat 3 + death_cast 4 let the gain sleep walk Necromancer to L3 and field Bone Dart + Deathbolt immediately; Warrior 2 + Relc stabilize the proof fight. #441 RE-FIXTURE (2026-08-12): the proof fight is the gate-road ambush, which #439 retuned from raider+shaman to TWO raiders + shaman; a rusty sword and no armour no longer carries it under `combat_autoplay` (the floor policy). Krshia's hunting knife and a leather jerkin -- both Act II shop stock -- restore the margin without moving the class levels the proof is about.",
  "version": 5,
  "state": {
   "current_map": "inn_upstairs",
@@ -14,8 +14,8 @@
   "started_quests": [],
   "pending_consolidation": {},
   "used_skills": [],
-  "inventory": ["rusty_sword"],
-  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "inventory": ["rusty_sword", "gnollish_hunting_knife", "leather_jerkin"],
+  "equipped": {"weapon": "gnollish_hunting_knife", "armor": "leather_jerkin"},
   "container_state": {},
   "actions_since_sleep": 0,
   "gold": 0,
