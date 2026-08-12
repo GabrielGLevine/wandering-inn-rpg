@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
 # Run a declarative QA script against the game.
-# Usage: qa/run_qa.sh <script-name> [headless|windowed|fullscreen] [--user-dir DIR] [--seed=N ...]
+# Usage: qa/run_qa.sh <script-name> [headless|windowed|fullscreen] [--user-dir DIR] [--fail-fast] [--seed=N ...]
 #   script-name: basename of a file in qa/scripts/ (no .json)
 #   mode: headless (default; screenshots skipped) or windowed (screenshots saved)
+#   --fail-fast: GH#436 AUTHORING mode -- stop at the first failed step instead
+#     of running the rest of the script against whatever state the failure left.
+#     Equivalent to QA_FAIL_FAST=1 in the environment or "fail_fast": true in the
+#     script root. Off by default: a sweep run wants every failure it can show.
+#   --checkpoint-at=N[,N...]: GH#435 AUTHORING mode -- serialize the live sim
+#     after 1-based step N into qa_output/<script>/checkpoint_step_N.json, which
+#     a scratch script can then load as `"fixture_save": "<that path>"` to
+#     iterate a late segment without re-walking the prefix. Checkpoints a script
+#     WITHOUT editing it (steel_thread's purity gate must stay untouched); a
+#     request landing mid-combat/dialogue defers to the next quiet step. The
+#     `dump_checkpoint {slot}` step action is the in-script equivalent.
 #   extra args are passed through to Godot user args (for example --seed=7)
 # Godot 4.7 here does not expose --user-dir. To isolate user:// state for
 # concurrent QA runs, this wrapper gives each run a dedicated HOME under the
@@ -37,6 +48,11 @@ while [ "$#" -gt 0 ]; do
 		--user-dir)
 			shift
 			USER_DIR="${1:?--user-dir requires a directory}"
+			;;
+		--fail-fast)
+			# QAPaths.parse_args only understands --k=v, so the bare human
+			# spelling is normalized here rather than taught to the parser.
+			EXTRA+=("--fail-fast=1")
 			;;
 		*)
 			EXTRA+=("$1")
