@@ -724,7 +724,10 @@ func _execute(step: Dictionary) -> void:
 		"assert_world_labels_in_view":
 			_assert_world_labels_in_view(step)
 		"combat_autoplay":
-			await _combat_autoplay(int(step.get("max_turns", 200)))
+			await _combat_autoplay(
+				int(step.get("max_turns", 200)),
+				String(step.get("policy", WICombatPolicies.DUMB))
+			)
 		"load_all_resources":
 			_load_all_resources()
 		"teleport":
@@ -1165,16 +1168,62 @@ func _assert_world_labels_in_view(step: Dictionary) -> void:
 			return
 
 
-func _combat_autoplay(max_turns: int) -> void:
+## `policy` selects who drives the PC's turns. Default `dumb` IS `WICombatAI`
+## — the melee profile every pre-2026-08-12 victory pin was authored against,
+## kept as the default so no existing script changes behaviour.
+##
+## `competent` swaps in `WICombatPolicies` (qa/combat_policies.gd, #437): the
+## same instrument the balance sims tune against, now drivable from a QA run.
+## The steel thread runs ALL its fights on it, because the floor policy never
+## casts and [Mage] levels 3+ bank on `spell_cast` — a continuous run under
+## `dumb` cannot level a caster past 2 no matter how long it plays
+## (docs/design/balance-bands-and-policy.md; CHOICE-LOG 2026-08-12).
+##
+## Ally and enemy turns are untouched in BOTH modes: they never reach this
+## loop (their `ai` is non-empty) and `WICombatPolicies.driven` only names the
+## PC, so enemies keep their shipped profiles exactly as in the game.
+func _combat_autoplay(max_turns: int, policy: String = WICombatPolicies.DUMB) -> void:
+	if policy != WICombatPolicies.DUMB and policy != WICombatPolicies.COMPETENT:
+		_fail("combat_autoplay: unknown policy %s (expected dumb|competent)" % policy)
+		return
+	# One instance per FIGHT: the pack it spends is re-read from the live
+	# inventory each time, so draughts bought between fights are carried and
+	# draughts drunk are gone for good.
+	var driver_policy: WICombatPolicies = null
+	if policy == WICombatPolicies.COMPETENT:
+		driver_policy = _competent_policy()
 	for i in max_turns:
 		var combat: WICombat = Game.sim.combat
 		if combat == null or combat.finished:
 			return
 		var active: Dictionary = combat.combatants[combat.get_active()]
 		if String(active["side"]) == "player" and String(active["ai"]) == "":
-			WICombatAI.take_turn(combat)
+			if driver_policy != null:
+				driver_policy.take_turn(combat)
+			else:
+				WICombatAI.take_turn(combat)
 		await get_tree().process_frame
 	_fail("combat_autoplay: combat did not finish within %d turns" % max_turns)
+
+
+## Seed the competent policy from the LIVE run: its pack is the PC's actual
+## inventory, and drinking routes through `WIGame.combat_use_item` — the same
+## call the hotbar's item slot makes — so the item leaves the real pack and
+## emits `item_used` + its toast, instead of the sim harness's stand-in.
+func _competent_policy() -> WICombatPolicies:
+	var p := WICombatPolicies.new(WICombatPolicies.COMPETENT)
+	var by_id := {}
+	for raw: Variant in Game.sim.inventory:
+		var item_id := String(raw)
+		if by_id.has(item_id):
+			continue
+		var rec: Dictionary = Game.sim.item(item_id)
+		if not rec.is_empty():
+			by_id[item_id] = rec
+	p.items_by_id = by_id
+	p.carried = {"pc": Array(Game.sim.inventory).duplicate()}
+	p.use_item_fn = Callable(Game.sim, "combat_use_item")
+	return p
 
 
 func _loosely_equal(a: Variant, b: Variant) -> bool:
