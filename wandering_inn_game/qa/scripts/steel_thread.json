@@ -13723,6 +13723,58 @@
    "timeout_sec": 5
   },
   {
+   "action": "press",
+   "name": "inventory",
+   "_comment": "== ZEVARA'S REWARD, FINALLY WORN == The moon_bone_amulet (Act III loot) carries ability [Invisibility] (hp+3, resonance 2/2). FINDING kept in docs/design/steel-thread-route-spec.md: the OPEN fork's warden fight is unwinnable by this build (50-56 HP vs 142 HP, 28-30 per hit); the alcove's authored sneak-past is the reachable resolution, and its key has been in the pack since the warren."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "moon_bone_amulet"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "moon_bone_amulet",
+    "slot": "accessory_1"
+   }
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
    "action": "move",
    "direction": "left",
    "steps": 7
@@ -14196,70 +14248,56 @@
    "timeout_sec": 5
   },
   {
-   "action": "move",
-   "direction": "up",
-   "steps": 1,
-   "_comment": "== THE WARDEN == encounter_when is met the instant seal_opened banks, and trigger_radius 1 off the alcove (19,6) makes (18,7) unskippable. *** KNOWN RED, 2026-08-11, seed 9. The continuous build loses here and the run stops at the combat_finished pin below. Warden 142 HP (con 112, power_level 18) landing 28-30 a hit; the PC dies in round 5. THE FINDING IS BIGGER THAN THIS FIGHT, and it is measured, not inferred. Probed live at this point in the route: the PC is max_hp 50 / max_mp 15, warrior 12 / mage 2 / diplomat 7 / trader 2, effective_power ~16.0. Under combat_autoplay it LOSES gallery_vermin_nest (trapped_halls 12,11) too -- two rift vermin, party power ~9.8, i.e. the weakest repeatable encounter anywhere in reach: downed in 3 rounds, 50 -> 33 -> 18 -> 10 -> 0, while putting out 12-13 a swing against a 57 HP vermin. The continuous build's combat power has fallen behind the whole Act V content tier, not merely behind the warden. Autoplay is part of that: it is a melee profile, so it never casts, never drinks the mending_draught/remedy_draught the PC is carrying, and never spends [Second Wind]. A human plays these fights better. But no QA route can reach Act V's end on autoplay from here. RESOLUTION AGREED (controller): route-side via the alcove's authored sneak-past -- _comment_victory says sneaking past and flattening it reach the same beat, and vault_anchor_stone banks seal_resolved either way. Mechanism verified end to end: interactions.gd:99-102 exempts door transitions from _break_sneak, so the seal door carries the sneak into the vault; wi_game.gd:1044 _toggle_sneak is a TRUE toggle, so pressing [Invisibility] again ends it (mage_invisibility_loop's press_field_skill sneak off-switch is NOT reusable -- that PC held rogue 1); manual combat casting is scriptable exactly as invisibility_combat_loop.json steps 23-26 do it. WHAT BLOCKS THE BUILD: [Invisibility] is mage L5 = spell_cast 13, and spell_cast is 0 (wi_combat.gd:942 tallies only the PC's own elemental casts IN combat; autoplay never casts). data/progression.json challenge.enabled is TRUE, so combat_banking.gd banks casts x challenge_weight x repetition_decay, never 1:1 -- kingslayer_den weights 1.00 (power 16.0, but str 20 / weapon_die 12 / con 75), gallery_vermin_nest weights 0.45, decay is 1/(1+0.9*ln(1+wins)) = 1.00/0.62/0.50, and every repeatable is respawns:true, i.e. one fight per NIGHT. And the PC must WIN to bank anything (_bank_action_tally sits inside the victory branch). So the grind needs fully MANUAL fights -- cast, potion, [Second Wind] -- roughly 3 kingslayer nights or ~8 vermin nights, each fight 40-80 hand-pinned steps. That is a session's work with a live-run feedback loop, not a comment. The PC's combat skill order is [frost_bolt, quick_cast, light, flame_jet, mana_shield, flame_dart, basic_swordwork, ...] (23 entries; frost_bolt is ap_cost 1 / mp_cost 2, the cheapest cast, and mana_shield eats MP 6 at a time as a reaction, so ~4-5 offensive casts per fight is the realistic ceiling at max_mp 15). Everything below is authored from seal_open.json steps 81-119 and runs unchanged once [Invisibility] is in hand. ***"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "combat_started",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_combat_shown",
-   "timeout_sec": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "combat.combatants.seal_warden.alive",
-   "equals": true
-  },
-  {
-   "action": "wait_for_event",
-   "type": "turn_started",
-   "timeout_sec": 10,
-   "payload_contains": {
-    "id": "pc"
-   }
-  },
-  {
-   "action": "screenshot",
-   "name": "08_act_v_06_the_warden"
-  },
-  {
-   "action": "combat_autoplay",
-   "max_turns": 300
-  },
-  {
-   "action": "wait_for_event",
-   "type": "combat_finished",
-   "timeout_sec": 30,
-   "payload_contains": {
-    "victory": true
-   }
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_combat_hidden",
-   "timeout_sec": 5
-  },
-  {
    "action": "wait_frames",
-   "frames": 5
+   "frames": 30,
+   "_comment": "Settle after the pisces_seal close: a press inside the panel's teardown window is eaten (same phantom as the pool-line lesson)."
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "invisibility",
+   "_comment": "== PAST THE ALCOVE == [Invisibility] from the worn amulet: sneak suppresses the warden's trigger (wi_game.gd:539); the seal door is a door transition, which preserves sneak (interactions.gd:99)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "skill": "invisibility"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sneak_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You soften your step."
+   }
   },
   {
    "action": "screenshot",
-   "name": "08_act_v_07_warden_down"
+   "name": "08_act_v_06_past_the_alcove"
   },
   {
    "action": "wait_frames",
    "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    7
+   ]
   },
   {
    "action": "move",
@@ -14465,6 +14503,24 @@
    ]
   },
   {
+   "action": "press_field_skill",
+   "skill": "invisibility",
+   "_comment": "Re-cloak: the return door lands on (18,7), inside the living warden's trigger radius. The anchor/tally interacts broke the first sneak (non-door interacts always do)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "skill": "invisibility"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sneak_started",
+   "timeout_sec": 5
+  },
+  {
    "action": "move",
    "direction": "left",
    "steps": 1
@@ -14515,6 +14571,24 @@
     16,
     9
    ]
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "invisibility",
+   "_comment": "Clear of the alcove's radius: drop the cloak (invisibility is a true toggle, wi_game.gd:1044)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sneak_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You straighten up."
+   }
   },
   {
    "action": "move",
