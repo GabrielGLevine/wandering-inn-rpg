@@ -67,6 +67,7 @@
     "combat"
    ],
    "ap_cost": 0,
+   "once_per_round": true,
    "effect": {
     "type": "riposte",
     "mult": 0.8

@@ -342,7 +342,7 @@
    ]
   },
   {
-   "_comment": "Conversation precedes combat. Join alone banks relc_joined_descent for ally_requires; solo never does. Victory banks cleared_the_warren, not raskghar_sealed; respawns=false. Balance: BOSS_CELLS gates warrior2+Relc 0.6-0.75; solo measured. #439 Act III CLIMAX RETUNE: a THIRD scout joins the Awakened's pack. The escort is the lever and the boss's own stats are untouched -- measured directly (sim probe, 2026-08-12): con 30->40->48 and str 18->22 move the band read only 1.00 -> 0.98 -> 0.92, because a single big target is HP the party grinds, not pressure it must survive. A fourth body moves it to 0.69. Measured competent-at-band: 0.69 at w5/m4 (band-top w5/m5 0.78); w3/m2 one band below is 0.42 LOSS. VETO PATH: solo at band is 0.06 -- see docs/design/spine-viability-table.md's Act III note.",
+   "_comment": "Conversation precedes combat. Join alone banks relc_joined_descent for ally_requires; solo never does. Victory banks cleared_the_warren, not raskghar_sealed; respawns=false. #451 post-cap composition repair: four enemies remain, but #439's third scout is now the cave's existing Sewer Bat. The joined w5/m4 competent read is 0.78 after Counter Strike's once-per-round cap; every combatant stat block stays frozen. The Relc-veto path is deliberately not inferred from the joined-path measurement.",
    "id": "awakened_boss",
    "kind": "encounter",
    "cell": [
@@ -358,7 +358,7 @@
     "raskghar_awakened",
     "raskghar_scout",
     "raskghar_scout",
-    "raskghar_scout"
+    "sewer_vermin"
    ],
    "allies": [
     "relc"

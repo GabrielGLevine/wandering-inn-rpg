@@ -4721,8 +4721,8 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 21,
-   "_comment": "GOLD/PACING: 14 -> 19. Olesm's retainer is the segment's first income; the spine still needs 54g of purchases (catalyst 18 + travel-stone 18 + Pallass stone 18)."
+   "equals": 17,
+   "_comment": "#451 seed-37 re-derivation: post-cap combat RNG changes the early loot ledger. Olesm's retainer is the segment's first income; downstream pins prove the route still funds its purchases."
   },
   {
    "action": "wait_for_event",
@@ -5604,7 +5604,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 36,
+   "equals": 32,
    "_comment": "GOLD/PACING: 19 -> 34 on Olesm's fifteen. Spine purchases still cost 54g total; the Zevara warren bounty (+10) and board work are the planned top-ups."
   },
   {
@@ -5665,13 +5665,17 @@
    "type": "ui_inventory_shown",
    "timeout_sec": 5,
    "payload_contains": {
-    "items": 6
+    "items": 7
    }
   },
   {
    "action": "press",
    "name": "move_down",
-   "_comment": "Oracle `inventory` at this state: 0 rusty_sword, 1 spear, 2 moonhide_fetish, 3 moon_bone_amulet, 4 construct_core_shard, 5 tonic. FOUR downs to the shard -- the pack is one shorter than the pre-#442 run because the competent policy now actually drinks the mending draught in the delve (largest-heal-wins, hit-aware trigger)."
+   "_comment": "#451 seed-37 inventory: 0 rusty_sword, 1 spear, 2 phosphor_pendant, 3 moonhide_fetish, 4 moon_bone_amulet, 5 construct_core_shard, 6 tonic. Five downs equip the shard; the guaranteed cistern pendant accounts for the added row."
+  },
+  {
+   "action": "press",
+   "name": "move_down"
   },
   {
    "action": "press",
@@ -6927,8 +6931,8 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 53,
-   "_comment": "GOLD/PACING: 34 -> 51 in one gatehouse stop. This is the segment's single largest earning detour and it cost about twenty walked cells; the Watch bounty ledger is where a player who did Acts II-III already has their Act IV budget waiting."
+   "equals": 49,
+   "_comment": "GOLD/PACING: 32 -> 49 in one gatehouse stop. This is the segment's single largest earning detour and it cost about twenty walked cells; the Watch bounty ledger is where a player who did Acts II-III already has their Act IV budget waiting."
   },
   {
    "action": "move",
@@ -7047,8 +7051,8 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 35,
-   "_comment": "GOLD/PACING: 51 -> 33 on the catalyst."
+   "equals": 31,
+   "_comment": "GOLD/PACING: 49 -> 31 on the catalyst."
   },
   {
    "action": "wait_for_event",
@@ -7215,8 +7219,8 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 30,
-   "_comment": "GOLD/PACING: 33 -> 28. The consult's talk fork costs 5g without [Charming Smile]; the free alternative is the cellar leak fight at the inn, which this run passes over to keep the segment's fight count at spec."
+   "equals": 26,
+   "_comment": "GOLD/PACING: 31 -> 26. The consult's talk fork costs 5g without [Charming Smile]; the free alternative is the cellar leak fight at the inn, which this run passes over to keep the segment's fight count at spec."
   },
   {
    "action": "wait_for_event",
@@ -7860,7 +7864,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 30
+   "equals": 26
   },
   {
    "action": "assert_state",
@@ -8614,8 +8618,8 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 12,
-   "_comment": "GOLD/PACING: 28 -> 10. The Pallass stone (another 18g) is still ahead and Riverfarm has no purse big enough for it; the Invrisil leg has to pay for Pallass."
+   "equals": 8,
+   "_comment": "GOLD/PACING: 26 -> 8. The Pallass stone (another 18g) is still ahead and Riverfarm has no purse big enough for it; the Invrisil leg has to pay for Pallass."
   },
   {
    "action": "wait_for_event",
@@ -8973,7 +8977,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 14
+   "equals": 10
   },
   {
    "action": "move",
@@ -9552,8 +9556,8 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 12,
-   "_comment": "GOLD/PACING: 12 -> 10 on two cups of rumor. They are not flavour: bought_rumor_from_cups 2 plus coyle_operation_found is what opens her favour row, which is the only door to the testimony this build can reach."
+   "equals": 8,
+   "_comment": "GOLD/PACING: 10 -> 8 on two cups of rumor. They are not flavour: bought_rumor_from_cups 2 plus coyle_operation_found is what opens her favour row, which is the only door to the testimony this build can reach."
   },
   {
    "action": "move",
@@ -10405,7 +10409,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 12,
+   "equals": 8,
    "_comment": "GOLD/PACING: the extortion fork would have paid 40g and settled the whole Pallass bill. Refusing it is what makes the Pallass stone a problem."
   },
   {
@@ -11808,8 +11812,8 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 37,
-   "_comment": "GOLD/PACING: 10 -> 35. The Brothers' courier run is the single job that makes the Pallass paperwork payable; without it the run stalls at the tier clerk's window."
+   "equals": 33,
+   "_comment": "GOLD/PACING: 8 -> 33. The Brothers' courier run is the single job that makes the Pallass paperwork payable; without it the run stalls at the tier clerk's window."
   },
   {
    "action": "move",
@@ -12132,7 +12136,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 42
+   "equals": 38
   },
   {
    "action": "wait_for_event",
@@ -12212,7 +12216,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 32
+   "equals": 28
   },
   {
    "action": "wait_for_event",
@@ -12367,9 +12371,9 @@
    }
   },
   {
-   "action": "wait_frames",
-   "frames": 3,
-   "_comment": "GOLD/PACING: ONE sale, and the picker opens ON it. Sellables list in inventory order and the mending draught is no longer in the pack -- the competent policy drank it in the delve once #442 made [Second Wind] once-per-fight -- so row 0 is the vault tonic and row 1 is the remedy draught, which STAYS. The old thread fenced every consumable for 18 gold with the reason written in: combat_autoplay never drinks anything. It does now, and #437 named the sale as one of the three things that made the finale unwinnable. The tonic is the one piece of real dead weight: its use_effect is a next_fight buff with no heal key, so the policy never reaches for it."
+   "action": "press",
+   "name": "move_down",
+   "_comment": "#451 seed-37 re-derivation: the guaranteed phosphor pendant is the first sellable row and stays in the pack; move to the vault tonic. The remedy draught also stays. The tonic is dead weight because its next-fight buff has no heal key, so the competent policy never reaches for it."
   },
   {
    "action": "press",
@@ -12389,7 +12393,7 @@
    "timeout_sec": 5,
    "payload_contains": {
     "delta": 8,
-    "total": 40,
+    "total": 36,
     "source": "krshia_sell"
    }
   },
@@ -12425,8 +12429,8 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 40,
-   "_comment": "GOLD/PACING: 32 -> 40 on the tonic alone. The old thread left this counter with 48 and an empty pack; this one leaves with 40 and two heals, and the Pallass papers (18 stone + 8 examination + 3 permit) still clear with change. The Act II supplier bounty (+2) and NOT buying the peddler gambeson are what absorbed the ten gold the draughts used to raise."
+   "equals": 36,
+   "_comment": "GOLD/PACING: 28 -> 36 on the tonic alone. The run keeps the phosphor pendant and remedy draught; the Pallass papers (18 stone + 8 examination + 3 permit) still clear exactly."
   },
   {
    "action": "press",
@@ -12519,7 +12523,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 22
+   "equals": 18
   },
   {
    "action": "wait_for_event",
@@ -12755,7 +12759,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 20,
+   "equals": 16,
    "_comment": "GOLD/PACING: the stamp itself is 2g on top of the 10g sponsorship and the 18g stone."
   },
   {
@@ -12903,7 +12907,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 15
+   "equals": 11
   },
   {
    "action": "wait_for_event",
@@ -12985,7 +12989,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 7
+   "equals": 3
   },
   {
    "action": "press",
@@ -13096,8 +13100,8 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 4,
-   "_comment": "GOLD/PACING: 46 gold spent between the Guild desk and this window. The Walled City is the most expensive thing in the run by a distance."
+   "equals": 0,
+   "_comment": "GOLD/PACING: the Walled City spends the remaining 36 gold exactly; the seed-37 route reaches the descent without hidden slack."
   },
   {
    "action": "wait_for_event",
@@ -13824,7 +13828,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 4
+   "equals": 0
   },
   {
    "action": "assert_state",
@@ -14078,13 +14082,17 @@
    "type": "ui_inventory_shown",
    "timeout_sec": 5,
    "payload_contains": {
-    "items": 13
+    "items": 14
    }
   },
   {
    "action": "press",
    "name": "move_down",
-   "_comment": "Oracle `inventory` here: 0 rusty_sword, 1 spear, 2 moonhide_fetish, 3 moon_bone_amulet, 4 construct_core_shard, 5 remedy_draught, 6 guardian_ward_fragment, then the quest tokens. Confirming an EQUIPPED row unequips it (inventory.gd:601)."
+   "_comment": "#451 seed-37 inventory: 0 rusty_sword, 1 spear, 2 phosphor_pendant, 3 moonhide_fetish, 4 moon_bone_amulet, 5 construct_core_shard, 6 remedy_draught, 7 guardian_ward_fragment, then quest tokens. Confirming an equipped row unequips it."
+  },
+  {
+   "action": "press",
+   "name": "move_down"
   },
   {
    "action": "press",

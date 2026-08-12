@@ -1189,11 +1189,11 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Issue #79: level-up toasts now also state their own felt HP/damage/MP payoff when the class's own growth produces one -- warrior's con growth here rounds to +1 Max HP (str's own /2-floor rounds to +0 damage at this exact span, so no damage clause).",
+   "_comment": "#451 seed-9 re-derivation: the capped ripostes bank fewer melee hits in the alley fight, so this sleep reaches Warrior 3 rather than 4. The toast still states the class's felt +1 Max HP payoff.",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Warrior Level 2 → 4] — unlocked [Quick Movement], [Second Wind] (+2 Max HP, +1 damage) — you start every fight full."
+    "text": "[Warrior Level 3] — unlocked [Quick Movement] (+1 Max HP) — you start every fight full."
    },
    "timeout_sec": 5
   },
