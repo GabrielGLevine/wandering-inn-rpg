@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Run a declarative QA script against the game.
-# Usage: qa/run_qa.sh <script-name> [headless|windowed] [--user-dir DIR] [--seed=N ...]
+# Usage: qa/run_qa.sh <script-name> [headless|windowed|fullscreen] [--user-dir DIR] [--seed=N ...]
 #   script-name: basename of a file in qa/scripts/ (no .json)
 #   mode: headless (default; screenshots skipped) or windowed (screenshots saved)
 #   extra args are passed through to Godot user args (for example --seed=7)
@@ -23,6 +23,9 @@ mkdir -p "$OUT"
 FLAGS=""
 if [ "$MODE" = "headless" ]; then
 	FLAGS="--headless"
+elif [ "$MODE" = "fullscreen" ]; then
+	# Windowed semantics (screenshots saved) on a fullscreen window.
+	FLAGS="--fullscreen"
 fi
 USER_DIR=""
 EXTRA=()
