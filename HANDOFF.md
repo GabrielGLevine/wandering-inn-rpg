@@ -43,79 +43,42 @@ or superseded session blocks.
   follow-ups recorded on #449 (dilution-stated bands; 4g finale economy).
   #451 parked by user (Counter Strike power level, ablation data attached). Pre-existing red still open: d3_inventory_shot (inventory pin drift,
   predates the program). Windowed observation run launched for the user.
-- QUEUED: **balance program** (#439 per-act leveling bands -> #440 Warden
-  chokepoint retune, user rulings 2026-08-11; CHOICE-LOG entry). Sequenced
-  AFTER #437's dual-policy sim table exists (tuning harness); steel-thread
-  Act V reauthors last (currently completes via the sneak-past — honest
-  record of today's balance until the retune lands).
-- QUEUED: **[Spellspear] lane (#449, user-ruled 2026-08-12)** — evolved-
-  lineage consolidation class; FULL implementable spec in the #449
-  comment (consolidation row, sparse-table class, flavored skill twins
-  + icons, registration matrix, canonical, sim row, steel-thread
-  no-change verify). Purely additive; wiki-verify the name before id
-  freeze. Dispatch when usage allows (parked at WINDDOWN, fable band).
-- PROVIDER SHIFT (2026-08-12, user notice): Codex pool ~7% left. B2 (#450)
-  stays running to completion; ALL Sol work after it moves to Opus 5
-  subagents (Agent tool, model opus) under the same brief+gate discipline
-  — E1 door-leg re-derivation in the seed-37 thread, E4, C2, C3, B3, B4,
-  E2 verify, Lane D. Controller (Fable) stays gates/adjudication only.
-- WAVE STATE (2026-08-12 evening): PRs open w/ CI watchers: #455 (E3
-  aura, gated+windowed-read PASS), #456 (Lane C: cap+harness+repair,
-  gated, warden A/B ratified, probe-race fixed cb9ecf45), #457 (A-M1
-  compiler, gated PASS after sliver refutation+rework). Merge order: C
-  before E1's close-out. B1 merged (#454).
-- QUIESCE SNAPSHOT (2026-08-12, session-window pause; resume here): Day-1
-  CLOSED+GATED: B1 MERGED (PR #454; note: squash carried the 41-commit
-  local backlog — granular history on local branch main-pre-454-archive).
-  C0 gate PASS (cap verified; sim-harness RUN-INSTABILITY found: 2 stable
-  modes, run-1-after-fresh-import matches pre-cap values — root-cause
-  dispatched). E1 gate: exit-cell seam FIXED controller-side (WIP
-  50a4a4b8) and FULLY GREEN — the suspected tail desync was a controller
-  verify-run error (steel_thread run WITHOUT --seed=9 fail-fasts at step
-  655 in combat and cascades; ALWAYS pass the seed explicitly). Sol
-  re-verified: steel_thread x2 passed 2567/2567, walkthrough 266/266,
-  zero script edits, teleport/install_fixture grep 0. E1 remaining:
-  rebase onto main (data_lint.py/test_data_lint.py collide with B1's
-  merged arm — additive both, trivial), suites re-run, PR, controller
-  windowed reads (facade row + 5 spent states). A-M1 gate: machinery PASS, act1.yaml REFUTED as
-  sliver — rework dispatched. C0.5+C1 REPORT IN (lane-c0-451, bfgybvs2c output; UNGATED —
-  gate post-reset with the usual adversarial workflow): claims all 5
-  reference climaxes in-window post-repair; steel thread RE-DERIVED to
-  seed 37 (seed 9 loses Act II nest now; warden tape 5 rounds PC 47/47 —
-  SCRUTINIZE vs prior 9-round 2/47 margin); canonicals re-derived:
-  relc_descent_rewind (Sewer Bat pin), invrisil_walkthrough (Warrior 3
-  toast). WALL list for user batch: Innkeeper I-V, Scout I-V, Ranger
-  I/II/IV/V, Druid I/IV + Druid CEILING drift (.93/.88/.97 over 0.85) —
-  three-pillars adjudication. 13 floor-policy defeats + 17 legacy matrix
-  cells ruled-acceptable, not tuned. MERGE ORDER RULING: C lands BEFORE
-  E1 (C's thread re-derivation predates E1's door move); after C merges,
-  E1 re-derives ONLY its steel_thread/walkthrough hunks on the composed
-  tree, map/data changes stand. CODEX IN FLIGHT (own pool):
-  A rework (lane-a-434), E3 #446 DONE (report in, WIP cd1dc4d3, gate
-  workflow STOPPED mid-run — resume wf_2b89e91a-95c from scriptPath in
-  session workflows dir). B2 #450 STOPPED CORRECTLY pre-edit (report in
-  bl87zgeje output): needs TWO controller/user rulings — (1)
-  hollow_true_knot route closes unless [Evil Eye] gains field use;
-  (2) spec mismatch: 3/5 tactic-family Skills passive+un-slottable
-  (combat activation requires ap_cost>0, wi_game.gd:2101), only
-  [Chosen Blow]/[Instantaneous Barrage] can produce tactic_used.
-  Controller adjudicates post-reset, then re-dispatch B2 resume-last. E3 eye-gate + E1 windowed reads pending.
-  User-ask batch so far: 26 orphan names (#452 comment), Coyle bounty
-  re-arm (#443 report), oracle dispatch-duplication follow-up. Next
-  after resume: E3 gate resume, E1 rebase+PR, then lane closes as they
-  land; E4 after E1; C2/C3 after C1; B3/B4 after B2+C; D last.
-- RUNNING (2026-08-12, Fable controller): **wave ≥434 Day-1 lanes live** —
-  plan at docs/superpowers/plans/2026-08-12-sol-wave-434-plus.md. Four Codex
-  (gpt-5.6-sol, effort high) lanes dispatched in parallel worktrees under
-  `.claude/worktrees/`: lane-a-434 (#434 M1, branch issue/434-compiler-m1),
-  lane-b1-452 (#452 layer-2 validator + ORPHAN-INVENTORY.md, branch
-  issue/452-lineage-validator), lane-c0-451 (#451 once-per-round cap, branch
-  issue/451-counterstrike-cap), lane-e1-443 (#443+#444, branch
-  issue/443-444-invrisil-polish). Briefs = CODEX-BRIEF.md in each worktree
-  root. Controller gates every close (fixture diff vs HEAD, decisive gates
-  re-run controller-side, windowed reads controller-side). Wave-autonomy
-  rulings logged in CHOICE-LOG (§Sol wave ≥434). Next after C0 lands:
-  B2 (#450) + C1-C3 + E3/E4; then B3 (#449) + E2 + B4; D last.
+- WAVE >=434 IN FLIGHT (2026-08-12, Fable controller; plan at
+  docs/superpowers/plans/2026-08-12-sol-wave-434-plus.md; wave-autonomy
+  rulings in CHOICE-LOG SS Sol wave >=434). MERGED to main: #454 (B1
+  lineage validator, 26-pair orphan inventory posted to #452 for the
+  user's naming pass), #455 (E3 dangersense aura, closes #446; USER
+  EYE-GATE pending via qa/playtest_saves/2026-08-12-446-dangersense-aura/
+  README.md), #457 (A-M1 itinerary compiler spine + honest Act I).
+  IN FLIGHT: Lane C PR #456 (cap #451 + harness probe + window repair,
+  fully gated + warden A/B ratified) blocked only on sim_combat_batch
+  legacy-bounds re-derivation — Opus agent landed 17 re-pinned cells
+  (7f15af48, attribution proven by merge-base control run) and is
+  migrating the ladder ordering assert to the competent policy per the
+  2026-08-11 doctrine; then push -> CI -> merge. B2 #450 gated PASS
+  (bf8eeb92 on issue/450-appraise-foe-scope; #445 guard
+  falsification-proven, 3 amendment rulings implemented) — rebases onto
+  main AFTER C (skills.json + invrisil_walkthrough compose), re-verify,
+  PR, merge; its 3 post-split Tactician sim rows insert after C lands
+  (exact rows in B2 close report, by1ku8f2b output). E1 #443/#444 fully
+  green on its branch (WIP 50a4a4b8; steel-thread scare was a controller
+  unseeded-run error — ALWAYS pass --seed explicitly) — after C merges:
+  rebase, re-derive its two QA-script hunks against C's seed-37 thread
+  (Opus), PR, controller windowed facade+spent-states read. REMAINING
+  QUEUE: E4 #447 (after E1; creation-copy pin blast incl. steel_thread
+  prologue), C2 #448 solo composition + C3 pace-sim, B3 #449
+  [Spellspear] (wiki-verify name first) + B4 #452 layers 3-5 (scaffolder,
+  sim-roster derivation — AFTER C's sim file settles), E2 = verification
+  sweep only (B2 owns the fix), Lane D steel-thread refresh LAST (after
+  B2+C+E4; through the compiler if A-M2/M3 land first). Codex pool
+  exhausted-ish: all remaining implementation via Opus subagents, same
+  brief+gate discipline; Fable = gates/adjudication only.
+  User-ask batch accumulating: 26 orphan pair names; Coyle bounty re-arm
+  (#443); C1 WALL list (Innkeeper I-V, Scout I-V, Ranger x4, Druid I/IV
+  + Druid ceiling drift) + 8 t3_warrior10 competent-floor cells —
+  three-pillars adjudication; oracle dispatch-duplication follow-up;
+  #454 squash carried the 41-commit local backlog (granular history on
+  local branch main-pre-454-archive).
 - QUEUED: **#452 codify #347** (user-directed 2026-08-12): lineage-
   completeness validator (build FIRST — inventories all orphaned pairs,
   protects main at commit time), consolidation scaffolder, doctrine
