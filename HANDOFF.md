@@ -28,6 +28,21 @@ or superseded session blocks.
   rc 0, import pass done. License verdict appended (license-notes,
   local). Alternates parked server-side (tags pick-lock-icon /
   workroom-door / enchanter-shelf).
+- ACTIVE (2026-08-11, Fable session): **continuous steel thread rebuild**,
+  branch `steel-thread-continuous`. User directive: steel_thread.json must be
+  ONE continuous playthrough (single PC, no install_fixture/teleport, true act
+  order — the old stitched album played regions before the warren and mixed
+  four PC iterations). Plan: `docs/superpowers/plans/2026-08-11-continuous-steel-thread.md`;
+  route spec: `wandering_inn_game/docs/design/steel-thread-route-spec.md`.
+  Acts I+II committed GREEN at seed 9 (495 steps). Act III delegated to an
+  Opus lane (in flight); Act IV brief staged (session scratchpad
+  `act4-brief.md`); Act V after. Then docs (STEEL-THREAD.md rewrite +
+  CHOICE-LOG: rewrite-in-place, kept_reward for spine gold, fight paths for
+  leveling) and double-headless + windowed observation run for the user.
+  Key new idiom (fold into wi-writing-qa-scripts at close): NPC pool line on
+  a NEW waking absorbs the first interact — use interact / wait dialogue_line /
+  interact; also patch-hygiene: re-read JSON after programmatic edits, never
+  print success outside the match loop.
 - No other issue implementation lane is recorded as active. The exact next action on
   this tree is to review and commit the housekeeping bundle without dropping
   unrelated edits. `scripts/preflight.sh --full` is green on the composed

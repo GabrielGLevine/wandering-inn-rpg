@@ -39,7 +39,15 @@ static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> A
 	for raw_ability: Variant in (item.get(WIKeys.ABILITIES, []) as Array):
 		var ability_display := _skill_display_name(String(raw_ability), skills_catalog)
 		if ability_display != "":
-			lines.append("Grants %s in combat" % ability_display)
+			# Steel-thread ruling (2026-08-11): worn-accessory abilities join
+			# known_skills(), so a FIELD-capable ability is no longer combat-only
+			# and the GH#334 note 28 honesty contract now cuts the other way —
+			# "in combat" would promise a restriction that no longer exists.
+			# The qualifier stays for combat-only abilities ([Second Wind]).
+			if _skill_is_field(String(raw_ability), skills_catalog):
+				lines.append("Grants %s" % ability_display)
+			else:
+				lines.append("Grants %s in combat" % ability_display)
 	var use_effect: Dictionary = item.get(WIKeys.USE_EFFECT, {})
 	if use_effect.has("heal"):
 		# GH#334 note 28 item 2: "in combat" is not decoration. `WIItems.
@@ -324,6 +332,16 @@ static func _load_skills() -> Array:
 	if parsed is Dictionary and (parsed as Dictionary).has(WIKeys.SKILLS):
 		return (parsed as Dictionary)[WIKeys.SKILLS]
 	return []
+
+
+static func _skill_is_field(skill_id: String, skills_catalog: Array = []) -> bool:
+	var catalog := skills_catalog
+	if catalog.is_empty():
+		catalog = _load_skills()
+	for skill: Dictionary in catalog:
+		if String(skill.get(WIKeys.ID, "")) == skill_id:
+			return bool(skill.get("field", false))
+	return false
 
 
 static func _skill_display_name(skill_id: String, skills_catalog: Array = []) -> String:

@@ -25,6 +25,28 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ## Current product and system rulings
 
+### Steel thread and item abilities (2026-08-11)
+
+- **The steel thread is continuous (user directive).** One PC, title to
+  epilogue, true act order, zero `install_fixture`/`teleport` (grep-gated);
+  rewritten in place — the stitched six-fixture album misrepresented act
+  order and mixed four PC iterations. In-run controller calls: reward kept
+  at Selys (spine purchases need coin), crate + cisterns by force, halls by
+  Ksmvr's plates, the favor mediated, Coyle exposed, seal OPENED with the
+  warden passed by cloak; night-watch wolves replaced by the track leg
+  (night phase unschedulable on a portal route); teleport-only album legs
+  (garden/barracks/runners-guild) dropped.
+- **Worn-accessory abilities are known while worn (user ruling).** The
+  measured wall behind it: the Seal Warden is unwinnable by the continuous
+  build and none of the three non-fight forks was reachable, while Zevara's
+  moon_bone_amulet grants [Invisibility] that `fold_abilities` confined to
+  combat. `known_skills()` now folds equipped-accessory abilities; the
+  field bar re-renders on equip/unequip; effect-text drops "in combat"
+  exactly for field-capable abilities (invisibility, eagle_eyes). Rejected
+  alternatives: warden retune (erases the intended wall), mage-grind route
+  (8 hand-scripted nights), shipping the red finale.
+
+
 ### Skills, classes, and field interactions
 
 - **[Ice Floor] is one dual-context skill id.** Extend `icy_floor`; do not mint

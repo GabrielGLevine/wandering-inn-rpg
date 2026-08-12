@@ -254,7 +254,13 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 				reason = "prior_waking"
 			_apply_visibility()
 			_render(reason)
-		WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED:
+		WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED, \
+		WIEvents.ITEM_EQUIPPED, WIEvents.ITEM_UNEQUIPPED:
+			# Steel-thread ruling (2026-08-11): worn-accessory abilities join
+			# known_skills(), so equips can now change the field bar — a worn
+			# moon_bone_amulet adds [Invisibility]. Before the ruling equips
+			# could not alter field skills, so no listener existed and the bar
+			# rendered stale until the next class grant or combat exit.
 			_render()
 		WIEvents.COMBAT_STARTED:
 			_combat_hidden = true

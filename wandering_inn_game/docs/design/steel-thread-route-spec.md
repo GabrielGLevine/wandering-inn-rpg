@@ -143,9 +143,12 @@ warden/vault beats).
    [Sneak] (rogue — gated on `recovered_crate_watch`, a fork this run
    closed by force), [Hedge Remedy] (hedge_witch), [Detect Magic]
    (mage L7). A diplomat-7 PC with three social Skills has nothing to
-   spend at `the_choice`. The run completes via mage L5
-   [Invisibility] (spell_cast 13, manual combat casts only —
-   autoplay never casts) and the alcove's authored sneak-past, which
-   reaches the same vault ending. Melee-only spines have NO
-   resolution; finale assumes spellsword-scale power or one of three
-   specific skills.
+   spend at `the_choice`. RESOLVED by user ruling (2026-08-11):
+   worn-accessory abilities join `known_skills()` — Zevara's
+   moon_bone_amulet grants [Invisibility], so the run equips its own
+   Act III reward and takes the alcove's authored sneak-past to the
+   same vault ending. (The mage-grind alternative was sized at 3-8
+   hand-scripted nights and rejected. Open finding kept: autoplay's
+   competence gap — no casts, no potions, no [Second Wind] — means
+   this build also loses under autoplay to power-9.8 trash it beats
+   by hand; melee-only spines still have no fight-fork resolution.)
