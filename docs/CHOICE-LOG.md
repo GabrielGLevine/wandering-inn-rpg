@@ -27,6 +27,21 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### Sol wave ≥434 — controller calls under wave autonomy (2026-08-12)
 
+- **#450 spec contradictions ruled (three, all intent-preserving).**
+  (1) [Evil Eye] gains `field: true` + an occult ambient read (spec §2
+  already repoints hollow_true_knot to it; combat-only was a data
+  oversight; prints stay distinct from Tactician vocabulary). (2) Free
+  scenery reads apply to ARMLESS props only; armed props (plate, cache,
+  bed, doors) keep their interact action and retire their standalone
+  flavor reads — except danger-bearing props: pressure_plate_a must be
+  covered by the trap-perception family, joining the find_trap surface
+  if nothing covers it. Rejected: a new free-inspection mechanism
+  (scope creep; revisit only if playtests miss the flavor). (3) Passive
+  tactic-family Skills emit `tactic_used` at their proc site (weapon-
+  family tally precedent); actives tally on use. Rejected: ap_cost==0
+  activation engine change (blast radius = every passive becomes
+  slottable) and forcing aura-shaped skills into actives.
+
 - **#444 fix shape:** ship option 1 only (move Hedault's frontage door out of
   the [23,1] sign adjacency into the open facade band). Option 3 (bespoke
   enchanter sign) deferred to a VISUAL-LOG follow-up if the windowed read still
