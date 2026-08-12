@@ -213,7 +213,8 @@
     "type": "heal",
     "amount": 8
    },
-   "description": "Breath returns, and the body remembers it can go on."
+   "description": "Breath returns, and the body remembers it can go on.",
+   "once_per_fight": true
   },
   {
    "_comment": "PASSIVE: combat behavior stays on effect.type=dangersense; exploration adds a held-only world warning with no `field` marker and therefore no hotbar slot, matching [Even Footing]'s passive schema.",

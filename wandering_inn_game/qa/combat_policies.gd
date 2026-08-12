@@ -39,8 +39,13 @@ const DUMB := "dumb"
 const COMPETENT := "competent"
 
 ## Below this fraction of max HP the competent policy stops fighting and fixes
-## itself. 0.35 is the balance doc's number.
+## itself. 0.35 is the balance doc's floor; the hit-aware term (spec amendment
+## 2026-08-12, controller) exists because a fixed fraction is incompetent
+## against heavy hitters: the warden swings 24-30 into a 64-HP pack-carrier,
+## so "wait for 35%" means dying at 26 HP with two draughts unspent. A
+## competent player heals when ONE more observed-scale hit could end them.
 const SURVIVE_HP_FRACTION := 0.35
+const SURVIVE_HIT_HEADROOM := 1.5
 
 ## Mirrors `WICombatAI.take_turn`'s own runaway guard, for the same reason: an
 ## action that reports success without consuming anything must not spin.
@@ -73,6 +78,7 @@ var driven: Dictionary = {"pc": true}
 ## as long as it is under threshold, which is optimal play and therefore off
 ## this policy's brief.
 var _survive_spent_this_turn := false
+var _survive_actions_this_turn := 0
 
 
 func _init(policy_name: String = DUMB) -> void:
@@ -87,6 +93,7 @@ func take_turn(combat: WICombat) -> void:
 		WICombatAI.take_turn(combat)
 		return
 	_survive_spent_this_turn = false
+	_survive_actions_this_turn = 0
 	var guard := 0
 	while not combat.finished and combat.get_active() == id and guard < ACT_GUARD:
 		guard += 1
@@ -123,23 +130,83 @@ func _competent_act_once(combat: WICombat, id: String) -> bool:
 # --- 1. SURVIVE ------------------------------------------------------------
 
 func _survive(combat: WICombat, id: String, c: Dictionary) -> bool:
-	if _survive_spent_this_turn:
-		return false
+	# One survive action per turn ordinarily; a SECOND is allowed only in the
+	# death band (one worst-case hit still ends this actor after the first
+	# heal). Spec amendment 2026-08-12: dying with draughts in the pack is not
+	# resource-using play — the first probe died at 4 HP holding two.
 	var max_hp := maxf(1.0, float(c[WIKeys.MAX_HP]))
-	if float(c[WIKeys.HP]) / max_hp >= SURVIVE_HP_FRACTION:
+	var worst_hit := _biggest_foe_threat(combat, c)
+	var hit_floor := SURVIVE_HIT_HEADROOM * worst_hit
+	var in_death_band := worst_hit > 0.0 and float(c[WIKeys.HP]) <= worst_hit
+	if _survive_actions_this_turn >= 2:
 		return false
+	if _survive_actions_this_turn == 1 and not in_death_band:
+		return false
+	var below_fraction := float(c[WIKeys.HP]) / max_hp < SURVIVE_HP_FRACTION
+	var below_hit_floor := hit_floor > 0.0 and float(c[WIKeys.HP]) <= hit_floor
+	if not below_fraction and not below_hit_floor:
+		return false
+	# Largest heal wins regardless of source: a +8 draught beats a +4 ward.
 	var heal_id := _best_heal_skill(combat, c)
+	var skill_amount := 0
+	if heal_id != "":
+		skill_amount = int((combat.skills.get(heal_id, {}).get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.AMOUNT, 0))
+	var draught_amount := _best_draught_heal(id)
+	if draught_amount > skill_amount:
+		if _drink_best_draught(combat, id, c):
+			_survive_actions_this_turn += 1
+			_survive_spent_this_turn = true
+			return true
 	if heal_id != "" and combat.use_skill(heal_id, id):
+		_survive_actions_this_turn += 1
 		_survive_spent_this_turn = true
 		return true
 	if _drink_best_draught(combat, id, c):
+		_survive_actions_this_turn += 1
 		_survive_spent_this_turn = true
 		return true
 	var escape_id := _escape_skill(combat, c)
 	if escape_id != "" and combat.use_skill(escape_id, id):
+		_survive_actions_this_turn += 1
 		_survive_spent_this_turn = true
 		return true
 	return false
+
+
+## Largest draught heal in the pack (0 if none) — the comparison side of the
+## largest-heal-wins rule; _drink_best_draught does the actual spending.
+func _best_draught_heal(id: String) -> int:
+	var best := 0
+	for raw: Variant in (carried.get(id, []) as Array):
+		var rec: Dictionary = items_by_id.get(String(raw), {})
+		best = maxi(best, int((rec.get(WIKeys.USE_EFFECT, {}) as Dictionary).get("heal", 0)))
+	return best
+
+
+## The survive trigger's threat scale: the largest expected melee/ranged hit
+## any living foe could land on this actor, from the same expected_damage the
+## NUKE ranking uses (miss-chance included, so it under- rather than
+## over-estimates a max roll — HEADROOM covers the gap). Stateless and
+## deterministic: no event history needed.
+func _biggest_foe_threat(combat: WICombat, c: Dictionary) -> float:
+	var worst := 0.0
+	for foe_id: Variant in combat.turn_order:
+		var f: Dictionary = combat.combatants.get(String(foe_id), {})
+		if f.is_empty() or String(f.get("side", "")) == "player":
+			continue
+		if not bool(f.get(WIKeys.ALIVE, true)):
+			continue
+		var melee := int(f.get(WIKeys.WEAPON_RANGE, 1)) <= 1
+		var mult := 1.0
+		for sk_v: Variant in (f.get(WIKeys.SKILLS, []) as Array):
+			var sk: Dictionary = combat.skills.get(String(sk_v), {})
+			if sk.is_empty():
+				continue
+			var eff: Dictionary = sk.get(WIKeys.EFFECT, {})
+			if String(eff.get(WIKeys.TYPE, "")) == "damage_mult":
+				mult = maxf(mult, float(eff.get("mult", 1.0)))
+		worst = maxf(worst, potential_damage(f, c, mult, melee))
+	return worst
 
 
 ## Highest-amount SELF heal in kit that is affordable and off cooldown.
@@ -359,6 +426,23 @@ func _is_untargetable(combat: WICombat, id: String) -> bool:
 ## `test_combat_policies.gd` pins it against thousands of real `_resolve_hit`
 ## rolls rather than against a re-reading of the formula. If it drifts, that
 ## test reds; do not "fix" it by copying new source in.
+## The survive trigger's statistic: the WORST single hit this attacker can
+## land (top die face, no miss-chance discount — a trigger priced on the
+## average hit dies to the max one; measured: warden expected 19.4 vs actual
+## power-strike 30). Same truncation/DR/clamp arithmetic as expected_damage.
+static func potential_damage(a: Dictionary, t: Dictionary, mult: float, melee: bool) -> float:
+	var stat: int = int(a[WIKeys.STATS]["str"]) if melee else int(a[WIKeys.STATS]["int"])
+	var die := maxi(1, int(a[WIKeys.WEAPON_DIE]))
+	var reduction := int(t.get(WIKeys.DAMAGE_REDUCTION, 0))
+	var base := int((stat / 2 + die) * mult)
+	if melee:
+		base += int(a.get(WIKeys.DAMAGE_MOD, 0))
+	var damage := maxi(1, base)
+	if reduction > 0:
+		damage = maxi(1, damage - reduction)
+	return float(damage)
+
+
 static func expected_damage(combat: WICombat, a: Dictionary, t: Dictionary, mult: float, melee: bool) -> float:
 	var hit_chance: int = WICombat.BASE_HIT + int(a["hit_bonus"]) - int(t[WIKeys.STATS]["dex"]) / 4
 	var p_hit := clampf(float(hit_chance) / 100.0, 0.0, 1.0)
