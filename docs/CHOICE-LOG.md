@@ -27,13 +27,14 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### User rulings 2026-08-13 (#438 wave-close batch)
 
-- **Class names past the spoiler bar are PROPOSABLE with user clearance
-  (user, 2026-08-13).** The wiki-verify flow gains a third outcome:
-  a canon-attested name that sits past the Book-17 bar may be PROPOSED
-  to the user and ships only on explicit clearance — no more silent
-  auto-fallback when the best name is post-bar. Content spoilers are
-  unchanged (the [Door of Portals]-class rule stands); this covers
-  class NAMES only.
+- **Class AND Skill names past the spoiler bar are PROPOSABLE with
+  user clearance (user, 2026-08-13, extended to Skills same day).** The
+  wiki-verify flow gains a third outcome: a canon-attested name that
+  sits past the Book-17 bar may be PROPOSED to the user and ships only
+  on explicit clearance — no more silent auto-fallback when the best
+  name is post-bar. Content spoilers are unchanged (the
+  [Door of Portals]-class rule stands); this covers class and [Skill]
+  NAMES only.
 
 - **Necromancer becomes consolidation-eligible (user, 2026-08-13).**
   New family seeded warrior-line x necromancer: one authored base
