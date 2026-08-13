@@ -43,6 +43,21 @@ or superseded session blocks.
   follow-ups recorded on #449 (dilution-stated bands; 4g finale economy).
   #451 parked by user (Counter Strike power level, ablation data attached). Pre-existing red still open: d3_inventory_shot (inventory pin drift,
   predates the program). Windowed observation run launched for the user.
+- QUIESCE 2 (2026-08-12 late): session window drained by 3 parallel Opus
+  agents; drain orders sent to the two live agents (B2-rebase, d3-sweep)
+  — read their final task outputs before resuming. E6 #459 halted
+  PRE-work with a COMPLETE recon deliverable in its task output
+  (ab97218de87e63227): sheet-sharing trap (wolf/razorbeak companions
+  share Idle-Sheet.png with combat sprite ids — new art needs NEW dirs),
+  side-profile trap (wolf/razorbeak idles are side views; PixelLab v3
+  rotation labels will be wrong — assign directions by eye or use
+  quadruped standard mode), renderer paths (_reconcile_companion_visual
+  world.gd:2100 passes no facing; mirror _play_player_anim:1777 via
+  entity_visual_factory helper), registry conventions (directional is
+  per-sprite; frame-count rows at test_sprite_registry 247/505/506).
+  PixelLab balance healthy (1712 generations). Resume E6 at job
+  submission. MERGED THIS SESSION: #454 B1, #455 E3, #457 A-M1,
+  #456 full Lane C (cap+harness+repair+matrix+13 re-fixtures).
 - WAVE >=434 IN FLIGHT (2026-08-12, Fable controller; plan at
   docs/superpowers/plans/2026-08-12-sol-wave-434-plus.md; wave-autonomy
   rulings in CHOICE-LOG SS Sol wave >=434). MERGED to main: #454 (B1
