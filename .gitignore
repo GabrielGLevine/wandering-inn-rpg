@@ -16,6 +16,12 @@ qa_output/
 !.codex/hooks.json
 potential_assets/
 
+# scripts/scaffold_consolidation.py --out staging. PROPOSALS, never shipped
+# artifacts: their whole point is that a human splices the mechanical parts into
+# the real catalogs and authors the flavor, so a committed scaffold tree is a
+# half-authored class sitting in the repo pretending to be work.
+scaffold/
+
 # Python bytecode cache
 __pycache__/
 *.pyc
