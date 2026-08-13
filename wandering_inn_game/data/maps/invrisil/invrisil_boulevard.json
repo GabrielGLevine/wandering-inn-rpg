@@ -1566,7 +1566,7 @@
    "observe": "Every open door on this building is round the side, facing the alley. The frontage keeps one narrow door and one clean window. The board over them is burgundy and brass, lettered COYLE AND SONS."
   },
   {
-   "_comment": "v0.16 I1 (#306): kind flips prop -> door in place on the SAME already-blocked cell (20,1), id and `observe` byte-identical, so invrisil_walkthrough's player_blocked + [Observe] + toast pins stay exact. hide_sprite dropped so the facade reads enterable.",
+   "_comment": "v0.16 I1 (#306): kind flips prop -> door in place on the SAME already-blocked cell (20,1). hide_sprite dropped so the facade reads enterable.",
    "id": "boulevard_stationer",
    "kind": "door",
    "cell": [
@@ -1575,7 +1575,6 @@
    ],
    "display_name": "A Stationer's Window",
    "sprite": "door",
-   "observe": "Ruled paper in three weights, ink in four, and a card offering a scribe by the hour in a hand that is itself the advertisement. The door is propped open, and two voices inside are arguing about a comma.",
    "to_map": "stationer",
    "to_cell": [
     6,

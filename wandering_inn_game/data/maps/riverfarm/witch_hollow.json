@@ -605,12 +605,12 @@
    ],
    "display_name": "A Tangled Knot",
    "sprite": "hollow_mushroom_cluster",
-   "requires_skill": "observe",
-   "skill_hint_toast": "The knot is too deliberate for briar. It wants a closer look than eyes give for free.",
-   "locked_toast": "Roots and briar, knotted tighter than any plant ties itself. The middle of it will not hold your eye.",
+   "requires_skill": "evil_eye",
+   "skill_hint_toast": "The knot is too deliberate for briar. A witch's eye might make it name the debt it holds.",
+   "locked_toast": "Roots and briar, knotted tighter than any plant ties itself. Whatever price sits in the middle will not show itself to an ordinary stare.",
    "on_skill_use": {
     "accomplishment": "blight_lifted",
-    "toast": "[Observe] — Look at it squarely and the knot resolves into a price, tied off and unpaid. You pay it where you stand, and the pull goes out of the briar all across the hollow."
+    "toast": "[Evil Eye] — The knot resolves into a price, tied off and unpaid. You pay it where you stand, and the pull goes out of the briar all across the hollow."
    },
    "observe": "Root and briar have grown into a single knot at the middle of the standing stones, the strands all pulled tight, each toward whichever stone stands closest."
   },

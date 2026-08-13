@@ -212,11 +212,6 @@
    "name": "interact"
   },
   {
-   "action": "wait_for_event",
-   "type": "skill_unknown",
-   "timeout_sec": 5
-  },
-  {
    "action": "assert_event_logged",
    "type": "toast",
    "payload_contains": {
@@ -249,11 +244,6 @@
   {
    "action": "press",
    "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "skill_unknown",
-   "timeout_sec": 5
   },
   {
    "action": "wait_for_event",

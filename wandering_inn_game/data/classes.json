@@ -329,13 +329,13 @@
 				{ "level": 3, "requires": { "observed_things": 6 }, "grants": ["dangersense"] },
 				{ "level": 4, "requires": { "observed_things": 10 }, "grants": [] },
 				{ "level": 5, "requires": { "observed_things": 15 }, "grants": ["directed_strike"] },
-				{ "level": 6, "requires": { "observed_things": 21 }, "grants": [] },
-				{ "level": 7, "requires": { "observed_things": 28 }, "grants": ["flanking_step"] },
-				{ "level": 8, "requires": { "observed_things": 36 }, "grants": [] },
-				{ "level": 9, "requires": { "observed_things": 45 }, "grants": [] },
-				{ "level": 10, "requires": { "observed_things": 55 }, "grants": [] },
-				{ "level": 11, "requires": { "observed_things": 66 }, "grants": [] },
-				{ "level": 12, "requires": { "observed_things": 78 }, "grants": [] }
+				{ "level": 6, "requires": { "observed_things": 20, "tactic_used": 4 }, "grants": [] },
+				{ "level": 7, "requires": { "observed_things": 24, "tactic_used": 8 }, "grants": ["flanking_step"] },
+				{ "level": 8, "requires": { "observed_things": 28, "tactic_used": 12 }, "grants": [] },
+				{ "level": 9, "requires": { "observed_things": 32, "tactic_used": 17 }, "grants": [] },
+				{ "level": 10, "requires": { "observed_things": 36, "tactic_used": 22 }, "grants": [] },
+				{ "level": 11, "requires": { "observed_things": 40, "tactic_used": 28 }, "grants": [] },
+				{ "level": 12, "requires": { "observed_things": 44, "tactic_used": 34 }, "grants": [] }
 			]
 		},
 		{
@@ -346,13 +346,13 @@
 			"inherits": "tactician",
 			"aspiration": { "display_name": "Grandmaster Strategist", "text": "Those who master the whole board — every piece, every player, every war before it starts — are in time named [Grandmaster Strategists]." },
 			"levels": [
-				{ "level": 10, "requires": { "observed_things": 55 }, "grants": ["read_the_field"] },
-				{ "level": 11, "requires": { "observed_things": 66 }, "grants": [] },
-				{ "level": 12, "requires": { "observed_things": 78 }, "grants": [] },
-				{ "level": 13, "requires": { "observed_things": 90 }, "grants": [] },
-				{ "level": 14, "requires": { "observed_things": 102 }, "grants": ["phantom_barrage"] },
-				{ "level": 15, "requires": { "observed_things": 114 }, "grants": [] },
-				{ "level": 16, "requires": { "observed_things": 126 }, "grants": [] }
+				{ "level": 10, "requires": { "observed_things": 36, "tactic_used": 22 }, "grants": ["read_the_field"] },
+				{ "level": 11, "requires": { "observed_things": 40, "tactic_used": 28 }, "grants": [] },
+				{ "level": 12, "requires": { "observed_things": 44, "tactic_used": 34 }, "grants": [] },
+				{ "level": 13, "requires": { "observed_things": 48, "tactic_used": 42 }, "grants": [] },
+				{ "level": 14, "requires": { "observed_things": 52, "tactic_used": 50 }, "grants": ["phantom_barrage"] },
+				{ "level": 15, "requires": { "observed_things": 56, "tactic_used": 58 }, "grants": [] },
+				{ "level": 16, "requires": { "observed_things": 60, "tactic_used": 68 }, "grants": [] }
 			]
 		},
 		{
@@ -371,7 +371,7 @@
 				{ "level": 2, "requires_any": { "heard_gossip": 5, "befriended_moments": 2 }, "grants": [] },
 				{ "level": 3, "requires_any": { "heard_gossip": 8, "befriended_moments": 4 }, "grants": ["measured_words"] },
 				{ "level": 4, "requires_any": { "heard_gossip": 12, "befriended_moments": 7 }, "grants": [] },
-				{ "level": 5, "requires_any": { "heard_gossip": 17, "befriended_moments": 10 }, "grants": ["soothing_presence"] },
+				{ "level": 5, "requires_any": { "heard_gossip": 17, "befriended_moments": 10 }, "grants": ["soothing_presence", "observe"] },
 				{ "level": 6, "requires_any": { "heard_gossip": 23, "befriended_moments": 14 }, "grants": [] },
 				{ "level": 7, "requires_any": { "heard_gossip": 30, "befriended_moments": 18 }, "grants": ["open_doors"] },
 				{ "level": 8, "requires_any": { "heard_gossip": 38, "befriended_moments": 23 }, "grants": [] },

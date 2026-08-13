@@ -15,7 +15,8 @@
   "classes": {
    "helper": 1,
    "mage": 1,
-   "tactician": 1
+   "tactician": 1,
+   "hedge_witch": 7
   },
   "accomplishments": {
    "met_relc": 1,
@@ -33,6 +34,8 @@
    "chess_with_olesm": 1,
    "cleaned_the_inn": 1,
    "learned_magic_from_pisces": 1,
+   "witch_lessons": 1,
+   "witch_craft_used": 18,
    "horns_dig_started": 1,
    "horns_dig_joined": 1,
    "pedestal_breached": 1,

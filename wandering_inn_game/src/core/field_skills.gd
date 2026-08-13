@@ -148,7 +148,10 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 	if not target.is_empty() and bool(target.get("cookware", false)) and (skill.get("cookware_use", {}) as Dictionary).size() > 0:
 		_break_sneak.call()
 		return _use_skill.call(skill_id, String(target[WIKeys.ID]))
-	if skill_id == "observe" and not target.is_empty():
+	# [Appraise Foe] is a living-opposition read. Authored prop arms above may
+	# still answer Observe (traps, doors, ledgers), but generic scenery never
+	# banks the progression counter merely because it occupies the faced cell.
+	if skill_id == "observe" and String(target.get(WIKeys.KIND, "")) in ["npc", "encounter"]:
 		_break_sneak.call()
 		var observe_line := String(target.get("observe", "You watch. Details surface."))
 		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": String(target[WIKeys.ID])})

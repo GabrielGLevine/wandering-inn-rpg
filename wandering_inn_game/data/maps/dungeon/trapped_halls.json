@@ -290,7 +290,12 @@
    ],
    "display_name": "A Loose Flagstone",
    "sprite": "pressure_plate",
-   "observe": "One flagstone sits a hair proud of its neighbors, the mortar cracked clean around its edge. Light does not reach the bottom of the crack.",
+   "skill_uses": {
+    "find_trap": {
+     "accomplishment": "spotted_pressure_plate",
+     "toast": "[Find Trap] — One flagstone sits a hair proud of its neighbors. The clean mortar crack marks the plate before your weight can."
+    }
+   },
    "on_interact_accomplishment": "triggered_pressure_plate",
    "toast": "The flagstone drops half an inch under your palm. A catch clicks somewhere back inside the wall, and nothing comes of it.",
    "visual_states": [
@@ -340,10 +345,17 @@
    "locked_toast": "A narrow slit runs along the wall at knee height. Whatever is loaded behind it, you have no idea how to disable it.",
    "requires_item": "trap_kit",
    "item_hint_toast": "A narrow slit at knee height, the mechanism seated behind the stone. Bare fingers will not reach the catch; this one takes a trap kit.",
-   "on_skill_use": {
-    "accomplishment": "halls_cleared",
-    "toast": "You follow the mechanism back to its catch and wedge it there with a wax-and-wire pick. The slit goes dark, and the kit is spent doing it.",
-    "remove_item": "trap_kit"
+   "skill_uses": {
+    "find_trap": {
+     "accomplishment": "halls_cleared",
+     "toast": "[Find Trap] — A hair-thin draw wire runs behind the slit. You wedge its catch with wax and wire; the slit goes dark and the kit is spent.",
+     "remove_item": "trap_kit"
+    },
+    "observe": {
+     "accomplishment": "halls_cleared",
+     "toast": "[Appraise Foe] — The slit owns the corridor from knee to throat. You pick the one dead angle, jam the catch there, and spend the kit doing it.",
+     "remove_item": "trap_kit"
+    }
    }
   },
   {
@@ -363,9 +375,19 @@
    "requires_skill": "observe",
    "skill_hint_toast": "The floor ahead looks exactly like the floor behind you. An eye trained to look properly would find the difference.",
    "locked_toast": "The floor ahead looks perfectly ordinary. You do not have the eye to check.",
-   "on_skill_use": {
-    "accomplishment": "spotted_illusory_floor",
-    "toast": "You look properly and the floor ahead stops matching the floor behind: grain crossways, paint edge a finger short of the wall, months of dust everywhere but that patch."
+   "skill_uses": {
+    "find_trap": {
+     "accomplishment": "spotted_illusory_floor",
+     "toast": "[Find Trap] — The mortar has no depth and the dust has no weight. There is no floor inside the painted boundary."
+    },
+    "keen_eye": {
+     "accomplishment": "spotted_illusory_floor",
+     "toast": "[Keen Eye] — Grain crosses the wrong way, paint stops a finger short, and months of dust avoid one perfect patch."
+    },
+    "observe": {
+     "accomplishment": "spotted_illusory_floor",
+     "toast": "[Appraise Foe] — The false floor turns this passage into a kill lane. The safe line hugs the wall where an ambusher would stand."
+    }
    },
    "visual_states": [
     {
@@ -930,7 +952,6 @@
      "warded_side_vault_looted": 1
     }
    },
-   "observe": "Fine ward-lines leave the cache and run east toward the sealed rune-door deeper in the halls.",
    "on_interact_accomplishment": "warded_side_vault_looted",
    "item": "wardwrights_counterweight",
    "toast": "The cache opens on a released catch. A lead counterweight rests inside, still holding a quiet ward."

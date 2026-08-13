@@ -2386,8 +2386,7 @@
      "near_garden"
     ],
     "skills": [
-     "basic_cleaning",
-     "observe"
+     "basic_cleaning"
     ],
     "dialogue": [],
     "systems": [
@@ -2520,7 +2519,7 @@
    "script": "riverfarm_skill",
    "seed": 9,
    "fixture": "riverfarm_skill_start",
-   "note": "8b Task R3 (issue #11) 'The Price of a Favor' SKILL path -- no combat: give -> the gauntlet in sequence (basic_cooking the offering -> [Light] the threshold candles -> [Observe] the true knot, the existing requires_skill/on_skill_use field-skill seam) -- the last step banks blight_lifted directly, no separate report needed -- then report -> completion.",
+   "note": "8b Task R3 (issue #11) 'The Price of a Favor' SKILL path -- no combat: give -> the gauntlet in sequence (basic_cooking the offering -> [Light] the threshold candles -> [Evil Eye] the true knot, the existing requires_skill/on_skill_use field-skill seam) -- the last step banks blight_lifted directly, no separate report needed -- then report -> completion.",
    "tiers": [
     "full"
    ],
@@ -2534,8 +2533,8 @@
     ],
     "skills": [
      "basic_cooking",
-     "light",
-     "observe"
+     "evil_eye",
+     "light"
     ],
     "dialogue": [
      "riverfarm_headman"
@@ -5204,7 +5203,7 @@
    "script": "stationer_room_loop",
    "seed": 9,
    "fixture": "invrisil_stationer_start",
-   "note": "v0.16 #306: the stationer's interior loop -- new boulevard door both ways off (20,2), three non-quest observes, the clerk's pool, return landing",
+   "note": "v0.16 #306: the stationer's interior loop -- new boulevard door both ways off (20,2), three free scenery reads, the clerk's pool, return landing",
    "tiers": [
     "full"
    ],
@@ -5217,8 +5216,7 @@
      "invrisil_stationer_start"
     ],
     "skills": [
-     "basic_cleaning",
-     "observe"
+     "basic_cleaning"
     ],
     "dialogue": [],
     "systems": [
@@ -5232,7 +5230,7 @@
    "script": "adventurers_rest_loop",
    "seed": 9,
    "fixture": "invrisil_rest_start",
-   "note": "v0.16 #306: the Adventurer's Rest interior loop -- the (18,1) door both ways, three observes, two ambient pool NPCs, room read UNARMED",
+   "note": "v0.16 #306: the Adventurer's Rest interior loop -- the (18,1) door both ways, three free scenery reads, two ambient pool NPCs, room read UNARMED",
    "tiers": [
     "full"
    ],
@@ -5245,8 +5243,7 @@
      "invrisil_rest_start"
     ],
     "skills": [
-     "basic_cleaning",
-     "observe"
+     "basic_cleaning"
     ],
     "dialogue": [],
     "systems": [
@@ -5456,8 +5453,7 @@
      "invrisil_stationer_start"
     ],
     "skills": [
-     "basic_cleaning",
-     "observe"
+     "basic_cleaning"
     ],
     "dialogue": [
      "hedault_enchanting"

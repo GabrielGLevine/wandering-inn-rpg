@@ -872,6 +872,39 @@ func _init() -> void:
 	assert(int(t38.get("spell_cast", 0)) == 1, "enemy spell_cast tallied under the shaman")
 	assert(int(t38.get("fire_cast", 0)) == 1, "flame_bolt carries the fire tag")
 
+	# #450: each tactic-family source tallies once per fight at its real proc.
+	for passive_id: String in ["battlefield_awareness", "flanking_step"]:
+		var tactic_passive := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: [passive_id]}})
+		tactic_passive.active_index = tactic_passive.turn_order.find("pc")
+		tactic_passive._start_turn()
+		var passive_tally: Dictionary = tactic_passive.action_tally.get("pc", {})
+		assert(int(passive_tally.get("tactic_used", 0)) == 1,
+			"%s tallies tactic_used when its turn-start move bonus procs" % passive_id)
+		tactic_passive.active_index = tactic_passive.turn_order.find("pc")
+		tactic_passive._start_turn()
+		passive_tally = tactic_passive.action_tally.get("pc", {})
+		assert(int(passive_tally.get("tactic_used", 0)) == 1,
+			"%s cannot tally twice in one fight" % passive_id)
+	var read_field := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["read_the_field"]}})
+	assert(int((read_field.action_tally.get("pc", {}) as Dictionary).get("tactic_used", 0)) == 1,
+		"read_the_field tallies tactic_used when its hit bonus is applied")
+	var tactic_actives := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["directed_strike", "phantom_barrage"]}})
+	tactic_actives.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
+	tactic_actives.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
+	tactic_actives.combatants["goblin_raider"][WIKeys.HP] = 999
+	tactic_actives.combatants["pc"][WIKeys.AP] = 8
+	tactic_actives.active_index = tactic_actives.turn_order.find("pc")
+	assert(tactic_actives.use_skill("directed_strike", "goblin_raider"), "chosen blow resolves")
+	assert(int((tactic_actives.action_tally.get("pc", {}) as Dictionary).get("tactic_used", 0)) == 1,
+		"directed_strike tallies tactic_used on use")
+	assert(tactic_actives.use_skill("phantom_barrage", "right"), "instantaneous barrage resolves")
+	assert(int((tactic_actives.action_tally.get("pc", {}) as Dictionary).get("tactic_used", 0)) == 2,
+		"phantom_barrage tallies its own tactic_used source")
+	tactic_actives.combatants["pc"][WIKeys.AP] = 8
+	assert(tactic_actives.use_skill("directed_strike", "goblin_raider"), "chosen blow can resolve twice")
+	assert(int((tactic_actives.action_tally.get("pc", {}) as Dictionary).get("tactic_used", 0)) == 2,
+		"an active tactic source cannot tally twice in one fight")
+
 	var c39 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt"]}})
 	c39.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
 	c39.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 1)

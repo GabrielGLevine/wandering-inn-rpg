@@ -999,6 +999,8 @@ class TestPropArmKeys(unittest.TestCase):
         "gold": "payload of the plain-interact arm",
         "item": "payload of the plain-interact arm",
         "variants": "payload resolution of the plain-interact arm",
+        "observe": "payload of the armless scenery-read arm",
+        "locked_toast": "fallback copy for an armless structural prop",
     }
     # Arms a prop is AIMED AT through WIGame.use_skill rather than dispatched
     # to, so they never appear in the match block and cannot be extracted.

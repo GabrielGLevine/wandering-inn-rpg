@@ -586,7 +586,15 @@ func _check_delivery_arrival() -> void:
 
 func interact() -> Dictionary:
 	_tick_action()
-	return _interactions.dispatch(entity_at(player_cell + player_facing), social_talked, entity_first_use, container_state)
+	var target := entity_at(player_cell + player_facing)
+	# Free scenery reads share Appraise's conditional visual-state resolution.
+	# Action-bearing props keep their normal dispatcher precedence.
+	if String(target.get(WIKeys.KIND, "")) == "prop" \
+			and not WIInteractions.PROP_ARM_KEYS.any(func(key: String) -> bool: return target.has(key)) \
+			and (target.get("visual_states", []) as Array).any(func(s: Variant) -> bool: return s is Dictionary and (s as Dictionary).has("observe")):
+		target = target.duplicate(true)
+		target["observe"] = _resolve_observe_text(target)
+	return _interactions.dispatch(target, social_talked, entity_first_use, container_state)
 
 
 func _resolve_skill_use_effect(effect: Dictionary) -> Dictionary:

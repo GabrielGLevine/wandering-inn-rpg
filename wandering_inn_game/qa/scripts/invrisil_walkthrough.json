@@ -395,36 +395,6 @@
    }
   },
   {
-   "action": "press_field_skill",
-   "skill": "observe"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "skill_used",
-   "payload_contains": {
-    "skill": "observe",
-    "target": "boulevard_stationer"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "toast",
-   "payload_contains": {
-    "text": "Ruled paper in three weights, ink in four, and a card offering a scribe by the hour in a hand that is itself the advertisement. The door is propped open, and two voices inside are arguing about a comma."
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "timeout_sec": 5
-  },
-  {
-   "action": "screenshot",
-   "name": "01c_boulevard_stationer"
-  },
-  {
    "_comment": "== #423 BEAT 3c: HEDAULT'S SHOP, the fifth boulevard shopfront and the first one you can walk INTO. Right 2 along the open row 2 to (22,2), bump north into the new door on the blocked facade row, and cross. This leg is the region canonical's answer to the whole issue: the enchanter is no longer a figure in a dead-end alley corner that only a hand-placed fixture could face. ==",
    "action": "move",
    "direction": "right",
@@ -702,17 +672,8 @@
    }
   },
   {
-   "action": "press_field_skill",
-   "skill": "observe"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "skill_used",
-   "payload_contains": {
-    "skill": "observe",
-    "target": "boulevard_coyle_front"
-   },
-   "timeout_sec": 5
+   "action": "press",
+   "name": "interact"
   },
   {
    "action": "wait_for_event",

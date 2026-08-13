@@ -194,6 +194,20 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 				if yielded != "":
 					_pickup.call(yielded, String(target[WIKeys.ID]))
 				return {"accomplishment": accomplishment_id}
+			# Props with no action arm are readable scenery. Their authored Observe
+			# line is plain interaction flavor, not a reason to cast Appraise Foe.
+			# The silent structural subset still terminates here instead of falling
+			# through to use_skill("") and producing an empty-Skill refusal.
+			if not PROP_ARM_KEYS.any(func(key: String) -> bool: return target.has(key)):
+				# A structural blocker keeps its explicit refusal copy; ordinary
+				# scenery reads its Observe line. Neither route invents a Skill.
+				var read_text := String(target.get("locked_toast", ""))
+				if read_text == "":
+					read_text = String(target.get("observe", ""))
+				if read_text != "":
+					_emit(WIEvents.TOAST, {"text": read_text})
+					return {"read": String(target[WIKeys.ID])}
+				return {}
 			# Explicit-Skill-use directive (2026-07-10): a KNOWN required skill
 			# hints toward the hotbar (interact never auto-casts); an unknown
 			# one routes to use_skill for its standard refusal.

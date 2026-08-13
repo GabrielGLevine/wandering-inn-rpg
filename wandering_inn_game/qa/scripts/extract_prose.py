@@ -1280,6 +1280,13 @@ def make_holdout(rows, reserved_ids, blind_ids):
 HOLDOUT_EXCLUDED_REASON = ("changed by #396 redesign (merged PR #401), not by "
                            "the prose pass")
 HOLDOUT_EXCLUSIONS = {
+    "map:inn/inn_upstairs.json:$.entities[1].visual_states[0].observe": {
+        "excluded": True,
+        "excluded_reason": "#450's approved scope fix retires standalone "
+                           "flavor reads from action-bearing props",
+        "what_moved": "hallway_door_a keeps its locked/open interaction but "
+                      "no longer carries an Appraise-only ownership read.",
+    },
     "map:riverfarm/witch_hollow.json:$.entities[24].observe": {
         "excluded": True,
         "excluded_reason": "path re-indexed by the r4 cottage merge "
