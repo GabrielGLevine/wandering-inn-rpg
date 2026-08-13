@@ -63,17 +63,14 @@ const ROWS := [
 ## from ROWS by an off-by-one nobody notices until a windowed shot.
 const GROUP_GAP_BEFORE := [4, 7, 10, 14, 16]
 const AUDIO_ROWS := {"Master volume": "Master", "Music volume": "Music", "SFX volume": "SFX"}
-## The descriptor tail the character-creation steps already speak, carried onto
-## the settings row so the two gameplay knobs stop reading as bare state (the
-## v0.17-close P2). Copy is char_creation.gd's own DIFFICULTY_BLURBS /
-## HINT_CHOICES blurbs VERBATIM -- one voice for one knob, whichever door the
-## player came through.
-const DIFFICULTY_TAILS := {
-	"Bronze": "a gentler road",
-	"Silver": "the road as it was cut",
-	"Gold": "no allowances",
-}
-const QUEST_HINT_TAILS := {true: "the journal points the way", false: "quests read as written"}
+## GH#447: the descriptor tails these two rows used to carry are GONE. They were
+## char_creation.gd's blurbs VERBATIM ("one voice for one knob, whichever door
+## the player came through"), so when a playtest report cut the blurbs off the
+## creation screen as overexplaining, this door had to lose them in the same
+## pass or the one voice becomes two. The rows read bare state now
+## ("Difficulty: Silver", "Quest Hints: On"); the durable explanation the
+## v0.17-close P2 actually wanted is the Help page's own "Difficulty & Quest
+## Hints" section, which shipped alongside these tails and stays.
 
 const MOUSE_LABELS := {
 	"move": "Click ground to walk",
@@ -698,14 +695,12 @@ func _row_text(i: int) -> String:
 		# opt-in FIELD-HUD strip (default OFF), this one is the journal's own
 		# next-step sub-row (default ON), and they switch independently.
 		"Quest Hints":
-			var on := WISettings.show_quest_hints()
-			return "Quest Hints: %s — %s" % ["On" if on else "Off", QUEST_HINT_TAILS[on]]
+			return "Quest Hints: %s" % ("On" if WISettings.show_quest_hints() else "Off")
 		# Issue #345. Cycles like Text Scale / Combat Speed rather than
 		# toggling, because it has three positions; the names are Liscor
 		# Hunted's own challenge ranks (canon, wiki-verified).
 		"Difficulty":
-			var rank := String(WISettings.difficulty_label())
-			return "Difficulty: %s — %s" % [rank, String(DIFFICULTY_TAILS.get(rank, ""))]
+			return "Difficulty: %s" % String(WISettings.difficulty_label())
 		_:
 			return key
 
