@@ -25,6 +25,48 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ## Current product and system rulings
 
+### User rulings 2026-08-13 (#438 wave-close batch)
+
+- **Orphan consolidation mappings APPROVED as inventoried**; swordsman
+  x mage (and its ice/fire siblings) map into [Spellsword] — target
+  reuse with the warrior pairs explicitly accepted. Controller to
+  propose 1-2 additional authored targets that reduce family reuse
+  (answered on #438: beast_master x mage-line and spearmaster x
+  archer-line, names wiki-verified at build).
+- **KIT walls resolved by RULED MULTICLASSING (option c).** Civil
+  spines are expected to carry a martial line to clear combat
+  chokepoints; the viability table's civil-spine climax losses are
+  design, not defects, and the civil pace overshoot (G6) is the
+  multiclass level budget — no band-column, no re-slope. Instrument
+  annotation follows.
+- **Producer gaps G1-G5 APPROVED at recommended shapes**: G1 [Mage] L2
+  requires_any {won_combat 3, spell_cast 4}; G2 scout Act I sneak-past
+  ambush entry arm; G3 tactic ladder widened before it steepens
+  (flanking_step L7->L6 + threshold trim per measurement); G4
+  ranged_hit quest grants on the bow-shaped forks; G5 tended_beasts on
+  the_price_kept's camp grant.
+- **Ladder stop-order: RESTORE via hired_blades composition** (frozen
+  stat blocks hold); ordering assert re-arms on the competent column
+  once monotone.
+- **Tactician-split Act V ceiling: fix without trivializing the
+  climax** — measurement-led, composition/class-data levers only,
+  STOP-and-report if the window is unreachable without policy or
+  frozen-stat movement.
+- **Equipment gaps: ADD missing gear across tracks (spear first)** via
+  vendors, encounter loot, trap/puzzle/sealed-area treasure, quest
+  rewards, and Hedault upgrades of existing gear — a content lane.
+- **Coyle bounty completion suppresses alley-nest re-arming** (other
+  respawners unchanged); cisterns/arc_flow headroom flags accepted as
+  monitors; #448 with-Relc ruling number restated to the measured 0.78.
+- **CONSOLIDATION IS AUTOMATIC (supersedes the #472 ruling request).**
+  No player choice: consolidation fires when qualified, with two
+  binding constraints — (1) it never removes existing Skills (upgrades
+  allowed), (2) advancement paths for consolidated classes stay OPEN:
+  a [Spellsword] (warrior x mage) can still level toward the warrior x
+  ice_mage target by meeting ice_mage requirements — consolidated
+  classes carry their parents' lineage credit for future
+  consolidations. Design spec before implementation (Fable).
+
 ### Sol wave ≥434 — controller calls under wave autonomy (2026-08-12)
 
 - **Ladder ordering claims are demoted to report-only until re-ruled
