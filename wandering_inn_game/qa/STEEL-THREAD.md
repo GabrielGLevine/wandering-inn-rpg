@@ -351,6 +351,36 @@ carrying the full snapshot, field bar, open-dialogue rows and combat roster
 where the old probe idiom needed a failing one. Every failure line now
 carries a compact `state={…}` suffix for the same reason.
 
+## Regenerating this script from an itinerary (#434 M3) — NOT yet the path
+
+The itinerary compiler (`scripts/itinerary/`) exists to make route-subject
+scripts like this one recompilable instead of hand-maintained, and M3's exit
+was to make `steel_thread.yaml` the canonical way to rebuild
+`steel_thread.json`. **It is not that yet, and this section says so rather
+than advertising a path that does not run.** Edit `steel_thread.json` by hand,
+as before.
+
+What blocks it is measured, not guessed. Of the 2569 shipped steps, **32
+(1.2%) have no emitter idiom**, in three groups:
+
+| Steps | Beat | Verdict |
+|---|---|---|
+| 18–31 | Character creation (`click_char_creation_card`, `type_text`, `click_char_creation_begin`, the Esc back-up round trip, difficulty + hints prompts) | **Not a gap.** §8 already rules this a fixed emitter prelude keyed by `creation:` scalars — buildable as a pass, just unbuilt. |
+| 84–106 | Relc's spar, driven turn by turn (`press move_right`, `hotbar_1`/`hotbar_2`, `cycle`, `end_turn`, interleaved with `ui_tutor_line_rendered` beat waits) | **Language gap.** The frozen `fight` primitive emits `combat_autoplay` and nothing else; there is no vocabulary for a hand-driven combat turn. The tutorial beats are the whole point of this fight, so autoplay cannot stand in. |
+| 562–566, 2318–2323 | Journal reads (`press journal` → `ui_journal_shown` → capture → close) | **Language gap.** No `journal` primitive; these are album/observer beats with no world effect. |
+
+The fourth group that *looked* like a gap is not one: the inventory cursor at
+steps 184, 965–969, 2045 and 2326–2340 is spelled as repeated
+`press move_down`, where the emitter emits one `move {direction, steps: N}`.
+Both walk the same cursor to the same row, so the golden differ treats them as
+the same claim (tolerance-class, §6.3) and the `equip`/`unequip` primitives
+already cover the semantics.
+
+Per §3.2 the primitive set is frozen for M1–M3 and M3 adds passes, not
+language, so both gaps are reported rather than patched around — `raw` would
+fit them inside the 2% budget and that is exactly the hiding place the budget
+exists to prevent. They belong to a design note ahead of M4.
+
 ## Known limitation
 
 `events_seen` may vary between identical seed-9 runs; `combat_autoplay`

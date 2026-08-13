@@ -1,4 +1,4 @@
-# Itinerary compiler (M2)
+# Itinerary compiler (M3)
 
 Compile an act from the repository root:
 
@@ -10,6 +10,105 @@ python3 scripts/itinerary/compile_itinerary.py scripts/itinerary/act2.yaml \
 ```
 
 Run the suites with `python3 -m pytest -q scripts/itinerary/tests`.
+
+## The two passes (M3)
+
+A compile is not a translation, it is a loop: plan against projections, play
+the plan, then re-plan knowing what happened (§5). Pass 1 is honest about what
+it cannot know — a chance-gated drop parts the gold interval, and a
+challenge-weighted counter is refused outright and queued as a `pins_pending`
+row. Pass 2 pays those off from a recorded run.
+
+```sh
+# pass 1: build the HARVEST script (a dump_state after every node) and run it
+python3 scripts/itinerary/compile_itinerary.py scripts/itinerary/act2.yaml \
+  --out /tmp/act2.probe.json --probe --run --seed 9 --run-out /tmp/probe_run
+
+# pass 2: re-emit against what that run actually did. THIS is the ship script.
+python3 scripts/itinerary/compile_itinerary.py scripts/itinerary/act2.yaml \
+  --out scripts/itinerary/generated/act2.json --refine /tmp/probe_run/events.jsonl
+```
+
+The harvest is keyed on **node labels**, not on event ordinals. `dump_state`
+(GH#436) emits `qa_state_dump` carrying the whole snapshot, so a probe run's
+`events.jsonl` is a sequence of node-labelled readings with the run's ordinary
+events between them. Counting occurrences of `gold_changed` and hoping the
+count is stable is the alternative, and it goes wrong silently the first time
+an unmodelled toast moves the ordinal. A label is not a guess.
+
+Probes are scaffolding. A ship build that still carries one is a compile
+error — the same discipline the `dump_checkpoint` grep gate enforces for the
+steel thread.
+
+### What pass 2 may and may not do
+
+It may collapse a projection, pin a harvested counter, and fill a `total` that
+pass 1 dropped. It may **not** re-decide the plan. The ledger carries two gold
+numbers and refine touches exactly one of them:
+
+- `state["gold"]` becomes the harvested truth, so every downstream oracle
+  answer is asked under the world the run was really in;
+- `gold_interval` stays **projected**, because it is the variable the economy
+  planner splices earn-detours on. Collapsing it would let pass 2 drop a
+  detour pass 1 inserted — and a pass that removes a node invalidates its own
+  evidence, since every rng draw behind that node moves (§2.4).
+
+So an unnecessary detour is **flagged, never removed** (`DETOUR/UNNECESSARY`
+in `_refine_notes`). Removing it is an itinerary edit, and an itinerary edit
+is re-verified wholesale.
+
+A harvest that is missing nodes is refused rather than partly applied: that is
+a stale harvest, and half a refinement is worse than none.
+
+### Fixed point
+
+Pass 2 must be a fixed point (§5): refine, probe the refined plan, harvest
+that, refine again, and the output is byte-identical. `--probe` and `--refine`
+combine for exactly this proof. It holds because refine only ever ADDS
+asserts and tightens pins — it never changes what the run does — so the second
+harvest describes the same run as the first.
+
+## When a compiled run reds
+
+Nothing in the emitted JSON is ever hand-patched; that rule is what keeps the
+corpus recompilable. So a failure has to be reported somewhere an author can
+act on it, which is the NODE:
+
+```sh
+python3 scripts/itinerary/compile_itinerary.py scripts/itinerary/act2.yaml \
+  --out /tmp/act2.json --run --seed 9
+```
+
+```
+ITINERARY FAILURE  step 64/64  action=assert_event_logged type=class_gained
+  node       act1.broken.claim   (assert)
+  planner    emitter
+  written at scripts/itinerary/act1.yaml:26
+  spec       {"event": {"payload_contains": {"class": "mage"}, "type": "class_gained"}}
+  why        A deliberately false claim -- Act I's sleep banks no class at all.
+  driver     expected event was never emitted: class_gained
+```
+
+The `_itin` stamp on every step is what makes that possible, and the `why` is
+in the report on purpose: half of these reds are the itinerary asking for
+something the game stopped offering, and the `why` is what tells you whether
+to re-route or drop the beat. A step whose stamp no itinerary declares is
+reported as UNMAPPED rather than attributed to the nearest node.
+
+## Golden diffs
+
+```sh
+python3 -m scripts.itinerary.goldens <compiled.json> <shipped.json>
+```
+
+Byte-identity is the wrong bar (§6.3). Differences sort into three buckets:
+**exact** (asserts, presses, event waits and their payload pins, screenshot
+names, autoplay policy — fatal), **net** (where a run of cursor/walk moves
+arrives — fatal, because the arrival is what the next press acts on), and
+**tolerance** (how a walk was split, wait timeouts, settle frames, comment
+text, `_itin` stamps — reported, never fatal). Pins may be TIGHTER on the
+compiled side and never looser. `press move_down` and `move {down, steps: N}`
+are the same cursor idiom and compare equal.
 
 M2 accepts the whole frozen primitive set: `goto`, `talk`, `fight`, `sleep`,
 `equip`, `unequip`, `buy`, `sell`, `use_field`, `interact`, `shot`, `assert`,
@@ -96,6 +195,13 @@ never patched around a changed epoch. `rng_epoch` counts fights, not loot —
   keeps hazard detection conservative in the safe direction.
 
 ## The acts
+
+`generated/act2.json` is the **pass-2** artifact (§5: the refined script is
+the one that ships), which is why it carries `_refine_notes` and two
+`accomplishments.won_combat` pins a static compile refuses to write. Rebuild
+it with the two-pass recipe above at `--seed 9`; a plain compile is pass 1 and
+will differ by exactly those tightenings. `generated/act1.json` has no
+projections to pay off, so its two passes are the same file.
 
 `act1.yaml` starts from a new game. `act2.yaml` starts from the shipped
 `post_tutorial_street` fixture, on purpose: compiled Act I declines Relc's spar

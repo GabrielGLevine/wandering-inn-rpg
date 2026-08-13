@@ -29,7 +29,7 @@ PRIMITIVES = {
 # variants), not language. So M2 unlocks everything and there is no
 # still-future primitive left to reject -- the rejection surface that remains
 # is an UNKNOWN primitive key, plus M1's own narrower set.
-MILESTONE_PRIMITIVES = {1: {"goto", "talk", "sleep"}, 2: set(PRIMITIVES)}
+MILESTONE_PRIMITIVES = {1: {"goto", "talk", "sleep"}, 2: set(PRIMITIVES), 3: set(PRIMITIVES)}
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
 
 # Every spec key a primitive accepts. Unknown keys are REJECTED rather than
@@ -85,6 +85,13 @@ class Node:
     spec: dict[str, Any]
     why: str
     act: str
+    # Where this node was WRITTEN. The provenance failure loop (§5) reports a
+    # red run as "node X, primitive Y, spec line Z" rather than as a raw driver
+    # error, and a node id with no source line is only two thirds of that
+    # answer. Empty when the document came from memory (detour fragments,
+    # tests) rather than from a file.
+    source_file: str = ""
+    source_line: int = 0
 
 
 @dataclass(frozen=True)
@@ -177,10 +184,38 @@ def _detour_nodes(detour_id: str, raw_nodes: Any) -> list[Node]:
 def load_itinerary(path: str | Path, milestone: int = 1) -> Itinerary:
     source = Path(path)
     try:
-        raw = yaml.safe_load(source.read_text(encoding="utf-8"))
+        text = source.read_text(encoding="utf-8")
+        raw = yaml.safe_load(text)
     except (OSError, yaml.YAMLError) as exc:
         raise SchemaError(f"could not read itinerary {source}: {exc}") from exc
-    return load_itinerary_document(raw, milestone)
+    document = load_itinerary_document(raw, milestone)
+    lines = _id_lines(text)
+    located = [
+        Node(node.id, node.primitive, node.spec, node.why, node.act, str(source), lines.get(node.id, 0))
+        for node in document.nodes
+    ]
+    return Itinerary(document.acts, located, document.start)
+
+
+ID_LINE_RE = re.compile(r"^\s*-?\s*id:\s*[\"']?([a-z0-9][a-z0-9._-]*)[\"']?\s*(?:#.*)?$")
+
+
+def _id_lines(text: str) -> dict[str, int]:
+    """Map every node id to the 1-based line that declares it.
+
+    Read off the raw text rather than out of the parse tree because PyYAML's
+    safe loader hands back plain dicts with no marks attached, and the two
+    alternatives -- a mark-carrying custom loader, or a side table keyed on
+    dict identity -- either pollute the mapping that the unknown-key check
+    reads or depend on object lifetimes. Node ids are unique per document and
+    the grammar for one is narrow, so the line is unambiguous.
+    """
+    found: dict[str, int] = {}
+    for number, line in enumerate(text.splitlines(), start=1):
+        match = ID_LINE_RE.match(line)
+        if match is not None:
+            found.setdefault(match.group(1), number)
+    return found
 
 
 def load_itinerary_document(raw: Any, milestone: int = 1) -> Itinerary:

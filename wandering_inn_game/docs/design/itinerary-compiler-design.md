@@ -112,6 +112,29 @@ global RNG stream — `economy.gd` seeds a private generator from
 `hash(run_seed:entity_id)` — so `rng_epoch` counts fights only. The §2
 prose listing loot as a global draw is superseded by this note.
 
+**Amendment (2026-08-13, M3): pass 2 refines PINS, not the PLAN.** The refine
+loop collapses `state["gold"]` to the harvested actual (so downstream oracle
+answers are asked under the world the run was really in) but deliberately
+leaves `gold_interval` projected, because that interval is what the economy
+planner splices earn-detours on. Letting the harvest move it would let pass 2
+drop a detour pass 1 inserted — and a pass that removes a node invalidates its
+own evidence, since every draw behind that node moves. So §2.3's "can REMOVE
+detours that proved unnecessary (flagged, not silent)" resolves to FLAG only:
+the removal is an itinerary edit, re-verified wholesale per §2.4. This is also
+what makes §5's fixed point hold rather than merely be hoped for — refine only
+ever adds asserts and tightens pins, so the refined script plays the same run
+the probe did.
+
+**Amendment (2026-08-13, M3): `won_combat` has a second depositor.** §2.2
+treats challenge-weighted counters as a combat-resolution concern, and the
+ledger queues its `pins_pending` rows from `apply_victory` alone. Measured in
+Act II: `won_combat` reaches 1 at `act2.krshia.report`, a `talk` node with no
+fight in it — a quest resolution-path grant (`WICombatBanking.grant`, GH#211
+§5) deposits weighted counters too. Pass 2 therefore pins from the HARVEST
+(any weighted counter that moved during a node) rather than from the queue,
+and reports an unqueued move as the modelling gap it is. Teaching the dialogue
+planner to project resolution grants is open work.
+
 ## 3. The itinerary language
 
 ### 3.1 Shape
@@ -224,6 +247,18 @@ rule is what keeps the corpus recompilable.
   `steel_thread.yaml` golden, fixed-point test. Exit: golden recompile
   passes tolerance diff; docs (STEEL-THREAD.md gains "regenerate via
   compiler" as the canonical path).
+  **Landed 2026-08-13 except the golden.** Refine, the provenance loop, the
+  tolerance differ and the fixed-point proof all ship and are gated; the
+  `steel_thread.yaml` golden is BLOCKED on two language gaps measured against
+  the shipped 2569-step script — the Relc spar is driven turn by turn for its
+  tutor beats (steps 84–106) and two journal reads are album beats with no
+  world effect (steps 562–566, 2318–2323). Neither is expressible as a pass,
+  and §3.2 freezes the primitive set through M3, so both are reported instead
+  of being hidden inside `raw`. Character creation (steps 18–31) is NOT a gap
+  — §8 already rules it a `creation:`-keyed emitter prelude, merely unbuilt.
+  The gap table lives in `qa/STEEL-THREAD.md`. A design note unfreezing the
+  vocabulary for hand-driven combat turns and panel-reading beats is the
+  prerequisite for the golden, and belongs ahead of M4.
 - **M4 — variants**: overlay layer + the Mage-run variant (the #438
   acceptance milestone). Exit: Mage run green in single-digit full runs,
   pacing report auto-generated from pass-2 harvests.

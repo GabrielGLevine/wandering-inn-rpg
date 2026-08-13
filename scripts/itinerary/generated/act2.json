@@ -384,6 +384,12 @@
   },
   {
    "action": "assert_state",
+   "path": "accomplishments.won_combat",
+   "equals": 1,
+   "_itin": "act2.krshia.report"
+  },
+  {
+   "action": "assert_state",
    "path": "accomplishments.crate_returned",
    "equals": 1,
    "_itin": "act2.crate.pins"
@@ -780,6 +786,12 @@
    "action": "assert_state",
    "path": "removed_entities",
    "contains": "goblin_encounter_1",
+   "_itin": "act2.road.ambush"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.won_combat",
+   "equals": 3,
    "_itin": "act2.road.ambush"
   },
   {
@@ -1197,7 +1209,8 @@
    "type": "gold_changed",
    "payload_contains": {
     "delta": -3,
-    "source": "peddler_stall"
+    "source": "peddler_stall",
+    "total": 4
    },
    "timeout_sec": 5,
    "_itin": "act2.peddler.kit"
@@ -1481,5 +1494,13 @@
  "starts_at_title": true,
  "_pacing_notes": [
   "act2.peddler.kit: GOLD/PACING: trap_kit asks 3; the interval floor was 2 (interval (2, 6)), so detour inn_chore_dirty_table (+1..1) was inserted. Why: The taproom chore is the only earn in the early game with no accomplishment gate in front of it and no dice behind it: [Basic Cleaning] is innate, the table pays a flat coin, and the payout is capped once per waking so it can never quietly inflate a run's economy. That makes it the right instrument when a purchase misses its price by a coin or two -- it buys the gap without buying a different playthrough."
+ ],
+ "_refine_notes": [
+  "act2.krshia.report: won_combat moved to 1 here and pass 1 queued NO pins_pending row for it -- the deposit came from a quest resolution-path grant, not a fight (combat_banking.grant, GH#211 §5), which the ledger does not model. Pinned from the harvest; the modelling gap is real and belongs to the dialogue planner.",
+  "act2.road.ambush: won_combat harvested at 3 after goblin_encounter_1 -- pinned (pass 1 refused to guess it)",
+  "act2.crate.fight: gold read as 4 (pass 1 carried the interval floor 2 of [2, 4])",
+  "act2.road.ambush: gold read as 6 (pass 1 carried the interval floor 2 of [2, 6])",
+  "act2.peddler.kit: purchase total pinned to 4 (pass 1 dropped it -- the interval was open)",
+  "DETOUR/UNNECESSARY: act2.peddler.kit asked 3 and the run arrived holding 6 before detour 'inn_chore_dirty_table' ran. Pass 1 inserted it because the projected floor was 2. Remove it from the itinerary if you want it gone -- doing that moves every rng draw after it, so the recompile is re-verified wholesale (§2.4)."
  ]
 }
