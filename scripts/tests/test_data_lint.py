@@ -55,6 +55,28 @@ class TestBrokenFixtures(unittest.TestCase):
         self.assertIn("entity 'missing' respawns but has no visual_states row", errs[0])
         self.assertIn("when.dormant", errs[0])
 
+    def test_placement_on_water_needs_an_explicit_marker(self):
+        # #474: the water family is DERIVED -- a `water: true` segment and the
+        # `freezable` list both count, and an undeclared cell on either reds.
+        water_map = {**GRID, "blocked": [],
+            "walls": {"segments": [{"from": [0, 0], "to": [1, 0], "water": True}]},
+            "freezable": [[2, 0]],
+            "entities": [
+                {"id": "wading", "kind": "encounter", "cell": [0, 0]},
+                {"id": "declared", "kind": "prop", "cell": [1, 0], "on_water": True},
+                {"id": "ashore", "kind": "prop", "cell": [0, 1]},
+            ],
+            "decor": [{"sprite": "raft", "cell": [2, 0]}]}
+        errs = self._errs(data_lint.check_placements_off_water, {"m": water_map})
+        self.assertEqual(len(errs), 2, errs)
+        self.assertIn("entity 'wading' stands on a water cell [0, 0]", errs[0])
+        self.assertIn("decor 'raft' stands on a water cell [2, 0]", errs[1])
+
+    def test_map_with_no_water_family_is_never_flagged(self):
+        errs = self._errs(data_lint.check_placements_off_water,
+            {"m": {**GRID, "blocked": [], "entities": [{"id": "a", "cell": [0, 0]}]}})
+        self.assertEqual(errs, [])
+
     def test_missing_grid(self):
         errs = self._errs(data_lint.check_maps, {"m": {"blocked": []}})
         self.assertIn("missing/invalid grid", errs[0])

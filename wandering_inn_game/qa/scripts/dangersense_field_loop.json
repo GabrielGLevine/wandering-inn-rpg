@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #413 holder proof. Loads an honest Rogue L4 night-floodplains fixture at (9,24), proves [Dangersense] stays off the field hotbar, pins the world render event's exact regions to the existing goblin_night_patrol and road_mothbears trigger_radius rows, then WALKS up/right/right to (11,23). Every walked cell stays Chebyshev distance 2 from goblin_night_patrol (10,21): the route approaches and skirts its revealed radius-1 square without entering it, and combat_started remains absent.",
+ "_comment": "Issue #413 holder proof. Loads an honest Rogue L4 night-floodplains fixture at (5,24), proves [Dangersense] stays off the field hotbar, pins the world render event's exact regions to EVERY live floodplains trigger_radius row, then WALKS up/right/right to (7,23). Every walked cell stays Chebyshev distance >= 2 from goblin_night_patrol (7,21): the route approaches and skirts its revealed radius-1 square without entering it, and combat_started remains absent. #475 RE-PIN: the regions payload used to hold two rows because the overlay dropped every encounter without an `encounter_when`, which silently excluded goblin_encounter_1 -- the unavoidable gate-road ambush. Three rows now, id-sorted, and the gate ambush's is the one this canonical exists to have caught. #474 RE-PIN: goblin_night_patrol's own cell moved (10,21) -> (7,21) off the pond; the walked route is byte-identical.",
  "fixture_save": "dangersense_holder_start",
  "starts_at_title": true,
  "steps": [
@@ -15,7 +15,7 @@
   {"action": "assert_state", "path": "classes.rogue", "equals": 4},
   {"action": "move", "direction": "up", "steps": 1},
   {"action": "move", "direction": "right", "steps": 2},
-  {"action": "assert_state", "path": "player_cell", "equals": [11, 23]},
+  {"action": "assert_state", "path": "player_cell", "equals": [7, 23]},
   {
    "action": "assert_event_count",
    "type": "ui_dangersense_rendered",
@@ -23,7 +23,8 @@
    "payload_contains": {
     "map": "floodplains",
     "regions": [
-     {"encounter": "goblin_night_patrol", "cell": [10, 21], "radius": 1},
+     {"encounter": "goblin_encounter_1", "cell": [30, 23], "radius": 2},
+     {"encounter": "goblin_night_patrol", "cell": [7, 21], "radius": 1},
      {"encounter": "road_mothbears", "cell": [23, 12], "radius": 1}
     ]
    }

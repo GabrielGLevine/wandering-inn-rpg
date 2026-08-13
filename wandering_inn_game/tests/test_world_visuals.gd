@@ -703,7 +703,8 @@ func _dangersense_world_contract_holds(source: String, overlay_source: String, s
 	var sim_trigger := _function_body(sim_source, "_check_trigger_radius")
 	return overlay_rebuild.find("radius_read.call(encounter)") != -1 \
 		and overlay_rebuild.find('encounter["trigger_radius"]') == -1 \
-		and overlay_rebuild.find('encounter.has("encounter_when")') != -1 \
+		and overlay_rebuild.find('encounter.has("encounter_when")') == -1 \
+		and live.find('encounter.has("encounter_when")') == -1 \
 		and overlay_rebuild.find("holder_has_skill and field_mode") != -1 \
 		and build.find("WIDangersenseOverlay.new") != -1 \
 		and gate.find("Game.sim.combat == null") != -1 \
@@ -747,9 +748,13 @@ func _init() -> void:
 	assert(danger_overlay.rebuild(danger_rows, true, false, authored_radius).is_empty() and not danger_overlay.visible,
 		"a holder outside field mode gets no warning regions")
 	var warning_regions := danger_overlay.rebuild(danger_rows, true, true, authored_radius)
-	assert((warning_regions as Array).size() == 2 and String(warning_regions[0]["encounter"]) == "a_danger",
-		"a field-mode holder gets only encounter_when proximity regions, deterministically sorted")
-	assert(danger_overlay.region_rect(warning_regions[1]) == Rect2(144, 320, 48, 48),
+	# #475: `plain_encounter` carries no gate, so nothing stops it springing --
+	# which is precisely why it must be warned about. It used to be dropped.
+	assert((warning_regions as Array).size() == 3
+			and String(warning_regions[0]["encounter"]) == "a_danger"
+			and String(warning_regions[1]["encounter"]) == "plain_encounter",
+		"a field-mode holder gets EVERY proximity region, gated or not, deterministically sorted")
+	assert(danger_overlay.region_rect(warning_regions[2]) == Rect2(144, 320, 48, 48),
 		"radius 1 draws the exact 3x3 Chebyshev trigger square from the encounter cell")
 	var affinity_game := WIGame.new(
 		WISceneCatalog.compose(),
@@ -783,6 +788,20 @@ func _init() -> void:
 		dangersense_source.replace("radius_read.call(encounter)", 'encounter["trigger_radius"]'),
 		sim_source,
 	), "[Dangersense] wiring contract must reject a raw authored-radius read")
+	# #475 tripwire, both halves: re-adding the shape test that hid the
+	# unavoidable gate-road ambush must red, wherever someone puts it back.
+	assert(not _dangersense_world_contract_holds(
+		source,
+		dangersense_source.replace('encounter.has("trigger_radius")',
+			'encounter.has("encounter_when") or not encounter.has("trigger_radius")'),
+		sim_source,
+	), "[Dangersense] must not re-gate its regions on encounter_when (overlay half)")
+	assert(not _dangersense_world_contract_holds(
+		source.replace('encounter.has("trigger_radius")',
+			'encounter.has("encounter_when") or not encounter.has("trigger_radius")'),
+		dangersense_source,
+		sim_source,
+	), "[Dangersense] must not re-gate its regions on encounter_when (collection half)")
 	danger_overlay.queue_free()
 	assert(_cleared_terrain_visual_contract_holds(source),
 		"terrain=cleared must reuse the shipped removal poof used by scorched")

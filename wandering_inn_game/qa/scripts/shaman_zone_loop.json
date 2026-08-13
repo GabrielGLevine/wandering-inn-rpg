@@ -37,7 +37,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "(10,23) -> (10,22): into goblin_night_patrol's trigger_radius 1 -- the sibling canonical's own opening.",
+   "_comment": "(7,23) -> (7,22): into goblin_night_patrol's trigger_radius 1 -- the sibling canonical's own opening (#474 walked both the encounter and its approach cell ashore; the step is unchanged).",
    "action": "move",
    "direction": "up",
    "steps": 1

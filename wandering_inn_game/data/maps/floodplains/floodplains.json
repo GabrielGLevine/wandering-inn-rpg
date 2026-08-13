@@ -1216,6 +1216,7 @@
     9,
     17
    ],
+   "on_water": true,
    "display_name": "Rippled Shallows",
    "sprite": "grass_tuft",
    "tint": [
@@ -1240,6 +1241,7 @@
     10,
     18
    ],
+   "on_water": true,
    "display_name": "Sunken Cache",
    "hide_sprite": true,
    "invisible": true,
@@ -1607,10 +1609,11 @@
    "on_victory": "rock_crabs_culled"
   },
   {
+   "_comment": "#474 (user eye-gate 2026-08-13): the marker rendered goblins STANDING IN THE POND. The cell was authored at (10,21) in #100 when this map had no water at all; v0.19 (8c4c6c66) painted the pond over it, and (10,21) is load-bearing water -- it is the south wall of the #398 pond_island pocket, so unpainting it would open a free land bridge (10,22)->(10,21)->(10,20) onto the island and retire the freeze/blink gate. So the ENTITY moved, to the pond's west shore: (7,21) is the nearest land cell whose whole 23px sprite footprint (goblin_base 256 * 0.09) clears the water -- north neighbour (7,20) and both side neighbours are land -- and it holds every walked cell of the #413 dangersense routes at Chebyshev >= 2, exactly as (10,21) did. present_when MIRRORS road_mothbears' own Finding-16 fix: on water the cell was already blocked, on land an always-present night encounter would stand as an invisible day wall. It replaces the day/dusk visual_states row (absent beats hidden); four open cardinal neighbours, so no save-compat cul-de-sac.",
    "id": "goblin_night_patrol",
    "kind": "encounter",
    "cell": [
-    10,
+    7,
     21
    ],
    "display_name": "Raiders in the Dark",
@@ -1632,20 +1635,15 @@
      "night"
     ]
    },
+   "present_when": {
+    "phase": [
+     "night"
+    ]
+   },
    "trigger_radius": 1,
    "observe": "Two of them working inside the boulder line, one behind the other, well after dark. Their weapons are wrapped and nothing they carry makes a sound.",
    "gate_closed_toast": "The boulder line is clear from here — the patrol does not use it until dark.",
    "visual_states": [
-    {
-     "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
-     "when": {
-      "phase": [
-       "day",
-       "dusk"
-      ]
-     },
-     "hidden": true
-    },
     {
      "when": {
       "dormant": true
@@ -2134,6 +2132,7 @@
     13,
     19
    ],
+   "on_water": true,
    "display_name": "Pond Reeds",
    "sprite": "pond_reeds",
    "observe": "Reeds stand thick in the shallows. Past them the pond pinches once, and the ground beyond that pinch is dry.",

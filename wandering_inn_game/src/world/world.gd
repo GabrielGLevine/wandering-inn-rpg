@@ -1101,7 +1101,17 @@ func _live_dangersense_encounters() -> Array:
 	for raw: Variant in Game.sim.entities.values():
 		var encounter := raw as Dictionary
 		var encounter_id := String(encounter.get("id", ""))
-		if not encounter.has("encounter_when") or not encounter.has("trigger_radius"):
+		# #475 (user eye-gate 2026-08-13): this used to demand `encounter_when`
+		# too, which silently dropped every UNCONDITIONAL ambush -- including
+		# goblin_encounter_1, the one fight on the Liscor gate road a player
+		# cannot walk around. A warning that omits the unavoidable danger is
+		# worse than no warning. The authority for "can this spring on me" is
+		# `_check_trigger_radius`, and its filter is exactly the four lines
+		# below plus `trigger_radius`; `encounter_gate_met` already answers
+		# true for an encounter that carries no gate, so the extra key test was
+		# never a gate reading, only a shape test that mistook the night
+		# encounters this shipped against for the whole population.
+		if not encounter.has("trigger_radius"):
 			continue
 		if not Game.sim.entity_present(encounter) \
 				or Game.sim.dormant_encounters.has(encounter_id) \

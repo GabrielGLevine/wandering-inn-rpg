@@ -1,9 +1,9 @@
 {
- "_comment": "Issue #413 non-holder control, identical route/story basis to dangersense_holder_start except it stops honestly at Rogue L3: sneaked_past_danger 4 and classes{rogue:3}. Rogue L3 grants [Find Trap] but not [Dangersense]; Warrior remains L1. The same night floodplains position and walked perimeter route therefore isolate the held-skill predicate without changing map, phase, encounter data, or starting geometry.",
+ "_comment": "Issue #413 non-holder control, identical route/story basis to dangersense_holder_start except it stops honestly at Rogue L3: sneaked_past_danger 4 and classes{rogue:3}. Rogue L3 grants [Find Trap] but not [Dangersense]; Warrior remains L1. The same night floodplains position and walked perimeter route therefore isolate the held-skill predicate without changing map, phase, encounter data, or starting geometry. #474 moved both fixtures' start cell (9,24) -> (5,24) together, so 'identical geometry to the holder fixture' still holds.",
  "version": 5,
  "state": {
   "current_map": "floodplains",
-  "player_cell": [9, 24],
+  "player_cell": [5, 24],
   "player_facing": [0, -1],
   "classes": {
    "warrior": 1,
