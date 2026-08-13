@@ -36,7 +36,6 @@
   "dormant_encounters": [],
   "generalist_classes": [],
   "started_quests": ["the_errand", "missing_crate", "cisterns", "what_the_seal_kept"],
-  "pending_consolidation": {},
   "used_skills": [],
   "inventory": ["gnollish_hunting_knife"],
   "equipped": {"weapon": "gnollish_hunting_knife", "armor": ""},

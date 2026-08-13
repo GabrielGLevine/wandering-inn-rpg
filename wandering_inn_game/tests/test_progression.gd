@@ -334,6 +334,41 @@ func _init() -> void:
 	assert(not mixed_evolved.is_empty() and int(mixed_evolved["level"]) == 14, "spearmaster + fire_mage (11,10) -> 14")
 	assert(mixed_evolved["target"] == "spellspear", "#449: an EVOLVED spear parent targets its own class, never spellsword")
 
+	# --- #472 3, LINEAGE PROXY. A held consolidated class stands in for either
+	# parent line its OWN row consumed, at its CURRENT level. ---
+	var proxy_chain := WIProgression.check_consolidation({"spellsword": 16, "archer": 10}, catalog)
+	assert(not proxy_chain.is_empty(), "[Spellsword] proxies the warrior line, so the ranger row fires")
+	assert(proxy_chain["target"] == "ranger", "the chained pair resolves to the ranger row's target")
+	assert((proxy_chain["parents"] as Array) == ["spellsword", "archer"], "the second consolidation CONSUMES the consolidated class itself")
+	assert(int(proxy_chain["level"]) == 18, "the proxy stands in at the CONSOLIDATED class's CURRENT level, not a consumed parent's frozen one: (16,10) -> max(ceil(52/3),16) == 18")
+	assert(int(WIProgression.check_consolidation({"spellsword": 20, "archer": 10}, catalog)["level"]) == 20, "climbing the consolidated class climbs the lineage with it -- (20,10) -> 20, strictly above the 18 a frozen warrior-11 stand-in would give")
+
+	# BOTH DIRECTIONS. The proxy is per-LINE, so a consolidated class reached off
+	# the OTHER line proxies that side instead.
+	var proxy_other_side := WIProgression.check_consolidation({"spellsword": 16, "beast_tamer": 10}, catalog)
+	assert(not proxy_other_side.is_empty() and proxy_other_side["target"] == "druid", "[Spellsword] proxies its MAGE side for the druid row's line B")
+	assert((proxy_other_side["parents"] as Array) == ["beast_tamer", "spellsword"], "line A is the tamer line, line B the proxied mage line -- parents follow the ROW's line order")
+
+	# CONTAINMENT DIRECTION. [Spellsword]'s warrior side is BROADER than
+	# [Spellspear]'s `[spearmaster]` line, so it must NOT satisfy it -- a
+	# warrior-built [Spellsword] is not a [Spearmaster], and the reverse rule
+	# would hand spear-less builds the evolved-lineage target #449 carved out.
+	assert(WIProgression.check_consolidation({"spellsword": 16, "mage": 10}, catalog).is_empty(), "a [Spellsword] + re-earned [Mage] matches NO row: it cannot proxy the narrower spearmaster line, and its own row refuses to merge it with itself")
+	var spear_proxy := WIProgression.check_consolidation({"spellspear": 16, "archer": 10}, catalog)
+	assert(not spear_proxy.is_empty() and spear_proxy["target"] == "ranger", "the NARROWER direction does hold: [Spellspear]'s own `[spearmaster]` side sits inside the ranger row's warrior line")
+
+	# SELF-MERGE GUARD. One consolidated class covers BOTH sides of its own row.
+	assert(WIProgression.check_consolidation({"spellsword": 16}, catalog).is_empty(), "a class never merges with itself, however many lines it proxies")
+
+	# --- #472 2, the runtime half of the UPGRADE escape hatch. ---
+	assert(WIProgression.consolidation_upgrades("spellsword", catalog).is_empty(), "no shipped row registers an upgrades map")
+	var upgrade_catalog := catalog.duplicate(true)
+	for row: Dictionary in upgrade_catalog["consolidations"]:
+		if String(row.get("target", "")) == "spellsword":
+			row["upgrades"] = {"power_strike": "keener_edge"}
+	assert(WIProgression.consolidation_upgrades("spellsword", upgrade_catalog) == {"power_strike": "keener_edge"}, "an authored upgrades map is read off the consolidations row")
+	assert(WIProgression.consolidation_upgrades("ranger", upgrade_catalog).is_empty(), "the map is per-row, never shared across targets")
+
 	# --- #449 EVOLVED-LINEAGE CONSOLIDATION, and the ORDER CONTRACT it rests on.
 	# User ruling 2026-08-12 (docs/CHOICE-LOG.md): spearmaster + mage does not
 	# lineage-carry into [Spellsword]; it consolidates into [Spellspear].

@@ -44,9 +44,7 @@ const ACCOMPLISHMENT_RECORDED := &"accomplishment_recorded"
 const CLASS_GAINED := &"class_gained"
 const CLASS_LEVEL_UP := &"class_level_up"
 const CLASS_EVOLVED := &"class_evolved"
-const CONSOLIDATION_OFFERED := &"consolidation_offered"
 const CONSOLIDATION_ACCEPTED := &"consolidation_accepted"
-const CONSOLIDATION_DECLINED := &"consolidation_declined"
 # v018-W2 (#347 prototype): DEV-ONLY log line. Emitted at the sleep beat ONLY
 # while WISystemBestowal.log_enabled() -- it grants nothing and no UI listens.
 const SYSTEM_BESTOWAL_CANDIDATE := &"system_bestowal_candidate"
@@ -140,8 +138,6 @@ const UI_TITLE_GATE_RENDERED := &"ui_title_gate_rendered"
 const UI_TITLE_NOTICE_RENDERED := &"ui_title_notice_rendered"
 const UI_NEW_GAME_CONFIRM_RENDERED := &"ui_new_game_confirm_rendered"
 const UI_PLAYTEST_LIST_RENDERED := &"ui_playtest_list_rendered"
-const UI_CONSOLIDATION_PROMPT_RENDERED := &"ui_consolidation_prompt_rendered"
-const UI_CONSOLIDATION_PROMPT_HIDDEN := &"ui_consolidation_prompt_hidden"
 const UI_TUTOR_LINE_RENDERED := &"ui_tutor_line_rendered"
 const UI_COMBAT_HINT_RENDERED := &"ui_combat_hint_rendered"
 ## A combat beat AT THE MOMENT IT IS SEEN. The sim emits an AI turn

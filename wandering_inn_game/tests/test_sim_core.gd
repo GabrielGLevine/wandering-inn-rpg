@@ -1096,92 +1096,78 @@ func _init() -> void:
 	assert(int(pc18[WIKeys.AP]) == ap_before2, "refused casts spend nothing")
 	_land_pc_hit(g18)
 
+	# #472 AUTOMATIC CONSOLIDATION. There is no offer, no prompt and no decline:
+	# the qualifying sleep APPLIES the merge in-beat and says so.
 	var g19 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g19.classes = {"warrior": 11, "mage": 10}
 	g19.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	_events.clear()
 	g19.sleep()
-	assert(_count("consolidation_offered") == 1, "qualifying sleep emits consolidation_offered")
-	var offered_payload: Dictionary = {}
+	assert(_count("consolidation_accepted") == 1, "a qualifying sleep APPLIES the merge, in that same sleep")
+	assert(_count("consolidation_offered") == 0, "there is no offer event any more -- nothing is asked")
+	var merge_payload: Dictionary = {}
 	for e: Dictionary in _events:
-		if e["type"] == "consolidation_offered":
-			offered_payload = e["payload"]
-	assert((offered_payload["parents"] as Array) == ["warrior", "mage"], "offer payload carries parents")
-	assert(offered_payload["target"] == "spellsword", "offer payload carries target")
-	assert(int(offered_payload["level"]) == 14, "offer payload carries merged level (11,10) -> 14")
-	assert(_count("class_evolved") == 0, "evolutions are DEFERRED, not resolved, on the offering sleep")
-	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "the soundly-sleep fallback never fires on an offering sleep")
-	assert(g19.classes.has("warrior") and g19.classes.has("mage"), "parents are untouched until the offer resolves")
-	assert(g19.pending_consolidation.get("target", "") == "spellsword", "pending offer stored on the game")
-
-	_events.clear()
-	g19.accept_consolidation()
-	assert(_count("consolidation_accepted") == 1, "accept emits consolidation_accepted")
-	assert(not g19.classes.has("warrior") and not g19.classes.has("mage"), "both parent classes are erased")
+		if e["type"] == "consolidation_accepted":
+			merge_payload = e["payload"]
+	assert((merge_payload["parents"] as Array) == ["warrior", "mage"], "payload carries parents")
+	assert(merge_payload["target"] == "spellsword", "payload carries target")
+	assert(int(merge_payload["level"]) == 14, "payload carries merged level (11,10) -> 14")
+	assert(not g19.classes.has("warrior") and not g19.classes.has("mage"), "both parent classes are erased by the sleep itself")
 	assert(int(g19.classes.get("spellsword", 0)) == 14, "target class set at the merged level")
-	assert(_count("class_evolved") == 0, "accept never runs the evolution stage")
-	assert(g19.pending_consolidation.is_empty(), "pending offer cleared after accept")
-	var post_accept_skills := g19.known_skills()
-	assert(post_accept_skills.has("basic_swordwork") and post_accept_skills.has("frost_bolt"), "spellsword's inherits chain still resolves both parents' kits")
-	assert(post_accept_skills.has("keener_edge"), "spellsword's own signature grant is present")
+	assert(_count("class_evolved") == 0, "the merged class has no evolution, and its parents are gone -- nothing left to evolve")
+	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "a merging sleep never falls through to the soundly-sleep fallback")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "[Warrior] and [Mage] merge into [Spellsword]!" and bool(e["payload"].get("lore", false))), "the merge is voiced in canon bracket voice AND banked to the journal's Lore record (lore: true) -- a class the player never chose to lose must be read-backable")
+	assert(g19.lore_notes.has("[Warrior] and [Mage] merge into [Spellsword]!"), "the journal entry is durable sim state, not a toast that may scroll past")
+	var post_merge_skills := g19.known_skills()
+	assert(post_merge_skills.has("basic_swordwork") and post_merge_skills.has("frost_bolt"), "spellsword's inherits chain still resolves both parents' kits")
+	assert(post_merge_skills.has("keener_edge"), "spellsword's own signature grant is present")
 
-	_events.clear()
-	g19.accept_consolidation()
-	assert(_events.is_empty(), "accept with no pending offer emits nothing")
+	assert(not (g19 as Object).has_method("accept_consolidation"), "#472: the accept API is DELETED, not deprecated")
+	assert(not (g19 as Object).has_method("decline_consolidation"), "#472: the decline API is DELETED -- there is no choice to decline")
+	assert(not (g19 as Object).has_method("pending_offer_display"), "#472: the prompt's display source is DELETED")
 
-	var g20 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	g20.classes = {"warrior": 11, "mage": 10}
-	g20.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
+	# THE #472 REGRESSION. The old beat RETURNED on an offer, so a sleep that
+	# offered a merge banked NOTHING below it -- the door-study chain silently
+	# lost a night. Same sleep, both outcomes, or this bug is back.
+	var g19b := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g19b.classes = {"warrior": 11, "mage": 10}
+	g19b.accomplishments = {"door_understood": 1, "recovered_anchor_stone": 1, "bought_catalyst": 1}
 	_events.clear()
-	g20.sleep()
-	assert(g20.pending_consolidation.get("target", "") == "spellsword", "same setup defers with a pending offer")
-	_events.clear()
-	g20.decline_consolidation()
-	assert(_count("consolidation_declined") == 1, "decline emits consolidation_declined")
-	assert(g20.pending_consolidation.is_empty(), "pending offer cleared after decline")
-	assert(_count("class_evolved") == 2, "decline resolves BOTH classes' evolutions (warrior->swordsman, mage->ice_mage)")
-	assert(g20.classes.has("swordsman") and not g20.classes.has("warrior"), "warrior evolves to swordsman on decline")
-	assert(g20.classes.has("ice_mage") and not g20.classes.has("mage"), "mage evolves to ice_mage on decline")
+	g19b.sleep()
+	assert(_count("consolidation_accepted") == 1, "#472 regression setup: this sleep really does merge")
+	assert(g19b.accomplishment_count("door_study_sleeps") == 1, "#472 REGRESSION PIN: a sleep that fires a consolidation ALSO banks door_study_sleeps -- the beat never returns early any more")
+	assert(g19b.accomplishment_count("catalyst_attunement_sleeps") == 0, "the door-awakened gate is still respected -- the fix restores the beat, it does not skip gates")
 
+	# ONCE PER SLEEP (4). warrior 11 + mage 10 + archer 11 qualifies BOTH the
+	# spellsword row and (via the 3 proxy, next sleep) the ranger row.
+	var g19c := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g19c.classes = {"warrior": 11, "mage": 10, "archer": 11}
 	_events.clear()
-	g20.decline_consolidation()
-	assert(_events.is_empty(), "decline with no pending offer emits nothing")
+	g19c.sleep()
+	assert(_count("consolidation_accepted") == 1, "AT MOST ONE consolidation per sleep, even with two qualifying rows")
+	assert(int(g19c.classes.get("spellsword", 0)) == 14 and int(g19c.classes.get("archer", 0)) == 11, "the first matching row fires; the second waits for the next bed")
+	_events.clear()
+	g19c.sleep()
+	assert(_count("consolidation_accepted") == 1, "3 PROXY, CHAINED: [Spellsword] 14 stands in for the warrior line at its CURRENT level, so the ranger row fires the NEXT sleep")
+	assert(g19c.classes.size() == 1 and int(g19c.classes.get("ranger", 0)) == 17, "the chain consumes the consolidated class itself: max(ceil(2*25/3), 14) == 17")
 
 	var g20b := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g20b.classes = {"warrior": 6, "mage": 7}
 	_events.clear()
 	g20b.sleep()
-	assert(g20b.pending_consolidation.is_empty(), "warrior 6 / mage 7 (sum 13, both below min_parent_level 10) no longer triggers an offer -- the retune's own invariant")
+	assert(_count("consolidation_accepted") == 0, "warrior 6 / mage 7 (sum 13, both below min_parent_level 10) does not merge -- the retune's own invariant")
 	assert(_count("class_evolved") == 0, "neither class is at its evolution at_level yet -- no outcome at all")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "a sleep with no offer and no evolution outcome still falls through to the soundly-sleep fallback")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "a sleep with no merge and no evolution outcome still falls through to the soundly-sleep fallback")
 
+	# EVOLUTIONS STILL RUN on a merging sleep -- the old beat deferred them onto
+	# the decline path, which no longer exists. A THIRD class carries the proof.
 	var g21 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	g21.classes = {"warrior": 11, "mage": 10}
-	g21.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
-	g21.sleep()
-	_events.clear()
-	g21.decline_consolidation()
-	g21.classes = {"warrior": 11, "mage": 10}
+	g21.classes = {"warrior": 11, "mage": 10, "beast_tamer": 10}
+	g21.accomplishments = {"tended_beasts": 14}
 	_events.clear()
 	g21.sleep()
-	assert(_count("consolidation_offered") == 1, "decline does not suppress future offers -- re-offered at the next qualifying sleep")
-
-	var g22 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	g22.classes = {"warrior": 11, "mage": 10}
-	g22.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
-	g22.sleep()
-	assert(g22.pending_consolidation.get("target", "") == "spellsword", "offer pending")
-	g22.accomplishments["spear_skill_used"] = 20
-	_events.clear()
-	g22.decline_consolidation()
-	assert(g22.classes.has("spearmaster"), "decline recomputes evolutions from CURRENT (post-offer-mutation) counters, not stale ones")
-	assert(not g22.classes.has("swordsman"), "the stale sword-dominant outcome from offer time is NOT applied")
-
-	var g23 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	_events.clear()
-	g23.accept_consolidation()
-	g23.decline_consolidation()
-	assert(_events.is_empty(), "accept/decline on a game with no offer ever emits nothing")
+	assert(_count("consolidation_accepted") == 1, "the merge lands")
+	assert(_count("class_evolved") >= 1 and g21.classes.has("beast_master"), "and the untouched third class still evolves in the SAME sleep -- evolutions are no longer deferred")
 
 	var cc_arc := combat_config.duplicate(true)
 	cc_arc["acts"] = _load_json("res://data/acts.json")
@@ -1200,19 +1186,13 @@ func _init() -> void:
 	_events.clear()
 	arc.sleep()
 	assert(arc.accomplishment_count("reached_two_classes") == 1, "AF I1: the qualifying sleep banks reached_two_classes")
-	assert(arc.pending_consolidation.get("target", "") == "spellsword", "AF I1: that sleep defers with a [Spellsword] offer")
-	assert(arc.accomplishment_count("watch_runner_pointed") == 0, "AF I1: the offer sleep defers the tremor pointer (one-sleep delay)")
+	assert(arc.classes.size() == 1 and arc.classes.has("spellsword"), "AF I1: that same sleep MERGES into a single [Spellsword] class (#472)")
+	assert(arc.accomplishment_count("watch_runner_pointed") == 1, "#472 REGRESSION PIN: the merging sleep ALSO fires the tremor pointer -- the beat no longer returns early, so its banks land in the SAME sleep")
 	assert(arc.act_summary()[WIKeys.ID] == "act_iii", "AF I1: flag banked -> act line advances to Act III")
-
-	arc.accept_consolidation()
-	assert(arc.classes.size() == 1 and arc.classes.has("spellsword"), "AF I1: accepted merge leaves a single [Spellsword] class")
 	assert(arc.accomplishment_count("reached_two_classes") == 1, "AF I1: reached_two_classes survives the merge (monotonic, never un-banked)")
 	assert(arc.act_summary()[WIKeys.ID] == "act_iii", "AF I1: post-consolidation act line stays Act III, never walks back to Act II")
 
-	_events.clear()
-	arc.sleep()
-	assert(arc.accomplishment_count("watch_runner_pointed") == 1, "AF I1: post-consolidation sleep fires the tremor pointer (gate reads the flag, not the live count)")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you."), "AF I1: the Watch-runner pointer toast renders after consolidation")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you."), "AF I1: the Watch-runner pointer toast renders on the merging sleep itself")
 	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you." and bool(e["payload"].get("sticky", false))), "GH#273: the pointer toast carries sticky=true AND lore=true -- it queues LAST at a busy wake beat, so it must survive the transition (v0.15 A3 makes the whole queue lossless) and be readable afterwards in the journal")
 
 	var cc_garden := combat_config.duplicate(true)
@@ -3379,9 +3359,9 @@ func _init() -> void:
 	assert(WIGame.apply_loadout(["a", "b", "c"], ["c", "a"]) == ["c", "a"], "non-empty loadout reorders to LOADOUT order and drops unlisted candidates")
 	assert(WIGame.apply_loadout(["a", "b"], ["nonexistent_skill", "b"]) == ["b"], "a loadout id absent from candidates (unknown/renamed) is silently dropped, never an error")
 
-	# --- a7 #208: auto-slot on grant, custom-loadout mode only. The two call
-	# sites (sleep() end, accept_consolidation() end) are one-line reconciles
-	# over this helper; arms exercise the helper's whole decision table. ---
+	# --- a7 #208: auto-slot on grant, custom-loadout mode only. sleep()'s own
+	# end-of-beat reconcile is the single call site (#472 folded the merge into
+	# that beat, so it needs none of its own); arms exercise the whole table. ---
 	var gAuto := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gAuto.inventory.clear()
 	gAuto.equipped[WIKeys.WEAPON] = ""
@@ -3414,7 +3394,7 @@ func _init() -> void:
 	# Review fixes, pinned: (HIGH) an item-only loadout is an AUTO field bar
 	# — auto-slot must NOT touch it (appending would collapse the bar to one
 	# skill); (cap) item pins never count against the 9 skill keys; and the
-	# CALL SITES themselves via a real sleep and a real consolidation decline.
+	# CALL SITE itself via a real sleep.
 	gAuto.hotbar_loadout.assign(["item:healing_draught"])
 	_events.clear()
 	gAuto._auto_slot_new_field_skills(before_no_observe)

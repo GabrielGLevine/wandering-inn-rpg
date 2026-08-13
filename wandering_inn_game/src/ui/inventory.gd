@@ -370,8 +370,6 @@ func _unhandled_input(event: InputEvent) -> void:
 func _can_open() -> bool:
 	if Game.sim.combat != null or Game.sim.dialogue != null:
 		return false
-	if not Game.sim.pending_consolidation.is_empty():
-		return false
 	if pause_menu_ref != null and bool(pause_menu_ref.get("open")):
 		return false
 	if journal_ref != null and bool(journal_ref.get("open")):

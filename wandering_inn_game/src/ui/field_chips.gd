@@ -125,8 +125,7 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 		WIEvents.DIALOGUE_STARTED, WIEvents.DIALOGUE_ENDED, \
 		WIEvents.UI_PAUSE_SHOWN, WIEvents.UI_PAUSE_HIDDEN, \
 		WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_JOURNAL_HIDDEN, \
-		WIEvents.UI_INVENTORY_SHOWN, WIEvents.UI_INVENTORY_HIDDEN, \
-		WIEvents.CONSOLIDATION_OFFERED, WIEvents.UI_CONSOLIDATION_PROMPT_HIDDEN:
+		WIEvents.UI_INVENTORY_SHOWN, WIEvents.UI_INVENTORY_HIDDEN:
 			_apply_visibility()
 
 
@@ -137,7 +136,6 @@ func _apply_visibility() -> void:
 	# pause chip shows; journal/inventory stay combat-blocked.
 	var combat_resting := Game.sim.combat != null and combat_ref != null and bool(combat_ref.is_resting())
 	var hard_blocked := (Game.sim.combat != null and not combat_resting) or _dialogue_open \
-			or not Game.sim.pending_consolidation.is_empty() \
 			or (main_ref != null and bool(main_ref.veil_modal_active()))
 	visible = not hard_blocked
 	if hard_blocked:

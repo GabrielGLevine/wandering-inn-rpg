@@ -165,6 +165,7 @@ func _init() -> void:
 		_check_combat_band(name, game)
 		_check_equipment(name, game)
 		_check_class_requirements(name, game, combat_config["classes"] as Dictionary)
+		_check_retired_keys(name, data as Dictionary)
 		_check_rng_state(name, data as Dictionary)
 
 	if _errors.is_empty():
@@ -466,6 +467,24 @@ const RNG_STATE_MIN_MAGNITUDE := 1_000_000
 
 # RNG.state is internal generator state, not a seed. Small literals are a
 # hand-authored-fixture trap; derive them with _derive_rng_state.gd.
+## #472 retired `pending_consolidation` with the prompt that filled it. A
+## FIXTURE is hand-authored state, so WISave's v8 migration arm (which drops the
+## key for real saves) would silently swallow a reintroduced one here and leave
+## the author believing a mid-offer position exists to test. It does not: there
+## is no offer, ever. Every retired key belongs in this list at the moment it
+## retires -- the migration arm covers players, this covers authors.
+const RETIRED_STATE_KEYS: Array[String] = ["pending_consolidation"]
+
+
+func _check_retired_keys(name: String, data: Dictionary) -> void:
+	var state: Variant = data.get("state", {})
+	if not (state is Dictionary):
+		return
+	for key: String in RETIRED_STATE_KEYS:
+		if (state as Dictionary).has(key):
+			_fail(name, "carries RETIRED save key '%s' -- the field no longer exists on WIGame, so this fixture is authoring state nothing reads (#472)" % key)
+
+
 func _check_rng_state(name: String, data: Dictionary) -> void:
 	var raw := String((data.get("state", {}) as Dictionary).get("rng_state", ""))
 	if not raw.is_valid_int():

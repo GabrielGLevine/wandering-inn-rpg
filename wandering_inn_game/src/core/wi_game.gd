@@ -41,7 +41,6 @@ var dormant_encounters: Array[String] = []
 var generalist_classes: Array[String] = []
 var used_skills: Array[String] = []
 var seen_statuses: Array[String] = []
-var pending_consolidation: Dictionary = {}
 var inventory: Array[String] = []
 # Every non-empty equipped id must also remain in inventory.
 var equipped: Dictionary = {WIKeys.WEAPON: "", "armor": "", "accessory_1": "", "accessory_2": "", "accessory_3": ""}
@@ -116,7 +115,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	# core stays pure and a hand-built scene_config can run with no table at all.
 	_field_skills = WIFieldSkills.new(sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _toggle_light, _blink_field, _ward_field, _animate_field, _door_openable, scene_config.get("interactions", {}), accomplishment_count)
 	_interactions = WIInteractions.new(sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, encounter_gate_met, start_combat, pickup, _has_required_items)
-	_sleep_beat = WISleepBeat.new(sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
+	_sleep_beat = WISleepBeat.new(sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _apply_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
 	_banking = WICombatBanking.new(sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
 	rng.seed = rng_seed
 	for s: Dictionary in skill_config.get(WIKeys.SKILLS, []):
@@ -2757,26 +2756,8 @@ func _holds_consolidated_class() -> bool:
 	return false
 
 
-func _set_pending_consolidation(offer: Dictionary) -> void:
-	pending_consolidation = offer
-
-
 func _grow_resonance() -> void:
 	resonance_capacity += 1
-
-
-func _enriched_offer(offer: Dictionary) -> Dictionary:
-	var enriched := offer.duplicate(true)
-	var parent_ids: Array = offer["parents"]
-	enriched["parents_display"] = [_class_display_name(String(parent_ids[0])), _class_display_name(String(parent_ids[1]))]
-	enriched["target_display"] = _class_display_name(String(offer["target"]))
-	return enriched
-
-
-func pending_offer_display() -> Dictionary:
-	if pending_consolidation.is_empty():
-		return {}
-	return _enriched_offer(pending_consolidation)
 
 
 func _resolve_evolutions() -> bool:
@@ -2817,12 +2798,13 @@ func _resolve_evolutions() -> bool:
 	return anything_happened
 
 
-func accept_consolidation() -> void:
-	var known_before_cons: Array = known_skills().duplicate()
-	if pending_consolidation.is_empty():
-		return
-	var offer := pending_consolidation
-	pending_consolidation = {}
+## #472: consolidation is AUTOMATIC (user ruling, docs/CHOICE-LOG.md). Called
+## from INSIDE the sleep beat, where the offer used to fire -- there is no
+## prompt, no pending state, and no decline. NO auto-slot reconcile of its own:
+## `sleep()` captured `known_before_sleep` before the beat and reconciles after
+## it, so the merged kit's new field skills slot on that one pass (the old
+## accept/decline paths needed their own only because they ran OUTSIDE the beat).
+func _apply_consolidation(offer: Dictionary) -> void:
 	var parents: Array = offer["parents"]
 	var target := String(offer["target"])
 	var level := int(offer["level"])
@@ -2832,27 +2814,42 @@ func accept_consolidation() -> void:
 		parent_names.append(String(_class_display_name(pid)))
 		classes.erase(pid)
 	classes[target] = level
+	_apply_consolidation_upgrades(target)
 	_emit(WIEvents.CONSOLIDATION_ACCEPTED, offer.duplicate(true))
 	var target_name := String(_class_display_name(target))
-	_emit(WIEvents.TOAST, {"text": "[%s] and [%s] merge into [%s]!" % [parent_names[0], parent_names[1], target_name]})
+	# The player's whole account of a merge they did not choose: canon bracket
+	# voice, both retiring parents named, the new class named, and NOTHING else
+	# (no merged level, no counters -- the opaque-until-sleep lock). `lore: true`
+	# makes it READ-BACKABLE in the journal's Lore record, which is the journal
+	# half of §1's "veil line + journal entry" -- a merge is not something a
+	# player may lose to a toast that scrolled past.
+	_emit(WIEvents.TOAST, {"text": "[%s] and [%s] merge into [%s]!" % [parent_names[0], parent_names[1], target_name], "lore": true})
 	_bank_reached_two_classes_if_earned()
-	_auto_slot_new_field_skills(known_before_cons)
 
 
-func decline_consolidation() -> void:
-	if pending_consolidation.is_empty():
+## The runtime half of the no-Skill-loss guarantee's UPGRADE escape hatch: a
+## target that replaces a parent grant with a strictly better [Skill] rewrites
+## what the player already carries, in `player_skills` and on the hotbar, so an
+## upgraded row is never both lost from the kit and stale in the bar. Inert
+## without an `upgrades` map (no shipped row carries one); data_lint's coverage
+## arm proves every authored pair is cost/effect-dominant.
+func _apply_consolidation_upgrades(target: String) -> void:
+	var upgrades := WIProgression.consolidation_upgrades(target, _combat_config.get("classes", {}))
+	if upgrades.is_empty():
 		return
-	pending_consolidation = {}
-	_emit(WIEvents.CONSOLIDATION_DECLINED, {})
-	# Review MEDIUM-HIGH: a consolidation offer defers evolutions out of the
-	# sleep beat — the decline path resolves them HERE, after the sleep-end
-	# reconcile already ran, and the next sleep's snapshot would treat the
-	# evolved grants as old. Reconcile around this resolution or those field
-	# skills never auto-slot.
-	var known_before_evo: Array = known_skills().duplicate()
-	if not _resolve_evolutions():
-		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
-	_auto_slot_new_field_skills(known_before_evo)
+	for old_id: String in upgrades:
+		var new_id := String(upgrades[old_id])
+		var owned := player_skills.find(old_id)
+		if owned != -1:
+			player_skills.remove_at(owned)
+			if not player_skills.has(new_id):
+				player_skills.append(new_id)
+		var slotted := hotbar_loadout.find(old_id)
+		if slotted != -1:
+			if hotbar_loadout.has(new_id):
+				hotbar_loadout.remove_at(slotted)
+			else:
+				hotbar_loadout[slotted] = new_id
 
 
 func _class_display_name(id: String) -> String:
@@ -2882,7 +2879,6 @@ func snapshot() -> Dictionary:
 		"dormant_encounters": dormant_encounters.duplicate(),
 		"generalist_classes": generalist_classes.duplicate(),
 		"started_quests": started_quests.duplicate(),
-		"pending_consolidation": pending_consolidation.duplicate(true),
 		"used_skills": used_skills.duplicate(),
 		"seen_statuses": seen_statuses.duplicate(),
 		"lore_notes": lore_notes.duplicate(),

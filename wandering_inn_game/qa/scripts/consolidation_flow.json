@@ -1,5 +1,5 @@
 {
- "_comment": "Fixture start (near_consolidation: warrior 11 + mage 10, sum 21 -- meets both min_parent_level 10 and min_combined_level 21). Class-foundation pass R3 (2026-07-12) re-based this fixture to the new consolidation gate (min_parent_level 6->10, min_combined_level 13->21) -- BOTH parents now individually clear their own evolution.at_level (10) too, which changes the DECLINE leg's own behavior from the old fixture: `_resolve_evolutions()` no longer skips warrior/mage outright (they're no longer below at_level), it recomputes a real 'waiting' outcome for EACH (min_uses not met -- this fixture's accomplishments carry no sword_skill_used/spear_skill_used/ice_cast/fire_cast at all, so both land in Waiting, never a real evolution), so decline now surfaces BOTH classes' own waiting toasts (mage first, catalog order, then warrior) instead of the old single 'You sleep soundly.' fallback. Exercises the FULL offer round trip: decline -> evolutions stage runs (both waiting) -> re-offered next qualifying sleep -> accept -> merged [Spellsword] at level 14 (max(ceil(2*21/3), max(11,10))=14, the new floor -- see classes.json's own consolidations[0]/spellsword `_comment`s) with the merged kit fielded in a subsequent fight. T8: accept/decline are now driven through the REAL UI consolidation prompt (src/ui/consolidation_prompt.gd) -- the prompt renders on consolidation_offered (ui_consolidation_prompt_rendered), cancel = decline (keep them apart), confirm on the default 'Consolidate' row = accept, and it hides (ui_consolidation_prompt_hidden) before the sim resolves the deferred sleep beat.",
+ "_comment": "Fixture start (near_consolidation: warrior 11 + mage 10, sum 21 -- meets both min_parent_level 10 and min_combined_level 21). #472 made consolidation AUTOMATIC (user ruling, docs/CHOICE-LOG.md), so what this script owns is no longer an offer round trip but the SHAPE OF THE BEAT: one sleep, and the merge lands inside it, strictly before the veil renders -- with the parents retired, the merged [Spellsword] at level 14 (max(ceil(2*21/3), max(11,10)) == 14, the derived floor), the Design's one veil line, the same sentence banked to the journal's Lore record, and the merged kit fielded in a subsequent fight. The modal prompt, decline_consolidation() and the re-offer leg this script used to exercise are DELETED; assert_event_absent on consolidation_offered is what keeps them deleted.",
  "fixture_save": "near_consolidation",
  "starts_at_title": true,
  "steps": [
@@ -53,7 +53,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -65,156 +68,7 @@
    "name": "interact"
   },
   {
-   "action": "wait_for_event",
-   "type": "consolidation_offered",
-   "payload_contains": {
-    "target": "spellsword",
-    "level": 14
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "pending_consolidation.target",
-   "equals": "spellsword"
-  },
-  {
-   "action": "assert_state",
-   "path": "pending_consolidation.level",
-   "equals": 14
-  },
-  {
-   "action": "assert_state",
-   "path": "classes",
-   "equals": {
-    "warrior": 11,
-    "mage": 10
-   }
-  },
-  {
-   "_comment": "THE ORDER PIN (playtest hotfix #8): wait_for_event's since-marker is a forward-only cursor, so these three consecutive waits prove the veil's sleep sequence RENDERS and FINISHES strictly BEFORE the consolidation prompt shows -- the offer surfaces after the sleep beat, never on top of it. The veil emits both events in the QA-collapsed path too (sleep_veil.gd's _run_sequence), so this ordering is headless-provable and can never silently regress. lines:0 -- this sleep banks no class/level announcements (the fixture sits exactly at the offer threshold). lines:1 = the GDI offer-announce line (the veil speaks the consolidation in the Design's voice; the modal choice still waits for the veil to finish).",
-   "action": "wait_for_event",
-   "type": "ui_sleep_veil_rendered",
-   "payload_contains": {
-    "lines": 1
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_sleep_veil_finished",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_consolidation_prompt_rendered",
-   "payload_contains": {
-    "target": "spellsword"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "screenshot",
-   "name": "01_offer_prompt"
-  },
-  {
-   "action": "press",
-   "name": "cancel"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_consolidation_prompt_hidden",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "consolidation_declined",
-   "timeout_sec": 5
-  },
-  {
-   "_comment": "R3 (2026-07-12): unlike the old fixture (both parents below at_level, no evolution outcome at all -> the plain 'sleep soundly' fallback), warrior 11 + mage 10 BOTH now clear evolution.at_level (10) -- decline's own `_resolve_evolutions()` recompute produces a real 'Waiting' outcome for EACH (this fixture banks no sword_skill_used/spear_skill_used/ice_cast/fire_cast, so min_uses is nowhere close to met for either axis). Both waiting toasts fire, catalog order (mage's class block precedes warrior's in classes.json) -- mage's first.",
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "payload_contains": {
-    "text": "Your focus wavers between frost and flame."
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "payload_contains": {
-    "text": "Your hands haven't chosen sword or spear yet."
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "pending_consolidation",
-   "equals": {}
-  },
-  {
-   "action": "assert_state",
-   "path": "classes",
-   "equals": {
-    "warrior": 11,
-    "mage": 10
-   }
-  },
-  {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "consolidation_offered",
-   "payload_contains": {
-    "target": "spellsword",
-    "level": 14
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "pending_consolidation.target",
-   "equals": "spellsword"
-  },
-  {
-   "_comment": "The SAME order pin as the first offer above -- the re-offer sleep also runs the full veil sequence before its prompt shows. lines:1 = the GDI offer-announce line (the veil speaks the consolidation in the Design's voice; the modal choice still waits for the veil to finish).",
-   "action": "wait_for_event",
-   "type": "ui_sleep_veil_rendered",
-   "payload_contains": {
-    "lines": 1
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_sleep_veil_finished",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_consolidation_prompt_rendered",
-   "payload_contains": {
-    "target": "spellsword"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "screenshot",
-   "name": "02_reoffered_prompt"
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_consolidation_prompt_hidden",
-   "timeout_sec": 5
-  },
-  {
+   "_comment": "#472: the sleep beat APPLIES the merge -- no offer, no modal, no decline. The event lands INSIDE the beat, so it is strictly before the veil's own render/finish pair; these forward-only waits are that order pin.",
    "action": "wait_for_event",
    "type": "consolidation_accepted",
    "payload_contains": {
@@ -224,9 +78,38 @@
    "timeout_sec": 5
   },
   {
+   "action": "assert_event_absent",
+   "type": "consolidation_offered"
+  },
+  {
+   "_comment": "lines:1 = the Design's merge line. This fixture sits exactly at the gate and banks no class/level announcements, so a second line here would mean progress text leaked into the veil.",
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {
+    "lines": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 5
+  },
+  {
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Warrior] and [Mage] merge into [Spellsword]!"
+   },
    "timeout_sec": 5
+  },
+  {
+   "_comment": "The journal half: the merge toast carries lore:true, so the sentence is banked to the durable Lore record.",
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": [
+    "[Warrior] and [Mage] merge into [Spellsword]!"
+   ]
   },
   {
    "action": "assert_state",
@@ -236,19 +119,17 @@
    }
   },
   {
-   "action": "assert_state",
-   "path": "pending_consolidation",
-   "equals": {}
-  },
-  {
    "action": "screenshot",
-   "name": "03_merged_spellsword"
+   "name": "01_merged_spellsword"
   },
   {
    "_comment": "Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3').",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 3]
+   "cell": [
+    2,
+    3
+   ]
   },
   {
    "action": "move",

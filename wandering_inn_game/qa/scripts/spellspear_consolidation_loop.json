@@ -1,5 +1,5 @@
 {
- "_comment": "#449 [Spellspear] -- the EVOLVED-LINEAGE consolidation, end to end. Sibling of consolidation_flow.json (which owns the offer/decline/re-offer round trip for the unevolved warrior line); this one owns the thing that round trip cannot show -- that an EVOLVED parent consolidates into its OWN class. Fixture near_spellspear_consolidation: spearmaster 11 + mage 10, the cheapest legal pair under min_parent_level 10 + min_combined_level 21, merging to max(ceil(2*21/3), max(11,10)) == 14. THE ROW THIS SCRIPT REALLY GATES is the ORDER of classes.json's `consolidations[]`: `WIProgression.check_consolidation` returns the FIRST match and [Spellsword]'s warrior line still literally lists `spearmaster`, so if the spellspear row ever sinks below it this script reds on `target: spellspear` instead of silently handing a spear player [Spellsword] in a build nobody replays. The OPAQUE-UNTIL-SLEEP lock is proved before the bed rather than asserted in prose: on a freshly loaded save standing at the threshold, `pending_consolidation` is empty and no consolidation_offered has been emitted -- the offer does not exist until the sleep beat resolves it, so there is nothing for a progress readout to leak. The closing fight is the kit proof: with Relc's spear WORN (weapon_gated_kit strips mismatched skills), the merged PC fields both an INHERITED spear-lineage grant (pierce_thrust, [Spearmaster] L14, arriving via `inherits`) and the consolidation's OWN new grant (keener_point, [Spellspear] L14). Relc fields as an ally without a conversation beat here -- the fixture already carries met_relc, which is goblin_encounter_2's whole `ally_requires`.",
+ "_comment": "#449 [Spellspear] -- the EVOLVED-LINEAGE consolidation, end to end, now AUTOMATIC (#472). Sibling of consolidation_flow.json; this one owns the thing that flow cannot show -- that an EVOLVED parent consolidates into its OWN class. Fixture near_spellspear_consolidation: spearmaster 11 + mage 10, the cheapest legal pair under min_parent_level 10 + min_combined_level 21, merging to max(ceil(2*21/3), max(11,10)) == 14. THE ROW THIS SCRIPT REALLY GATES is the ORDER of classes.json's `consolidations[]`: `WIProgression.check_consolidation` returns the FIRST match and [Spellsword]'s warrior line still literally lists `spearmaster`, so if the spellspear row ever sinks below it this script reds on `target: spellspear` instead of silently handing a spear player [Spellsword] in a build nobody replays. THE OPAQUE-UNTIL-SLEEP LOCK is proved before the bed rather than asserted in prose: on a freshly loaded save standing at the threshold, NO consolidation event has been emitted and both parents are still held -- resolution happens in the sleep beat and nowhere earlier, so there is nothing for a progress readout to leak. #472 replaced the modal with the Design simply telling you: the merge lands inside the beat (strictly BEFORE the veil finishes, pinned by these forward-only waits), the veil speaks one line, and the same line is banked to the journal's durable Lore record so a merge the player never chose is read-backable. The closing fight is the kit proof: with Relc's spear WORN (weapon_gated_kit strips mismatched skills), the merged PC fields both an INHERITED spear-lineage grant (pierce_thrust, [Spearmaster] L14, via `inherits`) and the consolidation's OWN new grant (keener_point, [Spellspear] L14).",
  "fixture_save": "near_spellspear_consolidation",
  "starts_at_title": true,
  "steps": [
@@ -51,14 +51,9 @@
    }
   },
   {
-   "_comment": "THE OPAQUE-UNTIL-SLEEP LOCK, proved rather than asserted in prose. This save stands ON the threshold: both parents clear min_parent_level and their sum is exactly min_combined_level. If eligibility surfaced anywhere before the sleep beat, it would be here -- and it is not. No offer exists to render a progress readout of.",
-   "action": "assert_state",
-   "path": "pending_consolidation",
-   "equals": {}
-  },
-  {
+   "_comment": "THE OPAQUE-UNTIL-SLEEP LOCK, proved rather than asserted in prose. This save stands ON the threshold: both parents clear min_parent_level and their sum is exactly min_combined_level. If eligibility resolved anywhere before the sleep beat, the merge event would already be in this run's stream -- and it is not.",
    "action": "assert_event_absent",
-   "type": "consolidation_offered"
+   "type": "consolidation_accepted"
   },
   {
    "_comment": "The inn walk is consolidation_flow's subject, not this one's: teleport to your_bed upstairs (the inn's only bed since #49).",
@@ -79,33 +74,14 @@
    "name": "interact"
   },
   {
-   "_comment": "THE ROW #449 EXISTS FOR. spearmaster + mage resolves to spellspear, never spellsword -- and to the SAME derived floor, since the merge formula never looked at which lineage the parents were.",
+   "_comment": "THE ROW #449 EXISTS FOR, now applied rather than offered. spearmaster + mage resolves to spellspear, never spellsword -- and to the SAME derived floor, since the merge formula never looked at which lineage the parents were.",
    "action": "wait_for_event",
-   "type": "consolidation_offered",
+   "type": "consolidation_accepted",
    "payload_contains": {
     "target": "spellspear",
     "level": 14
    },
    "timeout_sec": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "pending_consolidation.target",
-   "equals": "spellspear"
-  },
-  {
-   "action": "assert_state",
-   "path": "pending_consolidation.level",
-   "equals": 14
-  },
-  {
-   "_comment": "Offered is not accepted: the parents are untouched until the player says yes.",
-   "action": "assert_state",
-   "path": "classes",
-   "equals": {
-    "spearmaster": 11,
-    "mage": 10
-   }
   },
   {
    "_comment": "THE ORDER PIN (consolidation_flow's own, same reasoning): wait_for_event's since-marker is forward-only, so these consecutive waits prove the veil's sleep sequence RENDERS and FINISHES strictly before the prompt shows. lines:1 = the single offer-announce line; this fixture sits exactly at the threshold and banks no class/level announcements, so a second line here would mean progress text leaked into the veil.",
@@ -122,35 +98,8 @@
    "timeout_sec": 5
   },
   {
-   "action": "wait_for_event",
-   "type": "ui_consolidation_prompt_rendered",
-   "payload_contains": {
-    "target": "spellspear"
-   },
-   "timeout_sec": 5
-  },
-  {
    "action": "screenshot",
-   "name": "01_spellspear_offer_prompt"
-  },
-  {
-   "_comment": "Confirm on the default 'Consolidate' row = accept (the real UI prompt, src/ui/consolidation_prompt.gd).",
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_consolidation_prompt_hidden",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "consolidation_accepted",
-   "payload_contains": {
-    "target": "spellspear",
-    "level": 14
-   },
-   "timeout_sec": 5
+   "name": "01_spellspear_merge_veil"
   },
   {
    "_comment": "THE PLAYER-FACING COPY, pinned rather than waved through with a bare toast wait: canon bracket voice, both retiring parents named, the new class named, and NOTHING else -- no merged-level number, no counter, no stat grammar. That is the opaque-until-sleep product lock stated in the one place a player actually reads.",
@@ -162,17 +111,20 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "THE JOURNAL HALF of 1's 'veil line + journal entry'. The merge toast carries lore:true, so the same sentence is banked to the durable Lore record -- a class the player never chose to lose can be read back at leisure instead of living or dying by one toast's render race.",
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": [
+    "[Spearmaster] and [Mage] merge into [Spellspear]!"
+   ]
+  },
+  {
    "_comment": "Both parents retire into the one class -- the sparse table's floor written straight in, never counted up to.",
    "action": "assert_state",
    "path": "classes",
    "equals": {
     "spellspear": 14
    }
-  },
-  {
-   "action": "assert_state",
-   "path": "pending_consolidation",
-   "equals": {}
   },
   {
    "action": "screenshot",

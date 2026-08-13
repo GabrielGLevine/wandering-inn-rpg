@@ -6,9 +6,8 @@ extends RefCounted
 ## streams must stay byte-identical at pinned seeds. WIGame.sleep() keeps the
 ## waking-state reset (wards/companion/first-use/delivery/phase) and calls
 ## run() after PHASE_CHANGED. Shared helpers stay in WIGame behind Callables:
-## _resolve_evolutions (decline_consolidation also runs it), _enriched_offer
-## (pending_offer_display), _bank_reached_two_classes_if_earned
-## (accept_consolidation), _class_display_name, _quests_completed_count.
+## _resolve_evolutions, _bank_reached_two_classes_if_earned
+## (_apply_consolidation), _class_display_name, _quests_completed_count.
 ## Sleep-only helpers moved in: tremor pointer, garden earn/unlock, class
 ## gained toast (signatures gain a combat-config/classes-cfg param — the only
 ## non-verbatim drift, bodies unchanged). `classes`/`accomplishments`/
@@ -19,8 +18,7 @@ var _record_accomplishment: Callable
 var _accomplishment_count: Callable
 var _known_skills: Callable
 var _class_display_name: Callable
-var _enriched_offer: Callable
-var _set_pending_consolidation: Callable
+var _apply_consolidation: Callable
 var _bank_reached_two_classes: Callable
 var _resolve_evolutions: Callable
 var _quests_completed_count: Callable
@@ -29,14 +27,13 @@ var _grow_resonance: Callable
 var _skills: Dictionary
 
 
-func _init(event_sink: Callable, record_accomplishment_cb: Callable, accomplishment_count_cb: Callable, known_skills_cb: Callable, class_display_name_cb: Callable, enriched_offer_cb: Callable, set_pending_consolidation_cb: Callable, bank_reached_two_classes_cb: Callable, resolve_evolutions_cb: Callable, quests_completed_count_cb: Callable, start_quest_cb: Callable, grow_resonance_cb: Callable, skills: Dictionary) -> void:
+func _init(event_sink: Callable, record_accomplishment_cb: Callable, accomplishment_count_cb: Callable, known_skills_cb: Callable, class_display_name_cb: Callable, apply_consolidation_cb: Callable, bank_reached_two_classes_cb: Callable, resolve_evolutions_cb: Callable, quests_completed_count_cb: Callable, start_quest_cb: Callable, grow_resonance_cb: Callable, skills: Dictionary) -> void:
 	_event_sink = event_sink
 	_record_accomplishment = record_accomplishment_cb
 	_accomplishment_count = accomplishment_count_cb
 	_known_skills = known_skills_cb
 	_class_display_name = class_display_name_cb
-	_enriched_offer = enriched_offer_cb
-	_set_pending_consolidation = set_pending_consolidation_cb
+	_apply_consolidation = apply_consolidation_cb
 	_bank_reached_two_classes = bank_reached_two_classes_cb
 	_resolve_evolutions = resolve_evolutions_cb
 	_quests_completed_count = quests_completed_count_cb
@@ -131,11 +128,18 @@ func run(classes: Dictionary, accomplishments: Dictionary, combat_config: Dictio
 
 	_bank_reached_two_classes.call()
 
-	var offer := WIProgression.check_consolidation(classes, combat_config["classes"])
-	if not offer.is_empty():
-		_set_pending_consolidation.call(offer)
-		_emit(WIEvents.CONSOLIDATION_OFFERED, _enriched_offer.call(offer))
-		return
+	# #472 BEAT ORDER: consolidation APPLIES here -- exactly where the offer used
+	# to fire -- and this beat NEVER returns early any more. That is the whole
+	# preemption fix: a sleep that merges still runs every bank below it
+	# (door_study_sleeps was the regression), in the SAME sleep.
+	# ONCE PER SLEEP: `check_consolidation` returns the first matching row and
+	# nothing re-checks it, so each sleep retires at most one held-class pair and
+	# a second qualifying row waits for the next bed -- which also keeps the
+	# fixpoint trivially terminating.
+	var merge := WIProgression.check_consolidation(classes, combat_config["classes"])
+	if not merge.is_empty():
+		_apply_consolidation.call(merge)
+		anything_happened = true
 
 	if bool(_resolve_evolutions.call()):
 		anything_happened = true

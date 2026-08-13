@@ -264,25 +264,30 @@ class TestGoldenCanonicalSkeleton(GoldenBase):
 	def test_offer_and_accept_beats_pin_target_and_derived_floor(self):
 		spine = self._spine(self.proposal["qa_script"])
 		shipped = self._spine(self.shipped)
-		for event in ("consolidation_offered", "consolidation_accepted"):
-			mine = next(s for s in spine if s.get("type") == event and "payload_contains" in s)
-			theirs = next(s for s in shipped if s.get("type") == event and "payload_contains" in s)
-			self.assertEqual(mine["payload_contains"], theirs["payload_contains"])
-			self.assertEqual(mine["payload_contains"]["level"], 14)
+		# #472: `consolidation_accepted` is the ONLY consolidation event -- the
+		# merge applies in-beat, so there is no offer to pin alongside it.
+		event = "consolidation_accepted"
+		mine = next(s for s in spine if s.get("type") == event and "payload_contains" in s)
+		theirs = next(s for s in shipped if s.get("type") == event and "payload_contains" in s)
+		self.assertEqual(mine["payload_contains"], theirs["payload_contains"])
+		self.assertEqual(mine["payload_contains"]["level"], 14)
 
 	def test_opaque_until_sleep_lock_is_proved_before_the_bed(self):
 		spine = self._spine(self.proposal["qa_script"])
+		# #472: the lock is that NO consolidation event exists before the bed --
+		# `pending_consolidation` retired, so the absent-event probe IS the proof.
 		absent = [s for s in spine if s["action"] == "assert_event_absent"]
-		self.assertEqual([s["type"] for s in absent], ["consolidation_offered"])
-		pending = next(i for i, s in enumerate(spine)
-			if s.get("path") == "pending_consolidation" and s.get("equals") == {})
-		offered = next(i for i, s in enumerate(spine)
-			if s.get("type") == "consolidation_offered")
-		self.assertLess(pending, offered)
+		self.assertEqual([s["type"] for s in absent],
+			["consolidation_accepted", "consolidation_offered"])
+		locked = next(i for i, s in enumerate(spine)
+			if s["action"] == "assert_event_absent" and s["type"] == "consolidation_accepted")
+		merged = next(i for i, s in enumerate(spine)
+			if s.get("type") == "consolidation_accepted" and s["action"] == "wait_for_event")
+		self.assertLess(locked, merged)
 
 	def test_merged_state_assertions_match_the_shipped_script(self):
 		spine = self._spine(self.proposal["qa_script"])
-		shipped = self._spine(self.shipped)
+		shipped = [s for s in self._spine(self.shipped) if s.get("path") == "classes"]
 		merged = [s for s in spine if s.get("path") == "classes"]
 		self.assertEqual([s["equals"] for s in merged],
 			[s["equals"] for s in shipped if s.get("path") == "classes"])

@@ -5,7 +5,7 @@
   "current_map": "deep_tunnels", "player_cell": [13, 1], "player_facing": [1, 0],
   "classes": {"warrior": 5},
   "accomplishments": {"reached_liscor": 1, "met_relc": 1, "sparred_with_relc": 1, "heard_about_cisterns": 1, "resolved_the_cisterns": 1, "heard_the_deep_tremor": 1, "won_combat": 1, "melee_hit": 18},
-  "player_skills": ["basic_cleaning"], "removed_entities": [], "dormant_encounters": [], "generalist_classes": [], "started_quests": [], "pending_consolidation": {}, "used_skills": [],
+  "player_skills": ["basic_cleaning"], "removed_entities": [], "dormant_encounters": [], "generalist_classes": [], "started_quests": [], "used_skills": [],
   "inventory": ["rusty_sword", "leather_jerkin"], "equipped": {"weapon": "rusty_sword", "armor": "leather_jerkin"}, "container_state": {}, "gold": 20, "actions_since_sleep": 0, "rng_state": "-6393592048753323481"
  }
 }

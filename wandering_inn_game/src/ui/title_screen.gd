@@ -18,7 +18,7 @@ const PLAYTEST_FIXTURE_ORDER: Array[String] = [
 	"gear_loop_start", "cisterns_talk_start", "cisterns_scout_start",
 	"cisterns_fight_start", "wrong_order_talk_start", "wrong_order_fight_start",
 	"wrong_order_loop_start", "krshia_stage3_pre", "stage3_perks_pre",
-	"near_evolution", "near_consolidation", "pending_offer", "near_generalist",
+	"near_evolution", "near_consolidation", "near_generalist",
 	"near_mage_cast", "near_ice_floor", "near_defeat", "door_chain_talk_start",
 	"door_chain_scout_start", "door_chain_fight_start", "door_awakening_start",
 	"portal_menu_start", "near_ruin", "near_garden", "garden_unlocked", "deep_descent_start",

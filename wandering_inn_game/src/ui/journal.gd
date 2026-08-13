@@ -491,8 +491,6 @@ func _recent_message_count() -> int:
 func _can_open() -> bool:
 	if Game.sim.combat != null or Game.sim.dialogue != null:
 		return false
-	if not Game.sim.pending_consolidation.is_empty():
-		return false
 	if pause_menu_ref != null and bool(pause_menu_ref.get("open")):
 		return false
 	if inventory_ref != null and bool(inventory_ref.get("open")):

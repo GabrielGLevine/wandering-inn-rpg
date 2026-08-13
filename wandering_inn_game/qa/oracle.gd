@@ -40,7 +40,7 @@ const QUERIES := {
 	"visible_options": "<graph_id> [<node_id>] -- rows dialogue.gd would SHOW under this state",
 	"path": "<map> <x,y> <x,y> -- BFS over the map's blocked grid + entity cells",
 	"state": "<dot.path> -- anything WIGame.snapshot() reaches (omit for the whole snapshot)",
-	"progression_preview": "-- class gains, levels, consolidation, and evolution outcomes at the next sleep",
+	"progression_preview": "-- class gains, levels, the automatic consolidation, and evolution outcomes at the next sleep",
 	"field_bar": "-- field_hotbar_loadout() with slot numbers and number-key reachability",
 	"known_skills": "-- known_skills() split by source (innate / class grant / worn)",
 	"portal_rows": "-- portals.json x accomplishments x current-map exclusion",
@@ -504,9 +504,10 @@ func _q_state(sim: WIGame, argv: Array) -> Dictionary:
 
 
 ## This is the sleep beat's own progression ordering, evaluated on copies:
-## gains at level 1, all eligible level-ups, consolidation before evolution.
-## A consolidation offer defers evolution in the real beat, so candidates are
-## reported separately and `evolutions` stays empty while the modal is armed.
+## gains at level 1, all eligible level-ups, then (#472) AT MOST ONE
+## consolidation APPLIED, then evolutions. Nothing defers any more -- the beat
+## no longer returns early on a merge, so this preview runs the same straight
+## line the real beat does.
 func _q_progression_preview(sim: WIGame) -> Dictionary:
 	var catalog: Dictionary = sim._combat_config.get("classes", {})
 	var before: Dictionary = sim.classes.duplicate(true)
@@ -518,20 +519,19 @@ func _q_progression_preview(sim: WIGame) -> Dictionary:
 	var level_ups := WIProgression.check_level_ups(classes, sim.accomplishments, catalog)
 	for gain: Dictionary in level_ups:
 		classes[String(gain["class"])] = int(gain["level"])
-	var consolidation := sim.pending_consolidation.duplicate(true)
-	if consolidation.is_empty():
-		consolidation = WIProgression.check_consolidation(classes, catalog)
-	var candidates := WIProgression.check_evolutions(classes, sim.accomplishments, catalog, generalist)
-	var evolutions: Array = []
-	if consolidation.is_empty():
-		evolutions = candidates
-		for outcome: Dictionary in evolutions:
-			var class_id := String(outcome["class"])
-			if outcome.has("to"):
-				classes.erase(class_id)
-				classes[String(outcome["to"])] = int(outcome["level"])
-			elif bool(outcome.get("generalist", false)) and not generalist.has(class_id):
-				generalist.append(class_id)
+	var consolidation := WIProgression.check_consolidation(classes, catalog)
+	if not consolidation.is_empty():
+		for parent_id: Variant in consolidation["parents"]:
+			classes.erase(String(parent_id))
+		classes[String(consolidation["target"])] = int(consolidation["level"])
+	var evolutions := WIProgression.check_evolutions(classes, sim.accomplishments, catalog, generalist)
+	for outcome: Dictionary in evolutions:
+		var class_id := String(outcome["class"])
+		if outcome.has("to"):
+			classes.erase(class_id)
+			classes[String(outcome["to"])] = int(outcome["level"])
+		elif bool(outcome.get("generalist", false)) and not generalist.has(class_id):
+			generalist.append(class_id)
 	return {
 		"classes_before": before,
 		"classes_after": classes,
@@ -540,7 +540,6 @@ func _q_progression_preview(sim: WIGame) -> Dictionary:
 		"level_ups": level_ups,
 		"consolidation": consolidation,
 		"evolutions": evolutions,
-		"deferred_evolutions": candidates if not consolidation.is_empty() else [],
 	}
 
 

@@ -246,15 +246,70 @@ static func check_evolutions(classes: Dictionary, accomplishments: Dictionary, c
 	return out
 
 
-static func _held_line_candidate(classes: Dictionary, line: Array) -> String:
-	var best_id := ""
-	var best_level := -1
+## Every held id that can stand for `line`, level-DESC (ties keep authored
+## order). Index 0 is the old `_held_line_candidate` answer, so any row whose
+## two lists disagree at index 0 resolves byte-identically to the pre-#472
+## reader; the tail exists only for the one case that reader could not express
+## -- both lines wanting the SAME held class.
+static func _line_candidates(classes: Dictionary, line: Array, class_catalog: Dictionary) -> Array:
+	var found: Array = []
 	for id: Variant in line:
 		var id_str := String(id)
-		if classes.has(id_str) and int(classes[id_str]) > best_level:
-			best_id = id_str
-			best_level = int(classes[id_str])
-	return best_id
+		if classes.has(id_str) and not found.has(id_str):
+			found.append(id_str)
+	for proxy_id: String in _lineage_proxies(classes, line, class_catalog):
+		if not found.has(proxy_id):
+			found.append(proxy_id)
+	found.sort_custom(func(a: String, b: String) -> bool: return int(classes[a]) > int(classes[b]))
+	return found
+
+
+## #472 LINEAGE PROXY. A held consolidated class stands in for either parent
+## line its OWN row consumed, AT ITS CURRENT LEVEL (the class kept climbing, so
+## the lineage climbed with it) -- so [Spellsword] 16 + ice_mage 10 clears a
+## warrior-line x ice_mage row.
+## CONTAINMENT DIRECTION IS LOAD-BEARING: the proxy's own line must be a SUBSET
+## of the line being asked for, never the reverse. [Spellspear] (own line
+## `[spearmaster]`) satisfies a broad warrior line that lists spearmaster;
+## a [Spellsword] built off plain [Warrior] must NOT satisfy [Spellspear]'s
+## narrower `[spearmaster]` line. Reversing it hands spear-less builds the
+## evolved-lineage targets, which is exactly the orphaning #449 closed.
+static func _lineage_proxies(classes: Dictionary, line: Array, class_catalog: Dictionary) -> Array:
+	var asked: Dictionary = {}
+	for id: Variant in line:
+		asked[String(id)] = true
+	var out: Array = []
+	for entry: Dictionary in class_catalog.get("consolidations", []):
+		var target := String(entry.get("target", ""))
+		if target == "" or not classes.has(target):
+			continue
+		var lines: Array = entry.get("parent_lines", [])
+		if lines.size() != 2:
+			continue
+		for side: Variant in lines:
+			var covered := true
+			for id: Variant in (side as Array):
+				if not asked.has(String(id)):
+					covered = false
+					break
+			if covered and not out.has(target):
+				out.append(target)
+	return out
+
+
+## Optional `upgrades: {old_skill_id: new_skill_id}` on a consolidations row --
+## the no-Skill-loss escape hatch for a parent grant the target replaces with a
+## strictly better [Skill] instead of re-granting verbatim. data_lint's coverage
+## arm validates every pair is cost/effect-dominant; this is the runtime half
+## that rewrites what the player already holds.
+static func consolidation_upgrades(target_id: String, class_catalog: Dictionary) -> Dictionary:
+	for entry: Dictionary in class_catalog.get("consolidations", []):
+		if String(entry.get("target", "")) != target_id:
+			continue
+		var raw: Variant = entry.get("upgrades", {})
+		if raw is Dictionary:
+			return (raw as Dictionary).duplicate(true)
+	return {}
 
 
 static func _consolidation_merged_level(level_a: int, level_b: int) -> int:
@@ -270,8 +325,25 @@ static func check_consolidation(classes: Dictionary, class_catalog: Dictionary) 
 			continue
 		var min_parent_level := int(entry.get("min_parent_level", 0))
 		var min_combined_level := int(entry.get("min_combined_level", 0))
-		var id_a := _held_line_candidate(classes, lines[0])
-		var id_b := _held_line_candidate(classes, lines[1])
+		if classes.has(String(entry.get("target", ""))):
+			continue
+		var cands_a := _line_candidates(classes, lines[0], class_catalog)
+		var cands_b := _line_candidates(classes, lines[1], class_catalog)
+		# ONE held class can proxy BOTH sides of its own row ([Spellsword]
+		# covers the warrior line and the mage line alike), which would read as
+		# a class merging with itself. First distinct pair, both lists already
+		# level-DESC, so shipped single-candidate rows resolve exactly as before.
+		var id_a := ""
+		var id_b := ""
+		for a: String in cands_a:
+			for b: String in cands_b:
+				if a == b:
+					continue
+				id_a = a
+				id_b = b
+				break
+			if id_a != "":
+				break
 		if id_a == "" or id_b == "":
 			continue
 		var level_a := int(classes[id_a])

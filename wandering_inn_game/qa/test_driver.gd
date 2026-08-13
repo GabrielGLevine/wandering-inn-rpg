@@ -377,19 +377,6 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(slot_rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
-		"click_consolidation_row":
-			var cons_row_n := int(step["row"])
-			var cp := get_tree().root.find_child("ConsolidationPrompt", true, false)
-			if cp == null:
-				_fail("click_consolidation_row: ConsolidationPrompt node not found")
-			else:
-				var cons_rect: Rect2 = cp.call("row_rect", cons_row_n - 1)
-				if cons_rect.size == Vector2.ZERO:
-					_fail("click_consolidation_row: row %d has no rendered rect" % cons_row_n)
-				else:
-					_inject_mouse_click(cons_rect.get_center())
-			await get_tree().process_frame
-			await get_tree().process_frame
 		"click_confirm_chip":
 			var cs := get_tree().root.find_child("CombatScreen", true, false)
 			if cs == null:
@@ -1343,13 +1330,12 @@ func _combat_dump() -> Dictionary:
 
 
 ## GH#435 -- can a checkpoint be taken right now? `WISave.serialize` captures
-## neither combat nor dialogue nor a pending consolidation, so a checkpoint
-## taken inside one would resume as "the moment before, minus the panel": a
-## fixture that lies. Same three states `save_manual` refuses, for the same
-## reason.
+## neither combat nor dialogue, so a checkpoint taken inside one would resume as
+## "the moment before, minus the panel": a fixture that lies. Same states
+## `save_manual` refuses, for the same reason.
 func _sim_quiet() -> bool:
 	return Game != null and Game.sim != null and Game.sim.combat == null \
-			and Game.sim.dialogue == null and Game.sim.pending_consolidation.is_empty()
+			and Game.sim.dialogue == null
 
 
 ## GH#435. `run_qa.sh` already gives every run an isolated HOME, so the sim's own
@@ -1394,7 +1380,7 @@ func _dump_checkpoint(slot: String) -> void:
 		_fail("dump_checkpoint: no live sim")
 		return
 	if not _sim_quiet():
-		_fail("dump_checkpoint(%s): refused -- serialize() captures no combat/dialogue/consolidation, so the checkpoint would not be the state you are standing in" % slot)
+		_fail("dump_checkpoint(%s): refused -- serialize() captures no combat/dialogue, so the checkpoint would not be the state you are standing in" % slot)
 		return
 	_write_checkpoint(slot)
 
