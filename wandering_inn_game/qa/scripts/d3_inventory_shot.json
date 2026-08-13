@@ -1,5 +1,5 @@
 {
- "_comment": "Windowed shot: (NOT a canonical sweep member -- peek-style, excluded from ci_sweep). Loads the d2_shop fixture (Warrior L1 on the street, purse = 5 gold, carrying rusty_sword + relcs_spare_spear) via title Continue, opens the I panel, and screenshots the coin line so the D3 'Gold: N' header is visually inspectable. Windowed so the parchment coin line renders.",
+ "_comment": "Windowed shot, PROMOTED into the sweep (tiers: full) after its item_effect_lines pin rotted unwatched for a month: 0cbc988a (#79, 2026-07-12) added WIEffectText's weapon-kit family line (src/core/effect_text.gd:30) and re-pinned every sweep-VISIBLE sibling (inventory_loop, economy_loop, archer_earn_loop, ...), but this script carried no manifest row so ci_sweep could never red it -- same orphan-promotion rationale as its sibling d2_shop_shot. The screenshot step is a headless no-op, so sweep coverage is the payload pin only; the coin line still needs a windowed pass. Loads the d2_shop fixture (Warrior L1 on the street, purse = 5 gold, carrying rusty_sword + relcs_spare_spear) via title Continue, opens the I panel, and screenshots the coin line so the D3 'Gold: N' header is visually inspectable. Windowed so the parchment coin line renders.",
  "fixture_save": "d2_shop",
  "starts_at_title": true,
  "steps": [
@@ -11,7 +11,7 @@
   { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
   { "action": "press", "name": "inventory" },
-  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 2, "gold": 5, "item_effect_lines": [ [], [ "+1 damage on melee hits" ] ] }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 2, "gold": 5, "item_effect_lines": [ [ "Sword kit replaces other weapon Skills in combat" ], [ "+1 damage on melee hits", "Spear kit replaces other weapon Skills in combat" ] ] }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "01_inventory_coin_line" },
   { "action": "press", "name": "inventory" },
   { "action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5 }
