@@ -54,7 +54,14 @@ class OracleBridge:
             owned.cleanup()
         return parsed
 
-    def run_driver(self, script: str | Path, out_dir: str | Path, seed: int = 9, fail_fast: bool = True) -> tuple[dict[str, Any], str]:
+    def run_driver(
+        self,
+        script: str | Path,
+        out_dir: str | Path,
+        seed: int = 9,
+        fail_fast: bool = True,
+        timeout: int = 300,
+    ) -> tuple[dict[str, Any], str]:
         script_path = Path(script).resolve()
         output = Path(out_dir).resolve()
         output.mkdir(parents=True, exist_ok=True)
@@ -68,7 +75,7 @@ class OracleBridge:
             if fail_fast:
                 user_args.append("--fail-fast=1")
             cmd = [self.godot, "--headless", "--path", str(self.project), "--", *user_args]
-            run = subprocess.run(cmd, cwd=self.project.parent, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False, timeout=90)
+            run = subprocess.run(cmd, cwd=self.project.parent, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False, timeout=timeout)
         result_path = output / "result.json"
         if not result_path.exists():
             raise OracleError(f"driver produced no result.json (rc={run.returncode}):\n{run.stdout}")

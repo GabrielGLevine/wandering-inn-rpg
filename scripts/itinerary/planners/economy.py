@@ -43,6 +43,10 @@ class EconomyPlanner:
         self.plan_node: Callable[[Node, Ledger], list[dict[str, Any]]] | None = None
         self.used_detours: set[str] = set()
         self.notes: list[str] = []
+        # Every earn-detour this compile SPLICED IN, with the number that made
+        # it necessary. Pass 2 re-reads these against the harvested gold and
+        # flags the ones a real run proved unnecessary (§2.3).
+        self.insertions: list[dict[str, Any]] = []
 
     # ------------------------------------------------------------------ buy --
 
@@ -155,6 +159,13 @@ class EconomyPlanner:
                 f"and no registered detour certainly earns the {shortfall} short. Eligible detours: {available}"
             )
         self.used_detours.add(detour.id)
+        self.insertions.append({
+            "node": node_id,
+            "detour": detour.id,
+            "asking": asking,
+            "floor": ledger.gold_min,
+            "item": item_id,
+        })
         note = (
             f"GOLD/PACING: {item_id} asks {asking}; the interval floor was {ledger.gold_min} "
             f"(interval {ledger.gold_interval}), so detour {detour.id} (+{detour.earns[0]}..{detour.earns[1]}) "
