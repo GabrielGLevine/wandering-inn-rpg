@@ -79,10 +79,24 @@ class M1ContractTest(unittest.TestCase):
             with self.assertRaisesRegex(SchemaError, "duplicate node id"):
                 load_itinerary(duplicate, milestone=1)
 
+            # M1's own primitive set is FROZEN at goto/talk/sleep, so this
+            # rejection stays exactly as it was. What M2 changed is the other
+            # side of the gate: the same escape hatch now compiles under
+            # milestone 2, and nothing in the frozen §3.2 set is "still
+            # future" any more. The M2 acceptance table lives in
+            # test_m2_contract; this pair is the hinge between them.
             raw = tmp / "raw.yaml"
             raw.write_text("- act: i\n  nodes:\n    - id: hidden\n      raw: []\n", encoding="utf-8")
             with self.assertRaisesRegex(SchemaError, "not available in M1"):
                 load_itinerary(raw, milestone=1)
+
+            raw_m2 = tmp / "raw_m2.yaml"
+            raw_m2.write_text(
+                "- act: ii\n  nodes:\n    - id: hidden\n      raw:\n        steps: [{action: wait_frames, frames: 1}]\n"
+                "      why: the escape hatch is budgeted, not banned\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(load_itinerary(raw_m2, milestone=2).nodes[0].primitive, "raw")
 
         ledger = Ledger.fresh()
         save = ledger.materialize_save()

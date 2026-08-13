@@ -11,67 +11,208 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.itinerary.bridge import OracleBridge
+    from scripts.itinerary.detours import DetourLibrary
     from scripts.itinerary.emit import Emitter
     from scripts.itinerary.ledger import Ledger
+    from scripts.itinerary.planners.actions import ActionPlanner
+    from scripts.itinerary.planners.combat import CombatPlanner
     from scripts.itinerary.planners.dialogue import DialoguePlanner
+    from scripts.itinerary.planners.economy import EconomyPlanner
     from scripts.itinerary.planners.route import RoutePlanner
     from scripts.itinerary.planners.sleep import SleepPlanner
-    from scripts.itinerary.schema import load_itinerary
+    from scripts.itinerary.replay import checkpoint_from, self_check
+    from scripts.itinerary.schema import RAW_STEP_BUDGET, Node, load_itinerary
 else:
     from .bridge import OracleBridge
+    from .detours import DetourLibrary
     from .emit import Emitter
     from .ledger import Ledger
+    from .planners.actions import ActionPlanner
+    from .planners.combat import CombatPlanner
     from .planners.dialogue import DialoguePlanner
+    from .planners.economy import EconomyPlanner
     from .planners.route import RoutePlanner
     from .planners.sleep import SleepPlanner
-    from .schema import load_itinerary
+    from .replay import checkpoint_from, self_check
+    from .schema import RAW_STEP_BUDGET, Node, load_itinerary
+
+
+MILESTONE = 2
+START_NODE = "itinerary.start"
+
+
+class CompileError(RuntimeError):
+    pass
+
+
+class NodePlanner:
+    """One dispatcher, so a detour's nodes plan exactly like an act's do."""
+
+    def __init__(self, project: Path, bridge: Any, library: DetourLibrary) -> None:
+        self.library = library
+        # Every node this dispatcher plans leaves a checkpoint -- including the
+        # ones a detour splices in, which no act ever names.
+        self.checkpoints: list[Any] = []
+        self.route = RoutePlanner(project, bridge)
+        self.dialogue = DialoguePlanner(project, bridge, self.route)
+        self.sleep = SleepPlanner(bridge)
+        self.combat = CombatPlanner(project, bridge, self.route)
+        self.actions = ActionPlanner(project, bridge, self.route)
+        self.economy = EconomyPlanner(project, bridge, self.route, self.dialogue, library)
+        self.economy.plan_node = self.plan
+
+    def plan(self, node: Node, ledger: Ledger) -> list[dict[str, Any]]:
+        ops = self._dispatch(node, ledger)
+        for operation in ops:
+            # Ops planned inside another node (a spliced detour) keep their own
+            # provenance; everything else inherits the node it came from.
+            operation.setdefault("itin", node.id)
+        self.checkpoints.append(checkpoint_from(ledger, node.id, node.primitive))
+        return ops
+
+    def _dispatch(self, node: Node, ledger: Ledger) -> list[dict[str, Any]]:
+        spec = node.spec
+        if node.primitive == "goto":
+            return self.route.plan_to(node.id, ledger, str(spec["map"]), spec.get("cell"))
+        if node.primitive == "talk":
+            npc_map, entity = self.route.find_entity(str(spec["npc"]), str(spec.get("at", "")) or None)
+            return self.dialogue.plan(node.id, spec, node.why, ledger, entity, npc_map)
+        if node.primitive == "sleep":
+            ops = self.sleep.plan(node.id, spec, ledger)
+            if spec.get("shot"):
+                ops.append({"kind": "shot", "name": str(spec["shot"])})
+            return ops
+        if node.primitive == "fight":
+            return self.combat.plan(node.id, spec, ledger)
+        if node.primitive == "buy":
+            return self.economy.plan_buy(node.id, spec, node.why, ledger)
+        if node.primitive == "sell":
+            return self.economy.plan_sell(node.id, spec, node.why, ledger)
+        if node.primitive == "equip":
+            return self.actions.plan_equip(node.id, spec, ledger)
+        if node.primitive == "unequip":
+            return self.actions.plan_unequip(node.id, spec, ledger)
+        if node.primitive == "use_field":
+            return self.actions.plan_use_field(node.id, spec, ledger)
+        if node.primitive == "interact":
+            return self.actions.plan_interact(node.id, spec, ledger)
+        if node.primitive == "shot":
+            return [{"kind": "shot", "name": str(spec["name"])}]
+        if node.primitive == "assert":
+            return self._plan_assert(node, ledger)
+        if node.primitive == "detour":
+            return self.plan_detour(node.id, str(spec["id"]), ledger)
+        if node.primitive == "raw":
+            return [{"kind": "raw", "steps": list(spec["steps"]), "note": f"RAW: {node.why}" if node.why else None}]
+        raise CompileError(f"no planner for primitive {node.primitive!r} (node {node.id})")
+
+    def plan_detour(self, node_id: str, detour_id: str, ledger: Ledger) -> list[dict[str, Any]]:
+        detour = self.library.get(detour_id)
+        self.economy.used_detours.add(detour.id)
+        ops = self.plan(Node(f"detour.{detour.id}.entry", "goto", {"map": detour.entry_map}, detour.why, "detour"), ledger)
+        for inner in detour.nodes:
+            ops.extend(self.plan(inner, ledger))
+        if ledger.map_id != detour.exit_map:
+            raise CompileError(
+                f"{node_id}: detour {detour.id} promised to exit on {detour.exit_map} but left the ledger on {ledger.map_id}"
+            )
+        return ops
+
+    def _plan_assert(self, node: Node, ledger: Ledger) -> list[dict[str, Any]]:
+        ops: list[dict[str, Any]] = []
+        for path, expectation in node.spec.get("state", {}).items():
+            operation: dict[str, Any] = {"kind": "assert_state", "path": str(path)}
+            if isinstance(expectation, dict) and set(expectation) <= {"equals", "contains"} and expectation:
+                operation.update(expectation)
+            else:
+                operation["equals"] = expectation
+            ops.append(operation)
+        event = node.spec.get("event") or {}
+        if event:
+            ops.append({"kind": "assert_event", "type": str(event["type"]), "payload_contains": event.get("payload_contains", {})})
+        absent = node.spec.get("event_absent") or {}
+        if absent:
+            ops.append({"kind": "assert_event_absent", "type": str(absent["type"]), "payload_contains": absent.get("payload_contains", {})})
+        return ops
+
+
+def _fixture_reference(start_path: Path, project: Path) -> str:
+    """Prefer the bare fixture NAME over an absolute path.
+
+    The driver resolves a bare name under `qa/fixtures/`, and a compiled
+    script that hardcodes one machine's absolute path is not a script anyone
+    else can run -- nor one whose recompile is byte-comparable across trees.
+    """
+    fixtures = (project / "qa" / "fixtures").resolve()
+    resolved = start_path.resolve()
+    if resolved.parent == fixtures and resolved.suffix == ".json":
+        return resolved.stem
+    return str(resolved)
 
 
 def compile_itinerary(source: Path, output: Path, project: Path, authoring: bool = False) -> dict[str, Any]:
-    document = load_itinerary(source, milestone=1)
+    document = load_itinerary(source, milestone=MILESTONE)
     bridge = OracleBridge(project)
+    planner = NodePlanner(project, bridge, DetourLibrary())
+    emitter = Emitter()
     ledger = Ledger.fresh()
+
     script: dict[str, Any] = {
         "_comment": "Generated by scripts/itinerary/compile_itinerary.py. Edit the itinerary YAML, never this JSON.",
         "steps": [],
     }
+    prelude: list[dict[str, Any]] = []
     if document.start:
         start_path = Path(document.start)
         if not start_path.is_absolute():
             start_path = (source.parent / start_path).resolve()
-        start_save = json.loads(start_path.read_text(encoding="utf-8"))
-        ledger = Ledger.from_save(start_save)
-        script["fixture_save"] = str(start_path)
+        ledger = Ledger.from_save(json.loads(start_path.read_text(encoding="utf-8")))
+        script["fixture_save"] = _fixture_reference(start_path, project)
+        # A fixture only reaches the sim if the run CONTINUES from the title;
+        # the driver's own title auto-skip starts a new game instead.
+        script["starts_at_title"] = True
+        prelude = [{"kind": "fixture_prelude", "map": ledger.map_id, "cell": ledger.cell, "itin": START_NODE}]
 
-    route = RoutePlanner(project, bridge)
-    dialogue = DialoguePlanner(project, bridge, route)
-    sleep = SleepPlanner(bridge)
-    emitter = Emitter()
+    start_checkpoint = checkpoint_from(ledger, START_NODE, "start")
+    planner.checkpoints.append(start_checkpoint)
+    if prelude:
+        script["steps"].extend(emitter.emit(START_NODE, prelude))
+
     previous_act = ""
     for node in document.nodes:
         if authoring and node.act != previous_act:
             script["steps"].append({"_itin": node.id, "action": "dump_checkpoint", "slot": f"act_{node.act}"})
         previous_act = node.act
-        if node.primitive == "goto":
-            cell = node.spec.get("cell")
-            operations = route.plan_to(node.id, ledger, str(node.spec["map"]), cell)
-        elif node.primitive == "talk":
-            map_hint = str(node.spec.get("at", "")) or None
-            _, entity = route.find_entity(str(node.spec["npc"]), map_hint)
-            operations = dialogue.plan(node.id, node.spec, node.why, ledger, entity)
-        elif node.primitive == "sleep":
-            operations = sleep.plan(node.id, node.spec, ledger)
-        else:
-            raise RuntimeError(f"M1 compiler received unsupported primitive {node.primitive}")
+        operations = planner.plan(node, ledger)
         script["steps"].extend(emitter.emit(node.id, operations))
+
+    _validate(script["steps"], planner.checkpoints, start_checkpoint, document)
+    if planner.economy.notes:
+        script["_pacing_notes"] = list(planner.economy.notes)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(script, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return script
 
 
+def _validate(steps: list[dict[str, Any]], checkpoints: list[Any], start: Any, document: Any) -> None:
+    raw_nodes = {node.id for node in document.nodes if node.primitive == "raw"}
+    raw_steps = sum(1 for step in steps if str(step.get("_itin", "")) in raw_nodes)
+    if steps and raw_steps / len(steps) > RAW_STEP_BUDGET:
+        raise CompileError(
+            f"raw budget blown: {raw_steps}/{len(steps)} steps ({raw_steps / len(steps):.1%}) exceed "
+            f"{RAW_STEP_BUDGET:.0%}. Raw is where corpus knowledge goes to hide -- teach the emitter instead."
+        )
+    problems = self_check(steps, checkpoints, start)
+    if problems:
+        raise CompileError(
+            "ledger replay self-check FAILED -- the emitted script and the ledger disagree:\n  "
+            + "\n  ".join(problems)
+        )
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Compile a Wandering Inn QA itinerary (M1)")
+    parser = argparse.ArgumentParser(description="Compile a Wandering Inn QA itinerary (M2)")
     parser.add_argument("itinerary", type=Path)
     parser.add_argument("--out", type=Path)
     parser.add_argument("--project", type=Path, default=Path(__file__).resolve().parents[2] / "wandering_inn_game")
@@ -79,11 +220,17 @@ def main() -> int:
     args = parser.parse_args()
     output = args.out or args.itinerary.with_suffix(".json")
     script = compile_itinerary(args.itinerary.resolve(), output.resolve(), args.project.resolve(), args.authoring)
-    raw_steps = sum(1 for step in script["steps"] if step.get("action") == "raw")
-    print(f"ITINERARY_COMPILED: {output.resolve()} nodes={len(load_itinerary(args.itinerary, 1).nodes)} steps={len(script['steps'])} raw_steps={raw_steps}")
+    document = load_itinerary(args.itinerary, MILESTONE)
+    raw_nodes = {node.id for node in document.nodes if node.primitive == "raw"}
+    raw_steps = sum(1 for step in script["steps"] if str(step.get("_itin", "")) in raw_nodes)
+    print(
+        f"ITINERARY_COMPILED: {output.resolve()} nodes={len(document.nodes)} "
+        f"steps={len(script['steps'])} raw_steps={raw_steps} replay_self_check=ok"
+    )
+    for note in script.get("_pacing_notes", []):
+        print(f"  {note}")
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

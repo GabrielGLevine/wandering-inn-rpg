@@ -22,11 +22,24 @@ class DialoguePlanner:
             for path in sorted((self.project / "data/dialogue").glob("*.json"))
         }
 
-    def plan(self, node_id: str, spec: dict[str, Any], why: str, ledger: Ledger, entity: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    def plan(
+        self,
+        node_id: str,
+        spec: dict[str, Any],
+        why: str,
+        ledger: Ledger,
+        entity: dict[str, Any] | None = None,
+        map_id: str | None = None,
+    ) -> list[dict[str, Any]]:
         npc_id = str(spec["npc"])
         if entity is None:
             map_id, entity = self.route.find_entity(npc_id, str(spec.get("at", "")) or None)
-        else:
+        elif map_id is None:
+            # A caller that hands over an entity without saying WHERE it
+            # stands is asserting the ledger is already on its map. That held
+            # for M1, whose every talk followed a goto; it stops holding the
+            # moment a planner routes on the author's behalf, so the map now
+            # travels with the entity.
             map_id = ledger.map_id
         target = [int(part) for part in entity["cell"]]
         expected_facing = [target[0] - ledger.cell[0], target[1] - ledger.cell[1]]
@@ -79,6 +92,13 @@ class DialoguePlanner:
                 "end": ended,
                 "next_node": next_node,
                 "why": why,
+                # Planner-only bookkeeping (the emitter ignores it): the
+                # economy planner has to know WHICH row in a choose_path was
+                # the one that moved money, because the money events land
+                # between that row's confirm and its destination node -- not
+                # after the row that closes the conversation.
+                "gold_delta": sum(int(e["gold"]) for e in option.get("effects", []) if "gold" in e),
+                "grants": [str(e["item"]) for e in option.get("effects", []) if "item" in e],
             })
             if ended:
                 current = ""
@@ -86,4 +106,21 @@ class DialoguePlanner:
             if not destination:
                 raise DialogueError(f"choice {anchor!r} neither ends nor names a destination")
             current = destination
+        if current:
+            # Walking away from an OPEN panel is a hang, not a shortcut: the
+            # next `press` is consumed by the conversation's own cursor. Every
+            # destination node in the corpus carries a closing row, so this is
+            # a missing anchor rather than an impossible ask.
+            closing = self._closing_anchors(graph_id, current, ledger)
+            raise DialogueError(
+                f"{node_id}: choose_path leaves {graph_id}:{current} OPEN. Add a closing anchor; "
+                f"rows that end the conversation here: {closing}"
+            )
         return ops
+
+    def _closing_anchors(self, graph_id: str, node_id: str, ledger: Ledger) -> list[str]:
+        try:
+            answer = self.bridge.query(f"visible_options {graph_id} {node_id}", ledger)
+        except Exception:  # noqa: BLE001 -- advice only; the real error is above
+            return []
+        return [str(row.get("text", "")) for row in answer.get("options", []) if row.get("end")]

@@ -1,0 +1,148 @@
+- act: ii
+  # FIXTURE START, deliberately. Compiled Act I ends classless in the inn: it
+  # declines Relc's spar (M1's own ruling -- the gate cells sit within a
+  # Chebyshev 2 of the unavoidable road ambush), so it banks no class, takes no
+  # spear, and never reaches Liscor. Act II opens on the street with warrior 1
+  # and the spear in the pack, which is exactly what `post_tutorial_street`
+  # holds -- the shipped fixture the street-quest canonicals already run on,
+  # whose rng_state is verified to resolve the crate fight as a win with
+  # Klbkch fielded. Using it keeps Act II honest about where it starts instead
+  # of pretending a continuous run that the data does not support.
+  start: ../../wandering_inn_game/qa/fixtures/post_tutorial_street.json
+  nodes:
+    - id: act2.arrival
+      shot: {name: 20_act_ii_00_gate_arrival}
+
+    # -- Krshia's crate: ask, take it by force, report -----------------------
+    - id: act2.krshia.ask
+      talk:
+        npc: krshia
+        at: street
+        choose_path:
+          - I'll look into it.
+          - I'll find it.
+      why: >-
+        Take the crate errand on its plain rung. The guile rung needs a cellar
+        already studied and the Watch rung hands the job to someone else; this
+        itinerary is the one that goes and gets it, so it starts by saying so.
+    - id: act2.crate.fight
+      fight:
+        encounter: crate_scavengers
+        at: street
+        entry: interact
+        policy: competent
+        expect: victory
+        shots: [20_act_ii_01_crate_scavengers]
+      why: >-
+        The force path. Klbkch fields on the player side here because the
+        fixture carries chatted_with_klbkch, and the ally gate is the whole
+        difference between this fight and a warrior-1 loss.
+    - id: act2.krshia.report
+      talk:
+        npc: krshia
+        at: street
+        choose_path:
+          - Your crate's accounted for.
+          - Glad to help.
+      why: >-
+        Close the quest at its own counter rather than letting the fight's
+        bank stand in for the telling -- crate_returned is a beat Krshia has
+        to hear, and every later stage of her pool reads off it.
+    - id: act2.crate.pins
+      assert:
+        state:
+          accomplishments.crate_returned: 1
+          accomplishments.recovered_crate_force: 1
+          removed_entities: {contains: crate_scavengers}
+
+    # -- Olesm's cisterns briefing ------------------------------------------
+    - id: act2.olesm.cisterns
+      talk:
+        npc: olesm
+        at: street
+        choose_path:
+          - You look worried about something.
+          - I'll look into it. Where do I start?
+          - On it.
+      why: >-
+        Open the cisterns thread but stop at the briefing. Resolving it needs
+        either a nest fight this build loses without a night's leveling, or a
+        Watch sweep that closes the quest off-screen; the briefing is the beat
+        that is honestly plannable here, and it is what unlocks the grate.
+
+    # -- gear and the market ------------------------------------------------
+    - id: act2.spear.equip
+      equip: {item: relcs_spare_spear}
+      why: >-
+        Sequenced AFTER the crate fight on purpose: the fixture's rng_state is
+        verified against that fight as fought with the sword, and re-arming
+        first would move draws the fixture was tuned around.
+    - id: act2.stall.browse
+      interact:
+        prop: krshia_stall
+        at: street
+        expect_accomplishment: browsed_market
+
+    # -- the errand ---------------------------------------------------------
+    - id: act2.road.out
+      goto: {map: floodplains}
+    - id: act2.road.ambush
+      fight:
+        encounter: goblin_encounter_1
+        at: floodplains
+        entry: proximity
+        policy: competent
+        expect: victory
+        shots: [20_act_ii_02_road_ambush]
+      why: >-
+        Unavoidable, and that is the point. The gate lands the player already
+        inside this ambush's trigger radius, so the first step off the road
+        springs it -- there is no route to the inn that walks around it. The
+        compiler refuses to emit a leg that clips a proximity encounter, which
+        is what turned this from a mid-walk hang into a planned fight. Relc
+        fields here on met_relc, which the fixture carries.
+    - id: act2.erin.package
+      talk:
+        npc: erin
+        at: inn
+        choose_path:
+          - I'll take the package.
+          - On my way.
+      why: >-
+        Erin's errand is the act's other thread and the only one that pays
+        real coin, so it runs before the market beat that needs the money.
+    - id: act2.peddler.kit
+      buy:
+        vendor: peddler
+        at: street
+        item: trap_kit
+        choose_path:
+          - One of those trap kits the Watch keeps mentioning.
+          - That's all.
+      why: >-
+        The purchase this act's economy is actually built around. The kit asks
+        3 and the crate fight's 50% coin drop leaves the ledger guaranteeing
+        only 2, so the planner has to find the difference before it can commit
+        -- which is the whole point of carrying gold as an interval.
+    - id: act2.selys.deliver
+      talk:
+        npc: selys
+        at: guild
+        choose_path:
+          - Package for you, from Erin.
+          - I'll keep it. Courier's fee.
+          - (Leave.)
+      why: >-
+        Keep the fee. The spine needs the coin and the fork is exclusive --
+        errand_decided hides both rungs the moment either lands, so this is
+        the one and only place the run gets to choose.
+
+    - id: act2.close.pins
+      assert:
+        state:
+          accomplishments.package_delivered: 1
+          accomplishments.kept_reward: 1
+          accomplishments.heard_about_cisterns: 1
+          equipped.weapon: relcs_spare_spear
+    - id: act2.close
+      shot: {name: 20_act_ii_02_guild_after_errand}

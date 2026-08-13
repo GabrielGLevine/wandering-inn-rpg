@@ -1,0 +1,28 @@
+id: inn_chore_dirty_table
+why: >-
+  The taproom chore is the only earn in the early game with no accomplishment
+  gate in front of it and no dice behind it: [Basic Cleaning] is innate, the
+  table pays a flat coin, and the payout is capped once per waking so it can
+  never quietly inflate a run's economy. That makes it the right instrument
+  when a purchase misses its price by a coin or two -- it buys the gap without
+  buying a different playthrough.
+entry:
+  map: inn
+exit:
+  map: inn
+earns:
+  min: 1
+  max: 1
+requires: {}
+forbids:
+  # `gold_once_per_waking` on the table: the second wipe-down this waking
+  # banks nothing, so a second insertion would promise a coin it cannot pay.
+  cleaned_the_inn: 1
+nodes:
+  - id: approach
+    goto: {map: inn, cell: [5, 4]}
+  - id: wipe
+    use_field: {skill: basic_cleaning}
+    why: >-
+      Erin pays for the table by the job, so the coin is earned rather than
+      found -- the detour costs a waking's chore, not a quest beat.
