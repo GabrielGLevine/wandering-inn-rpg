@@ -43,28 +43,23 @@ or superseded session blocks.
   follow-ups recorded on #449 (dilution-stated bands; 4g finale economy).
   #451 parked by user (Counter Strike power level, ablation data attached). Pre-existing red still open: d3_inventory_shot (inventory pin drift,
   predates the program). Windowed observation run launched for the user.
-- WAVE >=434 CLOSED (2026-08-13, Fable controller). 16 PRs merged
-  (#454-#457, #461-#471, #473); issues #443-#452, #458, #459 closed;
-  #453 measurement program complete. Main releasable: ci_sweep ALL 247
-  green, preflight --full ALL GREEN, steel thread seed-37 x2 green
-  (STEEL-THREAD.md re-derived from live checkpoints). Shipped: lineage
-  validator + scaffolder + process docs (#452 all layers), [Spellspear]
-  (#449, wiki-discharged), [Appraise Foe] narrowing + free armless reads
-  + Tactician split (#450, absorbs #445), Counter Strike cap + harness
-  integrity + window repair + 13 canonical re-fixtures (#451/#453),
-  Relc-veto solo fight CI-gated at the ruled band (#448), itinerary
-  compiler M1 (#434 M1; M2-M4 remain), dangersense aura (#446), dormant
-  respawner states + door de-collision (#443/#444), creation copy
-  (#447), companion swap re-supply (#458), follower walk cycles (#459),
-  d3 red retired + promoted (#462). USER BATCH posted to #438
-  (2026-08-13 comment): orphan naming, KIT-walls x chokepoint x pillars
-  adjudication (C3 data), producer gaps G1-G6, ladder stop-order,
-  Tactician-split ceiling, no-T2-spear, bounty re-arm, headroom flags,
-  with-Relc restatement, #472 decline soft-lock ruling, eye-gate list.
-  NEW ISSUE: #472 (consolidation decline soft-locks Act V — ruling
-  needed). NEXT: F0 = Fable design pass for #460 (Lane F, plan doc) ->
-  user ratifies -> F1 implements; A-M2/M3/M4 dispatchable cold; wave
-  lessons folded into wi-* skills (2026-08-13 sections).
+- POST-WAVE FOLLOW-THROUGH (2026-08-13 session 2; resume here): 24
+  MERGED total (wave 16 + #476 M2, #478 producers [Druid consolidation
+  0/40->40/40], #479 Rank labels, #481 defects #474/#475, #482
+  AUTO-CONSOLIDATION [#472 closed; narrowed live rows, coverage lint,
+  proxy chaining, 77-pair parked queue], #483 annotations, #484 M3.5
+  [fight.driven+journal+fence; golden prefix step 62]). M3.6 RULED on
+  main, not dispatched. F0 #460 RATIFIED (Lich, crypt_lich/bone_thrall)
+  — F1 queues behind class-lane merge. NAMING REVIEW: issue #485 (6
+  set-level decisions). Post-bar class+Skill names proposable with user
+  clearance (CHOICE-LOG). IN FLIGHT AT DRAIN: class lane d10d45b9
+  ([Wild Sage]+[Skirmisher canon-match]+[Deathknight]; audit PASS bar
+  ONE unpinned seam — counsel_of_the_wild live-ness test; fix agent
+  finishing -> push+PR+merge) and balance tail (ladder + Tactician
+  ceiling; drain order sent, read its output for state). AFTER RESET:
+  merge class lane, read balance state, F1 Lich -> M3.6 -> equipment
+  sketch (Fable) -> M4. User batch additions: skirmisher martial WALLs,
+  wild_sage act5 1.00 ceiling (trivialization set with s16/druid).
 - QUEUED: **#452 codify #347** (user-directed 2026-08-12): lineage-
   completeness validator (build FIRST — inventories all orphaned pairs,
   protects main at commit time), consolidation scaffolder, doctrine
