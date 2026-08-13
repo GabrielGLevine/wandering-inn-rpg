@@ -16,16 +16,31 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ## Open decisions
 
-- **#432 — `next_fight` stacking:** repeatable food/cudgel props can produce,
-  consume, then produce again; `_merge_pending_meal` sums their damage modifier
-  without a cap. Current behavior stays unbounded because food already shipped
-  that loop. The user must choose a cap/reset rule before the class is changed.
 - **#19 — Steam commercial gate:** free-on-Steam is recommended. A paid path
   requires pirateaba's explicit permission before store or release work.
 
 ## Current product and system rulings
 
 ### User rulings 2026-08-13 (#438 wave-close batch)
+
+- **Act V capstone trivialization: trim capstone stat growth AND/OR
+  raise Warden difficulty, then re-balance builds that fall too weak
+  (user, 2026-08-13).** Binding design principle: NO build auto-wins —
+  any build the Warden can never beat regardless of tuning is a red
+  flag to surface, not tune around. Warden-side movement is hereby a
+  sanctioned frozen-block exception (the #451 shape); the lane is
+  measurement-led: capstone growth trims first, warden second, full
+  re-window + #441-pattern re-fixture blast after (every act5 row +
+  steel thread move), too-weak spines get composition/kit relief.
+- **Skirmisher walls are a kit/Skill gap (user, 2026-08-13).** Fill
+  the kit: measure what the spearmaster x archer spine lacks at act2
+  and act5, propose skill/kit additions (names via the clearance
+  flow), implement to window.
+- **#432 RULED: cap pending_meal stacking (user, 2026-08-13).**
+  Repeatable produce/use props no longer stack next_fight meal
+  modifiers; implementation default: strongest-single-meal cap,
+  re-eating refreshes rather than stacks (controller detail, document
+  in-data). The Open-decisions entry retires.
 
 - **#485 naming: six kit decisions GO; evolved/elemental pairs earn
   DISTINCT names (user, 2026-08-13).** Coverage authoring for all six
