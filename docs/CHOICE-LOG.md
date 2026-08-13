@@ -27,6 +27,17 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### User rulings 2026-08-13 (#438 wave-close batch)
 
+- **Necromancer becomes consolidation-eligible (user, 2026-08-13).**
+  New family seeded warrior-line x necromancer: one authored base
+  target covers warrior x necromancer and swordsman x necromancer
+  (approved reuse pattern); spearmaster x necromancer follows the
+  spear-owns-its-hybrids precedent (exempt pending naming unless
+  authored in the same pass). Target name wiki-verifies at build.
+  Rides the combined class-authoring lane with [Wild Sage] +
+  [Skirmisher] (both approved same day), which also ships the
+  maps_to validator extension the approved swordsman x mage ->
+  [Spellsword] reuse requires.
+
 - **Orphan consolidation mappings APPROVED as inventoried**; swordsman
   x mage (and its ice/fire siblings) map into [Spellsword] — target
   reuse with the warrior pairs explicitly accepted. Controller to
