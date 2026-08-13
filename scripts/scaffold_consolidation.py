@@ -248,16 +248,23 @@ def build_proposal(parents: tuple, target: str, catalogs: dict, *,
 	floor = merged_level(*pair)
 	ref = f"#{issue}"
 
-	parent_lines = [lineage_members([p], classes_by_id) for p in parents]
+	# #472: a live row may list ONLY pairs whose no-Skill-loss is PROVEN, and the
+	# target `inherits` exactly this pair -- so the row is exactly this pair, not
+	# the parents' evolution closures. The closure ids are NOT lost: lineage
+	# completeness keeps enumerating them as pairs needing their own targets.
+	parent_lines = [[p] for p in parents]
 	consolidation_row = {
 		"_comment": (
 			f"SCAFFOLD ({ref}, scripts/scaffold_consolidation.py). Gate shape copied VERBATIM from "
 			f"[{baseline_row.get('display_name', baseline)}]'s row (min_parent_level {min_parent}, "
 			f"min_combined_level {min_combined}) -- new consolidations follow the SAME gate, never a "
 			"bespoke one. ORDER IS LOAD-BEARING: `WIProgression.check_consolidation` returns the FIRST "
-			f"matching row and the '{baseline}' row's own lines still reach '{parents[0]}' x "
-			f"'{parents[1]}', so THIS ROW MUST BE PLACED ABOVE IT or the target is unreachable. Pin "
-			"that with an assertion in tests/test_progression.gd -- a comment does not gate a reorder."),
+			f"matching row, so if the '{baseline}' row can also reach '{parents[0]}' x "
+			f"'{parents[1]}' THIS ROW MUST BE PLACED ABOVE IT or the target is unreachable. Pin that "
+			"with an assertion in tests/test_progression.gd -- a comment does not gate a reorder. "
+			"#472: parent_lines list EXACTLY this pair, because consolidation is automatic and a live "
+			"row may only fire pairs the target demonstrably covers (data_lint's coverage arm hard-reds "
+			"any other); the evolved siblings wait for their own targets."),
 		"id": target,
 		"target": target,
 		"parent_lines": parent_lines,
