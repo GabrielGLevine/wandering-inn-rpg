@@ -87,6 +87,21 @@ const BUILDS := [
 	# fills the base capacity, so it is the only accessory it can wear.
 	{"name": "ship_act5_amulet", "classes": {"warrior": 12, "mage": 2, "diplomat": 7, "tactician": 2}, WIKeys.WEAPON: "relcs_spare_spear", "armor": "", "accessories": ["moon_bone_amulet"], "hp_mod_bonus": 2, "label": "w12/m2/d7/t2 + moon-bone amulet"},
 
+	# #450 POST-SPLIT TACTICIAN, MEASURED NOT INFERRED. The split gave the
+	# [Tactician] line a second counter (`tactic_used`) and capped it at 12,
+	# with [Strategist] carrying 10-16. Those are LEVELLING costs; whether they
+	# buy a viable Act V PC is a combat question, and this is where combat
+	# questions get answered. Three rows at the three levels the split defines:
+	# its onset (t6, the first level that asks for tactics at all), the
+	# Tactician cap (t12), and the Strategist cap (s16). Same spear, same food
+	# buff and same worn amulet as `ship_act5_amulet`, so the ONLY moving part
+	# against that row is the tactical line's own depth.
+	# REPORT-ONLY. No CALIBRATION row and no reference window names them; they
+	# are a read of what the split ships, not a target it must hit.
+	{"name": "ship_act5_tactician6", "classes": {"warrior": 12, "mage": 2, "diplomat": 7, "tactician": 6}, WIKeys.WEAPON: "relcs_spare_spear", "armor": "", "accessories": ["moon_bone_amulet"], "hp_mod_bonus": 2, "label": "w12/m2/d7/t6 — split onset 20 observed / 4 tactics"},
+	{"name": "ship_act5_tactician12", "classes": {"warrior": 12, "mage": 2, "diplomat": 7, "tactician": 12}, WIKeys.WEAPON: "relcs_spare_spear", "armor": "", "accessories": ["moon_bone_amulet"], "hp_mod_bonus": 2, "label": "w12/m2/d7/t12 — Tactician cap 44 observed / 34 tactics"},
+	{"name": "ship_act5_strategist16", "classes": {"warrior": 12, "mage": 2, "diplomat": 7, "strategist": 16}, WIKeys.WEAPON: "relcs_spare_spear", "armor": "", "accessories": ["moon_bone_amulet"], "hp_mod_bonus": 2, "label": "w12/m2/d7/s16 — Strategist cap 60 observed / 68 tactics"},
+
 	{"name": "band_act1", "classes": {"warrior": 2}, WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": [], "label": "w2 (band 1-2)"},
 	{"name": "band_act2", "classes": {"warrior": 3, "mage": 2}, WIKeys.WEAPON: "rusty_sword", "armor": "leather_jerkin", "accessories": [], "label": "w3/m2 = 5 (band 4-6)"},
 	{"name": "band_act3", "classes": {"warrior": 5, "mage": 4}, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": [], "label": "w5/m4 = 9 (band 8-10)"},
@@ -187,6 +202,28 @@ const ROSTER := [
 		"id": "act5_seal_warden_amulet", "act": "V", "beat": 33, "map": "dungeon/trapped_halls", "entity": "seal_warden_alcove",
 		"ship": "ship_act5_amulet", "band": "band_act5_top", "draughts": [],
 		"bypasses": "SHIP COLUMN: the same fight with the carried-but-unequipped upgrade WORN — hp+3, dmg+1, and [Invisibility] into the kit, which the competent policy spends as an escape below 35% HP. BAND COLUMN: no amulet (its resonance would not fit beside the band build's two charms) — this is the band TOP read, spellsword 16.",
+	},
+	# #450 POST-SPLIT TACTICIAN, REPORT-ONLY. The alcove again, with the ONLY
+	# moving part against the row above being the tactical line's own depth:
+	# split onset (t6), Tactician cap (t12), Strategist cap (s16). No CALIBRATION
+	# row and no reference window names them, so nothing here gates — an
+	# out-of-window read is the finding, not a retune order. BAND COLUMN is
+	# `band_act5_top` on all three, identical to the amulet row's, so the ship
+	# reads sit against one unchanged reference line.
+	{
+		"id": "act5_seal_warden_tactician6", "act": "V", "beat": 33, "map": "dungeon/trapped_halls", "entity": "seal_warden_alcove",
+		"ship": "ship_act5_tactician6", "band": "band_act5_top", "draughts": [],
+		"bypasses": "REPORT-ONLY (#450). Same bypass shape as `act5_seal_warden_amulet` — the amulet is worn, so its [Invisibility] is in the kit. SHIP COLUMN: the split's ONSET, tactician 6, the first level that asks for tactics at all.",
+	},
+	{
+		"id": "act5_seal_warden_tactician12", "act": "V", "beat": 33, "map": "dungeon/trapped_halls", "entity": "seal_warden_alcove",
+		"ship": "ship_act5_tactician12", "band": "band_act5_top", "draughts": [],
+		"bypasses": "REPORT-ONLY (#450). SHIP COLUMN: the [Tactician] CAP, level 12 — the deepest the pre-consolidation line goes before [Strategist] takes over.",
+	},
+	{
+		"id": "act5_seal_warden_strategist16", "act": "V", "beat": 33, "map": "dungeon/trapped_halls", "entity": "seal_warden_alcove",
+		"ship": "ship_act5_strategist16", "band": "band_act5_top", "draughts": [],
+		"bypasses": "REPORT-ONLY (#450). SHIP COLUMN: the [Strategist] CAP, level 16 — the split's top end, and the only row here whose tactical class is the evolution rather than its parent.",
 	},
 ]
 
@@ -660,8 +697,13 @@ func _init() -> void:
 	if not _failures.is_empty():
 		for line: String in _failures:
 			printerr("FAIL %s" % line)
-		assert(false, "calibration rows disagree with the shipped run's ground truth — see FAIL lines above")
+		# ORDER MATTERS, same shape as `_derived_spines` above: a failed `assert`
+		# aborts the enclosing function, so with the assert first `quit(1)` never
+		# ran — the one path this file exists to take exited by WATCHDOG TIMEOUT
+		# instead of by failing. Claim the exit code first; the assert still
+		# carries the message.
 		quit(1)
+		assert(false, "calibration rows disagree with the shipped run's ground truth — see FAIL lines above")
 		return
 	print("PASS: spine viability table generated; all %d calibration rows agree and all %d reference climaxes are inside [%.2f, %.2f]" % [
 		CALIBRATION.size(), SPINE_CLIMAX_IDS.size(), WINDOW_FLOOR, WINDOW_CEILING,
