@@ -18,7 +18,6 @@
   "dormant_encounters": [],
   "generalist_classes": [],
   "started_quests": ["wrong_order"],
-  "pending_consolidation": {},
   "used_skills": [],
   "inventory": ["rusty_sword", "relcs_spare_spear"],
   "equipped": { "weapon": "rusty_sword", "armor": "" },

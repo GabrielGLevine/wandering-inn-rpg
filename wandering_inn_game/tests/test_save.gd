@@ -282,24 +282,21 @@ func _init() -> void:
 	(bad_gen_data["state"] as Dictionary)["generalist_classes"] = "mage"
 	assert(not WISave.apply(_new_game(), bad_gen_data), "wrong-typed generalist_classes rejected")
 
-	var pending_original := _new_game()
-	pending_original.pending_consolidation = {"parents": ["warrior", "mage"], "target": "spellsword", "level": 14}
-	var pending_data := WISave.serialize(pending_original)
-	assert(int(pending_data["version"]) == WISave.VERSION, "M6 T5 does not bump the save version (still tags the current VERSION constant)")
-	var pending_restored := _new_game()
-	assert(WISave.apply(pending_restored, pending_data), "save with pending_consolidation applies")
-	assert(pending_restored.pending_consolidation == pending_original.pending_consolidation, "pending_consolidation round-trips")
-
-	var pre_t5_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
-	(pre_t5_data["state"] as Dictionary).erase("pending_consolidation")
-	var pre_t5_target := _new_game()
-	pre_t5_target.pending_consolidation = {"parents": ["warrior", "mage"], "target": "spellsword", "level": 14}
-	assert(WISave.apply(pre_t5_target, pre_t5_data), "save missing pending_consolidation still applies")
-	assert(pre_t5_target.pending_consolidation.is_empty(), "absent pending_consolidation restores empty, not stale data")
-
-	var bad_pending_data := WISave.serialize(_new_game()).duplicate(true)
-	(bad_pending_data["state"] as Dictionary)["pending_consolidation"] = "spellsword"
-	assert(not WISave.apply(_new_game(), bad_pending_data), "wrong-typed pending_consolidation rejected")
+	# #472 MIGRATION. `pending_consolidation` retired with the prompt: a v8 save
+	# caught mid-offer must load CLEAN, not stranded -- and nothing is lost,
+	# because the next sleep re-derives the same qualifying pair from `classes`
+	# and applies it. The v8 arm is the whole contract.
+	assert(not ("pending_consolidation" in JSON.stringify(WISave.serialize(_new_game()))), "serialize() no longer writes the retired key at all")
+	var mid_offer_v8 := {"version": 8, "state": (WISave.serialize(_new_game())["state"] as Dictionary).duplicate(true)}
+	(mid_offer_v8["state"] as Dictionary)["pending_consolidation"] = {"parents": ["warrior", "mage"], "target": "spellsword", "level": 14}
+	(mid_offer_v8["state"] as Dictionary)["classes"] = {"warrior": 11, "mage": 10}
+	var migrated_mid_offer: Dictionary = WISave._migrated(mid_offer_v8)
+	assert(int(migrated_mid_offer["version"]) == WISave.VERSION, "the v8 save migrates to the current version")
+	assert(not (migrated_mid_offer["state"] as Dictionary).has("pending_consolidation"), "the retired key is DROPPED by the v8 arm, never carried forward")
+	var mid_offer_target := _new_game()
+	assert(WISave.apply(mid_offer_target, mid_offer_v8), "a v8 save caught mid-offer still applies")
+	assert(int(mid_offer_target.classes.get("warrior", 0)) == 11 and int(mid_offer_target.classes.get("mage", 0)) == 10, "and lands holding the same two parents -- the merge is owed to the next sleep, not lost")
+	assert(not (mid_offer_v8["state"] as Dictionary).has("pending_consolidation") == false, "_migrated never mutates its caller's state dict")
 
 	var used_original := _new_game()
 	used_original.used_skills.append("power_strike")
@@ -339,7 +336,7 @@ func _init() -> void:
 	(bad_status_data["state"] as Dictionary)["seen_statuses"] = "slowed"
 	assert(not WISave.apply(_new_game(), bad_status_data), "wrong-typed seen_statuses rejected")
 
-	assert(WISave.VERSION == 8, "VERSION bumped to 8 for the v0.15 A3 lore_notes record")
+	assert(WISave.VERSION == 9, "VERSION bumped 8 -> 9 for #472's retired pending_consolidation key (8 was the v0.15 A3 lore_notes record)")
 
 	# GH#130 v5->v6 arm: a pre-#130 save with sleeps behind it gains slept=1
 	# exactly once; a never-slept v5 save gains nothing.
@@ -804,14 +801,11 @@ func _init() -> void:
 		"state": {
 			"classes": {"fighter": 3},
 			"generalist_classes": ["fighter", "helper"],
-			"pending_consolidation": {"parents": ["fighter", "mage"], "target": "fighter", "level": 9},
 		},
 	}
 	var carrier_state: Dictionary = (WISave._migrated(carrier_data) as Dictionary)["state"]
 	assert(int((carrier_state["classes"] as Dictionary).get("warrior", 0)) == 3 and not (carrier_state["classes"] as Dictionary).has("fighter"), "carrier remap: classes dict remaps fighter->warrior")
 	assert(Array(carrier_state["generalist_classes"]) == ["warrior", "helper"], "carrier remap: generalist_classes rewritten in place, other ids untouched")
-	assert(Array((carrier_state["pending_consolidation"] as Dictionary)["parents"]) == ["warrior", "mage"], "carrier remap: pending_consolidation.parents rewritten")
-	assert(String((carrier_state["pending_consolidation"] as Dictionary)["target"]) == "warrior", "carrier remap: pending_consolidation.target rewritten")
 	var carrier_in_state: Dictionary = carrier_data["state"]
 	assert(Array(carrier_in_state["generalist_classes"]) == ["fighter", "helper"], "_migrated leaves the input's generalist_classes untouched")
 

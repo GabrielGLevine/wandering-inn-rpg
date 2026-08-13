@@ -274,16 +274,10 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 		WIEvents.DIALOGUE_ENDED:
 			_dialogue_open = false
 			_apply_visibility()
-		# The consolidation prompt joins the modal set (v0.19 integration). It is
-		# centred, and the expanded readout is MOUSE_FILTER_STOP and grows one
-		# line per field slot -- so from FIVE slots on it covered the prompt's
-		# rows and ate the click, leaving Consolidate / keep-them-apart
-		# mouse-dead (keyboard still worked). v0.19's own warrior grants are what
-		# push a martial build past five, so this wave introduced the reach.
-		WIEvents.UI_PAUSE_SHOWN, WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_INVENTORY_SHOWN, WIEvents.UI_CONSOLIDATION_PROMPT_RENDERED:
+		WIEvents.UI_PAUSE_SHOWN, WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_INVENTORY_SHOWN:
 			_panel_open = true
 			_apply_visibility()
-		WIEvents.UI_PAUSE_HIDDEN, WIEvents.UI_JOURNAL_HIDDEN, WIEvents.UI_INVENTORY_HIDDEN, WIEvents.UI_CONSOLIDATION_PROMPT_HIDDEN:
+		WIEvents.UI_PAUSE_HIDDEN, WIEvents.UI_JOURNAL_HIDDEN, WIEvents.UI_INVENTORY_HIDDEN:
 			_panel_open = false
 			_apply_visibility()
 		WIEvents.UI_SLEEP_VEIL_FINISHED:
@@ -294,15 +288,7 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 
 
 func _apply_visibility() -> void:
-	visible = not (_combat_hidden or _dialogue_open or _panel_open or _consolidation_pending())
-
-
-## Derived from sim state, NOT from the event flag, because ordering defeats the
-## flag: a save loaded mid-offer reconstructs the prompt in `_ready()` and only
-## then emits WORLD_READY, whose arm resets `_panel_open` to false and would put
-## the readout back over the prompt.
-func _consolidation_pending() -> bool:
-	return Game.sim != null and not (Game.sim.pending_consolidation as Dictionary).is_empty()
+	visible = not (_combat_hidden or _dialogue_open or _panel_open)
 
 
 func _render(reason: String = "skills") -> void:

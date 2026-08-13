@@ -784,7 +784,7 @@
    "script": "consolidation_flow",
    "seed": 9,
    "fixture": "near_consolidation",
-   "note": "offer/decline/re-offer/accept -> [Spellsword]",
+   "note": "#472: the sleep beat's SHAPE for an automatic merge -- one sleep, the merge applied inside it and strictly before the veil renders, the Design's one veil line, the same sentence banked to the journal's Lore record, and the merged [Spellsword] 14 kit fielded in a later fight. `assert_event_absent consolidation_offered` is what keeps the deleted prompt/decline path deleted.",
    "tiers": [
     "full"
    ],
@@ -817,7 +817,7 @@
    "script": "spellspear_consolidation_loop",
    "seed": 449,
    "fixture": "near_spellspear_consolidation",
-   "note": "evolved lineage: spearmaster+mage -> [Spellspear] 14, inherited + own grants fielded",
+   "note": "evolved lineage: spearmaster+mage -> [Spellspear] 14, inherited + own grants fielded #472: the prompt steps are gone -- the merge applies in-beat; the opaque-until-sleep lock is now proved by an assert_event_absent on consolidation_accepted BEFORE the bed, and the veil line + journal Lore entry are asserted after it.",
    "tiers": [
     "full"
    ],
@@ -872,34 +872,6 @@
      "combat",
      "dialogue",
      "exploration",
-     "save"
-    ]
-   }
-  },
-  {
-   "script": "consolidation_reload",
-   "seed": 9,
-   "fixture": "pending_offer",
-   "note": "pause-load reconstructs the consolidation prompt mid-offer",
-   "tiers": [
-    "full"
-   ],
-   "surfaces": {
-    "maps": [
-     "inn"
-    ],
-    "fixtures": [
-     "pending_offer"
-    ],
-    "skills": [
-     "basic_cleaning",
-     "frost_bolt"
-    ],
-    "dialogue": [],
-    "systems": [
-     "combat",
-     "exploration",
-     "input",
      "save"
     ]
    }
@@ -2780,7 +2752,7 @@
    "script": "finale_after_merge",
    "seed": 9,
    "fixture": "finale_merge_start",
-   "note": "2026-07-27 Phase 8, THE FINALE vs A PENDING MERGE. The one collision the finale's bed hook has to survive: UI_SLEEP_VEIL_FINISHED is what opens consolidation_prompt's modal, so a sleep that both owes the ending and offers a consolidation would have dropped the finale's black over that choice. Loads a TALK-path-resolved save parked on the inn bed at exactly the [Spellsword] gate (warrior 10 + mage 11) and drives it live: sleep -> offer -> the veil voices it -> the prompt opens with the curtain PROVEN still down -> decline -> the finale rolls that same night at 10 lines. Also pins that a declined merge leaves both parent classes standing in the recount. No combat, no rng dependence.",
+   "note": "2026-08-13 #472, THE FINALE vs AN AUTOMATIC MERGE. The one collision the finale's bed hook has to survive. It used to be a modal the finale's black could fall over, so the hook stood down and the ending waited a night; consolidation now resolves INSIDE the sleep beat, before the veil runs, so the hook has one settled snapshot and the ending rolls that same night. Loads a TALK-path-resolved save parked on the inn bed at exactly the [Spellsword] gate (warrior 10 + mage 11) and drives it live: sleep -> merge applied -> the veil voices it -> the finale rolls at 12 lines, whose class recount names [Spellsword] and not the two parents it replaced (13 lines was the old declined-merge count -- that one-line delta IS the pin). No combat, no rng dependence.",
    "tiers": [
     "full"
    ],

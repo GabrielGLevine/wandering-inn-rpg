@@ -1,7 +1,7 @@
 class_name WISave
 extends RefCounted
 
-const VERSION := 8
+const VERSION := 9
 
 
 const DEPRECATED_IDS := {
@@ -30,7 +30,6 @@ static func serialize(game: WIGame) -> Dictionary:
 		"dormant_encounters": game.dormant_encounters.duplicate(),
 		"generalist_classes": game.generalist_classes.duplicate(),
 		"started_quests": game.started_quests.duplicate(),
-		"pending_consolidation": game.pending_consolidation.duplicate(true),
 		"used_skills": game.used_skills.duplicate(),
 		"seen_statuses": game.seen_statuses.duplicate(),
 		"lore_notes": game.lore_notes.duplicate(),
@@ -108,6 +107,13 @@ static func _migrated(data: Dictionary) -> Dictionary:
 		# happens at emit, so nothing before this save can be reconstructed --
 		# an old save starts its journal record empty and fills it from here on.
 		state["lore_notes"] = []
+		version = 8
+	if version == 8:
+		# #472: consolidation became AUTOMATIC, so there is no offer to hold
+		# pending -- `pending_consolidation` retires. A save caught mid-offer
+		# simply drops it; the merge is not lost, because the very next sleep
+		# re-derives the same qualifying pair from `classes` and applies it.
+		state.erase("pending_consolidation")
 		version = VERSION
 	out["version"] = version
 	var class_map: Dictionary = DEPRECATED_IDS["classes"]
@@ -126,19 +132,6 @@ static func _migrated(data: Dictionary) -> Dictionary:
 			var gen_id := String(gen[i])
 			if class_map.has(gen_id):
 				gen[i] = String(class_map[gen_id])
-	var pending_raw: Variant = state.get("pending_consolidation", {})
-	if pending_raw is Dictionary:
-		var pending: Dictionary = pending_raw
-		var parents_raw: Variant = pending.get("parents", [])
-		if parents_raw is Array:
-			var parents: Array = parents_raw
-			for i: int in parents.size():
-				var parent_id := String(parents[i])
-				if class_map.has(parent_id):
-					parents[i] = String(class_map[parent_id])
-		var target_id := String(pending.get("target", ""))
-		if class_map.has(target_id):
-			pending["target"] = String(class_map[target_id])
 	return out
 
 
@@ -191,8 +184,6 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	if not (s["dormant_encounters"] is Array):
 		return false
 	if s.has("generalist_classes") and not (s["generalist_classes"] is Array):
-		return false
-	if s.has("pending_consolidation") and not (s["pending_consolidation"] is Dictionary):
 		return false
 	if s.has("used_skills") and not (s["used_skills"] is Array):
 		return false
@@ -265,7 +256,6 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	var started_quests: Array = s["started_quests"]
 	var dormant_encounters: Array = s["dormant_encounters"]
 	var generalist_classes: Array = s.get("generalist_classes", [])
-	var pending_consolidation: Dictionary = s.get("pending_consolidation", {})
 	var used_skills: Array = s.get("used_skills", [])
 	var seen_statuses: Array = s.get("seen_statuses", [])
 	var lore_notes: Array = s.get("lore_notes", [])
@@ -299,7 +289,6 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.dormant_encounters.assign(dormant_encounters)
 	game.generalist_classes.clear()
 	game.generalist_classes.assign(generalist_classes)
-	game.pending_consolidation = pending_consolidation.duplicate(true)
 	game.used_skills.clear()
 	game.used_skills.assign(used_skills)
 	game.seen_statuses.clear()

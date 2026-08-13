@@ -1112,5 +1112,151 @@ class TestRealTree(unittest.TestCase):
             self.assertEqual(len(parsed), 1)
 
 
+class ConsolidationSkillCoverageTest(unittest.TestCase):
+    """#472 no-Skill-loss. The guarantee is only worth what its RED proves, so
+    every arm below is a gate-can-fail proof: a synthetic coverage gap and a
+    synthetic non-dominant upgrade must each fail, and the covered twin pass."""
+
+    SKILLS = [
+        {"id": "a_hit", "contexts": ["combat"], "ap_cost": 2,
+            "effect": {"type": "hit_bonus", "amount": 2}},
+        {"id": "b_bolt", "contexts": ["combat"], "ap_cost": 2, "mp_cost": 3,
+            "effect": {"type": "spell_damage", "amount": 4}},
+        {"id": "ab_own", "contexts": ["combat"], "ap_cost": 1,
+            "effect": {"type": "hit_bonus", "amount": 1}},
+        {"id": "a_hit_plus", "contexts": ["combat", "exploration"], "ap_cost": 1,
+            "effect": {"type": "hit_bonus", "amount": 3}},
+        {"id": "a_hit_sidegrade", "contexts": ["combat"], "ap_cost": 2,
+            "effect": {"type": "hit_bonus", "amount": 2}},
+        {"id": "a_hit_nerf", "contexts": ["combat"], "ap_cost": 3,
+            "effect": {"type": "hit_bonus", "amount": 3}},
+        {"id": "a_hit_reshape", "contexts": ["combat"], "ap_cost": 1,
+            "effect": {"type": "heal", "amount": 9}},
+    ]
+
+    def _catalog(self, target_grants, upgrades=None, inherits=("a", "b")):
+        target = {"id": "ab", "inherits": list(inherits),
+            "levels": [{"level": 4, "grants": list(target_grants)}]}
+        rule = {"id": "ab", "target": "ab", "parent_lines": [["a"], ["b"]],
+            "min_parent_level": 2, "min_combined_level": 4}
+        if upgrades is not None:
+            rule["upgrades"] = upgrades
+        return {
+            data_lint.DATA / "classes.json": {"classes": [
+                {"id": "a", "levels": [{"level": 1, "grants": []},
+                    {"level": 2, "grants": ["a_hit"]}]},
+                {"id": "b", "levels": [{"level": 1, "grants": []},
+                    {"level": 2, "grants": ["b_bolt"]}]},
+                target,
+            ], "consolidations": [rule]},
+            data_lint.DATA / "skills.json": {"skills": self.SKILLS},
+        }
+
+    def _run(self, **kwargs):
+        errors, report = [], []
+        data_lint.check_consolidation_skill_coverage(
+            self._catalog(**kwargs), errors, report)
+        return errors
+
+    def _run_both(self, **kwargs):
+        errors, report = [], []
+        data_lint.check_consolidation_skill_coverage(
+            self._catalog(**kwargs), errors, report)
+        return errors, report
+
+    def test_covered_union_passes(self):
+        self.assertEqual(self._run(target_grants=["a_hit", "b_bolt", "ab_own"]), [])
+
+    def test_synthetic_gap_is_a_hard_red(self):
+        """The target is AUTHORED for this pair but drops a parent's grant --
+        exactly the player-visible Skill loss an automatic merge may not cause."""
+        errors = self._run(target_grants=["a_hit", "ab_own"], inherits=("a",))
+        self.assertTrue(errors, "a target dropping a parent grant must FAIL")
+        self.assertIn("LOSES ['b_bolt']", "\n".join(errors))
+
+    def test_gap_has_no_exemption_route(self):
+        """THE CONTRACT (#472 audit FAIL 1). A LIVE pair -- one the engine will
+        actually merge -- reds on a coverage gap, and `_exempt` buys NOTHING.
+        The old shape let an `_exempt` row demote a live gap to a report line,
+        which is exactly the bypass that shipped warrior x ice_mage silently
+        dropping [Ice Wall]."""
+        catalog = self._catalog(target_grants=["a_hit", "ab_own"], inherits=("a",))
+        catalog[data_lint.DATA / "classes.json"]["consolidations"].append(
+            {"_exempt": ["a", "b"], "rationale": "please ignore the Skill loss"})
+        errors, report = [], []
+        data_lint.check_consolidation_skill_coverage(catalog, errors, report)
+        self.assertTrue(any("LOSES ['b_bolt']" in error for error in errors), errors)
+        self.assertTrue(any("NO exemption exists" in error for error in errors), errors)
+
+    def test_non_live_gap_is_a_report_not_a_red(self):
+        """The other half of the tier. A pair reachable only through the
+        evolution closure -- no live row merges it, so nothing is lost today --
+        is an AUTHORING QUEUE entry, listed with its real cost, never a red."""
+        catalog = self._catalog(target_grants=["a_hit", "b_bolt", "ab_own"])
+        doc = catalog[data_lint.DATA / "classes.json"]
+        doc["classes"].append({"id": "b2", "inherits": "b",
+            "levels": [{"level": 10, "grants": ["b_evolved_only"]}]})
+        for row in doc["classes"]:
+            if row["id"] == "b":
+                row["evolution"] = {"at_level": 10, "targets": {"used_b": "b2"}}
+        errors, report = [], []
+        data_lint.check_consolidation_skill_coverage(catalog, errors, report)
+        self.assertEqual(errors, [], errors)
+        self.assertTrue(any("'a' x 'b2'" in row and "NO live row merges" in row
+            for row in report), report)
+
+    def test_dominant_upgrade_covers_a_replaced_grant(self):
+        self.assertEqual(self._run(
+            target_grants=["a_hit_plus", "b_bolt", "ab_own"],
+            upgrades={"a_hit": "a_hit_plus"}), [])
+
+    def test_non_dominant_upgrade_is_a_hard_red(self):
+        errors = self._run(target_grants=["a_hit_nerf", "b_bolt", "ab_own"],
+            upgrades={"a_hit": "a_hit_nerf"})
+        self.assertTrue(any("is not dominant" in error and "costs more ap_cost" in error
+            for error in errors), errors)
+
+    def test_sidegrade_upgrade_is_a_hard_red(self):
+        errors = self._run(target_grants=["a_hit_sidegrade", "b_bolt", "ab_own"],
+            upgrades={"a_hit": "a_hit_sidegrade"})
+        self.assertTrue(any("not strictly better" in error for error in errors), errors)
+
+    def test_reshaped_upgrade_is_a_hard_red(self):
+        errors = self._run(target_grants=["a_hit_reshape", "b_bolt", "ab_own"],
+            upgrades={"a_hit": "a_hit_reshape"})
+        self.assertTrue(any("effect type" in error for error in errors), errors)
+
+    def test_undelivered_upgrade_is_a_hard_red(self):
+        errors = self._run(target_grants=["a_hit", "b_bolt", "ab_own"],
+            upgrades={"a_hit": "a_hit_plus"})
+        self.assertTrue(any("never grants" in error for error in errors), errors)
+
+    def test_shipped_rows_carry_no_coverage_gap(self):
+        errors, report = [], []
+        parsed = data_lint.check_wellformed([])
+        data_lint.check_consolidation_skill_coverage(parsed, errors, report)
+        self.assertEqual(errors, [], errors)
+        self.assertTrue(any("NO live row merges" in row for row in report), report)
+
+    def test_chain_walk_reaches_a_consolidated_parent(self):
+        """3: a consolidated class proxies its own parent line, so the chained
+        pair is enumerated -- and a chained target that drops the chain's union
+        reds exactly like a direct one."""
+        catalog = self._catalog(target_grants=["a_hit", "b_bolt", "ab_own"])
+        doc = catalog[data_lint.DATA / "classes.json"]
+        doc["classes"].append({"id": "c", "levels": [
+            {"level": 1, "grants": []}, {"level": 2, "grants": ["a_hit_plus"]}]})
+        doc["classes"].append({"id": "abc", "inherits": ["ab", "c"],
+            "levels": [{"level": 4, "grants": ["ab_own"]}]})
+        doc["consolidations"].append({"id": "abc", "target": "abc",
+            "parent_lines": [["a"], ["c"]],
+            "min_parent_level": 2, "min_combined_level": 4})
+        errors, report = [], []
+        data_lint.check_consolidation_skill_coverage(catalog, errors, report)
+        joined = "\n".join(report)
+        self.assertIn("'ab'", joined)
+        self.assertEqual(errors, [], "a chain with no authored target cannot fire, so it lists")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -5,7 +5,7 @@
   "current_map": "deep_tunnels", "player_cell": [13, 1], "player_facing": [1, 0],
   "classes": {"warrior": 8, "mage": 2},
   "accomplishments": {"reached_liscor": 1, "met_relc": 1, "sparred_with_relc": 1, "learned_magic_from_pisces": 1, "heard_about_cisterns": 1, "resolved_the_cisterns": 1, "heard_the_deep_tremor": 1, "won_combat": 3, "melee_hit": 40, "spell_cast": 13},
-  "player_skills": ["basic_cleaning", "observe"], "removed_entities": [], "dormant_encounters": [], "generalist_classes": [], "started_quests": [], "pending_consolidation": {}, "used_skills": [],
+  "player_skills": ["basic_cleaning", "observe"], "removed_entities": [], "dormant_encounters": [], "generalist_classes": [], "started_quests": [], "used_skills": [],
   "inventory": ["gnollish_hunting_knife", "watch_issue_gambeson", "stonescale_talisman", "copper_luck_band", "trap_kit"], "equipped": {"weapon": "gnollish_hunting_knife", "armor": "watch_issue_gambeson", "accessory_1": "stonescale_talisman", "accessory_2": "copper_luck_band"}, "container_state": {}, "gold": 20, "well_fed": true, "actions_since_sleep": 0, "rng_state": "-6393592048753323481"
  }
 }

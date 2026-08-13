@@ -328,8 +328,6 @@ func _can_open() -> bool:
 	if Game.sim.combat != null:
 		if combat_ref == null or not combat_ref.has_method("is_resting") or not bool(combat_ref.call("is_resting")):
 			return false
-	if not Game.sim.pending_consolidation.is_empty():
-		return false
 	if journal_ref != null and bool(journal_ref.get("open")):
 		return false
 	if inventory_ref != null and bool(inventory_ref.get("open")):

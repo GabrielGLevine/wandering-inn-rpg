@@ -338,8 +338,6 @@ func _wire_ui_refs() -> void:
 func _movement_gated() -> bool:
 	if Game.sim.combat != null or Game.sim.dialogue != null:
 		return true
-	if not Game.sim.pending_consolidation.is_empty():
-		return true
 	if (_pause_menu != null and bool(_pause_menu.get("open"))) \
 			or (_journal != null and bool(_journal.get("open"))) \
 			or (_inventory != null and bool(_inventory.get("open"))):

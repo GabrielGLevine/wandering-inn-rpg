@@ -39,7 +39,7 @@ SPEC_KEYS: dict[str, set[str]] = {
     "goto": {"map", "cell", "why"},
     "talk": {"npc", "at", "choose_path", "why"},
     "fight": {"encounter", "at", "entry", "policy", "expect", "max_turns", "shots", "why"},
-    "sleep": {"expect_levels", "consolidation", "shot", "why"},
+    "sleep": {"expect_levels", "expect_merge", "shot", "why"},
     "equip": {"item", "why"},
     "unequip": {"slot", "why"},
     "buy": {"vendor", "at", "item", "choose_path", "why"},
@@ -280,8 +280,12 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
     elif primitive == "sleep":
         if "expect_levels" in spec and not isinstance(spec["expect_levels"], bool):
             raise SchemaError(f"node {node_id} expect_levels must be boolean")
-        if spec.get("consolidation") not in (None, "accept", "decline"):
-            raise SchemaError(f"node {node_id} consolidation must be accept or decline")
+        merge = spec.get("expect_merge")
+        if merge is not None and not (isinstance(merge, dict)
+                and set(merge) == {"target", "level"}
+                and isinstance(merge["target"], str) and isinstance(merge["level"], int)):
+            raise SchemaError(f"node {node_id} expect_merge must be {{target, level}} -- #472 "
+                "consolidation is automatic, so a plan DECLARES the merge, never answers for it")
     elif primitive == "fight":
         if not str(spec.get("encounter", "")):
             raise SchemaError(f"node {node_id} fight needs encounter")

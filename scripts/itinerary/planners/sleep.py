@@ -18,19 +18,22 @@ class SleepPlanner:
         has_levels = bool(preview.get("class_gains") or preview.get("level_ups"))
         if "expect_levels" in spec and bool(spec["expect_levels"]) != has_levels:
             raise SleepError(f"{node_id} expect_levels={spec['expect_levels']} but oracle preview is {has_levels}: {preview}")
+        # #472: there is no modal and no choice. A qualifying sleep MERGES, so the
+        # plan's job is to declare the merge it expects rather than to answer for
+        # it. `expect_merge` mirrors `expect_levels`: state it and it is checked,
+        # omit it and the preview simply governs.
         consolidation = preview.get("consolidation", {})
-        choice = spec.get("consolidation")
-        if consolidation and choice not in ("accept", "decline"):
-            raise SleepError(f"{node_id} would open an unplanned consolidation modal: {consolidation}")
-        op = {"kind": "sleep", "preview": preview, "consolidation_choice": choice}
+        expected = spec.get("expect_merge")
+        if expected is not None:
+            if not consolidation:
+                raise SleepError(f"{node_id} expect_merge={expected} but the oracle previews no merge: {preview}")
+            actual = {"target": str(consolidation["target"]), "level": int(consolidation["level"])}
+            if expected != actual:
+                raise SleepError(f"{node_id} expect_merge={expected} but the oracle previews {actual}")
+        merge = ({"target": str(consolidation["target"]), "level": int(consolidation["level"])}
+            if consolidation else None)
+        op = {"kind": "sleep", "preview": preview, "merge": merge}
+        # apply_sleep_preview alone: `classes_after` already carries the merge.
         ledger.apply_sleep_preview(preview)
-        if consolidation and choice == "accept":
-            parents = list(consolidation["parents"])
-            for parent in parents:
-                ledger.state["classes"].pop(str(parent), None)
-            ledger.state["classes"][str(consolidation["target"])] = int(consolidation["level"])
-            ledger.state["pending_consolidation"] = {}
-        elif consolidation and choice == "decline":
-            ledger.state["pending_consolidation"] = {}
         return [op]
 

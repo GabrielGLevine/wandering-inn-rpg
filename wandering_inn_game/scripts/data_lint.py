@@ -46,7 +46,13 @@ Checks:
      reachable through a consolidation's parent lines and their evolution
      targets has an authored target class inheriting that exact pair, or an
      explicit `_exempt` row with a non-empty rationale.
- 10. respawn visuals -- every respawning encounter authors a dormant visual
+ 10. consolidation no-Skill-loss (#472) -- an AUTOMATIC merge may never cost
+     the player a [Skill], so the guarantee is checked in DATA at commit time
+     rather than folded over at runtime: for every consolidation row and every
+     qualifying parent level pair, the union of both parents' granted ids must
+     be covered by the target. A gap is a HARD red and is NOT exemptible --
+     it is player-visible Skill loss.
+ 11. respawn visuals -- every respawning encounter authors a dormant visual
      state, so combat_banking's dormant interval cannot leave its live marker
      unchanged until the next sleep.
 
@@ -1663,11 +1669,11 @@ SKILL_CODE_GRANTS = {
 	# appear on a player-facing record by design: the visible Skill is the
 	# ordinary granted one, and the *_boon rider is folded into a combatant kit
 	# at roster-build time (folding it onto the PC record would buff the PC).
-	"sworn_fang_boon": ("src/core/wi_game.gd", 2360,
+	"sworn_fang_boon": ("src/core/wi_game.gd", 2359,
 		"[Sworn Fang: Ride Together] folds it into the PC kit while a companion rides"),
-	"basic_command_boon": ("src/core/wi_game.gd", 2371,
+	"basic_command_boon": ("src/core/wi_game.gd", 2370,
 		"[Animals: Basic Command] folds it onto the COMPANION's kit"),
-	"pack_bond_boon": ("src/core/wi_game.gd", 2373,
+	"pack_bond_boon": ("src/core/wi_game.gd", 2372,
 		"[Pack Bond] folds it onto the COMPANION's kit"),
 }
 ITEM_CODE_GRANTS = {
@@ -2170,6 +2176,322 @@ def check_lineage_completeness(parsed: dict, errors: list) -> None:
 			f"'{parents[0]}' x '{parents[1]}' -- no consolidation reaches that pair")
 
 
+def _merged_consolidation_level(level_a: int, level_b: int) -> int:
+	"""Mirror of WIProgression._consolidation_merged_level -- integer ceil."""
+	total = level_a + level_b
+	return max(-((-2 * total) // 3), level_a, level_b)
+
+
+def _table_levels(cls: dict) -> list:
+	out = []
+	for row in cls.get("levels", []) if isinstance(cls.get("levels"), list) else []:
+		if isinstance(row, dict) and isinstance(row.get("level"), int):
+			out.append(row["level"])
+	return out
+
+
+def _grants_at_level(class_id: str, level: int, classes_by_id: dict, seen=None) -> set:
+	"""WIProgression.granted_skills' fold, in Python: own grants at or below
+	`level`, plus the WHOLE `inherits` closure read at that SAME level (an
+	ancestor is folded at the child's own level, never at one of its own)."""
+	if seen is None:
+		seen = set()
+	if class_id in seen:
+		return set()
+	seen.add(class_id)
+	cls = classes_by_id.get(class_id)
+	if not isinstance(cls, dict):
+		return set()
+	out = set()
+	for row in cls.get("levels", []) if isinstance(cls.get("levels"), list) else []:
+		if not isinstance(row, dict) or not isinstance(row.get("level"), int):
+			continue
+		if row["level"] <= level:
+			for skill_id in row.get("grants", []) or []:
+				if isinstance(skill_id, str):
+					out.add(skill_id)
+	raw = cls.get("inherits", [])
+	parents = [raw] if isinstance(raw, str) else (raw if isinstance(raw, list) else [])
+	for parent in parents:
+		if isinstance(parent, str):
+			out |= _grants_at_level(parent, level, classes_by_id, seen)
+	return out
+
+
+## Lower-is-better keys; everything else numeric under `effect` is higher-is-better.
+_UPGRADE_LOWER_IS_BETTER = ("ap_cost", "mp_cost", "cooldown_rounds", "windup_rounds")
+
+
+def _upgrade_dominant(old_id: str, new_id: str, skills_by_id: dict) -> str:
+	"""'' when `new_id` is a strictly-better stand-in for `old_id`; otherwise the
+	reason it is not. DOMINANCE, not similarity: no axis may regress and at least
+	one must improve, or the 'upgrade' is a rename (or a nerf) wearing the
+	no-Skill-loss guarantee's clothes."""
+	old = skills_by_id.get(old_id)
+	new = skills_by_id.get(new_id)
+	if not isinstance(old, dict):
+		return f"'{old_id}' is not a skill"
+	if not isinstance(new, dict):
+		return f"'{new_id}' is not a skill"
+	improved = False
+	for key in ("ap_cost", "mp_cost", "cooldown_rounds"):
+		old_v, new_v = old.get(key), new.get(key)
+		if isinstance(old_v, (int, float)) and not isinstance(new_v, (int, float)):
+			continue
+		if isinstance(new_v, (int, float)) and not isinstance(old_v, (int, float)):
+			return f"'{new_id}' adds a {key} '{old_id}' never charged"
+		if isinstance(old_v, (int, float)) and isinstance(new_v, (int, float)):
+			if new_v > old_v:
+				return f"'{new_id}' costs more {key} ({new_v}) than '{old_id}' ({old_v})"
+			if new_v < old_v:
+				improved = True
+	old_ctx = set(old.get("contexts", []) or [])
+	new_ctx = set(new.get("contexts", []) or [])
+	if not old_ctx <= new_ctx:
+		return (f"'{new_id}' drops context(s) {sorted(old_ctx - new_ctx)} that "
+			f"'{old_id}' had")
+	if old_ctx < new_ctx:
+		improved = True
+	old_fx = old.get("effect") if isinstance(old.get("effect"), dict) else {}
+	new_fx = new.get("effect") if isinstance(new.get("effect"), dict) else {}
+	if old_fx and not new_fx:
+		return f"'{new_id}' carries no effect while '{old_id}' does"
+	if old_fx and new_fx:
+		if old_fx.get("type") != new_fx.get("type"):
+			return (f"'{new_id}' effect type '{new_fx.get('type')}' differs from "
+				f"'{old_id}' effect type '{old_fx.get('type')}' -- not the same [Skill], "
+				"better")
+		for key, old_v in old_fx.items():
+			if not isinstance(old_v, (int, float)) or isinstance(old_v, bool):
+				continue
+			new_v = new_fx.get(key)
+			if not isinstance(new_v, (int, float)) or isinstance(new_v, bool):
+				return f"'{new_id}' effect drops numeric '{key}'"
+			lower_better = key in _UPGRADE_LOWER_IS_BETTER
+			if (new_v < old_v) if not lower_better else (new_v > old_v):
+				return (f"'{new_id}' effect.{key} ({new_v}) is worse than "
+					f"'{old_id}' effect.{key} ({old_v})")
+			if new_v != old_v:
+				improved = True
+	if not improved:
+		return f"'{new_id}' is not strictly better than '{old_id}' on any axis"
+	return ""
+
+
+def _line_proxies(line, rows: list) -> list:
+	"""#472 3, the lint's chain walk. A held consolidated class stands in for
+	either parent line its OWN row consumed, so a target reachable that way is a
+	real parent of the NEXT row and must be enumerated as one. Containment matches
+	WIProgression._lineage_proxies exactly: the proxy's own side must be a SUBSET
+	of the line being asked for (a warrior-built [Spellsword] is not a
+	[Spearmaster]); reversing it invents pairs the engine never fires."""
+	asked = {value for value in line if isinstance(value, str)}
+	out = []
+	for row in rows:
+		target = row.get("target")
+		lines = row.get("parent_lines", [])
+		if not isinstance(target, str) or not (isinstance(lines, list) and len(lines) == 2):
+			continue
+		for side in lines:
+			if not isinstance(side, list) or not side:
+				continue
+			if {value for value in side if isinstance(value, str)} <= asked and target not in out:
+				out.append(target)
+	return out
+
+
+def _pair_holdable(class_a: str, class_b: str, rows: list, classes_by_id: dict) -> bool:
+	"""False when one side is a consolidated class that CONSUMED the other -- the
+	engine retires a target's parent ids permanently (_retired_class_ids), so the
+	two can never be held at once."""
+	for consolidated, other in ((class_a, class_b), (class_b, class_a)):
+		for row in rows:
+			if row.get("target") != consolidated:
+				continue
+			lines = row.get("parent_lines", [])
+			if not (isinstance(lines, list) and len(lines) == 2):
+				continue
+			consumed = set()
+			for side in lines:
+				if isinstance(side, list):
+					consumed |= set(_lineage_members(side, classes_by_id))
+			if other in consumed:
+				return False
+	return True
+
+
+def _merge_proven(id_a: str, id_b: str, row: dict, classes_by_id: dict) -> bool:
+	"""WIProgression._merge_proven, in Python. A LITERAL authored pair is proven
+	statically by this very arm; a PROXY substitution is proven only by the
+	target inheriting exactly that pair."""
+	lines = row.get("parent_lines", [])
+	if not (isinstance(lines, list) and len(lines) == 2):
+		return False
+	if id_a in lines[0] and id_b in lines[1]:
+		return True
+	return _inheritance_pair(classes_by_id.get(row.get("target"), {})) == frozenset((id_a, id_b))
+
+
+def check_consolidation_skill_coverage(parsed: dict, errors: list, report: list) -> None:
+	"""#472 NO-SKILL-LOSS. Consolidation fires automatically, so a merge the
+	player never chose may not cost them a [Skill]. Enumerates EVERY qualifying
+	parent level pair (min_parent_level/min_combined_level up to each parent's own
+	table max, clamped to sparse floors), folds both parents' granted ids at those
+	levels, and requires the target to cover the union at that pair's own derived
+	merged level -- via its `inherits`, its own table, or a registered
+	`upgrades: {old: new}` pair proved cost/effect-dominant.
+
+	TWO TIERS, split on what the ENGINE can actually fire (WIProgression.
+	check_consolidation + _merge_proven):
+	  * LIVE -- a pair some live row will merge. A gap here is a HARD ERROR with
+	    NO exemption route: it ships and silently unlearns a [Skill] mid-run.
+	    `_exempt` buys nothing on a live pair; narrow the row's `parent_lines`
+	    (or author the coverage) instead.
+	  * CLOSURE-ONLY -- a pair a player can HOLD (evolution closure, or a chain
+	    the 3 proxy could reach) that no live row merges. Nothing is lost,
+	    because nothing fires; it is an authoring queue, owned by
+	    check_lineage_completeness' `_exempt`/orphan inventory. Listed as a
+	    REPORT so the queue stays visible with its real cost attached.
+	FIRST-MATCH ORDERING IS LOAD-BEARING (#449) in both tiers: check_consolidation
+	returns the FIRST matching row, so each pair is charged to exactly one row."""
+	doc = parsed.get(DATA / "classes.json") or {}
+	skills_doc = parsed.get(DATA / "skills.json") or {}
+	if not isinstance(doc, dict) or not isinstance(skills_doc, dict):
+		return
+	classes_by_id = {row.get("id"): row for row in doc.get("classes", [])
+		if isinstance(row, dict) and isinstance(row.get("id"), str)}
+	skills_by_id = {row.get("id"): row for row in skills_doc.get("skills", [])
+		if isinstance(row, dict) and isinstance(row.get("id"), str)}
+	rows = [row for row in doc.get("consolidations", []) if isinstance(row, dict)]
+	live_rows = [row for row in rows if "_exempt" not in row
+		and isinstance(row.get("parent_lines"), list) and len(row["parent_lines"]) == 2
+		and all(isinstance(line, list) and line for line in row["parent_lines"])]
+
+	def sides(row):
+		"""Everything a player could bring to this row: the authored ids, their
+		evolution closure, and any consolidated class that proxies the line."""
+		lines = row["parent_lines"]
+		return (list(_lineage_members(lines[0], classes_by_id)) + _line_proxies(lines[0], rows),
+			list(_lineage_members(lines[1], classes_by_id)) + _line_proxies(lines[1], rows))
+
+	def pairs_for():
+		"""pair -> (row, parent_a, parent_b), first matching row wins."""
+		found = {}
+		for row in live_rows:
+			target = row.get("target")
+			side_a, side_b = sides(row)
+			for parent_a in side_a:
+				for parent_b in side_b:
+					if parent_a == parent_b:
+						continue
+					# Holding the target SKIPS the row outright
+					# (check_consolidation's own guard), so a pair naming it is
+					# not a pair anyone merges.
+					if target in (parent_a, parent_b):
+						continue
+					if not _pair_holdable(parent_a, parent_b, rows, classes_by_id):
+						continue
+					found.setdefault(frozenset((parent_a, parent_b)), (row, parent_a, parent_b))
+		return found
+
+	live_pairs = {}
+	for row in live_rows:
+		target = row.get("target")
+		side_a, side_b = sides(row)
+		for parent_a in side_a:
+			for parent_b in side_b:
+				if parent_a == parent_b or target in (parent_a, parent_b):
+					continue
+				if not _pair_holdable(parent_a, parent_b, rows, classes_by_id):
+					continue
+				if not _merge_proven(parent_a, parent_b, row, classes_by_id):
+					continue
+				live_pairs.setdefault(frozenset((parent_a, parent_b)), (row, parent_a, parent_b))
+	closure_pairs = pairs_for()
+
+	for row in live_rows:
+		label = str(row.get("id", row.get("target", "<unnamed>")))
+		target_id = row.get("target")
+		target = classes_by_id.get(target_id)
+		if not isinstance(target, dict):
+			errors.append(f"consolidation coverage: '{label}' names unknown target "
+				f"'{target_id}'")
+			continue
+		upgrades = row.get("upgrades", {})
+		if not isinstance(upgrades, dict):
+			errors.append(f"consolidation coverage: '{label}' `upgrades` must be a "
+				"{old_skill_id: new_skill_id} map")
+			upgrades = {}
+		target_ceiling = max(_table_levels(target), default=0)
+		for old_id, new_id in sorted(upgrades.items()):
+			if not isinstance(new_id, str):
+				errors.append(f"consolidation coverage: '{label}' upgrade of "
+					f"'{old_id}' must map to a skill id")
+				continue
+			reason = _upgrade_dominant(old_id, new_id, skills_by_id)
+			if reason:
+				errors.append(f"consolidation coverage: '{label}' upgrade "
+					f"'{old_id}' -> '{new_id}' is not dominant: {reason}")
+			elif new_id not in _grants_at_level(target_id, target_ceiling, classes_by_id):
+				errors.append(f"consolidation coverage: '{label}' upgrade "
+					f"'{old_id}' -> '{new_id}', but '{target_id}' never grants "
+					f"'{new_id}' -- the upgrade is never delivered")
+
+	parked = []
+	for key, (row, parent_a, parent_b) in sorted(closure_pairs.items(),
+			key=lambda item: sorted(item[0])):
+		target_id = row.get("target")
+		label = str(row.get("id", target_id or "<unnamed>"))
+		if not isinstance(classes_by_id.get(target_id), dict):
+			continue
+		upgrades = row.get("upgrades", {})
+		if not isinstance(upgrades, dict):
+			upgrades = {}
+		min_parent = int(row.get("min_parent_level", 0) or 0)
+		min_combined = int(row.get("min_combined_level", 0) or 0)
+		levels_a = _table_levels(classes_by_id.get(parent_a, {}))
+		levels_b = _table_levels(classes_by_id.get(parent_b, {}))
+		if not levels_a or not levels_b:
+			continue
+		# A CHAINED parent is a consolidated class: its sparse table starts at its
+		# own merge floor, well above min_parent_level.
+		floor_a = max(min_parent, min(levels_a))
+		floor_b = max(min_parent, min(levels_b))
+		worst_missing: set = set()
+		worst_pair = None
+		for level_a in range(floor_a, max(levels_a) + 1):
+			for level_b in range(floor_b, max(levels_b) + 1):
+				if level_a + level_b < min_combined:
+					continue
+				need = (_grants_at_level(parent_a, level_a, classes_by_id)
+					| _grants_at_level(parent_b, level_b, classes_by_id))
+				have = _grants_at_level(target_id,
+					_merged_consolidation_level(level_a, level_b), classes_by_id)
+				missing = {s for s in need if s not in have and upgrades.get(s) not in have}
+				if missing and len(missing) > len(worst_missing):
+					worst_missing = missing
+					worst_pair = (level_a, level_b)
+		if not worst_missing:
+			continue
+		if key in live_pairs:
+			errors.append(f"consolidation coverage: '{label}' merging "
+				f"'{parent_a}' {worst_pair[0]} + '{parent_b}' {worst_pair[1]} "
+				f"into '{target_id}' "
+				f"{_merged_consolidation_level(worst_pair[0], worst_pair[1])} "
+				f"LOSES {sorted(worst_missing)} -- consolidation is automatic, so a LIVE "
+				"pair must cover both parents' kits via inherits, its own grants, or a "
+				"dominant `upgrades` pair. NO exemption exists: narrow the row's "
+				"`parent_lines` so the engine cannot fire this pair, or author the coverage")
+		else:
+			parked.append(f"'{parent_a}' x '{parent_b}' -> '{target_id}' would lose "
+				f"{sorted(worst_missing)}")
+	if parked:
+		report.append(f"consolidation coverage: {len(parked)} holdable parent pair(s) that "
+			"NO live row merges -- nothing is lost today because nothing fires, but each "
+			"needs an authored target before its lineage can consolidate at all "
+			f"(lineage completeness owns that queue): {'; '.join(sorted(parked))}")
+
+
 def main() -> int:
 	start = time.monotonic()
 	list_advisories = "--advisories" in sys.argv
@@ -2204,6 +2526,7 @@ def main() -> int:
 	check_placements_off_water(maps, errors)
 	check_moods(parsed, maps, errors)
 	check_lineage_completeness(parsed, errors)
+	check_consolidation_skill_coverage(parsed, errors, report)
 	advisories: list = []
 	skill_gate_advisories: list = []
 	prose_template_advisories: list = []

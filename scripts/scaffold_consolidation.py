@@ -248,16 +248,23 @@ def build_proposal(parents: tuple, target: str, catalogs: dict, *,
 	floor = merged_level(*pair)
 	ref = f"#{issue}"
 
-	parent_lines = [lineage_members([p], classes_by_id) for p in parents]
+	# #472: a live row may list ONLY pairs whose no-Skill-loss is PROVEN, and the
+	# target `inherits` exactly this pair -- so the row is exactly this pair, not
+	# the parents' evolution closures. The closure ids are NOT lost: lineage
+	# completeness keeps enumerating them as pairs needing their own targets.
+	parent_lines = [[p] for p in parents]
 	consolidation_row = {
 		"_comment": (
 			f"SCAFFOLD ({ref}, scripts/scaffold_consolidation.py). Gate shape copied VERBATIM from "
 			f"[{baseline_row.get('display_name', baseline)}]'s row (min_parent_level {min_parent}, "
 			f"min_combined_level {min_combined}) -- new consolidations follow the SAME gate, never a "
 			"bespoke one. ORDER IS LOAD-BEARING: `WIProgression.check_consolidation` returns the FIRST "
-			f"matching row and the '{baseline}' row's own lines still reach '{parents[0]}' x "
-			f"'{parents[1]}', so THIS ROW MUST BE PLACED ABOVE IT or the target is unreachable. Pin "
-			"that with an assertion in tests/test_progression.gd -- a comment does not gate a reorder."),
+			f"matching row, so if the '{baseline}' row can also reach '{parents[0]}' x "
+			f"'{parents[1]}' THIS ROW MUST BE PLACED ABOVE IT or the target is unreachable. Pin that "
+			"with an assertion in tests/test_progression.gd -- a comment does not gate a reorder. "
+			"#472: parent_lines list EXACTLY this pair, because consolidation is automatic and a live "
+			"row may only fire pairs the target demonstrably covers (data_lint's coverage arm hard-reds "
+			"any other); the evolved siblings wait for their own targets."),
 		"id": target,
 		"target": target,
 		"parent_lines": parent_lines,
@@ -365,7 +372,6 @@ def build_proposal(parents: tuple, target: str, catalogs: dict, *,
 			"equipped": {"weapon": weapon_item, "armor": ""},
 			"generalist_classes": [],
 			"inventory": [weapon_item] if weapon_item else [],
-			"pending_consolidation": {},
 			"player_cell": list(FIXTURE_CELL),
 			"player_facing": list(FIXTURE_FACING),
 			"player_skills": list(FIXTURE_SKILLS),
@@ -395,9 +401,10 @@ def build_proposal(parents: tuple, target: str, catalogs: dict, *,
 			"GATES is the ORDER of classes.json's `consolidations[]`: `check_consolidation` is "
 			f"first-match and [{baseline_row.get('display_name', baseline)}]'s lines still reach this "
 			"pair, so if this rule ever sinks below it the script reds on `target` instead of silently "
-			"handing the player the wrong class. The OPAQUE-UNTIL-SLEEP lock is PROVED before the bed "
-			"(empty pending_consolidation + no consolidation_offered on a freshly loaded save at the "
-			"threshold), not asserted in prose. The closing fight is the kit proof: an INHERITED "
+			"handing the player the wrong class. Consolidation is AUTOMATIC (#472): the merge applies "
+			"INSIDE the sleep beat, strictly before the veil renders, and there is no prompt to answer. "
+			"The OPAQUE-UNTIL-SLEEP lock is PROVED before the bed (no consolidation event on a freshly "
+			"loaded save at the threshold), not asserted in prose. The closing fight is the kit proof: an INHERITED "
 			"lineage grant and the consolidation's OWN new grant, both fielded. TODO: replace the "
 			"fight beat below with an act-appropriate encounter for this lineage, and re-derive the "
 			"screenshot names."),
@@ -413,27 +420,18 @@ def build_proposal(parents: tuple, target: str, catalogs: dict, *,
 			{"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
 			{"action": "assert_state", "path": "current_map", "equals": FIXTURE_MAP},
 			{"action": "assert_state", "path": "classes", "equals": dict(held)},
-			{"action": "assert_state", "path": "pending_consolidation", "equals": {}},
-			{"action": "assert_event_absent", "type": "consolidation_offered"},
+			{"action": "assert_event_absent", "type": "consolidation_accepted"},
 			{"action": "teleport", "map": "inn_upstairs", "cell": [9, 2]},
 			{"action": "move", "direction": "up", "steps": 1},
 			{"action": "press", "name": "interact"},
-			{"action": "wait_for_event", "type": "consolidation_offered",
+			{"action": "wait_for_event", "type": "consolidation_accepted",
 				"payload_contains": {"target": target, "level": floor}, "timeout_sec": 5},
-			{"action": "assert_state", "path": "pending_consolidation.target", "equals": target},
-			{"action": "assert_state", "path": "pending_consolidation.level", "equals": floor},
-			{"action": "assert_state", "path": "classes", "equals": dict(held)},
+			{"action": "assert_event_absent", "type": "consolidation_offered"},
 			{"action": "wait_for_event", "type": "ui_sleep_veil_rendered",
 				"payload_contains": {"lines": 1}, "timeout_sec": 5},
 			{"action": "wait_for_event", "type": "ui_sleep_veil_finished", "timeout_sec": 5},
-			{"action": "wait_for_event", "type": "ui_consolidation_prompt_rendered",
-				"payload_contains": {"target": target}, "timeout_sec": 5},
-			{"action": "screenshot", "name": f"01_{target}_offer_prompt"},
-			{"action": "press", "name": "confirm"},
-			{"action": "wait_for_event", "type": "ui_consolidation_prompt_hidden", "timeout_sec": 5},
-			{"action": "wait_for_event", "type": "consolidation_accepted",
-				"payload_contains": {"target": target, "level": floor}, "timeout_sec": 5},
-			{"_comment": "wi_game.gd:2811 composes this from the three display names -- it reds the "
+			{"action": "screenshot", "name": f"01_{target}_merge_veil"},
+			{"_comment": "wi_game.gd's _apply_consolidation composes this from the three display names -- it reds the "
 				"moment the TODO_NAME_ME placeholders are replaced, which is the point.",
 				"action": "wait_for_event", "type": "ui_toast_rendered",
 				"payload_contains": {"text": "[%s] and [%s] merge into [%s]!" % (
@@ -441,7 +439,6 @@ def build_proposal(parents: tuple, target: str, catalogs: dict, *,
 					classes_by_id[parents[1]].get("display_name", parents[1]),
 					TODO_NAME)}, "timeout_sec": 5},
 			{"action": "assert_state", "path": "classes", "equals": {target: floor}},
-			{"action": "assert_state", "path": "pending_consolidation", "equals": {}},
 			{"action": "screenshot", "name": f"02_merged_{target}"},
 			{"_comment": "TODO: an act-appropriate fight for this lineage. The asserts below are the "
 				"contract; the walk to them is content.",

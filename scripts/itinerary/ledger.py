@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from typing import Any, Iterable
 
 
-SAVE_VERSION = 8
+SAVE_VERSION = 9
 
 # Counters whose deposit is CHALLENGE-WEIGHTED, so their banked value is not a
 # count of anything a compiler can derive: a gray-band win deposits a fraction
@@ -30,7 +30,6 @@ def _fresh_state() -> dict[str, Any]:
         "dormant_encounters": [],
         "generalist_classes": [],
         "started_quests": [],
-        "pending_consolidation": {},
         "used_skills": [],
         "seen_statuses": [],
         "lore_notes": [],
@@ -229,9 +228,13 @@ class Ledger:
         self.state["social_talked"] = {}
         self.state["dormant_encounters"] = []
         self.state["actions_since_sleep"] = 0
+        # #472: consolidation is AUTOMATIC and resolves INSIDE the sleep beat, so
+        # the oracle's `classes_after` ALREADY carries the merge (parents retired,
+        # target at its merged level). Assigning it is the whole of the ledger's
+        # consolidation handling -- there is no pending state to mirror any more,
+        # and no caller may re-apply the merge on top of this.
         self.state["classes"] = deepcopy(preview["classes_after"])
         self.state["generalist_classes"] = deepcopy(preview.get("generalist_classes_after", self.state["generalist_classes"]))
-        self.state["pending_consolidation"] = deepcopy(preview.get("consolidation", {}))
 
     def materialize_save(self) -> dict[str, Any]:
         state = _fresh_state()

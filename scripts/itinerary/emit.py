@@ -306,21 +306,25 @@ class Emitter:
             steps.append({"action": "wait_for_event", "type": "class_gained", "payload_contains": {"class": class_id}, "timeout_sec": 5})
         for gain in preview.get("level_ups", []):
             steps.append({"action": "wait_for_event", "type": "class_level_up", "payload_contains": {"class": gain["class"], "level": gain["level"]}, "timeout_sec": 5})
+        # #472: consolidation APPLIES inside the sleep beat -- no offer, no modal,
+        # no press. The merge event therefore lands strictly BEFORE the veil
+        # renders, and wait_for_event's cursor is forward-only, so this order is
+        # itself the beat-order pin.
         consolidation = preview.get("consolidation", {})
         if consolidation:
             steps.extend([
-                {"action": "wait_for_event", "type": "consolidation_offered", "payload_contains": {"target": consolidation["target"], "level": consolidation["level"]}, "timeout_sec": 5},
+                {"action": "wait_for_event", "type": "consolidation_accepted", "payload_contains": {"target": consolidation["target"], "level": consolidation["level"]}, "timeout_sec": 5},
                 {"action": "wait_for_event", "type": "ui_sleep_veil_rendered", "timeout_sec": 5},
                 {"action": "wait_for_event", "type": "ui_sleep_veil_finished", "timeout_sec": 5},
-                {"action": "wait_for_event", "type": "ui_consolidation_prompt_rendered", "payload_contains": {"target": consolidation["target"]}, "timeout_sec": 5},
-                {"action": "press", "name": "confirm" if operation["consolidation_choice"] == "accept" else "cancel"},
-                {"action": "wait_for_event", "type": "ui_consolidation_prompt_hidden", "timeout_sec": 5},
-                {"action": "wait_for_event", "type": "consolidation_accepted" if operation["consolidation_choice"] == "accept" else "consolidation_declined", "timeout_sec": 5},
+                {"action": "assert_state", "path": "classes", "equals": preview["classes_after"]},
             ])
         else:
             steps.extend([
                 {"action": "wait_for_event", "type": "ui_sleep_veil_rendered", "timeout_sec": 5},
-                {"action": "assert_state", "path": "pending_consolidation", "equals": {}},
+                # The retired `pending_consolidation` pin said "no merge is
+                # queued". Its replacement says the stronger thing directly: no
+                # merge HAPPENED on this sleep.
+                {"action": "assert_event_absent", "type": "consolidation_accepted"},
                 {"action": "assert_state", "path": "classes", "equals": preview["classes_after"]},
             ])
         return steps

@@ -48,8 +48,10 @@ func _check_guard_flag_lifecycle(src: String) -> void:
 	var begin_sleep_body := src.get_slice("func _begin_sleep() -> void:", 1).get_slice("func play_opener", 0)
 	assert(begin_sleep_body.find("_sleep_has_consolidation = false") != -1, "_begin_sleep() must reset _sleep_has_consolidation false for every fresh sleep")
 
-	var offered_body := src.get_slice("WIEvents.CONSOLIDATION_OFFERED:", 1).get_slice("WIEvents.ACCOMPLISHMENT_RECORDED:", 0)
-	assert(offered_body.find("_sleep_has_consolidation = true") != -1, "the CONSOLIDATION_OFFERED handler must arm _sleep_has_consolidation")
+	assert(src.find("WIEvents.CONSOLIDATION_OFFERED") == -1, "#472: there is no offer event any more -- the veil reads the APPLIED merge")
+	var merge_line_body := src.get_slice("WIEvents.CONSOLIDATION_ACCEPTED:", 1).get_slice("WIEvents.ACCOMPLISHMENT_RECORDED:", 0)
+	assert(merge_line_body.find("_sleep_has_consolidation = true") != -1, "the CONSOLIDATION_ACCEPTED handler must arm _sleep_has_consolidation -- a merge the player never chose must not be skippable past")
+	assert(merge_line_body.find("merge into") != -1, "the veil must speak the merge (1: veil line + journal entry)")
 
 
 func _check_run_sequence_branches(src: String) -> void:
@@ -112,23 +114,17 @@ func _check_finale_is_owed_not_armed(src: String) -> void:
 	for conv: String in ["olesm_intro", "pisces_seal"]:
 		assert(curtain_body.find(conv) != -1, "%s BANKS seal_resolved -- it must be able to draw the curtain" % conv)
 
-	# The bed hook stands down for a queued merge offer; these two are its
-	# retry, so an owed finale never waits an extra night.
-	var merge_body := src.get_slice("WIEvents.CONSOLIDATION_ACCEPTED, WIEvents.CONSOLIDATION_DECLINED:", 1).get_slice("func _begin_sleep", 0)
-	assert(merge_body.find("play_finale.call_deferred()") != -1, "resolving a consolidation offer must re-attempt an owed finale")
-	# DEFERRED, not a straight call: decline_consolidation() emits
-	# CONSOLIDATION_DECLINED and only THEN resolves evolutions, so calling
-	# through would recount classes mid-flight -- and would do it DIFFERENTLY
-	# in QA (which builds the line list synchronously inside play_finale) than
-	# in real play (which defers into _run_finale). Same divergence the
-	# UI_CONSOLIDATION_PROMPT_HIDDEN edge was rejected for.
-	assert(merge_body.find("\tplay_finale()") == -1, "the consolidation edge must NOT call play_finale() straight through -- evolutions resolve after the emit")
+	# #472 RETIRED THE RETRY ARM WITH THE MODAL IT SERVED. The merge now applies
+	# INSIDE the sleep beat, before the veil sequence runs, so the bed hook has
+	# one settled snapshot to recount and never stands down.
+	assert(src.find("WIEvents.CONSOLIDATION_DECLINED") == -1, "#472: there is no decline event to retry an owed finale off")
+	assert(src.find("play_finale.call_deferred()") == -1, "#472: the deferred consolidation retry is DELETED -- nothing resolves after the veil any more")
 
 	var run_sequence_body := src.get_slice("func _run_sequence() -> void:", 1).get_slice("func _play_finale_off_the_bed", 0)
 	assert(run_sequence_body.split("_play_finale_off_the_bed()").size() - 1 == 2, "BOTH _run_sequence branches (QA-collapsed and real) must play an owed finale off the bed -- the FIGHT path banks seal_resolved at a container, never in a dialogue")
 
 	var off_the_bed_body := src.get_slice("func _play_finale_off_the_bed() -> void:", 1).get_slice("func _add_line(", 0)
-	assert(off_the_bed_body.find("if _sleep_has_consolidation:") != -1, "the bed hook must yield to a consolidation offer -- the finale's black would otherwise fall over that modal, and it stays owed anyway")
+	assert(off_the_bed_body.find("_sleep_has_consolidation") == -1, "#472: the bed hook must NOT stand down for a merge -- it already applied in-beat, so the finale rolls that same night naming the merged class")
 
 	var bank_body := src.get_slice("func _bank_finale_played() -> void:", 1).get_slice("func _emit_finale_rendered", 0)
 	assert(bank_body.find("record_accomplishment(\"finale_played\")") != -1, "the finale must bank finale_played")

@@ -324,15 +324,79 @@ func _init() -> void:
 
 	assert(WIProgression.check_consolidation({"spellsword": 14}, catalog).is_empty(), "holding only the target class -> no offer (no parent lines held)")
 
-	var evolved_offer := WIProgression.check_consolidation({"swordsman": 11, "ice_mage": 10}, catalog)
-	assert(not evolved_offer.is_empty(), "evolved parents (swordsman + ice_mage) still trigger the offer")
-	assert((evolved_offer["parents"] as Array) == ["swordsman", "ice_mage"], "parents reported by their HELD (evolved) ids, not the base line id")
-	assert(evolved_offer["target"] == "spellsword", "evolved parents still target spellsword")
-	assert(int(evolved_offer["level"]) == 14, "evolved-parent math uses the SAME formula (11,10) -> 14")
+	# #472 audit FAIL 1 REPLACED THESE TWO PINS. They asserted that EVOLVED
+	# parents merge through the broad lines -- and under automatic consolidation
+	# that is precisely the Skill loss the ruling forbids (swordsman+ice_mage
+	# became [Spellsword], quietly dropping four sword grants and three ice
+	# ones). The evolved pairs now wait for their own authored targets; the
+	# narrowed live surface is pinned immediately below.
+	# #449 ORDER CONTRACT, still gated: the evolved SPEAR lineage reaches its own
+	# class and never [Spellsword], and the base pair still reaches [Spellsword].
+	var spear_lineage := WIProgression.check_consolidation({"spearmaster": 11, "mage": 10}, catalog)
+	assert(spear_lineage["target"] == "spellspear", "#449: an EVOLVED spear parent targets its OWN class -- the spellspear row must stay above spellsword's")
+	assert(int(spear_lineage["level"]) == 14, "the evolved lineage uses the SAME merge formula (11,10) -> 14")
+	assert(String(WIProgression.check_consolidation({"warrior": 11, "mage": 10}, catalog)["target"]) == "spellsword", "#449 the other direction: the BASE warrior pair still reaches [Spellsword]")
 
-	var mixed_evolved := WIProgression.check_consolidation({"spearmaster": 11, "fire_mage": 10}, catalog)
-	assert(not mixed_evolved.is_empty() and int(mixed_evolved["level"]) == 14, "spearmaster + fire_mage (11,10) -> 14")
-	assert(mixed_evolved["target"] == "spellspear", "#449: an EVOLVED spear parent targets its own class, never spellsword")
+	# --- #472 audit FAIL 1: THE NARROWED LIVE SURFACE. Consolidation is
+	# automatic, so a row may only fire pairs whose no-Skill-loss is PROVEN.
+	# Every live row was narrowed to exactly the pair its target `inherits`;
+	# these pins are what stops a future widening from silently re-opening it. ---
+	assert(WIProgression.check_consolidation({"warrior": 11, "ice_mage": 10}, catalog).is_empty(), "warrior + ice_mage merges NOTHING: [Spellsword] does not inherit ice_mage, so the merge would drop [Ice Shard]/[Ice Wall]/[Icy Floor] -- the audit's own repro")
+	assert(WIProgression.check_consolidation({"warrior": 11, "fire_mage": 10}, catalog).is_empty(), "warrior + fire_mage likewise loses the whole flame kit -- no merge")
+	assert(WIProgression.check_consolidation({"swordsman": 14, "mage": 10}, catalog).is_empty(), "an EVOLVED martial parent has its own kit ([Crescent Cut] etc.) that [Spellsword] never inherits -- it waits for its own target, it does not merge lossily")
+	assert(WIProgression.check_consolidation({"spearmaster": 11, "ice_mage": 10}, catalog).is_empty(), "the same rule binds the evolved-lineage row: [Spellspear] inherits mage, not ice_mage")
+	assert(WIProgression.check_consolidation({"beast_master": 12, "mage": 10}, catalog).is_empty(), "[Beast Master]'s own grants are not in [Druid]'s inherits -- no merge")
+	assert(WIProgression.check_consolidation({"infiltrator": 12, "archer": 10}, catalog).is_empty(), "[Infiltrator]'s [Shadowstep] is not in [Scout]'s inherits -- no merge")
+	assert(WIProgression.check_consolidation({"barmaid": 12, "diplomat": 10}, catalog).is_empty(), "[Barmaid]'s service kit is not in [Innkeeper]'s inherits -- no merge")
+	# ...and the four proven pairs still merge, at the same derived floors.
+	assert(String(WIProgression.check_consolidation({"warrior": 11, "mage": 10}, catalog).get("target", "")) == "spellsword", "the PROVEN warrior+mage pair still merges")
+	assert(String(WIProgression.check_consolidation({"rogue": 11, "archer": 10}, catalog).get("target", "")) == "scout", "rogue+archer still merges")
+	assert(String(WIProgression.check_consolidation({"helper": 11, "diplomat": 10}, catalog).get("target", "")) == "innkeeper", "helper+diplomat still merges")
+	assert(String(WIProgression.check_consolidation({"warrior": 11, "archer": 10}, catalog).get("target", "")) == "ranger", "warrior+archer still merges")
+
+	# --- #472 3, LINEAGE PROXY. A held consolidated class stands in for either
+	# parent line its OWN row consumed, at its CURRENT level -- but ONLY where
+	# the chained merge is itself proven. Nothing inherits {spellsword, archer}
+	# today, so no chain fires on shipped data; the machinery is proved on a
+	# synthetic catalog that DOES author the chained target, and lights up for
+	# real the moment such a class lands. ---
+	assert(WIProgression.check_consolidation({"spellsword": 16, "archer": 10}, catalog).is_empty(), "a chained pair with no authored target does NOT fire -- [Ranger] inherits warrior+archer and would drop the whole mage half of [Spellsword]")
+	assert(WIProgression.check_consolidation({"ranger": 14, "mage": 10}, catalog).is_empty(), "the same chain from the other side: [Spellsword] would drop [Ranger]'s bow kit")
+	assert(WIProgression.check_consolidation({"spellsword": 16, "beast_tamer": 10}, catalog).is_empty(), "and on the other line -- [Druid] does not inherit spellsword")
+
+	var chain_catalog := catalog.duplicate(true)
+	(chain_catalog["classes"] as Array).append({
+		WIKeys.ID: "_chained_target", WIKeys.DISPLAY_NAME: "[Chained]",
+		"inherits": ["spellsword", "archer"],
+		"levels": [{"level": 18, "grants": []}],
+	})
+	(chain_catalog["consolidations"] as Array).append({
+		"id": "_chained", "target": "_chained_target",
+		"parent_lines": [["warrior"], ["archer"]],
+		"min_parent_level": 10, "min_combined_level": 21,
+	})
+	var chained := WIProgression.check_consolidation({"spellsword": 16, "archer": 10}, chain_catalog)
+	assert(not chained.is_empty() and String(chained["target"]) == "_chained_target", "3 CHAINING, PROVEN: once a class inherits {spellsword, archer}, [Spellsword] proxies the warrior line it consumed and the chain fires")
+	assert((chained["parents"] as Array) == ["spellsword", "archer"], "the second consolidation CONSUMES the consolidated class itself")
+	assert(int(chained["level"]) == 18, "the proxy stands in at the CONSOLIDATED class's CURRENT level, not a consumed parent's frozen one: (16,10) -> max(ceil(52/3),16) == 18")
+	var chained_higher := WIProgression.check_consolidation({"spellsword": 20, "archer": 10}, chain_catalog)
+	assert(int(chained_higher["level"]) == 20, "climbing the consolidated class climbs the lineage with it -- (20,10) -> 20, strictly above the 18 a frozen warrior-11 stand-in would give")
+
+	# CONTAINMENT DIRECTION, unchanged: [Spellsword]'s warrior side must not
+	# satisfy [Spellspear]'s narrower `[spearmaster]` line.
+	assert(WIProgression.check_consolidation({"spellsword": 16, "mage": 10}, catalog).is_empty(), "a [Spellsword] + re-earned [Mage] matches NO row: it cannot proxy the spearmaster line, and its own row refuses to merge it with itself")
+
+	# SELF-MERGE GUARD. One consolidated class covers BOTH sides of its own row.
+	assert(WIProgression.check_consolidation({"spellsword": 16}, catalog).is_empty(), "a class never merges with itself, however many lines it proxies")
+
+	# --- #472 2, the runtime half of the UPGRADE escape hatch. ---
+	assert(WIProgression.consolidation_upgrades("spellsword", catalog).is_empty(), "no shipped row registers an upgrades map")
+	var upgrade_catalog := catalog.duplicate(true)
+	for row: Dictionary in upgrade_catalog["consolidations"]:
+		if String(row.get("target", "")) == "spellsword":
+			row["upgrades"] = {"power_strike": "keener_edge"}
+	assert(WIProgression.consolidation_upgrades("spellsword", upgrade_catalog) == {"power_strike": "keener_edge"}, "an authored upgrades map is read off the consolidations row")
+	assert(WIProgression.consolidation_upgrades("ranger", upgrade_catalog).is_empty(), "the map is per-row, never shared across targets")
 
 	# --- #449 EVOLVED-LINEAGE CONSOLIDATION, and the ORDER CONTRACT it rests on.
 	# User ruling 2026-08-12 (docs/CHOICE-LOG.md): spearmaster + mage does not
@@ -359,17 +423,33 @@ func _init() -> void:
 	assert(not WIProgression.granted_skills({"spellspear": 14}, catalog).has("spellbound_thrust"), "L16 grant stays behind its level")
 	assert(WIProgression.granted_skills({"spellspear": 16}, catalog).has("spellbound_thrust"), "L16 grant lands at 16")
 
-	var same_line := WIProgression.check_consolidation({"warrior": 3, "swordsman": 11, "mage": 12}, catalog)
-	assert(not same_line.is_empty(), "the higher-level candidate (swordsman 11) qualifies even though warrior 3 (same line, sub-threshold) is also held")
-	assert((same_line["parents"] as Array) == ["swordsman", "mage"], "the best (highest-level) candidate per line is reported, not the first-listed id")
+	# #472 audit FAIL 1: this pin used to assert that holding a sub-threshold
+	# [Warrior] 3 alongside [Swordsman] 11 merged the SWORDSMAN. It cannot any
+	# more -- swordsman is off the live line precisely because [Spellsword]
+	# would drop its kit -- and a sub-threshold warrior is no merge either.
+	assert(WIProgression.check_consolidation({"warrior": 3, "swordsman": 11, "mage": 12}, catalog).is_empty(), "a sub-threshold base parent plus an evolved sibling merges NOTHING: warrior 3 is below min_parent_level and swordsman is not a proven pair for [Spellsword]")
+	# The best-candidate-per-line rule itself is unchanged; it just needs a line
+	# with more than one member to be visible, which no shipped row has now.
+	var multi_catalog := catalog.duplicate(true)
+	for row: Dictionary in (multi_catalog["consolidations"] as Array):
+		if String(row.get("target", "")) == "spellsword":
+			row["parent_lines"] = [["warrior", "_alt_warrior"], ["mage"]]
+	(multi_catalog["classes"] as Array).append({
+		WIKeys.ID: "_alt_warrior", WIKeys.DISPLAY_NAME: "[Alt]",
+		"inherits": "warrior", "levels": [{"level": 1, "grants": []}],
+	})
+	var best := WIProgression.check_consolidation({"warrior": 10, "_alt_warrior": 13, "mage": 11}, multi_catalog)
+	assert((best["parents"] as Array) == ["_alt_warrior", "mage"], "the best (HIGHEST-level) candidate per line is reported, not the first-listed id")
 
 	var scout_offer := WIProgression.check_consolidation({"rogue": 10, "archer": 11}, catalog)
 	assert(not scout_offer.is_empty() and scout_offer["target"] == "scout", "rogue and archer lines offer scout consolidation")
 	assert((scout_offer["parents"] as Array) == ["rogue", "archer"], "scout offer reports held parents in catalog order")
 	assert(int(scout_offer["level"]) == 14, "scout consolidation floor derives to 14 from the shared 10/21 gate")
 	assert(WIProgression.check_consolidation({"rogue": 10, "archer": 10}, catalog).is_empty(), "scout does not offer below combined level 21")
-	var evolved_scout_offer := WIProgression.check_consolidation({"infiltrator": 10, "sharpshooter": 11}, catalog)
-	assert(not evolved_scout_offer.is_empty() and evolved_scout_offer["target"] == "scout" and int(evolved_scout_offer["level"]) == 14, "evolved rogue/archer parents preserve scout floor")
+	# #472 audit FAIL 1: the evolved rogue/archer pair used to merge into [Scout]
+	# and lose [Shadowstep] + the whole sharpshooter kit with it. It waits for
+	# its own target now (lineage completeness tracks it as `_exempt`).
+	assert(WIProgression.check_consolidation({"infiltrator": 10, "sharpshooter": 11}, catalog).is_empty(), "evolved rogue/archer parents merge NOTHING -- [Scout] inherits rogue+archer and would drop [Shadowstep], [Blinding Arrow], [Called Shot], [Piercing Volley]")
 	assert(WIProgression.granted_skills({"scout": 14}, catalog).has("eagle_eyes"), "scout floor kit grants eagle_eyes")
 
 	var post_consolidation := WIProgression.check_class_gains(

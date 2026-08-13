@@ -111,7 +111,7 @@ func save_auto() -> void:
 
 
 func save_manual(slot: String = "manual") -> bool:
-	if sim.combat != null or sim.dialogue != null or not sim.pending_consolidation.is_empty():
+	if sim.combat != null or sim.dialogue != null:
 		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Cannot save right now.", "housekeeping": true})
 		return false
 	_write_slot(slot)
@@ -156,7 +156,7 @@ func export_save_text() -> String:
 		if not FileAccess.file_exists(slot_path):
 			return ""
 		return FileAccess.get_file_as_string(slot_path)
-	if sim.combat != null or sim.dialogue != null or not sim.pending_consolidation.is_empty():
+	if sim.combat != null or sim.dialogue != null:
 		return ""
 	return JSON.stringify(WISave.serialize(sim))
 
@@ -181,7 +181,7 @@ func import_save_text(text: String) -> bool:
 ## disk JSON through the save round-trip (serialize live sim -> fresh
 ## _make_sim -> WISave.apply), then let the GAME_LOADED handler rebuild
 ## the view + reset the view-side caches. Refuses in exactly the states
-## save_manual refuses (combat/dialogue/consolidation) -- save_auto and
+## save_manual refuses (combat/dialogue) -- save_auto and
 ## load_slot carry NO guard, so this check must live here, not be
 ## "composed" from them. Content-mismatch after id renames is out of
 ## scope: WISave.apply carries stale ids unchecked -- value-tuning tool,
@@ -189,7 +189,7 @@ func import_save_text(text: String) -> bool:
 func reload_data() -> bool:
 	if not world_live:
 		return false  # title-screen boot sim: reloading it would swap_to_world uninvited (export_save_text parity)
-	if sim.combat != null or sim.dialogue != null or not sim.pending_consolidation.is_empty():
+	if sim.combat != null or sim.dialogue != null:
 		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Cannot reload data right now.", "housekeeping": true})
 		return false
 	# String round-trip so applied state has passed the same JSON typing a

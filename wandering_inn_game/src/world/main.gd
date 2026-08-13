@@ -17,7 +17,6 @@ const PAUSE_MENU_SCRIPT := preload("res://src/ui/pause_menu.gd")
 const INVENTORY_SCRIPT := preload("res://src/ui/inventory.gd")
 const FIELD_HOTBAR_SCRIPT := preload("res://src/ui/field_hotbar.gd")
 const FIELD_CHIPS_SCRIPT := preload("res://src/ui/field_chips.gd")
-const CONSOLIDATION_PROMPT_SCRIPT := preload("res://src/ui/consolidation_prompt.gd")
 const SLEEP_VEIL_SCRIPT := preload("res://src/ui/sleep_veil.gd")
 const TITLE_SCREEN_SCRIPT := preload("res://src/ui/title_screen.gd")
 const CHAR_CREATION_SCRIPT := preload("res://src/ui/char_creation.gd")
@@ -356,9 +355,6 @@ func _spawn_ui_layers() -> void:
 	_pause_menu.combat_ref = combat_screen
 	_inventory.pause_menu_ref = _pause_menu
 	_inventory.journal_ref = _journal
-	var consolidation_prompt := CONSOLIDATION_PROMPT_SCRIPT.new()
-	consolidation_prompt.name = "ConsolidationPrompt"
-	add_child(consolidation_prompt)
 	_field_hotbar = FIELD_HOTBAR_SCRIPT.new()
 	_field_hotbar.name = "FieldHotbar"
 	add_child(_field_hotbar)
@@ -378,7 +374,6 @@ func _spawn_ui_layers() -> void:
 	_sleep_veil = SLEEP_VEIL_SCRIPT.new()
 	_sleep_veil.name = "SleepVeil"
 	add_child(_sleep_veil)
-	consolidation_prompt.sleep_veil_ref = _sleep_veil
 	# Issue #77: added LAST (after pause_menu/sleep_veil/everything else) so
 	# it sits latest in Main's child order -- see `_spawn_title()`'s matching
 	# comment for the "later child processes unhandled_input first" mechanism

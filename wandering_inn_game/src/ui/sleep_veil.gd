@@ -293,21 +293,19 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				var flavor := String(_EVOLUTION_RESULT_FLAVOR.get(to_id, ""))
 				if flavor != "":
 					_lines.append(flavor)
-		WIEvents.CONSOLIDATION_OFFERED:
-			# The GDI ANNOUNCES the offer under the veil (user ruling: the
-			# consolidation choice is delivered by the Grand Design during
-			# sleep) -- one line in its own voice, riding the same collection
-			# idiom as every other reveal. The CHOICE itself still happens in
-			# consolidation_prompt.gd's modal AFTER the veil completes: the
-			# input-dead-until-UI_SLEEP_VEIL_FINISHED contract (the
-			# prompt-held rework) is untouched. Issue #87: also arms
-			# `_sleep_has_consolidation`, forcing this sleep's whole reveal
-			# unskippable (see the PLAIN-SLEEP SKIP guard doc comment).
+		WIEvents.CONSOLIDATION_ACCEPTED:
+			# #472: the merge APPLIED inside this sleep beat, and the veil is
+			# where the player is told -- there is no choice to deliver, so the
+			# GDI states the result in the same voice the accept toast used.
+			# Issue #87's arm survives the prompt it was written for: a sleep
+			# that merges is still UNSKIPPABLE (see the PLAIN-SLEEP SKIP guard),
+			# because a class the player did not choose to lose must not be
+			# skippable past.
 			if _running:
 				_sleep_has_consolidation = true
 				var parents: Array = payload.get("parents", [])
 				if parents.size() == 2:
-					_lines.append("[%s and %s pull toward one another. The Design offers: %s.]" % [
+					_lines.append("[%s and %s merge into %s!]" % [
 						_class_name(String(parents[0])), _class_name(String(parents[1])),
 						_class_name(String(payload.get("target", "")))])
 		WIEvents.ACCOMPLISHMENT_RECORDED:
@@ -334,29 +332,6 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_open_conversation = ""
 			if FINALE_CURTAIN_CONVERSATIONS.has(ended):
 				play_finale()
-		WIEvents.CONSOLIDATION_ACCEPTED, WIEvents.CONSOLIDATION_DECLINED:
-			# THE BED HOOK'S RETRY. `_play_finale_off_the_bed()` stands down
-			# when a merge offer is queued behind the veil, so without this an
-			# owed finale would wait for a whole extra night. These two fire
-			# from wi_game AFTER the merge is applied (consolidation_prompt's
-			# `_choose` emits UI_CONSOLIDATION_PROMPT_HIDDEN *before* calling
-			# into the sim, which is the wrong edge for a sequence that
-			# recounts classes — the recount must show the class the player
-			# just chose, not the two it replaced).
-			#
-			# DEFERRED, and that is load-bearing for the same reason. Neither
-			# emit is the END of its sim call: `decline_consolidation()` fires
-			# CONSOLIDATION_DECLINED and only THEN runs `_resolve_evolutions()`
-			# (wi_game.gd — the decline path owns the evolutions the offer
-			# deferred out of the sleep beat). Calling straight through would
-			# recount classes mid-flight, and worse, differently in QA than in
-			# play: the QA collapse builds the line list synchronously inside
-			# `play_finale()` and would name the PRE-evolution class, while
-			# real play's own `_run_finale.call_deferred()` names the evolved
-			# one. Deferring here puts both on the far side of the whole
-			# synchronous chain, so the recount reads one settled snapshot.
-			# The emit sites stay untouched (consolidation_flow's pins hold).
-			play_finale.call_deferred()
 
 
 func _begin_sleep() -> void:
@@ -667,14 +642,10 @@ func _emit_defeat_finished(continue_chosen: bool) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_DEFEAT_VEIL_FINISHED, {"continue": continue_chosen})
 
 
-## Playtest hotfix #8: NO special case for a consolidation-offering sleep any
-## more -- it runs this exact same sequence as every other sleep, then emits
-## UI_SLEEP_VEIL_FINISHED as its very last act. consolidation_prompt.gd holds
-## a pending offer HIDDEN (input dead) until that event, so the offer
-## surfaces with/after this sleep's own announcement lines, never on top of
-## the black and never answerable blind. TRAP: the finished emit must fire in
-## the QA-collapsed branch too, and must always come AFTER _finish() -- the
-## whole ordering contract (rendered -> finished -> prompt) is pinned by
+## A merging sleep runs this exact same sequence as every other sleep, then
+## emits UI_SLEEP_VEIL_FINISHED as its very last act. TRAP: the finished emit
+## must fire in the QA-collapsed branch too, and must always come AFTER
+## _finish() -- the rendered -> finished ordering is pinned by
 ## consolidation_flow's forward-only event waits.
 func _run_sequence() -> void:
 	_reveal_queued = false
@@ -720,18 +691,15 @@ func _run_sequence() -> void:
 ## would leave the ending waiting on an optional chat with Pisces, and a
 ## save/quit before that chat would strand it. The bed is where the Design
 ## already speaks; an owed finale rolls off the sleep it follows. Called AFTER
-## _finish()/_emit_finished() so the sleep reveal's own contract
-## (rendered -> finished -> consolidation prompt) is untouched, and so
-## play_finale()'s `_running` guard has already cleared.
+## _finish()/_emit_finished() so the sleep reveal's own rendered -> finished
+## contract is untouched, and so play_finale()'s `_running` guard has cleared.
 ##
-## YIELDS TO THE CONSOLIDATION PROMPT. UI_SLEEP_VEIL_FINISHED is what tells
-## consolidation_prompt.gd to show its modal, so a sleep that offered a merge
-## would have the finale's black fall straight over that choice. The finale
-## stays OWED instead -- it is sim state, not a flag, so the next dialogue end
-## or the next sleep still delivers it, with nothing lost.
+## #472: NO consolidation stand-down, and no CONSOLIDATION_ACCEPTED retry arm
+## feeding it. The merge resolves INSIDE the sleep beat, before this runs, so a
+## sleep that both owes the ending and merges has one settled snapshot to
+## recount -- the finale rolls that same night and names the merged class,
+## never the two it replaced.
 func _play_finale_off_the_bed() -> void:
-	if _sleep_has_consolidation:
-		return
 	play_finale()
 
 
@@ -826,16 +794,8 @@ func _emit_finished() -> void:
 
 
 ## True while a SLEEP reveal is running or queued (from the sleep
-## phase_changed until _run_sequence's finished emit) -- queried by
-## consolidation_prompt.gd the instant an offer arrives, to decide
-## wait-for-finished vs show-now. Sleep-mode only on purpose: the offer can
-## only ever fire inside wi_game.gd's sleep() (whose UNCONDITIONAL
-## phase_changed has already run _begin_sleep by the time the offer event
-## lands, bus delivery being synchronous and in-order), so opener/epilogue
-## states are irrelevant here -- if THEY blocked _begin_sleep (the rare race
-## _begin_sleep's own guard covers), this correctly reads false and the
-## prompt shows immediately rather than waiting for a finished emit that
-## would never come.
+## phase_changed until _run_sequence's finished emit). Sleep-mode only on
+## purpose: opener/epilogue states are irrelevant to every caller.
 func sleep_sequence_active() -> bool:
 	return _running or _reveal_queued
 
