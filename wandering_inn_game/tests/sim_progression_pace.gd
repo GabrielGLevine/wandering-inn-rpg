@@ -64,6 +64,12 @@ extends SceneTree
 ##   ranged_hit          exactly ONE non-combat producer, liscor
 ##                       `archery_butt`, `once_per_waking` and bow-gated; no
 ##                       quest grant anywhere banks it.
+##   death_cast          ZERO producers outside combat, and only two inside it:
+##                       it tallies off `element: "death"`
+##                       (`wi_combat.gd:983`) and the game ships exactly two
+##                       death skills, [Bone Dart] and [Deathbolt], both
+##                       `contexts: ["combat"]`. No prop, conversation or quest
+##                       grant banks it (2026-08-13 census).
 ##   melee_hit/spell_cast/won_combat/tactic_used  the combat action tally.
 ## Every rate below cites which of those it draws on.
 
@@ -231,9 +237,11 @@ var ARCHETYPES := [
 		]},
 
 	# ---------------------------------------------------------------- spines
-	# One per non-exempt `consolidations` row in data/classes.json, plus the
-	# post-split tactical line (#450), which is an EVOLUTION line and therefore
-	# has no consolidation row to derive from.
+	# One per non-exempt `consolidations` row in data/classes.json, plus two
+	# lines that have no consolidation row to derive from: the post-split
+	# tactical line (#450), which is an EVOLUTION line, and [Necromancer]
+	# (2026-08-13), which is neither — its evolution is the roster's one parked
+	# exception, so it is a base class that ends where it starts.
 
 	# [Spellsword] = warrior + mage. The reference spine: the whole band table
 	# was authored against it. `caster` profile because the class casts AND
@@ -355,6 +363,69 @@ var ARCHETYPES := [
 			{"fights": [COMP_RASKGHAR, COMP_CORUSDEER, COMP_AWAKENED, COMP_RAZORBEAK], "chores": {"tended_beasts": 2}},
 			{"fights": [COMP_RUIN_GUARDIAN, COMP_WOLVES, COMP_VAULT, COMP_CORUSDEER, COMP_FORGE_GOLEM, -1], "chores": {"tended_beasts": 3}},
 			{"fights": [COMP_GALLERY, COMP_WARDEN, COMP_RAZORBEAK, -1], "chores": {"tended_beasts": 3}},
+		]},
+
+	# [Necromancer] (user ruling 2026-08-13). NOT a spine and NOT an evolution
+	# line: `consolidations` has no row for it and its evolution is the roster's
+	# one deliberate PARKED exception (classes.json's own comment — no attested
+	# <=Vol-7 necromancer evolution exists), so it carries no `target` at all and
+	# nothing here reports a merge. That is the measurement: a class that ends
+	# where it starts, against a band table stated in consolidated levels.
+	#
+	# ENTRY, waking 12 — the route's answer, not a round number. `studied_
+	# necromancy` has exactly one producer, Pisces' `necro_teach` node
+	# (`data/dialogue/pisces_magic.json`), and that node is TWO VISITS deep by
+	# authored design: the file's own comment reads "Two-visit deflect->teach per
+	# spec §5" — the first ask banks `asked_about_necromancy` and hides itself,
+	# and the second hub entry reveals the teach. Pisces stands on the Liscor
+	# Guild steps, the same Act II street beat this file already dates at waking
+	# 11 for `learned_magic_from_pisces`, so the earliest honest entry is the
+	# NEXT waking. `classless_until` 12 says exactly that, and (12 > ACT_ENDS[0])
+	# the Act I nonzero gate correctly exempts this line, as it does the
+	# tactician's.
+	#
+	# THE DIET IS ALL FIGHT. The census result for this line is a single sentence:
+	# `death_cast` has NO producer outside combat. It banks in `wi_combat.gd:983`,
+	# which tallies `<element>_cast` when a cast lands, and the whole game ships
+	# two death-element skills — [Bone Dart] (necromancer L1) and [Deathbolt]
+	# (L3), both `contexts: ["combat"]`. No prop, no conversation and no quest
+	# grant banks it anywhere — every `death_cast` in the repo is either the
+	# ladder in classes.json, its id registration in shipped_ids.json, or the two
+	# QA assets that hand-bank it (`qa/fixtures/near_necromancer.json`,
+	# `qa/scripts/necromancer_loop.json`). So `chores` is EMPTY on purpose — a
+	# chore row here would be invented content — and the L3-L12 ladder is
+	# measured through the fights or not at all. Same single-source shape #453 G4
+	# found for `ranged_hit`, one axis over.
+	#
+	# QUEST GRANTS, both of them. `quests.json` carries exactly TWO `spell_cast`
+	# grants in the entire file, and this line takes both: `door_that_goes_
+	# elsewhere`.read_the_door_runes {spell_cast 8} at waking 48 (route beat 23,
+	# Act IV, the read-the-wardwork fork a spellcaster takes — the same fork and
+	# the same waking `spellsword_spine` reads it at) and `what_the_seal_was_
+	# feeding`.seal_rewarded {spell_cast 10, warded_danger 3} at 72. Neither pays
+	# `death_cast`; see above.
+	#
+	# ROTATION is `spellsword_spine`'s verbatim. The necromancer's producer is a
+	# Liscor street conversation one beat off [Mage]'s, so it walks the same
+	# main-quest route, and holding the fights fixed makes the CLASS the only
+	# moving part between the two traces. `caster` profile for the same reason
+	# spellsword uses it: `_act_caster` falls through to `_act_melee`, so one
+	# trace banks casts and swings the way the class actually plays.
+	#
+	# CANON NOTE, deliberately not modelled: Pisces holds [Necromancer] BESIDE
+	# [Mage] (classes.json). This trace holds the line ALONE, because the question
+	# it exists to answer is whether the death-cast curve carries its own band —
+	# and a mage riding along would answer a different one.
+	{"name": "necromancer_line", "ai": "caster", "classless_until": 12, "loadout": MARTIAL_LOADOUT,
+		"watch": ["death_cast", "spell_cast", "won_combat"],
+		"entry": {12: {"studied_necromancy": 1}},
+		"quest_grants": {48: {"spell_cast": 8}, 72: {"spell_cast": 10, "warded_danger": 3}},
+		"acts": [
+			{"fights": [COMP_GATE, COMP_ROCK_CRAB, -1, COMP_GATE], "chores": {}},
+			{"fights": [COMP_CRATE, COMP_SEWER_VERMIN, COMP_SHIELD_SPIDERS, -1], "chores": {}},
+			{"fights": [COMP_RASKGHAR, COMP_CHIEFTAIN, COMP_AWAKENED, COMP_NIGHT_PATROL], "chores": {}},
+			{"fights": [COMP_RUIN_GUARDIAN, COMP_ALLEY, COMP_VAULT, COMP_WOLVES, COMP_FORGE_GOLEM, -1], "chores": {}},
+			{"fights": [COMP_GALLERY, COMP_WARDEN, -1, COMP_BOULEVARD], "chores": {}},
 		]},
 
 	# [Tactician] -> [Strategist] (#450). NOT a consolidation — an evolution

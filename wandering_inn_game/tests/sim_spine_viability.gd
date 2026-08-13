@@ -140,6 +140,37 @@ const SPINE_WEAPONS := {
 const WINDOW_FLOOR := 0.55
 const WINDOW_CEILING := 0.85
 
+## RULED MULTICLASSING (user ruling 2026-08-13, `docs/CHOICE-LOG.md`). A civil
+## spine is EXPECTED to carry a martial line to clear the combat chokepoints, so
+## its below-window climax cells at a civil-only band build are DESIGN, not
+## defects — and the civil pace overshoot (#453 G6) is that multiclass level
+## budget rather than a slope error.
+##
+## THE ANNOTATION MOVES NO GATE. `SPINE_CLIMAX_IDS` gates the five reference
+## climaxes in the `band` column and nothing else; not one per-spine cell has
+## ever been asserted, before the ruling or after it. What changes is what the
+## row TELLS a reader: "WALL — report only" named an open design question, and
+## the ruling closed it.
+##
+## WHY THESE THREE. [Innkeeper] (helper x diplomat) and [Scout] (rogue x archer)
+## are the civil spines the ruling names. [Druid] (beast_tamer x mage) joins for
+## its walled cells, per #453 C3's PACE-vs-KIT table (PR #471): 15 of that
+## table's 17 walls are KIT — the spine over-levels its band and loses anyway —
+## and the druid's sit in that 15. Note WHY a wall in THIS table can only be a
+## KIT read: every cell here is measured AT the act's band allocation, imposed
+## rather than earned, so pace cannot reach it at all. PACE is
+## `tests/sim_progression_pace.gd`'s question, and C3's one structural-PACE
+## finding (scout held NO class in Act I) was answered by G2 — `rogue`'s
+## `gained_by` now takes `crossed_under_cover`, so even that cell is a kit read
+## today.
+##
+## The martial spines are deliberately absent. A below-window `ranger`,
+## `spellsword` or `spellspear` cell stays a bare WALL: no ruling says a martial
+## spine needs a SECOND line to clear its own climaxes, so that row is still an
+## open question and must keep reading like one.
+const RULED_MULTICLASS_SPINES := ["innkeeper", "scout", "druid"]
+const RULED_MULTICLASS_NOTE := "RULED: multiclass-expected (2026-08-13)"
+
 ## THE SPINE, in route order (`docs/design/steel-thread-route-spec.md`).
 ## `arena`/`enemies`/`allies`/`scales` are the map entity's own fields; the
 ## script above enumerates them so a data edit shows up here as a changed row
@@ -731,8 +762,12 @@ func _init() -> void:
 				"items_by_id": items_by_id, "draughts": row["draughts"],
 			})
 			_spine_rows.append({"spine": spine["target"], "row": row, "build": build, "m": m})
-			print("[spine-class] %-11s %-28s %s %s" % [
+			# The disposition prints on the RUN LINE, not only in the written doc:
+			# a table nobody regenerates is where a ruling goes to rot, and the
+			# console read is the one every gate operator actually sees.
+			print("[spine-class] %-11s %-28s %-22s %-24s %s" % [
 				spine["target"], row_id, build["label"], _cell_text(m),
+				_spine_disposition(m, String(spine["target"])),
 			])
 
 	# ATTRIBUTION PROBE. The findings section claims which parts of the kit the
@@ -865,7 +900,10 @@ func _render() -> String:
 	out.append("")
 	out.append("## Per-spine band-competent climaxes")
 	out.append("")
-	out.append("The spine list is derived from every target in `data/classes.json`'s `consolidations`; no class id is duplicated here by hand. Acts I–IV use the target's two base parent lines at the same 2, 3/2, 5/4, and 7/6 band allocations as the original Spellsword seed; Act V uses the consolidated class at level 14. Druid fields its bonded wolf when the live arena-capacity rule permits it. Below-window class rows are WALLS for controller adjudication, not retune orders; above-window rows are ceiling WINDOW DRIFT.")
+	out.append("The spine list is derived from every target in `data/classes.json`'s `consolidations`; no class id is duplicated here by hand. Acts I–IV use the target's two base parent lines at the same 2, 3/2, 5/4, and 7/6 band allocations as the original Spellsword seed; Act V uses the consolidated class at level 14. Druid fields its bonded wolf when the live arena-capacity rule permits it. Below-window class rows on the MARTIAL spines are WALLS for controller adjudication, not retune orders; above-window rows are ceiling WINDOW DRIFT.")
+	out.append("")
+	out.append("**RULED MULTICLASSING (user ruling 2026-08-13, `docs/CHOICE-LOG.md`).** A civil spine is expected to carry a martial line to clear the combat chokepoints, so a below-window climax cell on `%s` is **design, not a defect** — it is marked `%s` rather than WALL, and the civil pace overshoot (#453 G6) is that multiclass level budget, not a slope error. Nothing about the gate moved: no per-spine cell has ever been asserted, before the ruling or after it. What the ruling settles is what the row MEANS. [Druid] is included for its walled cells per #453 C3's PACE-vs-KIT table (PR #471), which classified 15 of 17 walls as KIT — the spine over-levels its band and loses anyway — and every cell in this table is measured AT the act's band allocation, so a wall here can only be a kit read; pace is `tests/sim_progression_pace.gd`'s question. Martial spines are excluded: their below-window cells stay bare WALLs, because no ruling says a martial spine needs a second line to clear its own climaxes." % [
+		"`, `".join(RULED_MULTICLASS_SPINES), RULED_MULTICLASS_NOTE])
 	out.append("")
 	out.append(_spine_table())
 	out.append("")
@@ -917,7 +955,7 @@ func _render() -> String:
 	out.append("## Reading the table")
 	out.append("")
 	out.append("- **floor LOSS / competent WIN** — a competence wall, not a difficulty wall. The fight is fair; the script cannot play it. `act5_gallery_vermin_nest` is the archetype.")
-	out.append("- **floor LOSS / competent LOSS** — a real wall. Either the build is under band or the encounter is over it. In the class-derived table, a below-window competent row is reported as a WALL for adjudication; it is not permission to flatten the shared encounter for every stronger spine.")
+	out.append("- **floor LOSS / competent LOSS** — a real wall. Either the build is under band or the encounter is over it. In the class-derived table, a below-window competent row on a martial spine is reported as a WALL for adjudication; it is not permission to flatten the shared encounter for every stronger spine. On the ruled civil spines the same cell reads `%s` instead — the ruling above answered it." % RULED_MULTICLASS_NOTE)
 	out.append("- **floor WIN at a build far under band** — the ratchet. The fight is beatable by the weakest policy at the lowest kit, so it is not gating anything.")
 	out.append("- **bypasses** — 'unwinnable but bypassable' reads differently from 'wall'. The gate half of the column is derived from the map entity at generation time; the authored-resolution half is maintained in `ROSTER`.")
 	return "\n".join(out)
@@ -950,14 +988,19 @@ func _spine_table() -> String:
 		var m: Dictionary = record["m"]
 		out.append("| %s | `%s` | `%s` | %s | %s | %s |" % [
 			row["act"], row["id"], record["spine"], (record["build"] as Dictionary)["label"],
-			_cell_text(m), _spine_disposition(m),
+			_cell_text(m), _spine_disposition(m, String(record["spine"])),
 		])
 	return "\n".join(out)
 
 
-func _spine_disposition(m: Dictionary) -> String:
+func _spine_disposition(m: Dictionary, spine: String) -> String:
 	var position := _window_position(m, WINDOW_FLOOR, WINDOW_CEILING)
 	if position == "below":
+		# The 2026-08-13 ruling, applied where the row is read rather than in a
+		# hand-maintained note: a civil spine's walled cell is the multiclass
+		# expectation, not an unanswered balance question.
+		if RULED_MULTICLASS_SPINES.has(spine):
+			return RULED_MULTICLASS_NOTE
 		return "WALL — report only"
 	if position == "above":
 		return "WINDOW DRIFT — ceiling; adjudicate"
