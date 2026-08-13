@@ -44,8 +44,24 @@ or superseded session blocks.
   #451 parked by user (Counter Strike power level, ablation data attached). Pre-existing red still open: d3_inventory_shot (inventory pin drift,
   predates the program). Windowed observation run launched for the user.
 - QUIESCE 2 (2026-08-12 late): session window drained by 3 parallel Opus
-  agents; drain orders sent to the two live agents (B2-rebase, d3-sweep)
-  — read their final task outputs before resuming. E6 #459 halted
+  agents; both live agents drained cleanly — states committed on their
+  branches. RESUME ORDER: (0) FIX LATENT RED ON MAIN FIRST —
+  sim_spine_viability `_derived_spines` (line ~316) asserts on the 26
+  `_exempt` consolidation rows (B1) and silently derives 0 spine-class
+  rows while still printing PASS (gate-cannot-fail defect; C branched
+  pre-B1 so its runs never composed with the exempt rows; CI misses it
+  because the suite is not a CI unit arm). Fix: skip `_exempt` rows +
+  hard-fail on 0 derived spines + probe proof. (1) B2 branch state:
+  rebase DONE zero-conflict (6bf43e6a + WIP 2524b91d, safety ref
+  backup/b2-pre-rebase-bf8eeb92); Tactician BUILDS rows inserted but
+  UNWIRED (need 3 report-only ROSTER rows on seal_warden_alcove per
+  act5_seal_warden_amulet precedent) + unmeasured; ALL Task-3 gates
+  unrun (steel_thread --seed=37 divergence check included). (2) d3
+  branch fix/d3-inventory-shot commit 45d66479: pins re-derived (#79
+  effect-text cause; manifest promotion included), verification runs ALL
+  pending (headless x2, preflight, 5 inventory canonicals; step 10 is
+  the windowed-only coin-line shot). `timeout` not on PATH — use perl
+  alarm idiom. E6 #459 halted
   PRE-work with a COMPLETE recon deliverable in its task output
   (ab97218de87e63227): sheet-sharing trap (wolf/razorbeak companions
   share Idle-Sheet.png with combat sprite ids — new art needs NEW dirs),
