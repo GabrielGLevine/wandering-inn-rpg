@@ -1,0 +1,44 @@
+{
+ "_comment": "#438 [Deathknight]. Standing at the offer threshold, one sleep away. warrior 11 + necromancer 10 is the CHEAPEST legal pair -- min_parent_level 10 gates both, min_combined_level 21 rules out the (10,10) below it, and max(ceil(2*21/3), max(11,10)) == 14 is the sparse table's derived floor. THE CAP IS THE POINT OF THIS FIXTURE: [Necromancer]'s own table stops at 12 with no evolution (the roster's one deliberate no-evolution exception, user-ratified 2026-07-15), so the merge is the only rung the class has above it -- even this cheapest pair lands two levels past the ceiling, and a maxed 12+12 pair would land at 16. Ledger, in story order: met_relc + sparred_with_relc are the Act I tutorial that grants [Warrior]; melee_hit 68 is warrior's own L11 rung; studied_necromancy is Pisces' beat that grants [Necromancer]; won_combat 3 clears its L2; death_cast 45 is its L10 rung, and it banks alongside spell_cast rather than instead of it -- [Bone Dart] and [Deathbolt] carry element:'death', and wi_combat.gd tallies BOTH spell_cast and <element>_cast off any elemental cast, which is why [Deathknight]'s spellsword-verbatim requires_any curve is genuinely reachable from the necromancer half. Equipment: the starter rusty_sword is WORN, and that is load-bearing -- [Grave Edge], the consolidation's OWN L14 grant, is sword-gated exactly like the [Keener Edge] it re-flavors, so WICombatBuild.weapon_gated_kit would strip the Skill this canonical exists to prove off any other build. The starter sword also needs no invented shop provenance: every PC begins holding it. VERSION 5+, NOT lower: WISave._migrated's version==4 arm OVERWRITES `inventory`/`equipped` with the starter defaults. rng_state derived from seed 4383 via tests/_derive_rng_state.gd.",
+ "state": {
+  "current_map": "inn_upstairs",
+  "player_cell": [
+   9,
+   2
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 11,
+   "necromancer": 10
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "melee_hit": 68,
+   "studied_necromancy": 1,
+   "won_combat": 3,
+   "death_cast": 45
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-5798556170594108155",
+  "hotbar_loadout": []
+ },
+ "version": 6
+}

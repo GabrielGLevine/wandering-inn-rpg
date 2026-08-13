@@ -1091,6 +1091,50 @@ PLACEHOLDER_ICONS: list[tuple[str, str, tuple[int, int, int], tuple[int, int, in
 	# retires the parents, so no save holds spellsword and spellspear at once.
 	("keen_point", "assets/ui/icons/icon_keener_point.png", (170, 230, 230), (50, 100, 110)),
 	("bound_spear", "assets/ui/icons/icon_spellbound_thrust.png", (205, 160, 90), (95, 60, 20)),
+	# --- #438: the four consolidation-own grants of [Deathknight] and
+	# [Wild Sage]. ([Skirmisher]'s own grants need no row: [Steady Point] is an
+	# ap_cost 0 passive that never reaches a hotbar slot, so it carries no
+	# `icon`, exactly like its [Steady Draw] baseline; and its other L14 grant
+	# is [Dangersense] REUSED rather than twinned.) Same code-drawn policy as
+	# every skill icon above -- PixelLab pass user-gated, VISUAL-LOG drain rows
+	# filed with this change. All four shapes are NEW: the 2026-08-02 "tint is
+	# NOT disambiguation" directive means a twin may never be its baseline's
+	# recolour, so each changes the SILHOUETTE:
+	#   grave_edge   vs edge         -- blade INVERTED (point down) into a mound,
+	#                                   with a broad crossguard high on the haft.
+	#                                   `edge` is a centred, guardless, upward
+	#                                   leaf blade; this reads as a grave marker
+	#                                   at a glance and shares no outline with it.
+	#                                   Distinct from `plus` (symmetric, centred,
+	#                                   no taper) and `cross_slash` (two thin
+	#                                   diagonals, no vertical).
+	#   death_bound  vs bound_blade  -- a BONE laid horizontally across a diagonal
+	#                                   blade: a knobbed dumbbell silhouette over
+	#                                   a single slash. bound_blade is a static
+	#                                   upright sword (guard, pommel, tip orb) and
+	#                                   bound_spear is pole + ring, so neither the
+	#                                   diagonal nor the knobs appear anywhere in
+	#                                   the family. Nothing else in the icon set
+	#                                   has rounded bar-ends.
+	#   wild_counsel vs the [Peace of the Wild] placeholder -- a PAW PRINT (four
+	#                                   toes over a pad). Its baseline is still a
+	#                                   Wave D-2 filled rounded square with no
+	#                                   silhouette at all, so this is the first
+	#                                   real glyph in that pair; the paw is also
+	#                                   unique across all 44 shapes here.
+	#   briar_vine   vs thorn_hand   -- a climbing zigzag vine with three outward
+	#                                   barbs. Deliberately NOT a ring: `target`
+	#                                   and `quarry_mark` already own concentric
+	#                                   circles, and a fourth ring glyph would be
+	#                                   the shape-collision equivalent of a retint.
+	# Palettes follow meaning and never do the differentiating work: grave_edge
+	# keeps its twin's mana-cyan family shifted cold-grey (the same steel, gone
+	# graveyard), death_bound takes bone-white, and the two [Wild Sage] glyphs
+	# take the beast-tamer browns and the druid greens their kits already speak.
+	("grave_edge", "assets/ui/icons/icon_grave_edge.png", (175, 185, 195), (55, 65, 80)),
+	("death_bound", "assets/ui/icons/icon_deathbound_strike.png", (230, 228, 210), (80, 80, 90)),
+	("wild_counsel", "assets/ui/icons/icon_counsel_of_the_wild.png", (185, 150, 105), (85, 60, 35)),
+	("briar_vine", "assets/ui/icons/icon_bramble_hand.png", (120, 175, 95), (45, 85, 40)),
 ]
 
 
@@ -1279,6 +1323,42 @@ def _draw_placeholder(shape: str, dst_rel: str, fill: tuple[int, int, int], outl
 		draw.polygon([(8, 0), (11, 6), (9, 5), (9, 15), (7, 15), (7, 5), (5, 6)], fill=fill, outline=outline)
 		draw.ellipse([2, 7, 13, 12], fill=None, outline=(120, 180, 255), width=2)
 		draw.ellipse([6, 8, 9, 11], fill=(120, 180, 255), outline=(40, 80, 160))
+	elif shape == "grave_edge":
+		# [Grave Edge] (#438): the blade INVERTED -- point driven down into a
+		# low mound, broad crossguard high on the haft. Grave-marker read; the
+		# mound is drawn first so the point overlaps it rather than floating.
+		draw.polygon([(1, 15), (4, 11), (12, 11), (15, 15)], fill=outline, outline=outline)
+		draw.polygon([(6, 0), (10, 0), (10, 12), (8, 15), (6, 12)], fill=fill, outline=outline)
+		draw.rectangle([2, 3, 13, 5], fill=fill, outline=outline)
+	elif shape == "death_bound":
+		# [Deathbound Strike] (#438): a BONE with the spell bound around it as a
+		# mana ring. It borrows the family's "something bound at the middle"
+		# grammar from `bound_spear` on purpose, and differs where it counts --
+		# the four rounded knobs of a femur instead of bound_spear's narrow
+		# spearhead and thin full-length haft. No other glyph here has knobbed
+		# ends, so the silhouette is unique even before colour.
+		draw.rectangle([6, 3, 9, 12], fill=fill, outline=outline)
+		draw.ellipse([3, 0, 8, 5], fill=fill, outline=outline)
+		draw.ellipse([7, 0, 12, 5], fill=fill, outline=outline)
+		draw.ellipse([3, 10, 8, 15], fill=fill, outline=outline)
+		draw.ellipse([7, 10, 12, 15], fill=fill, outline=outline)
+		draw.ellipse([1, 5, 14, 10], fill=None, outline=(120, 180, 255), width=2)
+	elif shape == "wild_counsel":
+		# [Counsel of the Wild] (#438): a paw print -- four toes over a pad.
+		# Unique silhouette across every shape in this function.
+		draw.ellipse([4, 9, 11, 15], fill=fill, outline=outline)
+		draw.ellipse([1, 5, 4, 9], fill=fill, outline=outline)
+		draw.ellipse([4, 2, 7, 6], fill=fill, outline=outline)
+		draw.ellipse([8, 2, 11, 6], fill=fill, outline=outline)
+		draw.ellipse([11, 5, 14, 9], fill=fill, outline=outline)
+	elif shape == "briar_vine":
+		# [Bramble Hand] (#438): a climbing zigzag vine with three outward
+		# barbs. NOT a ring, deliberately -- `target` and `quarry_mark` already
+		# own the concentric-circle read in this set.
+		draw.line([(2, 14), (7, 10), (8, 5), (13, 2)], fill=fill, width=3)
+		draw.polygon([(6, 11), (11, 12), (7, 14)], fill=fill, outline=outline)
+		draw.polygon([(7, 7), (2, 5), (7, 4)], fill=fill, outline=outline)
+		draw.polygon([(11, 4), (15, 6), (10, 7)], fill=fill, outline=outline)
 	elif shape == "quarry_mark":
 		draw.ellipse([2, 2, 13, 13], fill=None, outline=fill, width=2)
 		draw.ellipse([5, 5, 10, 10], fill=None, outline=outline, width=1)

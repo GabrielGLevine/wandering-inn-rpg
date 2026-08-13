@@ -502,6 +502,39 @@
    "description": "Every spell you have ever cast gathers behind the point, and the thrust carries all of them through."
   },
   {
+   "_comment": "[DEATHKNIGHT] L14 grant (#438) -- the death-flavored TWIN of [Keener Edge] above, same baseline rule the #449 twins follow: ap_cost, effect type and multiplier are that skill's VERBATIM, and only id/name/prose/icon re-flavor. `weapon` is MIRRORED, NOT MOVED: [Deathknight]'s martial parent is plain [Warrior] -- exactly [Spellsword]'s -- so the gate stays `sword`. (Contrast [Keener Point], where the martial parent really did change to [Spearmaster] and the gate followed it.) Structurally unreachable by `sim_combat_batch.gd` -- deathknight is never assigned in the harness's BUILDS array, the fire_mage/ice_mage/spellsword/spellspear precedent -- so no balance-harness re-run is owed.",
+   "id": "grave_edge",
+   "display_name": "[Grave Edge]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "weapon": "sword",
+   "icon": "icon_grave_edge",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 1.6
+   },
+   "description": "The blade goes cold in the hand, and the cut lands like something already decided."
+  },
+  {
+   "_comment": "[DEATHKNIGHT] L16 grant (#438) -- the death-flavored TWIN of [Spellbound Strike] above: ap_cost/mp_cost/effect/cooldown_rounds are that skill's VERBATIM. DELIBERATELY UNGATED, exactly like its baseline -- no `weapon` key there, none here, since minting one would let `WICombatBuild.weapon_gated_kit` strip the class's marquee grant off a holder who changed weapons. NO `element` KEY either, and that is the same mirroring rule rather than an oversight: [Spellbound Strike] carries none, and adding element:'death' here would silently bank death_cast/spell_cast off a melee swing -- a counter change wearing flavor's clothes. The necromancy in this Skill is prose. Structurally unreachable by `sim_combat_batch.gd`, same precedent as [Grave Edge] above.",
+   "id": "deathbound_strike",
+   "display_name": "[Deathbound Strike]",
+   "icon": "icon_deathbound_strike",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "mp_cost": 3,
+   "effect": {
+    "type": "damage_mult",
+    "mult": 3.0
+   },
+   "cooldown_rounds": 2,
+   "description": "Every death you have ever called on leans into the swing at once, and the swing does not have to ask twice."
+  },
+  {
    "id": "lesser_stamina",
    "display_name": "[Lesser Stamina]",
    "contexts": [
@@ -1050,6 +1083,21 @@
    "description": "Breath out, string back, and the point of aim simply stops drifting — a drawn bow held as still as a nail in a beam."
   },
   {
+   "_comment": "[SKIRMISHER] L14 grant (#438) -- the spear-gated TWIN of [Steady Draw] directly above. [Ranger] is the mechanical baseline for this consolidation, so ap_cost and the effect block are that skill's VERBATIM (hit_bonus 8, ap_cost 0 -- a passive that only contributes through `weapon_gated_kit`); only the id, the name, the prose and the `weapon` gate re-flavor. THE GATE FOLLOWS THE LINEAGE, which is the one mechanical field this pattern moves: [Ranger] steadies a bow because its martial parent is plain [Warrior] and the bow is the half that needed steadying; [Skirmisher]'s martial parent is [Spearmaster], so its own grant steadies the spear instead. No icon, exactly like its baseline -- ap_cost 0 passives never reach a hotbar slot, so there is no sprites.json row to pin.",
+   "id": "steady_point",
+   "display_name": "[Steady Point]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "weapon": "spear",
+   "effect": {
+    "type": "hit_bonus",
+    "amount": 8
+   },
+   "description": "The haft settles into the pocket of your shoulder and stops arguing with your breathing — the point sits exactly where you left it."
+  },
+  {
    "_comment": "Deliberately carries NEITHER `ap_cost`/`effect` NOR `field: true` -- a pure passive identity trait, the SAME shape lesser_stamina/lesser_strength already ship (flavor-only, never castable).",
    "id": "bargain",
    "display_name": "[Bargain]",
@@ -1547,6 +1595,38 @@
     }
    },
    "description": "Green shoots burst from your palm and take the enemy at the ankle. The ground remembers being wild."
+  },
+  {
+   "_comment": "[WILD SAGE] L14 grant (#438) -- the TWIN of [Peace of the Wild] above. THIS TWIN HAS NO `effect` BLOCK AND THAT IS NOT WHERE ITS MECHANICS LIVE: [Peace of the Wild] is CODE-BANKED BY ID in wi_game.gd::_wild_affinity_reduction (beast-kind ambush trigger_radius -2, superseding [Wild Affinity]'s -1), so a data-only twin would ship INERT -- strictly weaker than the baseline, which is exactly the divergence the twin rule forbids. The seam now names this id too, at the SAME -2. If either id is ever renamed, that function is the second place to change. Prose is the flavor: [Druid] keeps a grove's peace, a [Wild Sage] rides with the pack that would have been the ambush.",
+   "id": "counsel_of_the_wild",
+   "display_name": "[Counsel of the Wild]",
+   "icon": "icon_counsel_of_the_wild",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "You are not a stranger the wild has decided to tolerate — you are asked. Beasts that would have taken the long way around come to you instead, and wait to be answered."
+  },
+  {
+   "_comment": "[WILD SAGE] L16 grant (#438) -- the TWIN of [Thorn Hand] above: ap_cost/mp_cost/element/effect (spell_damage range 1 + applies.rooted 1) are that skill's VERBATIM, element:'nature' included, so it banks nature_cast through the same element-counter seam and costs the lineage exactly what [Druid] pays. DELIBERATELY UNGATED like its baseline. Only id/name/prose/icon re-flavor.",
+   "id": "bramble_hand",
+   "display_name": "[Bramble Hand]",
+   "icon": "icon_bramble_hand",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "mp_cost": 3,
+   "element": "nature",
+   "effect": {
+    "type": "spell_damage",
+    "range": 1,
+    "applies": {
+     "rooted": {
+      "duration_rounds": 1
+     }
+    }
+   },
+   "description": "A briar uncoils out of your fist and takes hold, and every barb on it is turned the wrong way for leaving."
   },
   {
    "_comment": "CANON-VERDICT: ATTESTED (6.56, Yvlon). Swordsman L14, line's first non-mult active -- line_damage (piercing_shot resolver), sword-gated.",

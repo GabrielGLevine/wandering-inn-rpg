@@ -1,0 +1,45 @@
+{
+ "_comment": "#438 [Wild Sage]. The EVOLVED-LINEAGE sibling of near_druid_consolidation.json: same story beat (standing at the offer threshold, one sleep away), one rung up the tamer line. beast_master 11 + mage 10 is the CHEAPEST legal pair -- min_parent_level 10 gates both, min_combined_level 21 rules out the (10,10) below it, and max(ceil(2*21/3), max(11,10)) == 14 is the sparse table's derived floor. Ledger, in story order: soothed_a_beast + met_relc are the Act I beats that hand this player [Beast Tamer] at all; tended_beasts 44 carries the tamer curve past beast_tamer's own top rung AND beast_master's L11 (44), which is the whole reason this fixture is not near_druid's -- an EVOLVED [Beast Master] is standing here, holding [Pack Bond] and [Sworn Fang: Ride Together], and merging into [Druid] would have cost both (data_lint's coverage arm named that pair for exactly those two Skills before [Wild Sage] existed). learned_magic_from_pisces + won_combat 3 + spell_cast 45 are mage 1->10, near_druid_consolidation's numbers verbatim. Equipment: Krshia's hunting knife and a leather jerkin, both Act II shop stock, exactly as near_druid_consolidation carries them. NEITHER of this class's own grants has a `weapon` key ([Counsel of the Wild] is exploration, [Bramble Hand] is an ungated spell, both mirroring their [Druid] baselines), so the weapon choice is about SURVIVAL rather than the kit filter: the closing fight is the #439-retuned goblin camp (two raiders + shaman), and this fixture was authored with the starter rusty_sword and no armour first, which loses it outright under `combat_autoplay` at the floor policy -- PC and Relc both down in round 5. That is the #441 near_necromancer finding repeating on a caster-shaped spine, and it takes the same fix: restore the margin with gear a player really has by Act II rather than by moving the class levels the proof is about. VERSION 6, matching near_druid_consolidation: WISave._migrated's version==4 arm OVERWRITES `inventory`/`equipped` with the starter defaults, so anything below 5 cannot carry chosen equipment at all. rng_state is near_druid_consolidation.json's OWN derived state, shared DELIBERATELY (near_scout_consolidation already shares it): this fixture and near_druid are the same caster-shaped build at the same level fighting the same encounter, so running them on the same roll makes the two canonicals directly comparable instead of separated by dice. It is also load-bearing here -- on an independently derived roll (seed 4381) this fight is a coin-flip that the PC loses with the shaman on 1 HP, which is a real balance read on caster-shaped spines at the Act II goblin camp and is recorded here rather than tuned away.",
+ "state": {
+  "current_map": "inn_upstairs",
+  "player_cell": [
+   9,
+   2
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "beast_master": 11,
+   "mage": 10
+  },
+  "accomplishments": {
+   "soothed_a_beast": 1,
+   "tended_beasts": 44,
+   "spell_cast": 45,
+   "met_relc": 1,
+   "learned_magic_from_pisces": 1,
+   "won_combat": 3
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin"
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": []
+ },
+ "version": 6
+}

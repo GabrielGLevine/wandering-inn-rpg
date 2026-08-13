@@ -150,6 +150,12 @@ const EXPECTED_SKILLS := {
 	# in cost or multiplier shows up here as a diff.
 	"keener_point": ["2 AP — ×1.6 damage"],
 	"spellbound_thrust": ["3 AP, 3 MP — ×3 damage. Once every 2 rounds."],
+	# #438 [Deathknight]: the death-flavored twins of the SAME two baselines.
+	# Identical readouts for the identical reason -- [Spellsword] is the
+	# mechanical anchor for every martial x caster consolidation, so a tuning
+	# drift in either lineage surfaces here as a diff rather than in a playtest.
+	"grave_edge": ["2 AP — ×1.6 damage"],
+	"deathbound_strike": ["3 AP, 3 MP — ×3 damage. Once every 2 rounds."],
 	"lesser_stamina": [],
 	"low_grade_synthesis": [],
 	"cleansing_heat": [],
@@ -186,6 +192,10 @@ const EXPECTED_SKILLS := {
 	"flame_dart": ["2 AP, 3 MP — damage 1d6 at range 4"],
 	"perfect_hospitality": [],
 	"steady_draw": ["+8 to hit"],
+	# #438 [Skirmisher]: the spear-gated twin of the row above. The readout is
+	# identical because only the `weapon` gate re-flavors -- the effect block is
+	# [Ranger]'s VERBATIM, and `weapon` never reaches the effect lines.
+	"steady_point": ["+8 to hit"],
 	"bargain": [],
 	"appraise_goods": [],
 	"bulk_terms": [],
@@ -216,6 +226,12 @@ const EXPECTED_SKILLS := {
 	"pack_bond_boon": ["+4 max HP"],
 	"peace_of_the_wild": [],
 	"thorn_hand": ["2 AP, 3 MP — damage 1d6 at range 1. Roots."],
+	# #438 [Wild Sage]: the twins of the two rows directly above. [Counsel of
+	# the Wild] pins [] like its baseline -- BOTH carry their mechanics in
+	# wi_game.gd::_wild_affinity_reduction rather than an `effect` block, so an
+	# empty readout here is correct and NOT the signature of an inert twin.
+	"counsel_of_the_wild": [],
+	"bramble_hand": ["2 AP, 3 MP — damage 1d6 at range 1. Roots."],
 	"hearthward_charm": [],
 	"greater_hearthward": [],
 	"crescent_cut": ["3 AP — damage everything in a line 3 cells long"],

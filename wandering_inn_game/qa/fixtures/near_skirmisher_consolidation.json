@@ -1,0 +1,46 @@
+{
+ "_comment": "#438 [Skirmisher]. Standing at the offer threshold, one sleep away. spearmaster 11 + archer 10 is the CHEAPEST legal pair -- min_parent_level 10 gates both, min_combined_level 21 rules out the (10,10) below it, and max(ceil(2*21/3), max(11,10)) == 14 is the sparse table's derived floor. Ledger, in story order: sparred_with_relc + met_relc + given_spear_by_relc are the Act I tutorial that hands this player a SPEAR, which is the whole reason the fixture exists in this shape -- spear dominance is what evolved [Warrior] into [Spearmaster] and out of [Ranger]'s recipe. melee_hit 68 carries the warrior curve past both its own L10 (57) and spearmaster's L10 (57); spear_skill_used 16 is spearmaster's own L11 rung AND, with zero sword_skill_used, the >=0.6 dominance share over min_uses 12 that produced the evolution at all. won_combat 1 + ranged_hit 57 are archer 1->10 verbatim. Equipment: Relc's spare spear is WORN, not merely carried, and that is load-bearing rather than housekeeping -- [Steady Point], the consolidation's OWN L14 grant, is spear-gated, so WICombatBuild.weapon_gated_kit would strip the exact Skill this canonical exists to prove off a sword build. The bow half of the lineage reaches the fight through inherited [Archer] grants, which the same filter strips at a spear; that asymmetry is the class, not a fixture bug, and the kit assert names only what a spear-wielding [Skirmisher] really fields. VERSION 5, NOT lower: WISave._migrated's version==4 arm OVERWRITES `inventory`/`equipped` with the rusty_sword starter defaults, so a v3/v4 fixture cannot carry a chosen weapon at all. rng_state derived from seed 4382 via tests/_derive_rng_state.gd.",
+ "state": {
+  "current_map": "inn_upstairs",
+  "player_cell": [
+   9,
+   2
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "spearmaster": 11,
+   "archer": 10
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "melee_hit": 68,
+   "spear_skill_used": 16,
+   "won_combat": 1,
+   "ranged_hit": 57
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "relcs_spare_spear",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "6284051679268650456",
+  "hotbar_loadout": []
+ },
+ "version": 6
+}

@@ -2790,6 +2790,28 @@ func _init() -> void:
 	assert(gPeace.move_player(Vector2i.DOWN), "peace walks to dist 2")
 	assert(gPeace.move_player(Vector2i.DOWN), "peace walks to dist 1")
 	assert(gPeace.combat == null, "[Peace of the Wild] supersedes at -2: no ambush even at dist 1")
+	# #438 [Wild Sage]. THE ONLY GATE ON THIS TWIN'S LIVE-NESS. [Counsel of the
+	# Wild] re-flavors [Peace of the Wild], whose mechanics are NOT in an
+	# `effect` block -- they are an id literal in wi_game.gd::
+	# _wild_affinity_reduction. So the data pins cannot see this Skill working:
+	# test_effect_text pins [] for both twins (correctly), and deleting the id
+	# from that seam would leave every other suite green while the class's L14
+	# grant silently became inert -- strictly weaker than the baseline it is
+	# supposed to match, which is exactly the divergence the twin rule forbids.
+	# The block is gPeace's, walked verbatim, with the twin held instead: same
+	# harness, same encounter, same distances, so any drift between the two
+	# lineages shows up as a diff rather than as a playtest surprise.
+	# [Wild Affinity] is held ALONGSIDE it on purpose -- it proves the twin
+	# SUPERSEDES the -1 rather than merely coexisting with it.
+	var gCounsel := WIGame.new(affinity_scene, wave_b_skill_config, _sink, 12345, combat_config)
+	gCounsel.player_skills.append("wild_affinity")
+	gCounsel.player_skills.append("counsel_of_the_wild")
+	assert(gCounsel.effective_trigger_radius(affinity_encounter) == 0,
+		"the shared public radius read clamps [Counsel of the Wild]'s reduction at zero, exactly as its [Peace of the Wild] baseline does")
+	gCounsel.transition("floodplains", Vector2i(33, 20))
+	assert(gCounsel.move_player(Vector2i.DOWN), "counsel walks to dist 2")
+	assert(gCounsel.move_player(Vector2i.DOWN), "counsel walks to dist 1")
+	assert(gCounsel.combat == null, "[Counsel of the Wild] supersedes at -2 like its baseline: no ambush even at dist 1 -- if this reds, the twin has gone inert in wi_game.gd::_wild_affinity_reduction")
 
 	var gSneak := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gSneak.player_skills.append("sneak")

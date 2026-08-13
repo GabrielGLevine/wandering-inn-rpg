@@ -1,0 +1,183 @@
+{
+ "_comment": "#438 [Skirmisher] -- spearmaster x archer, end to end, automatic (#472). Sibling of the [Ranger] line's own flow; this one owns the thing that flow cannot show -- that an EVOLVED [Spearmaster] consolidates into its OWN spear-and-bow class instead of merging into [Ranger] at the cost of its whole spear kit. Fixture near_skirmisher_consolidation: spearmaster 11 + archer 10, the cheapest legal pair under min_parent_level 10 + min_combined_level 21, merging to max(ceil(2*21/3), max(11,10)) == 14. THE ROW THIS SCRIPT REALLY GATES is the ORDER of classes.json's `consolidations[]`: `WIProgression.check_consolidation` returns the FIRST match and [Ranger]'s `[warrior]` line's evolution closure still reaches spearmaster, so if the skirmisher row ever sinks below ranger's this script reds on `target: skirmisher` rather than silently handing a spear player [Ranger] in a build nobody replays. THE OPAQUE-UNTIL-SLEEP LOCK is proved before the bed rather than asserted in prose. The closing fight is the kit proof, and it is read WITH RELC'S SPEAR WORN: `WICombatBuild.weapon_gated_kit` strips weapon-mismatched Skills, so the spear-gated rows below only appear because the fixture wears the spear -- and the bow half of the lineage is correspondingly absent, which is the class rather than a bug.",
+ "fixture_save": "near_skirmisher_consolidation",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_upstairs"
+  },
+  {
+   "_comment": "The EVOLVED pair, held. [Warrior] is gone -- spear dominance replaced it at 10, which is the orphaning this family closes.",
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "spearmaster": 11,
+    "archer": 10
+   }
+  },
+  {
+   "_comment": "THE OPAQUE-UNTIL-SLEEP LOCK, proved rather than asserted in prose. This save stands ON the threshold: both parents clear min_parent_level and their sum is exactly min_combined_level. If eligibility resolved anywhere before the sleep beat, the merge event would already be in this run's stream -- and it is not.",
+   "action": "assert_event_absent",
+   "type": "consolidation_accepted"
+  },
+  {
+   "_comment": "The fixture stands at your_bed facing it, so the beat is one interact away; the inn walk is consolidation_flow's subject, not this script's.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "THE ROW #438 EXISTS FOR. beast_master + mage resolves to wild_sage, never druid -- and to the SAME derived floor, since the merge formula never looked at which lineage the parents were.",
+   "action": "wait_for_event",
+   "type": "consolidation_accepted",
+   "payload_contains": {
+    "target": "skirmisher",
+    "level": 14
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#472: consolidation is AUTOMATIC. There is no prompt to answer, so the absence of an offer event is part of the contract rather than an accident of this fixture.",
+   "action": "assert_event_absent",
+   "type": "consolidation_offered"
+  },
+  {
+   "_comment": "lines:1 = the single merge-announce line. This fixture sits exactly at the threshold and banks no class or level announcements, so a second line here would mean progress text leaked into the veil -- the opaque-until-sleep product lock, read where a player actually reads it.",
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {
+    "lines": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_skirmisher_merge_veil"
+  },
+  {
+   "_comment": "THE PLAYER-FACING COPY, pinned rather than waved through with a bare toast wait: canon bracket voice, both retiring parents named, the new class named, and NOTHING else -- no merged-level number, no counter, no stat grammar.",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Spearmaster] and [Archer] merge into [Skirmisher]!"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE JOURNAL HALF. The merge toast carries lore:true, so the same sentence is banked to the durable Lore record -- a class the player never chose to lose can be read back at leisure instead of living or dying by one toast's render race.",
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": [
+    "[Spearmaster] and [Archer] merge into [Skirmisher]!"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "skirmisher": 14
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "02_merged_skirmisher"
+  },
+  {
+   "_comment": "To the goblin camp: teleport to the lane above goblin_encounter_1 (30,23) and step into its radius-2 trigger, the same beat druid_consolidation_loop fights.",
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    30,
+    20
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "THE KIT PROOF, all three halves. pierce_thrust is [Spearmaster]'s OWN L14 grant reaching the merged class through `inherits` -- the spear kit a merge into [Ranger] would have deleted. steady_point is [Skirmisher]'s OWN L14 grant, the spear-gated twin of [Ranger]'s bow-gated [Steady Draw]. keen_eye is the archer half of the same fold, and it is the RIGHT archer probe precisely because it carries no `weapon` key: [Power Shot], [Piercing Shot] and [Quick Nock] are all bow-gated and are correctly absent from a spear build, so naming one of them here would pin a filter bug as if it were a kit.",
+   "action": "assert_state",
+   "path": "combat.combatants.pc.skills",
+   "contains": [
+    "pierce_thrust",
+    "steady_point",
+    "keen_eye"
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "03_skirmisher_kit_combat"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 10
+  }
+ ]
+}
