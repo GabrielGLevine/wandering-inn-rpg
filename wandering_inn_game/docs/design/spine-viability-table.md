@@ -66,6 +66,11 @@ The spine list is derived from every target in `data/classes.json`'s `consolidat
 
 | Act | Climax | Spine | Band build | competent | Disposition |
 |---|---|---|---|---|---|
+| I | `act1_gate_ambush` | `spellspear` | spearmaster2 | WIN 0.79 / 4 rd / +18 | IN WINDOW |
+| II | `act2_cistern_nest` | `spellspear` | spearmaster3/mage2 | WIN 0.79 / 4 rd / +22 | IN WINDOW |
+| III | `act3_awakened_boss` | `spellspear` | spearmaster5/mage4 | WIN 0.89 / 5 rd / +28 | WINDOW DRIFT — ceiling; adjudicate |
+| IV | `act4_vault_construct` | `spellspear` | spearmaster7/mage6 | WIN 0.80 / 6 rd / +48 | IN WINDOW |
+| V | `act5_seal_warden` | `spellspear` | spellspear14 | WIN 0.73 / 4 rd / +15 | IN WINDOW |
 | I | `act1_gate_ambush` | `spellsword` | warrior2 | WIN 0.80 / 4 rd / +18 | IN WINDOW |
 | II | `act2_cistern_nest` | `spellsword` | warrior3/mage2 | WIN 0.64 / 4 rd / +19 | IN WINDOW |
 | III | `act3_awakened_boss` | `spellsword` | warrior5/mage4 | WIN 0.78 / 4 rd / +20 | IN WINDOW |

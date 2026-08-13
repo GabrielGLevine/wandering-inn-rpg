@@ -1502,6 +1502,32 @@
    }
   }
  },
+ "icon_keener_point": {
+  "_comment": "#449 [Spellspear] L14. Code-drawn glyph (tools/sync_assets.py::_draw_placeholder shape 'keen_point'), NEW shape rather than a recolour of icon_keener_edge above -- see that table's comment for the tint-is-not-disambiguation reasoning. PixelLab pass user-gated; VISUAL-LOG carries the drain row.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_keener_point.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_spellbound_thrust": {
+  "_comment": "#449 [Spellspear] L16. Code-drawn glyph (tools/sync_assets.py::_draw_placeholder shape 'bound_spear'), NEW shape rather than a recolour of icon_spellbound_strike. PixelLab pass user-gated; VISUAL-LOG carries the drain row.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_spellbound_thrust.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
  "icon_basic_cleaning": {
   "animations": {
    "idle": {

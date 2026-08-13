@@ -301,6 +301,32 @@ func _init() -> void:
 
 	var mixed_evolved := WIProgression.check_consolidation({"spearmaster": 11, "fire_mage": 10}, catalog)
 	assert(not mixed_evolved.is_empty() and int(mixed_evolved["level"]) == 14, "spearmaster + fire_mage (11,10) -> 14")
+	assert(mixed_evolved["target"] == "spellspear", "#449: an EVOLVED spear parent targets its own class, never spellsword")
+
+	# --- #449 EVOLVED-LINEAGE CONSOLIDATION, and the ORDER CONTRACT it rests on.
+	# User ruling 2026-08-12 (docs/CHOICE-LOG.md): spearmaster + mage does not
+	# lineage-carry into [Spellsword]; it consolidates into [Spellspear].
+	# `check_consolidation` returns the FIRST matching row and [Spellsword]'s own
+	# warrior line still literally lists `spearmaster`, so the whole ruling hangs
+	# on the spellspear row sitting ABOVE the spellsword row in classes.json.
+	# THAT is what these assertions gate: a reorder (or a deletion) of that row
+	# silently re-routes every spear holder back into [Spellsword], which is
+	# invisible in the data and would only surface in a playtest. The paired
+	# warrior assertion is the other half -- the new row must NOT swallow the
+	# unevolved case it does not own.
+	var spear_offer := WIProgression.check_consolidation({"spearmaster": 11, "mage": 10}, catalog)
+	assert(not spear_offer.is_empty(), "spearmaster 11 / mage 10 clears the shared 10/21 gate")
+	assert(spear_offer["target"] == "spellspear", "the evolved spear line consolidates into [Spellspear], NOT [Spellsword] (#449 ruling); a spellspear row ordered below spellsword reds exactly here")
+	assert((spear_offer["parents"] as Array) == ["spearmaster", "mage"], "parents reported by their HELD ids")
+	assert(int(spear_offer["level"]) == 14, "same parents math as spellsword: (11,10) -> 14, the sparse table's derived floor")
+	assert(WIProgression.check_consolidation({"warrior": 11, "mage": 10}, catalog)["target"] == "spellsword", "the UNEVOLVED warrior line still reaches spellsword -- the new row must not shadow it")
+	assert(WIProgression.check_consolidation({"spearmaster": 10, "mage": 10}, catalog).is_empty(), "spellspear inherits the same gate: sum 20 < min_combined_level 21 -> no offer")
+	assert(WIProgression.granted_skills({"spellspear": 14}, catalog).has("keener_point"), "spellspear floor kit grants its OWN consolidation skill")
+	assert(WIProgression.granted_skills({"spellspear": 14}, catalog).has("pierce_thrust"), "spellspear floor kit inherits the spear lineage's L14 grant")
+	assert(WIProgression.granted_skills({"spellspear": 14}, catalog).has("flash_step"), "spellspear floor kit inherits the mage line too (both halves fold, the spellsword precedent)")
+	assert(not WIProgression.granted_skills({"spellspear": 14}, catalog).has("keener_edge"), "the twin's baseline skill is NOT granted -- spellspear carries its own id")
+	assert(not WIProgression.granted_skills({"spellspear": 14}, catalog).has("spellbound_thrust"), "L16 grant stays behind its level")
+	assert(WIProgression.granted_skills({"spellspear": 16}, catalog).has("spellbound_thrust"), "L16 grant lands at 16")
 
 	var same_line := WIProgression.check_consolidation({"warrior": 3, "swordsman": 11, "mage": 12}, catalog)
 	assert(not same_line.is_empty(), "the higher-level candidate (swordsman 11) qualifies even though warrior 3 (same line, sub-threshold) is also held")

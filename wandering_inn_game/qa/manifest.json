@@ -813,6 +813,38 @@
    }
   },
   {
+   "_comment": "#449. Sibling of consolidation_flow above, one lineage over: consolidation_flow owns the offer/decline/re-offer round trip for the UNEVOLVED warrior line, this one owns the EVOLVED case the user ruling created -- spearmaster + mage merging into its own [Spellspear] rather than lineage-carrying into [Spellsword]. Its real subject is the order of classes.json consolidations[]: check_consolidation is first-match and spellsword's warrior line still lists spearmaster, so this row reds if the spellspear rule ever sinks below it.",
+   "script": "spellspear_consolidation_loop",
+   "seed": 449,
+   "fixture": "near_spellspear_consolidation",
+   "note": "evolved lineage: spearmaster+mage -> [Spellspear] 14, inherited + own grants fielded",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_spellspear_consolidation"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_bolt"
+    ],
+    "dialogue": [
+     "goblin_parley"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "save_migration",
    "seed": 1,
    "fixture": "v2_format",

@@ -354,6 +354,38 @@ per-lane anchor comment; splice discipline per COMMON.
   its grants to field-only, or kill the record. A bestowal never ships
   a new effect type.
 
+## 9a. Amendment — evolved-lineage consolidation is the first
+## mass-production case (#449, ratified 2026-08-12)
+
+The user ruling recorded in docs/CHOICE-LOG.md ("Evolved lineages
+consolidate into unique classes") landed [Spellspear] — spearmaster +
+mage — as a hand-authored class on the shipped static machinery, exactly
+the §2.3 shape this spec argues for. Three things it establishes for the
+generator's own roster work:
+
+- **It is this spec's high-level-unique-class case, realized without
+  the generator.** No new vocabulary, no new effect type, no save-shape
+  change: one `consolidations[]` row, one sparse-table class row
+  (`inherits` folds both lineage kits), two re-flavored skill twins.
+  §2.3's "authored-combination table" claim now has a second worked
+  example beside the v1 bestowal design.
+- **The queue behind it is combinatorial, and that is the real
+  generator argument.** data_lint's lineage validator (GH#452/#454)
+  enumerates every reachable held-pair; after #449 there are still 25
+  `_exempt` orphan pairs awaiting a naming pass (swordsman x mage,
+  the archer/rogue lines, the tamer lines). Each currently costs a full
+  hand lane like this one. If more than a handful ship, they are the
+  first mass-production case for §2.3's table — the records are already
+  mechanically uniform (same 10/21 gate, same merge formula, kit by
+  `inherits`), so only the NAME and the two flavored grants are bespoke.
+- **A constraint the generator must inherit.**
+  `WIProgression.check_consolidation` returns the FIRST matching row, and
+  base rows list their evolved descendants in `parent_lines`. So a
+  lineage-specific target must be ordered ABOVE the base row it
+  specializes. Ordering is now load-bearing data, and #449 gates it in
+  `tests/test_progression.gd` rather than in a comment. Any generator
+  emitting these rows emits an ORDER, not a set.
+
 ## 10. Why not no-build outright
 
 The reduced build is cheap (slice 0 is a few pure functions on shipped

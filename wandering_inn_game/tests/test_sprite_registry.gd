@@ -271,6 +271,12 @@ func _build_expected_counts() -> Dictionary:
 	]:
 		counts[icon_id + "/idle"] = 1
 
+	## #449 [Spellspear]: the consolidation's own two grants. Code-drawn 16x16
+	## glyphs (PixelLab drain), NEW shapes rather than recolours of their
+	## [Spellsword] twins -- see tools/sync_assets.py's own comment.
+	for icon_id: String in ["icon_keener_point", "icon_spellbound_thrust"]:
+		counts[icon_id + "/idle"] = 1
+
 	for visual_log_prop: String in [
 		"dart_slit_tell", "illusory_floor_tell", "delivery_board",
 		"guild_notice_wall", "deep_fissure", "cold_hearth", "gnaw_pile",

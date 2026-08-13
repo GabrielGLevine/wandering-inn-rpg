@@ -1,0 +1,270 @@
+{
+ "_comment": "#449 [Spellspear] -- the EVOLVED-LINEAGE consolidation, end to end. Sibling of consolidation_flow.json (which owns the offer/decline/re-offer round trip for the unevolved warrior line); this one owns the thing that round trip cannot show -- that an EVOLVED parent consolidates into its OWN class. Fixture near_spellspear_consolidation: spearmaster 11 + mage 10, the cheapest legal pair under min_parent_level 10 + min_combined_level 21, merging to max(ceil(2*21/3), max(11,10)) == 14. THE ROW THIS SCRIPT REALLY GATES is the ORDER of classes.json's `consolidations[]`: `WIProgression.check_consolidation` returns the FIRST match and [Spellsword]'s warrior line still literally lists `spearmaster`, so if the spellspear row ever sinks below it this script reds on `target: spellspear` instead of silently handing a spear player [Spellsword] in a build nobody replays. The OPAQUE-UNTIL-SLEEP lock is proved before the bed rather than asserted in prose: on a freshly loaded save standing at the threshold, `pending_consolidation` is empty and no consolidation_offered has been emitted -- the offer does not exist until the sleep beat resolves it, so there is nothing for a progress readout to leak. The closing fight is the kit proof: with Relc's spear WORN (weapon_gated_kit strips mismatched skills), the merged PC fields both an INHERITED spear-lineage grant (pierce_thrust, [Spearmaster] L14, arriving via `inherits`) and the consolidation's OWN new grant (keener_point, [Spellspear] L14). Relc fields as an ally without a conversation beat here -- the fixture already carries met_relc, which is goblin_encounter_2's whole `ally_requires`.",
+ "fixture_save": "near_spellspear_consolidation",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "_comment": "The EVOLVED pair, held. [Warrior] is gone -- spear dominance replaced it at 10, which is the exact orphaning #449 was filed about.",
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "spearmaster": 11,
+    "mage": 10
+   }
+  },
+  {
+   "_comment": "THE OPAQUE-UNTIL-SLEEP LOCK, proved rather than asserted in prose. This save stands ON the threshold: both parents clear min_parent_level and their sum is exactly min_combined_level. If eligibility surfaced anywhere before the sleep beat, it would be here -- and it is not. No offer exists to render a progress readout of.",
+   "action": "assert_state",
+   "path": "pending_consolidation",
+   "equals": {}
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "consolidation_offered"
+  },
+  {
+   "_comment": "The inn walk is consolidation_flow's subject, not this one's: teleport to your_bed upstairs (the inn's only bed since #49).",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "THE ROW #449 EXISTS FOR. spearmaster + mage resolves to spellspear, never spellsword -- and to the SAME derived floor, since the merge formula never looked at which lineage the parents were.",
+   "action": "wait_for_event",
+   "type": "consolidation_offered",
+   "payload_contains": {
+    "target": "spellspear",
+    "level": 14
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "pending_consolidation.target",
+   "equals": "spellspear"
+  },
+  {
+   "action": "assert_state",
+   "path": "pending_consolidation.level",
+   "equals": 14
+  },
+  {
+   "_comment": "Offered is not accepted: the parents are untouched until the player says yes.",
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "spearmaster": 11,
+    "mage": 10
+   }
+  },
+  {
+   "_comment": "THE ORDER PIN (consolidation_flow's own, same reasoning): wait_for_event's since-marker is forward-only, so these consecutive waits prove the veil's sleep sequence RENDERS and FINISHES strictly before the prompt shows. lines:1 = the single offer-announce line; this fixture sits exactly at the threshold and banks no class/level announcements, so a second line here would mean progress text leaked into the veil.",
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {
+    "lines": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_consolidation_prompt_rendered",
+   "payload_contains": {
+    "target": "spellspear"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_spellspear_offer_prompt"
+  },
+  {
+   "_comment": "Confirm on the default 'Consolidate' row = accept (the real UI prompt, src/ui/consolidation_prompt.gd).",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_consolidation_prompt_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "consolidation_accepted",
+   "payload_contains": {
+    "target": "spellspear",
+    "level": 14
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE PLAYER-FACING COPY, pinned rather than waved through with a bare toast wait: canon bracket voice, both retiring parents named, the new class named, and NOTHING else -- no merged-level number, no counter, no stat grammar. That is the opaque-until-sleep product lock stated in the one place a player actually reads.",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Spearmaster] and [Mage] merge into [Spellspear]!"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Both parents retire into the one class -- the sparse table's floor written straight in, never counted up to.",
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "spellspear": 14
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "pending_consolidation",
+   "equals": {}
+  },
+  {
+   "action": "screenshot",
+   "name": "02_merged_spellspear"
+  },
+  {
+   "_comment": "To the warband. The floodplains walk is consolidation_flow's subject too; this script's subject is the kit that arrives at the fight, so it teleports to the lane north of goblin_encounter_2 (28,18) and walks the last three cells in. The entity blocks (28,18), so 'down 3' lands on (28,17) facing it.",
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    28,
+    15
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "goblin_parley"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "THE KIT PROOF, both halves. pierce_thrust is [Spearmaster]'s own L14 grant reaching the merged class through `inherits` -- the lineage kit the ruling promised. keener_point is [Spellspear]'s OWN L14 grant, the spear-flavored twin of [Spellsword]'s [Keener Edge]. flash_step is the mage half of the same fold, so this also proves BOTH parent lines survive the merge rather than the martial one winning. All three are only in this list because the fixture WEARS the spear: weapon_gated_kit would strip the two spear-gated rows off a sword build.",
+   "action": "assert_state",
+   "path": "combat.combatants.pc.skills",
+   "contains": [
+    "pierce_thrust",
+    "keener_point",
+    "flash_step"
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "03_spellspear_kit_combat"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  }
+ ]
+}
