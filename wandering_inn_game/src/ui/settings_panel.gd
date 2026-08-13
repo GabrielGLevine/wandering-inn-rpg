@@ -68,9 +68,13 @@ const AUDIO_ROWS := {"Master volume": "Master", "Music volume": "Music", "SFX vo
 ## the player came through"), so when a playtest report cut the blurbs off the
 ## creation screen as overexplaining, this door had to lose them in the same
 ## pass or the one voice becomes two. The rows read bare state now
-## ("Difficulty: Silver", "Quest Hints: On"); the durable explanation the
+## ("Difficulty: Silver Rank", "Quest Hints: On"); the durable explanation the
 ## v0.17-close P2 actually wanted is the Help page's own "Difficulty & Quest
 ## Hints" section, which shipped alongside these tails and stays.
+## The rank word in that first row is NOT typed here: it rides inside
+## WISettings.DIFFICULTY_LABELS (user ruling 2026-08-13), so this door and the
+## creation door say it because they read the same const, not because two
+## format strings happen to agree.
 
 const MOUSE_LABELS := {
 	"move": "Click ground to walk",

@@ -40,7 +40,18 @@ const COMBAT_SPEED_LABELS: Array[String] = ["Normal", "Fast", "Instant"]
 ## is exactly 1.0, so every existing save, every balance cell and every QA
 ## fixture reads the numbers it always did unless a player deliberately moves
 ## the row.
-const DIFFICULTY_LABELS: Array[String] = ["Bronze", "Silver", "Gold"]
+##
+## "RANK" RIDES IN THE LABEL (user ruling 2026-08-13). A bare metal name is a
+## colour to a player who has never opened the books; the rank word is what
+## makes the three read as one ladder of adventurer ranks rather than three
+## unexplained nouns, and it is the register the canon itself uses
+## ("Bronze, Silver, Gold, and Platinum-RANKED challenges"). It lives HERE
+## rather than in either renderer's format string on purpose: this const is the
+## single source both doors read (char_creation.gd's setup rows and
+## settings_panel.gd's "Difficulty: %s" row), so the one-voice contract #447
+## established -- whichever door a player came through says the same words --
+## holds by construction instead of by two matching edits.
+const DIFFICULTY_LABELS: Array[String] = ["Bronze Rank", "Silver Rank", "Gold Rank"]
 const DIFFICULTY_DEFAULT_STEP := 1
 
 ## THE ONE KNOB, and it is deliberately one: a multiplier on damage dealt TO
