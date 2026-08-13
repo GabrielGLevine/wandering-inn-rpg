@@ -181,6 +181,30 @@ Every fork choice (`choose_path`, resolution paths, ending picks) requires
 an inline `why:` string. The compiler emits these into step `_comment`s —
 CHOICE-LOG discipline enforced at the language level.
 
+**Amendment (2026-08-13, pre-M4 design note — Fable).** Two rulings:
+
+1. **§3.2 vocabulary amendment (narrow unfreeze).** The M3 golden measured
+   exactly two missing idioms in 2569 corpus steps; the vocabulary gains
+   exactly those two and re-freezes:
+   - `fight: {mode: driven, turns: [...]}` — an explicit turn list
+     (move/hotbar_N/cycle/end_turn presses + tutor-beat event waits),
+     shaped from the shipped spar (steel_thread 84-106). Autoplay remains
+     the default mode; `driven` exists for fights whose CHOREOGRAPHY is
+     the content. Turn lists are exact-class in goldens.
+   - `journal` — open, optional named capture, close (the shipped
+     press-journal idiom, steel_thread 562-566 / 2318-2323). Exact-class.
+   Both require emitter acceptance-table rows (the set-equality pin
+   forces this mechanically).
+2. **Pass-2 planning fence (structural, before M4).** Refine must never
+   re-plan. Enforcement is a plan-spine equality gate: pass 2 hard-fails
+   (CompileError) if node list, routes, or inserted detours differ from
+   pass 1 — pins/asserts/probe-removal excluded from the comparison. This
+   fences the audited latent path (refine's harvested ledger values
+   feeding route/ally/preview planning) for every future itinerary,
+   including M4's Mage variant, the first corpus artifact that sleeps
+   after fights. A weighted-counter lint on planner-readable requires is
+   OPTIONAL advisory on top; the spine gate is the binding rule.
+
 ## 4. Emitter contract
 
 One idiom table, tested in isolation (unit: primitive + ledger state →
