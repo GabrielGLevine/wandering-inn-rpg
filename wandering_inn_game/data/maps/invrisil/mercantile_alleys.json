@@ -1396,7 +1396,11 @@
    },
    "observe": "A narrow goods shutter opens onto the side passage. One watcher crosses its view on a fixed turn.",
    "on_skill_use": {
-    "accomplishment": "timed_counting_room_entry",
+    "_comment": "String|Array, the #398 P3 shape: the mode's own counter plus the shared pocket-open counter the guard's encounter_when reads. encounter_when has no OR arm (P3 review B1), so three disjoint mode counters cannot gate one encounter without this.",
+    "accomplishment": [
+     "timed_counting_room_entry",
+     "counting_room_open"
+    ],
     "toast": "[Appraise Foe] — The watcher turns on the third bell-stroke. You catch the shutter in the breath between one circuit and the next."
    }
   },
@@ -1420,12 +1424,15 @@
    },
    "observe": "An ironwood bar sits deep in stone brackets. Moving it quietly was never part of the design.",
    "on_skill_use": {
-    "accomplishment": "noisy_entry",
+    "accomplishment": [
+     "noisy_entry",
+     "counting_room_open"
+    ],
     "toast": "[Greater Strength] — The bar comes out with half the bracket. The counting room hears exactly how you entered."
    }
   },
   {
-   "_comment": "#398 P4 pocket encounter. Interact-only cannot work behind three disappearing gates, so radius 1 arms once a mode opens and the player crosses in.",
+   "_comment": "#398 P4 pocket encounter. Interact-only cannot work behind three disappearing gates, so radius 1 arms once a mode opens and the player crosses in. #475: it had NO encounter_when, which was invisible while [Dangersense] only drew gated encounters -- un-hiding the ungated ones put a warning aura inside a sealed room the player has never opened. `counting_room_open` is P4's copy of P3's shared pocket-open counter (warded_side_vault_open), banked atomically by all three modes, so encounter_gate_met answers false until the pocket does open and the overlay follows the sim by construction instead of by a second rule.",
    "id": "counting_room_guard",
    "kind": "encounter",
    "cell": [
@@ -1433,6 +1440,11 @@
     10
    ],
    "trigger_radius": 1,
+   "encounter_when": {
+    "requires": {
+     "counting_room_open": 1
+    }
+   },
    "display_name": "The Factor's Closed Account",
    "sprite": "hired_blade",
    "arena": "mercantile_alley",
