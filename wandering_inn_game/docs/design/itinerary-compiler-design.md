@@ -205,6 +205,43 @@ CHOICE-LOG discipline enforced at the language level.
    after fights. A weighted-counter lint on planner-readable requires is
    OPTIONAL advisory on top; the spine gate is the binding rule.
 
+**Amendment (2026-08-13, M3.6 ruling — Fable).** The golden's measured
+blocker table + the M3.5 audit findings resolve to one final pre-M4
+scope; the vocabulary re-freezes after these:
+
+1. **`fight.entry: dialogue`** — third FIGHT_ENTRIES member: the fight
+   is entered by a dialogue option carrying `start_combat` (the spar's
+   shape). The planner walks the conversation to that option; the
+   emitter omits the map-encounter approach/press and expects
+   combat_started off the dialogue confirm.
+2. **Effect-derived event waits (planner pass, no vocabulary):** after
+   a chosen dialogue option, the planner derives event waits from the
+   option's own `effects` array AND its quests.json joins
+   (accomplishment/quest_started/beat/completed/item_gained shapes).
+   The M3.5 "141" figure is REFUTED as miscounted — re-measure first
+   (audit: ~115 in-window, ≥26 non-derivable or already reproduced;
+   the pass targets the derivable subset and the golden differ decides
+   the rest row by row).
+3. **Emitter frame flexibilities (spec keys, not primitives):**
+   `turn_wait: false` (6 of 12 shipped fights carry no turn_started
+   wait), tutor-beat waits inside autoplay (`beats:` on the autoplay
+   fight), post-dismiss banking waits (`expect_banks_after_dismiss`),
+   payload-tight `combat_started` pins (`arena:` passthrough),
+   `goto.via: <door-id>` (the GH#375 west-door class), and the two
+   missing event kinds (`ui_map_rendered`, `ui_gdi_epilogue_rendered`)
+   as wait-shapes.
+4. **Sneak-lifetime modeling (#440)** in the ledger/route planner —
+   the last planner gap on the thread's tail.
+5. **Hardening (audit items):** node-level unknown-key rejection (a
+   typo'd second primitive currently no-ops silently — pre-existing);
+   fence arrival tracking (ledger end-position per node joins the
+   spine comparison, closing the state-dependent-destination hole
+   before M4's portal-heavy variant).
+
+Exit: the steel-thread golden passes the tolerance differ end-to-end;
+STEEL-THREAD.md's "regenerate via compiler" line lands. M4 (the Mage
+variant, the #438 acceptance milestone) dispatches only after this.
+
 ## 4. Emitter contract
 
 One idiom table, tested in isolation (unit: primitive + ledger state →
