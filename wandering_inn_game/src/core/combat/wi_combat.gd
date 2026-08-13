@@ -11,6 +11,7 @@ const DASH_COST := 1
 const DASH_GAIN := 3
 const WEAKENED_MULT := 0.75
 const GUARDED_MULT := 0.75
+const ONCE_PER_ROUND := "once_per_round"
 
 ## GH#337 skill cooldowns. The skills.json field name lives HERE rather than in
 ## `WIKeys` because it is a combat-only knob with exactly three readers (this
@@ -75,6 +76,7 @@ var windups: Dictionary = {}
 var _event_sink: Callable
 var _momentum_used: Dictionary = {}
 var _quick_cast_spent: Dictionary = {}
+var _counter_strike_round: Dictionary = {}
 
 
 func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary, event_sink: Callable, rng_seed: int) -> void:
@@ -635,10 +637,14 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 	if finished:
 		return
 	var target_now: Dictionary = combatants[target_id]
+	var counter_strike: Dictionary = skills["counter_strike"]
 	if allow_riposte and melee and target_now[WIKeys.ALIVE] \
 			and (target_now[WIKeys.SKILLS] as Array).has("counter_strike") \
+			and (not bool(counter_strike.get(ONCE_PER_ROUND, false)) \
+				or int(_counter_strike_round.get(target_id, 0)) != round_number) \
 			and is_adjacent(target_id, attacker_id):
-		var riposte_mult := float(skills["counter_strike"][WIKeys.EFFECT][WIKeys.MULT])
+		_counter_strike_round[target_id] = round_number
+		var riposte_mult := float(counter_strike[WIKeys.EFFECT][WIKeys.MULT])
 		_emit(WIEvents.REACTION_TRIGGERED, {"id": target_id, "skill": "counter_strike"})
 		_resolve_hit(target_id, attacker_id, riposte_mult, true, false)
 

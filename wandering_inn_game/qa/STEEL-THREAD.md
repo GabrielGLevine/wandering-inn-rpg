@@ -3,7 +3,7 @@
 Run from the repository root:
 
 ```bash
-wandering_inn_game/qa/run_qa.sh steel_thread windowed --seed=9
+wandering_inn_game/qa/run_qa.sh steel_thread windowed --seed=37
 ```
 
 One continuous playthrough: a single PC from the title gate to the GDI
@@ -24,11 +24,13 @@ warren) is superseded; git history retains it.
 
 Reauthored 2026-08-12 against the retuned game (#437/#441/#439/#440): the
 itinerary now carries a leveling diet that arrives at each act's climax in
-band, and every fight runs on the competent policy. **2567 steps, GREEN
-end to end at seed 9** — title gate to GDI epilogue, Seal Warden included.
+band, and every fight runs on the competent policy. After #451 capped
+[Counter Strike], the continuous combat draw was re-derived from seed 9 to
+seed 37 and its loot-ledger/inventory pins were re-recorded from the live run.
+**2569 steps are GREEN end to end at seed 37** — title gate to GDI epilogue,
+Seal Warden included.
 
-Measured headless wall time at seed 9: **~5 min**. `events_seen` across
-two consecutive green runs: **10995 / 11000**.
+The verified #451 headless run recorded **11433 events**.
 
 ## Every fight runs `policy: competent` (ruling, 2026-08-12)
 
@@ -58,7 +60,8 @@ pins:
   (the outfitting beat, the Krshia buyback picker, the descent kit)
   shifted by one row and was re-derived off the oracle.
 - The finale flipped. The same fight that died in round 5 holding two
-  undrunk draughts now **wins in round 9** (see the tape below).
+  undrunk draughts became a win; after #451 it is re-derived as a
+  **round-5 win at seed 37** (see the tape below).
 
 ## What this instrument is for
 
@@ -94,16 +97,16 @@ hide.
    (opened), the Seal Warden, the vault, anchor, tally, the walk back,
    final sleep, GDI epilogue
 
-## PC trajectory at act boundaries (seed 9, reauthored)
+## PC trajectory at act boundaries (seed 37, re-derived for #451)
 
 | Boundary | Classes | Combined | Band | Gold | Waking |
 |---|---|---|---|---|---|
 | End Act I (`reached_liscor`) | warrior 1 | 1 | 1–2 | 2 | 1 |
-| End Act II (`cisterns_reported`) | warrior 5, mage 2 | 7 | 4–6 | 10 | 3 |
-| End Act III (`raskghar_sealed`) | warrior 9, mage 2 | 11 | 8–10 | 16 | 4 |
-| End Act IV (`seal_descent_agreed`) | spearmaster 14, mage 6, diplomat 4 | 24 | 12–14 | 4 | 8 |
-| At the Seal Warden | spearmaster 14, mage 6, diplomat 7, trader 2 | 29 | 14–16 | 4 | 10 |
-| End of run (epilogue) | spearmaster 15, mage 6, diplomat 7, trader 2 | 30 | — | 4 | 11 |
+| End Act II (`cisterns_reported`) | warrior 5, mage 2 | 7 | 4–6 | 12 | 3 |
+| End Act III (`raskghar_sealed`) | warrior 9, mage 2 | 11 | 8–10 | 12 | 4 |
+| End Act IV (`seal_descent_agreed`) | spearmaster 14, mage 6, diplomat 4 | 24 | 12–14 | 0 | 8 |
+| At the Seal Warden | spearmaster 14, mage 6, diplomat 7, trader 2 | 29 | 14–16 | 0 | 10 |
+| End of run (epilogue) | spearmaster 15, mage 6, diplomat 7, trader 2 | 30 | — | 0 | 11 |
 
 Climax builds (the number the bands actually govern — levels resolve in
 `sleep()`, so a climax is fought at the *previous* night's build):
@@ -111,12 +114,12 @@ Climax builds (the number the bands actually govern — levels resolve in
 | Climax | Fought at | Band | Result |
 |---|---|---|---|
 | I gate-road ambush | warrior 1 | 1–2 | win |
-| II cistern nest (+ matriarch) | warrior 5 / mage 2 | 4–6 | win, round 3 |
+| II cistern nest (+ matriarch) | warrior 5 / mage 2 | 4–6 | win, round 5 |
 | III raskghar scouts (+ pack leader) | warrior 5 / mage 2 | 8–10 | win |
-| III awakened boss (+ third scout, with Relc) | warrior 5 / mage 2 | 8–10 | win |
-| IV vault construct | spearmaster ~12 / mage 3 | 12–14 | win |
+| III awakened boss (+ two scouts + Sewer Bat, with Relc) | warrior 5 / mage 2 | 8–10 | win, round 4 |
+| IV vault construct | spearmaster ~12 / mage 3 | 12–14 | win, round 7 |
 | IV ruin guardian | spearmaster 12 / mage 3 + core shard | — | win |
-| V seal warden | spearmaster 14 / mage 6 / dip 7 / trader 2 | 14–16 | **win, round 9, PC ends on 2 HP** |
+| V seal warden | spearmaster 14 / mage 6 / dip 7 / trader 2 | 14–16 | **win, round 5, PC ends on 47/47 HP** |
 
 ### The diet, per act (what was added and why)
 
@@ -179,35 +182,20 @@ that is green at band FLOOR would have traded a proof for a coin flip.
   turn of round 1, pinned by both the ambush toast and
   `combat.round == 1` at the PC's opening turn.
 
-## The Seal Warden, fight tape (seed 9)
+## The Seal Warden, fight tape (seed 37 after #451)
 
-**Win, 9 rounds, PC ends on 2 of 47 HP; warden 0 of 142.** Every
-resource in the pack was spent. Round by round:
+**Win, 5 rounds, PC ends on 47 of 47 HP; warden 0 of 142.** The observed
+event tape is compact: the warden's opening [Power Strike] reports 28 while
+[Mana Shield] absorbs 17 and the equipped reduction takes another point;
+the capped [Counter Strike] answers once for 14. [Second Wind] heals 8,
+[Piercing Strikes] deals 20, the remedy tops the PC by 2, and [Spear
+Flurry] deals 35. The warden then misses both its slam and next power
+strike; [Triple Thrust] deals 36 and the final [Spear Flurry] deals 43 for
+the kill. `combat_finished` records `{rounds:5, victory:true}`.
 
-| Rd | PC | Warden |
-|---|---|---|
-| 1 | ambush turn: basic, 14 | power strike 28 (PC 36) |
-| 2 | [Second Wind] +8, [Piercing Strikes] 21 | windup |
-| 3 | **remedy draught +3**, [Spear Flurry] **43** | slam 10, power strike 18 (PC 21) |
-| 4 | [Guarding Ward] +4 ×2 | windup |
-| 5 | [Guarding Ward] +4, [Piercing Strikes] 20 | slam 8, power strike 16 (PC 11) |
-| 6–8 | [Guarding Ward] +4 ×2 per round | slam 6, one power strike MISSES |
-| 9 | [Guarding Ward] +4, [Piercing Strikes] 23, basic 14 → **kill** | slam 10, power strike 24 (PC 2) |
-
-Reading it: [Second Wind] fires **once** (#442 holding), the draught is
-reached on round 3 (the amended largest-heal-wins + hit-aware trigger —
-the pre-amendment policy carried it undrunk to a round-5 death), and the
-ward fragment's [Guarding Ward] carries the middle of the fight. The
-warden's windup cadence is what makes that survivable: the PC's pure-heal
-rounds land on the rounds the warden spends winding up.
-
-**The margin is 2 HP and that is the finding.** The run is green at the
-band FLOOR, not comfortably inside the band, and it is green only because
-every one of #440 (fight instead of skip), #442 ([Second Wind] bounded),
-the policy amendment (hit-aware, largest-heal-wins, second survive action)
-and two worn-not-carried rewards landed. Treat a red here after any
-combat-data edit as the fight asking for a band decision, not the script
-asking for a fix.
+This is a deterministic canonical proof, not a replacement for the
+100-seed tuning row. The viability harness independently measures the
+level-14 Spellsword reference at 0.78 inside the window.
 
 ## Still open after the program
 
@@ -227,15 +215,15 @@ asking for a fix.
   #437's 0.77 was measured on that focused build with tuned gear. The
   band wants focused-equivalent power, and should say so.
 - **The economy has no room for armour.** It funds the spine's 82g of
-  mandatory purchases with 4g to spare; the two armours in the game cost
+  mandatory purchases with no gold to spare; the two armours in the game cost
   20 (peddler gambeson, damage reduction 1) and 24 (Krshia's jerkin,
   hp+4). A player who wants to be armoured for the finale has to skip
   something the spine needs.
 
-Seed 9 is load-bearing and not casually swappable: seeds 1, 2 and 5 red
-*earlier* (the Act II nest at 1 and 5; a gold pin at 2, because
-`supplier_scavengers`' 2g loot is a 50% roll, which makes every
-`GOLD/PACING` pin seed-derived).
+Seed 37 is load-bearing and was selected from observed full-prefix runs,
+not guessed. Seeds 1–7 and 9–36 fail before clearing the Act II nest; seed
+8 clears it but loses to the Act IV construct. Loot rolls also make every
+`GOLD/PACING` pin seed-derived.
 
 ## Dropped/kept coverage vs the stitched album
 
@@ -276,7 +264,7 @@ run, breaking continuity and PC identity) — nothing here ever enters
 `steel_thread.json` — the flag checkpoints it from outside:
 
 ```bash
-wandering_inn_game/qa/run_qa.sh steel_thread headless --seed=9 --checkpoint-at=1200
+wandering_inn_game/qa/run_qa.sh steel_thread headless --seed=37 --checkpoint-at=1200
 # QA_CHECKPOINT: step_1200 -> .../qa_output/steel_thread/checkpoint_step_1200.json (step 1199, street (29, 4))
 ```
 

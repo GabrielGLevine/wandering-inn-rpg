@@ -1,11 +1,11 @@
 {
- "_comment": "P2 strength-route fixture: Act-III backbone, deep_tunnels at the fallen beam, and Warrior 7 earning [Greater Strength] from the real class table. No trap kit or fire Skill is held; rng_state is the repository's derived seed-9 state.",
+ "_comment": "P2 strength-route fixture: Act-III backbone, deep_tunnels at the fallen beam, and a Warrior earning [Greater Strength] from the real class table (a L7 grant, held throughout). #451 RE-FIXTURE (2026-08-12): the once-per-round [Counter Strike] cap took the riposte throughput this canonical's FLOOR-policy win rested on, so the BUILD moved and the encounter did not (CHOICE-LOG 2026-08-11 doctrine; #441 pattern). Warrior 7 -- BELOW the Act III band (8-10) in docs/design/balance-bands-and-policy.md -- became Warrior 10, the band TOP, with the hunting knife, a Watch-issue gambeson and the stonescale talisman + copper luck-band (resonance 2+0 = base capacity). Measured floor: 0.08 -> 0.82 over 60 seeded sims of this exact roster and build. melee_hit raised to 57 for warrior L10 (classes.json). The sim_combat_batch cell collapsed_gallery_nest_w10_solo is UNTOUCHED and remains this roster's balance instrument. `well_fed: true` rides with it (+2 max HP). The pinned draw finishes at PC 5/55 -- the thinnest win in this wave after cisterns, and stated as such. No trap kit or fire Skill is held; rng_state is the repository's derived seed-9 state, UNCHANGED.",
  "version": 5,
  "state": {
   "current_map": "deep_tunnels", "player_cell": [13, 2], "player_facing": [1, 0],
-  "classes": {"warrior": 7},
-  "accomplishments": {"reached_liscor": 1, "met_relc": 1, "sparred_with_relc": 1, "heard_about_cisterns": 1, "resolved_the_cisterns": 1, "heard_the_deep_tremor": 1, "won_combat": 3, "melee_hit": 32},
+  "classes": {"warrior": 10},
+  "accomplishments": {"reached_liscor": 1, "met_relc": 1, "sparred_with_relc": 1, "heard_about_cisterns": 1, "resolved_the_cisterns": 1, "heard_the_deep_tremor": 1, "won_combat": 3, "melee_hit": 57},
   "player_skills": ["basic_cleaning", "observe"], "removed_entities": [], "dormant_encounters": [], "generalist_classes": [], "started_quests": [], "pending_consolidation": {}, "used_skills": [],
-  "inventory": ["rusty_sword", "leather_jerkin"], "equipped": {"weapon": "rusty_sword", "armor": "leather_jerkin"}, "container_state": {}, "gold": 20, "actions_since_sleep": 0, "rng_state": "-6393592048753323481"
+  "inventory": ["gnollish_hunting_knife", "watch_issue_gambeson", "stonescale_talisman", "copper_luck_band"], "equipped": {"weapon": "gnollish_hunting_knife", "armor": "watch_issue_gambeson", "accessory_1": "stonescale_talisman", "accessory_2": "copper_luck_band"}, "container_state": {}, "gold": 20, "well_fed": true, "actions_since_sleep": 0, "rng_state": "-6393592048753323481"
  }
 }

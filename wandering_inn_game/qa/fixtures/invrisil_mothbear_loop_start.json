@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #97: FIXTURE-FIRST start for invrisil_mothbear_loop -- the accept-fight-turnin loop for bounty_mothbear_cull (single-kill, NIGHT-gated). Guild desk-approach cell (8,3) facing up (accept happens here, same as every other bounty canonical) -- the fixture does NOT claim to stand on the encounter's map, so test_fixture_coherence.gd's MAP_REQUIRES chain never applies; the script's own `teleport` step (a debug action that bypasses door gates entirely, the dungeon_peek/pallass_peek precedent) reaches the kill site directly. `actions_since_sleep:500` makes phase=night from frame 1 (goblin_night_patrol_start/boulevard_night_footpads_start's own convention -- phase is a pure function of this counter, independent of current_map), so no in-script time-advance is needed before the ambush can spring. Gear/classes = sim_combat_batch.gd's own `t3_warrior10` build (the SAME build road_mothbears_t3_solo is measured against). times_slept 22 (== board_last_seen_times_slept) puts the pool window at [22,23,24] = [bounty_mothbear_cull, bounty_kingslayer_cull, bounty_forge_golem_cull] -- mothbear_cull visible as the picker's 1st option. rng_state derived from seed=2 (empirically re-derived -- seed=1 lost the fight in the real game flow): verified seed=2's first rng.randi() draw resolves the mothbear fight as a win (single-kill, no second draw needed). v0.16.1 #21: the encounter moved to the floodplains wagon road (`road_mothbears`) on the boulder_flats arena; the SAME rng_state still wins, re-verified by a real run, so no re-derivation was needed.",
+ "_comment": "Issue #97: FIXTURE-FIRST start for invrisil_mothbear_loop -- the accept-fight-turnin loop for bounty_mothbear_cull (single-kill, NIGHT-gated). Guild desk-approach cell (8,3) facing up (accept happens here, same as every other bounty canonical) -- the fixture does NOT claim to stand on the encounter's map, so test_fixture_coherence.gd's MAP_REQUIRES chain never applies; the script's own `teleport` step (a debug action that bypasses door gates entirely, the dungeon_peek/pallass_peek precedent) reaches the kill site directly. `actions_since_sleep:500` makes phase=night from frame 1 (goblin_night_patrol_start/boulevard_night_footpads_start's own convention -- phase is a pure function of this counter, independent of current_map), so no in-script time-advance is needed before the ambush can spring. #451 RE-FIXTURE (2026-08-12): the once-per-round [Counter Strike] cap took the riposte throughput this canonical's FLOOR-policy win rested on, so the BUILD moved and the encounter did not (CHOICE-LOG 2026-08-11: QA proves completability, sims prove balance; #441 pattern). warrior 10 -> warrior 12, and the leather jerkin/charm pair -> a Watch-issue gambeson with the stonescale talisman + copper luck-band (resonance 2+0 = the base capacity). 12 is the FLOOR of the Act IV band (12-14) in docs/design/balance-bands-and-policy.md, which is the era a Silver-rank bounty board belongs to. Measured floor: 0.63 -> 0.75 over 60 seeded sims of this exact roster and build. warrior 12 is the last rung classes.json defines for the line, so the level lever is spent here. The build raise alone did not flip the pinned draw, so the rng_state was ALSO re-derived by the procedure this fixture's own history names (it was already once re-derived, seed 1 -> seed 2, for exactly this reason): seed 2 -> seed 3 (.state -7684921244414978279), verified by RUNNING the canonical, which now wins in 4 rounds with the PC at 9/55. melee_hit raised to 80 for warrior L12 (classes.json). RANK IS UNMOVED: warrior 10 and warrior 12 are both SILVER (`WIProgression.power_rank`; gold needs two L10 lines), so the board's tier resolution, its posting copy and its 4-gold payout are untouched -- this fixture's own gold pin proves it. Gear/classes NO LONGER track sim_combat_batch.gd's `t3_warrior10` build; that cell (road_mothbears_t3_solo) is UNTOUCHED and stays the balance instrument for this roster, while the canonical is now a completability proof at band. times_slept 22 (== board_last_seen_times_slept) puts the pool window at [22,23,24] = [bounty_mothbear_cull, bounty_kingslayer_cull, bounty_forge_golem_cull] -- mothbear_cull visible as the picker's 1st option. rng_state derived from seed=2 (empirically re-derived -- seed=1 lost the fight in the real game flow): verified seed=2's first rng.randi() draw resolves the mothbear fight as a win (single-kill, no second draw needed). v0.16.1 #21: the encounter moved to the floodplains wagon road (`road_mothbears`) on the boulder_flats arena; the SAME rng_state still wins, re-verified by a real run, so no re-derivation was needed.",
  "version": 5,
  "state": {
   "current_map": "guild",
@@ -12,7 +12,7 @@
    -1
   ],
   "classes": {
-   "warrior": 10
+   "warrior": 12
   },
   "accomplishments": {
    "reached_liscor": 1,
@@ -21,7 +21,7 @@
    "given_spear_by_relc": 1,
    "visited_guild": 1,
    "won_combat": 1,
-   "melee_hit": 57
+   "melee_hit": 80
   },
   "player_skills": [
    "basic_cleaning"
@@ -34,21 +34,21 @@
   "used_skills": [],
   "inventory": [
    "gnollish_hunting_knife",
-   "leather_jerkin",
-   "hedge_ward_charm",
-   "hunters_fang_talisman"
+   "watch_issue_gambeson",
+   "stonescale_talisman",
+   "copper_luck_band"
   ],
   "equipped": {
    "weapon": "gnollish_hunting_knife",
-   "armor": "leather_jerkin",
-   "accessory_1": "hedge_ward_charm",
-   "accessory_2": "hunters_fang_talisman"
+   "armor": "watch_issue_gambeson",
+   "accessory_1": "stonescale_talisman",
+   "accessory_2": "copper_luck_band"
   },
   "container_state": {},
   "actions_since_sleep": 1000,
   "times_slept": 22,
   "board_last_seen_times_slept": 22,
   "gold": 0,
-  "rng_state": "4397686605447780332"
+  "rng_state": "-7684921244414978279"
  }
 }

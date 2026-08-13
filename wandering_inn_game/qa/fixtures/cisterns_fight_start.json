@@ -1,5 +1,5 @@
 {
- "_comment": "Quest 1 FIGHT path start. #441 RE-FIXTURE (2026-08-12): the build is now warrior L6 carrying the full Act II kit (spear, jerkin, both charms). #439 retuned the cistern nest into the [0.55,0.85] competent-at-band window, and this script drives the FLOOR policy (`combat_autoplay`), which loses at band BY DESIGN -- so the canonical's build moves, never the encounter. 6 is the TOP of the Act II band (4-6) in docs/design/balance-bands-and-policy.md, so this is at-band-with-kit and not an over-levelling dodge: measured floor WIN 0.91 / 4 rd over 100 seeded sims of this exact roster and build (same harness shape as tests/sim_spine_viability.gd), against 0.01 for the old warrior-L1 shape against the retuned nest. Standing next to Olesm at the Guild frontage -- cell (29,4) facing UP so the first interact opens olesm_intro (Olesm at 29,3). heard_about_cisterns is NOT banked and the quest is NOT started -- the script proves the full give -> grate -> descend -> clear the nest -> report -> completion loop honestly. rng_state re-derived: the nest now correctly fields BOTH shield_spiders (same-id roster dedup fix), a genuinely harder solo warrior-L1 fight than the old 1-spider collapse, so this state is one of the real winning draws for that fight (fixture rng overrides --seed). Issue #69: `chatted_with_klbkch: 1` added so cisterns_fight's own canonical proves the real ally gate live (shield_spiders now fields Klbkch, not Relc) -- plausible on this exact story position (the gate plaza is on the way from the street's arrival cell to the Guild frontage). rng_state re-verified still resolves a win with Klbkch fielded (extra roster entry shifts initiative-order rng draws). GH#337 re-derived again, seed 9 -> 11 (power_strike's new cadence flipped the draw).",
+ "_comment": "Quest 1 FIGHT path start. #451 RE-FIXTURE (2026-08-12), amending the #441 row below: the once-per-round [Counter Strike] cap took the riposte throughput #441's win rested on (PC 0/54 and Klbkch 0/38 dead in round 4, the matriarch standing at 25/48), so the KIT moved and the encounter did not (CHOICE-LOG 2026-08-11: QA proves completability, sims prove balance; never tune an encounter to green an autoplay pin). The LEVEL could not move: warrior 6 is already the TOP of the Act II band (4-6) in docs/design/balance-bands-and-policy.md, so this is a gear-only raise, the near_necromancer/near_druid_consolidation shape #441 used where a level was not available. Relc's spear became Krshia's hunting knife -- same damage_mod, but the sword family fields [Power Strike] (mult 2.0) where the spear fields [Piercing Strikes] (mult 1.4) -- the jerkin became a Watch-issue gambeson (damage_reduction beats flat HP against a three-body nest), and the two charms became the stonescale talisman (its [Tough Body] fold is worth +10 max HP on its own) beside a copper luck-band, which is resonance 2+0 = exactly the base capacity. Measured floor: 0.48 -> 0.64 over 100 seeded sims of this exact roster and build (same harness shape as tests/sim_spine_viability.gd::_measure); that is the ceiling an Act II band-top build reaches against the post-#439 nest under the floor policy, and it is stated rather than dressed up. `well_fed: true` is added with it (+2 max HP, wi_game.gd:2379) -- a meal at Erin's before walking to the Guild, the cheapest honest thing this position can hold. THE BUILD RAISE ALONE WAS NOT ENOUGH and that is recorded, not hidden: at the old pinned state the nest still won with the matriarch at 4/48 (it had been 25/48 before the raise), so the rng_state was re-derived by the procedure this fixture's own history names -- seed 11 -> seed 1 (.state -1966449618399012673), verified by RUNNING the canonical, which now wins in 5 rounds with the PC at 15/51. The seed moved because a MECHANIC moved (the cap), the same reason GH#337 moved it last time; the encounter did not. FLAGGED FOR THE CONTROLLER: a 0.64 floor at Act II band TOP is the thinnest headroom in this wave, and whether Act II's band or the nest's composition is the thing that should move is a design question this lane deliberately did not answer. #441 RE-FIXTURE (2026-08-12): the build is warrior L6 carrying the full Act II kit. #439 retuned the cistern nest into the [0.55,0.85] competent-at-band window, and this script drives the FLOOR policy (`combat_autoplay`), which loses at band BY DESIGN -- so the canonical's build moves, never the encounter. 6 is the TOP of the Act II band (4-6) in docs/design/balance-bands-and-policy.md, so this is at-band-with-kit and not an over-levelling dodge: measured floor WIN 0.91 / 4 rd over 100 seeded sims of this exact roster and build (same harness shape as tests/sim_spine_viability.gd), against 0.01 for the old warrior-L1 shape against the retuned nest. Standing next to Olesm at the Guild frontage -- cell (29,4) facing UP so the first interact opens olesm_intro (Olesm at 29,3). heard_about_cisterns is NOT banked and the quest is NOT started -- the script proves the full give -> grate -> descend -> clear the nest -> report -> completion loop honestly. rng_state re-derived: the nest now correctly fields BOTH shield_spiders (same-id roster dedup fix), a genuinely harder solo warrior-L1 fight than the old 1-spider collapse, so this state is one of the real winning draws for that fight (fixture rng overrides --seed). Issue #69: `chatted_with_klbkch: 1` added so cisterns_fight's own canonical proves the real ally gate live (shield_spiders now fields Klbkch, not Relc) -- plausible on this exact story position (the gate plaza is on the way from the street's arrival cell to the Guild frontage). rng_state re-verified still resolves a win with Klbkch fielded (extra roster entry shifts initiative-order rng draws). GH#337 re-derived again, seed 9 -> 11 (power_strike's new cadence flipped the draw).",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -25,18 +25,20 @@
   "inventory": [
    "rusty_sword",
    "relcs_spare_spear",
-   "leather_jerkin",
-   "hedge_ward_charm",
-   "hunters_fang_talisman"
+   "gnollish_hunting_knife",
+   "watch_issue_gambeson",
+   "stonescale_talisman",
+   "copper_luck_band"
   ],
   "equipped": {
-   "weapon": "relcs_spare_spear",
-   "armor": "leather_jerkin",
-   "accessory_1": "hedge_ward_charm",
-   "accessory_2": "hunters_fang_talisman"
+   "weapon": "gnollish_hunting_knife",
+   "armor": "watch_issue_gambeson",
+   "accessory_1": "stonescale_talisman",
+   "accessory_2": "copper_luck_band"
   },
   "container_state": {},
+  "well_fed": true,
   "actions_since_sleep": 0,
-  "rng_state": "6334680398940262529"
+  "rng_state": "-1966449618399012673"
  }
 }

@@ -1,5 +1,5 @@
 {
- "_comment": "flood_ledger_fight's start: INSIDE riverfarm_mill at the door's arrival cell (6,7), facing up. BAND FIXTURE (COMBAT_BAND_FIXTURES = 10): warrior 10 and NO mage, because _check_combat_band sums every held class level and demands exactly 10 -- warrior10+mage5 would be 15. warrior L10 requires melee_hit >= 57 (classes.json), so the baseline's 18 is raised to 57; mill_granary_scavengers is measured at t3_warrior10 in sim_combat_batch's granary_scavengers_t3_warrior10_solo cell. learned_magic_from_pisces/spell_cast stay banked as honest history -- no class reads them here. SEED: derived at 2, not 9. Both new cells measure ~0.81 win rate in sim_combat_batch, so roughly one starting state in five is a real defeat -- seed 9's state loses this fight in 2 rounds, seed 2's wins it. Found by the derive-then-verify loop (_derive_rng_state.gd prints the .state per seed; patch the fixture, re-run the canonical, repeat), the sanctioned procedure -- the roster and the gate window are untouched. Built from riverfarm_fight_start (the region's shipped baseline: post-mounting, door_awakened + riverfarm_attuned, so riverfarm_village/riverfarm_mill/witch_hollow/witch_hut all satisfy test_fixture_coherence MAP_REQUIRES). Adds blight_lifted + heard_price_of_a_favor + price_of_a_favor_reported: both v0.16 side quests hang their start option off price_of_a_favor_reported, so a save that has not closed 'The Price of a Favor' cannot see them. TRAP: rng_state is DERIVED (tests/_derive_rng_state.gd), never hand-typed; WISave restores .state directly and RNG_STATE_MIN_MAGNITUDE rejects small ints.",
+ "_comment": "flood_ledger_fight's start: INSIDE riverfarm_mill at the door's arrival cell (6,7), facing up. #451 RE-FIXTURE (2026-08-12): the once-per-round [Counter Strike] cap took the riposte throughput this canonical's FLOOR-policy win was resting on, so the BUILD moved and the encounter did not (CHOICE-LOG 2026-08-11: QA proves completability, sims prove balance -- never tune an encounter to green an autoplay pin; #441 pattern). warrior 10 with a rusty sword and NO armour became warrior 12 with the Act IV kit a Riverfarm-era save can honestly hold: Krshia's hunting knife, a Watch-issue gambeson, and the stonescale talisman + copper luck-band (resonance 2+0 = the base capacity, nothing smuggled past it). 12 is the FLOOR of the Act IV band (12-14) in docs/design/balance-bands-and-policy.md, so this is at-band, not an over-levelling dodge. Measured floor: 0.28 -> 0.83 over 60 seeded sims of this exact roster and build (same harness shape as tests/sim_spine_viability.gd::_measure). warrior L12 requires melee_hit >= 80 (classes.json), so the counter ledger moved with the levels. BAND FIXTURE (COMBAT_BAND_FIXTURES = 12, raised from 10 with the build): _check_combat_band sums every held class level and demands exactly that, so warrior stays the ONLY class here -- warrior12+mage5 would be 17. The sim_combat_batch cell granary_scavengers_t3_warrior10_solo is UNTOUCHED and stays the balance instrument for this roster; the canonical is now a completability proof at band, which is the decoupling the doctrine asks for. learned_magic_from_pisces/spell_cast stay banked as honest history -- no class reads them here. SEED: derived at 2, not 9. Both new cells measure ~0.81 win rate in sim_combat_batch, so roughly one starting state in five is a real defeat -- seed 9's state loses this fight in 2 rounds, seed 2's wins it. Found by the derive-then-verify loop (_derive_rng_state.gd prints the .state per seed; patch the fixture, re-run the canonical, repeat), the sanctioned procedure -- the roster and the gate window are untouched. Built from riverfarm_fight_start (the region's shipped baseline: post-mounting, door_awakened + riverfarm_attuned, so riverfarm_village/riverfarm_mill/witch_hollow/witch_hut all satisfy test_fixture_coherence MAP_REQUIRES). Adds blight_lifted + heard_price_of_a_favor + price_of_a_favor_reported: both v0.16 side quests hang their start option off price_of_a_favor_reported, so a save that has not closed 'The Price of a Favor' cannot see them. TRAP: rng_state is DERIVED (tests/_derive_rng_state.gd), never hand-typed; WISave restores .state directly and RNG_STATE_MIN_MAGNITUDE rejects small ints.",
  "version": 5,
  "state": {
   "current_map": "riverfarm_mill",
@@ -12,7 +12,7 @@
    -1
   ],
   "classes": {
-   "warrior": 10
+   "warrior": 12
   },
   "accomplishments": {
    "blight_lifted": 1,
@@ -30,7 +30,7 @@
    "horns_dig_joined": 1,
    "horns_dig_started": 1,
    "learned_magic_from_pisces": 1,
-   "melee_hit": 57,
+   "melee_hit": 80,
    "met_relc": 1,
    "pedestal_breached": 1,
    "price_of_a_favor_reported": 1,
@@ -52,11 +52,17 @@
   "pending_consolidation": {},
   "used_skills": [],
   "inventory": [
-   "rusty_sword"
+   "rusty_sword",
+   "gnollish_hunting_knife",
+   "watch_issue_gambeson",
+   "stonescale_talisman",
+   "copper_luck_band"
   ],
   "equipped": {
-   "weapon": "rusty_sword",
-   "armor": ""
+   "weapon": "gnollish_hunting_knife",
+   "armor": "watch_issue_gambeson",
+   "accessory_1": "stonescale_talisman",
+   "accessory_2": "copper_luck_band"
   },
   "container_state": {},
   "actions_since_sleep": 0,

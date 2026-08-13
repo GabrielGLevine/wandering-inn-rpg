@@ -167,6 +167,25 @@ func _init() -> void:
 	else:
 		assert(_count("reaction_triggered") == 0, "no riposte on a miss")
 
+	var c6b := _make(3, _sink)
+	_events.clear()
+	c6b.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
+	c6b.combatants["pc"][WIKeys.SKILLS] = ["counter_strike"]
+	c6b.combatants["pc"][WIKeys.HP] = 999
+	c6b.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
+	c6b.combatants["goblin_raider"][WIKeys.HP] = 999
+	c6b.combatants["goblin_raider"]["hit_bonus"] = 1000
+	c6b.active_index = c6b.turn_order.find("goblin_raider")
+	c6b._start_turn()
+	assert(c6b.attack("pc") and c6b.attack("pc"), "control: two guaranteed melee hits land in one round")
+	assert(_count("reaction_triggered") == 1, "counter strike fires at most once per round across multiple qualifying hits")
+	while c6b.round_number == 1:
+		c6b.end_turn()
+	c6b.active_index = c6b.turn_order.find("goblin_raider")
+	c6b._start_turn()
+	assert(c6b.attack("pc"), "control: another guaranteed melee hit lands next round")
+	assert(_count("reaction_triggered") == 2, "counter strike refreshes on the next round")
+
 	var c7 := _make(5, _sink)
 	_events.clear()
 	c7.combatants["pc"][WIKeys.SKILLS] = ["battle_momentum"]

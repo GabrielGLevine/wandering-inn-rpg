@@ -13,10 +13,10 @@ extends SceneTree
 ## script was written. This is that computation.
 ##
 ## WHAT IT IS NOT. It is not a band gate. `sim_combat_batch.gd` owns the
-## authored win-rate windows and it asserts them; this file asserts only the
-## CALIBRATION rows -- the handful of outcomes measured in the shipped run,
-## which are ground truth. If a calibration row disagrees, the policy or this
-## harness is wrong. Never move the expectation to meet the measurement.
+## broader authored win-rate matrix and asserts it; this file gates only its
+## five reference climaxes plus the CALIBRATION rows measured in the shipped
+## run. If a calibration row disagrees, the policy or this harness is wrong.
+## Never move the expectation to meet the measurement.
 ##
 ##   Run:    godot --headless --path wandering_inn_game --script res://tests/sim_spine_viability.gd
 ##   Write:  WI_SPINE_WRITE=1 ...   (regenerates docs/design/spine-viability-table.md)
@@ -95,22 +95,32 @@ const BUILDS := [
 	{"name": "band_act5_top", "classes": {"spellsword": 16}, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"], "label": "spellsword 16 (band 14-16 top)"},
 ]
 
+const SPINE_CLIMAX_IDS := [
+	"act1_gate_ambush", "act2_cistern_nest", "act3_awakened_boss",
+	"act4_vault_construct", "act5_seal_warden",
+]
+const SPINE_LEVELS := {
+	"I": [2, 0], "II": [3, 2], "III": [5, 4], "IV": [7, 6], "V": [14],
+}
+const SPINE_WEAPONS := {
+	"spellsword": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
+	"innkeeper": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
+	"ranger": ["training_bow", "hunting_bow", "hunting_bow", "hunting_bow", "hunting_bow"],
+	"scout": ["training_bow", "hunting_bow", "hunting_bow", "hunting_bow", "hunting_bow"],
+	"druid": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
+}
+const WINDOW_FLOOR := 0.55
+const WINDOW_CEILING := 0.85
+
 ## THE SPINE, in route order (`docs/design/steel-thread-route-spec.md`).
 ## `arena`/`enemies`/`allies`/`scales` are the map entity's own fields; the
 ## script above enumerates them so a data edit shows up here as a changed row
 ## rather than as a silent lie.
 ##
-## `draughts` is THE PACK AT THAT FIGHT, traced through `steel_thread.json`:
-## `mending_draught` is guaranteed loot off the Act III boss (`awakened_boss`
-## loot, chance 1.0), `remedy_draught` off the ruin guardian (chance 1.0) -- and
-## BOTH are fenced at Krshia's counter at steps 1956/1984, before Pallass.
-##
-## So the Act V rows carry NOTHING, and that is itself a finding worth the
-## column: step 1990's own comment says why they were sold -- "combat_autoplay
-## never drinks anything, so the run was carrying 18 gold of dead weight". The
-## floor policy's inability to use a consumable is what turned the run's healing
-## into pocket money, and the hardest fight in the game was then reached with an
-## empty pack. A competent player arrives at the warden holding two draughts.
+## `draughts` preserves the #437 calibration run's pack at each fight; that run
+## sold both heals before Act V. The current #451 seed-37 steel thread keeps and
+## uses its remedy, and is verified independently rather than silently moving a
+## historical calibration input.
 ##
 ## `bypasses` is hand-maintained (issue #437 sanctions this), but the GATE half
 ## of it is derived at runtime from the map JSON -- `encounter_when`,
@@ -145,7 +155,7 @@ const ROSTER := [
 	{
 		"id": "act3_awakened_boss", "act": "III", "beat": 15, "map": "sewers/deep_tunnels", "entity": "awakened_boss",
 		"ship": "ship_act3", "band": "band_act3", "draughts": [],
-		"bypasses": "None (act climax). `relc_descent` is a veto beat, not an out: [Go together] banks `relc_joined_descent`, which is the boss's `ally_requires` — refusing fights it SOLO. #439 WARNING, measured not inferred: the retuned pack (Awakened + 3 scouts) reads WIN 0.69 at band WITH Relc and **LOSS 0.06 at the same band without him**. The veto is now effectively a refusal to win the act, not a harder cut of it; pre-retune the same solo read was 0.37. Raised for the #440/veto lane — this lane did not touch the fork.",
+		"bypasses": "None (act climax). `relc_descent` is a veto beat, not an out: [Go together] banks `relc_joined_descent`, which is the boss's `ally_requires` — refusing fights it solo. The live joined roster is Awakened + 2 scouts + a Sewer Bat; this table measures that joined route and does not infer the veto route.",
 	},
 	{
 		"id": "act4_vault_construct", "act": "IV", "beat": 20, "map": "dungeon/trapped_halls", "entity": "vault_boss_slot",
@@ -226,6 +236,7 @@ const PREDICTIONS := [
 
 var _runs := 100
 var _rows: Array = []
+var _spine_rows: Array = []
 var _ablations: Dictionary = {}
 var _act5_max_hp := 0
 var _act5_dpr := 0.0
@@ -297,6 +308,73 @@ func _make_pc(batch: GDScript, build: Dictionary, by_id: Dictionary, classes: Di
 	return pc
 
 
+func _derived_spines(classes: Dictionary) -> Array:
+	var out: Array = []
+	for consolidation: Dictionary in classes.get("consolidations", []):
+		var target := String(consolidation.get("target", ""))
+		var parent_lines: Array = consolidation.get("parent_lines", [])
+		assert(target != "" and parent_lines.size() == 2,
+			"spine measurement requires a target and exactly two parent lines")
+		assert(SPINE_WEAPONS.has(target), "spine %s needs an explicit act-appropriate loadout" % target)
+		out.append({
+			"target": target,
+			"parents": [String((parent_lines[0] as Array)[0]), String((parent_lines[1] as Array)[0])],
+		})
+	return out
+
+
+func _spine_build(spine: Dictionary, act: String) -> Dictionary:
+	var act_i := ["I", "II", "III", "IV", "V"].find(act)
+	assert(act_i >= 0, "unknown spine act %s" % act)
+	var levels: Array = SPINE_LEVELS[act]
+	var held := {}
+	if act == "V":
+		held[String(spine["target"])] = int(levels[0])
+	else:
+		held[String((spine["parents"] as Array)[0])] = int(levels[0])
+		if int(levels[1]) > 0:
+			held[String((spine["parents"] as Array)[1])] = int(levels[1])
+	var parts: Array[String] = []
+	for class_id: String in held:
+		parts.append("%s%d" % [class_id, held[class_id]])
+	return {
+		"name": "spine_%s_%s" % [spine["target"], act.to_lower()],
+		"classes": held,
+		WIKeys.WEAPON: (SPINE_WEAPONS[spine["target"]] as Array)[act_i],
+		"armor": "" if act == "I" else "leather_jerkin",
+		"accessories": [] if act_i < 3 else ["hedge_ward_charm", "hunters_fang_talisman"],
+		"label": "/".join(parts),
+	}
+
+
+func _spine_cfgs(record: Dictionary, pc: Dictionary, by_id: Dictionary) -> Array:
+	var row: Dictionary = record["row"]
+	var entity: Dictionary = record["entity"]
+	var cfgs: Array = [pc]
+	var allies: Array = (entity.get("allies", []) as Array).duplicate()
+	var companion := "wolf_companion" if (pc[WIKeys.SKILLS] as Array).has("lesser_bond") else ""
+	if companion != "" and not allies.has(companion) \
+			and allies.size() + 2 <= ((record["arena"] as Dictionary)["player_spawns"] as Array).size():
+		allies.append(companion)
+	if companion != "" and (pc[WIKeys.SKILLS] as Array).has("sworn_fang_ride_together"):
+		(pc[WIKeys.SKILLS] as Array).append("sworn_fang_boon")
+	for ally_v: Variant in allies:
+		var ally_id := String(ally_v)
+		var ally: Dictionary = (by_id[ally_id] as Dictionary).duplicate(true)
+		var hp_mods: Dictionary = row.get("ally_hp_mods", {})
+		if hp_mods.has(ally_id):
+			ally[WIKeys.HP_MOD] = int(ally.get(WIKeys.HP_MOD, 0)) + int(hp_mods[ally_id])
+		if ally_id == companion:
+			var boons: Array = []
+			if (pc[WIKeys.SKILLS] as Array).has("animals_basic_command"):
+				boons.append("basic_command_boon")
+			if (pc[WIKeys.SKILLS] as Array).has("pack_bond"):
+				boons.append("pack_bond_boon")
+			(ally[WIKeys.SKILLS] as Array).append_array(boons)
+		cfgs.append(ally)
+	return cfgs
+
+
 ## One (row x build x policy) cell: N seeded fights, aggregated.
 ##
 ## `hp_margin` is one scalar for both outcomes: on a win it is the PC's HP left,
@@ -361,6 +439,56 @@ func _cell_text(m: Dictionary) -> String:
 	return "%s %.2f / %d rd / %+d" % [m["result"], m["win_rate"], m["rounds"], m["margin"]]
 
 
+func _verify_counter_strike_contract(skills: Dictionary) -> bool:
+	var counter_strike: Dictionary = {}
+	for skill: Dictionary in skills.get(WIKeys.SKILLS, []):
+		if String(skill.get(WIKeys.ID, "")) == "counter_strike":
+			counter_strike = skill
+			break
+	if not bool(counter_strike.get("once_per_round", false)):
+		printerr("FAIL spine harness refuses to measure: counter_strike data is not once-per-round")
+		return false
+
+	var events: Array[String] = []
+	var combat := WICombat.new({
+		WIKeys.ID: "counter_strike_contract",
+		"grid": {"width": 4, "height": 3},
+		"blocked": [],
+		"player_spawns": [[1, 1]],
+		"enemy_spawns": [[2, 1]],
+	}, [{
+		WIKeys.ID: "pc", WIKeys.DISPLAY_NAME: "Probe defender", WIKeys.SIDE: "player",
+		WIKeys.STATS: {"str": 10, "dex": 10, "con": 999, "int": 10},
+		WIKeys.WEAPON_DIE: 6, WIKeys.SKILLS: ["counter_strike"],
+	}, {
+		WIKeys.ID: "probe_attacker", WIKeys.DISPLAY_NAME: "Probe attacker", WIKeys.SIDE: "enemy",
+		WIKeys.STATS: {"str": 10, "dex": 10, "con": 999, "int": 10},
+		WIKeys.WEAPON_DIE: 6, WIKeys.SKILLS: [],
+	}], skills, func(type: String, _payload: Dictionary) -> void: events.append(type), 1)
+	combat.begin()
+	combat.combatants["probe_attacker"]["hit_bonus"] = 1000
+	combat.active_index = combat.turn_order.find("probe_attacker")
+	combat._start_turn()
+	if not (combat.attack("pc") and combat.attack("pc")):
+		printerr("FAIL spine harness counter-strike probe could not land two same-round hits")
+		return false
+	if events.count(WIEvents.REACTION_TRIGGERED) != 1:
+		printerr("FAIL spine harness refuses to measure: loaded combat engine is not once-per-round capped")
+		return false
+	while combat.round_number == 1:
+		combat.end_turn()
+	combat.active_index = combat.turn_order.find("probe_attacker")
+	combat._start_turn()
+	if not combat.attack("pc"):
+		printerr("FAIL spine harness counter-strike probe could not land a next-round hit")
+		return false
+	if events.count(WIEvents.REACTION_TRIGGERED) != 2:
+		printerr("FAIL spine harness refuses to measure: loaded combat engine does not refresh Counter Strike next round")
+		return false
+	print("[spine] engine contract: Counter Strike fired once in round 1 and refreshed in round 2")
+	return true
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var runs_env := OS.get_environment("WI_SPINE_RUNS")
@@ -371,6 +499,9 @@ func _init() -> void:
 	for a: Dictionary in _load("res://data/arenas.json")["arenas"]:
 		arena_by_id[String(a[WIKeys.ID])] = a
 	var skills := _load("res://data/skills.json")
+	if not _verify_counter_strike_contract(skills):
+		quit(1)
+		return
 	var classes := _load("res://data/classes.json")
 	var by_id := {}
 	for c: Dictionary in _load("res://data/combatants.json")["combatants"]:
@@ -426,7 +557,7 @@ func _init() -> void:
 			measured["%s_rank" % column] = rank
 			measured["%s_label" % column] = String(build["label"])
 		var record := {
-			"row": row, "entity": entity, "gate": _gate_note(entity), "m": measured,
+			"row": row, "entity": entity, "arena": arena, "gate": _gate_note(entity), "m": measured,
 		}
 		_rows.append(record)
 		print("[spine] %-28s ship(floor %s | competent %s)  band(floor %s | competent %s)" % [
@@ -434,6 +565,29 @@ func _init() -> void:
 			_cell_text(measured["ship_dumb"]), _cell_text(measured["ship_competent"]),
 			_cell_text(measured["band_dumb"]), _cell_text(measured["band_competent"]),
 		])
+
+	var spines := _derived_spines(classes)
+	print("[spine] derived %d consolidation spines from classes.json" % spines.size())
+	for spine: Dictionary in spines:
+		for row_id: String in SPINE_CLIMAX_IDS:
+			var record := _find_record(row_id)
+			var row: Dictionary = record["row"]
+			var entity: Dictionary = record["entity"]
+			var build := _spine_build(spine, String(row["act"]))
+			var pc := _make_pc(batch, build, by_id, classes, skills_by_id, items_by_id)
+			var cfgs := _spine_cfgs(record, pc, by_id)
+			var rank := WIProgression.power_rank(build["classes"], classes) if bool(entity.get("scales", false)) else "bronze"
+			for enemy_v: Variant in (entity.get("enemies", []) as Array):
+				cfgs.append(WIBountyScaling.scale_enemy((by_id[String(enemy_v)] as Dictionary).duplicate(true), rank))
+			var m := _measure({
+				"row": row_id, "build": build["name"], "policy": WICombatPolicies.COMPETENT,
+				"arena": record["arena"], "cfgs": cfgs, "skills": skills,
+				"items_by_id": items_by_id, "draughts": row["draughts"],
+			})
+			_spine_rows.append({"spine": spine["target"], "row": row, "build": build, "m": m})
+			print("[spine-class] %-11s %-28s %s %s" % [
+				spine["target"], row_id, build["label"], _cell_text(m),
+			])
 
 	# ATTRIBUTION PROBE. The findings section claims which parts of the kit the
 	# competence gap is actually made of; those claims are measured here rather
@@ -454,6 +608,7 @@ func _init() -> void:
 		print("[spine] ablation warden/competent without %s: %s" % [ablated, _cell_text(_ablations[ablated])])
 
 	_check_calibration()
+	_check_reference_windows()
 	var doc := _render()
 	print("")
 	print(doc)
@@ -470,7 +625,9 @@ func _init() -> void:
 		assert(false, "calibration rows disagree with the shipped run's ground truth — see FAIL lines above")
 		quit(1)
 		return
-	print("PASS: spine viability table generated; all %d calibration rows agree with the measured run" % CALIBRATION.size())
+	print("PASS: spine viability table generated; all %d calibration rows agree and all %d reference climaxes are inside [%.2f, %.2f]" % [
+		CALIBRATION.size(), SPINE_CLIMAX_IDS.size(), WINDOW_FLOOR, WINDOW_CEILING,
+	])
 	quit(0)
 
 
@@ -494,12 +651,25 @@ func _check_calibration() -> void:
 				cal["row"], cal["column"], cal["policy"], int(m["rounds"]), int(cal["rounds_near"])])
 
 
+func _check_reference_windows() -> void:
+	for row_id: String in SPINE_CLIMAX_IDS:
+		var record := _find_record(row_id)
+		if record.is_empty():
+			_failures.append("[window] reference climax %s has no measured row" % row_id)
+			continue
+		var m: Dictionary = (record["m"] as Dictionary)["band_competent"]
+		var rate := float(m["win_rate"])
+		if rate < WINDOW_FLOOR or rate > WINDOW_CEILING:
+			_failures.append("[window] %s / band / competent: %.2f outside [%.2f, %.2f]" % [
+				row_id, rate, WINDOW_FLOOR, WINDOW_CEILING])
+
+
 func _render() -> String:
 	var out: Array = []
 	out.append("<!-- GENERATED by tests/sim_spine_viability.gd (WI_SPINE_WRITE=1). Do not hand-edit the tables; edit the ROSTER/BUILDS there. -->")
 	out.append("# Spine fight viability — floor vs competent policy")
 	out.append("")
-	out.append("Generated by `tests/sim_spine_viability.gd` over **%d seeded sims per cell**, driving the real combat engine through `qa/combat_policies.gd`. Issue #437." % _runs)
+	out.append("Generated by `tests/sim_spine_viability.gd` over **%d seeded sims per cell**, driving the real combat engine through `qa/combat_policies.gd`. Issues #437 and #451." % _runs)
 	out.append("")
 	out.append("**Two policies, two columns.**")
 	out.append("")
@@ -510,7 +680,9 @@ func _render() -> String:
 	out.append("")
 	out.append("Doctrine (CHOICE-LOG 2026-08-11): **QA proves completability; these sims prove balance.** Never tune an encounter to green a dumb-autoplay victory pin.")
 	out.append("")
-	out.append("## The shipped steel thread's own kit")
+	out.append("## Historical #437 steel-thread calibration kit")
+	out.append("")
+	out.append("The `ship` column preserves the #437 calibration run, including its empty Act V pack. The current #451 seed-37 steel thread keeps and uses a remedy and is verified separately; historical calibration inputs do not move silently.")
 	out.append("")
 	out.append("The continuous run as it actually played (`docs/design/steel-thread-route-spec.md`). Spear from Act I on, no armour, no accessory worn before the alcove.")
 	out.append("")
@@ -521,6 +693,12 @@ func _render() -> String:
 	out.append("The same fights against `docs/design/balance-bands-and-policy.md`'s target bands, with best-available equipment for the act. This is the **reference** column the amendment asks for: a fight the competent policy loses AT BAND is a wall, whatever the floor column says.")
 	out.append("")
 	out.append(_table("band"))
+	out.append("")
+	out.append("## Per-spine band-competent climaxes")
+	out.append("")
+	out.append("The spine list is derived from every target in `data/classes.json`'s `consolidations`; no class id is duplicated here by hand. Acts I–IV use the target's two base parent lines at the same 2, 3/2, 5/4, and 7/6 band allocations as the original Spellsword seed; Act V uses the consolidated class at level 14. Druid fields its bonded wolf when the live arena-capacity rule permits it. Below-window class rows are WALLS for controller adjudication, not retune orders; above-window rows are ceiling WINDOW DRIFT.")
+	out.append("")
+	out.append(_spine_table())
 	out.append("")
 	out.append(_warden_callout())
 	out.append("")
@@ -556,7 +734,7 @@ func _render() -> String:
 	out.append("## Reading the table")
 	out.append("")
 	out.append("- **floor LOSS / competent WIN** — a competence wall, not a difficulty wall. The fight is fair; the script cannot play it. `act5_gallery_vermin_nest` is the archetype.")
-	out.append("- **floor LOSS / competent LOSS** — a real wall. Either the build is under band or the encounter is over it. Per CHOICE-LOG 2026-08-11 that is the INTENDED shape of an act climax: an unwinnable spine encounter is the signal to go level. **No row in either table is currently that shape** — and after #439 that reads as a result rather than as the complaint it was. The three retuned Acts I–III rows now sit at floor LOSS / competent WIN against the SHIPPED under-band kit: the act gates a player who does not spend their kit, and opens for one who does. Where the pre-#439 tables showed floor WIN at six to eight levels under band, they now show floor LOSS.")
+	out.append("- **floor LOSS / competent LOSS** — a real wall. Either the build is under band or the encounter is over it. In the class-derived table, a below-window competent row is reported as a WALL for adjudication; it is not permission to flatten the shared encounter for every stronger spine.")
 	out.append("- **floor WIN at a build far under band** — the ratchet. The fight is beatable by the weakest policy at the lowest kit, so it is not gating anything.")
 	out.append("- **bypasses** — 'unwinnable but bypassable' reads differently from 'wall'. The gate half of the column is derived from the map entity at generation time; the authored-resolution half is maintained in `ROSTER`.")
 	return "\n".join(out)
@@ -579,8 +757,41 @@ func _table(column: String) -> String:
 	return "\n".join(out)
 
 
+func _spine_table() -> String:
+	var out: Array = [
+		"| Act | Climax | Spine | Band build | competent | Disposition |",
+		"|---|---|---|---|---|---|",
+	]
+	for record: Dictionary in _spine_rows:
+		var row: Dictionary = record["row"]
+		var m: Dictionary = record["m"]
+		out.append("| %s | `%s` | `%s` | %s | %s | %s |" % [
+			row["act"], row["id"], record["spine"], (record["build"] as Dictionary)["label"],
+			_cell_text(m), _spine_disposition(m),
+		])
+	return "\n".join(out)
+
+
+func _spine_disposition(m: Dictionary) -> String:
+	var position := _window_position(m, WINDOW_FLOOR, WINDOW_CEILING)
+	if position == "below":
+		return "WALL — report only"
+	if position == "above":
+		return "WINDOW DRIFT — ceiling; adjudicate"
+	return "IN WINDOW"
+
+
 ## What the run of the table actually taught, with the numbers inline so a
 ## re-generation cannot leave a stale claim standing.
+func _window_position(m: Dictionary, floor_rate: float, ceiling_rate: float) -> String:
+	var rate := float(m["win_rate"])
+	if rate < floor_rate:
+		return "below"
+	if rate > ceiling_rate:
+		return "above"
+	return "inside"
+
+
 func _findings() -> String:
 	var warden: Dictionary = _find_record("act5_seal_warden")["m"]
 	var amulet: Dictionary = _find_record("act5_seal_warden_amulet")["m"]
@@ -593,17 +804,18 @@ func _findings() -> String:
 		"1. **The competence gap is [Piercing Strikes], not casting.** The shipped run fought the entire game with Relc's spear, which gates [Power Strike] out of the kit and [Piercing Strikes] in — a 1.4x damage_mult at the SAME 2 AP as a basic swing, i.e. ~+37%% damage for free. `WICombatAI` has no arm for it: `_act_melee` knows `power_strike` by literal id and nothing else. Ablation on the warden at the shipped kit: the competent policy measures %s with it and %s without — a bigger swing than every other resource in the kit combined. Autoplay is not merely 'a melee profile'; it is a melee profile that cannot use a spear's own skill." % [
 			_cell_text(warden["ship_competent"]), _cell_text(_ablations["piercing_strikes"])],
 		"",
-		"2. **[Second Wind] is a net LOSS against a single big target, and the policy spends it anyway.** 2 AP buys 8 HP or roughly 20 damage forgone; against the warden the heal arrives slower than the swing it replaces. Ablation: competent measures %s with it and %s without. Kept in on purpose — a player under 35%% HP drinks, and this is the clearest illustration of what 'competent, not optimal' costs. It also flags a data seam: [Second Wind] carries neither `cooldown_rounds` nor `once_per_fight`, so it is an unbounded heal for anyone willing to spend the AP." % [
+		"2. **[Second Wind] trades an attack for healing, and the policy spends it automatically.** 2 AP buys 8 HP or roughly 20 damage forgone. Ablation against the warden measures %s with it and %s without; those adjacent measurements are the result, without inferring a win-rate gain or loss when they tie. A player under 35%% HP heals, so this records what 'competent, not optimal' costs. It also flags a data seam: [Second Wind] carries neither `cooldown_rounds` nor `once_per_fight`, so it is an unbounded heal for anyone willing to spend the AP." % [
 			_cell_text(warden["ship_competent"]), _cell_text(_ablations["second_wind"])],
 		"",
-		"3. **The run sold its own answer.** `steel_thread.json` step 1990: both healing draughts and the vault tonic were fenced for 18 gold, with the reason written into the script — *'combat_autoplay never drinks anything, so the run was carrying 18 gold of dead weight.'* The hardest fight in the game was then entered with an empty pack. The floor policy did not just under-measure the fight; it changed what the run carried into it.",
+		"3. **The run once sold its own answer.** Before the competent-policy reauthoring, the steel thread fenced both healing draughts and the vault tonic for 18 gold because autoplay never drank them, then entered the hardest fight with an empty pack. The floor policy did not just under-measure the fight; it changed what the run carried into it.",
 		"",
 		"4. **The Act V spine build is weaker than the debrief recorded.** Four classes totalling 23 levels model to **%d max HP / %.1f DPR** against the warden, not the debrief's 56 / ~29. `derived_stat_bonuses` scales raw growth by `power_multiplier` (effective_power / total levels = %.2f here), so warrior 12's +12 con and +12 str arrive as +8 each; the debrief's pair is an UNDILUTED warrior-12 read. Roughly 30%% of the spine build's stat growth is paid for breadth — which is the pressure consolidation exists to relieve, and a direct #439 input: an unconsolidated multiclass PC does not reach its combined level's power. Note the direction: the build modelled here is the WEAKER of the two, so nothing in this table overstates spine viability." % [
 			_act5_max_hp, _act5_dpr, _act5_efficiency],
 		"",
-		"5. **Act III WAS the ratchet; #439 closed it.** Before the retune, scouts measured WIN 0.78 / 3 rd and boss WIN 0.60 / 5 rd under the FLOOR policy at warrior 2 — an act CLIMAX beaten by the weakest possible play six to eight levels below the band the act was supposed to deliver. The retune was COMPOSITION, not stats: the warren-mouth pair's second body is now a [Raskghar Pack-Leader], and the Awakened's pack gained a third scout. The boss's OWN numbers were left alone on evidence — a probe at con 30/40/48 and str 18/22 moved the band read only 1.00 / 0.98 / 0.92, because a lone high-HP target is grind the party chews through, not pressure it has to survive; a fourth body took the same fight to 0.69. Today the shipped w2/m1 kit measures %s and %s, and the same two fights at band read %s and %s under the COMPETENT policy — inside the [0.55, 0.85] tuning window, with the act gating below it." % [
+		"5. **Act III WAS the ratchet; its composition now follows the live engine.** #439 strengthened both climaxes without touching shared stat blocks. After #451 capped [Counter Strike], the fixed harness found the Awakened row below its window, so C1 retained four enemies but replaced the third scout with the cave's existing Sewer Bat; combatant stats remain frozen. Today the shipped w2/m1 kit measures %s and %s. At band the competent policy measures %s for scouts (%s the [0.55, 0.85] window) and %s for the boss (%s the window)." % [
 			_cell_text(scouts["ship_dumb"]), _cell_text(boss["ship_dumb"]),
-			_cell_text(scouts["band_competent"]), _cell_text(boss["band_competent"])],
+			_cell_text(scouts["band_competent"]), _window_position(scouts["band_competent"], 0.55, 0.85),
+			_cell_text(boss["band_competent"]), _window_position(boss["band_competent"], 0.55, 0.85)],
 		"",
 		"6. **The gallery nest is a pure competence wall.** Floor %s, competent %s at the same build and the same (empty) pack. Nothing about the encounter is unfair; the script simply cannot play it. It is also `scales: true`, and the Act V build's effective power puts it in the GOLD band (+50%% enemy HP, +2 damage) — the trash got a rank promotion the run never noticed." % [
 			_cell_text(vermin["ship_dumb"]), _cell_text(vermin["ship_competent"])],

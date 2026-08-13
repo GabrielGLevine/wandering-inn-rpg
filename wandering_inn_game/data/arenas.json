@@ -1633,7 +1633,7 @@
    ]
   },
   {
-   "_comment": "Vault requires at least 4 player spawns. WICombat indexes spawn arrays without a bounds guard; the PC plus three Horns consumes indices 0-3 and fewer entries crashes. GH#349: a 5th seat is deliberately NOT cut -- see docs/CHOICE-LOG.md.",
+   "_comment": "Vault requires at least 4 player spawns. WICombat indexes spawn arrays without a bounds guard; the PC plus three Horns consumes indices 0-3 and fewer entries crashes. GH#349: a 5th seat is deliberately NOT cut -- see docs/CHOICE-LOG.md. #451: [6,4] is a blocked cover cell (renders as the fallback wall tile -- the dungeon biome has no cover prop pool; VISUAL-LOG row tracks the art); routing the construct around it restores the band-competent fight window after Counter Strike's once-per-round cap without changing combatant stats. The vault arena also hosts the seal-warden fight -- warden rows were A/B-probed with this cell removed: byte-identical, so the solo warden read is genuinely unchanged.",
    "id": "vault",
    "biome": "dungeon",
    "grid": {
@@ -1648,6 +1648,10 @@
     [
      5,
      5
+    ],
+    [
+     6,
+     4
     ],
     [
      7,
