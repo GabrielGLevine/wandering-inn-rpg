@@ -1,26 +1,112 @@
 {
- "_comment": "Fixture-first Scout consolidation at the derived 14 floor. Infiltrator 10 + Sharpshooter 11 clear the shared 10/21 gate and the sleep beat MERGES them automatically (#472 -- no offer, no prompt, no decline); a real fight proves Eagle Eyes reaches pc.skills.",
+ "_comment": "Fixture-first Scout consolidation at the derived 14 floor. Infiltrator 10 + Sharpshooter 11 clear the shared 10/21 gate and the sleep beat MERGES them automatically (#472 -- no offer, no prompt, no decline); a real fight proves Eagle Eyes reaches pc.skills. #472 audit: RE-BASED off the evolved pair (infiltrator+sharpshooter) onto the proven-clean rogue+archer -- [Scout] inherits rogue+archer, so the evolved pair would have merged at the cost of [Shadowstep] and the sharpshooter kit, and no longer fires at all.",
  "fixture_save": "near_scout_consolidation",
  "starts_at_title": true,
  "steps": [
-  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
-  {"action": "move", "direction": "down", "steps": 1},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "consolidation_accepted", "payload_contains": {"target": "scout", "level": 14}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_sleep_veil_finished", "timeout_sec": 5},
-  {"action": "assert_event_absent", "type": "consolidation_offered"},
-  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Infiltrator] and [Sharpshooter] merge into [Scout]!"}, "timeout_sec": 5},
-  {"action": "assert_state", "path": "classes", "equals": {"scout": 14}},
-  {"action": "teleport", "map": "floodplains", "cell": [30, 20]},
-  {"action": "move", "direction": "down", "steps": 1},
-  {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
-  {"action": "assert_state", "path": "combat.combatants.pc.skills", "contains": "eagle_eyes"},
-  {"action": "combat_autoplay", "max_turns": 300},
-  {"action": "wait_for_event", "type": "combat_finished", "payload_contains": {"victory": true}, "timeout_sec": 10}
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "consolidation_accepted",
+   "payload_contains": {
+    "target": "scout",
+    "level": 14
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "consolidation_offered"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Rogue] and [Archer] merge into [Scout]!"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "scout": 14
+   }
+  },
+  {
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    30,
+    20
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.skills",
+   "contains": "eagle_eyes"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 10
+  }
  ]
 }
