@@ -1,0 +1,65 @@
+# The steel thread, as an itinerary (#434 M3/M3.5).
+#
+# Hand-derived from the shipped 2569-step `qa/scripts/steel_thread.json`, which
+# stays the golden this recompiles against (`scripts/itinerary/goldens.py`).
+# INCOMPLETE and deliberately so: it is authored act by act, and it stops at
+# the first beat the frozen vocabulary cannot express rather than hiding that
+# beat inside `raw`.
+#
+# Covers shipped steps 0-61 -- the creation prelude and Act I's opening walk.
+# Verified: this prefix compiles green (replay self-check ok, zero raw steps),
+# runs green headless at seed 37, and passes the tolerance differ against the
+# shipped prefix with ZERO exact-class differences. Its one fatal is net-class:
+# the router enters the inn by the main door where the script takes the west
+# one, and there is no way to name which door a `goto` should use.
+#
+# THE SEAM IS SHIPPED STEP 62, the Relc meeting. What stops the authoring is
+# not this file: the spar is entered from `relc_intro`'s `spar_offer` row,
+# whose effect is `{"start_combat": "relc_spar"}` on an `end: true` option, and
+# `FIGHT_ENTRIES` has no `entry: dialogue`. The full blocker table -- that one
+# plus the 141 effect-derived event waits the dialogue planner drops, and the
+# fight-shape variances -- is in `wandering_inn_game/qa/STEEL-THREAD.md`.
+# `fight: {mode: driven}` and `journal` are BUILT and pinned against the corpus
+# in `tests/test_m35_contract.py`; they are not what blocks this.
+
+- act: i
+  # §8's creation prelude, keyed by scalars. `tap_back` is the pointer-path
+  # round trip (Esc back to PICK, re-commit the same card by tap) that the
+  # keyboard route never exercises; `difficulty` names the rank the prompt is
+  # expected to OPEN on, because #346 made both setup prompts open on the live
+  # setting rather than on a fixed row.
+  creation:
+    race: drake
+    gender: f
+    name: Sella
+    difficulty: Silver Rank
+    hints: true
+    tap_back: true
+    shots:
+      gate: 00_title_gate
+      menu: 00_title_menu
+      picker: 01_creation_00_picker_grid_drake_f_selected
+      name: 01_creation_01_name_step_begin_control
+      difficulty: 01_creation_02_creation_difficulty
+      hints: 02_creation_hints
+      world: 01_creation_char_creation_drake_f_inn
+  nodes:
+    # -- the inn sign, and the door that proves it stayed reachable ----------
+    - id: act1.road.out
+      goto: {map: floodplains}
+    - id: act1.inn_sign
+      interact:
+        prop: inn_sign
+        at: floodplains
+        expect_accomplishment: read_the_inn_sign
+    - id: act1.inn_sign.shot
+      shot: {name: 02_tutorial_00b_inn_sign}
+    - id: act1.inn.reentry
+      goto: {map: inn}
+      why: >-
+        GH#375's can-fail reachability pin as a route: from the freed (6,6) the
+        step north blocks on the west inn door and turns to face it, and the
+        interact has to actually enter. A prop dropped on the approach cell
+        would red here rather than in a playtest.
+    - id: act1.road.back
+      goto: {map: floodplains}

@@ -283,6 +283,18 @@ rule is what keeps the corpus recompilable.
   The gap table lives in `qa/STEEL-THREAD.md`. A design note unfreezing the
   vocabulary for hand-driven combat turns and panel-reading beats is the
   prerequisite for the golden, and belongs ahead of M4.
+- **M3.5 — the amendment, landed 2026-08-13.** Both §3.2 primitives are BUILT
+  and reproduce their corpus rows exactly (spar 75–114, journal 561–566 and
+  2317–2322), §8's `creation:` prelude is BUILT and reproduces steps 0–40, and
+  the pass-2 plan-spine fence is enforced with a mutation red. The golden is
+  NOT done: `steel_thread.yaml` carries steps 0–61 and passes the tolerance
+  differ with zero exact-class rows, then stops at the Relc meeting. What stops
+  it is a beat the amendment did not reach — the spar is entered by a dialogue
+  option's `start_combat` effect and `FIGHT_ENTRIES` has no `entry: dialogue`
+  — plus the 141 effect-derived event waits the dialogue planner drops and six
+  fight-shape variances. Measured table in `qa/STEEL-THREAD.md`. **These are
+  the M4 prerequisite the way the two closed primitives were M3.5's**; the
+  vocabulary stays frozen until a note rules on `entry: dialogue`.
 - **M4 — variants**: overlay layer + the Mage-run variant (the #438
   acceptance milestone). Exit: Mage run green in single-digit full runs,
   pacing report auto-generated from pass-2 harvests.

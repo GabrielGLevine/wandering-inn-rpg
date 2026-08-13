@@ -18,15 +18,34 @@ class OracleBridge:
     def __init__(self, project: str | Path, godot: str = "/usr/local/bin/godot") -> None:
         self.project = Path(project).resolve()
         self.godot = godot
+        # A question asked twice under the SAME save has the same answer: the
+        # oracle boots a fresh sim per batch, reads a serialized WISave and
+        # exits, so there is no carried state for a repeat to observe
+        # differently. Caching on (query, save) is what makes the pass-2 spine
+        # fence affordable -- it plans the itinerary twice, and the two plans
+        # agree at almost every node by construction, which is exactly the
+        # case where every query is a repeat.
+        self._answers: dict[tuple[str, str], dict[str, Any]] = {}
+        self.queries_asked = 0
+        self.queries_served = 0
 
     def query(self, query: str, ledger: Ledger | None = None) -> dict[str, Any]:
         request: dict[str, Any] = {"query": query}
+        save_json = "" if ledger is None else json.dumps(ledger.materialize_save(), sort_keys=True)
+        key = (query, save_json)
+        self.queries_asked += 1
+        cached = self._answers.get(key)
+        if cached is not None:
+            self.queries_served += 1
+            return json.loads(json.dumps(cached))
         with tempfile.TemporaryDirectory(prefix="wi-itinerary-") as td:
             if ledger is not None:
                 save_path = Path(td) / "state.json"
-                save_path.write_text(json.dumps(ledger.materialize_save()), encoding="utf-8")
+                save_path.write_text(save_json, encoding="utf-8")
                 request["save"] = str(save_path)
-            return self.batch([request], temp_dir=Path(td))[0]
+            answer = self.batch([request], temp_dir=Path(td))[0]
+        self._answers[key] = answer
+        return json.loads(json.dumps(answer))
 
     def batch(self, requests: Iterable[dict[str, Any]], temp_dir: Path | None = None) -> list[dict[str, Any]]:
         owned = tempfile.TemporaryDirectory(prefix="wi-itinerary-batch-") if temp_dir is None else None

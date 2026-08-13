@@ -16,6 +16,11 @@ PANELS = {
     "inventory": ({"ui_inventory_shown"}, {"ui_inventory_hidden"}),
     "combat": ({"combat_started"}, {"ui_combat_hidden"}),
     "title": ({"ui_title_gate_rendered"}, {"world_ready"}),
+    # The journal has no cursor to walk, but it is still a panel: a `journal`
+    # node that opened the book and forgot to close it eats the next press
+    # exactly like an open conversation does, and the end-of-script check is
+    # what catches that.
+    "journal": ({"ui_journal_shown"}, {"ui_journal_hidden"}),
 }
 
 

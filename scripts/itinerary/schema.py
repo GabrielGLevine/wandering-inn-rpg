@@ -19,6 +19,7 @@ PRIMITIVES = {
     "sell",
     "use_field",
     "interact",
+    "journal",
     "shot",
     "assert",
     "detour",
@@ -29,6 +30,13 @@ PRIMITIVES = {
 # variants), not language. So M2 unlocks everything and there is no
 # still-future primitive left to reject -- the rejection surface that remains
 # is an UNKNOWN primitive key, plus M1's own narrower set.
+#
+# The 2026-08-13 pre-M4 design note reopened §3.2 for exactly two idioms the
+# M3 golden measured missing in 2569 corpus steps -- `fight.mode: driven` and
+# `journal` -- and re-froze behind them. `journal` is the only new PRIMITIVE
+# key (driven is a mode of the existing `fight`), and it lands in the same
+# unlocked-from-M2 tier as the rest: the milestone gate exists to stage M1's
+# spine, not to stage post-M3 amendments.
 MILESTONE_PRIMITIVES = {1: {"goto", "talk", "sleep"}, 2: set(PRIMITIVES), 3: set(PRIMITIVES)}
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
 
@@ -38,7 +46,7 @@ ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
 SPEC_KEYS: dict[str, set[str]] = {
     "goto": {"map", "cell", "why"},
     "talk": {"npc", "at", "choose_path", "why"},
-    "fight": {"encounter", "at", "entry", "policy", "expect", "max_turns", "shots", "why"},
+    "fight": {"encounter", "at", "entry", "mode", "turns", "policy", "expect", "max_turns", "shots", "why"},
     "sleep": {"expect_levels", "expect_merge", "shot", "why"},
     "equip": {"item", "why"},
     "unequip": {"slot", "why"},
@@ -53,6 +61,11 @@ SPEC_KEYS: dict[str, set[str]] = {
     # of a capture is explicitly banned (GH#324). Accepting `hold` would mean
     # silently ignoring it, so the schema rejects it instead.
     "shot": {"name", "why"},
+    # The shipped press-journal idiom (steel_thread 561-566 / 2317-2322): open,
+    # optionally capture, close. `act` tightens the `ui_journal_shown` pin to
+    # the act page the book opened on -- the corpus reads it both ways, and a
+    # journal beat that means "the book knows we are in Act V" should say so.
+    "journal": {"capture", "act", "why"},
     "assert": {"state", "event", "event_absent", "why"},
     "detour": {"id", "why"},
     "raw": {"steps", "why"},
@@ -65,6 +78,24 @@ COMBAT_POLICIES = {"competent", "dumb"}
 # `interact` = stand adjacent and press; `proximity` = the ambush springs
 # from a step into its trigger radius, so the walk is split around it.
 FIGHT_ENTRIES = {"interact", "proximity"}
+# `autoplay` is the default and stays it (2026-08-13 amendment): a fight whose
+# COURSE is not the content hands the board to WICombatPolicies and pins only
+# the outcome. `driven` is for the fights whose CHOREOGRAPHY is the content --
+# the classless spar exists to fire tutor beats in order, and an autoplayed
+# spar would prove nothing about them.
+FIGHT_MODES = {"autoplay", "driven"}
+# One turn-list entry names exactly one action. `where` is the only modifier,
+# and only `await`/`logged` take it.
+TURN_ACTIONS = {"press", "beat", "await", "logged", "pin", "settle", "shot", "autoplay"}
+TURN_MODIFIERS = {"where"}
+# What a hand-driven combat turn may press. Deliberately NOT the whole input
+# map: `interact` and `journal` on a live board are how a driven turn desyncs
+# from the script, and a walk `move` step is the overworld spelling -- the
+# board takes `move_<dir>` presses.
+COMBAT_PRESSES = (
+    {"move_up", "move_down", "move_left", "move_right", "cycle", "confirm", "cancel", "end_turn"}
+    | {f"hotbar_{index}" for index in range(1, 10)}
+)
 # The compiled-script raw budget (§3.2): raw is where corpus knowledge goes to
 # hide, so it is capped rather than banned.
 RAW_STEP_BUDGET = 0.02
@@ -99,6 +130,19 @@ class Itinerary:
     acts: list[dict[str, Any]]
     nodes: list[Node]
     start: str | None = None
+    # §8: the creation choreography is a fixed emitter prelude keyed by these
+    # scalars. Mutually exclusive with `start` -- an itinerary either CREATES a
+    # PC or loads one, and a document claiming both is asking the run to do two
+    # incompatible things at the title screen.
+    creation: dict[str, Any] | None = None
+
+
+# The `creation:` scalars §8 names, plus the two the corpus actually needs:
+# `name` (typed into the NAME step) and `tap_back` (the pointer-path round trip
+# that the keyboard route never covers). `shots` names the album beats, because
+# a fixed prelude cannot invent an album's naming scheme.
+CREATION_KEYS = {"race", "gender", "name", "difficulty", "hints", "tap_back", "shots"}
+CREATION_SHOT_SLOTS = {"gate", "menu", "picker", "name", "difficulty", "hints", "world"}
 
 
 @dataclass(frozen=True)
@@ -194,7 +238,7 @@ def load_itinerary(path: str | Path, milestone: int = 1) -> Itinerary:
         Node(node.id, node.primitive, node.spec, node.why, node.act, str(source), lines.get(node.id, 0))
         for node in document.nodes
     ]
-    return Itinerary(document.acts, located, document.start)
+    return Itinerary(document.acts, located, document.start, document.creation)
 
 
 ID_LINE_RE = re.compile(r"^\s*-?\s*id:\s*[\"']?([a-z0-9][a-z0-9._-]*)[\"']?\s*(?:#.*)?$")
@@ -228,11 +272,21 @@ def load_itinerary_document(raw: Any, milestone: int = 1) -> Itinerary:
     seen: set[str] = set()
     nodes: list[Node] = []
     start: str | None = None
+    creation: dict[str, Any] | None = None
     for act_index, act in enumerate(raw):
         if not isinstance(act, dict) or not str(act.get("act", "")).strip():
             raise SchemaError(f"act {act_index + 1} needs a non-empty act label")
         if act_index == 0 and act.get("start") is not None:
             start = str(act["start"])
+        if act_index == 0 and act.get("creation") is not None:
+            creation = _creation(act["creation"])
+        if act_index and (act.get("start") is not None or act.get("creation") is not None):
+            raise SchemaError(f"act {act['act']}: start/creation belong to the FIRST act -- a run has one opening")
+        if start is not None and creation is not None:
+            raise SchemaError(
+                "an itinerary either creates a PC (`creation:`) or loads one (`start:`), not both -- "
+                "the title screen cannot take New Game and Continue in the same run"
+            )
         act_nodes = act.get("nodes")
         if not isinstance(act_nodes, list) or not act_nodes:
             raise SchemaError(f"act {act['act']} needs a non-empty nodes list")
@@ -264,7 +318,39 @@ def load_itinerary_document(raw: Any, milestone: int = 1) -> Itinerary:
                 raise SchemaError(f"node {node_id} choose_path requires an inline why")
             _validate_primitive(node_id, primitive, spec)
             nodes.append(Node(node_id, primitive, dict(spec), why, str(act["act"])))
-    return Itinerary(list(raw), nodes, start)
+    return Itinerary(list(raw), nodes, start, creation)
+
+
+def _creation(raw: Any) -> dict[str, Any]:
+    if not isinstance(raw, dict):
+        raise SchemaError("creation: must be a mapping of scalars")
+    unknown = sorted(set(raw) - CREATION_KEYS)
+    if unknown:
+        raise SchemaError(f"creation: has unknown keys {unknown}")
+    for required in ("race", "gender", "name", "difficulty"):
+        if not str(raw.get(required, "")).strip():
+            raise SchemaError(f"creation: needs {required}")
+    if not isinstance(raw.get("hints", True), bool):
+        raise SchemaError("creation: hints must be boolean")
+    if not isinstance(raw.get("tap_back", False), bool):
+        raise SchemaError("creation: tap_back must be boolean")
+    shots = raw.get("shots") or {}
+    if not isinstance(shots, dict):
+        raise SchemaError("creation: shots must be a mapping of slot -> screenshot name")
+    unknown_slots = sorted(set(shots) - CREATION_SHOT_SLOTS)
+    if unknown_slots:
+        raise SchemaError(f"creation: shots has unknown slots {unknown_slots}; slots are {sorted(CREATION_SHOT_SLOTS)}")
+    if any(not str(name).strip() for name in shots.values()):
+        raise SchemaError("creation: every shots entry needs a screenshot name")
+    return {
+        "race": str(raw["race"]),
+        "gender": str(raw["gender"]),
+        "name": str(raw["name"]),
+        "difficulty": str(raw["difficulty"]),
+        "hints": bool(raw.get("hints", True)),
+        "tap_back": bool(raw.get("tap_back", False)),
+        "shots": {str(slot): str(name) for slot, name in shots.items()},
+    }
 
 
 def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> None:
@@ -304,6 +390,7 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
         shots = spec.get("shots", [])
         if not isinstance(shots, list) or any(not str(name).strip() for name in shots):
             raise SchemaError(f"node {node_id} fight shots must be a list of screenshot names")
+        _fight_mode(node_id, spec)
     elif primitive in ("buy", "sell"):
         if not str(spec.get("vendor", "")):
             raise SchemaError(f"node {node_id} {primitive} needs vendor")
@@ -326,6 +413,14 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
     elif primitive == "shot":
         if not str(spec.get("name", "")):
             raise SchemaError(f"node {node_id} shot needs name")
+    elif primitive == "journal":
+        # `capture` is optional by design -- the corpus opens the book once as
+        # an album beat and once as a state reading -- but an EMPTY string is a
+        # typo, not a choice, and would emit a nameless screenshot.
+        if "capture" in spec and not str(spec["capture"]).strip():
+            raise SchemaError(f"node {node_id} journal capture must be a screenshot name")
+        if "act" in spec and not str(spec["act"]).strip():
+            raise SchemaError(f"node {node_id} journal act must be an act id")
     elif primitive == "assert":
         state = spec.get("state", {})
         event = spec.get("event", {})
@@ -346,6 +441,93 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
             raise SchemaError(f"node {node_id} raw needs a non-empty list of step mappings")
         if any(not str(step.get("action", "")) for step in steps):
             raise SchemaError(f"node {node_id} raw steps each need an action")
+
+
+def _fight_mode(node_id: str, spec: dict[str, Any]) -> None:
+    """Validate the 2026-08-13 `driven` mode and its turn list.
+
+    The turn list is EXACT-CLASS in goldens (the design note says so), which
+    means every entry has to name one unambiguous emitted step -- there is no
+    room for a shape the emitter gets to interpret. So an entry is a mapping
+    carrying exactly one action key, and the whole list is refused rather than
+    partly understood.
+
+    The one structural rule beyond that: a driven list must contain exactly one
+    `autoplay` entry. Not zero -- a fight the script never finishes leaves the
+    board open and eats every step after it, and the victory pin is the
+    emitter's own guarantee, not something an author can forget. Not two --
+    the second would wait for a `combat_finished` that already fired.
+    """
+    mode = str(spec.get("mode", "autoplay"))
+    if mode not in FIGHT_MODES:
+        raise SchemaError(f"node {node_id} fight mode must be one of {sorted(FIGHT_MODES)}")
+    turns = spec.get("turns")
+    if mode == "autoplay":
+        if turns is not None:
+            raise SchemaError(
+                f"node {node_id} fight has turns but mode is autoplay -- a turn list the board never plays is a "
+                "choreography nobody watches; set mode: driven"
+            )
+        return
+    if spec.get("shots"):
+        # Placement is the whole point of driven mode: `shots` has one fixed
+        # slot (after the opening turn) and a driven fight's album beat is
+        # usually somewhere else. A `shot:` turn entry says exactly where.
+        raise SchemaError(
+            f"node {node_id} driven fight uses `shot:` turn entries, not `shots:` -- the turn list is where "
+            "placement is decided"
+        )
+    if not isinstance(turns, list) or not turns:
+        raise SchemaError(f"node {node_id} fight mode: driven needs a non-empty turns list")
+    autoplays = 0
+    for index, entry in enumerate(turns):
+        if not isinstance(entry, dict):
+            raise SchemaError(f"node {node_id} turn {index + 1} must be a mapping")
+        actions = sorted(set(entry) & TURN_ACTIONS)
+        if len(actions) != 1:
+            raise SchemaError(
+                f"node {node_id} turn {index + 1} needs exactly one of {sorted(TURN_ACTIONS)}, found {actions}"
+            )
+        unknown = sorted(set(entry) - TURN_ACTIONS - TURN_MODIFIERS)
+        if unknown:
+            raise SchemaError(f"node {node_id} turn {index + 1} has unknown keys {unknown}")
+        action = actions[0]
+        if "where" in entry:
+            if action not in ("await", "logged"):
+                raise SchemaError(f"node {node_id} turn {index + 1}: `where` only qualifies await/logged")
+            if not isinstance(entry["where"], dict) or not entry["where"]:
+                raise SchemaError(f"node {node_id} turn {index + 1}: `where` must be a non-empty mapping")
+        if action == "press":
+            name = str(entry["press"])
+            if name not in COMBAT_PRESSES:
+                raise SchemaError(
+                    f"node {node_id} turn {index + 1}: {name!r} is not a combat-board press "
+                    f"({sorted(COMBAT_PRESSES)})"
+                )
+        elif action in ("beat", "await", "logged", "shot"):
+            if not str(entry[action]).strip():
+                raise SchemaError(f"node {node_id} turn {index + 1}: {action} needs a name")
+        elif action == "settle":
+            if not (isinstance(entry["settle"], int) and entry["settle"] > 0):
+                raise SchemaError(f"node {node_id} turn {index + 1}: settle must be a positive frame count")
+        elif action == "pin":
+            pin = entry["pin"]
+            if not isinstance(pin, dict) or not str(pin.get("path", "")).strip():
+                raise SchemaError(f"node {node_id} turn {index + 1}: pin needs a path")
+            if "equals" not in pin and "contains" not in pin:
+                raise SchemaError(f"node {node_id} turn {index + 1}: pin needs equals or contains")
+        elif action == "autoplay":
+            if entry["autoplay"] is not True:
+                raise SchemaError(
+                    f"node {node_id} turn {index + 1}: write `autoplay: true` -- max_turns and policy are the "
+                    "fight's, not the turn's"
+                )
+            autoplays += 1
+    if autoplays != 1:
+        raise SchemaError(
+            f"node {node_id} driven fight has {autoplays} autoplay entries, needs exactly 1 -- the hand-driven "
+            "turns are the opening choreography, and the board still has to finish and be pinned victorious"
+        )
 
 
 def _choose_path(node_id: str, spec: dict[str, Any]) -> None:
