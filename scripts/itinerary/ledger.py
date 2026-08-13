@@ -7,6 +7,15 @@ from typing import Any, Iterable
 
 SAVE_VERSION = 8
 
+# Counters whose deposit is CHALLENGE-WEIGHTED, so their banked value is not a
+# count of anything a compiler can derive: a gray-band win deposits a fraction
+# (and may bank nothing at all until a whole unit accumulates), while a
+# low-power player beating a real fight banks at the adversity cap. The ledger
+# refuses to guess them and the emitter refuses to pin them -- `victories`,
+# which banks an integer under both flag states, is the counter that answers
+# "a win happened". Each skipped bank leaves a pins_pending row for pass 2.
+CHALLENGE_WEIGHTED = {"won_combat"}
+
 
 def _fresh_state() -> dict[str, Any]:
     return {
@@ -138,12 +147,81 @@ class Ledger:
                 if item in self.state["inventory"]:
                     self.state["inventory"].remove(item)
             elif "gold" in effect:
-                amount = int(effect["gold"])
-                lo, hi = self.gold_interval
-                self.gold_interval = (lo + amount, hi + amount)
-                self.state["gold"] = int(self.state.get("gold", 0)) + amount
+                self.shift_gold(int(effect["gold"]))
             elif "bank_first_use" in effect:
                 self.state["entity_first_use"][str(effect["bank_first_use"])] = True
+
+    # ------------------------------------------------------------- economy --
+
+    def shift_gold(self, amount: int) -> None:
+        """An EXACT, data-derived gold move: both interval ends shift together."""
+        lo, hi = self.gold_interval
+        self.gold_interval = (lo + amount, hi + amount)
+        self.state["gold"] = int(self.state.get("gold", 0)) + amount
+
+    def widen_gold(self, low: int, high: int) -> None:
+        """A PROJECTED gold move (a chance-gated loot drop): the ends part.
+
+        `gold` in the materialized save follows the LOW end, so every oracle
+        answer downstream of a widened interval is asked under the poorest
+        world the run could be in -- a gold-gated dialogue row that resolves
+        visible under `min` is visible under every outcome.
+        """
+        lo, hi = self.gold_interval
+        self.gold_interval = (lo + low, hi + high)
+        self.state["gold"] = self.gold_interval[0]
+
+    @property
+    def gold_min(self) -> int:
+        return self.gold_interval[0]
+
+    @property
+    def gold_certain(self) -> bool:
+        return self.gold_interval[0] == self.gold_interval[1]
+
+    # -------------------------------------------------------- inventory/gear --
+
+    def equip(self, slot: str, item_id: str) -> None:
+        self.state["equipped"][slot] = item_id
+
+    def unequip(self, slot: str) -> None:
+        self.state["equipped"][slot] = ""
+
+    # ---------------------------------------------------------------- combat --
+
+    def apply_victory(self, entity: dict[str, Any], loot_gold: tuple[int, int]) -> None:
+        """Project a won fight onto the ledger (§2.2 trust tier 2).
+
+        `victories` banks integer under both challenge-weighting flag states,
+        which is why it -- not `won_combat`, whose deposit is fractional in a
+        gray-band fight -- is what a compiled pin may assert.
+        """
+        self.accomplishment("victories")
+        for raw_banked in entity.get("on_victory", []):
+            banked = str(raw_banked)
+            if banked in CHALLENGE_WEIGHTED:
+                self.pins_pending.append({
+                    "counter": banked,
+                    "encounter": str(entity.get("id", "")),
+                    "reason": "challenge-weighted deposit -- harvest the actual from a run (pass 2)",
+                })
+                continue
+            self.accomplishment(banked)
+        entity_id = str(entity.get("id", ""))
+        if bool(entity.get("respawns", False)):
+            if entity_id not in self.state["dormant_encounters"]:
+                self.state["dormant_encounters"].append(entity_id)
+        elif not bool(entity.get("persistent", False)):
+            if entity_id not in self.state["removed_entities"]:
+                self.state["removed_entities"].append(entity_id)
+        if loot_gold != (0, 0):
+            self.widen_gold(*loot_gold)
+        # Combat CONSTRUCTION draws from the one global stream, so every fight
+        # is an epoch boundary: any itinerary edit before it invalidates the
+        # pins after it. Loot does NOT count -- `WIEconomy.roll_loot` seeds a
+        # private RandomNumberGenerator from hash("<run_seed>:<entity_id>")
+        # and never touches the world stream (src/core/economy.gd:47-53).
+        self.rng_epoch += 1
 
     def apply_sleep_preview(self, preview: dict[str, Any]) -> None:
         self.state["times_slept"] = int(self.state.get("times_slept", 0)) + 1

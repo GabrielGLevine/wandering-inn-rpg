@@ -4,7 +4,7 @@ Fable-authored 2026-08-12, on user directive to frontload the full design
 before implementation. Companion to the #434 issue body (which carries the
 sim-rule inventory with file refs) and to `wi-writing-qa-scripts`'s two
 lesson sections (the rule corpus this engine encodes). The shipped
-2567-step `steel_thread.json` is the golden corpus; the balance program
+2569-step `steel_thread.json` is the golden corpus; the balance program
 (#437–#442) built the instruments this engine composes.
 
 ## 0. The one architectural ruling that matters
@@ -107,6 +107,11 @@ Combat resolution, AI decisions, toast queues/coalescing, veil line
 counts, arena geometry. These are pass-2 harvest domains or
 never-pin domains (the skill doc's traps list is normative).
 
+**Amendment (2026-08-13, M2 audit finding):** loot does NOT consume the
+global RNG stream — `economy.gd` seeds a private generator from
+`hash(run_seed:entity_id)` — so `rng_epoch` counts fights only. The §2
+prose listing loot as a global draw is superseded by this note.
+
 ## 3. The itinerary language
 
 ### 3.1 Shape
@@ -197,7 +202,7 @@ rule is what keeps the corpus recompilable.
    the ledger transition that emitted it (catches planner/emitter drift).
 3. **Golden corpus**: recompile the shipped steel-thread itinerary
    (M3 deliverable: `steel_thread.yaml`, hand-derived once from the
-   2567-step script) → structural diff against the shipped JSON.
+   2569-step script) → structural diff against the shipped JSON.
    Tolerance rules: step order within a node may differ; pin subsets may
    be TIGHTER but never looser; walk routes may differ if both
    oracle-valid; shot names/holds exact. Diff tool reports per-node.

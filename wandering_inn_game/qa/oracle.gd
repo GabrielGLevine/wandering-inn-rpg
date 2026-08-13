@@ -319,13 +319,32 @@ func _drop_reason(walker: WIDialogue, opt: Dictionary) -> String:
 
 
 func _resolve_graph(sim: WIGame, graph_id: String) -> Dictionary:
-	# The two menus the game BUILDS in code have no file in data/dialogue/, and
-	# both are cursor surfaces a script has to count rows on, so they answer here
+	# The menus the game BUILDS in code have no file in data/dialogue/, and each
+	# is a cursor surface a script has to count rows on, so they answer here
 	# under the conversation label the driver's events carry.
 	if graph_id == "portal_menu":
 		return WIPortals.build_portal_graph(sim.attuned_destinations(), sim.current_map)
 	var graphs: Dictionary = sim._combat_config.get("dialogue", {})
-	return graphs.get(graph_id, {})
+	if graphs.has(graph_id):
+		return graphs[graph_id]
+	# A sell picker is `<vendor>_sell`, built from the CURRENT pack by
+	# `_open_sell_dialogue`. Checked only after the file lookup misses, so a
+	# future data/dialogue/*_sell.json would still win. Rows carry the price
+	# in their own text ("Sell: <name>. (+N gold)"), which is how a caller
+	# reads a sale's worth without recomputing the [Skill] trade bonus.
+	if graph_id.ends_with("_sell"):
+		var vendor_id := graph_id.trim_suffix("_sell")
+		var records: Array = []
+		for raw_id: Variant in sim.sellable_items():
+			var id := String(raw_id)
+			var rec: Dictionary = sim.item(id)
+			records.append({
+				"id": id,
+				"name": String(rec.get("name", id)),
+				"price": sim.sell_price(int(rec.get(WIKeys.PRICE, 0))),
+			})
+		return WIShop.build_sell_graph(records, vendor_id)
+	return {}
 
 
 ## BFS over exactly what the game blocks on: `is_cell_blocked`, which folds the
