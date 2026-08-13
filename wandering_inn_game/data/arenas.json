@@ -1571,6 +1571,7 @@
      4
     ]
    ],
+   "_comment_staging": "#438 LADDER STOP-ORDER REPAIR (user ruling 2026-08-13). Slot 2 is (8,3), NOT (9,3): the third body starts one step up the PC's own lane and contacts a round ahead of the captain and the second knife instead of arriving as one wall. Slots 2-3 are fielded ONLY by `hired_blades` -- adventurers_rest's `rest_bravos` is two enemies with no ally, and measures 0.77 floor / 0.73 competent either way -- so this is that encounter's staging and nothing else's. Staging-as-lever precedent: deep_tunnels.json's awakened_boss `_comment`. West of the (6,3)/(6,4) blocked column is a DEGENERATE regime: at (5,3) the vanguard dies in isolation while the rest walk around the wall (floor 0.94), so slot 2 must stay east of x=6.",
    "enemy_spawns": [
     [
      10,
@@ -1581,7 +1582,7 @@
      4
     ],
     [
-     9,
+     8,
      3
     ],
     [

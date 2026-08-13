@@ -100,60 +100,62 @@ const RUNS_PER_CELL := 100
 ## to keep this ladder's statement: 0.94 / 0.84 / 0.69 / 0.61, gaps 0.10 / 0.15 /
 ## 0.08 -- rung 1 climbs 0.02 and every gap still clears LADDER_TIE by 0.05+.
 ##
-## #451 (2026-08-12): THIS ORDERING CLAIM IS NOW REPORT-ONLY, BY CONTROLLER
-## RULING, AND THE ORDERING QUESTION IS ESCALATED TO THE USER BATCH. The band
-## re-derivation did not re-pin it and could not: read the two sections below in
-## order -- what the cap did to the floor read, then why no column will carry the
-## assert. Measured, merge-base vs branch:
+## #451 (2026-08-12) THE CAP BROKE THIS LADDER; #438 (2026-08-13) PUT IT BACK.
+## Measured, merge-base vs post-cap, floor policy:
 ##   merge-base  0.94 > 0.84 > 0.69 > 0.61   PASS, four real steps
 ##   post-cap    0.87 > 0.60 > 0.69 > 0.61   FAIL, rung 3 easier than rung 2 by 0.09
-## The mechanism is clean and cell-specific. Rung 2 is the ONLY cell in this file
-## that fields THREE `counter_strike` holders at once -- the sw14 PC, the ally
-## Wilovan, and hired_blade_leader -- against a three-body roster, so it is the
-## most cap-exposed measurement in the whole matrix (0.84 -> 0.60). Rungs 3 and 4
-## are SOLO fights against a SINGLE golem/warden: zero multi-hit exposure, and
-## both moved by EXACTLY 0.00. The cap therefore re-ranks the ladder by ROSTER
-## SHAPE, and the ladder's whole premise is that four stops of different shapes
-## are comparable at one shared yardstick.
-##
-## WHY IT WAS NOT RE-PINNED. The two available re-pins are both the move this
-## assert was built to refuse. Re-ordering LADDER_RUNGS would be a lie about the
-## game -- the constant is the main quest's STOP ORDER (Riverfarm -> Invrisil ->
-## Pallass -> the seal), a narrative fact, and a gate re-sorted into whatever it
-## measured asserts nothing. Widening LADDER_TIE is the "widen the band until the
-## red goes away" move that this comment's own GH#337 history records being
-## refused: the SAME cell tied this ladder then, the response was a logged SEAM
-## plus a later combatants.json compensation (weapon_die 6 -> 8, v0.18 W5), and
-## the fix round added the direct ordering assert precisely so the next collapse
-## "could not be green with both gates still green".
-##
-## THE CONTROLLER RULING (2026-08-12) AND WHAT MEASURING IT FOUND. The ruling:
-## this assert PREDATES the 2026-08-11 doctrine ruling "QA proves completability;
-## sims prove balance" (docs/CHOICE-LOG.md, steel-thread section); a main-quest
-## difficulty-ORDER claim is a balance claim, so it belongs on the COMPETENT
-## column, not the floor policy -- a doctrine migration, not a band-widening.
-## The migration was then MEASURED rather than assumed, and it has no destination:
+## The mechanism is cell-specific. Rung 2 is the ONLY cell in this file that fields
+## THREE `counter_strike` holders at once -- the sw14 PC, the ally Wilovan, and
+## hired_blade_leader -- against a three-body roster, so it is the most cap-exposed
+## measurement in the whole matrix (0.84 -> 0.60). Rungs 3 and 4 are SOLO fights
+## against a SINGLE golem/warden: zero multi-hit exposure, and both moved by EXACTLY
+## 0.00. The cap re-ranked the ladder by ROSTER SHAPE. The competent column was
+## broken too, in a DIFFERENT place, which is why the claim spent a day report-only:
 ##   floor      0.87 > 0.60 > 0.69 > 0.61   inverted at rungs 2/3 (0.09 past tie)
-##   competent  0.88 > 0.92 > 0.87 > 0.78   inverted at rungs 1/2 (0.04 vs 0.03 tie)
-## BOTH columns are non-monotone, in DIFFERENT places, so neither can carry the
-## claim. The competent inversion is small and pre-dates nothing in this branch's
-## reach -- rung 2 competent moved only 0.98 -> 0.92 under the cap, so the top
-## pair was already within a hair of each other and the tie band is what it
-## crosses, by 0.01. Per the ruling's own branch 3 the ordering comparison is
-## therefore DEMOTED TO REPORT-ONLY and nothing new is asserted. LADDER_TIE is
-## untouched; GH#337's refusal stands; the inversion still prints every run.
+##   competent  0.88 > 0.92 > 0.87 > 0.78   inverted at rungs 1/2 (0.01 past tie)
 ##
-## WHAT IS AND IS NOT EVIDENCE OF A BROKEN FIGHT. Competent rung 2 reads 0.92, so
-## the SHIPPED Invrisil fight is not broken -- what collapsed on the floor column
-## is the floor policy's riposte crutch, and what the ladder lost is the premise
-## that four differently-shaped stops are comparable at one yardstick once a
-## per-round cap taxes crowds and leaves duels alone. That premise is the thing
-## the user batch has to rule on; it is not a number a lane can pick.
-## THE DATA LEVER, if the ruling comes back "restore the floor ladder", is
-## `hired_blade_leader`'s own con/weapon_die in `data/combatants.json` -- the same
-## lever GH#337 named and v0.18 W5 pulled -- which this lane does not own.
-## ESCALATED TO THE USER BATCH: does the main-quest ordering claim survive #451
-## at all, and on which policy column should it live?
+## THE USER RULING (2026-08-13, docs/CHOICE-LOG.md): restore the stop order through
+## the hired_blades ENCOUNTER's COMPOSITION, frozen stat blocks hold, and re-arm the
+## ordering assert on the COMPETENT column once it is monotone. The two moves this
+## gate was built to refuse are still refused: LADDER_TIE is untouched (GH#337's
+## refusal stands) and LADDER_RUNGS is still the quest's narrative stop order, not a
+## sort of whatever was measured.
+##
+## WHAT WAS PULLED. `merchant_warehouse`'s enemy_spawns slot 2 moved (9,3) -> (8,3).
+## Slots 2-3 of that arena are fielded ONLY by hired_blades -- adventurers_rest's
+## rest_bravos is two enemies with no ally, and measures 0.77/0.73 either way -- so
+## this is one encounter's staging and nothing else's. The third blade now contacts
+## a round ahead of the captain and the second knife:
+##   floor      0.60 -> 0.70  the crew is fought IN DETAIL. The floor policy trades
+##                            swings with whoever is adjacent and never disengages,
+##                            so a staggered arrival is worth +0.10 to it.
+##   competent  0.92 -> 0.89  the SAME stagger COSTS a kit-spender: its opening
+##                            burst wants a cluster and a lowest-HP body to finish,
+##                            and a lone vanguard soaks it while the captain arrives
+##                            whole. Wilovan is left one-on-one longer (downed
+##                            0.69 -> 0.74).
+## Both columns are monotone off that one cell:
+##   floor      0.87 > 0.70 > 0.69 > 0.61   four real steps again
+##   competent  0.88 > 0.89 > 0.87 > 0.78   descending inside LADDER_TIE
+##
+## FAMILIES MEASURED AND REJECTED, 100 seeds each, both policies. A 4TH BODY
+## (footpad_lookout / footpad_bruiser) overshoots -- competent 0.81/0.82, i.e. rung 3
+## then reads 0.05 easier than rung 2 -- and craters the under-band stop cell to
+## 0.16-0.24 against its authored 0.33-0.47. A ROSTER SWAP has no legal id: the only
+## ones with the needed shape are rest_bravo_a/b, whose display names are the
+## Adventurer's Rest bar-fight figures (a continuity error in Coyle's warehouse), and
+## minting a combatant is the frozen-stat move the ruling forbids -- rest_bravo_b
+## also overshoots at competent 0.77. ARRIVAL ORDER (which of the three holds which
+## spawn) is the wrong SIGN: every permutation reads EASIER competent, 0.92 ->
+## 0.93/0.98. And slot 2 WEST of the (6,3)/(6,4) blocked column is degenerate -- at
+## (5,3) the vanguard dies alone while the rest walk around the wall, floor 0.94.
+##
+## THE ASSERT IS COMPETENT-KEYED. `WI_POLICY=competent` is the only leg an inversion
+## reds; the plain floor leg prints its ladder line as a REPORT. That is the
+## 2026-08-11 doctrine ruling applied ("QA proves completability; sims prove
+## balance") -- a main-quest difficulty-ORDER claim is a balance claim, so it rides
+## the column that spends the kit. ci.yml runs that leg; without it the gate gates
+## nothing.
 const LADDER_RUNGS := [
 	"briar_collectors_deep_t5_sw14_solo",
 	"hired_blades_t5_sw14_wilovan",
@@ -166,6 +168,9 @@ var _cell_idx := -1
 var _range_lo := -1
 var _range_hi := -1
 var _ladder_rates := {}
+## Set only by the competent leg's ordering gate; it is the ONE thing that can red
+## a policy sweep, whose per-cell bands stay report-only.
+var _ladder_failed := false
 
 ## GH#360 (a) — THE DIFFICULTY-TIER SWEEP HOOK, and it is deliberately a hook on
 ## this harness rather than a second 141-cell driver. The cells, the builds, the
@@ -717,18 +722,19 @@ const INVRISIL_CELLS := [
 	# longer what carries ordering: `LADDER_RUNGS`/`LADDER_TIE` does, by
 	# assertion, and that is the contract this restoration hands it back a real
 	# step to defend.
-	# #451 CAP RE-PIN (LADDER RUNG 2): 0.84 -> 0.60, window 0.76-0.90 -> 0.53-0.67
-	# (width 0.14 held, margins 0.07/0.07). The single most cap-exposed cell in the
-	# file -- three counter_strike holders on one board, which no other cell has --
-	# and therefore the biggest mover among the four rungs by a factor of three.
-	# Median holds at 4, so the rounds bar is untouched.
-	# THIS RE-PIN DOES NOT SETTLE THE LADDER. The window is a per-cell bound and
-	# moves with its measurement; the ORDERING claim is a separate contract, is now
-	# REPORT-ONLY by controller ruling, and is escalated to the user batch -- read
-	# LADDER_RUNGS' #451 block before touching either.
-	# Competent reads 0.98 -> 0.92, so the shipped fight is fine for a player who
-	# spends their kit; it is the floor policy that lost a crutch here.
-	{"name": "hired_blades_t5_sw14_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.53, "win_hi": 0.67, "check_rounds": true},
+	# #451 CAP RE-PIN (LADDER RUNG 2): 0.84 -> 0.60, window 0.76-0.90 -> 0.53-0.67.
+	# The single most cap-exposed cell in the file -- three counter_strike holders on
+	# one board, which no other cell has -- and the biggest mover among the four
+	# rungs by a factor of three.
+	# #438 STAGING RE-PIN (user ruling 2026-08-13, RESTORE THE STOP ORDER): 0.60 ->
+	# 0.70, window 0.53-0.67 -> 0.63-0.77 (width 0.14 held, margins 0.07/0.07 --
+	# this file's `measured +/- 0.07` idiom). NOT a band widened to bury a red: the
+	# CONTENT moved. arenas.json's merchant_warehouse enemy slot 2 went (9,3) ->
+	# (8,3), so the third blade contacts a round ahead of the wall; frozen stat
+	# blocks, the same three men, Wilovan still fields. Competent moves the OTHER
+	# way, 0.92 -> 0.89, which is the whole point -- LADDER_RUNGS' #438 block.
+	# Median holds at 4 (37/54/9 over rounds 3/4/5), so the rounds bar is untouched.
+	{"name": "hired_blades_t5_sw14_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.63, "win_hi": 0.77, "check_rounds": true},
 	{"name": "hired_blades_t4_sw11_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword11_party", "solo": false},
 	# v0.16 I1 (#306). Side-quest fight at Invrisil's own expected level, SOLO
 	# (Wilovan has no part in a stranger's commission). Window is the shipped
@@ -1779,35 +1785,42 @@ func _init() -> void:
 	# sharded runs exist to be concatenated and diffed, not to re-assert a global
 	# contract. The unsharded run is the one that owns this.
 	#
-	# #451 (2026-08-12): THE ORDERING COMPARISON IS REPORT-ONLY FROM HERE. A
-	# main-quest difficulty-ORDER claim is a BALANCE claim, and the 2026-08-11
-	# doctrine ruling ("QA proves completability; sims prove balance",
-	# docs/CHOICE-LOG.md) says a floor-policy harness is the wrong column to assert
-	# one from. The migration target the controller named -- the competent leg --
-	# was MEASURED before this demotion and is NON-MONOTONE TOO, so there is no
-	# honest column to move the assert onto and nothing new is asserted here.
-	# LADDER_TIE is untouched and GH#337's refusal to widen it stands: this is a
-	# doctrine migration that found no destination, not a band loosened to make a
-	# red go away. The inversion still PRINTS on every run, deliberately loudly,
-	# because the finding outlives the assert -- see LADDER_RUNGS' #451 block.
+	# #438 (2026-08-13): THE ORDERING COMPARISON IS ASSERTED AGAIN, ON THE COMPETENT
+	# COLUMN ONLY. A main-quest difficulty-ORDER claim is a BALANCE claim, and the
+	# 2026-08-11 doctrine ruling ("QA proves completability; sims prove balance",
+	# docs/CHOICE-LOG.md) says the floor policy is the wrong column to assert one
+	# from -- #451 measured the competent column too, found it non-monotone as well,
+	# and demoted the whole claim rather than assert from a broken column. The user
+	# ruling restored the stop order through hired_blades' staging, so the competent
+	# column is monotone and carries the gate; the floor leg keeps PRINTING its
+	# ladder line as the report it has always been. LADDER_TIE is untouched.
 	#
-	# THE WIRING CHECK BELOW STAYS HARD, and the distinction is the whole point:
-	# "did all four rungs actually get measured" is not a balance claim, it is the
-	# pin that stops a rename from silently unhooking this entire block. Demoting
-	# that too would buy nothing the doctrine ruling asked for and would let the
-	# report itself rot unnoticed.
+	# THE WIRING CHECK BELOW STAYS HARD ON EVERY LEG: "did all four rungs actually
+	# get measured" is not a balance claim, it is the pin that stops a rename from
+	# silently unhooking this entire block.
 	if _ladder_rates.size() == LADDER_RUNGS.size():
 		var ladder_line: Array = []
 		for rung_name: String in LADDER_RUNGS:
 			ladder_line.append("%s %.2f" % [rung_name, float(_ladder_rates[rung_name])])
 		print("[ladder] main-quest stops, descending: ", " > ".join(ladder_line))
+		# A tier leg never asserts either -- every band in this file is authored at
+		# Silver, so an ordering read at 0.75/1.3 is a measurement, not a contract.
+		var ladder_gated := _policy_sweep and not _tier_sweep \
+				and _policy != null and _policy.policy == WICombatPolicies.COMPETENT
 		for i in range(LADDER_RUNGS.size() - 1):
 			var upper := String(LADDER_RUNGS[i])
 			var lower := String(LADDER_RUNGS[i + 1])
 			var upper_rate := float(_ladder_rates[upper])
 			var lower_rate := float(_ladder_rates[lower])
-			if lower_rate > upper_rate + LADDER_TIE:
-				print("[ladder] REPORT-ONLY INVERSION (#451, ordering claim escalated to the user batch): rung %d (%s, %.2f) reads EASIER than rung %d (%s, %.2f) by more than the %.2f tie band" % [
+			if lower_rate <= upper_rate + LADDER_TIE:
+				continue
+			if ladder_gated:
+				_ladder_failed = true
+				printerr("FAIL [ladder]: rung %d (%s, %.2f) reads EASIER than rung %d (%s, %.2f) by more than the %.2f tie band" % [
+					i + 2, lower, lower_rate, i + 1, upper, upper_rate, LADDER_TIE,
+				])
+			else:
+				print("[ladder] REPORT-ONLY INVERSION (floor column; the ordering gate rides WI_POLICY=competent): rung %d (%s, %.2f) reads EASIER than rung %d (%s, %.2f) by more than the %.2f tie band" % [
 					i + 2, lower, lower_rate, i + 1, upper, upper_rate, LADDER_TIE,
 				])
 	elif _range_lo < 0:
@@ -1832,9 +1845,16 @@ func _init() -> void:
 	# bands that were authored for the floor policy, so its FAIL lines are the
 	# per-cell report and never the process's exit code.
 	if _policy_sweep:
-		print("[policy-sweep] policy=%s complete over %d cells x %d seeded runs — any FAIL lines above are the REPORT, not a regression" % [
+		print("[policy-sweep] policy=%s complete over %d cells x %d seeded runs — any FAIL [<family> / <cell>] lines above are the REPORT, not a regression" % [
 			_policy.policy, total_cells, RUNS_PER_CELL,
 		])
+		# #438: the ONE exception. The main-quest ordering gate lives on this leg,
+		# so a FAIL [ladder] line is a real red and must reach the exit code.
+		if _ladder_failed:
+			quit(1)
+			return
+		if _ladder_rates.size() == LADDER_RUNGS.size():
+			print("PASS: main-quest stop order holds on the competent column over %d rungs" % LADDER_RUNGS.size())
 		quit(0)
 		return
 

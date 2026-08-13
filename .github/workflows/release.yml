@@ -193,6 +193,21 @@ jobs:
           fi
           exit "${rc:-0}"
 
+      # #438: the main-quest stop-order gate is COMPETENT-KEYED (sim_combat_batch's
+      # LADDER_RUNGS block); per-cell bands stay report-only on this leg.
+      - name: (b) Balance harness — competent leg (main-quest ordering gate)
+        run: |
+          set -uo pipefail
+          cd wandering_inn_game
+          log="/tmp/sim_combat_batch_competent.log"
+          WI_POLICY=competent perl -e 'alarm 600; exec @ARGV' \
+            godot --headless --path . --script res://tests/sim_combat_batch.gd >"$log" 2>&1 || rc=$?
+          cat "$log"
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+            echo "::error::sim_combat_batch (competent) tripped the error/warning grep"; exit 1
+          fi
+          exit "${rc:-0}"
+
       - name: (b) Full canonical sweep (qa/ci_sweep.sh)
         # GH#287: same 4-way parallel opt-in as ci.yml's sweep jobs.
         env:
