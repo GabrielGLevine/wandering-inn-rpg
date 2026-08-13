@@ -1,5 +1,5 @@
 {
- "_comment": "thicket_keeps_fight's start: standing in witch_hollow at (2,3), directly south of thicket_line_den (2,2). BAND FIXTURE (COMBAT_BAND_FIXTURES = 10): warrior 10, no mage, melee_hit raised to 57 for warrior L10 -- same shape and same reason as flood_ledger_fight_start; the den is measured at t3_warrior10 in sim_combat_batch's thicket_line_den_t3_warrior10_solo cell. SEED: derived at 2, not 9. Both new cells measure ~0.81 win rate in sim_combat_batch, so roughly one starting state in five is a real defeat -- seed 9's state loses this fight in 2 rounds, seed 2's wins it. Found by the derive-then-verify loop (_derive_rng_state.gd prints the .state per seed; patch the fixture, re-run the canonical, repeat), the sanctioned procedure -- the roster and the gate window are untouched. Built from riverfarm_fight_start (the region's shipped baseline: post-mounting, door_awakened + riverfarm_attuned, so riverfarm_village/riverfarm_mill/witch_hollow/witch_hut all satisfy test_fixture_coherence MAP_REQUIRES). Adds blight_lifted + heard_price_of_a_favor + price_of_a_favor_reported: both v0.16 side quests hang their start option off price_of_a_favor_reported, so a save that has not closed 'The Price of a Favor' cannot see them. TRAP: rng_state is DERIVED (tests/_derive_rng_state.gd), never hand-typed; WISave restores .state directly and RNG_STATE_MIN_MAGNITUDE rejects small ints.",
+ "_comment": "thicket_keeps_fight's start: standing in witch_hollow at (2,3), directly south of thicket_line_den (2,2). #451 RE-FIXTURE (2026-08-12): the once-per-round [Counter Strike] cap removed the riposte throughput this canonical's FLOOR-policy win rested on, so the BUILD moved and the encounter did not (CHOICE-LOG 2026-08-11 doctrine; #441 pattern). warrior 10 / rusty sword / no armour became warrior 12 with the same Act IV Riverfarm kit flood_ledger_fight_start now carries -- hunting knife, Watch-issue gambeson, stonescale talisman + copper luck-band (resonance 2+0 = base capacity). 12 is the FLOOR of the Act IV band (12-14) in docs/design/balance-bands-and-policy.md. Measured floor: 0.23 -> 0.78 over 60 seeded sims of this exact roster and build. melee_hit raised to 80 for warrior L12 (classes.json). BAND FIXTURE (COMBAT_BAND_FIXTURES = 12, raised from 10 with the build) -- same shape and same reason as flood_ledger_fight_start; the sim_combat_batch cell thicket_line_den_t3_warrior10_solo is UNTOUCHED and remains the balance instrument for this roster. SEED: derived at 2, not 9. Both new cells measure ~0.81 win rate in sim_combat_batch, so roughly one starting state in five is a real defeat -- seed 9's state loses this fight in 2 rounds, seed 2's wins it. Found by the derive-then-verify loop (_derive_rng_state.gd prints the .state per seed; patch the fixture, re-run the canonical, repeat), the sanctioned procedure -- the roster and the gate window are untouched. Built from riverfarm_fight_start (the region's shipped baseline: post-mounting, door_awakened + riverfarm_attuned, so riverfarm_village/riverfarm_mill/witch_hollow/witch_hut all satisfy test_fixture_coherence MAP_REQUIRES). Adds blight_lifted + heard_price_of_a_favor + price_of_a_favor_reported: both v0.16 side quests hang their start option off price_of_a_favor_reported, so a save that has not closed 'The Price of a Favor' cannot see them. TRAP: rng_state is DERIVED (tests/_derive_rng_state.gd), never hand-typed; WISave restores .state directly and RNG_STATE_MIN_MAGNITUDE rejects small ints.",
  "version": 5,
  "state": {
   "current_map": "witch_hollow",
@@ -12,7 +12,7 @@
    -1
   ],
   "classes": {
-   "warrior": 10
+   "warrior": 12
   },
   "accomplishments": {
    "blight_lifted": 1,
@@ -30,7 +30,7 @@
    "horns_dig_joined": 1,
    "horns_dig_started": 1,
    "learned_magic_from_pisces": 1,
-   "melee_hit": 57,
+   "melee_hit": 80,
    "met_relc": 1,
    "pedestal_breached": 1,
    "price_of_a_favor_reported": 1,
@@ -52,11 +52,17 @@
   "pending_consolidation": {},
   "used_skills": [],
   "inventory": [
-   "rusty_sword"
+   "rusty_sword",
+   "gnollish_hunting_knife",
+   "watch_issue_gambeson",
+   "stonescale_talisman",
+   "copper_luck_band"
   ],
   "equipped": {
-   "weapon": "rusty_sword",
-   "armor": ""
+   "weapon": "gnollish_hunting_knife",
+   "armor": "watch_issue_gambeson",
+   "accessory_1": "stonescale_talisman",
+   "accessory_2": "copper_luck_band"
   },
   "container_state": {},
   "actions_since_sleep": 0,

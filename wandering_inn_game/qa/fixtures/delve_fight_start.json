@@ -1,5 +1,5 @@
 {
- "_comment": "8d E1 (issue #14) 'What the Seal Kept' delve_fight canonical's start -- the FULL end-to-end FIGHT-route proof (accept at Olesm -> FIGHT the promoted snare -> the vault fight, 4-ally party -> the FIND beat -> report). Positioned on `street` facing Olesm (29,3), quest state fresh (`horns_delve_started`/`horns_party_formed`/`halls_cleared`/`vault_construct_downed`/`seal_kept_found`/`seal_kept_reported` all UNBANKED -- this is the moment BEFORE the stipend accept, matching every other quest-start fixture's 'moment before beat 1' convention). CONSTRAINT: post_game structurally implies the full Act II/III backbone (test_fixture_coherence.gd's POST_GAME_BACKBONE) -- carries the SAME accomplishments block as door_chain_fight_start/door_chain_scout_start, the proven-coherent Act III baseline. Gear-aware T4 build: `classes: {spellsword: 11}` + gnollish_hunting_knife/leather_jerkin/hedge_ward_charm/hunters_fang_talisman, the EXACT `t4_spellsword11_party` reference build sim_combat_batch.gd's PARTY_CELLS tunes the vault fight against (registered in test_fixture_coherence.gd's COMBAT_BAND_FIXTURES at 11 -- this canonical resolves TWO real fights from this state, both need the tuned build). rng_state governs both live fights (the snare skirmish, then the vault boss) in sequence -- re-derive via tests/_derive_rng_state.gd if either loses.",
+ "_comment": "8d E1 (issue #14) 'What the Seal Kept' delve_fight canonical's start -- the FULL end-to-end FIGHT-route proof (accept at Olesm -> FIGHT the promoted snare -> the vault fight, 4-ally party -> the FIND beat -> report). Positioned on `street` facing Olesm (29,3), quest state fresh (`horns_delve_started`/`horns_party_formed`/`halls_cleared`/`vault_construct_downed`/`seal_kept_found`/`seal_kept_reported` all UNBANKED -- this is the moment BEFORE the stipend accept, matching every other quest-start fixture's 'moment before beat 1' convention). CONSTRAINT: post_game structurally implies the full Act II/III backbone (test_fixture_coherence.gd's POST_GAME_BACKBONE) -- carries the SAME accomplishments block as door_chain_fight_start/door_chain_scout_start, the proven-coherent Act III baseline. #451 RE-FIXTURE (2026-08-12): the once-per-round [Counter Strike] cap took the floor-policy win the FIRST of this canonical's two fights rested on (the promoted snare ended with snare_ward_b standing at 2/34, and the vault fight was never reached), so the BUILD moved and the encounter did not (CHOICE-LOG 2026-08-11: QA proves completability, sims prove balance; #441 pattern). `classes: {spellsword: 11}` became `{spellsword: 14}` -- the consolidation floor named in docs/design/balance-bands-and-policy.md and the TOP of the Act IV band (12-14) -- and the leather jerkin + charm pair became a Watch-issue gambeson with the stonescale talisman + copper luck-band (resonance 2+0 = the base capacity, nothing smuggled past it). Measured floor: snare 0.38 -> 0.73, vault-with-the-Horns 0.80 -> 0.83, over 60 seeded sims of each roster and this build. CONSEQUENCE, stated rather than hidden: the fixture no longer mirrors sim_combat_batch.gd's `t4_spellsword11_party` reference build, and test_fixture_coherence.gd's COMBAT_BAND_FIXTURES row moved 11 -> 14 WITH the build; that cell is untouched and remains the balance instrument for the vault, while this canonical is a completability proof at band. This canonical resolves TWO real fights from this state, so both were measured before the seed was trusted. `qa/scripts/delve_fight.json`'s `classes.spellsword` assert moved 11 -> 14 as a derived pin, the same way #441 moved cisterns_fight's warrior assert. rng_state governs both live fights (the snare skirmish, then the vault boss) in sequence -- re-derive via tests/_derive_rng_state.gd if either loses.",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -12,7 +12,7 @@
    -1
   ],
   "classes": {
-   "spellsword": 11
+   "spellsword": 14
   },
   "accomplishments": {
    "met_relc": 1,
@@ -48,15 +48,15 @@
   "used_skills": [],
   "inventory": [
    "gnollish_hunting_knife",
-   "leather_jerkin",
-   "hedge_ward_charm",
-   "hunters_fang_talisman"
+   "watch_issue_gambeson",
+   "stonescale_talisman",
+   "copper_luck_band"
   ],
   "equipped": {
    "weapon": "gnollish_hunting_knife",
-   "armor": "leather_jerkin",
-   "accessory_1": "hedge_ward_charm",
-   "accessory_2": "hunters_fang_talisman"
+   "armor": "watch_issue_gambeson",
+   "accessory_1": "stonescale_talisman",
+   "accessory_2": "copper_luck_band"
   },
   "container_state": {},
   "gold": 40,

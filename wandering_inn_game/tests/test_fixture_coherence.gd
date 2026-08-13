@@ -25,16 +25,26 @@ const COMBAT_BAND_FIXTURES := {
 	"door_chain_fight_start": 10,
 	"door_chain_sequence_break_start": 10,
 	"riverfarm_fight_start": 10,
-	"flood_ledger_fight_start": 10,
-	"thicket_fight_start": 10,
+	# --- #451 re-fixture (2026-08-12) --- these four rows moved WITH their
+	# fixtures, not independently of them: the once-per-round [Counter Strike]
+	# cap took the floor-policy win each canonical was pinned on, so per the
+	# 2026-08-11 doctrine (QA proves completability, sims prove balance) the
+	# BUILD was raised to the act band instead of the encounter being tuned.
+	# This dict asserts "the fixture still holds the build its canonical was
+	# verified at" -- so when that build legitimately moves, the number here is
+	# a DERIVED pin and moves with it. The sim_combat_batch cells these
+	# fixtures used to share a level with are untouched and stay the balance
+	# instruments for their rosters.
+	"flood_ledger_fight_start": 12,
+	"thicket_fight_start": 12,
 	"near_invrisil": 2,
-	"near_invrisil_fight": 10,
+	"near_invrisil_fight": 14,
 	# v0.16 Invrisil (#306): both new route fixtures ride the geared warrior-10
 	# reference build the two new sim_combat_batch cells were measured at
 	# (alley_fence_t3_warrior10_solo / rest_bravos_t3_warrior10_solo).
 	"invrisil_setting_fight_start": 10,
 	"invrisil_hat_loud_start": 10,
-	"delve_fight_start": 11,
+	"delve_fight_start": 14,
 	# 2026-07-26 Act V: the seal warden's own tuned band (spellsword14, the
 	# t4_spellsword14_party reference build sim_combat_batch gates the fight at).
 	"seal_open_start": 14,

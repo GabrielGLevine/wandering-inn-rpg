@@ -44,7 +44,7 @@
   {
    "action": "assert_state",
    "path": "classes.spellsword",
-   "equals": 11
+   "equals": 14
   },
   {
    "_comment": "== ACCEPT at Olesm (29,3) -- visible index 6. Olesm carries a real `talk_pool` (cisterns_reported's own stage bark, since this fixture's backbone includes it) that fires on the FIRST interact of the waking, BEFORE his conversation graph -- a first interact consumes it, the second opens olesm_intro for real (interact()'s documented talk_pool-then-conversation order).",

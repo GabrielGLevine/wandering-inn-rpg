@@ -1,11 +1,11 @@
 {
- "_comment": "#398 P4 social build fixture: the T3 warrior reference plus Trader 1, placed at the counting-room front. Seed-9 rng_state is derived; the route's live fight validates it.",
+ "_comment": "#398 P4 social build fixture: a band-level warrior plus Trader 1, placed at the counting-room front. #451 RE-FIXTURE (2026-08-12): the once-per-round [Counter Strike] cap took the riposte throughput this canonical's FLOOR-policy win rested on, so the BUILD moved and the encounter did not (CHOICE-LOG 2026-08-11: QA proves completability, sims prove balance; #441 pattern). warrior 10 + trader 1 = 11, BELOW the Act IV band (12-14) in docs/design/balance-bands-and-policy.md, became warrior 12 + trader 1 = 13, inside it; trader stays at 1 because [Bargain] is the L1 grant this route's gate is about. Gear: the leather jerkin became a Watch-issue gambeson, and the charm pair became Hedault's Keen-Set Hunters Fang ([Eagle Eyes], the +8 hit bonus that does most of the work here) beside an Old Delver's Clasp -- resonance 1+1 = 2, the base capacity, nothing smuggled past it. Both are honestly reachable from THIS save: the fang is Hedault's own enchant of the hunters_fang_talisman it already carried (hedault_enchanting.json, an item+gold gate with no accomplishment behind it, and invrisil_attuned/door_awakened are banked), and the clasp is the collapsed gallery's strongbox yield in deep_tunnels, which cleared_the_warren says this PC has walked. Measured floor: 0.28 -> 0.89 over 100 seeded sims of this exact roster and build (same harness shape as tests/sim_spine_viability.gd::_measure). melee_hit raised to 80 for warrior L12 (classes.json). Seed-9 rng_state is derived; the route's live fight validates it.",
  "version": 5,
  "state": {
   "current_map": "mercantile_alleys",
   "player_cell": [4, 7],
   "player_facing": [0, 1],
-  "classes": {"warrior": 10, "trader": 1},
+  "classes": {"warrior": 12, "trader": 1},
   "gold": 0,
   "accomplishments": {
    "met_relc": 1, "sparred_with_relc": 1, "given_spear_by_relc": 1,
@@ -17,7 +17,7 @@
    "door_understood": 1, "recovered_anchor_stone": 1, "bought_catalyst": 1,
    "door_study_sleeps": 3, "door_awakened": 1, "catalyst_delivered": 1,
    "read_the_board": 1, "riverfarm_attuned": 1, "blight_lifted": 1,
-   "invrisil_attuned": 1, "won_combat": 1, "melee_hit": 57,
+   "invrisil_attuned": 1, "won_combat": 1, "melee_hit": 80,
    "deliberate_commerce": 5, "horns_dig_started": 1, "horns_dig_joined": 1,
    "pedestal_breached": 1, "door_retrieved": 1, "door_mounted": 1
   },
@@ -26,8 +26,8 @@
   "dormant_encounters": [], "generalist_classes": [],
   "started_quests": ["the_errand", "missing_crate", "cisterns", "door_that_goes_elsewhere"],
   "pending_consolidation": {}, "used_skills": [],
-  "inventory": ["invrisil_attunement_stone", "gnollish_hunting_knife", "leather_jerkin", "hedge_ward_charm", "hunters_fang_talisman"],
-  "equipped": {"weapon": "gnollish_hunting_knife", "armor": "leather_jerkin", "accessory_1": "hedge_ward_charm", "accessory_2": "hunters_fang_talisman"},
+  "inventory": ["invrisil_attunement_stone", "gnollish_hunting_knife", "watch_issue_gambeson", "hedaults_hunters_fang", "old_delvers_clasp"],
+  "equipped": {"weapon": "gnollish_hunting_knife", "armor": "watch_issue_gambeson", "accessory_1": "hedaults_hunters_fang", "accessory_2": "old_delvers_clasp"},
   "container_state": {}, "actions_since_sleep": 0,
   "rng_state": "-6393592048753323481"
  }
