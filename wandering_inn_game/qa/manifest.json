@@ -7123,6 +7123,31 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "d3_inventory_shot",
+   "seed": 9,
+   "fixture": "d2_shop",
+   "note": "the inventory coin-line/item-card peek: pins the 'Gold: N' header and both weapons' item_effect_lines. PROMOTED out of peek-orphan status (same rationale as its sibling d2_shop_shot) after 0cbc988a (#79) added the weapon-kit family line and re-pinned only the sweep-visible siblings -- with no manifest row, ci_sweep could never red this one and the pin rotted a month. Screenshot step is a headless no-op: sweep coverage is the payload pin, the coin line still needs a windowed pass",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street"
+    ],
+    "fixtures": [
+     "d2_shop"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
   }
  ]
 }
