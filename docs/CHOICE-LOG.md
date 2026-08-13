@@ -27,6 +27,19 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### Sol wave ≥434 — controller calls under wave autonomy (2026-08-12)
 
+- **Ladder ordering claims are demoted to report-only until re-ruled
+  (2026-08-13).** Post-cap, the main-quest stop ladder is non-monotone
+  under BOTH policies (floor 2/3 by 0.09; competent 1/2 by 0.01 past the
+  tie band) — an ordering assert has no honest column to ride. The
+  wiring pin (all rungs measured) stays hard. Reopening the claim means
+  pulling a composition or stat lever on hired_blades (user batch).
+- **Ruled balance bands CI-gate via RULED_WINDOWS (2026-08-13).** A
+  user-ruled band (first case: the #448 veto solo at [0.35,0.45]) gates
+  in the sim at 100 seeds both edges, and in calibration with measured
+  per-row slack (RULED_SLACK, documented in-file) — never by widening
+  the reference window and never by a 0.5 categorical that the defect
+  shape would pass.
+
 - **#450 spec contradictions ruled (three, all intent-preserving).**
   (1) [Evil Eye] gains `field: true` + an occult ambient read (spec §2
   already repoints hollow_true_knot to it; combat-only was a data

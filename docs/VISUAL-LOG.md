@@ -80,8 +80,10 @@ r3–r5 playtest waves — gone from this file.
   (`settings_loop/01_settings_help_panel` has 6 sections, neither is one;
   `00_settings_panel_rows` reads bare "Difficulty: Silver"). Knob's best
   property — damage TAKEN only, enemy stats/accuracy/fight shape identical at
-  every rung — stated only in code comment. One Help section + carrying
-  char-creation's descriptor tail onto row closes it.
+  every rung — stated only in code comment. RESOLVED-BY-#447 route: the Help page's
+  "Difficulty & Quest Hints" section now carries the explanation and the
+  descriptor tails were deliberately removed (one-voice ruling) — verify the
+  Help section suffices in an eye pass, then close this row.
 - [ ] **(P2)** Settings row order buries gameplay knobs — #338/#345 appended
   after Export/Import Save to honour `settings_panel.gd`'s append-only index
   contract, so "Quest Thread" (row 11) and "Quest Hints" (row 15) split by
