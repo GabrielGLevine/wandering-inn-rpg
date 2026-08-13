@@ -506,6 +506,99 @@ func _wave_b_field_visual_contract_holds(source: String) -> bool:
 
 
 
+## GH#459 follower facing. The SELECTION is pure -- travel vector in, animation
+## name + mirror out -- so it is pinned by calling the real statics rather than
+## by slicing source. A companion carries no facing in the sim (the save holds a
+## bare id), so a wrong sign here is the difference between a wolf trotting
+## north and a wolf moonwalking behind the PC, and nothing else would catch it.
+func _assert_follower_facing_selection() -> void:
+	# Godot screen space: +y is DOWN. Getting this backwards is the whole bug.
+	assert(WIEntityVisualFactory.facing_from_delta(Vector2(0, 16)) == "down",
+		"a positive y delta is southward travel")
+	assert(WIEntityVisualFactory.facing_from_delta(Vector2(0, -16)) == "up",
+		"a negative y delta is northward travel")
+	assert(WIEntityVisualFactory.facing_from_delta(Vector2(16, 0)) == "right",
+		"a positive x delta is eastward travel")
+	assert(WIEntityVisualFactory.facing_from_delta(Vector2(-16, 0)) == "left",
+		"a negative x delta is westward travel")
+	assert(WIEntityVisualFactory.facing_from_delta(Vector2.ZERO) == "",
+		"no travel yields no facing -- the caller holds the last heading and idles")
+	assert(WIEntityVisualFactory.facing_from_delta(Vector2(16, 16)) == "right",
+		"a diagonal resolves horizontal: the side sheet reads better than the front")
+	assert(WIEntityVisualFactory.facing_name(Vector2i.UP) == "up"
+		and WIEntityVisualFactory.facing_name(Vector2i.DOWN) == "down"
+		and WIEntityVisualFactory.facing_name(Vector2i.LEFT) == "left"
+		and WIEntityVisualFactory.facing_name(Vector2i.RIGHT) == "right"
+		and WIEntityVisualFactory.facing_name(Vector2i.ZERO) == "",
+		"sim facing vectors map to the same facing names the travel vector produces")
+	# The mirror is the ONLY thing separating left from right: both resolve to
+	# the one authored `_side` sheet, which faces RIGHT.
+	assert(WIEntityVisualFactory.flip_for("left"), "left is the mirrored side sheet")
+	assert(not WIEntityVisualFactory.flip_for("right")
+		and not WIEntityVisualFactory.flip_for("down")
+		and not WIEntityVisualFactory.flip_for("up"),
+		"only left mirrors -- the side sheet is authored facing right")
+
+	var tex := PlaceholderTexture2D.new()
+	var directional := SpriteFrames.new()
+	for anim_name: String in ["idle_down", "idle_side", "idle_up", "walk_down", "walk_side", "walk_up"]:
+		directional.add_animation(anim_name)
+		directional.add_frame(anim_name, tex)
+	assert(WIEntityVisualFactory.anim_for(directional, "walk", "left") == "walk_side"
+		and WIEntityVisualFactory.anim_for(directional, "walk", "right") == "walk_side",
+		"left and right share one walk sheet")
+	assert(WIEntityVisualFactory.anim_for(directional, "walk", "up") == "walk_up"
+		and WIEntityVisualFactory.anim_for(directional, "idle", "down") == "idle_down",
+		"up/down select their own sheets")
+	assert(WIEntityVisualFactory.anim_for(directional, "walk", "") == "walk_down",
+		"an absent facing falls to the front sheet, never to nothing")
+
+	# The degrade path is what lets an idle-only companion keep rendering: a
+	# sprite with no walk authored must resolve "walk" back to its idle instead
+	# of blanking, which is exactly what the follower rows looked like pre-#459.
+	var idle_only := SpriteFrames.new()
+	idle_only.add_animation("idle")
+	idle_only.add_frame("idle", tex)
+	assert(WIEntityVisualFactory.anim_for(idle_only, "walk", "left") == "idle",
+		"an idle-only sheet degrades a walk request to its idle, not to blank")
+	assert(WIEntityVisualFactory.anim_for(SpriteFrames.new(), "walk", "down") == "",
+		"a sheet with nothing playable returns \"\" so callers can skip play()")
+	assert(WIEntityVisualFactory.anim_for(null, "walk", "down") == "",
+		"a null SpriteFrames must not crash the selection")
+
+
+## GH#459: the pure statics above cannot prove World actually ROUTES the
+## follower through them, so pin the wiring too -- the facing must be read from
+## the travel vector BEFORE the tween retargets the visual, and the idle that
+## follows must be token-guarded the way the PC's is.
+func _follower_walk_wiring_holds(source: String, factory_source: String) -> bool:
+	for helper: String in ["func facing_from_delta(", "func facing_name(", "func flip_for(", "func anim_for("]:
+		if factory_source.find("static " + helper) == -1:
+			return false
+	var move := _function_body(source, "_move_companion_visual")
+	# The delta must be measured against the CURRENT position; reading it after
+	# the tween starts would always be zero and the walk would never play.
+	if move.find("WIEntityVisualFactory.facing_from_delta(target - _companion_visual.position)") == -1:
+		return false
+	if move.find("_play_companion_anim(\"walk\")") == -1 or move.find("_queue_companion_idle()") == -1:
+		return false
+	if move.find("_play_companion_anim(\"idle\")") == -1:
+		return false
+	if move.find("_companion_facing = facing") == -1:
+		return false
+	var play := _function_body(source, "_play_companion_anim")
+	if play.find("WIEntityVisualFactory.anim_for(") == -1 or play.find("WIEntityVisualFactory.flip_for(") == -1:
+		return false
+	var queue := _function_body(source, "_queue_companion_idle")
+	if queue.find("_companion_anim_token") == -1 or queue.find("create_timer(0.18)") == -1:
+		return false
+	# The PC must share the convention, not keep a private copy of it.
+	var player := _function_body(source, "_play_player_anim")
+	return player.find("WIEntityVisualFactory.anim_for(") != -1 \
+		and player.find("WIEntityVisualFactory.facing_name(") != -1 \
+		and _function_body(source, "_reconcile_companion_visual").find("_companion_facing") != -1
+
+
 ## v0.15 T4.3 round 2: the dialogue defer's source contract. world.gd cannot be
 ## instantiated under a bare `--script` SceneTree (it reads the Game/ObservableBus
 ## autoloads, which do not exist there), so the BEHAVIOUR is pinned live in
@@ -885,6 +978,19 @@ func _spawn_light(_holder: Node2D, _light: Dictionary) -> void:
 	assert(driver_source.find("step.get(\"when_user_args\", {})") != -1 \
 		and driver_source.find("QAPaths.user_args().get(arg_name, \"\")") != -1,
 		"paced visual canonicals need an opt-in live-input assertion without changing headless streams")
+
+	_assert_follower_facing_selection()
+	assert(_follower_walk_wiring_holds(source, factory_source),
+		"followers must derive facing from their travel vector and share the PC's down/side/up convention (GH#459)")
+	for deleted_follower_clause: String in [
+		"WIEntityVisualFactory.facing_from_delta(target - _companion_visual.position)",
+		"_queue_companion_idle()",
+		"_companion_facing = facing",
+		"WIEntityVisualFactory.anim_for(",
+		"_companion_anim_token",
+	]:
+		assert(not _follower_walk_wiring_holds(source.replace(deleted_follower_clause, ""), factory_source),
+			"follower walk contract must reject deletion of: %s" % deleted_follower_clause)
 
 	print("PASS: world.gd presentation wiring contracts hold")
 	quit(0)

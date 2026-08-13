@@ -98,10 +98,6 @@ MANIFEST: list[tuple[str, str]] = [
 		"assets/sprites/citizen_f/Walk_Up-Sheet.png",
 	),
 	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Mobs/Skeleton Crew/Skeleton - Base/Idle/Idle-Sheet.png",
-		"assets/sprites/skeleton_ally/Idle-Sheet.png",
-	),
-	(
 		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Environment/Tilesets/Floors_Tiles.png",
 		"assets/tiles/free_pack/Floors_Tiles.png",
 	),

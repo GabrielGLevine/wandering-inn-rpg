@@ -4848,15 +4848,29 @@
   }
  },
  "skeleton_ally": {
+  "_comment": "GH#459: directional, and now OWNED PixelLab art (v3 rotation of the retired Pixel Crawler idle, so the bone palette is unchanged) -- the licensed single-facing sheet it used to ship is gone. This id is BOTH the overworld follower and the combatant record, so the side sheet is what the combat board picks up (board_renderer prefers idle_side): the raised skeleton now faces the enemy line instead of the camera.",
+  "directional": true,
   "shadow": true,
   "animations": {
    "idle": {
-    "sheet": "res://assets/sprites/skeleton_ally/Idle-Sheet.png",
+    "sheet_down": "res://assets/sprites/skeleton_ally/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/skeleton_ally/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/skeleton_ally/Idle_Up-Sheet.png",
     "frame_size": [
      32,
      32
     ],
     "fps": 5
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/skeleton_ally/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/skeleton_ally/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/skeleton_ally/Walk_Up-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 8
    }
   }
  },
@@ -5343,7 +5357,8 @@
   }
  },
  "wolf_companion": {
-  "_comment": "GH#156 follower visual: the world-layer companion visual keys on the companion ID, so the tamed wolf needs an id-named entry. Same OWNED river_wolf sheet at pup-adjacent scale; combat rendering keys on the combatant record's sprite (river_wolf) instead.",
+  "_comment": "GH#156 follower visual: the world-layer companion visual keys on the companion ID, so the tamed wolf needs an id-named entry; combat rendering keys on the combatant record's sprite (river_wolf) instead. GH#459 gave the follower its OWN directional dir -- it no longer shares river_wolf/Idle-Sheet.png, because writing walks into the shared dir would have repainted the combat wolf. OWNED PixelLab v3 rotation of that same idle, so the palette is the combat wolf's exactly. Idle stays one static frame per facing (the pre-#459 read); walk is the new 6-frame cycle.",
+  "directional": true,
   "render_scale": 0.26,
   "anchor": [
    0.5,
@@ -5352,17 +5367,30 @@
   "shadow": true,
   "animations": {
    "idle": {
-    "sheet": "res://assets/sprites/river_wolf/Idle-Sheet.png",
+    "sheet_down": "res://assets/sprites/wolf_companion/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/wolf_companion/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/wolf_companion/Idle_Up-Sheet.png",
     "frame_size": [
      64,
      64
     ],
     "fps": 1
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/wolf_companion/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/wolf_companion/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/wolf_companion/Walk_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 8
    }
   }
  },
  "razorbeak_companion": {
-  "_comment": "GH#156 follower visual (see wolf_companion). OWNED razorbeak sheet, chick-adjacent scale.",
+  "_comment": "GH#156 follower visual (see wolf_companion). GH#459: own directional dir, OWNED PixelLab v3 rotation of the razorbeak idle -- the combat razorbeak sheet is untouched.",
+  "directional": true,
   "render_scale": 0.6,
   "anchor": [
    0.4922,
@@ -5371,12 +5399,24 @@
   "shadow": true,
   "animations": {
    "idle": {
-    "sheet": "res://assets/sprites/razorbeak/Idle-Sheet.png",
+    "sheet_down": "res://assets/sprites/razorbeak_companion/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/razorbeak_companion/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/razorbeak_companion/Idle_Up-Sheet.png",
     "frame_size": [
      64,
      64
     ],
     "fps": 1
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/razorbeak_companion/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/razorbeak_companion/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/razorbeak_companion/Walk_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 8
    }
   }
  },

@@ -244,7 +244,10 @@ func _build_expected_counts() -> Dictionary:
 	## Wave D-2 (#156) tamer/druid kit -- placeholder 16x16 icons (PixelLab drain).
 	for icon_id: String in ["icon_healthy_rearing", "icon_animals_basic_command", "icon_lesser_bond", "icon_beasts_mending", "icon_wild_affinity", "icon_pack_bond", "icon_peace_of_the_wild", "icon_thorn_hand"]:
 		counts[icon_id + "/idle"] = 1
+	## GH#459: directional now (idle keeps its 4 frames per facing, walk is the
+	## template 6-frame cycle).
 	counts["skeleton_ally/idle"] = 4
+	counts["skeleton_ally/walk"] = 6
 	## Second Wind wave (#165) L14 grant kit -- placeholder 16x16 icons (PixelLab drain).
 	for icon_id: String in ["icon_crescent_cut", "icon_pierce_thrust", "icon_ice_wall", "icon_flashfire_spellcraft", "icon_blinding_arrow", "icon_shadowstep", "icon_phantom_barrage", "icon_trusted_voice", "icon_barmaids_prescience", "icon_swift_service", "icon_evaluation_of_wealth", "icon_couriers_double_step", "icon_tea_omens", "icon_flarepepper_supplies", "icon_perfect_reduction", "icon_sworn_fang_ride_together"]:
 		counts[icon_id + "/idle"] = 1
@@ -501,9 +504,13 @@ func _build_expected_counts() -> Dictionary:
 	counts["shop_oil_lamp/idle"] = 1
 	## <!-- v017-L4 END -->
 	counts["razorbeak/idle"] = 1
-	## GH#156 follower-visual aliases of the same owned single-frame sheets.
+	## GH#156 follower visuals, given their OWN directional dirs by GH#459 (they
+	## no longer alias the combat sheets). Idle keeps its single static frame per
+	## facing; walk is the 6-frame cycle every directional rig here uses.
 	counts["wolf_companion/idle"] = 1
+	counts["wolf_companion/walk"] = 6
 	counts["razorbeak_companion/idle"] = 1
+	counts["razorbeak_companion/walk"] = 6
 	counts["mothbear/idle"] = 1
 	counts["kingslayer_spider/idle"] = 1
 	counts["forge_golem/idle"] = 1

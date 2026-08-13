@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bjuwjloi2u5em"
-path="res://.godot/imported/Idle-Sheet.png-15d9667959c3353ec35c2a92022a9b6f.ctex"
+uid="uid://cg64p7tyc1cpw"
+path="res://.godot/imported/Walk_Side-Sheet.png-b4ddf870d30f67242875af5285bcde57.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/skeleton_ally/Idle-Sheet.png"
-dest_files=["res://.godot/imported/Idle-Sheet.png-15d9667959c3353ec35c2a92022a9b6f.ctex"]
+source_file="res://assets/sprites/razorbeak_companion/Walk_Side-Sheet.png"
+dest_files=["res://.godot/imported/Walk_Side-Sheet.png-b4ddf870d30f67242875af5285bcde57.ctex"]
 
 [params]
 
