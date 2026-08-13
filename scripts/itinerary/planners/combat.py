@@ -82,7 +82,7 @@ class CombatPlanner:
         shots = [str(name) for name in spec.get("shots", [])]
         loot = self._loot_interval(entity)
         ledger.apply_victory(entity, loot)
-        ops.append({
+        operation: dict[str, Any] = {
             "kind": "fight",
             "entry": entry,
             "encounter": str(entity.get("id", "")),
@@ -91,7 +91,17 @@ class CombatPlanner:
             "policy": str(spec.get("policy", DEFAULT_POLICY)),
             "max_turns": int(spec.get("max_turns", DEFAULT_MAX_TURNS)),
             "victory_pins": self._victory_pins(entity, ledger),
-        })
+        }
+        # A driven fight is planned EXACTLY like an autoplayed one -- same
+        # approach, same roster gate, same victory ledger, same rng epoch. The
+        # only thing `driven` changes is who plays the opening turns, which is
+        # an emitter concern; the planner carries the list across untouched
+        # rather than interpreting it, because interpreting it is how a second
+        # copy of the board's rules would grow in Python (§0).
+        if str(spec.get("mode", "autoplay")) == "driven":
+            operation["mode"] = "driven"
+            operation["turns"] = [dict(turn) for turn in spec.get("turns", [])]
+        ops.append(operation)
         return ops
 
     @staticmethod

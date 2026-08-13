@@ -47,6 +47,9 @@ class SchemaTest(unittest.TestCase):
             "sell": "{vendor: krshia, item: trap_kit}",
             "use_field": "{skill: basic_cleaning}",
             "interact": "{prop: krshia_stall}",
+            # Added by the 2026-08-13 pre-M4 amendment, which reopened §3.2 for
+            # this idiom and `fight.mode: driven` and re-froze behind them.
+            "journal": "{capture: 05_journal_acts}",
             "shot": "{name: a_shot}",
             "assert": "{state: {gold: 1}}",
             "detour": "{id: inn_chore_dirty_table}",

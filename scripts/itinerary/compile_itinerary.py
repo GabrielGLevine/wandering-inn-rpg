@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import dataclass
 import json
 from pathlib import Path
 import sys
@@ -12,7 +13,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.itinerary.bridge import OracleBridge
     from scripts.itinerary.detours import DetourLibrary
-    from scripts.itinerary.emit import Emitter
+    from scripts.itinerary.emit import CREATION_DIFFICULTY_OPTIONS, Emitter
     from scripts.itinerary.ledger import Ledger
     from scripts.itinerary.planners.actions import ActionPlanner
     from scripts.itinerary.planners.combat import CombatPlanner
@@ -28,7 +29,7 @@ if __package__ in (None, ""):
 else:
     from .bridge import OracleBridge
     from .detours import DetourLibrary
-    from .emit import Emitter
+    from .emit import CREATION_DIFFICULTY_OPTIONS, Emitter
     from .ledger import Ledger
     from .planners.actions import ActionPlanner
     from .planners.combat import CombatPlanner
@@ -102,6 +103,11 @@ class NodePlanner:
             return self.actions.plan_use_field(node.id, spec, ledger)
         if node.primitive == "interact":
             return self.actions.plan_interact(node.id, spec, ledger)
+        if node.primitive == "journal":
+            # No planner: a journal read banks nothing, moves nothing and draws
+            # no rng, so there is no decision for one to make. It goes straight
+            # to the emitter, which owns the open/close pair.
+            return [{"kind": "journal", "capture": str(spec.get("capture", "")), "act": str(spec.get("act", ""))}]
         if node.primitive == "shot":
             return [{"kind": "shot", "name": str(spec["name"])}]
         if node.primitive == "assert":
@@ -156,6 +162,34 @@ def _fixture_reference(start_path: Path, project: Path) -> str:
     return str(resolved)
 
 
+def _creation_operation(creation: dict[str, Any]) -> dict[str, Any]:
+    """The `creation:` scalars, resolved into the emitter's prelude operation.
+
+    The one resolution that happens here rather than in the emitter is the
+    difficulty CURSOR. §346 made both setup prompts open on the live setting
+    rather than on a fixed row, so the script's job is to say which rank the
+    run expects and let the pin prove the prompt agreed -- naming the rank and
+    deriving its index keeps the itinerary readable without the compiler
+    pretending it can read the player's settings file.
+    """
+    rank = str(creation["difficulty"])
+    if rank not in CREATION_DIFFICULTY_OPTIONS:
+        raise CompileError(
+            f"creation: difficulty {rank!r} is not one of {CREATION_DIFFICULTY_OPTIONS}"
+        )
+    return {
+        "kind": "creation_prelude",
+        "itin": START_NODE,
+        "race": str(creation["race"]),
+        "gender": str(creation["gender"]),
+        "name": str(creation["name"]),
+        "difficulty_step": CREATION_DIFFICULTY_OPTIONS.index(rank),
+        "hints": bool(creation["hints"]),
+        "tap_back": bool(creation["tap_back"]),
+        "shots": dict(creation.get("shots", {})),
+    }
+
+
 def _probe_step(node_id: str) -> dict[str, Any]:
     """The harvest marker: a node-labelled reading of the whole sim.
 
@@ -186,7 +220,7 @@ def compile_with_report(
     probe: bool = False,
     harvest: Harvest | None = None,
 ) -> tuple[dict[str, Any], Any]:
-    """Plan and emit one itinerary.
+    """Plan and emit one itinerary, and on pass 2 fence the plan (§3.2).
 
     `probe` builds the HARVEST script: the same run with a `dump_state` after
     every node, so a pass-2 refine has a node-labelled reading of the sim to
@@ -197,9 +231,52 @@ def compile_with_report(
     how §5's convergence contract stops being an argument and becomes a test:
     harvest the refined run, refine from THAT, and the output must be
     byte-identical to the one you already had.
+
+    Pass 2 additionally plans the itinerary TWICE -- once with the harvest and
+    once without -- and refuses to emit if the two plans differ in their spine.
+    That is the 2026-08-13 fence: refine may tighten pins, never re-plan. The
+    second plan is cheap because the oracle bridge caches on (query, save), and
+    two plans that agree ask identical questions under identical saves; the
+    moment they stop agreeing, the queries diverge and so does the spine, which
+    is the thing being caught.
     """
-    document = load_itinerary(source, milestone=MILESTONE)
     bridge = OracleBridge(project)
+    if harvest is not None:
+        baseline = _build(source, project, bridge, authoring, probe, None)
+        refined = _build(source, project, bridge, authoring, probe, harvest)
+        _fence_plan_spine(baseline, refined)
+        build = refined
+    else:
+        build = _build(source, project, bridge, authoring, probe, None)
+    script = build.script
+    _validate(script["steps"], build.checkpoints, build.start_checkpoint, build.document, probe)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(script, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    return script, build.report
+
+
+@dataclass
+class Build:
+    """One planning pass's whole output, before it is validated or written."""
+
+    document: Any
+    script: dict[str, Any]
+    checkpoints: list[Any]
+    start_checkpoint: Any
+    nodes: list[str]
+    detours: list[dict[str, Any]]
+    report: Any
+
+
+def _build(
+    source: Path,
+    project: Path,
+    bridge: Any,
+    authoring: bool,
+    probe: bool,
+    harvest: Harvest | None,
+) -> Build:
+    document = load_itinerary(source, milestone=MILESTONE)
     planner = NodePlanner(project, bridge, DetourLibrary())
     emitter = Emitter()
     ledger = Ledger.fresh()
@@ -220,6 +297,15 @@ def compile_with_report(
         # the driver's own title auto-skip starts a new game instead.
         script["starts_at_title"] = True
         prelude = [{"kind": "fixture_prelude", "map": ledger.map_id, "cell": ledger.cell, "itin": START_NODE}]
+    elif document.creation:
+        prelude = [_creation_operation(document.creation)]
+        # `creation_ui` is the driver's opt-in: without it the title auto-skip
+        # runs New Game straight past the creation screen the prelude drives.
+        script["starts_at_title"] = True
+        script["creation_ui"] = True
+        ledger.state["pc_name"] = str(document.creation["name"])
+        ledger.state["pc_race"] = str(document.creation["race"])
+        ledger.state["pc_gender"] = str(document.creation["gender"])
 
     start_checkpoint = checkpoint_from(ledger, START_NODE, "start")
     planner.checkpoints.append(start_checkpoint)
@@ -250,7 +336,6 @@ def compile_with_report(
     if refiner is not None:
         refiner.review_detours(planner.economy.insertions)
 
-    _validate(script["steps"], planner.checkpoints, start_checkpoint, document, probe)
     if planner.economy.notes:
         script["_pacing_notes"] = list(planner.economy.notes)
     if refiner is not None:
@@ -265,9 +350,88 @@ def compile_with_report(
         if refine_notes:
             script["_refine_notes"] = refine_notes
 
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(script, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
-    return script, (refiner.report if refiner is not None else None)
+    return Build(
+        document=document,
+        script=script,
+        checkpoints=planner.checkpoints,
+        start_checkpoint=start_checkpoint,
+        nodes=[node.id for node in document.nodes],
+        detours=[dict(row) for row in planner.economy.insertions],
+        report=(refiner.report if refiner is not None else None),
+    )
+
+
+# What the fence compares. Everything refine is ALLOWED to touch is excluded:
+# the assert actions it appends, the `payload_contains` pins it tightens, the
+# probe markers a probe build carries, and the prose it writes into comments.
+# What remains is the plan -- which nodes ran, in what order, and what the run
+# pressed and walked between them.
+SPINE_EXCLUDED_ACTIONS = {"assert_state", "assert_event_logged", "assert_event_absent", PROBE_ACTION}
+# The identity of a non-assert step, minus every pin surface. `steps`/`frames`
+# ride along because a changed ROUTE is exactly what this fence exists to catch.
+SPINE_FIELDS = ("action", "type", "name", "direction", "steps", "frames", "skill", "slot", "card", "text", "policy")
+
+
+def _plan_spine(script: dict[str, Any]) -> list[tuple[Any, ...]]:
+    spine: list[tuple[Any, ...]] = []
+    for step in script.get("steps", []):
+        if str(step.get("action", "")) in SPINE_EXCLUDED_ACTIONS:
+            continue
+        spine.append(tuple([str(step.get("_itin", ""))] + [step.get(field) for field in SPINE_FIELDS]))
+    return spine
+
+
+def _fence_plan_spine(baseline: Build, refined: Build) -> None:
+    """Pass 2 refines PINS, not the PLAN -- enforced, not asked for (§3.2).
+
+    The audited latent path is real: refine collapses harvested values into the
+    ledger so that downstream oracle answers are asked under the world the run
+    was really in, and those same ledger values are what the route, ally-gate
+    and progression-preview planners read. Nothing stops a harvested counter
+    from opening a door pass 1 found shut -- except this.
+
+    The comparison is the plan SPINE: the node list, the emitted route and
+    presses between nodes, and the detours the economy planner spliced in.
+    Pins, asserts and probe markers are excluded, because tightening those is
+    the entire job pass 2 is for. A difference is a CompileError rather than a
+    warning: a re-planned pass 2 has invalidated its own evidence (every rng
+    draw behind a moved node moves with it, §2.4), so its output is not a
+    tighter version of the run that was harvested -- it is a different run
+    wearing that run's pins.
+    """
+    if baseline.nodes != refined.nodes:
+        raise CompileError(
+            "PLAN-SPINE FENCE: pass 2 planned a different NODE LIST than pass 1.\n"
+            f"  pass 1: {len(baseline.nodes)} nodes\n  pass 2: {len(refined.nodes)} nodes\n"
+            f"  first difference: {_first_difference(baseline.nodes, refined.nodes)}"
+        )
+    left = [(row.get("node"), row.get("detour")) for row in baseline.detours]
+    right = [(row.get("node"), row.get("detour")) for row in refined.detours]
+    if left != right:
+        raise CompileError(
+            "PLAN-SPINE FENCE: pass 2 spliced a different set of earn-DETOURS than pass 1.\n"
+            f"  pass 1: {left}\n  pass 2: {right}\n"
+            "  Refine may FLAG an unnecessary detour (§2.3) and may never drop one: removing a node moves every "
+            "rng draw behind it, so the harvest being refined from describes a run that no longer exists."
+        )
+    baseline_spine, refined_spine = _plan_spine(baseline.script), _plan_spine(refined.script)
+    if baseline_spine != refined_spine:
+        raise CompileError(
+            "PLAN-SPINE FENCE: pass 2 emitted a different ROUTE than pass 1.\n"
+            f"  pass 1: {len(baseline_spine)} plan steps\n  pass 2: {len(refined_spine)} plan steps\n"
+            f"  first difference: {_first_difference(baseline_spine, refined_spine)}\n"
+            "  Pass 2 refines PINS, not the PLAN. A harvested value reached a planner -- route, ally gate or "
+            "progression preview -- and re-decided something pass 1 had already decided."
+        )
+
+
+def _first_difference(left: list[Any], right: list[Any]) -> str:
+    for index in range(max(len(left), len(right))):
+        one = left[index] if index < len(left) else None
+        two = right[index] if index < len(right) else None
+        if one != two:
+            return f"[{index}] pass 1 {one!r} vs pass 2 {two!r}"
+    return "(same prefix, different length)"
 
 
 def _validate(
