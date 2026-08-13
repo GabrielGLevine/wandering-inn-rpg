@@ -153,8 +153,8 @@
    "payload_contains": {
     "step": "hints",
     "options": [
-     "Yes \u2014 name the next step",
-     "No \u2014 let me find it"
+     "Yes",
+     "No"
     ],
     "cursor": 0
    },

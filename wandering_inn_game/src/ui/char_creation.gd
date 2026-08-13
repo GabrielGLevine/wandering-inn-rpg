@@ -55,23 +55,33 @@ const PORTRAIT_CENTER_Y := 118.0  # CARD_SIZE.y * 0.5 -- centered, no label row 
 const STEP_PROMPT := {
 	Step.PICK: "Who are you?",
 	Step.NAME: "Your name",
-	Step.DIFFICULTY: "How hard a road?",
-	# Short on purpose: the prompt ribbon is a fixed 640-wide texture panel at
-	# Title size, and the longer draft ran out past both of its ends (peek frame
-	# cc4c). Kept to the width of the PICK/NAME prompts it sits beside.
-	Step.HINTS: "Should the journal point?",
+	# Issue #447 (playtest 2026-08-12): plain nouns, in the NAME step's own
+	# register ("Your name") and in the exact words the Settings rows these two
+	# write already carry. The diegetic questions were doing the same explaining
+	# the blurbs below used to do, and a player read the pair as overexplained.
+	# Short also keeps them inside the prompt ribbon, a fixed 640-wide texture
+	# panel at Title size that an earlier longer draft ran out past both ends of
+	# (peek frame cc4c).
+	Step.DIFFICULTY: "Difficulty",
+	Step.HINTS: "Quest hints",
 }
 
-## The two setup steps' copy. Diegetic, and deliberately NOT a mechanics
-## readout: the difficulty rungs take their names from Liscor Hunted's own
-## challenge ranks (canon), and no multiplier is quoted to the player here or
-## anywhere else. Both are changeable later from Settings, which the hint strip
-## says out loud so a player never feels locked in by a menu they met once.
-## WIDTH IS A WINDOWED CATCH, not a guess: at 420 the hints rows' copy ran out
-## past both ends of the panel (peek frame cc4c). 620 is the width the longest
-## row measures inside with margin to spare, and the blurbs were cut down in
-## the same pass rather than only widening the furniture.
-const CHOICE_ROW_SIZE := Vector2(620.0, 44.0)
+## The two setup steps' copy. Issue #447: the rows are BARE now. The difficulty
+## rungs take their names from Liscor Hunted's own challenge ranks (canon) and
+## read as a ladder to anyone who has never opened the books; hints is a yes/no.
+## Both explained themselves before a descriptor tail was ever written for them,
+## and the tails are what a player named as overexplaining. Still deliberately
+## NOT a mechanics readout -- no multiplier is quoted to the player here or
+## anywhere else -- and the hint strip still says out loud that both are
+## changeable from Settings, so a player never feels locked in by a menu they
+## met once. The one durable explanation lives on Settings' Help page
+## ("Difficulty & Quest Hints"), which is where a player who wants one looks.
+## WIDTH FOLLOWS THE COPY: 620 was what the blurb tails measured (itself a
+## windowed catch -- at 420 they ran out past both ends of the panel, peek frame
+## cc4c). With the tails gone the widest row is a single word, so these rows take
+## the NAME step's own 360: the two answer-a-prompt steps share one column width
+## instead of the furniture staying sized for prose that no longer exists.
+const CHOICE_ROW_SIZE := Vector2(360.0, 44.0)
 const CHOICE_ROW_GAP := 10
 ## Selection caret placement, card- and row-local: just inside the 9-slice's
 ## own left border, the half-height being the glyph's vertical centring nudge.
@@ -82,14 +92,12 @@ const CARD_CARET_INSET_X := 10.0
 const CARD_CARET_HALF_H := 26.0
 const ROW_CARET_INSET_X := 14.0
 const ROW_CARET_HALF_H := 13.0
-const DIFFICULTY_BLURBS := {
-	"Bronze": "a gentler road",
-	"Silver": "the road as it was cut",
-	"Gold": "no allowances",
-}
+## Difficulty rows come straight off `WISettings.DIFFICULTY_LABELS` (there is no
+## per-rung copy here any more, #447). Hints keeps a table only because the row
+## has to map back to a bool.
 const HINT_CHOICES := [
-	{"value": true, "label": "Yes — name the next step", "blurb": "the journal points the way"},
-	{"value": false, "label": "No — let me find it", "blurb": "quests read as written"},
+	{"value": true, "label": "Yes"},
+	{"value": false, "label": "No"},
 ]
 
 var _step: int = Step.PICK
@@ -315,18 +323,19 @@ func _build_choice_list() -> void:
 		_choice_carets.append(caret)
 
 
-## `[{label, blurb}]` for the ACTIVE setup step, empty off those steps. One
-## place derives both the rendered rows and the `options` payload key, so QA
-## reads the strings the screen actually drew.
-func _choice_options() -> Array:
-	var out: Array = []
+## The row labels for the ACTIVE setup step, empty off those steps. One place
+## derives both the rendered rows and the `options` payload key, so QA reads the
+## strings the screen actually drew. #447 flattened this from `[{label, blurb}]`
+## to plain labels: the rows draw exactly one string each now, so a dict per row
+## would only be a wrapper around its single surviving key.
+func _choice_options() -> Array[String]:
+	var out: Array[String] = []
 	match _step:
 		Step.DIFFICULTY:
-			for name: String in WISettings.DIFFICULTY_LABELS:
-				out.append({"label": name, "blurb": String(DIFFICULTY_BLURBS.get(name, ""))})
+			out.assign(WISettings.DIFFICULTY_LABELS)
 		Step.HINTS:
 			for choice: Dictionary in HINT_CHOICES:
-				out.append({"label": String(choice["label"]), "blurb": String(choice["blurb"])})
+				out.append(String(choice["label"]))
 	return out
 
 
@@ -339,17 +348,13 @@ func _render_step() -> void:
 	_begin_button.visible = is_name
 	_grid_anchor.visible = _step == Step.PICK
 	_choice_anchor.visible = is_choice
-	var option_labels: Array[String] = []
-	for raw: Variant in options:
-		option_labels.append(String((raw as Dictionary)["label"]))
 	if is_choice:
 		for i in _choice_rows.size():
 			var live := i < options.size()
 			_choice_rows[i].visible = live
 			if not live:
 				continue
-			var option := options[i] as Dictionary
-			_choice_labels[i].text = "%s — %s" % [String(option["label"]), String(option["blurb"])]
+			_choice_labels[i].text = options[i]
 			UIChrome.set_patch_texture(_choice_rows[i].get_child(0) as NinePatchRect, UIChrome.BLUE_BUTTON_PRESSED if i == _choice_cursor else UIChrome.BLUE_BUTTON)
 			_choice_carets[i].visible = i == _choice_cursor
 		# Issue #346: say it is not a one-way door. A setup prompt a player
@@ -371,7 +376,7 @@ func _render_step() -> void:
 	# is byte-unchanged.
 	ObservableBus.emit_domain_event(WIEvents.UI_CHAR_CREATION_RENDERED, {
 		"step": _step_name(),
-		"options": option_labels,
+		"options": options,
 		"cursor": _choice_cursor if is_choice else -1,
 		"cards": PC_OPTIONS.size() if _step == Step.PICK else 0,
 	})
