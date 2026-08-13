@@ -469,6 +469,39 @@
    "description": "Every spell you have ever cast settles into the strike, and the strike remembers all of them at once."
   },
   {
+   "_comment": "[SPELLSPEAR] L14 grant (#449) -- the spear-flavored TWIN of [Keener Edge] directly above. The user ruling makes [Spellsword] the mechanical baseline for evolved-lineage consolidation skills, so ap_cost, effect type and multiplier are that skill's VERBATIM; only the id, the name, the prose and the `weapon` gate re-flavor (sword -> spear, the one mirrored field, since the gate IS the lineage). Structurally unreachable by `sim_combat_batch.gd` for the same reason as [Spellbound Strike] below -- spellspear is never assigned in the harness's BUILDS array -- so no balance-harness re-run is owed.",
+   "id": "keener_point",
+   "display_name": "[Keener Point]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "weapon": "spear",
+   "icon": "icon_keener_point",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 1.6
+   },
+   "description": "Mana runs the length of the haft until the point sings."
+  },
+  {
+   "_comment": "[SPELLSPEAR] L16 grant (#449) -- the spear-flavored TWIN of [Spellbound Strike] above, same baseline rule: ap_cost/mp_cost/effect/cooldown_rounds are that skill's VERBATIM. DELIBERATELY UNGATED, exactly like its baseline: [Spellbound Strike] carries no `weapon` key, so mirroring it means minting no gate either -- adding one here would be a mechanical divergence dressed as flavor, and `WICombatBuild.weapon_gated_kit` would then strip the class's marquee grant from any spellspear who picked up a sword. The flavor lives in the name and the prose. Structurally unreachable by `sim_combat_batch.gd` (spellspear is never assigned in the harness's BUILDS array, the fire_mage/ice_mage/spellsword precedent) -- no balance-harness re-run needed.",
+   "id": "spellbound_thrust",
+   "display_name": "[Spellbound Thrust]",
+   "icon": "icon_spellbound_thrust",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "mp_cost": 3,
+   "effect": {
+    "type": "damage_mult",
+    "mult": 3.0
+   },
+   "cooldown_rounds": 2,
+   "description": "Every spell you have ever cast gathers behind the point, and the thrust carries all of them through."
+  },
+  {
    "id": "lesser_stamina",
    "display_name": "[Lesser Stamina]",
    "contexts": [

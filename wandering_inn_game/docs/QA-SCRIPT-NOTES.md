@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for all 245 canonical QA scripts. The manifest is the
+This is the human index for all 246 canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -38,6 +38,7 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `necromancer_loop` | 9 | full | `near_necromancer` | fixture-banked [Necromancer] gain + L3 combat kit |
 | `scout_consolidation_loop` | 9 | full | `near_scout_consolidation` | rogue/archer lines -> [Scout] floor + combat kit |
 | `consolidation_flow` | 9 | full | `near_consolidation` | offer/decline/re-offer/accept -> [Spellsword] |
+| `spellspear_consolidation_loop` | 449 | full | `near_spellspear_consolidation` | evolved lineage: spearmaster+mage -> [Spellspear] 14, inherited + own grants fielded |
 | `save_migration` | 1 | full | `v2_format` | v2->v3 migration + v1 pause-load rejection + stale-slot defeat-reload |
 | `consolidation_reload` | 9 | full | `pending_offer` | pause-load reconstructs the consolidation prompt mid-offer |
 | `generalist_loop` | 9 | full | `near_generalist` | Generalist evolution path + balanced-mastery grants |

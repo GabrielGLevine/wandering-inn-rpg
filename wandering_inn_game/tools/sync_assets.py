@@ -1065,6 +1065,32 @@ PLACEHOLDER_ICONS: list[tuple[str, str, tuple[int, int, int], tuple[int, int, in
 	("flame", "assets/ui/icons/icon_flarepepper_supplies.png", (220, 70, 50), (120, 25, 15)),
 	("shard", "assets/ui/icons/icon_perfect_reduction.png", (230, 225, 180), (150, 140, 80)),
 	("fan", "assets/ui/icons/icon_sworn_fang_ride_together.png", (170, 130, 90), (90, 60, 30)),
+	# --- #449 [Spellspear]: the two consolidation-own grants. Same code-drawn
+	# glyph policy as every skill icon above (PixelLab pass user-gated, VISUAL-LOG
+	# drain row filed with this change). BOTH shapes are NEW, deliberately: their
+	# twins `edge` (icon_keener_edge) and `bound_blade` (icon_spellbound_strike)
+	# already exist, and a recolour of either would be exactly the retint the
+	# 2026-08-02 "tint is NOT disambiguation" directive forbids -- the two kits
+	# are what a player is being asked to tell apart. So each new glyph changes
+	# the SILHOUETTE, not the hue:
+	#   keen_point  vs edge        -- DIAGONAL thrusting spear (corner to corner,
+	#                                 thin haft + broad point) against `edge`'s
+	#                                 centred, symmetric, vertical blade. Nothing
+	#                                 else in the icon set is a full-length
+	#                                 diagonal weapon (`backstab` is a short dark
+	#                                 dagger + shadow slab, half the length).
+	#   bound_spear vs bound_blade -- pole + ENCIRCLING mana ring against
+	#                                 bound_blade's wide blade, crossguard, pommel
+	#                                 and tip orb. The ring is the read: the spell
+	#                                 is bound around the haft, not perched on the
+	#                                 point.
+	# Palettes follow meaning rather than doing the differentiating work:
+	# keen_point keeps its twin's mana-cyan (the mana-on-weapon family), while
+	# bound_spear takes the spear family's bronze so its ring reads as the only
+	# magic in the glyph. The pair can never be co-held anyway -- consolidating
+	# retires the parents, so no save holds spellsword and spellspear at once.
+	("keen_point", "assets/ui/icons/icon_keener_point.png", (170, 230, 230), (50, 100, 110)),
+	("bound_spear", "assets/ui/icons/icon_spellbound_thrust.png", (205, 160, 90), (95, 60, 20)),
 ]
 
 
@@ -1238,6 +1264,21 @@ def _draw_placeholder(shape: str, dst_rel: str, fill: tuple[int, int, int], outl
 		draw.ellipse([6, 6, 10, 10], fill=outline, outline=outline)
 		draw.polygon([(1, 5), (5, 1), (6, 5)], fill=fill, outline=outline)
 		draw.polygon([(10, 5), (11, 1), (15, 5)], fill=fill, outline=outline)
+	elif shape == "keen_point":
+		# [Keener Point] (#449): a spear driven corner-to-corner, lower-left to
+		# upper-right -- thin haft, broad leaf point, and a pale sliver inside
+		# the point (the same "singing edge" highlight `edge` carries, so the
+		# two twins share a visual grammar while sharing no silhouette).
+		draw.polygon([(0, 12), (2, 15), (11, 7), (9, 4)], fill=fill, outline=outline)
+		draw.polygon([(8, 6), (15, 0), (14, 8), (10, 9)], fill=fill, outline=outline)
+		draw.polygon([(11, 5), (14, 2), (13, 6)], fill=(240, 252, 252), outline=None)
+	elif shape == "bound_spear":
+		# [Spellbound Thrust] (#449): a full-length pole weapon (narrow head,
+		# haft to the frame floor) with the spell bound AROUND the haft as a
+		# mana ring, plus a bright core where ring meets shaft.
+		draw.polygon([(8, 0), (11, 6), (9, 5), (9, 15), (7, 15), (7, 5), (5, 6)], fill=fill, outline=outline)
+		draw.ellipse([2, 7, 13, 12], fill=None, outline=(120, 180, 255), width=2)
+		draw.ellipse([6, 8, 9, 11], fill=(120, 180, 255), outline=(40, 80, 160))
 	elif shape == "quarry_mark":
 		draw.ellipse([2, 2, 13, 13], fill=None, outline=fill, width=2)
 		draw.ellipse([5, 5, 10, 10], fill=None, outline=outline, width=1)

@@ -4,6 +4,17 @@
 	},
 	"consolidations": [
 		{
+			"_comment": "EVOLVED-LINEAGE CONSOLIDATION (#449; user ruling 2026-08-12, docs/CHOICE-LOG.md 'Evolved lineages consolidate into unique classes'). [Spearmaster] does NOT lineage-carry into [Spellsword] -- the evolved spear line merges with the mage line into its OWN class. SAME gate shape as every row below (min_parent_level 10, min_combined_level 21). ORDER IS LOAD-BEARING and this row must stay FIRST: `WIProgression.check_consolidation` returns the FIRST matching row, and [Spellsword]'s own warrior line still literally lists `spearmaster`, so a spear holder below this row would be handed [Spellsword] and [Spellspear] would be unreachable. That contract is GATED, not merely commented -- tests/test_progression.gd::_test_evolved_lineage_consolidation pins spearmaster+mage -> spellspear AND warrior+mage -> spellsword, so a reorder reds.",
+			"id": "spellspear",
+			"target": "spellspear",
+			"parent_lines": [
+				["spearmaster"],
+				["mage", "ice_mage", "fire_mage"]
+			],
+			"min_parent_level": 10,
+			"min_combined_level": 21
+		},
+		{
 			"id": "spellsword",
 			"target": "spellsword",
 			"parent_lines": [
@@ -62,7 +73,6 @@
 		{ "_exempt": ["swordsman", "mage"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["swordsman", "ice_mage"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["swordsman", "fire_mage"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
-		{ "_exempt": ["spearmaster", "mage"], "rationale": "resolved by #449 lane, lands later this wave" },
 		{ "_exempt": ["spearmaster", "ice_mage"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["spearmaster", "fire_mage"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["helper", "emissary"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
@@ -220,6 +230,24 @@
 				{ "level": 14, "requires_any": { "melee_hit": 105, "spell_cast": 87 }, "grants": ["keener_edge"] },
 				{ "level": 15, "requires_any": { "melee_hit": 119, "spell_cast": 100 }, "grants": [] },
 				{ "level": 16, "requires_any": { "melee_hit": 134, "spell_cast": 114 }, "grants": ["spellbound_strike"] },
+				{ "level": 17, "requires_any": { "melee_hit": 149, "spell_cast": 128 }, "grants": [] },
+				{ "level": 18, "requires_any": { "melee_hit": 164, "spell_cast": 142 }, "grants": [] },
+				{ "level": 19, "requires_any": { "melee_hit": 179, "spell_cast": 156 }, "grants": [] },
+				{ "level": 20, "requires_any": { "melee_hit": 194, "spell_cast": 170 }, "grants": [] },
+				{ "level": 21, "requires_any": { "melee_hit": 209, "spell_cast": 184 }, "grants": [] },
+				{ "level": 22, "requires_any": { "melee_hit": 224, "spell_cast": 198 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "[SPELLSPEAR] -- the evolved-lineage twin of [Spellsword] (#449; user ruling 2026-08-12, docs/CHOICE-LOG.md). SPARSE TABLE (GH#54 convention): consolidation-only, so `accept_consolidation` writes the merged level straight in and the table starts AT its floor. Floor = 14, DERIVED (never hardcoded elsewhere) from `WIProgression._consolidation_merged_level` over this class's own consolidations row: the cheapest legal pair under min_parent_level 10 + min_combined_level 21 is (11, 10), and max(ceil(2*21/3), max(11,10)) == 14 -- test_content.gd's `_validate_class_level_tables` re-derives exactly that from the SAME consolidations data. Same parents math as [Spellsword], hence the same floor. `stat_growth` and the whole requires_any curve are [Spellsword]'s VERBATIM: the ruling makes [Spellsword] the mechanical baseline and re-flavors only the grants, so the two lineages cost the same and the Act V band anchor reads the same on either spine. `melee_hit` (not `spear_skill_used`) is the martial axis for the same reason the [Warrior] curve uses it -- the shipped steel thread banks melee_hit fighting with Relc's spear, so the counter is weapon-agnostic already. The spear/mage lineage kit arrives by `inherits`; the two grants below are the consolidation's OWN, spellsword-baselined and spear-flavored ([Keener Edge] -> [Keener Point], [Spellbound Strike] -> [Spellbound Thrust]).",
+			"id": "spellspear",
+			"display_name": "Spellspear",
+			"stat_growth": { "str": 1, "int": 1 },
+			"inherits": ["spearmaster", "mage"],
+			"levels": [
+				{ "level": 14, "requires_any": { "melee_hit": 105, "spell_cast": 87 }, "grants": ["keener_point"] },
+				{ "level": 15, "requires_any": { "melee_hit": 119, "spell_cast": 100 }, "grants": [] },
+				{ "level": 16, "requires_any": { "melee_hit": 134, "spell_cast": 114 }, "grants": ["spellbound_thrust"] },
 				{ "level": 17, "requires_any": { "melee_hit": 149, "spell_cast": 128 }, "grants": [] },
 				{ "level": 18, "requires_any": { "melee_hit": 164, "spell_cast": 142 }, "grants": [] },
 				{ "level": 19, "requires_any": { "melee_hit": 179, "spell_cast": 156 }, "grants": [] },

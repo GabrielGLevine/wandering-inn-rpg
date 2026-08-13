@@ -1,0 +1,50 @@
+{
+ "_comment": "#449 [Spellspear]. The EVOLVED-LINEAGE sibling of near_consolidation.json: same story beat (standing at the offer threshold, one sleep away), one lineage over. spearmaster 11 + mage 10 is the CHEAPEST legal pair -- min_parent_level 10 gates both, min_combined_level 21 rules out the (10,10) the issue text sketched (sum 20), and max(ceil(2*21/3), max(11,10)) == 14 is the sparse table's derived floor. Ledger, in story order: sparred_with_relc + met_relc + given_spear_by_relc are the Act I tutorial that hands this player a SPEAR (which is the whole reason this fixture exists -- spear dominance is what evolved [Warrior] out of the [Spellsword] recipe); melee_hit 68 carries the warrior curve past its own L10 (57) and spearmaster's L10 (57); spear_skill_used 16 is spearmaster's own L11 rung AND, with zero sword_skill_used, the >=0.6 dominance share over min_uses 12 that produced the evolution at all; learned_magic_from_pisces + won_combat 3 + spell_cast 45 are mage 1->10 verbatim from near_consolidation. Equipment: Relc's spare spear is WORN, not just carried -- WICombatBuild.weapon_gated_kit strips weapon-mismatched skills from the combat kit, so a rusty_sword here would silently hide every spear grant the canonical exists to prove. VERSION 5, NOT 3 like its near_consolidation sibling, and that is load-bearing rather than housekeeping: WISave._migrated's version==4 arm OVERWRITES `inventory` and `equipped` with the rusty_sword starter defaults, so a v3 fixture cannot carry a chosen weapon at all (this fixture was authored at v3 first and the closing fight came up holding a sword with every spear grant gate-stripped). v5 is where the equipment keys are honoured verbatim and is what 149 of the shipped fixtures use. rng_state derived from seed 449 via tests/_derive_rng_state.gd.",
+ "state": {
+  "accomplishments": {
+   "melee_hit": 68,
+   "spear_skill_used": 16,
+   "spell_cast": 45,
+   "won_combat": 3,
+   "learned_magic_from_pisces": 1,
+   "sparred_with_relc": 1,
+   "met_relc": 1,
+   "given_spear_by_relc": 1
+  },
+  "actions_since_sleep": 0,
+  "classes": {
+   "mage": 10,
+   "spearmaster": 11
+  },
+  "container_state": {},
+  "current_map": "inn",
+  "dormant_encounters": [],
+  "equipped": {
+   "weapon": "relcs_spare_spear",
+   "armor": ""
+  },
+  "generalist_classes": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "pending_consolidation": {},
+  "player_cell": [
+   2,
+   3
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "player_skills": [
+   "basic_cleaning",
+   "frost_bolt"
+  ],
+  "removed_entities": [],
+  "rng_state": "8367991313693304703",
+  "started_quests": [],
+  "used_skills": []
+ },
+ "version": 5
+}

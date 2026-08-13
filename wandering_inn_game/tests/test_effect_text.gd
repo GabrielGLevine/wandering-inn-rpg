@@ -144,6 +144,12 @@ const EXPECTED_SKILLS := {
 	"slam": ["4 AP — blast a 3×3 area around the target for 1d6 after a round's gathering. Hits friend and foe. Roots."],
 	"keener_edge": ["2 AP — ×1.6 damage"],
 	"spellbound_strike": ["3 AP, 3 MP — ×3 damage. Once every 2 rounds."],
+	# #449 [Spellspear]: the spear-flavored twins of the two rows directly
+	# above. These pins reading IDENTICAL to their baselines is the point --
+	# the user ruling makes [Spellsword] the mechanical baseline, so any drift
+	# in cost or multiplier shows up here as a diff.
+	"keener_point": ["2 AP — ×1.6 damage"],
+	"spellbound_thrust": ["3 AP, 3 MP — ×3 damage. Once every 2 rounds."],
 	"lesser_stamina": [],
 	"low_grade_synthesis": [],
 	"cleansing_heat": [],

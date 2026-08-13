@@ -119,6 +119,19 @@ const SPINE_LEVELS := {
 }
 const SPINE_WEAPONS := {
 	"spellsword": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
+	# #449 [Spellspear], the EVOLVED-lineage spear spine. The one row here whose
+	# five acts are the SAME weapon, and that is a real finding rather than a
+	# shortcut: items.json ships three spears (chipped_spear 0, solid_oak_spear
+	# 0, relcs_spare_spear +1) and the best of them is the ACT I TUTORIAL GIFT.
+	# The spear family has no T2 upgrade at all -- the mid-game weapon bump every
+	# other spine takes (rusty_sword -> gnollish_hunting_knife, training_bow ->
+	# hunting_bow, both +1 damage_mod) simply does not exist for spear players,
+	# so this spine's Act I is a notch STRONGER than its siblings' and its Acts
+	# III-V are a notch behind on gear while the class carries the difference.
+	# Same read as the shipped steel thread, which fights every act of its run
+	# with relcs_spare_spear. Report-only, like every derived spine row: no
+	# CALIBRATION row and no reference window names it.
+	"spellspear": ["relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear"],
 	"innkeeper": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
 	"ranger": ["training_bow", "hunting_bow", "hunting_bow", "hunting_bow", "hunting_bow"],
 	"scout": ["training_bow", "hunting_bow", "hunting_bow", "hunting_bow", "hunting_bow"],
