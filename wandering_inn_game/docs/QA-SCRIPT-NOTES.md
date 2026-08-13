@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for all 244 canonical QA scripts. The manifest is the
+This is the human index for all 245 canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -207,6 +207,7 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `regional_work_loop` | 9 | full | `near_pallass` | v0.15 T4.4 (Lane B population): the regional repeatable-work canonical -- riverfarm_field_board, parlor_errand_slate and forge_fetch_slips each pay 2 gold once per waking, refuse a second take in the same waking, and re-arm after a sleep. Exact gold ledger 60 -> 62 -> 64 -> 66 across the three, the field board banked twice across the sleep, brothers_marker unbanked so the slate's marker-rate variant is provably unmatched, zero combat |
 | `witch_brew_loop` | 9 | full | `witch_brew_start` | v0.16.1 #6 ECONOMY: the ingredient-bounded brew arm. Before this the [Hedge Remedy] bench props had ZERO live coverage, which is how an unbounded brew->sell loop shipped. One cast eats the held dried_yarrow_bundle and yields a remedy_draught; the next cast is refused at the requires_item gate with the authored hint and banks nothing (assert_event_count pins exactly one remedy per yarrow). The consuming-recipe dup-output refusal is unit-proven in test_sim_core |
 | `gh330_companion_gate_loop` | 7 | full | `near_tamer_bond` | #330 R4: present_when.companion proven as a pair -- cache cell walkable with no bond, blocking with the wolf, walkable again with the razorbeak; plus the pond vantage's lead |
+| `companion_swap_recovery_loop` | 7 | full | `near_tamer_swap` | #458: a swap-released tamed bond banks companion_lost, so the spring-litter den re-supplies -- bond wolf -> swap to razorbeak -> trade for a working -> sleep -> re-bond the wolf |
 | `gh330_deer_arc_loop` | 7 | full | `gh330_deer_arc_start` | #330 R3: the wounded corusdeer stands, heals, and leaves -- worn grass + one-time shed antler, and corusdeer_range's ungated vouched soothe |
 | `gh330_lamb_pen_loop` | 7 | full | `gh330_lamb_pen_start` | #330 R2: the hunter's lamb pen as a [Beast Tamer] door outside the floodplains -- wool yield, waking cap, class gain at sleep, then the tended_beasts variant |
 | `journal_categories` | 3 | full | `inn_guests_start` | GH#336 Skills-tab redesign: category-primary + deduped rows (skill_categories/skill_row_ids pinned verbatim) + honest checkbox (assigns on Combat-Active and Exploration-Active, refuses on a Combat-Passive row that reaches no bar) |

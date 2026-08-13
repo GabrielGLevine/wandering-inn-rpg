@@ -1,0 +1,439 @@
+{
+ "_comment": "#458 round trip: a swapped-away tamed companion is RECOVERABLE. The playtest repro is legs 1-2 verbatim (bond the wolf, then bond the razorbeak -- the wolf is released and its den was consumed at bond time). Leg 3 is the half that must NOT change: the counter is banked, but a bond rides, so `present_when.companion: \"\"` keeps every spring-litter rung absent and the player can stand on the rung's own cell. Leg 4 trades the razorbeak for an animated working (the ONLY death-free way to empty a tamed slot) and leg 5 sleeps it away -- a sleep expiry banks nothing. Leg 6 is the recovery: rung 1 blocks (12,22) and rung 2 blocks (9,23) again, and [Lesser Bond] re-bonds the wolf. Can-fail: revert the `reason == \"released\"` arm in wi_game._clear_companion and step 22 (the first companion_lost bank) times out, taking legs 4-6 with it. Event ORDER matters at every swap: record_accomplishment emits inside _clear_companion BEFORE the release companion_changed, so the accomplishment wait comes first or the since-cursor eats it.",
+ "fixture_save": "near_tamer_swap",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "companion",
+   "equals": ""
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    22
+   ]
+  },
+  {
+   "_comment": "== (1) THE FIRST BOND == the fixture faces the wolf den (11,22); hotbar_1 is [Lesser Bond]. The den is CONSUMED here -- that is why a later release is a real loss.",
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "companion_changed",
+   "payload_contains": {
+    "id": "wolf_companion",
+    "active": true,
+    "reason": "tamed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "wolf_den"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.tended_beasts",
+   "equals": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "companion_lost"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_wolf_bonded"
+  },
+  {
+   "_comment": "== (2) THE PLAYTEST REPRO == down 1 -> (10,23), left 1 -> (9,23), left 1 blocks on razorbeak_chick (8,23) and faces it. Bonding it releases the wolf, whose den no longer exists.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    23
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    23
+   ]
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "companion_lost",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "companion_changed",
+   "payload_contains": {
+    "id": "wolf_companion",
+    "active": false,
+    "reason": "released"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "companion_changed",
+   "payload_contains": {
+    "id": "razorbeak_companion",
+    "active": true,
+    "reason": "tamed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.companion_lost",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.tended_beasts",
+   "equals": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "companion",
+   "equals": "razorbeak_companion"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_swapped_to_razorbeak"
+  },
+  {
+   "_comment": "== (3) NO DOUBLE-BONDING == the counter is met, but a bond rides: `present_when.companion` = the EMPTY slot keeps rung 1 absent, and standing ON (12,22) is the proof (a present entity blocks its own cell unconditionally). right 3 -> (12,23) [rung 3 needs 3 losses, still absent], up 1 -> (12,22).",
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    23
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    22
+   ]
+  },
+  {
+   "_comment": "== (4) TRADE THE BOND FOR A WORKING == ruin_surface (14,10), right 1 blocks on bone_pile_ruin (15,10) and faces it; hotbar_2 is [Animate Dead]. Releasing the TAMED razorbeak banks the second loss; raising bones is not beast-tending, so tended_beasts does NOT move.",
+   "action": "teleport",
+   "map": "ruin_surface",
+   "cell": [
+    14,
+    10
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "ruin_surface"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    10
+   ]
+  },
+  {
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "companion_lost",
+    "count": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "companion_changed",
+   "payload_contains": {
+    "id": "razorbeak_companion",
+    "active": false,
+    "reason": "released"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "companion_changed",
+   "payload_contains": {
+    "id": "skeleton_ally",
+    "active": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "bone_pile_ruin"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.tended_beasts",
+   "equals": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "companion",
+   "equals": "skeleton_ally"
+  },
+  {
+   "_comment": "== (5) THE WORKING FADES == the inn bed. An animated follower expiring at sleep is its design, not a loss: the counter must stand still at 2 across the sleep.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "companion_changed",
+   "payload_contains": {
+    "id": "skeleton_ally",
+    "active": false,
+    "reason": "sleep"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "companion",
+   "equals": ""
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.companion_lost",
+   "equals": 2
+  },
+  {
+   "_comment": "== (6) THE WILD OFFERS AGAIN == two losses, empty slot: rung 1 stands at (12,22) and rung 2 at (9,23). Both are proven by BLOCKING -- the same cells this run already walked onto/through while a bond rode.",
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    12,
+    23
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    23
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    23
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    23
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "wait_frames",
+   "frames": 60
+  },
+  {
+   "action": "screenshot",
+   "name": "02_spring_litter_standing"
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "companion_changed",
+   "payload_contains": {
+    "id": "wolf_companion",
+    "active": true,
+    "reason": "tamed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "wolf_den_spring"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "companion",
+   "equals": "wolf_companion"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.tended_beasts",
+   "equals": 7
+  },
+  {
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "companion_lost"
+   },
+   "count": 2
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "action": "screenshot",
+   "name": "03_wolf_rebonded"
+  }
+ ]
+}

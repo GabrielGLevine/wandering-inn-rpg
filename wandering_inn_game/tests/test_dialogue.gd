@@ -896,14 +896,17 @@ func test_pisces_inn_greet_never_seats_the_horns_in_an_empty_corner() -> void:
 	assert(declined_at_least_once, "at least one shipped state serves a non-corner greet -- otherwise the arm is unconditional")
 
 
-## GH#332. Both tame props are consumed permanently and a downed companion was
-## gone for good, so one bad fight could exhaust taming forever. Three halves,
-## all pinned here, and two of them are review-wave repairs:
-##  1. Only a TAMED death banks `companion_lost`. A swap and a sleep expiry
-##     were always excluded; an ANIMATED summon going down in a fight is the
-##     one the first cut missed, and `_combat_event_relay` routes EVERY downed
-##     companion through `_clear_companion("downed")`, so a necromancer with
-##     three bone piles and no [Lesser Bond] used to burn the whole ladder.
+## GH#332 (+ #458). Both tame props are consumed permanently and a lost
+## companion was gone for good, so one bad fight -- or one swap -- could
+## exhaust taming forever. Three halves, all pinned here:
+##  1. A TAMED bond leaving the slot banks `companion_lost`, whether it DIED
+##     ("downed") or was traded away ("released", #458 -- the prop it came
+##     from is already consumed, so a swap is a real loss). What is NOT a
+##     loss is anything ANIMATED: `_combat_event_relay` routes EVERY downed
+##     companion through `_clear_companion("downed")`, so banking a
+##     skeleton's fall (or its trade-in, or its sleep expiry) would burn
+##     rungs a necromancer with three bone piles and no [Lesser Bond] can
+##     never take.
 ##  2. A rung NEVER closes on the counter. The first cut gave rungs 1 and 2 an
 ##     `absent` arm one count above their own, so a player who lost a bond in
 ##     the floodplains and the next one in a dungeon came back to a rung
@@ -940,12 +943,8 @@ func test_companion_loss_reopens_a_den_one_rung_at_a_time() -> void:
 	assert(game.entity_present(_find_entity(scene, "floodplains", "wolf_den")), "the original den still stands on a fresh save")
 	assert(live.call(game).is_empty(), "no spring rung is offered before any bond is lost")
 
-	# Only a TAMED death banks. A swap, a sleep expiry, and an animated summon
-	# going down in a fight must not.
-	game.companion = "wolf_companion"
-	game.companion_source = "tamed"
-	game._clear_companion("released")
-	assert(game.accomplishment_count("companion_lost") == 0, "swapping bonds is a choice, not a loss")
+	# NOTHING animated banks -- not a sleep expiry, not a summon going down in
+	# a fight, not trading one in for another bond.
 	game.companion = "skeleton_ally"
 	game.companion_source = "animated"
 	game._clear_companion("sleep")
@@ -954,26 +953,35 @@ func test_companion_loss_reopens_a_den_one_rung_at_a_time() -> void:
 	game.companion_source = "animated"
 	game._clear_companion("downed")
 	assert(game.accomplishment_count("companion_lost") == 0, "a DOWNED ANIMATED summon is a spent working, not a lost bond -- it may not burn a ladder rung")
+	game.companion = "skeleton_ally"
+	game.companion_source = "animated"
+	game._clear_companion("released")
+	assert(game.accomplishment_count("companion_lost") == 0, "trading an ANIMATED working away for a bond is not a lost bond either -- the reason alone may not bank")
 	assert(live.call(game).is_empty(), "no rung opens for a skeleton the player could never have bonded")
 
+	# #458: a TAMED swap-release IS a loss -- the prop it came from was
+	# consumed at bond time, so nothing else would ever offer that beast again.
 	game.companion = "wolf_companion"
 	game.companion_source = "tamed"
-	game._clear_companion("downed")
-	assert(game.accomplishment_count("companion_lost") == 1, "a DOWNED TAMED companion banks the loss")
+	game._clear_companion("released")
+	assert(game.accomplishment_count("companion_lost") == 1, "trading a TAMED bond away banks the loss: the wild has to offer again or the swap is permanent")
 	assert(game.companion == "", "the bond slot is empty after the clear")
-	assert(live.call(game) == ["wolf_den_spring"], "first loss opens rung 1 and only rung 1")
+	assert(live.call(game) == ["wolf_den_spring"], "the swap opens rung 1 and only rung 1")
+
+	game.companion = "razorbeak_companion"
+	game.companion_source = "tamed"
+	game._clear_companion("downed")
+	assert(game.accomplishment_count("companion_lost") == 2, "a DOWNED TAMED companion banks the loss")
+	assert(live.call(game) == ["wolf_den_spring", "razorbeak_chick_fledgling"], "a second loss opens rung 2 WITHOUT erasing the rung 1 the player never walked back to")
 
 	# The wild does not offer while a bond already walks with you.
 	game.companion = "razorbeak_companion"
 	assert(live.call(game).is_empty(), "no rung is offered while a companion rides")
 	game.companion = ""
 
-	# An UNCLAIMED rung survives the next loss. This is the review-wave repro:
-	# lose a bond in the floodplains, lose the next one somewhere else, come
-	# back -- rung 1 must still be standing, because the player was never
-	# offered it.
-	game.record_accomplishment("companion_lost")
-	assert(live.call(game) == ["wolf_den_spring", "razorbeak_chick_fledgling"], "a second loss opens rung 2 WITHOUT erasing the rung 1 the player never walked back to")
+	# An UNCLAIMED rung survives the next loss: lose a bond in the floodplains,
+	# lose the next one somewhere else, come back -- rung 1 must still be
+	# standing, because the player was never offered it.
 	game.record_accomplishment("companion_lost")
 	assert(live.call(game) == ["wolf_den_spring", "razorbeak_chick_fledgling", "wolf_den_late_litter"], "three losses stand three unclaimed rungs -- the ladder's advertised depth")
 	game.record_accomplishment("companion_lost")
