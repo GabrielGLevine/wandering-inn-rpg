@@ -293,6 +293,29 @@ const ROSTER := [
 	# out-of-window read is the finding, not a retune order. BAND COLUMN is
 	# `band_act5_top` on all three, identical to the amulet row's, so the ship
 	# reads sit against one unchanged reference line.
+	#
+	# #438 (2026-08-13) STOP, MEASURED. The user ruling asked for the ceiling drift
+	# here (ship-competent t6 0.93 / t12 0.97 / s16 1.00 against the amulet row's
+	# 0.89 and WINDOW_CEILING 0.85) to be fixed from tactic-skill class DATA, and
+	# STOP-and-report if the window needs policy or frozen-stat movement. It does.
+	# Measured at 100 seeds, each leg a full run of this file:
+	#   high-rung tactic skills NEUTERED ([Read the Field] hit_bonus 10 -> 0,
+	#     [Instantaneous Barrage] length 4 -> 1 / cooldown 2 -> 6 / ap 3 -> 4):
+	#     s16 ship-competent 1.00 -> 1.00. ZERO. Only the FLOOR read moves
+	#     (0.93 -> 0.85). The row is SATURATED: at competent the build wins 100/100
+	#     on raw stats before a tactic Skill is spent, so the Skills have no margin
+	#     left to give back.
+	#   the WHOLE tactic family neutered (also [Battlefield Awareness] L1,
+	#     [Chosen Blow] L5, [Flanking Step] L6 — out of scope, it would undo #453
+	#     G3's L6 ladder relief): s16 1.00 -> 0.92, still 0.07 over, and it drags
+	#     the reference line with it — amulet 0.89 -> 0.83, t6 0.93 -> 0.84,
+	#     act5_seal_warden ship-competent 0.80 -> 0.68.
+	# THE RESIDUAL DRIVER IS THE CLASS, NOT ITS SKILLS: `strategist.stat_growth.int`
+	# (2/level x 16, on a 37-level multiclass) alone moves s16 1.00 -> 0.92 with
+	# every tactic Skill intact. That is classes.json — the class lane's surface —
+	# and even at 0 it does not reach 0.85. Reaching the ceiling needs class stat
+	# growth PLUS the level budget, or the warden's frozen block, or policy
+	# movement; all three are the ruling's stop conditions, so nothing was tuned.
 	{
 		"id": "act5_seal_warden_tactician6", "act": "V", "beat": 33, "map": "dungeon/trapped_halls", "entity": "seal_warden_alcove",
 		"ship": "ship_act5_tactician6", "band": "band_act5_top", "draughts": [],
