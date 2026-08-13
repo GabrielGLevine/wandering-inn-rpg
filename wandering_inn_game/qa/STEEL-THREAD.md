@@ -30,7 +30,13 @@ seed 37 and its loot-ledger/inventory pins were re-recorded from the live run.
 **2569 steps are GREEN end to end at seed 37** — title gate to GDI epilogue,
 Seal Warden included.
 
-The verified #451 headless run recorded **11433 events**.
+Re-verified 2026-08-13 (Lane D) on composed main after #448/#449/#450/#451:
+still **PASS, 2569/2569 steps, zero failures**, twice at `--seed=37`. Event
+counts observed **10950 / 10960 / 10962** across three runs — the ±12 jitter
+is the known limitation below; the ~480-event drop from the #451-era 11433 is
+the wave's own content landing, not a regression. Seed and step count are
+unchanged. The class rows below were re-derived from that run — they MOVED
+(see the dated note under the trajectory table).
 
 ## Every fight runs `policy: competent` (ruling, 2026-08-12)
 
@@ -97,16 +103,23 @@ hide.
    (opened), the Seal Warden, the vault, anchor, tally, the walk back,
    final sleep, GDI epilogue
 
-## PC trajectory at act boundaries (seed 37, re-derived for #451)
+## PC trajectory at act boundaries (seed 37, re-derived 2026-08-13, Lane D)
 
 | Boundary | Classes | Combined | Band | Gold | Waking |
 |---|---|---|---|---|---|
 | End Act I (`reached_liscor`) | warrior 1 | 1 | 1–2 | 2 | 1 |
-| End Act II (`cisterns_reported`) | warrior 5, mage 2 | 7 | 4–6 | 12 | 3 |
-| End Act III (`raskghar_sealed`) | warrior 9, mage 2 | 11 | 8–10 | 12 | 4 |
-| End Act IV (`seal_descent_agreed`) | spearmaster 14, mage 6, diplomat 4 | 24 | 12–14 | 0 | 8 |
-| At the Seal Warden | spearmaster 14, mage 6, diplomat 7, trader 2 | 29 | 14–16 | 0 | 10 |
-| End of run (epilogue) | spearmaster 15, mage 6, diplomat 7, trader 2 | 30 | — | 0 | 11 |
+| End Act II (`cisterns_reported`) | warrior 5, mage 3 | 8 | 4–6 | 12 | 3 |
+| End Act III (`raskghar_sealed`) | warrior 8, mage 4 | 12 | 8–10 | 12 | 4 |
+| End Act IV (`seal_descent_agreed`) | spearmaster 16, mage 8, diplomat 4 | 28 | 12–14 | 0 | 8 |
+| At the Seal Warden | spearmaster 16, mage 8, diplomat 7, trader 2 | 33 | 14–16 | 0 | 10 |
+| End of run (epilogue) | spearmaster 16, mage 8, diplomat 7, trader 2 | 33 | — | 0 | 11 |
+
+**These rows MOVED in the ≥434 wave** (previously warrior 5/mage 2 → 7,
+warrior 9/mage 2 → 11, spearmaster 14/mage 6/dip 4 → 24, and 29/30 at the
+last two boundaries). Gold and waking are UNCHANGED at every boundary, the
+warden tape below is unchanged beat for beat, and the run is still green —
+only the leveling curve moved, faster on both lines. Re-derived by
+checkpointing the live run (`--checkpoint-at`), not by hand.
 
 Climax builds (the number the bands actually govern — levels resolve in
 `sleep()`, so a climax is fought at the *previous* night's build):
@@ -114,12 +127,12 @@ Climax builds (the number the bands actually govern — levels resolve in
 | Climax | Fought at | Band | Result |
 |---|---|---|---|
 | I gate-road ambush | warrior 1 | 1–2 | win |
-| II cistern nest (+ matriarch) | warrior 5 / mage 2 | 4–6 | win, round 5 |
-| III raskghar scouts (+ pack leader) | warrior 5 / mage 2 | 8–10 | win |
-| III awakened boss (+ two scouts + Sewer Bat, with Relc) | warrior 5 / mage 2 | 8–10 | win, round 4 |
-| IV vault construct | spearmaster ~12 / mage 3 | 12–14 | win, round 7 |
-| IV ruin guardian | spearmaster 12 / mage 3 + core shard | — | win |
-| V seal warden | spearmaster 14 / mage 6 / dip 7 / trader 2 | 14–16 | **win, round 5, PC ends on 47/47 HP** |
+| II cistern nest (+ matriarch) | warrior 5 / mage 3 | 4–6 | win, round 5 |
+| III raskghar scouts (+ pack leader) | warrior 8 / mage 4 | 8–10 | win |
+| III awakened boss (+ two scouts + Sewer Bat, with Relc) | warrior 8 / mage 4 | 8–10 | win, round 4 |
+| IV vault construct | spearmaster 10 / mage 6 | 12–14 | win, round 7 |
+| IV ruin guardian | spearmaster 10 / mage 6 + core shard | — | win |
+| V seal warden | spearmaster 16 / mage 8 / dip 7 / trader 2 | 14–16 | **win, round 5, PC ends on 47/47 HP** |
 
 ### The diet, per act (what was added and why)
 
@@ -132,10 +145,10 @@ Climax builds (the number the bands actually govern — levels resolve in
   stitched route walked past — and then a night at the inn. The night is
   the whole fix: `melee_hit` 23 and `won_combat` 3 were already banked
   and *unspent*, because levels only resolve in `sleep()`. One night
-  converts them to [Warrior] 5 + [Mage] 2. Cost: 1 fight, 1 sleep,
+  converts them to [Warrior] 5 + [Mage] 3. Cost: 1 fight, 1 sleep,
   ~130 walked cells.
 - **Act III** — **nothing added**. The Act II night carries the act:
-  scouts, warren mouth and the Awakened all clear at warrior 5 / mage 2
+  scouts, warren mouth and the Awakened all clear at warrior 8 / mage 4
   with Relc kept. (The veto solo fork stays untaken; #439 measured it at
   0.06.)
 - **Act IV** — **no fights added; two rewards finally worn.** After
@@ -199,18 +212,31 @@ level-14 Spellsword reference at 0.78 inside the window.
 
 ## Still open after the program
 
-- **The consolidation gap is structural — filed-issue candidate.**
-  Spellsword needs warrior 10 + mage 10. [Warrior] evolves into
-  [Spearmaster] at 10 on `spear_skill_used` dominance — with Relc's spear
-  in hand from Act I that is the only reachable shape — and the
-  consolidation reads *warrior*, so **the evolution orphans the PC's
-  spellsword eligibility permanently**. Mage reaches 6, not 10, because
-  the competent policy only casts when the cast out-damages the swing and
-  a 1.4×/2.0×/2.6× spear kit always beats a level-6 frost bolt. No sane
-  diet on this spine reaches spellsword 14. Either consolidations accept
-  evolved parents, or the Act V band stops being stated as a
-  spellsword-shape.
-- **Level count is not the Act V band.** The run arrives at 29 combined
+- **The evolved-parent half of the consolidation gap is CLOSED (#449).**
+  The orphaning this section used to report — [Warrior] evolves to
+  [Spearmaster] at 10 on `spear_skill_used` dominance (with Relc's spear
+  from Act I, the only reachable shape) and the consolidation read
+  *warrior* — is fixed: [Spellspear] consolidates spearmaster × mage at
+  the same 10/21 gate. On this run the PC holds **spearmaster 16** at the
+  descent, so the martial half of the gate clears with six levels to spare.
+- **What is still open is the mage half — it is a diet gap, not a
+  structural one.** Mage reaches **8**, not 10. Level 10 wants
+  `spell_cast` 45; the run banks **35**, all of them ice (`ice_cast` 35,
+  `fire_cast` 0). The competent policy casts only when the cast out-damages
+  the swing, which on a spear kit means only at range, so casts cluster in
+  ranged multi-foe fights (the two Invrisil alley fights bank 6 each with
+  zero melee) and the single-boss climaxes bank none — `spell_cast` is
+  frozen at 35 from the last Invrisil fight through the warden. **+10
+  banked casts, all of which must land before the Act IV→V sleep**, is the
+  whole remaining delta. Paying it is not free: added fights consume rng
+  draws before `WICombat.new(..., rng.randi())` and re-roll the finale (the
+  measured `gallery_vermin_nest` result below), and the offer that fires
+  would preempt one Act V gating sleep — `sleep_beat.gd` returns at the
+  consolidation offer BEFORE `door_study_sleeps`/`second_door_study_sleeps`
+  bank, and a decline does not suppress the re-offer at the next sleep. A
+  mage-10 variant therefore belongs to #434 M4's Mage run, which owns the
+  variant layer, not to this thread.
+- **Level count is not the Act V band.** The run arrives at 33 combined
   levels and 47 max HP against a band written for 14–16 *focused*;
   #437's 0.77 was measured on that focused build with tuned gear. The
   band wants focused-equivalent power, and should say so.
