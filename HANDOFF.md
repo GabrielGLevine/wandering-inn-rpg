@@ -60,42 +60,24 @@ or superseded session blocks.
   (sheet-share + side-profile traps; renderer at world.gd:2100 /
   _play_player_anim:1777; registry rows 247/505/506; balance healthy).
   Max 2 concurrent Opus agents. `timeout` not on PATH — perl alarm idiom.
-- WAVE >=434 IN FLIGHT (2026-08-12, Fable controller; plan at
-  docs/superpowers/plans/2026-08-12-sol-wave-434-plus.md; wave-autonomy
-  rulings in CHOICE-LOG SS Sol wave >=434). MERGED to main: #454 (B1
-  lineage validator, 26-pair orphan inventory posted to #452 for the
-  user's naming pass), #455 (E3 dangersense aura, closes #446; USER
-  EYE-GATE pending via qa/playtest_saves/2026-08-12-446-dangersense-aura/
-  README.md), #457 (A-M1 itinerary compiler spine + honest Act I).
-  IN FLIGHT: Lane C PR #456 (cap #451 + harness probe + window repair,
-  fully gated + warden A/B ratified) blocked only on sim_combat_batch
-  legacy-bounds re-derivation — Opus agent landed 17 re-pinned cells
-  (7f15af48, attribution proven by merge-base control run) and is
-  migrating the ladder ordering assert to the competent policy per the
-  2026-08-11 doctrine; then push -> CI -> merge. B2 #450 gated PASS
-  (bf8eeb92 on issue/450-appraise-foe-scope; #445 guard
-  falsification-proven, 3 amendment rulings implemented) — rebases onto
-  main AFTER C (skills.json + invrisil_walkthrough compose), re-verify,
-  PR, merge; its 3 post-split Tactician sim rows insert after C lands
-  (exact rows in B2 close report, by1ku8f2b output). E1 #443/#444 fully
-  green on its branch (WIP 50a4a4b8; steel-thread scare was a controller
-  unseeded-run error — ALWAYS pass --seed explicitly) — after C merges:
-  rebase, re-derive its two QA-script hunks against C's seed-37 thread
-  (Opus), PR, controller windowed facade+spent-states read. REMAINING
-  QUEUE: E4 #447 (after E1; creation-copy pin blast incl. steel_thread
-  prologue), C2 #448 solo composition + C3 pace-sim, B3 #449
-  [Spellspear] (wiki-verify name first) + B4 #452 layers 3-5 (scaffolder,
-  sim-roster derivation — AFTER C's sim file settles), E2 = verification
-  sweep only (B2 owns the fix), Lane D steel-thread refresh LAST (after
-  B2+C+E4; through the compiler if A-M2/M3 land first). Codex pool
-  exhausted-ish: all remaining implementation via Opus subagents, same
-  brief+gate discipline; Fable = gates/adjudication only.
-  User-ask batch accumulating: 26 orphan pair names; Coyle bounty re-arm
-  (#443); C1 WALL list (Innkeeper I-V, Scout I-V, Ranger x4, Druid I/IV
-  + Druid ceiling drift) + 8 t3_warrior10 competent-floor cells —
-  three-pillars adjudication; oracle dispatch-duplication follow-up;
-  #454 squash carried the 41-commit local backlog (granular history on
-  local branch main-pre-454-archive).
+- WAVE >=434 (plan: docs/superpowers/plans/2026-08-12-sol-wave-434-plus.md;
+  rulings: CHOICE-LOG SS Sol wave >=434). MERGED: #454 B1 validator
+  (26-pair inventory on #452 awaits user naming), #455 E3 aura (user
+  eye-gate via qa/playtest_saves/2026-08-12-446-dangersense-aura/),
+  #457 A-M1 compiler, #456 full Lane C (cap + harness probe + window
+  repair + matrix re-derivation + report-only ladder + 13 canonical
+  re-fixtures). E1 green on its branch (50a4a4b8) — after B2 merges:
+  rebase, re-derive its 2 QA hunks vs the seed-37 thread, PR, windowed
+  facade read. QUEUE after B2: E5 #458 (wi_game.gd), E4 #447 (after E1),
+  C2 #448 + C3, B3 #449 (wiki-verify name) + B4 (after sim file
+  settles), E2 verify-only, Lane D last. All implementation via Opus
+  subagents (Codex dry); Fable gates only. USER-ASK BATCH: 26 orphan
+  names; Coyle bounty re-arm; WALL list (Innkeeper I-V, Scout I-V,
+  Ranger x4, Druid I/IV + ceiling drift) + 8 t3_warrior10
+  competent-floor cells; ladder stop-order (both policies non-monotone
+  post-cap); cisterns 0.64 / arc_flow 0.55 band-top headroom; oracle
+  dispatch duplication; #454 squash carried 41-commit backlog (granular
+  history on main-pre-454-archive).
 - QUEUED: **#452 codify #347** (user-directed 2026-08-12): lineage-
   completeness validator (build FIRST — inventories all orphaned pairs,
   protects main at commit time), consolidation scaffolder, doctrine
