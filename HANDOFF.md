@@ -60,6 +60,12 @@ or superseded session blocks.
   merge class lane, read balance state, F1 Lich -> M3.6 -> equipment
   sketch (Fable) -> M4. User batch additions: skirmisher martial WALLs,
   wild_sage act5 1.00 ceiling (trivialization set with s16/druid).
+  RULED 2026-08-13 late: capstone-set = trim growth AND/OR raise Warden
+  (NO-AUTO-WIN principle binding; warden movement sanctioned; full
+  re-window + re-fixture blast after); skirmisher walls = kit/Skill
+  gap lane; #432 = meal cap (strongest-single, refresh-not-stack).
+  These three join the post-reset dispatch queue AFTER balance-tail
+  PR (same surfaces).
 - QUEUED: **#452 codify #347** (user-directed 2026-08-12): lineage-
   completeness validator (build FIRST — inventories all orphaned pairs,
   protects main at commit time), consolidation scaffolder, doctrine
