@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for all 247 canonical QA scripts. The manifest is the
+This is the human index for all 250 canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -39,6 +39,9 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `scout_consolidation_loop` | 9 | full | `near_scout_consolidation` | rogue/archer lines -> [Scout] floor + combat kit |
 | `consolidation_flow` | 9 | full | `near_consolidation` | #472: the sleep beat's SHAPE for an automatic merge -- one sleep, the merge applied inside it and strictly before the veil renders, the Design's one veil line, the same sentence banked to the journal's Lore record, and the merged [Spellsword] 14 kit fielded in a later fight. `assert_event_absent consolidation_offered` is what keeps the deleted prompt/decline path deleted. |
 | `spellspear_consolidation_loop` | 449 | full | `near_spellspear_consolidation` | evolved lineage: spearmaster+mage -> [Spellspear] 14, inherited + own grants fielded #472: the prompt steps are gone -- the merge applies in-beat; the opaque-until-sleep lock is now proved by an assert_event_absent on consolidation_accepted BEFORE the bed, and the veil line + journal Lore entry are asserted after it. |
+| `skirmisher_consolidation_loop` | 438 | full | `near_skirmisher_consolidation` | spearmaster+archer -> [Skirmisher] 14, inherited + own grants fielded; [Steady Point] spear-gated, bow grants correctly stripped |
+| `deathknight_consolidation_loop` | 438 | full | `near_deathknight_consolidation` | warrior+necromancer -> [Deathknight] 14, the level path past [Necromancer]'s L12 cap; inherited + own grants fielded |
+| `wild_sage_consolidation_loop` | 438 | full | `near_wild_sage_consolidation` | beast_master+mage -> [Wild Sage] 14; the bond kit ([Pack Bond]/[Sworn Fang]) survives the merge instead of being dropped into [Druid] |
 | `save_migration` | 1 | full | `v2_format` | v2->v3 migration + v1 pause-load rejection + stale-slot defeat-reload |
 | `generalist_loop` | 9 | full | `near_generalist` | Generalist evolution path + balanced-mastery grants |
 | `lantern_check` | 9 | full | `—` | [Light] lit_the_common_room payoff, after the Pisces mage arc |

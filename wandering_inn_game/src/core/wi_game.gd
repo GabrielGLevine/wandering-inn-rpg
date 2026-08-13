@@ -879,7 +879,12 @@ func _wild_affinity_reduction(ent: Dictionary) -> int:
 	if not bool(ent.get("beast", false)):
 		return 0
 	var known := known_skills()
-	if known.has("peace_of_the_wild"):
+	# #438: [Counsel of the Wild] is [Wild Sage]'s TWIN of [Peace of the Wild]
+	# and sits at the SAME -2, because the consolidation-twin rule is that only
+	# name/prose/icon re-flavor. This branch is the whole reason the twin is not
+	# inert: the baseline's mechanics live HERE, in an id literal, not in an
+	# `effect` block a data-only copy would have carried across.
+	if known.has("peace_of_the_wild") or known.has("counsel_of_the_wild"):
 		return 2
 	if known.has("wild_affinity"):
 		return 1

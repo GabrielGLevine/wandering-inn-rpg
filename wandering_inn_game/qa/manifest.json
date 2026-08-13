@@ -845,6 +845,78 @@
    }
   },
   {
+   "_comment": "#438, first of three siblings of the spellspear row above. Its real subject is the ORDER of classes.json consolidations[]: check_consolidation is first-match and [Ranger]'s `[warrior]` line's evolution closure still reaches spearmaster, so this row reds if the skirmisher rule ever sinks below ranger's. Second subject is the weapon filter -- the fixture WEARS Relc's spear, and the kit assert names the spear-gated rows plus the one ungated archer grant, because the bow rows are correctly stripped.",
+   "script": "skirmisher_consolidation_loop",
+   "seed": 438,
+   "fixture": "near_skirmisher_consolidation",
+   "note": "spearmaster+archer -> [Skirmisher] 14, inherited + own grants fielded; [Steady Point] spear-gated, bow grants correctly stripped",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_skirmisher_consolidation"
+    ],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "combat"
+    ]
+   }
+  },
+  {
+   "_comment": "#438, second sibling. Subject is the [Necromancer] CAP: that class's table stops at 12 with no evolution, so this consolidation is the only rung above it, and the floor derivation is what the script pins. Order subject is the deathknight row sitting above [Spellsword]'s, which shares its `[warrior]` line. The fixture wears the starter sword because [Grave Edge] is sword-gated.",
+   "script": "deathknight_consolidation_loop",
+   "seed": 438,
+   "fixture": "near_deathknight_consolidation",
+   "note": "warrior+necromancer -> [Deathknight] 14, the level path past [Necromancer]'s L12 cap; inherited + own grants fielded",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_deathknight_consolidation"
+    ],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "combat"
+    ]
+   }
+  },
+  {
+   "_comment": "#438, third sibling, and the closest analogue to the spellspear row: an EVOLVED parent taking its own class rather than merging back lossily. [Druid]'s `[beast_tamer]` line's evolution closure reaches beast_master, so this row reds if the wild_sage rule ever sinks below druid's. The kit assert names [Sworn Fang: Ride Together] on purpose -- it is the Skill the old merge into [Druid] deleted.",
+   "script": "wild_sage_consolidation_loop",
+   "seed": 438,
+   "fixture": "near_wild_sage_consolidation",
+   "note": "beast_master+mage -> [Wild Sage] 14; the bond kit ([Pack Bond]/[Sworn Fang]) survives the merge instead of being dropped into [Druid]",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_wild_sage_consolidation"
+    ],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "combat"
+    ]
+   }
+  },
+  {
    "script": "save_migration",
    "seed": 1,
    "fixture": "v2_format",

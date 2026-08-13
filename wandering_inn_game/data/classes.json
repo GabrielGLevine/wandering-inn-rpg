@@ -15,6 +15,17 @@
 			"min_combined_level": 21
 		},
 		{
+			"_comment": "#438 [Deathknight] -- warrior x necromancer, the third of the 2026-08-13 consolidation families (user ruling, docs/CHOICE-LOG.md 'Necromancer becomes consolidation-eligible'). SAME gate shape as every row here (min_parent_level 10, min_combined_level 21); the lines are EXACTLY the pair this target `inherits`, so data_lint's coverage arm proves no-Skill-loss statically. THIS ROW IS THE LEVEL PATH PAST NECROMANCER'S CAP: [Necromancer]'s own table stops at 12, and the merge formula carries a warrior 12 + necromancer 12 holder to 16 -- the only rung above the cap the class has. ORDER: placed ABOVE [Spellsword]'s row, whose line_a is the same `[warrior]`. Post-#472 that placement is defence in depth rather than the sole lock (`_merge_proven` already refuses to let spellsword, which inherits {warrior, mage}, fire on a necromancer pair) -- but a future re-widening of the spellsword row's `parent_lines` would make the pair literally authored there, and then first-match order is the whole ruling. tests/test_progression.gd pins it both directions.",
+			"id": "deathknight",
+			"target": "deathknight",
+			"parent_lines": [
+				["warrior"],
+				["necromancer"]
+			],
+			"min_parent_level": 10,
+			"min_combined_level": 21
+		},
+		{
 			"id": "spellsword",
 			"target": "spellsword",
 			"parent_lines": [
@@ -31,6 +42,17 @@
 			"parent_lines": [
 				["helper"],
 				["diplomat"]
+			],
+			"min_parent_level": 10,
+			"min_combined_level": 21
+		},
+		{
+			"_comment": "#438 [Skirmisher] -- spearmaster x archer, the spear-and-bow sibling of [Ranger] (user ruling 2026-08-13: 'Controller to propose 1-2 additional authored targets that reduce family reuse ... beast_master x mage-line and spearmaster x archer-line'). SAME gate shape (min_parent_level 10, min_combined_level 21); lines are EXACTLY the inherited pair. ORDER IS LOAD-BEARING: [Ranger]'s line_a is the broad `[warrior]`, whose evolution closure LISTS spearmaster, so this row must sit ABOVE ranger's. Post-#472 `_merge_proven` is a second lock (ranger inherits {warrior, archer}, not {spearmaster, archer}), but the order is what the ruling actually rests on if either row is ever re-widened -- and it is GATED, not merely commented: tests/test_progression.gd pins spearmaster+archer -> skirmisher AND warrior+archer -> ranger.",
+			"id": "skirmisher",
+			"target": "skirmisher",
+			"parent_lines": [
+				["spearmaster"],
+				["archer"]
 			],
 			"min_parent_level": 10,
 			"min_combined_level": 21
@@ -53,6 +75,17 @@
 			"parent_lines": [
 				["rogue"],
 				["archer"]
+			],
+			"min_parent_level": 10,
+			"min_combined_level": 21
+		},
+		{
+			"_comment": "#438 [Wild Sage] -- beast_master x mage, the EVOLVED-tamer sibling of [Druid] (same user ruling that seeded [Skirmisher]). SAME gate shape (min_parent_level 10, min_combined_level 21); lines are EXACTLY the inherited pair. ORDER IS LOAD-BEARING: [Druid]'s line_a is `[beast_tamer]`, whose evolution closure LISTS beast_master, so this row must sit ABOVE druid's or a [Beast Master] merges back into the class that never carries [Pack Bond] or [Sworn Fang: Ride Together]. GATED in tests/test_progression.gd both directions (beast_master+mage -> wild_sage; beast_tamer+mage -> druid). CANON: [Wild Sage] is an ORIGINAL name, wiki-verified CLEAR 2026-08-13 (no canon [Class] of that name; the only full-text hit is the herb 'wild Sage Grass'); it sits in the attested 'Wild ---' family beside [Wild Mage] and Vasraf's [Wild General], itself a canon [Beast Tamer]/[General] hybrid.",
+			"id": "wild_sage",
+			"target": "wild_sage",
+			"parent_lines": [
+				["beast_master"],
+				["mage"]
 			],
 			"min_parent_level": 10,
 			"min_combined_level": 21
@@ -83,16 +116,16 @@
 		{ "_exempt": ["warrior", "sharpshooter"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["swordsman", "archer"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["swordsman", "sharpshooter"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
-		{ "_exempt": ["spearmaster", "archer"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["spearmaster", "sharpshooter"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["rogue", "sharpshooter"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["infiltrator", "archer"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["infiltrator", "sharpshooter"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["beast_tamer", "ice_mage"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["beast_tamer", "fire_mage"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
-		{ "_exempt": ["beast_master", "mage"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
 		{ "_exempt": ["beast_master", "ice_mage"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
-		{ "_exempt": ["beast_master", "fire_mage"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" }
+		{ "_exempt": ["beast_master", "fire_mage"], "rationale": "pending user naming pass, #452 inventory 2026-08-12" },
+		{ "_exempt": ["swordsman", "necromancer"], "rationale": "#438 [Deathknight]'s warrior line reaches the evolved swordsman. The user ruled this pair an APPROVED REUSE into the same authored target (docs/CHOICE-LOG.md 2026-08-13), but reuse cannot go live until [Deathknight] covers [Crescent Cut]/[Devastating Slash]/[Flash Cut]/[Quick Slash], via an `inherits` addition or a dominant `upgrades` map. Exempt pending that coverage authoring, which rides the user's naming batch." },
+		{ "_exempt": ["spearmaster", "necromancer"], "rationale": "#438 [Deathknight]'s warrior line reaches the evolved spearmaster. SPEAR-OWNS-ITS-HYBRIDS precedent (#449 [Spellspear], restated in the 2026-08-13 ruling): the spear line takes its own authored target rather than reusing the sword-shaped one. Exempt pending that naming pass." }
 	],
 	"classes": [
 		{
@@ -248,6 +281,25 @@
 				{ "level": 14, "requires_any": { "melee_hit": 105, "spell_cast": 87 }, "grants": ["keener_point"] },
 				{ "level": 15, "requires_any": { "melee_hit": 119, "spell_cast": 100 }, "grants": [] },
 				{ "level": 16, "requires_any": { "melee_hit": 134, "spell_cast": 114 }, "grants": ["spellbound_thrust"] },
+				{ "level": 17, "requires_any": { "melee_hit": 149, "spell_cast": 128 }, "grants": [] },
+				{ "level": 18, "requires_any": { "melee_hit": 164, "spell_cast": 142 }, "grants": [] },
+				{ "level": 19, "requires_any": { "melee_hit": 179, "spell_cast": 156 }, "grants": [] },
+				{ "level": 20, "requires_any": { "melee_hit": 194, "spell_cast": 170 }, "grants": [] },
+				{ "level": 21, "requires_any": { "melee_hit": 209, "spell_cast": 184 }, "grants": [] },
+				{ "level": 22, "requires_any": { "melee_hit": 224, "spell_cast": 198 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "[DEATHKNIGHT] -- warrior x necromancer (#438; user ruling 2026-08-13, docs/CHOICE-LOG.md 'Necromancer becomes consolidation-eligible'). SPARSE TABLE (GH#54): consolidation-only, so `accept_consolidation` writes the merged level straight in and the table starts AT its floor. Floor = 14, DERIVED (never hardcoded elsewhere) from `WIProgression._consolidation_merged_level` over this class's own consolidations row: the cheapest legal pair under min_parent_level 10 + min_combined_level 21 is (10, 11), and max(ceil(2*21/3), max(10,11)) == 14 -- test_content.gd's `_validate_class_level_tables` re-derives exactly that from the SAME data. THE CAP IS THE POINT: [Necromancer]'s own table stops at 12 with no evolution (the roster's one deliberate no-evolution exception, user-ratified 2026-07-15), so this merge is the ONLY rung a necromancer has above it -- warrior 12 + necromancer 12 lands at max(ceil(2*24/3), 12) == 16, and the table below carries a holder onward from there. `stat_growth` and the whole requires_any curve are [Spellsword]'s VERBATIM: the martial x caster shape is the same shape, so the two lineages cost the same and the band anchor reads the same on either spine. The `spell_cast` axis is genuinely reachable from the necromancer half -- [Bone Dart] and [Deathbolt] carry element:'death', and wi_combat.gd tallies spell_cast AND death_cast off any element -- so this is not a mage-only rung wearing a necromancer's name. The warrior/necromancer kit arrives by `inherits`; the two grants below are the consolidation's OWN, spellsword-baselined and death-flavored ([Keener Edge] -> [Grave Edge], [Spellbound Strike] -> [Deathbound Strike]). CANON: [Deathknight] is an ORIGINAL name, wiki-verified CLEAR 2026-08-13 (zero full-text hits, absent from List_of_Classes/D). Deliberately NOT [Deathbane Necromancer] (Pisces, 8.19 H -- past the Book 17 bar AND the inverse concept) and not [Death Warrior] (Gravesong 1.02, a spinoff the spoiler bar does not map onto).",
+			"id": "deathknight",
+			"display_name": "Deathknight",
+			"stat_growth": { "str": 1, "int": 1 },
+			"inherits": ["warrior", "necromancer"],
+			"aspiration": { "display_name": "Deathknight", "text": "The old art asks for a corpse. A [Warrior] who studies it long enough stops needing one to be lent." },
+			"levels": [
+				{ "level": 14, "requires_any": { "melee_hit": 105, "spell_cast": 87 }, "grants": ["grave_edge"] },
+				{ "level": 15, "requires_any": { "melee_hit": 119, "spell_cast": 100 }, "grants": [] },
+				{ "level": 16, "requires_any": { "melee_hit": 134, "spell_cast": 114 }, "grants": ["deathbound_strike"] },
 				{ "level": 17, "requires_any": { "melee_hit": 149, "spell_cast": 128 }, "grants": [] },
 				{ "level": 18, "requires_any": { "melee_hit": 164, "spell_cast": 142 }, "grants": [] },
 				{ "level": 19, "requires_any": { "melee_hit": 179, "spell_cast": 156 }, "grants": [] },
@@ -518,6 +570,25 @@
 			"aspiration": { "display_name": "Ranger of the Woods", "text": "Some who walk the wild longest are, in time, named [Ranger of the Woods] — the wood answers them before it answers anyone else." },
 			"levels": [
 				{ "level": 14, "requires_any": { "melee_hit": 105, "ranged_hit": 80 }, "grants": ["dangersense", "steady_draw"] },
+				{ "level": 15, "requires_any": { "melee_hit": 119, "ranged_hit": 95 }, "grants": [] },
+				{ "level": 16, "requires_any": { "melee_hit": 134, "ranged_hit": 110 }, "grants": [] },
+				{ "level": 17, "requires_any": { "melee_hit": 149, "ranged_hit": 125 }, "grants": [] },
+				{ "level": 18, "requires_any": { "melee_hit": 164, "ranged_hit": 140 }, "grants": [] },
+				{ "level": 19, "requires_any": { "melee_hit": 179, "ranged_hit": 155 }, "grants": [] },
+				{ "level": 20, "requires_any": { "melee_hit": 194, "ranged_hit": 170 }, "grants": [] },
+				{ "level": 21, "requires_any": { "melee_hit": 209, "ranged_hit": 185 }, "grants": [] },
+				{ "level": 22, "requires_any": { "melee_hit": 224, "ranged_hit": 200 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "[SKIRMISHER] -- spearmaster x archer (#438; user ruling 2026-08-13). SPARSE TABLE (GH#54): consolidation-only, floor = 14, DERIVED from `WIProgression._consolidation_merged_level` over this class's own consolidations row -- cheapest legal pair under min_parent_level 10 + min_combined_level 21 is (10, 11), and max(ceil(2*21/3), max(10,11)) == 14. `stat_growth` and the whole requires_any curve are [Ranger]'s VERBATIM: [Ranger] is the class this pair fell through to before this row existed, so it is the mechanical anchor and only the grants re-flavor -- both lineages cost the same. The spear/bow kit arrives by `inherits`. THE L14 GRANTS, and why they are not symmetric twins: [Dangersense] is REUSED, not twinned, because a [Skirmisher] already holds it through `inherits` (warrior L5 -> spearmaster -> here) -- exactly as [Ranger]'s own L14 re-grants it -- and minting a second skill with the same `dangersense` effect would add a duplicate that changes nothing. [Steady Draw] IS twinned, because it is granted by [Ranger] alone and reaches this lineage nowhere else; [Steady Point] is its spear-gated re-flavor, mirroring the ONE mechanical field the pattern moves (the weapon gate follows the lineage: [Ranger] steadies a bow because its martial parent is plain [Warrior]; this class's martial parent is [Spearmaster]). CANON: [Skirmisher] is an ATTESTED class -- Ksmvr advances [Warrior] -> [Skirmisher] at 6.19 H (Vol 6, inside the Book 17 bar), 'a mobile hit-and-run fighter'. Canon derives it from [Warrior] rather than the [Ranger] family, and attaches no weapon to it, so the description below carries the spear-and-bow framing. Evolution names [Brave Skirmisher] (8.22 HE) and [Elite Skirmisher] (8.18 H) are PAST THE BAR -- do not reach for them if this class ever grows one.",
+			"id": "skirmisher",
+			"display_name": "Skirmisher",
+			"stat_growth": { "str": 1, "dex": 1 },
+			"inherits": ["spearmaster", "archer"],
+			"aspiration": { "display_name": "Skirmisher", "text": "Hit, and be elsewhere. The ones who live longest never let a line form around them at all." },
+			"levels": [
+				{ "level": 14, "requires_any": { "melee_hit": 105, "ranged_hit": 80 }, "grants": ["dangersense", "steady_point"] },
 				{ "level": 15, "requires_any": { "melee_hit": 119, "ranged_hit": 95 }, "grants": [] },
 				{ "level": 16, "requires_any": { "melee_hit": 134, "ranged_hit": 110 }, "grants": [] },
 				{ "level": 17, "requires_any": { "melee_hit": 149, "ranged_hit": 125 }, "grants": [] },
@@ -814,6 +885,25 @@
 				{ "level": 14, "requires_any": { "tended_beasts": 74, "spell_cast": 87 }, "grants": ["peace_of_the_wild"] },
 				{ "level": 15, "requires_any": { "tended_beasts": 86, "spell_cast": 100 }, "grants": [] },
 				{ "level": 16, "requires_any": { "tended_beasts": 99, "spell_cast": 114 }, "grants": ["thorn_hand"] },
+				{ "level": 17, "requires_any": { "tended_beasts": 112, "spell_cast": 128 }, "grants": [] },
+				{ "level": 18, "requires_any": { "tended_beasts": 125, "spell_cast": 142 }, "grants": [] },
+				{ "level": 19, "requires_any": { "tended_beasts": 138, "spell_cast": 156 }, "grants": [] },
+				{ "level": 20, "requires_any": { "tended_beasts": 151, "spell_cast": 170 }, "grants": [] },
+				{ "level": 21, "requires_any": { "tended_beasts": 164, "spell_cast": 184 }, "grants": [] },
+				{ "level": 22, "requires_any": { "tended_beasts": 177, "spell_cast": 198 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "[WILD SAGE] -- beast_master x mage (#438; user ruling 2026-08-13). SPARSE TABLE (GH#54): consolidation-only, floor = 14, DERIVED from `WIProgression._consolidation_merged_level` over this class's own consolidations row -- cheapest legal pair under min_parent_level 10 + min_combined_level 21 is (10, 11), and max(ceil(2*21/3), max(10,11)) == 14. `stat_growth` and the whole requires_any curve are [Druid]'s VERBATIM: [Druid] is the class this pair fell through to before this row existed (its `[beast_tamer]` line's evolution closure lists beast_master), so it is the mechanical anchor and only the grants re-flavor. What the merge into [Druid] used to COST is exactly what this class exists to keep: [Pack Bond] and [Sworn Fang: Ride Together] are [Beast Master]'s own grants and [Druid] inherits beast_TAMER, never beast_master -- data_lint's coverage arm named that pair in the parked queue for precisely those two Skills. Here they arrive by `inherits`. The two grants below are the consolidation's OWN, druid-baselined and re-flavored for a bonded rider rather than a grove-keeper ([Peace of the Wild] -> [Counsel of the Wild], [Thorn Hand] -> [Bramble Hand]). Both are ungated exactly like their baselines -- no `weapon` key there, none here. CANON: [Wild Sage] is an ORIGINAL name, wiki-verified CLEAR 2026-08-13 (no canon [Class]; the only full-text hit is the herb 'wild Sage Grass'). It borrows an attested naming family -- [Wild Mage] and Vasraf's [Wild General], itself a canon [Beast Tamer]/[General] hybrid. NOTED RISK, accepted: canon's plain [Sage] is a scholarly class (6.39), so a canon-aware reader may hear 'wilderness scholar'; the description leans on the bond to pull it back.",
+			"id": "wild_sage",
+			"display_name": "Wild Sage",
+			"stat_growth": { "int": 1, "con": 1 },
+			"inherits": ["beast_master", "mage"],
+			"aspiration": { "display_name": "Wild Sage", "text": "The wild teaches no one who arrives to be taught. It answers the ones who already ride with it." },
+			"levels": [
+				{ "level": 14, "requires_any": { "tended_beasts": 74, "spell_cast": 87 }, "grants": ["counsel_of_the_wild"] },
+				{ "level": 15, "requires_any": { "tended_beasts": 86, "spell_cast": 100 }, "grants": [] },
+				{ "level": 16, "requires_any": { "tended_beasts": 99, "spell_cast": 114 }, "grants": ["bramble_hand"] },
 				{ "level": 17, "requires_any": { "tended_beasts": 112, "spell_cast": 128 }, "grants": [] },
 				{ "level": 18, "requires_any": { "tended_beasts": 125, "spell_cast": 142 }, "grants": [] },
 				{ "level": 19, "requires_any": { "tended_beasts": 138, "spell_cast": 156 }, "grants": [] },

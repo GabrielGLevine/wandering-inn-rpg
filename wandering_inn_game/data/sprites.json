@@ -1528,6 +1528,58 @@
    }
   }
  },
+ "icon_grave_edge": {
+  "_comment": "#438 [Deathknight] L14. Code-drawn glyph (tools/sync_assets.py::_draw_placeholder shape 'grave_edge'), NEW shape rather than a recolour of icon_keener_edge -- the blade is INVERTED into a mound with a crossguard, so the twins share no outline. PixelLab pass user-gated; VISUAL-LOG carries the drain row.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_grave_edge.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_deathbound_strike": {
+  "_comment": "#438 [Deathknight] L16. Code-drawn glyph (tools/sync_assets.py::_draw_placeholder shape 'death_bound'), NEW shape rather than a recolour of icon_spellbound_strike -- a knobbed femur inside the family's mana ring, where the baseline is an upright sword. PixelLab pass user-gated; VISUAL-LOG carries the drain row.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_deathbound_strike.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_counsel_of_the_wild": {
+  "_comment": "#438 [Wild Sage] L14. Code-drawn glyph (tools/sync_assets.py::_draw_placeholder shape 'wild_counsel'): a paw print, and the FIRST real silhouette in this twin pair -- its baseline icon_peace_of_the_wild is still a Wave D-2 filled rounded square. PixelLab pass user-gated; VISUAL-LOG carries the drain row.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_counsel_of_the_wild.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_bramble_hand": {
+  "_comment": "#438 [Wild Sage] L16. Code-drawn glyph (tools/sync_assets.py::_draw_placeholder shape 'briar_vine'): a barbed climbing vine, deliberately NOT a ring (icon_target and icon_marked_quarry already own the concentric-circle read). Its baseline icon_thorn_hand is likewise still a Wave D-2 filled square. PixelLab pass user-gated; VISUAL-LOG carries the drain row.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_bramble_hand.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
  "icon_basic_cleaning": {
   "animations": {
    "idle": {

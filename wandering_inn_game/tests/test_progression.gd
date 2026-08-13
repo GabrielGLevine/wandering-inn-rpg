@@ -345,7 +345,11 @@ func _init() -> void:
 	assert(WIProgression.check_consolidation({"warrior": 11, "fire_mage": 10}, catalog).is_empty(), "warrior + fire_mage likewise loses the whole flame kit -- no merge")
 	assert(WIProgression.check_consolidation({"swordsman": 14, "mage": 10}, catalog).is_empty(), "an EVOLVED martial parent has its own kit ([Crescent Cut] etc.) that [Spellsword] never inherits -- it waits for its own target, it does not merge lossily")
 	assert(WIProgression.check_consolidation({"spearmaster": 11, "ice_mage": 10}, catalog).is_empty(), "the same rule binds the evolved-lineage row: [Spellspear] inherits mage, not ice_mage")
-	assert(WIProgression.check_consolidation({"beast_master": 12, "mage": 10}, catalog).is_empty(), "[Beast Master]'s own grants are not in [Druid]'s inherits -- no merge")
+	# NOTE (#438): beast_master + mage and spearmaster + archer used to be pinned
+	# HERE, as two more evolved pairs that merge NOTHING. Both now have authored
+	# targets ([Wild Sage], [Skirmisher]) and are pinned as live merges in the
+	# #438 block further down -- the pair left this list by being SOLVED, which
+	# is the only legal way out of it.
 	assert(WIProgression.check_consolidation({"infiltrator": 12, "archer": 10}, catalog).is_empty(), "[Infiltrator]'s [Shadowstep] is not in [Scout]'s inherits -- no merge")
 	assert(WIProgression.check_consolidation({"barmaid": 12, "diplomat": 10}, catalog).is_empty(), "[Barmaid]'s service kit is not in [Innkeeper]'s inherits -- no merge")
 	# ...and the four proven pairs still merge, at the same derived floors.
@@ -353,6 +357,58 @@ func _init() -> void:
 	assert(String(WIProgression.check_consolidation({"rogue": 11, "archer": 10}, catalog).get("target", "")) == "scout", "rogue+archer still merges")
 	assert(String(WIProgression.check_consolidation({"helper": 11, "diplomat": 10}, catalog).get("target", "")) == "innkeeper", "helper+diplomat still merges")
 	assert(String(WIProgression.check_consolidation({"warrior": 11, "archer": 10}, catalog).get("target", "")) == "ranger", "warrior+archer still merges")
+
+	# --- #438 THE THREE 2026-08-13 CONSOLIDATION FAMILIES, and the ORDER
+	# CONTRACT each rests on. User ruling (docs/CHOICE-LOG.md): [Wild Sage] and
+	# [Skirmisher] are the two authored targets that reduce family reuse, and
+	# [Necromancer] becomes consolidation-eligible via [Deathknight].
+	# EVERY PIN IS DOUBLE-ENDED: the new pair reaches the NEW target, AND the
+	# baseline's own unevolved pair still reaches the BASELINE. A single-ended
+	# pin would pass just as happily with the new row swallowing its baseline's
+	# traffic, which is the failure that only surfaces in a playtest.
+	var sage_merge := WIProgression.check_consolidation({"beast_master": 11, "mage": 10}, catalog)
+	assert(String(sage_merge.get("target", "")) == "wild_sage", "#438: an EVOLVED [Beast Master] merges into its OWN class -- the wild_sage row must stay ABOVE druid's, whose `[beast_tamer]` line's evolution closure lists beast_master")
+	assert(int(sage_merge.get("level", 0)) == 14, "same merge formula, no bespoke gate: (11,10) -> max(ceil(2*21/3), 11) == 14")
+	assert(String(WIProgression.check_consolidation({"beast_tamer": 11, "mage": 10}, catalog).get("target", "")) == "druid", "#438 the other direction: the UNEVOLVED tamer pair still reaches [Druid] -- the new row must not swallow the case it does not own")
+
+	var skirm_merge := WIProgression.check_consolidation({"spearmaster": 11, "archer": 10}, catalog)
+	assert(String(skirm_merge.get("target", "")) == "skirmisher", "#438: spearmaster + archer reaches [Skirmisher] -- the row must stay ABOVE ranger's, whose `[warrior]` line's evolution closure lists spearmaster")
+	assert(int(skirm_merge.get("level", 0)) == 14, "(11,10) -> 14, the same formula every family uses")
+	assert(String(WIProgression.check_consolidation({"warrior": 11, "archer": 10}, catalog).get("target", "")) == "ranger", "#438 the other direction: the BASE warrior pair still reaches [Ranger]")
+
+	var dk_merge := WIProgression.check_consolidation({"warrior": 11, "necromancer": 10}, catalog)
+	assert(String(dk_merge.get("target", "")) == "deathknight", "#438: warrior + necromancer reaches [Deathknight], the row placed ABOVE spellsword's (same line_a)")
+	assert(int(dk_merge.get("level", 0)) == 14, "(11,10) -> 14")
+	assert(String(WIProgression.check_consolidation({"warrior": 11, "mage": 10}, catalog).get("target", "")) == "spellsword", "#438 the other direction: warrior + mage is untouched by the row now sitting above it")
+
+	# THE CAP IS THE POINT. [Necromancer]'s table stops at 12 with no evolution,
+	# so this merge is the only rung the class has above it: the FLOOR of the
+	# consolidation already clears the cap, and a maxed pair clears it by four.
+	assert(int(WIProgression.check_consolidation({"warrior": 10, "necromancer": 11}, catalog).get("level", 0)) == 14, "the CHEAPEST legal pair (10,11) already lands at 14 -- two levels past [Necromancer]'s own ceiling")
+	assert(int(WIProgression.check_consolidation({"warrior": 12, "necromancer": 12}, catalog).get("level", 0)) == 16, "a MAXED pair lands at max(ceil(2*24/3), 12) == 16, the top of the reachable range")
+	assert(WIProgression.check_consolidation({"warrior": 10, "necromancer": 10}, catalog).is_empty(), "both at min_parent_level but sum 20 < 21 -> no merge, the same boundary every family shares")
+
+	# THE NARROWED SURFACE HOLDS FOR THE NEW ROWS TOO: each lists exactly the
+	# pair its target `inherits`, so the evolved siblings still wait for their
+	# own targets rather than merging lossily into these.
+	assert(WIProgression.check_consolidation({"beast_master": 11, "ice_mage": 10}, catalog).is_empty(), "[Wild Sage] inherits mage, not ice_mage -- the elemental sibling does not merge here")
+	assert(WIProgression.check_consolidation({"spearmaster": 11, "sharpshooter": 10}, catalog).is_empty(), "[Skirmisher] inherits archer, not sharpshooter")
+	assert(WIProgression.check_consolidation({"swordsman": 11, "necromancer": 10}, catalog).is_empty(), "[Deathknight] inherits warrior, not swordsman -- the APPROVED-REUSE pair is still `_exempt` pending its coverage authoring, and until then it must not fire lossily")
+	assert(WIProgression.check_consolidation({"spearmaster": 11, "necromancer": 10}, catalog).is_empty(), "spear-owns-its-hybrids: the spear line waits for its own target rather than reusing the sword-shaped one")
+
+	# CHAINED-CONSOLIDATION PROBE (#438). Three new consolidated classes means
+	# three new lineage PROXIES, so the question the #472 machinery raises is
+	# whether any chain now fires on shipped data. It does NOT, and these pins
+	# are why: a proxy is only ever a CANDIDATE, and `_merge_proven` demands the
+	# target inherit EXACTLY the substituted pair. [Deathknight] inherits
+	# {warrior, necromancer}, never {spellsword, necromancer}, so [Spellsword]
+	# proxying the warrior line reaches its row and is refused there.
+	assert(WIProgression.check_consolidation({"spellsword": 16, "necromancer": 10}, catalog).is_empty(), "#438 chain probe: [Spellsword] proxies deathknight's `[warrior]` line, but deathknight inherits {warrior, necromancer} -- the substitution is NOT proven and nothing fires")
+	assert(WIProgression.check_consolidation({"deathknight": 16, "mage": 10}, catalog).is_empty(), "the reverse chain: [Deathknight] proxies spellsword's `[warrior]` line, but spellsword inherits {warrior, mage} -- refused, and a merge would have dropped the whole necromancy kit")
+	assert(WIProgression.check_consolidation({"deathknight": 16, "archer": 10}, catalog).is_empty(), "and into [Ranger]'s row on the same line -- refused for the same reason")
+	assert(WIProgression.check_consolidation({"skirmisher": 16, "mage": 10}, catalog).is_empty(), "[Skirmisher] proxies spellspear's `[spearmaster]` line; spellspear inherits {spearmaster, mage} -- refused")
+	assert(WIProgression.check_consolidation({"wild_sage": 16, "beast_tamer": 10}, catalog).is_empty(), "[Wild Sage] against druid's row -- refused, and `_pair_holdable` aside, druid inherits {beast_tamer, mage}")
+	assert(WIProgression.check_consolidation({"warrior": 16, "skirmisher": 10}, catalog).is_empty(), "[Skirmisher] proxying ranger's `[archer]` line is refused too -- the proxy direction is not the escape hatch")
 
 	# --- #472 3, LINEAGE PROXY. A held consolidated class stands in for either
 	# parent line its OWN row consumed, at its CURRENT level -- but ONLY where

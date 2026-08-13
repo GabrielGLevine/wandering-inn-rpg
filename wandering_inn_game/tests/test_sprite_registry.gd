@@ -277,6 +277,16 @@ func _build_expected_counts() -> Dictionary:
 	for icon_id: String in ["icon_keener_point", "icon_spellbound_thrust"]:
 		counts[icon_id + "/idle"] = 1
 
+	## #438 [Deathknight] + [Wild Sage]: their four consolidation-own grants,
+	## same policy. [Skirmisher] adds no row -- [Steady Point] is an ap_cost 0
+	## passive with no `icon` (mirroring [Steady Draw]), and its other L14 grant
+	## is [Dangersense] reused rather than twinned.
+	for icon_id: String in [
+		"icon_grave_edge", "icon_deathbound_strike",
+		"icon_counsel_of_the_wild", "icon_bramble_hand",
+	]:
+		counts[icon_id + "/idle"] = 1
+
 	for visual_log_prop: String in [
 		"dart_slit_tell", "illusory_floor_tell", "delivery_board",
 		"guild_notice_wall", "deep_fissure", "cold_hearth", "gnaw_pile",

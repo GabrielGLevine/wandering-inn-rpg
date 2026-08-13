@@ -136,6 +136,31 @@ const SPINE_WEAPONS := {
 	"ranger": ["training_bow", "hunting_bow", "hunting_bow", "hunting_bow", "hunting_bow"],
 	"scout": ["training_bow", "hunting_bow", "hunting_bow", "hunting_bow", "hunting_bow"],
 	"druid": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
+	# --- #438: the three consolidation families added on 2026-08-13. The spine
+	# roster DERIVES from classes.json `consolidations[]`, so each new row owes a
+	# loadout in the same commit or `_derived_spines`' entry assert fires. Each
+	# takes the act-appropriate progression its own weapon family actually ships,
+	# which is the only honest way to read these rows:
+	#   deathknight -- the SWORD track, identical to [Spellsword]'s. Its martial
+	#     parent is plain [Warrior] and its own L14 grant [Grave Edge] is
+	#     sword-gated exactly like [Keener Edge], so anything else would gate the
+	#     class's marquee Skill out of its own measurement.
+	#   skirmisher  -- the SPEAR track, identical to [Spellspear]'s, and it
+	#     inherits that spine's finding wholesale: items.json ships no T2 spear,
+	#     so the Act I tutorial gift (relcs_spare_spear, +1) is still the best
+	#     spear in the game at Act V. Its own L14 grant [Steady Point] is
+	#     spear-gated, so the spear is what the row must measure -- the bow half
+	#     of the lineage reaches combat through inherited [Archer] grants, which
+	#     `weapon_gated_kit` strips at a spear. That asymmetry is real and worth
+	#     seeing in the table rather than papering over with a bow loadout.
+	#   wild_sage   -- the sword track, identical to [Druid]'s: neither class
+	#     gates a single grant on a weapon, so the loadout is the generic
+	#     caster-with-a-sidearm progression its baseline already uses.
+	# Report-only, like every derived spine row: no CALIBRATION row and no
+	# reference window names any of them.
+	"deathknight": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
+	"skirmisher": ["relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear"],
+	"wild_sage": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
 }
 const WINDOW_FLOOR := 0.55
 const WINDOW_CEILING := 0.85
