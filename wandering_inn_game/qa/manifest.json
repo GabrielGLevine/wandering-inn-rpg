@@ -407,6 +407,35 @@
    }
   },
   {
+   "script": "relc_veto_solo",
+   "seed": 3,
+   "fixture": "relc_veto_solo_start",
+   "note": "issue #448: the VETO branch end to end -- [I go alone.] fields the boss's own solo_enemies pack (four initiative slots, no relc AND no second scout), wins it, and banks the same cleared_the_warren the join branch banks. deep_descent owns the accept branch",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels"
+    ],
+    "fixtures": [
+     "relc_veto_solo_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "light"
+    ],
+    "dialogue": [
+     "relc_descent"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "defeat_ally_alive",
    "seed": 3,
    "fixture": "near_defeat",

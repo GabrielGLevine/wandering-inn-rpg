@@ -170,7 +170,21 @@ const ROSTER := [
 	{
 		"id": "act3_awakened_boss", "act": "III", "beat": 15, "map": "sewers/deep_tunnels", "entity": "awakened_boss",
 		"ship": "ship_act3", "band": "band_act3", "draughts": [],
-		"bypasses": "None (act climax). `relc_descent` is a veto beat, not an out: [Go together] banks `relc_joined_descent`, which is the boss's `ally_requires` — refusing fights it solo. The live joined roster is Awakened + 2 scouts + a Sewer Bat; this table measures that joined route and does not infer the veto route.",
+		"bypasses": "None (act climax). `relc_descent` is a veto beat, not an out: [Go together] banks `relc_joined_descent`, which is the boss's `ally_requires`. This is the JOIN route — Awakened + 2 scouts + a Sewer Bat, with Relc — and the veto route is no longer inferred from it: it is measured, one row down, off the entity's own `solo_enemies`.",
+	},
+	# #448 THE VETO BRANCH, MEASURED. Same entity, same beat, the OTHER answer at
+	# the fork. It exists because the #439 retune quietly turned a hard-mode
+	# choice into a trap: the join pack fought with the ally slot empty read 0.04
+	# competent-at-band, so refusing Relc was a refusal to win the act. The user
+	# ruling (CHOICE-LOG 2026-08-12) is that the veto branches to a DIFFERENT
+	# FIGHT in [0.35, 0.45], not to a wall and not to a free skip, and that
+	# fixing it must not touch the join route — so `solo: true` here reads the
+	# entity's `solo_enemies` and fields NO ally, exactly as `start_combat` does
+	# when `ally_requires` goes unmet, and the row above is left alone.
+	{
+		"id": "act3_awakened_boss_solo", "act": "III", "beat": 15, "map": "sewers/deep_tunnels", "entity": "awakened_boss",
+		"ship": "ship_act3", "band": "band_act3", "draughts": [], "solo": true,
+		"bypasses": "None (act climax), and no ally: this is the [I go alone.] branch. RULED WINDOW, not the reference window — the fight is DESIGNED to sit under 0.5, so the five-climax [0.55, 0.85] band would be the wrong gate and `SPINE_CLIMAX_IDS` deliberately omits it. The floor column is expected LOSS-heavy and is report-only; competent-at-band is the contract.",
 	},
 	{
 		"id": "act4_vault_construct", "act": "IV", "beat": 20, "map": "dungeon/trapped_halls", "entity": "vault_boss_slot",
@@ -254,6 +268,27 @@ const CALIBRATION := [
 		"why": "#439 retune: pre-retune this was WIN 0.60 at warrior 2 with Relc (step 624) — the ratchet. Post-retune the under-band kit loses, and the act gates"},
 ]
 
+## THE RULED WINDOWS (#448). A per-row band, for a fight whose target is a USER
+## RULING rather than the five-climax policy window.
+##
+## Why this is not a CALIBRATION row: `CALIBRATION` gates a CATEGORICAL
+## (WIN/LOSS at 0.5), and the whole defect #448 names is a row that was already
+## on the correct side of that line. The veto branch read LOSS 0.04 and a
+## `want: LOSS` row would have passed it green. A ruled band needs both edges
+## asserted or it does not gate the thing it was written for.
+##
+## Why not `WINDOW_FLOOR`/`WINDOW_CEILING`: those are the five reference
+## climaxes' shared policy window, [0.55, 0.85], and they encode "hard enough to
+## gate the act, winnable by a player who spends their kit". A hard-mode OPT-IN
+## is a different contract and belongs under 0.5 by construction, so it takes
+## its own window instead of widening everyone else's.
+##
+##   `row` / `column` ("ship"|"band") / `policy` / `lo` / `hi`
+const RULED_WINDOWS := [
+	{"row": "act3_awakened_boss_solo", "column": "band", "policy": "competent", "lo": 0.35, "hi": 0.45,
+		"why": "user ruling 2026-08-12 (#448, CHOICE-LOG): Relc's veto branches to a hard solo fight, not a wall. 0.35-0.45 competent-at-band, with the pre-#439 solo read of 0.37 named as the reference feel"},
+]
+
 ## PREDICTIONS, kept separate from CALIBRATION and deliberately NOT asserted.
 ##
 ## `balance-bands-and-policy.md` wrote down what it EXPECTED the competent
@@ -310,6 +345,29 @@ func _entity(map_id: String, entity_id: String) -> Dictionary:
 			return e
 	assert(false, "no entity %s in map %s" % [entity_id, map_id])
 	return {}
+
+
+## #448 THE TWO BRANCHES OF AN ALLY-GATED FIGHT, read the way the game reads
+## them. A row marked `solo` is the veto branch: no ally, and the roster is the
+## entity's `solo_enemies` — the SAME field `wi_game.start_combat` swaps in when
+## `ally_requires` goes unmet. Static so `test_spine_calibration.gd` builds its
+## cells through these too; a table row and a CI gate row naming the same fight
+## must BE the same fight, and this is the one place that is decided.
+##
+## The `solo_enemies` assert is the point of the helper, not an afterthought:
+## silently falling back to `enemies` would measure the JOIN pack, report it as
+## the veto branch, and hand back exactly the 0.04-shaped lie #448 exists to
+## kill — green, and wrong.
+static func row_enemies(row: Dictionary, entity: Dictionary) -> Array:
+	if not bool(row.get("solo", false)):
+		return entity.get("enemies", []) as Array
+	assert(entity.has("solo_enemies"),
+		"row %s is the veto branch but entity %s authors no solo_enemies" % [row["id"], entity.get(WIKeys.ID, "?")])
+	return entity.get("solo_enemies", []) as Array
+
+
+static func row_allies(row: Dictionary, entity: Dictionary) -> Array:
+	return [] if bool(row.get("solo", false)) else (entity.get("allies", []) as Array)
 
 
 ## The runtime-derived half of the bypass column: gate, trigger and respawn
@@ -415,7 +473,7 @@ func _spine_cfgs(record: Dictionary, pc: Dictionary, by_id: Dictionary) -> Array
 	var row: Dictionary = record["row"]
 	var entity: Dictionary = record["entity"]
 	var cfgs: Array = [pc]
-	var allies: Array = (entity.get("allies", []) as Array).duplicate()
+	var allies: Array = row_allies(row, entity).duplicate()
 	var companion := "wolf_companion" if (pc[WIKeys.SKILLS] as Array).has("lesser_bond") else ""
 	if companion != "" and not allies.has(companion) \
 			and allies.size() + 2 <= ((record["arena"] as Dictionary)["player_spawns"] as Array).size():
@@ -604,13 +662,13 @@ func _init() -> void:
 			var build := _find_build(String(row[column]))
 			var rank := WIProgression.power_rank(build["classes"], classes) if bool(entity.get("scales", false)) else "bronze"
 			var cfgs: Array = [_make_pc(batch, build, by_id, classes, skills_by_id, items_by_id)]
-			for ally_v: Variant in (entity.get("allies", []) as Array):
+			for ally_v: Variant in row_allies(row, entity):
 				var ally: Dictionary = (by_id[String(ally_v)] as Dictionary).duplicate(true)
 				var hp_mods: Dictionary = row.get("ally_hp_mods", {})
 				if hp_mods.has(String(ally_v)):
 					ally[WIKeys.HP_MOD] = int(ally.get(WIKeys.HP_MOD, 0)) + int(hp_mods[String(ally_v)])
 				cfgs.append(ally)
-			for enemy_v: Variant in (entity.get("enemies", []) as Array):
+			for enemy_v: Variant in row_enemies(row, entity):
 				cfgs.append(WIBountyScaling.scale_enemy((by_id[String(enemy_v)] as Dictionary).duplicate(true), rank))
 			for policy_name: String in [WICombatPolicies.DUMB, WICombatPolicies.COMPETENT]:
 				measured["%s_%s" % [column, policy_name]] = _measure({
@@ -652,7 +710,7 @@ func _init() -> void:
 			var pc := _make_pc(batch, build, by_id, classes, skills_by_id, items_by_id)
 			var cfgs := _spine_cfgs(record, pc, by_id)
 			var rank := WIProgression.power_rank(build["classes"], classes) if bool(entity.get("scales", false)) else "bronze"
-			for enemy_v: Variant in (entity.get("enemies", []) as Array):
+			for enemy_v: Variant in row_enemies(row, entity):
 				cfgs.append(WIBountyScaling.scale_enemy((by_id[String(enemy_v)] as Dictionary).duplicate(true), rank))
 			var m := _measure({
 				"row": row_id, "build": build["name"], "policy": WICombatPolicies.COMPETENT,
@@ -684,6 +742,7 @@ func _init() -> void:
 
 	_check_calibration()
 	_check_reference_windows()
+	_check_ruled_windows()
 	var doc := _render()
 	print("")
 	print(doc)
@@ -705,8 +764,8 @@ func _init() -> void:
 		quit(1)
 		assert(false, "calibration rows disagree with the shipped run's ground truth — see FAIL lines above")
 		return
-	print("PASS: spine viability table generated; all %d calibration rows agree and all %d reference climaxes are inside [%.2f, %.2f]" % [
-		CALIBRATION.size(), SPINE_CLIMAX_IDS.size(), WINDOW_FLOOR, WINDOW_CEILING,
+	print("PASS: spine viability table generated; all %d calibration rows agree, all %d reference climaxes are inside [%.2f, %.2f], and all %d ruled band(s) hold" % [
+		CALIBRATION.size(), SPINE_CLIMAX_IDS.size(), WINDOW_FLOOR, WINDOW_CEILING, RULED_WINDOWS.size(),
 	])
 	quit(0)
 
@@ -742,6 +801,23 @@ func _check_reference_windows() -> void:
 		if rate < WINDOW_FLOOR or rate > WINDOW_CEILING:
 			_failures.append("[window] %s / band / competent: %.2f outside [%.2f, %.2f]" % [
 				row_id, rate, WINDOW_FLOOR, WINDOW_CEILING])
+
+
+## #448. BOTH EDGES ARE THE GATE. Below `lo` the fight is the wall the ruling
+## forbids; above `hi` it is the free skip the ruling also forbids. A
+## categorical would catch neither.
+func _check_ruled_windows() -> void:
+	for ruled: Dictionary in RULED_WINDOWS:
+		var record := _find_record(String(ruled["row"]))
+		if record.is_empty():
+			_failures.append("[ruled] window names an unknown row %s" % ruled["row"])
+			continue
+		var m: Dictionary = (record["m"] as Dictionary)["%s_%s" % [ruled["column"], ruled["policy"]]]
+		var rate := float(m["win_rate"])
+		if rate < float(ruled["lo"]) or rate > float(ruled["hi"]):
+			_failures.append("[ruled] %s / %s / %s: %.2f outside the RULED band [%.2f, %.2f] over %d seeds. This band is a user ruling, not a policy default — move the composition, never the window. Ruling: %s" % [
+				ruled["row"], ruled["column"], ruled["policy"], rate,
+				float(ruled["lo"]), float(ruled["hi"]), _runs, ruled["why"]])
 
 
 func _render() -> String:
@@ -794,6 +870,20 @@ func _render() -> String:
 		var mark := "✅" if String(m["result"]) == String(cal["want"]) else "❌"
 		out.append("| `%s` | %s | %s | %s | %s %s | %s |" % [
 			cal["row"], cal["column"], cal["policy"], cal["want"], mark, _cell_text(m), cal["why"]])
+	out.append("")
+	out.append("### Ruled windows (bands set by a user ruling, both edges asserted)")
+	out.append("")
+	out.append("A calibration row gates a categorical at 0.5; these gate a BAND. They exist for fights whose target came from a ruling rather than from the five-climax policy window, and where being on the right side of 0.5 is not the contract. Move the composition to meet the window, never the window to meet the measurement.")
+	out.append("")
+	out.append("| Row | Column | Policy | Ruled band | Measured | Ruling |")
+	out.append("|---|---|---|---|---|---|")
+	for ruled: Dictionary in RULED_WINDOWS:
+		var rrecord := _find_record(String(ruled["row"]))
+		var rm: Dictionary = (rrecord["m"] as Dictionary)["%s_%s" % [ruled["column"], ruled["policy"]]]
+		var inside := _window_position(rm, float(ruled["lo"]), float(ruled["hi"])) == "inside"
+		out.append("| `%s` | %s | %s | [%.2f, %.2f] | %s %s | %s |" % [
+			ruled["row"], ruled["column"], ruled["policy"], float(ruled["lo"]), float(ruled["hi"]),
+			"✅" if inside else "❌", _cell_text(rm), ruled["why"]])
 	out.append("")
 	out.append("### Predictions (evaluated, not asserted)")
 	out.append("")

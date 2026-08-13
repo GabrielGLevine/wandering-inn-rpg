@@ -1,0 +1,58 @@
+{
+    "_comment": "#448 THE VETO BRANCH'S OWN FIXTURE. deep_descent_start's exact build and keys (warrior L10 with the Act III kit -- Krshia's hunting knife, a jerkin, the two shop charms; 10 is the TOP of the Act III band), moved DOWN to the warren mouth: deep_tunnels (12,6) facing DOWN onto the awakened_boss at (12,7), so a bare interact opens relc_descent. Why a fixture and not a teleport off deep_descent_start: the veto leg needs a fight OUTCOME, and outcomes are rng-governed -- standing the PC where the fight starts keeps the rng churn between load and combat to nothing, so the pinned state means what it says. Extra keys over deep_descent_start are the two the position requires: `reached_the_warren` (the warren_mouth prop's on_interact bank, and the relc_descent_cameo's present_when) and `cleared_raskghar_scouts` with won_combat 2 (the scouts sit on the only lane east, so nobody stands here without having cleared them). rng_state is a properly-derived state (.seed=3, tests/_derive_rng_state.gd), never hand-typed -- WISave restores .state directly, not .seed. THE STATE IS LOAD-BEARING AND THE ODDS ARE NOT SLACK: this build reads floor-policy WIN 0.30 against the solo pack (boss + one scout + the Bat), so roughly SEVEN IN TEN states LOSE and the canonical needs a WIN. A re-derivation must actually run each candidate and confirm combat_finished victory:true; do not assume.",
+    "version": 5,
+    "state": {
+        "current_map": "deep_tunnels",
+        "player_cell": [
+            12,
+            6
+        ],
+        "player_facing": [
+            0,
+            1
+        ],
+        "classes": {
+            "warrior": 10
+        },
+        "accomplishments": {
+            "reached_liscor": 1,
+            "met_relc": 1,
+            "sparred_with_relc": 1,
+            "given_spear_by_relc": 1,
+            "heard_the_sewers": 1,
+            "heard_about_cisterns": 1,
+            "resolved_the_cisterns": 1,
+            "heard_the_deep_tremor": 1,
+            "cleared_raskghar_scouts": 1,
+            "reached_the_warren": 1,
+            "won_combat": 2,
+            "melee_hit": 57
+        },
+        "player_skills": [
+            "basic_cleaning",
+            "light"
+        ],
+        "removed_entities": [],
+        "dormant_encounters": [],
+        "generalist_classes": [],
+        "started_quests": [],
+        "pending_consolidation": {},
+        "used_skills": [],
+        "inventory": [
+            "rusty_sword",
+            "gnollish_hunting_knife",
+            "leather_jerkin",
+            "hedge_ward_charm",
+            "hunters_fang_talisman"
+        ],
+        "equipped": {
+            "weapon": "gnollish_hunting_knife",
+            "armor": "leather_jerkin",
+            "accessory_1": "hedge_ward_charm",
+            "accessory_2": "hunters_fang_talisman"
+        },
+        "container_state": {},
+        "actions_since_sleep": 0,
+        "rng_state": "-7684921244414978279"
+    }
+}

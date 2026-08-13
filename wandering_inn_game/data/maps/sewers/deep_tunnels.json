@@ -342,7 +342,7 @@
    ]
   },
   {
-   "_comment": "Conversation precedes combat. Join alone banks relc_joined_descent for ally_requires; solo never does. Victory banks cleared_the_warren, not raskghar_sealed; respawns=false. #451 post-cap composition repair: four enemies remain, but #439's third scout is now the cave's existing Sewer Bat. The joined w5/m4 competent read is 0.78 after Counter Strike's once-per-round cap; every combatant stat block stays frozen. The Relc-veto path is deliberately not inferred from the joined-path measurement.",
+   "_comment": "Conversation precedes combat. Join alone banks relc_joined_descent for ally_requires; solo never does. Victory banks cleared_the_warren, not raskghar_sealed; respawns=false. #451 post-cap composition repair: four enemies remain, but #439's third scout is now the cave's existing Sewer Bat. The joined w5/m4 competent read is 0.78 after Counter Strike's once-per-round cap; every combatant stat block stays frozen. #448 THE VETO IS A DIFFERENT FIGHT, NOT THIS ONE MINUS RELC: `solo_enemies` is fielded exactly when ally_requires goes unmet (wi_game.start_combat reads the same evaluation that empties the ally list, so the two can never disagree). This roster minus Relc measures 0.04 competent-at-band -- a refusal to win the act, which is the defect #448 names. The authored solo pack is the Awakened, ONE scout and the Bat, and it measures 0.37, the reference feel the user ruling names, gated in sim_spine_viability's RULED_WINDOWS. THE FICTION IS RELC'S OWN SHIPPED LINE -- he waits at the mouth, 'let the professional wait by the door for once' -- so the second scout, out on patrol, cannot come back in behind you: you trade the spear at your side for a door nobody else comes through. Staging is deliberate: enemy_spawns order puts the Bat on the NEAR cell (8,4) and the scout at (10,6); swapping them costs the player 0.08.",
    "id": "awakened_boss",
    "kind": "encounter",
    "cell": [
@@ -357,6 +357,11 @@
    "enemies": [
     "raskghar_awakened",
     "raskghar_scout",
+    "raskghar_scout",
+    "sewer_vermin"
+   ],
+   "solo_enemies": [
+    "raskghar_awakened",
     "raskghar_scout",
     "sewer_vermin"
    ],
