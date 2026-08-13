@@ -162,6 +162,12 @@ var _player_visual: Node2D
 var _player_sprite: AnimatedSprite2D
 var _player_anim_token := 0
 var _companion_visual: Node2D
+# GH#459: the follower's LAST heading. A companion has no facing in the sim
+# (the save carries a bare id), so this is where the walk direction persists
+# after the move ends -- the idle that follows must face the way the body was
+# last going, not snap back to a default.
+var _companion_facing := "down"
+var _companion_anim_token := 0
 var _ward_visuals: Array[Node2D] = []
 var _dangersense_overlay: WIDangersenseOverlay
 var _dangersense_state: Array[Dictionary] = []
@@ -1777,17 +1783,14 @@ func _first_sprite_child(holder: Node2D) -> AnimatedSprite2D:
 func _play_player_anim(prefix: String) -> void:
 	if _player_sprite == null or _player_sprite.sprite_frames == null:
 		return
-	var facing := Game.sim.player_facing
-	var suffix := "down"
-	if facing == Vector2i.UP:
-		suffix = "up"
-	elif facing == Vector2i.LEFT or facing == Vector2i.RIGHT:
-		suffix = "side"
-	_player_sprite.flip_h = facing == Vector2i.LEFT
-	var anim := "%s_%s" % [prefix, suffix]
-	if not _player_sprite.sprite_frames.has_animation(anim):
-		anim = prefix if _player_sprite.sprite_frames.has_animation(prefix) else "idle"
-	if _player_sprite.sprite_frames.has_animation(anim):
+	# GH#459: the down/side/up convention lives in WIEntityVisualFactory so the
+	# PC and the follower cannot drift apart. The PC keeps its own flip rule --
+	# it mirrors on LEFT unconditionally, because every PC body sheet is
+	# directional and the mirror is the authored left view.
+	var facing := WIEntityVisualFactory.facing_name(Game.sim.player_facing)
+	_player_sprite.flip_h = WIEntityVisualFactory.flip_for(facing)
+	var anim := WIEntityVisualFactory.anim_for(_player_sprite.sprite_frames, prefix, facing)
+	if anim != "":
 		_player_sprite.play(anim)
 
 
@@ -2011,6 +2014,18 @@ func _move_player_visual(target: Vector2) -> void:
 func _move_companion_visual(target: Vector2) -> void:
 	if _companion_visual == null or not is_instance_valid(_companion_visual):
 		return
+	# GH#459: derive the follower's facing from the travel vector BEFORE the
+	# tween starts moving it (afterwards `position` is already the target and
+	# the delta is zero). A zero delta means the companion did not actually
+	# change cells this beat -- hold the last heading and idle rather than
+	# playing a walk in place.
+	var facing := WIEntityVisualFactory.facing_from_delta(target - _companion_visual.position)
+	if facing == "":
+		_play_companion_anim("idle")
+	else:
+		_companion_facing = facing
+		_play_companion_anim("walk")
+		_queue_companion_idle()
 	var duration := _presentation_delay(MOVE_TWEEN_SECONDS)
 	if duration <= 0.0 or WISettings.reduce_motion():
 		_companion_visual.position = target
@@ -2018,6 +2033,34 @@ func _move_companion_visual(target: Vector2) -> void:
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(_companion_visual, "position", target, duration)
+
+
+## Follower twin of `_play_player_anim`: same registry, same down/side/up
+## convention, same graceful degrade -- an idle-only companion sheet simply
+## resolves "walk" back to its single idle, so a sprite that never gets a walk
+## authored keeps rendering exactly as it does today.
+func _play_companion_anim(prefix: String) -> void:
+	if _companion_visual == null or not is_instance_valid(_companion_visual):
+		return
+	var spr := _first_sprite_child(_companion_visual)
+	if spr == null or spr.sprite_frames == null:
+		return
+	var anim := WIEntityVisualFactory.anim_for(spr.sprite_frames, prefix, _companion_facing)
+	spr.flip_h = WIEntityVisualFactory.flip_for(_companion_facing) and anim.ends_with("_side")
+	if anim != "":
+		spr.play(anim)
+
+
+## Twin of `_queue_player_idle`: the walk plays for one step's worth of time and
+## the token guard makes the LAST move of a held-key run the only one that gets
+## to drop back to idle.
+func _queue_companion_idle() -> void:
+	_companion_anim_token += 1
+	var token := _companion_anim_token
+	get_tree().create_timer(0.18).timeout.connect(func() -> void:
+		if token == _companion_anim_token:
+			_play_companion_anim("idle")
+	)
 
 
 func _render_blink_afterimage(from_cell: Vector2i, to_cell: Vector2i) -> void:
@@ -2108,8 +2151,14 @@ func _reconcile_companion_visual() -> void:
 	if trail_cell.x < 0 or trail_cell.y < 0 \
 			or trail_cell.x >= Game.sim.grid_size.x or trail_cell.y >= Game.sim.grid_size.y:
 		trail_cell = Game.sim.player_cell
+	# GH#459: a rebuild (tame, map change, phase crossing) has no travel vector
+	# to read, so seed the follower's heading from the PC's -- it stands at the
+	# trailing cell looking the way the party is going, not blankly south.
+	var seed_facing := WIEntityVisualFactory.facing_name(Game.sim.player_facing)
+	if seed_facing != "":
+		_companion_facing = seed_facing
 	_companion_visual = _make_entity_visual(
-		trail_cell, Game.sim.companion, [], Color(0.72, 0.76, 0.7)
+		trail_cell, Game.sim.companion, [], Color(0.72, 0.76, 0.7), _companion_facing
 	)
 	ObservableBus.emit_domain_event(WIEvents.UI_COMPANION_RENDERED, {
 		"active": true,

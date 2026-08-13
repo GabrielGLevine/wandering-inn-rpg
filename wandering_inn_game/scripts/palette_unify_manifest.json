@@ -2446,16 +2446,6 @@
    "sha_after": "8074155155524a3242d01f0b79530ac126c6040f2a4e47998a7db2f60e0cec3d"
   },
   {
-   "path": "assets/sprites/skeleton_ally/Idle-Sheet.png",
-   "family": "CUSTOM-HD",
-   "mean_shift": 17.69,
-   "color_keep": 1.0,
-   "band_frac": 0.0,
-   "sha_before": "d81861bd80ba4786bd397dfa5798fda4d2e853dfe55cbf345546f71def4d69a0",
-   "blob_before": "4c4f552a3917be8aefe513eb06e7e7b9fc391962",
-   "sha_after": "8cbfe0c2b61ae2557e8fc0e2ba2b319d8ab93d5c0c713b9ac1344c3768351de1"
-  },
-  {
    "path": "assets/sprites/snare_coil/Idle-Sheet.png",
    "family": "PIXELLAB",
    "mean_shift": 33.69,
