@@ -27,6 +27,18 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### User rulings 2026-08-13 (#438 wave-close batch)
 
+- **#485 naming: six kit decisions GO; evolved/elemental pairs earn
+  DISTINCT names (user, 2026-08-13).** Coverage authoring for all six
+  sets proceeds. Naming layer amended: a pair with real combined
+  identity (e.g. swordsman x ice_mage) resolves to its OWN excitingly
+  named class ([Frostblade Warrior]/[Frostblade Knight] register), NOT
+  reuse into the base target — base x base pairs (warrior x mage ->
+  [Spellsword]) keep the base target. Controller produces the full
+  wiki-verified name-mapping proposal on #485 for approval (post-bar
+  candidates via the clearance flow). Also ruled: **swordsman renames
+  to [Blademaster]** (display name; the shipped id stays frozen) —
+  rename lane re-derives every prose/pin surface.
+
 - **Class AND Skill names past the spoiler bar are PROPOSABLE with
   user clearance (user, 2026-08-13, extended to Skills same day).** The
   wiki-verify flow gains a third outcome: a canon-attested name that
