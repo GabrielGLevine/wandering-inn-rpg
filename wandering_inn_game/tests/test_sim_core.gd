@@ -1139,17 +1139,21 @@ func _init() -> void:
 	assert(g19b.accomplishment_count("catalyst_attunement_sleeps") == 0, "the door-awakened gate is still respected -- the fix restores the beat, it does not skip gates")
 
 	# ONCE PER SLEEP (4). warrior 11 + mage 10 + archer 11 qualifies BOTH the
-	# spellsword row and (via the 3 proxy, next sleep) the ranger row.
+	# spellsword row and the ranger row on the SAME sleep.
 	var g19c := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g19c.classes = {"warrior": 11, "mage": 10, "archer": 11}
 	_events.clear()
 	g19c.sleep()
 	assert(_count("consolidation_accepted") == 1, "AT MOST ONE consolidation per sleep, even with two qualifying rows")
-	assert(int(g19c.classes.get("spellsword", 0)) == 14 and int(g19c.classes.get("archer", 0)) == 11, "the first matching row fires; the second waits for the next bed")
+	assert(int(g19c.classes.get("spellsword", 0)) == 14 and int(g19c.classes.get("archer", 0)) == 11, "the first matching row fires; the second row's turn would be the next bed")
+	# #472 audit FAIL 1: and the SECOND sleep must NOT chain [Spellsword] into
+	# [Ranger] -- [Ranger] inherits warrior+archer, so that merge would silently
+	# strip the entire mage half the player just earned. The 3 proxy is gated
+	# on the chained target actually covering the pair; none is authored yet.
 	_events.clear()
 	g19c.sleep()
-	assert(_count("consolidation_accepted") == 1, "3 PROXY, CHAINED: [Spellsword] 14 stands in for the warrior line at its CURRENT level, so the ranger row fires the NEXT sleep")
-	assert(g19c.classes.size() == 1 and int(g19c.classes.get("ranger", 0)) == 17, "the chain consumes the consolidated class itself: max(ceil(2*25/3), 14) == 17")
+	assert(_count("consolidation_accepted") == 0, "no chained merge fires: nothing inherits {spellsword, archer}, so [Spellsword] + [Archer] would be Skill loss and is refused")
+	assert(int(g19c.classes.get("spellsword", 0)) == 14 and int(g19c.classes.get("archer", 0)) == 11, "both classes stand, unmerged, until a target that covers them is authored")
 
 	var g20b := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g20b.classes = {"warrior": 6, "mage": 7}

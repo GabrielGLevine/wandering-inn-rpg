@@ -4,12 +4,12 @@
 	},
 	"consolidations": [
 		{
-			"_comment": "EVOLVED-LINEAGE CONSOLIDATION (#449; user ruling 2026-08-12, docs/CHOICE-LOG.md 'Evolved lineages consolidate into unique classes'). [Spearmaster] does NOT lineage-carry into [Spellsword] -- the evolved spear line merges with the mage line into its OWN class. SAME gate shape as every row below (min_parent_level 10, min_combined_level 21). ORDER IS LOAD-BEARING and this row must stay FIRST: `WIProgression.check_consolidation` returns the FIRST matching row, and [Spellsword]'s own warrior line still literally lists `spearmaster`, so a spear holder below this row would be handed [Spellsword] and [Spellspear] would be unreachable. That contract is GATED, not merely commented -- tests/test_progression.gd::_test_evolved_lineage_consolidation pins spearmaster+mage -> spellspear AND warrior+mage -> spellsword, so a reorder reds.",
+			"_comment": "EVOLVED-LINEAGE CONSOLIDATION (#449; user ruling 2026-08-12, docs/CHOICE-LOG.md 'Evolved lineages consolidate into unique classes'). [Spearmaster] does NOT lineage-carry into [Spellsword] -- the evolved spear line merges with the mage line into its OWN class. SAME gate shape as every row below (min_parent_level 10, min_combined_level 21). #472 NARROWED THESE LINES to exactly the pair this target `inherits`. Consolidation is AUTOMATIC now, so a row may only list pairs whose no-Skill-loss is PROVEN (data_lint's coverage arm hard-reds any live pair that is not) -- the old broad lines silently dropped the evolved parent's own kit, e.g. spearmaster+ice_mage handed you [Spellsword] minus [Ice Wall]. The evolved pairs did not vanish: they are back on lineage completeness's `_exempt` queue, awaiting their own authored targets. ORDER IS STILL LOAD-BEARING and this row must stay FIRST -- `WIProgression.check_consolidation` returns the FIRST matching row -- and the contract is GATED, not merely commented: tests/test_progression.gd pins spearmaster+mage -> spellspear AND warrior+mage -> spellsword, so a reorder reds.",
 			"id": "spellspear",
 			"target": "spellspear",
 			"parent_lines": [
 				["spearmaster"],
-				["mage", "ice_mage", "fire_mage"]
+				["mage"]
 			],
 			"min_parent_level": 10,
 			"min_combined_level": 21
@@ -18,8 +18,8 @@
 			"id": "spellsword",
 			"target": "spellsword",
 			"parent_lines": [
-				["warrior", "swordsman", "spearmaster"],
-				["mage", "ice_mage", "fire_mage"]
+				["warrior"],
+				["mage"]
 			],
 			"min_parent_level": 10,
 			"min_combined_level": 21
@@ -29,8 +29,8 @@
 			"id": "innkeeper",
 			"target": "innkeeper",
 			"parent_lines": [
-				["helper", "barmaid", "server"],
-				["diplomat", "emissary"]
+				["helper"],
+				["diplomat"]
 			],
 			"min_parent_level": 10,
 			"min_combined_level": 21
@@ -40,8 +40,8 @@
 			"id": "ranger",
 			"target": "ranger",
 			"parent_lines": [
-				["warrior", "swordsman", "spearmaster"],
-				["archer", "sharpshooter"]
+				["warrior"],
+				["archer"]
 			],
 			"min_parent_level": 10,
 			"min_combined_level": 21
@@ -51,8 +51,8 @@
 			"id": "scout",
 			"target": "scout",
 			"parent_lines": [
-				["rogue", "infiltrator"],
-				["archer", "sharpshooter"]
+				["rogue"],
+				["archer"]
 			],
 			"min_parent_level": 10,
 			"min_combined_level": 21
@@ -62,8 +62,8 @@
 			"id": "druid",
 			"target": "druid",
 			"parent_lines": [
-				["beast_tamer", "beast_master"],
-				["mage", "ice_mage", "fire_mage"]
+				["beast_tamer"],
+				["mage"]
 			],
 			"min_parent_level": 10,
 			"min_combined_level": 21

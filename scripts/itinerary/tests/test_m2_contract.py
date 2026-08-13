@@ -315,28 +315,34 @@ class EmitterTableTest(unittest.TestCase):
         self.assertEqual([s.get("type") for s in steps[1:3]], ["dialogue_ended", "ui_dialogue_hidden"])
         self.assertEqual(steps[3]["frames"], 30)
 
-    def test_sleep_without_levels_asserts_the_absence_of_the_modal(self) -> None:
-        steps = self.emit({"kind": "sleep", "consolidation_choice": None, "preview": {
+    def test_sleep_without_a_merge_asserts_no_merge_happened(self) -> None:
+        steps = self.emit({"kind": "sleep", "merge": None, "preview": {
             "classes_after": {}, "class_gains": [], "level_ups": [], "consolidation": {}}})
-        self.assertEqual(actions(steps), ["press", "wait_for_event", "wait_for_event", "assert_state", "assert_state"])
+        self.assertEqual(actions(steps), ["press", "wait_for_event", "wait_for_event",
+                                          "assert_event_absent", "assert_state"])
         self.assertEqual(steps[1]["payload_contains"], {"slept": True})
-        self.assertEqual(steps[3], {"action": "assert_state", "path": "pending_consolidation",
-                                    "equals": {}, "_itin": "n"})
+        # #472: the retired `pending_consolidation` pin meant "no merge is
+        # QUEUED"; this says the stronger thing -- none HAPPENED.
+        self.assertEqual(steps[3], {"action": "assert_event_absent",
+                                    "type": "consolidation_accepted", "_itin": "n"})
 
-    def test_sleep_with_levels_and_a_consolidation_modal(self) -> None:
-        steps = self.emit({"kind": "sleep", "consolidation_choice": "accept", "preview": {
-            "classes_after": {"spearmaster": 14}, "class_gains": ["mage"],
-            "level_ups": [{"class": "warrior", "level": 5}],
-            "consolidation": {"target": "spearmaster", "level": 14, "parents": ["warrior", "spearman"]}}})
+    def test_sleep_with_levels_and_an_automatic_merge(self) -> None:
+        steps = self.emit({"kind": "sleep", "merge": {"target": "spearmaster", "level": 14},
+            "preview": {
+                "classes_after": {"spearmaster": 14}, "class_gains": ["mage"],
+                "level_ups": [{"class": "warrior", "level": 5}],
+                "consolidation": {"target": "spearmaster", "level": 14, "parents": ["warrior", "spearman"]}}})
         types = [s.get("type") for s in steps if s["action"] == "wait_for_event"]
+        # The merge event lands INSIDE the sleep beat, so it precedes the veil --
+        # and wait_for_event's cursor is forward-only, so this list IS the
+        # beat-order pin. No prompt events survive; there is no modal.
         self.assertEqual(types, [
-            "phase_changed", "class_gained", "class_level_up", "consolidation_offered",
-            "ui_sleep_veil_rendered", "ui_sleep_veil_finished", "ui_consolidation_prompt_rendered",
-            "ui_consolidation_prompt_hidden", "consolidation_accepted",
+            "phase_changed", "class_gained", "class_level_up", "consolidation_accepted",
+            "ui_sleep_veil_rendered", "ui_sleep_veil_finished",
         ])
-        # An unplanned consolidation modal eats all input -- accepting it is a
-        # confirm, declining it a cancel, and the script must say which.
-        self.assertEqual([s for s in steps if s["action"] == "press"][-1]["name"], "confirm")
+        self.assertEqual([s for s in steps if s["action"] == "press"], [steps[0]])
+        self.assertEqual(steps[-1], {"action": "assert_state", "path": "classes",
+                                     "equals": {"spearmaster": 14}, "_itin": "n"})
 
 
 class FakeBridge:

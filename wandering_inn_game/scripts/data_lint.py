@@ -2320,24 +2320,40 @@ def _pair_holdable(class_a: str, class_b: str, rows: list, classes_by_id: dict) 
 	return True
 
 
+def _merge_proven(id_a: str, id_b: str, row: dict, classes_by_id: dict) -> bool:
+	"""WIProgression._merge_proven, in Python. A LITERAL authored pair is proven
+	statically by this very arm; a PROXY substitution is proven only by the
+	target inheriting exactly that pair."""
+	lines = row.get("parent_lines", [])
+	if not (isinstance(lines, list) and len(lines) == 2):
+		return False
+	if id_a in lines[0] and id_b in lines[1]:
+		return True
+	return _inheritance_pair(classes_by_id.get(row.get("target"), {})) == frozenset((id_a, id_b))
+
+
 def check_consolidation_skill_coverage(parsed: dict, errors: list, report: list) -> None:
-	"""#472 NO-SKILL-LOSS. Consolidation fires automatically now, so a merge the
+	"""#472 NO-SKILL-LOSS. Consolidation fires automatically, so a merge the
 	player never chose may not cost them a [Skill]. Enumerates EVERY qualifying
 	parent level pair (min_parent_level/min_combined_level up to each parent's own
-	table max), folds both parents' granted ids at those levels, and requires the
-	target to cover the union at that pair's own derived merged level -- via its
-	`inherits`, its own table, or a registered `upgrades: {old: new}` pair proved
-	cost/effect-dominant. A gap is a HARD error with NO exemption route: unlike a
-	lineage hole (which parks a pair as unauthored), a coverage hole SHIPS and
-	silently unlearns a [Skill] mid-playthrough.
+	table max, clamped to sparse floors), folds both parents' granted ids at those
+	levels, and requires the target to cover the union at that pair's own derived
+	merged level -- via its `inherits`, its own table, or a registered
+	`upgrades: {old: new}` pair proved cost/effect-dominant.
 
-	SCOPE. Only pairs that RESOLVE to the row's target -- the target's `inherits`
-	is exactly that pair, `check_lineage_completeness`' own predicate. Pairs that
-	arm has already flagged (`_exempt` or orphan) have no proper target yet, so
-	re-reporting them here in a second vocabulary would be noise, not signal;
-	they are listed as a REPORT line instead so the authoring queue is visible.
-	CHAINS (#472 3): a consolidated class proxies its own parent lines, so a
-	chained pair is checked the same way once its own target is authored."""
+	TWO TIERS, split on what the ENGINE can actually fire (WIProgression.
+	check_consolidation + _merge_proven):
+	  * LIVE -- a pair some live row will merge. A gap here is a HARD ERROR with
+	    NO exemption route: it ships and silently unlearns a [Skill] mid-run.
+	    `_exempt` buys nothing on a live pair; narrow the row's `parent_lines`
+	    (or author the coverage) instead.
+	  * CLOSURE-ONLY -- a pair a player can HOLD (evolution closure, or a chain
+	    the 3 proxy could reach) that no live row merges. Nothing is lost,
+	    because nothing fires; it is an authoring queue, owned by
+	    check_lineage_completeness' `_exempt`/orphan inventory. Listed as a
+	    REPORT so the queue stays visible with its real cost attached.
+	FIRST-MATCH ORDERING IS LOAD-BEARING (#449) in both tiers: check_consolidation
+	returns the FIRST matching row, so each pair is charged to exactly one row."""
 	doc = parsed.get(DATA / "classes.json") or {}
 	skills_doc = parsed.get(DATA / "skills.json") or {}
 	if not isinstance(doc, dict) or not isinstance(skills_doc, dict):
@@ -2347,42 +2363,59 @@ def check_consolidation_skill_coverage(parsed: dict, errors: list, report: list)
 	skills_by_id = {row.get("id"): row for row in skills_doc.get("skills", [])
 		if isinstance(row, dict) and isinstance(row.get("id"), str)}
 	rows = [row for row in doc.get("consolidations", []) if isinstance(row, dict)]
-	targets = {row.get("target") for row in rows if isinstance(row.get("target"), str)}
-	parked_pairs = set()
-	for row in rows:
-		pair = row.get("_exempt")
-		if isinstance(pair, list) and len(pair) == 2 and all(isinstance(v, str) for v in pair):
-			parked_pairs.add(frozenset(pair))
-	parked: list = []
-	# FIRST-MATCH ORDERING IS LOAD-BEARING (#449). `check_consolidation` returns
-	# the FIRST matching row, and the broad rows still literally list the evolved
-	# ids, so spearmaster x mage is [Spellspear]'s pair and never [Spellsword]'s
-	# -- checking it against both would red the row that can never fire for it.
-	claimed: dict = {}
-	for index, row in enumerate(rows):
-		if "_exempt" in row:
-			continue
-		lines = row.get("parent_lines", [])
-		if not (isinstance(lines, list) and len(lines) == 2
-				and all(isinstance(line, list) and line for line in lines)):
-			continue
-		for parent_a in list(_lineage_members(lines[0], classes_by_id)) + _line_proxies(lines[0], rows):
-			for parent_b in list(_lineage_members(lines[1], classes_by_id)) + _line_proxies(lines[1], rows):
-				if parent_a != parent_b:
-					claimed.setdefault(frozenset((parent_a, parent_b)), index)
-	for row_index, row in enumerate(rows):
-		if "_exempt" in row:
-			continue
+	live_rows = [row for row in rows if "_exempt" not in row
+		and isinstance(row.get("parent_lines"), list) and len(row["parent_lines"]) == 2
+		and all(isinstance(line, list) and line for line in row["parent_lines"])]
+
+	def sides(row):
+		"""Everything a player could bring to this row: the authored ids, their
+		evolution closure, and any consolidated class that proxies the line."""
+		lines = row["parent_lines"]
+		return (list(_lineage_members(lines[0], classes_by_id)) + _line_proxies(lines[0], rows),
+			list(_lineage_members(lines[1], classes_by_id)) + _line_proxies(lines[1], rows))
+
+	def pairs_for():
+		"""pair -> (row, parent_a, parent_b), first matching row wins."""
+		found = {}
+		for row in live_rows:
+			target = row.get("target")
+			side_a, side_b = sides(row)
+			for parent_a in side_a:
+				for parent_b in side_b:
+					if parent_a == parent_b:
+						continue
+					# Holding the target SKIPS the row outright
+					# (check_consolidation's own guard), so a pair naming it is
+					# not a pair anyone merges.
+					if target in (parent_a, parent_b):
+						continue
+					if not _pair_holdable(parent_a, parent_b, rows, classes_by_id):
+						continue
+					found.setdefault(frozenset((parent_a, parent_b)), (row, parent_a, parent_b))
+		return found
+
+	live_pairs = {}
+	for row in live_rows:
+		target = row.get("target")
+		side_a, side_b = sides(row)
+		for parent_a in side_a:
+			for parent_b in side_b:
+				if parent_a == parent_b or target in (parent_a, parent_b):
+					continue
+				if not _pair_holdable(parent_a, parent_b, rows, classes_by_id):
+					continue
+				if not _merge_proven(parent_a, parent_b, row, classes_by_id):
+					continue
+				live_pairs.setdefault(frozenset((parent_a, parent_b)), (row, parent_a, parent_b))
+	closure_pairs = pairs_for()
+
+	for row in live_rows:
 		label = str(row.get("id", row.get("target", "<unnamed>")))
 		target_id = row.get("target")
 		target = classes_by_id.get(target_id)
 		if not isinstance(target, dict):
 			errors.append(f"consolidation coverage: '{label}' names unknown target "
 				f"'{target_id}'")
-			continue
-		lines = row.get("parent_lines", [])
-		if not (isinstance(lines, list) and len(lines) == 2
-				and all(isinstance(line, list) and line for line in lines)):
 			continue
 		upgrades = row.get("upgrades", {})
 		if not isinstance(upgrades, dict):
@@ -2403,73 +2436,60 @@ def check_consolidation_skill_coverage(parsed: dict, errors: list, report: list)
 				errors.append(f"consolidation coverage: '{label}' upgrade "
 					f"'{old_id}' -> '{new_id}', but '{target_id}' never grants "
 					f"'{new_id}' -- the upgrade is never delivered")
+
+	parked = []
+	for key, (row, parent_a, parent_b) in sorted(closure_pairs.items(),
+			key=lambda item: sorted(item[0])):
+		target_id = row.get("target")
+		label = str(row.get("id", target_id or "<unnamed>"))
+		if not isinstance(classes_by_id.get(target_id), dict):
+			continue
+		upgrades = row.get("upgrades", {})
+		if not isinstance(upgrades, dict):
+			upgrades = {}
 		min_parent = int(row.get("min_parent_level", 0) or 0)
 		min_combined = int(row.get("min_combined_level", 0) or 0)
-		target_inherits = _inheritance_pair(target)
-		members_a = list(_lineage_members(lines[0], classes_by_id)) + _line_proxies(lines[0], rows)
-		members_b = list(_lineage_members(lines[1], classes_by_id)) + _line_proxies(lines[1], rows)
-		for parent_a in members_a:
-			for parent_b in members_b:
-				if parent_a == parent_b:
+		levels_a = _table_levels(classes_by_id.get(parent_a, {}))
+		levels_b = _table_levels(classes_by_id.get(parent_b, {}))
+		if not levels_a or not levels_b:
+			continue
+		# A CHAINED parent is a consolidated class: its sparse table starts at its
+		# own merge floor, well above min_parent_level.
+		floor_a = max(min_parent, min(levels_a))
+		floor_b = max(min_parent, min(levels_b))
+		worst_missing: set = set()
+		worst_pair = None
+		for level_a in range(floor_a, max(levels_a) + 1):
+			for level_b in range(floor_b, max(levels_b) + 1):
+				if level_a + level_b < min_combined:
 					continue
-				# WIProgression._retired_class_ids erases a consolidated class's
-				# parent ids on load and check_class_gains refuses to re-grant
-				# them, so "[Ranger] + [Archer]" is not a pair anyone can hold.
-				if not _pair_holdable(parent_a, parent_b, rows, classes_by_id):
-					continue
-				pair_key = frozenset((parent_a, parent_b))
-				if claimed.get(pair_key) != row_index:
-					continue
-				# TIER. A pair with a target that inherits it is AUTHORED, and a
-				# coverage hole there is a hard red with no exemption route. A pair
-				# already parked by lineage completeness (`_exempt`) or reached only
-				# by the 3 chain walk has no target class yet -- the loss is real,
-				# but "author the missing target" is the fix, and that queue is
-				# lineage completeness's, so it lists instead of failing. Deleting
-				# its `_exempt` row without authoring a target turns it red HERE.
-				chained = parent_a in targets or parent_b in targets
-				parked_pair = pair_key in parked_pairs or chained
-				levels_a = _table_levels(classes_by_id.get(parent_a, {}))
-				levels_b = _table_levels(classes_by_id.get(parent_b, {}))
-				if not levels_a or not levels_b:
-					continue
-				# A CHAINED parent is a consolidated class: its sparse table starts
-				# at its own merge floor, well above min_parent_level, so the naive
-				# range would enumerate levels it can never hold.
-				floor_a = max(min_parent, min(levels_a))
-				floor_b = max(min_parent, min(levels_b))
-				worst_missing: set = set()
-				worst_pair = None
-				for level_a in range(floor_a, max(levels_a) + 1):
-					for level_b in range(floor_b, max(levels_b) + 1):
-						if level_a + level_b < min_combined:
-							continue
-						need = (_grants_at_level(parent_a, level_a, classes_by_id)
-							| _grants_at_level(parent_b, level_b, classes_by_id))
-						have = _grants_at_level(target_id,
-							_merged_consolidation_level(level_a, level_b), classes_by_id)
-						missing = {s for s in need
-							if s not in have and upgrades.get(s) not in have}
-						if missing and len(missing) > len(worst_missing):
-							worst_missing = missing
-							worst_pair = (level_a, level_b)
-				if worst_missing and parked_pair:
-					parked.append(f"'{parent_a}' x '{parent_b}' -> '{target_id}' would lose "
-						f"{sorted(worst_missing)}"
-						+ (" (chain, 3)" if chained and pair_key not in parked_pairs else ""))
-				elif worst_missing:
-					errors.append(f"consolidation coverage: '{label}' merging "
-						f"'{parent_a}' {worst_pair[0]} + '{parent_b}' {worst_pair[1]} "
-						f"into '{target_id}' "
-						f"{_merged_consolidation_level(worst_pair[0], worst_pair[1])} "
-						f"LOSES {sorted(worst_missing)} -- consolidation is automatic, so "
-						"the target must cover both parents' kits via inherits, its own "
-						"grants, or a dominant `upgrades` pair (no exemption exists)")
+				need = (_grants_at_level(parent_a, level_a, classes_by_id)
+					| _grants_at_level(parent_b, level_b, classes_by_id))
+				have = _grants_at_level(target_id,
+					_merged_consolidation_level(level_a, level_b), classes_by_id)
+				missing = {s for s in need if s not in have and upgrades.get(s) not in have}
+				if missing and len(missing) > len(worst_missing):
+					worst_missing = missing
+					worst_pair = (level_a, level_b)
+		if not worst_missing:
+			continue
+		if key in live_pairs:
+			errors.append(f"consolidation coverage: '{label}' merging "
+				f"'{parent_a}' {worst_pair[0]} + '{parent_b}' {worst_pair[1]} "
+				f"into '{target_id}' "
+				f"{_merged_consolidation_level(worst_pair[0], worst_pair[1])} "
+				f"LOSES {sorted(worst_missing)} -- consolidation is automatic, so a LIVE "
+				"pair must cover both parents' kits via inherits, its own grants, or a "
+				"dominant `upgrades` pair. NO exemption exists: narrow the row's "
+				"`parent_lines` so the engine cannot fire this pair, or author the coverage")
+		else:
+			parked.append(f"'{parent_a}' x '{parent_b}' -> '{target_id}' would lose "
+				f"{sorted(worst_missing)}")
 	if parked:
-		report.append(f"consolidation coverage: {len(parked)} reachable parent pair(s) "
-			"have NO target inheriting that exact pair, so a merge there loses [Skills] "
-			"until one is authored -- lineage completeness owns that queue "
-			f"(`_exempt` rows + 3 chains): {'; '.join(sorted(parked))}")
+		report.append(f"consolidation coverage: {len(parked)} holdable parent pair(s) that "
+			"NO live row merges -- nothing is lost today because nothing fires, but each "
+			"needs an authored target before its lineage can consolidate at all "
+			f"(lineage completeness owns that queue): {'; '.join(sorted(parked))}")
 
 
 def main() -> int:

@@ -407,9 +407,8 @@
    "_itin": "act1.sleep"
   },
   {
-   "action": "assert_state",
-   "path": "pending_consolidation",
-   "equals": {},
+   "action": "assert_event_absent",
+   "type": "consolidation_accepted",
    "_itin": "act1.sleep"
   },
   {

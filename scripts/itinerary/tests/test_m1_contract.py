@@ -100,7 +100,7 @@ class M1ContractTest(unittest.TestCase):
 
         ledger = Ledger.fresh()
         save = ledger.materialize_save()
-        self.assertEqual(save["version"], 8)
+        self.assertEqual(save["version"], 9)  # #472 retired pending_consolidation
         self.assertEqual(save["state"]["current_map"], "inn")
         self.assertIsInstance(save["state"]["rng_state"], str)
 
@@ -124,7 +124,10 @@ class M1ContractTest(unittest.TestCase):
         sleep = SleepPlanner(fake)
         sleep_ops = sleep.plan("act1.sleep", {"expect_levels": False}, ledger)
         self.assertEqual(sleep_ops[0]["kind"], "sleep")
-        self.assertEqual(ledger.state["pending_consolidation"], {})
+        # #472: no pending state to mirror. A sleep that merges carries the merge
+        # it EXPECTS; one that does not carries None.
+        self.assertIsNone(sleep_ops[0]["merge"])
+        self.assertNotIn("pending_consolidation", ledger.state)
 
         steps = Emitter().emit(
             "act1.erin",

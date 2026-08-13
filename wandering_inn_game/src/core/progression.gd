@@ -266,8 +266,8 @@ static func _line_candidates(classes: Dictionary, line: Array, class_catalog: Di
 
 ## #472 LINEAGE PROXY. A held consolidated class stands in for either parent
 ## line its OWN row consumed, AT ITS CURRENT LEVEL (the class kept climbing, so
-## the lineage climbed with it) -- so [Spellsword] 16 + ice_mage 10 clears a
-## warrior-line x ice_mage row.
+## the lineage climbed with it).
+## A PROXY IS ONLY A CANDIDATE HERE -- `_merge_proven` is what lets it fire.
 ## CONTAINMENT DIRECTION IS LOAD-BEARING: the proxy's own line must be a SUBSET
 ## of the line being asked for, never the reverse. [Spellspear] (own line
 ## `[spearmaster]`) satisfies a broad warrior line that lists spearmaster;
@@ -295,6 +295,41 @@ static func _lineage_proxies(classes: Dictionary, line: Array, class_catalog: Di
 			if covered and not out.has(target):
 				out.append(target)
 	return out
+
+
+## #472 NO-SKILL-LOSS, ENFORCED IN THE ENGINE. Consolidation is automatic, so a
+## pair may only merge when the target demonstrably carries both parents' kits.
+## Two tiers, because the two populations are provable in different places:
+##   * a LITERAL authored pair is proven STATICALLY -- data_lint's coverage arm
+##     hard-reds any live row pair whose union the target drops, so reaching
+##     here means the data already passed. Nothing to re-check at runtime.
+##   * a PROXY substitution cannot be enumerated in data at all: which class
+##     stands in depends on what this player consolidated earlier. So the engine
+##     applies the coverage arm's own predicate directly -- the target must
+##     `inherit` EXACTLY this pair, which is the mechanism by which it carries
+##     both kits. Until a chained target is authored (nothing inherits
+##     {spellsword, archer} today), no chain fires and none can lose a [Skill].
+##     The 3 machinery stays live and lit the moment that class lands.
+static func _merge_proven(id_a: String, id_b: String, entry: Dictionary, class_catalog: Dictionary) -> bool:
+	var lines: Array = entry.get("parent_lines", [])
+	var literal_a := (lines[0] as Array).has(id_a)
+	var literal_b := (lines[1] as Array).has(id_b)
+	if literal_a and literal_b:
+		return true
+	var target := String(entry.get("target", ""))
+	for cls: Dictionary in class_catalog.get("classes", []):
+		if String(cls[WIKeys.ID]) != target:
+			continue
+		var raw: Variant = cls.get("inherits")
+		if raw == null:
+			return false
+		var parents: Array = raw if raw is Array else [raw]
+		if parents.size() != 2:
+			return false
+		var first := String(parents[0])
+		var second := String(parents[1])
+		return (first == id_a and second == id_b) or (first == id_b and second == id_a)
+	return false
 
 
 ## Optional `upgrades: {old_skill_id: new_skill_id}` on a consolidations row --
@@ -337,7 +372,7 @@ static func check_consolidation(classes: Dictionary, class_catalog: Dictionary) 
 		var id_b := ""
 		for a: String in cands_a:
 			for b: String in cands_b:
-				if a == b:
+				if a == b or not _merge_proven(a, b, entry, class_catalog):
 					continue
 				id_a = a
 				id_b = b

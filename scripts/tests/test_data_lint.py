@@ -1175,16 +1175,35 @@ class ConsolidationSkillCoverageTest(unittest.TestCase):
         self.assertIn("LOSES ['b_bolt']", "\n".join(errors))
 
     def test_gap_has_no_exemption_route(self):
-        """`_exempt` buys a lineage SKIP -- a pair PARKED as having no authored
-        target. It must never buy silence: the loss is still listed, so deleting
-        the rationale row and authoring a target that drops a grant reds."""
+        """THE CONTRACT (#472 audit FAIL 1). A LIVE pair -- one the engine will
+        actually merge -- reds on a coverage gap, and `_exempt` buys NOTHING.
+        The old shape let an `_exempt` row demote a live gap to a report line,
+        which is exactly the bypass that shipped warrior x ice_mage silently
+        dropping [Ice Wall]."""
         catalog = self._catalog(target_grants=["a_hit", "ab_own"], inherits=("a",))
         catalog[data_lint.DATA / "classes.json"]["consolidations"].append(
             {"_exempt": ["a", "b"], "rationale": "please ignore the Skill loss"})
         errors, report = [], []
         data_lint.check_consolidation_skill_coverage(catalog, errors, report)
-        self.assertEqual(errors, [])
-        self.assertTrue(any("would lose ['b_bolt']" in row for row in report), report)
+        self.assertTrue(any("LOSES ['b_bolt']" in error for error in errors), errors)
+        self.assertTrue(any("NO exemption exists" in error for error in errors), errors)
+
+    def test_non_live_gap_is_a_report_not_a_red(self):
+        """The other half of the tier. A pair reachable only through the
+        evolution closure -- no live row merges it, so nothing is lost today --
+        is an AUTHORING QUEUE entry, listed with its real cost, never a red."""
+        catalog = self._catalog(target_grants=["a_hit", "b_bolt", "ab_own"])
+        doc = catalog[data_lint.DATA / "classes.json"]
+        doc["classes"].append({"id": "b2", "inherits": "b",
+            "levels": [{"level": 10, "grants": ["b_evolved_only"]}]})
+        for row in doc["classes"]:
+            if row["id"] == "b":
+                row["evolution"] = {"at_level": 10, "targets": {"used_b": "b2"}}
+        errors, report = [], []
+        data_lint.check_consolidation_skill_coverage(catalog, errors, report)
+        self.assertEqual(errors, [], errors)
+        self.assertTrue(any("'a' x 'b2'" in row and "NO live row merges" in row
+            for row in report), report)
 
     def test_dominant_upgrade_covers_a_replaced_grant(self):
         self.assertEqual(self._run(
@@ -1217,8 +1236,7 @@ class ConsolidationSkillCoverageTest(unittest.TestCase):
         parsed = data_lint.check_wellformed([])
         data_lint.check_consolidation_skill_coverage(parsed, errors, report)
         self.assertEqual(errors, [], errors)
-        self.assertTrue(any("NO target inheriting that exact pair" in row
-            for row in report), report)
+        self.assertTrue(any("NO live row merges" in row for row in report), report)
 
     def test_chain_walk_reaches_a_consolidated_parent(self):
         """3: a consolidated class proxies its own parent line, so the chained
@@ -1237,7 +1255,7 @@ class ConsolidationSkillCoverageTest(unittest.TestCase):
         data_lint.check_consolidation_skill_coverage(catalog, errors, report)
         joined = "\n".join(report)
         self.assertIn("'ab'", joined)
-        self.assertIn("(chain", joined)
+        self.assertEqual(errors, [], "a chain with no authored target cannot fire, so it lists")
 
 
 if __name__ == "__main__":
