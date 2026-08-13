@@ -242,7 +242,7 @@
 			"resolution_paths": [
 				{ "accomplishment": "handoff_loud", "text": "The hat came off. The package still changed hands, and the house has agreed to remember it as a misunderstanding about a chair.", "grant": { "melee_hit": 5, "won_combat": 1 } },
 				{ "accomplishment": "handoff_talked", "text": "Three exchanges, no names, and a package that was never once mentioned by anybody at the table.", "grant": { "persuaded_someone": 2, "heard_gossip": 3 } },
-				{ "accomplishment": "handoff_quiet", "text": "Hat on the third peg, coat over the chair, the wrong one taken on the way out. Nobody raised a voice and nobody raised an eye.", "grant": { "sneaked_past_danger": 2, "observed_things": 2 } }
+				{ "_comment": "#453 G4 (user ruling 2026-08-13): `ranged_hit` joins the QUIET fork, the one a scout-shaped build actually takes -- the whole point of the gap is that the bow spine's own diet paid nothing toward its own axis. Rate is 4 against the fork's sneak-2: the ranged curve is coarser than the sneak curve (archer L10 asks 57 where rogue L10 asks 36), so a like-for-like top-up is roughly double. DISCLOSED FICTION STRETCH: unlike the other two grants this fork pays, `ranged_hit` is not visible in the fork's own prose (a hat, a coat, a package, no bow anywhere). The ruling names this fork and the shipped idiom is already abstract about grant counters (`merchant_extorted` pays `sneaked_past_danger` for an extortion), so it ships as ruled; `handoff_loud` -- whose brawl already pays melee_hit 5 -- is the fiction-tighter alternative if a controller re-cuts it.", "accomplishment": "handoff_quiet", "text": "Hat on the third peg, coat over the chair, the wrong one taken on the way out. Nobody raised a voice and nobody raised an eye.", "grant": { "sneaked_past_danger": 2, "observed_things": 2, "ranged_hit": 4 } }
 			]
 		},
 		{
@@ -360,10 +360,12 @@
 					}
 				},
 				{
+					"_comment": "#453 G4 (user ruling 2026-08-13): `ranged_hit` joins the fight fork at the SAME rate as `melee_hit`. Before this the counter was single-sourced -- combat's own per-attack tally (wi_combat.gd) plus the barracks archery butt (once per waking) -- and not one quest grant in the game paid it, so a bow spine's side-content diet paid nothing toward its own axis. The fork is weapon-agnostic in the fiction (you drew steel on a parley and drove them off) and the grant cannot tell which end of the fight you fought from, so it pays both axes rather than picking one.",
 					"accomplishment": "drove_off_rags",
 					"text": "You drew steel on a parley.",
 					"grant": {
 						"melee_hit": 8,
+						"ranged_hit": 8,
 						"won_combat": 1
 					}
 				}
@@ -403,11 +405,13 @@
 					}
 				},
 				{
+					"_comment": "#453 G5 (user ruling 2026-08-13): `tended_beasts` joins the larder fork at the same rate as its own `befriended_moments`. The counter was REGION-LOCKED before this -- every producer is a floodplains/riverfarm animal prop, so a [Beast Tamer] spine that left the region banked nothing from quests, and no quest grant in the game paid it at all. The fork already reads as the producer ('you hunted and hauled with the camp's own'), so no new act and no new prop is minted for it: zero treadmill.",
 					"accomplishment": "camp_larder_filled",
 					"text": "You hunted and hauled with the camp's own, and the racks were full before the frost.",
 					"grant": {
 						"befriended_moments": 4,
-						"heard_gossip": 3
+						"heard_gossip": 3,
+						"tended_beasts": 4
 					}
 				},
 				{

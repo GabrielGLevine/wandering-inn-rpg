@@ -286,7 +286,13 @@ var ARCHETYPES := [
 	{"name": "ranger_spine", "ai": "melee", "target": "ranger", "classless_until": 6, "loadout": BOW_LOADOUT,
 		"watch": ["melee_hit", "ranged_hit", "won_combat"],
 		"entry": {1: {"sparred_with_relc": 1}, 11: {"ranged_hit": 3}},
-		"quest_grants": {10: {"melee_hit": 6, "won_combat": 1}, 22: {"melee_hit": 10, "won_combat": 2}, 48: {"melee_hit": 12, "won_combat": 2}, 56: {"melee_hit": 6, "won_combat": 1}, 60: {"melee_hit": 8, "won_combat": 1}, 72: {"melee_hit": 10, "won_combat": 2}},
+		# #453 G4 (user ruling 2026-08-13): the waking-60 row is `chieftains_price`
+		# .drove_off_rags -- its {melee_hit 8, won_combat 1} matches that fork's
+		# grant exactly -- and that fork now pays `ranged_hit` at the same rate as
+		# melee. This is the fight fork, so a bow spine that drove Rags off banks
+		# its own axis for the first time; before G4 not one quest grant in the
+		# game paid `ranged_hit` at all.
+		"quest_grants": {10: {"melee_hit": 6, "won_combat": 1}, 22: {"melee_hit": 10, "won_combat": 2}, 48: {"melee_hit": 12, "won_combat": 2}, 56: {"melee_hit": 6, "won_combat": 1}, 60: {"melee_hit": 8, "ranged_hit": 8, "won_combat": 1}, 72: {"melee_hit": 10, "won_combat": 2}},
 		"acts": [
 			{"fights": [COMP_GATE, COMP_ROCK_CRAB, -1, COMP_GATE], "chores": {}},
 			{"fights": [COMP_CRATE, COMP_SEWER_VERMIN, COMP_SHIELD_SPIDERS, -1], "chores": {"ranged_hit": 1}},
@@ -295,19 +301,37 @@ var ARCHETYPES := [
 			{"fights": [COMP_GALLERY, COMP_WARDEN, -1, COMP_BOULEVARD], "chores": {"ranged_hit": 1}},
 		]},
 
-	# [Scout] = rogue + archer. BOTH parents are Liscor-or-later: [Rogue]'s
-	# `gained_by` is `recovered_crate_watch`, a `missing_crate` resolution
-	# (route beat 9, Act II), and [Archer] needs a bow. So this spine is
-	# CLASSLESS through Act I by construction, not by diet choice, and
-	# `classless_until` says so. Chores: `sneaked_past_danger` at 1/waking —
-	# the game ships 9 proximity encounters total and only 3 are reachable
-	# before Act IV, and each credits once per waking.
-	{"name": "scout_spine", "ai": "melee", "target": "scout", "classless_until": 14, "loadout": BOW_LOADOUT,
+	# [Scout] = rogue + archer. THIS SPINE'S DIET MOVED WITH #453 G2/G4 (user
+	# ruling 2026-08-13) -- the C3 measurement that produced those gaps read this
+	# spine as the one STRUCTURAL PACE wall in the roster, and the shipped answer
+	# has to be re-authored here or the instrument keeps reporting a game that no
+	# longer exists (the honesty rule at the top of this file).
+	#   G2: [Rogue]'s entry is now `accomplishment_any` over the crate job OR
+	#   `crossed_under_cover`, banked by crossing the floodplains gate-road ambush
+	#   after going down into the drainage cut. That crossing is Act I road content
+	#   -- this diet already asserts the ambush is reachable at waking 1 by fighting
+	#   COMP_GATE there -- so the entry moves 11 -> 1 and `classless_until` 14 -> 2.
+	#   The `fights` rotation is DELIBERATELY UNCHANGED: the cover arm buys one
+	#   crossing per waking and the ambush re-arms at every sleep, so a spine that
+	#   crosses under cover on waking 1 and fights the same ambush on wakings 5 and
+	#   9 is the literal shipped behaviour, not an approximation. Act I chores gain
+	#   the sneak line for the first time: pre-G2 this spine could not sneak in Act
+	#   I because [Stealth] is a [Rogue] L1 grant and [Rogue] was unreachable.
+	#   G4: `ranged_hit: 4` joins the waking-72 row. That row is `the_hat_stays_on`
+	#   .handoff_quiet -- its OTHER two counters match that fork's grant exactly
+	#   ({sneaked_past_danger 2, observed_things 2}) and it is the quiet fork a
+	#   scout takes. `chieftains_price.drove_off_rags` (the other G4 fork) is NOT
+	#   added here: it is the draw-steel fork, and every row in this diet carries
+	#   zero melee_hit -- this spine does not take it. See ranger_spine for that one.
+	# Chores: `sneaked_past_danger` at 1/waking — the game ships 9 proximity
+	# encounters total and only 3 are reachable before Act IV, and each credits
+	# once per waking.
+	{"name": "scout_spine", "ai": "melee", "target": "scout", "classless_until": 2, "loadout": BOW_LOADOUT,
 		"watch": ["sneaked_past_danger", "ranged_hit", "observed_things", "won_combat"],
-		"entry": {11: {"recovered_crate_watch": 1}, 13: {"ranged_hit": 3}},
-		"quest_grants": {12: {"sneaked_past_danger": 2, "observed_things": 2}, 22: {"sneaked_past_danger": 4, "observed_things": 4}, 44: {"sneaked_past_danger": 3, "observed_things": 2}, 52: {"sneaked_past_danger": 6, "persuaded_someone": 2}, 60: {"sneaked_past_danger": 3, "heard_gossip": 4}, 72: {"sneaked_past_danger": 2, "observed_things": 2}},
+		"entry": {1: {"crossed_under_cover": 1}, 13: {"ranged_hit": 3}},
+		"quest_grants": {12: {"sneaked_past_danger": 2, "observed_things": 2}, 22: {"sneaked_past_danger": 4, "observed_things": 4}, 44: {"sneaked_past_danger": 3, "observed_things": 2}, 52: {"sneaked_past_danger": 6, "persuaded_someone": 2}, 60: {"sneaked_past_danger": 3, "heard_gossip": 4}, 72: {"sneaked_past_danger": 2, "observed_things": 2, "ranged_hit": 4}},
 		"acts": [
-			{"fights": [COMP_GATE, -1, -1, -1], "chores": {}},
+			{"fights": [COMP_GATE, -1, -1, -1], "chores": {"sneaked_past_danger": 1}},
 			{"fights": [COMP_CRATE, COMP_SEWER_VERMIN, -1, -1], "chores": {"sneaked_past_danger": 1, "ranged_hit": 1}},
 			{"fights": [COMP_RASKGHAR, -1, COMP_NIGHT_PATROL, -1], "chores": {"sneaked_past_danger": 1, "ranged_hit": 1}},
 			{"fights": [COMP_ALLEY, -1, COMP_BOULEVARD, -1, COMP_WOLVES, -1], "chores": {"sneaked_past_danger": 3, "ranged_hit": 1}},

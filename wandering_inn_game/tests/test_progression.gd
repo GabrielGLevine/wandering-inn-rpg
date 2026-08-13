@@ -71,6 +71,17 @@ func _init() -> void:
 	assert(WIProgression.check_class_gains({"warrior": 1}, {"chess_with_olesm": 1}, catalog) == ["tactician"], "winning Olesm's chess match grants tactician (the class is earned at the board)")
 	assert(WIProgression.check_class_gains({"warrior": 1}, {"studied_the_cellar": 1}, catalog).is_empty(), "the cellar study no longer grants tactician (superseded driver)")
 	assert(WIProgression.check_class_gains({"warrior": 1, "tactician": 1}, {"studied_the_cellar": 1}, catalog).is_empty(), "already-held tactician is not re-gained")
+	
+	# #453 G2 (user ruling 2026-08-13): [Rogue] entry is `accomplishment_any`.
+	# Three arms, same discipline as the requires_any pins below: old path alone,
+	# new path alone, neither. The third arm uses `sneaked_past_danger` on purpose
+	# -- it is the counter the C3 proposal named, and the one that CANNOT gate
+	# this entry (it banks only while already sneaking, and no class grants a
+	# sneak before [Rogue] does), so this line pins the circularity out.
+	assert(WIProgression.check_class_gains({}, {"recovered_crate_watch": 1}, catalog).has("rogue"), "OLD PATH ONLY: the Liscor crate job still earns [Rogue]")
+	assert(WIProgression.check_class_gains({}, {"crossed_under_cover": 1}, catalog).has("rogue"), "NEW PATH ONLY: one crossing under cover earns [Rogue] in Act I")
+	assert(not WIProgression.check_class_gains({}, {"sneaked_past_danger": 99, "took_the_low_road": 99}, catalog).has("rogue"), "NEITHER arm met = no [Rogue]: neither sneaking itself nor merely entering the cut is the gate")
+	assert(WIProgression.check_class_gains({"rogue": 1}, {"crossed_under_cover": 5}, catalog).is_empty(), "already-held rogue is not re-gained through the new arm")
 	assert(WIProgression.check_class_gains({"warrior": 1}, {"studied_the_cellar": 0}, catalog).is_empty(), "studied_the_cellar banked but below threshold = no gain")
 	var tactician_l1 := WIProgression.granted_skills({"tactician": 1}, catalog)
 	assert(tactician_l1 == ["observe", "battlefield_awareness"], "tactician L1 kit spans field + combat pillars")
@@ -80,6 +91,11 @@ func _init() -> void:
 	assert(WIProgression.check_level_ups({"tactician": 5}, {"observed_things": 20, "tactic_used": 3}, catalog).is_empty(), "tactician L6 needs both appraisal and landed tactics")
 	var tac_l6 := WIProgression.check_level_ups({"tactician": 5}, {"observed_things": 20, "tactic_used": 4}, catalog)
 	assert(tac_l6.size() == 1 and int(tac_l6[0]["level"]) == 6, "tactician L6 clears at observed 20 + tactic 4")
+	# #453 G3 (user ruling 2026-08-13): the ladder WIDENS before it steepens --
+	# [Flanking Step] moved L7 -> L6. Pinned in both directions so a revert reds.
+	assert((tac_l6[0]["grants"] as Array) == ["flanking_step"], "tactician L6 now carries [Flanking Step]")
+	assert(WIProgression.granted_skills({"tactician": 6}, catalog).has("flanking_step"), "a L6 tactician holds [Flanking Step] -- three tactic-family Skills from L6 on")
+	assert(not WIProgression.granted_skills({"tactician": 5}, catalog).has("flanking_step"), "L5 does not: the rung moved down one, it did not move to the floor")
 	assert(WIProgression.granted_skills({"diplomat": 5}, catalog).has("observe"), "diplomat L5 shares Appraise Foe without moving soothing_presence")
 
 	assert(WIProgression.check_class_gains({}, {"persuaded_someone": 1}, catalog).is_empty(), "persuasion alone (no gossip volume) does not grant diplomat")
@@ -110,7 +126,22 @@ func _init() -> void:
 	var m_multi := WIProgression.check_level_ups({"mage": 1}, {"won_combat": 3, "spell_cast": 8}, catalog)
 	assert(m_multi.size() == 3, "mage walks L2 (won_combat) then L3/L4 (spell_cast) in one check")
 	assert(int(m_multi[2]["level"]) == 4, "cast-counter walk stops at spell_cast 8 = L4")
-	assert(WIProgression.check_level_ups({"mage": 1}, {"spell_cast": 100}, catalog).is_empty(), "an unmet early gate blocks the whole walk (no level skipping)")
+	# #453 G1 RE-ADJUDICATION (user ruling 2026-08-13). This line USED to read
+	# `mage 1 + spell_cast 100 -> empty` and prove no-level-skipping off mage L2's
+	# won_combat wall. That wall is now a requires_any arm, so the case it tested
+	# is no longer a blocked walk -- it is G1's whole point. The PRINCIPLE is
+	# unchanged and stays pinned, re-pointed at [Archer], whose L2 is still a
+	# plain AND gate on a DIFFERENT counter than its L3+ curve reads.
+	assert(WIProgression.check_level_ups({"archer": 1}, {"ranged_hit": 100}, catalog).is_empty(), "an unmet early gate blocks the whole walk (no level skipping): archer L2 wants won_combat, so a bottomless ranged_hit bank earns nothing")
+	
+	# #453 G1: mage L2 is `requires_any {won_combat 3, spell_cast 4}`. All three
+	# arms pinned -- old path alone, new path alone, and neither -- so a revert to
+	# `requires` reds the second and a widening to a vacuous gate reds the third.
+	var m_martial := WIProgression.check_level_ups({"mage": 1}, {"won_combat": 3}, catalog)
+	assert(m_martial.size() == 1 and int(m_martial[0]["level"]) == 2, "OLD PATH ONLY: three wins still earns mage L2 with zero spells cast")
+	var m_caster := WIProgression.check_level_ups({"mage": 1}, {"spell_cast": 4}, catalog)
+	assert(m_caster.size() == 2 and int(m_caster[0]["level"]) == 2 and int(m_caster[1]["level"]) == 3, "NEW PATH ONLY: four casts and no wins earns L2, and L3 with it (L3 reuses the same threshold)")
+	assert(WIProgression.check_level_ups({"mage": 1}, {"won_combat": 2, "spell_cast": 3}, catalog).is_empty(), "NEITHER arm met = no mage level (requires_any is not vacuously true)")
 
 	var sw_melee := WIProgression.check_level_ups({"spellsword": 14}, {"melee_hit": 119}, catalog)
 	assert(sw_melee.size() == 1 and sw_melee[0]["level"] == 15, "spellsword L15 via the melee arm")

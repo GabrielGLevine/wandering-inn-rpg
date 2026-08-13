@@ -142,6 +142,21 @@ static func check_class_gains(classes: Dictionary, accomplishments: Dictionary, 
 		var id := String(cls[WIKeys.ID])
 		if classes.has(id) or retired.has(id) or not cls.has("gained_by"):
 			continue
+		# #453 G2 (user ruling 2026-08-13): `accomplishment_any` is the ENTRY-side
+		# twin of `_level_met`'s `requires_any`, and carries that function's exact
+		# contract: ANY key clearing its threshold is enough, and an EMPTY dict is
+		# never met (the free-class guard, mirroring the free-level guard). It is
+		# checked FIRST and is exclusive with `accomplishment` -- a class authors
+		# one or the other, never both, so no shipped `gained_by` changes meaning.
+		# Shipped case: [Rogue] is earnable either by the Liscor crate job or by
+		# crossing the gate-road ambush under cover in Act I.
+		var any_reqs: Dictionary = (cls["gained_by"] as Dictionary).get("accomplishment_any", {})
+		if not any_reqs.is_empty():
+			for req_id: String in any_reqs:
+				if int(accomplishments.get(req_id, 0)) >= int(any_reqs[req_id]):
+					gains.append(id)
+					break
+			continue
 		var reqs: Dictionary = (cls["gained_by"] as Dictionary).get("accomplishment", {})
 		if reqs.is_empty():
 			continue

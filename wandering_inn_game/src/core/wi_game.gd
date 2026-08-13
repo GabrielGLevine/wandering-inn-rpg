@@ -543,6 +543,32 @@ func _check_trigger_radius(skipped_ids: Array[String] = []) -> void:
 				entity_first_use[danger_key] = true
 				record_accomplishment("sneaked_past_danger")
 			continue
+		# #453 G2 (user ruling 2026-08-13): THE COVER ARM -- the one way past a
+		# proximity encounter that asks NO CLASS at all, and the reason scout's
+		# Act I entry stops being structurally impossible. Every other bypass on
+		# this pass is skill-gated (`sneaking` needs a `sneaks:true` skill, i.e.
+		# [Stealth] from [Rogue] 1 or [Invisibility] from [Mage] 5; wards need
+		# `wards:true`; blink needs `blinks:true`), so `sneaked_past_danger` cannot
+		# gate [Rogue]'s OWN entry without circularity -- no class grants a sneak
+		# before [Rogue] does. `cover_prop` names a prop on this map whose interact
+		# IS the sneak-shaped act, and this reads that prop's `once_per_waking`
+		# ledger key rather than the counter it banks: `entity_first_use` clears at
+		# every sleep, so the suppression is EARNED THIS WAKING and the ambush
+		# RE-ARMS every night. The fight is skipped, never retired -- which is what
+		# keeps this arm clear of the chokepoint ruling (that ruling names the Seal
+		# Warden's PERMANENT worn-[Invisibility] bypass; CHOICE-LOG 2026-08-11).
+		# ORDER IS LOAD-BEARING: this sits BELOW `sneaking`, so a [Stealth] holder
+		# keeps banking its own richer counter and never reaches this arm.
+		# BANKS ON THE TRANSIT, NOT THE PROP: taking the cut and walking home banks
+		# nothing -- the credit is for the crossing the ambush would otherwise have
+		# sprung, once per encounter per waking.
+		var cover_prop := String(ent.get("cover_prop", ""))
+		if cover_prop != "" and entity_first_use.has("serve:%s" % cover_prop):
+			var cover_key := "cover:%s" % ent_id
+			if not entity_first_use.has(cover_key):
+				entity_first_use[cover_key] = true
+				record_accomplishment("crossed_under_cover")
+			continue
 		start_combat(ent_id)
 		return
 

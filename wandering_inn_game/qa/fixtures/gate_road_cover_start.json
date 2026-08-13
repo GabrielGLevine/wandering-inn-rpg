@@ -1,0 +1,35 @@
+{
+	"_comment": "#453 G2 fixture (user ruling 2026-08-13). DELIBERATELY CLASSLESS AND SKILL-BARE -- `classes` empty and `player_skills` carries only the innate [Basic Cleaning] that scene_root ships, because the whole claim under test is that the drainage cut answers the gate-road ambush for a player who holds NOTHING. Any granted skill would void the proof: [Stealth] and [Invisibility] both set `sneaks:true`, and the sneak arm sits ABOVE the cover arm in `_check_trigger_radius`, so a sneak-capable fixture would bank `sneaked_past_danger` and never reach the code this canonical exists to exercise. `accomplishments` is empty for the same reason -- every counter the run asserts is one the run creates. Standing at (26,24) facing right, one step west of the cut at (27,24) and Chebyshev 4 from goblin_encounter_1 at (30,23), i.e. two cells clear of its radius-2 band (x 28-32, y 21-25): the choice is made before the band, exactly as the fiction says. `equipped.weapon` is empty and no combat is meant to resolve, so `rng_state` is inert -- cloned from wave_b_blink_start, the sibling fixture on this same road.",
+	"version": 6,
+	"state": {
+		"current_map": "floodplains",
+		"player_cell": [
+			26,
+			24
+		],
+		"player_facing": [
+			1,
+			0
+		],
+		"classes": {},
+		"accomplishments": {},
+		"player_skills": [
+			"basic_cleaning"
+		],
+		"removed_entities": [],
+		"dormant_encounters": [],
+		"generalist_classes": [],
+		"started_quests": [],
+		"pending_consolidation": {},
+		"used_skills": [],
+		"inventory": [],
+		"equipped": {
+			"weapon": "",
+			"armor": ""
+		},
+		"container_state": {},
+		"actions_since_sleep": 0,
+		"rng_state": "-1966449618399012673",
+		"hotbar_loadout": []
+	}
+}

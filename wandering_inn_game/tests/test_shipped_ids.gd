@@ -22,6 +22,15 @@ const STRUCTURAL_LITERALS := [
 	# its own code-banked counter appends a row instead of colliding on a
 	# shared line. Same shape in scripts/generate_shipped_ids.py.
 	"companion_lost",
+	# #453 G2 (user ruling 2026-08-13): banked by wi_game._check_trigger_radius
+	# on the COVER ARM -- a transit that a `cover_prop` encounter would have
+	# sprung, made once per waking after going to ground in the named prop.
+	# Code-banked (never authored in map/quest/dialogue data), so the three
+	# censuses cannot discover it; it gates [Rogue]'s `accomplishment_any`
+	# entry, so a missing registration would red test_content, not just this
+	# suite. Own row per the companion_lost shape above. Same shape in
+	# scripts/generate_shipped_ids.py.
+	"crossed_under_cover",
 ]
 
 ## RETIRED accomplishments (#396 ruling 9) -- THE registry for the one legal way
