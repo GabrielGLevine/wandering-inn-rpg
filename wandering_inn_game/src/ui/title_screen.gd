@@ -30,7 +30,8 @@ const PLAYTEST_FIXTURE_ORDER: Array[String] = [
 	# mage half of the same sentence -- freeze, cross, thaw, kindle, clean.
 	"martial_field_armed", "martial_field_start", "sewers_property_seams",
 	# #396 close. APPENDED at the tail deliberately: playtest_boot pins curated
-	# indices 30 and 33, and appending moves nothing before them. Story order --
+	# indices 30 and 32 (#472 retired `pending_offer` from index 22, shifting the
+	# target from 33 to 32), and appending moves nothing before them. Story order --
 	# meet the shepherd, stand his watch with him fielded, finish Eloise's quest.
 	"winter_teeth_start", "winter_watch_agreed_night", "makings_mid_tend",
 ]

@@ -39,22 +39,45 @@
    "action": "assert_playtest_page",
    "equals": 0
   },
-  { "action": "click_playtest_page" },
-  { "action": "assert_playtest_page", "equals": 1 },
-  { "action": "click_playtest_back" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_playtest_list_rendered", "timeout_sec": 5 },
+  {
+   "action": "click_playtest_page"
+  },
+  {
+   "action": "assert_playtest_page",
+   "equals": 1
+  },
+  {
+   "action": "click_playtest_back"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_playtest_list_rendered",
+   "timeout_sec": 5
+  },
   {
    "action": "move",
    "direction": "right",
    "steps": 3
   },
   {
+   "_comment": "#472 RE-DERIVED: `pending_offer` retired with pending_consolidation, so title_screen.gd's PLAYTEST_FIXTURE_ORDER lost a curated entry at index 22 and everything after it shifted UP one. `right 3` still opens the page starting at curated index 30 (portal_menu_start); the target near_garden moved 33 -> 32, so this is `down 2`, not 3. Any future insert/removal before index 32 moves this number -- re-derive it by RUNNING, never by counting in your head.",
    "action": "move",
    "direction": "down",
-   "steps": 3
+   "steps": 2
   },
   {
    "action": "press",
