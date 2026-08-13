@@ -309,3 +309,20 @@ the details.
   and the docstring said so; the sanctioned mechanism (exclusions) was
   two paragraphs down. Cost two rounds. The gate's own documentation is
   the first read, not the last.
+
+
+## Gate-conduct lessons (wave >=434, 2026-08-13)
+- **Never `git checkout --` a dirty file inside a gate.** A mutation-test
+  restore on an UNCOMMITTED engine file reverted the very change under
+  test and the next sim run silently measured the old engine. cp-backup +
+  `cmp` restore only; WIP-commit the lane BEFORE gating so tracked
+  restores are safe at all.
+- **Triage disclosed reds against the CI job list AT GATE TIME.** Two CI
+  bounces on one lane were both items its close had disclosed and the
+  controller had filed as "ruled-acceptable" without asking which CI arm
+  runs them (sim_combat_batch bounds; 13 canonical floor-policy defeats).
+  A disclosed red is only acceptable if no required CI job executes it.
+- **Do not edit files a background job owns.** A controller comment edit
+  raced its own A/B probe's cp-restore on the same file and the composed
+  commit shipped the probe's mutated state. One writer per file — humans
+  and probes included.

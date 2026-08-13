@@ -379,3 +379,21 @@ byte-identical), and run verify-untouched IN THE SAME COMMIT.
   Tuning target = competent policy at band ∈ [0.55, 0.85]
   (`qa/combat_policies.gd`, `tests/sim_spine_viability.gd`,
   `docs/design/balance-bands-and-policy.md`).
+
+
+## Suite-authoring lessons (wave >=434, 2026-08-13)
+- **`quit(1)` BEFORE `assert(false, ...)`, always.** A failed GDScript
+  assert aborts the enclosing function, so an assert-then-quit failure
+  path never reaches the quit and hangs to the watchdog (rc 142, 60s)
+  instead of failing in 3s. Four suites carried this shape; grep for
+  `assert(false` when touching any suite.
+- **`godot --headless --script` exits 0 on failed assertions.** Never
+  trust rc alone for --script runs — grep `SCRIPT ERROR|FAIL` tokens (the
+  sweep's grep is the real red signal).
+- **`steel_thread` runs take `--seed` EXPLICITLY, every time.** An
+  unseeded verify run fail-fasts mid-run on a combat loss and the cascade
+  reads like a late-run desync — a controller burned a full false
+  diagnosis on this.
+- **VISUAL-LOG appends: check the tail newline first, resolve append
+  conflicts keep-both.** Two tail-append collisions in one wave; a missing
+  trailing newline glued rows into one line.

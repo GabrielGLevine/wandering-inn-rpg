@@ -95,3 +95,16 @@ checks, and the merge decision stay controller-side.
   gate-verdict prose as claims, not evidence.
 - Codex sandbox cannot open windows or write normal user://; windowed
   acceptance and those two unit suites are ALWAYS controller-side.
+
+
+## Wave >=434 lessons (2026-08-13)
+- **`task --resume-last` can silently drop write access.** One thread lost
+  it twice ("patch rejected: writing is blocked by read-only sandbox")
+  while another resumed thread kept writing fine. For write work after a
+  resume: if the first patch rejects, re-dispatch `--fresh` — the brief
+  file carries the context; do not fight the thread.
+- **Quoted digests are claims too.** A close quoted a table SHA that
+  matched nothing (not sha256/sha1/md5/git-blob of the artifact) while the
+  substance was independently fine. Gates verify quoted hashes against the
+  artifact, or ignore them and hash it themselves — never repeat an
+  unverified digest into a PR body.

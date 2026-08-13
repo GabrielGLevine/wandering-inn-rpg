@@ -361,3 +361,17 @@ main INTO the lane branch, delete the row, re-verify composed locally
 (import pass first — merged trees carry unimported class_name .gd),
 push, let the required checks re-run. Plan the waiver retirement as a
 branch commit, not a post-merge fix.
+
+
+## Orchestration lessons (wave >=434, 2026-08-13)
+- **Cap concurrent Claude subagents at TWO.** Three parallel Opus
+  implementation agents drained a full session window mid-wave and forced
+  a quiesce; agents share the session pool, and gate workflows are agents
+  too.
+- **`git worktree add` with a relative path: print `pwd` first.** A stuck
+  shell cwd nested one lane's worktree inside another lane's tree; the
+  agent briefed at the canonical path had to move it before starting.
+- **Provider-scoped budgets really are separate lanes.** When the Codex
+  pool ran dry mid-wave, shifting remaining implementation to Opus
+  subagents under the same brief+gate discipline lost nothing — the
+  briefs, not the provider, carry the standard.
