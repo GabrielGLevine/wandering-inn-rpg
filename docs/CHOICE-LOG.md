@@ -34,9 +34,11 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   spear-owns-its-hybrids precedent (exempt pending naming unless
   authored in the same pass). Target name wiki-verifies at build.
   Rides the combined class-authoring lane with [Wild Sage] +
-  [Skirmisher] (both approved same day), which also ships the
-  maps_to validator extension the approved swordsman x mage ->
-  [Spellsword] reuse requires.
+  [Skirmisher] (both approved same day). SUPERSEDED MECHANISM NOTE
+  (post-#482 narrowing): reuse mappings no longer get a maps_to
+  annotation — a reuse pair goes live only when its coverage is
+  AUTHORED (upgrades/inherits rows proving no Skill loss); the class
+  lane reports the per-pair coverage tables for the naming batch.
 
 - **Orphan consolidation mappings APPROVED as inventoried**; swordsman
   x mage (and its ice/fire siblings) map into [Spellsword] — target
