@@ -74,8 +74,18 @@ const STEP_PROMPT := {
 ## NOT a mechanics readout -- no multiplier is quoted to the player here or
 ## anywhere else -- and the hint strip still says out loud that both are
 ## changeable from Settings, so a player never feels locked in by a menu they
-## met once. The one durable explanation lives on Settings' Help page
+## met once. The durable explanation lives on Settings' Help page
 ## ("Difficulty & Quest Hints"), which is where a player who wants one looks.
+##
+## AMENDED 2026-08-13 (user ruling), and the amendment is narrow on purpose:
+## the difficulty rungs now carry the rank word IN the label
+## (WISettings.DIFFICULTY_LABELS, which is where both doors read it), and the
+## HINTS step -- and only that step -- gains one FUNCTIONAL caption
+## (HINTS_CAPTION_FMT below). "Difficulty" names a thing every player already
+## has a model for; "Quest hints / Yes / No" names a feature whose whole
+## meaning is WHERE it shows up, which nothing on this screen said. That is the
+## line between this and the tails #447 cut: those restated the option, this
+## states the surface the option controls.
 ## WIDTH FOLLOWS THE COPY: 620 was what the blurb tails measured (itself a
 ## windowed catch -- at 420 they ran out past both ends of the panel, peek frame
 ## cc4c). With the tails gone the widest row is a single word, so these rows take
@@ -99,6 +109,36 @@ const HINT_CHOICES := [
 	{"value": true, "label": "Yes"},
 	{"value": false, "label": "No"},
 ]
+
+## THE HINTS CAPTION (user ruling 2026-08-13). Not the descriptor tails #447
+## deleted, and deliberately not built like them: those were per-ROW flavour
+## ("the journal points the way") glued onto each option's own label, which is
+## what read as overexplaining. This is ONE caption on the STEP, and every
+## clause in it is a fact a player can act on --
+##   * WHERE the hints appear: the Journal, on its own key, as a line under
+##     each quest (journal.gd's `_build_quests_tab` draws exactly that, an
+##     indented italic sub-row per quest, gated by `_gated_quest_hints`);
+##   * WHAT the other answer means: quests render with no sub-row at all;
+##   * WHICH row changes it later: Settings' "Quest Hints".
+## The key is device-derived, not typed: `WIInputHints.label("journal")` is "J"
+## on keyboard and "Y" on pad, and this screen already re-renders on
+## INPUT_DEVICE_CHANGED (`_on_domain_event`), so a player who picks up a pad
+## mid-prompt is shown their own button.
+## NO OVERLAP WITH THE FOOTER BY DESIGN: the hint strip below already says
+## "Change it any time in Settings" for both setup steps, so this line supplies
+## the part the strip cannot -- the row's NAME -- rather than repeating the
+## strip's sentence one band above it.
+## The Yes:/No: prefixes are the ROW labels verbatim, so the caption maps onto
+## the two rows above it without a player having to infer which is which.
+const HINTS_CAPTION_FMT := "Yes: the Journal (%s) adds a line under each quest naming the next step.\nNo: quests read as written. In Settings it is the Quest Hints row."
+## Caption box, centre-anchored like every other element on this screen. Sits
+## in the empty band between the choice rows (which end at y=409 on the
+## two-row hints step) and the hint strip (y=686): 840 wide is generous on
+## purpose -- the longest line measures ~625px at the LARGEST text scale, so
+## neither line wraps at any shipped scale, and the box still has room for
+## three wrapped lines if a future scale or translation needs them.
+const CAPTION_SIZE := Vector2(840.0, 96.0)
+const CAPTION_TOP := 130.0
 
 var _step: int = Step.PICK
 var _cursor := 0
@@ -132,6 +172,7 @@ var _choice_rows: Array[Control] = []
 var _choice_labels: Array[Label] = []
 var _choice_carets: Array[Label] = []
 var _choice_cursor := 0
+var _caption_label: Label
 var _difficulty_step := 0
 var _quest_hints := true
 
@@ -186,6 +227,7 @@ func _build_ui() -> void:
 
 	_build_picker_grid()
 	_build_choice_list()
+	_build_caption()
 
 	_name_edit = LineEdit.new()
 	UIChrome.apply_theme(_name_edit)
@@ -323,6 +365,38 @@ func _build_choice_list() -> void:
 		_choice_carets.append(caret)
 
 
+## One caption label, built once and shown only where a step supplies text for
+## it (today: HINTS). Deliberately NOT a per-row widget: the caption describes
+## the CHOICE, not either answer, and a per-row surface is the shape #447
+## removed. "Small" + HINT_COLOR is the hint strip's own register, which is
+## what marks it as explanation rather than as a fourth option to pick.
+func _build_caption() -> void:
+	_caption_label = UIChrome.make_label("", "Small")
+	_caption_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_caption_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	# Wrap is a safety net, not the layout: the copy is authored to fit on two
+	# lines at every shipped text scale (see CAPTION_SIZE). WORD_SMART so a long
+	# word can still break rather than run off the box.
+	_caption_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_caption_label.set_anchors_preset(Control.PRESET_CENTER)
+	_caption_label.custom_minimum_size = CAPTION_SIZE
+	_caption_label.size = CAPTION_SIZE
+	UIChrome.set_offsets(_caption_label, -CAPTION_SIZE.x * 0.5, CAPTION_TOP, CAPTION_SIZE.x * 0.5, CAPTION_TOP + CAPTION_SIZE.y)
+	_caption_label.add_theme_color_override("font_color", HINT_COLOR)
+	_caption_label.hide()
+	_root.add_child(_caption_label)
+
+
+## The caption for the ACTIVE step, "" where a step has none. Same one-place
+## rule `_choice_options` follows: this is BOTH what the label draws and what
+## the `caption` payload key carries, so a QA pin reads the string the player
+## reads, never a copy of it that can drift.
+func _step_caption() -> String:
+	if _step == Step.HINTS:
+		return HINTS_CAPTION_FMT % WIInputHints.label("journal")
+	return ""
+
+
 ## The row labels for the ACTIVE setup step, empty off those steps. One place
 ## derives both the rendered rows and the `options` payload key, so QA reads the
 ## strings the screen actually drew. #447 flattened this from `[{label, blurb}]`
@@ -348,6 +422,9 @@ func _render_step() -> void:
 	_begin_button.visible = is_name
 	_grid_anchor.visible = _step == Step.PICK
 	_choice_anchor.visible = is_choice
+	var caption := _step_caption()
+	_caption_label.text = caption
+	_caption_label.visible = caption != ""
 	if is_choice:
 		for i in _choice_rows.size():
 			var live := i < options.size()
@@ -379,6 +456,12 @@ func _render_step() -> void:
 		"options": options,
 		"cursor": _choice_cursor if is_choice else -1,
 		"cards": PC_OPTIONS.size() if _step == Step.PICK else 0,
+		# ADDITIVE, and every pre-existing pin is subset-matched
+		# (test_driver._event_matches), so no existing `payload_contains` moves.
+		# "" on the steps that draw no caption, which is itself assertable --
+		# a caption leaking onto the pick/name/difficulty steps would show up
+		# as a non-empty string on a step whose pin says "".
+		"caption": caption,
 	})
 
 

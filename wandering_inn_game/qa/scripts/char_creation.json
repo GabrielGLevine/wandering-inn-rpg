@@ -102,16 +102,17 @@
    "payload_contains": {
     "step": "difficulty",
     "options": [
-     "Bronze",
-     "Silver",
-     "Gold"
+     "Bronze Rank",
+     "Silver Rank",
+     "Gold Rank"
     ],
-    "cursor": 1
+    "cursor": 1,
+    "caption": ""
    },
    "timeout_sec": 5
   },
   {
-   "_comment": "Issue #346: the difficulty prompt OPENS ON THE CURRENT SETTING (cursor 1 = Silver, the shipped-balance default), because the Settings panel is the source of truth and this screen is a shortcut into it, not a second copy. One down reaches Gold; confirm accepts and moves on.",
+   "_comment": "Issue #346: the difficulty prompt OPENS ON THE CURRENT SETTING (cursor 1 = Silver Rank, the shipped-balance default), because the Settings panel is the source of truth and this screen is a shortcut into it, not a second copy. One down reaches Gold Rank; confirm accepts and moves on. USER RULING 2026-08-13: the rungs carry the rank word, and they carry it from WISettings.DIFFICULTY_LABELS -- the same const the Settings row reads -- so this pin and the settings_loop row can never drift apart. `caption: \"\"` is the containment half of that ruling: the quest-hints caption is a HINTS-step surface, and a pin that only asserted its presence there could not catch it leaking onto this step.",
    "action": "screenshot",
    "name": "02_creation_difficulty"
   },
@@ -141,12 +142,13 @@
      "Yes",
      "No"
     ],
-    "cursor": 0
+    "cursor": 0,
+    "caption": "Yes: the Journal (J) adds a line under each quest naming the next step.\nNo: quests read as written. In Settings it is the Quest Hints row."
    },
    "timeout_sec": 5
   },
   {
-   "_comment": "...and the hints prompt likewise opens on the live value (cursor 0 = Yes, GH#338's default-ON). This row is committed by TAP (click_char_creation_card: char_creation.gd's `card_rect` hands back the i'th tappable option of the CURRENT step, so the setup rows reuse the sprite cards' driver action instead of adding one to shared QA infrastructure) rather than by key: a4 #216's credits modal is the standing lesson that a new keyboard-only surface strands a touch player, and this is the LAST step, so the tap both answers the prompt and starts the run.",
+   "_comment": "USER RULING 2026-08-13: the hints step carries a FUNCTIONAL caption, and this is its pin -- the exact string a player reads, asserted VERBATIM rather than by substring, because the whole point of the ruling is which facts the line states (the panel, its key, the sub-row it adds, the Settings row that changes it). `(J)` is the KEYBOARD label: the caption composes its key from WIInputHints.label('journal') and this driver classifies both key and mouse input as 'kb', so the pin is deterministic here and a pad player sees 'Y' instead. A caption edit that drops any of those facts fails HERE, on the copy, not silently in a screenshot nobody re-reads. ...and the hints prompt likewise opens on the live value (cursor 0 = Yes, GH#338's default-ON). This row is committed by TAP (click_char_creation_card: char_creation.gd's `card_rect` hands back the i'th tappable option of the CURRENT step, so the setup rows reuse the sprite cards' driver action instead of adding one to shared QA infrastructure) rather than by key: a4 #216's credits modal is the standing lesson that a new keyboard-only surface strands a touch player, and this is the LAST step, so the tap both answers the prompt and starts the run.",
    "action": "screenshot",
    "name": "03_creation_hints"
   },

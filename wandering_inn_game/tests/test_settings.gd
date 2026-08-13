@@ -187,14 +187,14 @@ func _check_settings_persistence() -> void:
 func _check_difficulty_ladder() -> void:
 	var script := load("res://src/ui/wi_settings.gd")
 	var names: Array = Array(script.DIFFICULTY_LABELS)
-	assert(names == ["Bronze", "Silver", "Gold"],
+	assert(names == ["Bronze Rank", "Silver Rank", "Gold Rank"],
 		"the three difficulty names are Liscor Hunted's own challenge ranks, in ascending order, got: %s" % [names])
 	assert(script.DIFFICULTY_LABELS.size() == script.DIFFICULTY_DAMAGE_TAKEN_MULTS.size(),
 		"every difficulty name must have a multiplier and vice versa")
 	assert(is_equal_approx(float(script.damage_taken_mult_for_step(script.DIFFICULTY_DEFAULT_STEP)), 1.0),
 		"the DEFAULT rung must be exactly 1.0 -- it is the shipped balance, and every band/fixture depends on it being untouched")
-	assert(String(script.DIFFICULTY_LABELS[script.DIFFICULTY_DEFAULT_STEP]) == "Silver",
-		"Silver is the default rung (Bronze softer, Gold sharper)")
+	assert(String(script.DIFFICULTY_LABELS[script.DIFFICULTY_DEFAULT_STEP]) == "Silver Rank",
+		"Silver Rank is the default rung (Bronze Rank softer, Gold Rank sharper)")
 	var mults: Array = Array(script.DIFFICULTY_DAMAGE_TAKEN_MULTS)
 	for i in mults.size() - 1:
 		assert(float(mults[i]) < float(mults[i + 1]),
@@ -214,16 +214,16 @@ func _check_difficulty_ladder() -> void:
 	assert(is_equal_approx(float(fresh.call("difficulty_damage_taken_mult")), 1.0),
 		"...and the getter L2's apply-site reads returns the shipped 1.0 there")
 	fresh.call("cycle_difficulty")
-	assert(String(fresh.call("difficulty_label")) == "Gold" and int(fresh.call("difficulty_step")) == 2, "cycle steps forward")
+	assert(String(fresh.call("difficulty_label")) == "Gold Rank" and int(fresh.call("difficulty_step")) == 2, "cycle steps forward")
 	fresh.call("cycle_difficulty")
 	assert(int(fresh.call("difficulty_step")) == 0, "...and wraps around the end")
 	fresh.call("set_difficulty_step", 2)
 	fresh.free()
 
 	var reloaded = _settings_instance(script)
-	assert(int(reloaded.call("difficulty_step")) == 2 and String(reloaded.call("difficulty_label")) == "Gold",
+	assert(int(reloaded.call("difficulty_step")) == 2 and String(reloaded.call("difficulty_label")) == "Gold Rank",
 		"a fresh instance loads the persisted rung -- changeable ANY time means it has to survive the process, not just the panel")
-	assert(float(reloaded.call("difficulty_damage_taken_mult")) > 1.0, "Gold sharpens what a hit costs")
+	assert(float(reloaded.call("difficulty_damage_taken_mult")) > 1.0, "Gold Rank sharpens what a hit costs")
 	reloaded.call("set_difficulty_step", script.DIFFICULTY_DEFAULT_STEP)
 	reloaded.free()
 

@@ -126,9 +126,9 @@
    "payload_contains": {
     "step": "difficulty",
     "options": [
-     "Bronze",
-     "Silver",
-     "Gold"
+     "Bronze Rank",
+     "Silver Rank",
+     "Gold Rank"
     ],
     "cursor": 1
    },
