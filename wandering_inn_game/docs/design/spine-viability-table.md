@@ -62,7 +62,9 @@ The same fights against `docs/design/balance-bands-and-policy.md`'s target bands
 
 ## Per-spine band-competent climaxes
 
-The spine list is derived from every target in `data/classes.json`'s `consolidations`; no class id is duplicated here by hand. Acts I–IV use the target's two base parent lines at the same 2, 3/2, 5/4, and 7/6 band allocations as the original Spellsword seed; Act V uses the consolidated class at level 14. Druid fields its bonded wolf when the live arena-capacity rule permits it. Below-window class rows are WALLS for controller adjudication, not retune orders; above-window rows are ceiling WINDOW DRIFT.
+The spine list is derived from every target in `data/classes.json`'s `consolidations`; no class id is duplicated here by hand. Acts I–IV use the target's two base parent lines at the same 2, 3/2, 5/4, and 7/6 band allocations as the original Spellsword seed; Act V uses the consolidated class at level 14. Druid fields its bonded wolf when the live arena-capacity rule permits it. Below-window class rows on the MARTIAL spines are WALLS for controller adjudication, not retune orders; above-window rows are ceiling WINDOW DRIFT.
+
+**RULED MULTICLASSING (user ruling 2026-08-13, `docs/CHOICE-LOG.md`).** A civil spine is expected to carry a martial line to clear the combat chokepoints, so a below-window climax cell on `innkeeper`, `scout`, `druid` is **design, not a defect** — it is marked `RULED: multiclass-expected (2026-08-13)` rather than WALL, and the civil pace overshoot (#453 G6) is that multiclass level budget, not a slope error. Nothing about the gate moved: no per-spine cell has ever been asserted, before the ruling or after it. What the ruling settles is what the row MEANS. [Druid] is included for its walled cells per #453 C3's PACE-vs-KIT table (PR #471), which classified 15 of 17 walls as KIT — the spine over-levels its band and loses anyway — and every cell in this table is measured AT the act's band allocation, so a wall here can only be a kit read; pace is `tests/sim_progression_pace.gd`'s question. Martial spines are excluded: their below-window cells stay bare WALLs, because no ruling says a martial spine needs a second line to clear its own climaxes.
 
 | Act | Climax | Spine | Band build | competent | Disposition |
 |---|---|---|---|---|---|
@@ -76,25 +78,25 @@ The spine list is derived from every target in `data/classes.json`'s `consolidat
 | III | `act3_awakened_boss` | `spellsword` | warrior5/mage4 | WIN 0.78 / 4 rd / +20 | IN WINDOW |
 | IV | `act4_vault_construct` | `spellsword` | warrior7/mage6 | WIN 0.64 / 7 rd / +30 | IN WINDOW |
 | V | `act5_seal_warden` | `spellsword` | spellsword14 | WIN 0.78 / 4 rd / +15 | IN WINDOW |
-| I | `act1_gate_ambush` | `innkeeper` | helper2 | LOSS 0.35 / 4 rd / -18 | WALL — report only |
-| II | `act2_cistern_nest` | `innkeeper` | helper3/diplomat2 | LOSS 0.01 / 4 rd / -74 | WALL — report only |
-| III | `act3_awakened_boss` | `innkeeper` | helper5/diplomat4 | LOSS 0.03 / 3 rd / -87 | WALL — report only |
-| IV | `act4_vault_construct` | `innkeeper` | helper7/diplomat6 | LOSS 0.31 / 7 rd / -36 | WALL — report only |
-| V | `act5_seal_warden` | `innkeeper` | innkeeper14 | LOSS 0.03 / 7 rd / -85 | WALL — report only |
+| I | `act1_gate_ambush` | `innkeeper` | helper2 | LOSS 0.35 / 4 rd / -18 | RULED: multiclass-expected (2026-08-13) |
+| II | `act2_cistern_nest` | `innkeeper` | helper3/diplomat2 | LOSS 0.01 / 4 rd / -74 | RULED: multiclass-expected (2026-08-13) |
+| III | `act3_awakened_boss` | `innkeeper` | helper5/diplomat4 | LOSS 0.03 / 3 rd / -87 | RULED: multiclass-expected (2026-08-13) |
+| IV | `act4_vault_construct` | `innkeeper` | helper7/diplomat6 | LOSS 0.31 / 7 rd / -36 | RULED: multiclass-expected (2026-08-13) |
+| V | `act5_seal_warden` | `innkeeper` | innkeeper14 | LOSS 0.03 / 7 rd / -85 | RULED: multiclass-expected (2026-08-13) |
 | I | `act1_gate_ambush` | `ranger` | warrior2 | LOSS 0.32 / 5 rd / -21 | WALL — report only |
 | II | `act2_cistern_nest` | `ranger` | warrior3/archer2 | WIN 0.50 / 5 rd / +1 | WALL — report only |
 | III | `act3_awakened_boss` | `ranger` | warrior5/archer4 | WIN 0.65 / 5 rd / +15 | IN WINDOW |
 | IV | `act4_vault_construct` | `ranger` | warrior7/archer6 | LOSS 0.06 / 9 rd / -71 | WALL — report only |
 | V | `act5_seal_warden` | `ranger` | ranger14 | LOSS 0.41 / 3 rd / -39 | WALL — report only |
-| I | `act1_gate_ambush` | `scout` | rogue2 | LOSS 0.04 / 2 rd / -37 | WALL — report only |
-| II | `act2_cistern_nest` | `scout` | rogue3/archer2 | LOSS 0.07 / 4 rd / -52 | WALL — report only |
-| III | `act3_awakened_boss` | `scout` | rogue5/archer4 | LOSS 0.11 / 3 rd / -69 | WALL — report only |
-| IV | `act4_vault_construct` | `scout` | rogue7/archer6 | LOSS 0.06 / 9 rd / -72 | WALL — report only |
-| V | `act5_seal_warden` | `scout` | scout14 | LOSS 0.02 / 3 rd / -60 | WALL — report only |
-| I | `act1_gate_ambush` | `druid` | beast_tamer2 | LOSS 0.35 / 4 rd / -18 | WALL — report only |
+| I | `act1_gate_ambush` | `scout` | rogue2 | LOSS 0.04 / 2 rd / -37 | RULED: multiclass-expected (2026-08-13) |
+| II | `act2_cistern_nest` | `scout` | rogue3/archer2 | LOSS 0.07 / 4 rd / -52 | RULED: multiclass-expected (2026-08-13) |
+| III | `act3_awakened_boss` | `scout` | rogue5/archer4 | LOSS 0.11 / 3 rd / -69 | RULED: multiclass-expected (2026-08-13) |
+| IV | `act4_vault_construct` | `scout` | rogue7/archer6 | LOSS 0.06 / 9 rd / -72 | RULED: multiclass-expected (2026-08-13) |
+| V | `act5_seal_warden` | `scout` | scout14 | LOSS 0.02 / 3 rd / -60 | RULED: multiclass-expected (2026-08-13) |
+| I | `act1_gate_ambush` | `druid` | beast_tamer2 | LOSS 0.35 / 4 rd / -18 | RULED: multiclass-expected (2026-08-13) |
 | II | `act2_cistern_nest` | `druid` | beast_tamer3/mage2 | WIN 0.93 / 4 rd / +33 | WINDOW DRIFT — ceiling; adjudicate |
 | III | `act3_awakened_boss` | `druid` | beast_tamer5/mage4 | WIN 0.88 / 4 rd / +27 | WINDOW DRIFT — ceiling; adjudicate |
-| IV | `act4_vault_construct` | `druid` | beast_tamer7/mage6 | LOSS 0.35 / 7 rd / -28 | WALL — report only |
+| IV | `act4_vault_construct` | `druid` | beast_tamer7/mage6 | LOSS 0.35 / 7 rd / -28 | RULED: multiclass-expected (2026-08-13) |
 | V | `act5_seal_warden` | `druid` | druid14 | WIN 0.97 / 4 rd / +42 | WINDOW DRIFT — ceiling; adjudicate |
 
 ## The falsifiable check (#440's scope gate)
@@ -159,6 +161,6 @@ A calibration row gates a categorical at 0.5; these gate a BAND. They exist for 
 ## Reading the table
 
 - **floor LOSS / competent WIN** — a competence wall, not a difficulty wall. The fight is fair; the script cannot play it. `act5_gallery_vermin_nest` is the archetype.
-- **floor LOSS / competent LOSS** — a real wall. Either the build is under band or the encounter is over it. In the class-derived table, a below-window competent row is reported as a WALL for adjudication; it is not permission to flatten the shared encounter for every stronger spine.
+- **floor LOSS / competent LOSS** — a real wall. Either the build is under band or the encounter is over it. In the class-derived table, a below-window competent row on a martial spine is reported as a WALL for adjudication; it is not permission to flatten the shared encounter for every stronger spine. On the ruled civil spines the same cell reads `RULED: multiclass-expected (2026-08-13)` instead — the ruling above answered it.
 - **floor WIN at a build far under band** — the ratchet. The fight is beatable by the weakest policy at the lowest kit, so it is not gating anything.
 - **bypasses** — 'unwinnable but bypassable' reads differently from 'wall'. The gate half of the column is derived from the map entity at generation time; the authored-resolution half is maintained in `ROSTER`.
