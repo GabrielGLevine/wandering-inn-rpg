@@ -1,9 +1,9 @@
 {
- "_comment": "Issue #413 holder fixture. Starts from near_rogue's real Missing Crate WATCH resolution (met/sparred/given spear plus asked/recovered/found/returned/persuaded, crate_scavengers removed), then carries the honest Rogue progression thresholds through L4: sneaked_past_danger 7 and classes{rogue:4}. Warrior stays L1, so Rogue L4 is the only source of [Dangersense] under test. The player has walked back to the floodplains and stands at (9,24), three Chebyshev cells south-west of goblin_night_patrol (10,21); actions_since_sleep 1000 makes its existing night-only encounter_when gate live. The script walks to distance 2 and across three cells of the radius-1 perimeter without entering it. rng_state is the shared seed-1-derived state used by goblin_night_patrol_start; no combat resolves, so it is outcome-inert.",
+ "_comment": "Issue #413 holder fixture. Starts from near_rogue's real Missing Crate WATCH resolution (met/sparred/given spear plus asked/recovered/found/returned/persuaded, crate_scavengers removed), then carries the honest Rogue progression thresholds through L4: sneaked_past_danger 7 and classes{rogue:4}. Warrior stays L1, so Rogue L4 is the only source of [Dangersense] under test. The player has walked back to the floodplains and stands at (5,24), three Chebyshev cells south of goblin_night_patrol (7,21); actions_since_sleep 1000 makes its existing night-only encounter_when gate live. The script walks to distance 2 and across three cells of the radius-1 perimeter without entering it. #474 CARRIED THE GEOMETRY WEST: the encounter left the pond cell (10,21) for the shore at (7,21), so this approach cell followed it from (9,24) to (5,24) -- the same 3-cell start distance and the same up/right/right walk along the ring, which is what this canonical actually proves. (5,23)/(6,23)/(7,23) are the new perimeter run; the pond and the razorbeak chick at (8,23) are why the ring cannot be walked from the east. rng_state is the shared seed-1-derived state used by goblin_night_patrol_start; no combat resolves, so it is outcome-inert.",
  "version": 5,
  "state": {
   "current_map": "floodplains",
-  "player_cell": [9, 24],
+  "player_cell": [5, 24],
   "player_facing": [0, -1],
   "classes": {
    "warrior": 1,

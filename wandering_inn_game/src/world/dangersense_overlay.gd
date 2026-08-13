@@ -51,8 +51,11 @@ func rebuild(encounters: Array, holder_has_skill: bool, field_mode: bool, radius
 			if not (raw is Dictionary):
 				continue
 			var encounter := raw as Dictionary
+			# #475: no `encounter_when` test -- an ambush needs no gate to
+			# spring, and requiring one hid the unavoidable gate-road ambush.
+			# The liveness filter is world.gd's `_live_dangersense_encounters`;
+			# this layer only refuses shapes it cannot draw.
 			if String(encounter.get("kind", "")) != "encounter" \
-					or not encounter.has("encounter_when") \
 					or not encounter.has("trigger_radius"):
 				continue
 			var raw_cell: Variant = encounter.get("cell", [])

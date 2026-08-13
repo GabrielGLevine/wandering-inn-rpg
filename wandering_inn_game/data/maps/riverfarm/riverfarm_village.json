@@ -939,7 +939,8 @@
    "cell": [
     22,
     5
-   ]
+   ],
+   "on_water": true
   },
   {
    "sprite": "bush_green",

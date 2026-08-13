@@ -120,6 +120,28 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   `_exempt` pending the user's naming pass (spearmaster×mage exempt-annotated
   as resolved-by-#449); nothing is scaffolded into existence silently and main
   goes green immediately.
+- **#475 was a shape test, not a design exclusion (2026-08-13).** The
+  [Dangersense] overlay dropped every encounter lacking `encounter_when`.
+  Archaeology on #413 (`1b7a21df`, both call sites, one commit): no rationale
+  in code, commit message, or this log, and the standing ruling above is "a
+  passive-held field aura over existing encounter trigger regions". The sim's
+  own authority, `_check_trigger_radius`, never tests that key, and
+  `encounter_gate_met` already answers true for a gateless encounter — so the
+  filter was a defect that hid the one Act I fight a player cannot walk around.
+  Un-hiding it reveals four auras: `goblin_encounter_1` (the gate-road ambush,
+  the point of the fix) and `alley_footpads_a`/`_b` are ungated ambushes on
+  public routes and ship as-is; `counting_room_guard` sits inside the #398 P4
+  three-gate pocket, so an aura there would glow inside a sealed room. It gains
+  `encounter_when.requires{counting_room_open}` — P4's copy of P3's shared
+  pocket-open counter, banked atomically by all three modes — rather than a new
+  OR arm in the gate vocabulary. Overlay parity is now by construction: the
+  overlay reads the sim's predicate instead of keeping a second rule.
+- **#474 mothbear determination: placement clean (2026-08-13).**
+  `road_mothbears` (23,12) is Chebyshev 10 from the nearest water cell and has
+  no floor layer at all; the map's water is a single pond at x7-13/y17-21. The
+  "on the pond" read was `goblin_night_patrol`, which stood at (10,21) — inside
+  that pond — until this wave walked it ashore to (7,21). One entity, one
+  defect; a windowed night read of the wagon road is on record.
 
 ### Steel thread and item abilities (2026-08-11)
 

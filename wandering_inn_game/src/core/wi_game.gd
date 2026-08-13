@@ -1205,9 +1205,9 @@ func encounter_gate_met(ent: Dictionary) -> bool:
 		return true
 	if when.has("phase"):
 		return (when["phase"] as Array).has(phase())
-	# GH#199: `absent` mirrors _present_gate_met's arm (count < threshold),
-	# ANDed with `requires` — the Rags gate's never-hunted-the-camp leg on an
-	# encounter_when (present_when is forbidden on encounters by validator).
+	# GH#199: `absent` mirrors _present_gate_met's arm (count < threshold), ANDed
+	# with `requires` — the Rags gate's never-hunted-the-camp leg. GH#392 freed
+	# present_when here too. No OR arm: N modes bank ONE shared pocket counter.
 	if when.has("requires") and not _accomplishment_gate_met(when["requires"] as Dictionary):
 		return false
 	if when.has("absent") and not _absent_gate_met(when["absent"] as Dictionary):

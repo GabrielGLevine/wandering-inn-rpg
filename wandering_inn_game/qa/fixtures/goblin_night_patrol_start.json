@@ -1,10 +1,10 @@
 {
- "_comment": "Issue #80 (world reactivity wave, item 4): goblin_night_patrol's own canonical fixture. IDENTICAL story position to post_tutorial.json (met_relc/sparred_with_relc/given_spear_by_relc banked, classes{warrior:1}, rusty_sword equipped -- the exact post-tutorial cold-start state, a real playthrough's own earliest floodplains position) -- only player_cell and actions_since_sleep differ. Positioned at (10,23), Chebyshev 2 from the encounter's own cell (10,21) -- one 'move up' step lands within trigger_radius 1 and springs it for real, no interact needed (river_wolf_pack's own shape). actions_since_sleep:1000 clears night_at (900, moods.json meta.phase_thresholds) from the very first frame -- no in-script grind needed, this fixture's whole point is skipping straight to the night-only gate being live. rng_state reused verbatim from post_tutorial.json/riverfarm_fight_start.json/near_invrisil_fight.json (a properly seed=1-derived .state, never hand-typed -- test_fixture_coherence.gd's RNG_STATE_MIN_MAGNITUDE floor).",
+ "_comment": "Issue #80 (world reactivity wave, item 4): goblin_night_patrol's own canonical fixture. IDENTICAL story position to post_tutorial.json (met_relc/sparred_with_relc/given_spear_by_relc banked, classes{warrior:1}, rusty_sword equipped -- the exact post-tutorial cold-start state, a real playthrough's own earliest floodplains position) -- only player_cell and actions_since_sleep differ. Positioned at (7,23), Chebyshev 2 from the encounter's own cell (7,21) -- one 'move up' step lands within trigger_radius 1 and springs it for real, no interact needed (river_wolf_pack's own shape). #474 MOVED BOTH: the encounter was standing in the pond at (10,21) and went ashore to (7,21), so this approach cell walked west with it -- the geometry (Chebyshev 2, one 'move up', no interact) is byte-identical, only the latitude changed. actions_since_sleep:1000 clears night_at (900, moods.json meta.phase_thresholds) from the very first frame -- no in-script grind needed, this fixture's whole point is skipping straight to the night-only gate being live. rng_state reused verbatim from post_tutorial.json/riverfarm_fight_start.json/near_invrisil_fight.json (a properly seed=1-derived .state, never hand-typed -- test_fixture_coherence.gd's RNG_STATE_MIN_MAGNITUDE floor).",
  "version": 5,
  "state": {
   "current_map": "floodplains",
   "player_cell": [
-   10,
+   7,
    23
   ],
   "player_facing": [

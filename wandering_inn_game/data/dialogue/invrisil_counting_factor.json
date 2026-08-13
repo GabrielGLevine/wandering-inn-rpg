@@ -47,6 +47,10 @@
      "effects": [
       {
        "accomplishment": "counting_room_invited"
+      },
+      {
+       "_comment": "The social mode's leg of the shared pocket-open counter -- the other two bank it through on_skill_use arrays.",
+       "accomplishment": "counting_room_open"
       }
      ],
      "end": true

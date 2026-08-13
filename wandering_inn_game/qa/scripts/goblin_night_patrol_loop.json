@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #80 (world reactivity wave, item 4): the night-only canonical for `goblin_night_patrol` (floodplains), the river_wolf_pack precedent's second application. Loads goblin_night_patrol_start (post-tutorial cold-start position, floodplains (10,23), actions_since_sleep already past night_at). Proves the whole night-texture chain live: phase()==night from load, encounter_when reads it, one real move into trigger_radius 1 fires start_combat for real (no interact), the fight resolves to a win (relc fielded, met_relc banked -- the SAME roster/arena/ally as goblin_encounter_2, just at a different hour), and on_victory banks won_combat.",
+ "_comment": "Issue #80 (world reactivity wave, item 4): the night-only canonical for `goblin_night_patrol` (floodplains), the river_wolf_pack precedent's second application. Loads goblin_night_patrol_start (post-tutorial cold-start position, floodplains (7,23), actions_since_sleep already past night_at). Proves the whole night-texture chain live: phase()==night from load, encounter_when reads it, one real move into trigger_radius 1 fires start_combat for real (no interact), the fight resolves to a win (relc fielded, met_relc banked -- the SAME roster/arena/ally as goblin_encounter_2, just at a different hour), and on_victory banks won_combat.",
  "fixture_save": "goblin_night_patrol_start",
  "starts_at_title": true,
  "steps": [
@@ -43,7 +43,7 @@
    "equals": "night"
   },
   {
-   "_comment": "(10,23) -> (10,22): Chebyshev distance to goblin_night_patrol's own cell (10,21) drops from 2 to 1, inside trigger_radius 1 -- start_combat fires on this single successful move, the encounter_when gate already reading night.",
+   "_comment": "(7,23) -> (7,22): Chebyshev distance to goblin_night_patrol's own cell (7,21) drops from 2 to 1, inside trigger_radius 1 -- start_combat fires on this single successful move, the encounter_when gate already reading night (and #474's present_when, which shares that gate).",
    "action": "move",
    "direction": "up",
    "steps": 1

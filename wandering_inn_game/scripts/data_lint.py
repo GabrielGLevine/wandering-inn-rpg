@@ -943,6 +943,37 @@ def check_solid_decor_blocks(maps: dict, errors: list) -> None:
 					"add the cell to `blocked` (solid props are solid; user ruling 2026-08-08)")
 
 
+def check_placements_off_water(maps: dict, errors: list) -> None:
+	"""#474 (user eye-gate 2026-08-13): goblin_night_patrol's marker rendered
+	two goblins STANDING IN THE POND. Nothing caught it because a cell can be
+	authored on land and later have water painted over it -- which is exactly
+	what happened (the cell predates the pond by twenty-odd commits).
+
+	The water family is DERIVED, never listed: `_water_cells` reads the map's
+	own `water: true` wall segments plus its `freezable` cells, and
+	`check_maps` above holds `water: true` in lockstep with the water SHEET,
+	so the family follows the tileset rather than a copy of it.
+
+	Standing on water is sometimes right (reeds in the shallows, a rowboat, a
+	submerged cache), so this is an EXPLICIT opt-in in the `invisible: true`
+	idiom: declare `on_water: true` on that entity or decor row and the
+	placement is a decision on the record instead of an accident."""
+	for map_id, m in sorted(maps.items()):
+		water = _water_cells(m)
+		if not water:
+			continue
+		rows = [("entity", e.get("id", "<no id>"), e) for e in m.get("entities", []) if isinstance(e, dict)]
+		rows += [("decor", d.get("sprite", "<no sprite>"), d) for d in (m.get("decor", []) or []) if isinstance(d, dict)]
+		for kind, label, row in rows:
+			cell = row.get("cell")
+			if not _cell_shape_ok(cell) or tuple(map(int, cell)) not in water:
+				continue
+			if row.get("on_water") is True:
+				continue
+			errors.append(f"maps/{map_id}: {kind} '{label}' stands on a water cell {list(map(int, cell))} "
+				"with no `on_water: true` marker -- it renders wading (user eye-gate 2026-08-13, #474)")
+
+
 def check_companion_toasts(maps: dict, errors: list) -> None:
 	"""GH#397 r2: every companion_source must carry its OWN taken_toast.
 
@@ -2170,6 +2201,7 @@ def main() -> int:
 	check_companion_toasts(maps, errors)
 	check_solid_decor_blocks(maps, errors)
 	check_spriteless_entities(maps, errors)
+	check_placements_off_water(maps, errors)
 	check_moods(parsed, maps, errors)
 	check_lineage_completeness(parsed, errors)
 	advisories: list = []

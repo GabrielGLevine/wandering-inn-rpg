@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #413 non-holder control. Loads the same honest night-floodplains state and walks the same up/right/right perimeter route as dangersense_field_loop, but stops at Rogue L3. It pins that ui_dangersense_rendered never fires while the trigger geometry, phase, and walked cells are otherwise identical; combat_started also remains absent.",
+ "_comment": "Issue #413 non-holder control. Loads the same honest night-floodplains state and walks the same up/right/right perimeter route as dangersense_field_loop (#474 carried both fixtures' start cell to (5,24) with the encounter), but stops at Rogue L3. It pins that ui_dangersense_rendered never fires while the trigger geometry, phase, and walked cells are otherwise identical; combat_started also remains absent.",
  "fixture_save": "dangersense_nonholder_start",
  "starts_at_title": true,
  "steps": [
@@ -17,7 +17,7 @@
   {"action": "assert_event_absent", "type": "ui_dangersense_rendered"},
   {"action": "move", "direction": "up", "steps": 1},
   {"action": "move", "direction": "right", "steps": 2},
-  {"action": "assert_state", "path": "player_cell", "equals": [11, 23]},
+  {"action": "assert_state", "path": "player_cell", "equals": [7, 23]},
   {"action": "assert_event_absent", "type": "combat_started"}
  ]
 }
