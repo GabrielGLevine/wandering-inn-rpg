@@ -43,37 +43,23 @@ or superseded session blocks.
   follow-ups recorded on #449 (dilution-stated bands; 4g finale economy).
   #451 parked by user (Counter Strike power level, ablation data attached). Pre-existing red still open: d3_inventory_shot (inventory pin drift,
   predates the program). Windowed observation run launched for the user.
-- QUIESCE 2 (2026-08-12 late): session window drained by 3 parallel Opus
-  agents; both live agents drained cleanly — states committed on their
-  branches. RESUME ORDER: (0) FIX LATENT RED ON MAIN FIRST —
-  sim_spine_viability `_derived_spines` (line ~316) asserts on the 26
-  `_exempt` consolidation rows (B1) and silently derives 0 spine-class
-  rows while still printing PASS (gate-cannot-fail defect; C branched
-  pre-B1 so its runs never composed with the exempt rows; CI misses it
-  because the suite is not a CI unit arm). Fix: skip `_exempt` rows +
-  hard-fail on 0 derived spines + probe proof. (1) B2 branch state:
-  rebase DONE zero-conflict (6bf43e6a + WIP 2524b91d, safety ref
-  backup/b2-pre-rebase-bf8eeb92); Tactician BUILDS rows inserted but
-  UNWIRED (need 3 report-only ROSTER rows on seal_warden_alcove per
-  act5_seal_warden_amulet precedent) + unmeasured; ALL Task-3 gates
-  unrun (steel_thread --seed=37 divergence check included). (2) d3
-  branch fix/d3-inventory-shot commit 45d66479: pins re-derived (#79
-  effect-text cause; manifest promotion included), verification runs ALL
-  pending (headless x2, preflight, 5 inventory canonicals; step 10 is
-  the windowed-only coin-line shot). `timeout` not on PATH — use perl
-  alarm idiom. E6 #459 halted
-  PRE-work with a COMPLETE recon deliverable in its task output
-  (ab97218de87e63227): sheet-sharing trap (wolf/razorbeak companions
-  share Idle-Sheet.png with combat sprite ids — new art needs NEW dirs),
-  side-profile trap (wolf/razorbeak idles are side views; PixelLab v3
-  rotation labels will be wrong — assign directions by eye or use
-  quadruped standard mode), renderer paths (_reconcile_companion_visual
-  world.gd:2100 passes no facing; mirror _play_player_anim:1777 via
-  entity_visual_factory helper), registry conventions (directional is
-  per-sprite; frame-count rows at test_sprite_registry 247/505/506).
-  PixelLab balance healthy (1712 generations). Resume E6 at job
-  submission. MERGED THIS SESSION: #454 B1, #455 E3, #457 A-M1,
-  #456 full Lane C (cap+harness+repair+matrix+13 re-fixtures).
+- RESUME STATE (2026-08-12 late; agent drain states live in this
+  session's task outputs): (0) derived-spines fix PR #461 (branch
+  fix/derived-spines-exempt, e986c519, fully proven) — merge on CI green;
+  same-shape follow-up: calibration-failure assert-then-quit at
+  sim_spine_viability ~line 650 hangs to watchdog, fold into B2
+  completion. (1) B2 branch: rebased clean onto post-C main (6bf43e6a +
+  WIP 2524b91d; safety ref backup/b2-pre-rebase-bf8eeb92); REMAINING:
+  wire 3 Tactician BUILDS rows into ROSTER (seal_warden_alcove,
+  act5_seal_warden_amulet precedent), WI_SPINE_WRITE=1 measure, all
+  Task-3 gates incl. steel_thread --seed=37, then PR+merge. (2) d3
+  branch fix/d3-inventory-shot 45d66479 (#79 root cause + manifest
+  promotion): verification runs pending (headless x2, preflight, 5
+  inventory canonicals; step 10 = windowed-only coin shot). (3) E6 #459:
+  resume at PixelLab submission; recon in task output ab97218de87e63227
+  (sheet-share + side-profile traps; renderer at world.gd:2100 /
+  _play_player_anim:1777; registry rows 247/505/506; balance healthy).
+  Max 2 concurrent Opus agents. `timeout` not on PATH — perl alarm idiom.
 - WAVE >=434 IN FLIGHT (2026-08-12, Fable controller; plan at
   docs/superpowers/plans/2026-08-12-sol-wave-434-plus.md; wave-autonomy
   rulings in CHOICE-LOG SS Sol wave >=434). MERGED to main: #454 (B1
