@@ -1,7 +1,16 @@
 # Enemy archetypes — framework + summoner (#460 F0 design)
 
-> Status: **AWAITING USER RATIFICATION** (F1 does not dispatch until this
-> flips to APPROVED). Fable-authored 2026-08-13.
+> Status: **RATIFIED (user, 2026-08-13)** with amendments: the archetype is
+> an undead **Lich** (nameless-Lich fiction — the Horns of Hammerad crypt
+> fight from Volume 1, the Ryoka first-meeting era, is the canon
+> archetype precedent), and the Lich carries **death-magic spells in its
+> own kit in addition to summons** (mirror the shipped player-side
+> death-element shapes: bone-dart / deathbolt class, enemy-kit rows).
+> §6's other three questions approved as written. Working combatant ids:
+> `crypt_lich` + `bone_thrall`. The §2 frail-caster statline is
+> superseded: the Lich is a caster threat itself; the summons multiply
+> it. All §3 balance guardrails unchanged (window with summons AND
+> spells priced in; the limit-ceiling case measured).
 
 ## 0. What this buys
 
