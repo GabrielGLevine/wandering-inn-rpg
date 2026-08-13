@@ -422,6 +422,22 @@ func _check_class_requirements(name: String, game: WIGame, classes_cfg: Dictiona
 			_fail(name, "held class '%s' has no classes.json row" % class_id)
 			continue
 		var held_level := int(game.classes[class_id])
+		# #453 G2 (2026-08-13): `gained_by` grew an `accomplishment_any` arm
+		# (WIProgression.check_class_gains), and this check read `accomplishment`
+		# ONLY -- an any-gated class would have fallen through an EMPTY dict and
+		# been silently exempted, re-opening the #91 hole for exactly the classes
+		# the new arm touches. Mirrors the engine: ANY key clearing its threshold
+		# makes the held class a legal story position; none clearing is the fail.
+		var gained_any: Dictionary = (row.get("gained_by", {}) as Dictionary).get("accomplishment_any", {})
+		if not gained_any.is_empty():
+			var any_met := false
+			for acc_id: String in gained_any:
+				if int(game.accomplishments.get(acc_id, 0)) >= int(gained_any[acc_id]):
+					any_met = true
+					break
+			if not any_met:
+				_fail(name, "class '%s' held but NO gained_by arm met (needs one of %s)" % [
+					class_id, str(gained_any)])
 		var gained: Dictionary = (row.get("gained_by", {}) as Dictionary).get("accomplishment", {})
 		for acc_id: String in gained:
 			if int(game.accomplishments.get(acc_id, 0)) < int(gained[acc_id]):

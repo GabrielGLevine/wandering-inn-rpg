@@ -7232,6 +7232,32 @@
      "exploration"
     ]
    }
+  },
+  {
+   "_comment": "<!-- 453-g2 --> APPENDED LAST under the producer-gaps lane marker.",
+   "script": "gate_road_cover_loop",
+   "seed": 9,
+   "fixture": "gate_road_cover_start",
+   "note": "#453 G2: the CLASSLESS answer to the gate-road ambush -- the drainage cut buys one crossing per waking and banks crossed_under_cover, the Act I producer [Rogue]'s accomplishment_any entry reads; ambush is skipped, never retired",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "gate_road_cover_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   }
  ]
 }

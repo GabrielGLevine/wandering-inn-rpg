@@ -111,6 +111,14 @@ STRUCTURAL_LITERALS = [
     # adding its own code-banked counter appends a row instead of colliding
     # on a shared line. Same shape in tests/test_shipped_ids.gd.
     "companion_lost",
+    # #453 G2 (user ruling 2026-08-13): banked by
+    # wi_game._check_trigger_radius on the COVER ARM -- a transit that a
+    # `cover_prop` encounter would have sprung, made once per waking after
+    # going to ground in the named prop. Code-banked (never authored in
+    # map/quest/dialogue data), so the three censuses cannot discover it;
+    # it gates [Rogue]'s `accomplishment_any` entry. Own row per the
+    # companion_lost shape above. Same shape in tests/test_shipped_ids.gd.
+    "crossed_under_cover",
 ]
 FROZEN_RETIRED_ACCOMPLISHMENTS = ["heard_thicket_keeps"]
 

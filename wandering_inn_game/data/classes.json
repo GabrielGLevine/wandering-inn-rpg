@@ -110,7 +110,7 @@
 			},
 			"levels": [
 				{ "level": 1, "requires": {}, "grants": ["frost_bolt", "quick_cast", "light"] },
-				{ "level": 2, "requires": { "won_combat": 3 }, "grants": ["flame_jet", "mana_shield", "flame_dart"] },
+				{ "_comment": "#453 G1 (user ruling 2026-08-13): `requires` -> `requires_any` on the SHIPPED idiom (spellsword/innkeeper/diplomat all gate this way). The old won_combat-only gate walled every NON-MARTIAL mage spine at L1 forever: the [Druid] pace trace banked spell_cast 126 by Act V and still read `beast_master16/mage1`, so the beast_tamer x mage consolidation (min_parent_level 10) NEVER fired -- 40/40 runs. `spell_cast: 4` is mage L3's OWN threshold reused verbatim, so the widened arm adds no new number to the curve and no new producer to the game (zero treadmill): a caster who casts four spells clears L2 and L3 together, and a martial mage keeps the won_combat road unchanged.", "level": 2, "requires_any": { "won_combat": 3, "spell_cast": 4 }, "grants": ["flame_jet", "mana_shield", "flame_dart"] },
 				{ "level": 3, "requires": { "spell_cast": 4 }, "grants": [] },
 				{ "level": 4, "requires": { "spell_cast": 8 }, "grants": [] },
 				{ "level": 5, "requires": { "spell_cast": 13 }, "grants": ["invisibility"] },
@@ -357,8 +357,8 @@
 				{ "level": 3, "requires": { "observed_things": 6 }, "grants": ["dangersense"] },
 				{ "level": 4, "requires": { "observed_things": 10 }, "grants": [] },
 				{ "level": 5, "requires": { "observed_things": 15 }, "grants": ["directed_strike"] },
-				{ "level": 6, "requires": { "observed_things": 20, "tactic_used": 4 }, "grants": [] },
-				{ "level": 7, "requires": { "observed_things": 24, "tactic_used": 8 }, "grants": ["flanking_step"] },
+				{ "_comment": "#453 G3 (user ruling 2026-08-13): THE LADDER WIDENS BEFORE IT STEEPENS. [Flanking Step] moves L7 -> L6; no threshold moves. `tactic_used` banks once per tactic-family Skill per fight (wi_combat._tally_skill_use), so the rung's own cost is paid out of the kit the rung hands you: pre-change a tactician arrived at L6 holding TWO tactic Skills ([Battlefield Awareness] L1, [Chosen Blow] L5) and had to buy L7's ask of 8 at 2/fight. Moving the third Skill down to L6 makes it 3/fight from L6 on. THRESHOLD TRIM DELIBERATELY NOT TAKEN: the ruling conditions it on the L6 ask exceeding what the kit banks by that point, and it does not -- the floor-arm pace trace reaches L6 in Act III at tactic_used 5 against an ask of 4.", "level": 6, "requires": { "observed_things": 20, "tactic_used": 4 }, "grants": ["flanking_step"] },
+				{ "level": 7, "requires": { "observed_things": 24, "tactic_used": 8 }, "grants": [] },
 				{ "level": 8, "requires": { "observed_things": 28, "tactic_used": 12 }, "grants": [] },
 				{ "level": 9, "requires": { "observed_things": 32, "tactic_used": 17 }, "grants": [] },
 				{ "level": 10, "requires": { "observed_things": 36, "tactic_used": 22 }, "grants": [] },
@@ -424,11 +424,11 @@
 			]
 		},
 		{
-			"_comment": "`recovered_crate_watch` needs only the classless `asked_about_crate` accomplishment -- reachable by any PC, no prerequisite class or skill.",
+			"_comment": "`recovered_crate_watch` needs only the classless `asked_about_crate` accomplishment -- reachable by any PC, no prerequisite class or skill. #453 G2 (user ruling 2026-08-13) widens the entry to `accomplishment_any` because that job is LISCOR-SIDE (missing_crate, route beat 9, Act II), which made [Scout] (rogue x archer) structurally classless through the whole of Act I -- a PACE wall with no diet that could answer it. `crossed_under_cover` is the floodplains gate-road ambush's new cover arm: banked on a transit the ambush would otherwise have sprung, once you have gone to ground in the drainage cut first. `sneaked_past_danger` -- the obvious candidate, and the one the C3 proposal named -- CANNOT be used here: it banks only while already sneaking, and no class grants a sneak before [Rogue] does, so it would gate [Rogue] on holding [Rogue] (the circularity this class's own QA canonical, qa/scripts/rogue_earn_loop.json, already documents). It stays [Rogue]'s LEVEL-UP counter past L1, unchanged.",
 			"id": "rogue",
 			"display_name": "Rogue",
 			"stat_growth": { "dex": 1 },
-			"gained_by": { "accomplishment": { "recovered_crate_watch": 1 } },
+			"gained_by": { "accomplishment_any": { "recovered_crate_watch": 1, "crossed_under_cover": 1 } },
 			"evolution": {
 				"at_level": 10,
 				"dominance_share": 0.6,

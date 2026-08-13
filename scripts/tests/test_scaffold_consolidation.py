@@ -202,15 +202,28 @@ class TestGoldenFixture(GoldenBase):
 			{"spearmaster": 11, "mage": 10})
 
 	def test_derived_counters_reproduce_the_shipped_ledger(self):
-		# EXACT, minus one: given_spear_by_relc is the equipped weapon's
+		# EXACT, minus two. (1) given_spear_by_relc is the equipped weapon's
 		# in-world PROVENANCE, which no curve implies -- the checklist asks for
-		# it by name and the human supplies it. Everything else (warrior's
-		# melee_hit 68 at L11 via `inherits`, spearmaster's own spear_skill_used
-		# 16, mage's spell_cast 45 + won_combat 3, the gained_by ones, met_relc)
-		# falls straight out of the same rule test_fixture_coherence enforces.
-		derived = self.proposal["fixture"]["state"]["accomplishments"]
+		# it by name and the human supplies it. (2) won_combat, since #453 G1
+		# (user ruling 2026-08-13): mage L2 went from `requires {won_combat 3}`
+		# to `requires_any {won_combat 3, spell_cast 4}`, so a held mage L10 no
+		# longer IMPLIES three wins -- this fixture's own spell_cast 45 satisfies
+		# that rung on the caster arm. The deriver correctly drops to warrior L2's
+		# won_combat 1 (reached through spearmaster's `inherits`), while the
+		# SHIPPED fixture keeps the pre-G1 value of 3. Both are legal story
+		# positions and 3 >= 1, so the shipped fixture is not re-cut for this --
+		# the assert below pins the relationship (shipped covers derived) rather
+		# than pretending the two numbers must still be equal. Everything else
+		# (warrior's melee_hit 68 at L11 via `inherits`, spearmaster's own
+		# spear_skill_used 16, mage's spell_cast 45, the gained_by ones, met_relc)
+		# still falls straight out of the rule test_fixture_coherence enforces.
+		derived = dict(self.proposal["fixture"]["state"]["accomplishments"])
 		shipped = dict(self.shipped["state"]["accomplishments"])
 		self.assertEqual(shipped.pop("given_spear_by_relc"), 1)
+		derived_wins = derived.pop("won_combat")
+		shipped_wins = shipped.pop("won_combat")
+		self.assertEqual(derived_wins, 1)
+		self.assertGreaterEqual(shipped_wins, derived_wins)
 		self.assertEqual(derived, shipped)
 
 	def test_lineage_weapon_is_equipped_and_carried(self):

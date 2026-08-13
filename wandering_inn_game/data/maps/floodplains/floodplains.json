@@ -1319,6 +1319,8 @@
     23
    ],
    "trigger_radius": 2,
+   "_comment_cover": "#453 G2 (user ruling 2026-08-13): `cover_prop` names the drainage cut at (27,24). A player who went down into it THIS WAKING crosses this band once without springing the ambush, banking `crossed_under_cover` at the crossing itself -- the classless Act I producer [Rogue]'s entry now reads. NOT a retirement and NOT an item bypass: `entity_first_use` clears at sleep, so the fight re-arms every night and stays the default road to the gate (the #439 Act I climax retune is untouched; arena, enemies, allies and loot here are byte-identical). The chokepoint ruling (CHOICE-LOG 2026-08-11) names the Seal Warden's PERMANENT worn-[Invisibility] bypass; a per-waking, terrain-shaped skip of a non-climactic road ambush that [Stealth] holders could already walk past is the breadth-of-viable-playstyles case that same ruling preserves.",
+   "cover_prop": "gate_road_drain_cut",
    "display_name": "Goblin Ambush",
    "sprite": "goblin_base",
    "arena": "goblin_ambush_tutorial",
@@ -2183,6 +2185,31 @@
      },
      "item": "",
      "toast": "The weather-sealed case is empty."
+    }
+   ]
+  },
+  {
+   "_comment": "#453 G2 (user ruling 2026-08-13): THE DRAINAGE CUT -- the classless, sneak-shaped way past goblin_encounter_1, and the only Act I producer [Rogue]'s entry can read. Cell (27,24) is Chebyshev 3 from the ambush at (30,23), i.e. one step OUTSIDE its radius-2 band (x 28-32, y 21-25), so the choice is made before the road is in their sight -- and the cut is reachable without ever entering that band. APPENDED LAST: verify-untouched pins prose by positional $.entities[N], so a mid-array insert reds it (the pond_narrows precedent). `once_per_waking` is LOAD-BEARING, not flavor: wi_game._check_trigger_radius reads this prop's `serve:` ledger key (cleared at every sleep) as the ambush's `cover_prop` suppression, so one crossing is bought per waking and the fight re-arms every night. Sprite REUSED from rags_camp_mouth -- no new art, and a turf-cut mouth is exactly what this is. The counter this banks is a state marker; the class-gating counter (`crossed_under_cover`) banks at the CROSSING, in code, so interacting here and walking home earns nothing.",
+   "id": "gate_road_drain_cut",
+   "kind": "prop",
+   "cell": [
+    27,
+    24
+   ],
+   "display_name": "The Drainage Cut",
+   "sprite": "turf_cut_mouth",
+   "observe": "The floodplain water goes out under the wall here through a stone-lined channel, wide enough for a person bent double. The grass along its lip has been walked flat, and not by anything wearing boots.",
+   "on_interact_accomplishment": "took_the_low_road",
+   "once_per_waking": true,
+   "once_per_waking_toast": "You have already used the cut once today, and the mud in it has your knees printed on it. Better to give it until morning.",
+   "toast": "You go down into the channel and follow it east at a crouch, the roadline above your shoulder the whole way.",
+   "variants": [
+    {
+     "when": {
+      "took_the_low_road": 1
+     },
+     "accomplishment": "took_the_low_road",
+     "toast": "You go down into the channel without breaking step this time. You know where it turns and where it shallows out."
     }
    ]
   }
