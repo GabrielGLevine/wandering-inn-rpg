@@ -43,41 +43,28 @@ or superseded session blocks.
   follow-ups recorded on #449 (dilution-stated bands; 4g finale economy).
   #451 parked by user (Counter Strike power level, ablation data attached). Pre-existing red still open: d3_inventory_shot (inventory pin drift,
   predates the program). Windowed observation run launched for the user.
-- RESUME STATE (2026-08-12 late; agent drain states live in this
-  session's task outputs): (0) derived-spines fix PR #461 (branch
-  fix/derived-spines-exempt, e986c519, fully proven) — merge on CI green;
-  same-shape follow-up: calibration-failure assert-then-quit at
-  sim_spine_viability ~line 650 hangs to watchdog, fold into B2
-  completion. (1) B2 branch: rebased clean onto post-C main (6bf43e6a +
-  WIP 2524b91d; safety ref backup/b2-pre-rebase-bf8eeb92); REMAINING:
-  wire 3 Tactician BUILDS rows into ROSTER (seal_warden_alcove,
-  act5_seal_warden_amulet precedent), WI_SPINE_WRITE=1 measure, all
-  Task-3 gates incl. steel_thread --seed=37, then PR+merge. (2) d3
-  branch fix/d3-inventory-shot 45d66479 (#79 root cause + manifest
-  promotion): verification runs pending (headless x2, preflight, 5
-  inventory canonicals; step 10 = windowed-only coin shot). (3) E6 #459:
-  resume at PixelLab submission; recon in task output ab97218de87e63227
-  (sheet-share + side-profile traps; renderer at world.gd:2100 /
-  _play_player_anim:1777; registry rows 247/505/506; balance healthy).
-  Max 2 concurrent Opus agents. `timeout` not on PATH — perl alarm idiom.
-- WAVE >=434 (plan: docs/superpowers/plans/2026-08-12-sol-wave-434-plus.md;
-  rulings: CHOICE-LOG SS Sol wave >=434). MERGED: #454 B1 validator
-  (26-pair inventory on #452 awaits user naming), #455 E3 aura (user
-  eye-gate via qa/playtest_saves/2026-08-12-446-dangersense-aura/),
-  #457 A-M1 compiler, #456 full Lane C (cap + harness probe + window
-  repair + matrix re-derivation + report-only ladder + 13 canonical
-  re-fixtures). E1 green on its branch (50a4a4b8) — after B2 merges:
-  rebase, re-derive its 2 QA hunks vs the seed-37 thread, PR, windowed
-  facade read. QUEUE after B2: E5 #458 (wi_game.gd), E4 #447 (after E1),
-  C2 #448 + C3, B3 #449 (wiki-verify name) + B4 (after sim file
-  settles), E2 verify-only, Lane D last. All implementation via Opus
-  subagents (Codex dry); Fable gates only. USER-ASK BATCH: 26 orphan
-  names; Coyle bounty re-arm; WALL list (Innkeeper I-V, Scout I-V,
-  Ranger x4, Druid I/IV + ceiling drift) + 8 t3_warrior10
-  competent-floor cells; ladder stop-order (both policies non-monotone
-  post-cap); cisterns 0.64 / arc_flow 0.55 band-top headroom; oracle
-  dispatch duplication; #454 squash carried 41-commit backlog (granular
-  history on main-pre-454-archive).
+- WAVE >=434 CLOSED (2026-08-13, Fable controller). 16 PRs merged
+  (#454-#457, #461-#471, #473); issues #443-#452, #458, #459 closed;
+  #453 measurement program complete. Main releasable: ci_sweep ALL 247
+  green, preflight --full ALL GREEN, steel thread seed-37 x2 green
+  (STEEL-THREAD.md re-derived from live checkpoints). Shipped: lineage
+  validator + scaffolder + process docs (#452 all layers), [Spellspear]
+  (#449, wiki-discharged), [Appraise Foe] narrowing + free armless reads
+  + Tactician split (#450, absorbs #445), Counter Strike cap + harness
+  integrity + window repair + 13 canonical re-fixtures (#451/#453),
+  Relc-veto solo fight CI-gated at the ruled band (#448), itinerary
+  compiler M1 (#434 M1; M2-M4 remain), dangersense aura (#446), dormant
+  respawner states + door de-collision (#443/#444), creation copy
+  (#447), companion swap re-supply (#458), follower walk cycles (#459),
+  d3 red retired + promoted (#462). USER BATCH posted to #438
+  (2026-08-13 comment): orphan naming, KIT-walls x chokepoint x pillars
+  adjudication (C3 data), producer gaps G1-G6, ladder stop-order,
+  Tactician-split ceiling, no-T2-spear, bounty re-arm, headroom flags,
+  with-Relc restatement, #472 decline soft-lock ruling, eye-gate list.
+  NEW ISSUE: #472 (consolidation decline soft-locks Act V — ruling
+  needed). NEXT: F0 = Fable design pass for #460 (Lane F, plan doc) ->
+  user ratifies -> F1 implements; A-M2/M3/M4 dispatchable cold; wave
+  lessons folded into wi-* skills (2026-08-13 sections).
 - QUEUED: **#452 codify #347** (user-directed 2026-08-12): lineage-
   completeness validator (build FIRST — inventories all orphaned pairs,
   protects main at commit time), consolidation scaffolder, doctrine
