@@ -40,6 +40,21 @@ class TestBrokenFixtures(unittest.TestCase):
                 "entities": [{"id": "a", "cell": [0, 3]}, {"id": "b"}]}})
         self.assertEqual(len(errs), 2)
 
+    def test_respawning_encounter_requires_dormant_visual_state(self):
+        maps = {"m": {**GRID, "blocked": [], "entities": [
+            {"id": "missing", "kind": "encounter", "cell": [0, 0],
+             "respawns": True, "visual_states": None},
+            {"id": "covered", "kind": "encounter", "cell": [1, 0],
+             "respawns": True,
+             "visual_states": [{"when": {"dormant": True}, "hidden": True}]},
+            {"id": "one_shot", "kind": "encounter", "cell": [2, 0],
+             "respawns": False},
+        ]}}
+        errs = self._errs(data_lint.check_maps, maps)
+        self.assertEqual(len(errs), 1, errs)
+        self.assertIn("entity 'missing' respawns but has no visual_states row", errs[0])
+        self.assertIn("when.dormant", errs[0])
+
     def test_missing_grid(self):
         errs = self._errs(data_lint.check_maps, {"m": {"blocked": []}})
         self.assertIn("missing/invalid grid", errs[0])

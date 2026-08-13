@@ -248,7 +248,7 @@
  },
  "entities": [
   {
-   "_comment": "Round-trip pair with boulevard_enchanter_shop (invrisil_boulevard cell 22,1). Landing (6,7) is the open cell directly north of this door -- standable, off every prop, and the start of every walk in this map's QA legs.",
+   "_comment": "Round-trip pair with boulevard_enchanter_shop (invrisil_boulevard cell 25,1; moved from 22,1 by #444). Landing (6,7) is the open cell directly north of this door -- standable, off every prop, and the start of every walk in this map's QA legs.",
    "id": "enchanter_shop_exit",
    "kind": "door",
    "cell": [
@@ -259,7 +259,7 @@
    "sprite": "door",
    "to_map": "invrisil_boulevard",
    "to_cell": [
-    22,
+    25,
     2
    ]
   },

@@ -1485,6 +1485,12 @@
       ]
      },
      "hidden": true
+    },
+    {
+     "when": {
+      "dormant": true
+     },
+     "hidden": true
     }
    ],
    "on_victory": "won_combat"
@@ -1506,6 +1512,19 @@
    ],
    "allies": [],
    "respawns": true,
+   "visual_states": [
+    {
+     "when": {
+      "dormant": true
+     },
+     "sprite": "bench",
+     "tint": [
+      0.72,
+      0.7,
+      0.66
+     ]
+    }
+   ],
    "observe": "A chalked ring on the cobbles, two of Coyle's regulars leaning against the wall beside it, already sizing you up.",
    "on_victory": "boulevard_duels_won"
   },
@@ -1582,11 +1601,11 @@
    ]
   },
   {
-   "_comment": "#423: Hedault's shop gets a real frontage on the main square. Row 1 is blocked x0-27, so promoting this facade cell to a door costs no walkable cell (the boulevard_stationer / boulevard_to_adventurers_rest pattern). Cell (22,1) chosen from the open 19..27 band, clear of the stationer's own door at (20,1) and of COYLE AND SONS at (23,1); the approach and landing cell is (22,2), open plaza.",
+   "_comment": "#423/#444: Hedault's shop gets a real frontage on the main square. Row 1 is blocked x0-27, so promoting this facade cell to a door costs no walkable cell (the boulevard_stationer / boulevard_to_adventurers_rest pattern). Cell (25,1) leaves a full facade cell beyond COYLE AND SONS at (23,1); the approach cell (25,2) is open plaza and stays clear of the alleys door at (27,2).",
    "id": "boulevard_enchanter_shop",
    "kind": "door",
    "cell": [
-    22,
+    25,
     1
    ],
    "display_name": "An Enchanter's Frontage",

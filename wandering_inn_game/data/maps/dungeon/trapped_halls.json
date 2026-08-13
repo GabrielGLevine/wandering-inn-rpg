@@ -710,6 +710,14 @@
    ],
    "allies": [],
    "respawns": true,
+   "visual_states": [
+    {
+     "when": {
+      "dormant": true
+     },
+     "hidden": true
+    }
+   ],
    "encounter_when": {
     "requires": {
      "halls_cleared": 1

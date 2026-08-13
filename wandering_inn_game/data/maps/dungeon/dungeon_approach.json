@@ -317,6 +317,19 @@
    ],
    "allies": [],
    "respawns": true,
+   "visual_states": [
+    {
+     "when": {
+      "dormant": true
+     },
+     "sprite": "spider_web",
+     "tint": [
+      0.66,
+      0.66,
+      0.7
+     ]
+    }
+   ],
    "observe": "Silk threads catch the light along the gallery's south wall, thick as rope, all leading back to one dark seam in the stone.",
    "on_victory": "kingslayer_spiders_culled",
    "loot": [
