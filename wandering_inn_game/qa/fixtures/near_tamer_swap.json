@@ -1,0 +1,47 @@
+{
+ "_comment": "#458 swap-recovery fixture: near_tamer_bond's build verbatim ([Beast Tamer] 3, tended_beasts 4 = the exact L3 threshold, soothed_a_beast 1 = the gained_by bank, facing the wolf den at floodplains 11,22) PLUS [Animate Dead] as a QA-fixture affordance on hotbar slot 2 (wave_b_animate_start's precedent; its exact Necromancer L5 grant is pinned in test_progression). The affordance is load-bearing, not decoration: a TAMED bond leaves the slot only by dying or by being traded away, and every trade hands you a replacement -- so the ONLY death-free way to stand in the floodplains with an EMPTY slot is to trade the beast for an animated working and let that working expire at sleep. That is the re-arm companion_swap_recovery_loop walks.",
+ "version": 6,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   10,
+   22
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "beast_tamer": 3
+  },
+  "accomplishments": {
+   "soothed_a_beast": 1,
+   "tended_beasts": 4,
+   "met_relc": 1,
+   "won_combat": 1
+  },
+  "player_skills": [
+   "animate_dead"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": [
+   "lesser_bond",
+   "animate_dead"
+  ]
+ }
+}

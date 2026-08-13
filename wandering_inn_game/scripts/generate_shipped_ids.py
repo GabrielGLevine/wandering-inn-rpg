@@ -104,11 +104,12 @@ STRUCTURAL_LITERALS = [
     "dungeon_attuned", "catalyst_attunement_sleeps", "resonance_grown",
     "tended_beasts", "finale_played",
     "tactic_used",
-    # v017-L5 (GH#332): banked by wi_game._clear_companion, and only on a
-    # TAMED downed-clear. Own row under this lane's anchor rather than
-    # appended to the line above, so a sibling lane adding its own
-    # code-banked counter appends a row instead of colliding on a shared
-    # line. Same shape in tests/test_shipped_ids.gd.
+    # v017-L5 (GH#332, #458): banked by wi_game._clear_companion on a TAMED
+    # clear that is a real loss -- "downed" or "released" (a swap: the
+    # source prop is consumed at bond time). Own row under this lane's
+    # anchor rather than appended to the line above, so a sibling lane
+    # adding its own code-banked counter appends a row instead of colliding
+    # on a shared line. Same shape in tests/test_shipped_ids.gd.
     "companion_lost",
 ]
 FROZEN_RETIRED_ACCOMPLISHMENTS = ["heard_thicket_keeps"]

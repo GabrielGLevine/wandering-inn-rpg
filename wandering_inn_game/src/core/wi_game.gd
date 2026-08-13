@@ -996,16 +996,22 @@ func _clear_companion(reason: String) -> void:
 	var was_tamed := companion_source == "tamed"
 	companion = ""
 	companion_source = ""
-	# GH#332: only a TAMED death banks. "released" (a swap) and "sleep" (an
-	# animated follower expiring) are choices with the bond still available.
+	# GH#332 + #458: a TAMED bond banks when it leaves the slot for good --
+	# "downed" (it died) or "released" (a swap traded it away). #458: the
+	# swap arm is NOT "the bond still available", which is what this comment
+	# used to claim; `_animate_field` consumed the source prop
+	# (`remove_entity`) at bond time, so without a bank the spring-litter
+	# dens never re-supply and one swap exhausts that beast forever. "sleep"
+	# stays out: an animated working expiring is its design, not a loss.
 	# The `was_tamed` half matters as much as the reason: an ANIMATED summon
-	# going down mid-fight is a spent working, not a lost bond -- the three
-	# bone piles it came from are not what the spring-litter dens re-supply,
-	# so banking on it would burn ladder rungs a necromancer without
-	# [Lesser Bond] can never take. Read BEFORE the clear; companion_source
-	# is wiped two lines up. STRUCTURAL LITERAL -- mirrored by hand in
-	# tests/test_shipped_ids.gd and scripts/generate_shipped_ids.py.
-	if reason == "downed" and was_tamed:
+	# going down mid-fight -- or released to bond something else -- is a
+	# spent working, not a lost bond; the bone piles it came from are not
+	# what the dens re-supply, so banking on it would burn ladder rungs a
+	# necromancer without [Lesser Bond] can never take. Read BEFORE the
+	# clear; companion_source is wiped two lines up. STRUCTURAL LITERAL --
+	# mirrored by hand in tests/test_shipped_ids.gd and
+	# scripts/generate_shipped_ids.py.
+	if (reason == "downed" or reason == "released") and was_tamed:
 		record_accomplishment("companion_lost")
 	_emit(WIEvents.COMPANION_CHANGED, {"id": old_id, "active": false, "reason": reason})
 

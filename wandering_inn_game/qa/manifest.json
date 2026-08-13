@@ -5811,6 +5811,33 @@
    }
   },
   {
+   "script": "companion_swap_recovery_loop",
+   "seed": 7,
+   "fixture": "near_tamer_swap",
+   "note": "#458: a swap-released tamed bond banks companion_lost, so the spring-litter den re-supplies -- bond wolf -> swap to razorbeak -> trade for a working -> sleep -> re-bond the wolf",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs",
+     "ruin_surface"
+    ],
+    "fixtures": [
+     "near_tamer_swap"
+    ],
+    "skills": [
+     "animate_dead"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "gh330_deer_arc_loop",
    "seed": 7,
    "fixture": "gh330_deer_arc_start",
