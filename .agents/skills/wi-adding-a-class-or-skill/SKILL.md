@@ -64,6 +64,45 @@ Merged level = `max(ceil(2*(L_a+L_b)/3), max(L_a,L_b))`, **integer** math
 only. Sleep DEFERS the offer before evolutions; decline is re-offered every
 qualifying sleep.
 
+## LINEAGE COMPLETENESS (#347 doctrine, #452 machinery)
+Every consolidation-eligible held-pair resolves to a **unique authored target
+class**, evolved lines included — user ruling 2026-08-12: [Spearmaster] does
+NOT lineage-carry into [Spellsword], it merges into its own [Spellspear].
+- `parent_lines` are read EXPANDED along each line's evolution closure, so
+  adding one `evolution.targets` entry silently mints new reachable pairs.
+  `data_lint.py::check_lineage_completeness` enumerates line_a × line_b and
+  reds unless each pair reaches a target whose `inherits` is exactly that
+  pair, or carries an `{"_exempt": [a,b], "rationale": "…"}` row. Exemption
+  buys a SKIP and nothing else; a stale one (target has since landed) also
+  reds.
+- **ORDER IS LOAD-BEARING.** `check_consolidation` returns the FIRST matching
+  row and the broad rows still list the evolved ids, so a new narrow rule must
+  sit ABOVE the one it carves out of — and that must be PINNED in
+  `test_progression.gd` (both directions), never just commented.
+- The spine roster derives from `consolidations[]`
+  (`sim_spine_viability.gd::_derived_spines`), so a new rule needs its
+  `SPINE_WEAPONS` loadout in the same commit or the suite asserts out.
+- **Scaffold it, don't retype it:** `python3
+  scripts/scaffold_consolidation.py --parents a,b --target <id> --out
+  scaffold/` emits every artifact below as a proposal (it never writes into
+  `data/`), plus an instantiated registration-matrix checklist.
+
+## BASELINE → FLAVORED TWIN (the #449 derivation)
+The pair's **baseline** is the class it falls through to today (the first
+`consolidations[]` row whose expanded lines reach it). The baseline is the
+MECHANICAL ANCHOR: the twin re-flavors and nothing else, so both lineages cost
+the same and the band anchor reads the same on either spine.
+
+| Part | Rule |
+|---|---|
+| floor | DERIVE via `_consolidation_merged_level` over the row's own gate (cheapest legal pair); never hardcode |
+| `stat_growth`, `requires`/`requires_any` curve, table max | baseline's VERBATIM |
+| `inherits` | the two held parents |
+| twin `ap_cost`/`mp_cost`/`effect`/`cooldown_rounds` | baseline grant's VERBATIM — a "small" tuning difference is a balance change in flavor's clothes |
+| twin `weapon` | MIRRORED, never minted: present on the baseline → re-gate to the new lineage's weapon; absent → stays absent (else `weapon_gated_kit` strips the class's marquee grant) |
+| `id`/`display_name`/`description`/`icon` art | FLAVOR — canon off the wiki, and a NEW glyph shape (tint is not disambiguation) |
+| fixture | cheapest legal pair held; counters derived from every held class's `gained_by` + `requires` along `inherits`; **version ≥ 5** (`WISave._migrated`'s v4 arm overwrites `equipped`/`inventory`); `rng_state` from `tests/_derive_rng_state.gd`; the chosen weapon needs an in-world provenance counter |
+
 ## SPARSE LEVEL TABLES for evolution-only classes (GH#54 convention)
 A class reached ONLY via Replacement (`evolution.targets`) or
 consolidation (`consolidations[].target`) never counts up from 1 —
