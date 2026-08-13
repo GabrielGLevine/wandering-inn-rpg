@@ -11,9 +11,9 @@
 		},
 		"alone_confirm": {
 			"speaker": "Relc",
-			"text": "Alone? Ha! You're either very brave or very— actually, no. Just the one thing. I'll hang back at the mouth, then, and let the professional wait by the door for once. Shout if you find teeth. Shout early.",
+			"text": "Alone? Ha! You're either very brave or very— actually, no. Just the one thing. Fine. I'll cork the mouth so nothing gets in behind you, and that's every scrap of help you get. What's already in there stays in there with you, and it's bigger than both of us. People walk back out of that. Not many. Shout if you find teeth. Shout early.",
 			"options": [
-				{ "text": "[I'm sure. Wait here.]", "effects": [ { "accomplishment": "went_alone" }, { "start_combat": "awakened_boss" } ], "end": true },
+				{ "text": "[I'm sure. Hold the door. The rest is mine.]", "effects": [ { "accomplishment": "went_alone" }, { "start_combat": "awakened_boss" } ], "end": true },
 				{ "text": "[On second thought, with me.]", "goto": "join" }
 			]
 		}

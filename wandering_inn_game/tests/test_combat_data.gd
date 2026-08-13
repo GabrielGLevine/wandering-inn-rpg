@@ -124,6 +124,16 @@ func _init() -> void:
 				assert(combatant_ids.has(String(enemy_id)), "encounter %s references unknown enemy %s" % [eid, enemy_id])
 			for ally_id: Variant in entity["allies"]:
 				assert(combatant_ids.has(String(ally_id)), "encounter %s references unknown ally %s" % [eid, ally_id])
+			# GH#448 the veto branch's own roster. Cross-referenced like `enemies`,
+			# and REFUSED on an encounter with no `ally_requires`: `start_combat`
+			# only ever reaches for it when an ally gate went unmet, so authoring
+			# one anywhere else is a roster that can never be fielded.
+			if entity.has("solo_enemies"):
+				assert(not (entity.get("ally_requires", {}) as Dictionary).is_empty(),
+					"encounter %s authors solo_enemies but has no ally_requires, so the roster is unreachable" % eid)
+				assert(not (entity["solo_enemies"] as Array).is_empty(), "encounter %s has an empty solo_enemies" % eid)
+				for enemy_id: Variant in entity["solo_enemies"]:
+					assert(combatant_ids.has(String(enemy_id)), "encounter %s references unknown solo enemy %s" % [eid, enemy_id])
 
 	_check_boss_veto_roster(scene, skills, combatants, classes, arenas)
 
@@ -161,4 +171,21 @@ func _check_boss_veto_roster(scene: Dictionary, skills: Dictionary, combatants: 
 	assert(g_join.start_combat("awakened_boss"), "join start_combat(awakened_boss) failed")
 	var join: Dictionary = g_join.combat.snapshot()["combatants"]
 	assert(join.has("relc"), "JOIN path must field Relc as an ally, but he is absent")
+	# GH#448 THE VETO IS A DIFFERENT FIGHT. The defect this replaced was the veto
+	# fielding the JOIN pack with the ally slot empty (0.04 competent-at-band --
+	# a refusal to win the act). Assert the branch by its SHAPE rather than by a
+	# roster literal: strictly fewer enemy bodies than the join pack, so the
+	# wire cannot be quietly cut back to "the same fight minus Relc" and cannot
+	# rot the next time the join roster is retuned.
+	var solo_enemies := 0
+	for id: String in solo:
+		if String((solo[id] as Dictionary)[WIKeys.SIDE]) == "enemy":
+			solo_enemies += 1
+	var join_enemies := 0
+	for id: String in join:
+		if String((join[id] as Dictionary)[WIKeys.SIDE]) == "enemy":
+			join_enemies += 1
+	assert(solo_enemies < join_enemies,
+		"VETO path must field its OWN pack (solo_enemies), not the join roster minus Relc: %d enemy bodies vs the join's %d" % [solo_enemies, join_enemies])
+	print("PASS: veto branch fields %d enemy bodies against the join branch's %d, and neither leaks the other's ally slot" % [solo_enemies, join_enemies])
 	quit(0)

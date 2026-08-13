@@ -2301,9 +2301,11 @@ func start_combat(entity_id: String) -> bool:
 	var cfgs: Array = [_build_player_combatant(by_id["pc"])]
 	var allies: Array = (entity.get("allies", []) as Array).duplicate()
 	var ally_req: Dictionary = entity.get("ally_requires", {})
+	var ally_gate_met := true
 	for key: String in ally_req:
 		if accomplishment_count(key) < int(ally_req[key]):
 			allies = []
+			ally_gate_met = false
 			break
 	var arena_id := String(entity["arena"])
 	var repeat_arena_id := String(entity.get("repeat_arena", ""))
@@ -2356,7 +2358,20 @@ func start_combat(entity_id: String) -> bool:
 	# site (mirrored in sim_combat_batch). Story/boss fights omit `scales`, so
 	# never step (a validator forbids scales on respawns:false / quest-fed wins).
 	var scale_rank := player_rank() if bool(entity.get("scales", false)) else "bronze"
-	for enemy: Variant in entity.get("enemies", []):
+	# GH#448 THE VETO BRANCH IS ITS OWN FIGHT. An ally-gated encounter may author
+	# `solo_enemies` beside `enemies`, and it is fielded exactly when
+	# `ally_requires` went UNMET -- read off the SAME evaluation that emptied the
+	# ally list above, never off a second accomplishment, so "no ally arrived"
+	# and "the solo pack arrived" cannot drift apart the way two independent
+	# gates would. Encounters without the key are byte-identical: `roster` stays
+	# `enemies`, and an encounter with no `ally_requires` at all never takes this
+	# branch (`ally_gate_met` starts true). Refusing help therefore changes WHICH
+	# FIGHT you get, not how strong its bodies are -- every stat block stays
+	# frozen, per the composition-only doctrine.
+	var roster: Array = entity.get("enemies", []) as Array
+	if not ally_gate_met and entity.has("solo_enemies"):
+		roster = entity.get("solo_enemies", []) as Array
+	for enemy: Variant in roster:
 		cfgs.append(WIBountyScaling.scale_enemy((by_id[String(enemy)] as Dictionary).duplicate(true), scale_rank))
 	# GH#440: read the stance BEFORE breaking it. An encounter authored
 	# `sneak_ambush` converts a live sneak into the fight's opening instead of a
