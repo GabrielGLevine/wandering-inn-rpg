@@ -308,9 +308,22 @@ func _make_pc(batch: GDScript, build: Dictionary, by_id: Dictionary, classes: Di
 	return pc
 
 
+## `consolidations[]` is TWO row kinds in one array, and reading it as one kind
+## is what broke this table. Authored consolidation RULES carry `target` +
+## `parent_lines`; `_exempt` rows (`{"_exempt": [a, b], "rationale": ...}`) are
+## ANNOTATIONS, added by #454, recording a reachable held-pair that deliberately
+## has no target yet. The sanctioned reading is `data_lint.py`'s
+## `check_lineage_completeness`, which filters with
+## `[row for row in rows if "_exempt" not in row]` (data_lint.py:2048) before it
+## looks at a single parent line. This is that filter, and nothing more:
+## exemption buys a row a SKIP and buys it nothing else. Every non-exempt row is
+## still held to a target and exactly two parent lines, because a real
+## consolidation missing either is a data defect that must stop the suite.
 func _derived_spines(classes: Dictionary) -> Array:
 	var out: Array = []
 	for consolidation: Dictionary in classes.get("consolidations", []):
+		if consolidation.has("_exempt"):
+			continue
 		var target := String(consolidation.get("target", ""))
 		var parent_lines: Array = consolidation.get("parent_lines", [])
 		assert(target != "" and parent_lines.size() == 2,
@@ -320,6 +333,20 @@ func _derived_spines(classes: Dictionary) -> Array:
 			"target": target,
 			"parents": [String((parent_lines[0] as Array)[0]), String((parent_lines[1] as Array)[0])],
 		})
+	# ZERO IS NEVER A LEGAL ANSWER. classes.json always carries the authored
+	# consolidations, so an empty derivation says the READER broke, never that
+	# the spine set emptied -- and the break is silent by construction: the
+	# per-spine table just stops printing while every other gate still agrees
+	# and the suite still ends PASS. That is exactly what shipped when the
+	# `_exempt` rows arrived and tripped the entry assert above (a failed assert
+	# aborts the function, which then hands back an empty Array). A gate that
+	# cannot fail is worse than no gate, so this one fails loudly instead.
+	if out.is_empty():
+		printerr("FAIL [spine] derived 0 consolidation spines from classes.json")
+		# ORDER MATTERS: a failed `assert` aborts the enclosing function, so the
+		# exit code has to be claimed BEFORE it or `quit(1)` never runs at all.
+		quit(1)
+		assert(false, "spine derivation produced no spines; classes.json always carries authored consolidations, so the reader is broken")
 	return out
 
 
@@ -568,6 +595,17 @@ func _init() -> void:
 
 	var spines := _derived_spines(classes)
 	print("[spine] derived %d consolidation spines from classes.json" % spines.size())
+	# RETURNING is what makes the failure stick: falling through would reach the
+	# PASS print and its `quit(0)`, which overwrites the exit code and restores
+	# exactly the dishonest green this fixes. `quit(1)` is repeated here rather
+	# than left to `_derived_spines` because the two ways of arriving empty exit
+	# differently -- a tripped assert ABORTS that function before its own
+	# `quit(1)` runs, and a `--script` SceneTree with no quit requested then
+	# hangs to the watchdog instead of failing now.
+	if spines.is_empty():
+		printerr("FAIL [spine] no consolidation spines derived; the per-spine table would be silently empty")
+		quit(1)
+		return
 	for spine: Dictionary in spines:
 		for row_id: String in SPINE_CLIMAX_IDS:
 			var record := _find_record(row_id)
