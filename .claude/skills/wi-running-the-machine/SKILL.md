@@ -375,3 +375,33 @@ branch commit, not a post-merge fix.
   pool ran dry mid-wave, shifting remaining implementation to Opus
   subagents under the same brief+gate discipline lost nothing — the
   briefs, not the provider, carry the standard.
+
+
+## The controller gate workflow (wave >=434 pattern, 2026-08-13)
+Every lane close gets an adversarial gate BEFORE its PR — a Workflow
+with 1-3 agents. The template that caught 6 real defects in two days:
+- **Audit agent(s)**: refutation-framed ("try to REFUTE", never
+  "verify"), given the close's CLAIMS enumerated with file:line, the
+  known Codex/Opus failure modes, and scope boundaries. One agent per
+  major surface; a rerun agent for controller-side gate re-execution.
+- **Non-negotiables in every audit prompt**: QUOTED-ONLY-OBSERVED
+  (verdicts are command output, digests verified against artifacts),
+  cp-backup/cmp restores (NEVER git-checkout-restore a dirty file —
+  a gate once measured the wrong engine that way), mutation re-runs
+  (re-run the close's own red proofs, don't trust quotes), scope diff
+  (git diff --name-only vs the base; anything outside the brief = FAIL).
+- **Dispositions**: PASS -> push, PR (evidence-structured body), REST
+  merge on CI green via a Monitor. FAIL -> SendMessage the SAME agent
+  the punch list (context intact beats a fresh brief); re-audit only
+  the fixed surfaces. A second gaming of the same surface moves it to
+  controller-side implementation.
+- **Standing constraints**: max 2 concurrent implementation agents
+  (3 drained a session window); one writer per file incl. controller
+  probes; serialize lanes sharing classes.json/skills.json (single
+  writer) and any file an active lane owns; disclosed reds triage
+  against the CI job list AT gate time; steel_thread always
+  --seed=<manifest seed> explicitly; fresh worktrees need the import
+  pass AND may need the private-overlay rsync before windowed reads.
+- **Merges**: gh api REST (PUT pulls/<n>/merge, squash) — gh pr merge
+  hits branch-policy friction; CI watch via Monitor polling gh run
+  list (never tight loops — a hot loop once burned the GraphQL pool).

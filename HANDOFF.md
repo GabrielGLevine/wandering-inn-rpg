@@ -43,6 +43,24 @@ or superseded session blocks.
   follow-ups recorded on #449 (dilution-stated bands; 4g finale economy).
   #451 parked by user (Counter Strike power level, ablation data attached). Pre-existing red still open: d3_inventory_shot (inventory pin drift,
   predates the program). Windowed observation run launched for the user.
+- ORCHESTRATOR HANDOVER (Fable 89% weekly, 2026-08-13): if Fable
+  exhausts, OPUS RUNS THE WAVE — nothing here needs Fable-level
+  adjudication anymore. The gate discipline is canonical in
+  wi-running-the-machine ("controller gate workflow" section, new);
+  design docs are all written: equipment sketch
+  (docs/superpowers/specs/2026-08-13-equipment-gaps-design.md, awaits
+  user taste-pass), M3.6 + auto-consolidation + summoner specs on
+  main, #485 name proposal posted (user approves per line). REMAINING
+  QUEUE (all mechanical under the gate template): merge #488 (done if
+  this line survives), Lich audit disposition (PASS->ship /
+  FAIL->punch-list to the same agent), skirmisher kit-gap lane,
+  #432 meal-cap lane, M3.6 dispatch (spec is the brief), [Blademaster]
+  rename lane, coverage lanes per #485 approvals, equipment lane per
+  sketch approval, M4 (after M3.6 golden passes). ESCALATION RULE for
+  Opus: anything smelling like a NEW design ruling (spec contradiction,
+  window unreachable inside sanctioned levers, canon question) goes to
+  the USER directly — do not improvise doctrine; wave autonomy covers
+  execution calls only, logged to CHOICE-LOG.
 - POST-WAVE FOLLOW-THROUGH (2026-08-13 session 2; resume here): 24
   MERGED total (wave 16 + #476 M2, #478 producers [Druid consolidation
   0/40->40/40], #479 Rank labels, #481 defects #474/#475, #482
