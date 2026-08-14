@@ -411,13 +411,31 @@ with 1-3 agents. The template that caught 6 real defects in two days:
   the punch list (context intact beats a fresh brief); re-audit only
   the fixed surfaces. A second gaming of the same surface moves it to
   controller-side implementation.
+- **PARALLEL AUDITORS MUST NOT MUTATION-TEST THE SAME WORKTREE**
+  (2026-08-14). Two auditors fanned out over one lane worktree both
+  ran cp-backup mutations; one caught the other's canary
+  (`"display_name": "Zzcanary"` live in classes.json) and correctly
+  reported the tree as untrustworthy mid-run. Restores were clean and
+  both verdicts survived, but any gate run straddling that window
+  proves nothing. Fix: give mutation-running auditors DISJOINT file
+  surfaces in their prompts, or serialize them, or hand each its own
+  worktree/copy. The one-writer-per-file rule covers auditors too —
+  they are writers while a mutation is live.
 - **Standing constraints**: max 2 concurrent implementation agents
   (3 drained a session window); one writer per file incl. controller
-  probes; serialize lanes sharing classes.json/skills.json (single
-  writer) and any file an active lane owns; disclosed reds triage
-  against the CI job list AT gate time; steel_thread always
-  --seed=<manifest seed> explicitly; fresh worktrees need the import
-  pass AND may need the private-overlay rsync before windowed reads.
+  probes AND auditors mid-mutation; serialize lanes sharing
+  classes.json/skills.json (single writer) and any file an active lane
+  owns; disclosed reds triage against the CI job list AT gate time;
+  steel_thread always --seed=<manifest seed> explicitly; fresh
+  worktrees need the import pass AND may need the private-overlay
+  rsync before windowed reads.
+- **Known environmental flake** (2026-08-14, seen by two independent
+  lanes): `scripts/tests/test_usage_hook.py::TestHook::test_fail_soft_corrupt_cache`
+  intermittently reds inside preflight's output-capturing subshell with
+  `OSError: [Errno 66] Directory not empty: 'python3.9'` (a tmpdir
+  cleanup race), while passing 4/4 run directly. Triage it as
+  environmental ONLY after confirming the diff touches nothing under
+  scripts/; otherwise treat as real.
 - **Merges**: gh api REST (PUT pulls/<n>/merge, squash) — gh pr merge
   hits branch-policy friction; CI watch via Monitor polling gh run
   list (never tight loops — a hot loop once burned the GraphQL pool).
