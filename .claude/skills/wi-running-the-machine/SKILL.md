@@ -222,6 +222,22 @@ the wiring files BEFORE debugging the engine.
   against current main (some pieces land, some are superseded — a7c6a7d
   split 2/5 ported, 3/5 superseded).
 
+## Piping a gate through `tail`/`head` DESTROYS its exit code (2026-08-14, pushed main red twice in one session)
+`python3 -m pytest ... | tail -2 && git commit ... && git push` **always
+pushes**: the pipeline's status is `tail`'s, which is 0 no matter what
+pytest did. Both reds were controller-side doc edits, caught only on a
+later re-run. Discipline: never chain a commit/push off a piped gate.
+Run the gate on its own line and print the real code
+(`cmd > /dev/null 2>&1; echo "RC=$?"`), or use `set -o pipefail`. Read
+the RC, THEN commit.
+
+Companion lesson, same session: **HANDOFF.md and CHOICE-LOG.md are
+size-gated** (12,000 and 30,000 bytes) and both sit near their caps, so
+any substantive controller append reds `test_agent_guidance.py`. Check
+the size in the same breath as the edit. When over, trim what those
+files' own headers say does not belong — merged-PR chronology,
+measurements, archaeology — never the live escalations.
+
 ## Selective re-gates (issue #101, 2026-07-12)
 `qa/ci_sweep.sh --tier smoke` (13 scripts, ~25s) on every push via CI;
 `--touching <path>[,<path>]` maps changed data/qa files to the crossing
