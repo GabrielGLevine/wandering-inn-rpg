@@ -480,7 +480,7 @@ func _init() -> void:
 	assert(WIProgression.granted_skills({"spellspear": 16}, catalog).has("spellbound_thrust"), "L16 grant lands at 16")
 
 	# #472 audit FAIL 1: this pin used to assert that holding a sub-threshold
-	# [Warrior] 3 alongside [Swordsman] 11 merged the SWORDSMAN. It cannot any
+	# [Warrior] 3 alongside [Blademaster] 11 merged the BLADEMASTER. It cannot any
 	# more -- swordsman is off the live line precisely because [Spellsword]
 	# would drop its kit -- and a sub-threshold warrior is no merge either.
 	assert(WIProgression.check_consolidation({"warrior": 3, "swordsman": 11, "mage": 12}, catalog).is_empty(), "a sub-threshold base parent plus an evolved sibling merges NOTHING: warrior 3 is below min_parent_level and swordsman is not a proven pair for [Spellsword]")

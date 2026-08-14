@@ -1,5 +1,5 @@
 {
- "_comment": "#398-P3 fixture-first Warrior route. Pure Swordsman 14 with the exact swordsman14 harness weapon; the inherited Warrior kit supplies [Greater Strength]. Seed 9 state is derived, not copied from another fixture.",
+ "_comment": "#398-P3 fixture-first Warrior route. Pure Blademaster 14 with the exact swordsman14 harness weapon; the inherited Warrior kit supplies [Greater Strength]. Seed 9 state is derived, not copied from another fixture.",
  "version": 5,
  "state": {
   "current_map": "trapped_halls",

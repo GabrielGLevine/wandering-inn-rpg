@@ -190,7 +190,7 @@
 		{
 			"_comment": "Floor = warrior's own evolution.at_level (10) -- the walk can never arrive below it (check_evolutions skips any held < at_level).",
 			"id": "swordsman",
-			"display_name": "Swordsman",
+			"display_name": "Blademaster",
 			"stat_growth": { "str": 1, "dex": 1 },
 			"inherits": "warrior",
 			"aspiration": { "display_name": "Swordmaster", "text": "Far down this road waits the title of [Swordmaster], earned by certification, or by defeating one." },
@@ -205,7 +205,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Spearmaster] is Replacement-only (never gained_by), the spear-dominant twin of [Swordsman] above -- same floor derivation (warrior's evolution.at_level == 10) and same reasoning applies verbatim.",
+			"_comment": "SPARSE TABLE (GH#54): [Spearmaster] is Replacement-only (never gained_by), the spear-dominant twin of [Blademaster] above -- same floor derivation (warrior's evolution.at_level == 10) and same reasoning applies verbatim.",
 			"id": "spearmaster",
 			"display_name": "Spearmaster",
 			"stat_growth": { "str": 1, "dex": 1 },

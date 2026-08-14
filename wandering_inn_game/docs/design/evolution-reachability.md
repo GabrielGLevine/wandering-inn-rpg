@@ -70,7 +70,7 @@ waking number by the same multiple without changing which finding is true.
 | `mage_mono_ice` (deliberate frost_bolt) | mage | REPLACEMENT → [Ice Mage] | 11 (L10) | — | spell_cast 46, ice_cast 46, melee_hit 4 |
 | `mage_mono_fire` (deliberate flame_jet) | mage | **NEVER** (150 wakings) — **since CLOSED by R2's flame_dart, re-measured REPLACEMENT at waking 31; see "Content gap CLOSED" below** | stuck at L6 | — | won_combat 115, melee_hit 293, spell_cast 22, fire_cast 22 |
 | `mage_deliberate_balanced` (frost/flame alternating **intent**, 50/50) | mage | REPLACEMENT → [Ice Mage] | 26 (L10) | — | spell_cast 45, ice_cast 42, fire_cast 3 (93% ice despite 50/50 intent) |
-| `warrior_sword` (shipped "melee" AI) | warrior | REPLACEMENT → [Swordsman] | 23 (L10) | — | sword_skill_used 44, melee_hit 57 |
+| `warrior_sword` (shipped "melee" AI) | warrior | REPLACEMENT → [Blademaster] | 23 (L10) | — | sword_skill_used 44, melee_hit 57 |
 | `warrior_spear` (deliberate piercing_strikes) | warrior | REPLACEMENT → [Spearmaster] | 24 (L10) | — | spear_skill_used 61, melee_hit 58 |
 | `warrior_hypothetical_mixed` (sword/spear alt. — **not reachable in real play**, see below) | warrior | REPLACEMENT → [Spearmaster] | 20 (L10) | — | spear_skill_used 28, sword_skill_used 17 |
 | `archer_bow` (deliberate power_shot at range) | archer | REPLACEMENT → [Sharpshooter] | 80 (L10) | — | bow_skill_used 64, ranged_hit 58 |
@@ -79,7 +79,7 @@ waking number by the same multiple without changing which finding is true.
 | `helper_deliberate_balanced` (serve/deliver alt., 50/50) | helper | **GENERALIST** (after the fix; was NEVER) | 109 (L10) | — | served_customer 54, delivered_item 55 |
 | `helper_cleaner_only` (levels via cleaned_the_inn alone) | helper | **NEVER** (150 wakings) | L10 reached, 0 dominance-axis uses | — | cleaned_the_inn 150, served_customer 0, delivered_item 0 |
 | `mixed_mage_warrior` (THE user's profile: 50% warrior-sword, 25% ice, 25% fire, decline every offer) → **mage** | mage | REPLACEMENT → [Ice Mage] | **39** (L10) | offered at waking **21** (→ [Spellsword] L12) | spell_cast 46, ice_cast 42, fire_cast 4 |
-| `mixed_mage_warrior` → **warrior** | warrior | REPLACEMENT → [Swordsman] | 20 (L10) | (same offer as above) | melee_hit 58, sword_skill_used 19 |
+| `mixed_mage_warrior` → **warrior** | warrior | REPLACEMENT → [Blademaster] | 20 (L10) | (same offer as above) | melee_hit 58, sword_skill_used 19 |
 
 Raw run: `tools/evolution_reachability.gd`'s own stdout (deterministic,
 verified twice-identical, zero SCRIPT ERROR/WARNING).
@@ -168,7 +168,7 @@ Consolidation's gate (`min_parent_level: 6`, `min_combined_level: 13`,
 the offer **erases both parents** (`accept_consolidation`), and
 [Spellsword] has no `evolution` block of its own (a `SPARSE TABLE`,
 levels 9-16 only) — so accepting the first offer **permanently forecloses**
-ever reaching [Ice Mage], [Fire Mage], [Swordsman], or [Spearmaster] for
+ever reaching [Ice Mage], [Fire Mage], [Blademaster], or [Spearmaster] for
 that character. A player who takes the first appealing named-hybrid offer
 (as most players would, with no signal that it's foreclosing anything —
 opaque-until-sleep by design) never sees a single-line evolution again.
@@ -291,9 +291,9 @@ deterministic, zero SCRIPT ERROR/WARNING):**
 
 | profile | target | outcome | waking (level) | consolidation cross-check |
 |---|---|---|---|---|
-| `warrior_sword` | warrior | REPLACEMENT → [Swordsman] | 23 (L10) | — |
+| `warrior_sword` | warrior | REPLACEMENT → [Blademaster] | 23 (L10) | — |
 | `mage_mono_ice` | mage | REPLACEMENT → [Ice Mage] | 11 (L10) | — |
-| `mixed_mage_warrior` (decline every offer) → **warrior** | warrior | REPLACEMENT → [Swordsman] | **20** (L10) | (same offer as below) |
+| `mixed_mage_warrior` (decline every offer) → **warrior** | warrior | REPLACEMENT → [Blademaster] | **20** (L10) | (same offer as below) |
 | `mixed_mage_warrior` (decline every offer) → **mage** | mage | REPLACEMENT → [Ice Mage] | **39** (L10) | offered at waking **39** (→ [Spellsword] L15) |
 
 **The inversion, read directly off this table:** under MONO play, both
@@ -301,7 +301,7 @@ axes still resolve early and cleanly (warrior 11-24 wakings, mage 11-26
 — unchanged from the original table, since neither single-class profile
 ever qualifies for a consolidation offer at all). Under MIXED play (THE
 user's exact original scenario — 50% warrior-sword, 25% ice, 25% fire),
-the warrior HALF now evolves into [Swordsman] on its own at waking 20 —
+the warrior HALF now evolves into [Blademaster] on its own at waking 20 —
 **before the consolidation offer ever appears**, the opposite of the old
 table's "offered at waking 21, mage's own Replacement not until waking
 39" race. The offer itself now surfaces only at waking 39, against an
@@ -309,7 +309,7 @@ ALREADY-EVOLVED swordsman (continued mono investment pushed it to level
 12 by then: `merged = max(ceil(2*22/3), max(12,10)) = 15`, matching the
 logged L15 offer) and a mage just reaching its own L10 threshold — co-
 arriving with mage's OWN Replacement, not preempting it by 18 wakings.
-A mixed player now sees BOTH single-line payoffs (Swordsman genuinely
+A mixed player now sees BOTH single-line payoffs (Blademaster genuinely
 held, Ice Mage's own evolution resolving the same beat) before ever
 facing the consolidation choice, exactly the exit criterion this pass
 set: "evolution-first under mono play; consolidation at 14+ for mixed."

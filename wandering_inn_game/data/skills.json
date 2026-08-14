@@ -1683,7 +1683,7 @@
    "description": "A briar uncoils out of your fist and takes hold, and every barb on it is turned the wrong way for leaving."
   },
   {
-   "_comment": "CANON-VERDICT: ATTESTED (6.56, Yvlon). Swordsman L14, line's first non-mult active -- line_damage (piercing_shot resolver), sword-gated.",
+   "_comment": "CANON-VERDICT: ATTESTED (6.56, Yvlon). Blademaster L14, line's first non-mult active -- line_damage (piercing_shot resolver), sword-gated.",
    "id": "crescent_cut",
    "display_name": "[Crescent Cut]",
    "icon": "icon_crescent_cut",
