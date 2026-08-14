@@ -6693,5 +6693,49 @@
     "fps": 1
    }
   }
+ },
+ "crypt_lich": {
+  "_comment": "#460 OWNED PixelLab v3 art (8-dir create + breathing-idle template on south/east/north; west mirrors side, diagonals parked). IDLE ONLY: this rig is combat-plus-encounter-marker and combat never plays `walk`. SILHOUETTE CONTRACT (tint is not disambiguation): robed casters already ship (ceria, pisces), so this one separates by SHAPE -- bare skull, a hem that hides the feet, and the only green spell-light on the board. render_scale 0.64: idle_side alpha bbox is 59 of 64 rows, so 37.8px = 2.36 cells, taller than every body it fields and under the ruin_warden rig's 3.51. anchor.y 0.96 = feet plane 62/64, measured off the alpha channel and not the frame bottom (THE ANCHOR RULE).",
+  "directional": true,
+  "render_scale": 0.64,
+  "anchor": [
+   0.5,
+   0.96
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/crypt_lich/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/crypt_lich/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/crypt_lich/Idle_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 4
+   }
+  }
+ },
+ "bone_thrall": {
+  "_comment": "#460 OWNED PixelLab v3 art, same pipeline as `crypt_lich`. THIS RIG EXISTS TO BE TOLD APART FROM `skeleton_ally`, which the player can raise from `bone_pile_ruin` on the SAME map -- so the two share boards and a tint would not have carried it. The separation is silhouette: upright clean pale bone against a hunched linen-bound corpse in rot-dark greys, 44 figure rows * 0.60 = 1.65 cells against the ally's 1.94, so the enemy is the SHORTER, heavier shape. anchor.y 0.97 = feet plane 47/48 off the alpha bbox.",
+  "directional": true,
+  "render_scale": 0.6,
+  "anchor": [
+   0.5,
+   0.97
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/bone_thrall/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/bone_thrall/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/bone_thrall/Idle_Up-Sheet.png",
+    "frame_size": [
+     48,
+     48
+    ],
+    "fps": 5
+   }
+  }
  }
 }

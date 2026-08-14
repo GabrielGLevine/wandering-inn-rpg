@@ -770,7 +770,13 @@ class TestContentReachability(unittest.TestCase):
         # the enemy-kit category -- reachable, but no longer learnable.
         self.assertIn("[enemy-kit only] skills.json 'frost_bolt'",
             "\n".join(advisories))
-        self.assertEqual(counts["enemy-kit only"], 4)
+        # DERIVED, not a literal: the shipped enemy-kit set grows every time an
+        # archetype lands (#460 added three Lich verbs and turned 4 into 7), and
+        # a hand-typed total makes an unrelated content wave look like a lint
+        # regression. What this test is actually about is the DELTA -- ungranting
+        # frost_bolt must move exactly one skill into the category.
+        base, _ = self._run(lambda parsed, maps: None)
+        self.assertEqual(counts["enemy-kit only"], base["enemy-kit only"] + 1)
 
     def test_orphaning_a_class_only_skill_reports_as_orphan(self):
         def mutate(parsed, _maps):

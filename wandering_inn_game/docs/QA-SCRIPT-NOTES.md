@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for all 250 canonical QA scripts. The manifest is the
+This is the human index for all 251 canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -72,6 +72,7 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `climax_chain` | 9 | full | `climax_surface_start` | the tremor beat + Zevara summons + Olesm briefing |
 | `climax_seal` | 9 | full | `climax_sealed_start` | the seal beat + journal Act III advance |
 | `arc_flow` | 9 | full | `near_act3` | THE WHOLE ACT III ARC PROOF, tremor through the seal and the sleep that banks post_game (Phase 8: the seal rolls no closing sequence -- that moved to Act V's seal_resolved); v0.15 A2 seam 1: TWO journal opens across the post_game sleep -- at the seal, act_beat_lines (Act IV, 7 pending openings) + lead_lines EMPTY (Olesm's survey option is still hidden, the refusal window); after the sleep, the survey lead and counted_among's flip on the same page |
+| `crypt_lich_fight` | 1 | full | `crypt_lich_start` | #460 crypt Lich: the summoner archetype end to end -- a body JOINS the fight mid-round (combatant_added, absent before the Lich's first turn), the fight_limit allowance is spent and capped at two arrivals, the competent policy wins, and crypt_lich_put_down banks ONCE for the victory rather than once per raised body. Also the art eye-gate: the player's skeleton_ally is raised at bone_pile_ruin first, so ally and bone_thrall share one board |
 | `status_first_encounter` | 9 | full | `near_mage_cast` | status glossary + first-encounter combat-feed surface |
 | `ice_floor_loop` | 9 | full | `near_ice_floor` | GH#21: [Ice Floor] area terrain effect -- cast/friendly-fire/standing-slow/expiry, live |
 | `gear_loop` | 9 | full | `gear_loop_start` | resonance-gear UI proof (accessory rows, capacity refusal) |

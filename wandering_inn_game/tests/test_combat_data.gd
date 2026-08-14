@@ -7,6 +7,12 @@ const KNOWN_ICONLESS_SKILLS := {
 	# skill without one, so this allowlist can only ever cover COMBAT-only
 	# skills (enemy verbs the hotbar never renders).
 	"guarding_ward": true,
+	# #460: the crypt Lich's three enemy-kit verbs. Same category as the three
+	# above -- no class grants them, so the hotbar never renders a slot for one
+	# and an icon would be art nothing can look at.
+	"lich_bone_splinter": true,
+	"lich_grave_lance": true,
+	"raise_bones": true,
 	"raskghar_maul": true,
 	"slam": true,
 }

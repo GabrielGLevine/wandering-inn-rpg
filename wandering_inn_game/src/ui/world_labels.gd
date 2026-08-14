@@ -58,6 +58,28 @@ func rebuild_context(context: String, entries: Array) -> void:
 	_update_labels()
 
 
+## #460: ONE entry, appended to a context that is already live. `rebuild_context`
+## clears first, so using it for a mid-fight arrival would blank every existing
+## readout until the next `apply_stats` pass -- visible as a flicker across the
+## whole board at the moment a summon lands.
+func add_to_context(context: String, entry: Dictionary) -> void:
+	var id := String(entry.get("id", ""))
+	var anchor := entry.get("anchor", null) as Node2D
+	if id == "" or anchor == null or _entries.has(id):
+		return
+	var panel := _make_panel(String(entry.get("stats", "")))
+	panel.visible = bool(_context_visible.get(context, true))
+	_root.add_child(panel)
+	_entries[id] = {
+		"context": context,
+		"anchor": anchor,
+		"offset": entry.get("offset", Vector2.ZERO),
+		"panel": panel,
+		"stats": panel.get_node("Stats"),
+	}
+	_update_labels()
+
+
 func clear_context(context: String) -> void:
 	var ids: Array = []
 	for id: String in _entries:

@@ -795,6 +795,10 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 				return ""
 			var windup_caster := _display_name(combat, view, String(payload["id"]))
 			line = "%s gathers itself for %s..." % [windup_caster, String(combat.skills[payload["skill"]]["display_name"])]
+		WIEvents.COMBATANT_ADDED:
+			if combat == null or not combat.combatants.has(String(payload.get("id", ""))):
+				return ""
+			line = "%s claws its way up out of the floor." % _display_name(combat, view, String(payload["id"]))
 		WIEvents.ACTION_REFUSED:
 			if combat == null or not combat.combatants.has(String(payload["actor"])):
 				return ""
@@ -803,10 +807,18 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 			# GH#337: "cooldown" would otherwise fall through the generic
 			# underscore-swap arm and read "hesitates -- cooldown." -- a data key
 			# spoken at the player. The Skill is recovering; say that.
+			# #460 `no_room`: the crowded-field tell. Same rule as `cooldown` above --
+			# the generic underscore swap would speak a data key ("hesitates -- no
+			# room.") at the player, and the interesting half is WHY the raising
+			# failed, not that a key exists. `summon_limit`/`no_template` are filtered
+			# out before they reach a feed (the AI never commits on an exhausted limit,
+			# and a missing template is a wiring defect that pushes an ERROR), so only
+			# this one needs prose.
 			var why_text := "no clear line of sight" if why == "no_los" \
 					else ("out of range" if why == "out_of_range" \
 					else ("that Skill is still recovering" if why == "cooldown" \
-					else why.replace("_", " ")))
+					else ("there is nowhere left for the dead to rise" if why == "no_room" \
+					else why.replace("_", " "))))
 			line = "%s hesitates — %s." % [refused, why_text]
 	return line
 

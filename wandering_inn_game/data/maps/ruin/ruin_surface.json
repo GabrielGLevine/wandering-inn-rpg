@@ -851,6 +851,27 @@
    ],
    "on_open_accomplishment": "claimed_briar_arch_cache",
    "open_toast": "The coffer opens under the roots. A ward-token rests inside."
+  },
+  {
+   "_comment": "#460 ONE new OPTIONAL encounter (spec sec.2). CELL, chosen on density: `ruin` is the sparsest region on the board (2 encounters, one map) against `dungeon`'s 6 across three, and inside the map this is the one quadrant holding neither the dig camp, the court's guardian (17,8) nor the briar arch -- two cells off `bone_pile_ruin`, where the fiction already pointed. INTERACT-ONLY (no trigger_radius): no route crosses it and no existing pin moves. NOT `respawns`: a re-fightable summoner is a farm, and the challenge weight rises with every body it raises. No `encounter_when` -- this map is reachable only through floodplains' `horns_dig_started` door, and `ruin_guardian` beside it carries none for the same reason. ARENA `ruin_court`: its four `enemy_spawns` are the capacity a summon places into, so the Lich takes one and the measured fight_limit of 2 fills two more, leaving one spare.",
+   "id": "crypt_lich_mouth",
+   "kind": "encounter",
+   "cell": [
+    17,
+    11
+   ],
+   "display_name": "The Lich",
+   "sprite": "crypt_lich",
+   "observe": "A stair goes down under the fallen slabs, and something is standing at the top of it. It does not turn its head when you come closer. The dig's spoil heaps have been running short of bones for days, and this is where they went.",
+   "arena": "ruin_court",
+   "enemies": [
+    "crypt_lich"
+   ],
+   "allies": [],
+   "on_victory": [
+    "crypt_lich_put_down",
+    "won_combat"
+   ]
   }
  ]
 }

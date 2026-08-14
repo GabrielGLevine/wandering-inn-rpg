@@ -17,6 +17,10 @@ const LINE_DIR_VECTORS := {
 const FROST_FLASH := Color(0.5, 0.8, 1.0)
 const FLAME_FLASH := Color(1.0, 0.45, 0.15)
 const SHIELD_FLASH := Color(0.4, 0.6, 1.0)
+## #460: the grave-light a raising throws on its own cell. Sits with the other
+## flash colors rather than in a skill table because it keys on the EVENT
+## (a body arrived), not on which Skill produced it.
+const GRAVE_FLASH := Color(0.45, 0.95, 0.55)
 const AI_BEAT_SECONDS := 0.5
 const HEAVY_HIT_DAMAGE := 14
 ## TRAP: an event that fires during an AI turn but is
@@ -38,6 +42,10 @@ const AI_PLAYBACK_TYPES := [
 	# this entry is load-bearing, not symmetry.
 	WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED,
 	WIEvents.WINDUP_DECLARED,
+	# #460 COMBATANT_ADDED fires from inside an AI turn ALWAYS (the summon Skill
+	# is enemy-kit-only), so this entry is load-bearing rather than symmetry --
+	# the exact `TERRAIN_ADDED` case this const's TRAP comment names.
+	WIEvents.COMBATANT_ADDED,
 	# GH#90 [burning]: STATUS_TICKED fires at round rollover, inside
 	# `_advance_turn` -- MID an AI turn whenever an AI combatant's end_turn
 	# wraps the order (the TERRAIN_EXPIRED class exactly). Also reaches the
@@ -269,7 +277,8 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		WIEvents.COMBATANT_MOVED, WIEvents.AP_CHANGED, WIEvents.COMBATANT_DOWNED, \
 		WIEvents.ATTACK_RESOLVED, WIEvents.SKILL_RESOLVED, WIEvents.REACTION_TRIGGERED, \
 		WIEvents.DASHED, WIEvents.STATUS_APPLIED, WIEvents.STATUS_EXPIRED, WIEvents.STATUS_TICKED, \
-		WIEvents.ACTION_REFUSED, WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED:
+		WIEvents.ACTION_REFUSED, WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED, \
+		WIEvents.COMBATANT_ADDED:
 			if _mode != Mode.INACTIVE:
 				var event := _capture_playback_event(type, payload)
 				_play_event_visual(type, event["payload"])
@@ -634,6 +643,27 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 			_board_renderer.add_terrain(String(payload.get("kind", "")), _ai_playback._cells_from_payload(payload.get("cells", [])))
 		WIEvents.TERRAIN_EXPIRED:
 			_board_renderer.expire_terrain(String(payload.get("kind", "")), _ai_playback._cells_from_payload(payload.get("cells", [])))
+		WIEvents.COMBATANT_ADDED:
+			# THE SUMMON MOMENT HAS TO READ. Two tells, both off the shipped
+			# vocabulary: the arrival cell flashes grave-green (the `_flash_cells`
+			# mechanism every area skill already uses) and the body appears.
+			# Live combat state is the ONLY source for the new holder's record --
+			# the payload carries id/template/cell but not the stats/sprite/scale
+			# `make_combatant_visual` needs, and unlike a stats readout there is
+			# nothing stale to leak: a combatant's sprite identity never changes.
+			var added_id := String(payload.get("id", ""))
+			var added_cell: Array = payload.get("cell", [])
+			var added_combat := _combat_or_null()
+			if added_combat != null and added_combat.combatants.has(added_id) and added_cell.size() >= 2:
+				if _view != null:
+					_view.refresh_names()
+				# The CELL comes off the payload, never off live state: the body may
+				# already have walked by the time playback replays its arrival, and the
+				# beat has to draw it where it rose.
+				_board_renderer.add_combatant_visual(added_id, added_combat.combatants[added_id],
+						Vector2i(int(added_cell[0]), int(added_cell[1])))
+			if added_cell.size() >= 2:
+				_flash_cells([Vector2i(int(added_cell[0]), int(added_cell[1]))], GRAVE_FLASH)
 
 
 func _play_combatant_anim(id: String, prefix: String, flip_h: Variant = null) -> void:
@@ -654,6 +684,12 @@ func _skill_flash_color(skill_id: String) -> Color:
 	# from `_radius_area`), so it rides the identical branch.
 	if not (effect_type in ["spell_damage", "line_damage", "icy_floor", "blast_damage"]):
 		return Color.TRANSPARENT
+	# #460: DATA, not the id prefix. `element` is already the authored truth for
+	# every elemental cast, and without this arm the shipped death spells --
+	# [Bone Dart], [Deathbolt] and the Lich's own two bolts -- all threw an ORANGE
+	# flame projectile, the exact label-vs-art mismatch VISUAL-LOG exists to catch.
+	if String(skill.get("element", "")) == "death":
+		return GRAVE_FLASH
 	if skill_id.begins_with("frost") or effect_type == "icy_floor":
 		return FROST_FLASH
 	return FLAME_FLASH

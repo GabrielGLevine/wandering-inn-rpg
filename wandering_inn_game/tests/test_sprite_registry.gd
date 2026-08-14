@@ -248,6 +248,12 @@ func _build_expected_counts() -> Dictionary:
 	## template 6-frame cycle).
 	counts["skeleton_ally/idle"] = 4
 	counts["skeleton_ally/walk"] = 6
+	## #460 the crypt-Lich archetype. IDLE ONLY on both rigs, and deliberately: they
+	## are combat-plus-encounter-marker sprites, and combat never plays `walk` (only
+	## world.gd does, for the PC and the companion). 4 = the PixelLab
+	## `breathing-idle` template's own frame count, the skeleton_ally number.
+	counts["crypt_lich/idle"] = 4
+	counts["bone_thrall/idle"] = 4
 	## Second Wind wave (#165) L14 grant kit -- placeholder 16x16 icons (PixelLab drain).
 	for icon_id: String in ["icon_crescent_cut", "icon_pierce_thrust", "icon_ice_wall", "icon_flashfire_spellcraft", "icon_blinding_arrow", "icon_shadowstep", "icon_phantom_barrage", "icon_trusted_voice", "icon_barmaids_prescience", "icon_swift_service", "icon_evaluation_of_wealth", "icon_couriers_double_step", "icon_tea_omens", "icon_flarepepper_supplies", "icon_perfect_reduction", "icon_sworn_fang_ride_together"]:
 		counts[icon_id + "/idle"] = 1

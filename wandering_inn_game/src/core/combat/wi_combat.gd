@@ -29,6 +29,22 @@ const ONCE_PER_ROUND := "once_per_round"
 ## carries N>2.
 const COOLDOWN_ROUNDS := "cooldown_rounds"
 
+## #460 summon effect. Same reasoning as COOLDOWN_ROUNDS above: combat-only
+## knobs with a handful of readers live beside the code that reads them, not in
+## `WIKeys`. `effect.type == "summon"` is the dispatch token -- the design
+## sketch in the spec wrote the block as `"effect": {"summon": {...}}`, but
+## EVERY effect in this engine dispatches on `effect.type` (`_apply_passives`,
+## `WISkillEffects.resolve_active`, `_absorber_skill_id`, the AI's own kit
+## scan), so a second shape would have been a private dialect one arm wide.
+const SUMMON := "summon"
+const SUMMON_COMBATANT := "combatant"
+const SUMMON_COUNT := "count"
+const SUMMON_FIGHT_LIMIT := "fight_limit"
+## Round on which a mid-fight arrival becomes eligible to act. Written by
+## `add_combatant`, read ONLY by `_advance_turn`; absent on every opening-roster
+## body, which is what makes an ordinary fight byte-identical.
+const JOINS_ROUND := "joins_round"
+
 var grid_size: Vector2i
 var blocked: Dictionary = {}
 var combatants: Dictionary = {}
@@ -73,7 +89,34 @@ var difficulty_damage_taken_mult := 1.0
 
 var windups: Dictionary = {}
 
+## #460 THE SUMMON ROSTER, INJECTED -- the `difficulty_damage_taken_mult`
+## precedent, and for the same reason. The PURITY RULE forbids this class from
+## reaching for an autoload or a data catalog, and `combatant_cfgs` only ever
+## carries the OPENING roster, so a body that arrives mid-fight has nowhere to
+## read its stats/kit/ai from. The composition root (`wi_game.start_combat`) and
+## every harness that fields a summoner set this once, right where the
+## difficulty multiplier is set. Keys are combatants.json ids.
+##
+## AN UNWIRED SITE REFUSES LOUDLY, it does not no-op: `summon_refusal` reports
+## `no_template` and `push_error`s, `skill_available` goes false, and the
+## ACTION_REFUSED beat rides the shipped render arm -- the failure mode a silent
+## `{}` default would otherwise hide inside a live fight.
+var summon_catalog: Dictionary = {}
+
+## #460 actor id -> {skill id -> summons already placed}. The `fight_limit`
+## ledger, and deliberately a COUNT where `used_skills_tally` is a SET: the cap
+## is "this many over the fight", not "once". Never save-serialized, for the
+## same reason `cooldowns` is not -- a fresh `WICombat` per encounter clears it
+## by construction.
+var summon_tally: Dictionary = {}
+
 var _event_sink: Callable
+## #460 actor id -> the round its capacity refusal last spoke. `_act_once`
+## re-scans after every successful action, so a summoner standing on a full
+## board would otherwise emit the same ACTION_REFUSED two or three times a turn
+## and print it as many times in the feed. One tell per actor per round, the
+## `_counter_strike_round` idiom.
+var _summon_refusal_round: Dictionary = {}
 var _momentum_used: Dictionary = {}
 var _quick_cast_spent: Dictionary = {}
 var _counter_strike_round: Dictionary = {}
@@ -95,44 +138,90 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 		var spawns: Array = arena_cfg["player_spawns"] if side == "player" else arena_cfg["enemy_spawns"]
 		var spawn: Array = spawns[spawn_i[side]]
 		spawn_i[side] += 1
-		var base_id := String(cfg[WIKeys.ID])
-		var runtime_id := base_id
-		var suffix := 2
-		while combatants.has(runtime_id):
-			runtime_id = "%s_%d" % [base_id, suffix]
-			suffix += 1
-		var c := {
-			WIKeys.ID: runtime_id,
-			WIKeys.TEMPLATE_ID: base_id,
-			WIKeys.DISPLAY_NAME: String(cfg[WIKeys.DISPLAY_NAME]),
-			WIKeys.SIDE: side,
-			WIKeys.CELL: Vector2i(int(spawn[0]), int(spawn[1])),
-			WIKeys.STATS: (cfg[WIKeys.STATS] as Dictionary).duplicate(true),
-			WIKeys.WEAPON_DIE: int(cfg[WIKeys.WEAPON_DIE]),
-			WIKeys.AI: String(cfg.get(WIKeys.AI, "")),
-			WIKeys.SKILLS: [],
-			"hit_bonus": 0,
-			WIKeys.MAX_HP: maxi(20 + int(cfg[WIKeys.STATS]["con"]) + int(cfg.get(WIKeys.HP_MOD, 0)), 1),
-			WIKeys.DAMAGE_MOD: int(cfg.get(WIKeys.DAMAGE_MOD, 0)),
-			WIKeys.DAMAGE_REDUCTION: int(cfg.get(WIKeys.DAMAGE_REDUCTION, 0)),
-			WIKeys.WEAPON_RANGE: int(cfg.get(WIKeys.WEAPON_RANGE, 1)),
-			WIKeys.AP: 0,
-			WIKeys.MOVE_POOL: 0,
-			"statuses": {},
-			WIKeys.ALIVE: true,
-		}
-		for sk: Variant in cfg.get(WIKeys.SKILLS, []):
-			c[WIKeys.SKILLS].append(String(sk))
-		_apply_passives(c)
-		c[WIKeys.HP] = c[WIKeys.MAX_HP]
-		c[WIKeys.MAX_MP] = 0
-		for sk: String in c[WIKeys.SKILLS]:
-			if (skills.get(sk, {}) as Dictionary).has(WIKeys.MP_COST):
-				c[WIKeys.MAX_MP] = 8 + int(int(c[WIKeys.STATS]["int"]) / 2)
-				break
-		c[WIKeys.MP] = c[WIKeys.MAX_MP]
+		var c := _build_combatant(cfg, Vector2i(int(spawn[0]), int(spawn[1])))
 		combatants[c[WIKeys.ID]] = c
 	_roll_initiative()
+
+
+## #460: extracted VERBATIM from `_init`'s roster loop so `add_combatant` can
+## build a mid-fight arrival through the identical derivation (max_hp formula,
+## passive fold, MP-pool rule, runtime-id suffixing). A second copy of this
+## would let a summoned body and a rostered one drift on any future stat rule.
+##
+## CALLER INSERTS. The suffix loop READS `combatants`, so the record is not
+## registered here -- both call sites assign into `combatants` on the very next
+## line, and doing it inside would make the function's own uniqueness scan
+## trivially self-satisfying.
+func _build_combatant(cfg: Dictionary, cell: Vector2i) -> Dictionary:
+	var base_id := String(cfg[WIKeys.ID])
+	var runtime_id := base_id
+	var suffix := 2
+	while combatants.has(runtime_id):
+		runtime_id = "%s_%d" % [base_id, suffix]
+		suffix += 1
+	var c := {
+		WIKeys.ID: runtime_id,
+		WIKeys.TEMPLATE_ID: base_id,
+		WIKeys.DISPLAY_NAME: String(cfg[WIKeys.DISPLAY_NAME]),
+		WIKeys.SIDE: String(cfg[WIKeys.SIDE]),
+		WIKeys.CELL: cell,
+		WIKeys.STATS: (cfg[WIKeys.STATS] as Dictionary).duplicate(true),
+		WIKeys.WEAPON_DIE: int(cfg[WIKeys.WEAPON_DIE]),
+		WIKeys.AI: String(cfg.get(WIKeys.AI, "")),
+		WIKeys.SKILLS: [],
+		"hit_bonus": 0,
+		WIKeys.MAX_HP: maxi(20 + int(cfg[WIKeys.STATS]["con"]) + int(cfg.get(WIKeys.HP_MOD, 0)), 1),
+		WIKeys.DAMAGE_MOD: int(cfg.get(WIKeys.DAMAGE_MOD, 0)),
+		WIKeys.DAMAGE_REDUCTION: int(cfg.get(WIKeys.DAMAGE_REDUCTION, 0)),
+		WIKeys.WEAPON_RANGE: int(cfg.get(WIKeys.WEAPON_RANGE, 1)),
+		WIKeys.AP: 0,
+		WIKeys.MOVE_POOL: 0,
+		"statuses": {},
+		WIKeys.ALIVE: true,
+	}
+	for sk: Variant in cfg.get(WIKeys.SKILLS, []):
+		c[WIKeys.SKILLS].append(String(sk))
+	_apply_passives(c)
+	c[WIKeys.HP] = c[WIKeys.MAX_HP]
+	c[WIKeys.MAX_MP] = 0
+	for sk: String in c[WIKeys.SKILLS]:
+		if (skills.get(sk, {}) as Dictionary).has(WIKeys.MP_COST):
+			c[WIKeys.MAX_MP] = 8 + int(int(c[WIKeys.STATS]["int"]) / 2)
+			break
+	c[WIKeys.MP] = c[WIKeys.MAX_MP]
+	return c
+
+
+## #460 A BODY JOINS A FIGHT ALREADY RUNNING -- the `summon` effect's entire
+## engine surface, and the ONLY way `combatants`/`turn_order` grow after `_init`.
+##
+## TURN ORDER IS THE RNG DOCTRINE, not a taste call. The entry APPENDS to the
+## tail of `turn_order` and carries `joins_round` = the round AFTER the one it
+## arrived in, so it acts for the first time next round. No initiative is
+## rolled, nothing already in the order moves, and zero rng is drawn -- a summon
+## that rolled initiative would re-seed every draw after it and invalidate every
+## downstream pin in any fight that contains one.
+##
+## APPENDING ALONE IS NOT ENOUGH, and this is the trap: when the summoner acts
+## early in the order the cursor has NOT yet passed the tail, so `_advance_turn`
+## would reach the new index inside the very same round and hand a free turn to
+## a body that was raised a moment ago. `joins_round` is what makes "appended to
+## the tail" and "acts from the next round" the same sentence.
+func add_combatant(cfg: Dictionary, cell: Vector2i, joins_round: int, source_id: String, skill_id: String) -> String:
+	var c := _build_combatant(cfg, cell)
+	c[JOINS_ROUND] = joins_round
+	combatants[c[WIKeys.ID]] = c
+	turn_order.append(String(c[WIKeys.ID]))
+	_emit(WIEvents.COMBATANT_ADDED, {
+		"id": String(c[WIKeys.ID]),
+		"template": String(c[WIKeys.TEMPLATE_ID]),
+		"side": String(c[WIKeys.SIDE]),
+		"cell": [cell.x, cell.y],
+		"source": source_id,
+		"skill": skill_id,
+		"round": round_number,
+	})
+	return String(c[WIKeys.ID])
 
 
 ## GH#440, THE SNEAK EDGE. An encounter authored `sneak_ambush` and entered while
@@ -405,7 +494,16 @@ func use_skill(skill_id: String, target_id: String) -> bool:
 		# shipped ACTION_REFUSED render arm so that IF the gate is ever reached
 		# it speaks, rather than silently no-oping -- the exact defect GH#334
 		# ruling 14 closed for `once_per_fight`.
-		_emit(WIEvents.ACTION_REFUSED, {"actor": actor_id, "reason": "cooldown", "skill": skill_id})
+		#
+		# #460: the CAPACITY arm IS a live path, unlike the cooldown one. The
+		# summoner AI deliberately commits on a full board -- it has already
+		# cleared cooldown, cost and `fight_limit`, so the only refusal it can
+		# provoke is the crowded field, and provoking it is how the player is
+		# TOLD the raising failed instead of being left to notice that nothing
+		# happened. `_refusal_speaks` holds that to one tell per round.
+		var reason := "cooldown" if cooldown_remaining(actor_id, skill_id) > 0 else summon_refusal(actor_id, skill_id)
+		if _refusal_speaks(actor_id, reason):
+			_emit(WIEvents.ACTION_REFUSED, {"actor": actor_id, "reason": reason, "skill": skill_id})
 		return false
 	if int(a.get(WIKeys.MP, 0)) < int(skill.get(WIKeys.MP_COST, 0)):
 		return false
@@ -433,8 +531,87 @@ func skill_spent(actor_id: String, skill_id: String) -> bool:
 ## HUD's `skill_affordable` all route through it, so the bar, the enemy AI and
 ## the rules can never disagree about what is still recovering -- the
 ## `skill_spent` contract, applied to the second refusal reason.
+## #460 rider: capacity joins the cooldown as a reason a Skill is not available
+## right now. Deliberately folded in HERE rather than added as a second test at
+## each call site -- `WICombatAI._can_afford` treats availability as part of
+## what "can afford" MEANS precisely so an unusable Skill FALLS THROUGH to the
+## holder's next option instead of costing it the whole turn, and a summoner
+## whose board is full must still get to cast.
 func skill_available(actor_id: String, skill_id: String) -> bool:
-	return cooldown_remaining(actor_id, skill_id) <= 0
+	if cooldown_remaining(actor_id, skill_id) > 0:
+		return false
+	return summon_refusal(actor_id, skill_id) == ""
+
+
+## The `summon` block of `skill_id`, or `{}` when it is not a summon skill --
+## the one place the effect shape is decoded, so every reader below agrees.
+func summon_effect(skill_id: String) -> Dictionary:
+	var effect: Dictionary = (skills.get(skill_id, {}) as Dictionary).get(WIKeys.EFFECT, {})
+	return effect if String(effect.get(WIKeys.TYPE, "")) == SUMMON else {}
+
+
+func summons_made(actor_id: String, skill_id: String) -> int:
+	return int((summon_tally.get(actor_id, {}) as Dictionary).get(skill_id, 0))
+
+
+## PER SUMMONER, PER FIGHT (spec §1). Two Liches on one board each get their own
+## allowance, and a fight that runs to the round cap never exceeds it.
+func summon_remaining(actor_id: String, skill_id: String) -> int:
+	var effect := summon_effect(skill_id)
+	if effect.is_empty():
+		return 0
+	return maxi(0, int(effect.get(SUMMON_FIGHT_LIMIT, 0)) - summons_made(actor_id, skill_id))
+
+
+## PLACEMENT: the first FREE cell of the summoner's own side's spawn array, IN
+## ARRAY ORDER. The array order IS the determinism contract -- it is the same
+## rule `_init` uses to seat the opening roster, and it draws no rng. Nearest-
+## first was rejected: it needs a tie-break of its own, and it would move the
+## placement (and therefore every pin in the fight) the moment an unrelated body
+## shifted one cell. `null` = the field is crowded, both sides of the board.
+func free_spawn_cell(side: String, claimed: Dictionary = {}) -> Variant:
+	var spawns: Array = arena_config.get("player_spawns" if side == "player" else "enemy_spawns", [])
+	for spawn: Variant in spawns:
+		var pair: Array = spawn
+		var cell := Vector2i(int(pair[0]), int(pair[1]))
+		if not claimed.has(cell) and is_cell_free(cell):
+			return cell
+	return null
+
+
+## WHY the summon cannot fire, "" when it can (and "" for every skill that is
+## not a summon, which is what keeps this a no-op on the shipped kit). Ordered
+## cheapest-and-most-permanent first, so the reason a caster hears is the most
+## informative one available.
+func summon_refusal(actor_id: String, skill_id: String) -> String:
+	var effect := summon_effect(skill_id)
+	if effect.is_empty():
+		return ""
+	if not summon_catalog.has(String(effect.get(SUMMON_COMBATANT, ""))):
+		# A WIRING defect, never a play state: some construction site built this
+		# fight without injecting `summon_catalog`. Loud on purpose -- the
+		# zero-noise baseline treats an ERROR line as a regression, which is
+		# exactly the right severity for a Skill that would otherwise vanish.
+		push_error("summon skill '%s' names combatant '%s', absent from the injected summon_catalog" % [
+			skill_id, String(effect.get(SUMMON_COMBATANT, ""))])
+		return "no_template"
+	if summon_remaining(actor_id, skill_id) <= 0:
+		return "summon_limit"
+	if free_spawn_cell(String((combatants.get(actor_id, {}) as Dictionary).get(WIKeys.SIDE, "enemy"))) == null:
+		return "no_room"
+	return ""
+
+
+## The capacity tell speaks at most once per actor per round -- see
+## `_summon_refusal_round`. Cooldown refusals are untouched (they are a
+## defensive non-path, never a live one) so their shape stays as GH#334 left it.
+func _refusal_speaks(actor_id: String, reason: String) -> bool:
+	if reason != "no_room":
+		return true
+	if int(_summon_refusal_round.get(actor_id, -1)) == round_number:
+		return false
+	_summon_refusal_round[actor_id] = round_number
+	return true
 
 
 ## Rounds still to wait before `skill_id` is usable again, 0 when it is ready.
@@ -711,7 +888,13 @@ func _tick_burning_statuses() -> void:
 
 func _advance_turn() -> void:
 	var tries := 0
-	while tries < turn_order.size() + 1:
+	# #460 widened from `size() + 1`. A join-waiter is a SECOND reason to skip an
+	# index (dead actors were the first), and a summon placed late in a round can
+	# leave every remaining index unusable -- the cursor then has to walk the tail,
+	# wrap into the next round, and walk again to the first eligible actor. That is
+	# 2N in the worst case, and at the old bound the loop fell out without ever
+	# calling `_start_turn`, which parks the fight with nobody active.
+	while tries < turn_order.size() * 2 + 2:
 		tries += 1
 		active_index += 1
 		if active_index >= turn_order.size():
@@ -726,9 +909,16 @@ func _advance_turn() -> void:
 				return
 			_purge_expired_terrain()
 			_purge_expired_statuses()
-		if combatants[get_active()][WIKeys.ALIVE]:
+		if combatants[get_active()][WIKeys.ALIVE] and not _waiting_to_join(get_active()):
 			_start_turn()
 			return
+
+
+## #460: a body raised THIS round is in `turn_order` but not yet eligible -- see
+## `add_combatant`. Absent key = 0 = every opening-roster combatant, so an
+## ordinary fight never takes this branch.
+func _waiting_to_join(id: String) -> bool:
+	return int((combatants[id] as Dictionary).get(JOINS_ROUND, 0)) > round_number
 
 
 func _start_round() -> void:

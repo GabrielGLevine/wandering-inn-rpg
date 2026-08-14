@@ -1,0 +1,233 @@
+{
+ "_comment": "#460 THE CRYPT LICH canonical -- the summoner archetype's completability proof. Four claims, in order: a body JOINS a fight already in progress (`combatant_added` fires after COMBAT_STARTED's order was already published, and it is ABSENT before the Lich's first turn); the `fight_limit` allowance is spent and never exceeded (exactly two arrivals, however long the fight runs); the fight is winnable by a player who spends their kit; and the encounter banks its counter ONCE for the victory rather than once per raised body (the anti-farming constraint, spec sec.1). The capacity refusal is DELIBERATELY NOT ASSERTED HERE and that is a measured choice, not an omission: `ruin_court` has four enemy spawn cells and the authored limit is two, so a crowded field needs every cell occupied by a LIVING body at the Lich's turn -- a state the thralls walk out of the moment they advance on the player. Asserting it against a live fight would be a flake, so it is proven where it is deterministic, in tests/test_summon_effect.gd (`_capacity_refuses_and_charges_nothing`, which also pins that a refusal spends no AP, starts no cooldown and banks nothing against the limit) and observed in the sim row where the opening roster fills the board.",
+ "fixture_save": "crypt_lich_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down to 'Continue', confirm loads crypt_lich_start.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "ruin_surface"
+  },
+  {
+   "_comment": "No body has joined anything yet: this rules out a fixture-supplied thrall and makes every arrival below one this fight produced. Placed BEFORE combat deliberately -- the same assert taken after COMBAT_STARTED is initiative-dependent (`WICombatAI` runs the Lich's whole turn synchronously, so at an rng where it wins initiative the raising has already happened by the time the next step is read).",
+   "action": "assert_event_absent",
+   "type": "combatant_added"
+  },
+  {
+   "_comment": "THE CO-BOARD SETUP, and it is the point of using this map. `bone_pile_ruin` (15,10) is a `companion_source` for `skeleton_ally` -- the player's own pale, upright raised skeleton -- and the crypt is nine cells away. Raising it here means the fight below fields the ALLY skeleton and the Lich's `bone_thrall`s at the same time, which is the exact case the art constraint is about.",
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "companion_changed",
+   "payload_contains": {
+    "id": "skeleton_ally",
+    "active": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "companion",
+   "equals": "skeleton_ally"
+  },
+  {
+   "_comment": "Teleport lands one cell SOUTH of the crypt mouth (17,11); the `move` into it sets facing even though the entity blocks (move_player writes player_facing before the blocked check). The door_chain_fight idiom -- walking the ruin is already proven live by ruin_walkthrough, and this script's subject is the summoner, not pathing.",
+   "action": "teleport",
+   "map": "ruin_surface",
+   "cell": [
+    17,
+    12
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 4
+  },
+  {
+   "action": "screenshot",
+   "name": "00_crypt_mouth"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The opening board: one Lich. Every other enemy in this fight arrives later, by its hand.",
+   "action": "assert_state",
+   "path": "combat.combatants.crypt_lich.side",
+   "equals": "enemy"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.skeleton_ally.side",
+   "equals": "player"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 4
+  },
+  {
+   "action": "screenshot",
+   "name": "01_board_opening"
+  },
+  {
+   "_comment": "PASS THE FIRST TURN so the raising happens where a screenshot can see it -- `combat_autoplay` runs a whole fight inside one step and cannot be paused mid-way (it fails if the fight has not ended by `max_turns`). Ending the turn hands the round to the Lich, which opens with [Raise Bones].",
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_added",
+   "payload_contains": {
+    "template": "bone_thrall",
+    "source": "crypt_lich",
+    "skill": "raise_bones"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "MID-FIGHT ARRIVAL: a body that was not in COMBAT_STARTED's order is now alive on the board.",
+   "action": "assert_state",
+   "path": "combat.combatants.bone_thrall.alive",
+   "equals": true
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.bone_thrall.side",
+   "equals": "enemy"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 4
+  },
+  {
+   "_comment": "THE EYE-GATE FRAME: the player's pale upright skeleton_ally and the Lich's hunched shroud-wrapped bone_thrall on ONE board. Read this before calling the art done.",
+   "action": "screenshot",
+   "name": "02_thrall_raised_beside_ally"
+  },
+  {
+   "_comment": "Pass again so the Lich reaches its SECOND turn and spends the rest of its allowance where the script can pin it. `cooldown_rounds` 1 forbids only a second raising inside ONE turn, so the second body lands the very next round.",
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_added",
+   "payload_contains": {
+    "template": "bone_thrall"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Competent policy, the steel_thread precedent: this encounter is authored to be LOST by the floor policy at band (0.05 over 100 seeds) and won by a player who spends their kit (0.76). Pinning victory to autoplay here would be the exact balance ratchet the 2026-08-11 doctrine ruling forbids.",
+   "action": "combat_autoplay",
+   "max_turns": 300,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "LIMIT EXHAUSTION: `raise_bones` authors fight_limit 2, and the measured composition spends the whole allowance in every seed -- so exactly two bodies join, never a third, however long the fight runs.",
+   "action": "assert_event_count",
+   "type": "combatant_added",
+   "count": 2
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combatant_added",
+   "payload_contains": {
+    "template": "bone_thrall"
+   },
+   "count": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "SINGLE BANK, the anti-farming pin -- and it must sit AFTER the board closes: `combat_screen` calls `Game.sim.resolve_combat()` on the victory banner's confirm, so the counter does not exist while the banner is still up (this assert read 0 there). The encounter's own counter is recorded once for the WIN, not once per body killed: the Lich's thralls died in this fight and the count is still 1.",
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "crypt_lich_put_down",
+    "count": 1
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.crypt_lich_put_down",
+   "equals": 1
+  },
+  {
+   "action": "wait_frames",
+   "frames": 4
+  },
+  {
+   "action": "screenshot",
+   "name": "03_crypt_quiet"
+  }
+ ]
+}

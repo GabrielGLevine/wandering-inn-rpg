@@ -1717,6 +1717,48 @@
     "power_strike"
    ],
    "_comment": "Keeps ruin_ward_b's `guarding_ward` shape; lower str/con/die is what makes the pair a pair."
+  },
+  {
+   "_comment": "#460 THE SUMMONER ARCHETYPE (spec RATIFIED 2026-08-13). A NAMELESS Lich in the Horns-of-Hammerad crypt register; no canon necromancer is named in shipped prose. `ai: caster` is REQUIRED twice over: the melee profile never casts (the autoplay gotcha) AND `_act_caster` is where the summon arm lives. The ratified header supersedes the spec body's frail-caster line -- this is a caster THREAT and the summons multiply it. con 36 = 56 HP is MEASURED: at 46 HP a competent band build killed it before its own allowance landed. RANK FLOOR (binding on any retune): an OPTIONAL pocket ABOVE the ruin's stop (power 10 vs ruin_guardian's 8) and BELOW the map's other pocket (briar_arch_ward pair, 11 each) -- so out-HPing the guardian is the design, not drift; what it must never do is out-rank an act climax. NEW ROW = tunable until first ship, frozen after.",
+   "id": "crypt_lich",
+   "display_name": "The Lich",
+   "sprite": "crypt_lich",
+   "side": "enemy",
+   "stats": {
+    "str": 8,
+    "dex": 11,
+    "con": 36,
+    "int": 16,
+    "wis": 12,
+    "cha": 6
+   },
+   "weapon_die": 4,
+   "ai": "caster",
+   "skills": [
+    "raise_bones",
+    "lich_grave_lance",
+    "lich_bone_splinter"
+   ],
+   "power_level": 10.0
+  },
+  {
+   "_comment": "#460 the raised add, and NOT the `skeleton_ally` record: one combatant id holds exactly one side, so the player's [Animate Dead] companion cannot be re-pointed at an enemy roster (the rags/rags_ally precedent). ART CONSTRAINT DISCHARGED, not deferred: `bone_pile_ruin` on THIS MAP is a skeleton_ally source, so ally and thrall can share a board and a tint would not have carried it -- this ships a bespoke silhouette (hunched, shroud-wrapped, 1.65 cells) against the ally's upright pale bone (1.94). Strictly weaker than that ally on every axis but con, where +3 HP is what keeps a body that arrives a round late from dying to one swing.",
+   "id": "bone_thrall",
+   "display_name": "Bone Thrall",
+   "sprite": "bone_thrall",
+   "side": "enemy",
+   "stats": {
+    "str": 9,
+    "dex": 6,
+    "con": 9,
+    "int": 2,
+    "wis": 4,
+    "cha": 1
+   },
+   "weapon_die": 4,
+   "ai": "melee",
+   "skills": [],
+   "power_level": 2.0
   }
  ]
 }
