@@ -303,7 +303,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Issue #79: the sleep veil now names the fork RESULT with flavor -- lines:2 is the bracket proclamation ('[Warrior Class -> Swordsman Class!]') PLUS the new results-only flavor line ('Your hands have chosen the sword.'), structural proof it rendered (no OCR needed).",
+   "_comment": "Issue #79: the sleep veil now names the fork RESULT with flavor -- lines:2 is the bracket proclamation ('[Warrior Class -> Blademaster Class!]') PLUS the new results-only flavor line ('Your hands have chosen the sword.'), structural proof it rendered (no OCR needed).",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "payload_contains": {
@@ -312,8 +312,12 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "#485 rename: the evolution toast is the surface that SPEAKS the class display name to the player ('[%s] has become [%s]!', wi_game.gd _resolve_evolutions). Pinned exact-string here -- the hedge_witch/runner_courier/cook_chef evolution canonicals already pin theirs, and this one (the only canonical that evolves the sword line) was the gap that let the shipped display string drift unpinned.",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Warrior] has become [Blademaster]!"
+   },
    "timeout_sec": 5
   },
   {
@@ -359,7 +363,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "fight3 -- issue #62 finding 8: goblin_encounter_1 is a ONE-SHOT retirement, already spent by fight2 above, so it can't re-arm here. Re-pinned onto relc_spar (persistent:true, ALWAYS immediately re-fightable, trivial-flagged so it doesn't touch the won_combat tally) -- proves the evolved Swordsman kit in a real live fight. From the floodplains door (7,6): right5->(12,6), down6->(12,12), interact.",
+   "_comment": "fight3 -- issue #62 finding 8: goblin_encounter_1 is a ONE-SHOT retirement, already spent by fight2 above, so it can't re-arm here. Re-pinned onto relc_spar (persistent:true, ALWAYS immediately re-fightable, trivial-flagged so it doesn't touch the won_combat tally) -- proves the evolved Blademaster kit in a real live fight. From the floodplains door (7,6): right5->(12,6), down6->(12,12), interact.",
    "action": "move",
    "direction": "right",
    "steps": 5
@@ -489,7 +493,7 @@
    "name": "02_swordsman_kit_combat"
   },
   {
-   "_comment": "v0.18 W5 -- THE COOLDOWN-BADGE LEG. The v0.16.2 close playtest flagged ZERO badge coverage: cooldowns shipped in GH#337 and the little number hotbar.gd draws in a cooling slot's top-right corner had never been photographed. This is the natural home for it -- the only class canonical whose PC fields a cooldown-holding kit at all (every other one either has no sword/bow line or is gated out of it by weapon_gated_kit), and the evolved-kit fight is exactly where a [Swordsman]'s Skills should be shown working. Kit order (granted_skills: swordsman's own L10 grants first, then inherited warrior grants, spear-family piercing_strikes stripped by the rusty sword): Attack(1)/Dash(2)/Quick Slash(3)/Flash Cut(4)/Power Strike(5)/Second Wind(6)/End Turn -- 6 numbered slots, 7 total, matching the ui_hotbar_rendered pin below. Power Strike is the ONLY cooldown holder in this kit (cooldown_rounds 2).",
+   "_comment": "v0.18 W5 -- THE COOLDOWN-BADGE LEG. The v0.16.2 close playtest flagged ZERO badge coverage: cooldowns shipped in GH#337 and the little number hotbar.gd draws in a cooling slot's top-right corner had never been photographed. This is the natural home for it -- the only class canonical whose PC fields a cooldown-holding kit at all (every other one either has no sword/bow line or is gated out of it by weapon_gated_kit), and the evolved-kit fight is exactly where a [Blademaster]'s Skills should be shown working. Kit order (granted_skills: swordsman's own L10 grants first, then inherited warrior grants, spear-family piercing_strikes stripped by the rusty sword): Attack(1)/Dash(2)/Quick Slash(3)/Flash Cut(4)/Power Strike(5)/Second Wind(6)/End Turn -- 6 numbered slots, 7 total, matching the ui_hotbar_rendered pin below. Power Strike is the ONLY cooldown holder in this kit (cooldown_rounds 2).",
    "action": "assert_event_logged",
    "type": "ui_hotbar_rendered",
    "payload_contains": {
