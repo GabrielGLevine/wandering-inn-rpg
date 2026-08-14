@@ -48,6 +48,15 @@ static func _letter(i: int) -> String:
 	return String.chr(65 + i) if i < 26 else str(i + 1)
 
 
+## #460: the dedup map is built ONCE at combat start, and a summon can add the
+## second body of a kind mid-fight -- without this the feed reads two identical
+## "Bone Thrall"s and the player cannot tell which one fell. Re-derived rather
+## than patched incrementally so the A/B lettering stays exactly the sorted-id
+## assignment `_build_display_names` documents.
+func refresh_names() -> void:
+	_display_names = _build_display_names()
+
+
 func display_name(id: String) -> String:
 	if _display_names.has(id):
 		return String(_display_names[id])

@@ -20,6 +20,12 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 		return _resolve_move_pool_bonus(combat, actor_id, a, skill, effect)
 	if effect_type == "invisibility":
 		return _resolve_invisibility(combat, actor_id, a, skill, effect)
+	# #460: ABOVE the target lookup, with the other targetless arms. A summon has
+	# no target -- the AI passes the caster's own id purely because `use_skill`
+	# takes the parameter -- and the shared lookup below would refuse it for
+	# naming a same-side "target" before the arm ever ran.
+	if effect_type == WICombat.SUMMON:
+		return _resolve_summon(combat, actor_id, a, skill, effect)
 	var t: Dictionary = combat.combatants.get(target_id, {})
 	if t.is_empty() or not t.get(WIKeys.ALIVE, false):
 		return false
@@ -83,6 +89,55 @@ static func _resolve_invisibility(combat: WICombat, actor_id: String, a: Diction
 		entry["expires_after_round"] = expires_after
 		statuses[status_id] = entry
 		combat._emit(WIEvents.STATUS_APPLIED, {"id": actor_id, "status": status_id})
+	return true
+
+
+## #460 THE SUMMON. Every gate that could refuse has already run in
+## `WICombat.use_skill` -> `skill_available` -> `summon_refusal` (template
+## present, `fight_limit` unspent, a free cell on the summoner's own spawn
+## array), so reaching this function means the raising happens.
+##
+## COSTS FIRST, then placement: `spend_skill_costs` is what stamps the cooldown
+## and charges the AP, and it must run exactly once no matter how many bodies
+## `count` asks for.
+##
+## `count` IS CLIPPED, not asserted: the loop stops at the `fight_limit`
+## remainder and at the first crowded cell, so a `count: 2` row on a board with
+## one slot raises one body and banks one against the limit rather than
+## half-failing. Shipped data is `count: 1`, so this is the rule being complete
+## ahead of a data row, not a live path.
+static func _resolve_summon(combat: WICombat, actor_id: String, a: Dictionary, skill: Dictionary, effect: Dictionary) -> bool:
+	var template_id := String(effect.get(WICombat.SUMMON_COMBATANT, ""))
+	var cfg: Dictionary = combat.summon_catalog[template_id]
+	var skill_id := String(skill[WIKeys.ID])
+	var side := String(a[WIKeys.SIDE])
+	combat.spend_skill_costs(a, skill)
+	var wanted := mini(maxi(int(effect.get(WICombat.SUMMON_COUNT, 1)), 1), combat.summon_remaining(actor_id, skill_id))
+	# CLAIMED, not merely free: nothing occupies a cell until `add_combatant`
+	# runs, so a `count > 1` raising would otherwise read the SAME first free cell
+	# every pass and stack two bodies on one square.
+	var claimed: Dictionary = {}
+	var cells: Array[Vector2i] = []
+	for _i in wanted:
+		var cell: Variant = combat.free_spawn_cell(side, claimed)
+		if not (cell is Vector2i):
+			break
+		claimed[cell] = true
+		cells.append(cell)
+	var cells_payload: Array = []
+	for cell: Vector2i in cells:
+		cells_payload.append([cell.x, cell.y])
+	# SKILL_RESOLVED lands BEFORE the arrivals so the feed reads "the Lich raises
+	# the dead" and then the bodies -- the ordering every other multi-target arm
+	# in this file already uses, and the one the playback queue replays.
+	combat._emit(WIEvents.SKILL_RESOLVED, {
+		"actor": actor_id, "skill": skill_id, "target": actor_id, "cells": cells_payload,
+	})
+	for cell: Vector2i in cells:
+		var ledger: Dictionary = combat.summon_tally.get(actor_id, {})
+		ledger[skill_id] = int(ledger.get(skill_id, 0)) + 1
+		combat.summon_tally[actor_id] = ledger
+		combat.add_combatant(cfg, cell, combat.round_number + 1, actor_id, skill_id)
 	return true
 
 

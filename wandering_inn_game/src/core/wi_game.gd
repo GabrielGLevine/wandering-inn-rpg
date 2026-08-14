@@ -2412,6 +2412,12 @@ func start_combat(entity_id: String) -> bool:
 	_pending_encounter = entity_id
 	combat = WICombat.new(arena, cfgs, skills_config_raw(), _combat_event_relay, rng.randi())
 	combat.difficulty_damage_taken_mult = difficulty_damage_taken_mult
+	# #460: the roster a `summon` Skill can reach for. `by_id` is already the whole
+	# combatants.json catalog keyed by id, so a summon target needs no second
+	# authoring surface -- it is any row, resolved the same way the encounter's own
+	# `enemies` list resolves. Injected HERE, beside the difficulty knob, because
+	# WICombat may not read a catalog itself (the purity rule).
+	combat.summon_catalog = by_id
 	if ambush and combat.grant_ambush("pc"):
 		_emit(WIEvents.TOAST, {"text": "It is still turning toward the sound when you reach it. The first move is yours."})
 	combat.begin()

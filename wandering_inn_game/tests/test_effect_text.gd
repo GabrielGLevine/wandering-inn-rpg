@@ -173,6 +173,13 @@ const EXPECTED_SKILLS := {
 	"charming_smile": [],
 	"calming_touch": ["2 AP — damage 1d6 at range 1. Slows."],
 	"raskghar_maul": ["3 AP — damage 1d6 at range 2. Slows. Weakens."],
+	## #460 the crypt Lich's three enemy-kit verbs. None of them can reach a player
+	## hotbar (no class grants them), but every catalog row is composed and pinned
+	## here anyway -- the bestiary and the journal read the same composer, and a
+	## Skill whose card says nothing is how a data key reaches a reader.
+	"raise_bones": ["3 AP — raise Bone Thrall to fight beside you, up to 2 a fight. Once per round."],
+	"lich_bone_splinter": ["1 AP, 2 MP — damage 1d6 at range 4"],
+	"lich_grave_lance": ["2 AP, 4 MP — damage 1d6 at range 4. Weakens."],
 	"power_shot": ["3 AP — ×2 damage. Once every 2 rounds."],
 	"quick_nock": ["1 AP — ×0.7 damage"],
 	"piercing_shot": ["3 AP — damage everything in a line 4 cells long. Once every 2 rounds."],

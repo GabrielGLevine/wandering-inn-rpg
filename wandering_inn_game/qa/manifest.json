@@ -1791,6 +1791,32 @@
    }
   },
   {
+   "script": "crypt_lich_fight",
+   "seed": 1,
+   "fixture": "crypt_lich_start",
+   "note": "#460 crypt Lich: the summoner archetype end to end -- a body JOINS the fight mid-round (combatant_added, absent before the Lich's first turn), the fight_limit allowance is spent and capped at two arrivals, the competent policy wins, and crypt_lich_put_down banks ONCE for the victory rather than once per raised body. Also the art eye-gate: the player's skeleton_ally is raised at bone_pile_ruin first, so ally and bone_thrall share one board",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "ruin_surface"
+    ],
+    "fixtures": [
+     "crypt_lich_start"
+    ],
+    "skills": [
+     "animate_dead",
+     "raise_bones"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "status_first_encounter",
    "seed": 9,
    "fixture": "near_mage_cast",

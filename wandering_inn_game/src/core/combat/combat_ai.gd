@@ -50,10 +50,46 @@ static func _act_once(combat: WICombat, id: String) -> bool:
 			return _act_melee(combat, id, c, foes)
 
 
+## #460 THE SUMMONER ARM, and it sits ahead of the offensive scan on purpose:
+## the raising is the archetype, it carries a cooldown, and a Lich that spends
+## its AP on a bolt first would raise nothing for the rest of the fight. Same
+## priority shape `_act_guard` already uses for its support skill.
+##
+## FALLS THROUGH RATHER THAN RETURNING, and that is the load-bearing part:
+## `take_turn` breaks on the FIRST refused action, so a summoner standing on a
+## crowded field must still reach its spells this turn. `_try_summon` therefore
+## answers "did I act", never "did I try".
 static func _act_caster(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
+	if _try_summon(combat, id, c):
+		return true
 	if _act_ranged(combat, id, c, foes):
 		return true
 	return _act_melee(combat, id, c, foes)
+
+
+## Commits the summon whenever cooldown, AP/MP and `fight_limit` allow -- and
+## DELIBERATELY does not pre-check the free cell, unlike every other arm in this
+## file, which filters on `_can_afford` (capacity included). Committing is what
+## makes the crowded field an OBSERVABLE ACTION_REFUSED beat with a feed line
+## instead of a silent non-event; `WICombat.use_skill`'s own gate is the thing
+## that refuses, and its `_refusal_speaks` latch holds the tell to one a round.
+## Exhaustion is filtered here rather than announced, because `summon_limit` is
+## permanent for the rest of the fight and would be pure noise every round.
+static func _try_summon(combat: WICombat, id: String, c: Dictionary) -> bool:
+	for sk: String in (c[WIKeys.SKILLS] as Array):
+		var s: Dictionary = combat.skills.get(sk, {})
+		if combat.summon_effect(sk).is_empty():
+			continue
+		if int(c[WIKeys.AP]) < combat.effective_ap_cost(c, s):
+			continue
+		if int(c.get(WIKeys.MP, 0)) < int(s.get(WIKeys.MP_COST, 0)):
+			continue
+		if combat.cooldown_remaining(id, sk) > 0 or combat.summon_remaining(id, sk) <= 0:
+			continue
+		# Self-id as the target token: the arm resolves above `resolve_active`'s
+		# shared target lookup and never reads it (the `invisibility` precedent).
+		return combat.use_skill(sk, id)
+	return false
 
 
 static func _act_melee(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:

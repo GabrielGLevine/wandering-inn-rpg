@@ -197,6 +197,11 @@ var _ladder_failed := false
 var _difficulty_mult := 1.0
 var _tier_sweep := false
 
+## #460 combatants.json keyed by id, filled once at startup. Empty until then,
+## which is safe: `summon_refusal` reports `no_template` and push_errors rather
+## than letting a summoner quietly measure as a caster with one fewer Skill.
+var _summon_catalog: Dictionary = {}
+
 ## #437 (b) — THE POLICY HOOK, the tier hook's exact twin and for the same
 ## reason: the cells, builds, rosters and per-family setup all live here, so a
 ## second driver would clone all of them and drift.
@@ -246,6 +251,11 @@ func _cell_in_range() -> bool:
 func _new_combat(arena: Dictionary, cfgs: Array, skills_cfg: Dictionary, sink: Callable, rng_seed: int) -> WICombat:
 	var combat := WICombat.new(arena, cfgs, skills_cfg, sink, rng_seed)
 	combat.difficulty_damage_taken_mult = _difficulty_mult
+	# #460 rides this single site for the same reason the tier hook does: the
+	# roster a `summon` Skill reaches for is injected once here rather than at each
+	# per-family loop. `_summon_catalog` is the whole combatants.json keyed by id,
+	# exactly what `wi_game.start_combat` hands the live game.
+	combat.summon_catalog = _summon_catalog
 	return combat
 
 
@@ -405,6 +415,28 @@ const RUIN_CELLS := [
 	# alley_fence_t3_warrior10_solo: retune or rename moves both or the tier
 	# gate reds.
 	{"name": "ruin_guardian_w8_solo", "arena": "ruin_court", "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"], "build": "warrior5_mage5", "solo": true},
+	# #460 THE SUMMONER, at the ruin's own yardstick build and on the ruin's own
+	# board. ONE cell, and that is the finding rather than a shortcut: with the
+	# measured composition (`raise_bones` count 1 / fight_limit 2 / cooldown 1,
+	# Lich con 36) the allowance is EXHAUSTED IN EVERY SEED -- 2.00 of 2 raised,
+	# mean over 100 -- so this row IS the spec sec.3.3 fight_limit-ceiling read and
+	# not a milder sibling of one. A synthetic "all thralls pre-placed" cell was
+	# built and REJECTED: the Lich's own allowance is untouched in such a roster,
+	# so it measures a board of FOUR enemy bodies (0.00 here) and reports it as
+	# the ceiling of a fight that can only ever field three.
+	# THE COUNTERFACTUAL IS MEASURED TOO, just not from here: `tests/sim_summon_
+	# ceiling.gd` holds the pre-placed board at the authored limit with the
+	# summoner's allowance PRE-SPENT (0.74 competent-at-band against the shipped
+	# 0.76 -- no inversion), which is the honest form of the composition rejected
+	# above. A cell in this file cannot express it: nothing here can pre-spend a
+	# ledger, and a bare pre-placed roster measures a Lich that fields the thralls
+	# AND still holds a full allowance.
+	# MEASURED-ONLY. This is a NEW row in its first wave, and the balance authority
+	# for the archetype is the competent-at-band window in `sim_spine_viability.gd`
+	# (spec sec.3.2, RULED_WINDOWS `act4_crypt_lich`) -- gating the floor policy
+	# here too would pin one fight against two contracts, and the floor read of a
+	# caster is the read that spends none of its kit.
+	{"name": "crypt_lich_w8_solo", "arena": "ruin_court", "enemies": ["crypt_lich"], "build": "warrior5_mage5", "solo": true},
 	# #398 P5's +3-band pocket -- BOTH modes open the same field, so both routes
 	# are measured here. Review M4 reset all four numbers; the two dispositions
 	# below are deliberately DIFFERENT and the reason is this file's own doctrine.
@@ -1136,6 +1168,7 @@ func _init() -> void:
 	var by_id := {}
 	for c: Dictionary in catalog["combatants"]:
 		by_id[String(c[WIKeys.ID])] = c
+	_summon_catalog = by_id
 	var skills_by_id := {}
 	for s: Dictionary in skills[WIKeys.SKILLS]:
 		skills_by_id[String(s[WIKeys.ID])] = s

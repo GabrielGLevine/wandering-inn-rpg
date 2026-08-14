@@ -1255,6 +1255,60 @@
    "description": "A black-green lance that leaves warmth and courage guttering behind it."
   },
   {
+   "_comment": "#460 THE SUMMON, the archetype's one new engine effect. ENEMY-KIT ONLY -- no class grants it, so data_lint files it under the `enemy-kit only` reachability CATEGORY, as guarding_ward/raskghar_maul/slam already are. AP-ONLY by design: the Lich's two bolts share one MP pool, and a raising that competed with them would make the archetype's signature the first thing a long fight stopped showing. cooldown/fight_limit/count/ap are BALANCE-MEASURED, not picked, and `tests/sim_summon_ceiling.gd` re-derives every number here on demand: the row as first authored (cd 2 / limit 3 / con 26) reads 0.85 competent-at-band -- ON the window ceiling -- with its fully-raised board at 0.29, through the floor, which is the case spec sec.3.3 rules by LOWERING THE LIMIT. Shipped reads 0.76 with the allowance spent in 100/100 seeds, and its fully-raised board at 0.74. These four are the only tuning levers this archetype has; shared stat rows are never one of them.",
+   "id": "raise_bones",
+   "display_name": "[Raise Bones]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "cooldown_rounds": 1,
+   "effect": {
+    "type": "summon",
+    "combatant": "bone_thrall",
+    "count": 1,
+    "fight_limit": 2
+   },
+   "description": "The floor answers. What is left of somebody stands up out of it."
+  },
+  {
+   "_comment": "#460 enemy-kit only, and a NEW id rather than the player's [Bone Dart]: bone_dart/deathbolt are [Necromancer] grants that sim_class_parity measures, so pointing a Lich at them would put an ENEMY knob inside the player's class ladder. A distinct id IS the per-context override (combatants.json's convention since :468), applied to a Skill. Shape is [Bone Dart]'s verbatim. CANON-VERDICT: ORIGINAL -- death magic is Volume-1 canon (Pisces); the name is generic-diegetic, not a cited spell.",
+   "id": "lich_bone_splinter",
+   "display_name": "[Bone Splinter]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 1,
+   "mp_cost": 2,
+   "element": "death",
+   "effect": {
+    "type": "spell_damage",
+    "range": 4
+   },
+   "description": "A shard of somebody's ribcage leaves the dark point-first."
+  },
+  {
+   "_comment": "#460 enemy-kit only, the heavy half -- [Deathbolt]'s shape verbatim under a new id, for the reason [Bone Splinter] gives. KIT ORDER IS THE MP CURVE: `WICombatAI._act_ranged` takes the FIRST affordable spell_damage in kit order, so the Lich spends this while its pool lasts and drops to the splinter after. CANON-VERDICT: ORIGINAL.",
+   "id": "lich_grave_lance",
+   "display_name": "[Grave Lance]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "mp_cost": 4,
+   "element": "death",
+   "effect": {
+    "type": "spell_damage",
+    "range": 4,
+    "applies": {
+     "weakened": {
+      "duration_rounds": 1
+     }
+    }
+   },
+   "description": "A lance of black-green light that leaves warmth guttering behind it."
+  },
+  {
    "_comment": "CANON-VERDICT: ATTESTED -- Pisces and Ceria, 2.15; field_ambient shape matches other prop-cast utility skills.",
    "id": "detect_magic",
    "display_name": "[Detect Magic]",

@@ -147,6 +147,10 @@ const _COMBAT_ONLY_EFFECT_TYPES := {
 	"mana_shield": true,
 	"quick_cast": true,
 	"invisibility": true,
+	## #460. Combat-only for the plainest possible reason: `WICombat.add_combatant`
+	## is the only thing that can resolve it, and there is no overworld board to
+	## put a body on.
+	"summon": true,
 }
 
 
@@ -269,7 +273,32 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 			return "Your first spell each turn costs 1 less AP."
 		"invisibility":
 			return "become impossible to target for %d rounds (breaks if you deal damage)" % int(effect.get(WIKeys.DURATION_ROUNDS, 0))
+		"summon":
+			# #460. The clause names the BODY, not the row id, through the same
+			# catalog `_caster_weapon_die` already reads -- a card that said
+			# "bone_thrall" would be a data key spoken at a reader. `fight_limit`
+			# is the half a player has to plan around, so it is stated; the
+			# cooldown is already spoken by `cooldown_clause`.
+			var summoned := _summon_display_name(combatants_catalog, String(effect.get("combatant", "")))
+			var count := int(effect.get("count", 1))
+			var many := "" if count == 1 else "%d " % count
+			return "raise %s%s to fight beside you, up to %d a fight" % [
+				many, summoned, int(effect.get("fight_limit", 0)),
+			]
 	return ""
+
+
+## #460. Display name for a summon target, "the dead" when the catalog is absent
+## (every composer here takes its catalog optionally and must stay speakable
+## without one).
+static func _summon_display_name(combatants_catalog: Array, combatant_id: String) -> String:
+	var catalog := combatants_catalog
+	if catalog.is_empty():
+		catalog = _load_combatants()
+	for row: Dictionary in catalog:
+		if String(row.get(WIKeys.ID, "")) == combatant_id:
+			return String(row.get(WIKeys.DISPLAY_NAME, "the dead"))
+	return "the dead"
 
 
 static func _status_suffix(effect: Dictionary) -> String:

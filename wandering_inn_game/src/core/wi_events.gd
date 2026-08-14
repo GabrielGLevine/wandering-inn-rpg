@@ -78,6 +78,18 @@ const TURN_STARTED := &"turn_started"
 const TURN_ENDED := &"turn_ended"
 const COMBATANT_MOVED := &"combatant_moved"
 const COMBATANT_DOWNED := &"combatant_downed"
+## #460: a combatant JOINED a fight already in progress -- the `summon` effect's
+## only observable. COMBAT_STARTED's `order` is a snapshot of the opening roster
+## and is never re-emitted, so without this beat a mid-fight arrival is
+## unfalsifiable from the log: the board simply has one more body on it and no
+## event says when or why. Payload `{id, template, side, cell:[x,y], source,
+## skill, round}` -- `id` is the RUNTIME id (suffixed, `bone_thrall_2`),
+## `template` the combatants.json row, `source` the summoner.
+## PRESENTATION TRAP: the visual node for the new body is created off THIS
+## event, so its playback arm must run OUTSIDE the `with_visuals` gate (the
+## TERRAIN_ADDED class) -- nothing in the post-drain resync creates a missing
+## holder, it only moves ones that already exist.
+const COMBATANT_ADDED := &"combatant_added"
 const ATTACK_RESOLVED := &"attack_resolved"
 const SKILL_RESOLVED := &"skill_resolved"
 const ACTION_REFUSED := &"action_refused"

@@ -1,0 +1,56 @@
+{
+ "_comment": "#460 crypt-Lich canonical. Stands mid-dig ON ruin_surface (the only way onto that map is `ruin_door`'s horns_dig_started gate, so the counter is banked), one cell WEST of `bone_pile_ruin` and facing it -- the wave_b_animate_start posture, reused deliberately rather than invented: the script's first act is to RAISE the player's own skeleton off that pile, so the fight that follows puts `skeleton_ally` and the Lich's `bone_thrall`s on ONE BOARD. That co-presence is the art constraint this feature carries (tint-is-not-disambiguation), and this fixture is what makes it observable instead of argued. BUILD is the Act IV band (`balance-bands-and-policy.md`: 12-14 combined) -- warrior 7 / mage 6 with the band's own loadout, the same allocation `sim_spine_viability.gd`'s `band_act4` measures the encounter at, so the canonical and the balance row are reading one build. [Animate Dead] rides `player_skills` as a fixture affordance (the wave_b precedent); its real Necromancer L5 grant is pinned in test_progression. The counters carry the level ladder honestly (melee_hit 32 for warrior 7, spell_cast 18 for mage 6) -- `test_fixture_coherence` refuses a fixture that holds a level its own accomplishments never earned, and it is right to: a save that could not exist measures nothing.",
+ "version": 6,
+ "state": {
+  "current_map": "ruin_surface",
+  "player_cell": [
+   14,
+   10
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 7,
+   "mage": 6
+  },
+  "accomplishments": {
+   "horns_dig_started": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "melee_hit": 32,
+   "spell_cast": 18,
+   "learned_magic_from_pisces": 1
+  },
+  "player_skills": [
+   "animate_dead"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman",
+   "mending_draught"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman",
+   "accessory_3": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": [
+   "animate_dead"
+  ]
+ }
+}

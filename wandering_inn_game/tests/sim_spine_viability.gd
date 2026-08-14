@@ -266,6 +266,21 @@ const ROSTER := [
 		"ship": "ship_act4", "band": "band_act4", "draughts": ["mending_draught"],
 		"bypasses": "The dig has a non-fight route to `pedestal_breached`; this row is the fight leg. Relc fields off `met_relc`.",
 	},
+	# #460 THE CRYPT LICH, the summoner archetype's own optional pocket. Measured
+	# beside `act4_ruin_guardian` because it shares that row's map and band, and
+	# because the pair is the honest comparison: the act's set-piece against the
+	# side fight that must sit under it.
+	#
+	# THIS ROW IS THE SEC.3 GUARDRAIL. The competent-at-band read is gated through
+	# RULED_WINDOWS at the reference window's own edges -- the fight has to be
+	# winnable by a player who spends their kit AND unwinnable by one who does not
+	# bother, with the summons AND the death magic priced in. The FLOOR column is
+	# report-only, as the spec asks.
+	{
+		"id": "act4_crypt_lich", "act": "IV", "beat": 22, "map": "ruin/ruin_surface", "entity": "crypt_lich_mouth",
+		"ship": "ship_act4", "band": "band_act4", "draughts": ["mending_draught"],
+		"bypasses": "FULLY OPTIONAL: interact-only (no trigger_radius), on no route and on no existing pin, so declining it costs nothing but the levels it pays. It does not respawn -- one raising of this crypt per save.",
+	},
 	{
 		"id": "act4_alley_footpads", "act": "IV", "beat": 26, "map": "invrisil/mercantile_alleys", "entity": "alley_footpads_a",
 		"ship": "ship_act4_late", "band": "band_act4", "draughts": ["mending_draught", "remedy_draught"],
@@ -404,6 +419,16 @@ const CALIBRATION := [
 ##
 ##   `row` / `column` ("ship"|"band") / `policy` / `lo` / `hi`
 const RULED_WINDOWS := [
+	# #460 THE SUMMONER GUARDRAIL (spec sec.3.2, RATIFIED 2026-08-13). The numbers
+	# are `WINDOW_FLOOR`/`WINDOW_CEILING` themselves, referenced rather than
+	# copied, because the spec asks this optional pocket to hold the SAME
+	# competent-at-band contract the five reference climaxes hold. It rides
+	# RULED_WINDOWS instead of `SPINE_CLIMAX_IDS` for the reason that list exists:
+	# it enumerates the five ACT CLIMAXES, and this is not one -- it is a fight a
+	# player may decline. What it is not allowed to be is unwinnable for a player
+	# who spends their kit, or free for one who does not.
+	{"row": "act4_crypt_lich", "column": "band", "policy": "competent", "lo": WINDOW_FLOOR, "hi": WINDOW_CEILING,
+		"why": "spec sec.3.2 (#460, RATIFIED): the summoner encounter lands competent-at-band inside [0.55, 0.85] with the summons AND the death magic priced in. Measured 0.76 / 4 rd at the landing commit, with the fight_limit allowance EXHAUSTED in 100/100 seeds -- so this row is also the sec.3.3 limit-ceiling read, and `tests/sim_summon_ceiling.gd` re-derives that (plus the 0.74 pre-placed counterfactual) on demand. Composition-only tuning if it moves (count/fight_limit/cooldown/placement and the NEW crypt_lich/bone_thrall rows); a policy change is a STOP-and-report, never a silent edit"},
 	{"row": "act3_awakened_boss_solo", "column": "band", "policy": "competent", "lo": 0.35, "hi": 0.45,
 		"why": "user ruling 2026-08-12 (#448, CHOICE-LOG): Relc's veto branches to a hard solo fight, not a wall. 0.35-0.45 competent-at-band, with the pre-#439 solo read of 0.37 named as the reference feel"},
 ]
@@ -648,6 +673,7 @@ func _measure(cell: Dictionary) -> Dictionary:
 				copy[WIKeys.SKILLS] = kit
 			cfgs.append(copy)
 		var combat := WICombat.new(cell["arena"], cfgs, cell["skills"], func(_t: String, _p: Dictionary) -> void: pass, seed_v)
+		combat.summon_catalog = cell.get("summon_catalog", {})
 		combat.begin()
 		max_hp = int(combat.combatants["pc"][WIKeys.MAX_HP])
 		var guard := 0
@@ -794,6 +820,11 @@ func _init() -> void:
 					"row": row["id"], "build": build["name"], "policy": policy_name,
 					"arena": arena, "cfgs": cfgs, "skills": skills,
 					"items_by_id": items_by_id, "draughts": row["draughts"],
+					# #460: the roster a `summon` Skill reaches for. Threaded the same way
+					# `wi_game.start_combat` injects it, so a summoner row measures the
+					# fight a player actually gets; an unwired harness would push_error and
+					# then measure a Lich that never raises anything.
+					"summon_catalog": by_id,
 				})
 			measured["%s_rank" % column] = rank
 			measured["%s_label" % column] = String(build["label"])

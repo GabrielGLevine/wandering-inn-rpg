@@ -506,6 +506,41 @@ func _rebuild_combat_labels() -> void:
 	labels.rebuild_context("combat", entries)
 
 
+## #460 A BODY THAT ARRIVED AFTER `build()` RAN. Same construction as the
+## opening roster's holders, so a summon is indistinguishable from a rostered
+## combatant once it is on the board.
+##
+## IDEMPOTENT BY THE `_squares` GUARD, and that guard is load-bearing: the
+## arrival beat is applied OUTSIDE playback's `with_visuals` gate (persistent
+## renderer state, the TERRAIN_ADDED class), so a skip fast-forward can reach
+## this function for a body that already has a holder.
+func add_combatant_visual(id: String, c: Dictionary, cell: Vector2i) -> void:
+	if _board == null or not is_instance_valid(_board) or _squares.has(id):
+		return
+	var visual := make_combatant_visual(id, c)
+	# PLACED HERE, not left to the next refresh, and this is load-bearing:
+	# `make_combatant_visual` never sets a position -- `build()` gets away with
+	# that because `_refresh()` moves the whole roster on the very next line. A
+	# mid-fight arrival has no such follow-up, because `_refresh_combatants` is
+	# GATED OFF while playback drains, so an unplaced holder rendered at cell
+	# (0,0) -- the board's top-left corner -- for the rest of the AI turn and then
+	# teleported to its real cell when the drain finished.
+	visual.position = Vector2(cell) * CELL
+	_board.add_child(visual)
+	_squares[id] = visual
+	apply_stats(id, {
+		"hp": int(c["hp"]), "max_hp": int(c["max_hp"]),
+		"mp": int(c.get("mp", 0)), "max_mp": int(c.get("max_mp", 0)),
+	})
+	var labels := _world_labels()
+	if labels != null:
+		labels.add_to_context("combat", {
+			"id": _label_id(id),
+			"anchor": visual,
+			"offset": visual.get_meta("label_offset", Vector2.ZERO),
+		})
+
+
 func _label_id(id: String) -> String:
 	return "combat:" + id
 

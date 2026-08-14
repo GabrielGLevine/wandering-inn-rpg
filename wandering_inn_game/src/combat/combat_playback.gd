@@ -310,7 +310,13 @@ func _apply_playback_event(event: Dictionary, with_visuals: bool) -> void:
 			_screen._push_feed(payload)
 			_screen._render_tutor_line(tutor)
 			_screen._refresh()
-		WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED:
+		WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED, WIEvents.COMBATANT_ADDED:
+			# #460 rides the TERRAIN class for exactly the reason this arm's comment
+			# gives: `add_combatant_visual` mutates PERSISTENT renderer state (a new
+			# holder in `_squares`), and nothing in the post-drain resync creates a
+			# missing holder -- `_refresh_combatants` only moves ones that exist. A
+			# player pressing skip on the beat the thrall claws up would otherwise
+			# fight an invisible body for the rest of the encounter.
 			# Terrain overlays are BOARD STATE,
 			# not transient juice -- `_play_event_visual`'s TERRAIN arms are the
 			# ONLY code that mutates board_renderer's persistent overlay tree,

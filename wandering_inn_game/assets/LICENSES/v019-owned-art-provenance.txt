@@ -44,3 +44,16 @@ assets/sprites/invrisil_lady_client/Idle_{Down,Side,Up}-Sheet.png (frames 1-3 on
     `idle_breath_v3_409` group — then colour-mapped onto the shipped
     sheet's own palette. Same PixelLab ownership terms as the rest of this
     file.
+
+assets/sprites/crypt_lich/Idle_{Down,Side,Up}-Sheet.png
+assets/sprites/bone_thrall/Idle_{Down,Side,Up}-Sheet.png
+    GH#460, the crypt-Lich summoner archetype. PixelLab v2
+    create-character (mode=v3, 8 directions; 64px and 48px respectively,
+    2026-08-14) plus animate-character on the `breathing-idle` template for
+    the south/east/north facings -- four frames each, packed into the
+    horizontal strips sprites.json reads. West mirrors the side sheet and
+    the four diagonals are parked, the standard directional shape. No walk
+    cycle: both rigs are combat-plus-encounter-marker and combat never
+    plays `walk`. PixelLab outputs are user-owned and redistributable per
+    its terms of service -- same footing as every other owned PixelLab
+    sheet above.

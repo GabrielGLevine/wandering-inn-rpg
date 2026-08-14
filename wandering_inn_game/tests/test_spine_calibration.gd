@@ -141,6 +141,9 @@ func _measure(cell: Dictionary) -> Dictionary:
 		for cfg: Dictionary in (cell["cfgs"] as Array):
 			cfgs.append(cfg.duplicate(true))
 		var combat := WICombat.new(cell["arena"], cfgs, cell["skills"], func(_t: String, _p: Dictionary) -> void: pass, seed_v)
+		# #460: a CI gate row naming the same fight as a table row must BE the same
+		# fight, and that now includes the roster a summoner can reach for.
+		combat.summon_catalog = cell.get("summon_catalog", {})
 		combat.begin()
 		var guard := 0
 		while not combat.finished and guard < 2000:
@@ -217,6 +220,7 @@ func _init() -> void:
 		measured[key] = _measure({
 			"row": parts[0], "policy": parts[2], "arena": arena_by_id[String(entity["arena"])],
 			"cfgs": cfgs, "skills": skills, "items_by_id": items_by_id, "draughts": row["draughts"],
+			"summon_catalog": by_id,
 		})
 		print("[calibration] %-46s %s %.2f / %d rd" % [key, measured[key]["result"], measured[key]["win_rate"], measured[key]["rounds"]])
 
