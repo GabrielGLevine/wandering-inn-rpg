@@ -423,9 +423,9 @@ different number:
 Of the 47 out-of-window rows, 26 follow a prop `interact` (the interact idiom
 already pins them), 10 follow the combat banner dismiss (item 3's
 `expect_banks_after_dismiss`, now built), 9 follow a conversation's teardown
-pair, and 2 are the Krshia sell row the economy planner already owns. Of the
-94 in-window rows, 92 are the amendment's own five shapes and 2 are that same
-sell row. The count is pinned in
+pair, and 2 follow a sleep's `phase_changed`. Of the 94 in-window rows, 92 are
+the amendment's own five shapes and 2 are the Krshia sell row the economy
+planner already owns. The count is pinned in
 `test_m36_contract.py::test_the_measured_derivable_subset_is_94_rows_at_55_sites_not_141`.
 
 **Where the golden stands.** `scripts/itinerary/steel_thread.yaml` now carries
