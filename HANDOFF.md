@@ -32,9 +32,16 @@ or superseded session blocks.
   unreachable inside sanctioned levers, canon question) goes to the
   USER directly — do not improvise doctrine; wave autonomy covers
   execution calls only, logged to CHOICE-LOG.
-- WAVE STATE (2026-08-14): **35 MERGED** through #497 — Lich (#460),
+- **CI now runs the Python corpus** (#498, 2026-08-14): a gate audit
+  found ~357 pytest tests wired into NO runner — CI's "Unit suites" is
+  `tests/test_*.gd` only — including every itinerary contract suite and
+  the differ's own safety guards. The new `Python suites (pytest)` job
+  carries `fetch-depth: 0` (test_data_diff walks `<sha>^`) and installs
+  the pinned engine (two contract tests drive the oracle). CI is 8
+  checks now. Verified running green on main post-merge.
+- WAVE STATE (2026-08-14): **36 MERGED** through #498 — Lich (#460),
   meal cap (#432), skirmisher [Give Ground], [Blademaster] rename, M3.6
-  (PARTIAL), equipment kit, §6.3 tightening. Per-change detail lives in
+  (PARTIAL), equipment kit, §6.3 tightening, the CI pytest job. Per-change detail lives in
   the merged PR bodies; rulings in docs/CHOICE-LOG.md (11 user calls
   landed 2026-08-14). Merged worktrees cleaned; verify a squash merge by
   CONTENT/tree, never `git cherry`.
@@ -68,20 +75,10 @@ or superseded session blocks.
   Acceptance milestone: Mage-focused steel-thread variant as an
   itinerary diff. Pieces 1-3 are hour-scale and Codex/Opus-delegable;
   #434 is day-scale (Fable specs, Sol implements per doctrine).
-- DONE (2026-08-11, Fable session): **continuous steel thread rebuilt and
-  merged** (`ceefd357` + follow-ups on main). One PC, title → epilogue,
-  true act order, zero install_fixture/teleport (grep-gated), 2448 steps,
-  seed 9, headless ~55s ×2 green, windowed observation run completed
-  green (72 captures, 14-line epilogue). Companion ruling shipped: worn-
-  accessory abilities are known while worn (known_skills fold + field-bar
-  re-render on equip + honest effect-text qualifier; sim_core/effect_text
-  pins and data_lint code-grant anchors repinned). Findings ledger for
-  the user's pacing/reachability debrief:
-  `wandering_inn_game/docs/design/steel-thread-route-spec.md` (warden
-  wall + autoplay competence gap, Act III XP lump, Act IV economy
-  squeeze, Diplomat load-bearing, alleys need [Stealth]). Known
-  pre-existing red, NOT this wave's: `d3_inventory_shot` (fails on an
-  unmodified tree too — inventory pin drift; triage separately).
+- Pacing/reachability findings ledger for the user's debrief lives at
+  `wandering_inn_game/docs/design/steel-thread-route-spec.md` (Act III
+  XP lump, Act IV economy squeeze, Diplomat load-bearing, alleys need
+  [Stealth]).
 - No other issue implementation lane is recorded as active. The exact next action on
   this tree is to review and commit the housekeeping bundle without dropping
   unrelated edits. `scripts/preflight.sh --full` is green on the composed
