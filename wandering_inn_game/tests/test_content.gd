@@ -2101,18 +2101,28 @@ func _validate_tutor_line_help_consistency() -> void:
 ## graphs, no list to maintain. Economics: variant price > base price +
 ## fee/2 (Hedault charges for real value).
 ##
-## SLOT RULE, widened by #438. This asserted `kind == "accessory"` on BOTH
-## sides, which was an accurate description of the shipped enchant loop rather
-## than a rule about it: every product on the hub happened to be an accessory
-## because no weapon upgrade had been authored yet. The #438 equipment-gaps
-## sketch authors one (relcs_spare_spear -> hedault_trued_spear), so the
-## accessory literal would have blocked the content it was never aimed at.
-## What the check is actually FOR is that an upgrade preserves the thing's
-## slot -- paying a fee to have your spear corrected must hand back a spear,
-## never a charm -- so it now asserts base.kind == variant.kind, which is
-## strictly stronger than the old pair-of-literals (it also catches an
-## accessory that upgrades into a different accessory-shaped kind) and still
-## refuses anything outside the two slots the loop is allowed to touch.
+## SLOT RULE, WIDENED by #438 -- and widened is the honest word for it. This
+## asserted `kind == "accessory"` on both sides, which described the shipped
+## enchant loop rather than ruling it: every product on the hub happened to be
+## an accessory because no weapon upgrade had been authored yet. #438 authors
+## one (relcs_spare_spear -> hedault_trued_spear), which the accessory literal
+## would have blocked.
+##
+## THIS IS STRICTLY WEAKER AS A FILTER, and nothing below should be read as
+## claiming otherwise. The old literal rejected every non-accessory pair, so it
+## caught everything the pair below catches and one class more -- weapon pairs,
+## which are now the point. An earlier draft of this comment credited the new
+## form with catching "an accessory that upgrades into a different
+## accessory-shaped kind"; that was false, because the old `variant.kind ==
+## "accessory"` arm already rejected it. There is no case the old rule missed.
+##
+## What the widening BUYS is the weapon slot. What it PRESERVES is the property
+## the old literal encoded only by accident -- that an upgrade hands back the
+## same slot it consumed, so a fee paid to correct a spear cannot return a
+## charm. The second `_check` is the residual fence: `same kind` alone would be
+## satisfied by a meal->meal or parcel->parcel swap, so the loop is still held
+## to the two slots it is allowed to touch. Narrowing back is a one-line change
+## (`base_kind == "accessory"`) the day the weapon arm is retired.
 func _validate_enchant_pairs(graphs: Dictionary, items: Dictionary) -> void:
 	var by_id: Dictionary = {}
 	for it: Dictionary in items.get("items", []):

@@ -1457,13 +1457,13 @@
       "lore": "A bow this long is a farmer's whole winter of shaping and a hunter's whole year of pulling. It was in the den because whoever drew it last did not walk out."
     },
     {
-      "_comment": "#438 EQUIPMENT GAPS, death-implement T2. ACCESSORY, not weapon, and the kind is forced by the engine rather than chosen: WICombatBuild.equipment_mods (combat_build.gd:19) reads ONLY damage_mod off a weapon, and fold_abilities (combat_build.gd:30) folds abilities from ACCESSORIES ONLY -- an implement authored as a weapon could carry no ability at all. Worse, a new `weapon_family` would send weapon_gated_kit stripping the necromantic lineage's own grants: [Grave Edge] is sword-gated, so a deathknight holding an implement would lose its marquee Skill. Held in the off hand beside a blade is both the correct fiction and the only shape that works. NAME: canon implement vocabulary is WAND and STAFF (the wiki's artifact list carries no 'rod' and no 'focus'; Pisces' Waisrabbit Bone Wand, Vol 4 Ch 4.10, is the pattern), so the sketch's 'Focus' is retired here rather than shipped. Price 30 = plum_silk_locket 30, the shipped enchanted-accessory band; hunters_fang_talisman is the same damage_mod 1 at resonance 1 for 14, and the extra resonance point is what the other 16 buys.",
+      "_comment": "#438 EQUIPMENT GAPS, death-implement T2. ACCESSORY, not weapon, and the kind is forced by the engine rather than chosen: WICombatBuild.equipment_mods (combat_build.gd:19) reads ONLY damage_mod off a weapon, and fold_abilities (combat_build.gd:30) folds abilities from ACCESSORIES ONLY -- an implement authored as a weapon could carry no ability at all. Worse, a new `weapon_family` would send weapon_gated_kit stripping the necromantic lineage's own grants: [Grave Edge] is sword-gated, so a deathknight holding an implement would lose its marquee Skill. Held in the off hand beside a blade is both the correct fiction and the only shape that works. NAME: canon implement vocabulary is WAND and STAFF (the wiki's artifact list carries no 'rod' and no 'focus'; Pisces' Waisrabbit Bone Wand, Vol 4 Ch 4.10, is the pattern), so the sketch's 'Focus' is retired here rather than shipped. WHAT AN IMPLEMENT CAN AND CANNOT BUY, measured: there is NO caster-power stat on items, and damage_mod is not one. `_resolve_hit` adds it inside `if melee:` (combat/wi_combat.gd:785), and the spell_damage arm calls that same function with melee=false (combat/skill_effects.gd:64) -- a spell scales off `int` and `weapon_die` and never sees a point of damage_mod. The effect card has always read '+1 damage on MELEE hits' and it was telling the truth. So this row cannot buy better death magic; what it can buy is the caster staying upright while casting, which is why its weight sits in hp_mod. DEFECT FIXED (audit): the first draft shipped hp_mod 0, which left this row losing outright to hunters_fang_talisman -- the same damage_mod 1 for 14g catalog and 20g at the very fence node that sells this one -- so the spine it exists for was better off ignoring it. hp_mod 3 is what separates the two rows.",
       "id": "graveflame_wand",
       "name": "Graveflame Wand",
       "kind": "accessory",
       "weapon_family": "none",
       "damage_mod": 1,
-      "hp_mod": 0,
+      "hp_mod": 3,
       "damage_reduction": 0,
       "resonance": 2,
       "tier": "enchanted",
@@ -1473,14 +1473,14 @@
       "lore": "He keeps it under the counter and does not display it, which he will tell you is a matter of shop policy rather than of law. The distinction matters to him."
     },
     {
-      "_comment": "#438 EQUIPMENT GAPS, death-implement T3 -- crypt_lich_mouth loot. NAME: the sketch's working name was 'Femur Rod', which the sketch itself flagged for replacement. This one is built from the canon naming pattern instead -- [material]bone + implement, after Pisces' Waisrabbit Bone Wand (Vol 4, Ch. 4.10) -- on [Lich], a canon undead type cited Vol 6, Ch. 6.51 A. Both hooks are pre-bar, the compound names no character's unique artifact, and it says exactly what the drop is. Accessory for the same engine reason as graveflame_wand. resonance 3 puts it past the base capacity of 2 (wi_game.gd:47), so it is a grown-capacity item exactly like anchor_sliver -- deliberate, and the reason it can outrun the T2 wand without outpricing it. Unpriced: unique drop, the moon_bone_amulet convention.",
+      "_comment": "#438 EQUIPMENT GAPS, death-implement T3 -- crypt_lich_mouth loot. NAME: the sketch's working name was 'Femur Rod', which the sketch itself flagged for replacement. This one is built from the canon naming pattern instead -- [material]bone + implement, after Pisces' Waisrabbit Bone Wand (Vol 4, Ch. 4.10) -- on [Lich], a canon undead type cited Vol 6, Ch. 6.51 A. Both hooks are pre-bar, the compound names no character's unique artifact, and it says exactly what the drop is. Accessory for the same engine reason as graveflame_wand, and it carries no caster-power stat for the same measured reason recorded there. resonance 3 puts it past the base capacity of 2 (wi_game.gd:47), the same reach as anchor_sliver. DEFECT FIXED (audit): the first draft shipped hp_mod 2 / damage_reduction 0, which the T2 row above then matched or beat on every stat; damage_reduction 1 is what separates this row from graveflame_wand. Unpriced: unique drop, the moon_bone_amulet convention.",
       "id": "lichbone_wand",
       "name": "Lichbone Wand",
       "kind": "accessory",
       "weapon_family": "none",
       "damage_mod": 1,
-      "hp_mod": 2,
-      "damage_reduction": 0,
+      "hp_mod": 3,
+      "damage_reduction": 1,
       "resonance": 3,
       "tier": "enchanted",
       "abilities": [],
@@ -1488,7 +1488,7 @@
       "lore": "It was made by someone patient out of what a crypt had to hand, over what must have been a long and undisturbed while. The banding is the only honest part of it."
     },
     {
-      "_comment": "#438 EQUIPMENT GAPS, civil-utility T2. The multiclass ruling (CHOICE-LOG 2026-08-13) makes civil spines fight; nothing in the shops helped them survive doing it. Armor, because that is the slot workwear occupies -- hp_mod 2 with no damage_reduction, so it never reads as a combat kit. Price 12 sits exactly on the shipped armor curve at 6 gold per hp_mod: wool_lined_cloak 18/hp3 and leather_jerkin 24/hp4 are both 6.0, and 2 x 6 = 12. VENDOR NOTE: the sketch named 'Coyle & Sons', which does not exist -- in shipped content Master Coyle is the Invrisil merchant-prince ANTAGONIST of the Farley chain (quests.json `merchant_fate_decided`), not a clothier. The forge tier sells its own workwear instead, which is better fiction for a weighted apron anyway.",
+      "_comment": "#438 EQUIPMENT GAPS, civil-utility T2. The multiclass ruling (CHOICE-LOG 2026-08-13) makes civil spines fight; nothing in the shops helped them survive doing it. Armor, because that is the slot workwear occupies -- hp_mod 2 with no damage_reduction, so it never reads as a combat kit. Price 12 sits exactly on the shipped armor curve at 6 gold per hp_mod: wool_lined_cloak 18/hp3 and leather_jerkin 24/hp4 are both 6.0, and 2 x 6 = 12. VENDOR NOTE, a deviation from a user-GO'd sketch, so the reason has to be the real one. Coyle & Sons SHIPS: it is named on the boulevard (data/maps/invrisil/invrisil_boulevard.json:1433, 'COYLE AND SONS keeps one modest door') and it has its own art (data/sprites.json `coyle_shop_sign`). The deviation is about CHARACTER, not existence -- Master Coyle is the Invrisil merchant-prince ANTAGONIST of the Farley chain (data/quests.json:204-213, terminal `merchant_fate_decided`), a man the player exposes or extorts, and a fork that can end with him ruined cannot also be a standing workwear counter. The forge tier sells its own bench kit instead, which is where a weighted apron belongs anyway.",
       "id": "weighted_apron",
       "name": "Weighted Apron",
       "kind": "armor",
