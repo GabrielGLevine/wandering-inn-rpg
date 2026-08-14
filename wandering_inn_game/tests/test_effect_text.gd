@@ -146,11 +146,7 @@ const EXPECTED_SKILLS := {
 	"quick_movement": ["+1 move cell every turn"],
 	"second_wind": ["2 AP — restore 8 HP to yourself. Once per fight."],
 	"dangersense": [],
-	# #474: the "Once per round." clause is the WHOLE lane-visible change to this
-	# Skill -- the mult is untouched at 1.4. It is a [Warrior] L1 grant and so is
-	# [Power Strike]; uncapped it bought two casts a turn (2.8x) against that
-	# Skill's cooldown-gated 2.0x, i.e. nothing over two plain swings.
-	"piercing_strikes": ["2 AP — ×1.4 damage. Once per round."],
+	"piercing_strikes": ["2 AP — ×1.4 damage"],
 	"quick_slash": ["1 AP — ×0.7 damage"],
 	"flash_cut": ["2 AP — ×1.4 damage"],
 	"devastating_slash": ["3 AP — ×2.6 damage. Once every 2 rounds."],

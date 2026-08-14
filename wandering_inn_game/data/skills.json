@@ -232,7 +232,7 @@
    "description": "A cold prickle at the neck, a heartbeat before harm."
   },
   {
-   "_comment_474": "#474 ONCE PER ROUND, and the mult is UNTOUCHED at 1.4. THE DEFECT, priced: this is a [Warrior] L1 grant and so is [Power Strike], and the two were not comparable. [Power Strike] is 3 AP for 2.0x on a 2-round cooldown, which against 4 AP of basic swings (2.0x) buys exactly nothing; [Piercing Strikes] was 2 AP for 1.4x with NO bound, i.e. TWO casts a turn for 2.8x -- a permanent +40% DPR the sword half of the same class level cannot reach. The cap makes it one big thrust and one ordinary swing (2.4x), which is still the spear line's identity and still ahead of the sword line, without being the whole of it. SHAPE PRECEDENT: [Counter Strike]'s `once_per_round`, capped by #451 for the same reason -- a free rider that scaled with how often the round let it fire. `cooldown_rounds: 1` IS once-per-round (WICombat.cooldown_remaining stamps round_number + 1). MEASURED, tests/_kit_probe.gd, 100 seeds, competent, per-spine band cells: spellspear I 0.88 -> 0.85, II 0.79 -> 0.72, III 0.78 -> 0.76, IV 0.92 -> 0.83, V 0.64 -> 0.64 (Act V is INSENSITIVE -- the warden ablation reads 0.64 either way); skirmisher I 0.88 -> 0.85, III 0.76 -> 0.74, IV 0.89 -> 0.84. The cost is on the record too: skirmisher's Act II cell, a WALL before this lane and after it, deepens 0.44 -> 0.28.",
+
    "id": "piercing_strikes",
    "display_name": "[Piercing Strikes]",
    "contexts": [
@@ -241,7 +241,6 @@
    "ap_cost": 2,
    "weapon": "spear",
    "icon": "icon_piercing_strikes",
-   "cooldown_rounds": 1,
    "effect": {
     "type": "damage_mult",
     "mult": 1.4

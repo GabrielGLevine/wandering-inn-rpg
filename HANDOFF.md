@@ -146,8 +146,19 @@ or superseded session blocks.
   0.69 (growth broadened to con 1 + str 1, flat rule untouched), and the
   bonded wolf now meets a counter — `target_rule: "bonded"` answered by
   [Sunder the Bond] on the Warden, the Awakened and the Matriarch.
-- **Two cells the counter cannot reach, wanting a ruling** (measured, 400
-  seeds, `docs/design/spine-viability-table.md` findings 10-11):
+- **The spear family is over the ceiling in Acts I and IV, wanting a
+  ruling.** `holdable_line` (#474) stopped measuring [Spellspear] and
+  [Skirmisher] at `spearmaster` levels the class does not have; at the
+  `warrior` line a player can actually hold, both read 0.88 at Act I and
+  0.92/0.89 at Act IV. The one lever that reaches them is [Piercing
+  Strikes] (2 AP, 1.4x, no bound, against [Power Strike]'s cooldown-gated
+  2.0x at the same [Warrior] L1 rung); capped once per round all four land
+  in window (0.85/0.83/0.85/0.84) — and the SHIP column moves with it by
+  up to 0.12, which at a single seeded run is the steel thread's authored
+  victory pins losing fights. Reverted and surfaced rather than shipped;
+  a cap wants its own lane with the steel-thread re-authoring budgeted.
+- **Two cells the counter cannot reach, wanting a ruling** (measured,
+  `docs/design/spine-viability-table.md` findings 10-11):
   1. `wild_sage14` at the Warden, 0.96. The wolf is worth +0.87 there and
      the counter is a STEP, not a slope — mult 2.0 reads 0.94/0.78 for
      wild_sage/druid, mult 2.2 reads 0.65/0.36, and nothing lands both
