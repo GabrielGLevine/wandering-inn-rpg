@@ -23,6 +23,15 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### User rulings 2026-08-13 (#438 wave-close batch)
 
+- **#485 name proposal: blanket GO, user edits stragglers later
+  (2026-08-13 night).** All proposed first-order names proceed;
+  wiki-verify at build still binds; post-bar hits still return for
+  clearance; any user edit later supersedes the shipped display name
+  (ids freeze at release cut only).
+- **Equipment sketch GO (2026-08-13 night)** — the nine-item table in
+  docs/superpowers/specs/2026-08-13-equipment-gaps-design.md
+  implements under its balance rails.
+
 - **Act V capstone trivialization: trim capstone stat growth AND/OR
   raise Warden difficulty, then re-balance builds that fall too weak
   (user, 2026-08-13).** Binding design principle: NO build auto-wins —

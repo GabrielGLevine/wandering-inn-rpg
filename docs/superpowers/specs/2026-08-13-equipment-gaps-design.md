@@ -1,7 +1,6 @@
 # Equipment gaps — content design sketch (#438 ruling 6)
 
-> Status: **DESIGN SKETCH for user taste-pass** (Fable, 2026-08-13).
-> Implementation dispatches after the user marks rows GO/edit. The
+> Status: **GO (user, 2026-08-13 night)** — implements under the §2 rails. The
 > ruling: add missing gear across tracks (spear first) via vendors,
 > encounter loot, trap/puzzle/sealed-area treasure, quest rewards, and
 > Hedault upgrades of existing gear.
