@@ -140,10 +140,23 @@ or superseded session blocks.
   2. **[Ranger] walls identically** at the warden (0.33, mp 0, no
      companion) — same diagnosis as skirmisher's pre-fix 0.26. Out of
      that lane's scope; wants the same kit-gap treatment if ruled.
-- **Design calls still open from #488:** bonded wolf worth +0.79 at the
-  Warden (bigger than every stat/Skill/item combined); t6/t12/s16 read as
-  a level-budget problem, not capstone power; `beast_master14` 0.63→0.27
-  collateral wants a broaden-growth repair (class-design call).
+- **Design calls still open from #488:** t6/t12/s16 read as a
+  level-budget problem, not capstone power. The other two are CLOSED by
+  the 2026-08-14 drift lane: `beast_master14` 0.63→0.27 is repaired to
+  0.69 (growth broadened to con 1 + str 1, flat rule untouched), and the
+  bonded wolf now meets a counter — `target_rule: "bonded"` answered by
+  [Sunder the Bond] on the Warden, the Awakened and the Matriarch.
+- **Two cells the counter cannot reach, wanting a ruling** (measured, 400
+  seeds, `docs/design/spine-viability-table.md` findings 10-11):
+  1. `wild_sage14` at the Warden, 0.96. The wolf is worth +0.87 there and
+     the counter is a STEP, not a slope — mult 2.0 reads 0.94/0.78 for
+     wild_sage/druid, mult 2.2 reads 0.65/0.36, and nothing lands both
+     inside [0.55, 0.85]. The four HP deciding whether one blow is lethal
+     are [Pack Bond]'s. Shipped at the setting that keeps druid in window;
+     wild_sage is SURFACED per NO-AUTO-WIN, not tuned around.
+  2. `act2_cistern_nest` for both bonded spines, 0.90. The counter buys
+     ~0.03 at ANY strength — at a three-body nest the companion's value is
+     its own damage, not the boss's attention.
 
 No other open issue is recorded here as waiting on user taste. Visual eye/ear
 reads remain in `docs/VISUAL-LOG.md`, where they can be accepted or promoted.
