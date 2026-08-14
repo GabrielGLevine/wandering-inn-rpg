@@ -154,14 +154,21 @@
    "timeout_sec": 10
   },
   {
-   "_comment": "THE KIT PROOF, all three halves. pierce_thrust is [Spearmaster]'s OWN L14 grant reaching the merged class through `inherits` -- the spear kit a merge into [Ranger] would have deleted. steady_point is [Skirmisher]'s OWN L14 grant, the spear-gated twin of [Ranger]'s bow-gated [Steady Draw]. keen_eye is the archer half of the same fold, and it is the RIGHT archer probe precisely because it carries no `weapon` key: [Power Shot], [Piercing Shot] and [Quick Nock] are all bow-gated and are correctly absent from a spear build, so naming one of them here would pin a filter bug as if it were a kit.",
+   "_comment": "THE KIT PROOF, all four halves. pierce_thrust is [Spearmaster]'s OWN L14 grant reaching the merged class through `inherits` -- the spear kit a merge into [Ranger] would have deleted. steady_point is [Skirmisher]'s OWN L14 grant, the spear-gated twin of [Ranger]'s bow-gated [Steady Draw]. keen_eye is the archer half of the same fold, and it is the RIGHT archer probe precisely because it carries no `weapon` key: [Power Shot], [Piercing Shot] and [Quick Nock] are all bow-gated and are correctly absent from a spear build, so naming one of them here would pin a filter bug as if it were a kit. give_ground is the #438 KIT-GAP leg, and it is the one row here that must hold for the OPPOSITE reason to steady_point: it carries no `weapon` key ON PURPOSE (its skills.json record says why), so a future gate minted onto it would strip the class's only defensive answer on the bow half of its own lineage -- and this assert, taken WITH THE SPEAR WORN, is what would catch that.",
    "action": "assert_state",
    "path": "combat.combatants.pc.skills",
    "contains": [
     "pierce_thrust",
     "steady_point",
-    "keen_eye"
+    "keen_eye",
+    "give_ground"
    ]
+  },
+  {
+   "_comment": "#438 THE KIT GAP, PROVED AS A NUMBER rather than as a membership. [Give Ground] is a 0-AP passive: it never appears in a hotbar slot and never emits a skill event, so the `contains` row above would pass unchanged even if `_apply_passives` stopped folding it. What the Skill actually DOES is raise this combatant's max HP by 10 on top of [Tough Body]'s own 10, and max_hp is the one surface that proves the fold happened. 20 base + con 12 + [Tough Body] 10 + [Give Ground] 10 == 52, with no armour on this fixture. If the grant were ever silently dropped -- or re-gated onto a weapon the fixture is not wearing -- this reads 42 and reds.",
+   "action": "assert_state",
+   "path": "combat.combatants.pc.max_hp",
+   "equals": 52
   },
   {
    "action": "screenshot",

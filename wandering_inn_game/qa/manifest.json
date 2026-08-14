@@ -849,7 +849,7 @@
    "script": "skirmisher_consolidation_loop",
    "seed": 438,
    "fixture": "near_skirmisher_consolidation",
-   "note": "spearmaster+archer -> [Skirmisher] 14, inherited + own grants fielded; [Steady Point] spear-gated, bow grants correctly stripped",
+   "note": "spearmaster+archer -> [Skirmisher] 14, inherited + own grants fielded; [Steady Point] spear-gated, bow grants correctly stripped; [Give Ground] (#438 kit gap) proved BOTH ways -- in the kit and as the max_hp 52 it folds",
    "tiers": [
     "full"
    ],

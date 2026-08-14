@@ -340,6 +340,68 @@ const ROSTER := [
 	#     harness artefact — `wi_game.gd:2352` fields the companion whenever the
 	#     arena has a free player spawn, and `vault` has four.
 	#
+	# #438 KIT GAP, THE SECOND HELPING (2026-08-13, user ruling: "Skirmisher walls
+	# are a kit/Skill gap — fill the kit"). skirmisher14 read 0.26 here, the
+	# lowest martial cell in the table. SCOPE OF THE FINDING, stated as measured
+	# rather than as a universal: among the FIVE spines whose Act V build stands
+	# at 48 max HP — spellsword, spellspear, deathknight, ranger, and skirmisher
+	# before this lane — the ones that clear this fight are exactly the ones
+	# carrying an effective-HP buffer ON TOP of that 48. [Spellsword]/
+	# [Spellspear]/[Deathknight] hold [Mana Shield] over a 19-point MP pool
+	# (67 EHP; 0.70/0.60/0.66); the two with no buffer are skirmisher 0.26 and
+	# ranger 0.33, precisely the two that wall. The other four derived spines are
+	# NOT at 48 and are not part of this read (measured, `_kit_probe.gd`, Act V:
+	# innkeeper 52, wild_sage 52, druid 52, scout 38 — and the last three carry a
+	# second body or a civil ruling of their own). So for the 48-HP family the
+	# buffer, not the damage, is what this row has been measuring, and [Ranger] is
+	# the same finding still open — see the reachability note below before
+	# assuming its remedy is free.
+	#   WHY A NEW SKILL AND NOT THE DEATHKNIGHT RE-GRANT: [Mana Shield] is INERT
+	#   on this lineage. `_new_combatant` sets `max_mp` only when the kit holds a
+	#   skill carrying `mp_cost`, and spearmaster x archer ships none at any
+	#   level — measured with `tests/_kit_probe.gd`, granting it reads 0.26 ->
+	#   0.26 at mp 0. [Give Ground] (hp_bonus 10, [Tough Body]'s block verbatim)
+	#   is the shape that works without mana: 0.26 -> 0.61, and the A/B that
+	#   sized it (+4 0.45, +8 0.56, +12 0.68) is in the skill's own record.
+	#   THE MECHANISM IS A STEP, NOT A SLOPE, and it is worth knowing for every
+	#   future row here: `WICombatPolicies._survive`'s hit floor is 1.5x the
+	#   biggest hit a living foe could land, which against this warden is
+	#   1.5 * int((17/2 + 8) * 2.0) == 48.0 — EQUAL to the 48 max HP the family
+	#   above carries. `hp <= hit_floor` is therefore true at FULL HEALTH, so the
+	#   competent policy opens the fight by healing for 0 and burning [Second
+	#   Wind]'s `once_per_fight`.
+	#   WHAT THE TEN HP ACTUALLY BUY, and the numbers belong to named builds
+	#   because they disagree with each other (100 seeds, competent, this row):
+	#     skirmisher14 PRE-lane, 48 HP (reproduce with WI_KIT_ABLATE=give_ground):
+	#       0.26 / 3 rd with [Second Wind], 0.26 / 3 rd without. Worth 0.00 and
+	#       zero rounds — it is spent at full health every time.
+	#     skirmisher14 SHIPPED, 58 HP: 0.61 / 5 rd with, 0.43 / 5 rd without.
+	#       Worth +0.18. The HP did not merely add HP; it lifted the build out of
+	#       the permanent death band and SWITCHED ON a Skill the class already had.
+	#     ship_act5 (the steel thread's own w12/m2/d7/t2, 52 HP) — this is the
+	#       build the ablation probe below prints, and it is a THIRD answer:
+	#       0.62 / 5 rd with, 0.64 / 4 rd without. Worth -0.02 and one round
+	#       SHORTER. Do not read that line as a statement about any other build.
+	#   ACTS I-IV ARE REACHABLE — the earlier draft of this comment said they were
+	#   not, and that was wrong. `_spine_build` holds the two PARENT lines below
+	#   Act V, so nothing on the skirmisher TABLE reaches them; but a grant placed
+	#   on `archer` at L<=2 does, and it need not disturb a sibling: [Keen Eye] is
+	#   an [Archer] L1 grant with NO `weapon` key and is in this spine's measured
+	#   act2 kit AT A SPEAR, so the gate is a choice rather than a law, and
+	#   data_lint.py contains zero occurrences of "weapon" — nothing forbids it.
+	#   A spear-gated archer grant is stripped from `ranger` and `scout`, the only
+	#   other spines inheriting [Archer], because SPINE_WEAPONS gives both a bow at
+	#   all five acts.
+	#   THE REAL REASON act2 STAYS OPEN IS OVERSHOOT ON THIS SPINE'S OWN CELLS.
+	#   Measured, `_kit_probe.gd` WI_KIT_ADD=give_ground, the same +10 HP reaching
+	#   each cell: act2 0.40 -> 0.67 (in window) and act4 0.80 -> 0.83 (in window),
+	#   but act3 0.72 -> 0.88 — ABOVE the 0.85 ceiling. Carried on the spearmaster
+	#   side instead it also takes act1 0.79 -> 0.96. So the cheapest reaching edit
+	#   fixes one cell and breaks another on the same spine, and act2 needs its own
+	#   ruling with a differently-sized or differently-shaped grant, NOT a claim
+	#   that it cannot be reached. It is UNCHANGED by this lane, as is every other
+	#   cell in the table.
+	#
 	# WHY NO FURTHER WARDEN MOVEMENT. Sized by its cost, A/B at 100 seeds
 	# (`_warden_probe.gd`), band build vs the ceiling row it was aimed at:
 	#   str 17 -> 26        spellsword14 0.78 -> 0.45   s16 1.00 -> 0.97
@@ -1145,7 +1207,7 @@ func _findings() -> String:
 		"1. **The competence gap is [Piercing Strikes], not casting.** The shipped run fought the entire game with Relc's spear, which gates [Power Strike] out of the kit and [Piercing Strikes] in — a 1.4x damage_mult at the SAME 2 AP as a basic swing, i.e. ~+37%% damage for free. `WICombatAI` has no arm for it: `_act_melee` knows `power_strike` by literal id and nothing else. Ablation on the warden at the shipped kit: the competent policy measures %s with it and %s without — a bigger swing than every other resource in the kit combined. Autoplay is not merely 'a melee profile'; it is a melee profile that cannot use a spear's own skill." % [
 			_cell_text(warden["ship_competent"]), _cell_text(_ablations["piercing_strikes"])],
 		"",
-		"2. **[Second Wind] trades an attack for healing, and the policy spends it automatically.** 2 AP buys 8 HP or roughly 20 damage forgone. Ablation against the warden measures %s with it and %s without; those adjacent measurements are the result, without inferring a win-rate gain or loss when they tie. A player under 35%% HP heals, so this records what 'competent, not optimal' costs. It also flags a data seam: [Second Wind] carries neither `cooldown_rounds` nor `once_per_fight`, so it is an unbounded heal for anyone willing to spend the AP." % [
+		"2. **[Second Wind] trades an attack for healing, and the policy spends it automatically.** 2 AP buys 8 HP or roughly 20 damage forgone. Ablation against the warden measures %s with it and %s without; those adjacent measurements are the result, without inferring a win-rate gain or loss when they tie. A player under 35%% HP heals, so this records what 'competent, not optimal' costs. THE DATA SHAPE, corrected: [Second Wind] carries `once_per_fight: true` and no `cooldown_rounds` (data/skills.json; the bound landed in 0f5225d3, the #454 lineage-completeness commit). An earlier version of this line said it carried NEITHER and flagged an unbounded-heal data seam -- that was false, and there is no seam: it is the tightest-bounded resource in the kit, exactly one use per fight. The bound has its own consequence, which is worth pricing in its place: `_survive` fires on a hit-floor term as well as the 35%% one -- 1.5x the biggest hit any living foe could land -- so a build whose max HP sits at or under that floor spends its ONE heal at FULL health, for 0, on round one. That is not hypothetical: at 48 max HP against this warden the floor is exactly 48.0, and ablating [Second Wind] from the pre-#438 skirmisher14 build moved it by 0.00 (0.26 / 3 rd either way), against +0.18 on the same class once ten points of max HP lifted it clear of the floor." % [
 			_cell_text(warden["ship_competent"]), _cell_text(_ablations["second_wind"])],
 		"",
 		"3. **The run once sold its own answer.** Before the competent-policy reauthoring, the steel thread fenced both healing draughts and the vault tonic for 18 gold because autoplay never drank them, then entered the hardest fight with an empty pack. The floor policy did not just under-measure the fight; it changed what the run carried into it.",
