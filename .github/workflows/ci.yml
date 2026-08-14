@@ -93,6 +93,25 @@ jobs:
           python3 scripts/render_qa_notes.py
           python3 scripts/check_doc_drift.py
 
+  # ---------------------------------------------------------- python-suites
+  # Added 2026-08-14 after a gate audit found the entire Python test corpus
+  # was wired into NO runner: CI's "Unit suites" job runs tests/test_*.gd
+  # (Godot) only, and nothing here ran pytest. That left ~357 tests — the
+  # data_lint suites, the scaffold/consolidation CLI tests, and every
+  # itinerary-compiler contract suite from M1 through M3.6 (139 of them,
+  # including the differ's own safety guards) — able to break with CI green.
+  # Engine-free, so it runs beside the lint job rather than behind Godot.
+  python-suites:
+    name: Python suites (pytest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install test dependencies
+        run: python3 -m pip install --quiet pytest Pillow
+      - name: Run the Python test corpus
+        run: python3 -m pytest -q scripts/
+
   # ------------------------------------------------------------------ smoke
   smoke:
     name: Smoke (headless boot)
