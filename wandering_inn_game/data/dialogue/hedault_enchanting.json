@@ -141,6 +141,26 @@
       }
      ],
      "goto": "work_room_opened"
+    },
+    {
+     "_comment": "#438 EQUIPMENT GAPS, spear T2.5 -- the FIRST weapon the enchant-commerce loop touches; every prior product on this hub is an accessory. Same trust-loop shape as the three arms at the top of the hub: {item, gold} show-locked, then fee + remove_item + item, then work_done. It CONSUMES relcs_spare_spear rather than selling a spear from stock, which is the point -- the Act I gift keeps its identity through the upgrade instead of being replaced by it. Fee 35 = the hunter's-fang arm exactly, the same mid-band correction at the same product tier. APPENDED LAST so the hub's authored order is unchanged above it; unlike the accomplishment-gated arms it is show-locked at every fixture, so its row is visible and the option-array pins that count this hub move by one -- that is re-pinned in this commit, not worked around.",
+     "text": "The spear. It was a gift. Correct it, don't replace it. (35 gold)",
+     "requires": {
+      "item": "relcs_spare_spear",
+      "gold": 35
+     },
+     "effects": [
+      {
+       "gold": -35
+      },
+      {
+       "remove_item": "relcs_spare_spear"
+      },
+      {
+       "item": "hedault_trued_spear"
+      }
+     ],
+     "goto": "work_done"
     }
    ]
   },

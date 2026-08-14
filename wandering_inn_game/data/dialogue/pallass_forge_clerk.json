@@ -90,6 +90,63 @@
       }
      },
      "goto": "queue_release"
+    },
+    {
+     "_comment": "#438 EQUIPMENT GAPS, the two forge-tier retail rows. APPENDED LAST and gated on `pallass_entry_stamped` exactly like the tempering-oil arm above, so they are HIDDEN at every fixture that has not stamped in -- the same shape that kept the oil arm off the earlier pins. Prices are the catalog prices (items.json guardsmans_pike 18, weighted_apron 12), posted-price like everything else this clerk sells: he records fees, he does not haggle.",
+     "text": "One of the wall-company pikes off the rack. (18 gold)",
+     "requires": {
+      "gold": 18,
+      "accomplishment": {
+       "pallass_entry_stamped": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -18
+      },
+      {
+       "item": "guardsmans_pike"
+      }
+     ],
+     "goto": "pike_sold"
+    },
+    {
+     "text": "A bench apron, the weighted kind. (12 gold)",
+     "requires": {
+      "gold": 12,
+      "accomplishment": {
+       "pallass_entry_stamped": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -12
+      },
+      {
+       "item": "weighted_apron"
+      }
+     ],
+     "goto": "apron_sold"
+    }
+   ]
+  },
+  "pike_sold": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "Rack stock, stamped at the collar. That stamp is the whole of what you are buying from me — an unstamped haft gets you turned around at the lift, and I would rather not have that conversation twice in one shift.",
+   "options": [
+    {
+     "text": "Understood.",
+     "end": true
+    }
+   ]
+  },
+  "apron_sold": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "Lead in the hem. It hangs straight and it stops a spark, and it is not armour, which is the answer if anyone up here asks you what it is.",
+   "options": [
+    {
+     "text": "Understood.",
+     "end": true
     }
    ]
   },

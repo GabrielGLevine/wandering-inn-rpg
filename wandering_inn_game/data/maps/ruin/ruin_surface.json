@@ -868,9 +868,16 @@
     "crypt_lich"
    ],
    "allies": [],
+   "_comment_loot": "#438 death-implement T3. This encounter is the ONLY safe home for a unique drop in its region: WIEconomy.roll_loot (economy.gd:53) seeds from (run_seed, entity_id) and nothing else, so a `respawns: true` entity re-rolls the SAME result on every kill -- a unique on a respawner either never drops or duplicates forever. crypt_lich_mouth does not respawn (one raising of this crypt per save), which is why the sketch's own 'F1's encounter pays its own track' lands here rather than on a grinder. chance 1.0 matches every shipped unique drop (awakened_boss, ruin_guardian, vault_boss_slot) and consumes the private loot stream without ever branching on it.",
    "on_victory": [
     "crypt_lich_put_down",
     "won_combat"
+   ],
+   "loot": [
+    {
+     "item": "lichbone_wand",
+     "chance": 1.0
+    }
    ]
   }
  ]

@@ -119,22 +119,40 @@ const SPINE_LEVELS := {
 }
 const SPINE_WEAPONS := {
 	"spellsword": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
-	# #449 [Spellspear], the EVOLVED-lineage spear spine. The one row here whose
-	# five acts are the SAME weapon, and that is a real finding rather than a
-	# shortcut: items.json ships three spears (chipped_spear 0, solid_oak_spear
-	# 0, relcs_spare_spear +1) and the best of them is the ACT I TUTORIAL GIFT.
-	# The spear family has no T2 upgrade at all -- the mid-game weapon bump every
-	# other spine takes (rusty_sword -> gnollish_hunting_knife, training_bow ->
-	# hunting_bow, both +1 damage_mod) simply does not exist for spear players,
-	# so this spine's Act I is a notch STRONGER than its siblings' and its Acts
-	# III-V are a notch behind on gear while the class carries the difference.
-	# Same read as the shipped steel thread, which fights every act of its run
-	# with relcs_spare_spear. Report-only, like every derived spine row: no
-	# CALIBRATION row and no reference window names it.
-	"spellspear": ["relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear"],
+	# #449 [Spellspear], the EVOLVED-lineage spear spine. Through #438 this row
+	# held relcs_spare_spear at all five acts, because items.json shipped three
+	# spears (chipped_spear 0, solid_oak_spear 0, relcs_spare_spear +1) and the
+	# best of them was the ACT I TUTORIAL GIFT: the mid-game bump every other
+	# spine takes (rusty_sword -> gnollish_hunting_knife, training_bow ->
+	# hunting_bow) had no spear equivalent at all. THAT GAP IS NOW CLOSED
+	# (#438 equipment-gaps sketch): hedault_trued_spear at Act IV and
+	# wyvernbone_lance at Act V, both +2, the first spear rungs above the
+	# universal +1 ceiling. Acts I-III deliberately KEEP the gift -- neither new
+	# spear is reachable before the Invrisil/sealed-area content that pays them,
+	# and this spine's Act III cell is the table's standing ceiling drift (0.89),
+	# which no lane may make worse by handing it earlier hardware.
+	# guardsmans_pike is the spear family's T2 and is NOT in this ladder: it is
+	# damage-flat against the gift by design (an acquisition path, not a power
+	# rung), so it can never win a best-available slot. That flatness is
+	# MEASURED, not assumed -- the #438 probe ran it at this spine's sibling Act
+	# IV slot and read 0.80, byte-equal to the relcs_spare_spear baseline.
+	# Report-only, like every derived spine row: no CALIBRATION row and no
+	# reference window names it.
+	"spellspear": ["relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear", "hedault_trued_spear", "wyvernbone_lance"],
 	"innkeeper": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
-	"ranger": ["training_bow", "hunting_bow", "hunting_bow", "hunting_bow", "hunting_bow"],
-	"scout": ["training_bow", "hunting_bow", "hunting_bow", "hunting_bow", "hunting_bow"],
+	# #438 bow rungs. ashwood_warbow (+2) is the first bow above the universal
+	# +1 ceiling and enters at Act IV, the act its Riverfarm drop is reachable.
+	# Acts I-III are untouched: training_bow -> hunting_bow is the family's own
+	# shipped T1 -> T2 step, and recurve_of_the_watch is damage-flat against
+	# hunting_bow (a Watch-quest acquisition fork, not a rung), so it can never
+	# win a best-available slot. READ THE NUMBERS BEFORE REACHING FOR THIS ROW:
+	# the +1 rung moved `ranger` act IV by 0.00 (0.06 either way) and act V from
+	# 0.33 to 0.36. The ranged spine's walls are NOT a hardware problem -- see
+	# `_build_pc`'s WEAPON_RANGE comment in sim_combat_batch.gd, which measured
+	# the same thing from the other side: the AI has no bow verb, so bow builds
+	# fight at melee reach whatever they are holding.
+	"ranger": ["training_bow", "hunting_bow", "hunting_bow", "ashwood_warbow", "ashwood_warbow"],
+	"scout": ["training_bow", "hunting_bow", "hunting_bow", "ashwood_warbow", "ashwood_warbow"],
 	"druid": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
 	# --- #438: the three consolidation families added on 2026-08-13. The spine
 	# roster DERIVES from classes.json `consolidations[]`, so each new row owes a
@@ -146,11 +164,10 @@ const SPINE_WEAPONS := {
 	#     sword-gated exactly like [Keener Edge], so anything else would gate the
 	#     class's marquee Skill out of its own measurement.
 	#   skirmisher  -- the SPEAR track, identical to [Spellspear]'s, and it
-	#     inherits that spine's finding wholesale: items.json ships no T2 spear,
-	#     so the Act I tutorial gift (relcs_spare_spear, +1) is still the best
-	#     spear in the game at Act V. Its own L14 grant [Steady Point] is
-	#     spear-gated, so the spear is what the row must measure -- the bow half
-	#     of the lineage reaches combat through inherited [Archer] grants, which
+	#     inherits that spine's ladder wholesale, including #438's two new
+	#     Act IV/V rungs. Its own L14 grant [Steady Point] is spear-gated, so
+	#     the spear is what the row must measure -- the bow half of the lineage
+	#     reaches combat through inherited [Archer] grants, which
 	#     `weapon_gated_kit` strips at a spear. That asymmetry is real and worth
 	#     seeing in the table rather than papering over with a bow loadout.
 	#   wild_sage   -- the sword track, identical to [Druid]'s: neither class
@@ -159,7 +176,7 @@ const SPINE_WEAPONS := {
 	# Report-only, like every derived spine row: no CALIBRATION row and no
 	# reference window names any of them.
 	"deathknight": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
-	"skirmisher": ["relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear"],
+	"skirmisher": ["relcs_spare_spear", "relcs_spare_spear", "relcs_spare_spear", "hedault_trued_spear", "wyvernbone_lance"],
 	"wild_sage": ["rusty_sword", "rusty_sword", "gnollish_hunting_knife", "gnollish_hunting_knife", "gnollish_hunting_knife"],
 }
 const WINDOW_FLOOR := 0.55

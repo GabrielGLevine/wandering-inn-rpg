@@ -1563,7 +1563,14 @@
     "river_wolf_b",
     "river_wolf_c"
    ],
+   "_comment_loot": "#438 bow T3. The sketch named razorbeak_nest / road_mothbears; BOTH are `respawns: true`, and roll_loot (economy.gd:53) seeds from (run_seed, entity_id) alone -- so a unique on either one re-rolls identically every kill and becomes an infinite duplicator. This pack does not respawn, sits in Riverfarm (an Act IV region, matching the item's ladder rung), and is a beast den, which is where a drawn-and-never-recovered warbow belongs. chance 1.0 = the shipped unique-drop convention; the private loot stream is consumed, never branched on.",
    "on_victory": "survived_wolf_night",
+   "loot": [
+    {
+     "item": "ashwood_warbow",
+     "chance": 1.0
+    }
+   ],
    "encounter_when": {
     "phase": [
      "night"

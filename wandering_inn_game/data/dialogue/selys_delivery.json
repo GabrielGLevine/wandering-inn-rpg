@@ -173,6 +173,39 @@
       }
      ],
      "goto": "pallass_sponsor"
+    },
+    {
+     "_comment": "#438 EQUIPMENT GAPS, civil-utility T2.5 -- the delivery-line fork the sketch asked for, and the lane's one true QUEST-REWARD channel (the other eight items come off vendors, loot and sealed-area treasure). APPENDED LAST and accomplishment-gated on the long-leg run, so it is HIDDEN at every fixture that has not delivered it and the hub's shipped 11-row option array is unchanged where the pins read it. hide_when retires it after one grant, the pallass-papers convention directly above.",
+     "text": "The long legs are telling on my feet. Does the Guild do anything about that?",
+     "requires": {
+      "accomplishment": {
+       "delivered_delivery_coyle_letter": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "runner_sandals_given": 1
+      }
+     },
+     "effects": [
+      {
+       "item": "runners_sandals"
+      },
+      {
+       "accomplishment": "runner_sandals_given"
+      }
+     ],
+     "goto": "runner_sandals_given"
+    }
+   ]
+  },
+  "runner_sandals_given": {
+   "speaker": "Selys",
+   "text": "The Guild does nothing about that, officially. Unofficially there's a box under this desk of things Runners left behind, and a pair in it that somebody wore to the shape of a road and then stopped needing. Take them. Don't tell me they don't fit; I've watched you walk.",
+   "options": [
+    {
+     "text": "\"They'll fit.\"",
+     "end": true
     }
    ]
   },

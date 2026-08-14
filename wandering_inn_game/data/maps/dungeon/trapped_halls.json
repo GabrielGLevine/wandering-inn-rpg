@@ -963,6 +963,29 @@
    "on_interact_accomplishment": "warded_side_vault_looted",
    "item": "wardwrights_counterweight",
    "toast": "The cache opens on a released catch. A lead counterweight rests inside, still holding a quiet ward."
+  },
+  {
+   "_comment": "#438 EQUIPMENT GAPS, spear T3 -- the sealed-area treasure row. A SIBLING prop rather than a second entry on the cache above, because the cache carries `item` (singular) and the interaction reads that key; two items need two props. It adds NO gating of its own: `present_when.requires` is byte-identical to the cache's, on warded_side_vault_secured -- the counter this pocket's own construct banks -- so it rides the trap-puzzle chain that was already there (snare or pry plate -> warded_side_vault_open -> construct -> secured). Its `absent` arm is the standard taken-once retire.",
+   "id": "warded_side_vault_rack",
+   "kind": "prop",
+   "cell": [
+    5,
+    13
+   ],
+   "display_name": "A Weapon Rack",
+   "sprite": "chest",
+   "present_when": {
+    "requires": {
+     "warded_side_vault_secured": 1
+    },
+    "absent": {
+     "warded_side_vault_rack_taken": 1
+    }
+   },
+   "observe": "A short rack against the pocket's back wall, cut for one shaft and still holding it.",
+   "on_interact_accomplishment": "warded_side_vault_rack_taken",
+   "item": "wyvernbone_lance",
+   "toast": "The rack gives up its one shaft. Bone, not ash, and cold through the wrapping."
   }
  ]
 }
