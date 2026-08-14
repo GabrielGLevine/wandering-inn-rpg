@@ -437,17 +437,27 @@ class TestCli(unittest.TestCase):
 			readme = next(p for p in written if p.name == "README.md")
 			self.assertIn("PROPOSAL ONLY", readme.read_text())
 
+	def _tracked_tree_state(self):
+		return subprocess.run(
+			["git", "status", "--porcelain", "wandering_inn_game/data",
+				"wandering_inn_game/qa"],
+			cwd=REPO_ROOT, capture_output=True, text=True).stdout
+
 	def test_stdout_mode_writes_nothing(self):
+		# Compare the tree BEFORE and AFTER rather than asserting it is clean:
+		# asserting emptiness cannot tell "the tool wrote a file" from "the
+		# developer has unstaged work", so it red five separate lanes in the
+		# >=434 wave on their own in-progress edits. Equality still fails the
+		# instant the tool writes anything, which is the property under test.
+		before = self._tracked_tree_state()
 		out = subprocess.run(
 			[sys.executable, str(REPO_ROOT / "scripts" / "scaffold_consolidation.py"),
 				"--parents", "spearmaster,mage", "--target", SHIPPED_TARGET,
 				"--issue", str(SHIPPED_ISSUE), "--allow-existing"],
 			capture_output=True, text=True, check=True)
 		self.assertEqual(json.loads(out.stdout)["floor"], 14)
-		self.assertEqual(
-			subprocess.run(["git", "status", "--porcelain", "wandering_inn_game/data",
-				"wandering_inn_game/qa"], cwd=REPO_ROOT, capture_output=True, text=True).stdout,
-			"")
+		self.assertEqual(self._tracked_tree_state(), before,
+			"stdout mode must leave data/ and qa/ exactly as it found them")
 
 
 if __name__ == "__main__":
