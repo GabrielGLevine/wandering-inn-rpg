@@ -24,21 +24,22 @@ or superseded session blocks.
   piece. #451 parked by user (Counter Strike power level). Pre-existing
   red still open: d3_inventory_shot (inventory pin drift, predates the
   program).
-- ORCHESTRATOR HANDOVER **EXECUTED 2026-08-14**: Fable weekly hit its
-  limit mid-gate (killed 3 auditors on the skirmisher lane); user
-  switched the session to Opus, which now runs the wave. Gates re-run
-  on Opus with the same template — no doctrine change. The gate discipline is canonical in
-  wi-running-the-machine ("controller gate workflow" section, new);
-  design docs are all written: equipment sketch
-  (docs/superpowers/specs/2026-08-13-equipment-gaps-design.md, awaits
-  user taste-pass), M3.6 + auto-consolidation + summoner specs on
-  main, #485 name proposal posted (user approves per line). REMAINING
-  QUEUE: **33 MERGED** through #493 — Lich (#460), meal cap (#432),
-  skirmisher [Give Ground], [Blademaster] rename, M3.6 (PARTIAL).
-  IN FLIGHT: equipment lane (9 items, GO'd sketch) in its gate.
+- ORCHESTRATOR = OPUS since 2026-08-14 (Fable weekly exhausted
+  mid-gate). Gate discipline canonical in wi-running-the-machine
+  ("controller gate workflow"). Specs on main: equipment (SHIPPED),
+  M3.6, auto-consolidation, summoner. REMAINING
+  QUEUE: **34 MERGED** through #496 — Lich (#460), meal cap (#432),
+  skirmisher [Give Ground], [Blademaster] rename, M3.6 (PARTIAL),
+  equipment kit (9 items). All lane worktrees cleaned up; content
+  presence in main verified per branch (squash merges — verify by
+  CONTENT/tree, never `git cherry`). NOTHING IN FLIGHT.
   NEXT: coverage lanes per #485 (blanket GO 2026-08-13 night,
   "stragglers edited later" — class-surface serialized, one lane at a
-  time), then M4 (blocked on the M3.6 exit ruling below). ESCALATION RULE for
+  time), then M4 (blocked on the M3.6 exit ruling below).
+  PARKED FOR AFTER THIS TAG (user): #494 resonance semantics,
+  #495 damage_mod-never-reaches-spell/line/blast.
+  WATCH: prose budget 25713/25725 — 12 words of headroom, so the next
+  CONTENT lane trips it; budget a trim into that lane's scope. ESCALATION RULE for
   Opus: anything smelling like a NEW design ruling (spec contradiction,
   window unreachable inside sanctioned levers, canon question) goes to
   the USER directly — do not improvise doctrine; wave autonomy covers
