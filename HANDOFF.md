@@ -33,14 +33,12 @@ or superseded session blocks.
   (docs/superpowers/specs/2026-08-13-equipment-gaps-design.md, awaits
   user taste-pass), M3.6 + auto-consolidation + summoner specs on
   main, #485 name proposal posted (user approves per line). REMAINING
-  QUEUE (all mechanical under the gate template): #488, #489 (Lich,
-  #460 closed) and #490 (meal cap, #432 closed) MERGED — 30 total;
-  skirmisher kit-gap lane sits at 6f77f0fa UNPUSHED with its gate
-  re-running on Opus (ship on PASS); then M3.6 dispatch (spec is the
-  brief), [Blademaster] rename lane, coverage lanes per #485 (blanket
-  GO 2026-08-13 night, "stragglers edited later" — class-surface
-  serialized, one lane at a time), equipment lane (sketch GO'd, §2
-  rails binding), M4 (after M3.6 golden passes). ESCALATION RULE for
+  QUEUE: **33 MERGED** through #493 — Lich (#460), meal cap (#432),
+  skirmisher [Give Ground], [Blademaster] rename, M3.6 (PARTIAL).
+  IN FLIGHT: equipment lane (9 items, GO'd sketch) in its gate.
+  NEXT: coverage lanes per #485 (blanket GO 2026-08-13 night,
+  "stragglers edited later" — class-surface serialized, one lane at a
+  time), then M4 (blocked on the M3.6 exit ruling below). ESCALATION RULE for
   Opus: anything smelling like a NEW design ruling (spec contradiction,
   window unreachable inside sanctioned levers, canon question) goes to
   the USER directly — do not improvise doctrine; wave autonomy covers
@@ -105,23 +103,25 @@ or superseded session blocks.
   `damage_mod`, so that ceiling is the spearmaster line, not the weapon.
   The sketch's §0 expectation that new gear would ease it is
   mechanically false. Needs adjudication as a class/spine question.
-- **M3.6 EXIT RULING (#434, blocks M4) — ripe, and correctly sized on
-  the second pass.** §6.3 lets pins be "TIGHTER and never looser" but
+- **M3.6 EXIT RULING (#434, blocks M4) — ripe. M3.6 itself MERGED
+  2026-08-14 as a PARTIAL milestone (#493); the ruling is what remains.** §6.3 lets pins be "TIGHTER and never looser" but
   only for `assert_*` actions, so a compiled-only `wait_for_event` is
   exact-class fatal even when the compiled run is strictly stricter than
   the shipped one. **Ruling wanted:** extend the tightening allowance to
   `wait_for_event`, or refuse it and add a per-node emitter key per wait
   (which pushes corpus knowledge back into itineraries — the thing the
-  compiler exists to remove). HONEST SIZE (the first framing oversold
-  it; the gate caught that): a YES reclassifies **12 of the 47**
-  exact-class rows in the authored window and 134 corpus-wide —
-  necessary, nowhere near sufficient. 35 exact + all 5 net rows survive
-  it. The residue is emitter idiom variance, each class now named and
-  counted in qa/STEEL-THREAD.md. Diagnosing the net rows was worth it
-  on its own: 2 turned out to be REAL routing bugs (the router entered
-  the ambush radius from the wrong side and bumped the stairs from the
-  wrong cell) and are fixed by authoring approach cells, not by any
-  ruling. M4 stays blocked; Acts II–V (2337 of 2569 steps) unauthored.
+  compiler exists to remove). HONEST SIZE (twice corrected by gates):
+  a YES reclassifies **12 of the 50** exact-class rows in the authored
+  window, independently typed as 3 `dialogue_node`, 2 `map_changed`,
+  2 `ui_dialogue_rendered`, and one each of `class_gained`,
+  `entity_removed`, `phase_changed`, `ui_inventory_selection_rendered`,
+  `ui_sleep_veil_rendered`. **38 exact + all 9 net rows survive it** —
+  necessary, nowhere near sufficient. The ~134 corpus figure is an
+  ESTIMATE projected onto an itinerary that does not exist (only steps
+  0-217 are authored); 12-of-50 is the only measurement. The residue is
+  emitter idiom variance, each class named and counted in
+  qa/STEEL-THREAD.md. M4 stays blocked; Acts II–V (2337 of 2569 steps)
+  unauthored.
 - **Balance rulings raised by the skirmisher lane (2026-08-14), both
   escalated rather than improvised:**
   1. `act2_cistern_nest` skirmisher 0.40 WALL. Acts I–IV measure the
