@@ -39,18 +39,25 @@ or superseded session blocks.
   carries `fetch-depth: 0` (test_data_diff walks `<sha>^`) and installs
   the pinned engine (two contract tests drive the oracle). CI is 8
   checks now. Verified running green on main post-merge.
-- WAVE STATE (2026-08-14): **36 MERGED** through #498 — Lich (#460),
+- WAVE STATE (2026-08-14): **37 MERGED** through #499 — Lich (#460),
   meal cap (#432), skirmisher [Give Ground], [Blademaster] rename, M3.6
-  (PARTIAL), equipment kit, §6.3 tightening, the CI pytest job. Per-change detail lives in
-  the merged PR bodies; rulings in docs/CHOICE-LOG.md (11 user calls
-  landed 2026-08-14). Merged worktrees cleaned; verify a squash merge by
-  CONTENT/tree, never `git cherry`.
-  IN FLIGHT: drift-set re-window lane (six ceiling cells + beast_master
-  growth + the Warden's companion counter, one re-window).
-  NEXT: [Ranger] kit-gap lane, then the small-fixes lane ([Sword Saint]
-  aspiration, "Runner's Sandals of the Second Wind" rename, harness
-  build-level fix), then coverage lanes per #485 (class-surface
-  serialized, one at a time), then M4 (still blocked — see below).
+  (PARTIAL), equipment kit, §6.3 tightening, the CI pytest job, the
+  drift-set re-window. Per-change detail in the merged PR bodies;
+  rulings in docs/CHOICE-LOG.md. Verify a squash merge by CONTENT/tree,
+  never `git cherry`.
+  **DRIVING TO A TAG (user, tag night): cut v0.20.0.** Pre-tag state
+  verified: no licensed-asset change since v0.19.0 so NO new bundle is
+  needed, `bundle-v7` holds the Latest badge and potential-assets-v1 is
+  correctly a prerelease, and the one new code-banked literal
+  (`crossed_under_cover`) is already in STRUCTURAL_LITERALS in both
+  files. **The one irreversible step remains: bump RELEASE in
+  `generate_shipped_ids.py` and regenerate `data/shipped_ids.json`
+  BEFORE tagging** — that freezes this wave's ids as permanent API.
+  IN FLIGHT: HUD copy-loss lane (VISUAL-LOG drain — the family where
+  authored prose never reaches the player).
+  AFTER THE TAG: [Ranger] kit-gap lane, the small-fixes lane ([Sword
+  Saint] aspiration, sandals rename, harness build-levels), coverage
+  lanes per #485 (class-surface serialized), then M4 (still blocked).
   PARKED FOR AFTER THIS TAG (user): #494 resonance semantics,
   #495 damage_mod-never-reaches-spell/line/blast.
   WATCH: prose budget 25713/25725 — 12 words of headroom, so the next
@@ -91,18 +98,14 @@ or superseded session blocks.
 
 - **#19 — commercial gate:** any paid Steam path requires pirateaba's explicit
   permission. Free-on-Steam remains the recommended path.
-- **Equipment lane escalations (2026-08-14):** (a) **Book 17 means two
-  different things** — docs/design/spoiler-cutoff.md says *Garden of
-  Sanctuary* (Vol 7 Pt 1, ~7.10); the wiki ebook index says *Lady of
-  Fire* (Vol 7 Pt 3, ~7.28), a ~18-chapter gap. Lanes judge STRICTER
-  until ruled; noted in that doc. (b) **Post-bar name wants clearance:**
-  "Runner's Sandals **of the Second Wind**" — [Second Wind] is Vol 8
-  Ch 8.15; shipped the cleared fallback "Runner's Sandals". The ability
-  itself is grandfathered. (c) **spellspear Act III 0.89 is out of
-  window and gear cannot fix it** — `equipment_mods` reads only
-  `damage_mod`, so that ceiling is the spearmaster line, not the weapon.
-  The sketch's §0 expectation that new gear would ease it is
-  mechanically false. Needs adjudication as a class/spine question.
+- ~~Equipment lane escalations~~ **ALL THREE RESOLVED 2026-08-14:**
+  Book 17 is now *Lady of Fire* (Vol 7 Pt 3) per user ruling — the
+  binding record `docs/design/spoiler-cutoff.md` is amended and the
+  old "judge stricter" instruction is RETIRED; "Runner's Sandals of the
+  Second Wind" is CLEARED (the Skill already ships grandfathered);
+  and spellspear Act III was never a gear problem — the drift lane
+  (#499) found the harness was measuring an unholdable build and the
+  cell now reads 0.78, in window.
 - **M3.6 EXIT (#434) — tightening ruling LANDED 2026-08-14; M4 STILL
   BLOCKED.** M3.6 merged as a PARTIAL milestone (#493). The user ruled
   that §6.3's "TIGHTER and never looser" **extends to a compiled-only
