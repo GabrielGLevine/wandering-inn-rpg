@@ -93,6 +93,18 @@ or superseded session blocks.
 
 - **#19 — commercial gate:** any paid Steam path requires pirateaba's explicit
   permission. Free-on-Steam remains the recommended path.
+- **Equipment lane escalations (2026-08-14):** (a) **Book 17 means two
+  different things** — docs/design/spoiler-cutoff.md says *Garden of
+  Sanctuary* (Vol 7 Pt 1, ~7.10); the wiki ebook index says *Lady of
+  Fire* (Vol 7 Pt 3, ~7.28), a ~18-chapter gap. Lanes judge STRICTER
+  until ruled; noted in that doc. (b) **Post-bar name wants clearance:**
+  "Runner's Sandals **of the Second Wind**" — [Second Wind] is Vol 8
+  Ch 8.15; shipped the cleared fallback "Runner's Sandals". The ability
+  itself is grandfathered. (c) **spellspear Act III 0.89 is out of
+  window and gear cannot fix it** — `equipment_mods` reads only
+  `damage_mod`, so that ceiling is the spearmaster line, not the weapon.
+  The sketch's §0 expectation that new gear would ease it is
+  mechanically false. Needs adjudication as a class/spine question.
 - **M3.6 EXIT RULING (#434, blocks M4) — ripe, and correctly sized on
   the second pass.** §6.3 lets pins be "TIGHTER and never looser" but
   only for `assert_*` actions, so a compiled-only `wait_for_event` is

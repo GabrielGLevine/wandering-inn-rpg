@@ -11,6 +11,16 @@
   grandfathered material). The Book 17 bar is internal discipline that
   keeps the advertised surface honest and shrinking-proof.
 
+**KNOWN DISCREPANCY (raised 2026-08-14 by the equipment lane, unruled).**
+This record equates Book 17 with *Garden of Sanctuary* (Volume 7 Part 1,
+through roughly Ch. 7.10). The wiki's ebook index instead lists Book 17
+as *Lady of Fire* (Volume 7 Part 3, through roughly Ch. 7.28). The two
+readings differ by ~18 chapters of admissible material. **Until the user
+rules, lanes judge against the STRICTER line — this document's Vol 7
+Part 1** — which is what the equipment lane did; nothing shipped turns
+on it. Do not re-litigate this per lane; if a name or element falls in
+the gap, escalate it as a clearance question instead.
+
 **The game's advertised spoiler scope: through the END OF VOLUME 7 of the
 web serial** (ebooks: through the Volume 7 books — Book 17 *Garden of
 Sanctuary* onward through the Vol 7 set). Advertise as:
