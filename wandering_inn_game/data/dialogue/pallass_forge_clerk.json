@@ -132,7 +132,7 @@
   },
   "pike_sold": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Rack stock, stamped at the collar. That stamp is the whole of what you are buying from me — an unstamped haft gets you turned around at the lift, and I would rather not have that conversation twice in one shift.",
+   "text": "Rack stock, stamped at the collar. The stamp is what you are buying. An unstamped haft gets you turned around at the lift.",
    "options": [
     {
      "text": "Understood.",
@@ -142,7 +142,7 @@
   },
   "apron_sold": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Lead in the hem. It hangs straight and it stops a spark, and it is not armour, which is the answer if anyone up here asks you what it is.",
+   "text": "Lead in the hem. It hangs straight and stops a spark. It is not armour, which is the answer if anyone asks.",
    "options": [
     {
      "text": "Understood.",

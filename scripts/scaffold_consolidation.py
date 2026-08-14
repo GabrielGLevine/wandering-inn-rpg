@@ -156,15 +156,36 @@ def _line_weapon(class_row: dict, skills_by_id: dict) -> str:
 
 
 def _best_weapon_item(family: str, items_doc: dict) -> str:
-	best = ""
-	best_mod = -(10 ** 6)
-	for item in items_doc.get("items", []):
-		if item.get("kind") != "weapon" or item.get("weapon_family") != family:
-			continue
-		mod = int(item.get("damage_mod", 0))
-		if mod > best_mod:
-			best, best_mod = str(item.get("id", "")), mod
-	return best
+	"""The best BASELINE weapon of a family: highest damage_mod at MUNDANE tier.
+
+	The tier filter arrived with #438 and is a correction, not a new policy.
+	This picked the highest damage_mod in the family full stop, which was only
+	accidentally right: until #438 no weapon above `tier: "mundane"` existed,
+	so every family's maximum happened to be its baseline. #438 ships enchanted
+	spears (hedault_trued_spear, wyvernbone_lance), and the unfiltered rule
+	promptly proposed a fixture equipped with a 35-gold Hedault commission --
+	gear a scaffolded STARTING position has no business already holding, and a
+	silent change to what every future consolidation canonical opens with.
+	A baseline fixture carries what the shops and the story hand out; an
+	upgrade is something the run earns on camera. Fallback to the unfiltered
+	pick if a family ever ships no mundane entry at all, so this can narrow the
+	answer but never empty it.
+	"""
+	def pick(rows: list) -> str:
+		best = ""
+		best_mod = -(10 ** 6)
+		for item in rows:
+			mod = int(item.get("damage_mod", 0))
+			if mod > best_mod:
+				best, best_mod = str(item.get("id", "")), mod
+		return best
+
+	family_rows = [
+		item for item in items_doc.get("items", [])
+		if item.get("kind") == "weapon" and item.get("weapon_family") == family
+	]
+	mundane = [item for item in family_rows if str(item.get("tier", "")) == "mundane"]
+	return pick(mundane) or pick(family_rows)
 
 
 def _own_grants(class_row: dict) -> list:

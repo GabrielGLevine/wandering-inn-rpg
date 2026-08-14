@@ -179,7 +179,7 @@
      "text": "The long legs are telling on my feet. Does the Guild do anything about that?",
      "requires": {
       "accomplishment": {
-       "delivered_delivery_coyle_letter": 1
+       "delivered_delivery_boulevard_letter": 1
       }
      },
      "hide_when": {
@@ -201,7 +201,7 @@
   },
   "runner_sandals_given": {
    "speaker": "Selys",
-   "text": "The Guild does nothing about that, officially. Unofficially there's a box under this desk of things Runners left behind, and a pair in it that somebody wore to the shape of a road and then stopped needing. Take them. Don't tell me they don't fit; I've watched you walk.",
+   "text": "Officially, nothing. Unofficially there's a box under this desk of what Runners left behind, and a pair in it somebody wore to the shape of a road and then stopped needing. Take them.",
    "options": [
     {
      "text": "\"They'll fit.\"",
