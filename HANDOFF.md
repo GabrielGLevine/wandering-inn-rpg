@@ -27,28 +27,30 @@ or superseded session blocks.
 - ORCHESTRATOR = OPUS since 2026-08-14 (Fable weekly exhausted
   mid-gate). Gate discipline canonical in wi-running-the-machine
   ("controller gate workflow"). Specs on main: equipment (SHIPPED),
-  M3.6, auto-consolidation, summoner. REMAINING
-  QUEUE: **34 MERGED** through #496 — Lich (#460), meal cap (#432),
-  skirmisher [Give Ground], [Blademaster] rename, M3.6 (PARTIAL),
-  equipment kit (9 items). All lane worktrees cleaned up; content
-  presence in main verified per branch (squash merges — verify by
-  CONTENT/tree, never `git cherry`). NOTHING IN FLIGHT.
-  NEXT: coverage lanes per #485 (blanket GO 2026-08-13 night,
-  "stragglers edited later" — class-surface serialized, one lane at a
-  time), then M4 (blocked on the M3.6 exit ruling below).
+  M3.6, auto-consolidation, summoner. ESCALATION RULE: anything
+  smelling like a NEW design ruling (spec contradiction, window
+  unreachable inside sanctioned levers, canon question) goes to the
+  USER directly — do not improvise doctrine; wave autonomy covers
+  execution calls only, logged to CHOICE-LOG.
+- WAVE STATE (2026-08-14): **35 MERGED** through #497 — Lich (#460),
+  meal cap (#432), skirmisher [Give Ground], [Blademaster] rename, M3.6
+  (PARTIAL), equipment kit, §6.3 tightening. Per-change detail lives in
+  the merged PR bodies; rulings in docs/CHOICE-LOG.md (11 user calls
+  landed 2026-08-14). Merged worktrees cleaned; verify a squash merge by
+  CONTENT/tree, never `git cherry`.
+  IN FLIGHT: drift-set re-window lane (six ceiling cells + beast_master
+  growth + the Warden's companion counter, one re-window).
+  NEXT: [Ranger] kit-gap lane, then the small-fixes lane ([Sword Saint]
+  aspiration, "Runner's Sandals of the Second Wind" rename, harness
+  build-level fix), then coverage lanes per #485 (class-surface
+  serialized, one at a time), then M4 (still blocked — see below).
   PARKED FOR AFTER THIS TAG (user): #494 resonance semantics,
   #495 damage_mod-never-reaches-spell/line/blast.
   WATCH: prose budget 25713/25725 — 12 words of headroom, so the next
-  CONTENT lane trips it; budget a trim into that lane's scope. ESCALATION RULE for
-  Opus: anything smelling like a NEW design ruling (spec contradiction,
-  window unreachable inside sanctioned levers, canon question) goes to
-  the USER directly — do not improvise doctrine; wave autonomy covers
-  execution calls only, logged to CHOICE-LOG.
-- WAVE STATE (2026-08-14): 30 MERGED. Per-change detail lives in the
-  merged PR bodies; rulings live in docs/CHOICE-LOG.md. NAMING REVIEW
-  open: issue #485 (6 set-level decisions; user GO'd the 6 kits and the
-  distinct-name direction, stragglers to be edited later). Post-bar
-  class+Skill names proposable with user clearance.
+  CONTENT lane trips it; budget a trim into that lane's scope.
+  EYE-GATE READY for the user: `qa/playtest_saves/2026-08-14-460-death-
+  cast-colour/` (PC death-cast recolour; autoplay structurally cannot
+  cast, so only a human read closes it).
 - QUEUED: **#452 codify #347** (user-directed 2026-08-12): lineage-
   completeness validator (build FIRST — inventories all orphaned pairs,
   protects main at commit time), consolidation scaffolder, doctrine
