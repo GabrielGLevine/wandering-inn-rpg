@@ -1,0 +1,56 @@
+{
+ "_comment": "#460 EYE-GATE (user ruling 2026-08-14: eye-gates ride a prepared save). The [Bone Dart] / [Deathbolt] recolour changed TWO ALREADY-SHIPPED player spells from flame-orange to grave-green, and no canonical can field it: WICombatAI defaults the PC's empty `ai` to the melee profile, so autoplay STRUCTURALLY cannot cast. This save is the only way a human sees a PC death-cast. warrior 11 + necromancer 10 holds bone_dart (necromancer L1) and deathbolt (L3) with enough body to survive several rounds; both are hotbarred. Parked one cell west of crypt_lich_mouth (17,11) facing east \u2014 the encounter is interact-only, so the fight starts when you press interact and not before. The Lich casts the SAME two spells back, so PC-cast and enemy-cast grave-green are judgeable in one fight. DO NOT SLEEP in this state: warrior 11 + necromancer 10 is the [Deathknight] consolidation pair and the sleep beat would fire it, retiring the parents mid-read.",
+ "version": 6,
+ "state": {
+  "current_map": "ruin_surface",
+  "player_cell": [
+   16,
+   11
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 11,
+   "necromancer": 10
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "studied_necromancy": 1,
+   "learned_magic_from_pisces": 1,
+   "horns_dig_started": 1,
+   "melee_hit": 68,
+   "won_combat": 3,
+   "death_cast": 45
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "leather_jerkin",
+   "graveflame_wand",
+   "mending_draught",
+   "mending_draught"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": "leather_jerkin",
+   "accessory_1": "graveflame_wand",
+   "accessory_2": "",
+   "accessory_3": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 3,
+  "rng_state": "-5798556170594108155",
+  "hotbar_loadout": [
+   "bone_dart",
+   "deathbolt"
+  ]
+ }
+}
