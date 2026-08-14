@@ -45,29 +45,11 @@ or superseded session blocks.
   window unreachable inside sanctioned levers, canon question) goes to
   the USER directly — do not improvise doctrine; wave autonomy covers
   execution calls only, logged to CHOICE-LOG.
-- POST-WAVE FOLLOW-THROUGH (2026-08-13 session 2; resume here): 24
-  MERGED total (wave 16 + #476 M2, #478 producers [Druid consolidation
-  0/40->40/40], #479 Rank labels, #481 defects #474/#475, #482
-  AUTO-CONSOLIDATION [#472 closed; narrowed live rows, coverage lint,
-  proxy chaining, 77-pair parked queue], #483 annotations, #484 M3.5
-  [fight.driven+journal+fence; golden prefix step 62]). M3.6 RULED on
-  main, not dispatched. F0 #460 RATIFIED (Lich, crypt_lich/bone_thrall)
-  — F1 queues behind class-lane merge. NAMING REVIEW: issue #485 (6
-  set-level decisions). Post-bar class+Skill names proposable with user
-  clearance (CHOICE-LOG). IN FLIGHT AT DRAIN: class lane d10d45b9
-  ([Wild Sage]+[Skirmisher canon-match]+[Deathknight]; audit PASS bar
-  ONE unpinned seam — counsel_of_the_wild live-ness test; fix agent
-  finishing -> push+PR+merge) and balance tail (ladder + Tactician
-  ceiling; drain order sent, read its output for state). AFTER RESET:
-  merge class lane, read balance state, F1 Lich -> M3.6 -> equipment
-  sketch (Fable) -> M4. User batch additions: skirmisher martial WALLs,
-  wild_sage act5 1.00 ceiling (trivialization set with s16/druid).
-  RULED 2026-08-13 late: capstone-set = trim growth AND/OR raise Warden
-  (NO-AUTO-WIN principle binding; warden movement sanctioned; full
-  re-window + re-fixture blast after); skirmisher walls = kit/Skill
-  gap lane; #432 = meal cap (strongest-single, refresh-not-stack).
-  These three join the post-reset dispatch queue AFTER balance-tail
-  PR (same surfaces).
+- WAVE STATE (2026-08-14): 30 MERGED. Per-change detail lives in the
+  merged PR bodies; rulings live in docs/CHOICE-LOG.md. NAMING REVIEW
+  open: issue #485 (6 set-level decisions; user GO'd the 6 kits and the
+  distinct-name direction, stragglers to be edited later). Post-bar
+  class+Skill names proposable with user clearance.
 - QUEUED: **#452 codify #347** (user-directed 2026-08-12): lineage-
   completeness validator (build FIRST — inventories all orphaned pairs,
   protects main at commit time), consolidation scaffolder, doctrine
@@ -111,6 +93,24 @@ or superseded session blocks.
 
 - **#19 — commercial gate:** any paid Steam path requires pirateaba's explicit
   permission. Free-on-Steam remains the recommended path.
+- **M3.6 EXIT RULING (#434, blocks M4).** All five M3.6 criteria shipped
+  and gated, but the golden does not pass the differ end-to-end. One
+  class blocks it: **134 rows where the compiled script pins MORE than
+  the shipped one** (24 pool-line `ui_dialogue_rendered` — 0 of 24
+  corpus rows wait it; 60 conversation-open `dialogue_node` — 3 of 63
+  do; 50 destination `dialogue_node` — 75 of 125 do). §6.3 allows pins
+  to be "TIGHTER and never looser", but only for `assert_*` actions, so
+  a compiled-only `wait_for_event` is exact-class fatal even though the
+  run is strictly stricter. **Ruling wanted:** extend the tightening
+  allowance to `wait_for_event` (closes all 134 at once, but changes
+  what the milestone gate treats as fatal), or refuse it and add a
+  per-node emitter key for each of the three waits (keeps the gate
+  narrow, but pushes corpus knowledge back into itineraries — which is
+  the thing the compiler exists to remove). The lane declined to decide
+  it on the grounds that widening a gate to pass its own milestone is
+  the wrong shape of work; I agree, so it comes to you. Acts II–V of the
+  itinerary (2351 of 2569 steps) are unauthored pending this, since
+  every conversation in them multiplies the same class.
 - **Balance rulings raised by the skirmisher lane (2026-08-14), both
   escalated rather than improvised:**
   1. `act2_cistern_nest` skirmisher 0.40 WALL. Acts I–IV measure the
