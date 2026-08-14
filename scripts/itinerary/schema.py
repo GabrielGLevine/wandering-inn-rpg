@@ -40,14 +40,35 @@ PRIMITIVES = {
 MILESTONE_PRIMITIVES = {1: {"goto", "talk", "sleep"}, 2: set(PRIMITIVES), 3: set(PRIMITIVES)}
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
 
+# Everything a NODE mapping may carry. The primitive keys are in here because a
+# node names exactly one of them; `id` and `why` are the two the grammar adds.
+#
+# This allow-list is the M3.6 hardening (2026-08-13 amendment item 5) and it is
+# structural, not a lint: the parser reads nothing out of a node except keys in
+# this set, so an unrecognised key can no longer be dropped on the floor. The
+# bug it closes is a typo'd SECOND primitive -- `talk:` beside `figth:` -- which
+# the exactly-one-primitive count happily accepted, because a misspelling is
+# not in PRIMITIVES and so was invisible to that count. The node then compiled
+# green while doing half of what it said, which is precisely the failure mode
+# the spec-key rejection was already built to prevent one level down.
+NODE_KEYS = {"id", "why"} | PRIMITIVES
+
 # Every spec key a primitive accepts. Unknown keys are REJECTED rather than
 # ignored: a typo'd `encouter:` that silently no-ops is the failure mode this
 # language cannot afford (a mis-planned fight compiles green and hangs a run).
 SPEC_KEYS: dict[str, set[str]] = {
-    "goto": {"map", "cell", "why"},
+    # `via` names WHICH door a leg takes when a map pair has more than one
+    # (GH#375's west inn door is the shipped class): both are oracle-valid, so
+    # §6.3 would call the route tolerant, but they ARRIVE on different cells
+    # and the arrival is what the next press acts on. `expect_render` adds the
+    # presentation half of an arrival -- `ui_map_rendered` for the destination.
+    "goto": {"map", "cell", "via", "expect_render", "why"},
     "talk": {"npc", "at", "choose_path", "why"},
-    "fight": {"encounter", "at", "entry", "mode", "turns", "policy", "expect", "max_turns", "shots", "why"},
-    "sleep": {"expect_levels", "expect_merge", "shot", "why"},
+    "fight": {
+        "encounter", "at", "entry", "npc", "choose_path", "mode", "turns", "policy", "expect",
+        "max_turns", "shots", "turn_wait", "beats", "expect_banks_after_dismiss", "arena", "why",
+    },
+    "sleep": {"expect_levels", "expect_merge", "expect_epilogue", "shot", "why"},
     "equip": {"item", "why"},
     "unequip": {"slot", "why"},
     "buy": {"vendor", "at", "item", "choose_path", "why"},
@@ -76,8 +97,21 @@ EQUIP_SLOTS = {"weapon", "armor", "accessory_1", "accessory_2", "accessory_3"}
 # ruling and `dumb` exists only for instrument-comparison runs (§4).
 COMBAT_POLICIES = {"competent", "dumb"}
 # `interact` = stand adjacent and press; `proximity` = the ambush springs
-# from a step into its trigger radius, so the walk is split around it.
-FIGHT_ENTRIES = {"interact", "proximity"}
+# from a step into its trigger radius, so the walk is split around it;
+# `dialogue` = the board opens on a conversation's own confirm, from an
+# option carrying `{"start_combat": <encounter>}` (2026-08-13 M3.6 amendment
+# item 1 -- the Relc spar is the shape). A dialogue-entered fight OWNS its
+# conversation walk, because the row that starts the fight is not a row that
+# closes a panel: emitting `dialogue_ended`/`ui_dialogue_hidden` for it would
+# claim a teardown the combat board pre-empts.
+FIGHT_ENTRIES = {"interact", "proximity", "dialogue"}
+# Where an AUTOPLAYED fight may carry `ui_tutor_line_rendered` beats. Driven
+# mode places beats freely (they are turn-list entries); autoplay hands the
+# board to the policy and so has exactly two slots a beat can sit in, both
+# outside the handover: before the PC's first turn, and after the board
+# finished but before the banner is dismissed. Both are shipped rows
+# (steel_thread 198 `real_ones`, 205 `road_clear`).
+FIGHT_BEAT_SLOTS = {"before_turn", "after_combat"}
 # `autoplay` is the default and stays it (2026-08-13 amendment): a fight whose
 # COURSE is not the content hands the board to WICombatPolicies and pins only
 # the outcome. `driven` is for the fights whose CHOREOGRAPHY is the content --
@@ -101,8 +135,9 @@ COMBAT_PRESSES = (
 RAW_STEP_BUDGET = 0.02
 
 # Primitives whose `choose_path` is a real fork and therefore owes a `why`
-# (§3.4 CHOICE-LOG discipline at the language level).
-FORK_PRIMITIVES = {"talk", "buy", "sell"}
+# (§3.4 CHOICE-LOG discipline at the language level). `fight` joins the list
+# with `entry: dialogue`: accepting a spar is a fork like any other.
+FORK_PRIMITIVES = {"talk", "buy", "sell", "fight"}
 
 
 class SchemaError(ValueError):
@@ -299,6 +334,13 @@ def load_itinerary_document(raw: Any, milestone: int = 1) -> Itinerary:
             if node_id in seen:
                 raise SchemaError(f"duplicate node id: {node_id}")
             seen.add(node_id)
+            stray = sorted(set(raw_node) - NODE_KEYS)
+            if stray:
+                raise SchemaError(
+                    f"node {node_id} has unknown keys {stray}; a node carries only id, why and ONE primitive "
+                    f"({sorted(PRIMITIVES)}). A misspelled primitive is the case this catches: it is not in the "
+                    "primitive set, so the exactly-one count never saw it and the beat silently did not happen."
+                )
             present = [key for key in PRIMITIVES if key in raw_node]
             if len(present) != 1:
                 raise SchemaError(f"node {node_id} needs exactly one primitive, found {present}")
@@ -359,6 +401,10 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
             raise SchemaError(f"node {node_id} goto needs map")
         if "cell" in spec and not _cell(spec["cell"]):
             raise SchemaError(f"node {node_id} goto cell must be [x, y] integers")
+        if "via" in spec and not str(spec["via"]).strip():
+            raise SchemaError(f"node {node_id} goto via must name a door/portal entity id")
+        if "expect_render" in spec and not isinstance(spec["expect_render"], bool):
+            raise SchemaError(f"node {node_id} goto expect_render must be boolean")
     elif primitive == "talk":
         if not str(spec.get("npc", "")):
             raise SchemaError(f"node {node_id} talk needs npc")
@@ -366,6 +412,8 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
     elif primitive == "sleep":
         if "expect_levels" in spec and not isinstance(spec["expect_levels"], bool):
             raise SchemaError(f"node {node_id} expect_levels must be boolean")
+        if "expect_epilogue" in spec and not isinstance(spec["expect_epilogue"], bool):
+            raise SchemaError(f"node {node_id} expect_epilogue must be boolean")
         merge = spec.get("expect_merge")
         if merge is not None and not (isinstance(merge, dict)
                 and set(merge) == {"target", "level"}
@@ -378,8 +426,11 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
         policy = str(spec.get("policy", "competent"))
         if policy not in COMBAT_POLICIES:
             raise SchemaError(f"node {node_id} fight policy must be one of {sorted(COMBAT_POLICIES)}")
-        if str(spec.get("entry", "interact")) not in FIGHT_ENTRIES:
+        entry = str(spec.get("entry", "interact"))
+        if entry not in FIGHT_ENTRIES:
             raise SchemaError(f"node {node_id} fight entry must be one of {sorted(FIGHT_ENTRIES)}")
+        _fight_entry(node_id, entry, spec)
+        _fight_frame(node_id, spec)
         # Only `victory` is plannable: a defeat leg reloads the save and every
         # downstream pin becomes fiction. Defeat coverage stays hand-written
         # (qa/scripts/defeat_reload.json).
@@ -441,6 +492,72 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
             raise SchemaError(f"node {node_id} raw needs a non-empty list of step mappings")
         if any(not str(step.get("action", "")) for step in steps):
             raise SchemaError(f"node {node_id} raw steps each need an action")
+
+
+def _fight_entry(node_id: str, entry: str, spec: dict[str, Any]) -> None:
+    """`entry: dialogue` owns a conversation walk; the other two must not.
+
+    The keys are the `talk` planner's own (`npc`, `choose_path`), because the
+    walk IS a talk -- what differs is only how it ends. Binding them to the
+    entry mode in both directions is the point: an author who writes
+    `choose_path` on a proximity ambush has described something that cannot
+    happen, and silently ignoring the key is the shape of bug this schema
+    exists to refuse.
+    """
+    if entry == "dialogue":
+        if not str(spec.get("npc", "")):
+            raise SchemaError(f"node {node_id} fight entry: dialogue needs npc -- the board opens on ITS confirm")
+        _choose_path(node_id, spec)
+        if not spec.get("choose_path"):
+            raise SchemaError(
+                f"node {node_id} fight entry: dialogue needs choose_path ending on the row whose effects carry "
+                "start_combat"
+            )
+        return
+    for key in ("npc", "choose_path"):
+        if key in spec:
+            raise SchemaError(
+                f"node {node_id} fight has {key} but entry is {entry!r} -- only entry: dialogue walks a conversation"
+            )
+
+
+def _fight_frame(node_id: str, spec: dict[str, Any]) -> None:
+    """The 2026-08-13 M3.6 frame flexibilities (amendment item 3).
+
+    Each of these is a SPEC key rather than a primitive because none of them
+    changes what a fight IS -- they say which of the frame's optional rows this
+    particular board actually has. The corpus measured all four: six of twelve
+    shipped fights carry no `turn_started` wait, two carry tutor beats outside
+    the driven arm, six bank counters between the dismiss and the teardown, and
+    one pins `combat_started` to its arena.
+    """
+    driven = str(spec.get("mode", "autoplay")) == "driven"
+    if "turn_wait" in spec:
+        if not isinstance(spec["turn_wait"], bool):
+            raise SchemaError(f"node {node_id} fight turn_wait must be boolean")
+        if driven:
+            raise SchemaError(
+                f"node {node_id} fight turn_wait is an autoplay key -- a driven list says when it waits with "
+                "`await: turn_started`"
+            )
+    beats = spec.get("beats")
+    if beats is not None:
+        if driven:
+            raise SchemaError(
+                f"node {node_id} fight beats is an autoplay key -- a driven list places beats with `beat:` entries"
+            )
+        if not isinstance(beats, dict) or not beats:
+            raise SchemaError(f"node {node_id} fight beats must be a non-empty mapping of slot -> beat names")
+        unknown = sorted(set(beats) - FIGHT_BEAT_SLOTS)
+        if unknown:
+            raise SchemaError(f"node {node_id} fight beats has unknown slots {unknown}; slots are {sorted(FIGHT_BEAT_SLOTS)}")
+        for slot, names in beats.items():
+            if not isinstance(names, list) or not names or any(not str(name).strip() for name in names):
+                raise SchemaError(f"node {node_id} fight beats.{slot} must be a non-empty list of beat names")
+    if "expect_banks_after_dismiss" in spec and not isinstance(spec["expect_banks_after_dismiss"], bool):
+        raise SchemaError(f"node {node_id} fight expect_banks_after_dismiss must be boolean")
+    if "arena" in spec and not str(spec["arena"]).strip():
+        raise SchemaError(f"node {node_id} fight arena must be an arena id")
 
 
 def _fight_mode(node_id: str, spec: dict[str, Any]) -> None:

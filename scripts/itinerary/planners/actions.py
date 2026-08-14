@@ -30,6 +30,13 @@ class ActionPlanner:
         self.route = route
         catalog = json.loads((self.project / "data/items.json").read_text(encoding="utf-8"))
         self.items = {str(row["id"]): row for row in catalog["items"]}
+        skills = json.loads((self.project / "data/skills.json").read_text(encoding="utf-8"))
+        # `sneaks: true` is what makes a field Skill a STANCE rather than a
+        # one-shot: `WIFieldSkills.use` routes it to `_toggle_sneak` and every
+        # other field arm calls `_break_sneak` first.
+        self.sneak_skills = {
+            str(row["id"]) for row in skills.get("skills", []) if bool(row.get("sneaks", False))
+        }
 
     # ------------------------------------------------------------ equipment --
 
@@ -112,6 +119,25 @@ class ActionPlanner:
         if not bool(slots[0].get("number_key_reachable", False)):
             raise ActionError(f"{node_id}: {skill_id} sits in slot {slots[0].get('slot')} -- past the 9 number keys")
 
+        if skill_id in self.sneak_skills:
+            # #440 / M3.6 amendment item 4. A stance Skill is a TOGGLE, and its
+            # two directions announce different things: casting emits
+            # sneak_started and "You soften your step."; casting again emits
+            # sneak_ended and "You straighten up." (wi_game.gd `_toggle_sneak`).
+            # Which one this node is depends on the ledger's own lifetime
+            # tracking, which is exactly the planner gap the amendment names.
+            if skill_id not in self.state_skills(ledger):
+                ledger.state["used_skills"].append(skill_id)
+            starting = not ledger.sneaking
+            if starting:
+                ledger.start_sneak()
+            else:
+                ledger.break_sneak()
+            return [{
+                "kind": "field_skill", "skill": skill_id, "target": "", "accomplishment": "",
+                "sneak": "start" if starting else "end",
+            }]
+
         # A field skill aimed at a prop needs that prop faced first; the target
         # and its banked counter both come from the prop's own `on_skill_use`.
         target_id = ""
@@ -155,6 +181,10 @@ class ActionPlanner:
         if not accomplishment:
             raise ActionError(f"{node_id}: {prop_id} banks no accomplishment -- nothing to pin")
         ops = self.route.plan_to(node_id, ledger, map_id, [int(part) for part in entity["cell"]])
+        # `WIInteractions` calls `_break_sneak` on every prop arm: a non-door
+        # interact always drops the cloak, which is why the shipped Act V
+        # sequence re-casts after the anchor and the tally (#440).
+        ledger.break_sneak()
         ledger.accomplishment(accomplishment)
         ops.append({
             "kind": "prop_interact",

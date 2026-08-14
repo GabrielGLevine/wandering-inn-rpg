@@ -14,6 +14,12 @@ COMBAT_SETTLE_FRAMES = 5
 # 5s default every other wait uses.
 TURN_TIMEOUT_SEC = 10
 COMBAT_TIMEOUT_SEC = 20
+# The sleep veil plays out before the epilogue can render, so the run's last
+# two waits sit behind an animation rather than behind a frame.
+EPILOGUE_TIMEOUT_SEC = 15
+# `ui_map_rendered` is a presentation confirmation that arrives a beat after
+# `map_changed`; the corpus gives it a frame budget rather than a wait.
+MAP_RENDER_SETTLE_FRAMES = 10
 # The corpus's album hold: long enough that a human watching a windowed run
 # sees the frame the capture took. Under headless it is a no-op.
 ALBUM_HOLD_FRAMES = 240
@@ -105,19 +111,42 @@ class Emitter:
             if operation.get("why"):
                 confirm["_comment"] = f"CHOICE: {operation['why']}"
             steps.append(confirm)
-            if operation.get("end"):
+            # WHERE the effect waits go is the engine's own order, not a
+            # preference (`WIGame.dialogue_choose`): `choose()` emits
+            # DIALOGUE_ENDED before returning, the owner then applies the
+            # effects, and only then does it `advance()` to the next node. So
+            # on a closing row the announcements land AFTER the teardown pair,
+            # and on a continuing row they land BEFORE the destination. Get
+            # this backwards and every wait sails past the since-cursor.
+            effect_waits = [self._effect_wait(row) for row in operation.get("effect_waits", [])]
+            if operation.get("hands_off_to_combat"):
+                # The board replaces the panel: no teardown, no destination.
+                steps.extend(effect_waits)
+            elif operation.get("end"):
                 steps.extend([
                     {"action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5},
                     {"action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5},
-                    {"action": "wait_frames", "frames": PANEL_SETTLE_FRAMES},
                 ])
-            elif operation.get("destination") and not operation.get("defer_destination"):
-                steps.append(self._destination_wait(operation.get("next_node", {})))
+                steps.extend(effect_waits)
+                steps.append({"action": "wait_frames", "frames": PANEL_SETTLE_FRAMES})
+            else:
+                steps.extend(effect_waits)
+                if operation.get("destination") and not operation.get("defer_destination"):
+                    steps.append(self._destination_wait(operation.get("next_node", {})))
         elif kind == "dialogue_node_wait":
             # The deferred half of a `dialogue_choose`: used when engine
             # events (a purchase's gold/toast/item chain) land BETWEEN the
             # confirm and the destination node.
             steps.append(self._destination_wait(operation.get("next_node", {})))
+        elif kind == "map_rendered":
+            # The arrival's PRESENTATION half (M3.6 amendment item 3).
+            # `map_changed` is the sim's claim; this is the one that says the
+            # destination was drawn, and it is an assert rather than a wait
+            # because the render is already behind the settle frames.
+            steps.extend([
+                {"action": "wait_frames", "frames": MAP_RENDER_SETTLE_FRAMES},
+                {"action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": {"map": str(operation["map"])}},
+            ])
         elif kind == "sleep":
             steps.extend(self._sleep_steps(operation))
         elif kind == "fixture_prelude":
@@ -215,31 +244,72 @@ class Emitter:
         if str(operation.get("mode", "autoplay")) == "driven":
             return self._driven_fight_steps(operation)
         steps: list[dict[str, Any]] = []
-        if operation.get("entry", "interact") == "interact":
-            steps.append({"action": "press", "name": "interact"})
-        steps.extend([
-            {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
-            {"action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5},
-        ])
-        for ally in operation.get("allies", []):
-            steps.append({"action": "assert_state", "path": f"combat.combatants.{ally}.side", "equals": "player"})
-        steps.append({"action": "wait_for_event", "type": "turn_started", "payload_contains": {"id": "pc"}, "timeout_sec": TURN_TIMEOUT_SEC})
+        steps.extend(self._board_opens(operation))
+        beats = operation.get("beats", {})
+        for name in beats.get("before_turn", []):
+            steps.append(self._beat_wait(name))
+        if operation.get("turn_wait", True):
+            # Six of the twelve shipped fights carry no `turn_started` wait
+            # (M3.6 amendment item 3): the autoplay step waits for the board to
+            # hand it a turn anyway, so the wait is a pin on WHOSE turn opens,
+            # not a synchronisation the run needs. Where a fight has an ally,
+            # or a shot that must land on the PC's own turn, it matters -- and
+            # `turn_wait: false` is how a fight without one says so.
+            steps.append({"action": "wait_for_event", "type": "turn_started", "payload_contains": {"id": "pc"}, "timeout_sec": TURN_TIMEOUT_SEC})
         for name in operation.get("shots", []):
             steps.append({"action": "screenshot", "name": str(name)})
         steps.extend([
             {"action": "combat_autoplay", "max_turns": int(operation["max_turns"]), "policy": str(operation["policy"])},
             {"action": "wait_for_event", "type": "combat_finished", "payload_contains": {"victory": True}, "timeout_sec": COMBAT_TIMEOUT_SEC},
-            # The result banner eats the next press until it is dismissed.
-            {"action": "press", "name": "confirm"},
+        ])
+        for name in beats.get("after_combat", []):
+            steps.append(self._beat_wait(name))
+        steps.extend(self._board_closes(operation))
+        return steps
+
+    def _board_opens(self, operation: dict[str, Any]) -> list[dict[str, Any]]:
+        """How the board arrives -- the emitter's promise in every fight mode."""
+        steps: list[dict[str, Any]] = []
+        if operation.get("entry", "interact") == "interact":
+            steps.append({"action": "press", "name": "interact"})
+        started: dict[str, Any] = {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5}
+        arena = str(operation.get("arena", ""))
+        if arena:
+            # A payload-tight `combat_started` (M3.6 amendment item 3): the
+            # shipped warden pins its arena, and an unpinned wait is a LOOSER
+            # claim than the corpus makes rather than a different one.
+            started["payload_contains"] = {"arena": arena}
+        steps.extend([started, {"action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5}])
+        for ally in operation.get("allies", []):
+            steps.append({"action": "assert_state", "path": f"combat.combatants.{ally}.side", "equals": "player"})
+        return steps
+
+    def _board_closes(self, operation: dict[str, Any]) -> list[dict[str, Any]]:
+        """The dismiss, the banking window it opens, and the victory pins.
+
+        `resolve_combat()` runs ON the dismiss press, not at `combat_finished`,
+        so an encounter's `on_victory` deposits land BETWEEN this confirm and
+        `ui_combat_hidden`. Before M3.6 the emitter only ever read them as
+        state afterwards, which is true but weaker -- it cannot tell a counter
+        that banked here from one that banked three nodes ago.
+        """
+        steps: list[dict[str, Any]] = [{"action": "press", "name": "confirm"}]
+        for row in operation.get("banks_after_dismiss", []):
+            steps.append(self._effect_wait(row))
+        steps.extend([
             {"action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5},
             {"action": "wait_frames", "frames": COMBAT_SETTLE_FRAMES},
         ])
-        # on_victory counters bank SYNCHRONOUSLY inside resolve_combat, before
-        # ui_combat_hidden -- so they are read as STATE here. A wait_for_event
-        # would be searching past the since-cursor for an event already gone.
         for pin in operation.get("victory_pins", []):
             steps.append(self._assert_state_step(pin))
         return steps
+
+    @staticmethod
+    def _beat_wait(name: str) -> dict[str, Any]:
+        return {
+            "action": "wait_for_event", "type": "ui_tutor_line_rendered",
+            "payload_contains": {"beat": str(name)}, "timeout_sec": 5,
+        }
 
     # -------------------------------------------------------- M3.5 shapes --
 
@@ -254,26 +324,12 @@ class Emitter:
         difference inside it is a difference in the choreography and nothing
         else.
         """
-        steps: list[dict[str, Any]] = []
-        if operation.get("entry", "interact") == "interact":
-            steps.append({"action": "press", "name": "interact"})
-        steps.extend([
-            {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
-            {"action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5},
-        ])
-        for ally in operation.get("allies", []):
-            steps.append({"action": "assert_state", "path": f"combat.combatants.{ally}.side", "equals": "player"})
+        steps: list[dict[str, Any]] = self._board_opens(operation)
         for entry in operation.get("turns", []):
             steps.extend(self._turn_steps(entry, operation))
-        steps.extend([
-            # Same tail as an autoplayed fight, and for the same reason: the
-            # result banner eats the next press until it is dismissed.
-            {"action": "press", "name": "confirm"},
-            {"action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5},
-            {"action": "wait_frames", "frames": COMBAT_SETTLE_FRAMES},
-        ])
-        for pin in operation.get("victory_pins", []):
-            steps.append(self._assert_state_step(pin))
+        # Same tail as an autoplayed fight, and for the same reason: the result
+        # banner eats the next press until it is dismissed.
+        steps.extend(self._board_closes(operation))
         return steps
 
     def _turn_steps(self, entry: dict[str, Any], operation: dict[str, Any]) -> list[dict[str, Any]]:
@@ -453,6 +509,19 @@ class Emitter:
             {"action": "press_field_skill", "skill": str(operation["skill"])},
             {"action": "wait_for_event", "type": "skill_used", "payload_contains": payload, "timeout_sec": 5},
         ]
+        sneak = str(operation.get("sneak", ""))
+        if sneak:
+            # A stance cast, not a working: `_toggle_sneak` emits SKILL_USED,
+            # then the lifetime edge, then its own line. There is no
+            # `ui_toast_rendered` here on purpose -- the claim is the domain
+            # event and the authored copy, not that a toast widget drew.
+            steps.extend([
+                {"action": "wait_for_event", "type": f"sneak_{'started' if sneak == 'start' else 'ended'}", "timeout_sec": 5},
+                {"action": "wait_for_event", "type": "toast",
+                 "payload_contains": {"text": "You soften your step." if sneak == "start" else "You straighten up."},
+                 "timeout_sec": 5},
+            ])
+            return steps
         if operation.get("accomplishment"):
             steps.append({"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": str(operation["accomplishment"])}, "timeout_sec": 5})
         steps.append({"action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5})
@@ -491,6 +560,15 @@ class Emitter:
             {"action": "wait_for_event", "type": "gold_changed", "payload_contains": gold_payload, "timeout_sec": 5},
             {"action": "wait_for_event", "type": "toast", "payload_contains": {"text": f"Earned {int(operation['price'])} gold."}, "timeout_sec": 5},
         ]
+
+    @staticmethod
+    def _effect_wait(row: dict[str, Any]) -> dict[str, Any]:
+        """One planner-derived announcement, as a wait (M3.6 amendment item 2)."""
+        step: dict[str, Any] = {"action": "wait_for_event", "type": str(row["type"]), "timeout_sec": 5}
+        payload = row.get("payload_contains") or {}
+        if payload:
+            step["payload_contains"] = deepcopy(payload)
+        return step
 
     @staticmethod
     def _destination_wait(next_node: dict[str, Any]) -> dict[str, Any]:
@@ -550,4 +628,14 @@ class Emitter:
                 {"action": "assert_event_absent", "type": "consolidation_accepted"},
                 {"action": "assert_state", "path": "classes", "equals": preview["classes_after"]},
             ])
+        if operation.get("epilogue"):
+            # The run's last claim (M3.6 amendment item 3): the GDI epilogue is
+            # an observer beat with no world effect, the same class as a
+            # `journal` read, and it is what makes the final sleep the END of a
+            # playthrough rather than one more night. Both waits carry the
+            # veil's own long ceiling -- the epilogue renders behind a full
+            # sleep animation, not behind a frame.
+            if not any(str(step.get("type", "")) == "ui_sleep_veil_finished" for step in steps):
+                steps.append({"action": "wait_for_event", "type": "ui_sleep_veil_finished", "timeout_sec": EPILOGUE_TIMEOUT_SEC})
+            steps.append({"action": "wait_for_event", "type": "ui_gdi_epilogue_rendered", "timeout_sec": EPILOGUE_TIMEOUT_SEC})
         return steps

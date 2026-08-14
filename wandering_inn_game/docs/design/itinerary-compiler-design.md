@@ -242,6 +242,57 @@ Exit: the steel-thread golden passes the tolerance differ end-to-end;
 STEEL-THREAD.md's "regenerate via compiler" line lands. M4 (the Mage
 variant, the #438 acceptance milestone) dispatches only after this.
 
+**M3.6 landed 2026-08-13, exit NOT met.** All five items are built,
+pinned from a node SPEC through to emitted steps, and mutation-proved
+(`scripts/itinerary/tests/`, contract + `pipeline.py` harness). The golden
+carries the whole of Act I: 21 nodes over shipped steps 0-217, green
+headless at seed 37 (232/232), byte-identical across two compiles.
+
+Item 2's "141" is REFUTED and re-measured **from the emitter's own
+placement rule** rather than from a standalone scanner: **105 rows at 60
+sites** are derivable (96 announced immediately on a continuing row, 9
+after the teardown on a closing row), and 36 belong to other idioms (26
+prop-interact, 8 post-dismiss, 2 sleep). A first pass reported 94/55/47
+and was wrong in both directions -- it missed a conversation that opens
+without a `dialogue_started` wait, and it did not model the closing-row
+placement at all.
+
+Differ, against shipped 0-217: pre-lane `50 exact / 11 net`, M3.6
+`50 exact / 9 net`. The lane ships exactly ONE `goldens.py` change and it
+is pure accounting: gaps of unmatched spine steps are carried forward,
+with a two-sided COVERAGE invariant proving nothing is dropped from
+comparison, so it cannot mask a difference. A second change — putting the
+pinned value in the alignment key — was tried and REVERTED: it fixes a
+real mis-pairing weakness but also moves a legitimate subsuming tightening
+into exact-class fatal, which is a change to which class is fatal. Policy,
+not accounting, and not a lane's to make inside the milestone it gates.
+
+**The open ruling, stated without overselling it.** Does §6.3's "pins
+may be TIGHTER and never looser" extend from `assert_*` actions to a
+compiled-only `wait_for_event`? Inside the authored 0-217 window a YES
+reclassifies **12 of 50** exact rows — measured, and typed in
+`qa/STEEL-THREAD.md`: 3 `dialogue_node`, 2 `ui_dialogue_rendered`, 2
+`map_changed`, and one each of `class_gained`, `entity_removed`,
+`phase_changed`, `ui_inventory_selection_rendered`,
+`ui_sleep_veil_rendered`. Only 5 of the 12 are in the dialogue idioms the
+residual table names; the ruling covers all 12 because it is about the
+ACTION, not the idiom.
+
+The corpus-wide figure of ~134 rows (60 conversation opens, 50
+destination nodes, 24 pool lines) is an ESTIMATE and must be read as one:
+it projects the emitter's idioms onto an itinerary that does not exist,
+since only 0-217 is authored. The observed sample is the 12.
+
+A YES is necessary and nowhere near sufficient — it leaves 38 exact and
+all 9 net rows in the authored window alone. The rest is emitter idiom
+variance (the 330-row `assert_state player_cell` class, the sleep idiom,
+the inventory `items` pin, the in-autoplay assert slot) and two differ
+accounting weaknesses. The lane declined to answer the question because
+widening a gate to pass its own milestone is the wrong shape of work.
+
+**M4 STAYS BLOCKED.** The golden does not pass the tolerance differ, so
+§7's M3.6 exit is NOT met and the M4 dispatch condition is unchanged.
+
 ## 4. Emitter contract
 
 One idiom table, tested in isolation (unit: primitive + ledger state →
@@ -328,10 +379,19 @@ rule is what keeps the corpus recompilable.
   differ with zero exact-class rows, then stops at the Relc meeting. What stops
   it is a beat the amendment did not reach — the spar is entered by a dialogue
   option's `start_combat` effect and `FIGHT_ENTRIES` has no `entry: dialogue`
-  — plus the 141 effect-derived event waits the dialogue planner drops and six
-  fight-shape variances. Measured table in `qa/STEEL-THREAD.md`. **These are
+  — plus the effect-derived event waits the dialogue planner drops (M3.5
+  recorded these as "141"; that was a whole-script census of those event
+  types, and the figure the planner actually owes is **105 rows at 60 sites**
+  — see M3.6 below) and six fight-shape variances. Measured table in
+  `qa/STEEL-THREAD.md`. **These are
   the M4 prerequisite the way the two closed primitives were M3.5's**; the
   vocabulary stays frozen until a note rules on `entry: dialogue`.
+- **M3.6 — the second amendment, landed 2026-08-13.** `fight.entry:
+  dialogue`, effect-derived event waits, the five emitter frame keys,
+  sneak lifetime and the two hardening items all BUILT. The golden reaches
+  shipped step 217 and runs green; it does not pass the differ end to end,
+  and the residual is the tightening-class ruling above rather than
+  vocabulary. See the §3.2 amendment's own note.
 - **M4 — variants**: overlay layer + the Mage-run variant (the #438
   acceptance milestone). Exit: Mage run green in single-digit full runs,
   pacing report auto-generated from pass-2 harvests.

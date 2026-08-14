@@ -133,6 +133,25 @@
   },
   {
    "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "missing_crate"
+   },
+   "_itin": "act2.krshia.ask"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "asked_about_crate",
+    "count": 1
+   },
+   "_itin": "act2.krshia.ask"
+  },
+  {
+   "action": "wait_for_event",
    "type": "dialogue_node",
    "timeout_sec": 5,
    "payload_contains": {
@@ -259,6 +278,15 @@
   },
   {
    "action": "wait_for_event",
+   "type": "entity_removed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "crate_scavengers"
+   },
+   "_itin": "act2.crate.fight"
+  },
+  {
+   "action": "wait_for_event",
    "type": "ui_combat_hidden",
    "timeout_sec": 5,
    "_itin": "act2.crate.fight"
@@ -347,6 +375,35 @@
    "action": "press",
    "name": "confirm",
    "_comment": "CHOICE: Close the quest at its own counter rather than letting the fight's bank stand in for the telling -- crate_returned is a beat Krshia has to hear, and every later stage of her pool reads off it.",
+   "_itin": "act2.krshia.report"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "crate_returned",
+    "count": 1
+   },
+   "_itin": "act2.krshia.report"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "missing_crate",
+    "beat": 2
+   },
+   "_itin": "act2.krshia.report"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "missing_crate"
+   },
    "_itin": "act2.krshia.report"
   },
   {
@@ -502,6 +559,25 @@
    "action": "press",
    "name": "confirm",
    "_comment": "CHOICE: Open the cisterns thread but stop at the briefing. Resolving it needs either a nest fight this build loses without a night's leveling, or a Watch sweep that closes the quest off-screen; the briefing is the beat that is honestly plannable here, and it is what unlocks the grate.",
+   "_itin": "act2.olesm.cisterns"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "cisterns"
+   },
+   "_itin": "act2.olesm.cisterns"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_about_cisterns",
+    "count": 1
+   },
    "_itin": "act2.olesm.cisterns"
   },
   {
@@ -761,6 +837,15 @@
   },
   {
    "action": "wait_for_event",
+   "type": "entity_removed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "goblin_encounter_1"
+   },
+   "_itin": "act2.road.ambush"
+  },
+  {
+   "action": "wait_for_event",
    "type": "ui_combat_hidden",
    "timeout_sec": 5,
    "_itin": "act2.road.ambush"
@@ -925,6 +1010,25 @@
    "action": "press",
    "name": "confirm",
    "_comment": "CHOICE: Erin's errand is the act's other thread and the only one that pays real coin, so it runs before the market beat that needs the money.",
+   "_itin": "act2.erin.package"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "the_errand"
+   },
+   "_itin": "act2.erin.package"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "has_package",
+    "count": 1
+   },
    "_itin": "act2.erin.package"
   },
   {
@@ -1407,6 +1511,26 @@
   },
   {
    "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "package_delivered",
+    "count": 1
+   },
+   "_itin": "act2.selys.deliver"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "the_errand",
+    "beat": 1
+   },
+   "_itin": "act2.selys.deliver"
+  },
+  {
+   "action": "wait_for_event",
    "type": "dialogue_node",
    "timeout_sec": 5,
    "payload_contains": {
@@ -1419,6 +1543,55 @@
    "action": "press",
    "name": "confirm",
    "_comment": "CHOICE: Keep the fee. The spine needs the coin and the fork is exclusive -- errand_decided hides both rungs the moment either lands, so this is the one and only place the run gets to choose.",
+   "_itin": "act2.selys.deliver"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "kept_reward",
+    "count": 1
+   },
+   "_itin": "act2.selys.deliver"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "errand_decided",
+    "count": 1
+   },
+   "_itin": "act2.selys.deliver"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "the_errand",
+    "beat": 2
+   },
+   "_itin": "act2.selys.deliver"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "the_errand"
+   },
+   "_itin": "act2.selys.deliver"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "delta": 4,
+    "source": "selys_delivery"
+   },
    "_itin": "act2.selys.deliver"
   },
   {

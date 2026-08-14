@@ -114,6 +114,17 @@ def _key(step: dict[str, Any]) -> str:
     for field_name in ("type", "path", "name", "skill", "slot", "label"):
         if field_name in normalized:
             parts.append(f"{field_name}={normalized[field_name]}")
+    # NOT included: the pinned VALUE. Every `assert_state player_cell` is
+    # therefore the same alignment token, and the matcher can pair an arrival
+    # with whichever one it reaches first -- a real weakness, and the reason
+    # two net-class rows in the M3.6 golden report an arrival difference for a
+    # leg whose compiled walk is step-for-step the corpus walk. Adding the
+    # value fixes that pairing, and M3.6 tried it: it also moves a legitimate
+    # SUBSUMING tightening (compiled `equals={a,b}` over shipped `equals={a}`)
+    # out of the TIGHTER class and into exact-class fatal, because the two keys
+    # stop matching and the shipped row reads as a dropped claim. That is a
+    # change to which class is fatal -- policy, not accounting -- so it was
+    # reverted rather than shipped inside the milestone it gates.
     return "|".join(parts)
 
 
@@ -169,24 +180,41 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
     matcher = difflib.SequenceMatcher(
         None, [_key(step) for step in compiled_spine], [_key(step) for step in shipped_spine], autojunk=False
     )
+    # A gap is the walk/cursor run BEFORE a spine step, and an UNMATCHED spine
+    # step splits one side's gap without splitting the other's. That is an
+    # accounting artifact, not an arrival difference: a compiled-only
+    # `assert_state player_cell` inserted mid-walk pins where the leg landed
+    # and moves nobody. So an unmatched step's gap is carried forward into the
+    # next matched anchor, where the two sides are comparable again -- without
+    # this, every allowed TIGHTENING inside a walk reported as a net-class
+    # fatal, which would make §6.3's "pins may be tighter" untrue in practice.
+    pending_compiled: list[dict[str, Any]] = []
+    pending_shipped: list[dict[str, Any]] = []
     for tag, c_lo, c_hi, s_lo, s_hi in matcher.get_opcodes():
         if tag == "equal":
             for offset in range(c_hi - c_lo):
-                _compare_pair(report, compiled_spine[c_lo + offset], shipped_spine[s_lo + offset])
+                anchor = compiled_spine[c_lo + offset]
+                _compare_pair(report, anchor, shipped_spine[s_lo + offset])
                 _compare_gap(
                     report,
-                    compiled_gaps[c_lo + offset],
-                    shipped_gaps[s_lo + offset],
-                    compiled_spine[c_lo + offset],
+                    pending_compiled + compiled_gaps[c_lo + offset],
+                    pending_shipped + shipped_gaps[s_lo + offset],
+                    anchor,
                 )
+                pending_compiled, pending_shipped = [], []
             continue
-        for step in compiled_spine[c_lo:c_hi]:
+        for index in range(c_lo, c_hi):
+            step = compiled_spine[index]
+            pending_compiled.extend(compiled_gaps[index])
             if str(step.get("action", "")) in ASSERT_ACTIONS:
                 report.tighter.append(f"compiled-only assert: {_describe(step)}")
             else:
                 report.exact.append(f"compiled-only step (shipped has no counterpart): {_describe(step)}")
-        for step in shipped_spine[s_lo:s_hi]:
-            report.exact.append(f"shipped-only step (compiler dropped this claim): {_describe(step)}")
+        for index in range(s_lo, s_hi):
+            pending_shipped.extend(shipped_gaps[index])
+            report.exact.append(
+                f"shipped-only step (compiler dropped this claim): {_describe(shipped_spine[index])}"
+            )
     return report
 
 

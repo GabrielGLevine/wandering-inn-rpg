@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 from pathlib import Path
 import sys
@@ -63,7 +63,7 @@ class NodePlanner:
         self.route = RoutePlanner(project, bridge)
         self.dialogue = DialoguePlanner(project, bridge, self.route)
         self.sleep = SleepPlanner(bridge)
-        self.combat = CombatPlanner(project, bridge, self.route)
+        self.combat = CombatPlanner(project, bridge, self.route, self.dialogue)
         self.actions = ActionPlanner(project, bridge, self.route)
         self.economy = EconomyPlanner(project, bridge, self.route, self.dialogue, library)
         self.economy.plan_node = self.plan
@@ -80,7 +80,10 @@ class NodePlanner:
     def _dispatch(self, node: Node, ledger: Ledger) -> list[dict[str, Any]]:
         spec = node.spec
         if node.primitive == "goto":
-            return self.route.plan_to(node.id, ledger, str(spec["map"]), spec.get("cell"))
+            ops = self.route.plan_to(node.id, ledger, str(spec["map"]), spec.get("cell"), str(spec.get("via", "")))
+            if spec.get("expect_render"):
+                ops.append({"kind": "map_rendered", "map": str(spec["map"])})
+            return ops
         if node.primitive == "talk":
             npc_map, entity = self.route.find_entity(str(spec["npc"]), str(spec.get("at", "")) or None)
             return self.dialogue.plan(node.id, spec, node.why, ledger, entity, npc_map)
@@ -90,7 +93,7 @@ class NodePlanner:
                 ops.append({"kind": "shot", "name": str(spec["shot"])})
             return ops
         if node.primitive == "fight":
-            return self.combat.plan(node.id, spec, ledger)
+            return self.combat.plan(node.id, spec, ledger, node.why)
         if node.primitive == "buy":
             return self.economy.plan_buy(node.id, spec, node.why, ledger)
         if node.primitive == "sell":
@@ -266,6 +269,14 @@ class Build:
     nodes: list[str]
     detours: list[dict[str, Any]]
     report: Any
+    # Where the LEDGER stood after each node (map, cell, facing). The emitted
+    # spine cannot see this on its own: a `goto` whose destination depends on
+    # ledger state re-plans into the SAME `move` runs when the two passes
+    # happen to agree on distance, and a `press interact` reads identical in
+    # both. The arrival is the state-dependent-destination hole, and closing it
+    # before M4's portal-heavy variant is the 2026-08-13 M3.6 amendment's
+    # item 5.
+    arrivals: list[tuple[str, str, tuple[int, int], tuple[int, int]]] = field(default_factory=list)
 
 
 def _build(
@@ -292,6 +303,12 @@ def _build(
         if not start_path.is_absolute():
             start_path = (source.parent / start_path).resolve()
         ledger = Ledger.from_save(json.loads(start_path.read_text(encoding="utf-8")))
+        # `WIGame.reprime_quests`: a fixture arrives mid-story with quests
+        # already started and beats already closed. Without this the first
+        # accomplishment the run banks would look like it closed every one of
+        # them at once, and the compiler would emit beat events the game will
+        # never send.
+        planner.dialogue.quests.reprime(ledger)
         script["fixture_save"] = _fixture_reference(start_path, project)
         # A fixture only reaches the sim if the run CONTINUES from the title;
         # the driver's own title auto-skip starts a new game instead.
@@ -358,6 +375,10 @@ def _build(
         nodes=[node.id for node in document.nodes],
         detours=[dict(row) for row in planner.economy.insertions],
         report=(refiner.report if refiner is not None else None),
+        arrivals=[
+            (cp.node, cp.map_id, (int(cp.cell[0]), int(cp.cell[1])), (int(cp.facing[0]), int(cp.facing[1])))
+            for cp in planner.checkpoints
+        ],
     )
 
 
@@ -413,6 +434,14 @@ def _fence_plan_spine(baseline: Build, refined: Build) -> None:
             f"  pass 1: {left}\n  pass 2: {right}\n"
             "  Refine may FLAG an unnecessary detour (§2.3) and may never drop one: removing a node moves every "
             "rng draw behind it, so the harvest being refined from describes a run that no longer exists."
+        )
+    if baseline.arrivals != refined.arrivals:
+        raise CompileError(
+            "PLAN-SPINE FENCE: pass 2 ARRIVED somewhere pass 1 did not.\n"
+            f"  first difference: {_first_difference(baseline.arrivals, refined.arrivals)}\n"
+            "  A node's end position is part of the plan even when the emitted steps between two nodes read the "
+            "same: a state-dependent destination (a gated door, a portal row that appeared) re-routes without "
+            "changing a single `move` run's length. Pass 2 refines PINS, not the PLAN."
         )
     baseline_spine, refined_spine = _plan_spine(baseline.script), _plan_spine(refined.script)
     if baseline_spine != refined_spine:

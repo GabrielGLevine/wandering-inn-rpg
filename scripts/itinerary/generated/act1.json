@@ -118,6 +118,16 @@
   },
   {
    "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "met_relc",
+    "count": 1
+   },
+   "_itin": "act1.relc.meet"
+  },
+  {
+   "action": "wait_for_event",
    "type": "dialogue_node",
    "timeout_sec": 5,
    "payload_contains": {
