@@ -668,7 +668,54 @@ func _derived_spines(classes: Dictionary) -> Array:
 	return out
 
 
-func _spine_build(spine: Dictionary, act: String) -> Dictionary:
+## THE HOLDABLE LINE (#474). `consolidations[].parent_lines` names the line the
+## MERGE requires, and #472 narrowed those to exactly the pair the target
+## `inherits` -- so three spines name an EVOLVED parent there: [Spellspear] and
+## [Skirmisher] name `spearmaster`, [Wild Sage] names `beast_master`. Acts I-IV
+## impose 2/3/5/7, and NO PLAYER CAN HOLD AN EVOLVED CLASS AT THOSE LEVELS: an
+## evolution is reached by evolving its base at `evolution.at_level` 10, so the
+## evolved class's own `levels` table starts at 10 and has no rung below it.
+## A build nobody can hold is not a balance read, so this walks the `inherits`
+## chain down to the class the band allocation actually puts in the player's
+## hands and measures THAT.
+##
+## THIS IS A MODEL FIX, NOT A TUNING KNOB, and the difference is checkable: it
+## changes no game data at all. What it changed when it landed is on the record
+## in the lane report -- `spellspear` act III 0.89 -> 0.78 and act I 0.79 ->
+## 0.80, because `spearmaster`'s str+dex growth was being applied at levels the
+## class does not have, in place of `warrior`'s str+con. Act V is untouched by
+## construction: it holds the consolidated target, which every holder reaches.
+##
+## The walk is by TABLE, never by a hardcoded id list: a class is holdable at
+## `level` when its own `levels` array carries a rung at or below it. Add a new
+## evolution tomorrow and this reads it without an edit.
+static func holdable_line(class_id: String, level: int, classes: Dictionary) -> String:
+	var by_id := {}
+	for cls: Dictionary in classes.get("classes", []):
+		by_id[String(cls[WIKeys.ID])] = cls
+	var current := class_id
+	var guard := 0
+	while guard < 8:
+		guard += 1
+		var cls: Dictionary = by_id.get(current, {})
+		if cls.is_empty():
+			return current
+		var floor_level := 9999
+		for rung: Dictionary in cls.get("levels", []):
+			floor_level = mini(floor_level, int(rung["level"]))
+		if floor_level <= level:
+			return current
+		# `inherits` is a String on an evolution and an Array on a consolidation
+		# target; only the evolution shape can be walked down, and a target is
+		# never asked (Act V holds it at 14, which its own table carries).
+		var inherits: Variant = cls.get("inherits", "")
+		if not (inherits is String) or String(inherits) == "":
+			return current
+		current = String(inherits)
+	return current
+
+
+static func spine_build(spine: Dictionary, act: String, classes: Dictionary) -> Dictionary:
 	var act_i := ["I", "II", "III", "IV", "V"].find(act)
 	assert(act_i >= 0, "unknown spine act %s" % act)
 	var levels: Array = SPINE_LEVELS[act]
@@ -676,9 +723,17 @@ func _spine_build(spine: Dictionary, act: String) -> Dictionary:
 	if act == "V":
 		held[String(spine["target"])] = int(levels[0])
 	else:
-		held[String((spine["parents"] as Array)[0])] = int(levels[0])
+		var line_a := holdable_line(String((spine["parents"] as Array)[0]), int(levels[0]), classes)
+		held[line_a] = int(levels[0])
 		if int(levels[1]) > 0:
-			held[String((spine["parents"] as Array)[1])] = int(levels[1])
+			var line_b := holdable_line(String((spine["parents"] as Array)[1]), int(levels[1]), classes)
+			# A COLLISION WOULD MEASURE ONE LINE AND CALL IT TWO. Two parents that
+			# walk down to the same base would silently collapse into a single
+			# dictionary key at the SECOND line's level, which is a quieter and
+			# worse lie than the one this walk exists to fix.
+			assert(line_b != line_a,
+				"spine %s: both parent lines resolve to %s at act %s" % [spine["target"], line_a, act])
+			held[line_b] = int(levels[1])
 	var parts: Array[String] = []
 	for class_id: String in held:
 		parts.append("%s%d" % [class_id, held[class_id]])
@@ -935,7 +990,7 @@ func _init() -> void:
 			var record := _find_record(row_id)
 			var row: Dictionary = record["row"]
 			var entity: Dictionary = record["entity"]
-			var build := _spine_build(spine, String(row["act"]))
+			var build := spine_build(spine, String(row["act"]), classes)
 			var pc := _make_pc(batch, build, by_id, classes, skills_by_id, items_by_id)
 			var cfgs := _spine_cfgs(record, pc, by_id)
 			var rank := WIProgression.power_rank(build["classes"], classes) if bool(entity.get("scales", false)) else "bronze"

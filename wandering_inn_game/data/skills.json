@@ -232,6 +232,7 @@
    "description": "A cold prickle at the neck, a heartbeat before harm."
   },
   {
+   "_comment_474": "#474 ONCE PER ROUND, and the mult is UNTOUCHED at 1.4. THE DEFECT, priced: this is a [Warrior] L1 grant and so is [Power Strike], and the two were not comparable. [Power Strike] is 3 AP for 2.0x on a 2-round cooldown, which against 4 AP of basic swings (2.0x) buys exactly nothing; [Piercing Strikes] was 2 AP for 1.4x with NO bound, i.e. TWO casts a turn for 2.8x -- a permanent +40% DPR the sword half of the same class level cannot reach. The cap makes it one big thrust and one ordinary swing (2.4x), which is still the spear line's identity and still ahead of the sword line, without being the whole of it. SHAPE PRECEDENT: [Counter Strike]'s `once_per_round`, capped by #451 for the same reason -- a free rider that scaled with how often the round let it fire. `cooldown_rounds: 1` IS once-per-round (WICombat.cooldown_remaining stamps round_number + 1). MEASURED, tests/_kit_probe.gd, 100 seeds, competent, per-spine band cells: spellspear I 0.88 -> 0.85, II 0.79 -> 0.72, III 0.78 -> 0.76, IV 0.92 -> 0.83, V 0.64 -> 0.64 (Act V is INSENSITIVE -- the warden ablation reads 0.64 either way); skirmisher I 0.88 -> 0.85, III 0.76 -> 0.74, IV 0.89 -> 0.84. The cost is on the record too: skirmisher's Act II cell, a WALL before this lane and after it, deepens 0.44 -> 0.28.",
    "id": "piercing_strikes",
    "display_name": "[Piercing Strikes]",
    "contexts": [
@@ -240,11 +241,28 @@
    "ap_cost": 2,
    "weapon": "spear",
    "icon": "icon_piercing_strikes",
+   "cooldown_rounds": 1,
    "effect": {
     "type": "damage_mult",
     "mult": 1.4
    },
    "description": "Thrusts that seek the seams in any guard."
+  },
+  {
+   "_comment": "#474 THE COMPANION COUNTER (user ruling 2026-08-14, docs/CHOICE-LOG.md: 'The Warden gains a COUNTER to companions, not a companion nerf: the wolf is worth +0.79 there but is the spine's identity, and a boss that can threaten a companion generalises to every future one.'). It is authored ONCE, here, and carried by the apex body of the three fights a companion was measured to trivialise -- seal_warden, raskghar_awakened, shield_spider_matriarch. WHAT MAKES IT GENERAL: `target_rule: bonded` names a ROLE, never an id, so the day a second companion ships it meets this Skill on the day it ships, and a boss authored tomorrow answers every companion by carrying one line. WHAT MAKES IT SAFE FOR EVERY OTHER BUILD: `resolve_active` REFUSES it against a body that is not bonded, so a companionless spine fights the identical fight it fought before -- measured, not asserted: every non-companion cell at all three encounters reads byte-identical across this change (lane report). NOT A DELETE BUTTON: 1.6x on a 2-round cooldown is roughly one extra wolf-scale wound every other round, so the second body still buys the turns it is meant to buy and still dies to a boss that decides to kill it. Sized by A/B at 100 seeds -- see the lane report for the mult/cooldown ladder.",
+   "id": "sunder_the_bond",
+   "display_name": "[Sunder the Bond]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "cooldown_rounds": 1,
+   "target_rule": "bonded",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 2.0
+   },
+   "description": "It reaches past the one holding the leash for the thing on the end of it."
   },
   {
    "id": "quick_slash",

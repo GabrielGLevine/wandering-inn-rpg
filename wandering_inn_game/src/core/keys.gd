@@ -29,6 +29,22 @@ const WEAPON := "weapon"
 const WINDUP_CADENCE := "windup_cadence"
 const ONCE_PER_FIGHT := "once_per_fight"
 
+## #474 THE COMPANION COUNTER, in two halves that only mean anything together.
+##
+## `BONDED` is a ROLE, on the combatant row: this body is on the player's side
+## because a bond, a taming or a raising put it there, not because the story
+## did. `TARGET_RULE` is the other half, on a SKILL: "this Skill may only be
+## spent on a body carrying that role".
+##
+## Why a role flag and not an id list: the counter has to generalise. A boss
+## authored today against `wolf_companion` would be a hack that the next
+## companion walks straight past; a boss authored against BONDED meets every
+## companion the game ever ships, on the day it ships, because the new row
+## carries the flag to be a companion at all (`data_lint.check_companion_bond_flag`
+## makes that a gate, not a convention).
+const BONDED := "bonded"
+const TARGET_RULE := "target_rule"
+
 const TYPE := "type"
 const AMOUNT := "amount"
 const MULT := "mult"

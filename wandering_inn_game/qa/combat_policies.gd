@@ -202,6 +202,19 @@ func _biggest_foe_threat(combat: WICombat, c: Dictionary) -> float:
 			var sk: Dictionary = combat.skills.get(String(sk_v), {})
 			if sk.is_empty():
 				continue
+			# #474: a Skill this actor cannot legally be hit BY is not a threat to
+			# it. `target_rule` Skills are the first ones that discriminate by
+			# target, and the omission was not cosmetic -- it was measured. The
+			# Seal Warden's 2.0x companion counter cannot be spent on the PC, but
+			# this scan priced it anyway, which raised `_survive`'s hit floor and
+			# made a COMPANIONLESS build heal earlier in every fight with a
+			# carrier on the board. `act3_awakened_boss_solo` band/competent read
+			# 0.37 before the counter existed and 0.29 with this line missing --
+			# a RULED window broken by a Skill that could never touch that PC.
+			# Read through the engine's own predicate so the policy cannot invent
+			# a second answer to "may this land on me".
+			if not WISkillEffects.target_rule_met(sk, c):
+				continue
 			var eff: Dictionary = sk.get(WIKeys.EFFECT, {})
 			if String(eff.get(WIKeys.TYPE, "")) == "damage_mult":
 				mult = maxf(mult, float(eff.get("mult", 1.0)))
