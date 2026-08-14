@@ -31,6 +31,15 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### User rulings 2026-08-13 (#438 wave-close batch)
 
+- **Resonance semantics DEFERRED to after this tag; Hedault upgrades
+  may hold or LOWER resonance (user, 2026-08-14).** The shipped fiction
+  calls resonance interference ("before the pieces start arguing") while
+  the shipped numbers scale it UP with power — canon says better gear
+  interferes LESS, i.e. the inverse. Full ruling parked on #494 with the
+  evidence; lanes write no resonance doctrine meanwhile, and fix
+  domination defects as defects. Approved direction: a Hedault trueing
+  keeping resonance flat or reducing it is the right upgrade axis — his
+  craft buys room to wear more, which beats +1 HP.
 - **Rename lanes change RENDERS of a class name, never common-noun
   prose that shares the word (controller call, 2026-08-14).** Pisces'
   "you hold yourself like a swordsman" survives the [Blademaster]
@@ -161,14 +170,12 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   oversight; prints stay distinct from Tactician vocabulary). (2) Free
   scenery reads apply to ARMLESS props only; armed props (plate, cache,
   bed, doors) keep their interact action and retire their standalone
-  flavor reads — except danger-bearing props: pressure_plate_a must be
-  covered by the trap-perception family, joining the find_trap surface
-  if nothing covers it. Rejected: a new free-inspection mechanism
-  (scope creep; revisit only if playtests miss the flavor). (3) Passive
-  tactic-family Skills emit `tactic_used` at their proc site (weapon-
-  family tally precedent); actives tally on use. Rejected: ap_cost==0
-  activation engine change (blast radius = every passive becomes
-  slottable) and forcing aura-shaped skills into actives.
+  flavor reads — except danger-bearing props, which the trap-perception
+  family must cover. Rejected: a new free-inspection mechanism (scope
+  creep). (3) Passive tactic-family Skills emit `tactic_used` at their
+  proc site (weapon-family tally precedent); actives tally on use.
+  Rejected: an ap_cost==0 activation engine change (blast radius =
+  every passive becomes slottable).
 
 - **#444 fix shape:** ship option 1 only (move Hedault's frontage door out of
   the [23,1] sign adjacency into the open facade band). Option 3 (bespoke
@@ -216,15 +223,10 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   consolidation recipes accepting evolved parents into the SAME target
   (erases lineage identity), and evolution deferring while
   consolidation is in reach. Full implementable spec on #449.
-  **WIKI VERIFY DISCHARGED (2026-08-13, before the id was cut).**
-  wiki.wanderinginn.com full-text search returns "There were no results
-  matching the query" for BOTH "Spellspear" and the alternative "Magic
-  Spearmaster", and List_of_Classes/S carries no such entry — so
-  [Spellspear] collides with no canon class and is not a spoiler-tier
-  name. The same page attests [Spellsword] as "Hybrid [Swordsman]/
-  [Mage]", which corroborates rather than contradicts the split this
-  ruling makes. [Spellspear] therefore SHIPPED as the id; [Magic
-  Spearmaster] is not needed and the fallback is spent.
+  **WIKI VERIFY DISCHARGED (2026-08-13, before the id was cut):**
+  no canon collision for [Spellspear] or the [Magic Spearmaster]
+  fallback; the wiki's attested [Spellsword] ("Hybrid [Swordsman]/
+  [Mage]") corroborates the split. [Spellspear] SHIPPED as the id.
 - **The warden wakes for every descent; endings stay three-path
   (2026-08-12).** #437's measurements refuted the "warden stat wall"
   (competent-policy WIN 0.73 at the shipped build; 0.77 at band) — so
