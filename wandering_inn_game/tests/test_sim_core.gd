@@ -4417,9 +4417,13 @@ func _check_unactivatable_skills_pre_revealed(scene_config: Dictionary, skill_co
 		"first use still reveals an activatable skill")
 
 
-## GH#334 ruling 5: PAY TWICE, GET BOTH. `pending_meal` was REPLACED on every
-## use, so eating a meal after an oil silently threw the oil away -- an item
-## consumed and gold spent with no signal of any kind.
+## GH#334 ruling 5 (PAY TWICE, GET BOTH) and GH#432's cap (STRONGEST SINGLE
+## MEAL) both live on `_merge_pending_meal`, and they compose PER KEY.
+## `pending_meal` was once REPLACED on every use, so eating a meal after an oil
+## silently threw the oil away; the fix for that SUMMED numeric keys, which made
+## every produce-only inn prop an unbounded damage farm (#432: cast, use, cast
+## again, `damage_mod` climbs forever for zero gold and zero rest). Different
+## keys still both ride; the same key caps at the strongest single value.
 func _check_pending_meal_merges(scene_config: Dictionary, skill_config: Dictionary) -> void:
 	var toasts: Array[String] = []
 	var g := WIGame.new(scene_config, skill_config, func(t: String, p: Dictionary) -> void:
@@ -4439,17 +4443,65 @@ func _check_pending_meal_merges(scene_config: Dictionary, skill_config: Dictiona
 
 	assert(g.use_item("fine_meal"), "fine_meal uses on top of the armed oil")
 	assert(int(g.pending_meal.get(WIKeys.DAMAGE_MOD, 0)) == 1,
-		"the meal must NOT clear the oil's damage -- this is the whole bug")
+		"the meal must NOT clear the oil's damage -- this is the #334 bug")
 	assert(int(g.pending_meal.get(WIKeys.HP_MOD, 0)) == 2, "and the meal's own +2 HP is armed beside it")
 	assert(toasts.back() == "Used: Fine Meal. +1 damage, +2 HP in your next fight.",
 		"the second toast reports the MERGED total, not just its own item, got: %s" % toasts.back())
 
-	# Two of the same item stack rather than one overwriting the other.
+	# GH#432: a WEAKER same-key use refreshes rather than stacks. crude_draught's
+	# +1 HP under the meal's armed +2 is a no-op on the number -- the item still
+	# spends, and the toast reports the real armed total rather than its own card.
 	g.inventory.assign(["crude_draught"])
-	var hp_before := int(g.pending_meal.get(WIKeys.HP_MOD, 0))
 	assert(g.use_item("crude_draught"), "crude_draught uses")
-	assert(int(g.pending_meal.get(WIKeys.HP_MOD, 0)) == hp_before + 1,
-		"a same-key second use SUMS")
+	assert(int(g.pending_meal.get(WIKeys.HP_MOD, 0)) == 2,
+		"a weaker same-key use REFRESHES: capped at the strongest single meal, never summed, got: %d"
+			% int(g.pending_meal.get(WIKeys.HP_MOD, 0)))
+	assert(toasts.back() == "Used: Crude Draught. +1 damage, +2 HP in your next fight.",
+		"the refresh toast still reports the LIVE armed total, got: %s" % toasts.back())
+
+	# GH#432: and the same key from a SECOND producer does not climb either --
+	# this is the improvised_cudgel/tempering_oil pair, both damage_mod 1.
+	g.inventory.assign(["improvised_cudgel"])
+	assert(g.use_item("improvised_cudgel"), "improvised_cudgel uses")
+	assert(int(g.pending_meal.get(WIKeys.DAMAGE_MOD, 0)) == 1,
+		"an equal same-key use is a no-op on the number, got: %d"
+			% int(g.pending_meal.get(WIKeys.DAMAGE_MOD, 0)))
+
+	# GH#432: a STRONGER same-key use replaces upward -- the cap is max(), not
+	# first-writer-wins. Fresh game so the weak draught arms first.
+	var g2 := WIGame.new(scene_config, skill_config, func(_t: String, _p: Dictionary) -> void:
+		pass, 77, {
+			"combatants": _load_json("res://data/combatants.json"),
+			"classes": _load_json("res://data/classes.json"),
+			"arenas": _load_json("res://data/arenas.json"),
+			"items": _load_json("res://data/items.json"),
+		})
+	g2.inventory.assign(["crude_draught", "signature_meal"])
+	assert(g2.use_item("crude_draught"), "the weak draught arms first")
+	assert(int(g2.pending_meal.get(WIKeys.HP_MOD, 0)) == 1, "+1 HP armed")
+	assert(g2.use_item("signature_meal"), "the stronger meal uses on top of it")
+	assert(int(g2.pending_meal.get(WIKeys.HP_MOD, 0)) == 2,
+		"a stronger same-key use REPLACES (2, not 1 and not 3), got: %d"
+			% int(g2.pending_meal.get(WIKeys.HP_MOD, 0)))
+	assert(int(g2.pending_meal.get(WIKeys.DAMAGE_MOD, 0)) == 1,
+		"and the meal's own new key arms beside it")
+
+	# GH#432 THE FARM, the defect this cap exists for: the taproom loop is
+	# produce -> use -> produce -> use, and every prop that feeds it is
+	# produce-only. Ten passes must leave the armed damage at ONE.
+	var g3 := WIGame.new(scene_config, skill_config, func(_t: String, _p: Dictionary) -> void:
+		pass, 77, {
+			"combatants": _load_json("res://data/combatants.json"),
+			"classes": _load_json("res://data/classes.json"),
+			"arenas": _load_json("res://data/arenas.json"),
+			"items": _load_json("res://data/items.json"),
+		})
+	for _pass: int in range(10):
+		g3.inventory.assign(["improvised_cudgel"])
+		assert(g3.use_item("improvised_cudgel"), "the re-armed cudgel uses every pass")
+	assert(int(g3.pending_meal.get(WIKeys.DAMAGE_MOD, 0)) == 1,
+		"ten farm passes arm +1 damage, not +10 -- the whole of #432, got: %d"
+			% int(g3.pending_meal.get(WIKeys.DAMAGE_MOD, 0)))
 
 	assert(WIEffectText.pending_meal_line({}) == "",
 		"an empty armed dict says nothing rather than inventing a payload")

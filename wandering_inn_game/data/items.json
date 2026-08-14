@@ -842,7 +842,7 @@
       "lore": "A hedge remedy does not promise miracles. It promises that the bleeding slows, the swelling settles, and morning remains possible."
     },
     {
-      "_comment": "The +2 HP next-fight payload anchors on the shipped well_fed combat-build bonus. NO `price` KEY (GH#334 ruling 7): hot_meal's precedent -- a meal is served or eaten, never merchandise. Cooking plates it free, so a price was a gold spigot.",
+      "_comment": "The +2 HP next-fight payload anchors on the shipped well_fed combat-build bonus. NO `price` KEY (GH#334 ruling 7): hot_meal's precedent -- a meal is served or eaten, never merchandise. Cooking plates it free, so a price was a gold spigot. GH#432 CAP, and this entry is the anchor every other next_fight payload cites: ARMED MEAL MODS NEVER SUM. `_merge_pending_meal` keeps the MAXIMUM per key, so a second plate REFRESHES the armed +2 instead of making it +4, a stronger meal REPLACES it, and a weaker one is a no-op on the number (the item still spends; the use toast reports the real armed total). The cap is PER KEY, so a Tempering Oil's damage still rides beside this HP -- GH#334 ruling 5 (pay twice, get both) is untouched, and only same-key restacking is bounded. That is what lets the produce-only inn props stay unbounded: the loop still costs the walk, and it buys exactly one meal's worth.",
       "id": "fine_meal",
       "name": "Fine Meal",
       "kind": "meal",
@@ -862,7 +862,7 @@
       "lore": "Good cooking is partly ingredients and mostly attention. This plate had enough of both to follow a traveler well past the table."
     },
     {
-      "_comment": "The +2 HP/+1 damage next-fight payload is the controller-ruled chef-tier step above well_fed. No `price` key (GH#334 ruling 7): see fine_meal.",
+      "_comment": "The +2 HP/+1 damage next-fight payload is the controller-ruled chef-tier step above well_fed. No `price` key (GH#334 ruling 7): see fine_meal. GH#432 cap applies PER KEY (full rule on fine_meal): this plate REPLACES a weaker armed hp_mod and refreshes an equal one, and its damage_mod does not add to an armed cudgel's or oil's -- it never sums with anything.",
       "id": "signature_meal",
       "name": "Signature Meal",
       "kind": "meal",
@@ -883,7 +883,7 @@
       "lore": "A signature dish is remembered before anyone knows why. The second bite explains it; the empty plate settles the argument."
     },
     {
-      "_comment": "Wave D-1 (#155): [Low-Grade Synthesis]'s bench output -- the low-tier end of the alchemist product line (tonic_of_the_clear_eye is the mid-tier). Reuses the next_fight prep-buff shape (fine_meal precedent) at hp_mod:1. Placeholder price; final pricing deferred to #92.",
+      "_comment": "Wave D-1 (#155): [Low-Grade Synthesis]'s bench output -- the low-tier end of the alchemist product line (tonic_of_the_clear_eye is the mid-tier). Reuses the next_fight prep-buff shape (fine_meal precedent) at hp_mod:1. Placeholder price; final pricing deferred to #92. GH#432: hp_mod 1 is the WEAK end of the ladder, so this is the canonical refresh case -- drunk under an armed fine_meal it caps at that meal's +2 and buys nothing (per-key max; full rule on fine_meal). Drunk first, a later fine_meal replaces it upward.",
       "id": "crude_draught",
       "name": "Crude Draught",
       "kind": "tool",
@@ -1209,7 +1209,7 @@
       "lore": "The barracks yard counts its shafts twice a day and still comes up short, so nobody minds one walking off in a recruit's pack. Everybody who ever drilled here has done it."
     },
     {
-      "_comment": "[Bar Fighting] yield. damage_mod 1 = tempering_oil parity, not a new tier. No price (hot_meal precedent).",
+      "_comment": "[Bar Fighting] yield. damage_mod 1 = tempering_oil parity, not a new tier. No price (hot_meal precedent). GH#432: the produce -> use -> produce farm this item fed is capped at the MERGE SITE, not here -- `_merge_pending_meal` maxes per key, so ten cudgels in a row arm +1 damage, never +10. Production stays deliberately unbounded; the payoff no longer stacks. Full rule on fine_meal.",
       "id": "improvised_cudgel",
       "name": "Improvised Cudgel",
       "kind": "tool",

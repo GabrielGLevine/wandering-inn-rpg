@@ -319,9 +319,13 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   restores the intended base-to-upgrade chain.
 - **`improvised_cudgel`** is yielded by using [Bar Fighting] on taproom
   furniture. **`solid_oak_spear`** is stocked in the barracks spare-kit crate.
-- **Cudgel production is currently unbounded-on-precedent.** Duplicate refusal
-  only bounds what is carried; consuming re-arms production, and pending meal
-  bonuses sum. #432 owns any systemic correction across cudgel and food props.
+- **Meal buffs cap at the strongest single meal (#432).** `_merge_pending_meal`
+  keeps the MAXIMUM per key, never a sum: a stronger meal replaces that key, an
+  equal-or-weaker one refreshes it. The cap is per key, so #334 ruling 5 (pay
+  twice, get both) still holds for different keys. Cudgel and food-prop
+  production stays unbounded-on-precedent — duplicate refusal bounds only what
+  is carried, and consuming re-arms the producer — but the loop is now a
+  walk-cost rather than a damage curve.
 - **Serve remains cooking-gated.** Requirements use item `source_hint` text to
   tell a blocked player where the needed meal comes from; combat builds are not
   entitled to bypass the cooking pillar.
@@ -428,7 +432,11 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 - “Same-map `present_when` is unsafe” → **false**; accomplishment reconciliation
   and dialogue-end deferral make it safe.
 - “Duplicate refusal bounds cudgel production” → **false**; use consumes the
-  item and re-arms the producer. #432 owns the class-level balance call.
+  item and re-arms the producer. #432 made the balance call: production stays
+  unbounded, the meal payoff caps at the strongest single meal.
+- “Armed next-fight meal mods sum” → **false since #432**; `_merge_pending_meal`
+  keeps the per-key maximum. The summing behaviour was #334 ruling 5's fix for
+  wholesale replacement and outlived its purpose.
 - “Passing event assertions proves a visible feature” → **false**; windowed
   rendering is required for player-visible claims.
 - #397 round-one “engineering green means prose exit met” → **false**; blind
