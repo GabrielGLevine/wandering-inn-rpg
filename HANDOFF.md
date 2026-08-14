@@ -113,14 +113,18 @@ or superseded session blocks.
   permission. Free-on-Steam remains the recommended path.
 - **Balance rulings raised by the skirmisher lane (2026-08-14), both
   escalated rather than improvised:**
-  1. `act2_cistern_nest` skirmisher 0.40 WALL is **structurally
-     unreachable** by the kit remedy: Acts I–IV measure the PARENT lines
-     (`spearmaster3/archer2`), not the consolidated class, and
-     spearmaster's table is empty under L10 while every archer grant is
-     bow-gated at a spear. Closing it means editing parent tables, which
-     moves spellspear / ranger / scout / sharpshooter — forbidden by
-     "other spines must not move". Needs its own ruling (accept the
-     mid-act wall, or sanction parent-table movement + re-window).
+  1. `act2_cistern_nest` skirmisher 0.40 WALL. Acts I–IV measure the
+     PARENT lines (`spearmaster3/archer2`), not the consolidated class,
+     so no skirmisher-table grant reaches it. It IS reachable by a
+     spear-gated grant on `archer` L≤2 (the archer table is NOT
+     bow-sealed — `keen_eye` carries no weapon key), and such a grant
+     provably does not move ranger or scout, both bow at all five acts.
+     The reason it stays open is COST, not reach: the cheapest reaching
+     edit overshoots the same spine elsewhere — act3 0.72→0.88 (above
+     the 0.85 ceiling), act1 0.79→0.96. Ruling wanted: accept the
+     mid-act wall, or sanction the parent-table edit plus the re-window
+     its overshoot forces. (The lane first recorded this as
+     "structurally unreachable"; the gate refuted that premise.)
   2. **[Ranger] walls identically** at the warden (0.33, mp 0, no
      companion) — same diagnosis as skirmisher's pre-fix 0.26. Out of
      that lane's scope; wants the same kit-gap treatment if ruled.
