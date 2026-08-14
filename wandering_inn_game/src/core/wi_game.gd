@@ -2519,18 +2519,46 @@ func use_item(item_id: String) -> bool:
 	return true
 
 
-## GH#334 ruling 5: PAY TWICE, GET BOTH. `pending_meal` used to be REPLACED by
-## each use, so eating a Fine Meal after a Tempering Oil silently threw the oil
-## away -- an item consumed, gold spent, and no signal of any kind that the
-## first buff had been overwritten. Numeric keys now SUM; anything else is
-## last-writer-wins (there is no non-numeric mod today, and a future one has no
-## meaningful addition). Cleared wholesale by `_build_player_combatant` exactly
-## as before, so the one-fight scope is unchanged.
+## TWO RULINGS COMPOSE HERE, and the composition is PER KEY.
+##
+## GH#334 ruling 5, PAY TWICE GET BOTH: `pending_meal` was once REPLACED
+## wholesale by each use, so eating a Fine Meal after a Tempering Oil silently
+## threw the oil away -- an item consumed, gold spent, and no signal of any kind
+## that the first buff was gone. Two DIFFERENT payloads must still both ride.
+##
+## GH#432 ruling, STRONGEST SINGLE MEAL: the fix for that summed numeric keys,
+## which made every produce-only prop on the inn map an unbounded damage farm.
+## Cast [Bar Fighting] on the dirty table, use the cudgel, cast again -- and
+## `damage_mod` climbed by 1 every loop, for zero gold, zero rest and no fight
+## in between (inn_chef_counter and inn_copper_pan run the identical
+## produce/consume loop with fine_meal and signature_meal). Nothing capped it:
+## the #330 duplicate refusal bounds what may be CARRIED, never what may be
+## produced, and the exploration-only loop is invisible to the difficulty-tier
+## monotonicity gates.
+##
+## So each key keeps the MAXIMUM of what is armed and what is coming in. A
+## stronger meal REPLACES that key; an equal or weaker one REFRESHES it -- a
+## no-op on the number, and re-eating never accumulates. The cap is per key, so
+## the oil's `damage_mod` and the meal's `hp_mod` still ride together and #334
+## is untouched; only SAME-key restacking is bounded. An absent key takes the
+## incoming value verbatim rather than maxing against a phantom 0, so a future
+## penalty-shaped mod arms honestly instead of being silently dropped.
+##
+## The refreshing item is still SPENT (a weaker draught on top of a stronger
+## meal buys nothing). That is deliberate and visible rather than hidden: the
+## use toast is composed off the LIVE post-merge dict, so it reports the real
+## armed total, not the item's own card. Non-numeric values stay
+## last-writer-wins -- there is no non-numeric mod today, and "strongest" has no
+## meaning for one. Cleared wholesale by `_build_player_combatant` exactly as
+## before, so the one-fight scope is unchanged.
 func _merge_pending_meal(gained: Dictionary) -> void:
 	for key: String in gained:
 		var incoming: Variant = gained[key]
 		if incoming is int or incoming is float:
-			pending_meal[key] = int(pending_meal.get(key, 0)) + int(incoming)
+			if pending_meal.has(key):
+				pending_meal[key] = maxi(int(pending_meal[key]), int(incoming))
+			else:
+				pending_meal[key] = int(incoming)
 		else:
 			pending_meal[key] = incoming
 
