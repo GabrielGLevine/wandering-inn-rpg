@@ -242,36 +242,42 @@ Exit: the steel-thread golden passes the tolerance differ end-to-end;
 STEEL-THREAD.md's "regenerate via compiler" line lands. M4 (the Mage
 variant, the #438 acceptance milestone) dispatches only after this.
 
-**M3.6 landed 2026-08-13, exit NOT met — and the reason is a ruling, not
-a gap in the five items.** All five are built, mutation-proved and pinned
-(`scripts/itinerary/tests/test_m36_contract.py`), and the golden now
-carries the whole of Act I: 19 nodes over shipped steps 0–217, green
-headless at seed 37 (243/243), tolerance differ **23 exact / 5 net**,
-down from 50/11. Item 2's "141" is REFUTED and re-measured: **94 rows at
-55 sites** are in-window; 141 counts every row of those types anywhere in
-the script, 47 of them behind a prop interact, a combat dismiss or a
-teardown pair.
+**M3.6 landed 2026-08-13, exit NOT met.** All five items are built,
+pinned from a node SPEC through to emitted steps, and mutation-proved
+(`scripts/itinerary/tests/`, contract + `pipeline.py` harness). The golden
+carries the whole of Act I: 21 nodes over shipped steps 0-217, green
+headless at seed 37 (232/232), byte-identical across two compiles.
 
-What now blocks the exit is measured corpus-wide and is one class:
-**134 rows where the COMPILED script claims more than the shipped one** —
-24 pool-line `ui_dialogue_rendered`, 60 conversation-open `dialogue_node`
-(the replay self-check requires it; two reds bought that rule), 50
-destination `dialogue_node`. §6.3's tightening allowance covers only
-`assert_*` actions, so each reads as an exact-class fatal even though the
-compiled run is strictly the stricter one. M3.5 reported the same thing
-about one of the three and this amendment did not rule on it.
+Item 2's "141" is REFUTED and re-measured **from the emitter's own
+placement rule** rather than from a standalone scanner: **105 rows at 60
+sites** are derivable (96 announced immediately on a continuing row, 9
+after the teardown on a closing row), and 36 belong to other idioms (26
+prop-interact, 8 post-dismiss, 2 sleep). A first pass reported 94/55/47
+and was wrong in both directions -- it missed a conversation that opens
+without a `dialogue_started` wait, and it did not model the closing-row
+placement at all.
 
-**The open ruling, stated so the next lane does not improvise it:** does
-§6.3's "pins may be TIGHTER and never looser" extend from `assert_*`
-actions to a compiled-only `wait_for_event`? Answering yes closes 134 of
-the residual fatals and changes what the milestone gate treats as fatal.
-Answering no means each of those three waits needs a per-node emitter key,
-which puts corpus knowledge back into itineraries — the thing `raw`'s 2%
-budget exists to prevent. This lane declined to decide it, because
-widening a gate to pass its own milestone is the wrong shape of work. The
-residual table (including the smaller sleep/inventory/autoplay-assert
-classes and the bump-to-face `_net` artifact) is in
-`wandering_inn_game/qa/STEEL-THREAD.md`.
+Differ, against shipped 0-217: pre-lane `50 exact / 11 net`, M3.6
+`47 exact / 5 net`. The lane edited `goldens.py` twice, and both are
+ACCOUNTING fixes rather than policy: gaps of unmatched spine steps are
+carried forward (with a coverage invariant proving nothing is dropped
+from comparison, so it cannot mask a difference), and position pins align
+on their value as well as their path (severity unchanged in every case).
+Which class is fatal was not touched.
+
+**The open ruling, stated without overselling it.** Does §6.3's "pins may
+be TIGHTER and never looser" extend from `assert_*` actions to a
+compiled-only `wait_for_event`? Corpus-wide the class is 134 rows -- 60
+conversation-open `dialogue_node`, 50 destination `dialogue_node`, 24
+pool-line `ui_dialogue_rendered` -- every one of them the compiler being
+stricter than the corpus. Inside the authored window a YES reclassifies
+**12 of 47** exact rows and leaves **35 exact and all 5 net**. It is
+necessary and nowhere near sufficient: the rest is emitter idiom variance
+(the 330-row `assert_state player_cell` class, the sleep idiom, the
+inventory `items` pin, the in-autoplay assert slot) and two differ
+accounting weaknesses. The lane declined to answer it because widening a
+gate to pass its own milestone is the wrong shape of work; the full
+residual table is in `wandering_inn_game/qa/STEEL-THREAD.md`.
 
 ## 4. Emitter contract
 

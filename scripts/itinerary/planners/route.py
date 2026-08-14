@@ -263,25 +263,10 @@ class RoutePlanner:
         driver_steps = self.compress(cells[:index])
         if driver_steps:
             ops.append({"kind": "walk", "steps": driver_steps})
-            ops.append(self._arrival_pin(stop))
         # The trigger move COMPLETES before the proximity check runs, so the
         # player is standing on the in-radius cell when the board opens.
         ledger.set_position(ledger.map_id, step_in, DIRECTION_VECTORS[direction])
         return ops, direction
-
-    @staticmethod
-    def _arrival_pin(cell: list[int]) -> dict[str, Any]:
-        """Where a walk leg LANDS, pinned before whatever acts on it next.
-
-        §6.3 already rules the arrival net-class -- a route between two anchors
-        may differ, the place it arrives at may not -- and this makes the run
-        itself say so instead of leaving it to a differ. The shipped corpus
-        carries 330 of these; the emitter carried them only after a map
-        transition, so every walk leg's landing was a claim the compiler could
-        make from the ledger and did not. It is an ASSERT, so a compiled leg
-        that pins where the corpus did not is a tightening, never noise.
-        """
-        return {"kind": "assert_state", "path": "player_cell", "equals": [int(part) for part in cell]}
 
     @staticmethod
     def compress(cells: list[list[int]]) -> list[dict[str, Any]]:
@@ -320,10 +305,9 @@ class RoutePlanner:
             if not isinstance(approach, dict):
                 raise RouteError(f"target has no interact approach: {query}: {answer}")
             driver_steps = list(approach.get("driver_steps", []))
-            stand = [int(part) for part in approach["cell"]]
             if driver_steps:
                 ops.append({"kind": "walk", "steps": driver_steps})
-                ops.append(self._arrival_pin(stand))
+            stand = [int(part) for part in approach["cell"]]
             ledger.set_position(ledger.map_id, stand)
             bump = str(approach["bump"])
             ledger.face(bump)
@@ -332,7 +316,6 @@ class RoutePlanner:
             driver_steps = list(answer.get("driver_steps", []))
             if driver_steps:
                 ops.append({"kind": "walk", "steps": driver_steps})
-                ops.append(self._arrival_pin(target))
             ledger.set_position(ledger.map_id, target)
             for step in reversed(driver_steps):
                 direction = str(step.get("direction", ""))

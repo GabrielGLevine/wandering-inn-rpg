@@ -133,6 +133,14 @@
       sleep: {expect_levels: true, shot: 02_tutorial_01_warrior_gained}
 
     # -- Relc's spear, and wearing it ----------------------------------------
+    - id: act1.stairs.approach
+      goto: {map: inn_upstairs, cell: [1, 1]}
+      why: >-
+        Stage the stair head. `stairs_down` (1,2) can be bumped from (1,1)
+        going down or from (2,2) going left, and the router takes the second;
+        the corpus takes the first. Both are oracle-valid and they leave the
+        run facing different ways, so the approach cell is named rather than
+        left to the shortest path.
     - id: act1.gift
       talk:
         npc: relc
@@ -152,6 +160,14 @@
       shot: {name: 02_tutorial_03_spear_equipped}
 
     # -- the gate road, and the ambush that owns it --------------------------
+    - id: act1.road.approach
+      goto: {map: floodplains, cell: [30, 20]}
+      why: >-
+        Stage the approach. The band springs on a step into its Chebyshev-2
+        radius, and WHICH step that is decides where the PC stands when the
+        board opens -- the router's own shortest path enters the radius from
+        the west at (28,23). This node puts the run one cell north of the
+        radius, so the trigger step is the shipped one.
     - id: act1.ambush
       why: >-
         The Act I climax. Walked into, not interacted with: the raiding band
