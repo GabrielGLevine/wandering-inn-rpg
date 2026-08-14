@@ -203,6 +203,10 @@ const EXPECTED_SKILLS := {
 	# identical because only the `weapon` gate re-flavors -- the effect block is
 	# [Ranger]'s VERBATIM, and `weapon` never reaches the effect lines.
 	"steady_point": ["+8 to hit"],
+	# #438 kit gap. Reads identically to [Tough Body] above, and that is the
+	# point: the effect block is that skill's VERBATIM, so the only thing the
+	# player sees differ between them is the name and the prose.
+	"give_ground": ["+10 max HP"],
 	"bargain": [],
 	"appraise_goods": [],
 	"bulk_terms": [],
