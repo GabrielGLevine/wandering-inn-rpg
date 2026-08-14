@@ -1410,12 +1410,11 @@
       "lore": "He would not call it an enchantment. He called it a correction, listed the four things that had been wrong with it in the order he found them, and charged for the hours."
     },
     {
-      "_comment": "#438 EQUIPMENT GAPS, spear T3 -- sealed-area treasure. damage_mod 2 plus range 2: the reach a lance has and a spear does not, and the only shipped weapon besides the two bows to carry a `range` at all. Unpriced, the shipped convention for a unique treasure weapon/accessory (moon_bone_amulet, the Act III warren reward, carries no price either), which also keeps it out of WIGame.sellable_items()'s priced-item filter.",
+      "_comment": "#438 EQUIPMENT GAPS, spear T3 -- sealed-area treasure. NO `range` KEY, and that is a decision with a measured price rather than an omission. A lance reaches, and `range: 2` was authored and measured here first: it lifted `skirmisher` act V from 0.61 to 0.79 (100 seeds) because the competent policy kites with a reaching weapon (combat_policies.gd:364). It came out because WIEffectText.item_effect_lines (effect_text.gd) picks its damage wording off `range > 1` alone -- so the card would have read '+2 damage on RANGED hits' for a spear. Teaching that composer reach-vs-ranged is shared-copy surgery with its own pin sweep, and no content lane should do it on the way past. The reach idea survives in the record with its number attached; the item ships as the spear track's top damage rung. Unpriced, the shipped convention for a unique treasure weapon (moon_bone_amulet carries no price either), which also keeps it out of WIGame.sellable_items()'s priced-item filter.",
       "id": "wyvernbone_lance",
       "name": "Wyvernbone Lance",
       "kind": "weapon",
       "weapon_family": "spear",
-      "range": 2,
       "damage_mod": 2,
       "hp_mod": 0,
       "damage_reduction": 0,

@@ -2099,7 +2099,20 @@ func _validate_tutor_line_help_consistency() -> void:
 ## GH#142: enchant pairs are the dialogue-effect swap triple (negative gold
 ## fee + remove_item base + item variant in ONE option). Derived from the
 ## graphs, no list to maintain. Economics: variant price > base price +
-## fee/2 (Hedault charges for real value), both records accessories.
+## fee/2 (Hedault charges for real value).
+##
+## SLOT RULE, widened by #438. This asserted `kind == "accessory"` on BOTH
+## sides, which was an accurate description of the shipped enchant loop rather
+## than a rule about it: every product on the hub happened to be an accessory
+## because no weapon upgrade had been authored yet. The #438 equipment-gaps
+## sketch authors one (relcs_spare_spear -> hedault_trued_spear), so the
+## accessory literal would have blocked the content it was never aimed at.
+## What the check is actually FOR is that an upgrade preserves the thing's
+## slot -- paying a fee to have your spear corrected must hand back a spear,
+## never a charm -- so it now asserts base.kind == variant.kind, which is
+## strictly stronger than the old pair-of-literals (it also catches an
+## accessory that upgrades into a different accessory-shaped kind) and still
+## refuses anything outside the two slots the loop is allowed to touch.
 func _validate_enchant_pairs(graphs: Dictionary, items: Dictionary) -> void:
 	var by_id: Dictionary = {}
 	for it: Dictionary in items.get("items", []):
@@ -2123,7 +2136,10 @@ func _validate_enchant_pairs(graphs: Dictionary, items: Dictionary) -> void:
 				var base: Dictionary = by_id.get(removed, {})
 				var variant: Dictionary = by_id.get(granted, {})
 				_check(not base.is_empty() and not variant.is_empty(), "%s/%s enchant references unknown items %s -> %s" % [conv_id, node_id, removed, granted])
-				_check(String(variant.get("kind", "")) == "accessory" and String(base.get("kind", "")) == "accessory", "%s enchant pair must be accessories" % conv_id)
+				var base_kind := String(base.get("kind", ""))
+				var variant_kind := String(variant.get("kind", ""))
+				_check(base_kind == variant_kind, "%s enchant %s->%s must keep its slot: base kind %s, variant kind %s" % [conv_id, removed, granted, base_kind, variant_kind])
+				_check(base_kind == "accessory" or base_kind == "weapon", "%s enchant pair kind %s is outside the loop's two slots (accessory, weapon)" % [conv_id, base_kind])
 				_check(
 					int(variant.get("price", 0)) * 2 > int(base.get("price", 0)) * 2 + fee,
 					"%s enchant %s->%s: variant price %d must exceed base %d + fee %d/2 (paid work must hold value)" % [conv_id, removed, granted, int(variant.get("price", 0)), int(base.get("price", 0)), fee]

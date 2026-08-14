@@ -3,6 +3,23 @@ extends SceneTree
 const _FORBIDDEN_ATTR := "(?i)\\b(str|dex|con|int|wis|cha)\\b"
 
 const EXPECTED_ITEMS := {
+	# --- #438 equipment gaps. Nine rows, hand-derived from items.json against
+	# `item_effect_lines`' composition order (damage, range, family, HP,
+	# reduction, resonance, abilities, worth) rather than pasted back from a
+	# run, so a change in that ORDER still reds here. Two shapes worth naming:
+	# the unpriced rows (treasure/quest/loot uniques) carry no "Worth" line at
+	# all, the moon_bone_amulet convention; and runners_sandals is the only
+	# statless row in the file -- resonance and one granted Skill, nothing else,
+	# which is exactly what a civil-utility item is supposed to look like.
+	"guardsmans_pike": ["+1 damage on melee hits", "Spear kit replaces other weapon Skills in combat", "Worth 18 gold"],
+	"hedault_trued_spear": ["+2 damage on melee hits", "Spear kit replaces other weapon Skills in combat", "Worth 45 gold"],
+	"wyvernbone_lance": ["+2 damage on melee hits", "Spear kit replaces other weapon Skills in combat"],
+	"recurve_of_the_watch": ["+1 damage on ranged hits", "Range 4", "Bow kit replaces other weapon Skills in combat"],
+	"ashwood_warbow": ["+2 damage on ranged hits", "Range 4", "Bow kit replaces other weapon Skills in combat"],
+	"graveflame_wand": ["+1 damage on melee hits", "Resonance 2", "Worth 30 gold"],
+	"lichbone_wand": ["+1 damage on melee hits", "+2 HP", "Resonance 3"],
+	"weighted_apron": ["+2 HP", "Worth 12 gold"],
+	"runners_sandals": ["Resonance 1", "Grants [Second Wind] in combat"],
 	"rusty_sword": ["Sword kit replaces other weapon Skills in combat"],
 	"relcs_spare_spear": ["+1 damage on melee hits", "Spear kit replaces other weapon Skills in combat"],
 	"crude_blade": ["Sword kit replaces other weapon Skills in combat"],

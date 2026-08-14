@@ -94,7 +94,7 @@ The spine list is derived from every target in `data/classes.json`'s `consolidat
 | II | `act2_cistern_nest` | `skirmisher` | spearmaster3/archer2 | LOSS 0.40 / 4 rd / -11 | WALL — report only |
 | III | `act3_awakened_boss` | `skirmisher` | spearmaster5/archer4 | WIN 0.72 / 5 rd / +20 | IN WINDOW |
 | IV | `act4_vault_construct` | `skirmisher` | spearmaster7/archer6 | WIN 0.81 / 6 rd / +48 | IN WINDOW |
-| V | `act5_seal_warden` | `skirmisher` | skirmisher14 | WIN 0.79 / 4 rd / +11 | IN WINDOW |
+| V | `act5_seal_warden` | `skirmisher` | skirmisher14 | WIN 0.63 / 5 rd / +5 | IN WINDOW |
 | I | `act1_gate_ambush` | `ranger` | warrior2 | LOSS 0.32 / 5 rd / -21 | WALL — report only |
 | II | `act2_cistern_nest` | `ranger` | warrior3/archer2 | WIN 0.50 / 5 rd / +1 | WALL — report only |
 | III | `act3_awakened_boss` | `ranger` | warrior5/archer4 | WIN 0.65 / 5 rd / +15 | IN WINDOW |
