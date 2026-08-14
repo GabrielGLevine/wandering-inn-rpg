@@ -18,31 +18,12 @@ or superseded session blocks.
   map `wandering_inn_game/docs/ARCHITECTURE.md`, makes QA inventories derive
   from `qa/manifest.json`, updates/syncs affected `wi-*` skills, and condenses
   this file plus `docs/CHOICE-LOG.md` with regression guards.
-- DONE (2026-08-11, Fable session): #423 art follow-ups SHIPPED — bespoke
-  `icon_pick_lock` (16x16, live on the hotbar, verified legible + distinct
-  from rogue-line siblings), `door_locked_heavy` on the work-room door
-  (window-read defect closed; one P4 residual row: unoccluded in-scene
-  read pending), `enchanter_stock_shelf` (8,1) + `enchanter_vial_case`
-  (10,1) fill the sparse right half. Gates: --touching 214/214, smoke
-  14/14, test_sprite_registry PASS (4 new frame-count rows), data_lint
-  rc 0, import pass done. License verdict appended (license-notes,
-  local). Alternates parked server-side (tags pick-lock-icon /
-  workroom-door / enchanter-shelf).
-- DONE (2026-08-12, Fable session): **balance program complete** (#434 is
-  the one open engine piece). Shipped across three waves: oracle/
-  fail-fast/checkpoints (#436/#435), dual-policy sim table + calibration
-  (#437), Acts I-III retunes into the [0.55,0.85] window + 8 canonical
-  re-fixtures (#439/#441), warden chokepoint (#440: wakes every descent,
-  endings post-fight, sneak = ambush edge), [Second Wind] once_per_fight
-  (#442), competent-policy survive amendments (hit-aware potential_damage,
-  largest-heal-wins, death-band second action). Steel thread REAUTHORED
-  and GREEN at band: 2567 steps, seed 9, x3 verified (events 10995/11000/
-  10995), warden falls in 9 rounds with every resource spent (PC 2/47).
-  Filed for the user: #448 (Relc veto trap choice), #449 (evolution
-  orphans consolidation — end-to-end evidence in the run), plus two #439
-  follow-ups recorded on #449 (dilution-stated bands; 4g finale economy).
-  #451 parked by user (Counter Strike power level, ablation data attached). Pre-existing red still open: d3_inventory_shot (inventory pin drift,
-  predates the program). Windowed observation run launched for the user.
+- BALANCE PROGRAM state (details in merged PR bodies #435-#442, #488):
+  every at-band climax row now sits inside [0.55,0.85]; steel thread
+  GREEN at band (2569 steps, seed 37). #434 is the one open engine
+  piece. #451 parked by user (Counter Strike power level). Pre-existing
+  red still open: d3_inventory_shot (inventory pin drift, predates the
+  program).
 - ORCHESTRATOR HANDOVER **EXECUTED 2026-08-14**: Fable weekly hit its
   limit mid-gate (killed 3 auditors on the skirmisher lane); user
   switched the session to Opus, which now runs the wave. Gates re-run
