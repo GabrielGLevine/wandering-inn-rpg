@@ -918,7 +918,26 @@ const DUNGEON_CELLS := [
 	# the fight is fought alone by design. Phase 9 (2026-07-27) re-swept every
 	# band together and left the warden UNCHANGED: retuning the three stops
 	# beneath it never pushed it out of 0.55-0.95, so the top band held.
-	{"name": "seal_warden_t5_sw14_solo", "arena": "vault", "enemies": ["seal_warden"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.55, "win_hi": 0.64, "check_rounds": true},
+	#
+	# #438 RE-PIN (2026-08-13): 0.61 -> 0.34, window 0.55-0.64 -> 0.29-0.39.
+	# THE CONTENT MOVED, and that is the only reason this line may move: the user
+	# ruling of 2026-08-13 (docs/CHOICE-LOG.md, 'Act V capstone trivialization')
+	# made warden-side stats a sanctioned frozen-block exception, and
+	# combatants.json took `seal_warden` con 112 -> 134 under it. The reasoning and
+	# the rejected levers live on that combatant; the short version is that HP was
+	# the only lever that did not tax the band build harder than the over-band rows
+	# it was aimed at. This expectation is NOT being moved to meet a measurement it
+	# disagreed with -- the measurement it disagreed with is the one this lane
+	# deliberately caused.
+	# Width held at 0.10, the rung idiom (rung 1 is 0.10, rungs 2/3 are 0.14/0.11),
+	# margins 0.05/0.05; median holds at 5 rounds (min 3, max 7), so `check_rounds`
+	# is unchanged and still meaningful.
+	# THE LADDER STILL DESCENDS, both columns, re-measured whole:
+	#   floor      0.87 > 0.70 > 0.69 > 0.34   rungs 1-3 moved 0.00; gap 3->4 widens
+	#   competent  0.88 > 0.89 > 0.87 > 0.70   inside LADDER_TIE at 1/2 as before
+	# Rung 4 is the ONLY cell in this file the warden move touches -- nothing else
+	# fields `seal_warden` except the report-only t4 read one line down (0.21).
+	{"name": "seal_warden_t5_sw14_solo", "arena": "vault", "enemies": ["seal_warden"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.29, "win_hi": 0.39, "check_rounds": true},
 	# The warden at Pallass's T4 build: the shared-level rung proving the warden
 	# sits a band ABOVE the forge golem, not merely later in the story.
 	{"name": "seal_warden_t4_sw11_solo", "arena": "vault", "enemies": ["seal_warden"], "build": "t4_spellsword11_party", "solo": true},
@@ -988,6 +1007,29 @@ const SECOND_WIND_CELLS := [
 	# Both medians hold at 3. Competent: swordsman 0.85 -> 0.63, spearmaster
 	# 0.88 -> 0.64, i.e. both still inside the doctrine band -- floor-policy class,
 	# not seams.
+	#
+	# #438 FLAT-GROWTH RE-MEASURE (2026-08-13). classes.json's new flat-growth rule
+	# (`meta._comment_stat_growth`: no class grows >1 point per level into one stat)
+	# retired the 'evolution bump' on seven classes, four of which this block
+	# measures. Every GATED cell held its authored window and none is re-pinned:
+	#   sharpshooter14  0.76 -> 0.66  (0.55-0.95 held; dex 2 -> 1)
+	#   infiltrator14   0.65 -> 0.62  (0.55-0.95 held; dex 2 -> 1)
+	#   strategist14    0.77 -> 0.77  (measured-only) -- EXACTLY zero, and it is a
+	#     control rather than a coincidence: this build runs AI=melee (see the block
+	#     above), and melee damage reads `str`, so a pure-int class's growth cannot
+	#     reach the number no matter what it is.
+	#   beast_master14  0.63 -> 0.27  (measured-only; con 2 -> 1, i.e. 64 -> 50 max
+	#     HP at L14) -- THE LARGEST COLLATERAL IN THE LANE, recorded here rather
+	#     than buried in a PR body. con is [Beast Master]'s only growth stat, so the
+	#     flat rule costs this class more than any other: its evolution now buys
+	#     Skills and level rungs alone, exactly as [Ice Mage]/[Fire Mage]'s does.
+	#     No window is broken (this cell has never carried one) so nothing is owed,
+	#     but if the class's power is meant to be preserved the principled repair is
+	#     to BROADEN it -- con 1 + str 1, the flat rule's own prescription and the
+	#     [Witch]/[Chef]/[Courier] shape -- which is a class-design call, not a
+	#     balance-lane one. Surfaced for adjudication, deliberately not taken here.
+	# `side_vault_construct_t5_infiltrator14_solo` in DUNGEON_CELLS re-reads
+	# 0.63 -> 0.61 against its narrow 0.56-0.70, also held.
 	{"name": "swordsman14_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "raskghar_scout"], "build": "swordsman14", "win_lo": 0.26, "win_hi": 0.66, "check_rounds": true},
 	{"name": "spearmaster14_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "goblin_raider"], "build": "spearmaster14", "win_lo": 0.30, "win_hi": 0.70, "check_rounds": true},
 	{"name": "ice_mage14_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "sewer_vermin"], "build": "ice_mage14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},

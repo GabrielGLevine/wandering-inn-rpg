@@ -22,7 +22,7 @@ curve the stitched-era content was authored against.
 | II — Make a Place | cisterns nest / crate | 4–6 | two classes formed; second class + 2-3 levels of quest counters |
 | III — What Stirs Beneath | awakened boss | 8–10 | `deep_descent_start` w5 at the DELVE START; boss authored for mid-single-digits + Relc |
 | IV — What the Door Opened | vault construct, forge exam era | 12–14, consolidation available by act end | `winter_teeth` w10 mid-act; `pallass_standards` ss14 late-act |
-| V — What the Seal Was Feeding | Seal Warden | 14–16 (consolidated: spellsword-shape or equivalent) | `seal_open_start` ss14; warden 142 HP / 28-30 per hit is plausibly fair HERE |
+| V — What the Seal Was Feeding | Seal Warden | 14–16 (consolidated: spellsword-shape or equivalent) | `seal_open_start` ss14; warden **164** HP / 28-30 per hit (#438, con 112 → 134; was 142 and measured SOFT at the top of this very band — spellsword16 read 0.86 against a 0.85 ceiling) |
 
 Measured today (steel thread, `ceefd357`): Act III climax fought at
 **2**; Act V reached at **w12/m2/d7/t2 unconsolidated, 56 HP**. The gap

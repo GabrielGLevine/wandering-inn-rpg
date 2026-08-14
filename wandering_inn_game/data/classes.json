@@ -1,5 +1,6 @@
 {
 	"meta": {
+		"_comment_stat_growth": "#438 THE FLAT-GROWTH RULE (user ruling 2026-08-13, docs/CHOICE-LOG.md 'Act V capstone trivialization'): NO class converts a level into more than ONE point of a single stat. Growth BROADENS -- a second stat -- it never STEEPENS. WHY THIS RULE AND NOT ANOTHER: every window in the balance suite is measured against the band yardstick, the [Spellsword] family, which grows 1 str + 1 int; a class growing 2 into one stat out-stats that yardstick 2:1 in the stat it stacked, at the same level, which is precisely 'the capstone out-stats its band'. Before this rule, 32 of 39 classes already obeyed it -- every base line, every consolidation target, and the mage/hedge_witch/cook/runner/helper evolution families ([Ice Mage] and [Fire Mage] buy an ELEMENT at the parent's rate; [Witch]/[Chef]/[Courier] buy a SECOND STAT). The seven exceptions were the single-axis evolutions, which carried an authored 'evolution bump' convention (its own trail: merchant/strategist -> alchemist -> beast_master, each _comment citing the last): strategist int 2, emissary int 2, infiltrator dex 2, sharpshooter dex 2, merchant cha 2, alchemist int 2, beast_master con 2. The bump is RETIRED here and all seven read 1. What an evolution buys is unchanged and was always the real reward: its own Skill grants, and the level rungs above the parent's cap. GATED, not merely stated: data_lint.py's `check_stat_growth_flat` reds any class that grows >1 into one stat, so the convention cannot creep back one class at a time the way it spread.",
 		"power_k": 1.55
 	},
 	"consolidations": [
@@ -297,7 +298,7 @@
 			"inherits": ["warrior", "necromancer"],
 			"aspiration": { "display_name": "Deathknight", "text": "The old art asks for a corpse. A [Warrior] who studies it long enough stops needing one to be lent." },
 			"levels": [
-				{ "level": 14, "requires_any": { "melee_hit": 105, "spell_cast": 87 }, "grants": ["grave_edge"] },
+				{ "_comment": "#438 KIT RELIEF, and it is the doctrine answer to a row this lane's own warden move pushed under the floor (0.58 -> 0.41 band-competent at the alcove): frozen non-warden STAT blocks hold, so relief comes from the KIT. MEASURED CAUSE, not inferred -- `tests/_warden_probe.gd` ablated [Mana Shield] out of the sibling consolidation [Spellsword] at the same level, weapon and act, and it read 0.78 -> 0.53 competent / 0.61 -> 0.32 floor. That single 0-AP Skill is the largest kit term in the row, and [Deathknight] never had it: [Spellsword]/[Spellspear]/[Druid]/[Wild Sage] all reach it through [Mage] L2, while the necromancer line ships NO 0-AP defensive answer at any level -- [Bone Dart] L1, [Deathbolt] L3, [Animate Dead] L5 (field-only), [Flash Step] L7. So the hole is structural to the parent line, not to this level, and the consolidation is where it surfaces. The SHIPPED id is granted rather than a re-flavored twin ON PURPOSE: minting [Grave Ward] or its like is a NAMING-FLOW change (wiki-verify + user clearance, CHOICE-LOG 2026-08-13) and this lane may not spend that gate. The re-flavored twin is the natural follow-up for the naming batch, exactly as [Grave Edge] twins [Keener Edge] one line down.", "level": 14, "requires_any": { "melee_hit": 105, "spell_cast": 87 }, "grants": ["grave_edge", "mana_shield"] },
 				{ "level": 15, "requires_any": { "melee_hit": 119, "spell_cast": 100 }, "grants": [] },
 				{ "level": 16, "requires_any": { "melee_hit": 134, "spell_cast": 114 }, "grants": ["deathbound_strike"] },
 				{ "level": 17, "requires_any": { "melee_hit": 149, "spell_cast": 128 }, "grants": [] },
@@ -422,7 +423,7 @@
 			"_comment": "[Strategist] is Replacement-only (never gained_by) -- tactician's evolution carries the PARENT's HELD level directly in.",
 			"id": "strategist",
 			"display_name": "Strategist",
-			"stat_growth": { "int": 2 },
+			"stat_growth": { "int": 1 },
 			"inherits": "tactician",
 			"aspiration": { "display_name": "Grandmaster Strategist", "text": "Those who master the whole board — every piece, every player, every war before it starts — are in time named [Grandmaster Strategists]." },
 			"levels": [
@@ -463,7 +464,7 @@
 			"_comment": "[Emissary] is Replacement-only (never gained_by) -- diplomat's evolution carries the PARENT's HELD level directly in.",
 			"id": "emissary",
 			"display_name": "Emissary",
-			"stat_growth": { "int": 2 },
+			"stat_growth": { "int": 1 },
 			"inherits": "diplomat",
 			"levels": [
 				{ "level": 10, "requires_any": { "heard_gossip": 57, "befriended_moments": 36 }, "grants": [] },
@@ -504,7 +505,7 @@
 			"_comment": "Floor = rogue's own evolution.at_level (10); rogue's OWN table now stops at 10 (archer/sharpshooter's stop-at-floor shape), so this table's single entry is already contiguous to its own max.",
 			"id": "infiltrator",
 			"display_name": "Infiltrator",
-			"stat_growth": { "dex": 2 },
+			"stat_growth": { "dex": 1 },
 			"inherits": "rogue",
 			"levels": [
 				{ "level": 10, "requires": { "sneaked_past_danger": 36 }, "grants": [] },
@@ -545,7 +546,7 @@
 			"_comment": "[Sharpshooter] is Replacement-only (never gained_by) -- archer's evolution carries the PARENT's HELD level directly into classes[sharpshooter] (check_evolutions/_resolve_evolutions), never counting up from level 1.",
 			"id": "sharpshooter",
 			"display_name": "Sharpshooter",
-			"stat_growth": { "dex": 2 },
+			"stat_growth": { "dex": 1 },
 			"inherits": "archer",
 			"aspiration": {
 				"display_name": "Sniper",
@@ -628,7 +629,7 @@
 			"_comment": "Floor = trader's own evolution.at_level (10); trader's OWN table stops at 10 too (archer/sharpshooter's stop-at-floor shape), so this table's single entry is already contiguous to its own max.",
 			"id": "merchant",
 			"display_name": "Merchant",
-			"stat_growth": { "cha": 2 },
+			"stat_growth": { "cha": 1 },
 			"inherits": "trader",
 			"levels": [
 				{ "level": 10, "requires": { "deliberate_commerce": 68 }, "grants": ["bulk_terms"] },
@@ -821,10 +822,10 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Alchemist] is Replacement-only ('Alchemist = advanced [Mixer]') -- floor = mixer's evolution.at_level (10). Trader-delta continuation +12/+13 (chef precedent). L10 grants [True Synthesis] (ORIGINAL, canon-plausible; [Master Alchemist]/guild-class names are Vol-9 = FAIL). stat_growth int:2 (merchant/strategist evolution-bump precedent).",
+			"_comment": "SPARSE TABLE (GH#54): [Alchemist] is Replacement-only ('Alchemist = advanced [Mixer]') -- floor = mixer's evolution.at_level (10). Trader-delta continuation +12/+13 (chef precedent). L10 grants [True Synthesis] (ORIGINAL, canon-plausible; [Master Alchemist]/guild-class names are Vol-9 = FAIL). stat_growth int:1 -- was int:2 on a 'merchant/strategist evolution-bump precedent' that #438 RETIRED; see meta._comment_stat_growth for the flat-growth rule and why the bump's citation chain is exactly what it exists to stop.",
 			"id": "alchemist",
 			"display_name": "Alchemist",
-			"stat_growth": { "int": 2 },
+			"stat_growth": { "int": 1 },
 			"inherits": "mixer",
 			"aspiration": { "display_name": "Guild Alchemist", "text": "The guilds certify what the cauldron already knows. Keep mixing." },
 			"levels": [
@@ -858,10 +859,10 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Beast Master] is Replacement-only (Redscar 5.55 G) -- floor = beast_tamer's evolution.at_level (10). Rogue-delta continuation +8/+9. stat_growth con:2 (evolution-bump precedent, alchemist int:2).",
+			"_comment": "SPARSE TABLE (GH#54): [Beast Master] is Replacement-only (Redscar 5.55 G) -- floor = beast_tamer's evolution.at_level (10). Rogue-delta continuation +8/+9. stat_growth con:1 -- was con:2 citing 'evolution-bump precedent, alchemist int:2', the last link in the chain #438 retired (meta._comment_stat_growth). THIS CLASS PAID THE MOST FOR THE RULE and the number is on the record: con is its only growth stat, so `beast_master14` falls 64 -> 50 max HP and its measured-only harness cell reads 0.63 -> 0.27 (tests/sim_combat_batch.gd's SECOND_WIND_CELLS block carries the full note). No authored window broke, so nothing is owed; if the class's power is meant to be held, the flat rule's own prescription is to BROADEN it (con 1 + str 1, the [Witch]/[Chef]/[Courier] shape) rather than restore the bump -- a class-design call, surfaced rather than taken.",
 			"id": "beast_master",
 			"display_name": "Beast Master",
-			"stat_growth": { "con": 2 },
+			"stat_growth": { "con": 1 },
 			"inherits": "beast_tamer",
 			"aspiration": { "display_name": "Beast Master", "text": "Redfang riders bond a wolf for life. Level far enough, and the wild starts offering." },
 			"levels": [

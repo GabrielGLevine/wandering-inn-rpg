@@ -1,5 +1,5 @@
 {
- "_comment": "seal_fed canonical's start (FIXTURE-FIRST). 2026-07-26 Act V, the TALK path: descent ask -> both reads -> leave it fed -> Olesm posts the standing Watch bounty. Same Act V position as seal_open_start (see that fixture for the shared derivation), with two differences, both load-bearing: classes carry {diplomat: 1} so [Charming Smile] is KNOWN and the witch-pattern Skill leg is selectable rather than a locked tease (diplomat's gained_by is {persuaded_someone: 1, heard_gossip: 3}, both banked here -- the mediation and the market gossip this save already did), and gold 20 keeps the priced alternate grey-visible beside it so the canonical can pin BOTH legs rendering before it takes one. No fight is resolved on this route; rng_state is inert for outcomes and kept at the spine fixture's own derived value. v0.15 Task 2.2: version 5 -> 8 and lore_notes PRE-POPULATED with six shipped lore-tagged lines this state implies the player already read (the approach's arrival narration, the ruin arrival, the pedestal reveal, the anchor socket's [Detect Magic], the inn frame's [Observe], the witch hollow's leyline seam). save.gd's v7->v8 arm sets lore_notes = [] on migration, so a version-5 fixture CANNOT carry a record -- the bump is what makes the pre-population survive apply(). Closes the Phase-1 caveat: no shipped script banked more than 2 lore lines, so the Lore tab's long-form render (ordering, full prose, a list worth scrolling) had never been read at length.",
+ "_comment": "seal_fed canonical's start (FIXTURE-FIRST). 2026-07-26 Act V, the TALK path: descent ask -> both reads -> leave it fed -> Olesm posts the standing Watch bounty. Same Act V position as seal_open_start (see that fixture for the shared derivation), with two differences, both load-bearing: classes carry {diplomat: 1} so [Charming Smile] is KNOWN and the witch-pattern Skill leg is selectable rather than a locked tease (diplomat's gained_by is {persuaded_someone: 1, heard_gossip: 3}, both banked here -- the mediation and the market gossip this save already did), and gold 20 keeps the priced alternate grey-visible beside it so the canonical can pin BOTH legs rendering before it takes one. No fight is resolved on this route; rng_state is inert for outcomes and kept at the spine fixture's own derived value. v0.15 Task 2.2: version 5 -> 8 and lore_notes PRE-POPULATED with six shipped lore-tagged lines this state implies the player already read (the approach's arrival narration, the ruin arrival, the pedestal reveal, the anchor socket's [Detect Magic], the inn frame's [Observe], the witch hollow's leyline seam). save.gd's v7->v8 arm sets lore_notes = [] on migration, so a version-5 fixture CANNOT carry a record -- the bump is what makes the pre-population survive apply(). Closes the Phase-1 caveat: no shipped script banked more than 2 lore lines, so the Lore tab's long-form render (ordering, full prose, a list worth scrolling) had never been read at length. #438 BAND RE-DERIVATION (2026-08-13). Classes {warrior:5, mage:5, +1} -> {warrior:14, mage:9, +1}, and the loadout gains the leather_jerkin + hedge_ward_charm + hunters_fang_talisman this Act V position always implied. WHY: #440 made the Seal Warden a CHOKEPOINT on every path, including this one, but this fixture was authored for a NON-COMBAT ending and its build was never re-derived for the fight it inherited. Measured against the shipped warden with tests/_warden_probe.gd at 100 seeds, autoplay policy -- which is what this canonical actually runs -- the old build read 0.08 BEFORE #438's warden move and 0.03 after. Its green was a lucky seed, not a viable build: a 1-in-12 draw that #438 turned into a 1-in-33, and seeds 1-23 all lose. Pinning another fluke would re-create the defect, so the BUILD moved instead. The new build reads 0.40 autoplay / 0.71 competent, i.e. slightly ABOVE seal_open_start's own spellsword-14 read (0.34/0.70) -- this path is no longer the one that proves the finale is beatable at half band. CONSOLIDATION IS DELIBERATELY NOT TRIPPED: warrior 14 clears min_parent_level 10 but mage 9 does not, so no auto-merge fires and the three-class shape (and its class-gated dialogue leg) is preserved -- which is also the steel thread's own situation, where the mage half never reaches 10. Level counters move with the levels (melee_hit 18 -> 80, the top rung [Warrior]'s own table names, and spell_cast 13 -> 37 for [Mage] 9), so test_fixture_coherence still proves every held level was earned rather than granted.",
  "version": 8,
  "state": {
   "current_map": "street",
@@ -12,8 +12,8 @@
    -1
   ],
   "classes": {
-   "warrior": 5,
-   "mage": 5,
+   "warrior": 14,
+   "mage": 9,
    "diplomat": 1
   },
   "accomplishments": {
@@ -21,6 +21,7 @@
    "bought_catalyst": 1,
    "brothers_job_done": 1,
    "brothers_marker": 1,
+   "catalyst_delivered": 1,
    "cisterns_reported": 1,
    "cleared_brothers_name": 1,
    "cleared_halls_by_force": 1,
@@ -28,7 +29,6 @@
    "coyle_operation_found": 1,
    "crate_returned": 1,
    "door_awakened": 1,
-   "catalyst_delivered": 1,
    "door_chain_started": 1,
    "door_mounted": 1,
    "door_retrieved": 1,
@@ -57,7 +57,7 @@
    "lattice_witch_lore": 1,
    "learned_magic_from_pisces": 1,
    "mediated_the_debt": 1,
-   "melee_hit": 18,
+   "melee_hit": 80,
    "merchant_exposed": 1,
    "merchant_fate_decided": 1,
    "met_pisces": 1,
@@ -82,7 +82,7 @@
    "second_door_study_sleeps": 2,
    "sensed_something_deeper": 1,
    "sparred_with_relc": 1,
-   "spell_cast": 13,
+   "spell_cast": 37,
    "spine_started": 1,
    "took_brothers_job": 1,
    "vault_construct_downed": 1,
@@ -121,11 +121,16 @@
    "rusty_sword",
    "relcs_spare_spear",
    "invrisil_attunement_stone",
-   "pallass_attunement_stone"
+   "pallass_attunement_stone",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
   ],
   "equipped": {
    "weapon": "relcs_spare_spear",
-   "armor": ""
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
   },
   "container_state": {},
   "gold": 20,

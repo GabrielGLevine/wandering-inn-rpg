@@ -211,7 +211,8 @@ The reauthored thread (`qa/STEEL-THREAD.md`) re-reads the list below.
    `spine_started`) forces three village↔hollow round trips.
 6. **The Seal Warden's OPEN fork is unwinnable by the continuous
    build** (measured: PC 56 HP / ~29 DPR vs warden 142 HP / 28-30 per
-   hit — death in 5 rounds, three identical runs at seed 9), and NONE
+   hit — death in 5 rounds, three identical runs at seed 9; the warden
+   is 164 HP after #438 and the finding only hardens), and NONE
    of the authored non-fight resolutions is reachable by it:
    [Sneak] (rogue — gated on `recovered_crate_watch`, a fork this run
    closed by force), [Hedge Remedy] (hedge_witch), [Detect Magic]

@@ -184,6 +184,64 @@ class TestBrokenFixtures(unittest.TestCase):
         self.assertEqual(self._errs(data_lint.check_gate_shapes, maps), [])
 
 
+class TestStatGrowthFlat(unittest.TestCase):
+    """#438 THE FLAT-GROWTH RULE's can-fail proof.
+
+    The rule exists because its predecessor spread one class at a time, each row
+    citing the last, so the cases that MUST red are the single-class regressions
+    -- not a wholesale rewrite. Every test below therefore moves exactly one
+    number, which is the shape the real defect took.
+    """
+
+    def _errs(self, classes):
+        errors = []
+        data_lint.check_stat_growth_flat(
+            {data_lint.DATA / "classes.json": {"classes": classes}}, errors)
+        return errors
+
+    def test_shipped_catalog_is_flat(self):
+        # The rule against the REAL file, not a fixture: this is what would have
+        # caught the seven evolution-bump rows before they shipped.
+        parsed = {}
+        with (data_lint.DATA / "classes.json").open() as handle:
+            parsed[data_lint.DATA / "classes.json"] = json.load(handle)
+        errors = []
+        data_lint.check_stat_growth_flat(parsed, errors)
+        self.assertEqual(errors, [])
+
+    def test_one_stat_at_one_point_passes(self):
+        self.assertEqual(self._errs([
+            {"id": "mage", "stat_growth": {"int": 1}},
+            {"id": "spellsword", "stat_growth": {"str": 1, "int": 1}},
+        ]), [])
+
+    def test_a_doubled_stat_fails(self):
+        errors = self._errs([{"id": "strategist", "stat_growth": {"int": 2}}])
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("'strategist' grows int by 2 per level", errors[0])
+
+    def test_broadening_is_allowed_but_steepening_is_not(self):
+        # The rule is about the PER-STAT rate, never the total: 1+1 passes and 2
+        # fails even though both are two points a level. Guards against a future
+        # reading that caps the sum instead.
+        self.assertEqual(self._errs([{"id": "druid", "stat_growth": {"int": 1, "con": 1}}]), [])
+        self.assertEqual(len(self._errs([{"id": "x", "stat_growth": {"con": 2}}])), 1)
+
+    def test_every_offending_stat_is_named_separately(self):
+        errors = self._errs([{"id": "x", "stat_growth": {"str": 3, "int": 1, "dex": 2}}])
+        self.assertEqual(len(errors), 2, errors)
+        self.assertIn("grows dex by 2", errors[0])
+        self.assertIn("grows str by 3", errors[1])
+
+    def test_non_numeric_growth_fails_rather_than_passing_silently(self):
+        errors = self._errs([{"id": "x", "stat_growth": {"int": "2"}}])
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("is not a number", errors[0])
+
+    def test_classes_without_growth_are_ignored(self):
+        self.assertEqual(self._errs([{"id": "x"}, {"id": "y", "stat_growth": {}}]), [])
+
+
 class TestLineageCompleteness(unittest.TestCase):
     def _catalog(self, exemptions=None, extra_classes=None, extra_rules=None):
         classes = [

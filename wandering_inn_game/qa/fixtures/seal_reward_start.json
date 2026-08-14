@@ -1,5 +1,5 @@
 {
- "_comment": "seal_reward canonical's start (FIXTURE-FIRST). 2026-07-26 Act V, the SKILL path: descent ask -> the runes -> [Detect Magic]'s QUARTET read -> re-cut the ward, consuming the piece of warded ruin-stone this save actually kept (the vault construct's core shard). Same Act V position as seal_open_start (see that fixture), plus three load-bearing differences: classes carry {necromancer: 1} for detect_magic (gained_by {studied_necromancy: 1}, banked here alongside its own precursor asked_about_necromancy -- Pisces taught this player the dead art); detected_wardwork is 3, the three OTHER shipped wardwork sites read (inn frame, ruin socket, the seam back in these halls), so the [Detect Magic] arm's richest text_variant is the one this run gets; and the pack holds construct_core_shard, NOT guardian_ward_fragment. FIX ROUND 1 (reviewer IMPORTANT): this is now deliberately a PLATES/WARDWORK-path save -- it never fought ruin_guardian (no cleared_ruin_guardian), so the only warded ruin-stone it owns is the vault construct's core, the main-line chance-1.0 drop every player carries. That is the exact state that had NO route to seal_rewarded before the second close arm landed, so this canonical proves the arm that matters: the fragment row renders VISIBLE-LOCKED here (item gates tease, they never hide -- only accomplishment gates hide), which the fork's option pin asserts, and the shard row is CONSUMED on the close. No fight is resolved on this route; rng_state is inert for outcomes.",
+ "_comment": "seal_reward canonical's start (FIXTURE-FIRST). 2026-07-26 Act V, the SKILL path: descent ask -> the runes -> [Detect Magic]'s QUARTET read -> re-cut the ward, consuming the piece of warded ruin-stone this save actually kept (the vault construct's core shard). Same Act V position as seal_open_start (see that fixture), plus three load-bearing differences: classes carry {necromancer: 1} for detect_magic (gained_by {studied_necromancy: 1}, banked here alongside its own precursor asked_about_necromancy -- Pisces taught this player the dead art); detected_wardwork is 3, the three OTHER shipped wardwork sites read (inn frame, ruin socket, the seam back in these halls), so the [Detect Magic] arm's richest text_variant is the one this run gets; and the pack holds construct_core_shard, NOT guardian_ward_fragment. FIX ROUND 1 (reviewer IMPORTANT): this is now deliberately a PLATES/WARDWORK-path save -- it never fought ruin_guardian (no cleared_ruin_guardian), so the only warded ruin-stone it owns is the vault construct's core, the main-line chance-1.0 drop every player carries. That is the exact state that had NO route to seal_rewarded before the second close arm landed, so this canonical proves the arm that matters: the fragment row renders VISIBLE-LOCKED here (item gates tease, they never hide -- only accomplishment gates hide), which the fork's option pin asserts, and the shard row is CONSUMED on the close. No fight is resolved on this route; rng_state is inert for outcomes. #438 BAND RE-DERIVATION (2026-08-13). Classes {warrior:5, mage:5, +1} -> {warrior:14, mage:9, +1}, and the loadout gains the leather_jerkin + hedge_ward_charm + hunters_fang_talisman this Act V position always implied. WHY: #440 made the Seal Warden a CHOKEPOINT on every path, including this one, but this fixture was authored for a NON-COMBAT ending and its build was never re-derived for the fight it inherited. Measured against the shipped warden with tests/_warden_probe.gd at 100 seeds, autoplay policy -- which is what this canonical actually runs -- the old build read 0.08 BEFORE #438's warden move and 0.03 after. Its green was a lucky seed, not a viable build: a 1-in-12 draw that #438 turned into a 1-in-33, and seeds 1-23 all lose. Pinning another fluke would re-create the defect, so the BUILD moved instead. The new build reads 0.40 autoplay / 0.71 competent, i.e. slightly ABOVE seal_open_start's own spellsword-14 read (0.34/0.70) -- this path is no longer the one that proves the finale is beatable at half band. CONSOLIDATION IS DELIBERATELY NOT TRIPPED: warrior 14 clears min_parent_level 10 but mage 9 does not, so no auto-merge fires and the three-class shape (and its class-gated dialogue leg) is preserved -- which is also the steel thread's own situation, where the mage half never reaches 10. Level counters move with the levels (melee_hit 18 -> 80, the top rung [Warrior]'s own table names, and spell_cast 13 -> 37 for [Mage] 9), so test_fixture_coherence still proves every held level was earned rather than granted.",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -12,8 +12,8 @@
    -1
   ],
   "classes": {
-   "warrior": 5,
-   "mage": 5,
+   "warrior": 14,
+   "mage": 9,
    "necromancer": 1
   },
   "accomplishments": {
@@ -22,6 +22,7 @@
    "bought_catalyst": 1,
    "brothers_job_done": 1,
    "brothers_marker": 1,
+   "catalyst_delivered": 1,
    "cisterns_reported": 1,
    "cleared_brothers_name": 1,
    "cleared_halls_by_force": 1,
@@ -30,7 +31,6 @@
    "crate_returned": 1,
    "detected_wardwork": 3,
    "door_awakened": 1,
-   "catalyst_delivered": 1,
    "door_chain_started": 1,
    "door_mounted": 1,
    "door_retrieved": 1,
@@ -58,7 +58,7 @@
    "lattice_witch_lore": 1,
    "learned_magic_from_pisces": 1,
    "mediated_the_debt": 1,
-   "melee_hit": 18,
+   "melee_hit": 80,
    "merchant_exposed": 1,
    "merchant_fate_decided": 1,
    "met_pisces": 1,
@@ -83,7 +83,7 @@
    "second_door_study_sleeps": 2,
    "sensed_something_deeper": 1,
    "sparred_with_relc": 1,
-   "spell_cast": 13,
+   "spell_cast": 37,
    "spine_started": 1,
    "studied_necromancy": 1,
    "took_brothers_job": 1,
@@ -116,11 +116,16 @@
    "relcs_spare_spear",
    "invrisil_attunement_stone",
    "pallass_attunement_stone",
-   "construct_core_shard"
+   "construct_core_shard",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
   ],
   "equipped": {
    "weapon": "relcs_spare_spear",
-   "armor": ""
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
   },
   "container_state": {},
   "gold": 11,

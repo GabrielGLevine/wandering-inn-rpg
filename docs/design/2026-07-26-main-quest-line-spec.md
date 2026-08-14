@@ -297,7 +297,7 @@ the solo forge golem's 15.0).
 | 1 | Riverfarm | `briar_collectors_deep` + `riverfarm_hunter` | 9.5 | 0.93 | 0.88–0.98 |
 | 2 | Invrisil | `hired_blades` + `wilovan` | 11.0 | 0.82 | 0.77–0.87 |
 | 3 | Pallass | `forge_calibration_golem` solo | 15.0 | 0.71 | 0.65–0.76 |
-| 4 | Act V | `seal_warden` solo | 18.0 | 0.59 | 0.55–0.64 |
+| 4 | Act V | `seal_warden` solo | 18.0 | 0.34 | 0.29–0.39 _(#438)_ |
 
 The four gate windows are **strictly disjoint and ordered**, so the ladder's
 ordering is itself an assertion — a future retune that flattens or reverses a
@@ -312,7 +312,7 @@ ladder alone could be an artifact of roster shape:
 |---|---|---|---|
 | Riverfarm → Invrisil | `t3_warrior10` | 0.79 | 0.64 |
 | Invrisil → Pallass | `t4_spellsword11_party` | 0.72 | 0.49 |
-| Pallass → Act V | `t4_spellsword14_party` | 0.71 | 0.59 |
+| Pallass → Act V | `t4_spellsword14_party` | 0.71 | 0.34 _(#438)_ |
 
 The two `_t4_sw11_` rungs stay MEASURED on purpose: the forge cell reads 0.49
 there, and an under-band value IS the evidence that Pallass sits a tier up.
@@ -321,8 +321,18 @@ there, and an under-band value IS the evidence that Pallass sits a tier up.
 con 38/40 → 34/36; `hired_blade_leader` gains `[Counter Strike]` (a Skill, so
 the knives stay untouched and `boulevard_duel_ring`'s band is unmoved) and a
 distinct `display_name`. No `power_level` changed — the labels were already
-the ladder above; the stats had drifted off them. `seal_warden` unchanged: the
-three stops beneath it never pushed the top band out of range.
+the ladder above; the stats had drifted off them. `seal_warden` was unchanged
+here: the three stops beneath it never pushed the top band out of range.
+
+**#438 AMENDS THAT LAST SENTENCE (2026-08-13).** `seal_warden` con 112 → 134,
+under the user ruling of 2026-08-13 that made warden-side stats a sanctioned
+frozen-block exception (`docs/CHOICE-LOG.md`, 'Act V capstone trivialization').
+What pushed the top band was not the three stops beneath it but the builds
+ABOVE it: the Act V climax read 0.86 at the top of its own authored 14–16 band
+and 0.89 at the steel thread's own build. Rung 4's floor window is re-pinned
+0.55–0.64 → 0.29–0.39 and both ladder columns still descend (floor
+0.87 > 0.70 > 0.69 > 0.34; competent 0.88 > 0.89 > 0.87 > 0.70). Rungs 1–3
+moved 0.00 — nothing but this fight fields the warden.
 
 ## 7. Amendments to #270 (door-continuation-spec)
 

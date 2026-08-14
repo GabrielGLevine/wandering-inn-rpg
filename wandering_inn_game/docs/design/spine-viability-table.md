@@ -31,11 +31,11 @@ The continuous run as it actually played (`docs/design/steel-thread-route-spec.m
 | IV | `act4_ruin_guardian` | w11/m2 / spear | WIN 0.77 / 4 rd / +24 | WIN 1.00 / 3 rd / +45 | The dig has a non-fight route to `pedestal_breached`; this row is the fight leg. Relc fields off `met_relc`.<br>_interact-only_ |
 | IV | `act4_alley_footpads` | w12/m2/d7 / spear | WIN 1.00 / 2 rd / +41 | WIN 1.00 / 2 rd / +45 | Sneak-shaped only: proximity trigger, suppressed while sneaking. Ledger finding 4 — 'the alleys cannot be crossed clean without [Stealth]', and the spine build eats TWO of these across four crossings.<br>_proximity r2 (sneak suppresses), respawns (one per sleep)_ |
 | IV/V | `act5_gallery_vermin_nest` _(gold-scaled)_ | w12/m2/d7/t2 / spear, 52 HP | LOSS 0.27 / 4 rd / -24 | WIN 0.70 / 3 rd / +18 | Optional side gallery — interact-only, never triggers on approach. `respawns: true` = one grind per sleep. THE AUTOPLAY WALL: hand-winnable, autoplay-losable.<br>_gated on `halls_cleared`, interact-only, respawns (one per sleep), rank-scaled_ |
-| V | `act5_seal_warden` | w12/m2/d7/t2 / spear, 52 HP | LOSS 0.48 / 5 rd / -2 | WIN 0.80 / 4 rd / +14 | Alcove sneak-past (trigger_radius 1, suppressed while sneaking) — reachable ONLY with a sneak-shaped ability. Ledger finding 6: [Sneak]/[Hedge Remedy]/[Detect Magic] are all off this build's tree; the run reached the fork by EQUIPPING the moon-bone amulet for its [Invisibility]. Per CHOICE-LOG 2026-08-11 that bypass is a defect (#440), not a feature.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
-| V | `act5_seal_warden_amulet` | w12/m2/d7/t2 + moon-bone amulet | WIN 0.69 / 5 rd / +10 | WIN 0.89 / 4 rd / +20 | SHIP COLUMN: the same fight with the carried-but-unequipped upgrade WORN — hp+3, dmg+1, and [Invisibility] into the kit, which the competent policy spends as an escape below 35% HP. BAND COLUMN: no amulet (its resonance would not fit beside the band build's two charms) — this is the band TOP read, spellsword 16.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
-| V | `act5_seal_warden_tactician6` | w12/m2/d7/t6 — split onset 20 observed / 4 tactics | WIN 0.71 / 5 rd / +11 | WIN 0.93 / 4 rd / +28 | REPORT-ONLY (#450). Same bypass shape as `act5_seal_warden_amulet` — the amulet is worn, so its [Invisibility] is in the kit. SHIP COLUMN: the split's ONSET, tactician 6, the first level that asks for tactics at all.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
-| V | `act5_seal_warden_tactician12` | w12/m2/d7/t12 — Tactician cap 44 observed / 34 tactics | WIN 0.73 / 5 rd / +13 | WIN 0.97 / 3 rd / +38 | REPORT-ONLY (#450). SHIP COLUMN: the [Tactician] CAP, level 12 — the deepest the pre-consolidation line goes before [Strategist] takes over.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
-| V | `act5_seal_warden_strategist16` | w12/m2/d7/s16 — Strategist cap 60 observed / 68 tactics | WIN 0.93 / 5 rd / +21 | WIN 1.00 / 2 rd / +55 | REPORT-ONLY (#450). SHIP COLUMN: the [Strategist] CAP, level 16 — the split's top end, and the only row here whose tactical class is the evolution rather than its parent.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
+| V | `act5_seal_warden` | w12/m2/d7/t2 / spear, 52 HP | LOSS 0.32 / 5 rd / -24 | WIN 0.62 / 5 rd / +5 | Alcove sneak-past (trigger_radius 1, suppressed while sneaking) — reachable ONLY with a sneak-shaped ability. Ledger finding 6: [Sneak]/[Hedge Remedy]/[Detect Magic] are all off this build's tree; the run reached the fork by EQUIPPING the moon-bone amulet for its [Invisibility]. Per CHOICE-LOG 2026-08-11 that bypass is a defect (#440), not a feature.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
+| V | `act5_seal_warden_amulet` | w12/m2/d7/t2 + moon-bone amulet | LOSS 0.49 / 5 rd / -1 | WIN 0.76 / 5 rd / +10 | SHIP COLUMN: the same fight with the carried-but-unequipped upgrade WORN — hp+3, dmg+1, and [Invisibility] into the kit, which the competent policy spends as an escape below 35% HP. BAND COLUMN: no amulet (its resonance would not fit beside the band build's two charms) — this is the band TOP read, spellsword 16.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
+| V | `act5_seal_warden_tactician6` | w12/m2/d7/t6 — split onset 20 observed / 4 tactics | WIN 0.50 / 5 rd / +1 | WIN 0.88 / 4 rd / +18 | REPORT-ONLY (#450). Same bypass shape as `act5_seal_warden_amulet` — the amulet is worn, so its [Invisibility] is in the kit. SHIP COLUMN: the split's ONSET, tactician 6, the first level that asks for tactics at all.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
+| V | `act5_seal_warden_tactician12` | w12/m2/d7/t12 — Tactician cap 44 observed / 34 tactics | WIN 0.52 / 5 rd / +3 | WIN 0.93 / 4 rd / +25 | REPORT-ONLY (#450). SHIP COLUMN: the [Tactician] CAP, level 12 — the deepest the pre-consolidation line goes before [Strategist] takes over.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
+| V | `act5_seal_warden_strategist16` | w12/m2/d7/s16 — Strategist cap 60 observed / 68 tactics | WIN 0.63 / 5 rd / +10 | WIN 0.98 / 3 rd / +31 | REPORT-ONLY (#450). SHIP COLUMN: the [Strategist] CAP, level 16 — the split's top end, and the only row here whose tactical class is the evolution rather than its parent.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
 
 ## The per-act band builds (#439's draft)
 
@@ -54,11 +54,11 @@ The same fights against `docs/design/balance-bands-and-policy.md`'s target bands
 | IV | `act4_ruin_guardian` | w7/m6 = 13 (band 12-14) | WIN 0.64 / 4 rd / +12 | WIN 0.98 / 3 rd / +43 | The dig has a non-fight route to `pedestal_breached`; this row is the fight leg. Relc fields off `met_relc`.<br>_interact-only_ |
 | IV | `act4_alley_footpads` | w7/m6 = 13 (band 12-14) | WIN 1.00 / 2 rd / +41 | WIN 1.00 / 2 rd / +42 | Sneak-shaped only: proximity trigger, suppressed while sneaking. Ledger finding 4 — 'the alleys cannot be crossed clean without [Stealth]', and the spine build eats TWO of these across four crossings.<br>_proximity r2 (sneak suppresses), respawns (one per sleep)_ |
 | IV/V | `act5_gallery_vermin_nest` _(silver-scaled)_ | spellsword 14 (band 14-16 floor) | WIN 0.67 / 3 rd / +10 | WIN 0.99 / 3 rd / +32 | Optional side gallery — interact-only, never triggers on approach. `respawns: true` = one grind per sleep. THE AUTOPLAY WALL: hand-winnable, autoplay-losable.<br>_gated on `halls_cleared`, interact-only, respawns (one per sleep), rank-scaled_ |
-| V | `act5_seal_warden` | spellsword 14 (band 14-16 floor) | WIN 0.61 / 5 rd / +7 | WIN 0.78 / 4 rd / +15 | Alcove sneak-past (trigger_radius 1, suppressed while sneaking) — reachable ONLY with a sneak-shaped ability. Ledger finding 6: [Sneak]/[Hedge Remedy]/[Detect Magic] are all off this build's tree; the run reached the fork by EQUIPPING the moon-bone amulet for its [Invisibility]. Per CHOICE-LOG 2026-08-11 that bypass is a defect (#440), not a feature.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
-| V | `act5_seal_warden_amulet` | spellsword 16 (band 14-16 top) | WIN 0.68 / 5 rd / +12 | WIN 0.86 / 4 rd / +15 | SHIP COLUMN: the same fight with the carried-but-unequipped upgrade WORN — hp+3, dmg+1, and [Invisibility] into the kit, which the competent policy spends as an escape below 35% HP. BAND COLUMN: no amulet (its resonance would not fit beside the band build's two charms) — this is the band TOP read, spellsword 16.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
-| V | `act5_seal_warden_tactician6` | spellsword 16 (band 14-16 top) | WIN 0.68 / 5 rd / +12 | WIN 0.86 / 4 rd / +15 | REPORT-ONLY (#450). Same bypass shape as `act5_seal_warden_amulet` — the amulet is worn, so its [Invisibility] is in the kit. SHIP COLUMN: the split's ONSET, tactician 6, the first level that asks for tactics at all.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
-| V | `act5_seal_warden_tactician12` | spellsword 16 (band 14-16 top) | WIN 0.68 / 5 rd / +12 | WIN 0.86 / 4 rd / +15 | REPORT-ONLY (#450). SHIP COLUMN: the [Tactician] CAP, level 12 — the deepest the pre-consolidation line goes before [Strategist] takes over.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
-| V | `act5_seal_warden_strategist16` | spellsword 16 (band 14-16 top) | WIN 0.68 / 5 rd / +12 | WIN 0.86 / 4 rd / +15 | REPORT-ONLY (#450). SHIP COLUMN: the [Strategist] CAP, level 16 — the split's top end, and the only row here whose tactical class is the evolution rather than its parent.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
+| V | `act5_seal_warden` | spellsword 14 (band 14-16 floor) | LOSS 0.34 / 5 rd / -12 | WIN 0.70 / 5 rd / +12 | Alcove sneak-past (trigger_radius 1, suppressed while sneaking) — reachable ONLY with a sneak-shaped ability. Ledger finding 6: [Sneak]/[Hedge Remedy]/[Detect Magic] are all off this build's tree; the run reached the fork by EQUIPPING the moon-bone amulet for its [Invisibility]. Per CHOICE-LOG 2026-08-11 that bypass is a defect (#440), not a feature.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
+| V | `act5_seal_warden_amulet` | spellsword 16 (band 14-16 top) | LOSS 0.47 / 5 rd / -1 | WIN 0.77 / 4 rd / +14 | SHIP COLUMN: the same fight with the carried-but-unequipped upgrade WORN — hp+3, dmg+1, and [Invisibility] into the kit, which the competent policy spends as an escape below 35% HP. BAND COLUMN: no amulet (its resonance would not fit beside the band build's two charms) — this is the band TOP read, spellsword 16.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
+| V | `act5_seal_warden_tactician6` | spellsword 16 (band 14-16 top) | LOSS 0.47 / 5 rd / -1 | WIN 0.77 / 4 rd / +14 | REPORT-ONLY (#450). Same bypass shape as `act5_seal_warden_amulet` — the amulet is worn, so its [Invisibility] is in the kit. SHIP COLUMN: the split's ONSET, tactician 6, the first level that asks for tactics at all.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
+| V | `act5_seal_warden_tactician12` | spellsword 16 (band 14-16 top) | LOSS 0.47 / 5 rd / -1 | WIN 0.77 / 4 rd / +14 | REPORT-ONLY (#450). SHIP COLUMN: the [Tactician] CAP, level 12 — the deepest the pre-consolidation line goes before [Strategist] takes over.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
+| V | `act5_seal_warden_strategist16` | spellsword 16 (band 14-16 top) | LOSS 0.47 / 5 rd / -1 | WIN 0.77 / 4 rd / +14 | REPORT-ONLY (#450). SHIP COLUMN: the [Strategist] CAP, level 16 — the split's top end, and the only row here whose tactical class is the evolution rather than its parent.<br>_gated on `read_the_feeding_ward`, proximity r1 (sneak suppresses)_ |
 
 ## Per-spine band-competent climaxes
 
@@ -72,32 +72,47 @@ The spine list is derived from every target in `data/classes.json`'s `consolidat
 | II | `act2_cistern_nest` | `spellspear` | spearmaster3/mage2 | WIN 0.79 / 4 rd / +22 | IN WINDOW |
 | III | `act3_awakened_boss` | `spellspear` | spearmaster5/mage4 | WIN 0.89 / 5 rd / +28 | WINDOW DRIFT — ceiling; adjudicate |
 | IV | `act4_vault_construct` | `spellspear` | spearmaster7/mage6 | WIN 0.80 / 6 rd / +48 | IN WINDOW |
-| V | `act5_seal_warden` | `spellspear` | spellspear14 | WIN 0.73 / 4 rd / +15 | IN WINDOW |
+| V | `act5_seal_warden` | `spellspear` | spellspear14 | WIN 0.60 / 5 rd / +6 | IN WINDOW |
+| I | `act1_gate_ambush` | `deathknight` | warrior2 | WIN 0.80 / 4 rd / +18 | IN WINDOW |
+| II | `act2_cistern_nest` | `deathknight` | warrior3/necromancer2 | WIN 0.63 / 4 rd / +9 | IN WINDOW |
+| III | `act3_awakened_boss` | `deathknight` | warrior5/necromancer4 | WIN 0.69 / 4 rd / +16 | IN WINDOW |
+| IV | `act4_vault_construct` | `deathknight` | warrior7/necromancer6 | WIN 0.81 / 7 rd / +53 | IN WINDOW |
+| V | `act5_seal_warden` | `deathknight` | deathknight14 | WIN 0.66 / 5 rd / +7 | IN WINDOW |
 | I | `act1_gate_ambush` | `spellsword` | warrior2 | WIN 0.80 / 4 rd / +18 | IN WINDOW |
 | II | `act2_cistern_nest` | `spellsword` | warrior3/mage2 | WIN 0.64 / 4 rd / +19 | IN WINDOW |
 | III | `act3_awakened_boss` | `spellsword` | warrior5/mage4 | WIN 0.78 / 4 rd / +20 | IN WINDOW |
 | IV | `act4_vault_construct` | `spellsword` | warrior7/mage6 | WIN 0.64 / 7 rd / +30 | IN WINDOW |
-| V | `act5_seal_warden` | `spellsword` | spellsword14 | WIN 0.78 / 4 rd / +15 | IN WINDOW |
+| V | `act5_seal_warden` | `spellsword` | spellsword14 | WIN 0.70 / 5 rd / +12 | IN WINDOW |
 | I | `act1_gate_ambush` | `innkeeper` | helper2 | LOSS 0.35 / 4 rd / -18 | RULED: multiclass-expected (2026-08-13) |
 | II | `act2_cistern_nest` | `innkeeper` | helper3/diplomat2 | LOSS 0.01 / 4 rd / -74 | RULED: multiclass-expected (2026-08-13) |
 | III | `act3_awakened_boss` | `innkeeper` | helper5/diplomat4 | LOSS 0.03 / 3 rd / -87 | RULED: multiclass-expected (2026-08-13) |
 | IV | `act4_vault_construct` | `innkeeper` | helper7/diplomat6 | LOSS 0.31 / 7 rd / -36 | RULED: multiclass-expected (2026-08-13) |
-| V | `act5_seal_warden` | `innkeeper` | innkeeper14 | LOSS 0.03 / 7 rd / -85 | RULED: multiclass-expected (2026-08-13) |
+| V | `act5_seal_warden` | `innkeeper` | innkeeper14 | LOSS 0.01 / 7 rd / -107 | RULED: multiclass-expected (2026-08-13) |
+| I | `act1_gate_ambush` | `skirmisher` | spearmaster2 | WIN 0.79 / 4 rd / +18 | IN WINDOW |
+| II | `act2_cistern_nest` | `skirmisher` | spearmaster3/archer2 | LOSS 0.40 / 4 rd / -11 | WALL — report only |
+| III | `act3_awakened_boss` | `skirmisher` | spearmaster5/archer4 | WIN 0.72 / 5 rd / +20 | IN WINDOW |
+| IV | `act4_vault_construct` | `skirmisher` | spearmaster7/archer6 | WIN 0.80 / 6 rd / +48 | IN WINDOW |
+| V | `act5_seal_warden` | `skirmisher` | skirmisher14 | LOSS 0.26 / 3 rd / -67 | WALL — report only |
 | I | `act1_gate_ambush` | `ranger` | warrior2 | LOSS 0.32 / 5 rd / -21 | WALL — report only |
 | II | `act2_cistern_nest` | `ranger` | warrior3/archer2 | WIN 0.50 / 5 rd / +1 | WALL — report only |
 | III | `act3_awakened_boss` | `ranger` | warrior5/archer4 | WIN 0.65 / 5 rd / +15 | IN WINDOW |
 | IV | `act4_vault_construct` | `ranger` | warrior7/archer6 | LOSS 0.06 / 9 rd / -71 | WALL — report only |
-| V | `act5_seal_warden` | `ranger` | ranger14 | LOSS 0.41 / 3 rd / -39 | WALL — report only |
+| V | `act5_seal_warden` | `ranger` | ranger14 | LOSS 0.33 / 3 rd / -61 | WALL — report only |
 | I | `act1_gate_ambush` | `scout` | rogue2 | LOSS 0.04 / 2 rd / -37 | RULED: multiclass-expected (2026-08-13) |
 | II | `act2_cistern_nest` | `scout` | rogue3/archer2 | LOSS 0.07 / 4 rd / -52 | RULED: multiclass-expected (2026-08-13) |
 | III | `act3_awakened_boss` | `scout` | rogue5/archer4 | LOSS 0.11 / 3 rd / -69 | RULED: multiclass-expected (2026-08-13) |
 | IV | `act4_vault_construct` | `scout` | rogue7/archer6 | LOSS 0.06 / 9 rd / -72 | RULED: multiclass-expected (2026-08-13) |
-| V | `act5_seal_warden` | `scout` | scout14 | LOSS 0.02 / 3 rd / -60 | RULED: multiclass-expected (2026-08-13) |
+| V | `act5_seal_warden` | `scout` | scout14 | LOSS 0.01 / 3 rd / -82 | RULED: multiclass-expected (2026-08-13) |
+| I | `act1_gate_ambush` | `wild_sage` | beast_master2 | LOSS 0.35 / 4 rd / -18 | WALL — report only |
+| II | `act2_cistern_nest` | `wild_sage` | beast_master3/mage2 | WIN 0.93 / 4 rd / +33 | WINDOW DRIFT — ceiling; adjudicate |
+| III | `act3_awakened_boss` | `wild_sage` | beast_master5/mage4 | WIN 0.88 / 4 rd / +27 | WINDOW DRIFT — ceiling; adjudicate |
+| IV | `act4_vault_construct` | `wild_sage` | beast_master7/mage6 | LOSS 0.35 / 7 rd / -28 | WALL — report only |
+| V | `act5_seal_warden` | `wild_sage` | wild_sage14 | WIN 0.98 / 4 rd / +40 | WINDOW DRIFT — ceiling; adjudicate |
 | I | `act1_gate_ambush` | `druid` | beast_tamer2 | LOSS 0.35 / 4 rd / -18 | RULED: multiclass-expected (2026-08-13) |
 | II | `act2_cistern_nest` | `druid` | beast_tamer3/mage2 | WIN 0.93 / 4 rd / +33 | WINDOW DRIFT — ceiling; adjudicate |
 | III | `act3_awakened_boss` | `druid` | beast_tamer5/mage4 | WIN 0.88 / 4 rd / +27 | WINDOW DRIFT — ceiling; adjudicate |
 | IV | `act4_vault_construct` | `druid` | beast_tamer7/mage6 | LOSS 0.35 / 7 rd / -28 | RULED: multiclass-expected (2026-08-13) |
-| V | `act5_seal_warden` | `druid` | druid14 | WIN 0.97 / 4 rd / +42 | WINDOW DRIFT — ceiling; adjudicate |
+| V | `act5_seal_warden` | `druid` | druid14 | WIN 0.82 / 5 rd / +18 | IN WINDOW |
 
 ## The falsifiable check (#440's scope gate)
 
@@ -105,10 +120,10 @@ The spine list is derived from every target in `data/classes.json`'s `consolidat
 
 | Build | floor (dumb) | competent |
 |---|---|---|
-| shipped run — w12/m2/d7/t2 / spear, 52 HP | LOSS 0.48 / 5 rd / -2 | WIN 0.80 / 4 rd / +14 |
-| shipped run + moon-bone amulet worn | WIN 0.69 / 5 rd / +10 | WIN 0.89 / 4 rd / +20 |
-| **spellsword 14 (band 14-16 floor)** | WIN 0.61 / 5 rd / +7 | **WIN 0.78 / 4 rd / +15** |
-| spellsword 16 (band 14-16 top) | WIN 0.68 / 5 rd / +12 | WIN 0.86 / 4 rd / +15 |
+| shipped run — w12/m2/d7/t2 / spear, 52 HP | LOSS 0.32 / 5 rd / -24 | WIN 0.62 / 5 rd / +5 |
+| shipped run + moon-bone amulet worn | LOSS 0.49 / 5 rd / -1 | WIN 0.76 / 5 rd / +10 |
+| **spellsword 14 (band 14-16 floor)** | LOSS 0.34 / 5 rd / -12 | **WIN 0.70 / 5 rd / +12** |
+| spellsword 16 (band 14-16 top) | LOSS 0.47 / 5 rd / -1 | WIN 0.77 / 4 rd / +14 |
 
 **The warden's current stats are FAIR at band.** A consolidated spellsword 14 under the competent policy lands inside the standard challenging-but-winnable window (0.55–0.95). Per `balance-bands-and-policy.md`, that makes #440 mostly the BYPASS rework, not a stat change — validate before touching warden numbers.
 
@@ -120,7 +135,7 @@ Each of these is an outcome the shipped run measured. The generator asserts them
 
 | Row | Column | Policy | Expected | Measured | Ground truth |
 |---|---|---|---|---|---|
-| `act5_seal_warden` | ship | dumb | LOSS | ✅ LOSS 0.48 / 5 rd / -2 | measured: PC 56 HP / ~29 DPR vs warden 142 HP / 28-30 per hit, death in 5 rounds, three identical runs at seed 9 |
+| `act5_seal_warden` | ship | dumb | LOSS | ✅ LOSS 0.32 / 5 rd / -24 | measured: PC 56 HP / ~29 DPR vs warden 142 HP / 28-30 per hit, death in 5 rounds, three identical runs at seed 9. THE WARDEN IS 164 HP AFTER #438 (con 112 -> 134) and this row is UNCHANGED — deliberately: what it asserts is the CATEGORICAL (the shipped kit loses under autoplay) plus the 5-round median, and both still hold at 0.34/5rd. The 142 is the provenance of the original measurement and stays as written; a ground-truth row records what was observed, not what is current |
 | `act5_gallery_vermin_nest` | ship | dumb | LOSS | ✅ LOSS 0.27 / 4 rd / -24 | measured: the same build loses to power-9.8 trash under autoplay |
 | `act5_gallery_vermin_nest` | ship | competent | WIN | ✅ WIN 0.70 / 3 rd / +18 | measured: hand-winnable — the gap IS the competence gap |
 | `act3_raskghar_scouts` | ship | dumb | LOSS | ✅ LOSS 0.06 / 3 rd / -35 | #439 retune: pre-retune this was WIN 0.78 at warrior 2 (steel_thread.json step 582) — the ratchet. Post-retune the under-band kit loses, and the act gates |
@@ -140,13 +155,13 @@ A calibration row gates a categorical at 0.5; these gate a BAND. They exist for 
 
 | Row | Column | Policy | Predicted | Measured | Verdict |
 |---|---|---|---|---|---|
-| `act5_seal_warden` | ship | competent | LOSS — balance-bands-and-policy.md: 'the 2.5x HP gap exceeds resource use' | WIN 0.80 / 4 rd / +14 | **REFUTED** |
+| `act5_seal_warden` | ship | competent | LOSS — balance-bands-and-policy.md: 'the 2.5x HP gap exceeds resource use' | WIN 0.62 / 5 rd / +5 | **REFUTED** |
 
 ## Findings
 
-1. **The competence gap is [Piercing Strikes], not casting.** The shipped run fought the entire game with Relc's spear, which gates [Power Strike] out of the kit and [Piercing Strikes] in — a 1.4x damage_mult at the SAME 2 AP as a basic swing, i.e. ~+37% damage for free. `WICombatAI` has no arm for it: `_act_melee` knows `power_strike` by literal id and nothing else. Ablation on the warden at the shipped kit: the competent policy measures WIN 0.80 / 4 rd / +14 with it and WIN 0.62 / 5 rd / +5 without — a bigger swing than every other resource in the kit combined. Autoplay is not merely 'a melee profile'; it is a melee profile that cannot use a spear's own skill.
+1. **The competence gap is [Piercing Strikes], not casting.** The shipped run fought the entire game with Relc's spear, which gates [Power Strike] out of the kit and [Piercing Strikes] in — a 1.4x damage_mult at the SAME 2 AP as a basic swing, i.e. ~+37% damage for free. `WICombatAI` has no arm for it: `_act_melee` knows `power_strike` by literal id and nothing else. Ablation on the warden at the shipped kit: the competent policy measures WIN 0.62 / 5 rd / +5 with it and LOSS 0.36 / 5 rd / -12 without — a bigger swing than every other resource in the kit combined. Autoplay is not merely 'a melee profile'; it is a melee profile that cannot use a spear's own skill.
 
-2. **[Second Wind] trades an attack for healing, and the policy spends it automatically.** 2 AP buys 8 HP or roughly 20 damage forgone. Ablation against the warden measures WIN 0.80 / 4 rd / +14 with it and WIN 0.80 / 4 rd / +19 without; those adjacent measurements are the result, without inferring a win-rate gain or loss when they tie. A player under 35% HP heals, so this records what 'competent, not optimal' costs. It also flags a data seam: [Second Wind] carries neither `cooldown_rounds` nor `once_per_fight`, so it is an unbounded heal for anyone willing to spend the AP.
+2. **[Second Wind] trades an attack for healing, and the policy spends it automatically.** 2 AP buys 8 HP or roughly 20 damage forgone. Ablation against the warden measures WIN 0.62 / 5 rd / +5 with it and WIN 0.64 / 4 rd / +8 without; those adjacent measurements are the result, without inferring a win-rate gain or loss when they tie. A player under 35% HP heals, so this records what 'competent, not optimal' costs. It also flags a data seam: [Second Wind] carries neither `cooldown_rounds` nor `once_per_fight`, so it is an unbounded heal for anyone willing to spend the AP.
 
 3. **The run once sold its own answer.** Before the competent-policy reauthoring, the steel thread fenced both healing draughts and the vault tonic for 18 gold because autoplay never drank them, then entered the hardest fight with an empty pack. The floor policy did not just under-measure the fight; it changed what the run carried into it.
 
@@ -156,7 +171,11 @@ A calibration row gates a categorical at 0.5; these gate a BAND. They exist for 
 
 6. **The gallery nest is a pure competence wall.** Floor LOSS 0.27 / 4 rd / -24, competent WIN 0.70 / 3 rd / +18 at the same build and the same (empty) pack. Nothing about the encounter is unfair; the script simply cannot play it. It is also `scales: true`, and the Act V build's effective power puts it in the GOLD band (+50% enemy HP, +2 damage) — the trash got a rank promotion the run never noticed.
 
-7. **The carried-but-unequipped upgrade was worth more than the fight was hard.** Equipping the moon-bone amulet — hp+3, dmg+1, and [Invisibility] into the kit — moves the warden from LOSS 0.48 / 5 rd / -2 to WIN 0.69 / 5 rd / +10 under the FLOOR policy alone. The accessory the run carried from Act III to Act V without wearing was, by itself, the difference between losing and winning the finale.
+7. **The carried-but-unequipped upgrade was worth more than the fight was hard.** Equipping the moon-bone amulet — hp+3, dmg+1, and [Invisibility] into the kit — moves the warden from LOSS 0.32 / 5 rd / -24 to LOSS 0.49 / 5 rd / -1 under the FLOOR policy alone. The accessory the run carried from Act III to Act V without wearing was, by itself, the difference between losing and winning the finale.
+
+8. **THE SECOND BODY IS THE BIGGEST NUMBER IN THIS TABLE (#438).** At the Act V climax the two bonded spines measure WIN 0.98 / 4 rd / +40 (`wild_sage14`) and WIN 0.82 / 5 rd / +18 (`druid14`), against WIN 0.70 / 5 rd / +12 for `spellsword14` — the SAME band allocation, the same effective power of 14, the same act. The gap is not stats and not the kit: it is the wolf. Withhold the companion and hold everything else fixed (`tests/_warden_probe.gd`, `WI_PROBE_NO_COMPANION=1`, 100 seeds) and both rows read **0.19 competent / 0.04 floor** — byte-identical to each other, because their stat growth and their re-flavored grants are identical too. **The bonded companion is worth about +0.79 win rate at this fight**, more than every stat, Skill, weapon and accessory in this table combined. It is not a harness artefact: `wi_game.gd:2352` fields the companion whenever the arena has a spare player spawn and `vault` has four, so a druid really does fight the solo finale two-on-one. That is the finding the #438 lane surfaces rather than tunes: no warden stat reaches it (at con 140 `wild_sage14` still reads 0.96 while the band build falls to 0.64), because the lever that shortens a 2v1 is composition, not HP. Whether a climax authored SOLO should field a companion at all is a design question for the encounter, and it is now on the record with a number attached.
+
+9. **The capstone growth trim was right, and it was not the mechanism (#438).** classes.json's flat-growth rule retired an 'evolution bump' convention that had spread to seven classes one citation at a time. It is a real correction — the band yardstick grows 1+1 and nothing should out-stat it 2:1 — and `data_lint.py::check_stat_growth_flat` now keeps it from creeping back. But measured against the fight it was reached for, `strategist.stat_growth.int` 2 → 1 moves the strategist-16 row 1.00 → 0.99. The rows that were over the ceiling were over it for TWO other reasons: an over-band level budget (finding above) and the wolf. Trimming class data was the first lever the ruling named and the smallest one that was actually there; recording that honestly is worth more than a tidy causal story.
 
 ## Reading the table
 
