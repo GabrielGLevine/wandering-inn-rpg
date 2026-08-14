@@ -1958,10 +1958,17 @@
     "goblin_raider"
    ],
    "conversation": "rags_meeting",
+   "_comment_loot": "#438 bow T2 -- the Watch/parley quest's STEEL fork paying its own axis. The sketch asked for 'the bow-shaped fork of a Liscor Watch quest (drove_off_rags already pays ranged_hit)', and this is the encounter that banks drove_off_rags; #453 G4 already made this fork pay ranged_hit at melee_hit's rate (quests.json chieftains_price), so the hardware follows the grant that was already there. Non-respawning, so the unique cannot duplicate under roll_loot's (run_seed, entity_id) reseed. chance 1.0 = the shipped unique-drop convention.",
    "on_victory": [
     "won_combat",
     "drove_off_rags",
     "rags_meeting_settled"
+   ],
+   "loot": [
+    {
+     "item": "recurve_of_the_watch",
+     "chance": 1.0
+    }
    ],
    "encounter_when": {
     "requires": {

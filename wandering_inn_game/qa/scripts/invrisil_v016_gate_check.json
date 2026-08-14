@@ -178,6 +178,15 @@
       "locked": false,
       "requirement": "",
       "text": "Just looking."
+     },
+     {
+      "effect_lines": [
+       "+2 damage on melee hits",
+       "Spear kit replaces other weapon Skills in combat"
+      ],
+      "locked": true,
+      "requirement": "costs 35 gold",
+      "text": "The spear. It was a gift. Correct it, don't replace it. (35 gold)"
      }
     ]
    },

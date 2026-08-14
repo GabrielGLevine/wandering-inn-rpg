@@ -2099,7 +2099,30 @@ func _validate_tutor_line_help_consistency() -> void:
 ## GH#142: enchant pairs are the dialogue-effect swap triple (negative gold
 ## fee + remove_item base + item variant in ONE option). Derived from the
 ## graphs, no list to maintain. Economics: variant price > base price +
-## fee/2 (Hedault charges for real value), both records accessories.
+## fee/2 (Hedault charges for real value).
+##
+## SLOT RULE, WIDENED by #438 -- and widened is the honest word for it. This
+## asserted `kind == "accessory"` on both sides, which described the shipped
+## enchant loop rather than ruling it: every product on the hub happened to be
+## an accessory because no weapon upgrade had been authored yet. #438 authors
+## one (relcs_spare_spear -> hedault_trued_spear), which the accessory literal
+## would have blocked.
+##
+## THIS IS STRICTLY WEAKER AS A FILTER, and nothing below should be read as
+## claiming otherwise. The old literal rejected every non-accessory pair, so it
+## caught everything the pair below catches and one class more -- weapon pairs,
+## which are now the point. An earlier draft of this comment credited the new
+## form with catching "an accessory that upgrades into a different
+## accessory-shaped kind"; that was false, because the old `variant.kind ==
+## "accessory"` arm already rejected it. There is no case the old rule missed.
+##
+## What the widening BUYS is the weapon slot. What it PRESERVES is the property
+## the old literal encoded only by accident -- that an upgrade hands back the
+## same slot it consumed, so a fee paid to correct a spear cannot return a
+## charm. The second `_check` is the residual fence: `same kind` alone would be
+## satisfied by a meal->meal or parcel->parcel swap, so the loop is still held
+## to the two slots it is allowed to touch. Narrowing back is a one-line change
+## (`base_kind == "accessory"`) the day the weapon arm is retired.
 func _validate_enchant_pairs(graphs: Dictionary, items: Dictionary) -> void:
 	var by_id: Dictionary = {}
 	for it: Dictionary in items.get("items", []):
@@ -2123,7 +2146,10 @@ func _validate_enchant_pairs(graphs: Dictionary, items: Dictionary) -> void:
 				var base: Dictionary = by_id.get(removed, {})
 				var variant: Dictionary = by_id.get(granted, {})
 				_check(not base.is_empty() and not variant.is_empty(), "%s/%s enchant references unknown items %s -> %s" % [conv_id, node_id, removed, granted])
-				_check(String(variant.get("kind", "")) == "accessory" and String(base.get("kind", "")) == "accessory", "%s enchant pair must be accessories" % conv_id)
+				var base_kind := String(base.get("kind", ""))
+				var variant_kind := String(variant.get("kind", ""))
+				_check(base_kind == variant_kind, "%s enchant %s->%s must keep its slot: base kind %s, variant kind %s" % [conv_id, removed, granted, base_kind, variant_kind])
+				_check(base_kind == "accessory" or base_kind == "weapon", "%s enchant pair kind %s is outside the loop's two slots (accessory, weapon)" % [conv_id, base_kind])
 				_check(
 					int(variant.get("price", 0)) * 2 > int(base.get("price", 0)) * 2 + fee,
 					"%s enchant %s->%s: variant price %d must exceed base %d + fee %d/2 (paid work must hold value)" % [conv_id, removed, granted, int(variant.get("price", 0)), int(base.get("price", 0)), fee]

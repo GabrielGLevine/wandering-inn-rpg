@@ -73,8 +73,8 @@ The spine list is derived from every target in `data/classes.json`'s `consolidat
 | I | `act1_gate_ambush` | `spellspear` | spearmaster2 | WIN 0.79 / 4 rd / +18 | IN WINDOW |
 | II | `act2_cistern_nest` | `spellspear` | spearmaster3/mage2 | WIN 0.79 / 4 rd / +22 | IN WINDOW |
 | III | `act3_awakened_boss` | `spellspear` | spearmaster5/mage4 | WIN 0.89 / 5 rd / +28 | WINDOW DRIFT — ceiling; adjudicate |
-| IV | `act4_vault_construct` | `spellspear` | spearmaster7/mage6 | WIN 0.80 / 6 rd / +48 | IN WINDOW |
-| V | `act5_seal_warden` | `spellspear` | spellspear14 | WIN 0.60 / 5 rd / +6 | IN WINDOW |
+| IV | `act4_vault_construct` | `spellspear` | spearmaster7/mage6 | WIN 0.83 / 6 rd / +48 | IN WINDOW |
+| V | `act5_seal_warden` | `spellspear` | spellspear14 | WIN 0.64 / 5 rd / +8 | IN WINDOW |
 | I | `act1_gate_ambush` | `deathknight` | warrior2 | WIN 0.80 / 4 rd / +18 | IN WINDOW |
 | II | `act2_cistern_nest` | `deathknight` | warrior3/necromancer2 | WIN 0.63 / 4 rd / +9 | IN WINDOW |
 | III | `act3_awakened_boss` | `deathknight` | warrior5/necromancer4 | WIN 0.69 / 4 rd / +16 | IN WINDOW |
@@ -93,18 +93,18 @@ The spine list is derived from every target in `data/classes.json`'s `consolidat
 | I | `act1_gate_ambush` | `skirmisher` | spearmaster2 | WIN 0.79 / 4 rd / +18 | IN WINDOW |
 | II | `act2_cistern_nest` | `skirmisher` | spearmaster3/archer2 | LOSS 0.40 / 4 rd / -11 | WALL — report only |
 | III | `act3_awakened_boss` | `skirmisher` | spearmaster5/archer4 | WIN 0.72 / 5 rd / +20 | IN WINDOW |
-| IV | `act4_vault_construct` | `skirmisher` | spearmaster7/archer6 | WIN 0.80 / 6 rd / +48 | IN WINDOW |
-| V | `act5_seal_warden` | `skirmisher` | skirmisher14 | WIN 0.61 / 5 rd / +5 | IN WINDOW |
+| IV | `act4_vault_construct` | `skirmisher` | spearmaster7/archer6 | WIN 0.81 / 6 rd / +48 | IN WINDOW |
+| V | `act5_seal_warden` | `skirmisher` | skirmisher14 | WIN 0.63 / 5 rd / +5 | IN WINDOW |
 | I | `act1_gate_ambush` | `ranger` | warrior2 | LOSS 0.32 / 5 rd / -21 | WALL — report only |
 | II | `act2_cistern_nest` | `ranger` | warrior3/archer2 | WIN 0.50 / 5 rd / +1 | WALL — report only |
 | III | `act3_awakened_boss` | `ranger` | warrior5/archer4 | WIN 0.65 / 5 rd / +15 | IN WINDOW |
-| IV | `act4_vault_construct` | `ranger` | warrior7/archer6 | LOSS 0.06 / 9 rd / -71 | WALL — report only |
-| V | `act5_seal_warden` | `ranger` | ranger14 | LOSS 0.33 / 3 rd / -61 | WALL — report only |
+| IV | `act4_vault_construct` | `ranger` | warrior7/archer6 | LOSS 0.06 / 9 rd / -68 | WALL — report only |
+| V | `act5_seal_warden` | `ranger` | ranger14 | LOSS 0.36 / 3 rd / -56 | WALL — report only |
 | I | `act1_gate_ambush` | `scout` | rogue2 | LOSS 0.04 / 2 rd / -37 | RULED: multiclass-expected (2026-08-13) |
 | II | `act2_cistern_nest` | `scout` | rogue3/archer2 | LOSS 0.07 / 4 rd / -52 | RULED: multiclass-expected (2026-08-13) |
 | III | `act3_awakened_boss` | `scout` | rogue5/archer4 | LOSS 0.11 / 3 rd / -69 | RULED: multiclass-expected (2026-08-13) |
-| IV | `act4_vault_construct` | `scout` | rogue7/archer6 | LOSS 0.06 / 9 rd / -72 | RULED: multiclass-expected (2026-08-13) |
-| V | `act5_seal_warden` | `scout` | scout14 | LOSS 0.01 / 3 rd / -82 | RULED: multiclass-expected (2026-08-13) |
+| IV | `act4_vault_construct` | `scout` | rogue7/archer6 | LOSS 0.08 / 9 rd / -70 | RULED: multiclass-expected (2026-08-13) |
+| V | `act5_seal_warden` | `scout` | scout14 | LOSS 0.01 / 3 rd / -77 | RULED: multiclass-expected (2026-08-13) |
 | I | `act1_gate_ambush` | `wild_sage` | beast_master2 | LOSS 0.35 / 4 rd / -18 | WALL — report only |
 | II | `act2_cistern_nest` | `wild_sage` | beast_master3/mage2 | WIN 0.93 / 4 rd / +33 | WINDOW DRIFT — ceiling; adjudicate |
 | III | `act3_awakened_boss` | `wild_sage` | beast_master5/mage4 | WIN 0.88 / 4 rd / +27 | WINDOW DRIFT — ceiling; adjudicate |
