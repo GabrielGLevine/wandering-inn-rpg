@@ -210,7 +210,7 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
             else:
                 report.exact.append(f"compiled-only step (shipped has no counterpart): {_describe(step)}")
         for index in range(s_lo, s_hi):
-            pass  # MUTATION B: drop the unmatched SHIPPED gap
+            pending_shipped.extend(shipped_gaps[index])
             report.exact.append(
                 f"shipped-only step (compiler dropped this claim): {_describe(shipped_spine[index])}"
             )
