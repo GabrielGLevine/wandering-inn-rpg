@@ -768,10 +768,12 @@ class PipelineEffectWaitsTest(unittest.TestCase):
         # CONTINUING row: quest_started then the counter, THEN the destination.
         self.assertEqual(kinds[confirms[0] + 1:confirms[0] + 4],
                          ["quest_started", "accomplishment_recorded", "dialogue_node"])
-        # CLOSING row: the teardown pair FIRST, then the announcements. This is
-        # the inversion the emitter's own comment calls fatal, and no golden
-        # authored so far contains a closing row with effects -- so nothing
-        # else in this repository would notice it.
+        # CLOSING row: the teardown pair FIRST, then the announcements. This
+        # is the inversion the emitter's own comment calls fatal. The shipped
+        # graphs carry plenty of end-rows with effects and the corpus pins
+        # four such sites (1038-1041, 1122-1125, 1948-1951, 2147-2150); what
+        # no AUTHORED ITINERARY reaches yet is any of them, so without this
+        # assertion the inversion would compile a byte-identical golden.
         self.assertEqual(kinds[confirms[1] + 1:confirms[1] + 6],
                          ["dialogue_ended", "ui_dialogue_hidden",
                           "accomplishment_recorded", "quest_beat_completed", "wait_frames:"])

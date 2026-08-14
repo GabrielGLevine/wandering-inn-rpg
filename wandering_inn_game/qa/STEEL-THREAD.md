@@ -440,6 +440,11 @@ that rule is asserted first, in
 `test_m36_contract.py::test_the_emitters_placement_rule_is_what_defines_the_window`,
 so inverting the placement reds before the count can drift again.
 
+**M3.6 MERGED AS A PARTIAL MILESTONE.** Its five ruled items are built and
+guarded; its EXIT is not met. The golden does not pass the tolerance differ,
+this section is still not the path to regenerate this script, and M4 (the
+Mage variant) stays blocked. What remains is tabled below.
+
 **Where the golden stands.** `scripts/itinerary/steel_thread.yaml` now carries
 the creation prelude plus **21 nodes covering shipped steps 0-217** -- the whole
 of Act I, through the spar, the first night, the spear, the gate-road ambush
@@ -509,20 +514,44 @@ measured corpus-wide, plus two differ accounting weaknesses:
 | Differ: a trailing bump-to-face reads as movement in `_net` | 3 of the 5 net rows | The bump sets facing and moves nobody, but `_net` cannot know the target cell is blocked |
 | Differ: repeated `press interact` anchors mis-pair | 2 of the 5 net rows | Every `press interact` is the same alignment token, so a compiled-only spine step slides the pairing |
 
-**WHAT THE OPEN RULING WOULD AND WOULD NOT BUY.** Three of those rows are one
-class -- **134 corpus rows where the COMPILED script claims MORE than the
-shipped one**, and §6.3's tightening allowance covers only `assert_*` actions.
-M3.5 reported this about one of the three; the M3.6 amendment did not rule on
-it. The question is whether "pins may be TIGHTER and never looser" extends
-from `assert_*` to a compiled-only `wait_for_event`.
+**WHAT THE OPEN RULING WOULD AND WOULD NOT BUY.** §6.3's tightening allowance
+covers only `assert_*` actions, so a compiled-only `wait_for_event` reads as an
+exact-class fatal even where the compiled run is strictly the stricter one.
+M3.5 reported this about the conversation-open `dialogue_node`; the M3.6
+amendment did not rule on it. The question is whether "pins may be TIGHTER and
+never looser" extends from `assert_*` to a compiled-only `wait_for_event`.
 
-It must not be oversold, and an earlier draft of this section did oversell it.
-Inside the authored 0-217 window a YES reclassifies **12 of the 47** exact
-rows. **35 exact and all 5 net rows remain**, and no ruling on tightening
-touches them: they are the 330-row position-pin class (9 rows here), the sleep
-idiom (7), the `items` pin, the in-autoplay hotbar assert, the pickup toast,
-and alignment residue. A YES is necessary for the golden and nowhere near
-sufficient.
+**MEASURED, inside the authored 0-217 window.** A YES reclassifies exactly
+**12 of the 47** exact rows. Typed, from the differ's own output:
+
+| Rows | Wait |
+|---|---|
+| 3 | `dialogue_node` (1 conversation-open, 2 destination) |
+| 2 | `ui_dialogue_rendered` (pool line) |
+| 2 | `map_changed` |
+| 1 each | `class_gained`, `entity_removed`, `phase_changed`, `ui_inventory_selection_rendered`, `ui_sleep_veil_rendered` |
+
+Only **5 of those 12** sit in the three dialogue-idiom classes tabled above;
+the other 7 are the sleep, inventory and transition idioms making the same
+kind of stricter claim. The ruling as phrased covers all 12 either way,
+because it is about the ACTION and not about which idiom emitted it.
+
+**ESTIMATED, corpus-wide: ~134 rows, and the number is an estimate.** It is
+the count of corpus sites at which the emitter's three dialogue idioms WOULD
+make a claim the shipped script does not -- 60 conversation opens that carry no
+`dialogue_node` (of 63), 50 continuing confirms that carry no destination
+`dialogue_node` (of 125), and 24 pool lines against the 0 `ui_dialogue_rendered`
+waits this script contains. It is a projection from the corpus onto an
+itinerary that **does not exist**: only steps 0-217 are authored, so no compile
+has ever emitted those rows and nothing has measured them. The observed sample
+is the 12 above. Treat 134 as an order-of-magnitude argument for why the
+question is worth a ruling, and 12-of-47 as the only measurement.
+
+**A YES is necessary and nowhere near sufficient.** Even inside the authored
+window it leaves **35 exact and all 5 net rows**, and no ruling on tightening
+touches them: the 330-row position-pin class (9 rows here), the sleep idiom
+(7), the `items` pin, the in-autoplay hotbar assert, the pickup toast, and
+alignment residue.
 
 **The 5 net rows are not arrival divergences.** Three are the bump-to-face
 `_net` artifact. The other two survive even though the compiled walk for that

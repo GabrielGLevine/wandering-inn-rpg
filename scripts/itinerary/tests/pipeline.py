@@ -136,9 +136,9 @@ class Pipeline:
     def inject_npc(self, map_id: str, entity: dict[str, Any], graph: dict[str, Any]) -> None:
         """Add an NPC and its conversation to the LOADED project data.
 
-        Used where the shape under test (a closing row that carries effects)
-        needs a controlled graph rather than a corpus site buried behind ten
-        acts of state. Everything else about the run stays real.
+        Used where the shape under test needs a controlled graph rather than
+        a corpus site buried behind ten acts of state. Everything else about
+        the run stays real.
         """
         self.planner.route.maps[map_id]["entities"].append(entity)
         self.planner.dialogue.graphs[str(entity["conversation"])] = graph

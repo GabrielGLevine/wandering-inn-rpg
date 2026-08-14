@@ -265,19 +265,31 @@ from comparison, so it cannot mask a difference), and position pins align
 on their value as well as their path (severity unchanged in every case).
 Which class is fatal was not touched.
 
-**The open ruling, stated without overselling it.** Does §6.3's "pins may
-be TIGHTER and never looser" extend from `assert_*` actions to a
-compiled-only `wait_for_event`? Corpus-wide the class is 134 rows -- 60
-conversation-open `dialogue_node`, 50 destination `dialogue_node`, 24
-pool-line `ui_dialogue_rendered` -- every one of them the compiler being
-stricter than the corpus. Inside the authored window a YES reclassifies
-**12 of 47** exact rows and leaves **35 exact and all 5 net**. It is
-necessary and nowhere near sufficient: the rest is emitter idiom variance
-(the 330-row `assert_state player_cell` class, the sleep idiom, the
-inventory `items` pin, the in-autoplay assert slot) and two differ
-accounting weaknesses. The lane declined to answer it because widening a
-gate to pass its own milestone is the wrong shape of work; the full
-residual table is in `wandering_inn_game/qa/STEEL-THREAD.md`.
+**The open ruling, stated without overselling it.** Does §6.3's "pins
+may be TIGHTER and never looser" extend from `assert_*` actions to a
+compiled-only `wait_for_event`? Inside the authored 0-217 window a YES
+reclassifies **12 of 47** exact rows — measured, and typed in
+`qa/STEEL-THREAD.md`: 3 `dialogue_node`, 2 `ui_dialogue_rendered`, 2
+`map_changed`, and one each of `class_gained`, `entity_removed`,
+`phase_changed`, `ui_inventory_selection_rendered`,
+`ui_sleep_veil_rendered`. Only 5 of the 12 are in the dialogue idioms the
+residual table names; the ruling covers all 12 because it is about the
+ACTION, not the idiom.
+
+The corpus-wide figure of ~134 rows (60 conversation opens, 50
+destination nodes, 24 pool lines) is an ESTIMATE and must be read as one:
+it projects the emitter's idioms onto an itinerary that does not exist,
+since only 0-217 is authored. The observed sample is the 12.
+
+A YES is necessary and nowhere near sufficient — it leaves 35 exact and
+all 5 net rows in the authored window alone. The rest is emitter idiom
+variance (the 330-row `assert_state player_cell` class, the sleep idiom,
+the inventory `items` pin, the in-autoplay assert slot) and two differ
+accounting weaknesses. The lane declined to answer the question because
+widening a gate to pass its own milestone is the wrong shape of work.
+
+**M4 STAYS BLOCKED.** The golden does not pass the tolerance differ, so
+§7's M3.6 exit is NOT met and the M4 dispatch condition is unchanged.
 
 ## 4. Emitter contract
 
@@ -365,8 +377,11 @@ rule is what keeps the corpus recompilable.
   differ with zero exact-class rows, then stops at the Relc meeting. What stops
   it is a beat the amendment did not reach — the spar is entered by a dialogue
   option's `start_combat` effect and `FIGHT_ENTRIES` has no `entry: dialogue`
-  — plus the 141 effect-derived event waits the dialogue planner drops and six
-  fight-shape variances. Measured table in `qa/STEEL-THREAD.md`. **These are
+  — plus the effect-derived event waits the dialogue planner drops (M3.5
+  recorded these as "141"; that was a whole-script census of those event
+  types, and the figure the planner actually owes is **105 rows at 60 sites**
+  — see M3.6 below) and six fight-shape variances. Measured table in
+  `qa/STEEL-THREAD.md`. **These are
   the M4 prerequisite the way the two closed primitives were M3.5's**; the
   vocabulary stays frozen until a note rules on `entry: dialogue`.
 - **M3.6 — the second amendment, landed 2026-08-13.** `fight.entry:
