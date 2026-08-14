@@ -590,31 +590,51 @@ class GoldenAccountingTest(unittest.TestCase):
 
         A gate change made inside the milestone it gates owes more than "it
         made the number smaller". The invariant is COVERAGE: every
-        tolerance-class step on both sides reaches exactly one `_compare_gap`
+        tolerance-class step on BOTH sides reaches exactly one `_compare_gap`
         call. The old accounting dropped the gap of any UNMATCHED spine step on
         the floor, so a walk sitting behind a compiled-only assert was never
         compared to anything at all -- which is a way to miss a real
         difference, not a way to catch one. Carrying it forward can only ADD
         movement to a comparison, never remove it.
+
+        BOTH SIDES, and this test used to say "both" while checking one. A
+        re-audit dropped the SHIPPED-side carry-forward and all 132 tests
+        stayed green -- the same defect class as the inert guards this suite
+        was rebuilt to close, one level down, in the very test whose job is to
+        prove the gate was not weakened. The shipped side is the direction that
+        matters most: losing a shipped gap loses the CORPUS's walk from the
+        comparison, which is exactly how a real difference hides.
         """
-        compiled = json.loads((PROJECT / "qa/scripts/steel_thread.json").read_text(encoding="utf-8"))
-        shipped_script = {"steps": compiled["steps"][:400]}
-        compiled = {"steps": [step for step in compiled["steps"][:400]]}
-        # Insert a compiled-only assert in the middle of every walk run, which
-        # is precisely the shape that used to lose a gap.
+        corpus = json.loads((PROJECT / "qa/scripts/steel_thread.json").read_text(encoding="utf-8"))["steps"][:400]
+        shipped_script = {"steps": list(corpus)}
+
+        # TWO fixtures, because the two carry-forwards run on different
+        # branches and a fixture that exercises one leaves the other dead.
+        #   compiled-only spine steps: an assert after every walk run.
         thickened: list[dict] = []
-        for step in compiled["steps"]:
+        for step in corpus:
             thickened.append(step)
             if step.get("action") == "move":
                 thickened.append({"action": "assert_state", "path": "player_cell", "equals": [0, 0]})
-        compiled = {"steps": thickened}
+        #   shipped-only spine steps: the corpus's own pins, dropped. This is
+        #   the real compiler's commonest divergence (330 position pins it does
+        #   not emit), and every one of them sits behind a walk.
+        thinned = [step for step in corpus if step.get("action") != "assert_state"]
+        self.assertLess(len(thinned), len(corpus), "the fixture must actually drop shipped spine steps")
 
-        seen: list[list[dict]] = []
+        for label, compiled in (("compiled-only spine", {"steps": thickened}),
+                                ("shipped-only spine", {"steps": thinned})):
+            self._assert_full_coverage(label, compiled, shipped_script)
+
+    def _assert_full_coverage(self, label: str, compiled: dict, shipped_script: dict) -> None:
+        seen_compiled: list[list[dict]] = []
+        seen_shipped: list[list[dict]] = []
         import scripts.itinerary.goldens as goldens_module
         original = goldens_module._compare_gap
 
         def recording(report, compiled_gap, shipped_gap, anchor):
-            seen.append(list(compiled_gap))
+            seen_compiled.append(list(compiled_gap))
+            seen_shipped.append(list(shipped_gap))
             return original(report, compiled_gap, shipped_gap, anchor)
 
         goldens_module._compare_gap = recording
@@ -623,15 +643,35 @@ class GoldenAccountingTest(unittest.TestCase):
         finally:
             goldens_module._compare_gap = original
 
-        compared = sum(int(step.get("steps", 1)) for gap in seen for step in gap if step.get("action") == "move")
-        total = sum(int(step.get("steps", 1)) for step in compiled["steps"] if step.get("action") == "move")
-        # Every walked cell on the compiled side reached a comparison. (A gap
-        # trailing the LAST spine step would be the one exception, and this
-        # script does not end on one.)
-        self.assertEqual(compared, total)
-        self.assertGreater(total, 0)
+        def walked(gaps: list[list[dict]]) -> int:
+            return sum(int(s.get("steps", 1)) for gap in gaps for s in gap if s.get("action") == "move")
 
-    def test_position_pins_align_on_their_value_not_only_their_path(self) -> None:
+        def total(script: dict) -> int:
+            return sum(int(s.get("steps", 1)) for s in script["steps"] if s.get("action") == "move")
+
+        # Every walked cell on EACH side reached a comparison. (A gap trailing
+        # the LAST spine step would be the one exception; both scripts here end
+        # on `press interact`, a spine step, so neither has one.)
+        self.assertGreater(total(compiled), 0)
+        self.assertEqual(walked(seen_compiled), total(compiled), f"{label}: compiled-side coverage")
+        self.assertEqual(walked(seen_shipped), total(shipped_script), f"{label}: shipped-side coverage")
+
+    def test_repeated_position_pins_MIS_PAIR_and_that_is_a_known_limitation(self) -> None:
+        """The weakness M3.6 measured, declined to fix, and records here.
+
+        `_key` omits the pinned VALUE, so every `assert_state player_cell` is
+        one alignment token and the matcher pairs an arrival with whichever it
+        reaches first. Two net-class rows in the M3.6 golden come from exactly
+        this, on a leg whose compiled walk is step-for-step the corpus walk.
+
+        Including the value fixes that pairing AND moves a legitimate SUBSUMING
+        tightening into exact-class fatal, because the two keys stop matching
+        and the shipped row reads as a dropped claim. That is a change to which
+        class is fatal -- policy, not accounting -- so this lane reverted it
+        rather than ship it inside the milestone it gates. This test is the
+        record of the tradeoff, so the next lane does not rediscover it by
+        accident.
+        """
         shipped_leg = {"steps": [
             {"action": "assert_state", "path": "player_cell", "equals": [7, 6]},
             {"action": "press", "name": "interact"},
@@ -642,12 +682,26 @@ class GoldenAccountingTest(unittest.TestCase):
             {"action": "press", "name": "interact"},
         ]}
         report = diff(compiled, shipped_leg)
-        self.assertTrue(report.passed, report.render())
-        self.assertEqual(report.tighter, ["compiled-only assert: [-] "
-                                          '{"action": "assert_state", "equals": [6, 6], "path": "player_cell"}'])
+        # THE LIMITATION, pinned: the matcher paired shipped [7,6] with
+        # compiled [6,6], so a pin the compiler did keep reads as changed.
+        self.assertFalse(report.passed)
+        self.assertTrue(any("!=" in row for row in report.exact), report.render())
 
-        # MUTATION: a pin the compiler DROPPED is still fatal.
-        self.assertFalse(diff({"steps": compiled["steps"][1:]}, shipped_leg).passed)
+        # WHAT IS NOT LOST, and what the value-in-key variant would have
+        # broken: a compiled pin that SUBSUMES the shipped one stays a
+        # tightening rather than becoming a dropped claim.
+        tighter = diff(
+            {"steps": [{"action": "assert_state", "path": "classes", "equals": {"warrior": 1, "mage": 3}},
+                       {"action": "press", "name": "interact"}]},
+            {"steps": [{"action": "assert_state", "path": "classes", "equals": {"warrior": 1}},
+                       {"action": "press", "name": "interact"}]},
+        )
+        self.assertTrue(tighter.passed, tighter.render())
+        self.assertEqual(len(tighter.tighter), 1)
+        self.assertEqual(tighter.exact, [])
+
+        # MUTATION: a pin the compiler DROPPED is still fatal, either way.
+        self.assertFalse(diff({"steps": compiled["steps"][2:]}, shipped_leg).passed)
 
 
 # ---------------------------------------------------------------------------

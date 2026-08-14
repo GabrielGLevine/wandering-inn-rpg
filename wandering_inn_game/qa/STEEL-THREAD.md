@@ -466,28 +466,31 @@ Against the shipped 0-217 the tolerance differ reports:
 | Differ | Result |
 |---|---|
 | Pre-lane (`goldens.py` @ 7904953e) | `GOLDEN FAIL: 50 exact-class, 11 net-class, 8 tolerance-class, 25 tightening(s)` |
-| M3.6 (two accounting fixes, below) | `GOLDEN FAIL: 47 exact-class, 5 net-class, 9 tolerance-class, 28 tightening(s)` |
+| M3.6 (one accounting fix, below) | `GOLDEN FAIL: 50 exact-class, 9 net-class, 9 tolerance-class, 25 tightening(s)` |
 
-**The differ was edited inside the milestone it gates, and that needs saying
-plainly.** Two changes, both accounting rather than policy, neither touching
-which CLASS is fatal:
+**The differ was edited inside the milestone it gates, so it carries exactly
+ONE change and that change is pure accounting.** A gap is the walk before a
+spine step, and an unmatched spine step used to have its gap dropped on the
+floor -- so a walk sitting behind a compiled-only assert was compared to
+nothing at all. The invariant that makes carrying it forward a STRENGTHENING
+is COVERAGE: every tolerance-class step, on BOTH sides, now reaches exactly
+one comparison. It is pinned in
+`test_the_carry_forward_cannot_MASK_a_difference_because_it_drops_nothing`,
+which reds independently when either direction is removed. Dropping movement
+from a comparison is a way to MISS a difference; carrying it forward can only
+add movement to one.
 
-1. **Gap carry-forward.** A gap is the walk before a spine step; an unmatched
-   spine step used to have its gap dropped on the floor, so a walk sitting
-   behind a compiled-only assert was compared to nothing at all. The invariant
-   that makes this a strengthening is COVERAGE: every tolerance-class step now
-   reaches exactly one comparison, pinned in
-   `test_the_carry_forward_cannot_MASK_a_difference_because_it_drops_nothing`.
-   Dropping movement from a comparison is a way to MISS a difference; carrying
-   it forward can only add movement to one.
-2. **Position pins align on their value.** Every `assert_state player_cell`
-   was the same alignment token, so the matcher paired an arrival with
-   whichever one it reached first. Severity is unchanged in every case: a pin
-   whose value really differs is fatal as a mismatch under the old key and as
-   a dropped claim under the new one, and the dropped-claim direction has its
-   own mutation red.
-
-Neither change is the tightening-class question below, which stays unanswered.
+**A second differ change was tried and REVERTED.** Including the pinned VALUE
+in the alignment key fixes a real weakness -- every `assert_state player_cell`
+is otherwise one token, so the matcher pairs an arrival with whichever it
+reaches first. It also moves a legitimate SUBSUMING tightening (compiled
+`equals={a,b}` over shipped `equals={a}`) out of the TIGHTER class and into
+exact-class fatal, because the two keys stop matching and the shipped row reads
+as a dropped claim. **That is a change to which class is fatal — policy, not
+accounting — and a lane may not make one inside the milestone it gates**, so it
+was reverted even though it was worth 3 exact and 4 net rows. The tradeoff is
+recorded in `goldens.py`'s own comment and pinned in
+`test_repeated_position_pins_MIS_PAIR_and_that_is_a_known_limitation`.
 
 **An earlier version of this lane also had the emitter pin `assert_state
 player_cell` after every walk leg.** It has been REVERTED: no M3.6 criterion
@@ -511,8 +514,8 @@ measured corpus-wide, plus two differ accounting weaknesses:
 | `ui_inventory_shown {items: N}`: the emitter's wait carries no payload, which is LOOSER | 3 | §6.3 forbids a looser pin |
 | `assert_event_logged` inside an autoplayed board (`ui_hotbar_rendered {slots}`) | 2 | Autoplay has no slot for an assert between the turn and the shot |
 | `pickup`'s `"Got: <item>"` toast | 1 | The amendment's derivable list is deliberately toast-free |
-| Differ: a trailing bump-to-face reads as movement in `_net` | 3 of the 5 net rows | The bump sets facing and moves nobody, but `_net` cannot know the target cell is blocked |
-| Differ: repeated `press interact` anchors mis-pair | 2 of the 5 net rows | Every `press interact` is the same alignment token, so a compiled-only spine step slides the pairing |
+| Differ: a trailing bump-to-face reads as movement in `_net` | part of the 9 net rows | The bump sets facing and moves nobody, but `_net` cannot know the target cell is blocked |
+| Differ: repeated anchors mis-pair (`press interact`, `assert_state player_cell`) | the rest of the 9 net rows | The alignment key omits the pressed/pinned VALUE, so a compiled-only spine step slides the pairing; fixing it is the policy change this lane reverted |
 
 **WHAT THE OPEN RULING WOULD AND WOULD NOT BUY.** §6.3's tightening allowance
 covers only `assert_*` actions, so a compiled-only `wait_for_event` reads as an
@@ -522,7 +525,7 @@ amendment did not rule on it. The question is whether "pins may be TIGHTER and
 never looser" extends from `assert_*` to a compiled-only `wait_for_event`.
 
 **MEASURED, inside the authored 0-217 window.** A YES reclassifies exactly
-**12 of the 47** exact rows. Typed, from the differ's own output:
+**12 of the 50** exact rows. Typed, from the differ's own output:
 
 | Rows | Wait |
 |---|---|
@@ -548,19 +551,19 @@ is the 12 above. Treat 134 as an order-of-magnitude argument for why the
 question is worth a ruling, and 12-of-47 as the only measurement.
 
 **A YES is necessary and nowhere near sufficient.** Even inside the authored
-window it leaves **35 exact and all 5 net rows**, and no ruling on tightening
-touches them: the 330-row position-pin class (9 rows here), the sleep idiom
-(7), the `items` pin, the in-autoplay hotbar assert, the pickup toast, and
-alignment residue.
+window it leaves **38 exact and all 9 net rows**, and no ruling on tightening
+touches them: the 330-row position-pin class, the sleep idiom, the `items`
+pin, the in-autoplay hotbar assert, the pickup toast, and alignment residue.
 
-**The 5 net rows are not arrival divergences.** Three are the bump-to-face
-`_net` artifact. The other two survive even though the compiled walk for that
-leg is now step-for-step the corpus walk (`left 7, up 1, left 1, down 1,
-interact` against shipped 147-152, and the inn crossing after it) -- the
-differ pairs them with the wrong anchors because every `press interact` is the
-same alignment token. That is a second differ accounting weakness, reported
-rather than fixed: this lane has already edited the gate twice and a third
-edit belongs to whoever rules on the class above.
+**The 9 net rows are not arrival divergences.** Some are the bump-to-face
+artifact (`_net` counts a blocked bump as movement because it cannot know the
+target cell is blocked). The rest are the mis-pairing above, and their
+signature is unmistakable: a `compiled net (0, 0)` against a whole shipped
+walk means the two sides were compared at different anchors, not that the run
+went somewhere else. Both of the legs this was checked against walk the corpus
+route step for step -- `left 7, up 1, left 1, down 1, interact` against shipped
+147-152, and the inn crossing after it. Reported rather than fixed: fixing it
+is the policy change above.
 
 Per §3.2 the vocabulary re-froze behind M3.6's five items, so everything above
 is reported rather than patched around.

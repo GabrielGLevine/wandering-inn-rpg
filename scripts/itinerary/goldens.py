@@ -114,16 +114,17 @@ def _key(step: dict[str, Any]) -> str:
     for field_name in ("type", "path", "name", "skill", "slot", "label"):
         if field_name in normalized:
             parts.append(f"{field_name}={normalized[field_name]}")
-    if str(normalized.get("action", "")) == "assert_state" and "equals" in normalized:
-        # Position pins all share one path, so without the VALUE every
-        # `assert_state player_cell` in a script is the same alignment token and
-        # the matcher pairs an arrival with whichever one it reaches first. The
-        # symptom was a compiled leg that walked the shipped route exactly and
-        # reported an arrival difference, because a tightening one row earlier
-        # had shifted the pairing. Severity is unchanged either way: a pin whose
-        # value really differs is fatal as a mismatch here and as a
-        # dropped-claim there.
-        parts.append(f"equals={json.dumps(normalized['equals'], sort_keys=True)}")
+    # NOT included: the pinned VALUE. Every `assert_state player_cell` is
+    # therefore the same alignment token, and the matcher can pair an arrival
+    # with whichever one it reaches first -- a real weakness, and the reason
+    # two net-class rows in the M3.6 golden report an arrival difference for a
+    # leg whose compiled walk is step-for-step the corpus walk. Adding the
+    # value fixes that pairing, and M3.6 tried it: it also moves a legitimate
+    # SUBSUMING tightening (compiled `equals={a,b}` over shipped `equals={a}`)
+    # out of the TIGHTER class and into exact-class fatal, because the two keys
+    # stop matching and the shipped row reads as a dropped claim. That is a
+    # change to which class is fatal -- policy, not accounting -- so it was
+    # reverted rather than shipped inside the milestone it gates.
     return "|".join(parts)
 
 

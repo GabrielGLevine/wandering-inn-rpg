@@ -258,17 +258,19 @@ without a `dialogue_started` wait, and it did not model the closing-row
 placement at all.
 
 Differ, against shipped 0-217: pre-lane `50 exact / 11 net`, M3.6
-`47 exact / 5 net`. The lane edited `goldens.py` twice, and both are
-ACCOUNTING fixes rather than policy: gaps of unmatched spine steps are
-carried forward (with a coverage invariant proving nothing is dropped
-from comparison, so it cannot mask a difference), and position pins align
-on their value as well as their path (severity unchanged in every case).
-Which class is fatal was not touched.
+`50 exact / 9 net`. The lane ships exactly ONE `goldens.py` change and it
+is pure accounting: gaps of unmatched spine steps are carried forward,
+with a two-sided COVERAGE invariant proving nothing is dropped from
+comparison, so it cannot mask a difference. A second change — putting the
+pinned value in the alignment key — was tried and REVERTED: it fixes a
+real mis-pairing weakness but also moves a legitimate subsuming tightening
+into exact-class fatal, which is a change to which class is fatal. Policy,
+not accounting, and not a lane's to make inside the milestone it gates.
 
 **The open ruling, stated without overselling it.** Does §6.3's "pins
 may be TIGHTER and never looser" extend from `assert_*` actions to a
 compiled-only `wait_for_event`? Inside the authored 0-217 window a YES
-reclassifies **12 of 47** exact rows — measured, and typed in
+reclassifies **12 of 50** exact rows — measured, and typed in
 `qa/STEEL-THREAD.md`: 3 `dialogue_node`, 2 `ui_dialogue_rendered`, 2
 `map_changed`, and one each of `class_gained`, `entity_removed`,
 `phase_changed`, `ui_inventory_selection_rendered`,
@@ -281,8 +283,8 @@ destination nodes, 24 pool lines) is an ESTIMATE and must be read as one:
 it projects the emitter's idioms onto an itinerary that does not exist,
 since only 0-217 is authored. The observed sample is the 12.
 
-A YES is necessary and nowhere near sufficient — it leaves 35 exact and
-all 5 net rows in the authored window alone. The rest is emitter idiom
+A YES is necessary and nowhere near sufficient — it leaves 38 exact and
+all 9 net rows in the authored window alone. The rest is emitter idiom
 variance (the 330-row `assert_state player_cell` class, the sleep idiom,
 the inventory `items` pin, the in-autoplay assert slot) and two differ
 accounting weaknesses. The lane declined to answer the question because
