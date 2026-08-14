@@ -218,7 +218,11 @@
      "goto": "fence_bought"
     },
     {
-     "_comment": "#438 EQUIPMENT GAPS, death-implement T2. SPEC DEVIATION, argued: the sketch put this at 'the Invrisil enchanter (Hedault sells what respectable shops will not display)'. Canon says the opposite of Hedault -- he refuses work that hurts people or profits from suffering (wiki: Hedault, Vol 3 Ch. 3.36) -- and 'no questions asked on either side of the counter' is this node's OWN standing line. The fence is the character who actually fits the sketch's parenthetical. Gated on brothers_job_done (the friend-of-the-house tier this node's own text_variant already keys on) and appended LAST, so it is hidden at every earlier fixture; hide_when retires it once bought, exactly like the pendant arm above.",
+     "text": "Nothing today.",
+     "goto": "hub"
+    },
+    {
+     "_comment": "#438 EQUIPMENT GAPS, death-implement T2. SPEC DEVIATION, argued: the sketch put this at 'the Invrisil enchanter (Hedault sells what respectable shops will not display)'. Canon says the opposite of Hedault -- he refuses work that hurts people or profits from suffering (wiki: Hedault, Vol 3 Ch. 3.36) -- and 'no questions asked on either side of the counter' is this node's OWN standing line. The fence is the character who actually fits the sketch's parenthetical. Gated on brothers_job_done (the friend-of-the-house tier this node's own text_variant already keys on) and appended LAST, so it is hidden at every earlier fixture; hide_when retires it once bought, exactly like the pendant arm above. ORDER: appended AFTER 'Nothing today.' deliberately -- the hedault hub uses the same idiom ('Just looking.' sits at index 4 with three later arms behind it). It keeps every pre-existing index in this node stable, which is what invrisil_disagreement_talk's fence walk pins.",
      "text": "The little black wand in the banded chest. (30 gold)",
      "requires": {
       "gold": 30,
@@ -243,10 +247,6 @@
       }
      ],
      "goto": "fence_bought"
-    },
-    {
-     "text": "Nothing today.",
-     "goto": "hub"
     }
    ]
   },
