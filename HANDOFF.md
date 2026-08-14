@@ -140,34 +140,11 @@ or superseded session blocks.
   2. **[Ranger] walls identically** at the warden (0.33, mp 0, no
      companion) — same diagnosis as skirmisher's pre-fix 0.26. Out of
      that lane's scope; wants the same kit-gap treatment if ruled.
-- **Design calls still open from #488:** t6/t12/s16 read as a
-  level-budget problem, not capstone power. The other two are CLOSED by
-  the 2026-08-14 drift lane: `beast_master14` 0.63→0.27 is repaired to
-  0.69 (growth broadened to con 1 + str 1, flat rule untouched), and the
-  bonded wolf now meets a counter — `target_rule: "bonded"` answered by
-  [Sunder the Bond] on the Warden, the Awakened and the Matriarch.
-- **The spear family is over the ceiling in Acts I and IV, wanting a
-  ruling.** `holdable_line` (#474) stopped measuring [Spellspear] and
-  [Skirmisher] at `spearmaster` levels the class does not have; at the
-  `warrior` line a player can actually hold, both read 0.88 at Act I and
-  0.92/0.89 at Act IV. The one lever that reaches them is [Piercing
-  Strikes] (2 AP, 1.4x, no bound, against [Power Strike]'s cooldown-gated
-  2.0x at the same [Warrior] L1 rung); capped once per round all four land
-  in window (0.85/0.83/0.85/0.84) — and the SHIP column moves with it by
-  up to 0.12, which at a single seeded run is the steel thread's authored
-  victory pins losing fights. Reverted and surfaced rather than shipped;
-  a cap wants its own lane with the steel-thread re-authoring budgeted.
-- **Two cells the counter cannot reach, wanting a ruling** (measured,
-  `docs/design/spine-viability-table.md` findings 10-11):
-  1. `wild_sage14` at the Warden, 0.96. The wolf is worth +0.87 there and
-     the counter is a STEP, not a slope — mult 2.0 reads 0.94/0.78 for
-     wild_sage/druid, mult 2.2 reads 0.65/0.36, and nothing lands both
-     inside [0.55, 0.85]. The four HP deciding whether one blow is lethal
-     are [Pack Bond]'s. Shipped at the setting that keeps druid in window;
-     wild_sage is SURFACED per NO-AUTO-WIN, not tuned around.
-  2. `act2_cistern_nest` for both bonded spines, 0.90. The counter buys
-     ~0.03 at ANY strength — at a three-body nest the companion's value is
-     its own damage, not the boss's attention.
+- **Design calls still open from #488:** t6/t12/s16 are level budget,
+  not capstone power. #474 closed the other two and left three of its
+  own: `wild_sage14` 0.96, `act2_cistern_nest` 0.90, and the spear family
+  over the ceiling in Acts I/IV. Numbers and reproducers:
+  `docs/design/spine-viability-table.md` findings 10-11.
 
 No other open issue is recorded here as waiting on user taste. Visual eye/ear
 reads remain in `docs/VISUAL-LOG.md`, where they can be accepted or promoted.
