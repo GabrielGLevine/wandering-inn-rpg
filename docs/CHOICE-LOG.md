@@ -31,15 +31,51 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### User rulings 2026-08-13 (#438 wave-close batch)
 
-- **Resonance semantics DEFERRED to after this tag; Hedault upgrades
-  may hold or LOWER resonance (user, 2026-08-14).** The shipped fiction
-  calls resonance interference ("before the pieces start arguing") while
-  the shipped numbers scale it UP with power — canon says better gear
-  interferes LESS, i.e. the inverse. Full ruling parked on #494 with the
-  evidence; lanes write no resonance doctrine meanwhile, and fix
-  domination defects as defects. Approved direction: a Hedault trueing
-  keeping resonance flat or reducing it is the right upgrade axis — his
-  craft buys room to wear more, which beats +1 HP.
+### User rulings 2026-08-14 (post-wave decision batch, 11 calls)
+
+- **M3.6 §6.3 tightening EXTENDS to compiled-only `wait_for_event`**
+  (reclassifies 12 of 50; M4 unblocks on the remaining 38 exact + 9
+  net). A compiled-only wait is strictly stricter and cannot hide — if
+  it never fires the run fails, which `ITINERARY_RUN_GREEN` gates.
+  Rejected: per-node emitter keys, which push corpus knowledge back
+  into itineraries.
+- **[Ranger]'s Warden wall gets a kit-gap lane** like skirmisher's.
+  BINDING: must not push any other cell above 0.85.
+- **`act2_cistern_nest` 0.40 ACCEPTED as an intended wall.** Reachable,
+  but the cheapest reaching edit trades one wall for two ceiling
+  breaches (act3→0.88, act1→0.96), and Acts I–IV measure PARENT lines —
+  a mid-act wall before consolidation is correct.
+- **The six WINDOW DRIFT cells are ONE lane** (spellspear III 0.92;
+  wild_sage II/III/V 0.91/0.90/0.98; druid II/III 0.91/0.90) — one
+  re-window covers the set; wild_sage V is the NO-AUTO-WIN case. Same
+  lane repairs `beast_master14` 0.63→0.27 by **broadening growth to
+  con 1 + str 1**; the flat-growth rule itself stands.
+- **The Warden gains a COUNTER to companions**, not a companion nerf:
+  the wolf is worth +0.79 there but is the spine's identity, and a boss
+  that can threaten a companion generalises to every future one.
+- **Book 17 = the WIKI's ebook index** (*Lady of Fire*, Vol 7 Pt 3),
+  superseding this repo's *Garden of Sanctuary* (Vol 7 Pt 1) reading.
+  LOOSENS the bar ~18 chapters, so nothing shipped needs re-auditing;
+  the discrepancy note in `docs/design/spoiler-cutoff.md` retires.
+- **"Runner's Sandals of the Second Wind" CLEARED** — [Second Wind]
+  already ships as a grandfathered Skill, so the name introduces no new
+  canon element.
+- **[Blademaster]'s aspiration promotes to [Sword Saint]** (wiki-verify
+  at build): canon groups [Blademaster] alongside [Swordmaster], so the
+  old text aimed a class at a peer.
+- **Over-levelled harness builds get FIXED, not relabelled** —
+  t6/t12/s16 measure 17.8–24.7 effective power against a 14–16 band, so
+  any "capstone too strong" reading of those rows is unsound.
+- **Eye-gates ride a PREPARED SAVE** (Playtest-States): autoplay cannot
+  cast, so the PC death-cast recolour needs a save the user loads.
+
+- **Resonance semantics DEFERRED past this tag (user, 2026-08-14);
+  evidence and the full question on #494.** The shipped fiction calls
+  resonance interference while the shipped numbers scale it UP with
+  power; canon implies the inverse. Lanes write NO resonance doctrine
+  meanwhile and fix domination defects as defects. Approved direction:
+  a Hedault trueing holding or LOWERING resonance is the right upgrade
+  axis — his craft buys room to wear more.
 - **Rename lanes change RENDERS of a class name, never common-noun
   prose that shares the word (controller call, 2026-08-14).** Pisces'
   "you hold yourself like a swordsman" survives the [Blademaster]
@@ -58,13 +94,11 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 - **Act V capstone trivialization: trim capstone stat growth AND/OR
   raise Warden difficulty, then re-balance builds that fall too weak
-  (user, 2026-08-13).** Binding design principle: NO build auto-wins —
-  any build the Warden can never beat regardless of tuning is a red
-  flag to surface, not tune around. Warden-side movement is hereby a
-  sanctioned frozen-block exception (the #451 shape); the lane is
-  measurement-led: capstone growth trims first, warden second, full
-  re-window + #441-pattern re-fixture blast after (every act5 row +
-  steel thread move), too-weak spines get composition/kit relief.
+  (user, 2026-08-13).** Binding: **NO build auto-wins**, and any build
+  the Warden can never beat regardless of tuning is a red flag to
+  surface, not tune around. Warden-side movement is a sanctioned
+  frozen-block exception; too-weak spines get composition/kit relief.
+  SHIPPED #488 (every at-band climax row now in window).
 - **Skirmisher walls are a kit/Skill gap (user, 2026-08-13).** Fill
   the kit: measure what the spearmaster x archer spine lacks at act2
   and act5, propose skill/kit additions (names via the clearance
@@ -79,13 +113,11 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   DISTINCT names (user, 2026-08-13).** Coverage authoring for all six
   sets proceeds. Naming layer amended: a pair with real combined
   identity (e.g. swordsman x ice_mage) resolves to its OWN excitingly
-  named class ([Frostblade Warrior]/[Frostblade Knight] register), NOT
-  reuse into the base target — base x base pairs (warrior x mage ->
-  [Spellsword]) keep the base target. Controller produces the full
-  wiki-verified name-mapping proposal on #485 for approval (post-bar
-  candidates via the clearance flow). Also ruled: **swordsman renames
-  to [Blademaster]** (display name; the shipped id stays frozen) —
-  rename lane re-derives every prose/pin surface.
+  named class ([Frostblade Knight] register), NOT reuse into the base
+  target — base x base pairs (warrior x mage → [Spellsword]) keep the
+  base target. Name-mapping proposal lives on #485. Also ruled:
+  **swordsman renames to [Blademaster]** (display only; id frozen) —
+  SHIPPED #492.
 
 - **Class AND Skill names past the spoiler bar are PROPOSABLE with
   user clearance (user, 2026-08-13, extended to Skills same day).** The
@@ -102,12 +134,9 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   (approved reuse pattern); spearmaster x necromancer follows the
   spear-owns-its-hybrids precedent (exempt pending naming unless
   authored in the same pass). Target name wiki-verifies at build.
-  Rides the combined class-authoring lane with [Wild Sage] +
-  [Skirmisher] (both approved same day). SUPERSEDED MECHANISM NOTE
-  (post-#482 narrowing): reuse mappings no longer get a maps_to
-  annotation — a reuse pair goes live only when its coverage is
-  AUTHORED (upgrades/inherits rows proving no Skill loss); the class
-  lane reports the per-pair coverage tables for the naming batch.
+  Post-#482: a reuse pair goes live only when its coverage is AUTHORED
+  (upgrades/inherits rows proving no Skill loss), not via a `maps_to`
+  annotation.
 
 - **Orphan consolidation mappings APPROVED as inventoried**; swordsman
   x mage (and its ice/fire siblings) map into [Spellsword] — target
@@ -143,11 +172,9 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 - **CONSOLIDATION IS AUTOMATIC (supersedes the #472 ruling request).**
   No player choice: consolidation fires when qualified, with two
   binding constraints — (1) it never removes existing Skills (upgrades
-  allowed), (2) advancement paths for consolidated classes stay OPEN:
-  a [Spellsword] (warrior x mage) can still level toward the warrior x
-  ice_mage target by meeting ice_mage requirements — consolidated
-  classes carry their parents' lineage credit for future
-  consolidations. Design spec before implementation (Fable).
+  allowed), (2) advancement paths stay OPEN: a [Spellsword] can still
+  level toward the warrior × ice_mage target, i.e. consolidated classes
+  carry their parents' lineage credit. SHIPPED #482.
 
 ### Sol wave ≥434 — controller calls under wave autonomy (2026-08-12)
 
@@ -165,14 +192,13 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   shape would pass.
 
 - **#450 spec contradictions ruled (three, all intent-preserving).**
-  (1) [Evil Eye] gains `field: true` + an occult ambient read (spec §2
-  already repoints hollow_true_knot to it; combat-only was a data
-  oversight; prints stay distinct from Tactician vocabulary). (2) Free
-  scenery reads apply to ARMLESS props only; armed props (plate, cache,
-  bed, doors) keep their interact action and retire their standalone
-  flavor reads — except danger-bearing props, which the trap-perception
-  family must cover. Rejected: a new free-inspection mechanism (scope
-  creep). (3) Passive tactic-family Skills emit `tactic_used` at their
+  (1) [Evil Eye] gains `field: true` + an occult ambient read
+  (combat-only was a data oversight). (2) Free scenery reads apply to
+  ARMLESS props only; armed props keep their interact action and retire
+  standalone flavor reads — except danger-bearing props, which the
+  trap-perception family must cover. Rejected: a new free-inspection
+  mechanism (scope creep). (3) Passive tactic-family Skills emit
+  `tactic_used` at their
   proc site (weapon-family tally precedent); actives tally on use.
   Rejected: an ap_cost==0 activation engine change (blast radius =
   every passive becomes slottable).
@@ -218,15 +244,11 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   2026-08-12, #449).** Spearmaster + mage does NOT lineage-carry into
   [Spellsword]; it consolidates into its own class — [Spellspear] —
   spellsword-baselined consolidation skills, spear-flavored, lineage
-  kit via inherits. This is #347's high-level-unique-class case
-  realized on the existing static machinery; rejected alternatives:
-  consolidation recipes accepting evolved parents into the SAME target
-  (erases lineage identity), and evolution deferring while
-  consolidation is in reach. Full implementable spec on #449.
-  **WIKI VERIFY DISCHARGED (2026-08-13, before the id was cut):**
-  no canon collision for [Spellspear] or the [Magic Spearmaster]
-  fallback; the wiki's attested [Spellsword] ("Hybrid [Swordsman]/
-  [Mage]") corroborates the split. [Spellspear] SHIPPED as the id.
+  kit via inherits. This is #347's high-level-unique-class case on the
+  existing static machinery; rejected: recipes accepting evolved parents
+  into the SAME target (erases lineage identity), and evolution
+  deferring while consolidation is in reach. Spec on #449; wiki verify
+  discharged before the id was cut, [Spellspear] SHIPPED.
 - **The warden wakes for every descent; endings stay three-path
   (2026-08-12).** #437's measurements refuted the "warden stat wall"
   (competent-policy WIN 0.73 at the shipped build; 0.77 at band) — so
@@ -235,25 +257,20 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   shipped endings (open / fed / re-ward) become post-fight resolutions,
   and sneak holders get an in-fight edge, never a skip. Preserves the
   v0.14 three-path seal conclusion AND the chokepoint directive.
-  Shipped mechanism: the alcove's `encounter_when` reads
-  `read_the_feeding_ward` and its `on_victory` banks
-  `seal_warden_downed`, which the choice row compounds onto its
-  ward-fact gate. Two durable constraints fall out. (1) The seal door's
-  `door_when` is deliberately NOT gated on the new counter: it would be
-  inert behind the choice gate, and `seal_opened` is a frozen shipped id
-  whose existing holders carry nothing to satisfy a second gate — the
-  refusal a player meets is a `variants` rung, not a closed door. (2) A
-  save holding any resolution counter without `seal_warden_downed` is
-  unreachable and `test_fixture_coherence` now fails it, so the bypass
-  cannot be reopened by a fixture edit.
+  Two durable constraints (mechanism detail in #440's PR body): (1) the
+  seal door's `door_when` is deliberately NOT gated on the new counter —
+  it would be inert behind the choice gate, and `seal_opened` is a
+  frozen shipped id; the refusal is a `variants` rung, not a closed
+  door. (2) A save holding any resolution counter without
+  `seal_warden_downed` is unreachable and `test_fixture_coherence`
+  fails it, so the bypass cannot be reopened by a fixture edit.
 - **QA proves completability; sims prove balance (user finding,
-  2026-08-11).** Dumb-autoplay victory pins had become a balance
-  ratchet: retunes that make a pinned fight autoplay-losable red CI, so
-  fights stay winnable by the weakest policy and ship ~a tier easier
-  than intended. Doctrine: pinned combat canonicals fixture at/over
-  band so the dumb policy wins deterministically; encounter difficulty
-  is tuned against #437's competent-policy-at-band column. Never tune
-  an encounter to green an autoplay pin.
+  2026-08-11).** Dumb-autoplay victory pins were a balance ratchet:
+  fights stayed winnable by the weakest policy and shipped ~a tier easy.
+  Doctrine: pinned combat canonicals fixture at/over band so the dumb
+  policy wins deterministically; difficulty is tuned against the
+  competent-policy-at-band column. **Never tune an encounter to green an
+  autoplay pin.**
 - **Combat chokepoints are sanctioned leveling gates (user ruling,
   2026-08-11 debrief).** Acts must require leveling progress: an
   unwinnable spine encounter is the intended signal to do side content
@@ -261,28 +278,19 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   its item bypass (worn [Invisibility] sneak-past) is a defect, not a
   feature; every player fights it (#440). This REFINES the three-pillars
   directive: pillars govern breadth of viable playstyles, not that every
-  gate is bypassable. The worn-abilities systems mechanic itself stands;
-  the finale's exposure to it goes. Sequenced: bands → warden retune →
-  steel-thread Act V reauthored to fight at band.
+  gate is bypassable. The worn-abilities mechanic stands; the finale's
+  exposure to it goes.
 
 - **The steel thread is continuous (user directive).** One PC, title to
-  epilogue, true act order, zero `install_fixture`/`teleport` (grep-gated);
-  rewritten in place — the stitched six-fixture album misrepresented act
-  order and mixed four PC iterations. In-run controller calls: reward kept
-  at Selys (spine purchases need coin), crate + cisterns by force, halls by
-  Ksmvr's plates, the favor mediated, Coyle exposed, seal OPENED with the
-  warden passed by cloak; night-watch wolves replaced by the track leg
-  (night phase unschedulable on a portal route); teleport-only album legs
-  (garden/barracks/runners-guild) dropped.
-- **Worn-accessory abilities are known while worn (user ruling).** The
-  measured wall behind it: the Seal Warden is unwinnable by the continuous
-  build and none of the three non-fight forks was reachable, while Zevara's
-  moon_bone_amulet grants [Invisibility] that `fold_abilities` confined to
-  combat. `known_skills()` now folds equipped-accessory abilities; the
-  field bar re-renders on equip/unequip; effect-text drops "in combat"
-  exactly for field-capable abilities (invisibility, eagle_eyes). Rejected
-  alternatives: warden retune (erases the intended wall), mage-grind route
-  (8 hand-scripted nights), shipping the red finale.
+  epilogue, true act order, zero `install_fixture`/`teleport`
+  (grep-gated); the stitched six-fixture album misrepresented act order
+  and mixed four PC iterations. Its in-run route choices are recorded in
+  `qa/STEEL-THREAD.md`.
+- **Worn-accessory abilities are known while worn (user ruling).**
+  `known_skills()` folds equipped-accessory abilities; the field bar
+  re-renders on equip/unequip; effect-text drops "in combat" exactly for
+  field-capable abilities. Rejected: warden retune (erases the intended
+  wall), mage-grind route, shipping the red finale.
 
 
 ### Skills, classes, and field interactions
