@@ -104,25 +104,25 @@ or superseded session blocks.
   `damage_mod`, so that ceiling is the spearmaster line, not the weapon.
   The sketch's §0 expectation that new gear would ease it is
   mechanically false. Needs adjudication as a class/spine question.
-- **M3.6 EXIT RULING (#434, blocks M4) — ripe. M3.6 itself MERGED
-  2026-08-14 as a PARTIAL milestone (#493); the ruling is what remains.** §6.3 lets pins be "TIGHTER and never looser" but
-  only for `assert_*` actions, so a compiled-only `wait_for_event` is
-  exact-class fatal even when the compiled run is strictly stricter than
-  the shipped one. **Ruling wanted:** extend the tightening allowance to
-  `wait_for_event`, or refuse it and add a per-node emitter key per wait
-  (which pushes corpus knowledge back into itineraries — the thing the
-  compiler exists to remove). HONEST SIZE (twice corrected by gates):
-  a YES reclassifies **12 of the 50** exact-class rows in the authored
-  window, independently typed as 3 `dialogue_node`, 2 `map_changed`,
-  2 `ui_dialogue_rendered`, and one each of `class_gained`,
-  `entity_removed`, `phase_changed`, `ui_inventory_selection_rendered`,
-  `ui_sleep_veil_rendered`. **38 exact + all 9 net rows survive it** —
-  necessary, nowhere near sufficient. The ~134 corpus figure is an
-  ESTIMATE projected onto an itinerary that does not exist (only steps
-  0-217 are authored); 12-of-50 is the only measurement. The residue is
-  emitter idiom variance, each class named and counted in
-  qa/STEEL-THREAD.md. M4 stays blocked; Acts II–V (2337 of 2569 steps)
-  unauthored.
+- **M3.6 EXIT (#434) — tightening ruling LANDED 2026-08-14; M4 STILL
+  BLOCKED.** M3.6 merged as a PARTIAL milestone (#493). The user ruled
+  that §6.3's "TIGHTER and never looser" **extends to a compiled-only
+  `wait_for_event`** (rejected: per-node emitter keys). `goldens.py`
+  implements it one-way only — a shipped-only step of any action stays a
+  dropped claim, a compiled-only step of any other action stays extra
+  behaviour, a looser payload pin stays fatal — and prints every
+  reclassified row in its own untruncated report block.
+  Differ against shipped 0-217 went `50 exact / 9 net` ->
+  **`38 exact-class, 9 net-class, 9 tolerance-class, 25 tightening(s),
+  12 compiled-only wait(s) reclassified`**. The 12 are typed as 3
+  `dialogue_node`, 2 `map_changed`, 2 `ui_dialogue_rendered`, and one
+  each of `class_gained`, `entity_removed`, `phase_changed`,
+  `ui_inventory_selection_rendered`, `ui_sleep_veil_rendered`.
+  **The golden still FAILS, so §7's M3.6 exit is NOT met and M4 does not
+  dispatch.** The residue is emitter idiom variance (330-row position-pin
+  class, sleep idiom, `items` pin, in-autoplay hotbar assert, pickup
+  toast) plus two differ accounting weaknesses, each named and counted in
+  qa/STEEL-THREAD.md. Acts II–V (2337 of 2569 steps) still unauthored.
 - **Balance rulings raised by the skirmisher lane (2026-08-14), both
   escalated rather than improvised:**
   1. `act2_cistern_nest` skirmisher 0.40 WALL. Acts I–IV measure the

@@ -258,40 +258,64 @@ without a `dialogue_started` wait, and it did not model the closing-row
 placement at all.
 
 Differ, against shipped 0-217: pre-lane `50 exact / 11 net`, M3.6
-`50 exact / 9 net`. The lane ships exactly ONE `goldens.py` change and it
-is pure accounting: gaps of unmatched spine steps are carried forward,
-with a two-sided COVERAGE invariant proving nothing is dropped from
-comparison, so it cannot mask a difference. A second change — putting the
+`50 exact / 9 net`, and **`38 exact / 9 net` since the 2026-08-14
+tightening ruling below**. The M3.6 lane shipped exactly ONE `goldens.py`
+change and it was pure accounting: gaps of unmatched spine steps are
+carried forward, with a two-sided COVERAGE invariant proving nothing is
+dropped from comparison, so it cannot mask a difference. A second change — putting the
 pinned value in the alignment key — was tried and REVERTED: it fixes a
 real mis-pairing weakness but also moves a legitimate subsuming tightening
 into exact-class fatal, which is a change to which class is fatal. Policy,
 not accounting, and not a lane's to make inside the milestone it gates.
 
-**The open ruling, stated without overselling it.** Does §6.3's "pins
-may be TIGHTER and never looser" extend from `assert_*` actions to a
-compiled-only `wait_for_event`? Inside the authored 0-217 window a YES
-reclassifies **12 of 50** exact rows — measured, and typed in
-`qa/STEEL-THREAD.md`: 3 `dialogue_node`, 2 `ui_dialogue_rendered`, 2
-`map_changed`, and one each of `class_gained`, `entity_removed`,
-`phase_changed`, `ui_inventory_selection_rendered`,
-`ui_sleep_veil_rendered`. Only 5 of the 12 are in the dialogue idioms the
-residual table names; the ruling covers all 12 because it is about the
-ACTION, not the idiom.
+**The tightening ruling (user, 2026-08-14): YES, §6.3 extends.** "Pins
+may be TIGHTER and never looser" now covers a compiled-only
+`wait_for_event`, not just `assert_*`. A wait the shipped script does not
+make is strictly the stricter claim and it cannot hide: if the event
+never fires the run does not finish, and `ITINERARY_RUN_GREEN` gates
+that. The rejected alternative was a per-node emitter key per wait, which
+pushes corpus knowledge back into itineraries — the thing the compiler
+exists to remove.
+
+**The allowance is ONE-WAY, and that asymmetry is the safety property.**
+The compiler may claim MORE, never less. So a compiled-only step of any
+other action is still extra behaviour and still exact-class fatal; a
+SHIPPED-only step of any action, `wait_for_event` included, is a dropped
+claim and stays fatal in every case; and a compiled wait whose payload
+pin is a SUBSET of the shipped one is the loosening §6.3 forbids.
+`WaitTighteningTest` in `scripts/itinerary/tests/test_m36_contract.py`
+pins each direction against a deliberate break — making the allowance
+symmetric absorbs 7 real dropped claims and reds there.
+
+Reclassified rows are **logged, never waved through**: the differ prints
+every one in its own report block (`compiled step N [node]
+wait_for_event type=… payload_contains=…`), and that block ignores the
+`--limit` truncation the other classes obey.
+
+Measured inside the authored 0-217 window, the ruling reclassifies
+**12 of 50** exact rows — typed in `qa/STEEL-THREAD.md`: 3
+`dialogue_node`, 2 `ui_dialogue_rendered`, 2 `map_changed`, and one each
+of `class_gained`, `entity_removed`, `phase_changed`,
+`ui_inventory_selection_rendered`, `ui_sleep_veil_rendered`. Only 5 of
+the 12 are in the dialogue idioms the residual table names; the ruling
+covers all 12 because it is about the ACTION, not the idiom.
 
 The corpus-wide figure of ~134 rows (60 conversation opens, 50
 destination nodes, 24 pool lines) is an ESTIMATE and must be read as one:
 it projects the emitter's idioms onto an itinerary that does not exist,
 since only 0-217 is authored. The observed sample is the 12.
 
-A YES is necessary and nowhere near sufficient — it leaves 38 exact and
-all 9 net rows in the authored window alone. The rest is emitter idiom
-variance (the 330-row `assert_state player_cell` class, the sleep idiom,
-the inventory `items` pin, the in-autoplay assert slot) and two differ
-accounting weaknesses. The lane declined to answer the question because
-widening a gate to pass its own milestone is the wrong shape of work.
+**The ruling was necessary and is nowhere near sufficient.** It leaves
+**38 exact and all 9 net rows** in the authored window alone. The rest is
+emitter idiom variance (the 330-row `assert_state player_cell` class, the
+sleep idiom, the inventory `items` pin, the in-autoplay assert slot) and
+two differ accounting weaknesses.
 
-**M4 STAYS BLOCKED.** The golden does not pass the tolerance differ, so
-§7's M3.6 exit is NOT met and the M4 dispatch condition is unchanged.
+**M4 STAYS BLOCKED.** The golden still does not pass the tolerance differ
+(`GOLDEN FAIL: 38 exact-class, 9 net-class, 9 tolerance-class, 25
+tightening(s), 12 compiled-only wait(s) reclassified`), so §7's M3.6 exit
+is NOT met and the M4 dispatch condition is unchanged. What the ruling
+unblocked is the QUESTION, not the milestone.
 
 ## 4. Emitter contract
 

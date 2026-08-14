@@ -705,6 +705,141 @@ class GoldenAccountingTest(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
+# §6.3's tightening allowance, extended to `wait_for_event` (ruling 2026-08-14)
+# ---------------------------------------------------------------------------
+
+
+class WaitTighteningTest(unittest.TestCase):
+    """The ruling that unblocked M4's measurement, and the asymmetry it rests on.
+
+    A compiled-only `wait_for_event` is strictly STRICTER than the shipped
+    script and it cannot hide: if the event never fires the run does not
+    finish, and `ITINERARY_RUN_GREEN` gates that. So it is a tightening.
+
+    Every assertion below is paired with the direction that must NOT move. The
+    allowance is one-way -- the compiler may claim MORE, never less -- and a
+    lane that widens it symmetrically has removed the gate, not relaxed it.
+    """
+
+    ANCHOR = {"action": "press", "name": "interact"}
+
+    def test_a_compiled_only_wait_is_a_tightening(self) -> None:
+        report = diff(
+            {"steps": [{"action": "wait_for_event", "type": "map_changed"}, self.ANCHOR]},
+            {"steps": [self.ANCHOR]},
+        )
+        self.assertTrue(report.passed, report.render())
+        self.assertEqual(report.exact, [])
+        self.assertEqual(len(report.tightened_waits), 1)
+
+    def test_the_allowance_does_NOT_run_the_other_way(self) -> None:
+        """A wait the compiler stopped making is a DROPPED CLAIM. Still fatal."""
+        report = diff(
+            {"steps": [self.ANCHOR]},
+            {"steps": [{"action": "wait_for_event", "type": "map_changed"}, self.ANCHOR]},
+        )
+        self.assertFalse(report.passed)
+        self.assertEqual(len(report.exact), 1)
+        self.assertIn("compiler dropped this claim", report.exact[0])
+        self.assertEqual(report.tightened_waits, [])
+
+    def test_the_allowance_covers_ONLY_the_wait_action(self) -> None:
+        """A compiled-only step of any other kind is extra BEHAVIOUR, not a
+        stricter claim about the same run, and stays exact-class fatal."""
+        for extra in (
+            {"action": "press", "name": "confirm"},
+            {"action": "screenshot", "name": "99_extra"},
+            {"action": "combat_autoplay", "policy": "competent"},
+        ):
+            with self.subTest(action=extra["action"]):
+                report = diff({"steps": [self.ANCHOR, extra]}, {"steps": [self.ANCHOR]})
+                self.assertFalse(report.passed, report.render())
+                self.assertIn("shipped has no counterpart", report.exact[0])
+
+    def test_a_LOOSER_compiled_wait_is_still_fatal(self) -> None:
+        """The allowance is about a wait the shipped side does not MAKE. A wait
+        it makes more tightly than the compiler is the loosening §6.3 forbids,
+        and it is a matched pair, so it never reaches this branch at all."""
+        report = diff(
+            {"steps": [{"action": "wait_for_event", "type": "map_changed"}, self.ANCHOR]},
+            {"steps": [{"action": "wait_for_event", "type": "map_changed",
+                        "payload_contains": {"map": "inn"}}, self.ANCHOR]},
+        )
+        self.assertFalse(report.passed)
+        self.assertEqual(report.tightened_waits, [])
+
+    def test_every_reclassified_row_is_LOGGED_and_never_truncated(self) -> None:
+        """The ruling's own condition: absorbed rows stay visible.
+
+        `render(limit)` caps the other blocks, and a report that says "... and
+        118 more" about the class it just stopped failing on is a silent pass
+        wearing a receipt. So this block ignores the limit -- pinned at
+        limit=1, the setting that would hide 49 of 50 rows.
+        """
+        waits = [{"action": "wait_for_event", "type": f"event_{n}"} for n in range(50)]
+        report = diff({"steps": waits + [self.ANCHOR]}, {"steps": [self.ANCHOR]})
+        self.assertTrue(report.passed, report.summary())
+        self.assertEqual(len(report.tightened_waits), 50)
+        rendered = report.render(limit=1)
+        self.assertIn("50 compiled-only wait(s) reclassified", rendered)
+        for n in range(50):
+            self.assertIn(f"type=event_{n} ", rendered, f"event_{n} was not logged")
+
+    def test_the_log_line_names_the_TYPE_even_behind_a_long_payload(self) -> None:
+        """The trap `_describe` walks into, which is why waits get their own.
+
+        `_describe` sorts keys and truncates at 220 chars, so a wait pinned on
+        a 200-character line of dialogue loses `type` off the end -- the one
+        field an auditor of this allowance needs most. The wait line leads with
+        it instead.
+        """
+        step = {"action": "wait_for_event", "type": "dialogue_node", "_itin": "act1.spar",
+                "payload_contains": {"speaker": "Relc", "text": "x" * 400}}
+        report = diff({"steps": [step, self.ANCHOR]}, {"steps": [self.ANCHOR]})
+        row = report.tightened_waits[0]
+        self.assertIn("type=dialogue_node", row)
+        self.assertIn("[act1.spar]", row)
+        self.assertIn("compiled step 0", row)
+        self.assertIn('"speaker": "Relc"', row)
+
+    def test_the_allowance_absorbs_TWELVE_rows_of_the_authored_golden(self) -> None:
+        """The measurement the ruling was made on, re-derived from the corpus.
+
+        Not a compile (that needs the Godot oracle); the shipped prefix diffed
+        against ITSELF plus the twelve waits the compiler emits and the corpus
+        does not. What is pinned is the accounting: twelve compiled-only waits
+        leave exact-class, and nothing else moves with them.
+        """
+        prefix = SHIPPED["steps"][:218]
+        extra_waits = [
+            ("ui_dialogue_rendered", None), ("dialogue_node", None),
+            ("dialogue_node", {"speaker": "Relc"}), ("map_changed", {"map": "inn"}),
+            ("phase_changed", {"slept": True}), ("class_gained", {"class": "warrior"}),
+            ("ui_sleep_veil_rendered", None), ("map_changed", {"map": "inn"}),
+            ("ui_dialogue_rendered", None), ("dialogue_node", None),
+            ("ui_inventory_selection_rendered", {"cursor": 1}),
+            ("entity_removed", {"id": "goblin_encounter_1"}),
+        ]
+        compiled = list(prefix)
+        for event, payload in extra_waits:
+            step = {"action": "wait_for_event", "type": event}
+            if payload is not None:
+                step["payload_contains"] = payload
+            compiled.append(step)
+        report = diff({"steps": compiled}, {"steps": list(prefix)})
+        self.assertEqual(len(report.tightened_waits), 12, report.summary())
+        self.assertEqual(report.exact, [], report.render())
+        self.assertEqual(report.net, [], report.render())
+
+        # MUTATION: turn one of them around -- a wait only the CORPUS makes --
+        # and the accounting must swing to fatal rather than absorb it.
+        dropped = diff({"steps": list(prefix)}, {"steps": compiled})
+        self.assertFalse(dropped.passed)
+        self.assertEqual(len(dropped.exact), 12, dropped.render())
+        self.assertEqual(dropped.tightened_waits, [])
+
+
+# ---------------------------------------------------------------------------
 # THE PIPELINE TIER: node spec -> planner -> emitted steps
 # ---------------------------------------------------------------------------
 #

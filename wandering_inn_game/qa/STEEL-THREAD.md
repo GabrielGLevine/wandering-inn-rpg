@@ -467,9 +467,20 @@ Against the shipped 0-217 the tolerance differ reports:
 |---|---|
 | Pre-lane (`goldens.py` @ 7904953e) | `GOLDEN FAIL: 50 exact-class, 11 net-class, 8 tolerance-class, 25 tightening(s)` |
 | M3.6 (one accounting fix, below) | `GOLDEN FAIL: 50 exact-class, 9 net-class, 9 tolerance-class, 25 tightening(s)` |
+| **Current** — after the 2026-08-14 tightening ruling | `GOLDEN FAIL: 38 exact-class, 9 net-class, 9 tolerance-class, 25 tightening(s), 12 compiled-only wait(s) reclassified` |
 
-**The differ was edited inside the milestone it gates, so it carries exactly
-ONE change and that change is pure accounting.** A gap is the walk before a
+Reproduce the current row with the compiled prefix and the shipped 0-217 slice:
+
+```sh
+python3 scripts/itinerary/compile_itinerary.py scripts/itinerary/steel_thread.yaml --out /tmp/st.json
+python3 -c 'import json;s=json.load(open("wandering_inn_game/qa/scripts/steel_thread.json"));s["steps"]=s["steps"][:218];json.dump(s,open("/tmp/st_shipped.json","w"))'
+python3 -m scripts.itinerary.goldens /tmp/st.json /tmp/st_shipped.json
+```
+
+**The M3.6 lane edited the differ inside the milestone it gates, so it made
+exactly ONE change and that change was pure accounting.** (The second row of
+the table above is a later, separately-ruled change — see THE RULING below.)
+A gap is the walk before a
 spine step, and an unmatched spine step used to have its gap dropped on the
 floor -- so a walk sitting behind a compiled-only assert was compared to
 nothing at all. The invariant that makes carrying it forward a STRENGTHENING
@@ -507,37 +518,54 @@ measured corpus-wide, plus two differ accounting weaknesses:
 | Class | Corpus rows | Why it is fatal today |
 |---|---|---|
 | Shipped `assert_state player_cell` after a walk leg; the emitter pins only after a transition | 330 | Dropped claim -> exact-class |
-| Conversation open: the compiler waits `dialogue_node` before `ui_dialogue_shown` (the replay self-check requires it, two reds bought the rule); 3 of 63 corpus opens do | 60 | Compiled-only `wait_for_event` |
-| Destination node: the compiler always waits the row's own `dialogue_node`; 75 of 125 continuing confirms here do | 50 | Compiled-only `wait_for_event` |
-| Pool line: the compiler also waits `ui_dialogue_rendered`; this script never does | 24 | Compiled-only `wait_for_event` |
-| Sleep: the compiler waits `phase_changed` and pins `classes`; this script pins the class toast, `ui_toast_rendered {from_start}` and `ui_sleep_veil_rendered {lines}` | 5 sleeps | Both directions |
+| ~~Conversation open: the compiler waits `dialogue_node` before `ui_dialogue_shown`~~ | ~~60~~ | **CLEARED by the 2026-08-14 ruling** — compiled-only `wait_for_event` is now a logged tightening |
+| ~~Destination node: the compiler always waits the row's own `dialogue_node`~~ | ~~50~~ | **CLEARED, same ruling** |
+| ~~Pool line: the compiler also waits `ui_dialogue_rendered`~~ | ~~24~~ | **CLEARED, same ruling** |
+| Sleep: the compiler waits `phase_changed` and pins `classes`; this script pins the class toast, `ui_toast_rendered {from_start}` and `ui_sleep_veil_rendered {lines}` | 5 sleeps | Both directions — the compiled-only half is now a tightening, the SHIPPED-only half is still a dropped claim |
 | `ui_inventory_shown {items: N}`: the emitter's wait carries no payload, which is LOOSER | 3 | §6.3 forbids a looser pin |
 | `assert_event_logged` inside an autoplayed board (`ui_hotbar_rendered {slots}`) | 2 | Autoplay has no slot for an assert between the turn and the shot |
 | `pickup`'s `"Got: <item>"` toast | 1 | The amendment's derivable list is deliberately toast-free |
 | Differ: a trailing bump-to-face reads as movement in `_net` | part of the 9 net rows | The bump sets facing and moves nobody, but `_net` cannot know the target cell is blocked |
 | Differ: repeated anchors mis-pair (`press interact`, `assert_state player_cell`) | the rest of the 9 net rows | The alignment key omits the pressed/pinned VALUE, so a compiled-only spine step slides the pairing; fixing it is the policy change this lane reverted |
 
-**WHAT THE OPEN RULING WOULD AND WOULD NOT BUY.** §6.3's tightening allowance
-covers only `assert_*` actions, so a compiled-only `wait_for_event` reads as an
-exact-class fatal even where the compiled run is strictly the stricter one.
-M3.5 reported this about the conversation-open `dialogue_node`; the M3.6
-amendment did not rule on it. The question is whether "pins may be TIGHTER and
-never looser" extends from `assert_*` to a compiled-only `wait_for_event`.
+**THE RULING (user, 2026-08-14): §6.3's tightening allowance EXTENDS to a
+compiled-only `wait_for_event`.** It used to cover only `assert_*` actions, so
+a wait the shipped script does not make read as exact-class fatal even where
+the compiled run is strictly the stricter one. It is a tightening now: if the
+event never fires the run does not finish, and `ITINERARY_RUN_GREEN` gates
+that, so the claim cannot hide. Rejected alternative: a per-node emitter key
+per wait, which pushes corpus knowledge back into itineraries.
 
-**MEASURED, inside the authored 0-217 window.** A YES reclassifies exactly
-**12 of the 50** exact rows. Typed, from the differ's own output:
+**The allowance runs ONE WAY only.** A compiled-only step of any other action
+is extra behaviour and still fatal; a SHIPPED-only step of any action,
+`wait_for_event` included, is a dropped claim and still fatal; a compiled wait
+whose payload pin is a subset of the shipped one is the loosening §6.3
+forbids. Making it symmetric absorbs 7 real dropped claims in this window
+alone (`38 exact` -> `31`), which is why `WaitTighteningTest` in
+`scripts/itinerary/tests/test_m36_contract.py` pins each direction against a
+deliberate break.
 
-| Rows | Wait |
-|---|---|
-| 3 | `dialogue_node` (1 conversation-open, 2 destination) |
-| 2 | `ui_dialogue_rendered` (pool line) |
-| 2 | `map_changed` |
-| 1 each | `class_gained`, `entity_removed`, `phase_changed`, `ui_inventory_selection_rendered`, `ui_sleep_veil_rendered` |
+**Reclassified rows are logged, not waved through.** The differ prints each
+one — `compiled step N [node] wait_for_event type=… payload_contains=…` — in
+its own report block, and that block ignores the `--limit` truncation the
+other classes obey. An allowance that stopped being auditable is a hole.
 
-Only **5 of those 12** sit in the three dialogue-idiom classes tabled above;
+**MEASURED, inside the authored 0-217 window: exactly 12 of the 50** exact
+rows moved. Typed, from the differ's own output:
+
+| Rows | Wait | Node |
+|---|---|---|
+| 3 | `dialogue_node` (1 conversation-open, 2 destination) | `act1.spar` ×2, `act1.gift` |
+| 2 | `ui_dialogue_rendered` (pool line) | `act1.spar`, `act1.gift` |
+| 2 | `map_changed` | `act1.upstairs.seam`, `act1.gift` |
+| 1 each | `class_gained`, `phase_changed`, `ui_sleep_veil_rendered` | `act1.sleep.warrior` |
+| 1 | `ui_inventory_selection_rendered` | `act1.equip.spear` |
+| 1 | `entity_removed` | `act1.ambush` |
+
+Only **5 of those 12** sat in the three dialogue-idiom classes tabled above;
 the other 7 are the sleep, inventory and transition idioms making the same
-kind of stricter claim. The ruling as phrased covers all 12 either way,
-because it is about the ACTION and not about which idiom emitted it.
+kind of stricter claim. The ruling covers all 12 either way, because it is
+about the ACTION and not about which idiom emitted it.
 
 **ESTIMATED, corpus-wide: ~134 rows, and the number is an estimate.** It is
 the count of corpus sites at which the emitter's three dialogue idioms WOULD
@@ -548,12 +576,14 @@ waits this script contains. It is a projection from the corpus onto an
 itinerary that **does not exist**: only steps 0-217 are authored, so no compile
 has ever emitted those rows and nothing has measured them. The observed sample
 is the 12 above. Treat 134 as an order-of-magnitude argument for why the
-question is worth a ruling, and 12-of-47 as the only measurement.
+question was worth a ruling, and 12-of-50 as the only measurement.
 
-**A YES is necessary and nowhere near sufficient.** Even inside the authored
-window it leaves **38 exact and all 9 net rows**, and no ruling on tightening
-touches them: the 330-row position-pin class, the sleep idiom, the `items`
-pin, the in-autoplay hotbar assert, the pickup toast, and alignment residue.
+**THE RULING WAS NECESSARY AND IS NOWHERE NEAR SUFFICIENT.** Inside the
+authored window it leaves **38 exact and all 9 net rows**, and no ruling on
+tightening touches them: the 330-row position-pin class, the sleep idiom, the
+`items` pin, the in-autoplay hotbar assert, the pickup toast, and alignment
+residue. **The golden still FAILS, §7's M3.6 exit is still NOT MET, and M4
+stays blocked.** The ruling unblocked the question, not the milestone.
 
 **The 9 net rows are not arrival divergences.** Some are the bump-to-face
 artifact (`_net` counts a blocked bump as movement because it cannot know the
