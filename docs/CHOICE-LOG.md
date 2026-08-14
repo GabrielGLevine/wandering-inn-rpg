@@ -19,10 +19,34 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 - **#19 — Steam commercial gate:** free-on-Steam is recommended. A paid path
   requires pirateaba's explicit permission before store or release work.
 
+- **[Blademaster]'s aspiration text is now incoherent — naming ruling
+  wanted (raised 2026-08-14 by the rename lane, escalated not
+  improvised).** `data/classes.json` still tells the class that "far
+  down this road waits the title of [Swordmaster]". That line was
+  derived from `[Swordsman]`'s canon advancement, but the repo's own
+  canon spike (`docs/superpowers/spike/wiki-warrior-line.md:91`) places
+  `[Blademaster]`/`[Blademistress]` ALONGSIDE `[Swordmaster]`/`[Sword
+  Saint]`, not beneath it — so the shipped text now points a class at a
+  peer rather than at a summit. Options: keep `[Swordmaster]`, promote
+  the aspiration to `[Sword Saint]`, or retire it. The rename ships
+  ahead of this (it was explicitly ruled); the aspiration is a separate
+  naming call.
+
 ## Current product and system rulings
 
 ### User rulings 2026-08-13 (#438 wave-close batch)
 
+- **A lowercase `swordsman` in prose is a common noun, not a class
+  render — leave it (controller execution call, 2026-08-14).**
+  `data/dialogue/pisces_magic.json:121` ("You hold yourself like a
+  swordsman more than a scholar") survives the [Blademaster] rename
+  untouched: it is gated on Pisces-conversation flags rather than on
+  holding the class, and his reply is about his father's rapier, so it
+  means "someone who fights with a sword". Substituting "blademaster"
+  would assert mastery the line does not mean; any other wording is new
+  authored prose, i.e. a voice decision nobody asked for. Rule
+  generalizes: rename lanes change RENDERS of a class name, never
+  common-noun prose that happens to share the word.
 - **#485 name proposal: blanket GO, user edits stragglers later
   (2026-08-13 night).** All proposed first-order names proceed;
   wiki-verify at build still binds; post-bar hits still return for
