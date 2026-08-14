@@ -93,24 +93,22 @@ or superseded session blocks.
 
 - **#19 — commercial gate:** any paid Steam path requires pirateaba's explicit
   permission. Free-on-Steam remains the recommended path.
-- **M3.6 EXIT RULING (#434, blocks M4).** All five M3.6 criteria shipped
-  and gated, but the golden does not pass the differ end-to-end. One
-  class blocks it: **134 rows where the compiled script pins MORE than
-  the shipped one** (24 pool-line `ui_dialogue_rendered` — 0 of 24
-  corpus rows wait it; 60 conversation-open `dialogue_node` — 3 of 63
-  do; 50 destination `dialogue_node` — 75 of 125 do). §6.3 allows pins
-  to be "TIGHTER and never looser", but only for `assert_*` actions, so
-  a compiled-only `wait_for_event` is exact-class fatal even though the
-  run is strictly stricter. **Ruling wanted:** extend the tightening
-  allowance to `wait_for_event` (closes all 134 at once, but changes
-  what the milestone gate treats as fatal), or refuse it and add a
-  per-node emitter key for each of the three waits (keeps the gate
-  narrow, but pushes corpus knowledge back into itineraries — which is
-  the thing the compiler exists to remove). The lane declined to decide
-  it on the grounds that widening a gate to pass its own milestone is
-  the wrong shape of work; I agree, so it comes to you. Acts II–V of the
-  itinerary (2351 of 2569 steps) are unauthored pending this, since
-  every conversation in them multiplies the same class.
+- **M3.6 EXIT RULING (#434, blocks M4) — NOT YET RIPE, do not rule on
+  the numbers below until the lane re-reports.** The question is real:
+  §6.3 lets pins be "TIGHTER and never looser" but only for `assert_*`
+  actions, so a compiled-only `wait_for_event` is exact-class fatal even
+  when the compiled run is strictly stricter than the shipped one.
+  **Ruling wanted eventually:** extend the tightening allowance to
+  `wait_for_event`, or refuse it and add a per-node emitter key per wait
+  (which pushes corpus knowledge back into itineraries — the thing the
+  compiler exists to remove). CAVEAT, from the gate: the lane framed
+  this as "one class, 134 rows" and that OVERSELLS it — a YES would
+  still leave 15 exact-class and 5 net-class fatals in its own 0-217
+  window, and 2 of those net rows are genuine arrival divergences no
+  §6.3 ruling can close (possibly real compiler bugs). The lane's
+  supporting measurement was also refuted twice by the gate and is being
+  re-derived. Wait for the corrected report before spending judgment on
+  it. M4 stays blocked meanwhile.
 - **Balance rulings raised by the skirmisher lane (2026-08-14), both
   escalated rather than improvised:**
   1. `act2_cistern_nest` skirmisher 0.40 WALL. Acts I–IV measure the
