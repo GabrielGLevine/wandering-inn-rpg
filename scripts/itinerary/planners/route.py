@@ -43,12 +43,14 @@ class RoutePlanner:
             raise RouteError(f"entity {entity_id!r} resolved to {len(candidates)} maps")
         return candidates[0]
 
-    def plan_to(self, node_id: str, ledger: Ledger, map_id: str, cell: list[int] | None = None) -> list[dict[str, Any]]:
+    def plan_to(
+        self, node_id: str, ledger: Ledger, map_id: str, cell: list[int] | None = None, via: str = ""
+    ) -> list[dict[str, Any]]:
         if map_id not in self.maps:
             raise RouteError(f"unknown destination map: {map_id}")
         ops: list[dict[str, Any]] = []
         if ledger.map_id != map_id:
-            for edge in self._transition_path(ledger, map_id):
+            for edge in self._transition_path(ledger, map_id, via):
                 transition = edge["entity"]
                 ops.extend(self._walk(ledger, transition["cell"]))
                 destination = [int(part) for part in edge["to_cell"]]
@@ -63,7 +65,21 @@ class RoutePlanner:
             ops.extend(self._walk(ledger, [int(part) for part in cell]))
         return ops
 
-    def _transition_path(self, ledger: Ledger, goal: str) -> list[dict[str, Any]]:
+    def _transition_path(self, ledger: Ledger, goal: str, via: str = "") -> list[dict[str, Any]]:
+        """The map-to-map legs, with `via` naming WHICH door takes the last one.
+
+        The router picks a door by search order, and where a map pair has two
+        the pick is arbitrary -- both are oracle-valid, both land somewhere on
+        the destination, and §6.3 would call the difference a tolerated route.
+        It is not tolerable: the two doors ARRIVE on different cells, and the
+        arrival is what the next press acts on. GH#375 is the shipped case --
+        the west inn door exists to be pinned reachable, and a route that takes
+        the main door proves nothing about it.
+
+        `via` therefore constrains the FINAL leg only. Constraining the whole
+        search would be a different feature (a waypoint), and naming the door
+        you arrive by is the thing the corpus actually needs.
+        """
         start = ledger.map_id
         frontier = deque([start])
         prior: dict[str, tuple[str, dict[str, Any]] | None] = {start: None}
@@ -88,7 +104,34 @@ class RoutePlanner:
             path.append(entity)
             current = previous
         path.reverse()
+        if via:
+            path[-1] = self._named_edge(path, goal, via, ledger)
         return path
+
+    def _named_edge(
+        self, path: list[dict[str, Any]], goal: str, via: str, ledger: Ledger
+    ) -> dict[str, Any]:
+        source = path[-1]
+        if str(source["entity"].get("id", "")) == via:
+            return source
+        # The leg's ORIGIN map is where the named door has to stand: substituting
+        # a door on some other map would silently re-route the whole path.
+        origin = next(
+            (map_id for map_id, data in self.maps.items()
+             if any(str(e.get("id", "")) == via for e in data.get("entities", []))),
+            "",
+        )
+        candidates = [
+            edge for edge in self._edges(origin, ledger)
+            if str(edge["entity"].get("id", "")) == via and str(edge["to_map"]) == goal
+        ] if origin else []
+        if len(candidates) != 1:
+            raise RouteError(
+                f"goto via {via!r} matched {len(candidates)} legs into {goal} from {origin or '(no map)'}. "
+                "`via` names a door/travel-prop on the map the last leg LEAVES, and its gate must be open at "
+                "this point in the ledger."
+            )
+        return candidates[0]
 
     def _edges(self, map_id: str, ledger: Ledger) -> list[dict[str, Any]]:
         edges: list[dict[str, Any]] = []
@@ -143,6 +186,15 @@ class RoutePlanner:
         only ever SHRINKS the radius, so ignoring it keeps this check
         conservative in the safe direction.
         """
+        if ledger.sneaking:
+            # #440's whole point, and M3.6 amendment item 4: a live sneak makes
+            # the proximity pass `continue` instead of springing (wi_game.gd
+            # 538-547) -- it credits `sneaked_past_danger` and walks on. So a
+            # cloaked route may cross a radius the same route would be refused
+            # for uncloaked. The stance's LIFETIME is what makes this safe to
+            # model: the ledger drops it at a fight, at a non-door interact and
+            # at every sleep, so it can never leak past the leg it was cast for.
+            return []
         hazards: list[dict[str, Any]] = []
         for entity in self.maps[map_id].get("entities", []):
             if str(entity.get("kind", "")) != "encounter" or "trigger_radius" not in entity:

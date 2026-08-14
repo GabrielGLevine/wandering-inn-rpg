@@ -28,12 +28,17 @@ class CombatPlanner:
     (`on_victory` counters, entity removal, the loot interval).
     """
 
-    def __init__(self, project: str | Path, bridge: Any, route: RoutePlanner) -> None:
+    def __init__(self, project: str | Path, bridge: Any, route: RoutePlanner, dialogue: Any = None) -> None:
         self.project = Path(project)
         self.bridge = bridge
         self.route = route
+        # `entry: dialogue` walks a conversation, and there is exactly one
+        # conversation walker. Sharing it rather than growing a second is what
+        # keeps the pool-line rule, the visible-row oracle query and the
+        # leaves-a-panel-open refusal in ONE place.
+        self.dialogue = dialogue
 
-    def plan(self, node_id: str, spec: dict[str, Any], ledger: Ledger) -> list[dict[str, Any]]:
+    def plan(self, node_id: str, spec: dict[str, Any], ledger: Ledger, why: str = "") -> list[dict[str, Any]]:
         encounter_id = str(spec["encounter"])
         map_hint = str(spec.get("at", "")) or None
         map_id, entity = self.route.find_entity(encounter_id, map_hint)
@@ -45,6 +50,21 @@ class CombatPlanner:
             raise CombatError(f"{node_id}: {encounter_id} is dormant and will not start a fight")
 
         entry = str(spec.get("entry", "interact"))
+        if entry == "dialogue":
+            # The 2026-08-13 M3.6 amendment item 1. The board opens on the
+            # conversation's own confirm, so there is no approach to the
+            # encounter entity and no press: the walk is to the NPC, and the
+            # dialogue planner refuses the whole node unless the chosen path
+            # ends on the row whose effects start THIS encounter.
+            if self.dialogue is None:
+                raise CombatError(f"{node_id}: entry: dialogue needs the dialogue planner wired")
+            talk_spec = {
+                "npc": str(spec["npc"]),
+                "at": str(spec.get("at", "")),
+                "choose_path": list(spec.get("choose_path", [])),
+            }
+            ops = self.dialogue.plan(node_id, talk_spec, why, ledger, start_combat=encounter_id)
+            return self._finish(node_id, spec, ledger, entity, ops, entry)
         if entry == "proximity":
             ops: list[dict[str, Any]] = []
             if ledger.map_id != map_id:
@@ -81,7 +101,9 @@ class CombatPlanner:
         allies = self._fielded_allies(entity, ledger)
         shots = [str(name) for name in spec.get("shots", [])]
         loot = self._loot_interval(entity)
-        ledger.apply_victory(entity, loot)
+        banks_after_dismiss = bool(spec.get("expect_banks_after_dismiss", False))
+        quests = getattr(self.dialogue, "quests", None) if banks_after_dismiss else None
+        banks = ledger.apply_victory(entity, loot, quests)
         operation: dict[str, Any] = {
             "kind": "fight",
             "entry": entry,
@@ -91,6 +113,13 @@ class CombatPlanner:
             "policy": str(spec.get("policy", DEFAULT_POLICY)),
             "max_turns": int(spec.get("max_turns", DEFAULT_MAX_TURNS)),
             "victory_pins": self._victory_pins(entity, ledger),
+            # The frame flexibilities (M3.6 amendment item 3). Each says which
+            # of the frame's optional rows THIS board has; none of them changes
+            # what a fight is.
+            "turn_wait": bool(spec.get("turn_wait", True)),
+            "beats": {str(slot): [str(name) for name in names] for slot, names in (spec.get("beats") or {}).items()},
+            "arena": str(spec.get("arena", "")),
+            "banks_after_dismiss": banks,
         }
         # A driven fight is planned EXACTLY like an autoplayed one -- same
         # approach, same roster gate, same victory ledger, same rng epoch. The

@@ -240,6 +240,15 @@ class EconomyPlanner:
         choose = dict(ops[index])
         destination = choose.get("next_node") or {}
         choose["defer_destination"] = True
+        # The transaction op below IS the money/grant claim, pinned with its
+        # price and its resulting total. The dialogue planner's generic
+        # effect-derived waits (M3.6 amendment item 2) would say the same thing
+        # more loosely and one row earlier, so they are dropped from THIS row
+        # rather than emitted twice: one claim per fact.
+        choose["effect_waits"] = [
+            row for row in choose.get("effect_waits", [])
+            if str(row.get("type", "")) not in ("gold_changed", "item_gained", "item_lost")
+        ]
         spliced = ops[:index] + [choose, transaction]
         if destination:
             spliced.append({"kind": "dialogue_node_wait", "next_node": destination})

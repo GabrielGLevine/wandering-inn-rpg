@@ -71,6 +71,18 @@ class Ledger:
     gold_interval: tuple[int, int]
     rng_epoch: int = 0
     pins_pending: list[dict[str, Any]] = field(default_factory=list)
+    # Compiler-only bookkeeping, not sim state. `WISave.serialize` does NOT
+    # carry `sneaking` (it is runtime-only -- `sleep()` clears it and a load
+    # starts uncloaked), so a materialized save cannot tell the oracle about a
+    # live stance and the ledger has to carry the lifetime itself (#440,
+    # 2026-08-13 M3.6 amendment item 4). The QA state dump DOES expose it,
+    # which is why `assert_state sneaking` is a legal pin even though no save
+    # round-trips the flag.
+    sneaking: bool = False
+    # `WIGame._quest_progress`: quest id -> {beat_index, completed}. The beat
+    # and completion events are edge-triggered off this table, so deriving them
+    # needs the previous reading and not just the counters (see quests.py).
+    quest_progress: dict[str, dict[str, Any]] = field(default_factory=dict)
 
     @classmethod
     def fresh(cls) -> "Ledger":
@@ -120,6 +132,23 @@ class Ledger:
 
     def talked_this_waking(self, npc_id: str) -> bool:
         return bool(self.state["social_talked"].get(npc_id, False))
+
+    # ---------------------------------------------------------------- sneak --
+
+    def start_sneak(self) -> None:
+        self.sneaking = True
+
+    def break_sneak(self) -> bool:
+        """`WIGame._break_sneak`: idempotent, and it says whether it fired.
+
+        The return value is the whole reason this is a method rather than an
+        assignment: the un-cloak emits `sneak_ended` ONLY when a stance was
+        live, so an emitter that pinned the event unconditionally would claim
+        an event the engine never sent.
+        """
+        was = self.sneaking
+        self.sneaking = False
+        return was
 
     def apply_effects(self, effects: Iterable[dict[str, Any]]) -> None:
         for effect in effects:
@@ -188,14 +217,25 @@ class Ledger:
 
     # ---------------------------------------------------------------- combat --
 
-    def apply_victory(self, entity: dict[str, Any], loot_gold: tuple[int, int]) -> None:
+    def apply_victory(
+        self, entity: dict[str, Any], loot_gold: tuple[int, int], quests: Any = None
+    ) -> list[dict[str, Any]]:
         """Project a won fight onto the ledger (§2.2 trust tier 2).
 
         `victories` banks integer under both challenge-weighting flag states,
         which is why it -- not `won_combat`, whose deposit is fractional in a
         gray-band fight -- is what a compiled pin may assert.
+
+        Returns the BANK WAITS in `WICombatBanking.resolve`'s own order, for
+        the `expect_banks_after_dismiss` frame (M3.6 amendment item 3): the
+        deposits run inside `resolve_combat()`, which fires on the banner
+        dismiss, so they land between that confirm and `ui_combat_hidden`.
+        `victories` is deliberately absent from the returned list -- the
+        emitter already pins it as STATE after the teardown, and one claim per
+        fact is the rule that keeps a golden diff readable.
         """
         self.accomplishment("victories")
+        waits: list[dict[str, Any]] = []
         for raw_banked in entity.get("on_victory", []):
             banked = str(raw_banked)
             if banked in CHALLENGE_WEIGHTED:
@@ -205,7 +245,10 @@ class Ledger:
                     "reason": "challenge-weighted deposit -- harvest the actual from a run (pass 2)",
                 })
                 continue
-            self.accomplishment(banked)
+            if quests is None:
+                self.accomplishment(banked)
+            else:
+                waits.extend(quests.record(self, banked))
         entity_id = str(entity.get("id", ""))
         if bool(entity.get("respawns", False)):
             if entity_id not in self.state["dormant_encounters"]:
@@ -213,6 +256,11 @@ class Ledger:
         elif not bool(entity.get("persistent", False)):
             if entity_id not in self.state["removed_entities"]:
                 self.state["removed_entities"].append(entity_id)
+                waits.append({"type": "entity_removed", "payload_contains": {"id": entity_id}})
+        # `start_combat` reads the stance and then breaks it (wi_game.gd:2410).
+        # A plan that thought the cloak survived a fight would route its next
+        # leg through a trigger radius it is no longer invisible to.
+        self.break_sneak()
         if loot_gold != (0, 0):
             self.widen_gold(*loot_gold)
         # Combat CONSTRUCTION draws from the one global stream, so every fight
@@ -221,6 +269,7 @@ class Ledger:
         # private RandomNumberGenerator from hash("<run_seed>:<entity_id>")
         # and never touches the world stream (src/core/economy.gd:47-53).
         self.rng_epoch += 1
+        return waits
 
     def apply_sleep_preview(self, preview: dict[str, Any]) -> None:
         self.state["times_slept"] = int(self.state.get("times_slept", 0)) + 1
@@ -228,6 +277,9 @@ class Ledger:
         self.state["social_talked"] = {}
         self.state["dormant_encounters"] = []
         self.state["actions_since_sleep"] = 0
+        # `sleep()` drops the cloak (wi_game.gd: `sneaking = false`), so a plan
+        # that walks a radius after a night has to re-cast rather than inherit.
+        self.sneaking = False
         # #472: consolidation is AUTOMATIC and resolves INSIDE the sleep beat, so
         # the oracle's `classes_after` ALREADY carries the merge (parents retired,
         # target at its merged level). Assigning it is the whole of the ledger's

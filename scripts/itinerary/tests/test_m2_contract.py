@@ -72,11 +72,20 @@ class SchemaTest(unittest.TestCase):
                     with self.assertRaisesRegex(SchemaError, "not available in M1"):
                         load_itinerary(path, milestone=1)
 
+            # M3.6 moved this rejection one step EARLIER and made it stronger:
+            # the node-key allow-list refuses `teleport:` by name before the
+            # exactly-one-primitive count ever runs. Same refusal, and now it
+            # also covers the case the count could never see -- a stray key
+            # BESIDE a valid primitive (see the M3.6 suite's own row).
             unknown = Path(td) / "unknown.yaml"
             unknown.write_text("- act: ii\n  nodes:\n    - id: n1\n      teleport: {map: inn}\n", encoding="utf-8")
             for milestone in (1, 2):
-                with self.assertRaisesRegex(SchemaError, "needs exactly one primitive"):
+                with self.assertRaisesRegex(SchemaError, "has unknown keys"):
                     load_itinerary(unknown, milestone=milestone)
+            empty = Path(td) / "empty.yaml"
+            empty.write_text("- act: ii\n  nodes:\n    - id: n1\n      why: nothing at all\n", encoding="utf-8")
+            with self.assertRaisesRegex(SchemaError, "needs exactly one primitive"):
+                load_itinerary(empty, milestone=2)
 
             typo = Path(td) / "typo.yaml"
             typo.write_text("- act: ii\n  nodes:\n    - id: n1\n      fight: {encouter: x}\n", encoding="utf-8")
