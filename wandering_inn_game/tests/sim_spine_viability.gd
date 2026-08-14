@@ -669,12 +669,31 @@ func _derived_spines(classes: Dictionary) -> Array:
 
 
 ## THE HOLDABLE LINE (#474). `consolidations[].parent_lines` names the line the
-## MERGE requires, and #472 narrowed those to exactly the pair the target
-## `inherits` -- so three spines name an EVOLVED parent there: [Spellspear] and
-## [Skirmisher] name `spearmaster`, [Wild Sage] names `beast_master`. Acts I-IV
-## impose 2/3/5/7, and NO PLAYER CAN HOLD AN EVOLVED CLASS AT THOSE LEVELS: an
-## evolution is reached by evolving its base at `evolution.at_level` 10, so the
-## evolved class's own `levels` table starts at 10 and has no rung below it.
+## MERGE requires, and on three rows that line is an EVOLVED class: [Spellspear]
+## and [Skirmisher] name `spearmaster`, [Wild Sage] names `beast_master`.
+##
+## THE PROVENANCE, checked rather than assumed -- an earlier draft of this
+## comment blamed #472 and that is wrong in a way worth correcting, because a
+## future lane reads this to learn WHY the walk exists. The evolved line_a is
+## #449's ([Spellspear], `e2a8e4ca`): that commit already reads
+## `[['spearmaster'], ['mage', 'ice_mage', 'fire_mage']]`, i.e. line_a was the
+## sole evolved parent from the day the row was authored, under the
+## SPEAR-OWNS-ITS-HYBRIDS ruling. #472 (`4cb5d24a`) narrowed only the MAGE side
+## of that row to `['mage']` and never touched line_a. [Skirmisher] and
+## [Wild Sage] were authored ALREADY narrow by the #438 trio (`269f94d8`) --
+## `[['spearmaster'], ['archer']]` and `[['beast_master'], ['mage']]` -- on a
+## branch #472 is not even an ancestor of, so #472 is not in their history at
+## all. BLAST RADIUS, therefore: naming an evolved parent is the consolidation
+## convention itself, not one commit's narrowing, and every future
+## evolved-lineage target inherits the same shape and the same need for this
+## walk.
+##
+## Acts I-IV impose 2/3/5/7, and NO PLAYER CAN HOLD AN EVOLVED CLASS AT THOSE
+## LEVELS: an evolution is reached by evolving its base at `evolution.at_level`
+## 10, so the evolved class's own `levels` table starts at 10 and has no rung
+## below it -- and `WIProgression.derived_stat_bonuses` sums `growth[stat] *
+## held` with no table-floor check, so an out-of-table level does not refuse,
+## it quietly pays the evolved class's growth curve.
 ## A build nobody can hold is not a balance read, so this walks the `inherits`
 ## chain down to the class the band allocation actually puts in the player's
 ## hands and measures THAT.
