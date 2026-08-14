@@ -294,28 +294,55 @@ const ROSTER := [
 	# `band_act5_top` on all three, identical to the amulet row's, so the ship
 	# reads sit against one unchanged reference line.
 	#
-	# #438 (2026-08-13) STOP, MEASURED. The user ruling asked for the ceiling drift
-	# here (ship-competent t6 0.93 / t12 0.97 / s16 1.00 against the amulet row's
-	# 0.89 and WINDOW_CEILING 0.85) to be fixed from tactic-skill class DATA, and
-	# STOP-and-report if the window needs policy or frozen-stat movement. It does.
-	# Measured at 100 seeds, each leg a full run of this file:
-	#   high-rung tactic skills NEUTERED ([Read the Field] hit_bonus 10 -> 0,
-	#     [Instantaneous Barrage] length 4 -> 1 / cooldown 2 -> 6 / ap 3 -> 4):
-	#     s16 ship-competent 1.00 -> 1.00. ZERO. Only the FLOOR read moves
-	#     (0.93 -> 0.85). The row is SATURATED: at competent the build wins 100/100
-	#     on raw stats before a tactic Skill is spent, so the Skills have no margin
-	#     left to give back.
-	#   the WHOLE tactic family neutered (also [Battlefield Awareness] L1,
-	#     [Chosen Blow] L5, [Flanking Step] L6 — out of scope, it would undo #453
-	#     G3's L6 ladder relief): s16 1.00 -> 0.92, still 0.07 over, and it drags
-	#     the reference line with it — amulet 0.89 -> 0.83, t6 0.93 -> 0.84,
-	#     act5_seal_warden ship-competent 0.80 -> 0.68.
-	# THE RESIDUAL DRIVER IS THE CLASS, NOT ITS SKILLS: `strategist.stat_growth.int`
-	# (2/level x 16, on a 37-level multiclass) alone moves s16 1.00 -> 0.92 with
-	# every tactic Skill intact. That is classes.json — the class lane's surface —
-	# and even at 0 it does not reach 0.85. Reaching the ceiling needs class stat
-	# growth PLUS the level budget, or the warden's frozen block, or policy
-	# movement; all three are the ruling's stop conditions, so nothing was tuned.
+	# #438 (2026-08-13) THE CAPSTONE/WARDEN REBALANCE, and the three rows it could
+	# not reach. The 2026-08-13 ruling authorised capstone stat-growth trims AND
+	# warden-side movement (a sanctioned frozen-block exception), under a
+	# NO-AUTO-WIN principle: no build may beat the Warden 100/100, and one that
+	# cannot be brought down is a red flag to SURFACE, not to tune around.
+	#
+	# WHAT SHIPPED. classes.json's flat-growth rule (no class grows >1 point per
+	# level into one stat — see its `meta._comment_stat_growth`), and seal_warden
+	# con 112 -> 134. Both are documented where the data lives. After them, every
+	# AT-BAND row at this fight is inside [0.55, 0.85] for the first time:
+	# spellsword14 0.78 -> 0.70, spellsword16 0.86 -> 0.77, the steel thread's own
+	# worn-amulet build 0.89 -> 0.76, spellspear14 0.73 -> 0.60, druid14
+	# 0.97 -> 0.82, and deathknight14 0.58 -> 0.41 -> 0.66 after its kit relief.
+	#
+	# WHAT IT COULD NOT REACH, and WHY — this is the finding, not an excuse:
+	#   t6 0.88, t12 0.93, s16 0.98. These three are NOT a capstone-power problem.
+	#     They are LEVEL BUDGET. `WIProgression.effective_power` puts them at 17.8,
+	#     21.7 and 24.7 against an act whose authored band is 14-16, and win rate
+	#     tracks that budget smoothly across the whole column (14 -> 0.70,
+	#     16 -> 0.77, 17.8 -> 0.88, 21.7 -> 0.93, 24.7 -> 0.98). A fight authored
+	#     for 14-16 SHOULD be won by a 24.7 build; the row is reading an over-band
+	#     PC, and no warden that leaves the band build winnable can catch it.
+	#   wild_sage14 0.98 at effective power 14 — the band FLOOR. This one is not a
+	#     level read at all, and it is the sharpest finding in the lane: it is the
+	#     BONDED WOLF. Measured with `tests/_warden_probe.gd`, same build, same
+	#     warden, companion withheld: wild_sage14 and druid14 both read 0.19
+	#     competent / 0.04 floor. The second body is worth +0.79. That dwarfs every
+	#     stat, Skill and item in this table combined, and it is REAL rather than a
+	#     harness artefact — `wi_game.gd:2352` fields the companion whenever the
+	#     arena has a free player spawn, and `vault` has four.
+	#
+	# WHY NO FURTHER WARDEN MOVEMENT. Sized by its cost, A/B at 100 seeds
+	# (`_warden_probe.gd`), band build vs the ceiling row it was aimed at:
+	#   str 17 -> 26        spellsword14 0.78 -> 0.45   s16 1.00 -> 0.97
+	#   weapon_die 8 -> 14  spellsword14 0.78 -> 0.52   s16 1.00 -> 0.98
+	#   con 112 -> 140      spellsword14 0.78 -> 0.64   s16 1.00 -> 1.00
+	# Every lever taxes the band build 3-10x harder than the row it is aimed at,
+	# because the over-band rows win the damage race in 2-3 rounds and never eat
+	# the extra dice. con was chosen as the least-bad of the three and sized to the
+	# largest value that keeps the at-band span in window. Pushing further buys
+	# 0.01 a step off the ceiling rows and spends 0.05 a step off the floor.
+	#
+	# CAPSTONE GROWTH IS NOT THE MECHANISM, MEASURED. `strategist.stat_growth.int`
+	# 2 -> 1 (the trim that shipped) moves s16 1.00 -> 0.99; 2 -> 0 reaches only
+	# 0.92. The trim is right on its own terms — it is a uniform data rule and it
+	# retired a convention that had spread to seven classes — but it is NOT what
+	# was trivializing this fight, and the record should not pretend otherwise.
+	# Neutering the tactic Skills is likewise near-inert here (#450's own probe:
+	# the high rungs move s16 by 0.00), and the whole family is out of scope.
 	{
 		"id": "act5_seal_warden_tactician6", "act": "V", "beat": 33, "map": "dungeon/trapped_halls", "entity": "seal_warden_alcove",
 		"ship": "ship_act5_tactician6", "band": "band_act5_top", "draughts": [],
@@ -340,7 +367,7 @@ const ROSTER := [
 ##   `rounds_near`: optional, +/- 2 on the median.
 const CALIBRATION := [
 	{"row": "act5_seal_warden", "column": "ship", "policy": "dumb", "want": "LOSS", "rounds_near": 5,
-		"why": "measured: PC 56 HP / ~29 DPR vs warden 142 HP / 28-30 per hit, death in 5 rounds, three identical runs at seed 9"},
+		"why": "measured: PC 56 HP / ~29 DPR vs warden 142 HP / 28-30 per hit, death in 5 rounds, three identical runs at seed 9. THE WARDEN IS 164 HP AFTER #438 (con 112 -> 134) and this row is UNCHANGED — deliberately: what it asserts is the CATEGORICAL (the shipped kit loses under autoplay) plus the 5-round median, and both still hold at 0.34/5rd. The 142 is the provenance of the original measurement and stays as written; a ground-truth row records what was observed, not what is current"},
 	{"row": "act5_gallery_vermin_nest", "column": "ship", "policy": "dumb", "want": "LOSS",
 		"why": "measured: the same build loses to power-9.8 trash under autoplay"},
 	{"row": "act5_gallery_vermin_nest", "column": "ship", "policy": "competent", "want": "WIN",
@@ -1066,6 +1093,15 @@ func _window_position(m: Dictionary, floor_rate: float, ceiling_rate: float) -> 
 	return "inside"
 
 
+## The per-spine half of `_find_record`. Findings that compare spines need the
+## class table's cells, not the ship/band ones.
+func _spine_cell(spine: String, row_id: String) -> Dictionary:
+	for record: Dictionary in _spine_rows:
+		if String(record["spine"]) == spine and String((record["row"] as Dictionary)["id"]) == row_id:
+			return record["m"]
+	return {}
+
+
 func _findings() -> String:
 	var warden: Dictionary = _find_record("act5_seal_warden")["m"]
 	var amulet: Dictionary = _find_record("act5_seal_warden_amulet")["m"]
@@ -1096,6 +1132,13 @@ func _findings() -> String:
 		"",
 		"7. **The carried-but-unequipped upgrade was worth more than the fight was hard.** Equipping the moon-bone amulet — hp+3, dmg+1, and [Invisibility] into the kit — moves the warden from %s to %s under the FLOOR policy alone. The accessory the run carried from Act III to Act V without wearing was, by itself, the difference between losing and winning the finale." % [
 			_cell_text(warden["ship_dumb"]), _cell_text(amulet["ship_dumb"])],
+		"",
+		"8. **THE SECOND BODY IS THE BIGGEST NUMBER IN THIS TABLE (#438).** At the Act V climax the two bonded spines measure %s (`wild_sage14`) and %s (`druid14`), against %s for `spellsword14` — the SAME band allocation, the same effective power of 14, the same act. The gap is not stats and not the kit: it is the wolf. Withhold the companion and hold everything else fixed (`tests/_warden_probe.gd`, `WI_PROBE_NO_COMPANION=1`, 100 seeds) and both rows read **0.19 competent / 0.04 floor** — byte-identical to each other, because their stat growth and their re-flavored grants are identical too. **The bonded companion is worth about +0.79 win rate at this fight**, more than every stat, Skill, weapon and accessory in this table combined. It is not a harness artefact: `wi_game.gd:2352` fields the companion whenever the arena has a spare player spawn and `vault` has four, so a druid really does fight the solo finale two-on-one. That is the finding the #438 lane surfaces rather than tunes: no warden stat reaches it (at con 140 `wild_sage14` still reads 0.96 while the band build falls to 0.64), because the lever that shortens a 2v1 is composition, not HP. Whether a climax authored SOLO should field a companion at all is a design question for the encounter, and it is now on the record with a number attached." % [
+			_cell_text(_spine_cell("wild_sage", "act5_seal_warden")),
+			_cell_text(_spine_cell("druid", "act5_seal_warden")),
+			_cell_text(_spine_cell("spellsword", "act5_seal_warden"))],
+		"",
+		"9. **The capstone growth trim was right, and it was not the mechanism (#438).** classes.json's flat-growth rule retired an 'evolution bump' convention that had spread to seven classes one citation at a time. It is a real correction — the band yardstick grows 1+1 and nothing should out-stat it 2:1 — and `data_lint.py::check_stat_growth_flat` now keeps it from creeping back. But measured against the fight it was reached for, `strategist.stat_growth.int` 2 → 1 moves the strategist-16 row 1.00 → 0.99. The rows that were over the ceiling were over it for TWO other reasons: an over-band level budget (finding above) and the wolf. Trimming class data was the first lever the ruling named and the smallest one that was actually there; recording that honestly is worth more than a tidy causal story.",
 	])
 
 

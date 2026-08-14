@@ -1539,6 +1539,7 @@
   },
   {
    "_comment": "Act V: roster-only retint of the ruin_warden rig at seal scale (distinct-id-per-context convention, :401). Stats belong to the seal band -- never retune toward the ruin fight's.",
+   "_comment_438": "#438 THE SANCTIONED FROZEN-BLOCK EXCEPTION (user ruling 2026-08-13, docs/CHOICE-LOG.md 'Act V capstone trivialization': 'Warden-side movement is hereby a sanctioned frozen-block exception (the #451 shape)'). con 112 -> 134, i.e. 142 -> 164 max HP with [Tough Body]. ONE FIELD, and it is the one the A/B chose rather than the one that was easiest to reach. WHY con AND NOT str/weapon_die -- measured, `tests/_warden_probe.gd`, 100 seeds, competent, band build vs the over-band ceiling rows: str 17->26 reads spellsword14 0.78 -> 0.45 while the strategist-16 ship row only moves 1.00 -> 0.97; weapon_die 8->14 reads 0.78 -> 0.52 against 1.00 -> 0.98. Both LETHALITY levers tax the band build 10x harder than the row they were aimed at, because the over-band rows win the damage race in 2-3 rounds and never eat the extra dice. HP is the only lever whose cost lands the other way: it lengthens the fight instead of raising its lethality, and the rows that were trivializing it are precisely the ones with the least damage to spare. At 134 the whole AT-BAND span comes inside the [0.55, 0.85] reference window -- spellsword14 0.78 -> 0.70, spellsword16 0.86 -> 0.77, the steel thread's own worn-amulet build 0.89 -> 0.76, spellspear14 0.73 -> 0.60, druid14 0.97 -> 0.82 -- while the calibration row (ship/floor) stays LOSS at its pinned 5-round median. SIZED BY ITS COST, not by the ceiling: 134 is the largest con that keeps every at-band row in window, and the ROWS IT CANNOT REACH ARE A REPORTED FINDING, not a reason to push further (see the #438 block in tests/sim_spine_viability.gd). dex is deliberately UNTOUCHED: initiative is `dex + d6` and `test_sim_core`/`test_combat_sim` pin this combatant's turn order at named seeds.",
    "id": "seal_warden",
    "power_level": 18.0,
    "display_name": "The Seal's Warden",
@@ -1548,7 +1549,7 @@
    "stats": {
     "str": 17,
     "dex": 10,
-    "con": 112,
+    "con": 134,
     "int": 8,
     "wis": 10,
     "cha": 2

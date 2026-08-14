@@ -2082,6 +2082,46 @@ def _inheritance_pair(cls: dict) -> frozenset:
 	return frozenset(value for value in raw if isinstance(value, str) and value)
 
 
+def check_stat_growth_flat(parsed: dict, errors: list) -> None:
+	"""#438 THE FLAT-GROWTH RULE: no class converts a level into more than ONE
+	point of a single stat. Growth broadens; it never steepens.
+
+	Stated and reasoned in classes.json's own `meta._comment_stat_growth`; this
+	is the gate that keeps it from rotting. It exists because the convention it
+	replaces spread ONE CLASS AT A TIME, each new row citing the last as
+	precedent -- merchant/strategist -> alchemist ("merchant/strategist
+	evolution-bump precedent") -> beast_master ("evolution-bump precedent,
+	alchemist int:2") -- until seven classes out-stat the band yardstick 2:1 in
+	whatever stat they stacked. A comment cannot stop that; a red run can.
+
+	Deliberately a HARD error and not an advisory: an out-of-window balance row
+	is recoverable, but the whole reference window is measured against the
+	[Spellsword] family's 1+1 growth, so a class growing 2 into one stat makes
+	every band comparison it appears in mean something different. That is a data
+	defect, not a tuning taste."""
+	doc = parsed.get(DATA / "classes.json") or {}
+	if not isinstance(doc, dict):
+		return
+	for row in doc.get("classes", []):
+		if not isinstance(row, dict):
+			continue
+		class_id = row.get("id")
+		growth = row.get("stat_growth")
+		if not isinstance(growth, dict):
+			continue
+		for stat_key, amount in sorted(growth.items()):
+			if isinstance(amount, bool) or not isinstance(amount, (int, float)):
+				errors.append(
+					f"classes.json: class {class_id!r} stat_growth[{stat_key!r}] is not a number")
+				continue
+			if amount > 1:
+				errors.append(
+					f"classes.json: class {class_id!r} grows {stat_key} by {amount} per level -- "
+					"the flat-growth rule (meta._comment_stat_growth) allows at most 1 point per "
+					"level into any single stat. A capstone broadens its growth across a second "
+					"stat; it never doubles one. Add a stat, do not steepen one.")
+
+
 def check_lineage_completeness(parsed: dict, errors: list) -> None:
 	"""Require one authored consolidation target or a reasoned exemption per
 	reachable held-pair. Target identity is exact inheritance, not merely a broad
@@ -2525,6 +2565,7 @@ def main() -> int:
 	check_spriteless_entities(maps, errors)
 	check_placements_off_water(maps, errors)
 	check_moods(parsed, maps, errors)
+	check_stat_growth_flat(parsed, errors)
 	check_lineage_completeness(parsed, errors)
 	check_consolidation_skill_coverage(parsed, errors, report)
 	advisories: list = []

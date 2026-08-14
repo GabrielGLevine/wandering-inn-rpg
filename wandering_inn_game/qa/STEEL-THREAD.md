@@ -66,8 +66,9 @@ pins:
   (the outfitting beat, the Krshia buyback picker, the descent kit)
   shifted by one row and was re-derived off the oracle.
 - The finale flipped. The same fight that died in round 5 holding two
-  undrunk draughts became a win; after #451 it is re-derived as a
-  **round-5 win at seed 37** (see the tape below).
+  undrunk draughts became a win; after #451 it re-derived to a round-5 win,
+  and after #438's warden move it is a **round-7 win at seed 37 on 1 of 47
+  HP** (see the tape below).
 
 ## What this instrument is for
 
@@ -116,10 +117,14 @@ hide.
 
 **These rows MOVED in the ≥434 wave** (previously warrior 5/mage 2 → 7,
 warrior 9/mage 2 → 11, spearmaster 14/mage 6/dip 4 → 24, and 29/30 at the
-last two boundaries). Gold and waking are UNCHANGED at every boundary, the
-warden tape below is unchanged beat for beat, and the run is still green —
-only the leveling curve moved, faster on both lines. Re-derived by
-checkpointing the live run (`--checkpoint-at`), not by hand.
+last two boundaries). Gold and waking are UNCHANGED at every boundary and
+the run is still green — only the leveling curve moved, faster on both
+lines. Re-derived by checkpointing the live run (`--checkpoint-at`), not by
+hand. **#438 UPDATE:** these boundary rows are unchanged again (the warden
+move touches one fight, not the curve), but the sentence that used to
+stand here — "the warden tape below is unchanged beat for beat" — no
+longer holds and has been withdrawn: that tape is fully re-derived, see
+its own section.
 
 Climax builds (the number the bands actually govern — levels resolve in
 `sleep()`, so a climax is fought at the *previous* night's build):
@@ -195,20 +200,41 @@ that is green at band FLOOR would have traded a proof for a coin flip.
   turn of round 1, pinned by both the ambush toast and
   `combat.round == 1` at the PC's opening turn.
 
-## The Seal Warden, fight tape (seed 37 after #451)
+## The Seal Warden, fight tape (seed 37 after #438)
 
-**Win, 5 rounds, PC ends on 47 of 47 HP; warden 0 of 142.** The observed
-event tape is compact: the warden's opening [Power Strike] reports 28 while
+**Win, 7 rounds, PC ends on 1 of 47 HP; warden 0 of 164.**
+
+**THE SEED HELD.** #438 took `seal_warden` con 112 → 134 under the
+2026-08-13 ruling's sanctioned frozen-block exception, which moves the
+warden's max HP 142 → 164 and therefore re-rolls every draw in this fight.
+The tape below is fully re-derived from the live run; the SEED is not. Seed
+37 still clears all **2569 steps green, twice**, and no re-derivation was
+needed — which is worth saying plainly, because a seed move here is the
+expensive failure mode and this change came within one hit point of it.
+
+The tape, observed: the warden's opening [Power Strike] reports 28 while
 [Mana Shield] absorbs 17 and the equipped reduction takes another point;
-the capped [Counter Strike] answers once for 14. [Second Wind] heals 8,
-[Piercing Strikes] deals 20, the remedy tops the PC by 2, and [Spear
-Flurry] deals 35. The warden then misses both its slam and next power
-strike; [Triple Thrust] deals 36 and the final [Spear Flurry] deals 43 for
-the kill. `combat_finished` records `{rounds:5, victory:true}`.
+the capped [Counter Strike] answers once for 14 (warden to 150). Round 2 is
+a clean [Piercing Strikes] for 20 (130). Round 3 the remedy tops the PC by
+2 and [Spear Flurry] deals 35 (95) while the warden misses twice. Round 4
+[Triple Thrust] deals 36 (59). Round 5 [Spear Flurry] deals 43 (16), then
+the warden lands BOTH swings for 13 and 20 and [Counter Strike] answers for
+14 (2) — the PC is on 16. Round 6 passes with neither side connecting.
+Round 7 the warden hits for 11 and 22, taking the PC to **1 HP**, and the
+capped [Counter Strike] fires one last time for 12 to finish it at 0;
+[Battle Momentum] triggers on the kill. `combat_finished` records
+`{rounds:7, victory:true}`.
+
+**The finale is a knife-edge now, and that is the point of the change.**
+Before #438 the same seed won in 5 rounds without the PC ever dropping
+below full — a climax that was not, in the event, a fight. It is now won on
+the last exchange with one hit point standing. Note what closed the gap:
+the last two rounds are carried entirely by [Counter Strike] reactions off
+the warden's own hits, so the run survives by being attacked.
 
 This is a deterministic canonical proof, not a replacement for the
 100-seed tuning row. The viability harness independently measures the
-level-14 Spellsword reference at 0.78 inside the window.
+level-14 Spellsword reference at 0.70 inside the window (0.78 before #438).
 
 ## Still open after the program
 
