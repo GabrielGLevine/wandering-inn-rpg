@@ -146,7 +146,11 @@ const EXPECTED_SKILLS := {
 	"quick_movement": ["+1 move cell every turn"],
 	"second_wind": ["2 AP — restore 8 HP to yourself. Once per fight."],
 	"dangersense": [],
-	"piercing_strikes": ["2 AP — ×1.4 damage"],
+	# #474: the "Once per round." clause is the WHOLE lane-visible change to this
+	# Skill -- the mult is untouched at 1.4. It is a [Warrior] L1 grant and so is
+	# [Power Strike]; uncapped it bought two casts a turn (2.8x) against that
+	# Skill's cooldown-gated 2.0x, i.e. nothing over two plain swings.
+	"piercing_strikes": ["2 AP — ×1.4 damage. Once per round."],
 	"quick_slash": ["1 AP — ×0.7 damage"],
 	"flash_cut": ["2 AP — ×1.4 damage"],
 	"devastating_slash": ["3 AP — ×2.6 damage. Once every 2 rounds."],
@@ -190,6 +194,12 @@ const EXPECTED_SKILLS := {
 	"charming_smile": [],
 	"calming_touch": ["2 AP — damage 1d6 at range 1. Slows."],
 	"raskghar_maul": ["3 AP — damage 1d6 at range 2. Slows. Weakens."],
+	# #474 [Sunder the Bond], the companion counter. Enemy-kit only, and the
+	# `target_rule: bonded` half is deliberately INVISIBLE in this string: the
+	# effect-text vocabulary describes what a Skill does, not who it may be spent
+	# on, and the counter's targeting contract is gated in
+	# tests/test_companion_counter.gd where it can be asserted both directions.
+	"sunder_the_bond": ["2 AP — ×2 damage. Once per round."],
 	## #460 the crypt Lich's three enemy-kit verbs. None of them can reach a player
 	## hotbar (no class grants them), but every catalog row is composed and pinned
 	## here anyway -- the bestiary and the journal read the same composer, and a
