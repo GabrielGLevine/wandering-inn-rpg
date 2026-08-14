@@ -129,8 +129,29 @@ func _check_housekeeping_class(raw: String) -> void:
 	# chore then held its FULL 6.0s (1.5x curve, 36 chars) with the payoff behind
 	# it -- longer than main's uncapped 4.06s. The cap must be re-checked inside
 	# the hold loop, or finding 8's headline repro comes out worse than it went in.
-	assert(show.find("deadline_msec = mini(deadline_msec, started_msec + int(TOAST_QUEUE_HOLD_CAP_SECONDS * 1000.0))") != -1,
+	assert(show.find("deadline_msec = mini(deadline_msec, started_msec + int(chore_cap * 1000.0))") != -1,
 		"the hold cap must be RE-CHECKED during the hold -- a chore that starts alone must still yield when an authored toast joins the queue")
+	# VISUAL-LOG "Authored payoff prose queues behind housekeeping toasts": the
+	# re-checked CAP was still 1.6s of the moment spent on "Autosaved." -- and
+	# under the windowed QA hold (0.4s) the cap never binds at all, so every
+	# capture of that beat photographed the chore. Measured on invrisil_hat_quiet
+	# at seed 37: "Autosaved." was the ONLY one of the beat's three toasts that
+	# ever reached ui_toast_rendered. A chore now yields OUTRIGHT (cap 0.0) the
+	# moment authored copy is waiting; chore-behind-chore keeps the 1.6s cap.
+	assert(show.find("var chore_cap := 0.0 if _queue_has_authored() else TOAST_QUEUE_HOLD_CAP_SECONDS") != -1,
+		"a chore holding the strip must yield it outright to waiting AUTHORED copy, not merely cap at TOAST_QUEUE_HOLD_CAP_SECONDS")
+
+	var yielder := _stubbed_instance(raw)
+	yielder.set("_toast_draining", true)
+	assert(not bool(yielder.call("_queue_has_authored")),
+		"an empty queue holds nothing authored -- a lone chore must keep its own hold")
+	yielder.call("_queue_toast", "Autosaved. (Esc — save/load anytime)", true, true)
+	assert(not bool(yielder.call("_queue_has_authored")),
+		"a queue of pure chores must not make the showing chore yield -- that is the 1.6s cap's own case")
+	yielder.call("_queue_toast", "Your coat goes over the chair back with the package folded into it.")
+	assert(bool(yielder.call("_queue_has_authored")),
+		"authored prose waiting behind a chore must be visible to the hold loop -- got %s" % [_texts(yielder.get("_toast_queue"))])
+	yielder.free()
 
 
 ## The user directive for finding 8: the whole hold curve is the old one x1.5.

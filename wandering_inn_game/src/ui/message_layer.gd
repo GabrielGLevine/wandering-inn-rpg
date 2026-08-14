@@ -799,6 +799,30 @@ func _authored_insert_index() -> int:
 	return at
 
 
+## Is anything WAITING authored? The other half of `_authored_insert_index`'s
+## rule, asked of the entry currently ON the strip rather than of the queue.
+## GH#325 reordered the QUEUE, which does nothing in the sequence it was written
+## for: game.gd autosaves from inside its own QUEST_BEAT_COMPLETED listener,
+## which runs BEFORE the sim's quest/payoff toasts reach the bus, so the queue is
+## EMPTY when "Autosaved." arrives -- it is popped and showing by the time there
+## is anything to insert ahead of. Measured on `invrisil_hat_quiet` at seed 37:
+## the beat emits "Autosaved." then "Quest updated: ..." then the authored
+## payoff, and "Autosaved." is the ONLY one of the three that ever reached
+## `ui_toast_rendered` -- it is what the capture named for the payoff
+## photographs. So a chore holding the strip yields it the moment authored copy
+## is waiting, instead of merely being CAPPED at
+## TOAST_QUEUE_HOLD_CAP_SECONDS while it eats the moment.
+## LOSSLESS EITHER WAY: the chore has already rendered (the event fires before
+## the hold) and already recorded, so yielding costs it only the tail of its
+## hold -- no queue entry moves, no render is skipped, and the emission ORDER of
+## every `ui_toast_rendered` is byte-identical. Chore-behind-chore keeps the cap.
+func _queue_has_authored() -> bool:
+	for entry: Dictionary in _toast_queue:
+		if not bool(entry.get("housekeeping", false)):
+			return true
+	return false
+
+
 func dismiss_current_toast_early() -> void:
 	if _toast_panel.visible:
 		_toast_skip_requested = true
@@ -906,8 +930,15 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 				# with the payoff waiting behind it. Authored toasts are never
 				# clamped here; QA holds (0.05s/0.4s) are already under the cap, so
 				# canonical timing is untouched.
+				# ...and AUTHORED copy does not wait out even the cap: a chore
+				# yields the strip outright the moment authored prose is queued
+				# behind it (`_queue_has_authored`). That is what puts the payoff
+				# line on screen at its own beat -- the cap alone still spent 1.6s
+				# of the moment on "Autosaved.", and under the windowed QA hold
+				# (0.4s) that is the ENTIRE window a capture ever sees.
 				if chore and not _toast_queue.is_empty():
-					deadline_msec = mini(deadline_msec, started_msec + int(TOAST_QUEUE_HOLD_CAP_SECONDS * 1000.0))
+					var chore_cap := 0.0 if _queue_has_authored() else TOAST_QUEUE_HOLD_CAP_SECONDS
+					deadline_msec = mini(deadline_msec, started_msec + int(chore_cap * 1000.0))
 				tree = get_tree()
 				if tree == null:
 					return

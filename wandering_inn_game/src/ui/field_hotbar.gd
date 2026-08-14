@@ -49,6 +49,21 @@ const HINT_BAND_FALLBACK := 340.0
 ## the controls row can still reach the strip's own footprint at 3+ slots.
 const TOAST_BAND_RESERVE := \
 	-MESSAGE_LAYER_SCRIPT.TOAST_BOTTOM_DEFAULT + MESSAGE_LAYER_SCRIPT.TOAST_PANEL_BASE_SIZE.y
+## THE SAME BAND, HORIZONTALLY -- and the closure of the residual logged just
+## above (VISUAL-LOG "Legend <-> toast mutual overdraw still LOSES COPY at
+## length"). The vertical reserve is measured at the strip's BASE height, but a
+## toast is exactly as tall as its own copy wraps: a 4-line one tops out ~38px
+## INSIDE the reserve and, drawing on CanvasLayer 12 against this layer's
+## default, painted straight through the legend's last row -- clipped mid-word
+## ("...old timber in momen", "You have learned h"). Worse with progression:
+## the legend grows a row per field skill, so the overlap band deepens exactly
+## as the player earns more to read. A taller reserve is the same arithmetic one
+## round later (nothing bounds a toast's line count), so the two rects are made
+## mutually exclusive in X instead -- height-independent, and STATIC for the
+## same reason TOAST_BAND_RESERVE is: yielding live to each toast would jump the
+## panel under a reader. Derived from the strip's own `TOAST_LEFT` offset
+## against the live viewport width, never a copied number.
+const TOAST_BAND_CLEARANCE := 8.0
 
 
 var _hotbar: WIHotbar
@@ -449,7 +464,13 @@ func _layout_controls() -> bool:
 	var desired_height := content_height + frame_size.y
 	var reserved_bottom := maxf(_hotbar.size.y, TOGGLE_SIZE.y) + CONTROLS_BOTTOM_MARGIN + READOUT_GAP + READOUT_SELECTION_CLEARANCE
 	reserved_bottom = maxf(reserved_bottom, TOAST_BAND_RESERVE + READOUT_GAP)
-	var rect := WIFieldHotbarLayout.readout_rect(safe, READOUT_MAX_WIDTH, desired_height, reserved_bottom)
+	# The strip is bottom-RIGHT anchored on the viewport (not on this layer's
+	# safe rect), so its left edge is the viewport width plus its own negative
+	# offset -- read live, because text scale and window size both move it.
+	var toast_band_left: float = viewport_size.x + MESSAGE_LAYER_SCRIPT.TOAST_LEFT
+	var rect := WIFieldHotbarLayout.readout_rect(
+		safe, READOUT_MAX_WIDTH, desired_height, reserved_bottom,
+		toast_band_left - TOAST_BAND_CLEARANCE)
 	_readout_panel.position = rect.position
 	_readout_panel.size = rect.size
 	_readout_panel.custom_minimum_size = rect.size

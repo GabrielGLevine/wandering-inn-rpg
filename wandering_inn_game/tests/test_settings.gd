@@ -137,6 +137,17 @@ func _check_text_scale_drift_tripwire() -> void:
 	_assert_theme_const(theme_src, "Lore/font_sizes/font_size", 12)
 
 
+## Reads `const NAME := <number>` out of GDScript SOURCE. See the note in
+## `_check_field_hotbar_layout`: the UI scripts these constants live in cannot be
+## `load()`ed from a `--script` run without raising autoload Compile Errors.
+func _const_float(src: String, name: String) -> float:
+	var re := RegEx.new()
+	re.compile("const\\s+%s\\s*:=\\s*(-?[0-9]+\\.?[0-9]*)" % name)
+	var m := re.search(src)
+	assert(m != null, "could not find `const %s := <number>` in source" % name)
+	return float(m.get_string(1))
+
+
 func _assert_theme_const(src: String, key: String, expected: int) -> void:
 	var re := RegEx.new()
 	re.compile("%s\\s*=\\s*(\\d+)" % key.replace("/", "\\/"))
@@ -351,6 +362,60 @@ func _check_field_hotbar_layout() -> void:
 					assert(content_rect.encloses(rows_rect), "all rows must clear both border ornaments at %d rows, text step %d, %s" % [row_count, step, str(viewport)])
 				else:
 					assert(is_equal_approx(visible_rows.end.y, content_rect.end.y), "overflow must clip cleanly at the content bottom at %d rows, text step %d, %s" % [row_count, step, str(viewport)])
+
+	# VISUAL-LOG "Legend <-> toast mutual overdraw still LOSES COPY at length":
+	# the toast strip draws on a HIGHER CanvasLayer than the readout, so wherever
+	# the two rects share an x range the plate paints straight through the legend
+	# -- and the vertical reserve cannot close it, because it is measured at the
+	# strip's BASE height while a toast is as tall as its own copy wraps. The
+	# exclusion is therefore HORIZONTAL and height-independent: the readout's
+	# right edge must never reach the strip's live left edge. Derived here from
+	# the same two message_layer constants field_hotbar.gd reads, so a retune of
+	# the strip's own offsets moves the guard with it instead of stranding it.
+	# SOURCE-parsed, never `load()`ed: message_layer.gd and field_hotbar.gd both
+	# reference autoloads (ObservableBus, WIInputHints) that a `--script` run has
+	# never registered, so loading either here raises a Compile Error the
+	# preflight `unit` grep counts as a FAILURE even though the suite prints PASS.
+	# The tripwire discipline `_check_text_scale_drift_tripwire` already uses.
+	var message_source := FileAccess.get_file_as_string(MESSAGE_LAYER_PATH)
+	var toast_left_offset := _const_float(message_source, "TOAST_LEFT")
+	var toast_right_offset := _const_float(message_source, "TOAST_RIGHT")
+	assert(toast_left_offset < 0.0 and toast_right_offset < 0.0,
+		"the toast strip must stay bottom-RIGHT anchored for this exclusion to be derivable")
+	var clearance := _const_float(hotbar_source, "TOAST_BAND_CLEARANCE")
+	assert(clearance > 0.0, "the readout must keep a real gap from the toast band, not merely abut it")
+	# The pure function below can only be trusted if the layer actually FEEDS it
+	# the strip's live left edge -- derived from the viewport, never copied.
+	assert(hotbar_source.contains("var toast_band_left: float = viewport_size.x + MESSAGE_LAYER_SCRIPT.TOAST_LEFT")
+			and hotbar_source.contains("toast_band_left - TOAST_BAND_CLEARANCE"),
+		"the field readout must pass the toast strip's LIVE left edge into readout_rect, not a copied constant")
+	var outer_margin := float(layout.get("OUTER_MARGIN"))
+	for viewport: Vector2 in viewports:
+		var safe := Rect2(Vector2(18, 16), viewport - Vector2(36, 34))
+		var band_left := viewport.x + toast_left_offset
+		for row_count in range(1, 10):
+			var desired_height := float(row_count * 24) + 48.0
+			var rect: Rect2 = layout.call("readout_rect", safe, 720.0, desired_height, 104.0,
+				band_left - clearance)
+			assert(safe.encloses(rect),
+				"the toast-band exclusion must not push the readout off its own safe area at %d rows, %s" % [row_count, str(viewport)])
+			var left_stop := safe.position.x + outer_margin
+			if left_stop + rect.size.x <= band_left - clearance:
+				# The shipped 1280x720 case: the panel FITS beside the strip, so
+				# the two rects must not share a single column of x.
+				assert(rect.end.x <= band_left,
+					"field readout must stay clear of the toast strip's x band at %d rows, %s (readout ends %f, band starts %f)"
+						% [row_count, str(viewport), rect.end.x, band_left])
+			else:
+				# Narrower than the pair can hold (canvas_items stretch means the
+				# shipped game never gets here; the mobile safe-area rows do).
+				# Degrade to "as far left as the safe area allows" -- strictly less
+				# overlap than centring, never a slide off the panel's own edge.
+				assert(is_equal_approx(rect.position.x, left_stop),
+					"a viewport too narrow for the exclusion must still push the readout hard left at %d rows, %s" % [row_count, str(viewport)])
+			var centred := safe.position.x + (safe.size.x - rect.size.x) * 0.5
+			assert(rect.position.x <= centred + 0.5,
+				"the toast-band exclusion must only ever move the readout LEFT of centre at %d rows, %s" % [row_count, str(viewport)])
 
 
 func _check_combat_speed_math() -> void:
