@@ -23,6 +23,16 @@ Pins may be TIGHTER on the compiled side and never looser (§6.3). A compiled
 a tightening and passes; a subset is a loosening and fails. An extra compiled
 assert is a tightening; a shipped assert with no compiled counterpart is a
 claim the compiler dropped, and fails.
+
+The allowance EXTENDS to a compiled-only `wait_for_event` (user ruling,
+2026-08-14). Such a wait is strictly stricter and it cannot hide: if the event
+never fires the run does not finish, and `ITINERARY_RUN_GREEN` gates that. The
+asymmetry is the whole safety property -- the compiler may claim MORE, never
+less. So a compiled-only step of any OTHER action is still extra behaviour and
+still exact-class fatal, and a SHIPPED-only step of any action at all is a
+dropped claim and stays fatal in every case. Reclassified rows are not waved
+through silently: each one is logged individually, untruncated, in its own
+report block, so a reader can audit exactly what the allowance absorbed.
 """
 
 from __future__ import annotations
@@ -47,6 +57,12 @@ CURSOR_PRESSES = {"move_up": "up", "move_down": "down", "move_left": "left", "mo
 IGNORED_KEYS = {"_itin", "_comment", "timeout_sec"}
 # Compiled-only steps that are pure TIGHTENING rather than extra behaviour.
 ASSERT_ACTIONS = {"assert_state", "assert_event_logged", "assert_event_absent", "assert_event_count"}
+# The one action the 2026-08-14 ruling adds to that set. Kept separate from
+# ASSERT_ACTIONS because its rows are logged in their own report block: the
+# ruling permits them, it does not make them invisible. NEVER widen this to a
+# state-CHANGING action -- a compiled-only `press` is extra behaviour, not a
+# stricter claim about the same run.
+TIGHTENING_WAIT_ACTION = "wait_for_event"
 
 DIRECTIONS = {"up": (0, -1), "down": (0, 1), "left": (-1, 0), "right": (1, 0)}
 
@@ -57,6 +73,10 @@ class GoldenDiff:
     net: list[str] = field(default_factory=list)
     tolerance: list[str] = field(default_factory=list)
     tighter: list[str] = field(default_factory=list)
+    # Compiled-only `wait_for_event` rows the 2026-08-14 ruling moved out of
+    # exact-class. Its own list, its own counted line, its own untruncated
+    # block -- an allowance that stopped being auditable is a hole.
+    tightened_waits: list[str] = field(default_factory=list)
 
     @property
     def passed(self) -> bool:
@@ -66,23 +86,28 @@ class GoldenDiff:
         verdict = "GOLDEN PASS (within tolerance)" if self.passed else "GOLDEN FAIL"
         return (
             f"{verdict}: {len(self.exact)} exact-class, {len(self.net)} net-class, "
-            f"{len(self.tolerance)} tolerance-class, {len(self.tighter)} tightening(s)"
+            f"{len(self.tolerance)} tolerance-class, {len(self.tighter)} tightening(s), "
+            f"{len(self.tightened_waits)} compiled-only wait(s) reclassified"
         )
 
     def render(self, limit: int = 40) -> str:
         blocks = [self.summary()]
-        for label, rows in (
-            ("EXACT (fatal)", self.exact),
-            ("NET (fatal)", self.net),
-            ("TIGHTER (allowed)", self.tighter),
-            ("TOLERANCE (allowed)", self.tolerance),
+        # `None` = never truncate. The reclassified waits are the one block a
+        # reader is being asked to audit, so a `... and N more` tail there
+        # would defeat the point of logging them.
+        for label, rows, cap in (
+            ("EXACT (fatal)", self.exact, limit),
+            ("NET (fatal)", self.net, limit),
+            ("TIGHTER: compiled-only waits, reclassified per the 2026-08-14 ruling", self.tightened_waits, None),
+            ("TIGHTER (allowed)", self.tighter, limit),
+            ("TOLERANCE (allowed)", self.tolerance, limit),
         ):
             if not rows:
                 continue
-            shown = rows[:limit]
+            shown = rows if cap is None else rows[:cap]
             body = "\n".join(f"  {row}" for row in shown)
-            if len(rows) > limit:
-                body += f"\n  ... and {len(rows) - limit} more"
+            if cap is not None and len(rows) > cap:
+                body += f"\n  ... and {len(rows) - cap} more"
             blocks.append(f"{label}: {len(rows)}\n{body}")
         return "\n\n".join(blocks)
 
@@ -162,6 +187,24 @@ def _describe(step: dict[str, Any]) -> str:
     return f"[{node or '-'}] {body}" if len(body) <= 220 else f"[{node or '-'}] {body[:217]}..."
 
 
+def _describe_wait(step: dict[str, Any], index: int) -> str:
+    """A reclassified wait, spelled so nothing about it can be hidden.
+
+    `_describe` truncates at 220 chars and sorts keys, which puts `type` AFTER
+    a long `payload_contains` and drops it off the end -- the audit's most
+    load-bearing field, gone. So the event type leads, the payload shape
+    follows in full, and the compiled step index says where to go look.
+    """
+    body = _normalize(step)
+    body.pop("action", None)
+    event = str(body.pop("type", "?"))
+    payload = body.pop("payload_contains", None)
+    shape = "no payload pin" if payload is None else f"payload_contains={json.dumps(payload, ensure_ascii=False, sort_keys=True)}"
+    node = str(step.get("_itin", "")) or "-"
+    rest = f" {json.dumps(body, ensure_ascii=False, sort_keys=True)}" if body else ""
+    return f"compiled step {index} [{node}] wait_for_event type={event} {shape}{rest}"
+
+
 def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
     report = GoldenDiff()
     compiled_steps = list(compiled.get("steps", []))
@@ -174,8 +217,8 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
 
     # The tolerance-class steps between two significant ones are that gap's
     # ROUTE; the significant steps themselves are the spine the diff aligns on.
-    compiled_spine, compiled_gaps = _split(compiled_steps)
-    shipped_spine, shipped_gaps = _split(shipped_steps)
+    compiled_spine, compiled_gaps, compiled_at = _split(compiled_steps)
+    shipped_spine, shipped_gaps, _ = _split(shipped_steps)
 
     matcher = difflib.SequenceMatcher(
         None, [_key(step) for step in compiled_spine], [_key(step) for step in shipped_spine], autojunk=False
@@ -206,10 +249,15 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
         for index in range(c_lo, c_hi):
             step = compiled_spine[index]
             pending_compiled.extend(compiled_gaps[index])
-            if str(step.get("action", "")) in ASSERT_ACTIONS:
+            action = str(step.get("action", ""))
+            if action in ASSERT_ACTIONS:
                 report.tighter.append(f"compiled-only assert: {_describe(step)}")
+            elif action == TIGHTENING_WAIT_ACTION:
+                report.tightened_waits.append(_describe_wait(step, compiled_at[index]))
             else:
                 report.exact.append(f"compiled-only step (shipped has no counterpart): {_describe(step)}")
+        # The other direction is NOT symmetric and must never be made so: a
+        # shipped-only `wait_for_event` is a claim the compiler stopped making.
         for index in range(s_lo, s_hi):
             pending_shipped.extend(shipped_gaps[index])
             report.exact.append(
@@ -218,19 +266,27 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
     return report
 
 
-def _split(steps: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[list[dict[str, Any]]]]:
-    """Spine of significant steps, plus the tolerance-class run BEFORE each."""
+def _split(
+    steps: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[list[dict[str, Any]]], list[int]]:
+    """Spine of significant steps, the tolerance run BEFORE each, and where each sat.
+
+    The third list is the spine step's index in the ORIGINAL script, kept only
+    so a reported row can name the step a reader should open.
+    """
     spine: list[dict[str, Any]] = []
     gaps: list[list[dict[str, Any]]] = []
+    at: list[int] = []
     pending: list[dict[str, Any]] = []
-    for step in steps:
+    for index, step in enumerate(steps):
         if _significant(step):
             spine.append(step)
             gaps.append(pending)
+            at.append(index)
             pending = []
         else:
             pending.append(step)
-    return spine, gaps
+    return spine, gaps, at
 
 
 def _compare_pair(report: GoldenDiff, compiled: dict[str, Any], shipped: dict[str, Any]) -> None:
