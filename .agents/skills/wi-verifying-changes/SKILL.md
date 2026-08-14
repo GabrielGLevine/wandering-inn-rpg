@@ -326,3 +326,34 @@ the details.
   raced its own A/B probe's cp-restore on the same file and the composed
   commit shipped the probe's mutated state. One writer per file — humans
   and probes included.
+
+## "Cannot fail" has THREE forms — check all three (wave >=434)
+A guard is worthless if it cannot go red, and this wave shipped one of
+each kind before a gate caught it. When you claim a surface is
+protected, name which form you ruled out:
+1. **The assertion is inert.** It tests a hand-built structure rather
+   than the real path — four M3.6 criteria had tests over
+   hand-constructed operation dicts, so eight mutations severing the
+   real spec->planner->emitter chain all stayed green. Fix: at least one
+   test per criterion must start from the SHIPPED input and assert on
+   observable output.
+2. **The assertion is real but nothing runs it.** The entire Python
+   corpus (~357 tests, incl. every itinerary contract suite and the
+   differ's own safety guards) was wired into NO CI job until
+   2026-08-14 — CI's "Unit suites" runs `tests/test_*.gd` only. Fix:
+   before trusting a suite, grep the workflows for what actually
+   invokes it.
+3. **The proof of the guard is itself faked.** Three consecutive
+   attempts to mutation-prove one 5-line test fix all "passed" without
+   testing anything: the injected canary landed in a module docstring,
+   then after a `raise SystemExit`, then it was pre-created so it sat in
+   both snapshots. Fix: before trusting a mutation, verify the mutation
+   ACTUALLY EXECUTED (print from it, or confirm its side effect appeared
+   for the first time), then check the test reds.
+
+Corollary for size-capped docs: **HANDOFF.md (12,000 bytes) and
+CHOICE-LOG.md (30,000) are gate-enforced and both sit near the cap.**
+Check size in the same breath as the edit, and never chain a commit off
+a piped gate — `pytest ... | tail && git push` always pushes, because
+the pipeline's status is `tail`'s. That pushed main red twice in one
+session.
