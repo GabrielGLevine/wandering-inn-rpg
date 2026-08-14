@@ -110,6 +110,16 @@ text, `_itin` stamps — reported, never fatal). Pins may be TIGHTER on the
 compiled side and never looser. `press move_down` and `move {down, steps: N}`
 are the same cursor idiom and compare equal.
 
+Since the 2026-08-14 ruling the tightening allowance covers a compiled-only
+`wait_for_event` as well as `assert_*`: a wait the shipped script does not make
+is the stricter claim, and it cannot hide — if the event never fires the run
+does not finish. It runs ONE WAY. A compiled-only step of any other action is
+extra behaviour and fatal; a SHIPPED-only step of any action is a claim the
+compiler dropped and fatal; a compiled wait whose payload pin is a subset of
+the shipped one is a loosening and fatal. Every reclassified row is printed
+individually in its own report block, which the `--limit` truncation does not
+apply to.
+
 M2 accepts the whole frozen primitive set: `goto`, `talk`, `fight`, `sleep`,
 `equip`, `unequip`, `buy`, `sell`, `use_field`, `interact`, `journal`, `shot`,
 `assert`, `detour`, `raw`. Every node needs a stable `id`; every fork
