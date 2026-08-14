@@ -43,20 +43,23 @@ or superseded session blocks.
   follow-ups recorded on #449 (dilution-stated bands; 4g finale economy).
   #451 parked by user (Counter Strike power level, ablation data attached). Pre-existing red still open: d3_inventory_shot (inventory pin drift,
   predates the program). Windowed observation run launched for the user.
-- ORCHESTRATOR HANDOVER (Fable 89% weekly, 2026-08-13): if Fable
-  exhausts, OPUS RUNS THE WAVE — nothing here needs Fable-level
-  adjudication anymore. The gate discipline is canonical in
+- ORCHESTRATOR HANDOVER **EXECUTED 2026-08-14**: Fable weekly hit its
+  limit mid-gate (killed 3 auditors on the skirmisher lane); user
+  switched the session to Opus, which now runs the wave. Gates re-run
+  on Opus with the same template — no doctrine change. The gate discipline is canonical in
   wi-running-the-machine ("controller gate workflow" section, new);
   design docs are all written: equipment sketch
   (docs/superpowers/specs/2026-08-13-equipment-gaps-design.md, awaits
   user taste-pass), M3.6 + auto-consolidation + summoner specs on
   main, #485 name proposal posted (user approves per line). REMAINING
-  QUEUE (all mechanical under the gate template): merge #488 (done if
-  this line survives), Lich audit disposition (PASS->ship /
-  FAIL->punch-list to the same agent), skirmisher kit-gap lane,
-  #432 meal-cap lane, M3.6 dispatch (spec is the brief), [Blademaster]
-  rename lane, coverage lanes per #485 approvals, equipment lane per
-  sketch approval, M4 (after M3.6 golden passes). ESCALATION RULE for
+  QUEUE (all mechanical under the gate template): #488, #489 (Lich,
+  #460 closed) and #490 (meal cap, #432 closed) MERGED — 30 total;
+  skirmisher kit-gap lane sits at 6f77f0fa UNPUSHED with its gate
+  re-running on Opus (ship on PASS); then M3.6 dispatch (spec is the
+  brief), [Blademaster] rename lane, coverage lanes per #485 (blanket
+  GO 2026-08-13 night, "stragglers edited later" — class-surface
+  serialized, one lane at a time), equipment lane (sketch GO'd, §2
+  rails binding), M4 (after M3.6 golden passes). ESCALATION RULE for
   Opus: anything smelling like a NEW design ruling (spec contradiction,
   window unreachable inside sanctioned levers, canon question) goes to
   the USER directly — do not improvise doctrine; wave autonomy covers
@@ -125,13 +128,25 @@ or superseded session blocks.
 
 ## User-held
 
-- **#432 — balance ruling required:** `next_fight` `pending_meal` effects from
-  repeatable produce/use props currently stack without a cap. This predates the
-  improvised cudgel and also affects food props. Choose the stacking/reset rule
-  before implementation; current behavior remains accepted-on-precedent until
-  that issue is ruled.
 - **#19 — commercial gate:** any paid Steam path requires pirateaba's explicit
   permission. Free-on-Steam remains the recommended path.
+- **Balance rulings raised by the skirmisher lane (2026-08-14), both
+  escalated rather than improvised:**
+  1. `act2_cistern_nest` skirmisher 0.40 WALL is **structurally
+     unreachable** by the kit remedy: Acts I–IV measure the PARENT lines
+     (`spearmaster3/archer2`), not the consolidated class, and
+     spearmaster's table is empty under L10 while every archer grant is
+     bow-gated at a spear. Closing it means editing parent tables, which
+     moves spellspear / ranger / scout / sharpshooter — forbidden by
+     "other spines must not move". Needs its own ruling (accept the
+     mid-act wall, or sanction parent-table movement + re-window).
+  2. **[Ranger] walls identically** at the warden (0.33, mp 0, no
+     companion) — same diagnosis as skirmisher's pre-fix 0.26. Out of
+     that lane's scope; wants the same kit-gap treatment if ruled.
+- **Design calls still open from #488:** bonded wolf worth +0.79 at the
+  Warden (bigger than every stat/Skill/item combined); t6/t12/s16 read as
+  a level-budget problem, not capstone power; `beast_master14` 0.63→0.27
+  collateral wants a broaden-growth repair (class-design call).
 
 No other open issue is recorded here as waiting on user taste. Visual eye/ear
 reads remain in `docs/VISUAL-LOG.md`, where they can be accepted or promoted.
