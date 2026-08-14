@@ -143,8 +143,9 @@ r3–r5 playtest waves — gone from this file.
   the hint ribbon on the slot row: centring is cosmetic, the copy is
   information. Static, so nothing jumps under a reader.
   EVIDENCE, `qa/run_qa.sh property_seams windowed --seed=37`: readout was
-  x 280–1000 against a band starting at 808 (192px shared); it is now x 80–800,
-  an 8px gap, and `05_nook_cleared.png` shows legend row 4 ending in the whole
+  x 280–1000 against a band starting at 808 (192px shared); the plate's top
+  edge now measures x 80–799 off the PNG itself (same number in `02` and `05`),
+  a 9px gap, and `05_nook_cleared.png` shows legend row 4 ending in the whole
   word "moments." — the exact copy the row cited as clipped to "…old timber in
   momen" — with the 3-line `[Firefly]` toast beside it, not over it.
   `ui_field_hotbar_rendered` `bar_left`/`group_width` unchanged (422/436): the
