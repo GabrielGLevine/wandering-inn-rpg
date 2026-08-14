@@ -411,16 +411,33 @@ with 1-3 agents. The template that caught 6 real defects in two days:
   the punch list (context intact beats a fresh brief); re-audit only
   the fixed surfaces. A second gaming of the same surface moves it to
   controller-side implementation.
-- **PARALLEL AUDITORS MUST NOT MUTATION-TEST THE SAME WORKTREE**
-  (2026-08-14). Two auditors fanned out over one lane worktree both
-  ran cp-backup mutations; one caught the other's canary
-  (`"display_name": "Zzcanary"` live in classes.json) and correctly
-  reported the tree as untrustworthy mid-run. Restores were clean and
-  both verdicts survived, but any gate run straddling that window
-  proves nothing. Fix: give mutation-running auditors DISJOINT file
-  surfaces in their prompts, or serialize them, or hand each its own
-  worktree/copy. The one-writer-per-file rule covers auditors too —
-  they are writers while a mutation is live.
+- **A MUTATION-RUNNING AUDIT AND ANY OTHER WRITER MUST NEVER SHARE A
+  WORKTREE** (2026-08-14, bit TWICE in one session, the second time
+  landing a weakened gate on a pushed branch).
+  1. Two parallel auditors over one lane worktree both ran cp-backup
+     mutations; one caught the other's canary (`"display_name":
+     "Zzcanary"` live in classes.json) and correctly called the tree
+     untrustworthy mid-run. Verdicts survived, but any gate run
+     straddling that window proves nothing.
+  2. Worse: the controller SendMessage-resumed a lane to push while a
+     re-gate auditor was mid-mutation in that same worktree. The lane
+     ran a whole-tree stage and its "docs-only" commit captured the
+     auditor's live mutation — `pending_shipped.extend(...)` replaced
+     by `pass  # MUTATION B` in the differ under audit. The pushed
+     branch carried a gate that DROPS unmatched shipped gaps, and the
+     PR's quoted numbers (47/5) no longer matched its own code (47/7).
+     CI cannot catch this: a differ that under-reports looks exactly
+     like a differ that passes.
+  Rules: (a) auditors are WRITERS while a mutation is live — the
+  one-writer-per-file rule covers them; (b) NEVER resume a lane while
+  its gate is running, and never start a gate while the lane is live —
+  quiesce one before the other; (c) give mutation-running auditors
+  disjoint file surfaces, or serialize them, or hand each its own
+  copy; (d) every lane brief says READ `git diff --staged` BEFORE
+  COMMITTING and never `git add -A` in a worktree another process may
+  touch; (e) at gate time, diff the lane's commits against their own
+  messages — a commit whose diffstat exceeds its description is the
+  tell.
 - **Standing constraints**: max 2 concurrent implementation agents
   (3 drained a session window); one writer per file incl. controller
   probes AND auditors mid-mutation; serialize lanes sharing
