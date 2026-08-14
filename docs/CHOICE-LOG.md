@@ -19,34 +19,25 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 - **#19 — Steam commercial gate:** free-on-Steam is recommended. A paid path
   requires pirateaba's explicit permission before store or release work.
 
-- **[Blademaster]'s aspiration text is now incoherent — naming ruling
-  wanted (raised 2026-08-14 by the rename lane, escalated not
-  improvised).** `data/classes.json` still tells the class that "far
-  down this road waits the title of [Swordmaster]". That line was
-  derived from `[Swordsman]`'s canon advancement, but the repo's own
-  canon spike (`docs/superpowers/spike/wiki-warrior-line.md:91`) places
-  `[Blademaster]`/`[Blademistress]` ALONGSIDE `[Swordmaster]`/`[Sword
-  Saint]`, not beneath it — so the shipped text now points a class at a
-  peer rather than at a summit. Options: keep `[Swordmaster]`, promote
-  the aspiration to `[Sword Saint]`, or retire it. The rename ships
-  ahead of this (it was explicitly ruled); the aspiration is a separate
-  naming call.
+- **[Blademaster]'s aspiration — naming ruling wanted (2026-08-14).**
+  `data/classes.json` still points the class at "the title of
+  [Swordmaster]", but the canon spike
+  (`docs/superpowers/spike/wiki-warrior-line.md:91`) puts
+  `[Blademaster]` ALONGSIDE `[Swordmaster]`, not beneath it — the text
+  now aims a class at a peer. Keep it, promote to `[Sword Saint]`, or
+  retire it. The ruled rename ships ahead of this.
 
 ## Current product and system rulings
 
 ### User rulings 2026-08-13 (#438 wave-close batch)
 
-- **A lowercase `swordsman` in prose is a common noun, not a class
-  render — leave it (controller execution call, 2026-08-14).**
-  `data/dialogue/pisces_magic.json:121` ("You hold yourself like a
-  swordsman more than a scholar") survives the [Blademaster] rename
-  untouched: it is gated on Pisces-conversation flags rather than on
-  holding the class, and his reply is about his father's rapier, so it
-  means "someone who fights with a sword". Substituting "blademaster"
-  would assert mastery the line does not mean; any other wording is new
-  authored prose, i.e. a voice decision nobody asked for. Rule
-  generalizes: rename lanes change RENDERS of a class name, never
-  common-noun prose that happens to share the word.
+- **Rename lanes change RENDERS of a class name, never common-noun
+  prose that shares the word (controller call, 2026-08-14).** Pisces'
+  "you hold yourself like a swordsman" survives the [Blademaster]
+  rename: it is gated on conversation flags, not on holding the class,
+  and means "someone who fights with a sword". "Blademaster" would
+  assert mastery the line does not; anything else is unrequested new
+  prose.
 - **#485 name proposal: blanket GO, user edits stragglers later
   (2026-08-13 night).** All proposed first-order names proceed;
   wiki-verify at build still binds; post-bar hits still return for
@@ -192,27 +183,16 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   as resolved-by-#449); nothing is scaffolded into existence silently and main
   goes green immediately.
 - **#475 was a shape test, not a design exclusion (2026-08-13).** The
-  [Dangersense] overlay dropped every encounter lacking `encounter_when`.
-  Archaeology on #413 (`1b7a21df`, both call sites, one commit): no rationale
-  in code, commit message, or this log, and the standing ruling above is "a
-  passive-held field aura over existing encounter trigger regions". The sim's
-  own authority, `_check_trigger_radius`, never tests that key, and
-  `encounter_gate_met` already answers true for a gateless encounter — so the
-  filter was a defect that hid the one Act I fight a player cannot walk around.
-  Un-hiding it reveals four auras: `goblin_encounter_1` (the gate-road ambush,
-  the point of the fix) and `alley_footpads_a`/`_b` are ungated ambushes on
-  public routes and ship as-is; `counting_room_guard` sits inside the #398 P4
-  three-gate pocket, so an aura there would glow inside a sealed room. It gains
-  `encounter_when.requires{counting_room_open}` — P4's copy of P3's shared
-  pocket-open counter, banked atomically by all three modes — rather than a new
-  OR arm in the gate vocabulary. Overlay parity is now by construction: the
-  overlay reads the sim's predicate instead of keeping a second rule.
+  [Dangersense] overlay's `encounter_when` filter was a defect, not a rule — it
+  hid the one Act I fight a player cannot walk around. Overlay parity is now by
+  construction: the overlay reads the sim's predicate instead of keeping a
+  second rule. `counting_room_guard` gains
+  `encounter_when.requires{counting_room_open}` so no aura glows inside the
+  #398 sealed pocket, rather than a new OR arm in the gate vocabulary.
 - **#474 mothbear determination: placement clean (2026-08-13).**
-  `road_mothbears` (23,12) is Chebyshev 10 from the nearest water cell and has
-  no floor layer at all; the map's water is a single pond at x7-13/y17-21. The
-  "on the pond" read was `goblin_night_patrol`, which stood at (10,21) — inside
-  that pond — until this wave walked it ashore to (7,21). One entity, one
-  defect; a windowed night read of the wagon road is on record.
+  `road_mothbears` was never on water; the "on the pond" read was
+  `goblin_night_patrol`, which stood inside the pond until this wave walked it
+  ashore to (7,21). One entity, one defect.
 
 ### Steel thread and item abilities (2026-08-11)
 
