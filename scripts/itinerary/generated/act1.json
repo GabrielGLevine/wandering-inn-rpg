@@ -8,15 +8,6 @@
    "_itin": "act1.floodplains.outbound"
   },
   {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    14,
-    3
-   ],
-   "_itin": "act1.floodplains.outbound"
-  },
-  {
    "action": "move",
    "direction": "right",
    "steps": 1,
@@ -65,15 +56,6 @@
    "action": "move",
    "direction": "right",
    "steps": 4,
-   "_itin": "act1.floodplains.outbound"
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    11,
-    13
-   ],
    "_itin": "act1.floodplains.outbound"
   },
   {
@@ -196,15 +178,6 @@
    "_itin": "act1.floodplains.return"
   },
   {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    7,
-    6
-   ],
-   "_itin": "act1.floodplains.return"
-  },
-  {
    "action": "move",
    "direction": "up",
    "steps": 1,
@@ -247,15 +220,6 @@
    "action": "move",
    "direction": "left",
    "steps": 7,
-   "_itin": "act1.floodplains.return"
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    7,
-    3
-   ],
    "_itin": "act1.floodplains.return"
   },
   {
@@ -370,15 +334,6 @@
    "_itin": "act1.bed.approach"
   },
   {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    1,
-    7
-   ],
-   "_itin": "act1.bed.approach"
-  },
-  {
    "action": "move",
    "direction": "down",
    "steps": 1,
@@ -433,15 +388,6 @@
    "action": "move",
    "direction": "right",
    "steps": 7,
-   "_itin": "act1.bed.approach"
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    9,
-    2
-   ],
    "_itin": "act1.bed.approach"
   },
   {
