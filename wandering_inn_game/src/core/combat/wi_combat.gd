@@ -178,6 +178,11 @@ func _build_combatant(cfg: Dictionary, cell: Vector2i) -> Dictionary:
 		WIKeys.MOVE_POOL: 0,
 		"statuses": {},
 		WIKeys.ALIVE: true,
+		# #474: the bonded ROLE rides the combatant, not the roster call, so a
+		# companion is recognisable as one from inside the fight -- which is what
+		# a Skill that answers companions has to ask. Absent key == false, so
+		# every existing row keeps its shape byte-for-byte.
+		WIKeys.BONDED: bool(cfg.get(WIKeys.BONDED, false)),
 	}
 	for sk: Variant in cfg.get(WIKeys.SKILLS, []):
 		c[WIKeys.SKILLS].append(String(sk))

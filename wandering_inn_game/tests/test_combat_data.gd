@@ -15,6 +15,10 @@ const KNOWN_ICONLESS_SKILLS := {
 	"raise_bones": true,
 	"raskghar_maul": true,
 	"slam": true,
+	# #474 the companion counter. Enemy-kit only by construction and by gate:
+	# `data_lint.check_companion_counter` requires it to answer a `bonded` role
+	# and no class grants it, so the hotbar never renders a slot for it.
+	"sunder_the_bond": true,
 }
 
 const VISUAL_LOG_ICON_SKILLS := [

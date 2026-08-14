@@ -29,6 +29,19 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 	var t: Dictionary = combat.combatants.get(target_id, {})
 	if t.is_empty() or not t.get(WIKeys.ALIVE, false):
 		return false
+	# #474 THE TARGET RULE, and it sits here -- above every effect arm, below the
+	# alive/exists lookup -- so it binds whatever effect a future counter is built
+	# out of. A Skill carrying `target_rule: "bonded"` is spendable ONLY on a body
+	# that arrived through a bond, a taming or a raising; against a lone PC it
+	# REFUSES, which is the whole reason a companion counter can be authored onto
+	# a shared encounter without touching what a companionless build fights.
+	#
+	# REFUSING, not silently swinging: `use_skill` has already charged nothing at
+	# this point (`spend_skill_costs` runs inside each arm), and `WICombatAI`'s
+	# own scan treats false as "try the next thing", so the holder falls through
+	# to its ordinary attack instead of losing the turn.
+	if not target_rule_met(skill, t):
+		return false
 	var same_side := String(t[WIKeys.SIDE]) == String(a[WIKeys.SIDE])
 	if effect_type == "heal":
 		if not same_side:
@@ -68,6 +81,26 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 			return _resolve_icy_floor(combat, actor_id, a, target_id, skill, effect)
 		"blast_damage":
 			return _resolve_blast_damage(combat, actor_id, a, target_id, skill, effect)
+	return false
+
+
+## #474. The single reading of `target_rule`, shared by the resolver above and by
+## `WICombatAI`'s scan -- if the AI and the resolver disagreed about who is a
+## legal target, the AI would spend a turn proposing a Skill the engine refuses.
+##
+## AN UNKNOWN RULE REFUSES. A typo'd `target_rule` must not fall through to
+## "no rule, everyone is legal": that is the failure mode where a counter authored
+## for companions quietly becomes a 1.6x strike on the PC. `data_lint`'s
+## `check_target_rule_vocabulary` reds the typo statically; this refuses it at
+## runtime as well, because the two guards fail differently and both are cheap.
+const TARGET_RULES := ["bonded"]
+
+static func target_rule_met(skill: Dictionary, target: Dictionary) -> bool:
+	var rule := String(skill.get(WIKeys.TARGET_RULE, ""))
+	if rule == "":
+		return true
+	if rule == "bonded":
+		return bool(target.get(WIKeys.BONDED, false))
 	return false
 
 

@@ -2122,6 +2122,73 @@ def check_stat_growth_flat(parsed: dict, errors: list) -> None:
 					"stat; it never doubles one. Add a stat, do not steepen one.")
 
 
+TARGET_RULES = ("bonded",)
+
+
+def check_companion_counter(parsed: dict, maps: dict, errors: list) -> None:
+	"""#474 THE COMPANION COUNTER'S TWO HALVES, held together statically.
+
+	The counter is `target_rule: "bonded"` on a Skill (src/core/combat/
+	skill_effects.gd) answering `bonded: true` on a combatant row. Each half is
+	inert without the other, and both failure modes are SILENT at runtime -- a
+	companion missing the flag walks past every counter ever authored and simply
+	wins, and a Skill whose rule nothing answers is a boss ability that never
+	fires. Neither reds a sim; both read as a balance number nobody can explain.
+
+	Three arms:
+
+	  1. Every `companion_source.companion_id` reachable in map data names a
+	     combatant carrying `bonded: true`. This is the one that matters for the
+	     future: the NEXT companion cannot ship without meeting the counters that
+	     already exist, so "generalises to every future companion" is a gate
+	     rather than a hope.
+	  2. Every `target_rule` on a skill is in the vocabulary the engine actually
+	     implements. An unknown rule refuses at runtime by design, so a typo
+	     would silently disable a boss's answer rather than crash.
+	  3. A `target_rule` skill must have at least one body in the bestiary that
+	     satisfies it, or it is dead data pretending to be a mechanism."""
+	combatants = (parsed.get(DATA / "combatants.json") or {}).get("combatants", [])
+	bonded_ids = {
+		str(row.get("id")) for row in combatants
+		if isinstance(row, dict) and row.get("bonded") is True
+	}
+	by_id = {str(row.get("id")): row for row in combatants if isinstance(row, dict)}
+
+	for map_id, m in sorted(maps.items()):
+		for entity in m.get("entities", []):
+			source = entity.get("companion_source")
+			if not isinstance(source, dict):
+				continue
+			companion_id = str(source.get("companion_id", ""))
+			if not companion_id:
+				continue
+			if companion_id not in by_id:
+				errors.append(f"maps/{map_id}: entity {entity.get('id', '<no id>')!r} bonds "
+					f"{companion_id!r}, which is not a combatants.json row")
+				continue
+			if companion_id not in bonded_ids:
+				errors.append(f"combatants.json: {companion_id!r} is fielded as a companion "
+					f"(maps/{map_id} entity {entity.get('id', '<no id>')!r}) but does not carry "
+					"`bonded: true` -- every companion-answering Skill (target_rule 'bonded') "
+					"would refuse against it, so the body would silently bypass every counter "
+					"the game has authored. See WIKeys.BONDED.")
+
+	for skill in (parsed.get(DATA / "skills.json") or {}).get("skills", []):
+		if not isinstance(skill, dict):
+			continue
+		rule = skill.get("target_rule")
+		if rule is None:
+			continue
+		if rule not in TARGET_RULES:
+			errors.append(f"skills.json: {skill.get('id')!r} carries target_rule {rule!r}, which "
+				f"the engine does not implement (known: {', '.join(TARGET_RULES)}). "
+				"WISkillEffects.target_rule_met REFUSES an unknown rule, so this Skill would "
+				"never fire and no test would say so.")
+		elif rule == "bonded" and not bonded_ids:
+			errors.append(f"skills.json: {skill.get('id')!r} answers bonded bodies, but no "
+				"combatants.json row carries `bonded: true` -- the Skill is unreachable.")
+
+
 def check_lineage_completeness(parsed: dict, errors: list) -> None:
 	"""Require one authored consolidation target or a reasoned exemption per
 	reachable held-pair. Target identity is exact inheritance, not merely a broad
@@ -2566,6 +2633,7 @@ def main() -> int:
 	check_placements_off_water(maps, errors)
 	check_moods(parsed, maps, errors)
 	check_stat_growth_flat(parsed, errors)
+	check_companion_counter(parsed, maps, errors)
 	check_lineage_completeness(parsed, errors)
 	check_consolidation_skill_coverage(parsed, errors, report)
 	advisories: list = []

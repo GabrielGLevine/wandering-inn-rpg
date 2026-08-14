@@ -668,7 +668,88 @@ func _derived_spines(classes: Dictionary) -> Array:
 	return out
 
 
-func _spine_build(spine: Dictionary, act: String) -> Dictionary:
+## THE HOLDABLE LINE (#474). `consolidations[].parent_lines` names the line the
+## MERGE requires, and on three rows that line is an EVOLVED class: [Spellspear]
+## and [Skirmisher] name `spearmaster`, [Wild Sage] names `beast_master`.
+##
+## THE PROVENANCE, checked rather than assumed -- an earlier draft of this
+## comment blamed #472 and that is wrong in a way worth correcting, because a
+## future lane reads this to learn WHY the walk exists. The evolved line_a is
+## #449's ([Spellspear], `e2a8e4ca`): that commit already reads
+## `[['spearmaster'], ['mage', 'ice_mage', 'fire_mage']]`, i.e. line_a was the
+## sole evolved parent from the day the row was authored, under the
+## SPEAR-OWNS-ITS-HYBRIDS ruling. #472 (`4cb5d24a`) narrowed only the MAGE side
+## of that row to `['mage']` and never touched line_a. [Skirmisher] and
+## [Wild Sage] were authored ALREADY narrow by the #438 trio (`269f94d8`) --
+## `[['spearmaster'], ['archer']]` and `[['beast_master'], ['mage']]` -- on a
+## branch #472 is not even an ancestor of, so #472 is not in their history at
+## all. BLAST RADIUS, therefore: naming an evolved parent is the consolidation
+## convention itself, not one commit's narrowing, and every future
+## evolved-lineage target inherits the same shape and the same need for this
+## walk.
+##
+## Acts I-IV impose 2/3/5/7, and NO PLAYER CAN HOLD AN EVOLVED CLASS AT THOSE
+## LEVELS: an evolution is reached by evolving its base at `evolution.at_level`
+## 10, so the evolved class's own `levels` table starts at 10 and has no rung
+## below it -- and `WIProgression.derived_stat_bonuses` sums `growth[stat] *
+## held` with no table-floor check, so an out-of-table level does not refuse,
+## it quietly pays the evolved class's growth curve.
+## A build nobody can hold is not a balance read, so this walks the `inherits`
+## chain down to the class the band allocation actually puts in the player's
+## hands and measures THAT.
+##
+## THIS IS A MODEL FIX, NOT A TUNING KNOB, and the difference is checkable: it
+## changes no game data at all. It fixed the cell it was reached for --
+## `spellspear` act III 0.89 -> 0.78 -- and it SURFACED FOUR MORE, which is the
+## honest half and must not be quietly re-tuned away: `spellspear` act I
+## 0.79 -> 0.88 and act IV 0.83 -> 0.92, `skirmisher` act I 0.79 -> 0.88 and act
+## IV 0.81 -> 0.89. Those cells did not get harder; they were being measured at
+## `spearmaster`'s str+dex growth applied to levels the class does not have,
+## instead of at `warrior`'s str+con, and a spear build (+1/+2 damage rungs the
+## sword family has no answer to, plus [Piercing Strikes] at 2 AP for 1.4x with
+## no bound) really is over the ceiling in Acts I and IV.
+##
+## THE LANE THAT LANDED THIS DID NOT CHASE THEM, deliberately, and the attempt is
+## on the record so the next one does not repeat it. The only lever that reaches
+## those four is [Piercing Strikes] itself; capping it once per round brings all
+## four inside the window (0.85/0.83/0.85/0.84, 100 seeds) -- and it also moves
+## the SHIP column, which is the steel thread's own build, by up to 0.12
+## (`act2_cistern_nest` ship/competent 0.54 -> 0.42, `act5_seal_warden`
+## 0.62 -> 0.54). At a single seeded run that is authored victory pins losing
+## fights, and re-authoring the steel thread is not a re-window. So the cap was
+## reverted and these four are a REPORTED FINDING for adjudication. Act V is untouched by
+## construction: it holds the consolidated target, which every holder reaches.
+##
+## The walk is by TABLE, never by a hardcoded id list: a class is holdable at
+## `level` when its own `levels` array carries a rung at or below it. Add a new
+## evolution tomorrow and this reads it without an edit.
+static func holdable_line(class_id: String, level: int, classes: Dictionary) -> String:
+	var by_id := {}
+	for cls: Dictionary in classes.get("classes", []):
+		by_id[String(cls[WIKeys.ID])] = cls
+	var current := class_id
+	var guard := 0
+	while guard < 8:
+		guard += 1
+		var cls: Dictionary = by_id.get(current, {})
+		if cls.is_empty():
+			return current
+		var floor_level := 9999
+		for rung: Dictionary in cls.get("levels", []):
+			floor_level = mini(floor_level, int(rung["level"]))
+		if floor_level <= level:
+			return current
+		# `inherits` is a String on an evolution and an Array on a consolidation
+		# target; only the evolution shape can be walked down, and a target is
+		# never asked (Act V holds it at 14, which its own table carries).
+		var inherits: Variant = cls.get("inherits", "")
+		if not (inherits is String) or String(inherits) == "":
+			return current
+		current = String(inherits)
+	return current
+
+
+static func spine_build(spine: Dictionary, act: String, classes: Dictionary) -> Dictionary:
 	var act_i := ["I", "II", "III", "IV", "V"].find(act)
 	assert(act_i >= 0, "unknown spine act %s" % act)
 	var levels: Array = SPINE_LEVELS[act]
@@ -676,9 +757,17 @@ func _spine_build(spine: Dictionary, act: String) -> Dictionary:
 	if act == "V":
 		held[String(spine["target"])] = int(levels[0])
 	else:
-		held[String((spine["parents"] as Array)[0])] = int(levels[0])
+		var line_a := holdable_line(String((spine["parents"] as Array)[0]), int(levels[0]), classes)
+		held[line_a] = int(levels[0])
 		if int(levels[1]) > 0:
-			held[String((spine["parents"] as Array)[1])] = int(levels[1])
+			var line_b := holdable_line(String((spine["parents"] as Array)[1]), int(levels[1]), classes)
+			# A COLLISION WOULD MEASURE ONE LINE AND CALL IT TWO. Two parents that
+			# walk down to the same base would silently collapse into a single
+			# dictionary key at the SECOND line's level, which is a quieter and
+			# worse lie than the one this walk exists to fix.
+			assert(line_b != line_a,
+				"spine %s: both parent lines resolve to %s at act %s" % [spine["target"], line_a, act])
+			held[line_b] = int(levels[1])
 	var parts: Array[String] = []
 	for class_id: String in held:
 		parts.append("%s%d" % [class_id, held[class_id]])
@@ -935,7 +1024,7 @@ func _init() -> void:
 			var record := _find_record(row_id)
 			var row: Dictionary = record["row"]
 			var entity: Dictionary = record["entity"]
-			var build := _spine_build(spine, String(row["act"]))
+			var build := spine_build(spine, String(row["act"]), classes)
 			var pc := _make_pc(batch, build, by_id, classes, skills_by_id, items_by_id)
 			var cfgs := _spine_cfgs(record, pc, by_id)
 			var rank := WIProgression.power_rank(build["classes"], classes) if bool(entity.get("scales", false)) else "bronze"
@@ -1249,6 +1338,10 @@ func _findings() -> String:
 			_cell_text(_spine_cell("spellsword", "act5_seal_warden"))],
 		"",
 		"9. **The capstone growth trim was right, and it was not the mechanism (#438).** classes.json's flat-growth rule retired an 'evolution bump' convention that had spread to seven classes one citation at a time. It is a real correction — the band yardstick grows 1+1 and nothing should out-stat it 2:1 — and `data_lint.py::check_stat_growth_flat` now keeps it from creeping back. But measured against the fight it was reached for, `strategist.stat_growth.int` 2 → 1 moves the strategist-16 row 1.00 → 0.99. The rows that were over the ceiling were over it for TWO other reasons: an over-band level budget (finding above) and the wolf. Trimming class data was the first lever the ruling named and the smallest one that was actually there; recording that honestly is worth more than a tidy causal story.",
+		"",
+		"10. **THE COMPANION COUNTER EXISTS, AND WHAT IT CANNOT REACH IS THE POINT (#474).** The user ruling of 2026-08-14 answered finding 8 with a mechanism rather than a nerf: the apex body of a fight may carry `target_rule: \"bonded\"` (shipped as [Sunder the Bond] on `seal_warden`, `raskghar_awakened` and `shield_spider_matriarch`), which is spendable ONLY on a body that reached the field through a bond, a taming or a raising. It answers the ROLE, so every future companion meets it on the day it ships, and a companionless build fights the identical fight -- the resolver refuses, and `tests/test_companion_counter.gd` asserts both directions. It brought the Act III companion cells inside the window (0.88 -> 0.81 at 100 seeds, both bonded spines). TWO CELLS IT DOES NOT REACH, and each fails for its own measured reason rather than for want of tuning. **Act V is a STEP, not a slope.** The wolf is worth +0.87 there, so the counter's whole job is to shave about a seventh of it, and no setting does: the A/B ladder (100 seeds, `_kit_probe.gd`) reads mult 2.0 -> `wild_sage14` 0.94 / `druid14` 0.78 and mult 2.2 -> 0.65 / 0.36, with nothing between, because the entire distance across the window is whether ONE blow kills a 30-or-34-HP companion -- and the four HP that decide it are [Pack Bond]'s. The setting that lands `wild_sage14` in window puts `druid14` at 0.36, below the floor, so the shipped setting is the one that keeps `druid14` in window and leaves `wild_sage14` above the ceiling: per the NO-AUTO-WIN doctrine that row is SURFACED, not tuned around. **Act II SATURATES.** wild_sage/druid read 0.90 at 400 seeds, and the counter is worth about 0.03 there at any strength (mult 2.0/2.2/2.5 all read 0.86 at 100 seeds) -- because at a three-body nest the second body's value is its own damage, not the boss's attention, and no amount of the matriarch answering it changes the arithmetic. Displacement was tried and REJECTED by measurement, which is worth recording so nobody reaches for it twice: a shove costs the boss the damage turn it spent shoving, and `wild_sage14`/`druid14` read 0.98/0.94 with it -- worse than no counter at all.",
+		"",
+		"11. **A THREAT MODEL THAT PRICED A SKILL NOBODY CAN BE HIT BY (#474).** `WICombatPolicies._biggest_foe_threat` sizes `_survive`'s hit floor from the largest `damage_mult` in any living foe's kit, and it took the max over ALL of them. The companion counter is the first shipped Skill that discriminates by target, so it was the first to expose the gap: a 2.0x that can only ever land on a companion was raising the healing threshold of a PC with no companion, in every fight with a carrier on the board. It was not theoretical and it was not small -- `act3_awakened_boss_solo` band/competent read 0.37 before the counter existed and 0.29 with the threat model unfixed, breaking a RULED window ([0.35, 0.45], #448) in a fight whose composition had not changed by one body. Fixed by asking the engine's own `WISkillEffects.target_rule_met` before pricing a Skill, after which the row reads 0.37 again, seed for seed.",
 	])
 
 

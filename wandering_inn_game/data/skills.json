@@ -247,6 +247,22 @@
    "description": "Thrusts that seek the seams in any guard."
   },
   {
+   "_comment": "#474 THE COMPANION COUNTER (user ruling 2026-08-14, docs/CHOICE-LOG.md: 'The Warden gains a COUNTER to companions, not a companion nerf: the wolf is worth +0.79 there but is the spine's identity, and a boss that can threaten a companion generalises to every future one.'). It is authored ONCE, here, and carried by the apex body of the three fights a companion was measured to trivialise -- seal_warden, raskghar_awakened, shield_spider_matriarch. WHAT MAKES IT GENERAL: `target_rule: bonded` names a ROLE, never an id, so the day a second companion ships it meets this Skill on the day it ships, and a boss authored tomorrow answers every companion by carrying one line. WHAT MAKES IT SAFE FOR EVERY OTHER BUILD: `resolve_active` REFUSES it against a body that is not bonded, so a companionless spine fights the identical fight it fought before -- measured, not asserted: every non-companion cell at all three encounters reads byte-identical across this change (lane report). NOT A DELETE BUTTON, and the shipped numbers are `mult` 2.0 at `cooldown_rounds` 1 -- which is ONCE PER ROUND, not once every two: `WICombat.cooldown_remaining` stamps `round_number + cooldown_rounds`, so 1 means unavailable for the rest of THIS round and ready again next (wi_combat.gd's `cooldowns` contract). At the Seal Warden that is about 25 damage into a 30-to-34 HP companion, so the second body is wounded hard and usually survives the first blow: it still buys the turns it is meant to buy, and it still dies to a boss that keeps deciding to kill it. SIZED BY A/B AT 100 SEEDS AND THE LADDER IS THE FINDING, not the setting -- 2.0 reads `wild_sage14` 0.94 / `druid14` 0.78 and 2.2 reads 0.65 / 0.36, with NOTHING in between, because the whole distance across the window is whether one blow is lethal and the four HP that decide it are [Pack Bond]'s. 2.0 is shipped because it is the side of that step which keeps `druid14` inside [0.55, 0.85]; `wild_sage14` above the ceiling is SURFACED per NO-AUTO-WIN (user ruling 2026-08-14), never tuned around. Re-tune from the ladder in docs/design/spine-viability-table.md finding 10, not from this line.",
+   "id": "sunder_the_bond",
+   "display_name": "[Sunder the Bond]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "cooldown_rounds": 1,
+   "target_rule": "bonded",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 2.0
+   },
+   "description": "It reaches past the one holding the leash for the thing on the end of it."
+  },
+  {
    "id": "quick_slash",
    "display_name": "[Quick Slash]",
    "contexts": [

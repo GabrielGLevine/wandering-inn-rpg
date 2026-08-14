@@ -33,6 +33,20 @@ static func _act_once(combat: WICombat, id: String) -> bool:
 	)
 	if foes.is_empty():
 		return false
+	# #474 THE COMPANION COUNTER, ahead of the profile scan and outside it.
+	#
+	# WHY ABOVE THE MATCH: it has to reach every profile. A counter that only the
+	# melee arm could spend would be an answer to companions on melee bosses,
+	# which is not a rule, it is a coincidence -- the Seal Warden is `melee` and
+	# the Awakened is `caster`, and both are meant to answer a second body.
+	#
+	# WHY THIS COSTS NOTHING ANYWHERE ELSE: the scan is over the ACTOR'S OWN kit
+	# and returns immediately when nothing in it carries a `target_rule`. Every
+	# combatant in the game today except the three that were authored the counter
+	# leaves this function on the first loop with no state touched, so the whole
+	# shipped bestiary behaves byte-for-byte as it did.
+	if _act_target_ruled(combat, id, c, foes):
+		return true
 	match profile:
 		"ranged":
 			return _act_ranged(combat, id, c, foes)
@@ -48,6 +62,48 @@ static func _act_once(combat: WICombat, id: String) -> bool:
 			return _act_coward(combat, id, c, foes)
 		_:
 			return _act_melee(combat, id, c, foes)
+
+
+## #474 THE COMPANION COUNTER'S ARM. Spends a `target_rule` Skill on the first
+## legal target in weapon reach, and answers "did I act", never "did I try" --
+## `take_turn` breaks on the first refused action, so an arm that returned true
+## for a Skill the engine then refused would cost its holder the whole turn
+## (the GH#337 lesson, restated here because this arm refuses BY DESIGN most
+## rounds: no companion on the field is the common case).
+##
+## REACH, not range: the counter is authored as a `damage_mult`, and
+## `resolve_active`'s damage_mult arm gates on `in_weapon_range`. Asking the same
+## question here is what keeps the AI from proposing a strike the resolver
+## declines -- and it is asked through the engine's own predicate rather than a
+## second copy of the distance rule.
+##
+## `foes` arrives HP-ascending from `alive_enemies_of`, so the first legal target
+## is the weakest bonded body on the board. That ordering is deliberate and it is
+## the one place this arm is opinionated: a boss that answers companions should
+## answer the one it can actually finish.
+static func _act_target_ruled(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
+	for sk: String in (c[WIKeys.SKILLS] as Array):
+		var s: Dictionary = combat.skills.get(sk, {})
+		if String(s.get(WIKeys.TARGET_RULE, "")) == "":
+			continue
+		if not _can_afford(combat, c, s):
+			continue
+		var effect: Dictionary = s.get(WIKeys.EFFECT, {})
+		for foe: String in foes:
+			if not WISkillEffects.target_rule_met(s, combat.combatants[foe]):
+				continue
+			# REACH IS THE EFFECT'S OWN, asked the way the resolver will ask it: a
+			# `range`-carrying effect clips on Chebyshev + LOS, a weapon-shaped one
+			# on `in_weapon_range`. Proposing a strike the resolver then declines
+			# would cost the holder its whole turn (`take_turn` breaks on the first
+			# refusal), which is the GH#337 lesson this arm is built around.
+			if effect.has(WIKeys.RANGE):
+				if combat.chebyshev(id, foe) > int(effect[WIKeys.RANGE]) or not combat.has_los(id, foe):
+					continue
+			elif not combat.in_weapon_range(id, foe):
+				continue
+			return combat.use_skill(sk, foe)
+	return false
 
 
 ## #460 THE SUMMONER ARM, and it sits ahead of the offensive scan on purpose:

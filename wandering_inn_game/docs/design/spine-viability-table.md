@@ -70,10 +70,10 @@ The spine list is derived from every target in `data/classes.json`'s `consolidat
 
 | Act | Climax | Spine | Band build | competent | Disposition |
 |---|---|---|---|---|---|
-| I | `act1_gate_ambush` | `spellspear` | spearmaster2 | WIN 0.79 / 4 rd / +18 | IN WINDOW |
-| II | `act2_cistern_nest` | `spellspear` | spearmaster3/mage2 | WIN 0.79 / 4 rd / +22 | IN WINDOW |
-| III | `act3_awakened_boss` | `spellspear` | spearmaster5/mage4 | WIN 0.89 / 5 rd / +28 | WINDOW DRIFT — ceiling; adjudicate |
-| IV | `act4_vault_construct` | `spellspear` | spearmaster7/mage6 | WIN 0.83 / 6 rd / +48 | IN WINDOW |
+| I | `act1_gate_ambush` | `spellspear` | warrior2 | WIN 0.88 / 4 rd / +24 | WINDOW DRIFT — ceiling; adjudicate |
+| II | `act2_cistern_nest` | `spellspear` | warrior3/mage2 | WIN 0.79 / 4 rd / +25 | IN WINDOW |
+| III | `act3_awakened_boss` | `spellspear` | warrior5/mage4 | WIN 0.78 / 4 rd / +29 | IN WINDOW |
+| IV | `act4_vault_construct` | `spellspear` | warrior7/mage6 | WIN 0.92 / 6 rd / +53 | WINDOW DRIFT — ceiling; adjudicate |
 | V | `act5_seal_warden` | `spellspear` | spellspear14 | WIN 0.64 / 5 rd / +8 | IN WINDOW |
 | I | `act1_gate_ambush` | `deathknight` | warrior2 | WIN 0.80 / 4 rd / +18 | IN WINDOW |
 | II | `act2_cistern_nest` | `deathknight` | warrior3/necromancer2 | WIN 0.63 / 4 rd / +9 | IN WINDOW |
@@ -90,10 +90,10 @@ The spine list is derived from every target in `data/classes.json`'s `consolidat
 | III | `act3_awakened_boss` | `innkeeper` | helper5/diplomat4 | LOSS 0.03 / 3 rd / -87 | RULED: multiclass-expected (2026-08-13) |
 | IV | `act4_vault_construct` | `innkeeper` | helper7/diplomat6 | LOSS 0.31 / 7 rd / -36 | RULED: multiclass-expected (2026-08-13) |
 | V | `act5_seal_warden` | `innkeeper` | innkeeper14 | LOSS 0.01 / 7 rd / -107 | RULED: multiclass-expected (2026-08-13) |
-| I | `act1_gate_ambush` | `skirmisher` | spearmaster2 | WIN 0.79 / 4 rd / +18 | IN WINDOW |
-| II | `act2_cistern_nest` | `skirmisher` | spearmaster3/archer2 | LOSS 0.40 / 4 rd / -11 | WALL — report only |
-| III | `act3_awakened_boss` | `skirmisher` | spearmaster5/archer4 | WIN 0.72 / 5 rd / +20 | IN WINDOW |
-| IV | `act4_vault_construct` | `skirmisher` | spearmaster7/archer6 | WIN 0.81 / 6 rd / +48 | IN WINDOW |
+| I | `act1_gate_ambush` | `skirmisher` | warrior2 | WIN 0.88 / 4 rd / +24 | WINDOW DRIFT — ceiling; adjudicate |
+| II | `act2_cistern_nest` | `skirmisher` | warrior3/archer2 | LOSS 0.44 / 4 rd / -14 | WALL — report only |
+| III | `act3_awakened_boss` | `skirmisher` | warrior5/archer4 | WIN 0.76 / 5 rd / +21 | IN WINDOW |
+| IV | `act4_vault_construct` | `skirmisher` | warrior7/archer6 | WIN 0.89 / 6 rd / +53 | WINDOW DRIFT — ceiling; adjudicate |
 | V | `act5_seal_warden` | `skirmisher` | skirmisher14 | WIN 0.63 / 5 rd / +5 | IN WINDOW |
 | I | `act1_gate_ambush` | `ranger` | warrior2 | LOSS 0.32 / 5 rd / -21 | WALL — report only |
 | II | `act2_cistern_nest` | `ranger` | warrior3/archer2 | WIN 0.50 / 5 rd / +1 | WALL — report only |
@@ -105,16 +105,16 @@ The spine list is derived from every target in `data/classes.json`'s `consolidat
 | III | `act3_awakened_boss` | `scout` | rogue5/archer4 | LOSS 0.11 / 3 rd / -69 | RULED: multiclass-expected (2026-08-13) |
 | IV | `act4_vault_construct` | `scout` | rogue7/archer6 | LOSS 0.08 / 9 rd / -70 | RULED: multiclass-expected (2026-08-13) |
 | V | `act5_seal_warden` | `scout` | scout14 | LOSS 0.01 / 3 rd / -77 | RULED: multiclass-expected (2026-08-13) |
-| I | `act1_gate_ambush` | `wild_sage` | beast_master2 | LOSS 0.35 / 4 rd / -18 | WALL — report only |
-| II | `act2_cistern_nest` | `wild_sage` | beast_master3/mage2 | WIN 0.93 / 4 rd / +33 | WINDOW DRIFT — ceiling; adjudicate |
-| III | `act3_awakened_boss` | `wild_sage` | beast_master5/mage4 | WIN 0.88 / 4 rd / +27 | WINDOW DRIFT — ceiling; adjudicate |
-| IV | `act4_vault_construct` | `wild_sage` | beast_master7/mage6 | LOSS 0.35 / 7 rd / -28 | WALL — report only |
-| V | `act5_seal_warden` | `wild_sage` | wild_sage14 | WIN 0.98 / 4 rd / +40 | WINDOW DRIFT — ceiling; adjudicate |
+| I | `act1_gate_ambush` | `wild_sage` | beast_tamer2 | LOSS 0.35 / 4 rd / -18 | WALL — report only |
+| II | `act2_cistern_nest` | `wild_sage` | beast_tamer3/mage2 | WIN 0.86 / 4 rd / +33 | WINDOW DRIFT — ceiling; adjudicate |
+| III | `act3_awakened_boss` | `wild_sage` | beast_tamer5/mage4 | WIN 0.81 / 5 rd / +22 | IN WINDOW |
+| IV | `act4_vault_construct` | `wild_sage` | beast_tamer7/mage6 | LOSS 0.35 / 7 rd / -28 | WALL — report only |
+| V | `act5_seal_warden` | `wild_sage` | wild_sage14 | WIN 0.94 / 4 rd / +29 | WINDOW DRIFT — ceiling; adjudicate |
 | I | `act1_gate_ambush` | `druid` | beast_tamer2 | LOSS 0.35 / 4 rd / -18 | RULED: multiclass-expected (2026-08-13) |
-| II | `act2_cistern_nest` | `druid` | beast_tamer3/mage2 | WIN 0.93 / 4 rd / +33 | WINDOW DRIFT — ceiling; adjudicate |
-| III | `act3_awakened_boss` | `druid` | beast_tamer5/mage4 | WIN 0.88 / 4 rd / +27 | WINDOW DRIFT — ceiling; adjudicate |
+| II | `act2_cistern_nest` | `druid` | beast_tamer3/mage2 | WIN 0.86 / 4 rd / +33 | WINDOW DRIFT — ceiling; adjudicate |
+| III | `act3_awakened_boss` | `druid` | beast_tamer5/mage4 | WIN 0.81 / 5 rd / +22 | IN WINDOW |
 | IV | `act4_vault_construct` | `druid` | beast_tamer7/mage6 | LOSS 0.35 / 7 rd / -28 | RULED: multiclass-expected (2026-08-13) |
-| V | `act5_seal_warden` | `druid` | druid14 | WIN 0.82 / 5 rd / +18 | IN WINDOW |
+| V | `act5_seal_warden` | `druid` | druid14 | WIN 0.78 / 5 rd / +18 | IN WINDOW |
 
 ## The falsifiable check (#440's scope gate)
 
@@ -176,9 +176,13 @@ A calibration row gates a categorical at 0.5; these gate a BAND. They exist for 
 
 7. **The carried-but-unequipped upgrade was worth more than the fight was hard.** Equipping the moon-bone amulet — hp+3, dmg+1, and [Invisibility] into the kit — moves the warden from LOSS 0.32 / 5 rd / -24 to LOSS 0.49 / 5 rd / -1 under the FLOOR policy alone. The accessory the run carried from Act III to Act V without wearing was, by itself, the difference between losing and winning the finale.
 
-8. **THE SECOND BODY IS THE BIGGEST NUMBER IN THIS TABLE (#438).** At the Act V climax the two bonded spines measure WIN 0.98 / 4 rd / +40 (`wild_sage14`) and WIN 0.82 / 5 rd / +18 (`druid14`), against WIN 0.70 / 5 rd / +12 for `spellsword14` — the SAME band allocation, the same effective power of 14, the same act. The gap is not stats and not the kit: it is the wolf. Withhold the companion and hold everything else fixed (`tests/_warden_probe.gd`, `WI_PROBE_NO_COMPANION=1`, 100 seeds) and both rows read **0.19 competent / 0.04 floor** — byte-identical to each other, because their stat growth and their re-flavored grants are identical too. **The bonded companion is worth about +0.79 win rate at this fight**, more than every stat, Skill, weapon and accessory in this table combined. It is not a harness artefact: `wi_game.gd:2352` fields the companion whenever the arena has a spare player spawn and `vault` has four, so a druid really does fight the solo finale two-on-one. That is the finding the #438 lane surfaces rather than tunes: no warden stat reaches it (at con 140 `wild_sage14` still reads 0.96 while the band build falls to 0.64), because the lever that shortens a 2v1 is composition, not HP. Whether a climax authored SOLO should field a companion at all is a design question for the encounter, and it is now on the record with a number attached.
+8. **THE SECOND BODY IS THE BIGGEST NUMBER IN THIS TABLE (#438).** At the Act V climax the two bonded spines measure WIN 0.94 / 4 rd / +29 (`wild_sage14`) and WIN 0.78 / 5 rd / +18 (`druid14`), against WIN 0.70 / 5 rd / +12 for `spellsword14` — the SAME band allocation, the same effective power of 14, the same act. The gap is not stats and not the kit: it is the wolf. Withhold the companion and hold everything else fixed (`tests/_warden_probe.gd`, `WI_PROBE_NO_COMPANION=1`, 100 seeds) and both rows read **0.19 competent / 0.04 floor** — byte-identical to each other, because their stat growth and their re-flavored grants are identical too. **The bonded companion is worth about +0.79 win rate at this fight**, more than every stat, Skill, weapon and accessory in this table combined. It is not a harness artefact: `wi_game.gd:2352` fields the companion whenever the arena has a spare player spawn and `vault` has four, so a druid really does fight the solo finale two-on-one. That is the finding the #438 lane surfaces rather than tunes: no warden stat reaches it (at con 140 `wild_sage14` still reads 0.96 while the band build falls to 0.64), because the lever that shortens a 2v1 is composition, not HP. Whether a climax authored SOLO should field a companion at all is a design question for the encounter, and it is now on the record with a number attached.
 
 9. **The capstone growth trim was right, and it was not the mechanism (#438).** classes.json's flat-growth rule retired an 'evolution bump' convention that had spread to seven classes one citation at a time. It is a real correction — the band yardstick grows 1+1 and nothing should out-stat it 2:1 — and `data_lint.py::check_stat_growth_flat` now keeps it from creeping back. But measured against the fight it was reached for, `strategist.stat_growth.int` 2 → 1 moves the strategist-16 row 1.00 → 0.99. The rows that were over the ceiling were over it for TWO other reasons: an over-band level budget (finding above) and the wolf. Trimming class data was the first lever the ruling named and the smallest one that was actually there; recording that honestly is worth more than a tidy causal story.
+
+10. **THE COMPANION COUNTER EXISTS, AND WHAT IT CANNOT REACH IS THE POINT (#474).** The user ruling of 2026-08-14 answered finding 8 with a mechanism rather than a nerf: the apex body of a fight may carry `target_rule: "bonded"` (shipped as [Sunder the Bond] on `seal_warden`, `raskghar_awakened` and `shield_spider_matriarch`), which is spendable ONLY on a body that reached the field through a bond, a taming or a raising. It answers the ROLE, so every future companion meets it on the day it ships, and a companionless build fights the identical fight -- the resolver refuses, and `tests/test_companion_counter.gd` asserts both directions. It brought the Act III companion cells inside the window (0.88 -> 0.81 at 100 seeds, both bonded spines). TWO CELLS IT DOES NOT REACH, and each fails for its own measured reason rather than for want of tuning. **Act V is a STEP, not a slope.** The wolf is worth +0.87 there, so the counter's whole job is to shave about a seventh of it, and no setting does: the A/B ladder (100 seeds, `_kit_probe.gd`) reads mult 2.0 -> `wild_sage14` 0.94 / `druid14` 0.78 and mult 2.2 -> 0.65 / 0.36, with nothing between, because the entire distance across the window is whether ONE blow kills a 30-or-34-HP companion -- and the four HP that decide it are [Pack Bond]'s. The setting that lands `wild_sage14` in window puts `druid14` at 0.36, below the floor, so the shipped setting is the one that keeps `druid14` in window and leaves `wild_sage14` above the ceiling: per the NO-AUTO-WIN doctrine that row is SURFACED, not tuned around. **Act II SATURATES.** wild_sage/druid read 0.90 at 400 seeds, and the counter is worth about 0.03 there at any strength (mult 2.0/2.2/2.5 all read 0.86 at 100 seeds) -- because at a three-body nest the second body's value is its own damage, not the boss's attention, and no amount of the matriarch answering it changes the arithmetic. Displacement was tried and REJECTED by measurement, which is worth recording so nobody reaches for it twice: a shove costs the boss the damage turn it spent shoving, and `wild_sage14`/`druid14` read 0.98/0.94 with it -- worse than no counter at all.
+
+11. **A THREAT MODEL THAT PRICED A SKILL NOBODY CAN BE HIT BY (#474).** `WICombatPolicies._biggest_foe_threat` sizes `_survive`'s hit floor from the largest `damage_mult` in any living foe's kit, and it took the max over ALL of them. The companion counter is the first shipped Skill that discriminates by target, so it was the first to expose the gap: a 2.0x that can only ever land on a companion was raising the healing threshold of a PC with no companion, in every fight with a carrier on the board. It was not theoretical and it was not small -- `act3_awakened_boss_solo` band/competent read 0.37 before the counter existed and 0.29 with the threat model unfixed, breaking a RULED window ([0.35, 0.45], #448) in a fight whose composition had not changed by one body. Fixed by asking the engine's own `WISkillEffects.target_rule_met` before pricing a Skill, after which the row reads 0.37 again, seed for seed.
 
 ## Reading the table
 

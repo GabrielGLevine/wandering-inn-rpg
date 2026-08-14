@@ -61,32 +61,18 @@ func _median(values: Array) -> int:
 	return int(sorted[sorted.size() / 2])
 
 
-## `sim_spine_viability._spine_build`, restated (it is not static). Acts I-IV hold
-## the target's two PARENT lines at the band allocation; Act V holds the
-## consolidated class at 14. That asymmetry is the whole reason this probe exists:
-## a class-table edit can only reach the Act V cell.
+## #474: CALLED, no longer restated. This file used to carry its own copy of
+## `sim_spine_viability._spine_build` because that method was not static; the
+## copy is exactly the thing that can drift from the table it claims to
+## reproduce, and the holdable-line walk (evolved parents below their evolution
+## rung) would have had to be written twice to stay honest. It is one static
+## function now, and this is the only caller that is not the table itself.
+## Acts I-IV hold the target's two PARENT lines at the band allocation, walked
+## down to the class a player can actually hold at that level; Act V holds the
+## consolidated class at 14. That asymmetry is the whole reason this probe
+## exists: a class-table edit can only reach the Act V cell.
 func _spine_build(spine: Dictionary, act: String) -> Dictionary:
-	var act_i := ["I", "II", "III", "IV", "V"].find(act)
-	assert(act_i >= 0, "unknown spine act %s" % act)
-	var levels: Array = SPINE.SPINE_LEVELS[act]
-	var held := {}
-	if act == "V":
-		held[String(spine["target"])] = int(levels[0])
-	else:
-		held[String((spine["parents"] as Array)[0])] = int(levels[0])
-		if int(levels[1]) > 0:
-			held[String((spine["parents"] as Array)[1])] = int(levels[1])
-	var parts: Array[String] = []
-	for class_id: String in held:
-		parts.append("%s%d" % [class_id, held[class_id]])
-	return {
-		"name": "spine_%s_%s" % [spine["target"], act.to_lower()],
-		"classes": held,
-		WIKeys.WEAPON: (SPINE.SPINE_WEAPONS[spine["target"]] as Array)[act_i],
-		"armor": "" if act == "I" else "leather_jerkin",
-		"accessories": [] if act_i < 3 else ["hedge_ward_charm", "hunters_fang_talisman"],
-		"label": "/".join(parts),
-	}
+	return SPINE.spine_build(spine, act, _classes)
 
 
 func _entity(map_id: String, entity_id: String) -> Dictionary:

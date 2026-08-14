@@ -41,6 +41,7 @@
   {
    "_comment": "Temporary [Animate Dead] companion: deliberately fragile, plain-melee, and skillless; Wave-B gated cells own its measured combat envelope.",
    "id": "skeleton_ally",
+   "bonded": true,
    "power_level": 1.5,
    "display_name": "Raised Skeleton",
    "sprite": "skeleton_ally",
@@ -274,7 +275,9 @@
    },
    "weapon_die": 7,
    "ai": "melee",
-   "skills": []
+   "skills": [
+    "sunder_the_bond"
+   ]
   },
   {
    "_comment": "Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, generic-diegetic per the spec. T5.1 DARK-ARENA: combat_scale 0.56 = 1.26 cells (36 idle_side bbox rows x 0.17 / CELL 16), tint warm off the blue-grey grade. Board-only, sim untouched.",
@@ -363,7 +366,8 @@
    "weapon_die": 4,
    "ai": "caster",
    "skills": [
-    "raskghar_maul"
+    "raskghar_maul",
+    "sunder_the_bond"
    ]
   },
   {
@@ -1364,8 +1368,10 @@
   },
   {
    "_comment": "GH#156 tamed companion ([Lesser Bond], wolf-den prop). River-wolf frame at companion tuning: con down from 12 so it stays precious, not a second PC. Boons (basic_command_boon/pack_bond_boon) are injected at roster build, never listed here.",
+   "_comment_474": "#474 THE BONDED ROLE. `bonded` says this body is on the player's side because a bond put it there -- it grants nothing and costs nothing on its own, and every stat on this row is untouched by the lane that added it. What it does is make the body ANSWERABLE: a Skill carrying `target_rule: bonded` may be spent on it (src/core/combat/skill_effects.gd), which is how an encounter can answer a companion without any encounter naming this id. data_lint.check_companion_bond_flag makes the flag a GATE, so the next companion row cannot ship without it and quietly walk past every counter authored so far.",
    "id": "wolf_companion",
    "power_level": 3.0,
+   "bonded": true,
    "display_name": "Bonded Wolf",
    "sprite": "river_wolf",
    "side": "player",
@@ -1384,6 +1390,7 @@
   {
    "_comment": "GH#156 tamed companion ([Lesser Bond], razorbeak-chick prop). Frailer than the wolf, faster to the flank. ai skirmisher NOT coward -- a fleeing ally reads as a bug.",
    "id": "razorbeak_companion",
+   "bonded": true,
    "power_level": 2.5,
    "display_name": "Bonded Razorbeak",
    "sprite": "razorbeak",
@@ -1559,7 +1566,8 @@
    "skills": [
     "tough_body",
     "power_strike",
-    "slam"
+    "slam",
+    "sunder_the_bond"
    ]
   },
   {

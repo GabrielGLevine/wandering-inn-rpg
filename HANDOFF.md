@@ -139,10 +139,11 @@ or superseded session blocks.
   2. **[Ranger] walls identically** at the warden (0.33, mp 0, no
      companion) — same diagnosis as skirmisher's pre-fix 0.26. Out of
      that lane's scope; wants the same kit-gap treatment if ruled.
-- **Design calls still open from #488:** bonded wolf worth +0.79 at the
-  Warden (bigger than every stat/Skill/item combined); t6/t12/s16 read as
-  a level-budget problem, not capstone power; `beast_master14` 0.63→0.27
-  collateral wants a broaden-growth repair (class-design call).
+- **Design calls still open from #488:** t6/t12/s16 are level budget,
+  not capstone power. #474 closed the other two and left three of its
+  own: `wild_sage14` 0.96, `act2_cistern_nest` 0.90, and the spear family
+  over the ceiling in Acts I/IV. Numbers and reproducers:
+  `docs/design/spine-viability-table.md` findings 10-11.
 
 No other open issue is recorded here as waiting on user taste. Visual eye/ear
 reads remain in `docs/VISUAL-LOG.md`, where they can be accepted or promoted.
