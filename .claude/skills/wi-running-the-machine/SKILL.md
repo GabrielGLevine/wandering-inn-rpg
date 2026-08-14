@@ -438,6 +438,17 @@ with 1-3 agents. The template that caught 6 real defects in two days:
   touch; (e) at gate time, diff the lane's commits against their own
   messages — a commit whose diffstat exceeds its description is the
   tell.
+  **THIS RECURRED A THIRD TIME (drift-set gate) AFTER BOTH RULES ABOVE
+  WERE WRITTEN**, because "the lane is quiesced" was true and I read it
+  as "the worktree is safe" — while dispatching TWO auditors into that
+  same worktree, both mandated to mutate. One caught the other's live
+  `mult: 2.45` against a shipped 2.0. The rule that actually works is
+  mechanical, so apply it without judgement: **a worktree hosts at most
+  ONE mutating process, ever.** Two auditors on one lane means either
+  one auditor, or a second `git worktree add` from the lane's own sha,
+  or an explicit split where exactly one may mutate and the other is
+  read-only — state which in every audit prompt. Writing "quiesced" in
+  the brief is not a control; counting the mutators is.
 - **Standing constraints**: max 2 concurrent implementation agents
   (3 drained a session window); one writer per file incl. controller
   probes AND auditors mid-mutation; serialize lanes sharing
