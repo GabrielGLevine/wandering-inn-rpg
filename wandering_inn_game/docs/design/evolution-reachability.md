@@ -305,7 +305,7 @@ the warrior HALF now evolves into [Blademaster] on its own at waking 20 —
 **before the consolidation offer ever appears**, the opposite of the old
 table's "offered at waking 21, mage's own Replacement not until waking
 39" race. The offer itself now surfaces only at waking 39, against an
-ALREADY-EVOLVED swordsman (continued mono investment pushed it to level
+ALREADY-EVOLVED [Blademaster] (continued mono investment pushed it to level
 12 by then: `merged = max(ceil(2*22/3), max(12,10)) = 15`, matching the
 logged L15 offer) and a mage just reaching its own L10 threshold — co-
 arriving with mage's OWN Replacement, not preempting it by 18 wakings.
