@@ -1,8 +1,8 @@
 # Choice log
 
-Durable controller/user rulings that still explain shipped behavior or constrain
-open work. The standing 2026-07-18 directive permits controller judgment calls
-when the user has not reserved the decision.
+Durable controller/user rulings that still explain shipped behavior or
+constrain open work. The 2026-07-18 directive permits controller judgment
+calls when the user has not reserved the decision.
 
 Insertion: head within the relevant section. Amend or supersede an existing
 entry instead of appending a second story about the same choice. Keep the call,
@@ -10,9 +10,8 @@ the rejected alternative when it matters, and one sentence of rationale.
 Implementation chronology, review findings, measurements, and verification
 belong in issue-closing PR bodies.
 
-The pre-condensation record remains recoverable with
-`git show 1aee127d:docs/CHOICE-LOG.md`. Earlier context also lives in merged PR
-bodies and `git log -p -- docs/CHOICE-LOG.md`.
+Pre-condensation record: `git show 1aee127d:docs/CHOICE-LOG.md`. Earlier
+context lives in merged PR bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ## Open decisions
 
@@ -30,6 +29,27 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 ## Current product and system rulings
 
 ### User rulings 2026-08-13 (#438 wave-close batch)
+
+### User rulings 2026-08-14 (tag night)
+
+- **wild_sage V 0.96 ACCEPTED, parked post-tag.** A step, not a slope:
+  the counter reads 0.94 at mult 2.0 and 0.65 at 2.2, nothing between,
+  because the window is whether one blow kills a 30-or-34-HP companion —
+  and the setting that lands wild_sage puts **druid at 0.36, below the
+  floor**. Shipped druid-in-window; wild_sage surfaced per NO-AUTO-WIN.
+- **spellspear I/IV and skirmisher I/IV ACCEPTED as corrected
+  measurement, parked post-tag.** NOT regressions: the gate ported only
+  the `holdable_line` fix onto origin/main and reproduced 0.88/0.92 and
+  0.88/0.89 exactly. The only lever (capping [Piercing Strikes] once
+  per round) moves the ship column up to 0.12 — it re-authors
+  steel-thread victory pins, so it needs its own budgeted lane.
+- **The spine harness was measuring builds no player can hold.**
+  `derived_stat_bonuses` sums `growth[stat] * held` with no table-floor
+  check; Acts I-IV impose levels 2/3/5/7 while all 16 evolved classes
+  floor at 10. Naming an evolved parent in `parent_lines` is the
+  consolidation CONVENTION (spear-owns-its-hybrids, #449), not one
+  commit's narrowing — so every future evolved-lineage target needs the
+  holdable-line walk this adds. Whole of spellspear III.
 
 ### User rulings 2026-08-14 (post-wave decision batch, 11 calls)
 
@@ -140,22 +160,15 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 - **Orphan consolidation mappings APPROVED as inventoried**; swordsman
   x mage (and its ice/fire siblings) map into [Spellsword] — target
-  reuse with the warrior pairs explicitly accepted. Controller to
-  propose 1-2 additional authored targets that reduce family reuse
-  (answered on #438: beast_master x mage-line and spearmaster x
-  archer-line, names wiki-verified at build).
+  reuse with the warrior pairs explicitly accepted. Two reuse-reducing
+  targets added on #438: beast_master x mage-line, spearmaster x
+  archer-line.
 - **KIT walls resolved by RULED MULTICLASSING (option c).** Civil
   spines are expected to carry a martial line to clear combat
-  chokepoints; the viability table's civil-spine climax losses are
-  design, not defects, and the civil pace overshoot (G6) is the
-  multiclass level budget — no band-column, no re-slope. Instrument
-  annotation follows.
-- **Producer gaps G1-G5 APPROVED at recommended shapes**: G1 [Mage] L2
-  requires_any {won_combat 3, spell_cast 4}; G2 scout Act I sneak-past
-  ambush entry arm; G3 tactic ladder widened before it steepens
-  (flanking_step L7->L6 + threshold trim per measurement); G4
-  ranged_hit quest grants on the bow-shaped forks; G5 tended_beasts on
-  the_price_kept's camp grant.
+  chokepoints; their climax losses are design, not defects, and the
+  civil pace overshoot (G6) is the multiclass level budget.
+- **Producer gaps G1-G5 APPROVED at recommended shapes** (per-gap
+  detail in #478's PR body). SHIPPED.
 - **Ladder stop-order: RESTORE via hired_blades composition** (frozen
   stat blocks hold); ordering assert re-arms on the competent column
   once monotone.
@@ -192,12 +205,11 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   shape would pass.
 
 - **#450 spec contradictions ruled (three, all intent-preserving).**
-  (1) [Evil Eye] gains `field: true` + an occult ambient read
-  (combat-only was a data oversight). (2) Free scenery reads apply to
-  ARMLESS props only; armed props keep their interact action and retire
-  standalone flavor reads — except danger-bearing props, which the
+  (1) [Evil Eye] gains `field: true` + an occult ambient read.
+  (2) Free scenery reads apply to ARMLESS props only; armed props keep
+  their interact action, except danger-bearing ones, which the
   trap-perception family must cover. Rejected: a new free-inspection
-  mechanism (scope creep). (3) Passive tactic-family Skills emit
+  mechanism. (3) Passive tactic-family Skills emit
   `tactic_used` at their
   proc site (weapon-family tally precedent); actives tally on use.
   Rejected: an ap_cost==0 activation engine change (blast radius =
@@ -242,21 +254,17 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   choice, not a trap and not a free skip.
 - **Evolved lineages consolidate into unique classes (user ruling,
   2026-08-12, #449).** Spearmaster + mage does NOT lineage-carry into
-  [Spellsword]; it consolidates into its own class — [Spellspear] —
-  spellsword-baselined consolidation skills, spear-flavored, lineage
-  kit via inherits. This is #347's high-level-unique-class case on the
-  existing static machinery; rejected: recipes accepting evolved parents
-  into the SAME target (erases lineage identity), and evolution
-  deferring while consolidation is in reach. Spec on #449; wiki verify
-  discharged before the id was cut, [Spellspear] SHIPPED.
+  [Spellsword]; it consolidates into its own class, [Spellspear] —
+  #347's high-level-unique-class case on the existing machinery.
+  Rejected: recipes accepting evolved parents into the SAME target
+  (erases lineage identity), and evolution deferring while
+  consolidation is in reach. SHIPPED.
 - **The warden wakes for every descent; endings stay three-path
-  (2026-08-12).** #437's measurements refuted the "warden stat wall"
-  (competent-policy WIN 0.73 at the shipped build; 0.77 at band) — so
-  #440 does zero stat work. The chokepoint ruling is satisfied
+  (2026-08-12).** #437 refuted the "warden stat wall" (competent 0.73
+  shipped, 0.77 at band), so #440 does zero stat work. Satisfied
   structurally: the fight fires before `the_choice` resolves, all three
-  shipped endings (open / fed / re-ward) become post-fight resolutions,
-  and sneak holders get an in-fight edge, never a skip. Preserves the
-  v0.14 three-path seal conclusion AND the chokepoint directive.
+  endings become post-fight resolutions, and sneak holders get an
+  in-fight edge, never a skip.
   Two durable constraints (mechanism detail in #440's PR body): (1) the
   seal door's `door_when` is deliberately NOT gated on the new counter —
   it would be inert behind the choice gate, and `seal_opened` is a
@@ -274,9 +282,9 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 - **Combat chokepoints are sanctioned leveling gates (user ruling,
   2026-08-11 debrief).** Acts must require leveling progress: an
   unwinnable spine encounter is the intended signal to do side content
-  (#439 per-act bands). The Seal Warden is the climactic chokepoint —
-  its item bypass (worn [Invisibility] sneak-past) is a defect, not a
-  feature; every player fights it (#440). This REFINES the three-pillars
+  (#439 bands). The Seal Warden is the climactic chokepoint and its
+  item bypass is a defect; every player fights it (#440). REFINES the
+  three-pillars
   directive: pillars govern breadth of viable playstyles, not that every
   gate is bypassable. The worn-abilities mechanic stands; the finale's
   exposure to it goes.
@@ -426,9 +434,8 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
   characters should not share another named character's rig.
 - **`pc_*` sprites are player-only.** A registry test rejects map entities or
   decor using player skins.
-- **Combat figure acceptance is measured from the animation actually rendered.**
-  The audited bar is 1.25–3.55 cells; move subject data rather than relaxing the
-  bar. `combat_scale` replaces field scale, and `combat_tint` is board-only.
+- **Combat figure acceptance is measured from the animation actually rendered**
+  (bar 1.25–3.55 cells; move subject data rather than relax it).
 - **Blocked board cells use biome prop data before renderer fallbacks.** A cell
   that affects pathing is gameplay geometry, not dim background dressing.
 - **Named payoff moments need visible lanes.** Event emission alone does not
@@ -445,12 +452,10 @@ bodies and `git log -p -- docs/CHOICE-LOG.md`.
 - [Flame Jet] without `burns` → **field `burns` enabled** in #398.
 - “Same-map `present_when` is unsafe” → **false**; accomplishment reconciliation
   and dialogue-end deferral make it safe.
-- “Duplicate refusal bounds cudgel production” → **false**; use consumes the
-  item and re-arms the producer. #432 made the balance call: production stays
-  unbounded, the meal payoff caps at the strongest single meal.
-- “Armed next-fight meal mods sum” → **false since #432**; `_merge_pending_meal`
-  keeps the per-key maximum. The summing behaviour was #334 ruling 5's fix for
-  wholesale replacement and outlived its purpose.
+- “Duplicate refusal bounds cudgel production” and “armed next-fight meal
+  mods sum” → **both false since #432**; production stays unbounded and
+  `_merge_pending_meal` keeps the per-key maximum. The summing was #334
+  ruling 5's fix for wholesale replacement and outlived its purpose.
 - “Passing event assertions proves a visible feature” → **false**; windowed
   rendering is required for player-visible claims.
 - #397 round-one “engineering green means prose exit met” → **false**; blind
