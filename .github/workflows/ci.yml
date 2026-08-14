@@ -93,6 +93,51 @@ jobs:
           python3 scripts/render_qa_notes.py
           python3 scripts/check_doc_drift.py
 
+  # ---------------------------------------------------------- python-suites
+  # Added 2026-08-14 after a gate audit found the entire Python test corpus
+  # was wired into NO runner: CI's "Unit suites" job runs tests/test_*.gd
+  # (Godot) only, and nothing here ran pytest. That left ~357 tests — the
+  # data_lint suites, the scaffold/consolidation CLI tests, and every
+  # itinerary-compiler contract suite from M1 through M3.6 (139 of them,
+  # including the differ's own safety guards) — able to break with CI green.
+  # Engine-free, so it runs beside the lint job rather than behind Godot.
+  python-suites:
+    name: Python suites (pytest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # fetch-depth 0: test_data_diff walks real history (`<sha>^`), which a
+      # shallow clone cannot resolve — it dies with git exit 128 rather than
+      # reporting a red test.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install test dependencies
+        run: python3 -m pip install --quiet pytest Pillow
+
+      # Two itinerary contract tests drive the ORACLE, which shells out to
+      # /usr/local/bin/godot. Installing it keeps them real rather than
+      # skipped — a skipped contract test is an unprotected one.
+      - name: Set up pinned Godot 4.7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  ${GODOT_BIN}.zip$" SHA512-SUMS.txt | sed "s#  ${GODOT_BIN}.zip#  godot.zip#" | sha512sum -c -
+          unzip -q godot.zip
+          sudo install -m 0755 "$GODOT_BIN" /usr/local/bin/godot
+          godot --version
+
+      - name: Import pass (the oracle needs class_name registration)
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 300; exec @ARGV' \
+            godot --headless --path wandering_inn_game --import
+
+      - name: Run the Python test corpus
+        run: python3 -m pytest -q scripts/
+
   # ------------------------------------------------------------------ smoke
   smoke:
     name: Smoke (headless boot)
