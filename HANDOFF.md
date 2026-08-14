@@ -93,22 +93,23 @@ or superseded session blocks.
 
 - **#19 — commercial gate:** any paid Steam path requires pirateaba's explicit
   permission. Free-on-Steam remains the recommended path.
-- **M3.6 EXIT RULING (#434, blocks M4) — NOT YET RIPE, do not rule on
-  the numbers below until the lane re-reports.** The question is real:
-  §6.3 lets pins be "TIGHTER and never looser" but only for `assert_*`
-  actions, so a compiled-only `wait_for_event` is exact-class fatal even
-  when the compiled run is strictly stricter than the shipped one.
-  **Ruling wanted eventually:** extend the tightening allowance to
+- **M3.6 EXIT RULING (#434, blocks M4) — ripe, and correctly sized on
+  the second pass.** §6.3 lets pins be "TIGHTER and never looser" but
+  only for `assert_*` actions, so a compiled-only `wait_for_event` is
+  exact-class fatal even when the compiled run is strictly stricter than
+  the shipped one. **Ruling wanted:** extend the tightening allowance to
   `wait_for_event`, or refuse it and add a per-node emitter key per wait
   (which pushes corpus knowledge back into itineraries — the thing the
-  compiler exists to remove). CAVEAT, from the gate: the lane framed
-  this as "one class, 134 rows" and that OVERSELLS it — a YES would
-  still leave 15 exact-class and 5 net-class fatals in its own 0-217
-  window, and 2 of those net rows are genuine arrival divergences no
-  §6.3 ruling can close (possibly real compiler bugs). The lane's
-  supporting measurement was also refuted twice by the gate and is being
-  re-derived. Wait for the corrected report before spending judgment on
-  it. M4 stays blocked meanwhile.
+  compiler exists to remove). HONEST SIZE (the first framing oversold
+  it; the gate caught that): a YES reclassifies **12 of the 47**
+  exact-class rows in the authored window and 134 corpus-wide —
+  necessary, nowhere near sufficient. 35 exact + all 5 net rows survive
+  it. The residue is emitter idiom variance, each class now named and
+  counted in qa/STEEL-THREAD.md. Diagnosing the net rows was worth it
+  on its own: 2 turned out to be REAL routing bugs (the router entered
+  the ambush radius from the wrong side and bumped the stairs from the
+  wrong cell) and are fixed by authoring approach cells, not by any
+  ruling. M4 stays blocked; Acts II–V (2337 of 2569 steps) unauthored.
 - **Balance rulings raised by the skirmisher lane (2026-08-14), both
   escalated rather than improvised:**
   1. `act2_cistern_nest` skirmisher 0.40 WALL. Acts I–IV measure the
