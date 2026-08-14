@@ -377,7 +377,7 @@ carrying the full snapshot, field bar, open-dialogue rows and combat roster
 where the old probe idiom needed a failing one. Every failure line now
 carries a compact `state={…}` suffix for the same reason.
 
-## Regenerating this script from an itinerary (#434 M3.5) — NOT yet the path
+## Regenerating this script from an itinerary (#434 M3.6) — NOT yet the path
 
 The itinerary compiler (`scripts/itinerary/`) exists to make route-subject
 scripts like this one recompilable instead of hand-maintained, and M3's exit
@@ -386,9 +386,9 @@ was to make `steel_thread.yaml` the canonical way to rebuild
 than advertising a path that does not run.** Edit `steel_thread.json` by hand,
 as before.
 
-**What M3.5 closed.** The three groups M3 reported are gone. The 2026-08-13
-pre-M4 design note reopened §3.2 for exactly two idioms and re-froze behind
-them, and §8's creation prelude got built:
+**What M3.5 closed.** The 2026-08-13 pre-M4 design note reopened §3.2 for
+exactly two idioms and re-froze behind them, and §8's creation prelude got
+built:
 
 | Steps | Beat | M3.5 |
 |---|---|---|
@@ -396,45 +396,77 @@ them, and §8's creation prelude got built:
 | 75–114 | Relc's spar, driven turn by turn | **Built.** `fight: {mode: driven, turns: [...]}`. Reproduces all 40 steps exactly. |
 | 561–566, 2317–2322 | Journal reads | **Built.** `journal: {capture, act}`. Reproduces both, modulo the tolerance-class album hold. |
 
-Each of those three is pinned step-for-step against this script in
-`scripts/itinerary/tests/test_m35_contract.py`, so the reproduction is a test
-and not a claim.
+**What M3.6 closed (2026-08-13 amendment, five items).** All five are BUILT and
+pinned in `scripts/itinerary/tests/test_m36_contract.py`, each with a mutation
+red:
 
-**Where the golden stands.** `scripts/itinerary/steel_thread.yaml` exists and
-carries Act I's opening — the creation prelude plus the five nodes covering
-shipped steps 0–61. That prefix recompiles and passes the tolerance differ
-with **zero exact-class differences**; its only fatal is one net-class row
-(the door, below). Authoring stopped there, at the clean seam immediately
-before the Relc meeting (step 62), because the beats past it need language and
-planner work outside the amendment's scope.
-
-**What blocks the rest, measured on the shipped script:**
-
-| Steps | Beat | Verdict |
+| Item | Shape | Status |
 |---|---|---|
-| 74–75 | The spar starts from a dialogue option: `relc_intro`'s `spar_offer` row carries `{"start_combat": "relc_spar"}` with `end: true`, so the board opens on the conversation's own confirm | **Language gap.** `FIGHT_ENTRIES` is `{interact, proximity}`; there is no `entry: dialogue`. Compiling it as `interact` walks to the map encounter and presses again — a different entry — and the dialogue planner meanwhile emits `dialogue_ended`/`ui_dialogue_hidden` for a row that hands off to combat instead of closing. |
-| 141 sites, 141 steps | Effect-derived event waits after a dialogue confirm: `accomplishment_recorded` ×80, `quest_beat_completed` ×20, `quest_started` ×15, `quest_completed` ×14, `item_gained` ×8, `entity_removed` ×2, `item_lost`/`gold_changed` ×1 | **Planner gap, not language.** Every one is derivable from the chosen option's own `effects` array (trust tier 1, §2.1) — the dialogue planner already reads that array to move the ledger and simply does not emit the waits. Each is a shipped claim the compiler drops, so each is exact-class fatal. |
-| 649, 690, 886, 1053, 1607, 1621 | Six of the twelve fights carry **no** `turn_started {id: pc}` wait before `combat_autoplay`; the emitter always emits one | **Emitter gap.** A compiled-only `wait_for_event` is not an assert, so the differ cannot classify it as a tightening. |
-| 198, 205 | `ui_tutor_line_rendered` beats (`real_ones`, `road_clear`) inside an **autoplayed** fight — one before `turn_started`, one between `combat_finished` and the dismiss | **Emitter gap.** `mode: driven` places beats freely; the autoplay arm has no slot for them, and the road ambush is otherwise a plain autoplay fight. |
-| 207, 388–389, 500–501, 1059, 1612, 1626 | Post-dismiss banking waits: `resolve_combat()` runs on the confirm, so `accomplishment_recorded`/`quest_beat_completed`/`entity_removed` land between the dismiss and `ui_combat_hidden` | **Emitter gap.** The fight arm reads these as state pins after the fact instead of waiting on them in place. |
-| 2439 | `combat_started` pinned to `{"arena": "vault"}` | **Emitter gap.** The compiled wait carries no payload, which is a *looser* pin and therefore fatal. |
-| 2427–2428, 2508–2520 | The #440 cloaked approach: `skill_used` → `sneak_started` → `assert_state sneaking` → `sneak_ended` | **Planner gap.** `use_field` emits a `skill_used`/toast pair and knows nothing about a sneak's lifetime. |
-| 2480, 2557 | `ui_map_rendered` (asserted logged) and `ui_gdi_epilogue_rendered` | **Gap.** Observer beats with no world effect, the same shape `journal` now covers — the epilogue in particular is the run's last claim. |
-| 54–56 | The inn re-entry takes `floodplains_inn_door_west` (6,5); the router takes the main door (7,5) | **Planner gap.** Both are oracle-valid and both land at inn (14,3), so §6.3 would call the route tolerant — but the arrival differs, which the differ rules net-class fatal, and GH#375's whole point is that the *west* door's reachability is the thing being pinned. There is no way to name which door a `goto` should use. |
+| 1 | `fight: {entry: dialogue}` — the board opens on a conversation's own confirm | **Built.** The fight node owns the walk; the emitter omits the approach press and the panel teardown. Reproduces 74–75. |
+| 2 | Effect-derived event waits after a chosen option | **Built.** `effects` + quests.json joins, in `WIGame.dialogue_choose` order. |
+| 3 | `turn_wait: false`, autoplay `beats:`, `expect_banks_after_dismiss`, `arena:`, `goto.via`, `ui_map_rendered` / `ui_gdi_epilogue_rendered` | **Built.** Reproduces 196–208 (minus one row, below), 2439, 2479–2480, and the epilogue tail. |
+| 4 | Sneak lifetime (#440) in the ledger and the route planner | **Built.** A live stance suppresses the proximity refusal; a fight, a non-door interact and a sleep all drop it. Reproduces 2426–2428. |
+| 5 | Node-level unknown-key rejection; fence arrival tracking | **Built.** A stray key beside a valid primitive is a `SchemaError`; the ledger's end position per node joins the pass-2 spine comparison. |
 
-Two things that *look* like gaps and are not. The inventory cursor spelled as
-repeated `press move_down` (steps 184, 965–969, 2045, 2326–2340) walks to the
-same row as the emitter's single `move {direction, steps: N}`, and the differ
-treats them as one claim (tolerance-class, §6.3). And a compiled-only
-`wait_for_event dialogue_node` before `ui_dialogue_shown` is the compiler
-being *stricter* than this script — the replay self-check requires it, and two
-reds bought that rule — but the differ's tightening allowance covers only
-assert actions, so it reads as a difference.
+**THE "141" FIGURE IS REFUTED, RE-MEASURED.** 141 is how many
+`accomplishment_recorded` / `quest_*` / `item_*` / `entity_removed` /
+`gold_changed` rows this script carries **anywhere**. The rows the dialogue
+planner can derive are the ones that follow a dialogue confirm, and that is a
+different number:
 
-Per §3.2 the vocabulary re-froze behind `driven` and `journal`, so the
-remaining language gaps are reported rather than patched around — `raw` would
-fit them inside the 2% budget and that is exactly the hiding place the budget
-exists to prevent.
+| Reading | Rows | Sites |
+|---|---|---|
+| All rows of those types, whole script (the M3.5 figure) | 141 | — |
+| **After a dialogue confirm (derivable window)** | **94** | **55** |
+| Not after a dialogue confirm | 47 | — |
+
+Of the 47 out-of-window rows, 26 follow a prop `interact` (the interact idiom
+already pins them), 10 follow the combat banner dismiss (item 3's
+`expect_banks_after_dismiss`, now built), 9 follow a conversation's teardown
+pair, and 2 are the Krshia sell row the economy planner already owns. Of the
+94 in-window rows, 92 are the amendment's own five shapes and 2 are that same
+sell row. The count is pinned in
+`test_m36_contract.py::test_the_measured_derivable_subset_is_94_rows_at_55_sites_not_141`.
+
+**Where the golden stands.** `scripts/itinerary/steel_thread.yaml` now carries
+the creation prelude plus **19 nodes covering shipped steps 0–217** — the whole
+of Act I, through the spar, the first night, the spear, the gate-road ambush
+and the arrival in Liscor. That prefix compiles clean (replay self-check ok,
+zero raw steps) and **runs green headless at seed 37, 243/243 steps**. Against
+the shipped 0–217 the tolerance differ reports **23 exact-class, 5 net-class,
+11 tolerance-class, 35 tightenings** — down from 50 exact / 11 net before the
+amendment landed.
+
+**What blocks the rest is no longer language.** It is emitter IDIOM VARIANCE
+plus one classification question §6.3 does not answer, measured corpus-wide:
+
+| Class | Rows | Why it is fatal today |
+|---|---|---|
+| Pool line: the compiler also waits `ui_dialogue_rendered`; this script never does | 24 | Compiled-only `wait_for_event` → exact-class |
+| Conversation open: the compiler waits `dialogue_node` before `ui_dialogue_shown` (the replay self-check requires it, two reds bought the rule); 3 of 63 corpus opens do | 60 | Compiled-only `wait_for_event` → exact-class |
+| Destination node: the compiler always waits the row's own `dialogue_node`; 75 of 125 continuing confirms here do | 50 | Compiled-only `wait_for_event` → exact-class |
+| Sleep: the compiler waits `phase_changed` and pins `classes`; this script pins the class toast, `ui_toast_rendered {from_start}` and `ui_sleep_veil_rendered {lines}` | 5 sleeps | Both directions — dropped claims AND compiled-only rows |
+| `ui_inventory_shown {items: N}`: the emitter's wait carries no payload, which is LOOSER | 3 | §6.3 forbids a looser pin |
+| `assert_event_logged` inside an autoplayed board (`ui_hotbar_rendered {slots}`) | 2 | Autoplay has no slot for an assert between the turn and the shot |
+| `pickup`'s `"Got: <item>"` toast | 1 | The amendment's derivable list is deliberately toast-free |
+| Trailing bump-to-face reads as movement in the differ's `_net` | ~1 per blocked approach | The bump sets facing and moves nobody, but `_net` cannot know the target cell is blocked |
+
+**The 134-row question, and why this lane did not answer it.** The first three
+rows of that table are one class: **the compiled script CLAIMS MORE than the
+shipped one, and §6.3's tightening allowance covers only `assert_*` actions.**
+M3.5 already reported this ("a compiled-only `wait_for_event dialogue_node` …
+is the compiler being *stricter* than this script … but the differ's
+tightening allowance covers only assert actions"), and the M3.6 amendment did
+not rule on it. Widening the tightening class to cover compiled-only
+`wait_for_event` rows would close 134 of the residual fatals in one move — and
+it is a change to what the milestone GATE considers fatal, which is a design
+ruling and not a lane's to make. **It is the next ruling this thread needs.**
+The alternative shape — teaching the emitter a per-node key for each of those
+three waits — puts corpus knowledge back into itineraries, which is the thing
+`raw`'s 2% budget exists to prevent.
+
+Per §3.2 the vocabulary re-froze behind M3.6's five items, so everything above
+is reported rather than patched around.
 
 ## Known limitation
 

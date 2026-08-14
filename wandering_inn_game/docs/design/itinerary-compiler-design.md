@@ -242,6 +242,37 @@ Exit: the steel-thread golden passes the tolerance differ end-to-end;
 STEEL-THREAD.md's "regenerate via compiler" line lands. M4 (the Mage
 variant, the #438 acceptance milestone) dispatches only after this.
 
+**M3.6 landed 2026-08-13, exit NOT met — and the reason is a ruling, not
+a gap in the five items.** All five are built, mutation-proved and pinned
+(`scripts/itinerary/tests/test_m36_contract.py`), and the golden now
+carries the whole of Act I: 19 nodes over shipped steps 0–217, green
+headless at seed 37 (243/243), tolerance differ **23 exact / 5 net**,
+down from 50/11. Item 2's "141" is REFUTED and re-measured: **94 rows at
+55 sites** are in-window; 141 counts every row of those types anywhere in
+the script, 47 of them behind a prop interact, a combat dismiss or a
+teardown pair.
+
+What now blocks the exit is measured corpus-wide and is one class:
+**134 rows where the COMPILED script claims more than the shipped one** —
+24 pool-line `ui_dialogue_rendered`, 60 conversation-open `dialogue_node`
+(the replay self-check requires it; two reds bought that rule), 50
+destination `dialogue_node`. §6.3's tightening allowance covers only
+`assert_*` actions, so each reads as an exact-class fatal even though the
+compiled run is strictly the stricter one. M3.5 reported the same thing
+about one of the three and this amendment did not rule on it.
+
+**The open ruling, stated so the next lane does not improvise it:** does
+§6.3's "pins may be TIGHTER and never looser" extend from `assert_*`
+actions to a compiled-only `wait_for_event`? Answering yes closes 134 of
+the residual fatals and changes what the milestone gate treats as fatal.
+Answering no means each of those three waits needs a per-node emitter key,
+which puts corpus knowledge back into itineraries — the thing `raw`'s 2%
+budget exists to prevent. This lane declined to decide it, because
+widening a gate to pass its own milestone is the wrong shape of work. The
+residual table (including the smaller sleep/inventory/autoplay-assert
+classes and the bump-to-face `_net` artifact) is in
+`wandering_inn_game/qa/STEEL-THREAD.md`.
+
 ## 4. Emitter contract
 
 One idiom table, tested in isolation (unit: primitive + ledger state →
@@ -332,6 +363,12 @@ rule is what keeps the corpus recompilable.
   fight-shape variances. Measured table in `qa/STEEL-THREAD.md`. **These are
   the M4 prerequisite the way the two closed primitives were M3.5's**; the
   vocabulary stays frozen until a note rules on `entry: dialogue`.
+- **M3.6 — the second amendment, landed 2026-08-13.** `fight.entry:
+  dialogue`, effect-derived event waits, the five emitter frame keys,
+  sneak lifetime and the two hardening items all BUILT. The golden reaches
+  shipped step 217 and runs green; it does not pass the differ end to end,
+  and the residual is the tightening-class ruling above rather than
+  vocabulary. See the §3.2 amendment's own note.
 - **M4 — variants**: overlay layer + the Mage-run variant (the #438
   acceptance milestone). Exit: Mage run green in single-digit full runs,
   pacing report auto-generated from pass-2 harvests.

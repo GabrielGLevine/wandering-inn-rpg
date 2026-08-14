@@ -1,4 +1,4 @@
-# Itinerary compiler (M3)
+# Itinerary compiler (M3.6)
 
 Compile an act from the repository root:
 
@@ -111,10 +111,66 @@ compiled side and never looser. `press move_down` and `move {down, steps: N}`
 are the same cursor idiom and compare equal.
 
 M2 accepts the whole frozen primitive set: `goto`, `talk`, `fight`, `sleep`,
-`equip`, `unequip`, `buy`, `sell`, `use_field`, `interact`, `shot`, `assert`,
-`detour`, `raw`. Every node needs a stable `id`; every fork (`choose_path`)
-needs a `why`. Unknown spec keys are rejected rather than ignored — a typo that
-silently no-ops is how a mis-planned fight compiles green and then hangs.
+`equip`, `unequip`, `buy`, `sell`, `use_field`, `interact`, `journal`, `shot`,
+`assert`, `detour`, `raw`. Every node needs a stable `id`; every fork
+(`choose_path`) needs a `why`. Unknown keys are rejected rather than ignored —
+at the SPEC level (`fight: {encouter: x}`) and, since M3.6, at the NODE level
+too. The node-level check is what catches a misspelled second primitive: a
+`figth:` beside a valid `goto:` is not in the primitive set, so the
+exactly-one-primitive count never saw it and the beat silently did not happen.
+
+## The M3.6 frame keys (2026-08-13 amendment)
+
+None of these is a new primitive. Each says which of an idiom's OPTIONAL rows
+this particular beat has, which is a property of the world and not a
+preference:
+
+| Key | On | What it says |
+|---|---|---|
+| `entry: dialogue` + `npc` + `choose_path` | `fight` | The board opens on a conversation's own confirm, from a row whose effects carry `start_combat`. The fight node owns the walk; the emitter emits neither an approach press nor a panel teardown. |
+| `turn_wait: false` | `fight` | This board carries no `turn_started {id: pc}` wait (6 of the corpus's 12 fights). |
+| `beats: {before_turn: [...], after_combat: [...]}` | autoplay `fight` | Tutor-line beats around the policy handover. A driven fight places beats with `beat:` turn entries instead. |
+| `expect_banks_after_dismiss: true` | `fight` | `resolve_combat()` runs on the banner dismiss, so the encounter's `on_victory` deposits are waited on BETWEEN that confirm and `ui_combat_hidden`. |
+| `arena: <id>` | `fight` | Tightens the `combat_started` pin to the arena that opened. |
+| `via: <door-id>` | `goto` | Which door the LAST leg takes. Two doors between the same pair of maps are both oracle-valid and arrive on different cells; the arrival is what the next press acts on (GH#375's west inn door). |
+| `expect_render: true` | `goto` | Asserts `ui_map_rendered` for the destination — the presentation half of an arrival. |
+| `expect_epilogue: true` | `sleep` | The run's last claim: `ui_sleep_veil_finished` then `ui_gdi_epilogue_rendered`. |
+
+## Effect-derived event waits
+
+A chosen dialogue option's `effects` array already moved the ledger; since M3.6
+it also says what the game will ANNOUNCE while it does. The derivation mirrors
+`WIGame.dialogue_choose`'s loop and its elif chain, and joins `quests.json`
+through `scripts/itinerary/quests.py` so a counter that closes a beat drags
+`quest_beat_completed`/`quest_completed` behind it. Placement is the engine's
+order, not a preference: on a CLOSING row the announcements land after
+`dialogue_ended`/`ui_dialogue_hidden` (because `choose()` emits the teardown
+before returning the effects), and on a continuing row they land before the
+destination `dialogue_node`. Get that backwards and every wait sails past the
+forward-only since-cursor.
+
+Toasts are deliberately not derived. The amendment enumerates the derivable
+shapes as accomplishment / quest_started / beat / completed / item_gained, and
+a toast is a presentation echo of an event already pinned; the purchase, sale
+and prop idioms pin the toasts whose authored COPY is the claim.
+
+## Sneak lifetime (#440)
+
+`WISave` does not serialize `sneaking` — it is runtime-only, cleared by
+`sleep()` — so the oracle can never be asked about a live stance and the
+ledger carries the lifetime itself. A `use_field` on a `sneaks: true` Skill
+toggles it (and the two directions announce different things); a fight, a
+non-door interact and a sleep all drop it. While it is live the route planner
+stops refusing walks that cross a proximity radius, because the engine's own
+proximity pass `continue`s instead of springing.
+
+## Where a walk LANDS is pinned
+
+Every walk leg ends in an `assert_state player_cell` before whatever acts on
+it next. §6.3 already rules the arrival net-class — a route between two
+anchors may differ, the place it arrives at may not — and this makes the run
+say so instead of leaving it to a differ. The shipped steel thread carries 330
+of these; before M3.6 the emitter carried them only after a map transition.
 
 The compiler asks `qa/oracle.gd` for paths, visible dialogue rows, inventory
 cursors, the field bar, and progression outcomes, then emits driver steps

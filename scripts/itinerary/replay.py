@@ -12,7 +12,13 @@ DIRECTIONS = {"up": (0, -1), "down": (0, 1), "left": (-1, 0), "right": (1, 0)}
 # FLAG, not a depth count: a conversation that ends emits both dialogue_ended
 # and ui_dialogue_hidden, and counting those as two closes would underflow.
 PANELS = {
-    "dialogue": ({"dialogue_started"}, {"dialogue_ended", "ui_dialogue_hidden"}),
+    # `combat_started` closes the conversation too (M3.6 amendment item 1): a
+    # `start_combat` row hands the screen to the board, and the panel it leaves
+    # behind is gone whether or not the script waited on its teardown. Without
+    # this the replay would keep the dialogue flag raised for the rest of the
+    # run and read every later walk as a menu cursor move -- which is exactly
+    # what it did the first time `entry: dialogue` compiled.
+    "dialogue": ({"dialogue_started"}, {"dialogue_ended", "ui_dialogue_hidden", "combat_started"}),
     "inventory": ({"ui_inventory_shown"}, {"ui_inventory_hidden"}),
     "combat": ({"combat_started"}, {"ui_combat_hidden"}),
     "title": ({"ui_title_gate_rendered"}, {"world_ready"}),

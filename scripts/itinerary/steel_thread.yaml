@@ -1,4 +1,4 @@
-# The steel thread, as an itinerary (#434 M3/M3.5).
+# The steel thread, as an itinerary (#434 M3/M3.5/M3.6).
 #
 # Hand-derived from the shipped 2569-step `qa/scripts/steel_thread.json`, which
 # stays the golden this recompiles against (`scripts/itinerary/goldens.py`).
@@ -6,21 +6,17 @@
 # the first beat the frozen vocabulary cannot express rather than hiding that
 # beat inside `raw`.
 #
-# Covers shipped steps 0-61 -- the creation prelude and Act I's opening walk.
-# Verified: this prefix compiles green (replay self-check ok, zero raw steps),
-# runs green headless at seed 37, and passes the tolerance differ against the
-# shipped prefix with ZERO exact-class differences. Its one fatal is net-class:
-# the router enters the inn by the main door where the script takes the west
-# one, and there is no way to name which door a `goto` should use.
+# Covers shipped steps 0-217 -- the creation prelude and the whole of Act I,
+# through the gate-road ambush and the arrival in Liscor. The 2026-08-13 M3.6
+# amendment is what carried it past the M3.5 seam at step 62: the Relc spar is
+# `fight: {entry: dialogue}`, the road ambush carries its tutor `beats:` and
+# its post-dismiss banks, and every dialogue confirm now claims the events its
+# own effects fire.
 #
-# THE SEAM IS SHIPPED STEP 62, the Relc meeting. What stops the authoring is
-# not this file: the spar is entered from `relc_intro`'s `spar_offer` row,
-# whose effect is `{"start_combat": "relc_spar"}` on an `end: true` option, and
-# `FIGHT_ENTRIES` has no `entry: dialogue`. The full blocker table -- that one
-# plus the 141 effect-derived event waits the dialogue planner drops, and the
-# fight-shape variances -- is in `wandering_inn_game/qa/STEEL-THREAD.md`.
-# `fight: {mode: driven}` and `journal` are BUILT and pinned against the corpus
-# in `tests/test_m35_contract.py`; they are not what blocks this.
+# THE SEAM IS NOW SHIPPED STEP 218, the start of Act II. What remains between
+# this file and a green end-to-end golden is not language: it is the emitter
+# IDIOM VARIANCE the differ measures against these 218 rows and the 2351
+# behind them (`wandering_inn_game/qa/STEEL-THREAD.md` carries the table).
 
 - act: i
   # §8's creation prelude, keyed by scalars. `tap_back` is the pointer-path
@@ -55,11 +51,128 @@
     - id: act1.inn_sign.shot
       shot: {name: 02_tutorial_00b_inn_sign}
     - id: act1.inn.reentry
-      goto: {map: inn}
+      goto: {map: inn, via: floodplains_inn_door_west}
       why: >-
         GH#375's can-fail reachability pin as a route: from the freed (6,6) the
         step north blocks on the west inn door and turns to face it, and the
         interact has to actually enter. A prop dropped on the approach cell
-        would red here rather than in a playtest.
+        would red here rather than in a playtest. `via` is what names WHICH
+        door -- the main door (7,5) is equally oracle-valid and proves nothing
+        about the west one.
     - id: act1.road.back
       goto: {map: floodplains}
+
+    # -- Relc, and the spar the conversation itself starts -------------------
+    - id: act1.spar
+      why: >-
+        Take the spar. It is the run's only classless fight and the only place
+        the combat tutor's teaching beats fire in order, which is why the turn
+        list is hand-driven rather than autoplayed -- an autoplayed spar would
+        prove nothing about the beats it exists to fire.
+      fight:
+        encounter: relc_spar
+        at: floodplains
+        # M3.6 amendment item 1: the board opens on `spar_offer`'s own confirm,
+        # off `{"start_combat": "relc_spar"}`. There is no approach to walk and
+        # no second press -- compiling this as `interact` would walk to the
+        # dummies and press again, which is a different entry.
+        entry: dialogue
+        npc: relc
+        choose_path:
+          - Just a traveler. Staying at the inn, heading for Liscor.
+          - You any good with that spear? (Spar)
+          - Ready when you are.
+        mode: driven
+        max_turns: 200
+        turns:
+          - {logged: ui_hotbar_rendered, where: {slots: 3}}
+          - {beat: opening}
+          - {await: turn_started, where: {id: pc}}
+          - {settle: 5}
+          - {pin: {path: combat.active, equals: pc}}
+          - {pin: {path: combat.combatants.pc.cell, equals: [2, 3]}}
+          - {press: move_right}
+          - {await: combatant_moved, where: {id: pc, cell: [3, 3]}}
+          - {beat: first_step}
+          - {press: move_right}
+          - {await: combatant_moved, where: {id: pc, cell: [4, 3]}}
+          - {press: move_right}
+          - {await: combatant_moved, where: {id: pc, cell: [5, 3]}}
+          - {beat: pool_empty}
+          - {pin: {path: combat.combatants.pc.move_pool, equals: 0}}
+          - {press: hotbar_2}
+          - {press: confirm}
+          - {await: dashed, where: {id: pc, move_pool: 3}}
+          - {beat: dash}
+          - {press: move_right}
+          - {await: combatant_moved, where: {id: pc, cell: [6, 3]}}
+          - {press: hotbar_1}
+          - {await: ui_targeting_shown}
+          - {beat: aim}
+          - {press: cycle}
+          - {press: confirm}
+          - {await: attack_resolved, where: {attacker: pc}}
+          - {beat: first_blood}
+          - {press: end_turn}
+          - {await: turn_ended, where: {id: pc}}
+          - {beat: watch}
+          - {autoplay: true}
+          - {beat: wrap}
+    - id: act1.spar.no_gift
+      assert: {event_absent: {type: item_gained}}
+      why: Accepting the spar granted no item -- the gift moved off the accept row.
+
+    # -- the first night: [Warrior] ------------------------------------------
+    - id: act1.upstairs.seam
+      goto: {map: inn_upstairs, cell: [2, 1]}
+    - id: act1.upstairs.seam.shot
+      shot: {name: 02_tutorial_00c_upstairs_floor_seam}
+    - id: act1.bed.approach
+      goto: {map: inn_upstairs, cell: [9, 1]}
+    - id: act1.sleep.warrior
+      sleep: {expect_levels: true, shot: 02_tutorial_01_warrior_gained}
+
+    # -- Relc's spear, and wearing it ----------------------------------------
+    - id: act1.gift
+      talk:
+        npc: relc
+        at: floodplains
+        choose_path:
+          - You said you had something for me?
+          - I'll try it on. (Check your pack after this.)
+      why: >-
+        The spear is the run's whole martial line -- [Warrior] evolves to
+        [Spearmaster] on spear-skill dominance, and this is the only spear the
+        thread ever holds.
+    - id: act1.gift.shot
+      shot: {name: 02_tutorial_02_gift_teaching}
+    - id: act1.equip.spear
+      equip: {item: relcs_spare_spear}
+    - id: act1.equip.shot
+      shot: {name: 02_tutorial_03_spear_equipped}
+
+    # -- the gate road, and the ambush that owns it --------------------------
+    - id: act1.ambush
+      why: >-
+        The Act I climax. Walked into, not interacted with: the raiding band
+        springs on the step that lands inside its Chebyshev-2 radius, so the
+        route stops one cell short and the fight IS the next move.
+      fight:
+        encounter: goblin_encounter_1
+        at: floodplains
+        entry: proximity
+        max_turns: 300
+        shots: [02_tutorial_04_ambush_warrior_spear]
+        # M3.6 amendment item 3: the road ambush is a plain autoplay fight that
+        # nonetheless carries two tutor beats -- one before the PC's first turn
+        # and one after the board finishes -- and banks `sign_defended` between
+        # the banner dismiss and the teardown, because `resolve_combat()` runs
+        # on that confirm.
+        beats: {before_turn: [real_ones], after_combat: [road_clear]}
+        expect_banks_after_dismiss: true
+    - id: act1.street.arrival
+      goto: {map: street}
+    - id: act1.street.shot
+      shot: {name: 02_tutorial_05_street_arrival}
+    - id: act1.gate_district.shot
+      shot: {name: 03_liscor_gate_district_arrival}
