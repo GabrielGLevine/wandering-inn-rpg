@@ -86,7 +86,7 @@ from wi_data_lib import DATA, GAME_ROOT, load_dialogue_graphs, load_json, load_s
 
 OUT_PATH = DATA / "shipped_ids.json"
 
-RELEASE = "0.19.0"
+RELEASE = "0.20.0"
 
 # ---------------------------------------------------------------------------
 # STRUCTURAL_LITERALS -- KEEP IN SYNC with tests/test_shipped_ids.gd's own
