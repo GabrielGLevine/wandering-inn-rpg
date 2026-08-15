@@ -812,10 +812,22 @@ func _authored_insert_index() -> int:
 ## photographs. So a chore holding the strip yields it the moment authored copy
 ## is waiting, instead of merely being CAPPED at
 ## TOAST_QUEUE_HOLD_CAP_SECONDS while it eats the moment.
-## LOSSLESS EITHER WAY: the chore has already rendered (the event fires before
-## the hold) and already recorded, so yielding costs it only the tail of its
-## hold -- no queue entry moves, no render is skipped, and the emission ORDER of
-## every `ui_toast_rendered` is byte-identical. Chore-behind-chore keeps the cap.
+## WHAT IT COSTS, EXACTLY -- not "the tail of its hold", ALL of it. The cap
+## collapses to `started_msec + int(0.0 * 1000.0)` == `started_msec`, a deadline
+## already in the PAST, so the loop exits on its next condition check no matter
+## how long the chore has been up. On `invrisil_hat_quiet` at seed 37 the two
+## `ui_toast_rendered` events either side of a yield are 13-14 ms apart (the
+## chore's whole on-screen life); the wave audit's own panel-visibility probe
+## put the chore at `visible_ms` 0 against 7 and 8 for the authored toasts
+## behind it. A yielding chore is a ~2-frame flash, and that is the intended
+## trade (see the VISUAL-LOG P3 row it opened), not a rounding error.
+## NOTHING IS LOST, which is a separate claim and the one the safety case rests
+## on: `record_message` runs in `_drain_toasts` before `_show` is ever awaited,
+## and `emit_domain_event(rendered_event, ...)` fires above the interruptible
+## loop, so a yielding chore has ALREADY entered Recent Messages and ALREADY
+## emitted `ui_toast_rendered` before this deadline can touch it. No queue entry
+## moves, no render is skipped, and the emission ORDER of every
+## `ui_toast_rendered` is byte-identical. Chore-behind-chore keeps the cap.
 func _queue_has_authored() -> bool:
 	for entry: Dictionary in _toast_queue:
 		if not bool(entry.get("housekeeping", false)):

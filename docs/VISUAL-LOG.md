@@ -77,9 +77,18 @@ r3–r5 playtest waves — gone from this file.
   photographed the chore. FIX: a chore holding the strip now yields it OUTRIGHT
   (cap 0.0) the moment authored copy is queued behind it
   (`message_layer.gd _queue_has_authored`); chore-behind-chore keeps the 1.6s
-  cap. Lossless and order-preserving — the chore has already emitted
-  `ui_toast_rendered` and been recorded, so it loses only the tail of its hold;
-  no queue entry moves and no render is skipped.
+  cap. COST, exactly: the chore loses not the tail of its hold but ALL of it —
+  the cap collapses to `started_msec + int(0.0 * 1000.0)` == `started_msec`, a
+  deadline already in the past, so the loop exits on its next check however long
+  the chore has been up. Measured, same run: the two `ui_toast_rendered` events
+  either side of the yield are 13–14 ms apart — the chore's whole on-screen
+  life; the wave audit's panel-visibility probe put it at `visible_ms` 0 against
+  7 and 8 for the authored toasts behind it. Nothing is LOST, which is the
+  separate claim the safety case rests on: `record_message` runs in
+  `_drain_toasts` before `_show` is awaited and `ui_toast_rendered` fires above
+  the interruptible loop, so a yielding chore has already recorded and already
+  rendered; no queue entry moves, no render is skipped, emission order
+  byte-identical.
   EVIDENCE, `qa/run_qa.sh invrisil_hat_quiet windowed --seed=37`: the capture
   named for the payoff now reads authored copy ("Quest updated: Go back to the
   parlor and tell Wilovan how the evening went.") where it read
@@ -142,14 +151,21 @@ r3–r5 playtest waves — gone from this file.
   number) minus `TOAST_BAND_CLEARANCE`. Centring yields, as it already does to
   the hint ribbon on the slot row: centring is cosmetic, the copy is
   information. Static, so nothing jumps under a reader.
-  EVIDENCE, `qa/run_qa.sh property_seams windowed --seed=37`: readout was
-  x 280–1000 against a band starting at 808 (192px shared); the plate's top
-  edge now measures x 80–799 off the PNG itself (same number in `02` and `05`),
-  a 9px gap, and `05_nook_cleared.png` shows legend row 4 ending in the whole
-  word "moments." — the exact copy the row cited as clipped to "…old timber in
-  momen" — with the 3-line `[Firefly]` toast beside it, not over it.
-  `ui_field_hotbar_rendered` `bar_left`/`group_width` unchanged (422/436): the
-  slot row does not move. Guard: `tests/test_settings.gd`
+  EVIDENCE, `qa/run_qa.sh property_seams windowed --seed=37` — the MECHANISM,
+  measured, because no single frame in this script can show the cure: the
+  readout plate's top edge measures x 80–799 off the PNG itself (same number in
+  `02` and `05`) against a toast band that starts at x 808, an 8px clear
+  matching `TOAST_BAND_CLEARANCE`; it was x 280–1000, 192px shared. The
+  mutation's own RED quotes the pre-fix number back — "readout ends
+  1000.000000, band starts 808.000000". `ui_field_hotbar_rendered`
+  `bar_left`/`group_width` unchanged (422/436): the slot row does not move.
+  NOT CITED AS PROOF, deliberately (it was, and it did not hold): the "moments."
+  tail in `05_nook_cleared.png`. Legend row 4 sits at y 514–526 while that
+  frame's toast tops out at y 560 — 34px clear — so that word reads whole with
+  OR without the fix, in `02`, `05` and `06` alike. The row's original
+  "…old timber in momen" came from a taller toast than any frame this script
+  captures. Geometry is the evidence here; the PNG only shows the two plates no
+  longer sharing a column. Guard: `tests/test_settings.gd`
   `_check_field_hotbar_layout`, mutation-proven — deleting the `right_limit`
   clamp reds it with "readout ends 1000.000000, band starts 808.000000".
   RESIDUAL: below ~1228px of viewport width the pair cannot both fit, and the
@@ -452,3 +468,47 @@ r3–r5 playtest waves — gone from this file.
 - [ ] **(P3)** crypt Lich + Bone Thrall, and the CO-BOARD read (#460) — the summoner archetype ships two OWNED PixelLab v3 rigs (`crypt_lich` 64px @ render_scale 0.64 ≈ 2.36 cells, `bone_thrall` 48px @ 0.60 ≈ 1.65 cells, both anchored off a measured alpha bbox, idle-only because combat never plays `walk`). The binding constraint is that `bone_thrall` must read apart from `skeleton_ally` AT A GLANCE, because `bone_pile_ruin` sits nine cells from the crypt on the SAME map and a necromancer PC can stand its own raised skeleton on the same board — tint would not have carried that (2026-08-02 directive), so the separation is silhouette AND height AND palette: the ally is pale/tan, broad and upright at 1.94 cells; the thrall is dark rot-grey, narrow and hunched at 1.65; the Lich is dark, crowned, 2.36 and carries the only green spell-light on the board. Evidence: `qa/run_qa.sh crypt_lich_fight windowed --seed=1` → `02_thrall_raised_beside_ally.png` puts all three on one board with the feed line under them, and `01_board_opening.png` / `00_crypt_mouth.png` carry the opening and the overworld read. NOTE for whoever gates this: the local run has no private asset overlay, so the PC renders as its magenta fallback chip and covers the crypt entity in `00_crypt_mouth.png` — read the overworld Lich off a run with the overlay installed. — fix direction: accept, or ask for one more separating step on the thrall (see the row below)
 - [ ] **(P4)** `bone_thrall` reads THIN at board scale (#460) — the rig is correct and clearly not the ally, but at 1.65 cells the hunched shroud reads as a narrow dark sliver next to the ally's broader frame, and it is the enemy the player has to count (up to two of them join mid-fight). It has no `combat_tint` and wants none — the whole point of the row is that tint is not the tell. — fix direction: one MASS step (a wider shroud/shoulder silhouette at the same height) on the next PixelLab pass, or accept if it reads fine in play at gameplay zoom
 - [ ] **(P3)** death spells changed colour — [Bone Dart] and [Deathbolt] (#460) — `combat_screen._skill_flash_color` picked FLAME_FLASH for every non-frost `spell_damage`, so both shipped [Necromancer] casts threw an ORANGE FIRE projectile and flashed orange on the target. They now key on the authored `element: death` and read grave-green (`GRAVE_FLASH`, the same colour the summon's arrival cell flashes). This is a player-visible change to TWO ALREADY-SHIPPED player spells, not only to the new enemy kit, and it is the label-vs-art class this log exists for (a black-green lance that renders as fire). NOT YET EYE-GATED: no canonical fields a PC casting either one — `WICombatAI` defaults the PC's empty `ai` to the melee profile, so autoplay structurally cannot cast, and the only frames in hand are the Lich's own bolts (`qa/run_qa.sh crypt_lich_fight windowed --seed=1`, the enemy side of the same colour). — fix direction: read a PC death-cast whenever a necromancer fixture next plays under the competent policy; accept the hue, or dial it if green-on-cave-floor reads weakly against the frost blue
+- [ ] **(P3)** "Autosaved." is now a ~2-frame flash on EVERY quest beat —
+  the deliberate, logged cost of the chore-yield fix in the "Authored payoff
+  prose queues behind housekeeping toasts" row above. `game.gd:110` autosaves
+  from inside its own `QUEST_BEAT_COMPLETED` listener, so the save toast
+  ALWAYS coincides with a beat, and a beat is exactly when authored copy is
+  queued behind it — which now collapses the chore's deadline to
+  `started_msec` (a time already past) rather than capping it at 1.6s.
+  Measured, `qa/run_qa.sh invrisil_hat_quiet windowed --seed=37`: 13–14 ms
+  between the chore's `ui_toast_rendered` and the next one — its whole
+  on-screen life; the wave audit's panel-visibility probe read it as
+  `visible_ms` 0, against 7 and 8 for the authored toasts behind it. So
+  "Autosaved. (Esc — save/load anytime)" — which is a FIRST-TIME-PLAYER
+  affordance, the one place the game says where saving lives — is functionally
+  unreadable at the moment it most reliably fires. A trade, not a loss: it
+  still carries `record=true`, so it lands in the journal's Recent Messages
+  every time, and the ruling stands that authored prose beats a chore.
+  Fix direction: a MINIMUM-VISIBLE-SPAN floor on a chore that has already
+  started showing (yield after N frames, not on the next check), so the strip
+  still hands over promptly but never renders a toast no eye can catch.
+  NOT taken in the same wave that introduced the yield — new timing behaviour
+  needs its own measurement pass, and this one would move a hold that
+  125 canonicals wait on `ui_toast_rendered` for.
+- [ ] **(P3)** Empty-interact flavor can be flashed AND unrecorded — authored
+  interior-flavor prose (`biomes.json`, e.g. "Nothing there — just old boards,
+  and the particular silence of a room with a roof on it.") is queued by
+  `message_layer.gd:451` as `_queue_toast(text, false, true)`: `record=false`
+  AND `housekeeping=true`. Since the chore-yield fix that pairing is newly
+  load-bearing — as a chore the line can now be cut to ~2 frames, and with
+  `record=false` it never reaches Recent Messages either, so an authored line
+  could reach the player NOWHERE. Exactly the family this lane drains.
+  LATENT TODAY, not live: a sweep of all 252 canonical event logs found 1885
+  `interact_nothing` events and ZERO cases where one was actually cut short.
+  BLOCKED on the obvious one-line cure (`record=true`): MEASURED to move a
+  shipped pin — `mobile_tap_check` step 32 pins `ui_journal_shown`
+  `recent_count: 1` and its own `_comment` states the case verbatim ("Unfixed
+  message_layer records it and this pins 2"); flipping the flag turns that
+  canonical RED at that step ("timeout (5.0s) waiting for event:
+  ui_journal_shown subset={"recent_count":1.0}"), while
+  `status_first_encounter` is unaffected. The pin encodes GH#202's own ruling
+  (idle wall-poking must not push real history past `RECENT_MESSAGES_CAP` 30),
+  so this is a ruling to revisit, not a flag to flip. Fix direction: decide
+  whether flavor prose is history, then re-derive `mobile_tap_check`'s count in
+  the same commit — or give the line a minimum-visible-span floor instead and
+  leave GH#202 standing.
