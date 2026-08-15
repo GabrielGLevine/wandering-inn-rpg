@@ -9,9 +9,10 @@ or superseded session blocks.
 
 ## Current state
 
-- Latest public release: **v0.19.0**. `main` also contains the post-release
-  orphan drain (#429, PR #433): six missing skill/item/content wires are live
-  and reachability categories now hard-fail once clean.
+- Latest public release: **v0.20.0** (cut 2026-08-14). Shipped-ids frozen at
+  0.20.0 — **950 ids**, +4 classes / +12 Skills / +9 items / +8
+  accomplishments since 0.19.0, zero removals. No new asset bundle was
+  needed (no licensed-asset change since v0.19.0).
 - Working tree: **do not discard** the active guidance/documentation bundle.
   It condenses the game `AGENTS.md`, moves detailed mechanisms into
   `wandering_inn_game/docs/ARCHITECTURE-HISTORY.md`, adds the current structural
@@ -45,19 +46,14 @@ or superseded session blocks.
   drift-set re-window. Per-change detail in the merged PR bodies;
   rulings in docs/CHOICE-LOG.md. Verify a squash merge by CONTENT/tree,
   never `git cherry`.
-  **DRIVING TO A TAG (user, tag night): cut v0.20.0.** Pre-tag state
-  verified: no licensed-asset change since v0.19.0 so NO new bundle is
-  needed, `bundle-v7` holds the Latest badge and potential-assets-v1 is
-  correctly a prerelease, and the one new code-banked literal
-  (`crossed_under_cover`) is already in STRUCTURAL_LITERALS in both
-  files. **The one irreversible step remains: bump RELEASE in
-  `generate_shipped_ids.py` and regenerate `data/shipped_ids.json`
-  BEFORE tagging** — that freezes this wave's ids as permanent API.
-  IN FLIGHT: HUD copy-loss lane (VISUAL-LOG drain — the family where
-  authored prose never reaches the player).
+  **v0.20.0 CUT 2026-08-14.** 39 merged this wave; nothing in flight.
   AFTER THE TAG: [Ranger] kit-gap lane, the small-fixes lane ([Sword
   Saint] aspiration, sandals rename, harness build-levels), coverage
   lanes per #485 (class-surface serialized), then M4 (still blocked).
+  Also parked for post-tag: wild_sage V 0.96 (step-not-slope, druid
+  falls below floor at the setting that fixes it) and the four surfaced
+  cells (spellspear I/IV, skirmisher I/IV — corrected measurement, not
+  regressions; the lever re-authors steel-thread pins).
   PARKED FOR AFTER THIS TAG (user): #494 resonance semantics,
   #495 damage_mod-never-reaches-spell/line/blast.
   WATCH: prose budget 25713/25725 — 12 words of headroom, so the next
