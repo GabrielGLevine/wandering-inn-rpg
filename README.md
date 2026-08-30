@@ -27,6 +27,13 @@ cd wandering-inn-rpg
 godot --path wandering_inn_game
 ```
 
+To check a fresh machine has everything the gates need — engine version,
+Python deps, git hooks, and the optional licensed-asset overlay — run:
+
+```bash
+bash scripts/setup_dev_env.sh --check   # report only; drop --check to set it up
+```
+
 The project is QA-first: every player-visible feature ships with a scripted
 playtest that asserts it. Run the same gate CI runs:
 
