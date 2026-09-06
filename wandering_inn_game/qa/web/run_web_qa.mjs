@@ -238,7 +238,15 @@ await page.addInitScript(() => {
 		return origConnect.apply(this, args);
 	};
 });
-await page.goto(`${BASE_URL}index.html`);
+const landing = await page.goto(`${BASE_URL}index.html`);
+// A missing export (no build/web/index.html) used to surface only as a
+// "no result within 120s" two minutes later; fail at the door instead.
+if (!landing || landing.status() !== 200) {
+	console.error(`FAIL: ${BASE_URL}index.html answered ${landing ? landing.status() : "nothing"} -- is build/web exported? (webRoot=${webRoot})`);
+	await browser.close();
+	server.close();
+	process.exit(1);
+}
 
 // #503 orientation probe: portrait entry must show the rotate overlay on a
 // coarse-pointer device and hide it again after rotation; the page is NEVER

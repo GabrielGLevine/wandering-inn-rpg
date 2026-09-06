@@ -82,6 +82,14 @@ not the finger); `real` = physical device observation.
 
 ## Reproductions filed / mapped
 
+- **CI "Web parity" job was a no-op since it was written** (found by this
+  pass, fixed in the same PR): `perl -e 'exec @ARGV' WI_REQUIRE_AUDIO_OUTPUT=1
+  bash …` exec'd a program literally named `WI_REQUIRE_AUDIO_OUTPUT=1`,
+  failed silently, exited 0 — empty log, green check. Every prior "web parity
+  green" claim was vacuous; the assignment now precedes perl and an empty log
+  (no `QA_RESULT: PASS`) fails the step. The runner also fails at the door
+  when `index.html` is not served (a missing export used to surface as a
+  120s timeout).
 - Import Save on mobile web → #253 (pre-existing, confirmed still open; not re-run here).
 - No additional concrete defect reproduced under emulation this pass; every
   emulated flow that reached its surface passed. Two canonicals (`title_flow`,
