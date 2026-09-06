@@ -708,6 +708,10 @@ class GoldenAccountingTest(unittest.TestCase):
                                 {"action": "press", "name": "interact"}]}, shipped_leg)
         self.assertFalse(moved.passed)
         self.assertTrue(any("dropped this claim" in row for row in moved.exact), moved.render())
+        # Review (#434): a float-typed cell on one side is the SAME cell.
+        floaty = diff({"steps": [{"action": "assert_state", "path": "player_cell", "equals": [7.0, 6.0]},
+                                 {"action": "press", "name": "interact"}]}, shipped_leg)
+        self.assertTrue(floaty.passed, floaty.render())
 
 
 # ---------------------------------------------------------------------------

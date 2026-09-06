@@ -146,7 +146,13 @@ def _key(step: dict[str, Any]) -> str:
     # arrival with whichever same-kind assert it reaches first (the source of
     # every net-class row in the Act I golden).
     if str(normalized.get("action", "")) == "assert_state" and str(normalized.get("path", "")) == "player_cell":
-        parts.append(f"equals={json.dumps(normalized.get('equals'), sort_keys=True)}")
+        cell = normalized.get("equals")
+        if isinstance(cell, list):
+            # JSON coordinates may parse as floats on one side (7.0) and ints
+            # on the other (7); the key must not split on that (replay.py
+            # normalizes the same way).
+            cell = [int(part) for part in cell]
+        parts.append(f"equals={json.dumps(cell, sort_keys=True)}")
     # NOT included: the pinned VALUE. Every `assert_state player_cell` is
     # therefore the same alignment token, and the matcher can pair an arrival
     # with whichever one it reaches first -- a real weakness, and the reason
