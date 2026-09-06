@@ -20,12 +20,14 @@ archived, or superseded session blocks.
   #477 gained_by any-arm readers, #253 web Import Save. Per-issue records:
   PRs #531–#534 (closed as superseded). Agent merges work as a BARE
   `gh pr merge …` (the allow rule is prefix-matched; no `cd` prefix).
-- **#508 Rogue discovery — PR #536** (`issue/508-rogue-discovery-v2`): leads
-  for both classless entries, Krshia's Watch pointer, bypass toast,
-  first-[Stealth] pointer, and the COMPILED fresh-save route
-  `rogue_discovery_cut_route` (itinerary planner now models cover-served and
-  sneaking band crossings). Dialogue prose corpus sits ONE word under the
-  24.5k+5% tripwire — the next dialogue edit trims elsewhere or re-baselines.
+- **#508 landed** (PR #536, `067cf95f`): leads for both classless entries,
+  Krshia's Watch pointer, bypass toast, first-[Stealth] pointer, and the
+  COMPILED fresh-save route `rogue_discovery_cut_route` (the itinerary planner
+  models cover-served and sneaking band crossings). Dialogue prose corpus sits
+  ONE word under the 24.5k+5% tripwire — the next dialogue edit trims elsewhere
+  or re-baselines.
+- Next lane: #509 message lifecycle (min readable lifetime before the
+  movement dismiss, autosave status treatment, lifecycle tests).
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
@@ -56,6 +58,19 @@ archived, or superseded session blocks.
 
 ## User-held
 
+- **#507 onboarding labels vs two standing rulings — needs your call before
+  dispatch.** The issue asks to name every creation choice and add difficulty
+  descriptions, but (a) "Playtest hotfix #3" removed race/gender labels from
+  the picker cards on purpose (`char_creation.gd` PC_OPTIONS block: identity
+  must read from the art) and (b) #447's one-voice ruling removed the
+  difficulty descriptor tails, moving the explanation to the Settings Help
+  page. Options: (1) keep both rulings, satisfy #507 with a single footer
+  line under the selected card ("Human · woman — looks only; nothing
+  mechanical") and a one-line difficulty blurb under the prompt ribbon on
+  that step only; (2) restore card labels + descriptor tails (reverses both
+  rulings); (3) leave creation as is and scope #507 to staged hints +
+  discoverability only. Recommendation: (1) — it names the choice without
+  putting text on the art and keeps the Help page the durable explanation.
 - **#494 resonance semantics** and **#495 gear damage/scaling semantics** need
   explicit recorded choices. Their post-tag scheduling hold has elapsed;
   roadmap authorization does not select a model. Implementation is #514.
