@@ -34,14 +34,15 @@ archived, or superseded session blocks.
 - **M1 dispatchable queue is now empty**: #507 waits on the label ruling
   below; #505/#506/#510 are `roadmap:blocked` on real-device findings; #511
   is the human gate. Real iPhone/Android observations remain the unblock.
-- **#434 Act II at golden equivalence -- PR #541 open** (branch
-  `issue/434-act-ii`; 8/8 checks green on 092b2275, review fixes on top).
+- **#434 Act II at golden equivalence (PR #541 merged 2026-09-06).**
   Act II slice diff 0 exact / 0 net; compiled Act I-II runs green headless
   at seed 37 (729 steps). Act I residue: one shipped-only row (ambush
   `ui_hotbar_rendered {slots: 4}`). Read `scripts/itinerary/README.md`
   "Act II is at golden equivalence" before touching the emitter: a golden
-  PASS is not a runtime PASS. NEXT after merge: Acts III-V authoring,
-  `goldens.py --slices`, caster-variant acceptance.
+  PASS is not a runtime PASS. NEXT (fresh branch off main): Act III
+  authoring (shipped 559-~810) on `issue/434-act-iii`, `goldens.py
+  --slices`, then Acts IV-V and the caster-variant acceptance. Session
+  2026-09-06 ended on the usage guard (QUIESCE) right after the merge.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
