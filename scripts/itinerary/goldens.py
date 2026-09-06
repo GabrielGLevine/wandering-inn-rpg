@@ -139,6 +139,20 @@ def _key(step: dict[str, Any]) -> str:
     for field_name in ("type", "path", "name", "skill", "slot", "label"):
         if field_name in normalized:
             parts.append(f"{field_name}={normalized[field_name]}")
+    # #434 residue: ARRIVAL pins carry their cell in the key. `player_cell` is
+    # equals-only (a cell subsumes nothing), so pairing by value cannot move a
+    # legitimate tightening into the fatal class -- the objection that kept
+    # values out of the key in M3.6 -- while it stops the matcher pairing an
+    # arrival with whichever same-kind assert it reaches first (the source of
+    # every net-class row in the Act I golden).
+    if str(normalized.get("action", "")) == "assert_state" and str(normalized.get("path", "")) == "player_cell":
+        cell = normalized.get("equals")
+        if isinstance(cell, list):
+            # JSON coordinates may parse as floats on one side (7.0) and ints
+            # on the other (7); the key must not split on that (replay.py
+            # normalizes the same way).
+            cell = [int(part) for part in cell]
+        parts.append(f"equals={json.dumps(cell, sort_keys=True)}")
     # NOT included: the pinned VALUE. Every `assert_state player_cell` is
     # therefore the same alignment token, and the matcher can pair an arrival
     # with whichever one it reaches first -- a real weakness, and the reason
