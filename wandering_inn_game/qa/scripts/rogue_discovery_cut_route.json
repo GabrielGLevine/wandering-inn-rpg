@@ -164,9 +164,19 @@
    "_itin": "rogue.cut.approach"
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ],
+   "_itin": "rogue.cut.approach"
+  },
+  {
    "action": "move",
    "direction": "right",
    "steps": 1,
+   "_bump": true,
    "_itin": "rogue.cut.approach"
   },
   {
@@ -251,9 +261,19 @@
    "_itin": "rogue.cut.approach"
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    26,
+    24
+   ],
+   "_itin": "rogue.cut.take"
+  },
+  {
    "action": "move",
    "direction": "right",
    "steps": 1,
+   "_bump": true,
    "_itin": "rogue.cut.take"
   },
   {
@@ -350,9 +370,19 @@
    "_itin": "rogue.home"
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ],
+   "_itin": "rogue.home"
+  },
+  {
    "action": "move",
    "direction": "up",
    "steps": 1,
+   "_bump": true,
    "_itin": "rogue.home"
   },
   {
@@ -425,9 +455,19 @@
    "_itin": "rogue.home"
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ],
+   "_itin": "rogue.home"
+  },
+  {
    "action": "move",
    "direction": "down",
    "steps": 1,
+   "_bump": true,
    "_itin": "rogue.home"
   },
   {
@@ -482,9 +522,19 @@
    "_itin": "rogue.home"
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ],
+   "_itin": "rogue.home"
+  },
+  {
    "action": "move",
    "direction": "up",
    "steps": 1,
+   "_bump": true,
    "_itin": "rogue.home"
   },
   {
@@ -580,9 +630,19 @@
    "_itin": "rogue.band.approach"
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ],
+   "_itin": "rogue.band.approach"
+  },
+  {
    "action": "move",
    "direction": "left",
    "steps": 1,
+   "_bump": true,
    "_itin": "rogue.band.approach"
   },
   {
@@ -631,9 +691,19 @@
    "_itin": "rogue.band.approach"
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ],
+   "_itin": "rogue.band.approach"
+  },
+  {
    "action": "move",
    "direction": "right",
    "steps": 1,
+   "_bump": true,
    "_itin": "rogue.band.approach"
   },
   {

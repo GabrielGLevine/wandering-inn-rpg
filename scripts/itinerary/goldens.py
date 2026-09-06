@@ -153,17 +153,15 @@ def _key(step: dict[str, Any]) -> str:
             # normalizes the same way).
             cell = [int(part) for part in cell]
         parts.append(f"equals={json.dumps(cell, sort_keys=True)}")
-    # NOT included: the pinned VALUE. Every `assert_state player_cell` is
-    # therefore the same alignment token, and the matcher can pair an arrival
-    # with whichever one it reaches first -- a real weakness, and the reason
-    # two net-class rows in the M3.6 golden report an arrival difference for a
-    # leg whose compiled walk is step-for-step the corpus walk. Adding the
-    # value fixes that pairing, and M3.6 tried it: it also moves a legitimate
-    # SUBSUMING tightening (compiled `equals={a,b}` over shipped `equals={a}`)
-    # out of the TIGHTER class and into exact-class fatal, because the two keys
-    # stop matching and the shipped row reads as a dropped claim. That is a
-    # change to which class is fatal -- policy, not accounting -- so it was
-    # reverted rather than shipped inside the milestone it gates.
+    # The pinned VALUE stays out of the key for every path but one. Keying a
+    # dict path (`classes`) by value would move a legitimate SUBSUMING
+    # tightening (compiled `equals={a,b}` over shipped `equals={a}`) out of
+    # the TIGHTER class into exact-class fatal -- the two keys stop matching
+    # and the shipped row reads as a dropped claim -- which is policy, not
+    # accounting (M3.6's finding). `player_cell` is the exception below: a
+    # cell subsumes nothing, so its value can pair arrivals without touching
+    # any class boundary. `IGNORED_KEYS` (`_bump` included) is stripped by
+    # `_normalize` BEFORE this runs, so marks never reach a key either.
     return "|".join(parts)
 
 
