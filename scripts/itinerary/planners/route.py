@@ -44,7 +44,7 @@ class RoutePlanner:
         return candidates[0]
 
     def plan_to(
-        self, node_id: str, ledger: Ledger, map_id: str, cell: list[int] | None = None, via: str = ""
+        self, node_id: str, ledger: Ledger, map_id: str, cell: list[int] | None = None, via: str = "", door_shot: str = ""
     ) -> list[dict[str, Any]]:
         if map_id not in self.maps:
             raise RouteError(f"unknown destination map: {map_id}")
@@ -57,10 +57,23 @@ class RoutePlanner:
                 if edge["kind"] == "portal":
                     ops.append({"kind": "portal_transition", "entity": transition["id"], "menu_index": edge["menu_index"], "map": edge["to_map"], "cell": destination})
                 else:
-                    ops.append({"kind": "transition", "map": edge["to_map"], "cell": destination})
+                    op: dict[str, Any] = {"kind": "transition", "map": edge["to_map"], "cell": destination}
+                    # A gated door voices its crossing (`door_when.open_toast`,
+                    # the fissure into the deep tunnels) BEFORE map_changed.
+                    open_toast = str((transition.get("door_when") or {}).get("open_toast", ""))
+                    if open_toast:
+                        op["open_toast"] = open_toast
+                    ops.append(op)
                 ledger.set_position(str(edge["to_map"]), destination)
                 if transition.get("on_enter_accomplishment"):
                     ledger.accomplishment(str(transition["on_enter_accomplishment"]))
+        if door_shot:
+            # `door_shot`: standing at the LAST door, facing it, before the
+            # press (steel_thread 625: the fissure lip).
+            doors = [op for op in ops if op.get("kind") == "transition"]
+            if not doors:
+                raise RouteError(f"{node_id}: door_shot {door_shot!r} but this goto crosses no door")
+            doors[-1]["shot"] = door_shot
         if cell is not None:
             walked = self._walk(ledger, [int(part) for part in cell])
             ops.extend(walked)
@@ -373,6 +386,10 @@ class RoutePlanner:
             bump = str(approach["bump"])
             ledger.face(bump)
             ops.append({"kind": "face_target", "direction": bump})
+            # The corpus pins the stand cell on BOTH sides of the bump
+            # (steel_thread 622-624, 591-593): the second pin is the claim
+            # that the bump displaced nobody.
+            ops.append({"kind": "arrival_pin", "cell": stand})
         else:
             driver_steps = list(answer.get("driver_steps", []))
             if driver_steps:

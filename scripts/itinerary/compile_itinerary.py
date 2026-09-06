@@ -80,7 +80,7 @@ class NodePlanner:
     def _dispatch(self, node: Node, ledger: Ledger) -> list[dict[str, Any]]:
         spec = node.spec
         if node.primitive == "goto":
-            ops = self.route.plan_to(node.id, ledger, str(spec["map"]), spec.get("cell"), str(spec.get("via", "")))
+            ops = self.route.plan_to(node.id, ledger, str(spec["map"]), spec.get("cell"), str(spec.get("via", "")), door_shot=str(spec.get("door_shot", "")))
             if spec.get("expect_render"):
                 ops.append({"kind": "map_rendered", "map": str(spec["map"])})
             return ops

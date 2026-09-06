@@ -131,10 +131,16 @@ def _replay_node(state: _State, node: str, steps: list[dict[str, Any]], checkpoi
         if action == "move":
             if state.in_panel:
                 continue  # cursor move, not a walk
-            state.moves.append(step)
             direction = str(step.get("direction", ""))
             if direction in DIRECTIONS:
                 state.facing = list(DIRECTIONS[direction])
+            # A facing bump (`_bump`, emit.py face_target) turns without
+            # moving -- the target cell is blocked by construction. Counting
+            # it as a walk put every post-fight position pin one cell inside
+            # the encounter (#434 Act III).
+            if step.get("_bump"):
+                continue
+            state.moves.append(step)
         elif action == "wait_for_event":
             problems.extend(_replay_wait(state, node, step))
         elif action == "combat_autoplay":

@@ -564,6 +564,9 @@ func _q_progression_preview(sim: WIGame) -> Dictionary:
 		"evolutions": evolutions,
 		"reached_two_classes": reached_two,
 		"tremor_pointer": tremor_pointer,
+		# The first sleep after the seal (sleep_beat.gd, right after the
+		# pointer): banked once, never toasted.
+		"post_game": sim.accomplishment_count("raskghar_sealed") >= 1 and sim.accomplishment_count("post_game") < 1,
 	}
 
 

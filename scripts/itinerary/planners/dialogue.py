@@ -165,6 +165,7 @@ class DialoguePlanner:
             # #434 Act II: the corpus photographs the START node (Pisces'
             # lessons) before the first choice.
             ops.append({"kind": "shot", "name": str(spec["open_shot"])})
+        state_pins: list[dict[str, Any]] = []
         for anchor in anchors:
             answer = self.bridge.query(f"visible_options {graph_id} {current}", ledger)
             options = [row for row in answer.get("options", []) if str(row.get("goto", "")) == anchor or str(row.get("text", "")) == anchor]
@@ -223,6 +224,14 @@ class DialoguePlanner:
                 # any effect wait. Mirrors WIDialogue.purchase_offer.
                 "purchase": _is_purchase_row(option),
             })
+            # Every accomplishment the row banks is ALSO pinned as state once
+            # the row has fully resolved (steel_thread 742:
+            # `accomplishments.raskghar_sealed == 1` after the teardown) --
+            # the wait says it happened here, the pin says what it totals.
+            for row in effect_waits:
+                payload = row.get("payload_contains") or {}
+                if row.get("type") == "accomplishment_recorded" and "count" in payload:
+                    state_pins.append({"kind": "assert_state", "path": f"accomplishments.{payload['id']}", "equals": int(payload["count"])})
             if hands_off:
                 combat_row = str(next(e["start_combat"] for e in effects if "start_combat" in e))
                 if combat_row != start_combat:
@@ -259,6 +268,7 @@ class DialoguePlanner:
                 f"{node_id}: choose_path leaves {graph_id}:{current} OPEN. Add a closing anchor; "
                 f"rows that end the conversation here: {closing}"
             )
+        ops.extend(state_pins)
         return ops
 
     def _closing_anchors(self, graph_id: str, node_id: str, ledger: Ledger) -> list[str]:

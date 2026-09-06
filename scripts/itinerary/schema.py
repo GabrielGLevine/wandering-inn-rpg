@@ -62,11 +62,11 @@ SPEC_KEYS: dict[str, set[str]] = {
     # §6.3 would call the route tolerant, but they ARRIVE on different cells
     # and the arrival is what the next press acts on. `expect_render` adds the
     # presentation half of an arrival -- `ui_map_rendered` for the destination.
-    "goto": {"map", "cell", "via", "expect_render", "why"},
+    "goto": {"map", "cell", "via", "expect_render", "door_shot", "why"},
     "talk": {"npc", "at", "choose_path", "shots", "open_shot", "why"},
     "fight": {
         "encounter", "at", "entry", "npc", "choose_path", "mode", "turns", "policy", "expect",
-        "max_turns", "shots", "turn_wait", "beats", "expect_banks_after_dismiss", "arena", "why",
+        "max_turns", "shots", "open_shot", "turn_wait", "beats", "expect_banks_after_dismiss", "arena", "why",
     },
     "sleep": {"expect_levels", "expect_merge", "expect_epilogue", "expect_veil_lines", "shot", "why"},
     "equip": {"item", "shot", "why"},
@@ -398,6 +398,8 @@ def _creation(raw: Any) -> dict[str, Any]:
 
 def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> None:
     if primitive == "goto":
+        if "door_shot" in spec and not str(spec["door_shot"]).strip():
+            raise SchemaError(f"node {node_id} goto door_shot must be a screenshot name")
         if not str(spec.get("map", "")):
             raise SchemaError(f"node {node_id} goto needs map")
         if "cell" in spec and not _cell(spec["cell"]):
@@ -441,6 +443,8 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
         if entry not in FIGHT_ENTRIES:
             raise SchemaError(f"node {node_id} fight entry must be one of {sorted(FIGHT_ENTRIES)}")
         _fight_entry(node_id, entry, spec)
+        if spec.get("open_shot") and entry != "dialogue":
+            raise SchemaError(f"node {node_id} fight open_shot needs entry: dialogue (the shot lands on the veto beat's open)")
         _fight_frame(node_id, spec)
         # Only `victory` is plannable: a defeat leg reloads the save and every
         # downstream pin becomes fiction. Defeat coverage stays hand-written

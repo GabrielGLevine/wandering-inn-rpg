@@ -255,8 +255,34 @@ green headless at seed 37. What it took, and what a differ PASS does not buy:
   close; the GH#167 tremor pointer is derived from the oracle preview
   (`reached_two_classes`, `tremor_pointer`) and emitted in
   `sleep_beat.gd` order (bank, quest start, sticky toast) before the veil.
-- Slice diffs while later acts are unauthored: filter the compile by
-  `_itin` prefix and the corpus by step range (Act I = `itinerary.start,
-  act1.` over 0-218; Act II = `act2.` over 218-559). A `--slices` option on
-  `goldens.py` is the open follow-up.
+- Slice diffs while later acts are unauthored:
+  `python3 scripts/itinerary/goldens.py <compiled> qa/scripts/steel_thread.json
+  --slice itinerary.start,act1.=0:218 --slice act2.=218:559 --slice act3.=559:773`
+  (compiled steps by `_itin` prefix, corpus by step range; every slice must
+  pass for exit 0).
+
+## Act III is at golden equivalence (2026-09-06)
+
+Shipped steps 559-772 (Zevara's summons, the fissure, the deep tunnels, Relc's
+veto beat and the boss, the report, the post-seal sleep) compile to 0 exact /
+0 net, and the compiled Act I-III script (1,075 steps) runs green headless at
+seed 37. What it took:
+
+- **The stand cell is pinned on BOTH sides of a facing bump.** The corpus
+  pins from whichever side it likes (413 before, 591-593 and 622-624 both,
+  663 merges the bump into `down 3` and pins after). The differ pairs a
+  shipped pin with the LAST of a run of identical compiled pins, discounts a
+  lone shipped 1-step move that repeats the compiled bump the pin already
+  crossed, and the one-step discount is now directional (a real `left 1`
+  to Zevara's column is not a `down` bump). The compile replay treats a
+  `_bump` as a turn, not a walk -- which is what a post-fight position pin
+  needs -- and a proximity trigger is emitted as a REAL move, never a bump.
+- **Vocabulary:** `goto.door_shot` (standing at the last door, facing it,
+  before the press; a gated door's `door_when.open_toast` is claimed before
+  `map_changed`); `fight.open_shot` on `entry: dialogue` (the veto beat);
+  every fight closes with `current_map`/`player_cell` pins; a conversation
+  ends with `accomplishments.<id> == count` pins for every counter its rows
+  banked (742); the post-seal sleep's `post_game` bank is derived from the
+  oracle preview like the tremor pointer.
+- Act I residue is unchanged: the ambush's `ui_hotbar_rendered {slots: 4}`.
 

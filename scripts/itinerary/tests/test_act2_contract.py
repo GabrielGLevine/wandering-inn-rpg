@@ -199,12 +199,15 @@ class ExplicitCellGotoTest(unittest.TestCase):
         self.assertEqual(steps[-1], {"action": "assert_state", "path": "player_cell", "equals": [13, 3]})
         self.assertEqual(steps[:-1], [{"action": "move", "direction": "right", "steps": 12}])
 
-    def test_a_blocked_target_keeps_its_single_stand_pin(self) -> None:
+    def test_a_blocked_target_pins_its_stand_cell_on_both_sides_of_the_bump(self) -> None:
+        """steel_thread 591-593 / 622-624: pin, bump, pin -- the second pin is
+        the claim that the bump displaced nobody. No third pin for the goto."""
         pipeline = Pipeline(FakeOracle(blocked={(13, 2)}))
         pipeline.ledger.set_position("street", [13, 4])
         steps = pipeline.run(act("    - id: n\n      goto: {map: street, cell: [13, 2]}\n", "ii"))
-        pins = [s for s in steps if s["action"] == "assert_state"]
-        self.assertEqual(pins, [{"action": "assert_state", "path": "player_cell", "equals": [13, 3]}])
+        pin = {"action": "assert_state", "path": "player_cell", "equals": [13, 3]}
+        self.assertEqual(steps[-3:], [pin, {"action": "move", "direction": "up", "steps": 1, "_bump": True}, pin])
+        self.assertEqual([s for s in steps if s["action"] == "assert_state"], [pin, pin])
 
 
 class GrantToastTest(unittest.TestCase):

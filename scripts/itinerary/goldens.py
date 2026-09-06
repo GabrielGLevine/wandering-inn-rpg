@@ -186,16 +186,20 @@ def _strip_mirrored_bump(compiled_gap: list[dict[str, Any]], shipped_gap: list[d
     last = _as_move(shipped_gap[-1])
     if last is None:
         return shipped_gap
-    if int(last.get("steps", 1)) == 1:
-        return shipped_gap[:-1]
-    # The corpus also MERGES a bump into the walk that precedes it (`right 2`
-    # before the south-square scavengers: one step onto the cell, one into
-    # the encounter). Same licence, same direction: discount one step.
+    # A bump is INTO the target: the corpus's move must point the same way
+    # (a stand-cell pin paired past the compiled bump would otherwise lose
+    # the corpus's real last step -- `left 1` to Zevara's column, #434 III).
     if str(last.get("direction", "")) != str(compiled_gap[-1].get("direction", "")):
         return shipped_gap
-    shortened = dict(shipped_gap[-1])
-    shortened["steps"] = int(last.get("steps", 1)) - 1
-    candidate = shipped_gap[:-1] + [shortened]
+    if int(last.get("steps", 1)) == 1:
+        candidate = shipped_gap[:-1]
+    else:
+        # The corpus also MERGES a bump into the walk that precedes it
+        # (`right 2` before the south-square scavengers: one step onto the
+        # cell, one into the encounter). Same licence: discount one step.
+        shortened = dict(shipped_gap[-1])
+        shortened["steps"] = int(last.get("steps", 1)) - 1
+        candidate = shipped_gap[:-1] + [shortened]
     # Only when the discount is what reconciles the two arrivals: a walk that
     # ends ON the stand cell already facing the target (`up 10` to Krshia's
     # counter) merged nothing, and discounting it would hide a real drift.
@@ -282,17 +286,26 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
     # fatal, which would make §6.3's "pins may be tighter" untrue in practice.
     pending_compiled: list[dict[str, Any]] = []
     pending_shipped: list[dict[str, Any]] = []
+    # The direction of the marked bump that closed the previous matched gap.
+    # The compiler pins the stand cell BEFORE it bumps (and again after); the
+    # corpus sometimes pins only after (steel_thread 413: pin, bump, press).
+    # When that happens the shipped bump is the lone 1-step move in a gap the
+    # compiled side has already spent -- the same bump, the other side of the
+    # pin -- and it is discounted like a mirrored one.
+    last_bump = ""
     for tag, c_lo, c_hi, s_lo, s_hi in opcodes:
         if tag == "equal":
             for offset in range(c_hi - c_lo):
                 anchor = compiled_spine[c_lo + offset]
                 _compare_pair(report, anchor, shipped_spine[s_lo + offset])
-                _compare_gap(
-                    report,
-                    pending_compiled + compiled_gaps[c_lo + offset],
-                    pending_shipped + shipped_gaps[s_lo + offset],
-                    anchor,
-                )
+                compiled_gap = pending_compiled + compiled_gaps[c_lo + offset]
+                shipped_gap = pending_shipped + shipped_gaps[s_lo + offset]
+                if not compiled_gap and last_bump and len(shipped_gap) == 1:
+                    lone = _as_move(shipped_gap[0])
+                    if lone is not None and int(lone.get("steps", 1)) == 1 and str(lone.get("direction", "")) == last_bump:
+                        shipped_gap = []
+                _compare_gap(report, compiled_gap, shipped_gap, anchor)
+                last_bump = str(compiled_gap[-1].get("direction", "")) if compiled_gap and _is_bump(compiled_gap[-1]) else ""
                 pending_compiled, pending_shipped = [], []
             continue
         for index in range(c_lo, c_hi):
@@ -367,6 +380,14 @@ def _align(compiled_keys: list[str], shipped_keys: list[str]) -> list[tuple[str,
     i = j = 0
     while i < n and j < m:
         if compiled_keys[i] == shipped_keys[j] and score[i][j] == score[i + 1][j + 1] + _weight(compiled_keys[i]):
+            # A run of identical compiled keys (the stand-cell pin on both
+            # sides of a bump) pairs the shipped step with the LAST of the
+            # run when that costs nothing: the corpus's single pin is the
+            # post-bump one whenever its walk merged the bump (`down 3` onto
+            # the gnaw pile), and the earlier twins fold into the gap.
+            if i + 1 < n and compiled_keys[i + 1] == compiled_keys[i] and score[i + 1][j] == score[i][j]:
+                i += 1
+                continue
             pairs.append((i, j))
             i += 1
             j += 1
@@ -484,6 +505,28 @@ def diff_files(compiled_path: str | Path, shipped_path: str | Path) -> GoldenDif
     return diff(compiled, shipped)
 
 
+def parse_slice(spec: str) -> tuple[list[str], int, int]:
+    """`<prefix>[,<prefix>...]=<lo>:<hi>` -- compiled steps whose `_itin`
+    starts with any prefix, against shipped steps [lo, hi)."""
+    prefixes, _, span = spec.partition("=")
+    lo, _, hi = span.partition(":")
+    if not prefixes or not lo or not hi:
+        raise ValueError(f"slice must be <prefix,...>=<lo>:<hi>, got {spec!r}")
+    return [part for part in prefixes.split(",") if part], int(lo), int(hi)
+
+
+def slice_diff(compiled: dict[str, Any], shipped: dict[str, Any], prefixes: list[str], lo: int, hi: int) -> GoldenDiff:
+    """One act against its corpus range. While later acts are unauthored, a
+    whole-file diff drowns in shipped-only rows and the alignment of the
+    authored acts is at the mercy of everything after them; slicing keeps
+    each act's equivalence its own verdict (#434 Act II-III)."""
+    part = {key: value for key, value in compiled.items() if key != "steps"}
+    part["steps"] = [step for step in compiled.get("steps", []) if any(str(step.get("_itin", "")).startswith(prefix) for prefix in prefixes)]
+    corpus = {key: value for key, value in shipped.items() if key != "steps"}
+    corpus["steps"] = list(shipped.get("steps", []))[lo:hi]
+    return diff(part, corpus)
+
+
 def main(argv: list[str] | None = None) -> int:
     import argparse
 
@@ -491,10 +534,26 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("compiled", type=Path)
     parser.add_argument("shipped", type=Path)
     parser.add_argument("--limit", type=int, default=40)
+    parser.add_argument(
+        "--slice", action="append", default=[], metavar="PREFIXES=LO:HI",
+        help="diff only compiled steps whose _itin starts with PREFIXES (comma list) against shipped[LO:HI]; "
+             "repeatable, e.g. --slice itinerary.start,act1.=0:218 --slice act2.=218:559",
+    )
     args = parser.parse_args(argv)
-    report = diff_files(args.compiled, args.shipped)
-    print(report.render(args.limit))
-    return 0 if report.passed else 1
+    if not args.slice:
+        report = diff_files(args.compiled, args.shipped)
+        print(report.render(args.limit))
+        return 0 if report.passed else 1
+    compiled = json.loads(Path(args.compiled).read_text(encoding="utf-8"))
+    shipped = json.loads(Path(args.shipped).read_text(encoding="utf-8"))
+    passed = True
+    for spec in args.slice:
+        prefixes, lo, hi = parse_slice(spec)
+        report = slice_diff(compiled, shipped, prefixes, lo, hi)
+        print(f"=== slice {spec}")
+        print(report.render(args.limit))
+        passed = passed and report.passed
+    return 0 if passed else 1
 
 
 if __name__ == "__main__":
