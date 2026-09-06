@@ -7328,6 +7328,32 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "mobile_touch_smoke",
+   "seed": 9,
+   "note": "#503 touch-only smoke (title gesture, Continue, adjacent-tap talk, paged taps, option taps, tap-to-walk, journal chip) via the touch_* tier: natively EMULATED taps (qa_touch real:false); on the web runner with --touch every tap is a real Playwright page.touchscreen.tap and an unserviced request fails -- no keyboard/mouse fallback",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "mobile_tap_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "lyonette_tip"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ]
 }

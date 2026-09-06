@@ -405,3 +405,19 @@ jobs:
             echo "::error::web-parity run tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
+
+      - name: Mobile touch smoke (mobile_touch_smoke, seed 9, emulated iPhone, portrait entry, real Playwright taps)
+        run: |
+          set -euo pipefail
+          log=web_touch_smoke.log
+          perl -e 'alarm 600; exec @ARGV' \
+            bash wandering_inn_game/qa/web/run_web_qa.sh mobile_touch_smoke 9 --skip-export --touch --device=iphone --portrait-entry >"$log" 2>&1 || rc=$?
+          cat "$log"
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+            echo "::error::mobile touch smoke tripped the error/warning grep"; exit 1
+          fi
+          # #503: the smoke is only meaningful when every tap was a REAL browser
+          # touch -- the driver fails unserviced requests, and this pins the count.
+          grep -q 'real touch taps performed by the runner: 12 ' "$log" || { echo "::error::expected 12 real touch taps"; exit 1; }
+          grep -q 'rotation probe: OK' "$log" || { echo "::error::portrait-entry rotation probe failed"; exit 1; }
+          exit "${rc:-0}"

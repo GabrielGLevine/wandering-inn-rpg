@@ -41,7 +41,37 @@ import { chromium } from "playwright";
 
 const args = process.argv.slice(2);
 const touchMode = args.includes("--touch");
-const positional = args.filter((a) => a !== "--touch");
+// #503 device presets: EMULATED phone contexts (Chromium + a phone UA/viewport/
+// touch). They are labelled emulated in every log line -- a Playwright run is
+// never evidence about real iPhone Safari or Android Chrome.
+const DEVICE_PRESETS = {
+	desktop: { viewport: { width: 640, height: 400 }, isMobile: false, label: "desktop Chromium 640x400" },
+	iphone: {
+		viewport: { width: 844, height: 390 },
+		userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1",
+		isMobile: true,
+		label: "EMULATED iPhone-Safari UA on Chromium 844x390 landscape",
+	},
+	android: {
+		viewport: { width: 915, height: 412 },
+		userAgent: "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36",
+		isMobile: true,
+		label: "EMULATED Android-Chrome UA on Chromium 915x412 landscape",
+	},
+};
+const deviceArg = args.find((a) => a.startsWith("--device="));
+const deviceName = deviceArg ? deviceArg.slice("--device=".length) : "desktop";
+const device = DEVICE_PRESETS[deviceName];
+if (!device) {
+	console.error(`unknown --device=${deviceName} (known: ${Object.keys(DEVICE_PRESETS).join(", ")})`);
+	process.exit(2);
+}
+// --portrait-entry (#503 orientation policy): open the page in PORTRAIT, prove
+// the rotate overlay is showing (CSS `(orientation:portrait) and
+// (pointer:coarse)` in export_presets html/head_include), then rotate to
+// landscape WITHOUT reloading and let the script play on -- progress kept.
+const portraitEntry = args.includes("--portrait-entry");
+const positional = args.filter((a) => !a.startsWith("--"));
 const scriptName = positional[0];
 const seedArg = positional[1];
 if (!scriptName) {
@@ -140,11 +170,16 @@ const browser = await chromium.launch({ args: ["--single-process"] });
 // mouse-consuming code (world.gd, hotbar, etc.) already handles. Issue #106
 // builds the actual `touch_*` DSL tier (real per-step page.touchscreen.tap
 // calls at live element coordinates) on top of this.
+const landscapeViewport = { ...device.viewport };
+const startViewport = portraitEntry ? { width: device.viewport.height, height: device.viewport.width } : landscapeViewport;
 const page = await browser.newPage({
-	viewport: { width: 640, height: 400 },
+	viewport: startViewport,
 	deviceScaleFactor: 1,
-	hasTouch: touchMode,
+	hasTouch: touchMode || device.isMobile,
+	isMobile: device.isMobile,
+	...(device.userAgent ? { userAgent: device.userAgent } : {}),
 });
+console.log(`MODE: ${device.label}${touchMode ? " + real Playwright touch servicing (--touch)" : ""}${portraitEntry ? " + portrait entry then rotate" : ""} -- EMULATED; not evidence about real hardware`);
 
 // Permanent console + page-error capture (issue #105: this session's
 // throwaway "print everything" patch, made permanent and tidied). QA_-
@@ -205,9 +240,55 @@ await page.addInitScript(() => {
 });
 await page.goto(`${BASE_URL}index.html`);
 
+// #503 orientation probe: portrait entry must show the rotate overlay on a
+// coarse-pointer device and hide it again after rotation; the page is NEVER
+// reloaded across the rotation, so anything the game did before it survives.
+let rotationProbe = null;
+if (portraitEntry) {
+	const readOverlay = () => page.evaluate(() => {
+		const el = document.getElementById("wi-rotate-overlay");
+		return {
+			overlayShown: !!el && getComputedStyle(el).display !== "none",
+			portrait: matchMedia("(orientation: portrait)").matches,
+			coarse: matchMedia("(pointer: coarse)").matches,
+			innerSize: [window.innerWidth, window.innerHeight],
+		};
+	});
+	await new Promise((ok) => setTimeout(ok, 1500));
+	const before = await readOverlay();
+	await page.screenshot({ path: join(outDir, "portrait_entry.png") });
+	await page.setViewportSize(landscapeViewport);
+	await new Promise((ok) => setTimeout(ok, 500));
+	const after = await readOverlay();
+	rotationProbe = { before, after };
+	console.log(`rotation probe: portrait overlayShown=${before.overlayShown} (portrait=${before.portrait} coarse=${before.coarse} inner=${before.innerSize}) -> landscape overlayShown=${after.overlayShown} (portrait=${after.portrait} inner=${after.innerSize})`);
+}
+
+// #503 real-touch servicing: the in-game driver publishes window-pixel tap
+// requests (test_driver.gd `_touch_at`); this loop performs each one with
+// page.touchscreen.tap -- a genuine browser touch event -- and acknowledges
+// it. Without --touch the context has no touchscreen and requests go
+// unserviced, which the driver turns into a step FAILURE (no fallback).
+let realTouches = 0;
+const serviceTouch = async () => {
+	const req = await page.evaluate(() => window.__WI_QA_TOUCH_REQ__ ?? null);
+	if (!req) return;
+	await page.evaluate(() => { window.__WI_QA_TOUCH_REQ__ = null; });
+	if (touchMode) {
+		await page.touchscreen.tap(req.x, req.y);
+		realTouches += 1;
+		console.log(`[touch] real tap #${realTouches} ${req.label} @ (${req.x.toFixed(0)},${req.y.toFixed(0)})`);
+	} else {
+		console.log(`[touch] request ${req.label} left UNSERVICED (no --touch) -- the driver fails this step`);
+		return;
+	}
+	await page.evaluate(() => { window.__WI_QA_TOUCH_DONE__ = (window.__WI_QA_TOUCH_DONE__ || 0) + 1; });
+};
+
 const deadline = Date.now() + TIMEOUT_MS;
 let result = null;
 while (Date.now() < deadline) {
+	await serviceTouch();
 	const shot = await page.evaluate(() => window.__WI_QA_SHOT__ ?? null);
 	if (shot) {
 		await page.screenshot({ path: join(outDir, `${shot}.png`) });
@@ -331,6 +412,12 @@ console.log(
 		.join(", ") || "no request seen"})`,
 );
 if (touchMode) console.log(`touch smoke (page.touchscreen.tap reached the canvas): ${touchSmokeOk ? "OK" : "FAIL"}`);
+if (touchMode) console.log(`real touch taps performed by the runner: ${realTouches} (EMULATED browser touch; not real hardware)`);
+if (rotationProbe) {
+	const rotOk = rotationProbe.before.overlayShown && !rotationProbe.after.overlayShown;
+	console.log(`rotation probe: ${rotOk ? "OK" : "FAIL"} (overlay shown in portrait, hidden after rotation, no reload)`);
+	if (!rotOk) process.exitCode = 1;
+}
 console.log(`audio smoke: ${audioSmokePassed ? "PASS" : "FAIL"}`);
 
 const overallPassed = result.passed && audioSmokePassed;

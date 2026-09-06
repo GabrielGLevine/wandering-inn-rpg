@@ -1,0 +1,228 @@
+{
+ "_comment": "#503 mobile touch smoke: title gesture, Continue, adjacent-tap talk, paged-dialogue taps, option taps, tap-to-walk, journal chip -- all via touch_* steps and nothing else. Native headless: emulated taps (qa_touch real:false). Web runner --touch (+ --device=iphone|android, --portrait-entry): every tap is a real page.touchscreen.tap performed by Playwright at the window pixel the driver publishes; an unserviced request FAILS the step, so a keyboard/mouse fallback cannot pass this script. Labelled EMULATED in the runner log -- never evidence about real hardware.",
+ "qa_real_paging": true,
+ "fixture_save": "mobile_tap_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Every input in this script is a touch_* step: on the web build the Playwright runner performs a REAL page.touchscreen.tap at the window pixel the driver publishes; natively the tap is emulated by the mouse injector and the qa_touch event says so (real:false). There is no keyboard press and no click step anywhere below.",
+   "action": "touch_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Title rows: 1 = New Game, 2 = Continue (fixture mobile_tap_start: inn (9,4), facing down, Lyonette at (9,5)).",
+   "action": "touch_title_row",
+   "row": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    4
+   ]
+  },
+  {
+   "_comment": "Adjacent-tap interact: tapping the NPC's own cell is the click-to-walk path's interact arm. First interact this waking = the pool line; the second opens the graph.",
+   "action": "touch_cell",
+   "cell": [
+    9,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Lyonette"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    9,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "lyonette_tip"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Row 3 opens the 4-page order_brief node (qa_real_paging on, as mobile_tap_check); pages advance by panel taps.",
+   "action": "touch_dialogue_option",
+   "option": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lyonette"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "page": 1,
+    "pages": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    640,
+    660
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "page": 2,
+    "pages": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    640,
+    660
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "page": 3,
+    "pages": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    640,
+    660
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "page": 4,
+    "pages": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Last page: option 1 ('How bad is it, really?') -> hub; hub option 2 ends the conversation (mobile_tap_check's down+confirm, by touch).",
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lyonette"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "_comment": "Tap-to-walk: one cell west is open floor; the walker lands there.",
+   "action": "touch_cell",
+   "cell": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    4
+   ]
+  },
+  {
+   "_comment": "Field chip = the touch affordance for the journal; tap it open, tap it closed.",
+   "action": "touch_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "_comment": "Field chip = the touch affordance for the journal; tap it open."
+  },
+  {
+   "_comment": "12 touches, every one of them the SAME kind: the count pins that no step silently took another input path. The web runner separately reports how many were REAL browser taps.",
+   "action": "assert_event_count",
+   "type": "qa_touch",
+   "count": 12
+  }
+ ]
+}
