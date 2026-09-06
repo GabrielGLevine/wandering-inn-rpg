@@ -512,3 +512,10 @@ r3–r5 playtest waves — gone from this file.
   whether flavor prose is history, then re-derive `mobile_tap_check`'s count in
   the same commit — or give the line a minimum-visible-span floor instead and
   leave GH#202 standing.
+- [ ] **(P3)** Character-creation difficulty choices explain rank names but
+  not their effect. `qa/run_qa.sh char_creation windowed` →
+  `02_creation_difficulty.png` shows only Bronze Rank / Silver Rank / Gold
+  Rank and the change-later footer. A new player cannot tell what changes
+  or which experience each offers. Fix direction: add a short description
+  for the selected rank, consistent with the damage-taken multipliers in
+  `src/ui/wi_settings.gd`; keep the canon rank names.

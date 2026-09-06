@@ -1,158 +1,53 @@
-# Roadmap (living doc — controller-owned, updated at milestone boundaries)
+# Roadmap
 
-Insertion: head within the relevant fixed section (Shipped is newest-first);
-section order itself is stable.
+Insertion: head. Update current facts in place. GitHub milestones and issue
+briefs own scheduling; merged PR bodies and git history preserve completed work.
 
-## Shipped (compressed ledger; per-issue detail in merged PR bodies)
+The current user-directed roadmap is [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). It prioritizes
+mobile parity, Rogue discovery, and purchase confirmation, then progression
+trust, a living world, tactical identity, and release readiness.
 
-- **v0.16.1 — 2026-07-29, the playtest wave.** All 26 findings from the
-  user's full sitting, same session as receipt, three PRs (#327-#329):
-  ONE toast spec (housekeeping class, per-dequeue cap, ×1.5 hold,
-  combat band closed, veil line — closes GH#325), [Light] as a toggle,
-  the field readout's own composer, combat-beat audio on the playback
-  clock, state-owned defeat music, biome-voice decoupling, the
-  brew-and-sell economy exploit closed with yarrow-gated brewing (+ a
-  hidden counter exploit found under it), the Hunter ruled a game
-  hunter, mill-ramp entrance, the alley mouth as a real wall break,
-  the fence fight's missing resolution beat, Cups gated, mothbears
-  re-homed to the road, blade banding, pot tints, the Coyle sign — and
-  the ART wave: bespoke Lady/Hedault/Coyle rigs + two shared civilian
-  rigs + the sign for $0.26, with a pc_* sprite ban enforced by a
-  mutation-proven registry gate.
-- **v0.16.0 — 2026-07-28, Region Depth.** One session end-to-end
-  (recon → 4 per-region plans → adversarial plan-verify, 42 findings
-  fixed pre-dispatch → 20-agent lane fleet → anchored merge-train →
-  close). Seven side quests with three-pillar parity (two each for
-  Riverfarm/Invrisil/Pallass + the Floodplains slice), seven walk-in
-  interiors, the game's FIRST goblin-ally fight (betrayal branch got
-  its first live QA coverage), the Invrisil NOBILITY layer (the Lady,
-  Reinhart ambients; full thread = #318), four bespoke camp sprites,
-  the forge-hall board-fight debt closed, seven leads rows. 778 ids
-  frozen — after the freeze pre-walk caught generate_shipped_ids
-  missing `skill_uses` producers (patched before regen; zero removals,
-  zero hand-adds).
-- **v0.15.0 — tagged 2026-07-28, Legibility & Life.** Delivery layer
-  (18 act-beat openings, Leads strip, lossless Lore tab), viewports +
-  endings acknowledgment, guest arc-windows + hygiene, the population
-  pass, readability (measured figure bar 1.25–3.55 cells; the shipped
-  roster had spanned 20x). 697 ids frozen.
-- **v0.14.0 — tagged 2026-07-28, the Main Quest wave.** Acts I–V off
-  the "post-game" framing, "The Dig" backport, the pilgrimage spine,
-  Act V's three-path seal conclusion + finale, FotI roster to ten,
-  the difficulty ladder. 669 ids frozen (`finale_played` hand-add).
-- **v0.13.0 — 2026-07-20, Depth + Polish.** The RENAME with verified
-  save carry-over (#111), journal tabs, FotI pilot, interior floors,
-  honest canonicals, the full art wave. 647 ids.
-- **v0.12.x — 2026-07-18/19.** God-file dissections, challenge-weighted
-  leveling, b-wave content, a-wave UX, mobile hotfixes.
-- **v0.8.0–v0.11.x — 2026-07-15→18.** Chronicle, pickers, economy pass,
-  rank-tiered bounties, Second Wind, Hedault enchanting, class Waves
-  A–D2, release automation. Earlier: git history.
+## Outcome milestones
 
-## Now (2026-08-02, post-v0.16.2): board is the v0.17 lane plan
+| Order | Horizon | Milestone | Acceptance gate |
+|---|---|---|---|
+| 1 | Now | [01 - Mobile parity and a clear first session](https://github.com/GabrielGLevine/wandering-inn-rpg/milestone/13) | [#511](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/511) |
+| 2 | Next | [02 - Trustworthy progression across playstyles](https://github.com/GabrielGLevine/wandering-inn-rpg/milestone/14) | [#516](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/516) |
+| 3 | Next | [03 - A living inn and a responsive world](https://github.com/GabrielGLevine/wandering-inn-rpg/milestone/15) | [#520](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/520) |
+| 4 | Later | [04 - Tactical identity and coherent game systems](https://github.com/GabrielGLevine/wandering-inn-rpg/milestone/16) | [#526](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/526) |
+| 5 | Later | [05 - Accessible, reliable release candidate](https://github.com/GabrielGLevine/wandering-inn-rpg/milestone/17) | [#530](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/530) |
 
-v0.16.2 tagged same-day (the friend-playtest wave: #340/#341/#342/#344,
-Release/Pages green). All scheduled work sits inside the seven v0.17
-lanes below (#335-#339, #345-#349 + #323/#324/#332/#343 riders).
-Dispatch is reserved for a FRESH SESSION — prompt in HANDOFF.
+Milestones are ordered outcomes, not date or version commitments. Each issue
+contains scope, numbered acceptance criteria, dependencies, an execution role,
+owned surfaces, and verification. Assign a named implementer and branch at
+dispatch. `successor-ready` marks work that can start; `roadmap:blocked` marks
+delivery prerequisites; `taste-gate` retains explicit user-held rulings.
 
-**User-held:** gossip-ladder scaling adjudication; the full-sitting
-states; Raskghar swap ear-gate (third strike = new track); #195 audio
-listen; #134 Wave-D lore ruling; #253 user-deferred; #19 HOLD; #140
-flake reference.
+## Start here
 
-## v0.17 plan (RATIFIED 2026-08-02, refactored HIGHLY PARALLEL per user
-directive): six concurrent lanes, exclusive file ownership, one anchored
-merge train, one release. Sequencing exists ONLY inside a lane where a
-shared file forces it — no cross-lane waits.
+1. [Purchase confirmation #504](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/504): explicit price/confirm/cancel and protection against repeated input.
+2. [Mobile parity matrix #503](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/503): iPhone Safari and Android Chrome against desktop; publish findings before dispatching repairs.
+3. [Rogue discovery #508](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/508) plus [schema consumers #477](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/477): fresh-save acquisition, first useful Stealth action, and continued growth.
+4. [Mobile save import #253](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/253) and [opening guidance #507](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/507).
+5. Responsive layout, touch flows, message readability, and critical mobile lifecycle repairs; exact dependencies are in the GitHub index.
 
-**L1 — Journal/UI/Settings** (owns journal.gd, wi_game.gd UI-producer
-region [_skill_entries/quest_summary siblings], quests.gd,
-settings_panel.gd + wi_settings.gd, char_creation.gd, quests.json hint
-fields, their QA pins): #336 Skills-tab redesign + AUTO 9-cap, THEN
-#338 quest-hints slice, THEN #345 three difficulty settings (anytime-
-changeable; Liscor's Hunted names — wiki-verify, Vol-7 exception
-user-granted), THEN #346 New Game creation prompts (difficulty +
-hints). One implementer, four slices, same files. DECLARED SEAM: the
-difficulty apply-site, if it lands in a combat file, is a one-field
-read L2 signs off on at train time.
+Real-phone checks require actual devices. Unavailable hardware does not block
+diagnostics or repairs, but does block claiming mobile parity. Critical
+background/resume, audio, keyboard, rotation, input and save defects belong to
+M1; sustained performance optimization follows in M5.
 
-**L2 — Combat/Dynamism** (owns wi_combat.gd, combat_ai.gd,
-combat_hud.gd, combat_screen.gd, skills.json, the balance-cell bands,
-test_combat_sim/test_combat_data/test_effect_text, arenas.json):
-#337 cooldowns per spec — AI fall-through first, surgical set, full
-141-cell re-author, badge/tooltip UI. RIDERS: #349's arena leg (vault
-ally roster gains Pisces or stages him explicitly — spawn arrays +
-band re-checks are this lane's authority) and the #345 difficulty-knob
-apply seam sign-off. No other lane touches combat or balance data.
+## Preserved scope and decisions
 
-**L3 — Presentation/Feel** (owns message_layer.gd, world.gd, WIAmbience,
-new shader/particle resources, audio.json, the acted-on data_lint
-advisory): #324 dead-render root-cause FIRST (its fix unblocks bark
-reliability), then #335 feedback layer phase 1 (action tell, affordance,
-audio gap rows), then the Atmosphere presentation half — time-of-day
-grading + motion layer. One lane because world.gd/message_layer are one
-ownership zone; internally sequenced, externally parallel to everything.
+- #494 and #495 decide equipment/resonance semantics; #514 implements the recorded rulings.
+- #485 owns consolidation coverage/naming decisions. Current inventory is required; completion of all #452 tooling is not a prerequisite for preparing that decision.
+- #434 keeps its existing M3.6 golden gate; compiler M4 cannot dispatch until that exit is met. #438 remains the compiler/caster acceptance umbrella. Continuous route authoring can proceed using existing tools.
+- #348/#452 retain ownership of their remaining work; reconcile shipped slices before implementing old briefs from scratch.
+- #347 dynamic unique-class exploration remains deferred. #19 stays in M-STEAM behind its separate distribution gates.
+- Native mobile apps, portrait-gameplay redesign, PWA/cloud saves and new regions are not committed by this roadmap.
 
-**L4 — Art** (owns assets/**, sprites.json, map decor/visual rows):
-VISUAL-LOG drain + tint-site audit (cauldron/hut/ruins/rune-door/
-wardstone candidates banked) THEN the palette-unification pass over the
-drained base. Hero-art pipeline per wi-art-and-sprites.
+## History
 
-**L5 — Content riders** (owns dialogue data, acts.json, dens/companion
-data + the one companion code literal — declared exception, no L3
-overlap): #323 dead inn_settled re-gate + #332 companion dead-end +
-#349 Pisces-joins-the-Horns narrative legs (four-member copy restore,
-the #15 bridge beat, dig-camp/residence presence rows; he still STARTS
-in Liscor independent — the arena leg is L2's).
-
-**L6 — Docs/causality** (owns docs/design/story-causality-map.md): the
-story causality map, agent-drafted → hand-verified → wired into
-wi-adding-dialogue-and-quests.
-
-**L7 — Fable design lane** (owns its two new docs/design specs; ZERO
-code): #347 dynamic Class creation (GDI-bestowed unique classes) +
-#348 emergent property-based Skill/object interactions (ToTK-style).
-Strongest-reasoner work per the allocation doctrine; deliverable =
-build/no-build specs feeding the post-v0.17 board.
-
-Re-parallelized 2026-08-02 after the user's five additions (#345-#349):
-still ZERO cross-lane waits — the new items slot as intra-lane slices
-(L1), riders (L2/L5), and a new conflict-free docs lane (L7); the two
-new seams (difficulty apply-site, Pisces arena leg) are declared above
-with single owners.
-
-Merge-train notes: standard-setter rule applies (L3's new lint runs
-against every sibling branch pre-merge); L2's re-authored bands are the
-only balance authority — no sibling may touch combatants/arenas; L4
-palette lands its sheet rewrites LAST in the train so every windowed
-re-read happens once, on the composed tree.
-
-v0.18 candidates: REMOVED from consideration (user directive
-2026-08-02). #318/#134/#195 stay parked on the board behind their
-existing gates; the roadmap plans nothing beyond v0.17.
-
-## Parked / standing
-
-- Three Pillars: EXECUTED and a STANDING GATE (every wave held to
-  "talk/help/fight all real"), not a future item.
-- Necromancer evolution (user-parked at Wave A); [Natural Allies: X]
-  (parked at D-2); check-roll/DC system (file if threshold scaling
-  proves insufficient).
-- #280 scored FEEL bench: CLOSED not-planned; revival criteria in
-  docs/design/2026-07-26-dev-arch-eval-275-280.md.
-- PixelLab budget: ~$2.30 credits. Icon backfills stay cheap one-call
-  items when wanted.
-
-## Release discipline reminders
-
-Freeze cut step-0: bump RELEASE in generate_shipped_ids.py, regen,
-commit BEFORE the tag; grep new `record_accomplishment` literals
-against STRUCTURAL_LITERALS in BOTH lists. **Producer-schema parity
-(v0.16 lesson):** the generator and test_content must agree on what
-counts as a producer — dry-run the walk and reconcile its ADD list
-against the wave's planned counters before every regen; a new producer
-schema lands in BOTH files in one commit. Bundle-latest check before
-tagging. Merges: read the checks table as its OWN step first —
-owner-auth merges bypass required checks (enforce_admins off). Any
-future config/name change repeats the #111 carry-over pattern.
+Remaining open work from the historical v0.19/v0.20 milestones moved into these
+outcome milestones. Completed issues and PRs retain their original record.
+The former local wave narrative is available in git history; do not use it as
+the current work queue.
