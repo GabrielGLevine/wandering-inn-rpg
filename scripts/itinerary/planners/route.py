@@ -362,6 +362,7 @@ class RoutePlanner:
                 ops.append({"kind": "walk", "steps": driver_steps})
             stand = [int(part) for part in approach["cell"]]
             ledger.set_position(ledger.map_id, stand)
+            ops.append({"kind": "arrival_pin", "cell": stand})
             bump = str(approach["bump"])
             ledger.face(bump)
             ops.append({"kind": "face_target", "direction": bump})

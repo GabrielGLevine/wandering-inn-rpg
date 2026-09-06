@@ -54,7 +54,7 @@ TOLERANCE_ACTIONS = {"move", "wait_frames"}
 # the run then acts on is the row it lands on, and that is the net.
 CURSOR_PRESSES = {"move_up": "up", "move_down": "down", "move_left": "left", "move_right": "right"}
 # Keys that never carry a claim about the game.
-IGNORED_KEYS = {"_itin", "_comment", "timeout_sec"}
+IGNORED_KEYS = {"_itin", "_comment", "timeout_sec", "_bump"}
 # Compiled-only steps that are pure TIGHTENING rather than extra behaviour.
 ASSERT_ACTIONS = {"assert_state", "assert_event_logged", "assert_event_absent", "assert_event_count"}
 # The one action the 2026-08-14 ruling adds to that set. Kept separate from
@@ -167,11 +167,35 @@ def _key(step: dict[str, Any]) -> str:
     return "|".join(parts)
 
 
+def _is_bump(step: dict[str, Any]) -> bool:
+    """A facing bump: a 1-step move the compiler marked as blocked."""
+    moved = _as_move(step)
+    return moved is not None and int(moved.get("steps", 1)) == 1 and bool(step.get("_bump", False))
+
+
+def _strip_mirrored_bump(compiled_gap: list[dict[str, Any]], shipped_gap: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """The corpus bumps too (`right 12` then `right 1` before Relc, `up 1`
+    before a door) but never marks it. When the COMPILED gap ends in a marked
+    bump and the shipped gap ends in a 1-step move, that move is the corpus's
+    bump: drop it from the shipped net. Symmetric by construction -- the
+    compiled side's knowledge is what licenses discounting the shipped step,
+    so a real 1-step arrival on the shipped side is never discounted unless
+    the compiler bumped at the same anchor (#434 residue)."""
+    if not compiled_gap or not shipped_gap or not _is_bump(compiled_gap[-1]):
+        return shipped_gap
+    last = _as_move(shipped_gap[-1])
+    if last is None or int(last.get("steps", 1)) != 1:
+        return shipped_gap
+    return shipped_gap[:-1]
+
+
 def _net(steps: list[dict[str, Any]]) -> tuple[int, int]:
     dx = dy = 0
     for step in steps:
         moved = _as_move(step)
         if moved is None:
+            continue
+        if _is_bump(step):
             continue
         vector = DIRECTIONS.get(str(moved.get("direction", "")))
         if vector is None:
@@ -325,6 +349,7 @@ def _compare_gap(
     anchor: dict[str, Any],
 ) -> None:
     node = str(anchor.get("_itin", "")) or "-"
+    shipped_gap = _strip_mirrored_bump(compiled_gap, shipped_gap)
     compiled_net, shipped_net = _net(compiled_gap), _net(shipped_gap)
     if compiled_net != shipped_net:
         report.net.append(

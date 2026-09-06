@@ -70,7 +70,14 @@ class Emitter:
             # bypass toast) right after the in-band move lands.
             steps.extend(self._effect_wait(row) for row in operation.get("waits", []))
         elif kind == "face_target":
-            steps.append({"action": "move", "direction": operation["direction"], "steps": 1})
+            # A bump: the move is BLOCKED by the target and only sets facing.
+            # `_bump` is driver-inert (unknown keys are ignored) and tells the
+            # golden differ this step displaces nobody (#434 residue).
+            steps.append({"action": "move", "direction": operation["direction"], "steps": 1, "_bump": True})
+        elif kind == "arrival_pin":
+            # The approach cell a blocked-target walk lands on -- the corpus pins
+            # it before every interact, so the compiler claims it too.
+            steps.append({"action": "assert_state", "path": "player_cell", "equals": list(operation["cell"])})
         elif kind == "transition":
             steps.extend([
                 {"action": "press", "name": "interact"},

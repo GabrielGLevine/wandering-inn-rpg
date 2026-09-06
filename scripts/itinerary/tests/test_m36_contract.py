@@ -656,6 +656,40 @@ class GoldenAccountingTest(unittest.TestCase):
         self.assertEqual(walked(seen_compiled), total(compiled), f"{label}: compiled-side coverage")
         self.assertEqual(walked(seen_shipped), total(shipped_script), f"{label}: shipped-side coverage")
 
+    def test_facing_bumps_displace_nobody_on_either_side(self) -> None:
+        """#434 residue, the other half: every compiled blocked-target approach
+        ends in a `face_target` bump (a 1-step move the target blocks), and the
+        corpus bumps too (`right 12` then `right 1` before Relc, `up 1` before
+        a door) without marking it. The emitter marks its bumps `_bump`; the
+        differ skips marked bumps and, ONLY when the compiled gap ends in one,
+        discounts a trailing 1-step move on the shipped side as the mirrored
+        bump. Measured on the Act I golden: NET 5 -> 0."""
+        shipped_leg = {"steps": [
+            {"action": "move", "direction": "right", "steps": 12},
+            {"action": "move", "direction": "right", "steps": 1},
+            {"action": "press", "name": "interact"},
+        ]}
+        compiled = {"steps": [
+            {"action": "move", "direction": "right", "steps": 12},
+            {"action": "move", "direction": "right", "steps": 1, "_bump": True},
+            {"action": "press", "name": "interact"},
+        ]}
+        report = diff(compiled, shipped_leg)
+        self.assertTrue(report.passed, report.render())
+        self.assertEqual(report.net, [])
+        # A REAL trailing step on the shipped side is never discounted when the
+        # compiler did not bump: the arrival difference stays fatal.
+        real = diff({"steps": [{"action": "move", "direction": "right", "steps": 12},
+                               {"action": "press", "name": "interact"}]}, shipped_leg)
+        self.assertFalse(real.passed)
+        self.assertTrue(any("arrives at a different place" in row for row in real.net), real.render())
+        # `_bump` never leaks into pair comparison (IGNORED_KEYS), and the emitter
+        # marks face_target while arrival_pin claims the approach cell.
+        steps = Emitter().emit("n", [{"kind": "arrival_pin", "cell": [12, 12]}, {"kind": "face_target", "direction": "down"}])
+        self.assertEqual(steps[0]["action"], "assert_state")
+        self.assertEqual(steps[0]["equals"], [12, 12])
+        self.assertTrue(steps[1].get("_bump"))
+
     def test_repeated_position_pins_pair_by_cell(self) -> None:
         """#434 residue accounting (was: the MIS-PAIR known limitation).
 
