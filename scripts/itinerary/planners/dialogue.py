@@ -224,6 +224,12 @@ class DialoguePlanner:
             if not destination:
                 raise DialogueError(f"choice {anchor!r} neither ends nor names a destination")
             current = destination
+            # #434 residue: a screenshot taken INSIDE the conversation, on the
+            # node this anchor opened (the corpus photographs Relc's gift line
+            # before the closing row). Keyed by the anchor that reached it.
+            shots: dict[str, Any] = spec.get("shots", {}) or {}
+            if anchor in shots:
+                ops.append({"kind": "shot", "name": str(shots[anchor])})
         if start_combat:
             raise DialogueError(
                 f"{node_id}: choose_path never reached a row whose effects start {start_combat!r} -- "

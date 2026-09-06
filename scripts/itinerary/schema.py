@@ -63,13 +63,13 @@ SPEC_KEYS: dict[str, set[str]] = {
     # and the arrival is what the next press acts on. `expect_render` adds the
     # presentation half of an arrival -- `ui_map_rendered` for the destination.
     "goto": {"map", "cell", "via", "expect_render", "why"},
-    "talk": {"npc", "at", "choose_path", "why"},
+    "talk": {"npc", "at", "choose_path", "shots", "why"},
     "fight": {
         "encounter", "at", "entry", "npc", "choose_path", "mode", "turns", "policy", "expect",
         "max_turns", "shots", "turn_wait", "beats", "expect_banks_after_dismiss", "arena", "why",
     },
-    "sleep": {"expect_levels", "expect_merge", "expect_epilogue", "shot", "why"},
-    "equip": {"item", "why"},
+    "sleep": {"expect_levels", "expect_merge", "expect_epilogue", "expect_veil_lines", "shot", "why"},
+    "equip": {"item", "shot", "why"},
     "unequip": {"slot", "why"},
     "buy": {"vendor", "at", "item", "choose_path", "why"},
     "sell": {"vendor", "at", "item", "choose_path", "why"},
@@ -409,6 +409,14 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
         if not str(spec.get("npc", "")):
             raise SchemaError(f"node {node_id} talk needs npc")
         _choose_path(node_id, spec)
+        shots = spec.get("shots", {})
+        if shots is not None and not isinstance(shots, dict):
+            raise SchemaError(f"node {node_id} talk shots must map an anchor to a screenshot name")
+        for anchor, name in (shots or {}).items():
+            if anchor not in [str(a) for a in spec.get("choose_path", [])]:
+                raise SchemaError(f"node {node_id} talk shots keys an anchor that is not in choose_path: {anchor!r}")
+            if not str(name):
+                raise SchemaError(f"node {node_id} talk shots[{anchor!r}] needs a screenshot name")
     elif primitive == "sleep":
         if "expect_levels" in spec and not isinstance(spec["expect_levels"], bool):
             raise SchemaError(f"node {node_id} expect_levels must be boolean")

@@ -130,7 +130,11 @@
     - id: act1.bed.approach
       goto: {map: inn_upstairs, cell: [9, 1]}
     - id: act1.sleep.warrior
-      sleep: {expect_levels: true, shot: 02_tutorial_01_warrior_gained}
+      # expect_veil_lines is DONOR-BACKED: the corpus pins 5 (the [Warrior
+      # Class Obtained!] line + the level-1 kit's four [Skill – X Obtained!]
+      # lines); the compiler does not derive veil lines (story lines fire off
+      # sleep-time counters the ledger does not model).
+      sleep: {expect_levels: true, expect_veil_lines: 5, shot: 02_tutorial_01_warrior_gained}
 
     # -- Relc's spear, and wearing it ----------------------------------------
     - id: act1.stairs.approach
@@ -148,16 +152,17 @@
         choose_path:
           - You said you had something for me?
           - I'll try it on. (Check your pack after this.)
+        # The corpus photographs the gift line INSIDE the conversation, on the
+        # node the first anchor opens, before the closing row (#434 residue).
+        shots:
+          You said you had something for me?: 02_tutorial_02_gift_teaching
       why: >-
         The spear is the run's whole martial line -- [Warrior] evolves to
         [Spearmaster] on spear-skill dominance, and this is the only spear the
         thread ever holds.
-    - id: act1.gift.shot
-      shot: {name: 02_tutorial_02_gift_teaching}
     - id: act1.equip.spear
-      equip: {item: relcs_spare_spear}
-    - id: act1.equip.shot
-      shot: {name: 02_tutorial_03_spear_equipped}
+      # ...and the worn spear with the inventory still OPEN.
+      equip: {item: relcs_spare_spear, shot: 02_tutorial_03_spear_equipped}
 
     # -- the gate road, and the ambush that owns it --------------------------
     - id: act1.road.approach

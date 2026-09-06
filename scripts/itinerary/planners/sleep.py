@@ -33,6 +33,8 @@ class SleepPlanner:
         merge = ({"target": str(consolidation["target"]), "level": int(consolidation["level"])}
             if consolidation else None)
         op = {"kind": "sleep", "preview": preview, "merge": merge, "epilogue": bool(spec.get("expect_epilogue", False))}
+        if spec.get("expect_veil_lines") is not None:
+            op["expect_veil_lines"] = int(spec["expect_veil_lines"])
         # apply_sleep_preview alone: `classes_after` already carries the merge.
         ledger.apply_sleep_preview(preview)
         return [op]
