@@ -46,7 +46,16 @@ archived, or superseded session blocks.
   Act I-III green headless at seed 37, 1,075 steps; rogue artifact green at
   seed 9) stands on its own. Do not merge as M3.6 evidence; merge or rebase
   it only under the #542/#543 owner's call. A sonnet review of 9f4abada was
-  dispatched and unreported at quiesce. Session quiesced on user directive.
+  dispatched; it reported AFTER the quiesce (45 tool uses, real citations):
+  CRITICAL `goldens.py` `last_bump` post-pin discount can zero a REAL
+  shipped 1-step walk between two presses (compiled forgot the walk ->
+  false PASS); IMPORTANT `dialogue.py state_pins` (a) stale count when one
+  conversation banks the same id twice, (b) silently dropped on
+  `fight: {entry: dialogue}` conversations (hands-off early return);
+  MINOR no planner-level test of the post-fight position source; route
+  `_edges` treats `to_map`+`door_when` additively (latent). NONE fixed --
+  the fix wave is the first move when #545 resumes. Session quiesced on
+  user directive.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
