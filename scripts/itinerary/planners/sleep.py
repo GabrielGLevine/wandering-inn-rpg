@@ -1,17 +1,47 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any
 
 from ..ledger import Ledger
 
+
+# GH#167: `_maybe_fire_tremor_pointer` -- the pointer's three claims are fixed text.
+TREMOR_QUEST = "something_beneath"
+TREMOR_TOAST = "A Watch runner is looking for you."
 
 class SleepError(RuntimeError):
     pass
 
 
 class SleepPlanner:
-    def __init__(self, bridge: Any) -> None:
+    def __init__(self, bridge: Any, project: str | Path | None = None) -> None:
         self.bridge = bridge
+        # #434 Act II: the class-gained toast is DERIVABLE (sleep_beat.gd
+        # `_class_gained_toast`: "[Name] class gained! — [Skill], ..." over the
+        # level-1 grants), so the sleep op carries it when the catalogs are at
+        # hand; the unit harness passes no project and pins nothing.
+        self.class_names: dict[str, str] = {}
+        self.level1_grants: dict[str, list[str]] = {}
+        self.skill_names: dict[str, str] = {}
+        if project is not None:
+            root = Path(project)
+            classes = json.loads((root / "data/classes.json").read_text(encoding="utf-8"))
+            for row in classes.get("classes", []):
+                cid = str(row.get("id", ""))
+                self.class_names[cid] = str(row.get("display_name", cid))
+                self.level1_grants[cid] = [str(g) for lv in row.get("levels", []) if int(lv.get("level", 0)) == 1 for g in lv.get("grants", [])]
+            skills = json.loads((root / "data/skills.json").read_text(encoding="utf-8"))
+            for row in skills.get("skills", []):
+                self.skill_names[str(row.get("id", ""))] = str(row.get("display_name", row.get("id", "")))
+
+    def class_gained_toast(self, class_id: str) -> str | None:
+        if class_id not in self.class_names:
+            return None
+        base = f"[{self.class_names[class_id]}] class gained!"
+        names = [self.skill_names.get(g, g) for g in self.level1_grants.get(class_id, [])]
+        return base if not names else f"{base} — {', '.join(names)}"
 
     def plan(self, node_id: str, spec: dict[str, Any], ledger: Ledger) -> list[dict[str, Any]]:
         preview = self.bridge.query("progression_preview", ledger)
@@ -33,9 +63,21 @@ class SleepPlanner:
         merge = ({"target": str(consolidation["target"]), "level": int(consolidation["level"])}
             if consolidation else None)
         op = {"kind": "sleep", "preview": preview, "merge": merge, "epilogue": bool(spec.get("expect_epilogue", False))}
+        toasts = {cid: self.class_gained_toast(str(cid)) for cid in preview.get("class_gains", [])}
+        op["class_gained_toasts"] = {cid: text for cid, text in toasts.items() if text}
         if spec.get("expect_veil_lines") is not None:
             op["expect_veil_lines"] = int(spec["expect_veil_lines"])
         # apply_sleep_preview alone: `classes_after` already carries the merge.
         ledger.apply_sleep_preview(preview)
+        # sleep_beat.gd past the level chain: the two-class bank, then the
+        # tremor pointer (GH#167) -- an accomplishment, a quest start, and a
+        # sticky toast, in that order, all before the veil renders.
+        if preview.get("reached_two_classes") and int(ledger.state["accomplishments"].get("reached_two_classes", 0)) < 1:
+            ledger.accomplishment("reached_two_classes")
+        op["tremor_pointer"] = bool(preview.get("tremor_pointer", False))
+        if op["tremor_pointer"]:
+            ledger.accomplishment("watch_runner_pointed")
+            if TREMOR_QUEST not in ledger.state["started_quests"]:
+                ledger.state["started_quests"].append(TREMOR_QUEST)
         return [op]
 

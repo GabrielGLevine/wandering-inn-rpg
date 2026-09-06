@@ -62,7 +62,14 @@ class RoutePlanner:
                 if transition.get("on_enter_accomplishment"):
                     ledger.accomplishment(str(transition["on_enter_accomplishment"]))
         if cell is not None:
-            ops.extend(self._walk(ledger, [int(part) for part in cell]))
+            walked = self._walk(ledger, [int(part) for part in cell])
+            ops.extend(walked)
+            # A goto that NAMES its cell claims the arrival -- the corpus pins
+            # its waypoints (`[13, 3]` on the way to the grate), and a leg that
+            # lands nowhere in particular is not worth a node. A blocked target
+            # already pinned its stand cell in `_walk`.
+            if not any(op.get("kind") == "arrival_pin" for op in walked):
+                ops.append({"kind": "arrival_pin", "cell": [int(part) for part in cell]})
         return ops
 
     def _transition_path(self, ledger: Ledger, goal: str, via: str = "") -> list[dict[str, Any]]:

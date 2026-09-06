@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from typing import Any, Iterable
+from scripts.itinerary.planners.sleep import TREMOR_QUEST, TREMOR_TOAST
 
 
 PANEL_SETTLE_FRAMES = 30
@@ -196,7 +197,6 @@ class Emitter:
             steps.extend([
                 {"action": "press", "name": "confirm"},
                 {"action": "wait_for_event", "type": "item_equipped", "payload_contains": {"item": str(operation["item"]), "slot": str(operation["slot"])}, "timeout_sec": 5},
-                {"action": "assert_state", "path": f"equipped.{operation['slot']}", "equals": str(operation["item"])},
             ])
         elif kind == "inventory_unequip":
             # ITEM_UNEQUIPPED carries only {slot} -- no item id -- so the
@@ -211,6 +211,9 @@ class Emitter:
                 {"action": "press", "name": "inventory"},
                 {"action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5},
             ])
+            worn = operation.get("equipped")
+            if worn:
+                steps.append({"action": "assert_state", "path": f"equipped.{worn['slot']}", "equals": str(worn["item"])})
         elif kind == "field_skill":
             steps.extend(self._field_skill_steps(operation))
         elif kind == "prop_interact":
@@ -285,6 +288,10 @@ class Emitter:
         """How the board arrives -- the emitter's promise in every fight mode."""
         steps: list[dict[str, Any]] = []
         if operation.get("entry", "interact") == "interact":
+            # `shots.approach`: the PC stands facing the encounter, board not
+            # yet open -- the same beat the corpus shoots at the south square.
+            for name in operation.get("approach_shots", []):
+                steps.append({"action": "screenshot", "name": str(name)})
             steps.append({"action": "press", "name": "interact"})
         started: dict[str, Any] = {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5}
         arena = str(operation.get("arena", ""))
@@ -645,8 +652,23 @@ class Emitter:
             {"action": "press", "name": "interact"},
             {"action": "wait_for_event", "type": "phase_changed", "payload_contains": {"slept": True}, "timeout_sec": 5},
         ]
+        # The rendered half of each class-gained toast lands AFTER the veil
+        # (the strip is paused under the veil; a wait placed before the veil
+        # wait moves the since-cursor past the veil and times out -- the
+        # compiled Act I-II run proved it), so it is pinned there, with
+        # `from_start` the way the corpus pins toast DELIVERY rather than
+        # order (v0.15 lesson: toast holds are wall-clock, driver steps are
+        # frame-paced). The class's own level is pinned per class, never the
+        # whole dict: a warrior that fought twice sleeps to level 3 on counters
+        # the ledger does not model, and the corpus pins `classes.mage` alone.
+        after_veil: list[dict[str, Any]] = []
         for class_id in preview.get("class_gains", []):
             steps.append({"action": "wait_for_event", "type": "class_gained", "payload_contains": {"class": class_id}, "timeout_sec": 5})
+            toast = (operation.get("class_gained_toasts") or {}).get(class_id)
+            if toast:
+                steps.append({"action": "wait_for_event", "type": "toast", "payload_contains": {"text": toast}, "timeout_sec": 5})
+                after_veil.append({"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": toast}, "from_start": True, "timeout_sec": 5})
+            after_veil.append({"action": "assert_state", "path": f"classes.{class_id}", "equals": 1})
         for gain in preview.get("level_ups", []):
             steps.append({"action": "wait_for_event", "type": "class_level_up", "payload_contains": {"class": gain["class"], "level": gain["level"]}, "timeout_sec": 5})
         # #472: consolidation APPLIES inside the sleep beat -- no offer, no modal,
@@ -654,21 +676,35 @@ class Emitter:
         # renders, and wait_for_event's cursor is forward-only, so this order is
         # itself the beat-order pin.
         consolidation = preview.get("consolidation", {})
+        pointer: list[dict[str, Any]] = []
+        if operation.get("tremor_pointer"):
+            # GH#167, in sleep_beat.gd's own order: the bank, the quest start,
+            # the sticky toast -- all synchronous inside the press, before
+            # the veil. The shipped `assert_event_logged` on the bank is the
+            # weaker claim; the ordered wait covers it.
+            pointer = [
+                {"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "watch_runner_pointed", "count": 1}, "timeout_sec": 5},
+                {"action": "wait_for_event", "type": "quest_started", "payload_contains": {"id": TREMOR_QUEST}, "timeout_sec": 5},
+                {"action": "wait_for_event", "type": "toast", "payload_contains": {"text": TREMOR_TOAST}, "timeout_sec": 5},
+            ]
         if consolidation:
             steps.extend([
                 {"action": "wait_for_event", "type": "consolidation_accepted", "payload_contains": {"target": consolidation["target"], "level": consolidation["level"]}, "timeout_sec": 5},
+                *pointer,
                 deepcopy(veil),
+                *after_veil,
                 {"action": "wait_for_event", "type": "ui_sleep_veil_finished", "timeout_sec": 5},
                 {"action": "assert_state", "path": "classes", "equals": preview["classes_after"]},
             ])
         else:
             steps.extend([
+                *pointer,
                 deepcopy(veil),
+                *after_veil,
                 # The retired `pending_consolidation` pin said "no merge is
                 # queued". Its replacement says the stronger thing directly: no
                 # merge HAPPENED on this sleep.
                 {"action": "assert_event_absent", "type": "consolidation_accepted"},
-                {"action": "assert_state", "path": "classes", "equals": preview["classes_after"]},
             ])
         if operation.get("epilogue"):
             # The run's last claim (M3.6 amendment item 3): the GDI epilogue is

@@ -32,6 +32,13 @@ class DialoguePlanner:
         self.bridge = bridge
         self.route = route
         self.quests = QuestJoin(self.project)
+        # `pickup()` voices every grant as "Got: <name>" (wi_game.gd) -- the
+        # corpus pins that toast on Relc's spear, so a claimed grant claims it.
+        items_path = self.project / "data" / "items.json"
+        item_rows = json.loads(items_path.read_text(encoding="utf-8")) if items_path.exists() else []
+        if isinstance(item_rows, dict):
+            item_rows = item_rows.get("items", [])
+        self.item_names = {str(row.get("id", "")): str(row.get("name", "")) for row in item_rows if isinstance(row, dict)}
         self.graphs = {
             path.stem: json.loads(path.read_text(encoding="utf-8"))
             for path in sorted((self.project / "data/dialogue").glob("*.json"))
@@ -85,6 +92,9 @@ class DialoguePlanner:
                         "type": "item_gained",
                         "payload_contains": {"item": item, "source": conversation},
                     })
+                    name = (getattr(self, "item_names", None) or {}).get(item, "")
+                    if name:
+                        waits.append({"type": "toast", "payload_contains": {"text": f"Got: {name}"}})
             elif "gold" in effect:
                 amount = int(effect["gold"])
                 ledger.shift_gold(amount)
@@ -151,6 +161,10 @@ class DialoguePlanner:
         graph = self.graphs[graph_id]
         current = str(graph["start"])
         ops.append({"kind": "dialogue_open", "conversation": graph_id, "entity": npc_id})
+        if spec.get("open_shot"):
+            # #434 Act II: the corpus photographs the START node (Pisces'
+            # lessons) before the first choice.
+            ops.append({"kind": "shot", "name": str(spec["open_shot"])})
         for anchor in anchors:
             answer = self.bridge.query(f"visible_options {graph_id} {current}", ledger)
             options = [row for row in answer.get("options", []) if str(row.get("goto", "")) == anchor or str(row.get("text", "")) == anchor]

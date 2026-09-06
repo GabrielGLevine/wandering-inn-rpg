@@ -56,7 +56,9 @@ class ActionPlanner:
             # #434 residue: the corpus photographs the worn item with the
             # inventory still OPEN; a shot node after `equip` cannot.
             ops.append({"kind": "shot", "name": str(spec["shot"])})
-        ops.append({"kind": "inventory_close"})
+        # The slot pin lands AFTER the panel closes (the corpus's order): the
+        # equip event is the panel's claim, the slot is the world's.
+        ops.append({"kind": "inventory_close", "equipped": {"slot": slot, "item": item_id}})
         return ops
 
     def plan_unequip(self, node_id: str, spec: dict[str, Any], ledger: Ledger) -> list[dict[str, Any]]:

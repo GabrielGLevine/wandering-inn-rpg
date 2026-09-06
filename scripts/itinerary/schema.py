@@ -63,7 +63,7 @@ SPEC_KEYS: dict[str, set[str]] = {
     # and the arrival is what the next press acts on. `expect_render` adds the
     # presentation half of an arrival -- `ui_map_rendered` for the destination.
     "goto": {"map", "cell", "via", "expect_render", "why"},
-    "talk": {"npc", "at", "choose_path", "shots", "why"},
+    "talk": {"npc", "at", "choose_path", "shots", "open_shot", "why"},
     "fight": {
         "encounter", "at", "entry", "npc", "choose_path", "mode", "turns", "policy", "expect",
         "max_turns", "shots", "turn_wait", "beats", "expect_banks_after_dismiss", "arena", "why",
@@ -105,6 +105,7 @@ COMBAT_POLICIES = {"competent", "dumb"}
 # closes a panel: emitting `dialogue_ended`/`ui_dialogue_hidden` for it would
 # claim a teardown the combat board pre-empts.
 FIGHT_ENTRIES = {"interact", "proximity", "dialogue"}
+FIGHT_SHOT_SLOTS = {"approach", "turn"}
 # Where an AUTOPLAYED fight may carry `ui_tutor_line_rendered` beats. Driven
 # mode places beats freely (they are turn-list entries); autoplay hands the
 # board to the policy and so has exactly two slots a beat can sit in, both
@@ -409,6 +410,8 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
         if not str(spec.get("npc", "")):
             raise SchemaError(f"node {node_id} talk needs npc")
         _choose_path(node_id, spec)
+        if "open_shot" in spec and not str(spec["open_shot"]):
+            raise SchemaError(f"node {node_id} talk open_shot needs a screenshot name")
         shots = spec.get("shots", {})
         if shots is not None and not isinstance(shots, dict):
             raise SchemaError(f"node {node_id} talk shots must map an anchor to a screenshot name")
@@ -447,8 +450,18 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
         if "max_turns" in spec and not (isinstance(spec["max_turns"], int) and spec["max_turns"] > 0):
             raise SchemaError(f"node {node_id} fight max_turns must be a positive integer")
         shots = spec.get("shots", [])
+        # A list is the PC's-turn album. A dict splits it by slot: `approach`
+        # lands after the facing bump and before the entry press (the corpus's
+        # 04_act_ii_03 south-square shot), `turn` after `turn_started pc`.
+        if isinstance(shots, dict):
+            unknown = sorted(set(shots) - FIGHT_SHOT_SLOTS)
+            if unknown:
+                raise SchemaError(f"node {node_id} fight shots slots must be among {sorted(FIGHT_SHOT_SLOTS)}; got {unknown}")
+            if "approach" in shots and entry != "interact":
+                raise SchemaError(f"node {node_id} fight shots.approach needs entry: interact (nothing to stand on before a proximity or dialogue board)")
+            shots = [name for names in shots.values() for name in (names or [])]
         if not isinstance(shots, list) or any(not str(name).strip() for name in shots):
-            raise SchemaError(f"node {node_id} fight shots must be a list of screenshot names")
+            raise SchemaError(f"node {node_id} fight shots must be a list of screenshot names, or {{approach: [...], turn: [...]}}")
         _fight_mode(node_id, spec)
     elif primitive in ("buy", "sell"):
         if not str(spec.get("vendor", "")):

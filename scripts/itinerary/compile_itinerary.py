@@ -62,7 +62,7 @@ class NodePlanner:
         self.checkpoints: list[Any] = []
         self.route = RoutePlanner(project, bridge)
         self.dialogue = DialoguePlanner(project, bridge, self.route)
-        self.sleep = SleepPlanner(bridge)
+        self.sleep = SleepPlanner(bridge, project)
         self.combat = CombatPlanner(project, bridge, self.route, self.dialogue)
         self.actions = ActionPlanner(project, bridge, self.route)
         self.economy = EconomyPlanner(project, bridge, self.route, self.dialogue, library)

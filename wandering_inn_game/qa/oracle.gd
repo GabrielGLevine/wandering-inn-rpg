@@ -532,6 +532,17 @@ func _q_progression_preview(sim: WIGame) -> Dictionary:
 			classes[String(outcome["to"])] = int(outcome["level"])
 		elif bool(outcome.get("generalist", false)) and not generalist.has(class_id):
 			generalist.append(class_id)
+	# sleep_beat.gd's beat order past the level chain: `reached_two_classes`
+	# banks on this sleep's class count (or an already-held merged class), and
+	# `_maybe_fire_tremor_pointer` reads that bank plus the completed-quest
+	# count -- both ledger-side facts the compiler cannot see, so the preview
+	# reports them (GH#167's pointer is the first sleep the corpus pins a
+	# quest_started on).
+	var reached_two := sim.accomplishment_count("reached_two_classes") >= 1 \
+		or classes.size() >= 2 or sim._holds_consolidated_class()
+	var tremor_pointer := sim.accomplishment_count("watch_runner_pointed") < 1 \
+		and sim.accomplishment_count("heard_the_deep_tremor") < 1 \
+		and reached_two and sim._quests_completed_count() >= 3
 	return {
 		"classes_before": before,
 		"classes_after": classes,
@@ -540,6 +551,8 @@ func _q_progression_preview(sim: WIGame) -> Dictionary:
 		"level_ups": level_ups,
 		"consolidation": consolidation,
 		"evolutions": evolutions,
+		"reached_two_classes": reached_two,
+		"tremor_pointer": tremor_pointer,
 	}
 
 

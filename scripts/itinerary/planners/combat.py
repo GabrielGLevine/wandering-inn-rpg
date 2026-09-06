@@ -99,7 +99,13 @@ class CombatPlanner:
         entry: str,
     ) -> list[dict[str, Any]]:
         allies = self._fielded_allies(entity, ledger)
-        shots = [str(name) for name in spec.get("shots", [])]
+        raw_shots = spec.get("shots", [])
+        if isinstance(raw_shots, dict):
+            approach_shots = [str(name) for name in (raw_shots.get("approach") or [])]
+            shots = [str(name) for name in (raw_shots.get("turn") or [])]
+        else:
+            approach_shots = []
+            shots = [str(name) for name in raw_shots]
         loot = self._loot_interval(entity)
         banks_after_dismiss = bool(spec.get("expect_banks_after_dismiss", False))
         quests = getattr(self.dialogue, "quests", None) if banks_after_dismiss else None
@@ -110,6 +116,7 @@ class CombatPlanner:
             "encounter": str(entity.get("id", "")),
             "allies": allies,
             "shots": shots,
+            "approach_shots": approach_shots,
             "policy": str(spec.get("policy", DEFAULT_POLICY)),
             "max_turns": int(spec.get("max_turns", DEFAULT_MAX_TURNS)),
             "victory_pins": self._victory_pins(entity, ledger),

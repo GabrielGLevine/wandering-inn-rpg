@@ -198,18 +198,20 @@ class EmitterTableTest(unittest.TestCase):
             {"kind": "inventory_open"},
             {"kind": "inventory_cursor", "cursor_index": 1, "item": "relcs_spare_spear"},
             {"kind": "inventory_equip", "item": "relcs_spare_spear", "slot": "weapon"},
-            {"kind": "inventory_close"},
+            {"kind": "inventory_close", "equipped": {"slot": "weapon", "item": "relcs_spare_spear"}},
         ])
+        # The slot pin follows the panel close (#434 Act I residue: the corpus
+        # asserts `equipped.weapon` after `ui_inventory_hidden`).
         self.assertEqual(actions(steps), [
             "press", "wait_for_event", "move", "wait_for_event",
-            "press", "wait_for_event", "assert_state", "press", "wait_for_event",
+            "press", "wait_for_event", "press", "wait_for_event", "assert_state",
         ])
+        self.assertEqual(steps[-1], {"action": "assert_state", "path": "equipped.weapon", "equals": "relcs_spare_spear", "_itin": "n"})
         self.assertEqual(steps[0], {"action": "press", "name": "inventory", "_itin": "n"})
         self.assertEqual(steps[3]["payload_contains"], {"cursor": 1, "item": "relcs_spare_spear"})
         self.assertEqual(steps[5]["payload_contains"], {"item": "relcs_spare_spear", "slot": "weapon"})
-        self.assertEqual(steps[6], {"action": "assert_state", "path": "equipped.weapon",
-                                    "equals": "relcs_spare_spear", "_itin": "n"})
-        self.assertEqual(steps[8]["type"], "ui_inventory_hidden")
+        self.assertEqual(steps[6], {"action": "press", "name": "inventory", "_itin": "n"})
+        self.assertEqual(steps[7]["type"], "ui_inventory_hidden")
 
     def test_unequip_proves_the_slot_by_state(self) -> None:
         steps = self.emit({"kind": "inventory_unequip", "slot": "weapon"})
@@ -330,8 +332,12 @@ class EmitterTableTest(unittest.TestCase):
     def test_sleep_without_a_merge_asserts_no_merge_happened(self) -> None:
         steps = self.emit({"kind": "sleep", "merge": None, "preview": {
             "classes_after": {}, "class_gains": [], "level_ups": [], "consolidation": {}}})
+        # No whole-dict `classes` pin on a plain sleep (#434 Act II): combat
+        # counters the ledger does not model level held classes, so the class
+        # pins are per gained class (see the Act II mage sleep) and a merge is
+        # the only sleep that pins the dict.
         self.assertEqual(actions(steps), ["press", "wait_for_event", "wait_for_event",
-                                          "assert_event_absent", "assert_state"])
+                                          "assert_event_absent"])
         self.assertEqual(steps[1]["payload_contains"], {"slept": True})
         # #472: the retired `pending_consolidation` pin meant "no merge is
         # QUEUED"; this says the stronger thing -- none HAPPENED.
