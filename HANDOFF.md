@@ -26,8 +26,23 @@ archived, or superseded session blocks.
   models cover-served and sneaking band crossings). Dialogue prose corpus sits
   ONE word under the 24.5k+5% tripwire — the next dialogue edit trims elsewhere
   or re-baselines.
-- Next lane: #509 message lifecycle (min readable lifetime before the
-  movement dismiss, autosave status treatment, lifecycle tests).
+- **#509 landed** (PR #537): the arrival bark was rendering UNDER FieldHotbar's
+  readout (same layer, 81% overlap) — line panel moved to the toast layer and
+  `assert_dialogue_displayed` now measures occlusion; 1.2s readable floor
+  before a movement dismiss (0 under QA); `game_saved` + hint-ribbon "Saved"
+  pill; `message_lifecycle_loop` canonical; two VISUAL-LOG rows closed.
+- **M1 dispatchable queue is now empty**: #507 waits on the label ruling
+  below; #505/#506/#510 are `roadmap:blocked` on real-device findings; #511
+  is the human gate. Real iPhone/Android observations remain the unblock.
+- **#434 residue, measured 2026-09-06** (`goldens.py` on a fresh
+  `steel_thread.yaml` compile vs `qa/scripts/steel_thread.json`): Act I
+  compiles to 232 steps against a 2569-step golden — 9 NET-fatal arrival
+  rows (walk/assert ordering: act1.road.back, spar, upstairs.seam, gift ×4,
+  street.arrival), 12 compiled-only waits reclassified TIGHTER, 25 allowed,
+  9 tolerance rows, and 1,532 shipped-only steps past the Act I seam. The
+  compiler now also models cover-served/sneaking band crossings (#508).
+  Next session: take the 9 NET rows first — each is an emit-order question,
+  not a language gap.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
