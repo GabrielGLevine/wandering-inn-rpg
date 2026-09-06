@@ -1,0 +1,271 @@
+{
+ "_comment": "#509 message lifecycle canonical: save status is a hint-ribbon pill (ui_save_status_rendered on game_saved) off the toast strip; a transient flavour line renders and a step dismisses it without recording (anti-spam kept); the journal modal pauses and resumes the strip; Reduce Motion changes nothing about delivery. Immediate arrival is line_display_ab (its assert_dialogue_displayed now measures OCCLUSION by the field readout); simultaneous authored/save is invrisil_hat_quiet. The 1.2s readable floor before a movement dismiss is a real-timing rule pinned by test_message_layer (QA collapses it to 0).",
+ "fixture_save": "mobile_tap_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#509 SAVE STATUS: a manual save is a housekeeping toast AND a compact pill on the hint ribbon (ui_save_status_rendered) -- the pill never touches the toast strip, so it can neither delay authored copy nor be dismissed by a step.",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Pause rows: Resume, Save, Load, ... -- down 1 = Save.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "save"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Order is the engine's: the picker closes, the pause menu closes, THEN the slot writes (game_saved) and the ribbon pill renders, then the housekeeping toast.",
+   "action": "wait_for_event",
+   "type": "ui_pause_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "payload_contains": {
+    "slot": "manual"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_status_rendered",
+   "payload_contains": {
+    "slot": "manual"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Game saved."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_saved_pill_on_hint_ribbon"
+  },
+  {
+   "_comment": "MOVEMENT + RECORD: an empty interact renders a transient flavour line (not recorded -- the anti-spam constraint stays); stepping away is the ordinary dismiss. Under QA the readable floor is 0 (canonical timing untouched); the 1.2s floor itself is pinned at real timings by test_message_layer.",
+   "action": "press",
+   "name": "move_left"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "interact_nothing",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "_comment": "MODAL CLOSURE (the #508 finding, now a contract): copy queued while a modal is up renders after the modal closes -- the queue is lossless. Journal open, then an authored beat cannot fire inside it, so the save status re-fires instead: pause -> save while the pill is already up re-arms it (serial) and the ribbon still reads Saved after the menu hides.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "REDUCED MOTION: the accessibility toggle must not change delivery -- a toast still renders and the ribbon pill still fires after a save.",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 7
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "reduce_motion": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Pause rows: Resume, Save, Load, ... -- down 1 = Save.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "save"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "payload_contains": {
+    "slot": "manual"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_status_rendered",
+   "payload_contains": {
+    "slot": "manual"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "game_saved",
+   "count": 2
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_save_status_rendered",
+   "count": 2
+  },
+  {
+   "action": "screenshot",
+   "name": "02_saved_pill_reduce_motion"
+  }
+ ]
+}

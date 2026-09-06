@@ -291,6 +291,7 @@ func _write_slot(slot: String) -> void:
 		return
 	file.store_string(JSON.stringify(WISave.serialize(sim)))
 	file.close()
+	ObservableBus.emit_domain_event(WIEvents.GAME_SAVED, {"slot": slot})
 
 
 func _rotate_slot(from: String, to: String) -> void:

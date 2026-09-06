@@ -1143,7 +1143,57 @@ func _probe_dialogue_display(step: Dictionary) -> void:
 	if want != "" and not String(state["text"]).contains(want):
 		_fail("assert_dialogue_displayed: displayed line %s does not contain %s" % [JSON.stringify(String(state["text"])), JSON.stringify(want)])
 		return
+	# #509 acceptance 1: visible-and-on-screen is not READABLE if another
+	# panel draws over it. The field readout (expanded until the first sleep)
+	# is the shipped occluder; measure the overlap against its rect and its
+	# canvas layer instead of trusting the rendered event.
+	var occluder := _dialogue_occluder(state)
+	# The measurement itself lands in events.jsonl, so a windowed read can be
+	# audited without re-running: what covered what, by how much, on which layer.
+	var readout := get_tree().root.find_child("FieldReadout", true, false) as Control
+	ObservableBus.emit_domain_event("qa_dialogue_display_probe", {
+		"line_rect": state.get("rect", []), "line_layer": int(state.get("layer", 0)),
+		"readout_visible": readout != null and readout.is_visible_in_tree(),
+		"readout_rect": [readout.get_global_rect().position.x, readout.get_global_rect().position.y, readout.get_global_rect().size.x, readout.get_global_rect().size.y] if readout != null else [],
+		"readout_layer": _canvas_layer_of(readout) if readout != null else -1,
+		"occluder": occluder,
+	})
+	if not occluder.is_empty():
+		_fail("assert_dialogue_displayed: line panel is OCCLUDED by %s (overlap %d%% of the line, layer %d vs %d; state %s)" % [String(occluder["name"]), int(occluder["overlap_pct"]), int(occluder["layer"]), int(state.get("layer", 0)), JSON.stringify(state)])
+		return
+	state["occluder"] = ""
 	_events_seen.append({"type": "qa_dialogue_displayed", "payload": state})
+
+
+## The panels that can sit in the line's band, checked by rect AND by canvas
+## layer (a higher-or-equal layer added later draws on top). Returns {} when
+## nothing covers more than OCCLUSION_PCT of the line panel.
+const OCCLUSION_PCT := 20.0
+
+static func _canvas_layer_of(node: Node) -> int:
+	var cur := node
+	while cur != null:
+		if cur is CanvasLayer:
+			return (cur as CanvasLayer).layer
+		cur = cur.get_parent()
+	return 0
+
+
+func _dialogue_occluder(state: Dictionary) -> Dictionary:
+	var r: Array = state.get("rect", [0, 0, 0, 0])
+	var line_rect := Rect2(float(r[0]), float(r[1]), float(r[2]), float(r[3]))
+	if line_rect.get_area() <= 0.0:
+		return {}
+	var line_layer := int(state.get("layer", 0))
+	for node_name: String in ["FieldReadout"]:
+		var ctrl := get_tree().root.find_child(node_name, true, false) as Control
+		if ctrl == null or not ctrl.is_visible_in_tree():
+			continue
+		var overlap := line_rect.intersection(ctrl.get_global_rect())
+		var pct := 100.0 * overlap.get_area() / line_rect.get_area()
+		if pct >= OCCLUSION_PCT and _canvas_layer_of(ctrl) >= line_layer:
+			return {"name": node_name, "overlap_pct": pct, "layer": _canvas_layer_of(ctrl)}
+	return {}
 
 
 func _assert_state(step: Dictionary) -> void:
