@@ -7328,6 +7328,30 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "gate_road_cover_negative",
+   "seed": 9,
+   "note": "#477 item 3: the UNSERVED gate-road crossing -- same classless fixture as gate_road_cover_loop but the cut is never taken, so the first in-band step springs goblin_encounter_1 and no crossed_under_cover banks (the overnight re-arm leg is a test_sim_core contract)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "gate_road_cover_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   }
  ]
 }

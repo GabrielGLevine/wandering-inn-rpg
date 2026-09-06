@@ -4085,6 +4085,31 @@ func _init() -> void:
 	assert(g_ench.inventory.has("hedaults_hunters_fang"), "variant granted")
 	assert(String(g_ench.equipped.get("accessory_1", "")) == "", "the dangling equip slot is cleared")
 
+	# --- #477 leg 2: the drainage-cut cover is EARNED PER WAKING. serve:<cut>
+	# clears at sleep (entity_first_use.clear()), so the same crossing that
+	# banked crossed_under_cover today springs goblin_encounter_1 tomorrow.
+	# Leg 1 (unserved crossing = ambush) is pinned by gate_road_cover_negative.
+	var g_cover := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_cover.transition("floodplains", Vector2i(26, 24))
+	g_cover.player_facing = Vector2i.RIGHT
+	g_cover.interact()  # the cut at (27,24): banks took_the_low_road + serve:gate_road_drain_cut
+	assert(g_cover.entity_first_use.has("serve:gate_road_drain_cut"), "taking the cut banks the serve key")
+	g_cover.move_player(Vector2i.UP)
+	g_cover.move_player(Vector2i.UP)
+	g_cover.move_player(Vector2i.RIGHT)
+	g_cover.move_player(Vector2i.RIGHT)
+	assert(g_cover.player_cell == Vector2i(28, 22) and g_cover.combat == null, "served crossing enters the band without a fight")
+	assert(g_cover.accomplishment_count("crossed_under_cover") == 1, "the crossing banks crossed_under_cover once")
+	g_cover.move_player(Vector2i.LEFT)
+	g_cover.move_player(Vector2i.LEFT)
+	assert(g_cover.player_cell == Vector2i(26, 22), "back out of the band, still no fight")
+	g_cover.sleep()
+	assert(not g_cover.entity_first_use.has("serve:gate_road_drain_cut"), "sleep clears the serve key -- the cover must be re-earned")
+	g_cover.move_player(Vector2i.RIGHT)
+	g_cover.move_player(Vector2i.RIGHT)
+	assert(g_cover.combat != null, "the same crossing the morning after springs the ambush (overnight re-arm)")
+	assert(g_cover.accomplishment_count("crossed_under_cover") == 1, "no cover credit without the cut that waking")
+
 	# --- GH#185: widened entrance surfaces (facade + gate flanks) ---
 	var g_ent := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g_ent.transition("floodplains", Vector2i(6, 6))
