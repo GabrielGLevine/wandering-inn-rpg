@@ -64,6 +64,11 @@ class Emitter:
         kind = str(operation.get("kind", ""))
         if kind == "walk":
             steps.extend(deepcopy(operation["steps"]))
+        elif kind == "bypass_bank":
+            # #508: a band crossed under cover / while sneaking banks on the
+            # transit; the engine emits accomplishment_recorded (then the
+            # bypass toast) right after the in-band move lands.
+            steps.extend(self._effect_wait(row) for row in operation.get("waits", []))
         elif kind == "face_target":
             steps.append({"action": "move", "direction": operation["direction"], "steps": 1})
         elif kind == "transition":

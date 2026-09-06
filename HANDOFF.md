@@ -20,13 +20,12 @@ archived, or superseded session blocks.
   #477 gained_by any-arm readers, #253 web Import Save. Per-issue records:
   PRs #531–#534 (closed as superseded). Agent merges work as a BARE
   `gh pr merge …` (the allow rule is prefix-matched; no `cd` prefix).
-- **#508 Rogue discovery — WIP on `issue/508-rogue-discovery-v2`** (rebased
-  onto main; the stacked `issue/508-rogue-discovery` is superseded): three
-  leads, Krshia's Watch pointer, the bypass toast. Still owed: the
-  first-[Stealth] pointer (two attempts never rendered under
-  rogue_earn_loop; drop point unknown) and the fresh-save compiled route
-  (itinerary `route._walk` needs a cover-served/sneaking bypass; draft act in
-  the session scratchpad). Review + PR owed.
+- **#508 Rogue discovery — PR #536** (`issue/508-rogue-discovery-v2`): leads
+  for both classless entries, Krshia's Watch pointer, bypass toast,
+  first-[Stealth] pointer, and the COMPILED fresh-save route
+  `rogue_discovery_cut_route` (itinerary planner now models cover-served and
+  sneaking band crossings). Dialogue prose corpus sits ONE word under the
+  24.5k+5% tripwire — the next dialogue edit trims elsewhere or re-baselines.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).

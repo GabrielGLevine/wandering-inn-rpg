@@ -291,6 +291,16 @@ func _first_wake_hint_text() -> String:
 	return "New morning. Every key and control is listed under %s — Settings — Help." % WIInputHints.label("cancel")
 
 
+## #508: the first [Stealth] holder gets ONE pointer the morning the class
+## lands -- where the Skill lives, how to fire it on every device, what breaks
+## it. Results-only copy (no counts), same static-lifetime contract as the
+## other first-time hints. Armed at CLASS_GAINED, queued at
+## UI_SLEEP_VEIL_FINISHED beside the first-wake pointer; the strip is a
+## lossless queue, so a modal opened right after (journal) only delays it.
+func _first_stealth_hint_text() -> String:
+	return "[Stealth] is on your field bar now: %s, or tap it, to soften your step. Using a Skill, a fight, or forcing a door straightens you up." % WIInputHints.label("hotbar")
+
+
 func _hint_text() -> String:
 	return "%s — menu (save/load)   %s — journal   %s — inventory" % [
 		WIInputHints.label("cancel"), WIInputHints.label("journal"), WIInputHints.label("inventory"),
@@ -303,6 +313,8 @@ var _first_pickup_hint_pending := false
 static var _first_pickup_hint_shown := false
 ## GH#171 first-waking controls pointer -- same static-lifetime contract.
 static var _first_wake_hint_shown := false
+static var _first_stealth_hint_shown := false
+static var _first_stealth_hint_pending := false
 static var _hint_reset_hooked := false
 
 var _conversation_open := false
@@ -314,11 +326,15 @@ static func _reset_first_pickup_hint(type: String, _payload: Dictionary) -> void
 	if type == WIEvents.GAME_RESET:
 		_first_pickup_hint_shown = false
 		_first_wake_hint_shown = false
+		_first_stealth_hint_shown = false
+		_first_stealth_hint_pending = false
 
 
 static func reset_hints() -> void:
 	_first_pickup_hint_shown = false
 	_first_wake_hint_shown = false
+	_first_stealth_hint_shown = false
+	_first_stealth_hint_pending = false
 
 
 func _ready() -> void:
@@ -469,6 +485,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_hint_panel.show()
 			_combat_active = false
 			_restore_banked_toasts()
+		WIEvents.CLASS_GAINED:
+			if String(payload.get("class", "")) == "rogue" and not _first_stealth_hint_shown:
+				_first_stealth_hint_pending = true
 		WIEvents.UI_SLEEP_VEIL_FINISHED:
 			# GH#171: one pointer at the full key reference, on the genuine
 			# first waking only (times_slept == 1 filters loaded veteran
@@ -476,6 +495,10 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			if not _first_wake_hint_shown and Game.sim != null and Game.sim.times_slept == 1:
 				_first_wake_hint_shown = true
 				_queue_toast(_first_wake_hint_text())
+			if _first_stealth_hint_pending and not _first_stealth_hint_shown:
+				_first_stealth_hint_pending = false
+				_first_stealth_hint_shown = true
+				_queue_toast(_first_stealth_hint_text(), true, false, true)
 		WIEvents.DIALOGUE_STARTED:
 			_conversation_open = true
 			_apply_toast_position()

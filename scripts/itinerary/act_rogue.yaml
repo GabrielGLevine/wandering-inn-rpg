@@ -1,0 +1,64 @@
+# #508: [Rogue] DISCOVERY from a fresh save, the drainage-cut route. No
+# pre-granted Skills, no pre-banked counters, no teleport: creation -> the
+# gate road -> down the cut -> across the ambush's band unfought -> home to
+# bed -> sleep mints [Rogue] -> first [Stealth] use -> the same band sneaked
+# for real (sneaked_past_danger, the growth counter) -> the journal knows.
+- act: rogue
+  creation:
+    race: human
+    gender: m
+    name: Pell
+    difficulty: Silver Rank
+    hints: true
+    tap_back: false
+  nodes:
+    - id: rogue.cut.approach
+      goto: {map: floodplains, cell: [26, 24]}
+      why: Stand west of the drainage cut, off the ambush's band.
+    - id: rogue.cut.take
+      interact:
+        prop: gate_road_drain_cut
+        at: floodplains
+        expect_accomplishment: took_the_low_road
+      why: Going to ground is the classless answer to the gate-road ambush.
+    - id: rogue.cut.cross
+      goto: {map: floodplains, cell: [31, 24]}
+      why: Cross the ambush's band under cover; crossed_under_cover banks on the transit, no fight.
+    - id: rogue.cut.banked
+      assert:
+        state:
+          accomplishments.crossed_under_cover: 1
+        event_absent: {type: combat_started}
+      why: The crossing, not the prop, is the credit; and it must have been unfought.
+    - id: rogue.home
+      goto: {map: inn_upstairs, cell: [9, 1]}
+      why: Sleep is the only place a class lands.
+    - id: rogue.sleep
+      sleep: {expect_levels: true}
+      why: The any-arm entry resolves at sleep.
+    - id: rogue.gained
+      assert:
+        state:
+          classes.rogue: 1
+        event: {type: class_gained, payload_contains: {class: rogue}}
+      why: "[Rogue] minted from crossed_under_cover alone."
+    - id: rogue.stealth.first
+      use_field: {skill: sneak}
+      why: "First [Stealth] use -- the field toggle the hint pointed at."
+    - id: rogue.band.approach
+      goto: {map: floodplains, cell: [26, 22]}
+      why: Back to the band's west edge, sneaking.
+    - id: rogue.band.sneak
+      goto: {map: floodplains, cell: [31, 22]}
+      why: Sneak the same band for real -- the growth counter's first unit.
+    - id: rogue.growth
+      assert:
+        event: {type: accomplishment_recorded, payload_contains: {id: sneaked_past_danger}}
+        event_absent: {type: combat_started}
+      why: "Bypassing a threat is visible and banks the counter [Rogue] L2 reads."
+    - id: rogue.growth.shot
+      shot: {name: 03_sneaked_the_band_unseen}
+      why: The bypass line on the strip, the cloak on the sprite -- the player-eyes read of acceptance 4.
+    - id: rogue.journal
+      journal: {capture: 04_journal_rogue_stealth}
+      why: The book lists [Rogue] and [Stealth]; growth guidance stays qualitative (no counts on screen).

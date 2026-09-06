@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for all 255 canonical QA scripts. The manifest is the
+This is the human index for all 256 canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -263,3 +263,4 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `mobile_touch_smoke` | 9 | full | `—` | #503 touch-only smoke (title gesture, Continue, adjacent-tap talk, paged taps, option taps, tap-to-walk, journal chip) via the touch_* tier: natively EMULATED taps (qa_touch real:false); on the web runner with --touch every tap is a real Playwright page.touchscreen.tap and an unserviced request fails -- no keyboard/mouse fallback |
 | `save_port_web` | 9 | full | `—` | #253 save port by REAL touch: Export (web = blob download the runner captures; native = user://exports) then Import (web = a browser file chooser the runner answers with that download; native = newest export) -> game_loaded{reason:import}, state identity. Cancel/invalid legs are the web-only siblings save_port_web_cancel / save_port_web_invalid run by CI |
 | `gate_road_cover_negative` | 9 | full | `—` | #477 item 3: the UNSERVED gate-road crossing -- same classless fixture as gate_road_cover_loop but the cut is never taken, so the first in-band step springs goblin_encounter_1 and no crossed_under_cover banks (the overnight re-arm leg is a test_sim_core contract) |
+| `rogue_discovery_cut_route` | 9 | full | `—` | #508 [Rogue] DISCOVERY from a FRESH SAVE (compiled from scripts/itinerary/act_rogue.yaml): creation -> gate road -> down the drainage cut (took_the_low_road) -> across the ambush band unfought (crossed_under_cover, no combat_started) -> home to bed -> sleep mints [Rogue] -> first [Stealth] -> the same band sneaked for real (sneaked_past_danger + the bypass toast). No pre-granted Skills, no pre-banked counters, no teleport |

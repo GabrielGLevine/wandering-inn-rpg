@@ -277,6 +277,9 @@ class Ledger:
         self.state["social_talked"] = {}
         self.state["dormant_encounters"] = []
         self.state["actions_since_sleep"] = 0
+        # wi_game.gd `sleep()`: `entity_first_use.clear()` -- serve/cover/danger
+        # keys re-arm every night (the cover crossing must be re-earned).
+        self.state["entity_first_use"] = {}
         # `sleep()` drops the cloak (wi_game.gd: `sneaking = false`), so a plan
         # that walks a radius after a night has to re-cast rather than inherit.
         self.sneaking = False
