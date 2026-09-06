@@ -15,12 +15,18 @@ archived, or superseded session blocks.
 - User-confirmed mobile targets: **iPhone Safari and Android Chrome**,
   compared with desktop. Rogue discovery is a priority; purchases require
   explicit confirmation before any gold or item effects commit.
-- **M1 wave 1 merge train** (`train/m1-wave-1`, one PR): #504 purchase
-  confirmation (PR #531), #503 mobile parity matrix + real-touch QA tier
-  (PR #532), #477 gained_by any-arm readers (PR #533), #253 web Import Save
-  (PR #534). Individual PR bodies are the per-issue records; the train PR
-  carries the composed gates. Merges are denied to the agent by the
-  permission classifier — **user merges**.
+- **M1 wave 1 landed** as train PR #535 (`5493bbfe`, 2026-09-06): #504
+  purchase confirmation, #503 mobile parity matrix + real-touch QA tier,
+  #477 gained_by any-arm readers, #253 web Import Save. Per-issue records:
+  PRs #531–#534 (closed as superseded). Agent merges work as a BARE
+  `gh pr merge …` (the allow rule is prefix-matched; no `cd` prefix).
+- **#508 Rogue discovery — WIP on `issue/508-rogue-discovery-v2`** (rebased
+  onto main; the stacked `issue/508-rogue-discovery` is superseded): three
+  leads, Krshia's Watch pointer, the bypass toast. Still owed: the
+  first-[Stealth] pointer (two attempts never rendered under
+  rogue_earn_loop; drop point unknown) and the fresh-save compiled route
+  (itinerary `route._walk` needs a cover-served/sneaking bypass; draft act in
+  the session scratchpad). Review + PR owed.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
