@@ -27,6 +27,7 @@ func _make_game_with_dialogue(graph: Dictionary) -> WIGame:
 		"classes": _load_json("res://data/classes.json"),
 		"arenas": _load_json("res://data/arenas.json"),
 		"dialogue": {"test_conv": graph},
+		"items": _load_json("res://data/items.json"),
 	}
 	return WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 
@@ -225,7 +226,9 @@ func test_gold_effect_verb_applies_through_dialogue_choose() -> void:
 	assert(game.gold == 10, "gold effect verb earns through dialogue_choose")
 	var opts: Array = game.dialogue.current_options()
 	assert(not bool(opts[0]["locked"]), "buy option unlocked once affordable (ctx refreshed mid-conversation)")
-	game.dialogue_choose(0)  # spend 6 AND grant the sibling item
+	game.dialogue_choose(0)  # offer: spend 6 AND grant the sibling item, held until confirm (#504)
+	assert(game.gold == 10 and not game.inventory.has("leather_jerkin"), "the offer holds the spend and the grant")
+	assert(game.purchase_confirm(), "confirm commits the purchase")
 	assert(game.gold == 4, "gold effect verb spends through dialogue_choose")
 	assert(game.inventory.has("leather_jerkin"), "sibling item effect still grants alongside the gold spend")
 
@@ -1093,6 +1096,168 @@ func test_wigame_nulls_a_walker_the_fail_safe_finished_at_begin() -> void:
 	assert(game.start_dialogue("test_conv", "npc_x"), "and the next conversation still opens")
 
 
+## #504: a priced row opens an OFFER; nothing commits until purchase_confirm().
+func test_purchase_offer_holds_every_effect_until_confirm() -> void:
+	_events.clear()
+	var graph := {"start": "shop", "nodes": {
+		"shop": {"speaker": "Krshia", "text": "buy?", "options": [
+			{"text": "The charm. (5 gold)", "requires": {"gold": 5}, "effects": [{"gold": -5}, {"item": "traveler_charm"}, {"accomplishment": "bought_charm"}], "goto": "bought"},
+			{"text": "leave", "end": true},
+		]},
+		"bought": {"speaker": "Krshia", "text": "sold", "options": [{"text": "bye", "end": true}]},
+	}}
+	var game := _make_game_with_dialogue(graph)
+	game.earn_gold(12, "test")
+	game.start_dialogue("test_conv", "krshia")
+	_events.clear()
+	assert(game.dialogue_choose(0), "choosing a priced row is accepted (it opens the offer)")
+	assert(not game.pending_purchase.is_empty(), "the offer is held on the sim")
+	assert(game.gold == 12, "offer spends nothing")
+	assert(not game.inventory.has("traveler_charm"), "offer grants nothing")
+	assert(game.accomplishment_count("bought_charm") == 0, "offer banks nothing")
+	assert(game.dialogue.current_id == "shop", "offer keeps the walker on the offer node")
+	assert(_count("purchase_offered") == 1 and _count("dialogue_choice") == 0 and _count("gold_changed") == 0, "offer emits purchase_offered and no commit events")
+	var offer: Dictionary = _events[0]["payload"]
+	assert(int(offer["price"]) == 5 and String(offer["item"]) == "traveler_charm" and int(offer["gold_after"]) == 7 and String(offer["conversation"]) == "test_conv", "offer payload names price/item/remaining gold/source")
+	assert(String(offer["item_name"]) != "" and String(offer["item_name"]) != "traveler_charm", "offer resolves the catalog display name")
+	assert(not game.dialogue_choose(1), "every other choice is refused while an offer is pending")
+	assert(game.dialogue.current_id == "shop" and game.gold == 12, "the refused choice changed nothing")
+	_events.clear()
+	assert(game.purchase_confirm(), "confirm commits")
+	assert(game.pending_purchase.is_empty(), "confirm clears the offer")
+	assert(game.gold == 7 and game.inventory.has("traveler_charm") and game.accomplishment_count("bought_charm") == 1, "confirm applies gold, item and accomplishment exactly as the pre-#504 choose did")
+	assert(game.dialogue.current_id == "bought", "confirm advances to the row's goto")
+	assert(_count("purchase_confirmed") == 1 and _count("dialogue_choice") == 1 and _count("gold_changed") == 1, "confirm emits purchase_confirmed then the ordinary commit stream")
+	assert(not game.purchase_confirm(), "a second confirm is a no-op")
+	assert(game.gold == 7 and _count("gold_changed") == 1, "a second confirm never buys twice")
+
+
+func test_purchase_cancel_spends_nothing_and_returns_to_the_same_offer() -> void:
+	var graph := {"start": "shop", "nodes": {"shop": {"speaker": "Ratici", "text": "look", "options": [
+		{"text": "the pendant", "requires": {"gold": 20}, "hide_when": {"item": "phosphor_pendant"}, "effects": [{"gold": -20}, {"item": "phosphor_pendant"}], "end": true},
+		{"text": "Another day, then.", "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)
+	game.earn_gold(20, "test")
+	game.start_dialogue("test_conv", "ratici")
+	assert(not game.purchase_cancel(), "cancel with no offer is a no-op")
+	assert(game.dialogue_choose(0), "end:true priced row opens an offer instead of ending")
+	assert(game.dialogue != null and not game.dialogue.finished, "an end:true purchase row does NOT end the conversation at offer time")
+	_events.clear()
+	assert(game.purchase_cancel(), "cancel is accepted")
+	assert(game.pending_purchase.is_empty() and game.gold == 20 and not game.inventory.has("phosphor_pendant"), "cancel spends nothing")
+	assert(game.dialogue != null and game.dialogue.current_id == "shop" and game.dialogue.current_options().size() == 2, "cancel returns to the same offer selection")
+	assert(_count("purchase_cancelled") == 1 and _count("dialogue_ended") == 0, "cancel emits purchase_cancelled and keeps the conversation open")
+	assert(game.dialogue_choose(0) and not game.pending_purchase.is_empty(), "the same row re-offers after a cancel")
+	assert(game.purchase_confirm(), "confirm after re-offer commits")
+	assert(game.gold == 0 and game.inventory.has("phosphor_pendant"), "the fence row charged and granted once")
+	assert(game.dialogue == null, "the end:true row ends the conversation on commit")
+
+
+func test_purchase_confirm_revalidates_funds_and_row() -> void:
+	var graph := {"start": "shop", "nodes": {"shop": {"speaker": "S", "text": "t", "options": [
+		{"text": "thing", "requires": {"gold": 8}, "effects": [{"gold": -8}, {"item": "whetstone"}], "goto": "shop"},
+		{"text": "leave", "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)
+	game.earn_gold(8, "test")
+	game.start_dialogue("test_conv", "s")
+	assert(game.dialogue_choose(0), "offer opens")
+	game.gold = 3  # funds vanish between offer and confirm (belt-and-braces: nothing in play can do this today)
+	_events.clear()
+	assert(not game.purchase_confirm(), "confirm refuses when the purse no longer covers the price")
+	assert(game.gold == 3 and not game.inventory.has("whetstone"), "refused confirm spends nothing")
+	assert(game.pending_purchase.is_empty(), "refused confirm clears the offer")
+	assert(_count("purchase_cancelled") == 1 and String(_events[0]["payload"]["reason"]) == "revalidation", "refusal reads as a cancellation with a revalidation reason")
+	assert(game.dialogue != null and game.dialogue.current_id == "shop", "the conversation survives the refusal")
+	game.gold = 8
+	assert(game.dialogue_choose(1) and game.dialogue == null, "leave still works after a refused confirm")
+
+
+func test_unaffordable_priced_row_never_offers() -> void:
+	var graph := {"start": "shop", "nodes": {"shop": {"speaker": "S", "text": "t", "options": [
+		{"text": "thing", "requires": {"gold": 8}, "effects": [{"gold": -8}, {"item": "whetstone"}], "goto": "shop"},
+		{"text": "leave", "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)
+	game.start_dialogue("test_conv", "s")
+	_events.clear()
+	assert(not game.dialogue_choose(0), "a locked (broke) row is refused before any offer")
+	assert(game.pending_purchase.is_empty() and _count("purchase_offered") == 0, "no offer for an unaffordable row")
+
+
+func test_service_rows_offer_and_narrative_spends_do_not() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "Lease the room. (20 gold)", "requires": {"gold": 20}, "effects": [{"gold": -20}, {"accomplishment": "room_purchased"}], "goto": "hub"},
+		{"text": "Improve the charm. (5 gold)", "requires": {"gold": 5, "item": "traveler_charm"}, "effects": [{"gold": -5}, {"remove_item": "traveler_charm"}, {"item": "hedaults_traveler_charm"}], "goto": "hub"},
+		{"text": "Toward the supply fund. (10 gold)", "spend": "donation", "requires": {"gold": 10}, "effects": [{"gold": -10}, {"accomplishment": "donated"}], "goto": "hub"},
+		{"text": "Offer the draw.", "spend": "wager", "effects": [{"gold": -2}, {"accomplishment": "drew"}], "goto": "hub"},
+		{"text": "leave", "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)
+	game.earn_gold(100, "test")
+	game.pickup("traveler_charm", "test")
+	game.start_dialogue("test_conv", "s")
+	_events.clear()
+	assert(game.dialogue_choose(0) and int(game.pending_purchase["price"]) == 20 and String(game.pending_purchase["item"]) == "", "a paid service (no item) offers with an empty item and the row text")
+	assert(String(game.pending_purchase["text"]).begins_with("Lease the room."), "service offer carries the row text for the summary")
+	assert(game.purchase_confirm() and game.accomplishment_count("room_purchased") == 1 and game.gold == 80, "service confirm commits")
+	assert(game.dialogue_choose(1) and String(game.pending_purchase["item"]) == "hedaults_traveler_charm", "an upgrade row offers the granted item")
+	assert((game.pending_purchase["consumes"] as Array).size() == 1, "an upgrade row names what it hands over")
+	assert(game.purchase_confirm() and game.inventory.has("hedaults_traveler_charm") and not game.inventory.has("traveler_charm") and game.gold == 75, "upgrade confirm swaps the item once")
+	_events.clear()
+	assert(game.dialogue_choose(2), "a donation-tagged row applies immediately")
+	assert(game.pending_purchase.is_empty() and game.gold == 65 and game.accomplishment_count("donated") == 1 and _count("purchase_offered") == 0, "narrative spends never open the confirmation")
+	assert(game.dialogue_choose(3) and game.gold == 63 and game.accomplishment_count("drew") == 1, "an unpriced negative-gold row (wager) applies immediately")
+
+
+func test_purchase_offer_carries_the_haggled_price() -> void:
+	var graph := {"start": "shop", "nodes": {"shop": {"speaker": "Eloise", "text": "t", "haggle": true, "options": [
+		{"text": "The yarrow bundle. (4 gold)", "requires": {"gold": 4}, "effects": [{"gold": -4}, {"item": "dried_yarrow_bundle"}], "goto": "shop"},
+	]}}}
+	var d := WIDialogue.new(graph, {"skills": ["bargain"], "classes": {}, "accomplishments": {}, "names": {}, "gold": 3, "items": {}}, Callable())
+	d.begin()
+	var offer := d.purchase_offer(0)
+	assert(int(offer["price"]) == 3 and String(offer["text"]) == "The yarrow bundle. (3 gold)", "the offer's price and text are the discounted figures the row renders")
+	assert(d.purchase_offer(5).is_empty(), "out-of-range index offers nothing")
+	var d2 := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "gold": 3, "items": {}}, Callable())
+	d2.begin()
+	assert(d2.purchase_offer(0).is_empty(), "a locked row (3 gold vs 4) offers nothing")
+
+
+func test_every_shipped_negative_gold_row_is_a_purchase_or_classified() -> void:
+	# The producer census the #504 brief asked for: a row that spends gold is
+	# either the priced-purchase idiom (confirmation) or carries a `spend`
+	# classification naming why it is not a shop.
+	var shared := WIDialogueBanks.load_shared()
+	var dir := DirAccess.open("res://data/dialogue")
+	var purchases := 0
+	var classified := 0
+	for f: String in dir.get_files():
+		if not f.ends_with(".json") or f.begins_with("_"):
+			continue
+		var g: Dictionary = WIDialogueBanks.expand(JSON.parse_string(FileAccess.get_file_as_string("res://data/dialogue/" + f)), shared)
+		for nid: String in g["nodes"]:
+			for opt: Variant in (g["nodes"][nid] as Dictionary).get("options", []):
+				var o := opt as Dictionary
+				var spent := 0
+				for e: Dictionary in o.get("effects", []):
+					if e.has("gold") and int(e["gold"]) < 0:
+						spent = -int(e["gold"])
+				if spent == 0:
+					continue
+				var priced := (o.get("requires", {}) as Dictionary).get("gold", -1) is float or (o.get("requires", {}) as Dictionary).get("gold", -1) is int
+				priced = priced and int((o.get("requires", {}) as Dictionary).get("gold", -1)) == spent
+				var kind := String(o.get("spend", "purchase"))
+				assert(WIDialogue.SPEND_KINDS.has(kind), "%s.%s: unknown spend kind '%s'" % [f, nid, kind])
+				if kind == "purchase":
+					assert(priced, "%s.%s: '%s' spends %d gold without the priced idiom and without a spend classification" % [f, nid, String(o["text"]), spent])
+					purchases += 1
+				else:
+					classified += 1
+	assert(purchases >= 40 and classified >= 8, "census sanity: %d purchases, %d classified narrative spends" % [purchases, classified])
+
+
 func _init() -> void:
 	# == DIALOGUE BANKS EXPAND AT LOAD (user directive 2026-08-05) ==
 	# 62 slots were copy-paste; graphs now bank lines (file-local text_banks +
@@ -1222,6 +1387,13 @@ func _init() -> void:
 	test_finished_walker_survives_a_goto_into_an_all_hidden_node()
 	test_wigame_nulls_the_walker_the_fail_safe_finished()
 	test_wigame_nulls_a_walker_the_fail_safe_finished_at_begin()
+	test_purchase_offer_holds_every_effect_until_confirm()
+	test_purchase_cancel_spends_nothing_and_returns_to_the_same_offer()
+	test_purchase_confirm_revalidates_funds_and_row()
+	test_unaffordable_priced_row_never_offers()
+	test_service_rows_offer_and_narrative_spends_do_not()
+	test_purchase_offer_carries_the_haggled_price()
+	test_every_shipped_negative_gold_row_is_a_purchase_or_classified()
 
 	print("PASS: dialogue graphs walk, gate, hide, and end correctly")
 	quit(0)

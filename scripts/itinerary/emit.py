@@ -111,6 +111,8 @@ class Emitter:
             if operation.get("why"):
                 confirm["_comment"] = f"CHOICE: {operation['why']}"
             steps.append(confirm)
+            if operation.get("purchase"):
+                steps.extend(self._purchase_confirm_steps(operation))
             # WHERE the effect waits go is the engine's own order, not a
             # preference (`WIGame.dialogue_choose`): `choose()` emits
             # DIALOGUE_ENDED before returning, the owner then applies the
@@ -535,6 +537,27 @@ class Emitter:
             steps.append({"action": "wait_for_event", "type": "toast", "payload_contains": {"text": str(operation["toast"])}, "timeout_sec": 5})
         steps.append({"action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5})
         return steps
+
+    @staticmethod
+    def _purchase_confirm_steps(operation: dict[str, Any]) -> list[dict[str, Any]]:
+        """#504: a priced row OFFERS on its confirm; the buy commits only after
+        the modal arms (0.3s swallow window) and the cursor moves off Cancel.
+        Emission order is the engine's: purchase_offered, then the armed
+        confirmation, then purchase_confirmed BEFORE any gold/item event."""
+        offer_payload: dict[str, Any] = {}
+        grants = list(operation.get("grants", []))
+        if grants:
+            offer_payload["item"] = str(grants[0])
+        offer = {"action": "wait_for_event", "type": "purchase_offered", "timeout_sec": 5}
+        if offer_payload:
+            offer["payload_contains"] = offer_payload
+        return [
+            offer,
+            {"action": "wait_for_event", "type": "ui_purchase_confirm_armed", "timeout_sec": 5},
+            {"action": "move", "direction": "down", "steps": 1},
+            {"_comment": "PURCHASE CONFIRM (#504): the modal opened on Cancel; down + confirm is the Buy row.", "action": "press", "name": "confirm"},
+            {"action": "wait_for_event", "type": "purchase_confirmed", "timeout_sec": 5},
+        ]
 
     def _purchase_steps(self, operation: dict[str, Any]) -> list[dict[str, Any]]:
         # Emission order is the engine's, not a preference: spend_gold emits

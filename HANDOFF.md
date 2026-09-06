@@ -15,9 +15,17 @@ archived, or superseded session blocks.
 - User-confirmed mobile targets: **iPhone Safari and Android Chrome**,
   compared with desktop. Rogue discovery is a priority; purchases require
   explicit confirmation before any gold or item effects commit.
-- No gameplay implementation lane is active. Roadmap publication and remote
-  verification are complete. Start issue work from current main through the
-  normal `issue/<n>-<slug>` and PR workflow.
+- **M1 wave 1 merge train** (`train/m1-wave-1`, one PR): #504 purchase
+  confirmation (PR #531), #503 mobile parity matrix + real-touch QA tier
+  (PR #532), #477 gained_by any-arm readers (PR #533), #253 web Import Save
+  (PR #534). Individual PR bodies are the per-issue records; the train PR
+  carries the composed gates. Merges are denied to the agent by the
+  permission classifier — **user merges**.
+- Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
+  observations (#511). CI's web-parity job had been a silent no-op since it
+  was written; it now runs for real (combat parity, touch smoke, save port).
+- Local dev env now has Godot 4.7.2 web export templates + Playwright, so
+  `qa/web/run_web_qa.sh` runs here.
 - Roadmap-session base: `main` at `7780925b`. Owned local housekeeping:
   `HANDOFF.md`, `docs/ROADMAP.md`, and the assessment's appended difficulty
   explanation finding in `docs/VISUAL-LOG.md`.

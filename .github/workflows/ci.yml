@@ -394,9 +394,15 @@ jobs:
         run: |
           set -euo pipefail
           log=web_parity.log
-          perl -e 'alarm 600; exec @ARGV' \
-            WI_REQUIRE_AUDIO_OUTPUT=1 bash wandering_inn_game/qa/web/run_web_qa.sh combat_walkthrough 9 >"$log" 2>&1 || rc=$?
+          # #503 finding: `perl ... exec @ARGV` with an ENV ASSIGNMENT as its first
+          # word exec'd a program literally named "WI_REQUIRE_AUDIO_OUTPUT=1",
+          # failed silently and exited 0 -- this job had been a no-op since it
+          # was written (empty log, green check). The assignment belongs in
+          # front of perl, and an empty log is now a failure in its own right.
+          WI_REQUIRE_AUDIO_OUTPUT=1 perl -e 'alarm 600; exec @ARGV' \
+            bash wandering_inn_game/qa/web/run_web_qa.sh combat_walkthrough 9 >"$log" 2>&1 || rc=$?
           cat "$log"
+          grep -q 'QA_RESULT: PASS' "$log" || { echo "::error::web-parity run produced no QA_RESULT: PASS (did the runner even start?)"; exit 1; }
           # Known-harmless runner-only line (first public CI run, 2026-07-06):
           # the wasm boot emits "ImageLoaderSVG: Target canvas dimensions
           # 51500x51500 ... scaled down" on ubuntu runners only (never locally).
@@ -405,3 +411,39 @@ jobs:
             echo "::error::web-parity run tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
+
+      - name: Mobile touch smoke (mobile_touch_smoke, seed 9, emulated iPhone, portrait entry, real Playwright taps)
+        run: |
+          set -euo pipefail
+          log=web_touch_smoke.log
+          perl -e 'alarm 600; exec @ARGV' \
+            bash wandering_inn_game/qa/web/run_web_qa.sh mobile_touch_smoke 9 --skip-export --touch --device=iphone --portrait-entry >"$log" 2>&1 || rc=$?
+          cat "$log"
+          grep -q 'QA_RESULT: PASS' "$log" || { echo "::error::mobile touch smoke produced no QA_RESULT: PASS"; exit 1; }
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+            echo "::error::mobile touch smoke tripped the error/warning grep"; exit 1
+          fi
+          # #503: the smoke is only meaningful when every tap was a REAL browser
+          # touch -- the driver fails unserviced requests, and this pins the count.
+          grep -q 'real touch taps performed by the runner: 12 ' "$log" || { echo "::error::expected 12 real touch taps"; exit 1; }
+          grep -q 'rotation probe: OK' "$log" || { echo "::error::portrait-entry rotation probe failed"; exit 1; }
+          exit "${rc:-0}"
+
+      - name: Web save port (#253 -- export download, import file chooser, cancel, invalid; real taps, emulated iPhone)
+        run: |
+          set -euo pipefail
+          printf '{"not":"a save","version":0}\n' > /tmp/garbage.json
+          fail=0
+          for leg in "save_port_web:" "save_port_web_cancel:--import-cancel" "save_port_web_invalid:--import-file=/tmp/garbage.json"; do
+            name="${leg%%:*}"; extra="${leg#*:}"; log="web_${name}.log"; rc=0
+            perl -e 'alarm 600; exec @ARGV' \
+              bash wandering_inn_game/qa/web/run_web_qa.sh "$name" 9 --skip-export --touch --device=iphone $extra >"$log" 2>&1 || rc=$?
+            cat "$log"
+            grep -q 'QA_RESULT: PASS' "$log" || { echo "::error::$name produced no QA_RESULT: PASS"; fail=1; }
+            grep -q 'file choosers opened=1' "$log" || { echo "::error::$name: the import tap opened no browser file chooser (the #253 symptom)"; fail=1; }
+            if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+              echo "::error::$name tripped the error/warning grep"; fail=1
+            fi
+            [ "$rc" = 0 ] || fail=1
+          done
+          exit "$fail"

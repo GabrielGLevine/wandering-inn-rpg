@@ -29,6 +29,7 @@ contracts, decisions, or history; a plan file never reopens completed work.
 | `wandering_inn_game/docs/ARCHITECTURE-HISTORY.md` | Detailed current mechanisms, history, and rationale | On-demand mechanism authority; current boundaries live in game `AGENTS.md` |
 | `wandering_inn_game/docs/QA-SCRIPT-NOTES.md` | Generated canonical QA inventory | Generated from `qa/manifest.json`; exact routes live in `qa/scripts/` |
 | `wandering_inn_game/qa/MACHINE-PLAYTEST.md` | Player-eyes screenshot playtest protocol | Current QA procedure |
+| `wandering_inn_game/qa/MOBILE-PARITY.md` | #503 mobile parity matrix: desktop reference vs emulated iPhone/Android vs real devices, orientation policy, touch-smoke commands | Current diagnostic record; real-device columns fill from the M1 gate (#511) |
 | `wandering_inn_game/qa/playtest_saves/` | Organic player-save regression snapshots | Retained QA evidence; not canonical fixtures |
 | `wandering_inn_game/qa/baselines/` | Frozen corpora the prose and dialogue-voice gates diff against | Gate fixtures, not docs; see its README for which files are pins vs derivatives |
 | `docs/reports/`, `.superpowers/`, `lanes/`, `LANE-*.md` | Generated reports, ledgers, screenshots, lane briefs and evidence | Gitignored; never bootstrap authority |

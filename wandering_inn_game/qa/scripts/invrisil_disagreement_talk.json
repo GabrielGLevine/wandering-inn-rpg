@@ -82,6 +82,31 @@
   },
   {
    "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "_comment": "PURCHASE CONFIRM (#504): the modal opened on Cancel; down + confirm is the Buy row.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
    "type": "accomplishment_recorded",
    "payload_contains": {
     "id": "heard_rumor_footpads"
@@ -105,6 +130,31 @@
    "_comment": "== STAGE 2, PURCHASE 2: hub now hides footpads (heard); visible [0 counting_house, 1 hellam, 2 hats, 3 door, 4 testimony-ask, 5 just_tea] -- favor-trigger still hidden (bought_rumor_from_cups:1). Take index 0 (counting_house).",
    "action": "press",
    "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "_comment": "PURCHASE CONFIRM (#504): the modal opened on Cancel; down + confirm is the Buy row.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
@@ -803,6 +853,34 @@
   {
    "action": "press",
    "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "phosphor_pendant"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "_comment": "PURCHASE CONFIRM (#504): the modal opened on Cancel; down + confirm is the Buy row.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5
   },
   {
    "_comment": "Buy contract emission order (economy_loop's krshia precedent): gold_changed BEFORE the 'Paid' toast, then the item grant, then the retirement counter.",

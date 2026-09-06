@@ -12,6 +12,7 @@ const MAP_TRANSITION_VISUAL_HOLD_SECONDS := 0.25
 const MESSAGE_LAYER_SCRIPT := preload("res://src/ui/message_layer.gd")
 const COMBAT_SCREEN_SCRIPT := preload("res://src/combat/combat_screen.gd")
 const DIALOGUE_PANEL_SCRIPT := preload("res://src/ui/dialogue_panel.gd")
+const PURCHASE_CONFIRM_SCRIPT := preload("res://src/ui/purchase_confirm.gd")
 const JOURNAL_SCRIPT := preload("res://src/ui/journal.gd")
 const PAUSE_MENU_SCRIPT := preload("res://src/ui/pause_menu.gd")
 const INVENTORY_SCRIPT := preload("res://src/ui/inventory.gd")
@@ -339,6 +340,11 @@ func _spawn_ui_layers() -> void:
 	var dialogue_panel := DIALOGUE_PANEL_SCRIPT.new()
 	dialogue_panel.name = "DialoguePanel"
 	add_child(dialogue_panel)
+	# #504: above the dialogue panel so the confirmation's catcher owns every
+	# click while an offer is pending.
+	var purchase_confirm := PURCHASE_CONFIRM_SCRIPT.new()
+	purchase_confirm.name = "PurchaseConfirm"
+	add_child(purchase_confirm)
 	_journal = JOURNAL_SCRIPT.new()
 	_journal.name = "Journal"
 	_pause_menu = PAUSE_MENU_SCRIPT.new()

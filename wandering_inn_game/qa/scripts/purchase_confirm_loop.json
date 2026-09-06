@@ -1,0 +1,566 @@
+{
+ "_comment": "#504 purchase confirmation canonical (the shared path every purchase producer rides). d2_shop fixture: Warrior L1 beside Krshia, purse 5, the charm (5) affordable. Proves: (1) choosing a priced row OFFERS and commits nothing; (2) input inside the 0.3s arm window is swallowed (held key / double tap), on keyboard AND on the Buy row by touch; (3) Esc cancels and the same row re-offers with no cursor move; (4) a tap outside the panel dismisses; (5) a Buy tap commits exactly once, then the ordinary gold_changed/Paid/item_gained stream and the row's goto; (6) repeat input after the buy never buys twice (counts pinned); (7) broke = locked row = no offer. Windowed: 01 = the armed modal with the cursor on Cancel (desktop read), 02 = the greyed stall with no modal.",
+ "fixture_save": "d2_shop",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Fresh hub: pitch(0), shop-entry(1), Just visiting(2). Down 1 + confirm opens the stall.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "options": [
+     {
+      "text": "The old charm-cord, then. (5 gold)",
+      "locked": false,
+      "requirement": "",
+      "effect_lines": [
+       "+2 HP",
+       "Resonance 1"
+      ]
+     },
+     {
+      "text": "That Silverfang hunting knife. Good steel. (15 gold)",
+      "locked": true,
+      "requirement": "costs 15 gold",
+      "effect_lines": [
+       "+1 damage on melee hits",
+       "Sword kit replaces other weapon Skills in combat"
+      ]
+     },
+     {
+      "text": "The wool-lined cloak. The wet gets in, out on the road. (18 gold)",
+      "locked": true,
+      "requirement": "costs 18 gold",
+      "effect_lines": [
+       "+3 HP"
+      ]
+     },
+     {
+      "text": "The boiled-leather jerkin. (24 gold)",
+      "locked": true,
+      "requirement": "costs 24 gold",
+      "effect_lines": [
+       "+4 HP"
+      ]
+     },
+     {
+      "text": "Show me the charms.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Nothing today.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The hunting bow, then. Gnoll-strung, proper draw. (18 gold)",
+      "locked": true,
+      "requirement": "costs 18 gold",
+      "effect_lines": [
+       "+1 damage on ranged hits",
+       "Range 4",
+       "Bow kit replaces other weapon Skills in combat"
+      ]
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "OFFER 1 (keyboard). Confirm on the affordable charm opens the confirmation and commits NOTHING: no gold_changed, no item_gained, walker still on the shop node, purse still 5.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "payload_contains": {
+    "conversation": "krshia_crate",
+    "item": "traveler_charm",
+    "price": 5,
+    "gold_before": 5,
+    "gold_after": 0,
+    "node": "shop"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "payload_contains": {
+    "item": "traveler_charm",
+    "price": 5,
+    "gold_after": 0,
+    "cursor": 0,
+    "armed": false,
+    "summary": "Traveler's Charm"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "traveler_charm"
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "dialogue_choice",
+   "count": 1
+  },
+  {
+   "_comment": "PRE-ARM SWALLOW: a down+confirm fired within the arm window (the double-tap / held-key shape) neither buys nor cancels. The rendered event above fires at t0; the modal arms at t0+0.3s; these two presses cost ~4 frames.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_cancelled"
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "payload_contains": {
+    "item": "traveler_charm"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_offer_armed_cursor_on_cancel"
+  },
+  {
+   "_comment": "CANCEL (keyboard Esc): spends nothing and returns to the SAME offer selection -- proven by the very next confirm re-offering the same row without any cursor move.",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_cancelled",
+   "payload_contains": {
+    "conversation": "krshia_crate",
+    "index": 0,
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "dialogue_ended"
+  },
+  {
+   "_comment": "OFFER 2 -> OUTSIDE-DISMISS: a tap off the panel (top-left corner) cancels, same as Esc.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "payload_contains": {
+    "item": "traveler_charm",
+    "price": 5
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "payload_contains": {
+    "item": "traveler_charm"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_screen",
+   "pos": [
+    40,
+    40
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_cancelled",
+   "payload_contains": {
+    "index": 0,
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_cancelled",
+   "count": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "_comment": "OFFER 3 -> TOUCH BUY: a tap on the Buy row commits exactly once -- the sim's own commit stream (gold_changed, Paid toast, item_gained) follows purchase_confirmed in emission order, then the row's goto renders.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "payload_contains": {
+    "item": "traveler_charm",
+    "price": 5
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "A Buy tap BEFORE the arm is swallowed (touch double-tap shape).",
+   "action": "click_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "payload_contains": {
+    "item": "traveler_charm"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "payload_contains": {
+    "conversation": "krshia_crate",
+    "item": "traveler_charm",
+    "price": 5
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_choice",
+   "payload_contains": {
+    "index": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "payload_contains": {
+    "delta": -5,
+    "total": 0,
+    "source": "krshia_crate"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Paid 5 gold."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "traveler_charm"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "text": "Sold. Wear it and use it. Mending costs extra. Anything else catch your eye?"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "REPEAT INPUT after the buy: another confirm lands on the 'bought' node's first row (back to the stall), never on a second purchase.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "options": [
+     {
+      "text": "The old charm-cord, then. (5 gold)",
+      "locked": true,
+      "requirement": "costs 5 gold",
+      "effect_lines": [
+       "+2 HP",
+       "Resonance 1"
+      ]
+     },
+     {
+      "text": "That Silverfang hunting knife. Good steel. (15 gold)",
+      "locked": true,
+      "requirement": "costs 15 gold",
+      "effect_lines": [
+       "+1 damage on melee hits",
+       "Sword kit replaces other weapon Skills in combat"
+      ]
+     },
+     {
+      "text": "The wool-lined cloak. The wet gets in, out on the road. (18 gold)",
+      "locked": true,
+      "requirement": "costs 18 gold",
+      "effect_lines": [
+       "+3 HP"
+      ]
+     },
+     {
+      "text": "The boiled-leather jerkin. (24 gold)",
+      "locked": true,
+      "requirement": "costs 24 gold",
+      "effect_lines": [
+       "+4 HP"
+      ]
+     },
+     {
+      "text": "Show me the charms.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Nothing today.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The hunting bow, then. Gnoll-strung, proper draw. (18 gold)",
+      "locked": true,
+      "requirement": "costs 18 gold",
+      "effect_lines": [
+       "+1 damage on ranged hits",
+       "Range 4",
+       "Bow kit replaces other weapon Skills in combat"
+      ]
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_confirmed",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "gold_changed",
+   "count": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "_comment": "INSUFFICIENT FUNDS: broke now, the charm row is locked -- confirm on it opens NO offer (count stays 3) and the walker stays put.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 6
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_offered",
+   "count": 3
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "ui_purchase_confirm_rendered",
+   "payload_contains": {
+    "cursor": 0,
+    "armed": false,
+    "gold_after": -5
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "02_broke_no_offer"
+  },
+  {
+   "_comment": "Leave cleanly: 'Nothing today.' (visible index 5) -> hub, then 'Just visiting.' ends.",
+   "action": "move",
+   "direction": "down",
+   "steps": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  }
+ ]
+}

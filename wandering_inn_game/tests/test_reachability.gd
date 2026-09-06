@@ -141,6 +141,8 @@ func _collect_class_consumers(classes: Dictionary, consumed: Dictionary) -> void
 	for cls: Dictionary in classes.get("classes", []):
 		var class_id := String(cls.get("id", "?"))
 		_collect_counter_dict((cls.get("gained_by", {}) as Dictionary).get("accomplishment", {}), "classes.%s.gained_by.accomplishment" % class_id, consumed)
+		# #477: the any arm consumes its counters too (entry-side requires_any).
+		_collect_counter_dict((cls.get("gained_by", {}) as Dictionary).get("accomplishment_any", {}), "classes.%s.gained_by.accomplishment_any" % class_id, consumed)
 		for level: Dictionary in cls.get("levels", []):
 			var label := "classes.%s.levels[%s]" % [class_id, str(level.get("level", "?"))]
 			_collect_counter_dict(level.get("requires", {}), label + ".requires", consumed)

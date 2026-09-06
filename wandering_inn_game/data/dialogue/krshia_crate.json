@@ -163,6 +163,7 @@
      "goto": "smoothed"
     },
     {
+     "spend": "gift",
      "text": "Just cover the shortfall myself. (2 gold)",
      "requires": {
       "accomplishment": {
@@ -273,6 +274,7 @@
      "goto": "goblin_run"
     },
     {
+     "spend": "gift",
      "text": "Stand the cost of a quiet run south myself. (8 gold)",
      "requires": {
       "accomplishment": {

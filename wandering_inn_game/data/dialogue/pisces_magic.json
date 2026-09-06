@@ -536,6 +536,7 @@
      "end": true
     },
     {
+     "spend": "gift",
      "text": "Then it's settled — I'll cover your time instead. (5 gold)",
      "requires": {
       "gold": 5

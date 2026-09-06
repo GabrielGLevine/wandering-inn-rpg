@@ -302,6 +302,7 @@
      "goto": "agreed_persuaded"
     },
     {
+     "spend": "wager",
      "text": "Ten gold says the water's fine. (10 gold)",
      "requires": {
       "gold": 10,

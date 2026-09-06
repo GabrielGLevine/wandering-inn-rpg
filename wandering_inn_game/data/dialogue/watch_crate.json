@@ -49,6 +49,7 @@
      "end": true
     },
     {
+     "spend": "bribe",
      "text": "Grease a few palms instead. (2 gold)",
      "requires": {
       "accomplishment": {

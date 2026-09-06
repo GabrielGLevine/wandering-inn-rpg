@@ -266,6 +266,7 @@
      "goto": "sealed"
     },
     {
+     "spend": "gift",
      "text": "(Hand over the trade goods \u2014 6 gold's worth, arranged in Liscor.)",
      "requires": {
       "gold": 6,

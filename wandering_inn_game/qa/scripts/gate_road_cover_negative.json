@@ -1,0 +1,116 @@
+{
+ "_comment": "#477 item 3: the missing negative leg of gate_road_cover_loop -- an UNSERVED crossing of the gate-road band springs the ambush and banks no cover credit. Same fixture (classless L1 at (26,24), facing the cut) so the only variable is whether the cut was taken. The overnight re-arm leg (serve key clears at sleep) is a sim contract in test_sim_core (#477 leg 2) because the bed is a map away.",
+ "fixture_save": "gate_road_cover_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Standing at (26,24), already facing right onto the cut at (27,24) -- Chebyshev 4 from the ambush, two cells clear of its band, so nothing has been risked yet.",
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    26,
+    24
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {}
+  },
+  {
+   "_comment": "NEGATIVE LEG (#477 item 3): the SAME fixture, the SAME band crossing, WITHOUT taking the cut first. No serve key, so the cover arm never runs and the first in-band step springs goblin_encounter_1 -- the ambush the sibling loop proves the cut suppresses. Falsifiable: delete the `entity_first_use.has(\"serve:...\")` guard in wi_game.gd's cover arm and this leg reds on combat_started absence.",
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    26,
+    22
+   ]
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started",
+   "payload_contains": {
+    "arena": "goblin_ambush_tutorial"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "took_the_low_road"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "payload_contains": {
+    "arena": "goblin_ambush_tutorial"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "crossed_under_cover"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {}
+  },
+  {
+   "action": "screenshot",
+   "name": "00_ambush_springs_unserved"
+  }
+ ]
+}

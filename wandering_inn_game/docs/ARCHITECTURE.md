@@ -133,6 +133,7 @@ world SubViewport (never mood-graded). Opaque panels set `layer = 10`.
 |---|---|
 | `message_layer.gd` | toast FIFO + one-time hints; static toast history for journal Recent Messages |
 | `dialogue_panel.gd` | renders WIDialogue nodes/options (data graphs AND code-built graphs identically) |
+| `purchase_confirm.gd` | #504 modal over the dialogue panel for `WIGame.pending_purchase`: cursor opens on Cancel, input swallowed until `ui_purchase_confirm_armed`, outside tap = cancel; forwards to `purchase_confirm()`/`purchase_cancel()` |
 | `journal.gd` | J: quests/leads/skills-by-class (BBCode); reveal state from sim |
 | `inventory.gd` | I: equip/unequip, resonance header, lore lines |
 | `pause_menu.gd` | Esc: save/load slots, settings, quit-to-title |
@@ -160,6 +161,12 @@ world SubViewport (never mood-graded). Opaque panels set `layer = 10`.
   mid-combat `phase_changed` (PC turns tick the action counter).
 - Deferred dialogue effects (`pending_combat`, `pending_board_action`,
   `travel_to`) apply only after the conversation ends.
+- Purchase rows (#504: `requires.gold` N + `gold: -N` effect, no narrative
+  `spend` tag) do not commit on `dialogue_choose`: the offer parks on
+  `WIGame.pending_purchase` (`purchase_offered`) and `purchase_confirm()`
+  revalidates then runs the ordinary commit path once; `purchase_cancel()`
+  returns to the same node. QA buy idiom: confirm → `purchase_offered` →
+  `ui_purchase_confirm_armed` → down + confirm → `purchase_confirmed` → gold/item.
 
 ## 5. Data catalog (`data/`)
 

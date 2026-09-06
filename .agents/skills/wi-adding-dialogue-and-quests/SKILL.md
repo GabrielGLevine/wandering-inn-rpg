@@ -145,6 +145,21 @@ effect events on a single-option close, or the effect wait times out
 staring at an already-ended conversation (cost a real debug cycle,
 GH#81's recruit_pell).
 
+## Spending gold: purchases CONFIRM, narrative spends need a `spend` tag (#504)
+A row that is `requires: {gold: N}` + `effects: [{gold: -N}, ...]` (the
+priced idiom) is a PURCHASE: `dialogue_choose` parks it on
+`WIGame.pending_purchase` (`purchase_offered`) and NOTHING applies until
+`purchase_confirm()` — item, accomplishment, `end: true`, all of it. Any
+other negative-gold row must carry `"spend": "gift" | "donation" |
+"wager" | "fine" | "bribe"` (data_lint + `test_dialogue`'s census red
+otherwise); tagged rows apply on choose exactly as before. Do not tag a
+shop/service row to skip the modal — the user directive is explicit.
+QA buy idiom (compiler emits it too): `press confirm` →
+`wait purchase_offered` → `wait ui_purchase_confirm_armed` → `move down 1`
+→ `press confirm` → `wait purchase_confirmed` → the gold/toast/item waits.
+A bare confirm on a priced row now opens the modal and waits forever
+for `gold_changed` — the exact red every pre-#504 buy script showed.
+
 ## Hubs and always-available exits (softlock guard)
 Any node with a `hide_when` option OR an accomplishment-`requires` option
 must keep at least one option with NEITHER key — a fully ungated exit.

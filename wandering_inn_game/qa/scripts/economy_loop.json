@@ -717,6 +717,34 @@
   },
   {
    "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "traveler_charm"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "_comment": "PURCHASE CONFIRM (#504): the modal opened on Cancel; down + confirm is the Buy row.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
    "type": "gold_changed",
    "payload_contains": {
     "delta": -5,

@@ -374,6 +374,8 @@ DLG_EFFECT_CONTAINER = "effects"
 DLG_KNOWN_NON_PROSE = {
     # graph structure
     "goto", "start", "speaker",
+    # #504 spend classification (purchase|gift|donation|wager|fine|bribe) -- an enum, never prose
+    "spend",
     # requires
     "skill", "item", "once_per_waking", "phase", "race", "quest",
     # effects (every string-valued effect key in wi_game.gd's dispatch)
