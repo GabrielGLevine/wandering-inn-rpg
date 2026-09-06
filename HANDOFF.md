@@ -15,9 +15,11 @@ archived, or superseded session blocks.
 - User-confirmed mobile targets: **iPhone Safari and Android Chrome**,
   compared with desktop. Rogue discovery is a priority; purchases require
   explicit confirmation before any gold or item effects commit.
-- No gameplay implementation lane is active. Roadmap publication and remote
-  verification are complete. Start issue work from current main through the
-  normal `issue/<n>-<slug>` and PR workflow.
+- **#504 purchase confirmation** is implemented on
+  `issue/504-purchase-confirmation` (PR pending gates + review as of
+  2026-09-05). Priced rows park on `WIGame.pending_purchase`; narrative
+  spends carry a `spend` tag; `PurchaseConfirm` modal arms after 0.3s.
+  Next in M1 order: #503 parity matrix, then #508/#477.
 - Roadmap-session base: `main` at `7780925b`. Owned local housekeeping:
   `HANDOFF.md`, `docs/ROADMAP.md`, and the assessment's appended difficulty
   explanation finding in `docs/VISUAL-LOG.md`.
