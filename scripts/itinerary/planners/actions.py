@@ -186,6 +186,10 @@ class ActionPlanner:
         # sequence re-casts after the anchor and the tally (#440).
         ledger.break_sneak()
         ledger.accomplishment(accomplishment)
+        if entity.get("once_per_waking"):
+            # WIInteractions banks `serve:<prop>` for once_per_waking props --
+            # the key the gate-road ambush's cover arm reads (#453 G2 / #508).
+            ledger.state["entity_first_use"][f"serve:{prop_id}"] = True
         ops.append({
             "kind": "prop_interact",
             "accomplishment": accomplishment,

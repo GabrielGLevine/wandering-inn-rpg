@@ -37,6 +37,10 @@
 
   { "_comment": "Journal for the windowed [Stealth] card shot (the renamed-Skill-card proof).", "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "03_journal_stealth_card" }
+  { "action": "screenshot", "name": "03_journal_stealth_card" },
+  {"_comment": "#508: the first-[Stealth] pointer was queued behind the veil (ui_sleep_veil_finished) and sat behind the class toast while the journal modal paused the strip -- the queue is lossless, so closing the book lets it render. Pins the copy on every device label (kb here).", "action": "press", "name": "journal"},
+  {"action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Rogue] class gained! — [Stealth]"}, "timeout_sec": 10},
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Stealth] is on your field bar now: number keys, or tap it, to soften your step. Using a Skill, a fight, or forcing a door straightens you up."}, "timeout_sec": 10}
  ]
 }

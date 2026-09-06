@@ -189,3 +189,17 @@ projections to pay off, so its two passes are the same file.
 ambush), so it ends classless, unarmed, and never reaches Liscor. Act II opens
 where that fixture already stands, which is the honest seam rather than a
 pretended continuous run.
+
+## Band crossings that do not fight (#508)
+
+`route._walk` refuses any path inside a proximity encounter's trigger radius
+-- unless the engine would let it through. Two arms, mirrored from
+`wi_game.gd`'s proximity pass: a live sneak (`use_field` on a `sneaks:true`
+Skill) credits `sneaked_past_danger` and walks on; a served `cover_prop`
+(`interact` on a `once_per_waking` prop banks `serve:<prop>` in the ledger's
+`entity_first_use`, cleared at sleep like the sim) credits
+`crossed_under_cover`. The walk then carries a `bypass_bank` op whose waits
+the emitter pins right after the moves (the bypass toast rides the sneak
+arm). `act_rogue.yaml` -> `qa/scripts/rogue_discovery_cut_route.json` is the
+canonical: creation to [Rogue] to the first sneak with no fixture at all.
+

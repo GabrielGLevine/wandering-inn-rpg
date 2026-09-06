@@ -187,6 +187,7 @@ class RoutePlanner:
         conservative in the safe direction.
         """
         if ledger.sneaking:
+            # (bypass crossings are banked by `_walk` via `bypass_hazards`.)
             # #440's whole point, and M3.6 amendment item 4: a live sneak makes
             # the proximity pass `continue` instead of springing (wi_game.gd
             # 538-547) -- it credits `sneaked_past_danger` and walks on. So a
@@ -206,8 +207,60 @@ class RoutePlanner:
                 continue
             if not self._requirements_met(entity.get("gate_when", {}).get("requires", {}), ledger):
                 continue
+            # #508 / #453 G2 THE COVER ARM: an encounter whose `cover_prop` was
+            # served this waking (`serve:<prop>` in entity_first_use, banked by
+            # the prop's own interact) skips instead of springing (wi_game.gd's
+            # cover arm), so its band is a walk, not a fight -- see `_walk`,
+            # which banks `crossed_under_cover` on the transit.
+            cover_prop = str(entity.get("cover_prop", ""))
+            if cover_prop and ledger.state["entity_first_use"].get(f"serve:{cover_prop}"):
+                continue
             hazards.append(entity)
         return hazards
+
+    def bypass_hazards(self, map_id: str, ledger: Ledger) -> list[dict[str, Any]]:
+        """Encounters a walk may CROSS this leg without a fight: every live
+        proximity encounter while sneaking, else those whose cover prop was
+        served this waking. Mirrors wi_game.gd's proximity pass order (sneak
+        arm above the cover arm); each crossing banks once per encounter per
+        waking (`danger:<id>` / `cover:<id>` in entity_first_use)."""
+        out: list[dict[str, Any]] = []
+        for entity in self.maps[map_id].get("entities", []):
+            if str(entity.get("kind", "")) != "encounter" or "trigger_radius" not in entity:
+                continue
+            if entity.get("present_when") or entity.get("encounter_when"):
+                continue
+            entity_id = str(entity.get("id", ""))
+            if entity_id in ledger.state["removed_entities"] or entity_id in ledger.state["dormant_encounters"]:
+                continue
+            if not self._requirements_met(entity.get("gate_when", {}).get("requires", {}), ledger):
+                continue
+            cover_prop = str(entity.get("cover_prop", ""))
+            if ledger.sneaking or (cover_prop and ledger.state["entity_first_use"].get(f"serve:{cover_prop}")):
+                out.append(entity)
+        return out
+
+    def _bank_bypasses(self, ledger: Ledger, cells: list[list[int]]) -> list[dict[str, Any]]:
+        """The waits a walk earns by crossing a band it is allowed to cross."""
+        ops: list[dict[str, Any]] = []
+        for entity in self.bypass_hazards(ledger.map_id, ledger):
+            if self._first_trigger(cells, [entity]) is None:
+                continue
+            entity_id = str(entity.get("id", ""))
+            first_use = ledger.state["entity_first_use"]
+            if ledger.sneaking:
+                key, counter, toast = f"danger:{entity_id}", "sneaked_past_danger", "Whatever was watching that stretch never saw you pass."
+            else:
+                key, counter, toast = f"cover:{entity_id}", "crossed_under_cover", ""
+            if first_use.get(key):
+                continue
+            first_use[key] = True
+            ledger.accomplishment(counter)
+            waits: list[dict[str, Any]] = [{"type": "accomplishment_recorded", "payload_contains": {"id": counter, "count": int(ledger.state["accomplishments"][counter])}}]
+            if toast:
+                waits.append({"type": "toast", "payload_contains": {"text": toast}})
+            ops.append({"kind": "bypass_bank", "encounter": entity_id, "waits": waits})
+        return ops
 
     @staticmethod
     def _chebyshev(a: list[int], b: list[int]) -> int:
@@ -322,4 +375,5 @@ class RoutePlanner:
                 if step.get("action") == "move" and direction in DIRECTION_VECTORS:
                     ledger.face(direction)
                     break
+        ops.extend(self._bank_bypasses(ledger, [[int(p) for p in c] for c in answer.get("cells", [])]))
         return ops

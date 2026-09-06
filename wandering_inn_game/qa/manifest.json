@@ -7431,6 +7431,33 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "rogue_discovery_cut_route",
+   "seed": 9,
+   "note": "#508 [Rogue] DISCOVERY from a FRESH SAVE (compiled from scripts/itinerary/act_rogue.yaml): creation -> gate road -> down the drainage cut (took_the_low_road) -> across the ambush band unfought (crossed_under_cover, no combat_started) -> home to bed -> sleep mints [Rogue] -> first [Stealth] -> the same band sneaked for real (sneaked_past_danger + the bypass toast). No pre-granted Skills, no pre-banked counters, no teleport",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "sneak"
+    ],
+    "dialogue": [],
+    "systems": [
+     "char_creation",
+     "combat",
+     "exploration",
+     "input",
+     "night_phase"
+    ]
+   }
   }
  ]
 }
