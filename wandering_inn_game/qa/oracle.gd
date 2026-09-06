@@ -519,6 +519,12 @@ func _q_progression_preview(sim: WIGame) -> Dictionary:
 	var level_ups := WIProgression.check_level_ups(classes, sim.accomplishments, catalog)
 	for gain: Dictionary in level_ups:
 		classes[String(gain["class"])] = int(gain["level"])
+	# sleep_beat.gd banks `reached_two_classes` HERE -- after gains and levels,
+	# BEFORE the merge and evolutions run -- so the count it reads is this
+	# pre-merge dict (review finding, #434 Act II: a post-merge read would
+	# differ the sleep two parents retire into one target).
+	var reached_two := sim.accomplishment_count("reached_two_classes") >= 1 \
+		or classes.size() >= 2 or sim._holds_consolidated_class()
 	var consolidation := WIProgression.check_consolidation(classes, catalog)
 	if not consolidation.is_empty():
 		for parent_id: Variant in consolidation["parents"]:
@@ -532,17 +538,22 @@ func _q_progression_preview(sim: WIGame) -> Dictionary:
 			classes[String(outcome["to"])] = int(outcome["level"])
 		elif bool(outcome.get("generalist", false)) and not generalist.has(class_id):
 			generalist.append(class_id)
-	# sleep_beat.gd's beat order past the level chain: `reached_two_classes`
-	# banks on this sleep's class count (or an already-held merged class), and
-	# `_maybe_fire_tremor_pointer` reads that bank plus the completed-quest
-	# count -- both ledger-side facts the compiler cannot see, so the preview
-	# reports them (GH#167's pointer is the first sleep the corpus pins a
-	# quest_started on).
-	var reached_two := sim.accomplishment_count("reached_two_classes") >= 1 \
-		or classes.size() >= 2 or sim._holds_consolidated_class()
+	# `_maybe_fire_tremor_pointer` (GH#167) reads the two-class bank plus the
+	# completed-quest count -- sim-side facts the compiler cannot see, so the
+	# preview reports them.
+	# `_maybe_fire_tremor_pointer` reads the quest count AFTER this sleep's
+	# own banks (`slept` at the top of sleep(), the two-class bank above), and
+	# `record_accomplishment` re-evaluates quests on every bank -- so a quest
+	# whose last beat waits on either counter completes DURING the beat. The
+	# preview evaluates the catalog against those counters, not the pre-sleep
+	# save. Other in-beat banks (door_study_sleeps and kin) are not modelled.
+	var after: Dictionary = sim.accomplishments.duplicate(true)
+	after["slept"] = int(after.get("slept", 0)) + 1
+	if reached_two:
+		after["reached_two_classes"] = maxi(int(after.get("reached_two_classes", 0)), 1)
 	var tremor_pointer := sim.accomplishment_count("watch_runner_pointed") < 1 \
 		and sim.accomplishment_count("heard_the_deep_tremor") < 1 \
-		and reached_two and sim._quests_completed_count() >= 3
+		and reached_two and _quests_completed_with(sim, after) >= 3
 	return {
 		"classes_before": before,
 		"classes_after": classes,
@@ -554,6 +565,20 @@ func _q_progression_preview(sim: WIGame) -> Dictionary:
 		"reached_two_classes": reached_two,
 		"tremor_pointer": tremor_pointer,
 	}
+
+
+## wi_game.gd `_quests_completed_count`, evaluated against a counter dict the
+## caller chooses (the sleep preview's post-bank counters).
+func _quests_completed_with(sim: WIGame, accomplishments: Dictionary) -> int:
+	var catalog: Dictionary = sim._combat_config.get("quests", {})
+	if catalog.is_empty() or sim.started_quests.is_empty():
+		return 0
+	var ev := WIQuests.evaluate(catalog, sim.started_quests, accomplishments)
+	var n := 0
+	for id: String in ev:
+		if bool(ev[id]["completed"]):
+			n += 1
+	return n
 
 
 ## Worn-accessory abilities are known WHILE WORN (ruling 2026-08-11), so the bar

@@ -34,26 +34,14 @@ archived, or superseded session blocks.
 - **M1 dispatchable queue is now empty**: #507 waits on the label ruling
   below; #505/#506/#510 are `roadmap:blocked` on real-device findings; #511
   is the human gate. Real iPhone/Android observations remain the unblock.
-- **#434 Act II authored to GOLDEN PASS, WIP on `issue/434-act-ii`**
-  (commit e5278049, pushed, no PR yet -- session wound down on the usage
-  guard 2026-09-06). Slice diff of Act II (shipped 218-558) reports 0
-  exact / 0 net; the compiled Act I-II script (729 steps) runs green
-  headless at seed 37. Act I residue is ONE shipped-only row: the ambush's
-  `ui_hotbar_rendered {slots: 4}` logged-assert (derive from the roster or
-  author a `fight.expect_hotbar_slots`). Landed in the WIP: weighted-LCS
-  alignment in `goldens.py` (difflib's longest-block matcher re-paired
-  Selys with Olesm on an inserted pin), `fight.shots {approach, turn}`,
-  tremor-pointer derivation (oracle preview `tremor_pointer`), explicit-cell
-  goto arrival pins, "Got: <name>" grant toasts, class render pinned after
-  the veil with `from_start`, per-class level pins on plain sleeps.
-  NEXT: run `rogue_discovery_cut_route` (recompiled, seed 9) green, add
-  contract tests for each new rule (approach shot order, merged-bump
-  discount only when nets reconcile, LCS insertion stability, goto pin,
-  pointer order, `from_start` ignore), README section for Act II, then
-  `[ci-full]` + review + PR (Refs #434). Then Acts III-V. Slice helper:
-  scratchpad `slice_diff.py <compiled> <itin prefixes> <lo> <hi>`; add a
-  `--slices` option to `goldens.py` so whole-file drift stops masking
-  per-act equivalence.
+- **#434 Act II at golden equivalence -- PR #541 open** (branch
+  `issue/434-act-ii`; 8/8 checks green on 092b2275, review fixes on top).
+  Act II slice diff 0 exact / 0 net; compiled Act I-II runs green headless
+  at seed 37 (729 steps). Act I residue: one shipped-only row (ambush
+  `ui_hotbar_rendered {slots: 4}`). Read `scripts/itinerary/README.md`
+  "Act II is at golden equivalence" before touching the emitter: a golden
+  PASS is not a runtime PASS. NEXT after merge: Acts III-V authoring,
+  `goldens.py --slices`, caster-variant acceptance.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
