@@ -145,6 +145,9 @@
         the corpus takes the first. Both are oracle-valid and they leave the
         run facing different ways, so the approach cell is named rather than
         left to the shortest path.
+    - id: act1.inn.waypoint
+      goto: {map: inn, cell: [2, 3]}
+      why: The corpus pins (2,3) at the foot of the stairs before the walk to the door.
     - id: act1.gift
       talk:
         npc: relc
@@ -197,3 +200,179 @@
       shot: {name: 02_tutorial_05_street_arrival}
     - id: act1.gate_district.shot
       shot: {name: 03_liscor_gate_district_arrival}
+
+# ---------------------------------------------------------------------------
+# Act II -- Make a Place. Shipped steps 218-558. Authored 2026-09-06 against
+# the corpus with the golden differ as the oracle; first slice covers 218-330
+# (Pisces' lessons, the crate errand, Erin's package, the [Mage] sleep, the
+# Guild interior).
+- act: ii
+  nodes:
+    - id: act2.pisces.lessons
+      talk:
+        npc: pisces
+        at: street
+        open_shot: 04_act_ii_00_pisces_lessons
+        choose_path:
+          - "You're a mage. Teach me to cast."
+          - How is casting different from swinging a blade?
+          - So what do I cast first?
+          - I'm ready. Show me the words.
+          - Thank you, Pisces.
+      why: >-
+        The second class comes from Pisces' words, not a scroll: the lessons
+        bank learned_magic_from_pisces, and the next sleep mints [Mage].
+    - id: act2.krshia.ask
+      talk:
+        npc: krshia
+        at: street
+        choose_path:
+          - I'll look into it.
+          - I'll find it.
+      why: Start the crate errand on its plain rung; the resolution comes later.
+    - id: act2.home.floodplains
+      goto: {map: floodplains}
+    - id: act2.home.inn
+      goto: {map: inn}
+    - id: act2.erin.package
+      talk:
+        npc: erin
+        at: inn
+        choose_path:
+          - I'll take the package.
+          - On my way.
+      why: The errand is Act II's spine; the package is what Selys is waiting for.
+    - id: act2.bed.approach
+      goto: {map: inn_upstairs, cell: [9, 1]}
+    - id: act2.sleep.mage
+      sleep: {expect_levels: true, shot: 04_act_ii_01_mage_gained}
+    - id: act2.stairs.approach
+      goto: {map: inn_upstairs, cell: [1, 1]}
+      why: Same stair-head staging as Act I -- the corpus bumps the stairs from (1,1) going down.
+    - id: act2.out.inn
+      goto: {map: inn}
+    - id: act2.out.floodplains
+      goto: {map: floodplains}
+    - id: act2.out.street
+      goto: {map: street}
+    - id: act2.guild.enter
+      goto: {map: guild}
+    - id: act2.guild.shot
+      shot: {name: 04_act_ii_02_guild_interior}
+
+    # Slice 331-439: the errand lands, Olesm names the cisterns, the crate
+    # comes back by force, and the supplier's crew learns manners.
+    - id: act2.selys.delivery
+      talk:
+        npc: selys
+        at: guild
+        choose_path:
+          - Package for you, from Erin.
+          - I'll keep it. Courier's fee.
+          - (Leave.)
+      why: >-
+        The_errand completes on the hand-over; keeping the courier's fee banks
+        kept_reward, the corpus's chosen rung.
+    - id: act2.guild.out
+      goto: {map: street}
+    - id: act2.olesm.approach
+      goto: {map: street, cell: [29, 4]}
+      why: The corpus meets Olesm from below (29,4), not from the west of his desk.
+    - id: act2.olesm.cisterns
+      talk:
+        npc: olesm
+        at: street
+        choose_path:
+          - You look worried about something.
+          - I'll look into it. Where do I start?
+          - On it.
+      why: Olesm starts the cisterns quest and banks heard_about_cisterns.
+    - id: act2.south_square.approach
+      goto: {map: street, cell: [11, 16]}
+    - id: act2.fight.crate_scavengers
+      fight:
+        encounter: crate_scavengers
+        at: street
+        entry: interact
+        policy: competent
+        expect: victory
+        shots:
+          approach: [04_act_ii_03_south_square_scavengers]
+          turn: [04_act_ii_04_crate_fight_mage_kit]
+        expect_banks_after_dismiss: true
+      why: The crate is recovered by force -- missing_crate beat 1 and recovered_crate_force.
+    - id: act2.krshia.report
+      talk:
+        npc: krshia
+        at: street
+        choose_path:
+          - Your crate's accounted for.
+          - Glad to help.
+      why: Closes missing_crate (beat 2) on the report rung.
+    - id: act2.fight.supplier_scavengers
+      fight:
+        encounter: supplier_scavengers
+        at: street
+        entry: interact
+        policy: competent
+        expect: victory
+        expect_banks_after_dismiss: true
+      why: The side fight banks strongarmed_the_supplier.
+    - id: act2.night2.floodplains
+      goto: {map: floodplains}
+    - id: act2.night2.inn
+      goto: {map: inn}
+    - id: act2.bed2.approach
+      goto: {map: inn_upstairs, cell: [9, 1]}
+    - id: act2.sleep.day3
+      sleep: {}
+      why: >-
+        The corpus sleeps once between the supplier fight and the sewers and
+        pins nothing on it; the compiler claims what the ledger knows.
+    - id: act2.stairs2.approach
+      goto: {map: inn_upstairs, cell: [1, 1]}
+    - id: act2.day3.inn
+      goto: {map: inn}
+    - id: act2.day3.floodplains
+      goto: {map: floodplains}
+    - id: act2.day3.street
+      goto: {map: street}
+    - id: act2.day3.waypoint
+      goto: {map: street, cell: [13, 3]}
+      why: The corpus pins (13,3) on the way to the grate.
+    - id: act2.sewers.enter
+      goto: {map: sewers}
+    - id: act2.sewers.shot
+      shot: {name: 04_act_ii_05_sewers_descent}
+    - id: act2.fight.shield_spiders
+      fight:
+        encounter: shield_spiders
+        at: sewers
+        entry: interact
+        policy: competent
+        expect: victory
+        shots: [04_act_ii_06_cistern_nest_fight]
+        expect_banks_after_dismiss: true
+      why: The nest clears -- cisterns beat 1 and cleared_the_nest.
+    - id: act2.sewers.out
+      goto: {map: street}
+    - id: act2.olesm.approach2
+      goto: {map: street, cell: [29, 4]}
+    - id: act2.olesm.report
+      talk:
+        npc: olesm
+        at: street
+        choose_path:
+          - Any word on the cisterns?
+          - It's dealt with. I cleared the nest myself.
+          - Anytime, Olesm.
+      why: cisterns_reported closes the quest (beat 2).
+    - id: act2.night3.floodplains
+      goto: {map: floodplains}
+    - id: act2.night3.inn
+      goto: {map: inn}
+    - id: act2.bed3.approach
+      goto: {map: inn_upstairs, cell: [9, 1]}
+    - id: act2.sleep.tremor
+      sleep: {}
+      why: Two classes and three quests done -- the tremor pointer fires and something_beneath starts.

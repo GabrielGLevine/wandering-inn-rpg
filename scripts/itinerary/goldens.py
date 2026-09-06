@@ -38,7 +38,6 @@ report block, so a reader can audit exactly what the allowance absorbed.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-import difflib
 import json
 from pathlib import Path
 from typing import Any
@@ -54,7 +53,10 @@ TOLERANCE_ACTIONS = {"move", "wait_frames"}
 # the run then acts on is the row it lands on, and that is the net.
 CURSOR_PRESSES = {"move_up": "up", "move_down": "down", "move_left": "left", "move_right": "right"}
 # Keys that never carry a claim about the game.
-IGNORED_KEYS = {"_itin", "_comment", "timeout_sec", "_bump"}
+# `from_start` is delivery-vs-order, not a different claim: the corpus pins a
+# toast's RENDER with it wherever the render races a veil (v0.15 lesson --
+# never pin toast order across a hold), and the compiler does the same.
+IGNORED_KEYS = {"_itin", "_comment", "timeout_sec", "_bump", "from_start"}
 # Compiled-only steps that are pure TIGHTENING rather than extra behaviour.
 ASSERT_ACTIONS = {"assert_state", "assert_event_logged", "assert_event_absent", "assert_event_count"}
 # The one action the 2026-08-14 ruling adds to that set. Kept separate from
@@ -182,9 +184,22 @@ def _strip_mirrored_bump(compiled_gap: list[dict[str, Any]], shipped_gap: list[d
     if not compiled_gap or not shipped_gap or not _is_bump(compiled_gap[-1]):
         return shipped_gap
     last = _as_move(shipped_gap[-1])
-    if last is None or int(last.get("steps", 1)) != 1:
+    if last is None:
         return shipped_gap
-    return shipped_gap[:-1]
+    if int(last.get("steps", 1)) == 1:
+        return shipped_gap[:-1]
+    # The corpus also MERGES a bump into the walk that precedes it (`right 2`
+    # before the south-square scavengers: one step onto the cell, one into
+    # the encounter). Same licence, same direction: discount one step.
+    if str(last.get("direction", "")) != str(compiled_gap[-1].get("direction", "")):
+        return shipped_gap
+    shortened = dict(shipped_gap[-1])
+    shortened["steps"] = int(last.get("steps", 1)) - 1
+    candidate = shipped_gap[:-1] + [shortened]
+    # Only when the discount is what reconciles the two arrivals: a walk that
+    # ends ON the stand cell already facing the target (`up 10` to Krshia's
+    # counter) merged nothing, and discounting it would hide a real drift.
+    return candidate if _net(candidate) == _net(compiled_gap) else shipped_gap
 
 
 def _net(steps: list[dict[str, Any]]) -> tuple[int, int]:
@@ -256,9 +271,7 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
     compiled_spine, compiled_gaps, compiled_at = _split(compiled_steps)
     shipped_spine, shipped_gaps, _ = _split(shipped_steps)
 
-    matcher = difflib.SequenceMatcher(
-        None, [_key(step) for step in compiled_spine], [_key(step) for step in shipped_spine], autojunk=False
-    )
+    opcodes = _align([_key(step) for step in compiled_spine], [_key(step) for step in shipped_spine])
     # A gap is the walk/cursor run BEFORE a spine step, and an UNMATCHED spine
     # step splits one side's gap without splitting the other's. That is an
     # accounting artifact, not an arrival difference: a compiled-only
@@ -269,7 +282,7 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
     # fatal, which would make §6.3's "pins may be tighter" untrue in practice.
     pending_compiled: list[dict[str, Any]] = []
     pending_shipped: list[dict[str, Any]] = []
-    for tag, c_lo, c_hi, s_lo, s_hi in matcher.get_opcodes():
+    for tag, c_lo, c_hi, s_lo, s_hi in opcodes:
         if tag == "equal":
             for offset in range(c_hi - c_lo):
                 anchor = compiled_spine[c_lo + offset]
@@ -294,12 +307,108 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
                 report.exact.append(f"compiled-only step (shipped has no counterpart): {_describe(step)}")
         # The other direction is NOT symmetric and must never be made so: a
         # shipped-only `wait_for_event` is a claim the compiler stopped making.
+        # ONE reclassification (#434 Act II): a shipped `assert_event_logged`
+        # whose event a compiled `wait_for_event` of the same type claims with
+        # a payload that subsumes it is not dropped -- an ordered wait is the
+        # STRONGER claim about the same event.
         for index in range(s_lo, s_hi):
             pending_shipped.extend(shipped_gaps[index])
+            shipped_step = shipped_spine[index]
+            if _wait_subsumes_logged_assert(compiled_steps, shipped_step):
+                report.tighter.append(f"logged-assert covered by an ordered wait: {_describe(shipped_step)}")
+                continue
             report.exact.append(
-                f"shipped-only step (compiler dropped this claim): {_describe(shipped_spine[index])}"
+                f"shipped-only step (compiler dropped this claim): {_describe(shipped_step)}"
             )
     return report
+
+
+# Alignment weights: what a paired spine step is WORTH. difflib's
+# longest-block-first heuristic (Ratcliff/Obershelp) was the M3.6 matcher; it
+# re-paired Selys' delivery with Olesm's brief the moment Act II grew a
+# compiled-only arrival pin between them, because an insertion splits the
+# longest block and the recursion then anchors on whichever same-key run is
+# longest elsewhere. A longest-common-subsequence over the same coarse keys
+# has no such cliff: every extra insertion costs exactly its own row. The
+# weights keep a named shot or a valued arrival pin from being traded away
+# for a run of `press confirm` pairings of equal count.
+_HEAVY_KEY_MARKS = ("screenshot|", "equals=", "type=map_changed", "type=combat_started", "type=dialogue_started")
+
+
+def _weight(key: str) -> int:
+    if any(mark in key for mark in _HEAVY_KEY_MARKS):
+        return 4
+    if key.startswith("wait_for_event") or key.startswith("assert_"):
+        return 2
+    return 1
+
+
+def _align(compiled_keys: list[str], shipped_keys: list[str]) -> list[tuple[str, int, int, int, int]]:
+    """difflib-shaped opcodes from a weighted LCS: `equal` blocks pair one
+    compiled spine step with one shipped step of the same key; the runs
+    between two blocks come back as `replace`/`delete`/`insert` exactly the
+    way `SequenceMatcher.get_opcodes()` spelled them, so the accounting
+    below reads either matcher unchanged."""
+    n, m = len(compiled_keys), len(shipped_keys)
+    # score[i][j] = best weight aligning compiled[i:] with shipped[j:].
+    score = [[0] * (m + 1) for _ in range(n + 1)]
+    for i in range(n - 1, -1, -1):
+        row, below = score[i], score[i + 1]
+        key = compiled_keys[i]
+        weight = _weight(key)
+        for j in range(m - 1, -1, -1):
+            best = below[j] if below[j] >= row[j + 1] else row[j + 1]
+            if key == shipped_keys[j]:
+                diagonal = below[j + 1] + weight
+                if diagonal > best:
+                    best = diagonal
+            row[j] = best
+    pairs: list[tuple[int, int]] = []
+    i = j = 0
+    while i < n and j < m:
+        if compiled_keys[i] == shipped_keys[j] and score[i][j] == score[i + 1][j + 1] + _weight(compiled_keys[i]):
+            pairs.append((i, j))
+            i += 1
+            j += 1
+        elif score[i + 1][j] >= score[i][j + 1]:
+            i += 1
+        else:
+            j += 1
+    opcodes: list[tuple[str, int, int, int, int]] = []
+    c_prev = s_prev = 0
+
+    def flush(c_hi: int, s_hi: int) -> None:
+        nonlocal c_prev, s_prev
+        if c_hi > c_prev and s_hi > s_prev:
+            opcodes.append(("replace", c_prev, c_hi, s_prev, s_hi))
+        elif c_hi > c_prev:
+            opcodes.append(("delete", c_prev, c_hi, s_prev, s_prev))
+        elif s_hi > s_prev:
+            opcodes.append(("insert", c_prev, c_prev, s_prev, s_hi))
+        c_prev, s_prev = c_hi, s_hi
+
+    for ci, si in pairs:
+        flush(ci, si)
+        if opcodes and opcodes[-1][0] == "equal" and opcodes[-1][2] == ci and opcodes[-1][4] == si:
+            tag, c_lo, _, s_lo, _ = opcodes[-1]
+            opcodes[-1] = (tag, c_lo, ci + 1, s_lo, si + 1)
+        else:
+            opcodes.append(("equal", ci, ci + 1, si, si + 1))
+        c_prev, s_prev = ci + 1, si + 1
+    flush(n, m)
+    return opcodes
+
+
+def _wait_subsumes_logged_assert(compiled_steps: list[dict[str, Any]], shipped_step: dict[str, Any]) -> bool:
+    if str(shipped_step.get("action", "")) != "assert_event_logged":
+        return False
+    wanted = _normalize(shipped_step)
+    for step in compiled_steps:
+        if str(step.get("action", "")) != "wait_for_event" or str(step.get("type", "")) != str(wanted.get("type", "")):
+            continue
+        if _subsumes(step.get("payload_contains", {}), wanted.get("payload_contains", {})):
+            return True
+    return False
 
 
 def _split(

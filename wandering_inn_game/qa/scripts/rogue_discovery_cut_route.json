@@ -267,6 +267,15 @@
     26,
     24
    ],
+   "_itin": "rogue.cut.approach"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    26,
+    24
+   ],
    "_itin": "rogue.cut.take"
   },
   {
@@ -332,6 +341,15 @@
     "id": "crossed_under_cover",
     "count": 1
    },
+   "_itin": "rogue.cut.cross"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ],
    "_itin": "rogue.cut.cross"
   },
   {
@@ -562,21 +580,38 @@
   },
   {
    "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Rogue] class gained! — [Stealth]"
+   },
+   "timeout_sec": 5,
+   "_itin": "rogue.sleep"
+  },
+  {
+   "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "timeout_sec": 5,
    "_itin": "rogue.sleep"
   },
   {
-   "action": "assert_event_absent",
-   "type": "consolidation_accepted",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Rogue] class gained! — [Stealth]"
+   },
+   "from_start": true,
+   "timeout_sec": 5,
    "_itin": "rogue.sleep"
   },
   {
    "action": "assert_state",
-   "path": "classes",
-   "equals": {
-    "rogue": 1
-   },
+   "path": "classes.rogue",
+   "equals": 1,
+   "_itin": "rogue.sleep"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "consolidation_accepted",
    "_itin": "rogue.sleep"
   },
   {
@@ -788,6 +823,15 @@
    "_itin": "rogue.band.approach"
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    26,
+    22
+   ],
+   "_itin": "rogue.band.approach"
+  },
+  {
    "action": "move",
    "direction": "right",
    "steps": 5,
@@ -810,6 +854,15 @@
    "payload_contains": {
     "text": "Whatever was watching that stretch never saw you pass."
    },
+   "_itin": "rogue.band.sneak"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    22
+   ],
    "_itin": "rogue.band.sneak"
   },
   {

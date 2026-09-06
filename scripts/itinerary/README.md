@@ -220,6 +220,43 @@ nothing the itinerary authors is claimed differently from the corpus. The
 vocabulary that closed the last rows: `talk.shots` (anchor -> screenshot taken
 on the node that anchor opens), `equip.shot` (taken with the inventory open),
 `sleep.expect_veil_lines` (donor-backed veil line count; not derivable), and
-`ui_inventory_shown.items` derived from the inventory oracle. Act II+ remains
-unauthored -- that is the whole remaining residue.
+`ui_inventory_shown.items` derived from the inventory oracle. One Act I row
+is still shipped-only: the ambush's `ui_hotbar_rendered {slots: 4}` logged
+assert (an autoplay fight has no slot for it yet).
+
+## Act II is at golden equivalence (2026-09-06)
+
+Shipped steps 218-558 are authored in `steel_thread.yaml`; a slice diff of
+that range reports 0 exact / 0 net, and the compiled Act I-II script runs
+green headless at seed 37. What it took, and what a differ PASS does not buy:
+
+- **A golden PASS is not a runtime PASS.** Compiled-only claims are
+  "tighter" by policy, so a WRONG compiled-only claim never reds the diff.
+  The first headless run of the PASSing slice timed out at the warrior
+  sleep: the class-gained render was pinned BEFORE the veil and the veil
+  fires first. Every emitter change ends with a headless run of the compile
+  at the corpus seed (`--seed=37`; an empty `--seed=` is a different seed
+  and the cistern nest LOSES at it).
+- **Plain sleeps pin per gained class, never the whole dict.** A warrior
+  that fought twice sleeps to level 3 on combat counters the ledger does
+  not model; the corpus pins `classes.mage` alone. Only a merge pins the
+  dict.
+- **Alignment is a weighted LCS** (`goldens._align`), not difflib's
+  longest-block matcher, which re-paired Selys' delivery with Olesm's brief
+  when one arrival pin was inserted between them. Named shots, valued
+  arrival pins, and map/combat/dialogue starts weigh more than presses.
+- **Merged facing bumps** (`right 2` = one cell plus the bump into the
+  encounter) are discounted only when the discount reconciles the two
+  nets; `from_start` is ignored (delivery vs order, v0.15 lesson).
+- Vocabulary: `fight.shots {approach: [...], turn: [...]}` (approach lands
+  after the facing bump, before the entry press); a `goto` that names a
+  walkable cell pins its arrival (the corpus's waypoints); dialogue grants
+  claim the `Got: <name>` toast; the equip slot pin follows the panel
+  close; the GH#167 tremor pointer is derived from the oracle preview
+  (`reached_two_classes`, `tremor_pointer`) and emitted in
+  `sleep_beat.gd` order (bank, quest start, sticky toast) before the veil.
+- Slice diffs while later acts are unauthored: filter the compile by
+  `_itin` prefix and the corpus by step range (Act I = `itinerary.start,
+  act1.` over 0-218; Act II = `act2.` over 218-559). A `--slices` option on
+  `goldens.py` is the open follow-up.
 
