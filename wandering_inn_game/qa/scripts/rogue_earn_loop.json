@@ -40,7 +40,7 @@
   { "action": "screenshot", "name": "03_journal_stealth_card" },
   {"_comment": "#508: the first-[Stealth] pointer was queued behind the veil (ui_sleep_veil_finished) and sat behind the class toast while the journal modal paused the strip -- the queue is lossless, so closing the book lets it render. Pins the copy on every device label (kb here).", "action": "press", "name": "journal"},
   {"action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Rogue] class gained! — [Stealth]"}, "timeout_sec": 10},
-  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Stealth] is on your field bar now: number keys, or tap it, to soften your step. Using a Skill, a fight, or forcing a door straightens you up."}, "timeout_sec": 10}
+  {"_comment": "DELIVERY, not order (v0.15 lesson): the render races the journal open on a slow runner -- CI 2026-09-06 saw it land BEFORE ui_journal_shown and the since-cursor had passed it.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Rogue] class gained! — [Stealth]"}, "from_start": true, "timeout_sec": 10},
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Stealth] is on your field bar now: number keys, or tap it, to soften your step. Using a Skill, a fight, or forcing a door straightens you up."}, "from_start": true, "timeout_sec": 10}
  ]
 }
