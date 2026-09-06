@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for all 252 canonical QA scripts. The manifest is the
+This is the human index for all 253 canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -260,3 +260,4 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `d3_inventory_shot` | 9 | full | `d2_shop` | the inventory coin-line/item-card peek: pins the 'Gold: N' header and both weapons' item_effect_lines. PROMOTED out of peek-orphan status (same rationale as its sibling d2_shop_shot) after 0cbc988a (#79) added the weapon-kit family line and re-pinned only the sweep-visible siblings -- with no manifest row, ci_sweep could never red this one and the pin rotted a month. Screenshot step is a headless no-op: sweep coverage is the payload pin, the coin line still needs a windowed pass |
 | `gate_road_cover_loop` | 9 | full | `gate_road_cover_start` | #453 G2: the CLASSLESS answer to the gate-road ambush -- the drainage cut buys one crossing per waking and banks crossed_under_cover, the Act I producer [Rogue]'s accomplishment_any entry reads; ambush is skipped, never retired |
 | `mobile_touch_smoke` | 9 | full | `—` | #503 touch-only smoke (title gesture, Continue, adjacent-tap talk, paged taps, option taps, tap-to-walk, journal chip) via the touch_* tier: natively EMULATED taps (qa_touch real:false); on the web runner with --touch every tap is a real Playwright page.touchscreen.tap and an unserviced request fails -- no keyboard/mouse fallback |
+| `save_port_web` | 9 | full | `—` | #253 save port by REAL touch: Export (web = blob download the runner captures; native = user://exports) then Import (web = a browser file chooser the runner answers with that download; native = newest export) -> game_loaded{reason:import}, state identity. Cancel/invalid legs are the web-only siblings save_port_web_cancel / save_port_web_invalid run by CI |

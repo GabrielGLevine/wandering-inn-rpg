@@ -204,6 +204,32 @@ page.on("pageerror", (err) => {
 	capturedErrors.push(text);
 });
 
+// #253 save port on the web: an Export is a blob download and an Import is a
+// browser file chooser. Both are captured here so a script can prove the
+// round trip END TO END in the real browser: downloads land in
+// qa_output/web_<script>/downloads/, and a file chooser opened by the game
+// is answered with `--import-file=<path>` or, failing that, the newest
+// download of this run. The counts print at the end; a chooser that never
+// opens is the exact #253 symptom.
+const importFileArg = args.find((a) => a.startsWith("--import-file="));
+// --import-cancel answers the chooser with NO file (the dismiss shape).
+const importCancel = args.includes("--import-cancel");
+const downloads = [];
+let fileChoosersOpened = 0;
+page.on("download", async (dl) => {
+	const target = join(outDir, "downloads", dl.suggestedFilename());
+	await mkdir(join(outDir, "downloads"), { recursive: true });
+	await dl.saveAs(target);
+	downloads.push(target);
+	console.log(`[web] download saved: ${dl.suggestedFilename()}`);
+});
+page.on("filechooser", async (chooser) => {
+	fileChoosersOpened += 1;
+	const chosen = importCancel ? null : (importFileArg ? importFileArg.slice("--import-file=".length) : downloads[downloads.length - 1]);
+	console.log(`[web] file chooser opened (#${fileChoosersOpened}, multiple=${chooser.isMultiple()}) -> ${chosen ? `answering with ${chosen}` : "answering with NO file (cancel)"}`);
+	await chooser.setFiles(chosen ? [chosen] : []);
+});
+
 await page.addInitScript(
 	({ name, seed }) => {
 		window.__WI_QA__ = { script: `res://qa/scripts/${name}.json`, seed: seed ?? "" };
@@ -421,6 +447,7 @@ console.log(
 );
 if (touchMode) console.log(`touch smoke (page.touchscreen.tap reached the canvas): ${touchSmokeOk ? "OK" : "FAIL"}`);
 if (touchMode) console.log(`real touch taps performed by the runner: ${realTouches} (EMULATED browser touch; not real hardware)`);
+console.log(`web save port: downloads=${downloads.length} file choosers opened=${fileChoosersOpened}`);
 // The rotation probe is part of the verdict: `process.exit(...)` below would
 // override a bare exitCode, so it feeds overallPassed directly.
 let rotationOk = true;

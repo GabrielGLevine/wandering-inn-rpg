@@ -428,3 +428,22 @@ jobs:
           grep -q 'real touch taps performed by the runner: 12 ' "$log" || { echo "::error::expected 12 real touch taps"; exit 1; }
           grep -q 'rotation probe: OK' "$log" || { echo "::error::portrait-entry rotation probe failed"; exit 1; }
           exit "${rc:-0}"
+
+      - name: Web save port (#253 -- export download, import file chooser, cancel, invalid; real taps, emulated iPhone)
+        run: |
+          set -euo pipefail
+          printf '{"not":"a save","version":0}\n' > /tmp/garbage.json
+          fail=0
+          for leg in "save_port_web:" "save_port_web_cancel:--import-cancel" "save_port_web_invalid:--import-file=/tmp/garbage.json"; do
+            name="${leg%%:*}"; extra="${leg#*:}"; log="web_${name}.log"; rc=0
+            perl -e 'alarm 600; exec @ARGV' \
+              bash wandering_inn_game/qa/web/run_web_qa.sh "$name" 9 --skip-export --touch --device=iphone $extra >"$log" 2>&1 || rc=$?
+            cat "$log"
+            grep -q 'QA_RESULT: PASS' "$log" || { echo "::error::$name produced no QA_RESULT: PASS"; fail=1; }
+            grep -q 'file choosers opened=1' "$log" || { echo "::error::$name: the import tap opened no browser file chooser (the #253 symptom)"; fail=1; }
+            if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+              echo "::error::$name tripped the error/warning grep"; fail=1
+            fi
+            [ "$rc" = 0 ] || fail=1
+          done
+          exit "$fail"

@@ -17,7 +17,7 @@ for arg in "${@:2}"; do
 		SKIP_EXPORT="1"
 	elif [ "$arg" = "--touch" ]; then
 		TOUCH="1"
-	elif [[ "$arg" == --device=* ]] || [ "$arg" = "--portrait-entry" ]; then
+	elif [[ "$arg" == --device=* ]] || [ "$arg" = "--portrait-entry" ] || [[ "$arg" == --import-file=* ]] || [ "$arg" = "--import-cancel" ]; then
 		# #503: emulated phone preset / portrait-entry rotation probe (see run_web_qa.mjs).
 		PASS+=("$arg")
 	else

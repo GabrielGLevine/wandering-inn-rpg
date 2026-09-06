@@ -820,23 +820,47 @@ func _finish_export(fname: String) -> void:
 	ObservableBus.emit_domain_event(WIEvents.SAVE_EXPORTED, {"file": fname})
 
 
+## #253 web arm. Safari-safe shape: ONE persistent <input type=file> that
+## lives in the document (Safari ignores click() on a detached input, and a
+## fresh element per tap was exactly that), clicked synchronously from the
+## row activation so it lands inside the tap's user-activation window. The
+## change/cancel handlers ALWAYS answer the callback -- an empty string means
+## "nothing chosen" and is silent, never the refusal toast. The callback is
+## created once and reused, so a stale one cannot fire for a later open.
 func _import_save() -> void:
 	if OS.has_feature("web"):
-		_web_import_cb = JavaScriptBridge.create_callback(_on_web_import_text)
-		JavaScriptBridge.get_interface("window").__wi_import_cb = _web_import_cb
+		ObservableBus.emit_domain_event(WIEvents.SAVE_IMPORT_REQUESTED, {"arm": "web"})
+		if _web_import_cb == null:
+			_web_import_cb = JavaScriptBridge.create_callback(_on_web_import_text)
+			JavaScriptBridge.get_interface("window").__wi_import_cb = _web_import_cb
 		JavaScriptBridge.eval("""
-var inp = document.createElement('input');
-inp.type = 'file';
-inp.accept = '.json,application/json';
-inp.onchange = function() {
-	if (!inp.files.length) return;
-	var r = new FileReader();
-	r.onload = function() { window.__wi_import_cb(r.result); };
-	r.readAsText(inp.files[0]);
-};
-inp.click();
+(function () {
+	var inp = window.__wi_import_input;
+	if (!inp) {
+		inp = document.createElement('input');
+		inp.type = 'file';
+		inp.accept = '.json,application/json';
+		inp.style.position = 'fixed';
+		inp.style.left = '-9999px';
+		inp.style.top = '0';
+		inp.setAttribute('aria-hidden', 'true');
+		document.body.appendChild(inp);
+		inp.addEventListener('change', function () {
+			if (!inp.files.length) { window.__wi_import_cb(''); return; }
+			var r = new FileReader();
+			r.onload = function () { var t = String(r.result || ''); inp.value = ''; window.__wi_import_cb(t); };
+			r.onerror = function () { inp.value = ''; window.__wi_import_cb(''); };
+			r.readAsText(inp.files[0]);
+		});
+		inp.addEventListener('cancel', function () { inp.value = ''; window.__wi_import_cb(''); });
+		window.__wi_import_input = inp;
+	}
+	inp.value = '';
+	inp.click();
+})();
 """, true)
 		return
+	ObservableBus.emit_domain_event(WIEvents.SAVE_IMPORT_REQUESTED, {"arm": "headless" if DisplayServer.get_name() == "headless" else "desktop"})
 	if DisplayServer.get_name() == "headless":
 		# QA probe order: an explicit import.json, else the NEWEST export —
 		# so a canonical can round-trip Export -> Import in one leg.
@@ -879,9 +903,13 @@ inp.click();
 
 
 func _on_web_import_text(args: Array) -> void:
-	if args.is_empty():
+	var text := "" if args.is_empty() else String(args[0])
+	if text.strip_edges().is_empty():
+		# Picker dismissed, or an empty/unreadable file: nothing to judge, so
+		# no refusal toast (the #253 "flashes refusal, never picked" shape).
+		ObservableBus.emit_domain_event(WIEvents.SAVE_IMPORT_CANCELLED, {"arm": "web"})
 		return
-	_apply_import_text(String(args[0]))
+	_apply_import_text(text)
 
 
 func _apply_import_text(text: String) -> void:

@@ -450,6 +450,8 @@ func _execute(step: Dictionary) -> void:
 			await _touch_rect_of("DialoguePanel", "option_rect", int(step["option"]) - 1, "touch_dialogue_option")
 		"touch_field_chip":
 			await _touch_rect_of("FieldChips", "chip_rect", String(step["chip"]), "touch_field_chip")
+		"touch_settings_row":
+			await _touch_rect_of("SettingsPanel", "row_rect", int(step["row"]) - 1, "touch_settings_row")
 		"touch_purchase_row":
 			await _touch_rect_of("PurchaseConfirm", "row_rect", 1 if String(step["row"]) == "buy" else 0, "touch_purchase_row")
 		"click_settings_row":

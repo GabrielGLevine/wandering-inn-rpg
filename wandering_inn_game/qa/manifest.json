@@ -7354,6 +7354,30 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "save_port_web",
+   "seed": 9,
+   "note": "#253 save port by REAL touch: Export (web = blob download the runner captures; native = user://exports) then Import (web = a browser file chooser the runner answers with that download; native = newest export) -> game_loaded{reason:import}, state identity. Cancel/invalid legs are the web-only siblings save_port_web_cancel / save_port_web_invalid run by CI",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild"
+    ],
+    "fixtures": [
+     "near_pallass"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "settings"
+    ]
+   }
   }
  ]
 }
