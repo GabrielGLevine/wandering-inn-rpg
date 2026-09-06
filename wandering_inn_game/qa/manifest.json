@@ -7357,6 +7357,56 @@
      "input"
     ]
    }
+  },
+  {
+   "script": "mobile_touch_smoke",
+   "seed": 9,
+   "note": "#503 touch-only smoke (title gesture, Continue, adjacent-tap talk, paged taps, option taps, tap-to-walk, journal chip) via the touch_* tier: natively EMULATED taps (qa_touch real:false); on the web runner with --touch every tap is a real Playwright page.touchscreen.tap and an unserviced request fails -- no keyboard/mouse fallback",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "mobile_tap_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "lyonette_tip"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "save_port_web",
+   "seed": 9,
+   "note": "#253 save port by REAL touch: Export (web = blob download the runner captures; native = user://exports) then Import (web = a browser file chooser the runner answers with that download; native = newest export) -> game_loaded{reason:import}, state identity. Cancel/invalid legs are the web-only siblings save_port_web_cancel / save_port_web_invalid run by CI",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild"
+    ],
+    "fixtures": [
+     "near_pallass"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "settings"
+    ]
+   }
   }
  ]
 }

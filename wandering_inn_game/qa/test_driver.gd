@@ -427,6 +427,33 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"touch_screen":
+			# #503 REAL-TOUCH TIER: on the web build the tap is performed by the
+			# Playwright runner (page.touchscreen.tap) at the WINDOW coordinate
+			# this position maps to -- a genuine browser touch, never an
+			# engine-injected event. Natively there is no browser, so the tap is
+			# EMULATED via the mouse-click injector and labelled so in the
+			# `qa_touch` event (real:false). No keyboard/mouse fallback exists on
+			# web: an unserviced request FAILS the step (see _touch_at).
+			await _touch_at(Vector2(float(step["pos"][0]), float(step["pos"][1])), "screen")
+		"touch_cell":
+			var touch_cell := Vector2i(int(step["cell"][0]), int(step["cell"][1]))
+			var touch_world := Vector2(touch_cell) * float(CELL) + Vector2(CELL, CELL) * 0.5
+			var touch_screen_pos: Variant = _world_to_screen(touch_world)
+			if touch_screen_pos == null:
+				_fail("touch_cell: could not resolve Main.world_to_screen")
+			else:
+				await _touch_at(touch_screen_pos as Vector2, "cell")
+		"touch_title_row":
+			await _touch_rect_of("TitleScreen", "row_rect", int(step["row"]) - 1, "touch_title_row")
+		"touch_dialogue_option":
+			await _touch_rect_of("DialoguePanel", "option_rect", int(step["option"]) - 1, "touch_dialogue_option")
+		"touch_field_chip":
+			await _touch_rect_of("FieldChips", "chip_rect", String(step["chip"]), "touch_field_chip")
+		"touch_settings_row":
+			await _touch_rect_of("SettingsPanel", "row_rect", int(step["row"]) - 1, "touch_settings_row")
+		"touch_purchase_row":
+			await _touch_rect_of("PurchaseConfirm", "row_rect", 1 if String(step["row"]) == "buy" else 0, "touch_purchase_row")
 		"click_purchase_row":
 			# #504: tap a row of the purchase confirmation -- "cancel" or "buy".
 			# Reads the modal's own rendered rect, so a tap before the modal is
@@ -899,6 +926,52 @@ func _inject_drag(from: Vector2, to: Vector2, steps: int) -> void:
 	release.position = to
 	release.global_position = to
 	get_tree().root.push_input(release, true)
+
+
+## #503: resolve a node's rendered rect and touch its centre (real on web,
+## emulated natively). `arg` is the rect method's single argument.
+func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label: String) -> void:
+	var node := get_tree().root.find_child(node_name, true, false)
+	if node == null:
+		_fail("%s: %s node not found" % [label, node_name])
+		return
+	var rect: Rect2 = node.call(rect_method, arg)
+	if rect.size == Vector2.ZERO:
+		_fail("%s: %s has no rendered rect" % [label, str(arg)])
+		return
+	await _touch_at(rect.get_center(), label)
+
+
+## The one seam every touch_* step rides. Web: publish the request in WINDOW
+## pixels (the root viewport's screen transform folds in canvas_items
+## stretch + letterbox offset, so the runner taps exactly where a finger
+## would), then wait for the runner to report the tap performed. A runner
+## not in --touch mode never answers, so the step FAILS rather than falling
+## back -- that absence of fallback is the contract #503 asks for.
+const TOUCH_SERVICE_DEADLINE_MSEC := 4000
+
+func _touch_at(pos: Vector2, label: String) -> void:
+	if OS.has_feature("web"):
+		var window_pos: Vector2 = get_viewport().get_screen_transform() * pos
+		JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = {x: %f, y: %f, label: %s}" % [window_pos.x, window_pos.y, JSON.stringify(label)], true)
+		var before := int(JavaScriptBridge.eval("window.__WI_QA_TOUCH_DONE__ || 0", true))
+		var deadline := Time.get_ticks_msec() + TOUCH_SERVICE_DEADLINE_MSEC
+		var serviced := false
+		while Time.get_ticks_msec() < deadline:
+			await get_tree().process_frame
+			if int(JavaScriptBridge.eval("window.__WI_QA_TOUCH_DONE__ || 0", true)) > before:
+				serviced = true
+				break
+		if not serviced:
+			JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = null", true)
+			_fail("%s: real touch at (%d,%d) was never performed by the runner (not in --touch mode?) -- no fallback" % [label, int(pos.x), int(pos.y)])
+			return
+		ObservableBus.emit_domain_event("qa_touch", {"label": label, "x": pos.x, "y": pos.y, "window_x": window_pos.x, "window_y": window_pos.y, "real": true, "mode": "browser_touch"})
+	else:
+		_inject_mouse_click(pos)
+		ObservableBus.emit_domain_event("qa_touch", {"label": label, "x": pos.x, "y": pos.y, "real": false, "mode": "emulated_native_click"})
+	await get_tree().process_frame
+	await get_tree().process_frame
 
 
 func _inject_mouse_click(pos: Vector2) -> void:

@@ -8,6 +8,11 @@ const GAME_RESET := &"game_reset"
 const GAME_LOADED := &"game_loaded"
 const SAVE_EXPORTED := &"save_exported"
 const SAVE_IMPORTED := &"save_imported"
+## #253: which platform arm the Import row took, and a picker dismissed /
+## empty read (no refusal toast -- nothing was chosen). Diagnostics for the
+## web build where only the event log can say what happened.
+const SAVE_IMPORT_REQUESTED := &"save_import_requested"
+const SAVE_IMPORT_CANCELLED := &"save_import_cancelled"
 const SAVE_MIGRATED := &"save_migrated"  ## #111: legacy user:// dir carried over after the project rename
 const GAME_OVER := &"game_over"
 const TOAST := &"toast"

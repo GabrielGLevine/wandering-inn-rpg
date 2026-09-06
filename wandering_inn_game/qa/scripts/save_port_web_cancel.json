@@ -1,0 +1,150 @@
+{
+ "_comment": "#253 CANCEL leg: the browser file chooser opens (real tap) and is dismissed with no file (runner --import-cancel). Contract: save_import_cancelled, NO refusal toast, NO game_loaded, settings still open, state untouched. Natively (emulated tap, headless arm) the newest export imports instead, so this script is WEB-ONLY: run_web_qa.sh save_port_web_cancel 9 --skip-export --touch --device=iphone --import-cancel.",
+ "fixture_save": "near_pallass",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "guild"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "_comment": "== EXPORT == pause -> Settings (row index 7) -> down x14 to 'Export Save' (index 14). GH#386 (v0.19 L5) regrouped the settings ROWS gameplay-first, so the save-file pair sits two rows further down than the append-order it landed in; nothing else in this script moved.",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 7
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#253 WEB ARM. Rows are 1-based like click_settings_row: 15 = Export Save, 16 = Import Save... (the keyboard idiom in save_port_loop moves down 14 then 1). Export on the web is a blob download the runner captures; the tap is a REAL browser touch so the import's file input opens inside a user gesture -- the exact condition mobile Safari/Chrome enforce and the engine-injected keyboard confirm cannot satisfy.",
+   "action": "touch_settings_row",
+   "row": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Save exported: wandering-inn-save-0.json"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_exported",
+   "payload_contains": {
+    "file": "wandering-inn-save-0.json"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "touch_settings_row",
+   "row": 16
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_import_requested",
+   "payload_contains": {
+    "arm": "web"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_import_cancelled",
+   "payload_contains": {
+    "arm": "web"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "toast",
+   "payload_contains": {
+    "text": "That file isn't a Wandering Inn save this build can read. Nothing was changed."
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "import"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "ui_settings_hidden"
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 60
+  },
+  {
+   "action": "assert_event_count",
+   "type": "qa_touch",
+   "count": 2
+  }
+ ]
+}
