@@ -35,6 +35,18 @@ archived, or superseded session blocks.
   M3.6 remains unmet; do not follow the superseded automatic Act III→V queue
   or advance M4. Coordinate an active owner's safe checkpoint before edits;
   ordinary route authoring remains possible with existing tools.
+- **PR #545 (Act III route authoring, branch `issue/434-act-iii`, worktree
+  `/private/tmp/wi-act3`) was opened 2026-09-06 BEFORE this session read the
+  #542/#543 ruling above.** It is "ordinary route authoring": Act III nodes,
+  `goto.door_shot`, `fight.open_shot`, both-side stand pins, post-fight and
+  dialogue state pins, `post_game` preview, `goldens.py --slice`, and a
+  `from_start` delivery fix for the `rogue_earn_loop` CI race. Its golden
+  claims (Act II/III 0/0) are measured with the UNREPAIRED comparator and
+  must be re-measured after #542/#543 land; its runtime evidence (compiled
+  Act I-III green headless at seed 37, 1,075 steps; rogue artifact green at
+  seed 9) stands on its own. Do not merge as M3.6 evidence; merge or rebase
+  it only under the #542/#543 owner's call. A sonnet review of 9f4abada was
+  dispatched and unreported at quiesce. Session quiesced on user directive.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
