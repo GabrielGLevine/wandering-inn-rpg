@@ -1,116 +1,80 @@
-# AGENTS.md
+# Repository operating contract
 
-This file provides model-neutral guidance to development agents working in this repository.
+This public repository is the working repository. Treat every tracked file as
+publishable. The active game is `wandering_inn_game/`; read its `AGENTS.md`
+when a task touches the game.
 
-## Session bootstrap ("Continue project work")
+## Choose the work from user intent
 
-**This PUBLIC repo is the one working repo** (unified 2026-07-07 —
-every commit is public on push; there is no private working copy).
-A fresh session positions itself in this order:
-1. This file, then `wandering_inn_game/AGENTS.md` (operating contracts,
-   source-of-truth map, commands, architecture boundaries, gotchas).
-2. **The GitHub board is the work queue**: `gh issue list -R
-   GabrielGLevine/wandering-inn-rpg` (milestones = the roadmap ladder;
-   every issue body is a dispatch-grade brief; the Projects board is
-   the kanban view). Route execution through the `wi-*` skills in
-   `.agents/skills/` — start with `wi-start-here`.
-3. `HANDOFF.md` — the living cross-session state doc (tracked): open
-   flags, playtest checklists, taste-queue for the user. **Keep it
-   updated as work progresses**, not just at session end. **It is
-   current-state, NOT a changelog — trim the tail regularly** (drop
-   dated session-close/milestone/wave entries once they're shipped and
-   in git; keep only genuinely-live sections + the Commands/env footer).
-   Left unpruned it accreted to 1296 lines / 78KB loaded every session
-   (pruned 2026-07-12); git history is the archive, so delete freely.
-   Never leave inline-code file paths wrapped across lines.
-4. `.superpowers/sdd/progress.md` (gitignored ledger) — exact
-   mid-milestone position, if present.
-Then: pick up the highest-priority unblocked issue (respect
-taste-gate/USER-SESSION labels — those wait for the user) and run the
-wi-running-the-machine cycle.
+The current user request is the process owner. An explicit task overrides
+queue autopick. For “continue project work,” resume the live item in
+`HANDOFF.md`; otherwise inspect the GitHub issue queue and choose the highest
+priority unblocked issue. `taste-gate` and `USER-SESSION` items wait for the
+user. Read only the relevant issue, current-state section, and project skill.
 
-## Repo Layout
+An accepted issue or design authorizes routine reversible implementation in
+its scope. Ask only when a missing choice would materially change the result,
+for a new taste/canon ruling, or for a consequential action outside existing
+authorization. Carry prior authorization forward, including the issue PR and
+merge workflow. Sending messages or making purchases needs explicit user
+authorization. Prepare a concrete result before requesting a missing decision.
 
-- **`wandering_inn_game/`** — **the active project; all current work happens here.** A fresh Godot 4.7 build designed QA-first for agent-driven development: pure sim core, ObservableBus event log, declarative QA playtest scripts (`qa/run_qa.sh`). Has its own `AGENTS.md` — read it when working here.
-- **`docs/superpowers/specs/`** and **`docs/superpowers/plans/`** — design specs and implementation plans per milestone, written via the `superpowers:brainstorming` → `superpowers:writing-plans` → `superpowers:subagent-driven-development` skill chain. Read the relevant spec/plan before significant changes.
-- **`potential_assets/`** — user-sourced asset packs, gitignored (licenses forbid redistribution — NEVER track; parked as `potential-assets-vN` on the private assets repo; restore via `scripts/fetch_potential_assets.sh`).
-- **Predecessor history**: the pre-transition private repo (`GabrielGLevine/wandering_inn_rpg`, underscores) is the frozen archive — full history incl. licensed assets; never make it public. v1/v2 game predecessors live in ITS history only.
+## Branches, ownership, and closure
 
-## Licensed assets & secrets (the unified-repo discipline)
+Issue work uses `issue/<n>-<slug>` and closes through a pull request using
+`.github/PULL_REQUEST_TEMPLATE/issue-close.md`. Its body records choices,
+validation, player-visible proof, context for the next agent, and deferrals.
+Squash-merge only after required CI and independent review pass. Non-issue
+guidance, ledger, and typo-class housekeeping may land directly on `main`.
 
-- Paths listed in `wandering_inn_game/assets_manifest.json` are NOT in this
-  repo — local dev overlays them via
-  `scripts/fetch_private_assets.sh` (game boots on committed
-  placeholder fallbacks without them). They're covered by a GENERATED
-  `.gitignore` block; `scripts/leak_check.sh` runs first in CI and
-  fails the build if any is ever tracked. New licensed asset =
-  manifest entry + ignore-block regen + bundle release FIRST (see
-  wi-shipping skill).
-- API keys: `docs/*_api_key.txt`, gitignored, local-only —
-  `docs/SECRETS-SETUP.md` documents provisioning. Actions secrets live
-  only in release.yml.
+One mutating process owns a worktree at a time. Parallel lanes require
+disjoint worktrees and explicit, non-overlapping file ownership; two workers
+must never edit or mutation-test the same tree. Content under different map
+region directories is usually disjoint; shared catalogs and generated outputs
+are not. Merge lanes into the issue branch, regenerate derived files on the
+composed tree, then re-run integration gates. Verify squash integration by
+tree identity, not commit ancestry.
 
-## Working Conventions (apply repo-wide)
+Keep `HANDOFF.md` as current state: issue, branch/base SHA, owned dirty paths,
+completed evidence, blockers, and exact next action. GitHub issues and PRs are
+the durable work/closure record. Respect each log document's declared
+`Insertion: head` or `Insertion: tail` rule.
 
-- `main` is the integration branch and there are no long-lived feature branches. **Worktree lanes ARE allowed** (user directive 2026-07-06; see the `wi-running-the-machine` skill's hardened merge rules): parallel execution lanes may run in isolated worktrees (`Agent isolation:"worktree"`) when their surfaces are disjoint, and the controller merges + re-gates on `main`. Maps live in `data/maps/<region>/<map>.json` (issue #100 split) — content lanes touching different region dirs are genuinely disjoint; only same-region map edits still serialize.
-- **Issue closes go through a PR** (user directive 2026-07-15): work an issue on branch `issue/<n>-<slug>`, open the PR with `.github/PULL_REQUEST_TEMPLATE/issue-close.md` filled (choices made, validation evidence, player-visible proof, new agent context, deferrals), squash-merge after CI + review. The PR body is the durable per-issue record — HANDOFF.md stays current-state only (RUNNING/QUEUE/flags), and future sessions read `gh pr list/view` instead of raw commit history. Non-issue housekeeping (HANDOFF edits, VISUAL-LOG drains, ledger, typo-class fixes) may still commit direct to main. Lanes merge into the issue branch; only the PR merges to main.
-- **Log-doc placement is deterministic:** every log/ledger doc (`HANDOFF.md`,
-  `docs/CHOICE-LOG.md`, `docs/ROADMAP.md`, both `VISUAL-LOG.md`s,
-  `wandering_inn_game/docs/ARCHITECTURE-HISTORY.md`) declares `Insertion: head`
-  or `Insertion: tail` in its opening lines. New entries go exactly there —
-  head = immediately after the header preamble, tail = end of file; never
-  mid-file. In-place updates to an existing entry stay in place. Readers and
-  diff reviewers may assume new content sits at the declared end.
-- **Comment economy:** keep compressed traps, contracts, constraints, ordering dependencies, and payload shapes. Delete provenance, review stories, code restatement, and duplicated rationale. `scripts/comment_census.py --check` owns and enforces the current ceilings; do not duplicate its constants in guidance.
-- Lore/canon reference (character names, races, skills, locations) comes from the Wandering Inn Wiki — treat it as source of truth when adding new content, not invented flavor.
-- **Stat grammar (softened 2026-07-13, user directive):** the game's visible currency is race, class, level, [Skills], HP/MP/AP, damage numbers, and gear; raw attribute scores (STR/DEX/etc.) stay out of player-facing text *by default*. The convention is baked into the core (`test_effect_text`'s visible-currency tier + forbidden-vocab tripwires enforce it), so it does NOT need restating in briefs, issue templates, or reviews — and sensible exceptions for item/description clarity are allowed when diegetic phrasing would genuinely be worse (update the tripwire in the same commit). Spirit stands; the hard ban does not.
-- When implementing Godot systems, check for a matching `godot-prompter:*` skill before writing code (dialogue-system, resource-pattern, scene-organization, godot-ui, godot-testing, ability-system, etc.) — this repo uses GodotPrompter alongside Superpowers; the workflow skill (brainstorming/planning/subagent-driven-development) governs *process*, GodotPrompter skills govern Godot-specific implementation patterns.
+Comments preserve constraints, ordering dependencies, payload shapes, and traps.
+Remove provenance, review narrative, and code restatement; let
+`scripts/comment_census.py --check` enforce current limits.
 
-## Commands
+## Public assets and secrets
 
-Each Godot project is run independently — there is no repo-wide build step or package manager. The installed engine is **Godot 4.7** (`/usr/local/bin/godot`).
+Files named by `wandering_inn_game/assets_manifest.json`, everything under
+`potential_assets/`, and local API-key files are never public or tracked.
+Licensed assets reach official builds through the private asset bundle;
+committed fallbacks keep the public checkout runnable. `scripts/leak_check.sh`
+is authoritative. A new licensed asset requires the manifest entry, generated
+ignore block, and private bundle release before public code references it.
+Never reduce game quality merely to make an asset public; flag the licensing
+choice to the user.
 
-```bash
-# Run the active game (from repo root)
-/usr/local/bin/godot --path wandering_inn_game
+## Product rules
 
-# PRIMARY verification tool — declarative agent playtests
-# (per-script canonical seeds + full script table: wandering_inn_game/AGENTS.md)
-wandering_inn_game/qa/run_qa.sh load_gate headless
-wandering_inn_game/qa/run_qa.sh combat_walkthrough headless --seed=9   # or `windowed` for screenshots
+Canon names, races, classes, skills, and locations come from the Wandering Inn
+Wiki. New content obeys `docs/design/spoiler-cutoff.md` and character voice
+obeys `docs/design/character-profiles.md`. Player-facing currency is race,
+class, level, `[Skills]`, HP/MP/AP, damage, gold, and gear. Raw attribute names
+stay out by default; a clarity exception updates the enforcing tripwire.
+Progress toward class/evolution thresholds remains opaque until sleep.
 
-# Headless parse/smoke check
-/usr/local/bin/godot --headless --path wandering_inn_game --quit
+Every player-facing change needs proof of the actual gameplay trigger, the
+domain event, rendered confirmation, and a windowed read of what the player
+sees. Mouse input does not prove touch. Scripted input proves only the exercised
+route and timing. Acceptance naming touch/device/tween behavior needs that path, or is
+reported as unproven and queued for the appropriate human/device check.
 
-```
+## Skills and capabilities
 
-See `wandering_inn_game/AGENTS.md` for the QA-loop conventions.
-
-## Provider and handoff contract
-
-- Roles, not model names, govern work: controller, implementer, reviewer, and
-  Git/windowed-QA operator. One person or agent may hold several roles.
-- Every in-progress handoff records issue, branch and base SHA, owned files,
-  verification already run, conflicts/dirty state, operator needs, and the
-  exact next action.
-- Discover capabilities per session. Never assume an agent can write `.git`,
-  access the network, or open a window solely from its provider/model name.
-- Usage telemetry is provider-scoped: Claude uses its CLI/cache; Codex queries
-  `account/rateLimits/read` through the local app server. Either fails soft
-  without borrowing the other provider's limits. All providers still obey the
-  shared no-overlapping-writers and integration-gate rules.
-- Codex (gpt-5.6-sol) delegation: Codex implements, the controller verifies/
-  merges — Codex never self-attests verification. Guardrails + audited failure
-  modes live in the `wi-delegating-to-codex` skill; briefs carry numbered
-  acceptance criteria and closes are gated against the issue-close PR template.
-- The tracked `.codex/hooks.json` is Git-root-safe and requires one-time review
-  via `/hooks`; trust its exact definition only after inspecting it.
-- `.agents/skills/` is canonical. `.claude/skills/` is generated by
-  `scripts/sync_agent_guidance.py`; CI rejects drift.
-
-## Cross-Cutting Gotchas (apply across projects in this repo)
-
-- **`@tool` does not inherit to GDScript subclasses.** Every subclass of an editor-time-aware base class (`Interaction`, `InteractionTemplateConversation`, etc. in v2) needs its own `@tool` annotation, even if the parent has one. Missing this has caused real bugs more than once.
-- **A resource/scene ext_resource id being declared does not mean it's wired to anything.** When cleaning up or reviewing `.tscn` files, grep for actual usage (`animation_scene = ExtResource(...)`, `script = ExtResource(...)`), not just the declaration line — orphaned declarations from removed content accumulate.
-- **A unit test calling a state-mutation method directly does not prove the real gameplay trigger calls it.** E.g. a test calling `WIPlayerState.record_accomplishment(...)` directly can pass while the actual combat-victory/interaction code path that's supposed to call it is missing entirely. Scene-contract tests should assert the *wiring* (does the relevant node's script reference the code that performs the real call), not just that the underlying method works in isolation.
-- **Passing tests and headless clean-parse do not prove a feature is visible/usable to a player.** Toast text, dialogue triggers, and hint text can be logically correct but never rendered (e.g. a stray `print()` instead of an on-screen UI call) or visually indistinguishable from other content (e.g. reusing another character's exact sprite for a new prop). When adding anything player-facing, check what a first-time player would actually see, not just that the code executes.
+`.agents/skills/` is canonical; regenerate provider mirrors with
+`python3 scripts/sync_agent_guidance.py --write`. Start with `wi-start-here`
+and use one task-specific process owner. Superpowers and Godot-specific skills
+are optional references when actually available and useful; their absence does
+not block work. Discover network, Git, window, and tool capabilities rather
+than inferring them from a provider name.

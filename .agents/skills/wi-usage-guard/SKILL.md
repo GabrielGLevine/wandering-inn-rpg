@@ -1,67 +1,40 @@
 ---
 name: wi-usage-guard
-description: Use before dispatching any lane/workflow/agent wave, at session start, when a USAGE-GUARD hook notification appears, or when deciding how to wind down before a usage cutoff.
+description: Interpret provider usage status and preserve resumable state near a quota boundary.
 ---
 
-# Usage Guard — provider-scoped graceful wind-down
+# Usage guard
 
-**Every provider:** check `scripts/usage_status.sh` (`--fresh` forces a
-provider-local query; plain call reuses a ≤5-min-old provider cache). Output is
-provider-labeled: Claude includes session/week/model usage; Codex includes the
-available app-server windows (for example `session=N/A week=17%`).
-Claude queries `claude -p /usage`; Codex queries the local app-server's
-`account/rateLimits/read` method. Either fails soft to UNKNOWN/N/A and never
-uses the other provider's telemetry. Exit codes: 0 OK/UNKNOWN/N/A, 10 CAUTION,
-20 WINDDOWN, 30 QUIESCE.
-A PostToolUse hook injects a `USAGE-GUARD escalated/de-escalated to ...`
-notice whenever the tier CHANGES mid-flight — treat that notice as this
-skill firing and act on the new tier immediately.
+Run `scripts/usage_status.sh` at session start for queue/resume work, before a
+worker wave, and at integration boundaries. The script is authority for tier,
+exit code, cache freshness, provider label, burn projection, and thresholds; do
+not duplicate its threshold table in guidance. `--fresh` requests a new
+provider-local reading when supported.
 
-## When to check explicitly (mandatory)
-- Session start (wi-start-here read order).
-- BEFORE dispatching any lane, workflow, or agent wave.
-- At merge points and milestone boundaries.
+Treat hooks as advisory and conditional. A transition notice matters only when
+the project hook is installed, trusted, executed, and delivered in the current
+environment. Polling the script remains the fallback. Provider telemetry never
+borrows another provider’s quota or capabilities.
 
-## Tiers
-| Tier | Session % | Weekly % | Protocol |
-|------|-----------|----------|----------|
-| OK | <70 | <80 | Normal operations. |
-| CAUTION | ≥70 | ≥80 | No NEW lanes/workflows/waves. Finish in-flight work. Prefer cheap/delegated ops (see wi-running-the-machine delegation ladder). |
-| WINDDOWN | ≥85 | ≥90 | Drain: stop feeding running lanes new tasks; let current tasks land; commit WIP on lane branches (WIP-tagged messages — NO un-gated merges to main); update HANDOFF RUNNING/QUEUE. |
-| QUIESCE | ≥95 | ≥96 | State-saving actions ONLY: commit WIP, write HANDOFF. Then see end-state below. |
+Act on the script’s reported tier:
 
-Two automatic adjustments (already in the script — read the line's `[...]`
-reasons): burn-rate projection escalates one tier early when exhaustion is
-projected before the reset and within 60 min; near-reset softening caps the
-session component at CAUTION when the reset is ≤15 min away (waiting for
-the reset beats a hard drain — weekly is never softened).
+- normal: proceed within the task;
+- caution: avoid opening new speculative lanes and finish bounded work;
+- wind-down: stop feeding new work, make each lane recoverable, preserve exact
+  state, and leave integration for a fresh window if evidence cannot land;
+- quiesce: state-saving actions only; never merge unverified work merely to save
+  it.
 
-## QUIESCE end-state
-- **Session window** (resets within hours): after state is saved, wait for
-  the reset — chained ScheduleWakeup hops of ≤1h ("waiting for usage window
-  reset") until `scripts/usage_status.sh --fresh` shows the new window,
-  then resume the HANDOFF queue.
-- **Weekly limit** (reset days away): hard stop. Save state, write HANDOFF,
-  report to the user, end the turn.
+Unknown telemetry is not zero usage, unlimited capacity, or a reason to stop all
+work. Continue bounded local work, keep a conservative landing reserve, avoid
+large fan-out, retry the status later, and record a persistent diagnostic in
+`HANDOFF.md`. The status script should expose one bounded failure reason and
+distinguish startup/EOF/permission errors from timeout; do not disable sandboxing
+to make telemetry work.
 
-## UNKNOWN
-The query failed (exit 0, line starts `UNKNOWN`). Proceed, but re-check
-within the hour; if UNKNOWN persists >1h, note it in HANDOFF and treat
-long dispatches as CAUTION.
-
-## Fable-class sessions (user directive 2026-07-20)
-The WEEKLY guard is TRIAGE-ONLY for Fable: never block or wind down
-execution on the Fable weekly budget. Instead, spend Fable where its
-judgment is the product (adjudication, review gates, playtest reads,
-architecture/spec work) and push mechanical volume down the delegation
-ladder (wi-delegating-to-codex / cheaper lanes). Session-window tiers
-(CAUTION/WINDDOWN/QUIESCE on the SESSION column) still apply — those
-protect in-flight state, not budget.
-
-## Wind-down invariants
-- Never merge to main just to "save work" — WIP lives on lane branches;
-  main only takes gated merges.
-- HANDOFF.md must let a FRESH session resume without this session's
-  context: RUNNING (what's mid-flight, exact state), QUEUE (what's next).
-- Running lanes get one clear "land what you have and stop" instruction,
-  not silence.
+A recoverable checkpoint contains objective and authorization, issue/branch/base
+SHA, exact owned dirty paths, completed evidence, pending operations, real
+blockers, and the next command. Work-in-progress stays on its issue/lane branch;
+`main` takes only reviewed, gated integration. Wait/resume behavior follows the
+current script notification and available scheduler; never assert a wake hook
+exists without checking it.

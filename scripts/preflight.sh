@@ -12,16 +12,75 @@ set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 GODOT="/usr/local/bin/godot"
 fail=0
+ARTIFACT_DIR="${PREFLIGHT_ARTIFACT_DIR:-}"
 say() { printf '%s\n' "$*"; }
-run() { # run <label> <cmd...> -- rc!=0 fails the bundle, output shown on failure
-	local label="$1"; shift
-	local out
-	if out=$("$@" 2>&1); then
-		say "ok   $label"
-	else
-		say "FAIL $label"; printf '%s\n' "$out" | tail -8; fail=1
+artifact_dir() {
+	if [ -z "$ARTIFACT_DIR" ]; then
+		ARTIFACT_DIR="${TMPDIR:-/tmp}/wi-preflight-$(date -u +%Y%m%dT%H%M%SZ)-$$"
+	fi
+	umask 077
+	if ! mkdir -p "$ARTIFACT_DIR"; then
+		say "FAIL cannot create preflight artifact directory: $ARTIFACT_DIR"
+		exit 1
 	fi
 }
+run() { # run <label> <cmd...> -- preserve complete logs and process status
+	local label="$1" safe log rc; shift
+	artifact_dir
+	safe=$(printf '%s' "$label" | tr -c 'A-Za-z0-9_.-' '_')
+	log="$ARTIFACT_DIR/gate-$safe.log"
+	"$@" >"$log" 2>&1
+	rc=$?
+	printf '%s\n' "$rc" >"$log.process-exit"
+	if [ "$rc" -eq 0 ]; then
+		say "ok   $label"
+	else
+		say "FAIL $label (rc=$rc)"
+		say "full log: $log"
+		tail -8 "$log" | cut -c1-240
+		fail=1
+	fi
+}
+unit() { # unit <name> [cmd...] -- rc=0, zero noise, and ^PASS are all required
+	local name="$1" safe log rc bad pas verdict=0
+	shift
+	artifact_dir
+	safe=$(printf '%s' "$name" | tr -c 'A-Za-z0-9_.-' '_')
+	log="$ARTIFACT_DIR/unit-$safe.log"
+	if [ "$#" -gt 0 ]; then
+		"$@" >"$log" 2>&1
+		rc=$?
+	else
+		perl -e 'alarm 300; exec @ARGV' "$GODOT" --headless --path "$ROOT/wandering_inn_game" --script "res://tests/$name.gd" >"$log" 2>&1
+		rc=$?
+	fi
+	printf '%s\n' "$rc" >"$log.process-exit"
+	bad=$(grep -cE 'WARNING|SCRIPT ERROR|Parse Error|ERROR:' "$log" || true)
+	pas=$(grep -c '^PASS' "$log" || true)
+	if [ "$rc" -eq 0 ] && [ "$bad" -eq 0 ] && [ "$pas" -ge 1 ]; then
+		say "ok   unit $name"
+	else
+		verdict=1
+		say "FAIL unit $name (rc=$rc badlines=$bad pass=$pas)"
+		say "full log: $log"
+		grep -E 'WARNING|SCRIPT ERROR|Parse Error|ERROR:' "$log" | head -5 | cut -c1-240
+		tail -3 "$log" | cut -c1-240
+		fail=1
+	fi
+	printf '{"process_exit":%s,"noise_lines":%s,"pass_markers":%s,"gate_exit":%s}\n' "$rc" "$bad" "$pas" "$verdict" >"$log.verdict.json"
+}
+
+# Process-level regression seam used by scripts/tests/test_preflight.py.
+if [ "${1:-}" = "--unit-command" ]; then
+	if [ "$#" -lt 3 ]; then
+		say "usage: $0 --unit-command <label> <command> [args...]"
+		exit 2
+	fi
+	name="$2"
+	shift 2
+	unit "$name" "$@"
+	exit "$fail"
+fi
 run "data_lint"            python3 "$ROOT/wandering_inn_game/scripts/data_lint.py"
 run "verify-untouched"     python3 "$ROOT/wandering_inn_game/qa/scripts/extract_prose.py" verify-untouched
 run "extract_prose self-test" python3 "$ROOT/wandering_inn_game/qa/scripts/extract_prose.py" self-test
@@ -36,14 +95,6 @@ run "doc drift"            python3 "$ROOT/scripts/check_doc_drift.py"
 # Godot boot), so it belongs in the FAST tier rather than behind --full.
 run "python tool suites"   python3 -m pytest -q "$ROOT/scripts/tests"
 # one Godot suite always: the registry catches missing sheets/regions/uids
-unit() { # unit <name> -- grep discipline: SCRIPT ERROR|Parse Error|ERROR: FAIL == 0 AND ^PASS present
-	local name="$1" out bad pas
-	out=$(perl -e 'alarm 300; exec @ARGV' "$GODOT" --headless --path "$ROOT/wandering_inn_game" --script "res://tests/$name.gd" 2>&1)
-	bad=$(printf '%s' "$out" | grep -cE 'SCRIPT ERROR|Parse Error|ERROR: FAIL')
-	pas=$(printf '%s' "$out" | grep -c '^PASS')
-	if [ "$bad" -eq 0 ] && [ "$pas" -ge 1 ]; then say "ok   unit $name"; else
-		say "FAIL unit $name (badlines=$bad pass=$pas)"; printf '%s\n' "$out" | grep -E 'SCRIPT ERROR|ERROR: FAIL' | head -5; fail=1; fi
-}
 unit test_sprite_registry
 if [ "${1:-}" = "--full" ]; then
 	for t in "$ROOT"/wandering_inn_game/tests/test_*.gd; do

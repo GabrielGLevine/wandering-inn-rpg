@@ -12,7 +12,7 @@ SAFE_PATH = "/usr/bin:/bin"
 
 
 def run_hook(home, env_extra, stdin_json=None):
-    env = {"PATH": SAFE_PATH, "HOME": home}
+    env = {"PATH": SAFE_PATH, "HOME": home, "PYTHONDONTWRITEBYTECODE": "1"}
     env.update(env_extra)
     payload = json.dumps(stdin_json or {"session_id": "testsess"})
     return subprocess.run(["bash", HOOK_SH], input=payload,
@@ -36,6 +36,33 @@ class TestHook(unittest.TestCase):
             self.assertIn("provider=codex", out["systemMessage"])
             second = run_hook(home, env)
             self.assertEqual(second.stdout.strip(), "")
+
+    def test_codex_notifies_once_per_known_unknown_transition(self):
+        with tempfile.TemporaryDirectory() as home:
+            cache = os.path.join(home, "codex-cache.json")
+            env = {"CODEX_CI": "1", "CODEX_USAGE_GUARD_CACHE": cache,
+                   "CODEX_USAGE_GUARD_CODEX": "/missing/codex"}
+            with open(cache, "w") as fh:
+                json.dump({"ts": time.time(), "rateLimits": {
+                    "primary": {"usedPercent": 90, "windowDurationMins": 300,
+                                "resetsAt": time.time() + 3600}}}, fh)
+            self.assertIn("WINDDOWN", run_hook(home, env).stdout)
+            self.assertEqual(run_hook(home, env).stdout.strip(), "")
+
+            with open(cache, "w") as fh:
+                json.dump({"ts": time.time() - 4000, "rateLimits": {
+                    "primary": {"usedPercent": 90, "windowDurationMins": 300,
+                                "resetsAt": time.time() + 3600}}}, fh)
+            unknown = run_hook(home, env)
+            self.assertIn("UNKNOWN", unknown.stdout)
+            self.assertEqual(run_hook(home, env).stdout.strip(), "")
+
+            with open(cache, "w") as fh:
+                json.dump({"ts": time.time(), "rateLimits": {
+                    "primary": {"usedPercent": 90, "windowDurationMins": 300,
+                                "resetsAt": time.time() + 3600}}}, fh)
+            self.assertIn("WINDDOWN", run_hook(home, env).stdout)
+            self.assertEqual(run_hook(home, env).stdout.strip(), "")
 
     def test_notifies_once_on_escalation(self):
         with tempfile.TemporaryDirectory() as home:
@@ -73,7 +100,7 @@ class TestHook(unittest.TestCase):
 
     def test_fail_soft_empty_stdin(self):
         with tempfile.TemporaryDirectory() as home:
-            env = {"PATH": SAFE_PATH, "HOME": home}
+            env = {"PATH": SAFE_PATH, "HOME": home, "PYTHONDONTWRITEBYTECODE": "1"}
             r = subprocess.run(["bash", HOOK_SH], input="",
                                capture_output=True, text=True, env=env)
             self.assertEqual(r.returncode, 0)
