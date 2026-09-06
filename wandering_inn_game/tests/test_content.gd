@@ -1496,16 +1496,27 @@ func _validate_hide_when_nodes_have_always_available_exit(graphs: Dictionary) ->
 			_check(has_always_available, "%s.%s has hide_when/progress-gated options but no always-available option -- risk of softlock" % [graph_id, node_id])
 
 
+## #477: reads BOTH gained_by arms. `accomplishment_any` (the #453 G2 entry
+## twin of requires_any) is exclusive with `accomplishment` in
+## WIProgression -- the any branch `continue`s before the plain arm is ever
+## read, so a class authoring both silently loses its plain arm. Lint it.
 func _validate_class_gains(classes: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for cls: Dictionary in classes.get("classes", []):
 		if not cls.has("gained_by"):
 			continue
-		var condition: Dictionary = (cls["gained_by"] as Dictionary).get("accomplishment", {})
-		for accomplishment_id: String in condition:
-			_check(
-				produced_accomplishments.has(accomplishment_id),
-				"class %s gained_by waits on unproduced accomplishment: %s" % [String(cls["id"]), accomplishment_id]
-			)
+		var gained_by: Dictionary = cls["gained_by"]
+		var plain: Dictionary = gained_by.get("accomplishment", {})
+		var any_arm: Dictionary = gained_by.get("accomplishment_any", {})
+		_check(not (gained_by.has("accomplishment") and gained_by.has("accomplishment_any")),
+			"class %s authors BOTH gained_by.accomplishment and accomplishment_any -- the sim ignores the plain arm; pick one" % String(cls["id"]))
+		_check(not (gained_by.has("accomplishment_any") and any_arm.is_empty()),
+			"class %s gained_by.accomplishment_any is empty -- never met (free-class guard)" % String(cls["id"]))
+		for arm: Dictionary in [plain, any_arm]:
+			for accomplishment_id: String in arm:
+				_check(
+					produced_accomplishments.has(accomplishment_id),
+					"class %s gained_by waits on unproduced accomplishment: %s" % [String(cls["id"]), accomplishment_id]
+				)
 
 
 func _validate_class_level_tables(classes: Dictionary) -> void:
@@ -1554,8 +1565,9 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 			min_level = mini(min_level, l)
 		class_table_max[id] = max_level
 
-		var reqs: Dictionary = (cls.get("gained_by", {}) as Dictionary).get("accomplishment", {})
-		var has_gained_by := not reqs.is_empty()
+		var gb_arms: Dictionary = cls.get("gained_by", {})
+		var has_gained_by := not (gb_arms.get("accomplishment", {}) as Dictionary).is_empty() \
+			or not (gb_arms.get("accomplishment_any", {}) as Dictionary).is_empty()
 
 		var floor_level := 1
 		var is_evolution_only := false

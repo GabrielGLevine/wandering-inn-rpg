@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for all 254 canonical QA scripts. The manifest is the
+This is the human index for all 255 canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -262,3 +262,4 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `purchase_confirm_loop` | 9 | smoke, full | `—` | #504 purchase confirmation: the shared offer/confirm/cancel path every purchase producer rides -- offer commits nothing, arm-window swallow (held key/double tap, keyboard and touch), Esc + outside-tap cancel return to the same row, a Buy tap commits exactly once (counts pinned), broke row opens no offer |
 | `mobile_touch_smoke` | 9 | full | `—` | #503 touch-only smoke (title gesture, Continue, adjacent-tap talk, paged taps, option taps, tap-to-walk, journal chip) via the touch_* tier: natively EMULATED taps (qa_touch real:false); on the web runner with --touch every tap is a real Playwright page.touchscreen.tap and an unserviced request fails -- no keyboard/mouse fallback |
 | `save_port_web` | 9 | full | `—` | #253 save port by REAL touch: Export (web = blob download the runner captures; native = user://exports) then Import (web = a browser file chooser the runner answers with that download; native = newest export) -> game_loaded{reason:import}, state identity. Cancel/invalid legs are the web-only siblings save_port_web_cancel / save_port_web_invalid run by CI |
+| `gate_road_cover_negative` | 9 | full | `—` | #477 item 3: the UNSERVED gate-road crossing -- same classless fixture as gate_road_cover_loop but the cut is never taken, so the first in-band step springs goblin_encounter_1 and no crossed_under_cover banks (the overnight re-arm leg is a test_sim_core contract) |

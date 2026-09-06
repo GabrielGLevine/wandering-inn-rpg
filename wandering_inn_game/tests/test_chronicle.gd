@@ -62,6 +62,14 @@ func _assert_class_requirements_reachable(game: WIGame, catalog: Dictionary) -> 
 		for counter: String in gained_by:
 			assert(game.accomplishment_count(counter) >= int(gained_by[counter]),
 				"near_riverfarm held class %s must satisfy gained_by.%s" % [class_id, counter])
+		# #477: the any arm is met by ANY one key clearing its threshold.
+		var any_arm: Dictionary = cls.get("gained_by", {}).get("accomplishment_any", {})
+		if not any_arm.is_empty():
+			var any_met := false
+			for counter: String in any_arm:
+				if game.accomplishment_count(counter) >= int(any_arm[counter]):
+					any_met = true
+			assert(any_met, "near_riverfarm held class %s must satisfy one gained_by.accomplishment_any key" % class_id)
 		for level_row: Dictionary in cls.get("levels", []):
 			if int(level_row.get("level", 0)) > int(game.classes[class_id]):
 				continue

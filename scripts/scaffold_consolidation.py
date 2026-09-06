@@ -227,6 +227,12 @@ def derive_fixture_counters(held: dict, classes_by_id: dict) -> dict:
 			row = classes_by_id[cid]
 			for acc_id, need in (row.get("gained_by", {}) or {}).get("accomplishment", {}).items():
 				bump(acc_id, need)
+			# #477: `accomplishment_any` is met by ONE key; the scaffold banks the
+			# FIRST authored key (deterministic, and the cheapest honest fixture --
+			# banking every key would overstate what the player did).
+			any_arm = (row.get("gained_by", {}) or {}).get("accomplishment_any", {}) or {}
+			for acc_id, need in list(any_arm.items())[:1]:
+				bump(acc_id, need)
 			for lvl in row.get("levels", []):
 				if int(lvl.get("level", 0)) > int(level):
 					continue
