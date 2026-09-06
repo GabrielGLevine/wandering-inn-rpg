@@ -203,3 +203,12 @@ the emitter pins right after the moves (the bypass toast rides the sneak
 arm). `act_rogue.yaml` -> `qa/scripts/rogue_discovery_cut_route.json` is the
 canonical: creation to [Rogue] to the first sneak with no fixture at all.
 
+## Compiled canonicals are regenerated with the emitter
+
+A shipped `qa/scripts/*.json` that is COMPILED from an act (today:
+`act_rogue.yaml` -> `rogue_discovery_cut_route.json`) is an emitter output,
+not hand-authored. Any change to `emit.py`, the planners or the ledger owes
+a recompile of each one (`compile_itinerary.py <act> --out qa/scripts/<name>.json`)
+and a real run of the result in the same PR -- otherwise the shipped script
+silently drifts from the source itinerary (review finding, #434).
+

@@ -285,7 +285,7 @@ class EmitterTableTest(unittest.TestCase):
 
     def test_face_target_is_a_single_blocked_bump(self) -> None:
         steps = self.emit({"kind": "face_target", "direction": "up"})
-        self.assertEqual(steps, [{"action": "move", "direction": "up", "steps": 1, "_itin": "n"}])
+        self.assertEqual(steps, [{"action": "move", "direction": "up", "steps": 1, "_bump": True, "_itin": "n"}])
 
     def test_door_transition_pins_both_halves_of_the_arrival(self) -> None:
         steps = self.emit({"kind": "transition", "map": "floodplains", "cell": [7, 6]})
