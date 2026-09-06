@@ -34,15 +34,14 @@ archived, or superseded session blocks.
 - **M1 dispatchable queue is now empty**: #507 waits on the label ruling
   below; #505/#506/#510 are `roadmap:blocked` on real-device findings; #511
   is the human gate. Real iPhone/Android observations remain the unblock.
-- **#434 residue, measured 2026-09-06** (`goldens.py` on a fresh
-  `steel_thread.yaml` compile vs `qa/scripts/steel_thread.json`): Act I
-  compiles to 232 steps against a 2569-step golden — 9 NET-fatal arrival
-  rows (walk/assert ordering: act1.road.back, spar, upstairs.seam, gift ×4,
-  street.arrival), 12 compiled-only waits reclassified TIGHTER, 25 allowed,
-  9 tolerance rows, and 1,532 shipped-only steps past the Act I seam. The
-  compiler now also models cover-served/sneaking band crossings (#508).
-  Next session: take the 9 NET rows first — each is an emit-order question,
-  not a language gap.
+- **#434 Act I is at golden equivalence** (PRs #538/#539/#540, 2026-09-06):
+  `goldens.py` on a fresh `steel_thread.yaml` compile reports NET 0 and EXACT
+  == the 1,563 shipped-only steps past the Act I seam. Accounting: arrival
+  pins keyed by cell, facing bumps discounted symmetrically, approach cells
+  pinned; vocabulary: `talk.shots`, `equip.shot`, `sleep.expect_veil_lines`,
+  derived `ui_inventory_shown.items`. Remaining M3.6 exit = authoring Act II+
+  in `steel_thread.yaml` (2,351 corpus steps) and the caster-variant
+  acceptance -- the language is proven on Act I; the residue is authoring.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
