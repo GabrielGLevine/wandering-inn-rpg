@@ -656,21 +656,22 @@ class GoldenAccountingTest(unittest.TestCase):
         self.assertEqual(walked(seen_compiled), total(compiled), f"{label}: compiled-side coverage")
         self.assertEqual(walked(seen_shipped), total(shipped_script), f"{label}: shipped-side coverage")
 
-    def test_repeated_position_pins_MIS_PAIR_and_that_is_a_known_limitation(self) -> None:
-        """The weakness M3.6 measured, declined to fix, and records here.
+    def test_repeated_position_pins_pair_by_cell(self) -> None:
+        """#434 residue accounting (was: the MIS-PAIR known limitation).
 
-        `_key` omits the pinned VALUE, so every `assert_state player_cell` is
-        one alignment token and the matcher pairs an arrival with whichever it
-        reaches first. Two net-class rows in the M3.6 golden come from exactly
-        this, on a leg whose compiled walk is step-for-step the corpus walk.
+        `_key` omits the pinned VALUE, so every `assert_state` of one path was
+        one alignment token and the matcher paired an arrival with whichever it
+        reached first -- the source of every net-class row in the Act I golden.
+        M3.6 declined to key by value because a SUBSUMING tightening on a dict
+        path (`classes`) would stop matching and read as a dropped claim.
 
-        Including the value fixes that pairing AND moves a legitimate SUBSUMING
-        tightening into exact-class fatal, because the two keys stop matching
-        and the shipped row reads as a dropped claim. That is a change to which
-        class is fatal -- policy, not accounting -- so this lane reverted it
-        rather than ship it inside the milestone it gates. This test is the
-        record of the tradeoff, so the next lane does not rediscover it by
-        accident.
+        The fix is scoped to `player_cell`: a cell is equals-only, it subsumes
+        nothing, so keying it by value cannot reclassify a tightening. Every
+        other path keeps the kind-only key, and the subsumption case below
+        still holds. Measured on the Act I golden: NET 9 -> 5, and the five
+        that remain are genuine one-cell arrival differences (router vs corpus)
+        plus two shipped `[12,12]` pins the compiler never emits -- honest
+        residue, not accounting.
         """
         shipped_leg = {"steps": [
             {"action": "assert_state", "path": "player_cell", "equals": [7, 6]},
@@ -682,14 +683,14 @@ class GoldenAccountingTest(unittest.TestCase):
             {"action": "press", "name": "interact"},
         ]}
         report = diff(compiled, shipped_leg)
-        # THE LIMITATION, pinned: the matcher paired shipped [7,6] with
-        # compiled [6,6], so a pin the compiler did keep reads as changed.
-        self.assertFalse(report.passed)
-        self.assertTrue(any("!=" in row for row in report.exact), report.render())
+        # PAIRED BY CELL: shipped [7,6] meets compiled [7,6]; compiled [6,6] is a
+        # compiled-only tightening, never a changed pin.
+        self.assertTrue(report.passed, report.render())
+        self.assertEqual(report.exact, [])
+        self.assertTrue(any("[6, 6]" in row for row in report.tighter), report.render())
 
-        # WHAT IS NOT LOST, and what the value-in-key variant would have
-        # broken: a compiled pin that SUBSUMES the shipped one stays a
-        # tightening rather than becoming a dropped claim.
+        # Subsumption on a dict path is untouched: a compiled pin that SUBSUMES
+        # the shipped one stays a tightening rather than becoming a dropped claim.
         tighter = diff(
             {"steps": [{"action": "assert_state", "path": "classes", "equals": {"warrior": 1, "mage": 3}},
                        {"action": "press", "name": "interact"}]},
@@ -700,8 +701,13 @@ class GoldenAccountingTest(unittest.TestCase):
         self.assertEqual(len(tighter.tighter), 1)
         self.assertEqual(tighter.exact, [])
 
-        # MUTATION: a pin the compiler DROPPED is still fatal, either way.
+        # MUTATION: a pin the compiler DROPPED is still fatal, either way -- and
+        # a DIFFERENT cell is a dropped claim plus a new one, never a silent pair.
         self.assertFalse(diff({"steps": compiled["steps"][2:]}, shipped_leg).passed)
+        moved = diff({"steps": [{"action": "assert_state", "path": "player_cell", "equals": [6, 6]},
+                                {"action": "press", "name": "interact"}]}, shipped_leg)
+        self.assertFalse(moved.passed)
+        self.assertTrue(any("dropped this claim" in row for row in moved.exact), moved.render())
 
 
 # ---------------------------------------------------------------------------
