@@ -225,7 +225,11 @@ page.on("download", async (dl) => {
 });
 page.on("filechooser", async (chooser) => {
 	fileChoosersOpened += 1;
-	const chosen = importCancel ? null : (importFileArg ? importFileArg.slice("--import-file=".length) : downloads[downloads.length - 1]);
+	// Only Import Save opens a chooser today; if another feature ever does,
+	// answering it here would be wrong -- gate on intent then.
+	const newest = downloads.length > 0 ? downloads[downloads.length - 1] : null;
+	const chosen = importCancel ? null : (importFileArg ? importFileArg.slice("--import-file=".length) : newest);
+	if (!importCancel && !chosen) console.log("[web] file chooser opened with NO download captured yet -- answering with no file");
 	console.log(`[web] file chooser opened (#${fileChoosersOpened}, multiple=${chooser.isMultiple()}) -> ${chosen ? `answering with ${chosen}` : "answering with NO file (cancel)"}`);
 	await chooser.setFiles(chosen ? [chosen] : []);
 });

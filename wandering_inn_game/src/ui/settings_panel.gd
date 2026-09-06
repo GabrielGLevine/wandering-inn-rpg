@@ -845,14 +845,20 @@ func _import_save() -> void:
 		inp.style.top = '0';
 		inp.setAttribute('aria-hidden', 'true');
 		document.body.appendChild(inp);
+		// Callback protocol: NO argument = nothing chosen (silent); a string =
+		// the chosen file's text, even when empty (an empty file is a real
+		// pick and earns the refusal). `cancel` on file inputs needs
+		// Chromium 113+ / Safari 16.4+; older browsers simply stay silent on
+		// a dismissed picker -- no stale callback can fire later because the
+		// input is persistent and only `change` reads a file.
 		inp.addEventListener('change', function () {
-			if (!inp.files.length) { window.__wi_import_cb(''); return; }
+			if (!inp.files.length) { window.__wi_import_cb(); return; }
 			var r = new FileReader();
-			r.onload = function () { var t = String(r.result || ''); inp.value = ''; window.__wi_import_cb(t); };
+			r.onload = function () { var t = String(r.result == null ? '' : r.result); inp.value = ''; window.__wi_import_cb(t); };
 			r.onerror = function () { inp.value = ''; window.__wi_import_cb(''); };
 			r.readAsText(inp.files[0]);
 		});
-		inp.addEventListener('cancel', function () { inp.value = ''; window.__wi_import_cb(''); });
+		inp.addEventListener('cancel', function () { inp.value = ''; window.__wi_import_cb(); });
 		window.__wi_import_input = inp;
 	}
 	inp.value = '';
@@ -903,13 +909,13 @@ func _import_save() -> void:
 
 
 func _on_web_import_text(args: Array) -> void:
-	var text := "" if args.is_empty() else String(args[0])
-	if text.strip_edges().is_empty():
-		# Picker dismissed, or an empty/unreadable file: nothing to judge, so
-		# no refusal toast (the #253 "flashes refusal, never picked" shape).
+	if args.is_empty() or args[0] == null:
+		# Picker dismissed: nothing was chosen, so nothing to judge and no
+		# refusal toast (the #253 "flashes refusal, never picked" shape).
 		ObservableBus.emit_domain_event(WIEvents.SAVE_IMPORT_CANCELLED, {"arm": "web"})
 		return
-	_apply_import_text(text)
+	# A chosen file -- empty or unreadable included -- is judged for real.
+	_apply_import_text(String(args[0]))
 
 
 func _apply_import_text(text: String) -> void:
