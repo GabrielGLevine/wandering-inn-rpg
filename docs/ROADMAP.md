@@ -25,11 +25,13 @@ delivery prerequisites; `taste-gate` retains explicit user-held rulings.
 
 ## Start here
 
-1. [Purchase confirmation #504](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/504): explicit price/confirm/cancel and protection against repeated input.
-2. [Mobile parity matrix #503](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/503): iPhone Safari and Android Chrome against desktop; publish findings before dispatching repairs.
-3. [Rogue discovery #508](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/508) plus [schema consumers #477](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/477): fresh-save acquisition, first useful Stealth action, and continued growth.
-4. [Mobile save import #253](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/253) and [opening guidance #507](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/507).
-5. Responsive layout, touch flows, message readability, and critical mobile lifecycle repairs; exact dependencies are in the GitHub index.
+Follow the [execution contract](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502#execution-contract) and live dispatch order in #502.
+
+1. Reopened [Rogue #508](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/508), [purchases #504](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/504), and [import #253](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/253): complete recovery/acquisition, actual browser-touch, and target-environment evidence while preserving shipped implementations.
+2. Layout #505, touch #506, and lifecycle #510 are ready for scoped audits/repairs: diagnostic #503 is complete. #477's schema fix remains delivered.
+3. Reopened message timing/modal proof #509 and independent opening guidance #507; isolate only genuinely unresolved presentation choices.
+4. #511 collects shared physical-phone and unfamiliar-player evidence before the composed acceptance verdict.
+5. Compiler evidence corrections [#542](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/542) and [#543](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/543) precede further equivalence claims; a new compiler expansion wave does not displace actionable M1 work.
 
 Real-phone checks require actual devices. Unavailable hardware does not block
 diagnostics or repairs, but does block claiming mobile parity. Critical
@@ -39,8 +41,9 @@ M1; sustained performance optimization follows in M5.
 ## Preserved scope and decisions
 
 - #494 and #495 decide equipment/resonance semantics; #514 implements the recorded rulings.
-- #485 owns consolidation coverage/naming decisions. Current inventory is required; completion of all #452 tooling is not a prerequisite for preparing that decision.
-- #434 keeps its existing M3.6 golden gate; compiler M4 cannot dispatch until that exit is met. #438 remains the compiler/caster acceptance umbrella. Continuous route authoring can proceed using existing tools.
+- #485's six-set coverage and first-order name proposal already received GO. Reconcile remaining approved work; preserve specific canon/post-bar exceptions. Completion of all #452 tooling is not a prerequisite.
+- #434 keeps its existing M3.6 golden gate and needs #542/#543's evidence corrections. Compiler M4 cannot dispatch until that exit is honestly met. #438 remains the compiler/caster acceptance umbrella. Continuous route authoring can proceed using existing tools.
+- #524/#528 are dependency-ready but remain M4/M5 work. Readiness is not priority.
 - #348/#452 retain ownership of their remaining work; reconcile shipped slices before implementing old briefs from scratch.
 - #347 dynamic unique-class exploration remains deferred. #19 stays in M-STEAM behind its separate distribution gates.
 - Native mobile apps, portrait-gameplay redesign, PWA/cloud saves and new regions are not committed by this roadmap.
