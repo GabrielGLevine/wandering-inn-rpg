@@ -357,3 +357,22 @@ Check size in the same breath as the edit, and never chain a commit off
 a piped gate — `pytest ... | tail && git push` always pushes, because
 the pipeline's status is `tail`'s. That pushed main red twice in one
 session.
+
+## One Godot process class per tree: never run unit suites beside a sweep (2026-09-05)
+`test_reload_caches.gd` creates `data/maps/zz_qa_tmp` transiently; a full
+sweep running in the same tree read it mid-flight and two visual_check
+canonicals went red on "cannot open res://data/maps/zz_qa_tmp" — twice
+in one session (once beside `preflight --full`, once beside a reviewer's
+unit runs). Both re-ran green alone. Sequence them: units, THEN the
+sweep; never dispatch a Godot-running reviewer while a sweep is live.
+
+## Web parity is only evidence when the runner actually ran (2026-09-05)
+CI's "Web parity" job was a silent no-op from the day it was written —
+`perl -e 'exec @ARGV' VAR=1 bash …` exec'd a program literally named
+`VAR=1`, failed silently and exited 0 with an empty log. Any web claim
+must cite a `QA_RESULT: PASS` line from the runner log (the job now
+requires it). Local runs: `qa/web/run_web_qa.sh <script> <seed>
+--skip-export --touch --device=iphone|android [--portrait-entry]
+[--import-file=… | --import-cancel]` after `qa/web/export_web.sh`;
+the local machine has the 4.7.2 templates + Playwright installed.
+
