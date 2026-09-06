@@ -18,7 +18,12 @@ import scaffold_consolidation as scaffold  # noqa: E402
 
 SCAN_ROOTS = [REPO_ROOT / "wandering_inn_game" / "tests", REPO_ROOT / "wandering_inn_game" / "src",
               REPO_ROOT / "wandering_inn_game" / "scripts", REPO_ROOT / "scripts"]
-PLAIN_ARM = re.compile(r'gained_by.*\.get\(\s*"accomplishment"')
+# File-level, not line-level: a reader that splits `x = cls["gained_by"]`
+# from `x.get("accomplishment")` across statements must not dodge the guard
+# (review finding). Any file that touches gained_by AND indexes the plain
+# arm anywhere owes a mention of the any arm.
+PLAIN_ARM = re.compile(r'(?:\.get\(\s*"accomplishment"|\["accomplishment"\])')
+GAINED_BY = re.compile(r'gained_by')
 
 
 class TestGainedByReaders(unittest.TestCase):
@@ -29,7 +34,7 @@ class TestGainedByReaders(unittest.TestCase):
 				if path.suffix not in (".gd", ".py") or "node_modules" in path.parts or path.name == Path(__file__).name:
 					continue
 				text = path.read_text(encoding="utf-8", errors="replace")
-				if not PLAIN_ARM.search(text):
+				if not (GAINED_BY.search(text) and PLAIN_ARM.search(text)):
 					continue
 				if "accomplishment_any" not in text:
 					blind.append(str(path.relative_to(REPO_ROOT)))
