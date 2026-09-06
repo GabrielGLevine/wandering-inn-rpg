@@ -9,6 +9,11 @@ var _ctx: Dictionary
 var _event_sink: Callable
 
 const BARGAIN_PRICE_MOD := 0.1
+## #504: `spend` classifies a negative-gold row. Absent/"purchase" on the
+## priced idiom (requires.gold N + effects gold -N) = a shop/service buy that
+## holds its effects behind WIGame.pending_purchase until confirmed. Every
+## other kind (and every unpriced spend) applies on choose() as before.
+const SPEND_KINDS := ["purchase", "gift", "donation", "wager", "fine", "bribe"]
 
 
 func _init(graph: Dictionary, ctx: Dictionary, event_sink: Callable) -> void:
@@ -79,6 +84,48 @@ func choose(index: int) -> Dictionary:
 		finished = true
 		_emit(WIEvents.DIALOGUE_ENDED, {})
 	return {"effects": effects, "ended": ended, "next": "" if ended else String(opt["goto"])}
+
+
+## #504: the offer a visible row would make, or {} when the row is not a
+## confirmable purchase (unpriced, narrative `spend`, locked, out of range).
+## Pure read: nothing advances. `text`/`price` are the RENDERED figures
+## (haggle-discounted), so the confirmation shows exactly what choose() charges.
+func purchase_offer(index: int) -> Dictionary:
+	if finished:
+		return {}
+	var visible: Array = _visible_options()
+	if index < 0 or index >= visible.size():
+		return {}
+	var opt: Dictionary = visible[index]["option"]
+	var req: Dictionary = opt.get("requires", {})
+	if not req.has("gold"):
+		return {}
+	var base := int(req["gold"])
+	if not _is_priced_purchase(opt, base):
+		return {}
+	if String(opt.get("spend", "purchase")) != "purchase":
+		return {}
+	if not _meets(req, opt):
+		return {}
+	var items: Dictionary = _ctx.get("items", {})
+	var item_id := ""
+	var consumes: Array = []
+	for effect: Dictionary in opt.get("effects", []):
+		if effect.has("item") and item_id == "":
+			item_id = String(effect["item"])
+		if effect.has("remove_item"):
+			for rem: Variant in (effect["remove_item"] if effect["remove_item"] is Array else [effect["remove_item"]]):
+				consumes.append(String((items.get(String(rem), {}) as Dictionary).get("name", String(rem))))
+	var item_name := "" if item_id == "" else String((items.get(item_id, {}) as Dictionary).get("name", item_id))
+	return {
+		"index": index,
+		"node": current_id,
+		"text": _priced_text(opt, req),
+		"price": _priced_gold(base, opt),
+		"item": item_id,
+		"item_name": item_name,
+		"consumes": consumes,
+	}
 
 
 func advance(next_id: String) -> void:

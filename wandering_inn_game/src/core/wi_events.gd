@@ -55,6 +55,12 @@ const DIALOGUE_LINE := &"dialogue_line"
 const DIALOGUE_CHOICE := &"dialogue_choice"
 const DIALOGUE_ENDED := &"dialogue_ended"
 const DIALOGUE_EFFECT_FAILED := &"dialogue_effect_failed"
+## #504: a priced dialogue row opens an OFFER; gold/item/accomplishment
+## effects wait for purchase_confirm(). cancelled carries reason
+## "player" | "revalidation" | "dialogue_closed".
+const PURCHASE_OFFERED := &"purchase_offered"
+const PURCHASE_CONFIRMED := &"purchase_confirmed"
+const PURCHASE_CANCELLED := &"purchase_cancelled"
 const PRE_COMBAT_CHOICE := &"pre_combat_choice"
 
 const QUEST_STARTED := &"quest_started"
@@ -129,6 +135,9 @@ const UI_DIALOGUE_PAGE_RENDERED := &"ui_dialogue_page_rendered"
 const UI_DIALOGUE_RENDERED := &"ui_dialogue_rendered"
 const UI_DIALOGUE_LINE_HIDDEN := &"ui_dialogue_line_hidden"
 const UI_PICKER_RENDERED := &"ui_picker_rendered"
+const UI_PURCHASE_CONFIRM_RENDERED := &"ui_purchase_confirm_rendered"
+const UI_PURCHASE_CONFIRM_ARMED := &"ui_purchase_confirm_armed"  ## #504: input accepted only after this
+const UI_PURCHASE_CONFIRM_HIDDEN := &"ui_purchase_confirm_hidden"
 const UI_TOAST_RENDERED := &"ui_toast_rendered"
 const UI_DEBUG_OVERLAY_RENDERED := &"ui_debug_overlay_rendered"  ## GH#279 dev overlay (debug builds only)
 const UI_DEBUG_OVERLAY_HIDDEN := &"ui_debug_overlay_hidden"

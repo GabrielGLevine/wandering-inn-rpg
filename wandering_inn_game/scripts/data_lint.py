@@ -84,6 +84,8 @@ from wi_data_lib import DATA, GAME_ROOT
 GATE_KEYS = ("door_when", "contains_when", "portal_menu_when", "fence_menu_when")
 SKILL_GATE_MECHANISMS = {"property", "blink", "arm", "social", "endure"}
 SKILL_GATE_NON_SKILL_GATES = {"dialogue", "item", "endure"}
+# #504: mirrors WIDialogue.SPEND_KINDS -- "purchase" confirms, the rest apply on choose.
+SPEND_KINDS = {"purchase", "gift", "donation", "wager", "fine", "bribe"}
 MOOD_PHASES = ("day", "dusk", "night")
 # MIRROR CONTRACT: src/world/world.gd's MOOD_LAYERS must carry this exact
 # set, or lint can approve a layer the renderer never applies.
@@ -533,6 +535,24 @@ def check_dialogue(parsed: dict, errors: list) -> None:
 				if goto is not None and goto not in nodes:
 					errors.append(f"{name}: node '{nid}' option {i} goto "
 						f"'{goto}' targets no node")
+				# #504 spend classification: a row that spends gold is either
+				# the priced-purchase idiom (requires.gold N + effects gold -N,
+				# which opens the confirmation) or carries `spend` naming why it
+				# is narrative money. Mirrors WIDialogue.SPEND_KINDS.
+				spent = 0
+				for effect in option.get("effects", []) or []:
+					if isinstance(effect, dict) and isinstance(effect.get("gold"), (int, float)) and effect["gold"] < 0:
+						spent = -int(effect["gold"])
+				spend = option.get("spend")
+				if spend is not None and spend not in SPEND_KINDS:
+					errors.append(f"{name}: node '{nid}' option {i} spend '{spend}' "
+						f"is not one of {sorted(SPEND_KINDS)}")
+				if spent and (spend is None or spend == "purchase"):
+					req_gold = (option.get("requires") or {}).get("gold")
+					if not isinstance(req_gold, (int, float)) or int(req_gold) != spent:
+						errors.append(f"{name}: node '{nid}' option {i} spends {spent} gold "
+							f"without the priced idiom (requires.gold == {spent}) and without a "
+							f"narrative `spend` classification")
 
 
 def check_prose_duplication(parsed: dict, maps: dict, errors: list) -> None:
@@ -1669,15 +1689,15 @@ SKILL_CODE_GRANTS = {
 	# appear on a player-facing record by design: the visible Skill is the
 	# ordinary granted one, and the *_boon rider is folded into a combatant kit
 	# at roster-build time (folding it onto the PC record would buff the PC).
-	"sworn_fang_boon": ("src/core/wi_game.gd", 2364,
+	"sworn_fang_boon": ("src/core/wi_game.gd", 2427,
 		"[Sworn Fang: Ride Together] folds it into the PC kit while a companion rides"),
-	"basic_command_boon": ("src/core/wi_game.gd", 2375,
+	"basic_command_boon": ("src/core/wi_game.gd", 2438,
 		"[Animals: Basic Command] folds it onto the COMPANION's kit"),
-	"pack_bond_boon": ("src/core/wi_game.gd", 2377,
+	"pack_bond_boon": ("src/core/wi_game.gd", 2440,
 		"[Pack Bond] folds it onto the COMPANION's kit"),
 }
 ITEM_CODE_GRANTS = {
-	"flarepepper_powder": ("src/core/wi_game.gd", 2767,
+	"flarepepper_powder": ("src/core/wi_game.gd", 2830,
 		"[Supplies: Flarepepper Powder] restocks one per rest"),
 }
 

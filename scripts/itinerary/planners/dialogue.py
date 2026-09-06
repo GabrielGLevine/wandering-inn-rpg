@@ -13,6 +13,19 @@ class DialogueError(RuntimeError):
     pass
 
 
+def _is_purchase_row(option: dict[str, Any]) -> bool:
+    """Mirror of `WIDialogue.purchase_offer`'s classification (#504)."""
+    req_gold = (option.get("requires") or {}).get("gold")
+    if not isinstance(req_gold, (int, float)):
+        return False
+    if str(option.get("spend", "purchase")) != "purchase":
+        return False
+    return any(
+        isinstance(effect.get("gold"), (int, float)) and int(effect["gold"]) == -int(req_gold)
+        for effect in option.get("effects", []) or []
+    )
+
+
 class DialoguePlanner:
     def __init__(self, project: str | Path, bridge: Any, route: RoutePlanner) -> None:
         self.project = Path(project)
@@ -190,6 +203,11 @@ class DialoguePlanner:
                 # after the row that closes the conversation.
                 "gold_delta": sum(int(e["gold"]) for e in option.get("effects", []) if "gold" in e),
                 "grants": [str(e["item"]) for e in option.get("effects", []) if "item" in e],
+                # #504: the priced idiom (requires.gold N + effects gold -N)
+                # without a narrative `spend` tag opens the confirmation
+                # modal; the emitter owes the offer/arm/confirm idiom BEFORE
+                # any effect wait. Mirrors WIDialogue.purchase_offer.
+                "purchase": _is_purchase_row(option),
             })
             if hands_off:
                 combat_row = str(next(e["start_combat"] for e in effects if "start_combat" in e))

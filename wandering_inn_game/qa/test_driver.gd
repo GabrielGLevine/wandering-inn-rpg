@@ -427,6 +427,22 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"click_purchase_row":
+			# #504: tap a row of the purchase confirmation -- "cancel" or "buy".
+			# Reads the modal's own rendered rect, so a tap before the modal is
+			# armed proves the swallow contract rather than passing vacuously.
+			var purchase_row := 1 if String(step["row"]) == "buy" else 0
+			var pc := get_tree().root.find_child("PurchaseConfirm", true, false)
+			if pc == null:
+				_fail("click_purchase_row: PurchaseConfirm node not found")
+			else:
+				var rect: Rect2 = pc.call("row_rect", purchase_row)
+				if rect.size == Vector2.ZERO:
+					_fail("click_purchase_row: %s row has no rendered rect" % String(step["row"]))
+				else:
+					_inject_mouse_click(rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"click_settings_row":
 			var settings_row_n := int(step["row"])
 			var sp := get_tree().root.find_child("SettingsPanel", true, false)

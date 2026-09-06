@@ -4080,6 +4080,8 @@ func _init() -> void:
 	g_ench.player_facing = Vector2i.UP
 	assert(g_ench.start_dialogue("hedault_enchanting", "hedault"), "hedault conversation opens")
 	g_ench.dialogue_choose(1)
+	assert(g_ench.gold == 40, "#504: the enchant row offers first, nothing paid yet")
+	assert(g_ench.purchase_confirm(), "confirm the enchant purchase")
 	assert(g_ench.gold == 5, "enchant fee paid")
 	assert(not g_ench.inventory.has("hunters_fang_talisman"), "EQUIPPED base still consumed (unequip-then-remove)")
 	assert(g_ench.inventory.has("hedaults_hunters_fang"), "variant granted")

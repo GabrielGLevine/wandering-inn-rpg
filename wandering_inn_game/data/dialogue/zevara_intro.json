@@ -427,6 +427,7 @@
      "end": true
     },
     {
+     "spend": "gift",
      "text": "Here — three gold for the lanterns and the healer. Budget problem solved, at least. (3 gold)",
      "requires": {
       "gold": 3

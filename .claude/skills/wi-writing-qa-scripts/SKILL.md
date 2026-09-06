@@ -27,6 +27,7 @@ tiers, and notes come from `qa/manifest.json`; the generated human index is
 | `assert_field_skill_absent` | `skill` | #398: negative of `press_field_skill`, reads `field_hotbar_loadout()` directly — proves a weapon-gated skill is OFF the bar (falsifiable: equip the weapon family and it reds) |
 | `assert_event_count` | `type`, `count`, `payload_contains` | exact whole-run count — the once-semantics proof (`== 1` after a repeat press) |
 | `assert_dialogue_displayed` | (see driver) | pins the rendered dialogue panel |
+| `click_purchase_row` | `row` ("buy"/"cancel") | #504: taps a row of the purchase confirmation via its rendered rect; before `ui_purchase_confirm_armed` the tap is swallowed (the touch double-tap proof). Canonical: `purchase_confirm_loop` |
 | `assert_state` | `path`, `equals` or `contains` | see below |
 | `assert_save_exists` | `slot` | checks `user://saves/<slot>.json` |
 | `assert_settings_file_exists` | — | checks `user://settings.cfg` |

@@ -35,6 +35,10 @@ var combat: WICombat = null
 ## fight at build time — the read-once contract lives at the copy.
 var difficulty_damage_taken_mult: float = 1.0
 var dialogue: WIDialogue = null
+## #504: a priced dialogue row's offer, held until purchase_confirm() /
+## purchase_cancel(). Non-empty = every other dialogue_choose is refused.
+## Never serialized: dialogue itself is not, and checkpoints refuse inside one.
+var pending_purchase: Dictionary = {}
 var started_quests: Array[String] = []
 var removed_entities: Array[String] = []
 var dormant_encounters: Array[String] = []
@@ -1425,11 +1429,21 @@ func _build_dialogue_ctx() -> Dictionary:
 func _clear_if_self_finished(walker: WIDialogue) -> void:
 	if dialogue == walker and walker.finished:
 		dialogue = null
+		_drop_pending_purchase("dialogue_closed")
+
+
+func _drop_pending_purchase(reason: String) -> void:
+	if pending_purchase.is_empty():
+		return
+	var offer := pending_purchase
+	pending_purchase = {}
+	_emit(WIEvents.PURCHASE_CANCELLED, {"index": int(offer["index"]), "conversation": String(offer["conversation"]), "reason": reason})
 
 
 func start_dialogue(conversation_id: String, source_entity_id: String) -> bool:
 	if dialogue != null or combat != null:
 		return false
+	pending_purchase = {}
 	var graphs: Dictionary = _combat_config.get("dialogue", {})
 	if not graphs.has(conversation_id):
 		return false
@@ -1444,6 +1458,7 @@ func start_dialogue(conversation_id: String, source_entity_id: String) -> bool:
 func _begin_code_dialogue(graph: Dictionary, conversation_label: String, source_entity_id: String) -> bool:
 	if dialogue != null or combat != null:
 		return false
+	pending_purchase = {}
 	_dialogue_conversation_id = conversation_label
 	_emit(WIEvents.DIALOGUE_STARTED, {"conversation": conversation_label, "entity": source_entity_id})
 	dialogue = WIDialogue.new(graph, _build_dialogue_ctx(), _addressed_sink)
@@ -1452,9 +1467,57 @@ func _begin_code_dialogue(graph: Dictionary, conversation_label: String, source_
 	return true
 
 
+## #504: a purchase row (WIDialogue.purchase_offer) does not commit here --
+## the offer parks on `pending_purchase` and purchase_confirm() runs the
+## commit path once. Every non-purchase row commits immediately as before.
 func dialogue_choose(index: int) -> bool:
 	if dialogue == null:
 		return false
+	if not pending_purchase.is_empty():
+		return false
+	var offer: Dictionary = dialogue.purchase_offer(index)
+	if offer.is_empty():
+		return _commit_dialogue_choice(index)
+	offer["conversation"] = _dialogue_conversation_id
+	offer["gold_before"] = gold
+	offer["gold_after"] = gold - int(offer["price"])
+	pending_purchase = offer
+	_emit(WIEvents.PURCHASE_OFFERED, offer.duplicate(true))
+	return true
+
+
+## Commits exactly once: the offer is cleared BEFORE any effect applies, so a
+## repeated confirm (double tap, held key) finds nothing to buy. Revalidates
+## the row (same node/text/price/item) and the live purse -- the offer's own
+## snapshot is never trusted.
+func purchase_confirm() -> bool:
+	if pending_purchase.is_empty():
+		return false
+	var offer := pending_purchase
+	pending_purchase = {}
+	if dialogue == null:
+		return false
+	var fresh: Dictionary = dialogue.purchase_offer(int(offer["index"]))
+	var same_row := not fresh.is_empty() \
+		and String(fresh["node"]) == String(offer["node"]) \
+		and String(fresh["text"]) == String(offer["text"]) \
+		and int(fresh["price"]) == int(offer["price"]) \
+		and String(fresh["item"]) == String(offer["item"])
+	if not same_row or gold < int(offer["price"]):
+		_emit(WIEvents.PURCHASE_CANCELLED, {"index": int(offer["index"]), "conversation": String(offer["conversation"]), "reason": "revalidation"})
+		return false
+	_emit(WIEvents.PURCHASE_CONFIRMED, offer.duplicate(true))
+	return _commit_dialogue_choice(int(offer["index"]))
+
+
+func purchase_cancel() -> bool:
+	if pending_purchase.is_empty():
+		return false
+	_drop_pending_purchase("player")
+	return true
+
+
+func _commit_dialogue_choice(index: int) -> bool:
 	var result: Dictionary = dialogue.choose(index)
 	if result.is_empty():
 		return false

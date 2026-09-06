@@ -499,7 +499,7 @@ func _hide() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if Game.sim.dialogue == null:
+	if Game.sim.dialogue == null or _purchase_pending():
 		return
 	if event.is_action_pressed("confirm"):
 		_confirm()
@@ -557,8 +557,15 @@ func _cancel_picker() -> void:
 	_confirm()
 
 
+## #504: while an offer is pending the PurchaseConfirm modal owns input; the
+## panel stays visible underneath (same node, same cursor) so a cancel
+## returns to the exact offer selection.
+func _purchase_pending() -> bool:
+	return not Game.sim.pending_purchase.is_empty()
+
+
 func _on_panel_gui_input(event: InputEvent) -> void:
-	if Game.sim.dialogue == null or _picker_active:
+	if Game.sim.dialogue == null or _picker_active or _purchase_pending():
 		return
 	if not (event is InputEventMouseButton):
 		return
@@ -574,7 +581,7 @@ func _on_panel_gui_input(event: InputEvent) -> void:
 
 
 func _on_options_gui_input(event: InputEvent) -> void:
-	if _options.is_empty() or not _on_last_page():
+	if _options.is_empty() or not _on_last_page() or _purchase_pending():
 		return
 	if event is InputEventMouseMotion:
 		var idx := UIChrome.control_index_at(_option_controls, (event as InputEventMouseMotion).position)

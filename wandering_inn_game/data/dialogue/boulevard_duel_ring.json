@@ -33,6 +33,7 @@
      "end": true
     },
     {
+     "spend": "wager",
      "text": "Formal bout, then. First blood, staked.",
      "requires": {
       "gold": 4

@@ -258,6 +258,7 @@
      "goto": "seal_bounty_posted"
     },
     {
+     "spend": "donation",
      "text": "Then I'll fund the first season myself, and you can explain the second. (12 gold)",
      "requires": {
       "gold": 12
@@ -359,6 +360,7 @@
      "goto": "olesm_chess_win"
     },
     {
+     "spend": "wager",
      "text": "Play it safe. Offer the draw.",
      "effects": [
       {

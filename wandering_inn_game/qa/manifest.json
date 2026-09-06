@@ -7328,6 +7328,35 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "purchase_confirm_loop",
+   "seed": 9,
+   "note": "#504 purchase confirmation: the shared offer/confirm/cancel path every purchase producer rides -- offer commits nothing, arm-window swallow (held key/double tap, keyboard and touch), Esc + outside-tap cancel return to the same row, a Buy tap commits exactly once (counts pinned), broke row opens no offer",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street"
+    ],
+    "fixtures": [
+     "d2_shop"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration",
+     "input"
+    ]
+   }
   }
  ]
 }
