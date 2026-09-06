@@ -21,6 +21,18 @@ archived, or superseded session blocks.
   (PR #534). Individual PR bodies are the per-issue records; the train PR
   carries the composed gates. Merges are denied to the agent by the
   permission classifier — **user merges**.
+- **#508 Rogue discovery — WIP on `issue/508-rogue-discovery`** (stacked on
+  the train): three leads (Watch route offered after Krshia asks; the gate-road
+  cut pointed at after the force/guile resolutions hide the Watch), Krshia's
+  accepted line names the Watch Sergeant, a bypass toast on
+  `sneaked_past_danger` (pinned in stealth_loop). NOT DONE: (a) the
+  first-[Stealth] pointer — two attempts (queued at CLASS_GAINED, then armed
+  and queued at UI_SLEEP_VEIL_FINISHED with static flags) never rendered
+  under rogue_earn_loop; reverted, drop point unknown; (b) the fresh-save
+  creation→cut→sleep→[Stealth] compiled route — the itinerary route planner
+  refuses band walks (`RouteError` on goblin_encounter_1); it needs a
+  cover-served / sneaking-aware `_walk` (scratchpad `act_rogue.yaml` is the
+  drafted act). Real-phone read of the cues also open.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).

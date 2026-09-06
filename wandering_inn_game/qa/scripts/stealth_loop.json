@@ -32,6 +32,7 @@
   { "_comment": "Break sneak with a genuine field-skill use ON A TARGET: [Appraise Foe] (slot 3) faced at the ambush entity itself. sneak_ended + the off-toast fire BEFORE observe's own skill_used/accomplishment/toast (the break happens at the TOP of the observe branch, per wi_game.gd).", "action": "press", "name": "hotbar_3" },
   { "action": "wait_for_event", "type": "sneak_ended", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You straighten up." }, "timeout_sec": 5 },
+  {"_comment": "#508 acceptance 4: BYPASSING a threat is visible -- the result line fired when sneaked_past_danger banked on the band, distinct from the soften/straighten toggles.", "action": "assert_event_logged", "type": "toast", "payload_contains": {"text": "Whatever was watching that stretch never saw you pass."}},
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "observe", "context": "exploration", "target": "goblin_encounter_1" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "observed_things", "count": 1 }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You watch. Details surface." }, "timeout_sec": 5 },

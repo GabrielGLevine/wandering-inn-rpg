@@ -15,6 +15,42 @@
 		{ "id": "lead_hat_stays_on", "requires": { "brothers_job_done": 1 }, "hide_when": { "hat_job_taken": 1 }, "lead_text": "Wilovan has an errand that wants a quiet pair of hands.", "place": "The Brothers' parlor, Invrisil" },
 		{ "id": "lead_tempered_standards", "requires": { "elevator_pass_stamped": 1, "chatted_with_forge_smith": 1 }, "hide_when": { "standards_commission_taken": 1 }, "lead_text": "The smith's reject bin is filling up with work that should have passed.", "place": "The forge tier, Pallass" },
 		{ "id": "lead_ledger_eats_first", "requires": { "elevator_pass_stamped": 1, "chatted_with_lift_attendant": 1 }, "hide_when": { "ledger_loop_started": 1 }, "lead_text": "One crate of tin has been held on the landing manifest three cycles running.", "place": "The forge tier, Pallass" },
-		{ "id": "lead_camp_winter", "requires": { "rags_meeting_settled": 1 }, "hide_when": { "rags_price_kept": 1, "drove_off_rags": 1 }, "lead_text": "Rags stood on the rise the whole time you were leaving, and did not sit down.", "place": "The southern floodplains" }
+		{ "id": "lead_camp_winter", "requires": { "rags_meeting_settled": 1 }, "hide_when": { "rags_price_kept": 1, "drove_off_rags": 1 }, "lead_text": "Rags stood on the rise the whole time you were leaving, and did not sit down.", "place": "The southern floodplains" },
+		{
+			"_comment": "#508 Rogue discovery cue: the WATCH route is offered, not hidden. Appears the moment Krshia asks, gone once the crate is found by any path.",
+			"id": "lead_crate_watch",
+			"requires": {
+				"asked_about_crate": 1
+			},
+			"hide_when": {
+				"found_the_crate": 1
+			},
+			"lead_text": "The Watch Sergeant hates sewer work more than she hates favours. A word from Krshia, or a coin, could send the Watch after the scavengers.",
+			"place": "Market Street, by the gate"
+		},
+		{
+			"_comment": "#508 acceptance 3: the FORCE resolution hides the Watch route, so the remaining classless [Rogue] entry -- the drainage cut on the gate road -- gets pointed at instead of silently surviving.",
+			"id": "lead_gate_road_cut_force",
+			"requires": {
+				"recovered_crate_force": 1
+			},
+			"hide_when": {
+				"crossed_under_cover": 1
+			},
+			"lead_text": "Where the floodplain water goes out under the wall on the gate road there is a stone channel, and the grass at its lip is walked flat by things that do not wear boots.",
+			"place": "The gate road, floodplains"
+		},
+		{
+			"_comment": "#508: the GUILE resolution hides the Watch route too; same pointer, gated on that branch.",
+			"id": "lead_gate_road_cut_guile",
+			"requires": {
+				"recovered_crate_guile": 1
+			},
+			"hide_when": {
+				"crossed_under_cover": 1
+			},
+			"lead_text": "Where the floodplain water goes out under the wall on the gate road there is a stone channel, and the grass at its lip is walked flat by things that do not wear boots.",
+			"place": "The gate road, floodplains"
+		}
 	]
 }
