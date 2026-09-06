@@ -1056,6 +1056,11 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 					return
 			_toast_skip_requested = false
 		else:
+			# Review (#509): keep the dismiss bookkeeping coherent on this path
+			# too, so a stale skip/floor flag can never leak into the next toast.
+			_toast_skip_requested = false
+			_dismiss_at_min_read = false
+			_showing_started_msec = Time.get_ticks_msec()
 			tree = get_tree()
 			if tree == null:
 				return
