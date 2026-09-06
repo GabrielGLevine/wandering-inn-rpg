@@ -83,6 +83,29 @@
   },
   {
    "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "copper_luck_band"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "PURCHASE CONFIRM (#504), touch path: the row tap only OFFERED; a tap on the armed modal's Buy row commits.",
+   "action": "click_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
    "type": "dialogue_ended",
    "timeout_sec": 5
   },
