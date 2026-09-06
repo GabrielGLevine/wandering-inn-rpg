@@ -15,8 +15,10 @@ SAFE_PATH = "/usr/bin:/bin"  # python3 lives here on macOS; `claude` does not
 def run_status(env_extra, args=()):
     env = {"PATH": SAFE_PATH, "HOME": env_extra.pop("HOME", "/tmp")}
     env.update(env_extra)
-    return subprocess.run(["bash", STATUS_SH, *args],
-                          capture_output=True, text=True, env=env)
+    with tempfile.TemporaryDirectory() as state:
+        env.setdefault("CODEX_USAGE_GUARD_STATE_DIR", state)
+        return subprocess.run(["bash", STATUS_SH, *args],
+                              capture_output=True, text=True, env=env)
 
 
 def write_fake_codex(bin_dir, response):
@@ -37,6 +39,14 @@ for line in sys.stdin:
         print(json.dumps({"id": message["id"], "result": response}), flush=True)
         break
 """ % json.dumps(response))
+    os.chmod(path, 0o755)
+    return path
+
+
+def write_failing_codex(bin_dir, diagnostic):
+    path = os.path.join(bin_dir, "codex")
+    with open(path, "w") as fh:
+        fh.write("#!/bin/bash\nprintf '%%s\\n' %r >&2\n" % (diagnostic,))
     os.chmod(path, 0o755)
     return path
 
@@ -75,9 +85,13 @@ class TestStatusCLI(unittest.TestCase):
         self.assertIn("week=72%", r.stdout)
 
     def test_codex_fails_soft_when_cli_unavailable(self):
-        r = run_status({"CODEX_CI": "1", "USAGE_GUARD_FAKE": "session=99 week=99"})
+        with tempfile.TemporaryDirectory() as td:
+            r = run_status({"CODEX_CI": "1", "USAGE_GUARD_FAKE": "session=99 week=99",
+                            "HOME": td, "CODEX_USAGE_GUARD_CODEX": "/missing/codex"},
+                           args=("--fresh",))
         self.assertEqual(r.returncode, 0)
-        self.assertTrue(r.stdout.startswith("N/A provider=codex"), r.stdout)
+        self.assertTrue(r.stdout.startswith("UNKNOWN provider=codex"), r.stdout)
+        self.assertIn("reason=startup", r.stdout)
 
     def test_codex_fails_soft_on_malformed_fresh_cache(self):
         with tempfile.TemporaryDirectory() as td:
@@ -86,11 +100,12 @@ class TestStatusCLI(unittest.TestCase):
                 json.dump({"ts": time.time(), "rateLimits": {
                     "primary": {"usedPercent": "bad"}}}, fh)
             r = run_status({"CODEX_CI": "1", "CODEX_USAGE_GUARD_CACHE": cache,
-                            "HOME": td})
+                            "CODEX_USAGE_GUARD_CODEX": "/missing/codex",
+                            "HOME": td}, args=("--fresh",))
         self.assertEqual(r.returncode, 0)
-        self.assertTrue(r.stdout.startswith("N/A provider=codex"), r.stdout)
+        self.assertTrue(r.stdout.startswith("UNKNOWN provider=codex"), r.stdout)
 
-    def test_codex_expired_stale_window_no_longer_drives_tier(self):
+    def test_codex_expired_stale_window_is_unknown(self):
         with tempfile.TemporaryDirectory() as td:
             cache = os.path.join(td, "cache.json")
             with open(cache, "w") as fh:
@@ -98,10 +113,40 @@ class TestStatusCLI(unittest.TestCase):
                     "primary": {"usedPercent": 99, "windowDurationMins": 300,
                                 "resetsAt": int(time.time()) - 1}}}, fh)
             r = run_status({"CODEX_CI": "1", "CODEX_USAGE_GUARD_CACHE": cache,
+                            "CODEX_USAGE_GUARD_CODEX": "/missing/codex",
+                            "HOME": td}, args=("--fresh",))
+        self.assertEqual(r.returncode, 0)
+        self.assertTrue(r.stdout.startswith("UNKNOWN provider=codex"), r.stdout)
+
+    def test_codex_eof_reports_bounded_redacted_diagnostic(self):
+        with tempfile.TemporaryDirectory() as td:
+            bin_dir = os.path.join(td, "bin")
+            os.makedirs(bin_dir)
+            write_failing_codex(
+                bin_dir,
+                "fatal startup token=abcdefghijklmnopqrstuvwxyz012345 /Users/private/auth")
+            r = run_status({"CODEX_CI": "1", "PATH": bin_dir + ":/usr/bin:/bin",
+                            "HOME": td}, args=("--fresh",))
+        self.assertEqual(r.returncode, 0)
+        self.assertTrue(r.stdout.startswith("UNKNOWN provider=codex"), r.stdout)
+        self.assertIn("reason=eof", r.stdout)
+        self.assertIn("fatal startup", r.stdout)
+        self.assertNotIn("abcdefghijklmnopqrstuvwxyz012345", r.stdout)
+        self.assertLess(len(r.stdout), 400)
+
+    def test_codex_cache_older_than_trust_limit_is_unknown(self):
+        with tempfile.TemporaryDirectory() as td:
+            cache = os.path.join(td, "cache.json")
+            with open(cache, "w") as fh:
+                json.dump({"ts": time.time() - 4000, "rateLimits": {
+                    "primary": {"usedPercent": 99, "windowDurationMins": 300,
+                                "resetsAt": time.time() + 3600}}}, fh)
+            r = run_status({"CODEX_CI": "1", "CODEX_USAGE_GUARD_CACHE": cache,
+                            "CODEX_USAGE_GUARD_CODEX": "/missing/codex",
                             "HOME": td})
         self.assertEqual(r.returncode, 0)
-        self.assertTrue(r.stdout.startswith("OK provider=codex"), r.stdout)
-        self.assertIn("session=0%", r.stdout)
+        self.assertTrue(r.stdout.startswith("UNKNOWN provider=codex"), r.stdout)
+        self.assertIn("stale", r.stdout)
 
     def test_fake_winddown_exit_20(self):
         r = run_status({"USAGE_GUARD_FAKE": "session=90 week=10"})

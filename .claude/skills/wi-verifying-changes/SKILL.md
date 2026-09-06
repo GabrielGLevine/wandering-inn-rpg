@@ -1,378 +1,52 @@
 ---
 name: wi-verifying-changes
-description: Use before claiming any Wandering Inn RPG change works, when choosing which QA gates to run, when a QA run hangs or shows warnings, or when deciding if a change needs windowed screenshots.
+description: Select and evaluate QA evidence before claiming a Wandering Inn RPG change works.
 ---
 
-# Verifying Changes (the QA gates)
+# Verify the current tree
 
-## Core principle
-**Evidence before claims.** A change "works" only after the gates below pass
-with ZERO warnings — any `SCRIPT ERROR`, `Parse Error`, or `WARNING` in any
-run is a regression (the project has no known-harmless warnings).
+Evidence is valid only for the settled tree and environment that produced it.
+Capture the tree SHA, command, fixture/manifest seed, engine/runtime, overlay
+state, exit code, required success marker, complete noise scan, and artifact
+path. Any subsequent relevant edit invalidates it.
 
-## Which gates for which change
+Start with existing entry points; do not replace their contract with a new
+wrapper. `scripts/preflight.sh` is the project preflight and `qa/run_qa.sh` /
+`qa/ci_sweep.sh` own QA execution. Until the runner itself enforces all three,
+verify each authoritative suite has: zero exit, expected `PASS`, and no
+`SCRIPT ERROR|Parse Error|ERROR:|WARNING`. A QA run also needs a present
+`result.json` with `passed: true`. Keep complete logs; never infer a verdict
+from piped or truncated output.
 
-**FIRST GATE for ANY `data/*.json` edit (GH#276, 2026-07-26):**
-`python3 wandering_inn_game/scripts/data_lint.py` — engine-free, <1s,
-catches malformed JSON / out-of-grid cells / dangling gotos / vacuous
-`*_when` gate shapes before any Godot boot. It is a PRE-check, **never a
-substitute** for the Godot gates below (the verification-boundary rule).
-`ci_sweep.sh` also runs it in pre-flight, and ci.yml's leak-check job
-carries it as the only pre-Godot CI signal.
+Route checks by changed surface:
 
-| You changed… | Run (all from repo root) |
-|---|---|
-| Any `.gd` / any code | `load_gate` + smoke + the QA scripts touching that surface |
-| `src/core/**` (sim) | `scripts/preflight.sh --full` (discovers every `tests/test_*.gd`) + FULL canonical QA sweep |
-| `data/combatants.json` / `skills.json` / `classes.json` / arenas | balance harness + full sweep + **seed check** (below) |
-| `data/maps/<region>/<map>.json` (maps) | selective sweep (`ci_sweep.sh --touching <path>`) minimum, full sweep + re-derive any path-walking scripts you broke |
-| `data/sprites.json` / new sprite assets / icon gen | **`test_sprite_registry` MINIMUM** (it pins per-animation frame counts — new entries need expected-count rows) + windowed read. `ci_sweep.sh` runs QA scripts, NOT units — a sprites.json add can leave this suite silently red for days (PF-wave incident 2026-07-06, caught by the public repo's first CI run, not locally) |
-| Anything player-visible (UI, sprites, text) | the above + **windowed screenshot you READ yourself** |
-| QA scripts / fixtures / test_driver | `load_gate` + the edited scripts + one untouched script (harness regression) |
+- Any JSON: `python3 wandering_inn_game/scripts/data_lint.py` first.
+- Any GDScript: import when the script/image/class-name set changed, then
+  `load_gate`, smoke, affected units and QA.
+- `src/core/**`: `scripts/preflight.sh --full` and full canonical sweep.
+- Combat/class/skill/arena: balance batch, affected combat scripts at manifest
+  seeds, and full sweep.
+- Map: `ci_sweep.sh --touching <path>` minimum; shared code/catalog/quest
+  effects require explicit or full coverage.
+- Sprite/icon/visual state: sprite registry unit plus real-overlay windowed
+  before/after read.
+- Player-visible UI/text/audio: domain + rendered assertions and windowed read.
+- QA driver/script/fixture: load gate, edited canonical, one unaffected
+  canonical, and derived-artifact checks.
 
-## Commands
-```bash
-# Parse/compile gate + smoke (always cheap, always first)
-wandering_inn_game/qa/run_qa.sh load_gate headless
-/usr/local/bin/godot --headless --path wandering_inn_game --quit   # grep WARNING
+Run units and sweeps sequentially in one tree. Finish edits before launching a
+sweep. Preserve windowed evidence immediately because reruns and full sweeps
+replace `qa_output`. Compare screenshot diffs in RGB and inspect the images;
+pixel difference alone cannot judge readability or meaning.
 
-# One QA script (seed: qa/manifest.json — seeds are PER SCRIPT)
-wandering_inn_game/qa/run_qa.sh <script> headless --seed=<seed>
-wandering_inn_game/qa/run_qa.sh <script> windowed --seed=<seed>   # + screenshots
+Player-visible evidence must start from the production trigger. Direct mutator
+tests, source greps, teleports, zero-delay test paths, or emitted payloads alone
+cannot prove that a player can trigger, see, touch, or time the feature. Mouse
+evidence does not prove touch. Native scripted touch proves only its declared
+emulation; web `page.touchscreen.tap` proves the web touch path, while physical
+device acceptance remains open until observed on the device.
 
-# Complete discovered unit suite
-scripts/preflight.sh --full
-
-# Balance harness (data-tuning authority; gated cells 0.55–0.95 win, medians 3–12)
-/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
-```
-Read `qa_output/<script>/result.json` for pass/failures; `events.jsonl` for
-the event log; `*.png` (windowed) for what a player sees.
-
-## Iron rules
-- **Refactor byte-identity = the SIM event subsequence, never the full
-  stream** (#194a method, mutation-proven): capture `events.jsonl` at
-  pinned seeds pre/post, strip `t`, drop `ui_*` + `audio_played` (frame-
-  timing-noisy — run-vs-run diffs on ONE tree prove it), diff the rest
-  in order. Detector sets must include a script that actually EXERCISES
-  each moved arm (level_up_loop carries zero class_gained events;
-  work_loop/social_loop are the class-gain carriers).
-- **A "pre-existing failure" claim needs a HEALTHY-OVERLAY proof, never a
-  git-stash proof.** Overlay assets (all paths in the manifest) are
-  gitignored — `git stash` is structurally blind to them, so "stashed my
-  changes, still fails, therefore pre-existing" is invalid whenever the
-  failing test reads assets. Proven wrong in practice (2026-07-12): a lane's
-  own sync_assets.py run corrupted its tree's body_a overlay; the stash
-  "proof" blamed main, but main passed. Correct proof: run the failing test
-  on MAIN's tree (or restore the overlay from main's copies) before claiming
-  pre-existing. Corollary: after running ANY asset-writing tool in a
-  worktree, md5-census the overlay against main before trusting the tree.
-- **Seed check after combat-data changes:** fights are deterministic per seed;
-  changing combat data can flip canonical outcomes. Re-run every combat script
-  at its pinned seed (`qa/manifest.json`; generated index in
-  `docs/QA-SCRIPT-NOTES.md`). A failed script may need a seed
-  re-derivation — that's a real task, not a one-value edit.
-- **A failed `assert` HANGS the run** (SceneTree scripts idle forever). Wrap
-  runs: `perl -e 'alarm 45; exec @ARGV' /usr/local/bin/godot ...`. macOS has
-  no `timeout`. Kill >2min runs, read partial output.
-- **A unit suite can print `PASS` and still contain a SCRIPT ERROR** (an error
-  thrown then swallowed mid-run — a T9 save-migration bug shipped this way).
-  Grep unit-run output for `SCRIPT ERROR|Parse Error|WARNING`, never for
-  `^PASS` alone. Zero-warning applies to unit runs too.
-- **Windowed screenshots must be READ, not just captured.** QA asserts logical
-  state; sprite size, label placement, text clipping, and "could a stranger
-  find this?" are only visible to eyes. Every sprite/tile region or scale pick
-  gets a screenshot read before the change is called done.
-- **Screenshot pixel-diffs: compare in RGB, never RGBA-default.** Pillow
-  ≥8.3's `ImageChops.difference(...).getbbox()` on RGBA defaults to
-  `alpha_only=True` → returns None ("identical") for ANY same-alpha pair —
-  a false negative that once "proved" day==dusk. Convert to RGB (or pass
-  `alpha_only=False`). Expect background noise from NPC idle-animation
-  frame jitter between independently launched windowed runs — crop to the
-  region under test.
-- **`qa_output/<script>/` is CLOBBERED by every re-run of that script** —
-  a headless re-run (yours or a reviewer's) deletes the windowed PNGs.
-  Read windowed shots IMMEDIATELY after capture, or copy them out
-  (scratchpad / fp-handoff) if any later run could touch that script.
-  This has cost redundant windowed re-runs twice (Q2, slice T2).
-- **Artifact flush is automatic at full sweeps** (user directive
-  2026-07-09): `ci_sweep.sh` runs `qa/flush_artifacts.sh` at startup
-  (skipped for `--only` subsets), and `run_qa.sh` deletes its own per-PID
-  `.godot_home` isolation dir on exit. Run `qa/flush_artifacts.sh`
-  manually between milestones if `qa_output/` balloons — everything it
-  removes regenerates on the next run. Corollary of the clobber rule
-  above: a full sweep now wipes ALL prior windowed evidence, so copy
-  keepers out BEFORE sweeping.
-- **Common-sense pass rides every visual read** (user directive 2026-07-04):
-  does the animation/icon/sfx MATCH the action semantically (a spell cast must
-  not swing a sword), does text wrap/fit, is anything placeholder-grade? Any
-  hit → fix now or log in `docs/VISUAL-LOG.md`; never silently ship it.
-- **QA passing ≠ playable.** If a human report contradicts a green run,
-  believe the human → wi-debugging-playtest-reports.
-- **Verification runs are headless CLI.** (The godot-ai MCP was removed
-  2026-07-06 — barely used; the windowed-QA loop covers visual work. The
-  zero-warning grep now has NO exempt lines.)
-- New `.gd` files: run `--headless --import` once, commit the `*.uid` sidecar.
-
-## Full-gate one-liner (before any commit claiming "all green")
-Run: load_gate → all canonical scripts at pinned seeds (ci_sweep.sh) → every tests/test_*.gd suite → smoke.
-Report results per script, not "everything passed".
-
-## OS-level screen capture (available since 2026-07-08)
-macOS Screen Recording permission is granted: `screencapture -x <png>`
-and `ffmpeg -f avfoundation -i "Capture screen 0"` (at
-/opt/homebrew/bin/ffmpeg) work. Reach for them when the QA screenshot
-can't answer the question: motion/feel evidence (frame-diff a real
-windowed walk — the #41 jitter methodology), post-viewport-scaling
-artifacts (in-engine dumps show pre-scale pixels only), and trailer
-capture. QA screenshots stay the default for content/legibility reads.
-
-## Settle the tree BEFORE launching a sweep (2 contaminated sweeps, 2026-07-19)
-A sweep launched while fixture/script/data edits continue produces a
-MIXED-STATE verdict (each script reads whatever the tree held at its
-moment). Twice in one day a sweep had to be killed and relaunched.
-Order: finish every edit, run the affected units, THEN launch the
-sweep; any tree edit after launch invalidates the run — kill and
-relaunch, never rationalize.
-
-## The full sweep CANNOT run foreground in one subagent shell call
-The full `ci_sweep.sh` exceeds any single Bash-call budget, so the
-harness ALWAYS promotes it to background — and a subagent waiting for
-that background notification is stranded (it never arrives; the #1
-recurring stall, 7 instances by 2026-07-08). The working idiom for
-subagents: start the sweep writing to a log file, then POLL — repeated
-short foreground calls (`sleep 60; tail -1 <log>`) until the verdict
-line appears; read rc from the log's own `rc=` echo, never from the
-promoted task. Controllers run sweeps as explicit background tasks and
-get real notifications — the trap is subagent-side only.
-
-
-### Sim cell tuning: never rerun the full batch per iteration
-`WI_CELL_COUNT_ONLY=1` prints the current cell count;
-`WI_CELL_RANGE=LO:HI` (0-based, inclusive) runs just your cells — find your
-block's indexes once and iterate on the range.
-Full batch runs ONCE at the end as the gate, not per tuning iteration.
-
-
-### Suites whose asserts DON'T stop the run (2026-07-19, cost two lied tail-reads)
-A bare `assert` does NOT stop a `--script` run: it prints `SCRIPT ERROR:
-Assertion failed` and the suite CONTINUES to its final `PASS` line — a
-`tail -1` read shows green over a real red (same family as
-test_effect_text's quit(1)-prints-PASS). The zero-noise grep is the ONLY
-honest detector for such a suite; never verdict any unit run from its last
-line alone. **`test_content.gd` was the named offender and was converted
-2026-07-27** (wave-close review): every check routes through its `_check`
-(collect) / `_require` (collect + report, for sites where continuing would
-crash) helpers, and `_init` prints `CONTENT_FAIL` lines, suppresses PASS and
-`quit(1)`s. Writing a NEW suite: take that shape, not a bare assert.
-
-### The local unit bar must mirror CI's THREE checks (2026-07-17 incident)
-A validator that reports via `quit(1)` keeps EXECUTING to the end of _init --
-so its log still prints `PASS` and only the EXIT CODE is red. A grep-only
-local bar (`grep ^PASS` + noise grep) declared test_effect_text green while
-five item pins were failing; CI would have caught it (`|| fail=1`). Local
-bar, always: (1) nonzero exit = red, (2) `^PASS` line present, (3) zero
-`SCRIPT ERROR|Parse Error|WARNING`. All three, every suite.
-
-### Eye-gate verification needs a REAL before/after pair (2026-07-19, a5 #205)
-A render change verified against a TEXT description ("the log says the
-spider was barely separable") is a PLACEBO — you're reading the after
-and pattern-matching to a memory, not measuring a difference. An a5
-legibility "fix" that set `holder.self_modulate` (non-inheriting — the
-holder Node2D draws nothing, so it tinted nothing) was byte-identical
-to main, and the after-shot "looked brighter" only against the log's
-prose. Discipline for any eye-gate/render change: capture the actual
-BEFORE on `main` (stash → checkout main → shoot → checkout branch →
-pop) and the AFTER on the branch, then `ImageChops.difference` the
-entity region (RGB, not RGBA — Pillow ≥8.3 alpha_only trap above) and
-confirm a non-zero bbox where the change should be AND unchanged where
-it shouldn't. Read both shots. Godot: `modulate` INHERITS to child
-sprites/rects and composes with their tint; `self_modulate` tints only
-the node's OWN canvas drawing — a holder wrapper needs `modulate`, and
-the combat board's leaf-node `self_modulate` works because it targets
-the drawing leaves, not their holder.
-
-### "missing result.json" + rc=0 is a RED flag, never a pass (2026-07-19, #256)
-A canonical that `get_tree().quit()`s mid-run (a cursor overshoot onto
-"Quit", a bad re-entry) exits 0, writes NO result.json, trips no grep —
-and `ci_sweep` USED to print "ok" for it (fixed #257: the sweep now
-fails on missing/`passed!=true` result.json; the bare-`ERROR:` grep
-gap is #258). Until those propagate everywhere: any run whose log ends
-"--- result.json --- (missing result.json)" with rc=0 PROVED NOTHING —
-the script quit before `_finish`. Never read that as green. A silent
-UI transition that a QA `wait_for_event` depends on must EMIT its event
-(a title/menu re-show emits `UI_TITLE_RENDERED`); a menu-return helper
-that stays silent AND leaves a stale cursor makes the next `move` step
-overshoot — the exact shape that quit playtest_boot mid-run.
-
-### Two JSON-editing traps that cost re-dos (2026-07-19)
-- `python json.dump` DEFAULTS to ensure_ascii=True — it rewrites every
-  literal `—` as `—` across the whole file (60-line churn for a
-  3-line edit, and it flips the dash-lint's dual-form problem). Always
-  `ensure_ascii=False`; for shipped JSON with MIXED formatting (compact
-  one-line entries beside expanded ones) prefer a text-splice Edit over
-  any reserialize — json.dump reflows the compact entries too.
-- Switching git branches when either side adds `class_name` .gd files
-  invalidates .godot's global-class cache — the next run cascades
-  "Identifier not declared" compile errors repo-wide. Re-run
-  `godot --headless --import` after EVERY branch switch that changes
-  the .gd file set (bit twice in one session).
-
-### New producer-key rule (pantry consolidation, 2026-07-20)
-Adding a NEW way for content to bank a counter (e.g. `skill_uses`, the
-per-skill on_skill_use map) must extend EVERY catalog walk, not just the
-one that fails first: `test_content` (produced cross-ref),
-`test_reachability` (zero-producer gates), `test_shipped_ids` (the
-frozen-id live-catalog scan). Find them all by grepping tests/ for the
-SIBLING key (`on_skill_use`) and mirror each scan. Three sequential
-reds from one gap cost three fix cycles; one grep would have cost none.
-Also: `visual_states` entries are `{when:{counter:<id>, at:N}, sprite}`
-— a `{<counter>:1}`-shaped `when` is silently INERT (base look renders;
-windowed-verify every visual_states add), and entity `variants` override
-interact effects via the `accomplishment` key, never
-`on_interact_accomplishment` (the resolve contract).
-
-## v0.15 addendum (2026-07-28)
-
-- **Comment-only commits still owe the doc gates**: `render_qa_notes`
-  + `check_doc_drift` before push — a `_comment` edit in a QA script
-  can drift the rendered notes table (the #312 CI red).
-- **Presence/window edits owe a whole-screen read**: the v0.14/v0.15
-  despawn class (entities popping mid-conversation) is now retired by
-  the reconciler's dialogue defer — but any NEW presence mechanism
-  must be judged on-screen, not per-row: the evidence bar is "who
-  vanishes while the player watches", never "is each row's gate
-  locally sensible".
-
-## Two failure-marker families — grep BOTH (2026-08-07, #397 r2)
-GDScript suites do NOT share one failure marker, and picking the wrong
-grep produces a confident false PASS:
-- `assert`-based suites (`test_sim_core` class) print
-  `SCRIPT ERROR: Assertion failed: ...` and **still print `^PASS` with
-  rc=0**. Grepping only `ERROR: FAIL` reports them green while an
-  assertion is broken (caught by a reviewer, not by the harness).
-- Hand-rolled suites print `ERROR: FAIL` and set rc.
-The bar for any unit claim: `grep -E "SCRIPT ERROR|Parse Error|ERROR: FAIL"`
-is 0 **AND** a `^PASS` line is present. rc alone lies in both directions.
-
-## `QA_RESULT: PASS` inside a script the SWEEP failed = look at the environment
-The sweep applies its own grep discipline over each script's log, so a
-script can pass its own assertions and still be counted FAILED on
-`ERROR: Error loading resource` lines. When a mass failure (126/230)
-includes `load_gate`/`title_flow`/`playtest_boot` AND the individual
-runs pass, it is never the content:
-- **the import cache is the first suspect.** A merge that delivers new
-  image assets needs `godot --headless --path wandering_inn_game --import`
-  in the MAIN tree before the re-gate; individual runs survive on
-  fallback_art, the sweep does not. (#390's assets reached main via a
-  train merge and the local `.godot` never imported them.)
-- Read a failing script's own `ci_sweep_logs/<name>.log` BEFORE
-  theorising. The `QA_RESULT` line and the `result.json` in that log
-  discriminate content failure from environment failure in one read.
-- Corollary already documented and re-confirmed: do not edit the tree
-  while a sweep runs — but if the failure set is IDENTICAL across two
-  runs, concurrency is disproven and the cause is real.
-
-## Gates run AFTER the edit, not once per session (2026-08-07, cost a real violation)
-`verify-untouched` was run clean before a controller mop-up and never
-after it; the mop-up edited a frozen holdout string and the gate built
-for exactly that never saw the change. A whole-branch reviewer found it.
-Any gate whose job is "X did not move" must be re-run after EVERY edit
-wave, including the controller's own — controller edits are the least
-reviewed code in the pipeline and the most likely to skip their gate.
-
-## Never JSON-reserialize a shipped data file
-`json.load` + `json.dump` on a map file reformatted 1,952 lines to apply
-a one-word fix; the revert of that reformat then destroyed another
-agent's uncommitted work in the same file (the shared-file wipe class).
-Edit shipped JSON with targeted string replacement, assert the match
-count is exactly 1, and check `git diff --stat` shows the line count you
-intended before going further.
-
-## Preflight bundle (retrospective tooling, 2026-08-09)
-`scripts/preflight.sh` = data_lint + verify-untouched + extract_prose
-self-test + surfaces --check + mirrors + doc-drift + test_sprite_registry
-(`--full` adds every unit suite). RUN IT AT EVERY WAVE CLOSE — per-gate
-memory is the weak link (verify-untouched drift hid across two waves;
-the ice-sink bug across many). The bundle is the habit; the gates are
-the details.
-
-## Two disciplines the same retrospective bought
-- **Ground truth before iteration:** one diagnostic dump (pixels, step
-  lists, event traces) BEFORE any tuning loop. The sheet-polarity pin
-  burned four blind threshold rounds that one pixel dump solved; route
-  edits misfired twice before printing the actual steps. If you are
-  adjusting a parameter for the second time without having LOOKED at
-  the artifact, stop and look.
-- **Read the verifier's contract before editing its inputs:** a broken
-  holdout pin got its ID rewritten — but ids KEY the frozen inventory,
-  and the docstring said so; the sanctioned mechanism (exclusions) was
-  two paragraphs down. Cost two rounds. The gate's own documentation is
-  the first read, not the last.
-
-
-## Gate-conduct lessons (wave >=434, 2026-08-13)
-- **Never `git checkout --` a dirty file inside a gate.** A mutation-test
-  restore on an UNCOMMITTED engine file reverted the very change under
-  test and the next sim run silently measured the old engine. cp-backup +
-  `cmp` restore only; WIP-commit the lane BEFORE gating so tracked
-  restores are safe at all.
-- **Triage disclosed reds against the CI job list AT GATE TIME.** Two CI
-  bounces on one lane were both items its close had disclosed and the
-  controller had filed as "ruled-acceptable" without asking which CI arm
-  runs them (sim_combat_batch bounds; 13 canonical floor-policy defeats).
-  A disclosed red is only acceptable if no required CI job executes it.
-- **Do not edit files a background job owns.** A controller comment edit
-  raced its own A/B probe's cp-restore on the same file and the composed
-  commit shipped the probe's mutated state. One writer per file — humans
-  and probes included.
-
-## "Cannot fail" has THREE forms — check all three (wave >=434)
-A guard is worthless if it cannot go red, and this wave shipped one of
-each kind before a gate caught it. When you claim a surface is
-protected, name which form you ruled out:
-1. **The assertion is inert.** It tests a hand-built structure rather
-   than the real path — four M3.6 criteria had tests over
-   hand-constructed operation dicts, so eight mutations severing the
-   real spec->planner->emitter chain all stayed green. Fix: at least one
-   test per criterion must start from the SHIPPED input and assert on
-   observable output.
-2. **The assertion is real but nothing runs it.** The entire Python
-   corpus (~357 tests, incl. every itinerary contract suite and the
-   differ's own safety guards) was wired into NO CI job until
-   2026-08-14 — CI's "Unit suites" runs `tests/test_*.gd` only. Fix:
-   before trusting a suite, grep the workflows for what actually
-   invokes it.
-3. **The proof of the guard is itself faked.** Three consecutive
-   attempts to mutation-prove one 5-line test fix all "passed" without
-   testing anything: the injected canary landed in a module docstring,
-   then after a `raise SystemExit`, then it was pre-created so it sat in
-   both snapshots. Fix: before trusting a mutation, verify the mutation
-   ACTUALLY EXECUTED (print from it, or confirm its side effect appeared
-   for the first time), then check the test reds.
-
-Corollary for size-capped docs: **HANDOFF.md (12,000 bytes) and
-CHOICE-LOG.md (30,000) are gate-enforced and both sit near the cap.**
-Check size in the same breath as the edit, and never chain a commit off
-a piped gate — `pytest ... | tail && git push` always pushes, because
-the pipeline's status is `tail`'s. That pushed main red twice in one
-session.
-
-## One Godot process class per tree: never run unit suites beside a sweep (2026-09-05)
-`test_reload_caches.gd` creates `data/maps/zz_qa_tmp` transiently; a full
-sweep running in the same tree read it mid-flight and two visual_check
-canonicals went red on "cannot open res://data/maps/zz_qa_tmp" — twice
-in one session (once beside `preflight --full`, once beside a reviewer's
-unit runs). Both re-ran green alone. Sequence them: units, THEN the
-sweep; never dispatch a Godot-running reviewer while a sweep is live.
-
-## Web parity is only evidence when the runner actually ran (2026-09-05)
-CI's "Web parity" job was a silent no-op from the day it was written —
-`perl -e 'exec @ARGV' VAR=1 bash …` exec'd a program literally named
-`VAR=1`, failed silently and exited 0 with an empty log. Any web claim
-must cite a `QA_RESULT: PASS` line from the runner log (the job now
-requires it). Local runs: `qa/web/run_web_qa.sh <script> <seed>
---skip-export --touch --device=iphone|android [--portrait-entry]
-[--import-file=… | --import-cancel]` after `qa/web/export_web.sh`;
-the local machine has the 4.7.2 templates + Playwright installed.
-
+Read [references/evidence-recipes.md](references/evidence-recipes.md) when
+validating refactor equivalence, visual changes, combat seed changes, or a
+claimed pre-existing failure. If a human report contradicts green QA, use
+`wi-debugging-playtest-reports`.

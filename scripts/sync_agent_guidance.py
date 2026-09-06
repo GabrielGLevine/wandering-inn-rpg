@@ -16,7 +16,7 @@ CLAUDE_SKILLS = ROOT / ".claude" / "skills"
 
 
 def skill_files(root: Path) -> list[Path]:
-	return sorted(path.relative_to(root) for path in root.glob("*/SKILL.md"))
+	return sorted(path.relative_to(root) for path in root.rglob("*") if path.is_file() and "__pycache__" not in path.parts)
 
 
 def check() -> int:
@@ -39,7 +39,7 @@ def check() -> int:
 			print(f"- {error}")
 		print("Run: python3 scripts/sync_agent_guidance.py --write")
 		return 1
-	print(f"PASS: agent guidance ({len(canonical)} canonical skills, Claude mirror exact)")
+	print(f"PASS: agent guidance ({len(canonical)} canonical files, Claude mirror exact)")
 	return 0
 
 
