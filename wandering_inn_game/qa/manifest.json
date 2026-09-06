@@ -7458,6 +7458,31 @@
      "night_phase"
     ]
    }
+  },
+  {
+   "script": "message_lifecycle_loop",
+   "seed": 9,
+   "note": "#509 message lifecycle: save status is a hint-ribbon pill (ui_save_status_rendered on game_saved) off the toast strip; transient flavour line renders + a step dismisses it unrecorded; journal modal pauses/resumes the strip; Reduce Motion changes nothing about delivery. Arrival visibility = line_display_ab (assert_dialogue_displayed now measures occlusion); the 1.2s readable floor is pinned at real timing by test_message_layer",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "mobile_tap_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "input",
+     "settings"
+    ]
+   }
   }
  ]
 }

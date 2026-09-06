@@ -40,7 +40,7 @@ r3–r5 playtest waves — gone from this file.
 
 ## Open — HUD, panels, toasts
 
-- [ ] **(P2)** Ambient line invisible after load — `talk_pool` line served
+- [x] **(P2)** Ambient line invisible after load — `talk_pool` line served
   within ~1.5 s of `world_ready` renders NOTHING (panel rect `message_layer.gd:443`,
   x 36–736 / y 461–556, empty map) while `ui_dialogue_rendered` carries
   full string. Same-NPC/seed A/B: `_vlog_line_timing/01_interact_at_world_ready.png`
@@ -61,6 +61,13 @@ r3–r5 playtest waves — gone from this file.
   comment describes this exact symptom near `world_ready` and names the boot
   music crossfade (1.0s) as what pushes a capture past the hold. Next pass
   should A/B those two before touching anything.
+  CLOSED (#509). The A/B was done and the panel WAS rendering: the line sat
+  under FieldHotbar's expanded readout -- same canvas layer (1), added later,
+  covering 81% of the line rect (`line_display_ab/01`, measured by the
+  driver's `assert_dialogue_displayed`, which now FAILS on >=20% overlap by a
+  visible panel on an equal-or-higher layer). FIX: the line panel is a child
+  of the toast layer (12), like every other piece of feedback; tripwire in
+  `test_message_layer._check_line_panel_on_toast_layer`.
 - [x] **(P2)** Authored payoff prose queues behind housekeeping toasts — on
   `handoff_quiet` order is `Autosaved.` → `Quest updated:` → payoff line,
   and `PLAYER_MOVED` dismisses early, so walking player never reads it
@@ -468,7 +475,7 @@ r3–r5 playtest waves — gone from this file.
 - [ ] **(P3)** crypt Lich + Bone Thrall, and the CO-BOARD read (#460) — the summoner archetype ships two OWNED PixelLab v3 rigs (`crypt_lich` 64px @ render_scale 0.64 ≈ 2.36 cells, `bone_thrall` 48px @ 0.60 ≈ 1.65 cells, both anchored off a measured alpha bbox, idle-only because combat never plays `walk`). The binding constraint is that `bone_thrall` must read apart from `skeleton_ally` AT A GLANCE, because `bone_pile_ruin` sits nine cells from the crypt on the SAME map and a necromancer PC can stand its own raised skeleton on the same board — tint would not have carried that (2026-08-02 directive), so the separation is silhouette AND height AND palette: the ally is pale/tan, broad and upright at 1.94 cells; the thrall is dark rot-grey, narrow and hunched at 1.65; the Lich is dark, crowned, 2.36 and carries the only green spell-light on the board. Evidence: `qa/run_qa.sh crypt_lich_fight windowed --seed=1` → `02_thrall_raised_beside_ally.png` puts all three on one board with the feed line under them, and `01_board_opening.png` / `00_crypt_mouth.png` carry the opening and the overworld read. NOTE for whoever gates this: the local run has no private asset overlay, so the PC renders as its magenta fallback chip and covers the crypt entity in `00_crypt_mouth.png` — read the overworld Lich off a run with the overlay installed. — fix direction: accept, or ask for one more separating step on the thrall (see the row below)
 - [ ] **(P4)** `bone_thrall` reads THIN at board scale (#460) — the rig is correct and clearly not the ally, but at 1.65 cells the hunched shroud reads as a narrow dark sliver next to the ally's broader frame, and it is the enemy the player has to count (up to two of them join mid-fight). It has no `combat_tint` and wants none — the whole point of the row is that tint is not the tell. — fix direction: one MASS step (a wider shroud/shoulder silhouette at the same height) on the next PixelLab pass, or accept if it reads fine in play at gameplay zoom
 - [ ] **(P3)** death spells changed colour — [Bone Dart] and [Deathbolt] (#460) — `combat_screen._skill_flash_color` picked FLAME_FLASH for every non-frost `spell_damage`, so both shipped [Necromancer] casts threw an ORANGE FIRE projectile and flashed orange on the target. They now key on the authored `element: death` and read grave-green (`GRAVE_FLASH`, the same colour the summon's arrival cell flashes). This is a player-visible change to TWO ALREADY-SHIPPED player spells, not only to the new enemy kit, and it is the label-vs-art class this log exists for (a black-green lance that renders as fire). NOT YET EYE-GATED: no canonical fields a PC casting either one — `WICombatAI` defaults the PC's empty `ai` to the melee profile, so autoplay structurally cannot cast, and the only frames in hand are the Lich's own bolts (`qa/run_qa.sh crypt_lich_fight windowed --seed=1`, the enemy side of the same colour). — fix direction: read a PC death-cast whenever a necromancer fixture next plays under the competent policy; accept the hue, or dial it if green-on-cave-floor reads weakly against the frost blue
-- [ ] **(P3)** "Autosaved." is now a ~2-frame flash on EVERY quest beat —
+- [x] **(P3)** "Autosaved." is now a ~2-frame flash on EVERY quest beat —
   the deliberate, logged cost of the chore-yield fix in the "Authored payoff
   prose queues behind housekeeping toasts" row above. `game.gd:110` autosaves
   from inside its own `QUEST_BEAT_COMPLETED` listener, so the save toast
@@ -490,6 +497,10 @@ r3–r5 playtest waves — gone from this file.
   NOT taken in the same wave that introduced the yield — new timing behaviour
   needs its own measurement pass, and this one would move a hold that
   125 canonicals wait on `ui_toast_rendered` for.
+  CLOSED (#509): the save status is no longer only a toast -- every slot
+  write emits `game_saved` and the hint ribbon carries a "•  Saved" pill for
+  4s (`ui_save_status_rendered`), off the strip entirely; the housekeeping
+  toast keeps its chore-yield behaviour. Canonical: `message_lifecycle_loop`.
 - [ ] **(P3)** Empty-interact flavor can be flashed AND unrecorded — authored
   interior-flavor prose (`biomes.json`, e.g. "Nothing there — just old boards,
   and the particular silence of a room with a roof on it.") is queued by

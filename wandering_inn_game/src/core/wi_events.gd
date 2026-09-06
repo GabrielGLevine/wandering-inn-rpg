@@ -8,6 +8,9 @@ const GAME_RESET := &"game_reset"
 const GAME_LOADED := &"game_loaded"
 const SAVE_EXPORTED := &"save_exported"
 const SAVE_IMPORTED := &"save_imported"
+## #509: every slot write (auto, manual, import) -- the compact "Saved"
+## status rides this, not the housekeeping toast.
+const GAME_SAVED := &"game_saved"
 ## #253: which platform arm the Import row took, and a picker dismissed /
 ## empty read (no refusal toast -- nothing was chosen). Diagnostics for the
 ## web build where only the event log can say what happened.
@@ -143,6 +146,7 @@ const UI_PICKER_RENDERED := &"ui_picker_rendered"
 const UI_PURCHASE_CONFIRM_RENDERED := &"ui_purchase_confirm_rendered"
 const UI_PURCHASE_CONFIRM_ARMED := &"ui_purchase_confirm_armed"  ## #504: input accepted only after this
 const UI_PURCHASE_CONFIRM_HIDDEN := &"ui_purchase_confirm_hidden"
+const UI_SAVE_STATUS_RENDERED := &"ui_save_status_rendered"  ## #509: the hint-ribbon "Saved" pill
 const UI_TOAST_RENDERED := &"ui_toast_rendered"
 const UI_DEBUG_OVERLAY_RENDERED := &"ui_debug_overlay_rendered"  ## GH#279 dev overlay (debug builds only)
 const UI_DEBUG_OVERLAY_HIDDEN := &"ui_debug_overlay_hidden"

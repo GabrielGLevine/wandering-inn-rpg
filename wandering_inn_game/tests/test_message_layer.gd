@@ -18,6 +18,9 @@ func _init() -> void:
 	_check_housekeeping_class(raw)
 	_check_hold_curve(raw)
 	_check_movement_dismiss_protection(raw)
+	_check_readable_floor(raw)
+	_check_save_status_off_the_strip(raw)
+	_check_line_panel_on_toast_layer(raw)
 	_check_interior_flavor_rotation(raw)
 	print("PASS: toast queue survives transitions (defer + combat bank)")
 	quit(0)
@@ -170,6 +173,53 @@ func _texts(entries: Variant) -> Array:
 	for e: Dictionary in (entries as Array):
 		out.append(String(e["text"]))
 	return out
+
+
+## #509 acceptance 2: a step before the readable floor retires the toast AT
+## the floor, never before; a step after it retires now; the floor never
+## extends a toast past its own hold. Pure rule, so it is tested at REAL
+## timings (1.2s floor) rather than the collapsed QA ones.
+func _check_readable_floor(raw: String) -> void:
+	assert(raw.find("const TOAST_MIN_READ_SECONDS := 1.2") != -1, "the readable floor is 1.2s")
+	var layer := _stubbed_instance(raw)
+	var floor_msec := 1200
+	assert(int(layer.call("early_dismiss_deadline", 10000, 15000, floor_msec)) == 11200,
+		"an early step retires the toast at the floor (started + 1.2s), not now")
+	assert(int(layer.call("early_dismiss_deadline", 10000, 10500, floor_msec)) == 10500,
+		"the floor never extends a toast past its own hold")
+	assert(int(layer.call("early_dismiss_deadline", 10000, 15000, 0)) == 10000,
+		"under QA the floor is 0: the step retires it at once (canonical timing untouched)")
+	# The dismiss entry point routes an early step to the floor flag, never to
+	# the skip flag -- source tripwire, since the panel needs a scene to be visible.
+	var dismiss := raw.get_slice("func dismiss_current_toast_early", 1).get_slice("\nfunc ", 0)
+	assert(dismiss.find("_dismiss_at_min_read = true") != -1, "an early step sets _dismiss_at_min_read")
+	assert(dismiss.find("_min_read_msec()") != -1, "the dismiss compares against the readable floor")
+	var loop := raw.get_slice("if _dismiss_at_min_read:", 1).get_slice("\n", 1)
+	assert(loop.find("early_dismiss_deadline(") != -1, "the hold loop honours the floor via the pure rule")
+	layer.free()
+
+
+## #509 acceptance 1: the arrival line must not be parented under the base
+## canvas (FieldHotbar's readout is drawn there, later, and covered 81% of the
+## line panel). The driver's assert_dialogue_displayed probe measures the
+## overlap live; this tripwire keeps the parent from drifting back.
+func _check_line_panel_on_toast_layer(raw: String) -> void:
+	assert(raw.find("toast_root.add_child(_dialogue_panel)") != -1,
+		"the dialogue line panel must be a child of the toast layer's root (layer TOAST_CANVAS_LAYER)")
+	assert(raw.find("root.add_child(_dialogue_panel)") == -1 or raw.find("toast_root.add_child(_dialogue_panel)") != -1,
+		"the line panel must not also sit on the base canvas")
+
+
+## #509: the save status is a PILL on the hint ribbon, never a toast -- so it
+## can neither delay authored copy nor be dismissed by a step.
+func _check_save_status_off_the_strip(raw: String) -> void:
+	var arm := raw.get_slice("WIEvents.GAME_SAVED:", 1).get_slice("WIEvents.", 0)
+	assert(arm.find("_show_save_status(") != -1, "GAME_SAVED renders the save status")
+	assert(arm.find("_queue_toast(") == -1, "GAME_SAVED must not queue a toast")
+	var body := raw.get_slice("func _show_save_status", 1).get_slice("\nfunc ", 0)
+	assert(body.find("_hint_label.text") != -1 and body.find("UI_SAVE_STATUS_RENDERED") != -1,
+		"the pill rides the hint ribbon and confirms with ui_save_status_rendered")
+	assert(body.find("_toast_queue") == -1, "the pill never touches the toast queue")
 
 
 func _stubbed_instance(raw: String) -> Object:

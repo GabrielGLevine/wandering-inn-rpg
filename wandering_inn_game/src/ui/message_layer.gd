@@ -59,6 +59,14 @@ const CAPTURE_HOLD_CEILING_SECONDS := 16.0
 ## hold. Chores stay capped: a stack of "Autosaved." must never eat reading
 ## time ahead of the payoff prose it was queued beside.
 const TOAST_QUEUE_HOLD_CAP_SECONDS := 1.6
+## #509 acceptance 2: a step is the "I have read it" signal, but a step taken
+## before a toast has had a READABLE life must not erase it. A dismiss that
+## arrives earlier than this retires the toast AT this mark instead of at
+## once; under QA/headless the floor is 0 so canonical timing is untouched.
+const TOAST_MIN_READ_SECONDS := 1.2
+## #509: how long the hint ribbon carries the compact "Saved" pill after a
+## slot write. Persistent-enough to be noticed on a phone, never a toast.
+const SAVE_STATUS_SECONDS := 4.0
 const DIALOGUE_SECONDS := 3.0
 const DIALOGUE_SECONDS_PER_EXTRA_LINE := 1.2
 const DIALOGUE_TEXT_WIDTH := 656.0
@@ -217,6 +225,11 @@ var _open_modals: Dictionary = {}
 ## hold; `_drain_toasts`'s own while-loop still pops and shows every
 ## remaining queued toast, in order, right after.
 var _toast_skip_requested := false
+## #509: when the showing toast started, and whether a step asked for an
+## early retire before the readable floor (honoured at the floor).
+var _showing_started_msec := 0
+var _dismiss_at_min_read := false
+var _save_status_serial := 0
 
 func _first_pickup_hint_text() -> String:
 	return "Press %s — your pack." % WIInputHints.label("inventory")
@@ -285,6 +298,22 @@ func _pick_flavor_line(key: String, raw: Variant) -> String:
 		_flavor_index[key] = (idx + 1) % lines.size()
 		return String(lines[idx])
 	return String(raw)
+
+
+func _show_save_status(slot: String) -> void:
+	_save_status_serial += 1
+	var serial := _save_status_serial
+	_hint_label.text = "%s   •  Saved" % _hint_text()
+	_resize_hint_panel()
+	ObservableBus.emit_domain_event(WIEvents.UI_SAVE_STATUS_RENDERED, {"slot": slot, "text": _hint_label.text})
+	var tree := get_tree()
+	if tree == null:
+		return
+	await tree.create_timer(SAVE_STATUS_SECONDS).timeout
+	if not is_inside_tree() or serial != _save_status_serial:
+		return
+	_hint_label.text = _hint_text()
+	_resize_hint_panel()
 
 
 func _first_wake_hint_text() -> String:
@@ -394,7 +423,11 @@ func _ready() -> void:
 	_dialogue_label = UIChrome.make_label()
 	_dialogue_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialogue_margin.add_child(_dialogue_label)
-	root.add_child(_dialogue_panel)
+	# #509 acceptance 1: the line panel lives on the TOAST layer (12), not the
+	# base one -- FieldHotbar's readout (expanded until the first sleep) sits
+	# on the base layer, is added later, and covered 81% of every arrival
+	# bark (line_display_ab's probe measured it). Feedback draws over panels.
+	toast_root.add_child(_dialogue_panel)
 	# Must run AFTER add_child (theme lookups need `_dialogue_label` already
 	# inside the themed tree, same ordering requirement as inventory.gd's
 	# `_reserve_status_label_height`) -- derives the panel's real size from
@@ -458,6 +491,10 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				_first_pickup_hint_pending = false
 				_first_pickup_hint_shown = true
 				_queue_toast(_first_pickup_hint_text())
+		WIEvents.GAME_SAVED:
+			# #509: the compact save status -- a pill on the hint ribbon for
+			# SAVE_STATUS_SECONDS, off the toast strip entirely.
+			_show_save_status(String(payload.get("slot", "")))
 		WIEvents.INTERACT_NOTHING:
 			# GH#202: empty-interact flavor is TRANSIENT -- render the toast
 			# but keep it out of Recent Messages, or idle wall-poking pushes
@@ -561,7 +598,19 @@ func dialogue_display_state() -> Dictionary:
 		"text": _dialogue_label.text,
 		"rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
 		"on_screen": view.intersects(rect),
+		"layer": canvas_layer_of(_dialogue_panel),
 	}
+
+
+## The nearest CanvasLayer ancestor's index (this engine build has no
+## CanvasItem.get_canvas_layer); 0 = the root viewport's own canvas.
+static func canvas_layer_of(node: Node) -> int:
+	var cur := node
+	while cur != null:
+		if cur is CanvasLayer:
+			return (cur as CanvasLayer).layer
+		cur = cur.get_parent()
+	return 0
 
 
 func _show_dialogue_line(text: String, fitted: String) -> void:
@@ -859,8 +908,27 @@ func _queue_has_authored() -> bool:
 
 
 func dismiss_current_toast_early() -> void:
-	if _toast_panel.visible:
+	if not _toast_panel.visible:
+		return
+	if Time.get_ticks_msec() - _showing_started_msec >= _min_read_msec():
 		_toast_skip_requested = true
+	else:
+		_dismiss_at_min_read = true
+
+
+## The readable floor in msec: 0 under QA/headless (the hold floors there are
+## already ~0, and 125 canonicals pin the rendered stream), the real constant
+## in play.
+func _min_read_msec() -> int:
+	if DisplayServer.get_name() == "headless" or (TestDriver != null and TestDriver.active()):
+		return 0
+	return int(TOAST_MIN_READ_SECONDS * 1000.0)
+
+
+## Pure rule for the unit suite: given when the toast started, its natural
+## deadline and the readable floor, where does an EARLY dismiss retire it?
+static func early_dismiss_deadline(started_msec: int, deadline_msec: int, min_read_msec: int) -> int:
+	return mini(deadline_msec, started_msec + min_read_msec)
 
 
 ## Displays queued toasts ONE AT A TIME, in emission order. A toast queued
@@ -954,9 +1022,15 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 	if hold > 0.0:
 		if interruptible:
 			_toast_skip_requested = false
+			_dismiss_at_min_read = false
 			var started_msec := Time.get_ticks_msec()
+			_showing_started_msec = started_msec
 			var deadline_msec := started_msec + int(hold * 1000.0)
 			while Time.get_ticks_msec() < deadline_msec and not _toast_skip_requested:
+				# #509: a step before the readable floor retires the toast AT the
+				# floor, never before it.
+				if _dismiss_at_min_read:
+					deadline_msec = early_dismiss_deadline(started_msec, deadline_msec, _min_read_msec())
 				# RE-CHECKED EVERY FRAME, not once at display time -- GH#325's own
 				# sequence queues the chore FIRST (game.gd autosaves from inside
 				# its QUEST_BEAT_COMPLETED listener, before the sim's payoff toast
