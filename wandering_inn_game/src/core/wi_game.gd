@@ -545,6 +545,10 @@ func _check_trigger_radius(skipped_ids: Array[String] = []) -> void:
 			if not entity_first_use.has(danger_key):
 				entity_first_use[danger_key] = true
 				record_accomplishment("sneaked_past_danger")
+				# #508 acceptance 4: the bypass is VISIBLE -- a result line, no
+				# count (opaque-until-sleep). Distinct from the soften/straighten
+				# toggles so a player can tell "I am sneaking" from "it worked".
+				_emit(WIEvents.TOAST, {"text": "Whatever was watching that stretch never saw you pass."})
 			continue
 		# #453 G2 (user ruling 2026-08-13): THE COVER ARM -- the one way past a
 		# proximity encounter that asks NO CLASS at all, and the reason scout's
