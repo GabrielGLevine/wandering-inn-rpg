@@ -47,12 +47,17 @@ class ActionPlanner:
         if ledger.state["equipped"].get(slot, "") == item_id:
             raise ActionError(f"{node_id}: {item_id} is already worn in {slot} -- confirm would UNEQUIP it")
         ledger.equip(slot, item_id)
-        return [
-            {"kind": "inventory_open"},
+        ops: list[dict[str, Any]] = [
+            {"kind": "inventory_open", "items": int(row["items_shown"])},
             {"kind": "inventory_cursor", "cursor_index": int(row["cursor_index"]), "item": item_id},
             {"kind": "inventory_equip", "item": item_id, "slot": slot},
-            {"kind": "inventory_close"},
         ]
+        if spec.get("shot"):
+            # #434 residue: the corpus photographs the worn item with the
+            # inventory still OPEN; a shot node after `equip` cannot.
+            ops.append({"kind": "shot", "name": str(spec["shot"])})
+        ops.append({"kind": "inventory_close"})
+        return ops
 
     def plan_unequip(self, node_id: str, spec: dict[str, Any], ledger: Ledger) -> list[dict[str, Any]]:
         slot = str(spec["slot"])
@@ -62,7 +67,7 @@ class ActionPlanner:
         row = self._inventory_row(node_id, ledger, item_id)
         ledger.unequip(slot)
         return [
-            {"kind": "inventory_open"},
+            {"kind": "inventory_open", "items": int(row["items_shown"])},
             {"kind": "inventory_cursor", "cursor_index": int(row["cursor_index"]), "item": item_id},
             # Confirm on an ALREADY-equipped row is the engine's own
             # toggle-to-unequip grammar, not a second equip call.
@@ -105,7 +110,11 @@ class ActionPlanner:
         if len(rows) != 1:
             carried = [str(row.get("id", "")) for row in answer.get("items", [])]
             raise ActionError(f"{node_id}: {item_id} matched {len(rows)} inventory rows; carried: {carried}")
-        return rows[0]
+        row = dict(rows[0])
+        # #434 residue: `ui_inventory_shown.items` is the row count the picker
+        # opened with -- the corpus pins it, so the open op carries it.
+        row["items_shown"] = len(answer.get("items", []))
+        return row
 
     # ---------------------------------------------------------- field skills --
 

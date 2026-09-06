@@ -180,10 +180,10 @@ class Emitter:
         elif kind == "assert_event_absent":
             steps.append(self._event_assert_step("assert_event_absent", operation))
         elif kind == "inventory_open":
-            steps.extend([
-                {"action": "press", "name": "inventory"},
-                {"action": "wait_for_event", "type": "ui_inventory_shown", "timeout_sec": 5},
-            ])
+            shown: dict[str, Any] = {"action": "wait_for_event", "type": "ui_inventory_shown", "timeout_sec": 5}
+            if operation.get("items") is not None:
+                shown["payload_contains"] = {"items": int(operation["items"])}
+            steps.extend([{"action": "press", "name": "inventory"}, shown])
         elif kind == "inventory_cursor":
             cursor = int(operation["cursor_index"])
             if cursor:
@@ -634,6 +634,13 @@ class Emitter:
 
     def _sleep_steps(self, operation: dict[str, Any]) -> list[dict[str, Any]]:
         preview = operation["preview"]
+        # #434 residue: the veil's line count is NOT derivable (story lines fire
+        # off sleep-time counters the ledger does not model), so it is pinned
+        # only when the itinerary AUTHORS it -- a donor-backed pin, the same
+        # rule the steel-thread doc gives hand authors.
+        veil: dict[str, Any] = {"action": "wait_for_event", "type": "ui_sleep_veil_rendered", "timeout_sec": 5}
+        if operation.get("expect_veil_lines") is not None:
+            veil["payload_contains"] = {"lines": int(operation["expect_veil_lines"])}
         steps: list[dict[str, Any]] = [
             {"action": "press", "name": "interact"},
             {"action": "wait_for_event", "type": "phase_changed", "payload_contains": {"slept": True}, "timeout_sec": 5},
@@ -650,13 +657,13 @@ class Emitter:
         if consolidation:
             steps.extend([
                 {"action": "wait_for_event", "type": "consolidation_accepted", "payload_contains": {"target": consolidation["target"], "level": consolidation["level"]}, "timeout_sec": 5},
-                {"action": "wait_for_event", "type": "ui_sleep_veil_rendered", "timeout_sec": 5},
+                deepcopy(veil),
                 {"action": "wait_for_event", "type": "ui_sleep_veil_finished", "timeout_sec": 5},
                 {"action": "assert_state", "path": "classes", "equals": preview["classes_after"]},
             ])
         else:
             steps.extend([
-                {"action": "wait_for_event", "type": "ui_sleep_veil_rendered", "timeout_sec": 5},
+                deepcopy(veil),
                 # The retired `pending_consolidation` pin said "no merge is
                 # queued". Its replacement says the stronger thing directly: no
                 # merge HAPPENED on this sleep.

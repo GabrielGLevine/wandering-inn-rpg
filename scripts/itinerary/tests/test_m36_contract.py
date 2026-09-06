@@ -656,6 +656,50 @@ class GoldenAccountingTest(unittest.TestCase):
         self.assertEqual(walked(seen_compiled), total(compiled), f"{label}: compiled-side coverage")
         self.assertEqual(walked(seen_shipped), total(shipped_script), f"{label}: shipped-side coverage")
 
+    def test_shots_can_be_taken_inside_a_conversation_and_an_open_inventory(self) -> None:
+        """#434 residue, the last Act I rows: the corpus photographs Relc's gift
+        line INSIDE the conversation and the worn spear with the inventory
+        OPEN. `talk.shots` (anchor -> name) and `equip.shot` express both; a
+        shot node after the talk/equip cannot, and read as compiled-only."""
+        from scripts.itinerary.schema import SchemaError, load_itinerary_document
+        ok = load_itinerary_document(milestone=3, raw=[{"act": "t", "nodes": [
+            {"id": "t.talk", "talk": {"npc": "relc", "choose_path": ["a", "b"], "shots": {"a": "shot_a"}}, "why": "w"},
+            {"id": "t.equip", "equip": {"item": "relcs_spare_spear", "shot": "worn"}},
+        ]}])
+        self.assertTrue(ok)
+        with self.assertRaises(SchemaError):
+            load_itinerary_document(milestone=3, raw=[{"act": "t", "nodes": [
+                {"id": "t.talk", "talk": {"npc": "relc", "choose_path": ["a"], "shots": {"zzz": "shot"}}, "why": "w"},
+            ]}])
+        # Emission order: the destination node renders, THEN the shot, then the
+        # closing row -- and the inventory shot lands before the close.
+        choose = {"kind": "dialogue_choose", "cursor_index": 0, "destination": "gift", "end": False,
+                  "next_node": {"speaker": "Relc"}, "why": "w", "effect_waits": [], "hands_off_to_combat": False}
+        steps = Emitter().emit("n", [choose, {"kind": "shot", "name": "gift"}])
+        kinds = [(s["action"], s.get("type", s.get("name", ""))) for s in steps]
+        self.assertLess(kinds.index(("wait_for_event", "dialogue_node")), kinds.index(("screenshot", "gift")))
+        steps = Emitter().emit("n", [{"kind": "inventory_open", "items": 2}, {"kind": "shot", "name": "worn"}, {"kind": "inventory_close"}])
+        kinds = [(s["action"], s.get("type", s.get("name", ""))) for s in steps]
+        self.assertLess(kinds.index(("screenshot", "worn")), kinds.index(("wait_for_event", "ui_inventory_hidden")))
+
+    def test_inventory_open_and_veil_pins_carry_their_counts(self) -> None:
+        """#434 residue, the last two Act I rows: `ui_inventory_shown.items` is
+        the picker's row count (derived from the inventory oracle at open
+        time) and `ui_sleep_veil_rendered.lines` is pinned ONLY when the
+        itinerary authors `expect_veil_lines` (donor-backed; not derivable)."""
+        steps = Emitter().emit("n", [{"kind": "inventory_open", "items": 2}])
+        self.assertEqual(steps[1]["type"], "ui_inventory_shown")
+        self.assertEqual(steps[1]["payload_contains"], {"items": 2})
+        bare = Emitter().emit("n", [{"kind": "inventory_open"}])
+        self.assertNotIn("payload_contains", bare[1])
+        preview = {"class_gains": ["warrior"], "level_ups": [], "classes_after": {"warrior": 1}, "consolidation": {}}
+        pinned = Emitter().emit("n", [{"kind": "sleep", "preview": preview, "merge": None, "epilogue": False, "expect_veil_lines": 5}])
+        veil = [s for s in pinned if s.get("type") == "ui_sleep_veil_rendered"]
+        self.assertEqual(veil[0]["payload_contains"], {"lines": 5})
+        unpinned = Emitter().emit("n", [{"kind": "sleep", "preview": preview, "merge": None, "epilogue": False}])
+        veil = [s for s in unpinned if s.get("type") == "ui_sleep_veil_rendered"]
+        self.assertNotIn("payload_contains", veil[0])
+
     def test_facing_bumps_displace_nobody_on_either_side(self) -> None:
         """#434 residue, the other half: every compiled blocked-target approach
         ends in a `face_target` bump (a 1-step move the target blocks), and the

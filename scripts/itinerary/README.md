@@ -212,3 +212,14 @@ a recompile of each one (`compile_itinerary.py <act> --out qa/scripts/<name>.jso
 and a real run of the result in the same PR -- otherwise the shipped script
 silently drifts from the source itinerary (review finding, #434).
 
+## Act I is at golden equivalence (2026-09-06)
+
+`goldens.py` on a fresh `steel_thread.yaml` compile vs `qa/scripts/steel_thread.json`
+reports NET 0 and EXACT == the shipped-only steps past the Act I seam (1,563):
+nothing the itinerary authors is claimed differently from the corpus. The
+vocabulary that closed the last rows: `talk.shots` (anchor -> screenshot taken
+on the node that anchor opens), `equip.shot` (taken with the inventory open),
+`sleep.expect_veil_lines` (donor-backed veil line count; not derivable), and
+`ui_inventory_shown.items` derived from the inventory oracle. Act II+ remains
+unauthored -- that is the whole remaining residue.
+
