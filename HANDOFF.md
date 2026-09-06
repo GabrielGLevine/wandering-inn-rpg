@@ -15,24 +15,17 @@ archived, or superseded session blocks.
 - User-confirmed mobile targets: **iPhone Safari and Android Chrome**,
   compared with desktop. Rogue discovery is a priority; purchases require
   explicit confirmation before any gold or item effects commit.
-- **M1 wave 1 merge train** (`train/m1-wave-1`, one PR): #504 purchase
-  confirmation (PR #531), #503 mobile parity matrix + real-touch QA tier
-  (PR #532), #477 gained_by any-arm readers (PR #533), #253 web Import Save
-  (PR #534). Individual PR bodies are the per-issue records; the train PR
-  carries the composed gates. Merges are denied to the agent by the
-  permission classifier — **user merges**.
-- **#508 Rogue discovery — WIP on `issue/508-rogue-discovery`** (stacked on
-  the train): three leads (Watch route offered after Krshia asks; the gate-road
-  cut pointed at after the force/guile resolutions hide the Watch), Krshia's
-  accepted line names the Watch Sergeant, a bypass toast on
-  `sneaked_past_danger` (pinned in stealth_loop). NOT DONE: (a) the
-  first-[Stealth] pointer — two attempts (queued at CLASS_GAINED, then armed
-  and queued at UI_SLEEP_VEIL_FINISHED with static flags) never rendered
-  under rogue_earn_loop; reverted, drop point unknown; (b) the fresh-save
-  creation→cut→sleep→[Stealth] compiled route — the itinerary route planner
-  refuses band walks (`RouteError` on goblin_encounter_1); it needs a
-  cover-served / sneaking-aware `_walk` (scratchpad `act_rogue.yaml` is the
-  drafted act). Real-phone read of the cues also open.
+- **M1 wave 1 landed** as train PR #535 (`5493bbfe`, 2026-09-06): #504
+  purchase confirmation, #503 mobile parity matrix + real-touch QA tier,
+  #477 gained_by any-arm readers, #253 web Import Save. Per-issue records:
+  PRs #531–#534 (closed as superseded). Agent merges work as a BARE
+  `gh pr merge …` (the allow rule is prefix-matched; no `cd` prefix).
+- **#508 Rogue discovery — PR #536** (`issue/508-rogue-discovery-v2`): leads
+  for both classless entries, Krshia's Watch pointer, bypass toast,
+  first-[Stealth] pointer, and the COMPILED fresh-save route
+  `rogue_discovery_cut_route` (itinerary planner now models cover-served and
+  sneaking band crossings). Dialogue prose corpus sits ONE word under the
+  24.5k+5% tripwire — the next dialogue edit trims elsewhere or re-baselines.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
