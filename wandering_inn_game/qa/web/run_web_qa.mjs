@@ -413,14 +413,19 @@ console.log(
 );
 if (touchMode) console.log(`touch smoke (page.touchscreen.tap reached the canvas): ${touchSmokeOk ? "OK" : "FAIL"}`);
 if (touchMode) console.log(`real touch taps performed by the runner: ${realTouches} (EMULATED browser touch; not real hardware)`);
+// The rotation probe is part of the verdict: `process.exit(...)` below would
+// override a bare exitCode, so it feeds overallPassed directly.
+let rotationOk = true;
 if (rotationProbe) {
-	const rotOk = rotationProbe.before.overlayShown && !rotationProbe.after.overlayShown;
-	console.log(`rotation probe: ${rotOk ? "OK" : "FAIL"} (overlay shown in portrait, hidden after rotation, no reload)`);
-	if (!rotOk) process.exitCode = 1;
+	rotationOk = rotationProbe.before.overlayShown && !rotationProbe.after.overlayShown;
+	console.log(`rotation probe: ${rotationOk ? "OK" : "FAIL"} (overlay shown in portrait, hidden after rotation, no reload)`);
 }
 console.log(`audio smoke: ${audioSmokePassed ? "PASS" : "FAIL"}`);
 
-const overallPassed = result.passed && audioSmokePassed;
+const overallPassed = result.passed && audioSmokePassed && rotationOk;
+if (!rotationOk) {
+	console.error("FAIL: portrait-entry rotation probe failed (see above).");
+}
 if (!audioSmokePassed) {
 	console.error("FAIL: audio smoke failed (see above) -- web audio is broken even if the QA script itself passed.");
 }

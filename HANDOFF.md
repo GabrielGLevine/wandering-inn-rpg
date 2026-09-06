@@ -15,9 +15,14 @@ archived, or superseded session blocks.
 - User-confirmed mobile targets: **iPhone Safari and Android Chrome**,
   compared with desktop. Rogue discovery is a priority; purchases require
   explicit confirmation before any gold or item effects commit.
-- No gameplay implementation lane is active. Roadmap publication and remote
-  verification are complete. Start issue work from current main through the
-  normal `issue/<n>-<slug>` and PR workflow.
+- **#504 purchase confirmation**: PR #531 green on all eight checks, merge
+  denied to the agent by the permission classifier — **user merges**.
+- **#503 mobile parity matrix**: implemented on `issue/503-mobile-parity-matrix`
+  (real-touch QA tier, emulated iPhone/Android presets, portrait-entry
+  rotation probe, `qa/MOBILE-PARITY.md`); PR pending review + CI. Real-device
+  columns stay UNTESTED until hardware observations (#511).
+- Local dev env now has Godot 4.7.2 web export templates + Playwright, so
+  `qa/web/run_web_qa.sh` runs here.
 - Roadmap-session base: `main` at `7780925b`. Owned local housekeeping:
   `HANDOFF.md`, `docs/ROADMAP.md`, and the assessment's appended difficulty
   explanation finding in `docs/VISUAL-LOG.md`.
