@@ -110,7 +110,7 @@ class NodePlanner:
             # No planner: a journal read banks nothing, moves nothing and draws
             # no rng, so there is no decision for one to make. It goes straight
             # to the emitter, which owns the open/close pair.
-            return [{"kind": "journal", "capture": str(spec.get("capture", "")), "act": str(spec.get("act", ""))}]
+            return [{"kind": "journal", "capture": str(spec.get("capture", "")), "act": str(spec.get("act", "")), "tab": str(spec.get("tab", ""))}]
         if node.primitive == "shot":
             return [{"kind": "shot", "name": str(spec["name"])}]
         if node.primitive == "assert":

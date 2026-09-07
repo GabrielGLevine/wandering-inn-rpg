@@ -86,7 +86,7 @@ SPEC_KEYS: dict[str, set[str]] = {
     # optionally capture, close. `act` tightens the `ui_journal_shown` pin to
     # the act page the book opened on -- the corpus reads it both ways, and a
     # journal beat that means "the book knows we are in Act V" should say so.
-    "journal": {"capture", "act", "why"},
+    "journal": {"capture", "act", "tab", "why"},
     "assert": {"state", "event", "event_absent", "why"},
     "detour": {"id", "why"},
     "raw": {"steps", "why"},
@@ -490,6 +490,8 @@ def _validate_primitive(node_id: str, primitive: str, spec: dict[str, Any]) -> N
         if not str(spec.get("name", "")):
             raise SchemaError(f"node {node_id} shot needs name")
     elif primitive == "journal":
+        if "tab" in spec and spec["tab"] not in ("quests", "skills", "history"):
+            raise SchemaError(f"node {node_id} journal tab must be quests, skills, or history")
         # `capture` is optional by design -- the corpus opens the book once as
         # an album beat and once as a state reading -- but an EMPTY string is a
         # typo, not a choice, and would emit a nameless screenshot.

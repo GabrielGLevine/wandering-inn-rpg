@@ -1012,6 +1012,20 @@
    "_itin": "rogue.journal"
   },
   {
+   "action": "press",
+   "name": "move_right",
+   "_itin": "rogue.journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "skills"
+   },
+   "timeout_sec": 5,
+   "_itin": "rogue.journal"
+  },
+  {
    "action": "screenshot",
    "name": "04_journal_rogue_stealth",
    "_itin": "rogue.journal"

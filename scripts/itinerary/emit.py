@@ -413,6 +413,13 @@ class Emitter:
         if act:
             shown["payload_contains"] = {"act_id": act}
         steps: list[dict[str, Any]] = [{"action": "press", "name": "journal"}, shown]
+        tab = str(operation.get("tab", ""))
+        if tab == "quests":
+            shown.setdefault("payload_contains", {})["active_tab"] = tab
+        elif tab:
+            for _ in range({"skills": 1, "history": 2}[tab]):
+                steps.append({"action": "press", "name": "move_right"})
+            steps.append({"action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": {"active_tab": tab}, "timeout_sec": 5})
         capture = str(operation.get("capture", ""))
         if capture:
             steps.append({"action": "screenshot", "name": capture})

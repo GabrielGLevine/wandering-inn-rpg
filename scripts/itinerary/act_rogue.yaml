@@ -89,5 +89,5 @@
       goto: {map: floodplains, cell: [31, 22]}
       why: Finish crossing after reading the bypass receipt.
     - id: rogue.journal
-      journal: {capture: 04_journal_rogue_stealth}
-      why: The book lists [Rogue] and [Stealth]; growth guidance stays qualitative (no counts on screen).
+      journal: {tab: skills, capture: 04_journal_rogue_stealth}
+      why: Open the actual Skills tab before reading Rogue and Stealth; the default Quests tab cannot prove their visible guidance.

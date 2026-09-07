@@ -19,7 +19,9 @@ archived, or superseded session blocks.
   Rogue (seed 7, 293 steps; diagnostic PASS means defect reproduced).
   Acquisition/respawn rules are unchanged. The proposal in
   `docs/design/rogue-recovery-proposal.md` awaits the owner's decision; #508
-  stays open. Finish the fresh-cut production-timing capture and scoped PR.
+  stays open. Fresh-cut production timing now passes all 143 steps on desktop
+  and both phone profiles; its Skills-tab capture reads the actual visible tab.
+  Exact next action: open/review the scoped guidance and evidence PR.
 - **Independent #504 lane:** worker owns `/private/tmp/wi-504-touch`, branch
   `issue/504-browser-touch`, integrated through main `87e6c0f7`. Owns browser
   purchase QA, driver/web helpers, manifest registration, CI routing and mobile
