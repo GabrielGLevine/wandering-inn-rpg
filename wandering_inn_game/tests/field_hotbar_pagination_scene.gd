@@ -8,6 +8,10 @@ class PhoneBar extends WIFieldHotbar:
 		return test_css
 
 func _ready() -> void:
+	var settings_path := "user://test_field_hotbar_pagination.cfg"
+	WISettings.set("_settings_path", settings_path)
+	WISettings.set("_settings", ConfigFile.new())
+	WISettings.set_text_scale_step(0)
 	var bar := PhoneBar.new()
 	add_child(bar)
 	bar._expanded = false
@@ -69,5 +73,6 @@ func _ready() -> void:
 	desktop.queue_free()
 	bar.queue_free()
 	await get_tree().process_frame
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(settings_path))
 	print("PASS: phone field pagination reaches 37 original slots with safe 44 CSS controls at all text scales; resize preserves selection")
 	get_tree().quit()
