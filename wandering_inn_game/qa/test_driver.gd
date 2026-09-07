@@ -472,6 +472,43 @@ func _execute(step: Dictionary) -> void:
 			await _touch_rect_of("DialoguePanel", "option_rect", int(step["option"]) - 1, "touch_dialogue_option", step.get("gesture", {}))
 		"touch_field_chip":
 			await _touch_rect_of("FieldChips", "chip_rect", String(step["chip"]), "touch_field_chip")
+		"touch_field_details":
+			var field := get_tree().root.find_child("FieldHotbar", true, false)
+			if field == null or field.toggle_rect().size == Vector2.ZERO:
+				_fail("touch_field_details: no visible details control")
+			else:
+				await _touch_at(field.toggle_rect().get_center(), "touch_field_details")
+		"touch_inventory_row":
+			await _touch_rect_of("Inventory", "item_row_rect", int(step["row"]) - 1, "touch_inventory_row")
+		"touch_journal_tab":
+			await _touch_rect_of("Journal", "tab_rect", String(step["tab"]), "touch_journal_tab")
+		"touch_inventory_equipment":
+			var inventory := get_tree().root.find_child("Inventory", true, false)
+			if inventory == null or inventory.equipment_rect().size == Vector2.ZERO:
+				_fail("touch_inventory_equipment: no visible equipment control")
+			else:
+				await _touch_at(inventory.equipment_rect().get_center(), "touch_inventory_equipment")
+		"touch_scroll_inventory", "touch_scroll_equipment":
+			var action := String(step["action"])
+			var inventory := get_tree().root.find_child("Inventory", true, false)
+			if inventory == null:
+				_fail("touch_scroll_inventory: Inventory is absent")
+			else:
+				var rect: Rect2 = inventory.visible_content_rect() if action == "touch_scroll_equipment" else inventory.list_rect()
+				var start := rect.position + rect.size * Vector2(0.5, 0.8)
+				var end := rect.position + rect.size * Vector2(0.5, 0.2)
+				var window_end := get_viewport().get_screen_transform() * end
+				await _touch_at(start, action, {"drag": true, "end_x": window_end.x, "end_y": window_end.y})
+		"assert_equipment_bottom_visible":
+			await _settle_for_capture()
+			var inventory := get_tree().root.find_child("Inventory", true, false)
+			if inventory == null or not bool(inventory.get("_equipment_expanded")):
+				_fail("assert_equipment_bottom_visible: equipment is not expanded")
+			else:
+				var labels: Array = inventory.get("_accessory_labels")
+				var last: Label = labels.back()
+				if not inventory.visible_content_rect().encloses(last.get_global_rect()):
+					_fail("assert_equipment_bottom_visible: last accessory is clipped")
 		"touch_settings_row":
 			await _touch_rect_of("SettingsPanel", "row_rect", int(step["row"]) - 1, "touch_settings_row")
 		"touch_purchase_row":
@@ -681,8 +718,14 @@ func _execute(step: Dictionary) -> void:
 			await _wait_for_event(String(step["type"]), float(step.get("timeout_sec", 5.0)), step.get("payload_contains", {}), bool(step.get("from_start", false)))
 		"screenshot":
 			await _screenshot(String(step["name"]))
+		"assert_dialogue_layout":
+			await _assert_dialogue_layout()
 		"assert_dialogue_displayed":
 			await _assert_dialogue_displayed(step)
+		"assert_field_layout":
+			await _assert_field_layout()
+		"assert_panel_layout":
+			await _assert_panel_layout(String(step["panel"]))
 		"assert_state":
 			_assert_state(step)
 		"assert_field_skill_absent":
@@ -767,6 +810,8 @@ func _execute(step: Dictionary) -> void:
 					settings_got = null
 			if settings_got != null and not _loosely_equal(settings_got, step["equals"]):
 				_fail("assert_settings_value: %s expected %s, got %s" % [settings_path, str(step["equals"]), str(settings_got)])
+		"resize_browser":
+			await _resize_browser(step)
 		"set_text_scale_step":
 			WISettings.set_text_scale_step(int(step["step"]))
 			await get_tree().process_frame
@@ -1133,6 +1178,140 @@ func _settle_for_capture() -> void:
 		await get_tree().process_frame
 	await get_tree().process_frame
 	await get_tree().process_frame
+
+
+func _resize_browser(step: Dictionary) -> void:
+	if not OS.has_feature("web"):
+		_fail("resize_browser: requires real browser viewport resize")
+		return
+	var request := {"width": int(step.get("width", 0)), "height": int(step.get("height", 0)), "restore": bool(step.get("restore", false))}
+	JavaScriptBridge.eval("window.__WI_QA_RESIZE__ = %s" % JSON.stringify(request), true)
+	var deadline := Time.get_ticks_msec() + WEB_CAPTURE_DEADLINE_MSEC
+	while Time.get_ticks_msec() < deadline:
+		if JavaScriptBridge.eval("window.__WI_QA_RESIZE__", true) == null:
+			await _settle_for_capture()
+			ObservableBus.emit_domain_event("qa_browser_resized", request)
+			return
+		await get_tree().process_frame
+	_fail("resize_browser: viewport request was not acknowledged")
+
+
+func _assert_dialogue_layout() -> void:
+	await _settle_for_capture()
+	var panel := get_tree().root.find_child("DialoguePanel", true, false)
+	if panel == null or not bool(panel.get("_shown")):
+		_fail("assert_dialogue_layout: dialogue is not visible")
+		return
+	var root: Control = panel.get("_root")
+	var bounds := root.get_global_rect()
+	if not get_viewport().get_visible_rect().encloses(bounds):
+		_fail("assert_dialogue_layout: panel is outside viewport")
+	var body: Label = panel.get("_text_label")
+	var font := body.get_theme_font("font")
+	var font_size := body.get_theme_font_size("font_size")
+	var text_height := font.get_multiline_string_size(body.text, HORIZONTAL_ALIGNMENT_LEFT, body.size.x, font_size).y
+	if text_height > body.size.y + 1.0 or not bounds.encloses(body.get_global_rect()):
+		_fail("assert_dialogue_layout: body text is clipped")
+	var css_font := font_size * WIResponsiveLayout.css_scale(get_viewport())
+	if css_font + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
+		_fail("assert_dialogue_layout: body text is too small")
+	var scroll: ScrollContainer = panel.get("_options_scroll")
+	var options: Array = panel.get("_option_controls")
+	for control: Control in options:
+		var rect := control.get_global_rect()
+		if not scroll.get_global_rect().intersects(rect):
+			continue
+		var visible_rect := scroll.get_global_rect().intersection(rect)
+		if visible_rect.intersects(body.get_global_rect()):
+			_fail("assert_dialogue_layout: option overlaps dialogue text")
+		var css := WIResponsiveLayout.css_rect(get_viewport(), rect)
+		if minf(css.size.x, css.size.y) + 0.01 < WIResponsiveLayout.MIN_TOUCH_CSS:
+			_fail("assert_dialogue_layout: option is smaller than 44 CSS pixels")
+	ObservableBus.emit_domain_event("qa_dialogue_layout_measured", {"text_scale": WISettings.text_scale_label(), "font_css": css_font, "panel_height": bounds.size.y})
+
+
+func _assert_panel_layout(panel_name: String) -> void:
+	await _settle_for_capture()
+	var panel := get_tree().root.find_child(panel_name, true, false)
+	var chips := get_tree().root.find_child("FieldChips", true, false)
+	if panel == null or not bool(panel.get("open")) or chips == null:
+		_fail("assert_panel_layout: requested panel is not open")
+		return
+	var root: Control = panel.get("_root")
+	var bounds := root.get_global_rect()
+	if not get_viewport().get_visible_rect().encloses(bounds):
+		_fail("assert_panel_layout: panel extends outside the viewport")
+	var chip_name := "inventory" if panel_name == "Inventory" else "journal"
+	var close_rect: Rect2 = chips.chip_rect(chip_name)
+	if close_rect.size == Vector2.ZERO or close_rect.intersects(bounds) or not get_viewport().get_visible_rect().encloses(close_rect):
+		_fail("assert_panel_layout: close control is absent or covered")
+	var content: Rect2 = panel.visible_content_rect() if panel_name == "Inventory" else panel.body_rect()
+	if not bounds.encloses(content):
+		_fail("assert_panel_layout: scrolling content extends outside its panel")
+	var content_css := WIResponsiveLayout.css_rect(get_viewport(), content)
+	if content_css.size.y < WIResponsiveLayout.MIN_TOUCH_CSS:
+		_fail("assert_panel_layout: fewer than 44 CSS pixels remain for scrolling content")
+	var controls := {"close": close_rect}
+	if panel_name == "Journal":
+		for tab: String in ["quests", "skills", "history"]:
+			controls[tab] = panel.tab_rect(tab)
+	else:
+		controls["equipment"] = panel.equipment_rect()
+		if not bool(panel.get("_equipment_expanded")):
+			controls["first_item"] = panel.item_row_rect(0)
+	for id: String in controls:
+		var rect: Rect2 = controls[id]
+		var parent_bounds: Rect2 = get_viewport().get_visible_rect() if id == "close" else (content if id == "first_item" else bounds)
+		if not parent_bounds.encloses(rect):
+			_fail("assert_panel_layout: %s is clipped or outside its visible area" % id)
+		for other_id: String in controls:
+			if other_id != id and rect.intersects(controls[other_id]):
+				_fail("assert_panel_layout: %s overlaps %s" % [id, other_id])
+		var css := WIResponsiveLayout.css_rect(get_viewport(), rect)
+		if minf(css.size.x, css.size.y) < WIResponsiveLayout.MIN_TOUCH_CSS - 0.01:
+			_fail("assert_panel_layout: %s is smaller than 44 CSS pixels" % id)
+	ObservableBus.emit_domain_event("qa_panel_layout_measured", {"panel": panel_name, "text_scale": WISettings.text_scale_label(), "content_height_css": content_css.size.y})
+
+
+func _assert_field_layout() -> void:
+	await _settle_for_capture()
+	var main := get_tree().root.find_child("Main", true, false)
+	var field := get_tree().root.find_child("FieldHotbar", true, false)
+	var chips := get_tree().root.find_child("FieldChips", true, false)
+	if main == null or field == null or chips == null or not field.visible:
+		_fail("assert_field_layout: exploration controls are not visible")
+		return
+	var rects: Dictionary = {}
+	for chip_name: String in ["inventory", "journal", "pause"]:
+		rects[chip_name] = chips.chip_rect(chip_name)
+	var hotbar: Node = field.hotbar_node()
+	for index in field.slot_count():
+		rects["slot_%d" % index] = hotbar.slot_rect(index)
+	rects["details"] = field.toggle_rect()
+	var viewport_rect := get_viewport().get_visible_rect()
+	var measurements: Dictionary = {}
+	for id: String in rects:
+		var rect: Rect2 = rects[id]
+		if rect.size == Vector2.ZERO or not viewport_rect.encloses(rect):
+			_fail("assert_field_layout: %s is absent or clipped: %s" % [id, rect])
+		var css: Rect2 = WIResponsiveLayout.css_rect(get_viewport(), rect)
+		measurements[id] = [css.position.x, css.position.y, css.size.x, css.size.y]
+		if WIResponsiveLayout.uses_touch_layout() and minf(css.size.x, css.size.y) < WIResponsiveLayout.MIN_TOUCH_CSS - 0.01:
+			_fail("assert_field_layout: %s is smaller than 44 CSS pixels: %s" % [id, css])
+		for other: String in rects:
+			if id < other and rect.intersects(rects[other]):
+				_fail("assert_field_layout: %s overlaps %s" % [id, other])
+	var world_rect: Rect2 = main.world_view_rect()
+	var player_position: Vector2 = main.world_to_screen(Vector2(Game.sim.player_cell) * CELL + Vector2.ONE * CELL * 0.5)
+	if not world_rect.has_point(player_position):
+		_fail("assert_field_layout: player lies outside the usable world")
+	for id: String in rects:
+		if world_rect.intersects(rects[id]):
+			_fail("assert_field_layout: world view overlaps %s" % id)
+	var readout := field.find_child("FieldReadout", true, false) as Control
+	if readout != null and readout.visible and world_rect.intersects(readout.get_global_rect()):
+		_fail("assert_field_layout: expanded details cover the world view")
+	ObservableBus.emit_domain_event("qa_field_layout_measured", {"controls_css": measurements, "touch_layout": WIResponsiveLayout.uses_touch_layout(), "text_scale": WISettings.text_scale_label(), "player": [player_position.x, player_position.y]})
 
 
 ## GH#324 DISPLAY PROOF. `ui_dialogue_rendered` is a bus confirmation that the

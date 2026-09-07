@@ -30,6 +30,10 @@ func update(grid_size: Vector2i, player_cell: Vector2i) -> void:
 	)
 
 
+func set_view_size(view_size: Vector2) -> void:
+	_view_size = view_size
+
+
 static func axis(content: float, view: float, focus: float) -> float:
 	if content <= view:
 		return content * 0.5

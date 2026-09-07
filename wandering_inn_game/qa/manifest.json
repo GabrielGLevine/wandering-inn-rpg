@@ -7551,6 +7551,100 @@
  ],
  "browser_scripts": [
   {
+   "script": "responsive_dialogue_touch",
+   "seed": 9,
+   "fixture": "mobile_tap_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "#505 actual touch four-page dialogue at all supported text scales, visible text and measured option targets. Physical phones remain #511.",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "mobile_tap_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "lyonette_tip"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "responsive_field_layout",
+   "seed": 37,
+   "fixture": "sewers_property_seams",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "#505 live CSS geometry at all text scales and actual browser contacts; native scripts do not prove this touch route. Physical phones remain #511.",
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs",
+     "sewers"
+    ],
+    "fixtures": [
+     "sewers_property_seams"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_touch",
+     "kindle",
+     "light"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "responsive_panels_touch",
+   "seed": 37,
+   "fixture": "gear_loop_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap",
+    "drag"
+   ],
+   "note": "#505 live CSS geometry at all text scales and actual browser contacts; native scripts do not prove this touch route. Physical phones remain #511.",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "gear_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "purchase_touch_static",
    "seed": 9,
    "fixture": "d2_shop",

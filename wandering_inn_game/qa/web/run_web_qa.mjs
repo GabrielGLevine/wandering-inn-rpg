@@ -39,6 +39,7 @@ import { createServer } from "node:http";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { chromium } from "playwright";
+import { gestureProof } from "./touch_gesture_proof.mjs";
 
 const args = process.argv.slice(2);
 const touchMode = args.includes("--touch");
@@ -317,7 +318,7 @@ const touchRequests = [];
 const touchSession = touchMode ? await page.context().newCDPSession(page) : null;
 await page.evaluate(() => {
 	window.__WI_TOUCH_EVENTS__ = [];
-	for (const type of ["touchstart", "touchend", "touchcancel"]) {
+	for (const type of ["touchstart", "touchmove", "touchend", "touchcancel"]) {
 	 document.addEventListener(type, (event) => window.__WI_TOUCH_EVENTS__.push({
 	  type, time: performance.now(), trusted: event.isTrusted,
 	  points: [...event.changedTouches].map((t) => ({x: t.clientX, y: t.clientY})),
@@ -333,7 +334,16 @@ const serviceTouch = async () => {
 		const gesture = req.gesture ?? {};
 		const repeat = Math.max(1, Math.min(3, gesture.repeat ?? 1));
 		const holdMs = Math.max(0, Math.min(1000, gesture.hold_ms ?? 0));
-		if (gesture.follow_purchase_buy) {
+		if (gesture.drag) {
+			if (holdMs || repeat !== 1 || gesture.follow_purchase_buy) throw new Error("drag cannot combine with purchase or repeated contacts");
+			await touchSession.send("Input.dispatchTouchEvent", {type: "touchStart", touchPoints: [{x: req.x, y: req.y}]});
+			for (let index = 1; index <= 8; index++) {
+				await page.waitForTimeout(20);
+				await touchSession.send("Input.dispatchTouchEvent", {type: "touchMove", touchPoints: [{x: req.x + (gesture.end_x - req.x) * index / 8, y: req.y + (gesture.end_y - req.y) * index / 8}]});
+			}
+			await touchSession.send("Input.dispatchTouchEvent", {type: "touchEnd", touchPoints: []});
+			realTouches += 1;
+		} else if (gesture.follow_purchase_buy) {
 			if (holdMs || repeat !== 1) throw new Error("pre-arm burst requires one unheld opening contact");
 			// Queue the ordered protocol messages before awaiting replies: awaiting
 			// each remote round trip can let the real modal arm between contacts.
@@ -371,6 +381,15 @@ const deadline = Date.now() + TIMEOUT_MS;
 let result = null;
 while (Date.now() < deadline) {
 	await serviceTouch();
+	const resize = await page.evaluate(() => window.__WI_QA_RESIZE__ ?? null);
+	if (resize) {
+		const size = resize.restore ? landscapeViewport : {width: resize.width, height: resize.height};
+		if (![size.width, size.height].every(n => Number.isInteger(n) && n >= 200 && n <= 3000)) throw new Error("Invalid QA viewport size");
+		await page.setViewportSize(size);
+		const actual = await page.evaluate(() => ({width: innerWidth, height: innerHeight}));
+		if (actual.width !== size.width || actual.height !== size.height) throw new Error("QA viewport resize did not apply");
+		await page.evaluate(() => { window.__WI_QA_RESIZE__ = null; });
+	}
 	const shot = await page.evaluate(() => window.__WI_QA_SHOT__ ?? null);
 	if (shot) {
 		await page.screenshot({ path: join(outDir, `${shot}.png`) });
@@ -463,6 +482,12 @@ const browserEvidence = {
 let timedTouchOk = true;
 for (const request of touchRequests) {
 	const gesture = request.gesture ?? {};
+	if (gesture.drag || (!gesture.follow_purchase_buy && !gesture.hold_ms)) {
+		const proof = gestureProof(request, browserEvidence.runtime.events);
+		request[gesture.drag ? "dragProof" : "tapProof"] = proof;
+		timedTouchOk = timedTouchOk && proof.passed;
+		continue;
+	}
 	if (!gesture.follow_purchase_buy && !gesture.hold_ms) continue;
 	const events = browserEvidence.runtime.events.filter((e) => e.time >= request.started && e.time <= request.finished);
 	const touches = events.filter((e) => e.type === "touchstart");

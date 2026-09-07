@@ -49,6 +49,7 @@ var _map_transition_rebuilt := false
 
 
 func _ready() -> void:
+	RenderingServer.set_default_clear_color(Color(0.05, 0.035, 0.025))
 	_install_symbol_font_fallback()
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_ensure_viewport_nodes()
@@ -83,6 +84,10 @@ func message_layer() -> Node:
 func world_to_screen(world_pos: Vector2) -> Vector2:
 	var canvas_pos := _sub_viewport.canvas_transform * world_pos
 	return _container.get_global_transform() * canvas_pos
+
+
+func world_view_rect() -> Rect2:
+	return Rect2(_container.position, Vector2(_sub_viewport.size) * _container.scale)
 
 
 ## The exact inverse of `world_to_screen` (issue #57's screen->cell trap):
@@ -276,10 +281,22 @@ func _hold_map_transition_midpoint() -> void:
 
 
 func _layout_viewport_container() -> void:
-	var scaled_size := WORLD_VIEWPORT_SIZE * WORLD_SCALE
-	_container.size = WORLD_VIEWPORT_SIZE
+	var viewport_size := get_viewport_rect().size
+	var top := 0.0
+	var bottom := viewport_size.y
+	if _world != null and Game.sim.combat == null:
+		if _field_chips != null:
+			top = _field_chips.occupied_height() + 10.0
+		if _field_hotbar != null:
+			bottom = _field_hotbar.world_bottom()
+	var view_size := Vector2(WORLD_VIEWPORT_SIZE.x, minf(WORLD_VIEWPORT_SIZE.y, floorf(maxf(160.0, bottom - top) / WORLD_SCALE)))
+	var scaled_size := view_size * WORLD_SCALE
+	_sub_viewport.size = Vector2i(view_size)
+	_container.size = view_size
 	_container.scale = Vector2(WORLD_SCALE, WORLD_SCALE)
-	_container.position = (get_viewport_rect().size - scaled_size) * 0.5
+	_container.position = Vector2((viewport_size.x - scaled_size.x) * 0.5, top + (bottom - top - scaled_size.y) * 0.5)
+	if _world != null:
+		_world.set_view_size(view_size)
 
 
 func _clear_world_viewport() -> void:
@@ -400,6 +417,8 @@ func _spawn_world() -> void:
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
+	if type in [WIEvents.WORLD_READY, WIEvents.UI_FIELD_HOTBAR_RENDERED, WIEvents.COMBAT_STARTED, WIEvents.UI_COMBAT_HIDDEN]:
+		_layout_viewport_container.call_deferred()
 	if type == WIEvents.GAME_RESET or type == WIEvents.GAME_LOADED:
 		WIDataRegistry.reset()
 		# GH#278: view-side static caches join the reset so a live data

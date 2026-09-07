@@ -9,6 +9,24 @@ archived, or superseded session blocks.
 
 ## Current state
 
+- **Active #505 responsive layout:** controller owns `issue/505-responsive-layout`
+  from main `1e311934`, now composed with #549 at `0ac059a8`. Reproduced small CSS hit regions and expanded readout
+  world occlusion in the current exported iPhone-sized Chromium build. Bounded
+  sequence: shared field sizing/clearance, modal text and controls, then crowded
+  combat; verify both phone profiles, all text scales, desktop and actual touch.
+  Phone field geometry passes all text scales and actual browser exit taps.
+  Inventory, equipment-scroll and four-page dialogue routes pass in both phone
+  profiles at all text scales; live field/panel shrinking now resizes hit targets.
+  Interim review defects are repaired, including continuous-drag evidence.
+  Browser safe-area handling and crowded combat remain in progress; full
+  integration gates and final independent review have not run. Physical browser-family observations remain under #511. Evidence lives at
+  `/private/tmp/wi-505-evidence`.
+- **#510 scoped recovery merged through PR #549:** main `0ac059a8` is identical
+  to the reviewed tree; all eight CI checks pass. Continue skips unreadable
+  newer saves. Both browser profiles prove actual reload of a completed durable
+  manual save and subsequent touch input, plus explicitly injected malformed-save
+  recovery with valid bytes preserved. Keyboard, audio, genuine backgrounding,
+  itch and physical lifecycle acceptance remain open. Evidence: `/private/tmp/wi-510-evidence`.
 - **#508 scoped work merged through PR #548:** main `6f188bbc` matches
   the independently reviewed tree; all eight CI checks pass. Fresh Watch proof earns both wages, pays
   the classless route, walks home and gains Rogue at sleep. Fresh drainage,

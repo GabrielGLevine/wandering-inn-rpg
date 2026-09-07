@@ -78,26 +78,29 @@ func _slot_index_at(local_pos: Vector2) -> int:
 ## output back in -- which is exactly how the bottom HUD cluster crept up to 25px
 ## left and 4% wider across re-layouts of an unchanged 3-slot bar (GH#386 P3).
 var _rendered_width := 0.0
+var _slot_size := SLOT_SIZE
 
 
 func rendered_width() -> float:
 	return _rendered_width
 
 
-func render(slots: Array, selected_index: int) -> void:
+func render(slots: Array, selected_index: int, slot_size := SLOT_SIZE) -> void:
+	_slot_size = slot_size
 	for child: Node in get_children():
+		remove_child(child)
 		child.queue_free()
 	var total_width := 0.0
 	for i in slots.size():
 		if i > 0:
 			total_width += END_TURN_GAP if bool((slots[i] as Dictionary).get("end_turn_gap", false)) else SLOT_GAP
-		total_width += SLOT_SIZE.x
+		total_width += _slot_size.x
 	_rendered_width = total_width
-	custom_minimum_size = Vector2(total_width, SLOT_SIZE.y)
+	custom_minimum_size = Vector2(total_width, _slot_size.y)
 	size = custom_minimum_size
 	offset_left = -total_width * 0.5
 	offset_right = total_width * 0.5
-	offset_top = -SLOT_SIZE.y - BOTTOM_MARGIN
+	offset_top = -_slot_size.y - BOTTOM_MARGIN
 	offset_bottom = -BOTTOM_MARGIN
 	var x := 0.0
 	for i in slots.size():
@@ -107,7 +110,7 @@ func render(slots: Array, selected_index: int) -> void:
 		var node := _make_slot(slot, i == selected_index)
 		node.position = Vector2(x, 0.0)
 		add_child(node)
-		x += SLOT_SIZE.x
+		x += _slot_size.x
 
 
 func slot_rect(index: int) -> Rect2:
@@ -121,8 +124,8 @@ func slot_rect(index: int) -> Rect2:
 
 func _make_slot(slot: Dictionary, selected: bool) -> Control:
 	var root := Control.new()
-	root.custom_minimum_size = SLOT_SIZE
-	root.size = SLOT_SIZE
+	root.custom_minimum_size = _slot_size
+	root.size = _slot_size
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if not bool(slot.get("affordable", true)):
 		root.modulate = UNAFFORDABLE_MODULATE
@@ -147,7 +150,7 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		tex_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tex_rect.size = ICON_SIZE
-		tex_rect.position = (SLOT_SIZE - ICON_SIZE) * 0.5
+		tex_rect.position = (_slot_size - ICON_SIZE) * 0.5
 		root.add_child(tex_rect)
 	else:
 		var text_label := UIChrome.make_label("", "Small")
@@ -183,8 +186,8 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 	if ap_cost > 0:
 		var ap_label := Label.new()
 		ap_label.text = "●".repeat(ap_cost)  # ●
-		ap_label.position = Vector2(2, SLOT_SIZE.y - 26)
-		ap_label.size = Vector2(SLOT_SIZE.x - 4, 13)
+		ap_label.position = Vector2(2, _slot_size.y - 26)
+		ap_label.size = Vector2(_slot_size.x - 4, 13)
 		ap_label.add_theme_font_size_override("font_size", 10)
 		ap_label.add_theme_color_override("font_color", AP_PIP_COLOR)
 		ap_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -194,8 +197,8 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 	if mp_cost > 0:
 		var mp_label := Label.new()
 		mp_label.text = "◆".repeat(mp_cost)  # ◆
-		mp_label.position = Vector2(2, SLOT_SIZE.y - 14)
-		mp_label.size = Vector2(SLOT_SIZE.x - 4, 13)
+		mp_label.position = Vector2(2, _slot_size.y - 14)
+		mp_label.size = Vector2(_slot_size.x - 4, 13)
 		mp_label.add_theme_font_size_override("font_size", 10)
 		mp_label.add_theme_color_override("font_color", MP_DIAMOND_COLOR)
 		mp_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -212,7 +215,7 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 	if cd_left > 0:
 		var badge := CooldownBadge.new()
 		badge.rounds = cd_left
-		badge.position = Vector2(SLOT_SIZE.x - COOLDOWN_BADGE_SIZE - 2.0, 2.0)
+		badge.position = Vector2(_slot_size.x - COOLDOWN_BADGE_SIZE - 2.0, 2.0)
 		badge.custom_minimum_size = Vector2(COOLDOWN_BADGE_SIZE, COOLDOWN_BADGE_SIZE)
 		badge.size = Vector2(COOLDOWN_BADGE_SIZE, COOLDOWN_BADGE_SIZE)
 		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE

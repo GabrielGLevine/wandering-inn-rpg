@@ -1260,6 +1260,18 @@ func _update_camera() -> void:
 	_camera_ctl.update(Game.sim.grid_size, Game.sim.player_cell)
 
 
+func set_view_size(view_size: Vector2) -> void:
+	if _camera_ctl == null:
+		return
+	_camera_ctl.set_view_size(view_size)
+	_vignette.size = view_size
+	_vignette.position = -view_size * 0.5
+	if Game.sim.combat == null:
+		_update_camera()
+	else:
+		_camera_ctl.enter_combat(Game.sim.combat.grid_size)
+
+
 func _pan_camera_to_player() -> void:
 	_camera_ctl.pan_to(Game.sim.grid_size, Game.sim.player_cell, _presentation_delay(MOVE_TWEEN_SECONDS))
 

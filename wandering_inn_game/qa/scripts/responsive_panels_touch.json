@@ -1,0 +1,449 @@
+{
+ "_comment": "#505 browser-only live phone layout at every supported text scale. Existing gear fixture is a layout/scroll stress case, never acquisition evidence. All input contacts are browser touch, including held drags. Assert readable content space, 44 CSS-pixel controls, equipment expansion, scroll without equip, and reachable Close. Physical observations remain #511.",
+ "fixture_save": "gear_loop_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_title_row",
+   "row": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 0
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Inventory"
+  },
+  {
+   "action": "screenshot",
+   "name": "0_inventory"
+  },
+  {
+   "action": "resize_browser",
+   "width": 740,
+   "height": 360
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Inventory"
+  },
+  {
+   "action": "screenshot",
+   "name": "0_inventory_resized"
+  },
+  {
+   "action": "resize_browser",
+   "restore": true
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Inventory"
+  },
+  {
+   "action": "touch_inventory_equipment"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_equipment_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "expanded": true
+   }
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Inventory"
+  },
+  {
+   "action": "screenshot",
+   "name": "0_equipment_expanded"
+  },
+  {
+   "action": "touch_scroll_equipment"
+  },
+  {
+   "action": "assert_equipment_bottom_visible"
+  },
+  {
+   "action": "screenshot",
+   "name": "0_equipment_expanded_bottom"
+  },
+  {
+   "action": "touch_inventory_equipment"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_equipment_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "expanded": false
+   }
+  },
+  {
+   "action": "touch_scroll_inventory"
+  },
+  {
+   "action": "assert_inventory_scrolled",
+   "greater_than": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.weapon",
+   "equals": "rusty_sword"
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_journal_tab",
+   "tab": "skills"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "active_tab": "skills"
+   }
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Journal"
+  },
+  {
+   "action": "screenshot",
+   "name": "0_journal_skills"
+  },
+  {
+   "action": "resize_browser",
+   "width": 740,
+   "height": 360
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Journal"
+  },
+  {
+   "action": "screenshot",
+   "name": "0_journal_skills_resized"
+  },
+  {
+   "action": "resize_browser",
+   "restore": true
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Journal"
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 1
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Inventory"
+  },
+  {
+   "action": "screenshot",
+   "name": "1_inventory"
+  },
+  {
+   "action": "touch_inventory_equipment"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_equipment_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "expanded": true
+   }
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Inventory"
+  },
+  {
+   "action": "screenshot",
+   "name": "1_equipment_expanded"
+  },
+  {
+   "action": "touch_scroll_equipment"
+  },
+  {
+   "action": "assert_equipment_bottom_visible"
+  },
+  {
+   "action": "screenshot",
+   "name": "1_equipment_expanded_bottom"
+  },
+  {
+   "action": "touch_inventory_equipment"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_equipment_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "expanded": false
+   }
+  },
+  {
+   "action": "touch_scroll_inventory"
+  },
+  {
+   "action": "assert_inventory_scrolled",
+   "greater_than": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.weapon",
+   "equals": "rusty_sword"
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_journal_tab",
+   "tab": "skills"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "active_tab": "skills"
+   }
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Journal"
+  },
+  {
+   "action": "screenshot",
+   "name": "1_journal_skills"
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 2
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Inventory"
+  },
+  {
+   "action": "screenshot",
+   "name": "2_inventory"
+  },
+  {
+   "action": "touch_inventory_equipment"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_equipment_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "expanded": true
+   }
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Inventory"
+  },
+  {
+   "action": "screenshot",
+   "name": "2_equipment_expanded"
+  },
+  {
+   "action": "touch_scroll_equipment"
+  },
+  {
+   "action": "assert_equipment_bottom_visible"
+  },
+  {
+   "action": "screenshot",
+   "name": "2_equipment_expanded_bottom"
+  },
+  {
+   "action": "touch_inventory_equipment"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_equipment_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "expanded": false
+   }
+  },
+  {
+   "action": "touch_scroll_inventory"
+  },
+  {
+   "action": "assert_inventory_scrolled",
+   "greater_than": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.weapon",
+   "equals": "rusty_sword"
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_journal_tab",
+   "tab": "skills"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "active_tab": "skills"
+   }
+  },
+  {
+   "action": "assert_panel_layout",
+   "panel": "Journal"
+  },
+  {
+   "action": "screenshot",
+   "name": "2_journal_skills"
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_equipped",
+   "count": 0
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_unequipped",
+   "count": 0
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 0
+  }
+ ]
+}
