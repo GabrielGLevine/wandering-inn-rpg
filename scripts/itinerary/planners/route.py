@@ -60,7 +60,7 @@ class RoutePlanner:
                     op: dict[str, Any] = {"kind": "transition", "map": edge["to_map"], "cell": destination}
                     # A gated door voices its crossing (`door_when.open_toast`,
                     # the fissure into the deep tunnels) BEFORE map_changed.
-                    open_toast = str((transition.get("door_when") or {}).get("open_toast", ""))
+                    open_toast = str(edge.get("open_toast", ""))
                     if open_toast:
                         op["open_toast"] = open_toast
                     ops.append(op)
@@ -157,11 +157,17 @@ class RoutePlanner:
         edges: list[dict[str, Any]] = []
         portal_carrier: dict[str, Any] | None = None
         for entity in self.maps[map_id].get("entities", []):
-            if entity.get("to_map"):
+            # WIInteractions dispatches by kind: doors use only to_map;
+            # props can transition through their satisfied door_when arm.
+            if entity.get("kind") == "door" and entity.get("to_map"):
                 edges.append({"kind": "transition", "entity": entity, "to_map": entity["to_map"], "to_cell": entity["to_cell"]})
+                continue
+            if entity.get("kind") != "prop":
+                continue
             door_when = entity.get("door_when", {})
             if door_when and self._requirements_met(door_when.get("requires", {}), ledger):
-                edges.append({"kind": "transition", "entity": entity, "to_map": door_when["to_map"], "to_cell": door_when["to_cell"]})
+                edges.append({"kind": "transition", "entity": entity, "to_map": door_when["to_map"], "to_cell": door_when["to_cell"], "open_toast": str(door_when.get("open_toast", ""))})
+                continue
             portal_when = entity.get("portal_menu_when", {})
             if entity.get("portal_menu") and self._requirements_met(portal_when.get("requires", {}), ledger):
                 portal_carrier = entity
@@ -238,49 +244,29 @@ class RoutePlanner:
             hazards.append(entity)
         return hazards
 
-    def bypass_hazards(self, map_id: str, ledger: Ledger) -> list[dict[str, Any]]:
-        """Encounters a walk may CROSS this leg without a fight: every live
-        proximity encounter while sneaking, else those whose cover prop was
-        served this waking. Mirrors wi_game.gd's proximity pass order (sneak
-        arm above the cover arm); each crossing banks once per encounter per
-        waking (`danger:<id>` / `cover:<id>` in entity_first_use)."""
-        out: list[dict[str, Any]] = []
-        for entity in self.maps[map_id].get("entities", []):
-            if str(entity.get("kind", "")) != "encounter" or "trigger_radius" not in entity:
-                continue
-            if entity.get("present_when") or entity.get("encounter_when"):
-                continue
-            entity_id = str(entity.get("id", ""))
-            if entity_id in ledger.state["removed_entities"] or entity_id in ledger.state["dormant_encounters"]:
-                continue
-            if not self._requirements_met(entity.get("gate_when", {}).get("requires", {}), ledger):
-                continue
-            cover_prop = str(entity.get("cover_prop", ""))
-            if ledger.sneaking or (cover_prop and ledger.state["entity_first_use"].get(f"serve:{cover_prop}")):
-                out.append(entity)
-        return out
-
     def _bank_bypasses(self, ledger: Ledger, cells: list[list[int]]) -> list[dict[str, Any]]:
-        """The waits a walk earns by crossing a band it is allowed to cross."""
-        ops: list[dict[str, Any]] = []
-        for entity in self.bypass_hazards(ledger.map_id, ledger):
-            if self._first_trigger(cells, [entity]) is None:
-                continue
-            entity_id = str(entity.get("id", ""))
-            first_use = ledger.state["entity_first_use"]
-            if ledger.sneaking:
-                key, counter, toast = f"danger:{entity_id}", "sneaked_past_danger", "Whatever was watching that stretch never saw you pass."
-            else:
-                key, counter, toast = f"cover:{entity_id}", "crossed_under_cover", ""
-            if first_use.get(key):
-                continue
-            first_use[key] = True
-            ledger.accomplishment(counter)
-            waits: list[dict[str, Any]] = [{"type": "accomplishment_recorded", "payload_contains": {"id": counter, "count": int(ledger.state["accomplishments"][counter])}}]
-            if toast:
-                waits.append({"type": "toast", "payload_contains": {"text": toast}})
-            ops.append({"kind": "bypass_bank", "encounter": entity_id, "waits": waits})
-        return ops
+        """Only a real sim walk may license a bypass counter or toast wait."""
+        if len(cells) < 2 or not self._needs_bypass_projection(ledger):
+            return []
+        probe = Ledger.from_save(ledger.materialize_save())
+        probe.set_position(ledger.map_id, cells[0])
+        stance = "sneaking" if ledger.sneaking else "visible"
+        query = f"bypass_walk {stance} unknown " + " ".join(f"{cell[0]},{cell[1]}" for cell in cells)
+        answer = self.bridge.query(query, probe)
+        if answer.get("supported") is not True:
+            raise RouteError(f"unsupported bypass projection: {answer}")
+        ledger.state["entity_first_use"] = answer["entity_first_use"]
+        ledger.state["warded_encounters"] = answer["warded_encounters"]
+        for counter in ("sneaked_past_danger", "crossed_under_cover"):
+            if counter in answer["accomplishments"]:
+                ledger.state["accomplishments"][counter] = int(answer["accomplishments"][counter])
+        return [{"kind": "bypass_bank", **bank} for bank in answer["banks"]]
+
+    @staticmethod
+    def _needs_bypass_projection(ledger: Ledger) -> bool:
+        return ledger.sneaking or bool(ledger.state["warded_encounters"]) or any(
+            key.startswith("serve:") for key in ledger.state["entity_first_use"]
+        )
 
     @staticmethod
     def _chebyshev(a: list[int], b: list[int]) -> int:
@@ -362,22 +348,32 @@ class RoutePlanner:
         answer = self.bridge.query(query, ledger)
         if not answer.get("reachable"):
             raise RouteError(f"oracle found no route: {query}: {answer}")
-        hazards = [e for e in self.proximity_hazards(ledger.map_id, ledger) if str(e.get("id", "")) != allow_encounter]
-        trigger = self._first_trigger([[int(p) for p in c] for c in answer.get("cells", [])], hazards)
+        approach = answer.get("approach") if answer.get("target_blocked") else None
+        if answer.get("target_blocked") and not isinstance(approach, dict):
+            raise RouteError(f"target has no interact approach: {query}: {answer}")
+        driver_steps = list((approach if approach is not None else answer).get("driver_steps", []))
+        # BFS may include the blocked target or choose a different approach.
+        # Replay exactly the emitted walk; a facing bump earns no credit.
+        cells = [start]
+        for step in driver_steps:
+            vector = DIRECTION_VECTORS[str(step["direction"])]
+            for _ in range(int(step.get("steps", 1))):
+                cells.append([cells[-1][0] + vector[0], cells[-1][1] + vector[1]])
+        # Ward/grace state can change during a walk. The sim projection below
+        # owns refusal as well as credit whenever such state is present.
+        hazards = [] if self._needs_bypass_projection(ledger) else [e for e in self.proximity_hazards(ledger.map_id, ledger) if str(e.get("id", "")) != allow_encounter]
+        trigger = self._first_trigger(cells, hazards)
         if trigger is not None:
             index, entity = trigger
             raise RouteError(
                 f"route {query} walks within {entity['trigger_radius']} of the proximity encounter "
-                f"{entity['id']!r} at {entity['cell']} (path cell {answer['cells'][index]}). That fight would start "
+                f"{entity['id']!r} at {entity['cell']} (path cell {cells[index]}). That fight would start "
                 "mid-walk and eat every step after it. Plan it: add a fight node with entry: proximity before "
                 "this leg, or route around it."
             )
+        banks = self._bank_bypasses(ledger, cells)
         ops: list[dict[str, Any]] = []
         if answer.get("target_blocked"):
-            approach = answer.get("approach")
-            if not isinstance(approach, dict):
-                raise RouteError(f"target has no interact approach: {query}: {answer}")
-            driver_steps = list(approach.get("driver_steps", []))
             if driver_steps:
                 ops.append({"kind": "walk", "steps": driver_steps})
             stand = [int(part) for part in approach["cell"]]
@@ -391,7 +387,6 @@ class RoutePlanner:
             # that the bump displaced nobody.
             ops.append({"kind": "arrival_pin", "cell": stand})
         else:
-            driver_steps = list(answer.get("driver_steps", []))
             if driver_steps:
                 ops.append({"kind": "walk", "steps": driver_steps})
             ledger.set_position(ledger.map_id, target)
@@ -400,5 +395,5 @@ class RoutePlanner:
                 if step.get("action") == "move" and direction in DIRECTION_VECTORS:
                     ledger.face(direction)
                     break
-        ops.extend(self._bank_bypasses(ledger, [[int(p) for p in c] for c in answer.get("cells", [])]))
+        ops.extend(banks)
         return ops

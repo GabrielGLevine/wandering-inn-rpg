@@ -33,8 +33,10 @@ func _init() -> void:
 	_check_path(oracle, sim)
 	_check_field_bar(oracle, sim)
 	_check_state_and_inventory(oracle, sim)
+	_check_bypass_walk(oracle)
+	_check_transition_precedence()
 
-	print("PASS: oracle answers visible_options / path / field_bar correctly against near_invrisil")
+	print("PASS: oracle answers visible_options / path / field_bar / bypass_walk and transition precedence")
 	quit()
 
 
@@ -57,7 +59,7 @@ func _compile_oracle() -> RefCounted:
 ## one, EXCEPT that the dialogue graphs are loaded and bank-expanded: the whole
 ## point of `visible_options` is the graph evaluation, and a sim with
 ## `"dialogue": {}` would make the key query untestable.
-func _sim_from_fixture() -> WIGame:
+func _sim_from_fixture(apply_fixture: bool = true) -> WIGame:
 	var shared_banks: Dictionary = WIDialogueBanks.load_shared()
 	var graphs: Dictionary = {}
 	var dir := DirAccess.open("res://data/dialogue")
@@ -83,10 +85,47 @@ func _sim_from_fixture() -> WIGame:
 	WISceneCatalog.reset()
 	var game := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"),
 			func(_t: String, _p: Dictionary) -> void: pass, 9, combat_config)
+	if not apply_fixture:
+		return game
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(FIXTURE))
 	assert(parsed is Dictionary, "%s is not JSON" % FIXTURE)
 	assert(WISave.apply(game, parsed as Dictionary), "%s must load -- the oracle's own input contract" % FIXTURE)
 	return game
+
+
+func _check_bypass_walk(oracle: RefCounted) -> void:
+	var sim := _sim_from_fixture(false)
+	sim.bind_map_silent("floodplains", Vector2i(26, 22))
+	var route := ["sneaking", "known", "26,22", "27,22", "28,22", "29,22"]
+	sim.warded_encounters["goblin_encounter_1"] = {"sleeps": 1}
+	var warded: Dictionary = oracle._q_bypass_walk(sim, route)
+	assert(warded.supported and warded.banks.is_empty(), "a ward precedes the real sneak credit arm")
+	assert(sim.accomplishment_count("sneaked_past_danger") == 0, "warded movement must not bank")
+	sim.bind_map_silent("floodplains", Vector2i(26, 22))
+	sim.warded_encounters.clear()
+	var live: Dictionary = oracle._q_bypass_walk(sim, route)
+	assert(live.supported and live.banks.size() == 1, "removing the ward changes actual crossing credit")
+	assert(sim.accomplishment_count("sneaked_past_danger") == 1, "the oracle executes WIGame movement")
+	sim.warded_encounters["goblin_encounter_1"] = {"sleeps": 2}
+	var before := WISave.serialize(sim)
+	var preview: Dictionary = oracle._q_progression_preview(sim)
+	assert(preview.bypass_state_after_sleep.warded_encounters.goblin_encounter_1.sleeps == 1, "real sleep decrements a longer-lived ward")
+	assert(preview.bypass_state_after_sleep.entity_first_use.is_empty(), "real sleep clears per-waking credit")
+	assert(WISave.serialize(sim) == before and sim.sneaking, "a sleep preview leaves its input sim unchanged")
+
+
+func _check_transition_precedence() -> void:
+	for kind: String in ["door", "prop"]:
+		var sim := _sim_from_fixture(false)
+		sim.bind_map_silent("floodplains", Vector2i(2, 10))
+		sim.player_facing = Vector2i.RIGHT
+		sim.entities["route_test_gate"] = {
+			"id": "route_test_gate", "kind": kind, "cell": Vector2i(3, 10),
+			"to_map": "inn", "to_cell": [2, 3],
+			"door_when": {"requires": {}, "to_map": "street", "to_cell": [1, 3]},
+		}
+		sim.interact()
+		assert(sim.current_map == ("inn" if kind == "door" else "street"), "kind dispatch, not additive route edges, determines the destination")
 
 
 ## THE key query. `erin_errand`'s hub authors FOURTEEN options; under

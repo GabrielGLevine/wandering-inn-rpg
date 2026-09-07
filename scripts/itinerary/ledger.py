@@ -272,6 +272,9 @@ class Ledger:
         return waits
 
     def apply_sleep_preview(self, preview: dict[str, Any]) -> None:
+        bypass_state = preview.get("bypass_state_after_sleep")
+        if bypass_state is None and self.state["warded_encounters"]:
+            raise ValueError("sleep with wards needs the oracle's bypass_state_after_sleep")
         self.state["times_slept"] = int(self.state.get("times_slept", 0)) + 1
         self.accomplishment("slept")
         self.state["social_talked"] = {}
@@ -280,6 +283,9 @@ class Ledger:
         # wi_game.gd `sleep()`: `entity_first_use.clear()` -- serve/cover/danger
         # keys re-arm every night (the cover crossing must be re-earned).
         self.state["entity_first_use"] = {}
+        if bypass_state is not None:
+            for key in ("warded_encounters", "entity_first_use", "dormant_encounters"):
+                self.state[key] = deepcopy(bypass_state[key])
         # `sleep()` drops the cloak (wi_game.gd: `sneaking = false`), so a plan
         # that walks a radius after a night has to re-cast rather than inherit.
         self.sneaking = False
@@ -297,4 +303,3 @@ class Ledger:
         state["gold"] = int(self.state.get("gold", self.gold_interval[0]))
         state["rng_state"] = str(state["rng_state"])
         return {"version": SAVE_VERSION, "state": state}
-
