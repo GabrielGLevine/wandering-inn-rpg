@@ -7551,6 +7551,78 @@
  ],
  "browser_scripts": [
   {
+   "script": "responsive_field_overflow",
+   "seed": 37,
+   "fixture": "responsive_field_overflow",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap",
+    "drag"
+   ],
+   "note": "#505 every saved field slot remains reachable, original slot14 activates Light, continuous touch drags reveal the final detail line. Emulation only.",
+   "surfaces": {
+    "maps": [
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "responsive_field_overflow"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking",
+     "basic_swordwork",
+     "charming_smile",
+     "flame_jet",
+     "frost_touch",
+     "icy_floor",
+     "kindle",
+     "light",
+     "observe",
+     "servers_prescience",
+     "soothe_clientele",
+     "sweep_the_tables",
+     "unerring_aim"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "combat_responsive_touch",
+   "seed": 37,
+   "fixture": "responsive_combat",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "#505 actual browser touch starts crowded ambush; details, action pages, inspection, targeting, long name and MP at all text scales and live resizing. Physical device evidence remains #511.",
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "responsive_combat"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "responsive_dialogue_touch",
    "seed": 9,
    "fixture": "mobile_tap_start",

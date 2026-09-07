@@ -27,6 +27,8 @@ var _drawer_tab := "battle"
 var _drawer_texts: Dictionary = {}
 var _details_open := false
 var _tutor_text := ""
+var _tutor_page := 0
+var _tutor_pages: Array[String] = []
 var _view: RefCounted
 var _inspected_id := ""
 var _last_actor := ""
@@ -55,6 +57,7 @@ func _init(host: Control, hotbar: WIHotbar) -> void:
 	_tutor = _panel(_root)
 	_tutor_label = _label(_tutor)
 	_button(_root, "note_close", "Close")
+	_button(_root, "note_next", "More")
 	_drawer = _panel(_root)
 	_drawer.mouse_filter = Control.MOUSE_FILTER_STOP
 	_drawer_text = _label(_drawer)
@@ -141,6 +144,8 @@ func refresh(view: RefCounted, rendered_slots: Array, selected_index: int, info_
 		tutor_height = maxf(44.0 / scale, float(wrapped.count("\n") + 1) * line_height + 20.0 / scale)
 	_regions = WICombatMobileLayout.regions(safe, scale, line_height, _page_count, tutor_height)
 	_place(_rail, _regions["rail"])
+	_active.text = ""
+	_context.text = ""
 	for id: String in ["details", "page_previous", "page_next", "previous", "next", "back", "confirm"]:
 		_place(_buttons[id], _regions[id])
 	_place_child(_active, _regions["active"], _rail)
@@ -203,9 +208,15 @@ func refresh(view: RefCounted, rendered_slots: Array, selected_index: int, info_
 			_buttons[id].hide()
 
 
-func _active_text(view: RefCounted, id: String) -> String:
+func _active_text(view: RefCounted, id: String, compact := true) -> String:
 	var c: Dictionary = view.combatant(id)
-	var line := "%s\nHP %d/%d" % [view.display_name(id), int(c["hp"]), int(c["max_hp"])]
+	var name := String(view.display_name(id))
+	var font := _active.get_theme_font("font")
+	if compact and font.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size).x > _active.size.x:
+		while not name.is_empty() and font.get_string_size(name + "…", HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size).x > _active.size.x:
+			name = name.left(-1)
+		name += "…"
+	var line := "%s\nHP %d/%d" % [name, int(c["hp"]), int(c["max_hp"])]
 	if int(c.get("max_mp", 0)) > 0:
 		line += " · MP %d/%d" % [int(c.get("mp", 0)), int(c["max_mp"])]
 	line += "\nAP %d · Move %d" % [int(c["ap"]), int(c["move_pool"])]
@@ -234,7 +245,7 @@ func _battle_text(view: RefCounted) -> String:
 	for id: String in view.ids():
 		var c: Dictionary = view.combatant(id)
 		lines.append("")
-		lines.append(_active_text(view, id) + (" · Down" if not view.alive(id) else ""))
+		lines.append(_active_text(view, id, false) + (" · Down" if not view.alive(id) else ""))
 		lines.append("Status: " + _statuses(c))
 		var skills: Array[String] = []
 		for skill: String in c.get("skills", []):
@@ -255,14 +266,22 @@ func _place_child(control: Control, rect: Rect2, parent: Control) -> void:
 func _layout_tutor(scale: float, font: Font) -> void:
 	_tutor.visible = not _tutor_text.is_empty() and not _details_open
 	_buttons["note_close"].visible = _tutor.visible
+	_buttons["note_next"].hide()
 	if not _tutor.visible:
 		return
 	var rect: Rect2 = _regions["tutor"]
 	_place(_tutor, rect)
 	var inset := 10.0 / scale
+	_tutor_label.text = ""
 	_place(_tutor_label, Rect2(Vector2(inset, inset), Vector2(rect.size.x - 100.0 / scale, rect.size.y - inset * 2.0)))
-	_tutor_label.text = WICombatMobileLayout.pages(_tutor_text, font, _font_size, _tutor_label.size.x, _tutor_label.size.y)[0]
+	_tutor_pages = WICombatMobileLayout.pages(_tutor_text, font, _font_size, _tutor_label.size.x, _tutor_label.size.y)
+	_tutor_page = clampi(_tutor_page, 0, _tutor_pages.size() - 1)
+	_tutor_label.text = _tutor_pages[_tutor_page]
 	_place(_buttons["note_close"], Rect2(Vector2(rect.end.x - 80.0 / scale, rect.position.y + 6.0 / scale), Vector2(74.0, 44.0) / scale))
+	if _tutor_pages.size() > 1:
+		_buttons["note_next"].show()
+		(_buttons["note_next"].get_node("Text") as Label).text = "More" if _tutor_page < _tutor_pages.size() - 1 else "Again"
+		_place(_buttons["note_next"], Rect2(Vector2(rect.end.x - 80.0 / scale, rect.position.y + 54.0 / scale), Vector2(74.0, 44.0) / scale))
 
 
 func _layout_drawer(safe: Rect2, scale: float, font: Font) -> void:
@@ -281,6 +300,7 @@ func _layout_drawer(safe: Rect2, scale: float, font: Font) -> void:
 	_place(_buttons["drawer_previous"], Rect2(Vector2(gap, bottom), Vector2(110.0 / scale, row)))
 	_place(_buttons["drawer_next"], Rect2(Vector2(rect.size.x - 110.0 / scale - gap, bottom), Vector2(110.0 / scale, row)))
 	_place(_drawer_page_label, Rect2(Vector2(120.0 / scale, bottom), Vector2(rect.size.x - 240.0 / scale, row)))
+	_drawer_text.text = ""
 	_place(_drawer_text, Rect2(Vector2(20.0 / scale, top + row + gap), Vector2(rect.size.x - 40.0 / scale, bottom - top - row - gap * 2.0)))
 	_drawer_pages = WICombatMobileLayout.pages(String(_drawer_texts.get(_drawer_tab, "")), font, _font_size, _drawer_text.size.x, _drawer_text.size.y)
 	_drawer_page = clampi(_drawer_page, 0, _drawer_pages.size() - 1)
@@ -308,6 +328,8 @@ func handle_action(id: String) -> bool:
 			_page = wrapi(_page + 1, 0, _page_count)
 		"note_close":
 			_tutor_text = ""
+		"note_next":
+			_tutor_page = wrapi(_tutor_page + 1, 0, _tutor_pages.size())
 		_:
 			return false
 	return true
@@ -330,11 +352,14 @@ func focused_id() -> String:
 
 func show_tutor(text: String) -> void:
 	_tutor_text = text
+	_tutor_page = 0
 
 
 func reset() -> void:
 	_details_open = false
 	_tutor_text = ""
+	_tutor_page = 0
+	_tutor_pages.clear()
 	_inspected_id = ""
 	_last_actor = ""
 	_page = 0
@@ -356,6 +381,12 @@ func control_rect(id: String) -> Rect2:
 func snapshot() -> Dictionary:
 	var viewport := _host.get_viewport()
 	var controls: Dictionary = {}
+	var texts: Dictionary = {}
+	var labels := {"active": _active, "context": _context, "drawer": _drawer_text, "tutor": _tutor_label}
+	for id: String in labels:
+		var label: Label = labels[id]
+		if label.is_visible_in_tree() and (not _details_open or label == _drawer_text):
+			texts[id] = _rect_data(WIResponsiveLayout.css_rect(viewport, label.get_global_rect()))
 	for id: String in _buttons:
 		var rect := control_rect(id)
 		if rect.has_area():
@@ -366,10 +397,13 @@ func snapshot() -> Dictionary:
 	return {
 		"mobile": true, "text_scale": _text_scale, "font_css": _font_size * WIResponsiveLayout.css_scale(viewport),
 		"controls": controls, "board_css": _rect_data(WIResponsiveLayout.css_rect(viewport, board_rect())),
+		"text_rects": texts,
 		"details_open": _details_open, "details_text": _drawer_text.text if _details_open else "",
 		"details_tab": _drawer_tab, "details_page": _drawer_page, "details_pages": _drawer_pages.size(),
 		"active_text": _active.text, "context_text": _context.text, "tutor_text": _tutor_label.text if _tutor.visible else "",
 		"action_page": _page, "action_pages": _page_count,
+		"focused_id": focused_id(),
+		"tutor_page": _tutor_page, "tutor_pages": _tutor_pages.size(),
 	}
 
 

@@ -10,16 +10,18 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Active #505 responsive layout:** root owns `issue/505-responsive-layout`,
-  main base `0ac059a8`, shared checkpoint `9f5dd145`. Its 12-case browser
-  registry passes: both phone profiles, all text scales, live shrinking,
-  field/panel/dialogue touch and purchase regressions. NPC message sizing now
-  has a reproduced red/green phone capture. Root owns shared helpers, other UI,
-  QA/manifest/CI and this handoff. Full integration evidence remains pending.
-  Worker `recovery_review` owns `issue/505-combat-layout` in
-  `/private/tmp/wi-510-lifecycle` from `9f5dd145`: combat presentation,
-  `world_labels.gd`, `hotbar.gd`, and world `main/world/camera_controller.gd`.
-  Do not mutate those paths in root until the lane is integrated. Worker is
-  implementing readable combat controls/details and camera clearance.
+  main base `0ac059a8`. Shared UI and the independent combat/field lanes are
+  integrated through the compact field follow-up; shared QA/text-fitting edits
+  are at the final integration checkpoint.
+  The current browser registry has 16 cases. Prior shared field/panel/dialogue
+  and purchase cases pass both profiles; composed rerun is pending. Crowded
+  combat passes 118 steps and 40 actual browser contacts at all text scales,
+  including long name/MP, every roster page, tutor pages and live shrinking.
+  Field overflow proves every saved slot, slot14 Light activation and the final
+  readout line through continuous drags. Compact field slots and truthful
+  hidden-selection events are integrated. Next: composed full preflight, browser
+  registry, native sweep/balance and final independent review. Root owns the
+  worktree; workers are read-only/idle. No #505 PR yet.
   Evidence: `/private/tmp/wi-505-evidence`. Physical #511 remains open.
 - **#510 scoped recovery merged through PR #549:** main `0ac059a8` is identical
   to the reviewed tree; all eight CI checks pass. Continue skips unreadable

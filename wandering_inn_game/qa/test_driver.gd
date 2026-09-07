@@ -478,6 +478,14 @@ func _execute(step: Dictionary) -> void:
 				_fail("touch_field_details: no visible details control")
 			else:
 				await _touch_at(field.toggle_rect().get_center(), "touch_field_details")
+		"touch_combat_control":
+			await _touch_rect_of("CombatScreen", "mobile_control_rect", String(step["control"]), "touch_combat_control", step.get("gesture", {}))
+		"touch_combat_pages":
+			await _touch_combat_pages(step)
+		"touch_field_pages":
+			await _touch_field_pages()
+		"touch_scroll_field_to_end":
+			await _touch_scroll_field_to_end()
 		"touch_inventory_row":
 			await _touch_rect_of("Inventory", "item_row_rect", int(step["row"]) - 1, "touch_inventory_row")
 		"touch_journal_tab":
@@ -726,6 +734,8 @@ func _execute(step: Dictionary) -> void:
 			await _assert_dialogue_displayed(step)
 		"assert_field_layout":
 			await _assert_field_layout()
+		"assert_combat_layout":
+			await _assert_combat_layout(step)
 		"assert_panel_layout":
 			await _assert_panel_layout(String(step["panel"]))
 		"assert_state":
@@ -1301,6 +1311,151 @@ func _assert_panel_layout(panel_name: String) -> void:
 	ObservableBus.emit_domain_event("qa_panel_layout_measured", {"panel": panel_name, "text_scale": WISettings.text_scale_label(), "content_height_css": content_css.size.y})
 
 
+func _touch_combat_pages(step: Dictionary) -> void:
+	var screen := get_tree().root.find_child("CombatScreen", true, false)
+	if screen == null:
+		_fail("touch_combat_pages: no combat screen")
+		return
+	var tutor := String(step.get("mode", "details")) == "tutor"
+	var page_key := "tutor_page" if tutor else "details_page"
+	var pages_key := "tutor_pages" if tutor else "details_pages"
+	var text_key := "tutor_text" if tutor else "details_text"
+	var control := "note_next" if tutor else "drawer_next"
+	var snapshot: Dictionary = screen.responsive_layout_snapshot()
+	if int(snapshot.get(page_key, -1)) != 0 or int(snapshot.get(pages_key, 0)) < 1:
+		_fail("touch_combat_pages: must begin at first rendered page")
+		return
+	var count := int(snapshot[pages_key])
+	var text := String(snapshot[text_key])
+	for page in range(1, count):
+		await _touch_rect_of("CombatScreen", "mobile_control_rect", control, "touch_combat_pages")
+		await _wait_for_event("ui_combat_layout_rendered" if tutor else "ui_combat_details_rendered", 5.0, {page_key: page})
+		await _assert_combat_layout({"equals": {page_key: page}})
+		snapshot = screen.responsive_layout_snapshot()
+		text += "\n" + String(snapshot[text_key])
+		await _screenshot("%s_%d" % [String(step.get("name", "combat_pages")), page])
+	for expected: String in step.get("contains", []):
+		if not text.replace("\n", " ").contains(expected):
+			_fail("touch_combat_pages: rendered pages omit %s" % expected)
+	ObservableBus.emit_domain_event("qa_combat_pages_read", {"mode": "tutor" if tutor else "details", "pages": count, "text": text})
+
+
+func _touch_field_pages() -> void:
+	var field := get_tree().root.find_child("FieldHotbar", true, false)
+	if field == null:
+		_fail("touch_field_pages: no field controls")
+		return
+	for attempt in 30:
+		var previous: Rect2 = field.page_control_rect("previous")
+		if not previous.has_area():
+			break
+		await _touch_at(previous.get_center(), "touch_field_pages")
+		await _wait_for_event("ui_field_hotbar_rendered", 5.0, {"reason": "page"})
+	var seen: Array[int] = []
+	for page in 30:
+		await _assert_field_layout()
+		for child: Control in field.hotbar_node().get_children():
+			var index := int(child.get_meta("slot_index"))
+			if not seen.has(index):
+				seen.append(index)
+		var next: Rect2 = field.page_control_rect("next")
+		if not next.has_area():
+			break
+		await _touch_at(next.get_center(), "touch_field_pages")
+		await _wait_for_event("ui_field_hotbar_rendered", 5.0, {"reason": "page", "page": page + 1})
+	if seen != range(field.slot_count()):
+		_fail("touch_field_pages: not every original slot was reached in order")
+	ObservableBus.emit_domain_event("qa_field_pages_read", {"visible_indices": seen, "slots": field.slot_count()})
+
+
+func _touch_scroll_field_to_end() -> void:
+	var field := get_tree().root.find_child("FieldHotbar", true, false)
+	if field == null or not bool(field.get("_expanded")):
+		_fail("touch_scroll_field_to_end: details must be expanded")
+		return
+	var scroll := field.get("_readout_scroll") as ScrollContainer
+	var label := field.get("_readout_label") as Label
+	var bar := scroll.get_v_scroll_bar()
+	if bar.max_value <= bar.page:
+		_fail("touch_scroll_field_to_end: fixture does not overflow")
+		return
+	for attempt in 80:
+		if scroll.scroll_vertical >= bar.max_value - bar.page - 1.0:
+			break
+		var rect := scroll.get_global_rect()
+		var end := rect.position + rect.size * Vector2(0.5, 0.15)
+		var window_end := get_viewport().get_screen_transform() * end
+		await _touch_at(rect.position + rect.size * Vector2(0.5, 0.85), "touch_scroll_field", {"drag": true, "end_x": window_end.x, "end_y": window_end.y})
+		await _settle_for_capture()
+	if scroll.scroll_vertical < bar.max_value - bar.page - 1.0 or label.get_global_rect().end.y > scroll.get_global_rect().end.y + 1.0:
+		_fail("touch_scroll_field_to_end: final readout line remains clipped")
+	ObservableBus.emit_domain_event("qa_field_readout_end_visible", {"scroll": scroll.scroll_vertical, "text": label.text})
+
+
+func _assert_combat_layout(step: Dictionary) -> void:
+	await _settle_for_capture()
+	var screen := get_tree().root.find_child("CombatScreen", true, false)
+	var main := get_tree().root.find_child("Main", true, false)
+	if screen == null or main == null or Game.sim.combat == null:
+		_fail("assert_combat_layout: no live combat")
+		return
+	var snapshot: Dictionary = screen.responsive_layout_snapshot()
+	if not bool(snapshot.get("mobile", false)):
+		_fail("assert_combat_layout: requires the mobile browser layout")
+		return
+	var safe := WIResponsiveLayout.css_rect(get_viewport(), WIResponsiveLayout.safe_rect(get_viewport()))
+	var rects: Dictionary = {}
+	for id: String in snapshot["controls"]:
+		var value: Dictionary = snapshot["controls"][id]
+		var rect := Rect2(value["x"], value["y"], value["width"], value["height"])
+		if minf(rect.size.x, rect.size.y) < 43.99 or not safe.grow(0.1).encloses(rect):
+			_fail("assert_combat_layout: clipped or undersized control %s: %s" % [id, rect])
+		for other: String in rects:
+			if rect.intersects(rects[other]):
+				_fail("assert_combat_layout: %s overlaps %s" % [id, other])
+		rects[id] = rect
+	if float(snapshot["font_css"]) < 14.0 * float(snapshot["text_scale"]) - 0.01:
+		_fail("assert_combat_layout: unreadable text size")
+	var text_rects: Array[Rect2] = []
+	for value: Dictionary in snapshot["text_rects"].values():
+		var text_rect := Rect2(value["x"], value["y"], value["width"], value["height"])
+		if not safe.grow(0.1).encloses(text_rect):
+			_fail("assert_combat_layout: important text exceeds safe bounds")
+		for id: String in rects:
+			if text_rect.intersects(rects[id]):
+				_fail("assert_combat_layout: important text overlaps %s" % id)
+		for other: Rect2 in text_rects:
+			if text_rect.intersects(other):
+				_fail("assert_combat_layout: important text regions overlap")
+		text_rects.append(text_rect)
+	for key: String in step.get("equals", {}):
+		if snapshot.get(key) != step["equals"][key]:
+			_fail("assert_combat_layout: %s expected %s, got %s" % [key, step["equals"][key], snapshot.get(key)])
+	for key: String in step.get("contains", {}):
+		if not String(snapshot.get(key, "")).contains(String(step["contains"][key])):
+			_fail("assert_combat_layout: %s is missing %s" % [key, step["contains"][key]])
+	if not bool(snapshot["details_open"]):
+		var board: Rect2 = main.world_view_rect()
+		var board_css := WIResponsiveLayout.css_rect(get_viewport(), board)
+		for id: String in rects:
+			if board_css.intersects(rects[id]):
+				_fail("assert_combat_layout: board overlaps %s" % id)
+		var origin: Vector2 = main.world_to_screen(Vector2.ZERO)
+		var edge: Vector2 = main.world_to_screen(Vector2(CELL, CELL))
+		var cell_size := (edge - origin) * WIResponsiveLayout.css_scale(get_viewport())
+		if minf(cell_size.x, cell_size.y) < 43.99:
+			_fail("assert_combat_layout: board cells smaller than 44 CSS pixels")
+		var combat: WICombat = Game.sim.combat
+		var focus := String(snapshot["focused_id"])
+		if focus.is_empty():
+			focus = combat.get_active()
+		var cell: Vector2i = combat.combatants[focus][WIKeys.CELL]
+		var position: Vector2 = main.world_to_screen(Vector2(cell) * CELL + Vector2.ONE * CELL * 0.5)
+		if not board.has_point(position):
+			_fail("assert_combat_layout: focused fighter is outside the visible board")
+	ObservableBus.emit_domain_event("qa_combat_layout_measured", snapshot)
+
+
 func _assert_field_layout() -> void:
 	await _settle_for_capture()
 	var main := get_tree().root.find_child("Main", true, false)
@@ -1313,8 +1468,12 @@ func _assert_field_layout() -> void:
 	for chip_name: String in ["inventory", "journal", "pause"]:
 		rects[chip_name] = chips.chip_rect(chip_name)
 	var hotbar: Node = field.hotbar_node()
-	for index in field.slot_count():
-		rects["slot_%d" % index] = hotbar.slot_rect(index)
+	for child: Control in hotbar.get_children():
+		rects["slot_%d" % int(child.get_meta("slot_index"))] = child.get_global_rect()
+	for page_name: String in ["FieldPagePrevious", "FieldPageNext"]:
+		var control := field.find_child(page_name, true, false) as Control
+		if control != null and control.is_visible_in_tree():
+			rects[page_name] = control.get_global_rect()
 	rects["details"] = field.toggle_rect()
 	var viewport_rect := get_viewport().get_visible_rect()
 	var measurements: Dictionary = {}

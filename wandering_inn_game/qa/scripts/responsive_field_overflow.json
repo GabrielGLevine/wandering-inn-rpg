@@ -1,0 +1,151 @@
+{
+ "_comment": "#505 actual browser touches reach every saved slot at every text scale, activate original slot14 Light and drag the expanded readout to its final line. Physical phones remain #511.",
+ "fixture_save": "responsive_field_overflow",
+ "starts_at_title": true,
+ "fail_fast": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_title_row",
+   "row": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 20
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 0
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 0
+  },
+  {
+   "action": "touch_field_pages"
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "overflow_0_last_page"
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 1
+  },
+  {
+   "action": "touch_field_pages"
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "overflow_1_last_page"
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 2
+  },
+  {
+   "action": "touch_field_pages"
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "overflow_2_last_page"
+  },
+  {
+   "action": "touch_hotbar_slot",
+   "slot": 14
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "light"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "used_skills",
+   "contains": "light"
+  },
+  {
+   "action": "screenshot",
+   "name": "overflow_light_activated"
+  },
+  {
+   "action": "touch_field_details"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "expanded": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "touch_scroll_field_to_end"
+  },
+  {
+   "action": "screenshot",
+   "name": "field_last_readout_line"
+  },
+  {
+   "action": "touch_field_details"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "expanded": false
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_field_layout"
+  }
+ ]
+}
