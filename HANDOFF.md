@@ -9,19 +9,30 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #505 responsive layout:** root owns `issue/505-responsive-layout`,
-  main base `0ac059a8`. Shared field, panel, dialogue and combat changes are
-  integrated. Full preflight passes; the subsequent marker fix passes its
-  affected unit and eliminates reproduced WebGL buffer warnings without a
-  warning exemption. The 16-case browser registry passes on `6293be11`.
-  Final combat spacing fixes pass both profiles: 118 steps, 38 trusted contacts,
-  actual two-page tutorial traversal, live shrinking and every roster page.
-  Before/after Android captures and final phone combat screenshots are read.
-  Next: commit settled candidate, native load/smoke/full sweep/balance, desktop
-  windowed comparison, then PR and required CI. Independent final review is
-  awaiting only the finished iPhone captures. Root owns all mutations.
-  Evidence: `/private/tmp/wi-505-evidence`; baseline Android source `0ac059a8`.
-  Physical #511 remains open. No #505 PR yet.
+- **Active #506 touch flow:** root owns `/private/tmp/wi-510-lifecycle`, branch
+  `issue/506-creation-back`, based on reviewed #505 candidate `81e66d29`.
+  Main now has its identical squash tree at `2197088a`; rebase #506 onto main
+  after settling the current patches. Creation Back and browser cancellation
+  harness are committed through `3358429b`. Root owns dirty inventory/journal
+  gesture fixes, touch-driver helpers and two new gesture scenarios.
+  Actual Android contacts reproduce horizontal-drag activation in both panels;
+  tracking two-dimensional travel fixes inventory and journal horizontal drags.
+  Actual no-move touch cancellation still activates each row; the first attempt
+  to reject `event.is_canceled()` did not fix it. Next: trace event order and
+  cancellation propagation, verify the root cause, then complete the fresh
+  continuous creation → earned Cooking → Warrior → spear → ambush touch route.
+  Detailed route: `/private/tmp/wi-506-plan.md`; evidence `/private/tmp/wi-506-evidence`.
+  Separate harness follow-up `4f3a4df4` corrects subpixel proof rounding and is
+  ready to integrate. No #506 PR yet. Browser/Godot slot is currently free.
+- **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
+  tree-identical to reviewed `81e66d29`. Independent source/visual review and all
+  eight CI checks pass, including 259 canonical scripts, both balance policies,
+  all 16 browser cases and lifecycle checks. Final local preflight/load gate and
+  desktop inventory/combat, long dialogue and upstairs captures pass and are
+  inspected. Phone combat proves actual tutorial More, complete roster pages
+  and live shrinking. The WebGL turn-marker defect is repaired without weakening
+  diagnostics. Evidence: `/private/tmp/wi-505-evidence`. Keep #505/#511 open for
+  physical iPhone Safari and Android Chrome acceptance.
 - **#510 scoped recovery merged through PR #549:** main `0ac059a8` is identical
   to the reviewed tree; all eight CI checks pass. Continue skips unreadable
   newer saves. Both browser profiles prove actual reload of a completed durable
