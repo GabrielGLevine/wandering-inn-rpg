@@ -25,6 +25,7 @@ from scripts.itinerary.emit import Emitter  # noqa: E402
 from scripts.itinerary.goldens import diff, parse_slice, slice_diff  # noqa: E402
 from scripts.itinerary.ledger import Ledger  # noqa: E402
 from scripts.itinerary.planners.sleep import SleepPlanner  # noqa: E402
+from scripts.itinerary.replay import Checkpoint, self_check  # noqa: E402
 from scripts.itinerary.schema import SchemaError, load_itinerary  # noqa: E402
 from scripts.itinerary.tests.pipeline import FakeOracle, Pipeline, act, bare  # noqa: E402
 
@@ -194,6 +195,15 @@ class BumpSidesTest(unittest.TestCase):
         compiled = [move("up", 2), move("down", bump=True)]
         shipped = [move("up", 2), move("left")]
         self.assertEqual(goldens._strip_mirrored_bump(compiled, shipped), shipped)
+
+
+class ReplayMovementTest(unittest.TestCase):
+    def test_only_a_marked_bump_can_leave_the_player_in_place(self) -> None:
+        checkpoint = Checkpoint("n", "goto", "street", [5, 5], [0, 1], (0, 0), {}, {}, {}, [], [])
+        ordinary = dict(move("down"), _itin="n")
+        self.assertTrue(self_check([ordinary], [checkpoint], checkpoint))
+        blocked = dict(ordinary, _bump=True)
+        self.assertEqual(self_check([blocked], [checkpoint], checkpoint), [])
 
 
 class SliceCliTest(unittest.TestCase):

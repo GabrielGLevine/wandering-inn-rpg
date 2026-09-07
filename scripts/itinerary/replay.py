@@ -221,21 +221,10 @@ def _reconcile_position(state: _State, checkpoint: Checkpoint) -> list[str]:
     if walked == target:
         state.cell = walked
     else:
-        # The one sanctioned discrepancy: a trailing single-step BUMP into a
-        # blocked cell sets facing without moving. Anything else is drift.
-        bump = state.moves[-1] if state.moves else None
-        undone = walked
-        if bump is not None and int(bump.get("steps", 1)) == 1:
-            delta = DIRECTIONS.get(str(bump.get("direction", "")), (0, 0))
-            undone = [walked[0] - delta[0], walked[1] - delta[1]]
-        if undone == target:
-            state.cell = target
-        else:
-            problems.append(
-                f"{checkpoint.node}: replayed cell {walked} (or {undone} allowing a trailing bump), "
-                f"ledger recorded {target}"
-            )
-            state.cell = target
+        problems.append(
+            f"{checkpoint.node}: replayed cell {walked}, ledger recorded {target}"
+        )
+        state.cell = target
     if state.facing != [int(part) for part in checkpoint.facing]:
         problems.append(
             f"{checkpoint.node}: replayed facing {state.facing}, ledger recorded {list(checkpoint.facing)}"

@@ -672,11 +672,11 @@ class ReplaySelfCheckTest(unittest.TestCase):
         problems = self_check([{"action": "wait_frames", "frames": 1}], [self.start], self.start)
         self.assertTrue(any("no _itin stamp" in p for p in problems), problems)
 
-    def test_a_trailing_bump_is_the_one_allowed_discrepancy(self) -> None:
+    def test_a_marked_bump_changes_facing_without_displacement(self) -> None:
         after = Checkpoint("n1", "talk", "inn", [7, 3], [0, -1], (0, 0), {}, {}, {}, [], [])
         steps = [
             {"action": "move", "direction": "right", "steps": 5, "_itin": "n1"},
-            {"action": "move", "direction": "up", "steps": 1, "_itin": "n1"},
+            {"action": "move", "direction": "up", "steps": 1, "_bump": True, "_itin": "n1"},
         ]
         self.assertEqual(self_check(steps, [self.start, after], self.start), [])
 
