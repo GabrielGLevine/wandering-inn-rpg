@@ -1,0 +1,557 @@
+{
+ "_comment": "#504 EMULATED browser-touch evidence only; run with qa/web/run_web_qa.sh --touch. Fixture loading and interaction setup use keyboard. All dialogue/purchase controls use browser touch: held opening, Cancel, rapid pre-arm Buy, outside dismiss, deliberate repeated Buy exactly once. DOM timestamps and trusted touch events are in browser-evidence.json; physical iOS/Android remains unproven.",
+ "fixture_save": "ratici_fence_start",
+ "starts_at_title": true,
+ "fail_fast": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "ratici_fence"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Ratici",
+    "options": [
+     {
+      "effect_lines": [
+       "+1 HP",
+       "Grants [Dangersense] in combat"
+      ],
+      "locked": false,
+      "requirement": "",
+      "text": "Small thing. Previous owner had less luck than it promised. You might do better. (6 gold)"
+     },
+     {
+      "effect_lines": [
+       "+2 HP",
+       "Resonance 1"
+      ],
+      "locked": false,
+      "requirement": "",
+      "text": "A hedge-witch's work. It kept somebody safe right up until it didn't. Clean history since. (13 gold)"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Another day, then."
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1,
+   "gesture": {
+    "hold_ms": 500
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "ratici_fence",
+    "price": 6,
+    "gold_before": 30,
+    "gold_after": 24,
+    "item": "copper_luck_band"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "cursor": 0,
+    "armed": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": [
+    "rusty_sword",
+    "invrisil_attunement_stone"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "given_spear_by_relc": 1,
+    "reached_liscor": 1,
+    "package_delivered": 1,
+    "errand_decided": 1,
+    "found_the_crate": 1,
+    "crate_returned": 1,
+    "resolved_the_cisterns": 1,
+    "cisterns_reported": 1,
+    "reached_two_classes": 1,
+    "watch_runner_pointed": 1,
+    "heard_the_deep_tremor": 1,
+    "heard_olesm_briefing": 1,
+    "cleared_the_warren": 1,
+    "raskghar_sealed": 1,
+    "post_game": 1,
+    "door_chain_started": 1,
+    "door_understood": 1,
+    "recovered_anchor_stone": 1,
+    "bought_catalyst": 1,
+    "door_study_sleeps": 3,
+    "door_awakened": 1,
+    "catalyst_delivered": 1,
+    "read_the_board": 1,
+    "riverfarm_attuned": 1,
+    "blight_lifted": 1,
+    "invrisil_attuned": 1,
+    "won_combat": 1,
+    "melee_hit": 57,
+    "eyed_the_stash": 1,
+    "brothers_job_done": 1,
+    "horns_dig_started": 1,
+    "horns_dig_joined": 1,
+    "pedestal_breached": 1,
+    "door_retrieved": 1,
+    "door_mounted": 1
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_held_open_no_commit"
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_cancelled",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": [
+    "rusty_sword",
+    "invrisil_attunement_stone"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "given_spear_by_relc": 1,
+    "reached_liscor": 1,
+    "package_delivered": 1,
+    "errand_decided": 1,
+    "found_the_crate": 1,
+    "crate_returned": 1,
+    "resolved_the_cisterns": 1,
+    "cisterns_reported": 1,
+    "reached_two_classes": 1,
+    "watch_runner_pointed": 1,
+    "heard_the_deep_tremor": 1,
+    "heard_olesm_briefing": 1,
+    "cleared_the_warren": 1,
+    "raskghar_sealed": 1,
+    "post_game": 1,
+    "door_chain_started": 1,
+    "door_understood": 1,
+    "recovered_anchor_stone": 1,
+    "bought_catalyst": 1,
+    "door_study_sleeps": 3,
+    "door_awakened": 1,
+    "catalyst_delivered": 1,
+    "read_the_board": 1,
+    "riverfarm_attuned": 1,
+    "blight_lifted": 1,
+    "invrisil_attuned": 1,
+    "won_combat": 1,
+    "melee_hit": 57,
+    "eyed_the_stash": 1,
+    "brothers_job_done": 1,
+    "horns_dig_started": 1,
+    "horns_dig_joined": 1,
+    "pedestal_breached": 1,
+    "door_retrieved": 1,
+    "door_mounted": 1
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1,
+   "gesture": {
+    "follow_purchase_buy": true
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "ratici_fence",
+    "price": 6,
+    "gold_before": 30,
+    "gold_after": 24,
+    "item": "copper_luck_band"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "cursor": 0,
+    "armed": false
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": [
+    "rusty_sword",
+    "invrisil_attunement_stone"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "given_spear_by_relc": 1,
+    "reached_liscor": 1,
+    "package_delivered": 1,
+    "errand_decided": 1,
+    "found_the_crate": 1,
+    "crate_returned": 1,
+    "resolved_the_cisterns": 1,
+    "cisterns_reported": 1,
+    "reached_two_classes": 1,
+    "watch_runner_pointed": 1,
+    "heard_the_deep_tremor": 1,
+    "heard_olesm_briefing": 1,
+    "cleared_the_warren": 1,
+    "raskghar_sealed": 1,
+    "post_game": 1,
+    "door_chain_started": 1,
+    "door_understood": 1,
+    "recovered_anchor_stone": 1,
+    "bought_catalyst": 1,
+    "door_study_sleeps": 3,
+    "door_awakened": 1,
+    "catalyst_delivered": 1,
+    "read_the_board": 1,
+    "riverfarm_attuned": 1,
+    "blight_lifted": 1,
+    "invrisil_attuned": 1,
+    "won_combat": 1,
+    "melee_hit": 57,
+    "eyed_the_stash": 1,
+    "brothers_job_done": 1,
+    "horns_dig_started": 1,
+    "horns_dig_joined": 1,
+    "pedestal_breached": 1,
+    "door_retrieved": 1,
+    "door_mounted": 1
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_rapid_buy_swallowed"
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    40,
+    40
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_cancelled",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_cancelled",
+   "count": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": [
+    "rusty_sword",
+    "invrisil_attunement_stone"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "given_spear_by_relc": 1,
+    "reached_liscor": 1,
+    "package_delivered": 1,
+    "errand_decided": 1,
+    "found_the_crate": 1,
+    "crate_returned": 1,
+    "resolved_the_cisterns": 1,
+    "cisterns_reported": 1,
+    "reached_two_classes": 1,
+    "watch_runner_pointed": 1,
+    "heard_the_deep_tremor": 1,
+    "heard_olesm_briefing": 1,
+    "cleared_the_warren": 1,
+    "raskghar_sealed": 1,
+    "post_game": 1,
+    "door_chain_started": 1,
+    "door_understood": 1,
+    "recovered_anchor_stone": 1,
+    "bought_catalyst": 1,
+    "door_study_sleeps": 3,
+    "door_awakened": 1,
+    "catalyst_delivered": 1,
+    "read_the_board": 1,
+    "riverfarm_attuned": 1,
+    "blight_lifted": 1,
+    "invrisil_attuned": 1,
+    "won_combat": 1,
+    "melee_hit": 57,
+    "eyed_the_stash": 1,
+    "brothers_job_done": 1,
+    "horns_dig_started": 1,
+    "horns_dig_joined": 1,
+    "pedestal_breached": 1,
+    "door_retrieved": 1,
+    "door_mounted": 1
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "ratici_fence",
+    "price": 6,
+    "gold_before": 30,
+    "gold_after": 24,
+    "item": "copper_luck_band"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "cursor": 0,
+    "armed": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_deliberate_confirm_ready"
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy",
+   "gesture": {
+    "repeat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "ratici_fence",
+    "price": 6
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "delta": -6,
+    "total": 24
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Paid 6 gold."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "copper_luck_band"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 24
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_confirmed",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "gold_changed",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_offered",
+   "count": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "04_committed_once"
+  }
+ ]
+}

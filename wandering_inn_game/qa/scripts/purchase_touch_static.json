@@ -1,0 +1,542 @@
+{
+ "_comment": "#504 EMULATED browser-touch evidence only; run with qa/web/run_web_qa.sh --touch. Fixture loading and interaction setup use keyboard. All dialogue/purchase controls use browser touch: held opening, Cancel, rapid pre-arm Buy, outside dismiss, deliberate repeated Buy exactly once. DOM timestamps and trusted touch events are in browser-evidence.json; physical iOS/Android remains unproven.",
+ "fixture_save": "d2_shop",
+ "starts_at_title": true,
+ "fail_fast": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "options": [
+     {
+      "text": "The old charm-cord, then. (5 gold)",
+      "locked": false,
+      "requirement": "",
+      "effect_lines": [
+       "+2 HP",
+       "Resonance 1"
+      ]
+     },
+     {
+      "text": "That Silverfang hunting knife. Good steel. (15 gold)",
+      "locked": true,
+      "requirement": "costs 15 gold",
+      "effect_lines": [
+       "+1 damage on melee hits",
+       "Sword kit replaces other weapon Skills in combat"
+      ]
+     },
+     {
+      "text": "The wool-lined cloak. The wet gets in, out on the road. (18 gold)",
+      "locked": true,
+      "requirement": "costs 18 gold",
+      "effect_lines": [
+       "+3 HP"
+      ]
+     },
+     {
+      "text": "The boiled-leather jerkin. (24 gold)",
+      "locked": true,
+      "requirement": "costs 24 gold",
+      "effect_lines": [
+       "+4 HP"
+      ]
+     },
+     {
+      "text": "Show me the charms.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Nothing today.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The hunting bow, then. Gnoll-strung, proper draw. (18 gold)",
+      "locked": true,
+      "requirement": "costs 18 gold",
+      "effect_lines": [
+       "+1 damage on ranged hits",
+       "Range 4",
+       "Bow kit replaces other weapon Skills in combat"
+      ]
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1,
+   "gesture": {
+    "hold_ms": 500
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "krshia_crate",
+    "price": 5,
+    "gold_before": 5,
+    "gold_after": 0,
+    "item": "traveler_charm"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "cursor": 0,
+    "armed": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": [
+    "rusty_sword",
+    "relcs_spare_spear"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "given_spear_by_relc": 1,
+    "reached_liscor": 1,
+    "chatted_with_krshia": 1,
+    "heard_gossip": 1
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_held_open_no_commit"
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_cancelled",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": [
+    "rusty_sword",
+    "relcs_spare_spear"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "given_spear_by_relc": 1,
+    "reached_liscor": 1,
+    "chatted_with_krshia": 1,
+    "heard_gossip": 1
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1,
+   "gesture": {
+    "follow_purchase_buy": true
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "krshia_crate",
+    "price": 5,
+    "gold_before": 5,
+    "gold_after": 0,
+    "item": "traveler_charm"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "cursor": 0,
+    "armed": false
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": [
+    "rusty_sword",
+    "relcs_spare_spear"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "given_spear_by_relc": 1,
+    "reached_liscor": 1,
+    "chatted_with_krshia": 1,
+    "heard_gossip": 1
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_rapid_buy_swallowed"
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    40,
+    40
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_cancelled",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_cancelled",
+   "count": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": [
+    "rusty_sword",
+    "relcs_spare_spear"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "given_spear_by_relc": 1,
+    "reached_liscor": 1,
+    "chatted_with_krshia": 1,
+    "heard_gossip": 1
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "krshia_crate",
+    "price": 5,
+    "gold_before": 5,
+    "gold_after": 0,
+    "item": "traveler_charm"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "cursor": 0,
+    "armed": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_deliberate_confirm_ready"
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy",
+   "gesture": {
+    "repeat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "krshia_crate",
+    "price": 5
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "delta": -5,
+    "total": 0
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Paid 5 gold."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "traveler_charm"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_confirmed",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "gold_changed",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_offered",
+   "count": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "04_committed_once"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Krshia"
+   }
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_offered",
+   "count": 3
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_confirmed",
+   "count": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "action": "screenshot",
+   "name": "05_insufficient_funds_no_offer"
+  }
+ ]
+}
