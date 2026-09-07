@@ -45,6 +45,14 @@ func _run() -> void:
 	var focus := WICameraController.combat_focus(Vector2i(12, 8), Vector2(152, 128), 16.0, [Vector2i(2, 3), Vector2i(9, 4)])
 	var view := Rect2(focus - Vector2(76, 64), Vector2(152, 128))
 	assert(view.has_point(Vector2(2.5, 3.5) * 16.0) and view.has_point(Vector2(9.5, 4.5) * 16.0), "active and nearby target share the reserved board view")
+	for cells: Array in [[Vector2i(0, 3), Vector2i(11, 3)], [Vector2i(11, 3), Vector2i(0, 3)], [Vector2i(5, 0), Vector2i(5, 7)]]:
+		var pair: Array[Vector2i] = []
+		pair.assign(cells)
+		var aperture := Vector2(152, 96 if pair[0].x == pair[1].x else 128)
+		var distant_focus := WICameraController.combat_focus(Vector2i(12, 8), aperture, 16.0, pair)
+		var visible := Rect2(distant_focus - aperture * 0.5, aperture)
+		var inspected := Rect2(Vector2(pair.back()) * 16.0, Vector2(16, 16))
+		assert(visible.encloses(inspected), "a distant inspected fighter must remain fully visible when the pair cannot fit")
 	var left := WICameraController.combat_focus(Vector2i(20, 8), Vector2(152, 128), 16.0, [Vector2i(0, 0)])
 	assert(left == Vector2(76, 64), "focus clamps at arena edge without hiding the actor")
 	print("PASS: combat controls fit phone safe areas; overflow actions and paged details retain every entry")

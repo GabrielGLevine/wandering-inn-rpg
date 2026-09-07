@@ -81,4 +81,8 @@ static func combat_focus(grid_size: Vector2i, view_size: Vector2, cell_px: float
 			minimum = minimum.min(cell)
 			maximum = maximum.max(cell)
 		focus = (Vector2(minimum + maximum) * 0.5 + Vector2.ONE * 0.5) * cell_px
+		var bounds_size := Vector2(maximum - minimum + Vector2i.ONE) * cell_px
+		if bounds_size.x > view_size.x or bounds_size.y > view_size.y:
+			# The inspected or targeted fighter is appended after the active fighter.
+			focus = (Vector2(focus_cells.back()) + Vector2.ONE * 0.5) * cell_px
 	return Vector2(axis(content_size.x, view_size.x, focus.x), axis(content_size.y, view_size.y, focus.y))
