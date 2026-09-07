@@ -1,5 +1,5 @@
 {
- "_comment": "#504 EMULATED browser-touch evidence only; run with qa/web/run_web_qa.sh --touch. Fixture loading and interaction setup use keyboard. All dialogue/purchase controls use browser touch: held opening, Cancel, rapid pre-arm Buy, outside dismiss, deliberate repeated Buy exactly once. DOM timestamps and trusted touch events are in browser-evidence.json; physical iOS/Android remains unproven.",
+ "_comment": "#504 EMULATED browser-touch evidence only; run with qa/web/run_web_qa.sh --touch. Fixture loading and interaction setup use keyboard. All dialogue/purchase controls use browser touch: held opening, Cancel, rapid pre-arm Buy, outside dismiss, deliberate repeated Buy exactly once. DOM timestamps and trusted touch events are in browser-evidence.json; physical iOS/Android remains unproven. Exact equipment/quest/stock-input snapshots and live displayed option lists remain unchanged before/cancel. Result inventory/equipment/accomplishments and receipt/effect counts are pinned. Native purchase_confirm_loop owns keyboard Back and same-selection reoffer proof; this script claims touch Cancel/outside only.",
  "fixture_save": "ratici_fence_start",
  "starts_at_title": true,
  "fail_fast": true,
@@ -93,7 +93,9 @@
     "price": 6,
     "gold_before": 30,
     "gold_after": 24,
-    "item": "copper_luck_band"
+    "item": "copper_luck_band",
+    "index": 0,
+    "node": "hub"
    }
   },
   {
@@ -164,6 +166,59 @@
     "pedestal_breached": 1,
     "door_retrieved": 1,
     "door_mounted": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped",
+   "equals": {
+    "weapon": "rusty_sword",
+    "armor": "",
+    "accessory_1": "",
+    "accessory_2": "",
+    "accessory_3": ""
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": [
+    "the_errand",
+    "missing_crate",
+    "cisterns",
+    "door_that_goes_elsewhere",
+    "something_beneath"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "container_state",
+   "equals": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "unchanged_offer_1"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "qa_state_dump",
+   "payload_contains": {
+    "label": "unchanged_offer_1",
+    "dialogue": {
+     "options": [
+      "Small thing. Previous owner had less luck than it promised. You might do better. (6 gold)",
+      "A hedge-witch's work. It kept somebody safe right up until it didn't. Clean history since. (13 gold)",
+      "Another day, then."
+     ],
+     "cursor": 0,
+     "node": "hub",
+     "finished": false
+    }
    }
   },
   {
@@ -253,6 +308,59 @@
    }
   },
   {
+   "action": "assert_state",
+   "path": "equipped",
+   "equals": {
+    "weapon": "rusty_sword",
+    "armor": "",
+    "accessory_1": "",
+    "accessory_2": "",
+    "accessory_3": ""
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": [
+    "the_errand",
+    "missing_crate",
+    "cisterns",
+    "door_that_goes_elsewhere",
+    "something_beneath"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "container_state",
+   "equals": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "unchanged_offer_2"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "qa_state_dump",
+   "payload_contains": {
+    "label": "unchanged_offer_2",
+    "dialogue": {
+     "options": [
+      "Small thing. Previous owner had less luck than it promised. You might do better. (6 gold)",
+      "A hedge-witch's work. It kept somebody safe right up until it didn't. Clean history since. (13 gold)",
+      "Another day, then."
+     ],
+     "cursor": 0,
+     "node": "hub",
+     "finished": false
+    }
+   }
+  },
+  {
    "action": "assert_event_absent",
    "type": "gold_changed"
   },
@@ -280,7 +388,9 @@
     "price": 6,
     "gold_before": 30,
     "gold_after": 24,
-    "item": "copper_luck_band"
+    "item": "copper_luck_band",
+    "index": 0,
+    "node": "hub"
    }
   },
   {
@@ -346,6 +456,59 @@
     "pedestal_breached": 1,
     "door_retrieved": 1,
     "door_mounted": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped",
+   "equals": {
+    "weapon": "rusty_sword",
+    "armor": "",
+    "accessory_1": "",
+    "accessory_2": "",
+    "accessory_3": ""
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": [
+    "the_errand",
+    "missing_crate",
+    "cisterns",
+    "door_that_goes_elsewhere",
+    "something_beneath"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "container_state",
+   "equals": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "unchanged_offer_3"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "qa_state_dump",
+   "payload_contains": {
+    "label": "unchanged_offer_3",
+    "dialogue": {
+     "options": [
+      "Small thing. Previous owner had less luck than it promised. You might do better. (6 gold)",
+      "A hedge-witch's work. It kept somebody safe right up until it didn't. Clean history since. (13 gold)",
+      "Another day, then."
+     ],
+     "cursor": 0,
+     "node": "hub",
+     "finished": false
+    }
    }
   },
   {
@@ -443,6 +606,59 @@
    }
   },
   {
+   "action": "assert_state",
+   "path": "equipped",
+   "equals": {
+    "weapon": "rusty_sword",
+    "armor": "",
+    "accessory_1": "",
+    "accessory_2": "",
+    "accessory_3": ""
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": [
+    "the_errand",
+    "missing_crate",
+    "cisterns",
+    "door_that_goes_elsewhere",
+    "something_beneath"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "container_state",
+   "equals": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "unchanged_offer_4"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "qa_state_dump",
+   "payload_contains": {
+    "label": "unchanged_offer_4",
+    "dialogue": {
+     "options": [
+      "Small thing. Previous owner had less luck than it promised. You might do better. (6 gold)",
+      "A hedge-witch's work. It kept somebody safe right up until it didn't. Clean history since. (13 gold)",
+      "Another day, then."
+     ],
+     "cursor": 0,
+     "node": "hub",
+     "finished": false
+    }
+   }
+  },
+  {
    "action": "assert_event_absent",
    "type": "gold_changed"
   },
@@ -467,7 +683,9 @@
     "price": 6,
     "gold_before": 30,
     "gold_after": 24,
-    "item": "copper_luck_band"
+    "item": "copper_luck_band",
+    "index": 0,
+    "node": "hub"
    }
   },
   {
@@ -552,6 +770,203 @@
   {
    "action": "screenshot",
    "name": "04_committed_once"
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": [
+    "rusty_sword",
+    "invrisil_attunement_stone",
+    "copper_luck_band"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped",
+   "equals": {
+    "weapon": "rusty_sword",
+    "armor": "",
+    "accessory_1": "",
+    "accessory_2": "",
+    "accessory_3": ""
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "given_spear_by_relc": 1,
+    "reached_liscor": 1,
+    "package_delivered": 1,
+    "errand_decided": 1,
+    "found_the_crate": 1,
+    "crate_returned": 1,
+    "resolved_the_cisterns": 1,
+    "cisterns_reported": 1,
+    "reached_two_classes": 1,
+    "watch_runner_pointed": 1,
+    "heard_the_deep_tremor": 1,
+    "heard_olesm_briefing": 1,
+    "cleared_the_warren": 1,
+    "raskghar_sealed": 1,
+    "post_game": 1,
+    "door_chain_started": 1,
+    "door_understood": 1,
+    "recovered_anchor_stone": 1,
+    "bought_catalyst": 1,
+    "door_study_sleeps": 3,
+    "door_awakened": 1,
+    "catalyst_delivered": 1,
+    "read_the_board": 1,
+    "riverfarm_attuned": 1,
+    "blight_lifted": 1,
+    "invrisil_attuned": 1,
+    "won_combat": 1,
+    "melee_hit": 57,
+    "eyed_the_stash": 1,
+    "brothers_job_done": 1,
+    "horns_dig_started": 1,
+    "horns_dig_joined": 1,
+    "pedestal_breached": 1,
+    "door_retrieved": 1,
+    "door_mounted": 1,
+    "deliberate_commerce": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": [
+    "the_errand",
+    "missing_crate",
+    "cisterns",
+    "door_that_goes_elsewhere",
+    "something_beneath"
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "container_state",
+   "equals": {}
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_gained",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "count": 1,
+   "payload_contains": {
+    "id": "deliberate_commerce"
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "toast",
+   "count": 1,
+   "payload_contains": {
+    "text": "Paid 6 gold."
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_cancelled",
+   "count": 2
+  },
+  {
+   "action": "assert_event_count",
+   "type": "dialogue_choice",
+   "count": 1
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    12,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 60
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    12,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Ratici",
+    "options": [
+     {
+      "effect_lines": [
+       "+2 HP",
+       "Resonance 1"
+      ],
+      "locked": false,
+      "requirement": "",
+      "text": "A hedge-witch's work. It kept somebody safe right up until it didn't. Clean history since. (13 gold)"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Another day, then."
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "dump_state",
+   "label": "stock_after_purchase"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "qa_state_dump",
+   "payload_contains": {
+    "label": "stock_after_purchase",
+    "dialogue": {
+     "options": [
+      "A hedge-witch's work. It kept somebody safe right up until it didn't. Clean history since. (13 gold)",
+      "Another day, then."
+     ],
+     "cursor": 0,
+     "finished": false,
+     "node": "hub"
+    }
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "05_fence_stock_after_purchase"
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_confirmed",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "gold_changed",
+   "count": 1
   }
  ]
 }
