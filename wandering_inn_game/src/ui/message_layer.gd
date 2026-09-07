@@ -327,7 +327,7 @@ func _first_wake_hint_text() -> String:
 ## UI_SLEEP_VEIL_FINISHED beside the first-wake pointer; the strip is a
 ## lossless queue, so a modal opened right after (journal) only delays it.
 func _first_stealth_hint_text() -> String:
-	return "[Stealth] is on your field bar now: %s, or tap it, to soften your step. Using a Skill, a fight, or forcing a door straightens you up." % WIInputHints.label("hotbar")
+	return "[Stealth] is on your field bar now: %s, or tap it, to soften your step. Walking and doorways keep you hidden. Talking, using props, most other Skills, or starting a fight ends it." % WIInputHints.label("hotbar")
 
 
 func _hint_text() -> String:
@@ -920,6 +920,8 @@ func dismiss_current_toast_early() -> void:
 ## already ~0, and 125 canonicals pin the rendered stream), the real constant
 ## in play.
 func _min_read_msec() -> int:
+	if _production_message_timing():
+		return int(TOAST_MIN_READ_SECONDS * 1000.0)
 	if DisplayServer.get_name() == "headless" or (TestDriver != null and TestDriver.active()):
 		return 0
 	return int(TOAST_MIN_READ_SECONDS * 1000.0)
@@ -988,7 +990,13 @@ func _fold_gold_toast(text: String) -> String:
 	return merged
 
 
+func _production_message_timing() -> bool:
+	return TestDriver != null and TestDriver.real_message_timing
+
+
 func _hold_seconds(seconds: float) -> float:
+	if _production_message_timing():
+		return seconds
 	if DisplayServer.get_name() == "headless":
 		return minf(seconds, QA_TOAST_HOLD_HEADLESS_SECONDS)
 	if TestDriver != null and TestDriver.active():
@@ -1094,6 +1102,8 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 ## therefore never routine, so it fails loud (`push_error` prints an `ERROR:`
 ## line, which every run's grep discipline treats as a failure).
 func _await_capture_release() -> void:
+	if _production_message_timing():
+		return
 	if TestDriver == null or not TestDriver.active():
 		return
 	var ceiling_msec := int(CAPTURE_HOLD_CEILING_SECONDS * 1000.0)

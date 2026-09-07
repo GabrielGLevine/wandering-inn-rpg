@@ -1950,6 +1950,7 @@
     "dialogue": [],
     "systems": [
      "combat",
+     "dialogue",
      "exploration"
     ]
    }
@@ -7482,6 +7483,68 @@
      "input",
      "save",
      "settings"
+    ]
+   }
+  },
+  {
+   "script": "rogue_discovery_watch_route",
+   "seed": 7,
+   "note": "#508 fresh creation: earn cleaning wages, train, win gate-road ambush, pay Watch without social Skills, return crate, walk home and sleep for Rogue; no fixture, teleport or pre-banked counters. Browser/physical touch remains separate.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "relc_intro",
+     "watch_crate"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "stealth_receipt_timing",
+   "seed": 9,
+   "fixture": "near_ambush_sneak",
+   "note": "#508 first field-bar touch and bypass receipt with production message timing; fixture wiring proof, not acquisition. Native uses injected mouse input; exported browser --touch proves browser input.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "near_ambush_sneak"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe",
+     "sneak"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
     ]
    }
   }

@@ -196,6 +196,14 @@ func _check_readable_floor(raw: String) -> void:
 	assert(dismiss.find("_min_read_msec()") != -1, "the dismiss compares against the readable floor")
 	var loop := raw.get_slice("if _dismiss_at_min_read:", 1).get_slice("\n", 1)
 	assert(loop.find("early_dismiss_deadline(") != -1, "the hold loop honours the floor via the pure rule")
+	layer.set("TestDriver", {"real_message_timing": true})
+	assert(int(layer.call("_min_read_msec")) == 1200,
+		"production message QA keeps the real reading floor even headless")
+	assert(float(layer.call("_hold_seconds", 4.0)) == 4.0,
+		"production message QA keeps the authored duration")
+	layer.set("TestDriver", null)
+	assert(int(layer.call("_min_read_msec")) == 0,
+		"ordinary headless QA retains its accelerated timing")
 	layer.free()
 
 

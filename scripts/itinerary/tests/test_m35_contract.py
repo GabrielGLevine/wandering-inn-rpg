@@ -235,6 +235,17 @@ class JournalTest(unittest.TestCase):
         self.assertNotIn("payload_contains", acts[1])
         self.assertEqual(act_v[1]["payload_contains"], {"act_id": "act_v"})
 
+    def test_tab_selection_precedes_capture_without_world_movement(self) -> None:
+        for tab, presses in (("quests", 0), ("skills", 1), ("history", 2)):
+            with self.subTest(tab=tab):
+                steps = Emitter().emit("n", [{"kind": "journal", "tab": tab, "capture": "tab"}])
+                shot = next(i for i, row in enumerate(steps) if row["action"] == "screenshot")
+                self.assertEqual(steps[shot - 1]["payload_contains"], {"active_tab": tab})
+                self.assertEqual(sum(row.get("name") == "move_right" for row in steps), presses)
+                ledger = Ledger.fresh()
+                checkpoint = checkpoint_from(ledger, "n", "journal")
+                self.assertEqual(self_check(steps, [checkpoint], checkpoint), [])
+
     def test_the_close_is_the_emitters_and_a_capture_is_optional(self) -> None:
         quiet = bare(Emitter().emit("n", [{"kind": "journal", "capture": "", "act": ""}]))
         self.assertEqual([step["action"] for step in quiet], ["press", "wait_for_event", "press", "wait_for_event"])
@@ -254,6 +265,7 @@ class JournalTest(unittest.TestCase):
             ("journal: {capture: ''}", "capture must be a screenshot name"),
             ("journal: {act: ''}", "act must be an act id"),
             ("journal: {page: 2}", "unknown keys"),
+            ("journal: {tab: bogus}", "tab must be"),
         ):
             with self.assertRaisesRegex(SchemaError, message):
                 document(f"- act: i\n  nodes:\n    - id: n\n      {body}\n")

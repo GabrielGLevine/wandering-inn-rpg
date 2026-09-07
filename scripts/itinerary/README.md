@@ -146,6 +146,8 @@ preference:
 | `expect_render: true` | `goto` | Asserts `ui_map_rendered` for the destination — the presentation half of an arrival. |
 | `expect_epilogue: true` | `sleep` | The run's last claim: `ui_sleep_veil_finished` then `ui_gdi_epilogue_rendered`. |
 
+`journal: {tab: skills, capture: name}` selects and confirms the visible tab before taking its screenshot. Tabs are `quests`, `skills`, or `history`; omitting `tab` preserves the existing default read.
+
 ## Effect-derived event waits
 
 A chosen dialogue option's `effects` array already moved the ledger; since M3.6
