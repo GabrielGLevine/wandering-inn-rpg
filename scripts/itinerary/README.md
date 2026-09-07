@@ -167,8 +167,8 @@ and prop idioms pin the toasts whose authored COPY is the claim.
 ## Sneak lifetime (#440)
 
 `WISave` does not serialize `sneaking` — it is runtime-only, cleared by
-`sleep()` — so the oracle can never be asked about a live stance and the
-ledger carries the lifetime itself. A `use_field` on a `sneaks: true` Skill
+`sleep()` — so the ledger carries the lifetime and supplies it explicitly
+to the oracle’s `bypass_walk` projection. A `use_field` on a `sneaks: true` Skill
 toggles it (and the two directions announce different things); a fight, a
 non-door interact and a sleep all drop it. While it is live the route planner
 stops refusing walks that cross a proximity radius, because the engine's own
@@ -192,16 +192,25 @@ pretended continuous run.
 
 ## Band crossings that do not fight (#508)
 
-`route._walk` refuses any path inside a proximity encounter's trigger radius
--- unless the engine would let it through. Two arms, mirrored from
-`wi_game.gd`'s proximity pass: a live sneak (`use_field` on a `sneaks:true`
-Skill) credits `sneaked_past_danger` and walks on; a served `cover_prop`
-(`interact` on a `once_per_waking` prop banks `serve:<prop>` in the ledger's
-`entity_first_use`, cleared at sleep like the sim) credits
-`crossed_under_cover`. The walk then carries a `bypass_bank` op whose waits
-the emitter pins right after the moves (the bypass toast rides the sneak
-arm). `act_rogue.yaml` -> `qa/scripts/rogue_discovery_cut_route.json` is the
-canonical: creation to [Rogue] to the first sneak with no fixture at all.
+`route._walk` projects bypass-sensitive movement through the oracle's
+`bypass_walk` query. The oracle executes the emitted cardinal moves through
+`WIGame.move_player`; its actual accomplishments and toast events license the
+emitted `bypass_bank` waits. It honors live encounter gates, wards, removal,
+dormancy, effective radius, and once-per-waking credit. Visible exits also
+project ward state so defeat grace cannot survive into a later sneak crossing.
+Sleep preview uses the real sleep on a copy to carry ward expiry and waking
+resets back to the ledger.
+
+The itinerary does not count every action, so its phase clock is not exact.
+A phase-sensitive crossing fails with an explicit unsupported-projection error;
+known-clock saved-state oracle probes can still measure day/night behavior.
+Unmodeled effects also fail explicitly. This is bounded bypass projection, not
+a second general gameplay simulation in Python.
+
+`act_rogue.yaml` -> `qa/scripts/rogue_discovery_cut_route.json` remains the fresh
+creation-to-Rogue canonical: earn cover credit, sleep, then cast Stealth and
+cross the live band. Fixture-based mixed-kit and eligibility tests complement
+that earned route; they do not establish fresh acquisition by themselves.
 
 ## Compiled canonicals are regenerated with the emitter
 
@@ -212,77 +221,51 @@ a recompile of each one (`compile_itinerary.py <act> --out qa/scripts/<name>.jso
 and a real run of the result in the same PR -- otherwise the shipped script
 silently drifts from the source itinerary (review finding, #434).
 
-## Act I is at golden equivalence (2026-09-06)
+## Authored steel-thread coverage and acceptance
 
-`goldens.py` on a fresh `steel_thread.yaml` compile vs `qa/scripts/steel_thread.json`
-reports NET 0 and EXACT == the shipped-only steps past the Act I seam (1,563):
-nothing the itinerary authors is claimed differently from the corpus. The
-vocabulary that closed the last rows: `talk.shots` (anchor -> screenshot taken
-on the node that anchor opens), `equip.shot` (taken with the inventory open),
-`sleep.expect_veil_lines` (donor-backed veil line count; not derivable), and
-`ui_inventory_shown.items` derived from the inventory oracle. One Act I row
-is still shipped-only: the ambush's `ui_hotbar_rendered {slots: 4}` logged
-assert (an autoplay fight has no slot for it yet).
+`steel_thread.yaml` authors Acts I–III through the first post-seal sleep
+(shipped steps 0–772). Earlier reports of Act II/III golden equivalence used
+an unsound comparator and are withdrawn. Structural equivalence and runtime
+execution are separate gates: a successful playthrough does not prove that
+all reference claims survive, and the comparator permits additional compiled
+assertions whose correctness still needs a runtime run.
 
-## Act II is at golden equivalence (2026-09-06)
+Recompute the authored slices against the unchanged shipped reference:
 
-Shipped steps 218-558 are authored in `steel_thread.yaml`; a slice diff of
-that range reports 0 exact / 0 net, and the compiled Act I-II script runs
-green headless at seed 37. What it took, and what a differ PASS does not buy:
+```sh
+python3 scripts/itinerary/compile_itinerary.py scripts/itinerary/steel_thread.yaml --out /tmp/steel-iii.json
+python3 scripts/itinerary/goldens.py /tmp/steel-iii.json wandering_inn_game/qa/scripts/steel_thread.json \
+  --slice itinerary.start,act1.=0:218 --slice act2.=218:559 --slice act3.=559:773
+```
 
-- **A golden PASS is not a runtime PASS.** Compiled-only claims are
-  "tighter" by policy, so a WRONG compiled-only claim never reds the diff.
-  The first headless run of the PASSing slice timed out at the warrior
-  sleep: the class-gained render was pinned BEFORE the veil and the veil
-  fires first. Every emitter change ends with a headless run of the compile
-  at the corpus seed (`--seed=37`; an empty `--seed=` is a different seed
-  and the cistern nest LOSES at it).
-- **Plain sleeps pin per gained class, never the whole dict.** A warrior
-  that fought twice sleeps to level 3 on combat counters the ledger does
-  not model; the corpus pins `classes.mage` alone. Only a merge pins the
-  dict.
-- **Alignment is a weighted LCS** (`goldens._align`), not difflib's
-  longest-block matcher, which re-paired Selys' delivery with Olesm's brief
-  when one arrival pin was inserted between them. Named shots, valued
-  arrival pins, and map/combat/dialogue starts weigh more than presses.
-- **Merged facing bumps** (`right 2` = one cell plus the bump into the
-  encounter) are discounted only when the discount reconciles the two
-  nets; `from_start` is ignored (delivery vs order, v0.15 lesson).
-- Vocabulary: `fight.shots {approach: [...], turn: [...]}` (approach lands
-  after the facing bump, before the entry press); a `goto` that names a
-  walkable cell pins its arrival (the corpus's waypoints); dialogue grants
-  claim the `Got: <name>` toast; the equip slot pin follows the panel
-  close; the GH#167 tremor pointer is derived from the oracle preview
-  (`reached_two_classes`, `tremor_pointer`) and emitted in
-  `sleep_beat.gd` order (bank, quest start, sticky toast) before the veil.
-- Slice diffs while later acts are unauthored:
-  `python3 scripts/itinerary/goldens.py <compiled> qa/scripts/steel_thread.json
-  --slice itinerary.start,act1.=0:218 --slice act2.=218:559 --slice act3.=559:773`
-  (compiled steps by `_itin` prefix, corpus by step range; every slice must
-  pass for exit 0).
+Measured after the comparator correction in PR #545:
 
-## Act III is at golden equivalence (2026-09-06)
+| Authored slice | Exact residue | Net residue | Outstanding claim |
+|---|---:|---:|---|
+| Act I | 1 | 0 | Missing `ui_hotbar_rendered {slots: 4}` assertion at the ambush. |
+| Act II | 1 | 0 | Mage class-toast wait uses `from_start: true`; the reference uses an ordered wait. |
+| Act III | 0 | 0 | None in the authored slice. |
 
-Shipped steps 559-772 (Zevara's summons, the fissure, the deep tunnels, Relc's
-veto beat and the boss, the report, the post-seal sleep) compile to 0 exact /
-0 net, and the compiled Act I-III script (1,075 steps) runs green headless at
-seed 37. What it took:
+The compiled Acts I–III route runs all 1,077 steps at seed 37. That runtime
+result does not cancel either remaining structural difference.
 
-- **The stand cell is pinned on BOTH sides of a facing bump.** The corpus
-  pins from whichever side it likes (413 before, 591-593 and 622-624 both,
-  663 merges the bump into `down 3` and pins after). The differ pairs a
-  shipped pin with the LAST of a run of identical compiled pins, discounts a
-  lone shipped 1-step move that repeats the compiled bump the pin already
-  crossed, and the one-step discount is now directional (a real `left 1`
-  to Zevara's column is not a `down` bump). The compile replay treats a
-  `_bump` as a turn, not a walk -- which is what a post-fight position pin
-  needs -- and a proximity trigger is emitted as a REAL move, never a bump.
-- **Vocabulary:** `goto.door_shot` (standing at the last door, facing it,
-  before the press; a gated door's `door_when.open_toast` is claimed before
-  `map_changed`); `fight.open_shot` on `entry: dialogue` (the veto beat);
-  every fight closes with `current_map`/`player_cell` pins; a conversation
-  ends with `accomplishments.<id> == count` pins for every counter its rows
-  banked (742); the post-seal sleep's `post_game` bank is derived from the
-  oracle preview like the tremor pointer.
-- Act I residue is unchanged: the ambush's `ui_hotbar_rendered {slots: 4}`.
+The comparator preserves event-history mode, checkpoint ordering, and terminal
+movement. A facing bump may be reconciled across corresponding position pins;
+an interaction cannot carry that allowance into a later walk. Negative controls
+exercise these boundaries rather than accepting a lower residue count as proof.
 
+Act III adds the fissure, deep-tunnel encounters, Relc's veto, the boss,
+Zevara's report, and the post-seal sleep. Its reusable compiler behavior is:
+
+- `goto.door_shot` captures the last door before interaction; gated-door
+  `open_toast` is awaited before `map_changed`.
+- `fight.open_shot` captures a dialogue entry, and post-fight map/cell pins
+  preserve the approach position. A proximity trigger is a real move;
+  replay treats a marked blocked bump as facing only.
+- Stand positions are pinned before and after a blocked facing bump.
+- Dialogue effects retain per-row event waits and one final state pin per
+  accomplishment ID, including dialogue that starts combat.
+- The oracle previews the first post-seal `post_game` bank for sleep.
+
+The parent #434 remains open for remaining equivalence residue, later acts,
+and caster-variant acceptance. M3.6 completion is not implied by route authoring.

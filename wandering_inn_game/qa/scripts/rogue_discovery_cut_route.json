@@ -356,8 +356,8 @@
    "type": "accomplishment_recorded",
    "timeout_sec": 5,
    "payload_contains": {
-    "id": "crossed_under_cover",
-    "count": 1
+    "count": 1,
+    "id": "crossed_under_cover"
    },
    "_itin": "rogue.cut.cross"
   },
@@ -905,8 +905,8 @@
    "type": "accomplishment_recorded",
    "timeout_sec": 5,
    "payload_contains": {
-    "id": "sneaked_past_danger",
-    "count": 1
+    "count": 1,
+    "id": "sneaked_past_danger"
    },
    "_itin": "rogue.band.sneak"
   },
