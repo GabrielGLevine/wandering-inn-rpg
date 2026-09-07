@@ -275,6 +275,11 @@ These scripts require browser touch and stay out of the native smoke/full sweep.
 
 | script | seed | profiles | fixture | purpose |
 |---|---:|---|---|---|
+| `responsive_field_overflow` | 37 | iphone, android | `responsive_field_overflow` | #505 every saved field slot remains reachable, original slot14 activates Light, continuous touch drags reveal the final detail line. Emulation only. |
+| `combat_responsive_touch` | 37 | iphone, android | `responsive_combat` | #505 actual browser touch starts crowded ambush; details, action pages, inspection, targeting, long name and MP at all text scales and live resizing. Physical device evidence remains #511. |
+| `responsive_dialogue_touch` | 9 | iphone, android | `mobile_tap_start` | #505 actual touch four-page dialogue at all supported text scales, visible text and measured option targets. Physical phones remain #511. |
+| `responsive_field_layout` | 37 | iphone, android | `sewers_property_seams` | #505 live CSS geometry at all text scales and actual browser contacts; native scripts do not prove this touch route. Physical phones remain #511. |
+| `responsive_panels_touch` | 37 | iphone, android | `gear_loop_start` | #505 live CSS geometry at all text scales and actual browser contacts; native scripts do not prove this touch route. Physical phones remain #511. |
 | `purchase_touch_static` | 9 | iphone, android | `d2_shop` | Browser touch: held opening, pre-arm second Buy, Cancel/outside, exactly-once charm purchase, exact state and broke stock list. |
 | `purchase_touch_fence` | 9 | iphone, android | `ratici_fence_start` | Browser touch: generated fence confirmation, unchanged pre/cancel state, exactly-once item purchase and remaining stock after reopen. |
 | `purchase_touch_service` | 9 | iphone, android | `near_room_upgrade` | Browser touch: paid room upgrade confirmation, unchanged pre/cancel state, exact tier effect and next-tier list after reopen. |

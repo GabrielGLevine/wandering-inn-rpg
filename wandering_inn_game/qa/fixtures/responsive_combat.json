@@ -1,0 +1,66 @@
+{
+ "_comment": "#505 layout stress fixture: existing geared Warrior10 plus Mage1 for MP, maximum-length wide player name, adjacent to the authored floodplains ambush. Skills and equipment are fixture setup, not progression evidence. The route triggers the live ambush through browser touch.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   30,
+   20
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 10,
+   "mage": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "catalyst_delivered": 1,
+   "riverfarm_attuned": 1,
+   "won_combat": 3,
+   "melee_hit": 57,
+   "learned_magic_from_pisces": 1,
+   "spell_cast": 13,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "pc_name": "WWWWWWWWWWWWWWWW"
+ }
+}

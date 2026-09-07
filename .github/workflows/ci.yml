@@ -454,6 +454,9 @@ jobs:
       - name: Browser-only purchase confirmation registry (emulated iPhone and Android)
         run: python3 wandering_inn_game/qa/web/run_browser_suite.py --skip-export
 
+      - name: Touch gesture negative controls
+        run: node wandering_inn_game/qa/web/touch_gesture_proof_test.mjs
+
       - name: Lifecycle runner negative controls
         run: node wandering_inn_game/qa/web/lifecycle_result_test.mjs
 

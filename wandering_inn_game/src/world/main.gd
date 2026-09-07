@@ -36,6 +36,7 @@ var _message_layer: Node
 var _title_screen: Node
 var _sleep_veil: Node
 var _settings_panel: Node
+var _combat_focus_cells: Array[Vector2i] = []
 var _combat_screen: Node
 var _map_transition_layer: CanvasLayer
 var _map_transition_overlay: ColorRect
@@ -49,6 +50,7 @@ var _map_transition_rebuilt := false
 
 
 func _ready() -> void:
+	RenderingServer.set_default_clear_color(Color(0.05, 0.035, 0.025))
 	_install_symbol_font_fallback()
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_ensure_viewport_nodes()
@@ -85,6 +87,10 @@ func world_to_screen(world_pos: Vector2) -> Vector2:
 	return _container.get_global_transform() * canvas_pos
 
 
+func world_view_rect() -> Rect2:
+	return Rect2(_container.position, Vector2(_sub_viewport.size) * _container.scale)
+
+
 ## The exact inverse of `world_to_screen` (issue #57's screen->cell trap):
 ## un-does the SubViewportContainer's global transform (its centering
 ## position + the 4x WORLD_SCALE), THEN the SubViewport's own `canvas_transform`
@@ -107,6 +113,9 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	var mb := event as InputEventMouseButton
 	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	if Game.sim.combat != null and not world_view_rect().has_point(mb.position):
+		accept_event()
 		return
 	var world_pos := screen_to_world(mb.position)
 	if _world != null:
@@ -275,11 +284,40 @@ func _hold_map_transition_midpoint() -> void:
 	await get_tree().create_timer(MAP_TRANSITION_VISUAL_HOLD_SECONDS).timeout
 
 
+func refresh_combat_layout(focus_cells: Array[Vector2i]) -> void:
+	_combat_focus_cells = focus_cells
+	_layout_viewport_container()
+
+
 func _layout_viewport_container() -> void:
-	var scaled_size := WORLD_VIEWPORT_SIZE * WORLD_SCALE
-	_container.size = WORLD_VIEWPORT_SIZE
-	_container.scale = Vector2(WORLD_SCALE, WORLD_SCALE)
-	_container.position = (get_viewport_rect().size - scaled_size) * 0.5
+	var viewport_size := get_viewport_rect().size
+	var top := 0.0
+	var bottom := viewport_size.y
+	if _world != null and Game.sim.combat == null:
+		if _field_chips != null:
+			top = _field_chips.occupied_height() + 10.0
+		if _field_hotbar != null:
+			bottom = _field_hotbar.world_bottom()
+	var scale := WORLD_SCALE
+	var view_size := Vector2(WORLD_VIEWPORT_SIZE.x, minf(WORLD_VIEWPORT_SIZE.y, floorf(maxf(160.0, bottom - top) / WORLD_SCALE)))
+	var bounds := Rect2(Vector2(0.0, top), Vector2(viewport_size.x, bottom - top))
+	var mobile_combat := _combat_screen != null and Game.sim.combat != null and WIResponsiveLayout.uses_touch_layout()
+	if mobile_combat:
+		var board_rect: Rect2 = _combat_screen.board_view_rect()
+		if board_rect.has_area():
+			bounds = board_rect
+			scale = ceilf(WICombatMobileLayout.CELL_CSS / WIResponsiveLayout.css_scale(get_viewport())) / 16.0
+			view_size = (bounds.size / scale).floor().max(Vector2.ONE)
+	var scaled_size := view_size * scale
+	if _sub_viewport.size != Vector2i(view_size):
+		_sub_viewport.size = Vector2i(view_size)
+	_container.size = view_size
+	_container.scale = Vector2(scale, scale)
+	_container.position = bounds.position + (bounds.size - scaled_size) * 0.5
+	if _world != null:
+		_world.set_view_size(view_size)
+		if mobile_combat:
+			_world.focus_combat_camera(_combat_focus_cells)
 
 
 func _clear_world_viewport() -> void:
@@ -400,6 +438,8 @@ func _spawn_world() -> void:
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
+	if type in [WIEvents.WORLD_READY, WIEvents.UI_FIELD_HOTBAR_RENDERED, WIEvents.COMBAT_STARTED, WIEvents.UI_COMBAT_HIDDEN]:
+		_layout_viewport_container.call_deferred()
 	if type == WIEvents.GAME_RESET or type == WIEvents.GAME_LOADED:
 		WIDataRegistry.reset()
 		# GH#278: view-side static caches join the reset so a live data

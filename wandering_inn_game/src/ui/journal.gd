@@ -173,7 +173,7 @@ func _ready() -> void:
 	# scene-tree add order.
 	layer = 10
 	_root = Control.new()
-	UIChrome.apply_theme(_root)
+	WIResponsiveLayout.apply_readable_theme(_root, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
 	_root.set_anchors_preset(Control.PRESET_CENTER)
 	_root.custom_minimum_size = PANEL_SIZE
 	_root.size = PANEL_SIZE
@@ -222,6 +222,9 @@ func _ready() -> void:
 	for i in _TAB_TITLES.size():
 		var tab_label := UIChrome.make_label("", "Small")
 		tab_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		tab_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		if WIResponsiveLayout.uses_touch_layout():
+			tab_label.custom_minimum_size = WIResponsiveLayout.touch_size(get_viewport(), Vector2(180.0, 40.0))
 		tab_label.mouse_filter = Control.MOUSE_FILTER_STOP
 		tab_label.gui_input.connect(_on_tab_label_gui_input.bind(i))
 		_tab_labels.append(tab_label)
@@ -283,6 +286,9 @@ func _ready() -> void:
 	_scroll_hint.hide()
 	_root.add_child(_scroll_hint)
 
+	get_viewport().size_changed.connect(_layout_panel)
+	UIChrome.THEME.changed.connect(_layout_panel)
+	_layout_panel()
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 
@@ -293,6 +299,18 @@ func _ready() -> void:
 ## with) rather than from the panel constants, so a theme font-size change
 ## re-quantizes itself. Never grows the body past the slot; a run where the
 ## metrics are unavailable leaves the pre-existing full-fill behaviour intact.
+func _layout_panel() -> void:
+	if _root == null or _body_label == null or not is_inside_tree():
+		return
+	WIResponsiveLayout.apply_readable_theme(_root, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
+	WIResponsiveLayout.place_panel(_root, WIResponsiveLayout.modal_rect(get_viewport(), PANEL_SIZE))
+	for tab: Label in _tab_labels:
+		if WIResponsiveLayout.uses_touch_layout():
+			tab.custom_minimum_size = WIResponsiveLayout.touch_size(get_viewport(), Vector2(180.0, 40.0))
+	_refresh_close_hint()
+	_clip_body_to_line_boundary.call_deferred()
+
+
 func _clip_body_to_line_boundary() -> void:
 	if _body_label == null:
 		return
@@ -332,6 +350,8 @@ func _close_hint_reserve() -> float:
 ## `journal` is the toggle that has always closed it. Naming both is what makes
 ## the row an answer rather than a second thing to memorize.
 func _close_hint_text() -> String:
+	if WIResponsiveLayout.uses_touch_layout():
+		return "Tap Close above to return."
 	return "%s or %s to close" % [WIInputHints.label("cancel"), WIInputHints.label("journal")]
 
 
@@ -499,6 +519,7 @@ func _can_open() -> bool:
 
 
 func _open() -> void:
+	_layout_panel()
 	open = true
 	_reset_body_gesture()
 	var act: Dictionary = Game.sim.act_summary()

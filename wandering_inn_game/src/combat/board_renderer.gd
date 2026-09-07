@@ -1,6 +1,15 @@
 class_name WICombatBoardRenderer
 extends Node
 
+class ActiveMarker extends Node2D:
+	var points := PackedVector2Array()
+	var color := Color.WHITE
+
+	func _draw() -> void:
+		# Polygon2D redraws hit GLES3 index-buffer rebinding on web.
+		draw_primitive(points, PackedColorArray([color]), PackedVector2Array())
+
+
 const CELL := 16
 const PLAYER_COLOR := Color(0.25, 0.45, 0.9)
 const ENEMY_COLOR := Color(0.75, 0.25, 0.2)
@@ -991,10 +1000,10 @@ func set_active_marker(id: String) -> void:
 	var visual := visual_for(id)
 	if visual == null:
 		return
-	var marker := Polygon2D.new()
+	var marker := ActiveMarker.new()
 	marker.name = "ActiveMarker"
 	marker.color = ACTIVE_MARKER_COLOR
-	marker.polygon = PackedVector2Array([
+	marker.points = PackedVector2Array([
 		Vector2(CELL * 0.5 - ACTIVE_MARKER_HALF_WIDTH, ACTIVE_MARKER_BASE_Y),
 		Vector2(CELL * 0.5 + ACTIVE_MARKER_HALF_WIDTH, ACTIVE_MARKER_BASE_Y),
 		Vector2(CELL * 0.5, ACTIVE_MARKER_TIP_Y),

@@ -1,0 +1,573 @@
+{
+ "_comment": "#505 browser touch starts the authored crowded ambush and exercises combat details, action overflow, inspection and targeting at all text scales and live shrinking. Fixture grants a Warrior/Mage kit and maximum-length wide name for layout stress, not progression evidence. Physical phones remain #511.",
+ "fixture_save": "responsive_combat",
+ "starts_at_title": true,
+ "fail_fast": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_title_row",
+   "row": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    20
+   ]
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    30,
+    21
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 0
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_0_compact"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "details"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_open": true
+   }
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "battle"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_tab": "battle",
+    "details_page": 0
+   },
+   "contains": {
+    "details_text": "HP"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_details_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_0_details"
+  },
+  {
+   "action": "touch_combat_pages",
+   "name": "combat_0_details_battle",
+   "contains": [
+    "WWWWWWWWWWWWWWWW",
+    "Relc",
+    "HP",
+    "MP",
+    "Status:"
+   ]
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "actions"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_tab": "actions",
+    "details_page": 0
+   }
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "drawer_next"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_page": 1
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_0_actions"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "drawer_close"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_open": false
+   }
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 1
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_1_compact"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "details"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_open": true
+   }
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "battle"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_tab": "battle",
+    "details_page": 0
+   },
+   "contains": {
+    "details_text": "HP"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_details_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_1_details"
+  },
+  {
+   "action": "touch_combat_pages",
+   "name": "combat_1_details_battle",
+   "contains": [
+    "WWWWWWWWWWWWWWWW",
+    "Relc",
+    "HP",
+    "MP",
+    "Status:"
+   ]
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "actions"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_tab": "actions",
+    "details_page": 0
+   }
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "drawer_next"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_page": 1
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_1_actions"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "drawer_close"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_open": false
+   }
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 2
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_2_compact"
+  },
+  {
+   "action": "touch_combat_pages",
+   "mode": "tutor",
+   "name": "tutor_130",
+   "min_pages": 2,
+   "contains": [
+    "Relc:",
+    "[Skills]"
+   ]
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "note_close"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "tutor_text": ""
+   }
+  },
+  {
+   "action": "resize_browser",
+   "width": 740,
+   "height": 360
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_130_resized"
+  },
+  {
+   "action": "resize_browser",
+   "restore": true
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "details"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_open": true
+   }
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "battle"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_tab": "battle",
+    "details_page": 0
+   },
+   "contains": {
+    "details_text": "HP"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_details_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_2_details"
+  },
+  {
+   "action": "touch_combat_pages",
+   "name": "combat_2_details_battle",
+   "contains": [
+    "WWWWWWWWWWWWWWWW",
+    "Relc",
+    "HP",
+    "MP",
+    "Status:"
+   ]
+  },
+  {
+   "action": "resize_browser",
+   "width": 740,
+   "height": 360
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_open": true
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "details_130_resized"
+  },
+  {
+   "action": "resize_browser",
+   "restore": true
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "actions"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_tab": "actions",
+    "details_page": 0
+   }
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "drawer_next"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_page": 1
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_2_actions"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "drawer_close"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_open": false
+   }
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "page_next"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "action_page": 1
+   }
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_overflow_page"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "page_previous"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "action_page": 0
+   }
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "next"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_layout_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "inspect_0"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "next"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_layout_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "inspect_1"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "next"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_layout_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "inspect_2"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "next"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_layout_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "inspect_3"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "next"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_layout_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "inspect_4"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "next"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_layout_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "inspect_5"
+  },
+  {
+   "action": "touch_hotbar_slot",
+   "slot": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_combat_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "combat_targeting"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "back"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  }
+ ]
+}

@@ -30,6 +30,10 @@ func update(grid_size: Vector2i, player_cell: Vector2i) -> void:
 	)
 
 
+func set_view_size(view_size: Vector2) -> void:
+	_view_size = view_size
+
+
 static func axis(content: float, view: float, focus: float) -> float:
 	if content <= view:
 		return content * 0.5
@@ -61,10 +65,24 @@ func kill_tween() -> void:
 		_camera_tween.kill()
 
 
-func enter_combat(grid_size: Vector2i) -> void:
+func enter_combat(grid_size: Vector2i, focus_cells: Array[Vector2i] = []) -> void:
 	kill_tween()
-	var content_size := Vector2(grid_size) * _cell
-	_camera.position = Vector2(
-		axis(content_size.x, _view_size.x, content_size.x * 0.5),
-		axis(content_size.y, _view_size.y, content_size.y * 0.5)
-	)
+	_camera.position = combat_focus(grid_size, _view_size, _cell, focus_cells)
+
+
+static func combat_focus(grid_size: Vector2i, view_size: Vector2, cell_px: float,
+		focus_cells: Array[Vector2i] = []) -> Vector2:
+	var content_size := Vector2(grid_size) * cell_px
+	var focus := content_size * 0.5
+	if not focus_cells.is_empty():
+		var minimum := focus_cells[0]
+		var maximum := focus_cells[0]
+		for cell: Vector2i in focus_cells:
+			minimum = minimum.min(cell)
+			maximum = maximum.max(cell)
+		focus = (Vector2(minimum + maximum) * 0.5 + Vector2.ONE * 0.5) * cell_px
+		var bounds_size := Vector2(maximum - minimum + Vector2i.ONE) * cell_px
+		if bounds_size.x > view_size.x or bounds_size.y > view_size.y:
+			# The inspected or targeted fighter is appended after the active fighter.
+			focus = (Vector2(focus_cells.back()) + Vector2.ONE * 0.5) * cell_px
+	return Vector2(axis(content_size.x, view_size.x, focus.x), axis(content_size.y, view_size.y, focus.y))

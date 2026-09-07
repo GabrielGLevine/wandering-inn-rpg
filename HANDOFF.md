@@ -9,20 +9,33 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **#508 scoped work merged through PR #548:** main `6f188bbc` matches
-  the independently reviewed tree; all eight CI checks pass. Fresh Watch proof earns both wages, pays
-  the classless route, walks home and gains Rogue at sleep. Fresh drainage,
-  Watch, stealth-break and production-timing feedback checks pass on desktop;
-  both emulated phone profiles pass Watch, break and real browser hotbar-touch
-  checks. No physical-device claim. Evidence: `/private/tmp/wi-508-evidence/composed`.
-  Fight-first → force-crate → drainage return → sleep still reproduces missing
-  Rogue (seed 7, 293 steps; diagnostic PASS means defect reproduced).
-  Acquisition/respawn rules are unchanged. The proposal in
-  `docs/design/rogue-recovery-proposal.md` awaits the owner's decision; #508
-  stays open. Fresh-cut production timing now passes all 143 steps on desktop
-  and both phone profiles; its Skills-tab capture reads the actual visible tab.
-  Exact next action: obtain the acquisition-rule decision below, then implement
-  and prove force/guile recovery on a new issue branch.
+- **Active #505 responsive layout:** root owns `issue/505-responsive-layout`,
+  main base `0ac059a8`. Shared field, panel, dialogue and combat changes are
+  integrated. Full preflight passes; the subsequent marker fix passes its
+  affected unit and eliminates reproduced WebGL buffer warnings without a
+  warning exemption. The 16-case browser registry passes on `6293be11`.
+  Final combat spacing fixes pass both profiles: 118 steps, 38 trusted contacts,
+  actual two-page tutorial traversal, live shrinking and every roster page.
+  Before/after Android captures and final phone combat screenshots are read.
+  Next: commit settled candidate, native load/smoke/full sweep/balance, desktop
+  windowed comparison, then PR and required CI. Independent final review is
+  awaiting only the finished iPhone captures. Root owns all mutations.
+  Evidence: `/private/tmp/wi-505-evidence`; baseline Android source `0ac059a8`.
+  Physical #511 remains open. No #505 PR yet.
+- **#510 scoped recovery merged through PR #549:** main `0ac059a8` is identical
+  to the reviewed tree; all eight CI checks pass. Continue skips unreadable
+  newer saves. Both browser profiles prove actual reload of a completed durable
+  manual save and subsequent touch input, plus explicitly injected malformed-save
+  recovery with valid bytes preserved. Keyboard, audio, genuine backgrounding,
+  itch and physical lifecycle acceptance remain open. Evidence: `/private/tmp/wi-510-evidence`.
+- **#508 scoped work merged through PR #548:** reviewed tree and all eight CI
+  checks pass at `6f188bbc`. Fresh Watch earns wages, buys the classless route,
+  returns home and gains Rogue at sleep. Drainage, Watch, stealth-break and
+  production-timing proof pass on desktop and both emulated phone profiles.
+  Evidence: `/private/tmp/wi-508-evidence/composed`. Physical evidence is open.
+  Fight-first → force-crate → drainage return → sleep still misses Rogue
+  (seed 7, 293 steps). Acquisition/respawn rules are unchanged; the owner must
+  decide `docs/design/rogue-recovery-proposal.md` before this recovery repair.
 - **#504 delivered through PR #547:** browser-touch coverage for all three
   purchase paths, readable ink labels, CI registration and eligibility invariant
   documentation are merged at `e5b53328`. The final ordered-input runner passes
@@ -30,12 +43,6 @@ archived, or superseded session blocks.
   now rejects plain errors; two existing item-tier mismatches are repaired with
   stats, prices, resonance and starting kits preserved. #504 remains open for
   physical iPhone Safari / Android Chrome observations under #511.
-- **#508 next decision:** scoped guidance and fresh-route proof are reviewed and
-  merged with #547. Acquisition remains unchanged.
-  The owner must decide whether deliberate drainage-cover traversal qualifies
-  after the road goblins are defeated. Until then, the documented force/guile
-  recovery defect remains open. No additional implementation is blocked for #504
-  except the physical-device observations.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.

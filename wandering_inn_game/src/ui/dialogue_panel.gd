@@ -53,16 +53,37 @@ var _picker_needed_height := 0.0
 ## _render_node / _confirm for the QA-safe paging contract.
 var _pages: Array[String] = []
 var _page_idx := 0
+var _notice_height := 0.0
+
+
+func reserve_notice_height(height: float) -> void:
+	if is_equal_approx(_notice_height, height):
+		return
+	_notice_height = height
+	if _shown:
+		_fit_panel_height()
+
+
+func _height_cap() -> float:
+	if not WIResponsiveLayout.uses_touch_layout():
+		return PICKER_MAX_HEIGHT
+	return minf(PICKER_MAX_HEIGHT, WIResponsiveLayout.safe_rect(get_viewport()).size.y - _notice_height - 36.0)
+
+
+func _panel_size() -> Vector2:
+	if WIResponsiveLayout.uses_touch_layout():
+		return Vector2(WIResponsiveLayout.safe_rect(get_viewport()).size.x - 48.0, PANEL_SIZE.y)
+	return PANEL_SIZE
 
 
 func _ready() -> void:
 	_root = Control.new()
-	UIChrome.apply_theme(_root)
+	WIResponsiveLayout.apply_readable_theme(_root, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
 	_root.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	_root.mouse_filter = Control.MOUSE_FILTER_STOP
-	_root.custom_minimum_size = PANEL_SIZE
-	_root.size = PANEL_SIZE
-	UIChrome.set_offsets(_root, -PANEL_SIZE.x * 0.5, -PANEL_SIZE.y - 18.0, PANEL_SIZE.x * 0.5, -18.0)
+	_root.custom_minimum_size = _panel_size()
+	_root.size = _panel_size()
+	UIChrome.set_offsets(_root, -_panel_size().x * 0.5, -_panel_size().y - 18.0, _panel_size().x * 0.5, -18.0)
 	_root.hide()
 	add_child(_root)
 
@@ -90,7 +111,7 @@ func _ready() -> void:
 
 	_text_label = UIChrome.make_label()
 	_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_text_label.custom_minimum_size = Vector2(PANEL_SIZE.x - 56.0, 46.0)
+	_text_label.custom_minimum_size = Vector2(_panel_size().x - 56.0, 46.0)
 	stack.add_child(_text_label)
 
 	# Continuation affordance shown only on a non-final page of a paged node —
@@ -125,6 +146,15 @@ func _ready() -> void:
 	# last page / with no options), so option clicks never double-handle.
 	_root.gui_input.connect(_on_panel_gui_input)
 	ObservableBus.domain_event.connect(_on_domain_event)
+	get_viewport().size_changed.connect(_on_layout_changed)
+	UIChrome.THEME.changed.connect(_on_layout_changed)
+
+
+func _on_layout_changed() -> void:
+	WIResponsiveLayout.apply_readable_theme(_root, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
+	_text_label.custom_minimum_size.x = _panel_size().x - 56.0
+	if _shown:
+		_fit_panel_height.call_deferred()
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
@@ -147,6 +177,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 
 
 func _render_node(payload: Dictionary) -> void:
+	WIResponsiveLayout.apply_readable_theme(_root, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
 	_speaker_label.text = String(payload["speaker"])
 	_options = payload.get("options", [])
 	_cursor = 0
@@ -205,15 +236,15 @@ func _sentence_boundary_cut(cur: String) -> int:
 func _render_page() -> void:
 	_text_label.text = _pages[_page_idx]
 	if _picker_active:
-		_text_label.custom_minimum_size = Vector2(PANEL_SIZE.x - 56.0, 24.0)
+		_text_label.custom_minimum_size = Vector2(_panel_size().x - 56.0, 24.0)
 		_more_hint.hide()
 		_options_box.show()
 		_rebuild_options()
 		_fit_panel_height.call_deferred()
 		return
-	_text_label.custom_minimum_size = Vector2(PANEL_SIZE.x - 56.0, 46.0)
+	_text_label.custom_minimum_size = Vector2(_panel_size().x - 56.0, 46.0)
 	var on_last := _on_last_page()
-	_more_hint.text = "▼  more — press %s" % WIInputHints.label("confirm")
+	_more_hint.text = "▼  More — tap to continue" if WIResponsiveLayout.uses_touch_layout() else "▼  more — press %s" % WIInputHints.label("confirm")
 	_more_hint.visible = not on_last
 	_options_box.visible = on_last
 	# GH#196: paging was INVISIBLE to the event stream (the tap-advance QA
@@ -248,7 +279,7 @@ func _fit_panel_height() -> void:
 	# Measure the stack with the scroll region collapsed so `base` is the
 	# fixed furniture (ribbon + text + margins); the options get whatever
 	# fits under the cap and scroll for the rest.
-	_options_scroll.custom_minimum_size = Vector2(PANEL_SIZE.x - 56.0, 0.0)
+	_options_scroll.custom_minimum_size = Vector2(_panel_size().x - 56.0, 0.0)
 	var base := _stack.get_combined_minimum_size().y + 52.0
 	# An autowrap Label queried before layout reports a min height wrapped at
 	# width 0 (the first fit of a conversation measured ~2245px for a
@@ -256,7 +287,7 @@ func _fit_panel_height() -> void:
 	# size.x does not invalidate the cache. Measure with FONT METRICS at the
 	# real inner width instead (the test_copy_fit method): deterministic on
 	# the first frame, independent of layout timing. 12px = scrollbar room.
-	var inner_w := PANEL_SIZE.x - 56.0 - 12.0
+	var inner_w := _panel_size().x - 56.0 - 12.0
 	var opts_needed := 0.0
 	var opt_sep := float(_options_box.get_theme_constant("separation"))
 	for child: Node in _options_box.get_children():
@@ -271,23 +302,28 @@ func _fit_panel_height() -> void:
 		opts_needed += maxf(text_h, lbl.custom_minimum_size.y) + opt_sep
 	var needed := base + opts_needed
 	_picker_needed_height = needed
-	var opts_h := minf(opts_needed, maxf(80.0, PICKER_MAX_HEIGHT - base))
-	_options_scroll.custom_minimum_size = Vector2(PANEL_SIZE.x - 56.0, opts_h)
-	var h := minf(maxf(PANEL_SIZE.y, base + opts_h), PICKER_MAX_HEIGHT)
-	_root.custom_minimum_size = Vector2(PANEL_SIZE.x, h)
-	_root.size = Vector2(PANEL_SIZE.x, h)
-	UIChrome.set_offsets(_root, -PANEL_SIZE.x * 0.5, -h - 18.0, PANEL_SIZE.x * 0.5, -18.0)
+	var opts_h := minf(opts_needed, maxf(80.0, _height_cap() - base))
+	_options_scroll.custom_minimum_size = Vector2(_panel_size().x - 56.0, opts_h)
+	var h := minf(maxf(_panel_size().y, base + opts_h), _height_cap())
+	_root.custom_minimum_size = Vector2(_panel_size().x, h)
+	_root.size = Vector2(_panel_size().x, h)
+	var shift := Vector2.ZERO
+	if WIResponsiveLayout.uses_touch_layout():
+		var safe := WIResponsiveLayout.safe_rect(get_viewport())
+		var viewport_size := get_viewport().get_visible_rect().size
+		shift = Vector2(safe.get_center().x - viewport_size.x * 0.5, safe.end.y - viewport_size.y)
+	UIChrome.set_offsets(_root, -_panel_size().x * 0.5 + shift.x, -h - 18.0 + shift.y, _panel_size().x * 0.5 + shift.x, -18.0 + shift.y)
 	if _pending_confirm != null and _shown:
 		# Playtest fix wave (findings 11/13): the page confirm carries the
 		# panel GEOMETRY, emitted only off a fit whose measurement was real
 		# (box laid out). panel_capped=true is the options scroll engaging;
-		# panel_height can never exceed PICKER_MAX_HEIGHT again.
+		# panel_height can never exceed _height_cap() again.
 		var pc: Dictionary = _pending_confirm
 		_pending_confirm = null
 		ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_PAGE_RENDERED,
 			{"page": int(pc["page"]), "pages": int(pc["pages"]),
 			"panel_height": h,
-			"panel_capped": needed > PICKER_MAX_HEIGHT})
+			"panel_capped": needed > _height_cap()})
 	if _picker_active:
 		_emit_picker_rendered.call_deferred()
 
@@ -336,7 +372,8 @@ func _rebuild_options() -> void:
 		# un-hinted row already eats 586 of 664px. test_copy_fit cannot see this
 		# (it measures font_size 14 only), so the row has to be able to grow.
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		l.custom_minimum_size = Vector2(0.0, 30.0)
+		l.custom_minimum_size = WIResponsiveLayout.touch_size(get_viewport(), Vector2(0.0, 30.0))
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		if locked:
 			l.add_theme_color_override("font_color", LOCKED_COLOR)
 		_options_box.add_child(l)

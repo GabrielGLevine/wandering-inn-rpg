@@ -67,7 +67,7 @@ func _slot_index_at(local_pos: Vector2) -> int:
 	for i in get_child_count():
 		var child := get_child(i) as Control
 		if child != null and Rect2(child.position, child.size).has_point(local_pos):
-			return i
+			return int(child.get_meta("slot_index", i))
 	return -1
 
 
@@ -78,51 +78,80 @@ func _slot_index_at(local_pos: Vector2) -> int:
 ## output back in -- which is exactly how the bottom HUD cluster crept up to 25px
 ## left and 4% wider across re-layouts of an unchanged 3-slot bar (GH#386 P3).
 var _rendered_width := 0.0
+var _slot_size := SLOT_SIZE
+var _touch_font_size := 0
+var _rendered_height := SLOT_SIZE.y
 
 
 func rendered_width() -> float:
 	return _rendered_width
 
 
-func render(slots: Array, selected_index: int) -> void:
+func render(slots: Array, selected_index: int, slot_size := SLOT_SIZE) -> void:
+	set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	_render_slots(slots, selected_index, slot_size, 0, 0)
+
+
+## Pages retain original slot indices so an overflow action uses the same dispatch.
+func render_page(slots: Array, selected_index: int, slot_size: Vector2, page: int,
+		page_size: int, font_size: int) -> void:
+	var first := clampi(page, 0, page_count(slots.size(), page_size) - 1) * maxi(page_size, 1)
+	_render_slots(slots.slice(first, mini(first + maxi(page_size, 1), slots.size())), selected_index, slot_size, first, font_size)
+
+
+static func page_count(slot_count: int, page_size: int) -> int:
+	return maxi(1, ceili(float(slot_count) / float(maxi(page_size, 1))))
+
+
+func rendered_height() -> float:
+	return _rendered_height
+
+
+func _render_slots(slots: Array, selected_index: int, slot_size: Vector2,
+		first_index: int, font_size: int) -> void:
+	_slot_size = slot_size
+	_touch_font_size = font_size
 	for child: Node in get_children():
+		remove_child(child)
 		child.queue_free()
+	var gap := SLOT_GAP if font_size == 0 else slot_size.x / 15.0
 	var total_width := 0.0
 	for i in slots.size():
 		if i > 0:
-			total_width += END_TURN_GAP if bool((slots[i] as Dictionary).get("end_turn_gap", false)) else SLOT_GAP
-		total_width += SLOT_SIZE.x
+			total_width += END_TURN_GAP if font_size == 0 and bool((slots[i] as Dictionary).get("end_turn_gap", false)) else gap
+		total_width += _slot_size.x
 	_rendered_width = total_width
-	custom_minimum_size = Vector2(total_width, SLOT_SIZE.y)
+	_rendered_height = _slot_size.y
+	custom_minimum_size = Vector2(total_width, _slot_size.y)
 	size = custom_minimum_size
 	offset_left = -total_width * 0.5
 	offset_right = total_width * 0.5
-	offset_top = -SLOT_SIZE.y - BOTTOM_MARGIN
+	offset_top = -_slot_size.y - BOTTOM_MARGIN
 	offset_bottom = -BOTTOM_MARGIN
 	var x := 0.0
 	for i in slots.size():
 		var slot: Dictionary = slots[i]
 		if i > 0:
-			x += END_TURN_GAP if bool(slot.get("end_turn_gap", false)) else SLOT_GAP
-		var node := _make_slot(slot, i == selected_index)
+			x += END_TURN_GAP if font_size == 0 and bool(slot.get("end_turn_gap", false)) else gap
+		var node := _make_slot(slot, i + first_index == selected_index)
+		node.set_meta("slot_index", i + first_index)
 		node.position = Vector2(x, 0.0)
 		add_child(node)
-		x += SLOT_SIZE.x
+		x += _slot_size.x
 
 
 func slot_rect(index: int) -> Rect2:
-	if index < 0 or index >= get_child_count():
-		return Rect2()
-	var slot_node := get_child(index) as Control
-	if slot_node == null:
-		return Rect2()
-	return Rect2(slot_node.global_position, slot_node.size)
+	for raw: Node in get_children():
+		var slot_node := raw as Control
+		if slot_node != null and int(slot_node.get_meta("slot_index", -1)) == index:
+			return slot_node.get_global_rect()
+	return Rect2()
 
 
 func _make_slot(slot: Dictionary, selected: bool) -> Control:
 	var root := Control.new()
-	root.custom_minimum_size = SLOT_SIZE
-	root.size = SLOT_SIZE
+	root.custom_minimum_size = _slot_size
+	root.size = _slot_size
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if not bool(slot.get("affordable", true)):
 		root.modulate = UNAFFORDABLE_MODULATE
@@ -146,8 +175,10 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		tex_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		tex_rect.size = ICON_SIZE
-		tex_rect.position = (SLOT_SIZE - ICON_SIZE) * 0.5
+		tex_rect.size = ICON_SIZE if _touch_font_size == 0 else Vector2.ONE * _slot_size.x * 0.4
+		tex_rect.position = (_slot_size - tex_rect.size) * 0.5
+		if _touch_font_size > 0:
+			tex_rect.position.y = _slot_size.y * 0.07
 		root.add_child(tex_rect)
 	else:
 		var text_label := UIChrome.make_label("", "Small")
@@ -159,6 +190,8 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		text_label.clip_text = true
 		text_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if _touch_font_size > 0:
+			text_label.add_theme_font_size_override("font_size", _touch_font_size)
 		root.add_child(text_label)
 
 	# GH#386: the key number is the slot's ONLY "press this" cue once details are
@@ -166,7 +199,7 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 	# the one that read numberless. Given an explicit rect and explicit ink so it
 	# cannot be a zero-width label or a dark-on-dark glyph on the carved frame.
 	var key_hint := String(slot.get("key_hint", ""))
-	if key_hint != "":
+	if key_hint != "" and _touch_font_size == 0:
 		var key_label := UIChrome.make_label("", "Small")
 		key_label.text = key_hint
 		# (5, 5), not (4, 1): the slot's 9-slice corner ornament occupies the top
@@ -180,26 +213,40 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		root.add_child(key_label)
 
 	var ap_cost := int(slot.get("ap_cost", 0))
-	if ap_cost > 0:
+	if ap_cost > 0 and _touch_font_size == 0:
 		var ap_label := Label.new()
 		ap_label.text = "●".repeat(ap_cost)  # ●
-		ap_label.position = Vector2(2, SLOT_SIZE.y - 26)
-		ap_label.size = Vector2(SLOT_SIZE.x - 4, 13)
+		ap_label.position = Vector2(2, _slot_size.y - 26)
+		ap_label.size = Vector2(_slot_size.x - 4, 13)
 		ap_label.add_theme_font_size_override("font_size", 10)
 		ap_label.add_theme_color_override("font_color", AP_PIP_COLOR)
 		ap_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		root.add_child(ap_label)
 
 	var mp_cost := int(slot.get("mp_cost", 0))
-	if mp_cost > 0:
+	if mp_cost > 0 and _touch_font_size == 0:
 		var mp_label := Label.new()
 		mp_label.text = "◆".repeat(mp_cost)  # ◆
-		mp_label.position = Vector2(2, SLOT_SIZE.y - 14)
-		mp_label.size = Vector2(SLOT_SIZE.x - 4, 13)
+		mp_label.position = Vector2(2, _slot_size.y - 14)
+		mp_label.size = Vector2(_slot_size.x - 4, 13)
 		mp_label.add_theme_font_size_override("font_size", 10)
 		mp_label.add_theme_color_override("font_color", MP_DIAMOND_COLOR)
 		mp_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		root.add_child(mp_label)
+
+	if _touch_font_size > 0 and (ap_cost > 0 or mp_cost > 0):
+		var cost := Label.new()
+		cost.text = "%d AP" % ap_cost
+		if mp_cost > 0:
+			cost.text += "\n%d MP" % mp_cost
+		cost.add_theme_font_size_override("font_size", _touch_font_size)
+		cost.add_theme_color_override("font_color", AP_PIP_COLOR)
+		cost.add_theme_constant_override("line_spacing", 0)
+		cost.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		cost.position = Vector2(2.0, _slot_size.y * 0.4)
+		cost.size = Vector2(_slot_size.x - 4.0, _slot_size.y * 0.58)
+		cost.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		root.add_child(cost)
 
 	# THE COOLDOWN BADGE (GH#337, fixed under GH#386's badge trio). It used to be
 	# a bare numeral at the chip's top-RIGHT, twin in size and weight to the key
@@ -212,9 +259,11 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 	if cd_left > 0:
 		var badge := CooldownBadge.new()
 		badge.rounds = cd_left
-		badge.position = Vector2(SLOT_SIZE.x - COOLDOWN_BADGE_SIZE - 2.0, 2.0)
-		badge.custom_minimum_size = Vector2(COOLDOWN_BADGE_SIZE, COOLDOWN_BADGE_SIZE)
-		badge.size = Vector2(COOLDOWN_BADGE_SIZE, COOLDOWN_BADGE_SIZE)
+		var badge_size := COOLDOWN_BADGE_SIZE if _touch_font_size == 0 else float(_touch_font_size) * 1.45
+		badge.font_px = COOLDOWN_BADGE_FONT_PX if _touch_font_size == 0 else _touch_font_size
+		badge.position = Vector2(_slot_size.x - badge_size - 2.0, 2.0)
+		badge.custom_minimum_size = Vector2(badge_size, badge_size)
+		badge.size = Vector2(badge_size, badge_size)
 		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		root.add_child(badge)
 
@@ -228,6 +277,7 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 ## inside a fixed 16px disc at every Text Scale rung.
 class CooldownBadge extends Control:
 	var rounds := 0
+	var font_px := COOLDOWN_BADGE_FONT_PX
 
 	func _draw() -> void:
 		var mid := size * 0.5
@@ -236,6 +286,6 @@ class CooldownBadge extends Control:
 		draw_arc(mid, r - 0.5, 0.0, TAU, 20, WIHotbar.COOLDOWN_BADGE_RIM, 1.5)
 		var font := ThemeDB.get_fallback_font()
 		var text := str(rounds)
-		var extents := font.get_string_size(text, HORIZONTAL_ALIGNMENT_CENTER, -1.0, COOLDOWN_BADGE_FONT_PX)
+		var extents := font.get_string_size(text, HORIZONTAL_ALIGNMENT_CENTER, -1.0, font_px)
 		draw_string(font, mid + Vector2(-extents.x * 0.5, extents.y * 0.34), text,
-				HORIZONTAL_ALIGNMENT_LEFT, -1.0, COOLDOWN_BADGE_FONT_PX, WIHotbar.COOLDOWN_BADGE_INK)
+				HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_px, WIHotbar.COOLDOWN_BADGE_INK)

@@ -70,6 +70,11 @@ var _status_label: Label
 const STATUS_LABEL_RESERVED_LINES := 2
 var _scroll: ScrollContainer
 var _items_box: VBoxContainer
+var _slots_box: VBoxContainer
+var _equipment_scroll: ScrollContainer
+var _equipment_button: Control
+var _equipment_label: Label
+var _equipment_expanded := false
 var _detail_scroll: ScrollContainer
 var _detail_box: VBoxContainer
 var _corner_icon: TextureRect
@@ -116,7 +121,7 @@ func _ready() -> void:
 	# scene-tree add order.
 	layer = 10
 	_root = Control.new()
-	UIChrome.apply_theme(_root)
+	WIResponsiveLayout.apply_readable_theme(_root, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
 	_root.set_anchors_preset(Control.PRESET_CENTER)
 	_root.custom_minimum_size = PANEL_SIZE
 	_root.size = PANEL_SIZE
@@ -152,25 +157,46 @@ func _ready() -> void:
 	stack.add_child(top_row)
 
 	var slots_box := VBoxContainer.new()
+	_slots_box = slots_box
 	slots_box.custom_minimum_size = Vector2(LIST_WIDTH, 0.0)
 	top_row.add_child(slots_box)
 
 	_gold_label = UIChrome.make_label("")
 	slots_box.add_child(_gold_label)
+	var equipment_box := slots_box
+	if WIResponsiveLayout.uses_touch_layout():
+		_equipment_button = UIChrome.make_texture_panel(UIChrome.BLUE_BUTTON)
+		_equipment_button.custom_minimum_size = WIResponsiveLayout.touch_size(get_viewport(), Vector2(260.0, 40.0))
+		_equipment_button.mouse_filter = Control.MOUSE_FILTER_STOP
+		_equipment_label = UIChrome.make_label("Show equipment", "Small")
+		_equipment_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		UIChrome.full_rect(_equipment_label)
+		_equipment_button.add_child(_equipment_label)
+		_equipment_button.gui_input.connect(_on_equipment_input)
+		slots_box.add_child(_equipment_button)
+		_equipment_scroll = ScrollContainer.new()
+		_equipment_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		_equipment_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		_equipment_scroll.hide()
+		slots_box.add_child(_equipment_scroll)
+		equipment_box = VBoxContainer.new()
+		equipment_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_equipment_scroll.add_child(equipment_box)
 
 	_weapon_label = UIChrome.make_label("")
-	slots_box.add_child(_weapon_label)
+	equipment_box.add_child(_weapon_label)
 	_armor_label = UIChrome.make_label("")
-	slots_box.add_child(_armor_label)
+	equipment_box.add_child(_armor_label)
 	for i in 3:
 		var accessory_label := UIChrome.make_label("")
-		slots_box.add_child(accessory_label)
+		equipment_box.add_child(accessory_label)
 		_accessory_labels.append(accessory_label)
 
 	var corner_box := VBoxContainer.new()
 	corner_box.add_theme_constant_override("separation", 8)
 	corner_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top_row.add_child(corner_box)
+	corner_box.visible = not WIResponsiveLayout.uses_touch_layout()
 
 	_corner_icon = TextureRect.new()
 	_corner_icon.custom_minimum_size = Vector2(ICON_DISPLAY_PX, ICON_DISPLAY_PX)
@@ -213,7 +239,14 @@ func _ready() -> void:
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
-	body.add_child(_scroll)
+	if _equipment_scroll != null:
+		var left_column := VBoxContainer.new()
+		left_column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		body.add_child(left_column)
+		_equipment_scroll.reparent(left_column)
+		left_column.add_child(_scroll)
+	else:
+		body.add_child(_scroll)
 	_items_box = VBoxContainer.new()
 	_items_box.add_theme_constant_override("separation", 4)
 	_items_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -237,7 +270,39 @@ func _ready() -> void:
 	scroll_bottom_spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	stack.add_child(scroll_bottom_spacer)
 
+	get_viewport().size_changed.connect(_layout_panel)
+	UIChrome.THEME.changed.connect(_layout_panel)
+	_layout_panel()
 	ObservableBus.domain_event.connect(_on_domain_event)
+
+
+func _layout_panel() -> void:
+	if _root == null or _status_label == null or not is_inside_tree():
+		return
+	WIResponsiveLayout.apply_readable_theme(_root, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
+	WIResponsiveLayout.place_panel(_root, WIResponsiveLayout.modal_rect(get_viewport(), PANEL_SIZE))
+	var list_width := LIST_WIDTH
+	if WIResponsiveLayout.uses_touch_layout():
+		list_width = (_root.size.x - 68.0 - 16.0) * 0.43
+		for row: Label in _item_labels:
+			row.custom_minimum_size.y = WIResponsiveLayout.touch_size(get_viewport(), Vector2.ZERO).y
+	_slots_box.custom_minimum_size.x = list_width
+	_scroll.custom_minimum_size.x = list_width
+	if _equipment_scroll != null:
+		_equipment_scroll.custom_minimum_size.x = list_width
+		_equipment_button.custom_minimum_size = WIResponsiveLayout.touch_size(get_viewport(), Vector2(260.0, 40.0))
+	_reserve_status_label_height()
+	_reserve_corner_breakout_height()
+
+
+func _on_equipment_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		_equipment_expanded = not _equipment_expanded
+		_equipment_scroll.visible = _equipment_expanded
+		_scroll.visible = not _equipment_expanded
+		_equipment_label.text = "Hide equipment" if _equipment_expanded else "Show equipment"
+		_equipment_button.accept_event()
+		ObservableBus.emit_domain_event("ui_inventory_equipment_rendered", {"expanded": _equipment_expanded})
 
 
 ## Reserves a FIXED row height for `_status_label` up front, from real font
@@ -378,6 +443,7 @@ func _can_open() -> bool:
 
 
 func _open() -> void:
+	_layout_panel()
 	open = true
 	_cursor = 0
 	_reset_list_gesture()
@@ -678,6 +744,10 @@ func _rebuild_items() -> void:
 	var cursor_row: Control = null
 	for i in _item_ids.size():
 		var name_label := UIChrome.make_label(_row_display_text(i))
+		if WIResponsiveLayout.uses_touch_layout():
+			name_label.custom_minimum_size.y = WIResponsiveLayout.touch_size(get_viewport(), Vector2.ZERO).y
+			name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		_items_box.add_child(name_label)
 		_item_labels.append(name_label)
 		if i == _cursor:
@@ -704,9 +774,28 @@ func _render_detail() -> void:
 	var kind := String(rec.get("kind", ""))
 	var equipped_here := _equipped_slot_for(item_id, kind) != ""
 	var tag := "  [Equipped]" if equipped_here else ""
-	var name_label := UIChrome.make_label("%s%s" % [name, tag], "Header")
+	var name_label := UIChrome.make_label("%s%s" % [name, tag], "MenuInk")
 	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_detail_box.add_child(name_label)
+	if WIResponsiveLayout.uses_touch_layout() and _icon_texture_for(item_id) != null:
+		var header := HBoxContainer.new()
+		header.add_theme_constant_override("separation", 8)
+		_detail_box.add_child(header)
+		var icon := TextureRect.new()
+		icon.custom_minimum_size = Vector2(ICON_DISPLAY_PX, ICON_DISPLAY_PX)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		icon.texture = _icon_texture_for(item_id)
+		header.add_child(icon)
+		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		header.add_child(name_label)
+	else:
+		_detail_box.add_child(name_label)
+	if WIResponsiveLayout.uses_touch_layout():
+		for line: String in WIEffectText.item_effect_lines(rec):
+			var effect := UIChrome.make_label(line, "MenuInk")
+			effect.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			_detail_box.add_child(effect)
 	var lore := String(rec.get("lore", ""))
 	if lore != "":
 		var lore_label := UIChrome.make_label(lore, "Lore")
@@ -745,7 +834,9 @@ func _render_corner() -> void:
 	var lines: Array[String] = WIEffectText.item_effect_lines(rec)
 	_corner_breakout.visible = not lines.is_empty()
 	for line: String in lines:
-		_corner_lines_box.add_child(UIChrome.make_label(line, "Menu"))
+		var label := UIChrome.make_label(line, "MenuInk")
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_corner_lines_box.add_child(label)
 	_corner_mech_line = " | ".join(lines)
 
 
@@ -758,11 +849,21 @@ func item_row_rect(i: int) -> Rect2:
 	return Rect2(label.global_position, label.size)
 
 
+func equipment_rect() -> Rect2:
+	return _equipment_button.get_global_rect() if open and _equipment_button != null else Rect2()
+
+
 ## GH#334 note 1 QA hooks, the carried list's twins of journal.gd's
 ## `body_rect`/`body_scroll_value`/`body_scrollable`: the drag leg reads the
 ## rect to aim the pan and the scroll VALUE to prove it moved. `cursor_scroll`
 ## already rides `ui_inventory_shown`, but nothing asserted that any gesture
 ## ever changed it.
+func visible_content_rect() -> Rect2:
+	if open and _equipment_scroll != null and _equipment_scroll.visible:
+		return _equipment_scroll.get_global_rect()
+	return list_rect()
+
+
 func list_rect() -> Rect2:
 	if not open or _scroll == null or not _scroll.visible:
 		return Rect2()

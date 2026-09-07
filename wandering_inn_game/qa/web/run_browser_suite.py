@@ -14,7 +14,7 @@ import sys
 GAME = Path(__file__).resolve().parents[2]
 MANIFEST = GAME / "qa/manifest.json"
 PROFILES = {"iphone", "android"}
-PROOFS = {"hold": "holdProof", "pre_arm": "preArmProof"}
+PROOFS = {"hold": "holdProof", "pre_arm": "preArmProof", "tap": "tapProof", "drag": "dragProof"}
 NOISE = re.compile(r"SCRIPT ERROR|Parse Error|WARNING|ERROR:|\[console:error\]|\[console:warning\]|\[pageerror\]")
 
 
@@ -60,10 +60,16 @@ def cases(manifest: dict) -> list[tuple[dict, str]]:
     return result
 
 
-def evaluate_run(entry: dict, profile: str, returncode: int, log: str, result: dict, evidence: dict) -> list[str]:
+def evaluate_run(entry: dict, profile: str, returncode: int, log: str, result: dict, evidence: dict, expected_steps: int | None = None) -> list[str]:
     failures = []
     if returncode != 0 or result.get("passed") is not True or "QA_RESULT: PASS" not in log:
         failures.append("runner failed or produced no successful game result")
+    count = result.get("steps_run")
+    if (type(count) is not int or count <= 0 or count != result.get("steps_total")
+            or (expected_steps is not None and count != expected_steps)
+            or result.get("script") != f"res://qa/scripts/{entry['script']}.json"
+            or result.get("aborted") is not False or result.get("failures") != []):
+        failures.append("game result is incomplete, aborted or names the wrong script")
     unexpected_log = any(NOISE.search(line) and not known_renderer_warning(line) for line in log.splitlines())
     unexpected_warnings = [line for line in evidence.get("warnings", []) if not known_renderer_warning(line)]
     if unexpected_log or evidence.get("errors") or unexpected_warnings:
@@ -125,7 +131,8 @@ def main() -> int:
         try:
             result = json.loads((destination / "result.json").read_text())
             evidence = json.loads((destination / "browser-evidence.json").read_text())
-            failures = evaluate_run(entry, profile, returncode, log, result, evidence)
+            expected_steps = len(json.loads((GAME / "qa/scripts" / f"{name}.json").read_text())["steps"])
+            failures = evaluate_run(entry, profile, returncode, log, result, evidence, expected_steps)
         except (OSError, ValueError, TypeError, AttributeError) as exc:
             failures = [f"missing or malformed browser evidence: {exc}"]
         row = {"script": name, "profile": profile, "passed": not failures, "runner_exit": returncode, "failures": failures}

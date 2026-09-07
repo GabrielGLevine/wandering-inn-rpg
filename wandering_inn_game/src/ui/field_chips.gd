@@ -42,7 +42,10 @@ func _ready() -> void:
 	_inventory_chip.gui_input.connect(_on_inventory_chip_gui_input)
 	_journal_chip.gui_input.connect(_on_journal_chip_gui_input)
 	_pause_chip.gui_input.connect(_on_pause_chip_gui_input)
+	get_viewport().size_changed.connect(_layout_chips)
+	UIChrome.THEME.changed.connect(_layout_chips)
 	ObservableBus.domain_event.connect(_on_domain_event)
+	_layout_chips()
 	_apply_visibility()
 
 
@@ -56,11 +59,35 @@ func _make_chip(host: Control, label_text: String, slot: int) -> Control:
 	var left := right - CHIP_SIZE.x
 	UIChrome.set_offsets(chip, left, CHIP_TOP_OFFSET, right, CHIP_TOP_OFFSET + CHIP_SIZE.y)
 	var lbl := UIChrome.make_label(label_text, "Small")
+	lbl.name = "ChipLabel"
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	lbl.set_anchors_preset(Control.PRESET_FULL_RECT)
 	chip.add_child(lbl)
 	host.add_child(chip)
 	return chip
+
+
+func _layout_chips() -> void:
+	if _pause_chip == null or not is_inside_tree():
+		return
+	var safe := WIResponsiveLayout.safe_rect(get_viewport())
+	var right := safe.end.x - get_viewport().get_visible_rect().size.x - CHIP_RIGHT_MARGIN
+	var top := safe.position.y + CHIP_TOP_OFFSET
+	var text_scale := WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]
+	for chip: Control in [_pause_chip, _journal_chip, _inventory_chip]:
+		var label := chip.get_node("ChipLabel") as Label
+		var base_size := int(WISettings.scaled_type_font_sizes(WISettings.text_scale_step())["Small"])
+		label.add_theme_font_size_override("font_size", WIResponsiveLayout.readable_font_size(get_viewport(), base_size, text_scale))
+		var chip_size := WIResponsiveLayout.touch_size(get_viewport(), CHIP_SIZE)
+		chip_size.x = maxf(chip_size.x, label.get_minimum_size().x + 24.0)
+		chip.custom_minimum_size = chip_size
+		UIChrome.set_offsets(chip, right - chip_size.x, top, right, top + chip_size.y)
+		right -= chip_size.x + CHIP_GAP
+
+
+func occupied_height() -> float:
+	return _pause_chip.get_global_rect().end.y if visible and _pause_chip != null else 0.0
 
 
 func _on_pause_chip_gui_input(event: InputEvent) -> void:
@@ -157,6 +184,10 @@ func _apply_visibility() -> void:
 	var pause_open := pause_menu_ref != null and bool(pause_menu_ref.get("open"))
 	var journal_open := journal_ref != null and bool(journal_ref.get("open"))
 	var inventory_open := inventory_ref != null and bool(inventory_ref.get("open"))
+	(_pause_chip.get_node("ChipLabel") as Label).text = "Close" if pause_open else "Pause"
+	(_journal_chip.get_node("ChipLabel") as Label).text = "Close" if journal_open else "Journal"
+	(_inventory_chip.get_node("ChipLabel") as Label).text = "Close" if inventory_open else "Inventory"
+	_layout_chips()
 	_pause_chip.visible = pause_open or not (journal_open or inventory_open)
 	_journal_chip.visible = journal_open or not (pause_open or inventory_open)
 	_inventory_chip.visible = inventory_open or not (pause_open or journal_open)

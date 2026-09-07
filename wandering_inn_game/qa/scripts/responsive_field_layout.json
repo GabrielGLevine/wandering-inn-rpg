@@ -1,0 +1,212 @@
+{
+ "_comment": "#505 layout fixture, not a discovery route. Fixture loads five field skills; teleport selects the eight-row inn interior. Measure live controls after actual canvas scaling, toggle details through browser touch at every text scale, and tap the nearby exit through the resized world viewport. Native runs inject mouse and make no touch claim. Physical phone observations remain #511.",
+ "fixture_save": "sewers_property_seams",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_title_row",
+   "row": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 20
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 0
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "resize_browser",
+   "width": 740,
+   "height": 360
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "field_resized"
+  },
+  {
+   "action": "resize_browser",
+   "restore": true
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "0_layout_before_toggle"
+  },
+  {
+   "action": "touch_field_details"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "0_layout_after_toggle"
+  },
+  {
+   "action": "touch_field_details"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 1
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "1_layout_before_toggle"
+  },
+  {
+   "action": "touch_field_details"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "1_layout_after_toggle"
+  },
+  {
+   "action": "touch_field_details"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 2
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "2_layout_before_toggle"
+  },
+  {
+   "action": "touch_field_details"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "2_layout_after_toggle"
+  },
+  {
+   "action": "touch_field_details"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    1,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "3_exit_reached"
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 0
+  }
+ ]
+}
