@@ -14,7 +14,13 @@ import sys
 GAME = Path(__file__).resolve().parents[2]
 MANIFEST = GAME / "qa/manifest.json"
 PROFILES = {"iphone", "android"}
-PROOFS = {"hold": "holdProof", "pre_arm": "preArmProof", "tap": "tapProof", "drag": "dragProof"}
+PROOFS = {"hold": "holdProof", "pre_arm": "preArmProof", "tap": "tapProof", "drag": "dragProof", "cancel": "cancelProof"}
+# #506: a continuous fresh-game route registers `fixture: "fresh"` -- the script
+# must carry NO fixture_save and start at the title. Longer routes may raise the
+# per-case runner timeout (seconds) within the runner's own accepted range.
+FRESH = "fresh"
+DEFAULT_TIMEOUT_SEC = 120
+MAX_TIMEOUT_SEC = 900
 NOISE = re.compile(r"SCRIPT ERROR|Parse Error|WARNING|ERROR:|\[console:error\]|\[console:warning\]|\[pageerror\]")
 
 
@@ -39,7 +45,7 @@ def cases(manifest: dict) -> list[tuple[dict, str]]:
         raise ValueError("malformed native script registry")
     seen = {row["script"] for row in native}
     result = []
-    allowed = {"script", "seed", "fixture", "profiles", "required_touch_proofs", "note", "surfaces"}
+    allowed = {"script", "seed", "fixture", "profiles", "required_touch_proofs", "note", "surfaces", "timeout_sec"}
     for entry in browser:
         if not isinstance(entry, dict) or set(entry) - allowed:
             raise ValueError("unknown or malformed browser script field")
@@ -56,6 +62,9 @@ def cases(manifest: dict) -> list[tuple[dict, str]]:
             raise ValueError(f"{name}: profiles must be unique known emulated profiles")
         if not isinstance(proofs, list) or not proofs or any(p not in PROOFS for p in proofs) or len(set(proofs)) != len(proofs):
             raise ValueError(f"{name}: required_touch_proofs must name known proofs")
+        timeout = entry.get("timeout_sec", DEFAULT_TIMEOUT_SEC)
+        if type(timeout) is not int or timeout < 30 or timeout > MAX_TIMEOUT_SEC:
+            raise ValueError(f"{name}: timeout_sec must be an integer from 30 to {MAX_TIMEOUT_SEC}")
         result.extend((entry, profile) for profile in profiles)
     return result
 
@@ -98,7 +107,10 @@ def main() -> int:
         selected = cases(json.loads(MANIFEST.read_text()))
         for entry, _ in selected:
             script = json.loads((GAME / "qa/scripts" / f"{entry['script']}.json").read_text())
-            if script.get("fixture_save") != entry["fixture"]:
+            if entry["fixture"] == FRESH:
+                if "fixture_save" in script or script.get("starts_at_title") is not True:
+                    raise ValueError(f"{entry['script']}: a fresh route must start at the title without fixture_save")
+            elif script.get("fixture_save") != entry["fixture"]:
                 raise ValueError(f"{entry['script']}: fixture differs from script fixture_save")
     except (OSError, ValueError, TypeError) as exc:
         print(f"BROWSER SUITE INVALID: {exc}", file=sys.stderr)
@@ -118,9 +130,10 @@ def main() -> int:
         name = entry["script"]
         destination = output / profile / name
         destination.mkdir(parents=True)
-        command = ["bash", str(GAME / "qa/web/run_web_qa.sh"), name, str(entry["seed"]), "--skip-export", "--touch", f"--device={profile}"]
+        timeout = int(entry.get("timeout_sec", DEFAULT_TIMEOUT_SEC))
+        command = ["bash", str(GAME / "qa/web/run_web_qa.sh"), name, str(entry["seed"]), "--skip-export", "--touch", f"--device={profile}", f"--timeout-sec={timeout}"]
         try:
-            run = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=180)
+            run = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=timeout + 60)
             returncode, log = run.returncode, run.stdout
         except subprocess.TimeoutExpired as exc:
             returncode, log = 124, (exc.stdout or b"").decode(errors="replace")

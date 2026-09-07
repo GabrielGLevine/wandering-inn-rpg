@@ -7812,6 +7812,134 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "touch_first_session",
+   "seed": 9,
+   "fixture": "fresh",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "timeout_sec": 600,
+   "note": "#506 continuous fresh browser-touch journey: title, creation Back/Begin, innate cleaning, Helper sleep, earned Basic Cooking, Relc intro, touch-driven training fight (move, Dash, aim, cancel, confirm, End Turn, real remaining turns), Warrior sleep, spear gift, inventory equip, proximity goblin ambush fought by touch, exploration restored. Real presentation timing; no fixture, keyboard, teleport or autoplay. Physical phones remain #511.",
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "fresh"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "touch_inventory_gestures",
+   "seed": 9,
+   "fixture": "gear_loop_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "drag",
+    "cancel"
+   ],
+   "note": "#506 narrow regression: horizontal drag, no-move cancel and drag-then-cancel on the equipped inventory row leave equipment unchanged; the next plain tap still unequips.",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "gear_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "touch_journal_gestures",
+   "seed": 9,
+   "fixture": "gear_loop_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "drag",
+    "cancel"
+   ],
+   "note": "#506 narrow regression: horizontal drag, no-move cancel and drag-then-cancel on a journal skill row leave the loadout unchanged; the next plain tap still toggles it.",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "gear_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "touch_purchase_cancel",
+   "seed": 9,
+   "fixture": "d2_shop",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "hold",
+    "cancel"
+   ],
+   "note": "#506 narrow regression on #504's confirmation: a canceled contact on an armed Buy spends no gold and grants no item; the following valid held release still purchases exactly once.",
+   "surfaces": {
+    "maps": [
+     "street"
+    ],
+    "fixtures": [
+     "d2_shop"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
   }
  ]
 }

@@ -52,6 +52,7 @@ var _script_path := ""
 ## exercises the paging surface itself (mobile_tap_check).
 var real_paging := false
 var real_message_timing := false
+var real_presentation_timing := false
 var _out_dir := ""
 ## GH#324: how many evidence captures are settling right now (screenshot or
 ## display probe). Nonzero means "a PNG/probe is about to read the screen", and
@@ -160,6 +161,7 @@ func _run() -> void:
 		return
 	_wants_creation_ui = bool(parsed.get("creation_ui", false))
 	real_paging = bool(parsed.get("qa_real_paging", false))
+	real_presentation_timing = bool(parsed.get("qa_real_presentation_timing", false))
 	real_message_timing = bool(parsed.get("qa_real_message_timing", false)) \
 		or _truthy(String(QAPaths.user_args().get("qa-real-message-timing", "")))
 	_fail_fast = _fail_fast or bool(parsed.get("fail_fast", false))
@@ -449,13 +451,34 @@ func _execute(step: Dictionary) -> void:
 			# web: an unserviced request FAILS the step (see _touch_at).
 			await _touch_at(Vector2(float(step["pos"][0]), float(step["pos"][1])), "screen")
 		"touch_cell":
-			var touch_cell := Vector2i(int(step["cell"][0]), int(step["cell"][1]))
-			var touch_world := Vector2(touch_cell) * float(CELL) + Vector2(CELL, CELL) * 0.5
-			var touch_screen_pos: Variant = _world_to_screen(touch_world)
-			if touch_screen_pos == null:
-				_fail("touch_cell: could not resolve Main.world_to_screen")
+			await _touch_world_cell(Vector2i(int(step.cell[0]), int(step.cell[1])))
+		"touch_walk":
+			await _touch_walk(Vector2i(int(step.to[0]), int(step.to[1])))
+		"wait_touch_ready":
+			await _wait_touch_ready()
+		"touch_field_skill":
+			await _touch_field_skill(String(step.skill))
+		"touch_talk":
+			await _touch_talk(Vector2i(int(step.cell[0]), int(step.cell[1])), String(step.get("conversation", "")))
+		"touch_dialogue_continue":
+			await _touch_dialogue_continue()
+		"touch_combat_slot":
+			await _touch_combat_slot(String(step.slot))
+		"touch_combat_rounds":
+			await _touch_combat_rounds(int(step.get("max_turns", 40)))
+		"touch_inventory_item":
+			await _touch_inventory_item(String(step.item))
+		"touch_combat_dismiss":
+			var cs := _combat_screen_node()
+			var board: Rect2 = cs.board_view_rect() if cs != null else Rect2()
+			if not board.has_area():
+				_fail("touch_combat_dismiss: no rendered combat board")
 			else:
-				await _touch_at(touch_screen_pos as Vector2, "cell")
+				await _touch_at(board.get_center(), "touch_combat_dismiss")
+		"touch_creation_control":
+			var control := String(step.control)
+			var method := {"back": "back_button_rect", "begin": "begin_button_rect", "card": "card_rect", "choice": "choice_row_rect"}
+			await _touch_rect_of("CharCreation", method[control], step.get("index"), "touch_creation_" + control)
 		"touch_hotbar_slot":
 			var hotbar := _resolve_hotbar_node()
 			if hotbar == null:
@@ -1011,12 +1034,383 @@ func _inject_drag(from: Vector2, to: Vector2, steps: int) -> void:
 
 ## #503: resolve a node's rendered rect and touch its centre (real on web,
 ## emulated natively). `arg` is the rect method's single argument.
+func _wait_touch_ready() -> bool:
+	var deadline := Time.get_ticks_msec() + 30000
+	while Time.get_ticks_msec() < deadline:
+		var main := get_tree().root.find_child("Main", true, false)
+		var world := get_tree().root.find_child("World", true, false)
+		var tween: Tween = world.get("_player_tween") if world != null else null
+		if main != null and not main.veil_modal_active() and not main.map_transition_active() and (tween == null or not tween.is_valid() or not tween.is_running()):
+			return true
+		await get_tree().process_frame
+	_fail("touch route: presentation did not finish")
+	return false
+
+
+func _touch_world_cell(cell: Vector2i) -> bool:
+	if not await _wait_touch_ready():
+		return false
+	var main := get_tree().root.find_child("Main", true, false)
+	var pos: Variant = _world_to_screen(Vector2(cell) * CELL + Vector2.ONE * CELL * 0.5)
+	if pos == null or not (main.world_view_rect() as Rect2).has_point(pos):
+		_fail("touch_cell: cell %s is outside the visible playfield" % cell)
+		return false
+	await _touch_at(pos, "cell")
+	return true
+
+
+## #506: bounded touch travel. Every step is one real contact on the visibly
+## adjacent next cell of the world's own click-path BFS (the same walkability
+## the shipped tap-to-walk uses), so a route never teleports and never clamps
+## an off-screen goal onto an unrelated contact. An encounter that interrupts
+## the route fails the step unless the goal itself was just reached.
+func _touch_walk(goal: Vector2i) -> void:
+	for attempt in 160:
+		if Game.sim.player_cell == goal:
+			await _wait_touch_ready()
+			return
+		if Game.sim.combat != null:
+			_fail("touch_walk: encounter interrupted route to %s" % goal)
+			return
+		if not await _wait_touch_ready():
+			return
+		var world := get_tree().root.find_child("World", true, false)
+		if world == null:
+			_fail("touch_walk: no World node")
+			return
+		var cell: Vector2i = Game.sim.player_cell
+		var came_from: Dictionary = world.call("_bfs_from", cell)
+		if not came_from.has(goal):
+			_fail("touch_walk: no walkable route from %s to %s" % [cell, goal])
+			return
+		var path: Array = world.call("_reconstruct_path", came_from, cell, goal)
+		var next: Vector2i = path[0]
+		if not await _touch_world_cell(next):
+			return
+		var deadline := Time.get_ticks_msec() + 3000
+		while Game.sim.player_cell != next and Time.get_ticks_msec() < deadline:
+			if Game.sim.combat != null:
+				break
+			await get_tree().process_frame
+		if Game.sim.player_cell != next and Game.sim.combat == null:
+			_fail("touch_walk: contact from %s did not reach %s" % [cell, next])
+			return
+	_fail("touch_walk: exceeded bounded route length")
+
+
+## #506: talk to the adjacent entity at `cell` by touch. A fresh waking's first
+## contact may only emit the ambient talk-pool line; wait for that line to
+## tear down and contact again (bounded) until `dialogue_started` opens the
+## graph. The player must already stand cardinally adjacent.
+func _touch_talk(cell: Vector2i, conversation: String) -> void:
+	for attempt in 3:
+		var before := _events_seen.size()
+		if not await _touch_world_cell(cell):
+			return
+		var deadline := Time.get_ticks_msec() + 5000
+		var line_seen := false
+		while Time.get_ticks_msec() < deadline:
+			var subset := {} if conversation.is_empty() else {"conversation": conversation}
+			var started := _find_event_since("dialogue_started", subset, before)
+			if started != -1:
+				_wait_cursor = started + 1
+				return
+			if _find_event_since("dialogue_line", {}, before) != -1:
+				line_seen = true
+				if _find_event_since("ui_dialogue_line_hidden", {}, before) != -1:
+					break
+			await get_tree().process_frame
+		if not line_seen:
+			_fail("touch_talk: contact on %s opened neither a conversation nor an ambient line" % cell)
+			return
+		await get_tree().process_frame
+		await get_tree().process_frame
+	_fail("touch_talk: %s never opened a conversation after ambient lines" % cell)
+
+
+## #506: advance a paged dialogue node by touching its visible "More" hint
+## until the option rows render. Each page turn is a real contact and must
+## produce its own `ui_dialogue_page_rendered`.
+func _touch_dialogue_continue() -> void:
+	var panel := get_tree().root.find_child("DialoguePanel", true, false)
+	if panel == null:
+		_fail("touch_dialogue_continue: DialoguePanel not found")
+		return
+	for attempt in 12:
+		var settle := Time.get_ticks_msec() + 3000
+		while Time.get_ticks_msec() < settle and not (panel.option_rect(0) as Rect2).has_area() and not (panel.more_hint_rect() as Rect2).has_area():
+			await get_tree().process_frame
+		if (panel.option_rect(0) as Rect2).has_area():
+			return
+		var more: Rect2 = panel.more_hint_rect()
+		if not more.has_area():
+			_fail("touch_dialogue_continue: neither options nor a More hint is rendered")
+			return
+		var before := _events_seen.size()
+		await _touch_at(more.get_center(), "touch_dialogue_continue")
+		var deadline := Time.get_ticks_msec() + 5000
+		while Time.get_ticks_msec() < deadline and _find_event_since("ui_dialogue_page_rendered", {}, before) == -1:
+			await get_tree().process_frame
+		if _find_event_since("ui_dialogue_page_rendered", {}, before) == -1:
+			_fail("touch_dialogue_continue: page contact rendered no new page")
+			return
+	_fail("touch_dialogue_continue: options never rendered within 12 pages")
+
+
+func _combat_screen_node() -> Node:
+	return get_tree().root.find_child("CombatScreen", true, false)
+
+
+## #506: touch a combat action-bar slot by its bar `type` (attack, dash,
+## end_turn) or skill/item id, paging the phone action bar with its real
+## page control until the slot has a rendered rect.
+func _touch_combat_slot(slot_id: String) -> bool:
+	var cs := _combat_screen_node()
+	if cs == null:
+		_fail("touch_combat_slot: CombatScreen not found")
+		return false
+	var slots: Array = cs.get("_bar_slots")
+	var index := -1
+	for i in slots.size():
+		var slot: Dictionary = slots[i]
+		if String(slot.get("type", "")) == slot_id or String(slot.get("id", "")) == slot_id:
+			index = i
+			break
+	if index < 0:
+		_fail("touch_combat_slot: no bar slot %s (bar: %s)" % [slot_id, JSON.stringify(slots.map(func(s: Dictionary) -> String: return String(s.get("id", s.get("type", "")))))])
+		return false
+	for attempt in 8:
+		var rect: Rect2 = cs.hotbar_node().slot_rect(index)
+		if rect.has_area():
+			await _touch_at(rect.get_center(), "touch_combat_slot_" + slot_id)
+			return true
+		var next: Rect2 = cs.mobile_control_rect("page_next")
+		if not next.has_area():
+			break
+		await _touch_at(next.get_center(), "touch_combat_page_next")
+	_fail("touch_combat_slot: no reachable action page shows " + slot_id)
+	return false
+
+
+## CombatScreen.Mode indices (INACTIVE, HOTBAR, ATTACK, SKILL_TARGET,
+## DASH_CONFIRM, WAIT_AI, BANNER) read through `_mode` for touch routing.
+const MODE_HOTBAR := 1
+const MODE_ATTACK := 2
+const MODE_SKILL_TARGET := 3
+const MODE_DASH_CONFIRM := 4
+const MODE_BANNER := 6
+
+
+func _combat_mode() -> int:
+	var cs := _combat_screen_node()
+	return int(cs.get("_mode")) if cs != null else 0
+
+
+## #506: finish the current fight with real contacts only. Each PC turn plans
+## read-only (nearest living enemy by the AI's own arena path length, the
+## shipped weapon range, the bar's own Piercing Strikes when affordable) and
+## then performs every decision as a visible browser contact: action slot ->
+## tap the offered target -> Confirm; step one adjacent cell along the AI's
+## path helper; Dash + Confirm when the step pool is empty; End Turn. AI turns
+## are waited out. Stops at the result banner, which the script dismisses.
+func _touch_combat_rounds(max_turns: int) -> void:
+	for turn in max_turns:
+		var deadline := Time.get_ticks_msec() + 60000
+		while Time.get_ticks_msec() < deadline:
+			if Game.sim.combat == null or Game.sim.combat.finished or _combat_mode() == MODE_BANNER:
+				return
+			if _combat_mode() == MODE_HOTBAR and Game.sim.combat.get_active() == "pc":
+				break
+			await get_tree().process_frame
+		if _combat_mode() != MODE_HOTBAR:
+			_fail("touch_combat_rounds: no PC turn within 60s (mode %d)" % _combat_mode())
+			return
+		for action in 8:
+			var combat: WICombat = Game.sim.combat
+			if combat == null or combat.finished or _combat_mode() != MODE_HOTBAR:
+				break
+			var snap: Dictionary = combat.snapshot()
+			var pc: Dictionary = snap["combatants"]["pc"]
+			var pc_cell := Vector2i(int(pc["cell"][0]), int(pc["cell"][1]))
+			var reach := int(pc.get("weapon_range", 1))
+			if int(pc["ap"]) < WICombat.ATTACK_COST:
+				break
+			# Read-only plan: the arena's own tutor line says "stay behind me",
+			# so with a living ally the PC only closes on enemies already
+			# engaged (adjacent to) that ally, never Dashing ahead alone.
+			var allies: Array[String] = []
+			for id: String in snap["combatants"]:
+				var c: Dictionary = snap["combatants"][id]
+				if id != "pc" and String(c["side"]) == "player" and bool(c["alive"]):
+					allies.append(id)
+			var target := ""
+			var best := 1 << 30
+			for id: String in snap["combatants"]:
+				var c: Dictionary = snap["combatants"][id]
+				if String(c["side"]) != "enemy" or not bool(c["alive"]):
+					continue
+				var cell := Vector2i(int(c["cell"][0]), int(c["cell"][1]))
+				var engaged := allies.is_empty() or combat.in_weapon_range("pc", id)
+				for ally: String in allies:
+					if combat.is_adjacent(ally, id):
+						engaged = true
+				if not engaged:
+					continue
+				var dist: int = WICombatAI._path_len(combat, pc_cell, cell, reach)
+				if dist < 0:
+					dist = absi(cell.x - pc_cell.x) + absi(cell.y - pc_cell.y) + 1000
+				if dist < best:
+					best = dist
+					target = id
+			if target.is_empty():
+				break
+			var target_cell_raw: Array = snap["combatants"][target]["cell"]
+			var target_cell := Vector2i(int(target_cell_raw[0]), int(target_cell_raw[1]))
+			if _touch_combat_can_strike(combat, pc_cell, target_cell, reach):
+				if not await _touch_combat_strike(target, target_cell):
+					return
+				continue
+			if int(pc["move_pool"]) <= 0:
+				if not allies.is_empty() or int(pc["ap"]) < WICombat.DASH_COST + WICombat.ATTACK_COST:
+					break
+				if not await _touch_combat_dash():
+					break
+			var step := Vector2i.ZERO
+			for dir: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+				if combat.is_cell_free(pc_cell + dir) and _touch_combat_can_strike(combat, pc_cell + dir, target_cell, reach):
+					step = dir
+					break
+			if step == Vector2i.ZERO:
+				step = WICombatAI._path_step(combat, pc_cell, target_cell, reach)
+			if step == Vector2i.ZERO:
+				break
+			var before := _events_seen.size()
+			if not await _touch_world_cell(pc_cell + step):
+				return
+			var wait := Time.get_ticks_msec() + 3000
+			while Time.get_ticks_msec() < wait and _find_event_since("combatant_moved", {"id": "pc"}, before) == -1:
+				await get_tree().process_frame
+			if _find_event_since("combatant_moved", {"id": "pc"}, before) == -1:
+				break
+		if Game.sim.combat != null and not Game.sim.combat.finished and _combat_mode() == MODE_HOTBAR:
+			var before_end := _events_seen.size()
+			if not await _touch_combat_slot("end_turn"):
+				return
+			var wait_end := Time.get_ticks_msec() + 5000
+			while Time.get_ticks_msec() < wait_end and _find_event_since("turn_ended", {"id": "pc"}, before_end) == -1:
+				await get_tree().process_frame
+	_fail("touch_combat_rounds: fight did not finish within %d PC turns" % max_turns)
+
+
+## Mirrors the targeting controller's own melee rule (Chebyshev reach AND a
+## supercover line of sight over arena-blocked cells) so the planner never
+## asks for a strike the real aim surface will refuse.
+func _touch_combat_can_strike(combat: WICombat, from: Vector2i, target_cell: Vector2i, reach: int) -> bool:
+	if maxi(absi(from.x - target_cell.x), absi(from.y - target_cell.y)) > reach:
+		return false
+	for cell: Vector2i in combat._supercover(from, target_cell):
+		if cell != from and cell != target_cell and combat.blocked.has(cell):
+			return false
+	return true
+
+
+## One touch-driven strike: Piercing Strikes when the bar offers it and AP
+## allows, else Attack; then the offered target's cell, then Confirm.
+func _touch_combat_strike(target: String, target_cell: Vector2i) -> bool:
+	var cs := _combat_screen_node()
+	var slots: Array = cs.get("_bar_slots")
+	var slot_id := "attack"
+	for slot: Dictionary in slots:
+		if String(slot.get("id", "")) == "piercing_strikes" and bool(slot.get("affordable", true)):
+			slot_id = "piercing_strikes"
+	if not await _touch_combat_slot(slot_id):
+		return false
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var targeting: RefCounted = cs.get("_targeting")
+	if (_combat_mode() != MODE_ATTACK and _combat_mode() != MODE_SKILL_TARGET) or not targeting.has_valid_target():
+		_fail("touch_combat_strike: %s offered no target for %s in range" % [slot_id, target])
+		return false
+	if not await _touch_world_cell(target_cell):
+		return false
+	var state: Dictionary = targeting.state()
+	if String((state["targets"] as Array)[int(state["index"])]) != target:
+		_fail("touch_combat_strike: contact on %s did not select %s" % [target_cell, target])
+		return false
+	var before := _events_seen.size()
+	await _touch_rect_of("CombatScreen", "mobile_control_rect", "confirm", "touch_combat_confirm")
+	var wait := Time.get_ticks_msec() + 5000
+	while Time.get_ticks_msec() < wait and _find_event_since("attack_resolved", {"attacker": "pc"}, before) == -1 and _find_event_since("skill_resolved", {"actor": "pc"}, before) == -1:
+		await get_tree().process_frame
+	if _find_event_since("attack_resolved", {"attacker": "pc"}, before) == -1 and _find_event_since("skill_resolved", {"actor": "pc"}, before) == -1:
+		_fail("touch_combat_strike: confirmed %s on %s never resolved" % [slot_id, target])
+		return false
+	return true
+
+
+func _touch_combat_dash() -> bool:
+	if not await _touch_combat_slot("dash"):
+		return false
+	await get_tree().process_frame
+	if _combat_mode() != MODE_DASH_CONFIRM:
+		return false
+	var before := _events_seen.size()
+	await _touch_rect_of("CombatScreen", "mobile_control_rect", "confirm", "touch_combat_confirm")
+	var wait := Time.get_ticks_msec() + 5000
+	while Time.get_ticks_msec() < wait and _find_event_since("dashed", {"id": "pc"}, before) == -1:
+		await get_tree().process_frame
+	return _find_event_since("dashed", {"id": "pc"}, before) != -1
+
+
+## #506: touch the inventory row of a carried item found by id through a
+## read-only lookup of the panel's rendered row order.
+func _touch_inventory_item(item: String) -> void:
+	var inventory := get_tree().root.find_child("Inventory", true, false)
+	if inventory == null or not bool(inventory.get("open")):
+		_fail("touch_inventory_item: Inventory is not open")
+		return
+	var ids: Array = inventory.get("_item_ids")
+	var index := ids.find(item)
+	if index < 0:
+		_fail("touch_inventory_item: %s is not carried (rows: %s)" % [item, JSON.stringify(ids)])
+		return
+	var rect: Rect2 = inventory.item_row_rect(index)
+	if not rect.has_area() or not (inventory.visible_content_rect() as Rect2).encloses(rect):
+		_fail("touch_inventory_item: row for %s is not fully visible" % item)
+		return
+	await _touch_at(rect.get_center(), "touch_inventory_item_" + item)
+
+
+func _touch_field_skill(skill: String) -> void:
+	var field := get_tree().root.find_child("FieldHotbar", true, false)
+	if field == null:
+		_fail("touch_field_skill: no field bar")
+		return
+	var index := -1
+	for slot in field.slot_count():
+		if field.skill_for_slot(slot + 1) == skill:
+			index = slot
+	if index < 0:
+		_fail("touch_field_skill: skill is not on the earned field bar: " + skill)
+		return
+	for attempt in field.slot_count():
+		var rect: Rect2 = field.hotbar_node().slot_rect(index)
+		if rect.has_area():
+			await _touch_at(rect.get_center(), "touch_field_skill_" + skill)
+			return
+		var next: Rect2 = field.page_control_rect("next")
+		if not next.has_area():
+			break
+		await _touch_at(next.get_center(), "touch_field_page_next")
+	_fail("touch_field_skill: no reachable page contains " + skill)
+
+
 func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label: String, gesture: Dictionary = {}) -> void:
 	var node := get_tree().root.find_child(node_name, true, false)
 	if node == null:
 		_fail("%s: %s node not found" % [label, node_name])
 		return
-	var rect: Rect2 = node.call(rect_method, arg)
+	var rect: Rect2 = node.call(rect_method) if arg == null else node.call(rect_method, arg)
 	if rect.size == Vector2.ZERO:
 		_fail("%s: %s has no rendered rect" % [label, str(arg)])
 		return

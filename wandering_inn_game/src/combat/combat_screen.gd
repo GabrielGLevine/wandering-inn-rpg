@@ -999,7 +999,7 @@ func _usable_combat_items() -> Array:
 
 
 func _test_driver_active() -> bool:
-	return TestDriver != null and TestDriver.active()
+	return TestDriver != null and TestDriver.active() and not TestDriver.real_presentation_timing
 
 
 func _current_beat_seconds() -> float:

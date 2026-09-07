@@ -645,6 +645,15 @@ func _on_options_gui_input(event: InputEvent) -> void:
 		_confirm()
 
 
+## #506 QA hook: the rendered "More" page hint's rect (empty when the last
+## page or the options are showing), so a touch route can turn pages through
+## the real contact the hint invites.
+func more_hint_rect() -> Rect2:
+	if _more_hint == null or not is_instance_valid(_more_hint) or not _more_hint.is_visible_in_tree():
+		return Rect2()
+	return _more_hint.get_global_rect()
+
+
 func option_rect(i: int) -> Rect2:
 	if i < 0 or i >= _option_controls.size():
 		return Rect2()

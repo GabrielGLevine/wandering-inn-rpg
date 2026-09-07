@@ -2215,7 +2215,7 @@ func _kill_player_tween() -> void:
 
 
 func _presentation_delay(seconds: float) -> float:
-	if (TestDriver != null and TestDriver.active()) or DisplayServer.get_name() == "headless":
+	if (TestDriver != null and TestDriver.active() and not TestDriver.real_presentation_timing) or DisplayServer.get_name() == "headless":
 		return 0.0
 	return seconds
 

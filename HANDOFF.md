@@ -9,51 +9,36 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #506 touch flow:** root owns `/private/tmp/wi-510-lifecycle`, branch
-  `issue/506-creation-back`, based on reviewed #505 candidate `81e66d29`.
-  Main now has its identical squash tree at `2197088a`; rebase #506 onto main
-  after settling the current patches. Creation Back and browser cancellation
-  harness are committed through `3358429b`. Root owns dirty inventory/journal
-  gesture fixes, touch-driver helpers and two new gesture scenarios.
-  Actual Android contacts reproduce horizontal-drag activation in both panels;
-  tracking two-dimensional travel fixes inventory and journal horizontal drags.
-  Actual no-move touch cancellation still activates each row; the first attempt
-  to reject `event.is_canceled()` did not fix it. Next: trace event order and
-  cancellation propagation, verify the root cause, then complete the fresh
-  continuous creation → earned Cooking → Warrior → spear → ambush touch route.
-  Detailed route: `/private/tmp/wi-506-plan.md`; evidence `/private/tmp/wi-506-evidence`.
-  Separate harness follow-up `4f3a4df4` corrects subpixel proof rounding and is
-  ready to integrate. No #506 PR yet. Browser/Godot slot is currently free.
-- **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
-  tree-identical to reviewed `81e66d29`. Independent source/visual review and all
-  eight CI checks pass, including 259 canonical scripts, both balance policies,
-  all 16 browser cases and lifecycle checks. Final local preflight/load gate and
-  desktop inventory/combat, long dialogue and upstairs captures pass and are
-  inspected. Phone combat proves actual tutorial More, complete roster pages
-  and live shrinking. The WebGL turn-marker defect is repaired without weakening
-  diagnostics. Evidence: `/private/tmp/wi-505-evidence`. Keep #505/#511 open for
+- **#506 continuous touch route composed, PR pending:** root owns
+  `/private/tmp/wi-510-lifecycle`, branch `issue/506-creation-back` (contains
+  main `27b844e6`). Creation Back, the browser cancellation harness, two-axis
+  drag rejection, canceled-contact lifecycles and commit-on-release purchase
+  are committed through `dcb68bc5`; `d17bc70d` adds the fresh continuous
+  route `touch_first_session` (title → creation Back/Begin → innate cleaning →
+  Helper sleep → earned Cooking → Relc → touch training fight → Warrior sleep →
+  spear gift → inventory equip → proximity ambush → exploration; 228 steps,
+  271 real contacts, real presentation timing) plus driver route helpers and
+  registry support for fresh routes, cancel proofs and per-case timeouts. The
+  four #506 browser cases are registered on both phone profiles (24 cases).
+  Android journey passes; evidence `/private/tmp/wi-506-evidence/first-session-android`.
+  Next: finish preflight/full-suite gates, open the issue-close PR, review.
+  Physical phones stay #511. Route plan: `/private/tmp/wi-506-plan.md`.
+- **#505 scoped layout repairs merged through PR #550** (`2197088a`): reviewed
+  and CI-green; phone combat proves tutorial More, roster pages and live
+  shrinking. Evidence `/private/tmp/wi-505-evidence`. #505/#511 stay open for
   physical iPhone Safari and Android Chrome acceptance.
-- **#510 scoped recovery merged through PR #549:** main `0ac059a8` is identical
-  to the reviewed tree; all eight CI checks pass. Continue skips unreadable
-  newer saves. Both browser profiles prove actual reload of a completed durable
-  manual save and subsequent touch input, plus explicitly injected malformed-save
-  recovery with valid bytes preserved. Keyboard, audio, genuine backgrounding,
-  itch and physical lifecycle acceptance remain open. Evidence: `/private/tmp/wi-510-evidence`.
-- **#508 scoped work merged through PR #548:** reviewed tree and all eight CI
-  checks pass at `6f188bbc`. Fresh Watch earns wages, buys the classless route,
-  returns home and gains Rogue at sleep. Drainage, Watch, stealth-break and
-  production-timing proof pass on desktop and both emulated phone profiles.
-  Evidence: `/private/tmp/wi-508-evidence/composed`. Physical evidence is open.
-  Fight-first → force-crate → drainage return → sleep still misses Rogue
-  (seed 7, 293 steps). Acquisition/respawn rules are unchanged; the owner must
-  decide `docs/design/rogue-recovery-proposal.md` before this recovery repair.
-- **#504 delivered through PR #547:** browser-touch coverage for all three
-  purchase paths, readable ink labels, CI registration and eligibility invariant
-  documentation are merged at `e5b53328`. The final ordered-input runner passes
-  six cases, three additional timing repeats and all required CI. The unit gate
-  now rejects plain errors; two existing item-tier mismatches are repaired with
-  stats, prices, resonance and starting kits preserved. #504 remains open for
-  physical iPhone Safari / Android Chrome observations under #511.
+- **#510 scoped recovery merged through PR #549** (`0ac059a8`): Continue skips
+  unreadable newer saves; both browser profiles prove reload and malformed-save
+  recovery. Keyboard, audio, backgrounding, itch and physical lifecycle
+  acceptance remain open. Evidence `/private/tmp/wi-510-evidence`.
+- **#508 scoped work merged through PR #548** (`6f188bbc`): fresh Watch route
+  gains Rogue at sleep on desktop and both phone profiles. Evidence
+  `/private/tmp/wi-508-evidence/composed`. Fight-first → force-crate → drainage
+  → sleep still misses Rogue (seed 7); the owner must decide
+  `docs/design/rogue-recovery-proposal.md` before that repair.
+- **#504 delivered through PR #547** (`e5b53328`): browser-touch coverage for
+  all three purchase paths and CI registration. #504 stays open only for
+  physical-device observations under #511.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.

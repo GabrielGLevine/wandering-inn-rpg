@@ -22,7 +22,7 @@ class BrowserRegistryTest(unittest.TestCase):
 
     def test_registry_routes_browser_cases_outside_native_tiers(self):
         cases = suite.cases(self.manifest)
-        self.assertEqual(len(cases), 16)
+        self.assertEqual(len(cases), 24)
         native = {row["script"] for row in self.manifest["scripts"]}
         self.assertTrue(all(entry["script"] not in native for entry, _ in cases))
         self.assertEqual({profile for _, profile in cases}, {"iphone", "android"})
@@ -38,6 +38,9 @@ class BrowserRegistryTest(unittest.TestCase):
             lambda m: m["browser_scripts"][0].update(required_touch_proofs=["unknown"]),
             lambda m: m["browser_scripts"][0].update(script=m["scripts"][0]["script"]),
             lambda m: m["browser_scripts"][0].update(tiers=["full"]),
+            lambda m: m["browser_scripts"][0].update(timeout_sec=901),
+            lambda m: m["browser_scripts"][0].update(timeout_sec="600"),
+            lambda m: m["browser_scripts"][0].update(timeout_sec=10),
         ]
         for mutate in mutations:
             with self.subTest(mutate=mutate):
@@ -45,6 +48,27 @@ class BrowserRegistryTest(unittest.TestCase):
                 mutate(data)
                 with self.assertRaises(ValueError):
                     suite.cases(data)
+
+    def test_fresh_route_registers_without_fixture_and_long_timeout_is_passed_through(self):
+        fresh = next(e for e in self.manifest["browser_scripts"] if e["script"] == "touch_first_session")
+        self.assertEqual(fresh["fixture"], suite.FRESH)
+        self.assertIn("cancel", suite.PROOFS)
+        script = json.loads((GAME / "qa/scripts/touch_first_session.json").read_text())
+        self.assertNotIn("fixture_save", script)
+        self.assertIs(script.get("starts_at_title"), True)
+        self.assertGreater(fresh["timeout_sec"], suite.DEFAULT_TIMEOUT_SEC)
+        self.assertLessEqual(fresh["timeout_sec"], suite.MAX_TIMEOUT_SEC)
+        self.assertEqual({p for e, p in suite.cases(self.manifest) if e["script"] == "touch_first_session"}, {"iphone", "android"})
+
+    def test_cancel_proof_is_required_where_registered(self):
+        entry = next(e for e in self.manifest["browser_scripts"] if e["script"] == "touch_inventory_gestures")
+        self.assertIn("cancel", entry["required_touch_proofs"])
+        result = self.result() | {"script": "res://qa/scripts/touch_inventory_gestures.json"}
+        evidence = self.evidence()
+        evidence["requests"] = [{"dragProof": self.result()}]
+        self.assertIn("missing or failed cancel touch proof", suite.evaluate_run(entry, "iphone", 0, "QA_RESULT: PASS", result, evidence))
+        evidence["requests"].append({"cancelProof": {"passed": True}})
+        self.assertEqual(suite.evaluate_run(entry, "iphone", 0, "QA_RESULT: PASS", result, evidence), [])
 
     def test_touching_never_selects_browser_only_scripts_for_native_execution(self):
         names = {entry["script"] for entry in self.manifest["browser_scripts"]}

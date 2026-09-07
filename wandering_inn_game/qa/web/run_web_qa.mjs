@@ -85,7 +85,9 @@ const here = dirname(fileURLToPath(import.meta.url));
 const projRoot = resolve(here, "../..");
 const webRoot = join(projRoot, "build/web");
 const outDir = join(projRoot, "qa_output", `web_${scriptName}`);
-const TIMEOUT_MS = 120_000;
+const timeoutSeconds = Number(args.find(a => a.startsWith("--timeout-sec="))?.split("=")[1] ?? 120);
+if (!Number.isInteger(timeoutSeconds) || timeoutSeconds < 30 || timeoutSeconds > 900) throw new Error("timeout-sec must be an integer from 30 to 900");
+const TIMEOUT_MS = timeoutSeconds * 1000;
 
 const MIME = {
 	".html": "text/html",

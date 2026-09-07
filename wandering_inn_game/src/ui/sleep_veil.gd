@@ -811,7 +811,7 @@ func _wait(seconds: float) -> void:
 
 
 func _is_qa() -> bool:
-	return (TestDriver != null and TestDriver.active()) or DisplayServer.get_name() == "headless"
+	return (TestDriver != null and TestDriver.active() and not TestDriver.real_presentation_timing) or DisplayServer.get_name() == "headless"
 
 
 func _load_display_names() -> void:
