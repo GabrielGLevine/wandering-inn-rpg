@@ -29,18 +29,33 @@ def render() -> str:
 			f"| `{_cell(entry['script'])}` | {_cell(seed)} | {_cell(tiers)} | "
 			f"`{_cell(fixture)}` | {_cell(entry['note'])} |"
 		)
+	browser_rows = []
+	for entry in data.get("browser_scripts", []):
+		browser_rows.append(
+			f"| `{_cell(entry['script'])}` | {_cell(entry.get('seed', 'none'))} | "
+			f"{_cell(', '.join(entry['profiles']))} | `{_cell(entry.get('fixture', '—'))}` | {_cell(entry['note'])} |"
+		)
 	return "\n".join([
 		"# QA Script Notes",
 		"",
 		"> Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.",
 		"",
-		f"This is the human index for all {len(rows)} canonical QA scripts. The manifest is the",
+		f"This is the human index for {len(rows)} native canonical QA scripts. The manifest is the",
 		"source of truth for seed, tier, fixture, purpose, and derived surfaces; each",
 		"`qa/scripts/<name>.json` is the source of truth for its exact route and assertions.",
 		"",
 		"| script | seed | tiers | fixture | purpose |",
 		"|---|---:|---|---|---|",
 		*rows,
+		"",
+		"## Browser-only QA",
+		"",
+		"Run `python3 wandering_inn_game/qa/web/run_browser_suite.py` (add `--skip-export` for an existing build).",
+		"These scripts require browser touch and stay out of the native smoke/full sweep. Profiles are emulated Chromium contexts.",
+		"",
+		"| script | seed | profiles | fixture | purpose |",
+		"|---|---:|---|---|---|",
+		*browser_rows,
 		"",
 	])
 

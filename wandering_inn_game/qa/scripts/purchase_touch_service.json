@@ -1,0 +1,696 @@
+{
+ "_comment": "#504 EMULATED browser-touch evidence only; run with qa/web/run_web_qa.sh --touch. Fixture loading and interaction setup use keyboard. All dialogue/purchase controls use browser touch: held opening, Cancel, rapid pre-arm Buy, outside dismiss, deliberate repeated Buy exactly once. DOM timestamps and trusted touch events are in browser-evidence.json; physical iOS/Android remains unproven. Exact equipment/quest/stock-input snapshots and live displayed option lists remain unchanged before/cancel. Result inventory/equipment/accomplishments and receipt/effect counts are pinned. Native purchase_confirm_loop owns keyboard Back and same-selection reoffer proof; this script claims touch Cancel/outside only.",
+ "fixture_save": "near_room_upgrade",
+ "starts_at_title": true,
+ "fail_fast": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "room_ledger"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1,
+   "gesture": {
+    "hold_ms": 500
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "room_ledger",
+    "price": 25,
+    "gold_before": 30,
+    "gold_after": 5,
+    "index": 0,
+    "node": "hub"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "cursor": 0,
+    "armed": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": []
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "resolved_wrong_order": 1,
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "won_combat": 1,
+    "reached_liscor": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped",
+   "equals": {
+    "weapon": "",
+    "armor": ""
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": []
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "container_state",
+   "equals": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "unchanged_offer_1"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "qa_state_dump",
+   "payload_contains": {
+    "label": "unchanged_offer_1",
+    "dialogue": {
+     "options": [
+      "Have the draughty single properly aired and banked. (25 gold)",
+      "Just checking the rates."
+     ],
+     "cursor": 0,
+     "node": "hub",
+     "finished": false
+    }
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_held_open_no_commit"
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_cancelled",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": []
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "resolved_wrong_order": 1,
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "won_combat": 1,
+    "reached_liscor": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped",
+   "equals": {
+    "weapon": "",
+    "armor": ""
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": []
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "container_state",
+   "equals": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "unchanged_offer_2"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "qa_state_dump",
+   "payload_contains": {
+    "label": "unchanged_offer_2",
+    "dialogue": {
+     "options": [
+      "Have the draughty single properly aired and banked. (25 gold)",
+      "Just checking the rates."
+     ],
+     "cursor": 0,
+     "node": "hub",
+     "finished": false
+    }
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1,
+   "gesture": {
+    "follow_purchase_buy": true
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "room_ledger",
+    "price": 25,
+    "gold_before": 30,
+    "gold_after": 5,
+    "index": 0,
+    "node": "hub"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "cursor": 0,
+    "armed": false
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": []
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "resolved_wrong_order": 1,
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "won_combat": 1,
+    "reached_liscor": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped",
+   "equals": {
+    "weapon": "",
+    "armor": ""
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": []
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "container_state",
+   "equals": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "unchanged_offer_3"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "qa_state_dump",
+   "payload_contains": {
+    "label": "unchanged_offer_3",
+    "dialogue": {
+     "options": [
+      "Have the draughty single properly aired and banked. (25 gold)",
+      "Just checking the rates."
+     ],
+     "cursor": 0,
+     "node": "hub",
+     "finished": false
+    }
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_rapid_buy_swallowed"
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    40,
+    40
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_cancelled",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_cancelled",
+   "count": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": []
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "resolved_wrong_order": 1,
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "won_combat": 1,
+    "reached_liscor": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped",
+   "equals": {
+    "weapon": "",
+    "armor": ""
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": []
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "container_state",
+   "equals": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "unchanged_offer_4"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "qa_state_dump",
+   "payload_contains": {
+    "label": "unchanged_offer_4",
+    "dialogue": {
+     "options": [
+      "Have the draughty single properly aired and banked. (25 gold)",
+      "Just checking the rates."
+     ],
+     "cursor": 0,
+     "node": "hub",
+     "finished": false
+    }
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "gold_changed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "purchase_confirmed"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "room_ledger",
+    "price": 25,
+    "gold_before": 30,
+    "gold_after": 5,
+    "index": 0,
+    "node": "hub"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "cursor": 0,
+    "armed": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_deliberate_confirm_ready"
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy",
+   "gesture": {
+    "repeat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "room_ledger",
+    "price": 25
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "delta": -25,
+    "total": 5
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Paid 25 gold."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.room_tier_1",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_confirmed",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "gold_changed",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_offered",
+   "count": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "04_committed_once"
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": []
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped",
+   "equals": {
+    "weapon": "",
+    "armor": ""
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "resolved_wrong_order": 1,
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "won_combat": 1,
+    "reached_liscor": 1,
+    "deliberate_commerce": 1,
+    "room_tier_1": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": []
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "container_state",
+   "equals": {}
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_gained",
+   "count": 0
+  },
+  {
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "count": 2
+  },
+  {
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "count": 1,
+   "payload_contains": {
+    "id": "deliberate_commerce"
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "toast",
+   "count": 1,
+   "payload_contains": {
+    "text": "Paid 25 gold."
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_cancelled",
+   "count": 2
+  },
+  {
+   "action": "assert_event_count",
+   "type": "dialogue_choice",
+   "count": 1
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    10,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lyonette"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "dump_state",
+   "label": "stock_after_purchase"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "qa_state_dump",
+   "payload_contains": {
+    "label": "stock_after_purchase",
+    "dialogue": {
+     "node": "hub",
+     "finished": false,
+     "cursor": 0,
+     "options": [
+      "[LOCKED] Pay for the good mattress and the window that shuts. (60 gold)",
+      "Just checking the rates."
+     ]
+    }
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "05_service_next_tier_only"
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_confirmed",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "gold_changed",
+   "count": 1
+  }
+ ]
+}

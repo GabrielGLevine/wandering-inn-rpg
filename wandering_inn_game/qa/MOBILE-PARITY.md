@@ -8,7 +8,7 @@ recorded OS/browser; fill from the M1 gate (#511). **Untested** stays untested.
 
 | Field | Value |
 |---|---|
-| Build SHA | working tree of `issue/503-mobile-parity-matrix` at PR time (base `fc226d90`); re-export before repeating any row |
+| Build SHA | Historical #503 rows used base `fc226d90`. Each #504 purchase run records its exported PCK SHA-256, browser, host and viewport in `browser-evidence.json`; re-export before repeating. |
 | Export | `qa/web/export_web.sh` → `build/web/` (Godot 4.7.2.stable, Web preset, single-threaded); payload `index.pck` 138.9 MB + `index.wasm` 37.7 MB (176.9 MB uncompressed; itch serves compressed) |
 | Runner | `qa/web/run_web_qa.sh <script> <seed> --skip-export --touch --device=iphone|android [--portrait-entry]` |
 | Emulated iPhone | Chromium 844×390 landscape, `isMobile`, `hasTouch`, iPhone OS 17.5 Safari UA (`run_web_qa.mjs` DEVICE_PRESETS) |
@@ -73,12 +73,69 @@ not the finger); `real` = physical device observation.
 | Journal scrolling | `spine_reach` PASS (drag steps) | not exercised by touch this pass | — | UNTESTED | UNTESTED | #506 |
 | Combat targeting / cancel / end-turn / results | `combat_touch_input` PASS (engine-injected taps) | engine-input PASS (`combat_touch_input`: adjacent-cell tap move, Dash confirm chip, Attack targeting cancel/re-aim — driver-injected taps) | — | UNTESTED | UNTESTED | #506 |
 | Settings | `settings_loop` PASS | engine-input: `settings_loop` FAILS on the same desktop-only `selectable_rows: 4` title pin at step 2; settings surface itself not reached — re-pin for web before reading it as a defect | — | UNTESTED | UNTESTED | #505 |
-| Purchases (confirm/cancel) | `purchase_confirm_loop` (#504, PR #531) | pending #504 merge; the modal's Buy/Cancel rows have a `touch_purchase_row` step ready | — | UNTESTED | UNTESTED | #504 |
+| Purchases (confirm/cancel) | `purchase_confirm_loop`: keyboard Back and same-selection reoffer; native clicks are not touch proof | browser-touch PASS: `purchase_touch_static`, `purchase_touch_fence`, `purchase_touch_service` | same three browser-touch scenarios PASS | **UNTESTED — #511** | **UNTESTED — #511** | #504 |
 | Save / reload | `save_load_roundtrip` PASS | engine-input PASS (`save_load_roundtrip`: write + reload through IndexedDB `user://`) (IndexedDB `user://`) | — | UNTESTED (iOS ITP eviction is a real-device concern) | UNTESTED | — |
 | Import / export save | `save_port_loop` PASS (headless arms) | real-touch PASS: `save_port_web` (Export = blob download captured; Import = browser file chooser opened by the tap and answered with that download → `game_loaded{reason:import}`); `save_port_web_cancel` (chooser dismissed → `save_import_cancelled`, no refusal toast); `save_port_web_invalid` (garbage file → refusal toast, state untouched). Web arm hardened for Safari (persistent in-document input, synchronous click, empty/cancel answered silently) | — | UNTESTED (the original report; iOS Safari's picker rules are the real-device question) | UNTESTED | #253 |
 | First-tap audio unlock | n/a | audio smoke PASS on every run (worklets load, output present after the gesture tap) | PASS | UNTESTED (iOS silent-switch/autoplay policy) | UNTESTED | #510 |
 | Rotation (portrait entry → landscape) | n/a | PASS (rotation probe; overlay shown/hidden; no reload) | not run | UNTESTED | UNTESTED | #510 |
 | Background / foreground resume | n/a | UNTESTED (Playwright cannot background a tab faithfully) | — | UNTESTED | UNTESTED | #510 |
+
+## Purchase confirmation evidence (#504)
+
+`manifest.json` registers the three timed purchase scenarios under
+`browser_scripts`, separately from native `scripts` and their smoke/full tiers.
+`python3 wandering_inn_game/qa/web/run_browser_suite.py` exports once and runs
+both emulated profiles through trusted browser contacts. CI uses the same
+entrypoint with `--skip-export` after its Web export. Native `--touching`
+selection excludes these scripts and points to the browser entrypoint.
+
+Each producer checks a held opening contact through the arming delay, a rapid
+second contact on the rendered Buy row before arming, touch Cancel, outside
+dismissal, and a deliberate repeated Buy that commits once. Static stock also
+checks insufficient funds. Exact inventory, equipment, accomplishments, quest
+inputs and stock inputs remain unchanged before/cancel; final state and effect
+counts are pinned. Reopening the fence removes the bought item; reopening the
+room ledger offers only the next tier. The native `purchase_confirm_loop`
+provides keyboard Back/Esc and immediate same-selection reoffer evidence;
+these browser scripts do not claim touch Back.
+
+The entrypoint preserves separate `qa_output/browser_suite/<profile>/<script>/`
+artifacts: result, runner log, production events, screenshots, and browser
+metadata with trusted contact timestamps, held duration, actual Buy-row target,
+and pre-arm proof. It rejects missing results/proofs, mismatched profiles,
+nonzero exits, and unexpected error/warning diagnostics. Exact Chromium
+ReadPixels performance messages and the existing Ubuntu SVG 51500 canvas
+warning remain in artifacts as known renderer diagnostics; other warnings fail.
+CI uploads this directory as `browser-purchase-confirmation`.
+
+On 2026-09-06, the composed tree after `a3b85afd` passed all six full-asset
+cases on Chromium `149.0.7827.55`, exported PCK SHA-256
+`8694efc4e8d1e15e936fa68d3564a91ab68ad264ec383ee71486f586b4d742ed`.
+Static stock ran 117 steps per profile; fence and service ran 109 each.
+Held contacts lasted 534–554 ms; rapid second contacts hit Buy 54–82 ms after
+render, before the 300 ms arm. No browser/game errors occurred; only the exact
+ReadPixels messages above were recorded. Native windowed
+`purchase_confirm_loop` passed 74 steps, and its rendered offer and
+insufficient-funds stock were inspected. `load_gate` and the unaffected
+browser `mobile_touch_smoke` also passed (12 real browser contacts).
+
+**Eligibility invariant:** `WIDialogue` evaluates options against its current
+conversation context snapshot. `WIGame.purchase_confirm()` asks that walker for
+the same row and checks its identity/price/item; this is not a refresh of every
+eligibility input from live simulation state. The open dialogue and purchase
+modal block ordinary movement, inventory, pause, competing dialogue choices,
+and field chips, so ordinary player input cannot change equipment, quest
+eligibility or stock while an offer is pending. The commit separately reads
+live `WIGame.gold` and refuses insufficient funds, and clears the pending offer
+before applying effects. If a future feature permits asynchronous eligibility
+changes inside the modal, it must refresh/invalidate the offer; the current
+snapshot invariant must not be described as a general live-context guarantee.
+
+These results are Chromium emulation, not physical iPhone Safari or Android
+Chrome evidence. Both physical-device columns remain **UNTESTED** under #511,
+as do itch embedding and device ergonomics. Purchase summaries and Buy/Cancel rows use the existing `MenuInk` style so
+their lettering stays dark against parchment. Captures show the complete
+summary, price, gold-after, Cancel and Buy without clipping.
 
 ## Reproductions filed / mapped
 

@@ -37,13 +37,15 @@ archived, or superseded session blocks.
   Act III **0 / 0**. The compiled 1,077-step Acts I–III route passes at seed 37.
   #434 remains open for those claims, later acts, and caster acceptance; M3.6
   and M4 are not complete. Resume actionable M1 work before more act expansion.
-- **Preserved M1 work:** `issue/508-rogue-recovery` remains in the primary
-  checkout at `55d3eee4` with local copy/QA/message-timing edits and the pending
-  recovery decision in `docs/design/rogue-recovery-proposal.md`.
-  `issue/504-browser-touch` remains in `/private/tmp/wi-504-touch` at `2d2db782`
-  with browser-touch purchase proof awaiting controller integration.
-  Next action: finish #508's scoped evidence/decision and integrate #504;
-  preserve unrelated `test_companion_counter.gd.uid` in each checkout.
+- **Active M1 integration:** `issue/504-browser-touch` has six passing trusted
+  browser-touch purchase cases on both phone profiles, native desktop proof,
+  CI registration and readable ink labels. Merge its reviewed scoped PR after CI;
+  #504 remains open for physical iPhone Safari/Android Chrome checks under #511.
+  `issue/508-rogue-recovery` is preserved remotely at `47aeb19b`, with verified
+  fresh Watch acquisition, corrected Stealth guidance, production-timing receipts
+  and an actual Skills-tab capture. Integrate this main into that branch next,
+  then open its scoped PR. Its acquisition-rule proposal remains unanswered;
+  #508 stays open. Preserve unrelated `test_companion_counter.gd.uid`.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).

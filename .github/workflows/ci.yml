@@ -213,7 +213,7 @@ jobs:
             cat "$log"
             # T9 lesson: a SCRIPT ERROR can print WITHOUT a nonzero exit — never
             # trust ^PASS alone. Require BOTH: a PASS line AND no error/warning.
-            if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+            if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING' "$log"; then
               echo "::error::$name tripped the error/warning grep"; fail=1
             fi
             if ! grep -q '^PASS' "$log"; then
@@ -447,3 +447,17 @@ jobs:
             [ "$rc" = 0 ] || fail=1
           done
           exit "$fail"
+
+      - name: Browser registry routing and evidence checks
+        run: python3 -m unittest scripts.tests.test_browser_suite -v
+
+      - name: Browser-only purchase confirmation registry (emulated iPhone and Android)
+        run: python3 wandering_inn_game/qa/web/run_browser_suite.py --skip-export
+
+      - name: Preserve browser-only evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-purchase-confirmation
+          path: wandering_inn_game/qa_output/browser_suite/
+          if-no-files-found: error

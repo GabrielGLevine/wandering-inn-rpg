@@ -273,13 +273,13 @@ def derive_surfaces_for(entry: dict, known_maps: set, known_skills: set,
 	}
 
 
-def derive_all() -> dict:
+def derive_all(include_browser: bool = False) -> dict:
 	manifest = _load(MANIFEST_PATH)
 	known_maps = _known_maps()
 	known_skills, skill_contexts = _known_skills()
 	known_dialogue = _known_dialogue_ids()
 	result = {}
-	for entry in manifest["scripts"]:
+	for entry in manifest["scripts"] + (manifest.get("browser_scripts", []) if include_browser else []):
 		result[entry["script"]] = derive_surfaces_for(
 			entry, known_maps, known_skills, skill_contexts, known_dialogue)
 	return result
@@ -300,7 +300,7 @@ def fixture_field_disagreements() -> list[tuple[str, str, str]]:
 	byte-identically the old `own != row` test."""
 	manifest = _load(MANIFEST_PATH)
 	out: list[tuple[str, str, str]] = []
-	for entry in manifest["scripts"]:
+	for entry in manifest["scripts"] + manifest.get("browser_scripts", []):
 		name = entry["script"]
 		row = entry.get("fixture")
 		script_path = os.path.join(SCRIPTS_DIR, f"{name}.json")
@@ -318,9 +318,9 @@ def cmd_write() -> int:
 			f"'{row}' contradicts the script's fixture_save '{own}'; the "
 			"derivation uses the script's. Fix one of them -- --check is FATAL "
 			"on this.", file=sys.stderr)
-	surfaces_by_script = derive_all()
+	surfaces_by_script = derive_all(include_browser=True)
 	manifest = _load(MANIFEST_PATH)
-	for entry in manifest["scripts"]:
+	for entry in manifest["scripts"] + manifest.get("browser_scripts", []):
 		entry["surfaces"] = surfaces_by_script[entry["script"]]
 	with open(MANIFEST_PATH, "w") as f:
 		json.dump(manifest, f, indent=1)
@@ -333,7 +333,7 @@ def cmd_write() -> int:
 
 
 def cmd_check() -> int:
-	fresh = derive_all()
+	fresh = derive_all(include_browser=True)
 	manifest = _load(MANIFEST_PATH)
 	disagreements = fixture_field_disagreements()
 	if disagreements:
@@ -346,13 +346,13 @@ def cmd_check() -> int:
 			"scripts/derive_qa_surfaces.py.", file=sys.stderr)
 		return 1
 	drift = []
-	for entry in manifest["scripts"]:
+	for entry in manifest["scripts"] + manifest.get("browser_scripts", []):
 		name = entry["script"]
 		committed = entry.get("surfaces")
 		if committed != fresh.get(name):
 			drift.append((name, committed, fresh.get(name)))
 	if not drift:
-		print(f"derive_qa_surfaces: --check OK, {len(manifest['scripts'])} script(s) match freshly-derived surfaces.")
+		print(f"derive_qa_surfaces: --check OK, {len(fresh)} script(s) match freshly-derived surfaces.")
 		return 0
 	print("derive_qa_surfaces: FATAL -- surfaces DRIFTED from a fresh derivation "
 		"(stale/hand-edited tags, or the script/fixture/data files changed underneath them):", file=sys.stderr)
@@ -491,7 +491,10 @@ def cmd_touching(paths_arg: str) -> int:
 			print(name)
 		return 0
 
-	crossing = set(touched_script_names)
+	browser_names = {entry["script"] for entry in _load(MANIFEST_PATH).get("browser_scripts", [])}
+	for name in sorted(touched_script_names & browser_names):
+		print(f"derive_qa_surfaces: {name} is browser-only; run qa/web/run_browser_suite.py", file=sys.stderr)
+	crossing = set(touched_script_names) - browser_names
 	for name, surf in surfaces_by_script.items():
 		for category, tag in touched_tags:
 			if tag in surf.get(category, []):

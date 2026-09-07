@@ -37,6 +37,7 @@ import { join, dirname, extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createServer } from "node:http";
 import { mkdir, rm, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { chromium } from "playwright";
 
 const args = process.argv.slice(2);
@@ -187,15 +188,19 @@ console.log(`MODE: ${device.label}${touchMode ? " + real Playwright touch servic
 // and every uncaught page error is now ALSO surfaced, not swallowed --
 // among them the exact worklet-failure text the audio smoke below checks.
 const capturedErrors = [];
+const capturedWarnings = [];
 page.on("console", (msg) => {
 	const text = msg.text();
 	if (text.startsWith("QA_")) {
 		console.log(`[game] ${text}`);
 		return;
 	}
-	if (msg.type() === "error") {
+	if (msg.type() === "error" || /^(SCRIPT ERROR|Parse Error|ERROR:)/.test(text)) {
 		console.log(`[console:error] ${text}`);
 		capturedErrors.push(text);
+	} else if (msg.type() === "warning" || /^WARNING/.test(text)) {
+		console.log(`[console:warning] ${text}`);
+		capturedWarnings.push(text);
 	}
 });
 page.on("pageerror", (err) => {
@@ -304,18 +309,57 @@ if (portraitEntry) {
 
 // #503 real-touch servicing: the in-game driver publishes window-pixel tap
 // requests (test_driver.gd `_touch_at`); this loop performs each one with
-// page.touchscreen.tap -- a genuine browser touch event -- and acknowledges
+// browser touchscreen events (CDP for a held contact) and acknowledges
 // it. Without --touch the context has no touchscreen and requests go
 // unserviced, which the driver turns into a step FAILURE (no fallback).
 let realTouches = 0;
+const touchRequests = [];
+const touchSession = touchMode ? await page.context().newCDPSession(page) : null;
+await page.evaluate(() => {
+	window.__WI_TOUCH_EVENTS__ = [];
+	for (const type of ["touchstart", "touchend", "touchcancel"]) {
+	 document.addEventListener(type, (event) => window.__WI_TOUCH_EVENTS__.push({
+	  type, time: performance.now(), trusted: event.isTrusted,
+	  points: [...event.changedTouches].map((t) => ({x: t.clientX, y: t.clientY})),
+	 }), {capture: true, passive: true});
+	}
+});
 const serviceTouch = async () => {
 	const req = await page.evaluate(() => window.__WI_QA_TOUCH_REQ__ ?? null);
 	if (!req) return;
 	await page.evaluate(() => { window.__WI_QA_TOUCH_REQ__ = null; });
 	if (touchMode) {
-		await page.touchscreen.tap(req.x, req.y);
-		realTouches += 1;
-		console.log(`[touch] real tap #${realTouches} ${req.label} @ (${req.x.toFixed(0)},${req.y.toFixed(0)})`);
+		const started = await page.evaluate(() => performance.now());
+		const gesture = req.gesture ?? {};
+		const repeat = Math.max(1, Math.min(3, gesture.repeat ?? 1));
+		const holdMs = Math.max(0, Math.min(1000, gesture.hold_ms ?? 0));
+		if (gesture.follow_purchase_buy) {
+			if (holdMs || repeat !== 1) throw new Error("pre-arm burst requires one unheld opening contact");
+			// Queue the ordered protocol messages before awaiting replies: awaiting
+			// each remote round trip can let the real modal arm between contacts.
+			const burst = [
+				{type: "touchStart", touchPoints: [{x: req.x, y: req.y}]},
+				{type: "touchEnd", touchPoints: []},
+				{type: "touchStart", touchPoints: [{x: gesture.follow_x, y: gesture.follow_y}]},
+				{type: "touchEnd", touchPoints: []},
+			];
+			await Promise.all(burst.map((contact) => touchSession.send("Input.dispatchTouchEvent", contact)));
+			realTouches += 2;
+		} else {
+			for (let i = 0; i < repeat; i++) {
+				if (holdMs) {
+					await touchSession.send("Input.dispatchTouchEvent", {type: "touchStart", touchPoints: [{x: req.x, y: req.y}]});
+					await page.waitForTimeout(holdMs);
+					await touchSession.send("Input.dispatchTouchEvent", {type: "touchEnd", touchPoints: []});
+				} else {
+					await page.touchscreen.tap(req.x, req.y);
+				}
+				realTouches += 1;
+				if (i + 1 < repeat) await page.waitForTimeout(30);
+			}
+		}
+		touchRequests.push({...req, started, finished: await page.evaluate(() => performance.now())});
+		console.log(`[touch] real contacts=${realTouches} ${req.label} @ (${req.x.toFixed(0)},${req.y.toFixed(0)})`);
 	} else {
 		console.log(`[touch] request ${req.label} left UNSERVICED (no --touch) -- the driver fails this step`);
 		return;
@@ -408,6 +452,47 @@ if (touchMode && result) {
 	}
 }
 
+const gameEvents = await page.evaluate(() => window.__WI_QA_EVENTS__ ?? []);
+const browserEvidence = {
+	emulated: true, device: deviceName, profile: device, browser: browser.version(),
+	host: BASE_URL, script: scriptName, touchMode, requests: touchRequests,
+	buildPckSha256: createHash("sha256").update(await readFile(join(webRoot, "index.pck"))).digest("hex"),
+	runtime: await page.evaluate(() => ({userAgent: navigator.userAgent, maxTouchPoints: navigator.maxTouchPoints, viewport: [innerWidth, innerHeight], events: window.__WI_TOUCH_EVENTS__})),
+	errors: capturedErrors, warnings: capturedWarnings,
+};
+let timedTouchOk = true;
+for (const request of touchRequests) {
+	const gesture = request.gesture ?? {};
+	if (!gesture.follow_purchase_buy && !gesture.hold_ms) continue;
+	const events = browserEvidence.runtime.events.filter((e) => e.time >= request.started && e.time <= request.finished);
+	const touches = events.filter((e) => e.type === "touchstart");
+	const rendered = gameEvents.find((e) => e.type === "ui_purchase_confirm_rendered" && e.browser_time_ms >= request.started);
+	const armed = gameEvents.find((e) => e.type === "ui_purchase_confirm_armed" && e.browser_time_ms >= request.started);
+	let passed = false;
+	if (gesture.follow_purchase_buy) {
+		const second = touches[1];
+		passed = events.map((e) => e.type).join(",") === "touchstart,touchend,touchstart,touchend"
+			&& touches.length === 2 && events.every((e) => e.trusted) && rendered && armed
+			&& second.time >= rendered.browser_time_ms && second.time < armed.browser_time_ms
+			&& Math.abs(second.points[0].x - rendered.buy_window_pos[0]) < 1
+			&& Math.abs(second.points[0].y - rendered.buy_window_pos[1]) < 1;
+		request.preArmProof = {passed: !!passed, domOrder: events.map((e) => e.type), renderedAt: rendered?.browser_time_ms, secondTouchAt: second?.time, armedAt: armed?.browser_time_ms};
+	} else {
+		const released = events.find((e) => e.type === "touchend");
+		passed = touches.length === 1 && events.every((e) => e.trusted) && released && rendered && armed
+			&& released.time - touches[0].time >= gesture.hold_ms
+			&& rendered.browser_time_ms >= touches[0].time && armed.browser_time_ms < released.time;
+		request.holdProof = {passed: !!passed, durationMs: released ? released.time - touches[0].time : null, armedAt: armed?.browser_time_ms, releasedAt: released?.time};
+	}
+	timedTouchOk = timedTouchOk && !!passed;
+}
+browserEvidence.timedTouchPassed = timedTouchOk;
+if (result && !timedTouchOk) {
+	result.passed = false;
+	result.failures.push("browser touch timing/target evidence failed; see browser-evidence.json");
+}
+await writeFile(join(outDir, "events.json"), JSON.stringify(gameEvents, null, 2));
+await writeFile(join(outDir, "browser-evidence.json"), JSON.stringify(browserEvidence, null, 2));
 await browser.close();
 server.close();
 
@@ -461,7 +546,7 @@ if (rotationProbe) {
 }
 console.log(`audio smoke: ${audioSmokePassed ? "PASS" : "FAIL"}`);
 
-const overallPassed = result.passed && audioSmokePassed && rotationOk;
+const overallPassed = result.passed && audioSmokePassed && rotationOk && timedTouchOk;
 if (!rotationOk) {
 	console.error("FAIL: portrait-entry rotation probe failed (see above).");
 }

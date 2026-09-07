@@ -1403,7 +1403,7 @@
       "hp_mod": 0,
       "damage_reduction": 0,
       "resonance": 0,
-      "tier": "enchanted",
+      "tier": "mundane",
       "abilities": [],
       "price": 45,
       "description": "The same castoff haft, re-collared and trued down its length until the point arrives exactly where the shaft promised it would.",
@@ -1419,7 +1419,7 @@
       "hp_mod": 0,
       "damage_reduction": 0,
       "resonance": 0,
-      "tier": "enchanted",
+      "tier": "mundane",
       "abilities": [],
       "description": "A long killing spear socketed onto bone rather than ash, light for its length and cold to the grip in any weather.",
       "lore": "The High Passes give up their dead slowly and never cheaply. Whoever cut this length out of a wing-spar knew which bone stays straight, and cared enough to seal the cut."

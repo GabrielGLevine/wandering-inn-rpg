@@ -51,6 +51,7 @@ var _script_path := ""
 ## panel's jump-to-last-page QA contract -- required by any script that
 ## exercises the paging surface itself (mobile_tap_check).
 var real_paging := false
+var real_message_timing := false
 var _out_dir := ""
 ## GH#324: how many evidence captures are settling right now (screenshot or
 ## display probe). Nonzero means "a PNG/probe is about to read the screen", and
@@ -59,6 +60,7 @@ var _out_dir := ""
 var _capture_depth := 0
 var _failures: PackedStringArray = []
 var _events_seen: Array = []
+var _last_purchase_buy_pos := Vector2.ZERO
 var _screenshots: PackedStringArray = []
 var _wait_cursor := 0
 var _wants_creation_ui := false
@@ -137,7 +139,15 @@ func _ready() -> void:
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
-	_events_seen.append({"type": type, "payload": payload})
+	var event := {"type": type, "payload": payload}
+	if OS.has_feature("web"):
+		event["browser_time_ms"] = JavaScriptBridge.eval("performance.now()", true)
+		if type == "ui_purchase_confirm_rendered":
+			var panel := get_tree().root.find_child("PurchaseConfirm", true, false)
+			var buy_rect: Rect2 = panel.call("row_rect", 1)
+			var buy_pos := get_viewport().get_screen_transform() * buy_rect.get_center()
+			event["buy_window_pos"] = [buy_pos.x, buy_pos.y]
+	_events_seen.append(event)
 
 
 func _run() -> void:
@@ -150,6 +160,7 @@ func _run() -> void:
 		return
 	_wants_creation_ui = bool(parsed.get("creation_ui", false))
 	real_paging = bool(parsed.get("qa_real_paging", false))
+	real_message_timing = bool(parsed.get("qa_real_message_timing", false))
 	_fail_fast = _fail_fast or bool(parsed.get("fail_fast", false))
 	_install_fixture_saves(parsed.get("fixture_save"))
 	if not bool(parsed.get("starts_at_title", false)):
@@ -444,16 +455,26 @@ func _execute(step: Dictionary) -> void:
 				_fail("touch_cell: could not resolve Main.world_to_screen")
 			else:
 				await _touch_at(touch_screen_pos as Vector2, "cell")
+		"touch_hotbar_slot":
+			var hotbar := _resolve_hotbar_node()
+			if hotbar == null:
+				_fail("touch_hotbar_slot: no live hotbar node found")
+			else:
+				var rect: Rect2 = hotbar.call("slot_rect", int(step["slot"]) - 1)
+				if rect.size == Vector2.ZERO:
+					_fail("touch_hotbar_slot: slot has no rendered rect")
+				else:
+					await _touch_at(rect.get_center(), "touch_hotbar_slot")
 		"touch_title_row":
 			await _touch_rect_of("TitleScreen", "row_rect", int(step["row"]) - 1, "touch_title_row")
 		"touch_dialogue_option":
-			await _touch_rect_of("DialoguePanel", "option_rect", int(step["option"]) - 1, "touch_dialogue_option")
+			await _touch_rect_of("DialoguePanel", "option_rect", int(step["option"]) - 1, "touch_dialogue_option", step.get("gesture", {}))
 		"touch_field_chip":
 			await _touch_rect_of("FieldChips", "chip_rect", String(step["chip"]), "touch_field_chip")
 		"touch_settings_row":
 			await _touch_rect_of("SettingsPanel", "row_rect", int(step["row"]) - 1, "touch_settings_row")
 		"touch_purchase_row":
-			await _touch_rect_of("PurchaseConfirm", "row_rect", 1 if String(step["row"]) == "buy" else 0, "touch_purchase_row")
+			await _touch_rect_of("PurchaseConfirm", "row_rect", 1 if String(step["row"]) == "buy" else 0, "touch_purchase_row", step.get("gesture", {}))
 		"click_purchase_row":
 			# #504: tap a row of the purchase confirmation -- "cancel" or "buy".
 			# Reads the modal's own rendered rect, so a tap before the modal is
@@ -930,7 +951,7 @@ func _inject_drag(from: Vector2, to: Vector2, steps: int) -> void:
 
 ## #503: resolve a node's rendered rect and touch its centre (real on web,
 ## emulated natively). `arg` is the rect method's single argument.
-func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label: String) -> void:
+func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label: String, gesture: Dictionary = {}) -> void:
 	var node := get_tree().root.find_child(node_name, true, false)
 	if node == null:
 		_fail("%s: %s node not found" % [label, node_name])
@@ -939,7 +960,17 @@ func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label:
 	if rect.size == Vector2.ZERO:
 		_fail("%s: %s has no rendered rect" % [label, str(arg)])
 		return
-	await _touch_at(rect.get_center(), label)
+	if node_name == "PurchaseConfirm":
+		var buy_rect: Rect2 = node.call("row_rect", 1)
+		_last_purchase_buy_pos = get_viewport().get_screen_transform() * buy_rect.get_center()
+	if bool(gesture.get("follow_purchase_buy", false)):
+		if _last_purchase_buy_pos == Vector2.ZERO:
+			_fail("follow_purchase_buy needs a prior rendered modal touch at this viewport")
+			return
+		gesture = gesture.duplicate()
+		gesture["follow_x"] = _last_purchase_buy_pos.x
+		gesture["follow_y"] = _last_purchase_buy_pos.y
+	await _touch_at(rect.get_center(), label, gesture)
 
 
 ## The one seam every touch_* step rides. Web: publish the request in WINDOW
@@ -950,10 +981,10 @@ func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label:
 ## back -- that absence of fallback is the contract #503 asks for.
 const TOUCH_SERVICE_DEADLINE_MSEC := 4000
 
-func _touch_at(pos: Vector2, label: String) -> void:
+func _touch_at(pos: Vector2, label: String, gesture: Dictionary = {}) -> void:
 	if OS.has_feature("web"):
 		var window_pos: Vector2 = get_viewport().get_screen_transform() * pos
-		JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = {x: %f, y: %f, label: %s}" % [window_pos.x, window_pos.y, JSON.stringify(label)], true)
+		JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = {x: %f, y: %f, label: %s, gesture: %s}" % [window_pos.x, window_pos.y, JSON.stringify(label), JSON.stringify(gesture)], true)
 		var before := int(JavaScriptBridge.eval("window.__WI_QA_TOUCH_DONE__ || 0", true))
 		var deadline := Time.get_ticks_msec() + TOUCH_SERVICE_DEADLINE_MSEC
 		var serviced := false
@@ -966,8 +997,11 @@ func _touch_at(pos: Vector2, label: String) -> void:
 			JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = null", true)
 			_fail("%s: real touch at (%d,%d) was never performed by the runner (not in --touch mode?) -- no fallback" % [label, int(pos.x), int(pos.y)])
 			return
-		ObservableBus.emit_domain_event("qa_touch", {"label": label, "x": pos.x, "y": pos.y, "window_x": window_pos.x, "window_y": window_pos.y, "real": true, "mode": "browser_touch"})
+		ObservableBus.emit_domain_event("qa_touch", {"label": label, "x": pos.x, "y": pos.y, "window_x": window_pos.x, "window_y": window_pos.y, "real": true, "mode": "browser_touch", "gesture": gesture})
 	else:
+		if not gesture.is_empty():
+			_fail("timed touch gestures require the browser runner with --touch")
+			return
 		_inject_mouse_click(pos)
 		ObservableBus.emit_domain_event("qa_touch", {"label": label, "x": pos.x, "y": pos.y, "real": false, "mode": "emulated_native_click"})
 	await get_tree().process_frame
@@ -1575,6 +1609,7 @@ func _finish() -> void:
 	for failure: String in _failures:
 		print("QA_FAILURE: " + failure)
 	if OS.has_feature("web"):
+		JavaScriptBridge.eval("window.__WI_QA_EVENTS__ = %s" % JSON.stringify(_events_seen), true)
 		JavaScriptBridge.eval("window.__WI_RESULT__ = %s" % JSON.stringify(result), true)
 	else:
 		get_tree().quit(0 if _failures.is_empty() else 1)
