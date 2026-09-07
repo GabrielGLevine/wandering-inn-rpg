@@ -66,6 +66,13 @@ then paginates against the new area. Otherwise Godot's previous minimum height
 can keep old text flowing over controls after a smaller viewport or larger
 font. Geometry checks include text-versus-text and text-versus-control overlap.
 
+The active-turn triangle uses a canvas primitive. In the local Godot 4.7.2
+build (`ed1daf0bf`), [Polygon2D redraw](https://github.com/godotengine/godot/blob/ed1daf0bf/scene/2d/polygon_2d.cpp#L387-L395)
+reaches an [index-buffer update using the vertex-buffer target](https://github.com/godotengine/godot/blob/ed1daf0bf/drivers/gles3/storage/mesh_storage.cpp#L532-L543).
+Showing details and resizing triggered WebGL binding errors on that path.
+The primitive retains the triangle's points, color and lifecycle and avoids
+the invalid update. The browser warning gate remains unchanged.
+
 ## Evidence boundaries
 
 The browser registry exercises Chromium at 844 × 390 and 915 × 412 CSS pixels,
