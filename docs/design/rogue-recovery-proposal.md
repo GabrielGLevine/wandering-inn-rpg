@@ -7,8 +7,12 @@ creates a character, earns Warrior and a spear, defeats the road goblins,
 meets Klbkch, recovers the crate by force, returns through ordinary doors,
 uses the drainage cut, crosses the cleared road and sleeps. Seed 7 completes
 293 steps with both Rogue entry counters absent and no Rogue grant.
-The same Watch options hide after guile recovery. The drainage lead therefore
-points at an exhausted producer in both histories.
+The same Watch options hide after guile recovery: the Light report in
+`krshia_crate.json` records `found_the_crate`, which hides both options in
+`watch_crate.json`. Its quest reward grants growth credit, not either Rogue
+entry counter. This analogous branch is source-inspected; the fresh diagnostic
+above exercises force. The drainage lead points at an exhausted producer in
+both histories when the road encounter was already defeated.
 
 ## Proposed decision
 

@@ -151,7 +151,8 @@ func _run() -> void:
 		return
 	_wants_creation_ui = bool(parsed.get("creation_ui", false))
 	real_paging = bool(parsed.get("qa_real_paging", false))
-	real_message_timing = bool(parsed.get("qa_real_message_timing", false))
+	real_message_timing = bool(parsed.get("qa_real_message_timing", false)) \
+		or _truthy(String(QAPaths.user_args().get("qa-real-message-timing", "")))
 	_fail_fast = _fail_fast or bool(parsed.get("fail_fast", false))
 	_install_fixture_saves(parsed.get("fixture_save"))
 	if not bool(parsed.get("starts_at_title", false)):

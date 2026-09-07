@@ -14,6 +14,7 @@
 #     WITHOUT editing it (steel_thread's purity gate must stay untouched); a
 #     request landing mid-combat/dialogue defers to the next quiet step. The
 #     `dump_checkpoint {slot}` step action is the in-script equivalent.
+#   --qa-real-message-timing=1 keeps production holds and disables capture extensions.
 #   extra args are passed through to Godot user args (for example --seed=7)
 # Godot 4.7 here does not expose --user-dir. To isolate user:// state for
 # concurrent QA runs, this wrapper gives each run a dedicated HOME under the

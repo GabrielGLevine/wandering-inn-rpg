@@ -10,18 +10,22 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Active #508 correction:** controller owns `issue/508-rogue-recovery`,
-  base `a1716c4e`; Watch proof integrated as `18f24231`. Owned work: first-Stealth
-  copy and `rogue_earn_loop`, fresh cut itinerary/canonical feedback assertions,
-  fresh Watch canonical/manifest/derived notes, recovery diagnostic and proposal.
-  Fresh creation → road victory → force-crate → drainage return → sleep reproduces
-  the missing Rogue grant (seed 7, 293 steps, clean PASS means defect reproduced).
-  Existing acquisition/respawn behavior is unchanged. Owner decision requested
-  in `docs/design/rogue-recovery-proposal.md`; continue independent M1 work.
+  integrated through main `87e6c0f7`. Fresh Watch proof earns both wages, pays
+  the classless route, walks home and gains Rogue at sleep. Fresh drainage,
+  Watch, stealth-break and production-timing feedback checks pass on desktop;
+  both emulated phone profiles pass Watch, break and real browser hotbar-touch
+  checks. No physical-device claim. Evidence: `/private/tmp/wi-508-evidence/composed`.
+  Fight-first → force-crate → drainage return → sleep still reproduces missing
+  Rogue (seed 7, 293 steps; diagnostic PASS means defect reproduced).
+  Acquisition/respawn rules are unchanged. The proposal in
+  `docs/design/rogue-recovery-proposal.md` awaits the owner's decision; #508
+  stays open. Finish the fresh-cut production-timing capture and scoped PR.
 - **Independent #504 lane:** worker owns `/private/tmp/wi-504-touch`, branch
-  `issue/504-browser-touch`, base `a1716c4e`, new browser-touch purchase QA and
-  necessary QA driver/web helpers only. No shared UI/core writer. Root owns
-  manifest integration and final review. Exact next action: finish #508 rendered
-  proofs and windowed reads, then integrate/review #504 browser evidence.
+  `issue/504-browser-touch`, integrated through main `87e6c0f7`. Owns browser
+  purchase QA, driver/web helpers, manifest registration, CI routing and mobile
+  evidence notes. Root owns independent review and PR integration. Exact next
+  action: read final desktop/six-case browser evidence and merge the scoped PR;
+  physical iPhone Safari/Android Chrome observations remain with #511.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.
@@ -50,13 +54,6 @@ archived, or superseded session blocks.
   Act III **0 / 0**. The compiled 1,077-step Acts I–III route passes at seed 37.
   #434 remains open for those claims, later acts, and caster acceptance; M3.6
   and M4 are not complete. Resume actionable M1 work before more act expansion.
-- **Preserved M1 work:** `issue/508-rogue-recovery` remains in the primary
-  checkout at `55d3eee4` with local copy/QA/message-timing edits and the pending
-  recovery decision in `docs/design/rogue-recovery-proposal.md`.
-  `issue/504-browser-touch` remains in `/private/tmp/wi-504-touch` at `2d2db782`
-  with browser-touch purchase proof awaiting controller integration.
-  Next action: finish #508's scoped evidence/decision and integrate #504;
-  preserve unrelated `test_companion_counter.gd.uid` in each checkout.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
