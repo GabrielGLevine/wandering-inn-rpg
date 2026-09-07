@@ -282,6 +282,7 @@
    "action": "touch_combat_pages",
    "mode": "tutor",
    "name": "tutor_130",
+   "min_pages": 2,
    "contains": [
     "Relc:",
     "[Skills]"

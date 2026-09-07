@@ -25,7 +25,7 @@ static func regions(safe: Rect2, css_scale: float, line_height: float, pages: in
 	var context_y := active_y + active_height + gap
 	var context_height := maxf(line_height, hotbar_y - gap - context_y)
 	var board_right := rail.position.x - gap
-	var note_height := minf(tutor_height, safe.size.y * 0.5)
+	var note_height := minf(tutor_height, safe.size.y / 3.0)
 	var board_top := safe.position.y + note_height + (gap if note_height > 0.0 else 0.0)
 	return {
 		"rail": rail,

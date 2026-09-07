@@ -10,19 +10,18 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Active #505 responsive layout:** root owns `issue/505-responsive-layout`,
-  main base `0ac059a8`. Shared UI and the independent combat/field lanes are
-  integrated through the compact field follow-up; shared QA/text-fitting edits
-  are at the final integration checkpoint.
-  The current browser registry has 16 cases. Prior shared field/panel/dialogue
-  and purchase cases pass both profiles; composed rerun is pending. Crowded
-  combat passes 118 steps and 40 actual browser contacts at all text scales,
-  including long name/MP, every roster page, tutor pages and live shrinking.
-  Field overflow proves every saved slot, slot14 Light activation and the final
-  readout line through continuous drags. Compact field slots and truthful
-  hidden-selection events are integrated. Next: composed full preflight, browser
-  registry, native sweep/balance and final independent review. Root owns the
-  worktree; workers are read-only/idle. No #505 PR yet.
-  Evidence: `/private/tmp/wi-505-evidence`. Physical #511 remains open.
+  main base `0ac059a8`. Shared field, panel, dialogue and combat changes are
+  integrated. Full preflight passes; the subsequent marker fix passes its
+  affected unit and eliminates reproduced WebGL buffer warnings without a
+  warning exemption. The 16-case browser registry passes on `6293be11`.
+  Final combat spacing fixes pass both profiles: 118 steps, 38 trusted contacts,
+  actual two-page tutorial traversal, live shrinking and every roster page.
+  Before/after Android captures and final phone combat screenshots are read.
+  Next: commit settled candidate, native load/smoke/full sweep/balance, desktop
+  windowed comparison, then PR and required CI. Independent final review is
+  awaiting only the finished iPhone captures. Root owns all mutations.
+  Evidence: `/private/tmp/wi-505-evidence`; baseline Android source `0ac059a8`.
+  Physical #511 remains open. No #505 PR yet.
 - **#510 scoped recovery merged through PR #549:** main `0ac059a8` is identical
   to the reviewed tree; all eight CI checks pass. Continue skips unreadable
   newer saves. Both browser profiles prove actual reload of a completed durable

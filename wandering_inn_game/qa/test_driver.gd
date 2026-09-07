@@ -1326,6 +1326,9 @@ func _touch_combat_pages(step: Dictionary) -> void:
 		_fail("touch_combat_pages: must begin at first rendered page")
 		return
 	var count := int(snapshot[pages_key])
+	if count < int(step.get("min_pages", 1)):
+		_fail("touch_combat_pages: expected at least %d pages, got %d" % [int(step.min_pages), count])
+		return
 	var text := String(snapshot[text_key])
 	for page in range(1, count):
 		await _touch_rect_of("CombatScreen", "mobile_control_rect", control, "touch_combat_pages")
