@@ -125,13 +125,12 @@ class AlignmentTest(unittest.TestCase):
         equal = [(c_lo, s_lo) for tag, c_lo, _, s_lo, _ in opcodes if tag == "equal"]
         self.assertEqual(equal, [(0, 2)])
 
-    def test_from_start_is_delivery_not_a_different_claim(self) -> None:
-        """steel_thread 143: the corpus pins the class-gained RENDER with
-        from_start because it races the veil (v0.15: never pin toast order)."""
+    def test_render_waits_preserve_the_driver_cursor_mode(self) -> None:
+        """UI receipts use the same ordered wait cursor as domain events."""
         ordered = {"steps": [{"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "t"}}]}
         anytime = {"steps": [{"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "t"}, "from_start": True}]}
-        self.assertTrue(diff(ordered, anytime).passed)
-        self.assertTrue(diff(anytime, ordered).passed)
+        self.assertFalse(diff(ordered, anytime).passed)
+        self.assertFalse(diff(anytime, ordered).passed)
 
 
 class SleepOrderTest(unittest.TestCase):

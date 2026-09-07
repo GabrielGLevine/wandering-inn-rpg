@@ -53,10 +53,7 @@ TOLERANCE_ACTIONS = {"move", "wait_frames"}
 # the run then acts on is the row it lands on, and that is the net.
 CURSOR_PRESSES = {"move_up": "up", "move_down": "down", "move_left": "left", "move_right": "right"}
 # Keys that never carry a claim about the game.
-# `from_start` is delivery-vs-order, not a different claim: the corpus pins a
-# toast's RENDER with it wherever the render races a veil (v0.15 lesson --
-# never pin toast order across a hold), and the compiler does the same.
-IGNORED_KEYS = {"_itin", "_comment", "timeout_sec", "_bump", "from_start"}
+IGNORED_KEYS = {"_itin", "_comment", "timeout_sec", "_bump"}
 # Compiled-only steps that are pure TIGHTENING rather than extra behaviour.
 ASSERT_ACTIONS = {"assert_state", "assert_event_logged", "assert_event_absent", "assert_event_count"}
 # The one action the 2026-08-14 ruling adds to that set. Kept separate from
@@ -131,7 +128,11 @@ def _significant(step: dict[str, Any]) -> bool:
 
 
 def _normalize(step: dict[str, Any]) -> dict[str, Any]:
-    return {key: value for key, value in step.items() if key not in IGNORED_KEYS}
+    normalized = {key: value for key, value in step.items() if key not in IGNORED_KEYS}
+    if step.get("action") == "wait_for_event":
+        # History searches do not advance the driver's ordered wait cursor.
+        normalized["from_start"] = bool(step.get("from_start", False))
+    return normalized
 
 
 def _key(step: dict[str, Any]) -> str:
@@ -272,8 +273,8 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
 
     # The tolerance-class steps between two significant ones are that gap's
     # ROUTE; the significant steps themselves are the spine the diff aligns on.
-    compiled_spine, compiled_gaps, compiled_at = _split(compiled_steps)
-    shipped_spine, shipped_gaps, _ = _split(shipped_steps)
+    compiled_spine, compiled_gaps, compiled_at, compiled_tail = _split(compiled_steps)
+    shipped_spine, shipped_gaps, shipped_at, shipped_tail = _split(shipped_steps)
 
     opcodes = _align([_key(step) for step in compiled_spine], [_key(step) for step in shipped_spine])
     # A gap is the walk/cursor run BEFORE a spine step, and an UNMATCHED spine
@@ -286,13 +287,10 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
     # fatal, which would make §6.3's "pins may be tighter" untrue in practice.
     pending_compiled: list[dict[str, Any]] = []
     pending_shipped: list[dict[str, Any]] = []
-    # The direction of the marked bump that closed the previous matched gap.
-    # The compiler pins the stand cell BEFORE it bumps (and again after); the
-    # corpus sometimes pins only after (steel_thread 413: pin, bump, press).
-    # When that happens the shipped bump is the lone 1-step move in a gap the
-    # compiled side has already spent -- the same bump, the other side of the
-    # pin -- and it is discounted like a mirrored one.
+    # A bump can cross a stand-cell pin, but never an interaction or a
+    # second time after it already discounted the mirrored shipped move.
     last_bump = ""
+    compiled_checkpoint = shipped_checkpoint = 0
     for tag, c_lo, c_hi, s_lo, s_hi in opcodes:
         if tag == "equal":
             for offset in range(c_hi - c_lo):
@@ -300,12 +298,16 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
                 _compare_pair(report, anchor, shipped_spine[s_lo + offset])
                 compiled_gap = pending_compiled + compiled_gaps[c_lo + offset]
                 shipped_gap = pending_shipped + shipped_gaps[s_lo + offset]
-                if not compiled_gap and last_bump and len(shipped_gap) == 1:
-                    lone = _as_move(shipped_gap[0])
-                    if lone is not None and int(lone.get("steps", 1)) == 1 and str(lone.get("direction", "")) == last_bump:
-                        shipped_gap = []
+                shipped_gap = _post_pin_bump(last_bump, compiled_gap, shipped_gap)
+                mirrored = _strip_mirrored_bump(compiled_gap, shipped_gap) != shipped_gap
                 _compare_gap(report, compiled_gap, shipped_gap, anchor)
-                last_bump = str(compiled_gap[-1].get("direction", "")) if compiled_gap and _is_bump(compiled_gap[-1]) else ""
+                carries_bump = (
+                    anchor.get("action") == "assert_state" and anchor.get("path") == "player_cell"
+                    and compiled_gap and _is_bump(compiled_gap[-1]) and not mirrored
+                )
+                last_bump = str(compiled_gap[-1].get("direction", "")) if carries_bump else ""
+                compiled_checkpoint = compiled_at[c_lo + offset] + 1
+                shipped_checkpoint = shipped_at[s_lo + offset] + 1
                 pending_compiled, pending_shipped = [], []
             continue
         for index in range(c_lo, c_hi):
@@ -321,19 +323,35 @@ def diff(compiled: dict[str, Any], shipped: dict[str, Any]) -> GoldenDiff:
         # The other direction is NOT symmetric and must never be made so: a
         # shipped-only `wait_for_event` is a claim the compiler stopped making.
         # ONE reclassification (#434 Act II): a shipped `assert_event_logged`
-        # whose event a compiled `wait_for_event` of the same type claims with
-        # a payload that subsumes it is not dropped -- an ordered wait is the
-        # STRONGER claim about the same event.
+        # covered by a completed wait is retained only at its aligned
+        # checkpoint, never by searching a later state-changing interval.
         for index in range(s_lo, s_hi):
             pending_shipped.extend(shipped_gaps[index])
             shipped_step = shipped_spine[index]
-            if _wait_subsumes_logged_assert(compiled_steps, shipped_step):
-                report.tighter.append(f"logged-assert covered by an ordered wait: {_describe(shipped_step)}")
+            compiled_stop = compiled_at[c_hi] if c_hi < len(compiled_at) else len(compiled_steps)
+            if _wait_subsumes_logged_assert(
+                compiled_steps, shipped_step, compiled_checkpoint, compiled_stop,
+                shipped_steps[shipped_checkpoint:shipped_at[index]],
+            ):
+                report.tighter.append(f"logged-assert covered by a wait completed by this checkpoint: {_describe(shipped_step)}")
                 continue
             report.exact.append(
                 f"shipped-only step (compiler dropped this claim): {_describe(shipped_step)}"
             )
+    compiled_gap = pending_compiled + compiled_tail
+    shipped_gap = _post_pin_bump(last_bump, compiled_gap, pending_shipped + shipped_tail)
+    _compare_gap(report, compiled_gap, shipped_gap, {"action": "end_of_script"})
     return report
+
+
+def _post_pin_bump(
+    direction: str, compiled_gap: list[dict[str, Any]], shipped_gap: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    if not compiled_gap and direction and len(shipped_gap) == 1:
+        lone = _as_move(shipped_gap[0])
+        if lone is not None and int(lone.get("steps", 1)) == 1 and str(lone.get("direction", "")) == direction:
+            return []
+    return shipped_gap
 
 
 # Alignment weights: what a paired spine step is WORTH. difflib's
@@ -420,25 +438,53 @@ def _align(compiled_keys: list[str], shipped_keys: list[str]) -> list[tuple[str,
     return opcodes
 
 
-def _wait_subsumes_logged_assert(compiled_steps: list[dict[str, Any]], shipped_step: dict[str, Any]) -> bool:
+def _wait_subsumes_logged_assert(
+    compiled_steps: list[dict[str, Any]], shipped_step: dict[str, Any],
+    compiled_checkpoint: int, compiled_stop: int, shipped_gap: list[dict[str, Any]],
+) -> bool:
     if str(shipped_step.get("action", "")) != "assert_event_logged":
         return False
     wanted = _normalize(shipped_step)
-    for step in compiled_steps:
+    for index, step in enumerate(compiled_steps[:compiled_stop]):
         if str(step.get("action", "")) != "wait_for_event" or str(step.get("type", "")) != str(wanted.get("type", "")):
             continue
-        if _subsumes(step.get("payload_contains", {}), wanted.get("payload_contains", {})):
+        if not _subsumes(step.get("payload_contains", {}), wanted.get("payload_contains", {})):
+            continue
+        # An earlier completed wait proves a persistent history fact. Within
+        # the current aligned interval, preserve the ordered movement prefix:
+        # an out-and-back detour can produce an event despite equal net travel.
+        if index < compiled_checkpoint:
+            return True
+        interval = compiled_steps[compiled_checkpoint:index]
+        if any(_significant(row) and row.get("action") not in ASSERT_ACTIONS | {TIGHTENING_WAIT_ACTION} for row in interval):
+            continue
+        if _movement_prefix(interval) == _movement_prefix(shipped_gap):
             return True
     return False
 
 
+def _movement_prefix(steps: list[dict[str, Any]]) -> list[tuple[str, int]]:
+    """Coalesce split moves without cancelling or reordering any travel."""
+    prefix: list[tuple[str, int]] = []
+    for step in steps:
+        moved = _as_move(step)
+        if moved is None:
+            continue
+        direction, count = str(moved.get("direction", "")), int(moved.get("steps", 1))
+        if prefix and prefix[-1][0] == direction:
+            prefix[-1] = (direction, prefix[-1][1] + count)
+        else:
+            prefix.append((direction, count))
+    return prefix
+
+
 def _split(
     steps: list[dict[str, Any]],
-) -> tuple[list[dict[str, Any]], list[list[dict[str, Any]]], list[int]]:
+) -> tuple[list[dict[str, Any]], list[list[dict[str, Any]]], list[int], list[dict[str, Any]]]:
     """Spine of significant steps, the tolerance run BEFORE each, and where each sat.
 
-    The third list is the spine step's index in the ORIGINAL script, kept only
-    so a reported row can name the step a reader should open.
+    The third list holds original step indices for checkpoint mapping and
+    reports. The fourth retains the route after the final spine step.
     """
     spine: list[dict[str, Any]] = []
     gaps: list[list[dict[str, Any]]] = []
@@ -452,7 +498,7 @@ def _split(
             pending = []
         else:
             pending.append(step)
-    return spine, gaps, at
+    return spine, gaps, at, pending
 
 
 def _compare_pair(report: GoldenDiff, compiled: dict[str, Any], shipped: dict[str, Any]) -> None:
