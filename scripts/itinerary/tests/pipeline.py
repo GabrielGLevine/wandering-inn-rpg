@@ -67,6 +67,11 @@ class FakeOracle:
 
     def query(self, query: str, ledger: Any = None) -> dict[str, Any]:
         self.asked.append(query)
+        if query.startswith("bypass_walk "):
+            # Pipeline tests stub the oracle boundary. Eligibility itself is
+            # covered by test_bypass_contract against real WIGame movement.
+            return {"supported": True, "banks": [], "entity_first_use": dict(ledger.state["entity_first_use"]),
+                    "warded_encounters": dict(ledger.state["warded_encounters"]), "accomplishments": dict(ledger.state["accomplishments"])}
         if query.startswith("path "):
             return self._path(query)
         if query.startswith("visible_options "):

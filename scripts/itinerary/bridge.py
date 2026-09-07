@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 from typing import Any, Iterable
@@ -67,7 +68,9 @@ class OracleBridge:
         if not isinstance(parsed, list):
             raise OracleError(f"batch oracle answer is not an array: {parsed!r}")
         errors = [answer for answer in parsed if isinstance(answer, dict) and "error" in answer]
-        if run.returncode != 0 or errors:
+        diagnostics = "\n".join(item for item in run.stdout.splitlines() if not item.startswith("ORACLE_JSON: "))
+        noise = re.search(r"SCRIPT ERROR|Parse Error|ERROR:|WARNING", diagnostics)
+        if run.returncode != 0 or errors or noise:
             raise OracleError(f"oracle batch failed (rc={run.returncode}): {errors}\n{run.stdout}")
         if owned is not None:
             owned.cleanup()

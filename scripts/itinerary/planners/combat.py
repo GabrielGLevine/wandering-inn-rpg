@@ -63,6 +63,8 @@ class CombatPlanner:
                 "at": str(spec.get("at", "")),
                 "choose_path": list(spec.get("choose_path", [])),
             }
+            if spec.get("open_shot"):
+                talk_spec["open_shot"] = str(spec["open_shot"])
             ops = self.dialogue.plan(node_id, talk_spec, why, ledger, start_combat=encounter_id)
             return self._finish(node_id, spec, ledger, entity, ops, entry)
         if entry == "proximity":
@@ -71,13 +73,15 @@ class CombatPlanner:
                 ops.extend(self.route.plan_to(node_id, ledger, map_id))
             walk_ops, direction = self.route.plan_trigger_walk(node_id, ledger, entity)
             ops.extend(walk_ops)
-            # The step that springs it. Emitted as a plain move because that is
-            # all it is -- no interact, no confirm; the board opens by itself.
-            ops.append({"kind": "face_target", "direction": direction})
+            # The step that springs it. A REAL move (the trigger cell is
+            # walkable; the ledger already stands on it), never a `_bump`:
+            # the replay and the post-fight pin both read it as displacement.
+            ops.append({"kind": "walk", "steps": [{"action": "move", "direction": direction, "steps": 1}]})
             return self._finish(node_id, spec, ledger, entity, ops, entry)
 
         ops = self.route.plan_to(node_id, ledger, map_id, [int(part) for part in entity["cell"]])
-        if entry == "interact" and (not ops or ops[-1]["kind"] != "face_target"):
+        last = next((op for op in reversed(ops) if op.get("kind") != "arrival_pin"), None)
+        if entry == "interact" and (last is None or last["kind"] != "face_target"):
             # The approach must end in a bump that faces the encounter. If the
             # oracle walked us ONTO the cell instead, the entity is not a
             # blocker and this fight triggers on proximity mid-walk -- which
@@ -117,6 +121,8 @@ class CombatPlanner:
             "allies": allies,
             "shots": shots,
             "approach_shots": approach_shots,
+            "map": ledger.map_id,
+            "cell": [int(part) for part in ledger.cell],
             "policy": str(spec.get("policy", DEFAULT_POLICY)),
             "max_turns": int(spec.get("max_turns", DEFAULT_MAX_TURNS)),
             "victory_pins": self._victory_pins(entity, ledger),

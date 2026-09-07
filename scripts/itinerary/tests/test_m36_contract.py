@@ -989,7 +989,7 @@ class PipelineDialogueEntryTest(unittest.TestCase):
         # conversation open; there is no THIRD one walking to the dummies,
         # which is what `entry: interact` would have emitted here.
         opened = kinds.index("combat_started")
-        self.assertEqual(kinds[opened - 1], "press:confirm")
+        self.assertEqual([kind for kind in kinds[:opened] if kind != "assert_state:"][-1], "press:confirm")
         self.assertEqual(kinds[:opened].count("press:interact"), 2)
         self.assertNotIn("dialogue_ended", kinds)
         self.assertNotIn("ui_dialogue_hidden", kinds)
@@ -999,6 +999,22 @@ class PipelineDialogueEntryTest(unittest.TestCase):
         pipeline.run(self.SPEC)
         self.assertEqual(pipeline.ledger.rng_epoch, 1)
         self.assertEqual(int(pipeline.ledger.state["accomplishments"]["sparred_with_relc"]), 1)
+
+    def test_dialogue_accomplishment_is_pinned_before_the_fight_runs(self) -> None:
+        steps = floodplains_pipeline().run(self.SPEC)
+        pin = {"action": "assert_state", "path": "accomplishments.met_relc", "equals": 1}
+        self.assertIn(pin, steps)
+        bank = next(i for i, s in enumerate(steps) if s.get("type") == "accomplishment_recorded" and s["payload_contains"].get("id") == "met_relc")
+        self.assertLess(bank, steps.index(pin))
+        self.assertLess(steps.index(pin), next(i for i, s in enumerate(steps) if s["action"] == "combat_autoplay"))
+
+    def test_post_fight_position_comes_from_the_npc_approach(self) -> None:
+        pipeline = floodplains_pipeline()
+        steps = pipeline.run(self.SPEC)
+        position_pins = [s for s in steps if s.get("path") == "player_cell"]
+        self.assertEqual(position_pins[-1]["equals"], pipeline.ledger.cell)
+        self.assertEqual(position_pins[-1]["equals"], position_pins[-2]["equals"])
+        self.assertNotEqual(position_pins[-1]["equals"], [13, 12])
 
 
 class PipelineEffectWaitsTest(unittest.TestCase):

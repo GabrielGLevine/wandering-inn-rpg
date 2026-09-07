@@ -45,6 +45,7 @@ const QUERIES := {
 	"known_skills": "-- known_skills() split by source (innate / class grant / worn)",
 	"portal_rows": "-- portals.json x accomplishments x current-map exclusion",
 	"inventory": "-- carried items in insertion order (= picker cursor order)",
+	"bypass_walk": "<sneaking|visible> <known|unknown> <x,y>... -- execute a cardinal walk; second argument states whether the saved action clock is exact",
 }
 
 ## world.gd binds number keys 1..9 only; slot ten and up are reachable by
@@ -106,6 +107,8 @@ func _initialize() -> void:
 			answer = _q_portal_rows(sim)
 		"inventory":
 			answer = _q_inventory(sim)
+		"bypass_walk":
+			answer = _q_bypass_walk(sim, rest)
 		_:
 			answer = {"error": "unhandled query: " + verb}
 	answer["query"] = verb
@@ -214,6 +217,8 @@ func _answer_query(sim: WIGame, verb: String, rest: Array) -> Dictionary:
 			return _q_portal_rows(sim)
 		"inventory":
 			return _q_inventory(sim)
+		"bypass_walk":
+			return _q_bypass_walk(sim, rest)
 		_:
 			return {"error": "unhandled query: " + verb}
 
@@ -415,6 +420,73 @@ func _q_path(sim: WIGame, argv: Array) -> Dictionary:
 	return out
 
 
+func _q_bypass_walk(sim: WIGame, argv: Array) -> Dictionary:
+	if argv.size() < 3 or not ["sneaking", "visible"].has(String(argv[0])) or not ["known", "unknown"].has(String(argv[1])):
+		return {"error": "bypass_walk needs: %s" % QUERIES["bypass_walk"]}
+	var cells: Array[Vector2i] = []
+	for raw: Variant in argv.slice(2):
+		var cell: Variant = _parse_cell(String(raw))
+		if cell == null:
+			return {"error": "invalid bypass walk cell: %s" % raw}
+		cells.append(cell)
+	if cells[0] != sim.player_cell:
+		return {"error": "bypass walk must start at the saved player_cell"}
+	for i in range(1, cells.size()):
+		var delta := cells[i] - cells[i - 1]
+		if absi(delta.x) + absi(delta.y) != 1:
+			return {"error": "bypass walk must use adjacent cardinal cells"}
+	# The itinerary does not count every non-walk action. It must not infer a
+	# phase from that partial clock; exact saved-state probes may opt in.
+	if String(argv[1]) == "unknown":
+		for ent: Dictionary in sim.entities.values():
+			if not ent.has("trigger_radius"):
+				continue
+			if not (ent.get("present_when", {}) as Dictionary).has("phase") and not (ent.get("encounter_when", {}) as Dictionary).has("phase"):
+				continue
+			var at: Vector2i = ent[WIKeys.CELL]
+			for cell: Vector2i in cells.slice(1):
+				if maxi(absi(cell.x - at.x), absi(cell.y - at.y)) <= sim.effective_trigger_radius(ent):
+					return {"supported": false, "reason": "phase-sensitive crossing needs an exact action clock", "encounter": String(ent[WIKeys.ID])}
+	# Sneaking is deliberately absent from WISave; this is a projection input,
+	# never a save-field extension or an earned-Skill claim.
+	sim.sneaking = String(argv[0]) == "sneaking"
+	var events: Array = []
+	sim._event_sink = func(type: String, payload: Dictionary) -> void:
+		events.append({"type": type, "payload_contains": payload.duplicate(true)})
+	var banks: Array = []
+	for i in range(1, cells.size()):
+		var first_use_before := sim.entity_first_use.duplicate()
+		var event_start := events.size()
+		if not sim.move_player(cells[i] - cells[i - 1]) or sim.player_cell != cells[i]:
+			return {"supported": false, "reason": "walk is blocked", "cell": [cells[i].x, cells[i].y], "events": events}
+		if sim.combat != null:
+			return {"supported": false, "reason": "walk starts a proximity encounter", "encounter": sim.pending_encounter(), "cell": [cells[i].x, cells[i].y], "events": events}
+		var credited: Array[String] = []
+		for key: String in sim.entity_first_use:
+			if not first_use_before.has(key) and (key.begins_with("danger:") or key.begins_with("cover:")):
+				credited.append(key)
+		var bank: Dictionary = {}
+		for event: Dictionary in events.slice(event_start):
+			var type := String(event["type"])
+			var payload: Dictionary = event["payload_contains"]
+			if type == WIEvents.ACCOMPLISHMENT_RECORDED:
+				var counter := String(payload.get("id", ""))
+				if not ["sneaked_past_danger", "crossed_under_cover"].has(counter) or credited.is_empty():
+					return {"supported": false, "reason": "walk has effects outside bypass projection", "events": events}
+				var key: String = credited.pop_front()
+				bank = {"encounter": key.get_slice(":", 1), "waits": [event]}
+				banks.append(bank)
+			elif type == WIEvents.TOAST and not bank.is_empty():
+				(bank["waits"] as Array).append(event)
+	return {
+		"supported": true, "banks": banks, "events": events,
+		"entity_first_use": sim.entity_first_use.duplicate(true),
+		"warded_encounters": sim.warded_encounters.duplicate(true),
+		"accomplishments": sim.accomplishments.duplicate(true),
+		"actions_since_sleep": sim.actions_since_sleep,
+	}
+
+
 func _bfs(sim: WIGame, from_cell: Vector2i, to_cell: Vector2i) -> Variant:
 	if from_cell == to_cell:
 		return [from_cell]
@@ -554,7 +626,7 @@ func _q_progression_preview(sim: WIGame) -> Dictionary:
 	var tremor_pointer := sim.accomplishment_count("watch_runner_pointed") < 1 \
 		and sim.accomplishment_count("heard_the_deep_tremor") < 1 \
 		and reached_two and _quests_completed_with(sim, after) >= 3
-	return {
+	var out := {
 		"classes_before": before,
 		"classes_after": classes,
 		"generalist_classes_after": generalist,
@@ -564,7 +636,23 @@ func _q_progression_preview(sim: WIGame) -> Dictionary:
 		"evolutions": evolutions,
 		"reached_two_classes": reached_two,
 		"tremor_pointer": tremor_pointer,
+		# The first sleep after the seal (sleep_beat.gd, right after the
+		# pointer): banked once, never toasted.
+		"post_game": sim.accomplishment_count("raskghar_sealed") >= 1 and sim.accomplishment_count("post_game") < 1,
 	}
+	# Ward expiry and per-waking eligibility come from the real sleep, not a
+	# second expiry rule in the compiler. Other preview fields stay unchanged.
+	var sleeping := WIGame.new(WISceneCatalog.compose(), {"skills": sim.skills.values()}, Callable(), sim._run_seed, sim._combat_config, sim._phase_config)
+	if not WISave.apply(sleeping, WISave.serialize(sim)):
+		return {"error": "could not clone saved state for sleep eligibility"}
+	sleeping._event_sink = Callable()
+	sleeping.sleep()
+	out["bypass_state_after_sleep"] = {
+		"warded_encounters": sleeping.warded_encounters.duplicate(true),
+		"entity_first_use": sleeping.entity_first_use.duplicate(true),
+		"dormant_encounters": sleeping.dormant_encounters.duplicate(),
+	}
+	return out
 
 
 ## wi_game.gd `_quests_completed_count`, evaluated against a counter dict the

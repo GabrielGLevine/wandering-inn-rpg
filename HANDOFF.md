@@ -40,14 +40,23 @@ archived, or superseded session blocks.
   timing and real queued-message/modal proof; #253 needs target-device/itch
   import verification. Preserve useful implementations from PRs #535–#537;
   merged partial work does not satisfy their missing criteria.
-- **#434 completion evidence is blocked by #542/#543 corrections.** #542
-  repairs golden event-history/checkpoint and terminal-movement false
-  positives; #543 repairs bypass predictions for warded encounters. At
-  reviewed base `5d93e48f`, Act I still lacked a hotbar assertion. Act II's
-  earlier zero-residue report must be remeasured with the repaired comparator.
-  M3.6 remains unmet; do not follow the superseded automatic Act III→V queue
-  or advance M4. Coordinate an active owner's safe checkpoint before edits;
-  ordinary route authoring remains possible with existing tools.
+- **Compiler corrections in PR #545:** comparator #542 preserves event-history
+  mode, checkpoint order, movement tails, and single-use facing-bump credit;
+  #543 obtains bypass credit and waking/ward state from real sim projections.
+  Unknown-clock phase-sensitive crossings fail explicitly. Act III route
+  authoring and dialogue/post-fight pins are retained; no gameplay rules changed.
+  Current authored slice residue is Act I **1 exact / 0 net** (missing hotbar
+  assertion), Act II **1 exact / 0 net** (Mage-toast history-mode mismatch),
+  Act III **0 / 0**. The compiled 1,077-step Acts I–III route passes at seed 37.
+  #434 remains open for those claims, later acts, and caster acceptance; M3.6
+  and M4 are not complete. Resume actionable M1 work before more act expansion.
+- **Preserved M1 work:** `issue/508-rogue-recovery` remains in the primary
+  checkout at `55d3eee4` with local copy/QA/message-timing edits and the pending
+  recovery decision in `docs/design/rogue-recovery-proposal.md`.
+  `issue/504-browser-touch` remains in `/private/tmp/wi-504-touch` at `2d2db782`
+  with browser-touch purchase proof awaiting controller integration.
+  Next action: finish #508's scoped evidence/decision and integrate #504;
+  preserve unrelated `test_companion_counter.gd.uid` in each checkout.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
