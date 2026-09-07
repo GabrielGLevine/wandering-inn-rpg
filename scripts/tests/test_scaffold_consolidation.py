@@ -238,6 +238,24 @@ class TestGoldenFixture(GoldenBase):
 		self.assertTrue(self.shipped["state"]["rng_state"].lstrip("-").isdigit())
 
 
+class TestBaselineWeaponEligibility(unittest.TestCase):
+	def test_advanced_spears_never_replace_relcs_baseline(self):
+		items = _load(DATA / "items.json")
+		for tier in ("mundane", "enchanted"):
+			with self.subTest(tier=tier):
+				for item in items["items"]:
+					if item["id"] in ("hedault_trued_spear", "wyvernbone_lance"):
+						item["tier"] = tier
+				self.assertEqual(scaffold._best_weapon_item("spear", items), "relcs_spare_spear")
+		baseline = next(item for item in items["items"] if item["id"] == "relcs_spare_spear")
+		self.assertEqual(baseline["damage_mod"], 1)
+
+	def test_fallback_also_excludes_advanced_acquisition(self):
+		items = {"items": [dict(id=item, kind="weapon", weapon_family="spear", tier="enchanted", damage_mod=damage)
+			for item, damage in [("hedault_trued_spear", 2), ("wyvernbone_lance", 2), ("baseline", 1)]]}
+		self.assertEqual(scaffold._best_weapon_item("spear", items), "baseline")
+
+
 class TestGoldenCanonicalSkeleton(GoldenBase):
 	@classmethod
 	def setUpClass(cls):
