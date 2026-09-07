@@ -9,7 +9,7 @@ PROJECT_GUIDANCE = ROOT / "wandering_inn_game" / "AGENTS.md"
 
 def test_project_guidance_stays_bootstrap_sized_and_source_linked() -> None:
 	text = PROJECT_GUIDANCE.read_text()
-	assert len(text.encode()) <= 30_000
+	assert len(text.split()) <= 800
 	assert "## Canonical QA seed table" not in text
 	assert "res://tests/test_" not in text
 	assert "no human playtest" not in text.lower()
@@ -18,13 +18,14 @@ def test_project_guidance_stays_bootstrap_sized_and_source_linked() -> None:
 		"qa/manifest.json",
 		"docs/QA-SCRIPT-NOTES.md",
 		"scripts/preflight.sh --full",
-		"Humans gate FEEL",
+		"human playtests judge feel",
 	):
 		assert required in text
 
 
 def test_root_guidance_does_not_duplicate_volatile_project_values() -> None:
 	text = (ROOT / "AGENTS.md").read_text()
+	assert len(text.split()) <= 800
 	for retired in (
 		"canonical QA seed table",
 		"160 licensed asset paths",
@@ -34,15 +35,15 @@ def test_root_guidance_does_not_duplicate_volatile_project_values() -> None:
 		assert retired not in text
 
 
-def test_start_skill_matches_root_bootstrap_order() -> None:
-	text = (ROOT / ".agents" / "skills" / "wi-start-here" / "SKILL.md").read_text()
-	positions = [
-		text.index("`wandering_inn_game/AGENTS.md`"),
-		text.index("GitHub Issues/Milestones"),
-		text.index("`HANDOFF.md`"),
-		text.index("`.superpowers/sdd/progress.md`"),
-	]
-	assert positions == sorted(positions)
+def test_start_skill_routes_only_existing_skills_and_sources() -> None:
+	import re
+	text = (ROOT / ".agents/skills/wi-start-here/SKILL.md").read_text()
+	for skill in re.findall(r"`(wi-[a-z-]+)`", text):
+		assert (ROOT / ".agents/skills" / skill / "SKILL.md").is_file()
+	for source in ("wandering_inn_game/AGENTS.md", "HANDOFF.md"):
+		assert f"`{source}`" in text
+		assert (ROOT / source).is_file()
+	assert len(text.split()) <= 250
 
 
 def test_architecture_history_receives_displaced_project_context() -> None:
@@ -85,9 +86,11 @@ def test_canonical_skills_do_not_restore_retired_guidance() -> None:
 			"wi-godot-mcp",
 		):
 			assert retired not in text, f"{path.relative_to(ROOT)}: {retired}"
-	assert "mechanically concatenating both sides" in texts[
-		ROOT / ".agents" / "skills" / "wi-running-the-machine" / "SKILL.md"
-	]
+	import re
+	for path, text in texts.items():
+		for reference in re.findall(r"\]\((references/[^)]+)\)", text):
+			assert (path.parent / reference).is_file(), reference
+		assert len(text.split()) <= 600, path
 
 
 def test_manifest_and_discovery_own_dynamic_qa_inventories() -> None:

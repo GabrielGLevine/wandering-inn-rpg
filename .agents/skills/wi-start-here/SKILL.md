@@ -1,87 +1,37 @@
 ---
 name: wi-start-here
-description: Use when starting any session on the Wandering Inn RPG repo, when unsure which project skill applies, or when onboarding to the codebase for the first time.
+description: Route a Wandering Inn RPG task to the smallest relevant guidance set.
 ---
 
-# Wandering Inn RPG — Start Here
+# Start here
 
-## Repo identity (UNIFIED 2026-07-07)
-This public repo IS the working repo — every commit is public on push;
-there is no sync step. Licensed assets overlay locally via
-`scripts/fetch_private_assets.sh`; `scripts/leak_check.sh` is CI job 1.
-Details: wi-shipping. The pre-transition private repo (underscored
-name) is a frozen read-only archive.
+The current user task is authority. Do not inspect the queue or start unrelated
+work when the user supplied a bounded task. For “continue project work,” read
+the live section of `HANDOFF.md`, then the relevant GitHub issue/PR. Read
+`.superpowers/sdd/progress.md` only when it records an active resumable task.
 
-## Read order (every fresh session)
-1. `wandering_inn_game/AGENTS.md` — operating contracts, authority map,
-   commands, architecture boundaries, and durable gotchas. The active project
-   is `wandering_inn_game/` only.
-2. **GitHub Issues/Milestones = the plan** (transitioned 2026-07-07):
-   `gh issue list -R GabrielGLevine/wandering-inn-rpg --milestone <name>`
-   — each issue body is a dispatch-grade brief (goal/sources/scope/danger
-   list/verification/exit). `docs/DOC-MAP.md` maps current authority versus
-   retained design and provenance records; git history holds retired plans.
-3. `HANDOFF.md` — live state, user-held decisions, and in-flight ownership.
-   Open visual/playtest observations live in `docs/VISUAL-LOG.md`; the board
-   remains the queue authority.
-4. `.superpowers/sdd/progress.md` (ledger, gitignored) — tail = exact position.
-5. Run `scripts/usage_status.sh`; it queries and caches the active provider's
-   own capacity (Claude CLI or Codex app-server), failing soft when unavailable.
-   All providers keep the shared lane and integration discipline.
+Read `wandering_inn_game/AGENTS.md` for any game change, then select the one
+domain skill that owns the task. Use `wi-running-the-machine` for issue
+execution and `wi-verifying-changes` before completion claims.
 
-## Project identity (non-negotiable)
-- **QA-first:** every player-visible feature ships with a bus event, a
-  `ui_*_rendered` confirmation, and a QA-script assertion. Humans gate FEEL.
-- **Stat grammar (default, not a hard ban — softened 2026-07-13):** raw
-  STR/DEX/CON/INT/WIS/CHA stay out of player-facing text by default;
-  HP/MP/AP/damage numbers are the visible currency. Enforced by
-  test_effect_text's tripwires — don't restate it in briefs; clarity
-  exceptions allowed (update the tripwire in the same commit).
-- **Opaque-until-sleep:** never render progress-toward text (no "3/12 uses",
-  no percentages, no merged-level numbers in prompts). Results only.
-- **Canon from the wiki** (`wiki.wanderinginn.com` mirror), never invented.
-- **Tune data, never sim.** The balance harness is the numbers authority.
-- **Issue work closes through a PR.** Use `issue/<n>-<slug>`; non-issue
-  guidance/ledger housekeeping may commit directly to `main`.
-
-## Which skill do I need?
 | Task | Skill |
 |---|---|
-| Verify a change / run the gates | wi-verifying-changes |
-| Execute a task end-to-end (implement→review→commit) | wi-running-the-machine |
-| A human reports a bug QA doesn't catch | wi-debugging-playtest-reports |
-| Write or fix a QA playtest script | wi-writing-qa-scripts |
-| New map / room / doors / furniture | wi-adding-a-scene |
-| New enemy / encounter / fight balance | wi-adding-an-encounter |
-| New class, class skill, evolution, consolidation | wi-adding-a-class-or-skill |
-| New NPC dialogue / quest / choice gating | wi-adding-dialogue-and-quests |
-| Sprites, icons, tiles, asset packs | wi-art-and-sprites |
-| An external PR arrives (triage/review/test/merge) | wi-handling-prs |
+| QA route or evidence | `wi-verifying-changes` |
+| QA DSL/fixture | `wi-writing-qa-scripts` |
+| Human report contradicts QA | `wi-debugging-playtest-reports` |
+| Map/room/door/prop | `wi-adding-a-scene` |
+| Enemy/arena/encounter | `wi-adding-an-encounter` |
+| Class/skill/progression | `wi-adding-a-class-or-skill` |
+| Dialogue/quest/copy | `wi-adding-dialogue-and-quests` |
+| Sprite/icon/tile/assets | `wi-art-and-sprites` |
+| Windowed player read | `wi-machine-playtest` |
+| External PR | `wi-handling-prs` |
+| Release/private bundle | `wi-shipping` |
+| Delegation | `wi-delegating-to-codex` |
+| Usage notification | `wi-usage-guard` |
 
-## Library governance
-`.agents/skills/` is the tracked, model-neutral source. Make evidence-backed
-edits there, then regenerate provider mirrors with
-`python3 scripts/sync_agent_guidance.py --write`; CI rejects drift.
-
-## Escalate to the user (never guess)
-Design/taste/canon-ambiguity calls, balance-bound changes, anything
-irreversible or outward-facing (publishing, licenses, purchases), and any
-playtest-feel verdict. Queue unresolved rulings in HANDOFF with options + a
-recommendation; put eye/ear observations in `docs/VISUAL-LOG.md`.
-
-
-## Where things live (path traps that cost real retries, 2026-07-17)
-| thing | path |
-|---|---|
-| asset overlay manifest | `wandering_inn_game/assets_manifest.json` (entries under key `assets`, each `{path, bundle, fallback}`) |
-| QA notes renderer | repo root `scripts/render_qa_notes.py` (NOT wandering_inn_game/scripts/) |
-| surfaces deriver | `wandering_inn_game/scripts/derive_qa_surfaces.py` (no --write flag; always writes) |
-| QA screenshots | `wandering_inn_game/qa_output/<script>/` (NOT qa/output) |
-| JSON splice helper | `wandering_inn_game/scripts/splice_json.py` (shipped-JSON appends with placement proofs) |
-| ledger | `.superpowers/sdd/progress.md` (GITIGNORED — never `git add`) |
-| roadmap | `docs/ROADMAP.md` (recreated 2026-07-17 post-unification) |
-| playtest states | `wandering_inn_game/qa/playtest_saves/<date-slug>/` (README + slot jsons) |
-
-**Controller shell: every Bash call resets CWD to the repo root.** Use
-absolute paths or `git -C` for ALL worktree/lane operations — a bare
-`cd /tmp/<lane> && ...` chain is fine within ONE call but never carries over.
+Existing issue acceptance or an approved design authorizes reversible work in
+scope. Ask for a new material taste/canon choice, unresolved scope that changes
+the product, or a consequential action outside prior authorization. Record unresolved taste gates
+in `HANDOFF.md`; do not guess. Use optional external workflow or Godot skills
+only when installed and directly useful.

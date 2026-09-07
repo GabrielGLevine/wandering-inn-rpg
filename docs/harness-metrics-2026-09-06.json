@@ -1,0 +1,91 @@
+{
+  "date": "2026-09-06",
+  "runtime": "Codex 0.153.0",
+  "tokenizer": "o200k_base proxy; not an Astra tokenizer/billing claim",
+  "base_commit": "0f05e6463e06a9b4a862762e177c119cd677c43b",
+  "measurements": {
+    "rendered_prompt_text": {
+      "before": {
+        "bytes": 44520,
+        "characters": 44434,
+        "words": 5258,
+        "o200k_proxy_tokens": 10958,
+        "text_blocks": 11
+      },
+      "after": {
+        "bytes": 23817,
+        "characters": 23809,
+        "words": 3107,
+        "o200k_proxy_tokens": 5276,
+        "text_blocks": 11
+      },
+      "proxy_token_reduction_percent": 51.9
+    },
+    "all_project_entrypoints": {
+      "before": {
+        "bytes": 203792,
+        "characters": 202498,
+        "words": 28524,
+        "o200k_proxy_tokens": 51902,
+        "files": 17,
+        "raw_file_bytes": 203776,
+        "conditional_reference_bytes": 0
+      },
+      "after": {
+        "bytes": 44996,
+        "characters": 44938,
+        "words": 6099,
+        "o200k_proxy_tokens": 9592,
+        "files": 17,
+        "raw_file_bytes": 44980,
+        "conditional_reference_bytes": 18573
+      },
+      "proxy_token_reduction_percent": 81.5
+    },
+    "common_issue_guidance_chain": {
+      "before": {
+        "bytes": 78681,
+        "characters": 78297,
+        "words": 11246,
+        "o200k_proxy_tokens": 19543
+      },
+      "after": {
+        "bytes": 16681,
+        "characters": 16663,
+        "words": 2207,
+        "o200k_proxy_tokens": 3757
+      },
+      "proxy_token_reduction_percent": 80.8
+    },
+    "superpowers_entrypoints": {
+      "before": {
+        "bytes": 138591,
+        "characters": 137926,
+        "words": 20746,
+        "o200k_proxy_tokens": 31835
+      },
+      "after": {
+        "bytes": 16632,
+        "characters": 16632,
+        "words": 2256,
+        "o200k_proxy_tokens": 2832
+      },
+      "proxy_token_reduction_percent": 91.1
+    }
+  },
+  "project_catalog": {
+    "before": 144,
+    "after": 22
+  },
+  "limits": [
+    "Rendered prompt input excludes hidden system prompts and tool definitions.",
+    "All entrypoints are a footprint inventory, not a claim they load together.",
+    "Conditional references remain available and add task-dependent input when read.",
+    "No matched end-to-end execution benchmark or billed-cost reduction has been established.",
+    "Current running conversations retain previously injected instructions; use a new session for full discovery changes."
+  ],
+  "raw_prompt_sha256": {
+    "prompt-before.json": "e45d03713c7b65460179300caf28f5374e833b87adf1799843c73281ffbf321d",
+    "prompt-after.json": "92ed48a709c0540383f151b80175735b17079f09884414897882ca870ca6766d"
+  }
+}
