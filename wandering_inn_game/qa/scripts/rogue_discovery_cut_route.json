@@ -629,6 +629,21 @@
    "_itin": "rogue.gained"
   },
   {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Stealth] is on your field bar now: number keys, or tap it, to soften your step. Walking and doorways keep you hidden. Talking, using props, most other Skills, or starting a fight ends it."
+   },
+   "timeout_sec": 15,
+   "_itin": "rogue.hint",
+   "_comment": "RAW: Read the actual queued first-use guidance before trying its field-bar button."
+  },
+  {
+   "action": "screenshot",
+   "name": "01_first_stealth_hint",
+   "_itin": "rogue.hint.shot"
+  },
+  {
    "action": "press_field_skill",
    "skill": "sneak",
    "_itin": "rogue.stealth.first"
@@ -657,6 +672,20 @@
    },
    "timeout_sec": 5,
    "_itin": "rogue.stealth.first"
+  },
+  {
+   "action": "assert_state",
+   "path": "sneaking",
+   "equals": true,
+   "_itin": "rogue.stealth.stance"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_sneak_rendered",
+   "payload_contains": {
+    "active": true
+   },
+   "_itin": "rogue.stealth.stance"
   },
   {
    "action": "move",
@@ -834,7 +863,7 @@
   {
    "action": "move",
    "direction": "right",
-   "steps": 5,
+   "steps": 3,
    "_itin": "rogue.band.sneak"
   },
   {
@@ -860,10 +889,20 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    31,
+    29,
     22
    ],
    "_itin": "rogue.band.sneak"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Whatever was watching that stretch never saw you pass."
+   },
+   "timeout_sec": 10,
+   "_itin": "rogue.bypass.receipt",
+   "_comment": "RAW: A domain toast alone does not prove the bypass receipt rendered."
   },
   {
    "action": "assert_event_logged",
@@ -882,6 +921,21 @@
    "action": "screenshot",
    "name": "03_sneaked_the_band_unseen",
    "_itin": "rogue.growth.shot"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2,
+   "_itin": "rogue.band.finish"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    22
+   ],
+   "_itin": "rogue.band.finish"
   },
   {
    "action": "press",

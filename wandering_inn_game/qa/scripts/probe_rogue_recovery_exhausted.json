@@ -1,5 +1,5 @@
 {
- "_comment": "Fresh Watch acquisition: character creation, training, ordinary Warrior sleep, earned spear, road victory, paid Missing Crate resolution, and walked return to bed for Rogue. No fixtures, teleports, drainage credit, or granted progression. The paid route requires neither Rogue nor a social Skill. Two table-cleaning wages, earned on separate wakings, fund the Watch payment. Cleaning earns Helper at the training sleep; the completed Watch quest rewards persuasion only after the paid fork and earns Diplomat alongside Rogue on the final sleep.",
+ "_comment": "#508 diagnostic: reproduces the unresolved fight-first / force-crate loss of both Rogue entries. PASS means the reported defect was reproduced, not recovery acceptance. Fresh creation, real victories, ordinary return to the drainage cut and sleep.",
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [
@@ -171,42 +171,6 @@
    },
    "from_start": true,
    "timeout_sec": 5
-  },
-  {
-   "action": "move",
-   "direction": "right",
-   "steps": 3
-  },
-  {
-   "action": "move",
-   "direction": "down",
-   "steps": 1
-  },
-  {
-   "action": "press_field_skill",
-   "skill": "basic_cleaning"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "gold_changed",
-   "payload_contains": {
-    "delta": 1,
-    "total": 1
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "payload_contains": {
-    "text": "[Basic Cleaning] — The table is spotless. Earned 1 gold."
-   },
-   "timeout_sec": 10
-  },
-  {
-   "action": "move",
-   "direction": "left",
-   "steps": 3
   },
   {
    "action": "move",
@@ -815,7 +779,7 @@
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "payload_contains": {
-    "lines": 7
+    "lines": 5
    },
    "timeout_sec": 5
   },
@@ -899,42 +863,6 @@
     2,
     3
    ]
-  },
-  {
-   "action": "move",
-   "direction": "right",
-   "steps": 3
-  },
-  {
-   "action": "move",
-   "direction": "down",
-   "steps": 1
-  },
-  {
-   "action": "press_field_skill",
-   "skill": "basic_cleaning"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "gold_changed",
-   "payload_contains": {
-    "delta": 1,
-    "total": 2
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "payload_contains": {
-    "text": "[Basic Cleaning] — The table is spotless. Earned 1 gold."
-   },
-   "timeout_sec": 10
-  },
-  {
-   "action": "move",
-   "direction": "left",
-   "steps": 3
   },
   {
    "action": "move",
@@ -1236,6 +1164,14 @@
    "timeout_sec": 5
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
    "action": "assert_event_logged",
    "type": "entity_removed",
    "payload_contains": {
@@ -1243,21 +1179,36 @@
    }
   },
   {
-   "action": "assert_event_logged",
-   "type": "gold_changed",
-   "payload_contains": {
-    "source": "dirty_table",
-    "delta": 1,
-    "total": 2
-   }
+   "action": "move",
+   "direction": "right",
+   "steps": 3
   },
   {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    1,
-    3
-   ]
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "chatted_with_klbkch"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
   },
   {
    "action": "move",
@@ -1311,31 +1262,6 @@
    "timeout_sec": 5
   },
   {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "payload_contains": {
-    "speaker": "Krshia",
-    "text": "Good. Sewer grates, south of here. Start there. Careful of teeth. Or the Watch Sergeant south of my stall; he hates sewer work."
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_page_rendered",
-   "timeout_sec": 5
-  },
-  {
-   "action": "screenshot",
-   "name": "00_krshia_watch_lead"
-  },
-  {
-   "action": "assert_event_logged",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "asked_about_crate"
-   }
-  },
-  {
    "action": "wait_frames",
    "frames": 3
   },
@@ -1361,12 +1287,26 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 9
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
   },
   {
    "action": "move",
    "direction": "right",
-   "steps": 4
+   "steps": 2
+  },
+  {
+   "action": "screenshot",
+   "name": "01_south_square_scavengers"
   },
   {
    "action": "press",
@@ -1374,73 +1314,37 @@
   },
   {
    "action": "wait_for_event",
-   "type": "dialogue_started",
-   "payload_contains": {
-    "conversation": "watch_crate"
-   },
+   "type": "combat_started",
    "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
-   "type": "dialogue_node",
-   "payload_contains": {
-    "speaker": "Watch Sergeant",
-    "options": [
-     {
-      "text": "Point them at the scavengers. [Charming Smile]",
-      "locked": true,
-      "requirement": "requires [Charming Smile]"
-     },
-     {
-      "text": "Just passing through.",
-      "locked": false,
-      "requirement": ""
-     },
-     {
-      "text": "Grease a few palms instead. (2 gold)",
-      "locked": false,
-      "requirement": ""
-     }
-    ]
-   },
+   "type": "ui_combat_shown",
    "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
-   "type": "ui_dialogue_shown",
-   "timeout_sec": 5
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
   },
   {
-   "action": "screenshot",
-   "name": "01_watch_options_before_spending"
+   "action": "combat_autoplay",
+   "max_turns": 300
   },
   {
-   "action": "move",
-   "direction": "down",
-   "steps": 2
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 10
   },
   {
    "action": "press",
    "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "gold_changed",
-   "payload_contains": {
-    "delta": -2,
-    "total": 0,
-    "source": "watch_crate"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "recovered_crate_watch",
-    "count": 1
-   },
-   "timeout_sec": 10
   },
   {
    "action": "wait_for_event",
@@ -1461,50 +1365,46 @@
   },
   {
    "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "payload_contains": {
-    "text": "Paid 2 gold."
-   },
-   "timeout_sec": 10
-  },
-  {
-   "action": "screenshot",
-   "name": "01_paid_watch_resolution"
-  },
-  {
-   "action": "assert_event_absent",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "persuaded_someone"
-   }
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
   },
   {
    "action": "wait_frames",
-   "frames": 3
+   "frames": 5
   },
   {
-   "action": "press",
-   "name": "confirm"
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "recovered_crate_force"
+   }
   },
   {
-   "action": "wait_for_event",
-   "type": "dialogue_ended",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_hidden",
-   "timeout_sec": 5
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "found_the_crate"
+   }
   },
   {
    "action": "move",
    "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
    "steps": 3
   },
   {
    "action": "move",
    "direction": "up",
-   "steps": 9
+   "steps": 10
   },
   {
    "action": "press",
@@ -1545,18 +1445,6 @@
    "timeout_sec": 5
   },
   {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "payload_contains": {
-    "text": "Quest complete: The Missing Crate"
-   },
-   "timeout_sec": 10
-  },
-  {
-   "action": "screenshot",
-   "name": "02_watch_crate_returned"
-  },
-  {
    "action": "wait_frames",
    "frames": 3
   },
@@ -1582,26 +1470,31 @@
    }
   },
   {
-   "action": "assert_state",
-   "path": "accomplishments.recovered_crate_watch",
-   "equals": 1
+   "action": "press",
+   "name": "journal"
   },
   {
-   "action": "assert_event_absent",
-   "type": "class_gained",
-   "payload_contains": {
-    "class": "rogue"
-   }
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_journal_complete"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
   },
   {
    "action": "move",
    "direction": "left",
-   "steps": 12
-  },
-  {
-   "action": "move",
-   "direction": "left",
-   "steps": 1
+   "steps": 13
   },
   {
    "action": "press",
@@ -1611,13 +1504,56 @@
    "action": "wait_for_event",
    "type": "map_changed",
    "payload_contains": {
-    "map": "floodplains",
-    "cell": [
-     31,
-     24
-    ]
+    "map": "floodplains"
    },
-   "timeout_sec": 5
+   "timeout_sec": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "took_the_low_road"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
   },
   {
    "action": "move",
@@ -1791,46 +1727,7 @@
    "payload_contains": {
     "slept": true
    },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "class_gained",
-   "payload_contains": {
-    "class": "rogue"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "toast",
-   "payload_contains": {
-    "text": "[Rogue] class gained! — [Stealth]"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_sleep_veil_rendered",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "payload_contains": {
-    "text": "[Rogue] class gained! — [Stealth]"
-   },
-   "from_start": true,
-   "timeout_sec": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "classes.rogue",
-   "equals": 1
-  },
-  {
-   "action": "assert_event_absent",
-   "type": "consolidation_accepted"
+   "timeout_sec": 10
   },
   {
    "action": "assert_event_absent",
@@ -1841,43 +1738,17 @@
   },
   {
    "action": "assert_event_absent",
-   "type": "accomplishment_recorded",
+   "type": "class_gained",
    "payload_contains": {
-    "id": "took_the_low_road"
+    "class": "rogue"
    }
   },
   {
-   "action": "assert_event_absent",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "recovered_crate_force"
-   }
+   "action": "dump_state"
   },
   {
-   "action": "screenshot",
-   "name": "03_watch_rogue_gained"
-  },
-  {
-   "action": "press",
-   "name": "journal"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_journal_shown",
-   "timeout_sec": 5
-  },
-  {
-   "action": "screenshot",
-   "name": "04_watch_rogue_journal"
-  },
-  {
-   "action": "press",
-   "name": "journal"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_journal_hidden",
-   "timeout_sec": 5
+   "action": "dump_checkpoint",
+   "slot": "force_exhausted"
   }
  ]
 }

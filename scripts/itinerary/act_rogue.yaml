@@ -42,15 +42,41 @@
           classes.rogue: 1
         event: {type: class_gained, payload_contains: {class: rogue}}
       why: "[Rogue] minted from crossed_under_cover alone."
+    - id: rogue.hint
+      raw:
+        steps:
+          - action: wait_for_event
+            type: ui_toast_rendered
+            payload_contains:
+              text: "[Stealth] is on your field bar now: number keys, or tap it, to soften your step. Walking and doorways keep you hidden. Talking, using props, most other Skills, or starting a fight ends it."
+            timeout_sec: 15
+      why: Read the actual queued first-use guidance before trying its field-bar button.
+    - id: rogue.hint.shot
+      shot: {name: 01_first_stealth_hint}
+      why: Inspect the first-use hint while it is displayed.
     - id: rogue.stealth.first
       use_field: {skill: sneak}
       why: "First [Stealth] use -- the field toggle the hint pointed at."
+    - id: rogue.stealth.stance
+      assert:
+        state: {sneaking: true}
+        event: {type: ui_sneak_rendered, payload_contains: {active: true}}
+      why: The earned Skill changes both simulation stance and its rendered indicator.
     - id: rogue.band.approach
       goto: {map: floodplains, cell: [26, 22]}
       why: Back to the band's west edge, sneaking.
     - id: rogue.band.sneak
-      goto: {map: floodplains, cell: [31, 22]}
+      goto: {map: floodplains, cell: [29, 22]}
       why: Sneak the same band for real -- the growth counter's first unit.
+    - id: rogue.bypass.receipt
+      raw:
+        steps:
+          - action: wait_for_event
+            type: ui_toast_rendered
+            payload_contains:
+              text: "Whatever was watching that stretch never saw you pass."
+            timeout_sec: 10
+      why: A domain toast alone does not prove the bypass receipt rendered.
     - id: rogue.growth
       assert:
         event: {type: accomplishment_recorded, payload_contains: {id: sneaked_past_danger}}
@@ -59,6 +85,9 @@
     - id: rogue.growth.shot
       shot: {name: 03_sneaked_the_band_unseen}
       why: The bypass line on the strip, the cloak on the sprite -- the player-eyes read of acceptance 4.
+    - id: rogue.band.finish
+      goto: {map: floodplains, cell: [31, 22]}
+      why: Finish crossing after reading the bypass receipt.
     - id: rogue.journal
       journal: {capture: 04_journal_rogue_stealth}
       why: The book lists [Rogue] and [Stealth]; growth guidance stays qualitative (no counts on screen).

@@ -327,7 +327,7 @@ func _first_wake_hint_text() -> String:
 ## UI_SLEEP_VEIL_FINISHED beside the first-wake pointer; the strip is a
 ## lossless queue, so a modal opened right after (journal) only delays it.
 func _first_stealth_hint_text() -> String:
-	return "[Stealth] is on your field bar now: %s, or tap it, to soften your step. Using a Skill, a fight, or forcing a door straightens you up." % WIInputHints.label("hotbar")
+	return "[Stealth] is on your field bar now: %s, or tap it, to soften your step. Walking and doorways keep you hidden. Talking, using props, most other Skills, or starting a fight ends it." % WIInputHints.label("hotbar")
 
 
 func _hint_text() -> String:

@@ -1950,6 +1950,7 @@
     "dialogue": [],
     "systems": [
      "combat",
+     "dialogue",
      "exploration"
     ]
    }
@@ -7482,6 +7483,41 @@
      "input",
      "save",
      "settings"
+    ]
+   }
+  },
+  {
+   "script": "rogue_discovery_watch_route",
+   "seed": 7,
+   "note": "#508 fresh creation: earn cleaning wages, train, win gate-road ambush, pay Watch without social Skills, return crate, walk home and sleep for Rogue; no fixture, teleport or pre-banked counters. Browser/physical touch remains separate.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "relc_intro",
+     "watch_crate"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase",
+     "quests"
     ]
    }
   }

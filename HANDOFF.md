@@ -9,6 +9,19 @@ archived, or superseded session blocks.
 
 ## Current state
 
+- **Active #508 correction:** controller owns `issue/508-rogue-recovery`,
+  base `a1716c4e`; Watch proof integrated as `18f24231`. Owned work: first-Stealth
+  copy and `rogue_earn_loop`, fresh cut itinerary/canonical feedback assertions,
+  fresh Watch canonical/manifest/derived notes, recovery diagnostic and proposal.
+  Fresh creation → road victory → force-crate → drainage return → sleep reproduces
+  the missing Rogue grant (seed 7, 293 steps, clean PASS means defect reproduced).
+  Existing acquisition/respawn behavior is unchanged. Owner decision requested
+  in `docs/design/rogue-recovery-proposal.md`; continue independent M1 work.
+- **Independent #504 lane:** worker owns `/private/tmp/wi-504-touch`, branch
+  `issue/504-browser-touch`, base `a1716c4e`, new browser-touch purchase QA and
+  necessary QA driver/web helpers only. No shared UI/core writer. Root owns
+  manifest integration and final review. Exact next action: finish #508 rendered
+  proofs and windowed reads, then integrate/review #504 browser evidence.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.

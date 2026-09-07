@@ -25,8 +25,8 @@
 			"hide_when": {
 				"found_the_crate": 1
 			},
-			"lead_text": "The Watch Sergeant hates sewer work more than she hates favours. A word from Krshia, or a coin, could send the Watch after the scavengers.",
-			"place": "Market Street, by the gate"
+			"lead_text": "The Watch Sergeant hates sewer work more than he hates favours. A word from Krshia, or a coin, could send the Watch after the scavengers.",
+			"place": "Market Street, south of Krshia's stall"
 		},
 		{
 			"_comment": "#508 acceptance 3: the FORCE resolution hides the Watch route, so the remaining classless [Rogue] entry -- the drainage cut on the gate road -- gets pointed at instead of silently surviving.",
