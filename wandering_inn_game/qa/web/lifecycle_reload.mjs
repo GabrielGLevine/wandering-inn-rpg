@@ -1,6 +1,7 @@
 // Real same-origin page reload. Browser profiles emulate devices; no claim of
 // physical backgrounding, process eviction, or interruption-caused corruption.
 import { chromium } from 'playwright';
+import { stageResultFailures } from './lifecycle_result.mjs';
 import { createServer } from 'node:http';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve, extname, join, sep } from 'node:path';
@@ -45,6 +46,7 @@ try {
   for (const type of ['touchstart','touchend','touchcancel']) document.addEventListener(type, e => window.__WI_LIFECYCLE_TOUCHES__.push({type,trusted:e.isTrusted,time:performance.now()}), {capture:true,passive:true});
  });
  async function runStage(name) {
+  const expected = JSON.parse(await readFile(join(game, `qa/scripts/lifecycle_${name}.json`), 'utf8')).steps.length;
   const until = Date.now()+120000;
   let result;
   while (Date.now()<until) {
@@ -62,7 +64,8 @@ try {
   }
   const runtime = await page.evaluate(() => ({boot:window.__WI_LIFECYCLE_BOOT__,origin:location.origin,touches:window.__WI_LIFECYCLE_TOUCHES__,events:window.__WI_QA_EVENTS__ ?? []}));
   stages.push({name,result,runtime});
-  if(result?.passed !== true) throw new Error(`${name}: QA failed: ${JSON.stringify(result)}`);
+  const resultFailures = stageResultFailures(result, name, expected);
+  if(resultFailures.length) throw new Error(`${name}: ${resultFailures.join('; ')}: ${JSON.stringify(result)}`);
   if(runtime.touches.filter(e => e.type==='touchstart').length<3 || runtime.touches.some(e=>!e.trusted)) throw new Error(`${name}: missing trusted browser touch`);
   if(runtime.events.filter(e=>e.type==='qa_touch').length<3 || runtime.events.filter(e=>e.type==='qa_touch').some(e=>e.payload.real!==true)) throw new Error(`${name}: emulated engine touch fallback`);
   console.log(`QA_RESULT: PASS lifecycle_${name} (${profile}, emulated Chromium)`);
