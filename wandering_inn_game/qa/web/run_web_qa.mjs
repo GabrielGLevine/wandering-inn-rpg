@@ -39,7 +39,7 @@ import { createServer } from "node:http";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { chromium } from "playwright";
-import { gestureProof } from "./touch_gesture_proof.mjs";
+import { gestureProof, cancelProof } from "./touch_gesture_proof.mjs";
 
 const args = process.argv.slice(2);
 const touchMode = args.includes("--touch");
@@ -334,6 +334,7 @@ const serviceTouch = async () => {
 		const gesture = req.gesture ?? {};
 		const repeat = Math.max(1, Math.min(3, gesture.repeat ?? 1));
 		const holdMs = Math.max(0, Math.min(1000, gesture.hold_ms ?? 0));
+		if (gesture.cancel === true && (repeat !== 1 || gesture.follow_purchase_buy)) throw new Error("cancel requires one contact without a purchase burst");
 		if (gesture.drag) {
 			if (holdMs || repeat !== 1 || gesture.follow_purchase_buy) throw new Error("drag cannot combine with purchase or repeated contacts");
 			await touchSession.send("Input.dispatchTouchEvent", {type: "touchStart", touchPoints: [{x: req.x, y: req.y}]});
@@ -341,7 +342,12 @@ const serviceTouch = async () => {
 				await page.waitForTimeout(20);
 				await touchSession.send("Input.dispatchTouchEvent", {type: "touchMove", touchPoints: [{x: req.x + (gesture.end_x - req.x) * index / 8, y: req.y + (gesture.end_y - req.y) * index / 8}]});
 			}
-			await touchSession.send("Input.dispatchTouchEvent", {type: "touchEnd", touchPoints: []});
+			await touchSession.send("Input.dispatchTouchEvent", {type: gesture.cancel === true ? "touchCancel" : "touchEnd", touchPoints: []});
+			realTouches += 1;
+		} else if (gesture.cancel === true) {
+			await touchSession.send("Input.dispatchTouchEvent", {type: "touchStart", touchPoints: [{x: req.x, y: req.y}]});
+			if (holdMs) await page.waitForTimeout(holdMs);
+			await touchSession.send("Input.dispatchTouchEvent", {type: "touchCancel", touchPoints: []});
 			realTouches += 1;
 		} else if (gesture.follow_purchase_buy) {
 			if (holdMs || repeat !== 1) throw new Error("pre-arm burst requires one unheld opening contact");
@@ -482,6 +488,11 @@ const browserEvidence = {
 let timedTouchOk = true;
 for (const request of touchRequests) {
 	const gesture = request.gesture ?? {};
+	if (gesture.cancel === true) {
+		request.cancelProof = cancelProof(request, browserEvidence.runtime.events);
+		timedTouchOk = timedTouchOk && request.cancelProof.passed;
+		continue;
+	}
 	if (gesture.drag || (!gesture.follow_purchase_buy && !gesture.hold_ms)) {
 		const proof = gestureProof(request, browserEvidence.runtime.events);
 		request[gesture.drag ? "dragProof" : "tapProof"] = proof;
