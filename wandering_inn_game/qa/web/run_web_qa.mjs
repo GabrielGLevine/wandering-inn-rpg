@@ -188,15 +188,19 @@ console.log(`MODE: ${device.label}${touchMode ? " + real Playwright touch servic
 // and every uncaught page error is now ALSO surfaced, not swallowed --
 // among them the exact worklet-failure text the audio smoke below checks.
 const capturedErrors = [];
+const capturedWarnings = [];
 page.on("console", (msg) => {
 	const text = msg.text();
 	if (text.startsWith("QA_")) {
 		console.log(`[game] ${text}`);
 		return;
 	}
-	if (msg.type() === "error") {
+	if (msg.type() === "error" || /^(SCRIPT ERROR|Parse Error|ERROR:)/.test(text)) {
 		console.log(`[console:error] ${text}`);
 		capturedErrors.push(text);
+	} else if (msg.type() === "warning" || /^WARNING/.test(text)) {
+		console.log(`[console:warning] ${text}`);
+		capturedWarnings.push(text);
 	}
 });
 page.on("pageerror", (err) => {
@@ -444,7 +448,7 @@ const browserEvidence = {
 	host: BASE_URL, script: scriptName, touchMode, requests: touchRequests,
 	buildPckSha256: createHash("sha256").update(await readFile(join(webRoot, "index.pck"))).digest("hex"),
 	runtime: await page.evaluate(() => ({userAgent: navigator.userAgent, maxTouchPoints: navigator.maxTouchPoints, viewport: [innerWidth, innerHeight], events: window.__WI_TOUCH_EVENTS__})),
-	errors: capturedErrors,
+	errors: capturedErrors, warnings: capturedWarnings,
 };
 let timedTouchOk = true;
 for (const request of touchRequests) {

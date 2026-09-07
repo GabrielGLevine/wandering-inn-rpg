@@ -447,3 +447,17 @@ jobs:
             [ "$rc" = 0 ] || fail=1
           done
           exit "$fail"
+
+      - name: Browser registry routing and evidence checks
+        run: python3 -m unittest scripts.tests.test_browser_suite -v
+
+      - name: Browser-only purchase confirmation registry (emulated iPhone and Android)
+        run: python3 wandering_inn_game/qa/web/run_browser_suite.py --skip-export
+
+      - name: Preserve browser-only evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-purchase-confirmation
+          path: wandering_inn_game/qa_output/browser_suite/
+          if-no-files-found: error
