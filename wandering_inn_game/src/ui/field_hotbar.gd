@@ -72,6 +72,10 @@ var _readout_panel: PanelContainer
 var _readout_scroll: ScrollContainer
 var _readout_label: Label
 var _toggle: Control
+var _page_previous: Button
+var _page_next: Button
+var _page := 0
+var _page_size := 1
 var _toggle_label: Label
 var _selection_label: Label
 ## Parchment-strip chrome panel drawn directly behind `_selection_label`
@@ -109,6 +113,7 @@ func _ready() -> void:
 	_root.add_child(_hotbar)
 	_build_readout()
 	_build_toggle()
+	_build_pages()
 	_selection_label_backing = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_selection_label_backing.name = "SelectionLabelBacking"
 	_selection_label_backing.visible = false
@@ -159,6 +164,39 @@ func _build_toggle() -> void:
 	_toggle.add_child(_toggle_label)
 
 
+func _build_pages() -> void:
+	_page_previous = Button.new()
+	_page_previous.text = "‹"
+	_page_previous.name = "FieldPagePrevious"
+	_page_previous.pressed.connect(_change_page.bind(-1))
+	_root.add_child(_page_previous)
+	_page_next = Button.new()
+	_page_next.text = "›"
+	_page_next.name = "FieldPageNext"
+	_page_next.pressed.connect(_change_page.bind(1))
+	_root.add_child(_page_next)
+
+
+func _change_page(delta: int) -> void:
+	_page = clampi(_page + delta, 0, WIHotbar.page_count(_last_slots.size(), _page_size) - 1)
+	_layout_controls()
+	_update_selection_label(_last_selected_index)
+	_emit_rendered("page")
+
+
+func page_control_rect(direction: String) -> Rect2:
+	var button := _page_previous if direction == "previous" else _page_next
+	return button.get_global_rect() if visible and button.visible and not button.disabled else Rect2()
+
+
+func _uses_touch_layout() -> bool:
+	return WIResponsiveLayout.uses_touch_layout()
+
+
+func _css_scale() -> float:
+	return WIResponsiveLayout.css_scale(get_viewport())
+
+
 func hotbar_node() -> WIHotbar:
 	return _hotbar
 
@@ -176,7 +214,8 @@ func slot_count() -> int:
 
 func set_selected(index: int) -> void:
 	_last_selected_index = index
-	_hotbar.render(_last_slots, index, WIResponsiveLayout.touch_size(get_viewport(), WIHotbar.SLOT_SIZE))
+	if index >= 0 and _uses_touch_layout():
+		_page = index / maxi(1, _page_size)
 	_layout_controls()
 	_update_selection_label(index)
 
@@ -221,7 +260,6 @@ func _on_device_changed(_device: String) -> void:
 func _refresh_layout() -> void:
 	if not is_inside_tree() or _readout_panel == null:
 		return
-	_hotbar.render(_last_slots, _last_selected_index, WIResponsiveLayout.touch_size(get_viewport(), WIHotbar.SLOT_SIZE))
 	if _layout_controls():
 		_update_selection_label(_last_selected_index)
 		_emit_rendered("layout")
@@ -247,9 +285,9 @@ func _update_selection_label(index: int) -> void:
 		_selection_label_backing.visible = false
 	else:
 		_selection_label.text = label_text
-		_position_selection_label(index)
 		_selection_label.visible = true
 		_selection_label_backing.visible = true
+		_position_selection_label(index)
 	ObservableBus.emit_domain_event(WIEvents.UI_FIELD_HOTBAR_SELECTION_RENDERED, {
 		"index": index if label_text != "" else -1,
 		"skill": skill_id if label_text != "" else "",
@@ -363,7 +401,6 @@ func _render(reason: String = "skills") -> void:
 			_readout_lines.append(String(quest_lines[0]))
 	_last_slots = slots
 	_last_selected_index = -1
-	_hotbar.render(slots, -1, WIResponsiveLayout.touch_size(get_viewport(), WIHotbar.SLOT_SIZE))
 	_update_readout()
 	_update_toggle_label()
 	# The payload carries the cluster's rect, so it must not be sent from a
@@ -418,6 +455,9 @@ func _emit_rendered(reason: String) -> void:
 		# of two screenshots someone has to remember to take.
 		"bar_left": int(round(_bar_left)),
 		"group_width": int(round(_group_width())),
+		"page": _page,
+		"pages": WIHotbar.page_count(_last_slots.size(), _page_size),
+		"visible_indices": range(_page * _page_size, mini((_page + 1) * _page_size, _last_slots.size())),
 	})
 
 
@@ -428,6 +468,8 @@ func _group_width() -> float:
 	if _hotbar == null:
 		return 0.0
 	var w := _hotbar.rendered_width()
+	if _page_previous != null and _page_previous.visible:
+		w += 2.0 * (_page_previous.size.x + TOGGLE_GAP)
 	if _toggle != null and _toggle.visible:
 		w += TOGGLE_GAP + _toggle.size.x
 	return w
@@ -454,7 +496,7 @@ func _layout_controls() -> bool:
 		call_deferred("_layout_controls")
 		return false
 	var safe := _current_safe_rect()
-	var touch_layout := WIResponsiveLayout.uses_touch_layout()
+	var touch_layout := _uses_touch_layout()
 	var text_scale := WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]
 	var base_font := int(WISettings.scaled_type_font_sizes(WISettings.text_scale_step())["Small"])
 	for label: Label in [_toggle_label, _readout_label]:
@@ -465,6 +507,43 @@ func _layout_controls() -> bool:
 	toggle_size.x = maxf(toggle_size.x, _toggle_label.get_minimum_size().x + 24.0)
 	_toggle.custom_minimum_size = toggle_size
 	_toggle.size = toggle_size
+	var slot_size := WIHotbar.SLOT_SIZE
+	_page_previous.visible = false
+	_page_next.visible = false
+	if touch_layout:
+		var css := _css_scale()
+		var minimum := ceilf(44.0 / css)
+		var mobile_font := ceili(14.0 * text_scale / css)
+		_toggle_label.add_theme_font_size_override("font_size", mobile_font)
+		toggle_size = Vector2(maxf(minimum, _toggle_label.get_minimum_size().x + 24.0), minimum)
+		_toggle.custom_minimum_size = toggle_size
+		_toggle.size = toggle_size
+		slot_size = Vector2(ceilf(60.0 / css), ceilf(72.0 / css))
+		var available := safe.size.x - toggle_size.x - TOGGLE_GAP
+		var slot_gap := slot_size.x / 15.0
+		var capacity := maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))
+		var paged := _last_slots.size() > capacity
+		if paged:
+			available -= 2.0 * (minimum + TOGGLE_GAP)
+			capacity = maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))
+		var first_visible := _page * _page_size
+		if capacity != _page_size and _last_selected_index >= first_visible and _last_selected_index < first_visible + _page_size:
+			first_visible = _last_selected_index
+		_page_size = capacity
+		_page = clampi(first_visible / _page_size, 0, WIHotbar.page_count(_last_slots.size(), _page_size) - 1)
+		for button: Button in [_page_previous, _page_next]:
+			button.visible = paged
+			button.custom_minimum_size = Vector2.ONE * minimum
+			button.size = Vector2.ONE * minimum
+			button.add_theme_font_size_override("font_size", mobile_font)
+		_page_previous.disabled = _page == 0
+		_page_next.disabled = _page >= WIHotbar.page_count(_last_slots.size(), _page_size) - 1
+		_hotbar.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+		_hotbar.render_page(_last_slots, _last_selected_index, slot_size, _page, _page_size, mobile_font)
+	else:
+		_page = 0
+		_page_size = maxi(1, _last_slots.size())
+		_hotbar.render(_last_slots, _last_selected_index, slot_size)
 	var group_width := _group_width()
 	var group_left := safe.position.x + (safe.size.x - group_width) * 0.5
 	# Finding 19 (playtest): at 9 slots the centred group ran under the
@@ -477,20 +556,24 @@ func _layout_controls() -> bool:
 		hint_band = HINT_BAND_FALLBACK
 	if not touch_layout:
 		group_left = maxf(group_left, safe.position.x + hint_band + HINT_BAND_GAP)
-	_bar_left = group_left
+	var page_reserve := _page_previous.size.x + TOGGLE_GAP if _page_previous.visible else 0.0
+	_bar_left = group_left + page_reserve
 	# `rendered_width()`, NEVER `_hotbar.size.x`: the bar's size IS the offsets
 	# set below, so reading it here made the layout a feedback loop -- see
 	# hotbar.gd's `_rendered_width` doc for the drift it produced.
 	var bar_width := _hotbar.rendered_width()
-	var hotbar_center := group_left + bar_width * 0.5
+	var hotbar_center := _bar_left + bar_width * 0.5
 	var center_shift := hotbar_center - viewport_size.x * 0.5
 	var safe_bottom := maxf(0.0, viewport_size.y - safe.end.y)
 	_hotbar.offset_left = -bar_width * 0.5 + center_shift
 	_hotbar.offset_right = bar_width * 0.5 + center_shift
-	_hotbar.offset_top = -WIResponsiveLayout.touch_size(viewport, WIHotbar.SLOT_SIZE).y - CONTROLS_BOTTOM_MARGIN - safe_bottom
+	_hotbar.offset_top = -slot_size.y - CONTROLS_BOTTOM_MARGIN - safe_bottom
 	_hotbar.offset_bottom = -CONTROLS_BOTTOM_MARGIN - safe_bottom
+	if _page_previous.visible:
+		_page_previous.position = Vector2(group_left, safe.end.y - CONTROLS_BOTTOM_MARGIN - _page_previous.size.y)
+		_page_next.position = Vector2(_bar_left + bar_width + TOGGLE_GAP, _page_previous.position.y)
 	if _toggle.visible:
-		_toggle.position = Vector2(group_left + bar_width + TOGGLE_GAP, safe.end.y - CONTROLS_BOTTOM_MARGIN - toggle_size.y)
+		_toggle.position = Vector2(_bar_left + bar_width + page_reserve + TOGGLE_GAP, safe.end.y - CONTROLS_BOTTOM_MARGIN - toggle_size.y)
 	var style := _readout_panel.get_theme_stylebox("panel")
 	var frame_size := WIFieldHotbarLayout.style_frame_size(style)
 	var panel_width := minf(READOUT_MAX_WIDTH, maxf(1.0, safe.size.x - WIFieldHotbarLayout.OUTER_MARGIN * 2.0))
