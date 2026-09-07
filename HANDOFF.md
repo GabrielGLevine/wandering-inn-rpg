@@ -9,8 +9,8 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #508 correction:** controller owns `issue/508-rogue-recovery`,
-  integrated through main `87e6c0f7`. Fresh Watch proof earns both wages, pays
+- **#508 scoped work merged through PR #548:** main `6f188bbc` matches
+  the independently reviewed tree; all eight CI checks pass. Fresh Watch proof earns both wages, pays
   the classless route, walks home and gains Rogue at sleep. Fresh drainage,
   Watch, stealth-break and production-timing feedback checks pass on desktop;
   both emulated phone profiles pass Watch, break and real browser hotbar-touch
@@ -21,7 +21,8 @@ archived, or superseded session blocks.
   `docs/design/rogue-recovery-proposal.md` awaits the owner's decision; #508
   stays open. Fresh-cut production timing now passes all 143 steps on desktop
   and both phone profiles; its Skills-tab capture reads the actual visible tab.
-  Exact next action: open/review the scoped guidance and evidence PR.
+  Exact next action: obtain the acquisition-rule decision below, then implement
+  and prove force/guile recovery on a new issue branch.
 - **#504 delivered through PR #547:** browser-touch coverage for all three
   purchase paths, readable ink labels, CI registration and eligibility invariant
   documentation are merged at `e5b53328`. The final ordered-input runner passes
@@ -30,7 +31,7 @@ archived, or superseded session blocks.
   stats, prices, resonance and starting kits preserved. #504 remains open for
   physical iPhone Safari / Android Chrome observations under #511.
 - **#508 next decision:** scoped guidance and fresh-route proof are reviewed and
-  composed with #547. Complete its scoped PR; acquisition remains unchanged.
+  merged with #547. Acquisition remains unchanged.
   The owner must decide whether deliberate drainage-cover traversal qualifies
   after the road goblins are defeated. Until then, the documented force/guile
   recovery defect remains open. No additional implementation is blocked for #504
@@ -47,9 +48,9 @@ archived, or superseded session blocks.
   repair dispatch. #507 can progress independent guidance while preparing
   any unresolved presentation choice. Follow the
   [execution contract](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502#execution-contract).
-- **Reopened acceptance corrections:** #504 needs actual browser-touch
-  purchase proof; #508 needs fight-first/force-crate recovery, fresh Watch
-  acquisition, and accurate stealth-break guidance; #509 needs production
+- **Remaining acceptance corrections:** #504 needs physical-device purchase
+  observations; #508 needs fight-first force/guile recovery after the owner
+  selects its rule; #509 needs production
   timing and real queued-message/modal proof; #253 needs target-device/itch
   import verification. Preserve useful implementations from PRs #535–#537;
   merged partial work does not satisfy their missing criteria.
