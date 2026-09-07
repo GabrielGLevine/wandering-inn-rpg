@@ -36,6 +36,7 @@ var _message_layer: Node
 var _title_screen: Node
 var _sleep_veil: Node
 var _settings_panel: Node
+var _combat_focus_cells: Array[Vector2i] = []
 var _combat_screen: Node
 var _map_transition_layer: CanvasLayer
 var _map_transition_overlay: ColorRect
@@ -112,6 +113,9 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	var mb := event as InputEventMouseButton
 	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	if Game.sim.combat != null and not world_view_rect().has_point(mb.position):
+		accept_event()
 		return
 	var world_pos := screen_to_world(mb.position)
 	if _world != null:
@@ -280,6 +284,11 @@ func _hold_map_transition_midpoint() -> void:
 	await get_tree().create_timer(MAP_TRANSITION_VISUAL_HOLD_SECONDS).timeout
 
 
+func refresh_combat_layout(focus_cells: Array[Vector2i]) -> void:
+	_combat_focus_cells = focus_cells
+	_layout_viewport_container()
+
+
 func _layout_viewport_container() -> void:
 	var viewport_size := get_viewport_rect().size
 	var top := 0.0
@@ -289,14 +298,26 @@ func _layout_viewport_container() -> void:
 			top = _field_chips.occupied_height() + 10.0
 		if _field_hotbar != null:
 			bottom = _field_hotbar.world_bottom()
+	var scale := WORLD_SCALE
 	var view_size := Vector2(WORLD_VIEWPORT_SIZE.x, minf(WORLD_VIEWPORT_SIZE.y, floorf(maxf(160.0, bottom - top) / WORLD_SCALE)))
-	var scaled_size := view_size * WORLD_SCALE
-	_sub_viewport.size = Vector2i(view_size)
+	var bounds := Rect2(Vector2(0.0, top), Vector2(viewport_size.x, bottom - top))
+	var mobile_combat := _combat_screen != null and Game.sim.combat != null and WIResponsiveLayout.uses_touch_layout()
+	if mobile_combat:
+		var board_rect: Rect2 = _combat_screen.board_view_rect()
+		if board_rect.has_area():
+			bounds = board_rect
+			scale = ceilf(WICombatMobileLayout.CELL_CSS / WIResponsiveLayout.css_scale(get_viewport())) / 16.0
+			view_size = (bounds.size / scale).floor().max(Vector2.ONE)
+	var scaled_size := view_size * scale
+	if _sub_viewport.size != Vector2i(view_size):
+		_sub_viewport.size = Vector2i(view_size)
 	_container.size = view_size
-	_container.scale = Vector2(WORLD_SCALE, WORLD_SCALE)
-	_container.position = Vector2((viewport_size.x - scaled_size.x) * 0.5, top + (bottom - top - scaled_size.y) * 0.5)
+	_container.scale = Vector2(scale, scale)
+	_container.position = bounds.position + (bounds.size - scaled_size) * 0.5
 	if _world != null:
 		_world.set_view_size(view_size)
+		if mobile_combat:
+			_world.focus_combat_camera(_combat_focus_cells)
 
 
 func _clear_world_viewport() -> void:

@@ -117,6 +117,8 @@ var _combat: WICombat
 var _confirm_chip: Control
 var _confirm_armed := false
 var _feed: Array = []
+var _feed_history: Array[String] = []
+var _mobile: WICombatMobileHud
 var _feed_panel_height := FEED_PANEL_BASE_SIZE.y
 var _last_slot_info_index := -999
 var _last_slot_info_text := ""
@@ -233,6 +235,12 @@ func build() -> void:
 	_confirm_chip.add_child(chip_label)
 	_root.add_child(_confirm_chip)
 
+	_mobile = WICombatMobileHud.new(_root, _hotbar)
+
+
+func mobile_hud() -> WICombatMobileHud:
+	return _mobile
+
 
 func hotbar_node() -> WIHotbar:
 	return _hotbar
@@ -256,6 +264,8 @@ func _on_confirm_chip_gui_input(event: InputEvent) -> void:
 ## same fail-loud-via-`_fail` contract every other `click_*` step already
 ## follows when its target rect is empty).
 func confirm_chip_rect() -> Rect2:
+	if _mobile != null and WIResponsiveLayout.uses_touch_layout():
+		return _mobile.control_rect("confirm")
 	if _confirm_chip == null or not _confirm_chip.visible:
 		return Rect2()
 	return Rect2(_confirm_chip.global_position, _confirm_chip.size)
@@ -302,7 +312,7 @@ func _make_panel_label(
 ## `_ai_skip_hint_text`'s own doc comment.
 func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: bool,
 		targeting_state: Dictionary, bar_slots: Array, bar_index: int, info_slot_index: int,
-		dash_confirm: bool = false, hints: Dictionary = DEFAULT_HINTS, ai_skip_hint: bool = false) -> void:
+		dash_confirm: bool = false, hints: Dictionary = DEFAULT_HINTS, ai_skip_hint: bool = false, text_scale := 1.0) -> void:
 	var order_bits: Array = []
 	for id: String in view.order():
 		var mark := "> " if id == view.active_id() else ""
@@ -322,6 +332,24 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 		_readout_label.text = _ai_skip_hint_text(hints)
 	_confirm_armed = dash_confirm or (in_targeting and (bool(targeting_state.get("line_mode", false)) or not (targeting_state.get("targets", []) as Array).is_empty()))
 	_confirm_chip.visible = bar_active and _confirm_armed
+
+	if WIResponsiveLayout.uses_touch_layout():
+		_order_label.get_parent().get_parent().hide()
+		_feed_label.get_parent().get_parent().hide()
+		_readout_panel.hide()
+		_confirm_chip.hide()
+		var slots := render_bar_slots(view, bar_slots) if bar_active and not bar_slots.is_empty() else []
+		var action_lines: Array[String] = []
+		for slot: Dictionary in slots:
+			action_lines.append(_slot_info_line(slot))
+		_mobile.refresh(view, slots, bar_index, info_slot_index, targeting_state, bar_active,
+			_confirm_armed, dash_confirm, in_targeting, _feed_history, action_lines, text_scale)
+		if is_banner:
+			var viewport := _root.get_viewport()
+			var board := _mobile.board_rect()
+			var size := WIResponsiveLayout.touch_size(viewport, Vector2(360.0, 76.0))
+			WIResponsiveLayout.place_panel(_banner_panel, Rect2(board.get_center() - size * 0.5, size))
+			_banner_label.add_theme_font_size_override("font_size", WIResponsiveLayout.readable_font_size(viewport, 24, text_scale))
 
 
 ## Builds the ordered slot list for the hotbar -- Attack, Dash, then
@@ -682,6 +710,9 @@ func show_banner(text: String) -> void:
 
 func clear_feed() -> void:
 	_feed.clear()
+	_feed_history.clear()
+	if _mobile != null:
+		_mobile.reset()
 
 
 ## The usable text-content height for the feed label RIGHT NOW, derived from
@@ -701,6 +732,7 @@ func _feed_text_capacity_height() -> float:
 func feed_push(line: String) -> void:
 	if line == "":
 		return
+	_feed_history.append(line)
 	# GH#170(b): every on-screen feed line also lands in the shared Recent
 	# Messages history -- the journal answers "what just happened" after a
 	# fight from the SAME composed copy the player saw scroll past.
@@ -1006,6 +1038,9 @@ func render_tutor_line(tutor: Dictionary) -> void:
 		return
 	_grow_feed_panel_for_tutor(String(tutor.get("line", "")))
 	feed_push(String(tutor.get("line", "")))
+	if _mobile != null and WIResponsiveLayout.uses_touch_layout():
+		_mobile.show_tutor(String(tutor.get("line", "")))
+		_screen._refresh()
 	_screen._emit_tutor_rendered(String(tutor.get("id", "")))
 
 

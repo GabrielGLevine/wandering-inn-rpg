@@ -185,6 +185,9 @@ func _ready() -> void:
 	_hud.build()
 	_hud.hotbar_node().slot_clicked.connect(_on_hotbar_slot_clicked)
 	_hud.confirm_tapped.connect(_on_confirm_chip_tapped)
+	_hud.mobile_hud().action_requested.connect(_on_mobile_action)
+	get_viewport().size_changed.connect(_refresh_mobile_layout)
+	UIChrome.THEME.changed.connect(_refresh_mobile_layout)
 	_board_renderer = load("res://src/combat/board_renderer.gd").new()
 	_board_renderer.name = "BoardRenderer"
 	add_child(_board_renderer)
@@ -448,7 +451,66 @@ func _refresh() -> void:
 		_board_renderer.render_aim_preview(_targeting.aim_preview())
 	else:
 		_board_renderer.clear_aim_preview()
-	_hud.refresh(_view, bar_active, in_targeting, _mode == Mode.BANNER, targeting_state, _bar_slots, _bar_index, _info_slot_index, _mode == Mode.DASH_CONFIRM, hints, ai_skip_hint)
+	_hud.refresh(_view, bar_active, in_targeting, _mode == Mode.BANNER, targeting_state, _bar_slots, _bar_index, _info_slot_index, _mode == Mode.DASH_CONFIRM, hints, ai_skip_hint, WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
+
+	if WIResponsiveLayout.uses_touch_layout() and main_ref != null:
+		var mobile: WICombatMobileHud = _hud.mobile_hud()
+		var focus: Array[Vector2i] = [_view.cell(_view.active_id())]
+		var label_ids: Array[String] = ["combat:" + String(_view.active_id())]
+		var inspected := mobile.focused_id()
+		if not inspected.is_empty() and _view.ids().has(inspected):
+			focus.append(_view.cell(inspected))
+			label_ids.append("combat:" + inspected)
+		main_ref.refresh_combat_layout(focus)
+		var labels: WIWorldLabels = main_ref.world_labels()
+		labels.configure_combat_readability(true, WIResponsiveLayout.readable_font_size(get_viewport(), 11,
+			WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]), label_ids, mobile.details_open())
+
+
+func _refresh_mobile_layout() -> void:
+	if _mode != Mode.INACTIVE and WIResponsiveLayout.uses_touch_layout():
+		_refresh.call_deferred()
+
+
+func mobile_control_rect(id: String) -> Rect2:
+	return _hud.mobile_hud().control_rect(id) if WIResponsiveLayout.uses_touch_layout() else Rect2()
+
+
+func board_view_rect() -> Rect2:
+	return _hud.mobile_hud().board_rect() if WIResponsiveLayout.uses_touch_layout() else Rect2()
+
+
+func responsive_layout_snapshot() -> Dictionary:
+	return _hud.mobile_hud().snapshot() if WIResponsiveLayout.uses_touch_layout() else {"mobile": false}
+
+
+func _on_mobile_action(action: String) -> void:
+	if _mode == Mode.INACTIVE or (main_ref != null and main_ref.pause_open()):
+		return
+	var mobile: WICombatMobileHud = _hud.mobile_hud()
+	if mobile.handle_action(action):
+		_refresh()
+		ObservableBus.emit_domain_event("ui_combat_details_rendered" if mobile.details_open() else "ui_combat_layout_rendered", mobile.snapshot())
+		return
+	if mobile.details_open():
+		return
+	match action:
+		"confirm":
+			_on_confirm_chip_tapped()
+		"back":
+			if _mode in [Mode.ATTACK, Mode.SKILL_TARGET]:
+				_cancel_targeting()
+			elif _mode == Mode.DASH_CONFIRM:
+				_cancel_bar_action()
+			mobile.clear_inspection()
+		"previous", "next":
+			var delta := -1 if action == "previous" else 1
+			if _mode in [Mode.ATTACK, Mode.SKILL_TARGET] and _targeting.has_valid_target():
+				_targeting.cycle(delta)
+			elif _mode == Mode.HOTBAR:
+				mobile.inspect(delta)
+	_refresh()
+	ObservableBus.emit_domain_event("ui_combat_layout_rendered", mobile.snapshot())
 
 
 func _refresh_combatants() -> void:
@@ -816,6 +878,8 @@ func hotbar_node() -> WIHotbar:
 
 
 func _on_hotbar_slot_clicked(index: int) -> void:
+	if WIResponsiveLayout.uses_touch_layout() and _hud.mobile_hud().details_open():
+		return
 	if _mode != Mode.HOTBAR and _mode != Mode.ATTACK and _mode != Mode.SKILL_TARGET and _mode != Mode.DASH_CONFIRM:
 		return
 	if main_ref != null and main_ref.pause_open():
@@ -836,6 +900,8 @@ func _switch_bar_slot(index: int) -> void:
 
 
 func handle_board_click(world_pos: Vector2) -> void:
+	if WIResponsiveLayout.uses_touch_layout() and _hud.mobile_hud().details_open():
+		return
 	# review M4: with the combat pause open (now a mainline touch state via
 	# the resting chip), a board tap must not move the PC under the menu —
 	# the same guard the hotbar/confirm-chip tap handlers already carry.
@@ -947,6 +1013,11 @@ func _emit_ai_playback_done(beats: int) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _mode != Mode.INACTIVE and WIResponsiveLayout.uses_touch_layout() and _hud.mobile_hud().details_open():
+		if event.is_action_pressed("cancel"):
+			_on_mobile_action("drawer_close")
+		get_viewport().set_input_as_handled()
+		return
 	if _mode == Mode.INACTIVE or (Game.sim.combat == null and _mode != Mode.BANNER):
 		return
 	if _mode == Mode.WAIT_AI and _ai_playback.is_playing() and (event.is_action_pressed("confirm") or event.is_action_pressed("cancel")):

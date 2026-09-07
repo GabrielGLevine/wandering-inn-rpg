@@ -1289,6 +1289,11 @@ func enter_combat_camera(grid_size: Vector2i) -> void:
 	_camera_ctl.enter_combat(grid_size)
 
 
+func focus_combat_camera(cells: Array[Vector2i]) -> void:
+	if Game.sim.combat != null:
+		_camera_ctl.enter_combat(Game.sim.combat.grid_size, cells)
+
+
 func exit_combat_camera() -> void:
 	_update_camera()
 
