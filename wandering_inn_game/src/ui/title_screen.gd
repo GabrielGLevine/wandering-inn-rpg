@@ -58,6 +58,7 @@ var _state: int = State.GESTURE
 var _cursor := 0
 var _continue_enabled := false
 var _continue_slot := ""
+var _unreadable_save_found := false
 
 var _root: Control
 var _gesture_label: Label
@@ -621,17 +622,10 @@ func _on_new_game_confirm_gui_input(event: InputEvent) -> void:
 		_select_new_game_confirm_choice()
 
 
-## apply rejects mismatched VERSION). Without feedback the title screen
-## silently does nothing -- surface it and grey the Continue row so New
-## Game is the obvious path. (Continue-only: the playtest picker loads its
-## own "playtest" slot directly and shows its own failure notice -- see
-## `_confirm_playtest_row` -- because this helper's failure branch resets
-## Continue-slot state, which the picker must not touch.)
 func _load_slot_or_notice(slot: String) -> void:
-	if not Game.load_slot(slot):
-		_continue_slot = ""
+	if not _save_slot_readable(slot) or not Game.load_slot(slot):
 		_refresh_continue_state()
-		_show_notice("Save is from an older version. Start a New Game")
+		_show_notice("Could not read that save. Choose Continue to try another save." if _continue_enabled else "No readable save found. You can start a New Game.")
 
 
 func _skip_creation() -> bool:
@@ -652,9 +646,14 @@ func _refresh_continue_state() -> void:
 	_continue_slot = _newest_save_slot()
 	_continue_enabled = not _continue_slot.is_empty()
 	_refresh_continue_caption()
+	if _unreadable_save_found:
+		_show_notice("Unreadable save skipped. Continue uses your latest readable save." if _continue_enabled else "No readable save found. You can start a New Game.")
+	elif _notice_label != null:
+		_notice_label.text = ""
 
 
 func _newest_save_slot() -> String:
+	_unreadable_save_found = false
 	var best_slot := ""
 	var best_time := -1
 	var candidates: Array[String] = ["auto"]
@@ -662,11 +661,25 @@ func _newest_save_slot() -> String:
 	for slot: String in candidates:
 		var path := "user://saves/%s.json" % slot
 		if FileAccess.file_exists(path):
+			if not _save_slot_readable(slot):
+				_unreadable_save_found = true
+				continue
 			var modified_time: int = FileAccess.get_modified_time(path)
 			if modified_time > best_time:
 				best_time = modified_time
 				best_slot = slot
 	return best_slot
+
+
+func _save_slot_readable(slot: String) -> bool:
+	var path := "user://saves/%s.json" % slot
+	if not FileAccess.file_exists(path):
+		return false
+	var parser := JSON.new()
+	if parser.parse(FileAccess.get_file_as_string(path)) != OK or not (parser.data is Dictionary):
+		return false
+	# Match load_slot's trial apply without replacing the live simulation or files.
+	return WISave.apply(Game._make_sim(), parser.data)
 
 
 func _refresh_continue_caption() -> void:
@@ -703,9 +716,13 @@ func _show_notice(text: String) -> void:
 	if _notice_label == null:
 		_notice_label = UIChrome.make_label("", "Small")
 		_notice_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		_notice_label.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-		UIChrome.set_offsets(_notice_label, -300.0, -60.0, 300.0, -36.0)
-		(_menu_root.get_parent() as Control).add_child(_notice_label)
+		_notice_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		_notice_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_notice_label.add_theme_color_override("font_color", ENABLED_COLOR)
+		_notice_label.add_theme_font_size_override("font_size", 24)
+		_notice_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
+		UIChrome.set_offsets(_notice_label, -450.0, 294.0, 450.0, 374.0)
+		_root.add_child(_notice_label)
 	_notice_label.text = text
 	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_NOTICE_RENDERED, {"text": text})
 
