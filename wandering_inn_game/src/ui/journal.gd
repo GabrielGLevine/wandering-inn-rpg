@@ -413,12 +413,12 @@ func _reset_body_gesture() -> void:
 
 
 func _on_body_gui_input(event: InputEvent) -> void:
+	if not open:
+		return
 	if event.is_canceled():
 		_reset_body_gesture()
 		_body_gesture_panned = true
 		get_viewport().set_input_as_handled()
-		return
-	if not open:
 		return
 	# A gesture that PANNED must not also count as a tap on whatever row it
 	# happens to let go over. RichTextLabel fires `meta_clicked` on button

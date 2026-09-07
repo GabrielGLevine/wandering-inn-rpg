@@ -54,8 +54,13 @@ class BrowserRegistryTest(unittest.TestCase):
         self.assertEqual(fresh["fixture"], suite.FRESH)
         self.assertIn("cancel", suite.PROOFS)
         script = json.loads((GAME / "qa/scripts/touch_first_session.json").read_text())
-        self.assertNotIn("fixture_save", script)
-        self.assertIs(script.get("starts_at_title"), True)
+        suite.validate_script(fresh, script)
+        for bad in [script | {"fixture_save": "d2_shop"}, {k: v for k, v in script.items() if k != "starts_at_title"}]:
+            with self.assertRaises(ValueError):
+                suite.validate_script(fresh, bad)
+        with self.assertRaises(ValueError):
+            suite.validate_script(self.entry, script)
+        suite.validate_script(self.entry, {"fixture_save": self.entry["fixture"]})
         self.assertGreater(fresh["timeout_sec"], suite.DEFAULT_TIMEOUT_SEC)
         self.assertLessEqual(fresh["timeout_sec"], suite.MAX_TIMEOUT_SEC)
         self.assertEqual({p for e, p in suite.cases(self.manifest) if e["script"] == "touch_first_session"}, {"iphone", "android"})

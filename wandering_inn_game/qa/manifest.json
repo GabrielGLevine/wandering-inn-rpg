@@ -7825,7 +7825,7 @@
     "tap"
    ],
    "timeout_sec": 600,
-   "note": "#506 continuous fresh browser-touch journey: title, creation Back/Begin, innate cleaning, Helper sleep, earned Basic Cooking, Relc intro, touch-driven training fight (move, Dash, aim, cancel, confirm, End Turn, real remaining turns), Warrior sleep, spear gift, inventory equip, proximity goblin ambush fought by touch, exploration restored. Real presentation timing; no fixture, keyboard, teleport or autoplay. Physical phones remain #511.",
+   "note": "#506 continuous fresh browser-touch journey: title, creation Back/Begin, innate cleaning, Helper sleep, earned Basic Cooking, Relc intro, touch-driven training fight (move, Dash, aim, cancel, confirm, End Turn, real remaining turns), Warrior sleep, spear gift, inventory equip, proximity goblin ambush fought by touch, exploration restored. Real sleep-veil, world-step, map-transition and combat-beat timing (toasts keep their own qa_real_message_timing switch); no fixture, keyboard, teleport or autoplay. Physical phones remain #511.",
    "surfaces": {
     "maps": [
      "floodplains",
@@ -7920,7 +7920,7 @@
     "hold",
     "cancel"
    ],
-   "note": "#506 narrow regression on #504's confirmation: a canceled contact on an armed Buy spends no gold and grants no item; the following valid held release still purchases exactly once.",
+   "note": "#506 narrow regression on #504's confirmation (keyboard-driven setup to the crate, touch for the confirmation itself): a canceled contact on an armed Buy spends no gold and grants no item; the following valid held release still purchases exactly once.",
    "surfaces": {
     "maps": [
      "street"

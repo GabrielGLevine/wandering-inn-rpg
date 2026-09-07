@@ -52,6 +52,10 @@ var _script_path := ""
 ## exercises the paging surface itself (mobile_tap_check).
 var real_paging := false
 var real_message_timing := false
+## #506: `qa_real_presentation_timing` keeps the shipped sleep-veil, world-step,
+## map-transition and combat-beat delays under the driver so a browser-touch
+## route waits on real presentation. Toasts keep `real_message_timing`; a
+## headless run still collapses everything.
 var real_presentation_timing := false
 var _out_dir := ""
 ## GH#324: how many evidence captures are settling right now (screenshot or
@@ -471,14 +475,19 @@ func _execute(step: Dictionary) -> void:
 		"touch_combat_dismiss":
 			var cs := _combat_screen_node()
 			var board: Rect2 = cs.board_view_rect() if cs != null else Rect2()
-			if not board.has_area():
+			if _combat_mode() != MODE_BANNER:
+				_fail("touch_combat_dismiss: no result banner is showing (mode %d); a board contact would move or aim instead" % _combat_mode())
+			elif not board.has_area():
 				_fail("touch_combat_dismiss: no rendered combat board")
 			else:
 				await _touch_at(board.get_center(), "touch_combat_dismiss")
 		"touch_creation_control":
 			var control := String(step.control)
 			var method := {"back": "back_button_rect", "begin": "begin_button_rect", "card": "card_rect", "choice": "choice_row_rect"}
-			await _touch_rect_of("CharCreation", method[control], step.get("index"), "touch_creation_" + control)
+			if not method.has(control):
+				_fail("touch_creation_control: unknown control " + control)
+			else:
+				await _touch_rect_of("CharCreation", method[control], step.get("index"), "touch_creation_" + control)
 		"touch_hotbar_slot":
 			var hotbar := _resolve_hotbar_node()
 			if hotbar == null:
@@ -1214,6 +1223,9 @@ func _combat_mode() -> int:
 ## path helper; Dash + Confirm when the step pool is empty; End Turn. AI turns
 ## are waited out. Stops at the result banner, which the script dismisses.
 func _touch_combat_rounds(max_turns: int) -> void:
+	if Game.sim.combat == null:
+		_fail("touch_combat_rounds: no active combat")
+		return
 	for turn in max_turns:
 		var deadline := Time.get_ticks_msec() + 60000
 		while Time.get_ticks_msec() < deadline:
@@ -1274,7 +1286,7 @@ func _touch_combat_rounds(max_turns: int) -> void:
 				if not allies.is_empty() or int(pc["ap"]) < WICombat.DASH_COST + WICombat.ATTACK_COST:
 					break
 				if not await _touch_combat_dash():
-					break
+					return
 			var step := Vector2i.ZERO
 			for dir: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 				if combat.is_cell_free(pc_cell + dir) and _touch_combat_can_strike(combat, pc_cell + dir, target_cell, reach):
@@ -1291,7 +1303,8 @@ func _touch_combat_rounds(max_turns: int) -> void:
 			while Time.get_ticks_msec() < wait and _find_event_since("combatant_moved", {"id": "pc"}, before) == -1:
 				await get_tree().process_frame
 			if _find_event_since("combatant_moved", {"id": "pc"}, before) == -1:
-				break
+				_fail("touch_combat_rounds: contact on %s moved nobody" % (pc_cell + step))
+				return
 		if Game.sim.combat != null and not Game.sim.combat.finished and _combat_mode() == MODE_HOTBAR:
 			var before_end := _events_seen.size()
 			if not await _touch_combat_slot("end_turn"):
@@ -1299,6 +1312,9 @@ func _touch_combat_rounds(max_turns: int) -> void:
 			var wait_end := Time.get_ticks_msec() + 5000
 			while Time.get_ticks_msec() < wait_end and _find_event_since("turn_ended", {"id": "pc"}, before_end) == -1:
 				await get_tree().process_frame
+			if _find_event_since("turn_ended", {"id": "pc"}, before_end) == -1:
+				_fail("touch_combat_rounds: End Turn contact ended no turn")
+				return
 	_fail("touch_combat_rounds: fight did not finish within %d PC turns" % max_turns)
 
 
@@ -1353,13 +1369,17 @@ func _touch_combat_dash() -> bool:
 		return false
 	await get_tree().process_frame
 	if _combat_mode() != MODE_DASH_CONFIRM:
+		_fail("touch_combat_dash: the Dash contact armed no confirmation (mode %d)" % _combat_mode())
 		return false
 	var before := _events_seen.size()
 	await _touch_rect_of("CombatScreen", "mobile_control_rect", "confirm", "touch_combat_confirm")
 	var wait := Time.get_ticks_msec() + 5000
 	while Time.get_ticks_msec() < wait and _find_event_since("dashed", {"id": "pc"}, before) == -1:
 		await get_tree().process_frame
-	return _find_event_since("dashed", {"id": "pc"}, before) != -1
+	if _find_event_since("dashed", {"id": "pc"}, before) == -1:
+		_fail("touch_combat_dash: confirmed Dash never resolved")
+		return false
+	return true
 
 
 ## #506: touch the inventory row of a carried item found by id through a

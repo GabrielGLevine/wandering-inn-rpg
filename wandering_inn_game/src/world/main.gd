@@ -258,7 +258,7 @@ func _fade_map_transition(target_alpha: float, seconds: float) -> void:
 func _transition_delay(seconds: float) -> float:
 	if DisplayServer.get_name() == "headless":
 		return 0.0
-	if TestDriver != null and TestDriver.active() \
+	if TestDriver != null and TestDriver.active() and not TestDriver.real_presentation_timing \
 			and not _map_transition_visual_requested():
 		return 0.0
 	return seconds

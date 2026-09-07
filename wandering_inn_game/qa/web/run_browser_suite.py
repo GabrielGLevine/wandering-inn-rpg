@@ -69,6 +69,15 @@ def cases(manifest: dict) -> list[tuple[dict, str]]:
     return result
 
 
+def validate_script(entry: dict, script: dict) -> None:
+    """Fail closed when a registry row disagrees with its script's own start."""
+    if entry["fixture"] == FRESH:
+        if "fixture_save" in script or script.get("starts_at_title") is not True:
+            raise ValueError(f"{entry['script']}: a fresh route must start at the title without fixture_save")
+    elif script.get("fixture_save") != entry["fixture"]:
+        raise ValueError(f"{entry['script']}: fixture differs from script fixture_save")
+
+
 def evaluate_run(entry: dict, profile: str, returncode: int, log: str, result: dict, evidence: dict, expected_steps: int | None = None) -> list[str]:
     failures = []
     if returncode != 0 or result.get("passed") is not True or "QA_RESULT: PASS" not in log:
@@ -106,12 +115,7 @@ def main() -> int:
     try:
         selected = cases(json.loads(MANIFEST.read_text()))
         for entry, _ in selected:
-            script = json.loads((GAME / "qa/scripts" / f"{entry['script']}.json").read_text())
-            if entry["fixture"] == FRESH:
-                if "fixture_save" in script or script.get("starts_at_title") is not True:
-                    raise ValueError(f"{entry['script']}: a fresh route must start at the title without fixture_save")
-            elif script.get("fixture_save") != entry["fixture"]:
-                raise ValueError(f"{entry['script']}: fixture differs from script fixture_save")
+            validate_script(entry, json.loads((GAME / "qa/scripts" / f"{entry['script']}.json").read_text()))
     except (OSError, ValueError, TypeError) as exc:
         print(f"BROWSER SUITE INVALID: {exc}", file=sys.stderr)
         return 2
