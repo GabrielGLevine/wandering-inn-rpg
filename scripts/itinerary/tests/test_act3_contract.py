@@ -11,6 +11,7 @@ into the walk and pins AFTER.
 from __future__ import annotations
 
 from pathlib import Path
+from copy import deepcopy
 import sys
 import tempfile
 import unittest
@@ -124,6 +125,19 @@ class DialogueStatePinTest(unittest.TestCase):
         kinds = [s.get("type") or s["action"] for s in steps]
         self.assertLess(kinds.index("ui_dialogue_hidden"), len(kinds) - 1)
         self.assertEqual(kinds.count("assert_state"), 1 + kinds[:kinds.index("dialogue_started")].count("assert_state"))
+
+    def test_repeated_accomplishment_pins_only_the_final_count(self) -> None:
+        graph = deepcopy(self.GRAPH)
+        graph["nodes"]["seal"]["options"][0]["effects"] = [{"accomplishment": "sealed_test"}]
+        pipeline = Pipeline(FakeOracle(blocked={(9, 6)}, options=self.ROWS))
+        pipeline.ledger.set_position("floodplains", [9, 5], [0, 1])
+        pipeline.inject_npc("floodplains", {"id": "tester", "kind": "npc", "cell": [9, 6], "display_name": "Tester", "conversation": "tester_graph"}, graph)
+        steps = pipeline.run(act("    - id: t\n      why: the seal\n      talk: {npc: tester, at: floodplains, choose_path: [\"It's done.\", Captain.]}\n", "iii"))
+        pins = [s for s in steps if s.get("path") == "accomplishments.sealed_test"]
+        self.assertEqual(pins, [{"action": "assert_state", "path": "accomplishments.sealed_test", "equals": 2}])
+        counts = [s["payload_contains"]["count"] for s in steps if s.get("type") == "accomplishment_recorded" and s["payload_contains"].get("id") == "sealed_test"]
+        self.assertEqual(counts, [1, 2])
+        self.assertEqual(steps[-1], pins[0])
 
 
 class PostSealSleepTest(unittest.TestCase):
