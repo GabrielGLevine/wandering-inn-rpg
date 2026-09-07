@@ -22,13 +22,19 @@ archived, or superseded session blocks.
   stays open. Fresh-cut production timing now passes all 143 steps on desktop
   and both phone profiles; its Skills-tab capture reads the actual visible tab.
   Exact next action: open/review the scoped guidance and evidence PR.
-- **#504 integration:** PR #547 at `89be7acb` contains six passing browser-touch
-  purchase cases, CI registration, accurate eligibility documentation and dark
-  ink for purchase summaries/rows. Independent review approved; required CI is
-  running. Its reviewed tree is composed into this #508 branch. Regenerated
-  manifest/notes retain both new native Rogue scripts and three browser scripts.
-  Merge #547 after CI, merge its squash into this branch, then finish #508's
-  scoped PR. Physical phone observations remain with #511; both issues stay open.
+- **#504 delivered through PR #547:** browser-touch coverage for all three
+  purchase paths, readable ink labels, CI registration and eligibility invariant
+  documentation are merged at `e5b53328`. The final ordered-input runner passes
+  six cases, three additional timing repeats and all required CI. The unit gate
+  now rejects plain errors; two existing item-tier mismatches are repaired with
+  stats, prices, resonance and starting kits preserved. #504 remains open for
+  physical iPhone Safari / Android Chrome observations under #511.
+- **#508 next decision:** scoped guidance and fresh-route proof are reviewed and
+  composed with #547. Complete its scoped PR; acquisition remains unchanged.
+  The owner must decide whether deliberate drainage-cover traversal qualifies
+  after the road goblins are defeated. Until then, the documented force/guile
+  recovery defect remains open. No additional implementation is blocked for #504
+  except the physical-device observations.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.
