@@ -162,6 +162,7 @@ var _card_carets: Array[Label] = []
 var _portraits: Array[AnimatedSprite2D] = []
 var _name_edit: LineEdit
 var _begin_button: Control
+var _back_button: Button
 
 ## Issue #346: the shared setup-choice list, reused by BOTH new steps (one
 ## widget, two datasets -- a second bespoke picker would be two things to keep
@@ -186,6 +187,8 @@ func _ready() -> void:
 	_build_ui()
 	_render_step()
 	ObservableBus.domain_event.connect(_on_domain_event)
+	get_viewport().size_changed.connect(_layout_back_button)
+	UIChrome.THEME.changed.connect(_layout_back_button)
 
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
@@ -269,6 +272,41 @@ func _build_ui() -> void:
 	UIChrome.set_offsets(_hint_label, -400.0, -34.0, 400.0, -4.0)
 	_hint_label.add_theme_color_override("font_color", HINT_COLOR)
 	_root.add_child(_hint_label)
+
+	_back_button = Button.new()
+	_back_button.name = "CreationBack"
+	_back_button.text = "Back"
+	_back_button.focus_mode = Control.FOCUS_NONE
+	_back_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	_back_button.pressed.connect(_back)
+	_root.add_child(_back_button)
+	_layout_back_button()
+
+
+static func back_control_layout(safe: Rect2, css_scale: float, text_size: Vector2) -> Rect2:
+	var css := maxf(css_scale, 0.01)
+	var minimum := Vector2.ONE * ceilf(44.0 / css)
+	var size := minimum.max(text_size + Vector2(24.0, 12.0) / css)
+	return Rect2(safe.position + Vector2.ONE * (12.0 / css), size)
+
+
+func _layout_back_button() -> void:
+	if _back_button == null or not is_inside_tree():
+		return
+	var viewport := get_viewport()
+	var css := WIResponsiveLayout.css_scale(viewport) if WIResponsiveLayout.uses_touch_layout() else 1.0
+	var text_scale := WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]
+	var font_size := maxi(UIChrome.THEME.get_font_size("font_size", "Button"), ceili(14.0 * text_scale / css))
+	_back_button.add_theme_font_size_override("font_size", font_size)
+	var text_size := _back_button.get_theme_font("font").get_string_size("Back", HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
+	var rect := back_control_layout(WIResponsiveLayout.safe_rect(viewport), css, text_size)
+	_back_button.custom_minimum_size = rect.size
+	_back_button.size = rect.size
+	_back_button.position = rect.position
+
+
+func back_button_rect() -> Rect2:
+	return _back_button.get_global_rect() if _back_button != null and _back_button.is_visible_in_tree() else Rect2()
 
 
 ## The six-sprite picker grid (2 rows x 3 cols, PC_OPTIONS' own row-major
@@ -414,6 +452,7 @@ func _choice_options() -> Array[String]:
 
 
 func _render_step() -> void:
+	_layout_back_button()
 	_prompt_label.text = String(STEP_PROMPT[_step])
 	var is_name := _step == Step.NAME
 	var options := _choice_options()
@@ -462,6 +501,8 @@ func _render_step() -> void:
 		# a caption leaking onto the pick/name/difficulty steps would show up
 		# as a non-empty string on a step whose pin says "".
 		"caption": caption,
+		"back_visible": _back_button.is_visible_in_tree(),
+		"back_label": _back_button.text,
 	})
 
 
