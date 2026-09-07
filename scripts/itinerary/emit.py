@@ -80,8 +80,12 @@ class Emitter:
             # it before every interact, so the compiler claims it too.
             steps.append({"action": "assert_state", "path": "player_cell", "equals": list(operation["cell"])})
         elif kind == "transition":
+            if operation.get("shot"):
+                steps.append({"action": "screenshot", "name": str(operation["shot"])})
+            steps.append({"action": "press", "name": "interact"})
+            if operation.get("open_toast"):
+                steps.append({"action": "wait_for_event", "type": "toast", "payload_contains": {"text": str(operation["open_toast"])}, "timeout_sec": 5})
             steps.extend([
-                {"action": "press", "name": "interact"},
                 {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": operation["map"], "cell": operation["cell"]}, "timeout_sec": 5},
                 {"action": "assert_state", "path": "current_map", "equals": operation["map"]},
                 {"action": "assert_state", "path": "player_cell", "equals": operation["cell"]},
@@ -323,6 +327,11 @@ class Emitter:
         ])
         for pin in operation.get("victory_pins", []):
             steps.append(self._assert_state_step(pin))
+        if operation.get("map"):
+            # The board closes where it opened (steel_thread 659-660): the
+            # ledger's position IS the claim, and the next walk starts from it.
+            steps.append({"action": "assert_state", "path": "current_map", "equals": str(operation["map"])})
+            steps.append({"action": "assert_state", "path": "player_cell", "equals": list(operation["cell"])})
         return steps
 
     @staticmethod
@@ -687,6 +696,13 @@ class Emitter:
                 {"action": "wait_for_event", "type": "quest_started", "payload_contains": {"id": TREMOR_QUEST}, "timeout_sec": 5},
                 {"action": "wait_for_event", "type": "toast", "payload_contains": {"text": TREMOR_TOAST}, "timeout_sec": 5},
             ]
+        if operation.get("post_game"):
+            # sleep_beat.gd: the first sleep after the seal banks post_game,
+            # right after the pointer check and with no toast of its own.
+            pointer.extend([
+                {"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "post_game", "count": 1}, "timeout_sec": 5},
+                {"action": "assert_state", "path": "accomplishments.post_game", "equals": 1},
+            ])
         if consolidation:
             steps.extend([
                 {"action": "wait_for_event", "type": "consolidation_accepted", "payload_contains": {"target": consolidation["target"], "level": consolidation["level"]}, "timeout_sec": 5},

@@ -125,13 +125,12 @@ class AlignmentTest(unittest.TestCase):
         equal = [(c_lo, s_lo) for tag, c_lo, _, s_lo, _ in opcodes if tag == "equal"]
         self.assertEqual(equal, [(0, 2)])
 
-    def test_from_start_is_delivery_not_a_different_claim(self) -> None:
-        """steel_thread 143: the corpus pins the class-gained RENDER with
-        from_start because it races the veil (v0.15: never pin toast order)."""
+    def test_render_waits_preserve_the_driver_cursor_mode(self) -> None:
+        """UI receipts use the same ordered wait cursor as domain events."""
         ordered = {"steps": [{"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "t"}}]}
         anytime = {"steps": [{"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "t"}, "from_start": True}]}
-        self.assertTrue(diff(ordered, anytime).passed)
-        self.assertTrue(diff(anytime, ordered).passed)
+        self.assertFalse(diff(ordered, anytime).passed)
+        self.assertFalse(diff(anytime, ordered).passed)
 
 
 class SleepOrderTest(unittest.TestCase):
@@ -199,12 +198,15 @@ class ExplicitCellGotoTest(unittest.TestCase):
         self.assertEqual(steps[-1], {"action": "assert_state", "path": "player_cell", "equals": [13, 3]})
         self.assertEqual(steps[:-1], [{"action": "move", "direction": "right", "steps": 12}])
 
-    def test_a_blocked_target_keeps_its_single_stand_pin(self) -> None:
+    def test_a_blocked_target_pins_its_stand_cell_on_both_sides_of_the_bump(self) -> None:
+        """steel_thread 591-593 / 622-624: pin, bump, pin -- the second pin is
+        the claim that the bump displaced nobody. No third pin for the goto."""
         pipeline = Pipeline(FakeOracle(blocked={(13, 2)}))
         pipeline.ledger.set_position("street", [13, 4])
         steps = pipeline.run(act("    - id: n\n      goto: {map: street, cell: [13, 2]}\n", "ii"))
-        pins = [s for s in steps if s["action"] == "assert_state"]
-        self.assertEqual(pins, [{"action": "assert_state", "path": "player_cell", "equals": [13, 3]}])
+        pin = {"action": "assert_state", "path": "player_cell", "equals": [13, 3]}
+        self.assertEqual(steps[-3:], [pin, {"action": "move", "direction": "up", "steps": 1, "_bump": True}, pin])
+        self.assertEqual([s for s in steps if s["action"] == "assert_state"], [pin, pin])
 
 
 class GrantToastTest(unittest.TestCase):

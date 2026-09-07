@@ -107,7 +107,8 @@ class M1ContractTest(unittest.TestCase):
         fake = FakeBridge()
         route = RoutePlanner(ROOT / "wandering_inn_game", fake)
         route_ops = route.plan_to("act1.erin", ledger, "inn", [7, 2])
-        self.assertEqual(route_ops[-1]["kind"], "face_target")
+        # #434 Act III: the stand cell is pinned on both sides of the bump.
+        self.assertEqual([op["kind"] for op in route_ops[-3:]], ["arrival_pin", "face_target", "arrival_pin"])
         self.assertEqual(ledger.cell, [7, 3])
 
         facing_ledger = Ledger.fresh()

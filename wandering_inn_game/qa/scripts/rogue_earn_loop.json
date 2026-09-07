@@ -1,5 +1,5 @@
 {
- "_comment": "THE [Rogue] EARN CANONICAL -- fixture-first proof of earn -> sleep -> class_gained -> [Stealth] fielded (the project's ratified fixture-first policy for new canonicals, named explicitly for this class in the K3 canon-verdicts packet). Loads near_rogue (warrior L1 at the inn (2,3), the Missing Crate WATCH path's resolution pre-banked: recovered_crate_watch/found_the_crate/crate_returned/asked_about_crate/persuaded_someone -- [Rogue]'s gained_by gate, the cleanest EXISTING classless guile counter; see classes.json's rogue _comment for the full circularity + onboarding-integrity trace: `sneaked_past_danger` [the OTHER candidate, banked only while already sneaking] cannot gate Rogue's OWN grant without circularity, since no class grants `sneak` before Rogue does -- it is Rogue's LEVEL-UP counter instead, past L1). One sleep resolves the gate -> [Rogue] class_gained, granting `sneak` (canon-renamed [Stealth]) at level 1 -- POST-onboarding trivially, since recovered_crate_watch is street-quest content unreachable without already surviving the floodplains goblin_encounter_1 ambush (street sits behind liscor_gate, 2 cells from the ambush's own Chebyshev-2 zone). Hotbar re-renders 1->2 field slots ([Basic Cleaning], [Stealth]); pressing [Stealth]'s slot toggles real sneaking through the SAME shipped mechanism stealth_loop's QA-fixture-granted copy already exercises (skill_used + sneak_started + toast + ui_sneak_rendered) -- proving the class grant is the genuine article, not a parallel path. Journal opened at the end for the windowed [Stealth] card shot. No combat anywhere; fixture rng_state is cosmetic, seed 9 for convention.",
+ "_comment": "THE [Rogue] EARN CANONICAL -- fixture-first proof of earn -> sleep -> class_gained -> [Stealth] fielded (the project's ratified fixture-first policy for new canonicals, named explicitly for this class in the K3 canon-verdicts packet). Loads near_rogue (warrior L1 at the inn (2,3), the Missing Crate WATCH path's resolution pre-banked: recovered_crate_watch/found_the_crate/crate_returned/asked_about_crate/persuaded_someone -- [Rogue]'s gained_by gate, the cleanest EXISTING classless guile counter; see classes.json's rogue _comment for the full circularity + onboarding-integrity trace: `sneaked_past_danger` [the OTHER candidate, banked only while already sneaking] cannot gate Rogue's OWN grant without circularity, since no class grants `sneak` before Rogue does -- it is Rogue's LEVEL-UP counter instead, past L1). One sleep resolves the gate -> [Rogue] class_gained, granting `sneak` (canon-renamed [Stealth]) at level 1 -- POST-onboarding trivially, since recovered_crate_watch is street-quest content unreachable without already surviving the floodplains goblin_encounter_1 ambush (street sits behind liscor_gate, 2 cells from the ambush's own Chebyshev-2 zone). Hotbar re-renders 1->2 field slots ([Basic Cleaning], [Stealth]); pressing [Stealth]'s slot toggles real sneaking through the SAME shipped mechanism stealth_loop's QA-fixture-granted copy already exercises (skill_used + sneak_started + toast + ui_sneak_rendered) -- proving the class grant is the genuine article, not a parallel path. Journal opened at the end for the Act I progression read. No combat anywhere; fixture rng_state is cosmetic, seed 9 for convention.",
  "fixture_save": "near_rogue",
  "starts_at_title": true,
  "steps": [
@@ -25,7 +25,10 @@
   { "action": "assert_state", "path": "classes.rogue", "equals": 1 },
   { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3, "readout_lines": ["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.", "2  [Basic Swordwork] — Steadier hands with any blade.", "3  [Stealth] — A soft step that slips past watching eyes and clears ground when blades are drawn."] }, "timeout_sec": 5 },
   { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Rogue] class gained! — [Stealth]" } },
+  {"_comment": "The class render can precede the hotbar wait; history lookup proves this one sleep delivered it.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Rogue] class gained! — [Stealth]"}, "from_start": true, "timeout_sec": 10},
   { "action": "screenshot", "name": "01_rogue_gained_toast" },
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Stealth] is on your field bar now: number keys, or tap it, to soften your step. Using a Skill, a fight, or forcing a door straightens you up."}, "timeout_sec": 10},
+  {"action": "screenshot", "name": "01b_first_stealth_hint"},
 
   { "_comment": "Slot 3 is [Stealth] after innate [Basic Cleaning] and sword-gated [Basic Swordwork]. Press it -- the toggle ignores the faced target entirely, so facing the bed is harmless.", "action": "press", "name": "hotbar_3" },
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "sneak", "context": "exploration", "target": "" }, "timeout_sec": 5 },
@@ -35,12 +38,11 @@
   { "action": "assert_state", "path": "sneaking", "equals": true },
   { "action": "screenshot", "name": "02_stealth_fielded" },
 
-  { "_comment": "Journal for the windowed [Stealth] card shot (the renamed-Skill-card proof).", "action": "press", "name": "journal" },
+  { "_comment": "Journal opens on the quest tab and confirms the Act I class milestone.", "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "03_journal_stealth_card" },
-  {"_comment": "#508: the first-[Stealth] pointer was queued behind the veil (ui_sleep_veil_finished) and sat behind the class toast while the journal modal paused the strip -- the queue is lossless, so closing the book lets it render. Pins the copy on every device label (kb here).", "action": "press", "name": "journal"},
-  {"action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Rogue] class gained! — [Stealth]"}, "timeout_sec": 10},
-  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Stealth] is on your field bar now: number keys, or tap it, to soften your step. Using a Skill, a fight, or forcing a door straightens you up."}, "timeout_sec": 10}
+  { "action": "screenshot", "name": "03_journal_act_progress" },
+  {"_comment": "Close the journal after the progression read.", "action": "press", "name": "journal"},
+  {"action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5}
+
  ]
 }
