@@ -333,20 +333,30 @@ const serviceTouch = async () => {
 		const gesture = req.gesture ?? {};
 		const repeat = Math.max(1, Math.min(3, gesture.repeat ?? 1));
 		const holdMs = Math.max(0, Math.min(1000, gesture.hold_ms ?? 0));
-		for (let i = 0; i < repeat; i++) {
-			if (holdMs) {
-				await touchSession.send("Input.dispatchTouchEvent", {type: "touchStart", touchPoints: [{x: req.x, y: req.y}]});
-				await page.waitForTimeout(holdMs);
-				await touchSession.send("Input.dispatchTouchEvent", {type: "touchEnd", touchPoints: []});
-			} else {
-				await page.touchscreen.tap(req.x, req.y);
-			}
-			realTouches += 1;
-			if (i + 1 < repeat) await page.waitForTimeout(30);
-		}
 		if (gesture.follow_purchase_buy) {
-			await page.touchscreen.tap(gesture.follow_x, gesture.follow_y);
-			realTouches += 1;
+			if (holdMs || repeat !== 1) throw new Error("pre-arm burst requires one unheld opening contact");
+			// Queue the ordered protocol messages before awaiting replies: awaiting
+			// each remote round trip can let the real modal arm between contacts.
+			const burst = [
+				{type: "touchStart", touchPoints: [{x: req.x, y: req.y}]},
+				{type: "touchEnd", touchPoints: []},
+				{type: "touchStart", touchPoints: [{x: gesture.follow_x, y: gesture.follow_y}]},
+				{type: "touchEnd", touchPoints: []},
+			];
+			await Promise.all(burst.map((contact) => touchSession.send("Input.dispatchTouchEvent", contact)));
+			realTouches += 2;
+		} else {
+			for (let i = 0; i < repeat; i++) {
+				if (holdMs) {
+					await touchSession.send("Input.dispatchTouchEvent", {type: "touchStart", touchPoints: [{x: req.x, y: req.y}]});
+					await page.waitForTimeout(holdMs);
+					await touchSession.send("Input.dispatchTouchEvent", {type: "touchEnd", touchPoints: []});
+				} else {
+					await page.touchscreen.tap(req.x, req.y);
+				}
+				realTouches += 1;
+				if (i + 1 < repeat) await page.waitForTimeout(30);
+			}
 		}
 		touchRequests.push({...req, started, finished: await page.evaluate(() => performance.now())});
 		console.log(`[touch] real contacts=${realTouches} ${req.label} @ (${req.x.toFixed(0)},${req.y.toFixed(0)})`);
@@ -461,11 +471,12 @@ for (const request of touchRequests) {
 	let passed = false;
 	if (gesture.follow_purchase_buy) {
 		const second = touches[1];
-		passed = touches.length === 2 && events.every((e) => e.trusted) && rendered && armed
+		passed = events.map((e) => e.type).join(",") === "touchstart,touchend,touchstart,touchend"
+			&& touches.length === 2 && events.every((e) => e.trusted) && rendered && armed
 			&& second.time >= rendered.browser_time_ms && second.time < armed.browser_time_ms
 			&& Math.abs(second.points[0].x - rendered.buy_window_pos[0]) < 1
 			&& Math.abs(second.points[0].y - rendered.buy_window_pos[1]) < 1;
-		request.preArmProof = {passed: !!passed, renderedAt: rendered?.browser_time_ms, secondTouchAt: second?.time, armedAt: armed?.browser_time_ms};
+		request.preArmProof = {passed: !!passed, domOrder: events.map((e) => e.type), renderedAt: rendered?.browser_time_ms, secondTouchAt: second?.time, armedAt: armed?.browser_time_ms};
 	} else {
 		const released = events.find((e) => e.type === "touchend");
 		passed = touches.length === 1 && events.every((e) => e.trusted) && released && rendered && armed
