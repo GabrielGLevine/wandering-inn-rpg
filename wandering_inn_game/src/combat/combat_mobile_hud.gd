@@ -141,7 +141,7 @@ func refresh(view: RefCounted, rendered_slots: Array, selected_index: int, info_
 	if not _tutor_text.is_empty():
 		var width: float = preliminary["board"].size.x - 100.0 / scale
 		var wrapped := WICombatMobileLayout.pages(_tutor_text, font, _font_size, width, 10000.0)[0]
-		tutor_height = maxf(44.0 / scale, float(wrapped.count("\n") + 1) * line_height + 20.0 / scale)
+		tutor_height = maxf(50.0 / scale, ceilf(float(wrapped.count("\n") + 1) * line_height + 20.0 / scale) + 2.0)
 	_regions = WICombatMobileLayout.regions(safe, scale, line_height, _page_count, tutor_height)
 	_place(_rail, _regions["rail"])
 	_active.text = ""
