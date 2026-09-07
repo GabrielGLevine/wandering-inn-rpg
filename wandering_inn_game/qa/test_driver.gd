@@ -51,6 +51,7 @@ var _script_path := ""
 ## panel's jump-to-last-page QA contract -- required by any script that
 ## exercises the paging surface itself (mobile_tap_check).
 var real_paging := false
+var real_message_timing := false
 var _out_dir := ""
 ## GH#324: how many evidence captures are settling right now (screenshot or
 ## display probe). Nonzero means "a PNG/probe is about to read the screen", and
@@ -159,6 +160,7 @@ func _run() -> void:
 		return
 	_wants_creation_ui = bool(parsed.get("creation_ui", false))
 	real_paging = bool(parsed.get("qa_real_paging", false))
+	real_message_timing = bool(parsed.get("qa_real_message_timing", false))
 	_fail_fast = _fail_fast or bool(parsed.get("fail_fast", false))
 	_install_fixture_saves(parsed.get("fixture_save"))
 	if not bool(parsed.get("starts_at_title", false)):
@@ -453,6 +455,16 @@ func _execute(step: Dictionary) -> void:
 				_fail("touch_cell: could not resolve Main.world_to_screen")
 			else:
 				await _touch_at(touch_screen_pos as Vector2, "cell")
+		"touch_hotbar_slot":
+			var hotbar := _resolve_hotbar_node()
+			if hotbar == null:
+				_fail("touch_hotbar_slot: no live hotbar node found")
+			else:
+				var rect: Rect2 = hotbar.call("slot_rect", int(step["slot"]) - 1)
+				if rect.size == Vector2.ZERO:
+					_fail("touch_hotbar_slot: slot has no rendered rect")
+				else:
+					await _touch_at(rect.get_center(), "touch_hotbar_slot")
 		"touch_title_row":
 			await _touch_rect_of("TitleScreen", "row_rect", int(step["row"]) - 1, "touch_title_row")
 		"touch_dialogue_option":
