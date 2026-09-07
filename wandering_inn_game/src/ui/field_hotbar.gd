@@ -292,6 +292,7 @@ func _update_selection_label(index: int) -> void:
 		"index": index if label_text != "" else -1,
 		"skill": skill_id if label_text != "" else "",
 		"label": label_text,
+		"visible": _selection_label.is_visible_in_tree(),
 	})
 
 
@@ -518,7 +519,7 @@ func _layout_controls() -> bool:
 		toggle_size = Vector2(maxf(minimum, _toggle_label.get_minimum_size().x + 24.0), minimum)
 		_toggle.custom_minimum_size = toggle_size
 		_toggle.size = toggle_size
-		slot_size = Vector2(ceilf(60.0 / css), ceilf(72.0 / css))
+		slot_size = Vector2.ONE * minimum
 		var available := safe.size.x - toggle_size.x - TOGGLE_GAP
 		var slot_gap := slot_size.x / 15.0
 		var capacity := maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))

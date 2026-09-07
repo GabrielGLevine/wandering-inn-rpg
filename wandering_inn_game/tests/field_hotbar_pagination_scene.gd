@@ -11,7 +11,12 @@ func _ready() -> void:
 	var bar := PhoneBar.new()
 	add_child(bar)
 	bar._expanded = false
+	var selection_events: Array[Dictionary] = []
+	ObservableBus.domain_event.connect(func(type: String, payload: Dictionary) -> void:
+		if type == WIEvents.UI_FIELD_HOTBAR_SELECTION_RENDERED:
+			selection_events.append(payload))
 	for i in 37:
+		bar._field_skills.append("test%d" % i)
 		bar._last_slots.append({"label": "[Field Skill %d]" % i, "type": "skill", "id": "test%d" % i})
 	bar._update_toggle_label()
 	var clicked: Array[int] = []
@@ -30,6 +35,7 @@ func _ready() -> void:
 				var controls: Array[Rect2] = [bar._toggle.get_global_rect(), bar._page_previous.get_global_rect(), bar._page_next.get_global_rect()]
 				for child: Control in bar.hotbar_node().get_children():
 					controls.append(child.get_global_rect())
+					assert(is_equal_approx(child.size.x, child.size.y) and child.size.y * bar.test_css < 45.0, "field slots must remain compact 44 CSS squares: %s scale %f" % [child.size, bar.test_css])
 					bar.hotbar_node().slot_clicked.emit(int(child.get_meta("slot_index")))
 				for rect: Rect2 in controls:
 					assert(bar._current_safe_rect().encloses(rect), "control clipped")
@@ -46,6 +52,13 @@ func _ready() -> void:
 			bar._refresh_layout()
 			assert(bar._last_selected_index == 35, "resize must preserve original selection")
 			assert(bar.hotbar_node().slot_rect(35).has_area(), "selected slot stays visible after resize")
+			assert(selection_events.back().visible and selection_events.back().index == 35)
+			var armed_page := bar._page
+			bar._page_previous.pressed.emit()
+			assert(not bar._selection_label.visible and not selection_events.back().visible)
+			assert(bar._last_selected_index == 35 and selection_events.back().index == 35, "paging hides the label without disarming the selected skill")
+			bar._page_next.pressed.emit()
+			assert(bar._page == armed_page and bar._selection_label.visible and selection_events.back().visible, "returning to the armed page restores the label and its visibility event")
 	var desktop := WIFieldHotbar.new()
 	add_child(desktop)
 	desktop._last_slots = bar._last_slots.duplicate(true)
