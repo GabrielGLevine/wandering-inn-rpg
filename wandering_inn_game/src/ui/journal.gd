@@ -413,6 +413,11 @@ func _reset_body_gesture() -> void:
 
 
 func _on_body_gui_input(event: InputEvent) -> void:
+	if event.is_canceled():
+		_reset_body_gesture()
+		_body_gesture_panned = true
+		get_viewport().set_input_as_handled()
+		return
 	if not open:
 		return
 	# A gesture that PANNED must not also count as a tap on whatever row it
@@ -433,11 +438,11 @@ func _on_body_gui_input(event: InputEvent) -> void:
 		_reset_body_gesture()
 	elif event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed:
 		_reset_body_gesture()
-	var dy := 0.0
+	var delta := Vector2.ZERO
 	if event is InputEventScreenDrag:
-		dy = (event as InputEventScreenDrag).relative.y
+		delta = (event as InputEventScreenDrag).relative
 	elif event is InputEventMouseMotion and ((event as InputEventMouseMotion).button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
-		dy = (event as InputEventMouseMotion).relative.y
+		delta = (event as InputEventMouseMotion).relative
 	else:
 		return
 	# Total travel, not per-event travel: a slow pan arrives as many small deltas
@@ -445,12 +450,12 @@ func _on_body_gui_input(event: InputEvent) -> void:
 	# but NOT in magnitude -- so this sums absolute values and never resets
 	# mid-gesture. Scrolling itself stays unconditional below: a sub-slop wobble
 	# pans by those same few px, which is invisible, and still counts as a tap.
-	_body_gesture_drift += absf(dy)
+	_body_gesture_drift += delta.length()
 	if _body_gesture_drift > BODY_PAN_SLOP_PX:
 		_body_gesture_panned = true
 	var vbar := _body_label.get_v_scroll_bar()
 	if vbar != null and vbar.max_value > vbar.page:
-		vbar.value = clampf(vbar.value - dy, vbar.min_value, vbar.max_value - vbar.page)
+		vbar.value = clampf(vbar.value - delta.y, vbar.min_value, vbar.max_value - vbar.page)
 		_update_scroll_hint()
 		get_viewport().set_input_as_handled()
 
@@ -756,6 +761,18 @@ func tab_rect(tab_id: String) -> Rect2:
 	if lbl == null or not lbl.visible:
 		return Rect2()
 	return Rect2(lbl.global_position, lbl.size)
+
+
+func skill_row_rect(index: int) -> Rect2:
+	if not open or _active_tab != Tab.SKILLS or index < 0 or index >= _flat_skill_ids.size():
+		return Rect2()
+	var paragraph := int(_build_skills_tab(index)["cursor_line"])
+	var bar := _body_label.get_v_scroll_bar()
+	var top := _body_label.global_position.y + _body_label.get_paragraph_offset(paragraph) - bar.value
+	var font := _body_label.get_theme_font("normal_font")
+	var height := font.get_height(_body_label.get_theme_font_size("normal_font_size"))
+	var rect := Rect2(Vector2(_body_label.global_position.x + 10.0, top), Vector2(160.0, height))
+	return rect if _body_label.get_global_rect().encloses(rect) else Rect2()
 
 
 ## Issue #209 QA hook: the active tab's id (one of `_TAB_IDS`).

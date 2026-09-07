@@ -1,0 +1,129 @@
+{
+  "_comment": "#506 narrow browser gesture regression. Horizontal travel must not activate a journal row; the following real tap must still work. Prepared state is not acquisition proof.",
+  "fixture_save": "gear_loop_start",
+  "starts_at_title": true,
+  "steps": [
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_gate_rendered",
+      "timeout_sec": 5
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        200
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_rendered",
+      "timeout_sec": 5
+    },
+    {
+      "action": "touch_title_row",
+      "row": 2
+    },
+    {
+      "action": "wait_for_event",
+      "type": "world_ready",
+      "timeout_sec": 5
+    },
+    {
+      "action": "set_text_scale_step",
+      "step": 0
+    },
+    {
+      "action": "touch_field_chip",
+      "chip": "journal"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_journal_shown",
+      "timeout_sec": 5
+    },
+    {
+      "action": "touch_journal_tab",
+      "tab": "skills"
+    },
+    {
+      "action": "wait_frames",
+      "frames": 3
+    },
+    {
+      "action": "screenshot",
+      "name": "before_journal_drag"
+    },
+    {
+      "action": "touch_journal_skill",
+      "index": 0,
+      "gesture": {
+        "drag": true,
+        "delta_css": [
+          30,
+          0
+        ]
+      }
+    },
+    {
+      "action": "wait_frames",
+      "frames": 3
+    },
+    {
+      "action": "assert_event_count",
+      "type": "ui_journal_loadout_rendered",
+      "count": 0
+    },
+    {
+      "action": "screenshot",
+      "name": "horizontal_drag_keeps_loadout"
+    },
+    {
+      "action": "touch_journal_skill",
+      "index": 0,
+      "gesture": {
+        "cancel": true,
+        "hold_ms": 100
+      }
+    },
+    {
+      "action": "wait_frames",
+      "frames": 3
+    },
+    {
+      "action": "assert_event_count",
+      "type": "ui_journal_loadout_rendered",
+      "count": 0
+    },
+    {
+      "action": "touch_journal_skill",
+      "index": 0,
+      "gesture": {
+        "drag": true,
+        "delta_css": [
+          30,
+          0
+        ],
+        "cancel": true
+      }
+    },
+    {
+      "action": "wait_frames",
+      "frames": 3
+    },
+    {
+      "action": "assert_event_count",
+      "type": "ui_journal_loadout_rendered",
+      "count": 0
+    },
+    {
+      "action": "touch_journal_skill",
+      "index": 0
+    },
+    {
+      "action": "assert_event_count",
+      "type": "ui_journal_loadout_rendered",
+      "count": 1
+    }
+  ]
+}

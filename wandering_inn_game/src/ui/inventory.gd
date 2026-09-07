@@ -582,6 +582,11 @@ func _top_visible_row() -> int:
 
 
 func _on_items_gui_input(event: InputEvent) -> void:
+	if event.is_canceled():
+		_reset_list_gesture()
+		_list_gesture_panned = true
+		get_viewport().set_input_as_handled()
+		return
 	# PRESS (mouse or touch) opens a fresh gesture. Touch is handled explicitly
 	# alongside the emulated mouse event for journal.gd's reason: Godot's
 	# touch->mouse emulation is on by default, but a ScreenTouch/ScreenDrag pair
@@ -596,13 +601,13 @@ func _on_items_gui_input(event: InputEvent) -> void:
 		_list_press_index = UIChrome.control_index_at(_item_labels, (event as InputEventScreenTouch).position)
 		return
 	# PAN: a screen drag, or a mouse motion with the left button held.
-	var dy := 0.0
+	var delta := Vector2.ZERO
 	var panning := false
 	if event is InputEventScreenDrag:
-		dy = (event as InputEventScreenDrag).relative.y
+		delta = (event as InputEventScreenDrag).relative
 		panning = true
 	elif event is InputEventMouseMotion and ((event as InputEventMouseMotion).button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
-		dy = (event as InputEventMouseMotion).relative.y
+		delta = (event as InputEventMouseMotion).relative
 		panning = true
 	if panning:
 		# Total travel, not per-event travel -- see journal.gd's identical
@@ -610,10 +615,10 @@ func _on_items_gui_input(event: InputEvent) -> void:
 		# latch, while a jittery tap's deltas cancel in position but not in
 		# magnitude. Scrolling itself stays unconditional: a sub-slop wobble
 		# pans by those same few px (invisible) and still counts as a tap.
-		_list_gesture_drift += absf(dy)
+		_list_gesture_drift += delta.length()
 		if _list_gesture_drift > LIST_PAN_SLOP_PX:
 			_list_gesture_panned = true
-		_pan_list(dy)
+		_pan_list(delta.y)
 		get_viewport().set_input_as_handled()
 		return
 	# HOVER: bare motion (no button) still re-selects the row under the pointer.

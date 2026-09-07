@@ -487,7 +487,9 @@ func _execute(step: Dictionary) -> void:
 		"touch_scroll_field_to_end":
 			await _touch_scroll_field_to_end()
 		"touch_inventory_row":
-			await _touch_rect_of("Inventory", "item_row_rect", int(step["row"]) - 1, "touch_inventory_row")
+			await _touch_rect_of("Inventory", "item_row_rect", int(step["row"]) - 1, "touch_inventory_row", step.get("gesture", {}))
+		"touch_journal_skill":
+			await _touch_rect_of("Journal", "skill_row_rect", int(step["index"]), "touch_journal_skill", step.get("gesture", {}))
 		"touch_journal_tab":
 			await _touch_rect_of("Journal", "tab_rect", String(step["tab"]), "touch_journal_tab")
 		"touch_inventory_equipment":
@@ -1028,6 +1030,12 @@ func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label:
 		gesture = gesture.duplicate()
 		gesture["follow_x"] = _last_purchase_buy_pos.x
 		gesture["follow_y"] = _last_purchase_buy_pos.y
+	if gesture.has("delta_css"):
+		gesture = gesture.duplicate()
+		var end := get_viewport().get_screen_transform() * rect.get_center() + Vector2(float(gesture.delta_css[0]), float(gesture.delta_css[1]))
+		gesture["end_x"] = end.x
+		gesture["end_y"] = end.y
+		gesture.erase("delta_css")
 	await _touch_at(rect.get_center(), label, gesture)
 
 

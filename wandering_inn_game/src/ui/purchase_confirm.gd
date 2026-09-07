@@ -38,6 +38,8 @@ var _armed := false
 var _offer: Dictionary = {}
 var _serial := 0
 var _price_re := RegEx.new()
+var _touch_row := -1
+var _touch_drift := 0.0
 
 
 func _ready() -> void:
@@ -119,6 +121,8 @@ func _show(offer: Dictionary) -> void:
 	_offer = offer
 	_cursor = ROW_CANCEL
 	_armed = false
+	_touch_row = -1
+	_touch_drift = 0.0
 	_serial += 1
 	var serial := _serial
 	_summary_label.text = _summary_text(offer)
@@ -177,6 +181,8 @@ func _hide() -> void:
 		return
 	_shown = false
 	_armed = false
+	_touch_row = -1
+	_touch_drift = 0.0
 	_offer = {}
 	_root.hide()
 	_catcher.hide()
@@ -249,6 +255,7 @@ func _on_rows_gui_input(event: InputEvent) -> void:
 	if not _shown or not _pending():
 		return
 	if event is InputEventMouseMotion:
+		_track_touch_motion(event as InputEventMouseMotion)
 		var idx := UIChrome.control_index_at(_row_labels, (event as InputEventMouseMotion).position)
 		if idx >= 0 and idx != _cursor:
 			_cursor = idx
@@ -257,13 +264,11 @@ func _on_rows_gui_input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton):
 		return
 	var mb := event as InputEventMouseButton
-	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+	if mb.button_index != MOUSE_BUTTON_LEFT:
 		return
 	_root.accept_event()
-	if not _armed:
-		return
 	var idx := UIChrome.control_index_at(_row_labels, mb.position)
-	if idx >= 0:
+	if _pointer_activation(mb, idx) and idx >= 0:
 		_cursor = idx
 		_refresh_rows()
 		_select(idx)
@@ -272,14 +277,36 @@ func _on_rows_gui_input(event: InputEvent) -> void:
 func _on_catcher_gui_input(event: InputEvent) -> void:
 	if not _shown or not _pending():
 		return
+	if event is InputEventMouseMotion:
+		_track_touch_motion(event as InputEventMouseMotion)
+		return
 	if not (event is InputEventMouseButton):
 		return
 	var mb := event as InputEventMouseButton
-	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+	if mb.button_index != MOUSE_BUTTON_LEFT:
 		return
 	_catcher.accept_event()
-	if _armed:
+	if _pointer_activation(mb, -2):
 		_cancel()
+
+
+func _track_touch_motion(event: InputEventMouseMotion) -> void:
+	if event.device == -1 and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+		_touch_drift += event.relative.length() * WIResponsiveLayout.css_scale(get_viewport())
+
+
+func _pointer_activation(event: InputEventMouseButton, row: int) -> bool:
+	if event.device != -1:
+		return event.pressed and not event.canceled and _armed
+	if event.pressed:
+		_touch_row = row if _armed else -1
+		_touch_drift = 0.0
+		return false
+	# The opening contact and contacts begun before arming cannot buy on release.
+	var valid := _touch_row != -1 and row == _touch_row and _armed and not event.canceled and _touch_drift <= 6.0
+	_touch_row = -1
+	_touch_drift = 0.0
+	return valid
 
 
 ## QA seams: 0 = Cancel, 1 = Buy.

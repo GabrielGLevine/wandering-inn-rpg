@@ -1,0 +1,125 @@
+{
+  "_comment": "#506 narrow real-touch regression: a horizontal drag within the equipped row must not toggle equipment. Fixture proves only gesture handling, not acquisition.",
+  "fixture_save": "gear_loop_start",
+  "starts_at_title": true,
+  "steps": [
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_gate_rendered",
+      "timeout_sec": 5
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        200
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_rendered",
+      "timeout_sec": 5
+    },
+    {
+      "action": "touch_title_row",
+      "row": 2
+    },
+    {
+      "action": "wait_for_event",
+      "type": "world_ready",
+      "timeout_sec": 5
+    },
+    {
+      "action": "set_text_scale_step",
+      "step": 0
+    },
+    {
+      "action": "touch_field_chip",
+      "chip": "inventory"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_inventory_shown",
+      "timeout_sec": 5
+    },
+    {
+      "action": "touch_inventory_row",
+      "row": 1,
+      "gesture": {
+        "drag": true,
+        "delta_css": [
+          30,
+          0
+        ]
+      }
+    },
+    {
+      "action": "wait_frames",
+      "frames": 3
+    },
+    {
+      "action": "assert_state",
+      "path": "equipped.weapon",
+      "equals": "rusty_sword"
+    },
+    {
+      "action": "screenshot",
+      "name": "horizontal_drag_keeps_equipment"
+    },
+    {
+      "action": "touch_inventory_row",
+      "row": 1,
+      "gesture": {
+        "cancel": true,
+        "hold_ms": 100
+      }
+    },
+    {
+      "action": "wait_frames",
+      "frames": 3
+    },
+    {
+      "action": "assert_state",
+      "path": "equipped.weapon",
+      "equals": "rusty_sword"
+    },
+    {
+      "action": "touch_inventory_row",
+      "row": 1,
+      "gesture": {
+        "drag": true,
+        "delta_css": [
+          30,
+          0
+        ],
+        "cancel": true
+      }
+    },
+    {
+      "action": "wait_frames",
+      "frames": 3
+    },
+    {
+      "action": "assert_state",
+      "path": "equipped.weapon",
+      "equals": "rusty_sword"
+    },
+    {
+      "action": "touch_inventory_row",
+      "row": 1
+    },
+    {
+      "action": "wait_frames",
+      "frames": 3
+    },
+    {
+      "action": "assert_state",
+      "path": "equipped.weapon",
+      "equals": ""
+    },
+    {
+      "action": "screenshot",
+      "name": "valid_tap_after_cancellation"
+    }
+  ]
+}
