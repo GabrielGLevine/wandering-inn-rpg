@@ -22,12 +22,13 @@ archived, or superseded session blocks.
   stays open. Fresh-cut production timing now passes all 143 steps on desktop
   and both phone profiles; its Skills-tab capture reads the actual visible tab.
   Exact next action: open/review the scoped guidance and evidence PR.
-- **Independent #504 lane:** worker owns `/private/tmp/wi-504-touch`, branch
-  `issue/504-browser-touch`, integrated through main `87e6c0f7`. Owns browser
-  purchase QA, driver/web helpers, manifest registration, CI routing and mobile
-  evidence notes. Root owns independent review and PR integration. Exact next
-  action: read final desktop/six-case browser evidence and merge the scoped PR;
-  physical iPhone Safari/Android Chrome observations remain with #511.
+- **#504 integration:** PR #547 at `89be7acb` contains six passing browser-touch
+  purchase cases, CI registration, accurate eligibility documentation and dark
+  ink for purchase summaries/rows. Independent review approved; required CI is
+  running. Its reviewed tree is composed into this #508 branch. Regenerated
+  manifest/notes retain both new native Rogue scripts and three browser scripts.
+  Merge #547 after CI, merge its squash into this branch, then finish #508's
+  scoped PR. Physical phone observations remain with #511; both issues stay open.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.

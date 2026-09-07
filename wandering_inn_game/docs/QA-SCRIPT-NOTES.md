@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for all 259 canonical QA scripts. The manifest is the
+This is the human index for 259 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -267,3 +267,14 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `message_lifecycle_loop` | 9 | full | `—` | #509 message lifecycle: save status is a hint-ribbon pill (ui_save_status_rendered on game_saved) off the toast strip; transient flavour line renders + a step dismisses it unrecorded; journal modal pauses/resumes the strip; Reduce Motion changes nothing about delivery. Arrival visibility = line_display_ab (assert_dialogue_displayed now measures occlusion); the 1.2s readable floor is pinned at real timing by test_message_layer |
 | `rogue_discovery_watch_route` | 7 | full | `—` | #508 fresh creation: earn cleaning wages, train, win gate-road ambush, pay Watch without social Skills, return crate, walk home and sleep for Rogue; no fixture, teleport or pre-banked counters. Browser/physical touch remains separate. |
 | `stealth_receipt_timing` | 9 | full | `near_ambush_sneak` | #508 first field-bar touch and bypass receipt with production message timing; fixture wiring proof, not acquisition. Native touch emulates; exported browser --touch proves browser input. |
+
+## Browser-only QA
+
+Run `python3 wandering_inn_game/qa/web/run_browser_suite.py` (add `--skip-export` for an existing build).
+These scripts require browser touch and stay out of the native smoke/full sweep. Profiles are emulated Chromium contexts.
+
+| script | seed | profiles | fixture | purpose |
+|---|---:|---|---|---|
+| `purchase_touch_static` | 9 | iphone, android | `d2_shop` | Browser touch: held opening, pre-arm second Buy, Cancel/outside, exactly-once charm purchase, exact state and broke stock list. |
+| `purchase_touch_fence` | 9 | iphone, android | `ratici_fence_start` | Browser touch: generated fence confirmation, unchanged pre/cancel state, exactly-once item purchase and remaining stock after reopen. |
+| `purchase_touch_service` | 9 | iphone, android | `near_room_upgrade` | Browser touch: paid room upgrade confirmation, unchanged pre/cancel state, exact tier effect and next-tier list after reopen. |

@@ -83,7 +83,7 @@ func _ready() -> void:
 	UIChrome.full_rect(_title_label)
 	ribbon.add_child(_title_label)
 
-	_summary_label = UIChrome.make_label("", "Menu")
+	_summary_label = UIChrome.make_label("", "MenuInk")
 	_summary_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	stack.add_child(_summary_label)
 	_price_label = UIChrome.make_label("")
@@ -92,7 +92,7 @@ func _ready() -> void:
 	stack.add_child(_after_label)
 
 	for i in 2:
-		var row := UIChrome.make_label("", "Menu")
+		var row := UIChrome.make_label("", "MenuInk")
 		row.custom_minimum_size = Vector2(0.0, 30.0)
 		stack.add_child(row)
 		_row_labels.append(row)
