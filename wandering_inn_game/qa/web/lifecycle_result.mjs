@@ -7,3 +7,9 @@ export function stageResultFailures(result, name, expectedSteps) {
  if (result?.steps_total !== expectedSteps || result?.steps_run !== expectedSteps) failures.push('stage did not run every expected step');
  return failures;
 }
+
+export function isKnownRendererDiagnostic(diagnostic) {
+ if (!['warning', 'log'].includes(diagnostic.type)) return false;
+ return /^\[\.WebGL-0x[0-9a-fA-F]+\]GL Driver Message \(OpenGL, Performance, GL_CLOSE_PATH_NV, High\): GPU stall due to ReadPixels(?: \(this message will no longer repeat\))?$/.test(diagnostic.text)
+  || /^(?:WARNING: )?ImageLoaderSVG: Target canvas dimensions 51500[×x]51500 \(with scale 1\.00\) exceed the max supported dimensions 16384[×x]16384\. The target canvas will be scaled down\.$/.test(diagnostic.text);
+}

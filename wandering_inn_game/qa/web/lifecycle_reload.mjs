@@ -1,7 +1,7 @@
 // Real same-origin page reload. Browser profiles emulate devices; no claim of
 // physical backgrounding, process eviction, or interruption-caused corruption.
 import { chromium } from 'playwright';
-import { stageResultFailures } from './lifecycle_result.mjs';
+import { stageResultFailures, isKnownRendererDiagnostic } from './lifecycle_result.mjs';
 import { createServer } from 'node:http';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve, extname, join, sep } from 'node:path';
@@ -115,7 +115,7 @@ try {
  if(final?.bytes!==durable.bytes) throw new Error('Recovery changed the valid manual save');
  if(new Set(stages.map(s=>s.runtime.boot)).size!==3 || stages.some(s=>s.runtime.origin!==origin)) throw new Error('Expected three distinct boots at one origin');
  // Match the existing browser suite's narrow renderer-only warning exception.
- const unexpected=diagnostics.filter(d=>d.type!=='warning' || !/^\[\.WebGL-0x[0-9a-fA-F]+\]GL Driver Message \(OpenGL, Performance, GL_CLOSE_PATH_NV, High\): GPU stall due to ReadPixels(?: \(this message will no longer repeat\))?$/.test(d.text));
+ const unexpected=diagnostics.filter(d=>!isKnownRendererDiagnostic(d));
  if(unexpected.length) throw new Error(`Unexpected diagnostics: ${JSON.stringify(unexpected)}`);
  if(requests.some(r=>r.status!==200)) throw new Error('Failed HTTP request');
 } catch(err) {failure=String(err); console.error(failure);}

@@ -454,6 +454,35 @@ jobs:
       - name: Browser-only purchase confirmation registry (emulated iPhone and Android)
         run: python3 wandering_inn_game/qa/web/run_browser_suite.py --skip-export
 
+      - name: Lifecycle runner negative controls
+        run: node wandering_inn_game/qa/web/lifecycle_result_test.mjs
+
+      - name: Browser reload and unreadable-save recovery (emulated iPhone and Android)
+        run: |
+          set -euo pipefail
+          fail=0
+          for profile in iphone android; do
+            log="web_lifecycle_${profile}.log"; rc=0
+            perl -e 'alarm 600; exec @ARGV' \
+              node wandering_inn_game/qa/web/lifecycle_reload.mjs "$profile" >"$log" 2>&1 || rc=$?
+            cat "$log"
+            grep -q '^LIFECYCLE_RESULT: PASS$' "$log" || fail=1
+            [ "$rc" = 0 ] || fail=1
+            test -s "wandering_inn_game/qa_output/lifecycle_${profile}/result.json" || fail=1
+          done
+          exit "$fail"
+
+      - name: Preserve browser lifecycle evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-lifecycle-recovery
+          path: |
+            wandering_inn_game/qa_output/lifecycle_iphone/
+            wandering_inn_game/qa_output/lifecycle_android/
+            web_lifecycle_*.log
+          if-no-files-found: error
+
       - name: Preserve browser-only evidence
         if: always()
         uses: actions/upload-artifact@v4
