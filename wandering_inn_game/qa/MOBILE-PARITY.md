@@ -103,9 +103,21 @@ The entrypoint preserves separate `qa_output/browser_suite/<profile>/<script>/`
 artifacts: result, runner log, production events, screenshots, and browser
 metadata with trusted contact timestamps, held duration, actual Buy-row target,
 and pre-arm proof. It rejects missing results/proofs, mismatched profiles,
-nonzero exits, and error/warning diagnostics. CI uploads this directory as
-`browser-purchase-confirmation`. Earlier full-asset runs passed all six cases;
-repeat the entrypoint on the composed tree before recording a new build.
+nonzero exits, and unexpected error/warning diagnostics. Exact Chromium
+ReadPixels performance messages and the existing Ubuntu SVG 51500 canvas
+warning remain in artifacts as known renderer diagnostics; other warnings fail.
+CI uploads this directory as `browser-purchase-confirmation`.
+
+On 2026-09-06, the composed tree after `a3b85afd` passed all six full-asset
+cases on Chromium `149.0.7827.55`, exported PCK SHA-256
+`8694efc4e8d1e15e936fa68d3564a91ab68ad264ec383ee71486f586b4d742ed`.
+Static stock ran 117 steps per profile; fence and service ran 109 each.
+Held contacts lasted 534–554 ms; rapid second contacts hit Buy 54–82 ms after
+render, before the 300 ms arm. No browser/game errors occurred; only the exact
+ReadPixels messages above were recorded. Native windowed
+`purchase_confirm_loop` passed 74 steps, and its rendered offer and
+insufficient-funds stock were inspected. `load_gate` and the unaffected
+browser `mobile_touch_smoke` also passed (12 real browser contacts).
 
 **Eligibility invariant:** `WIDialogue` evaluates options against its current
 conversation context snapshot. `WIGame.purchase_confirm()` asks that walker for

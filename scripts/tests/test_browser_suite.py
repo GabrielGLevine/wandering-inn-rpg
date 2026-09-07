@@ -77,6 +77,19 @@ class BrowserRegistryTest(unittest.TestCase):
                 mutate(evidence)
                 self.assertTrue(suite.evaluate_run(self.entry, "iphone", 0, "QA_RESULT: PASS", {"passed": True}, evidence))
 
+    def test_only_known_renderer_warning_is_exempted_and_retained(self):
+        warning = "[.WebGL-0x123abc]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+        for text in [warning, warning + " (this message will no longer repeat)",
+                     "WARNING: ImageLoaderSVG: Target canvas dimensions 51500x51500 scaled down"]:
+            evidence = self.evidence()
+            evidence["warnings"] = [text]
+            self.assertEqual(suite.evaluate_run(self.entry, "iphone", 0, "QA_RESULT: PASS\n[console:warning] " + text, {"passed": True}, evidence), [])
+            self.assertEqual(evidence["warnings"], [text])
+        for text in ["Unknown renderer warning", warning + " unexpected error", "ERROR: ImageLoaderSVG: Target canvas dimensions 51500"]:
+            evidence = self.evidence()
+            evidence["warnings"] = [text]
+            self.assertTrue(suite.evaluate_run(self.entry, "iphone", 0, "QA_RESULT: PASS", {"passed": True}, evidence))
+
     def test_false_green_exit_or_error_output_is_rejected(self):
         for rc, log, result in [(1, "QA_RESULT: PASS", {"passed": True}), (0, "", {"passed": True}),
                                 (0, "QA_RESULT: PASS\nERROR: failed", {"passed": True}),

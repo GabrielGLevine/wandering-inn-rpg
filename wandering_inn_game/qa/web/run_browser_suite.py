@@ -18,6 +18,17 @@ PROOFS = {"hold": "holdProof", "pre_arm": "preArmProof"}
 NOISE = re.compile(r"SCRIPT ERROR|Parse Error|WARNING|ERROR:|\[console:error\]|\[console:warning\]|\[pageerror\]")
 
 
+# Screenshot readback stalls are renderer telemetry; the SVG warning is the
+# existing Ubuntu web-CI exception. Keep both in artifacts, fail other warnings.
+def known_renderer_warning(line: str) -> bool:
+    message = line.removeprefix("[console:warning] ")
+    return bool(re.fullmatch(
+        r"\[\.WebGL-0x[0-9a-fA-F]+\]GL Driver Message \(OpenGL, Performance, GL_CLOSE_PATH_NV, High\): GPU stall due to ReadPixels(?: \(this message will no longer repeat\))?",
+        message,
+    )) or ("ImageLoaderSVG: Target canvas dimensions 51500" in message
+           and not re.search(r"SCRIPT ERROR|Parse Error|ERROR:", message))
+
+
 def cases(manifest: dict) -> list[tuple[dict, str]]:
     if not isinstance(manifest, dict) or set(manifest) - {"_comment", "scripts", "browser_scripts"}:
         raise ValueError("unknown or malformed manifest section")
@@ -53,7 +64,9 @@ def evaluate_run(entry: dict, profile: str, returncode: int, log: str, result: d
     failures = []
     if returncode != 0 or result.get("passed") is not True or "QA_RESULT: PASS" not in log:
         failures.append("runner failed or produced no successful game result")
-    if NOISE.search(log) or evidence.get("errors") or evidence.get("warnings"):
+    unexpected_log = any(NOISE.search(line) and not known_renderer_warning(line) for line in log.splitlines())
+    unexpected_warnings = [line for line in evidence.get("warnings", []) if not known_renderer_warning(line)]
+    if unexpected_log or evidence.get("errors") or unexpected_warnings:
         failures.append("browser/game diagnostics contain an error or warning")
     if evidence.get("emulated") is not True or evidence.get("device") != profile or evidence.get("touchMode") is not True:
         failures.append("missing matching emulated browser-touch context")
