@@ -133,9 +133,9 @@ snapshot invariant must not be described as a general live-context guarantee.
 
 These results are Chromium emulation, not physical iPhone Safari or Android
 Chrome evidence. Both physical-device columns remain **UNTESTED** under #511,
-as do itch embedding and device ergonomics. Existing pale modal lettering has
-low contrast at phone size; captures show the complete summary, price,
-gold-after, Cancel and Buy without clipping.
+as do itch embedding and device ergonomics. Purchase summaries and Buy/Cancel rows use the existing `MenuInk` style so
+their lettering stays dark against parchment. Captures show the complete
+summary, price, gold-after, Cancel and Buy without clipping.
 
 ## Reproductions filed / mapped
 
