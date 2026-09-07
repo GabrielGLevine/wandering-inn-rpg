@@ -9,20 +9,26 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **#506 continuous touch route composed, PR pending:** root owns
-  `/private/tmp/wi-510-lifecycle`, branch `issue/506-creation-back` (contains
-  main `27b844e6`). Creation Back, the browser cancellation harness, two-axis
-  drag rejection, canceled-contact lifecycles and commit-on-release purchase
-  are committed through `dcb68bc5`; `d17bc70d` adds the fresh continuous
-  route `touch_first_session` (title → creation Back/Begin → innate cleaning →
-  Helper sleep → earned Cooking → Relc → touch training fight → Warrior sleep →
-  spear gift → inventory equip → proximity ambush → exploration; 228 steps,
-  271 real contacts, real presentation timing) plus driver route helpers and
-  registry support for fresh routes, cancel proofs and per-case timeouts. The
-  four #506 browser cases are registered on both phone profiles (24 cases).
-  Android journey passes; evidence `/private/tmp/wi-506-evidence/first-session-android`.
-  Next: finish preflight/full-suite gates, open the issue-close PR, review.
-  Physical phones stay #511. Route plan: `/private/tmp/wi-506-plan.md`.
+- **#506 QUIESCED mid-gate (usage stop 2026-09-07):** root owns
+  `/private/tmp/wi-510-lifecycle`, branch `issue/506-creation-back` pushed at
+  `20925d2e` (contains main `27b844e6`); only untracked node_modules/.uid
+  dirty. `b65e46fd` = fresh continuous route `touch_first_session` (228 steps,
+  271 real contacts: creation Back/Begin → cleaning → Helper sleep → earned
+  Cooking → Relc → touch training fight → Warrior sleep → spear → equip →
+  proximity ambush → exploration) + driver route helpers + registry fresh
+  route/cancel proof/timeout_sec; `20925d2e` = review fixes (timing opt-in
+  covers board animation and map transitions; helpers fail closed).
+  Evidence at `b65e46fd`: preflight --full, three headless canonicals and all
+  24 browser cases pass (`/private/tmp/wi-506-evidence/{first-session-android,browser-suite-b65e46fd}`).
+  At `20925d2e`: preflight --full and canonicals pass; the browser suite was
+  in flight when stopped — `purchase_touch_service android` timed out after
+  nine contacts with no game result (passed on the prior tree; unexplained),
+  partial log `/private/tmp/wi-506-evidence/gates-20925d2e/`. No PR yet; body
+  draft `/private/tmp/wi-506-evidence/pr-body-draft.md`; route generator
+  `gen_first_session.py` beside it. Next: from the worktree root rerun
+  `python3 wandering_inn_game/qa/web/run_browser_suite.py --skip-export`
+  (or the single case `wandering_inn_game/qa/web/run_web_qa.sh purchase_touch_service 9 --skip-export --touch --device=android`),
+  then open the issue-close PR from the draft. Physical phones stay #511.
 - **#505 scoped layout repairs merged through PR #550** (`2197088a`): reviewed
   and CI-green; phone combat proves tutorial More, roster pages and live
   shrinking. Evidence `/private/tmp/wi-505-evidence`. #505/#511 stay open for
