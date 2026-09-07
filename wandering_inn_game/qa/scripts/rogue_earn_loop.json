@@ -27,6 +27,10 @@
   { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Rogue] class gained! — [Stealth]" } },
   { "action": "screenshot", "name": "01_rogue_gained_toast" },
 
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Rogue] class gained! — [Stealth]"}, "timeout_sec": 10, "from_start": true},
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Stealth] is on your field bar now: number keys, or tap it, to soften your step. Walking and doorways keep you hidden. Talking, using props, most other Skills, or starting a fight ends it."}, "timeout_sec": 10},
+  {"action": "screenshot", "name": "01b_first_stealth_hint"},
+
   { "_comment": "Slot 3 is [Stealth] after innate [Basic Cleaning] and sword-gated [Basic Swordwork]. Press it -- the toggle ignores the faced target entirely, so facing the bed is harmless.", "action": "press", "name": "hotbar_3" },
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "sneak", "context": "exploration", "target": "" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "sneak_started", "timeout_sec": 5 },
@@ -38,10 +42,8 @@
   { "_comment": "Journal for the windowed [Stealth] card shot (the renamed-Skill-card proof).", "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_shown", "timeout_sec": 5 },
   { "action": "screenshot", "name": "03_journal_stealth_card" },
-  {"_comment": "#508: the first-[Stealth] pointer was queued behind the veil (ui_sleep_veil_finished) and sat behind the class toast while the journal modal paused the strip -- the queue is lossless, so closing the book lets it render. Pins the copy on every device label (kb here).", "action": "press", "name": "journal"},
+  {"action": "press", "name": "journal"},
   {"action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Rogue] class gained! — [Stealth]"}, "timeout_sec": 10},
-  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Stealth] is on your field bar now: number keys, or tap it, to soften your step. Walking and doorways keep you hidden. Talking, using props, most other Skills, or starting a fight ends it."}, "timeout_sec": 10},
 
   {"action": "move", "direction": "left", "steps": 4},
   {"action": "assert_state", "path": "sneaking", "equals": true},

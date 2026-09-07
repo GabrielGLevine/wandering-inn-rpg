@@ -7520,6 +7520,33 @@
      "quests"
     ]
    }
+  },
+  {
+   "script": "stealth_receipt_timing",
+   "seed": 9,
+   "fixture": "near_ambush_sneak",
+   "note": "#508 first field-bar touch and bypass receipt with production message timing; fixture wiring proof, not acquisition. Native touch emulates; exported browser --touch proves browser input.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "near_ambush_sneak"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe",
+     "sneak"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   }
  ]
 }

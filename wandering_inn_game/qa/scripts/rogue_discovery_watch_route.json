@@ -1315,7 +1315,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Krshia",
-    "text": "Good. Sewer grates, south of here. Start there. Careful of teeth. Or the Watch Sergeant south of my stall; he hates sewer work."
+    "text": "Good. Sewer grates, south of here. Start there. Careful of teeth. Or ask the Watch Sergeant farther south. He hates sewer work."
    },
    "timeout_sec": 5
   },
