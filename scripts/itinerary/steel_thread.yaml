@@ -376,3 +376,121 @@
     - id: act2.sleep.tremor
       sleep: {}
       why: Two classes and three quests done -- the tremor pointer fires and something_beneath starts.
+
+# ---------------------------------------------------------------------------
+# Act III -- What Stirs Beneath. Shipped steps 559-772: Zevara's summons, the
+# sewer fissure, the deep tunnels (hearth, scouts, gnaw pile, warren mouth),
+# Relc's veto beat and the boss, the report, and the post-seal sleep.
+- act: iii
+  nodes:
+    - id: act3.pointer.shot
+      shot: {name: 05_act_iii_00_tremor_pointer}
+    - id: act3.journal
+      journal: {capture: 05_act_iii_01_journal_acts}
+      why: Act pacing evidence for the observer -- the journal read the corpus takes on waking.
+    - id: act3.stairs.approach
+      goto: {map: inn_upstairs, cell: [1, 1]}
+    - id: act3.out.inn
+      goto: {map: inn}
+    - id: act3.out.floodplains
+      goto: {map: floodplains}
+    - id: act3.out.street
+      goto: {map: street}
+    - id: act3.zevara.summons
+      talk:
+        npc: zevara
+        at: street
+        open_shot: 06_act_iii_00_zevara_summons
+        choose_path:
+          - You sent a runner for me?
+          - Then I'll go down.
+          - On it.
+      why: heard_the_deep_tremor is the fissure's door gate and something_beneath's first beat.
+    - id: act3.sewers.enter
+      goto: {map: sewers}
+    - id: act3.fissure.approach
+      goto: {map: sewers, cell: [8, 11]}
+    - id: act3.deep.enter
+      goto: {map: deep_tunnels, door_shot: 06_act_iii_01_deep_fissure}
+      why: The fissure is a gated door; its open_toast voices the descent before map_changed.
+    - id: act3.landing.shot
+      shot: {name: 06_act_iii_02_deep_tunnels_landing}
+    - id: act3.hearth.wp1
+      goto: {map: deep_tunnels, cell: [2, 4]}
+    - id: act3.hearth.wp2
+      goto: {map: deep_tunnels, cell: [4, 4]}
+    - id: act3.hearth
+      interact: {prop: cold_hearth, at: deep_tunnels, expect_accomplishment: found_cold_hearth}
+    - id: act3.scouts.approach
+      goto: {map: deep_tunnels, cell: [8, 3]}
+      why: The hearth plugs y4; the corpus comes at the scouts from above.
+    - id: act3.fight.scouts
+      fight:
+        encounter: raskghar_scouts
+        at: deep_tunnels
+        entry: interact
+        turn_wait: false
+        max_turns: 200
+        shots:
+          approach: [06_act_iii_03_scout_field]
+          turn: [06_act_iii_04_raskghar_scouts]
+        expect_banks_after_dismiss: true
+    - id: act3.gnaw.wp1
+      goto: {map: deep_tunnels, cell: [9, 3]}
+    - id: act3.gnaw.wp2
+      goto: {map: deep_tunnels, cell: [9, 5]}
+    - id: act3.gnaw
+      interact: {prop: gnaw_pile, at: deep_tunnels, expect_accomplishment: found_gnaw_pile}
+    - id: act3.warren.wp
+      goto: {map: deep_tunnels, cell: [11, 5]}
+    - id: act3.warren
+      interact: {prop: warren_mouth, at: deep_tunnels, expect_accomplishment: reached_the_warren}
+      why: reached_the_warren is what conjures Relc's cameo for the veto beat.
+    - id: act3.warren.shot
+      shot: {name: 06_act_iii_05_warren_mouth}
+    - id: act3.boss.approach
+      goto: {map: deep_tunnels, cell: [12, 6]}
+    - id: act3.fight.boss
+      fight:
+        encounter: awakened_boss
+        at: deep_tunnels
+        entry: dialogue
+        npc: awakened_boss
+        choose_path: ["[Go together.]"]
+        open_shot: 06_act_iii_06_relc_veto
+        shots: [06_act_iii_07_boss_fight]
+        turn_wait: false
+        max_turns: 200
+        expect_banks_after_dismiss: true
+      why: The veto beat opens on the encounter's own conversation; [Go together.] fields Relc and starts the board.
+    - id: act3.warren.cleared.shot
+      shot: {name: 06_act_iii_08_warren_cleared}
+    - id: act3.back.wp1
+      goto: {map: deep_tunnels, cell: [11, 3]}
+    - id: act3.back.wp2
+      goto: {map: deep_tunnels, cell: [2, 3]}
+    - id: act3.back.sewers
+      goto: {map: sewers}
+    - id: act3.back.street
+      goto: {map: street}
+    - id: act3.zevara.approach
+      goto: {map: street, cell: [2, 5]}
+    - id: act3.zevara.report
+      talk:
+        npc: zevara
+        at: street
+        choose_path:
+          - It's done. The thing under the city won't be climbing up.
+          - Captain.
+        shots:
+          It's done. The thing under the city won't be climbing up.: 06_act_iii_09_report_zevara
+      why: raskghar_sealed closes something_beneath and is Act IV's gate.
+    - id: act3.home.floodplains
+      goto: {map: floodplains}
+    - id: act3.home.inn
+      goto: {map: inn}
+    - id: act3.bed.approach
+      goto: {map: inn_upstairs, cell: [9, 1]}
+    - id: act3.sleep.post_seal
+      sleep: {shot: 06_act_iii_10_post_seal_sleep}
+      why: The first sleep after the seal banks post_game, silently.

@@ -75,6 +75,9 @@ class SleepPlanner:
         if preview.get("reached_two_classes") and int(ledger.state["accomplishments"].get("reached_two_classes", 0)) < 1:
             ledger.accomplishment("reached_two_classes")
         op["tremor_pointer"] = bool(preview.get("tremor_pointer", False))
+        op["post_game"] = bool(preview.get("post_game", False))
+        if op["post_game"]:
+            ledger.accomplishment("post_game")
         if op["tremor_pointer"]:
             ledger.accomplishment("watch_runner_pointed")
             if TREMOR_QUEST not in ledger.state["started_quests"]:
