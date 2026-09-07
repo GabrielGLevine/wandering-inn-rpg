@@ -151,6 +151,7 @@ var _toast_label: Label
 var _dialogue_panel: Control
 var _dialogue_label: Label
 var _dialogue_text_height := 0.0
+var _dialogue_full_text := ""
 var _hint_panel: Control
 var _hint_margin: MarginContainer
 var _hint_label: Label
@@ -455,6 +456,7 @@ func _ready() -> void:
 	# every Control using it, so BOTH derived panels re-fit live instead of
 	# staying frozen at the size they were built with.
 	root.theme_changed.connect(_on_theme_changed)
+	get_viewport().size_changed.connect(_on_theme_changed)
 	ObservableBus.emit_domain_event.call_deferred(WIEvents.UI_HINT_RENDERED, _hint_payload())
 
 	ObservableBus.domain_event.connect(_on_domain_event)
@@ -512,6 +514,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			# pins stay exact either way.
 			var speaker := String(payload["speaker"])
 			var text := "%s: %s" % [speaker, String(payload["text"])] if speaker != "" else String(payload["text"])
+			_resize_dialogue_panel()
 			var fitted := _fit_dialogue_line(text)
 			_show_dialogue_line(text, fitted)
 		WIEvents.COMBAT_STARTED:
@@ -617,6 +620,7 @@ static func canvas_layer_of(node: Node) -> int:
 
 
 func _show_dialogue_line(text: String, fitted: String) -> void:
+	_dialogue_full_text = text
 	await _show(_dialogue_panel, _dialogue_label, text, _dialogue_hold_seconds(fitted), WIEvents.UI_DIALOGUE_RENDERED, fitted, true)
 	# CONTRACT: audio releases standalone-line duck on the renderer's actual close.
 	ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_LINE_HIDDEN, {})
@@ -655,11 +659,33 @@ func _restore_banked_toasts() -> void:
 		_drain_toasts()
 
 
+func _process(_delta: float) -> void:
+	if _toast_panel == null or not WIResponsiveLayout.uses_touch_layout():
+		return
+	var conversation := get_parent().get_node_or_null("DialoguePanel")
+	if conversation != null and conversation.has_method("reserve_notice_height"):
+		conversation.reserve_notice_height(_toast_panel_height + 12.0 if _toast_panel.visible and _conversation_open else 0.0)
+	if _toast_panel.visible and _conversation_open:
+		_apply_toast_position()
+
+
 func _apply_toast_position() -> void:
 	var bottom := TOAST_BOTTOM_RAISED if _conversation_open else TOAST_BOTTOM_DEFAULT
-	var controls := WIResponsiveLayout.touch_size(get_viewport(), Vector2(52.0, 52.0))
-	bottom = minf(bottom, -controls.y - 60.0)
-	UIChrome.set_offsets(_toast_panel, TOAST_LEFT, bottom - _toast_panel_height, TOAST_RIGHT, bottom)
+	if WIResponsiveLayout.uses_touch_layout():
+		var viewport := get_viewport()
+		var safe := WIResponsiveLayout.safe_rect(viewport)
+		var controls := WIResponsiveLayout.touch_size(viewport, Vector2(52.0, 52.0))
+		bottom = minf(bottom, _message_bottom(safe, controls.y))
+		if _conversation_open:
+			var conversation := get_parent().get_node_or_null("DialoguePanel")
+			if conversation != null:
+				var panel: Control = conversation.get("_root")
+				if panel != null and panel.is_visible_in_tree():
+					bottom = minf(bottom, panel.get_global_rect().position.y - viewport.get_visible_rect().size.y - 12.0)
+		var right := safe.end.x - viewport.get_visible_rect().size.x - 24.0
+		UIChrome.set_offsets(_toast_panel, right - _message_width(), bottom - _toast_panel_height, right, bottom)
+	else:
+		UIChrome.set_offsets(_toast_panel, TOAST_LEFT, bottom - _toast_panel_height, TOAST_RIGHT, bottom)
 
 
 func _toast_panel_height_for(lines: int) -> float:
@@ -674,10 +700,11 @@ func _toast_panel_height_for(lines: int) -> float:
 func _resize_toast_panel(text: String) -> void:
 	var base_font := int(WISettings.scaled_type_font_sizes(WISettings.text_scale_step())["Small"])
 	_toast_label.add_theme_font_size_override("font_size", WIResponsiveLayout.readable_font_size(get_viewport(), base_font, WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]))
-	var lines := _wrapped_line_count(_toast_label, text, TOAST_TEXT_WIDTH)
+	var width := _message_width() if WIResponsiveLayout.uses_touch_layout() else TOAST_PANEL_BASE_SIZE.x
+	var lines := _wrapped_line_count(_toast_label, text, width - (TOAST_PANEL_BASE_SIZE.x - TOAST_TEXT_WIDTH))
 	_toast_panel_height = _toast_panel_height_for(lines)
-	_toast_panel.custom_minimum_size = Vector2(TOAST_PANEL_BASE_SIZE.x, _toast_panel_height)
-	_toast_panel.size = Vector2(TOAST_PANEL_BASE_SIZE.x, _toast_panel_height)
+	_toast_panel.custom_minimum_size = Vector2(width, _toast_panel_height)
+	_toast_panel.size = Vector2(width, _toast_panel_height)
 	_apply_toast_position()
 
 
@@ -698,17 +725,46 @@ func _resize_toast_panel(text: String) -> void:
 ## fold). `_dialogue_text_height` itself stays the raw 2-line text-block
 ## height -- `_fit_dialogue_line`'s wrap-capacity math must keep measuring
 ## against exactly 2 lines of TEXT, not the padded panel height.
+func _message_bottom(safe: Rect2, controls_height: float) -> float:
+	var viewport_height := get_viewport().get_visible_rect().size.y
+	var bottom := safe.end.y - viewport_height - controls_height - 60.0
+	var main := get_parent()
+	if main != null and main.has_method("world_view_rect"):
+		var world: Rect2 = main.world_view_rect()
+		if world.size.y > 0.0:
+			bottom = minf(bottom, world.end.y - viewport_height - 12.0)
+	return bottom
+
+
+func _message_width() -> float:
+	return maxf(1.0, WIResponsiveLayout.safe_rect(get_viewport()).size.x - 48.0)
+
+
+func _dialogue_width() -> float:
+	return _message_width() - 44.0 if WIResponsiveLayout.uses_touch_layout() else DIALOGUE_TEXT_WIDTH
+
+
 func _resize_dialogue_panel() -> void:
+	var base_font := int(WISettings.scaled_type_font_sizes(WISettings.text_scale_step())["Label"])
+	_dialogue_label.add_theme_font_size_override("font_size", WIResponsiveLayout.readable_font_size(get_viewport(), base_font, WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]))
 	var font := _dialogue_label.get_theme_font("font")
 	var font_size := _dialogue_label.get_theme_font_size("font_size")
 	var line_spacing := float(_dialogue_label.get_theme_constant("line_spacing"))
 	var pitch := font.get_height(font_size) + line_spacing
 	_dialogue_text_height = DIALOGUE_LINE_CAPACITY * pitch - line_spacing
 	var panel_height := maxf(_dialogue_text_height + 24.0, _dialogue_text_height + 2.0 * TOAST_FOLD_DANGER_PX)
-	_dialogue_panel.custom_minimum_size = Vector2(700.0, panel_height)
-	_dialogue_panel.size = Vector2(700.0, panel_height)
-	const DIALOGUE_BOTTOM := -164.0
-	UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
+	var width := _message_width() if WIResponsiveLayout.uses_touch_layout() else 700.0
+	_dialogue_panel.custom_minimum_size = Vector2(width, panel_height)
+	_dialogue_panel.size = Vector2(width, panel_height)
+	if WIResponsiveLayout.uses_touch_layout():
+		var safe := WIResponsiveLayout.safe_rect(get_viewport())
+		var controls := WIResponsiveLayout.touch_size(get_viewport(), Vector2(52.0, 52.0))
+		var bottom := _message_bottom(safe, controls.y)
+		var left := safe.position.x + 24.0
+		UIChrome.set_offsets(_dialogue_panel, left, bottom - panel_height, left + width, bottom)
+	else:
+		const DIALOGUE_BOTTOM := -164.0
+		UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
 
 
 ## Fits the hint ribbon to ONE line of `_hint_label`'s LIVE font metrics plus
@@ -747,7 +803,10 @@ func _resize_hint_panel() -> void:
 		HINT_PANEL_LEFT + size.x, HINT_PANEL_BOTTOM)
 	if WIResponsiveLayout.uses_touch_layout():
 		_hint_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		UIChrome.set_offsets(_hint_panel, HINT_PANEL_LEFT, 4.0, HINT_PANEL_LEFT + size.x, 4.0 + size.y)
+		var safe := WIResponsiveLayout.safe_rect(get_viewport())
+		var left := safe.position.x + HINT_PANEL_LEFT
+		var top := safe.position.y + 4.0
+		UIChrome.set_offsets(_hint_panel, left, top, left + size.x, top + size.y)
 		hint_band_width = 0.0
 	# Centre the line in the PAPER, not in the panel rect: the rect's bottom
 	# ~40% is rule/fold/shadow/transparency, so panel-centred (the Label
@@ -785,6 +844,10 @@ func _on_theme_changed() -> void:
 		return
 	_resize_dialogue_panel()
 	_resize_hint_panel()
+	if _dialogue_panel.visible:
+		_dialogue_label.text = _fit_dialogue_line(_dialogue_full_text)
+	if _toast_panel.visible:
+		_resize_toast_panel(_toast_label.text)
 	ObservableBus.emit_domain_event(WIEvents.UI_HINT_RENDERED, _hint_payload())
 
 
@@ -1161,19 +1224,19 @@ func _line_capacity(label: Label, height: float) -> int:
 
 
 func _dialogue_hold_seconds(display_text: String) -> float:
-	var lines := _wrapped_line_count(_dialogue_label, display_text, DIALOGUE_TEXT_WIDTH)
+	var lines := _wrapped_line_count(_dialogue_label, display_text, _dialogue_width())
 	var extra_lines := maxi(lines - 1, 0)
 	return DIALOGUE_SECONDS + float(extra_lines) * DIALOGUE_SECONDS_PER_EXTRA_LINE
 
 
 func _fit_dialogue_line(text: String) -> String:
 	var capacity := _line_capacity(_dialogue_label, _dialogue_text_height)
-	if _wrapped_line_count(_dialogue_label, text, DIALOGUE_TEXT_WIDTH) <= capacity:
+	if _wrapped_line_count(_dialogue_label, text, _dialogue_width()) <= capacity:
 		return text
 	var words := text.split(" ")
 	while words.size() > 1:
 		words.remove_at(words.size() - 1)
 		var candidate := " ".join(words) + "…"
-		if _wrapped_line_count(_dialogue_label, candidate, DIALOGUE_TEXT_WIDTH) <= capacity:
+		if _wrapped_line_count(_dialogue_label, candidate, _dialogue_width()) <= capacity:
 			return candidate
 	return (words[0] + "…") if words.size() > 0 else text

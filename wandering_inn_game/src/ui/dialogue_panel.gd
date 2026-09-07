@@ -53,11 +53,26 @@ var _picker_needed_height := 0.0
 ## _render_node / _confirm for the QA-safe paging contract.
 var _pages: Array[String] = []
 var _page_idx := 0
+var _notice_height := 0.0
+
+
+func reserve_notice_height(height: float) -> void:
+	if is_equal_approx(_notice_height, height):
+		return
+	_notice_height = height
+	if _shown:
+		_fit_panel_height()
+
+
+func _height_cap() -> float:
+	if not WIResponsiveLayout.uses_touch_layout():
+		return PICKER_MAX_HEIGHT
+	return minf(PICKER_MAX_HEIGHT, WIResponsiveLayout.safe_rect(get_viewport()).size.y - _notice_height - 36.0)
 
 
 func _panel_size() -> Vector2:
 	if WIResponsiveLayout.uses_touch_layout():
-		return Vector2(get_viewport().get_visible_rect().size.x - 48.0, PANEL_SIZE.y)
+		return Vector2(WIResponsiveLayout.safe_rect(get_viewport()).size.x - 48.0, PANEL_SIZE.y)
 	return PANEL_SIZE
 
 
@@ -287,23 +302,28 @@ func _fit_panel_height() -> void:
 		opts_needed += maxf(text_h, lbl.custom_minimum_size.y) + opt_sep
 	var needed := base + opts_needed
 	_picker_needed_height = needed
-	var opts_h := minf(opts_needed, maxf(80.0, PICKER_MAX_HEIGHT - base))
+	var opts_h := minf(opts_needed, maxf(80.0, _height_cap() - base))
 	_options_scroll.custom_minimum_size = Vector2(_panel_size().x - 56.0, opts_h)
-	var h := minf(maxf(_panel_size().y, base + opts_h), PICKER_MAX_HEIGHT)
+	var h := minf(maxf(_panel_size().y, base + opts_h), _height_cap())
 	_root.custom_minimum_size = Vector2(_panel_size().x, h)
 	_root.size = Vector2(_panel_size().x, h)
-	UIChrome.set_offsets(_root, -_panel_size().x * 0.5, -h - 18.0, _panel_size().x * 0.5, -18.0)
+	var shift := Vector2.ZERO
+	if WIResponsiveLayout.uses_touch_layout():
+		var safe := WIResponsiveLayout.safe_rect(get_viewport())
+		var viewport_size := get_viewport().get_visible_rect().size
+		shift = Vector2(safe.get_center().x - viewport_size.x * 0.5, safe.end.y - viewport_size.y)
+	UIChrome.set_offsets(_root, -_panel_size().x * 0.5 + shift.x, -h - 18.0 + shift.y, _panel_size().x * 0.5 + shift.x, -18.0 + shift.y)
 	if _pending_confirm != null and _shown:
 		# Playtest fix wave (findings 11/13): the page confirm carries the
 		# panel GEOMETRY, emitted only off a fit whose measurement was real
 		# (box laid out). panel_capped=true is the options scroll engaging;
-		# panel_height can never exceed PICKER_MAX_HEIGHT again.
+		# panel_height can never exceed _height_cap() again.
 		var pc: Dictionary = _pending_confirm
 		_pending_confirm = null
 		ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_PAGE_RENDERED,
 			{"page": int(pc["page"]), "pages": int(pc["pages"]),
 			"panel_height": h,
-			"panel_capped": needed > PICKER_MAX_HEIGHT})
+			"panel_capped": needed > _height_cap()})
 	if _picker_active:
 		_emit_picker_rendered.call_deferred()
 

@@ -718,6 +718,8 @@ func _execute(step: Dictionary) -> void:
 			await _wait_for_event(String(step["type"]), float(step.get("timeout_sec", 5.0)), step.get("payload_contains", {}), bool(step.get("from_start", false)))
 		"screenshot":
 			await _screenshot(String(step["name"]))
+		"assert_message_layout":
+			await _assert_message_layout(String(step.get("kind", "dialogue")))
 		"assert_dialogue_layout":
 			await _assert_dialogue_layout()
 		"assert_dialogue_displayed":
@@ -1180,6 +1182,28 @@ func _settle_for_capture() -> void:
 	await get_tree().process_frame
 
 
+func _assert_message_layout(kind: String) -> void:
+	_capture_depth += 1
+	await _settle_for_capture()
+	var layer := get_tree().root.find_child("MessageLayer", true, false)
+	var panel: Control = layer.get("_toast_panel" if kind == "toast" else "_dialogue_panel") if layer != null else null
+	var label: Label = layer.get("_toast_label" if kind == "toast" else "_dialogue_label") if layer != null else null
+	if panel == null or label == null or not panel.is_visible_in_tree() or label.text.is_empty():
+		_fail("assert_message_layout: requested message is not visible")
+	else:
+		var bounds := panel.get_global_rect()
+		if not WIResponsiveLayout.safe_rect(get_viewport()).encloses(bounds):
+			_fail("assert_message_layout: message is outside safe viewport")
+		var font_size := label.get_theme_font_size("font_size")
+		if font_size * WIResponsiveLayout.css_scale(get_viewport()) + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
+			_fail("assert_message_layout: message text is too small")
+		var field := get_tree().root.find_child("FieldHotbar", true, false)
+		if field != null and field.visible and bounds.end.y > field.world_bottom() + 0.01:
+			_fail("assert_message_layout: message overlaps field controls or details")
+		ObservableBus.emit_domain_event("qa_message_layout_measured", {"kind": kind, "font_css": font_size * WIResponsiveLayout.css_scale(get_viewport()), "text_scale": WISettings.text_scale_label()})
+	_capture_depth -= 1
+
+
 func _resize_browser(step: Dictionary) -> void:
 	if not OS.has_feature("web"):
 		_fail("resize_browser: requires real browser viewport resize")
@@ -1206,6 +1230,10 @@ func _assert_dialogue_layout() -> void:
 	var bounds := root.get_global_rect()
 	if not get_viewport().get_visible_rect().encloses(bounds):
 		_fail("assert_dialogue_layout: panel is outside viewport")
+	var messages := get_tree().root.find_child("MessageLayer", true, false)
+	var toast: Control = messages.get("_toast_panel") if messages != null else null
+	if toast != null and toast.is_visible_in_tree() and toast.get_global_rect().intersects(bounds):
+		_fail("assert_dialogue_layout: toast overlaps conversation")
 	var body: Label = panel.get("_text_label")
 	var font := body.get_theme_font("font")
 	var font_size := body.get_theme_font_size("font_size")

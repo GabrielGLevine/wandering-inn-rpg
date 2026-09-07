@@ -46,6 +46,10 @@
    ]
   },
   {
+   "action": "set_text_scale_step",
+   "step": 2
+  },
+  {
    "_comment": "Adjacent-tap interact: tapping the NPC's own cell is the click-to-walk path's interact arm. First interact this waking = the pool line; the second opens the graph.",
    "action": "touch_cell",
    "cell": [
@@ -60,6 +64,18 @@
     "speaker": "Lyonette"
    },
    "timeout_sec": 5
+  },
+  {
+   "action": "assert_message_layout",
+   "kind": "dialogue"
+  },
+  {
+   "action": "screenshot",
+   "name": "npc_line_130"
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 0
   },
   {
    "action": "wait_frames",
@@ -356,5 +372,6 @@
    "type": "qa_touch",
    "count": 12
   }
- ]
+ ],
+ "qa_real_message_timing": true
 }

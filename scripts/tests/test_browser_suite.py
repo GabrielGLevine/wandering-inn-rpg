@@ -22,7 +22,7 @@ class BrowserRegistryTest(unittest.TestCase):
 
     def test_registry_routes_browser_cases_outside_native_tiers(self):
         cases = suite.cases(self.manifest)
-        self.assertEqual(len(cases), 10)
+        self.assertEqual(len(cases), 12)
         native = {row["script"] for row in self.manifest["scripts"]}
         self.assertTrue(all(entry["script"] not in native for entry, _ in cases))
         self.assertEqual({profile for _, profile in cases}, {"iphone", "android"})
