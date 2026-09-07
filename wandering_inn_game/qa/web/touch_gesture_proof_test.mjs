@@ -70,4 +70,21 @@ const repeatedEvents = [...canceledTap.map((e, i) => ({...e, type: i ? 'touchend
  event('touchstart', 40, 200), event('touchend', 50, 200)];
 assert.equal(gestureProof(repeatedTap, repeatedEvents).passed, true);
 assert.equal(gestureProof(repeatedTap, repeatedEvents.slice(0, -1)).passed, false);
+const recordedRequest = {"x": 264.134369, "y": 247.486115, "label": "touch_inventory_row", "gesture": {"cancel": true, "drag": true, "end_x": 294.134368896484, "end_y": 247.486114501953}, "started": 5481.199999988079, "finished": 5996.699999988079};
+const recordedStream = [
+ ["touchstart", 5528.599999964237, 264.1343688964844, 247.48611450195312],
+ ["touchmove", 5576.800000011921, 267.8843688964844, 247.48611450195312],
+ ["touchmove", 5624.399999976158, 271.6343688964844, 247.48611450195312],
+ ["touchmove", 5673.199999988079, 275.3843688964844, 247.48611450195312],
+ ["touchmove", 5743.699999988079, 279.1343688964844, 247.48611450195312],
+ ["touchmove", 5790.599999964237, 282.8843688964844, 247.48611450195312],
+ ["touchmove", 5834.5, 286.6343688964844, 247.48611450195312],
+ ["touchmove", 5881.5, 290.3843688964844, 247.48611450195312],
+ ["touchmove", 5927.5, 294.1343688964844, 247.48611450195312],
+ ["touchcancel", 5974.399999976158, 294.1343688964844, 247.48611450195312],
+].map(([type, time, x, y]) => ({type, time, trusted: true, points: [{x, y}]}));
+assert.equal(cancelProof(recordedRequest, recordedStream).passed, true);
+const overshootStream = recordedStream.map(e => e.type === 'touchmove' && e === recordedStream.at(-2)
+ ? {...e, points: [{x: e.points[0].x + 0.01, y: e.points[0].y}]} : e);
+assert.equal(cancelProof(recordedRequest, overshootStream).passed, false);
 console.log('TOUCH_GESTURE_RESULT: PASS');

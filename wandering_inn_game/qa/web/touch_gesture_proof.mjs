@@ -29,13 +29,14 @@ export function cancelProof(request, allEvents) {
   && Math.abs(event.points[0].x - x) < 1 && Math.abs(event.points[0].y - y) < 1;
  const dx = endX - request.x, dy = endY - request.y;
  const distanceSquared = dx * dx + dy * dy;
+ const progressTolerance = 0.001 / Math.max(1, Math.sqrt(distanceSquared));
  let previousProgress = 0;
  const pathValid = moves.every(event => {
   if (event.type !== 'touchmove' || event.points?.length !== 1) return false;
   const {x, y} = event.points[0];
   if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
   const progress = distanceSquared === 0 ? 0 : ((x - request.x) * dx + (y - request.y) * dy) / distanceSquared;
-  const valid = progress >= previousProgress && progress >= 0 && progress <= 1
+  const valid = progress >= previousProgress - progressTolerance && progress >= -progressTolerance && progress <= 1 + progressTolerance
    && Math.abs(x - (request.x + progress * dx)) < 1
    && Math.abs(y - (request.y + progress * dy)) < 1;
   previousProgress = progress;
