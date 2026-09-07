@@ -1,5 +1,5 @@
 {
- "_comment": "#508 rendered bypass and field-bar touch proof with production message durations, reading floor, and no screenshot hold extension. Fixture isolates feedback wiring; fresh cut/Watch canonicals own acquisition. Native touch is emulated; --touch web runner services the same slot through real browser touch.",
+ "_comment": "#508 rendered bypass and field-bar touch proof with production message durations, reading floor, and no screenshot hold extension. Fixture isolates feedback wiring; fresh cut/Watch canonicals own acquisition. Native uses injected mouse input; --touch web runner services the same slot through real browser touch.",
  "fixture_save": "near_ambush_sneak",
  "starts_at_title": true,
  "qa_real_message_timing": true,

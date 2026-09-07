@@ -7525,7 +7525,7 @@
    "script": "stealth_receipt_timing",
    "seed": 9,
    "fixture": "near_ambush_sneak",
-   "note": "#508 first field-bar touch and bypass receipt with production message timing; fixture wiring proof, not acquisition. Native touch emulates; exported browser --touch proves browser input.",
+   "note": "#508 first field-bar touch and bypass receipt with production message timing; fixture wiring proof, not acquisition. Native uses injected mouse input; exported browser --touch proves browser input.",
    "tiers": [
     "full"
    ],
