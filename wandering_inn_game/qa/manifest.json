@@ -1256,7 +1256,7 @@
    "script": "field_skills_loop",
    "seed": 9,
    "fixture": "near_tactician",
-   "note": "field-skill hotbar loop (Basic Cleaning -> Observe); loadout remap; #115 expanded onboarding -> first-waking auto-collapse, keyboard toggle, settings persistence",
+   "note": "field-skill hotbar loop (Basic Cleaning -> Observe); loadout remap; #557 compact default, explicit keyboard Details toggle, settings persistence",
    "tiers": [
     "full"
    ],
@@ -1281,10 +1281,38 @@
    }
   },
   {
+   "script": "owned_chrome_compact_help",
+   "seed": 9,
+   "fixture": "near_tactician",
+   "note": "#557 owned paper/walnut chrome; compact default; selected description; explicit Details; settings/inventory screenshot and expanded/collapsed preference roundtrip",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "near_tactician"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration",
+     "input",
+     "save",
+     "settings"
+    ]
+   }
+  },
+  {
    "script": "hotbar_tab_loop",
    "seed": 9,
    "fixture": "near_tactician",
-   "note": "Tab-primed field-hotbar select; #115 mouse/touch Details collapse/expand parity; confirm fires the number-key-equivalent stream",
+   "note": "Tab-primed field-hotbar select; #557 mouse Details expand/collapse; selected skill description; confirm fires the number-key-equivalent stream",
    "tiers": [
     "full"
    ],
