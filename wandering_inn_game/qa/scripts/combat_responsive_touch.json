@@ -72,7 +72,10 @@
    "frames": 3
   },
   {
-   "action": "assert_combat_layout"
+   "action": "assert_combat_layout",
+   "contains": {
+    "context_text": "Tap adjacent to move."
+   }
   },
   {
    "action": "screenshot",
@@ -172,7 +175,10 @@
    "frames": 3
   },
   {
-   "action": "assert_combat_layout"
+   "action": "assert_combat_layout",
+   "contains": {
+    "context_text": "Tap adjacent to move."
+   }
   },
   {
    "action": "screenshot",
@@ -272,7 +278,10 @@
    "frames": 3
   },
   {
-   "action": "assert_combat_layout"
+   "action": "assert_combat_layout",
+   "contains": {
+    "context_text": "Tap adjacent to move."
+   }
   },
   {
    "action": "screenshot",

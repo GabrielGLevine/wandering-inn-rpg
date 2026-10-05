@@ -190,7 +190,7 @@ func refresh(view: RefCounted, rendered_slots: Array, selected_index: int, info_
 	elif not bar_active:
 		context = "Tap the board to skip.\n" + _latest_feed
 	else:
-		context += "\nTap a neighboring square to move.\n‹ › inspect fighters."
+		context += "\nTap adjacent to move."
 	_context.text = WICombatMobileLayout.pages(context, font, _font_size, _context.size.x, _context.size.y)[0]
 	_buttons["confirm"].visible = bar_active and confirm_armed
 	_buttons["back"].visible = bar_active and (in_targeting or dash_confirm or not _inspected_id.is_empty())
@@ -236,7 +236,7 @@ static func _statuses(combatant: Dictionary) -> String:
 
 
 func _battle_text(view: RefCounted) -> String:
-	var lines: Array[String] = ["Turn order"]
+	var lines: Array[String] = ["‹ › inspect fighters.", "", "Turn order"]
 	var order: Array[String] = []
 	for id: String in view.order():
 		if view.alive(id):
