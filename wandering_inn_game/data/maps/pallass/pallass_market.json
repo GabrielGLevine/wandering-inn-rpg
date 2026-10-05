@@ -439,7 +439,7 @@
     5
    ],
    "display_name": "Stallkeeper",
-   "sprite": "drake_patron",
+   "sprite": "stallkeeper",
    "facing": "down",
    "conversation": "pallass_market_local",
    "dialogue": [
@@ -605,12 +605,7 @@
     5
    ],
    "display_name": "Xif",
-   "sprite": "gnoll_traveler",
-   "tint": [
-    1.08,
-    0.98,
-    0.78
-   ],
+   "sprite": "xif",
    "facing": "down",
    "conversation": "xif",
    "observe": "A City Gnoll in a stained apron, shaggy fur tan under the stains, eyebrows singed down to stubble. He is arguing cheerfully with himself about the price of something.",

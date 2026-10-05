@@ -407,12 +407,7 @@
     3
    ],
    "display_name": "Recruit Pell",
-   "sprite": "royal_soldier",
-   "tint": [
-    0.6,
-    0.68,
-    0.62
-   ],
+   "sprite": "recruit_pell",
    "facing": "down",
    "present_when": {
     "requires": {

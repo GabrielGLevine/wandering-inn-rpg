@@ -1042,12 +1042,7 @@
     6
    ],
    "display_name": "Cups",
-   "sprite": "citizen_f",
-   "tint": [
-    0.55,
-    0.6,
-    0.6
-   ],
+   "sprite": "cups",
    "facing": "right",
    "observe": "A tea-tray harness worn shiny at the left shoulder — she pours right-handed and listens left-eared. The cups are chipped. The ears are not.",
    "friendly_line": "She pours you a cup without being asked. \"On the house,\" she says, \"which is the only kind of trade I ever regret.\"",
@@ -1068,7 +1063,7 @@
    ],
    "trigger_radius": 2,
    "display_name": "Footpads in the Turn",
-   "sprite": "human_laborer",
+   "sprite": "footpad",
    "arena": "mercantile_alley",
    "enemies": [
     "footpad_lookout",
@@ -1097,7 +1092,7 @@
    ],
    "trigger_radius": 2,
    "display_name": "Footpads by the Cheese-Propped Door",
-   "sprite": "human_laborer",
+   "sprite": "footpad_bruiser",
    "arena": "mercantile_alley",
    "enemies": [
     "footpad_lookout",
@@ -1481,6 +1476,27 @@
    ],
    "on_open_accomplishment": "claimed_counting_room_goods",
    "open_toast": "The seal parts on a bale of dyed silk, brass findings and sealed spice packets, every tie under the same counting-house stamp."
+  },
+  {
+   "id": "alleys_to_cross_street",
+   "kind": "prop",
+   "cell": [
+    19,
+    11
+   ],
+   "display_name": "Rear Service Gate",
+   "sprite": "door",
+   "locked_toast": "The rear gate is barred. The Brothers have not opened this passage to you.",
+   "door_when": {
+    "requires": {
+     "brothers_job_done": 1
+    },
+    "to_map": "invrisil_cross_street",
+    "to_cell": [
+     20,
+     10
+    ]
+   }
   }
  ]
 }

@@ -203,12 +203,7 @@
     2
    ],
    "display_name": "Den-Shop Keeper",
-   "sprite": "drake_patron",
-   "tint": [
-    0.78,
-    0.56,
-    0.42
-   ],
+   "sprite": "den_shop_keeper",
    "facing": "down",
    "observe": "A broad Drake behind a counter worn pale in two places, one where the coins land and one where her elbow goes. Both are hers.",
    "friendly_line": "She pushes a bowl of salted something across the counter at you without being asked, and takes the coin for it without apologising.",

@@ -34,6 +34,7 @@
    "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
   ]
  },
+ "cover_skip": [[10,1],[11,1],[12,1],[14,1],[15,1]],
  "blocked": [
   [
    2,
@@ -566,27 +567,9 @@
     1
    ]
   },
-  {
-   "sprite": "library_desk",
-   "cell": [
-    10,
-    1
-   ]
-  },
-  {
-   "sprite": "library_desk",
-   "cell": [
-    11,
-    1
-   ]
-  },
-  {
-   "sprite": "library_shelf",
-   "cell": [
-    12,
-    1
-   ]
-  },
+
+
+
   {
    "_comment": "#408 prop variety: was `barrel`. Second basket stack mid-row: repetition is diegetic in a market, a third barrel was not. Cell stays in `blocked`.",
    "sprite": "basket_stack",
@@ -595,27 +578,9 @@
     1
    ]
   },
-  {
-   "sprite": "library_desk",
-   "cell": [
-    14,
-    1
-   ]
-  },
-  {
-   "sprite": "library_desk",
-   "cell": [
-    15,
-    1
-   ]
-  },
-  {
-   "sprite": "library_shelf",
-   "cell": [
-    16,
-    1
-   ]
-  },
+
+
+
   {
    "_comment": "#408 prop variety: was `crate`. Split firewood at the row's far end. Cell stays in `blocked` (firewood_stack is solid).",
    "sprite": "firewood_stack",
@@ -631,27 +596,9 @@
     1
    ]
   },
-  {
-   "sprite": "food_basket",
-   "cell": [
-    10,
-    1
-   ]
-  },
-  {
-   "sprite": "food_bread",
-   "cell": [
-    14,
-    1
-   ]
-  },
-  {
-   "sprite": "food_ham",
-   "cell": [
-    15,
-    1
-   ]
-  },
+
+
+
   {
    "sprite": "food_basket",
    "cell": [
@@ -1063,6 +1010,13 @@
     1.14,
     0.9
    ]
+  },
+  {
+   "sprite": "grain_sacks",
+   "cell": [
+    16,
+    1
+   ]
   }
  ],
  "scatter": [
@@ -1110,7 +1064,7 @@
    ],
    "display_name": "Watch Guard",
    "person": true,
-   "sprite": "royal_soldier",
+   "sprite": "liscor_watch_guard",
    "observe": "Watch armor, kept. He stands the post properly: weight even, eyes on the gap in the wall. Twice while you stand there, he checks the same empty stretch of road.",
    "friendly_line": "The guard's eyes leave the road for a moment and settle on you. Hah. You'll do. Go on through, and I'll know your face next time.",
    "facing": "up",
@@ -1353,7 +1307,7 @@
     2
    ],
    "display_name": "Bread Stall",
-   "sprite": "market_stall_wood",
+   "sprite": "liscor_bread_stall",
    "tint": [
     0.9,
     0.75,
@@ -1372,7 +1326,7 @@
    ],
    "display_name": "A Road-Peddler",
    "person": true,
-   "sprite": "human_laborer",
+   "sprite": "road_peddler",
    "observe": "A road-peddler behind a folding stall, half his stock still roped for travel. Everything he sells says somewhere else.",
    "facing": "down",
    "conversation": "peddler_stall",
@@ -1381,11 +1335,6 @@
      "speaker": "Peddler",
      "text": "Watch gear, mostly honest."
     }
-   ],
-   "tint": [
-    0.85,
-    0.78,
-    0.62
    ],
    "_comment": "Finding 13: he wore `hired_blade`, a COMBATANT rig, forbidden on a friendly. Shares `human_laborer` with the drayman (anonymous extras may); dusty tint keeps the two distinct."
   },
@@ -1397,7 +1346,7 @@
     2
    ],
    "display_name": "Krshia's Stall",
-   "sprite": "market_stall_silverfang",
+   "sprite": "silverfang_stall_cutout",
    "observe": "A card propped against the near stack warns that the seller remembers faces. Silverfang goods: cheap tin and cord at the front edge. Bolts of plains wool set back behind them.",
    "variants": [
     {
@@ -1867,7 +1816,7 @@
    "facing": "left",
    "display_name": "A Frazzled Drayman",
    "person": true,
-   "sprite": "human_laborer",
+   "sprite": "frazzled_drayman",
    "conversation": "drayman_dispute",
    "observe": "A dray cart, a missing axle-pin, and a man about one shout from tipping the whole day over."
   },
@@ -1881,12 +1830,7 @@
    ],
    "display_name": "Watch Sergeant",
    "person": true,
-   "sprite": "royal_soldier",
-   "tint": [
-    0.62,
-    0.55,
-    0.72
-   ],
+   "sprite": "watch_sergeant",
    "observe": "Stripes on the sleeve, ink on the fingers. He would send the crate problem down the chain if the chain had not already sent it back up to him.",
    "facing": "down",
    "conversation": "watch_crate",

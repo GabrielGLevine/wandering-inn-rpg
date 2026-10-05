@@ -10,23 +10,29 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Approved holistic art program #564:** root owns the main workspace on
-  `issue/564-holistic-art-direction`, based on current main `e1d2edee` plus
-  the reviewed direction `6cd8264b`. User approved execution on 2026-10-05;
-  no renewed taste gate is needed for its described regional/layout/UI choices.
-  Root owns scene/art catalogs and program guidance. The UI/chrome worker
-  owns `/private/tmp/wi-art-ui` on `issue/557-owned-chrome`. A disjoint
-  `/private/tmp/wi-art-foundation` worker owns registry/lint/test foundation
-  only on `issue/554-owned-sprite-fallback`. Its independently approved fix
-  is integrated through `fba36333`; implementation lane is idle. Root pilot
-  dirty paths: inn map/catalog/provenance, seven inn sprites, floor atlas,
-  ground-tone shader/builder/test and execution plan. UI integration pending.
-  Baseline gallery: `potential_assets/art_direction_review_2026-10-05/index.html`
-  (ignored, private overlay captures). The 147 review captures remain baseline
-  framing/native route evidence, not proof of the coming implementation.
-  Exact next action: implement inn/ground/compact chrome first, validate and
-  independently review it, then execute the approved regional slices and
-  curated roster/icon/key-art coverage. Preserve the merged M1 touch repairs.
-  Physical-device acceptance remains separate from implementation progress.
+  `issue/564-holistic-art-direction`, main base `e1d2edee` plus approved direction
+  `6cd8264b`. User authorized the full regional/layout/UI program on 2026-10-05.
+  Reviewed fallback engine is integrated through `fba36333`; crate public/overlay
+  route and ground binding mutation evidence: `/private/tmp/wi-art-execution`.
+  Owned compact UI is integrated through `363c7ab7`; roster asset-only commit
+  `f13b767b` has 37 rigs/267 sheets/1392 lossless frames, now bound in dirty
+  catalogs/maps with measured combat scales. Roster lane is idle. Active icon/
+  title/journal-art worker: `/private/tmp/wi-art-icons`, `issue/564-icons-key-art`,
+  exclusive icon/item/skill/title/journal UI paths; root owns shared sprites,
+  manifests, provenance and generated indexes. Root dirty paths include regional
+  maps/catalogs/provenance, new cross-street, Liscor/Invrisil props, world renderer
+  confirmation/events, registry counts, QA routes and execution plan.
+  New cross-street real door routes and both gated rear endpoints pass; gate
+  requires existing `brothers_job_done`, so initial alley traversal stays intact.
+  Inn clean-table real hotbar trigger -> counter -> exact renderer confirmation
+  passes 197 steps windowed. Native UI/chore and prior public/overlay evidence
+  remain scoped to their producing checkpoints, not final program closure.
+  Baseline gallery: `potential_assets/art_direction_review_2026-10-05/index.html`.
+  **Exact next action:** finish Pallass vista/camera framing, Riverfarm/Garden/
+  camp/ruin/underground composition and terrain/fallback curation; integrate icon
+  lane, regenerate indexes, then composed full gates, phone web routes and
+  independent review/CI. Preserve M1 repairs and untracked companion UID. No
+  physical-device or production-animation acceptance inferred from scripted QA.
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
   (standalone tree `5e8af12d`); QA/export source `93016f0b`.

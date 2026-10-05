@@ -588,12 +588,7 @@
     6
    ],
    "display_name": "Forge-Tier Smith",
-   "sprite": "drake_patron",
-   "tint": [
-    0.62,
-    0.44,
-    0.38
-   ],
+   "sprite": "forge_tier_smith",
    "facing": "left",
    "observe": "A Drake in a leather apron scarred through in three places, both forearms banded with old burn-marks — her eyes on the billet's colour, her free hand finding the tongs without looking.",
    "friendly_line": "She sets the hammer down long enough to look at you properly. The billet on the anvil goes a shade darker while she does.",

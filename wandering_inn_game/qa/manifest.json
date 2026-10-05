@@ -5370,6 +5370,7 @@
    "surfaces": {
     "maps": [
      "invrisil_boulevard",
+     "invrisil_cross_street",
      "stationer"
     ],
     "fixtures": [
@@ -5397,7 +5398,9 @@
    "surfaces": {
     "maps": [
      "adventurers_rest",
-     "invrisil_boulevard"
+     "invrisil_boulevard",
+     "invrisil_cross_street",
+     "mercantile_alleys"
     ],
     "fixtures": [
      "invrisil_rest_start"
@@ -7613,7 +7616,7 @@
    "surfaces": {
     "maps": [
      "adventurers_rest",
-     "invrisil_boulevard"
+     "invrisil_cross_street"
     ],
     "fixtures": [
      "invrisil_hat_quiet_start"
@@ -7663,7 +7666,7 @@
    "fixture": "line_display_ab_start",
    "surfaces": {
     "maps": [
-     "invrisil_boulevard",
+     "invrisil_cross_street",
      "stationer"
     ],
     "fixtures": [

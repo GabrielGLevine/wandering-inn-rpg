@@ -195,12 +195,7 @@
    ],
    "display_name": "Sergeant Ashgrave",
    "person": true,
-   "sprite": "royal_soldier",
-   "tint": [
-    0.55,
-    0.35,
-    0.3
-   ],
+   "sprite": "dresk_ashgrave",
    "observe": "A belt-slate at his hip, chalk stub worn to a nub, already a line into today's tally. Rust-brown scales, no plate for a desk posting — he'd rather be finishing the count than talking to you.",
    "facing": "down",
    "talk_pool": [
@@ -247,7 +242,7 @@
     5
    ],
    "display_name": "Zevara's Desk",
-   "sprite": "library_desk",
+   "sprite": "watch_report_desk",
    "observe": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it.",
    "on_interact_accomplishment": "saw_zevaras_desk",
    "toast": "Watch Captain's desk. Empty, same as every other time you've walked past it."

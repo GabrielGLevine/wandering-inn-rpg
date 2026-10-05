@@ -195,10 +195,10 @@
    ],
    "display_name": "Out to the Boulevard",
    "sprite": "door",
-   "to_map": "invrisil_boulevard",
+   "to_map": "invrisil_cross_street",
    "to_cell": [
-    20,
-    2
+    6,
+    3
    ]
   },
   {

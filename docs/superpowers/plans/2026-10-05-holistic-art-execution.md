@@ -1,5 +1,7 @@
 # Approved holistic art execution
 
+> Status: **ACTIVE**
+
 User authorization: 2026-10-05, “Execute on your recommendation.”
 Direction: `docs/design/2026-10-05-holistic-art-review.md`. Program: #564.
 Base: current main `e1d2edee`, preserving merged M1 software. The older review

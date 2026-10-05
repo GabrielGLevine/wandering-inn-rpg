@@ -601,6 +601,23 @@
  ],
  "floor_layers": [
   {
+   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+   "tile_px": 16,
+   "coords": [
+    0,
+    0
+   ],
+   "tone": {
+    "base": [
+     0.36,
+     0.35,
+     0.38
+    ],
+    "detail": 0.2
+   },
+   "cells": "all"
+  },
+  {
    "_pick": "The marble plaza patch around the fountain -- OWNED wang tileset, pure-marble tile. CONTROLLER FIX 2026-07-08: [3,3] (row-major by wang id, id15 = pure marble), not the handoff doc's wrong [0,3] (a transition tile -- the doc's id->position table was corrected on main).",
    "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
    "tile_px": 16,
@@ -1090,7 +1107,7 @@
     3
    ],
    "display_name": "The Rooftop Line",
-   "sprite": "riverfarm_fence_ew",
+   "sprite": "invrisil_roofline",
    "requires_skill": "eagle_eyes",
    "skill_hint_toast": "The rooftops run straighter than the streets. Sharp enough eyes could follow one from here.",
    "locked_toast": "Slate roofs and chimney smoke, one ridge behind another. Picking a line through it takes sharper eyes than yours.",
@@ -1117,22 +1134,17 @@
     7
    ]
   },
+
   {
-   "_comment": "v0.16 I2 (#306): promotes the shipped [18,1] DECOR door sprite into a real door (its decor row is deleted in the same edit, so nothing double-draws). Row 1 is blocked x0-27, so no walkable cell gains a blocker. Cell chosen over [4,1]; rationale in CHOICE-LOG.",
-   "id": "boulevard_to_adventurers_rest",
-   "kind": "door",
+   "id": "boulevard_rest_wayfinding",
+   "kind": "prop",
    "cell": [
     18,
     1
    ],
-   "display_name": "The Adventurer's Rest",
-   "sprite": "door",
-   "observe": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Two men come out and let the door swing shut behind them.",
-   "to_map": "adventurers_rest",
-   "to_cell": [
-    6,
-    7
-   ]
+   "display_name": "Adventurer’s Rest Sign",
+   "sprite": "invrisil_hanging_sign",
+   "observe": "A cup on a hanging board points toward the cross-street."
   },
   {
    "id": "master_coyle",
@@ -1201,7 +1213,7 @@
     6
    ],
    "display_name": "A Rose-Cloaked Shopper",
-   "sprite": "citizen_f",
+   "sprite": "townswoman",
    "tint": [
     0.72,
     0.5,
@@ -1229,7 +1241,7 @@
     11
    ],
    "display_name": "A Woman in City Wool",
-   "sprite": "citizen_f",
+   "sprite": "townswoman",
    "tint": [
     0.5,
     0.55,
@@ -1539,7 +1551,8 @@
    "observe": "The glazier sets a pane on edge in the rack and puts his eye to the top edge, sighting down the street through the glass.",
    "hide_sprite": true,
    "invisible": true,
-   "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)"
+   "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)",
+   "sprite": "invrisil_glazier_front"
   },
   {
    "id": "boulevard_cordwainer",
@@ -1565,7 +1578,8 @@
    "observe": "Three tables behind glass gone opaque with steam. On the slate by the door, smoke-leaf is chalked at a price by the ounce, no grade beside it.",
    "hide_sprite": true,
    "invisible": true,
-   "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)"
+   "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)",
+   "sprite": "invrisil_tea_front"
   },
   {
    "_comment": "v0.16.1 #17: the sign the game TALKS about now exists. coyle_operation_lookout's toast and Wilovan both name COYLE AND SONS; a repo-wide grep found those two prose hits and nothing else. The nearest art was an anonymous `coin_shop_sign` DECOR row at [22,1] with no id, name or observe -- deleted and re-expressed here on the blocked facade row (the boulevard_stationer pattern; no walkable cell lost). INTERIM ART by directive: existing sprite, burgundy-and-brass tint (Coyle's livery). Bespoke art rides the art PR. No on_interact_accomplishment -- it would mint a shipped id for a read the vantage prop already banks.",
@@ -1584,21 +1598,22 @@
    ],
    "observe": "Every open door on this building is round the side, facing the alley. The frontage keeps one narrow door and one clean window. The board over them is burgundy and brass, lettered COYLE AND SONS."
   },
+
   {
-   "_comment": "v0.16 I1 (#306): kind flips prop -> door in place on the SAME already-blocked cell (20,1). hide_sprite dropped so the facade reads enterable.",
-   "id": "boulevard_stationer",
+   "id": "boulevard_to_cross_street",
    "kind": "door",
    "cell": [
     20,
     1
    ],
-   "display_name": "A Stationer's Window",
+   "display_name": "Commercial Cross-street",
    "sprite": "door",
-   "to_map": "stationer",
+   "to_map": "invrisil_cross_street",
    "to_cell": [
-    6,
+    1,
     7
-   ]
+   ],
+   "observe": "The shop row breaks here into a narrower commercial street."
   },
   {
    "_comment": "#423/#444: Hedault's shop gets a real frontage on the main square. Row 1 is blocked x0-27, so promoting this facade cell to a door costs no walkable cell (the boulevard_stationer / boulevard_to_adventurers_rest pattern). Cell (25,1) leaves a full facade cell beyond COYLE AND SONS at (23,1); the approach cell (25,2) is open plaza and stays clear of the alleys door at (27,2).",
@@ -1609,7 +1624,7 @@
     1
    ],
    "display_name": "An Enchanter's Frontage",
-   "sprite": "door",
+   "sprite": "invrisil_shop_door",
    "observe": "One narrow window with one piece in it and a great deal of room around the piece. The card in the corner gives an appraisal fee and an hour, with no adjectives anywhere on it.",
    "to_map": "enchanter_shop",
    "to_cell": [
@@ -1637,8 +1652,7 @@
    "toast": "Pink lacquer and a black wheel-rim, past the end of the colonnade before your head comes round; the calling starts again a beat later, one shopfront at a time down the row.",
    "invisible": true,
    "_comment_invisible": "facade prop: art lives in the north wall sheet (r3 2026-08-08)"
-  }
- ],
+  }],
  "cover_skip": [
   [
    0,

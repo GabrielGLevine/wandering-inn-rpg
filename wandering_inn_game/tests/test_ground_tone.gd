@@ -2,6 +2,7 @@ extends SceneTree
 
 
 func _init() -> void:
+	WITestWatchdog.arm(self)
 	var root := Node2D.new()
 	var config := {
 		"sheet": "res://assets/tiles/harvest/inn_floor.png", "tile_px": 16,

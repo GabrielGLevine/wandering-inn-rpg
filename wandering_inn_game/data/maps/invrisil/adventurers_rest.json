@@ -220,10 +220,10 @@
    ],
    "display_name": "Out to the Boulevard",
    "sprite": "door",
-   "to_map": "invrisil_boulevard",
+   "to_map": "invrisil_cross_street",
    "to_cell": [
-    18,
-    2
+    14,
+    3
    ]
   },
   {
@@ -235,12 +235,7 @@
     1
    ],
    "display_name": "The House Factor",
-   "sprite": "city_scribe",
-   "tint": [
-    0.7,
-    0.68,
-    0.8
-   ],
+   "sprite": "house_factor",
    "facing": "down",
    "observe": "He keeps the ledger of who is owed a table rather than who is owed money, which in this house is the more delicate book. He has not written anything down since you came in.",
    "talk_pool": [
@@ -436,7 +431,7 @@
     2
    ],
    "display_name": "A Woman Who Came in a Carriage",
-   "sprite": "invrisil_lady_client",
+   "sprite": "invrisil_gentlewoman_2",
    "facing": "left",
    "present_when": {
     "requires": {

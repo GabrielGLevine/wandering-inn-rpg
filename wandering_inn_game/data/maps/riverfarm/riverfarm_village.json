@@ -1325,7 +1325,7 @@
    ],
    "facing": "down",
    "display_name": "Former Headman",
-   "sprite": "human_laborer",
+   "sprite": "former_headman",
    "talk_pool": [
     "@riverfarm_headman_shared"
    ],
@@ -1388,7 +1388,7 @@
    ],
    "facing": "down",
    "display_name": "A Villager",
-   "sprite": "citizen_f",
+   "sprite": "townswoman",
    "talk_pool": [
     {
      "echo_of": "riverfarm_witch"

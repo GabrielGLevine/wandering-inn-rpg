@@ -1352,8 +1352,20 @@ func _build_entities() -> Array[Node2D]:
 		)
 		visual.visible = not bool(render["hidden"])
 		_entity_visuals[String(ent["id"])] = visual
+		_emit_entity_visual_rendered(String(ent["id"]), render)
 		visuals.append(visual)
 	return visuals
+
+
+func _emit_entity_visual_rendered(id: String, render: Dictionary) -> void:
+	var sprite_id := String(render["sprite"])
+	ObservableBus.emit_domain_event(WIEvents.UI_ENTITY_VISUAL_RENDERED, {
+		"map": Game.sim.current_map,
+		"entity": id,
+		"sprite": sprite_id,
+		"resolved_sprite": WISpriteRegistry.resolved_id(sprite_id),
+		"hidden": bool(render["hidden"]),
+	})
 
 
 ## Resolves a `prop`/`npc` entity's CURRENT
@@ -1425,6 +1437,7 @@ func _refresh_entity_visual(id: String) -> void:
 	var new_visual := _make_entity_visual(cell, String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"], false, ent.get("field_y_sort_bias_px", null))
 	new_visual.visible = not bool(render["hidden"])
 	_entity_visuals[id] = new_visual
+	_emit_entity_visual_rendered(id, render)
 	assert(_light_count <= LIGHT_BUDGET,
 		"map %s exceeds the %d-light budget (%d) after a visual_states refresh -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])
 
@@ -1529,6 +1542,7 @@ func _reconcile_entity_presence() -> void:
 			var visual := _make_entity_visual(ent["cell"], String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"], false, ent.get("field_y_sort_bias_px", null))
 			visual.visible = not bool(render["hidden"])
 			_entity_visuals[id] = visual
+			_emit_entity_visual_rendered(id, render)
 		else:
 			var old_visual := _entity_visuals[id] as Node2D
 			for child: Node in old_visual.get_children():

@@ -2031,7 +2031,7 @@
     12
    ],
    "display_name": "Shapes in the Dark",
-   "sprite": "mothbear",
+   "sprite": "mothbear_harvest",
    "arena": "boulder_flats",
    "enemies": [
     "mothbear_a",

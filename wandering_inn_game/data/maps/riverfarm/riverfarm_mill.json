@@ -217,7 +217,7 @@
    ],
    "facing": "down",
    "display_name": "The Tallyman",
-   "sprite": "human_laborer",
+   "sprite": "tallyman",
    "observe": "A thin man with a hazel stick in each hand, laying them side by side against the light.",
    "talk_pool": [
     "Barley in, barley out. Anyone who says a mill is complicated has never run one.",
