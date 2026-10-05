@@ -600,6 +600,14 @@ func _execute(step: Dictionary) -> void:
 					_fail("scroll_reference: Back moved with the content")
 		"assert_reference_layout":
 			await _assert_reference_layout()
+		"touch_combat_banner":
+			await _settle_for_capture()
+			var screen := get_tree().root.find_child("CombatScreen", true, false)
+			var banner: Control = screen.get("_hud").get("_banner_panel") if screen != null else null
+			if banner == null or not banner.is_visible_in_tree():
+				_fail("touch_combat_banner: no visible result ribbon")
+			else:
+				await _touch_at(banner.get_global_rect().get_center(), "combat_banner")
 		"assert_combat_banner":
 			await _settle_for_capture()
 			var combat_screen := get_tree().root.find_child("CombatScreen", true, false)

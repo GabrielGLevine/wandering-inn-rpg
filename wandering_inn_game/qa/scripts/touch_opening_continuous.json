@@ -501,7 +501,7 @@
         1,
         0
       ],
-      "steps": 10
+      "steps": 9
     },
     {
       "action": "touch_cell",
@@ -615,11 +615,7 @@
       "name": "08_training_victory"
     },
     {
-      "action": "touch_cell",
-      "cell": [
-        2,
-        3
-      ]
+      "action": "touch_combat_banner"
     },
     {
       "action": "wait_for_event",
@@ -1062,11 +1058,7 @@
       "name": "12_ambush_results"
     },
     {
-      "action": "touch_cell",
-      "cell": [
-        2,
-        3
-      ]
+      "action": "touch_combat_banner"
     },
     {
       "action": "wait_for_event",
