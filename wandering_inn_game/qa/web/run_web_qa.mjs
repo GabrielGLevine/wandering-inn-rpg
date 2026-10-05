@@ -32,6 +32,7 @@
 // despite the request demonstrably reaching the server (confirmed via the
 // server's own access log) and succeeding. The server's own log is the only
 // reliable place to see them, so that's what the audio smoke below reads.
+import { browserResultFailures, isKnownRendererDiagnostic } from "./lifecycle_result.mjs";
 import { readFile } from "node:fs/promises";
 import { join, dirname, extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -40,6 +41,7 @@ import { mkdir, rm, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { chromium } from "playwright";
 import { gestureProof } from "./touch_gesture_proof.mjs";
+import { dispatchDrag } from "./touch_dispatch.mjs";
 
 const args = process.argv.slice(2);
 const touchMode = args.includes("--touch");
@@ -85,7 +87,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 const projRoot = resolve(here, "../..");
 const webRoot = join(projRoot, "build/web");
 const outDir = join(projRoot, "qa_output", `web_${scriptName}`);
-const TIMEOUT_MS = 120_000;
+const scriptDefinition = JSON.parse(await readFile(join(projRoot, "qa/scripts", `${scriptName}.json`), "utf8"));
+const timeoutSeconds = scriptDefinition.qa_timeout_sec ?? 120;
+if (!Number.isInteger(timeoutSeconds) || timeoutSeconds < 1 || timeoutSeconds > 600) throw new Error("qa_timeout_sec must be 1..600");
+const TIMEOUT_MS = timeoutSeconds * 1000;
 
 const MIME = {
 	".html": "text/html",
@@ -148,10 +153,7 @@ const port = server.address().port;
 const BASE_URL = `http://127.0.0.1:${port}/`;
 
 const browser = await chromium.launch({ args: ["--single-process"] });
-// deviceScaleFactor pinned to 1: without it, headless Chromium on some CI
-// runners reports an absurd devicePixelRatio, and Godot's ImageLoaderSVG then
-// rasterizes engine-theme SVGs at gigantic canvases (the runner-only
-// "51500x51500" WARNING caught by the public repo's first CI run).
+// Phone contexts exercise high-density canvas backing independently of CSS targets.
 // hasTouch (--touch mode, issue #105, the #106 prerequisite): configures the
 // Chromium context so page.touchscreen.tap(...) dispatches real touch events
 // the browser accepts -- without it Playwright refuses touchscreen calls
@@ -176,7 +178,7 @@ const landscapeViewport = { ...device.viewport };
 const startViewport = portraitEntry ? { width: device.viewport.height, height: device.viewport.width } : landscapeViewport;
 const page = await browser.newPage({
 	viewport: startViewport,
-	deviceScaleFactor: 1,
+	deviceScaleFactor: deviceName === "desktop" ? 1 : 2,
 	hasTouch: touchMode || device.isMobile,
 	isMobile: device.isMobile,
 	...(device.userAgent ? { userAgent: device.userAgent } : {}),
@@ -188,10 +190,14 @@ console.log(`MODE: ${device.label}${touchMode ? " + real Playwright touch servic
 // prefixed lines are the existing script-progress log; every console ERROR
 // and every uncaught page error is now ALSO surfaced, not swallowed --
 // among them the exact worklet-failure text the audio smoke below checks.
+const capturedDiagnostics = [];
 const capturedErrors = [];
 const capturedWarnings = [];
 page.on("console", (msg) => {
 	const text = msg.text();
+	const diagnostic = {type: msg.type(), text};
+	capturedDiagnostics.push(diagnostic);
+	if (isKnownRendererDiagnostic(diagnostic)) { capturedWarnings.push(text); return; }
 	if (text.startsWith("QA_")) {
 		console.log(`[game] ${text}`);
 		return;
@@ -206,6 +212,7 @@ page.on("console", (msg) => {
 });
 page.on("pageerror", (err) => {
 	const text = String(err);
+	capturedDiagnostics.push({type: "pageerror", text});
 	console.log(`[pageerror] ${text}`);
 	capturedErrors.push(text);
 });
@@ -334,14 +341,15 @@ const serviceTouch = async () => {
 		const gesture = req.gesture ?? {};
 		const repeat = Math.max(1, Math.min(3, gesture.repeat ?? 1));
 		const holdMs = Math.max(0, Math.min(1000, gesture.hold_ms ?? 0));
-		if (gesture.drag) {
-			if (holdMs || repeat !== 1 || gesture.follow_purchase_buy) throw new Error("drag cannot combine with purchase or repeated contacts");
+		if (gesture.cancel) {
+			if (holdMs || repeat !== 1 || gesture.follow_purchase_buy || gesture.drag) throw new Error("cancel needs a single stationary contact");
 			await touchSession.send("Input.dispatchTouchEvent", {type: "touchStart", touchPoints: [{x: req.x, y: req.y}]});
-			for (let index = 1; index <= 8; index++) {
-				await page.waitForTimeout(20);
-				await touchSession.send("Input.dispatchTouchEvent", {type: "touchMove", touchPoints: [{x: req.x + (gesture.end_x - req.x) * index / 8, y: req.y + (gesture.end_y - req.y) * index / 8}]});
-			}
-			await touchSession.send("Input.dispatchTouchEvent", {type: "touchEnd", touchPoints: []});
+			await page.waitForTimeout(80);
+			await touchSession.send("Input.dispatchTouchEvent", {type: "touchCancel", touchPoints: []});
+			realTouches += 1;
+		} else if (gesture.drag) {
+			if (holdMs || repeat !== 1 || gesture.follow_purchase_buy) throw new Error("drag cannot combine with purchase or repeated contacts");
+			await dispatchDrag(touchSession, req);
 			realTouches += 1;
 		} else if (gesture.follow_purchase_buy) {
 			if (holdMs || repeat !== 1) throw new Error("pre-arm burst requires one unheld opening contact");
@@ -446,12 +454,12 @@ const audioProbe = await page.evaluate(async () => {
 });
 console.log(`audio OUTPUT probe: taps=${audioProbe.taps} [${audioProbe.tapNodes}] ctxStates=[${audioProbe.states}] peakRMS=${audioProbe.peakRms.toFixed(6)} oscillatorControlRMS=${audioProbe.controlRms.toFixed(6)} => ${audioProbe.peakRms > 0.0001 ? "OUTPUT PRESENT" : "SILENT GRAPH"}`);
 // THE TOOTH (web-silence root cause, 2026-07-13): with WI_REQUIRE_AUDIO_OUTPUT=1
-// a silent graph is a HARD FAIL when the tap machinery itself is proven live
-// (oscillator control > 0). Set for scripts that always play audio
+// both game output and a live oscillator control are required. An unavailable
+// control cannot establish output. Set for scripts that always play audio
 // (combat_walkthrough boots into field music) -- this is the assert that would
 // have caught the runtime-bus silence the day it shipped.
-if (process.env.WI_REQUIRE_AUDIO_OUTPUT === "1" && audioProbe.controlRms > 0.0001 && audioProbe.peakRms <= 0.0001) {
-	console.error("audio OUTPUT probe: REQUIRED output missing (graph silent while control oscillator renders) -- the runtime-bus silence class");
+if (process.env.WI_REQUIRE_AUDIO_OUTPUT === "1" && (audioProbe.controlRms <= 0.0001 || audioProbe.peakRms <= 0.0001)) {
+	console.error("audio OUTPUT probe: REQUIRED output unproven: game output and a live control oscillator must both render");
 	globalThis.__requiredAudioOutputMissing = true;
 }
 
@@ -476,15 +484,15 @@ const browserEvidence = {
 	emulated: true, device: deviceName, profile: device, browser: browser.version(),
 	host: BASE_URL, script: scriptName, touchMode, requests: touchRequests,
 	buildPckSha256: createHash("sha256").update(await readFile(join(webRoot, "index.pck"))).digest("hex"),
-	runtime: await page.evaluate(() => ({userAgent: navigator.userAgent, maxTouchPoints: navigator.maxTouchPoints, viewport: [innerWidth, innerHeight], events: window.__WI_TOUCH_EVENTS__})),
-	errors: capturedErrors, warnings: capturedWarnings,
+	runtime: await page.evaluate(() => ({userAgent: navigator.userAgent, maxTouchPoints: navigator.maxTouchPoints, viewport: [innerWidth, innerHeight], devicePixelRatio, events: window.__WI_TOUCH_EVENTS__})),
+	errors: capturedErrors, warnings: capturedWarnings, diagnostics: capturedDiagnostics,
 };
 let timedTouchOk = true;
 for (const request of touchRequests) {
 	const gesture = request.gesture ?? {};
 	if (gesture.drag || (!gesture.follow_purchase_buy && !gesture.hold_ms)) {
 		const proof = gestureProof(request, browserEvidence.runtime.events);
-		request[gesture.drag ? "dragProof" : "tapProof"] = proof;
+		request[gesture.cancel ? "cancelProof" : gesture.drag ? "dragProof" : "tapProof"] = proof;
 		timedTouchOk = timedTouchOk && proof.passed;
 		continue;
 	}
@@ -524,6 +532,11 @@ server.close();
 if (!result) {
 	console.error(`FAIL: no result within ${TIMEOUT_MS / 1000}s (game never finished the QA script)`);
 	process.exit(1);
+}
+const verdictFailures = browserResultFailures(result, scriptName, scriptDefinition.steps.length, capturedDiagnostics);
+if (verdictFailures.length) {
+ result.passed = false;
+ result.failures = [...(Array.isArray(result.failures) ? result.failures : []), ...verdictFailures];
 }
 await writeFile(join(outDir, "result.json"), JSON.stringify(result, null, 2));
 console.log(`result: ${JSON.stringify(result, null, 2)}`);

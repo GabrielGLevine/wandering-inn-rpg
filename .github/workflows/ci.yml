@@ -169,7 +169,7 @@ jobs:
           perl -e 'alarm 120; exec @ARGV' \
             godot --headless --path wandering_inn_game --quit >"$log" 2>&1 || rc=$?
           cat "$log"
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log"; then
             echo "::error::smoke boot produced a SCRIPT ERROR / Parse Error / WARNING"
             exit 1
           fi
@@ -230,7 +230,7 @@ jobs:
           perl -e 'alarm 600; exec @ARGV' \
             godot --headless --path . --script res://tests/sim_combat_batch.gd >"$log" 2>&1 || rc=$?
           cat "$log"
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log"; then
             echo "::error::sim_combat_batch tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
@@ -247,7 +247,7 @@ jobs:
           WI_POLICY=competent perl -e 'alarm 600; exec @ARGV' \
             godot --headless --path . --script res://tests/sim_combat_batch.gd >"$log" 2>&1 || rc=$?
           cat "$log"
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log"; then
             echo "::error::sim_combat_batch (competent) tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
@@ -260,7 +260,7 @@ jobs:
           perl -e 'alarm 600; exec @ARGV' \
             godot --headless --path . --script res://tests/sim_class_paths.gd >"$log" 2>&1 || rc=$?
           cat "$log"
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log"; then
             echo "::error::sim_class_paths tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
@@ -344,7 +344,7 @@ jobs:
     name: Web parity (headless Chromium)
     if: github.event_name != 'push' || contains(github.event.head_commit.message, '[ci-full]')
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -407,7 +407,7 @@ jobs:
           # the wasm boot emits "ImageLoaderSVG: Target canvas dimensions
           # 51500x51500 ... scaled down" on ubuntu runners only (never locally).
           # Precisely exempted; root-causing the oversized SVG is queued work.
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
             echo "::error::web-parity run tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
@@ -420,7 +420,7 @@ jobs:
             bash wandering_inn_game/qa/web/run_web_qa.sh mobile_touch_smoke 9 --skip-export --touch --device=iphone --portrait-entry >"$log" 2>&1 || rc=$?
           cat "$log"
           grep -q 'QA_RESULT: PASS' "$log" || { echo "::error::mobile touch smoke produced no QA_RESULT: PASS"; exit 1; }
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
             echo "::error::mobile touch smoke tripped the error/warning grep"; exit 1
           fi
           # #503: the smoke is only meaningful when every tap was a REAL browser
@@ -441,7 +441,7 @@ jobs:
             cat "$log"
             grep -q 'QA_RESULT: PASS' "$log" || { echo "::error::$name produced no QA_RESULT: PASS"; fail=1; }
             grep -q 'file choosers opened=1' "$log" || { echo "::error::$name: the import tap opened no browser file chooser (the #253 symptom)"; fail=1; }
-            if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+            if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
               echo "::error::$name tripped the error/warning grep"; fail=1
             fi
             [ "$rc" = 0 ] || fail=1
@@ -451,11 +451,13 @@ jobs:
       - name: Browser registry routing and evidence checks
         run: python3 -m unittest scripts.tests.test_browser_suite -v
 
-      - name: Browser-only purchase confirmation registry (emulated iPhone and Android)
+      - name: Browser-only interaction registry (emulated iPhone and Android)
         run: python3 wandering_inn_game/qa/web/run_browser_suite.py --skip-export
 
       - name: Touch gesture negative controls
-        run: node wandering_inn_game/qa/web/touch_gesture_proof_test.mjs
+        run: |
+          node wandering_inn_game/qa/web/touch_gesture_proof_test.mjs
+          node wandering_inn_game/qa/web/touch_dispatch_test.mjs
 
       - name: Lifecycle runner negative controls
         run: node wandering_inn_game/qa/web/lifecycle_result_test.mjs
@@ -475,6 +477,22 @@ jobs:
           done
           exit "$fail"
 
+      - name: Browser import request lifetime (emulated iPhone and Android)
+        run: |
+          set -euo pipefail
+          for profile in iphone android; do
+            node wandering_inn_game/qa/web/import_request_lifetime.mjs "$profile"
+          done
+
+      - name: Exported name input and suspended audio recovery (emulated profiles, direct/local iframe)
+        run: |
+          set -euo pipefail
+          for profile in iphone android; do
+            for host in direct iframe; do
+              node wandering_inn_game/qa/web/lifecycle_input_audio.mjs "$profile" "$host" --headless
+            done
+          done
+
       - name: Preserve browser lifecycle evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -483,6 +501,8 @@ jobs:
           path: |
             wandering_inn_game/qa_output/lifecycle_iphone/
             wandering_inn_game/qa_output/lifecycle_android/
+            wandering_inn_game/qa_output/import_request_lifetime_*/
+            wandering_inn_game/qa_output/lifecycle_input_audio_*/
             web_lifecycle_*.log
           if-no-files-found: error
 

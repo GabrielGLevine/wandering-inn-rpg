@@ -1,0 +1,179 @@
+{
+  "_comment": "Browser-only lifecycle probe. Runner performs trusted name-field taps, real exported Godot HTML input fill/blur, actual viewport resize, observed tab visibility and actual AudioContext suspension fault injection. OS virtual keyboard, phone suspension and itch remain separate acceptance. Setup choices after the exercised Continue tap use native QA mouse injection. After creation, suspend again and arm game-only output capture before actual Pause; committed menu_move SFX proves output on public and licensed builds. Title music is intentionally absent in public checkouts.",
+  "starts_at_title": true,
+  "creation_ui": true,
+  "fail_fast": true,
+  "steps": [
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_gate_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "00_audio_locked"
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        360
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "01_title_audio"
+    },
+    {
+      "action": "touch_title_row",
+      "row": 1
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_char_creation_rendered",
+      "payload_contains": {
+        "step": "pick"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        322,
+        308
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_char_creation_rendered",
+      "payload_contains": {
+        "step": "name"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "02_name_enter"
+    },
+    {
+      "action": "screenshot",
+      "name": "03_rotation"
+    },
+    {
+      "action": "screenshot",
+      "name": "04_visibility"
+    },
+    {
+      "action": "screenshot",
+      "name": "05_suspend"
+    },
+    {
+      "action": "screenshot",
+      "name": "06_resume"
+    },
+    {
+      "action": "assert_event_absent",
+      "type": "ui_char_creation_rendered",
+      "payload_contains": {
+        "step": "difficulty"
+      }
+    },
+    {
+      "action": "assert_event_absent",
+      "type": "ui_char_creation_rendered",
+      "payload_contains": {
+        "step": "hints"
+      }
+    },
+    {
+      "action": "assert_event_absent",
+      "type": "ui_char_creation_confirmed"
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        424
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_char_creation_rendered",
+      "payload_contains": {
+        "step": "difficulty"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "click_char_creation_card",
+      "card": 2
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_char_creation_rendered",
+      "payload_contains": {
+        "step": "hints"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "click_char_creation_card",
+      "card": 1
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_char_creation_confirmed",
+      "payload_contains": {
+        "pc_name": "Mira",
+        "pc_race": "human",
+        "pc_gender": "m"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "wait_for_event",
+      "type": "world_ready",
+      "timeout_sec": 10
+    },
+    {
+      "action": "assert_state",
+      "path": "pc_name",
+      "equals": "Mira"
+    },
+    {
+      "action": "assert_event_count",
+      "type": "ui_char_creation_confirmed",
+      "count": 1
+    },
+    {
+      "action": "screenshot",
+      "name": "07_created"
+    },
+    {
+      "action": "touch_field_chip",
+      "chip": "pause"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_pause_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "assert_event_count",
+      "type": "audio_played",
+      "payload_contains": {
+        "id": "menu_move"
+      },
+      "count": 1
+    },
+    {
+      "action": "screenshot",
+      "name": "08_pause_audio"
+    }
+  ]
+}

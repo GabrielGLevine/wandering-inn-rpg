@@ -1,5 +1,5 @@
 {
- "_comment": "#509 message lifecycle canonical: save status is a hint-ribbon pill (ui_save_status_rendered on game_saved) off the toast strip; a transient flavour line renders and a step dismisses it without recording (anti-spam kept); the journal modal pauses and resumes the strip; Reduce Motion changes nothing about delivery. Immediate arrival is line_display_ab (its assert_dialogue_displayed now measures OCCLUSION by the field readout); simultaneous authored/save is invrisil_hat_quiet. The 1.2s readable floor before a movement dismiss is a real-timing rule pinned by test_message_layer (QA collapses it to 0).",
+ "_comment": "#509 accelerated lifecycle compatibility: manual save status, transient flavor input, a real toast queued during journal open, exactly-once delivery after ordinary close, and Reduce Motion. Production durations are exercised by message_production_timing and test_message_lifetime_runtime.",
  "fixture_save": "mobile_tap_start",
  "starts_at_title": true,
  "steps": [
@@ -106,7 +106,7 @@
    "name": "01_saved_pill_on_hint_ribbon"
   },
   {
-   "_comment": "MOVEMENT + RECORD: an empty interact renders a transient flavour line (not recorded -- the anti-spam constraint stays); stepping away is the ordinary dismiss. Under QA the readable floor is 0 (canonical timing untouched); the 1.2s floor itself is pinned at real timings by test_message_layer.",
+   "_comment": "MOVEMENT + RECORD: actual empty interact remains transient; this accelerated route checks delivery compatibility. message_production_timing measures the shipped movement floor.",
    "action": "press",
    "name": "move_left"
   },
@@ -129,7 +129,7 @@
    "name": "move_right"
   },
   {
-   "_comment": "MODAL CLOSURE (the #508 finding, now a contract): copy queued while a modal is up renders after the modal closes -- the queue is lossless. Journal open, then an authored beat cannot fire inside it, so the save status re-fires instead: pause -> save while the pill is already up re-arms it (serial) and the ribbon still reads Saved after the menu hides.",
+   "_comment": "MODAL CLOSURE: inject a real toast-domain payload while the actual journal is open, then use its ordinary close input. The production-timing modal script measures the full readable hold.",
    "action": "press",
    "name": "journal"
   },
@@ -139,6 +139,21 @@
    "timeout_sec": 5
   },
   {
+   "action": "queue_domain_event",
+   "type": "toast",
+   "payload": {
+    "text": "A message queued while the journal is open waits until you close it."
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_toast_rendered",
+   "count": 0,
+   "payload_contains": {
+    "text": "A message queued while the journal is open waits until you close it."
+   }
+  },
+  {
    "action": "press",
    "name": "journal"
   },
@@ -146,6 +161,27 @@
    "action": "wait_for_event",
    "type": "ui_journal_hidden",
    "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "text": "A message queued while the journal is open waits until you close it."
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_toast_rendered",
+   "count": 1,
+   "payload_contains": {
+    "text": "A message queued while the journal is open waits until you close it."
+   }
+  },
+  {
+   "action": "assert_recent_message_count",
+   "text_contains": "A message queued while the journal is open waits until you close it.",
+   "count": 1
   },
   {
    "_comment": "REDUCED MOTION: the accessibility toggle must not change delivery -- a toast still renders and the ribbon pill still fires after a save.",

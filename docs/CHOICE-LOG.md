@@ -1,17 +1,12 @@
 # Choice log
 
-Durable controller/user rulings that still explain shipped behavior or
-constrain open work. The 2026-07-18 directive permits controller judgment
-calls when the user has not reserved the decision.
+Durable user/controller rulings for shipped and open work. The 2026-07-18
+user directive permits controller judgment on unreserved decisions.
 
-Insertion: head within the relevant section. Amend or supersede an existing
-entry instead of appending a second story about the same choice. Keep the call,
-the rejected alternative when it matters, and one sentence of rationale.
-Implementation chronology, review findings, measurements, and verification
-belong in issue-closing PR bodies.
-
-Pre-condensation record: `git show 1aee127d:docs/CHOICE-LOG.md`. Earlier
-context lives in merged PR bodies and `git log -p -- docs/CHOICE-LOG.md`.
+Insertion: head within the relevant section. Amend existing entries; preserve
+the call, significant rejected alternative and reason. Evidence and chronology
+belong in issue PRs. Earlier context: `git show 1aee127d:docs/CHOICE-LOG.md`,
+merged PRs and `git log -p -- docs/CHOICE-LOG.md`.
 
 ## Open decisions
 
@@ -28,28 +23,31 @@ context lives in merged PR bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ## Current product and system rulings
 
-### User rulings 2026-08-13 (#438 wave-close batch)
+### User rulings 2026-10-04 (M1)
+
+- **#508 approved:** deliberate drainage-cover use plus actual crossing earns
+  covered-crossing credit after goblin defeat. Bare/prop-only visits earn none;
+  once per crossing/waking, no respawn, Rogue only at sleep. Live-danger credit
+  still needs a threat. `docs/design/rogue-recovery-proposal.md` owns details.
+- **#507 approved:** selected race/gender footer beneath unlabeled art states
+  appearance only; difficulty explanation beneath its prompt; keep Settings Help.
+- **M1 acceptance retained:** physical iPhone Safari/Android Chrome, three
+  unfamiliar players and desktop reference. User supplies observations.
 
 ### User rulings 2026-08-14 (tag night)
 
-- **wild_sage V 0.96 ACCEPTED, parked post-tag.** A step, not a slope:
-  the counter reads 0.94 at mult 2.0 and 0.65 at 2.2, nothing between,
-  because the window is whether one blow kills a 30-or-34-HP companion —
-  and the setting that lands wild_sage puts **druid at 0.36, below the
-  floor**. Shipped druid-in-window; wild_sage surfaced per NO-AUTO-WIN.
-- **spellspear I/IV and skirmisher I/IV ACCEPTED as corrected
-  measurement, parked post-tag.** NOT regressions: the gate ported only
-  the `holdable_line` fix onto origin/main and reproduced 0.88/0.92 and
-  0.88/0.89 exactly. The only lever (capping [Piercing Strikes] once
-  per round) moves the ship column up to 0.12 — it re-authors
-  steel-thread victory pins, so it needs its own budgeted lane.
-- **The spine harness was measuring builds no player can hold.**
-  `derived_stat_bonuses` sums `growth[stat] * held` with no table-floor
-  check; Acts I-IV impose levels 2/3/5/7 while all 16 evolved classes
-  floor at 10. Naming an evolved parent in `parent_lines` is the
-  consolidation CONVENTION (spear-owns-its-hybrids, #449), not one
-  commit's narrowing — so every future evolved-lineage target needs the
-  holdable-line walk this adds. Whole of spellspear III.
+- **wild_sage V0.96 accepted, parked post-tag.** Counter reads0.94 at2.0
+  and0.65 at2.2: one blow must kill a30/34HP companion. That setting puts
+  druid0.36 below floor. Keep druid in window; surface wild_sage per NO-AUTO-WIN.
+- **spellspear/skirmisher I/IV accepted as corrected measurements, parked.**
+  `holdable_line` alone reproduces0.88/0.92 and0.88/0.89 on main.
+  Capping [Piercing Strikes] once/round raises ship to0.12 and reauthors
+  steel-thread victory pins; that needs a budgeted lane.
+- **Spine builds must be holdable.** `derived_stat_bonuses` sums growth*held
+  without table-floor checks; Acts I–IV levels2/3/5/7 precede evolved floors10.
+  Evolved parents in `parent_lines` are #449's spear-owned consolidation
+  convention. Future evolved-lineage targets need the holdable-line walk,
+  including all of spellspear III.
 
 ### User rulings 2026-08-14 (post-wave decision batch, 11 calls)
 

@@ -7538,13 +7538,206 @@
     ],
     "skills": [
      "basic_cleaning",
+     "flame_jet",
      "observe",
      "sneak"
     ],
     "dialogue": [],
     "systems": [
      "combat",
+     "economy",
      "exploration"
+    ]
+   }
+  },
+  {
+   "script": "message_production_timing",
+   "seed": 37,
+   "note": "#509 production holds: first-frame dismissal, ordinary movement and recent-message single recording.",
+   "tiers": [
+    "full"
+   ],
+   "fixture": "invrisil_hat_quiet_start",
+   "surfaces": {
+    "maps": [
+     "adventurers_rest"
+    ],
+    "fixtures": [
+     "invrisil_hat_quiet_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "message_production_timing_transition",
+   "seed": 37,
+   "note": "#509 unread authored toast survives a doorway, renders anew and records once.",
+   "tiers": [
+    "full"
+   ],
+   "fixture": "invrisil_hat_quiet_start",
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "invrisil_boulevard"
+    ],
+    "fixtures": [
+     "invrisil_hat_quiet_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "message_production_timing_modal",
+   "seed": 7,
+   "note": "#509 modal pauses actual display age; resume retains the readable floor.",
+   "tiers": [
+    "full"
+   ],
+   "fixture": "mobile_tap_start",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "mobile_tap_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "input",
+     "settings"
+    ]
+   }
+  },
+  {
+   "script": "message_production_timing_arrival",
+   "seed": 9,
+   "note": "#509 dialogue arrival remains visible and readable at production timing.",
+   "tiers": [
+    "full"
+   ],
+   "fixture": "line_display_ab_start",
+   "surfaces": {
+    "maps": [
+     "invrisil_boulevard",
+     "stationer"
+    ],
+    "fixtures": [
+     "line_display_ab_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "rogue_recovery_force",
+   "seed": 7,
+   "note": "#508 fresh fight-first force-crate route: deliberate cleared-road cover transit gives a rendered receipt and Rogue at sleep; defeated enemies stay absent.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "krshia_crate",
+     "relc_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "input",
+     "night_phase",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "rogue_recovery_guile",
+   "seed": 9,
+   "note": "#508 fresh earned Mage/Light guile-crate route: deliberate cleared-road cover transit earns Rogue at sleep without respawning enemies.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [
+     "light"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "pisces_magic",
+     "relc_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "exploration",
+     "input",
+     "night_phase",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "stage_guidance_fresh",
+   "seed": 9,
+   "tiers": [
+    "full"
+   ],
+   "note": "#507 fresh earned cleaning, actual rendered Erin sleep cue, ordinary upstairs reward, History/Help/Replay, manual Save/Load and Quest Hints OFF/ON across UI rebuild. Native input; physical comprehension remains #511.",
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "save",
+     "settings"
     ]
    }
   }
@@ -7810,6 +8003,152 @@
      "dialogue",
      "economy",
      "exploration"
+    ]
+   }
+  },
+  {
+   "script": "touch_gesture_inventory",
+   "seed": 9,
+   "fixture": "gear_loop_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap",
+    "drag",
+    "cancel"
+   ],
+   "note": "#506 trusted horizontal drift and touch cancellation activate no equipment; subsequent tap activates once. Emulation only.",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "gear_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "touch_gesture_journal",
+   "seed": 9,
+   "fixture": "gear_loop_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap",
+    "drag",
+    "cancel"
+   ],
+   "note": "#506 trusted horizontal drift and touch cancellation assign no Skill; subsequent tap assigns once. Emulation only.",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "gear_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "power_strike"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "touch_opening_continuous",
+   "seed": 9,
+   "fixture": null,
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap",
+    "drag"
+   ],
+   "note": "#506 continuous fresh creation, paid chore, Helper sleep, earned training/Warrior, equipment, aimed combat cancellation and road victory through actual browser contacts. No fixture, keyboard, teleport or sim autoplay. Presentation is accelerated QA; physical phones and human sessions remain #511.",
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking",
+     "piercing_strikes"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "creation_explanations_touch",
+   "seed": 9,
+   "fixture": null,
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "#507 all six named appearance-only choices, all difficulty explanations before touch commitment and responsive Back/name/setup controls at 130%. Chromium emulation only; physical keyboard and comprehension remain #511.",
+   "surfaces": {
+    "maps": [],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "char_creation",
+     "settings"
+    ]
+   }
+  },
+  {
+   "script": "touch_reference_pages",
+   "seed": 9,
+   "fixture": null,
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap",
+    "drag"
+   ],
+   "note": "Fresh Settings Controls/Help real browser contacts, readable measured geometry at100/115/130, actual scrolling/fixed Back and live narrow resize.",
+   "surfaces": {
+    "maps": [],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "settings"
     ]
    }
   }

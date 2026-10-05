@@ -12,6 +12,57 @@ extends RefCounted
 ## unchanged -- static-var access reads identically to the old const access.
 const THEME_PATH := "res://assets/ui/chrome/wi_ui_theme.tres"
 
+
+static func install_touch_cancellation_bridge() -> void:
+	if not OS.has_feature("web"):
+		return
+	# Godot 4.7 maps DOM touchcancel to touchend. Capture before that callback;
+	# retain the primary contact's canceled state through its emulated release.
+	JavaScriptBridge.eval("""
+	if (!window.__WI_TOUCH_CANCEL_BRIDGE__) {
+	 window.__WI_TOUCH_CANCEL_BRIDGE__ = true;
+	 const active = new Set();
+	 let primary = null;
+	 window.__WI_TOUCH_CANCELED__ = new Set();
+	 window.__WI_TOUCH_MOUSE_CANCELED__ = false;
+	 document.addEventListener('touchstart', event => {
+	  if (!active.size) {
+	   primary = event.changedTouches[0].identifier;
+	   window.__WI_TOUCH_CANCELED__.clear();
+	   window.__WI_TOUCH_MOUSE_CANCELED__ = false;
+	  }
+	  for (const touch of event.changedTouches) active.add(touch.identifier);
+	 }, {capture: true, passive: true});
+	 for (const type of ['touchend', 'touchcancel']) {
+	  document.addEventListener(type, event => {
+	   for (const touch of event.changedTouches) {
+	    active.delete(touch.identifier);
+	    if (type === 'touchcancel') {
+	     window.__WI_TOUCH_CANCELED__.add(touch.identifier);
+	     if (touch.identifier === primary) window.__WI_TOUCH_MOUSE_CANCELED__ = true;
+	    }
+	   }
+	  }, {capture: true, passive: true});
+	 }
+	}
+	""", true)
+
+
+static func pointer_canceled(event: InputEvent) -> bool:
+	if event is InputEventMouseButton:
+		var button := event as InputEventMouseButton
+		if button.canceled:
+			return true
+		return OS.has_feature("web") and not button.pressed and button.device == InputEvent.DEVICE_ID_EMULATION \
+			and bool(JavaScriptBridge.eval("window.__WI_TOUCH_MOUSE_CANCELED__ === true", true))
+	if event is InputEventScreenTouch:
+		var touch := event as InputEventScreenTouch
+		if touch.canceled:
+			return true
+		return OS.has_feature("web") and not touch.pressed \
+			and bool(JavaScriptBridge.eval("window.__WI_TOUCH_CANCELED__?.has(%d) === true" % touch.index, true))
+	return false
+
 static var THEME: Theme = _chrome_theme()
 static var PARCHMENT_PANEL: Texture2D = chrome_texture("res://assets/ui/chrome/Banner_Vertical.png")
 static var PARCHMENT_STRIP: Texture2D = chrome_texture("res://assets/ui/chrome/Banner_Horizontal.png")

@@ -22,7 +22,7 @@ class BrowserRegistryTest(unittest.TestCase):
 
     def test_registry_routes_browser_cases_outside_native_tiers(self):
         cases = suite.cases(self.manifest)
-        self.assertEqual(len(cases), 16)
+        self.assertEqual(len(cases), sum(len(row["profiles"]) for row in self.manifest["browser_scripts"]))
         native = {row["script"] for row in self.manifest["scripts"]}
         self.assertTrue(all(entry["script"] not in native for entry, _ in cases))
         self.assertEqual({profile for _, profile in cases}, {"iphone", "android"})
@@ -38,6 +38,8 @@ class BrowserRegistryTest(unittest.TestCase):
             lambda m: m["browser_scripts"][0].update(required_touch_proofs=["unknown"]),
             lambda m: m["browser_scripts"][0].update(script=m["scripts"][0]["script"]),
             lambda m: m["browser_scripts"][0].update(tiers=["full"]),
+            lambda m: m["browser_scripts"][0].pop("fixture"),
+            lambda m: m["browser_scripts"][0].update(fixture=""),
         ]
         for mutate in mutations:
             with self.subTest(mutate=mutate):
@@ -45,6 +47,19 @@ class BrowserRegistryTest(unittest.TestCase):
                 mutate(data)
                 with self.assertRaises(ValueError):
                     suite.cases(data)
+
+    def test_fresh_routes_require_explicit_null_fixture_and_full_timeout(self):
+        entry = next(row for row in self.manifest["browser_scripts"] if row["script"] == "touch_opening_continuous")
+        self.assertIsNone(entry["fixture"])
+        self.assertEqual({profile for row, profile in suite.cases(self.manifest) if row is entry}, {"iphone", "android"})
+        self.assertEqual(suite.script_timeout("touch_opening_continuous"), 660)
+
+    def test_cancel_proof_cannot_be_replaced_by_an_ordinary_tap(self):
+        entry = self.entry | {"required_touch_proofs": ["cancel"]}
+        evidence = self.evidence() | {"requests": [{"cancelProof": {"passed": True}}]}
+        self.assertEqual(suite.evaluate_run(entry, "iphone", 0, "QA_RESULT: PASS", self.result(), evidence), [])
+        for requests in [[{"tapProof": {"passed": True}}], [{"cancelProof": {"passed": False}}], []]:
+            self.assertTrue(suite.evaluate_run(entry, "iphone", 0, "QA_RESULT: PASS", self.result(), evidence | {"requests": requests}))
 
     def test_touching_never_selects_browser_only_scripts_for_native_execution(self):
         names = {entry["script"] for entry in self.manifest["browser_scripts"]}
@@ -91,12 +106,12 @@ class BrowserRegistryTest(unittest.TestCase):
     def test_only_known_renderer_warning_is_exempted_and_retained(self):
         warning = "[.WebGL-0x123abc]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
         for text in [warning, warning + " (this message will no longer repeat)",
-                     "WARNING: ImageLoaderSVG: Target canvas dimensions 51500x51500 scaled down"]:
+                     "WARNING: ImageLoaderSVG: Target canvas dimensions 51500x51500 (with scale 1.00) exceed the max supported dimensions 16384x16384. The target canvas will be scaled down."]:
             evidence = self.evidence()
             evidence["warnings"] = [text]
             self.assertEqual(suite.evaluate_run(self.entry, "iphone", 0, "QA_RESULT: PASS\n[console:warning] " + text, self.result(), evidence), [])
             self.assertEqual(evidence["warnings"], [text])
-        for text in ["Unknown renderer warning", warning + " unexpected error", "ERROR: ImageLoaderSVG: Target canvas dimensions 51500"]:
+        for text in ["Unknown renderer warning", warning + " unexpected error", "ERROR: ImageLoaderSVG: Target canvas dimensions 51500", "WARNING: ImageLoaderSVG: Target canvas dimensions 51500x51500 scaled down"]:
             evidence = self.evidence()
             evidence["warnings"] = [text]
             self.assertTrue(suite.evaluate_run(self.entry, "iphone", 0, "QA_RESULT: PASS", self.result(), evidence))

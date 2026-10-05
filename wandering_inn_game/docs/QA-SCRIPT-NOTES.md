@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 259 native canonical QA scripts. The manifest is the
+This is the human index for 266 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -267,6 +267,13 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `message_lifecycle_loop` | 9 | full | `—` | #509 message lifecycle: save status is a hint-ribbon pill (ui_save_status_rendered on game_saved) off the toast strip; transient flavour line renders + a step dismisses it unrecorded; journal modal pauses/resumes the strip; Reduce Motion changes nothing about delivery. Arrival visibility = line_display_ab (assert_dialogue_displayed now measures occlusion); the 1.2s readable floor is pinned at real timing by test_message_layer |
 | `rogue_discovery_watch_route` | 7 | full | `—` | #508 fresh creation: earn cleaning wages, train, win gate-road ambush, pay Watch without social Skills, return crate, walk home and sleep for Rogue; no fixture, teleport or pre-banked counters. Browser/physical touch remains separate. |
 | `stealth_receipt_timing` | 9 | full | `near_ambush_sneak` | #508 first field-bar touch and bypass receipt with production message timing; fixture wiring proof, not acquisition. Native uses injected mouse input; exported browser --touch proves browser input. |
+| `message_production_timing` | 37 | full | `invrisil_hat_quiet_start` | #509 production holds: first-frame dismissal, ordinary movement and recent-message single recording. |
+| `message_production_timing_transition` | 37 | full | `invrisil_hat_quiet_start` | #509 unread authored toast survives a doorway, renders anew and records once. |
+| `message_production_timing_modal` | 7 | full | `mobile_tap_start` | #509 modal pauses actual display age; resume retains the readable floor. |
+| `message_production_timing_arrival` | 9 | full | `line_display_ab_start` | #509 dialogue arrival remains visible and readable at production timing. |
+| `rogue_recovery_force` | 7 | full | `—` | #508 fresh fight-first force-crate route: deliberate cleared-road cover transit gives a rendered receipt and Rogue at sleep; defeated enemies stay absent. |
+| `rogue_recovery_guile` | 9 | full | `—` | #508 fresh earned Mage/Light guile-crate route: deliberate cleared-road cover transit earns Rogue at sleep without respawning enemies. |
+| `stage_guidance_fresh` | 9 | full | `—` | #507 fresh earned cleaning, actual rendered Erin sleep cue, ordinary upstairs reward, History/Help/Replay, manual Save/Load and Quest Hints OFF/ON across UI rebuild. Native input; physical comprehension remains #511. |
 
 ## Browser-only QA
 
@@ -283,3 +290,8 @@ These scripts require browser touch and stay out of the native smoke/full sweep.
 | `purchase_touch_static` | 9 | iphone, android | `d2_shop` | Browser touch: held opening, pre-arm second Buy, Cancel/outside, exactly-once charm purchase, exact state and broke stock list. |
 | `purchase_touch_fence` | 9 | iphone, android | `ratici_fence_start` | Browser touch: generated fence confirmation, unchanged pre/cancel state, exactly-once item purchase and remaining stock after reopen. |
 | `purchase_touch_service` | 9 | iphone, android | `near_room_upgrade` | Browser touch: paid room upgrade confirmation, unchanged pre/cancel state, exact tier effect and next-tier list after reopen. |
+| `touch_gesture_inventory` | 9 | iphone, android | `gear_loop_start` | #506 trusted horizontal drift and touch cancellation activate no equipment; subsequent tap activates once. Emulation only. |
+| `touch_gesture_journal` | 9 | iphone, android | `gear_loop_start` | #506 trusted horizontal drift and touch cancellation assign no Skill; subsequent tap assigns once. Emulation only. |
+| `touch_opening_continuous` | 9 | iphone, android | `None` | #506 continuous fresh creation, paid chore, Helper sleep, earned training/Warrior, equipment, aimed combat cancellation and road victory through actual browser contacts. No fixture, keyboard, teleport or sim autoplay. Presentation is accelerated QA; physical phones and human sessions remain #511. |
+| `creation_explanations_touch` | 9 | iphone, android | `None` | #507 all six named appearance-only choices, all difficulty explanations before touch commitment and responsive Back/name/setup controls at 130%. Chromium emulation only; physical keyboard and comprehension remain #511. |
+| `touch_reference_pages` | 9 | iphone, android | `None` | Fresh Settings Controls/Help real browser contacts, readable measured geometry at100/115/130, actual scrolling/fixed Back and live narrow resize. |

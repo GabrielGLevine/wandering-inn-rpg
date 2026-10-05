@@ -62,7 +62,7 @@ const TOAST_QUEUE_HOLD_CAP_SECONDS := 1.6
 ## #509 acceptance 2: a step is the "I have read it" signal, but a step taken
 ## before a toast has had a READABLE life must not erase it. A dismiss that
 ## arrives earlier than this retires the toast AT this mark instead of at
-## once; under QA/headless the floor is 0 so canonical timing is untouched.
+## once. Accelerated QA uses zero; production-timing QA keeps the shipped floor.
 const TOAST_MIN_READ_SECONDS := 1.2
 ## #509: how long the hint ribbon carries the compact "Saved" pill after a
 ## slot write. Persistent-enough to be noticed on a phone, never a toast.
@@ -183,13 +183,10 @@ var _toast_queue: Array[Dictionary] = []
 ## Combat is the one deliberate exception: it has its own feed, so
 ## COMBAT_STARTED BANKS the pending queue (below) and UI_COMBAT_HIDDEN
 ## re-queues it.
-## HAZARD for QA authors: `_defer_toast_display` also calls
-## `dismiss_current_toast_early()`, so a transition CUTS SHORT the showing
-## toast's hold -- including the windowed QA_TOAST_HOLD_SECONDS 0.4s
-## legibility floor that the screenshot discipline leans on. A script that
-## needs a specific toast ON SCREEN across a map change must wait on that
-## toast's OWN `ui_toast_rendered` after the transition (it re-renders on the
-## far side); a bare wait plus a screenshot can catch the panel already hidden.
+## Transitions hide the current panel immediately. Normal timing replays unread
+## authored copy with a fresh hold; accelerated QA retires the current display.
+## A replay capture must wait for that text's new `ui_toast_rendered` after the
+## transition: a prior render event cannot prove the replacement is visible.
 ## Toasts parked for the duration of a fight. Bank/restore move whole entries
 ## between here and `_toast_queue`; nothing is ever dropped in either direction.
 var _banked_toasts: Array[Dictionary] = []
@@ -229,6 +226,10 @@ var _toast_skip_requested := false
 ## #509: when the showing toast started, and whether a step asked for an
 ## early retire before the readable floor (honoured at the floor).
 var _showing_started_msec := 0
+var _dialogue_started_msec := 0
+var _dialogue_generation := 0
+var _showing_entry: Dictionary = {}
+var _toast_interrupted := false
 var _dismiss_at_min_read := false
 var _save_status_serial := 0
 
@@ -318,6 +319,8 @@ func _show_save_status(slot: String) -> void:
 
 
 func _first_wake_hint_text() -> String:
+	if WIResponsiveLayout.uses_touch_layout():
+		return "New morning. Every control is listed under Pause — Settings — Help."
 	return "New morning. Every key and control is listed under %s — Settings — Help." % WIInputHints.label("cancel")
 
 
@@ -584,6 +587,7 @@ func _shown_event_for(hidden_event: String) -> String:
 
 
 func _clear_dialogue_line() -> void:
+	_dialogue_generation += 1
 	_dialogue_panel.hide()
 
 
@@ -605,6 +609,19 @@ func dialogue_display_state() -> Dictionary:
 		"rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
 		"on_screen": view.intersects(rect),
 		"layer": canvas_layer_of(_dialogue_panel),
+		"elapsed_msec": Time.get_ticks_msec() - _dialogue_started_msec,
+	}
+
+
+func toast_display_state() -> Dictionary:
+	var rect := _toast_panel.get_global_rect()
+	return {
+		"visible": _toast_panel.is_visible_in_tree(),
+		"text": _toast_label.text,
+		"elapsed_msec": Time.get_ticks_msec() - _showing_started_msec,
+		"rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
+		"on_screen": get_viewport().get_visible_rect().intersects(rect),
+		"layer": canvas_layer_of(_toast_panel),
 	}
 
 
@@ -621,17 +638,23 @@ static func canvas_layer_of(node: Node) -> int:
 
 func _show_dialogue_line(text: String, fitted: String) -> void:
 	_dialogue_full_text = text
-	await _show(_dialogue_panel, _dialogue_label, text, _dialogue_hold_seconds(fitted), WIEvents.UI_DIALOGUE_RENDERED, fitted, true)
-	# CONTRACT: audio releases standalone-line duck on the renderer's actual close.
-	ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_LINE_HIDDEN, {})
+	var closed := await _show(_dialogue_panel, _dialogue_label, text, _dialogue_hold_seconds(fitted), WIEvents.UI_DIALOGUE_RENDERED, fitted, true)
+	# Only the current bark may close its panel and release the audio duck.
+	if closed:
+		ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_LINE_HIDDEN, {})
 
 
-## A transition retires the toast that ALREADY RENDERED (it is about the side
-## the player just left, and dialogue needs the raised slot clear) and cuts its
-## remaining hold short so the survivors drain immediately on the far side. The
-## queue itself is untouched -- see `_toast_queue`'s contract.
+## Unread authored copy waits through the transition and gets a fresh readable
+## hold afterwards. It was already recorded, so replay never duplicates history.
 func _defer_toast_display() -> void:
-	dismiss_current_toast_early()
+	if _toast_panel.visible:
+		if not _showing_entry.is_empty() and not _showing_housekeeping \
+				and Time.get_ticks_msec() - _showing_started_msec < _min_read_msec():
+			var deferred := _showing_entry.duplicate()
+			deferred["record"] = false
+			_toast_queue.push_front(deferred)
+		_toast_interrupted = true
+		_toast_skip_requested = true
 	_toast_panel.hide()
 
 
@@ -685,6 +708,7 @@ func _apply_toast_position() -> void:
 		var right := safe.end.x - viewport.get_visible_rect().size.x - 24.0
 		UIChrome.set_offsets(_toast_panel, right - _message_width(), bottom - _toast_panel_height, right, bottom)
 	else:
+		bottom = minf(bottom, _message_bottom(WIResponsiveLayout.safe_rect(get_viewport()), 0.0))
 		UIChrome.set_offsets(_toast_panel, TOAST_LEFT, bottom - _toast_panel_height, TOAST_RIGHT, bottom)
 
 
@@ -763,8 +787,8 @@ func _resize_dialogue_panel() -> void:
 		var left := safe.position.x + 24.0
 		UIChrome.set_offsets(_dialogue_panel, left, bottom - panel_height, left + width, bottom)
 	else:
-		const DIALOGUE_BOTTOM := -164.0
-		UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
+		var bottom := minf(-164.0, _message_bottom(WIResponsiveLayout.safe_rect(get_viewport()), 0.0))
+		UIChrome.set_offsets(_dialogue_panel, 36.0, bottom - panel_height, 736.0, bottom)
 
 
 ## Fits the hint ribbon to ONE line of `_hint_label`'s LIVE font metrics plus
@@ -995,9 +1019,8 @@ func dismiss_current_toast_early() -> void:
 		_dismiss_at_min_read = true
 
 
-## The readable floor in msec: 0 under QA/headless (the hold floors there are
-## already ~0, and 125 canonicals pin the rendered stream), the real constant
-## in play.
+## Accelerated QA keeps its existing event stream; the timing opt-in exercises
+## the same reading floor and hold loop as normal play, including headless.
 func _min_read_msec() -> int:
 	if _production_message_timing():
 		return int(TOAST_MIN_READ_SECONDS * 1000.0)
@@ -1036,12 +1059,14 @@ func _drain_toasts() -> void:
 		if at < 0:
 			break
 		var entry: Dictionary = _toast_queue.pop_at(at)
+		_showing_entry = entry
 		var text := String(entry["text"])
 		_showing_housekeeping = bool(entry.get("housekeeping", false))
 		_showing_protected = bool(entry.get("protected", false))
 		if bool(entry.get("record", true)):
 			record_message(text)
 		await _show(_toast_panel, _toast_label, text, _toast_seconds(text), WIEvents.UI_TOAST_RENDERED, "", true, true)
+		_showing_entry = {}
 		_showing_protected = false
 	_toast_draining = false
 
@@ -1083,23 +1108,41 @@ func _hold_seconds(seconds: float) -> float:
 	return seconds
 
 
-func _show(panel: Control, label: Label, text: String, seconds: float, rendered_event: String, display_text: String = "", collapse_under_qa: bool = false, interruptible: bool = false) -> void:
+func _show(panel: Control, label: Label, text: String, seconds: float, rendered_event: String, display_text: String = "", collapse_under_qa: bool = false, interruptible: bool = false) -> bool:
+	var dialogue_generation := _dialogue_generation
+	if panel == _dialogue_panel:
+		_dialogue_generation += 1
+		dialogue_generation = _dialogue_generation
 	if panel == _toast_panel:
 		_resize_toast_panel(text)
+		_toast_skip_requested = false
+		_dismiss_at_min_read = false
+		_toast_interrupted = false
+		_showing_started_msec = Time.get_ticks_msec()
+	else:
+		_dialogue_started_msec = Time.get_ticks_msec()
 	label.text = display_text if display_text != "" else text
 	panel.show()
 	var tree := get_tree()
 	if tree == null:
-		return
+		return false
 	await tree.process_frame
 	if not is_inside_tree():
-		return
+		return false
+	if panel == _dialogue_panel and dialogue_generation != _dialogue_generation:
+		return false
+	if panel == _toast_panel and _toast_interrupted:
+		return false
 	if panel == _toast_panel:
 		var folded := _fold_gold_toast(text)
 		if folded != text:
 			text = folded
+			_showing_entry["text"] = text
 			label.text = text
 			_resize_toast_panel(text)
+		_showing_started_msec = Time.get_ticks_msec()
+	else:
+		_dialogue_started_msec = Time.get_ticks_msec()
 	ObservableBus.emit_domain_event(rendered_event, {"text": text})
 	var hold := _hold_seconds(seconds) if collapse_under_qa else seconds
 	# Only CHORES yield their reading time to the queue -- see the constant.
@@ -1108,10 +1151,7 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 		hold = minf(hold, TOAST_QUEUE_HOLD_CAP_SECONDS)
 	if hold > 0.0:
 		if interruptible:
-			_toast_skip_requested = false
-			_dismiss_at_min_read = false
-			var started_msec := Time.get_ticks_msec()
-			_showing_started_msec = started_msec
+			var started_msec := _showing_started_msec
 			var deadline_msec := started_msec + int(hold * 1000.0)
 			while Time.get_ticks_msec() < deadline_msec and not _toast_skip_requested:
 				# #509: a step before the readable floor retires the toast AT the
@@ -1137,27 +1177,28 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 					deadline_msec = mini(deadline_msec, started_msec + int(chore_cap * 1000.0))
 				tree = get_tree()
 				if tree == null:
-					return
+					return false
 				await tree.process_frame
 				if not is_inside_tree():
-					return
+					return false
 			_toast_skip_requested = false
 		else:
-			# Review (#509): keep the dismiss bookkeeping coherent on this path
-			# too, so a stale skip/floor flag can never leak into the next toast.
-			_toast_skip_requested = false
-			_dismiss_at_min_read = false
-			_showing_started_msec = Time.get_ticks_msec()
 			tree = get_tree()
 			if tree == null:
-				return
+				return false
 			await tree.create_timer(hold).timeout
 			if not is_inside_tree():
-				return
-	await _await_capture_release()
+				return false
+	if panel == _dialogue_panel and dialogue_generation != _dialogue_generation:
+		return false
+	await _await_capture_release(dialogue_generation if panel == _dialogue_panel else -1)
 	if not is_inside_tree():
-		return
+		return false
+	# A cleared or replaced bark owns a new generation; its predecessor cannot hide it.
+	if panel == _dialogue_panel and dialogue_generation != _dialogue_generation:
+		return false
 	panel.hide()
+	return true
 
 
 ## GH#324, the verification-boundary half. The QA hold above is a wall-clock
@@ -1180,7 +1221,7 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 ## shorter bound would hand the race back with no signal. Expiring it is
 ## therefore never routine, so it fails loud (`push_error` prints an `ERROR:`
 ## line, which every run's grep discipline treats as a failure).
-func _await_capture_release() -> void:
+func _await_capture_release(dialogue_generation: int = -1) -> void:
 	if _production_message_timing():
 		return
 	if TestDriver == null or not TestDriver.active():
@@ -1190,13 +1231,15 @@ func _await_capture_release() -> void:
 		ceiling_msec = int(TestDriver.capture_hold_ceiling_msec())
 	var deadline_msec := Time.get_ticks_msec() + ceiling_msec
 	while TestDriver.capture_in_flight() and Time.get_ticks_msec() < deadline_msec:
+		if dialogue_generation >= 0 and dialogue_generation != _dialogue_generation:
+			return
 		var tree := get_tree()
 		if tree == null:
 			return
 		await tree.process_frame
 		if not is_inside_tree():
 			return
-	if TestDriver.capture_in_flight():
+	if TestDriver.capture_in_flight() and (dialogue_generation < 0 or dialogue_generation == _dialogue_generation):
 		push_error("GH#324: capture-hold ceiling (%d ms) expired with a capture still in flight -- a transient panel just retired mid-capture; the evidence race is OPEN for this shot" % ceiling_msec)
 
 

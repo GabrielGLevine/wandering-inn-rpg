@@ -1,8 +1,9 @@
 # Holistic art review and harvest direction
 
-Review date: 2026-10-05. Status: **recommendation for taste review**.
-This records findings and a proposed program; it does not approve a new style,
-change a map, or supersede the existing city identity rulings.
+Review date: 2026-10-05. Status: **APPROVED for execution**.
+The user approved this program on 2026-10-05: “Execute on your recommendation.”
+Issue #564 owns execution and its documented regional/layout/UI choices.
+The regional identities, canon cutoff and existing gameplay gates remain binding.
 
 ## Recommendation
 

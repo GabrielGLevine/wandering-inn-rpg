@@ -12,8 +12,27 @@ static func uses_touch_layout() -> bool:
 
 
 static func css_scale(viewport: Viewport) -> float:
-	var scale := viewport.get_screen_transform().get_scale().abs()
+	var scale := css_transform(viewport).get_scale().abs()
 	return maxf(0.01, minf(scale.x, scale.y))
+
+
+static func css_transform(viewport: Viewport) -> Transform2D:
+	var screen := viewport.get_screen_transform()
+	if not OS.has_feature("web"):
+		return screen
+	# Godot reports backing pixels; DOM contacts and safe-area insets use CSS.
+	var encoded: Variant = JavaScriptBridge.eval("""
+	(() => {
+	 const canvas = document.querySelector('canvas');
+	 if (!canvas || !canvas.width || !canvas.height) return null;
+	 const rect = canvas.getBoundingClientRect();
+	 return JSON.stringify([rect.width / canvas.width, rect.height / canvas.height, rect.left, rect.top]);
+	})()
+	""", true)
+	var values: Variant = JSON.parse_string(String(encoded)) if encoded is String else null
+	if values is Array and values.size() == 4 and float(values[0]) > 0.0 and float(values[1]) > 0.0:
+		return Transform2D(Vector2(float(values[0]), 0.0), Vector2(0.0, float(values[1])), Vector2(float(values[2]), float(values[3]))) * screen
+	return screen
 
 
 static func touch_size(viewport: Viewport, desktop_size: Vector2) -> Vector2:
@@ -29,7 +48,7 @@ static func readable_font_size(viewport: Viewport, desktop_size: int, text_scale
 
 
 static func css_rect(viewport: Viewport, rect: Rect2) -> Rect2:
-	return viewport.get_screen_transform() * rect
+	return css_transform(viewport) * rect
 
 
 static func apply_readable_theme(control: Control, viewport: Viewport, text_scale: float) -> void:
@@ -66,7 +85,7 @@ static func safe_rect(viewport: Viewport) -> Rect2:
 			var origin := Vector2(float(edges[0]), float(edges[1]))
 			var end := Vector2(float(edges[2]), float(edges[3]))
 			var css_bounds := Rect2(origin, end - origin)
-			return bounds.intersection(viewport.get_screen_transform().affine_inverse() * css_bounds)
+			return bounds.intersection(css_transform(viewport).affine_inverse() * css_bounds)
 	elif OS.has_feature("mobile") or DisplayServer.window_get_mode() >= DisplayServer.WINDOW_MODE_FULLSCREEN:
 		return WIFieldHotbarLayout.viewport_safe_rect(bounds.size, DisplayServer.get_display_safe_area(), DisplayServer.screen_get_size())
 	return bounds

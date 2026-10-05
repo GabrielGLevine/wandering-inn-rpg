@@ -72,7 +72,10 @@
    "frames": 3
   },
   {
-   "action": "assert_combat_layout"
+   "action": "assert_combat_layout",
+   "contains": {
+    "context_text": "Tap adjacent to move."
+   }
   },
   {
    "action": "screenshot",
@@ -172,7 +175,10 @@
    "frames": 3
   },
   {
-   "action": "assert_combat_layout"
+   "action": "assert_combat_layout",
+   "contains": {
+    "context_text": "Tap adjacent to move."
+   }
   },
   {
    "action": "screenshot",
@@ -272,7 +278,10 @@
    "frames": 3
   },
   {
-   "action": "assert_combat_layout"
+   "action": "assert_combat_layout",
+   "contains": {
+    "context_text": "Tap adjacent to move."
+   }
   },
   {
    "action": "screenshot",
@@ -545,6 +554,42 @@
    "name": "inspect_5"
   },
   {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "details"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "actions"
+  },
+  {
+   "action": "screenshot",
+   "name": "inspection_context_details"
+  },
+  {
+   "action": "touch_combat_pages",
+   "name": "inspection_context_pages",
+   "contains": [
+    "Current action",
+    "Inspect:",
+    "HP",
+    "Attack \u00b7 2 AP"
+   ]
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "drawer_close"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
    "action": "touch_hotbar_slot",
    "slot": 1
   },
@@ -554,11 +599,60 @@
    "timeout_sec": 5
   },
   {
-   "action": "assert_combat_layout"
+   "action": "assert_combat_layout",
+   "contains": {
+    "context_text": "No target. Back to move."
+   }
   },
   {
    "action": "screenshot",
    "name": "combat_targeting"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "details"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "actions"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_open": true,
+    "details_tab": "actions",
+    "details_page": 0
+   },
+   "contains": {
+    "details_text": "No target. Back to move."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "targeting_context_details"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "drawer_close"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_open": false
+   },
+   "contains": {
+    "context_text": "No target. Back to move."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
   },
   {
    "action": "touch_combat_control",
