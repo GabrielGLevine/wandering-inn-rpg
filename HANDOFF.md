@@ -9,6 +9,21 @@ archived, or superseded session blocks.
 
 ## Current state
 
+- **User-requested holistic art review of PR #563:** root owns branch
+  `docs/holistic-art-review`, baseline `f35270f07561aa3c533c86625b39dc03245fbecf`.
+  Owned documentation paths: `docs/design/2026-10-05-holistic-art-review.md`,
+  `docs/VISUAL-LOG.md`, and this file. No gameplay or asset integration changes.
+  Local review gallery: `potential_assets/art_direction_review_2026-10-05/index.html`
+  (ignored; never publish its overlay screenshots). Evidence: ten existing
+  windowed routes, load gate, and a disposable 62-view survey of all 32 maps;
+  147 screenshots, passing results and clean complete logs. The survey is
+  framing evidence only; its script is retained in the gallery, removed from
+  the game. Proposed direction: coherent illustrated pixels, inn composition
+  pilot, one Invrisil commercial cross-street/loop, Pallass lower-city depth,
+  Garden landscaping, quieter ground and chrome. Next: user taste review of
+  the concrete report/gallery; then reconcile #563 and the existing city/help
+  rulings before implementing the selected scene pilot. Phone, physical touch,
+  production animation timing and audio are not proven by this desktop review.
 - **Active #506 touch flow:** root owns `/private/tmp/wi-510-lifecycle`, branch
   `issue/506-creation-back`, based on reviewed #505 candidate `81e66d29`.
   Main now has its identical squash tree at `2197088a`; rebase #506 onto main
