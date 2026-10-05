@@ -808,6 +808,31 @@ func _build_expected_counts() -> Dictionary:
 	counts["mothbear_harvest/slice"] = 7
 	counts["mothbear_harvest/hit"] = 5
 	counts["mothbear_harvest/death"] = 7
+	counts["icon_flash_cut/idle"] = 1
+	counts["icon_bone_dart/idle"] = 1
+	counts["icon_power_strike/idle"] = 1
+	counts["icon_quick_slash/idle"] = 1
+	counts["icon_devastating_slash/idle"] = 1
+	counts["icon_crescent_cut/idle"] = 1
+	counts["icon_piercing_strikes/idle"] = 1
+	counts["icon_triple_thrust/idle"] = 1
+	counts["icon_extended_sweep/idle"] = 1
+	counts["icon_spear_flurry/idle"] = 1
+	counts["icon_pierce_thrust/idle"] = 1
+	counts["icon_keener_edge/idle"] = 1
+	counts["icon_keener_point/idle"] = 1
+	counts["icon_flame_bolt/idle"] = 1
+	counts["icon_flame_jet/idle"] = 1
+	counts["icon_frost_bolt/idle"] = 1
+	counts["icon_ice_shard/idle"] = 1
+	counts["icon_icy_floor/idle"] = 1
+	counts["icon_flame_scythe/idle"] = 1
+	counts["icon_flare_burst/idle"] = 1
+	counts["icon_spellbound_strike/idle"] = 1
+	counts["icon_spellbound_thrust/idle"] = 1
+	counts["icon_attack/idle"] = 1
+	counts["icon_dash/idle"] = 1
+	counts["icon_basic_swordwork/idle"] = 1
 	return counts
 
 

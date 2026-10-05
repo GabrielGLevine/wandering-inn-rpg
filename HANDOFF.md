@@ -42,11 +42,7 @@ archived, or superseded session blocks.
   #507/#508/#509 are closed; #504/#505/#506/#510/#253/#511 and M1 stay open
   for their physical/actual-host/human criteria. Production is unchanged from
   the `ab279415` 36-case local browser baseline.
-  Final CI proves all 266 native canonicals, units/balance, 26 browser registry
-  cases, lifecycle/import and four 31-step audio cases. Eight local private/
-  public audio cases pass with fresh post-contact output; the retained-buffer
-  negative rejects stale output. Historical failures, causal corrections,
-  original-source evidence and narrow known diagnostics are recorded in PR #551.
+  PR #551 records final native/browser/audio evidence and causal corrections.
   Private candidate: `/private/tmp/wi-m1-candidate-93016f0b/m1-web-93016f0b.zip`,
   manifest and observation checklist alongside; PCK `cccbe5f4…`.
   Evidence: `/private/tmp/wi-m1-evidence`, private/public audio roots and
