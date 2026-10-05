@@ -252,6 +252,17 @@ func _execute(step: Dictionary) -> void:
 		"queue_domain_event":
 			ObservableBus.emit_domain_event(String(step["type"]), step.get("payload", {}))
 			await get_tree().process_frame
+		"begin_production_message_timing":
+			var layer := get_tree().root.find_child("MessageLayer", true, false)
+			var deadline := Time.get_ticks_msec() + 15000
+			while layer != null and (bool(layer.get("_toast_draining")) or not (layer.get("_toast_queue") as Array).is_empty()) and Time.get_ticks_msec() < deadline:
+				await get_tree().process_frame
+			if layer == null or bool(layer.get("_toast_draining")) or not (layer.get("_toast_queue") as Array).is_empty():
+				_fail("begin_production_message_timing: earlier messages did not drain")
+			else:
+				real_message_timing = true
+				ObservableBus.emit_domain_event("qa_production_message_timing_enabled", {})
+			await get_tree().process_frame
 		"assert_message_visible":
 			_assert_message_visible(step)
 		"assert_recent_message_count":
@@ -1178,7 +1189,7 @@ func _touch_combat_finish(max_actions: int, first_skill: String = "") -> void:
 
 func _touch_inventory_item(item_id: String) -> void:
 	var panel := get_tree().root.find_child("Inventory", true, false)
-	var index := Game.sim.inventory.find(item_id)
+	var index: int = Game.sim.inventory.find(item_id)
 	if panel == null or index < 0:
 		_fail("touch_inventory_item: item is not carried or panel is absent")
 		return
@@ -1212,7 +1223,7 @@ func _touch_combat_path_step(combat: WICombat, player: Dictionary, enemies: Arra
 						clear = false
 				if not clear:
 					continue
-				var distance := WICombatAI._path_len(combat, from, candidate, 0)
+				var distance: int = WICombatAI._path_len(combat, from, candidate, 0)
 				if distance > 0 and distance < best_length:
 					best_length = distance
 					best = WICombatAI._path_step(combat, from, candidate, 0)
@@ -1469,7 +1480,7 @@ func _assert_message_layout(kind: String) -> void:
 		if WIResponsiveLayout.uses_touch_layout() and font_size * WIResponsiveLayout.css_scale(get_viewport()) + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
 			_fail("assert_message_layout: message text is too small")
 		var field := get_tree().root.find_child("FieldHotbar", true, false)
-		if (WIResponsiveLayout.uses_touch_layout() or kind == "dialogue") and field != null and field.visible and bounds.end.y > field.world_bottom() + 0.01:
+		if field != null and field.visible and bounds.end.y > field.world_bottom() + 0.01:
 			_fail("assert_message_layout: message overlaps field controls or details")
 		ObservableBus.emit_domain_event("qa_message_layout_measured", {"kind": kind, "font_css": font_size * WIResponsiveLayout.css_scale(get_viewport()), "text_scale": WISettings.text_scale_label()})
 	_capture_depth -= 1
@@ -1757,7 +1768,7 @@ func _assert_creation_layout() -> void:
 		return
 	var safe := WIResponsiveLayout.safe_rect(get_viewport())
 	var css_scale := WIResponsiveLayout.css_scale(get_viewport())
-	var scale := WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]
+	var scale: float = WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]
 	var controls: Array[Control] = [screen.get("_back_button")]
 	for key: String in ["_name_edit", "_begin_button"]:
 		var control: Control = screen.get(key)

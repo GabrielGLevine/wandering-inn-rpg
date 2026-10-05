@@ -7704,9 +7704,11 @@
      "relc_intro"
     ],
     "systems": [
+     "char_creation",
      "combat",
      "dialogue",
      "exploration",
+     "input",
      "night_phase",
      "quests"
     ]

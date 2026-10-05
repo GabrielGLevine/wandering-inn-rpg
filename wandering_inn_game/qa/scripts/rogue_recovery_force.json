@@ -1,5 +1,5 @@
 {
- "_comment": "Fresh fight-first/force-crate recovery: real victories, ordinary drainage return, deliberate crossing receipt, Rogue at sleep; no respawn or direct grant. Keyboard/native route; phone profiles are emulation, physical acceptance remains #511.",
+ "_comment": "Fresh fight-first/force-crate recovery: real victories, ordinary drainage return, deliberate crossing receipt, Rogue at sleep; no respawn or direct grant. Keyboard/native route; phone profiles are emulation, physical acceptance remains #511. Recovery messages use production timing after a naturally drained accelerated prelude; no queue clearing or synthetic receipts.",
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [
@@ -1492,6 +1492,9 @@
    "timeout_sec": 5
   },
   {
+   "action": "begin_production_message_timing"
+  },
+  {
    "action": "move",
    "direction": "left",
    "steps": 13
@@ -1561,7 +1564,24 @@
    "payload_contains": {
     "text": "You keep low through the drainage crossing, out of sight of the road."
    },
-   "timeout_sec": 10
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "rogue"
+   }
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "You keep low through the drainage crossing",
+   "visible": true
+  },
+  {
+   "action": "assert_message_layout",
+   "kind": "toast"
   },
   {
    "action": "screenshot",
@@ -1771,6 +1791,24 @@
    "action": "assert_state",
    "path": "classes.rogue",
    "equals": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Rogue] class gained! \u2014 [Stealth]"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "[Rogue] class gained!",
+   "visible": true
+  },
+  {
+   "action": "assert_message_layout",
+   "kind": "toast"
   },
   {
    "action": "screenshot",

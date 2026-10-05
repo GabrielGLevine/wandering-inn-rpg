@@ -705,6 +705,7 @@ func _apply_toast_position() -> void:
 		var right := safe.end.x - viewport.get_visible_rect().size.x - 24.0
 		UIChrome.set_offsets(_toast_panel, right - _message_width(), bottom - _toast_panel_height, right, bottom)
 	else:
+		bottom = minf(bottom, _message_bottom(WIResponsiveLayout.safe_rect(get_viewport()), 0.0))
 		UIChrome.set_offsets(_toast_panel, TOAST_LEFT, bottom - _toast_panel_height, TOAST_RIGHT, bottom)
 
 

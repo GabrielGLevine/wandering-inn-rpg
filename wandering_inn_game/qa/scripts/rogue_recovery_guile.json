@@ -1,9 +1,173 @@
 {
- "_comment": "Fresh earned Mage/Light guile-crate recovery after road victory. Ordinary return through doors, drainage cover/transit receipt, Rogue acquired only at sleep. No fixture, direct grant or respawn.",
+ "_comment": "Fresh creation, earned Warrior and Mage/Light, actual road victory and guile crate recovery. Ordinary stairs/door travel, deliberate drainage cover/transit, Rogue only at sleep. No fixture, teleport, direct grant or respawn. Native keyboard route; combat_autoplay proves outcomes only, not player tactics or touch. Recovery messages use production timing after a naturally drained accelerated prelude; no queue clearing or synthetic receipts.",
  "steps": [
   {
    "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_char_creation_card",
+   "card": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "type_text",
+   "text": "Sella"
+  },
+  {
+   "action": "click_char_creation_begin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "difficulty",
+    "options": [
+     "Bronze Rank",
+     "Silver Rank",
+     "Gold Rank"
+    ],
+    "cursor": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "hints",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "cursor": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_char_creation_card",
+   "card": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_confirmed",
+   "payload_contains": {
+    "pc_name": "Sella",
+    "pc_race": "drake",
+    "pc_gender": "f",
+    "difficulty_step": 1,
+    "quest_hints": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
    "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_gdi_opener_rendered",
+   "payload_contains": {
+    "lines": 4,
+    "race": "drake"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_name",
+   "equals": "Sella"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_race",
+   "equals": "drake"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_gender",
+   "equals": "f"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_sprite",
+   "equals": "pc_drake_f"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "pc_sprite": "pc_drake_f"
+   },
+   "from_start": true,
    "timeout_sec": 5
   },
   {
@@ -188,10 +352,81 @@
    ]
   },
   {
-   "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
-   "action": "teleport",
-   "map": "inn_upstairs",
-   "cell": [
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
     9,
     2
    ]
@@ -219,10 +454,68 @@
    "equals": 1
   },
   {
-   "_comment": "== PHASE B: cross the floodplains ambush (fight 1, Warrior kit + Relc ally) ==. Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3').",
-   "action": "teleport",
-   "map": "inn",
-   "cell": [
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
     2,
     3
    ]
@@ -573,10 +866,81 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
-   "action": "teleport",
-   "map": "inn_upstairs",
-   "cell": [
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
     9,
     2
    ]
@@ -604,10 +968,68 @@
    "equals": 1
   },
   {
-   "_comment": "== PHASE E: back to the street for the crate quest. The mage sleep RE-ARMED goblin_encounter_1, so crossing the zone again fights it (fight 2, now Warrior/Mage). Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3'). ==",
-   "action": "teleport",
-   "map": "inn",
-   "cell": [
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
     2,
     3
    ]
@@ -1108,6 +1530,9 @@
    "timeout_sec": 5
   },
   {
+   "action": "begin_production_message_timing"
+  },
+  {
    "action": "move",
    "direction": "left",
    "steps": 13
@@ -1177,7 +1602,24 @@
    "payload_contains": {
     "text": "You keep low through the drainage crossing, out of sight of the road."
    },
-   "timeout_sec": 10
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "rogue"
+   }
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "You keep low through the drainage crossing",
+   "visible": true
+  },
+  {
+   "action": "assert_message_layout",
+   "kind": "toast"
   },
   {
    "action": "screenshot",
@@ -1389,9 +1831,29 @@
    "equals": 2
   },
   {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Rogue] class gained! \u2014 [Stealth]"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "[Rogue] class gained!",
+   "visible": true
+  },
+  {
+   "action": "assert_message_layout",
+   "kind": "toast"
+  },
+  {
    "action": "screenshot",
    "name": "02_rogue_at_sleep"
   }
  ],
- "fail_fast": true
+ "fail_fast": true,
+ "starts_at_title": true,
+ "creation_ui": true
 }

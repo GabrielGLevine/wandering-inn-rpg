@@ -13,12 +13,16 @@ archived, or superseded session blocks.
   branch `issue/506-touch-flow`, base `2d1830a9`. Integrated #509 lifetime,
   #253 import-request ownership, #510 DOM-input/audio lifecycle probes and
   #507 responsive Controls/Help. Approved #508 cleared-road covered crossing
-  implemented; fresh force298/298 and guile235/235 plus sim negatives pass.
+  implemented; fresh force298/298 plus sim negatives pass. Guile312/312 now uses
+  actual creation/stairs, zero teleports, production recovery receipts with
+  visibility/bounds and no Rogue before final sleep.
   Fresh DPR2 Android touch route170/170 and275 trusted contacts passes; creation
   130% six-choice explanation route64/64 passes. Composed measured reference
   scroll/Back/resize passes; fresh native guidance131/131 passes, including a
   reproduced/repaired desktop dialogue/readout overlap. Final source changes
-  add explicit touch victory/tutor wording; full gates and review remain next.
+  add explicit touch victory/tutor wording and desktop toast clearance. First
+  composed preflight caught type/pin/prose/doc limits, all repaired; restart
+  full gates and final evidence review next.
   Root owns remaining tracked M1 source/QA/docs; all implementation lanes are
   integrated and workers have stopped edits. Preserve node_modules symlink and
   companion UID as untracked. Evidence `/private/tmp/wi-m1-evidence`,
