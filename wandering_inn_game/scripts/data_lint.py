@@ -667,6 +667,59 @@ def check_sprites(parsed: dict, errors: list) -> None:
 			errors.append(f"sprites.json: entry '{key}' missing non-empty animations")
 
 
+def check_sprite_fallbacks(parsed: dict, errors: list, bundle_paths: set | None = None) -> None:
+	"""Fallbacks must be one-hop, non-player entries with public sheets.
+	Manifest membership is authoritative even when a private overlay is installed.
+	"""
+	sprites = parsed.get(DATA / "sprites.json") or {}
+	if bundle_paths is None:
+		manifest = json.loads((GAME_ROOT / "assets_manifest.json").read_text(encoding="utf-8"))
+		bundle_paths = {asset["path"] for asset in manifest.get("assets", []) if asset.get("bundle")}
+	for sid, entry in sprites.items():
+		if not isinstance(entry, dict) or "fallback_sprite" not in entry:
+			continue
+		target = entry["fallback_sprite"]
+		where = f"sprites.json: '{sid}' fallback_sprite '{target}'"
+		if not isinstance(target, str) or not target:
+			errors.append(f"{where} must be a non-empty sprite id")
+			continue
+		if target == sid:
+			errors.append(f"{where} points at itself")
+			continue
+		if target not in sprites:
+			errors.append(f"{where} is not a sprite id")
+			continue
+		if target.startswith("pc_"):
+			errors.append(f"{where} is a player-only pc_* skin")
+			continue
+		tgt = sprites[target]
+		if not isinstance(tgt, dict):
+			errors.append(f"{where} is not a sprite entry")
+			continue
+		if "fallback_sprite" in tgt:
+			errors.append(f"{where} chains to another fallback")
+			continue
+		animations = tgt.get("animations")
+		if not isinstance(animations, dict) or not animations:
+			errors.append(f"{where} lacks valid sheet animations")
+			continue
+		sheets = []
+		valid = True
+		for anim in animations.values():
+			if not isinstance(anim, dict):
+				valid = False
+				break
+			paths = [value for key, value in anim.items() if key.startswith("sheet")]
+			if not paths or any(not isinstance(path, str) or not path for path in paths):
+				valid = False
+				break
+			sheets.extend(paths)
+		if not valid:
+			errors.append(f"{where} lacks valid sheet animations")
+		elif any(path.removeprefix("res://") in bundle_paths for path in sheets):
+			errors.append(f"{where} is itself bundle-only (missing in the public checkout it serves)")
+
+
 def _walk_gates(node, map_id: str, entity_id: str, errors: list) -> None:
 	if isinstance(node, dict):
 		for k, v in node.items():
@@ -2644,6 +2697,7 @@ def main() -> int:
 	check_shared_dialogue_banks_used(parsed, errors)
 	check_prose_duplication(parsed, maps, errors)
 	check_sprites(parsed, errors)
+	check_sprite_fallbacks(parsed, errors)
 	check_skill_icons(parsed, errors)
 	check_talk_banks(maps, errors)
 	check_gate_shapes(maps, errors)

@@ -12,15 +12,16 @@ func _init() -> void:
 	for sprite_id: String in catalog:
 		assert(WISpriteRegistry.has_sprite(sprite_id), "registry missing sprite: " + sprite_id)
 		var frames: SpriteFrames = WISpriteRegistry.frames_for(sprite_id)
-		var entry: Dictionary = catalog[sprite_id]
+		var resolved: String = WISpriteRegistry.resolved_id(sprite_id)
+		var entry: Dictionary = catalog[resolved]
 		var directional: bool = bool(entry.get("directional", false))
 		for anim_name: String in entry["animations"]:
 			var facings: Array[String] = _facings(directional)
 			for facing: String in facings:
 				var full_name: String = "%s_%s" % [anim_name, facing] if facing != "" else anim_name
 				assert(frames.has_animation(full_name), "%s missing animation: %s" % [sprite_id, full_name])
-				var expected: int = expected_counts.get("%s/%s" % [sprite_id, anim_name], -1)
-				assert(expected >= 0, "no expected frame count for %s/%s" % [sprite_id, anim_name])
+				var expected: int = expected_counts.get("%s/%s" % [resolved, anim_name], -1)
+				assert(expected >= 0, "no expected frame count for %s/%s" % [resolved, anim_name])
 				var actual: int = frames.get_frame_count(full_name)
 				var anim_rec: Dictionary = entry["animations"][anim_name]
 				var sheet_key: String = "sheet_%s" % facing if facing != "" else "sheet"
@@ -28,13 +29,14 @@ func _init() -> void:
 					assert(actual >= 1, "%s animation %s: fallback placeholder needs >= 1 frame" % [sprite_id, full_name])
 				else:
 					assert(actual == expected, "%s animation %s: expected %d frames, got %d" % [sprite_id, full_name, expected, actual])
-				_assert_expected_region(sprite_id, full_name, frames.get_frame_texture(full_name, 0))
+				_assert_expected_region(resolved, full_name, frames.get_frame_texture(full_name, 0))
 	_assert_visual_log_assets_are_real(catalog)
 	_assert_no_pc_sprites_in_scene()
 	assert(not WISpriteRegistry.has_sprite("missing_sprite"), "registry should reject unknown sprite ids")
 	_assert_biome_tiles_build()
 	_assert_ice_tile_is_bespoke_and_opaque()
 	_assert_missing_sheet_fallback()
+	_assert_fallback_sprite_resolution()
 	print("PASS: sprite registry catalog builds SpriteFrames")
 	quit(0)
 
@@ -131,6 +133,74 @@ func _assert_missing_sheet_fallback() -> void:
 	frames2.remove_animation("default")
 	WISpriteRegistry._add_strip(frames2, "idle", "res://assets/__nonexistent_region__.png", Vector2i(16, 16), 6.0, [0, 0, 64, 16])
 	assert(frames2.get_frame_count("idle") == 4, "region placeholder should yield 4 frames")
+
+
+func _assert_fallback_sprite_resolution() -> void:
+	# Synthetic sheets keep this contract independent of the private overlay.
+	var real_sheet := "res://assets/sprites/door_locked_heavy/Idle-Sheet.png"
+	var missing_sheet := "res://assets/__nonexistent_pack__.png"
+	assert(ResourceLoader.exists(real_sheet), "fixture sheet moved: " + real_sheet)
+	WISpriteRegistry.reset()
+	WISpriteRegistry._load_catalog()
+	var cat: Dictionary = WISpriteRegistry._catalog
+	var owned := {"render_scale": 0.4, "anchor": [0.25, 0.75], "shadow": true,
+		"animations": {"idle": {"sheet": real_sheet, "frame_size": [16, 32],
+			"region": [16, 0, 32, 32], "fps": 2}}}
+	var primary := {"render_scale": 1.0, "anchor": [0.5, 1.0],
+		"fallback_sprite": "__t_owned", "directional": true,
+		"animations": {"idle": {"sheet_down": real_sheet, "sheet_side": real_sheet,
+			"sheet_up": missing_sheet, "frame_size": [64, 64], "fps": 1}}}
+	cat["__t_owned"] = owned
+	cat["__t_missing"] = primary
+	cat["__t_present"] = {"fallback_sprite": "__t_owned",
+		"animations": {"idle": {"sheet": real_sheet, "frame_size": [64, 64], "fps": 1}}}
+	cat["__t_missing_anim"] = cat["__t_present"].duplicate(true)
+	cat["__t_missing_anim"]["animations"]["walk"] = {"sheet": missing_sheet, "frame_size": [64, 64]}
+	assert(WISpriteRegistry.resolved_id("__t_missing") == "__t_owned", "one missing facing must swap the whole entry")
+	assert(WISpriteRegistry.resolved_id("__t_missing_anim") == "__t_owned", "a missing later animation must swap the whole entry")
+	assert(WISpriteRegistry.resolved_id("__t_present") == "__t_present", "present primary must stay primary")
+	assert(WISpriteRegistry.has_sprite("__t_missing"), "existence uses the requested id")
+	assert(not WISpriteRegistry.has_sprite("__t_unknown"), "resolution must not create catalog ids")
+	assert(WISpriteRegistry.resolved_id("__t_unknown") == "__t_unknown", "unknown id stays unknown")
+	assert(WISpriteRegistry.entry_for("__t_unknown").is_empty(), "unknown entry stays empty")
+	assert(WISpriteRegistry.entry_for("__t_missing") == owned, "all presentation fields must follow the fallback")
+	assert(WISpriteRegistry.anchor_for("__t_missing") == Vector2(0.25, 0.75), "anchor must follow fallback art")
+	assert(is_equal_approx(float(WISpriteRegistry.entry_for("__t_missing")["render_scale"]), 0.4), "scale must follow fallback art")
+	var frames := WISpriteRegistry.frames_for("__t_missing")
+	assert(frames == WISpriteRegistry.frames_for("__t_missing"), "requested id must cache frames")
+	assert(frames.has_animation("idle") and not frames.has_animation("idle_down"), "directionality must follow fallback art")
+	assert(frames.get_frame_count("idle") == 2, "frame count must follow fallback region")
+	assert(is_equal_approx(frames.get_animation_speed("idle"), 2.0), "timing must follow fallback art")
+	var tex := frames.get_frame_texture("idle", 0) as AtlasTexture
+	assert(tex.region == Rect2(16, 0, 16, 32), "fallback crop and frame geometry must replace the primary")
+	assert(not WISpriteRegistry.is_fallback_sheet(real_sheet), "owned fallback must load real art")
+	for invalid: Variant in ["__t_nope", "__t_invalid", "__t_chain", "__t_unavailable", "pc_test", 7, "", null]:
+		var id := "__t_bad_%s" % str(invalid)
+		cat[id] = {"fallback_sprite": invalid,
+			"animations": {"idle": {"sheet": missing_sheet, "frame_size": [16, 23], "fps": 1}}}
+		cat["__t_invalid"] = "not an entry"
+		cat["__t_chain"] = {"fallback_sprite": "__t_owned", "animations": owned["animations"]}
+		cat["__t_unavailable"] = {"animations": cat[id]["animations"]}
+		cat["pc_test"] = owned
+		assert(WISpriteRegistry.resolved_id(id) == id, "invalid fallback must retain placeholder path: " + id)
+		var bad_frames := WISpriteRegistry.frames_for(id)
+		assert(bad_frames.get_frame_texture("idle", 0).get_size() == Vector2(16, 23), "invalid fallback must retain primary placeholder geometry")
+	cat["__t_self"] = {"fallback_sprite": "__t_self", "animations": cat["__t_unavailable"]["animations"]}
+	assert(WISpriteRegistry.resolved_id("__t_self") == "__t_self", "self-target must not resolve")
+	primary["animations"]["idle"]["sheet_up"] = real_sheet
+	assert(WISpriteRegistry.resolved_id("__t_missing") == "__t_owned", "resolution must stay consistent with cached frames until reset")
+	WISpriteRegistry.reset()
+	assert(WISpriteRegistry._catalog.is_empty() and WISpriteRegistry._cache.is_empty(), "reset must clear catalog and frames")
+	assert(WISpriteRegistry._resolved_ids.is_empty(), "reset must clear resolved ids")
+	assert(WISpriteRegistry._placeholder_cache.is_empty() and WISpriteRegistry._missing_sheet_logged.is_empty(), "reset must clear placeholder state")
+	WISpriteRegistry._load_catalog()
+	assert(not WISpriteRegistry._catalog.has("__t_missing"), "reset must reload disk without synthetic entries")
+	WISpriteRegistry._catalog["__t_owned"] = owned
+	WISpriteRegistry._catalog["__t_missing"] = primary
+	assert(WISpriteRegistry.resolved_id("__t_missing") == "__t_missing", "reset must reevaluate sheet availability")
+	var fresh := WISpriteRegistry.frames_for("__t_missing")
+	assert(fresh != frames and fresh.has_animation("idle_up"), "reset must rebuild primary frames")
+	WISpriteRegistry.reset()
 
 
 func _load_json(path: String) -> Dictionary:

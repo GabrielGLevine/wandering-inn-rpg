@@ -184,6 +184,69 @@ class TestBrokenFixtures(unittest.TestCase):
         self.assertEqual(self._errs(data_lint.check_gate_shapes, maps), [])
 
 
+class TestSpriteFallbacks(unittest.TestCase):
+    def check(self, sprites, bundle=()):
+        errors = []
+        data_lint.check_sprite_fallbacks(
+            {data_lint.DATA / "sprites.json": sprites}, errors,
+            bundle_paths=set(bundle))
+        return errors
+
+    def entry(self, sheet="res://assets/sprites/owned/Idle.png", **kwargs):
+        return {"animations": {"idle": {"sheet": sheet}}, **kwargs}
+
+    def test_valid_fallback_and_primary_without_fallback(self):
+        self.assertEqual(self.check({
+            "primary": self.entry(fallback_sprite="owned"),
+            "owned": self.entry(), "other": self.entry()}), [])
+
+    def test_dangling_self_chained_and_player_targets(self):
+        for target, entries, message in [
+            ("missing", {}, "not a sprite id"),
+            ("primary", {}, "points at itself"),
+            ("chain", {"chain": self.entry(fallback_sprite="owned"),
+                       "owned": self.entry()}, "chains"),
+            ("pc_test", {"pc_test": self.entry()}, "player-only"),
+        ]:
+            with self.subTest(target=target):
+                errors = self.check({"primary": self.entry(fallback_sprite=target), **entries})
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn(message, errors[0])
+
+    def test_bundle_target_checks_every_animation_and_facing(self):
+        private = "assets/private.png"
+        for key in ["sheet", "sheet_down", "sheet_side", "sheet_up"]:
+            with self.subTest(key=key):
+                target = self.entry()
+                target["animations"]["walk"] = {key: "res://" + private}
+                errors = self.check({"primary": self.entry(fallback_sprite="owned"),
+                                     "owned": target}, [private])
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn("bundle-only", errors[0])
+
+    def test_invalid_target_types_and_animation_records_report_errors(self):
+        for target in [None, 7, [], {}, "", "broken"]:
+            with self.subTest(target=target):
+                errors = self.check({"primary": self.entry(fallback_sprite=target),
+                                     "broken": "not an entry"})
+                self.assertEqual(len(errors), 1, errors)
+        for target in [{}, {"animations": []}, {"animations": {"idle": "bad"}},
+                       {"animations": {"idle": {"sheet": 7}}},
+                       {"animations": {"idle": {"fps": 1}}}]:
+            with self.subTest(target=target):
+                errors = self.check({"primary": self.entry(fallback_sprite="owned"),
+                                     "owned": target})
+                self.assertEqual(len(errors), 1, errors)
+
+    def test_default_bundle_paths_use_manifest_without_overlay_files(self):
+        errors = []
+        data_lint.check_sprite_fallbacks({data_lint.DATA / "sprites.json": {
+            "primary": self.entry(fallback_sprite="owned"),
+            "owned": self.entry("res://assets/props/free_pack/Furniture.png")}}, errors)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("bundle-only", errors[0])
+
+
 class TestStatGrowthFlat(unittest.TestCase):
     """#438 THE FLAT-GROWTH RULE's can-fail proof.
 
