@@ -41,6 +41,7 @@ import { mkdir, rm, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { chromium } from "playwright";
 import { gestureProof } from "./touch_gesture_proof.mjs";
+import { dispatchDrag } from "./touch_dispatch.mjs";
 
 const args = process.argv.slice(2);
 const touchMode = args.includes("--touch");
@@ -348,12 +349,7 @@ const serviceTouch = async () => {
 			realTouches += 1;
 		} else if (gesture.drag) {
 			if (holdMs || repeat !== 1 || gesture.follow_purchase_buy) throw new Error("drag cannot combine with purchase or repeated contacts");
-			await touchSession.send("Input.dispatchTouchEvent", {type: "touchStart", touchPoints: [{x: req.x, y: req.y}]});
-			for (let index = 1; index <= 8; index++) {
-				await page.waitForTimeout(20);
-				await touchSession.send("Input.dispatchTouchEvent", {type: "touchMove", touchPoints: [{x: req.x + (gesture.end_x - req.x) * index / 8, y: req.y + (gesture.end_y - req.y) * index / 8}]});
-			}
-			await touchSession.send("Input.dispatchTouchEvent", {type: "touchEnd", touchPoints: []});
+			await dispatchDrag(touchSession, req);
 			realTouches += 1;
 		} else if (gesture.follow_purchase_buy) {
 			if (holdMs || repeat !== 1) throw new Error("pre-arm burst requires one unheld opening contact");

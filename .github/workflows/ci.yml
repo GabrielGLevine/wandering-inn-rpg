@@ -455,7 +455,9 @@ jobs:
         run: python3 wandering_inn_game/qa/web/run_browser_suite.py --skip-export
 
       - name: Touch gesture negative controls
-        run: node wandering_inn_game/qa/web/touch_gesture_proof_test.mjs
+        run: |
+          node wandering_inn_game/qa/web/touch_gesture_proof_test.mjs
+          node wandering_inn_game/qa/web/touch_dispatch_test.mjs
 
       - name: Lifecycle runner negative controls
         run: node wandering_inn_game/qa/web/lifecycle_result_test.mjs

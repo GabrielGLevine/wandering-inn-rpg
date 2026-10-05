@@ -1,5 +1,5 @@
 {
-  "_comment": "Fresh touch-only creation, Back, earned Helper/Cooking, real Relc training, sleep-earned Warrior, Journal loadout, earned spear, aimed-skill cancel/end-turn/ambush/results and resumed exploration. No fixture, keyboard, teleport or sim autoplay. Combat planner only reads live state; every command uses browser touch through shipped UI. Chromium phone profiles do not prove physical Safari/Chrome. TestDriver accelerates presentation; this route proves input/state/render wiring, not production tween timing.",
+  "_comment": "Fresh touch-only creation, Back, earned Helper/Cooking, real Relc training, sleep-earned Warrior, Journal loadout, earned spear, aimed-skill cancel/end-turn/ambush/results and resumed exploration. No fixture, keyboard, teleport or sim autoplay. Combat planner only reads live state; every command uses browser touch through shipped UI. Chromium phone profiles do not prove physical Safari/Chrome. Erin's sleep cue uses natural message timing through capture and retirement; other presentation remains accelerated, so this route does not prove production tween timing.",
   "starts_at_title": true,
   "creation_ui": true,
   "fail_fast": true,
@@ -203,6 +203,9 @@
       "steps": 2
     },
     {
+      "action": "begin_production_message_timing"
+    },
+    {
       "action": "touch_cell",
       "cell": [
         7,
@@ -225,6 +228,14 @@
     {
       "action": "screenshot",
       "name": "04b_earned_sleep_cue"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_dialogue_line_hidden",
+      "timeout_sec": 10
+    },
+    {
+      "action": "end_production_message_timing"
     },
     {
       "action": "wait_seconds",

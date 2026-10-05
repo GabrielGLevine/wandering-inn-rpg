@@ -265,6 +265,9 @@ func _execute(step: Dictionary) -> void:
 			await get_tree().process_frame
 		"assert_message_visible":
 			_assert_message_visible(step)
+		"end_production_message_timing":
+			real_message_timing = false
+			ObservableBus.emit_domain_event("qa_production_message_timing_disabled", {})
 		"assert_recent_message_count":
 			var recent_count := 0
 			var message_script: GDScript = load("res://src/ui/message_layer.gd")
