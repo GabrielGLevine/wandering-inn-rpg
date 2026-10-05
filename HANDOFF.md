@@ -9,37 +9,33 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **M1 software candidate (#506 primary):** PR #551, `issue/506-touch-flow`,
-  base `2d1830a9`; current QA source `93016f0b`, tree `5e90899f`.
-  Owner-approved #507 creation/footer/difficulty and #508 cleared-road cover,
-  #509 bark ownership, #253 import ownership and #510 scoped probes are composed.
-  Production is unchanged from `ab279415` (36 local browser cases pass).
-  First CI `0154a281`: browser 20 pass/6 fail from CDP latency/Erin timing.
-  `082a42dd`: 21 pass/5 fail from queued drag bursts. `ee9ecad6` awaits
-  touchStart delivery before pacing moves; ten focused local cases pass.
-  CI `fec91f7f` passes all 26 registry cases and seven other jobs, but its
-  newly reached input/audio probe expects absent licensed title music.
-  `93016f0b` retains title/name context-state checks and requires actual game
-  output after suspension + trusted Pause using committed SFX. Eight local
-  private/public direct/iframe cases pass (31 steps each). Capture excludes
-  control/suspended taps and flushes pre-resume analyser history. A retained-
-  waveform/zero-fresh-output negative rejects the old sampler's false green.
-  Four-second contact deadline, 80 ms drag proof and RMS thresholds are intact.
-  Web CI job allowance is 60 minutes; prior run reached audio at 42 minutes.
-  Native/units/balance evidence retains its original source; PR owns exact-head
-  CI, independent final review, per-criterion proof and squash tree identity.
-  Evidence: `/private/tmp/wi-m1-audio-private-93016f0b`, public counterpart,
-  `/private/tmp/wi-m1-audio-stale-negative-93016f0b`,
-  `/private/tmp/wi-m1-browser-drag-start-ee9ecad6` and `/private/tmp/wi-m1-evidence`.
-  Root owns `/private/tmp/wi-m1-506` and public audio verification tree;
-  other lanes are integrated/idle. Preserve untracked node_modules/companion UID
+- **M1 software merged through PR #551:** squash `6148d1e5`, tree
+  `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
+  (standalone tree `5e8af12d`); QA/export source `93016f0b`.
+  CI run `37355007466` passes all eight jobs on composed checkout `4f315958`,
+  whose tree exactly matches the squash. Independent source and post-merge
+  reviews approve. Incoming #552/#553 tooling and backup guidance are preserved.
+  #507/#508/#509 are closed; #504/#505/#506/#510/#253/#511 and M1 stay open
+  for their physical/actual-host/human criteria. Production is unchanged from
+  the `ab279415` 36-case local browser baseline.
+  Final CI proves all 266 native canonicals, units/balance, 26 browser registry
+  cases, lifecycle/import and four 31-step audio cases. Eight local private/
+  public audio cases pass with fresh post-contact output; the retained-buffer
+  negative rejects stale output. Historical failures, causal corrections,
+  original-source evidence and narrow known diagnostics are recorded in PR #551.
+  Private candidate: `/private/tmp/wi-m1-candidate-93016f0b/m1-web-93016f0b.zip`,
+  manifest and observation checklist alongside; PCK `cccbe5f4…`.
+  Evidence: `/private/tmp/wi-m1-evidence`, private/public audio roots and
+  `/private/tmp/wi-m1-audio-stale-negative-93016f0b`.
+  Root's implementation tree is `/private/tmp/wi-m1-506`; final handoff only
+  uses `/private/tmp/wi-m1-closeout`, based on merged main `6148d1e5`.
+  Other lanes are integrated/idle. Preserve untracked node_modules/companion UID
   and the unrelated PixelLab note in the original main tree's dirty HANDOFF.
-  Next acceptance: #511 physical iPhone Safari/Android Chrome and three
-  unfamiliar-player sessions with desktop reference; none supplied. OS keyboard,
-  chooser/background/audio policy and actual itch remain unproven. Use
-  `wandering_inn_game/qa/M1-OBSERVATIONS.md` with the private manifest
-  (PCK `cccbe5f4…`). No release/deploy/outreach/recruitment authorized.
-  M1 stays open pending physical and human results.
+  **Exact next action:** collect #511 physical iPhone Safari/Android Chrome
+  observations and three unfamiliar-player sessions with desktop reference,
+  using the same private candidate and `qa/M1-OBSERVATIONS.md`. None supplied.
+  OS keyboard/chooser/background/audio policy and actual itch remain unproven.
+  No release/deploy/outreach/recruitment authorized. M1 stays open.
 - **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
   tree-identical to reviewed `81e66d29`. Independent source/visual review and all
   eight CI checks pass, including 259 canonical scripts, both balance policies,
@@ -58,8 +54,8 @@ archived, or superseded session blocks.
   returns home and gains Rogue at sleep. Drainage, Watch, stealth-break and
   production-timing proof pass on desktop and both emulated phone profiles.
   Evidence: `/private/tmp/wi-508-evidence/composed`. Physical evidence is open.
-  The owner-approved cleared-road crossing recovery is implemented on the
-  M1 candidate; no enemies respawn. The issue PR records final verification.
+  The owner-approved cleared-road crossing recovery is merged through PR #551;
+  no enemies respawn. #508 is closed; PR #551 records final verification.
 - **#504 delivered through PR #547** (`e5b53328`; narrative in the PR body).
   Open only for physical iPhone Safari / Android Chrome observations (#511).
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
@@ -142,14 +138,13 @@ The live index and milestones are authoritative:
 
 Immediate dispatch order:
 
-1. #508 recovery/acquisition, #504 browser-touch purchases, and available
-   #253 target-environment reproduction/verification.
-2. #505 layout, #506 continuous touch flows and #510 critical lifecycle;
-   #503's prerequisite is satisfied. Serialize shared UI/core files.
-3. #509 production-timing/modal evidence and #507 independent guidance.
-4. #511 shared physical-phone observations and composed unfamiliar-player
-   acceptance; observations can feed implementation issues before final verdict.
-5. Bound compiler work to a safe checkpoint and #542/#543 acceptance repairs
+1. #511 shared physical-phone observations and three unfamiliar-player sessions
+   with desktop reference. The owner retained these gates and offered results;
+   no observations have arrived. Software repairs and automated gates are done.
+2. Diagnose supplied observations against the same candidate; close only the
+   corresponding #504/#505/#506/#510/#253 physical/actual-host criteria that
+   pass. A failed observation may authorize a scoped repair in its issue.
+3. Bound compiler work to a safe checkpoint and #542/#543 acceptance repairs
    before further equivalence claims. No new compiler expansion wave ahead
    of actionable M1 work without a concrete dependency or owner reprioritization.
 
