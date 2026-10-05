@@ -26,34 +26,46 @@ source tree, PCK hash, browser, viewport and input class. Physical-device cells
 below remain **UNTESTED**. Historical rows describe their original builds;
 current composed gates supersede their script or layout limitations.
 
-Tested gameplay/QA correction `ee9ecad63fe19f9c02bf86a943f1679b9cf76f83`,
-tree `e5abff380d86ad418695fcb1fb8b04a1040c54a1`, private-overlay Web PCK SHA-256
-`73c227aaf5f5e2fe276dbd712d5f4cec384e3ed08f87caa4f12d81c33b87db88`.
-All ten focused cases pass locally: continuous, responsive panels, Inventory,
-Journal and reference pages on both profiles. Continuous routes complete 178
-steps and 275 contacts each. The helper awaits touchStart delivery before
-pacing eight protocol moves on Node's clock, then awaits every reply before
-completion. Trusted DOM proof (including at least 80 ms contact) and the
-four-second deadline are unchanged. A controlled 400 ms renderer backlog
-reproduces old-helper failure at 58 ms and repaired success at 274 ms actual
-DOM contact; it is a diagnostic probe, not device behavior. CPU throttling
-alone did not reproduce the failure. Erin's actual sleep cue uses production
-timing through screenshot acknowledgement and natural retirement, then restores
-acceleration. Remaining tween timing is not proven. Native import/load/smoke
-at `34e72690` covers identical Godot/game/QA sources; later edits are Node-only.
+Current QA source `93016f0b502724c6fbda01d261a55aaf5dc51cca`,
+tree `5e90899fc6addb1d1cb161464217acf9342357a9`, private-overlay Web PCK SHA-256
+`cccbe5f4e7712b6202ebbeee113e4a0f19a3c8dc0ce64e101295a8ac3088142e`.
+The PCK differs from the prior drag candidate because the lifecycle QA script
+now includes an actual Pause output cue; shipped game production is unchanged.
 
-The unchanged-production baseline `ab279415` passes all 26 local browser registry
-cases plus ten production-message/Stealth cases. First CI `0154a281` passes the
-full 266 native sweep and other gates; browser passes 20/26, six fail from
-per-move CDP latency and accelerated cue expiration. Correction `34e72690`
-passes those six locally. Renewed CI `082a42dd` completes all 26 engine scripts
-and all other jobs, but five wrappers fail actual DOM duration when queued
-drags arrive in a burst after renderer backlog (21 pass/5 fail). Preserve both
-failed runs. PR #551 records final independent review, renewed exact-head CI
-and integration of the start-delivery correction. Broad native/windowed evidence
-is from `664d8cb0`; native units from `e3a10a00`; unchanged-core balance from
-`38a8df9b`. Preserve each run's source; these are not all one-tree runs.
-The final record-only commit changes no shipped game or QA behavior.
+Drag correction `ee9ecad6` passes ten local cases (continuous/panels/Inventory/
+Journal/reference on both profiles). Continuous routes complete 178 steps and
+275 contacts each. The helper awaits touchStart delivery before pacing eight
+moves, then awaits all replies. Trusted DOM proof including 80 ms contact and
+the four-second request deadline remain. A controlled 400 ms renderer backlog
+reproduces old-helper failure at 58 ms and repaired success at 274 ms contact;
+CPU throttling alone did not reproduce it. Erin's actual sleep cue uses natural
+production timing through screenshot acknowledgement and retirement, then
+restores acceleration. Remaining tween timing is not proven.
+
+CI `fec91f7f` passes all 26 browser registry cases and all seven other jobs,
+but the newly reached input/audio stage fails on title RMS: the public checkout
+intentionally omits licensed title music. The context resumed; an independent
+control oscillator produced output while game output remained silent. Current
+QA explicitly treats title/name as context-state measurements and requires
+fresh game output after a new suspension and trusted Pause contact. The real
+`ui_pause_shown`/`menu_move` cue uses committed SFX. Eight cases pass on
+`93016f0b`: both profiles × direct/local iframe × private/public assets, all
+31 complete steps. Game-only capture is armed before the contact, excludes
+suspended/control/untagged taps, and waits for a full analyser window plus
+render quantum to flush pre-resume history. A retained-waveform/zero-fresh-output
+negative produces old-sampler false green and current refusal with positive
+control output. Neither RMS threshold is reduced. Web CI's overall job envelope
+is 60 minutes because the previous run reached the audio stage at 42 minutes;
+per-case/contact deadlines stay unchanged. PR #551 owns final review and CI.
+
+The unchanged-production baseline `ab279415` passes 36 local browser cases.
+Earlier CI `0154a281` passes 20/26 registry cases, failing six on CDP latency/
+accelerated cue timing; `082a42dd` completes all 26 engine scripts but passes
+21 wrappers and fails five on burst drag duration. Preserve every failed run.
+Native focused gates are from `34e72690`; broad native/windowed from `664d8cb0`,
+units from `e3a10a00`, unchanged-core balance from `38a8df9b`. These are
+source-separated evidence, not all one-tree runs. Final integration records
+and CI configuration change no shipped game behavior.
 
 - Fresh creation names all six choices before starting, explains appearance,
   incoming damage and change-later settings. A separate 130% touch route
@@ -82,7 +94,7 @@ The final record-only commit changes no shipped game or QA behavior.
   Empty chooser selection is a surrogate; actual OS Back remains untested.
 - Lifecycle probes use real DOM name input focus/edit/blur and viewport
   rotation, plus explicit AudioContext suspension followed by trusted touch
-  and measured output. Headed Chromium started audio running; neither browser
+  and fresh game output at an actual Pause cue. Chromium started audio running; neither browser
   startup-policy unlock nor genuine hidden/visible backgrounding was observed.
   Local cross-origin iframe is a surrogate for actual itch hosting.
 

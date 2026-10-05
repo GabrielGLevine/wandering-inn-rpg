@@ -10,37 +10,36 @@ archived, or superseded session blocks.
 ## Current state
 
 - **M1 software candidate (#506 primary):** PR #551, `issue/506-touch-flow`,
-  base `2d1830a9`; tested gameplay/QA `ee9ecad6`, tree `e5abff38`.
-  Owner-approved #507 creation/footer/difficulty and #508 cleared-road cover
-  rule, #509 feedback/bark ownership, #253 import-request ownership and #510
-  scoped probes are composed. Production is unchanged from `ab279415`, whose
-  36 local browser cases pass. First CI `0154a281`: browser 20 pass/6 fail
-  from serialized CDP latency and accelerated Erin cue expiration. Correction
-  `34e72690` passes those six locally and uses natural Erin timing. Renewed
-  CI `082a42dd`: all 26 engine scripts complete, 21 wrappers pass/5 fail;
-  renderer backlog bursts queued drags below the unchanged 80 ms minimum.
-  Correction `ee9ecad6` awaits touchStart delivery, then paces eight moves
-  without per-move reply waits. All ten affected cases pass locally on both
-  phone profiles; continuous routes complete 178 steps/275 contacts each.
-  A controlled 400 ms renderer backlog proves old-helper RED 58 ms versus
-  repaired GREEN 274 ms actual contact. Four-second deadline/proof unchanged.
-  Native import/load/smoke at `34e72690` covers identical Godot/game/QA source;
-  broad native/windowed, units and balance retain original source SHAs.
-  Evidence: `/private/tmp/wi-m1-browser-drag-start-ee9ecad6`,
-  `/private/tmp/wi-m1-drag-start-block-ee9ecad6`,
-  `/private/tmp/wi-m1-native-evidence-34e72690`, prior
-  `/private/tmp/wi-m1-browser-final-ab279415` and `/private/tmp/wi-m1-evidence`.
-  PR #551 records per-criterion acceptance, final independent review,
-  renewed exact-head CI and squash tree identity; read it for integration state.
-  Root owns `/private/tmp/wi-m1-506`; other lanes are integrated and idle.
-  Preserve untracked node_modules symlink and companion UID. Preserve the
-  unrelated PixelLab note in the original main worktree's dirty HANDOFF.
+  base `2d1830a9`; current QA source `93016f0b`, tree `5e90899f`.
+  Owner-approved #507 creation/footer/difficulty and #508 cleared-road cover,
+  #509 bark ownership, #253 import ownership and #510 scoped probes are composed.
+  Production is unchanged from `ab279415` (36 local browser cases pass).
+  First CI `0154a281`: browser 20 pass/6 fail from CDP latency/Erin timing.
+  `082a42dd`: 21 pass/5 fail from queued drag bursts. `ee9ecad6` awaits
+  touchStart delivery before pacing moves; ten focused local cases pass.
+  CI `fec91f7f` passes all 26 registry cases and seven other jobs, but its
+  newly reached input/audio probe expects absent licensed title music.
+  `93016f0b` retains title/name context-state checks and requires actual game
+  output after suspension + trusted Pause using committed SFX. Eight local
+  private/public direct/iframe cases pass (31 steps each). Capture excludes
+  control/suspended taps and flushes pre-resume analyser history. A retained-
+  waveform/zero-fresh-output negative rejects the old sampler's false green.
+  Four-second contact deadline, 80 ms drag proof and RMS thresholds are intact.
+  Web CI job allowance is 60 minutes; prior run reached audio at 42 minutes.
+  Native/units/balance evidence retains its original source; PR owns exact-head
+  CI, independent final review, per-criterion proof and squash tree identity.
+  Evidence: `/private/tmp/wi-m1-audio-private-93016f0b`, public counterpart,
+  `/private/tmp/wi-m1-audio-stale-negative-93016f0b`,
+  `/private/tmp/wi-m1-browser-drag-start-ee9ecad6` and `/private/tmp/wi-m1-evidence`.
+  Root owns `/private/tmp/wi-m1-506` and public audio verification tree;
+  other lanes are integrated/idle. Preserve untracked node_modules/companion UID
+  and the unrelated PixelLab note in the original main tree's dirty HANDOFF.
   Next acceptance: #511 physical iPhone Safari/Android Chrome and three
-  unfamiliar-player sessions with desktop reference. No observations supplied.
-  Actual OS keyboard/chooser/background/audio-policy/itch behavior is unproven.
-  Use `wandering_inn_game/qa/M1-OBSERVATIONS.md` and the private manifest
-  (tested PCK `73c227aa…`) for identical-build observations. No release/deploy,
-  outreach or recruitment authorized. M1 remains open pending those results.
+  unfamiliar-player sessions with desktop reference; none supplied. OS keyboard,
+  chooser/background/audio policy and actual itch remain unproven. Use
+  `wandering_inn_game/qa/M1-OBSERVATIONS.md` with the private manifest
+  (PCK `cccbe5f4…`). No release/deploy/outreach/recruitment authorized.
+  M1 stays open pending physical and human results.
 - **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
   tree-identical to reviewed `81e66d29`. Independent source/visual review and all
   eight CI checks pass, including 259 canonical scripts, both balance policies,
