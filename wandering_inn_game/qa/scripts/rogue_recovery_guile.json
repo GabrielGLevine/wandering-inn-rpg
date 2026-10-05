@@ -1,7 +1,5 @@
 {
- "_comment": "Historical pre-repair defect probe: its absent-credit pins are expected to fail after approved #508 recovery. Acceptance routes are rogue_recovery_force and rogue_recovery_guile. Never register this defect-reproduction script as a green gate.",
- "starts_at_title": true,
- "creation_ui": true,
+ "_comment": "Fresh creation, earned Warrior and Mage/Light, actual road victory and guile crate recovery. Ordinary stairs/door travel, deliberate drainage cover/transit, Rogue only at sleep. No fixture, teleport, direct grant or respawn. Native keyboard route; combat_autoplay proves outcomes only, not player tactics or touch. Recovery messages use production timing after a naturally drained accelerated prelude; no queue clearing or synthetic receipts.",
  "steps": [
   {
    "action": "wait_for_event",
@@ -173,99 +171,10 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "== PHASE A: meet Relc, spar, sleep -> Warrior L1 ==",
    "action": "move",
    "direction": "right",
-   "steps": 12
-  },
-  {
-   "action": "move",
-   "direction": "right",
-   "steps": 1
-  },
-  {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "map_changed",
-   "payload_contains": {
-    "map": "floodplains"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    7,
-    6
-   ]
-  },
-  {
-   "action": "move",
-   "direction": "left",
-   "steps": 1
-  },
-  {
-   "action": "move",
-   "direction": "left",
-   "steps": 1
-  },
-  {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "read_the_inn_sign"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "toast",
-   "payload_contains": {
-    "text": "A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN \u2014 NO KILLING GOBLINS."
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "timeout_sec": 5
-  },
-  {
-   "action": "move",
-   "direction": "up",
-   "steps": 1
-  },
-  {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "map_changed",
-   "payload_contains": {
-    "map": "inn"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    14,
-    3
-   ]
-  },
-  {
-   "action": "move",
-   "direction": "right",
-   "steps": 1
+   "steps": 13
   },
   {
    "action": "press",
@@ -310,6 +219,7 @@
    "name": "interact"
   },
   {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
    "action": "wait_for_event",
    "type": "dialogue_line",
    "payload_contains": {
@@ -351,15 +261,6 @@
    "name": "confirm"
   },
   {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "payload_contains": {
-    "speaker": "Relc",
-    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
-   },
-   "timeout_sec": 5
-  },
-  {
    "action": "press",
    "name": "confirm"
   },
@@ -374,220 +275,8 @@
    "timeout_sec": 5
   },
   {
-   "action": "assert_event_logged",
-   "type": "ui_hotbar_rendered",
-   "payload_contains": {
-    "slots": 3
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_tutor_line_rendered",
-   "payload_contains": {
-    "beat": "opening"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "turn_started",
-   "payload_contains": {
-    "id": "pc"
-   },
-   "timeout_sec": 10
-  },
-  {
-   "action": "wait_frames",
-   "frames": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "combat.active",
-   "equals": "pc"
-  },
-  {
-   "action": "assert_state",
-   "path": "combat.combatants.pc.cell",
-   "equals": [
-    2,
-    3
-   ]
-  },
-  {
-   "action": "press",
-   "name": "move_right"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "combatant_moved",
-   "payload_contains": {
-    "id": "pc",
-    "cell": [
-     3,
-     3
-    ]
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_tutor_line_rendered",
-   "payload_contains": {
-    "beat": "first_step"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "move_right"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "combatant_moved",
-   "payload_contains": {
-    "id": "pc",
-    "cell": [
-     4,
-     3
-    ]
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "move_right"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "combatant_moved",
-   "payload_contains": {
-    "id": "pc",
-    "cell": [
-     5,
-     3
-    ]
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_tutor_line_rendered",
-   "payload_contains": {
-    "beat": "pool_empty"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "combat.combatants.pc.move_pool",
-   "equals": 0
-  },
-  {
-   "action": "press",
-   "name": "hotbar_2"
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dashed",
-   "payload_contains": {
-    "id": "pc",
-    "move_pool": 3
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_tutor_line_rendered",
-   "payload_contains": {
-    "beat": "dash"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "move_right"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "combatant_moved",
-   "payload_contains": {
-    "id": "pc",
-    "cell": [
-     6,
-     3
-    ]
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "hotbar_1"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_targeting_shown",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_tutor_line_rendered",
-   "payload_contains": {
-    "beat": "aim"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "cycle"
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "attack_resolved",
-   "payload_contains": {
-    "attacker": "pc"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_tutor_line_rendered",
-   "payload_contains": {
-    "beat": "first_blood"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "end_turn"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "turn_ended",
-   "payload_contains": {
-    "id": "pc"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_tutor_line_rendered",
-   "payload_contains": {
-    "beat": "watch"
-   },
-   "timeout_sec": 5
-  },
-  {
    "action": "combat_autoplay",
-   "max_turns": 200,
-   "policy": "competent"
+   "max_turns": 200
   },
   {
    "action": "wait_for_event",
@@ -615,17 +304,9 @@
    "timeout_sec": 5
   },
   {
-   "action": "wait_frames",
-   "frames": 5
-  },
-  {
    "action": "assert_state",
    "path": "accomplishments.sparred_with_relc",
    "equals": 1
-  },
-  {
-   "action": "assert_event_absent",
-   "type": "item_gained"
   },
   {
    "action": "move",
@@ -768,31 +449,6 @@
    "timeout_sec": 5
   },
   {
-   "action": "wait_for_event",
-   "type": "toast",
-   "payload_contains": {
-    "text": "[Warrior] class gained! \u2014 [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_sleep_veil_rendered",
-   "payload_contains": {
-    "lines": 5
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "payload_contains": {
-    "text": "[Warrior] class gained! \u2014 [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
-   },
-   "from_start": true,
-   "timeout_sec": 10
-  },
-  {
    "action": "assert_state",
    "path": "classes.warrior",
    "equals": 1
@@ -887,161 +543,17 @@
    "timeout_sec": 5
   },
   {
-   "action": "move",
-   "direction": "right",
-   "steps": 5
-  },
-  {
-   "action": "move",
-   "direction": "down",
-   "steps": 6
-  },
-  {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    12,
-    12
+    7,
+    6
    ]
-  },
-  {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_line",
-   "payload_contains": {
-    "speaker": "Relc"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_started",
-   "payload_contains": {
-    "conversation": "relc_intro"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_shown",
-   "timeout_sec": 5
-  },
-  {
-   "action": "move",
-   "direction": "down",
-   "steps": 1
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "item_gained",
-   "payload_contains": {
-    "item": "relcs_spare_spear",
-    "source": "relc_intro"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "toast",
-   "payload_contains": {
-    "text": "Got: Relc's Spare Spear"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "given_spear_by_relc"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "payload_contains": {
-    "speaker": "Relc",
-    "text": "My spare spear. Held gates wider than that one. Now listen. It won't help you from inside a pack. Check your pack, get the spear in your hand before you're back on the road. Sword arm, spear arm. What you carry decides which moves you get."
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_ended",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_hidden",
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "inventory"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_inventory_shown",
-   "payload_contains": {
-    "items": 2
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "move_down"
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "item_equipped",
-   "payload_contains": {
-    "item": "relcs_spare_spear",
-    "slot": "weapon"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "inventory"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_inventory_hidden",
-   "timeout_sec": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "equipped.weapon",
-   "equals": "relcs_spare_spear"
-  },
-  {
-   "action": "move",
-   "direction": "up",
-   "steps": 6
   },
   {
    "action": "move",
    "direction": "right",
-   "steps": 18
+   "steps": 23
   },
   {
    "action": "move",
@@ -1073,14 +585,6 @@
   },
   {
    "action": "wait_for_event",
-   "type": "ui_tutor_line_rendered",
-   "payload_contains": {
-    "beat": "real_ones"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
    "type": "turn_started",
    "payload_contains": {
     "id": "pc"
@@ -1088,16 +592,8 @@
    "timeout_sec": 10
   },
   {
-   "action": "assert_event_logged",
-   "type": "ui_hotbar_rendered",
-   "payload_contains": {
-    "slots": 4
-   }
-  },
-  {
    "action": "combat_autoplay",
-   "max_turns": 300,
-   "policy": "competent"
+   "max_turns": 300
   },
   {
    "action": "wait_for_event",
@@ -1118,15 +614,6 @@
   {
    "action": "press",
    "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "sign_defended",
-    "count": 1
-   },
-   "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
@@ -1172,21 +659,59 @@
    ]
   },
   {
-   "action": "assert_event_logged",
-   "type": "entity_removed",
-   "payload_contains": {
-    "id": "goblin_encounter_1"
-   }
+   "_comment": "== PHASE C: Pisces teaches magic ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
   },
   {
    "action": "move",
    "direction": "right",
-   "steps": 3
+   "steps": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    25,
+    4
+   ]
   },
   {
    "action": "move",
    "direction": "down",
-   "steps": 3
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL S4: first talk to Pisces this waking plays his pool line (dialogue_line + chatted_with_pisces + heard_gossip banks); a second interact opens the magic lesson.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Pisces"
+   },
+   "timeout_sec": 5
   },
   {
    "action": "press",
@@ -1194,11 +719,76 @@
   },
   {
    "action": "wait_for_event",
-   "type": "accomplishment_recorded",
+   "type": "dialogue_started",
    "payload_contains": {
-    "id": "chatted_with_klbkch"
+    "conversation": "pisces_magic"
    },
    "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "met_pisces"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "learned_magic_from_pisces"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== PHASE D: back to the inn, sleep -> [Mage]/[Light] ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 28
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
   },
   {
    "action": "move",
@@ -1208,9 +798,460 @@
   {
    "action": "move",
    "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
    "steps": 3
   },
   {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "mage"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.mage",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "_comment": "Issue #62 finding 8: goblin_encounter_1 is now a ONE-SHOT retirement -- fight1 above (Phase B) already spent it, it can no longer re-arm here. Re-pinned onto relc_spar (persistent:true, always immediately re-fightable) for the 'prove the post-mage kit in a real fight' beat this second crossing existed for. sparred_with_relc is ALREADY 1 from Phase A's own spar, so `meet`'s re-entry now ALSO shows the (still-ungranted) spear-gift option ahead of Spar in authored order -- visible list is ['What's out here worth guarding?'(0), 'You said you had something for me?'(1), 'Got time to show me how to fight? (Spar)'(2), 'Keep walking.'(3)]; move down 2 to skip past both and land on Spar.",
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "First interact this waking (two sleeps happened since Phase A's Relc talk) absorbs the rotating pool bark -- a second interact opens the real relc_intro graph.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "spar_offer node -- sparred_with_relc:1 already banked, so the text_variant ('Again? Fine...') wins over the base line this time. Options ['Ready when you are.'(0), 'Another time.'(1)]; confirm at the default cursor fires start_combat:relc_spar and ends the conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Again? Fine. The dummies heal fast. Straw's forgiving that way. Same rules. Move and hit."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "_comment": "Back to the liscor_gate approach -- same geometry Phase B already proved, now just a plain safe walk (goblin_encounter_1 is gone for good after Phase B's win, no second ambush here anymore). up6->(12,6), left5->(7,6), right23->(30,6), down14->(30,20), down1->(30,21).",
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    20
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "_comment": "== PHASE F: the crate quest (guile path), unchanged from the pre-O4 script. East to Krshia (13,2), accept.",
    "action": "move",
    "direction": "right",
    "steps": 12
@@ -1225,6 +1266,7 @@
    "name": "interact"
   },
   {
+   "_comment": "SOCIAL S4: this waking's mage sleep RE-ARMED social_talked, so the first talk to Krshia here plays her pool line (dialogue_line + chatted_with_krshia + heard_gossip banks); a second interact opens the real crate graph.",
    "action": "wait_for_event",
    "type": "dialogue_line",
    "payload_contains": {
@@ -1266,6 +1308,38 @@
    "frames": 3
   },
   {
+   "_comment": "'accepted' node index 0 loops back to the hub for the hidden-until-studied check.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "OPACITY TEETH: at the hub with asked_about_crate banked but studied_the_cellar NOT yet, the guile report option is genuinely absent (exact-length array match). Krshia's hub also carries an ALWAYS-visible shop-entry option ('Hrr \u2014 what's on the stall today?', unlocked -- no gold gate on the nav option itself) and, since the ratified sell mechanic, an ALWAYS-visible sell-entry option too (appended last, krshia_crate.json), so the exact array is now [shop-entry, Just visiting, sell-entry] -- all unlocked. The buy options' gold-greying lives one node deeper (the 'shop' node), not here.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "options": [
+     {
+      "text": "What's on the stall today?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just visiting.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I've a few things I don't need. Buying?",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'Just visiting.' is now visible index 1 (shop-entry took index 0): move down 1 to it, then confirm to close.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -1285,6 +1359,7 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "South to cellar_door (10,17): down column 13, left to the open x10 column, down; the door blocks (10,17) and faces it.",
    "action": "move",
    "direction": "down",
    "steps": 10
@@ -1297,101 +1372,47 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 3
-  },
-  {
-   "action": "move",
-   "direction": "right",
-   "steps": 2
+   "steps": 4
   },
   {
    "action": "screenshot",
-   "name": "01_south_square_scavengers"
+   "name": "01_cellar_door"
   },
   {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "combat_started",
-   "timeout_sec": 5
+   "action": "press_field_skill",
+   "skill": "light"
   },
   {
    "action": "wait_for_event",
-   "type": "ui_combat_shown",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "turn_started",
+   "type": "skill_used",
    "payload_contains": {
-    "id": "pc"
-   },
-   "timeout_sec": 10
-  },
-  {
-   "action": "combat_autoplay",
-   "max_turns": 300
-  },
-  {
-   "action": "wait_for_event",
-   "type": "combat_finished",
-   "payload_contains": {
-    "victory": true
-   },
-   "timeout_sec": 10
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "quest_beat_completed",
-   "payload_contains": {
-    "id": "missing_crate",
-    "beat": 1
+    "skill": "light",
+    "target": "cellar_door"
    },
    "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
-   "type": "entity_removed",
+   "type": "accomplishment_recorded",
    "payload_contains": {
-    "id": "crate_scavengers"
+    "id": "studied_the_cellar"
    },
    "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
-   "type": "ui_combat_hidden",
+   "type": "ui_toast_rendered",
    "timeout_sec": 5
-  },
-  {
-   "action": "wait_frames",
-   "frames": 5
   },
   {
    "action": "assert_event_logged",
-   "type": "accomplishment_recorded",
+   "type": "toast",
    "payload_contains": {
-    "id": "recovered_crate_force"
+    "text": "[Light] \u2014 The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf."
    }
   },
   {
-   "action": "assert_event_logged",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "found_the_crate"
-   }
-  },
-  {
-   "action": "move",
-   "direction": "left",
-   "steps": 1
-  },
-  {
+   "_comment": "Back up to Krshia (13,2) to report via the now-visible guile option.",
    "action": "move",
    "direction": "up",
    "steps": 3
@@ -1426,6 +1447,23 @@
   {
    "action": "press",
    "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "recovered_crate_guile"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "missing_crate",
+    "beat": 1
+   },
+   "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
@@ -1492,6 +1530,9 @@
    "timeout_sec": 5
   },
   {
+   "action": "begin_production_message_timing"
+  },
+  {
    "action": "move",
    "direction": "left",
    "steps": 13
@@ -1554,6 +1595,35 @@
    "action": "move",
    "direction": "down",
    "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You keep low through the drainage crossing, out of sight of the road."
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "rogue"
+   }
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "You keep low through the drainage crossing",
+   "visible": true
+  },
+  {
+   "action": "assert_message_layout",
+   "kind": "toast"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_cleared_covered_crossing"
   },
   {
    "action": "move",
@@ -1730,14 +1800,14 @@
    "timeout_sec": 10
   },
   {
-   "action": "assert_event_absent",
+   "action": "assert_event_logged",
    "type": "accomplishment_recorded",
    "payload_contains": {
     "id": "crossed_under_cover"
    }
   },
   {
-   "action": "assert_event_absent",
+   "action": "assert_event_logged",
    "type": "class_gained",
    "payload_contains": {
     "class": "rogue"
@@ -1748,7 +1818,42 @@
   },
   {
    "action": "dump_checkpoint",
-   "slot": "force_exhausted"
+   "slot": "guile_recovered"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.rogue",
+   "equals": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Rogue] class gained! \u2014 [Stealth]"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "[Rogue] class gained!",
+   "visible": true
+  },
+  {
+   "action": "assert_message_layout",
+   "kind": "toast"
+  },
+  {
+   "action": "screenshot",
+   "name": "02_rogue_at_sleep"
   }
- ]
+ ],
+ "fail_fast": true,
+ "starts_at_title": true,
+ "creation_ui": true
 }

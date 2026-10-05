@@ -9,21 +9,37 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #506 touch flow:** root owns `/private/tmp/wi-510-lifecycle`, branch
-  `issue/506-creation-back`, based on reviewed #505 candidate `81e66d29`.
-  Main now has its identical squash tree at `2197088a`; rebase #506 onto main
-  after settling the current patches. Creation Back and browser cancellation
-  harness are committed through `3358429b`. Root owns dirty inventory/journal
-  gesture fixes, touch-driver helpers and two new gesture scenarios.
-  Actual Android contacts reproduce horizontal-drag activation in both panels;
-  tracking two-dimensional travel fixes inventory and journal horizontal drags.
-  Actual no-move touch cancellation still activates each row; the first attempt
-  to reject `event.is_canceled()` did not fix it. Next: trace event order and
-  cancellation propagation, verify the root cause, then complete the fresh
-  continuous creation → earned Cooking → Warrior → spear → ambush touch route.
-  Detailed route: `/private/tmp/wi-506-plan.md`; evidence `/private/tmp/wi-506-evidence`.
-  Separate harness follow-up `4f3a4df4` corrects subpixel proof rounding and is
-  ready to integrate. No #506 PR yet. Browser/Godot slot is currently free.
+- **M1 software candidate (#506 primary):** PR #551, `issue/506-touch-flow`,
+  base `2d1830a9`; current QA source `93016f0b`, tree `5e90899f`.
+  Owner-approved #507 creation/footer/difficulty and #508 cleared-road cover,
+  #509 bark ownership, #253 import ownership and #510 scoped probes are composed.
+  Production is unchanged from `ab279415` (36 local browser cases pass).
+  First CI `0154a281`: browser 20 pass/6 fail from CDP latency/Erin timing.
+  `082a42dd`: 21 pass/5 fail from queued drag bursts. `ee9ecad6` awaits
+  touchStart delivery before pacing moves; ten focused local cases pass.
+  CI `fec91f7f` passes all 26 registry cases and seven other jobs, but its
+  newly reached input/audio probe expects absent licensed title music.
+  `93016f0b` retains title/name context-state checks and requires actual game
+  output after suspension + trusted Pause using committed SFX. Eight local
+  private/public direct/iframe cases pass (31 steps each). Capture excludes
+  control/suspended taps and flushes pre-resume analyser history. A retained-
+  waveform/zero-fresh-output negative rejects the old sampler's false green.
+  Four-second contact deadline, 80 ms drag proof and RMS thresholds are intact.
+  Web CI job allowance is 60 minutes; prior run reached audio at 42 minutes.
+  Native/units/balance evidence retains its original source; PR owns exact-head
+  CI, independent final review, per-criterion proof and squash tree identity.
+  Evidence: `/private/tmp/wi-m1-audio-private-93016f0b`, public counterpart,
+  `/private/tmp/wi-m1-audio-stale-negative-93016f0b`,
+  `/private/tmp/wi-m1-browser-drag-start-ee9ecad6` and `/private/tmp/wi-m1-evidence`.
+  Root owns `/private/tmp/wi-m1-506` and public audio verification tree;
+  other lanes are integrated/idle. Preserve untracked node_modules/companion UID
+  and the unrelated PixelLab note in the original main tree's dirty HANDOFF.
+  Next acceptance: #511 physical iPhone Safari/Android Chrome and three
+  unfamiliar-player sessions with desktop reference; none supplied. OS keyboard,
+  chooser/background/audio policy and actual itch remain unproven. Use
+  `wandering_inn_game/qa/M1-OBSERVATIONS.md` with the private manifest
+  (PCK `cccbe5f4…`). No release/deploy/outreach/recruitment authorized.
+  M1 stays open pending physical and human results.
 - **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
   tree-identical to reviewed `81e66d29`. Independent source/visual review and all
   eight CI checks pass, including 259 canonical scripts, both balance policies,
@@ -42,9 +58,8 @@ archived, or superseded session blocks.
   returns home and gains Rogue at sleep. Drainage, Watch, stealth-break and
   production-timing proof pass on desktop and both emulated phone profiles.
   Evidence: `/private/tmp/wi-508-evidence/composed`. Physical evidence is open.
-  Fight-first → force-crate → drainage return → sleep still misses Rogue
-  (seed 7, 293 steps). Acquisition/respawn rules are unchanged; the owner must
-  decide `docs/design/rogue-recovery-proposal.md` before this recovery repair.
+  The owner-approved cleared-road crossing recovery is implemented on the
+  M1 candidate; no enemies respawn. The issue PR records final verification.
 - **#504 delivered through PR #547** (`e5b53328`; narrative in the PR body).
   Open only for physical iPhone Safari / Android Chrome observations (#511).
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
@@ -53,17 +68,16 @@ archived, or superseded session blocks.
 - User-confirmed mobile targets: **iPhone Safari and Android Chrome**,
   compared with desktop. Rogue discovery is a priority; purchases require
   explicit confirmation before any gold or item effects commit.
-- **M1 has actionable work.** #503's diagnostic matrix/touch baseline and
-  #477's schema-reader fixes remain delivered. #505/#506/#510 are ready for
-  scoped audits and repairs; missing phones hold physical acceptance, not
-  repair dispatch. #507 can progress independent guidance while preparing
-  any unresolved presentation choice. Follow the
+- **M1 local machine verification is complete.** #503 diagnostics and #477 schema
+  readers remain delivered. The #506 issue PR records the composed software
+  repairs for #507/#508/#509 and scoped #253/#510 evidence. Physical and human
+  acceptance belongs to #511; keep device-dependent issues open until the
+  named observations land. Follow the
   [execution contract](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502#execution-contract).
 - **Remaining acceptance corrections:** #504 needs physical-device purchase
-  observations; #508 needs fight-first force/guile recovery after the owner
-  selects its rule; #509 needs production
-  timing and real queued-message/modal proof; #253 needs target-device/itch
-  import verification. Preserve useful implementations from PRs #535–#537;
+  observations; the M1 issue PR records #508/#509 software closure evidence.
+  #253 still needs physical target-device/itch import
+  verification. Preserve useful implementations from PRs #535–#537;
   merged partial work does not satisfy their missing criteria.
 - **Compiler corrections in PR #545:** comparator #542 preserves event-history
   mode, checkpoint order, movement tails, and single-use facing-bump credit;
@@ -78,7 +92,7 @@ archived, or superseded session blocks.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
-- Local dev env now has Godot 4.7.2 web export templates + Playwright, so
+- Local dev env now has Godot 4.7 stable web export templates + Playwright, so
   `qa/web/run_web_qa.sh` runs here.
 - Preserve pre-existing untracked `wandering_inn_game/tests/test_companion_counter.gd.uid`.
 - Latest release recorded by the repository: **v0.20.0** (2026-08-14).
@@ -99,20 +113,6 @@ archived, or superseded session blocks.
 
 ## User-held
 
-- **#507 presentation reconciliation affects only the disputed placement.**
-  Continue staged guidance and prepare concrete rendering options before
-  requesting any necessary reversal. The issue asks to name every creation
-  choice and add difficulty descriptions, but (a) "Playtest hotfix #3" removed race/gender labels from
-  the picker cards on purpose (`char_creation.gd` PC_OPTIONS block: identity
-  must read from the art) and (b) #447's one-voice ruling removed the
-  difficulty descriptor tails, moving the explanation to the Settings Help
-  page. Options: (1) keep both rulings, satisfy #507 with a single footer
-  line under the selected card ("Human · woman — looks only; nothing
-  mechanical") and a one-line difficulty blurb under the prompt ribbon on
-  that step only; (2) restore card labels + descriptor tails (reverses both
-  rulings); (3) leave creation as is and scope #507 to staged hints +
-  discoverability only. Recommendation: (1) — it names the choice without
-  putting text on the art and keeps the Help page the durable explanation.
 - **#494 resonance semantics** and **#495 gear damage/scaling semantics** need
   explicit recorded choices. Their post-tag scheduling hold has elapsed;
   roadmap authorization does not select a model. Implementation is #514.
@@ -178,7 +178,7 @@ python3 scripts/sync_agent_guidance.py
 python3 scripts/render_qa_notes.py
 ```
 
-- Current local engine reports **4.7.2**; CI pins **4.7-stable**. Toolchain
+- Current local engine reports **4.7-stable (5b4e0cb0f)**; CI pins **4.7-stable**. Toolchain
   alignment is tracked in #529; report actual version with evidence.
 - macOS has no `timeout`; use the documented alarm wrapper. Shell scripts
   must remain compatible with Bash 3.2.

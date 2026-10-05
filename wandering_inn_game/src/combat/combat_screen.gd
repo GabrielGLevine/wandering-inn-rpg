@@ -305,9 +305,10 @@ func _apply_combat_finished(payload: Dictionary) -> void:
 	# directly (combat_screen.gd IS the composition root, unlike combat_hud.gd/
 	# targeting_controller.gd, which stay autoload-free by contract); kb-mode
 	# output is byte-identical to the old literal.
-	var confirm_glyph: String = WIInputHints.label("confirm")
+	var confirm_glyph: String = "Tap" if WIResponsiveLayout.uses_touch_layout() else WIInputHints.label("confirm")
 	_hud.show_banner(("Victory! — %s" % confirm_glyph) if bool(payload["victory"]) else ("Defeat… — %s" % confirm_glyph))
 	_refresh()
+	ObservableBus.emit_domain_event("ui_combat_result_rendered", {"victory": bool(payload["victory"]), "confirm": confirm_glyph})
 
 
 func _show_combat() -> void:

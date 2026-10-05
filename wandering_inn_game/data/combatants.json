@@ -258,7 +258,7 @@
    "skills": []
   },
   {
-   "_comment": "#439 Act II CLIMAX RETUNE. The cistern nest's third body -- what the entity's own observe line already promises behind the visible pair ('more eyes catch the light down there than you want to count'), so the roster grew without the prose moving. FICTION FLOOR (binding on any future retune): STRICTLY dominates a plain shield_spider on every axis (str 14>9, con 28>17, weapon_die 7>4) and stays STRICTLY UNDER the Act III boss on every axis (str 14<18, con 28<30, and HP is 20+con so 48 < the Awakened's 50). The con was 32 in the first pass and that made an Act II side-nest guard tougher-skinned than the act climax two acts later; str carries the threat instead. ART DEBT (docs/VISUAL-LOG.md): shares the `shield_spider` sheet at a larger combat_scale; a bespoke silhouette is owed, because scale alone is a tint-grade tell.",
+   "_comment": "Cistern nest's third body follows the entity's 'more eyes' observe line. Fiction floor: strictly dominate plain shield_spider on every combat axis and stay strictly below the ActIII Awakened boss on every axis, including HP. Increase str rather than making this ActII guard tougher-skinned than later climaxes. Art debt: bespoke silhouette owed; larger shield_spider scale alone is a tint-grade tell (docs/VISUAL-LOG.md).",
    "id": "shield_spider_matriarch",
    "power_level": 7.5,
    "display_name": "Shield Spider Matriarch",
@@ -325,7 +325,7 @@
    "skills": []
   },
   {
-   "_comment": "#439 Act III RETUNE. The second half of the warren-mouth PAIR (the entity's observe line says 'Two of them', so the fight was retuned by RANK, not by count). Canon-plausible: Raskghar bands run under a leader, and the warren's door is not held by two interchangeable scouts. FICTION FLOOR (binding on any future retune): strictly dominates raskghar_scout (str 15>11, con 24>14, weapon_die 6>5) and stays strictly UNDER raskghar_awakened (str 15<18, con 24<30). [Counter Strike] is the point of the row: a melee-first player who just trades swings pays for it, which is the competence the Act III band is supposed to have bought. ART DEBT (docs/VISUAL-LOG.md): shares the `raskghar_scout` sheet at a larger combat_scale pending a bespoke silhouette.",
+   "_comment": "Warren-mouth pair's leader; the entity's 'Two of them' fixes count, so retune rank rather than adding bodies. Fiction floor: strictly dominate raskghar_scout's str/con/die and keep str/con below raskghar_awakened. Counter Strike penalizes simple swing trading at the ActIII band. Art debt: bespoke silhouette owed; larger raskghar_scout scale is interim (docs/VISUAL-LOG.md).",
    "id": "raskghar_pack_leader",
    "power_level": 7.0,
    "display_name": "Raskghar Pack-Leader",
@@ -1368,7 +1368,7 @@
   },
   {
    "_comment": "GH#156 tamed companion ([Lesser Bond], wolf-den prop). River-wolf frame at companion tuning: con down from 12 so it stays precious, not a second PC. Boons (basic_command_boon/pack_bond_boon) are injected at roster build, never listed here.",
-   "_comment_474": "#474 THE BONDED ROLE. `bonded` says this body is on the player's side because a bond put it there -- it grants nothing and costs nothing on its own, and every stat on this row is untouched by the lane that added it. What it does is make the body ANSWERABLE: a Skill carrying `target_rule: bonded` may be spent on it (src/core/combat/skill_effects.gd), which is how an encounter can answer a companion without any encounter naming this id. data_lint.check_companion_bond_flag makes the flag a GATE, so the next companion row cannot ship without it and quietly walk past every counter authored so far.",
+   "_comment_474": "bonded marks a companion role without granting stats or costing resources. Skills with target_rule:bonded can target it through src/core/combat/skill_effects.gd; never couple those counters to a companion id. data_lint.check_companion_bond_flag requires future companions to participate too.",
    "id": "wolf_companion",
    "power_level": 3.0,
    "bonded": true,
@@ -1546,7 +1546,7 @@
   },
   {
    "_comment": "Act V: roster-only retint of the ruin_warden rig at seal scale (distinct-id-per-context convention, :401). Stats belong to the seal band -- never retune toward the ruin fight's.",
-   "_comment_438": "#438 THE SANCTIONED FROZEN-BLOCK EXCEPTION (user ruling 2026-08-13, docs/CHOICE-LOG.md 'Act V capstone trivialization': 'Warden-side movement is hereby a sanctioned frozen-block exception (the #451 shape)'). con 112 -> 134, i.e. 142 -> 164 max HP with [Tough Body]. ONE FIELD, and it is the one the A/B chose rather than the one that was easiest to reach. WHY con AND NOT str/weapon_die -- measured, `tests/_warden_probe.gd`, 100 seeds, competent, band build vs the over-band ceiling rows: str 17->26 reads spellsword14 0.78 -> 0.45 while the strategist-16 ship row only moves 1.00 -> 0.97; weapon_die 8->14 reads 0.78 -> 0.52 against 1.00 -> 0.98. Both LETHALITY levers tax the band build 10x harder than the row they were aimed at, because the over-band rows win the damage race in 2-3 rounds and never eat the extra dice. HP is the only lever whose cost lands the other way: it lengthens the fight instead of raising its lethality, and the rows that were trivializing it are precisely the ones with the least damage to spare. At 134 the whole AT-BAND span comes inside the [0.55, 0.85] reference window -- spellsword14 0.78 -> 0.70, spellsword16 0.86 -> 0.77, the steel thread's own worn-amulet build 0.89 -> 0.76, spellspear14 0.73 -> 0.60, druid14 0.97 -> 0.82 -- while the calibration row (ship/floor) stays LOSS at its pinned 5-round median. SIZED BY ITS COST, not by the ceiling: 134 is the largest con that keeps every at-band row in window, and the ROWS IT CANNOT REACH ARE A REPORTED FINDING, not a reason to push further (see the #438 block in tests/sim_spine_viability.gd). dex is deliberately UNTOUCHED: initiative is `dex + d6` and `test_sim_core`/`test_combat_sim` pin this combatant's turn order at named seeds.",
+   "_comment_438": "Seal Warden's sanctioned frozen-block exception changes con only (docs/CHOICE-LOG.md, 'Act V capstone trivialization'). HP lengthens the fight without the lethality increase that disproportionately punishes at-band builds. con134 is the largest value keeping all at-band rows within0.55-0.85; out-of-window ceiling builds remain findings, not permission to push further. Preserve the calibration row's pinned5-round LOSS. dex stays untouched: initiative=dex+d6 and named-seed turn order is pinned in test_sim_core/test_combat_sim. Retune from tests/sim_spine_viability.gd and the warden probe.",
    "id": "seal_warden",
    "power_level": 18.0,
    "display_name": "The Seal's Warden",
@@ -1571,7 +1571,7 @@
    ]
   },
   {
-   "_comment": "#398-P3: one shared guard, two class-disjoint L14 access builds. ai/con RETUNED at review (LOW+M8), measured at con 45 (swordsman/infiltrator win): coward 0.95/0.62 but it fled the cache it guards; guard 0.83/0.15; skirmisher 0.99/0.09; melee 0.87/0.44. Shipped: melee + con 30 = 0.93/0.63. STANDING CONSTRAINT: one guard must clear 0.55 for BOTH, and infiltrator14 is calibrated at ~power 6 vs swordsman14's ~15, so it is tuned to the WEAKER build and the spread is inherent. power_level 16->13 tracks the cut.",
+   "_comment": "One shared guard must clear 0.55 for both L14 access builds. Infiltrator power about 6 versus Swordsman about 15 requires tuning for the weaker build; their win-rate spread is inherent. Keep separate compositions on distinct ids.",
    "id": "side_vault_construct",
    "power_level": 13.0,
    "display_name": "Side-Vault Construct",
@@ -1727,7 +1727,7 @@
    "_comment": "Keeps ruin_ward_b's `guarding_ward` shape; lower str/con/die is what makes the pair a pair."
   },
   {
-   "_comment": "#460 THE SUMMONER ARCHETYPE (spec RATIFIED 2026-08-13). A NAMELESS Lich in the Horns-of-Hammerad crypt register; no canon necromancer is named in shipped prose. `ai: caster` is REQUIRED twice over: the melee profile never casts (the autoplay gotcha) AND `_act_caster` is where the summon arm lives. The ratified header supersedes the spec body's frail-caster line -- this is a caster THREAT and the summons multiply it. con 36 = 56 HP is MEASURED: at 46 HP a competent band build killed it before its own allowance landed. RANK FLOOR (binding on any retune): an OPTIONAL pocket ABOVE the ruin's stop (power 10 vs ruin_guardian's 8) and BELOW the map's other pocket (briar_arch_ward pair, 11 each) -- so out-HPing the guardian is the design, not drift; what it must never do is out-rank an act climax. NEW ROW = tunable until first ship, frozen after.",
+   "_comment": "Nameless Lich in the Horns-of-Hammerad crypt register; shipped prose names no canon necromancer. ai:caster is required: melee AI never casts and the summon arm lives in _act_caster. Rank floor: this optional pocket must remain above ruin_guardian(power8) and below briar_arch_ward's pair(power11 each); never out-rank an act climax. HP must allow its summon allowance to land. New rows may tune until first ship, then freeze.",
    "id": "crypt_lich",
    "display_name": "The Lich",
    "sprite": "crypt_lich",
@@ -1750,7 +1750,7 @@
    "power_level": 10.0
   },
   {
-   "_comment": "#460 the raised add, and NOT the `skeleton_ally` record: one combatant id holds exactly one side, so the player's [Animate Dead] companion cannot be re-pointed at an enemy roster (the rags/rags_ally precedent). ART CONSTRAINT DISCHARGED, not deferred: `bone_pile_ruin` on THIS MAP is a skeleton_ally source, so ally and thrall can share a board and a tint would not have carried it -- this ships a bespoke silhouette (hunched, shroud-wrapped, 1.65 cells) against the ally's upright pale bone (1.94). Strictly weaker than that ally on every axis but con, where +3 HP is what keeps a body that arrives a round late from dying to one swing.",
+   "_comment": "A combatant id has exactly one side: never reuse the player's skeleton_ally for an enemy roster. bone_pile_ruin can produce skeleton_ally on this map, so both bodies may share a board; distinct silhouettes are required, not a tint. Thrall is weaker on every axis except con; its3 extra HP keep the late-arriving summon from dying to one swing.",
    "id": "bone_thrall",
    "display_name": "Bone Thrall",
    "sprite": "bone_thrall",

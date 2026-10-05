@@ -178,11 +178,11 @@ func refresh(view: RefCounted, rendered_slots: Array, selected_index: int, info_
 	var context := action
 	if in_targeting:
 		if bool(targeting.get("line_mode", false)):
-			context += "\nAim %s · arrows turn the line" % ["up", "down", "left", "right"][int(targeting.get("line_dir", 0))]
+			context += "\nAim %s · ‹ › turn" % ["up", "down", "left", "right"][int(targeting.get("line_dir", 0))]
 		elif not _target_id.is_empty():
 			context = "Target: " + _unit_summary(view, _target_id) + "\n" + action
 		else:
-			context += "\nNo target in reach. Back to move."
+			context += "\nNo target. Back to move."
 	elif dash_confirm:
 		context += "\nConfirm to refill your steps."
 	elif not _inspected_id.is_empty() and view.ids().has(_inspected_id):
@@ -190,7 +190,7 @@ func refresh(view: RefCounted, rendered_slots: Array, selected_index: int, info_
 	elif not bar_active:
 		context = "Tap the board to skip.\n" + _latest_feed
 	else:
-		context += "\nTap a neighboring square to move.\n‹ › inspect fighters."
+		context += "\nTap adjacent to move."
 	_context.text = WICombatMobileLayout.pages(context, font, _font_size, _context.size.x, _context.size.y)[0]
 	_buttons["confirm"].visible = bar_active and confirm_armed
 	_buttons["back"].visible = bar_active and (in_targeting or dash_confirm or not _inspected_id.is_empty())
@@ -198,7 +198,7 @@ func refresh(view: RefCounted, rendered_slots: Array, selected_index: int, info_
 	_buttons["next"].visible = _buttons["previous"].visible
 	_drawer_texts = {
 		"battle": _battle_text(view),
-		"actions": "Action details\n\n" + "\n\n".join(action_lines),
+		"actions": "Current action\n" + context + "\n\nAction details\n\n" + "\n\n".join(action_lines),
 		"log": "Recent combat events\n\n" + "\n\n".join(feed),
 	}
 	_layout_tutor(scale, font)
@@ -236,7 +236,7 @@ static func _statuses(combatant: Dictionary) -> String:
 
 
 func _battle_text(view: RefCounted) -> String:
-	var lines: Array[String] = ["Turn order"]
+	var lines: Array[String] = ["‹ › inspect fighters.", "", "Turn order"]
 	var order: Array[String] = []
 	for id: String in view.order():
 		if view.alive(id):

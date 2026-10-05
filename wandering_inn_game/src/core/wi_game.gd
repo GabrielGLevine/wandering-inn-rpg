@@ -41,6 +41,8 @@ var dialogue: WIDialogue = null
 var pending_purchase: Dictionary = {}
 var started_quests: Array[String] = []
 var removed_entities: Array[String] = []
+# Authored terrain survives runtime encounter removal and is rebuilt on load.
+var _cover_crossings: Dictionary = {}
 var dormant_encounters: Array[String] = []
 var generalist_classes: Array[String] = []
 var used_skills: Array[String] = []
@@ -149,10 +151,13 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	for map_id: String in scene_config["maps"]:
 		var m: Dictionary = scene_config["maps"][map_id]
 		var ents := {}
+		_cover_crossings[map_id] = []
 		for e: Dictionary in m.get("entities", []):
 			var ent: Dictionary = e.duplicate(true)
 			ent[WIKeys.CELL] = Vector2i(int(e[WIKeys.CELL][0]), int(e[WIKeys.CELL][1]))
 			ents[String(e[WIKeys.ID])] = ent
+			if String(ent.get("cover_prop", "")) != "" and ent.has("trigger_radius"):
+				_cover_crossings[map_id].append(ent.duplicate(true))
 		var blocked := {}
 		for cell: Array in m.get("blocked", []):
 			blocked[Vector2i(int(cell[0]), int(cell[1]))] = true
@@ -488,6 +493,17 @@ func pending_encounter() -> String:
 func _check_trigger_radius(skipped_ids: Array[String] = []) -> void:
 	if combat != null or dialogue != null:
 		return
+	# Only defeated, removed encounters use the authored crossing copy. Live
+	# danger keeps its ordinary presence, phase, ward and stealth ordering.
+	for crossing: Dictionary in _cover_crossings.get(current_map, []):
+		var id := String(crossing[WIKeys.ID])
+		if not removed_entities.has(id) or skipped_ids.has(id):
+			continue
+		if not entity_present(crossing) or not encounter_gate_met(crossing):
+			continue
+		var offset: Vector2i = player_cell - (crossing[WIKeys.CELL] as Vector2i)
+		if maxi(absi(offset.x), absi(offset.y)) <= effective_trigger_radius(crossing):
+			_bank_cover_crossing(crossing)
 	for ent: Dictionary in entities.values():
 		if String(ent.get(WIKeys.KIND, "")) != "encounter":
 			continue
@@ -550,34 +566,24 @@ func _check_trigger_radius(skipped_ids: Array[String] = []) -> void:
 				# toggles so a player can tell "I am sneaking" from "it worked".
 				_emit(WIEvents.TOAST, {"text": "Whatever was watching that stretch never saw you pass."})
 			continue
-		# #453 G2 (user ruling 2026-08-13): THE COVER ARM -- the one way past a
-		# proximity encounter that asks NO CLASS at all, and the reason scout's
-		# Act I entry stops being structurally impossible. Every other bypass on
-		# this pass is skill-gated (`sneaking` needs a `sneaks:true` skill, i.e.
-		# [Stealth] from [Rogue] 1 or [Invisibility] from [Mage] 5; wards need
-		# `wards:true`; blink needs `blinks:true`), so `sneaked_past_danger` cannot
-		# gate [Rogue]'s OWN entry without circularity -- no class grants a sneak
-		# before [Rogue] does. `cover_prop` names a prop on this map whose interact
-		# IS the sneak-shaped act, and this reads that prop's `once_per_waking`
-		# ledger key rather than the counter it banks: `entity_first_use` clears at
-		# every sleep, so the suppression is EARNED THIS WAKING and the ambush
-		# RE-ARMS every night. The fight is skipped, never retired -- which is what
-		# keeps this arm clear of the chokepoint ruling (that ruling names the Seal
-		# Warden's PERMANENT worn-[Invisibility] bypass; CHOICE-LOG 2026-08-11).
-		# ORDER IS LOAD-BEARING: this sits BELOW `sneaking`, so a [Stealth] holder
-		# keeps banking its own richer counter and never reaches this arm.
-		# BANKS ON THE TRANSIT, NOT THE PROP: taking the cut and walking home banks
-		# nothing -- the credit is for the crossing the ambush would otherwise have
-		# sprung, once per encounter per waking.
-		var cover_prop := String(ent.get("cover_prop", ""))
-		if cover_prop != "" and entity_first_use.has("serve:%s" % cover_prop):
-			var cover_key := "cover:%s" % ent_id
-			if not entity_first_use.has(cover_key):
-				entity_first_use[cover_key] = true
-				record_accomplishment("crossed_under_cover")
+		# Live stealth credit has priority. Cover requires this waking's prop
+		# use and actual transit, once per crossing; it never retires a threat.
+		if _bank_cover_crossing(ent):
 			continue
 		start_combat(ent_id)
 		return
+
+
+func _bank_cover_crossing(crossing: Dictionary) -> bool:
+	var prop := String(crossing.get("cover_prop", ""))
+	if prop.is_empty() or not entity_first_use.has("serve:%s" % prop):
+		return false
+	var key := "cover:%s" % String(crossing[WIKeys.ID])
+	if not entity_first_use.has(key):
+		entity_first_use[key] = true
+		record_accomplishment("crossed_under_cover")
+		_emit(WIEvents.TOAST, {"text": "You keep low through the drainage crossing, out of sight of the road."})
+	return true
 
 
 func _check_delivery_arrival() -> void:
