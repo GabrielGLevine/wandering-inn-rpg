@@ -738,6 +738,12 @@ here by charter.
 
 ## 3c. PixelLab generation batches (2026-07-19 refresh) — read before generating anything
 
+> **2026-10-05: query before reading this section.** `python3 tools/find_asset.py
+> <use words>` ranks every owned batch (25 as of the 2026-10 harvest, incl.
+> `pixellab_harvest_2026-10/`), every wired `sprites.json` id and pack files
+> for a use case, with verdicts and manifest lines. The batch table below is
+> historical; `docs/asset-candidates.md` is the generated current inventory.
+
 **Why this section exists:** sections 1–3b were written 2026-07-03…07, before
 the game began generating its own sprites with PixelLab. Since 2026-07-11 the
 tree has accumulated **eight dated PixelLab batches** in `potential_assets/`,

@@ -25,6 +25,15 @@ Large landmarks benefit from a clear 3/4 top-down concept followed by true pixel
 conversion; integrate at measured scale. One-shot scene images are look-dev or
 flat set pieces, not replacements for grid/wall/entity map data.
 
+Every generation batch lives in its own `potential_assets/<source>_<date>[/<lane>]/`
+directory with a standard `MANIFEST.json` (schema in `tools/asset_candidates.py`:
+path, kind, targets, verdict READY/USABLE-WITH-FIX/ALT/REJECTED, ids, prompt,
+notes, rig feet plane, contact sheet). Record every kept output there as you
+download it, then rebuild `docs/asset-candidates.*` with
+`python3 tools/asset_candidates.py` so the next session's query finds it.
+Never create `MANIFEST.json` beside a legacy lowercase `manifest.json`; macOS
+treats them as one file.
+
 Check current tool documentation/endpoints rather than relying on historic API
 recipes. Never state that a generation service is connected until its callable
 tool is visible in the session. Poll only with bounded attempts and keep raw
