@@ -1,0 +1,158 @@
+{
+ "_comment": "#509 unread transition: the actual hat interaction emits authored prose, then ordinary world movement and the nearby doorway happen before its readable floor. The message must reappear beyond the real map transition with a fresh readable hold and a single history entry.",
+ "qa_real_message_timing": true,
+ "fixture_save": "invrisil_hat_quiet_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Title's default row is New Game -- down 1 to Continue, which loads the fixture-seeded manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "adventurers_rest"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    7
+   ]
+  },
+  {
+   "_comment": "== THE CAN-FAIL FIRST. The corner table alone banks handoff_mistimed and hands the package back; only its hat_hook_set variant banks handoff_quiet. Route east along row 7, up the east side to (11,3), bump north into the table at (11,2). ==",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "id": "hat_hook_set"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "text": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "text": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you."
+   }
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you.",
+   "visible": true,
+   "max_elapsed_msec": 450
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you."
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "invrisil_boulevard"
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.9
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you.",
+   "visible": true,
+   "min_elapsed_msec": 850
+  },
+  {
+   "action": "screenshot",
+   "name": "01_unread_authored_receipt_after_real_doorway"
+  },
+  {
+   "action": "assert_recent_message_count",
+   "text_contains": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you.",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you."
+   },
+   "count": 2
+  }
+ ]
+}
