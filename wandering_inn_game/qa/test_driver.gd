@@ -1113,6 +1113,7 @@ func _inject_drag(from: Vector2, to: Vector2, steps: int) -> void:
 ## #503: resolve a node's rendered rect and touch its centre (real on web,
 ## emulated natively). `arg` is the rect method's single argument.
 func _touch_cell(cell: Vector2i) -> void:
+	await _settle_for_capture()
 	var screen_pos: Variant = _world_to_screen(Vector2(cell) * float(CELL) + Vector2(CELL, CELL) * 0.5)
 	if screen_pos == null:
 		_fail("touch_cell: could not resolve Main.world_to_screen")
