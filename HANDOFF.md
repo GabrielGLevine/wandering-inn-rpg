@@ -10,20 +10,24 @@ archived, or superseded session blocks.
 ## Current state
 
 - **M1 software candidate (#506 primary):** PR #551, `issue/506-touch-flow`,
-  base `2d1830a9`; tested gameplay/QA `34e72690`, tree `b86be79f`.
+  base `2d1830a9`; tested gameplay/QA `ee9ecad6`, tree `e5abff38`.
   Owner-approved #507 creation/footer/difficulty and #508 cleared-road cover
   rule, #509 feedback/bark ownership, #253 import-request ownership and #510
-  scoped probes are composed. Production is unchanged from `ab279415`.
-  That baseline passes all 36 local browser cases. First exact-head CI at
-  `0154a281` passes native/units but browser registry passes 20/26; six fail: serialized
-  CDP replies overrun the four-second deadline; accelerated Erin bark expires
-  before observation. QA corrections pace the same eight drag samples on
-  Node's clock and observe Erin at natural timing through capture/retirement.
-  All six failed cases pass on `34e72690`; continuous routes complete 178 steps
-  and 275 contacts each. Deadline, DOM proof and gameplay assertions remain.
-  Fresh native import/load/smoke pass on `34e72690`. Broad native/windowed,
-  units and unchanged-core balance evidence retains its original SHA.
-  Evidence: `/private/tmp/wi-m1-browser-ci-fix-34e72690`,
+  scoped probes are composed. Production is unchanged from `ab279415`, whose
+  36 local browser cases pass. First CI `0154a281`: browser 20 pass/6 fail
+  from serialized CDP latency and accelerated Erin cue expiration. Correction
+  `34e72690` passes those six locally and uses natural Erin timing. Renewed
+  CI `082a42dd`: all 26 engine scripts complete, 21 wrappers pass/5 fail;
+  renderer backlog bursts queued drags below the unchanged 80 ms minimum.
+  Correction `ee9ecad6` awaits touchStart delivery, then paces eight moves
+  without per-move reply waits. All ten affected cases pass locally on both
+  phone profiles; continuous routes complete 178 steps/275 contacts each.
+  A controlled 400 ms renderer backlog proves old-helper RED 58 ms versus
+  repaired GREEN 274 ms actual contact. Four-second deadline/proof unchanged.
+  Native import/load/smoke at `34e72690` covers identical Godot/game/QA source;
+  broad native/windowed, units and balance retain original source SHAs.
+  Evidence: `/private/tmp/wi-m1-browser-drag-start-ee9ecad6`,
+  `/private/tmp/wi-m1-drag-start-block-ee9ecad6`,
   `/private/tmp/wi-m1-native-evidence-34e72690`, prior
   `/private/tmp/wi-m1-browser-final-ab279415` and `/private/tmp/wi-m1-evidence`.
   PR #551 records per-criterion acceptance, final independent review,

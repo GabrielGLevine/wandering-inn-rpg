@@ -26,26 +26,33 @@ source tree, PCK hash, browser, viewport and input class. Physical-device cells
 below remain **UNTESTED**. Historical rows describe their original builds;
 current composed gates supersede their script or layout limitations.
 
-Tested gameplay/QA correction `34e72690668c4f160ca5b7cd2b5dc3f40a195126`,
-tree `b86be79f269b711b8333eda33008116ccbae0882`, private-overlay Web PCK SHA-256
+Tested gameplay/QA correction `ee9ecad63fe19f9c02bf86a943f1679b9cf76f83`,
+tree `e5abff380d86ad418695fcb1fb8b04a1040c54a1`, private-overlay Web PCK SHA-256
 `73c227aaf5f5e2fe276dbd712d5f4cec384e3ed08f87caa4f12d81c33b87db88`.
-All six failed-CI browser cases pass locally on this correction: both continuous
-routes, both responsive-panel routes and Android Inventory/Journal gestures.
-Continuous routes complete 178 steps and 275 contacts each. Eight protocol drag
-samples are paced on Node's clock without waiting for every compositor reply;
-trusted DOM proof and the four-second deadline are unchanged. Erin's actual
-sleep cue uses production timing through its screenshot and natural retirement,
-then the route restores acceleration. Remaining tween timing is not proven.
-Fresh native import/load/smoke gates also pass on this exact source.
+All ten focused cases pass locally: continuous, responsive panels, Inventory,
+Journal and reference pages on both profiles. Continuous routes complete 178
+steps and 275 contacts each. The helper awaits touchStart delivery before
+pacing eight protocol moves on Node's clock, then awaits every reply before
+completion. Trusted DOM proof (including at least 80 ms contact) and the
+four-second deadline are unchanged. A controlled 400 ms renderer backlog
+reproduces old-helper failure at 58 ms and repaired success at 274 ms actual
+DOM contact; it is a diagnostic probe, not device behavior. CPU throttling
+alone did not reproduce the failure. Erin's actual sleep cue uses production
+timing through screenshot acknowledgement and natural retirement, then restores
+acceleration. Remaining tween timing is not proven. Native import/load/smoke
+at `34e72690` covers identical Godot/game/QA sources; later edits are Node-only.
 
 The unchanged-production baseline `ab279415` passes all 26 local browser registry
-cases plus ten production-message/Stealth cases. First exact-head CI at
-`0154a281` passes the full 266 native sweep and other gates, but browser
-registry passes 20/26; six fail because of per-move CDP latency and accelerated cue expiration.
-Preserve those failures; PR #551 records renewed exact-head CI, independent
-review and integration of the corrections. Full local native/windowed evidence
-is from `664d8cb0`; native units are from `e3a10a00`; unchanged-core balance is
-from `38a8df9b`. Preserve each run's source; these are not all one-tree runs.
+cases plus ten production-message/Stealth cases. First CI `0154a281` passes the
+full 266 native sweep and other gates; browser passes 20/26, six fail from
+per-move CDP latency and accelerated cue expiration. Correction `34e72690`
+passes those six locally. Renewed CI `082a42dd` completes all 26 engine scripts
+and all other jobs, but five wrappers fail actual DOM duration when queued
+drags arrive in a burst after renderer backlog (21 pass/5 fail). Preserve both
+failed runs. PR #551 records final independent review, renewed exact-head CI
+and integration of the start-delivery correction. Broad native/windowed evidence
+is from `664d8cb0`; native units from `e3a10a00`; unchanged-core balance from
+`38a8df9b`. Preserve each run's source; these are not all one-tree runs.
 The final record-only commit changes no shipped game or QA behavior.
 
 - Fresh creation names all six choices before starting, explains appearance,
