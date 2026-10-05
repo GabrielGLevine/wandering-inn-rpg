@@ -247,6 +247,21 @@ func _execute(step: Dictionary) -> void:
 		"wait_frames":
 			for i in int(step.get("frames", 1)):
 				await get_tree().process_frame
+		"wait_seconds":
+			await get_tree().create_timer(float(step["seconds"])).timeout
+		"queue_domain_event":
+			ObservableBus.emit_domain_event(String(step["type"]), step.get("payload", {}))
+			await get_tree().process_frame
+		"assert_message_visible":
+			_assert_message_visible(step)
+		"assert_recent_message_count":
+			var recent_count := 0
+			var message_script: GDScript = load("res://src/ui/message_layer.gd")
+			for message: String in message_script.recent_messages:
+				if message.contains(String(step["text_contains"])):
+					recent_count += 1
+			if recent_count != int(step["count"]):
+				_fail("assert_recent_message_count: got %d, expected %d" % [recent_count, int(step["count"])])
 		"press":
 			if String(step.get("device", "keyboard")) == "gamepad":
 				_inject_gamepad_action(String(step["name"]))
@@ -487,7 +502,9 @@ func _execute(step: Dictionary) -> void:
 		"touch_scroll_field_to_end":
 			await _touch_scroll_field_to_end()
 		"touch_inventory_row":
-			await _touch_rect_of("Inventory", "item_row_rect", int(step["row"]) - 1, "touch_inventory_row")
+			await _touch_rect_of("Inventory", "item_row_rect", int(step["row"]) - 1, "touch_inventory_row", step.get("gesture", {}))
+		"touch_journal_skill":
+			await _touch_rect_of("Journal", "skill_row_rect", String(step["skill"]), "touch_journal_skill", step.get("gesture", {}))
 		"touch_journal_tab":
 			await _touch_rect_of("Journal", "tab_rect", String(step["tab"]), "touch_journal_tab")
 		"touch_inventory_equipment":
@@ -1028,6 +1045,14 @@ func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label:
 		gesture = gesture.duplicate()
 		gesture["follow_x"] = _last_purchase_buy_pos.x
 		gesture["follow_y"] = _last_purchase_buy_pos.y
+	if gesture.has("delta"):
+		gesture = gesture.duplicate()
+		var delta: Array = gesture["delta"]
+		var end := get_viewport().get_screen_transform() * (rect.get_center() + Vector2(float(delta[0]), float(delta[1])))
+		gesture.erase("delta")
+		gesture["drag"] = true
+		gesture["end_x"] = end.x
+		gesture["end_y"] = end.y
 	await _touch_at(rect.get_center(), label, gesture)
 
 
@@ -1190,6 +1215,26 @@ func _settle_for_capture() -> void:
 		await get_tree().process_frame
 	await get_tree().process_frame
 	await get_tree().process_frame
+
+
+func _assert_message_visible(step: Dictionary) -> void:
+	var layer := get_tree().root.find_child("MessageLayer", true, false)
+	var kind := String(step.get("kind", "toast"))
+	var method := "toast_display_state" if kind == "toast" else "dialogue_display_state"
+	if layer == null or not layer.has_method(method):
+		_fail("assert_message_visible: %s probe is unavailable" % kind)
+		return
+	var state: Dictionary = layer.call(method)
+	var expected := bool(step.get("visible", true))
+	if bool(state["visible"]) != expected:
+		_fail("assert_message_visible: expected visible=%s, got %s" % [expected, state])
+	if expected and not String(state["text"]).contains(String(step.get("text_contains", ""))):
+		_fail("assert_message_visible: text mismatch: " + str(state))
+	if step.has("min_elapsed_msec") and int(state["elapsed_msec"]) < int(step["min_elapsed_msec"]):
+		_fail("assert_message_visible: message read too briefly: " + str(state))
+	if step.has("max_elapsed_msec") and int(state["elapsed_msec"]) > int(step["max_elapsed_msec"]):
+		_fail("assert_message_visible: missed early observation: " + str(state))
+	ObservableBus.emit_domain_event("qa_message_visibility_measured", {"kind": kind, "state": state})
 
 
 func _assert_message_layout(kind: String) -> void:
