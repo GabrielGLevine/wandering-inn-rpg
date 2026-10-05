@@ -478,7 +478,11 @@ func _execute(step: Dictionary) -> void:
 			await _touch_cell(Vector2i(int(step["cell"][0]), int(step["cell"][1])))
 		"touch_walk":
 			var direction := Vector2i(int(step["direction"][0]), int(step["direction"][1]))
+			var until: Array = step.get("until_cell", [])
+			var goal := Vector2i(int(until[0]), int(until[1])) if until.size() == 2 else Vector2i.ZERO
 			for i in int(step.get("steps", 1)):
+				if until.size() == 2 and Game.sim.player_cell == goal:
+					break
 				var target: Vector2i = Game.sim.player_cell + direction
 				await _touch_cell(target)
 				var deadline := Time.get_ticks_msec() + 3000
@@ -487,6 +491,8 @@ func _execute(step: Dictionary) -> void:
 				if Game.sim.player_cell != target:
 					_fail("touch_walk: did not reach " + str(target))
 					break
+			if until.size() == 2 and Game.sim.player_cell != goal:
+				_fail("touch_walk: did not reach stopping cell " + str(goal))
 		"touch_combat_finish":
 			await _touch_combat_finish(int(step.get("max_actions", 200)), String(step.get("skill", "")))
 		"touch_hotbar_slot":
@@ -1118,6 +1124,13 @@ func _touch_cell(cell: Vector2i) -> void:
 	if screen_pos == null:
 		_fail("touch_cell: could not resolve Main.world_to_screen")
 	else:
+		var main := get_tree().root.find_child("Main", true, false)
+		var bounds: Rect2 = main.world_view_rect()
+		ObservableBus.emit_domain_event("qa_cell_touch_target", {
+			"cell": [cell.x, cell.y], "screen": [screen_pos.x, screen_pos.y],
+			"world_rect": [bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y],
+			"within_world": bounds.has_point(screen_pos),
+		})
 		await _touch_at(screen_pos as Vector2, "cell")
 
 

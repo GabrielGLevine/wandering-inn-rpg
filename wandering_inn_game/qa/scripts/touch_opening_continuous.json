@@ -504,6 +504,10 @@
       "steps": 9
     },
     {
+      "action": "screenshot",
+      "name": "06b_inn_exit_approach"
+    },
+    {
       "action": "touch_cell",
       "cell": [
         15,
