@@ -60,6 +60,7 @@ async function audioOutput(control=false) {
    const samples=new Float32Array(2048);
    for(let round=0;round<6;round++) {
     for(const tap of taps) {
+     if(!tap.context.__wiControl&&audio.capture&&(!Number.isFinite(tap.armedAudioTime)||tap.context.state!=='running'||tap.context.currentTime-tap.armedAudioTime<(tap.analyser.fftSize+128)/tap.context.sampleRate)) continue;
      tap.analyser.getFloatTimeDomainData(samples);
      rms=Math.max(rms,Math.sqrt(samples.reduce((sum,value)=>sum+value*value,0)/samples.length));
     }
@@ -108,6 +109,9 @@ try {
    if(!audio.capture) return;
    const samples=new Float32Array(2048);
    for(const tap of audio.taps.filter(tap=>!tap.context.__wiControl)) {
+    // Flush one analyser window plus a render quantum before crediting resumed output.
+    if(!Number.isFinite(tap.armedAudioTime)||tap.context.state!=='running'||tap.context.currentTime-tap.armedAudioTime<(tap.analyser.fftSize+128)/tap.context.sampleRate) continue;
+    if(audio.capture.firstRunningSampleAt===null) audio.capture.firstRunningSampleAt=performance.now();
     tap.analyser.getFloatTimeDomainData(samples);
     const rms=Math.sqrt(samples.reduce((sum,value)=>sum+value*value,0)/samples.length);
     audio.capture.peakRms=Math.max(audio.capture.peakRms,rms);
@@ -230,7 +234,8 @@ try {
      const audio=window.__WI_LIFECYCLE_AUDIO__;
      const contexts=audio.contexts.filter(ctx=>!ctx.__wiControl);
      await Promise.all(contexts.map(ctx=>ctx.suspend()));
-     audio.capture={armedAt:performance.now(),peakRms:0,samples:0,lastSampleAt:null};
+     for(const tap of audio.taps.filter(tap=>!tap.context.__wiControl)) tap.armedAudioTime=tap.context.currentTime;
+     audio.capture={armedAt:performance.now(),firstRunningSampleAt:null,peakRms:0,samples:0,lastSampleAt:null};
      return contexts.map(ctx=>ctx.state);
     });
     assert(probe.states.length>0&&probe.states.every(state=>state==='suspended'),'Pre-Pause game context did not suspend');
@@ -238,7 +243,10 @@ try {
    }
    if(shot==='08_pause_audio') {
     probe.audio=await audioOutput(true);
-    assert(probe.audio.states.length>0&&probe.audio.states.every(state=>state==='running')&&probe.audio.capture?.samples>0&&probe.audio.peakRms>0.0001&&probe.audio.controlRms>0.0001,'Trusted Pause tap did not restore actual game SFX output after suspension');
+    assert(probe.audio.states.length>0&&probe.audio.states.every(state=>state==='running')&&Number.isFinite(probe.audio.capture?.firstRunningSampleAt)&&probe.audio.capture?.samples>0&&probe.audio.peakRms>0.0001&&probe.audio.controlRms>0.0001,'Trusted Pause tap did not restore actual game SFX output after suspension');
+    const contact=await frame.evaluate(armedAt=>window.__WI_LIFECYCLE_EVENTS__.find(event=>event.type==='touchstart'&&event.trusted&&event.time>=armedAt),probe.audio.capture.armedAt);
+    assert(contact&&probe.audio.capture.firstRunningSampleAt>=contact.time,'Fresh output capture did not follow the trusted Pause contact');
+    probe.contact=contact;
     probe.mechanism='Trusted Pause contact → ui_pause_shown/menu_move → committed SFX through the actual game context; control oscillator excluded from game capture.';
    }
    probe.geometry=await geometry();
