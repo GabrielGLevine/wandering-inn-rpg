@@ -15,7 +15,7 @@ archived, or superseded session blocks.
   rule, #509 feedback/bark ownership, #253 import-request ownership and #510
   scoped probes are composed. Production is unchanged from `ab279415`.
   That baseline passes all 36 local browser cases. First exact-head CI at
-  `0154a281` passes native/units but browser registry fails 20/26: serialized
+  `0154a281` passes native/units but browser registry passes 20/26; six fail: serialized
   CDP replies overrun the four-second deadline; accelerated Erin bark expires
   before observation. QA corrections pace the same eight drag samples on
   Node's clock and observe Erin at natural timing through capture/retirement.

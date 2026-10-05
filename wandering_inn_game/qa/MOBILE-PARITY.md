@@ -40,8 +40,8 @@ Fresh native import/load/smoke gates also pass on this exact source.
 
 The unchanged-production baseline `ab279415` passes all 26 local browser registry
 cases plus ten production-message/Stealth cases. First exact-head CI at
-`0154a281` passes the full 266 native sweep and other gates, but fails browser
-registry 20/26 because of per-move CDP latency and accelerated cue expiration.
+`0154a281` passes the full 266 native sweep and other gates, but browser
+registry passes 20/26; six fail because of per-move CDP latency and accelerated cue expiration.
 Preserve those failures; PR #551 records renewed exact-head CI, independent
 review and integration of the corrections. Full local native/windowed evidence
 is from `664d8cb0`; native units are from `e3a10a00`; unchanged-core balance is
