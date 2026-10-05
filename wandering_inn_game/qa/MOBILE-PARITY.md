@@ -26,15 +26,26 @@ source tree, PCK hash, browser, viewport and input class. Physical-device cells
 below remain **UNTESTED**. Historical rows describe their original builds;
 current composed gates supersede their script or layout limitations.
 
-Tested gameplay/QA commit `ab2794157113926d0d953708ed7b21f2ae29d320`, tree
-`13c22d2386b252833486d36a7152da6163477225`, private-overlay Web PCK SHA-256
-`75d1b8fa2b36b2ebaef81b22dae7fbf62b3ddba5c02fbd7e7bd222800e61f746`.
-All 26 browser registry cases and ten production-message/Stealth cases pass.
-Both continuous routes complete 175 steps with 275 trusted contacts. Full native
-canonical evidence is from `664d8cb0`; final QA-only targeting/stopping changes
-have fresh import/load/smoke/Stealth checks, and the PR CI runs the exact head.
-Native units pass on `e3a10a00`; unchanged-core balance evidence is from
-`38a8df9b`. Preserve each run's source; these are not all one-tree runs.
+Tested gameplay/QA correction `34e72690668c4f160ca5b7cd2b5dc3f40a195126`,
+tree `b86be79f269b711b8333eda33008116ccbae0882`, private-overlay Web PCK SHA-256
+`73c227aaf5f5e2fe276dbd712d5f4cec384e3ed08f87caa4f12d81c33b87db88`.
+All six failed-CI browser cases pass locally on this correction: both continuous
+routes, both responsive-panel routes and Android Inventory/Journal gestures.
+Continuous routes complete 178 steps and 275 contacts each. Eight protocol drag
+samples are paced on Node's clock without waiting for every compositor reply;
+trusted DOM proof and the four-second deadline are unchanged. Erin's actual
+sleep cue uses production timing through its screenshot and natural retirement,
+then the route restores acceleration. Remaining tween timing is not proven.
+Fresh native import/load/smoke gates also pass on this exact source.
+
+The unchanged-production baseline `ab279415` passes all 26 local browser registry
+cases plus ten production-message/Stealth cases. First exact-head CI at
+`0154a281` passes the full 266 native sweep and other gates, but fails browser
+registry 20/26 because of per-move CDP latency and accelerated cue expiration.
+Preserve those failures; PR #551 records renewed exact-head CI, independent
+review and integration of the corrections. Full local native/windowed evidence
+is from `664d8cb0`; native units are from `e3a10a00`; unchanged-core balance is
+from `38a8df9b`. Preserve each run's source; these are not all one-tree runs.
 The final record-only commit changes no shipped game or QA behavior.
 
 - Fresh creation names all six choices before starting, explains appearance,

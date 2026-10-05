@@ -9,33 +9,33 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **M1 software candidate (#506 primary):** `issue/506-touch-flow`, base
-  `2d1830a9`; tested gameplay/QA commit `ab279415`, tree `13c22d23`.
+- **M1 software candidate (#506 primary):** PR #551, `issue/506-touch-flow`,
+  base `2d1830a9`; tested gameplay/QA `34e72690`, tree `b86be79f`.
   Owner-approved #507 creation/footer/difficulty and #508 cleared-road cover
-  rule are implemented. #509 production lifetime, bark ownership, readable
-  feedback, #253 import-request ownership and #510 scoped probes are composed.
-  Native preflight all units passes on `e3a10a00`; full canonical sweep passes
-  on `664d8cb0`; final QA-only delta has fresh import/load/smoke/Stealth gates.
-  All 26 browser registry cases plus ten production-message/Stealth cases pass
-  on `ab279415`. Both fresh continuous routes run 175 steps with 275 trusted
-  contacts, actual aimed combat/cancel/equipment drag/victory/resumed movement.
-  Evidence keeps these SHAs distinct; final PR CI runs the exact composed head.
-  Full native/windowed, balance, discovery/recovery and independent visual
-  evidence is preserved under `/private/tmp/wi-m1-*-evidence-*`,
+  rule, #509 feedback/bark ownership, #253 import-request ownership and #510
+  scoped probes are composed. Production is unchanged from `ab279415`.
+  That baseline passes all 36 local browser cases. First exact-head CI at
+  `0154a281` passes native/units but browser registry fails 20/26: serialized
+  CDP replies overrun the four-second deadline; accelerated Erin bark expires
+  before observation. QA corrections pace the same eight drag samples on
+  Node's clock and observe Erin at natural timing through capture/retirement.
+  All six failed cases pass on `34e72690`; continuous routes complete 178 steps
+  and 275 contacts each. Deadline, DOM proof and gameplay assertions remain.
+  Fresh native import/load/smoke pass on `34e72690`. Broad native/windowed,
+  units and unchanged-core balance evidence retains its original SHA.
+  Evidence: `/private/tmp/wi-m1-browser-ci-fix-34e72690`,
+  `/private/tmp/wi-m1-native-evidence-34e72690`, prior
   `/private/tmp/wi-m1-browser-final-ab279415` and `/private/tmp/wi-m1-evidence`.
-  The issue PR records per-criterion acceptance, independent review, required
-  CI and squash tree identity. Read that durable record for integration status.
-  Root owns `/private/tmp/wi-m1-506`; implementation lanes are integrated and
-  idle. No owned tracked changes remain after the record-only commit. Preserve
-  untracked node_modules symlink and companion UID. Preserve the unrelated
-  PixelLab note in the original main worktree's dirty HANDOFF; do not overwrite
-  or stash another owner's changes.
-  Next acceptance work: #511 physical iPhone Safari/Android Chrome and three
+  PR #551 records per-criterion acceptance, final independent review,
+  renewed exact-head CI and squash tree identity; read it for integration state.
+  Root owns `/private/tmp/wi-m1-506`; other lanes are integrated and idle.
+  Preserve untracked node_modules symlink and companion UID. Preserve the
+  unrelated PixelLab note in the original main worktree's dirty HANDOFF.
+  Next acceptance: #511 physical iPhone Safari/Android Chrome and three
   unfamiliar-player sessions with desktop reference. No observations supplied.
-  Actual OS keyboard/chooser/background/audio-policy/itch behavior is unproven;
-  do not substitute Chromium or scripted input. Use
-  `wandering_inn_game/qa/M1-OBSERVATIONS.md` and the private candidate manifest
-  (tested PCK `75d1b8fa…`) for identical-build observations. No release/deploy,
+  Actual OS keyboard/chooser/background/audio-policy/itch behavior is unproven.
+  Use `wandering_inn_game/qa/M1-OBSERVATIONS.md` and the private manifest
+  (tested PCK `73c227aa…`) for identical-build observations. No release/deploy,
   outreach or recruitment authorized. M1 remains open pending those results.
 - **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
   tree-identical to reviewed `81e66d29`. Independent source/visual review and all
