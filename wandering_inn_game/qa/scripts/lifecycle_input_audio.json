@@ -1,5 +1,5 @@
 {
-  "_comment": "Browser-only lifecycle probe. Runner performs trusted name-field taps, real exported Godot HTML input fill/blur, actual viewport resize, observed tab visibility and actual AudioContext suspension fault injection. OS virtual keyboard, phone suspension and itch remain separate acceptance. Setup choices after the exercised Continue tap use native QA mouse injection.",
+  "_comment": "Browser-only lifecycle probe. Runner performs trusted name-field taps, real exported Godot HTML input fill/blur, actual viewport resize, observed tab visibility and actual AudioContext suspension fault injection. OS virtual keyboard, phone suspension and itch remain separate acceptance. Setup choices after the exercised Continue tap use native QA mouse injection. After creation, suspend again and arm game-only output capture before actual Pause; committed menu_move SFX proves output on public and licensed builds. Title music is intentionally absent in public checkouts.",
   "starts_at_title": true,
   "creation_ui": true,
   "fail_fast": true,
@@ -153,6 +153,27 @@
     {
       "action": "screenshot",
       "name": "07_created"
+    },
+    {
+      "action": "touch_field_chip",
+      "chip": "pause"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_pause_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "assert_event_count",
+      "type": "audio_played",
+      "payload_contains": {
+        "id": "menu_move"
+      },
+      "count": 1
+    },
+    {
+      "action": "screenshot",
+      "name": "08_pause_audio"
     }
   ]
 }

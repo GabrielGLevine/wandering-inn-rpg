@@ -67,7 +67,9 @@ async function audioOutput(control=false) {
    }
    return rms;
   }
-  const peakRms=await peak(gameTaps);
+  const sampledPeakRms=await peak(gameTaps);
+  const capture=audio.capture ? {...audio.capture} : null;
+  const peakRms=Math.max(sampledPeakRms,capture?.peakRms??0);
   let controlRms=null;
   if(makeControl) {
    const ctx=new AudioContext();ctx.__wiControl=true;
@@ -76,7 +78,7 @@ async function audioOutput(control=false) {
    controlRms=await peak(audio.taps.filter(tap=>tap.context===ctx));
    oscillator.stop();await ctx.close();
   }
-  return {states:gameContexts.map(ctx=>ctx.state),contexts:gameContexts.length,taps:gameTaps.length,peakRms,controlRms};
+  return {states:gameContexts.map(ctx=>ctx.state),contexts:gameContexts.length,taps:gameTaps.length,peakRms,sampledPeakRms,controlRms,capture};
  },control);
 }
 
@@ -101,6 +103,17 @@ try {
   window.AudioContext=class extends NativeContext {
    constructor(...args) {super(...args);audio.contexts.push(this);this.addEventListener('statechange',event=>audio.states.push({state:this.state,trusted:event.isTrusted,time:performance.now()}));}
   };
+  // Arm before the gameplay contact so short committed SFX cannot pass between samples.
+  setInterval(() => {
+   if(!audio.capture) return;
+   const samples=new Float32Array(2048);
+   for(const tap of audio.taps.filter(tap=>!tap.context.__wiControl)) {
+    tap.analyser.getFloatTimeDomainData(samples);
+    const rms=Math.sqrt(samples.reduce((sum,value)=>sum+value*value,0)/samples.length);
+    audio.capture.peakRms=Math.max(audio.capture.peakRms,rms);
+   }
+   audio.capture.samples++;audio.capture.lastSampleAt=performance.now();
+  },20);
   const connect=AudioNode.prototype.connect;
   AudioNode.prototype.connect=function(...args) {
    if(args[0]===this.context.destination) {
@@ -146,7 +159,8 @@ try {
    }
    if(shot==='01_title_audio') {
     probe.audio=await audioOutput(true);
-    assert(probe.audio.states.every(state=>state==='running')&&probe.audio.peakRms>0.0001&&probe.audio.controlRms>0.0001,'First trusted title tap did not unlock actual game audio output');
+    assert(probe.audio.states.length>0&&probe.audio.states.every(state=>state==='running')&&probe.audio.controlRms>0.0001,'First trusted title tap did not resume the game context');
+    probe.mechanism='Game context resumed; title output is measured but may be silent without the licensed music. Production SFX output recovery is required after creation.';
    }
    if(shot==='02_name_enter') {
     await tapName();
@@ -207,8 +221,25 @@ try {
     await tapName();
     probe.domValue=await frame.locator('input[type="text"]:not([disabled])').inputValue();assert.equal(probe.domValue,'Mira','Name lost after blur/rotation/visibility');
     probe.audio=await audioOutput(true);
-    assert(probe.audio.states.every(state=>state==='running')&&probe.audio.peakRms>0.0001&&probe.audio.controlRms>0.0001,'Trusted tap did not restore actual game audio output after suspension');
+    assert(probe.audio.states.length>0&&probe.audio.states.every(state=>state==='running')&&probe.audio.controlRms>0.0001,'Trusted name tap did not resume the game context after suspension');
+    probe.mechanism='Name/boot preservation and context resume; production SFX output recovery is required next.';
     await frame.locator('input[type="text"]:not([disabled])').evaluate(element=>element.blur());
+   }
+   if(shot==='07_created') {
+    probe.states=await frame.evaluate(async()=>{
+     const audio=window.__WI_LIFECYCLE_AUDIO__;
+     const contexts=audio.contexts.filter(ctx=>!ctx.__wiControl);
+     await Promise.all(contexts.map(ctx=>ctx.suspend()));
+     audio.capture={armedAt:performance.now(),peakRms:0,samples:0,lastSampleAt:null};
+     return contexts.map(ctx=>ctx.state);
+    });
+    assert(probe.states.length>0&&probe.states.every(state=>state==='suspended'),'Pre-Pause game context did not suspend');
+    probe.mechanism='Actual context fault injection and game-only analyser armed before the next trusted Pause contact.';
+   }
+   if(shot==='08_pause_audio') {
+    probe.audio=await audioOutput(true);
+    assert(probe.audio.states.length>0&&probe.audio.states.every(state=>state==='running')&&probe.audio.capture?.samples>0&&probe.audio.peakRms>0.0001&&probe.audio.controlRms>0.0001,'Trusted Pause tap did not restore actual game SFX output after suspension');
+    probe.mechanism='Trusted Pause contact → ui_pause_shown/menu_move → committed SFX through the actual game context; control oscillator excluded from game capture.';
    }
    probe.geometry=await geometry();
    await page.screenshot({path:join(output,`${shot}.png`)});
@@ -231,7 +262,7 @@ finally {
  if(frame&&!runtime) runtime=await frame.evaluate(()=>({boot:window.__WI_LIFECYCLE_BOOT__,events:window.__WI_LIFECYCLE_EVENTS__,audioStates:window.__WI_LIFECYCLE_AUDIO__?.states,gameEvents:window.__WI_QA_EVENTS__??[]})).catch(()=>null);
  const buildPckSha256=createHash('sha256').update(await readFile(join(root,'index.pck'))).digest('hex');
  await writeFile(join(output,'console.json'),JSON.stringify(consoleLog,null,2));
- await writeFile(join(output,'result.json'),JSON.stringify({passed:!failure,failure,profile,hosting,headed,browser:browser?.version(),host:origin,topUrl:page?.url(),gameUrl:frame?.url(),autoplayPolicy:'document-user-activation-required',visibilityVerified:probes.find(probe=>probe.name==='04_visibility')?.verified??false,browserPolicyUnlockVerified:probes[0]?.browserPolicyUnlockProven??false,buildPckSha256,emulated:true,scope:'Exported Godot DOM input/blur, viewport changes, measured desktop-tab visibility, actual game AudioContext suspend and trusted-tap output recovery. Physical keyboards/phones, OS suspension and actual itch remain unproven.',result,probes,runtime,touches,diagnostics,requests},null,2));
+ await writeFile(join(output,'result.json'),JSON.stringify({passed:!failure,failure,profile,hosting,headed,browser:browser?.version(),host:origin,topUrl:page?.url(),gameUrl:frame?.url(),autoplayPolicy:'document-user-activation-required',visibilityVerified:probes.find(probe=>probe.name==='04_visibility')?.verified??false,browserPolicyUnlockVerified:probes[0]?.browserPolicyUnlockProven??false,buildPckSha256,emulated:true,scope:'Exported Godot DOM input/blur, viewport changes, measured desktop-tab visibility, actual game AudioContext suspend and trusted Pause SFX output recovery. Physical keyboards/phones, OS suspension and actual itch remain unproven.',result,probes,runtime,touches,diagnostics,requests},null,2));
  await browser?.close();server.close();
 }
 if(failure) process.exitCode=1;
