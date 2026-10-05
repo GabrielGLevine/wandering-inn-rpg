@@ -390,6 +390,8 @@ func _emit_shown() -> void:
 		"resonance": {"used": Game.sim.resonance_used(), "capacity": Game.sim.resonance_capacity},
 		"cursor_scroll": _scroll.scroll_vertical,
 		"selected_icon": _corner_icon.visible,
+		"selected_icon_path": _icon_path_for(String(_item_ids[_cursor])) if not _item_ids.is_empty() and _corner_icon.visible else "",
+		"list_icon_paths": _item_ids.map(func(id: Variant) -> String: return _icon_path_for(String(id)) if _icon_texture_for(String(id)) != null else ""),
 		"mech_line": _corner_mech_line,
 	})
 
@@ -405,6 +407,8 @@ func _emit_selection() -> void:
 		"cursor": _cursor,
 		"item": "" if _item_ids.is_empty() else String(_item_ids[_cursor]),
 		"selected_icon": _corner_icon.visible,
+		"selected_icon_path": _icon_path_for(String(_item_ids[_cursor])) if not _item_ids.is_empty() and _corner_icon.visible else "",
+		"list_icon_paths": _item_ids.map(func(id: Variant) -> String: return _icon_path_for(String(id)) if _icon_texture_for(String(id)) != null else ""),
 		"mech_line": _corner_mech_line,
 	})
 
@@ -501,7 +505,13 @@ func _row_display_text(i: int) -> String:
 		tag = "  [Equipped]"
 	elif (rec.get("use_effect", {}) as Dictionary).has("heal") and Game.sim.hotbar_loadout.has("item:%s" % item_id):
 		tag = "  [On Hotbar]"
-	return "%s%s%s" % [mark, name, tag]
+	var prefix := ""
+	if _icon_texture_for(item_id) != null:
+		var font := _root.get_theme_font("font", "Label")
+		var font_px := _root.get_theme_font_size("font_size", "Label")
+		var space_width := maxf(1.0, font.get_string_size(" ", HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_px).x)
+		prefix = " ".repeat(ceili((_list_icon_size() + 4.0) / space_width))
+	return prefix + "%s%s%s" % [mark, name, tag]
 
 
 func _refresh_row_marks() -> void:
@@ -752,6 +762,19 @@ func _rebuild_items() -> void:
 			name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		_items_box.add_child(name_label)
+		var texture := _icon_texture_for(String(_item_ids[i]))
+		if texture != null:
+			var icon := TextureRect.new()
+			icon.texture = texture
+			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			name_label.add_child(icon)
+			icon.set_anchors_preset(Control.PRESET_CENTER_LEFT)
+			var side := _list_icon_size()
+			UIChrome.set_offsets(icon, 0.0, -side * 0.5, side, side * 0.5)
+			name_label.custom_minimum_size.y = maxf(name_label.custom_minimum_size.y, side)
 		_item_labels.append(name_label)
 		if i == _cursor:
 			cursor_row = name_label
@@ -884,6 +907,11 @@ func list_scrollable() -> bool:
 		return false
 	var vbar := _scroll.get_v_scroll_bar()
 	return vbar != null and vbar.max_value > vbar.page
+
+
+func _list_icon_size() -> float:
+	return float(WIResponsiveLayout.readable_font_size(get_viewport(), 16,
+		WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]))
 
 
 func _icon_texture_for(item_id: String) -> Texture2D:

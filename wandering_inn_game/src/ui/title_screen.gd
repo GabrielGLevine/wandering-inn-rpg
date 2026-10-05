@@ -49,6 +49,8 @@ const ENABLED_COLOR := Color(0.18, 0.105, 0.045)
 const DISABLED_COLOR := Color(0.5, 0.47, 0.4)
 const GESTURE_COLOR := Color(0.85, 0.8, 0.68)
 const BACKDROP_COLOR := Color(0.08, 0.06, 0.05)
+const BACKDROP_ART := preload("res://assets/key_art/harvest/title_backdrop.png")
+const INN_SIGN_ART := preload("res://assets/key_art/harvest/inn_sign.png")
 const NATIVE_SIZE := Vector2(1280.0, 720.0)
 
 var main_ref: WIMain
@@ -154,6 +156,15 @@ func _build_ui() -> void:
 	backdrop.color = BACKDROP_COLOR
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(backdrop)
+	var backdrop_art := TextureRect.new()
+	backdrop_art.name = "TitleBackdropArt"
+	backdrop_art.texture = BACKDROP_ART
+	backdrop_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	backdrop_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	backdrop_art.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	backdrop_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	UIChrome.full_rect(backdrop_art)
+	_root.add_child(backdrop_art)
 
 	_build_embers()
 
@@ -163,10 +174,19 @@ func _build_ui() -> void:
 	title_panel.size = Vector2(640.0, 92.0)
 	UIChrome.set_offsets(title_panel, -320.0, 180.0, 320.0, 272.0)
 	_root.add_child(title_panel)
+	var inn_sign := TextureRect.new()
+	inn_sign.texture = INN_SIGN_ART
+	inn_sign.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	inn_sign.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	inn_sign.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	inn_sign.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	inn_sign.position = Vector2(14.0, 10.0)
+	inn_sign.size = Vector2(64.0, 72.0)
+	title_panel.add_child(inn_sign)
 
 	var title_margin := MarginContainer.new()
 	UIChrome.full_rect(title_margin)
-	UIChrome.add_margins(title_margin, 42, 18, 42, 18)
+	UIChrome.add_margins(title_margin, 88, 18, 42, 18)
 	title_panel.add_child(title_margin)
 
 	var title_label := UIChrome.make_label("THE WANDERING INN", "Title")
@@ -229,7 +249,7 @@ func _build_ui() -> void:
 	# the menu skeleton, still hidden pending the gesture). Zero-payload --
 	# QA scripts that need to drive the gate deterministically (title_flow)
 	# wait on this instead of a frame-count guess.
-	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_GATE_RENDERED, {})
+	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_GATE_RENDERED, {"backdrop_art": "title_backdrop_pro_v1", "emblem_art": "emblem_inn_sign_v1", "backdrop_fit": "keep_aspect_centered"})
 
 
 ## Subtle ember drift over the title screen -- the map direction cards'
