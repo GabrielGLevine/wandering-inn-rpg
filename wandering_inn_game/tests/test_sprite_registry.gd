@@ -699,6 +699,14 @@ func _build_expected_counts() -> Dictionary:
 			"firewood_stack", "rubble_pile", "battle_debris"]:
 		counts["%s/idle" % variety_prop] = 1
 
+	counts["crate_owned/idle"] = 1
+	counts["inn_hearth/idle"] = 1
+	counts["inn_back_bar/idle"] = 1
+	counts["inn_bar_station/idle"] = 1
+	counts["inn_kitchen_prep/idle"] = 1
+	counts["inn_round_table/idle"] = 1
+	counts["inn_table_clean/idle"] = 1
+	counts["inn_table_soiled/idle"] = 1
 	return counts
 
 

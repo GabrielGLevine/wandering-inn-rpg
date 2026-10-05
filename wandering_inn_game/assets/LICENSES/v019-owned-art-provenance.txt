@@ -57,3 +57,26 @@ assets/sprites/bone_thrall/Idle_{Down,Side,Up}-Sheet.png
     plays `walk`. PixelLab outputs are user-owned and redistributable per
     its terms of service -- same footing as every other owned PixelLab
     sheet above.
+
+HARVEST 2026-10 — approved holistic art program #564
+assets/sprites/inn_hearth/Idle-Sheet.png
+    PixelLab generation 5f0ecf9b-66b5-4241-8d6a-a6dd3596c026; source set_pieces/inn_hearth.png.
+assets/sprites/inn_back_bar/Idle-Sheet.png
+    PixelLab generation 477dc182-22a1-46e7-80ab-cbe091ce0e77; source set_pieces/back_bar_shelf.png.
+assets/sprites/inn_bar_station/Idle-Sheet.png
+    PixelLab generation 0d602315-d68d-4e47-9c32-c990db23754b; source set_pieces/bar_counter_stools.png.
+assets/sprites/inn_kitchen_prep/Idle-Sheet.png
+    PixelLab generation 7d2b8817-6c60-40d5-9bd5-a6edbdf362a0; source set_pieces/kitchen_prep_counter.png.
+assets/sprites/inn_round_table/Idle-Sheet.png
+    PixelLab generation 0a2534df-b670-4594-a656-23a5978ac594; source bonus_round_table.png.
+assets/sprites/inn_table_clean/Idle-Sheet.png
+    PixelLab generation a4616992-4f23-425d-8f4a-c485facb9b88; source inn_table_dirty__after.png.
+assets/sprites/inn_table_soiled/Idle-Sheet.png
+    PixelLab generation e086945b-ea4d-41ff-8104-d714340246e1; source inn_table_dirty__before.png.
+assets/tiles/harvest/inn_floor.png
+    PixelLab Wang tileset f690b96e-4744-448e-9a6e-0c4458b9c447,
+    generated 2026-10-05. Full 64x64 source atlas; tile positions read from
+    its generated metadata. PixelLab outputs are user-owned and
+    redistributable under the same attested terms as the owned art above.
+
+crate_owned/Idle-Sheet.png: PixelLab owned generation 0a4384ab-702d-4998-8e26-8e15c4c97585; source L2_props/crate.png; copied unchanged. Measured alpha bounds (10, 7, 54, 57); scale 0.36364 for a 16px visible width. Public fallback; licensed primary remains preferred when present.

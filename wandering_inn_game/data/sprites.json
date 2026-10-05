@@ -918,6 +918,7 @@
   }
  },
  "crate": {
+  "fallback_sprite": "crate_owned",
   "_comment": "#398: WAS [690,71,38,26] -- bbox only (30,2)-(38,25), an 8x23 scrap of the FIRST crate's left plank edge, drawn as a ~14x41 near-black sliver offset right (the anchor centred a frame 81% empty). The sheet draws TWO 16x23 crates flush at x720-751 sharing a DOUBLE divider (x735 = left crate's right outline, x736 = right crate's left) plus a barrel flush at x752 -- one alpha component, so cut on drawn edges, not alpha. Took the CLOSED twin over the open-top left one: meanL 47.3 vs 32.3, 29% vs 48% near-black, and the open one's 10x7 black interior reads as a hole at 1x -- fatal in deep_tunnels (world band 13/255). rs 1.0 = native 16px grid: one cell wide, 0.44-cell overhang UP into air. Probe: bbox (0,0,16,23), pad 0/0; its OPAQUE-CANVAS flag is expected (solid wooden box, not a keyed canvas).",
   "render_scale": 1.0,
   "anchor": [
@@ -6735,6 +6736,150 @@
      48
     ],
     "fps": 5
+   }
+  }
+ },
+ "inn_hearth": {
+  "render_scale": 0.42,
+  "anchor": [
+   0.489583,
+   0.875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_hearth/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_back_bar": {
+  "render_scale": 0.48,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_back_bar/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     80
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_bar_station": {
+  "render_scale": 0.42,
+  "anchor": [
+   0.5,
+   0.861111
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_bar_station/Idle-Sheet.png",
+    "frame_size": [
+     144,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_kitchen_prep": {
+  "render_scale": 0.38,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_kitchen_prep/Idle-Sheet.png",
+    "frame_size": [
+     112,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_round_table": {
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_round_table/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_table_clean": {
+  "render_scale": 0.35,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_table_clean/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_table_soiled": {
+  "render_scale": 0.35,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_table_soiled/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "crate_owned": {
+  "render_scale": 0.36364,
+  "anchor": [
+   0.5,
+   0.890625
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/crate_owned/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
    }
   }
  }

@@ -13,9 +13,13 @@ archived, or superseded session blocks.
   `issue/564-holistic-art-direction`, based on current main `e1d2edee` plus
   the reviewed direction `6cd8264b`. User approved execution on 2026-10-05;
   no renewed taste gate is needed for its described regional/layout/UI choices.
-  Root owns scene/art catalogs, UI/chrome and program guidance. A disjoint
+  Root owns scene/art catalogs and program guidance. The UI/chrome worker
+  owns `/private/tmp/wi-art-ui` on `issue/557-owned-chrome`. A disjoint
   `/private/tmp/wi-art-foundation` worker owns registry/lint/test foundation
-  only on `issue/554-owned-sprite-fallback`; integrate before dual-build art QA.
+  only on `issue/554-owned-sprite-fallback`. Its independently approved fix
+  is integrated through `fba36333`; implementation lane is idle. Root pilot
+  dirty paths: inn map/catalog/provenance, seven inn sprites, floor atlas,
+  ground-tone shader/builder/test and execution plan. UI integration pending.
   Baseline gallery: `potential_assets/art_direction_review_2026-10-05/index.html`
   (ignored, private overlay captures). The 147 review captures remain baseline
   framing/native route evidence, not proof of the coming implementation.
@@ -50,28 +54,11 @@ archived, or superseded session blocks.
   using the same private candidate and `qa/M1-OBSERVATIONS.md`. None supplied.
   OS keyboard/chooser/background/audio policy and actual itch remain unproven.
   No release/deploy/outreach/recruitment authorized. M1 stays open.
-- **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
-  tree-identical to reviewed `81e66d29`. Independent source/visual review and all
-  eight CI checks pass, including 259 canonical scripts, both balance policies,
-  all 16 browser cases and lifecycle checks. Phone combat proves actual tutorial More, complete roster pages
-  and live shrinking. The WebGL turn-marker defect is repaired without weakening
-  diagnostics. Evidence: `/private/tmp/wi-505-evidence`. Keep #505/#511 open for
-  physical iPhone Safari and Android Chrome acceptance.
-- **#510 scoped recovery merged through PR #549:** main `0ac059a8` is identical
-  to the reviewed tree; all eight CI checks pass. Continue skips unreadable
-  newer saves. Both browser profiles prove actual reload of a completed durable
-  manual save and subsequent touch input, plus explicitly injected malformed-save
-  recovery with valid bytes preserved. Keyboard, audio, genuine backgrounding,
-  itch and physical lifecycle acceptance remain open. Evidence: `/private/tmp/wi-510-evidence`.
-- **#508 scoped work merged through PR #548:** reviewed tree and all eight CI
-  checks pass at `6f188bbc`. Fresh Watch earns wages, buys the classless route,
-  returns home and gains Rogue at sleep. Drainage, Watch, stealth-break and
-  production-timing proof pass on desktop and both emulated phone profiles.
-  Evidence: `/private/tmp/wi-508-evidence/composed`. Physical evidence is open.
-  The owner-approved cleared-road crossing recovery is merged through PR #551;
-  no enemies respawn. #508 is closed; PR #551 records final verification.
-- **#504 delivered through PR #547** (`e5b53328`; narrative in the PR body).
-  Open only for physical iPhone Safari / Android Chrome observations (#511).
+- Prior M1 scoped repairs (#504/#505/#508/#510) are merged through PRs
+  #547–#550. Their evidence and remaining physical criteria are recorded in
+  those PRs and #511; #505/#510 evidence roots remain `/private/tmp/wi-505-evidence`
+  and `/private/tmp/wi-510-evidence`. Do not rerun completed software closure
+  merely because physical observations remain outstanding.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.

@@ -1,6 +1,7 @@
 class_name WITileBoardBuilder
 
 const CELL := 16
+const GROUND_TONE_SHADER := preload("res://src/world/shaders/ground_tone.gdshader")
 const _WATER_NEIGHBORS := [
 	[Vector2i(0, -1), 1], [Vector2i(1, -1), 2],
 	[Vector2i(1, 0), 4], [Vector2i(1, 1), 8],
@@ -202,6 +203,19 @@ static func make_tile_layer(parent: Node2D, sheet_path: String, tile_px: int, re
 	return layer
 
 
+static func apply_ground_tone(layer: TileMapLayer, tone: Dictionary) -> void:
+	if tone.is_empty():
+		return
+	var base: Array = tone.get("base", [])
+	if base.size() != 3:
+		return
+	var material := ShaderMaterial.new()
+	material.shader = GROUND_TONE_SHADER
+	material.set_shader_parameter("ground_base", Color(float(base[0]), float(base[1]), float(base[2])))
+	material.set_shader_parameter("ground_detail", clampf(float(tone.get("detail", 1.0)), 0.0, 1.0))
+	layer.material = material
+
+
 ## Renders `floor_layers` entries (data/maps/** / data/arenas.json
 ## schema): each entry paints either a fixed `coords` tile or a
 ## position-hashed pick from `variants` over the cells selected by `cells`
@@ -216,6 +230,7 @@ static func build_floor_layers(parent: Node2D, layers_cfg: Array, grid: Vector2i
 		var sheet := String(layer_cfg.get("sheet", biome_cfg["sheet"]))
 		var tile_px := int(layer_cfg.get("tile_px", biome_cfg["tile_px"]))
 		var tile_layer := make_tile_layer(parent, sheet, tile_px, registry)
+		apply_ground_tone(tile_layer, layer_cfg.get("tone", {}))
 		var cells := resolve_layer_cells(layer_cfg.get("cells", "all"), grid)
 		var variants: Array = layer_cfg.get("variants", [])
 		var fixed_coord: Variant = layer_cfg.get("coords", null)
