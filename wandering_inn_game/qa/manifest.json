@@ -7538,12 +7538,14 @@
     ],
     "skills": [
      "basic_cleaning",
+     "flame_jet",
      "observe",
      "sneak"
     ],
     "dialogue": [],
     "systems": [
      "combat",
+     "economy",
      "exploration"
     ]
    }
