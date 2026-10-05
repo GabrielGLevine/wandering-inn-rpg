@@ -563,11 +563,50 @@
    "timeout_sec": 5
   },
   {
-   "action": "assert_combat_layout"
+   "action": "assert_combat_layout",
+   "contains": {
+    "context_text": "No target. Back to move."
+   }
   },
   {
    "action": "screenshot",
    "name": "combat_targeting"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "details"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "actions"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_open": true,
+    "details_tab": "actions",
+    "details_page": 0
+   },
+   "contains": {
+    "details_text": "No target. Back to move."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "targeting_context_details"
+  },
+  {
+   "action": "touch_combat_control",
+   "control": "drawer_close"
+  },
+  {
+   "action": "assert_combat_layout",
+   "equals": {
+    "details_open": false
+   },
+   "contains": {
+    "context_text": "No target. Back to move."
+   }
   },
   {
    "action": "touch_combat_control",
