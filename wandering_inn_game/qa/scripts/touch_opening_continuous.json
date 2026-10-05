@@ -501,7 +501,8 @@
         1,
         0
       ],
-      "steps": 9
+      "steps": 12,
+      "until_cell": [14, 3]
     },
     {
       "action": "screenshot",
@@ -844,7 +845,8 @@
         1,
         0
       ],
-      "steps": 12
+      "steps": 12,
+      "until_cell": [14, 3]
     },
     {
       "action": "touch_cell",
