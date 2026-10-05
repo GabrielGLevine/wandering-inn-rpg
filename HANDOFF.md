@@ -185,5 +185,6 @@ python3 scripts/render_qa_notes.py
 - Windowed QA serializes. Reruns replace their `qa_output/` evidence; a full
   sweep flushes prior artifacts. Headless warnings/errors require triage.
 - Licensed overlays and `potential_assets/` are local-only; never commit them.
+  Backup: private `potential-assets-v2` release.
 - Provider capacity fails soft when telemetry is unavailable. Roles and
   exact file ownership govern dispatch, not historical provider assignments.
