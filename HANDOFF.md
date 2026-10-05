@@ -27,9 +27,7 @@ archived, or superseded session blocks.
 - **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
   tree-identical to reviewed `81e66d29`. Independent source/visual review and all
   eight CI checks pass, including 259 canonical scripts, both balance policies,
-  all 16 browser cases and lifecycle checks. Final local preflight/load gate and
-  desktop inventory/combat, long dialogue and upstairs captures pass and are
-  inspected. Phone combat proves actual tutorial More, complete roster pages
+  all 16 browser cases and lifecycle checks. Phone combat proves actual tutorial More, complete roster pages
   and live shrinking. The WebGL turn-marker defect is repaired without weakening
   diagnostics. Evidence: `/private/tmp/wi-505-evidence`. Keep #505/#511 open for
   physical iPhone Safari and Android Chrome acceptance.
@@ -47,13 +45,8 @@ archived, or superseded session blocks.
   Fight-first → force-crate → drainage return → sleep still misses Rogue
   (seed 7, 293 steps). Acquisition/respawn rules are unchanged; the owner must
   decide `docs/design/rogue-recovery-proposal.md` before this recovery repair.
-- **#504 delivered through PR #547:** browser-touch coverage for all three
-  purchase paths, readable ink labels, CI registration and eligibility invariant
-  documentation are merged at `e5b53328`. The final ordered-input runner passes
-  six cases, three additional timing repeats and all required CI. The unit gate
-  now rejects plain errors; two existing item-tier mismatches are repaired with
-  stats, prices, resonance and starting kits preserved. #504 remains open for
-  physical iPhone Safari / Android Chrome observations under #511.
+- **#504 delivered through PR #547** (`e5b53328`; narrative in the PR body).
+  Open only for physical iPhone Safari / Android Chrome observations (#511).
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.
