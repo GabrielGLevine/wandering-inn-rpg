@@ -155,6 +155,127 @@
   {
    "action": "assert_event_absent",
    "type": "combat_started"
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    -1
+   ],
+   "steps": 2
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    34,
+    20
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "sneaking",
+   "equals": true
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    35,
+    20
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sneak_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_sneak_rendered",
+   "payload_contains": {
+    "active": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "payload_contains": {
+    "skill": "flame_jet"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You straighten up."
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "You straighten up."
+  },
+  {
+   "action": "assert_message_layout",
+   "kind": "toast"
+  },
+  {
+   "action": "screenshot",
+   "name": "02_stealth_broken_receipt"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "The meat is good and it will not stay good. Raw and cold, it is no use to you, and you have no way to change that."
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "The meat is good and it will not stay good. Raw and cold, it is no use to you, and you have no way to change that."
+  },
+  {
+   "action": "assert_message_layout",
+   "kind": "toast"
+  },
+  {
+   "action": "screenshot",
+   "name": "03_blocked_action_receipt"
+  },
+  {
+   "action": "assert_state",
+   "path": "sneaking",
+   "equals": false
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cooked_a_kill"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "seared_venison"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
   }
  ]
 }
