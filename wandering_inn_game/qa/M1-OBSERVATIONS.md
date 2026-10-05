@@ -1,6 +1,6 @@
 # M1 device and unfamiliar-player observations
 
-Status: software candidate undergoing composed verification. Physical and unfamiliar-player acceptance remains required by #511. Do not substitute Chromium phone profiles for either physical browser.
+Status: software candidate passes local composed verification; the issue PR records exact-head CI/review and integration. Physical and unfamiliar-player acceptance remains required by #511. Do not substitute Chromium phone profiles for either physical browser.
 
 Record the tested candidate's Git tree SHA and exported PCK SHA-256 from the candidate manifest. For each observation record date, anonymized tester ID, whether the tester is unfamiliar, device/model, OS and browser version, CSS viewport, orientation, host (direct URL or actual itch iframe), input mechanism, capture/notes path, result, coaching, and residual issue. No observation has been supplied yet.
 

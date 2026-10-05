@@ -9,30 +9,34 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active M1 completion (#506 primary):** root owns `/private/tmp/wi-m1-506`,
-  branch `issue/506-touch-flow`, base `2d1830a9`. Integrated #509 lifetime,
-  #253 import-request ownership, #510 DOM-input/audio lifecycle probes and
-  #507 responsive Controls/Help. Approved #508 cleared-road covered crossing
-  implemented; fresh force298/298 plus sim negatives pass. Guile312/312 now uses
-  actual creation/stairs, zero teleports, production recovery receipts with
-  visibility/bounds and no Rogue before final sleep.
-  Fresh DPR2 Android touch route170/170 and275 trusted contacts passes; creation
-  130% six-choice explanation route64/64 passes. Composed measured reference
-  scroll/Back/resize passes; fresh native guidance131/131 passes, including a
-  reproduced/repaired desktop dialogue/readout overlap. Final source changes
-  add explicit touch victory/tutor wording and desktop toast clearance. First
-  composed preflight caught type/pin/prose/doc limits, all repaired; restart
-  full gates and final evidence review next.
-  Root owns remaining tracked M1 source/QA/docs; all implementation lanes are
-  integrated and workers have stopped edits. Preserve node_modules symlink and
-  companion UID as untracked. Evidence `/private/tmp/wi-m1-evidence`,
-  `/private/tmp/wi509-final-gates`, `/private/tmp/wi-507-reference-evidence`.
-  Next: commit composed sources, isolated equivalent-tree full native gates,
-  root full browser gates and windowed reads, independent review, issue PR/CI,
-  authorized squash and tree-identity check. No new PR yet. Physical phones,
-  actual OS keyboard/chooser/background/itch and three unfamiliar-player
-  sessions remain required; no observations supplied. Checklist:
-  `wandering_inn_game/qa/M1-OBSERVATIONS.md`. No release/deploy authorized.
+- **M1 software candidate (#506 primary):** `issue/506-touch-flow`, base
+  `2d1830a9`; tested gameplay/QA commit `ab279415`, tree `13c22d23`.
+  Owner-approved #507 creation/footer/difficulty and #508 cleared-road cover
+  rule are implemented. #509 production lifetime, bark ownership, readable
+  feedback, #253 import-request ownership and #510 scoped probes are composed.
+  Native preflight all units passes on `e3a10a00`; full canonical sweep passes
+  on `664d8cb0`; final QA-only delta has fresh import/load/smoke/Stealth gates.
+  All 26 browser registry cases plus ten production-message/Stealth cases pass
+  on `ab279415`. Both fresh continuous routes run 175 steps with 275 trusted
+  contacts, actual aimed combat/cancel/equipment drag/victory/resumed movement.
+  Evidence keeps these SHAs distinct; final PR CI runs the exact composed head.
+  Full native/windowed, balance, discovery/recovery and independent visual
+  evidence is preserved under `/private/tmp/wi-m1-*-evidence-*`,
+  `/private/tmp/wi-m1-browser-final-ab279415` and `/private/tmp/wi-m1-evidence`.
+  The issue PR records per-criterion acceptance, independent review, required
+  CI and squash tree identity. Read that durable record for integration status.
+  Root owns `/private/tmp/wi-m1-506`; implementation lanes are integrated and
+  idle. No owned tracked changes remain after the record-only commit. Preserve
+  untracked node_modules symlink and companion UID. Preserve the unrelated
+  PixelLab note in the original main worktree's dirty HANDOFF; do not overwrite
+  or stash another owner's changes.
+  Next acceptance work: #511 physical iPhone Safari/Android Chrome and three
+  unfamiliar-player sessions with desktop reference. No observations supplied.
+  Actual OS keyboard/chooser/background/audio-policy/itch behavior is unproven;
+  do not substitute Chromium or scripted input. Use
+  `wandering_inn_game/qa/M1-OBSERVATIONS.md` and the private candidate manifest
+  (tested PCK `75d1b8fa…`) for identical-build observations. No release/deploy,
+  outreach or recruitment authorized. M1 remains open pending those results.
 - **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
   tree-identical to reviewed `81e66d29`. Independent source/visual review and all
   eight CI checks pass, including 259 canonical scripts, both balance policies,
@@ -52,7 +56,7 @@ archived, or superseded session blocks.
   production-timing proof pass on desktop and both emulated phone profiles.
   Evidence: `/private/tmp/wi-508-evidence/composed`. Physical evidence is open.
   The owner-approved cleared-road crossing recovery is implemented on the
-  active M1 branch; no enemies respawn. Final composed verification remains.
+  M1 candidate; no enemies respawn. The issue PR records final verification.
 - **#504 delivered through PR #547** (`e5b53328`; narrative in the PR body).
   Open only for physical iPhone Safari / Android Chrome observations (#511).
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
@@ -61,15 +65,15 @@ archived, or superseded session blocks.
 - User-confirmed mobile targets: **iPhone Safari and Android Chrome**,
   compared with desktop. Rogue discovery is a priority; purchases require
   explicit confirmation before any gold or item effects commit.
-- **M1 has actionable work.** #503's diagnostic matrix/touch baseline and
-  #477's schema-reader fixes remain delivered. #505/#506/#510 are ready for
-  scoped audits and repairs; missing phones hold physical acceptance, not
-  repair dispatch. #507 can progress independent guidance while preparing
-  any unresolved presentation choice. Follow the
+- **M1 local machine verification is complete.** #503 diagnostics and #477 schema
+  readers remain delivered. The #506 issue PR records the composed software
+  repairs for #507/#508/#509 and scoped #253/#510 evidence. Physical and human
+  acceptance belongs to #511; keep device-dependent issues open until the
+  named observations land. Follow the
   [execution contract](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502#execution-contract).
 - **Remaining acceptance corrections:** #504 needs physical-device purchase
-  observations; #508/#509 software proofs are composed on the active branch; final gates
-  and review remain. #253 still needs physical target-device/itch import
+  observations; the M1 issue PR records #508/#509 software closure evidence.
+  #253 still needs physical target-device/itch import
   verification. Preserve useful implementations from PRs #535–#537;
   merged partial work does not satisfy their missing criteria.
 - **Compiler corrections in PR #545:** comparator #542 preserves event-history

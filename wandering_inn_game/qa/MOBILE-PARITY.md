@@ -18,13 +18,24 @@ recorded OS/browser; fill from the M1 gate (#511). **Untested** stays untested.
 | Real Android Chrome | **UNTESTED** — same fields |
 | Hosting | local HTTP server (`run_web_qa.mjs`); the itch embed and direct itch.io hosting are **UNTESTED** this pass (the embed adds itch's iframe + its own scroll/viewport chrome) |
 
-## Current composed M1 verification (2026-10-04)
+## Current composed M1 verification (2026-10-05)
 
 Software is on `issue/506-touch-flow`, based on `2d1830a9`. Current Chromium
 phone contexts use DPR2. The candidate manifest/evidence records the exact
 source tree, PCK hash, browser, viewport and input class. Physical-device cells
 below remain **UNTESTED**. Historical rows describe their original builds;
 current composed gates supersede their script or layout limitations.
+
+Tested gameplay/QA commit `ab2794157113926d0d953708ed7b21f2ae29d320`, tree
+`13c22d2386b252833486d36a7152da6163477225`, private-overlay Web PCK SHA-256
+`75d1b8fa2b36b2ebaef81b22dae7fbf62b3ddba5c02fbd7e7bd222800e61f746`.
+All 26 browser registry cases and ten production-message/Stealth cases pass.
+Both continuous routes complete 175 steps with 275 trusted contacts. Full native
+canonical evidence is from `664d8cb0`; final QA-only targeting/stopping changes
+have fresh import/load/smoke/Stealth checks, and the PR CI runs the exact head.
+Native units pass on `e3a10a00`; unchanged-core balance evidence is from
+`38a8df9b`. Preserve each run's source; these are not all one-tree runs.
+The final record-only commit changes no shipped game or QA behavior.
 
 - Fresh creation names all six choices before starting, explains appearance,
   incoming damage and change-later settings. A separate 130% touch route
@@ -44,7 +55,9 @@ current composed gates supersede their script or layout limitations.
   Watch/drainage discovery and first-Stealth routes remain canonical gates.
 - Production message cases exercise actual hold loops, early/late movement,
   long/reduced-motion text, transition replay without duplicate history,
-  queued modal delivery and immediate arrival. Phone-profile runs using
+  queued modal delivery and immediate arrival. Bark generations prevent an
+  earlier timer from hiding its replacement or releasing its audio duck.
+  Phone-profile runs using
   injected engine input are labelled as such; they do not prove touch.
 - Save import proves stale FileReader request rejection, closure safety,
   empty-file refusal and valid acceptance with live/manual bytes preserved.
