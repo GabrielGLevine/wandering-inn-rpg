@@ -5,10 +5,13 @@ description: Select, create, register, license, and verify sprites, icons, props
 
 # Add art or sprites
 
-Read `docs/asset-catalog.md` for qualitative fit, then the asset index for exact
-paths/dimensions, the scene assembly guide for composition, and
-`data/sprites.json` for existing registrations. Do not guess atlas coordinates
-or browse whole source packs into context.
+Start with `python3 tools/find_asset.py <use words> [--kind K] [--tier T]`: it
+ranks what is already wired, owned generated candidates (with verdicts, sizes,
+manifest lines) and pack files for that use. Then read `docs/asset-catalog.md`
+for qualitative fit, the asset index for exact pack paths/dimensions, the scene
+assembly guide for composition, and `data/sprites.json` for existing
+registrations. Do not guess atlas coordinates or browse whole source packs into
+context. Do not generate art that a READY candidate already covers.
 
 Use the highest-fidelity suitable asset available. Furniture and obstacles use
 real prop silhouettes, not recolored terrain. A functional or named identity
