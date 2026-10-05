@@ -705,12 +705,18 @@ def check_sprite_fallbacks(parsed: dict, errors: list, bundle_paths: set | None 
 			continue
 		sheets = []
 		valid = True
+		required_sheets = ("sheet_down", "sheet_side", "sheet_up") if tgt.get("directional") else ("sheet",)
 		for anim in animations.values():
 			if not isinstance(anim, dict):
 				valid = False
 				break
 			paths = [value for key, value in anim.items() if key.startswith("sheet")]
-			if not paths or any(not isinstance(path, str) or not path for path in paths):
+			if any(key not in anim for key in required_sheets) or any(not isinstance(path, str) or not path for path in paths):
+				valid = False
+				break
+			size = anim.get("frame_size")
+			if (not isinstance(size, list) or len(size) != 2
+				or any(type(dimension) not in (int, float) or dimension < 1 for dimension in size)):
 				valid = False
 				break
 			sheets.extend(paths)

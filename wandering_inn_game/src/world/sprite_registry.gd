@@ -62,7 +62,7 @@ static func resolved_id(sprite_id: String) -> String:
 	if fallback is String and fallback != "" and fallback != sprite_id and not fallback.begins_with("pc_"):
 		var target: Variant = _catalog.get(fallback)
 		if target is Dictionary and not target.has("fallback_sprite"):
-			if _missing_any_sheet(entry) and not _missing_any_sheet(target):
+			if _missing_any_sheet(entry) and not _missing_any_sheet(target) and _valid_frame_geometry(target):
 				resolved = fallback
 	_resolved_ids[sprite_id] = resolved
 	return resolved
@@ -75,15 +75,28 @@ static func _missing_any_sheet(entry: Dictionary) -> bool:
 	for anim: Variant in animations.values():
 		if not anim is Dictionary:
 			return true
-		var has_sheet := false
+		var sheet_keys: Array[String] = []
+		for facing: String in _facings(bool(entry.get("directional", false))):
+			sheet_keys.append("sheet_%s" % facing if facing != "" else "sheet")
 		for key: String in anim:
-			if key.begins_with("sheet"):
-				has_sheet = true
-				if not anim[key] is String or not ResourceLoader.exists(anim[key]):
-					return true
-		if not has_sheet:
-			return true
+			if key.begins_with("sheet") and not sheet_keys.has(key):
+				sheet_keys.append(key)
+		for key: String in sheet_keys:
+			var path: Variant = anim.get(key)
+			if not path is String or not ResourceLoader.exists(path):
+				return true
 	return false
+
+
+static func _valid_frame_geometry(entry: Dictionary) -> bool:
+	for anim: Dictionary in entry["animations"].values():
+		var size: Variant = anim.get("frame_size")
+		if not size is Array or size.size() != 2:
+			return false
+		for dimension: Variant in size:
+			if not (dimension is int or dimension is float) or dimension < 1:
+				return false
+	return true
 
 
 static func anchor_for(sprite_id: String) -> Vector2:

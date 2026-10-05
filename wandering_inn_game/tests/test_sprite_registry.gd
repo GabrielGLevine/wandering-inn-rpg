@@ -37,6 +37,7 @@ func _init() -> void:
 	_assert_ice_tile_is_bespoke_and_opaque()
 	_assert_missing_sheet_fallback()
 	_assert_fallback_sprite_resolution()
+	_assert_fallback_target_completeness()
 	print("PASS: sprite registry catalog builds SpriteFrames")
 	quit(0)
 
@@ -200,6 +201,47 @@ func _assert_fallback_sprite_resolution() -> void:
 	assert(WISpriteRegistry.resolved_id("__t_missing") == "__t_missing", "reset must reevaluate sheet availability")
 	var fresh := WISpriteRegistry.frames_for("__t_missing")
 	assert(fresh != frames and fresh.has_animation("idle_up"), "reset must rebuild primary frames")
+	WISpriteRegistry.reset()
+
+
+func _assert_fallback_target_completeness() -> void:
+	var real_sheet := "res://assets/sprites/door_locked_heavy/Idle-Sheet.png"
+	var primary := {"fallback_sprite": "__t_target", "animations": {"idle": {
+		"sheet": "res://assets/__nonexistent_pack__.png", "frame_size": [16, 23]}}}
+	var complete := {"directional": true, "animations": {"idle": {
+		"sheet_down": real_sheet, "sheet_side": real_sheet, "sheet_up": real_sheet,
+		"frame_size": [64, 64]}}}
+	for missing_key: String in ["sheet_down", "sheet_side", "sheet_up", "sheet"]:
+		WISpriteRegistry.reset()
+		WISpriteRegistry._load_catalog()
+		var target: Dictionary = complete.duplicate(true) if missing_key != "sheet" else {
+			"animations": {"idle": {"sheet_side": real_sheet, "frame_size": [64, 64]}}}
+		target["animations"]["idle"].erase(missing_key)
+		WISpriteRegistry._catalog["__t_target"] = target
+		WISpriteRegistry._catalog["__t_primary"] = primary
+		assert(WISpriteRegistry.resolved_id("__t_primary") == "__t_primary", "target needs required sheet key: " + missing_key)
+		assert(WISpriteRegistry.frames_for("__t_primary").get_frame_texture("idle", 0).get_size() == Vector2(16, 23), "incomplete target must keep safe primary placeholder")
+		# The same absent key on a primary must select a complete target.
+		WISpriteRegistry.reset()
+		WISpriteRegistry._load_catalog()
+		target["fallback_sprite"] = "__t_target"
+		WISpriteRegistry._catalog["__t_primary"] = target
+		WISpriteRegistry._catalog["__t_target"] = complete
+		assert(WISpriteRegistry.resolved_id("__t_primary") == "__t_target", "primary missing required sheet key must resolve: " + missing_key)
+		assert(WISpriteRegistry.frames_for("__t_primary").has_animation("idle_up"), "complete directional target must build every facing")
+	var invalid_targets: Array = [{}, {"animations": null}, {"animations": []},
+		{"animations": {}}, {"animations": {"idle": null}},
+		{"animations": {"idle": {}}}]
+	for bad_size: Variant in [null, [], [16], [16, 0], ["64", 64], [64, 64, 64]]:
+		invalid_targets.append({"animations": {"idle": {"sheet": real_sheet, "frame_size": bad_size}}})
+	invalid_targets.append({"animations": {"idle": {"sheet": real_sheet}}})
+	for target: Dictionary in invalid_targets:
+		WISpriteRegistry.reset()
+		WISpriteRegistry._load_catalog()
+		WISpriteRegistry._catalog["__t_primary"] = primary
+		WISpriteRegistry._catalog["__t_target"] = target
+		assert(WISpriteRegistry.resolved_id("__t_primary") == "__t_primary", "invalid animation target must not resolve: " + str(target))
+		assert(WISpriteRegistry.frames_for("__t_primary").get_frame_count("idle") == 1, "invalid target must keep safe primary placeholder")
 	WISpriteRegistry.reset()
 
 

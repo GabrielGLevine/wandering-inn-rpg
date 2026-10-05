@@ -193,7 +193,7 @@ class TestSpriteFallbacks(unittest.TestCase):
         return errors
 
     def entry(self, sheet="res://assets/sprites/owned/Idle.png", **kwargs):
-        return {"animations": {"idle": {"sheet": sheet}}, **kwargs}
+        return {"animations": {"idle": {"sheet": sheet, "frame_size": [16, 16]}}, **kwargs}
 
     def test_valid_fallback_and_primary_without_fallback(self):
         self.assertEqual(self.check({
@@ -217,12 +217,48 @@ class TestSpriteFallbacks(unittest.TestCase):
         private = "assets/private.png"
         for key in ["sheet", "sheet_down", "sheet_side", "sheet_up"]:
             with self.subTest(key=key):
-                target = self.entry()
-                target["animations"]["walk"] = {key: "res://" + private}
+                sheet_keys = ["sheet"] if key == "sheet" else ["sheet_down", "sheet_side", "sheet_up"]
+                anim = {field: "res://assets/owned.png" for field in sheet_keys}
+                anim["frame_size"] = [16, 16]
+                target = {"directional": key != "sheet", "animations": {
+                    "idle": copy.deepcopy(anim), "walk": {**anim, key: "res://" + private}}}
                 errors = self.check({"primary": self.entry(fallback_sprite="owned"),
                                      "owned": target}, [private])
                 self.assertEqual(len(errors), 1, errors)
                 self.assertIn("bundle-only", errors[0])
+
+    def test_every_animation_requires_all_facing_sheet_keys(self):
+        for directional, keys in [(False, ["sheet"]),
+                                  (True, ["sheet_down", "sheet_side", "sheet_up"])]:
+            anim = {key: "res://assets/owned.png" for key in keys}
+            anim["frame_size"] = [16, 16]
+            for missing in keys:
+                with self.subTest(directional=directional, missing=missing):
+                    broken = copy.deepcopy(anim)
+                    del broken[missing]
+                    if not directional:
+                        broken["sheet_side"] = "res://assets/owned.png"
+                    target = {"directional": directional, "animations": {
+                        "idle": anim, "walk": broken}}
+                    errors = self.check({"primary": self.entry(fallback_sprite="owned"),
+                                         "owned": target})
+                    self.assertEqual(len(errors), 1, errors)
+                    self.assertIn("valid sheet animations", errors[0])
+            self.assertEqual(self.check({"primary": self.entry(fallback_sprite="owned"),
+                                         "owned": {"directional": directional,
+                                                   "animations": {"idle": anim}}}), [])
+
+    def test_animation_target_requires_valid_frame_geometry(self):
+        for size in [None, [], [16], [16, 0], ["64", 64], [True, 64], [64, 64, 64]]:
+            with self.subTest(size=size):
+                target = self.entry()
+                target["animations"]["idle"]["frame_size"] = size
+                self.assertEqual(len(self.check({
+                    "primary": self.entry(fallback_sprite="owned"), "owned": target})), 1)
+        target = self.entry()
+        del target["animations"]["idle"]["frame_size"]
+        self.assertEqual(len(self.check({"primary": self.entry(fallback_sprite="owned"),
+                                         "owned": target})), 1)
 
     def test_invalid_target_types_and_animation_records_report_errors(self):
         for target in [None, 7, [], {}, "", "broken"]:
