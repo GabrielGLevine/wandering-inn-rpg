@@ -84,6 +84,19 @@ const MOUSE_LABELS := {
 	"field_readout": "Click Details",
 }
 
+const TOUCH_LABELS := {
+	"move": "Tap ground to walk",
+	"interact": "Tap an adjacent target",
+	"confirm": "Tap a row or option",
+	"cancel": "Tap Back or Close",
+	"cycle": "Tap a target to select it",
+	"journal": "Tap Journal",
+	"inventory": "Tap Inventory",
+	"end_turn": "Tap End Turn",
+	"hotbar": "Tap a hotbar slot",
+	"field_readout": "Tap Details",
+}
+
 enum State { ROWS, CONTROLS, HELP, CREDITS }
 
 ## True while this panel is visible -- world.gd/pause_menu.gd/title_screen.gd
@@ -103,6 +116,11 @@ var _row_labels: Array[Label] = []
 
 var _controls_root: Control
 var _controls_back_label: Label
+var _controls_scroll: ScrollContainer
+var _controls_grid: GridContainer
+var _controls_labels: Array[Label] = []
+var _controls_touch_layout := false
+var _reference_signature: Array = []
 
 var _help_root: Control
 var _credits_root: Control
@@ -119,6 +137,8 @@ var _credits_link_keys: Array = []
 var _credits_back_label: Control = null
 var _help_back_label: Label
 var _help_sections: Array = []
+var _help_scroll: ScrollContainer
+var _help_labels: Array[Label] = []
 
 
 func _ready() -> void:
@@ -130,6 +150,8 @@ func _ready() -> void:
 	_build_controls_panel()
 	_build_help_panel()
 	_build_credits_panel()
+	get_viewport().size_changed.connect(_layout_reference_panels)
+	_layout_reference_panels()
 
 
 func _build_rows_panel() -> void:
@@ -220,54 +242,76 @@ func _apply_rows_panel_size() -> void:
 	UIChrome.set_offsets(_root, -wanted.x * 0.5, -wanted.y * 0.5, wanted.x * 0.5, wanted.y * 0.5)
 
 
-func _build_controls_panel() -> void:
-	_controls_root = Control.new()
-	UIChrome.apply_theme(_controls_root)
-	_controls_root.set_anchors_preset(Control.PRESET_CENTER)
-	_controls_root.custom_minimum_size = CONTROLS_PANEL_SIZE
-	_controls_root.size = CONTROLS_PANEL_SIZE
-	UIChrome.set_offsets(_controls_root, -CONTROLS_PANEL_SIZE.x * 0.5, -CONTROLS_PANEL_SIZE.y * 0.5, CONTROLS_PANEL_SIZE.x * 0.5, CONTROLS_PANEL_SIZE.y * 0.5)
-	_controls_root.mouse_filter = Control.MOUSE_FILTER_STOP
-	_controls_root.hide()
-	add_child(_controls_root)
-	_controls_root.add_child(UIChrome.make_patch(UIChrome.CARVED_PANEL))
-
+func _build_reference_panel(title_text: String) -> Dictionary:
+	var root := Control.new()
+	root.mouse_filter = Control.MOUSE_FILTER_STOP
+	root.hide()
+	add_child(root)
+	root.add_child(UIChrome.make_patch(UIChrome.CARVED_PANEL))
 	var margin := MarginContainer.new()
 	UIChrome.full_rect(margin)
 	UIChrome.add_margins(margin, 26, 20, 26, 20)
-	_controls_root.add_child(margin)
-
-	var stack := VBoxContainer.new()
-	stack.add_theme_constant_override("separation", 4)
-	margin.add_child(stack)
-
-	var title := UIChrome.make_label("Controls", "Menu")
+	root.add_child(margin)
+	var outer := VBoxContainer.new()
+	outer.add_theme_constant_override("separation", 8)
+	margin.add_child(outer)
+	var title := UIChrome.make_label(title_text, "Menu")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	stack.add_child(title)
+	outer.add_child(title)
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	outer.add_child(scroll)
+	var back := UIChrome.make_label("> Back", "Menu")
+	back.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	back.mouse_filter = Control.MOUSE_FILTER_STOP
+	outer.add_child(back)
+	return {"root": root, "scroll": scroll, "title": title, "back": back}
 
-	var grid := GridContainer.new()
-	grid.columns = 4
-	grid.add_theme_constant_override("h_separation", 20)
-	grid.add_theme_constant_override("v_separation", 4)
-	stack.add_child(grid)
-	for header_text: String in ["Action", "Keyboard", "Gamepad", "Mouse"]:
-		grid.add_child(UIChrome.make_label(header_text, "Small"))
+
+func _build_controls_panel() -> void:
+	var panel := _build_reference_panel("Controls")
+	_controls_root = panel.root
+	_controls_scroll = panel.scroll
+	_controls_back_label = panel.back
+	_controls_back_label.gui_input.connect(_on_controls_back_gui_input)
+	_controls_grid = GridContainer.new()
+	_controls_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_controls_grid.add_theme_constant_override("h_separation", 20)
+	_controls_grid.add_theme_constant_override("v_separation", 8)
+	_controls_scroll.add_child(_controls_grid)
+	_rebuild_controls_table()
+
+
+func _rebuild_controls_table() -> void:
+	for child in _controls_grid.get_children():
+		_controls_grid.remove_child(child)
+		child.queue_free()
+	_controls_labels.clear()
+	_controls_grid.columns = 2 if _controls_touch_layout else 4
+	var headers: Array = ["Action", "Touch"] if _controls_touch_layout else ["Action", "Keyboard", "Gamepad", "Mouse"]
+	for text: String in headers:
+		_add_controls_cell(text)
 	var kb_labels: Dictionary = WIInputHints.LABELS["kb"]
 	var pad_labels: Dictionary = WIInputHints.LABELS["pad"]
 	for action: String in kb_labels:
-		grid.add_child(UIChrome.make_label(_format_action_name(action), "Small"))
-		grid.add_child(UIChrome.make_label(String(kb_labels[action]), "Small"))
-		grid.add_child(UIChrome.make_label(String(pad_labels.get(action, "--")), "Small"))
-		grid.add_child(UIChrome.make_label(String(MOUSE_LABELS.get(action, "--")), "Small"))
+		_add_controls_cell(_format_action_name(action))
+		if _controls_touch_layout:
+			_add_controls_cell(String(TOUCH_LABELS[action]))
+		else:
+			_add_controls_cell(String(kb_labels[action]))
+			_add_controls_cell(String(pad_labels.get(action, "--")))
+			_add_controls_cell(String(MOUSE_LABELS.get(action, "--")))
 
-	var spacer := Control.new()
-	spacer.custom_minimum_size = Vector2(0.0, 10.0)
-	stack.add_child(spacer)
 
-	_controls_back_label = UIChrome.make_label("> Back", "Menu")
-	stack.add_child(_controls_back_label)
-	_controls_back_label.mouse_filter = Control.MOUSE_FILTER_STOP
-	_controls_back_label.gui_input.connect(_on_controls_back_gui_input)
+func _add_controls_cell(text: String) -> void:
+	var label := UIChrome.make_label(text, "Small")
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_controls_grid.add_child(label)
+	_controls_labels.append(label)
 
 
 func _format_action_name(action: String) -> String:
@@ -280,62 +324,81 @@ func _format_action_name(action: String) -> String:
 
 
 func _build_help_panel() -> void:
-	_help_root = Control.new()
-	UIChrome.apply_theme(_help_root)
-	_help_root.set_anchors_preset(Control.PRESET_CENTER)
-	_help_root.custom_minimum_size = HELP_PANEL_SIZE
-	_help_root.size = HELP_PANEL_SIZE
-	UIChrome.set_offsets(_help_root, -HELP_PANEL_SIZE.x * 0.5, -HELP_PANEL_SIZE.y * 0.5, HELP_PANEL_SIZE.x * 0.5, HELP_PANEL_SIZE.y * 0.5)
-	_help_root.mouse_filter = Control.MOUSE_FILTER_STOP
-	_help_root.hide()
-	add_child(_help_root)
-	_help_root.add_child(UIChrome.make_patch(UIChrome.CARVED_PANEL))
-
-	var margin := MarginContainer.new()
-	UIChrome.full_rect(margin)
-	UIChrome.add_margins(margin, 26, 20, 26, 20)
-	_help_root.add_child(margin)
-
-	var outer := VBoxContainer.new()
-	outer.add_theme_constant_override("separation", 8)
-	margin.add_child(outer)
-
-	var title := UIChrome.make_label("Help", "Menu")
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	outer.add_child(title)
-
-	# The sections scroll; the TITLE and the BACK ROW do not. Back rode off the
-	# bottom of the parchment the moment this page went from 6 sections to 8
-	# (windowed catch, GH#386) -- the same failure a4 #216 already fixed once by
-	# growing the panel, which is a fix with an expiry date. Outside the scroll,
-	# Back is reachable at any section count and any text scale.
-	var scroll := ScrollContainer.new()
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	outer.add_child(scroll)
-
+	var panel := _build_reference_panel("Help")
+	_help_root = panel.root
+	_help_scroll = panel.scroll
+	_help_back_label = panel.back
+	_help_back_label.gui_input.connect(_on_help_back_gui_input)
 	var stack := VBoxContainer.new()
-	stack.add_theme_constant_override("separation", 8)
+	stack.add_theme_constant_override("separation", 12)
 	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(stack)
-
+	_help_scroll.add_child(stack)
 	_help_sections = _load_help_sections()
 	for section: Dictionary in _help_sections:
 		var body := UIChrome.make_label(_help_line(section))
 		body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		body.custom_minimum_size = Vector2(HELP_TEXT_WIDTH, 0.0)
+		body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		stack.add_child(body)
+		_help_labels.append(body)
 
-	var spacer := Control.new()
-	spacer.custom_minimum_size = Vector2(0.0, 10.0)
-	outer.add_child(spacer)
 
-	_help_back_label = UIChrome.make_label("> Back", "Menu")
-	outer.add_child(_help_back_label)
-	_help_back_label.mouse_filter = Control.MOUSE_FILTER_STOP
-	_help_back_label.gui_input.connect(_on_help_back_gui_input)
+func _reference_layout_signature() -> Array:
+	return [WIResponsiveLayout.css_transform(get_viewport()), WIResponsiveLayout.safe_rect(get_viewport()), WISettings.text_scale_step(), WIResponsiveLayout.uses_touch_layout()]
+
+
+func _process(_delta: float) -> void:
+	if is_open and _state in [State.CONTROLS, State.HELP] and _reference_signature != _reference_layout_signature():
+		_layout_reference_panels()
+
+
+func _layout_reference_panels() -> void:
+	if _controls_root == null or _help_root == null:
+		return
+	var viewport := get_viewport()
+	var touch := WIResponsiveLayout.uses_touch_layout()
+	if touch != _controls_touch_layout:
+		_controls_touch_layout = touch
+		_rebuild_controls_table()
+	var text_scale: float = WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]
+	for entry: Array in [[_controls_root, CONTROLS_PANEL_SIZE], [_help_root, HELP_PANEL_SIZE]]:
+		var panel := entry[0] as Control
+		WIResponsiveLayout.apply_readable_theme(panel, viewport, text_scale)
+		var rect := WIResponsiveLayout.modal_rect(viewport, entry[1])
+		if not touch:
+			var safe := WIResponsiveLayout.safe_rect(viewport)
+			rect.size = rect.size.min((safe.size - Vector2(24.0, 24.0)).max(Vector2.ONE))
+			rect.position = safe.get_center() - rect.size * 0.5
+		WIResponsiveLayout.place_panel(panel, rect)
+	for back: Label in [_controls_back_label, _help_back_label]:
+		back.custom_minimum_size = WIResponsiveLayout.touch_size(viewport, Vector2(84.0, 34.0))
+	_reference_signature = _reference_layout_signature()
+
+
+func reference_back_rect() -> Rect2:
+	var back: Label = _controls_back_label if _state == State.CONTROLS else _help_back_label if _state == State.HELP else null
+	return Rect2(back.global_position, back.size) if is_open and back != null and back.is_visible_in_tree() else Rect2()
+
+
+func reference_scroll_rect() -> Rect2:
+	var scroll: ScrollContainer = _controls_scroll if _state == State.CONTROLS else _help_scroll if _state == State.HELP else null
+	return Rect2(scroll.global_position, scroll.size) if is_open and scroll != null and scroll.is_visible_in_tree() else Rect2()
+
+
+func _reference_rect_data(rect: Rect2) -> Array:
+	return [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
+
+
+func reference_layout_snapshot() -> Dictionary:
+	if not is_open or _state not in [State.CONTROLS, State.HELP]:
+		return {}
+	var viewport := get_viewport()
+	var panel := _controls_root if _state == State.CONTROLS else _help_root
+	var scroll := _controls_scroll if _state == State.CONTROLS else _help_scroll
+	var texts: Array = []
+	var labels: Array[Label] = _controls_labels if _state == State.CONTROLS else _help_labels
+	for label: Label in labels:
+		texts.append({"text": label.text, "rect": _reference_rect_data(Rect2(label.global_position, label.size)), "font_px": label.get_theme_font_size("font_size"), "font_css": label.get_theme_font_size("font_size") * WIResponsiveLayout.css_scale(viewport)})
+	return {"page": "controls" if _state == State.CONTROLS else "help", "touch": _controls_touch_layout, "columns": _controls_grid.columns if _state == State.CONTROLS else 1, "panel_rect": _reference_rect_data(Rect2(panel.global_position, panel.size)), "safe_rect": _reference_rect_data(WIResponsiveLayout.safe_rect(viewport)), "back_rect": _reference_rect_data(reference_back_rect()), "back_css_rect": _reference_rect_data(WIResponsiveLayout.css_rect(viewport, reference_back_rect())), "scroll_rect": _reference_rect_data(reference_scroll_rect()), "scroll_y": scroll.scroll_vertical, "scroll_max": scroll.get_v_scroll_bar().max_value - scroll.get_v_scroll_bar().page, "text_scale": WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()], "texts": texts}
 
 
 ## `data/help_content.json` -- content is DATA, this file only renders (CLAUDE.md
@@ -535,8 +598,10 @@ func row_rect(i: int) -> Rect2:
 func _enter_controls() -> void:
 	_state = State.CONTROLS
 	_root.hide()
+	_layout_reference_panels()
+	_controls_scroll.scroll_vertical = 0
 	_controls_root.show()
-	ObservableBus.emit_domain_event(WIEvents.UI_CONTROLS_RENDERED, {"rows": (WIInputHints.LABELS["kb"] as Dictionary).size()})
+	ObservableBus.emit_domain_event(WIEvents.UI_CONTROLS_RENDERED, {"rows": (WIInputHints.LABELS["kb"] as Dictionary).size(), "touch": _controls_touch_layout, "columns": _controls_grid.columns, "touch_instructions": TOUCH_LABELS.duplicate() if _controls_touch_layout else {}})
 
 
 func _exit_controls() -> void:
@@ -550,9 +615,11 @@ func _exit_controls() -> void:
 func _enter_help() -> void:
 	_state = State.HELP
 	_root.hide()
+	_layout_reference_panels()
+	_help_scroll.scroll_vertical = 0
 	_help_root.show()
 	var sample := _help_line_by_heading("Skills & the Hotbar")
-	ObservableBus.emit_domain_event(WIEvents.UI_HELP_RENDERED, {"sections": _help_sections.size(), "sample": sample})
+	ObservableBus.emit_domain_event(WIEvents.UI_HELP_RENDERED, {"sections": _help_sections.size(), "sample": sample, "touch": _controls_touch_layout})
 
 
 func _exit_help() -> void:

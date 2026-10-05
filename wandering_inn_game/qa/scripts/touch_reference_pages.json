@@ -1,0 +1,270 @@
+{
+  "_comment": "Exported touch opens Controls/Help and taps their fixed Back row at 100/115/130. Coordinates exercise the declared landscape path; reference getters support measured Back, scroll and resize checks on the composed driver. Physical devices remain separate.",
+  "starts_at_title": true,
+  "fail_fast": true,
+  "steps": [
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_gate_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        360
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_title_row",
+      "row": 5
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 11
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_controls_rendered",
+      "payload_contains": {
+        "rows": 10,
+        "touch": true,
+        "columns": 2,
+        "touch_instructions": {
+          "move": "Tap ground to walk",
+          "interact": "Tap an adjacent target",
+          "confirm": "Tap a row or option",
+          "cancel": "Tap Back or Close",
+          "cycle": "Tap a target to select it",
+          "journal": "Tap Journal",
+          "inventory": "Tap Inventory",
+          "end_turn": "Tap End Turn",
+          "hotbar": "Tap a hotbar slot",
+          "field_readout": "Tap Details"
+        }
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "0_controls"
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        639
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 12
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_help_rendered",
+      "payload_contains": {
+        "sections": 8,
+        "touch": true
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "0_help"
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        639
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 9
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "payload_contains": {
+        "text_scale_step": 1
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 11
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_controls_rendered",
+      "payload_contains": {
+        "rows": 10,
+        "touch": true,
+        "columns": 2,
+        "touch_instructions": {
+          "move": "Tap ground to walk",
+          "interact": "Tap an adjacent target",
+          "confirm": "Tap a row or option",
+          "cancel": "Tap Back or Close",
+          "cycle": "Tap a target to select it",
+          "journal": "Tap Journal",
+          "inventory": "Tap Inventory",
+          "end_turn": "Tap End Turn",
+          "hotbar": "Tap a hotbar slot",
+          "field_readout": "Tap Details"
+        }
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "1_controls"
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        639
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 12
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_help_rendered",
+      "payload_contains": {
+        "sections": 8,
+        "touch": true
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "1_help"
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        639
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 9
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "payload_contains": {
+        "text_scale_step": 2
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 11
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_controls_rendered",
+      "payload_contains": {
+        "rows": 10,
+        "touch": true,
+        "columns": 2,
+        "touch_instructions": {
+          "move": "Tap ground to walk",
+          "interact": "Tap an adjacent target",
+          "confirm": "Tap a row or option",
+          "cancel": "Tap Back or Close",
+          "cycle": "Tap a target to select it",
+          "journal": "Tap Journal",
+          "inventory": "Tap Inventory",
+          "end_turn": "Tap End Turn",
+          "hotbar": "Tap a hotbar slot",
+          "field_readout": "Tap Details"
+        }
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "2_controls"
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        639
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 12
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_help_rendered",
+      "payload_contains": {
+        "sections": 8,
+        "touch": true
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "2_help"
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        639
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "timeout_sec": 10
+    }
+  ]
+}

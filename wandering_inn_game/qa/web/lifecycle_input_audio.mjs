@@ -123,7 +123,8 @@ try {
    const backing=await frame.evaluate(()=>{const canvas=document.querySelector('canvas');return [canvas.width,canvas.height];});
    assert(canvas&&backing.every(size=>size>0),'Missing canvas touch geometry');
    // Engine window coordinates use backing pixels; Playwright taps use CSS pixels.
-   const css={x:canvas.x+req.x*canvas.width/backing[0],y:canvas.y+req.y*canvas.height/backing[1]};
+   const frameOffset=hosting==='iframe'?await page.locator('iframe').boundingBox():{x:0,y:0};
+   const css=req.coordinate_space==='css'?{x:frameOffset.x+req.x,y:frameOffset.y+req.y}:{x:canvas.x+req.x*canvas.width/backing[0],y:canvas.y+req.y*canvas.height/backing[1]};
    await page.touchscreen.tap(css.x,css.y);
    touches.push({...req,css,backing});
    await frame.evaluate(()=>{window.__WI_QA_TOUCH_DONE__=(window.__WI_QA_TOUCH_DONE__||0)+1;});
