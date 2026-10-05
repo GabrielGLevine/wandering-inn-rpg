@@ -570,6 +570,33 @@ func _execute(step: Dictionary) -> void:
 					_fail("assert_equipment_bottom_visible: last accessory is clipped")
 		"touch_settings_row":
 			await _touch_rect_of("SettingsPanel", "row_rect", int(step["row"]) - 1, "touch_settings_row")
+		"touch_reference_back":
+			await _touch_rect_of("SettingsPanel", "reference_back_rect", null, "touch_reference_back")
+		"scroll_reference":
+			var panel := get_tree().root.find_child("SettingsPanel", true, false)
+			if panel == null or panel.reference_scroll_rect().size == Vector2.ZERO:
+				_fail("scroll_reference: no visible reference page")
+			else:
+				var before: Dictionary = panel.reference_layout_snapshot()
+				var rect: Rect2 = panel.reference_scroll_rect()
+				var end := WIResponsiveLayout.css_transform(get_viewport()) * (rect.position + rect.size * Vector2(0.5, 0.2))
+				await _touch_at(rect.position + rect.size * Vector2(0.5, 0.8), "scroll_reference", {"drag": true, "end_x": end.x, "end_y": end.y})
+				await _settle_for_capture()
+				var after: Dictionary = panel.reference_layout_snapshot()
+				if float(before.scroll_max) > 0.5 and int(after.scroll_y) <= int(before.scroll_y):
+					_fail("scroll_reference: content did not scroll")
+				if before.back_rect != after.back_rect:
+					_fail("scroll_reference: Back moved with the content")
+		"assert_reference_layout":
+			await _assert_reference_layout()
+		"assert_combat_banner":
+			await _settle_for_capture()
+			var combat_screen := get_tree().root.find_child("CombatScreen", true, false)
+			var label: Label = combat_screen.get("_hud").get("_banner_label") if combat_screen != null else null
+			if label == null or not label.is_visible_in_tree() or not label.text.contains(String(step["text_contains"])):
+				_fail("assert_combat_banner: expected visible result text")
+			elif not WIResponsiveLayout.safe_rect(get_viewport()).encloses(label.get_global_rect()) or label.get_theme_font("font").get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, label.get_theme_font_size("font_size")).x > label.size.x + 0.1:
+				_fail("assert_combat_banner: result text is clipped")
 		"touch_purchase_row":
 			await _touch_rect_of("PurchaseConfirm", "row_rect", 1 if String(step["row"]) == "buy" else 0, "touch_purchase_row", step.get("gesture", {}))
 		"click_purchase_row":
@@ -1220,7 +1247,7 @@ func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label:
 	if node == null:
 		_fail("%s: %s node not found" % [label, node_name])
 		return
-	var rect: Rect2 = node.call(rect_method, arg)
+	var rect: Rect2 = node.call(rect_method) if arg == null else node.call(rect_method, arg)
 	if rect.size == Vector2.ZERO:
 		_fail("%s: %s has no rendered rect" % [label, str(arg)])
 		return
@@ -1442,7 +1469,7 @@ func _assert_message_layout(kind: String) -> void:
 		if WIResponsiveLayout.uses_touch_layout() and font_size * WIResponsiveLayout.css_scale(get_viewport()) + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
 			_fail("assert_message_layout: message text is too small")
 		var field := get_tree().root.find_child("FieldHotbar", true, false)
-		if WIResponsiveLayout.uses_touch_layout() and field != null and field.visible and bounds.end.y > field.world_bottom() + 0.01:
+		if (WIResponsiveLayout.uses_touch_layout() or kind == "dialogue") and field != null and field.visible and bounds.end.y > field.world_bottom() + 0.01:
 			_fail("assert_message_layout: message overlaps field controls or details")
 		ObservableBus.emit_domain_event("qa_message_layout_measured", {"kind": kind, "font_css": font_size * WIResponsiveLayout.css_scale(get_viewport()), "text_scale": WISettings.text_scale_label()})
 	_capture_depth -= 1
@@ -1691,6 +1718,35 @@ func _assert_combat_layout(step: Dictionary) -> void:
 		if not board.has_point(position):
 			_fail("assert_combat_layout: focused fighter is outside the visible board")
 	ObservableBus.emit_domain_event("qa_combat_layout_measured", snapshot)
+
+
+func _assert_reference_layout() -> void:
+	await _settle_for_capture()
+	var panel := get_tree().root.find_child("SettingsPanel", true, false)
+	var snapshot: Dictionary = panel.reference_layout_snapshot() if panel != null else {}
+	if snapshot.is_empty():
+		_fail("assert_reference_layout: no visible reference page")
+		return
+	var bounds_data: Array = snapshot.panel_rect
+	var bounds := Rect2(bounds_data[0], bounds_data[1], bounds_data[2], bounds_data[3])
+	var safe := WIResponsiveLayout.safe_rect(get_viewport())
+	var back: Rect2 = panel.reference_back_rect()
+	var scroll: Rect2 = panel.reference_scroll_rect()
+	if not safe.grow(0.1).encloses(bounds) or not bounds.grow(0.1).encloses(back) or not bounds.grow(0.1).encloses(scroll) or back.intersects(scroll):
+		_fail("assert_reference_layout: panel, content or fixed Back is outside safe bounds")
+	var touch := WIResponsiveLayout.uses_touch_layout()
+	if touch and minf(back.size.x, back.size.y) * WIResponsiveLayout.css_scale(get_viewport()) < WIResponsiveLayout.MIN_TOUCH_CSS - 0.01:
+		_fail("assert_reference_layout: Back is smaller than 44 CSS pixels")
+	if snapshot.page == "controls" and int(snapshot.columns) != (2 if touch else 4):
+		_fail("assert_reference_layout: wrong input columns")
+	for text: Dictionary in snapshot.texts:
+		var rect_data: Array = text.rect
+		var rect := Rect2(rect_data[0], rect_data[1], rect_data[2], rect_data[3])
+		if rect.position.x < scroll.position.x - 0.1 or rect.end.x > scroll.end.x + 0.1:
+			_fail("assert_reference_layout: text overflows content width")
+		if touch and float(text.font_css) < WIResponsiveLayout.MIN_TEXT_CSS * float(snapshot.text_scale) - 0.01:
+			_fail("assert_reference_layout: reference text is too small")
+	ObservableBus.emit_domain_event("qa_reference_layout_measured", snapshot)
 
 
 func _assert_creation_layout() -> void:

@@ -1,0 +1,693 @@
+{
+  "_comment": "Fresh native field-stage proof; creation identity/difficulty remain in char_creation and touch_opening_continuous. No fixture, teleport, graph injection, or combat autoplay. Ordinary inn route reuses continuous opening; first talk with Erin occurs AFTER earned cleaning, so her genuine authored bed cue can fire. Production message timing keeps first-wake delivery and movement dismissal meaningful; screenshots are outside timing comparisons. History rereads recorded consequence and first-wake pointer; Help rereads generic Sleep/Saving rules, not exact Erin chatter. Save/load checks current config-backed setting across UI rebuild, not process restart. Keyboard/native route cannot establish touch or human comprehension.",
+  "starts_at_title": true,
+  "qa_real_message_timing": true,
+  "fail_fast": true,
+  "qa_timeout_sec": 240,
+  "steps": [
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_gate_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "world_ready",
+      "timeout_sec": 10
+    },
+    {
+      "action": "assert_state",
+      "path": "current_map",
+      "equals": "inn"
+    },
+    {
+      "action": "assert_state",
+      "path": "player_cell",
+      "equals": [
+        2,
+        3
+      ]
+    },
+    {
+      "action": "assert_state",
+      "path": "classes",
+      "equals": {}
+    },
+    {
+      "action": "assert_event_logged",
+      "type": "ui_gdi_opener_rendered",
+      "payload_contains": {
+        "lines": 4
+      }
+    },
+    {
+      "action": "move",
+      "direction": "right",
+      "steps": 3
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 1
+    },
+    {
+      "action": "press_field_skill",
+      "skill": "basic_cleaning"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "skill_used",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "skill": "basic_cleaning",
+        "target": "dirty_table"
+      }
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_toast_rendered",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "text": "[Basic Cleaning] \u2014 The table is spotless. Earned 1 gold."
+      }
+    },
+    {
+      "action": "screenshot",
+      "name": "00_useful_action_and_consequence"
+    },
+    {
+      "action": "assert_state",
+      "path": "accomplishments.cleaned_the_inn",
+      "equals": 1
+    },
+    {
+      "action": "assert_state",
+      "path": "classes",
+      "equals": {}
+    },
+    {
+      "action": "wait_seconds",
+      "seconds": 1.3
+    },
+    {
+      "action": "move",
+      "direction": "right",
+      "steps": 2
+    },
+    {
+      "action": "assert_message_visible",
+      "kind": "toast",
+      "visible": false
+    },
+    {
+      "action": "move",
+      "direction": "up",
+      "steps": 1
+    },
+    {
+      "action": "press",
+      "name": "interact"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "dialogue_line",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "speaker": "Erin",
+        "text": "Hey \u2014 you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep \u2014 that's just how it works. Go go go!"
+      }
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_dialogue_rendered",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "text": "Erin: Hey \u2014 you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep \u2014 that's just how it works. Go go go!"
+      }
+    },
+    {
+      "action": "assert_message_layout",
+      "kind": "dialogue"
+    },
+    {
+      "action": "screenshot",
+      "name": "01_authored_sleep_cue"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_dialogue_line_hidden",
+      "timeout_sec": 25
+    },
+    {
+      "action": "press",
+      "name": "journal"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_journal_shown",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "active_tab": "quests"
+      }
+    },
+    {
+      "action": "press",
+      "name": "move_left"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_journal_shown",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "active_tab": "history"
+      }
+    },
+    {
+      "action": "assert_recent_message_count",
+      "text_contains": "The table is spotless.",
+      "count": 1
+    },
+    {
+      "action": "screenshot",
+      "name": "02_recent_consequence_reread"
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_journal_hidden",
+      "timeout_sec": 10
+    },
+    {
+      "action": "move",
+      "direction": "left",
+      "steps": 5
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 3
+    },
+    {
+      "action": "move",
+      "direction": "left",
+      "steps": 1
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 1
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 1
+    },
+    {
+      "action": "press",
+      "name": "interact"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "map_changed",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "map": "inn_upstairs"
+      }
+    },
+    {
+      "action": "assert_state",
+      "path": "player_cell",
+      "equals": [
+        1,
+        1
+      ]
+    },
+    {
+      "action": "move",
+      "direction": "right",
+      "steps": 1
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 1
+    },
+    {
+      "action": "move",
+      "direction": "right",
+      "steps": 7
+    },
+    {
+      "action": "assert_state",
+      "path": "player_cell",
+      "equals": [
+        9,
+        2
+      ]
+    },
+    {
+      "action": "move",
+      "direction": "up",
+      "steps": 1
+    },
+    {
+      "action": "press",
+      "name": "interact"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_sleep_veil_finished",
+      "timeout_sec": 20
+    },
+    {
+      "action": "assert_event_logged",
+      "type": "class_gained",
+      "payload_contains": {
+        "class": "helper"
+      }
+    },
+    {
+      "action": "assert_state",
+      "path": "classes.helper",
+      "equals": 1
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_toast_rendered",
+      "timeout_sec": 30,
+      "from_start": true,
+      "payload_contains": {
+        "text": "[Helper] class gained! \u2014 [Basic Cooking]"
+      }
+    },
+    {
+      "action": "screenshot",
+      "name": "03_first_sleep_reward"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_toast_rendered",
+      "timeout_sec": 30,
+      "from_start": true,
+      "payload_contains": {
+        "text": "New morning. Every key and control is listed under Esc \u2014 Settings \u2014 Help."
+      }
+    },
+    {
+      "action": "screenshot",
+      "name": "04_first_morning_help_pointer"
+    },
+    {
+      "action": "wait_seconds",
+      "seconds": 1.3
+    },
+    {
+      "action": "move",
+      "direction": "left",
+      "steps": 1
+    },
+    {
+      "action": "assert_message_visible",
+      "kind": "toast",
+      "visible": false
+    },
+    {
+      "action": "press",
+      "name": "journal"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_journal_shown",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "active_tab": "quests"
+      }
+    },
+    {
+      "action": "press",
+      "name": "move_left"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_journal_shown",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "active_tab": "history"
+      }
+    },
+    {
+      "action": "assert_recent_message_count",
+      "text_contains": "New morning. Every key and control",
+      "count": 1
+    },
+    {
+      "action": "screenshot",
+      "name": "05_first_morning_pointer_reread"
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_journal_hidden",
+      "timeout_sec": 10
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_pause_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 7
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 10
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_controls_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "06_controls_reference"
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 1
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_help_rendered",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "sections": 8
+      }
+    },
+    {
+      "action": "screenshot",
+      "name": "07_reread_sleep_and_save_help"
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 2
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_hints_replayed",
+      "timeout_sec": 10
+    },
+    {
+      "action": "wait_for_event",
+      "type": "toast",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "text": "Tutorial hints will show again."
+      }
+    },
+    {
+      "action": "move",
+      "direction": "up",
+      "steps": 11
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "show_quest_hints": false
+      }
+    },
+    {
+      "action": "assert_settings_file_exists"
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_hidden",
+      "timeout_sec": 10
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_pause_hidden",
+      "timeout_sec": 10
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_toast_rendered",
+      "timeout_sec": 20,
+      "payload_contains": {
+        "text": "Tutorial hints will show again."
+      }
+    },
+    {
+      "action": "screenshot",
+      "name": "08_replay_hints_confirmation"
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_pause_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 1
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_slot_picker_rendered",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "mode": "save"
+      }
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_pause_hidden",
+      "timeout_sec": 10
+    },
+    {
+      "action": "wait_for_event",
+      "type": "game_saved",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "slot": "manual"
+      }
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_save_status_rendered",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "slot": "manual"
+      }
+    },
+    {
+      "action": "screenshot",
+      "name": "09_manual_save_confirmation"
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_pause_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 2
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_slot_picker_rendered",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "mode": "load"
+      }
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "game_loaded",
+      "timeout_sec": 10
+    },
+    {
+      "action": "wait_for_event",
+      "type": "world_ready",
+      "timeout_sec": 10
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_pause_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 7
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 2
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "show_quest_hints": false
+      }
+    },
+    {
+      "action": "screenshot",
+      "name": "10_guidance_setting_survives_save_load"
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_rendered",
+      "timeout_sec": 10,
+      "payload_contains": {
+        "show_quest_hints": true
+      }
+    },
+    {
+      "action": "assert_settings_file_exists"
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_hidden",
+      "timeout_sec": 10
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_pause_hidden",
+      "timeout_sec": 10
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
- "_comment": "Historical pre-repair defect probe: its absent-credit pins are expected to fail after approved #508 recovery. Acceptance routes are rogue_recovery_force and rogue_recovery_guile. Never register this defect-reproduction script as a green gate.",
+ "_comment": "Fresh fight-first/force-crate recovery: real victories, ordinary drainage return, deliberate crossing receipt, Rogue at sleep; no respawn or direct grant. Keyboard/native route; phone profiles are emulation, physical acceptance remains #511.",
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [
@@ -1556,6 +1556,18 @@
    "steps": 2
   },
   {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You keep low through the drainage crossing, out of sight of the road."
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "01_cleared_covered_crossing"
+  },
+  {
    "action": "move",
    "direction": "up",
    "steps": 16
@@ -1730,14 +1742,14 @@
    "timeout_sec": 10
   },
   {
-   "action": "assert_event_absent",
+   "action": "assert_event_logged",
    "type": "accomplishment_recorded",
    "payload_contains": {
     "id": "crossed_under_cover"
    }
   },
   {
-   "action": "assert_event_absent",
+   "action": "assert_event_logged",
    "type": "class_gained",
    "payload_contains": {
     "class": "rogue"
@@ -1748,7 +1760,22 @@
   },
   {
    "action": "dump_checkpoint",
-   "slot": "force_exhausted"
+   "slot": "force_recovered"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.rogue",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "02_rogue_at_sleep"
   }
- ]
+ ],
+ "fail_fast": true
 }

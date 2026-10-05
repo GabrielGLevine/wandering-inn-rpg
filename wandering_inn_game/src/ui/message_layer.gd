@@ -318,6 +318,8 @@ func _show_save_status(slot: String) -> void:
 
 
 func _first_wake_hint_text() -> String:
+	if WIResponsiveLayout.uses_touch_layout():
+		return "New morning. Every control is listed under Pause — Settings — Help."
 	return "New morning. Every key and control is listed under %s — Settings — Help." % WIInputHints.label("cancel")
 
 
@@ -781,8 +783,8 @@ func _resize_dialogue_panel() -> void:
 		var left := safe.position.x + 24.0
 		UIChrome.set_offsets(_dialogue_panel, left, bottom - panel_height, left + width, bottom)
 	else:
-		const DIALOGUE_BOTTOM := -164.0
-		UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
+		var bottom := minf(-164.0, _message_bottom(WIResponsiveLayout.safe_rect(get_viewport()), 0.0))
+		UIChrome.set_offsets(_dialogue_panel, 36.0, bottom - panel_height, 736.0, bottom)
 
 
 ## Fits the hint ribbon to ONE line of `_hint_label`'s LIVE font metrics plus

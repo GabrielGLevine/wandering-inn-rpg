@@ -10,20 +10,25 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Active M1 completion (#506 primary):** root owns `/private/tmp/wi-m1-506`,
-  branch `issue/506-touch-flow`, base `2d1830a9`. Root owns dirty creation,
-  inventory/journal cancellation, input bridge, QA driver/browser routes and
-  shared catalogs/docs. #509 message fixes integrated as `9c196edb`; focused
-  production timing units/QA pass. Both emulated phone profiles pass actual
-  horizontal drag/cancel/no-activation and subsequent deliberate activation.
-  Evidence: `/private/tmp/wi-m1-evidence/506`, `/private/tmp/wi509-final-gates`.
-  A second worker owns `/private/tmp/wi-m1-253`, `issue/253-import-request-lifetime`,
-  settings-panel import request ownership and a new browser regression only.
-  #508 covered-crossing recovery and #507 footer/blurb are approved in CHOICE-LOG.
-  Next: finish fresh continuous touch route, responsive creation and lifecycle
-  repairs; compose, regenerate QA, run integration gates and independent review.
-  Physical devices and three unfamiliar-player sessions remain user-supplied
-  acceptance. Old `/private/tmp/wi-510-lifecycle` and its handoff commits are
-  unavailable; current work reconstructs them from main. No new PR yet.
+  branch `issue/506-touch-flow`, base `2d1830a9`. Integrated #509 lifetime,
+  #253 import-request ownership, #510 DOM-input/audio lifecycle probes and
+  #507 responsive Controls/Help. Approved #508 cleared-road covered crossing
+  implemented; fresh force298/298 and guile235/235 plus sim negatives pass.
+  Fresh DPR2 Android touch route170/170 and275 trusted contacts passes; creation
+  130% six-choice explanation route64/64 passes. Composed measured reference
+  scroll/Back/resize passes; fresh native guidance131/131 passes, including a
+  reproduced/repaired desktop dialogue/readout overlap. Final source changes
+  add explicit touch victory/tutor wording; full gates and review remain next.
+  Root owns remaining tracked M1 source/QA/docs; all implementation lanes are
+  integrated and workers have stopped edits. Preserve node_modules symlink and
+  companion UID as untracked. Evidence `/private/tmp/wi-m1-evidence`,
+  `/private/tmp/wi509-final-gates`, `/private/tmp/wi-507-reference-evidence`.
+  Next: commit composed sources, isolated equivalent-tree full native gates,
+  root full browser gates and windowed reads, independent review, issue PR/CI,
+  authorized squash and tree-identity check. No new PR yet. Physical phones,
+  actual OS keyboard/chooser/background/itch and three unfamiliar-player
+  sessions remain required; no observations supplied. Checklist:
+  `wandering_inn_game/qa/M1-OBSERVATIONS.md`. No release/deploy authorized.
 - **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
   tree-identical to reviewed `81e66d29`. Independent source/visual review and all
   eight CI checks pass, including 259 canonical scripts, both balance policies,
@@ -42,9 +47,8 @@ archived, or superseded session blocks.
   returns home and gains Rogue at sleep. Drainage, Watch, stealth-break and
   production-timing proof pass on desktop and both emulated phone profiles.
   Evidence: `/private/tmp/wi-508-evidence/composed`. Physical evidence is open.
-  Fight-first → force-crate → drainage return → sleep still misses Rogue
-  (seed 7, 293 steps). Acquisition/respawn rules are unchanged; the owner approved `docs/design/rogue-recovery-proposal.md`; implement the
-  cleared-road crossing credit without enemy respawn.
+  The owner-approved cleared-road crossing recovery is implemented on the
+  active M1 branch; no enemies respawn. Final composed verification remains.
 - **#504 delivered through PR #547** (`e5b53328`; narrative in the PR body).
   Open only for physical iPhone Safari / Android Chrome observations (#511).
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
@@ -60,9 +64,9 @@ archived, or superseded session blocks.
   any unresolved presentation choice. Follow the
   [execution contract](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502#execution-contract).
 - **Remaining acceptance corrections:** #504 needs physical-device purchase
-  observations; #508 needs fight-first force/guile recovery under the approved covered-crossing rule; #509 needs production
-  timing and real queued-message/modal proof; #253 needs target-device/itch
-  import verification. Preserve useful implementations from PRs #535–#537;
+  observations; #508/#509 software proofs are composed on the active branch; final gates
+  and review remain. #253 still needs physical target-device/itch import
+  verification. Preserve useful implementations from PRs #535–#537;
   merged partial work does not satisfy their missing criteria.
 - **Compiler corrections in PR #545:** comparator #542 preserves event-history
   mode, checkpoint order, movement tails, and single-use facing-bump credit;
@@ -77,7 +81,7 @@ archived, or superseded session blocks.
 - Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
   observations (#511). CI's web-parity job had been a silent no-op since it
   was written; it now runs for real (combat parity, touch smoke, save port).
-- Local dev env now has Godot 4.7.2 web export templates + Playwright, so
+- Local dev env now has Godot 4.7 stable web export templates + Playwright, so
   `qa/web/run_web_qa.sh` runs here.
 - Preserve pre-existing untracked `wandering_inn_game/tests/test_companion_counter.gd.uid`.
 - Latest release recorded by the repository: **v0.20.0** (2026-08-14).

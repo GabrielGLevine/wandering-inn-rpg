@@ -1,6 +1,6 @@
 extends CanvasLayer
 ## Flow: title NEW GAME -> this screen -> Game.reset({pc_name,pc_race,pc_gender})
-## -> the GDI cold open -> inn. Two steps, native-res title-family UI:
+## -> the GDI cold open -> inn. Native-res title-family UI:
 ##   PICK -> a 2x3 grid of the six PC sprite variants (pc_human_m/f,
 ##           pc_drake_m/f, pc_gnoll_m/f), each an idle-animated AnimatedSprite2D
 ##           via WISpriteRegistry -- arrows move the cursor across the grid,
@@ -33,11 +33,11 @@ const PC_OPTIONS: Array[Dictionary] = [
 ]
 const GRID_COLS := 3
 const GRID_ROWS := 2
-const CARD_SIZE := Vector2(300.0, 214.0)
+const CARD_SIZE := Vector2(300.0, 200.0)
 const CARD_GAP := Vector2(18.0, 14.0)
-const GRID_SIZE := Vector2(936.0, 442.0)  # GRID_COLS*CARD_SIZE.x + gaps, GRID_ROWS*CARD_SIZE.y + gap
+const GRID_SIZE := Vector2(936.0, 414.0)  # GRID_COLS*CARD_SIZE.x + gaps, GRID_ROWS*CARD_SIZE.y + gap
 const PORTRAIT_HEIGHT := 180.0
-const PORTRAIT_CENTER_Y := 107.0  # CARD_SIZE.y * 0.5 -- centered, no label row below it any more
+const PORTRAIT_CENTER_Y := 100.0  # CARD_SIZE.y * 0.5 -- centered, no label row below it any more
 
 const STEP_PROMPT := {
 	Step.PICK: "Who are you?",
@@ -50,7 +50,7 @@ const CHOICE_ROW_SIZE := Vector2(360.0, 44.0)
 const CHOICE_ROW_GAP := 10
 ## Selection caret placement, card- and row-local: just inside the 9-slice's
 ## own left border, the half-height being the glyph's vertical centring nudge.
-## The card caret draws at Title weight -- a 300x236 card against a near-black
+## The card caret draws at Title weight -- a 300x200 card against a near-black
 ## backdrop swallows a body-sized glyph, and this mark is the ONLY thing
 ## distinguishing the chosen card now that the texture swap alone is ruled out.
 const CARD_CARET_INSET_X := 10.0
@@ -258,10 +258,14 @@ func _layout_controls() -> void:
 		_choice_carets[i].position.y = row_size.y * 0.5 - ROW_CARET_HALF_H
 	var count := maxi(1, _choice_options().size())
 	var stack_height := row_size.y * count + float(CHOICE_ROW_GAP * (count - 1))
-	WIResponsiveLayout.place_panel(_choice_anchor, Rect2(Vector2(center.x - row_size.x * 0.5, 284.0), Vector2(row_size.x, stack_height)))
-	WIResponsiveLayout.place_panel(_identity_label, Rect2(Vector2(safe.position.x + 24.0, 632.0 if _step == Step.PICK else 592.0), Vector2(safe.size.x - 48.0, 38.0)))
-	WIResponsiveLayout.place_panel(_difficulty_label, Rect2(Vector2(center.x - 460.0, 194.0), Vector2(920.0, 76.0)))
-	var hint_height := 38.0 if _step == Step.PICK else 72.0
+	WIResponsiveLayout.place_panel(_choice_anchor, Rect2(Vector2(center.x - row_size.x * 0.5, 310.0 if _step == Step.DIFFICULTY else 284.0), Vector2(row_size.x, stack_height)))
+	WIResponsiveLayout.place_panel(_identity_label, Rect2(Vector2(safe.position.x + 24.0, 604.0 if _step == Step.PICK else 546.0), Vector2(safe.size.x - 48.0, 52.0)))
+	WIResponsiveLayout.place_panel(_difficulty_label, Rect2(Vector2(center.x - 460.0, 194.0), Vector2(920.0, 104.0)))
+	if WIResponsiveLayout.uses_touch_layout():
+		WIResponsiveLayout.place_panel(_caption_label, Rect2(Vector2(safe.position.x + 24.0, 486.0), Vector2(safe.size.x - 48.0, 104.0)))
+	else:
+		WIResponsiveLayout.place_panel(_caption_label, Rect2(Vector2(center.x - CAPTION_SIZE.x * 0.5, center.y + CAPTION_TOP), CAPTION_SIZE))
+	var hint_height := 52.0 if _step == Step.PICK else 104.0
 	WIResponsiveLayout.place_panel(_hint_label, Rect2(Vector2(safe.position.x + 24.0, safe.end.y - hint_height - 6.0), Vector2(safe.size.x - 48.0, hint_height)))
 	_hint_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
@@ -280,7 +284,7 @@ func _build_picker_grid() -> void:
 	_grid_anchor.set_anchors_preset(Control.PRESET_CENTER)
 	_grid_anchor.custom_minimum_size = GRID_SIZE
 	_grid_anchor.size = GRID_SIZE
-	UIChrome.set_offsets(_grid_anchor, -GRID_SIZE.x * 0.5, -176.0, GRID_SIZE.x * 0.5, 266.0)
+	UIChrome.set_offsets(_grid_anchor, -GRID_SIZE.x * 0.5, -176.0, GRID_SIZE.x * 0.5, -176.0 + GRID_SIZE.y)
 	_grid_anchor.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_grid_anchor)
 
@@ -392,6 +396,8 @@ func _build_caption() -> void:
 ## reads, never a copy of it that can drift.
 func _step_caption() -> String:
 	if _step == Step.HINTS:
+		if WIResponsiveLayout.uses_touch_layout():
+			return "Yes: Journal shows each quest's next step. No: those hints stay hidden.\nChange it in Settings — Quest Hints."
 		return HINTS_CAPTION_FMT % WIInputHints.label("journal")
 	return ""
 
@@ -417,10 +423,10 @@ func _render_step() -> void:
 	var selected: Dictionary = PC_OPTIONS[_cursor]
 	var identity := "%s · %s — appearance only" % [String(selected["race"]).capitalize(), "man" if selected["gender"] == "m" else "woman"]
 	_identity_label.text = identity
-	_identity_label.visible = true
+	_identity_label.visible = _step == Step.PICK or _step == Step.NAME
 	var difficulty_blurb := ""
 	if _step == Step.DIFFICULTY:
-		difficulty_blurb = ["Bronze Rank: take less damage in combat.", "Silver Rank: standard combat damage.", "Gold Rank: take more damage in combat."][_choice_cursor] + " Change it later in Settings."
+		difficulty_blurb = "Hits on you: Bronze hurts less, Silver is standard, Gold hurts more. Change it later in Settings."
 	_difficulty_label.text = difficulty_blurb
 	_difficulty_label.visible = _step == Step.DIFFICULTY
 	var is_name := _step == Step.NAME

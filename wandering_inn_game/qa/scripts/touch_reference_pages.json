@@ -1,5 +1,5 @@
 {
-  "_comment": "Exported touch opens Controls/Help and taps their fixed Back row at 100/115/130. Coordinates exercise the declared landscape path; reference getters support measured Back, scroll and resize checks on the composed driver. Physical devices remain separate.",
+  "_comment": "Fresh title \u2192 actual Settings Controls/Help contacts at100/115/130. Measured safe bounds/readable CSS fonts, genuine vertical drags with scroll change and stationary Back, live narrow landscape resize/restoration, measured actual Back taps. Chromium DPR2 evidence; physical devices remain separate.",
   "starts_at_title": true,
   "fail_fast": true,
   "steps": [
@@ -56,15 +56,24 @@
       "timeout_sec": 10
     },
     {
+      "action": "assert_reference_layout"
+    },
+    {
       "action": "screenshot",
       "name": "0_controls"
     },
     {
-      "action": "touch_screen",
-      "pos": [
-        640,
-        639
-      ]
+      "action": "scroll_reference"
+    },
+    {
+      "action": "assert_reference_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "0_controls_scrolled"
+    },
+    {
+      "action": "touch_reference_back"
     },
     {
       "action": "wait_for_event",
@@ -85,15 +94,24 @@
       "timeout_sec": 10
     },
     {
+      "action": "assert_reference_layout"
+    },
+    {
       "action": "screenshot",
       "name": "0_help"
     },
     {
-      "action": "touch_screen",
-      "pos": [
-        640,
-        639
-      ]
+      "action": "scroll_reference"
+    },
+    {
+      "action": "assert_reference_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "0_help_scrolled"
+    },
+    {
+      "action": "touch_reference_back"
     },
     {
       "action": "wait_for_event",
@@ -139,15 +157,24 @@
       "timeout_sec": 10
     },
     {
+      "action": "assert_reference_layout"
+    },
+    {
       "action": "screenshot",
       "name": "1_controls"
     },
     {
-      "action": "touch_screen",
-      "pos": [
-        640,
-        639
-      ]
+      "action": "scroll_reference"
+    },
+    {
+      "action": "assert_reference_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "1_controls_scrolled"
+    },
+    {
+      "action": "touch_reference_back"
     },
     {
       "action": "wait_for_event",
@@ -168,15 +195,24 @@
       "timeout_sec": 10
     },
     {
+      "action": "assert_reference_layout"
+    },
+    {
       "action": "screenshot",
       "name": "1_help"
     },
     {
-      "action": "touch_screen",
-      "pos": [
-        640,
-        639
-      ]
+      "action": "scroll_reference"
+    },
+    {
+      "action": "assert_reference_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "1_help_scrolled"
+    },
+    {
+      "action": "touch_reference_back"
     },
     {
       "action": "wait_for_event",
@@ -222,15 +258,43 @@
       "timeout_sec": 10
     },
     {
+      "action": "assert_reference_layout"
+    },
+    {
       "action": "screenshot",
       "name": "2_controls"
     },
     {
-      "action": "touch_screen",
-      "pos": [
-        640,
-        639
-      ]
+      "action": "scroll_reference"
+    },
+    {
+      "action": "assert_reference_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "2_controls_scrolled"
+    },
+    {
+      "action": "resize_browser",
+      "width": 740,
+      "height": 360
+    },
+    {
+      "action": "assert_reference_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "2_controls_resized"
+    },
+    {
+      "action": "resize_browser",
+      "restore": true
+    },
+    {
+      "action": "assert_reference_layout"
+    },
+    {
+      "action": "touch_reference_back"
     },
     {
       "action": "wait_for_event",
@@ -251,20 +315,49 @@
       "timeout_sec": 10
     },
     {
+      "action": "assert_reference_layout"
+    },
+    {
       "action": "screenshot",
       "name": "2_help"
     },
     {
-      "action": "touch_screen",
-      "pos": [
-        640,
-        639
-      ]
+      "action": "scroll_reference"
+    },
+    {
+      "action": "assert_reference_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "2_help_scrolled"
+    },
+    {
+      "action": "resize_browser",
+      "width": 740,
+      "height": 360
+    },
+    {
+      "action": "assert_reference_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "2_help_resized"
+    },
+    {
+      "action": "resize_browser",
+      "restore": true
+    },
+    {
+      "action": "assert_reference_layout"
+    },
+    {
+      "action": "touch_reference_back"
     },
     {
       "action": "wait_for_event",
       "type": "ui_settings_rendered",
       "timeout_sec": 10
     }
-  ]
+  ],
+  "qa_timeout_sec": 240
 }

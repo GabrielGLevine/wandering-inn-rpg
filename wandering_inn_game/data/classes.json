@@ -477,7 +477,7 @@
 			]
 		},
 		{
-			"_comment": "recovered_crate_watch requires only classless asked_about_crate, but is Liscor-side in ActII; accomplishment_any admits the ActI covered crossing. crossed_under_cover banks when the gate-road ambush transit follows hiding in the drainage cut. Never gate entry on sneaked_past_danger: it requires already sneaking, first granted by Rogue, making entry circular. Keep it for later level-ups; qa/scripts/rogue_earn_loop.json pins the entry route.",
+			"_comment": "recovered_crate_watch requires only classless asked_about_crate, but is Liscor-side in ActII; accomplishment_any admits the ActI covered crossing. crossed_under_cover banks when gate-road transit follows deliberate drainage cover use this waking, including after the ambush was defeated. Bare crossings and prop-only use grant nothing. Never gate entry on sneaked_past_danger: it requires already sneaking, first granted by Rogue, making entry circular. Keep it for later level-ups; qa/scripts/rogue_earn_loop.json pins the entry route.",
 			"id": "rogue",
 			"display_name": "Rogue",
 			"stat_growth": { "dex": 1 },

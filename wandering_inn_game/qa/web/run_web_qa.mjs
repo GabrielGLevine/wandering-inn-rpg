@@ -458,8 +458,8 @@ const audioProbe = await page.evaluate(async () => {
 });
 console.log(`audio OUTPUT probe: taps=${audioProbe.taps} [${audioProbe.tapNodes}] ctxStates=[${audioProbe.states}] peakRMS=${audioProbe.peakRms.toFixed(6)} oscillatorControlRMS=${audioProbe.controlRms.toFixed(6)} => ${audioProbe.peakRms > 0.0001 ? "OUTPUT PRESENT" : "SILENT GRAPH"}`);
 // THE TOOTH (web-silence root cause, 2026-07-13): with WI_REQUIRE_AUDIO_OUTPUT=1
-// a silent graph is a HARD FAIL when the tap machinery itself is proven live
-// (oscillator control > 0). Set for scripts that always play audio
+// both game output and a live oscillator control are required. An unavailable
+// control cannot establish output. Set for scripts that always play audio
 // (combat_walkthrough boots into field music) -- this is the assert that would
 // have caught the runtime-bus silence the day it shipped.
 if (process.env.WI_REQUIRE_AUDIO_OUTPUT === "1" && (audioProbe.controlRms <= 0.0001 || audioProbe.peakRms <= 0.0001)) {

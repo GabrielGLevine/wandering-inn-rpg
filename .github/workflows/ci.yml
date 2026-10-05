@@ -344,7 +344,7 @@ jobs:
     name: Web parity (headless Chromium)
     if: github.event_name != 'push' || contains(github.event.head_commit.message, '[ci-full]')
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -451,7 +451,7 @@ jobs:
       - name: Browser registry routing and evidence checks
         run: python3 -m unittest scripts.tests.test_browser_suite -v
 
-      - name: Browser-only purchase confirmation registry (emulated iPhone and Android)
+      - name: Browser-only interaction registry (emulated iPhone and Android)
         run: python3 wandering_inn_game/qa/web/run_browser_suite.py --skip-export
 
       - name: Touch gesture negative controls
@@ -475,6 +475,22 @@ jobs:
           done
           exit "$fail"
 
+      - name: Browser import request lifetime (emulated iPhone and Android)
+        run: |
+          set -euo pipefail
+          for profile in iphone android; do
+            node wandering_inn_game/qa/web/import_request_lifetime.mjs "$profile"
+          done
+
+      - name: Exported name input and suspended audio recovery (emulated profiles, direct/local iframe)
+        run: |
+          set -euo pipefail
+          for profile in iphone android; do
+            for host in direct iframe; do
+              node wandering_inn_game/qa/web/lifecycle_input_audio.mjs "$profile" "$host" --headless
+            done
+          done
+
       - name: Preserve browser lifecycle evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -483,6 +499,8 @@ jobs:
           path: |
             wandering_inn_game/qa_output/lifecycle_iphone/
             wandering_inn_game/qa_output/lifecycle_android/
+            wandering_inn_game/qa_output/import_request_lifetime_*/
+            wandering_inn_game/qa_output/lifecycle_input_audio_*/
             web_lifecycle_*.log
           if-no-files-found: error
 

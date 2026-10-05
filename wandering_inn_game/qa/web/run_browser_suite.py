@@ -14,7 +14,7 @@ import sys
 GAME = Path(__file__).resolve().parents[2]
 MANIFEST = GAME / "qa/manifest.json"
 PROFILES = {"iphone", "android"}
-PROOFS = {"hold": "holdProof", "pre_arm": "preArmProof", "tap": "tapProof", "drag": "dragProof"}
+PROOFS = {"hold": "holdProof", "pre_arm": "preArmProof", "tap": "tapProof", "drag": "dragProof", "cancel": "cancelProof"}
 NOISE = re.compile(r"SCRIPT ERROR|Parse Error|WARNING|ERROR:|\[console:error\]|\[console:warning\]|\[pageerror\]")
 
 
@@ -25,8 +25,9 @@ def known_renderer_warning(line: str) -> bool:
     return bool(re.fullmatch(
         r"\[\.WebGL-0x[0-9a-fA-F]+\]GL Driver Message \(OpenGL, Performance, GL_CLOSE_PATH_NV, High\): GPU stall due to ReadPixels(?: \(this message will no longer repeat\))?",
         message,
-    )) or ("ImageLoaderSVG: Target canvas dimensions 51500" in message
-           and not re.search(r"SCRIPT ERROR|Parse Error|ERROR:", message))
+    )) or bool(re.fullmatch(
+        r"(?:WARNING: )?ImageLoaderSVG: Target canvas dimensions 51500[×x]51500 \(with scale 1\.00\) exceed the max supported dimensions 16384[×x]16384\. The target canvas will be scaled down\.", message,
+    ))
 
 
 def cases(manifest: dict) -> list[tuple[dict, str]]:
@@ -49,8 +50,9 @@ def cases(manifest: dict) -> list[tuple[dict, str]]:
         seen.add(name)
         if type(entry.get("seed")) is not int:
             raise ValueError(f"{name}: integer seed is required")
-        if any(not isinstance(entry.get(key), str) or not entry[key] for key in ("fixture", "note")):
-            raise ValueError(f"{name}: fixture and note are required")
+        if ("fixture" not in entry or (entry["fixture"] is not None and (not isinstance(entry["fixture"], str) or not entry["fixture"]))
+                or not isinstance(entry.get("note"), str) or not entry["note"]):
+            raise ValueError(f"{name}: explicit fixture (null for fresh creation) and note are required")
         profiles, proofs = entry.get("profiles"), entry.get("required_touch_proofs")
         if not isinstance(profiles, list) or not profiles or any(p not in PROFILES for p in profiles) or len(set(profiles)) != len(profiles):
             raise ValueError(f"{name}: profiles must be unique known emulated profiles")
@@ -89,6 +91,13 @@ def evaluate_run(entry: dict, profile: str, returncode: int, log: str, result: d
     return failures
 
 
+def script_timeout(name: str) -> int:
+    seconds = json.loads((GAME / "qa/scripts" / f"{name}.json").read_text()).get("qa_timeout_sec", 120)
+    if type(seconds) is not int or not 1 <= seconds <= 600:
+        raise ValueError(f"{name}: qa_timeout_sec must be 1..600")
+    return seconds + 60
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--skip-export", action="store_true")
@@ -98,6 +107,7 @@ def main() -> int:
         selected = cases(json.loads(MANIFEST.read_text()))
         for entry, _ in selected:
             script = json.loads((GAME / "qa/scripts" / f"{entry['script']}.json").read_text())
+            script_timeout(entry["script"])
             if script.get("fixture_save") != entry["fixture"]:
                 raise ValueError(f"{entry['script']}: fixture differs from script fixture_save")
     except (OSError, ValueError, TypeError) as exc:
@@ -120,7 +130,7 @@ def main() -> int:
         destination.mkdir(parents=True)
         command = ["bash", str(GAME / "qa/web/run_web_qa.sh"), name, str(entry["seed"]), "--skip-export", "--touch", f"--device={profile}"]
         try:
-            run = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=180)
+            run = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=script_timeout(entry["script"]))
             returncode, log = run.returncode, run.stdout
         except subprocess.TimeoutExpired as exc:
             returncode, log = 124, (exc.stdout or b"").decode(errors="replace")

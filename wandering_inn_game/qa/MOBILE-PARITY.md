@@ -9,7 +9,7 @@ recorded OS/browser; fill from the M1 gate (#511). **Untested** stays untested.
 | Field | Value |
 |---|---|
 | Build SHA | Historical #503 rows used base `fc226d90`. Each #504 purchase run records its exported PCK SHA-256, browser, host and viewport in `browser-evidence.json`; re-export before repeating. |
-| Export | `qa/web/export_web.sh` → `build/web/` (Godot 4.7.2.stable, Web preset, single-threaded); payload `index.pck` 138.9 MB + `index.wasm` 37.7 MB (176.9 MB uncompressed; itch serves compressed) |
+| Export | `qa/web/export_web.sh` → `build/web/` (Godot 4.7.stable.official.5b4e0cb0f, Web preset, single-threaded); payload `index.pck` and `index.wasm` sizes vary; record the candidate manifest |
 | Runner | `qa/web/run_web_qa.sh <script> <seed> --skip-export --touch --device=iphone|android [--portrait-entry]` |
 | Emulated iPhone | Chromium 844×390 landscape, `isMobile`, `hasTouch`, iPhone OS 17.5 Safari UA (`run_web_qa.mjs` DEVICE_PRESETS) |
 | Emulated Android | Chromium 915×412 landscape, `isMobile`, `hasTouch`, Pixel 8 Chrome 126 UA |
@@ -17,6 +17,46 @@ recorded OS/browser; fill from the M1 gate (#511). **Untested** stays untested.
 | Real iPhone Safari | **UNTESTED** — no hardware in the recording session; record device model, iOS + Safari version, CSS viewport (`window.innerWidth×innerHeight`), orientation, build SHA |
 | Real Android Chrome | **UNTESTED** — same fields |
 | Hosting | local HTTP server (`run_web_qa.mjs`); the itch embed and direct itch.io hosting are **UNTESTED** this pass (the embed adds itch's iframe + its own scroll/viewport chrome) |
+
+## Current composed M1 verification (2026-10-04)
+
+Software is on `issue/506-touch-flow`, based on `2d1830a9`. Current Chromium
+phone contexts use DPR2. The candidate manifest/evidence records the exact
+source tree, PCK hash, browser, viewport and input class. Physical-device cells
+below remain **UNTESTED**. Historical rows describe their original builds;
+current composed gates supersede their script or layout limitations.
+
+- Fresh creation names all six choices before starting, explains appearance,
+  incoming damage and change-later settings. A separate 130% touch route
+  measures live text and 44 CSS-pixel targets, including every Back step.
+- Fresh continuous browser-touch route earns cleaning money, Helper/Cooking,
+  Warrior, equipment and a spear, then aims/cancels/re-aims Skills, wins the
+  road fight and resumes exploration. It uses no fixture, teleport, engine
+  keyboard input or simulation autoplay. Scripted success proves that route;
+  independent player discovery remains #511.
+- Inventory/Journal horizontal drags and DOM `touchcancel` must leave rows
+  unchanged; subsequent deliberate taps act once. Reference pages show touch
+  instructions, readable text at 100/115/130, genuine scrolling and a fixed
+  measured Back target through live viewport resize.
+- Fresh fight-first force and guile crate routes preserve the remaining Rogue
+  entry: deliberately use drainage cover and walk its crossing, then earn the
+  class at sleep. Bare crossings and prop-only visits earn nothing. Existing
+  Watch/drainage discovery and first-Stealth routes remain canonical gates.
+- Production message cases exercise actual hold loops, early/late movement,
+  long/reduced-motion text, transition replay without duplicate history,
+  queued modal delivery and immediate arrival. Phone-profile runs using
+  injected engine input are labelled as such; they do not prove touch.
+- Save import proves stale FileReader request rejection, closure safety,
+  empty-file refusal and valid acceptance with live/manual bytes preserved.
+  Empty chooser selection is a surrogate; actual OS Back remains untested.
+- Lifecycle probes use real DOM name input focus/edit/blur and viewport
+  rotation, plus explicit AudioContext suspension followed by trusted touch
+  and measured output. Headed Chromium started audio running; neither browser
+  startup-policy unlock nor genuine hidden/visible backgrounding was observed.
+  Local cross-origin iframe is a surrogate for actual itch hosting.
+
+The physical and unfamiliar-player checklist is `M1-OBSERVATIONS.md`. No
+physical observations or unfamiliar-player sessions have been recorded.
 
 ## Orientation policy (acceptance 4)
 
@@ -37,8 +77,8 @@ wrappers stay out of scope.
 `mobile_touch_smoke` (fixture `mobile_tap_start`) uses ONLY `touch_*` steps:
 title gesture, Continue row, adjacent-tap talk (×2), paged-dialogue taps (×3),
 option taps (×3), tap-to-walk, journal chip — 12 touches, count pinned. On
-the web runner with `--touch` the driver publishes each tap in WINDOW pixels
-(`Viewport.get_screen_transform()`) and Playwright performs a genuine
+the web runner with `--touch` the driver publishes each tap in canvas CSS coordinates
+(`WIResponsiveLayout.css_transform()` measures actual canvas CSS/backing geometry) and Playwright performs a genuine
 `page.touchscreen.tap`; an unserviced request FAILS the step. Negative proof:
 the same run without `--touch` reports every request `UNSERVICED` and the
 script fails — there is no keyboard or mouse fallback. Natively the taps are
@@ -75,8 +115,8 @@ not the finger); `real` = physical device observation.
 | Settings | `settings_loop` PASS | engine-input: `settings_loop` FAILS on the same desktop-only `selectable_rows: 4` title pin at step 2; settings surface itself not reached — re-pin for web before reading it as a defect | — | UNTESTED | UNTESTED | #505 |
 | Purchases (confirm/cancel) | `purchase_confirm_loop`: keyboard Back and same-selection reoffer; native clicks are not touch proof | browser-touch PASS: `purchase_touch_static`, `purchase_touch_fence`, `purchase_touch_service` | same three browser-touch scenarios PASS | **UNTESTED — #511** | **UNTESTED — #511** | #504 |
 | Save / reload | `save_load_roundtrip` PASS | engine-input PASS (`save_load_roundtrip`: write + reload through IndexedDB `user://`) (IndexedDB `user://`) | — | UNTESTED (iOS ITP eviction is a real-device concern) | UNTESTED | — |
-| Import / export save | `save_port_loop` PASS (headless arms) | real-touch PASS: `save_port_web` (Export = blob download captured; Import = browser file chooser opened by the tap and answered with that download → `game_loaded{reason:import}`); `save_port_web_cancel` (chooser dismissed → `save_import_cancelled`, no refusal toast); `save_port_web_invalid` (garbage file → refusal toast, state untouched). Web arm hardened for Safari (persistent in-document input, synchronous click, empty/cancel answered silently) | — | UNTESTED (the original report; iOS Safari's picker rules are the real-device question) | UNTESTED | #253 |
-| First-tap audio unlock | n/a | audio smoke PASS on every run (worklets load, output present after the gesture tap) | PASS | UNTESTED (iOS silent-switch/autoplay policy) | UNTESTED | #510 |
+| Import / export save | `save_port_loop` PASS (headless arms) | real-touch PASS: `save_port_web` (Export = blob download captured; Import = browser file chooser opened by the tap and answered with that download → `game_loaded{reason:import}`); `save_port_web_cancel` (empty-selection surrogate → `save_import_cancelled`, no refusal toast; OS chooser Back/Cancel is unproven); `save_port_web_invalid` (garbage file → refusal toast, state untouched). Web arm hardened for Safari (persistent in-document input, synchronous click, empty/cancel answered silently) | — | UNTESTED (the original report; iOS Safari's picker rules are the real-device question) | UNTESTED | #253 |
+| First-tap audio unlock | n/a | Output after a gesture passes; browser-policy unlock remains unproven | Same | UNTESTED (iOS silent-switch/autoplay policy) | UNTESTED | #510 |
 | Rotation (portrait entry → landscape) | n/a | PASS (rotation probe; overlay shown/hidden; no reload) | not run | UNTESTED | UNTESTED | #510 |
 | Background / foreground resume | n/a | UNTESTED (Playwright cannot background a tab faithfully) | — | UNTESTED | UNTESTED | #510 |
 
