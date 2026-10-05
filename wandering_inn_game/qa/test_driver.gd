@@ -145,7 +145,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		if type == "ui_purchase_confirm_rendered":
 			var panel := get_tree().root.find_child("PurchaseConfirm", true, false)
 			var buy_rect: Rect2 = panel.call("row_rect", 1)
-			var buy_pos := get_viewport().get_screen_transform() * buy_rect.get_center()
+			var buy_pos := WIResponsiveLayout.css_transform(get_viewport()) * buy_rect.get_center()
 			event["buy_window_pos"] = [buy_pos.x, buy_pos.y]
 	_events_seen.append(event)
 
@@ -556,7 +556,7 @@ func _execute(step: Dictionary) -> void:
 				var rect: Rect2 = inventory.visible_content_rect() if action == "touch_scroll_equipment" else inventory.list_rect()
 				var start := rect.position + rect.size * Vector2(0.5, 0.8)
 				var end := rect.position + rect.size * Vector2(0.5, 0.2)
-				var window_end := get_viewport().get_screen_transform() * end
+				var window_end := WIResponsiveLayout.css_transform(get_viewport()) * end
 				await _touch_at(start, action, {"drag": true, "end_x": window_end.x, "end_y": window_end.y})
 		"assert_equipment_bottom_visible":
 			await _settle_for_capture()
@@ -789,6 +789,8 @@ func _execute(step: Dictionary) -> void:
 			await _assert_combat_layout(step)
 		"assert_panel_layout":
 			await _assert_panel_layout(String(step["panel"]))
+		"assert_creation_layout":
+			await _assert_creation_layout()
 		"assert_state":
 			_assert_state(step)
 		"assert_field_skill_absent":
@@ -868,6 +870,10 @@ func _execute(step: Dictionary) -> void:
 					settings_got = WISettings.combat_speed_step()
 				"field_readout_expanded":
 					settings_got = WISettings.field_readout_expanded()
+				"difficulty_step":
+					settings_got = WISettings.difficulty_step()
+				"show_quest_hints":
+					settings_got = WISettings.show_quest_hints()
 				_:
 					_fail("assert_settings_value: unknown path " + settings_path)
 					settings_got = null
@@ -1097,7 +1103,7 @@ func _touch_combat_finish(max_actions: int, first_skill: String = "") -> void:
 			if combat.in_weapon_range("pc", id) and combat.has_los("pc", id):
 				target = id
 				break
-		if target != "" and not first_skill.is_empty() and int(player["ap"]) >= int(combat.skills[first_skill].get("ap_cost", 0)):
+		if target != "" and not first_skill.is_empty() and combat.skill_available("pc", first_skill) and not combat.skill_spent("pc", first_skill) and int(player["ap"]) >= int(combat.skills[first_skill].get("ap_cost", 0)):
 			var slots: Array = screen.get("_bar_slots")
 			var skill_index := -1
 			for slot_index in slots.size():
@@ -1117,10 +1123,14 @@ func _touch_combat_finish(max_actions: int, first_skill: String = "") -> void:
 					_fail("touch_combat_finish: cancel changed AP or left targeting open")
 					return
 				ObservableBus.emit_domain_event("qa_touch_target_cancel_checked", {"skill": first_skill, "ap_unchanged": true})
+			var skill_event_start := _events_seen.size()
 			await _touch_combat_slot(screen, skill_index, "combat_aimed_skill")
 			await _touch_cell(combat.combatants[target]["cell"])
 			if not screen.is_resting() and not combat.finished:
 				await _touch_rect_of("CombatScreen", "mobile_control_rect", "confirm", "combat_confirm")
+			if _find_event_since("skill_resolved", {"actor": "pc", "skill": first_skill}, skill_event_start) < 0:
+				_fail("touch_combat_finish: aimed touch produced no skill resolution")
+				return
 			skill_done = true
 		elif target != "" and int(player["ap"]) >= WICombat.ATTACK_COST:
 			await _touch_combat_slot(screen, 0, "combat_attack")
@@ -1128,15 +1138,12 @@ func _touch_combat_finish(max_actions: int, first_skill: String = "") -> void:
 			# Tapping the already selected target confirms immediately.
 			if not screen.is_resting() and not combat.finished:
 				await _touch_rect_of("CombatScreen", "mobile_control_rect", "confirm", "combat_confirm")
-		elif not enemies.is_empty() and int(player["move_pool"]) >= WICombat.MOVE_COST:
+		elif not enemies.is_empty() and int(player["ap"]) >= WICombat.ATTACK_COST and int(player["move_pool"]) >= WICombat.MOVE_COST:
 			var direction := _touch_combat_path_step(combat, player, enemies)
 			if direction == Vector2i.ZERO:
 				await _touch_combat_end_turn(screen)
 			else:
 				await _touch_cell((player["cell"] as Vector2i) + direction)
-		elif target == "" and int(player["ap"]) >= WICombat.DASH_COST:
-			await _touch_combat_slot(screen, 1, "combat_dash")
-			await _touch_rect_of("CombatScreen", "mobile_control_rect", "confirm", "combat_confirm")
 		else:
 			await _touch_combat_end_turn(screen)
 	_fail("touch_combat_finish: action limit exceeded")
@@ -1155,7 +1162,7 @@ func _touch_inventory_item(item_id: String) -> void:
 			await _touch_at(rect.get_center(), "touch_inventory_item")
 			return
 		var movement := -minf(80.0, content.size.y * 0.4) if rect.end.y > content.end.y else minf(80.0, content.size.y * 0.4)
-		var endpoint := get_viewport().get_screen_transform() * (content.get_center() + Vector2(0.0, movement))
+		var endpoint := WIResponsiveLayout.css_transform(get_viewport()) * (content.get_center() + Vector2(0.0, movement))
 		await _touch_at(content.get_center(), "scroll_inventory", {"drag": true, "end_x": endpoint.x, "end_y": endpoint.y})
 	_fail("touch_inventory_item: item remained outside the visible list")
 
@@ -1219,7 +1226,7 @@ func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label:
 		return
 	if node_name == "PurchaseConfirm":
 		var buy_rect: Rect2 = node.call("row_rect", 1)
-		_last_purchase_buy_pos = get_viewport().get_screen_transform() * buy_rect.get_center()
+		_last_purchase_buy_pos = WIResponsiveLayout.css_transform(get_viewport()) * buy_rect.get_center()
 	if bool(gesture.get("follow_purchase_buy", false)):
 		if _last_purchase_buy_pos == Vector2.ZERO:
 			_fail("follow_purchase_buy needs a prior rendered modal touch at this viewport")
@@ -1230,7 +1237,7 @@ func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label:
 	if gesture.has("delta"):
 		gesture = gesture.duplicate()
 		var delta: Array = gesture["delta"]
-		var end := get_viewport().get_screen_transform() * (rect.get_center() + Vector2(float(delta[0]), float(delta[1])))
+		var end := WIResponsiveLayout.css_transform(get_viewport()) * (rect.get_center() + Vector2(float(delta[0]), float(delta[1])))
 		gesture.erase("delta")
 		gesture["drag"] = true
 		gesture["end_x"] = end.x
@@ -1239,8 +1246,8 @@ func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label:
 
 
 ## The one seam every touch_* step rides. Web: publish the request in WINDOW
-## pixels (the root viewport's screen transform folds in canvas_items
-## stretch + letterbox offset, so the runner taps exactly where a finger
+## CSS pixels (including canvas density, stretch and letterboxing), so
+## the runner taps exactly where a finger
 ## would), then wait for the runner to report the tap performed. A runner
 ## not in --touch mode never answers, so the step FAILS rather than falling
 ## back -- that absence of fallback is the contract #503 asks for.
@@ -1248,9 +1255,9 @@ const TOUCH_SERVICE_DEADLINE_MSEC := 4000
 
 func _touch_at(pos: Vector2, label: String, gesture: Dictionary = {}) -> void:
 	if OS.has_feature("web"):
-		var window_pos: Vector2 = get_viewport().get_screen_transform() * pos
-		JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = {x: %f, y: %f, label: %s, gesture: %s}" % [window_pos.x, window_pos.y, JSON.stringify(label), JSON.stringify(gesture)], true)
+		var window_pos: Vector2 = WIResponsiveLayout.css_transform(get_viewport()) * pos
 		var before := int(JavaScriptBridge.eval("window.__WI_QA_TOUCH_DONE__ || 0", true))
+		JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = {x: %f, y: %f, coordinate_space: 'css', label: %s, gesture: %s}" % [window_pos.x, window_pos.y, JSON.stringify(label), JSON.stringify(gesture)], true)
 		var deadline := Time.get_ticks_msec() + TOUCH_SERVICE_DEADLINE_MSEC
 		var serviced := false
 		while Time.get_ticks_msec() < deadline:
@@ -1262,7 +1269,7 @@ func _touch_at(pos: Vector2, label: String, gesture: Dictionary = {}) -> void:
 			JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = null", true)
 			_fail("%s: real touch at (%d,%d) was never performed by the runner (not in --touch mode?) -- no fallback" % [label, int(pos.x), int(pos.y)])
 			return
-		ObservableBus.emit_domain_event("qa_touch", {"label": label, "x": pos.x, "y": pos.y, "window_x": window_pos.x, "window_y": window_pos.y, "real": true, "mode": "browser_touch", "gesture": gesture})
+		ObservableBus.emit_domain_event("qa_touch", {"label": label, "x": pos.x, "y": pos.y, "window_x": window_pos.x, "window_y": window_pos.y, "coordinate_space": "css", "real": true, "mode": "browser_touch", "gesture": gesture})
 	else:
 		if not gesture.is_empty():
 			_fail("timed touch gestures require the browser runner with --touch")
@@ -1614,7 +1621,7 @@ func _touch_scroll_field_to_end() -> void:
 			break
 		var rect := scroll.get_global_rect()
 		var end := rect.position + rect.size * Vector2(0.5, 0.15)
-		var window_end := get_viewport().get_screen_transform() * end
+		var window_end := WIResponsiveLayout.css_transform(get_viewport()) * end
 		await _touch_at(rect.position + rect.size * Vector2(0.5, 0.85), "touch_scroll_field", {"drag": true, "end_x": window_end.x, "end_y": window_end.y})
 		await _settle_for_capture()
 	if scroll.scroll_vertical < bar.max_value - bar.page - 1.0 or label.get_global_rect().end.y > scroll.get_global_rect().end.y + 1.0:
@@ -1684,6 +1691,58 @@ func _assert_combat_layout(step: Dictionary) -> void:
 		if not board.has_point(position):
 			_fail("assert_combat_layout: focused fighter is outside the visible board")
 	ObservableBus.emit_domain_event("qa_combat_layout_measured", snapshot)
+
+
+func _assert_creation_layout() -> void:
+	await _settle_for_capture()
+	var screen := get_tree().root.find_child("CharCreation", true, false)
+	if screen == null:
+		_fail("assert_creation_layout: creation is not visible")
+		return
+	var safe := WIResponsiveLayout.safe_rect(get_viewport())
+	var css_scale := WIResponsiveLayout.css_scale(get_viewport())
+	var scale := WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]
+	var controls: Array[Control] = [screen.get("_back_button")]
+	for key: String in ["_name_edit", "_begin_button"]:
+		var control: Control = screen.get(key)
+		if control.is_visible_in_tree():
+			controls.append(control)
+	for key: String in ["_cards", "_choice_rows"]:
+		for control: Control in screen.get(key):
+			if control.is_visible_in_tree():
+				controls.append(control)
+	var rectangles: Array[Rect2] = []
+	for control: Control in controls:
+		var rect := control.get_global_rect()
+		if not safe.grow(0.1).encloses(rect):
+			_fail("assert_creation_layout: control is outside safe bounds")
+		if WIResponsiveLayout.uses_touch_layout() and minf(rect.size.x, rect.size.y) * css_scale < WIResponsiveLayout.MIN_TOUCH_CSS - 0.01:
+			_fail("assert_creation_layout: control is smaller than 44 CSS pixels")
+		for other: Rect2 in rectangles:
+			if rect.intersects(other):
+				_fail("assert_creation_layout: controls overlap")
+		rectangles.append(rect)
+	var text_rects: Array[Rect2] = []
+	var measurements: Array = []
+	for key: String in ["_prompt_label", "_identity_label", "_difficulty_label", "_caption_label", "_hint_label"]:
+		var label: Label = screen.get(key)
+		if not label.is_visible_in_tree():
+			continue
+		var rect := label.get_global_rect()
+		var font_size := label.get_theme_font_size("font_size")
+		var font := label.get_theme_font("font")
+		if label.text.is_empty() or not safe.grow(0.1).encloses(rect):
+			_fail("assert_creation_layout: %s is empty or outside safe bounds: %s" % [key, rect])
+		if font.get_height(font_size) * label.get_line_count() > rect.size.y + 0.1:
+			_fail("assert_creation_layout: %s lines are clipped" % key)
+		if WIResponsiveLayout.uses_touch_layout() and font_size * css_scale < WIResponsiveLayout.MIN_TEXT_CSS * scale - 0.01:
+			_fail("assert_creation_layout: required text is too small")
+		for other: Rect2 in rectangles + text_rects:
+			if rect.intersects(other):
+				_fail("assert_creation_layout: %s overlaps %s" % [key, other])
+		text_rects.append(rect)
+		measurements.append({"key": key, "text": label.text, "rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y], "font_css": font_size * css_scale, "lines": label.get_line_count()})
+	ObservableBus.emit_domain_event("qa_creation_layout_measured", {"text_scale": scale, "text": measurements, "controls": controls.size()})
 
 
 func _assert_field_layout() -> void:

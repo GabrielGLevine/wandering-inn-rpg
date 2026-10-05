@@ -152,10 +152,7 @@ const port = server.address().port;
 const BASE_URL = `http://127.0.0.1:${port}/`;
 
 const browser = await chromium.launch({ args: ["--single-process"] });
-// deviceScaleFactor pinned to 1: without it, headless Chromium on some CI
-// runners reports an absurd devicePixelRatio, and Godot's ImageLoaderSVG then
-// rasterizes engine-theme SVGs at gigantic canvases (the runner-only
-// "51500x51500" WARNING caught by the public repo's first CI run).
+// Phone contexts exercise high-density canvas backing independently of CSS targets.
 // hasTouch (--touch mode, issue #105, the #106 prerequisite): configures the
 // Chromium context so page.touchscreen.tap(...) dispatches real touch events
 // the browser accepts -- without it Playwright refuses touchscreen calls
@@ -180,7 +177,7 @@ const landscapeViewport = { ...device.viewport };
 const startViewport = portraitEntry ? { width: device.viewport.height, height: device.viewport.width } : landscapeViewport;
 const page = await browser.newPage({
 	viewport: startViewport,
-	deviceScaleFactor: 1,
+	deviceScaleFactor: deviceName === "desktop" ? 1 : 2,
 	hasTouch: touchMode || device.isMobile,
 	isMobile: device.isMobile,
 	...(device.userAgent ? { userAgent: device.userAgent } : {}),
@@ -199,7 +196,7 @@ page.on("console", (msg) => {
 	const text = msg.text();
 	const diagnostic = {type: msg.type(), text};
 	capturedDiagnostics.push(diagnostic);
-	if (isKnownRendererDiagnostic(diagnostic)) return;
+	if (isKnownRendererDiagnostic(diagnostic)) { capturedWarnings.push(text); return; }
 	if (text.startsWith("QA_")) {
 		console.log(`[game] ${text}`);
 		return;
@@ -465,8 +462,8 @@ console.log(`audio OUTPUT probe: taps=${audioProbe.taps} [${audioProbe.tapNodes}
 // (oscillator control > 0). Set for scripts that always play audio
 // (combat_walkthrough boots into field music) -- this is the assert that would
 // have caught the runtime-bus silence the day it shipped.
-if (process.env.WI_REQUIRE_AUDIO_OUTPUT === "1" && audioProbe.controlRms > 0.0001 && audioProbe.peakRms <= 0.0001) {
-	console.error("audio OUTPUT probe: REQUIRED output missing (graph silent while control oscillator renders) -- the runtime-bus silence class");
+if (process.env.WI_REQUIRE_AUDIO_OUTPUT === "1" && (audioProbe.controlRms <= 0.0001 || audioProbe.peakRms <= 0.0001)) {
+	console.error("audio OUTPUT probe: REQUIRED output unproven: game output and a live control oscillator must both render");
 	globalThis.__requiredAudioOutputMissing = true;
 }
 
@@ -491,15 +488,15 @@ const browserEvidence = {
 	emulated: true, device: deviceName, profile: device, browser: browser.version(),
 	host: BASE_URL, script: scriptName, touchMode, requests: touchRequests,
 	buildPckSha256: createHash("sha256").update(await readFile(join(webRoot, "index.pck"))).digest("hex"),
-	runtime: await page.evaluate(() => ({userAgent: navigator.userAgent, maxTouchPoints: navigator.maxTouchPoints, viewport: [innerWidth, innerHeight], events: window.__WI_TOUCH_EVENTS__})),
-	errors: capturedErrors, warnings: capturedWarnings,
+	runtime: await page.evaluate(() => ({userAgent: navigator.userAgent, maxTouchPoints: navigator.maxTouchPoints, viewport: [innerWidth, innerHeight], devicePixelRatio, events: window.__WI_TOUCH_EVENTS__})),
+	errors: capturedErrors, warnings: capturedWarnings, diagnostics: capturedDiagnostics,
 };
 let timedTouchOk = true;
 for (const request of touchRequests) {
 	const gesture = request.gesture ?? {};
 	if (gesture.drag || (!gesture.follow_purchase_buy && !gesture.hold_ms)) {
 		const proof = gestureProof(request, browserEvidence.runtime.events);
-		request[gesture.drag ? "dragProof" : "tapProof"] = proof;
+		request[gesture.cancel ? "cancelProof" : gesture.drag ? "dragProof" : "tapProof"] = proof;
 		timedTouchOk = timedTouchOk && proof.passed;
 		continue;
 	}
