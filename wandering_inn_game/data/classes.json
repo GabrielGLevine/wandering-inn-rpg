@@ -1,11 +1,11 @@
 {
 	"meta": {
-		"_comment_stat_growth": "#438 THE FLAT-GROWTH RULE (user ruling 2026-08-13, docs/CHOICE-LOG.md 'Act V capstone trivialization'): NO class converts a level into more than ONE point of a single stat. Growth BROADENS -- a second stat -- it never STEEPENS. WHY THIS RULE AND NOT ANOTHER: every window in the balance suite is measured against the band yardstick, the [Spellsword] family, which grows 1 str + 1 int; a class growing 2 into one stat out-stats that yardstick 2:1 in the stat it stacked, at the same level, which is precisely 'the capstone out-stats its band'. Before this rule, 32 of 39 classes already obeyed it -- every base line, every consolidation target, and the mage/hedge_witch/cook/runner/helper evolution families ([Ice Mage] and [Fire Mage] buy an ELEMENT at the parent's rate; [Witch]/[Chef]/[Courier] buy a SECOND STAT). The seven exceptions were the single-axis evolutions, which carried an authored 'evolution bump' convention (its own trail: merchant/strategist -> alchemist -> beast_master, each _comment citing the last): strategist int 2, emissary int 2, infiltrator dex 2, sharpshooter dex 2, merchant cha 2, alchemist int 2, beast_master con 2. The bump is RETIRED here and all seven read 1. What an evolution buys is unchanged and was always the real reward: its own Skill grants, and the level rungs above the parent's cap. GATED, not merely stated: data_lint.py's `check_stat_growth_flat` reds any class that grows >1 into one stat, so the convention cannot creep back one class at a time the way it spread.",
+		"_comment_stat_growth": "Flat growth: at most one point per level in any stat; broaden into a second stat rather than increase a single-stat rate. Evolution rewards are Skills and rungs above the parent cap. Spellsword (str 1 + int 1) is the balance-band yardstick. Enforced by data_lint.check_stat_growth_flat; design authority: docs/CHOICE-LOG.md, 'Act V capstone trivialization'.",
 		"power_k": 1.55
 	},
 	"consolidations": [
 		{
-			"_comment": "EVOLVED-LINEAGE CONSOLIDATION (#449; user ruling 2026-08-12, docs/CHOICE-LOG.md 'Evolved lineages consolidate into unique classes'). [Spearmaster] does NOT lineage-carry into [Spellsword] -- the evolved spear line merges with the mage line into its OWN class. SAME gate shape as every row below (min_parent_level 10, min_combined_level 21). #472 NARROWED THESE LINES to exactly the pair this target `inherits`. Consolidation is AUTOMATIC now, so a row may only list pairs whose no-Skill-loss is PROVEN (data_lint's coverage arm hard-reds any live pair that is not) -- the old broad lines silently dropped the evolved parent's own kit, e.g. spearmaster+ice_mage handed you [Spellsword] minus [Ice Wall]. The evolved pairs did not vanish: they are back on lineage completeness's `_exempt` queue, awaiting their own authored targets. ORDER IS STILL LOAD-BEARING and this row must stay FIRST -- `WIProgression.check_consolidation` returns the FIRST matching row -- and the contract is GATED, not merely commented: tests/test_progression.gd pins spearmaster+mage -> spellspear AND warrior+mage -> spellsword, so a reorder reds.",
+			"_comment": "FIRST-MATCH ORDER: keep this row first; WIProgression.check_consolidation returns the first match. Evolved spear + mage must yield Spellspear, plain warrior + mage Spellsword (test_progression.gd). Live pairs must match the target's inherited kit: automatic consolidation may not lose Skills. Evolved pairs needing distinct targets remain in lineage completeness's _exempt queue; do not widen parent_lines without proving coverage.",
 			"id": "spellspear",
 			"target": "spellspear",
 			"parent_lines": [
@@ -16,7 +16,7 @@
 			"min_combined_level": 21
 		},
 		{
-			"_comment": "#438 [Deathknight] -- warrior x necromancer, the third of the 2026-08-13 consolidation families (user ruling, docs/CHOICE-LOG.md 'Necromancer becomes consolidation-eligible'). SAME gate shape as every row here (min_parent_level 10, min_combined_level 21); the lines are EXACTLY the pair this target `inherits`, so data_lint's coverage arm proves no-Skill-loss statically. THIS ROW IS THE LEVEL PATH PAST NECROMANCER'S CAP: [Necromancer]'s own table stops at 12, and the merge formula carries a warrior 12 + necromancer 12 holder to 16 -- the only rung above the cap the class has. ORDER: placed ABOVE [Spellsword]'s row, whose line_a is the same `[warrior]`. Post-#472 that placement is defence in depth rather than the sole lock (`_merge_proven` already refuses to let spellsword, which inherits {warrior, mage}, fire on a necromancer pair) -- but a future re-widening of the spellsword row's `parent_lines` would make the pair literally authored there, and then first-match order is the whole ruling. tests/test_progression.gd pins it both directions.",
+			"_comment": "Keep above Spellsword: first-match order protects warrior + necromancer even if parent_lines later widen; test_progression.gd pins both directions. Only list inherited pairs with proven no-Skill-loss. This is Necromancer's only path above its level-12 cap: parents 12 + 12 merge at level 16.",
 			"id": "deathknight",
 			"target": "deathknight",
 			"parent_lines": [
@@ -48,7 +48,7 @@
 			"min_combined_level": 21
 		},
 		{
-			"_comment": "#438 [Skirmisher] -- spearmaster x archer, the spear-and-bow sibling of [Ranger] (user ruling 2026-08-13: 'Controller to propose 1-2 additional authored targets that reduce family reuse ... beast_master x mage-line and spearmaster x archer-line'). SAME gate shape (min_parent_level 10, min_combined_level 21); lines are EXACTLY the inherited pair. ORDER IS LOAD-BEARING: [Ranger]'s line_a is the broad `[warrior]`, whose evolution closure LISTS spearmaster, so this row must sit ABOVE ranger's. Post-#472 `_merge_proven` is a second lock (ranger inherits {warrior, archer}, not {spearmaster, archer}), but the order is what the ruling actually rests on if either row is ever re-widened -- and it is GATED, not merely commented: tests/test_progression.gd pins spearmaster+archer -> skirmisher AND warrior+archer -> ranger.",
+			"_comment": "Keep above Ranger: warrior's evolution closure includes Spearmaster, so first-match order must preserve spearmaster + archer -> Skirmisher and warrior + archer -> Ranger. test_progression.gd pins both. Only inherited pairs with proven no-Skill-loss may be live; _merge_proven is an additional lock, not permission to reorder.",
 			"id": "skirmisher",
 			"target": "skirmisher",
 			"parent_lines": [
@@ -81,7 +81,7 @@
 			"min_combined_level": 21
 		},
 		{
-			"_comment": "#438 [Wild Sage] -- beast_master x mage, the EVOLVED-tamer sibling of [Druid] (same user ruling that seeded [Skirmisher]). SAME gate shape (min_parent_level 10, min_combined_level 21); lines are EXACTLY the inherited pair. ORDER IS LOAD-BEARING: [Druid]'s line_a is `[beast_tamer]`, whose evolution closure LISTS beast_master, so this row must sit ABOVE druid's or a [Beast Master] merges back into the class that never carries [Pack Bond] or [Sworn Fang: Ride Together]. GATED in tests/test_progression.gd both directions (beast_master+mage -> wild_sage; beast_tamer+mage -> druid). CANON: [Wild Sage] is an ORIGINAL name, wiki-verified CLEAR 2026-08-13 (no canon [Class] of that name; the only full-text hit is the herb 'wild Sage Grass'); it sits in the attested 'Wild ---' family beside [Wild Mage] and Vasraf's [Wild General], itself a canon [Beast Tamer]/[General] hybrid.",
+			"_comment": "Keep above Druid: beast_tamer's evolution closure includes beast_master. Druid lacks Beast Master's Pack Bond and Sworn Fang: Ride Together. test_progression.gd pins beast_master + mage -> Wild Sage and beast_tamer + mage -> Druid. Only proven inherited pairs may be live. Canon naming constraints are on Wild Sage's class record.",
 			"id": "wild_sage",
 			"target": "wild_sage",
 			"parent_lines": [
@@ -92,7 +92,7 @@
 			"min_combined_level": 21
 		},
 		{
-			"_comment": "SAME gate shape as [Spellsword]/[Innkeeper]/[Ranger]/[Scout] (min_parent_level 10, min_combined_level 21). CANON LIBERTY (documented, GH#156): the two-way [Druid] route via tamer+mage is engine-shaped; Nalthaliarstrelous holds [Druid]+[Gardener] UNCONSOLIDATED (4.44 M), so the Gardener line is deliberately omitted here.",
+			"_comment": "Canon liberty: tamer + mage consolidation is engine-shaped. Nalthaliarstrelous holds Druid + Gardener unconsolidated (4.44 M); deliberately omit the Gardener line.",
 			"id": "druid",
 			"target": "druid",
 			"parent_lines": [
@@ -144,7 +144,7 @@
 			},
 			"levels": [
 				{ "level": 1, "requires": {}, "grants": ["frost_bolt", "quick_cast", "light"] },
-				{ "_comment": "#453 G1 (user ruling 2026-08-13): `requires` -> `requires_any` on the SHIPPED idiom (spellsword/innkeeper/diplomat all gate this way). The old won_combat-only gate walled every NON-MARTIAL mage spine at L1 forever: the [Druid] pace trace banked spell_cast 126 by Act V and still read `beast_master16/mage1`, so the beast_tamer x mage consolidation (min_parent_level 10) NEVER fired -- 40/40 runs. `spell_cast: 4` is mage L3's OWN threshold reused verbatim, so the widened arm adds no new number to the curve and no new producer to the game (zero treadmill): a caster who casts four spells clears L2 and L3 together, and a martial mage keeps the won_combat road unchanged.", "level": 2, "requires_any": { "won_combat": 3, "spell_cast": 4 }, "grants": ["flame_jet", "mana_shield", "flame_dart"] },
+				{ "_comment": "requires_any preserves the martial won_combat route and lets non-martial casters reach Mage L2. spell_cast:4 reuses L3's threshold, so four casts clear L2 and L3 together; no new counter producer or treadmill.", "level": 2, "requires_any": { "won_combat": 3, "spell_cast": 4 }, "grants": ["flame_jet", "mana_shield", "flame_dart"] },
 				{ "level": 3, "requires": { "spell_cast": 4 }, "grants": [] },
 				{ "level": 4, "requires": { "spell_cast": 8 }, "grants": [] },
 				{ "level": 5, "requires": { "spell_cast": 13 }, "grants": ["invisibility"] },
@@ -273,7 +273,7 @@
 			]
 		},
 		{
-			"_comment": "[SPELLSPEAR] -- the evolved-lineage twin of [Spellsword] (#449; user ruling 2026-08-12, docs/CHOICE-LOG.md). SPARSE TABLE (GH#54 convention): consolidation-only, so `accept_consolidation` writes the merged level straight in and the table starts AT its floor. Floor = 14, DERIVED (never hardcoded elsewhere) from `WIProgression._consolidation_merged_level` over this class's own consolidations row: the cheapest legal pair under min_parent_level 10 + min_combined_level 21 is (11, 10), and max(ceil(2*21/3), max(11,10)) == 14 -- test_content.gd's `_validate_class_level_tables` re-derives exactly that from the SAME consolidations data. Same parents math as [Spellsword], hence the same floor. `stat_growth` and the whole requires_any curve are [Spellsword]'s VERBATIM: the ruling makes [Spellsword] the mechanical baseline and re-flavors only the grants, so the two lineages cost the same and the Act V band anchor reads the same on either spine. `melee_hit` (not `spear_skill_used`) is the martial axis for the same reason the [Warrior] curve uses it -- the shipped steel thread banks melee_hit fighting with Relc's spear, so the counter is weapon-agnostic already. The spear/mage lineage kit arrives by `inherits`; the two grants below are the consolidation's OWN, spellsword-baselined and spear-flavored ([Keener Edge] -> [Keener Point], [Spellbound Strike] -> [Spellbound Thrust]).",
+			"_comment": "Consolidation-only sparse table: derive floor from this class's consolidation row through WIProgression._consolidation_merged_level, never hardcode it elsewhere. Parents (11,10) at combined 21 yield max(ceil(2*21/3),11)=14; test_content re-derives it. Growth and requires_any mirror Spellsword; only grant flavor and the lineage weapon gate differ. melee_hit is weapon-agnostic, including Relc's spear; do not substitute spear_skill_used. Parent kit arrives through inherits.",
 			"id": "spellspear",
 			"display_name": "Spellspear",
 			"stat_growth": { "str": 1, "int": 1 },
@@ -291,14 +291,14 @@
 			]
 		},
 		{
-			"_comment": "[DEATHKNIGHT] -- warrior x necromancer (#438; user ruling 2026-08-13, docs/CHOICE-LOG.md 'Necromancer becomes consolidation-eligible'). SPARSE TABLE (GH#54): consolidation-only, so `accept_consolidation` writes the merged level straight in and the table starts AT its floor. Floor = 14, DERIVED (never hardcoded elsewhere) from `WIProgression._consolidation_merged_level` over this class's own consolidations row: the cheapest legal pair under min_parent_level 10 + min_combined_level 21 is (10, 11), and max(ceil(2*21/3), max(10,11)) == 14 -- test_content.gd's `_validate_class_level_tables` re-derives exactly that from the SAME data. THE CAP IS THE POINT: [Necromancer]'s own table stops at 12 with no evolution (the roster's one deliberate no-evolution exception, user-ratified 2026-07-15), so this merge is the ONLY rung a necromancer has above it -- warrior 12 + necromancer 12 lands at max(ceil(2*24/3), 12) == 16, and the table below carries a holder onward from there. `stat_growth` and the whole requires_any curve are [Spellsword]'s VERBATIM: the martial x caster shape is the same shape, so the two lineages cost the same and the band anchor reads the same on either spine. The `spell_cast` axis is genuinely reachable from the necromancer half -- [Bone Dart] and [Deathbolt] carry element:'death', and wi_combat.gd tallies spell_cast AND death_cast off any element -- so this is not a mage-only rung wearing a necromancer's name. The warrior/necromancer kit arrives by `inherits`; the two grants below are the consolidation's OWN, spellsword-baselined and death-flavored ([Keener Edge] -> [Grave Edge], [Spellbound Strike] -> [Deathbound Strike]). CANON: [Deathknight] is an ORIGINAL name, wiki-verified CLEAR 2026-08-13 (zero full-text hits, absent from List_of_Classes/D). Deliberately NOT [Deathbane Necromancer] (Pisces, 8.19 H -- past the Book 17 bar AND the inverse concept) and not [Death Warrior] (Gravesong 1.02, a spinoff the spoiler bar does not map onto).",
+			"_comment": "Consolidation-only sparse table; derive floor via WIProgression._consolidation_merged_level from its own row (10+11 ->14), checked by test_content. Necromancer has no evolution above its level-12 cap; 12+12 ->16 makes this its sole higher path. Growth/requires_any mirror Spellsword. Bone Dart and Deathbolt's death element bank both spell_cast and death_cast; inherits preserves the parent kit. CANON: Deathknight is ORIGINAL, wiki full-text/List_of_Classes/D checked clear. Do not substitute Deathbane Necromancer (8.19 H, past Book17 and inverse concept) or Death Warrior (Gravesong1.02, outside the mapped spoiler bar).",
 			"id": "deathknight",
 			"display_name": "Deathknight",
 			"stat_growth": { "str": 1, "int": 1 },
 			"inherits": ["warrior", "necromancer"],
 			"aspiration": { "display_name": "Deathknight", "text": "The old art asks for a corpse. A [Warrior] who studies it long enough stops needing one to be lent." },
 			"levels": [
-				{ "_comment": "#438 KIT RELIEF, and it is the doctrine answer to a row this lane's own warden move pushed under the floor (0.58 -> 0.41 band-competent at the alcove): frozen non-warden STAT blocks hold, so relief comes from the KIT. MEASURED CAUSE, not inferred -- `tests/_warden_probe.gd` ablated [Mana Shield] out of the sibling consolidation [Spellsword] at the same level, weapon and act, and it read 0.78 -> 0.53 competent / 0.61 -> 0.32 floor. That single 0-AP Skill is the largest kit term in the row, and [Deathknight] never had it: [Spellsword]/[Spellspear]/[Druid]/[Wild Sage] all reach it through [Mage] L2, while the necromancer line ships NO 0-AP defensive answer at any level -- [Bone Dart] L1, [Deathbolt] L3, [Animate Dead] L5 (field-only), [Flash Step] L7. So the hole is structural to the parent line, not to this level, and the consolidation is where it surfaces. The SHIPPED id is granted rather than a re-flavored twin ON PURPOSE: minting [Grave Ward] or its like is a NAMING-FLOW change (wiki-verify + user clearance, CHOICE-LOG 2026-08-13) and this lane may not spend that gate. The re-flavored twin is the natural follow-up for the naming batch, exactly as [Grave Edge] twins [Keener Edge] one line down.", "level": 14, "requires_any": { "melee_hit": 105, "spell_cast": 87 }, "grants": ["grave_edge", "mana_shield"] },
+				{ "_comment": "Mana Shield supplies the 0-AP defensive answer missing from the Necromancer parent kit; other caster consolidations inherit it through Mage L2. Retain the shipped id: a re-flavored replacement such as Grave Ward needs wiki verification and user naming clearance (docs/CHOICE-LOG.md). Frozen non-warden stat blocks require kit-based relief.", "level": 14, "requires_any": { "melee_hit": 105, "spell_cast": 87 }, "grants": ["grave_edge", "mana_shield"] },
 				{ "level": 15, "requires_any": { "melee_hit": 119, "spell_cast": 100 }, "grants": [] },
 				{ "level": 16, "requires_any": { "melee_hit": 134, "spell_cast": 114 }, "grants": ["deathbound_strike"] },
 				{ "level": 17, "requires_any": { "melee_hit": 149, "spell_cast": 128 }, "grants": [] },
@@ -410,7 +410,7 @@
 				{ "level": 3, "requires": { "observed_things": 6 }, "grants": ["dangersense"] },
 				{ "level": 4, "requires": { "observed_things": 10 }, "grants": [] },
 				{ "level": 5, "requires": { "observed_things": 15 }, "grants": ["directed_strike"] },
-				{ "_comment": "#453 G3 (user ruling 2026-08-13): THE LADDER WIDENS BEFORE IT STEEPENS. [Flanking Step] moves L7 -> L6; no threshold moves. `tactic_used` banks once per tactic-family Skill per fight (wi_combat._tally_skill_use), so the rung's own cost is paid out of the kit the rung hands you: pre-change a tactician arrived at L6 holding TWO tactic Skills ([Battlefield Awareness] L1, [Chosen Blow] L5) and had to buy L7's ask of 8 at 2/fight. Moving the third Skill down to L6 makes it 3/fight from L6 on. THRESHOLD TRIM DELIBERATELY NOT TAKEN: the ruling conditions it on the L6 ask exceeding what the kit banks by that point, and it does not -- the floor-arm pace trace reaches L6 in Act III at tactic_used 5 against an ask of 4.", "level": 6, "requires": { "observed_things": 20, "tactic_used": 4 }, "grants": ["flanking_step"] },
+				{ "_comment": "tactic_used banks once per tactic-family Skill per fight (wi_combat._tally_skill_use). Flanking Step at L6 supplies the third tactic for L7's ask of8; do not trim thresholds merely to address kit width. The L6 ask of4 is already reachable with the preceding kit.", "level": 6, "requires": { "observed_things": 20, "tactic_used": 4 }, "grants": ["flanking_step"] },
 				{ "level": 7, "requires": { "observed_things": 24, "tactic_used": 8 }, "grants": [] },
 				{ "level": 8, "requires": { "observed_things": 28, "tactic_used": 12 }, "grants": [] },
 				{ "level": 9, "requires": { "observed_things": 32, "tactic_used": 17 }, "grants": [] },
@@ -477,7 +477,7 @@
 			]
 		},
 		{
-			"_comment": "`recovered_crate_watch` needs only the classless `asked_about_crate` accomplishment -- reachable by any PC, no prerequisite class or skill. #453 G2 (user ruling 2026-08-13) widens the entry to `accomplishment_any` because that job is LISCOR-SIDE (missing_crate, route beat 9, Act II), which made [Scout] (rogue x archer) structurally classless through the whole of Act I -- a PACE wall with no diet that could answer it. `crossed_under_cover` is the floodplains gate-road ambush's new cover arm: banked on a transit the ambush would otherwise have sprung, once you have gone to ground in the drainage cut first. `sneaked_past_danger` -- the obvious candidate, and the one the C3 proposal named -- CANNOT be used here: it banks only while already sneaking, and no class grants a sneak before [Rogue] does, so it would gate [Rogue] on holding [Rogue] (the circularity this class's own QA canonical, qa/scripts/rogue_earn_loop.json, already documents). It stays [Rogue]'s LEVEL-UP counter past L1, unchanged.",
+			"_comment": "recovered_crate_watch requires only classless asked_about_crate, but is Liscor-side in ActII; accomplishment_any admits the ActI covered crossing. crossed_under_cover banks when the gate-road ambush transit follows hiding in the drainage cut. Never gate entry on sneaked_past_danger: it requires already sneaking, first granted by Rogue, making entry circular. Keep it for later level-ups; qa/scripts/rogue_earn_loop.json pins the entry route.",
 			"id": "rogue",
 			"display_name": "Rogue",
 			"stat_growth": { "dex": 1 },
@@ -582,14 +582,14 @@
 			]
 		},
 		{
-			"_comment": "[SKIRMISHER] -- spearmaster x archer (#438; user ruling 2026-08-13). SPARSE TABLE (GH#54): consolidation-only, floor = 14, DERIVED from `WIProgression._consolidation_merged_level` over this class's own consolidations row -- cheapest legal pair under min_parent_level 10 + min_combined_level 21 is (10, 11), and max(ceil(2*21/3), max(10,11)) == 14. `stat_growth` and the whole requires_any curve are [Ranger]'s VERBATIM: [Ranger] is the class this pair fell through to before this row existed, so it is the mechanical anchor and only the grants re-flavor -- both lineages cost the same. The spear/bow kit arrives by `inherits`. THE L14 GRANTS, and why they are not symmetric twins: [Dangersense] is REUSED, not twinned, because a [Skirmisher] already holds it through `inherits` (warrior L5 -> spearmaster -> here) -- exactly as [Ranger]'s own L14 re-grants it -- and minting a second skill with the same `dangersense` effect would add a duplicate that changes nothing. [Steady Draw] IS twinned, because it is granted by [Ranger] alone and reaches this lineage nowhere else; [Steady Point] is its spear-gated re-flavor, mirroring the ONE mechanical field the pattern moves (the weapon gate follows the lineage: [Ranger] steadies a bow because its martial parent is plain [Warrior]; this class's martial parent is [Spearmaster]). A THIRD L14 grant, [Give Ground], landed later under the #438 kit-gap ruling and is NOT part of the twin pair -- it answers a measured wall rather than mirroring a baseline grant, and its own skills.json record carries the derivation; the level row below points at it too. CANON: [Skirmisher] is an ATTESTED class -- Ksmvr advances [Warrior] -> [Skirmisher] at 6.19 H (Vol 6, inside the Book 17 bar), 'a mobile hit-and-run fighter'. Canon derives it from [Warrior] rather than the [Ranger] family, and attaches no weapon to it, so the description below carries the spear-and-bow framing. Evolution names [Brave Skirmisher] (8.22 HE) and [Elite Skirmisher] (8.18 H) are PAST THE BAR -- do not reach for them if this class ever grows one.",
+			"_comment": "Consolidation-only sparse table: derive floor from its own merge row (10+11 ->14), checked by test_content. Growth/requires_any mirror Ranger; inherits supplies spear/bow kit. Reuse Dangersense already inherited through warrior L5; a second identical effect adds nothing. Steady Point twins Steady Draw with the weapon gate following Spearmaster to spear. Give Ground is separate kit relief. CANON: Skirmisher is attested on Ksmvr's Warrior evolution,6.19 H, mobile hit-and-run; canon specifies no weapon, so spear/bow framing belongs in the description. Brave Skirmisher8.22 HE and Elite Skirmisher8.18 H are beyond Book17; do not use them as evolutions.",
 			"id": "skirmisher",
 			"display_name": "Skirmisher",
 			"stat_growth": { "str": 1, "dex": 1 },
 			"inherits": ["spearmaster", "archer"],
 			"aspiration": { "display_name": "Skirmisher", "text": "Hit, and be elsewhere. The ones who live longest never let a line form around them at all." },
 			"levels": [
-				{ "_comment": "#438 KIT GAP, filled at L14 and only at L14 -- the Act V spine cell holds this class at exactly its floor (`sim_spine_viability._spine_build`), so a grant at 15 or above cannot reach the wall it was authored for, and Acts I-IV are measured on the PARENT lines (spearmaster/archer) where nothing on THIS table applies at all -- which is a statement about this table only, NOT about reachability: a grant on `archer` at L<=2 does reach those cells, and skills.json's give_ground record carries the measured reason act2 was still left open (overshoot on act3/act1, not unreachability). [Give Ground] is the addition; its own record in skills.json carries the full derivation, the A/B that sized it, and the four refuted alternatives.", "level": 14, "requires_any": { "melee_hit": 105, "ranged_hit": 80 }, "grants": ["dangersense", "steady_point", "give_ground"] },
+				{ "_comment": "Give Ground must be granted at L14: sim_spine_viability's ActV build holds this consolidation at its floor. This table cannot affect ActsI-IV, measured on parent lines; an Archer grant at L<=2 can reach them. ActII remains open because the same relief overshoots ActIII/ActI, not because it is unreachable. See skills.json's give_ground record.", "level": 14, "requires_any": { "melee_hit": 105, "ranged_hit": 80 }, "grants": ["dangersense", "steady_point", "give_ground"] },
 				{ "level": 15, "requires_any": { "melee_hit": 119, "ranged_hit": 95 }, "grants": [] },
 				{ "level": 16, "requires_any": { "melee_hit": 134, "ranged_hit": 110 }, "grants": [] },
 				{ "level": 17, "requires_any": { "melee_hit": 149, "ranged_hit": 125 }, "grants": [] },
@@ -642,7 +642,7 @@
 			]
 		},
 		{
-			"_comment": "Curves: completed_delivery = rogue's sneaked_past_danger curve verbatim; delivered_item = helper's delivered_item column verbatim (requires_any, helper precedent). Counter-sharing with helper sanctioned (melee_hit feeds warrior AND spellsword). Evolution: SINGLE-AXIS on completed_delivery (tactician/trader precedent); min_uses 12 clears trivially (L10 threshold 36 >> 12). Street/City Runner are guild RANKS in canon, not classes -- rank text lives in Runner's Guild board copy only.",
+			"_comment": "completed_delivery mirrors Rogue's sneaked_past_danger curve; delivered_item mirrors Helper's column under requires_any. Shared counters may feed both classes. Evolution is single-axis completed_delivery; L10 threshold36 clears min_uses12. Street/City Runner are canon guild ranks, not classes; keep those names in Runner's Guild board copy.",
 			"id": "runner",
 			"display_name": "Runner",
 			"stat_growth": { "dex": 1 },
@@ -682,7 +682,7 @@
 			]
 		},
 		{
-			"_comment": "CANON: [Hedge Witch] attested 6.41 E ('self-taught mage'); progression to full [Witch] = craft proven, the arc's own rule ('a hedge witch WITH a craft beats a trained witch without one'). NO GENDER GATE -- canon witches are female-coded through Vol 7; PC is unspecified; canon-liberty flag, user-ratified 2026-07-15. Curve: witch_craft_used = rogue's sneaked curve verbatim. Single-axis evolution on the UMBRELLA counter witch_craft_used (every craft prop banks it) -- avoids the 2-keys-1-target dominance trap (see trader's _comment).",
+			"_comment": "CANON: Hedge Witch,6.41 E, self-taught mage; evolution requires proven craft. No gender gate: deliberate canon liberty (docs/CHOICE-LOG.md). witch_craft_used mirrors Rogue's sneaked curve. Evolution uses the umbrella counter banked by every craft prop, avoiding trader's two-keys/one-target dominance trap.",
 			"id": "hedge_witch",
 			"display_name": "Hedge Witch",
 			"stat_growth": { "int": 1 },
@@ -722,7 +722,7 @@
 			]
 		},
 		{
-			"_comment": "CANON: Pisces holds [Necromancer] from pre-story (1.06 R) and dual-classes [Mage] Lv 20 (6.67) -- separate base class held BESIDE mage is canon-exact, and leaves mage's shipped evolution block untouched. Curve: mage's own shape verbatim (won_combat 3 at L2, spell_cast curve on death_cast L3+; death_cast banks automatically off element:'death', wi_combat.gd:740-742). EVOLUTION PARKED (user-ratified 2026-07-15): no attested <=Vol-7 necromancer evolution exists; aspiration carries the fantasy; revisit on canon find. This is the roster's one deliberate no-evolution exception. ASPIRATION CANON-VERDICT: display_name 'Master of the Old Art' = ORIGINAL, canon-plausible flag; the text's shapes-no-grave phrasing is covered by Bone Horrors 4.37 O (PASS, pre-Book-17).",
+			"_comment": "CANON: Pisces holds Necromancer pre-story(1.06 R) beside Mage Lv20(6.67); separate base class preserves Mage evolution. Mage-shaped curve uses death_cast from element:'death' (wi_combat.gd). No <=Vol7 attested evolution is available: this remains the deliberate no-evolution exception pending a canon find (docs/CHOICE-LOG.md). Aspiration 'Master of the Old Art' is ORIGINAL; shapes-no-grave wording follows Bone Horrors4.37 O, before Book17.",
 			"id": "necromancer",
 			"display_name": "Necromancer",
 			"stat_growth": { "int": 1 },
@@ -783,7 +783,7 @@
 			]
 		},
 		{
-			"_comment": "Floor = 14 (derived: min_parent_level 10 + min_combined_level 21 -> merged max(ceil(2*(10+11)/3), 11) = 14, the spellsword walk; test_content re-derives). Thresholds: sneaked_past_danger = rogue-delta continuation past 36 (+8/+8/+9 -> 44/52/61 at 14/15/16 is NOT used; see below); ranged_hit reuses the ranger precedent (sharpshooter's late values 80/95/110). requires_any of the two parent verbs, spellsword shape. sneaked continuation: 36(+8)=44 @14, 52 @15, 61 @16.",
+			"_comment": "Consolidation floor derives from its merge row (10+11 ->14), checked by test_content. requires_any follows the two parent verbs. sneaked_past_danger continues Rogue's36 by +8/+8/+9 ->44/52/61 at14/15/16; ranged_hit follows Sharpshooter's late80/95/110 values.",
 			"id": "scout",
 			"display_name": "Scout",
 			"stat_growth": { "dex": 1, "int": 1 },
@@ -802,7 +802,7 @@
 			]
 		},
 		{
-			"_comment": "CANON: [Mixer] is the base class ('Alchemist = advanced [Mixer]', List of Classes). Curve: trader's per-level thresholds VERBATIM (L2=8 .. L10=68); gained-by-low (1) per Wave D-1 (#155) -- the first synthesis is the entry, the grind is the class. Single-axis Replacement to [Alchemist] (trader/cook/tactician precedent; min_uses 12 trivially cleared, 68 >> 12). v1 kit is field/bench-cast only (no combat skills), so sim_combat_batch stays untouched.",
+			"_comment": "CANON: Mixer is the base class; Alchemist is advanced Mixer (wiki List of Classes). Trader thresholds are mirrored; first synthesis grants entry. Replacement evolution is single-axis; L10 threshold68 clears min_uses12. This kit is field/bench-only, without combat Skills.",
 			"id": "mixer",
 			"display_name": "Mixer",
 			"stat_growth": { "int": 1 },
@@ -822,7 +822,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Alchemist] is Replacement-only ('Alchemist = advanced [Mixer]') -- floor = mixer's evolution.at_level (10). Trader-delta continuation +12/+13 (chef precedent). L10 grants [True Synthesis] (ORIGINAL, canon-plausible; [Master Alchemist]/guild-class names are Vol-9 = FAIL). stat_growth int:1 -- was int:2 on a 'merchant/strategist evolution-bump precedent' that #438 RETIRED; see meta._comment_stat_growth for the flat-growth rule and why the bump's citation chain is exactly what it exists to stop.",
+			"_comment": "Replacement-only sparse table; floor derives from Mixer's evolution.at_level10. Trader-delta continuation +12/+13 follows Chef. True Synthesis is ORIGINAL; Master Alchemist/guild-class names are Vol9 and beyond the spoiler bar. Growth obeys meta._comment_stat_growth; never restore a single-stat evolution bump.",
 			"id": "alchemist",
 			"display_name": "Alchemist",
 			"stat_growth": { "int": 1 },
@@ -839,7 +839,7 @@
 			]
 		},
 		{
-			"_comment": "GH#156: new BASE class, the ally/companion mechanic's home. gained_by soothed_a_beast (partial taming counts -- Lyonette and a hurt bee, 3.23 L); producer = the wounded-corusdeer prop (floodplains). Curve: ROGUE per-level thresholds VERBATIM on umbrella counter tended_beasts. Single-axis Replacement to [Beast Master] (Redscar, 5.55 G). CANON FENCE: no tamer above Lv 40 anywhere in world data.",
+			"_comment": "CANON: Beast Tamer entry accepts partial taming (Lyonette/hurt bee,3.23 L), produced by floodplains' wounded-corusdeer prop. tended_beasts mirrors Rogue thresholds. Replacement to Beast Master follows Redscar5.55 G. No tamer above Lv40 may appear in world data.",
 			"id": "beast_tamer",
 			"display_name": "Beast Tamer",
 			"stat_growth": { "con": 1 },
@@ -859,10 +859,10 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Beast Master] is Replacement-only (Redscar 5.55 G) -- floor = beast_tamer's evolution.at_level (10). Rogue-delta continuation +8/+9. stat_growth con:1 -- was con:2 citing 'evolution-bump precedent, alchemist int:2', the last link in the chain #438 retired (meta._comment_stat_growth). THIS CLASS PAID THE MOST FOR THE RULE and the number is on the record: con is its only growth stat, so `beast_master14` falls 64 -> 50 max HP and its measured-only harness cell reads 0.63 -> 0.27 (tests/sim_combat_batch.gd's SECOND_WIND_CELLS block carries the full note). No authored window broke, so nothing is owed; if the class's power is meant to be held, the flat rule's own prescription is to BROADEN it (con 1 + str 1, the [Witch]/[Chef]/[Courier] shape) rather than restore the bump -- a class-design call, surfaced rather than taken.",
+			"_comment": "Replacement-only sparse table; floor derives from beast_tamer.evolution.at_level10. Rogue-delta continuation +8/+9. Canon: Redscar5.55 G. Growth must obey meta._comment_stat_growth; broaden rather than restore a single-stat bump.",
 			"id": "beast_master",
 			"display_name": "Beast Master",
-			"_comment_474": "#474 BROADENED, not restored (user ruling 2026-08-14, docs/CHOICE-LOG.md: 'Same lane repairs beast_master14 0.63->0.27 by broadening growth to con 1 + str 1; the flat-growth rule itself stands'). #438's flat rule took this class from con 2 to con 1 and, because con was its ONLY growth stat, that halved every point of stat it earns -- beast_master14 fell 64 -> 50 max HP and its measured harness cell read 0.63 -> 0.27. The rule is not the defect and is untouched here: NO stat grows more than 1 per level, and this class now grows con 1 + str 1, the [Witch]/[Chef]/[Courier] BROADENING shape the rule's own comment prescribes. It also fixes a data smell the trim left behind -- an evolution whose growth was byte-identical to its parent [Beast Tamer]'s, i.e. an evolution that bought nothing at all on this axis. THE SPINE TABLE DOES NOT MOVE WITH IT, and that is by construction rather than by luck: `sim_spine_viability.holdable_line` measures Acts I-IV at the class a player can actually hold, which for this lineage is [Beast Tamer] at 2/3/5/7 (an evolution has no rung below 10), and Act V holds [Wild Sage]. So this change reaches exactly the cell it was reached for.",
+			"_comment_474": "Growth broadens to con1 + str1 under the flat-growth rule (docs/CHOICE-LOG.md). sim_spine_viability.holdable_line measures ActsI-IV on Beast Tamer at2/3/5/7 and ActV on Wild Sage, so this evolution's growth affects its own Beast Master harness cell without moving those spine builds.",
 			"stat_growth": { "con": 1, "str": 1 },
 			"inherits": "beast_tamer",
 			"aspiration": { "display_name": "Beast Master", "text": "Redfang riders bond a wolf for life. Level far enough, and the wild starts offering." },
@@ -877,7 +877,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Druid] is consolidation-only -- floor = 14, DERIVED from min_parent_level 10 / min_combined_level 21 via the merge formula (test_content re-derives, never hardcode elsewhere). requires_any thresholds: tended_beasts = rogue-delta continuation (L14=74), spell_cast = the spellsword mage-side numbers VERBATIM. CANON FENCES: druids are rare loners (no orders/temples); [Natural Allies: X] cross-class canon PARKED; Vol-8 druid content banned.",
+			"_comment": "Consolidation-only sparse table; derive floor from the merge row (10+11 ->14), checked by test_content. tended_beasts continues Rogue's deltas(L14=74); spell_cast mirrors Spellsword. CANON: druids are rare loners, without orders/temples. Natural Allies:X cross-class use is parked; Vol8 druid content is beyond the spoiler bar.",
 			"id": "druid",
 			"display_name": "Druid",
 			"stat_growth": { "int": 1, "con": 1 },
@@ -896,7 +896,7 @@
 			]
 		},
 		{
-			"_comment": "[WILD SAGE] -- beast_master x mage (#438; user ruling 2026-08-13). SPARSE TABLE (GH#54): consolidation-only, floor = 14, DERIVED from `WIProgression._consolidation_merged_level` over this class's own consolidations row -- cheapest legal pair under min_parent_level 10 + min_combined_level 21 is (10, 11), and max(ceil(2*21/3), max(10,11)) == 14. `stat_growth` and the whole requires_any curve are [Druid]'s VERBATIM: [Druid] is the class this pair fell through to before this row existed (its `[beast_tamer]` line's evolution closure lists beast_master), so it is the mechanical anchor and only the grants re-flavor. What the merge into [Druid] used to COST is exactly what this class exists to keep: [Pack Bond] and [Sworn Fang: Ride Together] are [Beast Master]'s own grants and [Druid] inherits beast_TAMER, never beast_master -- data_lint's coverage arm named that pair in the parked queue for precisely those two Skills. Here they arrive by `inherits`. The two grants below are the consolidation's OWN, druid-baselined and re-flavored for a bonded rider rather than a grove-keeper ([Peace of the Wild] -> [Counsel of the Wild], [Thorn Hand] -> [Bramble Hand]). Both are ungated exactly like their baselines -- no `weapon` key there, none here. CANON: [Wild Sage] is an ORIGINAL name, wiki-verified CLEAR 2026-08-13 (no canon [Class]; the only full-text hit is the herb 'wild Sage Grass'). It borrows an attested naming family -- [Wild Mage] and Vasraf's [Wild General], itself a canon [Beast Tamer]/[General] hybrid. NOTED RISK, accepted: canon's plain [Sage] is a scholarly class (6.39), so a canon-aware reader may hear 'wilderness scholar'; the description leans on the bond to pull it back.",
+			"_comment": "Consolidation-only sparse table; derive floor from its merge row (10+11 ->14), checked by test_content. Growth/requires_any mirror Druid. inherits must preserve Beast Master's Pack Bond and Sworn Fang: Ride Together, absent from Druid's Beast Tamer ancestry. Counsel of the Wild and Bramble Hand twin Druid grants without adding weapon gates. CANON: Wild Sage is ORIGINAL, wiki checked clear; 'wild Sage Grass' is an herb, not a class. Naming family: Wild Mage and Vasraf's Wild General, a Beast Tamer/General hybrid. Sage is scholarly(6.39); description must emphasize the accepted bonded-rider meaning.",
 			"id": "wild_sage",
 			"display_name": "Wild Sage",
 			"stat_growth": { "int": 1, "con": 1 },

@@ -32,6 +32,7 @@
 // despite the request demonstrably reaching the server (confirmed via the
 // server's own access log) and succeeding. The server's own log is the only
 // reliable place to see them, so that's what the audio smoke below reads.
+import { browserResultFailures, isKnownRendererDiagnostic } from "./lifecycle_result.mjs";
 import { readFile } from "node:fs/promises";
 import { join, dirname, extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -85,7 +86,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 const projRoot = resolve(here, "../..");
 const webRoot = join(projRoot, "build/web");
 const outDir = join(projRoot, "qa_output", `web_${scriptName}`);
-const TIMEOUT_MS = 120_000;
+const scriptDefinition = JSON.parse(await readFile(join(projRoot, "qa/scripts", `${scriptName}.json`), "utf8"));
+const timeoutSeconds = scriptDefinition.qa_timeout_sec ?? 120;
+if (!Number.isInteger(timeoutSeconds) || timeoutSeconds < 1 || timeoutSeconds > 600) throw new Error("qa_timeout_sec must be 1..600");
+const TIMEOUT_MS = timeoutSeconds * 1000;
 
 const MIME = {
 	".html": "text/html",
@@ -188,10 +192,14 @@ console.log(`MODE: ${device.label}${touchMode ? " + real Playwright touch servic
 // prefixed lines are the existing script-progress log; every console ERROR
 // and every uncaught page error is now ALSO surfaced, not swallowed --
 // among them the exact worklet-failure text the audio smoke below checks.
+const capturedDiagnostics = [];
 const capturedErrors = [];
 const capturedWarnings = [];
 page.on("console", (msg) => {
 	const text = msg.text();
+	const diagnostic = {type: msg.type(), text};
+	capturedDiagnostics.push(diagnostic);
+	if (isKnownRendererDiagnostic(diagnostic)) return;
 	if (text.startsWith("QA_")) {
 		console.log(`[game] ${text}`);
 		return;
@@ -206,6 +214,7 @@ page.on("console", (msg) => {
 });
 page.on("pageerror", (err) => {
 	const text = String(err);
+	capturedDiagnostics.push({type: "pageerror", text});
 	console.log(`[pageerror] ${text}`);
 	capturedErrors.push(text);
 });
@@ -334,7 +343,13 @@ const serviceTouch = async () => {
 		const gesture = req.gesture ?? {};
 		const repeat = Math.max(1, Math.min(3, gesture.repeat ?? 1));
 		const holdMs = Math.max(0, Math.min(1000, gesture.hold_ms ?? 0));
-		if (gesture.drag) {
+		if (gesture.cancel) {
+			if (holdMs || repeat !== 1 || gesture.follow_purchase_buy || gesture.drag) throw new Error("cancel needs a single stationary contact");
+			await touchSession.send("Input.dispatchTouchEvent", {type: "touchStart", touchPoints: [{x: req.x, y: req.y}]});
+			await page.waitForTimeout(80);
+			await touchSession.send("Input.dispatchTouchEvent", {type: "touchCancel", touchPoints: []});
+			realTouches += 1;
+		} else if (gesture.drag) {
 			if (holdMs || repeat !== 1 || gesture.follow_purchase_buy) throw new Error("drag cannot combine with purchase or repeated contacts");
 			await touchSession.send("Input.dispatchTouchEvent", {type: "touchStart", touchPoints: [{x: req.x, y: req.y}]});
 			for (let index = 1; index <= 8; index++) {
@@ -524,6 +539,11 @@ server.close();
 if (!result) {
 	console.error(`FAIL: no result within ${TIMEOUT_MS / 1000}s (game never finished the QA script)`);
 	process.exit(1);
+}
+const verdictFailures = browserResultFailures(result, scriptName, scriptDefinition.steps.length, capturedDiagnostics);
+if (verdictFailures.length) {
+ result.passed = false;
+ result.failures = [...(Array.isArray(result.failures) ? result.failures : []), ...verdictFailures];
 }
 await writeFile(join(outDir, "result.json"), JSON.stringify(result, null, 2));
 console.log(`result: ${JSON.stringify(result, null, 2)}`);

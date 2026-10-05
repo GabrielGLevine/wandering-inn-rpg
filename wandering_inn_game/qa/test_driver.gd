@@ -464,13 +464,20 @@ func _execute(step: Dictionary) -> void:
 			# web: an unserviced request FAILS the step (see _touch_at).
 			await _touch_at(Vector2(float(step["pos"][0]), float(step["pos"][1])), "screen")
 		"touch_cell":
-			var touch_cell := Vector2i(int(step["cell"][0]), int(step["cell"][1]))
-			var touch_world := Vector2(touch_cell) * float(CELL) + Vector2(CELL, CELL) * 0.5
-			var touch_screen_pos: Variant = _world_to_screen(touch_world)
-			if touch_screen_pos == null:
-				_fail("touch_cell: could not resolve Main.world_to_screen")
-			else:
-				await _touch_at(touch_screen_pos as Vector2, "cell")
+			await _touch_cell(Vector2i(int(step["cell"][0]), int(step["cell"][1])))
+		"touch_walk":
+			var direction := Vector2i(int(step["direction"][0]), int(step["direction"][1]))
+			for i in int(step.get("steps", 1)):
+				var target: Vector2i = Game.sim.player_cell + direction
+				await _touch_cell(target)
+				var deadline := Time.get_ticks_msec() + 3000
+				while Game.sim.player_cell != target and Time.get_ticks_msec() < deadline:
+					await get_tree().process_frame
+				if Game.sim.player_cell != target:
+					_fail("touch_walk: did not reach " + str(target))
+					break
+		"touch_combat_finish":
+			await _touch_combat_finish(int(step.get("max_actions", 200)), String(step.get("skill", "")))
 		"touch_hotbar_slot":
 			var hotbar := _resolve_hotbar_node()
 			if hotbar == null:
@@ -483,6 +490,31 @@ func _execute(step: Dictionary) -> void:
 					await _touch_at(rect.get_center(), "touch_hotbar_slot")
 		"touch_title_row":
 			await _touch_rect_of("TitleScreen", "row_rect", int(step["row"]) - 1, "touch_title_row")
+		"touch_creation_card":
+			await _touch_rect_of("CharCreation", "card_rect", int(step["card"]) - 1, "touch_creation_card")
+		"touch_creation_back", "touch_creation_begin":
+			var creation := get_tree().root.find_child("CharCreation", true, false)
+			var method := "back_button_rect" if String(step["action"]) == "touch_creation_back" else "begin_button_rect"
+			if creation == null:
+				_fail("touch_creation: no character creation screen")
+			else:
+				var rect: Rect2 = creation.call(method)
+				if rect.size == Vector2.ZERO:
+					_fail("touch_creation: control has no rendered rect")
+				else:
+					await _touch_at(rect.get_center(), String(step["action"]))
+		"touch_field_skill":
+			var field := get_tree().root.find_child("FieldHotbar", true, false)
+			var skill_id := String(step["skill"])
+			var index: int = (Game.sim.field_hotbar_loadout() as Array).find(skill_id)
+			if index < 0 or field == null:
+				_fail("touch_field_skill: skill is not on the live bar: " + skill_id)
+			else:
+				var rect: Rect2 = field.hotbar_node().slot_rect(index)
+				if rect.size == Vector2.ZERO:
+					_fail("touch_field_skill: skill has no rendered control")
+				else:
+					await _touch_at(rect.get_center(), "touch_field_skill")
 		"touch_dialogue_option":
 			await _touch_rect_of("DialoguePanel", "option_rect", int(step["option"]) - 1, "touch_dialogue_option", step.get("gesture", {}))
 		"touch_field_chip":
@@ -501,6 +533,8 @@ func _execute(step: Dictionary) -> void:
 			await _touch_field_pages()
 		"touch_scroll_field_to_end":
 			await _touch_scroll_field_to_end()
+		"touch_inventory_item":
+			await _touch_inventory_item(String(step["item"]))
 		"touch_inventory_row":
 			await _touch_rect_of("Inventory", "item_row_rect", int(step["row"]) - 1, "touch_inventory_row", step.get("gesture", {}))
 		"touch_journal_skill":
@@ -1026,6 +1060,154 @@ func _inject_drag(from: Vector2, to: Vector2, steps: int) -> void:
 
 ## #503: resolve a node's rendered rect and touch its centre (real on web,
 ## emulated natively). `arg` is the rect method's single argument.
+func _touch_cell(cell: Vector2i) -> void:
+	var screen_pos: Variant = _world_to_screen(Vector2(cell) * float(CELL) + Vector2(CELL, CELL) * 0.5)
+	if screen_pos == null:
+		_fail("touch_cell: could not resolve Main.world_to_screen")
+	else:
+		await _touch_at(screen_pos as Vector2, "cell")
+
+
+# The planner only reads live state. Every change must follow a browser touch
+# through the real hotbar, board, Confirm or End turn control.
+func _touch_combat_finish(max_actions: int, first_skill: String = "") -> void:
+	var screen := get_tree().root.find_child("CombatScreen", true, false)
+	var combat: WICombat = Game.sim.combat
+	if screen == null or combat == null:
+		_fail("touch_combat_finish: no live combat")
+		return
+	var skill_done := first_skill.is_empty()
+	for i in max_actions:
+		var deadline := Time.get_ticks_msec() + 20000
+		while not combat.finished and (combat.get_active() != "pc" or not screen.is_resting()) and Time.get_ticks_msec() < deadline:
+			await get_tree().process_frame
+		if combat.finished:
+			if not skill_done:
+				_fail("touch_combat_finish: requested aimed skill was not exercised")
+			if not bool(combat.outcome.get("victory", false)):
+				_fail("touch_combat_finish: touch route lost the fight")
+			return
+		if combat.get_active() != "pc" or not screen.is_resting():
+			_fail("touch_combat_finish: player controls did not recover")
+			return
+		var player: Dictionary = combat.combatants["pc"]
+		var enemies := combat.alive_enemies_of("pc")
+		var target := ""
+		for id: String in enemies:
+			if combat.in_weapon_range("pc", id) and combat.has_los("pc", id):
+				target = id
+				break
+		if target != "" and not first_skill.is_empty() and int(player["ap"]) >= int(combat.skills[first_skill].get("ap_cost", 0)):
+			var slots: Array = screen.get("_bar_slots")
+			var skill_index := -1
+			for slot_index in slots.size():
+				if String(slots[slot_index].get("id", "")) == first_skill:
+					skill_index = slot_index
+			if skill_index < 0:
+				_fail("touch_combat_finish: requested skill is not on the bar")
+				return
+			if not skill_done:
+				var ap_before := int(player["ap"])
+				await _touch_combat_slot(screen, skill_index, "combat_aimed_skill")
+				if screen.is_resting():
+					_fail("touch_combat_finish: aimed skill did not open targeting")
+					return
+				await _touch_rect_of("CombatScreen", "mobile_control_rect", "back", "combat_cancel")
+				if not screen.is_resting() or int(player["ap"]) != ap_before:
+					_fail("touch_combat_finish: cancel changed AP or left targeting open")
+					return
+				ObservableBus.emit_domain_event("qa_touch_target_cancel_checked", {"skill": first_skill, "ap_unchanged": true})
+			await _touch_combat_slot(screen, skill_index, "combat_aimed_skill")
+			await _touch_cell(combat.combatants[target]["cell"])
+			if not screen.is_resting() and not combat.finished:
+				await _touch_rect_of("CombatScreen", "mobile_control_rect", "confirm", "combat_confirm")
+			skill_done = true
+		elif target != "" and int(player["ap"]) >= WICombat.ATTACK_COST:
+			await _touch_combat_slot(screen, 0, "combat_attack")
+			await _touch_cell(combat.combatants[target]["cell"])
+			# Tapping the already selected target confirms immediately.
+			if not screen.is_resting() and not combat.finished:
+				await _touch_rect_of("CombatScreen", "mobile_control_rect", "confirm", "combat_confirm")
+		elif not enemies.is_empty() and int(player["move_pool"]) >= WICombat.MOVE_COST:
+			var direction := _touch_combat_path_step(combat, player, enemies)
+			if direction == Vector2i.ZERO:
+				await _touch_combat_end_turn(screen)
+			else:
+				await _touch_cell((player["cell"] as Vector2i) + direction)
+		elif target == "" and int(player["ap"]) >= WICombat.DASH_COST:
+			await _touch_combat_slot(screen, 1, "combat_dash")
+			await _touch_rect_of("CombatScreen", "mobile_control_rect", "confirm", "combat_confirm")
+		else:
+			await _touch_combat_end_turn(screen)
+	_fail("touch_combat_finish: action limit exceeded")
+
+
+func _touch_inventory_item(item_id: String) -> void:
+	var panel := get_tree().root.find_child("Inventory", true, false)
+	var index := Game.sim.inventory.find(item_id)
+	if panel == null or index < 0:
+		_fail("touch_inventory_item: item is not carried or panel is absent")
+		return
+	for attempt in 20:
+		var rect: Rect2 = panel.item_row_rect(index)
+		var content: Rect2 = panel.visible_content_rect()
+		if rect.size != Vector2.ZERO and content.encloses(rect):
+			await _touch_at(rect.get_center(), "touch_inventory_item")
+			return
+		var movement := -minf(80.0, content.size.y * 0.4) if rect.end.y > content.end.y else minf(80.0, content.size.y * 0.4)
+		var endpoint := get_viewport().get_screen_transform() * (content.get_center() + Vector2(0.0, movement))
+		await _touch_at(content.get_center(), "scroll_inventory", {"drag": true, "end_x": endpoint.x, "end_y": endpoint.y})
+	_fail("touch_inventory_item: item remained outside the visible list")
+
+
+func _touch_combat_path_step(combat: WICombat, player: Dictionary, enemies: Array) -> Vector2i:
+	var from: Vector2i = player["cell"]
+	var reach := int(player.get("weapon_range", 1))
+	var best_length := 9999
+	var best := Vector2i.ZERO
+	for id: String in enemies:
+		var target: Vector2i = combat.combatants[id]["cell"]
+		for dx in range(-reach, reach + 1):
+			for dy in range(-reach, reach + 1):
+				var candidate := target + Vector2i(dx, dy)
+				if not combat.is_cell_free(candidate):
+					continue
+				var clear := true
+				for cell: Vector2i in combat._supercover(candidate, target):
+					if cell != candidate and cell != target and combat.blocked.has(cell):
+						clear = false
+				if not clear:
+					continue
+				var distance := WICombatAI._path_len(combat, from, candidate, 0)
+				if distance > 0 and distance < best_length:
+					best_length = distance
+					best = WICombatAI._path_step(combat, from, candidate, 0)
+	return best
+
+
+func _touch_combat_slot(screen: Node, index: int, label: String) -> void:
+	var hotbar: Node = screen.hotbar_node()
+	for page in 10:
+		var rect: Rect2 = hotbar.slot_rect(index)
+		if rect.size != Vector2.ZERO:
+			await _touch_at(rect.get_center(), label)
+			return
+		var current_page := int(screen.responsive_layout_snapshot().get("action_page", 0))
+		var page_size := WICombatMobileLayout.PAGE_SIZE
+		var direction := "page_next" if index >= (current_page + 1) * maxi(page_size, 1) else "page_previous"
+		await _touch_rect_of("CombatScreen", "mobile_control_rect", direction, "combat_change_page")
+	_fail("%s: hotbar slot is unreachable" % label)
+
+
+func _touch_combat_end_turn(screen: Node) -> void:
+	var slots: Array = screen.get("_bar_slots")
+	for i in slots.size():
+		if String((slots[i] as Dictionary).get("type", "")) == "end_turn":
+			await _touch_combat_slot(screen, i, "combat_end_turn")
+			return
+	_fail("touch_combat_end_turn: End turn is unreachable")
+
+
 func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label: String, gesture: Dictionary = {}) -> void:
 	var node := get_tree().root.find_child(node_name, true, false)
 	if node == null:

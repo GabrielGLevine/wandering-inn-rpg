@@ -1,0 +1,1034 @@
+{
+ "_comment": "Fresh touch-only creation, Back, earned Helper/Cooking, real Relc training, sleep-earned Warrior, Journal loadout, earned spear, aimed-skill cancel/end-turn/ambush/results and resumed exploration. No fixture, keyboard, teleport or sim autoplay. Combat planner only reads live state; every command uses browser touch through shipped UI. Chromium phone profiles do not prove physical Safari/Chrome. TestDriver accelerates presentation; this route proves input/state/render wiring, not production tween timing.",
+ "starts_at_title": true,
+ "creation_ui": true,
+ "fail_fast": true,
+ "qa_timeout_sec": 600,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_title_row",
+   "row": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "step": "pick"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_named_character"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 4
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "step": "name"
+   }
+  },
+  {
+   "action": "touch_creation_back"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "step": "pick",
+    "selected_identity": "Human \u00b7 woman \u2014 appearance only"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_selected_character"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 4
+  },
+  {
+   "action": "touch_creation_begin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "step": "difficulty"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "02_difficulty_explanation"
+  },
+  {
+   "action": "touch_creation_back"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "step": "name"
+   }
+  },
+  {
+   "action": "touch_creation_begin"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "step": "hints"
+   }
+  },
+  {
+   "action": "touch_creation_back"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "step": "difficulty"
+   }
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 2
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_gender",
+   "equals": "f"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {}
+  },
+  {
+   "action": "screenshot",
+   "name": "03_fresh_inn"
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 3
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    5,
+    4
+   ]
+  },
+  {
+   "action": "touch_field_skill",
+   "skill": "basic_cleaning"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "target": "dirty_table"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Basic Cleaning] \u2014 The table is spotless. Earned 1 gold."
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cleaned_the_inn",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "04_useful_cleaning"
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    -1,
+    0
+   ],
+   "steps": 3
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    1
+   ],
+   "steps": 3
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    -1,
+    0
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    1
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    1,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "inn_upstairs"
+   }
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    1
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 7
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    9,
+    1
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "helper"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.helper",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "05_first_sleep_reward"
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    1
+   ],
+   "steps": 2
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    9,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "leather_jerkin",
+    "source": "inn_chest"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "payload_contains": {
+    "item": "leather_jerkin",
+    "slot": "armor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    -1
+   ],
+   "steps": 2
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    -1,
+    0
+   ],
+   "steps": 7
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    1,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    -1
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    -1
+   ],
+   "steps": 3
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 2
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    -1
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    4,
+    1
+   ]
+  },
+  {
+   "action": "touch_field_skill",
+   "skill": "basic_cooking"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "skill": "basic_cooking",
+    "target": "stew_pot"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal",
+    "source": "stew_pot"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "06_earned_cooking"
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    1
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 10
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    15,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 5
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    1
+   ],
+   "steps": 6
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    12,
+    13
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "speaker": "Relc"
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 1.3
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    12,
+    13
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "screenshot",
+   "name": "07_real_training"
+  },
+  {
+   "action": "touch_combat_finish",
+   "max_actions": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_training_victory"
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.sparred_with_relc",
+   "equals": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    -1
+   ],
+   "steps": 6
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    -1,
+    0
+   ],
+   "steps": 5
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    7,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    -1,
+    0
+   ],
+   "steps": 12
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    1
+   ],
+   "steps": 3
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    -1,
+    0
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    1
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    1,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "inn_upstairs"
+   }
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    1
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 7
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    9,
+    1
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "warrior"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "09_warrior_reward"
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    -1,
+    0
+   ],
+   "steps": 7
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    1,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    -1
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 1
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    -1
+   ],
+   "steps": 3
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_journal_tab",
+   "tab": "skills"
+  },
+  {
+   "action": "touch_journal_skill",
+   "skill": "piercing_strikes"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "loadout_changed"
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 12
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    15,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 5
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    1
+   ],
+   "steps": 6
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    12,
+    13
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "speaker": "Relc"
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 1.3
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    12,
+    13
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "relcs_spare_spear",
+    "source": "relc_intro"
+   }
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "relcs_spare_spear"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "relcs_spare_spear",
+    "slot": "weapon"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "10_earned_spear_equipped"
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.weapon",
+   "equals": "relcs_spare_spear"
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    -1
+   ],
+   "steps": 6
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    1,
+    0
+   ],
+   "steps": 18
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    1
+   ],
+   "steps": 14
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    30,
+    21
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "screenshot",
+   "name": "11_road_ambush"
+  },
+  {
+   "action": "touch_combat_finish",
+   "max_actions": 250,
+   "skill": "piercing_strikes"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "qa_touch_target_cancel_checked",
+   "payload_contains": {
+    "skill": "piercing_strikes",
+    "ap_unchanged": true
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "skill": "piercing_strikes"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "turn_ended",
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "12_ambush_results"
+  },
+  {
+   "action": "touch_cell",
+   "cell": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "touch_walk",
+   "direction": [
+    0,
+    -1
+   ],
+   "steps": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "13_exploration_resumed"
+  }
+ ]
+}

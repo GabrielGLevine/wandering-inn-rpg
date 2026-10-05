@@ -9,21 +9,21 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #506 touch flow:** root owns `/private/tmp/wi-510-lifecycle`, branch
-  `issue/506-creation-back`, based on reviewed #505 candidate `81e66d29`.
-  Main now has its identical squash tree at `2197088a`; rebase #506 onto main
-  after settling the current patches. Creation Back and browser cancellation
-  harness are committed through `3358429b`. Root owns dirty inventory/journal
-  gesture fixes, touch-driver helpers and two new gesture scenarios.
-  Actual Android contacts reproduce horizontal-drag activation in both panels;
-  tracking two-dimensional travel fixes inventory and journal horizontal drags.
-  Actual no-move touch cancellation still activates each row; the first attempt
-  to reject `event.is_canceled()` did not fix it. Next: trace event order and
-  cancellation propagation, verify the root cause, then complete the fresh
-  continuous creation → earned Cooking → Warrior → spear → ambush touch route.
-  Detailed route: `/private/tmp/wi-506-plan.md`; evidence `/private/tmp/wi-506-evidence`.
-  Separate harness follow-up `4f3a4df4` corrects subpixel proof rounding and is
-  ready to integrate. No #506 PR yet. Browser/Godot slot is currently free.
+- **Active M1 completion (#506 primary):** root owns `/private/tmp/wi-m1-506`,
+  branch `issue/506-touch-flow`, base `2d1830a9`. Root owns dirty creation,
+  inventory/journal cancellation, input bridge, QA driver/browser routes and
+  shared catalogs/docs. #509 message fixes integrated as `9c196edb`; focused
+  production timing units/QA pass. Both emulated phone profiles pass actual
+  horizontal drag/cancel/no-activation and subsequent deliberate activation.
+  Evidence: `/private/tmp/wi-m1-evidence/506`, `/private/tmp/wi509-final-gates`.
+  A second worker owns `/private/tmp/wi-m1-253`, `issue/253-import-request-lifetime`,
+  settings-panel import request ownership and a new browser regression only.
+  #508 covered-crossing recovery and #507 footer/blurb are approved in CHOICE-LOG.
+  Next: finish fresh continuous touch route, responsive creation and lifecycle
+  repairs; compose, regenerate QA, run integration gates and independent review.
+  Physical devices and three unfamiliar-player sessions remain user-supplied
+  acceptance. Old `/private/tmp/wi-510-lifecycle` and its handoff commits are
+  unavailable; current work reconstructs them from main. No new PR yet.
 - **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
   tree-identical to reviewed `81e66d29`. Independent source/visual review and all
   eight CI checks pass, including 259 canonical scripts, both balance policies,
@@ -43,8 +43,8 @@ archived, or superseded session blocks.
   production-timing proof pass on desktop and both emulated phone profiles.
   Evidence: `/private/tmp/wi-508-evidence/composed`. Physical evidence is open.
   Fight-first → force-crate → drainage return → sleep still misses Rogue
-  (seed 7, 293 steps). Acquisition/respawn rules are unchanged; the owner must
-  decide `docs/design/rogue-recovery-proposal.md` before this recovery repair.
+  (seed 7, 293 steps). Acquisition/respawn rules are unchanged; the owner approved `docs/design/rogue-recovery-proposal.md`; implement the
+  cleared-road crossing credit without enemy respawn.
 - **#504 delivered through PR #547** (`e5b53328`; narrative in the PR body).
   Open only for physical iPhone Safari / Android Chrome observations (#511).
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
@@ -60,8 +60,7 @@ archived, or superseded session blocks.
   any unresolved presentation choice. Follow the
   [execution contract](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502#execution-contract).
 - **Remaining acceptance corrections:** #504 needs physical-device purchase
-  observations; #508 needs fight-first force/guile recovery after the owner
-  selects its rule; #509 needs production
+  observations; #508 needs fight-first force/guile recovery under the approved covered-crossing rule; #509 needs production
   timing and real queued-message/modal proof; #253 needs target-device/itch
   import verification. Preserve useful implementations from PRs #535–#537;
   merged partial work does not satisfy their missing criteria.
@@ -99,20 +98,6 @@ archived, or superseded session blocks.
 
 ## User-held
 
-- **#507 presentation reconciliation affects only the disputed placement.**
-  Continue staged guidance and prepare concrete rendering options before
-  requesting any necessary reversal. The issue asks to name every creation
-  choice and add difficulty descriptions, but (a) "Playtest hotfix #3" removed race/gender labels from
-  the picker cards on purpose (`char_creation.gd` PC_OPTIONS block: identity
-  must read from the art) and (b) #447's one-voice ruling removed the
-  difficulty descriptor tails, moving the explanation to the Settings Help
-  page. Options: (1) keep both rulings, satisfy #507 with a single footer
-  line under the selected card ("Human · woman — looks only; nothing
-  mechanical") and a one-line difficulty blurb under the prompt ribbon on
-  that step only; (2) restore card labels + descriptor tails (reverses both
-  rulings); (3) leave creation as is and scope #507 to staged hints +
-  discoverability only. Recommendation: (1) — it names the choice without
-  putting text on the art and keeps the Help page the durable explanation.
 - **#494 resonance semantics** and **#495 gear damage/scaling semantics** need
   explicit recorded choices. Their post-tag scheduling hold has elapsed;
   roadmap authorization does not select a model. Implementation is #514.
@@ -178,7 +163,7 @@ python3 scripts/sync_agent_guidance.py
 python3 scripts/render_qa_notes.py
 ```
 
-- Current local engine reports **4.7.2**; CI pins **4.7-stable**. Toolchain
+- Current local engine reports **4.7-stable (5b4e0cb0f)**; CI pins **4.7-stable**. Toolchain
   alignment is tracked in #529; report actual version with evidence.
 - macOS has no `timeout`; use the documented alarm wrapper. Shell scripts
   must remain compatible with Bash 3.2.

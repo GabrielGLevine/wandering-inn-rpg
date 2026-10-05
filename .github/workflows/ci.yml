@@ -169,7 +169,7 @@ jobs:
           perl -e 'alarm 120; exec @ARGV' \
             godot --headless --path wandering_inn_game --quit >"$log" 2>&1 || rc=$?
           cat "$log"
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log"; then
             echo "::error::smoke boot produced a SCRIPT ERROR / Parse Error / WARNING"
             exit 1
           fi
@@ -230,7 +230,7 @@ jobs:
           perl -e 'alarm 600; exec @ARGV' \
             godot --headless --path . --script res://tests/sim_combat_batch.gd >"$log" 2>&1 || rc=$?
           cat "$log"
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log"; then
             echo "::error::sim_combat_batch tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
@@ -247,7 +247,7 @@ jobs:
           WI_POLICY=competent perl -e 'alarm 600; exec @ARGV' \
             godot --headless --path . --script res://tests/sim_combat_batch.gd >"$log" 2>&1 || rc=$?
           cat "$log"
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log"; then
             echo "::error::sim_combat_batch (competent) tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
@@ -260,7 +260,7 @@ jobs:
           perl -e 'alarm 600; exec @ARGV' \
             godot --headless --path . --script res://tests/sim_class_paths.gd >"$log" 2>&1 || rc=$?
           cat "$log"
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log"; then
             echo "::error::sim_class_paths tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
@@ -407,7 +407,7 @@ jobs:
           # the wasm boot emits "ImageLoaderSVG: Target canvas dimensions
           # 51500x51500 ... scaled down" on ubuntu runners only (never locally).
           # Precisely exempted; root-causing the oversized SVG is queued work.
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
             echo "::error::web-parity run tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
@@ -420,7 +420,7 @@ jobs:
             bash wandering_inn_game/qa/web/run_web_qa.sh mobile_touch_smoke 9 --skip-export --touch --device=iphone --portrait-entry >"$log" 2>&1 || rc=$?
           cat "$log"
           grep -q 'QA_RESULT: PASS' "$log" || { echo "::error::mobile touch smoke produced no QA_RESULT: PASS"; exit 1; }
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
             echo "::error::mobile touch smoke tripped the error/warning grep"; exit 1
           fi
           # #503: the smoke is only meaningful when every tap was a REAL browser
@@ -441,7 +441,7 @@ jobs:
             cat "$log"
             grep -q 'QA_RESULT: PASS' "$log" || { echo "::error::$name produced no QA_RESULT: PASS"; fail=1; }
             grep -q 'file choosers opened=1' "$log" || { echo "::error::$name: the import tap opened no browser file chooser (the #253 symptom)"; fail=1; }
-            if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+            if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
               echo "::error::$name tripped the error/warning grep"; fail=1
             fi
             [ "$rc" = 0 ] || fail=1

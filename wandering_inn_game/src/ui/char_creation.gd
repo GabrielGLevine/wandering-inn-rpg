@@ -23,13 +23,6 @@ const HINT_COLOR := Color(0.72, 0.68, 0.58)
 const NAME_MAX := 16
 const BEGIN_BUTTON_SIZE := Vector2(200.0, 48.0)
 
-## The six PC sprite variants, in GridContainer fill order (row-major: top
-## row is Male across the three races, bottom row is Female) so a plain
-## for-loop over this array lays the grid out correctly with GRID_COLS
-## columns. Picking a card sets pc_race + pc_gender together. CONSTRAINT: no
-## race/gender text anywhere in this dict on purpose (playtest hotfix #3 --
-## identity reads from the art alone; stats are never shown either, same
-## rule) -- do not add a label field back without re-checking that rule.
 const PC_OPTIONS: Array[Dictionary] = [
 	{"race": "human", "gender": "m", "sprite": "pc_human_m"},
 	{"race": "drake", "gender": "m", "sprite": "pc_drake_m"},
@@ -40,57 +33,19 @@ const PC_OPTIONS: Array[Dictionary] = [
 ]
 const GRID_COLS := 3
 const GRID_ROWS := 2
-## Playtest hotfix #3: cards carry NO race/gender label any more (identity
-## must be evident from the art alone -- see `_refresh_card`'s doc comment)
-## and the reclaimed label space folds into the portrait, which also grows
-## a further increment on top of that -- CARD_SIZE.y 196->236 (+40),
-## PORTRAIT_HEIGHT 128->200 (+56%). The prompt ribbon (shrunk + raised) and
-## hint strip (lowered) below make room; see their own offsets.
-const CARD_SIZE := Vector2(300.0, 236.0)
+const CARD_SIZE := Vector2(300.0, 214.0)
 const CARD_GAP := Vector2(18.0, 14.0)
-const GRID_SIZE := Vector2(936.0, 486.0)  # GRID_COLS*CARD_SIZE.x + gaps, GRID_ROWS*CARD_SIZE.y + gap
-const PORTRAIT_HEIGHT := 200.0
-const PORTRAIT_CENTER_Y := 118.0  # CARD_SIZE.y * 0.5 -- centered, no label row below it any more
+const GRID_SIZE := Vector2(936.0, 442.0)  # GRID_COLS*CARD_SIZE.x + gaps, GRID_ROWS*CARD_SIZE.y + gap
+const PORTRAIT_HEIGHT := 180.0
+const PORTRAIT_CENTER_Y := 107.0  # CARD_SIZE.y * 0.5 -- centered, no label row below it any more
 
 const STEP_PROMPT := {
 	Step.PICK: "Who are you?",
 	Step.NAME: "Your name",
-	# Issue #447 (playtest 2026-08-12): plain nouns, in the NAME step's own
-	# register ("Your name") and in the exact words the Settings rows these two
-	# write already carry. The diegetic questions were doing the same explaining
-	# the blurbs below used to do, and a player read the pair as overexplained.
-	# Short also keeps them inside the prompt ribbon, a fixed 640-wide texture
-	# panel at Title size that an earlier longer draft ran out past both ends of
-	# (peek frame cc4c).
 	Step.DIFFICULTY: "Difficulty",
 	Step.HINTS: "Quest hints",
 }
 
-## The two setup steps' copy. Issue #447: the rows are BARE now. The difficulty
-## rungs take their names from Liscor Hunted's own challenge ranks (canon) and
-## read as a ladder to anyone who has never opened the books; hints is a yes/no.
-## Both explained themselves before a descriptor tail was ever written for them,
-## and the tails are what a player named as overexplaining. Still deliberately
-## NOT a mechanics readout -- no multiplier is quoted to the player here or
-## anywhere else -- and the hint strip still says out loud that both are
-## changeable from Settings, so a player never feels locked in by a menu they
-## met once. The durable explanation lives on Settings' Help page
-## ("Difficulty & Quest Hints"), which is where a player who wants one looks.
-##
-## AMENDED 2026-08-13 (user ruling), and the amendment is narrow on purpose:
-## the difficulty rungs now carry the rank word IN the label
-## (WISettings.DIFFICULTY_LABELS, which is where both doors read it), and the
-## HINTS step -- and only that step -- gains one FUNCTIONAL caption
-## (HINTS_CAPTION_FMT below). "Difficulty" names a thing every player already
-## has a model for; "Quest hints / Yes / No" names a feature whose whole
-## meaning is WHERE it shows up, which nothing on this screen said. That is the
-## line between this and the tails #447 cut: those restated the option, this
-## states the surface the option controls.
-## WIDTH FOLLOWS THE COPY: 620 was what the blurb tails measured (itself a
-## windowed catch -- at 420 they ran out past both ends of the panel, peek frame
-## cc4c). With the tails gone the widest row is a single word, so these rows take
-## the NAME step's own 360: the two answer-a-prompt steps share one column width
-## instead of the furniture staying sized for prose that no longer exists.
 const CHOICE_ROW_SIZE := Vector2(360.0, 44.0)
 const CHOICE_ROW_GAP := 10
 ## Selection caret placement, card- and row-local: just inside the 9-slice's
@@ -147,21 +102,18 @@ var _gender := "m"
 var _name := ""
 
 var _root: Control
+var _identity_label: Label
+var _difficulty_label: Label
 var _prompt_label: Label
 var _hint_label: Label
 var _grid_anchor: Control
 var _cards: Array[Control] = []
-## TINT IS NOT DISAMBIGUATION (user directive 2026-08-02, and it binds UI, not
-## only sprites): selection used to be a texture swap alone -- the chosen card
-## and row were desaturated copies of the same teal ribbon, against a
-## near-black backdrop where three teal ribbons already read alike. These
-## carets are the SHAPE half, and the project already speaks in them
-## (pause_menu/settings_panel's own "> " row mark). Deliberately NOT a name
-## label: PC_OPTIONS' own constraint block bars race/gender text on this step.
+# Cards stay unlabeled; the selected identity is explained beneath the art.
 var _card_carets: Array[Label] = []
 var _portraits: Array[AnimatedSprite2D] = []
 var _name_edit: LineEdit
 var _begin_button: Control
+var _back_button: Button
 
 ## Issue #346: the shared setup-choice list, reused by BOTH new steps (one
 ## widget, two datasets -- a second bespoke picker would be two things to keep
@@ -185,6 +137,7 @@ func _ready() -> void:
 	_quest_hints = WISettings.show_quest_hints()
 	_build_ui()
 	_render_step()
+	get_viewport().size_changed.connect(_layout_controls)
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 
@@ -228,6 +181,15 @@ func _build_ui() -> void:
 	_build_picker_grid()
 	_build_choice_list()
 	_build_caption()
+	_identity_label = UIChrome.make_label("", "Small")
+	_identity_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_identity_label.add_theme_color_override("font_color", HINT_COLOR)
+	_root.add_child(_identity_label)
+	_difficulty_label = UIChrome.make_label("", "Small")
+	_difficulty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_difficulty_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_difficulty_label.add_theme_color_override("font_color", HINT_COLOR)
+	_root.add_child(_difficulty_label)
 
 	_name_edit = LineEdit.new()
 	UIChrome.apply_theme(_name_edit)
@@ -269,6 +231,43 @@ func _build_ui() -> void:
 	UIChrome.set_offsets(_hint_label, -400.0, -34.0, 400.0, -4.0)
 	_hint_label.add_theme_color_override("font_color", HINT_COLOR)
 	_root.add_child(_hint_label)
+	_back_button = Button.new()
+	_back_button.text = "Back"
+	_back_button.focus_mode = Control.FOCUS_NONE
+	_back_button.pressed.connect(_back)
+	_root.add_child(_back_button)
+	_layout_controls()
+
+
+func _layout_controls() -> void:
+	var viewport := get_viewport()
+	var safe := WIResponsiveLayout.safe_rect(viewport)
+	WIResponsiveLayout.apply_readable_theme(_root, viewport, WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
+	_name_edit.theme = _root.theme
+	var target := WIResponsiveLayout.touch_size(viewport, Vector2(150.0, 48.0))
+	WIResponsiveLayout.place_panel(_back_button, Rect2(safe.position + Vector2(24.0, 12.0), target))
+	_back_button.add_theme_font_size_override("font_size", WIResponsiveLayout.readable_font_size(viewport, int(22.0 * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]))
+	var center := safe.get_center()
+	var name_size := WIResponsiveLayout.touch_size(viewport, Vector2(360.0, 48.0))
+	WIResponsiveLayout.place_panel(_name_edit, Rect2(center - name_size * 0.5, name_size))
+	var begin_size := WIResponsiveLayout.touch_size(viewport, BEGIN_BUTTON_SIZE)
+	WIResponsiveLayout.place_panel(_begin_button, Rect2(Vector2(center.x - begin_size.x * 0.5, center.y + name_size.y * 0.5 + 16.0), begin_size))
+	var row_size := WIResponsiveLayout.touch_size(viewport, CHOICE_ROW_SIZE)
+	for i in _choice_rows.size():
+		_choice_rows[i].custom_minimum_size = row_size
+		_choice_carets[i].position.y = row_size.y * 0.5 - ROW_CARET_HALF_H
+	var count := maxi(1, _choice_options().size())
+	var stack_height := row_size.y * count + float(CHOICE_ROW_GAP * (count - 1))
+	WIResponsiveLayout.place_panel(_choice_anchor, Rect2(Vector2(center.x - row_size.x * 0.5, 284.0), Vector2(row_size.x, stack_height)))
+	WIResponsiveLayout.place_panel(_identity_label, Rect2(Vector2(safe.position.x + 24.0, 632.0 if _step == Step.PICK else 592.0), Vector2(safe.size.x - 48.0, 38.0)))
+	WIResponsiveLayout.place_panel(_difficulty_label, Rect2(Vector2(center.x - 460.0, 194.0), Vector2(920.0, 76.0)))
+	var hint_height := 38.0 if _step == Step.PICK else 72.0
+	WIResponsiveLayout.place_panel(_hint_label, Rect2(Vector2(safe.position.x + 24.0, safe.end.y - hint_height - 6.0), Vector2(safe.size.x - 48.0, hint_height)))
+	_hint_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+
+func back_button_rect() -> Rect2:
+	return _back_button.get_global_rect()
 
 
 ## The six-sprite picker grid (2 rows x 3 cols, PC_OPTIONS' own row-major
@@ -281,7 +280,7 @@ func _build_picker_grid() -> void:
 	_grid_anchor.set_anchors_preset(Control.PRESET_CENTER)
 	_grid_anchor.custom_minimum_size = GRID_SIZE
 	_grid_anchor.size = GRID_SIZE
-	UIChrome.set_offsets(_grid_anchor, -GRID_SIZE.x * 0.5, -170.0, GRID_SIZE.x * 0.5, 316.0)
+	UIChrome.set_offsets(_grid_anchor, -GRID_SIZE.x * 0.5, -176.0, GRID_SIZE.x * 0.5, 266.0)
 	_grid_anchor.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_grid_anchor)
 
@@ -415,6 +414,15 @@ func _choice_options() -> Array[String]:
 
 func _render_step() -> void:
 	_prompt_label.text = String(STEP_PROMPT[_step])
+	var selected: Dictionary = PC_OPTIONS[_cursor]
+	var identity := "%s · %s — appearance only" % [String(selected["race"]).capitalize(), "man" if selected["gender"] == "m" else "woman"]
+	_identity_label.text = identity
+	_identity_label.visible = true
+	var difficulty_blurb := ""
+	if _step == Step.DIFFICULTY:
+		difficulty_blurb = ["Bronze Rank: take less damage in combat.", "Silver Rank: standard combat damage.", "Gold Rank: take more damage in combat."][_choice_cursor] + " Change it later in Settings."
+	_difficulty_label.text = difficulty_blurb
+	_difficulty_label.visible = _step == Step.DIFFICULTY
 	var is_name := _step == Step.NAME
 	var options := _choice_options()
 	var is_choice := not options.is_empty()
@@ -446,22 +454,23 @@ func _render_step() -> void:
 		for i in PC_OPTIONS.size():
 			_refresh_card(i)
 		_hint_label.text = "Arrows to choose  •  %s to confirm  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
-	# `cards` rather than a sixth/seventh `options` entry: the pick step's cards
-	# CANNOT carry labels (PC_OPTIONS' constraint block -- identity reads from
-	# the art alone), so `options` stays honestly empty there and this is what
-	# makes the step assertable at all. Additive: every existing `options` pin
-	# is byte-unchanged.
+	if WIResponsiveLayout.uses_touch_layout():
+		if is_choice:
+			_hint_label.text = "Tap an option  •  Back returns to the previous step  •  Change it later in Settings"
+		elif is_name:
+			_hint_label.text = "Tap to enter a name, then Continue  •  Back changes your character"
+		else:
+			_hint_label.text = "Tap a character  •  Back returns to the title"
+	_layout_controls()
+	# Cards stay unlabeled; the selected identity is explained beneath the art.
 	ObservableBus.emit_domain_event(WIEvents.UI_CHAR_CREATION_RENDERED, {
 		"step": _step_name(),
 		"options": options,
 		"cursor": _choice_cursor if is_choice else -1,
 		"cards": PC_OPTIONS.size() if _step == Step.PICK else 0,
-		# ADDITIVE, and every pre-existing pin is subset-matched
-		# (test_driver._event_matches), so no existing `payload_contains` moves.
-		# "" on the steps that draw no caption, which is itself assertable --
-		# a caption leaking onto the pick/name/difficulty steps would show up
-		# as a non-empty string on a step whose pin says "".
 		"caption": caption,
+		"selected_identity": identity,
+		"difficulty_explanation": difficulty_blurb,
 	})
 
 

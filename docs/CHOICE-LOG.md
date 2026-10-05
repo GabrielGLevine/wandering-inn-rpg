@@ -28,6 +28,20 @@ context lives in merged PR bodies and `git log -p -- docs/CHOICE-LOG.md`.
 
 ## Current product and system rulings
 
+### User rulings 2026-10-04 (M1 completion)
+
+- **#508 cleared-road recovery approved.** Deliberately use drainage cover and
+  walk its crossing to earn covered-crossing credit even after the road goblins
+  are defeated. Bare crossings and prop-only visits earn nothing; enemies stay
+  defeated, credit remains once per crossing per waking, and Rogue arrives at
+  sleep. Live-danger bypass credit still requires a live threat.
+- **#507 creation explanations approved.** Keep art cards unlabeled and explain
+  the selected race/gender in a footer beneath the art (appearance only).
+  Explain the selected difficulty beneath its prompt; retain Settings Help.
+- **M1 physical/human acceptance retained.** iPhone Safari, Android Chrome and
+  three unfamiliar-player sessions with a desktop reference remain required.
+  The user will provide device/tester observations; emulation cannot close them.
+
 ### User rulings 2026-08-13 (#438 wave-close batch)
 
 ### User rulings 2026-08-14 (tag night)

@@ -35,11 +35,14 @@ var _device := "kb"
 
 
 func _ready() -> void:
+	UIChrome.install_touch_cancellation_bridge()
 	set_process_input(true)
 	process_priority = -1000
 
 
 func _input(event: InputEvent) -> void:
+	if UIChrome.pointer_canceled(event):
+		event.set("canceled", true)
 	var next := _classify(event)
 	if next == "" or next == _device:
 		return
