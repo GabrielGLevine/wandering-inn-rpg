@@ -9,6 +9,8 @@ archived, or superseded session blocks.
 
 ## Current state
 
+- **Resource/capacity roadmap planning #565 (2026-10-05):** isolated docs worktree `/private/tmp/wi-vitals-roadmap`, branch `docs/vitals-recovery-roadmap`, base `e1d2edee`; only `HANDOFF.md`, `docs/ROADMAP.md`, `docs/CHOICE-LOG.md` and the new resource plan are owned here. Game/art paths and the active #564 workspace are untouched. GitHub #566–#571 own open resource, HUD, potion, food, capacity and composed-cutover implementation. #502 and affected milestone/issue records carry the new M2 dependencies; M3 stories/M4 tactics/M5 release consume them. Planning evidence: `/private/tmp/wi-vitals-planning`; no gameplay validation is claimed. **Exact next action:** reach an owned #564 safe checkpoint, then dispatch staged #566 and independent #570, serialize shared core/save/UI writers and use #571's gate before removing battle refills. M1 physical/human gates and #494/#495 semantic choices stay open. Three safe MP doses per waking/4 HP excess loss and resonance 4→5 are starting tuning proposals, not newly selected rulings.
+
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
   (standalone tree `5e8af12d`); QA/export source `93016f0b`.
