@@ -227,6 +227,7 @@ var _toast_skip_requested := false
 ## early retire before the readable floor (honoured at the floor).
 var _showing_started_msec := 0
 var _dialogue_started_msec := 0
+var _dialogue_generation := 0
 var _showing_entry: Dictionary = {}
 var _toast_interrupted := false
 var _dismiss_at_min_read := false
@@ -586,6 +587,7 @@ func _shown_event_for(hidden_event: String) -> String:
 
 
 func _clear_dialogue_line() -> void:
+	_dialogue_generation += 1
 	_dialogue_panel.hide()
 
 
@@ -636,9 +638,10 @@ static func canvas_layer_of(node: Node) -> int:
 
 func _show_dialogue_line(text: String, fitted: String) -> void:
 	_dialogue_full_text = text
-	await _show(_dialogue_panel, _dialogue_label, text, _dialogue_hold_seconds(fitted), WIEvents.UI_DIALOGUE_RENDERED, fitted, true)
-	# CONTRACT: audio releases standalone-line duck on the renderer's actual close.
-	ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_LINE_HIDDEN, {})
+	var closed := await _show(_dialogue_panel, _dialogue_label, text, _dialogue_hold_seconds(fitted), WIEvents.UI_DIALOGUE_RENDERED, fitted, true)
+	# Only the current bark may close its panel and release the audio duck.
+	if closed:
+		ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_LINE_HIDDEN, {})
 
 
 ## Unread authored copy waits through the transition and gets a fresh readable
@@ -1105,7 +1108,11 @@ func _hold_seconds(seconds: float) -> float:
 	return seconds
 
 
-func _show(panel: Control, label: Label, text: String, seconds: float, rendered_event: String, display_text: String = "", collapse_under_qa: bool = false, interruptible: bool = false) -> void:
+func _show(panel: Control, label: Label, text: String, seconds: float, rendered_event: String, display_text: String = "", collapse_under_qa: bool = false, interruptible: bool = false) -> bool:
+	var dialogue_generation := _dialogue_generation
+	if panel == _dialogue_panel:
+		_dialogue_generation += 1
+		dialogue_generation = _dialogue_generation
 	if panel == _toast_panel:
 		_resize_toast_panel(text)
 		_toast_skip_requested = false
@@ -1118,12 +1125,14 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 	panel.show()
 	var tree := get_tree()
 	if tree == null:
-		return
+		return false
 	await tree.process_frame
 	if not is_inside_tree():
-		return
+		return false
+	if panel == _dialogue_panel and dialogue_generation != _dialogue_generation:
+		return false
 	if panel == _toast_panel and _toast_interrupted:
-		return
+		return false
 	if panel == _toast_panel:
 		var folded := _fold_gold_toast(text)
 		if folded != text:
@@ -1168,22 +1177,28 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 					deadline_msec = mini(deadline_msec, started_msec + int(chore_cap * 1000.0))
 				tree = get_tree()
 				if tree == null:
-					return
+					return false
 				await tree.process_frame
 				if not is_inside_tree():
-					return
+					return false
 			_toast_skip_requested = false
 		else:
 			tree = get_tree()
 			if tree == null:
-				return
+				return false
 			await tree.create_timer(hold).timeout
 			if not is_inside_tree():
-				return
-	await _await_capture_release()
+				return false
+	if panel == _dialogue_panel and dialogue_generation != _dialogue_generation:
+		return false
+	await _await_capture_release(dialogue_generation if panel == _dialogue_panel else -1)
 	if not is_inside_tree():
-		return
+		return false
+	# A cleared or replaced bark owns a new generation; its predecessor cannot hide it.
+	if panel == _dialogue_panel and dialogue_generation != _dialogue_generation:
+		return false
 	panel.hide()
+	return true
 
 
 ## GH#324, the verification-boundary half. The QA hold above is a wall-clock
@@ -1206,7 +1221,7 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 ## shorter bound would hand the race back with no signal. Expiring it is
 ## therefore never routine, so it fails loud (`push_error` prints an `ERROR:`
 ## line, which every run's grep discipline treats as a failure).
-func _await_capture_release() -> void:
+func _await_capture_release(dialogue_generation: int = -1) -> void:
 	if _production_message_timing():
 		return
 	if TestDriver == null or not TestDriver.active():
@@ -1216,13 +1231,15 @@ func _await_capture_release() -> void:
 		ceiling_msec = int(TestDriver.capture_hold_ceiling_msec())
 	var deadline_msec := Time.get_ticks_msec() + ceiling_msec
 	while TestDriver.capture_in_flight() and Time.get_ticks_msec() < deadline_msec:
+		if dialogue_generation >= 0 and dialogue_generation != _dialogue_generation:
+			return
 		var tree := get_tree()
 		if tree == null:
 			return
 		await tree.process_frame
 		if not is_inside_tree():
 			return
-	if TestDriver.capture_in_flight():
+	if TestDriver.capture_in_flight() and (dialogue_generation < 0 or dialogue_generation == _dialogue_generation):
 		push_error("GH#324: capture-hold ceiling (%d ms) expired with a capture still in flight -- a transient panel just retired mid-capture; the evidence race is OPEN for this shot" % ceiling_msec)
 
 

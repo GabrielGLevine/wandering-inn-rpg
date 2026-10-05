@@ -163,6 +163,17 @@
    "visible": true
   },
   {
+   "action": "wait_seconds",
+   "seconds": 1.5
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "dialogue",
+   "text_contains": "A Lady with a Ring Box:",
+   "visible": true,
+   "min_elapsed_msec": 1450
+  },
+  {
    "action": "screenshot",
    "name": "02_bark_after_real_doorway_transition"
   },

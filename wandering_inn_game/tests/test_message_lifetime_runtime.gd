@@ -12,14 +12,17 @@ class SettingsStub extends RefCounted:
 	func text_scale_step() -> int:
 		return 0
 	func scaled_type_font_sizes(_step: int) -> Dictionary:
-		return {"Small": 14}
+		return {"Small": 14, "Label": 14}
 
 class DriverStub extends RefCounted:
 	var real_message_timing := true
+	var capturing := true
 	func active() -> bool:
 		return true
 	func capture_in_flight() -> bool:
-		return true
+		return capturing
+	func capture_hold_ceiling_msec() -> int:
+		return 300
 
 var _layer: CanvasLayer
 var _sink := EventSink.new()
@@ -49,9 +52,12 @@ func _run() -> void:
 	_layer.set("_toast_panel", panel)
 	_layer.set("_toast_label", label)
 	var line := Control.new()
+	var line_label := Label.new()
+	line.add_child(line_label)
 	_layer.add_child(line)
 	line.hide()
 	_layer.set("_dialogue_panel", line)
+	_layer.set("_dialogue_label", line_label)
 	root.add_child(_layer)
 	await process_frame
 	await _early_movement()
@@ -62,6 +68,9 @@ func _run() -> void:
 	await _unread_transition()
 	await _save_contention_and_long_text()
 	await _transient_history()
+	await _replacement_bark()
+	await _bark_event_ownership()
+	await _superseded_capture()
 	_layer.free()
 	if not _failures.is_empty():
 		print("FAIL: message lifetime runtime: %d failures" % _failures.size())
@@ -197,6 +206,72 @@ func _transient_history() -> void:
 	_emit(WIEvents.PLAYER_MOVED)
 	await _wait_hidden()
 	_check(history.size() == before, "transient ambient copy polluted Recent Messages")
+
+func _replacement_bark() -> void:
+	var panel: Control = _layer.get("_dialogue_panel")
+	var label := Label.new()
+	panel.add_child(label)
+	_layer.call("_show", panel, label, "Earlier bark", 0.25, WIEvents.UI_DIALOGUE_RENDERED)
+	await create_timer(0.1).timeout
+	_emit(WIEvents.MAP_CHANGED)
+	_layer.call("_show", panel, label, "Arrival bark", 0.6, WIEvents.UI_DIALOGUE_RENDERED)
+	await create_timer(0.3).timeout
+	_check(panel.visible and label.text == "Arrival bark", "a retired bark timer hid the replacement after a map transition")
+	await create_timer(0.4).timeout
+	_check(not panel.visible, "replacement bark failed to retire at its own deadline")
+	_layer.call("_show", panel, label, "First nearby bark", 0.25, WIEvents.UI_DIALOGUE_RENDERED)
+	await create_timer(0.1).timeout
+	_layer.call("_show", panel, label, "Second nearby bark", 0.6, WIEvents.UI_DIALOGUE_RENDERED)
+	await create_timer(0.3).timeout
+	_check(panel.visible and label.text == "Second nearby bark", "an overlapping bark timer hid the latest line")
+	await create_timer(0.4).timeout
+	_check(not panel.visible, "latest bark failed to retire at its own deadline")
+
+func _bark_event_ownership() -> void:
+	var before := _event_count(WIEvents.UI_DIALOGUE_LINE_HIDDEN)
+	_emit(WIEvents.DIALOGUE_LINE, {"speaker": "First", "text": "A short bark."})
+	await create_timer(1.0).timeout
+	_emit(WIEvents.MAP_CHANGED)
+	_emit(WIEvents.DIALOGUE_LINE, {"speaker": "Arrival", "text": "The next bark."})
+	await create_timer(2.3).timeout
+	var state: Dictionary = _layer.call("dialogue_display_state")
+	_check(bool(state["visible"]) and String(state["text"]).begins_with("Arrival:"), "arrival bark lost its own production hold")
+	_check(_event_count(WIEvents.UI_DIALOGUE_LINE_HIDDEN) == before, "obsolete bark released the current audio duck")
+	await create_timer(1.0).timeout
+	_check(_event_count(WIEvents.UI_DIALOGUE_LINE_HIDDEN) == before + 1, "actual bark close must release audio once")
+	var renders := _event_count(WIEvents.UI_DIALOGUE_RENDERED)
+	_emit(WIEvents.DIALOGUE_LINE, {"speaker": "Obsolete", "text": "Same-frame old bark."})
+	_emit(WIEvents.MAP_CHANGED)
+	_emit(WIEvents.DIALOGUE_LINE, {"speaker": "Current", "text": "Same-frame new bark."})
+	await process_frame
+	await process_frame
+	_check(_event_count(WIEvents.UI_DIALOGUE_RENDERED) == renders + 1, "same-frame replacement emitted an obsolete render")
+	await create_timer(3.3).timeout
+	_check(_event_count(WIEvents.UI_DIALOGUE_LINE_HIDDEN) == before + 2, "same-frame replacement must close once")
+
+func _event_count(type: String) -> int:
+	var count := 0
+	for event: Dictionary in _sink.events:
+		if event["type"] == type:
+			count += 1
+	return count
+
+func _superseded_capture() -> void:
+	var driver: RefCounted = _layer.get("TestDriver")
+	driver.set("real_message_timing", false)
+	var panel: Control = _layer.get("_dialogue_panel")
+	var label: Label = _layer.get("_dialogue_label")
+	_layer.call("_show", panel, label, "Old captured bark", 0.05, WIEvents.UI_DIALOGUE_RENDERED)
+	await create_timer(0.1).timeout
+	_emit(WIEvents.MAP_CHANGED)
+	_layer.call("_show", panel, label, "Replacement during capture", 0.6, WIEvents.UI_DIALOGUE_RENDERED)
+	await create_timer(0.4).timeout
+	_check(panel.visible, "obsolete capture wait hid the replacement")
+	driver.set("capturing", false)
+	await create_timer(0.3).timeout
+	_check(not panel.visible, "replacement capture did not release")
+	driver.set("real_message_timing", true)
+	driver.set("capturing", true)
 
 func _check(condition: bool, message: String = "runtime assertion failed") -> void:
 	if not condition:
