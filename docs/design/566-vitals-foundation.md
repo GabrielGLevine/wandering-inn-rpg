@@ -130,5 +130,10 @@ message timing, exit 0, `QA_RESULT: PASS`, no noise and passing result artifacts
 Evidence: `vitals-carry-headless` and `vitals-fresh-headless` under the evidence
 root. The first combat HP/MP hints now explain carry and sleep using the existing
 feed and `ui_combat_hint_rendered` mechanism. Matching canonical pins are updated.
-Windowed observations, affected older canonicals and composed full gates remain
-pending; no physical-phone, hostile continuous journey or #571 activation claim.
+The five affected canonicals passed at `503b192b` (defeat/reload, abandon,
+combat walkthrough, mage invisibility, first status); see `targeted-503b192b.log`.
+Passive equipment HP modifiers now explicitly say `max HP`. The exhaustive
+effect-text unit and actual inventory/gear routes pass with unchanged healing
+and next-fight copy (`passive-copy/`, `passive-copy-routes.log`).
+Windowed observations of the new routes and composed full gates remain pending;
+no physical-phone, hostile continuous journey or #571 activation claim.

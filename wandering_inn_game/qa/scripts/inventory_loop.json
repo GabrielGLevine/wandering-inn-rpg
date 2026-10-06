@@ -146,7 +146,7 @@
       "Sword kit replaces other weapon Skills in combat"
      ],
      [
-      "+4 HP",
+      "+4 max HP",
       "Worth 24 gold"
      ]
     ],
@@ -160,7 +160,7 @@
    "name": "02_inventory_first_open"
   },
   {
-   "_comment": "Selection-corner proof (inventory-corner design): move to leather_jerkin (index 1) -- cursor moves confirm via the DISTINCT ui_inventory_selection_rendered event, NOT ui_inventory_shown: that event drives audio.json's ui_open panel-open chime, so a per-move shown emit would replay the chime on every arrow press. selected_icon:true (leather_jerkin.png ships) and mech_line joins its two card lines exactly as WIEffectText generated them above ('+4 HP | Worth 24 gold'), proving the breakout box carries the mechanical read the card body no longer inlines.",
+   "_comment": "Selection-corner proof (inventory-corner design): move to leather_jerkin (index 1) -- cursor moves confirm via the DISTINCT ui_inventory_selection_rendered event, NOT ui_inventory_shown: that event drives audio.json's ui_open panel-open chime, so a per-move shown emit would replay the chime on every arrow press. selected_icon:true (leather_jerkin.png ships) and mech_line joins its two card lines exactly as WIEffectText generated them above ('+4 max HP | Worth 24 gold'), proving the breakout box carries the mechanical read the card body no longer inlines.",
    "action": "press",
    "name": "move_down"
   },
@@ -171,7 +171,7 @@
     "cursor": 1,
     "item": "leather_jerkin",
     "selected_icon": true,
-    "mech_line": "+4 HP | Worth 24 gold"
+    "mech_line": "+4 max HP | Worth 24 gold"
    },
    "timeout_sec": 5
   },
@@ -558,7 +558,7 @@
       "Sword kit replaces other weapon Skills in combat"
      ],
      [
-      "+4 HP",
+      "+4 max HP",
       "Worth 24 gold"
      ],
      [

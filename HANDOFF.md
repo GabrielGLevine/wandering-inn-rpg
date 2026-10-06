@@ -10,8 +10,8 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Resumed #566 core handoff checkpoint:** branch `issue/566-persistent-vitals-foundation`,
-  worktree `/private/tmp/wi-566-foundation`, composed base `62a182e3` with art
-  `e89770de`. Owner: resource foundation worker. Combat carries current HP/MP;
+  worktree `/private/tmp/wi-566-foundation`, composed base `6908654e` with HUD and art
+  `e89770de`. QA checkpoint `503b192b`; ownership is released to the root integrator. Combat carries current HP/MP;
   victory commits once before banking; armed meal checkpoints precede consumption;
   combat/sleep autosaves wait for settled state. Stable `resources_changed`
   before/after/reason/source/preparation interface and HUD constants are available.
@@ -20,21 +20,24 @@ archived, or superseded session blocks.
   Full preflight passed at `03da9ec4`, including deliberate old full-refill/text/event-tail
   test updates. Both balance policies passed; no numerical windows changed.
   **Next:** windowed reads of `vitals_carry_loop` and `vitals_fresh_start`,
-  affected older canonicals and composed gates. Both new actual-input routes
+  and composed gates after capacity integration. Both new actual-input routes
   pass headless at seed 9 with production message timing and frozen domain/HUD
   payload assertions (136 and 122 steps); evidence is preserved under the
   resumed evidence root. The former is explicitly fixture contract proof; the
   latter earns chest armor and sleep through a fresh route without teleports.
   Reviewed standalone builder amendment bug is fixed; meaningful post-builder
   current-pool regression is red/green and full calibration passes.
-  Core ownership is released for capacity work in its separate worktree; this
-  worker continues only QA/routes/manifest/tests and evidence documentation.
+  Five affected canonicals pass at `503b192b`: defeat/reload, abandon, combat
+  walkthrough, mage invisibility and first status. Passive equipment now says
+  `+N max HP`; exhaustive effect-text unit plus inventory/gear routes pass.
+  Logs: `targeted-503b192b.log`, `passive-copy/`, `passive-copy-routes.log`
+  under the evidence root. No owned test process remains; the entire tree is
+  released. Do not begin #568 before capacity handoff and explicit dispatch.
   HUD #578 checkpoint a9e839d3 is composed, including tested resource strip, captured receipts and Saved fit.
   User confirmed usage reset; no interrupted test remains active.
   PR #572 remains draft/unmerged; no player activation or deployment before #571.
-  Owned changes: core simulation/autosave/events/sleep, corresponding tests,
-  explicit-rest batch setup, four recovery-copy QA pins, data-lint source pins,
-  this handoff and `docs/design/566-vitals-foundation.md`.
+  Owned dirty paths: none. Source/QA/evidence changes are committed; parent
+  owns composition, publishing checkpoints and remaining integration gates.
   Preserve pre-existing untracked `tests/test_companion_counter.gd.uid`.
 - **Recovery program #565:** #566–#571 own core, HUD, consumables, food,
   capacity and composed cutover. #568/#569 recovery and quantities remain separate;
