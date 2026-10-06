@@ -153,7 +153,47 @@ def _numeric_vector(value, size: int, nonnegative: bool = False) -> bool:
 			and (not nonnegative or v >= 0) for v in value))
 
 
+
+def _ground_cells_valid(value, width: int, height: int) -> bool:
+	if value == "all":
+		return True
+	if not isinstance(value, dict):
+		return False
+	if "list" in value:
+		return (isinstance(value["list"], list) and all(
+			_numeric_vector(cell, 2, True) and all(type(v) is not bool and _int_like(v) for v in cell)
+			and cell[0] < width and cell[1] < height for cell in value["list"]))
+	if "rect" in value:
+		r = value["rect"]
+		return (_numeric_vector(r, 4, True) and all(_int_like(v) for v in r)
+			and r[2] > 0 and r[3] > 0 and r[0] + r[2] <= width and r[1] + r[3] <= height)
+	return False
+
+
+def _check_ground_transitions(map_id: str, config: dict, errors: list) -> None:
+	layers = config.get("floor_layers", [])
+	if not isinstance(layers, list):
+		errors.append(f"maps/{map_id}: floor_layers must be an array")
+		return
+	for index, layer in enumerate(layers):
+		if not isinstance(layer, dict) or "wang_corners" not in layer:
+			continue
+		corners = layer["wang_corners"]
+		if (not isinstance(corners, list) or len(corners) != 16 or not all(
+				_numeric_vector(coord, 2, True) and all(_int_like(v) for v in coord) for coord in corners)):
+			errors.append(f"maps/{map_id}: floor layer {index} needs 16 nonnegative integer Wang atlas coordinates")
+		grid = config["grid"]
+		if not _ground_cells_valid(layer.get("terrain_lower_cells"), int(grid["width"]), int(grid["height"])):
+			errors.append(f"maps/{map_id}: floor layer {index} needs terrain_lower_cells within its grid")
+
+
 def _check_map_rendering_geometry(map_id: str, config: dict, errors: list) -> None:
+	if "boundary_tone" in config:
+		tone = config["boundary_tone"]
+		if (not isinstance(tone, dict) or not _numeric_vector(tone.get("base"), 3)
+				or type(tone.get("detail")) not in (int, float) or not math.isfinite(tone["detail"])
+				or not 0 <= tone["detail"] <= 1):
+			errors.append(f"maps/{map_id}: boundary_tone needs base[3] and detail in [0,1]")
 	camera = config.get("camera", {})
 	if not isinstance(camera, dict):
 		errors.append(f"maps/{map_id}: camera must be an object")
@@ -185,6 +225,7 @@ def check_maps(maps: dict, errors: list) -> None:
 			continue
 		w, h = int(grid["width"]), int(grid["height"])
 		_check_map_rendering_geometry(map_id, m, errors)
+		_check_ground_transitions(map_id, m, errors)
 		for cell in m.get("blocked", []):
 			if not _cell_shape_ok(cell):
 				errors.append(f"maps/{map_id}: malformed blocked cell {cell!r}")

@@ -243,17 +243,45 @@ static func build_vistas(parent: Node2D, config: Array, registry: Variant) -> in
 	return count
 
 
+static func terrain_vertex_bits(vertex: Vector2i, lower_cells: Dictionary) -> int:
+	return 15 ^ vertex_water_bits(vertex, lower_cells)
+
+
+static func build_ground_transition(parent: Node2D, config: Dictionary, grid: Vector2i,
+		biome_cfg: Dictionary, registry) -> void:
+	var lower := {}
+	for cell: Vector2i in resolve_layer_cells(config["terrain_lower_cells"], grid):
+		lower[cell] = true
+	var sheet := String(config.get("sheet", biome_cfg["sheet"]))
+	var tile_px := int(config.get("tile_px", biome_cfg["tile_px"]))
+	var layer := make_tile_layer(parent, sheet, tile_px, registry)
+	layer.position = Vector2(-CELL / 2.0, -CELL / 2.0)
+	apply_ground_tone(layer, config.get("tone", {}))
+	var corners: Array = config["wang_corners"]
+	for x in grid.x + 1:
+		for y in grid.y + 1:
+			var vertex := Vector2i(x, y)
+			var coord: Array = corners[terrain_vertex_bits(vertex, lower)]
+			layer.set_cell(vertex, 0, Vector2i(int(coord[0]), int(coord[1])))
+	parent.add_child(layer)
+
+
 ## Renders `floor_layers` entries (data/maps/** / data/arenas.json
 ## schema): each entry paints either a fixed `coords` tile or a
 ## position-hashed pick from `variants` over the cells selected by `cells`
 ## ("all" | {"rect":[x,y,w,h]} | {"list":[[x,y],...]}). One TileMapLayer per
 ## entry, added (under `parent`) in array order so later entries draw over
 ## earlier ones.
-static func build_floor_layers(parent: Node2D, layers_cfg: Array, grid: Vector2i, biome_cfg: Dictionary, registry) -> void:
+static func build_floor_layers(parent: Node2D, layers_cfg: Array, grid: Vector2i, biome_cfg: Dictionary, registry) -> int:
+	var transitions := 0
 	for raw: Variant in layers_cfg:
 		if not (raw is Dictionary):
 			continue
 		var layer_cfg := raw as Dictionary
+		if layer_cfg.has("wang_corners"):
+			build_ground_transition(parent, layer_cfg, grid, biome_cfg, registry)
+			transitions += 1
+			continue
 		var sheet := String(layer_cfg.get("sheet", biome_cfg["sheet"]))
 		var tile_px := int(layer_cfg.get("tile_px", biome_cfg["tile_px"]))
 		var tile_layer := make_tile_layer(parent, sheet, tile_px, registry)
@@ -278,6 +306,8 @@ static func build_floor_layers(parent: Node2D, layers_cfg: Array, grid: Vector2i
 			parent.add_child(tile_layer)
 		else:
 			tile_layer.queue_free()
+
+	return transitions
 
 
 static func build_skirt(parent: Node2D, grid: Vector2i, margin: int, biome_cfg: Dictionary, registry) -> void:

@@ -46,6 +46,24 @@ class TestMapRenderingGeometry(unittest.TestCase):
                 self.assertTrue(self.check({"vistas": vistas}))
 
 
+    def test_ground_transition_accepts_complete_corner_table_and_authored_path(self):
+        corners = [[x, y] for y in range(4) for x in range(4)]
+        self.assertEqual(self.check({"floor_layers": [{"wang_corners": corners,
+            "terrain_lower_cells": {"list": [[1, 1], [2, 1]]}}]}), [])
+
+    def test_ground_transition_rejects_malformed_corner_tables_and_paths(self):
+        corners = [[x, y] for y in range(4) for x in range(4)]
+        for bad in [None, [], corners[:15], [[False, 0]] * 16, [[0]] * 16, [[-1, 0]] * 16]:
+            with self.subTest(corners=bad):
+                self.assertTrue(self.check({"floor_layers": [{"wang_corners": bad,
+                    "terrain_lower_cells": {"list": [[1, 1]]}}]}))
+        for bad in [None, [], {"list": [[4, 1]]}, {"list": [[True, 1]]},
+                {"rect": [0, 0, 5, 1]}, {"rect": [0, 0, 0, 1]}, "unknown"]:
+            with self.subTest(cells=bad):
+                self.assertTrue(self.check({"floor_layers": [{"wang_corners": corners,
+                    "terrain_lower_cells": bad}]}))
+
+
 class TestBrokenFixtures(unittest.TestCase):
     def _errs(self, fn, *args):
         errors = []

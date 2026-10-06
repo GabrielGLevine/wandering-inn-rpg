@@ -966,7 +966,7 @@ func _build_floor() -> void:
 		for y in grid_size.y:
 			floor_layer.set_cell(Vector2i(x, y), 0, floor_coord)
 	_field_root.add_child(floor_layer)
-	WITileBoardBuilder.build_floor_layers(_field_root, map_cfg.get("floor_layers", []), grid_size, biome, WISpriteRegistry)
+	var ground_transitions := WITileBoardBuilder.build_floor_layers(_field_root, map_cfg.get("floor_layers", []), grid_size, biome, WISpriteRegistry)
 	var segment_covered := WITileBoardBuilder.build_walls(_field_root, map_cfg.get("walls", {}), grid_size, biome, WISpriteRegistry)
 
 	var cover_skip := {}
@@ -992,6 +992,7 @@ func _build_floor() -> void:
 	assert(prop_plan.size() <= FIELD_BLOCKED_PROP_BUDGET,
 		"map %s exceeds the %d blocked-prop budget (%d)" % [Game.sim.current_map, FIELD_BLOCKED_PROP_BUDGET, prop_plan.size()])
 	_field_blocked_prop_plan = prop_plan
+	var boundary_toned := false
 	if not fallback_cells.is_empty():
 		var blocked_sheet := String(biome.get("blocked_sheet", biome["sheet"]))
 		var blocked_tile_px := int(biome.get("blocked_tile_px", tile_px))
@@ -999,6 +1000,8 @@ func _build_floor() -> void:
 		var blocked_coord := Vector2i(int(biome["blocked"][0]), int(biome["blocked"][1]))
 		for cell: Vector2i in fallback_cells:
 			blocked_layer.set_cell(cell, 0, blocked_coord)
+		WITileBoardBuilder.apply_ground_tone(blocked_layer, map_cfg.get("boundary_tone", {}))
+		boundary_toned = blocked_layer.material is ShaderMaterial
 		_field_root.add_child(blocked_layer)
 	var vista_count := WITileBoardBuilder.build_vistas(_field_root, map_cfg.get("vistas", []), WISpriteRegistry)
 	ObservableBus.emit_domain_event(WIEvents.UI_MAP_RENDERED, {
@@ -1006,6 +1009,8 @@ func _build_floor() -> void:
 		"floor_cells": grid_size.x * grid_size.y,
 		"blocked_cells": Game.sim.blocked_cells.size(),
 		"vistas": vista_count,
+		"ground_transitions": ground_transitions,
+		"boundary_toned": boundary_toned,
 	})
 
 

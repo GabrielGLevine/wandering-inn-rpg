@@ -216,6 +216,63 @@
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "04_back_on_the_boulevard" },
   { "_comment": "Scope guards: the room is an exploration surface here, nothing fought and no quest taken.", "action": "assert_event_absent", "type": "combat_started" },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "heirloom_commission_started"} }
+  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "heirloom_commission_started"} },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     24,
+     1
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "payload_contains": {
+    "skill": "eagle_eyes"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Slate roofs and chimney smoke, one ridge behind another. Picking a line through it takes sharper eyes than yours."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_roofline_above_the_facade"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    24,
+    3
+   ]
+  }
  ]
 }

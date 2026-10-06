@@ -1267,7 +1267,7 @@
    "kind": "prop",
    "cell": [
     24,
-    3
+    1
    ],
    "display_name": "The Rooftop Line",
    "sprite": "invrisil_roofline",
@@ -1277,7 +1277,8 @@
    "on_skill_use": {
     "accomplishment": "scouted_vantage",
     "toast": "[Eagle Eyes] — The rooftop line resolves into a second city: runners' shortcuts, a watcher over Coyle's block, and two gentlemen who are always politely elsewhere."
-   }
+   },
+   "hide_sprite": true
   },
   {
    "_comment": "Landing (1,7) sits inside the alleys' own west corridor, open + off every blocked/entity cell there. v0.16.1 #9: this was a free-standing `door` on open paving -- rows 2..15 had no wall east of x=24, so the city's only alley entrance had plaza on all four sides. There is a building there now (x=26 masonry, sealed east at [27,3], floor_layer 6 behind it) and this entity is the BREAK in it: hide_sprite, so the three-cell gap at y7..9 is what the player reads. TRAP: row 2 stays open x0..27 (invrisil_walkthrough paces it to grind to night), so the north end seals at [27,3], never [26,2] -- without that one cell the masonry is a SCREEN, the lane behind it open off the plaza at (27,2).",

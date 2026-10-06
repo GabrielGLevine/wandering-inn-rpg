@@ -235,7 +235,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_dusty_scroll"
  },
  "ruin_warden": {
   "_comment": "#223: bespoke PixelLab v3 combat rig -- the awakened granite construct (guardian boss + lesser wards via combat_scale; replaces training_dummy in the fights and raskghar_awakened on the ruin_surface encounter). anchor feet-plane 158/216.",
@@ -787,7 +788,8 @@
   "render_scale": 0.55,
   "shadow": true,
   "_comment_ysort": "Covers all six beds/cots. TRAP: 0.55 makes the art 1.86 cells tall, overhanging the cell NORTH, and bias 0 amputated a PC standing there (riverfarm_guest_cot (8,4), garden_bed (11,4) have walkable north cells). -32 is the `stairs_up` remedy; NOT -16, never positive.",
-  "field_y_sort_bias_px": -32.0
+  "field_y_sort_bias_px": -32.0,
+  "fallback_sprite": "owned_fallback_bed"
  },
  "door": {
   "render_scale": 0.5,
@@ -807,7 +809,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_door"
  },
  "chest": {
   "_comment": "Domed lid + lock plate. TRAP: stay on `chest_open`'s sheet and scale -- one object, two states. The old Interior_Props crop was a flat-topped sideboard and a playtest recorded it as a mattress.",
@@ -828,7 +831,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_chest"
  },
  "chest_open": {
   "render_scale": 0.85,
@@ -848,7 +852,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_chest_open"
  },
  "plant_pot": {
   "render_scale": 0.6,
@@ -867,7 +872,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_plant_pot"
  },
  "bar_counter": {
   "_comment": "#398: WAS [256,279,68,44] -- alpha bbox None, FULLY TRANSPARENT, so every counter drew NOTHING (old coords sit past the art in the door/window block). Now a drawn-edge cut of the drawer-front sideboard x0-47/y18-47 (wardrobe starts y48). rs 0.35 keeps the original 1.05x0.66-cell footprint, so no map re-derives. Probe: bbox (0,0,48,30), pad 0/0.",
@@ -891,7 +897,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_bar_counter"
  },
  "barrel": {
   "_comment": "#398: WAS [730,14,19,22] -- 32.5% fill, bbox (8,3)-(19,18) right-CLIPPED, and it caught a small POT, not a barrel, sitting hard right so it drew ~a quarter cell off its own cell. Now the real hooped barrel flush to the crates' right: drawn-edge cut x752-767/y74-95 (crate outline x751, next object x769). rs 1.0 = native 16px grid, matching `crate` -- drawn at one scale side by side. Probe: bbox (0,0,16,22), pad 0/0.",
@@ -915,7 +922,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_barrel"
  },
  "crate": {
   "fallback_sprite": "crate_owned",
@@ -964,7 +972,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_stool"
  },
  "mushroom": {
   "animations": {
@@ -982,7 +991,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_mushroom"
  },
  "sconce": {
   "render_scale": 0.5,
@@ -1001,7 +1011,8 @@
     ],
     "fps": 6
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_sconce"
  },
  "rug_woven_cream": {
   "_comment": "#390: the shipped sheet was red-flecked speckle and read as a spill (stationer_room_loop/01). Regenerated with a real warp/weft grid and fringe, judged against `rug_woven_red`. Anchor = bbox 58/64.",
@@ -1041,7 +1052,8 @@
    }
   },
   "render_scale": 0.35,
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_table_brown"
  },
  "goblin_base": {
   "directional": true,
@@ -2214,7 +2226,8 @@
     ],
     "fps": 5
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_grill"
  },
  "counter_left": {
   "render_scale": 0.5,
@@ -2290,7 +2303,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_shelf_bottles"
  },
  "window_blue": {
   "_comment": "#390: the old region was a 16px slice off the SIDE of a chest block, not a window -- hence the grey slab with a blue edge (player_room_loop/00). Real four-pane window on Furniture.png.",
@@ -2310,7 +2324,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_window_blue"
  },
  "food_bread": {
   "render_scale": 0.75,
@@ -2333,7 +2348,8 @@
   "anchor": [
    0.5,
    1.5
-  ]
+  ],
+  "fallback_sprite": "owned_fallback_food_bread"
  },
  "food_ham": {
   "render_scale": 0.75,
@@ -2356,7 +2372,8 @@
   "anchor": [
    0.5,
    1.5
-  ]
+  ],
+  "fallback_sprite": "owned_fallback_food_ham"
  },
  "food_basket": {
   "render_scale": 0.75,
@@ -2375,7 +2392,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_food_basket"
  },
  "rug_woven_red": {
   "_comment_ysort": "GH#127: flat floor decor must ALWAYS render under sorted content -- large north bias keeps it above the floor layers (different parent) but under every y-sorted sibling on any crossed cell. Small biases cannot fix a walk-across prop.",
@@ -2411,7 +2429,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_facade_plaster"
  },
  "bush_green": {
   "render_scale": 0.5,
@@ -2430,7 +2449,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_bush_green"
  },
  "grass_tuft": {
   "render_scale": 0.75,
@@ -2449,7 +2469,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_grass_tuft"
  },
  "flower_purple": {
   "render_scale": 0.6,
@@ -2468,7 +2489,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_flower_purple"
  },
  "flower_tiny": {
   "render_scale": 0.75,
@@ -2487,7 +2509,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_flower_tiny"
  },
  "pebble": {
   "render_scale": 0.6,
@@ -2506,7 +2529,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_pebble"
  },
  "boulder": {
   "_comment": "Same 32x43 shape, so all consumers keep geometry.",
@@ -2527,7 +2551,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_boulder"
  },
  "anchor_waystone": {
   "_comment": "Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a small freestanding stone waystone archway/doorframe silhouette with a faint painted glow in the opening -- reads as a portal, not a rock.",
@@ -2566,7 +2591,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_tree_big"
  },
  "mushroom_purple_l": {
   "render_scale": 0.5,
@@ -2586,7 +2612,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_mushroom_purple_l"
  },
  "mushroom_purple_m": {
   "render_scale": 0.5,
@@ -2605,7 +2632,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_mushroom_purple_m"
  },
  "mushroom_purple_s": {
   "render_scale": 0.75,
@@ -2624,7 +2652,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_mushroom_purple_s"
  },
  "inn_roof": {
   "_comment": "Plain row-based y-sort drew the facade (holder.position.y = (Y+1)*CELL, the larger key) over that overlap band, cutting off the roof's bottom edge/eaves -- the exact 'fronts draw over roofs' defect.",
@@ -2683,7 +2712,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_tree_round"
  },
  "campfire": {
   "render_scale": 0.75,
@@ -2702,7 +2732,8 @@
     ],
     "fps": 6
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_campfire"
  },
  "unlit_lantern": {
   "render_scale": 1.0,
@@ -2721,7 +2752,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_unlit_lantern"
  },
  "library_desk": {
   "render_scale": 0.5,
@@ -2741,7 +2773,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_library_desk"
  },
  "library_shelf": {
   "render_scale": 0.5,
@@ -2761,7 +2794,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_library_shelf"
  },
  "royal_soldier": {
   "animations": {
@@ -2792,7 +2826,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_sewer_grate"
  },
  "a_hunter": {
   "directional": true,
@@ -3069,72 +3104,72 @@
  },
  "pc_human_m": {
   "directional": true,
-  "render_scale": 0.62,
+  "render_scale": 0.6154,
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/body_a/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Idle_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 6
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Idle_Up-Sheet.png"
    },
    "walk": {
-    "sheet_down": "res://assets/sprites/body_a/Walk_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Walk_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Walk_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 8
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Walk_Up-Sheet.png"
    },
    "slice": {
-    "sheet_down": "res://assets/sprites/body_a/Slice_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Slice_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Slice_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 8
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Slice_Up-Sheet.png"
    },
    "cast": {
-    "sheet_down": "res://assets/sprites/body_a/Cast_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Cast_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Cast_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 10
+    "fps": 10,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Cast_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Cast_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Cast_Up-Sheet.png"
    },
    "hit": {
-    "sheet_down": "res://assets/sprites/body_a/Hit_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Hit_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Hit_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 10
+    "fps": 10,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Hit_Up-Sheet.png"
    },
    "death": {
-    "sheet_down": "res://assets/sprites/body_a/Death_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Death_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Death_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 8
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Death_Up-Sheet.png"
    }
   },
   "anchor": [
    0.5,
-   0.75
+   0.74038462
   ]
  },
  "pc_human_f": {
@@ -3672,7 +3707,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_pedestal"
  },
  "stairs_up": {
   "_comment_ysort": "GH#127: 2-cell-tall sprite sorted at its bottom cell painted over the northern approach player. -32 (two cells, the raskghar_awakened decisive-margin pattern) -- NOT -16, which only TIES the approach player's key and would covertly depend on world.gd's entities-before-player tree-order tie-break.",
@@ -3742,7 +3778,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_garden_fountain_basin"
  },
  "garden_fountain_statue": {
   "render_scale": 1.0,
@@ -3761,7 +3798,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_garden_fountain_statue"
  },
  "memorial_plinth": {
   "_comment": "PIL alpha bbox: (4,7)-(27,23) of 32x32 -- feet plane 24/32=0.75 (NOT the frame bottom -- real transparent padding below the plinth's own small base shadow), anchor set accordingly per the ANCHOR RULE.",
@@ -4201,7 +4239,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_crop_row_orange"
  },
  "crop_row_green": {
   "animations": {
@@ -4219,7 +4258,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_crop_row_green"
  },
  "crop_row_dark_green": {
   "animations": {
@@ -4237,7 +4277,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_crop_row_dark_green"
  },
  "tree_autumn_orange": {
   "_comment": "Licensed pick, Free Pack Vegetation.png -- the harvest-light edge dressing (picks.md sec.4).",
@@ -4257,7 +4298,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_tree_autumn_orange"
  },
  "tree_autumn_red": {
   "shadow": true,
@@ -4276,7 +4318,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_tree_autumn_red"
  },
  "hollow_glow_stone": {
   "_comment": "Licensed pick, Fairy Forest Props.png -- scaled down so it reads as a rune stone, not a bloom (picks.md sec.5).",
@@ -4296,7 +4339,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_hollow_glow_stone"
  },
  "hollow_mushroom_cluster": {
   "render_scale": 0.6,
@@ -4315,7 +4359,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_hollow_mushroom_cluster"
  },
  "hollow_canopy_tree": {
   "render_scale": 0.38,
@@ -4335,7 +4380,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_hollow_canopy_tree"
  },
  "hollow_small_tree": {
   "render_scale": 0.6,
@@ -4354,7 +4400,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_hollow_small_tree"
  },
  "hollow_bent_tree": {
   "_comment": "0.32 lands 16x28.8 -- a slim bent-tree silhouette that overhangs upward like boulder does, never sideways.",
@@ -4374,7 +4421,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_hollow_bent_tree"
  },
  "river_wolf_idle": {
   "_comment": "Licensed Admurin sheet is 192x32: four 48x32 frames. Using 32x32 slices dismembers the wolf.",
@@ -4840,7 +4888,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_dungeon_statue"
  },
  "dungeon_rubble": {
   "_comment": "Blob-scan pick: a muted grey-olive close to the dungeon floor's own cast.",
@@ -4861,7 +4910,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_dungeon_rubble"
  },
  "pressure_plate": {
   "_comment": "Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a worked-stone floor tile with a subtly raised/cracked-border square plate at center.",
@@ -6621,7 +6671,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_scree_spill"
  },
  "briar_wall": {
   "_comment": "#398 D2. OWNED PixelLab, 32px not the 64px default: a fine lattice speckles at ship scale. Anchor = alpha bbox 30/32; the 6.1% holes ARE the lattice.",
@@ -6679,7 +6730,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_pond_reeds"
  },
  "grain_sacks": {
   "_comment": "#408 prop-variety pass 2026-08-08 (OWNED PixelLab 1-direction object, 64px, tag wi409-408). render_scale 0.4 is the floor-prop default -- 64px at 0.4 reads ~0.8 cell, so it fills its cell without swallowing a neighbour. anchor.y from the alpha bbox's lowest opaque row (60/64), not the frame bottom. Solid: carries a SOLID_DECOR_SPRITES entry in scripts/data_lint.py, so every decor cell using it must also be in its map's `blocked` list.",
@@ -8276,6 +8328,1227 @@
     "frame_size": [
      32,
      32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "garden_shelter_tree": {
+  "render_scale": 0.47619,
+  "anchor": [
+   0.5,
+   0.882812
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/garden_shelter_tree/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "garden_blossom_white": {
+  "render_scale": 0.333333,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/garden_blossom_white/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "garden_blossom_purple": {
+  "render_scale": 0.4375,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/garden_blossom_purple/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "garden_low_hedge": {
+  "render_scale": 0.391304,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/garden_low_hedge/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "garden_rest_bench": {
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/garden_rest_bench/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "camp_hide_tent_owned": {
+  "render_scale": 0.414634,
+  "anchor": [
+   0.489583,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/camp_hide_tent_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     80
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "camp_cooking_spit_owned": {
+  "render_scale": 0.451613,
+  "anchor": [
+   0.5,
+   0.921875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/camp_cooking_spit_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "camp_weapon_rack_owned": {
+  "render_scale": 0.30303,
+  "anchor": [
+   0.5,
+   0.958333
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/camp_weapon_rack_owned/Idle-Sheet.png",
+    "frame_size": [
+     80,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "camp_lookout_owned": {
+  "render_scale": 0.464286,
+  "anchor": [
+   0.4875,
+   0.928571
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/camp_lookout_owned/Idle-Sheet.png",
+    "frame_size": [
+     80,
+     112
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "camp_palisade_owned": {
+  "render_scale": 0.421053,
+  "anchor": [
+   0.5,
+   0.847222
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/camp_palisade_owned/Idle-Sheet.png",
+    "frame_size": [
+     160,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_bar_counter": {
+  "render_scale": 0.20588235,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/bar_counter/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_barrel": {
+  "render_scale": 0.42105263,
+  "anchor": [
+   0.5,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/barrel/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_bed": {
+  "shadow": true,
+  "_comment_ysort": "Covers all six beds/cots. TRAP: 0.55 makes the art 1.86 cells tall, overhanging the cell NORTH, and bias 0 amputated a PC standing there (riverfarm_guest_cot (8,4), garden_bed (11,4) have walkable north cells). -32 is the `stairs_up` remedy; NOT -16, never positive.",
+  "field_y_sort_bias_px": -32.0,
+  "render_scale": 0.6875,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/bed/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_boulder": {
+  "shadow": true,
+  "render_scale": 0.2962963,
+  "anchor": [
+   0.5,
+   0.890625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/boulder/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_bush_green": {
+  "render_scale": 0.34782609,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/bush_green/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_campfire": {
+  "render_scale": 0.4137931,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/campfire/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_chest": {
+  "shadow": true,
+  "render_scale": 0.37777778,
+  "anchor": [
+   0.515625,
+   0.875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/chest/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_chest_open": {
+  "shadow": true,
+  "render_scale": 0.34910714,
+  "anchor": [
+   0.5390625,
+   0.96875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/chest_open/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_crop_row_dark_green": {
+  "render_scale": 0.59259259,
+  "anchor": [
+   0.5,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/crop_row_dark_green/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_crop_row_green": {
+  "render_scale": 0.64,
+  "anchor": [
+   0.5,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/crop_row_green/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_crop_row_orange": {
+  "render_scale": 0.69230769,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/crop_row_orange/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_door": {
+  "shadow": true,
+  "render_scale": 0.36666667,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/door/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_dungeon_rubble": {
+  "shadow": true,
+  "render_scale": 0.25714286,
+  "anchor": [
+   0.5078125,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/dungeon_rubble/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_dungeon_statue": {
+  "shadow": true,
+  "render_scale": 0.44590164,
+  "anchor": [
+   0.5,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/dungeon_statue/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_dusty_scroll": {
+  "render_scale": 0.19230769,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/dusty_scroll/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_facade_plaster": {
+  "shadow": true,
+  "render_scale": 0.375,
+  "anchor": [
+   0.5,
+   0.75
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/facade_plaster/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_flower_purple": {
+  "render_scale": 0.43636364,
+  "anchor": [
+   0.5,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/flower_purple/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_flower_tiny": {
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/flower_tiny/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_food_basket": {
+  "render_scale": 0.22222222,
+  "anchor": [
+   0.53125,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/food_basket/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_food_bread": {
+  "render_scale": 0.2,
+  "anchor": [
+   0.5,
+   0.890625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/food_bread/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_food_ham": {
+  "render_scale": 0.21428571,
+  "anchor": [
+   0.515625,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/food_ham/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_garden_fountain_basin": {
+  "render_scale": 0.59259259,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/garden_fountain_basin/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_garden_fountain_statue": {
+  "render_scale": 0.5,
+  "anchor": [
+   0.484375,
+   0.96875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/garden_fountain_statue/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_grass_tuft": {
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/grass_tuft/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_grill": {
+  "render_scale": 0.44912281,
+  "anchor": [
+   0.5078125,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/grill/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_hollow_bent_tree": {
+  "render_scale": 0.34782609,
+  "anchor": [
+   0.3125,
+   0.96875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/hollow_bent_tree/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_hollow_canopy_tree": {
+  "shadow": true,
+  "render_scale": 0.57,
+  "anchor": [
+   0.4609375,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/hollow_canopy_tree/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_hollow_glow_stone": {
+  "render_scale": 0.44385965,
+  "anchor": [
+   0.4921875,
+   0.953125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/hollow_glow_stone/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_hollow_mushroom_cluster": {
+  "render_scale": 0.44651163,
+  "anchor": [
+   0.5,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/hollow_mushroom_cluster/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_hollow_small_tree": {
+  "render_scale": 0.98181818,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/hollow_small_tree/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_library_desk": {
+  "shadow": true,
+  "render_scale": 0.30188679,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/library_desk/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_library_shelf": {
+  "shadow": true,
+  "render_scale": 0.30188679,
+  "anchor": [
+   0.4921875,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/library_shelf/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_mushroom": {
+  "render_scale": 0.76190476,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/mushroom/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_mushroom_purple_l": {
+  "shadow": true,
+  "render_scale": 0.57142857,
+  "anchor": [
+   0.5,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/mushroom_purple_l/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_mushroom_purple_m": {
+  "render_scale": 0.73333333,
+  "anchor": [
+   0.5,
+   0.796875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/mushroom_purple_m/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_mushroom_purple_s": {
+  "render_scale": 0.48387097,
+  "anchor": [
+   0.5078125,
+   0.71875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/mushroom_purple_s/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_pebble": {
+  "render_scale": 0.53333333,
+  "anchor": [
+   0.5,
+   0.71875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/pebble/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_pedestal": {
+  "shadow": true,
+  "render_scale": 0.31034483,
+  "anchor": [
+   0.5,
+   0.953125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/pedestal/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_plant_pot": {
+  "render_scale": 0.24,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/plant_pot/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_pond_reeds": {
+  "render_scale": 0.4375,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/pond_reeds/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_sconce": {
+  "render_scale": 0.41025641,
+  "anchor": [
+   0.5234375,
+   0.78125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/sconce/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_scree_spill": {
+  "render_scale": 0.57142857,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/scree_spill/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_sewer_grate": {
+  "render_scale": 0.37894737,
+  "anchor": [
+   0.5,
+   0.765625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/sewer_grate/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_shelf_bottles": {
+  "render_scale": 0.32,
+  "anchor": [
+   0.5,
+   0.890625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/shelf_bottles/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_stool": {
+  "render_scale": 0.3,
+  "anchor": [
+   0.5,
+   0.828125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/stool/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_table_brown": {
+  "shadow": true,
+  "render_scale": 0.42,
+  "anchor": [
+   0.5,
+   0.890625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/table_brown/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_tree_autumn_orange": {
+  "shadow": true,
+  "render_scale": 1.0,
+  "anchor": [
+   0.4765625,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/tree_autumn_orange/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_tree_autumn_red": {
+  "shadow": true,
+  "render_scale": 0.80769231,
+  "anchor": [
+   0.4765625,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/tree_autumn_red/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_tree_big": {
+  "shadow": true,
+  "render_scale": 1.06666667,
+  "anchor": [
+   0.5546875,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/tree_big/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_tree_round": {
+  "shadow": true,
+  "render_scale": 0.53894737,
+  "anchor": [
+   0.5,
+   0.8828125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/tree_round/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_unlit_lantern": {
+  "render_scale": 0.24561404,
+  "anchor": [
+   0.5,
+   0.953125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/unlit_lantern/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_window_blue": {
+  "render_scale": 0.37946429,
+  "anchor": [
+   0.46875,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/window_blue/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "riverfarm_well_owned": {
+  "render_scale": 0.32,
+  "anchor": [
+   0.50625,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/riverfarm_well_owned/Idle-Sheet.png",
+    "frame_size": [
+     80,
+     96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "riverfarm_waterwheel_owned": {
+  "render_scale": 0.288889,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/riverfarm_waterwheel_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "riverfarm_granary_owned": {
+  "render_scale": 0.414634,
+  "anchor": [
+   0.5,
+   0.946429
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/riverfarm_granary_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     112
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "riverfarm_wheelwright_owned": {
+  "render_scale": 0.538462,
+  "anchor": [
+   0.4375,
+   0.805556
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/riverfarm_wheelwright_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "longhouse_communal_table_owned": {
+  "render_scale": 0.307692,
+  "anchor": [
+   0.5,
+   0.958333
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/longhouse_communal_table_owned/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "mill_tally_sticks_owned": {
+  "render_scale": 0.466667,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/mill_tally_sticks_owned/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "mill_high_shelf_owned": {
+  "render_scale": 0.458333,
+  "anchor": [
+   0.53125,
+   0.984375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/mill_high_shelf_owned/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
     ],
     "fps": 1
    }

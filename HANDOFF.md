@@ -15,24 +15,27 @@ archived, or superseded session blocks.
   Foundation/crate/inn/chrome, 37 complete rigs and regional bindings, owned
   icons/title/journal are integrated through `f4fe17e0`. UI lane is idle;
   exact source/hash/geometry evidence: `/private/tmp/wi-art-icon-evidence`.
-  Regional checkpoint adds Pallass lower-city vistas/parapets, opt-in field
-  margins, a measured HUD-free desktop combat viewport, legible rig scales,
-  Invrisil north arrival/return stone and fountain, owned timber/window/roof
-  frontage, and the gated cross-street. Movement/turn/balance rules unchanged.
-  Preflight is ALL GREEN. Field/vista/combat units pass; real native Invrisil
-  275-step route and portal round trip pass; Pallass 291-step route passes.
-  Read PNG evidence/logs: `/private/tmp/wi-art-execution`; independent review
-  of this newest checkpoint and remaining composed/full/browser gates pending.
-  Roster/fallback worker owns `/private/tmp/wi-art-fallbacks`, branch
-  `issue/564-owned-fallback-props`, asset-only `harvest_fallbacks/**` and
-  `harvest_player_human_m/**`; root serializes catalogs/maps/QA/provenance.
-  Baseline gallery: `potential_assets/art_direction_review_2026-10-05/index.html`.
-  **Exact next action:** review this regional checkpoint; exercise updated
-  feel/steel routes and combat pointer routes; finish Riverfarm/Garden/camp/
-  ruin/underground composition and terrain/fallback curation; integrate PC/
-  fallback fragments and icon QA registration, then full gates/browser and
-  independent review/CI/PR closure. Preserve M1 and untracked companion UID.
-  Physical-device and production-animation acceptance remain unproven.
+  Root owns dirty catalogs/renderers, Garden/camp/roof QA and provenance.
+  City checkpoint `53f447af` has independent clean native city/
+  pointer/feel routes. Its roof strip defect is corrected in the next checkpoint:
+  facade-bound Eagle Eyes refusal and walking through the old street cell pass.
+  Garden 147-step unlock/memorial/day-bright dusk/rest/return passes with three
+  connected pockets. Camp 89-step entry/work/exit passes with tents/cooking/
+  supplies/lookout and authored feet. New Wang ground matches all 16 metadata
+  corner cases; existing tile coordinates never transfer to another atlas.
+  Human PC and 52 complete prop fallbacks are integrated; registry, combat
+  visuals and 197-step inn work route pass. Riverfarm art kit is registered
+  for the next isolated map lane. Exact logs/PNGs: `/private/tmp/wi-art-execution`.
+  Creature asset checkpoint `a77fcbc` is frozen, unintegrated; bat/wolf/razorbeak/
+  watchgolem candidates and explicit rejections: `/private/tmp/wi-art-creature-evidence`.
+  Read-only terrain descriptor audit: `/private/tmp/wi-art-terrain-audit`.
+  Optional steel seed9 loss is pre-existing: base `e1d2edee` and city checkpoint
+  have identical 97 combat events and fail at 499/2582; comparison evidence in
+  `/private/tmp/wi-art-execution/steel-baseline-independent-review`.
+  **Exact next action:** finish Riverfarm/hollow/longhouse/mill and ruin/
+  underground composition, whole-config terrain fallback, creature integration,
+  then composed full gates/browser and independent review/CI/PR closure. Keep
+  companion UID untracked. Physical-device/production timing remain unproven.
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
   (standalone tree `5e8af12d`); QA/export source `93016f0b`.
