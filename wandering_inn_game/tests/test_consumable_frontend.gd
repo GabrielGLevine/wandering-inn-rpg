@@ -179,6 +179,7 @@ func _run() -> void:
 	_check((_inventory.get("_use_receipt") as Label).text == receipt and receipt.contains("Lost 4 HP"), "rendered poison receipt never rereads later resources")
 	await _live_button_burst()
 	await _final_food_receipt()
+	await _food_receipt_after_equipment()
 	_inventory.free()
 	_combat_previews()
 	await _mobile_combat_receipt()
@@ -209,6 +210,30 @@ func _final_food_receipt() -> void:
 	_check(not _messages.item_use_busy() and not (_inventory.get("_use_button") as Button).visible, "final-unit rearm preserves readiness with gear selected")
 	_check(receipt.text.contains("Fine Meal") and receipt.text.contains("Restored 8 HP"), "final-unit receipt retains captured food recovery")
 	_check(detail.get_global_rect().encloses(receipt.get_global_rect()), "final-unit receipt stays fully inside detail viewport after rearm")
+
+
+func _food_receipt_after_equipment() -> void:
+	_game.sim.inventory = ["rusty_sword", "leather_jerkin"]
+	_game.sim.consumable_counts.clear()
+	_game.sim.vitals.hp = 24
+	_game.sim.vitals.mp = 4
+	_game.sim.pickup("mending_draught", "test")
+	_game.sim.pickup("remedy_draught", "test")
+	_game.sim.pickup("fine_meal", "test")
+	await _frames(3)
+	await _select("fine_meal")
+	(_inventory.get("_use_button") as Button).pressed.emit()
+	await _rearm()
+	var ids: Array = _inventory.get("_item_ids")
+	_inventory.call("_move_cursor", ids.find("leather_jerkin") - int(_inventory.get("_cursor")))
+	await _frames(3)
+	_inventory.call("_confirm")
+	await _frames(6)
+	var receipt: Label = _inventory.get("_use_receipt")
+	var detail: ScrollContainer = _inventory.get("_detail_scroll")
+	_check(_game.sim.equipped.armor == "leather_jerkin" and _game.sim.vitals.hp == 32, "actual armor control changes maximum without healing after food")
+	_check(receipt.text.contains("Fine Meal") and receipt.text.contains("Restored 8 HP"), "selecting armor retains the immutable meal receipt")
+	_check(detail.get_global_rect().encloses(receipt.get_global_rect()), "meal receipt stays fully visible after selecting and equipping armor")
 
 
 func _combat_previews() -> void:

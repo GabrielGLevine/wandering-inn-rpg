@@ -1092,6 +1092,8 @@ func _render_use_actions() -> void:
 	_use_preview.visible = usable
 	_use_receipt.visible = not _receipt_data.is_empty()
 	if not usable:
+		if not _receipt_data.is_empty():
+			_keep_receipt_visible.call_deferred(int(_receipt_data.get("operation_id", -1)), _use_generation)
 		return
 	_use_offer_sim = Game.sim
 	_use_offer = Game.sim.prepare_item_use(id, "world").duplicate(true)
@@ -1152,10 +1154,10 @@ func _on_use_rearmed() -> void:
 	if open:
 		_render_use_actions()
 		if not _receipt_data.is_empty():
-			_keep_rearmed_receipt_visible.call_deferred(int(_receipt_data.get("operation_id", -1)), _use_generation)
+			_keep_receipt_visible.call_deferred(int(_receipt_data.get("operation_id", -1)), _use_generation)
 
 
-func _keep_rearmed_receipt_visible(operation: int, generation: int) -> void:
+func _keep_receipt_visible(operation: int, generation: int) -> void:
 	await get_tree().process_frame
 	if open and generation == _use_generation and operation == int(_receipt_data.get("operation_id", -2)):
 		_detail_scroll.ensure_control_visible(_use_receipt)
