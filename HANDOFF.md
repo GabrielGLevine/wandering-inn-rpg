@@ -19,10 +19,10 @@ archived, or superseded session blocks.
   `capacity_570.json`; clean import/diagnostic logs alongside. Import recreated
   an existing untracked `tests/test_companion_counter.gd.uid`; keep it local.
   Smoke (15 canonicals, including load_gate) and combat-policy units pass:
-  zero exits/no noise, QA results retained. **Next:** independent review,
-  then publish the diagnostic checkpoint. Treat 4→5 as the implementation
-  candidate: Infiltrator/Hedault 96/100 is a balance risk,
-  not balance acceptance. Root owns subsequent core/save/UI implementation.
+  zero exits/no noise, QA results retained. Independent review approved
+  diagnostic ec1acd72; published in PR #573. 4→5 remains a candidate with
+  disclosed gear/band risks. **Next:** compose #566/HUD and implement configured
+  capacity, migration and real equip/growth proof under serialized ownership.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code squashed as `0bbd96aa`. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
