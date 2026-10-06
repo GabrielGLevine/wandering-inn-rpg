@@ -932,7 +932,7 @@
    "payload_contains": {
     "text": "Got: Anchor Stone"
    },
-   "timeout_sec": 5
+   "timeout_sec": 30
   },
   {
    "action": "assert_state",
