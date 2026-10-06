@@ -9,29 +9,30 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Approved holistic art program #564:** root owns the main workspace on
-  `issue/564-holistic-art-direction`, base `e1d2edee`. User approved full
-  execution on 2026-10-05. Inn/chrome, complete NPC rigs, city/cross-street/
-  vistas, icons/key art, Garden/camp, PC/prop fallbacks, Riverfarm and six
-  ruin/underground maps are integrated through `fac1c2b8`. All other lanes
-  are frozen/idle; root owns all further mutations and composed verification.
-  Four complete creature rigs: actual bat/razorbeak40, wolf1065, watchgolem98
-  routes pass; registry and unchanged combat legibility bounds pass. Terrain
-  descriptors preserve original inheritance; public survey48views and actual
-  barracks125/stationer104/creature40 routes pass. Static168-draw coverage and
-  independent public read pass with contrast polish applied. Underground
-  slice `363cd76a` independently approved:20clean gates,39canonicals,49native
-  captures,6655blocker comparisons and60sampled escape moves (no save/load
-  roundtrip). Root's dirty palette override fixes legacy roof tint; paired
-  dungeon brazier/mood flags and quieter razorbeak ground pass native127/40.
+- **Approved holistic art program #564:** root owns `issue/564-holistic-art-direction`,
+  base `e1d2edee`, integrated through `307188a1`. User approved full execution
+  on 2026-10-05. Inn/chrome, NPC/PC/prop rigs, cities/cross-street/vistas,
+  icons/key art, Garden/camp, Riverfarm, ruin/underground and whole-record
+  terrain fallbacks are composed. Main is settled except the protected
+  untracked companion UID. Browser-startup worker owns only QA driver/web
+  files in `/private/tmp/wi-browser-ready`; other lanes are frozen.
+  Fresh official and public surveys: all33 maps,63 matching captures,318steps
+  each, independently read. Catalog review:473 owned PNGs,187/187 private
+  terrain draws have complete fallbacks; combat rosters/balance unchanged.
+  Full preflight54/54 passes; canonical268/269 plus corrected Archer152 passes.
+  Balance147cells x100seeds passes. Original browser22/26 exposes a runner
+  readiness race, not a demonstrated product-touch failure; bounded startup
+  handshake is being tested without extending individual gesture deadlines.
   Evidence: `/private/tmp/wi-art-execution`, `/private/tmp/wi-art-underground-evidence`,
   `/private/tmp/wi-art-riverfarm-evidence`, `/private/tmp/wi-art-creature-evidence`.
+  Independent final verdict awaits settled full native/browser repeats.
   Optional steel seed9 loss predates art: baseline/city97combat events match,
   both fail499; comparison in art-execution/steel-baseline-independent-review.
-  **Exact next action:** finish fresh public/overlay full-world art proof,
-  then settled full units/native sweep/balance/browser, independent exact-head
-  review, required CI and PR closure. Preserve untracked companion UID.
-  Physical devices and production timing remain unproven; no deployment.
+  **Exact next action:** integrate reviewed startup fix, regenerate derived
+  files, rerun full preflight/native/browser, obtain exact-head review, then
+  PR/required CI/squash tree-identity closure. Preserve companion UID.
+  Unsuitable harvested rigs retain strong official primaries/public limits;
+  physical devices and production timing remain unproven. No deployment.
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
   (standalone tree `5e8af12d`); QA/export source `93016f0b`.
