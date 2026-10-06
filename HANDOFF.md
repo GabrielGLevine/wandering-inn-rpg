@@ -26,19 +26,19 @@ archived, or superseded session blocks.
   Current phone combat133 and poison67 pass bothprofiles; all67combat/6poison
   images read. fc6repeat28both/6images read; older198alayout99both remains.
   Native52+meal23 prior captures read; current paid/cot15captures read/pass.
-- **Next:** integration b2a37365 includes reviewed force queue waits.
-  Root window tree `/private/tmp/wi-567-window-final`7614e738 runs matching
-  rest receipt/arc waits/message modal, session45588; review pending.
-  Prior cca force349/deep187 PASS; all17 images independently read.
-  Rogue `/private/tmp/wi-512-routes`43f7b8a0 completes3464steps/ending/Inn,
+- **Next:** integration14fa248d includes reviewed native QA corrections.
+  Native7614 force350/arc298/message48 PASS;24 images reviewed; composed
+  5-script subset PASS. Production src/data unchanged fromc4.
+  resource_plan `/private/tmp/wi-571-lifecycle-qa`76c37650:174-step abandon,
+  food-expiry/equip-noheal passes headless; native/review/composition pending.
+  Rogue `/private/tmp/wi-512-routes`43f7b8a0 reviewed:3464step ending/Inn,
   8wins/3losses/18sleeps,146g−142g=4g; INVALID5shaderRID errors.
-  Worker965 wall; other profiles unrun. resource_plan audits clause5 QA.
-  capacity570 engine diagnosis38deed19: bare serial repro3/3, controls clean;
-  retaining52 game materials fails. Exact-engine instrumentation next.
+  Worker965 wall; other profiles unrun. capacity570 diagnosis38deed19 reviewed;
+  bare serial repro3/3. Exact-engine build underway.
   Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence
   `/private/tmp/wi-*-evidence`. Preserve companionUID/privateoverlay.
-  Two workers max; root native lane. PR578/582/583 draft; fd23 seven non-Web
-  CI jobs pass. No partial activation/deployment.
+  Two workers max; resource_plan native lane. DraftPR578/582/583/574.
+  Final571 waits for earned/economic findings. No activation/deployment.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
