@@ -859,6 +859,7 @@ func _activate_bar_slot(index: int) -> void:
 			_item_offer = Game.sim.prepare_item_use(String(slot.id), "combat").duplicate(true)
 			_item_offer["name"] = String(slot.get("label", slot.id))
 			_item_generation += 1
+			_emit_item_preview.call_deferred(_item_offer.duplicate(true), _item_generation)
 			if bool(_item_offer.get("allowed", false)):
 				_bar_index = index
 				_info_slot_index = index
@@ -1291,3 +1292,10 @@ func _render_item_receipt(result: Dictionary) -> void:
 	if _mode != Mode.INACTIVE:
 		result.merge({"text": text, "surface": "combat_feed"}, true)
 		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_RENDERED, result)
+
+
+func _emit_item_preview(offer: Dictionary, generation: int) -> void:
+	await get_tree().process_frame
+	if generation == _item_generation and _mode != Mode.INACTIVE:
+		offer.merge({"text": WIEffectText.item_use_text(offer), "surface": "combat_readout", "generation": generation}, true)
+		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_PREVIEW_RENDERED, offer)

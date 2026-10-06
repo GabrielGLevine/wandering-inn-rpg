@@ -108,9 +108,13 @@ func _run() -> void:
 	stale.call()
 	_check(_game.sim.item_count("mending_draught") == 2, "callback from prior render cannot use new token")
 	var first: Callable = button.pressed.get_connections()[0]["callable"]
+	Input.action_press("confirm")
 	first.call()
 	first.call()
 	_check(_game.sim.item_count("mending_draught") == 1, "duplicate activation consumes once")
+	await _frames()
+	_check(_messages.item_use_busy(), "held confirm cannot rearm after visible receipt")
+	Input.action_release("confirm")
 	await _frames()
 	_check(not _messages.item_use_busy() and bool(_inventory.get("open")), "visible receipt releases latch with inventory open")
 	_check(_event_count(WIEvents.UI_ITEM_USE_RENDERED) == 1, "one result has one correlated render")
@@ -147,6 +151,7 @@ func _run() -> void:
 	_game.sim.vitals.hp = 2
 	_check((_inventory.get("_use_receipt") as Label).text == receipt and receipt.contains("Lost 4 HP"), "rendered poison receipt never rereads later resources")
 	_inventory.free()
+	_combat_previews()
 	_messages.free()
 	await _frames()
 	if not _failures.is_empty():
@@ -154,3 +159,38 @@ func _run() -> void:
 		return
 	print("PASS test_consumable_frontend: real controls, counts, tokens, warning cancellation and captured in-panel receipts")
 	quit(0)
+
+
+func _combat_previews() -> void:
+	_game.sim.pickup("mana_potion", "test")
+	_game.sim.pickup("mana_potion", "test")
+	_game.sim.hotbar_loadout.append("item:mana_potion")
+	_game.sim.transition("floodplains", Vector2i(3, 2))
+	_check(_game.sim.start_combat("relc_spar"), "authored combat initializes")
+	var combat := _game.sim.combat
+	combat.active_index = combat.turn_order.find("pc")
+	var pc: Dictionary = combat.combatants.pc
+	pc.ap = 0
+	pc.mp = 0
+	pc.hp = 12
+	var view := WICombatView.new(combat)
+	var hud: RefCounted = load("res://src/combat/combat_hud.gd").new(null, null, null)
+	var item := _game.sim.item("mana_potion").duplicate(true)
+	item["count"] = _game.sim.item_count("mana_potion")
+	item["preview"] = _game.sim.preview_item_use("mana_potion", "combat")
+	var slots: Array = hud.rebuild_slots(view, "pc", _game.sim.hotbar_loadout, [item])
+	var index := -1
+	for i in slots.size():
+		if String(slots[i].get("id", "")) == "mana_potion":
+			index = i
+	_check(index >= 0, "MP potion has a real combat item slot")
+	var rendered: Array = hud.render_bar_slots(view, slots)
+	_check(not rendered[index].affordable and String(hud._slot_info_line(rendered[index])).contains("Not enough AP"), "HUD refusal uses core preview with no AP")
+	pc.ap = 2
+	var selected := _game.sim.prepare_item_use("mana_potion", "combat")
+	_game.sim.preview_item_use("remedy_draught", "combat")
+	slots[index].preview = _game.sim.preview_item_use("mana_potion", "combat")
+	rendered = hud.render_bar_slots(view, slots)
+	_check(rendered[index].affordable and rendered[index].label.contains("×2") and String(hud._slot_info_line(rendered[index])).contains("Restore 6 MP"), "HUD shows count and projected MP restoration")
+	var result := _game.sim.commit_item_use(int(selected.operation_id))
+	_check(result.committed and pc.ap == 1 and _game.sim.item_count("mana_potion") == 1, "inspecting another slot preserves selected operation")
