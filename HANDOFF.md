@@ -9,34 +9,29 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed at user request:** compose merged art PR #577 and finish this lane.
-  Lane #570: `issue/570-capacity-analysis` in `/private/tmp/wi-570-capacity`;
-  base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
-  Owned paths: `HANDOFF.md`, `docs/design/570-capacity-analysis.md`, `scripts/analysis/capacity_570.py`, new `tests/sim_capacity_570.gd` + UID.
-  Calibration on `a5b6dee5`: 3,400 fights; eight matching batch controls and
-  rounds histograms; seed outcomes/Skill counts match pre-art evidence.
-  Evidence: `/private/tmp/wi-570-evidence/composed/combat-checks.json` and
-  `capacity_570.json`; clean import/diagnostic logs alongside. Import recreated
-  an existing untracked `tests/test_companion_counter.gd.uid`; keep it local.
-  Smoke (15 canonicals, including load_gate) and combat-policy units pass:
-  zero exits/no noise, QA results retained. Independent review approved
-  diagnostic ec1acd72; published in PR #573. 4→5 remains a candidate with
-  disclosed gear/band risks. **Next:** compose #566/HUD and implement configured
-  capacity, migration and real equip/growth proof under serialized ownership.
-- **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
-  is composed here as completed code squashed as `0bbd96aa`. Original art checkout
-  remains separately owned and untouched. Previous choice-log ceiling fix is
-  included. Squash tree `0e843291` matches the reviewed source. Its Web CI waiver
-  was art-only; required CI remains mandatory for these lanes.
-  Other checkpoints: #572 foundation, #573 capacity, #574 routes, #575 homecomings,
-  #578 HUD contract and #579 encounter design. Serialize shared source/catalogs.
-- **#566 resource foundation:** staged in draft PR #572, isolated
-  `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
-  Battle handoff, recovery presentation and composed #571 acceptance remain open.
-- **Resource/capacity roadmap #565:** planning is merged at base `b1c4b02b`;
-  `docs/design/2026-10-05-persistent-vitals-recovery-plan.md` and #566–#571 own
-  the staged resource/HUD/potion/food/capacity/cutover work. Proposed tuning
-  remains subject to measurement. M1 devices and #494/#495 choices stay open.
+- **Active #570 capacity:** `issue/570-capacity-analysis` in
+  `/private/tmp/wi-570-capacity`; base now composes #566/HUD through e46ff61d
+  and main10827698. User resumed all paused pieces; checkpoint coherent steps.
+  Capacity worker owns progression resonance configuration/accessor, WIGame
+  capacity verbs, save migration, sleep growth, inventory capacity display,
+  corresponding new tests and optional diagnostic/doc/HANDOFF. Resource worker
+  owns only separate-tree QA/routes/manifest and resource tutorial-copy fixes.
+  **Next:** implement measured 4→5 curve with three accessory positions,
+  once-only migration/growth and loss-proof/no-heal tests; coordinate registered
+  actual equip/refusal/sleep/reload QA after shared manifest is released.
+  Diagnostic ec1acd72 is independently approved: 3,400 fights, eight matching
+  controls; smoke/load/policy units pass. Evidence `/private/tmp/wi-570-evidence`.
+  Band overruns and 96/100 Infiltrator result remain disclosed follow-up risks.
+  No earned acquisition, implementation or overall balance acceptance yet.
+- **Art #577 is merged:** e89770de and squash0bbd96aa share tree0e843291.
+  The original checkout remains untouched. Its Web CI waiver applies only to
+  art; required checks remain mandatory here. #575/#579 are reviewed designs;
+  #572/#578 carry staged resources/HUD; #574 holds route reconnaissance.
+- **#565 integration remains staged:** no deployment or merge of carried
+  resources before #567–#571 recovery/HUD/journey gates. Current resource
+  schema v10; capacity migration precedes later consumable quantities.
+  Preserve known untracked companion-counter UID. M1 devices and #494/#495
+  choices remain open; no physical-slot or price-model rewrite is authorized.
 
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`

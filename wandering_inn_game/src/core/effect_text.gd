@@ -95,6 +95,47 @@ static func pending_meal_line(pending: Dictionary) -> String:
 	return "%s in your next fight." % ", ".join(bits)
 
 
+static func resource_line(resources: Dictionary) -> String:
+	return "HP %d/%d   MP %d/%d" % [resources.get("hp", 0), resources.get("max_hp", 0), resources.get("mp", 0), resources.get("max_mp", 0)]
+
+
+static func preparation_lines(preparation: Dictionary) -> Array[String]:
+	var lines: Array[String] = []
+	for state: String in ["armed", "active"]:
+		var bits := next_fight_bits(preparation.get(state, {}))
+		for i in bits.size():
+			bits[i] = bits[i].replace(" HP", " max HP")
+		if not bits.is_empty():
+			lines.append("%s: %s." % ["Next fight" if state == "armed" else "This fight", ", ".join(bits)])
+	if bool(preparation.get("well_fed", false)):
+		lines.append("Well fed — until sleep.")
+	if int(preparation.get("room_hp", 0)) > 0:
+		lines.append("Room: +%d max HP (permanent)." % int(preparation["room_hp"]))
+	return lines
+
+
+static func resource_receipt(payload: Dictionary) -> String:
+	var before: Dictionary = payload.get("before", {})
+	var after: Dictionary = payload.get("after", {})
+	if before.is_empty() or after.is_empty():
+		return ""
+	var reason := String(payload.get("reason", ""))
+	var parts: Array[String] = []
+	if reason == "sleep":
+		parts.append("Rested: HP %d/%d (%+d), MP %d/%d (%+d)." % [after["hp"], after["max_hp"], int(after["hp"]) - int(before["hp"]), after["mp"], after["max_mp"], int(after["mp"]) - int(before["mp"])])
+	else:
+		parts.append(resource_line(after) + ".")
+	for pool: String in ["hp", "mp"]:
+		var delta := int(after["max_" + pool]) - int(before["max_" + pool])
+		if delta != 0:
+			parts.append("Max %s %+d." % [pool.to_upper(), delta])
+			if reason != "sleep" and int(before[pool]) > int(after["max_" + pool]):
+				parts.append("%s capped at %d/%d." % [pool.to_upper(), after[pool], after["max_" + pool]])
+	var preparation: Dictionary = payload.get("preparation", {})
+	parts.append_array(preparation_lines(preparation))
+	return " ".join(parts)
+
+
 static func skill_effect_lines(skill: Dictionary, combatants_catalog: Array = []) -> Array[String]:
 	var effect: Dictionary = skill.get(WIKeys.EFFECT, {})
 	var phrase := _effect_phrase(effect, combatants_catalog, int(skill.get(WIKeys.AP_COST, 0)))

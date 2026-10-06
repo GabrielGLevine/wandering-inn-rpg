@@ -1,7 +1,7 @@
 class_name WISave
 extends RefCounted
 
-const VERSION := 9
+const VERSION := 10
 
 
 const DEPRECATED_IDS := {
@@ -18,7 +18,9 @@ const MIGRATABLE_ID_CLASSES := ["classes"]
 
 
 static func serialize(game: WIGame) -> Dictionary:
+	game.vitals.reconcile(game.player_resource_maxima())
 	return {"version": VERSION, "state": {
+		"vitals": game.vitals.serialized(),
 		"current_map": game.current_map,
 		"player_cell": [game.player_cell.x, game.player_cell.y],
 		"player_facing": [game.player_facing.x, game.player_facing.y],
@@ -64,6 +66,13 @@ static func serialize(game: WIGame) -> Dictionary:
 		"delivery_failed": game.delivery_failed,
 		"delivery_last_seen_times_slept": game.delivery_last_seen_times_slept,
 	}}
+
+
+static func _supported_version(value: Variant) -> bool:
+	if not (value is int or value is float):
+		return false
+	var number := float(value)
+	return is_finite(number) and number == floor(number) and number >= 2 and number <= VERSION
 
 
 static func _migrated(data: Dictionary) -> Dictionary:
@@ -114,7 +123,10 @@ static func _migrated(data: Dictionary) -> Dictionary:
 		# simply drops it; the merge is not lost, because the very next sleep
 		# re-derives the same qualifying pair from `classes` and applies it.
 		state.erase("pending_consolidation")
-		version = VERSION
+		version = 9
+	if version == 9:
+		# Missing legacy pools are derived after restored kit/equipment is applied.
+		version = 10
 	out["version"] = version
 	var class_map: Dictionary = DEPRECATED_IDS["classes"]
 	var cls_raw: Variant = state.get("classes", {})
@@ -136,6 +148,8 @@ static func _migrated(data: Dictionary) -> Dictionary:
 
 
 static func metadata(data: Dictionary) -> Dictionary:
+	if not _supported_version(data.get("version")):
+		return {}
 	# Pure preview path: migrate a copy and never apply to WIGame or mutate caller data.
 	var migrated := _migrated(data)
 	if int(migrated.get("version", -1)) != VERSION:
@@ -162,6 +176,9 @@ static func metadata(data: Dictionary) -> Dictionary:
 
 
 static func apply(game: WIGame, data: Dictionary) -> bool:
+	if not _supported_version(data.get("version")):
+		return false
+	var legacy_vitals := int(data.get("version", -1)) < 10
 	data = _migrated(data)
 	if int(data.get("version", -1)) != VERSION:
 		return false
@@ -169,6 +186,11 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	if not (raw_state is Dictionary):
 		return false
 	var s: Dictionary = raw_state
+	if s.has("vitals"):
+		if not WIVitals.valid_saved(s["vitals"]):
+			return false
+	elif not legacy_vitals:
+		return false
 	var required := ["current_map", "player_cell", "player_facing", "classes", "accomplishments", "player_skills", "removed_entities", "dormant_encounters", "started_quests", "rng_state", "inventory", "equipped", "container_state", "actions_since_sleep"]
 	for key: String in required:
 		if not s.has(key):
@@ -357,5 +379,9 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.accepted_delivery_baseline = (s.get("accepted_delivery_baseline", {}) as Dictionary).duplicate(true)
 	game.delivery_failed = bool(s.get("delivery_failed", false))
 	game.delivery_last_seen_times_slept = int(s.get("delivery_last_seen_times_slept", 0))
+	if s.has("vitals"):
+		game.vitals.restore(s["vitals"], game.player_resource_maxima())
+	else:
+		game.vitals.refill(game.player_resource_maxima())
 	game.reprime_quests()
 	return true

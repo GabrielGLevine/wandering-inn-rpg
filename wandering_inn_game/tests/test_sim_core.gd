@@ -719,7 +719,7 @@ func _init() -> void:
 	assert(g8.classes.get("mage", 0) == 1, "mage class gained at sleep")
 	assert(_count("class_gained") == 1, "class_gained emitted")
 	assert(_count("class_level_up") == 0, "no mage level without won_combat 3")
-	var gain_toast: Dictionary = _events[_events.size() - 1]
+	var gain_toast: Dictionary = _events.filter(func(ev: Dictionary) -> bool: return ev["type"] == "toast")[-1]
 	assert(gain_toast["type"] == "toast" and gain_toast["payload"]["text"] == "[Mage] class gained! — [Frost Bolt], [Quick Cast], [Light]", "O4 grants-listing gain toast text")
 
 	var g9 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
@@ -985,7 +985,7 @@ func _init() -> void:
 	# full bar as a bug. The clarifier rides ONLY when a pool number is actually
 	# on screen -- a damage-only or grant-only toast says nothing about pools and
 	# so gets no clarifier (`pool_grew`, sleep_beat.gd).
-	assert(warrior_toasts[0] == "[Warrior Level 2 → 5] — unlocked [Quick Movement], [Second Wind], [Dangersense] (+2 Max HP, +1 damage) — you start every fight full.", "batched toast announces span + all unlocks + felt growth + the no-pool clarifier")
+	assert(warrior_toasts[0] == "[Warrior Level 2 → 5] — unlocked [Quick Movement], [Second Wind], [Dangersense] (+2 Max HP, +1 damage) — sleep restores HP and MP.", "batched toast announces span + all unlocks + felt growth + the sleep recovery clarifier")
 	assert(_count("skill_unlocked") == 3, "per-level grants all unlock")
 	g16.record_accomplishment("melee_hit", 30)
 	_events.clear()
@@ -1001,7 +1001,7 @@ func _init() -> void:
 	# every class whose empty levels this walk crosses; what this line pins now is
 	# that a multi-level span lists EVERY unlock in level order beside its own
 	# felt growth.
-	assert(span_toast == "[Warrior Level 5 → 9] — unlocked [Even Footing], [Greater Strength] (+4 Max HP, +2 damage) — you start every fight full.", "multi-level batch lists every unlock in level order beside the span's felt growth")
+	assert(span_toast == "[Warrior Level 5 → 9] — unlocked [Even Footing], [Greater Strength] (+4 Max HP, +2 damage) — sleep restores HP and MP.", "multi-level batch lists every unlock in level order beside the span's felt growth")
 	g16.record_accomplishment("won_combat", 3)
 	_events.clear()
 	g16.sleep()
@@ -1009,7 +1009,7 @@ func _init() -> void:
 	for e: Dictionary in _events:
 		if e["type"] == "toast" and String(e["payload"]["text"]).begins_with("[Mage"):
 			mage_toast = String(e["payload"]["text"])
-	assert(mage_toast == "[Mage Level 2] — unlocked [Flame Jet], [Mana Shield], [Flame Dart] (+1 Max MP) — you start every fight full.", "single level keeps the plain shape + felt growth + the no-pool clarifier (MP is the other half of the same false model)")
+	assert(mage_toast == "[Mage Level 2] — unlocked [Flame Jet], [Mana Shield], [Flame Dart] (+1 Max MP) — sleep restores HP and MP.", "single level keeps the plain shape + felt growth + the sleep recovery clarifier (MP is the other half of the same false model)")
 
 	var g17 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g17.find_entity("goblin_encounter_2")["respawns"] = true
@@ -1615,7 +1615,7 @@ func _init() -> void:
 	assert(e4b.equip("leather_jerkin"), "equip the jerkin")
 	assert(e4b.start_combat("goblin_encounter_2"), "armored combat starts")
 	assert(int(e4b.combat.combatants["pc"][WIKeys.MAX_HP]) == base_max_hp + 4, "leather_jerkin's hp_mod (+4) rides the combat build")
-	assert(int(e4b.combat.combatants["pc"][WIKeys.HP]) == int(e4b.combat.combatants["pc"][WIKeys.MAX_HP]), "starting hp is the boosted max_hp")
+	assert(int(e4b.combat.combatants["pc"][WIKeys.HP]) == base_max_hp, "equipping a larger maximum cannot manufacture current HP")
 	assert(int(e4b.combat.combatants["pc"][WIKeys.DAMAGE_REDUCTION]) == 0, "leather_jerkin carries no damage_reduction")
 
 	var e4c := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
@@ -1638,7 +1638,7 @@ func _init() -> void:
 	wf6.well_fed = true
 	assert(wf6.start_combat("goblin_encounter_2"), "well_fed combat starts")
 	assert(int(wf6.combat.combatants["pc"][WIKeys.MAX_HP]) == base_max_hp + 2, "well_fed's +2 hp_mod rides the combat build")
-	assert(int(wf6.combat.combatants["pc"][WIKeys.HP]) == int(wf6.combat.combatants["pc"][WIKeys.MAX_HP]), "starting hp is the boosted max_hp")
+	assert(int(wf6.combat.combatants["pc"][WIKeys.HP]) == base_max_hp, "waking maximum bonus alone cannot restore current HP")
 
 	var wf6b := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	wf6b.transition("street", Vector2i(4, 3))
