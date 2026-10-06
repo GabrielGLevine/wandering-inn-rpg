@@ -296,6 +296,8 @@ func _layout_viewport_container() -> void:
 	if _world != null and Game.sim.combat == null:
 		if _field_chips != null:
 			top = _field_chips.occupied_height() + 10.0
+		if _message_layer != null:
+			top = maxf(top, _message_layer.field_hint_rect().end.y + 10.0)
 		if _field_hotbar != null:
 			bottom = _field_hotbar.world_bottom()
 	var scale := WORLD_SCALE
@@ -372,6 +374,7 @@ func _spawn_ui_layers() -> void:
 	message_layer.name = "MessageLayer"
 	add_child(message_layer)
 	_message_layer = message_layer
+	_message_layer.layout_changed.connect(_layout_viewport_container.call_deferred)
 	var combat_screen := COMBAT_SCREEN_SCRIPT.new()
 	combat_screen.name = "CombatScreen"
 	combat_screen.main_ref = self
@@ -416,6 +419,8 @@ func _spawn_ui_layers() -> void:
 	_field_chips.inventory_ref = _inventory
 	_field_chips.main_ref = self
 	_field_chips.combat_ref = _combat_screen
+	_field_chips.message_layer_ref = _message_layer
+	_field_chips.layout_changed.connect(_layout_viewport_container.call_deferred)
 	add_child(_field_chips)
 	_sleep_veil = SLEEP_VEIL_SCRIPT.new()
 	_sleep_veil.name = "SleepVeil"

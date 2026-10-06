@@ -16,7 +16,7 @@ archived, or superseded session blocks.
   Checkpoint before each implementation or validation phase.
   Evidence: `/private/tmp/wi-567-evidence`; independent review:
   `/private/tmp/wi-567-independent-review.md`.
-  **Exact next action:** import and run focused HUD renderer tests, then checkpoint implementation and obtain actual gameplay/windowed proof. HUD working changes add numeric field resources, inventory preparation and frozen receipts, with Saved fit reservation. Core settlement checkpoint `03da9ec4` is now composed; potion details follow #568. Issue remains open.
+  **Exact next action:** run load/smoke/message regression gates and actual gameplay/windowed proof on the settled HUD checkpoint. Numeric field resources, inventory preparation and frozen receipts with Saved fit reservation are implemented. Godot 4.7 import and focused HUD tests pass (zero exit/no noise); CSS geometry emulation is not browser-touch evidence. Core settlement checkpoint `03da9ec4` is now composed; potion details follow #568. Issue remains open.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code pending its CI/merge. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is

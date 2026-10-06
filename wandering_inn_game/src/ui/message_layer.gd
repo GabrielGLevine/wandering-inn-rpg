@@ -1,5 +1,11 @@
 extends CanvasLayer
 
+signal layout_changed
+
+var _field_resource_rect := Rect2()
+var _field_launcher_rect := Rect2()
+var _sleep_active := false
+
 ## GH#170: last-N toast texts for the journal's Recent Messages section --
 ## the durable answer to "it went past before I could read it". Static so
 ## the journal (created on open) reads history it never saw live. Sleep
@@ -295,7 +301,7 @@ func _show_save_status(slot: String) -> void:
 	var serial := _save_status_serial
 	_hint_label.text = "Saved" if WIResponsiveLayout.uses_touch_layout() else "%s   •  Saved" % _hint_text()
 	_resize_hint_panel()
-	ObservableBus.emit_domain_event(WIEvents.UI_SAVE_STATUS_RENDERED, {"slot": slot, "text": _hint_label.text})
+	_confirm_save_status(slot, serial)
 	var tree := get_tree()
 	if tree == null:
 		return
@@ -304,6 +310,35 @@ func _show_save_status(slot: String) -> void:
 		return
 	_hint_label.text = _hint_text()
 	_resize_hint_panel()
+
+
+func _confirm_save_status(slot: String, serial: int) -> void:
+	await get_tree().process_frame
+	if is_inside_tree() and serial == _save_status_serial and not _sleep_active and _hint_panel.is_visible_in_tree():
+		ObservableBus.emit_domain_event(WIEvents.UI_SAVE_STATUS_RENDERED, {"slot": slot, "text": _hint_label.text})
+
+
+func place_field_hint(resources: Rect2, launchers: Rect2) -> void:
+	_field_resource_rect = resources
+	_field_launcher_rect = launchers
+	_position_field_hint()
+
+
+func field_hint_rect() -> Rect2:
+	return _hint_panel.get_global_rect() if WIResponsiveLayout.uses_touch_layout() and _hint_panel.is_visible_in_tree() else Rect2()
+
+
+func _position_field_hint() -> void:
+	if _hint_panel == null or not WIResponsiveLayout.uses_touch_layout():
+		return
+	var safe: Rect2 = WIResponsiveLayout.safe_rect(get_viewport())
+	var origin := safe.position + Vector2(HINT_PANEL_LEFT, 4.0)
+	if _field_resource_rect.has_area():
+		origin.x = _field_resource_rect.end.x + 8.0
+		if origin.x + _hint_panel.size.x > _field_launcher_rect.position.x - 8.0:
+			origin = Vector2(safe.position.x + HINT_PANEL_LEFT, maxf(_field_resource_rect.end.y, _field_launcher_rect.end.y) + 8.0)
+	UIChrome.set_offsets(_hint_panel, origin.x, origin.y, origin.x + _hint_panel.size.x, origin.y + _hint_panel.size.y)
+	layout_changed.emit()
 
 
 func _first_wake_hint_text() -> String:
@@ -460,6 +495,20 @@ func _ready() -> void:
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	match type:
+		WIEvents.RESOURCES_CHANGED:
+			if String(payload.get("reason", "")) in ["sleep", "equipment", "dialogue", "preparation", "combat_victory"]:
+				var text := WIEffectText.resource_receipt(payload)
+				if not text.is_empty():
+					_queue_toast(text, true, false, true, false, payload)
+		WIEvents.PHASE_CHANGED:
+			if bool(payload.get("slept", false)):
+				_sleep_active = true
+				_defer_toast_display()
+		WIEvents.UI_SLEEP_VEIL_FINISHED:
+			_sleep_active = false
+			if not _toast_draining:
+				_drain_toasts()
+	match type:
 		WIEvents.INPUT_DEVICE_CHANGED:
 			_hint_label.text = _hint_text()
 			_resize_hint_panel()
@@ -506,16 +555,16 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_resize_dialogue_panel()
 			var fitted := _fit_dialogue_line(text)
 			_show_dialogue_line(text, fitted)
-		WIEvents.COMBAT_STARTED:
+		WIEvents.COMBAT_PREPARING, WIEvents.COMBAT_STARTED:
 			_hint_panel.hide()
 			_combat_active = true
 			_clear_dialogue_line()
 			_defer_toast_display()
 			_bank_toasts()
 		WIEvents.UI_COMBAT_HIDDEN:
+			_combat_active = false
 			_hint_panel.show()
 			_resize_hint_panel()
-			_combat_active = false
 			_restore_banked_toasts()
 		WIEvents.CLASS_GAINED:
 			if String(payload.get("class", "")) == "rogue" and not _first_stealth_hint_shown:
@@ -682,8 +731,8 @@ func _apply_toast_position() -> void:
 	var bottom := TOAST_BOTTOM_RAISED if _conversation_open else TOAST_BOTTOM_DEFAULT
 	if WIResponsiveLayout.uses_touch_layout():
 		var viewport := get_viewport()
-		var safe := WIResponsiveLayout.safe_rect(viewport)
-		var controls := WIResponsiveLayout.touch_size(viewport, Vector2(52.0, 52.0))
+		var safe: Rect2 = WIResponsiveLayout.safe_rect(viewport)
+		var controls: Vector2 = WIResponsiveLayout.touch_size(viewport, Vector2(52.0, 52.0))
 		bottom = minf(bottom, _message_bottom(safe, controls.y))
 		if _conversation_open:
 			var conversation := get_parent().get_node_or_null("DialoguePanel")
@@ -767,8 +816,8 @@ func _resize_dialogue_panel() -> void:
 	_dialogue_panel.custom_minimum_size = Vector2(width, panel_height)
 	_dialogue_panel.size = Vector2(width, panel_height)
 	if WIResponsiveLayout.uses_touch_layout():
-		var safe := WIResponsiveLayout.safe_rect(get_viewport())
-		var controls := WIResponsiveLayout.touch_size(get_viewport(), Vector2(52.0, 52.0))
+		var safe: Rect2 = WIResponsiveLayout.safe_rect(get_viewport())
+		var controls: Vector2 = WIResponsiveLayout.touch_size(get_viewport(), Vector2(52.0, 52.0))
 		var bottom := _message_bottom(safe, controls.y)
 		var left := safe.position.x + 24.0
 		UIChrome.set_offsets(_dialogue_panel, left, bottom - panel_height, left + width, bottom)
@@ -813,10 +862,7 @@ func _resize_hint_panel() -> void:
 		HINT_PANEL_LEFT + size.x, HINT_PANEL_BOTTOM)
 	if WIResponsiveLayout.uses_touch_layout():
 		_hint_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		var safe := WIResponsiveLayout.safe_rect(get_viewport())
-		var left := safe.position.x + HINT_PANEL_LEFT
-		var top := safe.position.y + 4.0
-		UIChrome.set_offsets(_hint_panel, left, top, left + size.x, top + size.y)
+		_position_field_hint()
 		hint_band_width = 0.0
 	# Centre the line in the PAPER, not in the panel rect: the rect's bottom
 	# ~40% is rule/fold/shadow/transparency, so panel-centred (the Label
@@ -910,10 +956,10 @@ func _hint_payload() -> Dictionary:
 ## journal body row, so a modal-response line is one short line by contract.
 ## Nothing else about it differs -- lossless queue, ordering within its class,
 ## the hold cap.
-func _queue_toast(text: String, record := true, housekeeping := false, protected := false, modal_response := false) -> void:
+func _queue_toast(text: String, record := true, housekeeping := false, protected := false, modal_response := false, recovery: Dictionary = {}) -> void:
 	var entry := {
 		"text": text, "record": record, "housekeeping": housekeeping,
-		"protected": protected, "modal_response": modal_response,
+		"protected": protected, "modal_response": modal_response, "recovery": recovery.duplicate(true),
 	}
 	if _combat_active:
 		# The board is up: the feed speaks for the fight (combat_screen mirrors
@@ -923,7 +969,7 @@ func _queue_toast(text: String, record := true, housekeeping := false, protected
 		# them -- otherwise the post-fight drain would double-enter them.
 		# HOUSEKEEPING keeps its record flag: chrome is not mirrored into the
 		# combat feed, so its only entry into Recent Messages is that drain.
-		if not housekeeping:
+		if not housekeeping and recovery.is_empty():
 			entry["record"] = false
 		_banked_toasts.append(entry)
 		return
@@ -940,6 +986,8 @@ func _queue_toast(text: String, record := true, housekeeping := false, protected
 ## show, leave the queue untouched" (the lossless-queue contract -- the modal's
 ## own HIDDEN event kicks the drain again).
 func _next_toast_index() -> int:
+	if _sleep_active or _combat_active:
+		return -1
 	if _toast_queue.is_empty():
 		return -1
 	if _open_modals.is_empty():
@@ -1130,6 +1178,11 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 	else:
 		_dialogue_started_msec = Time.get_ticks_msec()
 	ObservableBus.emit_domain_event(rendered_event, {"text": text})
+	if panel == _toast_panel and not (_showing_entry.get("recovery", {}) as Dictionary).is_empty():
+		var proof: Dictionary = _showing_entry["recovery"].duplicate(true)
+		proof["text"] = label.text
+		proof["surface"] = "toast"
+		ObservableBus.emit_domain_event(WIEvents.UI_RECOVERY_RENDERED, proof)
 	var hold := _hold_seconds(seconds) if collapse_under_qa else seconds
 	# Only CHORES yield their reading time to the queue -- see the constant.
 	var chore := panel == _toast_panel and _showing_housekeeping
