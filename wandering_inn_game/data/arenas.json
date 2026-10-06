@@ -2537,6 +2537,25 @@
       4
      ]
     }
+   ],
+   "floor_layers": [
+    {
+     "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+     "tile_px": 16,
+     "coords": [
+      3,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.3,
+       0.32,
+       0.35
+      ],
+      "detail": 0.3
+     },
+     "cells": "all"
+    }
    ]
   }
  ]

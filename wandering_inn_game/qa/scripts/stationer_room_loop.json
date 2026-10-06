@@ -25,6 +25,17 @@
    "timeout_sec": 5
   },
   {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "invrisil_cross_street",
+    "entity": "cross_street_shopper",
+    "sprite": "townswoman",
+    "resolved_sprite": "townswoman",
+    "hidden": false
+   }
+  },
+  {
    "action": "wait_for_event",
    "type": "ui_map_rendered",
    "payload_contains": {
