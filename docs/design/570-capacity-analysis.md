@@ -366,3 +366,14 @@ integration, actual 58-gold acquisition, UI/domain/rendered evidence and
 windowed/touch checks remain separate gates; this checkpoint does not close
 them. Earlier counterfactual combat measurements remain diagnostics, not proof
 of earned gear or sustained resource balance.
+
+
+The staged QA routes now use actual catalog costs to keep refusal meaningful
+under four capacity: Moon Bone (2) plus Stonescale (2) fits; Hedge (1) refuses
+with the third position free. A separate three-position-full check uses only
+two capacity points and expects the physical-position refusal instead. The
+awakening fixture wears Moon Bone (2), then attempts Anchor Sliver (3) both
+before and after the existing growth sleep. A further real sleep must retain
+five and the single growth event. These fixtures preserve their historical
+schema and prove no earned acquisition. Targeted headless and root-owned
+windowed validation remain pending at this route-edit checkpoint.

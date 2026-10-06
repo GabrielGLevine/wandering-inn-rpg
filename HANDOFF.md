@@ -9,18 +9,19 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #570 capacity QA:** `issue/570-capacity-analysis`, isolated tree
-  `/private/tmp/wi-570-capacity`. Core60aebdaa plus resourceQA/copy85af0621.
-  Capacity4→5, strict v11+2 migration and JSON-safe limits implemented;
-  focused capacity/save/core gates pass. Boundary review artifact:
-  `/private/tmp/wi-570-implementation-independent-review.md`.
-  **Next:** capacity570 owns gear_loop/door_awakening routes, their fixtures,
-  manifest/generated surfaces and matching docs. Preserve actual fit/refusal
-  and once-only growth; fixture mechanics do not prove earned acquisition.
-  Core/save/UI released to #568's separate tree; do not edit those paths.
-  Plan `/private/tmp/wi-570-evidence/implementation/qa-route-repair-plan.md`.
-  Root composes final gates/window proof. Diagnostic ec1acd72 remains reviewed:
-  3,400 fights/eight controls; overruns and96/100 Infiltrator remain risks.
+- **Active #570 capacity QA:** `issue/570-capacity-analysis` in
+  `/private/tmp/wi-570-capacity`, composed base `87b65ded`. Reviewed implementation
+  `60aebdaa` includes four initial capacity, once-only growth to five, and
+  JSON-safe v11 migration. Capacity owns gear_loop/door_awakening scripts,
+  their fixtures, manifest/generated notes, analysis doc and this lane block.
+  QA edits exercise fitting four, rejecting five with a free position,
+  distinct physical-full refusal, actual growth enabling the same five-point
+  loadout, and one further real sleep retaining five. Legacy fixture versions
+  remain historical. No earned acquisition claim; no core/UI edits in this lane.
+  **Next:** targeted load gate, both routes with production message timing,
+  unaffected canonical/shared-fixture coverage, then release for root windowed
+  evidence and final composed integration. Evidence `/private/tmp/wi-570-evidence`.
+  Diagnostic band overruns and 96/100 Infiltrator result remain follow-up risks.
 - **Art #577 is merged:** e89770de and squash0bbd96aa share tree0e843291.
   Original checkout untouched. User permits Web parity bypass when it blocks
   merges; other CI and independent review remain required. #575/#579 are designs;
