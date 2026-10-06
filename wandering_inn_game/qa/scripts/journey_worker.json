@@ -1,0 +1,429 @@
+{
+ "_comment": "#512 fresh worker/social history, seed9. Real paid chores, walked bed and held cooking. No fixture, teleport, topup or repeated wage farming. Opening checkpoint; extend through social acquisition and ending.",
+ "starts_at_title": true,
+ "creation_ui": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "type_text",
+   "text": "Maren"
+  },
+  {
+   "action": "click_char_creation_begin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "difficulty",
+    "options": [
+     "Bronze Rank",
+     "Silver Rank",
+     "Gold Rank"
+    ],
+    "cursor": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "hints",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "cursor": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_char_creation_card",
+   "card": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_confirmed",
+   "payload_contains": {
+    "pc_name": "Maren",
+    "pc_race": "human",
+    "pc_gender": "m",
+    "difficulty_step": 1,
+    "quest_hints": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_gdi_opener_rendered",
+   "payload_contains": {
+    "lines": 4,
+    "race": "human"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_name",
+   "equals": "Maren"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_race",
+   "equals": "human"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_gender",
+   "equals": "m"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_sprite",
+   "equals": "pc_human_m"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "pc_sprite": "pc_human_m"
+   },
+   "from_start": true,
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cleaning"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "target": "dirty_table"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleaned_the_inn",
+    "count": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Basic Cleaning] — The table is spotless. Earned 1 gold."
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "delivered_item",
+    "count": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You carry the laden tray out to the tables. Earned 1 gold."
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 2
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_first_wages_no_repeat_farming"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 9
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "helper"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Helper] class gained! — [Basic Cooking]"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.helper",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 2
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_helper_after_first_real_sleep"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_worker_earned_helper"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cooking"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cooking",
+    "target": "stew_pot"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal",
+    "source": "stew_pot",
+    "count_after": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Hot Meal"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.hot_meal",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cooked_meal",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 2
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_first_held_skill_meal"
+  },
+  {
+   "action": "screenshot",
+   "name": "02_worker_cooked_meal"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_opening"
+  }
+ ]
+}

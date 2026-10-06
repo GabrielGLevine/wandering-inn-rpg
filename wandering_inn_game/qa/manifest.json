@@ -7922,6 +7922,59 @@
      "save"
     ]
    }
+  },
+  {
+   "script": "journey_rogue",
+   "seed": 9,
+   "tiers": [
+    "full"
+   ],
+   "note": "#512 fresh Rogue opening checkpoint: real drainage transit, walked sleep, earned Stealth and live danger bypass. No fixtures or teleport; ending extension remains in progress.",
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "sneak"
+    ],
+    "dialogue": [],
+    "systems": [
+     "char_creation",
+     "combat",
+     "exploration",
+     "input",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "journey_worker",
+   "seed": 9,
+   "tiers": [
+    "full"
+   ],
+   "note": "#512 fresh worker opening checkpoint: actual wages, walked sleep, Helper and held Basic Cooking stock. No fixtures or teleport; social/ending extension remains in progress.",
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [],
+    "systems": [
+     "char_creation",
+     "economy",
+     "exploration",
+     "input"
+    ]
+   }
   }
  ],
  "browser_scripts": [

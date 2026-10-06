@@ -14,7 +14,11 @@ archived, or superseded session blocks.
   Resource worker owns only #512 routes, manifest/generated QA, scoped docs and
   HANDOFF. No gameplay/core/UI ownership. Driver extensions need controller
   coordination first. Composed d04cf5c7 and91bdac25; run fresh Rogue and
-  worker/social prefixes before full histories. No fixtures/teleports/topups.
+  worker/social histories through full endings. No fixtures/teleports/topups.
+  Fresh journey_rogue145-step and journey_worker70-step opening prefixes pass
+  seed9 headless; captured actual state/receipts in design512-continuous-journeys
+  and `/private/tmp/wi-512-evidence/current`. Next: serving/social acquisition
+  and ordinary errands, then full quest/ending continuation. Windows pending.
   Checkpoint before long route runs; preserve actual costs and imperfect forks.
 
 - **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
