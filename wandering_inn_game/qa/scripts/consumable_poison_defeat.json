@@ -264,11 +264,7 @@
    "type": "item_used",
    "payload_contains": {
     "item": "mana_potion",
-    "restore_mp": 6,
-    "hp_lost": 3,
-    "count_after": 1,
-    "ap_before": 4,
-    "ap_after": 3
+    "count_after": 1
    },
    "timeout_sec": 15
   },
@@ -278,7 +274,11 @@
    "payload_contains": {
     "item": "mana_potion",
     "committed": true,
-    "count_after": 1
+    "count_after": 1,
+    "restore_mp": 6,
+    "hp_lost": 3,
+    "ap_before": 4,
+    "ap_after": 3
    },
    "timeout_sec": 15
   },
