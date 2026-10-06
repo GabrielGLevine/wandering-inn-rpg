@@ -13,17 +13,13 @@ archived, or superseded session blocks.
   Lane #570: `issue/570-capacity-analysis` in `/private/tmp/wi-570-capacity`;
   base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
   Owned paths: `HANDOFF.md`, `docs/design/570-capacity-analysis.md`, `scripts/analysis/capacity_570.py`, new `tests/sim_capacity_570.gd` + UID.
-  Checkpoint before each implementation or validation phase.
-  Evidence: `/private/tmp/wi-570-evidence`; independent review:
-  `/private/tmp/wi-570-independent-review.md` (#570 benchmark extension still unreviewed).
-  Calibration on composed head `a5b6dee5` is complete: 3,400 fights and all
-  eight batch controls match, including the complete rounds histograms;
-  per-seed outcomes/Skill-event counts match pre-art evidence exactly.
+  Calibration on `a5b6dee5`: 3,400 fights; eight matching batch controls and
+  rounds histograms; seed outcomes/Skill counts match pre-art evidence.
   Evidence: `/private/tmp/wi-570-evidence/composed/combat-checks.json` and
   `capacity_570.json`; clean import/diagnostic logs alongside. Import recreated
   an existing untracked `tests/test_companion_counter.gd.uid`; keep it local.
-  **Exact next action:** run the smoke tier (includes load_gate), affected
-  combat-policy units and independent review. Continue treating 4→5 as the
+  **Next:** smoke tier (includes load_gate), combat-policy units and review.
+  Treat 4→5 as the
   implementation candidate: Infiltrator/Hedault 96/100 is a balance risk,
   not balance acceptance. Root owns subsequent core/save/UI implementation.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
