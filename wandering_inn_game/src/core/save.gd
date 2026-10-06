@@ -1,7 +1,7 @@
 class_name WISave
 extends RefCounted
 
-const VERSION := 10
+const VERSION := 11
 
 
 const DEPRECATED_IDS := {
@@ -42,7 +42,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"social_talked": game.social_talked.duplicate(true),
 		"entity_first_use": game.entity_first_use.duplicate(true),
 		"gold": game.gold,
-		"resonance_capacity": game.resonance_capacity,
+		"resonance_capacity": game.resonance_limit(),
 		"light_active": game.light_active,
 		"well_fed": game.well_fed,
 		"pending_meal": game.pending_meal.duplicate(true),
@@ -127,6 +127,17 @@ static func _migrated(data: Dictionary) -> Dictionary:
 	if version == 9:
 		# Missing legacy pools are derived after restored kit/equipment is applied.
 		version = 10
+	if version == 10:
+		if not (state.get("accomplishments", {}) is Dictionary):
+			return out
+		var legacy_default := 3 if int(state.get("accomplishments", {}).get("resonance_grown", 0)) >= 1 else 2
+		var capacity: Variant = state.get("resonance_capacity", legacy_default)
+		if not WIResonance.valid_capacity(capacity):
+			return out
+		if int(capacity) > WIResonance.MAX_CAPACITY - WIResonance.LEGACY_BASELINE_INCREASE:
+			return out
+		state["resonance_capacity"] = int(capacity) + WIResonance.LEGACY_BASELINE_INCREASE
+		version = 11
 	out["version"] = version
 	var class_map: Dictionary = DEPRECATED_IDS["classes"]
 	var cls_raw: Variant = state.get("classes", {})
@@ -221,7 +232,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 		return false
 	if s.has("gold") and not (s["gold"] is int or s["gold"] is float):
 		return false
-	if s.has("resonance_capacity") and not (s["resonance_capacity"] is int or s["resonance_capacity"] is float):
+	if not s.has("resonance_capacity") or not WIResonance.valid_capacity(s["resonance_capacity"]):
 		return false
 	if s.has("light_active") and not (s["light_active"] is bool):
 		return false
@@ -325,7 +336,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.social_talked = social_talked.duplicate(true)
 	game.entity_first_use = entity_first_use.duplicate(true)
 	game.gold = int(s.get("gold", 0))
-	game.resonance_capacity = int(s.get("resonance_capacity", 2))
+	game.resonance_capacity = int(s["resonance_capacity"])
 	game.light_active = bool(s.get("light_active", false))
 	game.well_fed = bool(s.get("well_fed", false))
 	game.pending_meal = (s.get("pending_meal", {}) as Dictionary).duplicate(true)

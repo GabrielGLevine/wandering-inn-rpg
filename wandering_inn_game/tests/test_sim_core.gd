@@ -1372,7 +1372,7 @@ func _init() -> void:
 	assert(String(e1.equipped.get("accessory_1", "?")) == "", "PC starts with no accessory_1 equipped")
 	assert(String(e1.equipped.get("accessory_2", "?")) == "", "PC starts with no accessory_2 equipped")
 	assert(String(e1.equipped.get("accessory_3", "?")) == "", "PC starts with no accessory_3 equipped")
-	assert(e1.resonance_capacity == 2, "PC starts with the default resonance_capacity of 2")
+	assert(e1.resonance_limit() == 4, "PC starts with four Resonance")
 	assert(e1.item("rusty_sword").get(WIKeys.KIND, "") == "weapon", "item() resolves the starter sword's catalog record")
 	assert(e1.item("nonexistent_item").is_empty(), "item() returns {} for an unknown id")
 
@@ -1490,6 +1490,7 @@ func _init() -> void:
 	])
 	cc_g1["items"] = {"items": g1_items}
 	var gAcc := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_g1)
+	gAcc.resonance_capacity = 2  # Keep the synthetic swap/refusal boundary at two.
 	for fixture_id: String in ["test_charm_hp", "test_charm_dmg", "test_charm_reduc", "test_charm_over", "test_charm_extra", "test_ring_res1", "test_blade_res1", "test_blade_res1b"]:
 		gAcc.pickup(fixture_id, "test_fixture")
 

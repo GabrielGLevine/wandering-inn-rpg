@@ -9,30 +9,29 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed #567:** `issue/567-hud-contract`, `/private/tmp/wi-567-hud-contract`;
-  composed main `10827698`, HUD `a9e839d3`, reviewed head `8a4591cd`.
-  Controller owns this tree.
-  Implemented numeric field/inventory resources and captured recovery receipts.
-  **Next:** compose #570 capacity, then window-test
-  `vitals_carry_loop`/`vitals_fresh_start`, then integrate #568 potion controls.
-  Serialize core/QA; no partial resource deployment.
-  Bundle-v7 windowed gear_loop/tutorial_flow/sewers_walkthrough(9):
-  exit0, PASS, result true, zero noise; all19 screenshots inspected. Equipment
-  keeps currentHP47 while maxima change; real ambush returns31/43. Fieldstrip
-  stays legible on dark maps and hides for combat/dialogue. Existing max-HP
-  item wording and first-combat hints are corrected by composed #56685af0621.
-  Evidence `/private/tmp/wi-567-evidence/window-8a4591cd`; bounded source/window
-  review `/private/tmp/wi-567-hud-independent-review.md` approves. Native metric
-  tests cover phone dimensions/scales; browser/touch/device proof remains open.
+- **Active #568 dependency:** `issue/568-consumable-recovery`, isolated tree
+  `/private/tmp/wi-568-consumables`. Base HUD/resource690f49f1 plus capacity
+  schema11/JSON-boundary60aebdaa; schema12 is reserved for quantities.
+  Owner resource_plan after controller dispatch: declared consumable catalog,
+  core inventory/save/transactions/preview/commit/poison and focused tests.
+  UI/combat presentation, effect_text and QA/generated files are separately owned.
+  **Next:** checkpoint strict saved quantities and atomic acquisition/removal,
+  then shared tokenized restorative use, poisoning and actual potion content.
+  No partial activated-resource deployment. Full composed gates follow UI/QA.
+  Read `/private/tmp/wi-568-prep.md` and `/private/tmp/wi-569-prep.md` for exact
+  producer/transaction traps and subsequent recovery-service requirements.
+- **Completed foundation checkpoints:** #56685af0621 (carry QA and max-HP copy),
+  #567a9e839d3 (HUD), #57060aebdaa (capacity). Resource/HUD bounded reviews pass;
+  capacity JSON-boundary re-review pending. Resource headless routes pass;
+  fresh-start production-timing window passes at690f49f1, all4captures read.
+  Evidence `/private/tmp/wi-566-resumed-evidence`, `/private/tmp/wi-567-evidence`,
+  `/private/tmp/wi-570-evidence`. New-source integration gates remain mandatory.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code squashed as `0bbd96aa`. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
   included. Squash tree `0e843291` matches the reviewed source. User now permits bypassing Web parity
   when it bottlenecks a PR; all other CI and independent review remain required.
   Other lanes: #572–#575 and #579; serialize shared source/catalogs.
-- **#566 resource foundation:** staged in draft PR #572, isolated
-  `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
-  Battle handoff and settled autosaves are implemented in `03da9ec4`; foundation focused units pass. Full integration, recovery presentation and composed #571 acceptance remain open.
 - **Resource/capacity roadmap #565:** planning is merged at base `b1c4b02b`;
   `docs/design/2026-10-05-persistent-vitals-recovery-plan.md` and #566–#571 own
   the staged resource/HUD/potion/food/capacity/cutover work. Proposed tuning
