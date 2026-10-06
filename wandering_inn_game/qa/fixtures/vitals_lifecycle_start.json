@@ -1,0 +1,61 @@
+{
+ "_comment": "Disclosed #571 lifecycle fixture, not earned acquisition: Mage1, 24 HP/4 MP, two prior mana doses, Leather Jerkin, Fine Meal, two Mending Draughts, one Mana Potion and preassigned item bar. All subsequent preparation, gear changes, combat use, abandon and victory use real controls. No fixture reload or top-up within route.",
+ "version": 12,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   12,
+   12
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "mage": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "learned_magic_from_pisces": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "used_skills": [],
+  "seen_statuses": [],
+  "inventory": [
+   "rusty_sword",
+   "leather_jerkin",
+   "fine_meal",
+   "mending_draught",
+   "mana_potion"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "vitals": {
+   "hp": 24,
+   "mp": 4,
+   "mp_potion_doses": 2
+  },
+  "consumable_counts": {
+   "fine_meal": 1,
+   "mending_draught": 2,
+   "mana_potion": 1
+  },
+  "pending_loot": [],
+  "resonance_capacity": 4,
+  "hotbar_loadout": [
+   "item:mending_draught",
+   "item:mana_potion"
+  ]
+ }
+}

@@ -2,12 +2,13 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 276 native canonical QA scripts. The manifest is the
+This is the human index for 277 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
 | script | seed | tiers | fixture | purpose |
 |---|---:|---|---|---|
+| `vitals_lifecycle_negatives` | 9 | full | `vitals_lifecycle_start` | #571 disclosed fixture: numeric equip-toggle negatives, changed combat pools/stock/exposure abandoned to distinct auto checkpoint, one-fight meal activation and terminal expiry clamp; actual controls and frozen receipts. |
 | `meal_service_loop` | 9 | full | `meal_service_start` | #569 disclosed pre-errand non-cook fixture: actual meal purchase cancel/two confirms, frozen recovery receipts, poor free-bed directions and real stairs/hall/bed; supplied class/purse/depletion are not earned history. |
 | `meal_earned_cooking` | 9 | full | `None` | #569 fresh cleaning and Helper sleep earn Basic Cooking; real chest armor creates capped HP headroom; pot/kettle acquisition, missing-Skill/station and no-output checks, actual inventory eating. No combat-injury claim. |
 | `meal_station_loop` | 9 | full | `meal_station_start` | #569 supplied Chef10/Mage1 and held cooking Skills: actual Advanced/Signature station production, repeated/capped recovery, strongest preparation and save/load; not earned class or resale history. |
