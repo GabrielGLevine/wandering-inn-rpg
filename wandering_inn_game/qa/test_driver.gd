@@ -288,7 +288,8 @@ func _execute(step: Dictionary) -> void:
 			await get_tree().process_frame
 		"begin_production_message_timing":
 			var layer := get_tree().root.find_child("MessageLayer", true, false)
-			var deadline := Time.get_ticks_msec() + 15000
+			var wait_msec := int(clampf(float(step.get("timeout_sec", 15.0)), 1.0, 120.0) * 1000.0)
+			var deadline := Time.get_ticks_msec() + wait_msec
 			while layer != null and (bool(layer.get("_toast_draining")) or not (layer.get("_toast_queue") as Array).is_empty()) and Time.get_ticks_msec() < deadline:
 				await get_tree().process_frame
 			if layer == null or bool(layer.get("_toast_draining")) or not (layer.get("_toast_queue") as Array).is_empty():

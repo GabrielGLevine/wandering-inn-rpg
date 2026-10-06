@@ -1741,7 +1741,9 @@
    "timeout_sec": 5
   },
   {
-   "action": "begin_production_message_timing"
+   "action": "begin_production_message_timing",
+   "_comment": "When production timing is enabled from boot, both earned sleeps and quest messages must drain.",
+   "timeout_sec": 120
   },
   {
    "action": "move",
