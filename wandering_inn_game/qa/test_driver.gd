@@ -593,13 +593,13 @@ func _execute(step: Dictionary) -> void:
 			await _touch_rect_of("Inventory", "item_use_rect", null, "touch_inventory_use", step.get("gesture", {}))
 		"touch_inventory_bar":
 			await _touch_rect_of("Inventory", "item_bar_rect", null, "touch_inventory_bar", step.get("gesture", {}))
-		"touch_item_warning_cancel", "touch_item_warning_confirm":
+		"touch_item_warning_cancel", "touch_item_warning_confirm", "touch_item_receipt_close":
 			var action := String(step["action"])
 			var presenter := get_tree().get_first_node_in_group("wi_item_use_presenter")
 			if presenter == null:
 				_fail("%s: item-use presenter is absent" % action)
 			else:
-				var method := "item_warning_cancel_rect" if action == "touch_item_warning_cancel" else "item_warning_confirm_rect"
+				var method: String = {"touch_item_warning_cancel": "item_warning_cancel_rect", "touch_item_warning_confirm": "item_warning_confirm_rect", "touch_item_receipt_close": "item_receipt_close_rect"}[action]
 				await _touch_rect_of(String(presenter.name), method, null, action, step.get("gesture", {}))
 		"touch_inventory_row":
 			await _touch_rect_of("Inventory", "item_row_rect", int(step["row"]) - 1, "touch_inventory_row", step.get("gesture", {}))

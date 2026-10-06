@@ -135,8 +135,21 @@
   },
   {
    "action": "wait_for_event",
-   "type": "ui_dialogue_shown",
+   "type": "dialogue_node",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "speaker": "Xif",
+    "text": "Sold, at the posted price. Prices are final. You will run out. Come back when you do. The shop opens at the first bell."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
    "timeout_sec": 15
+  },
+  {
+   "action": "assert_dialogue_displayed",
+   "contains": "Sold, at the posted price."
   },
   {
    "action": "screenshot",
@@ -148,7 +161,16 @@
   },
   {
    "action": "wait_for_event",
-   "type": "ui_dialogue_shown",
+   "type": "dialogue_node",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "speaker": "Xif",
+    "text": "The repeat customer. I like repeat customers. What now?"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
    "timeout_sec": 15
   },
   {
@@ -218,8 +240,21 @@
   },
   {
    "action": "wait_for_event",
-   "type": "ui_dialogue_shown",
+   "type": "dialogue_node",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "speaker": "Xif",
+    "text": "Sold, at the posted price. Prices are final. You will run out. Come back when you do. The shop opens at the first bell."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
    "timeout_sec": 15
+  },
+  {
+   "action": "assert_dialogue_displayed",
+   "contains": "Sold, at the posted price."
   },
   {
    "action": "screenshot",
@@ -242,6 +277,11 @@
    "action": "wait_for_event",
    "type": "ui_inventory_shown",
    "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
   },
   {
    "action": "touch_inventory_item",
@@ -305,6 +345,16 @@
    "name": "04_safe_third_dose"
   },
   {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "mana_potion",
+    "count_before": 1,
+    "exposure_before": 3
+   }
+  },
+  {
    "action": "touch_inventory_use"
   },
   {
@@ -336,6 +386,26 @@
    "timeout_sec": 15,
    "payload_contains": {
     "item": "mana_potion"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "mana_potion",
+    "reason": "cancelled",
+    "committed": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "mana_potion",
+    "count_before": 1,
+    "exposure_before": 3
    }
   },
   {

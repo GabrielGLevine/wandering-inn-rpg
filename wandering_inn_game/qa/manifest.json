@@ -8333,6 +8333,35 @@
      "settings"
     ]
    }
+  },
+  {
+   "script": "consumable_repeat_touch",
+   "seed": 9,
+   "fixture": "consumable_repeat_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "#568 Chromium touch only: three fixture-owned potions and two viable uses; rapid Use contacts consume once, later deliberate contact consumes next. Stock/HP/MP/exposure explicitly fixture setup; no earned/device claim.",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "consumable_repeat_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
   }
  ]
 }
