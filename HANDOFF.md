@@ -36,13 +36,15 @@ archived, or superseded session blocks.
   engine leaks in bare reproduction; unmodified custom build/MRE/prefix798
   clean after import. Earlier cache-error controls invalidated. Build/config
   differences remain unexplained; no production replacement or active build.
-- **Active #512 martial:** resource_plan owns `/private/tmp/wi-512-martial`,
-  `issue/512-martial-recovery`, basef71d8e8c; steel_thread/docs only. Free-bed
-  detour after original661 preserves seed37/history. Before4/49HP,0/13MP; fifthsleep49/49HP13/13MP,12gold unchanged.
-  First fresh prefix beats boss round4 at26HP0MP; stopsZevara fresh greeting.
-  Exact afterpins +secondinteract correction authored; next fresh fail-fast
-  replay to first divergence, then load/unaffected controls and release. Root
-  owns native/integration. No mobile/tuning/extra tactics; retain companionUID.
+- **#512 martial released:** `/private/tmp/wi-512-martial`, branch
+  `issue/512-martial-recovery`, basef71d8e8c, sourcefe7922dc. Walked free bed
+  after sixth win restores49HP13MP; Awakened victoryround4 ends26HP0MP.
+  Fresh-waking Zevara secondinteract fixed. Fresh2698 route stops1009 at
+  FULL42HP14MP vault lossround7,construct46HP,17gold: exit1/resultfalse,
+  ZERO engine noise. No further tactics/tuning. Load2/abandon54 clean;
+  Details: docs/design/512-martial-recovery.md.
+  Root retains native; focused window remains pending. Tracked clean except
+  companionUID; no runtime. Review vault wall before extension.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
