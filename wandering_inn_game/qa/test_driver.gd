@@ -60,6 +60,8 @@ var _out_dir := ""
 var _capture_depth := 0
 var _failures: PackedStringArray = []
 var _events_seen: Array = []
+var _initial_title_gate_seen := false
+var _initial_web_draw_seen := false
 var _last_purchase_buy_pos := Vector2.ZERO
 var _screenshots: PackedStringArray = []
 var _wait_cursor := 0
@@ -139,6 +141,8 @@ func _ready() -> void:
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
+	if type == "ui_title_gate_rendered":
+		_initial_title_gate_seen = true
 	var event := {"type": type, "payload": payload}
 	if OS.has_feature("web"):
 		event["browser_time_ms"] = JavaScriptBridge.eval("performance.now()", true)
@@ -168,11 +172,22 @@ func _run() -> void:
 	if OS.has_feature("web") and int(JavaScriptBridge.eval("window.__WI_QA__?.wait_for_runner_ready === true ? 1 : 0", true)) == 1:
 		var startup_deadline := Time.get_ticks_msec() + RUNNER_STARTUP_DEADLINE_MSEC
 		var runner_ready := false
+		var draw_connected := false
+		var engine_ready_published := false
 		while Time.get_ticks_msec() < startup_deadline:
-			if int(JavaScriptBridge.eval("window.__WI_QA_RUNNER_READY__ === true ? 1 : 0", true)) == 1:
+			if _initial_title_gate_seen and not draw_connected:
+				RenderingServer.frame_post_draw.connect(_on_initial_web_draw, CONNECT_ONE_SHOT)
+				draw_connected = true
+			if _initial_web_draw_seen and not engine_ready_published:
+				JavaScriptBridge.eval("window.__WI_QA_ENGINE_READY__ = {initial_draw_complete: true, rendered_at_ms: performance.now()}", true)
+				ObservableBus.emit_domain_event("qa_engine_ready", {"initial_ui": "ui_title_gate_rendered"})
+				engine_ready_published = true
+			if engine_ready_published and int(JavaScriptBridge.eval("window.__WI_QA_RUNNER_READY__ === true ? 1 : 0", true)) == 1:
 				runner_ready = true
 				break
 			await get_tree().process_frame
+		if RenderingServer.frame_post_draw.is_connected(_on_initial_web_draw):
+			RenderingServer.frame_post_draw.disconnect(_on_initial_web_draw)
 		if not runner_ready:
 			_fail("web runner startup readiness was not received within 30000ms; no QA steps run")
 			_aborted = true
@@ -197,6 +212,9 @@ func _run() -> void:
 
 
 const RUNNER_STARTUP_DEADLINE_MSEC := 30000
+
+func _on_initial_web_draw() -> void:
+	_initial_web_draw_seen = true
 
 func _install_fixture_saves(spec: Variant) -> void:
 	if spec == null:
