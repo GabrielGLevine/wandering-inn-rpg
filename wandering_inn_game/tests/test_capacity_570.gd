@@ -30,6 +30,7 @@ func _init() -> void:
 	_check_growth()
 	_check_migration()
 	_check_resources()
+	_check_json_boundary()
 	print("PASS test_capacity_570")
 	quit(0)
 
@@ -149,3 +150,52 @@ func _check_resources() -> void:
 		assert(pc[WIKeys.SKILLS].has("mana_shield") and int(pc[WIKeys.DAMAGE_REDUCTION]) == 1)
 		game.combat.apply_damage("pc", 3, "training_dummy_a", true)
 		assert(int(pc[WIKeys.HP]) == 5 and int(pc[WIKeys.MP]) == 0, "depleted Mana Shield cannot absorb damage after equipping")
+
+
+func _json_roundtrip(data: Dictionary) -> Dictionary:
+	return JSON.parse_string(JSON.stringify(data))
+
+
+func _check_json_boundary() -> void:
+	const MAX_JSON_INTEGER: int = 9007199254740991
+	for version: int in [10, WISave.VERSION]:
+		for invalid: int in [MAX_JSON_INTEGER + 1, 18014398509481984]:
+			var data := WISave.serialize(_new_game())
+			data["version"] = version
+			data["state"]["resonance_capacity"] = invalid
+			var target := _new_game()
+			var before := WISave.serialize(target)
+			assert(not WISave.apply(target, _json_roundtrip(data)), "JSON capacities above the exact integer range must be rejected")
+			assert(WISave.serialize(target) == before)
+	for version: int in [10, WISave.VERSION]:
+		var data := WISave.serialize(_new_game())
+		data["version"] = version
+		data["state"]["resonance_capacity"] = MAX_JSON_INTEGER - (2 if version == 10 else 0)
+		var target := _new_game()
+		assert(WISave.apply(target, _json_roundtrip(data)))
+		assert(target.resonance_limit() == MAX_JSON_INTEGER)
+		assert(WISave.apply(target, _json_roundtrip(WISave.serialize(target))))
+		assert(target.resonance_limit() == MAX_JSON_INTEGER, "JSON save/reparse preserves the largest accepted capacity exactly")
+	for legacy: int in [MAX_JSON_INTEGER - 1, MAX_JSON_INTEGER]:
+		var data := WISave.serialize(_new_game())
+		data["version"] = 10
+		data["state"]["resonance_capacity"] = legacy
+		var target := _new_game()
+		var before := WISave.serialize(target)
+		assert(not WISave.apply(target, _json_roundtrip(data)), "legacy +2 must fit inside the JSON-safe range")
+		assert(WISave.serialize(target) == before)
+	for invalid: Variant in [-1, 1.5, INF, NAN, MAX_JSON_INTEGER + 1, "4"]:
+		var game := _new_game({"initial_capacity": invalid, "growth_amount": invalid})
+		assert(game.resonance_limit() == 4, "invalid configuration uses the safe default")
+		game.record_accomplishment("door_awakened")
+		game.sleep()
+		game.sleep()
+		assert(game.resonance_limit() == 5, "invalid growth configuration cannot overflow or subtract capacity")
+	var bounded := _new_game({"initial_capacity": MAX_JSON_INTEGER - 1, "growth_amount": 2})
+	bounded.record_accomplishment("door_awakened")
+	bounded.sleep()
+	bounded.sleep()
+	assert(bounded.resonance_limit() == MAX_JSON_INTEGER, "growth respects the same exact-integer bound")
+	assert(WISave.apply(bounded, _json_roundtrip(WISave.serialize(bounded))))
+	bounded.sleep()
+	assert(bounded.resonance_limit() == MAX_JSON_INTEGER and bounded.accomplishment_count("resonance_grown") == 1)

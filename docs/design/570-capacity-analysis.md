@@ -336,8 +336,13 @@ are unchanged.
 Save version 11 adds the historical baseline increase of two exactly once to
 valid pre-v11 capacity. Missing legacy capacity uses two, or three when the
 existing growth accomplishment is present. Custom capacities are increased,
-not clamped downward; unrepresentable overflow is rejected. Modern saves must
-carry an explicit nonnegative, finite integral capacity. Rejection precedes
+not clamped downward within the supported range. Capacity is limited to
+`2^53 - 1` (9,007,199,254,740,991), the largest universally exact JSON integer.
+Legacy values whose +2 increase would exceed this bound are rejected. Modern
+saves must carry an explicit nonnegative, finite integral capacity within the
+same bound. Invalid initial/growth configuration uses the safe default; growth
+stops at the bound. An actual serialize/reparse regression proves the largest
+accepted capacity survives migration and subsequent saves without rounding. Rejection precedes
 game mutation. Existing earlier schema migrations retain their prior behavior.
 The v11 step preserves equipped items, inventory, lore and accomplishments,
 as well as present depleted HP, zero MP and potion exposure.

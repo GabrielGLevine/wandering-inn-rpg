@@ -13,7 +13,9 @@ archived, or superseded session blocks.
   `/private/tmp/wi-570-capacity`, implementation base `45a54e52` (composed
   #566/HUD and main10827698). Four initial Resonance, one existing sleep growth,
   three accessory positions; shared config/accessor and v11 +2 migration are
-  implemented. Focused capacity unit passes with no error/warning noise;
+  implemented. Review precision fix caps accepted capacity at `2^53 - 1`,
+  rejecting legacy +2 overflow; actual JSON boundary tests pass cleanly.
+  Focused capacity unit passes with no error/warning noise;
   Godot 4.7 import and data lint pass. Evidence:
   `/private/tmp/wi-570-evidence/implementation`; rejected test-fixture runs
   remain separately named. Existing save/core assertions now reflect v11/four;
