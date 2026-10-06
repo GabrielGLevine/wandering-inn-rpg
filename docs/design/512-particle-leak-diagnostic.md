@@ -156,9 +156,9 @@ unchanged. Selected game observer/log hashes are recorded separately in
 `sha256.json` and exact command matrix.
 
 
-## Engine instrumentation in progress
+## Custom engine comparison
 
-An unmodified source build of exact archive `5b4e0cb0f` is in progress in
+An unmodified source build of exact archive `5b4e0cb0f` completed in
 `/private/tmp/wi-512-engine-source`. Pinned SCons4.9.1 lives in a temporary venv;
 source/archive hashes, the command, and machine limits are preserved in
 `engine-build-metadata.json`. The command is:
@@ -184,6 +184,58 @@ limited negative does not establish the compiled engine's behavior.
 The initial build completed successfully, but its template default refused
 `--path`; a working-directory fallback timed out without executing the probe.
 Those cases are invalid controls. The corrected command above enables Godot's
-supported project/script loading option. The corrected build log is
+supported project/script loading option. The corrected build completed with exit zero. Its log is
 `engine-build-baseline-paths.log`; no trace patch has been applied. Initial
 refusal logs and timeout metadata are preserved separately.
+
+
+The first corrected-build MRE pair also had a startup error: the bare project
+lacked its generated global script cache. Although both reached the completion
+marker without a shader leak, these are invalid controls. Metadata explicitly
+marks `custom-baseline-valid-*` invalid (the filename is historical). No build,
+compiler, or padding conclusion follows from that pair. The runner now records
+all `SCRIPT ERROR`, `Parse Error`, `ERROR:`, and `WARNING` noise, in addition to
+exit and completion. A normal editor import prepares the cache before retry.
+
+
+After the normal import (`godot --headless --path <bare-project> --editor
+--import --quit`), both engines were rerun against the same script contents.
+The complete logs, exact commands, binary/source hashes, and verdicts are in
+`engine-build-metadata.json`, `*-after-import-results.json`, and
+`custom-engine-checkpoint-sha256.json` under the evidence directory.
+
+| Valid comparison | Exit / completion | Full noise check |
+|---|---|---|
+| Installed4.7, two-material repro after import | Zero / marker | DummyShader leak; rejected gate |
+| Installed4.7, no-argument-read control | Zero / marker | Clean |
+| Unmodified custom4.7, two-material repro after import | Zero / marker | Clean |
+| Unmodified custom4.7, no-argument-read control | Zero / marker | Clean |
+| Unmodified custom4.7, unchanged worker prefix798 | Zero / QA_RESULT PASS;798/798 passing result | Clean |
+
+The source revision is `5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88`, upstream
+tree `a74f51b5f510fdacf72be7d8f8d598e7b7c192cd`. The local compiler is
+AppleClang21.0.0 and target is `template_debug`; the installed binary is the
+official editor build. Compiler, build target/configuration, binary layout,
+and allocation/lifetime behavior have not been isolated from one another.
+The valid comparison establishes a build-dependent reproduction, not which
+of these differences causes it. It does not prove a padding defect or a fix.
+The custom binary has not replaced any installed or project engine.
+
+An ordinary Shader-resource version of the two-allocation control also
+completes without noise on the installed engine; it does not exercise the
+ParticleProcessMaterial cache. An attempted x86_64-slice comparison timed out
+without a completion marker and supplies no architecture evidence.
+
+The investigation is checkpointed with no active processes. The logging patch
+remains unapplied because the valid custom baseline does not reproduce the
+failure. No further compiler/configuration probes or production changes are
+part of this checkpoint. The installed engine's noisy worker/rogue runs remain
+invalid gates; custom798 success does not retroactively accept them.
+
+A bounded follow-up should first reproduce the failure in a build with known
+compiler and editor-target settings, then apply the prepared trace to identify
+key/cache lifetime divergence. Any engine correction or candidate version
+needs the same minimal red/control comparison, unchanged long-route replay,
+and native visual acceptance before becoming the production engine. Do not
+expand this diagnostic into an engine replacement or gameplay workaround
+without that evidence.

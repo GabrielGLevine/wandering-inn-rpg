@@ -15,8 +15,9 @@ archived, or superseded session blocks.
   also leaks a particle shader; prefix792 clean,798 noisy at second deep entry.
   Bare two-material serial repro leaks3/3; matched controls clean. All52 game
   particle materials freed; engine mechanism unresolved. Next instrument key/
-  cache accounting with isolated custom engine (corrected build in progress);
-  no production workaround. Root owns integration.
+  cache accounting only after a failing custom baseline: current unmodified
+  custom MRE/prefix798 are clean; official MRE still leaks. Diagnostic released,
+  trace unapplied, no engine replacement. Root owns integration.
 
 - **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
   Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.
