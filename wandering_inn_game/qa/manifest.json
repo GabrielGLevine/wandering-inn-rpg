@@ -7933,20 +7933,24 @@
    "surfaces": {
     "maps": [
      "deep_tunnels",
+     "dungeon_approach",
      "floodplains",
      "guild",
      "inn",
      "inn_upstairs",
      "sewers",
-     "street"
+     "street",
+     "trapped_halls"
     ],
     "fixtures": [],
     "skills": [
      "basic_cleaning",
+     "find_trap",
      "light",
      "sneak"
     ],
     "dialogue": [
+     "ceria_intro",
      "drayman_dispute",
      "erin_errand",
      "krshia_crate",

@@ -206,3 +206,20 @@ the diagnostic tail was removed and is not part of the canonical.
 Next: actual seal report, equip earned loot within capacity, sleep, and the
 regional spine with measured costs. Worker remains at its recorded boss wall;
 Rogue's successful result does not erase that different history.
+
+## Gallery and earned Skill utility
+
+Rogue1365 reaches the actual gallery report:20gold (5retainer+15report),
+29/49HP,0/15MP. The warren's Mending Draught is spent by competent combat
+autoplay in the vault: stock1→0, HP21→29, AP4→3. This is observed policy use,
+not a manual potion-button proof. Find Trap is actually cast on pressure_plate_a
+with its domain event and exact rendered line; slot11 requires the rendered
+control because number-key mapping stops at9. Native input is an emulated
+click, not physical touch proof. The subsequent guided crossing deliberately
+retains Ksmvr's17HP penalty. The vault is won through this same history.
+
+Fang, earned Moonhide and earned Moon-Bone occupy all four Resonance before
+the vault. The next choice is the earned Core Shard and actual capacity refusal/
+swap, followed by rest before the ruin guardian. This route still carries the
+known shutdown shader leak;1365 result assertions pass but the overall gate is
+invalid. Evidence rogue-gallery-current and rogue-gallery2.log.

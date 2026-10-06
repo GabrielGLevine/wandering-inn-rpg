@@ -21,7 +21,10 @@ archived, or superseded session blocks.
   DummyShader RID leak ERROR at exit, so authoritative gates INVALID.
   Root/capacity570 own isolated lifecycle diagnosis; two-frame drain probe
   still leaked and was removed. Earlier Rogue882 was clean.
-  Next: Rogue seal report, earned-loot equipment/rest and regional gates.
+  Rogue1365 now reaches gallery report:20g,29/49HP,0/15MP. Actual
+  Find Trap plate cast and Ksmvr17HP guided-cost observed; earned draught
+  consumed by competent policy1→0. Next: earned Core Shard capacity swap,
+  actual sleep before ruin guardian, then regional gates.
   Evidence /private/tmp/wi-512-evidence/current; exact details in
   docs/design/512-continuous-journeys.md. Endings, force-crate variant,
   affordability and windows remain outstanding.
