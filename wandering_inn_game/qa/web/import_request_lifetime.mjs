@@ -1,3 +1,4 @@
+import { runnerStartupInit, releaseRunnerStartup } from "./runner_startup.mjs";
 // Delayed real FileReader fault injection after trusted Import-row taps.
 // Empty chooser selection is a cancellation surrogate, not physical OS Back.
 import assert from 'node:assert/strict';
@@ -89,8 +90,9 @@ try {
    await chooser.setFiles(choice ? {name:choice[0], mimeType:'application/json', buffer:Buffer.from(choice[1])} : []);
   } catch (error) {chooserFailure = String(error);}
  });
+ await page.addInitScript(runnerStartupInit);
  await page.addInitScript(() => {
-  window.__WI_QA__ = {script:'res://qa/scripts/import_request_lifetime.json', seed:'9'};
+  window.__WI_QA__ = {script:'res://qa/scripts/import_request_lifetime.json', seed:'9',wait_for_runner_ready:true};
   window.__WI_IMPORT_CONTACTS__ = [];
   for (const type of ['touchstart', 'touchend', 'touchcancel']) document.addEventListener(type, event => {
    window.__WI_IMPORT_CONTACTS__.push({type, trusted:event.isTrusted, time:performance.now()});
@@ -116,6 +118,7 @@ try {
   };
  });
  await page.goto(origin + '/index.html');
+ await releaseRunnerStartup(page);
  const deadline = Date.now() + 120000;
  while (Date.now() < deadline) {
   if (chooserFailure) throw new Error(chooserFailure);

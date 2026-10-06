@@ -235,7 +235,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_dusty_scroll"
  },
  "ruin_warden": {
   "_comment": "#223: bespoke PixelLab v3 combat rig -- the awakened granite construct (guardian boss + lesser wards via combat_scale; replaces training_dummy in the fights and raskghar_awakened on the ruin_surface encounter). anchor feet-plane 158/216.",
@@ -787,7 +788,8 @@
   "render_scale": 0.55,
   "shadow": true,
   "_comment_ysort": "Covers all six beds/cots. TRAP: 0.55 makes the art 1.86 cells tall, overhanging the cell NORTH, and bias 0 amputated a PC standing there (riverfarm_guest_cot (8,4), garden_bed (11,4) have walkable north cells). -32 is the `stairs_up` remedy; NOT -16, never positive.",
-  "field_y_sort_bias_px": -32.0
+  "field_y_sort_bias_px": -32.0,
+  "fallback_sprite": "owned_fallback_bed"
  },
  "door": {
   "render_scale": 0.5,
@@ -807,7 +809,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_door"
  },
  "chest": {
   "_comment": "Domed lid + lock plate. TRAP: stay on `chest_open`'s sheet and scale -- one object, two states. The old Interior_Props crop was a flat-topped sideboard and a playtest recorded it as a mattress.",
@@ -828,7 +831,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_chest"
  },
  "chest_open": {
   "render_scale": 0.85,
@@ -848,7 +852,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_chest_open"
  },
  "plant_pot": {
   "render_scale": 0.6,
@@ -867,7 +872,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_plant_pot"
  },
  "bar_counter": {
   "_comment": "#398: WAS [256,279,68,44] -- alpha bbox None, FULLY TRANSPARENT, so every counter drew NOTHING (old coords sit past the art in the door/window block). Now a drawn-edge cut of the drawer-front sideboard x0-47/y18-47 (wardrobe starts y48). rs 0.35 keeps the original 1.05x0.66-cell footprint, so no map re-derives. Probe: bbox (0,0,48,30), pad 0/0.",
@@ -891,7 +897,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_bar_counter"
  },
  "barrel": {
   "_comment": "#398: WAS [730,14,19,22] -- 32.5% fill, bbox (8,3)-(19,18) right-CLIPPED, and it caught a small POT, not a barrel, sitting hard right so it drew ~a quarter cell off its own cell. Now the real hooped barrel flush to the crates' right: drawn-edge cut x752-767/y74-95 (crate outline x751, next object x769). rs 1.0 = native 16px grid, matching `crate` -- drawn at one scale side by side. Probe: bbox (0,0,16,22), pad 0/0.",
@@ -915,9 +922,11 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_barrel"
  },
  "crate": {
+  "fallback_sprite": "crate_owned",
   "_comment": "#398: WAS [690,71,38,26] -- bbox only (30,2)-(38,25), an 8x23 scrap of the FIRST crate's left plank edge, drawn as a ~14x41 near-black sliver offset right (the anchor centred a frame 81% empty). The sheet draws TWO 16x23 crates flush at x720-751 sharing a DOUBLE divider (x735 = left crate's right outline, x736 = right crate's left) plus a barrel flush at x752 -- one alpha component, so cut on drawn edges, not alpha. Took the CLOSED twin over the open-top left one: meanL 47.3 vs 32.3, 29% vs 48% near-black, and the open one's 10x7 black interior reads as a hole at 1x -- fatal in deep_tunnels (world band 13/255). rs 1.0 = native 16px grid: one cell wide, 0.44-cell overhang UP into air. Probe: bbox (0,0,16,23), pad 0/0; its OPAQUE-CANVAS flag is expected (solid wooden box, not a keyed canvas).",
   "render_scale": 1.0,
   "anchor": [
@@ -963,7 +972,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_stool"
  },
  "mushroom": {
   "animations": {
@@ -981,7 +991,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_mushroom"
  },
  "sconce": {
   "render_scale": 0.5,
@@ -1000,7 +1011,8 @@
     ],
     "fps": 6
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_sconce"
  },
  "rug_woven_cream": {
   "_comment": "#390: the shipped sheet was red-flecked speckle and read as a spill (stationer_room_loop/01). Regenerated with a real warp/weft grid and fringe, judged against `rug_woven_red`. Anchor = bbox 58/64.",
@@ -1040,7 +1052,8 @@
    }
   },
   "render_scale": 0.35,
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_table_brown"
  },
  "goblin_base": {
   "directional": true,
@@ -1277,72 +1290,72 @@
  "icon_attack": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_attack.png",
+    "sheet": "res://assets/icons/harvest/icon_attack.png",
     "frame_size": [
      16,
      16
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_dash": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_dash.png",
+    "sheet": "res://assets/icons/harvest/icon_dash.png",
     "frame_size": [
      16,
      16
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_power_strike": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_power_strike.png",
+    "sheet": "res://assets/icons/harvest/icon_power_strike.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_flame_bolt": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_flame_bolt.png",
+    "sheet": "res://assets/icons/harvest/icon_flame_bolt.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_flame_jet": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_flame_jet.png",
+    "sheet": "res://assets/icons/harvest/icon_flame_jet.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_frost_bolt": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_frost_bolt.png",
+    "sheet": "res://assets/icons/harvest/icon_frost_bolt.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
@@ -1361,170 +1374,168 @@
  "icon_piercing_strikes": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_piercing_strikes.png",
+    "sheet": "res://assets/icons/harvest/icon_piercing_strikes.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_quick_slash": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_quick_slash.png",
+    "sheet": "res://assets/icons/harvest/icon_quick_slash.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_flash_cut": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_flash_cut.png",
+    "sheet": "res://assets/icons/harvest/icon_flash_cut.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_devastating_slash": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_devastating_slash.png",
+    "sheet": "res://assets/icons/harvest/icon_devastating_slash.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_triple_thrust": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_triple_thrust.png",
+    "sheet": "res://assets/icons/harvest/icon_triple_thrust.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_extended_sweep": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_extended_sweep.png",
+    "sheet": "res://assets/icons/harvest/icon_extended_sweep.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_spear_flurry": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_spear_flurry.png",
+    "sheet": "res://assets/icons/harvest/icon_spear_flurry.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_ice_shard": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_ice_shard.png",
+    "sheet": "res://assets/icons/harvest/icon_ice_shard.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_icy_floor": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_icy_floor.png",
+    "sheet": "res://assets/icons/harvest/icon_icy_floor.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_flame_scythe": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_flame_scythe.png",
+    "sheet": "res://assets/icons/harvest/icon_flame_scythe.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_flare_burst": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_flare_burst.png",
+    "sheet": "res://assets/icons/harvest/icon_flare_burst.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_keener_edge": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_keener_edge.png",
+    "sheet": "res://assets/icons/harvest/icon_keener_edge.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_keener_point": {
-  "_comment": "#449 [Spellspear] L14. Code-drawn glyph (tools/sync_assets.py::_draw_placeholder shape 'keen_point'), NEW shape rather than a recolour of icon_keener_edge above -- see that table's comment for the tint-is-not-disambiguation reasoning. PixelLab pass user-gated; VISUAL-LOG carries the drain row.",
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_keener_point.png",
+    "sheet": "res://assets/icons/harvest/icon_keener_point.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_spellbound_thrust": {
-  "_comment": "#449 [Spellspear] L16. Code-drawn glyph (tools/sync_assets.py::_draw_placeholder shape 'bound_spear'), NEW shape rather than a recolour of icon_spellbound_strike. PixelLab pass user-gated; VISUAL-LOG carries the drain row.",
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_spellbound_thrust.png",
+    "sheet": "res://assets/icons/harvest/icon_spellbound_thrust.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
@@ -1778,15 +1789,14 @@
   }
  },
  "icon_spellbound_strike": {
-  "_comment": "GH#94 icon drain: code-drawn steel-blade+mana-glow glyph, tools/sync_assets.py::_draw_placeholder shape 'bound_blade'.",
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_spellbound_strike.png",
+    "sheet": "res://assets/icons/harvest/icon_spellbound_strike.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
@@ -1842,12 +1852,12 @@
  "icon_bone_dart": {
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_bone_dart.png",
+    "sheet": "res://assets/icons/harvest/icon_bone_dart.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
@@ -2216,7 +2226,8 @@
     ],
     "fps": 5
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_grill"
  },
  "counter_left": {
   "render_scale": 0.5,
@@ -2235,7 +2246,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "counter_segment_owned"
  },
  "counter_mid": {
   "render_scale": 0.5,
@@ -2254,7 +2266,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "counter_segment_owned"
  },
  "counter_right": {
   "render_scale": 0.5,
@@ -2273,7 +2286,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "counter_segment_owned"
  },
  "shelf_bottles": {
   "render_scale": 0.5,
@@ -2292,7 +2306,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_shelf_bottles"
  },
  "window_blue": {
   "_comment": "#390: the old region was a 16px slice off the SIDE of a chest block, not a window -- hence the grey slab with a blue edge (player_room_loop/00). Real four-pane window on Furniture.png.",
@@ -2312,7 +2327,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_window_blue"
  },
  "food_bread": {
   "render_scale": 0.75,
@@ -2335,7 +2351,8 @@
   "anchor": [
    0.5,
    1.5
-  ]
+  ],
+  "fallback_sprite": "owned_fallback_food_bread"
  },
  "food_ham": {
   "render_scale": 0.75,
@@ -2358,7 +2375,8 @@
   "anchor": [
    0.5,
    1.5
-  ]
+  ],
+  "fallback_sprite": "owned_fallback_food_ham"
  },
  "food_basket": {
   "render_scale": 0.75,
@@ -2377,7 +2395,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_food_basket"
  },
  "rug_woven_red": {
   "_comment_ysort": "GH#127: flat floor decor must ALWAYS render under sorted content -- large north bias keeps it above the floor layers (different parent) but under every y-sorted sibling on any crossed cell. Small biases cannot fix a walk-across prop.",
@@ -2413,7 +2432,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_facade_plaster"
  },
  "bush_green": {
   "render_scale": 0.5,
@@ -2432,7 +2452,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_bush_green"
  },
  "grass_tuft": {
   "render_scale": 0.75,
@@ -2451,7 +2472,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_grass_tuft"
  },
  "flower_purple": {
   "render_scale": 0.6,
@@ -2470,7 +2492,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_flower_purple"
  },
  "flower_tiny": {
   "render_scale": 0.75,
@@ -2489,7 +2512,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_flower_tiny"
  },
  "pebble": {
   "render_scale": 0.6,
@@ -2508,7 +2532,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_pebble"
  },
  "boulder": {
   "_comment": "Same 32x43 shape, so all consumers keep geometry.",
@@ -2529,7 +2554,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_boulder"
  },
  "anchor_waystone": {
   "_comment": "Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a small freestanding stone waystone archway/doorframe silhouette with a faint painted glow in the opening -- reads as a portal, not a rock.",
@@ -2568,7 +2594,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_tree_big"
  },
  "mushroom_purple_l": {
   "render_scale": 0.5,
@@ -2588,7 +2615,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_mushroom_purple_l"
  },
  "mushroom_purple_m": {
   "render_scale": 0.5,
@@ -2607,7 +2635,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_mushroom_purple_m"
  },
  "mushroom_purple_s": {
   "render_scale": 0.75,
@@ -2626,7 +2655,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_mushroom_purple_s"
  },
  "inn_roof": {
   "_comment": "Plain row-based y-sort drew the facade (holder.position.y = (Y+1)*CELL, the larger key) over that overlap band, cutting off the roof's bottom edge/eaves -- the exact 'fronts draw over roofs' defect.",
@@ -2648,7 +2678,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "city_roof_owned"
  },
  "wandering_inn_facade": {
   "anchor": [
@@ -2685,7 +2716,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_tree_round"
  },
  "campfire": {
   "render_scale": 0.75,
@@ -2704,7 +2736,8 @@
     ],
     "fps": 6
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_campfire"
  },
  "unlit_lantern": {
   "render_scale": 1.0,
@@ -2723,7 +2756,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_unlit_lantern"
  },
  "library_desk": {
   "render_scale": 0.5,
@@ -2743,7 +2777,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_library_desk"
  },
  "library_shelf": {
   "render_scale": 0.5,
@@ -2763,7 +2798,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "owned_fallback_library_shelf"
  },
  "royal_soldier": {
   "animations": {
@@ -2794,7 +2830,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_sewer_grate"
  },
  "a_hunter": {
   "directional": true,
@@ -2857,54 +2894,63 @@
   ]
  },
  "wilovan": {
-  "_comment": "OWNED PixelLab v3 (#390). Gnoll Gentleman Caller: bowler, cane, waistcoat (the id used to wear `pc_gnoll_m`, the PLAYER's skin). COMBAT SET 2026-08-05: slice/hit/death, three kept facings. `cast`/`walk` stay unreachable for him. Feet plane 95/128, anchor unchanged.",
   "directional": true,
   "render_scale": 0.4754,
   "anchor": [
    0.5,
-   0.7422
+   0.71969697
   ],
   "shadow": true,
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/wilovan/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/wilovan/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/wilovan/Idle_Up-Sheet.png",
     "frame_size": [
      128,
-     128
+     132
     ],
-    "fps": 6
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/wilovan/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/wilovan/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/wilovan/Idle_Up-Sheet.png"
    },
    "slice": {
-    "sheet_down": "res://assets/sprites/wilovan/Slice_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/wilovan/Slice_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/wilovan/Slice_Up-Sheet.png",
     "frame_size": [
      128,
-     128
+     132
     ],
-    "fps": 8
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/wilovan/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/wilovan/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/wilovan/Slice_Up-Sheet.png"
    },
    "hit": {
-    "sheet_down": "res://assets/sprites/wilovan/Hit_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/wilovan/Hit_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/wilovan/Hit_Up-Sheet.png",
     "frame_size": [
      128,
-     128
+     132
     ],
-    "fps": 10
+    "fps": 10,
+    "sheet_down": "res://assets/sprites/harvest_rosters/wilovan/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/wilovan/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/wilovan/Hit_Up-Sheet.png"
    },
    "death": {
-    "sheet_down": "res://assets/sprites/wilovan/Death_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/wilovan/Death_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/wilovan/Death_Up-Sheet.png",
     "frame_size": [
      128,
-     128
+     132
     ],
-    "fps": 8
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/wilovan/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/wilovan/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/wilovan/Death_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     128,
+     132
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/wilovan/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/wilovan/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/wilovan/Walk_Up-Sheet.png"
    }
   }
  },
@@ -3062,72 +3108,72 @@
  },
  "pc_human_m": {
   "directional": true,
-  "render_scale": 0.62,
+  "render_scale": 0.6154,
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/body_a/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Idle_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 6
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Idle_Up-Sheet.png"
    },
    "walk": {
-    "sheet_down": "res://assets/sprites/body_a/Walk_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Walk_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Walk_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 8
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Walk_Up-Sheet.png"
    },
    "slice": {
-    "sheet_down": "res://assets/sprites/body_a/Slice_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Slice_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Slice_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 8
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Slice_Up-Sheet.png"
    },
    "cast": {
-    "sheet_down": "res://assets/sprites/body_a/Cast_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Cast_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Cast_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 10
+    "fps": 10,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Cast_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Cast_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Cast_Up-Sheet.png"
    },
    "hit": {
-    "sheet_down": "res://assets/sprites/body_a/Hit_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Hit_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Hit_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 10
+    "fps": 10,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Hit_Up-Sheet.png"
    },
    "death": {
-    "sheet_down": "res://assets/sprites/body_a/Death_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/body_a/Death_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Death_Up-Sheet.png",
     "frame_size": [
      104,
      104
     ],
-    "fps": 8
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_player_human_m/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_player_human_m/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_player_human_m/Death_Up-Sheet.png"
    }
   },
   "anchor": [
    0.5,
-   0.75
+   0.74038462
   ]
  },
  "pc_human_f": {
@@ -3665,7 +3711,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_pedestal"
  },
  "stairs_up": {
   "_comment_ysort": "GH#127: 2-cell-tall sprite sorted at its bottom cell painted over the northern approach player. -32 (two cells, the raskghar_awakened decisive-margin pattern) -- NOT -16, which only TIES the approach player's key and would covertly depend on world.gd's entities-before-player tree-order tie-break.",
@@ -3735,7 +3782,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_garden_fountain_basin"
  },
  "garden_fountain_statue": {
   "render_scale": 1.0,
@@ -3754,7 +3802,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_garden_fountain_statue"
  },
  "memorial_plinth": {
   "_comment": "PIL alpha bbox: (4,7)-(27,23) of 32x32 -- feet plane 24/32=0.75 (NOT the frame bottom -- real transparent padding below the plinth's own small base shadow), anchor set accordingly per the ANCHOR RULE.",
@@ -3851,21 +3900,63 @@
   }
  },
  "briar_collector": {
-  "_comment": "Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this sprite realizes an animate collector-construct of that plant, witch-craft-bound, not a new invented species.",
-  "render_scale": 0.35,
+  "directional": true,
+  "render_scale": 0.383333,
   "anchor": [
    0.5,
-   0.9531
+   0.8372093
   ],
   "shadow": true,
   "animations": {
    "idle": {
-    "sheet": "res://assets/sprites/briar_collector/Idle-Sheet.png",
     "frame_size": [
-     64,
-     64
+     84,
+     86
     ],
-    "fps": 1
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/briar_collector/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/briar_collector/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/briar_collector/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     84,
+     86
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/briar_collector/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/briar_collector/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/briar_collector/Walk_Up-Sheet.png"
+   },
+   "slice": {
+    "frame_size": [
+     84,
+     86
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/briar_collector/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/briar_collector/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/briar_collector/Slice_Up-Sheet.png"
+   },
+   "hit": {
+    "frame_size": [
+     84,
+     86
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/briar_collector/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/briar_collector/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/briar_collector/Hit_Up-Sheet.png"
+   },
+   "death": {
+    "frame_size": [
+     84,
+     86
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/briar_collector/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/briar_collector/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/briar_collector/Death_Up-Sheet.png"
    }
   }
  },
@@ -4152,7 +4243,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_crop_row_orange"
  },
  "crop_row_green": {
   "animations": {
@@ -4170,7 +4262,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_crop_row_green"
  },
  "crop_row_dark_green": {
   "animations": {
@@ -4188,7 +4281,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_crop_row_dark_green"
  },
  "tree_autumn_orange": {
   "_comment": "Licensed pick, Free Pack Vegetation.png -- the harvest-light edge dressing (picks.md sec.4).",
@@ -4208,7 +4302,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_tree_autumn_orange"
  },
  "tree_autumn_red": {
   "shadow": true,
@@ -4227,7 +4322,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_tree_autumn_red"
  },
  "hollow_glow_stone": {
   "_comment": "Licensed pick, Fairy Forest Props.png -- scaled down so it reads as a rune stone, not a bloom (picks.md sec.5).",
@@ -4247,7 +4343,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_hollow_glow_stone"
  },
  "hollow_mushroom_cluster": {
   "render_scale": 0.6,
@@ -4266,7 +4363,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_hollow_mushroom_cluster"
  },
  "hollow_canopy_tree": {
   "render_scale": 0.38,
@@ -4286,7 +4384,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_hollow_canopy_tree"
  },
  "hollow_small_tree": {
   "render_scale": 0.6,
@@ -4305,7 +4404,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_hollow_small_tree"
  },
  "hollow_bent_tree": {
   "_comment": "0.32 lands 16x28.8 -- a slim bent-tree silhouette that overhangs upward like boulder does, never sideways.",
@@ -4325,7 +4425,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_hollow_bent_tree"
  },
  "river_wolf_idle": {
   "_comment": "Licensed Admurin sheet is 192x32: four 48x32 frames. Using 32x32 slices dismembers the wolf.",
@@ -4542,24 +4643,33 @@
   "shadow": true
  },
  "antinium_worker": {
-  "_comment": "IDLE-ONLY by design: Workers are stationed ambient extras (the Invrisil crowd-extra precedent); identical rigs across all Worker instances are diegetic (canon: Workers are visually uniform).",
   "directional": true,
   "render_scale": 0.551,
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/antinium_worker/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/antinium_worker/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/antinium_worker/Idle_Up-Sheet.png",
     "frame_size": [
      116,
-     116
+     126
     ],
-    "fps": 6
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/antinium_worker/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/antinium_worker/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/antinium_worker/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     116,
+     126
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/antinium_worker/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/antinium_worker/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/antinium_worker/Walk_Up-Sheet.png"
    }
   },
   "anchor": [
    0.5,
-   0.698
+   0.71428571
   ],
   "shadow": true
  },
@@ -4782,7 +4892,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_dungeon_statue"
  },
  "dungeon_rubble": {
   "_comment": "Blob-scan pick: a muted grey-olive close to the dungeon floor's own cast.",
@@ -4803,7 +4914,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_dungeon_rubble"
  },
  "pressure_plate": {
   "_comment": "Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a worked-stone floor tile with a subtly raised/cracked-border square plate at center.",
@@ -5603,28 +5715,26 @@
   }
  },
  "icon_crescent_cut": {
-  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_crescent_cut.png",
+    "sheet": "res://assets/icons/harvest/icon_crescent_cut.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
  "icon_pierce_thrust": {
-  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
   "animations": {
    "idle": {
-    "sheet": "res://assets/ui/icons/icon_pierce_thrust.png",
+    "sheet": "res://assets/icons/harvest/icon_pierce_thrust.png",
     "frame_size": [
-     16,
-     16
+     32,
+     32
     ],
-    "fps": 1
+    "fps": 6
    }
   }
  },
@@ -5881,113 +5991,163 @@
   }
  },
  "invrisil_lady_client": {
-  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig. Idle-only (she never walks); feet plane 92/124, 61 rows -> 30/61.",
   "directional": true,
   "render_scale": 0.4918,
   "anchor": [
-   0.4919,
-   0.75
+   0.5,
+   0.7421875
   ],
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/invrisil_lady_client/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/invrisil_lady_client/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/invrisil_lady_client/Idle_Up-Sheet.png",
     "frame_size": [
      124,
-     124
-    ],
-    "fps": 6
-   }
-  },
-  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's."
- },
- "master_coyle": {
-  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig, burgundy-and-gold merchant livery his own copy names. Feet plane 95/128.",
-  "directional": true,
-  "render_scale": 0.4839,
-  "anchor": [
-   0.4857,
-   0.7422
-  ],
-  "animations": {
-   "idle": {
-    "sheet_down": "res://assets/sprites/master_coyle/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/master_coyle/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/master_coyle/Idle_Up-Sheet.png",
-    "frame_size": [
-     128,
      128
     ],
-    "fps": 6
-   }
-  },
-  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's."
- },
- "hedault": {
-  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig; he no longer shares the Headman's laborer rig with his own alley's footpads.",
-  "directional": true,
-  "render_scale": 0.4918,
-  "anchor": [
-   0.4906,
-   0.75
-  ],
-  "animations": {
-   "idle": {
-    "sheet_down": "res://assets/sprites/hedault/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/hedault/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/hedault/Idle_Up-Sheet.png",
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/invrisil_lady_client/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/invrisil_lady_client/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/invrisil_lady_client/Idle_Up-Sheet.png"
+   },
+   "walk": {
     "frame_size": [
      124,
-     124
+     128
     ],
-    "fps": 6
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/invrisil_lady_client/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/invrisil_lady_client/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/invrisil_lady_client/Walk_Up-Sheet.png"
    }
   },
-  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's."
+  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's.",
+  "shadow": true
  },
- "city_scribe": {
-  "_comment": "v0.16.1 art wave: shared clerk rig for anonymous ledger-keepers (extras may share; named characters may not).",
+ "master_coyle": {
   "directional": true,
   "render_scale": 0.4839,
   "anchor": [
-   0.4973,
-   0.75
+   0.5,
+   0.73076923
   ],
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/city_scribe/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/city_scribe/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/city_scribe/Idle_Up-Sheet.png",
     "frame_size": [
-     124,
-     124
+     128,
+     130
     ],
-    "fps": 6
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/master_coyle/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/master_coyle/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/master_coyle/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     128,
+     130
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/master_coyle/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/master_coyle/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/master_coyle/Walk_Up-Sheet.png"
    }
   },
-  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's."
+  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's.",
+  "shadow": true
  },
- "city_runner": {
-  "_comment": "v0.16.1 art wave: shared courier rig (pack + satchel + papers) for errand-runners; extras may share this one.",
+ "hedault": {
   "directional": true,
   "render_scale": 0.4918,
   "anchor": [
-   0.4758,
-   0.7419
+   0.5,
+   0.734375
   ],
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/city_runner/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/city_runner/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/city_runner/Idle_Up-Sheet.png",
     "frame_size": [
      124,
-     124
+     128
     ],
-    "fps": 4
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/hedault/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/hedault/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/hedault/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     124,
+     128
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/hedault/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/hedault/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/hedault/Walk_Up-Sheet.png"
    }
-  }
+  },
+  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's.",
+  "shadow": true
+ },
+ "city_scribe": {
+  "directional": true,
+  "render_scale": 0.4839,
+  "anchor": [
+   0.5,
+   0.7421875
+  ],
+  "animations": {
+   "idle": {
+    "frame_size": [
+     124,
+     128
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/city_scribe/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/city_scribe/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/city_scribe/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     124,
+     128
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/city_scribe/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/city_scribe/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/city_scribe/Walk_Up-Sheet.png"
+   }
+  },
+  "_comment_409": "#409 review H3 2026-08-09: the idle is 4 frames @ fps 6, the family standard (41 other rigs) -- it shipped at 2, which is a 3 Hz toggle rather than a breath. FRAME 0 IS THE PREVIOUSLY SHIPPED REST POSE, BYTE-IDENTICAL; frames 1-3 are frames 1/2/4 of this rig's own server-side idle_breath_v3_409 group (PixelLab animate-character, mode=v3), remapped through the rotation->shipped palette LUT so each frame's palette is a strict subset of frame 0's.",
+  "shadow": true
+ },
+ "city_runner": {
+  "directional": true,
+  "render_scale": 0.4918,
+  "anchor": [
+   0.5,
+   0.7265625
+  ],
+  "animations": {
+   "idle": {
+    "frame_size": [
+     124,
+     128
+    ],
+    "fps": 4,
+    "sheet_down": "res://assets/sprites/harvest_rosters/city_runner/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/city_runner/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/city_runner/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     124,
+     128
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/city_runner/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/city_runner/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/city_runner/Walk_Up-Sheet.png"
+   }
+  },
+  "shadow": true
  },
  "coyle_shop_sign": {
   "_comment": "v0.16.1 art wave: Coyle and Sons' own board. 0.45 = 27x25 world px, above coin_shop_sign's 24 so the named front outranks it.",
@@ -6252,112 +6412,157 @@
   }
  },
  "selys": {
-  "_comment": "OWNED PixelLab v3 (#390). Drake receptionist; wore `citizen_f`, a HUMAN woman, under a green tint -- a species error tint cannot fix. Anchor MEASURED from the alpha bbox.",
   "directional": true,
   "render_scale": 0.4462,
   "anchor": [
    0.5,
-   0.7656
+   0.71969697
   ],
   "shadow": true,
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/selys/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/selys/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/selys/Idle_Up-Sheet.png",
     "frame_size": [
      128,
-     128
+     132
     ],
-    "fps": 6
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/selys/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/selys/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/selys/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     128,
+     132
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/selys/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/selys/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/selys/Walk_Up-Sheet.png"
    }
   }
  },
  "krshia": {
-  "_comment": "OWNED PixelLab v3 (#390). Gnoll [Shopkeeper]; was `gnoll_traveler` + tint. SECOND PASS: v1 read as a brawler (reused as `gnoll_ranger`). Anchor MEASURED.",
   "directional": true,
   "render_scale": 0.4915,
   "anchor": [
    0.5,
-   0.75
+   0.73728814
   ],
   "shadow": true,
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/krshia/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/krshia/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/krshia/Idle_Up-Sheet.png",
     "frame_size": [
      116,
-     116
+     118
     ],
-    "fps": 6
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/krshia/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/krshia/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/krshia/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     116,
+     118
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/krshia/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/krshia/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/krshia/Walk_Up-Sheet.png"
    }
   }
  },
  "octavia": {
-  "_comment": "OWNED PixelLab v3 (#390, finding 10 SECOND PASS: v1 shipped too light; canon Octavia is DARK-SKINNED). Palette explicit per her profile; pale seams = species signifier. Anchor MEASURED.",
   "directional": true,
   "render_scale": 0.4531,
   "anchor": [
    0.5,
-   0.75
+   0.73809524
   ],
   "shadow": true,
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/octavia/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/octavia/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/octavia/Idle_Up-Sheet.png",
     "frame_size": [
      124,
-     124
+     126
     ],
-    "fps": 6
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/octavia/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/octavia/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/octavia/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     124,
+     126
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/octavia/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/octavia/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/octavia/Walk_Up-Sheet.png"
    }
   }
  },
  "ilvo": {
-  "_comment": "OWNED PixelLab v3 (#390). A THIRD Drake civilian rig -- Ilvo wore `tier_clerk`, a Pallass civic sash, because the registry held two Drake civilian rigs and Renn needed the other. Anchor MEASURED.",
   "directional": true,
   "render_scale": 0.4754,
   "anchor": [
    0.5,
-   0.75
+   0.71428571
   ],
   "shadow": true,
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/ilvo/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/ilvo/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/ilvo/Idle_Up-Sheet.png",
     "frame_size": [
      120,
-     120
+     126
     ],
-    "fps": 6
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/ilvo/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/ilvo/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/ilvo/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     120,
+     126
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/ilvo/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/ilvo/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/ilvo/Walk_Up-Sheet.png"
    }
   }
  },
  "gnoll_ranger": {
-  "_comment": "OWNED PixelLab v3. REUSE of the rejected Krshia v1 (parked in potential_assets): wrong for a [Shopkeeper], right for `rest_gnoll_ranger`. Anchor MEASURED.",
   "directional": true,
   "render_scale": 0.4603,
   "anchor": [
    0.5,
-   0.7422
+   0.71969697
   ],
   "shadow": true,
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/gnoll_ranger/Idle_Down-Sheet.png",
-    "sheet_side": "res://assets/sprites/gnoll_ranger/Idle_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/gnoll_ranger/Idle_Up-Sheet.png",
     "frame_size": [
      128,
-     128
+     132
     ],
-    "fps": 6
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/gnoll_ranger/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/gnoll_ranger/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/gnoll_ranger/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     128,
+     132
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/gnoll_ranger/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/gnoll_ranger/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/gnoll_ranger/Walk_Up-Sheet.png"
    }
   }
  },
@@ -6470,7 +6675,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_scree_spill"
  },
  "briar_wall": {
   "_comment": "#398 D2. OWNED PixelLab, 32px not the 64px default: a fine lattice speckles at ship scale. Anchor = alpha bbox 30/32; the 6.1% holes ARE the lattice.",
@@ -6528,7 +6734,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "owned_fallback_pond_reeds"
  },
  "grain_sacks": {
   "_comment": "#408 prop-variety pass 2026-08-08 (OWNED PixelLab 1-direction object, 64px, tag wi409-408). render_scale 0.4 is the floor-prop default -- 64px at 0.4 reads ~0.8 cell, so it fills its cell without swallowing a neighbour. anchor.y from the alpha bbox's lowest opaque row (60/64), not the frame bottom. Solid: carries a SOLID_DECOR_SPRITES entry in scripts/data_lint.py, so every decor cell using it must also be in its map's `blocked` list.",
@@ -6737,5 +6944,2978 @@
     "fps": 5
    }
   }
+ },
+ "inn_hearth": {
+  "render_scale": 0.42,
+  "anchor": [
+   0.489583,
+   0.875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_hearth/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_back_bar": {
+  "render_scale": 0.48,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_back_bar/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     80
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_bar_station": {
+  "render_scale": 0.42,
+  "anchor": [
+   0.5,
+   0.861111
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_bar_station/Idle-Sheet.png",
+    "frame_size": [
+     144,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_kitchen_prep": {
+  "render_scale": 0.38,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_kitchen_prep/Idle-Sheet.png",
+    "frame_size": [
+     112,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_round_table": {
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_round_table/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_table_clean": {
+  "render_scale": 0.35,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_table_clean/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_table_soiled": {
+  "render_scale": 0.35,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_table_soiled/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "crate_owned": {
+  "render_scale": 0.36364,
+  "anchor": [
+   0.5,
+   0.890625
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/crate_owned/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "liscor_bread_stall": {
+  "render_scale": 0.444444,
+  "anchor": [
+   0.510417,
+   0.895833
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/liscor_bread_stall/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "guild_roofed_board": {
+  "render_scale": 0.377049,
+  "anchor": [
+   0.484375,
+   0.90625
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/guild_roofed_board/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "watch_report_desk": {
+  "render_scale": 0.387097,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/watch_report_desk/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "guild_handbill_wall": {
+  "render_scale": 0.37931,
+  "anchor": [
+   0.5,
+   0.890625
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/guild_handbill_wall/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "silverfang_stall_cutout": {
+  "render_scale": 0.02913632,
+  "anchor": [
+   0.531499,
+   0.875598
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/silverfang_stall_cutout/Idle-Sheet.png",
+    "frame_size": [
+     1254,
+     1254
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_roofline": {
+  "render_scale": 0.619048,
+  "anchor": [
+   0.53125,
+   0.734375
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_roofline/Idle-Sheet.png",
+    "frame_size": [
+     192,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_glazier_front": {
+  "render_scale": 0.287356,
+  "anchor": [
+   0.505208,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_glazier_front/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_tea_front": {
+  "render_scale": 0.357143,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_tea_front/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_shop_door": {
+  "render_scale": 0.444444,
+  "anchor": [
+   0.5,
+   0.984375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_shop_door/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_hanging_sign": {
+  "render_scale": 0.428571,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_hanging_sign/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_ornate_bench": {
+  "render_scale": 0.333333,
+  "anchor": [
+   0.5,
+   0.892857
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_ornate_bench/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     56
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_flower_cart": {
+  "render_scale": 0.405797,
+  "anchor": [
+   0.515625,
+   0.888889
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_flower_cart/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "renn": {
+  "directional": true,
+  "render_scale": 0.491228,
+  "anchor": [
+   0.5,
+   0.82142857
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     84,
+     84
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/renn/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/renn/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/renn/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     84,
+     84
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/renn/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/renn/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/renn/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "vess": {
+  "directional": true,
+  "render_scale": 0.418182,
+  "anchor": [
+   0.5,
+   0.81521739
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/vess/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/vess/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/vess/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/vess/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/vess/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/vess/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "yelra": {
+  "directional": true,
+  "render_scale": 0.509434,
+  "anchor": [
+   0.5,
+   0.83333333
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     84,
+     84
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/yelra/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/yelra/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/yelra/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     84,
+     84
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/yelra/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/yelra/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/yelra/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "xif": {
+  "directional": true,
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   0.87142857
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     64,
+     70
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/xif/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/xif/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/xif/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     64,
+     70
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/xif/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/xif/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/xif/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "dresk_ashgrave": {
+  "directional": true,
+  "render_scale": 0.518519,
+  "anchor": [
+   0.5,
+   0.83333333
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     84,
+     84
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/dresk_ashgrave/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/dresk_ashgrave/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/dresk_ashgrave/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     84,
+     84
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/dresk_ashgrave/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/dresk_ashgrave/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/dresk_ashgrave/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "liscor_watch_guard": {
+  "directional": true,
+  "render_scale": 0.389831,
+  "anchor": [
+   0.5,
+   0.82978723
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     92,
+     94
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/liscor_watch_guard/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/liscor_watch_guard/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/liscor_watch_guard/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     92,
+     94
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/liscor_watch_guard/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/liscor_watch_guard/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/liscor_watch_guard/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "cups": {
+  "directional": true,
+  "render_scale": 0.380952,
+  "anchor": [
+   0.5,
+   0.83695652
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/cups/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/cups/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/cups/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/cups/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/cups/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/cups/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "townswoman": {
+  "directional": true,
+  "render_scale": 0.344828,
+  "anchor": [
+   0.5,
+   0.96969697
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     64,
+     66
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/townswoman/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/townswoman/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/townswoman/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     64,
+     66
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/townswoman/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/townswoman/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/townswoman/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "invrisil_gentlewoman_2": {
+  "directional": true,
+  "render_scale": 0.482759,
+  "anchor": [
+   0.5,
+   0.85227273
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     88,
+     88
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/invrisil_gentlewoman_2/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/invrisil_gentlewoman_2/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/invrisil_gentlewoman_2/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     88,
+     88
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/invrisil_gentlewoman_2/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/invrisil_gentlewoman_2/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/invrisil_gentlewoman_2/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "former_headman": {
+  "directional": true,
+  "render_scale": 0.423729,
+  "anchor": [
+   0.5,
+   0.8372093
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     84,
+     86
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/former_headman/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/former_headman/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/former_headman/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     84,
+     86
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/former_headman/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/former_headman/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/former_headman/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "tallyman": {
+  "directional": true,
+  "render_scale": 0.403509,
+  "anchor": [
+   0.5,
+   0.96969697
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     64,
+     66
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/tallyman/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/tallyman/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/tallyman/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     64,
+     66
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/tallyman/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/tallyman/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/tallyman/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "frazzled_drayman": {
+  "directional": true,
+  "render_scale": 0.42623,
+  "anchor": [
+   0.5,
+   0.83333333
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     88,
+     90
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/frazzled_drayman/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/frazzled_drayman/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/frazzled_drayman/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     88,
+     90
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/frazzled_drayman/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/frazzled_drayman/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/frazzled_drayman/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "road_peddler": {
+  "directional": true,
+  "render_scale": 0.459016,
+  "anchor": [
+   0.5,
+   0.85227273
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     88,
+     88
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/road_peddler/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/road_peddler/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/road_peddler/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     88,
+     88
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/road_peddler/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/road_peddler/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/road_peddler/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "den_shop_keeper": {
+  "directional": true,
+  "render_scale": 0.442623,
+  "anchor": [
+   0.5,
+   0.85227273
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     88,
+     88
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/den_shop_keeper/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/den_shop_keeper/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/den_shop_keeper/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     88,
+     88
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/den_shop_keeper/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/den_shop_keeper/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/den_shop_keeper/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "forge_tier_smith": {
+  "directional": true,
+  "render_scale": 0.442623,
+  "anchor": [
+   0.5,
+   0.79591837
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     92,
+     98
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/forge_tier_smith/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/forge_tier_smith/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/forge_tier_smith/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     92,
+     98
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/forge_tier_smith/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/forge_tier_smith/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/forge_tier_smith/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "forge_hall_apprentice": {
+  "directional": true,
+  "render_scale": 0.377049,
+  "anchor": [
+   0.5,
+   0.83333333
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     88,
+     90
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/forge_hall_apprentice/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/forge_hall_apprentice/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/forge_hall_apprentice/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     88,
+     90
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/forge_hall_apprentice/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/forge_hall_apprentice/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/forge_hall_apprentice/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "stallkeeper": {
+  "directional": true,
+  "render_scale": 0.457627,
+  "anchor": [
+   0.5,
+   0.82222222
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     88,
+     90
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/stallkeeper/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/stallkeeper/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/stallkeeper/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     88,
+     90
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/stallkeeper/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/stallkeeper/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/stallkeeper/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "gentleman_bowler": {
+  "directional": true,
+  "render_scale": 0.451613,
+  "anchor": [
+   0.5,
+   0.83333333
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     88,
+     90
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/gentleman_bowler/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/gentleman_bowler/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/gentleman_bowler/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     88,
+     90
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/gentleman_bowler/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/gentleman_bowler/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/gentleman_bowler/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "recruit_pell": {
+  "directional": true,
+  "render_scale": 0.366667,
+  "anchor": [
+   0.5,
+   0.80851064
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     92,
+     94
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/recruit_pell/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/recruit_pell/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/recruit_pell/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     92,
+     94
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/recruit_pell/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/recruit_pell/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/recruit_pell/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "watch_sergeant": {
+  "directional": true,
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.82978723
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     92,
+     94
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/watch_sergeant/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/watch_sergeant/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/watch_sergeant/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     92,
+     94
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/watch_sergeant/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/watch_sergeant/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/watch_sergeant/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "house_factor": {
+  "directional": true,
+  "render_scale": 0.435484,
+  "anchor": [
+   0.5,
+   0.81521739
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     88,
+     92
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/house_factor/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/house_factor/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/house_factor/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     88,
+     92
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/house_factor/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/house_factor/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/house_factor/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "footpad_bruiser": {
+  "directional": true,
+  "render_scale": 0.474576,
+  "anchor": [
+   0.5,
+   0.84090909
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     88,
+     88
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/footpad_bruiser/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/footpad_bruiser/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/footpad_bruiser/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     88,
+     88
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/footpad_bruiser/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/footpad_bruiser/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/footpad_bruiser/Walk_Up-Sheet.png"
+   },
+   "slice": {
+    "frame_size": [
+     88,
+     88
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/footpad_bruiser/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/footpad_bruiser/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/footpad_bruiser/Slice_Up-Sheet.png"
+   },
+   "hit": {
+    "frame_size": [
+     88,
+     88
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/footpad_bruiser/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/footpad_bruiser/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/footpad_bruiser/Hit_Up-Sheet.png"
+   },
+   "death": {
+    "frame_size": [
+     88,
+     88
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/footpad_bruiser/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/footpad_bruiser/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/footpad_bruiser/Death_Up-Sheet.png"
+   }
+  }
+ },
+ "footpad": {
+  "directional": true,
+  "render_scale": 0.369231,
+  "anchor": [
+   0.5,
+   0.85
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     100,
+     100
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/footpad/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/footpad/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/footpad/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     100,
+     100
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/footpad/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/footpad/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/footpad/Walk_Up-Sheet.png"
+   },
+   "slice": {
+    "frame_size": [
+     100,
+     100
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/footpad/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/footpad/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/footpad/Slice_Up-Sheet.png"
+   },
+   "hit": {
+    "frame_size": [
+     100,
+     100
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/footpad/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/footpad/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/footpad/Hit_Up-Sheet.png"
+   },
+   "death": {
+    "frame_size": [
+     100,
+     100
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/footpad/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/footpad/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/footpad/Death_Up-Sheet.png"
+   }
+  }
+ },
+ "mothbear_harvest": {
+  "directional": true,
+  "render_scale": 0.538462,
+  "anchor": [
+   0.5,
+   0.80952381
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     84,
+     84
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/mothbear/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/mothbear/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/mothbear/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     84,
+     84
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/harvest_rosters/mothbear/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/mothbear/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/mothbear/Walk_Up-Sheet.png"
+   },
+   "slice": {
+    "frame_size": [
+     84,
+     84
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/mothbear/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/mothbear/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/mothbear/Slice_Up-Sheet.png"
+   },
+   "hit": {
+    "frame_size": [
+     84,
+     84
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/mothbear/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/mothbear/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/mothbear/Hit_Up-Sheet.png"
+   },
+   "death": {
+    "frame_size": [
+     84,
+     84
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/harvest_rosters/mothbear/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/harvest_rosters/mothbear/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/harvest_rosters/mothbear/Death_Up-Sheet.png"
+   }
+  }
+ },
+ "icon_basic_swordwork": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/icons/harvest/icon_basic_swordwork.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 6
+   }
+  }
+ },
+ "pallass_lower_city": {
+  "render_scale": 0.19152854511970535,
+  "anchor": [
+   0.5,
+   0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_lower_city/Idle-Sheet.png",
+    "frame_size": [
+     2172,
+     724
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_tool_wall": {
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_tool_wall/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_billet_rack": {
+  "render_scale": 0.3,
+  "anchor": [
+   0.5,
+   0.984375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_billet_rack/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_reject_bin": {
+  "render_scale": 0.315789,
+  "anchor": [
+   0.507812,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_reject_bin/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_tagged_pallet": {
+  "render_scale": 0.3,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_tagged_pallet/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_parapet_full": {
+  "render_scale": 1.04918,
+  "anchor": [
+   0.502604,
+   0.75
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_parapet_full/Idle-Sheet.png",
+    "frame_size": [
+     192,
+     48
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_rail_post": {
+  "render_scale": 0.5161290322580645,
+  "anchor": [
+   0.515625,
+   0.8333333333333334
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_parapet_full/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     24
+    ],
+    "region": [
+     4,
+     16,
+     32,
+     24
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_timber_panel": {
+  "render_scale": 0.428571,
+  "anchor": [
+   0.5,
+   0.75
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_timber_panel/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_upper_window": {
+  "render_scale": 0.272727,
+  "anchor": [
+   0.46875,
+   0.9375
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_upper_window/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_stationery_display": {
+  "render_scale": 0.642857,
+  "anchor": [
+   0.5,
+   0.6875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_stationery_display/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "garden_shelter_tree": {
+  "render_scale": 0.47619,
+  "anchor": [
+   0.5,
+   0.882812
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/garden_shelter_tree/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "garden_blossom_white": {
+  "render_scale": 0.333333,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/garden_blossom_white/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "garden_blossom_purple": {
+  "render_scale": 0.4375,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/garden_blossom_purple/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "garden_low_hedge": {
+  "render_scale": 0.391304,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/garden_low_hedge/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "garden_rest_bench": {
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/garden_rest_bench/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "camp_hide_tent_owned": {
+  "render_scale": 0.414634,
+  "anchor": [
+   0.489583,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/camp_hide_tent_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     80
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "camp_cooking_spit_owned": {
+  "render_scale": 0.451613,
+  "anchor": [
+   0.5,
+   0.921875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/camp_cooking_spit_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "camp_weapon_rack_owned": {
+  "render_scale": 0.30303,
+  "anchor": [
+   0.5,
+   0.958333
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/camp_weapon_rack_owned/Idle-Sheet.png",
+    "frame_size": [
+     80,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "camp_lookout_owned": {
+  "render_scale": 0.464286,
+  "anchor": [
+   0.4875,
+   0.928571
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/camp_lookout_owned/Idle-Sheet.png",
+    "frame_size": [
+     80,
+     112
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "camp_palisade_owned": {
+  "render_scale": 0.421053,
+  "anchor": [
+   0.5,
+   0.847222
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/camp_palisade_owned/Idle-Sheet.png",
+    "frame_size": [
+     160,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_bar_counter": {
+  "render_scale": 0.20588235,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/bar_counter/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_barrel": {
+  "render_scale": 0.42105263,
+  "anchor": [
+   0.5,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/barrel/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_bed": {
+  "shadow": true,
+  "_comment_ysort": "Covers all six beds/cots. TRAP: 0.55 makes the art 1.86 cells tall, overhanging the cell NORTH, and bias 0 amputated a PC standing there (riverfarm_guest_cot (8,4), garden_bed (11,4) have walkable north cells). -32 is the `stairs_up` remedy; NOT -16, never positive.",
+  "field_y_sort_bias_px": -32.0,
+  "render_scale": 0.6875,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/bed/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_boulder": {
+  "shadow": true,
+  "render_scale": 0.2962963,
+  "anchor": [
+   0.5,
+   0.890625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/boulder/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_bush_green": {
+  "render_scale": 0.34782609,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/bush_green/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_campfire": {
+  "render_scale": 0.4137931,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/campfire/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_chest": {
+  "shadow": true,
+  "render_scale": 0.37777778,
+  "anchor": [
+   0.515625,
+   0.875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/chest/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_chest_open": {
+  "shadow": true,
+  "render_scale": 0.34910714,
+  "anchor": [
+   0.5390625,
+   0.96875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/chest_open/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_crop_row_dark_green": {
+  "render_scale": 0.59259259,
+  "anchor": [
+   0.5,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/crop_row_dark_green/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_crop_row_green": {
+  "render_scale": 0.64,
+  "anchor": [
+   0.5,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/crop_row_green/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_crop_row_orange": {
+  "render_scale": 0.69230769,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/crop_row_orange/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_door": {
+  "shadow": true,
+  "render_scale": 0.36666667,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/door/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_dungeon_rubble": {
+  "shadow": true,
+  "render_scale": 0.25714286,
+  "anchor": [
+   0.5078125,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/dungeon_rubble/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_dungeon_statue": {
+  "shadow": true,
+  "render_scale": 0.44590164,
+  "anchor": [
+   0.5,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/dungeon_statue/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_dusty_scroll": {
+  "render_scale": 0.19230769,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/dusty_scroll/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_facade_plaster": {
+  "shadow": true,
+  "render_scale": 0.375,
+  "anchor": [
+   0.5,
+   0.75
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/facade_plaster/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_flower_purple": {
+  "render_scale": 0.43636364,
+  "anchor": [
+   0.5,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/flower_purple/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_flower_tiny": {
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/flower_tiny/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_food_basket": {
+  "render_scale": 0.22222222,
+  "anchor": [
+   0.53125,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/food_basket/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_food_bread": {
+  "render_scale": 0.2,
+  "anchor": [
+   0.5,
+   0.890625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/food_bread/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_food_ham": {
+  "render_scale": 0.21428571,
+  "anchor": [
+   0.515625,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/food_ham/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_garden_fountain_basin": {
+  "render_scale": 0.59259259,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/garden_fountain_basin/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_garden_fountain_statue": {
+  "render_scale": 0.5,
+  "anchor": [
+   0.484375,
+   0.96875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/garden_fountain_statue/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_grass_tuft": {
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/grass_tuft/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_grill": {
+  "render_scale": 0.44912281,
+  "anchor": [
+   0.5078125,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/grill/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_hollow_bent_tree": {
+  "render_scale": 0.34782609,
+  "anchor": [
+   0.3125,
+   0.96875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/hollow_bent_tree/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_hollow_canopy_tree": {
+  "shadow": true,
+  "render_scale": 0.57,
+  "anchor": [
+   0.4609375,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/hollow_canopy_tree/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_hollow_glow_stone": {
+  "render_scale": 0.44385965,
+  "anchor": [
+   0.4921875,
+   0.953125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/hollow_glow_stone/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_hollow_mushroom_cluster": {
+  "render_scale": 0.44651163,
+  "anchor": [
+   0.5,
+   0.90625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/hollow_mushroom_cluster/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_hollow_small_tree": {
+  "render_scale": 0.98181818,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/hollow_small_tree/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_library_desk": {
+  "shadow": true,
+  "render_scale": 0.30188679,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/library_desk/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_library_shelf": {
+  "shadow": true,
+  "render_scale": 0.30188679,
+  "anchor": [
+   0.4921875,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/library_shelf/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_mushroom": {
+  "render_scale": 0.76190476,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/mushroom/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_mushroom_purple_l": {
+  "shadow": true,
+  "render_scale": 0.57142857,
+  "anchor": [
+   0.5,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/mushroom_purple_l/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_mushroom_purple_m": {
+  "render_scale": 0.73333333,
+  "anchor": [
+   0.5,
+   0.796875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/mushroom_purple_m/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "owned_fallback_mushroom_purple_s": {
+  "render_scale": 0.48387097,
+  "anchor": [
+   0.5078125,
+   0.71875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/mushroom_purple_s/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_pebble": {
+  "render_scale": 0.53333333,
+  "anchor": [
+   0.5,
+   0.71875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/pebble/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_pedestal": {
+  "shadow": true,
+  "render_scale": 0.31034483,
+  "anchor": [
+   0.5,
+   0.953125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/pedestal/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_plant_pot": {
+  "render_scale": 0.24,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/plant_pot/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_pond_reeds": {
+  "render_scale": 0.4375,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/pond_reeds/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_sconce": {
+  "render_scale": 0.41025641,
+  "anchor": [
+   0.5234375,
+   0.78125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/sconce/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_scree_spill": {
+  "render_scale": 0.57142857,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/scree_spill/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_sewer_grate": {
+  "render_scale": 0.37894737,
+  "anchor": [
+   0.5,
+   0.765625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/sewer_grate/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_shelf_bottles": {
+  "render_scale": 0.32,
+  "anchor": [
+   0.5,
+   0.890625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/shelf_bottles/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_stool": {
+  "render_scale": 0.3,
+  "anchor": [
+   0.5,
+   0.828125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/stool/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_table_brown": {
+  "shadow": true,
+  "render_scale": 0.42,
+  "anchor": [
+   0.5,
+   0.890625
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/table_brown/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_tree_autumn_orange": {
+  "shadow": true,
+  "render_scale": 1.0,
+  "anchor": [
+   0.4765625,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/tree_autumn_orange/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_tree_autumn_red": {
+  "shadow": true,
+  "render_scale": 0.80769231,
+  "anchor": [
+   0.4765625,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/tree_autumn_red/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_tree_big": {
+  "shadow": true,
+  "render_scale": 1.06666667,
+  "anchor": [
+   0.5546875,
+   0.984375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/tree_big/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_tree_round": {
+  "shadow": true,
+  "render_scale": 0.53894737,
+  "anchor": [
+   0.5,
+   0.8828125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/tree_round/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_unlit_lantern": {
+  "render_scale": 0.24561404,
+  "anchor": [
+   0.5,
+   0.953125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/unlit_lantern/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "owned_fallback_window_blue": {
+  "render_scale": 0.37946429,
+  "anchor": [
+   0.46875,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/window_blue/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "riverfarm_well_owned": {
+  "render_scale": 0.32,
+  "anchor": [
+   0.50625,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/riverfarm_well_owned/Idle-Sheet.png",
+    "frame_size": [
+     80,
+     96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "riverfarm_waterwheel_owned": {
+  "render_scale": 0.288889,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/riverfarm_waterwheel_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "riverfarm_granary_owned": {
+  "render_scale": 0.414634,
+  "anchor": [
+   0.5,
+   0.946429
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/riverfarm_granary_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     112
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "riverfarm_wheelwright_owned": {
+  "render_scale": 0.538462,
+  "anchor": [
+   0.4375,
+   0.805556
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/riverfarm_wheelwright_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "longhouse_communal_table_owned": {
+  "render_scale": 0.307692,
+  "anchor": [
+   0.5,
+   0.958333
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/longhouse_communal_table_owned/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "mill_tally_sticks_owned": {
+  "render_scale": 0.466667,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/mill_tally_sticks_owned/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "mill_high_shelf_owned": {
+  "render_scale": 0.458333,
+  "anchor": [
+   0.53125,
+   0.984375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/mill_high_shelf_owned/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "dig_camp_tent_owned": {
+  "render_scale": 0.404762,
+  "anchor": [
+   0.520833,
+   0.9
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/dig_camp_tent_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     80
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "ruin_fallen_column_owned": {
+  "render_scale": 0.263158,
+  "anchor": [
+   0.507812,
+   0.90625
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/ruin_fallen_column_owned/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "dig_survey_stakes_owned": {
+  "render_scale": 0.1,
+  "anchor": [
+   0.5,
+   0.8125
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/dig_survey_stakes_owned/Idle-Sheet.png",
+    "frame_size": [
+     160,
+     48
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "dungeon_brazier_owned": {
+  "render_scale": 0.428571,
+  "anchor": [
+   0.510417,
+   0.909091
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/dungeon_brazier_owned/Idle-Sheet.png",
+    "frame_size": [
+     48,
+     88
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "dungeon_wall_chains_owned": {
+  "render_scale": 0.179487,
+  "anchor": [
+   0.5,
+   0.833333
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/dungeon_wall_chains_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "crypt_sarcophagus_owned": {
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.921875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/crypt_sarcophagus_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "gallery_mouth_owned": {
+  "render_scale": 0.421053,
+  "anchor": [
+   0.491071,
+   0.802083
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/gallery_mouth_owned/Idle-Sheet.png",
+    "frame_size": [
+     112,
+     96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "cave_bat_harvest": {
+  "render_scale": 0.31884058,
+  "anchor": [
+   0.5,
+   0.80357143
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_creatures/cave_bat_harvest/Idle-Sheet.png",
+    "frame_size": [
+     112,
+     112
+    ],
+    "fps": 6
+   },
+   "move": {
+    "sheet": "res://assets/sprites/harvest_creatures/cave_bat_harvest/Move-Sheet.png",
+    "frame_size": [
+     112,
+     112
+    ],
+    "fps": 10
+   },
+   "slice": {
+    "sheet": "res://assets/sprites/harvest_creatures/cave_bat_harvest/Slice-Sheet.png",
+    "frame_size": [
+     112,
+     112
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet": "res://assets/sprites/harvest_creatures/cave_bat_harvest/Hit-Sheet.png",
+    "frame_size": [
+     112,
+     112
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet": "res://assets/sprites/harvest_creatures/cave_bat_harvest/Death-Sheet.png",
+    "frame_size": [
+     112,
+     112
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "river_wolf_harvest": {
+  "render_scale": 0.64516129,
+  "anchor": [
+   0.5,
+   0.67391304
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_creatures/river_wolf_harvest/Idle-Sheet.png",
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 1
+   },
+   "walk": {
+    "sheet": "res://assets/sprites/harvest_creatures/river_wolf_harvest/Walk-Sheet.png",
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet": "res://assets/sprites/harvest_creatures/river_wolf_harvest/Slice-Sheet.png",
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet": "res://assets/sprites/harvest_creatures/river_wolf_harvest/Hit-Sheet.png",
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet": "res://assets/sprites/harvest_creatures/river_wolf_harvest/Death-Sheet.png",
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "razorbeak_harvest": {
+  "render_scale": 0.53658537,
+  "anchor": [
+   0.5,
+   0.79411765
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_creatures/razorbeak_harvest/Idle-Sheet.png",
+    "frame_size": [
+     68,
+     68
+    ],
+    "fps": 6
+   },
+   "slice": {
+    "sheet": "res://assets/sprites/harvest_creatures/razorbeak_harvest/Slice-Sheet.png",
+    "frame_size": [
+     68,
+     68
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet": "res://assets/sprites/harvest_creatures/razorbeak_harvest/Hit-Sheet.png",
+    "frame_size": [
+     68,
+     68
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet": "res://assets/sprites/harvest_creatures/razorbeak_harvest/Death-Sheet.png",
+    "frame_size": [
+     68,
+     68
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "watchgolem_harvest": {
+  "render_scale": 0.38596491,
+  "anchor": [
+   0.5,
+   0.85
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_creatures/watchgolem_harvest/Idle-Sheet.png",
+    "frame_size": [
+     80,
+     80
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet": "res://assets/sprites/harvest_creatures/watchgolem_harvest/Walk-Sheet.png",
+    "frame_size": [
+     80,
+     80
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet": "res://assets/sprites/harvest_creatures/watchgolem_harvest/Slice-Sheet.png",
+    "frame_size": [
+     80,
+     80
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet": "res://assets/sprites/harvest_creatures/watchgolem_harvest/Hit-Sheet.png",
+    "frame_size": [
+     80,
+     80
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet": "res://assets/sprites/harvest_creatures/watchgolem_harvest/Death-Sheet.png",
+    "frame_size": [
+     80,
+     80
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "counter_segment_owned": {
+  "render_scale": 0.266667,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/counter_segment_owned/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "city_roof_owned": {
+  "render_scale": 0.03555556,
+  "anchor": [
+   0.5,
+   0.9078341
+  ],
+  "field_y_sort_bias_px": 20.0,
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/city_roof_owned/Idle-Sheet.png",
+    "frame_size": [
+     1812,
+     868
+    ],
+    "fps": 1
+   }
+  },
+  "field_tint_override": [
+   1.0,
+   1.0,
+   1.0
+  ]
  }
 }

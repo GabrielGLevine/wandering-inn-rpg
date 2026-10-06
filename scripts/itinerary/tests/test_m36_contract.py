@@ -338,11 +338,11 @@ class EffectDerivedWaitsTest(unittest.TestCase):
         self.assertEqual(len(outside), 36, "rows that belong to other idioms")
         # The closing rows are corpus sites, not a category: naming them is
         # what makes the 9 auditable.
-        self.assertEqual(closing, [1040, 1041, 1123, 1124, 1125, 1950, 1951, 2149, 2150])
+        self.assertEqual(closing, [1040, 1041, 1123, 1124, 1125, 1963, 1964, 2162, 2163])
         # And the post-dismiss eight are the ones `expect_banks_after_dismiss`
         # owns -- exactly the list the superseded M3.5 table carried.
         after_dismiss = [index for index in outside if _preceding_press(steps, index) == "confirm"]
-        self.assertEqual(after_dismiss, [207, 388, 389, 500, 501, 1059, 1612, 1626])
+        self.assertEqual(after_dismiss, [207, 388, 389, 500, 501, 1059, 1613, 1627])
         self.assertEqual(len(outside) - len(after_dismiss), 28, "26 prop interacts + 2 sleep banks")
 
 
@@ -408,7 +408,7 @@ class FrameFlexibilityTest(unittest.TestCase):
     def test_arena_tightens_the_combat_started_pin(self) -> None:
         steps = bare(Emitter().emit("n", [self.operation(entry="interact", arena="vault")]))
         started = next(step for step in steps if step.get("type") == "combat_started")
-        self.assertEqual(started, shipped(2439, 2439)[0])
+        self.assertEqual(started, shipped(2452, 2452)[0])
         # MUTATION: without it the wait is LOOSER than the corpus, which §6.3
         # rules fatal rather than tolerable.
         loose = next(s for s in bare(Emitter().emit("n", [self.operation()])) if s.get("type") == "combat_started")
@@ -416,7 +416,7 @@ class FrameFlexibilityTest(unittest.TestCase):
 
     def test_the_two_missing_event_kinds_have_shapes(self) -> None:
         rendered = bare(Emitter().emit("n", [{"kind": "map_rendered", "map": "seal_vault"}]))
-        self.assertEqual(rendered, shipped(2479, 2480))
+        self.assertEqual(rendered, shipped(2492, 2493))
 
         preview = {"class_gains": [], "level_ups": [], "classes_after": {}, "consolidation": {}}
         epilogue = bare(Emitter().emit("n", [{"kind": "sleep", "preview": preview, "merge": None, "epilogue": True}]))
@@ -491,10 +491,10 @@ class SneakLifetimeTest(unittest.TestCase):
         drop = bare(Emitter().emit("n", [{"kind": "field_skill", "skill": "invisibility", "target": "", "accomplishment": "", "sneak": "end"}]))
         self.assertEqual([step.get("type") for step in drop[1:]], ["skill_used", "sneak_ended", "toast"])
         self.assertEqual(drop[3]["payload_contains"], {"text": "You straighten up."})
-        # The shipped cloak (2426-2428). The one difference is a TIGHTENING:
+        # The shipped cloak (2439-2441). The one difference is a TIGHTENING:
         # the compiled `skill_used` pin carries `context: exploration` as
         # well, which is a superset of the corpus row and not a second claim.
-        corpus = [row for row in shipped(2426, 2428) if row["action"] != "screenshot"]
+        corpus = [row for row in shipped(2439, 2441) if row["action"] != "screenshot"]
         self.assertEqual([step["action"] for step in cloak[:3]], [row["action"] for row in corpus])
         self.assertEqual(cloak[1]["payload_contains"],
                          dict(corpus[1]["payload_contains"], context="exploration"))
@@ -1064,7 +1064,7 @@ class PipelineEffectWaitsTest(unittest.TestCase):
         # CLOSING row: the teardown pair FIRST, then the announcements. This
         # is the inversion the emitter's own comment calls fatal. The shipped
         # graphs carry plenty of end-rows with effects and the corpus pins
-        # four such sites (1038-1041, 1122-1125, 1948-1951, 2147-2150); what
+        # four such sites (1038-1041, 1122-1125, 1961-1964, 2160-2163); what
         # no AUTHORED ITINERARY reaches yet is any of them, so without this
         # assertion the inversion would compile a byte-identical golden.
         self.assertEqual(kinds[confirms[1] + 1:confirms[1] + 6],

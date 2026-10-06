@@ -74,9 +74,11 @@ data edit:  python3 scripts/data_lint.py   (from wandering_inn_game/).
 from __future__ import annotations
 
 import json
+import math
 import re
 import sys
 import time
+import struct
 from pathlib import Path
 
 from wi_data_lib import DATA, GAME_ROOT
@@ -146,6 +148,182 @@ def _in_grid(cell, grid: dict) -> bool:
 		and 0 <= int(cell[1]) < int(grid["height"]))
 
 
+def _numeric_vector(value, size: int, nonnegative: bool = False) -> bool:
+	return (isinstance(value, list) and len(value) == size
+		and all(type(v) in (int, float) and math.isfinite(v)
+			and (not nonnegative or v >= 0) for v in value))
+
+
+
+
+TERRAIN_RENDER_KEYS = {
+	"sheet", "tile_px", "coords", "variants", "cap", "face", "top_coords", "base_coords",
+	"floor", "blocked_sheet", "blocked_tile_px", "blocked", "skirt_sheet", "skirt_tile_px", "skirt",
+	"tone", "floor_tone", "blocked_tone", "skirt_tone", "wang_corners", "terrain_lower_cells", "underlay",
+}
+
+
+def _terrain_atlas_size(sheet, tile_px):
+	if (not isinstance(sheet, str) or not sheet.startswith("res://assets/") or ".." in Path(sheet).parts
+			or type(tile_px) not in (int, float) or not _int_like(tile_px) or tile_px <= 0):
+		return None
+	path = GAME_ROOT / sheet.removeprefix("res://")
+	try:
+		with path.open("rb") as image:
+			header = image.read(24)
+		if header[:8] != b"\x89PNG\r\n\x1a\n":
+			return None
+		width, height = struct.unpack(">II", header[16:24])
+		unit = int(tile_px)
+		return (width // unit, height // unit) if width >= unit and height >= unit else None
+	except (OSError, ValueError, struct.error):
+		return None
+
+
+def _check_tile_fallback(config: dict, role: str, label: str, errors: list) -> None:
+	if "fallback_render" not in config:
+		return
+	fallback = config["fallback_render"]
+	if not isinstance(fallback, dict) or not fallback:
+		errors.append(f"{label}: fallback_render must be a complete render object")
+		return
+	if set(fallback) - TERRAIN_RENDER_KEYS:
+		errors.append(f"{label}: fallback_render may not replace geometry, gameplay or chain another fallback")
+	atlas = _terrain_atlas_size(fallback.get("sheet"), fallback.get("tile_px"))
+	if atlas is None:
+		errors.append(f"{label}: fallback_render needs a real PNG sheet and matching positive tile unit")
+		return
+	def coord_valid(coord, size):
+		return (_numeric_vector(coord, 2, True) and all(_int_like(v) for v in coord)
+			and coord[0] < size[0] and coord[1] < size[1])
+	for key in ("coords", "cap", "face", "top_coords", "base_coords", "floor"):
+		if key in fallback and not coord_valid(fallback[key], atlas):
+			errors.append(f"{label}: fallback_render.{key} is outside its own atlas")
+	for key in ("variants", "wang_corners"):
+		if key in fallback and (not isinstance(fallback[key], list) or not fallback[key]
+				or (key == "wang_corners" and len(fallback[key]) != 16)
+				or not all(coord_valid(coord, atlas) for coord in fallback[key])):
+			errors.append(f"{label}: fallback_render.{key} needs valid coordinates on its own atlas")
+	for key in ("blocked", "skirt"):
+		if key not in fallback:
+			continue
+		size = _terrain_atlas_size(fallback.get(key + "_sheet", fallback["sheet"]),
+			fallback.get(key + "_tile_px", fallback["tile_px"]))
+		if size is None or not coord_valid(fallback[key], size):
+			errors.append(f"{label}: fallback_render.{key} needs its own valid sheet/unit/coordinate")
+	if role == "biome":
+		for key in ("floor", "blocked", "skirt"):
+			if key in config and key not in fallback:
+				errors.append(f"{label}: fallback_render cannot drop biome {key}")
+	elif role == "floor_layer" and not any(key in fallback for key in ("coords", "variants", "wang_corners")):
+		errors.append(f"{label}: fallback_render needs a fixed, variant or Wang floor selector")
+	elif role == "wall_segment":
+		for key in ("face", "cap"):
+			if key in config and key not in fallback:
+				errors.append(f"{label}: fallback_render cannot drop wall {key}")
+		if not any(key in fallback for key in ("face", "cap")):
+			errors.append(f"{label}: fallback_render needs a visible wall surface")
+	elif role == "wall_band" and "top_coords" in config and "top_coords" not in fallback:
+		errors.append(f"{label}: fallback_render cannot drop the wall band")
+	for key in ("tone", "floor_tone", "blocked_tone", "skirt_tone"):
+		if key not in fallback:
+			continue
+		tone = fallback[key]
+		if (not isinstance(tone, dict) or not _numeric_vector(tone.get("base"), 3)
+				or type(tone.get("detail")) not in (int, float) or not math.isfinite(tone["detail"])
+				or not 0 <= tone["detail"] <= 1):
+			errors.append(f"{label}: fallback_render.{key} needs base[3] and detail in [0,1]")
+	if "underlay" in fallback:
+		underlay = fallback["underlay"]
+		if not isinstance(underlay, dict) or "underlay" in underlay:
+			errors.append(f"{label}: fallback underlay must be one complete floor descriptor")
+		else:
+			_check_tile_fallback({"fallback_render": underlay}, "floor_layer", label + ".underlay", errors)
+
+
+def _check_scene_tile_fallbacks(config: dict, label: str, errors: list) -> None:
+	for index, layer in enumerate(config.get("floor_layers", [])):
+		if isinstance(layer, dict):
+			_check_tile_fallback(layer, "floor_layer", f"{label}.floor_layers[{index}]", errors)
+	walls = config.get("walls", {})
+	if not isinstance(walls, dict):
+		return
+	_check_tile_fallback(walls, "wall_band", label + ".walls", errors)
+	for index, segment in enumerate(walls.get("segments", [])):
+		if isinstance(segment, dict):
+			_check_tile_fallback(segment, "wall_segment", f"{label}.walls.segments[{index}]", errors)
+
+
+def check_catalog_tile_fallbacks(parsed: dict, errors: list) -> None:
+	for name, config in (parsed.get(DATA / "biomes.json") or {}).items():
+		if isinstance(config, dict):
+			_check_tile_fallback(config, "biome", "biomes." + name, errors)
+	for arena in (parsed.get(DATA / "arenas.json") or {}).get("arenas", []):
+		if isinstance(arena, dict):
+			_check_scene_tile_fallbacks(arena, "arenas." + str(arena.get("id", "")), errors)
+
+
+def _ground_cells_valid(value, width: int, height: int) -> bool:
+	if value == "all":
+		return True
+	if not isinstance(value, dict):
+		return False
+	if "list" in value:
+		return (isinstance(value["list"], list) and all(
+			_numeric_vector(cell, 2, True) and all(type(v) is not bool and _int_like(v) for v in cell)
+			and cell[0] < width and cell[1] < height for cell in value["list"]))
+	if "rect" in value:
+		r = value["rect"]
+		return (_numeric_vector(r, 4, True) and all(_int_like(v) for v in r)
+			and r[2] > 0 and r[3] > 0 and r[0] + r[2] <= width and r[1] + r[3] <= height)
+	return False
+
+
+def _check_ground_transitions(map_id: str, config: dict, errors: list) -> None:
+	layers = config.get("floor_layers", [])
+	if not isinstance(layers, list):
+		errors.append(f"maps/{map_id}: floor_layers must be an array")
+		return
+	for index, layer in enumerate(layers):
+		if not isinstance(layer, dict) or "wang_corners" not in layer:
+			continue
+		corners = layer["wang_corners"]
+		if (not isinstance(corners, list) or len(corners) != 16 or not all(
+				_numeric_vector(coord, 2, True) and all(_int_like(v) for v in coord) for coord in corners)):
+			errors.append(f"maps/{map_id}: floor layer {index} needs 16 nonnegative integer Wang atlas coordinates")
+		grid = config["grid"]
+		if not _ground_cells_valid(layer.get("terrain_lower_cells"), int(grid["width"]), int(grid["height"])):
+			errors.append(f"maps/{map_id}: floor layer {index} needs terrain_lower_cells within its grid")
+
+
+def _check_map_rendering_geometry(map_id: str, config: dict, errors: list) -> None:
+	if "boundary_tone" in config:
+		tone = config["boundary_tone"]
+		if (not isinstance(tone, dict) or not _numeric_vector(tone.get("base"), 3)
+				or type(tone.get("detail")) not in (int, float) or not math.isfinite(tone["detail"])
+				or not 0 <= tone["detail"] <= 1):
+			errors.append(f"maps/{map_id}: boundary_tone needs base[3] and detail in [0,1]")
+	camera = config.get("camera", {})
+	if not isinstance(camera, dict):
+		errors.append(f"maps/{map_id}: camera must be an object")
+	else:
+		for key, size in (("offset", 2), ("margins", 4)):
+			if key in camera and not _numeric_vector(camera[key], size, key == "margins"):
+				errors.append(f"maps/{map_id}: camera.{key} must carry {size} finite numbers"
+					+ (" >= 0" if key == "margins" else ""))
+	vistas = config.get("vistas", [])
+	if not isinstance(vistas, list):
+		errors.append(f"maps/{map_id}: vistas must be an array")
+		return
+	for index, vista in enumerate(vistas):
+		if (not isinstance(vista, dict) or not isinstance(vista.get("sprite"), str)
+				or not vista["sprite"] or not _numeric_vector(vista.get("cell"), 2)
+				or ("foreground" in vista and type(vista["foreground"]) is not bool)
+				or ("tint" in vista and not (_numeric_vector(vista["tint"], 3)
+					or _numeric_vector(vista["tint"], 4)))):
+			errors.append(f"maps/{map_id}: vista {index} needs sprite, cell[2] and optional tint[3|4]")
+
+
 def check_maps(maps: dict, errors: list) -> None:
 	for map_id, m in sorted(maps.items()):
 		grid = m.get("grid")
@@ -155,6 +333,9 @@ def check_maps(maps: dict, errors: list) -> None:
 			errors.append(f"maps/{map_id}: missing/invalid grid {{width,height}}")
 			continue
 		w, h = int(grid["width"]), int(grid["height"])
+		_check_map_rendering_geometry(map_id, m, errors)
+		_check_ground_transitions(map_id, m, errors)
+		_check_scene_tile_fallbacks(m, "maps." + map_id, errors)
 		for cell in m.get("blocked", []):
 			if not _cell_shape_ok(cell):
 				errors.append(f"maps/{map_id}: malformed blocked cell {cell!r}")
@@ -665,6 +846,67 @@ def check_sprites(parsed: dict, errors: list) -> None:
 			continue
 		if not isinstance(entry, dict) or not entry.get("animations"):
 			errors.append(f"sprites.json: entry '{key}' missing non-empty animations")
+		elif "field_tint_override" in entry and not _numeric_vector(entry["field_tint_override"], 3, True):
+			errors.append(f"sprites.json: entry '{key}' field_tint_override needs three finite nonnegative channels")
+
+
+def check_sprite_fallbacks(parsed: dict, errors: list, bundle_paths: set | None = None) -> None:
+	"""Fallbacks must be one-hop, non-player entries with public sheets.
+	Manifest membership is authoritative even when a private overlay is installed.
+	"""
+	sprites = parsed.get(DATA / "sprites.json") or {}
+	if bundle_paths is None:
+		manifest = json.loads((GAME_ROOT / "assets_manifest.json").read_text(encoding="utf-8"))
+		bundle_paths = {asset["path"] for asset in manifest.get("assets", []) if asset.get("bundle")}
+	for sid, entry in sprites.items():
+		if not isinstance(entry, dict) or "fallback_sprite" not in entry:
+			continue
+		target = entry["fallback_sprite"]
+		where = f"sprites.json: '{sid}' fallback_sprite '{target}'"
+		if not isinstance(target, str) or not target:
+			errors.append(f"{where} must be a non-empty sprite id")
+			continue
+		if target == sid:
+			errors.append(f"{where} points at itself")
+			continue
+		if target not in sprites:
+			errors.append(f"{where} is not a sprite id")
+			continue
+		if target.startswith("pc_"):
+			errors.append(f"{where} is a player-only pc_* skin")
+			continue
+		tgt = sprites[target]
+		if not isinstance(tgt, dict):
+			errors.append(f"{where} is not a sprite entry")
+			continue
+		if "fallback_sprite" in tgt:
+			errors.append(f"{where} chains to another fallback")
+			continue
+		animations = tgt.get("animations")
+		if not isinstance(animations, dict) or not animations:
+			errors.append(f"{where} lacks valid sheet animations")
+			continue
+		sheets = []
+		valid = True
+		required_sheets = ("sheet_down", "sheet_side", "sheet_up") if tgt.get("directional") else ("sheet",)
+		for anim in animations.values():
+			if not isinstance(anim, dict):
+				valid = False
+				break
+			paths = [value for key, value in anim.items() if key.startswith("sheet")]
+			if any(key not in anim for key in required_sheets) or any(not isinstance(path, str) or not path for path in paths):
+				valid = False
+				break
+			size = anim.get("frame_size")
+			if (not isinstance(size, list) or len(size) != 2
+				or any(type(dimension) not in (int, float) or dimension < 1 for dimension in size)):
+				valid = False
+				break
+			sheets.extend(paths)
+		if not valid:
+			errors.append(f"{where} lacks valid sheet animations")
+		elif any(path.removeprefix("res://") in bundle_paths for path in sheets):
+			errors.append(f"{where} is itself bundle-only (missing in the public checkout it serves)")
 
 
 def _walk_gates(node, map_id: str, entity_id: str, errors: list) -> None:
@@ -2632,6 +2874,7 @@ def main() -> int:
 		return 1
 	maps = _compose_maps(parsed, errors)
 	check_maps(maps, errors)
+	check_catalog_tile_fallbacks(parsed, errors)
 	check_skill_gates(parsed, maps, errors)
 	# MERGE NOTE (v0.18 W1): this pair is parked HERE, at the top of the check_*
 	# block, and its REPORT print at the very bottom of main() -- both as far as
@@ -2644,6 +2887,7 @@ def main() -> int:
 	check_shared_dialogue_banks_used(parsed, errors)
 	check_prose_duplication(parsed, maps, errors)
 	check_sprites(parsed, errors)
+	check_sprite_fallbacks(parsed, errors)
 	check_skill_icons(parsed, errors)
 	check_talk_banks(maps, errors)
 	check_gate_shapes(maps, errors)

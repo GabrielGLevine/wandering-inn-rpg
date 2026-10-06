@@ -15,6 +15,14 @@
 
   { "_comment": "== ENTER dungeon_approach via teleport (unreachable any other way this phase) ==", "action": "teleport", "map": "dungeon_approach", "cell": [0, 0] },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "dungeon_approach" }, "timeout_sec": 5 },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_lights_rendered",
+   "payload_contains": {
+    "map": "dungeon_approach",
+    "count": 2
+   }
+  },
   { "action": "assert_state", "path": "current_map", "equals": "dungeon_approach" },
   { "action": "assert_event_logged", "type": "ui_mood_applied", "payload_contains": { "map": "dungeon_approach" } },
   { "_comment": "v019-L2 RE-PIN 6 -> 8: GH#380 seeded the (4,9)/(5,9) rubble spill (`unsteady`, which joins `blocked` at load). Off the perimeter the lap below walks and off all three teleport legs, so the route is byte-identical.", "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "dungeon_approach", "floor_cells": 192, "blocked_cells": 8 } },
@@ -57,6 +65,14 @@
   { "action": "assert_state", "path": "player_cell", "equals": [13, 6] },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "trapped_halls" }, "timeout_sec": 5 },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_lights_rendered",
+   "payload_contains": {
+    "map": "trapped_halls",
+    "count": 2
+   }
+  },
   { "action": "assert_state", "path": "current_map", "equals": "trapped_halls" },
   { "action": "assert_state", "path": "player_cell", "equals": [2, 7] },
   { "_comment": "#398-P3 RE-PIN 12 -> 21, DERIVED not fitted: the side-vault seal adds nine wall cells, one of which -- (9,10) -- was already walled by the pre-existing (9,10)-(9,11) segment. (0,10),(1,10),(3,10),(4,10),(5,10),(6,10),(8,10) close the y10 threshold row; (9,12),(9,13) close the pocket's east side (review B1: without those two, x10 y12/13 walked straight in and (5,12)/(4,13) were reachable with no kit at all). 12 + 7 + 2 = 21. floor_cells stays 280 because floor_layers covers `all` and walls do not subtract floor.", "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "trapped_halls", "floor_cells": 280, "blocked_cells": 21 } },

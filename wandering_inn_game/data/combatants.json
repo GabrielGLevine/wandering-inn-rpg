@@ -145,8 +145,8 @@
    "id": "cave_spider",
    "power_level": 1.8,
    "display_name": "Cave Bat",
-   "sprite": "bat",
-   "combat_scale": 0.56,
+   "sprite": "cave_bat_harvest",
+   "combat_scale": 0.31884058,
    "side": "enemy",
    "stats": {
     "str": 9,
@@ -572,7 +572,8 @@
    },
    "weapon_die": 7,
    "ai": "melee",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.322581
   },
   {
    "_comment": "See briar_collector_a: canon cite + #396 solo retune.",
@@ -596,7 +597,8 @@
    },
    "weapon_die": 7,
    "ai": "melee",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.322581
   },
   {
    "_comment": "Riverfarm's capstone (blight_lifted), FIRST pilgrimage stop = LOWEST band, authored at 9.5 power_level (bands + method: docs/design/2026-07-26-main-quest-line-spec.md sec.6). #396 SOLO RETUNE (rule FIRED -- solo 0.22 closed blight_lifted's fight route): cut on both axes, power_level held. Levers, before/after, ladder: RIVERFARM_CELLS in tests/sim_combat_batch.gd.",
@@ -653,7 +655,7 @@
    "id": "river_wolf_a",
    "power_level": 7.0,
    "display_name": "River Wolf",
-   "sprite": "river_wolf",
+   "sprite": "river_wolf_harvest",
    "side": "enemy",
    "stats": {
     "str": 11,
@@ -665,13 +667,14 @@
    },
    "weapon_die": 5,
    "ai": "skirmisher",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.645162
   },
   {
    "id": "river_wolf_b",
    "power_level": 7.0,
    "display_name": "River Wolf",
-   "sprite": "river_wolf",
+   "sprite": "river_wolf_harvest",
    "side": "enemy",
    "stats": {
     "str": 11,
@@ -683,14 +686,15 @@
    },
    "weapon_die": 5,
    "ai": "skirmisher",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.645162
   },
   {
    "_comment": "River_wolf_pack's third member, the pack's alpha -- see river_wolf_a's _comment for the canon cite.",
    "id": "river_wolf_c",
    "power_level": 8.5,
    "display_name": "River Wolf Alpha",
-   "sprite": "river_wolf",
+   "sprite": "river_wolf_harvest",
    "side": "enemy",
    "stats": {
     "str": 13,
@@ -704,13 +708,14 @@
    "ai": "melee",
    "skills": [
     "power_strike"
-   ]
+   ],
+   "combat_scale": 0.645162
   },
   {
    "id": "footpad_lookout",
    "power_level": 3.0,
    "display_name": "Footpad",
-   "sprite": "human_laborer",
+   "sprite": "footpad",
    "side": "enemy",
    "stats": {
     "str": 7,
@@ -722,14 +727,15 @@
    },
    "weapon_die": 3,
    "ai": "melee",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.363637
   },
   {
    "_comment": "Alley_footpads' second member -- see footpad_lookout's own _comment for the canon-plausibility cite + the LOW-lethality design contract.",
    "id": "footpad_bruiser",
    "power_level": 3.5,
    "display_name": "Footpad",
-   "sprite": "human_laborer",
+   "sprite": "footpad_bruiser",
    "side": "enemy",
    "stats": {
     "str": 9,
@@ -741,7 +747,8 @@
    },
    "weapon_die": 4,
    "ai": "melee",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.40678
   },
   {
    "_comment": "First all-human combatant family (spec sec.2). v0.16.1 #20: combat_scale bands the crew to ~2.0 cells; FIGURE_ROWS measures idle_side alpha-bbox -- re-derive on any sheet change. v0.18 W5 rung-4: weapon_die 6->8, con untouched (sim_combat_batch rung-2 cell).",
@@ -790,7 +797,7 @@
    "id": "hired_blade_knife_b",
    "power_level": 7.5,
    "display_name": "Hired Blade",
-   "sprite": "human_laborer",
+   "sprite": "footpad",
    "side": "enemy",
    "stats": {
     "str": 11,
@@ -802,7 +809,8 @@
    },
    "weapon_die": 5,
    "ai": "melee",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.363637
   },
   {
    "_comment": "v0.16 I1 FIGHT (#306). NEW ids, never a retune of footpad_*/hired_blade_* -- those feed boulevard_duel_ring, both night loops and Invrisil's two ladder rungs. A distinct id IS the per-encounter override. Sprite reused from hired_blade. v0.16.1 #20: combat_scale 0.28, banded as hired_blade_leader.",
@@ -834,7 +842,7 @@
    "id": "fence_doorman",
    "power_level": 9.5,
    "display_name": "The Back Door",
-   "sprite": "human_laborer",
+   "sprite": "footpad_bruiser",
    "side": "enemy",
    "combat_tint": [
     0.45,
@@ -853,7 +861,8 @@
    "ai": "melee",
    "skills": [
     "power_strike"
-   ]
+   ],
+   "combat_scale": 0.40678
   },
   {
    "_comment": "v0.16 I2 FIGHT (#306). NEW ids -- the shared footpad/hired-blade rosters are never retuned. Sprite citizen_f, the hired_blade_knife_a precedent (registered, no combat_scale).",
@@ -884,7 +893,7 @@
    "id": "rest_bravo_b",
    "power_level": 8.5,
    "display_name": "The One Who Was Waiting",
-   "sprite": "human_laborer",
+   "sprite": "footpad",
    "side": "enemy",
    "combat_tint": [
     0.5,
@@ -903,7 +912,8 @@
    "ai": "melee",
    "skills": [
     "power_strike"
-   ]
+   ],
+   "combat_scale": 0.363637
   },
   {
    "_comment": "con17 reflects his canon 'brick-like physique' AND is a harness-derived ceiling, not an arbitrary pick: below ~14 he goes down in 90%+ of hired_blades fights (too fragile for a come-along ally to feel like a real participant).",
@@ -1046,7 +1056,7 @@
    "id": "razorbeak_a",
    "power_level": 1.5,
    "display_name": "Razorbeak",
-   "sprite": "razorbeak",
+   "sprite": "razorbeak_harvest",
    "side": "enemy",
    "stats": {
     "str": 9,
@@ -1058,14 +1068,15 @@
    },
    "weapon_die": 5,
    "ai": "coward",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.53658537
   },
   {
    "_comment": "Razorbeak nest's second member -- see razorbeak_a's own _comment for the canon cite + the `coward` profile rationale.",
    "id": "razorbeak_b",
    "power_level": 1.5,
    "display_name": "Razorbeak",
-   "sprite": "razorbeak",
+   "sprite": "razorbeak_harvest",
    "side": "enemy",
    "stats": {
     "str": 9,
@@ -1077,14 +1088,15 @@
    },
    "weapon_die": 5,
    "ai": "coward",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.53658537
   },
   {
    "_comment": "Mothbear, T3 NIGHT-ONLY pack encounter (`road_mothbears`, floodplains wagon road). v0.16.1 #21: re-homed off invrisil_boulevard. No cite exists for `mothbear` in the wiki, data/ or docs/design/ -- an ORIGINAL beast on wilderness logic, not a cited one.",
    "id": "mothbear_a",
    "power_level": 7.0,
    "display_name": "Mothbear",
-   "sprite": "mothbear",
+   "sprite": "mothbear_harvest",
    "side": "enemy",
    "stats": {
     "str": 15,
@@ -1096,14 +1108,15 @@
    },
    "weapon_die": 6,
    "ai": "melee",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.452831
   },
   {
    "_comment": "`road_mothbears`' pack alpha. v0.16.1 #21: the old note pointed at mothbear_a \"for the canon cite\", which pointed at nothing -- the dangling pointer is deleted rather than re-aimed.",
    "id": "mothbear_b",
    "power_level": 8.0,
    "display_name": "Mothbear",
-   "sprite": "mothbear",
+   "sprite": "mothbear_harvest",
    "side": "enemy",
    "stats": {
     "str": 16,
@@ -1117,7 +1130,8 @@
    "ai": "melee",
    "skills": [
     "power_strike"
-   ]
+   ],
+   "combat_scale": 0.452831
   },
   {
    "_comment": "damage_reduction 2 models the armored carapace (lighter than rock_crab's 8 -- an ambush hunter, not a slow tank).",
@@ -1195,7 +1209,7 @@
    "id": "watchgolem_a",
    "power_level": 12.5,
    "display_name": "Stone Golem",
-   "sprite": "watchgolem",
+   "sprite": "watchgolem_harvest",
    "side": "enemy",
    "stats": {
     "str": 14,
@@ -1208,14 +1222,15 @@
    "weapon_die": 6,
    "damage_reduction": 3,
    "ai": "guard",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.38596491
   },
   {
    "_comment": "The market guard pair's escort half -- see watchgolem_a's own _comment for the canon cite + the paired-guard rationale.",
    "id": "watchgolem_b",
    "power_level": 13.0,
    "display_name": "Stone Golem",
-   "sprite": "watchgolem",
+   "sprite": "watchgolem_harvest",
    "side": "enemy",
    "stats": {
     "str": 15,
@@ -1230,7 +1245,8 @@
    "ai": "guard",
    "skills": [
     "power_strike"
-   ]
+   ],
+   "combat_scale": 0.38596491
   },
   {
    "_comment": "Balance: sim_combat_batch.gd RIVERFARM_CELLS' `riverfarm_thicket_patch_t3_solo`, GATED 0.55-0.95 at `t3_warrior10` (measured 0.81 -- solo, no hunter ally, the renewable-cull's own design point).",
@@ -1249,7 +1265,8 @@
    },
    "weapon_die": 6,
    "ai": "melee",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.322581
   },
   {
    "_comment": "Riverfarm_thicket_patch's second remnant -- see thicket_remnant_a's own _comment for the full canon cite + distinct-id rationale.",
@@ -1268,7 +1285,8 @@
    },
    "weapon_die": 6,
    "ai": "melee",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.322581
   },
   {
    "_comment": "v0.16 #305 R1 FIGHT. Roster-only clone of thicket_remnant's numbers (a distinct id IS the override, see :468) so the granary fight sits in the Riverfarm stop band. NOT goblin_raider: that Act-I rig sits four bands under this stop. Balance: RIVERFARM_CELLS' `granary_scavengers_t3_warrior10_solo`, gated 0.55-0.95 (stop-cell window, not a rung's).",

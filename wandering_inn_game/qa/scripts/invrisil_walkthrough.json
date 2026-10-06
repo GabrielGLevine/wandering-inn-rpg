@@ -108,12 +108,25 @@
    "path": "player_cell",
    "equals": [
     4,
-    8
+    4
    ]
   },
   {
    "action": "screenshot",
    "name": "00_scale_shock_arrival"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "screenshot",
+   "name": "00a_city_landmarks_unobstructed"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
   },
   {
    "_comment": "== BEAT 2: the crowd is really there, and as of v0.15 T4.2 it TALKS -- invrisil_extra_1 (7,6) carries a 3-line talk_pool over its shipped static `dialogue`. Up 2 to (4,6), right 2 to (6,6), bump right to face (7,6). Interact ONE serves pool index 0 (chatted_with_invrisil_extra_1 unbanked at this fixture) under her display name; interact TWO is spent-pool, which falls to the static one-liner exactly as before -- BOTH crowd surfaces proven in one stop, where the old beat proved only the second. ==",
@@ -801,6 +814,10 @@
    "timeout_sec": 10
   },
   {
+   "action": "assert_combat_layout",
+   "desktop": true
+  },
+  {
    "action": "screenshot",
    "name": "02b_footpads_surround_opens"
   },
@@ -1046,6 +1063,50 @@
    "action": "assert_state",
    "path": "sneaking",
    "equals": false
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The rear gate is barred. The Brothers have not opened this passage to you."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "The rear gate is barred. The Brothers have not opened this passage to you."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "mercantile_alleys"
+  },
+  {
+   "action": "screenshot",
+   "name": "03b_rear_gate_closed"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
   },
   {
    "_comment": "== BEAT 9: into the parlor. Bump right to face alleys_to_parlor (19,12), interact -> landing (1,4). ==",
