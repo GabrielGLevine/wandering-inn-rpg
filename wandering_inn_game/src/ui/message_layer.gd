@@ -1480,11 +1480,11 @@ func _fit_use_overlay() -> void:
 	if _use_overlay == null:
 		return
 	WIResponsiveLayout.apply_readable_theme(_use_overlay, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
-	var safe := WIResponsiveLayout.safe_rect(get_viewport()).grow(-12.0)
+	var safe: Rect2 = WIResponsiveLayout.safe_rect(get_viewport()).grow(-12.0)
 	var extent := Vector2(minf(safe.size.x, 560.0), minf(safe.size.y, 400.0))
 	_use_panel.position = safe.get_center() - extent * 0.5
 	_use_panel.size = extent
-	var target := WIResponsiveLayout.touch_size(get_viewport(), Vector2(0, 44)) if WIResponsiveLayout.uses_touch_layout() else Vector2(0, 40)
+	var target: Vector2 = WIResponsiveLayout.touch_size(get_viewport(), Vector2(0, 44)) if WIResponsiveLayout.uses_touch_layout() else Vector2(0, 40)
 	_use_cancel.custom_minimum_size = target
 	_use_confirm.custom_minimum_size = target
 
