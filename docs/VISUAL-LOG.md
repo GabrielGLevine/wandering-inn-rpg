@@ -480,13 +480,3 @@ r3–r5 playtest waves — gone from this file.
   panels and a dark border imply little of the stacked city. Fix direction:
   arrival-framed Invrisil structures and Pallass lower-terrace backdrop;
   substantial changes are authorized by the user-approved #564 review.
-
-- [ ] **(P2)** Inventory final-unit receipt clips after rearm — consuming the
-  last Fine Meal or Signature Meal automatically selects Rusty Sword; the
-  retained operation receipt keeps a stale detail-scroll offset and its first
-  line is clipped at the viewport top. Native `meal_station_loop windowed
-  --seed=9 --qa-real-message-timing=1` at `d242e87e`, captures
-  `02_repeated_recovery_prep_not_stacked.png` and
-  `03_signature_capped_mp_and_strongest_prep.png`, preserved in
-  `/private/tmp/wi-569-qa-evidence/station-window/`. Logical route passes;
-  preserve receipt visibility when final-unit rearm selects remaining gear.

@@ -1151,6 +1151,14 @@ func _activate_use(operation: int, id: String, generation: int, source_sim: RefC
 func _on_use_rearmed() -> void:
 	if open:
 		_render_use_actions()
+		if not _receipt_data.is_empty():
+			_keep_rearmed_receipt_visible.call_deferred(int(_receipt_data.get("operation_id", -1)), _use_generation)
+
+
+func _keep_rearmed_receipt_visible(operation: int, generation: int) -> void:
+	await get_tree().process_frame
+	if open and generation == _use_generation and operation == int(_receipt_data.get("operation_id", -2)):
+		_detail_scroll.ensure_control_visible(_use_receipt)
 
 
 func _render_use_receipt(result: Dictionary) -> void:

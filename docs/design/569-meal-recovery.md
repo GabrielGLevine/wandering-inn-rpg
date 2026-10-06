@@ -139,8 +139,17 @@ The lane has no remaining intended runtime or QA edits.
 
 Native window runs at `d242e87e` pass all three routes with the current private
 asset overlay; all 19 captures were read. Service and earned-cooking captures
-are readable. Station captures 02/03 reveal clipped retained receipts after
-final-unit rearm selects the sword; this is recorded in VISUAL-LOG and blocks
-visual acceptance until fixed. All evidence is preserved under
-`/private/tmp/wi-569-qa-evidence/{service,earned,station}-window`. Native clicks
-remain emulated input, with no browser or physical-device claim.
+are readable. Station captures 02/03 exposed clipped retained receipts after
+final-unit rearm selected the sword. The bounded inventory fix waits for the
+rearm layout and scrolls the captured receipt into view, guarded by operation
+and render generation; it does not alter readiness, mint tokens or resize the
+panel. The production frontend regression fails on the original geometry and
+passes after the fix. The affected station window rerun passes all 92 steps;
+all four captures were read and both receipts are now fully visible. The
+corresponding VISUAL-LOG row is removed with this fix.
+
+Evidence is retained under `/private/tmp/wi-569-qa-evidence`: original native
+`{service,earned,station}-window`, corrected `station-window-fixed`, and
+`receipt-red-clean.log` / `receipt-green.log`. Native clicks remain emulated
+input, with no browser or physical-device claim. The window lane is released;
+next is independent exact-head review and controller composition/full gates.

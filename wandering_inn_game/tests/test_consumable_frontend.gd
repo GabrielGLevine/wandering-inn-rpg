@@ -169,6 +169,7 @@ func _run() -> void:
 	_game.sim.vitals.hp = 2
 	_check((_inventory.get("_use_receipt") as Label).text == receipt and receipt.contains("Lost 4 HP"), "rendered poison receipt never rereads later resources")
 	await _live_button_burst()
+	await _final_food_receipt()
 	_inventory.free()
 	_combat_previews()
 	await _mobile_combat_receipt()
@@ -179,6 +180,26 @@ func _run() -> void:
 		return
 	print("PASS test_consumable_frontend: real controls, counts, tokens, warning cancellation and captured in-panel receipts")
 	quit(0)
+
+
+func _final_food_receipt() -> void:
+	_game.sim.inventory = ["rusty_sword"]
+	_game.sim.consumable_counts.clear()
+	_game.sim.hotbar_loadout.clear()
+	_game.sim.vitals.hp = 7
+	_game.sim.vitals.mp = 0
+	_game.sim.pickup("fine_meal", "test")
+	await _frames(3)
+	await _select("fine_meal")
+	(_inventory.get("_use_button") as Button).pressed.emit()
+	await _rearm()
+	await _frames(3)
+	var receipt: Label = _inventory.get("_use_receipt")
+	var detail: ScrollContainer = _inventory.get("_detail_scroll")
+	_check(_game.sim.item_count("fine_meal") == 0 and _game.sim.inventory == ["rusty_sword"], "last meal is consumed and remaining gear becomes selected")
+	_check(not _messages.item_use_busy() and not (_inventory.get("_use_button") as Button).visible, "final-unit rearm preserves readiness with gear selected")
+	_check(receipt.text.contains("Fine Meal") and receipt.text.contains("Restored 8 HP"), "final-unit receipt retains captured food recovery")
+	_check(detail.get_global_rect().encloses(receipt.get_global_rect()), "final-unit receipt stays fully inside detail viewport after rearm")
 
 
 func _combat_previews() -> void:
