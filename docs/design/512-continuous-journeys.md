@@ -325,3 +325,23 @@ so the earned economy/input contract is diagnostic pending clean rerun and
 root's window proof. Next is the actual warden and ending, with no further
 optional portfolio expansion. Other profiles and the force-crate variant remain
 unrun; this history's exercised losses/missed input do not stand in for them.
+
+## Purchased-set defeat and earned-kit retry
+
+The purchased set's actual warden attempt loses in round7 with the warden at
+13HP. Mana Shield spends16MP and the attempt consumes the one Remedy. The
+route retains this defeat and the production rollback restores precombat
+pools/stock. It then swaps only already-earned gear: Fang/Moon-Bone/Guardian
+Fragment, walks out through the dungeon and Door, and sleeps to fill the
+changed maximum. This one recovery sleep also resolves accumulated Rogue6;
+no extra victory or income loop was added.
+
+Retry entry51HP/16MP,4gold,Remedy1; actual victory exit10/51HP,0/16MP,4gold,
+Remedy0. This is a whole-history result, not an isolated claim that gear alone
+caused the win: the walked sleep also changed Rogue5→6 and the combat history
+advanced normally. No seed or tuning changed. Both purchased pieces remain
+in the pack, so the58g spend is preserved rather than refunded or edited out.
+
+rogue-warden-current/rogue-retry2.log: exit0/PASS3344 with4 shaderRID errors.
+The first defeat and the return-approach authoring mistake have separate
+artifacts. Next: actual ending choice, vault resolution and Inn epilogue.

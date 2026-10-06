@@ -35,7 +35,9 @@ archived, or superseded session blocks.
   Rogue3115 pays Pallass46g then buys remaining44g set: Fang14 earlier,
   Hedge9/Stone35 now,4g left; actually equipped4/4. Required sleeps restore
  48HP16MP, Rogue5/Diplomat9/Warrior7/Mage8/Helper1/Archer2/Trader2.
-  Next warden/ending only.3RID shutdown ERROR persists, assertions only.
+  Rogue3344 retains bought-set warden loss13enemyHP, real rollback, earned
+  Moon-Bone/Guardian swap and walked bed. Rogue6 retry wins10HP0MP,Remedy0,
+ 4g. Next ending/epilogue only;4RID ERROR persists, assertions only.
   Evidence /private/tmp/wi-512-evidence/current; exact details in
   docs/design/512-continuous-journeys.md. Endings, force-crate variant,
   affordability and windows remain outstanding.
