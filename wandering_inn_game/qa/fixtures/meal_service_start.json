@@ -1,0 +1,47 @@
+{
+ "_comment": "#569 mechanical service fixture: pre-errand non-cook Mage1, 7HP/0MP and 6gold at Erin. Class, depletion, purse and position are setup, not earned history. No cooking Skill, food, or completed quest is supplied.",
+ "version": 12,
+ "state": {
+  "pc_race": "human",
+  "current_map": "inn",
+  "player_cell": [
+   7,
+   3
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "mage": 1
+  },
+  "accomplishments": {},
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 6,
+  "rng_state": "-6393592048753323481",
+  "vitals": {
+   "hp": 7,
+   "mp": 0,
+   "mp_potion_doses": 0
+  },
+  "resonance_capacity": 4,
+  "consumable_counts": {},
+  "pending_loot": []
+ }
+}
