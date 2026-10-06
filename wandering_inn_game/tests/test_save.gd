@@ -336,7 +336,7 @@ func _init() -> void:
 	(bad_status_data["state"] as Dictionary)["seen_statuses"] = "slowed"
 	assert(not WISave.apply(_new_game(), bad_status_data), "wrong-typed seen_statuses rejected")
 
-	assert(WISave.VERSION == 9, "VERSION bumped 8 -> 9 for #472's retired pending_consolidation key (8 was the v0.15 A3 lore_notes record)")
+	assert(WISave.VERSION == 10, "VERSION 10 persists HP/MP/exposure after v9 retired pending_consolidation")
 
 	# GH#130 v5->v6 arm: a pre-#130 save with sleeps behind it gains slept=1
 	# exactly once; a never-slept v5 save gains nothing.
