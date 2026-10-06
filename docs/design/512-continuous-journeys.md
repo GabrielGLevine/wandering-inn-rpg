@@ -431,3 +431,26 @@ failures are retained separately. Loss/rollback pins are now authored for the
 next replay. The only authorized next retry claims existing Zevara3+4gold,
 buys Traveler's Charm5 through the real confirmation, rests and returns once.
 No win or ending is promised.
+
+## Finite Watch-reward recovery still meets the boss wall
+
+After the free-armor loss and real rollback, Maren walks back to Zevara and
+claims only the two already-earned crate/cistern rewards:1→4→8gold. At Krshia's
+actual purchase confirmation, Traveler's Charm costs5, leaving3. The inventory
+receipt shows48/50HP immediately after equip, so raising the cap does not heal.
+A real seventh sleep earns Diplomat6 and restores50HP/15MP. No new meals,
+potions, repeated wage collection, or extra fights were added. The held stock
+is still one Hot Meal and an armed +2maxHP preparation; the last two defeats
+restore their legitimate precombat checkpoints.
+
+The single authorized charm retry enters50/52HP,15/15MP with Relc, then loses
+in round6. Relc and all adds fall; the boss remains at10/50HP. This is a measured
+wall after practical free armor, resting and a finite earned purchase, not
+guaranteed worker success. Gear, earned Diplomat/Mage levels, rest and honest
+walk/RNG history change together; no isolated gear causality is claimed.
+Full1280-step observation5 exits0/PASS/result true with two DummyShader RID
+ERRORs, invalidating the authoritative gate. Evidence is preserved under
+`worker-charm-measured-loss` and `worker-charm5.log`. Final exact loss, resources,
+stock, purse, equipment and five-defeat/three-victory assertions now accompany
+the production rollback; final replay remains next. No further retry, farming,
+gear purchase or ending extension is authorized in this bounded continuation.

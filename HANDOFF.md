@@ -20,14 +20,13 @@ archived, or superseded session blocks.
   rogue-full-ending-current has result/events/checkpoints. Exit0/PASS but
  5shaderRID ERRORs make the authoritative gate INVALID. No full-route window
   or physical-touch claim. Root/capacity570 own lifecycle investigation.
-  Worker free-armor continuation observes a round6 loss, boss10HP;
- 1095 assertions PASS but two shader ERRORs invalidate the gate. Actual
- chest/rest yields48HP/14MP and Mage4,1gold. See current design ledger.
- Fresh martial/caster/
-  work-heavy endings and force-crate/other imperfect variants remain unrun.
-  **Next:** pin the armor loss/real rollback, checkpoint, then claim already-
- earned Zevara3+4, buy Traveler5 and attempt one rested retry. No gameplay
- edits/native runs. Preserve companion UID; root owns UI/teardown.
+  Worker bounded recovery: free chest armor/rest earns Mage4, then eligible
+ Zevara3+4→Traveler5 and seventh sleep earns Diplomat6. Both retries lose
+ round6 with boss10HP; final3gold,50HP/15MP rollback,1HotMeal. Observation1280
+ PASS/exit0 but2shaderERRORs INVALID; preserved worker-charm-measured-loss.
+ **Next:** final loss/rollback pins replay, load_gate/unaffected canonical,
+ checkpoint/release. No more attempts/farming/production/native changes.
+ Preserve companion UID; root owns UI/teardown.
 
 - **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
   Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.
