@@ -72,3 +72,30 @@ results/events/checkpoints; source logs worker-social3/rogue-mage. Failed walk
 and level expectations are retained separately. Next: third-quest/act gates,
 continued Rogue danger credit, meaningful social choices and actual supported
 combat through the regional ending. Full endings and window reads remain open.
+
+## Earned Act III, training and guile checkpoint
+
+The worker now passes545 continuous fresh steps. Charming Smile resolves both
+the crate and Watch sweep; Olesm pays6gold, bringing the purse to13. The third
+actual sleep advances to Act III. A real Relc spar uses manual Dash/Attack
+inputs followed by competent autoplay; carried resources are dumped before and
+after. Four more actual pot casts stock four Hot Meals for the expedition.
+Together with the served plate, this earns Cook at the fourth sleep. Current
+build is Helper1/Diplomat5/Mage1/Rogue1/Warrior1/Cook1,44/44HP,14/14MP,13gold.
+These are disclosed support classes and finite travel preparation, not a
+pacifist or pure-worker claim. Relc's newly present seat blocks the old x1 Inn
+walk; the route takes the reachable x2 aisle without removing him.
+
+Rogue now passes385 fresh steps: keeps Selys's4gold reward, uses actual Light
+at the cellar, and resolves Krshia's guile fork. Two live danger crossings plus
+the quest's shipped two-credit reward total4, so the third sleep earns Rogue3
+with Pick Lock and Find Trap. The initial expected level2 was corrected after
+reading the earned event ledger and quests.json reward; no input changed.
+The road remains live. This proves acquisition, not yet later Skill utility.
+
+Evidence folders worker-training-pass and rogue-guile-pass contain passing
+results, events and earned checkpoints, with exit0/no Godot warning/error noise.
+The failed Relc-seat walk and observed Rogue-level pin are retained. Regional
+continuation, full endings, force-crate variant, complete expense/power ledgers
+and window reads remain open. Compose the reviewed frontend input guard before
+actual inventory recovery in the next continuation.

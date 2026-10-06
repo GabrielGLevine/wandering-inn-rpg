@@ -7933,18 +7933,22 @@
    "surfaces": {
     "maps": [
      "floodplains",
+     "guild",
      "inn",
      "inn_upstairs",
      "street"
     ],
     "fixtures": [],
     "skills": [
+     "light",
      "sneak"
     ],
     "dialogue": [
      "erin_errand",
      "krshia_crate",
-     "pisces_magic"
+     "olesm_intro",
+     "pisces_magic",
+     "selys_delivery"
     ],
     "systems": [
      "char_creation",
@@ -7975,22 +7979,29 @@
     "fixtures": [],
     "skills": [
      "basic_cleaning",
-     "basic_cooking"
+     "basic_cooking",
+     "sneak"
     ],
     "dialogue": [
      "drayman_dispute",
      "erin_errand",
      "krshia_crate",
+     "olesm_intro",
      "patron_serving",
      "pisces_magic",
-     "selys_delivery"
+     "relc_intro",
+     "selys_delivery",
+     "watch_crate",
+     "zevara_intro"
     ],
     "systems": [
      "char_creation",
+     "combat",
      "dialogue",
      "economy",
      "exploration",
      "input",
+     "night_phase",
      "quests"
     ]
    }
