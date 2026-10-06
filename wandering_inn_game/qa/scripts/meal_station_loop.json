@@ -173,7 +173,10 @@
     "preparation": {
      "armed": {
       "hp_mod": 2
-     }
+     },
+     "active": {},
+     "room_hp": 0,
+     "well_fed": false
     }
    }
   },
@@ -232,7 +235,10 @@
     "preparation": {
      "armed": {
       "hp_mod": 2
-     }
+     },
+     "active": {},
+     "room_hp": 0,
+     "well_fed": false
     }
    }
   },
@@ -379,7 +385,10 @@
      "armed": {
       "hp_mod": 2,
       "damage_mod": 1
-     }
+     },
+     "active": {},
+     "room_hp": 0,
+     "well_fed": false
     }
    }
   },

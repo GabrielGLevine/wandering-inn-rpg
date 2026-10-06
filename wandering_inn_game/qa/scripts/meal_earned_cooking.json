@@ -806,8 +806,9 @@
    "type": "game_loaded"
   },
   {
-   "action": "assert_event_absent",
-   "type": "game_reset"
+   "action": "assert_event_count",
+   "type": "game_reset",
+   "count": 1
   }
  ]
 }
