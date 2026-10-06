@@ -25,9 +25,28 @@ merged PRs and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### User rulings 2026-10-05 (resources and capacity)
 
-- **HP/MP carry between battles.** Actual sleep refills them; Inn meals, food made with a relevant held Skill, inventory food and potions can restore them. Combat potion use costs AP; excess MP potion use causes mana poisoning and HP loss. Show current/max HP/MP and useful preparation feedback outside combat. Program #565 and its [plan](design/2026-10-05-persistent-vitals-recovery-plan.md) own implementation sequencing; gameplay is not yet implemented.
-- **Increase resonance capacity so more enchanted gear fits (#570).** This authorizes capacity expansion independently of #494's unresolved semantic model and #495's damage semantics. Hedault's earlier flat/lower-cost upgrade direction remains approved. Additional physical gear positions have not been selected.
-- Proposed tuning is 1 AP combat potions, three safe MP doses per waking then 4 HP loss per excess dose, and capacity 4→5 at the existing once-only beat. These are controller recommendations for measurement, not user-selected numeric/cadence rulings. User replies supersede them; preserve #432 meal caps and prior repeatable cooking access.
+- **#565:** HP/MP persist between battles; actual sleep refills. Inn meals,
+  relevant held-Skill cooking, inventory food and potions can restore them. Combat
+  potions cost AP; excess MP potion use causes mana poisoning/HP loss. Show current/max HP/MP
+  and preparation. The [plan](design/2026-10-05-persistent-vitals-recovery-plan.md)
+  owns sequencing; gameplay is not implemented.
+- **#570:** expand resonance independently of #494/#495; retain Hedault's
+  flat/lower-cost upgrade direction. No extra physical gear positions selected.
+  Proposed 1 AP potions, 3 safe MP doses/waking then 4 HP excess loss, capacity 4→5
+  at the existing once-only beat need measurement; they are not numeric/cadence rulings. Preserve #432 meal caps and
+  repeatable cooking.
+
+### User rulings 2026-10-05 (holistic art)
+
+- **#564/#554:** best art wins per asset within a coherent scene. Owned replaces licensed
+  art when better at gameplay scale; otherwise retain official primary/owned
+  public fallback. READY is not acceptance; no quota wiring.
+- Sprite animation/geometry/scale/anchor swap together. Terrain inherits the
+  original parent before complete fallback selection with owned coordinates.
+- Retain the 16px grid and gameplay identities; recompose inn/regions, add Invrisil's
+  cross-street/Pallass's lower-city depth per
+  `docs/design/2026-10-05-holistic-art-review.md`. Unsuitable rigs/physical devices remain
+  explicit coverage records.
 
 ### User rulings 2026-10-04 (M1)
 
@@ -219,11 +238,10 @@ merged PRs and `git log -p -- docs/CHOICE-LOG.md`.
   Rejected: an ap_cost==0 activation engine change (blast radius =
   every passive becomes slottable).
 
-- **#444 fix shape:** ship option 1 only (move Hedault's frontage door out of
-  the [23,1] sign adjacency into the open facade band). Option 3 (bespoke
-  enchanter sign) deferred to a VISUAL-LOG follow-up if the windowed read still
-  misleads; option 2 (real Coyle door) rejected here — it belongs to the Coyle
-  quest line, not a polish lane.
+- **#444:** move Hedault's door out of [23,1] sign adjacency into open facade.
+  Defer a bespoke sign to VISUAL-LOG if the windowed read still misleads;
+  a real Coyle door belongs to its
+  quest, not this polish lane.
 - **#451 scope:** once-per-round cap at L2 ships alone. [Improved Counter
   Strike] is NOT shipped this wave — the lane reports a martial-table
   recommendation and the reopen stays a controller/user adjudication.
@@ -231,17 +249,13 @@ merged PRs and `git log -p -- docs/CHOICE-LOG.md`.
   `_exempt` pending the user's naming pass (spearmaster×mage exempt-annotated
   as resolved-by-#449); nothing is scaffolded into existence silently and main
   goes green immediately.
-- **#475 was a shape test, not a design exclusion (2026-08-13).** The
-  [Dangersense] overlay's `encounter_when` filter was a defect, not a rule — it
-  hid the one Act I fight a player cannot walk around. Overlay parity is now by
-  construction: the overlay reads the sim's predicate instead of keeping a
-  second rule. `counting_room_guard` gains
-  `encounter_when.requires{counting_room_open}` so no aura glows inside the
-  #398 sealed pocket, rather than a new OR arm in the gate vocabulary.
-- **#474 mothbear determination: placement clean (2026-08-13).**
-  `road_mothbears` was never on water; the "on the pond" read was
-  `goblin_night_patrol`, which stood inside the pond until this wave walked it
-  ashore to (7,21). One entity, one defect.
+- **#475 parity:** the overlay's `encounter_when` filter was a defect hiding
+  the unavoidable Act I fight, not a design exclusion. Read the sim predicate
+  instead of duplicating rules. `counting_room_guard` uses
+  `encounter_when.requires{counting_room_open}` for #398's sealed pocket;
+  do not add an OR arm to the gate vocabulary.
+- **#474 placement:** `road_mothbears` was never on water. The pond actor,
+  `goblin_night_patrol`, moved ashore to (7,21).
 
 ### Steel thread and item abilities (2026-08-11)
 
@@ -462,48 +476,32 @@ merged PRs and `git log -p -- docs/CHOICE-LOG.md`.
   ruling 5's fix for wholesale replacement and outlived its purpose.
 - “Passing event assertions proves a visible feature” → **false**; windowed
   rendering is required for player-visible claims.
-- #397 round-one “engineering green means prose exit met” → **false**; blind
-  readers failed it. Round two passed after map-register re-authorship and
-  cadence correction; #406 carries the explicit-instruction/holdout residue.
+- #397 engineering-green prose did not meet blind-reader acceptance. Round
+  two passed after map-register/cadence corrections; #406 owns the holdout.
 
 ## Historical release index
 
-This section is intentionally terse. Follow the cited issue/PR or the archived
-pre-condensation file for alternatives, review chronology, and measurements.
+Issue/PRs and `git show 1aee127d:docs/CHOICE-LOG.md` retain alternatives and
+review measurements; current rulings are above.
 
 - **v0.19 / #398, #400, #403, #404, #412–#414, #417, #421, #423, #424,
-  #429:** field-skill pockets, martial re-scope, [Dangersense], [Pick Lock],
-  [Rope Arrow], canonical steel-thread QA, reachability enforcement, and orphan
-  drain. Current rulings are folded above.
-- **#397 prose naturalization:** round one failed blind reading despite green
-  engineering gates. User approved map-register-only round two under the
-  discovery/zero-inference rules; the final blind read passed. #406 owns the
-  fresh-control holdout release.
-- **v0.18 / #347, #348, #359, #360:** data-composed property verbs, gated
-  dynamic-Class prototype, looping phase clock, and tier-sweep instrumentation.
-  The property table enters through `WISceneCatalog.compose()` rather than a new
-  game-core registry.
-- **v0.17:** feedback/atmosphere, settings/difficulty, cooldowns, voice pass,
-  four-member Horns continuity, and the first dynamic-Class/property designs.
-  Atmosphere ownership stayed data/UI-side; image assets joined the import
-  purity rule.
-- **v0.16–v0.16.2:** region-depth quests, friend-playtest fixes, named-character
-  sprite cleanup, and the Coyle sign. Pallass interiors use globally unique map
-  stems; forge encounters are interact-only; quest-local counters do not feed
-  unrelated bounties. The mothbear moved outside Invrisil.
-- **v0.15:** delivery/leads/lore UI, endings, guest windows, regional
-  population, and measured board legibility. Dialogue-open presence deferral,
-  route-honest quest resolutions, biome-backed blocked props, and the combat
-  figure bar became standing contracts.
-- **v0.14:** Acts I–V main quest, pilgrimage spine, three-path seal conclusion,
-  finale, roster expansion, and difficulty ladder. Shipped ids froze at release
-  and later migrations preserve them.
-- **v0.13:** rename/save carry-over, journal tabs, Floors of the Inn pilot,
-  interiors, art, and honest canonicals. Public naming changes require explicit
-  save migration rather than silent key replacement.
-- **v0.12:** god-file dissections, challenge-weighted leveling, content/UX waves,
-  and mobile hotfixes. Rank-aware fixture expansion was declined when the
-  existing contract already represented the intended state.
-- **v0.10–v0.11:** economy, rank-tiered bounties, Second Wind, Hedault
-  enchanting, early class waves, music intake, and release automation. The
-  public demo/release path is verified independently from local green tests.
+  #429:** field/martial/danger/lock/rope, steel-thread QA, reachability/orphans.
+- **#397:** round one failed blind prose reading despite green engineering;
+  approved map-register round two passed discovery/zero-inference; #406 holdout.
+- **v0.18 / #347, #348, #359, #360:** property verbs enter through
+  `WISceneCatalog.compose()`, gated dynamic Classes, phase clock and tier sweep.
+- **v0.17:** feedback/atmosphere/settings/cooldowns/voice/four Horns; atmosphere
+  stays data/UI-owned and images obey import purity.
+- **v0.16–v0.16.2:** depth quests/playtest/named rigs/Coyle sign. Pallass stems
+  are globally unique, forge fights interact-only; quest counters do not feed
+  unrelated bounties;
+  Invrisil's mothbear moved outside.
+- **v0.15:** delivery/lore/endings/guests/population; presence deferral, honest
+  routes, biome blockers and measured figures became contracts.
+- **v0.14:** Acts I–V/pilgrimage/seal/finale/rosters/difficulty; released IDs stay
+  stable through migrations.
+- **v0.13:** naming/saves/journal/inn/art; public renames need save migration.
+- **v0.12:** decomposition/leveling/UX/mobile; rank-aware fixtures declined
+  because existing contracts represented the intended state.
+- **v0.10–v0.11:** economy/bounties/Second Wind/enchanting/classes/music/release;
+  public release proof remains independent of local green tests.

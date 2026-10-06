@@ -239,16 +239,20 @@
    "name": "move_down"
   },
   {
-   "_comment": "training_bow has no res://assets/icons/items/ asset (path-by-convention, no data field) -- selected_icon:false is the honest iconless-degrade read, same as any other unclaimed-art item.",
    "action": "wait_for_event",
    "type": "ui_inventory_selection_rendered",
    "payload_contains": {
     "cursor": 2,
     "item": "training_bow",
-    "selected_icon": false,
+    "selected_icon": true,
+    "selected_icon_path": "res://assets/icons/items/training_bow.png",
     "mech_line": "Range 4 | Bow kit replaces other weapon Skills in combat | Worth 8 gold"
    },
    "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "owned_training_bow_inventory"
   },
   {
    "action": "screenshot",

@@ -37,11 +37,6 @@ const ICON_SOURCE_PX := 32
 const ICON_SCALE := 2
 const ICON_DISPLAY_PX := ICON_SOURCE_PX * ICON_SCALE
 const ICON_DIR := "res://assets/icons/items/"
-## TRAP: this is a RESERVE, not a clamp -- there is NO runtime guard, so an
-## item whose card generates a 4th simultaneous effect line silently GROWS
-## the box past the reservation (custom_minimum_size is a floor, and the
-## lines VBox renders every line regardless), shoving the layout below it.
-const CORNER_BREAKOUT_RESERVED_LINES := 3
 const CORNER_BREAKOUT_MARGIN := 10
 
 const SCROLL_BOTTOM_INSET := 30.0
@@ -80,6 +75,7 @@ var _detail_box: VBoxContainer
 var _corner_icon: TextureRect
 var _corner_breakout: Control
 var _corner_lines_box: VBoxContainer
+var _corner_item_catalog: Array = []
 ## The selected item's breakout lines joined for the QA payload (`" | "`
 ## separated, `""` when none) -- cached by `_render_corner` so
 ## `_emit_shown`'s `mech_line` reads the exact rendered fact instead of
@@ -117,6 +113,7 @@ var _list_press_index := -1
 
 
 func _ready() -> void:
+	_corner_item_catalog = (JSON.parse_string(FileAccess.get_file_as_string("res://data/items.json")) as Dictionary).get("items", [])
 	# See the file doc comment: must outrank WIWorldLabels regardless of
 	# scene-tree add order.
 	layer = 10
@@ -281,6 +278,14 @@ func _layout_panel() -> void:
 		return
 	WIResponsiveLayout.apply_readable_theme(_root, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
 	WIResponsiveLayout.place_panel(_root, WIResponsiveLayout.modal_rect(get_viewport(), PANEL_SIZE))
+	for i in _item_labels.size():
+		var row := _item_labels[i]
+		var icon := row.get_node_or_null("ItemRowIcon") as TextureRect
+		if icon != null:
+			var side := _list_icon_size()
+			UIChrome.set_offsets(icon, 0.0, -side * 0.5, side, side * 0.5)
+			row.custom_minimum_size.y = maxf(row.custom_minimum_size.y, side)
+		row.text = _row_display_text(i)
 	var list_width := LIST_WIDTH
 	if WIResponsiveLayout.uses_touch_layout():
 		list_width = (_root.size.x - 68.0 - 16.0) * 0.43
@@ -333,16 +338,27 @@ func _reserve_status_label_height() -> void:
 
 
 func _reserve_corner_breakout_height() -> void:
-	var probe := UIChrome.make_label("", "Menu")
+	var probe := UIChrome.make_label("", "MenuInk")
 	_corner_lines_box.add_child(probe)
 	var font := probe.get_theme_font("font")
 	var font_size := probe.get_theme_font_size("font_size")
 	var line_spacing := float(probe.get_theme_constant("line_spacing"))
-	var pitch := font.get_height(font_size) + line_spacing
+	var line_height := font.get_height(font_size)
 	_corner_lines_box.remove_child(probe)
 	probe.queue_free()
-	var lines_height := CORNER_BREAKOUT_RESERVED_LINES * pitch - line_spacing
-	_corner_breakout.custom_minimum_size = Vector2(0.0, lines_height + CORNER_BREAKOUT_MARGIN * 2)
+	var width := maxf(1.0, _root.size.x - 68.0 - _slots_box.custom_minimum_size.x - 16.0 - CORNER_BREAKOUT_MARGIN * 2)
+	var separation := float(_corner_lines_box.get_theme_constant("separation"))
+	# Reserve the catalog maximum for this width/font, so selection never moves the list.
+	var reserved_height := 0.0
+	for item: Dictionary in _corner_item_catalog:
+		var lines := WIEffectText.item_effect_lines(item)
+		var height := separation * maxi(0, lines.size() - 1)
+		for line: String in lines:
+			var measured := font.get_multiline_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, width, font_size)
+			var rows := maxi(1, int(round(measured.y / line_height)))
+			height += rows * line_height + maxi(0, rows - 1) * line_spacing
+		reserved_height = maxf(reserved_height, height)
+	_corner_breakout.custom_minimum_size = Vector2(0.0, reserved_height + CORNER_BREAKOUT_MARGIN * 2)
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
@@ -390,6 +406,8 @@ func _emit_shown() -> void:
 		"resonance": {"used": Game.sim.resonance_used(), "capacity": Game.sim.resonance_capacity},
 		"cursor_scroll": _scroll.scroll_vertical,
 		"selected_icon": _corner_icon.visible,
+		"selected_icon_path": _icon_path_for(String(_item_ids[_cursor])) if not _item_ids.is_empty() and _corner_icon.visible else "",
+		"list_icon_paths": _item_ids.map(func(id: Variant) -> String: return _icon_path_for(String(id)) if _icon_texture_for(String(id)) != null else ""),
 		"mech_line": _corner_mech_line,
 	})
 
@@ -405,6 +423,8 @@ func _emit_selection() -> void:
 		"cursor": _cursor,
 		"item": "" if _item_ids.is_empty() else String(_item_ids[_cursor]),
 		"selected_icon": _corner_icon.visible,
+		"selected_icon_path": _icon_path_for(String(_item_ids[_cursor])) if not _item_ids.is_empty() and _corner_icon.visible else "",
+		"list_icon_paths": _item_ids.map(func(id: Variant) -> String: return _icon_path_for(String(id)) if _icon_texture_for(String(id)) != null else ""),
 		"mech_line": _corner_mech_line,
 	})
 
@@ -501,7 +521,13 @@ func _row_display_text(i: int) -> String:
 		tag = "  [Equipped]"
 	elif (rec.get("use_effect", {}) as Dictionary).has("heal") and Game.sim.hotbar_loadout.has("item:%s" % item_id):
 		tag = "  [On Hotbar]"
-	return "%s%s%s" % [mark, name, tag]
+	var prefix := ""
+	if _icon_texture_for(item_id) != null:
+		var font := _root.get_theme_font("font", "Label")
+		var font_px := _root.get_theme_font_size("font_size", "Label")
+		var space_width := maxf(1.0, font.get_string_size(" ", HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_px).x)
+		prefix = " ".repeat(ceili((_list_icon_size() + 4.0) / space_width))
+	return prefix + "%s%s%s" % [mark, name, tag]
 
 
 func _refresh_row_marks() -> void:
@@ -752,6 +778,20 @@ func _rebuild_items() -> void:
 			name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		_items_box.add_child(name_label)
+		var texture := _icon_texture_for(String(_item_ids[i]))
+		if texture != null:
+			var icon := TextureRect.new()
+			icon.name = "ItemRowIcon"
+			icon.texture = texture
+			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			name_label.add_child(icon)
+			icon.set_anchors_preset(Control.PRESET_CENTER_LEFT)
+			var side := _list_icon_size()
+			UIChrome.set_offsets(icon, 0.0, -side * 0.5, side, side * 0.5)
+			name_label.custom_minimum_size.y = maxf(name_label.custom_minimum_size.y, side)
 		_item_labels.append(name_label)
 		if i == _cursor:
 			cursor_row = name_label
@@ -884,6 +924,11 @@ func list_scrollable() -> bool:
 		return false
 	var vbar := _scroll.get_v_scroll_bar()
 	return vbar != null and vbar.max_value > vbar.page
+
+
+func _list_icon_size() -> float:
+	return float(WIResponsiveLayout.readable_font_size(get_viewport(), 16,
+		WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]))
 
 
 func _icon_texture_for(item_id: String) -> Texture2D:

@@ -9,22 +9,20 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Quiesced at user request:** no new dispatch or experiments until resumed.
+- **Resumed at user request:** compose completed art PR #577 and finish this lane.
   Lane #570: `issue/570-capacity-analysis` in `/private/tmp/wi-570-capacity`;
   base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
   Owned paths: `HANDOFF.md`, `docs/design/570-capacity-analysis.md`, `scripts/analysis/capacity_570.py`, new `tests/sim_capacity_570.gd` + UID.
-  Changes are committed; no worker or experiment remains active.
+  Checkpoint before each implementation or validation phase.
   Evidence: `/private/tmp/wi-570-evidence`; independent review:
   `/private/tmp/wi-570-independent-review.md` (#570 benchmark extension still unreviewed).
-  **Exact next action:** On resume, correct the competent-policy completion marker; compare controls 86/125/67 under both policies, then load gate, smoke, policy units and independent review. WIP 7e834e58 completed 3,400 fights and two matching controls. Exact commands/results: /private/tmp/wi-570-evidence/combat/quiesce-checkpoint.json. No balance acceptance.
-- **Art #564 remains separately owned:** original checkout untouched by this lane;
-  last observed local head `bb5be3ed`, issue open. Shared core/save/UI,
-  catalogs, manifests and generated outputs serialize after art integration.
-  Draft PRs #573 (capacity), #574 (routes), #575 (homecomings); HUD #567 and
-  encounter #521 drafts are discoverable by their issue branches.
-  Required CI/review must pass before merge. Published drafts' Python CI found
-  the inherited choice-log ceiling failure (31,122 > 30,000 bytes); art owns
-  its correction. Latest handoff-only commits require fresh CI status reads.
+  **Exact next action:** correct the competent-policy completion marker; compare controls 86/125/67 under both policies, then load gate, smoke, policy units and independent review. WIP 7e834e58 completed 3,400 fights and two matching controls. Exact commands/results: /private/tmp/wi-570-evidence/combat/quiesce-checkpoint.json. No balance acceptance.
+- **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
+  is composed here as completed code pending its CI/merge. Original art checkout
+  remains separately owned and untouched. Previous choice-log ceiling fix is
+  included. Refresh main and verify squash tree identity after art lands.
+  Other checkpoints: #572 foundation, #573 capacity, #574 routes, #575 homecomings,
+  #578 HUD contract and #579 encounter design. Serialize shared source/catalogs.
 - **#566 resource foundation:** staged in draft PR #572, isolated
   `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
   Battle handoff, recovery presentation and composed #571 acceptance remain open.

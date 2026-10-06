@@ -1,15 +1,6 @@
 class_name UIChrome
 extends RefCounted
 
-## Fallback-art contract (UI chrome half). These were `const
-## preload(...)` -- but preload is COMPILE-TIME, so a public checkout missing
-## the Tiny Swords bundle (see assets_manifest.json) failed to compile
-## UIChrome, cascading a parse error through EVERY UI script and preventing
-## boot entirely. They are now `static var`s resolved at RUNTIME via
-## `chrome_texture()`, which returns the real texture when present (ZERO
-## behavior change) or a generated NinePatch-safe placeholder when the file is
-## absent. External call sites (`UIChrome.PARCHMENT_PANEL`, etc.) are
-## unchanged -- static-var access reads identically to the old const access.
 const THEME_PATH := "res://assets/ui/chrome/wi_ui_theme.tres"
 
 
@@ -64,12 +55,13 @@ static func pointer_canceled(event: InputEvent) -> bool:
 	return false
 
 static var THEME: Theme = _chrome_theme()
-static var PARCHMENT_PANEL: Texture2D = chrome_texture("res://assets/ui/chrome/Banner_Vertical.png")
-static var PARCHMENT_STRIP: Texture2D = chrome_texture("res://assets/ui/chrome/Banner_Horizontal.png")
-static var CARVED_PANEL: Texture2D = chrome_texture("res://assets/ui/chrome/Carved_9Slides.png")
-static var BLUE_BUTTON: Texture2D = chrome_texture("res://assets/ui/chrome/Button_Blue_9Slides.png")
-static var BLUE_BUTTON_PRESSED: Texture2D = chrome_texture("res://assets/ui/chrome/Button_Blue_9Slides_Pressed.png")
-static var BLUE_RIBBON: Texture2D = chrome_texture("res://assets/ui/chrome/Ribbon_Blue_3Slides.png")
+static var PARCHMENT_PANEL: Texture2D = chrome_texture("res://assets/ui/harvest/paper_panel.png")
+static var PARCHMENT_STRIP: Texture2D = chrome_texture("res://assets/ui/harvest/paper_strip.png")
+static var CARVED_PANEL: Texture2D = PARCHMENT_PANEL
+static var BLUE_BUTTON: Texture2D = PARCHMENT_STRIP
+static var BLUE_BUTTON_PRESSED: Texture2D = chrome_texture("res://assets/ui/harvest/brass_pressed.png")
+static var BLUE_RIBBON: Texture2D = chrome_texture("res://assets/ui/harvest/walnut_strip.png")
+static var DARK_SLOT: Texture2D = chrome_texture("res://assets/ui/harvest/dark_slot.png")
 
 static var _chrome_placeholder_tex: Texture2D = null
 static var _missing_chrome_logged: Dictionary = {}
@@ -119,26 +111,46 @@ static func _log_missing_chrome(path: String) -> void:
 	_missing_chrome_logged[path] = true
 	print("[fallback_art] missing sheet: %s" % path)
 
-const PATCH_MARGIN := 24
-const STRIP_PATCH_MARGIN := 20
-const RIBBON_PATCH_MARGIN_X := 36
-const RIBBON_PATCH_MARGIN_Y := 16
+const PATCH_MARGIN := 12
+const STRIP_PATCH_MARGIN := 5
+const RIBBON_PATCH_MARGIN_X := 9
+const RIBBON_PATCH_MARGIN_Y := 5
 
-const PARCHMENT_REGION := Rect2(36, 31, 120, 131)
-const BANNER_H_REGION := Rect2(33, 47, 126, 123)
-## Without the crop, PATCH_MARGIN's 24px corner bands rendered those empty
-## rows 1:1 into the control rect (~8px dead space at a 44px row's bottom),
-## so a rect-centered label sat ~4px LOW against the VISIBLE pill band on
-## unpressed rows -- while the pressed art's split 4-top/8-bottom emptiness
-## roughly halved the error and masked it on the selected row (exactly the
-## user-reported title-menu read: "New Game" centered, "Continue"/"Quit"
-## riding the pill's bottom edge). With the region crop the pill fills the
-## whole control rect, so label centering is honest in BOTH states wherever
-## these buttons are used (title_screen.gd, char_creation.gd). Texture
-## SWAPS on cursor move must go through `set_patch_texture` (below) so the
-## region follows the texture -- the two bboxes differ.
-const BLUE_BUTTON_REGION := Rect2(7, 0, 178, 184)
-const BLUE_BUTTON_PRESSED_REGION := Rect2(5, 4, 182, 180)
+# Per-texture corners and padding: no slice may cross its flat center band.
+static func _patch_margins(texture: Texture2D, fallback: int = PATCH_MARGIN) -> Vector4:
+	if _is_same_art(texture, PARCHMENT_PANEL):
+		return Vector4(23, 22, 23, 22)
+	if _is_same_art(texture, PARCHMENT_STRIP):
+		return Vector4(5, 5, 5, 5)
+	if _is_same_art(texture, BLUE_RIBBON):
+		return Vector4(9, 5, 9, 5)
+	if _is_same_art(texture, BLUE_BUTTON_PRESSED):
+		return Vector4(8, 6, 8, 6)
+	if _is_same_art(texture, DARK_SLOT):
+		return Vector4(5, 5, 5, 5)
+	return Vector4(fallback, fallback, fallback, fallback)
+
+
+static func _configure_patch(patch: NinePatchRect, texture: Texture2D, fallback: int) -> void:
+	patch.texture = texture
+	patch.region_rect = _auto_region(texture)
+	var margins := _patch_margins(texture, fallback)
+	patch.patch_margin_left = int(margins.x)
+	patch.patch_margin_top = int(margins.y)
+	patch.patch_margin_right = int(margins.z)
+	patch.patch_margin_bottom = int(margins.w)
+	patch.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	var prior_inlay := patch.get_node_or_null("PressedPaperInlay")
+	if prior_inlay != null:
+		prior_inlay.free()
+	if _is_same_art(texture, BLUE_BUTTON_PRESSED):
+		var paper := ColorRect.new()
+		paper.name = "PressedPaperInlay"
+		paper.color = Color(240.0 / 255.0, 219.0 / 255.0, 176.0 / 255.0)
+		paper.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		patch.add_child(paper)
+		full_rect(paper)
+		set_offsets(paper, margins.x, margins.y, -margins.z, -margins.w)
 
 
 static func apply_theme(control: Control) -> void:
@@ -167,42 +179,22 @@ static func add_margins(container: MarginContainer, left: int, top: int, right: 
 	container.add_theme_constant_override("margin_bottom", bottom)
 
 
-## Full-rect NinePatchRect with SYMMETRIC patch margins on all four sides —
-## the default for square-ish chrome (parchment panels, carved wood, blue
-## buttons). Region contract: an explicit `region` always wins; otherwise
-## known floating-art textures get their measured art bbox via _auto_region;
-## anything else 9-slices the full texture.
+# Explicit regions override the measured alpha crop; owned chrome uses its own slices.
 static func make_patch(texture: Texture2D, margin: int = PATCH_MARGIN, region: Rect2 = Rect2()) -> NinePatchRect:
 	var patch := NinePatchRect.new()
-	patch.texture = texture
-	var art_region := region if region.size != Vector2.ZERO else _auto_region(texture)
-	if art_region.size != Vector2.ZERO:
-		patch.region_rect = art_region
-	patch.patch_margin_left = margin
-	patch.patch_margin_right = margin
-	patch.patch_margin_top = margin
-	patch.patch_margin_bottom = margin
+	_configure_patch(patch, texture, margin)
+	if region.size != Vector2.ZERO:
+		patch.region_rect = region
 	patch.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	full_rect(patch)
 	return patch
 
 
-## Full-rect NinePatchRect with ASYMMETRIC margins — wide left/right, short
-## top/bottom — for landscape chrome whose flourishes live on its ends (the
-## blue ribbon's tails). Same auto-region contract as make_patch (no explicit
-## `region` override — none of the ribbon-shaped chrome floats in a canvas).
 static func make_horizontal_patch(texture: Texture2D, margin_x: int, margin_y: int) -> NinePatchRect:
-	var patch := NinePatchRect.new()
-	patch.texture = texture
-	var art_region := _auto_region(texture)
-	if art_region.size != Vector2.ZERO:
-		patch.region_rect = art_region
-	patch.patch_margin_left = margin_x
-	patch.patch_margin_right = margin_x
-	patch.patch_margin_top = margin_y
-	patch.patch_margin_bottom = margin_y
-	patch.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	full_rect(patch)
+	var patch := make_patch(texture, margin_x)
+	if _auto_region(texture).size == Vector2.ZERO:
+		patch.patch_margin_top = margin_y
+		patch.patch_margin_bottom = margin_y
 	return patch
 
 
@@ -225,14 +217,18 @@ static func make_chrome_panel_container(texture: Texture2D = PARCHMENT_PANEL, ma
 	var style := StyleBoxTexture.new()
 	style.texture = texture
 	style.region_rect = _auto_region(texture)
-	style.texture_margin_left = margin
-	style.texture_margin_top = margin
-	style.texture_margin_right = margin
-	style.texture_margin_bottom = margin
-	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
-		style.set_content_margin(side, margin)
+	var margins := _patch_margins(texture, margin)
+	style.texture_margin_left = margins.x
+	style.texture_margin_top = margins.y
+	style.texture_margin_right = margins.z
+	style.texture_margin_bottom = margins.w
+	style.set_content_margin(SIDE_LEFT, margins.x + 5)
+	style.set_content_margin(SIDE_TOP, margins.y + 4)
+	style.set_content_margin(SIDE_RIGHT, margins.z + 5)
+	style.set_content_margin(SIDE_BOTTOM, margins.w + 4)
 	var panel := PanelContainer.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	panel.add_theme_stylebox_override("panel", style)
 	return panel
 
@@ -273,20 +269,21 @@ static func _is_same_art(texture: Texture2D, reference: Texture2D) -> bool:
 
 static func _auto_region(texture: Texture2D) -> Rect2:
 	if _is_same_art(texture, PARCHMENT_PANEL):
-		return PARCHMENT_REGION
+		return Rect2(0, 0, 80, 60)
 	if _is_same_art(texture, PARCHMENT_STRIP):
-		return BANNER_H_REGION
-	if _is_same_art(texture, BLUE_BUTTON):
-		return BLUE_BUTTON_REGION
+		return Rect2(0, 0, 53, 20)
+	if _is_same_art(texture, BLUE_RIBBON):
+		return Rect2(0, 0, 72, 17)
 	if _is_same_art(texture, BLUE_BUTTON_PRESSED):
-		return BLUE_BUTTON_PRESSED_REGION
+		return Rect2(0, 0, 61, 24)
+	if _is_same_art(texture, DARK_SLOT):
+		return Rect2(0, 0, 37, 32)
 	return Rect2()
 
 
-## Every texture swap on a chrome patch must route through here.
+# Texture changes also replace crop and slice geometry (normal and pressed differ).
 static func set_patch_texture(patch: NinePatchRect, texture: Texture2D) -> void:
-	patch.texture = texture
-	patch.region_rect = _auto_region(texture)
+	_configure_patch(patch, texture, PATCH_MARGIN)
 
 
 ## Which entry in `controls` (Control nodes -- an Array[Label]/Array[Control],

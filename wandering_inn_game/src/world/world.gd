@@ -955,7 +955,8 @@ func _map_transition_stale_cover() -> bool:
 ## Y-sorted biome props/decor/entities. Segment and cover_skip cells own their
 ## art; generic covers must never double-draw them.
 func _build_floor() -> void:
-	var biome: Dictionary = _biome_for_current_map()
+	var original_biome: Dictionary = _biome_for_current_map()
+	var biome := WITileBoardBuilder.resolve_biome_render(original_biome, WISpriteRegistry)
 	var map_cfg: Dictionary = _current_map_cfg()
 	var grid_size := Game.sim.grid_size
 	WITileBoardBuilder.build_skirt(_field_root, grid_size, SKIRT_MARGIN_CELLS, biome, WISpriteRegistry)
@@ -965,9 +966,11 @@ func _build_floor() -> void:
 	for x in grid_size.x:
 		for y in grid_size.y:
 			floor_layer.set_cell(Vector2i(x, y), 0, floor_coord)
+	floor_layer.set_meta("owned_terrain_fallback", bool(biome.get("_using_fallback", false)))
+	WITileBoardBuilder.apply_ground_tone(floor_layer, biome.get("floor_tone", {}))
 	_field_root.add_child(floor_layer)
-	WITileBoardBuilder.build_floor_layers(_field_root, map_cfg.get("floor_layers", []), grid_size, biome, WISpriteRegistry)
-	var segment_covered := WITileBoardBuilder.build_walls(_field_root, map_cfg.get("walls", {}), grid_size, biome, WISpriteRegistry)
+	var ground_transitions := WITileBoardBuilder.build_floor_layers(_field_root, map_cfg.get("floor_layers", []), grid_size, original_biome, WISpriteRegistry)
+	var segment_covered := WITileBoardBuilder.build_walls(_field_root, map_cfg.get("walls", {}), grid_size, original_biome, WISpriteRegistry)
 
 	var cover_skip := {}
 	for c: Array in (map_cfg.get("cover_skip", []) as Array):
@@ -992,6 +995,7 @@ func _build_floor() -> void:
 	assert(prop_plan.size() <= FIELD_BLOCKED_PROP_BUDGET,
 		"map %s exceeds the %d blocked-prop budget (%d)" % [Game.sim.current_map, FIELD_BLOCKED_PROP_BUDGET, prop_plan.size()])
 	_field_blocked_prop_plan = prop_plan
+	var boundary_toned := false
 	if not fallback_cells.is_empty():
 		var blocked_sheet := String(biome.get("blocked_sheet", biome["sheet"]))
 		var blocked_tile_px := int(biome.get("blocked_tile_px", tile_px))
@@ -999,11 +1003,23 @@ func _build_floor() -> void:
 		var blocked_coord := Vector2i(int(biome["blocked"][0]), int(biome["blocked"][1]))
 		for cell: Vector2i in fallback_cells:
 			blocked_layer.set_cell(cell, 0, blocked_coord)
+		blocked_layer.set_meta("owned_terrain_fallback", bool(biome.get("_using_fallback", false)))
+		WITileBoardBuilder.apply_ground_tone(blocked_layer, map_cfg.get("boundary_tone", biome.get("blocked_tone", {})))
+		boundary_toned = blocked_layer.material is ShaderMaterial
 		_field_root.add_child(blocked_layer)
+	var vista_count := WITileBoardBuilder.build_vistas(_field_root, map_cfg.get("vistas", []), WISpriteRegistry)
+	var owned_terrain_layers := 0
+	for layer: Node in _field_root.get_children():
+		if bool(layer.get_meta("owned_terrain_fallback", false)):
+			owned_terrain_layers += 1
 	ObservableBus.emit_domain_event(WIEvents.UI_MAP_RENDERED, {
 		"map": Game.sim.current_map,
 		"floor_cells": grid_size.x * grid_size.y,
 		"blocked_cells": Game.sim.blocked_cells.size(),
+		"vistas": vista_count,
+		"ground_transitions": ground_transitions,
+		"boundary_toned": boundary_toned,
+		"owned_terrain_layers": owned_terrain_layers,
 	})
 
 
@@ -1257,7 +1273,18 @@ func _current_map_cfg() -> Dictionary:
 func _update_camera() -> void:
 	# Camera math + pan tween live in WICameraController (#194b seam 2);
 	# wrappers keep the sim reads and QA-paced duration world-side.
+	_configure_field_camera()
 	_camera_ctl.update(Game.sim.grid_size, Game.sim.player_cell)
+
+
+func _configure_field_camera() -> void:
+	var config: Dictionary = _current_map_cfg().get("camera", {})
+	var offset: Array = config.get("offset", [0, 0])
+	var margins: Array = config.get("margins", [0, 0, 0, 0])
+	_camera_ctl.set_field_framing(
+		Vector2(float(offset[0]), float(offset[1])),
+		Vector4(float(margins[0]), float(margins[1]), float(margins[2]), float(margins[3]))
+	)
 
 
 func set_view_size(view_size: Vector2) -> void:
@@ -1273,6 +1300,7 @@ func set_view_size(view_size: Vector2) -> void:
 
 
 func _pan_camera_to_player() -> void:
+	_configure_field_camera()
 	_camera_ctl.pan_to(Game.sim.grid_size, Game.sim.player_cell, _presentation_delay(MOVE_TWEEN_SECONDS))
 
 
@@ -1352,8 +1380,20 @@ func _build_entities() -> Array[Node2D]:
 		)
 		visual.visible = not bool(render["hidden"])
 		_entity_visuals[String(ent["id"])] = visual
+		_emit_entity_visual_rendered(String(ent["id"]), render)
 		visuals.append(visual)
 	return visuals
+
+
+func _emit_entity_visual_rendered(id: String, render: Dictionary) -> void:
+	var sprite_id := String(render["sprite"])
+	ObservableBus.emit_domain_event(WIEvents.UI_ENTITY_VISUAL_RENDERED, {
+		"map": Game.sim.current_map,
+		"entity": id,
+		"sprite": sprite_id,
+		"resolved_sprite": WISpriteRegistry.resolved_id(sprite_id),
+		"hidden": bool(render["hidden"]),
+	})
 
 
 ## Resolves a `prop`/`npc` entity's CURRENT
@@ -1425,6 +1465,7 @@ func _refresh_entity_visual(id: String) -> void:
 	var new_visual := _make_entity_visual(cell, String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"], false, ent.get("field_y_sort_bias_px", null))
 	new_visual.visible = not bool(render["hidden"])
 	_entity_visuals[id] = new_visual
+	_emit_entity_visual_rendered(id, render)
 	assert(_light_count <= LIGHT_BUDGET,
 		"map %s exceeds the %d-light budget (%d) after a visual_states refresh -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])
 
@@ -1529,6 +1570,7 @@ func _reconcile_entity_presence() -> void:
 			var visual := _make_entity_visual(ent["cell"], String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"], false, ent.get("field_y_sort_bias_px", null))
 			visual.visible = not bool(render["hidden"])
 			_entity_visuals[id] = visual
+			_emit_entity_visual_rendered(id, render)
 		else:
 			var old_visual := _entity_visuals[id] as Node2D
 			for child: Node in old_visual.get_children():

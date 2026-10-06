@@ -7,6 +7,13 @@ extends CanvasLayer
 ## opaque parchment, bleeding through the title ribbon. `layer = 10` below
 ## wins on the explicit CanvasLayer stacking rule regardless of add order.
 
+const ACT_ART := {
+	"act_i": "res://assets/key_art/harvest/act_i_banner.png",
+	"act_iii": "res://assets/key_art/harvest/act_iii_banner.png",
+	"act_iv": "res://assets/key_art/harvest/act_iv_banner.png",
+	"act_v": "res://assets/key_art/harvest/act_v_banner.png",
+}
+
 const PANEL_SIZE := Vector2(640.0, 560.0)
 
 ## Close-hint placement, panel-local. `_root` is the 9-slice's DESTINATION
@@ -718,6 +725,7 @@ func toggle_open() -> bool:
 ## visible tab while every section field stays present and unchanged.
 func _emit_journal_shown() -> void:
 	_journal_payload["active_tab"] = _TAB_IDS[_active_tab]
+	_journal_payload["act_art"] = _act_art_id() if _active_tab == Tab.QUESTS else ""
 	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_SHOWN, _journal_payload)
 
 
@@ -1090,10 +1098,19 @@ func _lead_lines() -> Array:
 ## Completed + Postings. "What am I doing now." Reads the `_open_*` snapshot
 ## fields (captured at `_open()`, immutable while the panel is open). Returns
 ## `{text: String}`.
+func _act_art_id() -> String:
+	var id := String(_open_act.get("id", ""))
+	return id if ACT_ART.has(id) and ResourceLoader.exists(ACT_ART[id]) else ""
+
+
 func _build_quests_tab() -> Dictionary:
 	var parts: Array = []
 	if not _open_act.is_empty():
 		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(_open_act.get("header", ""))))
+		var art_id := _act_art_id()
+		if art_id != "":
+			var width := maxi(1, mini(480, int(_root.size.x) - 84))
+			parts.append("[img width=%d height=%d]%s[/img]" % [width, maxi(1, width / 4), ACT_ART[art_id]])
 		for line: String in _act_beat_lines():
 			parts.append(UIChrome.bb_escape(line))
 		parts.append("")

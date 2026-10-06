@@ -467,6 +467,18 @@ func _refresh() -> void:
 		labels.configure_combat_readability(true, WIResponsiveLayout.readable_font_size(get_viewport(), 11,
 			WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]), label_ids, mobile.details_open())
 
+	elif main_ref != null:
+		var focus: Array[Vector2i] = []
+		for id: String in _view.ids():
+			if _view.alive(id):
+				focus.append(_view.cell(id))
+		focus.append(_view.cell(_view.active_id()))
+		var targets: Array = targeting_state.get("targets", [])
+		if not targets.is_empty():
+			focus.append(_view.cell(String(targets[int(targeting_state.get("index", 0))])))
+		main_ref.refresh_combat_layout(focus)
+		ObservableBus.emit_domain_event("ui_combat_layout_rendered", {"mobile": false})
+
 
 func _refresh_mobile_layout() -> void:
 	if _mode != Mode.INACTIVE and WIResponsiveLayout.uses_touch_layout():
@@ -478,7 +490,7 @@ func mobile_control_rect(id: String) -> Rect2:
 
 
 func board_view_rect() -> Rect2:
-	return _hud.mobile_hud().board_rect() if WIResponsiveLayout.uses_touch_layout() else Rect2()
+	return _hud.mobile_hud().board_rect() if WIResponsiveLayout.uses_touch_layout() else _hud.desktop_board_rect()
 
 
 func responsive_layout_snapshot() -> Dictionary:
