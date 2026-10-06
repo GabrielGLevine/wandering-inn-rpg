@@ -9,18 +9,22 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Parallel roadmap #512:** controller owns `issue/512-route-recon` in
-  `/private/tmp/wi-512-routes`, base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
-  Owned paths: `HANDOFF.md`, `docs/design/512-route-reconnaissance.md`. No game/art/shared QA
-  surfaces are owned here. Evidence: `/private/tmp/wi-512-evidence`; source/design
-  validation only, no new gameplay or device acceptance. **Next:** Finish independent source review and publish partial Refs #512 PR; author earned routes after composed recovery/capacity is available.
-- **Art #564 remains separately owned:** original checkout is read-only to this
-  lane; last observed head `bb5be3ed`, issue open and no implementation PR.
-  User authorizes independent parallel roadmap work until art completes.
-  #570 capacity analysis, #512 journey reconnaissance and #517 homecoming design
-  use separate worktrees. Refresh live art status before any new dispatch;
-  shared core/save/UI, catalogs, manifests and generated outputs serialize.
-  Keep isolated PRs unmerged pending art integration and required CI/review.
+- **Quiesced at user request:** no new dispatch or experiments until resumed.
+  Lane #512: `issue/512-route-recon` in `/private/tmp/wi-512-routes`;
+  base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
+  Owned paths: `HANDOFF.md`, `docs/design/512-route-reconnaissance.md`.
+  Changes are committed; no worker or experiment remains active.
+  Evidence: `/private/tmp/wi-512-evidence`; independent review:
+  `/private/tmp/wi-512-independent-review.md`.
+  **Exact next action:** On resume, author earned routes only after composed recovery/capacity is available. Independent source review approved this reconnaissance; issue remains open.
+- **Art #564 remains separately owned:** original checkout untouched by this lane;
+  last observed local head `bb5be3ed`, issue open. Shared core/save/UI,
+  catalogs, manifests and generated outputs serialize after art integration.
+  Draft PRs #573 (capacity), #574 (routes), #575 (homecomings); HUD #567 and
+  encounter #521 drafts are discoverable by their issue branches.
+  Required CI/review must pass before merge. Published drafts' Python CI found
+  the inherited choice-log ceiling failure (31,122 > 30,000 bytes); art owns
+  its correction. Latest handoff-only commits require fresh CI status reads.
 - **#566 resource foundation:** staged in draft PR #572, isolated
   `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
   Battle handoff, recovery presentation and composed #571 acceptance remain open.
