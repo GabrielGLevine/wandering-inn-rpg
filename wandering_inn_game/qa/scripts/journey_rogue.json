@@ -1,7 +1,7 @@
 {
  "starts_at_title": true,
  "creation_ui": true,
- "_comment": "#512 authored continuous Rogue seed9. Cut acquisition/live stealth, real Pisces lesson and Krshia errand, walked return/Erin package/sleep. Preserves live road; no fixture, teleport, topup. Ending extension in progress.",
+ "_comment": "#512 continuous fresh Rogue history: actual creation/acquisition, recorded defeats and earned recovery, live Rogue utility, all regional prices,58gold gear after required fees, warden retry and open ending. No fixtures, teleports, topups, seed changes or repeat-income farming. Known shader shutdown noise is tracked separately; see512-continuous-journeys for evidence limits.",
  "steps": [
   {
    "action": "wait_for_event",
@@ -19986,6 +19986,739 @@
   {
    "action": "dump_checkpoint",
    "slot": "rogue_warden_result"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.max_hp",
+   "equals": 51
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.max_mp",
+   "equals": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 4
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "seal_warden_alcove",
+    "before": {
+     "hp": 10,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 16,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 10,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 16,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "from_start": true,
+   "timeout_sec": 20,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "seal_warden_alcove",
+    "before": {
+     "hp": 10,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 16,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 10,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 16,
+     "mp_potion_doses": 0
+    },
+    "surface": "field"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "pisces_seal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull, and correct, and I resent both qualities. Or \u2014 if your hands are equal to it, which remains unproven \u2014 you re-cut the ward yourself and it holds another age without a keeper. I dislike most of these. I will be copying the outer lines while you decide."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_05b_the_choice"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "seal_opened"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever else objects to this. The alcove was the first answer to that question. I would not assume it was the only one."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The seal does not resist. It simply stops being a seal \u2014 the runes go quiet in order, one ring at a time, and the door swings in on three centuries of undisturbed air."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "seal_vault"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "seal_vault"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_08_the_vault"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "seal_anchor_rune"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "seal_resolved"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_seal_was_feeding"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Not a prisoner. An anchor: a twin to the stone the Horns hauled out of the ruin, and it has been drinking the ward's slow pour for three centuries to stay awake. Pisces, hoarse: \"This is why the Door works at all. Somebody left it something to come home to, and then somebody sealed the room and let it drink.\""
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_09_the_anchor"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Cut into the slab, in a hand that expected readers: a tally. Ninety-one marks, then a gap, then one more in a different chisel. Nobody came back to make the ninety-third."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_10_the_tally"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "trapped_halls"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    7
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "08_act_v_11_back_in_the_halls"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "dungeon_approach"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "portal_menu"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Warm air, woodsmoke, the creak of the pantry door settling shut behind you. You're back, and you didn't walk here."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Your own bed."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_gdi_epilogue_rendered",
+   "timeout_sec": 15
+  },
+  {
+   "action": "screenshot",
+   "name": "09_epilogue"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 300
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.seal_resolved",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.seal_opened",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.read_the_seal_runes",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.read_the_feeding_ward",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.dungeon_attuned",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.finale_played",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_upstairs"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "seal_kept_fed"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "seal_rewarded"
+   }
+  },
+  {
+   "action": "dump_state",
+   "label": "rogue_fresh_history_ending_epilogue"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "rogue_full_ending"
   }
  ]
 }

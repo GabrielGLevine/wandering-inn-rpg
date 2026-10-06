@@ -9,39 +9,22 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #512 route authoring:** `issue/512-route-recon`, isolated
-  `/private/tmp/wi-512-routes`, original dispatch head `7429cd62`.
-  Resource worker owns only #512 routes, manifest/generated QA, scoped docs and
-  HANDOFF. No gameplay/core/UI ownership. Driver extensions need controller
-  coordination first. Composed d04cf5c7 and91bdac25; run fresh Rogue and
-  worker/social histories through full endings. No fixtures/teleports/topups.
-  Rogue1098 assertions pass: actual14g Fang→scout clear10HP/0MP→walked
-  bed44HP/14MP→joined boss victory44HP/4MP,0g,Mending+Moonhide earned.
-  Worker965 records its real readiness wall. Both longer routes emit a
-  DummyShader RID leak ERROR at exit, so authoritative gates INVALID.
-  Root/capacity570 own isolated lifecycle diagnosis; two-frame drain probe
-  still leaked and was removed. Earlier Rogue882 was clean.
-  Rogue1365 now reaches gallery report:20g,29/49HP,0/15MP. Actual
-  Find Trap plate cast and Ksmvr17HP guided-cost observed; earned draught
-  consumed by competent policy1→0. Rogue1548 now proves earned slot+capacity
-  refusals, Core swap4/4, actual sleep51HP/16MP, guardian victory51HP/0MP,
- 20g and Anchor. Warrior7/Mage7/Rogue4/Diplomat6/Helper1. Same shader noise.
-  Rogue1719 mounts/awakens Door: bounties20→37, confirmed catalyst37→19,
-  held Charming Smile free consult,3 required sleeps;51HP/16MP,Mage8.
-  Rogue2444 reaches paid courier:26g,48/51HP,0/16MP. Real18g travel,
- 2g field wage,2g rumors; live Stealth twice then missed return reactivation
-  retained as ambush victory. Rogue2659 completes bounded heirloom25g/name30g
-  portfolio→81g; actual Pick Lock room acquisition + Stealth block arm.
-  Rogue3115 pays Pallass46g then buys remaining44g set: Fang14 earlier,
-  Hedge9/Stone35 now,4g left; actually equipped4/4. Required sleeps restore
- 48HP16MP, Rogue5/Diplomat9/Warrior7/Mage8/Helper1/Archer2/Trader2.
-  Rogue3344 retains bought-set warden loss13enemyHP, real rollback, earned
-  Moon-Bone/Guardian swap and walked bed. Rogue6 retry wins10HP0MP,Remedy0,
- 4g. Next ending/epilogue only;4RID ERROR persists, assertions only.
-  Evidence /private/tmp/wi-512-evidence/current; exact details in
-  docs/design/512-continuous-journeys.md. Endings, force-crate variant,
-  affordability and windows remain outstanding.
-  Checkpoint before long route runs; preserve actual costs and imperfect forks.
+- **#512 route checkpoint, ready for controller composition:**
+  `issue/512-route-recon`, `/private/tmp/wi-512-routes`, dispatch7429cd62.
+  Owned scope: QA routes/manifest/generated notes/docs only; no gameplay edits.
+  Rogue3464 completes actual fresh creation→open ending→Inn epilogue:4gold,
+ 53HP/16MP,18sleeps,8victories/3defeats; real rollback/recovery retained.
+  Earned58gold purchased set follows all required regional costs; exact ledger
+  and artifacts are in docs/design/512-continuous-journeys.md.
+  Final log: /private/tmp/wi-512-evidence/current/rogue-ending2.log; archived
+  rogue-full-ending-current has result/events/checkpoints. Exit0/PASS but
+ 5shaderRID ERRORs make the authoritative gate INVALID. No full-route window
+  or physical-touch claim. Root/capacity570 own lifecycle investigation.
+  Worker965 remains at the measured Awakened boss wall. Fresh martial/caster/
+  work-heavy endings and force-crate/other imperfect variants remain unrun.
+  **Next:** controller composes current UI/driver, repairs teardown, reruns
+  and window-reads Rogue, then explicitly assigns remaining profiles.
+  Release this tree after final checkpoint; preserve untracked companion UID.
 
 - **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
   Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.
@@ -57,22 +40,17 @@ archived, or superseded session blocks.
   pass; four lint pins fixed,282Python/109subtests pass. Both full combat
   policies pass atdcac4795. Final canonical pending. Native40images read.
   No partial activation before recovery/#571. Physical devices unproven.
-- **Integration:** root owns `/private/tmp/wi-567-hud-contract`,
-  `issue/567-hud-contract`, base1375e375. Touch-driver0e55e381 compiles and
-  load_gate passes; controls now composed. Browser touch at378cbe19 fails
-  large-text inventory scroll;14images read under
-  `/private/tmp/wi-567-evidence/browser-378cbe19-iphone` (Chromium emulation).
-  Capacity refusal wrongly describes2/4 as full; both defects logged.
-  **Next:** compose reviewed core/frontend, correct QA pins, install
-  `/private/tmp/wi-568-qa-draft`, full gates and window/browser proof. Draft
-  repeated-input leg needs viable second use and browser-only registration.
-- **Owners:** resource_plan: `/private/tmp/wi-568-consumables`,206f36ac/PR582
-  core/data/tests. Core review clear; Mana Potion/token/copy done.
-  #569 core91bdac25 complete; bounded contracts pass. capacity570: `/private/tmp/wi-567-consumable-ui`,
-  9da54788 composed; controls/warning/layout focused tests pass. Root QA. #569 then
-  #512 consume recovery. Registry `/private/tmp/wi-parallel-roadmap-status.json`.
-  Evidence `/private/tmp/wi-{566-resumed,567,568,570}-evidence`. Preserve UID,
-  private overlay, local node_modules/.gdignore; original art tree untouched.
+- **Integration:** root owns `/private/tmp/wi-567-hud-contract`. Latest reported
+  checkpoint c4b00465 fixes phone opening-touch cancel and hotbar name/AP
+  overlap; independent review and both browser poison67 routes pass. Root
+  full gates/window rotation remain active; physical devices remain unproven.
+  This QA tree has earlier composed frontend3bd7f529 and warning198a7711,
+  plus driver ff6b8741/e48edf4c. Recompose before final acceptance.
+- **Owners:** resource_plan releases #512 QA tree after this checkpoint.
+  Capacity570 owns isolated shader-lifecycle diagnosis; root owns shared
+  integration/windows. Core568206f36ac and56991bdac25 are earlier committed
+  work, not active source ownership here. Preserve private overlays, local
+  node_modules/.gdignore, companion UID and the original art worktree.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.

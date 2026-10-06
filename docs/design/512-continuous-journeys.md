@@ -5,6 +5,26 @@ and meal recovery91bdac25 at d8f74fd4. Gameplay rules, prices, enemies and UI
 remain unchanged by this lane. This document records actual route checkpoints;
 it does not promote opening proof into an ending or physical-device claim.
 
+## Current outcome and acceptance limit
+
+The3464-step fresh Rogue history reaches the open ending and actual Inn
+epilogue. Final4gold,53/53HP,16/16MP; `seal_warden_downed`, `seal_opened`,
+`seal_resolved` and `finale_played` are all1, and the epilogue renderer reports
+17lines. The route preserves three defeats (cistern, first scouts, first
+warden), their production rollback, and the missed-Stealth return ambush.
+It contains no fixture install, teleport, state injection or checkpoint load.
+
+**This is not a clean authoritative gate.** The final headless process exits0,
+printsPASS, and passes all3464 steps, but reports5 leaked DummyShader RIDs.
+Root/capacity570 own the lifecycle investigation. Full continuous windowed
+read, composed-tree rerun and physical touch remain unproven. Worker965 stops
+at its recorded boss wall. Fresh martial/caster/work-heavy endings and the
+force-crate/other imperfect-choice variants remain separate authoring work.
+
+The sections below are chronological checkpoint history; their forward-looking
+notes describe the next action at that checkpoint, not current unfinished work.
+The final ledger and exact next integration actions are at the end.
+
 ## Fresh opening checkpoint
 
 Godot4.7, seed9, Silver Rank, human creation, new isolated user directory per
@@ -345,3 +365,47 @@ in the pack, so the58g spend is preserved rather than refunded or edited out.
 rogue-warden-current/rogue-retry2.log: exit0/PASS3344 with4 shaderRID errors.
 The first defeat and the return-approach authoring mistake have separate
 artifacts. Next: actual ending choice, vault resolution and Inn epilogue.
+
+## Complete Rogue ledger and release point
+
+The final run is `/private/tmp/wi-512-evidence/current/rogue-ending2.log`, with
+archived result/events/checkpoints in `rogue-full-ending-current/`. It has
+20,450events, no failed assertions,8victories and3defeats. Warden retry wins
+in round11 at10/51HP and0/16MP; matching frozen domain and field-rendered
+resource payloads are asserted. The last real sleep renders the17-line
+epilogue and resolves Warrior9; other final classes are Mage8/Rogue6/
+Diplomat9/Helper1/Archer2/Trader2. There are18actual sleeps total, including
+required attunements and justified recovery; no repeated wage/fight farming.
+
+| Actual gold source | Gold |
+| --- | ---: |
+| Kept errand4, road victory2, cistern report6, first two chores2 |14|
+| Gallery retainer5 and report15 |20|
+| Three earned Watch claims3+4+10 |17|
+| Single Riverfarm field job |2|
+| Once-only Brothers courier |25|
+| Linked heirloom25 and name30 commissions |55|
+| Single Selys board payment |5|
+| Earned vault Tonic sold |8|
+| **Total inflow** |**146**|
+| Catalyst18 and first travel stone18 |−36|
+| Pallass sponsorship10, stone18, entry2, filing5, exam8, stamp3 |−46|
+| Two individually confirmed rumors |−2|
+| Purchased Fang14, Hedge9, Stonescale35 |−58|
+| **Final purse** |**4**|
+
+Stock: the earned Mending1 is consumed in the vault. The guardian's Remedy1
+is consumed in the first warden loss, restored by the actual precombat defeat
+rollback, then consumed in the successful retry; final consumable counts are
+empty. No food or MP potion is acquired/used in this Rogue history. The Worker
+kitchen history and root's paid-service/vendor proof remain distinct evidence.
+The True Gauge and commission locket stay unsold. Purchased Hedge/Stonescale
+stay held after the final switch to already-earned Moon-Bone/Guardian/Fang.
+
+This lane stops here and releases the tracked-clean worktree after its final
+checkpoint; the companion-counter UID remains intentionally untracked. Next:
+root composes current frontend/driver corrections, fixes lifecycle teardown,
+reruns this exact continuous route and reads actual window captures. Then
+scope the remaining profiles explicitly: worker wall remediation, fresh
+martial/caster/work-heavy completions, and force-crate/imperfect variants.
+Neither the economic endpoint nor the open ending closes those criteria.
