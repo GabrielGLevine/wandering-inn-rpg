@@ -150,9 +150,18 @@ func _run() -> void:
 	_game.sim.vitals.mp_potion_doses = 3
 	await _select("test_mp")
 	var before := WISave.serialize(_game.sim)
+	var cancellations_before := _event_count(WIEvents.ITEM_USE_CANCELLED)
 	button.pressed.emit()
 	_check(bool(_messages.get("_use_warning")), "fourth mana dose opens warning")
 	_check((_messages.get("_use_confirm") as Button).disabled, "opening press cannot immediately confirm risk")
+	var opening_touch := InputEventScreenTouch.new()
+	opening_touch.pressed = true
+	(_messages.get("_use_overlay") as Control).gui_input.emit(opening_touch)
+	var opening_mouse := InputEventMouseButton.new()
+	opening_mouse.button_index = MOUSE_BUTTON_LEFT
+	opening_mouse.pressed = true
+	(_messages.get("_use_overlay") as Control).gui_input.emit(opening_mouse)
+	_check(bool(_messages.get("_use_warning")) and _event_count(WIEvents.ITEM_USE_CANCELLED) == cancellations_before, "opening touch and emulated mouse cannot dismiss the new warning")
 	_messages.call("_confirm_presented_use")
 	_check(WISave.serialize(_game.sim) == before, "unarmed confirm does not mutate")
 	_messages.call("_cancel_presented_use")

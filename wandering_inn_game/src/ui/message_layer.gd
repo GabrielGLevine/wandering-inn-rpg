@@ -1447,6 +1447,9 @@ func _build_use_overlay() -> void:
 	UIChrome.apply_theme(_use_overlay)
 	canvas.add_child(_use_overlay)
 	_use_overlay.gui_input.connect(func(event: InputEvent) -> void:
+		# The opening touch may also deliver an emulated mouse event to this overlay.
+		if _use_warning and not _use_warning_armed:
+			return
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			_cancel_presented_use()
 		elif event is InputEventScreenTouch and event.pressed:
