@@ -185,3 +185,24 @@ Evidence rogue-social-fallback-pass and rogue-earned-gear-wages-pass is clean
 exit0/PASS with passing results. Unexpected losses and the initially mistaken
 tray-counter pin remain in separate evidence folders. The route has not won
 the mandatory boss or reached an ending; no balance/seed changes were made.
+
+## Rogue clears the warren through earned recovery
+
+The1098-step route's assertions pass: Fang purchase14→0, scout retry wins
+with10HP/0MP, actual walk back to the Inn and sleep restores44HP/14MP, then
+walked return and the first joined boss attempt wins. Exit44HP/4MP,0gold,
+one earned Mending Draught and Moonhide Fetish. Kit remains Warrior2/Mage4/
+Rogue3/Diplomat5/Helper1; Counter Strike, Battle Momentum and Mana Shield are
+actually used. Matching domain/rendered sleep payloads pin10/44HP,0/14MP
+to44/44HP,14/14MP. No ending or regional affordability claim follows yet.
+
+Both1016-step scout/rest and1098-step boss runs emit the same DummyShader RID
+leak ERROR during shutdown. Their assertions/checkpoints are diagnostic, not
+clean authoritative gates; the latter is preserved in
+rogue-warren-cleared-current. Root's isolated lifecycle investigation owns the
+fix. Worker965 plus a two-frame final-drain diagnostic also reproduced it;
+the diagnostic tail was removed and is not part of the canonical.
+
+Next: actual seal report, equip earned loot within capacity, sleep, and the
+regional spine with measured costs. Worker remains at its recorded boss wall;
+Rogue's successful result does not erase that different history.
