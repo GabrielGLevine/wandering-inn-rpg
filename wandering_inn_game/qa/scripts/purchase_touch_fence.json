@@ -52,7 +52,7 @@
     "options": [
      {
       "effect_lines": [
-       "+1 HP",
+       "+1 max HP",
        "Grants [Dangersense] in combat"
       ],
       "locked": false,
@@ -61,7 +61,7 @@
      },
      {
       "effect_lines": [
-       "+2 HP",
+       "+2 max HP",
        "Resonance 1"
       ],
       "locked": false,
@@ -918,7 +918,7 @@
     "options": [
      {
       "effect_lines": [
-       "+2 HP",
+       "+2 max HP",
        "Resonance 1"
       ],
       "locked": false,

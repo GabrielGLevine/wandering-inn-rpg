@@ -182,6 +182,14 @@ func _init() -> void:
 	for it: Dictionary in _load("res://data/items.json")["items"]:
 		items_by_id[String(it[WIKeys.ID])] = it
 
+	var rested_build := _find_build("ship_act5")
+	var rested_cfg: Dictionary = BATCH._build_pc(rested_build, by_id["pc"], classes, skills_by_id, items_by_id)
+	rested_cfg[WIKeys.HP_MOD] = int(rested_cfg.get(WIKeys.HP_MOD, 0)) + int(rested_build["hp_mod_bonus"])
+	var rested := WICombat.new(arena_by_id["training_yard"], [rested_cfg], skills, Callable(), 1)
+	var rested_pc: Dictionary = rested.combatants["pc"]
+	assert(int(rested_pc[WIKeys.HP]) == int(rested_pc[WIKeys.MAX_HP]), "standalone probe rests after its post-builder food bonus")
+	assert(int(rested_pc[WIKeys.MP]) == int(rested_pc[WIKeys.MAX_MP]), "standalone probe starts with its complete mana pool")
+
 	# Only the cells this file gates get built — the report's other 39 are the
 	# report's business.
 	var wanted := {}

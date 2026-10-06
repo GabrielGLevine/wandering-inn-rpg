@@ -30,7 +30,7 @@ static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> A
 		lines.append("%s kit replaces other weapon Skills in combat" % weapon_family.capitalize())
 	var hp_mod := int(item.get(WIKeys.HP_MOD, 0))
 	if hp_mod > 0:
-		lines.append("+%d HP" % hp_mod)
+		lines.append("+%d max HP" % hp_mod)
 	var reduction := int(item.get(WIKeys.DAMAGE_REDUCTION, 0))
 	if reduction > 0:
 		lines.append("Reduces every hit taken by %d" % reduction)

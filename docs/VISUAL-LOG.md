@@ -480,10 +480,3 @@ r3–r5 playtest waves — gone from this file.
   panels and a dark border imply little of the stacked city. Fix direction:
   arrival-framed Invrisil structures and Pallass lower-terrace backdrop;
   substantial changes are authorized by the user-approved #564 review.
-
-- [ ] **(P2)** Persistent-resource equipment cards — passive gear still reads
-  `+2 HP`, which can imply immediate healing while the new summary correctly
-  retains current HP. Official-overlay `gear_loop` windowed seed9 at8a4591cd,
-  `02_accessory_equipped_resonance_header_and_lore.png`: HP47/50 alongside
-  `+2 HP`; later unequip remains47/49. Clarify passive bonuses as maximum HP
-  and retain restoration wording for consumables; #566 followup owns the fix.

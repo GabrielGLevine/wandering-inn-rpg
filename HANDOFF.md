@@ -13,22 +13,22 @@ archived, or superseded session blocks.
   composed main `10827698`, HUD `a9e839d3`, reviewed head `8a4591cd`.
   Controller owns this tree.
   Implemented numeric field/inventory resources and captured recovery receipts.
-  **Next:** compose #566 `503b192b` and #570 capacity checkpoint, window-test
+  **Next:** compose #570 capacity, then window-test
   `vitals_carry_loop`/`vitals_fresh_start`, then integrate #568 potion controls.
   Serialize core/QA; no partial resource deployment.
   Bundle-v7 windowed gear_loop/tutorial_flow/sewers_walkthrough(9):
   exit0, PASS, result true, zero noise; all19 screenshots inspected. Equipment
   keeps currentHP47 while maxima change; real ambush returns31/43. Fieldstrip
   stays legible on dark maps and hides for combat/dialogue. Existing max-HP
-  item wording needs clarification; #566 corrects stale first-combat hints.
+  item wording and first-combat hints are corrected by composed #56685af0621.
   Evidence `/private/tmp/wi-567-evidence/window-8a4591cd`; bounded source/window
   review `/private/tmp/wi-567-hud-independent-review.md` approves. Native metric
   tests cover phone dimensions/scales; browser/touch/device proof remains open.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code squashed as `0bbd96aa`. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
-  included. Squash tree `0e843291` matches the reviewed source. Its Web CI waiver
-  was art-only; required CI remains mandatory for these lanes.
+  included. Squash tree `0e843291` matches the reviewed source. User now permits bypassing Web parity
+  when it bottlenecks a PR; all other CI and independent review remain required.
   Other lanes: #572–#575 and #579; serialize shared source/catalogs.
 - **#566 resource foundation:** staged in draft PR #572, isolated
   `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
