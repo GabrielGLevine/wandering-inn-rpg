@@ -10,17 +10,19 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Active #570 capacity QA:** `issue/570-capacity-analysis` in
-  `/private/tmp/wi-570-capacity`, composed base `87b65ded`. Reviewed implementation
-  `60aebdaa` includes four initial capacity, once-only growth to five, and
-  JSON-safe v11 migration. Capacity owns gear_loop/door_awakening scripts,
-  their fixtures, manifest/generated notes, analysis doc and this lane block.
-  QA edits exercise fitting four, rejecting five with a free position,
-  distinct physical-full refusal, actual growth enabling the same five-point
-  loadout, and one further real sleep retaining five. Legacy fixture versions
-  remain historical. No earned acquisition claim; no core/UI edits in this lane.
-  **Next:** targeted load gate, both routes with production message timing,
-  unaffected canonical/shared-fixture coverage, then release for root windowed
-  evidence and final composed integration. Evidence `/private/tmp/wi-570-evidence`.
+  `/private/tmp/wi-570-capacity`, composed base `87b65ded`; QA checkpoint
+  `f79e4a37`. Reviewed core `60aebdaa` and resourceQA/copy `85af0621` retained.
+  Gear124 steps, awakening94, shared-fixture journal43 and untouched fresh
+  vitals122 pass with seed9/production timing; final load gate and fixture
+  coherence209/209 pass. All zero exit/PASS/no noise/passing QA result.json.
+  Derived surfaces/notes, JSON lint, comment census and leak check pass.
+  Evidence `/private/tmp/wi-570-evidence/qa/validation-summary.json`; failed
+  authoring queue-wait runs are preserved separately. No core/UI edits here.
+  **Next:** release QA ownership to root for windowed gear/awakening reads and
+  final composed integration. Actual income/purchases, combat consequence and
+  sleep/reload/browser journey remain open. Follow-up recommendation:
+  `/private/tmp/wi-570-evidence/qa/acquisition-followup.md`; use real journey
+  receipts and net purse, never seeded58g or undisclosed wage loops.
   Diagnostic band overruns and 96/100 Infiltrator result remain follow-up risks.
 - **Art #577 is merged:** e89770de and squash0bbd96aa share tree0e843291.
   Original checkout untouched. User permits Web parity bypass when it blocks
