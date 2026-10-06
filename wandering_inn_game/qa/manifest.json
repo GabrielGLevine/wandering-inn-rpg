@@ -65,6 +65,38 @@
    }
   },
   {
+   "script": "meal_station_loop",
+   "seed": 9,
+   "fixture": "meal_station_start",
+   "note": "#569 supplied Chef10/Mage1 and held cooking Skills: actual Advanced/Signature station production, repeated/capped recovery, strongest preparation and save/load; not earned class or resale history.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "meal_station_start"
+    ],
+    "skills": [
+     "advanced_cooking",
+     "basic_cleaning",
+     "basic_cooking",
+     "signature_dish"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration",
+     "save"
+    ]
+   }
+  },
+  {
    "script": "vitals_carry_loop",
    "seed": 9,
    "fixture": "vitals_carry_start",

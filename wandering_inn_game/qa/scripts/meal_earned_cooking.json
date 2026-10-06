@@ -306,6 +306,12 @@
   },
   {
    "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
     "text": "[Helper] class gained! — [Basic Cooking]"
@@ -316,12 +322,6 @@
    "action": "assert_state",
    "path": "classes.helper",
    "equals": 1
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_sleep_veil_finished",
-   "timeout_sec": 60,
-   "payload_contains": {}
   },
   {
    "action": "assert_state",
@@ -600,10 +600,11 @@
   },
   {
    "action": "wait_for_event",
-   "type": "skill_no_effect",
+   "type": "skill_used",
    "timeout_sec": 60,
    "payload_contains": {
-    "skill": "basic_cooking"
+    "skill": "basic_cooking",
+    "target": ""
    }
   },
   {
@@ -611,7 +612,7 @@
    "type": "ui_toast_rendered",
    "timeout_sec": 60,
    "payload_contains": {
-    "text": "Nothing here calls for that."
+    "text": "[Basic Cooking] — You picture the dish this place is missing. Your hands twitch toward a ladle that isn't there."
    }
   },
   {

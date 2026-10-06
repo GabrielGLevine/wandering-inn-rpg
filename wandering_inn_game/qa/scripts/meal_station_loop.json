@@ -1,0 +1,557 @@
+{
+ "_comment": "#569 fixture contract, not earned class history: held Advanced Cooking at chef counter twice and Signature Dish at copper pan, actual inventory use, capped MP, strongest preparation without stacking or poisoning, and real save/load. Setup explicitly supplies Chef10/Mage1/Skills/depletion/legal position; no food stock is supplied. No merchant-resale or combat consequence claim.",
+ "fixture_save": "meal_station_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "advanced_cooking"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "skill": "advanced_cooking",
+    "target": "inn_chef_counter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "fine_meal",
+    "source": "inn_chef_counter",
+    "count_after": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "text": "Got: Fine Meal"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.fine_meal",
+   "equals": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "advanced_cooking"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "skill": "advanced_cooking",
+    "target": "inn_chef_counter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "fine_meal",
+    "source": "inn_chef_counter",
+    "count_after": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "text": "Got: Fine Meal"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.fine_meal",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "screenshot",
+   "name": "01_repeated_held_advanced_production"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "fine_meal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_before": 2,
+    "restore_hp": 8,
+    "restore_mp": 4,
+    "allowed": true
+   }
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "fine_meal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_before": 2,
+    "count_after": 1,
+    "restore_hp": 8,
+    "restore_mp": 4,
+    "committed": true,
+    "preparation": {
+     "armed": {
+      "hp_mod": 2
+     }
+    }
+   }
+  },
+  {
+   "action": "wait_item_use_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "fine_meal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_before": 1,
+    "restore_hp": 8,
+    "restore_mp": 4,
+    "allowed": true
+   }
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "fine_meal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_before": 1,
+    "count_after": 0,
+    "restore_hp": 8,
+    "restore_mp": 4,
+    "committed": true,
+    "preparation": {
+     "armed": {
+      "hp_mod": 2
+     }
+    }
+   }
+  },
+  {
+   "action": "wait_item_use_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 23
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "02_repeated_recovery_prep_not_stacked"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "signature_dish"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "skill": "signature_dish",
+    "target": "inn_copper_pan"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "signature_meal",
+    "source": "inn_copper_pan",
+    "count_after": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "text": "Got: Signature Meal"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.signature_meal",
+   "equals": 1
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "signature_meal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "signature_meal",
+    "count_before": 1,
+    "restore_hp": 10,
+    "restore_mp": 4,
+    "allowed": true
+   }
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "signature_meal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "signature_meal",
+    "count_before": 1,
+    "count_after": 0,
+    "restore_hp": 10,
+    "restore_mp": 4,
+    "committed": true,
+    "preparation": {
+     "armed": {
+      "hp_mod": 2,
+      "damage_mod": 1
+     }
+    }
+   }
+  },
+  {
+   "action": "wait_item_use_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 33
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2,
+    "damage_mod": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {}
+  },
+  {
+   "action": "screenshot",
+   "name": "03_signature_capped_mp_and_strongest_prep"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "save"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "payload_contains": {
+    "slot": "manual"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 33
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2,
+    "damage_mod": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_used",
+   "count": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "04_food_resources_preparation_reload"
+  },
+  {
+   "action": "dump_state",
+   "label": "disclosed_held_station_production_and_reload"
+  }
+ ]
+}
