@@ -27,23 +27,25 @@ archived, or superseded session blocks.
   Seven inventory touch contacts/profile, keyboard startup, no device claim.
   Earlier combat133/poison67both and native force350/arc298/message48 reviewed.
   PR578 atf71d8e8c has all eight CI jobs PASS, including Web parity.
-- **Core checkpoints:** released journey tree `/private/tmp/wi-512-routes`
-  d7033d7f (QA8ae64053), draftPR574. Rogue3464 reaches ending/Inn.
-  Worker1423 preserves six losses: final held-FlameJet tactic loses round5,
-  boss39HP, rollback50HP/15MP/3g/one Hot Meal. Load/abandon controls clean.
-  Long routes remain INVALID from shader RID errors; no victory claim.
-  Engine diagnosis `/private/tmp/wi-512-leak-probe`9874ca61 released: official
-  engine leaks in bare reproduction; unmodified custom build/MRE/prefix798
-  clean after import. Earlier cache-error controls invalidated. Build/config
-  differences remain unexplained; no production replacement or active build.
-- **Next:** final journey/engine checkpoints reviewed/pushed; compose journey
-  source unchanged into integration. resource_plan owns isolated
-  `/private/tmp/wi-512-martial` fromf71d8e8c: actual walked free-bed detour
-  after sixth win, boss-entry baseline4/49HP/0/13MP. Caster438 remains open.
-  Final571 waits for accepted core/economic findings, not extra mobile checks.
-  Failed broad phone/title attempts retained and tracked in #585. Registry
-  `/private/tmp/wi-parallel-roadmap-status.json`; evidence `/private/tmp/wi-*-evidence`.
-  One martial worker; root integration/QA. Preserve companionUID/overlay.
+- **Core checkpoints:** journey d7033d7f reviewed/pushed and composed289f0984.
+  Official native Rogue3464 reaches ending/Inn,146g−142g=4,39unique images read.
+  Two shader shutdown ERRORs still invalidate gate; #586 tracks this, specific
+  exception requested from user and not assumed. Reviewed engine9874ca61 is
+  backed up; no further builds/probes. Worker1423 retains six losses; boss39HP.
+  Martial1ab7cf1c reviewed: walked free bed restores49HP/13MP, Awakened wins
+  at26HP; next fully rested vault fight loses with construct46HP. No tuning.
+  Poor recovery167 checkpoint-control passes native/zero-noise with both
+  captures read: actual14g purchase→0g, scouts10HP/0MP, retired road, no income,
+  walked bed44HP/14MP. Portable regression6f4cc5ec awaits final composed check.
+- **Next:** desktop earned field bar clips later skills/Details at13–17slots.
+  resource_plan owns `/private/tmp/wi-567-desktop-field` from289f0984;
+  fixb080e0ad reuses paging after live hint reserve; independent review pending.
+  Root composes martial/desktop and checks bounded regression, units/load and
+  native earned-bar controls. Preserve exact noisy/failed journey limits;
+  #453 holds measured combat walls; caster438/economic variants remain open.
+  Final571 waits for core/economic acceptance, not mobile585. No deployment.
+  Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence
+  `/private/tmp/wi-*-evidence`. Preserve companionUID/privateoverlay.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
