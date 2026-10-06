@@ -120,6 +120,10 @@
    "timeout_sec": 30
   },
   {
+   "action": "assert_dialogue_layout",
+   "contains": "Sure"
+  },
+  {
    "action": "screenshot",
    "name": "00_early_noncook_service"
   },
@@ -282,6 +286,10 @@
    "action": "wait_for_event",
    "type": "ui_dialogue_page_rendered",
    "timeout_sec": 30
+  },
+  {
+   "action": "assert_dialogue_layout",
+   "contains": "Sure"
   },
   {
    "action": "touch_dialogue_option",
@@ -447,6 +455,10 @@
    "timeout_sec": 30
   },
   {
+   "action": "assert_dialogue_layout",
+   "contains": "Sure"
+  },
+  {
    "action": "touch_dialogue_option",
    "option": 1
   },
@@ -487,6 +499,10 @@
    "action": "wait_for_event",
    "type": "ui_dialogue_page_rendered",
    "timeout_sec": 30
+  },
+  {
+   "action": "assert_dialogue_layout",
+   "contains": "Up the stairs by the south wall, then along the hall to your bed at the far end"
   },
   {
    "action": "screenshot",
