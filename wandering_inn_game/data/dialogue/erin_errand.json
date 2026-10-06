@@ -180,7 +180,7 @@
        "bank_first_use": "meal:erin"
       },
       {
-       "well_fed": true
+       "recovery": { "restore_hp": 6, "restore_mp": 4, "well_fed": true }
       }
      ],
      "goto": "erin_meal"
@@ -263,6 +263,10 @@
       }
      ],
      "goto": "erin_pond"
+    },
+    {
+     "text": "Could I get something to eat?",
+     "goto": "meal_service"
     }
    ]
   },
@@ -428,7 +432,7 @@
   },
   "erin_meal": {
    "speaker": "Erin",
-   "text": "Sit. Eat. That's an order. New recipe — still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math.",
+   "text": "Sit down before I eat your bread. This restores up to 6 HP and 4 MP, with +2 max HP until you sleep. I did say it would stick to your ribs.",
    "options": [
     {
      "text": "Back up a moment.",
@@ -487,6 +491,66 @@
     {
      "text": "Right, the Guild.",
      "end": true
+    }
+   ]
+  },
+  "meal_service": {
+   "speaker": "Erin",
+   "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free.",
+   "options": [
+    {
+     "text": "A meal: restore up to 6 HP and 4 MP. (3 gold)",
+     "requires": {
+      "gold": 3
+     },
+     "effects": [
+      {
+       "gold": -3
+      },
+      {
+       "recovery": {
+        "restore_hp": 6,
+        "restore_mp": 4
+       }
+      }
+     ],
+     "goto": "meal_served"
+    },
+    {
+     "text": "I need the bed.",
+     "goto": "free_rest"
+    },
+    {
+     "text": "Maybe later.",
+     "end": true
+    }
+   ]
+  },
+  "meal_served": {
+   "speaker": "Erin",
+   "text": "There you go. Careful, the bowl is hot.",
+   "options": [
+    {
+     "text": "Another bowl?",
+     "goto": "meal_service"
+    },
+    {
+     "text": "That hit the spot. Thanks.",
+     "end": true
+    }
+   ]
+  },
+  "free_rest": {
+   "speaker": "Erin",
+   "text": "Up the stairs by the south wall, then along the hall to your bed at the far end. No charge. Sleeping restores your HP and MP and clears mana-potion strain. Please actually sleep. Staring at the ceiling does not count.",
+   "options": [
+    {
+     "text": "I will get some rest.",
+     "end": true
+    },
+    {
+     "text": "Let me look at the meal again.",
+     "goto": "meal_service"
     }
    ]
   }

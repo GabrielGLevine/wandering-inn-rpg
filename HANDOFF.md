@@ -34,8 +34,8 @@ archived, or superseded session blocks.
   repeated-input leg needs viable second use and browser-only registration.
 - **Owners:** resource_plan: `/private/tmp/wi-568-consumables`,206f36ac/PR582
   core/data/tests. Core review clear; Mana Potion/token/copy done.
-  #569 meal tree active. capacity570: `/private/tmp/wi-567-consumable-ui`,
-  9da54788 composed; controls/warning/layout focused tests pass. Root QA. #569 then
+  #56991bdac25 core reviewed/composed; actual QA next. capacity570: `/private/tmp/wi-567-consumable-ui`,
+  9da54788 composed; controls/warning/layout focused tests pass. Root QA. #512
   #512 consume recovery. Registry `/private/tmp/wi-parallel-roadmap-status.json`.
   Evidence `/private/tmp/wi-{566-resumed,567,568,570}-evidence`. Preserve UID,
   private overlay, local node_modules/.gdignore; original art tree untouched.
