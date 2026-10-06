@@ -9,27 +9,21 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #570 capacity:** `issue/570-capacity-analysis` in
-  `/private/tmp/wi-570-capacity`, implementation base `45a54e52` (composed
-  #566/HUD and main10827698). Four initial Resonance, one existing sleep growth,
-  three accessory positions; shared config/accessor and v11 +2 migration are
-  implemented. Review precision fix caps accepted capacity at `2^53 - 1`,
-  rejecting legacy +2 overflow; actual JSON boundary tests pass cleanly.
-  Focused capacity unit passes with no error/warning noise;
-  Godot 4.7 import and data lint pass. Evidence:
-  `/private/tmp/wi-570-evidence/implementation`; rejected test-fixture runs
-  remain separately named. Existing save/core assertions now reflect v11/four;
-  the synthetic two-capacity swap/refusal fixture remains explicitly two.
-  Affected save/core units also pass cleanly at `36787975`.
-  **Next:** root composes resource QA and owns final full preflight/canonical
-  sweep plus rendered/windowed
-  acquisition/equip/refusal/sleep/reload proof. No QA manifest/driver edits here.
-  Diagnostic ec1acd72 is independently approved: 3,400 fights, eight matching
-  controls. Band overruns and 96/100 Infiltrator result remain follow-up risks.
-  No actual earned acquisition, overall balance or player-visible acceptance.
+- **Active #570 capacity QA:** `issue/570-capacity-analysis`, isolated tree
+  `/private/tmp/wi-570-capacity`. Core60aebdaa plus resourceQA/copy85af0621.
+  Capacity4→5, strict v11+2 migration and JSON-safe limits implemented;
+  focused capacity/save/core gates pass. Boundary review artifact:
+  `/private/tmp/wi-570-implementation-independent-review.md`.
+  **Next:** capacity570 owns gear_loop/door_awakening routes, their fixtures,
+  manifest/generated surfaces and matching docs. Preserve actual fit/refusal
+  and once-only growth; fixture mechanics do not prove earned acquisition.
+  Core/save/UI released to #568's separate tree; do not edit those paths.
+  Plan `/private/tmp/wi-570-evidence/implementation/qa-route-repair-plan.md`.
+  Root composes final gates/window proof. Diagnostic ec1acd72 remains reviewed:
+  3,400 fights/eight controls; overruns and96/100 Infiltrator remain risks.
 - **Art #577 is merged:** e89770de and squash0bbd96aa share tree0e843291.
-  The original checkout remains untouched. Its Web CI waiver applies only to
-  art; required checks remain mandatory here. #575/#579 are reviewed designs;
+  Original checkout untouched. User permits Web parity bypass when it blocks
+  merges; other CI and independent review remain required. #575/#579 are designs;
   #572/#578 carry staged resources/HUD; #574 holds route reconnaissance.
 - **#565 integration remains staged:** no deployment or merge of carried
   resources before #567–#571 recovery/HUD/journey gates. Current resource

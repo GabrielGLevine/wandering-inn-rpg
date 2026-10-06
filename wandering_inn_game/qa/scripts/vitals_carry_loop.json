@@ -1,0 +1,865 @@
+{
+ "_comment": "#566 fixture contract: depleted modern save -> real inventory hotbar assignment -> two Frost Bolts -> actual 8 HP draught heal -> victory -> a second practice fight without sleep -> pause save/load -> walk Inn stairs and actual bed. Exact domain and rendered resource receipts. No fixture top-ups during route; initial kit/item/exposure are fixture-provided, not earned journey evidence.",
+ "fixture_save": "vitals_carry_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 2
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "loadout_changed",
+   "payload_contains": {
+    "skill": "item:mending_draught",
+    "assigned": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.skills",
+   "contains": "frost_bolt"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_hotbar_rendered",
+   "payload_contains": {
+    "slots": 5
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     3,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "hotbar_3"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "skill",
+    "skill": "frost_bolt"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "status_applied",
+   "payload_contains": {
+    "id": "training_dummy_a",
+    "status": "slowed",
+    "first_seen": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_first_encounter_feed"
+  },
+  {
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "press",
+   "name": "hotbar_3"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "skill",
+    "skill": "frost_bolt"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "status_applied",
+   "payload_contains": {
+    "id": "training_dummy_a",
+    "status": "slowed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_second_application_no_repeat_toast"
+  },
+  {
+   "action": "assert_event_count",
+   "type": "status_applied",
+   "payload_contains": {
+    "status": "slowed"
+   },
+   "count": 2
+  },
+  {
+   "action": "assert_event_count",
+   "type": "status_applied",
+   "payload_contains": {
+    "status": "slowed",
+    "first_seen": true
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "press",
+   "name": "hotbar_4"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "mending_draught",
+    "healed": 8
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 15
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_action",
+    "after": {
+     "hp": 15,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "combat_autoplay"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "before": {
+     "hp": 15,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 15,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "after": {
+     "hp": 15,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "field"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "before": {
+     "hp": 15,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 15,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "01_carried_after_heal"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "before": {
+     "hp": 15,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 15,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 8
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "save"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "payload_contains": {
+    "slot": "manual"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "payload_contains": {
+    "after": {
+     "hp": 15,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "field"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "screenshot",
+   "name": "02_depleted_reload"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 43
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 0
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "sleep",
+    "before": {
+     "hp": 15,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 43,
+     "max_hp": 43,
+     "mp": 12,
+     "max_mp": 12,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "payload_contains": {
+    "reason": "sleep",
+    "after": {
+     "hp": 43,
+     "max_hp": 43,
+     "mp": 12,
+     "max_mp": 12,
+     "mp_potion_doses": 0
+    },
+    "surface": "field"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "payload_contains": {
+    "reason": "sleep",
+    "before": {
+     "hp": 15,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 43,
+     "max_hp": 43,
+     "mp": 12,
+     "max_mp": 12,
+     "mp_potion_doses": 0
+    }
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "03_settled_sleep"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "game_reset"
+  }
+ ]
+}
