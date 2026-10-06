@@ -1,15 +1,15 @@
 # Approved holistic art execution
 
-> Status: **ACTIVE**
+> Status: **DONE** — merged in PR #577; mobile follow-ups #576/#580 remain separate.
 
 User authorization: 2026-10-05, “Execute on your recommendation.”
 Direction: `docs/design/2026-10-05-holistic-art-review.md`. Program: #564.
 Base: current main `e1d2edee`, preserving merged M1 software. The older review
 captures remain comparative references, not current implementation evidence.
 
-Root owns the main workspace on `issue/564-holistic-art-direction` and all
-composed catalogs, assets, maps, UI, provenance and generated indexes. The
-foundation, chrome, sprite and regional lanes are integrated and frozen.
+The approved art train is merged on main as `0bbd96aa` (reviewed `e89770de`,
+identical tree `0e843291`). Foundation, chrome, sprite and regional lanes are
+integrated; root owns only closure records.
 Independent reviewers use isolated probes and retained artifacts.
 
 ## Implementation sequence
@@ -33,7 +33,7 @@ Independent reviewers use isolated probes and retained artifacts.
 - [x] Curated props/fallback coverage, complete accepted NPC/enemy clips,
   co-visible skill/item icon families, title and act art. Register provenance
   and expected frame counts; never bulk-accept a READY label without a read.
-- [ ] Composed-tree lint, preflight, appropriate native sweep/balance gates,
+- [x] Composed-tree lint, preflight, appropriate native sweep/balance gates,
   public/overlay screenshots, web layout/touch routes, independent review and
   required CI. Close only fully satisfied constituent issues; preserve open
   physical-device or production-timing criteria explicitly.
@@ -68,3 +68,14 @@ diagnostic evidence, not a green claim. Request-correlated receipts/native-tap
 experiments are separate unmerged follow-up work. Mandatory GitHub CI, including
 Web parity, remains unchanged. Physical-device/host/production-timing limits and
 unsuitable public-rig coverage remain open.
+
+## Closure evidence
+
+PR #577 closes #564 and W0 #554. Sol's final art-only proof passes54 unit suites,
+all269 canonical routes and495 Python tests. Astra independently approves the
+art/source and exact corpus-pin repair. Official/public surveys cover33 maps
+in63 matching views each. Seven final-head CI jobs pass; the user explicitly
+waived the still-running Web parity job for this merge and requested runtime
+issue #580. It is not claimed as passing. #576 owns separate mobile correctness
+work; other incomplete harvest coverage and physical/device/timing criteria
+remain open. No release or deployment was included.
