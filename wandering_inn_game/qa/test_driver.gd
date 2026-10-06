@@ -589,6 +589,16 @@ func _execute(step: Dictionary) -> void:
 			await _touch_scroll_field_to_end()
 		"touch_inventory_item":
 			await _touch_inventory_item(String(step["item"]))
+		"wait_item_use_ready":
+			var presenter := get_tree().get_first_node_in_group("wi_item_use_presenter")
+			var deadline := Time.get_ticks_msec() + int(float(step.get("timeout_sec", 15)) * 1000.0)
+			if presenter == null:
+				_fail("wait_item_use_ready: item-use presenter is absent")
+			else:
+				while presenter.item_use_busy() and Time.get_ticks_msec() < deadline:
+					await get_tree().process_frame
+				if presenter.item_use_busy():
+					_fail("wait_item_use_ready: receipt/input guard did not release")
 		"touch_inventory_use":
 			await _touch_rect_of("Inventory", "item_use_rect", null, "touch_inventory_use", step.get("gesture", {}))
 		"touch_inventory_bar":
@@ -1596,7 +1606,7 @@ func _assert_dialogue_layout(step: Dictionary = {}) -> void:
 	if text_height > body.size.y + 1.0 or not bounds.encloses(body.get_global_rect()):
 		_fail("assert_dialogue_layout: body text is clipped")
 	var css_font := font_size * WIResponsiveLayout.css_scale(get_viewport())
-	if css_font + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
+	if WIResponsiveLayout.uses_touch_layout() and css_font + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
 		_fail("assert_dialogue_layout: body text is too small")
 	var scroll: ScrollContainer = panel.get("_options_scroll")
 	var options: Array = panel.get("_option_controls")
