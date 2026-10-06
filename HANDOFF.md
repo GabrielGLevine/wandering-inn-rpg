@@ -9,39 +9,17 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **#568 quantity checkpoint:** `issue/568-consumable-recovery`, isolated
-  `/private/tmp/wi-568-consumables`, base `8b5602ab` (capacity schema11 composed).
-  Owner: resource core worker; exact ownership is core items/game/save/inventory
-  transactions, combat simulation, item/rule/vendor data, lint, focused tests and
-  this handoff/design568. UI, effect_text and authored/generated QA are excluded.
-  Schema12 saves explicit food/potion counts beside ordered unique item IDs.
-  Legacy counts initialize once; modern malformed counts refuse before mutation.
-  Quantity, save, vitals-handoff and simulation units pass; evidence under
-  `/private/tmp/wi-568-evidence`. Inventory transactions preflight overflow and
-  ingredients, then publish events only after complete purchase/craft/sale state.
-  **Next:** shared pure preview and tokenized use/poison, followed by reachable
-  canon-checked MP potion data. Frozen frontend contract and unimplemented parts
-  are in `docs/design/568-consumable-recovery.md`. No broad gates/activation claim.
-  Preserve generated untracked companion-counter UID; do not publish it here.
-
-
-- **Active #568 dependency:** `issue/568-consumable-recovery`, isolated tree
-  `/private/tmp/wi-568-consumables`. Base HUD/resource690f49f1 plus capacity
-  schema11/JSON-boundary60aebdaa; schema12 is reserved for quantities.
-  Owner resource_plan after controller dispatch: declared consumable catalog,
-  core inventory/save/transactions/preview/commit/poison and focused tests.
-  UI/combat presentation, effect_text and QA/generated files are separately owned.
-  **Next:** checkpoint strict saved quantities and atomic acquisition/removal,
-  then shared tokenized restorative use, poisoning and actual potion content.
-  No partial activated-resource deployment. Full composed gates follow UI/QA.
-  Read `/private/tmp/wi-568-prep.md` and `/private/tmp/wi-569-prep.md` for exact
-  producer/transaction traps and subsequent recovery-service requirements.
-- **Completed foundation checkpoints:** #56685af0621 (carry QA and max-HP copy),
-  #567a9e839d3 (HUD), #57060aebdaa (capacity). Resource/HUD bounded reviews pass;
-  capacity JSON-boundary re-review pending. Resource headless routes pass;
-  fresh-start production-timing window passes at690f49f1, all4captures read.
-  Evidence `/private/tmp/wi-566-resumed-evidence`, `/private/tmp/wi-567-evidence`,
-  `/private/tmp/wi-570-evidence`. New-source integration gates remain mandatory.
+- **Active #567 consumable frontend:** `issue/567-consumable-controls`, isolated
+  `/private/tmp/wi-567-consumable-ui`, based on quantity checkpointd53bcc74.
+  capacity570 owns UI inventory/message layer, combat screen/HUD, effect_text,
+  new frontend tests and this handoff. No core/data/save/QA edits here.
+  **Next:** implement visible quantities and separate Use/bar actions; bind
+  displayed operation tokens, one shared warning and captured rendered result.
+  Quantity APIs exist; shared-use API contract is in the568design but awaits
+  resource_plan's validated checkpoint. Merge that core checkpoint before
+  claiming API compilation/runtime proof; preserve any core review corrections.
+  Root owns main HUD integration/window/canonical proof in wi-567-hud-contract.
+  No deployment or partial activation merge. Commit each coherent UI slice.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code squashed as `0bbd96aa`. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
