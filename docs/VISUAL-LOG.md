@@ -480,3 +480,10 @@ r3–r5 playtest waves — gone from this file.
   panels and a dark border imply little of the stacked city. Fix direction:
   arrival-framed Invrisil structures and Pallass lower-terrace backdrop;
   substantial changes are authorized by the user-approved #564 review.
+
+- [ ] **(P2)** Potion warning text overlaps inventory text — windowed
+  `consumable_vendor_loop`, seed9, `ff6b8741` plus readiness wait, has a
+  translucent default panel behind dark warning text. The underlying item card
+  is readable through the warning, obscuring the restoration/poisoning choice.
+  Evidence: `/private/tmp/wi-567-evidence/window-vendor-ready/05_fourth_dose_warning.png`.
+  Use the existing opaque parchment panel container for warning and receipt.
