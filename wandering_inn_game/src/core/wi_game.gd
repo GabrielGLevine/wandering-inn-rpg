@@ -84,6 +84,7 @@ var delivery_last_seen_times_slept: int = 0
 var social_talked: Dictionary = {}
 var entity_first_use: Dictionary = {}
 var light_active := false
+var _settling_dialogue_choice := false
 var well_fed := false
 var pending_meal: Dictionary = {}
 var frozen_cells: Dictionary = {}
@@ -1509,13 +1510,19 @@ func _begin_code_dialogue(graph: Dictionary, conversation_label: String, source_
 ## the offer parks on `pending_purchase` and purchase_confirm() runs the
 ## commit path once. Every non-purchase row commits immediately as before.
 func dialogue_choose(index: int) -> bool:
-	if dialogue == null:
+	if dialogue == null or _settling_dialogue_choice:
 		return false
 	if not pending_purchase.is_empty():
 		return false
 	var offer: Dictionary = dialogue.purchase_offer(index)
 	if offer.is_empty():
 		return _commit_dialogue_choice(index)
+	var service := _dialogue_recovery_plan(dialogue.choose(index, false))
+	if not service.is_empty():
+		if not bool(service.allowed):
+			_emit(WIEvents.TOAST, {"text": "You do not need another meal yet. Your bed upstairs is free when you need to rest."})
+			return false
+		offer["recovery"] = service.duplicate(true)
 	offer["conversation"] = _dialogue_conversation_id
 	offer["gold_before"] = gold
 	offer["gold_after"] = gold - int(offer["price"])
@@ -1529,7 +1536,7 @@ func dialogue_choose(index: int) -> bool:
 ## the row (same node/text/price/item) and the live purse -- the offer's own
 ## snapshot is never trusted.
 func purchase_confirm() -> bool:
-	if pending_purchase.is_empty():
+	if pending_purchase.is_empty() or _settling_dialogue_choice:
 		return false
 	var offer := pending_purchase
 	pending_purchase = {}
@@ -1541,11 +1548,12 @@ func purchase_confirm() -> bool:
 		and String(fresh["text"]) == String(offer["text"]) \
 		and int(fresh["price"]) == int(offer["price"]) \
 		and String(fresh["item"]) == String(offer["item"])
-	if not same_row or gold < int(offer["price"]) or not _dialogue_items_available(dialogue.choose(int(offer["index"]), false)):
+	var choice := dialogue.choose(int(offer["index"]), false)
+	var service := _dialogue_recovery_plan(choice)
+	if not same_row or gold < int(offer["price"]) or not _dialogue_items_available(choice) or service != offer.get("recovery", {}):
 		_emit(WIEvents.PURCHASE_CANCELLED, {"index": int(offer["index"]), "conversation": String(offer["conversation"]), "reason": "revalidation"})
 		return false
-	_emit(WIEvents.PURCHASE_CONFIRMED, offer.duplicate(true))
-	return _commit_dialogue_choice(int(offer["index"]))
+	return _commit_dialogue_choice(int(offer["index"]), offer)
 
 
 func purchase_cancel() -> bool:
@@ -1555,8 +1563,18 @@ func purchase_cancel() -> bool:
 	return true
 
 
+func _dialogue_recovery_plan(result: Dictionary) -> Dictionary:
+	for effect: Dictionary in result.get("effects", []):
+		if effect.has("recovery"):
+			return WIItems.preview_service(effect.recovery, player_resources(), preparation_snapshot(), _recovery_rules())
+	return {}
+
+
 func _dialogue_items_available(result: Dictionary) -> bool:
 	if result.is_empty():
+		return false
+	var service := _dialogue_recovery_plan(result)
+	if not service.is_empty() and (combat != null or not bool(service.allowed)):
 		return false
 	var gained: Array = []
 	var removed: Array = []
@@ -1594,15 +1612,20 @@ func _dialogue_items_available(result: Dictionary) -> bool:
 	return can_change_items(gained, removed, true)
 
 
-func _commit_dialogue_choice(index: int) -> bool:
+func _commit_dialogue_choice(index: int, purchase: Dictionary = {}) -> bool:
 	var result: Dictionary = dialogue.choose(index, false)
 	if not _dialogue_items_available(result):
 		return false
+	var service := _dialogue_recovery_plan(result)
+	var service_gold_before := gold
+	_settling_dialogue_choice = true
 	for effect: Dictionary in result["effects"]:
 		if effect.has("start_combat"):
 			_emit(WIEvents.PRE_COMBAT_CHOICE, {"encounter": String(effect["start_combat"])})
 			break
 	_begin_item_events()
+	if not purchase.is_empty():
+		_emit(WIEvents.PURCHASE_CONFIRMED, purchase.duplicate(true))
 	result = dialogue.choose(index)
 	_emit(WIEvents.DIALOGUE_CHOICE, {"index": index})
 	var walker := dialogue
@@ -1632,7 +1655,10 @@ func _commit_dialogue_choice(index: int) -> bool:
 		elif effect.has("item"):
 			pickup(String(effect["item"]), _dialogue_conversation_id)
 		elif effect.has("gold"):
-			_apply_gold_effect(int(effect["gold"]), _dialogue_conversation_id)
+			if service.is_empty():
+				_apply_gold_effect(int(effect["gold"]), _dialogue_conversation_id)
+			else:
+				gold = _economy.apply_gold_effect(gold, int(effect["gold"]), _dialogue_conversation_id)
 		elif effect.has("bank_first_use"):
 			entity_first_use[String(effect["bank_first_use"])] = true
 		elif effect.has("remove_item"):
@@ -1648,6 +1674,10 @@ func _commit_dialogue_choice(index: int) -> bool:
 			remove_item(removed_id, _dialogue_conversation_id)
 		elif effect.has("well_fed"):
 			well_fed = bool(effect["well_fed"])
+		elif effect.has("recovery"):
+			well_fed = bool(service.preparation.get("well_fed", well_fed))
+			vitals.hp = int(service.after.hp)
+			vitals.mp = int(service.after.mp)
 		elif effect.has("start_combat"):
 			pending_combat = String(effect["start_combat"])
 		elif effect.has("travel_to"):
@@ -1680,7 +1710,16 @@ func _commit_dialogue_choice(index: int) -> bool:
 			# toast: an authored line at the moment a dialogue pick
 			# resolves something, so talk resolutions stop being silent.
 			_emit(WIEvents.TOAST, {"text": String(effect["toast"])})
-		_resources_changed(before_resources, "dialogue", _dialogue_conversation_id, before_preparation != preparation_snapshot())
+		if service.is_empty():
+			_resources_changed(before_resources, "dialogue", _dialogue_conversation_id, before_preparation != preparation_snapshot())
+	if not service.is_empty():
+		service = {"service": "inn_meal", "source": _dialogue_conversation_id, "reason": "dialogue",
+			"before": service.before.duplicate(true), "after": player_resources(),
+			"preparation_before": service.preparation_before.duplicate(true), "preparation": preparation_snapshot(),
+			"restore_hp": service.restore_hp, "restore_mp": service.restore_mp,
+			"gold_before": service_gold_before, "gold_after": gold}
+		_observed_resources = player_resources().duplicate(true)
+		_emit(WIEvents.RESOURCES_CHANGED, service.duplicate(true))
 	_end_item_events()
 	if not bool(result["ended"]):
 		walker.set_ctx(_build_dialogue_ctx())
@@ -1703,6 +1742,9 @@ func _commit_dialogue_choice(index: int) -> bool:
 		_open_sell_dialogue(pending_sell_vendor)
 	if pending_travel != "":
 		_travel_to_portal(pending_travel)
+	if not service.is_empty():
+		_emit(WIEvents.SERVICE_RECOVERY_SETTLED, service.duplicate(true))
+	_settling_dialogue_choice = false
 	return true
 
 

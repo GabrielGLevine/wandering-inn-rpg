@@ -724,6 +724,16 @@ def check_dialogue(parsed: dict, errors: list) -> None:
 				for effect in option.get("effects", []) or []:
 					if isinstance(effect, dict) and isinstance(effect.get("gold"), (int, float)) and effect["gold"] < 0:
 						spent = -int(effect["gold"])
+				recoveries = [e["recovery"] for e in option.get("effects", []) if isinstance(e, dict) and "recovery" in e]
+				if recoveries:
+					if len(recoveries) != 1 or any(set(e) - {"gold", "recovery", "bank_first_use"} for e in option.get("effects", [])):
+						errors.append(f"{name}: node '{nid}' option {i} recovery must be one atomic gold/gate/service transaction")
+					for recovery in recoveries:
+						if not isinstance(recovery, dict) or set(recovery) - {"restore_hp", "restore_mp", "well_fed"}:
+							errors.append(f"{name}: node '{nid}' option {i} has invalid recovery keys")
+							continue
+						if any(type(recovery.get(k, 0)) is not int or recovery.get(k, 0) < 0 for k in ("restore_hp", "restore_mp")) or ("well_fed" in recovery and type(recovery["well_fed"]) is not bool):
+							errors.append(f"{name}: node '{nid}' option {i} recovery needs nonnegative integer amounts and boolean well_fed")
 				spend = option.get("spend")
 				if spend is not None and spend not in SPEND_KINDS:
 					errors.append(f"{name}: node '{nid}' option {i} spend '{spend}' "
@@ -1931,15 +1941,15 @@ SKILL_CODE_GRANTS = {
 	# appear on a player-facing record by design: the visible Skill is the
 	# ordinary granted one, and the *_boon rider is folded into a combatant kit
 	# at roster-build time (folding it onto the PC record would buff the PC).
-	"sworn_fang_boon": ("src/core/wi_game.gd", 2517,
+	"sworn_fang_boon": ("src/core/wi_game.gd", 2559,
 		"[Sworn Fang: Ride Together] folds it into the PC kit while a companion rides"),
-	"basic_command_boon": ("src/core/wi_game.gd", 2528,
+	"basic_command_boon": ("src/core/wi_game.gd", 2570,
 		"[Animals: Basic Command] folds it onto the COMPANION's kit"),
-	"pack_bond_boon": ("src/core/wi_game.gd", 2530,
+	"pack_bond_boon": ("src/core/wi_game.gd", 2572,
 		"[Pack Bond] folds it onto the COMPANION's kit"),
 }
 ITEM_CODE_GRANTS = {
-	"flarepepper_powder": ("src/core/wi_game.gd", 3261,
+	"flarepepper_powder": ("src/core/wi_game.gd", 3303,
 		"[Supplies: Flarepepper Powder] restocks one per rest"),
 }
 

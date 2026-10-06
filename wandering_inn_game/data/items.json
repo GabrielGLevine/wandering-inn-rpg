@@ -349,7 +349,8 @@
       "abilities": [],
       "source_hint": "the stew pot, if you cook",
       "description": "A bowl of stew and a heel of bread, still steaming from the pot. Someone's waiting on this.",
-      "lore": "The stew pot doesn't care who it's for — Watch, patron, or the cook themselves. It only cares that it's stirred."
+      "lore": "The stew pot doesn't care who it's for — Watch, patron, or the cook themselves. It only cares that it's stirred.",
+      "use_effect": { "restore_hp": 6, "restore_mp": 0 }
     },
     {
       "_comment": "kind:\"parcel\" reused verbatim from the delivery precedent below -- inert carried flavor, no price (never sold), no weapon/armor/accessory kind so equip() structurally refuses it.",
@@ -866,6 +867,8 @@
       "tier": "mundane",
       "abilities": [],
       "use_effect": {
+        "restore_hp": 8,
+        "restore_mp": 4,
         "next_fight": {
           "hp_mod": 2
         }
@@ -888,6 +891,8 @@
       "tier": "mundane",
       "abilities": [],
       "use_effect": {
+        "restore_hp": 10,
+        "restore_mp": 6,
         "next_fight": {
           "hp_mod": 2,
           "damage_mod": 1
@@ -1259,6 +1264,8 @@
       "tier": "mundane",
       "abilities": [],
       "use_effect": {
+        "restore_hp": 6,
+        "restore_mp": 0,
         "next_fight": {
           "hp_mod": 2
         }

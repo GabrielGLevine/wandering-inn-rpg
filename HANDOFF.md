@@ -9,6 +9,23 @@ archived, or superseded session blocks.
 
 ## Current state
 
+- **Active #569 meal/service checkpoint:** `issue/569-meal-recovery`, isolated
+  `/private/tmp/wi-569-meals`, base `206f36ac` (#568 reviewed core/catalog).
+  Owner resource worker: core service/food effects, existing Erin dialogue,
+  item/Skill data, lint, focused tests and this handoff/design569. UI/effect_text,
+  QA/fixtures/manifest/generated are excluded and owned by integration lanes.
+  Early repeatable 3-gold service restores6HP/4MP through existing confirmation;
+  free-bed directions remain reachable at zero gold. Late free meal retains
+  waking gate and +2 maxHP, now with6HP/4MP recovery. Explicit food restoration
+  retains legal unlimited station access and preparation caps/no resale.
+  Frozen service resource events settle gold/pools/gate before observers;
+  `service_recovery_settled` drives autosave after dialogue advance.
+  Focused meal contract test, import and data lint pass under
+  `/private/tmp/wi-569-evidence`; full current evidence scope in design569.
+  **Next:** checkpoint API, run affected existing pure units serially, then
+  controller composes actual input/routes/windows and full integration gates.
+  No earned acquisition/window/touch or full-gate claim from focused units.
+
 - **#568 core/catalog checkpoint:** `issue/568-consumable-recovery`, isolated
   `/private/tmp/wi-568-consumables`, base `8b5602ab` (capacity schema11 composed).
   Quantity checkpoint `d53bcc74`, shared-use/reward checkpoint `a8509a19`.
