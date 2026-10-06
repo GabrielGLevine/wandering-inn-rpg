@@ -1,5 +1,5 @@
 {
- "_comment": "Prepared icon audition, not an earned progression claim.",
+ "_comment": "Prepared icon audition with coherent Warrior 3 and Mage 5 prerequisites.",
  "version": 5,
  "state": {
   "current_map": "inn",
@@ -16,12 +16,16 @@
    "mage": 5
   },
   "accomplishments": {
-   "met_relc": 1,
-   "sparred_with_relc": 1,
-   "given_spear_by_relc": 1,
-   "studied_the_cellar": 1,
-   "chess_with_olesm": 1
-  },
+                      "met_relc": 1,
+                      "sparred_with_relc": 1,
+                      "given_spear_by_relc": 1,
+                      "studied_the_cellar": 1,
+                      "chess_with_olesm": 1,
+                      "won_combat": 1,
+                      "melee_hit": 6,
+                      "learned_magic_from_pisces": 1,
+                      "spell_cast": 13
+                     },
   "player_skills": [
    "basic_cleaning"
   ],
