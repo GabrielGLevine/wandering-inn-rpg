@@ -55,12 +55,13 @@
    ]
   },
   {
-   "_comment": "Fresh settings start expanded: names + mechanics render before first sleep.",
+   "_comment": "Fresh settings keep the full list collapsed; Details remains discoverable.",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
     "slots": 2,
-    "expanded": true,
+    "expanded": false,
+    "toggle_label": "Show details [H]",
     "slot_numbers": [
      "1",
      "2"
@@ -229,13 +230,9 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "First waking auto-collapses only after the expanded onboarding read and sleep reveal.",
+   "_comment": "The sleep reveal must finish before a player requests details.",
    "action": "wait_for_event",
-   "type": "ui_field_hotbar_rendered",
-   "payload_contains": {
-    "expanded": false,
-    "reason": "first_waking"
-   },
+   "type": "ui_sleep_veil_finished",
    "timeout_sec": 5
   },
   {

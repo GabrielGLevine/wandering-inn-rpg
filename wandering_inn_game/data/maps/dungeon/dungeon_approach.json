@@ -51,55 +51,73 @@
     "to": [
      7,
      4
-    ]
+    ],
+    "cap": [
+     3,
+     3
+    ],
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+     "tile_px": 16,
+     "cap": [
+      0,
+      3
+     ]
+    }
    }
   ]
  },
  "floor_layers": [
   {
-   "_pick": "Cemetery-floor variation reusing the dungeon biome's own verified floor-tile neighborhood (2,2)/(3,7) plus the genuinely darker worn variant (2,11) for real wear texture.",
-   "variants": [
-    [
-     2,
-     2
-    ],
-    [
-     3,
-     7
-    ],
-    [
-     2,
-     11
-    ]
+   "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+   "tile_px": 16,
+   "coords": [
+    2,
+    1
    ],
-   "cells": "all"
+   "cells": "all",
+   "tone": {
+    "base": [
+     0.59,
+     0.59,
+     0.6
+    ],
+    "detail": 0.35
+   }
   }
  ],
  "decor": [
   {
-   "_comment": "CASTLE 0.3 statue dressing, blocked-pair (THE BLOCKING CONTRACT).",
-   "sprite": "dungeon_statue",
+   "sprite": "dungeon_brazier_owned",
    "cell": [
     4,
     2
    ],
-   "tint": [
-    0.75,
-    0.75,
-    0.78
-   ]
+   "light": {
+    "color": [
+     0.96,
+     0.66,
+     0.36
+    ],
+    "energy": 0.5,
+    "radius": 24
+   }
   },
   {
-   "sprite": "dungeon_statue",
+   "sprite": "dungeon_brazier_owned",
    "cell": [
     11,
     2
    ],
-   "tint": [
-    0.7,
-    0.7,
-    0.74
-   ]
+   "light": {
+    "color": [
+     0.96,
+     0.66,
+     0.36
+    ],
+    "energy": 0.5,
+    "radius": 24
+   }
   },
   {
    "_comment": "CAVE rubble dressing (a collapse band), blocked-pair.",

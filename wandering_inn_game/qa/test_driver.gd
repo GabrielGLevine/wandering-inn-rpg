@@ -60,6 +60,8 @@ var _out_dir := ""
 var _capture_depth := 0
 var _failures: PackedStringArray = []
 var _events_seen: Array = []
+var _initial_title_gate_seen := false
+var _initial_web_draw_seen := false
 var _last_purchase_buy_pos := Vector2.ZERO
 var _screenshots: PackedStringArray = []
 var _wait_cursor := 0
@@ -139,6 +141,8 @@ func _ready() -> void:
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
+	if type == "ui_title_gate_rendered":
+		_initial_title_gate_seen = true
 	var event := {"type": type, "payload": payload}
 	if OS.has_feature("web"):
 		event["browser_time_ms"] = JavaScriptBridge.eval("performance.now()", true)
@@ -163,11 +167,36 @@ func _run() -> void:
 	real_message_timing = bool(parsed.get("qa_real_message_timing", false)) \
 		or _truthy(String(QAPaths.user_args().get("qa-real-message-timing", "")))
 	_fail_fast = _fail_fast or bool(parsed.get("fail_fast", false))
+	var steps: Array = parsed["steps"]
+	_steps_total = steps.size()
+	if OS.has_feature("web") and int(JavaScriptBridge.eval("window.__WI_QA__?.wait_for_runner_ready === true ? 1 : 0", true)) == 1:
+		var startup_deadline := Time.get_ticks_msec() + RUNNER_STARTUP_DEADLINE_MSEC
+		var runner_ready := false
+		var draw_connected := false
+		var engine_ready_published := false
+		while Time.get_ticks_msec() < startup_deadline:
+			if _initial_title_gate_seen and not draw_connected:
+				RenderingServer.frame_post_draw.connect(_on_initial_web_draw, CONNECT_ONE_SHOT)
+				draw_connected = true
+			if _initial_web_draw_seen and not engine_ready_published:
+				JavaScriptBridge.eval("window.__WI_QA_ENGINE_READY__ = {initial_draw_complete: true, rendered_at_ms: performance.now()}", true)
+				ObservableBus.emit_domain_event("qa_engine_ready", {"initial_ui": "ui_title_gate_rendered"})
+				engine_ready_published = true
+			if engine_ready_published and int(JavaScriptBridge.eval("window.__WI_QA_RUNNER_READY__ === true ? 1 : 0", true)) == 1:
+				runner_ready = true
+				break
+			await get_tree().process_frame
+		if RenderingServer.frame_post_draw.is_connected(_on_initial_web_draw):
+			RenderingServer.frame_post_draw.disconnect(_on_initial_web_draw)
+		if not runner_ready:
+			_fail("web runner startup readiness was not received within 30000ms; no QA steps run")
+			_aborted = true
+			_finish()
+			return
+		ObservableBus.emit_domain_event("qa_runner_ready", {})
 	_install_fixture_saves(parsed.get("fixture_save"))
 	if not bool(parsed.get("starts_at_title", false)):
 		await _skip_title()
-	var steps: Array = parsed["steps"]
-	_steps_total = steps.size()
 	for i: int in steps.size():
 		_step_index = i
 		_steps_run = i + 1
@@ -181,6 +210,11 @@ func _run() -> void:
 			break
 	_finish()
 
+
+const RUNNER_STARTUP_DEADLINE_MSEC := 30000
+
+func _on_initial_web_draw() -> void:
+	_initial_web_draw_seen = true
 
 func _install_fixture_saves(spec: Variant) -> void:
 	if spec == null:
@@ -1320,7 +1354,7 @@ func _touch_at(pos: Vector2, label: String, gesture: Dictionary = {}) -> void:
 	if OS.has_feature("web"):
 		var window_pos: Vector2 = WIResponsiveLayout.css_transform(get_viewport()) * pos
 		var before := int(JavaScriptBridge.eval("window.__WI_QA_TOUCH_DONE__ || 0", true))
-		JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = {x: %f, y: %f, coordinate_space: 'css', label: %s, gesture: %s}" % [window_pos.x, window_pos.y, JSON.stringify(label), JSON.stringify(gesture)], true)
+		JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = {x: %f, y: %f, coordinate_space: 'css', issued_at_ms: performance.now(), label: %s, gesture: %s}" % [window_pos.x, window_pos.y, JSON.stringify(label), JSON.stringify(gesture)], true)
 		var deadline := Time.get_ticks_msec() + TOUCH_SERVICE_DEADLINE_MSEC
 		var serviced := false
 		while Time.get_ticks_msec() < deadline:
@@ -1699,6 +1733,9 @@ func _assert_combat_layout(step: Dictionary) -> void:
 	if screen == null or main == null or Game.sim.combat == null:
 		_fail("assert_combat_layout: no live combat")
 		return
+	if bool(step.get("desktop", false)):
+		_assert_desktop_combat_layout(screen, main)
+		return
 	var snapshot: Dictionary = screen.responsive_layout_snapshot()
 	if not bool(snapshot.get("mobile", false)):
 		_fail("assert_combat_layout: requires the mobile browser layout")
@@ -1754,6 +1791,42 @@ func _assert_combat_layout(step: Dictionary) -> void:
 		if not board.has_point(position):
 			_fail("assert_combat_layout: focused fighter is outside the visible board")
 	ObservableBus.emit_domain_event("qa_combat_layout_measured", snapshot)
+
+
+func _assert_desktop_combat_layout(screen: Node, main: Node) -> void:
+	var reserved: Rect2 = screen.board_view_rect()
+	var board: Rect2 = main.world_view_rect()
+	if not reserved.has_area() or not reserved.grow(1.0).encloses(board):
+		_fail("assert_combat_layout: desktop board exceeds HUD-free rectangle")
+		return
+	var renderer := screen.get_node("BoardRenderer")
+	for id: String in Game.sim.combat.combatants:
+		if int(Game.sim.combat.combatants[id]["hp"]) <= 0:
+			continue
+		var holder: Node2D = renderer.visual_for(id)
+		if holder == null:
+			_fail("assert_combat_layout: missing live fighter %s" % id)
+			continue
+		for child: Node in holder.get_children():
+			if not child is AnimatedSprite2D:
+				continue
+			var sprite := child as AnimatedSprite2D
+			var texture := sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+			var pixels := Rect2(texture.get_image().get_used_rect())
+			var shift := sprite.offset - texture.get_size() * 0.5 if sprite.centered else sprite.offset
+			var visible := Rect2()
+			var first := true
+			for corner: Vector2 in [pixels.position, Vector2(pixels.end.x, pixels.position.y), pixels.end, Vector2(pixels.position.x, pixels.end.y)]:
+				if sprite.flip_h:
+					corner.x = texture.get_width() - corner.x
+				if sprite.flip_v:
+					corner.y = texture.get_height() - corner.y
+				var point: Vector2 = main.world_to_screen(sprite.to_global(corner + shift))
+				visible = Rect2(point, Vector2.ZERO) if first else visible.expand(point)
+				first = false
+			if not board.grow(2.0).encloses(visible):
+				_fail("assert_combat_layout: desktop fighter %s clipped: %s outside %s" % [id, visible, board])
+	ObservableBus.emit_domain_event("qa_combat_layout_measured", {"mobile": false, "board": board})
 
 
 func _assert_reference_layout() -> void:

@@ -1,0 +1,1942 @@
+{
+ "biome": "invrisil_street",
+ "grid": {
+  "width": 22,
+  "height": 14
+ },
+ "blocked": [
+  [
+   0,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   7,
+   0
+  ],
+  [
+   8,
+   0
+  ],
+  [
+   9,
+   0
+  ],
+  [
+   10,
+   0
+  ],
+  [
+   11,
+   0
+  ],
+  [
+   12,
+   0
+  ],
+  [
+   13,
+   0
+  ],
+  [
+   14,
+   0
+  ],
+  [
+   15,
+   0
+  ],
+  [
+   16,
+   0
+  ],
+  [
+   17,
+   0
+  ],
+  [
+   18,
+   0
+  ],
+  [
+   19,
+   0
+  ],
+  [
+   20,
+   0
+  ],
+  [
+   21,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   6,
+   1
+  ],
+  [
+   7,
+   1
+  ],
+  [
+   8,
+   1
+  ],
+  [
+   9,
+   1
+  ],
+  [
+   10,
+   1
+  ],
+  [
+   11,
+   1
+  ],
+  [
+   12,
+   1
+  ],
+  [
+   13,
+   1
+  ],
+  [
+   14,
+   1
+  ],
+  [
+   15,
+   1
+  ],
+  [
+   16,
+   1
+  ],
+  [
+   17,
+   1
+  ],
+  [
+   18,
+   1
+  ],
+  [
+   19,
+   1
+  ],
+  [
+   20,
+   1
+  ],
+  [
+   21,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   6,
+   2
+  ],
+  [
+   7,
+   2
+  ],
+  [
+   8,
+   2
+  ],
+  [
+   9,
+   2
+  ],
+  [
+   10,
+   2
+  ],
+  [
+   11,
+   2
+  ],
+  [
+   12,
+   2
+  ],
+  [
+   13,
+   2
+  ],
+  [
+   14,
+   2
+  ],
+  [
+   15,
+   2
+  ],
+  [
+   16,
+   2
+  ],
+  [
+   17,
+   2
+  ],
+  [
+   18,
+   2
+  ],
+  [
+   19,
+   2
+  ],
+  [
+   20,
+   2
+  ],
+  [
+   21,
+   2
+  ],
+  [
+   0,
+   13
+  ],
+  [
+   1,
+   13
+  ],
+  [
+   2,
+   13
+  ],
+  [
+   3,
+   13
+  ],
+  [
+   4,
+   13
+  ],
+  [
+   5,
+   13
+  ],
+  [
+   6,
+   13
+  ],
+  [
+   7,
+   13
+  ],
+  [
+   8,
+   13
+  ],
+  [
+   9,
+   13
+  ],
+  [
+   10,
+   13
+  ],
+  [
+   11,
+   13
+  ],
+  [
+   12,
+   13
+  ],
+  [
+   13,
+   13
+  ],
+  [
+   14,
+   13
+  ],
+  [
+   15,
+   13
+  ],
+  [
+   16,
+   13
+  ],
+  [
+   17,
+   13
+  ],
+  [
+   18,
+   13
+  ],
+  [
+   19,
+   13
+  ],
+  [
+   20,
+   13
+  ],
+  [
+   21,
+   13
+  ],
+  [
+   0,
+   3
+  ],
+  [
+   0,
+   4
+  ],
+  [
+   0,
+   5
+  ],
+  [
+   0,
+   6
+  ],
+  [
+   0,
+   8
+  ],
+  [
+   0,
+   9
+  ],
+  [
+   0,
+   10
+  ],
+  [
+   0,
+   11
+  ],
+  [
+   0,
+   12
+  ],
+  [
+   21,
+   3
+  ],
+  [
+   21,
+   4
+  ],
+  [
+   21,
+   5
+  ],
+  [
+   21,
+   6
+  ],
+  [
+   21,
+   7
+  ],
+  [
+   21,
+   8
+  ],
+  [
+   21,
+   9
+  ],
+  [
+   21,
+   11
+  ],
+  [
+   21,
+   12
+  ],
+  [
+   3,
+   10
+  ],
+  [
+   4,
+   10
+  ],
+  [
+   16,
+   11
+  ],
+  [
+   17,
+   11
+  ],
+  [
+   9,
+   5
+  ],
+  [
+   10,
+   5
+  ],
+  [
+   18,
+   5
+  ]
+ ],
+ "cover_skip": [
+  [
+   0,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   7,
+   0
+  ],
+  [
+   8,
+   0
+  ],
+  [
+   9,
+   0
+  ],
+  [
+   10,
+   0
+  ],
+  [
+   11,
+   0
+  ],
+  [
+   12,
+   0
+  ],
+  [
+   13,
+   0
+  ],
+  [
+   14,
+   0
+  ],
+  [
+   15,
+   0
+  ],
+  [
+   16,
+   0
+  ],
+  [
+   17,
+   0
+  ],
+  [
+   18,
+   0
+  ],
+  [
+   19,
+   0
+  ],
+  [
+   20,
+   0
+  ],
+  [
+   21,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   6,
+   1
+  ],
+  [
+   7,
+   1
+  ],
+  [
+   8,
+   1
+  ],
+  [
+   9,
+   1
+  ],
+  [
+   10,
+   1
+  ],
+  [
+   11,
+   1
+  ],
+  [
+   12,
+   1
+  ],
+  [
+   13,
+   1
+  ],
+  [
+   14,
+   1
+  ],
+  [
+   15,
+   1
+  ],
+  [
+   16,
+   1
+  ],
+  [
+   17,
+   1
+  ],
+  [
+   18,
+   1
+  ],
+  [
+   19,
+   1
+  ],
+  [
+   20,
+   1
+  ],
+  [
+   21,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   6,
+   2
+  ],
+  [
+   7,
+   2
+  ],
+  [
+   8,
+   2
+  ],
+  [
+   9,
+   2
+  ],
+  [
+   10,
+   2
+  ],
+  [
+   11,
+   2
+  ],
+  [
+   12,
+   2
+  ],
+  [
+   13,
+   2
+  ],
+  [
+   14,
+   2
+  ],
+  [
+   15,
+   2
+  ],
+  [
+   16,
+   2
+  ],
+  [
+   17,
+   2
+  ],
+  [
+   18,
+   2
+  ],
+  [
+   19,
+   2
+  ],
+  [
+   20,
+   2
+  ],
+  [
+   21,
+   2
+  ],
+  [
+   0,
+   13
+  ],
+  [
+   1,
+   13
+  ],
+  [
+   2,
+   13
+  ],
+  [
+   3,
+   13
+  ],
+  [
+   4,
+   13
+  ],
+  [
+   5,
+   13
+  ],
+  [
+   6,
+   13
+  ],
+  [
+   7,
+   13
+  ],
+  [
+   8,
+   13
+  ],
+  [
+   9,
+   13
+  ],
+  [
+   10,
+   13
+  ],
+  [
+   11,
+   13
+  ],
+  [
+   12,
+   13
+  ],
+  [
+   13,
+   13
+  ],
+  [
+   14,
+   13
+  ],
+  [
+   15,
+   13
+  ],
+  [
+   16,
+   13
+  ],
+  [
+   17,
+   13
+  ],
+  [
+   18,
+   13
+  ],
+  [
+   19,
+   13
+  ],
+  [
+   20,
+   13
+  ],
+  [
+   21,
+   13
+  ],
+  [
+   0,
+   3
+  ],
+  [
+   0,
+   4
+  ],
+  [
+   0,
+   5
+  ],
+  [
+   0,
+   6
+  ],
+  [
+   0,
+   8
+  ],
+  [
+   0,
+   9
+  ],
+  [
+   0,
+   10
+  ],
+  [
+   0,
+   11
+  ],
+  [
+   0,
+   12
+  ],
+  [
+   21,
+   3
+  ],
+  [
+   21,
+   4
+  ],
+  [
+   21,
+   5
+  ],
+  [
+   21,
+   6
+  ],
+  [
+   21,
+   7
+  ],
+  [
+   21,
+   8
+  ],
+  [
+   21,
+   9
+  ],
+  [
+   21,
+   11
+  ],
+  [
+   21,
+   12
+  ],
+  [
+   3,
+   10
+  ],
+  [
+   16,
+   11
+  ],
+  [
+   9,
+   5
+  ]
+ ],
+ "floor_layers": [
+  {
+   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+   "tile_px": 16,
+   "coords": [
+    0,
+    0
+   ],
+   "tone": {
+    "base": [
+     0.36,
+     0.35,
+     0.38
+    ],
+    "detail": 0.2
+   },
+   "cells": "all"
+  },
+  {
+   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+   "tile_px": 16,
+   "coords": [
+    3,
+    3
+   ],
+   "tone": {
+    "base": [
+     0.53,
+     0.5,
+     0.47
+    ],
+    "detail": 0.15
+   },
+   "cells": {
+    "list": [
+     [
+      1,
+      6
+     ],
+     [
+      1,
+      7
+     ],
+     [
+      1,
+      8
+     ],
+     [
+      2,
+      6
+     ],
+     [
+      2,
+      7
+     ],
+     [
+      2,
+      8
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      3,
+      7
+     ],
+     [
+      3,
+      8
+     ],
+     [
+      4,
+      6
+     ],
+     [
+      4,
+      7
+     ],
+     [
+      4,
+      8
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      5,
+      7
+     ],
+     [
+      5,
+      8
+     ],
+     [
+      6,
+      6
+     ],
+     [
+      6,
+      7
+     ],
+     [
+      6,
+      8
+     ],
+     [
+      7,
+      6
+     ],
+     [
+      7,
+      7
+     ],
+     [
+      7,
+      8
+     ],
+     [
+      8,
+      6
+     ],
+     [
+      8,
+      7
+     ],
+     [
+      8,
+      8
+     ],
+     [
+      9,
+      6
+     ],
+     [
+      9,
+      7
+     ],
+     [
+      9,
+      8
+     ],
+     [
+      10,
+      6
+     ],
+     [
+      10,
+      7
+     ],
+     [
+      10,
+      8
+     ],
+     [
+      11,
+      6
+     ],
+     [
+      11,
+      7
+     ],
+     [
+      11,
+      8
+     ],
+     [
+      12,
+      6
+     ],
+     [
+      12,
+      7
+     ],
+     [
+      12,
+      8
+     ],
+     [
+      13,
+      6
+     ],
+     [
+      13,
+      7
+     ],
+     [
+      13,
+      8
+     ],
+     [
+      14,
+      6
+     ],
+     [
+      14,
+      7
+     ],
+     [
+      14,
+      8
+     ],
+     [
+      15,
+      6
+     ],
+     [
+      15,
+      7
+     ],
+     [
+      15,
+      8
+     ],
+     [
+      16,
+      6
+     ],
+     [
+      16,
+      7
+     ],
+     [
+      16,
+      8
+     ],
+     [
+      17,
+      6
+     ],
+     [
+      17,
+      7
+     ],
+     [
+      17,
+      8
+     ],
+     [
+      18,
+      6
+     ],
+     [
+      18,
+      7
+     ],
+     [
+      18,
+      8
+     ],
+     [
+      19,
+      6
+     ],
+     [
+      19,
+      7
+     ],
+     [
+      19,
+      8
+     ],
+     [
+      20,
+      6
+     ],
+     [
+      20,
+      7
+     ],
+     [
+      20,
+      8
+     ],
+     [
+      5,
+      3
+     ],
+     [
+      5,
+      4
+     ],
+     [
+      5,
+      5
+     ],
+     [
+      6,
+      3
+     ],
+     [
+      6,
+      4
+     ],
+     [
+      6,
+      5
+     ],
+     [
+      7,
+      3
+     ],
+     [
+      7,
+      4
+     ],
+     [
+      7,
+      5
+     ],
+     [
+      13,
+      3
+     ],
+     [
+      13,
+      4
+     ],
+     [
+      13,
+      5
+     ],
+     [
+      14,
+      3
+     ],
+     [
+      14,
+      4
+     ],
+     [
+      14,
+      5
+     ],
+     [
+      15,
+      3
+     ],
+     [
+      15,
+      4
+     ],
+     [
+      15,
+      5
+     ],
+     [
+      17,
+      9
+     ],
+     [
+      17,
+      10
+     ],
+     [
+      17,
+      11
+     ],
+     [
+      18,
+      9
+     ],
+     [
+      18,
+      10
+     ],
+     [
+      18,
+      11
+     ],
+     [
+      19,
+      9
+     ],
+     [
+      19,
+      10
+     ],
+     [
+      19,
+      11
+     ],
+     [
+      20,
+      9
+     ],
+     [
+      20,
+      10
+     ],
+     [
+      20,
+      11
+     ]
+    ]
+   }
+  },
+  {
+   "_pick": "FIX WAVE facade assembly, handoff.md's recipe executed DATA-SIDE (per-cell picks; a committed composite of licensed pieces is forbidden in the public repo, and floor_layers rects accept negative y -- verified in tile_board_builder.resolve_layer_cells, plain range(), no grid clamp -- so the above-grid loom rows need no code). Layer 1/5: the cornice/roofline cap, Wall_Tiles (8,2) cool blue-grey stone (picks.md sec.2, MOCKUP-PROVEN), one row above the visible plaster at y=-2.",
+   "sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+   "tile_px": 16,
+   "coords": [
+    8,
+    2
+   ],
+   "cells": {
+    "rect": [
+     0,
+     -2,
+     22,
+     1
+    ]
+   },
+    "fallback_render": {
+                        "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                        "tile_px": 16,
+                        "coords": [
+                         4,
+                         2
+                        ],
+                        "tone": {
+                         "base": [
+                          0.4,
+                          0.34,
+                          0.26
+                         ],
+                         "detail": 0.55
+                        }
+                       }
+  },
+  {
+   "_pick": "Layer 2/5: cream plaster upper floors, Building_Walls (26,2) (picks.md sec.1, MOCKUP-PROVEN flat #ddccb8) -- y=-1 (above-grid loom row) + y=0 (in-grid blocked row, cover_skip'd). Two plaster rows over a glass row = the 2-cell-facade scale-shock read, plus the cornice above.",
+   "sheet": "res://assets/props/free_pack/Building_Walls.png",
+   "tile_px": 16,
+   "coords": [
+    26,
+    2
+   ],
+   "cells": {
+    "rect": [
+     0,
+     -1,
+     22,
+     2
+    ]
+   },
+    "fallback_render": {
+                        "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                        "tile_px": 16,
+                        "coords": [
+                         4,
+                         3
+                        ],
+                        "tone": {
+                         "base": [
+                          0.4,
+                          0.34,
+                          0.26
+                         ],
+                         "detail": 0.55
+                        }
+                       }
+  },
+  {
+   "_pick": "Layer 3/5: the leaded-glass storefront line, Building_Walls (13,35) (picks.md sec.1, MOCKUP-PROVEN, 'USE SPARINGLY -- one shopfront band') -- exactly one band, the ground-floor row y=1 the player walks past.",
+   "sheet": "res://assets/props/free_pack/Building_Walls.png",
+   "tile_px": 16,
+   "coords": [
+    13,
+    35
+   ],
+   "cells": {
+    "rect": [
+     0,
+     1,
+     22,
+     1
+    ]
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/window_facade.png",
+     "tile_px": 64,
+     "coords": [
+      0,
+      0
+     ],
+     "underlay": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "coords": [
+       4,
+       3
+      ]
+     }
+    }
+  },
+  {
+   "_pick": "Layer 4/5: pilaster strips every 3 cells (the spec's 'vertical LINES'), Wall_Tiles (8,2) stone columns spanning y=-1..1. Full 16px cells, not the mockup's 6px strips -- the cell-pick machinery has no sub-cell crop, so each pilaster is a full stone column dividing the glass line into 2-cell shopfronts (an honest approximation the windowed re-take judges).",
+   "sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+   "tile_px": 16,
+   "coords": [
+    8,
+    2
+   ],
+   "cells": {
+    "list": [
+     [
+      2,
+      -1
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      2,
+      1
+     ],
+     [
+      5,
+      -1
+     ],
+     [
+      5,
+      0
+     ],
+     [
+      5,
+      1
+     ],
+     [
+      8,
+      -1
+     ],
+     [
+      8,
+      0
+     ],
+     [
+      8,
+      1
+     ],
+     [
+      11,
+      -1
+     ],
+     [
+      11,
+      0
+     ],
+     [
+      11,
+      1
+     ],
+     [
+      14,
+      -1
+     ],
+     [
+      14,
+      0
+     ],
+     [
+      14,
+      1
+     ],
+     [
+      17,
+      -1
+     ],
+     [
+      17,
+      0
+     ],
+     [
+      17,
+      1
+     ],
+     [
+      20,
+      -1
+     ],
+     [
+      20,
+      0
+     ],
+     [
+      20,
+      1
+     ]
+    ]
+   },
+    "fallback_render": {
+                        "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                        "tile_px": 16,
+                        "coords": [
+                         2,
+                         3
+                        ],
+                        "tone": {
+                         "base": [
+                          0.4,
+                          0.34,
+                          0.26
+                         ],
+                         "detail": 0.55
+                        }
+                       }
+  },
+  {
+   "sheet": "res://assets/props/free_pack/Building_Walls.png",
+   "tile_px": 16,
+   "coords": [
+    13,
+    35
+   ],
+   "cells": {
+    "rect": [
+     0,
+     2,
+     22,
+     1
+    ]
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/window_facade.png",
+     "tile_px": 64,
+     "coords": [
+      0,
+      0
+     ],
+     "underlay": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "coords": [
+       4,
+       3
+      ]
+     }
+    }
+  },
+  {
+   "sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+   "tile_px": 16,
+   "coords": [
+    8,
+    2
+   ],
+   "cells": {
+    "rect": [
+     0,
+     13,
+     22,
+     1
+    ]
+   },
+    "fallback_render": {
+                        "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                        "tile_px": 16,
+                        "coords": [
+                         4,
+                         2
+                        ],
+                        "tone": {
+                         "base": [
+                          0.4,
+                          0.34,
+                          0.26
+                         ],
+                         "detail": 0.55
+                        }
+                       }
+  },
+  {
+   "sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+   "tile_px": 16,
+   "coords": [
+    8,
+    2
+   ],
+   "cells": {
+    "list": [
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      0,
+      5
+     ],
+     [
+      0,
+      6
+     ],
+     [
+      0,
+      8
+     ],
+     [
+      0,
+      9
+     ],
+     [
+      0,
+      10
+     ],
+     [
+      0,
+      11
+     ],
+     [
+      0,
+      12
+     ],
+     [
+      21,
+      3
+     ],
+     [
+      21,
+      4
+     ],
+     [
+      21,
+      5
+     ],
+     [
+      21,
+      6
+     ],
+     [
+      21,
+      7
+     ],
+     [
+      21,
+      8
+     ],
+     [
+      21,
+      9
+     ],
+     [
+      21,
+      11
+     ],
+     [
+      21,
+      12
+     ]
+    ]
+   },
+    "fallback_render": {
+                        "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                        "tile_px": 16,
+                        "coords": [
+                         2,
+                         3
+                        ],
+                        "tone": {
+                         "base": [
+                          0.4,
+                          0.34,
+                          0.26
+                         ],
+                         "detail": 0.55
+                        }
+                       }
+  }
+ ],
+ "decor": [
+  {
+   "sprite": "invrisil_roofline",
+   "cell": [
+    4,
+    -1
+   ]
+  },
+  {
+   "sprite": "invrisil_roofline",
+   "cell": [
+    12,
+    -1
+   ]
+  },
+  {
+   "sprite": "invrisil_hanging_sign",
+   "cell": [
+    5,
+    2
+   ]
+  },
+  {
+   "sprite": "invrisil_hanging_sign",
+   "cell": [
+    13,
+    2
+   ]
+  },
+  {
+   "sprite": "invrisil_ornate_bench",
+   "cell": [
+    4,
+    10
+   ]
+  },
+  {
+   "sprite": "invrisil_ornate_bench",
+   "cell": [
+    17,
+    11
+   ]
+  },
+  {
+   "sprite": "invrisil_flower_cart",
+   "cell": [
+    10,
+    5
+   ]
+  },
+  {
+   "sprite": "plant_pot",
+   "cell": [
+    18,
+    5
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    2,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    2,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    5,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    5,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    8,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    8,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    11,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    11,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    14,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    14,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    17,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    17,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    20,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    20,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_stationery_display",
+   "cell": [
+    5,
+    2
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "cross_street_to_boulevard",
+   "kind": "door",
+   "cell": [
+    0,
+    7
+   ],
+   "display_name": "Boulevard Square",
+   "sprite": "door",
+   "to_map": "invrisil_boulevard",
+   "to_cell": [
+    20,
+    2
+   ]
+  },
+  {
+   "_comment": "v0.16 I1 (#306): kind flips prop -> door in place on the SAME already-blocked cell (20,1). hide_sprite dropped so the facade reads enterable.",
+   "id": "boulevard_stationer",
+   "kind": "door",
+   "cell": [
+    6,
+    2
+   ],
+   "display_name": "A Stationer's Window",
+   "sprite": "invrisil_shop_door",
+   "to_map": "stationer",
+   "to_cell": [
+    6,
+    7
+   ]
+  },
+  {
+   "_comment": "v0.16 I2 (#306): promotes the shipped [18,1] DECOR door sprite into a real door (its decor row is deleted in the same edit, so nothing double-draws). Row 1 is blocked x0-27, so no walkable cell gains a blocker. Cell chosen over [4,1]; rationale in CHOICE-LOG.",
+   "id": "boulevard_to_adventurers_rest",
+   "kind": "door",
+   "cell": [
+    14,
+    2
+   ],
+   "display_name": "The Adventurer's Rest",
+   "sprite": "invrisil_shop_door",
+   "observe": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Two men come out and let the door swing shut behind them.",
+   "to_map": "adventurers_rest",
+   "to_cell": [
+    6,
+    7
+   ]
+  },
+  {
+   "id": "cross_street_to_alleys",
+   "kind": "prop",
+   "cell": [
+    21,
+    10
+   ],
+   "display_name": "Rear Service Gate",
+   "sprite": "invrisil_shop_door",
+   "locked_toast": "The rear gate is barred. The Brothers have not opened this passage to you.",
+   "door_when": {
+    "requires": {
+     "brothers_job_done": 1
+    },
+    "to_map": "mercantile_alleys",
+    "to_cell": [
+     18,
+     11
+    ]
+   }
+  },
+  {
+   "id": "cross_street_runner",
+   "kind": "npc",
+   "cell": [
+    4,
+    6
+   ],
+   "display_name": "A Runner with Parcels",
+   "sprite": "city_runner",
+   "facing": "right",
+   "dialogue": [
+    {
+     "speaker": "A Runner with Parcels",
+     "text": "The stationer is just up there. Beds are farther along, if your feet have had enough."
+    }
+   ]
+  },
+  {
+   "id": "cross_street_shopper",
+   "kind": "npc",
+   "cell": [
+    17,
+    5
+   ],
+   "display_name": "A Shopper in City Wool",
+   "sprite": "townswoman",
+   "facing": "left",
+   "dialogue": [
+    {
+     "speaker": "A Shopper in City Wool",
+     "text": "A quieter street. You can hear yourself think here."
+    }
+   ]
+  }
+ ]
+}

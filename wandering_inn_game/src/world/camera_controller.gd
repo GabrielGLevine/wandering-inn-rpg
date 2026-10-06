@@ -12,6 +12,8 @@ var _camera: Camera2D
 var _cell: float
 var _view_size: Vector2
 var _camera_tween: Tween
+var _field_offset := Vector2.ZERO
+var _field_margins := Vector4.ZERO
 
 
 func _init(camera: Camera2D, cell_px: float, view_size: Vector2) -> void:
@@ -22,11 +24,26 @@ func _init(camera: Camera2D, cell_px: float, view_size: Vector2) -> void:
 
 func update(grid_size: Vector2i, player_cell: Vector2i) -> void:
 	kill_tween()
+	_camera.position = _field_position(grid_size, player_cell)
+
+
+func set_field_framing(offset_cells: Vector2, margins_cells: Vector4) -> void:
+	_field_offset = offset_cells * _cell
+	_field_margins = Vector4(
+		maxf(0, margins_cells.x), maxf(0, margins_cells.y),
+		maxf(0, margins_cells.z), maxf(0, margins_cells.w)
+	) * _cell
+
+
+func _field_position(grid_size: Vector2i, player_cell: Vector2i) -> Vector2:
 	var content_size := Vector2(grid_size) * _cell
-	var focus := Vector2(player_cell) * _cell + Vector2(_cell, _cell) * 0.5
-	_camera.position = Vector2(
-		axis(content_size.x, _view_size.x, focus.x),
-		axis(content_size.y, _view_size.y, focus.y)
+	var offset := _field_offset.clamp(-_view_size * 0.25, _view_size * 0.25)
+	var focus := (Vector2(player_cell) + Vector2.ONE * 0.5) * _cell + offset
+	return Vector2(
+		axis(content_size.x + _field_margins.x + _field_margins.z,
+			_view_size.x, focus.x + _field_margins.x) - _field_margins.x,
+		axis(content_size.y + _field_margins.y + _field_margins.w,
+			_view_size.y, focus.y + _field_margins.y) - _field_margins.y
 	)
 
 
@@ -44,12 +61,7 @@ func pan_to(grid_size: Vector2i, player_cell: Vector2i, duration: float) -> void
 	if duration <= 0.0:
 		update(grid_size, player_cell)
 		return
-	var content_size := Vector2(grid_size) * _cell
-	var focus := Vector2(player_cell) * _cell + Vector2(_cell, _cell) * 0.5
-	var target := Vector2(
-		axis(content_size.x, _view_size.x, focus.x),
-		axis(content_size.y, _view_size.y, focus.y)
-	)
+	var target := _field_position(grid_size, player_cell)
 	kill_tween()
 	_camera_tween = _camera.create_tween()
 	_camera_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
