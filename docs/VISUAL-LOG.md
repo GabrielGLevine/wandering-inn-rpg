@@ -480,3 +480,5 @@ r3–r5 playtest waves — gone from this file.
   panels and a dark border imply little of the stacked city. Fix direction:
   arrival-framed Invrisil structures and Pallass lower-terrace backdrop;
   substantial changes are authorized by the user-approved #564 review.
+
+- [ ] **(P2)** Earned desktop field controls — 13–17 Skills push Details and later slots beyond the right edge; opening the long Details list also consumes the world view. Native Rogue289f0984 captures07_act_iv_07/08 and08_01–03; desktop8621c754 control now proves paging/input but fails expanded-panel geometry. Bound row capacity beside live hints and cap the existing scrollable readout; verify native pages, Skill use and expanded Details.
