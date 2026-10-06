@@ -75,6 +75,16 @@ var _equipment_label: Label
 var _equipment_expanded := false
 var _detail_scroll: ScrollContainer
 var _detail_box: VBoxContainer
+var _item_actions: VBoxContainer
+var _use_button: Button
+var _bar_button: Button
+var _use_preview: Label
+var _use_receipt: Label
+var _use_offer: Dictionary = {}
+var _use_generation := 0
+var _use_action := 0
+var _receipt_data: Dictionary = {}
+var _claiming_loot := false
 var _corner_icon: TextureRect
 var _corner_breakout: Control
 var _corner_lines_box: VBoxContainer
@@ -268,6 +278,20 @@ func _ready() -> void:
 	_detail_box.add_theme_constant_override("separation", 6)
 	_detail_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_detail_scroll.add_child(_detail_box)
+	_item_actions = VBoxContainer.new()
+	_item_actions.add_theme_constant_override("separation", 6)
+	_detail_box.add_child(_item_actions)
+	_use_preview = UIChrome.make_label("", "Small")
+	_use_preview.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_item_actions.add_child(_use_preview)
+	_use_button = Button.new()
+	_use_button.text = "Use"
+	_item_actions.add_child(_use_button)
+	_bar_button = Button.new()
+	_item_actions.add_child(_bar_button)
+	_use_receipt = UIChrome.make_label("", "MenuInk")
+	_use_receipt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_item_actions.add_child(_use_receipt)
 
 	var scroll_bottom_spacer := Control.new()
 	scroll_bottom_spacer.custom_minimum_size = Vector2(0.0, SCROLL_BOTTOM_INSET)
@@ -303,6 +327,8 @@ func _layout_panel() -> void:
 	if _equipment_scroll != null:
 		_equipment_scroll.custom_minimum_size.x = list_width
 		_equipment_button.custom_minimum_size = WIResponsiveLayout.touch_size(get_viewport(), Vector2(260.0, 40.0))
+	for button: Button in [_use_button, _bar_button]:
+		button.custom_minimum_size = WIResponsiveLayout.touch_size(get_viewport(), Vector2(0.0, 40.0)) if WIResponsiveLayout.uses_touch_layout() else Vector2(0.0, 36.0)
 	_reserve_status_label_height()
 	_reserve_corner_breakout_height()
 
@@ -374,8 +400,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.RESOURCES_CHANGED:
 		_refresh_resources(payload)
 	elif type in [WIEvents.ITEM_GAINED, WIEvents.ITEM_LOST]:
-		_rebuild_items()
-		_emit_selection()
+		if not _item_use_busy() and not _claiming_loot:
+			_rebuild_items()
+			_emit_selection()
+	elif type in [WIEvents.ITEM_USE_SETTLED, WIEvents.ITEM_USE_REFUSED, WIEvents.ITEM_USE_CANCELLED]:
+		if _item_use_busy() and String(payload.get("context", "")) == "world":
+			_render_use_receipt(payload)
 	elif type == WIEvents.GOLD_CHANGED:
 		_refresh_gold()
 		_emit_shown()
@@ -452,6 +482,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		_open()
 		get_viewport().set_input_as_handled()
 		return
+	if _item_use_busy():
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("inventory") or event.is_action_pressed("cancel"):
 		_close()
 		get_viewport().set_input_as_handled()
@@ -460,6 +493,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_down"):
 		_move_cursor(1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("move_left") or event.is_action_pressed("move_right"):
+		if _bar_button.visible:
+			_use_action = 1 - _use_action
+			_refresh_action_labels()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("confirm"):
 		_confirm()
@@ -477,6 +515,10 @@ func _can_open() -> bool:
 
 
 func _open() -> void:
+	_claiming_loot = true
+	Game.sim.claim_pending_loot()
+	_claiming_loot = false
+	_receipt_data.clear()
 	_layout_panel()
 	open = true
 	_cursor = 0
@@ -487,6 +529,7 @@ func _open() -> void:
 
 
 func _close() -> void:
+	_retire_use_offer()
 	open = false
 	_reset_list_gesture()
 	_root.hide()
@@ -506,6 +549,7 @@ func toggle_open() -> bool:
 func _move_cursor(delta: int) -> void:
 	if _item_ids.is_empty():
 		return
+	_use_action = 0
 	_cursor = wrapi(_cursor + delta, 0, _item_ids.size())
 	_status_label.text = ""
 	_rebuild_items()
@@ -694,7 +738,8 @@ func _on_items_gui_input(event: InputEvent) -> void:
 		return
 	_hover_cursor(idx)
 	_cursor = idx
-	_confirm()
+	if not WIItems.stackable(Game.sim.item(_item_ids[idx])):
+		_confirm()
 
 
 func _confirm() -> void:
@@ -703,6 +748,12 @@ func _confirm() -> void:
 	var item_id := String(_item_ids[_cursor])
 	var rec: Dictionary = Game.sim.item(item_id)
 	var kind := String(rec.get("kind", ""))
+	if WIItems.stackable(rec):
+		if _use_action == 1 and _bar_button.visible:
+			_set_item_bar(item_id, _use_generation, not Game.sim.hotbar_loadout.has("item:" + item_id))
+		else:
+			_activate_use(int(_use_offer.get("operation_id", 0)), item_id, _use_generation, Game.sim)
+		return
 	if kind == "weapon" or kind == "armor" or kind == "accessory":
 		var equipped_slot := _equipped_slot_for(item_id, kind)
 		var ok: bool = Game.sim.unequip(equipped_slot) if equipped_slot != "" else Game.sim.equip(item_id)
@@ -847,6 +898,8 @@ func _rebuild_items() -> void:
 
 func _render_detail() -> void:
 	for child: Node in _detail_box.get_children():
+		if child == _item_actions:
+			continue
 		_detail_box.remove_child(child)
 		child.queue_free()
 	for line: String in WIEffectText.preparation_lines(_resource_payload.get("preparation", {})):
@@ -854,6 +907,7 @@ func _render_detail() -> void:
 		preparation_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_detail_box.add_child(preparation_label)
 	if _item_ids.is_empty():
+		_render_use_actions()
 		return
 	var item_id := String(_item_ids[_cursor])
 	var rec: Dictionary = Game.sim.item(item_id)
@@ -878,6 +932,8 @@ func _render_detail() -> void:
 		header.add_child(name_label)
 	else:
 		_detail_box.add_child(name_label)
+	_detail_box.move_child(_item_actions, _detail_box.get_child_count() - 1)
+	_render_use_actions()
 	if WIResponsiveLayout.uses_touch_layout():
 		for line: String in WIEffectText.item_effect_lines(rec):
 			var effect := UIChrome.make_label(line, "MenuInk")
@@ -984,3 +1040,114 @@ func _icon_texture_for(item_id: String) -> Texture2D:
 
 func _icon_path_for(item_id: String) -> String:
 	return "%s%s.png" % [ICON_DIR, item_id]
+
+
+func _use_presenter() -> Node:
+	return get_tree().get_first_node_in_group("wi_item_use_presenter")
+
+
+func _item_use_busy() -> bool:
+	var presenter := _use_presenter()
+	return presenter != null and presenter.item_use_busy()
+
+
+func _retire_use_offer() -> void:
+	if not _use_offer.is_empty() and not _item_use_busy():
+		Game.sim.cancel_item_use(int(_use_offer.get("operation_id", 0)))
+	_use_offer.clear()
+
+
+func _render_use_actions() -> void:
+	if _item_actions == null:
+		return
+	if _item_use_busy():
+		_use_button.disabled = true
+		_bar_button.disabled = true
+		return
+	_retire_use_offer()
+	_use_generation += 1
+	for button: Button in [_use_button, _bar_button]:
+		for connection: Dictionary in button.pressed.get_connections():
+			button.pressed.disconnect(connection["callable"])
+	var id := "" if _item_ids.is_empty() else _item_ids[_cursor]
+	var rec: Dictionary = Game.sim.item(id)
+	var usable := WIItems.stackable(rec)
+	_item_actions.visible = usable or not _receipt_data.is_empty()
+	_use_button.visible = usable
+	_bar_button.visible = usable and String(rec.get("consumable_family", "")) in ["hp_potion", "mp_potion"]
+	_use_preview.visible = usable
+	_use_receipt.visible = not _receipt_data.is_empty()
+	if not usable:
+		return
+	_use_offer = Game.sim.prepare_item_use(id, "world").duplicate(true)
+	_use_preview.text = WIEffectText.item_use_text(_use_offer)
+	_use_button.disabled = not bool(_use_offer.get("allowed", false))
+	_bar_button.disabled = false
+	_use_button.pressed.connect(_activate_use.bind(int(_use_offer.get("operation_id", 0)), id, _use_generation, Game.sim))
+	_bar_button.pressed.connect(_set_item_bar.bind(id, _use_generation, not Game.sim.hotbar_loadout.has("item:" + id)))
+	_refresh_action_labels()
+	var proof := _use_offer.duplicate(true)
+	proof["text"] = _use_preview.text
+	proof["surface"] = "inventory"
+	proof["generation"] = _use_generation
+	_emit_use_preview.call_deferred(proof)
+
+
+func _emit_use_preview(proof: Dictionary) -> void:
+	await get_tree().process_frame
+	if open and int(proof.get("generation", -1)) == _use_generation:
+		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_PREVIEW_RENDERED, proof)
+
+
+func _refresh_action_labels() -> void:
+	_use_button.text = ("> " if _use_action == 0 else "") + "Use"
+	var id := String(_use_offer.get("item", ""))
+	_bar_button.text = ("> " if _use_action == 1 else "") + ("Remove from combat bar" if Game.sim.hotbar_loadout.has("item:" + id) else "Add to combat bar")
+
+
+func _set_item_bar(id: String, generation: int, slotted: bool) -> void:
+	if generation != _use_generation or _item_use_busy() or not open:
+		return
+	if Game.sim.hotbar_loadout.has("item:" + id) != slotted:
+		Game.sim.loadout_toggle("item:" + id)
+	_refresh_row_marks()
+	_render_use_actions()
+	_emit_selection()
+
+
+func _activate_use(operation: int, id: String, generation: int, source_sim: RefCounted) -> void:
+	if not open or generation != _use_generation or source_sim != Game.sim:
+		return
+	if operation != int(_use_offer.get("operation_id", 0)) or id != String(_use_offer.get("item", "")):
+		return
+	var presenter := _use_presenter()
+	if presenter == null:
+		return
+	if not presenter.item_use_rearmed.is_connected(_on_use_rearmed):
+		presenter.item_use_rearmed.connect(_on_use_rearmed)
+	presenter.activate_item_offer(_use_offer.duplicate(true), source_sim)
+	_use_button.disabled = true
+	_bar_button.disabled = true
+
+
+func _on_use_rearmed() -> void:
+	if open:
+		_render_use_actions()
+
+
+func _render_use_receipt(result: Dictionary) -> void:
+	_receipt_data = result.duplicate(true)
+	_refresh()
+	var rec: Dictionary = Game.sim.item(String(result.get("item", "")))
+	_use_receipt.text = "%s — %s" % [String(rec.get("name", result.get("item", "Item"))), WIEffectText.item_use_text(result)]
+	_use_receipt.show()
+	_item_actions.show()
+	_receipt_data["text"] = _use_receipt.text
+	_receipt_data["surface"] = "inventory"
+	_emit_use_receipt.call_deferred(_receipt_data.duplicate(true))
+
+
+func _emit_use_receipt(proof: Dictionary) -> void:
+	await get_tree().process_frame
+	if open and int(proof.get("operation_id", -1)) == int(_receipt_data.get("operation_id", -2)):
+		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_RENDERED, proof)
