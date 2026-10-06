@@ -10,6 +10,7 @@ var _use_rendered := false
 var _use_warning := false
 var _use_warning_armed := false
 var _use_warning_frame := 0
+var _use_warning_msec := 0
 var _use_touches: Dictionary = {}
 var _use_overlay: Control
 var _use_panel: PanelContainer
@@ -1386,6 +1387,7 @@ func _accept_use_result(result: Dictionary) -> void:
 func _fallback_use_receipt(result: Dictionary) -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
+	await get_tree().process_frame
 	if not item_use_busy() or int(result.operation_id) != int(_active_use.operation_id) or _use_rendered:
 		return
 	# A surface may disappear during defeat/load. Keep its captured result visible.
@@ -1410,7 +1412,8 @@ func _show_use_warning(offer: Dictionary) -> void:
 	_use_warning = true
 	_use_warning_armed = false
 	_use_warning_frame = Engine.get_process_frames()
-	_use_warning_label.text = "%s — mana poisoning\n%s\nUse this dose?" % [String(offer.get("name", "Mana potion")), WIEffectText.item_use_text(offer)]
+	_use_warning_msec = Time.get_ticks_msec()
+	_use_warning_label.text = "%s — mana poisoning\n%s\nUse this dose?" % [String(_active_use.get("name", "Mana potion")), WIEffectText.item_use_text(offer)]
 	_use_cancel.text = "Cancel"
 	_use_cancel.disabled = false
 	_use_confirm.text = "Use dose"
@@ -1420,6 +1423,7 @@ func _show_use_warning(offer: Dictionary) -> void:
 	_use_cancel.grab_focus()
 	_fit_use_overlay()
 	var proof := offer.duplicate(true)
+	proof["name"] = String(_active_use.get("name", ""))
 	proof.merge({"text": _use_warning_label.text, "surface": "item_warning", "armed": false}, true)
 	_emit_use_warning.call_deferred(proof)
 
@@ -1475,6 +1479,7 @@ func _build_use_overlay() -> void:
 func _fit_use_overlay() -> void:
 	if _use_overlay == null:
 		return
+	WIResponsiveLayout.apply_readable_theme(_use_overlay, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
 	var safe := WIResponsiveLayout.safe_rect(get_viewport()).grow(-12.0)
 	var extent := Vector2(minf(safe.size.x, 560.0), minf(safe.size.y, 400.0))
 	_use_panel.position = safe.get_center() - extent * 0.5
@@ -1489,6 +1494,9 @@ func _confirm_presented_use() -> void:
 		return
 	_use_warning = false
 	_use_overlay.hide()
+	if _use_sim != Game.sim:
+		_accept_use_result({"operation_id": _active_use.operation_id, "committed": false, "allowed": false, "reason": "stale_operation"})
+		return
 	_commit_presented_use(true)
 
 
@@ -1512,7 +1520,14 @@ func _input(event: InputEvent) -> void:
 			_use_touches.erase(event.index)
 	if not _use_warning:
 		return
-	if event.is_action_pressed("cancel"):
+	if event.is_action_pressed("move_down") or event.is_action_pressed("move_up") or event.is_action_pressed("move_left") or event.is_action_pressed("move_right"):
+		if _use_warning_armed:
+			if _use_cancel.has_focus():
+				_use_confirm.grab_focus()
+			else:
+				_use_cancel.grab_focus()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("cancel"):
 		_cancel_presented_use()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("confirm"):
@@ -1525,7 +1540,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _process_item_use() -> void:
-	if _use_warning and not _use_warning_armed and Engine.get_process_frames() > _use_warning_frame + 1 and _use_input_released():
+	if _use_warning and not _use_warning_armed and Engine.get_process_frames() > _use_warning_frame + 1 and Time.get_ticks_msec() - _use_warning_msec >= 300 and _use_input_released():
 		_use_warning_armed = true
 		_use_confirm.disabled = false
 		var proof := _active_use.duplicate(true)
@@ -1537,3 +1552,11 @@ func _process_item_use() -> void:
 		_active_use.clear()
 		_use_sim = null
 		item_use_rearmed.emit()
+
+
+func item_warning_cancel_rect() -> Rect2:
+	return _use_cancel.get_global_rect() if _use_warning and _use_overlay.visible else Rect2()
+
+
+func item_warning_confirm_rect() -> Rect2:
+	return _use_confirm.get_global_rect() if _use_warning and _use_overlay.visible else Rect2()

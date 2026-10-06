@@ -279,6 +279,10 @@ func _ready() -> void:
 	_detail_box.add_theme_constant_override("separation", 6)
 	_detail_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_detail_scroll.add_child(_detail_box)
+	if WIResponsiveLayout.uses_touch_layout():
+		_status_label.reparent(_detail_box)
+		_status_label.custom_minimum_size = Vector2.ZERO
+		_status_label.hide()
 	_item_actions = VBoxContainer.new()
 	_item_actions.add_theme_constant_override("separation", 6)
 	_detail_box.add_child(_item_actions)
@@ -363,6 +367,8 @@ func _on_equipment_input(event: InputEvent) -> void:
 ## position is identical whether the echo is empty, one line, or its max,
 ## with no resize/layout-timing race to guard.
 func _reserve_status_label_height() -> void:
+	if WIResponsiveLayout.uses_touch_layout():
+		return
 	var font := _status_label.get_theme_font("font")
 	var font_size := _status_label.get_theme_font_size("font_size")
 	var line_spacing := float(_status_label.get_theme_constant("line_spacing"))
@@ -421,6 +427,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# gated shut) still gets its own visible copy in here,
 		# single-sourced from this same payload.
 		_status_label.text = String(payload.get("text", ""))
+		_status_label.show()
+		if WIResponsiveLayout.uses_touch_layout():
+			_detail_scroll.ensure_control_visible.call_deferred(_status_label)
 
 
 ## The `ui_inventory_shown` re-confirm payload, shared by `_open()` and the
@@ -580,7 +589,7 @@ func _row_display_text(i: int) -> String:
 	var tag := ""
 	if equipped_here:
 		tag = "  [Equipped]"
-	elif (rec.get("use_effect", {}) as Dictionary).has("heal") and Game.sim.hotbar_loadout.has("item:%s" % item_id):
+	elif bool(rec.get("usable_in_combat", false)) and Game.sim.hotbar_loadout.has("item:%s" % item_id):
 		tag = "  [On Hotbar]"
 	var prefix := ""
 	if _icon_texture_for(item_id) != null:
@@ -773,7 +782,7 @@ func _confirm() -> void:
 		# left the player to infer the whole rule from an "[On Hotbar]" tag
 		# appearing on the row. Say it instead.
 		var token := "item:%s" % item_id
-		var slotting := not Game.sim.hotbar_loadout.has(token)
+		var slotting: bool = not Game.sim.hotbar_loadout.has(token)
 		Game.sim.loadout_toggle(token)
 		_refresh_row_marks()
 		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text":
@@ -819,7 +828,7 @@ func _refresh_resources(payload: Dictionary = {}) -> void:
 		lines.append("No MP pool.")
 	elif int(resources.get("mp", 0)) == 0:
 		lines.append("MP depleted.")
-	_resource_label.text = "\n".join(lines)
+	_resource_label.text = (" · " if WIResponsiveLayout.uses_touch_layout() else "\n").join(lines)
 	_render_detail()
 	_resource_render_serial += 1
 	var serial := _resource_render_serial
@@ -900,8 +909,10 @@ func _rebuild_items() -> void:
 
 
 func _render_detail() -> void:
+	if WIResponsiveLayout.uses_touch_layout():
+		_status_label.visible = not _status_label.text.is_empty()
 	for child: Node in _detail_box.get_children():
-		if child == _item_actions:
+		if child == _item_actions or child == _status_label:
 			continue
 		_detail_box.remove_child(child)
 		child.queue_free()
@@ -1077,13 +1088,14 @@ func _render_use_actions() -> void:
 	var usable := WIItems.stackable(rec)
 	_item_actions.visible = usable or not _receipt_data.is_empty()
 	_use_button.visible = usable
-	_bar_button.visible = usable and String(rec.get("consumable_family", "")) in ["hp_potion", "mp_potion"]
+	_bar_button.visible = usable and bool(rec.get("usable_in_combat", false))
 	_use_preview.visible = usable
 	_use_receipt.visible = not _receipt_data.is_empty()
 	if not usable:
 		return
 	_use_offer_sim = Game.sim
 	_use_offer = Game.sim.prepare_item_use(id, "world").duplicate(true)
+	_use_offer["name"] = String(rec.get("name", id))
 	_use_preview.text = WIEffectText.item_use_text(_use_offer)
 	_use_button.disabled = not bool(_use_offer.get("allowed", false))
 	_bar_button.disabled = false
@@ -1106,7 +1118,7 @@ func _emit_use_preview(proof: Dictionary) -> void:
 func _refresh_action_labels() -> void:
 	_use_button.text = ("> " if _use_action == 0 else "") + "Use"
 	var id := String(_use_offer.get("item", ""))
-	_bar_button.text = ("> " if _use_action == 1 else "") + ("Remove from combat bar" if Game.sim.hotbar_loadout.has("item:" + id) else "Add to combat bar")
+	_bar_button.text = ("> " if _use_action == 1 else "") + ("Remove from bar" if Game.sim.hotbar_loadout.has("item:" + id) else "Add to bar")
 
 
 func _set_item_bar(id: String, generation: int, slotted: bool) -> void:
@@ -1141,9 +1153,10 @@ func _on_use_rearmed() -> void:
 
 func _render_use_receipt(result: Dictionary) -> void:
 	_receipt_data = result.duplicate(true)
+	_receipt_data["name"] = String(_use_offer.get("name", result.get("item", "Item")))
 	_refresh()
 	var rec: Dictionary = Game.sim.item(String(result.get("item", "")))
-	_use_receipt.text = "%s — %s" % [String(rec.get("name", result.get("item", "Item"))), WIEffectText.item_use_text(result)]
+	_use_receipt.text = "%s — %s" % [String(_receipt_data.get("name", rec.get("name", "Item"))), WIEffectText.item_use_text(result)]
 	_use_receipt.show()
 	_item_actions.show()
 	_receipt_data["text"] = _use_receipt.text
@@ -1153,5 +1166,15 @@ func _render_use_receipt(result: Dictionary) -> void:
 
 func _emit_use_receipt(proof: Dictionary) -> void:
 	await get_tree().process_frame
+	_detail_scroll.ensure_control_visible(_use_receipt)
+	await get_tree().process_frame
 	if open and int(proof.get("operation_id", -1)) == int(_receipt_data.get("operation_id", -2)):
 		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_RENDERED, proof)
+
+
+func item_use_rect() -> Rect2:
+	return _use_button.get_global_rect() if open and _use_button.is_visible_in_tree() else Rect2()
+
+
+func item_bar_rect() -> Rect2:
+	return _bar_button.get_global_rect() if open and _bar_button.is_visible_in_tree() else Rect2()

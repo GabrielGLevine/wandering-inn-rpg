@@ -16,7 +16,8 @@ archived, or superseded session blocks.
   new frontend tests and this handoff. No core/data/save/QA edits here.
   **Next:** finish token-bound Use/bar controls, shared first-harm warning and
   immediate captured in-panel/feed receipts; compile and run focused UI tests.
-  The current UI binding checkpoint is untested. Root owns composed broad gates,
+  The focused production-control regression passes; browser/combat proof remains.
+  Root owns composed broad gates,
   window/browser proof and publication. No partial activation/deployment.
 - **#568 dependency:** resource_plan owns core items/game/save transactions,
   simulation, item/rule/vendor data, lint and focused core tests in its isolated

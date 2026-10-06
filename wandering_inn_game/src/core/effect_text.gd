@@ -52,12 +52,12 @@ static func item_use_refusal(reason: String) -> String:
 		"cancelled": return "Cancelled. Nothing used."
 		"stale_operation", "invalid_operation": return "The item or your condition changed. Select Use again."
 		"no_ap", "insufficient_ap": return "Not enough AP."
-		"no_stock", "not_owned": return "None left."
+		"missing_stock": return "None left."
 		"no_mp", "no_mp_pool": return "You have no MP pool to restore."
 		"no_benefit", "full_resources": return "No recovery or preparation to gain."
-		"world_lethal", "lethal": return "That dose would leave you with no HP. You cannot drink it here."
-		"wrong_turn", "not_player_turn": return "Wait for your turn."
-		"food_in_combat": return "Eat this outside combat."
+		"lethal_world_poison": return "That dose would leave you with no HP. You cannot drink it here."
+		"wrong_actor": return "Wait for your turn."
+		"not_combat_usable": return "Eat this outside combat."
 	return "Cannot use this item now."
 
 
@@ -96,14 +96,11 @@ static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> A
 			else:
 				lines.append("Grants %s in combat" % ability_display)
 	var use_effect: Dictionary = item.get(WIKeys.USE_EFFECT, {})
-	if use_effect.has("heal"):
-		# GH#334 note 28 item 2: "in combat" is not decoration. `WIItems.
-		# _resolve_heal_use` refuses outright when `combat == null`, and the
-		# inventory panel silently repurposes confirm into a hotbar toggle for
-		# exactly these items -- so an unqualified "Heals 8 HP" was the card
-		# promising something the only reachable out-of-combat press cannot do.
-		# The `next_fight` branch three lines down already models the idiom.
-		lines.append("Heals %d HP in combat (single use)" % int(use_effect["heal"]))
+	if use_effect.has("restore_hp"):
+		lines.append("Restores up to %d HP (single use)" % int(use_effect["restore_hp"]))
+	if use_effect.has("restore_mp"):
+		lines.append("Restores up to %d MP (single use)" % int(use_effect["restore_mp"]))
+		lines.append("Repeated doses risk mana poisoning until sleep")
 	if use_effect.has("next_fight"):
 		var nf_bits := next_fight_bits(use_effect["next_fight"] as Dictionary)
 		if not nf_bits.is_empty():
