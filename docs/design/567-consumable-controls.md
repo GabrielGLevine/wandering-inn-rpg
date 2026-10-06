@@ -52,3 +52,23 @@ is discoverable in group `wi_item_use_presenter`. Render events preserve frozen
 core fields plus `text`/`surface`; previews add `generation`. Warning arming emits
 `UI_ITEM_USE_WARNING_ARMED` only after release and the reading guard. These native
 control tests do not establish the final combat feed fit or responsive touch path.
+
+
+Review corrections retain the current operation for 300ms after its first actual
+receipt render and until input is released. The live-button regression taps again
+within 30ms plus three frames with three MP doses, checks one consumption, then
+checks a deliberate later press. Keyboard Use on a refused no-benefit offer leaves
+bar placement enabled. Both regressions exercise current control bindings.
+
+Combat receipt proof now requires visible complete text after HUD refresh. A hidden
+mobile desktop feed, or a clipped receipt, cannot suppress the shared visible
+receipt panel; its actual Close button is exposed by `item_receipt_close_rect()`.
+A production CombatScreen/HUD unit forces the touch-layout branch and checks the
+visible fallback, captured text, close and rearm. The mobile rail uses item-specific
+HP/MP recovery, AP, dose and poisoning copy instead of the Dash instruction. Native
+injected-layout checks do not replace the controller's browser/touch proof.
+
+Food/service core91bdac25 is composed. Item cards omit zero restoration fields and
+reserve mana-poisoning warnings for declared MP potions. Exact hot/fine/signature/
+seared-food lines and potion warnings pass the exhaustive effect-text contract.
+The four affected focused units pass without noise on the composed corrections.

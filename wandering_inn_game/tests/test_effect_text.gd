@@ -51,7 +51,7 @@ const EXPECTED_ITEMS := {
 	# GH#380/#383 yields: both priceless (never merchandise), so only the
 	# next_fight clause composes.
 	"improvised_cudgel": ["Next fight: +1 damage (single use)"],
-	"seared_venison": ["Next fight: +2 HP (single use)"],
+	"seared_venison": ["Restores up to 6 HP (single use)", "Next fight: +2 HP (single use)"],
 	"parcel_plains_wool": [],
 	"parcel_that_ticks": [],
 	"parcel_watch_dispatch": [],
@@ -62,7 +62,7 @@ const EXPECTED_ITEMS := {
 	"parcel_tactics_brief": [],
 	"parcel_sealed_letter": [],
 	"parcel_seed_grain": [],
-	"hot_meal": [],
+	"hot_meal": ["Restores up to 6 HP (single use)"],
 	"flarepepper_powder": ["Next fight: +1 damage (single use)", "Worth 6 gold"],
 	"cups_debt_chit": [],
 	"renns_warhammer": [],
@@ -87,8 +87,8 @@ const EXPECTED_ITEMS := {
 	# 2026-08-02 (GH#334 ruling 7): both lost their `price` key -- a meal is
 	# served or eaten, never merchandise (hot_meal's precedent) -- so the
 	# generated "Worth N gold" row is gone with it.
-	"fine_meal": ["Next fight: +2 HP (single use)"],
-	"signature_meal": ["Next fight: +1 damage, +2 HP (single use)"],
+	"fine_meal": ["Restores up to 8 HP (single use)", "Restores up to 4 MP (single use)", "Next fight: +2 HP (single use)"],
+	"signature_meal": ["Restores up to 10 HP (single use)", "Restores up to 6 MP (single use)", "Next fight: +1 damage, +2 HP (single use)"],
 	"tempering_oil": ["Next fight: +1 damage (single use)", "Worth 12 gold"],
 	"crude_draught": ["Next fight: +1 HP (single use)", "Worth 4 gold"],
 	"solvent_phial": ["Worth 6 gold"],

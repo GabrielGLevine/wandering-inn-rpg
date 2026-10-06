@@ -9,19 +9,20 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **#567 consumable frontend checkpoint:** `issue/567-consumable-controls`,
-  isolated `/private/tmp/wi-567-consumable-ui`, review fixes `17e8eda1`, composed
-  core/catalog `206f36ac`, food/service `91bdac25`. capacity570 owns inventory/message layer, combat
-  screen/HUD, effect_text, new frontend tests and this handoff; no QA/core edits.
-  Inventory has quantity labels, separate Use/bar controls, captured operation
-  callbacks, first-harm Cancel/Confirm and immediate correlated receipts.
-  Focused frontend, effect-text, resource-HUD and combat-visual units and load
-  gate pass. Exact commands/hashes and rejected attempts are preserved under
-  `/private/tmp/wi-567-consumable-evidence`; no runtime smoke route exists.
-  **Next:** controller independent review, compose owned QA, run actual smoke/
-  integration tiers and new native/browser input paths; verify large-text phone
-  scroll correction and combat feed fit. Physical device proof remains open.
-  No partial activation/deployment. Finish food-copy focused checks, then release for controller integration.
+- **#567 consumable frontend:** `issue/567-consumable-controls`, isolated
+  `/private/tmp/wi-567-consumable-ui`. Review fixes `17e8eda1`; composed core
+  `206f36ac` and food/service `91bdac25`. UI worker owns inventory/message layer,
+  combat screen/HUD/mobile HUD, effect_text and focused tests; no QA/core edits.
+  Four review findings fixed: 300ms post-receipt burst guard, refused keyboard
+  Use preserves bar control, visible mobile receipt fallback, item-specific
+  mobile confirmation. Current-button timed burst and production touch-layout
+  CombatScreen/HUD regressions pass. Food cards omit zero recovery and food
+  poison warnings. Frontend/effect/resource-HUD/combat-visual units pass cleanly.
+  Evidence: `/private/tmp/wi-567-consumable-evidence/review-fixed-results.json`.
+  **Next:** independent review of settled commit, controller composition and
+  native/browser/full gates. Earlier load gate passed before review fixes;
+  do not treat old evidence as current. Physical device proof remains open.
+  No partial activation/deployment. Controller handles publication.
 - **#568 dependency:** resource_plan owns core items/game/save transactions,
   simulation, item/rule/vendor data, lint and focused core tests in its isolated
   tree. Schema12 counts and shared prepare/commit/cancel use APIs are validated
