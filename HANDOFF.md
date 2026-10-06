@@ -20,21 +20,21 @@ archived, or superseded session blocks.
   #568206f36ac and #56991bdac25 have bounded independent review. Frontend
   3bd7f529 fixes four input/mobile findings plus erroneous food-poisoning copy;
   focused units/load and independent re-review pass. No partial activation/deployment.
-- **Evidence:** a8a225df full65units/7toolgates pass; default147x100 balance
-  passes, competent147x100 completes with16report-only differences/orderPASS.
-  Full canonical261/276 passed; all15 failures now have focused passing repairs:
-  actualpaid/cot/walked recovery, stale text/event pins, message bounds. Re-run
-  full gates on final composed tree. Native52 root captures plus meal23 read.
-  Browser198a layout99/repeat28 pass both emulatedphones,34capturesread.
-- **Next:** final full gates and windowed recovery routes. Root owns
-  `/private/tmp/wi-567-hud-contract`. fc6e5970 fixes opening touch cancelling
-  potion warning; RED/GREEN and review pass. Clean export: poison67/repeat28
-  pass both emulated phones, 12captures read. Earlier layout99 each remains.
-  All15 canonical repairs reviewed; final full sweep pending.
-  resource_plan owns #512 `/private/tmp/wi-512-routes`, 87b71fd3: Rogue1365
-  reaches earned vault/report; worker965 boss wall. Long runs INVALID due
-  shutdown shader ERROR; capacity570 diagnoses `/private/tmp/wi-512-leak-probe`
-  afa0c0c0. No production shader fix. Native window lane available.
+- **Evidence:** c4b00465 full65units/7toolgates and canonical276/276 PASS,
+  no engine noise. Rested default147x100 balance passes; competent147x100
+  completes with16 report-only differences/orderPASS. Pure core unchanged.
+  Current phone combat133 and poison67 pass bothprofiles; all67combat/6poison
+  images read. fc6repeat28both/6images read; older198alayout99both remains.
+  Native52+meal23 prior captures read; current paid/cot15captures read/pass.
+- **Next:** finish native walked/message rotation and #512 earned journeys.
+  Root `/private/tmp/wi-567-hud-contract` head1c14ae3f. Window-only QA wait
+  corrections compose by tree identity;3b4b5f70 same16dfda2c tree. Both
+  affected headless subsets pass. `/private/tmp/wi-567-window-final` now
+ 2a113ff1 first-class queuewait45s replay; root native lane reserved.
+  resource_plan `/private/tmp/wi-512-routes`13c69eda proves actual58g gear
+  after mandatoryfees; warden retry pending. Worker965 boss wall remains.
+  Longruns INVALID shaderexitERROR; capacity570 `/private/tmp/wi-512-leak-probe`
+  has bare-engine serial reproduction; no productionfix/causality claim yet.
   Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence567/569/512
   under `/private/tmp/wi-*-evidence`. Preserve companionUID/privateoverlay.
   Two workers max. PR578/582/583 draft; no partial activation/deployment.
