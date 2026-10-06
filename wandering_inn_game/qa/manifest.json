@@ -8265,6 +8265,31 @@
      "night_phase"
     ]
    }
+  },
+  {
+   "script": "desktop_field_earned_overflow",
+   "seed": 9,
+   "fixture": "desktop_field_earned_start",
+   "tiers": [
+    "full"
+   ],
+   "note": "#567 desktop17-skill earned-state fixture: actual paging exposes every original slot, slot16 clicks dispatch Keen Eye, keyboard brackets reveal last/first selection, and Details stays visible. Native mouse emulation; inheritedkit is not acquisition/mobile proof.",
+   "surfaces": {
+    "maps": [
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "desktop_field_earned_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "keen_eye"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
   }
  ],
  "browser_scripts": [

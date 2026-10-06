@@ -1,0 +1,160 @@
+{
+  "_comment": "Desktop visual/input control from unchanged earned17-skill checkpoint; native emulated mouse, no mobile or fresh acquisition claim.",
+  "starts_at_title": true,
+  "fixture_save": "desktop_field_earned_start",
+  "steps": [
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_gate_rendered",
+      "timeout_sec": 30
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_rendered",
+      "timeout_sec": 30
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 1
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "game_loaded",
+      "timeout_sec": 30
+    },
+    {
+      "action": "wait_for_event",
+      "type": "world_ready",
+      "timeout_sec": 30
+    },
+    {
+      "action": "assert_event_logged",
+      "type": "ui_field_hotbar_rendered",
+      "payload_contains": {
+        "slots": 17,
+        "pages": 2
+      }
+    },
+    {
+      "action": "assert_field_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "desktop_earned_first_page"
+    },
+    {
+      "action": "touch_field_pages"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "qa_field_pages_read",
+      "timeout_sec": 20,
+      "payload_contains": {
+        "slots": 17,
+        "visible_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ]
+      }
+    },
+    {
+      "action": "screenshot",
+      "name": "desktop_earned_last_page"
+    },
+    {
+      "action": "touch_hotbar_slot",
+      "slot": 16
+    },
+    {
+      "action": "wait_for_event",
+      "type": "skill_used",
+      "timeout_sec": 20,
+      "payload_contains": {
+        "skill": "keen_eye",
+        "context": "exploration"
+      }
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_toast_rendered",
+      "timeout_sec": 20,
+      "payload_contains": {
+        "text": "[Keen Eye] \u2014 You read the room the way you'd read a stand of trees for game: what moved, what didn't, what's worth a second look. Nothing here needs tracking."
+      }
+    },
+    {
+      "action": "screenshot",
+      "name": "desktop_earned_skill16_used"
+    },
+    {
+      "action": "press",
+      "name": "slot_next"
+    },
+    {
+      "action": "press",
+      "name": "slot_prev"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_field_hotbar_selection_rendered",
+      "timeout_sec": 20,
+      "payload_contains": {
+        "index": 16,
+        "visible": true
+      }
+    },
+    {
+      "action": "assert_field_layout"
+    },
+    {
+      "action": "press",
+      "name": "slot_next"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_field_hotbar_selection_rendered",
+      "timeout_sec": 20,
+      "payload_contains": {
+        "index": 0,
+        "visible": true
+      }
+    },
+    {
+      "action": "assert_field_layout"
+    },
+    {
+      "action": "touch_field_details"
+    },
+    {
+      "action": "assert_field_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "desktop_earned_details"
+    }
+  ]
+}

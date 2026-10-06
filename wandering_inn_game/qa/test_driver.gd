@@ -12,6 +12,8 @@ const ACTION_KEYS := {
 	"cancel": KEY_ESCAPE,
 	"cycle": KEY_TAB,
 	"hotbar_prime": KEY_TAB,
+	"slot_prev": KEY_BRACKETLEFT,
+	"slot_next": KEY_BRACKETRIGHT,
 	"field_readout": KEY_H,
 	"journal": KEY_J,
 	"inventory": KEY_I,
