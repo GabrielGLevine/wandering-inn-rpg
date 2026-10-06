@@ -338,6 +338,13 @@
    "action": "assert_event_count",
    "type": "item_used",
    "count": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Restored 8 HP. HP 43/43   MP 0/0. 1 AP spent. 1 left."
+   }
   }
  ]
 }
