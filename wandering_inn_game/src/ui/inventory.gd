@@ -81,6 +81,7 @@ var _bar_button: Button
 var _use_preview: Label
 var _use_receipt: Label
 var _use_offer: Dictionary = {}
+var _use_offer_sim: Variant
 var _use_generation := 0
 var _use_action := 0
 var _receipt_data: Dictionary = {}
@@ -515,6 +516,8 @@ func _can_open() -> bool:
 
 
 func _open() -> void:
+	if _claiming_loot:
+		return
 	_claiming_loot = true
 	Game.sim.claim_pending_loot()
 	_claiming_loot = false
@@ -1053,7 +1056,7 @@ func _item_use_busy() -> bool:
 
 func _retire_use_offer() -> void:
 	if not _use_offer.is_empty() and not _item_use_busy():
-		Game.sim.cancel_item_use(int(_use_offer.get("operation_id", 0)))
+		_use_offer_sim.cancel_item_use(int(_use_offer.get("operation_id", 0)))
 	_use_offer.clear()
 
 
@@ -1079,6 +1082,7 @@ func _render_use_actions() -> void:
 	_use_receipt.visible = not _receipt_data.is_empty()
 	if not usable:
 		return
+	_use_offer_sim = Game.sim
 	_use_offer = Game.sim.prepare_item_use(id, "world").duplicate(true)
 	_use_preview.text = WIEffectText.item_use_text(_use_offer)
 	_use_button.disabled = not bool(_use_offer.get("allowed", false))
