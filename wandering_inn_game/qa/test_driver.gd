@@ -881,7 +881,7 @@ func _execute(step: Dictionary) -> void:
 		"assert_message_layout":
 			await _assert_message_layout(String(step.get("kind", "dialogue")))
 		"assert_dialogue_layout":
-			await _assert_dialogue_layout()
+			await _assert_dialogue_layout(step)
 		"assert_dialogue_displayed":
 			await _assert_dialogue_displayed(step)
 		"assert_field_layout":
@@ -1573,7 +1573,7 @@ func _resize_browser(step: Dictionary) -> void:
 	_fail("resize_browser: viewport request was not acknowledged")
 
 
-func _assert_dialogue_layout() -> void:
+func _assert_dialogue_layout(step: Dictionary = {}) -> void:
 	await _settle_for_capture()
 	var panel := get_tree().root.find_child("DialoguePanel", true, false)
 	if panel == null or not bool(panel.get("_shown")):
@@ -1588,6 +1588,8 @@ func _assert_dialogue_layout() -> void:
 	if toast != null and toast.is_visible_in_tree() and toast.get_global_rect().intersects(bounds):
 		_fail("assert_dialogue_layout: toast overlaps conversation")
 	var body: Label = panel.get("_text_label")
+	if step.has("contains") and not body.text.contains(String(step["contains"])):
+		_fail("assert_dialogue_layout: rendered page does not contain requested text")
 	var font := body.get_theme_font("font")
 	var font_size := body.get_theme_font_size("font_size")
 	var text_height := font.get_multiline_string_size(body.text, HORIZONTAL_ALIGNMENT_LEFT, body.size.x, font_size).y
@@ -1606,7 +1608,7 @@ func _assert_dialogue_layout() -> void:
 		if visible_rect.intersects(body.get_global_rect()):
 			_fail("assert_dialogue_layout: option overlaps dialogue text")
 		var css := WIResponsiveLayout.css_rect(get_viewport(), rect)
-		if minf(css.size.x, css.size.y) + 0.01 < WIResponsiveLayout.MIN_TOUCH_CSS:
+		if WIResponsiveLayout.uses_touch_layout() and minf(css.size.x, css.size.y) + 0.01 < WIResponsiveLayout.MIN_TOUCH_CSS:
 			_fail("assert_dialogue_layout: option is smaller than 44 CSS pixels")
 	ObservableBus.emit_domain_event("qa_dialogue_layout_measured", {"text_scale": WISettings.text_scale_label(), "font_css": css_font, "panel_height": bounds.size.y})
 
