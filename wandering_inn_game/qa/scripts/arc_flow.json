@@ -80,7 +80,7 @@
    }
   },
   {
-   "_comment": "v0.16.1 finding 25: the pointer's GUARANTEED read. The toast above is spoken UNDER the sleep veil (veil layer 30, toasts layer 12) and its hold expires around the time the black lifts, so sleep_veil now mirrors the beat as a veil line on the ACCOMPLISHMENT_RECORDED arm. This veil is the ONLY one in the whole game that fires under `watch_runner_pointed`, and it is otherwise line-less: `lines` 0 -> 1 IS the new line, measured on this seed (arc_flow's other two veils are the pinned 4-line and 0-line ones far below, so the count is unambiguous here). Without this pin the only guaranteed-read line in the arc had no canonical proof at all.",
+   "_comment": "The initial pointer sleep renders one line. The added recovery sleep comes later, so this exact assertion still isolates the guaranteed pointer read.",
    "action": "assert_event_logged",
    "type": "ui_sleep_veil_rendered",
    "payload_contains": {
@@ -322,7 +322,8 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "node": "cisterns"
+    "speaker": "Olesm",
+    "text": "The cisterns are off my ledger and onto the Council's, thanks to you. Quiet streets. I could get used to it."
    },
    "timeout_sec": 5
   },
@@ -531,6 +532,11 @@
    ]
   },
   {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 14
+  },
+  {
    "action": "dump_state",
    "label": "scout_carried_depletion_before_walked_retreat"
   },
@@ -691,6 +697,11 @@
    ]
   },
   {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 8
+  },
+  {
    "action": "dump_state",
    "label": "retreat_live_road_ambush_resolved"
   },
@@ -813,8 +824,60 @@
    "type": "ui_recovery_rendered",
    "timeout_sec": 60,
    "payload_contains": {
-    "reason": "sleep"
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 8,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 0,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 51,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 0,
+     "mp_potion_doses": 0
+    }
    }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 51
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.max_hp",
+   "equals": 51
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 9,
+    "diplomat": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "day"
+  },
+  {
+   "action": "assert_event_count",
+   "type": "class_level_up",
+   "payload_contains": {
+    "class": "diplomat",
+    "level": 2
+   },
+   "count": 1
   },
   {
    "action": "dump_state",
@@ -1571,13 +1634,31 @@
    }
   },
   {
-   "_comment": "THE SEAL'S LIGHT TRANSITION rides this sleep: 4 veil lines, re-derived from the run's own events.jsonl -- Warrior 10, Warrior 11, Diplomat 2, and the GDI's seal beat. #441 re-derivation (2026-08-12): this pin was 7 when near_act3 started at Warrior 5 and the arc's banked counters walked it 6->7->8 here. The re-fixture starts at Warrior 9 + Diplomat 1 (Act III band top) with the melee_hit ledger that level honestly requires, so the same arc's banking now spends its rungs at 10 and 11 instead. A build-dependent count, re-derived from the run, not a contract that moved.",
+   "_comment": "The walked recovery bed already earned Diplomat 2. This first post-seal sleep renders exactly Warrior 10, Warrior 11 and the seal line; preserve the once-only empty veil on the next sleep.",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "lines": 4
+    "lines": 3
    }
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 11,
+    "diplomat": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 53
   },
   {
    "_comment": "THE BANK, at the sleep and not before.",
@@ -1635,6 +1716,19 @@
    "timeout_sec": 5,
    "payload_contains": {
     "lines": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 11,
+    "diplomat": 2
    }
   },
   {
