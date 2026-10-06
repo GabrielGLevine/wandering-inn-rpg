@@ -283,3 +283,20 @@ The route remains diagnostic pending lifecycle repair. Next bounded portfolio:
 existing heirloom/name quests, then required Pallass costs and final descent;
 no indefinite sidequest or repeat-income loop. The58g gear purchase claim still
 requires actual funding and input proof.
+
+## Bounded one-time portfolio and continued Rogue utility
+
+Rogue2659 completes the two linked existing local commissions. The heirloom
+truth arm pays25 (26→51); the name investigation uses held Appraise Foe,
+then the held Stealth dialogue arm takes the block and the actual steward pays
+30 (51→81). Walking between their real rooms replaces the old fixture QA's
+teleports. No sleep or repeat income occurs. During the enchanter visit, actual
+Pick Lock opens the work-room with matching Skill/bank/rendered receipt and
+the finished-work case yields the mundane True Gauge. The gauge stays held.
+This is acquired Rogue utility alongside the prior Find Trap and live bypasses.
+
+The portfolio stops here.81gold funds remaining required travel plus the
+scoped gear purchases once the normal single board payment and sale land;
+no more sidequest expansion is planned. Current48/51HP,0/16MP still reflects
+the alley mistake. rogue-portfolio-current/rogue-name1.log records exit0 and
+PASS2659, but the shader leak now reports3RIDs. The gate remains invalid.

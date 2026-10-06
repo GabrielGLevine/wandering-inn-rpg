@@ -30,8 +30,10 @@ archived, or superseded session blocks.
   held Charming Smile free consult,3 required sleeps;51HP/16MP,Mage8.
   Rogue2444 reaches paid courier:26g,48/51HP,0/16MP. Real18g travel,
  2g field wage,2g rumors; live Stealth twice then missed return reactivation
-  retained as ambush victory. No repeat earnings. Next bounded heirloom/name
-  portfolio, required Pallass costs/finale;58g gear set still unproven.
+  retained as ambush victory. Rogue2659 completes bounded heirloom25g/name30g
+  portfolio→81g; actual Pick Lock room acquisition + Stealth block arm.
+  Stop optional expansion. Next required Pallass costs/58g gear/finale;
+ 3RID shutdown ERROR persists, route assertions only.
   Evidence /private/tmp/wi-512-evidence/current; exact details in
   docs/design/512-continuous-journeys.md. Endings, force-crate variant,
   affordability and windows remain outstanding.
