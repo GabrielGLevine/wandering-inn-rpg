@@ -20,25 +20,25 @@ archived, or superseded session blocks.
   #568206f36ac and #56991bdac25 have bounded independent review. Frontend
   3bd7f529 fixes four input/mobile findings plus erroneous food-poisoning copy;
   focused units/load and independent re-review pass. No partial activation/deployment.
-- **Evidence:** c4b00465 full65units/7toolgates and canonical276/276 PASS,
-  no engine noise. Rested default147x100 balance passes; competent147x100
-  completes with16 report-only differences/orderPASS. Pure core unchanged.
-  Current phone combat133 and poison67 pass bothprofiles; all67combat/6poison
-  images read. fc6repeat28both/6images read; older198alayout99both remains.
-  Native52+meal23 prior captures read; current paid/cot15captures read/pass.
-- **Next:** integration14fa248d includes reviewed native QA corrections.
-  Native7614 force350/arc298/message48 PASS;24 images reviewed; composed
-  5-script subset PASS. Production src/data unchanged fromc4.
-  resource_plan `/private/tmp/wi-571-lifecycle-qa`76c37650:174-step abandon,
-  food-expiry/equip-noheal passes headless; native/review/composition pending.
-  Rogue `/private/tmp/wi-512-routes`43f7b8a0 reviewed:3464step ending/Inn,
-  8wins/3losses/18sleeps,146g−142g=4g; INVALID5shaderRID errors.
-  Worker965 wall; other profiles unrun. capacity570 diagnosis38deed19 reviewed;
-  bare serial repro3/3. Exact-engine build underway.
+- **Evidence:** c6eb280b full65units/7tools PASS; six affected native controls
+  pass individually. c4 canonical276PASS/rested balance remain baselines.
+  Native lifecycle174+7readcaptures closes receipt clipping. c6 browser
+  repeat28both/6images and2144 inventory55both/4images pass/read, seven real
+  touch contacts/profile each; keyboard startup, no device claim.
+  c4 combat133/poison67both remain; native force350/arc298/message48 reviewed.
+- **Next:** integration2144c984; publish browser review/checkpoint.
+  Lifecycle/receipt repair c6 reviewed; registered browserQA2144.
+  Failed native invocation of browser-only repeat and incomplete broad phone
+  lifecycle/title-touch attempts retained; no claims from those runs.
+  Rogue3464 ending/Inn and worker1302 finite armor/charm retries reviewed;
+  `/private/tmp/wi-512-routes`33dab52e. Worker still loses with boss10HP;
+  gold22−19=3. Longruns INVALID2–5shaderRID errors; other profiles unrun.
+  resource_plan reads worker tactics only. capacity570 c1d6895d rebuilding
+  exact engine with project loading enabled before tracing cache cleanup.
   Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence
   `/private/tmp/wi-*-evidence`. Preserve companionUID/privateoverlay.
-  Two workers max; resource_plan native lane. DraftPR578/582/583/574.
-  Final571 waits for earned/economic findings. No activation/deployment.
+  Two workers max; native lane free. DraftPR578/582/583/574. Final571 waits
+  for earned/economic findings; no activation/deployment.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
