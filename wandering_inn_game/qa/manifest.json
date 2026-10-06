@@ -8568,6 +8568,35 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "inventory_recovery_equipment_touch",
+   "seed": 9,
+   "fixture": "vitals_lifecycle_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "#571 mixed-input browser inventory: keyboard title/open, actual gear/Use touch. Fixture-owned depleted Mage/food/armor; repeated equip toggles do not heal and final-meal receipt remains readable after armor changes. No combat, acquisition, title-touch timing or device verdict.",
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "vitals_lifecycle_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
   }
  ]
 }

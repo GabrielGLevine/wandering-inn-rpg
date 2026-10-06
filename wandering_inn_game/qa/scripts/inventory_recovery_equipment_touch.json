@@ -1,5 +1,5 @@
 {
- "_comment": "Browser touch inventory recovery proof only. Disclosed lifecycle fixture supplies Mage1, depleted pools, gear and one Fine Meal. Actual touchscreen title/inventory/gear/Use controls prove repeated equipment toggles do not heal and a last-meal receipt stays readable after armor changes. No earned acquisition, combat rollback, or physical-device claim. Browser-only route, excluded from native canonical list.",
+ "_comment": "Browser inventory recovery proof only. Disclosed lifecycle fixture supplies Mage1, depleted pools, gear and one Fine Meal. Keyboard title/opening, then actual touchscreen gear/Use controls prove repeated equipment toggles do not heal and a last-meal receipt stays readable after armor changes. Mixed input; no earned acquisition, combat rollback, title-touch timing or physical-device claim. Browser-only route, excluded from native canonical list.",
  "fixture_save": "vitals_lifecycle_start",
  "starts_at_title": true,
  "steps": [
@@ -9,11 +9,8 @@
    "timeout_sec": 5
   },
   {
-   "action": "touch_screen",
-   "pos": [
-    640,
-    200
-   ]
+   "action": "press",
+   "name": "confirm"
   },
   {
    "action": "wait_for_event",
@@ -21,8 +18,13 @@
    "timeout_sec": 5
   },
   {
-   "action": "touch_title_row",
-   "row": 2
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
   },
   {
    "action": "wait_for_event",
@@ -45,8 +47,8 @@
    "equals": 4
   },
   {
-   "action": "touch_field_chip",
-   "chip": "inventory"
+   "action": "press",
+   "name": "inventory"
   },
   {
    "action": "wait_for_event",
