@@ -9,39 +9,30 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **#568 quantity checkpoint:** `issue/568-consumable-recovery`, isolated
+- **#568 core/catalog checkpoint:** `issue/568-consumable-recovery`, isolated
   `/private/tmp/wi-568-consumables`, base `8b5602ab` (capacity schema11 composed).
-  Owner: resource core worker; exact ownership is core items/game/save/inventory
-  transactions, combat simulation, item/rule/vendor data, lint, focused tests and
-  this handoff/design568. UI, effect_text and authored/generated QA are excluded.
-  Schema12 saves explicit food/potion counts beside ordered unique item IDs.
-  Legacy counts initialize once; modern malformed counts refuse before mutation.
-  Quantity, save, vitals-handoff and simulation units pass; evidence under
-  `/private/tmp/wi-568-evidence`. Inventory transactions preflight overflow and
-  ingredients, then publish events only after complete purchase/craft/sale state.
-  Shared recovery/tokenized use/poison and lossless pending loot are implemented;
-  focused recovery/reward and existing save/handoff/simulation/combat-policy
-  checks pass. The UI constants and frozen offer/result contract are ready.
-  **Next:** canon-checked MP potion vendor data; frontend composes the committed
-  API in its separate tree. Frozen frontend contract and remaining parts
-  are in `docs/design/568-consumable-recovery.md`. No broad gates/activation claim.
-  Preserve generated untracked companion-counter UID; do not publish it here.
+  Quantity checkpoint `d53bcc74`, shared-use/reward checkpoint `a8509a19`.
+  Owner resource core worker: core items/game/save/inventory transactions,
+  combat simulation, item/rule/vendor data, lint, focused tests and design568.
+  UI, effect_text and authored/generated QA remain separately owned.
+  Schema12 persists strict consumable counts and lossless pending loot.
+  Shared tokenized world/combat use settles AP/resources/stock/exposure once;
+  sleep and dialogue invalidate old intent even when pools return unchanged.
+  Non-registering `preview_item_use` supports multiple displayed item slots.
+  Generic Mana Potion restores6MP, costs10gold at Xif's existing stall (row4;
+  exit5). Actual shop confirmation is covered with declared unit setup.
+  Resonance refusal now describes attempted overflow accurately at partial use.
+  Focused quantity/reward/recovery/save/simulation/combat-policy/content tests
+  pass; exact evidence and failure history are in design568 and
+  `/private/tmp/wi-568-evidence`. No earned-travel/window/touch claim from units.
+  **Next:** frontend merges this committed API/catalog into its separate tree;
+  controller composes real-input QA and windows, then full required units,
+  canonicals and balance. No full gates or activation claim at this checkpoint.
+  Preserve untracked companion-counter UID; do not publish it here.
 
-
-- **Active #568 dependency:** `issue/568-consumable-recovery`, isolated tree
-  `/private/tmp/wi-568-consumables`. Base HUD/resource690f49f1 plus capacity
-  schema11/JSON-boundary60aebdaa; schema12 is reserved for quantities.
-  Owner resource_plan after controller dispatch: declared consumable catalog,
-  core inventory/save/transactions/preview/commit/poison and focused tests.
-  UI/combat presentation, effect_text and QA/generated files are separately owned.
-  **Next:** checkpoint strict saved quantities and atomic acquisition/removal,
-  then shared tokenized restorative use, poisoning and actual potion content.
-  No partial activated-resource deployment. Full composed gates follow UI/QA.
-  Read `/private/tmp/wi-568-prep.md` and `/private/tmp/wi-569-prep.md` for exact
-  producer/transaction traps and subsequent recovery-service requirements.
 - **Completed foundation checkpoints:** #56685af0621 (carry QA and max-HP copy),
   #567a9e839d3 (HUD), #57060aebdaa (capacity). Resource/HUD bounded reviews pass;
-  capacity JSON-boundary re-review pending. Resource headless routes pass;
+  capacity JSON-boundary independent re-review passes. Resource headless routes pass;
   fresh-start production-timing window passes at690f49f1, all4captures read.
   Evidence `/private/tmp/wi-566-resumed-evidence`, `/private/tmp/wi-567-evidence`,
   `/private/tmp/wi-570-evidence`. New-source integration gates remain mandatory.

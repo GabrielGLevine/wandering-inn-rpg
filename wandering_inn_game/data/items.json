@@ -1537,6 +1537,27 @@
       ],
       "description": "Flat running sandals, re-strapped more than once, the soles worn to the shape of somebody else's stride.",
       "lore": "A Runner who stopped running gave them up rather than sell them, on the theory that a road owes something to whoever takes it next. They are lighter on than they look in the hand."
+    },
+    {
+     "id": "mana_potion",
+     "stackable": true,
+     "consumable_family": "mp_potion",
+     "usable_in_combat": true,
+     "name": "Mana Potion",
+     "kind": "tool",
+     "weapon_family": "none",
+     "damage_mod": 0,
+     "hp_mod": 0,
+     "damage_reduction": 0,
+     "resonance": 0,
+     "tier": "mundane",
+     "abilities": [],
+     "price": 10,
+     "use_effect": {
+      "restore_mp": 6
+     },
+     "description": "A small, stoppered bottle of mana potion.",
+     "lore": "Kept beside the healing draughts, with a warning to count your doses. Another bottle cannot do everything a night's sleep can."
     }
   ]
 }
