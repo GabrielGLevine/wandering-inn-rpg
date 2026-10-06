@@ -36,14 +36,13 @@ archived, or superseded session blocks.
   engine leaks in bare reproduction; unmodified custom build/MRE/prefix798
   clean after import. Earlier cache-error controls invalidated. Build/config
   differences remain unexplained; no production replacement or active build.
-- **Next:** independently review/publish final journey/engine checkpoints.
-  Unchanged martial steel_thread fails at697 entering awakened fight; zero
-  engine noise. Inspect carried resources and actual retreat/bed route before
-  editing QA. Caster438 and imperfect/economic variants remain core work.
-  Final571 waits for accepted core/economic findings, not extra mobile checks.
-  Failed broad phone/title attempts retained and tracked in #585. Registry
-  `/private/tmp/wi-parallel-roadmap-status.json`; evidence `/private/tmp/wi-*-evidence`.
-  No active implementation workers/runtimes. Preserve companionUID/overlay.
+- **Active #512 martial:** resource_plan owns `/private/tmp/wi-512-martial`,
+  `issue/512-martial-recovery`, basef71d8e8c; steel_thread/docs only. Free-bed
+  detour after original661 preserves seed37/history. Before4/49HP,0/13MP,
+  twelve gold/six wins.185 ignored assets copied/hash checked, lint/import pass.
+  Next: fresh fail-fast2679 replay, pin settled maxima/boss result, load and
+  unaffected control; stop at rested wall/first downstream divergence. Root
+  owns native/integration. No mobile/tuning/extra tactics; retain companionUID.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
