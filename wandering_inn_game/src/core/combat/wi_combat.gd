@@ -682,6 +682,15 @@ func apply_damage(target_id: String, amount: int, source_id: String, melee: bool
 	_post_damage(target_id, source_id)
 
 
+func apply_unmitigated_loss(target_id: String, amount: int) -> void:
+	var target: Dictionary = combatants.get(target_id, {})
+	if finished or not bool(target.get(WIKeys.ALIVE, false)):
+		return
+	target[WIKeys.HP] = maxi(0, int(target[WIKeys.HP]) - maxi(0, amount))
+	# No attacker means no kill credit; down/end handling remains shared.
+	_post_damage(target_id, "")
+
+
 func _deduct_hp(target_id: String, amount: int) -> int:
 	var t: Dictionary = combatants[target_id]
 	if not t[WIKeys.ALIVE]:

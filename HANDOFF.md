@@ -19,8 +19,11 @@ archived, or superseded session blocks.
   Quantity, save, vitals-handoff and simulation units pass; evidence under
   `/private/tmp/wi-568-evidence`. Inventory transactions preflight overflow and
   ingredients, then publish events only after complete purchase/craft/sale state.
-  **Next:** shared pure preview and tokenized use/poison, followed by reachable
-  canon-checked MP potion data. Frozen frontend contract and unimplemented parts
+  Shared recovery/tokenized use/poison and lossless pending loot are implemented;
+  focused recovery/reward and existing save/handoff/simulation/combat-policy
+  checks pass. The UI constants and frozen offer/result contract are ready.
+  **Next:** canon-checked MP potion vendor data; frontend composes the committed
+  API in its separate tree. Frozen frontend contract and remaining parts
   are in `docs/design/568-consumable-recovery.md`. No broad gates/activation claim.
   Preserve generated untracked companion-counter UID; do not publish it here.
 

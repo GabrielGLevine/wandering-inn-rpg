@@ -4,6 +4,11 @@
 		"initial_capacity": 4,
 		"growth_amount": 1
 	},
+	"recovery": {
+		"safe_mp_doses": 3,
+		"poison_hp": 4,
+		"combat_ap_cost": 1
+	},
 	"challenge": {
 		"enabled": true,
 		"weight_gamma": 1.6,

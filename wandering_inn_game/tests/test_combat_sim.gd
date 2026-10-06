@@ -2234,9 +2234,9 @@ func _init() -> void:
 	pc119[WIKeys.HP] = int(pc119[WIKeys.MAX_HP])
 	var ap119_before_b := int(pc119[WIKeys.AP])
 	var result119b := WIItems.resolve_use(draught119, c119)
-	assert(bool(result119b.get("ok", false)), "a heal-shaped item still resolves at full HP")
-	assert(int(result119b.get("healed", -1)) == 0, "healed clamps to 0 at full HP")
-	assert(int(pc119[WIKeys.AP]) == ap119_before_b - 1, "AP is still spent even on a 0-heal use")
+	assert(not bool(result119b.get("ok", true)), "a full-HP potion refuses with no benefit")
+	assert(int(pc119[WIKeys.HP]) == int(pc119[WIKeys.MAX_HP]), "refusal preserves full HP")
+	assert(int(pc119[WIKeys.AP]) == ap119_before_b, "no-benefit refusal spends no AP")
 
 	pc119[WIKeys.AP] = 0
 	var hp119_before_refusal := int(pc119[WIKeys.HP])

@@ -37,6 +37,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"lore_notes": game.lore_notes.duplicate(),
 		"inventory": game.inventory.duplicate(),
 		"consumable_counts": game.consumable_counts.duplicate(),
+		"pending_loot": game.pending_loot.duplicate(true),
 		"equipped": game.equipped.duplicate(true),
 		"container_state": game.container_state.duplicate(true),
 		"actions_since_sleep": game.actions_since_sleep,
@@ -290,6 +291,10 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	if not WIItems.valid_counts(s["inventory"], counts, game._items):
 		return false
 
+	var pending: Variant = [] if legacy_counts else s.get("pending_loot")
+	if not WIItems.valid_pending_loot(pending, game._items):
+		return false
+
 	var player_cell: Array = s["player_cell"]
 	var player_facing: Array = s["player_facing"]
 	var removed_entities: Array = s["removed_entities"]
@@ -338,6 +343,9 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.lore_notes.assign(lore_notes)
 	game.inventory.clear()
 	game.inventory.assign(inventory)
+	game.pending_loot = []
+	for entry: Dictionary in pending:
+		game.pending_loot.append({"item": String(entry.item), "source": String(entry.source), "count": 1})
 	game.consumable_counts = {}
 	for id: String in counts:
 		game.consumable_counts[id] = int(counts[id])
