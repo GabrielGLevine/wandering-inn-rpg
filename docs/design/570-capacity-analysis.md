@@ -8,8 +8,8 @@ and the [recovery plan](2026-10-05-persistent-vitals-recovery-plan.md).
 Recommend **4 at creation, 5 after the existing once-only sleep growth** for
 the implementation candidate. Actual catalog combinations show a useful
 additional enchanted item at each boundary while retaining three accessory
-positions and a capacity refusal above five. This is a static equipment and
-acquisition analysis, not combat balance acceptance. No game values, item
+positions and a capacity refusal above five. The catalog analysis and the
+provisional diagnostic below are not combat balance acceptance. No game values, item
 costs, save rules, physical positions, UI or balance windows change here.
 The recommendation is ready for combat measurement; it does not establish
 that the larger capacity avoids auto-wins.
@@ -217,9 +217,93 @@ Remaining gates before #570 can close:
    batch, full canonical sweep and independent review after composition.
    Keep zero-exit, success-marker, noise-scan and QA `result.json` evidence.
 
-This analysis validates only catalog arithmetic, acquisition debits and
-source-grounded exposure. It performs no Godot source edits and introduces
-no alternative combat model. The shared harness has authored cells rather
-than a read-only arbitrary-loadout input, so new combat measurements require
-a separately owned harness change. Actual acquisition, runtime equip,
-combat outcomes, migration, sleep rendering and touch remain unproven.
+## Provisional combat diagnostic — quiesced checkpoint
+
+At the user's quiesce request, the new
+[`sim_capacity_570.gd`](../../wandering_inn_game/tests/sim_capacity_570.gd)
+had completed **34 cells × 100 seeds = 3,400 fights** on Godot
+`4.7.stable.official.5b4e0cb0f`. It preloads the authoritative batch script
+without instantiating its SceneTree and calls the existing static `_build_pc`.
+Resolution uses `WICombat`; both default (`dumb`) and `competent` policies
+come from `WICombatPolicies`. No combat formula or alternative builder is
+introduced. Source game data is unchanged from the analysis snapshot;
+the experiment started at branch head `7e01a08b0eec6171fc5fac525a87c18a9b5251c2`.
+
+Four existing batch cells are read directly from its constants:
+
+| Global batch index | Cell / build | Fixed gear and party |
+|---:|---|---|
+| 115 | `counting_room_guard_t3_warrior10_solo` / `t3_warrior10` | Warrior 10; hunting knife, leather jerkin; solo |
+| 86 | `briar_arch_wards_mage11_solo` / `p5_mage11_caster` | Mage 11, caster AI; hunting knife, leather jerkin; solo |
+| 125 | `side_vault_construct_t5_infiltrator14_solo` / `infiltrator14` | Infiltrator 14; hunting knife, no armor; solo |
+| 67 | `mage3_necromancer3_goblin_ambush_with_skeleton` / `mage3_necromancer3_caster` | Mage 3 / Necromancer 3, caster AI; no weapon/armor; Skeleton ally |
+
+Within each source cell, enemy records, arena, classes, weapon/armor and
+party stay fixed. Seeds are 1–100, difficulty multiplier 1.0, no consumables
+or preparation. Entry HP/MP is full under the current engine. Only accessory
+selection changes. The unarmed companion build receives an explicit empty
+weapon ID for variants to enable the existing builder's accessory fold;
+its control retains the exact source build. These are counterfactual loadouts,
+not proof that the classes can earn and afford those items at these fights.
+
+Each result is **wins out of 100 / upper-median rounds / upper-median PC
+end HP / upper-median PC end MP** across all runs, including losses. Control
+means the unchanged source build; row letters refer to the earlier catalog
+table. The JSON also preserves each seed's outcome and PC `skill_resolved`
+event counts, aggregate Skill counts, source/effective builds, source hashes,
+rounds histogram and ally downs. Event counts describe exercised policy actions.
+
+| Source index | Accessories | Default policy | Competent policy |
+|---:|---|---|---|
+| 115 | control | 38 / 4 / 0 / 0 | 53 / 4 / 2 / 0 |
+| 115 | A | 38 / 4 / 0 / 0 | 53 / 4 / 2 / 0 |
+| 115 | B | 65 / 4 / 4 / 0 | 69 / 4 / 9 / 0 |
+| 115 | E | 68 / 4 / 5 / 0 | 70 / 4 / 9 / 0 |
+| 115 | F | 76 / 4 / 8 / 0 | 77 / 4 / 15 / 0 |
+| 115 | G | 80 / 4 / 10 / 0 | 82 / 4 / 17 / 0 |
+| 86 | control | 38 / 4 / 0 / 0 | 9 / 5 / 0 / 0 |
+| 86 | A | 38 / 4 / 0 / 0 | 9 / 5 / 0 / 0 |
+| 86 | B | 66 / 4 / 10 / 0 | 60 / 5 / 7 / 0 |
+| 86 | C | 49 / 4 / 0 / 0 | 40 / 5 / 0 / 0 |
+| 86 | D | 61 / 4 / 4 / 0 | 47 / 5 / 0 / 0 |
+| 125 | control | 61 / 3 / 5 / 0 | 73 / 3 / 12 / 0 |
+| 125 | C | 76 / 3 / 15 / 0 | 86 / 3 / 17 / 0 |
+| 125 | D | 89 / 3 / 19 / 0 | 96 / 3 / 21 / 0 |
+| 67 | control | 62 / 4 / 19 / 0 | 46 / 4 / 0 / 0 |
+| 67 | A | 67 / 4 / 20 / 0 | 54 / 4 / 5 / 0 |
+| 67 | B | 86 / 4 / 33 / 0 | 73 / 5 / 21 / 0 |
+
+No sampled cell won all 100 seeds. That does not establish a no-auto-win
+guarantee. Infiltrator D's 96/100 competent result is a balance risk for
+follow-up, not permission to widen a band. Mage policy outcomes differ:
+caster default AI also casts spells, so “default” must not be described as
+universally basic-attacks-only. Capacity does not repair every policy/build
+weakness; the Mage D result is still 47/100 under competent policy.
+
+**Validation is incomplete.** Import completed with zero exit and no error
+or warning noise. After correcting an initial parse error in script-resource
+inspection, the diagnostic completed with zero exit, its expected PASS marker
+and no `SCRIPT ERROR|Parse Error|ERROR:|WARNING`. The two index-115 controls
+were then run through the unchanged authoritative batch. Both policies match
+win rate, median/min/max rounds and the complete rounds histogram exactly.
+The comparison wrapper stopped because it expected the default PASS marker
+from the competent report-only run; that engine run exited zero with its
+actual `[policy-sweep] policy=competent complete` marker. The remaining six
+controls were not started. Public fallback-art informational lines are
+present; this is not a private-overlay or visual run.
+
+Resume with existing diagnostic artifacts, correct the comparison's
+policy-specific completion marker, and check indices 86, 125 and 67 under
+both policies before treating those cells as calibrated. Then run load_gate,
+the smoke tier, affected combat-policy units and independent review. These
+checks were not started because the user requested quiescence. No thresholds
+or pins were changed. Actual acquisition, runtime equip/refusal, persistent
+resource interaction, migration, sleep rendering and touch remain unproven.
+
+Reproducer (choose an evidence directory outside the project):
+
+```sh
+godot --headless --path wandering_inn_game --script res://tests/sim_capacity_570.gd -- --report=/tmp/capacity_570.json
+WI_CELL_RANGE=115:115 WI_POLICY=dumb godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
+WI_CELL_RANGE=115:115 WI_POLICY=competent godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
+```
