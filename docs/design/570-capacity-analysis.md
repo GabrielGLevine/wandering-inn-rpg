@@ -294,8 +294,14 @@ existing companion test's missing-UID warning was rejected and rerun cleanly
 after Godot recreated that local UID. This is a public-checkout numerical
 run, not a private-overlay or visual run.
 
-The load gate, smoke tier, affected combat-policy units and independent
-review remain next at this checkpoint. No thresholds or pins were changed.
+The smoke tier passed all 15 canonicals, including `load_gate`, with zero
+exit, the suite's all-green marker, no error/warning matches and valid
+passing `result.json` files. The affected `test_combat_policies.gd` suite
+also passed with zero exit, its expected PASS marker and no error/warning
+noise. These gates ran at `0cd72ddb9406d6e5dfeceff0868d312e0bf5acea`, tree
+`f6bfbe8e7be1f5a6b82dc0826b48de127fa8435a`; only documentation changed after
+calibration. Independent review remains before publication acceptance.
+No thresholds or pins were changed.
 Actual acquisition, runtime equip/refusal, persistent
 resource interaction, migration, sleep rendering and touch remain unproven.
 

@@ -18,9 +18,10 @@ archived, or superseded session blocks.
   Evidence: `/private/tmp/wi-570-evidence/composed/combat-checks.json` and
   `capacity_570.json`; clean import/diagnostic logs alongside. Import recreated
   an existing untracked `tests/test_companion_counter.gd.uid`; keep it local.
-  **Next:** smoke tier (includes load_gate), combat-policy units and review.
-  Treat 4→5 as the
-  implementation candidate: Infiltrator/Hedault 96/100 is a balance risk,
+  Smoke (15 canonicals, including load_gate) and combat-policy units pass:
+  zero exits/no noise, QA results retained. **Next:** independent review,
+  then publish the diagnostic checkpoint. Treat 4→5 as the implementation
+  candidate: Infiltrator/Hedault 96/100 is a balance risk,
   not balance acceptance. Root owns subsequent core/save/UI implementation.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code pending its CI/merge. Original art checkout
