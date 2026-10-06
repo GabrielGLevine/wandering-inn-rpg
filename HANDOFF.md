@@ -9,8 +9,6 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **#569 QA:** `issue/569-recovery-qa`, base `de5bf08f`; QA-only lane.
-  Evidence/next: [meal recovery](docs/design/569-meal-recovery.md).
 - **User direction:** finish paused art-blocked roadmap work; checkpoint often.
   Art577 merged0bbd96aa with reviewed/squash tree identity. Original art tree
   remains untouched. Web parity may be waived when a merge bottleneck; record
@@ -22,23 +20,23 @@ archived, or superseded session blocks.
   #568206f36ac and #56991bdac25 have bounded independent review. Frontend
   3bd7f529 fixes four input/mobile findings plus erroneous food-poisoning copy;
   focused units/load and independent re-review pass. No partial activation/deployment.
-- **Evidence:** native47 accepted images read. Vendor107-step production-timing
-  window route passes: real purchases, safe/harmful doses, cancel, final stock,
-  reload. Opaque warning panel fixes observed overlap; all7 captures read at
-  `/private/tmp/wi-567-evidence/window-vendor-opaque`. Explicit fixture money
-  and history, not earned acquisition. Browser378cbe19 large-text scroll failed;
-  corrected frontend needs rerun. Full65-suite preflight5b070257 failed four
-  gates, all corrected with focused passing checks; full rerun still pending.
-- **Next:** clean export then browser layout/repeat/use, combat recovery QA,
-  meal window routes, full gates on settled tree. Root owns integration/runtime
-  and #568 QA; #569 QA worker capacity570 owns `/private/tmp/wi-569-qa` at
-  de385c24 (service112-step pass, fresh/station drafts). resource_plan owns
-  #512 fresh journeys `/private/tmp/wi-512-routes`, extending earned Rogue and
-  worker routes beyond prefixes; no fixture/teleport/topup proofs.
-  Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence roots
-  `/private/tmp/wi-{566-resumed,567,568,569,570}-evidence`. Preserve companion
-  UID/private overlay and local node_modules/.gdignore. Two implementation
-  workers max. #568PR582/#569PR583 draft; frontend3bd7f529 reviewed/integrated.
+- **Evidence:** native49 accepted images read; vendor107/combat-item59 window
+  routes pass. Poison66 and carried-vitals140 headless pass normal defeat,
+  reload, stock, resource and sleep behavior. Export198a7711 clean; browser
+  layout99/repeat28 pass both phone profiles; all34images inspected (Android
+  layout independently). Repeated touch consumes one dose, later tap another.
+  Chromium emulation, not physical devices. `/private/tmp/wi-567-evidence`.
+- **Next:** full preflight/canonical/balance on composed2ea24b25; poison window
+  and browser combat. Earlier65-suite preflight failed four gates, corrected
+  with focused passes. Root owns integration/runtime/568QA. Meal c62b751c
+  composed: service112/fresh134/station92 and focused gates pass headless.
+  capacity570 owns `/private/tmp/wi-569-qa` sequential windows; root stays
+  headless meanwhile. resource_plan owns #512 fresh journeys atb7c1bcd3 plus
+  frontend; worker545/Rogue385 earned prefixes pass, regional retry after real
+  scout defeat underway. No fixtures/teleports/topups in these journeys.
+  Registry `/private/tmp/wi-parallel-roadmap-status.json`; preserve companion
+  UID/private overlay/node_modules/.gdignore. Two implementation workers max.
+  #568PR582/#569PR583/integrationPR578 draft; no partial activation/deployment.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
