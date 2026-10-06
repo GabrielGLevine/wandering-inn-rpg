@@ -9,32 +9,29 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Approved holistic art program #564:** root owns main workspace on
-  `issue/564-holistic-art-direction`, base `e1d2edee`. User approved the full
-  regional/layout/UI program on 2026-10-05. Inn/chrome, 37 complete rigs,
-  city/cross-street/vistas, icons/key art, Garden, camp, human PC and 52 prop
-  fallbacks are integrated. Riverfarm composition is integrated at `b12e0a75`:
-  25 affected canonical routes and five native routes pass; actual yard probe
-  verifies approaches, blockers, herd states and saved-player escapes.
-  Root owns terrain/creature catalogs and provenance. Complete terrain
-  bindings cover other regions and all arena layers; floodplains uses one
-  authored road/lowland Wang mask. Preflight, builder unit, hunt/camp 91-step,
-  city 277-step, UI kit and first-combat routes pass; arena shoulder-family
-  mismatch and duplicate descriptors found by static review are corrected.
-  Underground worker owns ruin/dungeon/sewers maps and affected QA in isolated
-  `/private/tmp/wi-art-underground` from `e4cb25c3`; root excludes those paths.
-  Logs/PNGs: `/private/tmp/wi-art-execution`; Riverfarm evidence:
-  `/private/tmp/wi-art-riverfarm-evidence`; terrain audit:
-  `/private/tmp/wi-art-terrain-audit`. Creature checkpoint `a77fcbc` is frozen,
-  unintegrated; four complete battlers and rejected candidates are documented
-  in `/private/tmp/wi-art-creature-evidence`. Other lanes are idle.
-  Optional steel seed9 loss predates art: baseline and city checkpoint have
-  identical 97 combat events, both fail at step 499. Comparison evidence:
-  `/private/tmp/wi-art-execution/steel-baseline-independent-review`.
-  **Exact next action:** compose ruin/underground; attach complete terrain
-  fallbacks, integrate creatures, then full gates/browser and independent
-  review/CI/PR closure. Preserve untracked companion UID. Physical devices and
-  production timing remain unproven. No release/deploy/outreach authorized.
+- **Approved holistic art program #564:** root owns the main workspace on
+  `issue/564-holistic-art-direction`, base `e1d2edee`. User approved full
+  execution on 2026-10-05. Inn/chrome, complete NPC rigs, city/cross-street/
+  vistas, icons/key art, Garden/camp, PC/prop fallbacks, Riverfarm and six
+  ruin/underground maps are integrated through `fac1c2b8`. All other lanes
+  are frozen/idle; root owns all further mutations and composed verification.
+  Four complete creature rigs: actual bat/razorbeak40, wolf1065, watchgolem98
+  routes pass; registry and unchanged combat legibility bounds pass. Terrain
+  descriptors preserve original inheritance; public survey48views and actual
+  barracks125/stationer104/creature40 routes pass. Static168-draw coverage and
+  independent public read pass with contrast polish applied. Underground
+  slice `363cd76a` independently approved:20clean gates,39canonicals,49native
+  captures,6655blocker comparisons and60sampled escape moves (no save/load
+  roundtrip). Root's dirty palette override fixes legacy roof tint; paired
+  dungeon brazier/mood flags and quieter razorbeak ground pass native127/40.
+  Evidence: `/private/tmp/wi-art-execution`, `/private/tmp/wi-art-underground-evidence`,
+  `/private/tmp/wi-art-riverfarm-evidence`, `/private/tmp/wi-art-creature-evidence`.
+  Optional steel seed9 loss predates art: baseline/city97combat events match,
+  both fail499; comparison in art-execution/steel-baseline-independent-review.
+  **Exact next action:** finish fresh public/overlay full-world art proof,
+  then settled full units/native sweep/balance/browser, independent exact-head
+  review, required CI and PR closure. Preserve untracked companion UID.
+  Physical devices and production timing remain unproven; no deployment.
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
   (standalone tree `5e8af12d`); QA/export source `93016f0b`.

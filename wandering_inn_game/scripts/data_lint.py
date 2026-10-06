@@ -846,6 +846,8 @@ def check_sprites(parsed: dict, errors: list) -> None:
 			continue
 		if not isinstance(entry, dict) or not entry.get("animations"):
 			errors.append(f"sprites.json: entry '{key}' missing non-empty animations")
+		elif "field_tint_override" in entry and not _numeric_vector(entry["field_tint_override"], 3, True):
+			errors.append(f"sprites.json: entry '{key}' field_tint_override needs three finite nonnegative channels")
 
 
 def check_sprite_fallbacks(parsed: dict, errors: list, bundle_paths: set | None = None) -> None:

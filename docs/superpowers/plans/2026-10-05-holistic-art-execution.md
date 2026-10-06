@@ -7,16 +7,16 @@ Direction: `docs/design/2026-10-05-holistic-art-review.md`. Program: #564.
 Base: current main `e1d2edee`, preserving merged M1 software. The older review
 captures remain comparative references, not current implementation evidence.
 
-Root owns the main workspace on `issue/564-holistic-art-direction`. The #554
-foundation worker owns `/private/tmp/wi-art-foundation`, registry/lint and
-their tests only. Catalogs, assets, maps, UI, provenance and generated indexes
-serialize under root; independent review does not mutate root's tree.
+Root owns the main workspace on `issue/564-holistic-art-direction` and all
+composed catalogs, assets, maps, UI, provenance and generated indexes. The
+foundation, chrome, sprite and regional lanes are integrated and frozen.
+Independent reviewers use isolated probes and retained artifacts.
 
 ## Implementation sequence
 
-- [ ] #554 whole-record fallback resolution and validation; root supplies the
+- [x] #554 whole-record fallback resolution and validation; root supplies the
   measured crate pilot and dual-build gameplay evidence after integration.
-- [ ] Inn pilot: measure and register hearth, bar/back shelf, kitchen and
+- [x] Inn pilot: measure and register hearth, bar/back shelf, kitchen and
   social-table candidates. Recompose within the current room first; inspect
   solids, approach cells and visitor windows before conditional enlargement.
   Preserve shipped interaction IDs and progression. Wire Selys's actual rig.
@@ -25,11 +25,11 @@ serialize under root; independent review does not mutate root's tree.
   Default field details collapse; selecting a skill exposes its description,
   and explicit details retain the full reference. Preserve saved preferences
   and world-clearance layout. Prove native and emulated phone routes.
-- [ ] Liscor market/civic rooms; Invrisil architectural square and cross-street
+- [x] Liscor market/civic rooms; Invrisil architectural square and cross-street
   loop with gate-preserving alley connection; Pallass terrace/lower-city depth.
-- [ ] Riverfarm working yards/ground, Garden pockets, camp clusters, ruin
+- [x] Riverfarm working yards/ground, Garden pockets, camp clusters, ruin
   structural landmark and differentiated underground spaces.
-- [ ] Curated props/fallback coverage, complete accepted NPC/enemy clips,
+- [x] Curated props/fallback coverage, complete accepted NPC/enemy clips,
   co-visible skill/item icon families, title and act art. Register provenance
   and expected frame counts; never bulk-accept a READY label without a read.
 - [ ] Composed-tree lint, preflight, appropriate native sweep/balance gates,
@@ -52,3 +52,9 @@ saved cells, door pairs and all crossing QA routes. Pins are changed only for
 observed intentional behavior, not to silence regressions. Each changed input
 or interaction proves actual trigger, domain event, rendered confirmation and
 state. Teleport look-dev is never substituted for traversal evidence.
+
+Implementation checkpoints: city/UI `f4fe17e0`/`53f447af`, Garden/camp/PC
+`266f8def`, Riverfarm `b12e0a75`, complete terrain `a9260572`, creatures and
+public assemblies `fcccc5a7`, underground `fac1c2b8`. Chrome's emulated browser
+proof and composed closure gates remain unchecked. Strong licensed primaries
+remain where new clips fail weapon/facing/death continuity; no quota wiring.
