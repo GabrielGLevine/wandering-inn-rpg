@@ -9,7 +9,7 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed at user request:** compose completed art PR #577 and finish this lane.
+- **Resumed at user request:** compose merged art PR #577 and finish this lane.
   Lane #512: `issue/512-route-recon` in `/private/tmp/wi-512-routes`;
   base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
   Owned paths: `HANDOFF.md`, `docs/design/512-route-reconnaissance.md`.
@@ -18,9 +18,10 @@ archived, or superseded session blocks.
   `/private/tmp/wi-512-independent-review.md`.
   **Exact next action:** author earned routes only after composed recovery/capacity is available. Independent source review approved this reconnaissance; issue remains open.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
-  is composed here as completed code pending its CI/merge. Original art checkout
+  is composed here as completed code squashed as `0bbd96aa`. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
-  included. Refresh main and verify squash tree identity after art lands.
+  included. Squash tree `0e843291` matches the reviewed source. Its Web CI waiver
+  was art-only; required CI remains mandatory for these lanes.
   Other checkpoints: #572 foundation, #573 capacity, #574 routes, #575 homecomings,
   #578 HUD contract and #579 encounter design. Serialize shared source/catalogs.
 - **#566 resource foundation:** staged in draft PR #572, isolated
