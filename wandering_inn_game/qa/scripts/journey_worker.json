@@ -7586,6 +7586,810 @@
   {
    "action": "screenshot",
    "name": "worker_11_finite_recovery_wall_rollback"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_comment": "One bounded tactical retry after the preserved1302-step/five-defeat history. Walk out/back to clear encounter grace; no rest, stock, gear, seed or tuning changes. Round2 held Flame Jet uses real hotbar/aim inputs; competent policy finishes. No outcome fishing."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump deep_fissure (8,12) -- a present entity blocks its cell, so this only turns us to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "door_when gate is MET (heard_the_deep_tremor banked at the gatehouse). NOTE: the door_when arm short-circuits BEFORE on_interact_accomplishment, so found_the_fissure never banks on this path -- pin the open_toast instead."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "The encounter carries a conversation (relc_descent), so the veto beat opens BEFORE combat."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "relc_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Row 0 = [Go together.]: banks relc_joined_descent (the boss's ally_requires) and starts the fight with Relc fielded. Our PC is a low warrior/mage -- the join is not optional at this level."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 50
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.round",
+   "equals": 1
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     2,
+     3
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     3,
+     3
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     4,
+     3
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "round_started",
+   "payload_contains": {
+    "round": 2
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_ai_playback_done",
+   "payload_contains": {},
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    4,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.cell",
+   "equals": [
+    5,
+    5
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.sewer_vermin.cell",
+   "equals": [
+    6,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.raskghar_scout.cell",
+   "equals": [
+    6,
+    5
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.raskghar_scout_2.cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_tactical_round2_before"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     4,
+     4
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     4,
+     5
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     4,
+     6
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "hotbar_4"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "skill": "flame_jet"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_aim_preview_rendered",
+   "payload_contains": {
+    "kind": "line",
+    "cells": [
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      6
+     ],
+     [
+      7,
+      6
+     ],
+     [
+      8,
+      6
+     ]
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "pc",
+    "skill": "flame_jet",
+    "target": "right",
+    "hit_ids": [
+     "raskghar_scout_2",
+     "sewer_vermin"
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_beat",
+   "payload_contains": {
+    "beat_type": "skill_resolved",
+    "actor": "pc",
+    "skill": "flame_jet",
+    "target": "right",
+    "hit_ids": [
+     "raskghar_scout_2",
+     "sewer_vermin"
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc",
+    "target": "raskghar_scout_2",
+    "damage": 10,
+    "target_hp": 24,
+    "hit": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_beat",
+   "payload_contains": {
+    "beat_type": "attack_resolved",
+    "attacker": "pc",
+    "target": "raskghar_scout_2",
+    "damage": 10,
+    "target_hp": 24,
+    "hit": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc",
+    "target": "sewer_vermin",
+    "damage": 11,
+    "target_hp": 2,
+    "hit": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_beat",
+   "payload_contains": {
+    "beat_type": "attack_resolved",
+    "attacker": "pc",
+    "target": "sewer_vermin",
+    "damage": 11,
+    "target_hp": 2,
+    "hit": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 11
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_tactical_flame_jet_result"
+  },
+  {
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dashed",
+   "payload_contains": {
+    "id": "pc",
+    "move_pool": 3
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     5,
+     6
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "hotbar_6"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "skill": "piercing_strikes"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "click",
+   "cell": [
+    6,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "pc",
+    "skill": "piercing_strikes",
+    "target": "raskghar_scout"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc",
+    "target": "raskghar_scout",
+    "damage": 18,
+    "target_hp": 16
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_beat",
+   "payload_contains": {
+    "beat_type": "attack_resolved",
+    "attacker": "pc",
+    "target": "raskghar_scout",
+    "damage": 18,
+    "target_hp": 16
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 11
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_tactical_manual_round2_complete"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_12_tactical_flame_jet"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false,
+    "rounds": 5
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.raskghar_awakened.hp",
+   "equals": 39
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_tactical_outcome"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_13_tactical_outcome"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 50
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.diplomat",
+   "equals": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.mage",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.armor",
+   "equals": "leather_jerkin"
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_1",
+   "equals": "hunters_fang_talisman"
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_2",
+   "equals": "traveler_charm"
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "hot_meal": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 7
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "surface": "field",
+    "after": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   },
+   "count": 6
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "count": 3
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_tactical_loss_rollback"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_tactical_loss_rollback"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_14_tactical_loss_rollback"
   }
  ]
 }

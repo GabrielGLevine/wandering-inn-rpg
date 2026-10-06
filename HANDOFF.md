@@ -26,9 +26,13 @@ archived, or superseded session blocks.
  exact rollback3gold/50HP15MP/1HotMeal, five defeats/three victories. Evidence
  worker-bounded-final-journey_worker + matchinglog under current evidence.
  load_gate2/combat_abandon54 clean; lint/derived/notes pass.
- **Next:** root composes current UI/renderer fix for clean replay/window.
- Tree released, no active process; no further attempts/farming/production/
- native changes. Preserve companion UID.
+ Tactical extension now authored1423 steps: preserve1302/five losses, actual
+ Flame Jet east + Dash/Piercing retry, then sixth loss/rollback. Diagnostic
+ suffix99 passes logically, boss39HP round5; OS certificate ERROR means no
+ clean evidence. Original1302 shader limits retained. Full fresh replay pending.
+ **Next:** run journey_worker seed9, load_gate and combat_abandon, preserve
+ artifacts/noise and checkpoint final outcome; then release. No more tactics,
+ production edits or mobile/native runs. Preserve companion UID.
 
 - **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
   Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.

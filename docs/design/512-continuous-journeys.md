@@ -466,3 +466,26 @@ are `worker-bounded-final-journey_worker`, `worker-bounded-final-load_gate` and
 No native read was run for this continuation. Root must compose the current UI
 and renderer-lifecycle fix before authoritative replay/window acceptance.
 No further retry, farming, gear purchase or ending extension was attempted.
+
+
+## One bounded tactical retry: authored, fresh replay pending
+
+The original1302 steps and five defeats remain unchanged. The appended attempt
+walks out of the Deep Tunnels and back to clear defeat grace. It spends no gold,
+adds no rest, changes no gear, and retains50HP/15MP, one Hot Meal and armed+2HP.
+Round1 deliberately repeats the prior walk/end-turn; round2 asserts the actual
+actor positions before changing tactics. Keyboard hotbar4/target-cycle/confirm
+casts held Flame Jet east from(4,6), with matching aim/domain/rendered events.
+Quick Cast costs1AP/4MP. Dash1AP, move(5,6), then hotbar6 and an actual mouse
+selection of scout1 spend2AP on Piercing Strikes. Competent autoplay finishes.
+
+A checkpoint-loaded diagnostic suffix exercised these controls once after a
+navigation-only correction (the sewer exit arrives at8,12, requiring one step
+up). It hit scout2 for10, vermin for11 (leaving2HP), and scout1 for18. Relc still
+died in round2; automatic Mana Shield spent10MP that round and the last1MP in
+round3. The attempt lost in round5 with boss39HP, worse than the retained10HP
+outcome. The fixed route pins that result without revising the tactic or seed.
+This is not yet continuous evidence: fresh1423-step replay is the next gate.
+Diagnostic99 passes/exit0 but OS certificate ERROR invalidates a clean claim.
+Artifacts: `/private/tmp/wi-worker-tactical-probe-2[.log]`; probe1 preserves the
+pre-combat navigation failure. No mobile/native observation or victory claim.

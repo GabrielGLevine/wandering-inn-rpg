@@ -8014,7 +8014,7 @@
    "tiers": [
     "full"
    ],
-   "note": "Fresh worker/social history with retained losses: earned cooking and multiclass support, Fang purchase, free chest armor/rest, finite Watch3+4 and Traveler5; bounded retries retain measured Awakened boss wall. No fixtures/top-ups/farming or ending claim.",
+   "note": "Fresh worker/social history with retained losses: earned cooking and multiclass support, Fang purchase, free chest armor/rest, finite Watch3+4 and Traveler5; bounded retries retain measured Awakened boss wall, including one actual-input Flame Jet tactical loss. No fixtures/top-ups/farming or ending claim.",
    "surfaces": {
     "maps": [
      "deep_tunnels",
@@ -8030,6 +8030,8 @@
      "advanced_cooking",
      "basic_cleaning",
      "basic_cooking",
+     "flame_jet",
+     "piercing_strikes",
      "sneak"
     ],
     "dialogue": [
