@@ -44,8 +44,9 @@ Diagnostic teleports appear only in explicitly isolated map-cycle probes; they
 are not gameplay route evidence. Assets were copied from the private overlay
 into ignored paths; their hashes are preserved separately and are not tracked.
 
-Next isolate the earlier process history missing from the training-save replay,
-then reduce a reproducing resource lifecycle before proposing a reviewed fix.
+Next instrument the reduced engine case below to distinguish shader-cache
+accounting from key comparison/storage, then validate any engine correction
+against both this reduction and the unchanged long game routes.
 Godot debugging supplied the reproduce/isolate sequence; Godot testing supplied
 the small scene lifecycle harness. The alternative, changing renderer or
 ambient behavior to silence teardown, would discard the failure evidence.
@@ -54,3 +55,82 @@ Matching engine source confirms a shared particle shader cache whose user counts
 are adjusted on material updates/destruction; this motivates lifecycle tracing
 but does not prove the game or engine cause. Source: [Godot5b4e0cb0f particle
 material](https://github.com/godotengine/godot/blob/5b4e0cb0f/scene/resources/particle_process_material.cpp).
+
+
+## Main-thread engine reduction
+
+Official Godot `4.7.stable.5b4e0cb0f`, macOS ARM64. A bare project with only
+`config_version=5` and the compatibility renderer reproduces the headless
+DummyShader leak with this script:
+
+```gdscript
+extends SceneTree
+var material: ParticleProcessMaterial
+var COUNT := 2
+func _initialize() -> void:
+    _run.call_deferred()
+func _run() -> void:
+    OS.get_cmdline_user_args()
+    for iteration in COUNT:
+        material = ParticleProcessMaterial.new()
+        material.get_rid()
+        material = null
+    print("PARTICLE_SERIAL_COMPLETE")
+    quit()
+    return
+```
+
+The exact tab-indented script, bare project, complete logs, commands, and hashes
+are in `/private/tmp/wi-512-leak-evidence/serial-repro-bundle/`. Execute each case
+in a fresh process with an isolated HOME:
+
+```sh
+env HOME=/private/tmp/wi-512-leak-runtime-serial-bundle /usr/local/bin/godot --headless --path /private/tmp/wi-512-leak-evidence/serial-repro-bundle --script /private/tmp/wi-512-leak-evidence/serial-repro-bundle/repro.gd
+```
+
+| Script, otherwise identical | Trials | Completion / exit | Full stderr |
+|---|---:|---|---|
+| `repro.gd` | 3 | Marker / zero | DummyShader leak each time |
+| `control_without_args.gd`: omit argument read | 1 | Marker / zero | Clean |
+| `control_one_material.gd`: count1 | 1 | Marker / zero | Clean |
+| `control_without_rid.gd`: omit get_rid | 1 | Marker / zero | Clean |
+
+There are no nodes, scenes, assets, autoloads, game code, or threads in this
+reproduction. Empty user arguments also reproduce the earlier equivalent case.
+The argument-read sensitivity suggests an allocation-sensitive engine defect;
+it does not establish that the argument API itself is faulty. This bare
+reduction has not been run natively; the unchanged full worker route supplied
+the independent native particle-shader failure above.
+
+A weak-reference observer on the full798-step prefix retained the leak while
+reporting all52 particle nodes and all52 process materials freed before exit.
+Replaying their exact creation/free order, frame spacing, and phase gating in
+isolation remained clean. A more intrusive per-frame observer also made one
+full prefix run clean, so instrumentation can perturb this failure. Node
+ownership is not supported as the cause by these observations.
+
+The exact engine's `MaterialKey` constructor clears its whole storage. Its
+hash and equality inspect the whole structure, including unused bits, and
+`_compute_key` returns a locally initialized key. Source alone therefore does
+not demonstrate uninitialized padding. The cache decrements users during
+updates/destruction and frees at zero. Compiler handling of key storage/copies
+and cache accounting remain hypotheses requiring direct instrumentation.
+[Exact header](https://github.com/godotengine/godot/blob/5b4e0cb0f/scene/resources/particle_process_material.h)
+and [implementation](https://github.com/godotengine/godot/blob/5b4e0cb0f/scene/resources/particle_process_material.cpp).
+
+An earlier same-resource parallel get_rid experiment is not evidence of a game
+race: lazy material mutation makes that concurrent API use an invalid control,
+and the serial reduction needs no threads. Strict Variant-inference parse
+failures in early weak-reference scripts are preserved under
+`rejected-weakref-typing/`; they are not clean controls. The earlier
+`trace798-framed.log` typing failure is likewise rejected; its corrected
+`trace798-framed2.log` reproduces the leak.
+
+No production workaround is justified yet. Eager get_rid already occurs in the
+failing reduction. Manually freeing a Resource-owned RID risks invalidating its
+owner; retaining resources merely postpones lifecycle work. Keep particle
+quality and strict stderr gates intact. The preferred path is an instrumented
+engine correction or independently verified engine version, followed by the
+minimal red/control cases, repeated unchanged worker/rogue routes, and native
+visual checks. No engine upgrade, external report, or waiver is authorized by
+this diagnostic checkpoint.

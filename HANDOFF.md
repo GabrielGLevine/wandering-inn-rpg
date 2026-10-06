@@ -13,8 +13,9 @@ archived, or superseded session blocks.
   isolated `/private/tmp/wi-512-leak-probe`; no production changes.
   [Evidence/next](docs/design/512-particle-leak-diagnostic.md). Native worker965
   also leaks a particle shader; prefix792 clean,798 noisy at second deep entry.
-  Fresh checkpoint/history reductions clean; cause not yet proven. Root owns
-  integration; resource worker retains separate journey ownership.
+  Bare two-material serial repro leaks3/3; matched controls clean. All52 game
+  particle materials freed; engine mechanism unresolved. Next instrument key/
+  cache accounting; no production workaround. Root owns integration.
 
 - **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
   Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.
