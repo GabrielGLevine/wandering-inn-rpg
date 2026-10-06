@@ -989,7 +989,9 @@ func _usable_combat_items() -> Array:
 		var id := String(raw_id)
 		var rec: Dictionary = Game.sim.item(id)
 		if (rec.get("use_effect", {}) as Dictionary).has("heal"):
-			out.append(rec)
+			var counted := rec.duplicate(true)
+			counted["count"] = Game.sim.item_count(id)
+			out.append(counted)
 	return out
 
 

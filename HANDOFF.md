@@ -13,8 +13,9 @@ archived, or superseded session blocks.
   `/private/tmp/wi-567-consumable-ui`, based on quantity checkpointd53bcc74.
   capacity570 owns UI inventory/message layer, combat screen/HUD, effect_text,
   new frontend tests and this handoff. No core/data/save/QA edits here.
-  **Next:** implement visible quantities and separate Use/bar actions; bind
-  displayed operation tokens, one shared warning and captured rendered result.
+  **Next:** quantity labels/payloads are staged in inventory and combat slots;
+  wire separate Use/bar actions, displayed operation tokens, shared warning
+  and immediate captured in-panel/feed receipts after the core API checkpoint.
   Quantity APIs exist; shared-use API contract is in the568design but awaits
   resource_plan's validated checkpoint. Merge that core checkpoint before
   claiming API compilation/runtime proof; preserve any core review corrections.

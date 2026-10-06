@@ -14,6 +14,11 @@ const _STATUS_VERB := {
 }
 
 
+static func counted_item_name(item: Dictionary, count: int) -> String:
+	var label := String(item.get("name", item.get("id", "")))
+	return "%s ×%d" % [label, count] if WIItems.stackable(item) else label
+
+
 static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> Array[String]:
 	var lines: Array[String] = []
 	var damage_mod := int(item.get(WIKeys.DAMAGE_MOD, 0))

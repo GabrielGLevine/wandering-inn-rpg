@@ -401,7 +401,8 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usab
 			continue
 		var rec: Dictionary = usable_by_id[item_id]
 		slots.append({
-			"type": "item", "id": item_id, "label": String(rec.get("name", item_id)),
+			"type": "item", "id": item_id, "label": WIEffectText.counted_item_name(rec, int(rec.get("count", 1))),
+			"count": int(rec.get("count", 1)),
 			"icon": String(rec.get("icon", "")), "key_hint": str(number),
 			"description": String(rec.get("description", "")),
 			"use_effect": rec.get("use_effect", {}),

@@ -373,6 +373,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		return
 	if type == WIEvents.RESOURCES_CHANGED:
 		_refresh_resources(payload)
+	elif type in [WIEvents.ITEM_GAINED, WIEvents.ITEM_LOST]:
+		_rebuild_items()
+		_emit_selection()
 	elif type == WIEvents.GOLD_CHANGED:
 		_refresh_gold()
 		_emit_shown()
@@ -412,6 +415,7 @@ func _emit_shown() -> void:
 		"items": _item_ids.size(),
 		"gold": Game.sim.gold,
 		"item_effect_lines": _rendered_effect_lines(),
+		"item_counts": _item_ids.map(func(id: String) -> int: return Game.sim.item_count(id)),
 		"resonance": {"used": Game.sim.resonance_used(), "capacity": Game.sim.resonance_limit()},
 		"cursor_scroll": _scroll.scroll_vertical,
 		"selected_icon": _corner_icon.visible,
@@ -431,6 +435,7 @@ func _emit_selection() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SELECTION_RENDERED, {
 		"cursor": _cursor,
 		"item": "" if _item_ids.is_empty() else String(_item_ids[_cursor]),
+		"count": 0 if _item_ids.is_empty() else Game.sim.item_count(_item_ids[_cursor]),
 		"selected_icon": _corner_icon.visible,
 		"selected_icon_path": _icon_path_for(String(_item_ids[_cursor])) if not _item_ids.is_empty() and _corner_icon.visible else "",
 		"list_icon_paths": _item_ids.map(func(id: Variant) -> String: return _icon_path_for(String(id)) if _icon_texture_for(String(id)) != null else ""),
@@ -521,7 +526,7 @@ func _equipped_slot_for(item_id: String, kind: String) -> String:
 func _row_display_text(i: int) -> String:
 	var item_id := String(_item_ids[i])
 	var rec: Dictionary = Game.sim.item(item_id)
-	var name := String(rec.get("name", item_id))
+	var name := WIEffectText.counted_item_name(rec, Game.sim.item_count(item_id))
 	var kind := String(rec.get("kind", ""))
 	var equipped_here := _equipped_slot_for(item_id, kind) != ""
 	var mark := "> " if i == _cursor else "  "
@@ -852,7 +857,7 @@ func _render_detail() -> void:
 		return
 	var item_id := String(_item_ids[_cursor])
 	var rec: Dictionary = Game.sim.item(item_id)
-	var name := String(rec.get("name", item_id))
+	var name := WIEffectText.counted_item_name(rec, Game.sim.item_count(item_id))
 	var kind := String(rec.get("kind", ""))
 	var equipped_here := _equipped_slot_for(item_id, kind) != ""
 	var tag := "  [Equipped]" if equipped_here else ""
