@@ -9,7 +9,7 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed at user request:** compose completed art PR #577 and finish this lane.
+- **Resumed at user request:** compose merged art PR #577 and finish this lane.
   Lane #567: `issue/567-hud-contract` in `/private/tmp/wi-567-hud-contract`;
   base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
   Owned paths: `HANDOFF.md`, HUD contract, `src/ui/{field_chips,message_layer,sleep_veil,inventory}.gd`, `src/world/main.gd`, `src/core/effect_text.gd`; matching new HUD tests. Core mutation/events and QA shared surfaces stay with #566 until serialized integration.
@@ -18,9 +18,10 @@ archived, or superseded session blocks.
   **Exact next action:** controller composes this HUD checkpoint into #566, runs authored resource QA/window/browser evidence and independent review. Core `03da9ec4` is composed; #568 potion controls and full #567 acceptance remain open.
   Evidence: import, `test_resource_hud`, message queue/lifetime and effect-text units pass; load_gate, gear_loop(9), tutorial_flow(9) pass (zero exit/no noise/result true). Fallback assets; no window/browser/device proof. CSS fit emulation covers both phone sizes/all text scales.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
-  is composed here as completed code pending its CI/merge. Original art checkout
+  is composed here as completed code squashed as `0bbd96aa`. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
-  included. Refresh main and verify squash tree identity after art lands.
+  included. Squash tree `0e843291` matches the reviewed source. Its Web CI waiver
+  was art-only; required CI remains mandatory for these lanes.
   Other lanes: #572–#575 and #579; serialize shared source/catalogs.
 - **#566 resource foundation:** staged in draft PR #572, isolated
   `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
