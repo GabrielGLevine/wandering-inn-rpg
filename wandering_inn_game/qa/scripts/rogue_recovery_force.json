@@ -1274,6 +1274,18 @@
    "timeout_sec": 30
   },
   {
+   "_comment": "Capture the earned road-fight rest receipt after earlier sleep, reward, and class messages finish reading.",
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 120,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {"hp": 3, "max_hp": 43, "mp": 0, "max_mp": 0, "mp_potion_doses": 0},
+    "after": {"hp": 46, "max_hp": 46, "mp": 0, "max_mp": 0, "mp_potion_doses": 0}
+   }
+  },
+  {
    "action": "dump_state"
   },
   {
