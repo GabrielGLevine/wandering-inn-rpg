@@ -1257,7 +1257,7 @@
   {
    "action": "press",
    "name": "interact",
-   "_comment": "Sleep. Two classes + 3 quests done: the tremor pointer fires and something_beneath starts."
+   "_comment": "Actual bed recovery banks earned road-fight progress before returning to the crate fight."
   },
   {
    "action": "wait_for_event",
