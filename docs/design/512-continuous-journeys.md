@@ -17,8 +17,12 @@ It contains no fixture install, teleport, state injection or checkpoint load.
 **This is not a clean authoritative gate.** The final headless process exits0,
 printsPASS, and passes all3464 steps, but reports5 leaked DummyShader RIDs.
 Root/capacity570 own the lifecycle investigation. Full continuous windowed
-read, composed-tree rerun and physical touch remain unproven. Worker965 stops
-at its recorded boss wall. Fresh martial/caster/work-heavy endings and the
+read, composed-tree rerun and physical touch remain unproven. Worker1302
+retains five losses, including free chest armor/rest and finite earned charm
+retries; the Awakened boss still has10HP after the last round6 loss. Its final
+rollback preserves3gold,50/50HP,15/15MP,1HotMeal and armed+2maxHP. All1302
+assertions pass/exit0, but two shader RID ERRORs invalidate its gate too.
+Fresh martial/caster/work-heavy endings and the
 force-crate/other imperfect-choice variants remain separate authoring work.
 
 The sections below are chronological checkpoint history; their forward-looking
@@ -451,6 +455,14 @@ walk/RNG history change together; no isolated gear causality is claimed.
 Full1280-step observation5 exits0/PASS/result true with two DummyShader RID
 ERRORs, invalidating the authoritative gate. Evidence is preserved under
 `worker-charm-measured-loss` and `worker-charm5.log`. Final exact loss, resources,
-stock, purse, equipment and five-defeat/three-victory assertions now accompany
-the production rollback; final replay remains next. No further retry, farming,
-gear purchase or ending extension is authorized in this bounded continuation.
+stock, purse, equipment and five-defeat/three-victory assertions accompany
+the production rollback. Final1302-step replay atc2d5a964 exits0 with PASS and
+result true, still invalidated by two shader RID ERRORs. Required load_gate2
+and unaffected combat_abandon54 both pass cleanly. Structural lint, derived
+surfaces, generated notes and diff checks pass. The final evidence directories
+are `worker-bounded-final-journey_worker`, `worker-bounded-final-load_gate` and
+`worker-bounded-final-combat_abandon`, with matching .log files under
+`/private/tmp/wi-512-evidence/current/`. Gold ledger totals22earned,19spent,3held.
+No native read was run for this continuation. Root must compose the current UI
+and renderer-lifecycle fix before authoritative replay/window acceptance.
+No further retry, farming, gear purchase or ending extension was attempted.

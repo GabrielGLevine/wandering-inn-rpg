@@ -22,11 +22,13 @@ archived, or superseded session blocks.
   or physical-touch claim. Root/capacity570 own lifecycle investigation.
   Worker bounded recovery: free chest armor/rest earns Mage4, then eligible
  Zevara3+4→Traveler5 and seventh sleep earns Diplomat6. Both retries lose
- round6 with boss10HP; final3gold,50HP/15MP rollback,1HotMeal. Observation1280
- PASS/exit0 but2shaderERRORs INVALID; preserved worker-charm-measured-loss.
- **Next:** final loss/rollback pins replay, load_gate/unaffected canonical,
- checkpoint/release. No more attempts/farming/production/native changes.
- Preserve companion UID; root owns UI/teardown.
+ round6 with boss10HP. Final1302 atc2d5a964 PASS/exit0 but2shaderERRORs INVALID;
+ exact rollback3gold/50HP15MP/1HotMeal, five defeats/three victories. Evidence
+ worker-bounded-final-journey_worker + matchinglog under current evidence.
+ load_gate2/combat_abandon54 clean; lint/derived/notes pass.
+ **Next:** root composes current UI/renderer fix for clean replay/window.
+ Tree released, no active process; no further attempts/farming/production/
+ native changes. Preserve companion UID.
 
 - **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
   Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.
