@@ -411,6 +411,11 @@
    ]
   },
   {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
    "action": "dump_state",
    "label": "retreat_live_road_ambush_resolved"
   },
@@ -533,7 +538,43 @@
    "type": "ui_recovery_rendered",
    "timeout_sec": 60,
    "payload_contains": {
-    "reason": "sleep"
+    "reason": "sleep",
+    "before": {
+     "hp": 24,
+     "max_hp": 58,
+     "mp": 0,
+     "max_mp": 0,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 58,
+     "max_hp": 58,
+     "mp": 0,
+     "max_mp": 0,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 58
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.max_hp",
+   "equals": 58
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 10
    }
   },
   {
@@ -762,13 +803,13 @@
   },
   {
    "action": "move",
-   "direction": "right",
-   "steps": 6
+   "direction": "down",
+   "steps": 1
   },
   {
    "action": "move",
-   "direction": "down",
-   "steps": 1
+   "direction": "right",
+   "steps": 6
   },
   {
    "action": "assert_state",
@@ -1031,14 +1072,14 @@
    "equals": "deep_tunnels"
   },
   {
-   "_comment": "b7 #203: the post-clear reconcile — Relc's cameo LEAVES once cleared_the_warren banks (absent gate). The 12 = 11 entities + PC, and the 11 INCLUDES the defeated awakened_boss: this reconcile fires on the cleared bank mid-combat-screen, and the boss's entity_removed lands later (render-silent) at the victory-banner confirm — do not 'correct' the count by subtracting the boss. A regression re-seating the cameo post-clear renders 13 here and this count fails. #398-p2's four new visible entities re-derive the established 8 to 12. Captured stream (seed 9, this tree): {14} -> {13} -> {13} (the count:2 pin above) -> {12} (this one).",
+   "_comment": "The cleared scout remains removed on the walked return, rendering 12 entities before the warren cameo. The post-boss cleared reconcile renders 12 again (Relc leaves; the defeated boss is removed afterward). Exact stream on seed 9: 14 -> 13 -> 12 -> 13 -> 12; two 13 and two 12 renders.",
    "action": "assert_event_count",
    "type": "ui_entities_rendered",
    "payload_contains": {
     "sprites": 12,
     "fallbacks": 0
    },
-   "count": 1
+   "count": 2
   },
   {
    "action": "screenshot",

@@ -1866,7 +1866,11 @@
    "surfaces": {
     "maps": [
      "deep_tunnels",
-     "sewers"
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "sewers",
+     "street"
     ],
     "fixtures": [
      "deep_descent_start"
@@ -1955,7 +1959,10 @@
    "surfaces": {
     "maps": [
      "deep_tunnels",
+     "floodplains",
+     "inn",
      "inn_upstairs",
+     "sewers",
      "street"
     ],
     "fixtures": [
