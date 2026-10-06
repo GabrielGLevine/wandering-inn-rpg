@@ -1,0 +1,225 @@
+# #570: capacity analysis before implementation
+
+Analysis date: 2026-10-05. Source snapshot:
+`b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
+Scope: the approved capacity direction in [#570](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/570)
+and the [recovery plan](2026-10-05-persistent-vitals-recovery-plan.md).
+
+Recommend **4 at creation, 5 after the existing once-only sleep growth** for
+the implementation candidate. Actual catalog combinations show a useful
+additional enchanted item at each boundary while retaining three accessory
+positions and a capacity refusal above five. This is a static equipment and
+acquisition analysis, not combat balance acceptance. No game values, item
+costs, save rules, physical positions, UI or balance windows change here.
+The recommendation is ready for combat measurement; it does not establish
+that the larger capacity avoids auto-wins.
+
+## Reproducible catalog measurements
+
+From the repository root:
+
+```sh
+python3 scripts/analysis/capacity_570.py
+python3 scripts/analysis/capacity_570.py --check
+```
+
+The script reads shipped item, Skill and dialogue JSON. It sums accessory
+modifiers and resonance and enumerates distinct item sets; it does not call
+`equip()`, build combatants or run fights. Flat columns exclude weapon,
+armor, class growth and Skill effects. In particular, the HP column does
+not include [Tough Body]. Item-granted Skills are unique IDs, not promises
+of additional effects when the class already holds that Skill. The shared
+authority for interpreting those fields remains
+[`WICombatBuild`](../../wandering_inn_game/src/core/combat_build.gd).
+
+**Budget fit alone is insufficient: row J requires four accessory positions
+and is always physically refused, even when its resonance fits.** All other
+rows use at most three positions. The examples assume resonance-zero weapon
+and armor; production capacity counts every equipped position.
+
+<!-- capacity-570:begin -->
+| Loadout | Resonance | Accessory positions | Flat HP | Flat damage | Flat reduction | Item-granted Skills | Budget fits 2 / 3 / 4 / 5 |
+|---|---:|---:|---:|---:|---:|---|---|
+| A: current shop pair | 2 | 2 | 2 | 1 | 0 | — | yes / yes / yes / yes |
+| B: current pair + Stonescale | 4 | 3 | 2 | 1 | 1 | [Tough Body] | no / no / yes / yes |
+| C: current grown trio | 3 | 3 | 5 | 1 | 0 | — | no / yes / yes / yes |
+| D: shield + two Hedault pieces | 4 | 3 | 5 | 1 | 0 | [Dangersense], [Eagle Eyes], [Mana Shield] | no / no / yes / yes |
+| E: earned Lichbone alone | 3 | 1 | 3 | 1 | 1 | — | no / yes / yes / yes |
+| F: earned Lichbone + Fang | 4 | 2 | 3 | 2 | 1 | — | no / no / yes / yes |
+| G: earned Lichbone + pair | 5 | 3 | 5 | 2 | 1 | — | no / no / no / yes |
+| H: earned Anchor + pair | 5 | 3 | 6 | 1 | 1 | — | no / no / no / yes |
+| I: two costly pieces | 6 | 2 | 7 | 1 | 2 | — | no / no / no / no |
+| J: four pieces, budget fits | 3 | 4 | 6 | 1 | 0 | [Dangersense] | no / yes / yes / yes |
+
+Catalog scope: 27 positive-resonance accessories with a nonzero flat modifier or an ability.
+
+| Capacity | Single items | Two-item sets | Three-item sets |
+|---:|---:|---:|---:|
+| 2 | 25 | 171 | 0 |
+| 3 | 27 | 285 | 969 |
+| 4 | 27 | 338 | 1995 |
+| 5 | 27 | 350 | 2622 |
+
+Actual dialogue gold debits (excluding travel and prerequisites):
+
+- A: 23g; B: 58g; C: 43g.
+- True-Set Wardstone: 56g = 16g bead + 40g fee; Keen-Set Hunters Fang: 49g = 14g fang + 35g fee.
+- D: 105g plus the Traveler's Charm acquisition cost plus its 20g upgrade fee.
+- G/H: an earned unpriced item plus 23g for the purchased pair.
+<!-- capacity-570:end -->
+
+The set counts cover positive-resonance accessories with at least one
+nonzero flat modifier or an ability. They exclude zero-resonance pieces and
+purely cosmetic positive-cost pieces. Each set contains distinct item IDs
+and ignores ordering. These are catalog possibilities, not counts of
+simultaneously obtainable, class-useful or balance-approved builds; no
+quest, route or mutual-exclusion filter is applied. In particular, duplicate
+Skills can make a counted item less useful for a given class.
+
+The table's item IDs are fixed in the script. Names in its row labels mean:
+Fang = `hunters_fang_talisman`; Ward/pair = `hedge_ward_charm` plus Fang;
+Stonescale = `stonescale_talisman`; Lichbone = `lichbone_wand`;
+Anchor = `anchor_sliver`. Row C adds `phosphor_pendant`; D uses
+`hedaults_wardstone`, `hedaults_hunters_fang`, `hedaults_traveler_charm`;
+J adds `copper_luck_band` to C.
+
+## What changes, and what remains a choice
+
+At current starting capacity 2, row A fits and its third accessory position
+cannot accept Stonescale's cost 2. Starting capacity 4 admits row B: one
+additional enchanted accessory and +1 flat damage reduction. [Tough Body]
+adds 10 max HP only when absent from the class kit; Warrior already grants
+it at level 1, so this is not an additional 10 HP for Warrior builds.
+This is the strongest simple purchasing witness: all three pieces are sold
+by Krshia, with actual debits totaling 58 gold.
+
+At current grown capacity 3, Lichbone alone fits (E) but cannot retain the
+Fang or Ward. At proposed starting 4 it can retain Fang (F). The earned
+growth to 5 admits Ward too (G), adding 2 flat HP to F. Thus sleep still
+buys something tangible. Anchor offers a parallel 3+1+1 witness (H), trading
+one flat damage modifier for one flat HP relative to G. Existing 3-cost
+items become wearable before resonance growth if acquired; this is a real
+progression change to measure, not just more room for small items.
+
+Capacity 5 still rejects Lichbone plus Anchor (I: 6, with a third position
+free). Three accessory positions also still reject J at capacity 3, 4 or 5.
+Increasing capacity cannot retain Stonescale, Fang, Ward **and** Copper
+Luck-Band. Dropping the ring can cost [Dangersense] to a class that lacks it.
+Likewise Hollow Herb Sachet costs zero resonance, occupies a position and
+grants [Witch's Warding] (+8 max HP when not already held). A three-piece
+enchanted loadout is not automatically the best use of three positions.
+
+`WIGame.equip()` checks accessory-position availability before resonance;
+new refusal QA must leave a physical position free when it intends to prove
+the capacity refusal. The function also subtracts displaced weapon/armor
+resonance when replacing those pieces. Preserve both rules.
+
+## Real acquisition and price evidence
+
+These are authored routes, not completed playthrough observations. Source
+nodes and item grants can be inspected in the linked files. Gold below is
+the acquisition debit, without assigning a gold value to travel or combat.
+
+| Item(s) | Existing source and prerequisites | Actual gold debit |
+|---|---|---:|
+| Fang / Hedge-Ward / Stonescale | [Krshia dialogue](../../wandering_inn_game/data/dialogue/krshia_crate.json), `charms` options 4 / 3 / 5, respectively; sufficient gold | 14 / 9 / 35 |
+| Phosphor Pendant | [Wilovan dialogue](../../wandering_inn_game/data/dialogue/invrisil_wilovan.json), `fence` option 0; one purchase via `bought_phosphor_pendant` | 20 |
+| Witch's Wardstone Bead → True-Set Wardstone | [Riverfarm witch](../../wandering_inn_game/data/dialogue/riverfarm_witch.json), `shop` option 3, then [Hedault](../../wandering_inn_game/data/dialogue/hedault_enchanting.json), `hub` option 2; consumes the bead | 16 + 40 = 56 |
+| Fang → Keen-Set Hunters Fang | Krshia purchase, then Hedault `hub` option 1; consumes the original Fang | 14 + 35 = 49 |
+| Traveler's Charm → Warded Traveler Charm | Krshia `shop` option 0 at 5g, or option 6 at 4g after her friendship gates; Hedault `hub` option 0 consumes it | 25 standard / 24 friend |
+| Lichbone Wand | [Ruin surface](../../wandering_inn_game/data/maps/ruin/ruin_surface.json), non-respawning `crypt_lich_mouth` victory, chance 1.0 loot; reach the dig and win the optional Lich fight | No purchase; earned, unpriced |
+| Anchor Sliver | Same map, cracked plinth container; `pedestal_unsealed`, `rune_sequence_done`, `horns_dig_joined`; granted alongside `anchor_stone` | No purchase; earned, unpriced |
+| Graveflame Wand, alternative 2-cost accessory | Wilovan `fence` option 2, requires `brothers_job_done`; one purchase via `bought_graveflame_wand` | 30 |
+
+Row D therefore costs **130g standard / 129g friend** if all base items are
+purchased. The resulting catalog price fields (50/45/18) are not these
+payments. A found Traveler's Charm reduces the incremental gold needed;
+that is not evidence the whole acquisition route is free. Phosphor also
+appears as chance-0.3 loot from the sewer Shield Spider Nest; the guaranteed
+purchase is used for the reproducible cost comparison. No earned unique's
+missing price is converted to a hypothetical shop price.
+
+## Affected class spines and consequences to measure
+
+Skill grants and inheritance below come from
+[`classes.json`](../../wandering_inn_game/data/classes.json), with effects in
+[`skills.json`](../../wandering_inn_game/data/skills.json). Combat abilities
+are folded without duplicate IDs. These are exposure priorities, not
+measured win-rate changes or new class requirements.
+
+| Spine family | Why extra capacity matters | Comparison priority |
+|---|---|---|
+| Warrior → Blademaster / Spearmaster; Spellsword / Spellspear / Deathknight | Stonescale's flat reduction helps while its [Tough Body] duplicates the inherited kit. Extra Fang/Lichbone flat damage can affect repeated weapon hits. | A→B, E→F→G with the spine's actual weapon and allies |
+| Mage → Ice Mage / Fire Mage; Druid / Wild Sage | Pure caster paths can gain [Tough Body] from B. Mage level 2 already grants [Mana Shield], inherited by these Mage descendants, so D does not grant a second shield. | B versus cheaper HP/ward combinations; D with the actual held kit and MP |
+| Necromancer → Deathknight | Graveflame and Lichbone are accessories in this engine. Capacity admits their defensive/damage modifiers beside other pieces; these are not new spell-power formulas. | Graveflame+pair (4) versus Lichbone+pair (5), solo and companion routes |
+| Archer → Sharpshooter / Scout / Ranger / Skirmisher; Rogue → Infiltrator | D grants [Eagle Eyes] (+8 hit bonus) if missing. Scout grants it at 14; duplicates give no extra bonus. Rogue grants [Dangersense] at 4, Warrior-derived hybrids inherit it. | D versus B/C with ranged/Skill use; do not infer bow behavior from melee autoplay |
+| Beast Tamer → Beast Master | More personal defense can change survival while the companion deals damage; caster consolidations also inherit Mage's shield. | B/C with the real companion and earned equipment timing |
+| Helper / service / Innkeeper; Trader / Merchant; Runner / Courier; Cook / Chef; Mixer / Alchemist; Diplomat / Emissary; Tactician / Strategist; Hedge Witch / Witch | Equipment can supply combat abilities absent from the class kit. Tactician gets [Dangersense] at 3; Hedge Witch gets [Witch's Warding] at 3. Added equipment must not be assumed to repair progression-route gaps. | Purchased B/D versus zero-cost ring/sachet choices on the actual spine; include constrained gold and low resources |
+
+[Mana Shield] consumes existing MP one-for-one to absorb damage; depleted MP
+buys no absorption. [Eagle Eyes]'s +8 is a hit-bonus input, not a measured
+eight-point win-rate increase. Flat damage is an input to the combat damage
+path, not a claim that every spell scales with every item. No semantic
+ruling for #494/#495, Hedault price rewrite or item-resonance retuning follows
+from this report.
+
+## Implementation and acceptance handoff
+
+The baseline has `WISave.VERSION = 9`, starting capacity hard-coded as 2,
+load fallback 2 and growth +1. Implement a data-owned base/growth accessor
+used by creation, save migration and equip checks. Preserve the live sleep
+gate: after `door_awakened`, the second `catalyst_attunement_sleeps` earns
+`resonance_grown` once. A day-phase change alone is not sleep. Preserve
+partial attunement progress and the grown marker; increasing the baseline
+must not replay the growth beat.
+
+Coordinate the composed save version with #566/#568 before coding migration;
+this document reserves no version number. Apply the baseline delta +2
+exactly once to legacy numeric capacity: 2→4, 3→5, custom 7→9. Preserve
+equipped IDs, inventory and growth/attunement history; never clamp valid
+custom values to five. Define the missing-field legacy default explicitly
+from legacy rules, including fixtures with existing growth history. Modern
+saves must round-trip capacity and depletion unchanged. Verify sequential
+migrations from each supported predecessor and a second load of the migrated
+save. Do not treat every save older than some unrelated recovery migration
+as eligible to receive the capacity delta again.
+
+No accessory here has an MP modifier, but HP modifiers and granted
+`hp_bonus` Skills affect resource maxima. When composed with #566, test
+depleted HP/MP through equip, unequip, replacement, reload and entering or
+leaving combat. Changing maxima must follow the shared persistent-resource
+policy and must not replenish spent resources by cycling equipment. Include
+Stonescale with and without class-owned [Tough Body] and a depleted
+[Mana Shield] wearer. Report the selected max-change policy from #566 rather
+than inventing a competing one in this slice.
+
+Remaining gates before #570 can close:
+
+1. Implement configuration, accessor, migration, actual sleep growth and UI
+   values; prove old/new saves, repeat migration, growth idempotence and the
+   two independent refusal cases. No such implementation is in this slice.
+2. Use `tests/sim_combat_batch.gd` and `tests/sim_spine_viability.gd` through
+   their existing shared combat build/policies. Compare A→B, C→D and E→F→G
+   against affected spine encounters at actual acquisition levels, with
+   identical seeds/party/difficulty/policy on each comparison. Preserve both
+   floor and competent results, HP/MP consequences, win rate and rounds;
+   add zero-resonance defensive alternatives where relevant. Submit findings
+   to #453/#513; unchanged old cells do not measure the newly admitted sets.
+   Retain existing balance windows and report any auto-win as unresolved.
+3. Earn or purchase the chosen example items through real gameplay, equip
+   through inventory, read used/capacity and attack/Skill consequences,
+   exercise capacity refusal with a free position and physical refusal with
+   spare capacity, unequip/re-equip, then actual sleep and reload. Capture
+   trigger → domain event → rendered confirmation → QA assertion, windowed
+   screenshots and the required browser-touch route. Named physical devices
+   still require their observations.
+4. Run the implementation's prescribed data lint, full units, shared combat
+   batch, full canonical sweep and independent review after composition.
+   Keep zero-exit, success-marker, noise-scan and QA `result.json` evidence.
+
+This analysis validates only catalog arithmetic, acquisition debits and
+source-grounded exposure. It performs no Godot source edits and introduces
+no alternative combat model. The shared harness has authored cells rather
+than a read-only arbitrary-loadout input, so new combat measurements require
+a separately owned harness change. Actual acquisition, runtime equip,
+combat outcomes, migration, sleep rendering and touch remain unproven.
