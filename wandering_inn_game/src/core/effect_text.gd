@@ -96,11 +96,12 @@ static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> A
 			else:
 				lines.append("Grants %s in combat" % ability_display)
 	var use_effect: Dictionary = item.get(WIKeys.USE_EFFECT, {})
-	if use_effect.has("restore_hp"):
+	if int(use_effect.get("restore_hp", 0)) > 0:
 		lines.append("Restores up to %d HP (single use)" % int(use_effect["restore_hp"]))
-	if use_effect.has("restore_mp"):
+	if int(use_effect.get("restore_mp", 0)) > 0:
 		lines.append("Restores up to %d MP (single use)" % int(use_effect["restore_mp"]))
-		lines.append("Repeated doses risk mana poisoning until sleep")
+		if String(item.get("consumable_family", "")) == "mp_potion":
+			lines.append("Repeated doses risk mana poisoning until sleep")
 	if use_effect.has("next_fight"):
 		var nf_bits := next_fight_bits(use_effect["next_fight"] as Dictionary)
 		if not nf_bits.is_empty():

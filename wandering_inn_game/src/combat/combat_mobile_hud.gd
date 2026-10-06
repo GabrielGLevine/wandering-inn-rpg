@@ -168,8 +168,11 @@ func refresh(view: RefCounted, rendered_slots: Array, selected_index: int, info_
 		_target_id = String(targets[int(targeting.get("index", 0))])
 	_active.text = _active_text(view, actor)
 	var action := ""
+	var item_preview: Dictionary = {}
 	if not rendered_slots.is_empty():
 		var slot: Dictionary = rendered_slots[clampi(info_index, 0, rendered_slots.size() - 1)]
+		if String(slot.get("type", "")) == "item":
+			item_preview = slot.get("preview", {})
 		action = String(slot.get("label", "")).replace("\n", " ")
 		if slot.has("ap_cost"):
 			action += " · %d AP" % int(slot["ap_cost"])
@@ -183,6 +186,8 @@ func refresh(view: RefCounted, rendered_slots: Array, selected_index: int, info_
 			context = "Target: " + _unit_summary(view, _target_id) + "\n" + action
 		else:
 			context += "\nNo target. Back to move."
+	elif not item_preview.is_empty():
+		context = action + "\n" + _item_preview_text(item_preview)
 	elif dash_confirm:
 		context += "\nConfirm to refill your steps."
 	elif not _inspected_id.is_empty() and view.ids().has(_inspected_id):
@@ -409,3 +414,19 @@ func snapshot() -> Dictionary:
 
 static func _rect_data(rect: Rect2) -> Dictionary:
 	return {"x": rect.position.x, "y": rect.position.y, "width": rect.size.x, "height": rect.size.y}
+
+
+func _item_preview_text(offer: Dictionary) -> String:
+	if not bool(offer.get("allowed", false)):
+		return WIEffectText.item_use_refusal(String(offer.get("reason", "")))
+	var effects: Array[String] = []
+	for pool: String in ["hp", "mp"]:
+		var amount := int(offer.get("restore_" + pool, 0))
+		if amount > 0:
+			effects.append("+%d %s" % [amount, pool.to_upper()])
+	var line := " · ".join(effects)
+	if int(offer.get("poison_hp", 0)) > 0:
+		line += "\n−%d HP poison · Dose %d" % [int(offer.poison_hp), int(offer.dose_number)]
+	elif int(offer.get("dose_number", 0)) > 0:
+		line += " · Dose %d" % int(offer.dose_number)
+	return line

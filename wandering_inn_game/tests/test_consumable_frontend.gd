@@ -74,6 +74,10 @@ func _run() -> void:
 	_game.sim._items.test_mp = {"id": "test_mp", "name": "Test Mana", "stackable": true, "consumable_family": "mp_potion", "usable_in_combat": true, "use_effect": {"restore_mp": 6}}
 	_game.sim.pickup("test_mp", "test")
 	_game.sim.pickup("test_mp", "test")
+	_game.sim._items.burst_mp = _game.sim.item("mana_potion").duplicate(true)
+	_game.sim._items.burst_mp.id = "burst_mp"
+	for i in 3:
+		_game.sim.pickup("burst_mp", "test")
 	var message_script := _patched("res://src/ui/message_layer.gd", "var Game: Variant\nvar ObservableBus: Variant\nvar WISettings: Variant\nvar TestDriver: Variant\nvar WIInputHints: Variant", true)
 	_messages = message_script.new()
 	_messages.set("Game", _game)
@@ -88,7 +92,7 @@ func _run() -> void:
 		elif type in [WIEvents.ITEM_USE_SETTLED, WIEvents.ITEM_USE_REFUSED, WIEvents.ITEM_USE_CANCELLED]:
 			_messages.call("_accept_use_result", payload)
 		elif type == WIEvents.UI_ITEM_USE_RENDERED:
-			_messages.set("_use_rendered", true)
+			_messages.call("_mark_use_rendered", payload)
 	)
 	var inventory_script := _patched("res://src/ui/inventory.gd", "var Game: Variant\nvar ObservableBus: Variant\nvar WISettings: Variant")
 	_inventory = inventory_script.new()
@@ -97,6 +101,17 @@ func _run() -> void:
 	_inventory.set("WISettings", SettingsBoundary.new())
 	root.add_child(_inventory)
 	_inventory.call("_open")
+	_game.sim.vitals.mp = int(_game.sim.player_resource_maxima().max_mp)
+	await _select("test_mp")
+	var no_benefit := _game.sim.player_resources()
+	var confirm := InputEventAction.new()
+	confirm.action = "confirm"
+	confirm.pressed = true
+	_inventory.call("_unhandled_input", confirm)
+	_check(not (_inventory.get("_bar_button") as Button).disabled and not _messages.item_use_busy(), "keyboard no-benefit Use leaves bar control enabled")
+	(_inventory.get("_bar_button") as Button).pressed.emit()
+	_check(_game.sim.hotbar_loadout.has("item:test_mp") and _game.sim.item_count("test_mp") == 2, "bar placement still works after keyboard no-benefit Use")
+	_check(_game.sim.player_resources() == no_benefit, "no-benefit keyboard action preserves resources")
 	_game.sim.vitals.hp = 1
 	await _select("mending_draught")
 	var button: Button = _inventory.get("_use_button")
@@ -116,6 +131,9 @@ func _run() -> void:
 	_check(_messages.item_use_busy(), "held confirm cannot rearm after visible receipt")
 	Input.action_release("confirm")
 	await _frames()
+	button.pressed.emit()
+	_check(_game.sim.item_count("mending_draught") == 1, "current button binding cannot consume again inside post-receipt burst")
+	await _rearm()
 	_check(not _messages.item_use_busy() and bool(_inventory.get("open")), "visible receipt releases latch with inventory open")
 	_check(_event_count(WIEvents.UI_ITEM_USE_RENDERED) == 1, "one result has one correlated render")
 	_check((_messages.get("_toast_queue") as Array).is_empty(), "in-panel receipt does not duplicate into world queue")
@@ -124,7 +142,7 @@ func _run() -> void:
 	await _select("mending_draught")
 	var last: Callable = button.pressed.get_connections()[0]["callable"]
 	last.call()
-	await _frames()
+	await _rearm()
 	last.call()
 	_check(_game.sim.item_count("mending_draught") == 0 and _game.sim.item_count("remedy_draught") == 1, "final stock callback never consumes adjacent row")
 	_game.sim.vitals.mp = 0
@@ -138,20 +156,22 @@ func _run() -> void:
 	_messages.call("_confirm_presented_use")
 	_check(WISave.serialize(_game.sim) == before, "unarmed confirm does not mutate")
 	_messages.call("_cancel_presented_use")
-	await _frames()
+	await _rearm()
 	_check(WISave.serialize(_game.sim) == before and not _messages.item_use_busy(), "cancel preserves full saved tuple and releases latch")
 	button.pressed.emit()
 	await create_timer(0.35).timeout
 	await _frames(2)
 	_check(_event_count(WIEvents.UI_ITEM_USE_WARNING_ARMED) == 1, "warning arms after release and readable delay")
 	_messages.call("_confirm_presented_use")
-	await _frames()
+	await _rearm()
 	_check(_game.sim.vitals.hp == 8 and _game.sim.vitals.mp == 6 and _game.sim.vitals.mp_potion_doses == 4 and _game.sim.item_count("test_mp") == 1, "confirmed warning commits captured fourth dose once")
 	var receipt := (_inventory.get("_use_receipt") as Label).text
 	_game.sim.vitals.hp = 2
 	_check((_inventory.get("_use_receipt") as Label).text == receipt and receipt.contains("Lost 4 HP"), "rendered poison receipt never rereads later resources")
+	await _live_button_burst()
 	_inventory.free()
 	_combat_previews()
+	await _mobile_combat_receipt()
 	_messages.free()
 	await _frames()
 	if not _failures.is_empty():
@@ -194,3 +214,100 @@ func _combat_previews() -> void:
 	_check(rendered[index].affordable and rendered[index].label.contains("×2") and String(hud._slot_info_line(rendered[index])).contains("Restore 6 MP"), "HUD shows count and projected MP restoration")
 	var result := _game.sim.commit_item_use(int(selected.operation_id))
 	_check(result.committed and pc.ap == 1 and _game.sim.item_count("mana_potion") == 1, "inspecting another slot preserves selected operation")
+
+
+func _rearm() -> void:
+	await create_timer(0.36).timeout
+	await _frames(2)
+
+
+func _live_button_burst() -> void:
+	_game.sim.vitals.mp = 0
+	_game.sim.vitals.mp_potion_doses = 0
+	await _select("burst_mp")
+	var button: Button = _inventory.get("_use_button")
+	button.pressed.emit()
+	await create_timer(0.03).timeout
+	await _frames(3)
+	button.pressed.emit()
+	_check(_game.sim.item_count("burst_mp") == 2 and _game.sim.vitals.mp == 6 and _game.sim.vitals.mp_potion_doses == 1, "timed repeat uses current signal binding and consumes one of three mana doses")
+	await _rearm()
+	button.pressed.emit()
+	_check(_game.sim.item_count("burst_mp") == 1 and _game.sim.vitals.mp_potion_doses == 2, "deliberate later button press consumes the second dose")
+	await _rearm()
+
+
+class HintsBoundary extends RefCounted:
+	func label(action: String) -> String:
+		return action
+
+class TouchLayoutBoundary extends RefCounted:
+	func uses_touch_layout() -> bool:
+		return true
+	func touch_size(viewport: Viewport, size: Vector2) -> Vector2:
+		return WIResponsiveLayout.touch_size(viewport, size)
+	func readable_font_size(viewport: Viewport, size: int, scale: float = 1.0) -> int:
+		return WIResponsiveLayout.readable_font_size(viewport, size, scale)
+	func place_panel(panel: Control, rect: Rect2) -> void:
+		WIResponsiveLayout.place_panel(panel, rect)
+
+
+func _mobile_combat_receipt() -> void:
+	var combat := _game.sim.combat
+	combat.combatants.pc.ap = 2
+	combat.combatants.pc.mp = 0
+	combat.combatants.pc.hp = 12
+	_game.sim.vitals.mp_potion_doses = 4
+	var screen_script := _patched("res://src/combat/combat_screen.gd", "var Game: Variant\nvar ObservableBus: Variant\nvar WISettings: Variant\nvar TestDriver: Variant\nvar WIInputHints: Variant", true)
+	var screen: CanvasLayer = screen_script.new()
+	screen.set("Game", _game)
+	screen.set("ObservableBus", _bus)
+	screen.set("WISettings", SettingsBoundary.new())
+	screen.set("WIInputHints", HintsBoundary.new())
+	root.add_child(screen)
+	var host := Control.new()
+	UIChrome.full_rect(host)
+	screen.add_child(host)
+	var hud_script := GDScript.new()
+	hud_script.source_code = FileAccess.get_file_as_string("res://src/combat/combat_hud.gd").replace("class_name WICombatHud\n", "").replace("extends RefCounted", "extends RefCounted\nvar WIResponsiveLayout: Variant")
+	assert(hud_script.reload() == OK)
+	var hud: RefCounted = hud_script.new(host, null, screen)
+	hud.set("WIResponsiveLayout", TouchLayoutBoundary.new())
+	hud.build()
+	var board: Node = load("res://src/combat/board_renderer.gd").new()
+	screen.add_child(board)
+	screen.set("_board_renderer", board)
+	screen.set("_ai_playback", load("res://src/combat/combat_playback.gd").new(board, screen))
+	screen.set("_view", WICombatView.new(combat))
+	screen.set("_hud", hud)
+	screen.set("_root", host)
+	screen.set("_mode", screen.Mode.HOTBAR)
+	var slots: Array = hud.rebuild_slots(screen.get("_view"), "pc", _game.sim.hotbar_loadout, screen.call("_usable_combat_items"))
+	screen.set("_bar_slots", slots)
+	var index := -1
+	for i in slots.size():
+		if String(slots[i].get("id", "")) == "mana_potion":
+			index = i
+	screen.call("_activate_bar_slot", index)
+	screen.call("_refresh")
+	var context: String = hud.mobile_hud().snapshot().context_text
+	_check(context.contains("+6 MP") and context.contains("4 HP poison") and context.contains("1 AP") and not context.contains("refill your steps"), "actual mobile rail shows item recovery/AP/poison instead of Dash")
+	var receipt_callback := func(type: String, payload: Dictionary) -> void:
+		if type == WIEvents.ITEM_USE_SETTLED and String(payload.get("context", "")) == "combat":
+			screen.call("_render_item_receipt", payload.duplicate(true))
+	_bus.domain_event.connect(receipt_callback)
+	var start := _bus.events.size()
+	screen.call("_confirm_bar_action")
+	await _frames(6)
+	var surface := ""
+	for event: Dictionary in _bus.events.slice(start):
+		if event.type == WIEvents.UI_ITEM_USE_RENDERED:
+			surface = String(event.payload.get("surface", ""))
+	_check(surface == "item_receipt", "hidden mobile desktop feed cannot certify the receipt")
+	_check(_messages.item_use_busy() and (_messages.get("_use_overlay") as Control).is_visible_in_tree(), "visible phone receipt retains latch until player closes it")
+	_check((_messages.get("_use_warning_label") as Label).text.contains("Restored 6 MP"), "phone receipt draws captured restoration")
+	(_messages.get("_use_cancel") as Button).pressed.emit()
+	await _rearm()
+	_check(not _messages.item_use_busy(), "actual receipt Close releases guarded use latch")
+	_bus.domain_event.disconnect(receipt_callback)
+	screen.free()

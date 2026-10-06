@@ -6,7 +6,9 @@ signal item_use_rearmed
 var _active_use: Dictionary = {}
 var _use_sim: Variant
 var _use_settled := false
+const ITEM_USE_REARM_MSEC := 300
 var _use_rendered := false
+var _use_rendered_msec := 0
 var _use_warning := false
 var _use_warning_armed := false
 var _use_warning_frame := 0
@@ -515,8 +517,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		WIEvents.ITEM_USE_SETTLED, WIEvents.ITEM_USE_REFUSED, WIEvents.ITEM_USE_CANCELLED:
 			_accept_use_result(payload)
 		WIEvents.UI_ITEM_USE_RENDERED:
-			if item_use_busy() and int(payload.get("operation_id", -1)) == int(_active_use.operation_id):
-				_use_rendered = true
+			_mark_use_rendered(payload)
 	match type:
 		WIEvents.RESOURCES_CHANGED:
 			if String(payload.get("reason", "")) in ["sleep", "equipment", "dialogue", "preparation", "combat_victory"]:
@@ -1546,7 +1547,7 @@ func _process_item_use() -> void:
 		var proof := _active_use.duplicate(true)
 		proof["armed"] = true
 		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_WARNING_ARMED, proof)
-	if item_use_busy() and _use_settled and _use_rendered and not _use_warning and _use_input_released():
+	if item_use_busy() and _use_settled and _use_rendered and not _use_warning and _use_input_released() and Time.get_ticks_msec() - _use_rendered_msec >= ITEM_USE_REARM_MSEC:
 		if _use_overlay != null and _use_overlay.visible:
 			return
 		_active_use.clear()
@@ -1560,3 +1561,13 @@ func item_warning_cancel_rect() -> Rect2:
 
 func item_warning_confirm_rect() -> Rect2:
 	return _use_confirm.get_global_rect() if _use_warning and _use_overlay.visible else Rect2()
+
+
+func _mark_use_rendered(payload: Dictionary) -> void:
+	if not _use_rendered and item_use_busy() and int(payload.get("operation_id", -1)) == int(_active_use.operation_id):
+		_use_rendered = true
+		_use_rendered_msec = Time.get_ticks_msec()
+
+
+func item_receipt_close_rect() -> Rect2:
+	return _use_cancel.get_global_rect() if not _use_warning and _use_overlay != null and _use_overlay.visible else Rect2()

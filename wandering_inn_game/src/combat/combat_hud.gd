@@ -327,7 +327,7 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 		if is_banner:
 			var viewport := _root.get_viewport()
 			var board := _mobile.board_rect()
-			var size := WIResponsiveLayout.touch_size(viewport, Vector2(360.0, 76.0))
+			var size: Vector2 = WIResponsiveLayout.touch_size(viewport, Vector2(360.0, 76.0))
 			WIResponsiveLayout.place_panel(_banner_panel, Rect2(board.get_center() - size * 0.5, size))
 			_banner_label.add_theme_font_size_override("font_size", WIResponsiveLayout.readable_font_size(viewport, 24, text_scale))
 
@@ -1052,3 +1052,7 @@ func _resize_feed_panel(height: float) -> void:
 	panel.custom_minimum_size = Vector2(FEED_PANEL_BASE_SIZE.x, height)
 	panel.size = Vector2(FEED_PANEL_BASE_SIZE.x, height)
 	UIChrome.set_offsets(panel, FEED_OFFSET_LEFT, FEED_OFFSET_BOTTOM - height, FEED_OFFSET_RIGHT, FEED_OFFSET_BOTTOM)
+
+
+func rendered_feed_has(text: String) -> bool:
+	return _feed_label != null and _feed_label.is_visible_in_tree() and _feed_label.text.contains(text)

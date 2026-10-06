@@ -1288,8 +1288,9 @@ func _render_item_receipt(result: Dictionary) -> void:
 		return
 	var text := WIEffectText.item_use_text(result)
 	_hud.feed_push(text)
+	_refresh()
 	await get_tree().process_frame
-	if _mode != Mode.INACTIVE:
+	if _mode != Mode.INACTIVE and _hud.rendered_feed_has(text):
 		result.merge({"text": text, "surface": "combat_feed"}, true)
 		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_RENDERED, result)
 
