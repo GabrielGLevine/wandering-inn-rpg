@@ -166,3 +166,28 @@ existing canonical timing, not new native/browser acceptance. Full logs,
 results and prior rejected sweep evidence are in
 `/private/tmp/wi-569-qa-evidence/stale-pins/`. No gameplay or fixture change was
 needed for these six repairs.
+
+The carried-HP canonical repairs at `b3bdf638` pass headless without fail-fast:
+`deep_descent` 187 steps, `arc_flow` 298, and unaffected `char_creation` 40.
+Both now walk out from the scout fight through sewers/street, defeat the live
+gate-road ambush with Relc, walk to the Inn bed, and walk back before the boss.
+Deep carries 31/58 HP after scouts, 24/58 after the road, and restores 58/58
+at the bed. Arc carries 14/51, then 8/51, restores 51/51, and wins the boss at
+33/51. These are seed-9 route observations, not a general balance assessment.
+
+Arc's existing fixture omits the grate-access fact despite resolved cistern
+history, so the route asks Olesm's real cistern question after his existing
+briefing. No fixture key is patched. The added bed earns Diplomat 2; the seal
+sleep subsequently earns Warrior 10/11 and renders exactly three lines. The
+next bed still renders zero lines, and all existing seam journal and no-closing-
+sequence assertions remain. Zevara's refreshed ambient interaction is exercised
+before the seal graph. Deep's exact render count includes the returned tunnel.
+
+Original setup/seam teleports in arc and supplied class/quest/kit history remain
+disclosed. The new retreat has no teleports, top-ups, seed changes or enemy
+tuning. Full results, logs, events and route copies are hashed in
+`/private/tmp/wi-569-qa-evidence/walked-recovery/checkpoint.json`; rejected
+authoring runs are retained beside them. Data lint and generated surfaces/notes
+checks pass. This checkpoint has headless canonical timing evidence; the new
+walked segments still need a native window read. Next: independent exact-head
+review, controller composition and appropriate composed integration/window gates.
