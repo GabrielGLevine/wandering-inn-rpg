@@ -42,6 +42,18 @@
    "equals": "floodplains"
   },
   {
+   "action": "assert_event_logged",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "floodplains",
+    "ground_transitions": 1
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_floodplains_ground"
+  },
+  {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [

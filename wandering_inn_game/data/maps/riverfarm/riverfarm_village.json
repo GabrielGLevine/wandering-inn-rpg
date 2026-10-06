@@ -1270,7 +1270,15 @@
      3,
      16
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/generated/water_shoreline_16.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ]
+    }
   },
   {
    "sheet": "res://assets/tiles/harvest/meadow_paths.png",

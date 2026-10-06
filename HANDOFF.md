@@ -16,10 +16,13 @@ archived, or superseded session blocks.
   fallbacks are integrated. Riverfarm composition is integrated at `b12e0a75`:
   25 affected canonical routes and five native routes pass; actual yard probe
   verifies approaches, blockers, herd states and saved-player escapes.
-  Root owns terrain fallback runtime/catalog metadata, creature integration,
-  shared catalogs and provenance. Complete terrain descriptor selection and
-  lint/unit contracts pass; real-map fallback bindings remain to attach.
-  Ruin/dungeon prop kit is registered for an isolated regional map lane.
+  Root owns terrain/creature catalogs and provenance. Complete terrain
+  bindings cover other regions and all arena layers; floodplains uses one
+  authored road/lowland Wang mask. Preflight, builder unit, hunt/camp 91-step,
+  city 277-step, UI kit and first-combat routes pass; arena shoulder-family
+  mismatch and duplicate descriptors found by static review are corrected.
+  Underground worker owns ruin/dungeon/sewers maps and affected QA in isolated
+  `/private/tmp/wi-art-underground` from `e4cb25c3`; root excludes those paths.
   Logs/PNGs: `/private/tmp/wi-art-execution`; Riverfarm evidence:
   `/private/tmp/wi-art-riverfarm-evidence`; terrain audit:
   `/private/tmp/wi-art-terrain-audit`. Creature checkpoint `a77fcbc` is frozen,

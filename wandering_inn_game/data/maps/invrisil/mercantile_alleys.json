@@ -837,7 +837,15 @@
      2
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ]
+    }
   }
  ],
  "decor": [

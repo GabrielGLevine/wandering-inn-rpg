@@ -220,425 +220,268 @@
  ],
  "floor_layers": [
   {
-   "sheet": "res://assets/tiles/floor_tiles_12/grass_02.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
+   "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+   "tile_px": 16,
+   "wang_corners": [
+    [2, 1],
+    [1, 1],
+    [2, 0],
+    [3, 0],
+    [2, 2],
+    [1, 0],
+    [0, 1],
+    [1, 3],
+    [3, 1],
+    [2, 3],
+    [3, 2],
+    [0, 0],
+    [1, 2],
+    [0, 2],
+    [3, 3],
+    [0, 3]
    ],
-   "cells": {
-    "rect": [
-     3,
-     2,
-     9,
-     7
-    ]
-   },
-   "_pick": "hill plateau tone"
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
+   "terrain_lower_cells": {
     "list": [
-     [
-      3,
-      3
-     ],
-     [
-      3,
-      4
-     ],
-     [
-      3,
-      5
-     ],
-     [
-      3,
-      6
-     ],
-     [
-      3,
-      7
-     ],
-     [
-      3,
-      8
-     ],
-     [
-      4,
-      8
-     ],
-     [
-      5,
-      8
-     ],
-     [
-      6,
-      8
-     ],
-     [
-      7,
-      8
-     ],
-     [
-      8,
-      8
-     ],
-     [
-      9,
-      8
-     ],
-     [
-      10,
-      8
-     ],
-     [
-      11,
-      8
-     ],
-     [
-      11,
-      7
-     ],
-     [
-      11,
-      6
-     ],
-     [
-      11,
-      5
-     ]
+     [3, 3],
+     [3, 4],
+     [3, 5],
+     [11, 5],
+     [3, 6],
+     [6, 6],
+     [7, 6],
+     [8, 6],
+     [11, 6],
+     [3, 7],
+     [6, 7],
+     [7, 7],
+     [8, 7],
+     [11, 7],
+     [3, 8],
+     [4, 8],
+     [5, 8],
+     [6, 8],
+     [7, 8],
+     [8, 8],
+     [9, 8],
+     [10, 8],
+     [11, 8],
+     [6, 9],
+     [7, 9],
+     [6, 10],
+     [7, 10],
+     [6, 11],
+     [7, 11],
+     [6, 12],
+     [7, 12],
+     [20, 12],
+     [21, 12],
+     [22, 12],
+     [7, 13],
+     [8, 13],
+     [9, 13],
+     [10, 13],
+     [11, 13],
+     [12, 13],
+     [13, 13],
+     [14, 13],
+     [15, 13],
+     [16, 13],
+     [22, 13],
+     [6, 14],
+     [7, 14],
+     [8, 14],
+     [9, 14],
+     [10, 14],
+     [11, 14],
+     [12, 14],
+     [13, 14],
+     [14, 14],
+     [15, 14],
+     [16, 14],
+     [17, 14],
+     [18, 14],
+     [19, 14],
+     [20, 14],
+     [21, 14],
+     [22, 14],
+     [23, 14],
+     [5, 15],
+     [6, 15],
+     [7, 15],
+     [8, 15],
+     [9, 15],
+     [10, 15],
+     [11, 15],
+     [12, 15],
+     [13, 15],
+     [14, 15],
+     [15, 15],
+     [16, 15],
+     [17, 15],
+     [18, 15],
+     [19, 15],
+     [20, 15],
+     [21, 15],
+     [22, 15],
+     [23, 15],
+     [24, 15],
+     [25, 15],
+     [26, 15],
+     [27, 15],
+     [28, 15],
+     [5, 16],
+     [6, 16],
+     [7, 16],
+     [8, 16],
+     [9, 16],
+     [10, 16],
+     [11, 16],
+     [12, 16],
+     [13, 16],
+     [14, 16],
+     [15, 16],
+     [16, 16],
+     [23, 16],
+     [24, 16],
+     [25, 16],
+     [26, 16],
+     [27, 16],
+     [28, 16],
+     [29, 16],
+     [4, 17],
+     [5, 17],
+     [6, 17],
+     [7, 17],
+     [8, 17],
+     [9, 17],
+     [10, 17],
+     [11, 17],
+     [12, 17],
+     [13, 17],
+     [14, 17],
+     [15, 17],
+     [16, 17],
+     [17, 17],
+     [28, 17],
+     [29, 17],
+     [4, 18],
+     [5, 18],
+     [6, 18],
+     [7, 18],
+     [8, 18],
+     [9, 18],
+     [10, 18],
+     [11, 18],
+     [12, 18],
+     [13, 18],
+     [14, 18],
+     [15, 18],
+     [28, 18],
+     [29, 18],
+     [3, 19],
+     [5, 19],
+     [6, 19],
+     [7, 19],
+     [8, 19],
+     [9, 19],
+     [10, 19],
+     [11, 19],
+     [12, 19],
+     [13, 19],
+     [14, 19],
+     [15, 19],
+     [16, 19],
+     [17, 19],
+     [18, 19],
+     [19, 19],
+     [28, 19],
+     [29, 19],
+     [5, 20],
+     [6, 20],
+     [7, 20],
+     [8, 20],
+     [9, 20],
+     [10, 20],
+     [11, 20],
+     [12, 20],
+     [13, 20],
+     [14, 20],
+     [15, 20],
+     [16, 20],
+     [17, 20],
+     [18, 20],
+     [19, 20],
+     [28, 20],
+     [29, 20],
+     [30, 20],
+     [2, 21],
+     [3, 21],
+     [4, 21],
+     [5, 21],
+     [6, 21],
+     [7, 21],
+     [8, 21],
+     [9, 21],
+     [10, 21],
+     [11, 21],
+     [12, 21],
+     [13, 21],
+     [14, 21],
+     [15, 21],
+     [16, 21],
+     [17, 21],
+     [18, 21],
+     [19, 21],
+     [29, 21],
+     [30, 21],
+     [2, 22],
+     [3, 22],
+     [4, 22],
+     [5, 22],
+     [6, 22],
+     [7, 22],
+     [8, 22],
+     [9, 22],
+     [10, 22],
+     [11, 22],
+     [12, 22],
+     [13, 22],
+     [14, 22],
+     [15, 22],
+     [29, 22],
+     [30, 22],
+     [31, 22],
+     [2, 23],
+     [3, 23],
+     [4, 23],
+     [5, 23],
+     [6, 23],
+     [7, 23],
+     [8, 23],
+     [9, 23],
+     [10, 23],
+     [11, 23],
+     [12, 23],
+     [13, 23],
+     [14, 23],
+     [15, 23],
+     [30, 23],
+     [31, 23],
+     [30, 24],
+     [31, 24],
+     [30, 25],
+     [31, 25]
     ]
    },
-   "_pick": "dry earthen hill brow; the later road layers cut through its south edge"
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/grass_02.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     17,
-     2,
-     9,
-     6
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/grass_02.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     21,
-     17,
-     7,
-     5
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/grass_03.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     2,
-     11,
-     5,
-     4
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/grass_03.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     33,
-     9,
-     6,
-     6
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     5,
-     15,
-     11,
-     9
-    ]
+   "tone": {
+    "base": [
+     0.3,
+     0.37,
+     0.22
+    ],
+    "detail": 0.6
    },
-   "_pick": "wet lowland mud sheet"
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "list": [
-     [
-      16,
-      16
-     ],
-     [
-      16,
-      17
-     ],
-     [
-      17,
-      17
-     ],
-     [
-      15,
-      14
-     ],
-     [
-      14,
-      14
-     ],
-     [
-      6,
-      14
-     ],
-     [
-      7,
-      14
-     ],
-     [
-      4,
-      17
-     ],
-     [
-      4,
-      18
-     ],
-     [
-      3,
-      19
-     ]
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     16,
-     19,
-     4,
-     3
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     2,
-     21,
-     3,
-     3
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     6,
-     6,
-     3,
-     2
-    ]
-   },
-   "_pick": "road: inn apron"
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     6,
-     7,
-     2,
-     6
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     7,
-     13,
-     10,
-     2
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     16,
-     14,
-     8,
-     2
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     23,
-     15,
-     6,
-     2
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     28,
-     16,
-     2,
-     5
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     29,
-     20,
-     2,
-     3
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "rect": [
-     30,
-     22,
-     2,
-     4
-    ]
-   }
-  },
-  {
-   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
-   "tile_px": 540,
-   "coords": [
-    0,
-    0
-   ],
-   "cells": {
-    "list": [
-     [
-      21,
-      12
-     ],
-     [
-      22,
-      12
-     ],
-     [
-      20,
-      12
-     ],
-     [
-      22,
-      13
-     ]
-    ]
-   },
-   "_pick": "POI-A shoulder"
+   "cells": "all"
   }
  ],
  "walls": {
@@ -700,7 +543,15 @@
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
     "tile_px": 16,
-    "water": true
+    "water": true,
+     "fallback_render": {
+      "sheet": "res://assets/tiles/generated/water_shoreline_16.png",
+      "tile_px": 16,
+      "cap": [
+       2,
+       1
+      ]
+     }
    },
    {
     "from": [
@@ -717,7 +568,15 @@
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
     "tile_px": 16,
-    "water": true
+    "water": true,
+     "fallback_render": {
+      "sheet": "res://assets/tiles/generated/water_shoreline_16.png",
+      "tile_px": 16,
+      "cap": [
+       2,
+       1
+      ]
+     }
    },
    {
     "from": [
@@ -734,7 +593,15 @@
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
     "tile_px": 16,
-    "water": true
+    "water": true,
+     "fallback_render": {
+      "sheet": "res://assets/tiles/generated/water_shoreline_16.png",
+      "tile_px": 16,
+      "cap": [
+       2,
+       1
+      ]
+     }
    },
    {
     "from": [
@@ -751,7 +618,15 @@
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
     "tile_px": 16,
-    "water": true
+    "water": true,
+     "fallback_render": {
+      "sheet": "res://assets/tiles/generated/water_shoreline_16.png",
+      "tile_px": 16,
+      "cap": [
+       2,
+       1
+      ]
+     }
    },
    {
     "from": [
@@ -768,7 +643,15 @@
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
     "tile_px": 16,
-    "water": true
+    "water": true,
+     "fallback_render": {
+      "sheet": "res://assets/tiles/generated/water_shoreline_16.png",
+      "tile_px": 16,
+      "cap": [
+       2,
+       1
+      ]
+     }
    },
    {
     "from": [
@@ -785,7 +668,15 @@
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
     "tile_px": 16,
-    "water": true
+    "water": true,
+     "fallback_render": {
+      "sheet": "res://assets/tiles/generated/water_shoreline_16.png",
+      "tile_px": 16,
+      "cap": [
+       2,
+       1
+      ]
+     }
    },
    {
     "from": [
@@ -802,7 +693,15 @@
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
     "tile_px": 16,
-    "water": true
+    "water": true,
+     "fallback_render": {
+      "sheet": "res://assets/tiles/generated/water_shoreline_16.png",
+      "tile_px": 16,
+      "cap": [
+       2,
+       1
+      ]
+     }
    }
   ]
  },

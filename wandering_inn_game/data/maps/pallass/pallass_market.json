@@ -169,7 +169,15 @@
      12
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ]
+    }
   },
   {
    "coords": [
@@ -199,7 +207,15 @@
      4,
      3
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/ashlar_over_checker_v1.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ]
+    }
   }
  ],
  "decor": [

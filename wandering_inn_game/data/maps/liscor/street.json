@@ -336,7 +336,15 @@
      32,
      3
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ]
+    }
   },
   {
    "_pick": "Gate plaza slab: the goblin_ambush arena's VERIFIED cobble neighborhood, distinct tone from the street band",
@@ -363,7 +371,15 @@
      8,
      5
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ]
+    }
   },
   {
    "_pick": "Guild forecourt slab, same verified neighborhood",
@@ -390,7 +406,15 @@
      8,
      5
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ]
+    }
   },
   {
    "_pick": "P4 wear-edge jitter: broken cobble cells along the band's south lip",
@@ -441,7 +465,15 @@
       1
      ]
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ]
+    }
   },
   {
    "_pick": "South-district square where the side street widens",
@@ -464,7 +496,15 @@
      5,
      3
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ]
+    }
   }
  ],
  "walls": {

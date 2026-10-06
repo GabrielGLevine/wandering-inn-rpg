@@ -213,7 +213,15 @@
      4
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/carpet_over_floorboards_v2_square.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ]
+    }
   }
  ],
  "decor": [

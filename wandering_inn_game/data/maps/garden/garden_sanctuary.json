@@ -451,7 +451,15 @@
       1
      ]
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/gravel_over_lawn_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ]
+    }
   }
  ],
  "decor": [

@@ -182,7 +182,23 @@
      23
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/inn_floor.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ],
+     "tone": {
+      "base": [
+       0.33,
+       0.27,
+       0.2
+      ],
+      "detail": 0.65
+     }
+    }
   },
   {
    "_comment": "Slate rows 2 and 9 frame the neutral working floor at top and bottom. No blocking moves.",
@@ -264,7 +280,15 @@
      4,
      3
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/ashlar_over_checker_v1.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ]
+    }
   }
  ],
  "decor": [

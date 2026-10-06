@@ -26,7 +26,19 @@
     "face": [
      14,
      7
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ],
+      "face": [
+       4,
+       3
+      ]
+     }
    },
    {
     "from": [
@@ -40,7 +52,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    },
    {
     "from": [
@@ -54,7 +74,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    },
    {
     "from": [
@@ -68,7 +96,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    },
    {
     "from": [
@@ -82,7 +118,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    },
    {
     "_comment": "The work-room partition, west arm.",
@@ -97,7 +141,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    },
    {
     "_comment": "M5 (review): the 3x2 area behind the partition is SOLID MASS, not a room. The work room is its own map; leaving these cells as floor rendered a walkable-looking pocket no player could ever enter. Walled in both rows so the partition reads as the back of the building.",
@@ -112,7 +164,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    },
    {
     "from": [
@@ -126,7 +186,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    },
    {
     "_comment": "The partition's south arm. The gap it leaves at (8,3) carries the work-room door -- the [Pick Lock] debut gate. That gap is a DOORWAY, not an opening: the door prop blocks the cell, and what lies through it is a separate map.",
@@ -141,7 +209,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    }
   ]
  },

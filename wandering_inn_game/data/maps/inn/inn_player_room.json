@@ -23,7 +23,23 @@
      21
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/inn_floor.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.33,
+       0.27,
+       0.2
+      ],
+      "detail": 0.65
+     }
+    }
   },
   {
    "_pick": "One warmer plank band under the bed wall, from the inn's hall swatch, so the room is not one flat tone edge to edge.",
@@ -46,7 +62,23 @@
      3,
      2
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/inn_floor.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.33,
+       0.27,
+       0.2
+      ],
+      "detail": 0.65
+     }
+    }
   }
  ],
  "walls": {
@@ -69,7 +101,19 @@
     "face": [
      14,
      7
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ],
+      "face": [
+       4,
+       3
+      ]
+     }
    },
    {
     "from": [
@@ -83,7 +127,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    },
    {
     "from": [
@@ -97,7 +149,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    },
    {
     "from": [
@@ -111,7 +171,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    },
    {
     "from": [
@@ -125,7 +193,15 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+      "tile_px": 16,
+      "cap": [
+       4,
+       2
+      ]
+     }
    }
   ]
  },

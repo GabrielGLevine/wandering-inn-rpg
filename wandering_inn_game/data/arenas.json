@@ -79,7 +79,17 @@
        2
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+      "tile_px": 16,
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+       "tile_px": 16,
+       "coords": [
+        0,
+        3
+       ]
+      }
     },
     {
      "_pick": "dirt-transition edge strips at the north/south grid edges (rows 0 and 7) -- whole-image tile.",
@@ -96,7 +106,23 @@
        12,
        1
       ]
-     }
+     },
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+       "tile_px": 16,
+       "coords": [
+        1,
+        2
+       ],
+       "tone": {
+        "base": [
+         0.31,
+         0.32,
+         0.23
+        ],
+        "detail": 0.6
+       }
+      }
     },
     {
      "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
@@ -112,7 +138,23 @@
        12,
        1
       ]
-     }
+     },
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+       "tile_px": 16,
+       "coords": [
+        3,
+        0
+       ],
+       "tone": {
+        "base": [
+         0.31,
+         0.32,
+         0.23
+        ],
+        "detail": 0.6
+       }
+      }
     }
    ],
    "decor": [
@@ -286,7 +328,23 @@
        13
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+       "tile_px": 16,
+       "coords": [
+        2,
+        1
+       ],
+       "tone": {
+        "base": [
+         0.18,
+         0.2,
+         0.22
+        ],
+        "detail": 0.75
+       }
+      }
     }
    ],
    "decor": [
@@ -410,7 +468,23 @@
        4,
        4
       ]
-     }
+     },
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+       "tile_px": 16,
+       "coords": [
+        2,
+        1
+       ],
+       "tone": {
+        "base": [
+         0.31,
+         0.32,
+         0.23
+        ],
+        "detail": 0.6
+       }
+      }
     }
    ],
    "decor": [
@@ -601,7 +675,17 @@
        2
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+      "tile_px": 16,
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+       "tile_px": 16,
+       "coords": [
+        0,
+        3
+       ]
+      }
     },
     {
      "_pick": "dirt-transition edge strips at the north/south grid edges (rows 0 and 7) -- whole-image tile.",
@@ -618,7 +702,23 @@
        12,
        1
       ]
-     }
+     },
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+       "tile_px": 16,
+       "coords": [
+        1,
+        2
+       ],
+       "tone": {
+        "base": [
+         0.31,
+         0.32,
+         0.23
+        ],
+        "detail": 0.6
+       }
+      }
     },
     {
      "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
@@ -634,7 +734,23 @@
        12,
        1
       ]
-     }
+     },
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+       "tile_px": 16,
+       "coords": [
+        3,
+        0
+       ],
+       "tone": {
+        "base": [
+         0.31,
+         0.32,
+         0.23
+        ],
+        "detail": 0.6
+       }
+      }
     }
    ],
    "decor": [
@@ -840,7 +956,23 @@
        13
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+       "tile_px": 16,
+       "coords": [
+        2,
+        1
+       ],
+       "tone": {
+        "base": [
+         0.18,
+         0.2,
+         0.22
+        ],
+        "detail": 0.75
+       }
+      }
     }
    ],
    "decor": [
@@ -963,7 +1095,23 @@
        13
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+       "tile_px": 16,
+       "coords": [
+        2,
+        1
+       ],
+       "tone": {
+        "base": [
+         0.18,
+         0.2,
+         0.22
+        ],
+        "detail": 0.75
+       }
+      }
     }
    ],
    "decor": [
@@ -1086,7 +1234,15 @@
        23
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/inn_floor.png",
+       "tile_px": 16,
+       "coords": [
+        2,
+        1
+       ]
+      }
     }
    ],
    "decor": [
@@ -1190,7 +1346,23 @@
        13
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+       "tile_px": 16,
+       "coords": [
+        2,
+        1
+       ],
+       "tone": {
+        "base": [
+         0.18,
+         0.2,
+         0.22
+        ],
+        "detail": 0.75
+       }
+      }
     }
    ],
    "decor": [
@@ -1293,7 +1465,16 @@
        9
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/bramble_over_moss_v2.png",
+       "tile_px": 16,
+       "coords": [
+        2,
+        1
+       ]
+      }
     }
    ],
    "decor": [
@@ -1496,7 +1677,17 @@
        2
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+      "tile_px": 16,
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+       "tile_px": 16,
+       "coords": [
+        0,
+        3
+       ]
+      }
     }
    ],
    "decor": [
@@ -1606,7 +1797,15 @@
        23
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/inn_floor.png",
+       "tile_px": 16,
+       "coords": [
+        2,
+        1
+       ]
+      }
     }
    ],
    "decor": [
@@ -1717,7 +1916,15 @@
        11
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+       "tile_px": 16,
+       "coords": [
+        2,
+        1
+       ]
+      }
     }
    ],
    "decor": [
@@ -1843,7 +2050,15 @@
        11
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+       "tile_px": 16,
+       "coords": [
+        2,
+        1
+       ]
+      }
     }
    ],
    "decor": [
@@ -1945,7 +2160,16 @@
       0,
       0
      ],
-     "cells": "all"
+     "cells": "all",
+
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+       "tile_px": 16,
+       "coords": [
+        0,
+        3
+       ]
+      }
     }
    ],
    "decor": [
@@ -2066,7 +2290,15 @@
        11
       ]
      ],
-     "cells": "all"
+     "cells": "all",
+      "fallback_render": {
+       "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+       "tile_px": 16,
+       "coords": [
+        2,
+        1
+       ]
+      }
     }
    ],
    "decor": [
