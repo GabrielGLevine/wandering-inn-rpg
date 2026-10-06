@@ -9,32 +9,30 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Approved holistic art program #564:** root owns `issue/564-holistic-art-direction`,
-  base `e1d2edee`, composed source `18628391`. User approved full execution
-  on 2026-10-05. Inn/chrome, NPC/PC/prop rigs, cities/cross-street/vistas,
-  icons/key art, Garden/camp, Riverfarm, ruin/underground and whole-record
-  terrain fallbacks are composed. Root now owns selection-ruling/recipe/index
-  closure docs. Browser worker owns only QA driver/web in `/private/tmp/wi-browser-ready`;
-  other lanes are frozen. Preserve untracked companion UID.
-  Fresh official/public surveys:33maps,63 matching captures,318steps each,
-  independently read. Catalog:473 owned PNGs,187/187 private terrain draws
-  have complete fallbacks; combat rosters/balance unchanged. Composed186
-  full54 units and all269 native canonicals pass, complete/no engine noise.
-  Balance147cells x100seeds passes. Initial browser22/26 and the first managed
-  startup repeat expose early rendering/service races, not product-touch proof.
-  Worker adds an actual first-draw/engine-ready handshake; gesture4s and total
-  startup30s bounds stay fixed. The public-pack delayed controls do not establish
-  official-overlay readiness; fresh no-delay official proof is required.
-  Evidence: `/private/tmp/wi-art-execution`, `/private/tmp/wi-art-underground-evidence`,
-  `/private/tmp/wi-art-riverfarm-evidence`, `/private/tmp/wi-art-creature-evidence`.
-  Failed/interrupted browser output is retained in first-composed-ready-browser-output.
-  Optional steel seed9 loss predates art: baseline/city97combat events match,
-  both fail499; comparison in art-execution/steel-baseline-independent-review.
-  **Exact next action:** integrate reviewed engine-ready fix, settle closure
-  docs/index, rerun affected preflight/native/browser gates, exact-head review,
-  then PR/required CI/squash tree-identity closure. No deployment.
-  Unsuitable rigs retain strong official primaries/public limits; physical
-  devices and production timing remain unproven. Constituent coverage stays open.
+- **Approved holistic art #564:** root owns `issue/564-holistic-art-direction`,
+  original base `e1d2edee`; composed game/QA `18628391`, docs through `ca6dcaef`.
+  All approved regional, roster/icon/key-art, chrome and complete fallback slices
+  are integrated. Official/public33-map63-view surveys and catalog473-PNG/
+  187-private-draw fallback audits pass independent review. Full54 units and
+  all269 native canonicals pass complete/no noise; balance147x100 passes.
+  Browser worker exclusively owns QA driver/web in `/private/tmp/wi-browser-ready`;
+  official-overlay first-draw/runner handshake is pending final integration.
+  Prior browser22/26 and managed-start failure are retained diagnostics, not
+  acceptance. Four-second touch and30-second startup bounds stay unchanged.
+  Evidence: `/private/tmp/wi-art-execution` and regional/creature evidence dirs.
+  Optional steel seed9 loss predates art (97 matching combat events, fail499).
+  **Next:** integrate reviewed startup fix, settle docs/index, final native/web
+  gates, exact-head review, PR/required CI/squash tree identity. Preserve untracked
+  companion UID. Unsuitable rigs retain official art/public limits; physical
+  devices/timing remain unproven. No deployment or premature constituent closure.
+- **Resource/capacity roadmap #565:** planning merged on main `b1c4b02b`;
+  #566–#571 own staged resources/HUD/potions/food/capacity/cutover. No gameplay
+  validation is claimed. After #564's owned safe checkpoint, dispatch #566 and
+  independent #570; serialize core/save/UI writers and keep #571's cutover gate.
+  The plan is `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`;
+  `/private/tmp/wi-vitals-planning` holds planning evidence. M1 physical/human
+  and #494/#495 semantic choices remain open; proposed tuning is not a ruling.
+
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
   (standalone tree `5e8af12d`); QA/export source `93016f0b`.

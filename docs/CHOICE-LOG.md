@@ -23,6 +23,12 @@ merged PRs and `git log -p -- docs/CHOICE-LOG.md`.
 
 ## Current product and system rulings
 
+### User rulings 2026-10-05 (resources and capacity)
+
+- **HP/MP carry between battles.** Actual sleep refills them; Inn meals, food made with a relevant held Skill, inventory food and potions can restore them. Combat potion use costs AP; excess MP potion use causes mana poisoning and HP loss. Show current/max HP/MP and useful preparation feedback outside combat. Program #565 and its [plan](design/2026-10-05-persistent-vitals-recovery-plan.md) own implementation sequencing; gameplay is not yet implemented.
+- **Increase resonance capacity so more enchanted gear fits (#570).** This authorizes capacity expansion independently of #494's unresolved semantic model and #495's damage semantics. Hedault's earlier flat/lower-cost upgrade direction remains approved. Additional physical gear positions have not been selected.
+- Proposed tuning is 1 AP combat potions, three safe MP doses per waking then 4 HP loss per excess dose, and capacity 4→5 at the existing once-only beat. These are controller recommendations for measurement, not user-selected numeric/cadence rulings. User replies supersede them; preserve #432 meal caps and prior repeatable cooking access.
+
 ### User rulings 2026-10-05 (holistic art)
 
 - **#564 / #554 approved:** best art wins per asset within a coherent scene.
