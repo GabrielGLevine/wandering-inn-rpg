@@ -174,7 +174,7 @@ func _check_live_projection_and_staging() -> void:
 	assert(game.vitals.hp == 3, "travel does not refill saved resources")
 	assert(game.start_combat("relc_spar"), "actual practice entry remains available")
 	var pc: Dictionary = game.combat.combatants["pc"]
-	assert(int(pc[WIKeys.HP]) == int(pc[WIKeys.MAX_HP]), "player activation is deferred: legacy entry stays rested")
+	assert(int(pc[WIKeys.HP]) == 3, "practice entry carries the player resource pool")
 	pc[WIKeys.HP] = 8
 	assert(int(game.player_resources()[WIKeys.HP]) == 8, "active projection follows live combat")
 	assert(int(game.snapshot()["vitals"][WIKeys.HP]) == 8, "snapshot never projects stale world HP in combat")

@@ -16,7 +16,7 @@ archived, or superseded session blocks.
   Checkpoint before each implementation or validation phase.
   Evidence: `/private/tmp/wi-567-evidence`; independent review:
   `/private/tmp/wi-567-independent-review.md`.
-  **Exact next action:** implement authoritative exploration HP/MP and captured recovery receipts on existing chrome; measure live HUD/Saved/launcher fit. Compose #566 settlement updates before acceptance; potion details follow #568. Issue remains open.
+  **Exact next action:** import and run focused HUD renderer tests, then checkpoint implementation and obtain actual gameplay/windowed proof. HUD working changes add numeric field resources, inventory preparation and frozen receipts, with Saved fit reservation. Core settlement checkpoint `03da9ec4` is now composed; potion details follow #568. Issue remains open.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code pending its CI/merge. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
@@ -25,7 +25,7 @@ archived, or superseded session blocks.
   #578 HUD contract and #579 encounter design. Serialize shared source/catalogs.
 - **#566 resource foundation:** staged in draft PR #572, isolated
   `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
-  Battle handoff, recovery presentation and composed #571 acceptance remain open.
+  Battle handoff and settled autosaves are implemented in `03da9ec4`; foundation focused units pass. Full integration, recovery presentation and composed #571 acceptance remain open.
 - **Resource/capacity roadmap #565:** planning is merged at base `b1c4b02b`;
   `docs/design/2026-10-05-persistent-vitals-recovery-plan.md` and #566–#571 own
   the staged resource/HUD/potion/food/capacity/cutover work. Proposed tuning

@@ -1,8 +1,8 @@
 # #566 staged resource foundation
 
-This slice runs beside #564 in `/private/tmp/wi-566-foundation`, branch
-`issue/566-persistent-vitals-foundation`, base `b1c4b02b`. It does not activate
-persistent damage in player fights or satisfy all #566 acceptance.
+The resource foundation runs in `/private/tmp/wi-566-foundation`, branch
+`issue/566-persistent-vitals-foundation`, base `b1c4b02b`. It stages persistent resources on the composed integration branch; player-route
+acceptance remains incomplete.
 
 ## Delivered seams
 
@@ -31,37 +31,38 @@ persistent damage in player fights or satisfy all #566 acceptance.
 
 ## Choices and staging
 
-Keep resource authority in the pure simulation and the existing JSON save
-pipeline. Node-based Saveable components or a second formula would violate the
-current ownership/shared-math contract. A focused RefCounted state object is
-per-game, never a shared mutable Resource. HP modifiers stay in the build data;
-food restoration will be explicit in #568/#569.
+The resumed composed branch activates carried resources for integration testing.
+PR #572 stays draft/unmerged until practical HUD/recovery paths and #571 software
+acceptance are complete. No runtime switch, player option or deployment is added.
+Pure per-game state and the existing versioned JSON save pipeline remain authority.
 
-Battle construction defaults to full rest. `start_combat` deliberately does not
-supply the saved resource values in this slice, and `resolve_combat` does not
-commit terminal resources. This is the integration-branch staging approach from
-the approved recovery plan; do not merge/deploy a persistence-only player build.
-No HUD, new events, canon, potion thresholds, physical slots or capacity tuning
-are introduced here.
+`COMBAT_PREPARING` fires after arena validation and before preparation consumption.
+An earlier dialogue-choice checkpoint wins over this general entry checkpoint.
+Victory commits current PC resources and clamps one-fight maximum expiry before
+banking; `COMBAT_RESOLVED` listeners still have the finished combat. Reentrant
+resolution cannot bank twice. `COMBAT_SETTLED` fires after combat is cleared.
+Defeat never commits zero-HP state; the existing loader restores pre-combat state
+and encounter exit grace. Abandon retains its distinct `auto` rollback checkpoint.
 
-## Remaining #566 work after the art checkpoint
+Autosaves defer while combat or sleep settlement is active. Sleep retains its early
+phase event for the veil, then resolves progression and kit changes before refill,
+exposure reset, and `SLEEP_SETTLED`. Intermediate class/phase events cannot save
+partially settled state. In-combat day-phase changes cannot overwrite rollback.
 
-1. Wire carried PC initialization and exactly-once terminal commit. Cover damage,
-   real mana spends, shields, healing then victory, and all practice/story entries.
-2. Preserve an armed-versus-active preparation boundary. The current build still
-   clears pending_meal before COMBAT_STARTED. Move pre-combat autosave before
-   that consumption, preserving the earlier dialogue-choice checkpoint.
-3. Serialize world/combat/event/autosave ownership with #564. Add honest domain
-   events, rendered confirmation and actual QA routes without weakening pins.
-4. Ensure sleep autosave occurs after the final refill/progression. Current
-   PHASE_CHANGED and intermediate CLASS_* autosaves precede that final state;
-   this slice does not claim completed autosave ordering.
-5. Prove defeat/abandon rollback with the real Game checkpoint loader and exit
-   grace. Never carry dead-player state into the world or refill on retry.
-6. Compose count/capacity migration with #568/#570 using version 10 as this
-   foundation; subsequent schemas need ordered migration, not parallel versions.
-7. Add earned two-fight, depletion/reload, sleep, max-buff expiry and retry routes,
-   windowed/browser-touch evidence, then full composed acceptance through #571.
+`RESOURCES_CHANGED` carries frozen `before`, `after`, `reason`, `source` and
+`preparation` dictionaries. Resource projections contain current/max HP/MP and
+`mp_potion_doses`; preparation has `armed`, `active`, `well_fed`, and `room_hp`.
+Combat actions emit only changed pools; preparation/equipment receipts can emit
+with equal pools. HUD rendering and actual player-route proof remain #567 work.
+
+## Remaining integration work
+
+1. Run full current-tree units, canonical QA and the shared balance batch; update
+   only deliberate semantic assumptions, never weaken numerical windows.
+2. Add actual player-trigger carry/reload/sleep/retry routes with rendered
+   confirmations and windowed reads after #567 composition.
+3. Compose #568/#569 recovery/count and #570 capacity delivery in migration order;
+   complete #571 cutover evidence before merging an activated player build.
 
 ## Verification
 

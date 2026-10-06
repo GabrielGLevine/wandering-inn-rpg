@@ -30,6 +30,10 @@ var skills: Dictionary = {}
 var classes: Dictionary = {}
 var combat: WICombat = null
 var vitals := WIVitals.new()
+var _active_meal: Dictionary = {}
+var _observed_resources: Dictionary = {}
+var _resolving_combat := false
+var _settling_sleep := false
 ## GH#345 difficulty seam: plain data, PURE (core never touches the
 ## WISettings autoload). Scene layer pushes the current value (settings
 ## row, creation prompt, world boot); start_combat copies it into the
@@ -1544,11 +1548,13 @@ func _commit_dialogue_choice(index: int) -> bool:
 	var pending_sell_vendor := ""
 	for effect: Dictionary in result["effects"]:
 		if effect.has("start_combat"):
-			# Snapshot precedes option effects; synchronous COMBAT_STARTED consumes it,
+			# Snapshot precedes option effects; synchronous COMBAT_PREPARING consumes it,
 			# or DIALOGUE_EFFECT_FAILED disarms the snapshot guard.
 			_emit(WIEvents.PRE_COMBAT_CHOICE, {"encounter": String(effect["start_combat"])})
 			break
 	for effect: Dictionary in result["effects"]:
+		var before_resources := player_resources()
+		var before_preparation := preparation_snapshot()
 		if effect.has("accomplishment"):
 			record_accomplishment(String(effect["accomplishment"]))
 		elif effect.has("quest"):
@@ -1613,6 +1619,7 @@ func _commit_dialogue_choice(index: int) -> bool:
 			# toast: an authored line at the moment a dialogue pick
 			# resolves something, so talk resolutions stop being silent.
 			_emit(WIEvents.TOAST, {"text": String(effect["toast"])})
+		_resources_changed(before_resources, "dialogue", _dialogue_conversation_id, before_preparation != preparation_snapshot())
 	if not bool(result["ended"]):
 		walker.set_ctx(_build_dialogue_ctx())
 		walker.advance(String(result["next"]))
@@ -2403,7 +2410,6 @@ func start_combat(entity_id: String) -> bool:
 	var by_id := {}
 	for c: Dictionary in _combat_config["combatants"]["combatants"]:
 		by_id[String(c[WIKeys.ID])] = c
-	var cfgs: Array = [_build_player_combatant(by_id["pc"])]
 	var allies: Array = (entity.get("allies", []) as Array).duplicate()
 	var ally_req: Dictionary = entity.get("ally_requires", {})
 	var ally_gate_met := true
@@ -2422,6 +2428,9 @@ func start_combat(entity_id: String) -> bool:
 			arena = a
 	if arena.is_empty():
 		return false
+	var before_resources := player_resources()
+	_emit(WIEvents.COMBAT_PREPARING, {"encounter": entity_id})
+	var cfgs: Array = [_build_player_combatant(by_id["pc"])]
 	# ORDER/CAPACITY: inject after ally_requires, before ally_hp_penalty.
 	# PC + allies + companion must fit arena player_spawns.
 	if companion != "" and by_id.has(companion) and not allies.has(companion):
@@ -2495,12 +2504,17 @@ func start_combat(entity_id: String) -> bool:
 	combat.summon_catalog = by_id
 	if ambush and combat.grant_ambush("pc"):
 		_emit(WIEvents.TOAST, {"text": "It is still turning toward the sound when you reach it. The first move is yours."})
+	_resources_changed(before_resources, "combat_entry", entity_id, true)
 	combat.begin()
 	return true
 
 
 func _build_player_combatant(template: Dictionary) -> Dictionary:
-	var pc := _player_combatant_config(template, pending_meal)
+	vitals.reconcile(player_resource_maxima())
+	_active_meal = pending_meal.duplicate(true)
+	var pc := _player_combatant_config(template, _active_meal)
+	pc["initial_hp"] = vitals.hp
+	pc["initial_mp"] = vitals.mp
 	pending_meal = {}
 	return pc
 
@@ -2544,6 +2558,25 @@ func player_resources() -> Dictionary:
 		state = vitals.serialized()
 		state.merge(maxima)
 	return state
+
+
+func preparation_snapshot() -> Dictionary:
+	return {"armed": pending_meal.duplicate(true), "active": _active_meal.duplicate(true),
+		"well_fed": well_fed, "room_hp": _room_tier_bonus()}
+
+
+func save_settlement_pending() -> bool:
+	return combat != null or _resolving_combat or _settling_sleep
+
+
+func _resources_changed(before: Dictionary, reason: String, source: String = "", force: bool = false) -> void:
+	var after := player_resources()
+	_observed_resources = after.duplicate(true)
+	if not force and before == after:
+		return
+	_emit(WIEvents.RESOURCES_CHANGED, {"before": before.duplicate(true),
+		"after": after.duplicate(true), "reason": reason, "source": source,
+		"preparation": preparation_snapshot()})
 
 
 func _room_tier_bonus() -> int:
@@ -2602,9 +2635,11 @@ func use_item(item_id: String) -> bool:
 	var result := WIItems.resolve_use(rec, null)
 	if not bool(result.get("ok", false)):
 		return false
+	var before_resources := player_resources()
 	_merge_pending_meal(result.get("pending_meal", {}) as Dictionary)
 	inventory.erase(item_id)
 	_emit(WIEvents.ITEM_USED, {"item": item_id})
+	_resources_changed(before_resources, "preparation", item_id, true)
 	# GH#334 note 28 item 3: the toast used to be "Used: Fine Meal." and nothing
 	# else -- the payload the player just spent an item and a walk to the cook
 	# for was never restated, and its one-fight scope was stated nowhere in the
@@ -2776,10 +2811,11 @@ func equip(item_id: String) -> bool:
 	if would_be_total > resonance_capacity:
 		_emit(WIEvents.TOAST, {"text": _CAPACITY_REFUSAL_TOAST})
 		return false
-	vitals.reconcile(player_resource_maxima())
+	var before_resources := player_resources()
 	equipped[target_slot] = item_id
 	vitals.reconcile(player_resource_maxima())
 	_emit(WIEvents.ITEM_EQUIPPED, {"item": item_id, "slot": target_slot})
+	_resources_changed(before_resources, "equipment", item_id, true)
 	return true
 
 
@@ -2790,19 +2826,34 @@ func unequip(slot: String) -> bool:
 		return false
 	if String(equipped.get(slot, "")) == "":
 		return false
-	vitals.reconcile(player_resource_maxima())
+	var before_resources := player_resources()
 	equipped[slot] = ""
 	vitals.reconcile(player_resource_maxima())
 	_emit(WIEvents.ITEM_UNEQUIPPED, {"slot": slot})
+	_resources_changed(before_resources, "equipment", slot, true)
 	return true
 
 
 func resolve_combat() -> void:
-	if combat == null or not combat.finished:
+	if combat == null or not combat.finished or _resolving_combat:
 		return
-	_banking.resolve(combat, _pending_encounter, dormant_encounters, classes, fractional_bank)
+	_resolving_combat = true
+	var before_resources := player_resources()
+	var encounter := _pending_encounter
+	var victory := bool(combat.outcome.get("victory", false))
+	if victory:
+		vitals.hp = int(before_resources[WIKeys.HP])
+		vitals.mp = int(before_resources[WIKeys.MP])
+		vitals.reconcile(player_resource_maxima())
+	# Banking listeners still read the finished combat. Autosaves wait for settlement.
+	_banking.resolve(combat, encounter, dormant_encounters, classes, fractional_bank)
 	combat = null
 	_pending_encounter = ""
+	_active_meal = {}
+	_resolving_combat = false
+	if victory:
+		_resources_changed(before_resources, "combat_victory", encounter, true)
+		_emit(WIEvents.COMBAT_SETTLED, {"encounter": encounter, "vitals": player_resources()})
 
 
 func _roll_loot(entity: Dictionary) -> void:
@@ -2836,6 +2887,10 @@ const _EVOLUTION_WAITING_TOASTS := {
 
 
 func sleep() -> void:
+	if combat != null or _settling_sleep:
+		return
+	_settling_sleep = true
+	var before_resources := player_resources()
 	var known_before_sleep: Array = known_skills().duplicate()
 	for encounter_id: String in warded_encounters.keys():
 		var ward: Dictionary = warded_encounters[encounter_id]
@@ -2883,6 +2938,9 @@ func sleep() -> void:
 	_sleep_beat.run(classes, accomplishments, _combat_config)
 	_auto_slot_new_field_skills(known_before_sleep)
 	vitals.refill(player_resource_maxima())
+	_settling_sleep = false
+	_resources_changed(before_resources, "sleep", "bed", true)
+	_emit(WIEvents.SLEEP_SETTLED, {"vitals": player_resources(), "times_slept": times_slept})
 
 
 func _bank_reached_two_classes_if_earned() -> void:
@@ -3010,6 +3068,7 @@ func skills_config_raw() -> Dictionary:
 func snapshot() -> Dictionary:
 	return {
 		"vitals": player_resources(),
+		"preparation": preparation_snapshot(),
 		"current_map": current_map,
 		"player_cell": [player_cell.x, player_cell.y],
 		"player_facing": [player_facing.x, player_facing.y],
@@ -3121,6 +3180,8 @@ func _combat_event_relay(type: String, payload: Dictionary) -> void:
 		if reaction_skill != "" and not used_skills.has(reaction_skill):
 			used_skills.append(reaction_skill)
 	_emit(type, payload)
+	if combat != null and not _observed_resources.is_empty():
+		_resources_changed(_observed_resources, "combat_action", type)
 
 
 func _enrich_status_applied(payload: Dictionary) -> Dictionary:

@@ -1128,6 +1128,9 @@ static func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalo
 		pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION]
 	else:
 		pc[WIKeys.SKILLS] = kit
+	var maxima := WICombatBuild.resource_maxima(pc, skills_by_id)
+	pc["initial_hp"] = maxima[WIKeys.MAX_HP]
+	pc["initial_mp"] = maxima[WIKeys.MAX_MP]
 	return pc
 
 
