@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import { runnerStartupInit, releaseRunnerStartup, startupDelay } from './runner_startup.mjs';
+
+const target = {evaluate: async (fn, arg) => fn(arg)};
+globalThis.window = {__WI_QA__: {wait_for_runner_ready: true}};
+runnerStartupInit();
+const release = releaseRunnerStartup(target, {delayMs: 60});
+await new Promise(resolve => setTimeout(resolve, 10));
+assert.equal(window.__WI_QA_RUNNER_READY__, false, 'preparation must not release delayed startup');
+const timing = await release;
+assert.equal(window.__WI_QA_RUNNER_READY__, true);
+assert(timing.ready_at_ms - timing.prepared_at_ms >= 50);
+runnerStartupInit();
+assert.equal(window.__WI_QA_RUNNER_READY__, false, 'each document/reload resets readiness');
+await releaseRunnerStartup(target, {withhold: true});
+assert.equal(window.__WI_QA_RUNNER_READY__, false);
+assert.equal(window.__WI_QA_STARTUP__.ready_at_ms, null);
+window.__WI_QA__.wait_for_runner_ready = false;
+await assert.rejects(releaseRunnerStartup(target), /not initialized/);
+assert.equal(startupDelay([]), 0);
+assert.equal(startupDelay(['--startup-delay-ms=6000']), 6000);
+for (const value of ['-1', '20001', 'NaN', '1.5', '']) assert.throws(() => startupDelay([`--startup-delay-ms=${value}`]));
+delete globalThis.window;
+console.log('RUNNER_STARTUP_TEST: PASS');

@@ -163,11 +163,25 @@ func _run() -> void:
 	real_message_timing = bool(parsed.get("qa_real_message_timing", false)) \
 		or _truthy(String(QAPaths.user_args().get("qa-real-message-timing", "")))
 	_fail_fast = _fail_fast or bool(parsed.get("fail_fast", false))
+	var steps: Array = parsed["steps"]
+	_steps_total = steps.size()
+	if OS.has_feature("web") and int(JavaScriptBridge.eval("window.__WI_QA__?.wait_for_runner_ready === true ? 1 : 0", true)) == 1:
+		var startup_deadline := Time.get_ticks_msec() + RUNNER_STARTUP_DEADLINE_MSEC
+		var runner_ready := false
+		while Time.get_ticks_msec() < startup_deadline:
+			if int(JavaScriptBridge.eval("window.__WI_QA_RUNNER_READY__ === true ? 1 : 0", true)) == 1:
+				runner_ready = true
+				break
+			await get_tree().process_frame
+		if not runner_ready:
+			_fail("web runner startup readiness was not received within 30000ms; no QA steps run")
+			_aborted = true
+			_finish()
+			return
+		ObservableBus.emit_domain_event("qa_runner_ready", {})
 	_install_fixture_saves(parsed.get("fixture_save"))
 	if not bool(parsed.get("starts_at_title", false)):
 		await _skip_title()
-	var steps: Array = parsed["steps"]
-	_steps_total = steps.size()
 	for i: int in steps.size():
 		_step_index = i
 		_steps_run = i + 1
@@ -181,6 +195,8 @@ func _run() -> void:
 			break
 	_finish()
 
+
+const RUNNER_STARTUP_DEADLINE_MSEC := 30000
 
 func _install_fixture_saves(spec: Variant) -> void:
 	if spec == null:
@@ -1320,7 +1336,7 @@ func _touch_at(pos: Vector2, label: String, gesture: Dictionary = {}) -> void:
 	if OS.has_feature("web"):
 		var window_pos: Vector2 = WIResponsiveLayout.css_transform(get_viewport()) * pos
 		var before := int(JavaScriptBridge.eval("window.__WI_QA_TOUCH_DONE__ || 0", true))
-		JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = {x: %f, y: %f, coordinate_space: 'css', label: %s, gesture: %s}" % [window_pos.x, window_pos.y, JSON.stringify(label), JSON.stringify(gesture)], true)
+		JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = {x: %f, y: %f, coordinate_space: 'css', issued_at_ms: performance.now(), label: %s, gesture: %s}" % [window_pos.x, window_pos.y, JSON.stringify(label), JSON.stringify(gesture)], true)
 		var deadline := Time.get_ticks_msec() + TOUCH_SERVICE_DEADLINE_MSEC
 		var serviced := false
 		while Time.get_ticks_msec() < deadline:
