@@ -495,14 +495,14 @@
    "action": "assert_event_logged",
    "type": "ui_combat_hint_rendered",
    "payload_contains": {
-    "text": "[You come to every fight whole. Wounds do not follow you out of one.]"
+    "text": "[HP carries between battles. Sleep restores HP.]"
    }
   },
   {
    "action": "assert_event_absent",
    "type": "ui_combat_hint_rendered",
    "payload_contains": {
-    "text": "[Mana gathers fresh at every battle's start.]"
+    "text": "[MP carries between battles. Sleep restores MP.]"
    }
   }
  ]

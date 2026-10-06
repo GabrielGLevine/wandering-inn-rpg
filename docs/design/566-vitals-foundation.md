@@ -111,7 +111,24 @@ asserting current HP/MP equal final maxima after the actual post-builder bonus.
 The unchanged calibration windows also pass. Evidence: `rested-red` and
 `rested-green` under the same evidence root.
 
-The current composed source includes the HUD and visible sleep copy. Actual
-carry/heal/reload/sleep route proof and windowed reads are still pending; old
-foundation compatibility runs do not establish these new player behaviors.
-Composed full gates remain required before #571 activation.
+The composed HUD has two passing actual-input routes at seed 9 with production
+message timing, exit 0, `QA_RESULT: PASS`, no noise and passing result artifacts:
+
+- `vitals_carry_loop`: 136 steps. A disclosed modern fixture provides HP 7,
+  MP 12, two prior doses and one draught. Actual hotbar casts spend MP to 8;
+  the actual draught action heals HP to 15. Victory and a second fight retain
+  15/8; pause save/load preserves those values and exposure. The real Inn
+  stairs and bed resolve Warrior, then refill to HP 43/43 and MP 12/12 and
+  clear exposure. Every handoff/sleep receipt matches frozen domain values.
+  This is fixture contract proof, not earned item/class acquisition.
+- `vitals_fresh_start`: 122 steps from a fresh simulation, without fixtures,
+  teleports or direct state changes. Actual chest acquisition and inventory
+  equip increase maximum HP 32→36 while current HP stays 32. Two real spars
+  carry 32/36; actual stairs/bed grant Warrior and refill the resulting 47/47.
+  Inert practice opponents are not hostile attrition evidence.
+
+Evidence: `vitals-carry-headless` and `vitals-fresh-headless` under the evidence
+root. The first combat HP/MP hints now explain carry and sleep using the existing
+feed and `ui_combat_hint_rendered` mechanism. Matching canonical pins are updated.
+Windowed observations, affected older canonicals and composed full gates remain
+pending; no physical-phone, hostile continuous journey or #571 activation claim.

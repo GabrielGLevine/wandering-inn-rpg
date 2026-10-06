@@ -19,8 +19,12 @@ archived, or superseded session blocks.
   autosave/load callbacks. Logs: `/private/tmp/wi-566-resumed-evidence`.
   Full preflight passed at `03da9ec4`, including deliberate old full-refill/text/event-tail
   test updates. Both balance policies passed; no numerical windows changed.
-  **Next:** add `vitals_carry_loop` fixture-contract and `vitals_fresh_start` earned
-  input routes against the composed HUD, then windowed reads and composed gates.
+  **Next:** windowed reads of `vitals_carry_loop` and `vitals_fresh_start`,
+  affected older canonicals and composed gates. Both new actual-input routes
+  pass headless at seed 9 with production message timing and frozen domain/HUD
+  payload assertions (136 and 122 steps); evidence is preserved under the
+  resumed evidence root. The former is explicitly fixture contract proof; the
+  latter earns chest armor and sleep through a fresh route without teleports.
   Reviewed standalone builder amendment bug is fixed; meaningful post-builder
   current-pool regression is red/green and full calibration passes.
   Core ownership is released for capacity work in its separate worktree; this

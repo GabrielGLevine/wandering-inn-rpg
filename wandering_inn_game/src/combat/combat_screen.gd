@@ -128,30 +128,12 @@ var _acting_skill_flash_color: Color = Color.TRANSPARENT
 static var _first_combat_hint_shown := false
 static var _combat_hint_reset_hooked := false
 
-## v0.16.1 finding 19. The playtest question was "why did my MP recharge without
-## sleeping?" -- and the answer is that MP is not a persistent resource at all,
-## so nothing recharges: WICombat.build sets MAX_MP and then MP = MAX_MP for
-## every combatant at every fight (HP likewise), and an exhaustive search of the
-## MP surface finds no per-turn tick, no overworld tick, no item and no sleep
-## hook. There is nothing to carry, so nothing can be depleted between fights.
-## That IS the design -- evolution-reachability.md prices [Flame Dart]'s "AP/MP
-## premium" as fewer casts PER FIGHT -- but the game never said so, while
-## surfaces DO show MP (sleep_beat announces "+N Max MP", the journal prints
-## "3 MP"), which invites the player to model a persistent pool and then read
-## its refill as a bug. So: say it, once, on the first fight where the PC
-## actually has a pool. Own flag, not `_first_combat_hint_shown`'s -- a Warrior's
-## opening fights must not spend a disclosure that would mean nothing to them.
-const FIRST_MP_HINT_LINE := "[Mana gathers fresh at every battle's start.]"
+## The MP hint waits for a real mana pool; noncasters must not spend its one-shot flag.
+const FIRST_MP_HINT_LINE := "[MP carries between battles. Sleep restores MP.]"
 static var _first_mp_hint_shown := false
 
-## GH#334 notes 19/28, the HP half of the disclosure above. The MP line's own
-## comment named HP in the same breath ("HP likewise") and then said only the MP
-## half -- and because that line correctly waits for MAX_MP > 0, a Warrior gets
-## NO disclosure of the model at all, ever, while the game keeps showing them HP
-## bars in combat and announcing "+N Max HP" at every level. So: a sibling that
-## fires on the FIRST COMBAT REGARDLESS OF POOL. Own flag, same one-shot shape,
-## same UI_COMBAT_HINT_RENDERED so QA can pin it.
-const FIRST_HP_HINT_LINE := "[You come to every fight whole. Wounds do not follow you out of one.]"
+## HP carry applies to every build, including classless opening fights.
+const FIRST_HP_HINT_LINE := "[HP carries between battles. Sleep restores HP.]"
 static var _first_hp_hint_shown := false
 
 
