@@ -9,30 +9,35 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed at user request:** compose merged art PR #577 and finish this lane.
-  Lane #521: `issue/521-encounter-design` in `/private/tmp/wi-521-encounters`;
-  base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
-  Owned paths: `HANDOFF.md`, `docs/design/521-encounter-proposals.md`.
-  Checkpoint before each implementation or validation phase.
-  Evidence: `/private/tmp/wi-521-evidence`; independent review:
-  `/private/tmp/wi-521-independent-review.md`.
-  **Next:** revalidate composed design, finish non-Web CI, then merge PR #579.
-  #517 design merged as5823356f (reviewed/squash trees match); #518/#520 own
-  its runtime/emotional acceptance. #522 owns encounter implementation after #516/#571.
-- **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
-  is composed here as completed code squashed as `0bbd96aa`. Original art checkout
-  remains separately owned and untouched. Previous choice-log ceiling fix is
-  included. Squash tree `0e843291` matches the reviewed source. User now permits bypassing Web parity
-  when it bottlenecks a PR; all other CI and independent review remain required.
-  Other checkpoints: #572 foundation, #573 capacity, #574 routes, #575 homecomings,
-  #578 HUD contract and #579 encounter design. Serialize shared source/catalogs.
-- **#566 resource foundation:** staged in draft PR #572, isolated
-  `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
-  Battle handoff, recovery presentation and composed #571 acceptance remain open.
-- **Resource/capacity roadmap #565:** planning is merged at base `b1c4b02b`;
-  `docs/design/2026-10-05-persistent-vitals-recovery-plan.md` and #566–#571 own
-  the staged resource/HUD/potion/food/capacity/cutover work. Proposed tuning
-  remains subject to measurement. M1 devices and #494/#495 choices stay open.
+- **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
+  Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.
+  Original art checkout remains separately owned and untouched.
+- **User CI permission:** bypass Web parity when it bottlenecks PR merges;
+  record each waiver without calling it a pass. Other CI/review and actual
+  gameplay/device evidence remain required.
+- **Designs closed:** #517/PR575 squash5823356f/treee3203d51; #521/PR579
+  squash53bd4c68/tree95341cea. Reviewed/squash trees match; seven non-Web CI
+  jobs passed and Web was sole waived blocker. Runtime stays #518/#520/#522.
+- **Staged resources:** PR572/#56685af0621, PR578/#5673d2ae361, PR573/#570
+  core60aebdaa plus QA checkpoints. Carry, HUD/receipts and capacity4→5/v11
+  have bounded source review; JSON precision fix approved. No partial deployment
+  or activation merge before recovery/#571. All59 Godot units pass; four lint
+  line pins needed repinning, then282Python tests/109subtests pass. Final
+  canonical/balance follows capacity QA. Bundle-v7 windowed gear/tutorial/dark
+  and fresh-start/carry routes pass; all28images read. Browser/device unproven.
+- **Active owners:** resource_plan owns #568 core/counts/schema12/transactions/
+  poison/data/tests in `/private/tmp/wi-568-consumables`, branch
+  `issue/568-consumable-recovery`, base8b5602ab. capacity570 owns gear/door
+  QA/fixtures/manifest/generated/docs only in `/private/tmp/wi-570-capacity`.
+  Controller validates `/private/tmp/wi-567-hud-contract`; preserve companionUID.
+  **Next:** checkpoint quantities, shared preview/token use and poison; then
+  frontend. Compose capacity QA and window/final gates. #569 services follow568;
+  #512 earned journeys follow recovery (PR574 recon). No shared mutable trees.
+  Exact live registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence
+  `/private/tmp/wi-{566-resumed,567,570}-evidence`; branch HANDOFFs pin heads.
+- **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
+  governs #566–#571. Preserve unlimited existing kitchen access and measure it.
+  M1 devices and #494/#495 choices remain open.
 
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
@@ -58,10 +63,6 @@ archived, or superseded session blocks.
   using the same private candidate and `qa/M1-OBSERVATIONS.md`. None supplied.
   OS keyboard/chooser/background/audio policy and actual itch remain unproven.
   No release/deploy/outreach/recruitment authorized. M1 stays open.
-- Prior scoped M1 repairs are merged through PRs #547–#551; their PR bodies
-  own detailed validation. #507/#508/#509 are closed. Remaining physical-device,
-  actual-host and human clauses stay open; do not rerun software closure merely
-  because those observations are missing.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.
