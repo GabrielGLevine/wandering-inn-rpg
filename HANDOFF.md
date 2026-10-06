@@ -17,9 +17,14 @@ archived, or superseded session blocks.
   before/after/reason/source/preparation interface and HUD constants are available.
   Focused vitals, initialization and new handoff unit pass, including actual Game
   autosave/load callbacks. Logs: `/private/tmp/wi-566-resumed-evidence`.
-  First sim-core compatibility probe found expected old full-refill/text/event-tail
-  assumptions; updated these deliberately, rerun pending. No balance pins changed.
-  **Next:** correct the reviewed full-rest builder amendment bug; add actual carry/reload/sleep QA and windowed reads on the composed HUD. Full preflight and both balance policies passed at03da9ec4; new composed gates remain pending.
+  Full preflight passed at `03da9ec4`, including deliberate old full-refill/text/event-tail
+  test updates. Both balance policies passed; no numerical windows changed.
+  **Next:** add `vitals_carry_loop` fixture-contract and `vitals_fresh_start` earned
+  input routes against the composed HUD, then windowed reads and composed gates.
+  Reviewed standalone builder amendment bug is fixed; meaningful post-builder
+  current-pool regression is red/green and full calibration passes.
+  Core ownership is released for capacity work in its separate worktree; this
+  worker continues only QA/routes/manifest/tests and evidence documentation.
   HUD #578 checkpoint a9e839d3 is composed, including tested resource strip, captured receipts and Saved fit.
   User confirmed usage reset; no interrupted test remains active.
   PR #572 remains draft/unmerged; no player activation or deployment before #571.

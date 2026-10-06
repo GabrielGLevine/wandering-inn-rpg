@@ -74,7 +74,7 @@ canonical QA and the shared numerical balance batch. These prove foundation
 compatibility; they do not prove player-facing carried-resource delivery.
 
 
-## Recorded foundation evidence
+## Historical foundation evidence (6d3a0a88)
 
 Implementation source: `6d3a0a883372313a35285e2b6733e9374a73e855`, tree
 `d8d77929ec791593e73084d312909c07dd4d4795`; engine
@@ -91,17 +91,27 @@ licensed overlay. Logs/verdicts live at `/private/tmp/wi-566-evidence`.
 | Comment census, leak check, diff whitespace | Pass. |
 | Independent source review | Approved for this bounded draft at 6d3a0a88; external record `/private/tmp/wi-566-independent-review.md`. No merge/full-issue approval. |
 
-Full preflight is not green. `test_choice_log_stays_a_decision_index` finds
-the untouched base CHOICE-LOG at 31,122 bytes (limit 30,000). The base HANDOFF
-also exceeded its 12,000-byte cap; this lane's current handoff is trimmed.
-`test_head_tree_findings_are_the_known_set` reports four line-number drifts:
-`sworn_fang_boon`, `basic_command_boon`, `pack_bond_boon`, and
-`flarepepper_powder`. Repin the actual granting lines after composing the tree.
-The shared data-lint validator and CHOICE-LOG are owned by the art lane; this
-lane leaves them untouched and records those fixes for serialized integration.
-No behavior/fixture/golden/balance assertion was weakened.
+That historical foundation preflight was red on the then-oversized CHOICE-LOG
+and four moved source-grant pins. Art composition and the resumed source-pin
+updates resolved those blockers. It described no newly activated resource UI;
+that statement does not apply to the current carry/sleep/HUD composition.
 
-There is no new player-visible surface to inspect in this staged slice.
-Existing native routes establish compatibility only. Carried-resource gameplay,
-new rendered receipts, browser touch, physical devices and human understanding
-remain unproven until the follow-up wiring/recovery work lands.
+## Current checkpoint evidence
+
+`03da9ec4` passed `scripts/preflight.sh --full` (exit 0, `PREFLIGHT: ALL GREEN`)
+and both 147 × 100 seeded balance policies (exit 0, PASS and zero noise).
+Complete logs and per-suite verdicts: `/private/tmp/wi-566-resumed-evidence`.
+The competent-policy cell bands remain report-only; the required ladder passed.
+
+Review found that explicit full-rest fields in the shared batch builder froze
+pools before downstream spine probes appended their food HP bonus. The builder
+now deliberately omits initial pools so `WICombat` derives/rests the final config.
+The calibration regression fails on the old builder and passes after the fix,
+asserting current HP/MP equal final maxima after the actual post-builder bonus.
+The unchanged calibration windows also pass. Evidence: `rested-red` and
+`rested-green` under the same evidence root.
+
+The current composed source includes the HUD and visible sleep copy. Actual
+carry/heal/reload/sleep route proof and windowed reads are still pending; old
+foundation compatibility runs do not establish these new player behaviors.
+Composed full gates remain required before #571 activation.
