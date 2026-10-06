@@ -1,6 +1,7 @@
 {
  "_comment": "Reachable ONLY via the portal contract (data/portals.json's new 'invrisil' row, requires_accomplishment invrisil_attuned, banked by the Guild-board letter beat)",
  "biome": "invrisil_street",
+ "camera": {"offset": [0, -3], "margins": [0, 3, 0, 0]},
  "grid": {
   "width": 28,
   "height": 18
@@ -252,7 +253,7 @@
   ],
   [
    14,
-   8
+   5
   ],
   [
    4,
@@ -628,10 +629,18 @@
    "cells": {
     "rect": [
      10,
-     5,
+     3,
      10,
      7
     ]
+   },
+   "tone": {
+    "base": [
+     0.53,
+     0.5,
+     0.47
+    ],
+    "detail": 0.15
    }
   },
   {
@@ -912,7 +921,7 @@
    "sprite": "plaza_fountain",
    "cell": [
     14,
-    8
+    5
    ]
   },
   {
@@ -1071,6 +1080,160 @@
     4,
     1
    ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    2,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    2,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    5,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    5,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    8,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    8,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    11,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    11,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    14,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    14,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    17,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    17,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    20,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    20,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    23,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    23,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_timber_panel",
+   "cell": [
+    26,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_upper_window",
+   "cell": [
+    26,
+    0
+   ]
+  },
+  {
+   "sprite": "invrisil_roofline",
+   "cell": [
+    4,
+    -1
+   ]
+  },
+  {
+   "sprite": "invrisil_roofline",
+   "cell": [
+    11,
+    -1
+   ]
+  },
+  {
+   "sprite": "invrisil_roofline",
+   "cell": [
+    18,
+    -1
+   ]
+  },
+  {
+   "sprite": "invrisil_roofline",
+   "cell": [
+    25,
+    -1
+   ]
   }
  ],
  "entities": [
@@ -1080,7 +1243,7 @@
    "kind": "prop",
    "cell": [
     3,
-    8
+    4
    ],
    "display_name": "A Weathered Marker",
    "sprite": "anchor_waystone",

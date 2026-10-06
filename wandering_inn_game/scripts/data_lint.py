@@ -74,6 +74,7 @@ data edit:  python3 scripts/data_lint.py   (from wandering_inn_game/).
 from __future__ import annotations
 
 import json
+import math
 import re
 import sys
 import time
@@ -146,6 +147,34 @@ def _in_grid(cell, grid: dict) -> bool:
 		and 0 <= int(cell[1]) < int(grid["height"]))
 
 
+def _numeric_vector(value, size: int, nonnegative: bool = False) -> bool:
+	return (isinstance(value, list) and len(value) == size
+		and all(type(v) in (int, float) and math.isfinite(v)
+			and (not nonnegative or v >= 0) for v in value))
+
+
+def _check_map_rendering_geometry(map_id: str, config: dict, errors: list) -> None:
+	camera = config.get("camera", {})
+	if not isinstance(camera, dict):
+		errors.append(f"maps/{map_id}: camera must be an object")
+	else:
+		for key, size in (("offset", 2), ("margins", 4)):
+			if key in camera and not _numeric_vector(camera[key], size, key == "margins"):
+				errors.append(f"maps/{map_id}: camera.{key} must carry {size} finite numbers"
+					+ (" >= 0" if key == "margins" else ""))
+	vistas = config.get("vistas", [])
+	if not isinstance(vistas, list):
+		errors.append(f"maps/{map_id}: vistas must be an array")
+		return
+	for index, vista in enumerate(vistas):
+		if (not isinstance(vista, dict) or not isinstance(vista.get("sprite"), str)
+				or not vista["sprite"] or not _numeric_vector(vista.get("cell"), 2)
+				or ("foreground" in vista and type(vista["foreground"]) is not bool)
+				or ("tint" in vista and not (_numeric_vector(vista["tint"], 3)
+					or _numeric_vector(vista["tint"], 4)))):
+			errors.append(f"maps/{map_id}: vista {index} needs sprite, cell[2] and optional tint[3|4]")
+
+
 def check_maps(maps: dict, errors: list) -> None:
 	for map_id, m in sorted(maps.items()):
 		grid = m.get("grid")
@@ -155,6 +184,7 @@ def check_maps(maps: dict, errors: list) -> None:
 			errors.append(f"maps/{map_id}: missing/invalid grid {{width,height}}")
 			continue
 		w, h = int(grid["width"]), int(grid["height"])
+		_check_map_rendering_geometry(map_id, m, errors)
 		for cell in m.get("blocked", []):
 			if not _cell_shape_ok(cell):
 				errors.append(f"maps/{map_id}: malformed blocked cell {cell!r}")

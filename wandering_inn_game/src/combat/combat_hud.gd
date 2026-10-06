@@ -332,6 +332,22 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 			_banner_label.add_theme_font_size_override("font_size", WIResponsiveLayout.readable_font_size(viewport, 24, text_scale))
 
 
+func desktop_board_rect() -> Rect2:
+	var viewport := _root.get_viewport_rect()
+	var top := 12.0
+	var bottom := viewport.size.y - 12.0
+	var order_panel: Control = _order_label.get_parent().get_parent()
+	if order_panel.visible:
+		top = maxf(top, order_panel.get_global_rect().end.y + 12.0)
+	if _confirm_chip.visible:
+		top = maxf(top, _confirm_chip.get_global_rect().end.y + 12.0)
+	var feed_panel: Control = _feed_label.get_parent().get_parent()
+	for panel: Control in [feed_panel, _readout_panel, _hotbar]:
+		if panel.visible:
+			bottom = minf(bottom, panel.get_global_rect().position.y - 12.0)
+	return Rect2(Vector2(12.0, top), Vector2(maxf(1.0, viewport.size.x - 24.0), maxf(1.0, bottom - top)))
+
+
 ## Builds the ordered slot list for the hotbar -- Attack, Dash, then
 ## `actor_id`'s combat skills with an AP cost (skills.json order), then End
 ## Turn. Rebuilt fresh every time a player turn starts (`combat_screen.gd`'s

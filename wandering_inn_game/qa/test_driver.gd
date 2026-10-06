@@ -1699,6 +1699,9 @@ func _assert_combat_layout(step: Dictionary) -> void:
 	if screen == null or main == null or Game.sim.combat == null:
 		_fail("assert_combat_layout: no live combat")
 		return
+	if bool(step.get("desktop", false)):
+		_assert_desktop_combat_layout(screen, main)
+		return
 	var snapshot: Dictionary = screen.responsive_layout_snapshot()
 	if not bool(snapshot.get("mobile", false)):
 		_fail("assert_combat_layout: requires the mobile browser layout")
@@ -1754,6 +1757,42 @@ func _assert_combat_layout(step: Dictionary) -> void:
 		if not board.has_point(position):
 			_fail("assert_combat_layout: focused fighter is outside the visible board")
 	ObservableBus.emit_domain_event("qa_combat_layout_measured", snapshot)
+
+
+func _assert_desktop_combat_layout(screen: Node, main: Node) -> void:
+	var reserved: Rect2 = screen.board_view_rect()
+	var board: Rect2 = main.world_view_rect()
+	if not reserved.has_area() or not reserved.grow(1.0).encloses(board):
+		_fail("assert_combat_layout: desktop board exceeds HUD-free rectangle")
+		return
+	var renderer := screen.get_node("BoardRenderer")
+	for id: String in Game.sim.combat.combatants:
+		if int(Game.sim.combat.combatants[id]["hp"]) <= 0:
+			continue
+		var holder: Node2D = renderer.visual_for(id)
+		if holder == null:
+			_fail("assert_combat_layout: missing live fighter %s" % id)
+			continue
+		for child: Node in holder.get_children():
+			if not child is AnimatedSprite2D:
+				continue
+			var sprite := child as AnimatedSprite2D
+			var texture := sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+			var pixels := Rect2(texture.get_image().get_used_rect())
+			var shift := sprite.offset - texture.get_size() * 0.5 if sprite.centered else sprite.offset
+			var visible := Rect2()
+			var first := true
+			for corner: Vector2 in [pixels.position, Vector2(pixels.end.x, pixels.position.y), pixels.end, Vector2(pixels.position.x, pixels.end.y)]:
+				if sprite.flip_h:
+					corner.x = texture.get_width() - corner.x
+				if sprite.flip_v:
+					corner.y = texture.get_height() - corner.y
+				var point: Vector2 = main.world_to_screen(sprite.to_global(corner + shift))
+				visible = Rect2(point, Vector2.ZERO) if first else visible.expand(point)
+				first = false
+			if not board.grow(2.0).encloses(visible):
+				_fail("assert_combat_layout: desktop fighter %s clipped: %s outside %s" % [id, visible, board])
+	ObservableBus.emit_domain_event("qa_combat_layout_measured", {"mobile": false, "board": board})
 
 
 func _assert_reference_layout() -> void:

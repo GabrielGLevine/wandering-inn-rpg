@@ -584,7 +584,7 @@ func _init() -> void:
 ## Facing recorded per row so a re-derivation can reproduce it exactly.
 const FIGURE_ROWS := {
 	"bat": 36.0,                   # idle_side, 96px frame
-	"briar_collector": 60.0,       # idle (non-directional), 64px frame
+	"briar_collector": 62.0,       # idle_side, 84x86px frame
 	"briar_collector_deep": 59.0,  # idle (non-directional), 64px frame
 	"ruin_warden": 106.0,          # idle_side, 216px frame
 	# v0.16.1 #20: the four rigs the `hired_blades` finding exposed. All four
@@ -596,6 +596,9 @@ const FIGURE_ROWS := {
 	"hired_blade": 113.0,          # idle_side, 148px frame
 	"citizen_f": 30.0,             # idle_side, 64px frame
 	"human_laborer": 50.0,         # idle_side, 104px frame
+	"footpad": 66.0,              # idle_side, 100px frame
+	"footpad_bruiser": 59.0,      # idle_side, 88px frame
+	"mothbear_harvest": 53.0,     # idle_side, 84px frame
 	"mothbear": 52.0,              # idle (non-directional), 64px frame
 }
 ## 1.25 = the briar collector, the smallest figure any windowed read HAS

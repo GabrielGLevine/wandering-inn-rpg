@@ -1000,10 +1000,12 @@ func _build_floor() -> void:
 		for cell: Vector2i in fallback_cells:
 			blocked_layer.set_cell(cell, 0, blocked_coord)
 		_field_root.add_child(blocked_layer)
+	var vista_count := WITileBoardBuilder.build_vistas(_field_root, map_cfg.get("vistas", []), WISpriteRegistry)
 	ObservableBus.emit_domain_event(WIEvents.UI_MAP_RENDERED, {
 		"map": Game.sim.current_map,
 		"floor_cells": grid_size.x * grid_size.y,
 		"blocked_cells": Game.sim.blocked_cells.size(),
+		"vistas": vista_count,
 	})
 
 
@@ -1257,7 +1259,18 @@ func _current_map_cfg() -> Dictionary:
 func _update_camera() -> void:
 	# Camera math + pan tween live in WICameraController (#194b seam 2);
 	# wrappers keep the sim reads and QA-paced duration world-side.
+	_configure_field_camera()
 	_camera_ctl.update(Game.sim.grid_size, Game.sim.player_cell)
+
+
+func _configure_field_camera() -> void:
+	var config: Dictionary = _current_map_cfg().get("camera", {})
+	var offset: Array = config.get("offset", [0, 0])
+	var margins: Array = config.get("margins", [0, 0, 0, 0])
+	_camera_ctl.set_field_framing(
+		Vector2(float(offset[0]), float(offset[1])),
+		Vector4(float(margins[0]), float(margins[1]), float(margins[2]), float(margins[3]))
+	)
 
 
 func set_view_size(view_size: Vector2) -> void:
@@ -1273,6 +1286,7 @@ func set_view_size(view_size: Vector2) -> void:
 
 
 func _pan_camera_to_player() -> void:
+	_configure_field_camera()
 	_camera_ctl.pan_to(Game.sim.grid_size, Game.sim.player_cell, _presentation_delay(MOVE_TWEEN_SECONDS))
 
 

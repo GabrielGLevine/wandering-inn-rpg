@@ -5,10 +5,13 @@
   "Nothing there. Chalked prices and swept stone, and not one thing outside its allotted square.",
   "Nothing there. A clerk two stalls down writes something about you and moves on."
  ],
+ "camera": {"margins": [0, 1, 0, 4]},
+ "vistas": [{"sprite": "pallass_lower_city", "cell": [13, 11], "tint": [0.72, 0.78, 0.88]}, {"sprite": "pallass_parapet_full", "cell": [6.5, 10], "foreground": true}, {"sprite": "pallass_parapet_full", "cell": [19.5, 10], "foreground": true}, {"sprite": "pallass_rail_post", "cell": [13, 10], "foreground": true}],
  "grid": {
   "width": 26,
   "height": 11
  },
+ "cover_skip": [[0, 10], [1, 10], [2, 10], [3, 10], [4, 10], [5, 10], [6, 10], [7, 10], [8, 10], [9, 10], [10, 10], [11, 10], [12, 10], [13, 10], [14, 10], [15, 10], [16, 10], [17, 10], [18, 10], [19, 10], [20, 10], [21, 10], [22, 10], [23, 10], [24, 10], [25, 10]],
  "blocked": [
   [
    0,
@@ -305,8 +308,7 @@
     "radius": 24,
     "flicker": false
    }
-  }
- ],
+  }],
  "entities": [
   {
    "_comment": "THE PALLASS RETURN CARRIER. pallass_market/pallass_forge have no map exit but each other, so this plinth is the cluster's ONLY way home -- gate it tighter than the portals.json `pallass` row (pallass_attuned) and the tier becomes a one-way trap. Same gate = always met by anyone standing here; the row is the arrival, this is the departure. Unshipped upgrade: an earned carve (`pallass_return_carved`) may re-gate FLAVOR later, never access. on_interact_accomplishment/toast are the unmet-gate arm only (interactions.gd checks portal_menu first), reachable via teleport in pallass_peek.",

@@ -573,7 +573,7 @@
    "weapon_die": 7,
    "ai": "melee",
    "skills": [],
-   "combat_scale": 0.285714
+   "combat_scale": 0.322581
   },
   {
    "_comment": "See briar_collector_a: canon cite + #396 solo retune.",
@@ -598,7 +598,7 @@
    "weapon_die": 7,
    "ai": "melee",
    "skills": [],
-   "combat_scale": 0.285714
+   "combat_scale": 0.322581
   },
   {
    "_comment": "Riverfarm's capstone (blight_lifted), FIRST pilgrimage stop = LOWEST band, authored at 9.5 power_level (bands + method: docs/design/2026-07-26-main-quest-line-spec.md sec.6). #396 SOLO RETUNE (rule FIRED -- solo 0.22 closed blight_lifted's fight route): cut on both axes, power_level held. Levers, before/after, ladder: RIVERFARM_CELLS in tests/sim_combat_batch.gd.",
@@ -725,7 +725,7 @@
    "weapon_die": 3,
    "ai": "melee",
    "skills": [],
-   "combat_scale": 0.28169
+   "combat_scale": 0.363637
   },
   {
    "_comment": "Alley_footpads' second member -- see footpad_lookout's own _comment for the canon-plausibility cite + the LOW-lethality design contract.",
@@ -745,7 +745,7 @@
    "weapon_die": 4,
    "ai": "melee",
    "skills": [],
-   "combat_scale": 0.289855
+   "combat_scale": 0.40678
   },
   {
    "_comment": "First all-human combatant family (spec sec.2). v0.16.1 #20: combat_scale bands the crew to ~2.0 cells; FIGURE_ROWS measures idle_side alpha-bbox -- re-derive on any sheet change. v0.18 W5 rung-4: weapon_die 6->8, con untouched (sim_combat_batch rung-2 cell).",
@@ -807,7 +807,7 @@
    "weapon_die": 5,
    "ai": "melee",
    "skills": [],
-   "combat_scale": 0.28169
+   "combat_scale": 0.363637
   },
   {
    "_comment": "v0.16 I1 FIGHT (#306). NEW ids, never a retune of footpad_*/hired_blade_* -- those feed boulevard_duel_ring, both night loops and Invrisil's two ladder rungs. A distinct id IS the per-encounter override. Sprite reused from hired_blade. v0.16.1 #20: combat_scale 0.28, banded as hired_blade_leader.",
@@ -859,7 +859,7 @@
    "skills": [
     "power_strike"
    ],
-   "combat_scale": 0.289855
+   "combat_scale": 0.40678
   },
   {
    "_comment": "v0.16 I2 FIGHT (#306). NEW ids -- the shared footpad/hired-blade rosters are never retuned. Sprite citizen_f, the hired_blade_knife_a precedent (registered, no combat_scale).",
@@ -910,7 +910,7 @@
    "skills": [
     "power_strike"
    ],
-   "combat_scale": 0.28169
+   "combat_scale": 0.363637
   },
   {
    "_comment": "con17 reflects his canon 'brick-like physique' AND is a harness-derived ceiling, not an arbitrary pick: below ~14 he goes down in 90%+ of hired_blades fights (too fragile for a come-along ally to feel like a real participant).",
@@ -1104,7 +1104,7 @@
    "weapon_die": 6,
    "ai": "melee",
    "skills": [],
-   "combat_scale": 0.333333
+   "combat_scale": 0.452831
   },
   {
    "_comment": "`road_mothbears`' pack alpha. v0.16.1 #21: the old note pointed at mothbear_a \"for the canon cite\", which pointed at nothing -- the dangling pointer is deleted rather than re-aimed.",
@@ -1126,7 +1126,7 @@
    "skills": [
     "power_strike"
    ],
-   "combat_scale": 0.333333
+   "combat_scale": 0.452831
   },
   {
    "_comment": "damage_reduction 2 models the armored carapace (lighter than rock_crab's 8 -- an ambush hunter, not a slow tank).",
@@ -1259,7 +1259,7 @@
    "weapon_die": 6,
    "ai": "melee",
    "skills": [],
-   "combat_scale": 0.285714
+   "combat_scale": 0.322581
   },
   {
    "_comment": "Riverfarm_thicket_patch's second remnant -- see thicket_remnant_a's own _comment for the full canon cite + distinct-id rationale.",
@@ -1279,7 +1279,7 @@
    "weapon_die": 6,
    "ai": "melee",
    "skills": [],
-   "combat_scale": 0.285714
+   "combat_scale": 0.322581
   },
   {
    "_comment": "v0.16 #305 R1 FIGHT. Roster-only clone of thicket_remnant's numbers (a distinct id IS the override, see :468) so the granary fight sits in the Riverfarm stop band. NOT goblin_raider: that Act-I rig sits four bands under this stop. Balance: RIVERFARM_CELLS' `granary_scavengers_t3_warrior10_solo`, gated 0.55-0.95 (stop-cell window, not a rung's).",

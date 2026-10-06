@@ -216,6 +216,33 @@ static func apply_ground_tone(layer: TileMapLayer, tone: Dictionary) -> void:
 	layer.material = material
 
 
+static func build_vistas(parent: Node2D, config: Array, registry: Variant) -> int:
+	var count := 0
+	for row: Dictionary in config:
+		var sprite_id := String(row["sprite"])
+		var entry: Dictionary = registry.entry_for(sprite_id)
+		var frames: SpriteFrames = registry.frames_for(sprite_id)
+		if frames == null or not frames.has_animation("idle"):
+			continue
+		var texture := frames.get_frame_texture("idle", 0)
+		var scale_value := float(entry.get("render_scale", 1.0))
+		var anchor: Array = entry.get("anchor", [0.5, 1.0])
+		var cell: Array = row["cell"]
+		var vista := Sprite2D.new()
+		vista.texture = texture
+		vista.centered = false
+		vista.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		vista.z_index = 0 if bool(row.get("foreground", false)) else -10
+		vista.scale = Vector2.ONE * scale_value
+		vista.position = Vector2(float(cell[0]), float(cell[1])) * CELL \
+			- Vector2(float(anchor[0]), float(anchor[1])) * texture.get_size() * scale_value
+		var tint: Array = row.get("tint", [1, 1, 1])
+		vista.modulate = Color(float(tint[0]), float(tint[1]), float(tint[2]), float(tint[3]) if tint.size() == 4 else 1.0)
+		parent.add_child(vista)
+		count += 1
+	return count
+
+
 ## Renders `floor_layers` entries (data/maps/** / data/arenas.json
 ## schema): each entry paints either a fixed `coords` tile or a
 ## position-hashed pick from `variants` over the cells selected by `cells`
@@ -260,6 +287,7 @@ static func build_skirt(parent: Node2D, grid: Vector2i, margin: int, biome_cfg: 
 	var tile_px := int(biome_cfg.get("skirt_tile_px", biome_cfg["tile_px"]))
 	var coord := Vector2i(int(biome_cfg["skirt"][0]), int(biome_cfg["skirt"][1]))
 	var layer := make_tile_layer(parent, sheet, tile_px, registry)
+	layer.z_index = -20
 	var lo := Vector2i(-margin, -margin)
 	var hi := Vector2i(grid.x + margin, grid.y + margin)
 	for x in range(lo.x, hi.x):

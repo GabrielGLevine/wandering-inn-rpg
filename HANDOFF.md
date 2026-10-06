@@ -10,29 +10,29 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Approved holistic art program #564:** root owns the main workspace on
-  `issue/564-holistic-art-direction`, main base `e1d2edee` plus approved direction
+  `issue/564-holistic-art-direction`, main base `e1d2edee` plus approved review
   `6cd8264b`. User authorized the full regional/layout/UI program on 2026-10-05.
-  Reviewed fallback engine is integrated through `fba36333`; crate public/overlay
-  route and ground binding mutation evidence: `/private/tmp/wi-art-execution`.
-  Owned compact UI is integrated through `363c7ab7`; roster asset-only commit
-  `f13b767b` has 37 rigs/267 sheets/1392 lossless frames, now bound in dirty
-  catalogs/maps with measured combat scales. Roster lane is idle. Active icon/
-  title/journal-art worker: `/private/tmp/wi-art-icons`, `issue/564-icons-key-art`,
-  exclusive icon/item/skill/title/journal UI paths; root owns shared sprites,
-  manifests, provenance and generated indexes. Root dirty paths include regional
-  maps/catalogs/provenance, new cross-street, Liscor/Invrisil props, world renderer
-  confirmation/events, registry counts, QA routes and execution plan.
-  New cross-street real door routes and both gated rear endpoints pass; gate
-  requires existing `brothers_job_done`, so initial alley traversal stays intact.
-  Inn clean-table real hotbar trigger -> counter -> exact renderer confirmation
-  passes 197 steps windowed. Native UI/chore and prior public/overlay evidence
-  remain scoped to their producing checkpoints, not final program closure.
+  Foundation/crate/inn/chrome, 37 complete rigs and regional bindings, owned
+  icons/title/journal are integrated through `f4fe17e0`. UI lane is idle;
+  exact source/hash/geometry evidence: `/private/tmp/wi-art-icon-evidence`.
+  Regional checkpoint adds Pallass lower-city vistas/parapets, opt-in field
+  margins, a measured HUD-free desktop combat viewport, legible rig scales,
+  Invrisil north arrival/return stone and fountain, owned timber/window/roof
+  frontage, and the gated cross-street. Movement/turn/balance rules unchanged.
+  Preflight is ALL GREEN. Field/vista/combat units pass; real native Invrisil
+  275-step route and portal round trip pass; Pallass 291-step route passes.
+  Read PNG evidence/logs: `/private/tmp/wi-art-execution`; independent review
+  of this newest checkpoint and remaining composed/full/browser gates pending.
+  Roster/fallback worker owns `/private/tmp/wi-art-fallbacks`, branch
+  `issue/564-owned-fallback-props`, asset-only `harvest_fallbacks/**` and
+  `harvest_player_human_m/**`; root serializes catalogs/maps/QA/provenance.
   Baseline gallery: `potential_assets/art_direction_review_2026-10-05/index.html`.
-  **Exact next action:** finish Pallass vista/camera framing, Riverfarm/Garden/
-  camp/ruin/underground composition and terrain/fallback curation; integrate icon
-  lane, regenerate indexes, then composed full gates, phone web routes and
-  independent review/CI. Preserve M1 repairs and untracked companion UID. No
-  physical-device or production-animation acceptance inferred from scripted QA.
+  **Exact next action:** review this regional checkpoint; exercise updated
+  feel/steel routes and combat pointer routes; finish Riverfarm/Garden/camp/
+  ruin/underground composition and terrain/fallback curation; integrate PC/
+  fallback fragments and icon QA registration, then full gates/browser and
+  independent review/CI/PR closure. Preserve M1 and untracked companion UID.
+  Physical-device and production-animation acceptance remain unproven.
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
   (standalone tree `5e8af12d`); QA/export source `93016f0b`.

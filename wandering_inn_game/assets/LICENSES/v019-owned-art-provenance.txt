@@ -425,3 +425,21 @@ wandering_inn_game/assets/key_art/harvest/act_i_banner.png: owned PixelLab gener
 wandering_inn_game/assets/key_art/harvest/act_iii_banner.png: owned PixelLab generation 5a80f942-2c27-4768-88b0-8a7021999584; source L4_tiles_ui_art/keyart/act3_what_stirs_beneath_v1.png; source/public size [320, 180]/[320, 80]; crop [0, 55, 320, 135], alpha [0, 0, 320, 80]; public SHA256 7971a431aa7813326c5d0e10e824b8876907d00da99b99dd026fbcb47a45ef52.
 wandering_inn_game/assets/key_art/harvest/act_iv_banner.png: owned PixelLab generation edf48080-64d8-4174-a462-438ebbb1a9df; source L4_tiles_ui_art/keyart/act4_what_the_door_opened_v1.png; source/public size [320, 180]/[320, 80]; crop [0, 45, 320, 125], alpha [0, 0, 320, 80]; public SHA256 dba02850acb3101fe0dd57dba19ba5de69f46736ca0a2d4a46250b0826f637d6.
 wandering_inn_game/assets/key_art/harvest/act_v_banner.png: owned PixelLab generation f198b909-ac96-46bb-a0e1-6c6aaf16a481; source L4_tiles_ui_art/keyart/act5_what_the_seal_was_feeding_v1.png; source/public size [320, 180]/[320, 80]; crop [0, 85, 320, 165], alpha [0, 0, 320, 80]; public SHA256 5f6ff6e90f79ca617f22bb07ed2c9ef5319a541088e082820dbb0efb11024c7e.
+
+pallass_tool_wall/Idle-Sheet.png: owned PixelLab generation 0382d696-374d-472f-8257-fbf6cb5e841a; source L2_props/forge_tool_wall.png; copied unchanged; canvas 64x64; alpha (2, 4, 62, 60); feet anchor [0.5, 0.9375], scale 0.4 (visible width 24px).
+
+pallass_billet_rack/Idle-Sheet.png: owned PixelLab generation f6ca4a50-90a5-46b6-9166-c15c8e8a3820; source L2_props/forge_billet_rack.png; copied unchanged; canvas 64x64; alpha (2, 2, 62, 63); feet anchor [0.5, 0.984375], scale 0.3 (visible width 18px).
+
+pallass_reject_bin/Idle-Sheet.png: owned PixelLab generation 5a155355-5e3d-4190-850e-30254c195729; source L2_props/forge_reject_bin.png; copied unchanged; canvas 64x64; alpha (4, 3, 61, 62); feet anchor [0.507812, 0.96875], scale 0.315789 (visible width 18px).
+
+pallass_tagged_pallet/Idle-Sheet.png: owned PixelLab generation abc0d724-84db-4c1d-9a73-04194ad829d5; source L2_props/lift_cargo_pallet.png; copied unchanged; canvas 64x64; alpha (2, 2, 62, 62); feet anchor [0.5, 0.96875], scale 0.3 (visible width 18px).
+
+pallass_parapet_full/Idle-Sheet.png: owned PixelLab generation 3d0f9fbf-ca78-43ad-be77-6f02d0546d78; source L2_props/set_pieces/forge_parapet_rail.png; copied unchanged; canvas 192x48; alpha (5, 19, 188, 36); feet anchor [0.502604, 0.75], scale 1.04918 (visible width 192px).
+
+pallass_rail_post: same owned forge parapet sheet, runtime atlas region [4,16,32,24]; measured region-alpha (1, 3, 32, 20), width16px, scale 0.5161290322580645. No source pixel changes.
+
+invrisil_timber_panel/Idle-Sheet.png: owned PixelLab generation 722976a0-fd8f-4e8f-8dfc-21a4a27fba37; source L2_props/facade_plaster.png; copied unchanged; canvas 128x128; alpha (8, 32, 120, 96); feet anchor [0.5, 0.75], scale 0.428571 (visible width 48px).
+
+invrisil_upper_window/Idle-Sheet.png: owned PixelLab generation cb2904c3-0062-4571-8c95-59187ba252a0; source L2_props/window_blue.png; copied unchanged; canvas 64x64; alpha (8, 4, 52, 60); feet anchor [0.46875, 0.9375], scale 0.272727 (visible width 12px).
+
+invrisil_stationery_display/Idle-Sheet.png: owned PixelLab generation 836fc40b-054f-4695-b84e-76ba731934e2; source L2_props/bonus_scroll_shelf.png; copied unchanged; canvas 32x32; alpha (2, 4, 30, 22); feet anchor [0.5, 0.6875], scale 0.642857 (visible width 18px).

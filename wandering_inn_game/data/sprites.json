@@ -7129,7 +7129,7 @@
    0.53125,
    0.734375
   ],
-  "shadow": true,
+  "shadow": false,
   "animations": {
    "idle": {
     "sheet": "res://assets/sprites/invrisil_roofline/Idle-Sheet.png",
@@ -8092,6 +8092,192 @@
      32
     ],
     "fps": 6
+   }
+  }
+ },
+ "pallass_lower_city": {
+  "render_scale": 0.19152854511970535,
+  "anchor": [
+   0.5,
+   0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_lower_city/Idle-Sheet.png",
+    "frame_size": [
+     2172,
+     724
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_tool_wall": {
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_tool_wall/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_billet_rack": {
+  "render_scale": 0.3,
+  "anchor": [
+   0.5,
+   0.984375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_billet_rack/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_reject_bin": {
+  "render_scale": 0.315789,
+  "anchor": [
+   0.507812,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_reject_bin/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_tagged_pallet": {
+  "render_scale": 0.3,
+  "anchor": [
+   0.5,
+   0.96875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_tagged_pallet/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_parapet_full": {
+  "render_scale": 1.04918,
+  "anchor": [
+   0.502604,
+   0.75
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_parapet_full/Idle-Sheet.png",
+    "frame_size": [
+     192,
+     48
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pallass_rail_post": {
+  "render_scale": 0.5161290322580645,
+  "anchor": [
+   0.515625,
+   0.8333333333333334
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pallass_parapet_full/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     24
+    ],
+    "region": [
+     4,
+     16,
+     32,
+     24
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_timber_panel": {
+  "render_scale": 0.428571,
+  "anchor": [
+   0.5,
+   0.75
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_timber_panel/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_upper_window": {
+  "render_scale": 0.272727,
+  "anchor": [
+   0.46875,
+   0.9375
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_upper_window/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_stationery_display": {
+  "render_scale": 0.642857,
+  "anchor": [
+   0.5,
+   0.6875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_stationery_display/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
    }
   }
  }

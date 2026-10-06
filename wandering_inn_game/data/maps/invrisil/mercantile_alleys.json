@@ -1485,7 +1485,7 @@
     11
    ],
    "display_name": "Rear Service Gate",
-   "sprite": "door",
+   "sprite": "invrisil_shop_door",
    "locked_toast": "The rear gate is barred. The Brothers have not opened this passage to you.",
    "door_when": {
     "requires": {

@@ -68,7 +68,33 @@
    "name": "01_boulevard_day"
   },
   {
-   "_comment": "Row 1 of the boulevard is blocked end to end, so the bump sets facing without moving and the stationer door opens on interact.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
    "action": "move",
    "direction": "up",
    "steps": 1

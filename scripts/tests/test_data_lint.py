@@ -21,6 +21,31 @@ import data_lint  # noqa: E402
 GRID = {"grid": {"width": 4, "height": 3}}
 
 
+class TestMapRenderingGeometry(unittest.TestCase):
+    def check(self, extra):
+        errors = []
+        data_lint.check_maps({"m": {**GRID, "entities": [], **extra}}, errors)
+        return errors
+
+    def test_exterior_vista_and_negative_camera_offset_are_valid(self):
+        self.assertEqual(self.check({"camera": {"offset": [0, -3], "margins": [0, 2, 0, 4]},
+            "vistas": [{"sprite": "pallass_lower_city", "cell": [13, 11], "tint": [0.7, 0.8, 0.9]}]}), [])
+
+    def test_malformed_camera_is_rejected_before_world_reads_it(self):
+        for camera in [None, [], {"offset": [0]}, {"offset": [False, 0]},
+                {"margins": [0, -1, 0, 0]}, {"margins": [0, 1, 0]}, {"offset": [float("inf"), 0]}]:
+            with self.subTest(camera=camera):
+                self.assertTrue(self.check({"camera": camera}))
+
+    def test_malformed_vista_is_rejected_before_renderer_reads_it(self):
+        for vistas in [None, {}, [None], [{"sprite": "", "cell": [1, 2]}],
+                [{"sprite": "city", "cell": [1]}], [{"sprite": "city", "cell": [True, 1]}],
+                [{"sprite": "city", "cell": [1, 2], "tint": [1, 1]}],
+                [{"sprite": "city", "cell": [1, 2], "foreground": "true"}]]:
+            with self.subTest(vistas=vistas):
+                self.assertTrue(self.check({"vistas": vistas}))
+
+
 class TestBrokenFixtures(unittest.TestCase):
     def _errs(self, fn, *args):
         errors = []

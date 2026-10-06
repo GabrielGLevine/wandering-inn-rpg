@@ -711,6 +711,14 @@ func _build_expected_counts() -> Dictionary:
 	counts["invrisil_hanging_sign/idle"] = 1
 	counts["invrisil_ornate_bench/idle"] = 1
 	counts["invrisil_flower_cart/idle"] = 1
+	counts["pallass_tool_wall/idle"] = 1
+	counts["pallass_billet_rack/idle"] = 1
+	counts["pallass_reject_bin/idle"] = 1
+	counts["pallass_tagged_pallet/idle"] = 1
+	counts["pallass_parapet_full/idle"] = 1
+	counts["invrisil_timber_panel/idle"] = 1
+	counts["invrisil_upper_window/idle"] = 1
+	counts["invrisil_stationery_display/idle"] = 1
 	counts["crate_owned/idle"] = 1
 	counts["inn_hearth/idle"] = 1
 	counts["inn_back_bar/idle"] = 1
@@ -833,6 +841,8 @@ func _build_expected_counts() -> Dictionary:
 	counts["icon_attack/idle"] = 1
 	counts["icon_dash/idle"] = 1
 	counts["icon_basic_swordwork/idle"] = 1
+	counts["pallass_lower_city/idle"] = 1
+	counts["pallass_rail_post/idle"] = 1
 	return counts
 
 

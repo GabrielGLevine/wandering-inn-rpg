@@ -108,12 +108,17 @@
    "path": "player_cell",
    "equals": [
     4,
-    8
+    4
    ]
   },
   {
    "action": "screenshot",
    "name": "00_scale_shock_arrival"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
   },
   {
    "_comment": "== BEAT 2: the crowd is really there, and as of v0.15 T4.2 it TALKS -- invrisil_extra_1 (7,6) carries a 3-line talk_pool over its shipped static `dialogue`. Up 2 to (4,6), right 2 to (6,6), bump right to face (7,6). Interact ONE serves pool index 0 (chatted_with_invrisil_extra_1 unbanked at this fixture) under her display name; interact TWO is spent-pool, which falls to the static one-liner exactly as before -- BOTH crowd surfaces proven in one stop, where the old beat proved only the second. ==",
@@ -799,6 +804,10 @@
     "id": "pc"
    },
    "timeout_sec": 10
+  },
+  {
+   "action": "assert_combat_layout",
+   "desktop": true
   },
   {
    "action": "screenshot",
