@@ -280,7 +280,7 @@
   {
    "action": "move",
    "direction": "right",
-   "steps": 1
+   "steps": 5
   },
   {
    "action": "move",
@@ -290,7 +290,15 @@
   {
    "action": "move",
    "direction": "left",
-   "steps": 2
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
   },
   {
    "action": "move",

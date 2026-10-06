@@ -9,13 +9,8 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #569 recovery QA:** isolated `/private/tmp/wi-569-qa`,
-  `issue/569-recovery-qa`, base `de5bf08f`. capacity570 owns meal routes/fixtures,
-  scoped existing pins, manifest/derived notes and QA docs. Runtime/driver stays
-  controller-owned. Service fixture/route drafted; data lint passes. Next:
-  compose root graph probe, production-timing service run, then fresh earned
-  Helper/cooking/chest headroom route and disclosed advanced-station checks.
-  No window concurrency; root owns browser/window/full integration gates.
+- **#569 QA:** `issue/569-recovery-qa`, base `de5bf08f`; QA-only lane.
+  Evidence/next: [meal recovery](docs/design/569-meal-recovery.md).
 - **User direction:** finish paused art-blocked roadmap work; checkpoint often.
   Art577 merged0bbd96aa with reviewed/squash tree identity. Original art tree
   remains untouched. Web parity may be waived when a merge bottleneck; record
