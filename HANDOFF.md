@@ -9,27 +9,12 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #512 route authoring:** `issue/512-route-recon`, isolated
-  `/private/tmp/wi-512-routes`, original dispatch head `7429cd62`.
-  Resource worker owns only #512 routes, manifest/generated QA, scoped docs and
-  HANDOFF. No gameplay/core/UI ownership. Driver extensions need controller
-  coordination first. Composed d04cf5c7 and91bdac25; run fresh Rogue and
-  worker/social histories through full endings. No fixtures/teleports/topups.
-  Rogue882 fresh steps pass: force-nest loss→earned social fallback→ActIII;
-  scouts loss at enemy2HP→two unclaimed1g Inn chores→Helper sleep,14g
-  available for an actual Fang purchase. Current44HP/14MP (Helper sleep
-  changes the prior15MP maximum to14).
-  Worker965-step assertions pass but two runs leak DummyShader RID at exit
-  (ERROR; authoritative gate invalid): initial scout loss, earned14g Fang
-  retry wins scouts, both underrecovered and fully recovered boss attempts
-  lose; real rollback preserves1g,44HP/12MP,one HotMeal,no FineMeals.
-  Exact fractional/adversity findings in docs/design/512-continuous-journeys.md.
-  Root owns worker balance assessment; no arbitrary victory farming.
-  Next: Rogue actual14g Fang purchase and intended scout retry, then
-  walked recovery/earned utility/regional gates.
-  Evidence /private/tmp/wi-512-evidence/current/{worker-wall-contract-clean-pass,
-  rogue-support-pass}. Endings, force-crate variant and windows outstanding.
-  Checkpoint before long route runs; preserve actual costs and imperfect forks.
+- **#512 shader diagnostic:** `issue/512-worker-leak-probe`, base `35992223`,
+  isolated `/private/tmp/wi-512-leak-probe`; no production changes.
+  [Evidence/next](docs/design/512-particle-leak-diagnostic.md). Native worker965
+  also leaks a particle shader; prefix792 clean,798 noisy at second deep entry.
+  Fresh checkpoint/history reductions clean; cause not yet proven. Root owns
+  integration; resource worker retains separate journey ownership.
 
 - **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
   Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.
