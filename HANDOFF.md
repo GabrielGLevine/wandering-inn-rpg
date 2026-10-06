@@ -9,29 +9,27 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed #566 resource foundation:** worktree `/private/tmp/wi-566-foundation`,
-  branch `issue/566-persistent-vitals-foundation`, PR #572. Base now includes
-  completed art PR #577 `e89770de61a36564b5e6bc783314ee7ebca64f02` pending CI/merge.
-  Prior staged schema/shared-maxima source `99a3de03` passed its targeted units,
-  canonical sweep and balance gates; evidence `/private/tmp/wi-566-evidence`.
-  That evidence does not prove the upcoming combat handoff implementation.
-  Owned: core resource/combat/save/sleep/Game event orchestration, corresponding
-  tests/QA and required source pins; HANDOFF and foundation design note.
-  Original art checkout remains untouched. #570 owns its optional diagnostic
-  and analysis only until shared core/save edits can be integrated serially.
-  **Exact next action:** implement carried combat entry/terminal commit, exact
-  checkpoint rollback, pre-build save and settled sleep ordering, resource
-  events and actual QA. Retain staged activation until #571 recovery/HUD gates.
-  Commit each coherent step before long gates; record commands, exits, noise
-  and artifacts. No release or persistence-only deployment.
-
+- **Resumed #566 core handoff checkpoint:** branch `issue/566-persistent-vitals-foundation`,
+  worktree `/private/tmp/wi-566-foundation`, composed base `62a182e3` with art
+  `e89770de`. Owner: resource foundation worker. Combat carries current HP/MP;
+  victory commits once before banking; armed meal checkpoints precede consumption;
+  combat/sleep autosaves wait for settled state. Stable `resources_changed`
+  before/after/reason/source/preparation interface and HUD constants are available.
+  Focused vitals, initialization and new handoff unit pass, including actual Game
+  autosave/load callbacks. Logs: `/private/tmp/wi-566-resumed-evidence`.
+  First sim-core compatibility probe found expected old full-refill/text/event-tail
+  assumptions; updated these deliberately, rerun pending. No balance pins changed.
+  **Next:** full units/canonicals/batch, actual carried-resource QA and HUD integration.
+  PR #572 remains draft/unmerged; no player activation or deployment before #571.
+  Owned changes: core simulation/autosave/events/sleep, corresponding tests,
+  explicit-rest batch setup, four recovery-copy QA pins, data-lint source pins,
+  this handoff and `docs/design/566-vitals-foundation.md`.
+  Preserve pre-existing untracked `tests/test_companion_counter.gd.uid`.
 - **Recovery program #565:** #566–#571 own core, HUD, consumables, food,
-  capacity and composed cutover. Plan:
-  `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`.
-  Begin staged #566 and independent #570, serialize core/save/UI writers;
-  #571 gates removal of battle refills. Three safe MP doses per waking,
-  4 HP excess loss and resonance 4→5 are tuning proposals. M1 device gates
-  and #494/#495 choices stay open. #564 owns the primary art checkout.
+  capacity and composed cutover. #568/#569 recovery and quantities remain separate;
+  #567 consumes the new frozen events. Capacity is a separate lane.
+  The integration branch stages persistent behavior; no runtime rollout flag.
+  Current schema is v10; later quantity/capacity migrations must compose serially.
 
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`

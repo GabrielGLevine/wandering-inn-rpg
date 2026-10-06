@@ -84,6 +84,13 @@ const ITEM_USED := &"item_used"
 const GOLD_CHANGED := &"gold_changed"
 const PHASE_CHANGED := &"phase_changed"
 
+const UI_RESOURCES_RENDERED := &"ui_resources_rendered"
+const UI_RECOVERY_RENDERED := &"ui_recovery_rendered"
+const RESOURCES_CHANGED := &"resources_changed"
+const COMBAT_PREPARING := &"combat_preparing"
+const COMBAT_SETTLED := &"combat_settled"
+const SLEEP_SETTLED := &"sleep_settled"
+
 const COMBAT_STARTED := &"combat_started"
 const COMBAT_FINISHED := &"combat_finished"
 const COMBAT_RESOLVED := &"combat_resolved"
