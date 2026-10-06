@@ -8,7 +8,6 @@
  "blocked": [],
  "floor_layers": [
   {
-   "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood (same picks as sewers/cave_mouth).",
    "variants": [
     [
      8,
@@ -23,7 +22,31 @@
      13
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+   "tone": {
+    "base": [
+     0.36,
+     0.34,
+     0.31
+    ],
+    "detail": 0.26
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+    "tile_px": 16,
+    "coords": [
+     2,
+     1
+    ],
+    "tone": {
+     "base": [
+      0.36,
+      0.34,
+      0.31
+     ],
+     "detail": 0.26
+    }
+   }
   }
  ],
  "walls": {
@@ -38,7 +61,19 @@
     "to": [
      7,
      2
-    ]
+    ],
+    "cap": [
+     2,
+     6
+    ],
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+     "tile_px": 16,
+     "cap": [
+      0,
+      3
+     ]
+    }
    },
    {
     "from": [
@@ -48,7 +83,19 @@
     "to": [
      4,
      9
-    ]
+    ],
+    "cap": [
+     2,
+     6
+    ],
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+     "tile_px": 16,
+     "cap": [
+      0,
+      3
+     ]
+    }
    },
    {
     "from": [
@@ -62,7 +109,15 @@
     "cap": [
      2,
      3
-    ]
+    ],
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+     "tile_px": 16,
+     "cap": [
+      0,
+      3
+     ]
+    }
    },
    {
     "from": [
@@ -76,7 +131,15 @@
     "cap": [
      2,
      3
-    ]
+    ],
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+     "tile_px": 16,
+     "cap": [
+      0,
+      3
+     ]
+    }
    },
    {
     "from": [
@@ -90,7 +153,15 @@
     "cap": [
      2,
      3
-    ]
+    ],
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+     "tile_px": 16,
+     "cap": [
+      0,
+      3
+     ]
+    }
    },
    {
     "from": [
@@ -104,7 +175,15 @@
     "cap": [
      2,
      3
-    ]
+    ],
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+     "tile_px": 16,
+     "cap": [
+      0,
+      3
+     ]
+    }
    }
   ]
  },
@@ -457,7 +536,7 @@
     3
    ],
    "display_name": "Tarred Shoring",
-   "sprite": "crate",
+   "sprite": "gallery_mouth_owned",
    "tint": [
     0.32,
     0.24,

@@ -327,6 +327,16 @@
    "timeout_sec": 5
   },
   {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "inn",
+    "entity": "dirty_table",
+    "sprite": "inn_table_clean",
+    "hidden": false
+   }
+  },
+  {
    "action": "screenshot",
    "name": "01_clean_toast"
   },

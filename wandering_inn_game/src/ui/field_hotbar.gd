@@ -21,7 +21,7 @@ signal slot_activate_requested(slot: int)
 
 const SELECTION_LABEL_GAP := 4.0
 const SELECTION_LABEL_PADDING_X := 10.0
-const SELECTION_LABEL_PADDING_Y := 4.0
+const SELECTION_LABEL_PADDING_Y := 8.0
 const TOGGLE_SIZE := Vector2(144.0, 52.0)
 const TOGGLE_GAP := 8.0
 const READOUT_MAX_WIDTH := 720.0
@@ -96,7 +96,7 @@ var _last_slots: Array = []
 var _readout_lines: Array = []
 var _slot_numbers: Array = []
 var _fallback_labels: Array = []
-var _expanded := true
+var _expanded := false
 var _combat_hidden := false
 var _dialogue_open := false
 var _panel_open := false
@@ -128,7 +128,7 @@ func _ready() -> void:
 	WIInputHints.device_changed.connect(_on_device_changed)
 	get_viewport().size_changed.connect(_refresh_layout)
 	UIChrome.THEME.changed.connect(_refresh_layout)
-	_expanded = WISettings.field_readout_expanded() if WISettings.has_field_readout_choice() or not WIResponsiveLayout.uses_touch_layout() else false
+	_expanded = WISettings.field_readout_expanded()
 
 
 func _build_readout() -> void:
@@ -233,6 +233,8 @@ func world_bottom() -> float:
 	bottom = minf(bottom, _hotbar.global_position.y - READOUT_SELECTION_CLEARANCE)
 	if _readout_panel.visible:
 		bottom = minf(bottom, _readout_panel.position.y - READOUT_GAP)
+	if _selection_label_backing.visible:
+		bottom = minf(bottom, _selection_label_backing.position.y - READOUT_GAP)
 	return bottom
 
 
@@ -274,17 +276,19 @@ func _refresh_layout() -> void:
 func _update_selection_label(index: int) -> void:
 	var skill_id := ""
 	var label_text := ""
+	var description := ""
 	if index >= 0 and index < _field_skills.size():
 		skill_id = String(_field_skills[index])
 		var sk: Dictionary = Game.sim.skills.get(skill_id, {})
 		# `display_name` is ALREADY bracket-formatted ("[Basic Cleaning]") --
 		# see this file's own doc comment; do not re-wrap it.
 		label_text = String(sk.get("display_name", skill_id))
+		description = String(sk.get("description", ""))
 	if label_text == "":
 		_selection_label.visible = false
 		_selection_label_backing.visible = false
 	else:
-		_selection_label.text = label_text
+		_selection_label.text = label_text + ("\n" + description if not _expanded and description != "" else "")
 		_selection_label.visible = true
 		_selection_label_backing.visible = true
 		_position_selection_label(index)
@@ -292,6 +296,9 @@ func _update_selection_label(index: int) -> void:
 		"index": index if label_text != "" else -1,
 		"skill": skill_id if label_text != "" else "",
 		"label": label_text,
+		"description": description,
+		"text": _selection_label.text if label_text != "" else "",
+		"backing_width": int(round(_selection_label_backing.size.x)) if label_text != "" else 0,
 		"visible": _selection_label.is_visible_in_tree(),
 	})
 
@@ -302,12 +309,16 @@ func _position_selection_label(index: int) -> void:
 		_selection_label.visible = false
 		_selection_label_backing.visible = false
 		return
-	var label_size := _selection_label.get_minimum_size()
+	var safe := _current_safe_rect()
+	var max_width := minf(360.0, safe.size.x - SELECTION_LABEL_PADDING_X * 2.0)
+	_selection_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_selection_label.custom_minimum_size = Vector2(max_width, 0.0)
+	_selection_label.size = Vector2(max_width, 0.0)
+	var label_size := _selection_label.get_combined_minimum_size()
 	_selection_label.size = label_size
 	var padding := Vector2(SELECTION_LABEL_PADDING_X, SELECTION_LABEL_PADDING_Y)
 	var backing_size := label_size + padding * 2.0
 	var slot_center_x := rect.position.x + rect.size.x * 0.5
-	var safe := _current_safe_rect()
 	var backing_x := clampf(slot_center_x - backing_size.x * 0.5, safe.position.x, maxf(safe.position.x, safe.end.x - backing_size.x))
 	var backing_top := maxf(safe.position.y, rect.position.y - backing_size.y - SELECTION_LABEL_GAP)
 	_selection_label_backing.custom_minimum_size = backing_size
@@ -322,12 +333,8 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 			_combat_hidden = false
 			_dialogue_open = false
 			_panel_open = false
-			_expanded = WISettings.field_readout_expanded() if WISettings.has_field_readout_choice() or not WIResponsiveLayout.uses_touch_layout() else false
+			_expanded = WISettings.field_readout_expanded()
 			var reason := "world_ready"
-			if not WISettings.has_field_readout_choice() and Game.sim.times_slept > 0:
-				WISettings.set_field_readout_expanded(false)
-				_expanded = false
-				reason = "prior_waking"
 			_apply_visibility()
 			_render(reason)
 		WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED, \
@@ -356,9 +363,6 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 		WIEvents.UI_PAUSE_HIDDEN, WIEvents.UI_JOURNAL_HIDDEN, WIEvents.UI_INVENTORY_HIDDEN:
 			_panel_open = false
 			_apply_visibility()
-		WIEvents.UI_SLEEP_VEIL_FINISHED:
-			if not WISettings.has_field_readout_choice() and Game.sim.times_slept >= 1:
-				_set_expanded(false, true, "first_waking")
 		WIEvents.UI_SETTINGS_RENDERED:
 			_layout_controls()
 
@@ -383,6 +387,7 @@ func _render(reason: String = "skills") -> void:
 			"id": id,
 			"label": display,
 			"fallback_label": fallback,
+			"description": String(sk.get("description", "")),
 			"icon": String(sk.get("icon", "")),
 			"key_hint": str(number),
 		})
@@ -419,6 +424,7 @@ func _set_expanded(value: bool, persist: bool, reason: String) -> void:
 	_update_readout()
 	_update_toggle_label()
 	if _layout_controls():
+		_update_selection_label(_last_selected_index)
 		_emit_rendered(reason)
 	else:
 		call_deferred("_emit_rendered", reason)

@@ -12,15 +12,16 @@ func _init() -> void:
 	for sprite_id: String in catalog:
 		assert(WISpriteRegistry.has_sprite(sprite_id), "registry missing sprite: " + sprite_id)
 		var frames: SpriteFrames = WISpriteRegistry.frames_for(sprite_id)
-		var entry: Dictionary = catalog[sprite_id]
+		var resolved: String = WISpriteRegistry.resolved_id(sprite_id)
+		var entry: Dictionary = catalog[resolved]
 		var directional: bool = bool(entry.get("directional", false))
 		for anim_name: String in entry["animations"]:
 			var facings: Array[String] = _facings(directional)
 			for facing: String in facings:
 				var full_name: String = "%s_%s" % [anim_name, facing] if facing != "" else anim_name
 				assert(frames.has_animation(full_name), "%s missing animation: %s" % [sprite_id, full_name])
-				var expected: int = expected_counts.get("%s/%s" % [sprite_id, anim_name], -1)
-				assert(expected >= 0, "no expected frame count for %s/%s" % [sprite_id, anim_name])
+				var expected: int = expected_counts.get("%s/%s" % [resolved, anim_name], -1)
+				assert(expected >= 0, "no expected frame count for %s/%s" % [resolved, anim_name])
 				var actual: int = frames.get_frame_count(full_name)
 				var anim_rec: Dictionary = entry["animations"][anim_name]
 				var sheet_key: String = "sheet_%s" % facing if facing != "" else "sheet"
@@ -28,13 +29,15 @@ func _init() -> void:
 					assert(actual >= 1, "%s animation %s: fallback placeholder needs >= 1 frame" % [sprite_id, full_name])
 				else:
 					assert(actual == expected, "%s animation %s: expected %d frames, got %d" % [sprite_id, full_name, expected, actual])
-				_assert_expected_region(sprite_id, full_name, frames.get_frame_texture(full_name, 0))
+				_assert_expected_region(resolved, full_name, frames.get_frame_texture(full_name, 0))
 	_assert_visual_log_assets_are_real(catalog)
 	_assert_no_pc_sprites_in_scene()
 	assert(not WISpriteRegistry.has_sprite("missing_sprite"), "registry should reject unknown sprite ids")
 	_assert_biome_tiles_build()
 	_assert_ice_tile_is_bespoke_and_opaque()
 	_assert_missing_sheet_fallback()
+	_assert_fallback_sprite_resolution()
+	_assert_fallback_target_completeness()
 	print("PASS: sprite registry catalog builds SpriteFrames")
 	quit(0)
 
@@ -131,6 +134,115 @@ func _assert_missing_sheet_fallback() -> void:
 	frames2.remove_animation("default")
 	WISpriteRegistry._add_strip(frames2, "idle", "res://assets/__nonexistent_region__.png", Vector2i(16, 16), 6.0, [0, 0, 64, 16])
 	assert(frames2.get_frame_count("idle") == 4, "region placeholder should yield 4 frames")
+
+
+func _assert_fallback_sprite_resolution() -> void:
+	# Synthetic sheets keep this contract independent of the private overlay.
+	var real_sheet := "res://assets/sprites/door_locked_heavy/Idle-Sheet.png"
+	var missing_sheet := "res://assets/__nonexistent_pack__.png"
+	assert(ResourceLoader.exists(real_sheet), "fixture sheet moved: " + real_sheet)
+	WISpriteRegistry.reset()
+	WISpriteRegistry._load_catalog()
+	var cat: Dictionary = WISpriteRegistry._catalog
+	var owned := {"render_scale": 0.4, "anchor": [0.25, 0.75], "shadow": true,
+		"animations": {"idle": {"sheet": real_sheet, "frame_size": [16, 32],
+			"region": [16, 0, 32, 32], "fps": 2}}}
+	var primary := {"render_scale": 1.0, "anchor": [0.5, 1.0],
+		"fallback_sprite": "__t_owned", "directional": true,
+		"animations": {"idle": {"sheet_down": real_sheet, "sheet_side": real_sheet,
+			"sheet_up": missing_sheet, "frame_size": [64, 64], "fps": 1}}}
+	cat["__t_owned"] = owned
+	cat["__t_missing"] = primary
+	cat["__t_present"] = {"fallback_sprite": "__t_owned",
+		"animations": {"idle": {"sheet": real_sheet, "frame_size": [64, 64], "fps": 1}}}
+	cat["__t_missing_anim"] = cat["__t_present"].duplicate(true)
+	cat["__t_missing_anim"]["animations"]["walk"] = {"sheet": missing_sheet, "frame_size": [64, 64]}
+	assert(WISpriteRegistry.resolved_id("__t_missing") == "__t_owned", "one missing facing must swap the whole entry")
+	assert(WISpriteRegistry.resolved_id("__t_missing_anim") == "__t_owned", "a missing later animation must swap the whole entry")
+	assert(WISpriteRegistry.resolved_id("__t_present") == "__t_present", "present primary must stay primary")
+	assert(WISpriteRegistry.has_sprite("__t_missing"), "existence uses the requested id")
+	assert(not WISpriteRegistry.has_sprite("__t_unknown"), "resolution must not create catalog ids")
+	assert(WISpriteRegistry.resolved_id("__t_unknown") == "__t_unknown", "unknown id stays unknown")
+	assert(WISpriteRegistry.entry_for("__t_unknown").is_empty(), "unknown entry stays empty")
+	assert(WISpriteRegistry.entry_for("__t_missing") == owned, "all presentation fields must follow the fallback")
+	assert(WISpriteRegistry.anchor_for("__t_missing") == Vector2(0.25, 0.75), "anchor must follow fallback art")
+	assert(is_equal_approx(float(WISpriteRegistry.entry_for("__t_missing")["render_scale"]), 0.4), "scale must follow fallback art")
+	var frames := WISpriteRegistry.frames_for("__t_missing")
+	assert(frames == WISpriteRegistry.frames_for("__t_missing"), "requested id must cache frames")
+	assert(frames.has_animation("idle") and not frames.has_animation("idle_down"), "directionality must follow fallback art")
+	assert(frames.get_frame_count("idle") == 2, "frame count must follow fallback region")
+	assert(is_equal_approx(frames.get_animation_speed("idle"), 2.0), "timing must follow fallback art")
+	var tex := frames.get_frame_texture("idle", 0) as AtlasTexture
+	assert(tex.region == Rect2(16, 0, 16, 32), "fallback crop and frame geometry must replace the primary")
+	assert(not WISpriteRegistry.is_fallback_sheet(real_sheet), "owned fallback must load real art")
+	for invalid: Variant in ["__t_nope", "__t_invalid", "__t_chain", "__t_unavailable", "pc_test", 7, "", null]:
+		var id := "__t_bad_%s" % str(invalid)
+		cat[id] = {"fallback_sprite": invalid,
+			"animations": {"idle": {"sheet": missing_sheet, "frame_size": [16, 23], "fps": 1}}}
+		cat["__t_invalid"] = "not an entry"
+		cat["__t_chain"] = {"fallback_sprite": "__t_owned", "animations": owned["animations"]}
+		cat["__t_unavailable"] = {"animations": cat[id]["animations"]}
+		cat["pc_test"] = owned
+		assert(WISpriteRegistry.resolved_id(id) == id, "invalid fallback must retain placeholder path: " + id)
+		var bad_frames := WISpriteRegistry.frames_for(id)
+		assert(bad_frames.get_frame_texture("idle", 0).get_size() == Vector2(16, 23), "invalid fallback must retain primary placeholder geometry")
+	cat["__t_self"] = {"fallback_sprite": "__t_self", "animations": cat["__t_unavailable"]["animations"]}
+	assert(WISpriteRegistry.resolved_id("__t_self") == "__t_self", "self-target must not resolve")
+	primary["animations"]["idle"]["sheet_up"] = real_sheet
+	assert(WISpriteRegistry.resolved_id("__t_missing") == "__t_owned", "resolution must stay consistent with cached frames until reset")
+	WISpriteRegistry.reset()
+	assert(WISpriteRegistry._catalog.is_empty() and WISpriteRegistry._cache.is_empty(), "reset must clear catalog and frames")
+	assert(WISpriteRegistry._resolved_ids.is_empty(), "reset must clear resolved ids")
+	assert(WISpriteRegistry._placeholder_cache.is_empty() and WISpriteRegistry._missing_sheet_logged.is_empty(), "reset must clear placeholder state")
+	WISpriteRegistry._load_catalog()
+	assert(not WISpriteRegistry._catalog.has("__t_missing"), "reset must reload disk without synthetic entries")
+	WISpriteRegistry._catalog["__t_owned"] = owned
+	WISpriteRegistry._catalog["__t_missing"] = primary
+	assert(WISpriteRegistry.resolved_id("__t_missing") == "__t_missing", "reset must reevaluate sheet availability")
+	var fresh := WISpriteRegistry.frames_for("__t_missing")
+	assert(fresh != frames and fresh.has_animation("idle_up"), "reset must rebuild primary frames")
+	WISpriteRegistry.reset()
+
+
+func _assert_fallback_target_completeness() -> void:
+	var real_sheet := "res://assets/sprites/door_locked_heavy/Idle-Sheet.png"
+	var primary := {"fallback_sprite": "__t_target", "animations": {"idle": {
+		"sheet": "res://assets/__nonexistent_pack__.png", "frame_size": [16, 23]}}}
+	var complete := {"directional": true, "animations": {"idle": {
+		"sheet_down": real_sheet, "sheet_side": real_sheet, "sheet_up": real_sheet,
+		"frame_size": [64, 64]}}}
+	for missing_key: String in ["sheet_down", "sheet_side", "sheet_up", "sheet"]:
+		WISpriteRegistry.reset()
+		WISpriteRegistry._load_catalog()
+		var target: Dictionary = complete.duplicate(true) if missing_key != "sheet" else {
+			"animations": {"idle": {"sheet_side": real_sheet, "frame_size": [64, 64]}}}
+		target["animations"]["idle"].erase(missing_key)
+		WISpriteRegistry._catalog["__t_target"] = target
+		WISpriteRegistry._catalog["__t_primary"] = primary
+		assert(WISpriteRegistry.resolved_id("__t_primary") == "__t_primary", "target needs required sheet key: " + missing_key)
+		assert(WISpriteRegistry.frames_for("__t_primary").get_frame_texture("idle", 0).get_size() == Vector2(16, 23), "incomplete target must keep safe primary placeholder")
+		# The same absent key on a primary must select a complete target.
+		WISpriteRegistry.reset()
+		WISpriteRegistry._load_catalog()
+		target["fallback_sprite"] = "__t_target"
+		WISpriteRegistry._catalog["__t_primary"] = target
+		WISpriteRegistry._catalog["__t_target"] = complete
+		assert(WISpriteRegistry.resolved_id("__t_primary") == "__t_target", "primary missing required sheet key must resolve: " + missing_key)
+		assert(WISpriteRegistry.frames_for("__t_primary").has_animation("idle_up"), "complete directional target must build every facing")
+	var invalid_targets: Array = [{}, {"animations": null}, {"animations": []},
+		{"animations": {}}, {"animations": {"idle": null}},
+		{"animations": {"idle": {}}}]
+	for bad_size: Variant in [null, [], [16], [16, 0], ["64", 64], [64, 64, 64]]:
+		invalid_targets.append({"animations": {"idle": {"sheet": real_sheet, "frame_size": bad_size}}})
+	invalid_targets.append({"animations": {"idle": {"sheet": real_sheet}}})
+	for target: Dictionary in invalid_targets:
+		WISpriteRegistry.reset()
+		WISpriteRegistry._load_catalog()
+		WISpriteRegistry._catalog["__t_primary"] = primary
+		WISpriteRegistry._catalog["__t_target"] = target
+		assert(WISpriteRegistry.resolved_id("__t_primary") == "__t_primary", "invalid animation target must not resolve: " + str(target))
+		assert(WISpriteRegistry.frames_for("__t_primary").get_frame_count("idle") == 1, "invalid target must keep safe primary placeholder")
+	WISpriteRegistry.reset()
 
 
 func _load_json(path: String) -> Dictionary:
@@ -587,6 +699,253 @@ func _build_expected_counts() -> Dictionary:
 			"firewood_stack", "rubble_pile", "battle_debris"]:
 		counts["%s/idle" % variety_prop] = 1
 
+	counts["liscor_bread_stall/idle"] = 1
+	counts["guild_roofed_board/idle"] = 1
+	counts["watch_report_desk/idle"] = 1
+	counts["guild_handbill_wall/idle"] = 1
+	counts["silverfang_stall_cutout/idle"] = 1
+	counts["invrisil_roofline/idle"] = 1
+	counts["invrisil_glazier_front/idle"] = 1
+	counts["invrisil_tea_front/idle"] = 1
+	counts["invrisil_shop_door/idle"] = 1
+	counts["invrisil_hanging_sign/idle"] = 1
+	counts["invrisil_ornate_bench/idle"] = 1
+	counts["invrisil_flower_cart/idle"] = 1
+	counts["pallass_tool_wall/idle"] = 1
+	counts["pallass_billet_rack/idle"] = 1
+	counts["pallass_reject_bin/idle"] = 1
+	counts["pallass_tagged_pallet/idle"] = 1
+	counts["pallass_parapet_full/idle"] = 1
+	counts["invrisil_timber_panel/idle"] = 1
+	counts["invrisil_upper_window/idle"] = 1
+	counts["invrisil_stationery_display/idle"] = 1
+	counts["garden_shelter_tree/idle"] = 1
+	counts["garden_blossom_white/idle"] = 1
+	counts["garden_blossom_purple/idle"] = 1
+	counts["garden_low_hedge/idle"] = 1
+	counts["garden_rest_bench/idle"] = 1
+	counts["camp_hide_tent_owned/idle"] = 1
+	counts["camp_cooking_spit_owned/idle"] = 1
+	counts["camp_weapon_rack_owned/idle"] = 1
+	counts["camp_lookout_owned/idle"] = 1
+	counts["camp_palisade_owned/idle"] = 1
+	counts["owned_fallback_bar_counter/idle"] = 1
+	counts["owned_fallback_barrel/idle"] = 1
+	counts["owned_fallback_bed/idle"] = 1
+	counts["owned_fallback_boulder/idle"] = 1
+	counts["owned_fallback_bush_green/idle"] = 1
+	counts["owned_fallback_campfire/idle"] = 1
+	counts["owned_fallback_chest/idle"] = 1
+	counts["owned_fallback_chest_open/idle"] = 1
+	counts["owned_fallback_crop_row_dark_green/idle"] = 1
+	counts["owned_fallback_crop_row_green/idle"] = 1
+	counts["owned_fallback_crop_row_orange/idle"] = 1
+	counts["owned_fallback_door/idle"] = 1
+	counts["owned_fallback_dungeon_rubble/idle"] = 1
+	counts["owned_fallback_dungeon_statue/idle"] = 1
+	counts["owned_fallback_dusty_scroll/idle"] = 1
+	counts["owned_fallback_facade_plaster/idle"] = 1
+	counts["owned_fallback_flower_purple/idle"] = 1
+	counts["owned_fallback_flower_tiny/idle"] = 1
+	counts["owned_fallback_food_basket/idle"] = 1
+	counts["owned_fallback_food_bread/idle"] = 1
+	counts["owned_fallback_food_ham/idle"] = 1
+	counts["owned_fallback_garden_fountain_basin/idle"] = 1
+	counts["owned_fallback_garden_fountain_statue/idle"] = 1
+	counts["owned_fallback_grass_tuft/idle"] = 1
+	counts["owned_fallback_grill/idle"] = 1
+	counts["owned_fallback_hollow_bent_tree/idle"] = 1
+	counts["owned_fallback_hollow_canopy_tree/idle"] = 1
+	counts["owned_fallback_hollow_glow_stone/idle"] = 1
+	counts["owned_fallback_hollow_mushroom_cluster/idle"] = 1
+	counts["owned_fallback_hollow_small_tree/idle"] = 1
+	counts["owned_fallback_library_desk/idle"] = 1
+	counts["owned_fallback_library_shelf/idle"] = 1
+	counts["owned_fallback_mushroom/idle"] = 1
+	counts["owned_fallback_mushroom_purple_l/idle"] = 1
+	counts["owned_fallback_mushroom_purple_m/idle"] = 1
+	counts["owned_fallback_mushroom_purple_s/idle"] = 1
+	counts["owned_fallback_pebble/idle"] = 1
+	counts["owned_fallback_pedestal/idle"] = 1
+	counts["owned_fallback_plant_pot/idle"] = 1
+	counts["owned_fallback_pond_reeds/idle"] = 1
+	counts["owned_fallback_sconce/idle"] = 1
+	counts["owned_fallback_scree_spill/idle"] = 1
+	counts["owned_fallback_sewer_grate/idle"] = 1
+	counts["owned_fallback_shelf_bottles/idle"] = 1
+	counts["owned_fallback_stool/idle"] = 1
+	counts["owned_fallback_table_brown/idle"] = 1
+	counts["owned_fallback_tree_autumn_orange/idle"] = 1
+	counts["owned_fallback_tree_autumn_red/idle"] = 1
+	counts["owned_fallback_tree_big/idle"] = 1
+	counts["owned_fallback_tree_round/idle"] = 1
+	counts["owned_fallback_unlit_lantern/idle"] = 1
+	counts["owned_fallback_window_blue/idle"] = 1
+	counts["pc_human_m/idle"] = 4
+	counts["pc_human_m/walk"] = 6
+	counts["pc_human_m/slice"] = 3
+	counts["pc_human_m/cast"] = 6
+	counts["pc_human_m/hit"] = 6
+	counts["pc_human_m/death"] = 7
+	counts["riverfarm_well_owned/idle"] = 1
+	counts["riverfarm_waterwheel_owned/idle"] = 1
+	counts["riverfarm_granary_owned/idle"] = 1
+	counts["riverfarm_wheelwright_owned/idle"] = 1
+	counts["longhouse_communal_table_owned/idle"] = 1
+	counts["mill_tally_sticks_owned/idle"] = 1
+	counts["mill_high_shelf_owned/idle"] = 1
+	counts["dig_camp_tent_owned/idle"] = 1
+	counts["ruin_fallen_column_owned/idle"] = 1
+	counts["dig_survey_stakes_owned/idle"] = 1
+	counts["dungeon_brazier_owned/idle"] = 1
+	counts["dungeon_wall_chains_owned/idle"] = 1
+	counts["crypt_sarcophagus_owned/idle"] = 1
+	counts["gallery_mouth_owned/idle"] = 1
+	counts["cave_bat_harvest/idle"] = 7
+	counts["cave_bat_harvest/move"] = 7
+	counts["cave_bat_harvest/slice"] = 7
+	counts["cave_bat_harvest/hit"] = 5
+	counts["cave_bat_harvest/death"] = 7
+	counts["river_wolf_harvest/idle"] = 1
+	counts["river_wolf_harvest/walk"] = 6
+	counts["river_wolf_harvest/slice"] = 7
+	counts["river_wolf_harvest/hit"] = 5
+	counts["river_wolf_harvest/death"] = 7
+	counts["razorbeak_harvest/idle"] = 5
+	counts["razorbeak_harvest/slice"] = 7
+	counts["razorbeak_harvest/hit"] = 5
+	counts["razorbeak_harvest/death"] = 7
+	counts["watchgolem_harvest/idle"] = 5
+	counts["watchgolem_harvest/walk"] = 7
+	counts["watchgolem_harvest/slice"] = 7
+	counts["watchgolem_harvest/hit"] = 5
+	counts["watchgolem_harvest/death"] = 7
+	counts["counter_segment_owned/idle"] = 1
+	counts["city_roof_owned/idle"] = 1
+	counts["crate_owned/idle"] = 1
+	counts["inn_hearth/idle"] = 1
+	counts["inn_back_bar/idle"] = 1
+	counts["inn_bar_station/idle"] = 1
+	counts["inn_kitchen_prep/idle"] = 1
+	counts["inn_round_table/idle"] = 1
+	counts["inn_table_clean/idle"] = 1
+	counts["inn_table_soiled/idle"] = 1
+	counts["selys/idle"] = 4
+	counts["selys/walk"] = 6
+	counts["krshia/idle"] = 4
+	counts["krshia/walk"] = 6
+	counts["octavia/idle"] = 4
+	counts["octavia/walk"] = 6
+	counts["ilvo/idle"] = 4
+	counts["ilvo/walk"] = 6
+	counts["hedault/idle"] = 4
+	counts["hedault/walk"] = 6
+	counts["master_coyle/idle"] = 4
+	counts["master_coyle/walk"] = 6
+	counts["wilovan/idle"] = 4
+	counts["wilovan/slice"] = 5
+	counts["wilovan/hit"] = 5
+	counts["wilovan/death"] = 7
+	counts["wilovan/walk"] = 6
+	counts["invrisil_lady_client/idle"] = 4
+	counts["invrisil_lady_client/walk"] = 6
+	counts["gnoll_ranger/idle"] = 4
+	counts["gnoll_ranger/walk"] = 6
+	counts["city_scribe/idle"] = 4
+	counts["city_scribe/walk"] = 6
+	counts["city_runner/idle"] = 1
+	counts["city_runner/walk"] = 6
+	counts["antinium_worker/idle"] = 4
+	counts["antinium_worker/walk"] = 6
+	counts["renn/idle"] = 4
+	counts["renn/walk"] = 6
+	counts["vess/idle"] = 4
+	counts["vess/walk"] = 6
+	counts["yelra/idle"] = 4
+	counts["yelra/walk"] = 6
+	counts["xif/idle"] = 4
+	counts["xif/walk"] = 6
+	counts["dresk_ashgrave/idle"] = 4
+	counts["dresk_ashgrave/walk"] = 6
+	counts["liscor_watch_guard/idle"] = 4
+	counts["liscor_watch_guard/walk"] = 6
+	counts["cups/idle"] = 4
+	counts["cups/walk"] = 6
+	counts["townswoman/idle"] = 4
+	counts["townswoman/walk"] = 6
+	counts["invrisil_gentlewoman_2/idle"] = 4
+	counts["invrisil_gentlewoman_2/walk"] = 6
+	counts["former_headman/idle"] = 4
+	counts["former_headman/walk"] = 6
+	counts["tallyman/idle"] = 4
+	counts["tallyman/walk"] = 6
+	counts["frazzled_drayman/idle"] = 4
+	counts["frazzled_drayman/walk"] = 6
+	counts["road_peddler/idle"] = 4
+	counts["road_peddler/walk"] = 6
+	counts["den_shop_keeper/idle"] = 4
+	counts["den_shop_keeper/walk"] = 6
+	counts["forge_tier_smith/idle"] = 4
+	counts["forge_tier_smith/walk"] = 6
+	counts["forge_hall_apprentice/idle"] = 4
+	counts["forge_hall_apprentice/walk"] = 6
+	counts["stallkeeper/idle"] = 4
+	counts["stallkeeper/walk"] = 6
+	counts["gentleman_bowler/idle"] = 4
+	counts["gentleman_bowler/walk"] = 6
+	counts["recruit_pell/idle"] = 4
+	counts["recruit_pell/walk"] = 6
+	counts["watch_sergeant/idle"] = 4
+	counts["watch_sergeant/walk"] = 6
+	counts["house_factor/idle"] = 4
+	counts["house_factor/walk"] = 6
+	counts["footpad_bruiser/idle"] = 4
+	counts["footpad_bruiser/walk"] = 6
+	counts["footpad_bruiser/slice"] = 7
+	counts["footpad_bruiser/hit"] = 5
+	counts["footpad_bruiser/death"] = 7
+	counts["footpad/idle"] = 4
+	counts["footpad/walk"] = 6
+	counts["footpad/slice"] = 7
+	counts["footpad/hit"] = 5
+	counts["footpad/death"] = 7
+	counts["briar_collector/idle"] = 5
+	counts["briar_collector/walk"] = 7
+	counts["briar_collector/slice"] = 7
+	counts["briar_collector/hit"] = 5
+	counts["briar_collector/death"] = 7
+	counts["mothbear_harvest/idle"] = 5
+	counts["mothbear_harvest/walk"] = 7
+	counts["mothbear_harvest/slice"] = 7
+	counts["mothbear_harvest/hit"] = 5
+	counts["mothbear_harvest/death"] = 7
+	counts["icon_flash_cut/idle"] = 1
+	counts["icon_bone_dart/idle"] = 1
+	counts["icon_power_strike/idle"] = 1
+	counts["icon_quick_slash/idle"] = 1
+	counts["icon_devastating_slash/idle"] = 1
+	counts["icon_crescent_cut/idle"] = 1
+	counts["icon_piercing_strikes/idle"] = 1
+	counts["icon_triple_thrust/idle"] = 1
+	counts["icon_extended_sweep/idle"] = 1
+	counts["icon_spear_flurry/idle"] = 1
+	counts["icon_pierce_thrust/idle"] = 1
+	counts["icon_keener_edge/idle"] = 1
+	counts["icon_keener_point/idle"] = 1
+	counts["icon_flame_bolt/idle"] = 1
+	counts["icon_flame_jet/idle"] = 1
+	counts["icon_frost_bolt/idle"] = 1
+	counts["icon_ice_shard/idle"] = 1
+	counts["icon_icy_floor/idle"] = 1
+	counts["icon_flame_scythe/idle"] = 1
+	counts["icon_flare_burst/idle"] = 1
+	counts["icon_spellbound_strike/idle"] = 1
+	counts["icon_spellbound_thrust/idle"] = 1
+	counts["icon_attack/idle"] = 1
+	counts["icon_dash/idle"] = 1
+	counts["icon_basic_swordwork/idle"] = 1
+	counts["pallass_lower_city/idle"] = 1
+	counts["pallass_rail_post/idle"] = 1
 	return counts
 
 

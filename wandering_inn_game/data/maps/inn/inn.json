@@ -49,6 +49,7 @@
    "Erin gave me a name for the corner I sit in. She calls it 'Ksmvr's Post.' I have accepted the designation. It is efficient."
   ]
  },
+ "cover_skip": [[9,2],[3,1]],
  "blocked": [
   [
    7,
@@ -85,42 +86,21 @@
  ],
  "floor_layers": [
   {
-   "_pick": "E3 L1 hall planks: position-hashed variants from the light plank swatch",
-   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "sheet": "res://assets/tiles/harvest/inn_floor.png",
    "tile_px": 16,
-   "variants": [
-    [
-     1,
-     21
-    ],
-    [
-     2,
-     21
-    ],
-    [
-     1,
-     22
-    ],
-    [
-     2,
-     22
-    ]
+   "coords": [
+    0,
+    3
    ],
+   "tone": {"base": [0.37, 0.26, 0.17], "detail": 0.18},
    "cells": "all"
   },
   {
-   "_pick": "E3 L1 kitchen zone: grey cobble swatch",
-   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "sheet": "res://assets/tiles/harvest/inn_floor.png",
    "tile_px": 16,
-   "variants": [
-    [
-     9,
-     22
-    ],
-    [
-     9,
-     23
-    ]
+   "coords": [
+    2,
+    1
    ],
    "cells": {
     "rect": [
@@ -152,7 +132,23 @@
      3,
      3
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/inn_floor.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.33,
+       0.27,
+       0.2
+      ],
+      "detail": 0.65
+     }
+    }
   }
  ],
  "walls": {
@@ -175,7 +171,27 @@
     "face": [
      14,
      7
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "face": [
+                          4,
+                          3
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -189,7 +205,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -203,7 +235,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -217,7 +265,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -231,7 +295,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    }
   ]
  },
@@ -244,7 +324,7 @@
    ]
   },
   {
-   "sprite": "hearth",
+   "sprite": "inn_hearth",
    "cell": [
     2,
     1
@@ -259,6 +339,13 @@
     "radius": 40,
     "flicker": true
    }
+  },
+  {
+   "sprite": "inn_kitchen_prep",
+   "cell": [
+    4,
+    1
+   ]
   },
   {
    "sprite": "grill",
@@ -278,28 +365,14 @@
    }
   },
   {
-   "sprite": "counter_mid",
-   "cell": [
-    6,
-    2
-   ]
-  },
-  {
-   "sprite": "counter_mid",
+   "sprite": "inn_bar_station",
    "cell": [
     8,
     2
    ]
   },
   {
-   "sprite": "counter_right",
-   "cell": [
-    9,
-    2
-   ]
-  },
-  {
-   "sprite": "shelf_bottles",
+   "sprite": "inn_back_bar",
    "cell": [
     8,
     1
@@ -313,28 +386,7 @@
    ]
   },
   {
-   "sprite": "stool",
-   "cell": [
-    6,
-    3
-   ]
-  },
-  {
-   "sprite": "stool",
-   "cell": [
-    8,
-    3
-   ]
-  },
-  {
-   "sprite": "food_basket",
-   "cell": [
-    6,
-    2
-   ]
-  },
-  {
-   "sprite": "table_brown",
+   "sprite": "inn_round_table",
    "cell": [
     7,
     6
@@ -345,13 +397,6 @@
    "cell": [
     7,
     6
-   ]
-  },
-  {
-   "sprite": "food_ham",
-   "cell": [
-    5,
-    4
    ]
   },
   {
@@ -376,7 +421,7 @@
    ]
   },
   {
-   "sprite": "table_brown",
+   "sprite": "inn_round_table",
    "cell": [
     12,
     7
@@ -753,7 +798,7 @@
     4
    ],
    "display_name": "Dirty Table",
-   "sprite": "dirty_table",
+   "sprite": "inn_table_soiled",
    "requires_skill": "basic_cleaning",
    "skill_hint_toast": "Rings, crumbs and gravy going tacky on the boards; one good wipe-down clears the lot.",
    "on_skill_use": {
@@ -775,7 +820,7 @@
       "counter": "cleaned_the_inn",
       "at": 1
      },
-     "sprite": "table_brown",
+     "sprite": "inn_table_clean",
      "tint": [
       1.0,
       1.0,
@@ -894,7 +939,7 @@
     6
    ],
    "display_name": "Selys",
-   "sprite": "citizen_f",
+   "sprite": "selys",
    "facing": "down",
    "conversation": "selys_inn",
    "present_when": {

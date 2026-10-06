@@ -4,6 +4,7 @@ extends RefCounted
 static var _catalog: Dictionary = {}
 static var _cache: Dictionary = {}
 static var _tile_sources: Dictionary = {}
+static var _resolved_ids: Dictionary = {}
 
 ## Fallback-art contract. A PUBLIC checkout is missing the
 ## protected asset packs (see wandering_inn_game/assets_manifest.json), so
@@ -27,6 +28,7 @@ static func reset() -> void:
 	_catalog = {}
 	_cache = {}
 	_tile_sources = {}
+	_resolved_ids = {}
 	_placeholder_cache = {}
 	_missing_sheet_logged = {}
 
@@ -45,7 +47,56 @@ static func has_sprite(sprite_id: String) -> bool:
 
 static func entry_for(sprite_id: String) -> Dictionary:
 	_load_catalog()
-	return _catalog.get(sprite_id, {})
+	return _catalog.get(resolved_id(sprite_id), {})
+
+
+## Swap the whole presentation entry so crop, anchor and scale agree.
+## Resolution stays fixed with cached frames until reset; fallbacks are one hop.
+static func resolved_id(sprite_id: String) -> String:
+	_load_catalog()
+	if _resolved_ids.has(sprite_id):
+		return _resolved_ids[sprite_id]
+	var resolved := sprite_id
+	var entry: Dictionary = _catalog.get(sprite_id, {})
+	var fallback: Variant = entry.get("fallback_sprite", "")
+	if fallback is String and fallback != "" and fallback != sprite_id and not fallback.begins_with("pc_"):
+		var target: Variant = _catalog.get(fallback)
+		if target is Dictionary and not target.has("fallback_sprite"):
+			if _missing_any_sheet(entry) and not _missing_any_sheet(target) and _valid_frame_geometry(target):
+				resolved = fallback
+	_resolved_ids[sprite_id] = resolved
+	return resolved
+
+
+static func _missing_any_sheet(entry: Dictionary) -> bool:
+	var animations: Variant = entry.get("animations", {})
+	if not animations is Dictionary or animations.is_empty():
+		return true
+	for anim: Variant in animations.values():
+		if not anim is Dictionary:
+			return true
+		var sheet_keys: Array[String] = []
+		for facing: String in _facings(bool(entry.get("directional", false))):
+			sheet_keys.append("sheet_%s" % facing if facing != "" else "sheet")
+		for key: String in anim:
+			if key.begins_with("sheet") and not sheet_keys.has(key):
+				sheet_keys.append(key)
+		for key: String in sheet_keys:
+			var path: Variant = anim.get(key)
+			if not path is String or not ResourceLoader.exists(path):
+				return true
+	return false
+
+
+static func _valid_frame_geometry(entry: Dictionary) -> bool:
+	for anim: Dictionary in entry["animations"].values():
+		var size: Variant = anim.get("frame_size")
+		if not size is Array or size.size() != 2:
+			return false
+		for dimension: Variant in size:
+			if not (dimension is int or dimension is float) or dimension < 1:
+				return false
+	return true
 
 
 static func anchor_for(sprite_id: String) -> Vector2:
@@ -90,7 +141,7 @@ static func frames_for(sprite_id: String) -> SpriteFrames:
 	assert(_catalog.has(sprite_id), "unknown sprite id: " + sprite_id)
 	if _cache.has(sprite_id):
 		return _cache[sprite_id]
-	var entry: Dictionary = _catalog[sprite_id]
+	var entry: Dictionary = _catalog[resolved_id(sprite_id)]
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
 	var directional := bool(entry.get("directional", false))
@@ -111,6 +162,10 @@ static func frames_for(sprite_id: String) -> SpriteFrames:
 			)
 	_cache[sprite_id] = frames
 	return frames
+
+
+static func tile_sheet_available(sheet_path: String) -> bool:
+	return ResourceLoader.exists(sheet_path)
 
 
 static func tile_set_for(sheet_path: String, tile_px: int) -> TileSet:

@@ -18,7 +18,7 @@
   { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 19, "gold": 0, "resonance": { "used": 0, "capacity": 2 }, "cursor_scroll": 0, "selected_icon": true }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "00_full_pack_top_cursor_rusty_sword" },
 
-  { "_comment": "Detour to traveler_charm (index 7) -- the corner's 3-LINE case (hp_mod + resonance + price all at once, the real max across data/items.json that CORNER_BREAKOUT_RESERVED_LINES is sized for): selected_icon:true (traveler_charm.png ships) and mech_line joins all three in card order. Pinned via the per-move ui_inventory_selection_rendered event -- cursor moves never emit ui_inventory_shown (that would replay audio.json's ui_open chime per arrow press).", "action": "press", "name": "move_down" },
+  { "_comment": "Detour to traveler_charm (index 7) -- the corner's 3-LINE case (hp_mod + resonance + price all at once, a three-line sample within the catalog-derived paper reserve): selected_icon:true (traveler_charm.png ships) and mech_line joins all three in card order. Pinned via the per-move ui_inventory_selection_rendered event -- cursor moves never emit ui_inventory_shown (that would replay audio.json's ui_open chime per arrow press).", "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },

@@ -83,7 +83,7 @@ var _text_scale_step := 0
 var _reduce_motion := false
 var _combat_speed_step := 0
 var _difficulty_step := DIFFICULTY_DEFAULT_STEP
-var _field_readout_expanded := true
+var _field_readout_expanded := false
 var _field_readout_choice := false
 var _show_quest_thread := false
 ## GH#338 — DEFAULT ON, and deliberately so. Every other knob in this file
@@ -111,7 +111,7 @@ func _load_settings() -> void:
 	var field_value: Variant = _settings.get_value("field_hud", "readout_expanded") \
 			if _settings.has_section_key("field_hud", "readout_expanded") else null
 	_field_readout_choice = field_value is bool
-	_field_readout_expanded = bool(field_value) if _field_readout_choice else true
+	_field_readout_expanded = bool(field_value) if _field_readout_choice else false
 	_show_quest_thread = bool(_settings.get_value("field_hud", "show_quest_thread", false))
 	# Own section: this is a JOURNAL knob, not a field-HUD one, and the default
 	# is TRUE -- so an absent key must read ON, not OFF.
