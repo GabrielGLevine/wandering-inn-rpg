@@ -78,20 +78,8 @@ const TOAST_BOTTOM_DEFAULT := -34.0
 const TOAST_BOTTOM_RAISED := -264.0
 const TOAST_PANEL_BASE_SIZE := Vector2(448.0, 96.0)
 const TOAST_TEXT_WIDTH := 412.0
-## Danger zone = 686-658 = 28px, measured from the panel's OWN bottom edge
-## (a 9-slice-art property, independent of the MarginContainer's content
-## margins). Unlike the feed (top-aligned text, single measured deficit),
-## the toast label is VERTICALLY CENTERED (`_ready()`), so growing the
-## panel pushes only HALF of any added headroom above the text block -- the
-## other half lands below it, meaning the danger zone must be budgeted
-## TWICE (`_toast_panel_height`'s derivation) to actually clear the fold
-## rather than just approach it.
-## TRAP (v0.4.0 playtest, the Invrisil ledger toast): that 28px was measured
-## at the BASE 96px panel height -- but Banner_Horizontal's fold art starts
-## 29px above the texture region's bottom while STRIP_PATCH_MARGIN is only
-## 20, so 9 source px of fold live in the 9-patch's STRETCHED CENTER band.
+# Centered message copy keeps conservative breathing room at every text scale.
 const TOAST_FOLD_DANGER_PX := 30.0
-const STRIP_FOLD_PATCH_BOTTOM := 32
 
 ## World hint ribbon ("Esc — menu   J — journal   I — inventory"). The panel
 ## rect and its content margins are BOTH derived, from live font metrics plus
@@ -400,7 +388,6 @@ func _ready() -> void:
 	# IGNORE default -- a click on the toast strip while it is showing must
 	# not leak through to a world click-to-walk/interact underneath it.
 	_toast_panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	(_toast_panel.get_child(0) as NinePatchRect).patch_margin_bottom = STRIP_FOLD_PATCH_BOTTOM
 	_toast_panel.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	_toast_panel.custom_minimum_size = TOAST_PANEL_BASE_SIZE
 	_toast_panel.size = TOAST_PANEL_BASE_SIZE
@@ -419,7 +406,6 @@ func _ready() -> void:
 
 	_dialogue_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_dialogue_panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	(_dialogue_panel.get_child(0) as NinePatchRect).patch_margin_bottom = STRIP_FOLD_PATCH_BOTTOM
 	_dialogue_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	_dialogue_panel.hide()
 	var dialogue_margin := MarginContainer.new()

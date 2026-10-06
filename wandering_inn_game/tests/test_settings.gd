@@ -294,7 +294,7 @@ func _check_field_readout_persistence() -> void:
 	# user://settings.cfg (the exact stomping #118 outlawed), and passes or
 	# fails depending on what the developer's own cfg happens to contain.
 	var missing = _settings_instance(script)
-	assert(bool(missing.call("field_readout_expanded")), "missing field-readout key must expose names/mechanics")
+	assert(not bool(missing.call("field_readout_expanded")), "missing field-readout key must keep the world clear")
 	assert(not bool(missing.call("has_field_readout_choice")), "missing field-readout key is not an explicit player choice")
 	missing.call("set_field_readout_expanded", false)
 	missing.free()
@@ -302,13 +302,17 @@ func _check_field_readout_persistence() -> void:
 	var persisted = _settings_instance(script)
 	assert(not bool(persisted.call("field_readout_expanded")), "collapsed field readout must round-trip through settings.cfg")
 	assert(bool(persisted.call("has_field_readout_choice")), "a persisted bool is an explicit player choice")
+	persisted.call("set_field_readout_expanded", true)
 	persisted.free()
+	var expanded = _settings_instance(script)
+	assert(bool(expanded.call("field_readout_expanded")) and bool(expanded.call("has_field_readout_choice")), "valid expanded player preference must survive a new settings instance")
+	expanded.free()
 
 	config.load(SETTINGS_PATH)
 	config.set_value("field_hud", "readout_expanded", "corrupt")
 	assert(config.save(SETTINGS_PATH) == OK, "field-readout corrupt-key setup must save")
 	var corrupt = _settings_instance(script)
-	assert(bool(corrupt.call("field_readout_expanded")), "wrong-typed field-readout key must fall back expanded")
+	assert(not bool(corrupt.call("field_readout_expanded")), "wrong-typed field-readout key must fall back collapsed")
 	assert(not bool(corrupt.call("has_field_readout_choice")), "wrong-typed field-readout key must not become a player choice")
 	corrupt.free()
 
@@ -341,7 +345,7 @@ func _check_field_hotbar_layout() -> void:
 	var panel: PanelContainer = chrome.call("make_chrome_panel_container", chrome.get("PARCHMENT_PANEL"), chrome.get("PATCH_MARGIN"))
 	var style := panel.get_theme_stylebox("panel")
 	var frame_size: Vector2 = layout.call("style_frame_size", style)
-	assert(frame_size == Vector2(48, 48), "parchment content margins must match its 24px border ornament")
+	assert(frame_size == Vector2(56, 52), "paper content must clear its measured walnut border and inner padding")
 	panel.free()
 
 	var viewports := [Vector2(1280, 720), Vector2(960, 540), Vector2(844, 390)]

@@ -21,6 +21,7 @@ Run:  python3 -m pytest -q scripts/tests/test_scaffold_consolidation.py
 
 import json
 import re
+import struct
 import subprocess
 import sys
 import tempfile
@@ -159,21 +160,26 @@ class TestGoldenSkillTwins(GoldenBase):
 
 
 class TestGoldenIconSlots(GoldenBase):
-	def test_slot_shape_matches_the_shipped_sprites_entries(self):
-		# One slot per twin, paired in emission order with the twins #449
-		# authored from the same baselines. Only the sheet path (which follows
-		# the un-named id) may differ.
+	def test_slot_schema_matches_shipped_icons_with_native_art_geometry(self):
 		self.assertEqual(len(self.proposal["icon_slots"]), len(SHIPPED_TWINS))
 		pairs = zip(self.proposal["icon_slots"].values(),
 			(self.sprites[f"icon_{sid}"] for sid in SHIPPED_TWINS.values()))
 		for raw_scaffolded, raw_shipped in pairs:
 			scaffolded, shipped = _strip(raw_scaffolded), _strip(raw_shipped)
 			self.assertEqual(list(scaffolded), list(shipped))
-			mine = dict(scaffolded["animations"]["idle"])
-			theirs = dict(shipped["animations"]["idle"])
-			self.assertEqual(list(mine), list(theirs))
-			self.assertNotEqual(mine.pop("sheet"), theirs.pop("sheet"))
-			self.assertEqual(mine, theirs)
+			mine = scaffolded["animations"]["idle"]
+			theirs = shipped["animations"]["idle"]
+			self.assertEqual(set(mine), set(theirs))
+			self.assertNotEqual(mine["sheet"], theirs["sheet"])
+			self.assertEqual(mine["frame_size"], [16, 16])
+			self.assertEqual(mine["fps"], 1)
+			# Final art occupies one whole PNG; slicing a 32px glyph as four
+			# placeholder-sized frames must fail even though the schema matches.
+			image = GAME / theirs["sheet"].removeprefix("res://")
+			header = image.read_bytes()[:24]
+			self.assertEqual(header[:8], b"\x89PNG\r\n\x1a\n")
+			self.assertEqual(theirs["frame_size"], list(struct.unpack(">II", header[16:24])))
+			self.assertGreaterEqual(theirs["fps"], 0)
 
 	def test_sheet_path_follows_the_icon_id(self):
 		for icon_id, slot in self.proposal["icon_slots"].items():

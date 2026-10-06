@@ -1,3 +1,4 @@
+import { runnerStartupInit, releaseRunnerStartup } from "./runner_startup.mjs";
 // Exported Godot DOM input and actual AudioContext fault injection.
 // Viewport changes and desktop tab visibility do not prove phone suspension.
 import assert from 'node:assert/strict';
@@ -92,8 +93,9 @@ try {
   if(['error','warning'].includes(row.type)||/SCRIPT ERROR|Parse Error|ERROR:|WARNING/.test(row.text)) diagnostics.push(row);
  });
  page.on('pageerror',error=>diagnostics.push({type:'pageerror',text:String(error)}));
+ await context.addInitScript(runnerStartupInit);
  await context.addInitScript(() => {
-  window.__WI_QA__={script:'res://qa/scripts/lifecycle_input_audio.json',seed:'9'};
+  window.__WI_QA__={script:'res://qa/scripts/lifecycle_input_audio.json',seed:'9',wait_for_runner_ready:true};
   window.__WI_LIFECYCLE_BOOT__=crypto.randomUUID();
   window.__WI_LIFECYCLE_EVENTS__=[];
   for(const type of ['touchstart','touchend','touchcancel','focus','blur','input','visibilitychange']) document.addEventListener(type,event=>{
@@ -131,6 +133,7 @@ try {
  await page.goto(origin+(hosting==='iframe'?'/iframe.html':'/index.html'));
  frame=hosting==='iframe'?await page.locator('iframe').elementHandle().then(handle=>handle.contentFrame()):page;
  assert(frame,'Missing game frame');
+ await releaseRunnerStartup(frame);
  const deadline=Date.now()+120000;
  while(Date.now()<deadline) {
   const req=await frame.evaluate(()=>window.__WI_QA_TOUCH_REQ__??null);

@@ -9,7 +9,31 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resource/capacity roadmap planning #565 (2026-10-05):** isolated docs worktree `/private/tmp/wi-vitals-roadmap`, branch `docs/vitals-recovery-roadmap`, base `e1d2edee`; only `HANDOFF.md`, `docs/ROADMAP.md`, `docs/CHOICE-LOG.md` and the new resource plan are owned here. Game/art paths and the active #564 workspace are untouched. GitHub #566–#571 own open resource, HUD, potion, food, capacity and composed-cutover implementation. #502 and affected milestone/issue records carry the new M2 dependencies; M3 stories/M4 tactics/M5 release consume them. Planning evidence: `/private/tmp/wi-vitals-planning`; no gameplay validation is claimed. **Exact next action:** reach an owned #564 safe checkpoint, then dispatch staged #566 and independent #570, serialize shared core/save/UI writers and use #571's gate before removing battle refills. M1 physical/human gates and #494/#495 semantic choices stay open. Three safe MP doses per waking/4 HP excess loss and resonance 4→5 are starting tuning proposals, not newly selected rulings.
+- **Approved holistic art #564:** `issue/564-holistic-art-direction`, original
+  base `e1d2edee`, composed with main `b1c4b02b`; source through `bb5be3ed`.
+  All approved regional, roster, icon, key-art, chrome and fallback slices are
+  integrated. Official/public surveys cover33 maps/63 views; catalog473 PNGs
+  and187 private terrain fallbacks pass review. Astra approves the art.
+  Sol's bb5 full54-unit/preflight passes;269 native sweep runs in
+  `/private/tmp/wi-art-sol-integration` on `issue/564-art-native`.
+  User prioritizes art merge over mobile tuning. Local official browser22/26
+  remains failed diagnostic evidence; initial-frame fix is included, receipt/
+  native-tap work excluded. Follow-up6769/six dirty adapters are stopped in
+  `/private/tmp/wi-browser-ready`; preserved patch/state in art-execution/
+  browser-startup-diagnosis/mobile-followup-stopped. No further tuning planned.
+  Evidence: `/private/tmp/wi-art-execution`, `/private/tmp/wi-art-astra-review`
+  and regional/creature directories. Balance147x100 passes. Optional steel seed9
+  loss predates art (97 matching combat events, fail499). Coverage limits remain.
+  **Next:** art PR, final native evidence, mandatory CI including Web parity,
+  Astra final review, squash/tree-identity closure. Preserve root companion UID.
+  No deployment; physical devices and production timing/audio remain unproven.
+- **Resource/capacity roadmap #565:** planning merged on main `b1c4b02b`;
+  #566–#571 own staged resources/HUD/potions/food/capacity/cutover. No gameplay
+  validation is claimed. After #564's owned safe checkpoint, dispatch #566 and
+  independent #570; serialize core/save/UI writers and keep #571's cutover gate.
+  The plan is `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`;
+  `/private/tmp/wi-vitals-planning` holds planning evidence. M1 physical/human
+  and #494/#495 semantic choices remain open; proposed tuning is not a ruling.
 
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
@@ -20,11 +44,7 @@ archived, or superseded session blocks.
   #507/#508/#509 are closed; #504/#505/#506/#510/#253/#511 and M1 stay open
   for their physical/actual-host/human criteria. Production is unchanged from
   the `ab279415` 36-case local browser baseline.
-  Final CI proves all 266 native canonicals, units/balance, 26 browser registry
-  cases, lifecycle/import and four 31-step audio cases. Eight local private/
-  public audio cases pass with fresh post-contact output; the retained-buffer
-  negative rejects stale output. Historical failures, causal corrections,
-  original-source evidence and narrow known diagnostics are recorded in PR #551.
+  PR #551 records final native/browser/audio evidence and causal corrections.
   Private candidate: `/private/tmp/wi-m1-candidate-93016f0b/m1-web-93016f0b.zip`,
   manifest and observation checklist alongside; PCK `cccbe5f4…`.
   Evidence: `/private/tmp/wi-m1-evidence`, private/public audio roots and
@@ -38,28 +58,11 @@ archived, or superseded session blocks.
   using the same private candidate and `qa/M1-OBSERVATIONS.md`. None supplied.
   OS keyboard/chooser/background/audio policy and actual itch remain unproven.
   No release/deploy/outreach/recruitment authorized. M1 stays open.
-- **#505 scoped layout repairs merged through PR #550:** main `2197088a` is
-  tree-identical to reviewed `81e66d29`. Independent source/visual review and all
-  eight CI checks pass, including 259 canonical scripts, both balance policies,
-  all 16 browser cases and lifecycle checks. Phone combat proves actual tutorial More, complete roster pages
-  and live shrinking. The WebGL turn-marker defect is repaired without weakening
-  diagnostics. Evidence: `/private/tmp/wi-505-evidence`. Keep #505/#511 open for
-  physical iPhone Safari and Android Chrome acceptance.
-- **#510 scoped recovery merged through PR #549:** main `0ac059a8` is identical
-  to the reviewed tree; all eight CI checks pass. Continue skips unreadable
-  newer saves. Both browser profiles prove actual reload of a completed durable
-  manual save and subsequent touch input, plus explicitly injected malformed-save
-  recovery with valid bytes preserved. Keyboard, audio, genuine backgrounding,
-  itch and physical lifecycle acceptance remain open. Evidence: `/private/tmp/wi-510-evidence`.
-- **#508 scoped work merged through PR #548:** reviewed tree and all eight CI
-  checks pass at `6f188bbc`. Fresh Watch earns wages, buys the classless route,
-  returns home and gains Rogue at sleep. Drainage, Watch, stealth-break and
-  production-timing proof pass on desktop and both emulated phone profiles.
-  Evidence: `/private/tmp/wi-508-evidence/composed`. Physical evidence is open.
-  The owner-approved cleared-road crossing recovery is merged through PR #551;
-  no enemies respawn. #508 is closed; PR #551 records final verification.
-- **#504 delivered through PR #547** (`e5b53328`; narrative in the PR body).
-  Open only for physical iPhone Safari / Android Chrome observations (#511).
+- Prior M1 scoped repairs (#504/#505/#508/#510) are merged through PRs
+  #547–#550. Their evidence and remaining physical criteria are recorded in
+  those PRs and #511; #505/#510 evidence roots remain `/private/tmp/wi-505-evidence`
+  and `/private/tmp/wi-510-evidence`. Do not rerun completed software closure
+  merely because physical observations remain outstanding.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.

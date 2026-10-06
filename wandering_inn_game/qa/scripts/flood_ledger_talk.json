@@ -610,6 +610,38 @@
    "action": "assert_state",
    "path": "accomplishments.ledger_read_true",
    "equals": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "riverfarm_mill",
+    "floor_cells": 108,
+    "blocked_cells": 42,
+    "ground_transitions": 0
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "riverfarm_mill",
+    "entity": "mill_high_shelf",
+    "sprite": "mill_high_shelf_owned",
+    "resolved_sprite": "mill_high_shelf_owned",
+    "hidden": false
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "riverfarm_mill",
+    "entity": "mill_tally_sticks",
+    "sprite": "mill_tally_sticks_owned",
+    "resolved_sprite": "mill_tally_sticks_owned",
+    "hidden": false
+   }
   }
  ]
 }

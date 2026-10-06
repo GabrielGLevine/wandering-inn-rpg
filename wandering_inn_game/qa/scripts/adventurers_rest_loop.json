@@ -12,11 +12,68 @@
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 10 },
   { "action": "assert_state", "path": "current_map", "equals": "invrisil_boulevard" },
   { "action": "assert_state", "path": "player_cell", "equals": [18, 2] },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
   { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [18, 1]} },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     20,
+     1
+    ]
+   }
+  },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "01_two_doors_on_one_facade" },
   { "action": "press", "name": "interact" },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "adventurers_rest"}, "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "adventurers_rest" },
   { "action": "assert_state", "path": "player_cell", "equals": [6, 7] },
@@ -76,7 +133,151 @@
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [6, 8]} },
   { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "invrisil_boulevard"}, "timeout_sec": 5 },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    11
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "13a_alley_rear_connection"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    20,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "13b_cross_street_loop"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 19
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
   { "action": "assert_state", "path": "player_cell", "equals": [18, 2] },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "05_back_on_the_boulevard" },

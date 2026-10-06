@@ -1,0 +1,340 @@
+{
+ "_comment": "#557 owned paper/walnut chrome: fresh compact default, transient selected-skill description, explicit full details, settings and inventory legibility, both preferences surviving save/load UI rebuilds. Native pointer input proves only the exercised mouse route.",
+ "fixture_save": "near_tactician",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_title_owned_menu"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 2,
+    "expanded": false,
+    "toggle_label": "Show details [H]"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_field_compact"
+  },
+  {
+   "action": "press",
+   "name": "hotbar_prime"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_selection_rendered",
+   "payload_contains": {
+    "index": 0,
+    "label": "[Basic Cleaning]",
+    "description": "Cleans mundane messes with supernatural ease.",
+    "text": "[Basic Cleaning]\nCleans mundane messes with supernatural ease.",
+    "backing_width": 380,
+    "visible": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_selected_description"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_selection_rendered",
+   "payload_contains": {
+    "index": -1,
+    "label": "",
+    "description": "",
+    "visible": false
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_field_readout"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "expanded": true,
+    "reason": "player",
+    "toggle_label": "Hide details [H]"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_settings_value",
+   "path": "field_readout_expanded",
+   "equals": true
+  },
+  {
+   "action": "screenshot",
+   "name": "03_full_details"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_inventory_paper"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_pause_row",
+   "row": 8
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_settings_paper"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_pause_row",
+   "row": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "save"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Game saved."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_pause_row",
+   "row": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "expanded": true,
+    "reason": "world_ready"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_settings_value",
+   "path": "field_readout_expanded",
+   "equals": true
+  },
+  {
+   "action": "click_field_readout"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "expanded": false,
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_pause_row",
+   "row": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "save"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Game saved."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_pause_row",
+   "row": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "expanded": false,
+    "reason": "world_ready"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_settings_value",
+   "path": "field_readout_expanded",
+   "equals": false
+  },
+  {
+   "action": "screenshot",
+   "name": "06_compact_preference_restored"
+  }
+ ]
+}

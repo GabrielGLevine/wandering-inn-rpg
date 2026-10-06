@@ -64,7 +64,15 @@
      4
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/carpet_over_floorboards_v2_square.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ]
+    }
   }
  ],
  "walls": {
@@ -87,7 +95,27 @@
     "face": [
      14,
      7
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "face": [
+                          4,
+                          3
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -101,7 +129,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -115,7 +159,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -129,7 +189,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -143,7 +219,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    }
   ]
  },
@@ -373,7 +465,7 @@
     3
    ],
    "display_name": "The Request Board",
-   "sprite": "request_board",
+   "sprite": "guild_roofed_board",
    "facing": "right",
    "board": true,
    "toast": "The Request Board. Paper three layers deep, new notices pinned straight over the dead ones. A posting pays on turn-in; take one at the Guildmistress's desk so it's logged, and only what you do after counts.",
@@ -420,7 +512,7 @@
     5
    ],
    "display_name": "Notice Wall",
-   "sprite": "request_board",
+   "sprite": "guild_handbill_wall",
    "facing": "right",
    "on_interact_accomplishment": "read_guild_notices",
    "toast": "The smaller board carries lost gear, rooms going spare, and one duel challenge with nothing written under it. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
@@ -451,12 +543,7 @@
    ],
    "display_name": "Renn",
    "person": true,
-   "sprite": "drake_patron",
-   "tint": [
-    0.55,
-    0.58,
-    0.62
-   ],
+   "sprite": "renn",
    "facing": "left",
    "talk_pool": [
     "Four silver for a nest clear? Four? My arrows cost more than that if it goes badly.",
@@ -507,12 +594,7 @@
    ],
    "display_name": "Yelra",
    "person": true,
-   "sprite": "gnoll_traveler",
-   "tint": [
-    0.62,
-    0.5,
-    0.35
-   ],
+   "sprite": "yelra",
    "facing": "down",
    "talk_pool": [
     "Bronze-rank, six months in. Long enough to know which jobs pay in coin and which pay in regret.",
