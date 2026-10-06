@@ -1561,8 +1561,15 @@ func _assert_message_layout(kind: String) -> void:
 		if WIResponsiveLayout.uses_touch_layout() and font_size * WIResponsiveLayout.css_scale(get_viewport()) + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
 			_fail("assert_message_layout: message text is too small")
 		var field := get_tree().root.find_child("FieldHotbar", true, false)
-		if field != null and field.visible and bounds.end.y > field.world_bottom() + 0.01:
-			_fail("assert_message_layout: message overlaps field controls or details")
+		if field != null and field.visible:
+			if WIResponsiveLayout.uses_touch_layout():
+				if bounds.end.y > field.world_bottom() + 0.01:
+					_fail("assert_message_layout: message overlaps field controls or details")
+			else:
+				for property: String in ["_hotbar", "_toggle", "_readout_panel", "_selection_label_backing", "_page_previous", "_page_next"]:
+					var control: Control = field.get(property)
+					if control != null and control.is_visible_in_tree() and bounds.intersects(control.get_global_rect()):
+						_fail("assert_message_layout: message overlaps field controls or details")
 		ObservableBus.emit_domain_event("qa_message_layout_measured", {"kind": kind, "font_css": font_size * WIResponsiveLayout.css_scale(get_viewport()), "text_scale": WISettings.text_scale_label()})
 	_capture_depth -= 1
 

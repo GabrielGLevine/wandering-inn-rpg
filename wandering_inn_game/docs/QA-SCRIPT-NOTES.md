@@ -292,6 +292,7 @@ These scripts require browser touch and stay out of the native smoke/full sweep.
 
 | script | seed | profiles | fixture | purpose |
 |---|---:|---|---|---|
+| `consumable_poison_touch` | 9 | iphone, android | `consumable_poison_defeat_start` | Mixed input fixture route: real browser touch potion selection/confirmation, lethal warning and visible phone receipt Close; normal defeat restores precombat stock/vitals. Keyboard route setup, not touch-only or device evidence. |
 | `responsive_field_overflow` | 37 | iphone, android | `responsive_field_overflow` | #505 every saved field slot remains reachable, original slot14 activates Light, continuous touch drags reveal the final detail line. Emulation only. |
 | `combat_responsive_touch` | 37 | iphone, android | `responsive_combat` | #505 actual browser touch starts crowded ambush; details, action pages, inspection, targeting, long name and MP at all text scales and live resizing. Physical device evidence remains #511. |
 | `responsive_dialogue_touch` | 9 | iphone, android | `mobile_tap_start` | #505 actual touch four-page dialogue at all supported text scales, visible text and measured option targets. Physical phones remain #511. |

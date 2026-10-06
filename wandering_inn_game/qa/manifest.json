@@ -8056,6 +8056,40 @@
  ],
  "browser_scripts": [
   {
+   "script": "consumable_poison_touch",
+   "seed": 9,
+   "fixture": "consumable_poison_defeat_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "Mixed input fixture route: real browser touch potion selection/confirmation, lethal warning and visible phone receipt Close; normal defeat restores precombat stock/vitals. Keyboard route setup, not touch-only or device evidence.",
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "consumable_poison_defeat_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "goblin_parley"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "save"
+    ]
+   }
+  },
+  {
    "script": "responsive_field_overflow",
    "seed": 37,
    "fixture": "responsive_field_overflow",
