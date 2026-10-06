@@ -1931,15 +1931,15 @@ SKILL_CODE_GRANTS = {
 	# appear on a player-facing record by design: the visible Skill is the
 	# ordinary granted one, and the *_boon rider is folded into a combatant kit
 	# at roster-build time (folding it onto the PC record would buff the PC).
-	"sworn_fang_boon": ("src/core/wi_game.gd", 2449,
+	"sworn_fang_boon": ("src/core/wi_game.gd", 2517,
 		"[Sworn Fang: Ride Together] folds it into the PC kit while a companion rides"),
-	"basic_command_boon": ("src/core/wi_game.gd", 2460,
+	"basic_command_boon": ("src/core/wi_game.gd", 2528,
 		"[Animals: Basic Command] folds it onto the COMPANION's kit"),
-	"pack_bond_boon": ("src/core/wi_game.gd", 2462,
+	"pack_bond_boon": ("src/core/wi_game.gd", 2530,
 		"[Pack Bond] folds it onto the COMPANION's kit"),
 }
 ITEM_CODE_GRANTS = {
-	"flarepepper_powder": ("src/core/wi_game.gd", 2935,
+	"flarepepper_powder": ("src/core/wi_game.gd", 3261,
 		"[Supplies: Flarepepper Powder] restocks one per rest"),
 }
 
@@ -2861,6 +2861,32 @@ def check_consolidation_skill_coverage(parsed: dict, errors: list, report: list)
 			f"(lineage completeness owns that queue): {'; '.join(sorted(parked))}")
 
 
+def check_consumable_stacks(parsed, errors):
+	for row in _catalog_rows(parsed, "items.json", "items"):
+		if "stackable" not in row and "consumable_family" not in row:
+			continue
+		if row.get("stackable") is not True or row.get("consumable_family") not in {"food", "hp_potion", "mp_potion"}:
+			errors.append(f"items.json '{row.get('id')}': stackable consumable needs explicit food/potion family")
+		if row.get("kind") not in {"meal", "tool"}:
+			errors.append(f"items.json '{row.get('id')}': equipment/quest identity cannot stack")
+		if "usable_in_combat" in row and not isinstance(row["usable_in_combat"], bool):
+			errors.append(f"items.json '{row.get('id')}': usable_in_combat must be boolean")
+		if row.get("consumable_family") == "food" and row.get("usable_in_combat", False):
+			errors.append(f"items.json '{row.get('id')}': food cannot be used in combat")
+		for key in ("restore_hp", "restore_mp"):
+			value = row.get("use_effect", {}).get(key, 0)
+			if isinstance(value, bool) or not isinstance(value, int) or not 0 <= value <= 2147483647:
+				errors.append(f"items.json '{row.get('id')}': {key} must be a bounded nonnegative integer")
+
+
+	progression = parsed.get(DATA / "progression.json", {})
+	rules = progression.get("recovery", {})
+	for key, minimum in (("safe_mp_doses", 0), ("poison_hp", 1), ("combat_ap_cost", 1)):
+		value = rules.get(key)
+		if isinstance(value, bool) or not isinstance(value, int) or not minimum <= value < 2147483647:
+			errors.append(f"progression.json recovery.{key}: expected bounded integer >= {minimum}")
+
+
 def main() -> int:
 	start = time.monotonic()
 	list_advisories = "--advisories" in sys.argv
@@ -2872,6 +2898,7 @@ def main() -> int:
 		print(f"data_lint: {len(errors)} well-formedness error(s); "
 			"deeper tiers skipped.", file=sys.stderr)
 		return 1
+	check_consumable_stacks(parsed, errors)
 	maps = _compose_maps(parsed, errors)
 	check_maps(maps, errors)
 	check_catalog_tile_fallbacks(parsed, errors)

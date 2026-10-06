@@ -1,7 +1,7 @@
 class_name WISave
 extends RefCounted
 
-const VERSION := 11
+const VERSION := 12
 
 
 const DEPRECATED_IDS := {
@@ -36,6 +36,8 @@ static func serialize(game: WIGame) -> Dictionary:
 		"seen_statuses": game.seen_statuses.duplicate(),
 		"lore_notes": game.lore_notes.duplicate(),
 		"inventory": game.inventory.duplicate(),
+		"consumable_counts": game.consumable_counts.duplicate(),
+		"pending_loot": game.pending_loot.duplicate(true),
 		"equipped": game.equipped.duplicate(true),
 		"container_state": game.container_state.duplicate(true),
 		"actions_since_sleep": game.actions_since_sleep,
@@ -138,6 +140,8 @@ static func _migrated(data: Dictionary) -> Dictionary:
 			return out
 		state["resonance_capacity"] = int(capacity) + WIResonance.LEGACY_BASELINE_INCREASE
 		version = 11
+	if version == 11:
+		version = 12
 	out["version"] = version
 	var class_map: Dictionary = DEPRECATED_IDS["classes"]
 	var cls_raw: Variant = state.get("classes", {})
@@ -189,6 +193,7 @@ static func metadata(data: Dictionary) -> Dictionary:
 static func apply(game: WIGame, data: Dictionary) -> bool:
 	if not _supported_version(data.get("version")):
 		return false
+	var legacy_counts := int(data.get("version", -1)) < 12
 	var legacy_vitals := int(data.get("version", -1)) < 10
 	data = _migrated(data)
 	if int(data.get("version", -1)) != VERSION:
@@ -282,6 +287,14 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	if not game.has_map(String(s["current_map"])):
 		return false
 
+	var counts: Variant = WIItems.legacy_counts(s["inventory"], game._items) if legacy_counts else s.get("consumable_counts")
+	if not WIItems.valid_counts(s["inventory"], counts, game._items):
+		return false
+
+	var pending: Variant = [] if legacy_counts else s.get("pending_loot")
+	if not WIItems.valid_pending_loot(pending, game._items):
+		return false
+
 	var player_cell: Array = s["player_cell"]
 	var player_facing: Array = s["player_facing"]
 	var removed_entities: Array = s["removed_entities"]
@@ -330,6 +343,12 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.lore_notes.assign(lore_notes)
 	game.inventory.clear()
 	game.inventory.assign(inventory)
+	game.pending_loot = []
+	for entry: Dictionary in pending:
+		game.pending_loot.append({"item": String(entry.item), "source": String(entry.source), "count": 1})
+	game.consumable_counts = {}
+	for id: String in counts:
+		game.consumable_counts[id] = int(counts[id])
 	game.equipped = equipped.duplicate(true)
 	game.container_state = container_state.duplicate(true)
 	game.actions_since_sleep = int(s["actions_since_sleep"])

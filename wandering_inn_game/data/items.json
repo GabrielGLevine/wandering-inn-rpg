@@ -336,6 +336,8 @@
     {
       "_comment": "GH#378 arm 1: signposts the cooking gate at all 21 Serve options at once. TRAP: test_copy_fit measures the option row at fs14 ONLY (22px spare); at 115%/130% scale every row ran 59-162px over until dialogue_panel gained autowrap. No wording fits fs18.",
       "id": "hot_meal",
+      "stackable": true,
+      "consumable_family": "food",
       "name": "Hot Meal",
       "kind": "meal",
       "weapon_family": "none",
@@ -616,6 +618,9 @@
     {
       "_comment": "Heal amount (8) matches second_wind's own self-heal skill for a consistent 'a solid partial heal' feel across the two surfaces.",
       "id": "mending_draught",
+      "stackable": true,
+      "consumable_family": "hp_potion",
+      "usable_in_combat": true,
       "name": "Mending Draught",
       "kind": "tool",
       "weapon_family": "none",
@@ -627,7 +632,8 @@
       "abilities": [],
       "price": 10,
       "use_effect": {
-        "heal": 8
+        "heal": 8,
+        "restore_hp": 8
       },
       "description": "A corked vial of something dark red, thick as syrup, that smells faintly of yarrow and copper.",
       "lore": "The witch keeps a shelf of these behind the tea things — not magic, she says, just knowing which roots do what. Drink it mid-fight and the wound closes slower than a real healer's work, but it closes."
@@ -825,6 +831,9 @@
     {
       "_comment": "Heal shape and 8-HP band mirror mending_draught verbatim; 10g placeholder price mirrors that precedent, with final pricing deferred to open issue #92.",
       "id": "remedy_draught",
+      "stackable": true,
+      "consumable_family": "hp_potion",
+      "usable_in_combat": true,
       "name": "Remedy Draught",
       "kind": "tool",
       "weapon_family": "none",
@@ -836,7 +845,8 @@
       "abilities": [],
       "price": 10,
       "use_effect": {
-        "heal": 8
+        "heal": 8,
+        "restore_hp": 8
       },
       "description": "A squat green-glass bottle, stoppered warm, smelling of mint, bitterroot, and woodsmoke.",
       "lore": "A hedge remedy does not promise miracles. It promises that the bleeding slows, the swelling settles, and morning remains possible."
@@ -844,6 +854,8 @@
     {
       "_comment": "The +2 HP next-fight payload anchors on the shipped well_fed combat-build bonus. NO `price` KEY (GH#334 ruling 7): hot_meal's precedent -- a meal is served or eaten, never merchandise. Cooking plates it free, so a price was a gold spigot. GH#432 CAP, and this entry is the anchor every other next_fight payload cites: ARMED MEAL MODS NEVER SUM. `_merge_pending_meal` keeps the MAXIMUM per key, so a second plate REFRESHES the armed +2 instead of making it +4, a stronger meal REPLACES it, and a weaker one is a no-op on the number (the item still spends; the use toast reports the real armed total). The cap is PER KEY, so a Tempering Oil's damage still rides beside this HP -- GH#334 ruling 5 (pay twice, get both) is untouched, and only same-key restacking is bounded. That is what lets the produce-only inn props stay unbounded: the loop still costs the walk, and it buys exactly one meal's worth.",
       "id": "fine_meal",
+      "stackable": true,
+      "consumable_family": "food",
       "name": "Fine Meal",
       "kind": "meal",
       "weapon_family": "none",
@@ -864,6 +876,8 @@
     {
       "_comment": "The +2 HP/+1 damage next-fight payload is the controller-ruled chef-tier step above well_fed. No `price` key (GH#334 ruling 7): see fine_meal. GH#432 cap applies PER KEY (full rule on fine_meal): this plate REPLACES a weaker armed hp_mod and refreshes an equal one, and its damage_mod does not add to an armed cudgel's or oil's -- it never sums with anything.",
       "id": "signature_meal",
+      "stackable": true,
+      "consumable_family": "food",
       "name": "Signature Meal",
       "kind": "meal",
       "weapon_family": "none",
@@ -1013,6 +1027,8 @@
     {
       "_comment": "GH#165 [Supplies: Flarepepper Powder] output. Meal-buff consumable (tempering_oil next_fight {damage_mod:1} shape). Restocked one-per-rest by the Chef's [Supplies:] sleep hook (wi_game.gd), never sold -- price carried for economy-validator parity + any future shop.",
       "id": "flarepepper_powder",
+      "stackable": true,
+      "consumable_family": "food",
       "name": "Flarepepper Powder",
       "kind": "meal",
       "weapon_family": "none",
@@ -1231,6 +1247,8 @@
     {
       "_comment": "[Flame Jet] carcass yield. hp_mod 2 = fine_meal parity, flavor not power. No price (hot_meal precedent).",
       "id": "seared_venison",
+      "stackable": true,
+      "consumable_family": "food",
       "name": "Seared Venison",
       "kind": "meal",
       "weapon_family": "none",
@@ -1519,6 +1537,27 @@
       ],
       "description": "Flat running sandals, re-strapped more than once, the soles worn to the shape of somebody else's stride.",
       "lore": "A Runner who stopped running gave them up rather than sell them, on the theory that a road owes something to whoever takes it next. They are lighter on than they look in the hand."
+    },
+    {
+     "id": "mana_potion",
+     "stackable": true,
+     "consumable_family": "mp_potion",
+     "usable_in_combat": true,
+     "name": "Mana Potion",
+     "kind": "tool",
+     "weapon_family": "none",
+     "damage_mod": 0,
+     "hp_mod": 0,
+     "damage_reduction": 0,
+     "resonance": 0,
+     "tier": "mundane",
+     "abilities": [],
+     "price": 10,
+     "use_effect": {
+      "restore_mp": 6
+     },
+     "description": "A small, stoppered bottle of mana potion.",
+     "lore": "Kept beside the healing draughts, with a warning to count your doses. Another bottle cannot do everything a night's sleep can."
     }
   ]
 }

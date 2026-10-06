@@ -32,9 +32,9 @@ archived, or superseded session blocks.
   **Next:** compose reviewed core/frontend, correct QA pins, install
   `/private/tmp/wi-568-qa-draft`, full gates and window/browser proof. Draft
   repeated-input leg needs viable second use and browser-only registration.
-- **Owners:** resource_plan: `/private/tmp/wi-568-consumables`,a8509a19/PR582
-  core/data/tests. Loot/delivery clear; token lifetime fix, Mana Potion vendor
-  and capacity copy active. capacity570: `/private/tmp/wi-567-consumable-ui`,
+- **Owners:** resource_plan: `/private/tmp/wi-568-consumables`,206f36ac/PR582
+  core/data/tests. Core review clear; Mana Potion/token/copy done.
+  #569 meal tree active. capacity570: `/private/tmp/wi-567-consumable-ui`,
   97001e52, frontend controls/warning/receipt/layout. Root owns QA. #569 then
   #512 consume recovery. Registry `/private/tmp/wi-parallel-roadmap-status.json`.
   Evidence `/private/tmp/wi-{566-resumed,567,568,570}-evidence`. Preserve UID,

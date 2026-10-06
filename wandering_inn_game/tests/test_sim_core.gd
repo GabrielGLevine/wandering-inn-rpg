@@ -1514,7 +1514,7 @@ func _init() -> void:
 	assert(not gAcc.equip("test_charm_over"), "over-capacity equip is refused")
 	assert(String(gAcc.equipped.get("accessory_3", "?")) == "", "refused equip leaves accessory_3 empty")
 	assert(_count("item_equipped") == 0, "refused equip emits no item_equipped")
-	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first.", "over-capacity equip emits the capacity refusal toast idiom")
+	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle. This would take more Resonance than you can hold. Something has to come off first.", "over-capacity equip emits the capacity refusal toast idiom")
 	assert(gAcc.inventory.has("test_charm_over"), "the refused item is still carried (never equipped, never dropped)")
 
 	assert(gAcc.equip("test_charm_reduc"), "equip the third (zero-resonance) accessory, filling all three slots")
@@ -1530,7 +1530,7 @@ func _init() -> void:
 	assert(gAcc.unequip("accessory_1") and gAcc.unequip("accessory_2") and gAcc.unequip("accessory_3"), "unequip clears all three accessory slots")
 	_events.clear()
 	assert(not gAcc.equip("test_charm_over"), "test_charm_over (resonance 3) alone still exceeds capacity 2 even with every slot free")
-	assert(String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first.", "same capacity refusal, now with all slots free -- proves it's a resonance gate, not a slot-count gate")
+	assert(String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle. This would take more Resonance than you can hold. Something has to come off first.", "same capacity refusal, now with all slots free -- proves it's a resonance gate, not a slot-count gate")
 
 	assert(gAcc.equip("test_ring_res1"), "resonance-1 ring equips into the freed accessory slot")
 	assert(gAcc.equip("test_blade_res1"), "resonance-1 weapon swap onto rusty_sword (0->1) fits: total exactly 2")
@@ -2551,18 +2551,7 @@ func _init() -> void:
 	assert(String(no_burns.get("ambient", "")) == "test_field_flame", "a flag-less skill falls through to ambient on a burnable prop")
 	assert(not gNoBurns.find_entity("sewer_debris").is_empty(), "a combat spell without `burns` is never a universal debris-burner")
 
-	# v0.16.1 #6 ECONOMY: the [Hedge Remedy] brew arms are INGREDIENT-GATED, and
-	# the gate is what bounds the brew -> sell-to-Eloise loop (she stands on the
-	# cauldron's own map, so the cycle was zero-travel and free). Three legs on
-	# one game, against the real catalog:
-	#  (a) empty pack -- refused at requires_item; nothing produced, nothing banked
-	#  (b) yarrow held -- the arm resolves, EATS the bundle, banks the counter once
-	#  (c) yarrow held AND the output already in the pack -- the consuming-recipe
-	#      dup-output refusal fires BEFORE record_accomplishment, which is the fix
-	#      for the second, larger exploit: spamming a full pack used to bank free
-	#      witch_craft_used forever ([Hedge Witch] -> [Witch] needs 89 of them).
-	# Leg (c) is why this lives in a unit and not only in witch_brew_loop:
-	# inventory never stacks, so no save fixture can stage "holding both".
+	# Every brewed dose consumes real yarrow; existing stock stacks without free credit.
 	var gBrew := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gBrew.player_skills.append("hedge_remedy")
 	gBrew.transition("witch_hollow", Vector2i(6, 9))
@@ -2578,9 +2567,11 @@ func _init() -> void:
 	assert(gBrew.accomplishment_count("witch_craft_used") == 1, "the resolved brew banks the craft counter exactly once")
 	gBrew.inventory.append("dried_yarrow_bundle")
 	_events.clear()
-	assert(String(gBrew.use_skill_field("hedge_remedy").get("blocked_duplicate", "")) == "remedy_draught", "a pack already holding the output refuses before any state changes")
-	assert(gBrew.accomplishment_count("witch_craft_used") == 1, "the dup-output refusal banks NO extra witch_craft_used -- the counter exploit is closed")
-	assert(gBrew.inventory.has("dried_yarrow_bundle"), "the dup-output refusal consumes no reagents")
+	assert(String(gBrew.use_skill_field("hedge_remedy").get("accomplishment", "")) == "witch_craft_used", "another real ingredient produces a second dose")
+	assert(gBrew.accomplishment_count("witch_craft_used") == 2 and gBrew.item_count("remedy_draught") == 2)
+	assert(not gBrew.inventory.has("dried_yarrow_bundle"), "each brewed unit consumes its reagent")
+	assert(String(gBrew.use_skill_field("hedge_remedy").get("item_hint", "")) == "dried_yarrow_bundle")
+	assert(gBrew.accomplishment_count("witch_craft_used") == 2, "stock alone cannot bank free crafts")
 
 	var gAnimateCrowded := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
 	gAnimateCrowded.player_skills.append("test_animate")
@@ -4033,11 +4024,11 @@ func _init() -> void:
 	var g_bench := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g_bench.player_skills.append("basic_cooking")
 	g_bench.transition("inn", Vector2i(4, 2))
-	g_bench.inventory.append("hot_meal")
+	g_bench.pickup("hot_meal", "test")
 	_events.clear()
 	var r_bench: Dictionary = g_bench.use_skill("basic_cooking", "stew_pot")
-	assert(String(r_bench.get("blocked_duplicate", "")) == "hot_meal", "uncapped bench: a held output still refuses")
-	assert(g_bench.accomplishment_count("cooked_meal") == 0, "uncapped bench: the refusal banks NOTHING")
+	assert(String(r_bench.get("accomplishment", "")) == "cooked_meal", "held food can stack through real cooking")
+	assert(g_bench.accomplishment_count("cooked_meal") == 1 and g_bench.item_count("hot_meal") == 2)
 	g_bench.remove_item("hot_meal", "test")
 	var r_bench_ok: Dictionary = g_bench.use_skill("basic_cooking", "stew_pot")
 	assert(String(r_bench_ok.get("accomplishment", "")) == "cooked_meal", "uncapped bench: the normal path still banks")
@@ -4496,7 +4487,10 @@ func _check_unactivatable_skills_pre_revealed(scene_config: Dictionary, skill_co
 ## keys still both ride; the same key caps at the strongest single value.
 func _check_pending_meal_merges(scene_config: Dictionary, skill_config: Dictionary) -> void:
 	var toasts: Array[String] = []
+	var uses: Array = []
 	var g := WIGame.new(scene_config, skill_config, func(t: String, p: Dictionary) -> void:
+		if t == WIEvents.INVENTORY_USE_RESOLVED:
+			uses.append(p.duplicate(true))
 		if t == WIEvents.TOAST:
 			toasts.append(String(p.get("text", ""))), 77, {
 				"combatants": _load_json("res://data/combatants.json"),
@@ -4504,7 +4498,8 @@ func _check_pending_meal_merges(scene_config: Dictionary, skill_config: Dictiona
 				"arenas": _load_json("res://data/arenas.json"),
 				"items": _load_json("res://data/items.json"),
 			})
-	g.inventory.assign(["tempering_oil", "fine_meal"])
+	g.pickup("tempering_oil", "test")
+	g.pickup("fine_meal", "test")
 
 	assert(g.use_item("tempering_oil"), "tempering_oil is a next_fight item and uses out of combat")
 	assert(int(g.pending_meal.get(WIKeys.DAMAGE_MOD, 0)) == 1, "the oil arms +1 damage")
@@ -4515,8 +4510,8 @@ func _check_pending_meal_merges(scene_config: Dictionary, skill_config: Dictiona
 	assert(int(g.pending_meal.get(WIKeys.DAMAGE_MOD, 0)) == 1,
 		"the meal must NOT clear the oil's damage -- this is the #334 bug")
 	assert(int(g.pending_meal.get(WIKeys.HP_MOD, 0)) == 2, "and the meal's own +2 HP is armed beside it")
-	assert(toasts.back() == "Used: Fine Meal. +1 damage, +2 HP in your next fight.",
-		"the second toast reports the MERGED total, not just its own item, got: %s" % toasts.back())
+	assert(uses.back().preparation.armed == {"damage_mod": 1, "hp_mod": 2},
+		"the settled receipt carries the merged preparation and scope")
 
 	# GH#432: a WEAKER same-key use refreshes rather than stacks. crude_draught's
 	# +1 HP under the meal's armed +2 is a no-op on the number -- the item still
@@ -4546,7 +4541,8 @@ func _check_pending_meal_merges(scene_config: Dictionary, skill_config: Dictiona
 			"arenas": _load_json("res://data/arenas.json"),
 			"items": _load_json("res://data/items.json"),
 		})
-	g2.inventory.assign(["crude_draught", "signature_meal"])
+	g2.pickup("crude_draught", "test")
+	g2.pickup("signature_meal", "test")
 	assert(g2.use_item("crude_draught"), "the weak draught arms first")
 	assert(int(g2.pending_meal.get(WIKeys.HP_MOD, 0)) == 1, "+1 HP armed")
 	assert(g2.use_item("signature_meal"), "the stronger meal uses on top of it")

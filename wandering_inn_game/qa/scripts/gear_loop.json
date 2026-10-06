@@ -59,7 +59,7 @@
   {"action": "press", "name": "move_up"},
   {"action": "wait_for_event", "type": "ui_inventory_selection_rendered", "timeout_sec": 15, "payload_contains": {"cursor": 11, "item": "hedge_ward_charm"}},
   {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "toast", "timeout_sec": 15, "payload_contains": {"text": "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first."}},
+  {"action": "wait_for_event", "type": "toast", "timeout_sec": 15, "payload_contains": {"text": "It buzzes once against the others, like a wasp against glass, and will not settle. This would take more Resonance than you can hold. Something has to come off first."}},
   {"action": "assert_state", "path": "equipped.accessory_1", "equals": "moon_bone_amulet"},
   {"action": "assert_state", "path": "equipped.accessory_2", "equals": "stonescale_talisman"},
   {"action": "assert_state", "path": "equipped.accessory_3", "equals": ""},
@@ -95,7 +95,7 @@
   {"action": "press", "name": "inventory"},
   {"action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5},
 
-  {"_comment": "Inventory echoes the refusal immediately; the global toast queue renders it after the modal closes.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first."}, "timeout_sec": 30},
+  {"_comment": "Inventory echoes the refusal immediately; the global toast queue renders it after the modal closes.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "It buzzes once against the others, like a wasp against glass, and will not settle. This would take more Resonance than you can hold. Something has to come off first."}, "timeout_sec": 30},
 
   {"_comment": "Drain the first leg through its tool feedback before opening the physical-full leg.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "That isn't something you can equip."}, "timeout_sec": 60},
 

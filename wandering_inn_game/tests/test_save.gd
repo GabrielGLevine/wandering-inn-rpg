@@ -336,7 +336,7 @@ func _init() -> void:
 	(bad_status_data["state"] as Dictionary)["seen_statuses"] = "slowed"
 	assert(not WISave.apply(_new_game(), bad_status_data), "wrong-typed seen_statuses rejected")
 
-	assert(WISave.VERSION == 11, "VERSION 11 migrates capacity after v10 persisted resources")
+	assert(WISave.VERSION == 12, "VERSION 12 adds quantities after capacity and persisted resources")
 
 	# GH#130 v5->v6 arm: a pre-#130 save with sleeps behind it gains slept=1
 	# exactly once; a never-slept v5 save gains nothing.
