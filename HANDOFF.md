@@ -9,36 +9,33 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
-  Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.
-  Original art checkout remains separately owned and untouched.
-- **User CI permission:** bypass Web parity when it bottlenecks PR merges;
-  record each waiver without calling it a pass. Other CI/review and actual
-  gameplay/device evidence remain required.
-- **Designs closed:** #517/PR575 squash5823356f/treee3203d51; #521/PR579
-  squash53bd4c68/tree95341cea. Reviewed/squash trees match; seven non-Web CI
-  jobs passed and Web was sole waived blocker. Runtime stays #518/#520/#522.
-- **Staged resources:** #566/PR57285af0621, #567/PR5780e55e381,
-  #570/PR5738676a0be. Carry/HUD/capacity have bounded review. All59Godot units
-  pass; four lint pins fixed,282Python/109subtests pass. Both full combat
-  policies pass atdcac4795. Final canonical pending. Native40images read.
-  No partial activation before recovery/#571. Physical devices unproven.
-- **Integration:** root owns `/private/tmp/wi-567-hud-contract`,
-  `issue/567-hud-contract`, base1375e375. Touch-driver0e55e381 compiles and
-  load_gate passes; controls now composed. Browser touch at378cbe19 fails
-  large-text inventory scroll;14images read under
-  `/private/tmp/wi-567-evidence/browser-378cbe19-iphone` (Chromium emulation).
-  Capacity refusal wrongly describes2/4 as full; both defects logged.
-  **Next:** compose reviewed core/frontend, correct QA pins, install
-  `/private/tmp/wi-568-qa-draft`, full gates and window/browser proof. Draft
-  repeated-input leg needs viable second use and browser-only registration.
-- **Owners:** resource_plan: `/private/tmp/wi-568-consumables`,206f36ac/PR582
-  core/data/tests. Core review clear; Mana Potion/token/copy done.
-  #56991bdac25 core reviewed/composed; actual QA next. capacity570: `/private/tmp/wi-567-consumable-ui`,
-  9da54788 composed; controls/warning/layout focused tests pass. Root QA. #512
-  #512 consume recovery. Registry `/private/tmp/wi-parallel-roadmap-status.json`.
-  Evidence `/private/tmp/wi-{566-resumed,567,568,570}-evidence`. Preserve UID,
-  private overlay, local node_modules/.gdignore; original art tree untouched.
+- **User direction:** finish paused art-blocked roadmap work; checkpoint often.
+  Art577 merged0bbd96aa with reviewed/squash tree identity. Original art tree
+  remains untouched. Web parity may be waived when a merge bottleneck; record
+  waiver, keep other CI/review and actual gameplay/device acceptance.
+- **Closed designs:** #517/PR5755823356f and #521/PR57953bd4c68; seven non-Web
+  jobs passed, sole Web blocker waived, squash trees verified. Runtime separate.
+- **Integration owner:** root only, `/private/tmp/wi-567-hud-contract`,
+  `issue/567-hud-contract`, base1375e375. #56685af0621/#5708676a0be,
+  #568206f36ac and #56991bdac25 have bounded independent review. Frontend
+  3bd7f529 fixes four input/mobile findings plus erroneous food-poisoning copy;
+  focused units/load pass, re-review pending. No partial activation/deployment.
+- **Evidence:** native40 accepted images read. Vendor106-step actual purchase,
+  safe/harmful use/cancel/final-stock/reload route passes headless; explicit
+  fixture money/history, not earned acquisition. Browser378cbe19 large-text
+  scroll failed;14images read, corrected frontend needs rerun. Full65-suite
+  preflight5b070257 failed four gates: item schema, oracle rows, prose baseline,
+  food copy. First three corrected/passing at1e7114ba; frontend fixes fourth.
+  Prior full combat policies pass; new full units/canonical/balance pending.
+- **Next:** complete frontend composition/review; window vendor/meal routes,
+  browser layout/repeat/use, full gates on settled tree. Root owns568/569 QA.
+  resource_plan owns #512 journeys in `/private/tmp/wi-512-routes` atd8f74fd4,
+  writing fresh Rogue/worker prefixes without fixtures/teleports/topups.
+  capacity570 frontend tree released at3bd7f529. Meal91 branch pushed/PR583.
+  Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence roots
+  `/private/tmp/wi-{566-resumed,567,568,569,570}-evidence`. Preserve companion
+  UID/private overlay and local node_modules/.gdignore. User said Continue
+  after quota interruption; fresh usage normal0%. Two implementation workers max.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.

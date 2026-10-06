@@ -35,3 +35,40 @@ heal, cancellation preserves the full saved tuple, confirmed fourth mana dose
 records HP/MP/exposure/count, and receipt text remains captured after live state
 changes. Import is clean. This is native logical evidence; current browser layout,
 actual pointer routes, combat rendered fit and physical touch remain unproven.
+
+
+The composed checkpoint includes core/catalog206f36ac: pure previews do not replace
+pending use tokens, and real Mana Potions appear in combat slots. Focused checks
+also cover held confirm through receipt, core-driven AP refusal, MP recovery copy,
+quantity labels and preservation of a selected token while inspecting another item.
+Existing effect-text, resource-HUD and combat-visual units pass without engine noise.
+The load gate passes with its result artifact. The controller owns the actual smoke
+and full integration tiers plus new input QA; an attempted standalone `smoke` route
+was rejected before gameplay because no such route exists.
+
+Selectors for authored input are inventory `item_use_rect()`/`item_bar_rect()` and
+message-layer `item_warning_cancel_rect()`/`item_warning_confirm_rect()`; the latter
+is discoverable in group `wi_item_use_presenter`. Render events preserve frozen
+core fields plus `text`/`surface`; previews add `generation`. Warning arming emits
+`UI_ITEM_USE_WARNING_ARMED` only after release and the reading guard. These native
+control tests do not establish the final combat feed fit or responsive touch path.
+
+
+Review corrections retain the current operation for 300ms after its first actual
+receipt render and until input is released. The live-button regression taps again
+within 30ms plus three frames with three MP doses, checks one consumption, then
+checks a deliberate later press. Keyboard Use on a refused no-benefit offer leaves
+bar placement enabled. Both regressions exercise current control bindings.
+
+Combat receipt proof now requires visible complete text after HUD refresh. A hidden
+mobile desktop feed, or a clipped receipt, cannot suppress the shared visible
+receipt panel; its actual Close button is exposed by `item_receipt_close_rect()`.
+A production CombatScreen/HUD unit forces the touch-layout branch and checks the
+visible fallback, captured text, close and rearm. The mobile rail uses item-specific
+HP/MP recovery, AP, dose and poisoning copy instead of the Dash instruction. Native
+injected-layout checks do not replace the controller's browser/touch proof.
+
+Food/service core91bdac25 is composed. Item cards omit zero restoration fields and
+reserve mana-poisoning warnings for declared MP potions. Exact hot/fine/signature/
+seared-food lines and potion warnings pass the exhaustive effect-text contract.
+The four affected focused units pass without noise on the composed corrections.

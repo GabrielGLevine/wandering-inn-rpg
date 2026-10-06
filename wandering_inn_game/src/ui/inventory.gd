@@ -1136,6 +1136,8 @@ func _activate_use(operation: int, id: String, generation: int, source_sim: RefC
 		return
 	if operation != int(_use_offer.get("operation_id", 0)) or id != String(_use_offer.get("item", "")):
 		return
+	if not bool(_use_offer.get("allowed", false)) or _item_use_busy():
+		return
 	var presenter := _use_presenter()
 	if presenter == null:
 		return
