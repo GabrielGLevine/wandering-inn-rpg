@@ -26,18 +26,18 @@ archived, or superseded session blocks.
   actualpaid/cot/walked recovery, stale text/event pins, message bounds. Re-run
   full gates on final composed tree. Native52 root captures plus meal23 read.
   Browser198a layout99/repeat28 pass both emulatedphones,34capturesread.
-- **Next:** clean export/new phone poison receipt route, fullfinalgates, inspect
-  actualnewrecovery routes windowed. Root owns integration/runtime/568QA.
-  Composed inventoryfixc463 and QA5e7974c6; deep187/arc298 from4f76eebc pass
-  actualretreat/roadfight/bed/return without fixture changes; reviewpending.
-  resource_plan owns #512 freshjourneys `/private/tmp/wi-512-routes`, worker
-  bosswall and RogueearnedFang/scoutwin recorded; longruns have DummyShader
-  exiterror and remain INVALID. capacity570 now owns separate512leakdiagnosis
-  and nativewindow lane; no noise suppression. Root staysheadless/browser.
-  Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence
-  `/private/tmp/wi-567-evidence` and569/512 roots. Preserve companionUID,
-  privateoverlay/node_modules/.gdignore. Twoimplementationworkers max.
-  PR578/582/583 draft; no partialactivation/deployment.
+- **Next:** final full gates and windowed recovery routes. Root owns
+  `/private/tmp/wi-567-hud-contract`. fc6e5970 fixes opening touch cancelling
+  potion warning; RED/GREEN and review pass. Clean export: poison67/repeat28
+  pass both emulated phones, 12captures read. Earlier layout99 each remains.
+  All15 canonical repairs reviewed; final full sweep pending.
+  resource_plan owns #512 `/private/tmp/wi-512-routes`, 87b71fd3: Rogue1365
+  reaches earned vault/report; worker965 boss wall. Long runs INVALID due
+  shutdown shader ERROR; capacity570 diagnoses `/private/tmp/wi-512-leak-probe`
+  afa0c0c0. No production shader fix. Native window lane available.
+  Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence567/569/512
+  under `/private/tmp/wi-*-evidence`. Preserve companionUID/privateoverlay.
+  Two workers max. PR578/582/583 draft; no partial activation/deployment.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.

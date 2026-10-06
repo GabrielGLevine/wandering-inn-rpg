@@ -870,6 +870,10 @@
    }
   },
   {
+   "action": "screenshot",
+   "name": "recovery_paid_meals_before_vault"
+  },
+  {
    "action": "teleport",
    "map": "trapped_halls",
    "cell": [
