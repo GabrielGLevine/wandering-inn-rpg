@@ -26,18 +26,19 @@ archived, or superseded session blocks.
   Current phone combat133 and poison67 pass bothprofiles; all67combat/6poison
   images read. fc6repeat28both/6images read; older198alayout99both remains.
   Native52+meal23 prior captures read; current paid/cot15captures read/pass.
-- **Next:** finish native walked/message rotation and #512 earned journeys.
-  Root `/private/tmp/wi-567-hud-contract` head1c14ae3f. Window-only QA wait
-  corrections compose by tree identity;3b4b5f70 same16dfda2c tree. Both
-  affected headless subsets pass. `/private/tmp/wi-567-window-final` now
- 2a113ff1 first-class queuewait45s replay; root native lane reserved.
-  resource_plan `/private/tmp/wi-512-routes`13c69eda proves actual58g gear
-  after mandatoryfees; warden retry pending. Worker965 boss wall remains.
-  Longruns INVALID shaderexitERROR; capacity570 `/private/tmp/wi-512-leak-probe`
-  has bare-engine serial reproduction; no productionfix/causality claim yet.
-  Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence567/569/512
-  under `/private/tmp/wi-*-evidence`. Preserve companionUID/privateoverlay.
-  Two workers max. PR578/582/583 draft; no partial activation/deployment.
+- **Next:** integration b2a37365 includes reviewed force queue waits.
+  Root window tree `/private/tmp/wi-567-window-final`7614e738 runs matching
+  rest receipt/arc waits/message modal, session45588; review pending.
+  Prior cca force349/deep187 PASS; all17 images independently read.
+  Rogue `/private/tmp/wi-512-routes`43f7b8a0 completes3464steps/ending/Inn,
+  8wins/3losses/18sleeps,146g−142g=4g; INVALID5shaderRID errors.
+  Worker965 wall; other profiles unrun. resource_plan audits clause5 QA.
+  capacity570 engine diagnosis38deed19: bare serial repro3/3, controls clean;
+  retaining52 game materials fails. Exact-engine instrumentation next.
+  Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence
+  `/private/tmp/wi-*-evidence`. Preserve companionUID/privateoverlay.
+  Two workers max; root native lane. PR578/582/583 draft; fd23 seven non-Web
+  CI jobs pass. No partial activation/deployment.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
