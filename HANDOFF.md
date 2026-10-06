@@ -9,14 +9,21 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed at user request:** compose merged art PR #577 and finish this lane.
-  Lane #567: `issue/567-hud-contract` in `/private/tmp/wi-567-hud-contract`;
-  base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
-  Owned paths: `HANDOFF.md`, HUD contract, `src/ui/{field_chips,message_layer,sleep_veil,inventory}.gd`, `src/world/main.gd`, `src/core/effect_text.gd`; matching new HUD tests. Core mutation/events and QA shared surfaces stay with #566 until serialized integration.
-  Evidence: `/private/tmp/wi-567-evidence`; independent review:
-  `/private/tmp/wi-567-independent-review.md`.
-  **Exact next action:** controller composes this HUD checkpoint into #566, runs authored resource QA/window/browser evidence and independent review. Core `03da9ec4` is composed; #568 potion controls and full #567 acceptance remain open.
-  Evidence: import, `test_resource_hud`, message queue/lifetime and effect-text units pass; load_gate, gear_loop(9), tutorial_flow(9) pass (zero exit/no noise/result true). Fallback assets; no window/browser/device proof. CSS fit emulation covers both phone sizes/all text scales.
+- **Resumed #567:** `issue/567-hud-contract`, `/private/tmp/wi-567-hud-contract`;
+  composed main `10827698`, HUD `a9e839d3`, reviewed head `8a4591cd`.
+  Controller owns this tree.
+  Implemented numeric field/inventory resources and captured recovery receipts.
+  **Next:** compose #566 `503b192b` and #570 capacity checkpoint, window-test
+  `vitals_carry_loop`/`vitals_fresh_start`, then integrate #568 potion controls.
+  Serialize core/QA; no partial resource deployment.
+  Bundle-v7 windowed gear_loop/tutorial_flow/sewers_walkthrough(9):
+  exit0, PASS, result true, zero noise; all19 screenshots inspected. Equipment
+  keeps currentHP47 while maxima change; real ambush returns31/43. Fieldstrip
+  stays legible on dark maps and hides for combat/dialogue. Existing max-HP
+  item wording needs clarification; #566 corrects stale first-combat hints.
+  Evidence `/private/tmp/wi-567-evidence/window-8a4591cd`; bounded source/window
+  review `/private/tmp/wi-567-hud-independent-review.md` approves. Native metric
+  tests cover phone dimensions/scales; browser/touch/device proof remains open.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code squashed as `0bbd96aa`. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
@@ -55,10 +62,6 @@ archived, or superseded session blocks.
   using the same private candidate and `qa/M1-OBSERVATIONS.md`. None supplied.
   OS keyboard/chooser/background/audio policy and actual itch remain unproven.
   No release/deploy/outreach/recruitment authorized. M1 stays open.
-- Prior scoped M1 repairs are merged through PRs #547–#551; their PR bodies
-  own detailed validation. #507/#508/#509 are closed. Remaining physical-device,
-  actual-host and human clauses stay open; do not rerun software closure merely
-  because those observations are missing.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.
