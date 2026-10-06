@@ -450,6 +450,13 @@
      "mp": 14,
      "max_mp": 14,
      "mp_potion_doses": 0
+    },
+    "before": {
+     "hp": 2,
+     "max_hp": 58,
+     "mp": 0,
+     "max_mp": 0,
+     "mp_potion_doses": 0
     }
    }
   },
@@ -713,9 +720,16 @@
    "payload_contains": {
     "reason": "sleep",
     "after": {
-     "hp": 56,
-     "max_hp": 56,
+     "hp": 57,
+     "max_hp": 57,
      "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "before": {
+     "hp": 20,
+     "max_hp": 56,
+     "mp": 0,
      "max_mp": 14,
      "mp_potion_doses": 0
     }

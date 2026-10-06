@@ -397,7 +397,21 @@
    "payload_contains": {
     "reason": "dialogue",
     "service": "inn_meal",
-    "gold_after": 3
+    "gold_after": 3,
+    "before": {
+     "hp": 7,
+     "max_hp": 32,
+     "mp": 0,
+     "max_mp": 12,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 13,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 0
+    }
    },
    "timeout_sec": 60
   },
@@ -411,7 +425,21 @@
    "payload_contains": {
     "reason": "dialogue",
     "service": "inn_meal",
-    "gold_after": 0
+    "gold_after": 0,
+    "before": {
+     "hp": 13,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 19,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 0
+    }
    },
    "timeout_sec": 60
   },
