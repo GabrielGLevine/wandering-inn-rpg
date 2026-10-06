@@ -19,7 +19,9 @@ archived, or superseded session blocks.
   autosave/load callbacks. Logs: `/private/tmp/wi-566-resumed-evidence`.
   First sim-core compatibility probe found expected old full-refill/text/event-tail
   assumptions; updated these deliberately, rerun pending. No balance pins changed.
-  **Next:** full units/canonicals/batch, actual carried-resource QA and HUD integration.
+  **Next:** correct the reviewed full-rest builder amendment bug; add actual carry/reload/sleep QA and windowed reads on the composed HUD. Full preflight and both balance policies passed at03da9ec4; new composed gates remain pending.
+  HUD #578 checkpoint a9e839d3 is composed, including tested resource strip, captured receipts and Saved fit.
+  User confirmed usage reset; no interrupted test remains active.
   PR #572 remains draft/unmerged; no player activation or deployment before #571.
   Owned changes: core simulation/autosave/events/sleep, corresponding tests,
   explicit-rest batch setup, four recovery-copy QA pins, data-lint source pins,

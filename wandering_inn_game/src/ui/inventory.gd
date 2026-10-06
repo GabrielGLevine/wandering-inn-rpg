@@ -49,6 +49,9 @@ var journal_ref: Node = null
 var _root: Control
 var _title_label: Label
 var _gold_label: Label
+var _resource_label: Label
+var _resource_payload: Dictionary = {}
+var _resource_render_serial := 0
 var _weapon_label: Label
 var _armor_label: Label
 var _accessory_labels: Array[Label] = []
@@ -226,6 +229,10 @@ func _ready() -> void:
 	# inside the themed tree (this panel's `_root` carries `UIChrome.
 	_reserve_status_label_height()
 
+	_resource_label = UIChrome.make_label("", "Small")
+	_resource_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	stack.add_child(_resource_label)
+
 	var body := HBoxContainer.new()
 	body.add_theme_constant_override("separation", 16)
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -364,7 +371,9 @@ func _reserve_corner_breakout_height() -> void:
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if not open:
 		return
-	if type == WIEvents.GOLD_CHANGED:
+	if type == WIEvents.RESOURCES_CHANGED:
+		_refresh_resources(payload)
+	elif type == WIEvents.GOLD_CHANGED:
 		_refresh_gold()
 		_emit_shown()
 	elif type == WIEvents.ITEM_EQUIPPED or type == WIEvents.ITEM_UNEQUIPPED:
@@ -721,6 +730,7 @@ func _confirm() -> void:
 
 func _refresh() -> void:
 	_status_label.text = ""
+	_refresh_resources()
 	_refresh_gold()
 	_refresh_slots()
 	_rebuild_items()
@@ -736,6 +746,31 @@ func _rendered_effect_lines() -> Array:
 	for item_id: String in _item_ids:
 		out.append(WIEffectText.item_effect_lines(Game.sim.item(String(item_id))))
 	return out
+
+
+func _refresh_resources(payload: Dictionary = {}) -> void:
+	_resource_payload = payload.duplicate(true)
+	if not _resource_payload.has("after"):
+		var snapshot: Dictionary = Game.sim.snapshot()
+		_resource_payload["after"] = snapshot.get("vitals", {})
+		_resource_payload["preparation"] = snapshot.get("preparation", {})
+	var resources: Dictionary = _resource_payload["after"]
+	var lines: Array[String] = [WIEffectText.resource_line(resources)]
+	if int(resources.get("max_mp", 0)) == 0:
+		lines.append("No MP pool.")
+	elif int(resources.get("mp", 0)) == 0:
+		lines.append("MP depleted.")
+	_resource_label.text = "\n".join(lines)
+	_render_detail()
+	_resource_render_serial += 1
+	var serial := _resource_render_serial
+	await get_tree().process_frame
+	if not is_inside_tree() or serial != _resource_render_serial or not open or not _resource_label.is_visible_in_tree():
+		return
+	var proof := _resource_payload.duplicate(true)
+	proof["text"] = _resource_label.text
+	proof["surface"] = "inventory"
+	ObservableBus.emit_domain_event(WIEvents.UI_RESOURCES_RENDERED, proof)
 
 
 func _refresh_gold() -> void:
@@ -809,6 +844,10 @@ func _render_detail() -> void:
 	for child: Node in _detail_box.get_children():
 		_detail_box.remove_child(child)
 		child.queue_free()
+	for line: String in WIEffectText.preparation_lines(_resource_payload.get("preparation", {})):
+		var preparation_label := UIChrome.make_label(line, "Small")
+		preparation_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_detail_box.add_child(preparation_label)
 	if _item_ids.is_empty():
 		return
 	var item_id := String(_item_ids[_cursor])
