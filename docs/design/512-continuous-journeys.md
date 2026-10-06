@@ -117,3 +117,48 @@ this does not claim the mandatory gate is cleared. Evidence is
 worker-earned-recovery-pass; the original unexpected defeat is preserved in
 worker-scouts-earned-defeat. Next is a paid equipment decision from15gold and
 an earned, prepared retry. No balance change is authorized by this wall.
+
+## Recorded worker wall and retry expense
+
+The965-step worker route now deliberately records three real losses, with
+production defeat reload after each. Its result assertions pass, but both runs
+emit a DummyShader leak ERROR at exit: the authoritative gate remains invalid.
+This is diagnostic wall evidence, not an ending or winning-boss claim. After the initial scout loss, road victory and
+rest, the player spends14 of15gold on Hunter's Fang through the actual armed
+purchase confirmation. Fourteen combined class levels give nominal effective
+power8.073094, but combat kit remains Warrior1/Mage3,44HP/14MP, Relc's spear
+and Fang. The prepared scout retry wins with3HP/0MP left. One Fine Meal raises
+that to11HP/4MP; the first boss attempt with Relc loses. Production reload
+restores that state. Two more Fine Meals and three Hot Meals heal to44HP/12MP,
+with armed +2maxHP preparation. The fully healed boss retry still loses in
+five rounds: Relc falls in round2 and the boss retains39HP when the PC falls.
+The saved wall checkpoint restores44HP/12MP,1gold, one Hot Meal, no Fine Meals.
+
+The level explanation is narrower than an assumed universal adversity penalty.
+The road lists won_combat and deposits0.573838475990826: effective power6.248325
+versus enemy4.415777, ratio0.706714, gamma1.6. Relc and scouts list quest-victory
+IDs instead of won_combat. Prepared scouts award an action multiplier1.287666793
+(effective8.073094 versus enemy9.455123), not a gray-band discount. Only3
+integer melee_hit were earned; the actual diet is primarily spell casts.
+No extra victory farming is added solely to force Warrior2. Root owns balance
+assessment; source values, enemy tuning and seed remain unchanged.
+
+Evidence worker-wall-contract-pass and worker-wall-contract-clean-pass contain
+(the latter name predates final noise inspection; both runs are noisy) the full history and saved exact
+fractional bank. Unexpected defeat artifacts remain worker-scouts-earned-defeat,
+worker-awakened-underrecovery-defeat and worker-awakened-full-recovery-defeat.
+Native offscreen inventory selection uses keyboard scrolling, because the
+touch helper's timed scroll requires the browser runner; no touch claim follows.
+
+Rogue now passes555 fresh steps: real Relc training, earned Warrior at sleep,
+earned spear equipped, first actual road fight, walked return and rest. The
+road is now deliberately retired for safety/combat support after earlier
+Rogue bypass proof. Evidence rogue-support-pass. Next is cistern resolution,
+continued earned Rogue utility and actual regional readiness, without claiming
+the worker's unresolved boss gate has been cleared.
+
+Both wall-result runs are rejected despite passing results: Godot emits a
+DummyShader RID leak ERROR during exit. The identical rerun reproduces it.
+Rogue555 and unaffected load_gate exit0/PASS without error/warning noise.
+Worker events/checkpoint remain useful diagnostic evidence, but its final
+authoritative gate is pending a teardown investigation owned by root.

@@ -7948,12 +7948,14 @@
      "krshia_crate",
      "olesm_intro",
      "pisces_magic",
+     "relc_intro",
      "selys_delivery"
     ],
     "systems": [
      "char_creation",
      "combat",
      "dialogue",
+     "economy",
      "exploration",
      "input",
      "night_phase",
@@ -7992,6 +7994,7 @@
      "olesm_intro",
      "patron_serving",
      "pisces_magic",
+     "relc_descent",
      "relc_intro",
      "selys_delivery",
      "watch_crate",

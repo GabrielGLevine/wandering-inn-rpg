@@ -2274,6 +2274,1035 @@
   {
    "action": "dump_checkpoint",
    "slot": "rogue_pick_lock"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains",
+    "cell": [
+     7,
+     6
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "met_relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "dump_state",
+   "label": "rogue_first_combat_entry_relc_training"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "opening"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     3,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "first_step"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     4,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     5,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "pool_empty"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.move_pool",
+   "equals": 0
+  },
+  {
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dashed",
+   "payload_contains": {
+    "id": "pc",
+    "move_pool": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "dash"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     6,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "aim"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "first_blood"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_ended",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "watch"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "dump_state",
+   "label": "rogue_training_after_actual_attack_dash_inputs"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "wrap"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.sparred_with_relc",
+   "equals": 1
+  },
+  {
+   "action": "dump_state",
+   "label": "rogue_training_carried_exit"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Sleep. Two classes + 3 quests done: the tremor pointer fires and something_beneath starts."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "slept": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "warrior"
+   }
+  },
+  {
+   "action": "dump_state",
+   "label": "rogue_disclosed_earned_warrior_support"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "== WALKED (was teleport): back from bed to the stairs. (9,2) -> (2,2)."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "stairs_down: bump-face then interact."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ],
+   "_comment": "Back at the ground-floor lane head; the gift-node route below reuses the spawn choreography."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Meet (met_relc+sparred, given_spear unset): visible options ['What's out here'(0), 'You said you had something for me?'(1), 'Spar'(2), 'Keep walking'(3)] -- select index 1, the gift.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "relcs_spare_spear",
+    "source": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Got: Relc's Spare Spear"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "given_spear_by_relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Gift node: the 'press I' teaching line.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "My spare spear. Held gates wider than that one. Now listen. It won't help you from inside a pack. Check your pack, get the spear in your hand before you're back on the road. Sword arm, spear arm. What you carry decides which moves you get."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Gift option 0 'I'll try it on.' ends the conversation.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== EQUIP THE SPEAR ==. I opens the pack (2 items: rusty_sword idx0, relcs_spare_spear idx1); cursor resets to 0 -> one move_down selects the spear -> confirm equips it.",
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {
+    "items": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "payload_contains": {
+    "item": "relcs_spare_spear",
+    "slot": "weapon"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.weapon",
+   "equals": "relcs_spare_spear"
+  },
+  {
+   "_comment": "== PART 2: walk the road, the proximity ambush fires (no interact) ==. (12,12) up6->(12,6), right18->(30,6), down14->(30,20); the next step into (30,21) lands within Chebyshev 2 of goblin_encounter_1 (30,23) and springs it.",
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 18
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    20
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "real_ones"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "dump_state",
+   "label": "rogue_road_entry_spear_support"
+  },
+  {
+   "action": "combat_autoplay",
+   "policy": "competent",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "rogue_road_clear_disclosed_retirement"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 15
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Sleep. Two classes + 3 quests done: the tremor pointer fires and something_beneath starts."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "slept": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "rogue_road_support_actual_rest"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "rogue_road_support"
   }
  ]
 }
