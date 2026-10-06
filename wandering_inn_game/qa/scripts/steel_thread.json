@@ -4107,6 +4107,13 @@
      "mp": 0,
      "max_mp": 13,
      "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 13,
+     "max_mp": 13,
+     "mp_potion_doses": 0
     }
    },
    "timeout_sec": 60
@@ -4115,7 +4122,14 @@
    "action": "wait_for_event",
    "type": "sleep_settled",
    "payload_contains": {
-    "times_slept": 5
+    "times_slept": 5,
+    "vitals": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 13,
+     "max_mp": 13,
+     "mp_potion_doses": 0
+    }
    },
    "timeout_sec": 60
   },
@@ -4137,6 +4151,13 @@
      "mp": 0,
      "max_mp": 13,
      "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 13,
+     "max_mp": 13,
+     "mp_potion_doses": 0
     }
    },
    "timeout_sec": 60
@@ -4154,6 +4175,30 @@
   {
    "action": "dump_state",
    "label": "martial_free_bed_settled"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 49,
+    "max_hp": 49,
+    "mp": 13,
+    "max_mp": 13,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 9,
+    "mage": 4
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {}
   },
   {
    "action": "screenshot",
@@ -4416,6 +4461,30 @@
    "label": "martial_rested_return_to_scout_route"
   },
   {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 49,
+    "max_hp": 49,
+    "mp": 13,
+    "max_mp": 13,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 9,
+    "mage": 4
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {}
+  },
+  {
    "action": "dump_checkpoint",
    "slot": "martial_rested_return"
   },
@@ -4614,6 +4683,38 @@
    "equals": "player"
   },
   {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 49
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 13
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "awakened_boss",
+    "before": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 13,
+     "max_mp": 13,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 13,
+     "max_mp": 13,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
    "action": "screenshot",
    "name": "06_act_iii_07_boss_fight"
   },
@@ -4635,6 +4736,21 @@
    }
   },
   {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 26
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.raskghar_awakened.hp",
+   "equals": 0
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
@@ -4646,6 +4762,41 @@
   {
    "action": "wait_frames",
    "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 26,
+    "max_hp": 49,
+    "mp": 0,
+    "max_mp": 13,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "awakened_boss",
+    "after": {
+     "hp": 26,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 13,
+     "mp_potion_doses": 0
+    }
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "dump_state",
+   "label": "martial_rested_warren_victory"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "martial_rested_warren_victory"
   },
   {
    "action": "assert_event_logged",
@@ -4829,7 +4980,25 @@
   {
    "action": "press",
    "name": "interact",
-   "_comment": "SAME WAKING as the summons -- social_talked only clears on sleep, so her pool line is spent and this single interact opens the graph directly."
+   "_comment": "The inserted recovery sleep resets Zevara's talk pool. Hear the fresh-waking line, wait for its actual teardown, then interact again to open the existing report graph."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_rendered",
+   "payload_contains": {
+    "text": "Zevara: The cistern file is closed. Do you know how few files close in this office? I keep it on top of the stack for morale."
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_line_hidden",
+   "payload_contains": {},
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "interact"
   },
   {
    "action": "wait_for_event",

@@ -38,10 +38,10 @@ archived, or superseded session blocks.
   differences remain unexplained; no production replacement or active build.
 - **Active #512 martial:** resource_plan owns `/private/tmp/wi-512-martial`,
   `issue/512-martial-recovery`, basef71d8e8c; steel_thread/docs only. Free-bed
-  detour after original661 preserves seed37/history. Before4/49HP,0/13MP,
-  twelve gold/six wins.185 ignored assets copied/hash checked, lint/import pass.
-  Next: fresh fail-fast2679 replay, pin settled maxima/boss result, load and
-  unaffected control; stop at rested wall/first downstream divergence. Root
+  detour after original661 preserves seed37/history. Before4/49HP,0/13MP; fifthsleep49/49HP13/13MP,12gold unchanged.
+  First fresh prefix beats boss round4 at26HP0MP; stopsZevara fresh greeting.
+  Exact afterpins +secondinteract correction authored; next fresh fail-fast
+  replay to first divergence, then load/unaffected controls and release. Root
   owns native/integration. No mobile/tuning/extra tactics; retain companionUID.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
