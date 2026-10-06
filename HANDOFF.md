@@ -18,8 +18,9 @@ archived, or superseded session blocks.
   `/private/tmp/wi-570-evidence/implementation`; rejected test-fixture runs
   remain separately named. Existing save/core assertions now reflect v11/four;
   the synthetic two-capacity swap/refusal fixture remains explicitly two.
-  **Next:** run affected save/core units, checkpoint, then root composes resource
-  QA and owns the final full preflight/canonical sweep plus rendered/windowed
+  Affected save/core units also pass cleanly at `36787975`.
+  **Next:** root composes resource QA and owns final full preflight/canonical
+  sweep plus rendered/windowed
   acquisition/equip/refusal/sleep/reload proof. No QA manifest/driver edits here.
   Diagnostic ec1acd72 is independently approved: 3,400 fights, eight matching
   controls. Band overruns and 96/100 Infiltrator result remain follow-up risks.

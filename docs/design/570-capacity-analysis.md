@@ -355,7 +355,8 @@ None prompted a combat or earlier-schema migration change.
 
 The existing save test now pins v11 and migrates missing capacity from v10 to
 four. The core test pins four initially and explicitly retains capacity two
-for its synthetic swap/refusal boundary. Those affected suites, full composed
+for its synthetic swap/refusal boundary. The affected save/core suites pass
+cleanly on implementation commit `36787975` (tree `058a1993`). Full composed
 integration, actual 58-gold acquisition, UI/domain/rendered evidence and
 windowed/touch checks remain separate gates; this checkpoint does not close
 them. Earlier counterfactual combat measurements remain diagnostics, not proof
