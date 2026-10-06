@@ -102,6 +102,7 @@ func _init() -> void:
 	_check_help_content()
 	_check_veil_lines()
 	_check_combat_hint_lines()
+	await _check_inventory_effect_insets()
 
 	print("copy_fit: %d strings measured across all surfaces" % _measured_count)
 	if not _failures.is_empty():
@@ -111,6 +112,35 @@ func _init() -> void:
 	assert(_failures.is_empty(), "%d copy-fit overflow(s) -- see printed list above" % _failures.size())
 	print("PASS: every authored player-facing string fits its panel budget")
 	quit(0)
+
+
+func _check_inventory_effect_insets() -> void:
+	var inventory := load("res://src/ui/inventory.gd").new() as CanvasLayer
+	get_root().add_child(inventory)
+	inventory._root.show()
+	var settings := get_root().get_node("WISettings")
+	var original_scale: int = settings.text_scale_step()
+	for step: int in settings.TEXT_SCALE_STEPS.size():
+		settings.set_text_scale_step(step)
+		inventory._layout_panel()
+		for item: Dictionary in _load_json("res://data/items.json").get("items", []):
+			for child: Node in inventory._corner_lines_box.get_children():
+				inventory._corner_lines_box.remove_child(child)
+				child.queue_free()
+			for line: String in WIEffectText.item_effect_lines(item):
+				var label := UIChrome.make_label(line, "MenuInk")
+				label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				inventory._corner_lines_box.add_child(label)
+			await process_frame
+			await process_frame
+			var paper: Rect2 = inventory._corner_breakout.get_global_rect()
+			for label: Label in inventory._corner_lines_box.get_children():
+				if not paper.encloses(label.get_global_rect()):
+					_failures.append("inventory effect escapes paper: %s at text scale %d" % [item.id, step])
+	settings.set_text_scale_step(original_scale)
+	inventory.queue_free()
+	await process_frame
+	print("PASS: all item effect labels stay inside paper at every text scale")
 
 
 func _check_drift_tripwires() -> void:
