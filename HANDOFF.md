@@ -119,9 +119,6 @@ archived, or superseded session blocks.
 - Open presentation debt lives in `docs/VISUAL-LOG.md`, including inn/HUD
   clearance, dialogue lifetime and pending sprite/icon/ear reads. Fresh
   captures under `qa_output/` are disposable; inspect before rerunning.
-- GitHub repository milestones, issue labels and dependency links are updated.
-  Projects v2 board synchronization was unavailable because the current token
-  lacks `read:project`; no authentication settings were changed.
 
 ## User-held
 
