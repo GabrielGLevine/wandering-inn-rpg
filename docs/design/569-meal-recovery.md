@@ -136,3 +136,11 @@ Next: independently review the exact composed head, then run and inspect each
 meal route windowed with the same seed and timing argument. The controller
 owns window/browser scheduling, composed full integration and publication.
 The lane has no remaining intended runtime or QA edits.
+
+Native window runs at `d242e87e` pass all three routes with the current private
+asset overlay; all 19 captures were read. Service and earned-cooking captures
+are readable. Station captures 02/03 reveal clipped retained receipts after
+final-unit rearm selects the sword; this is recorded in VISUAL-LOG and blocks
+visual acceptance until fixed. All evidence is preserved under
+`/private/tmp/wi-569-qa-evidence/{service,earned,station}-window`. Native clicks
+remain emulated input, with no browser or physical-device claim.
