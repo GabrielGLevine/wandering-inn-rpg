@@ -2819,6 +2819,7 @@
    ],
    "surfaces": {
     "maps": [
+     "riverfarm_longhouse",
      "riverfarm_village",
      "witch_hollow"
     ],
@@ -3417,6 +3418,7 @@
     "maps": [
      "deep_tunnels",
      "dungeon_approach",
+     "inn",
      "street",
      "trapped_halls"
     ],
@@ -3426,7 +3428,9 @@
     "skills": [
      "basic_cleaning"
     ],
-    "dialogue": [],
+    "dialogue": [
+     "erin_errand"
+    ],
     "systems": [
      "audio",
      "combat",
