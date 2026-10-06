@@ -9,33 +9,38 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #567 integration:** `issue/567-hud-contract`, controller-owned
-  `/private/tmp/wi-567-hud-contract`. Composed resource85af0621, HUDa9e839d3,
-  capacity60aebdaa and gear/door QA8676a0be; bounded source reviews approve.
-  Core at3d2ae361:59Godot units pass; grant-reference repindcac4795 yields
- 282Python/109subtests passing. Both full combat policies pass atdcac4795.
-  Bundle-v7 window gear/tutorial/dark and fresh-start/carry pass (28images read).
-  **Next:** compose main1375e375, regenerate QA, window-test new gear/door routes,
-  run canonical sweep and targeted browser-touch layout. Initial browser export
-  imported Playwright SVGs from local node_modules; add local.gdignore and rerun.
-  No partial resource deployment. #568 core/data/tests are resource_plan's in
-  `/private/tmp/wi-568-consumables`; quantitiesd53bcc74/PR582 pending review fixes
-  and shared use/poison. Frontend owner prepares separately; QA ownership is free.
-  Evidence `/private/tmp/wi-567-evidence`, `/private/tmp/wi-570-evidence/qa`;
-  review paths and earlier acceptance remain in draft PRs572/573/578/582.
-- **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
-  is composed here as completed code squashed as `0bbd96aa`. Original art checkout
-  remains separately owned and untouched. Previous choice-log ceiling fix is
-  included. Squash tree `0e843291` matches the reviewed source. User now permits bypassing Web parity
-  when it bottlenecks a PR; all other CI and independent review remain required.
-  Other lanes: #572–#575 and #579; serialize shared source/catalogs.
-- **#566 resource foundation:** staged in draft PR #572, isolated
-  `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
-  Battle handoff and settled autosaves are implemented in `03da9ec4`; foundation focused units pass. Full integration, recovery presentation and composed #571 acceptance remain open.
-- **Resource/capacity roadmap #565:** planning is merged at base `b1c4b02b`;
-  `docs/design/2026-10-05-persistent-vitals-recovery-plan.md` and #566–#571 own
-  the staged resource/HUD/potion/food/capacity/cutover work. Proposed tuning
-  remains subject to measurement. M1 devices and #494/#495 choices stay open.
+- **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
+  Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.
+  Original art checkout remains separately owned and untouched.
+- **User CI permission:** bypass Web parity when it bottlenecks PR merges;
+  record each waiver without calling it a pass. Other CI/review and actual
+  gameplay/device evidence remain required.
+- **Designs closed:** #517/PR575 squash5823356f/treee3203d51; #521/PR579
+  squash53bd4c68/tree95341cea. Reviewed/squash trees match; seven non-Web CI
+  jobs passed and Web was sole waived blocker. Runtime stays #518/#520/#522.
+- **Staged resources:** PR572/#56685af0621, PR578/#5673d2ae361, PR573/#570
+  core60aebdaa plus QA checkpoints. Carry, HUD/receipts and capacity4→5/v11
+  have bounded source review; JSON precision fix approved. No partial deployment
+  or activation merge before recovery/#571. All59 Godot units pass; four lint
+  line pins needed repinning, then282Python tests/109subtests pass. Final
+  canonical/balance follows capacity QA. Bundle-v7 windowed gear/tutorial/dark
+  and fresh-start/carry routes pass; all28images read. Browser/device unproven.
+- **This integration tree:** controller owns `/private/tmp/wi-567-hud-contract`,
+  branch `issue/567-hud-contract`, composed main1375e375 and capacityQA8676a0be.
+  Both full combat policies pass atdcac4795; capacity fixture routes pass.
+  **Next:** regenerate QA, window-test new gear/door, full canonical and targeted
+  browser-touch layout. Add local node_modules/.gdignore before re-export;
+  first diagnostic export imported Playwright SVGs and emitted warnings.
+  resource_plan owns #568 core/data/tests in `/private/tmp/wi-568-consumables`;
+  d53bcc74/PR582 quantities checkpoint awaits overflow/delivery review fixes
+  and shared token-use/poison. capacity570 prepares disjoint frontend ownership;
+  shared QA is released. #569 services then #512 journeys consume recovery.
+  No shared mutable trees; preserve companion UID and ignored private assets.
+  Exact registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence roots
+  `/private/tmp/wi-{566-resumed,567,570}-evidence`; branch HANDOFFs pin heads.
+- **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
+  governs #566–#571. Preserve unlimited existing kitchen access and measure it.
+  M1 devices and #494/#495 choices remain open.
 
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
