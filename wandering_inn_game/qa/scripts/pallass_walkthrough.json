@@ -601,6 +601,15 @@
    "frames": 10
   },
   {
+   "action": "assert_event_logged",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "pallass_market",
+    "floor_cells": 286,
+    "vistas": 4
+   }
+  },
+  {
    "action": "screenshot",
    "name": "03_pallass_market_arrival"
   },

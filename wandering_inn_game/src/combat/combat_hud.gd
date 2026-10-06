@@ -58,26 +58,7 @@ const TUTOR_SUPPORTED_EVENTS := [
 	WIEvents.STATUS_EXPIRED, WIEvents.ACTION_REFUSED, WIEvents.UI_TARGETING_SHOWN,
 ]
 
-## png, shared with message_layer.gd's toast/dialogue-bark panels). TRAP:
-## at the default STRIP_PATCH_MARGIN (20), only 9 of the fold art's 29
-## source px sit in the 9-patch's UNSTRETCHED bottom band -- the rest live
-## in the STRETCHED center band, so on a panel that grows
-## (`_grow_feed_panel_for_tutor`/`_resize_feed_panel`) the fold stretches
-## and moves WITH the height (message_layer.gd's STRIP_FOLD_PATCH_BOTTOM
-## doc comment has the full measurement/mechanism), and any proportional
-## fold-position estimate chases that moving target -- a long beat's last
-## line can still ride the fold. `build()` pins this panel's NinePatchRect
-## `patch_margin_bottom` to this value (same as message_layer.gd's
-## STRIP_FOLD_PATCH_BOTTOM: same texture, same measured 29px source fold
-## depth, 32 covers it with slack) so the fold lives ENTIRELY in the
-## unstretched bottom patch and its position is a TRUE PIXEL CONSTANT
-## (FEED_FOLD_DANGER_PX) at any panel height. Both the base capacity
-## (`_feed_text_capacity_height`) and the tutor-grow formula
-## (`_grow_feed_panel_for_tutor`) derive from this fixed-pixel model -- the
-## toast panel's `_toast_panel_height_for` idiom, with a SINGLE deficit
-## (this label is TOP-aligned, not centered like the toast's, so only the
-## bottom needs budgeting, not doubled).
-const FEED_STRIP_FOLD_PATCH_BOTTOM := 32
+# Keep text clearance independent of the texture-specific slices in UIChrome.
 const FEED_FOLD_DANGER_PX := 30.0
 const FEED_CONTENT_MARGIN_TOP := 8.0
 const TUTOR_SAFETY_BUFFER_PX := 12.0
@@ -190,7 +171,6 @@ func build() -> void:
 	# and a sliced fourth" and why wrapping was irrelevant to it.
 	_feed_label.size_flags_vertical = Control.SIZE_FILL
 	_feed_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-	(_feed_label.get_parent().get_parent().get_child(0) as NinePatchRect).patch_margin_bottom = FEED_STRIP_FOLD_PATCH_BOTTOM
 	_readout_panel = _make_panel(UIChrome.PARCHMENT_STRIP, Control.PRESET_CENTER_BOTTOM, Vector2(620.0, 104.0), Vector4(-310.0, -190.0, 310.0, -78.0))
 	_readout_label = UIChrome.make_rich_label("CombatReadout")
 	var readout_margin := MarginContainer.new()
@@ -350,6 +330,22 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 			var size := WIResponsiveLayout.touch_size(viewport, Vector2(360.0, 76.0))
 			WIResponsiveLayout.place_panel(_banner_panel, Rect2(board.get_center() - size * 0.5, size))
 			_banner_label.add_theme_font_size_override("font_size", WIResponsiveLayout.readable_font_size(viewport, 24, text_scale))
+
+
+func desktop_board_rect() -> Rect2:
+	var viewport := _root.get_viewport_rect()
+	var top := 12.0
+	var bottom := viewport.size.y - 12.0
+	var order_panel: Control = _order_label.get_parent().get_parent()
+	if order_panel.visible:
+		top = maxf(top, order_panel.get_global_rect().end.y + 12.0)
+	if _confirm_chip.visible:
+		top = maxf(top, _confirm_chip.get_global_rect().end.y + 12.0)
+	var feed_panel: Control = _feed_label.get_parent().get_parent()
+	for panel: Control in [feed_panel, _readout_panel, _hotbar]:
+		if panel.visible:
+			bottom = minf(bottom, panel.get_global_rect().position.y - 12.0)
+	return Rect2(Vector2(12.0, top), Vector2(maxf(1.0, viewport.size.x - 24.0), maxf(1.0, bottom - top)))
 
 
 ## Builds the ordered slot list for the hotbar -- Attack, Dash, then

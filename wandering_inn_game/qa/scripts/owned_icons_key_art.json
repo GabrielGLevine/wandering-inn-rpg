@@ -1,0 +1,163 @@
+{
+ "fixture_save": "owned_icon_kit",
+ "starts_at_title": true,
+ "fail_fast": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "payload_contains": {
+    "backdrop_art": "title_backdrop_pro_v1",
+    "emblem_art": "emblem_inn_sign_v1",
+    "backdrop_fit": "keep_aspect_centered"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_title_menu"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {
+    "selected_icon_path": "res://assets/icons/items/rusty_sword.png",
+    "list_icon_paths": [
+     "res://assets/icons/items/rusty_sword.png",
+     "res://assets/icons/items/relcs_spare_spear.png",
+     "res://assets/icons/items/training_bow.png",
+     "res://assets/icons/items/hunting_bow.png",
+     "res://assets/icons/items/guardsmans_pike.png",
+     "res://assets/icons/items/lichbone_wand.png",
+     "res://assets/icons/items/graveflame_wand.png",
+     "res://assets/icons/items/mending_draught.png",
+     "res://assets/icons/items/remedy_draught.png",
+     "res://assets/icons/items/sleeproot_draught.png"
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_co_visible_item_rows"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "payload_contains": {
+    "selected_icon_path": "res://assets/icons/items/guardsmans_pike.png"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_pike_preview"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "payload_contains": {
+    "selected_icon_path": "res://assets/icons/items/lichbone_wand.png"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_wand_preview"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "payload_contains": {
+    "selected_icon_path": "res://assets/icons/items/mending_draught.png"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_potion_preview"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "quests",
+    "act_art": "act_i"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_act_i_header"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  }
+ ]
+}

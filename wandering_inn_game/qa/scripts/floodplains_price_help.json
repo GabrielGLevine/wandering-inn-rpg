@@ -42,6 +42,18 @@
    "equals": "floodplains"
   },
   {
+   "action": "assert_event_logged",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "floodplains",
+    "ground_transitions": 1
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_floodplains_ground"
+  },
+  {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
@@ -203,13 +215,14 @@
    "name": "01_rags_camp_arrival"
   },
   {
-   "_comment": "Render confirmation for the NEW interior, exact counts read off a real run: 12x9 = 108 floor cells, 42 blocked (rim + the four corner boulders + the crate).",
+   "_comment": "Authored tent, rack and lookout feet own five cells; the four loose corner boulder blockers are cleared.",
    "action": "assert_event_logged",
    "type": "ui_map_rendered",
    "payload_contains": {
     "map": "rags_camp",
     "floor_cells": 108,
-    "blocked_cells": 42
+    "blocked_cells": 43,
+    "ground_transitions": 1
    }
   },
   {

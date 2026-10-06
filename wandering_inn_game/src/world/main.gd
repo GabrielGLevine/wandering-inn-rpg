@@ -301,12 +301,14 @@ func _layout_viewport_container() -> void:
 	var scale := WORLD_SCALE
 	var view_size := Vector2(WORLD_VIEWPORT_SIZE.x, minf(WORLD_VIEWPORT_SIZE.y, floorf(maxf(160.0, bottom - top) / WORLD_SCALE)))
 	var bounds := Rect2(Vector2(0.0, top), Vector2(viewport_size.x, bottom - top))
-	var mobile_combat := _combat_screen != null and Game.sim.combat != null and WIResponsiveLayout.uses_touch_layout()
-	if mobile_combat:
+	var combat_layout := _combat_screen != null and Game.sim.combat != null
+	var mobile_combat := combat_layout and WIResponsiveLayout.uses_touch_layout()
+	if combat_layout:
 		var board_rect: Rect2 = _combat_screen.board_view_rect()
 		if board_rect.has_area():
 			bounds = board_rect
-			scale = ceilf(WICombatMobileLayout.CELL_CSS / WIResponsiveLayout.css_scale(get_viewport())) / 16.0
+			if mobile_combat:
+				scale = ceilf(WICombatMobileLayout.CELL_CSS / WIResponsiveLayout.css_scale(get_viewport())) / 16.0
 			view_size = (bounds.size / scale).floor().max(Vector2.ONE)
 	var scaled_size := view_size * scale
 	if _sub_viewport.size != Vector2i(view_size):
@@ -316,7 +318,7 @@ func _layout_viewport_container() -> void:
 	_container.position = bounds.position + (bounds.size - scaled_size) * 0.5
 	if _world != null:
 		_world.set_view_size(view_size)
-		if mobile_combat:
+		if combat_layout:
 			_world.focus_combat_camera(_combat_focus_cells)
 
 

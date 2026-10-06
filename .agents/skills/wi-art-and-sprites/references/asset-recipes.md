@@ -1,5 +1,32 @@
 # Asset recipes
 
+## Selection and public fallbacks
+
+The approved #564/#554 ruling is best art wins per asset within a coherent
+scene. Compare candidates with co-visible materials, figures and UI at actual
+gameplay scale in windowed official and public builds. Replace a licensed
+primary only when the owned candidate reads better; otherwise keep the primary
+and register the owned public fallback. READY is a candidate label, not runtime
+acceptance. Preserve explicit rejections for weapon/facing/death discontinuity.
+
+`fallback_sprite` selects a complete registry entry through
+`WISpriteRegistry.resolved_id()`: if any primary animation sheet is unavailable,
+all animations, frame geometry, scale and anchor come from the owned entry.
+Targets must be public, one-hop and non-player-only; do not chain fallbacks or
+use a `pc_*` target. A selected player rig is a direct primary registration.
+Pin expected animation counts and measure alpha bounds before wiring it.
+
+Terrain `fallback_render` is likewise a complete descriptor. Resolve original
+biome/wall inheritance first, then replace render fields with the owned sheet,
+unit, coordinates, tone and optional underlay. Keep topology and
+simulation properties. Owned Wang atlases use their own documented corner-bit
+coordinates; UI regions and NinePatch margins come from the selected artwork.
+
+Record target, winner, reason and both gameplay screenshots in the issue PR.
+Append source/tool/prompt/hash provenance to the current license record, then
+rebuild `docs/asset-candidates.*` with `python3 tools/asset_candidates.py` and
+provider mirrors with `python3 scripts/sync_agent_guidance.py --write`.
+
 ## Registry
 
 `data/sprites.json` entries may be static or directional. Directional

@@ -458,3 +458,25 @@ r3–r5 playtest waves — gone from this file.
   whether flavor prose is history, then re-derive `mobile_tap_check`'s count in
   the same commit — or give the line a minimum-visible-span floor instead and
   leave GH#202 standing.
+- [ ] **(P3)** Repeated grass seams dominate Riverfarm and Rags's camp —
+  fresh baseline `f35270f0`, `qa/run_qa.sh riverfarm_walkthrough windowed --seed=9`
+  → `01_arrived_riverfarm_village_day.png`; disposable all-map framing survey
+  → `rags_camp__center.png`. Both show long horizontal bands across ordinary
+  grass. Evidence retained in `potential_assets/art_direction_review_2026-10-05/`.
+  Fix direction: quieter base tile variants and connected path/yard materials;
+  compare harvested grass v2 in the actual scenes before selecting it.
+- [ ] **(P3)** Garden's landmark composition is sparse —
+  `qa/run_qa.sh garden_walkthrough windowed --seed=9` →
+  `02_garden_day_bright_identity.png`, `03_memorial_hill_dusk_no_darkness.png`:
+  rectangular lawn, straight path, fountain and bed carry almost the whole
+  environment. Fix direction: planted shelter, fountain/rest and quiet memorial
+  pockets within the current extent first. Taste proposal and preserved shots:
+  `docs/design/2026-10-05-holistic-art-review.md` and the local review directory.
+- [ ] **(P3)** City architecture underdelivers its intended scale —
+  `qa/run_qa.sh invrisil_walkthrough windowed --seed=9` →
+  `00_scale_shock_arrival.png` / `06_facade_scale_shock.png`: arrival lacks
+  building mass; later facade remains a low strip. `qa/run_qa.sh pallass_peek
+  windowed --seed=9` → `00_pallass_market_arrival_corner.png`: isolated wall
+  panels and a dark border imply little of the stacked city. Fix direction:
+  arrival-framed Invrisil structures and Pallass lower-terrace backdrop;
+  substantial changes are authorized by the user-approved #564 review.

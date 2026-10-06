@@ -9,6 +9,12 @@ archived, or superseded session blocks.
 
 ## Current state
 
+- **Resumed resource foundation:** PR #572 now composes completed art PR #577
+  head `e89770de61a36564b5e6bc783314ee7ebca64f02` pending art CI/merge.
+  Next: finish staged combat carry, rollback, settled sleep/save ordering and
+  actual QA; retain #571 activation gate. Checkpoint each coherent step.
+
+
 - **Active #566 foundation (separate from #564 art):** owner is this Codex
   session; worktree `/private/tmp/wi-566-foundation`, branch
   `issue/566-persistent-vitals-foundation`, base `b1c4b02b` (origin/main).

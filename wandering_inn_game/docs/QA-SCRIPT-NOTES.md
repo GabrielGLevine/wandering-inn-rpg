@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 266 native canonical QA scripts. The manifest is the
+This is the human index for 269 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -54,8 +54,9 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `journal_skills` | 9 | full | `—` | journal skills-by-class panel; pre/post-first-use reveal |
 | `inventory_loop` | 9 | full | `—` | THE inventory/equipment loop; weapon-gated kit proof |
 | `atmosphere_check` | 9 | smoke, full | `—` | mood-grade/phase-clock proof; day->dusk->night->day cycle; issue #80: Erin's phase-gated line at dusk + hungry_patron's present_when day<->night flip (sim- and render-side) |
-| `field_skills_loop` | 9 | full | `near_tactician` | field-skill hotbar loop (Basic Cleaning -> Observe); loadout remap; #115 expanded onboarding -> first-waking auto-collapse, keyboard toggle, settings persistence |
-| `hotbar_tab_loop` | 9 | full | `near_tactician` | Tab-primed field-hotbar select; #115 mouse/touch Details collapse/expand parity; confirm fires the number-key-equivalent stream |
+| `field_skills_loop` | 9 | full | `near_tactician` | field-skill hotbar loop (Basic Cleaning -> Observe); loadout remap; #557 compact default, explicit keyboard Details toggle, settings persistence |
+| `owned_chrome_compact_help` | 9 | full | `near_tactician` | #557 owned paper/walnut chrome; compact default; selected description; explicit Details; settings/inventory screenshot and expanded/collapsed preference roundtrip |
+| `hotbar_tab_loop` | 9 | full | `near_tactician` | Tab-primed field-hotbar select; #557 mouse Details expand/collapse; selected skill description; confirm fires the number-key-equivalent stream |
 | `mouse_loop` | 9 | smoke, full | `near_tactician` | Issue #57/#84: mouse support -- distant prop click walks to nearest approach cell and stops without interacting, hotbar slot CLICK fires the number-key-equivalent stream and disarms a Tab-primed cursor, adjacent click faces+interacts in one click, click-to-walk on open ground (exact per-step count), keyboard press mid-path cancels, a title-row click reaches Continue, a pause-row click Resumes, dialogue-option clicks pin the exact keyboard-equivalent dialogue_choice payload |
 | `social_loop` | 9 | full | `social_loop_start` | Social Pillar v1 proof; rotating talk pools + goblin_parley's Warrior-gated intimidate -> LIVE [Diplomat] earn at the sleep (#123: fixture no longer pre-holds the class); post-earn [Charming Smile]-gated Watch persuade fires as the issue #50 gate's live proof |
 | `sewers_walkthrough` | 9 | full | `near_sewers` | Liscor sewers proof; grate-gate seam + vermin fight |
@@ -274,6 +275,8 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `rogue_recovery_force` | 7 | full | `—` | #508 fresh fight-first force-crate route: deliberate cleared-road cover transit gives a rendered receipt and Rogue at sleep; defeated enemies stay absent. |
 | `rogue_recovery_guile` | 9 | full | `—` | #508 fresh earned Mage/Light guile-crate route: deliberate cleared-road cover transit earns Rogue at sleep without respawning enemies. |
 | `stage_guidance_fresh` | 9 | full | `—` | #507 fresh earned cleaning, actual rendered Erin sleep cue, ordinary upstairs reward, History/Help/Replay, manual Save/Load and Quest Hints OFF/ON across UI rebuild. Native input; physical comprehension remains #511. |
+| `owned_icons_key_art` | 9 | full | `owned_icon_kit` | #558/#562 curated co-visible owned icons and title/journal art; icon-kit setup fixture, real inventory selection and J opening; text-only ActII fallback |
+| `harvest_creature_visuals` | 9 | full | `—` | #564 complete bat/razorbeak rigs through actual encounters, renderer-bound sprite confirmations and desktop alpha bounds. |
 
 ## Browser-only QA
 

@@ -1,3 +1,4 @@
+import { runnerStartupInit, releaseRunnerStartup } from "./runner_startup.mjs";
 // Real same-origin page reload. Browser profiles emulate devices; no claim of
 // physical backgrounding, process eviction, or interruption-caused corruption.
 import { chromium } from 'playwright';
@@ -38,9 +39,10 @@ try {
   if (['error','warning'].includes(msg.type()) || /SCRIPT ERROR|Parse Error|ERROR:|WARNING/.test(msg.text())) diagnostics.push({type:msg.type(),text:msg.text()});
  });
  page.on('pageerror', err => diagnostics.push({type:'pageerror',text:String(err)}));
+ await page.addInitScript(runnerStartupInit);
  await page.addInitScript(() => {
   const stage = sessionStorage.getItem('wiLifecycleStage') ?? 'save';
-  window.__WI_QA__ = {script:`res://qa/scripts/lifecycle_${stage}.json`,seed:'9'};
+  window.__WI_QA__ = {script:`res://qa/scripts/lifecycle_${stage}.json`,seed:'9',wait_for_runner_ready:true};
   window.__WI_LIFECYCLE_BOOT__ = crypto.randomUUID();
   window.__WI_LIFECYCLE_TOUCHES__ = [];
   for (const type of ['touchstart','touchend','touchcancel']) document.addEventListener(type, e => window.__WI_LIFECYCLE_TOUCHES__.push({type,trusted:e.isTrusted,time:performance.now()}), {capture:true,passive:true});
@@ -49,6 +51,7 @@ try {
   const expected = JSON.parse(await readFile(join(game, `qa/scripts/lifecycle_${name}.json`), 'utf8')).steps.length;
   const until = Date.now()+120000;
   let result;
+  await releaseRunnerStartup(page);
   while (Date.now()<until) {
    const req = await page.evaluate(() => window.__WI_QA_TOUCH_REQ__ ?? null);
    if(req) {
