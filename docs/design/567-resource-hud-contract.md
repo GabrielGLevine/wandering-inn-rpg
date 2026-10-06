@@ -113,3 +113,5 @@ Implement the row and projection adapter first against the agreed settled contra
 ## Resumed checkpoint evidence
 
 Godot 4.7 import and `test_resource_hud.gd` pass with zero exit and no error/warning noise. The focused test exercises production Controls and the production receipt coroutine with injected sim/settings boundaries: long numeric values, supported text scales, narrow desktop widths, 844×390 and 915×412 CSS metric emulation with safe insets, Saved/launcher separation, preparation expiry wording, and frozen payload retention through inventory/sleep. This is renderer/contract evidence, not gameplay-trigger, browser-touch or physical-device proof. Logs: `/private/tmp/wi-567-evidence`.
+
+The existing message queue/lifetime and effect-text units also pass. `load_gate`, `gear_loop --seed=9` and `tutorial_flow --seed=9` pass with zero exit, clean noise scans and passing result artifacts on the public-fallback asset checkout. These routes provide regression coverage; the core owner is adding resource-specific gameplay assertions for composed validation. Comment census and whitespace checks pass.

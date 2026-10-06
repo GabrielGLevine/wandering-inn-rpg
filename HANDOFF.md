@@ -13,16 +13,15 @@ archived, or superseded session blocks.
   Lane #567: `issue/567-hud-contract` in `/private/tmp/wi-567-hud-contract`;
   base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
   Owned paths: `HANDOFF.md`, HUD contract, `src/ui/{field_chips,message_layer,sleep_veil,inventory}.gd`, `src/world/main.gd`, `src/core/effect_text.gd`; matching new HUD tests. Core mutation/events and QA shared surfaces stay with #566 until serialized integration.
-  Checkpoint before each implementation or validation phase.
   Evidence: `/private/tmp/wi-567-evidence`; independent review:
   `/private/tmp/wi-567-independent-review.md`.
-  **Exact next action:** run load/smoke/message regression gates and actual gameplay/windowed proof on the settled HUD checkpoint. Numeric field resources, inventory preparation and frozen receipts with Saved fit reservation are implemented. Godot 4.7 import and focused HUD tests pass (zero exit/no noise); CSS geometry emulation is not browser-touch evidence. Core settlement checkpoint `03da9ec4` is now composed; potion details follow #568. Issue remains open.
+  **Exact next action:** controller composes this HUD checkpoint into #566, runs authored resource QA/window/browser evidence and independent review. Core `03da9ec4` is composed; #568 potion controls and full #567 acceptance remain open.
+  Evidence: import, `test_resource_hud`, message queue/lifetime and effect-text units pass; load_gate, gear_loop(9), tutorial_flow(9) pass (zero exit/no noise/result true). Fallback assets; no window/browser/device proof. CSS fit emulation covers both phone sizes/all text scales.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code pending its CI/merge. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
   included. Refresh main and verify squash tree identity after art lands.
-  Other checkpoints: #572 foundation, #573 capacity, #574 routes, #575 homecomings,
-  #578 HUD contract and #579 encounter design. Serialize shared source/catalogs.
+  Other lanes: #572–#575 and #579; serialize shared source/catalogs.
 - **#566 resource foundation:** staged in draft PR #572, isolated
   `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
   Battle handoff and settled autosaves are implemented in `03da9ec4`; foundation focused units pass. Full integration, recovery presentation and composed #571 acceptance remain open.

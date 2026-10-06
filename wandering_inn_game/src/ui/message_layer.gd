@@ -301,21 +301,19 @@ func _show_save_status(slot: String) -> void:
 	var serial := _save_status_serial
 	_hint_label.text = "Saved" if WIResponsiveLayout.uses_touch_layout() else "%s   •  Saved" % _hint_text()
 	_resize_hint_panel()
-	_confirm_save_status(slot, serial)
 	var tree := get_tree()
 	if tree == null:
 		return
+	await tree.process_frame
+	if not is_inside_tree() or serial != _save_status_serial:
+		return
+	if not _sleep_active and _hint_panel.is_visible_in_tree():
+		ObservableBus.emit_domain_event(WIEvents.UI_SAVE_STATUS_RENDERED, {"slot": slot, "text": _hint_label.text})
 	await tree.create_timer(SAVE_STATUS_SECONDS).timeout
 	if not is_inside_tree() or serial != _save_status_serial:
 		return
 	_hint_label.text = _hint_text()
 	_resize_hint_panel()
-
-
-func _confirm_save_status(slot: String, serial: int) -> void:
-	await get_tree().process_frame
-	if is_inside_tree() and serial == _save_status_serial and not _sleep_active and _hint_panel.is_visible_in_tree():
-		ObservableBus.emit_domain_event(WIEvents.UI_SAVE_STATUS_RENDERED, {"slot": slot, "text": _hint_label.text})
 
 
 func place_field_hint(resources: Rect2, launchers: Rect2) -> void:
