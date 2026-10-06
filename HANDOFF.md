@@ -9,21 +9,21 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed #567:** `issue/567-hud-contract`, `/private/tmp/wi-567-hud-contract`;
-  composed main `10827698`, HUD `a9e839d3`, reviewed head `8a4591cd`.
-  Controller owns this tree.
-  Implemented numeric field/inventory resources and captured recovery receipts.
-  **Next:** compose #570 capacity, then window-test
-  `vitals_carry_loop`/`vitals_fresh_start`, then integrate #568 potion controls.
-  Serialize core/QA; no partial resource deployment.
-  Bundle-v7 windowed gear_loop/tutorial_flow/sewers_walkthrough(9):
-  exit0, PASS, result true, zero noise; all19 screenshots inspected. Equipment
-  keeps currentHP47 while maxima change; real ambush returns31/43. Fieldstrip
-  stays legible on dark maps and hides for combat/dialogue. Existing max-HP
-  item wording and first-combat hints are corrected by composed #56685af0621.
-  Evidence `/private/tmp/wi-567-evidence/window-8a4591cd`; bounded source/window
-  review `/private/tmp/wi-567-hud-independent-review.md` approves. Native metric
-  tests cover phone dimensions/scales; browser/touch/device proof remains open.
+- **Active #567 integration:** `issue/567-hud-contract`, isolated tree
+  `/private/tmp/wi-567-hud-contract`; controller owns validation here.
+  Composed #56685af0621, HUDa9e839d3, capacity60aebdaa (schema11). All three
+  have bounded independent source approval. No partial resource deployment.
+  **Next:** import and full preflight on this settled tree; then compose #570
+  gear/door QA repair and run canonical/balance/window gates. #568 core/schema12
+  is owned by resource_plan in `/private/tmp/wi-568-consumables`; capacity570
+  owns gear/door routes plus shared QA generation in its own tree.
+  Official bundle-v7 windowed gear/tutorial/sewers passes at8a4591cd (19images).
+  New production-timing fresh-start/carry routes pass at690f49f1 (9images read):
+  earned armor32/36 without healing, sleep47/47; actual casts/potion and reload
+  retain15HP/8MP, real sleep43HP/12MP. Frozen domain/HUD receipts match pixels.
+  Passive max-HP wording corrected; browser/touch/device proof remains open.
+  Evidence `/private/tmp/wi-567-evidence/window-{8a4591cd,690f49f1}`; source
+  reviews `/private/tmp/wi-567-hud-independent-review.md` and sibling artifacts.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code squashed as `0bbd96aa`. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
