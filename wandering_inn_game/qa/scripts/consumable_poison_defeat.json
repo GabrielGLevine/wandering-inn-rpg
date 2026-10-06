@@ -1,0 +1,380 @@
+{
+ "_comment": "#568 disclosed near-lethal Mage fixture with two Mana Potions and three previous doses. Actual Add to bar, walk, goblin dialogue, warning and confirm trigger poison defeat while Relc lives. Normal defeat reload must restore precombat stock/vitals/exposure, not award victory. Fixture is not earned acquisition. Native click warning is not browser or physical-touch evidence.",
+ "fixture_save": "consumable_poison_defeat_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.mage",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "equals": [
+    "rusty_sword",
+    "relcs_spare_spear",
+    "mana_potion"
+   ]
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {
+    "items": 3
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "payload_contains": {
+    "cursor": 2,
+    "item": "mana_potion"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "mana_potion"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "loadout_changed",
+   "payload_contains": {
+    "skill": "item:mana_potion",
+    "assigned": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "hotbar_loadout",
+   "equals": [
+    "item:mana_potion"
+   ]
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 21
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    28,
+    17
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "goblin_parley"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_hotbar_rendered",
+   "payload_contains": {
+    "slots": 5
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "press",
+   "name": "hotbar_4"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "mana_potion",
+    "context": "combat",
+    "allowed": true,
+    "confirmation_required": true,
+    "restore_mp": 6,
+    "poison_hp": 4,
+    "count_before": 2
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_warning_armed",
+   "payload_contains": {
+    "item": "mana_potion",
+    "dose_number": 4
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "screenshot",
+   "name": "01_lethal_dose_warning"
+  },
+  {
+   "action": "touch_item_warning_confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "mana_potion",
+    "restore_mp": 6,
+    "hp_lost": 3,
+    "count_after": 1,
+    "ap_before": 4,
+    "ap_after": 3
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "payload_contains": {
+    "item": "mana_potion",
+    "committed": true,
+    "count_after": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.alive",
+   "equals": false
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.alive",
+   "equals": true
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.mana_potion",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "02_poison_defeat_receipt"
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.mana_potion",
+   "equals": 2
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "game_reset"
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_used",
+   "count": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "03_precombat_stock_and_vitals_restored"
+  }
+ ]
+}

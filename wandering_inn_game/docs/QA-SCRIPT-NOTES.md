@@ -2,12 +2,13 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 272 native canonical QA scripts. The manifest is the
+This is the human index for 273 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
 | script | seed | tiers | fixture | purpose |
 |---|---:|---|---|---|
+| `consumable_poison_defeat` | 9 | full | `consumable_poison_defeat_start` | Disclosed near-lethal Mage fixture: real potion confirmation causes normal defeat with living ally; precombat reload restores dose count, stock, HP/MP. |
 | `vitals_carry_loop` | 9 | full | `vitals_carry_start` | #566 fixture contract: real casting/heal, two carried fights, depleted save/load and final bed refill; fixture kit/item is not earned journey evidence. |
 | `vitals_fresh_start` | 9 | full | `—` | #566 fresh start: earned chest armor cannot heal, two real spars carry resources, real stairs/bed resolve Warrior then refill; no fixture or teleport. |
 | `load_gate` | none | smoke, full | `—` | native-only resource compile/load gate |

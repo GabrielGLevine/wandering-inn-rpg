@@ -2,6 +2,39 @@
  "_comment": "The ONE source of truth for the canonical QA sweep. ci_sweep.sh parses this (python3) to build its run list; the CLAUDE.md canonical seed table is generated FROM it and ci_sweep.sh's startup drift-checks the table against this file on every run. Add/rename/reorder a script HERE first, then re-render the CLAUDE.md table row to match -- ci_sweep.sh will hard-fail the sweep if they disagree. seed:null means the script takes no --seed (load_gate, char_creation). fixture is the fixture_save this script's own qa/scripts/<name>.json loads via title Continue (its rng_state overrides --seed when present) -- informational, not consumed by ci_sweep.sh's invocation. note is the one-line purpose column. tiers: hand-curated membership, every entry >=1 of smoke/full, smoke subset of full (ci_sweep.sh drift-checks both facts). smoke = load_gate + one canonical per subsystem, <3min, runs every push. full = everything (unchanged). surfaces: GENERATED ONLY by scripts/derive_qa_surfaces.py from the script+fixture+data files themselves (maps/fixtures/skills/systems referenced) -- never hand-edit; ci_sweep.sh --touching <path> maps changed paths to surface tags to crossing scripts; the drift check re-runs the generator and fails on any mismatch (stale tags = FATAL). browser_scripts is a separate browser-only registry consumed by qa/web/run_browser_suite.py; those entries never join native smoke/full or --touching runs. Profiles name emulated Chromium contexts, not physical devices.",
  "scripts": [
   {
+   "script": "consumable_poison_defeat",
+   "seed": 9,
+   "fixture": "consumable_poison_defeat_start",
+   "note": "Disclosed near-lethal Mage fixture: real potion confirmation causes normal defeat with living ally; precombat reload restores dose count, stock, HP/MP.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "consumable_poison_defeat_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "goblin_parley"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "save"
+    ]
+   }
+  },
+  {
    "script": "vitals_carry_loop",
    "seed": 9,
    "fixture": "vitals_carry_start",

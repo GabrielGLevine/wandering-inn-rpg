@@ -331,6 +331,19 @@
    "timeout_sec": 15
   },
   {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "payload_contains": {
+    "item": "mending_draught",
+    "restore_hp": 8,
+    "committed": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
    "action": "assert_state",
    "path": "vitals.hp",
    "equals": 15
