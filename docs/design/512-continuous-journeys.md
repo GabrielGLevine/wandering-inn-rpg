@@ -260,3 +260,26 @@ rogue-door-current and rogue-door1.log preserve exit0/PASS1719 with the same
 two shader-RID ERRORs; still diagnostic, not a clean gate. The first18g travel
 stone is affordable, leaving1g before regional earnings. The58g purchased gear
 set is not afforded or claimed by this history.
+
+## Regional travel, live Stealth, and courier pay
+
+Rogue2444 follows the same uninterrupted history through Riverfarm and
+Invrisil. Held Calming Touch settles the debt. The actual confirmed travel
+stone costs19→1gold; one field-work job pays2→3; two individually confirmed
+rumor purchases cost3→1. Stealth crosses both live alley ambush radii with
+matching domain/rendered receipts. The Brothers dialogue breaks it: the return
+walk actually triggers the eastern ambush at16,11. That missed reactivation
+is retained and won, costing51HP/16MP→48HP/0MP; reactivating Stealth then
+crosses the remaining live group. Accepting the job alone does not retire them.
+
+Cups's testimony and Coyle's exposure resolve socially; the40g extortion is
+refused. The once-only courier handover pays25, ending26gold,48/51HP,0/16MP,
+with the earned Remedy still held. No extra sleep or repeated wage was used.
+This preserves exercised missed-input adversity; it does not substitute for
+unrun martial/caster/work-heavy or force-crate variants.
+
+rogue-courier-current/rogue-city3.log: exit0/PASS2444, same2 shaderRID errors.
+The route remains diagnostic pending lifecycle repair. Next bounded portfolio:
+existing heirloom/name quests, then required Pallass costs and final descent;
+no indefinite sidequest or repeat-income loop. The58g gear purchase claim still
+requires actual funding and input proof.
