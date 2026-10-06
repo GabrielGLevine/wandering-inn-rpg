@@ -66,6 +66,18 @@
    "steps": 1
   },
   {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "mending_draught"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
@@ -327,7 +339,7 @@
    "action": "assert_event_logged",
    "type": "resources_changed",
    "payload_contains": {
-    "reason": "combat_action",
+    "reason": "item_use",
     "after": {
      "hp": 15,
      "max_hp": 32,
