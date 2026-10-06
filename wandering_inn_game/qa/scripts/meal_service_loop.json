@@ -1,0 +1,652 @@
+{
+ "_comment": "#569 fixture contract: actual ambient/graph, purchase cancel and two paid services, frozen receipts, poor-player directions then real stair/hall/bed navigation. Native touch_* here is emulated input, not physical/browser touch. Supplied Mage, damage and6gold are disclosed setup.",
+ "fixture_save": "meal_service_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "mage": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_field_skill_absent",
+   "skill": "basic_cooking"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Erin"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_line_hidden",
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "erin_errand"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 4
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Erin",
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_dialogue_layout",
+   "contains": "Sure"
+  },
+  {
+   "action": "screenshot",
+   "name": "00_early_noncook_service"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 6,
+    "gold_after": 3
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "payload_contains": {
+    "price": 3,
+    "cursor": 0
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_cancelled",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "screenshot",
+   "name": "01_cancel_no_charge"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 6,
+    "gold_after": 3
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "payload_contains": {
+    "price": 3,
+    "gold_after": 3
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "payload_contains": {
+    "price": 3
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "dialogue",
+    "service": "inn_meal",
+    "gold_before": 6,
+    "gold_after": 3,
+    "restore_hp": 6,
+    "restore_mp": 4
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 3
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 13
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "02_confirmed_bowl_1"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Erin",
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_dialogue_layout",
+   "contains": "Sure"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 3,
+    "gold_after": 0
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "payload_contains": {
+    "price": 3,
+    "gold_after": 0
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "payload_contains": {
+    "price": 3
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "dialogue",
+    "service": "inn_meal",
+    "gold_before": 3,
+    "gold_after": 0,
+    "restore_hp": 6,
+    "restore_mp": 4
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 0
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 19
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "02_confirmed_bowl_2"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "payload_contains": {
+    "reason": "dialogue",
+    "service": "inn_meal",
+    "gold_after": 3
+   },
+   "timeout_sec": 60
+  },
+  {
+   "action": "screenshot",
+   "name": "03_first_frozen_receipt"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "payload_contains": {
+    "reason": "dialogue",
+    "service": "inn_meal",
+    "gold_after": 0
+   },
+   "timeout_sec": 60
+  },
+  {
+   "action": "screenshot",
+   "name": "04_second_frozen_receipt"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "erin_errand"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 4
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Erin",
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_dialogue_layout",
+   "contains": "Sure"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 19
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "assert_event_count",
+   "type": "purchase_confirmed",
+   "count": 2
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Erin",
+    "text": "Up the stairs by the south wall, then along the hall to your bed at the far end. No charge. Sleeping restores your HP and MP and clears mana-potion strain. Please actually sleep. Staring at the ceiling does not count."
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_dialogue_layout",
+   "contains": "Staring at the ceiling does not count."
+  },
+  {
+   "action": "screenshot",
+   "name": "05_poor_free_bed_directions"
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "payload_contains": {
+    "reason": "sleep",
+    "after": {
+     "hp": 32,
+     "max_hp": 32,
+     "mp": 12,
+     "max_mp": 12,
+     "mp_potion_doses": 0
+    }
+   },
+   "timeout_sec": 60
+  },
+  {
+   "action": "screenshot",
+   "name": "06_real_free_bed_refill"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "helper"
+   }
+  },
+  {
+   "action": "dump_state",
+   "label": "meal_service_paid_repeat_then_real_free_rest"
+  }
+ ]
+}

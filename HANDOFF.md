@@ -9,6 +9,8 @@ archived, or superseded session blocks.
 
 ## Current state
 
+- **#569 QA:** `issue/569-recovery-qa`, base `de5bf08f`; QA-only lane.
+  Evidence/next: [meal recovery](docs/design/569-meal-recovery.md).
 - **User direction:** finish paused art-blocked roadmap work; checkpoint often.
   Art577 merged0bbd96aa with reviewed/squash tree identity. Original art tree
   remains untouched. Web parity may be waived when a merge bottleneck; record

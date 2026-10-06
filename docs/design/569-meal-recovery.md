@@ -72,3 +72,67 @@ and windows remain for composed integration.
 Root owns QA and frontend composition; physical-phone/human evidence remains
 separate. Unlimited kitchen recovery must be measured in #513/#453, not capped
 silently to preserve a former full-rest baseline.
+
+## Production-input QA scope
+
+The canonical routes `meal_service_loop`, `meal_earned_cooking` and
+`meal_station_loop` use production message timing and actual player controls.
+The first uses disclosed pre-errand Mage1/depletion/6-gold setup: cancellation,
+two paid meals (7 HP/0 MP → 13/4 → 19/8, gold 6 → 3 → 0), frozen receipts
+rendered after dialogue closes, a poor purchase refusal, and the real stairs,
+hall and free bed (32 HP/12 MP). QA dialogue deliberately jumps to its final
+page; the full bed directions are domain-asserted, but the initial directions
+page is not certified visible by this route.
+
+The fresh route creates a character, cleans for one gold, walks to the bed,
+earns Helper/Basic Cooking, opens the upstairs chest and equips its armor.
+That creates headroom without healing (33/33 → 33/37), rather than simulating
+combat injury. Held cooking at the stew pot and alternate kettle produces two
+Hot Meals. Missing Skill, missing station and the authored no-output short
+order add no food. Inventory eating restores exactly four HP and leaves one
+meal; a second full-pool use keeps that unit. Only character creation resets
+the game. This establishes real acquisition and consumption, not class-band
+combat balance or an economy based on repeated wage farming.
+
+The station fixture explicitly supplies Chef10/Mage1, held cooking Skills,
+depletion, required class-prerequisite accomplishments and a legal station
+position; its class history is not earned.
+Two actual Advanced Cooking casts produce two Fine Meals, both eaten for
+8 HP/4 MP without stacking the +2 next-fight maximum-HP preparation. A walked
+Signature Dish cast produces a meal whose use restores 10 HP and the remaining
+4 MP, preserves +2 maximum HP and adds +1 damage preparation, with no potion
+exposure. Actual manual save/load retains 33 HP/12 MP, preparation and empty
+food stock. No merchant-resale trigger or combat consequence is claimed by
+these routes; no-resale refusal and additional negative combinations remain
+covered by `test_meal_recovery`.
+
+Native headless input/render events establish the exercised wiring and timing,
+not placement or touch-device acceptance. Controller-owned window/browser
+reads, independent review and composed integration gates remain separate.
+Rejected route drafts are preserved alongside final evidence, including the
+headless CSS probe, last-page text, event-order/new-game reset, complete nested
+receipt payload, and blocked kitchen traversal corrections. None changed
+runtime behavior or relaxed a refusal.
+
+### QA checkpoint and next action
+
+QA implementation is released from `/private/tmp/wi-569-qa`, branch
+`issue/569-recovery-qa`, base `de5bf08f`; runtime and driver changes were composed
+only from controller-owned commits. Owned paths are the three meal scripts,
+two meal fixtures, manifest/generated notes, this document and the HANDOFF
+pointer. The pre-existing untracked companion-test UID is preserved.
+
+At code checkpoint `53a2e614`, `meal_service_loop` (112 steps),
+`meal_earned_cooking` (134), and `meal_station_loop` (92) pass headless with
+seed 9 and `--qa-real-message-timing=1`, without fail-fast on their final runs.
+Fixture coherence, meal recovery unit, load gate, unaffected `char_creation`,
+data lint and generated QA notes checks pass. Logs require exit zero, expected
+PASS, no engine error/warning noise, and passing QA result JSON. Final results,
+events and logs are retained in `/private/tmp/wi-569-qa-evidence`; earlier
+rejected fixture-history checks remain there too. Adding the Mage/Chef
+prerequisite histories changed disclosed setup, not claimed route acquisition.
+
+Next: independently review the exact composed head, then run and inspect each
+meal route windowed with the same seed and timing argument. The controller
+owns window/browser scheduling, composed full integration and publication.
+The lane has no remaining intended runtime or QA edits.

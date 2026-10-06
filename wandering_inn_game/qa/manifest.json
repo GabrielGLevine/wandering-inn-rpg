@@ -2,6 +2,101 @@
  "_comment": "The ONE source of truth for the canonical QA sweep. ci_sweep.sh parses this (python3) to build its run list; the CLAUDE.md canonical seed table is generated FROM it and ci_sweep.sh's startup drift-checks the table against this file on every run. Add/rename/reorder a script HERE first, then re-render the CLAUDE.md table row to match -- ci_sweep.sh will hard-fail the sweep if they disagree. seed:null means the script takes no --seed (load_gate, char_creation). fixture is the fixture_save this script's own qa/scripts/<name>.json loads via title Continue (its rng_state overrides --seed when present) -- informational, not consumed by ci_sweep.sh's invocation. note is the one-line purpose column. tiers: hand-curated membership, every entry >=1 of smoke/full, smoke subset of full (ci_sweep.sh drift-checks both facts). smoke = load_gate + one canonical per subsystem, <3min, runs every push. full = everything (unchanged). surfaces: GENERATED ONLY by scripts/derive_qa_surfaces.py from the script+fixture+data files themselves (maps/fixtures/skills/systems referenced) -- never hand-edit; ci_sweep.sh --touching <path> maps changed paths to surface tags to crossing scripts; the drift check re-runs the generator and fails on any mismatch (stale tags = FATAL). browser_scripts is a separate browser-only registry consumed by qa/web/run_browser_suite.py; those entries never join native smoke/full or --touching runs. Profiles name emulated Chromium contexts, not physical devices.",
  "scripts": [
   {
+   "script": "meal_service_loop",
+   "seed": 9,
+   "fixture": "meal_service_start",
+   "note": "#569 disclosed pre-errand non-cook fixture: actual meal purchase cancel/two confirms, frozen recovery receipts, poor free-bed directions and real stairs/hall/bed; supplied class/purse/depletion are not earned history.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "meal_service_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [
+     "erin_errand"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "meal_earned_cooking",
+   "seed": 9,
+   "fixture": null,
+   "note": "#569 fresh cleaning and Helper sleep earn Basic Cooking; real chest armor creates capped HP headroom; pot/kettle acquisition, missing-Skill/station and no-output checks, actual inventory eating. No combat-injury claim.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [],
+    "systems": [
+     "char_creation",
+     "economy",
+     "exploration",
+     "input",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "meal_station_loop",
+   "seed": 9,
+   "fixture": "meal_station_start",
+   "note": "#569 supplied Chef10/Mage1 and held cooking Skills: actual Advanced/Signature station production, repeated/capped recovery, strongest preparation and save/load; not earned class or resale history.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "meal_station_start"
+    ],
+    "skills": [
+     "advanced_cooking",
+     "basic_cleaning",
+     "basic_cooking",
+     "signature_dish"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration",
+     "save"
+    ]
+   }
+  },
+  {
    "script": "consumable_poison_defeat",
    "seed": 9,
    "fixture": "consumable_poison_defeat_start",
