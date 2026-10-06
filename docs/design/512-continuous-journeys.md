@@ -21,7 +21,7 @@ read, composed-tree rerun and physical touch remain unproven. Worker1302
 retains five losses, including free chest armor/rest and finite earned charm
 retries; the Awakened boss still has10HP after the last round6 loss. Its final
 rollback preserves3gold,50/50HP,15/15MP,1HotMeal and armed+2maxHP. All1302
-assertions pass/exit0, but two shader RID ERRORs invalidate its gate too.
+steps pass/exit0, but two shader RID ERRORs invalidate its gate too.
 Fresh martial/caster/work-heavy endings and the
 force-crate/other imperfect-choice variants remain separate authoring work.
 
