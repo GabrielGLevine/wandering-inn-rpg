@@ -283,6 +283,17 @@ caster default AI also casts spells, so “default” must not be described as
 universally basic-attacks-only. Capacity does not repair every policy/build
 weakness; the Mage D result is still 47/100 under competent policy.
 
+Additional comparisons for #453/#513: counting-room default-policy variants
+F (76/100) and G (80/100) exceed the existing source row's 71/100 upper bound;
+side-vault C (76/100) and D (89/100) exceed its 70/100 upper bound. These are
+changed-gear diagnostics, not replacements for the pinned source builds or
+permission to widen their windows. C already fits the old grown capacity of
+three, so its excess is existing gear sensitivity, not solely an effect of
+new capacity. Competent rows here are report-only; the control's 46/100 and
+A's 54/100 do not establish a newly introduced competent-gate regression.
+Retain these risks when choosing reachable loadouts and interpreting continuous
+resource/economy measurements; the proposed curve is not final balance closure.
+
 The composed import and diagnostic completed with zero exit and no
 `SCRIPT ERROR|Parse Error|ERROR:|WARNING`; the diagnostic emitted its expected
 PASS marker. All four source controls were run under both policies through
