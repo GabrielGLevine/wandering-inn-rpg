@@ -164,7 +164,7 @@ source/archive hashes, the command, and machine limits are preserved in
 `engine-build-metadata.json`. The command is:
 
 ```sh
-/private/tmp/wi-512-engine-tools/bin/scons platform=macos arch=arm64 target=template_debug debug_symbols=no use_volk=yes -j2
+/private/tmp/wi-512-engine-tools/bin/scons platform=macos arch=arm64 target=template_debug debug_symbols=no use_volk=yes disable_path_overrides=no -j2
 ```
 
 Metal, ANGLE, OpenGL3, Vulkan, particles, and accessibility remain compiled.
@@ -179,3 +179,11 @@ lookups, users, insertion, destruction, and cache entries retained at engine
 shutdown. Baseline source remains untouched while compiling. A standalone
 AppleClang21 copy-construction check on the same key layout was clean; that
 limited negative does not establish the compiled engine's behavior.
+
+
+The initial build completed successfully, but its template default refused
+`--path`; a working-directory fallback timed out without executing the probe.
+Those cases are invalid controls. The corrected command above enables Godot's
+supported project/script loading option. The corrected build log is
+`engine-build-baseline-paths.log`; no trace patch has been applied. Initial
+refusal logs and timeout metadata are preserved separately.
