@@ -36,14 +36,14 @@ archived, or superseded session blocks.
   engine leaks in bare reproduction; unmodified custom build/MRE/prefix798
   clean after import. Earlier cache-error controls invalidated. Build/config
   differences remain unexplained; no production replacement or active build.
-- **Next:** final journey/engine checkpoints reviewed/pushed; compose journey
-  source unchanged into integration. resource_plan owns isolated
-  `/private/tmp/wi-512-martial` fromf71d8e8c: actual walked free-bed detour
-  after sixth win, boss-entry baseline4/49HP/0/13MP. Caster438 remains open.
-  Final571 waits for accepted core/economic findings, not extra mobile checks.
-  Failed broad phone/title attempts retained and tracked in #585. Registry
-  `/private/tmp/wi-parallel-roadmap-status.json`; evidence `/private/tmp/wi-*-evidence`.
-  One martial worker; root integration/QA. Preserve companionUID/overlay.
+- **Desktop field overflow #567:** resource_plan owns isolated
+  `/private/tmp/wi-567-desktop-field`, base289f0984; field_hotbar +existing
+  pagination tests only. Desktop capacity reserves live hint/Details/arrows,
+  retains52px slots/originalindices, follows keyboard selection across pages.
+  RED oldcontinuousrow fails; GREEN13/37desktop +unchanged37phone cases pass.
+  Evidence /private/tmp/wi-desktop-field-evidence. Next: load/field controls,
+  checkpoint/release. Root owns native proof; no mobile expansion. Martial
+ 1ab7cf1c released: rested Awakened victory, fully rested vault wall pendingreview.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.

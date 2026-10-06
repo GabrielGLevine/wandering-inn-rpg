@@ -214,7 +214,7 @@ func slot_count() -> int:
 
 func set_selected(index: int) -> void:
 	_last_selected_index = index
-	if index >= 0 and _uses_touch_layout():
+	if index >= 0:
 		_page = index / maxi(1, _page_size)
 	_layout_controls()
 	_update_selection_label(index)
@@ -365,6 +365,8 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 			_apply_visibility()
 		WIEvents.UI_SETTINGS_RENDERED:
 			_layout_controls()
+		WIEvents.UI_HINT_RENDERED:
+			_refresh_layout()
 
 
 func _apply_visibility() -> void:
@@ -515,8 +517,14 @@ func _layout_controls() -> bool:
 	_toggle.custom_minimum_size = toggle_size
 	_toggle.size = toggle_size
 	var slot_size := WIHotbar.SLOT_SIZE
-	_page_previous.visible = false
-	_page_next.visible = false
+	var slot_gap := float(WIHotbar.SLOT_GAP)
+	var slot_font := 0
+	var page_button_size := WIHotbar.SLOT_SIZE.x
+	var page_font := base_font
+	var hint_band: float = MESSAGE_LAYER_SCRIPT.hint_band_width
+	if hint_band <= 0.0:
+		hint_band = HINT_BAND_FALLBACK
+	var hint_reserve := 0.0 if touch_layout else hint_band + HINT_BAND_GAP
 	if touch_layout:
 		var css := _css_scale()
 		var minimum := ceilf(44.0 / css)
@@ -526,31 +534,32 @@ func _layout_controls() -> bool:
 		_toggle.custom_minimum_size = toggle_size
 		_toggle.size = toggle_size
 		slot_size = Vector2.ONE * minimum
-		var available := safe.size.x - toggle_size.x - TOGGLE_GAP
-		var slot_gap := slot_size.x / 15.0
-		var capacity := maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))
-		var paged := _last_slots.size() > capacity
-		if paged:
-			available -= 2.0 * (minimum + TOGGLE_GAP)
-			capacity = maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))
-		var first_visible := _page * _page_size
-		if capacity != _page_size and _last_selected_index >= first_visible and _last_selected_index < first_visible + _page_size:
-			first_visible = _last_selected_index
-		_page_size = capacity
-		_page = clampi(first_visible / _page_size, 0, WIHotbar.page_count(_last_slots.size(), _page_size) - 1)
-		for button: Button in [_page_previous, _page_next]:
-			button.visible = paged
-			button.custom_minimum_size = Vector2.ONE * minimum
-			button.size = Vector2.ONE * minimum
-			button.add_theme_font_size_override("font_size", mobile_font)
-		_page_previous.disabled = _page == 0
-		_page_next.disabled = _page >= WIHotbar.page_count(_last_slots.size(), _page_size) - 1
-		_hotbar.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-		_hotbar.render_page(_last_slots, _last_selected_index, slot_size, _page, _page_size, mobile_font)
-	else:
-		_page = 0
-		_page_size = maxi(1, _last_slots.size())
-		_hotbar.render(_last_slots, _last_selected_index, slot_size)
+		slot_gap = slot_size.x / 15.0
+		slot_font = mobile_font
+		page_button_size = minimum
+		page_font = mobile_font
+	# Reserve the live hint ribbon before capacity, including Details and both
+	# page buttons. Moving an oversized group right cannot make it fit.
+	var available := safe.size.x - hint_reserve - toggle_size.x - TOGGLE_GAP
+	var capacity := maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))
+	var paged := _last_slots.size() > capacity
+	if paged:
+		available -= 2.0 * (page_button_size + TOGGLE_GAP)
+		capacity = maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))
+	var first_visible := _page * _page_size
+	if capacity != _page_size and _last_selected_index >= first_visible and _last_selected_index < first_visible + _page_size:
+		first_visible = _last_selected_index
+	_page_size = capacity
+	_page = clampi(first_visible / _page_size, 0, WIHotbar.page_count(_last_slots.size(), _page_size) - 1)
+	for button: Button in [_page_previous, _page_next]:
+		button.visible = paged
+		button.custom_minimum_size = Vector2.ONE * page_button_size
+		button.size = Vector2.ONE * page_button_size
+		button.add_theme_font_size_override("font_size", page_font)
+	_page_previous.disabled = _page == 0
+	_page_next.disabled = _page >= WIHotbar.page_count(_last_slots.size(), _page_size) - 1
+	_hotbar.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	_hotbar.render_page(_last_slots, _last_selected_index, slot_size, _page, _page_size, slot_font)
 	var group_width := _group_width()
 	var group_left := safe.position.x + (safe.size.x - group_width) * 0.5
 	# Finding 19 (playtest): at 9 slots the centred group ran under the
@@ -558,11 +567,8 @@ func _layout_controls() -> bool:
 	# ribbon's LIVE band (device labels and text scale both change its width;
 	# the first fix used a constant and a larger text scale walked the ribbon
 	# over slot 1). Centring is cosmetic, the ribbon is information.
-	var hint_band: float = MESSAGE_LAYER_SCRIPT.hint_band_width
-	if hint_band <= 0.0:
-		hint_band = HINT_BAND_FALLBACK
 	if not touch_layout:
-		group_left = maxf(group_left, safe.position.x + hint_band + HINT_BAND_GAP)
+		group_left = maxf(group_left, safe.position.x + hint_reserve)
 	var page_reserve := _page_previous.size.x + TOGGLE_GAP if _page_previous.visible else 0.0
 	_bar_left = group_left + page_reserve
 	# `rendered_width()`, NEVER `_hotbar.size.x`: the bar's size IS the offsets

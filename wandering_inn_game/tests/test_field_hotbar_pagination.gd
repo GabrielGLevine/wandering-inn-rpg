@@ -14,12 +14,12 @@ func _run() -> void:
 		"--quit-after", "180", "res://tests/test_field_hotbar_pagination.tscn",
 	], output, true)
 	var transcript := "\n".join(output)
-	var passed := result == 0 and transcript.contains("PASS: phone field pagination")
+	var passed := result == 0 and transcript.contains("PASS: field pagination")
 	for marker: String in ["ERROR:", "WARNING:", "SCRIPT ERROR:"]:
 		passed = passed and not transcript.contains(marker)
 	if not passed:
 		printerr("Field pagination scene failed (exit %d):\n%s" % [result, transcript])
 		quit(1)
 		return
-	print("PASS: phone field pagination reaches 37 original slots with safe 44 CSS controls at all text scales; resize preserves selection")
+	print("PASS: field pagination preserves original indices and safe controls on phone and overflowing desktop bars")
 	quit(0)
