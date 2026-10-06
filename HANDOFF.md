@@ -9,44 +9,45 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **User direction:** finish paused art-blocked roadmap work; checkpoint often.
-  Art577 merged0bbd96aa; original art tree untouched. Additional mobile testing
-  is deferred to #585 and does not block core delivery. Reuse existing proof;
-  no new mobile matrices. Web parity may be waived when a merge bottleneck;
-  preserve other required CI/review and report remaining core acceptance.
-- **Closed designs:** #517/PR5755823356f and #521/PR57953bd4c68; seven non-Web
-  jobs passed, sole Web blocker waived, squash trees verified. Runtime separate.
-- **Integration owner:** root, `/private/tmp/wi-567-hud-contract`,
-  `issue/567-hud-contract`, base1375e375, code c6eb280b/QA2144c984.
-  #56685af0621/#5708676a0be/#568206f36ac/#56991bdac25 independently reviewed
-  and composed. Draft PR578/582/583; no partial activation/deployment.
-- **Evidence:** c6 full65units/7tools PASS; six native controls pass.
-  c4 canonical276PASS/rested balance remain baselines. Native lifecycle174
-  and seven read captures close receipt clipping. c6 browser repeat28both
-  and2144 inventory55both pass; all ten captures independently read.
-  Seven inventory touch contacts/profile, keyboard startup, no device claim.
-  Earlier combat133/poison67both and native force350/arc298/message48 reviewed.
-  PR578 atf71d8e8c has all eight CI jobs PASS, including Web parity.
-- **Core checkpoints:** journey d7033d7f reviewed/pushed and composed289f0984.
-  Official native Rogue3464 reaches ending/Inn,146g−142g=4,39unique images read.
-  Two shader shutdown ERRORs still invalidate gate; #586 tracks this, specific
-  exception requested from user and not assumed. Reviewed engine9874ca61 is
-  backed up; no further builds/probes. Worker1423 retains six losses; boss39HP.
-  Martial1ab7cf1c reviewed: walked free bed restores49HP/13MP, Awakened wins
-  at26HP; next fully rested vault fight loses with construct46HP. No tuning.
-  Poor recovery167 checkpoint-control passes native/zero-noise with both
-  captures read: actual14g purchase→0g, scouts10HP/0MP, retired road, no income,
-  walked bed44HP/14MP. Portable regression6f4cc5ec awaits final composed check.
-- **Next:** desktop earned field bar clips later skills/Details at13–17slots.
-  resource_plan owns `/private/tmp/wi-567-desktop-field` from289f0984;
-  fixb080e0ad reviewed/composed; native slots/paging/brackets pass. Long
-  Details still consumes world view; worker bounds existing scroll panel.
-  Root8621c754 has full65units/7tools atbdd and poor167/load/abandon PASS;
-  native earned-bar controls. Preserve exact noisy/failed journey limits;
-  #453 holds measured combat walls; caster438/economic variants remain open.
-  Final571 waits for core/economic acceptance, not mobile585. No deployment.
-  Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence
-  `/private/tmp/wi-*-evidence`. Preserve companionUID/privateoverlay.
+- **QUIESCED at user request:** `/private/tmp/wi-567-hud-contract`, branch
+  `issue/567-hud-contract`, base1375e375, draft PR578. Production bdd30b80;
+  QA8621c754; finding1272b234. No owned local jobs/workers active. Desktop
+  worker clean at2c8f6615; remaining Details height fix NOT started. Preserve
+  companion UID/private overlay and unrelated main audio584 edits.
+- **Constraints:** core first; extra mobile testing deferred to #585,
+  nonblocking. Web parity may be waived as a merge bottleneck; other required
+  CI/review remain gates. #586 tracks shader shutdown errors. Requested
+  exception has NO answer and is NOT authorized. No more engine probes/builds
+  or deployment. No balance/seed changes.
+- **Reviewed/composed:** #56685af0621/#5708676a0be/#568206f36ac/#56991bdac25,
+  journey d7033d7f, martial1ab7cf1c, desktop b080e0ad. Draft PRs572/573/574/
+  578/582/583 remain staged. Designs517/PR575 and521/PR579 merged as5823356f/
+  53bd4c68; squash trees verified.
+- **Evidence:** bdd30b80 full preflight65units+7tools PASS; poor167/load2/
+  combat-abandon54 PASS, zero engine noise. At8621c754 load2 PASS; native
+  desktop27 FAIL step26: expanded Details covers world view. Earlier paging,
+  brackets and skill16 use pass; three produced pictures read. Fourth unrun.
+  CI run37528779273 atbdd: Python/canonical FAIL, five jobs PASS, Web running
+  at last read. Failed logs unavailable while run active. Triage next session;
+  old all-green CI/canonical results are baselines, not current acceptance.
+- **Exact next action:** inspect failed CI logs; bound desktop Details using
+  its existing ScrollContainer (height currently clamped only for touch),
+  add meaningful expanded long-list regression, rerun native
+  `desktop_field_earned_overflow`27/load/relevant checks and read four images.
+  Open P2 in `docs/VISUAL-LOG.md` retains defect. No new mobile matrix.
+- **Journey limits:** native Rogue3464 reaches ending/Inn,146g−142g=4;
+  39 unique images read, two shader ERRORs make gate INVALID. Epilogue picture
+  shows toast, not17-line body. Worker1423 retains six losses/boss39HP.
+  Martial walked bed restores49HP/13MP; Awakened wins26HP. Next fully rested
+  vault loses/construct46HP; vault analysis NOT started. Poor167 checkpoint
+  control proves purchase14g→0g, scouts10HP/0MP, retired road/no income,
+  walked bed44HP/14MP; native clean/pictures read. Not fresh acquisition or
+  full513 closure. #453 holds combat walls; caster/economic variants remain
+  open. #571 waits for core acceptance, not585.
+- **Resume:** `/private/tmp/wi-parallel-roadmap-resume.md` and status JSON
+  retain lane heads/reviews. Latest `/private/tmp/wi-567-evidence/` subdirs:
+  `composed-bdd30b80`, `desktop-final-8621c754`, `rogue-window-289f0984`.
+  See `docs/design/512-martial-recovery.md` and `513-low-gold-recovery.md`.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
