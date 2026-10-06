@@ -55,7 +55,7 @@ var seen_statuses: Array[String] = []
 var inventory: Array[String] = []
 # Every non-empty equipped id must also remain in inventory.
 var equipped: Dictionary = {WIKeys.WEAPON: "", "armor": "", "accessory_1": "", "accessory_2": "", "accessory_3": ""}
-var resonance_capacity: int = 2
+var resonance_capacity: int = WIResonance.DEFAULT_INITIAL
 var container_state: Dictionary = {}
 var actions_since_sleep: int = 0
 var gold: int = 0
@@ -137,6 +137,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	pc_race = _sanitize_pc_race(String(creation_config.get("pc_race", "human")))
 	pc_gender = _sanitize_pc_gender(String(creation_config.get("pc_gender", "m")))
 	_combat_config = combat_config
+	resonance_capacity = WIResonance.initial(_resonance_config())
 	_phase_config = phase_config
 	for it: Dictionary in (combat_config.get("items", {}) as Dictionary).get("items", []):
 		_items[String(it[WIKeys.ID])] = it
@@ -2768,6 +2769,14 @@ func _equipped_resonance_total() -> int:
 	return total
 
 
+func _resonance_config() -> Dictionary:
+	return (_combat_config.get("progression", {}) as Dictionary).get("resonance", {})
+
+
+func resonance_limit() -> int:
+	return resonance_capacity
+
+
 func resonance_used() -> int:
 	return _equipped_resonance_total()
 
@@ -2808,7 +2817,7 @@ func equip(item_id: String) -> bool:
 			return false
 	var displaced_resonance := int(item(String(equipped.get(target_slot, ""))).get(WIKeys.RESONANCE, 0))
 	var would_be_total := _equipped_resonance_total() - displaced_resonance + int(rec.get(WIKeys.RESONANCE, 0))
-	if would_be_total > resonance_capacity:
+	if would_be_total > resonance_limit():
 		_emit(WIEvents.TOAST, {"text": _CAPACITY_REFUSAL_TOAST})
 		return false
 	var before_resources := player_resources()
@@ -2958,8 +2967,10 @@ func _holds_consolidated_class() -> bool:
 	return false
 
 
-func _grow_resonance() -> void:
-	resonance_capacity += 1
+func _grow_resonance() -> int:
+	var amount := mini(WIResonance.growth(_resonance_config()), WIResonance.MAX_CAPACITY - resonance_capacity)
+	resonance_capacity += amount
+	return amount
 
 
 func _resolve_evolutions() -> bool:

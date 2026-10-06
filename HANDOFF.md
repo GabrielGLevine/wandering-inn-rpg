@@ -10,19 +10,20 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Active #570 capacity:** `issue/570-capacity-analysis` in
-  `/private/tmp/wi-570-capacity`; base now composes #566/HUD through e46ff61d
-  and main10827698. User resumed all paused pieces; checkpoint coherent steps.
-  Capacity worker owns progression resonance configuration/accessor, WIGame
-  capacity verbs, save migration, sleep growth, inventory capacity display,
-  corresponding new tests and optional diagnostic/doc/HANDOFF. Resource worker
-  owns only separate-tree QA/routes/manifest and resource tutorial-copy fixes.
-  **Next:** implement measured 4→5 curve with three accessory positions,
-  once-only migration/growth and loss-proof/no-heal tests; coordinate registered
-  actual equip/refusal/sleep/reload QA after shared manifest is released.
+  `/private/tmp/wi-570-capacity`, implementation base `45a54e52` (composed
+  #566/HUD and main10827698). Four initial Resonance, one existing sleep growth,
+  three accessory positions; shared config/accessor and v11 +2 migration are
+  implemented. Focused capacity unit passes with no error/warning noise;
+  Godot 4.7 import and data lint pass. Evidence:
+  `/private/tmp/wi-570-evidence/implementation`; rejected test-fixture runs
+  remain separately named. Existing save/core assertions now reflect v11/four;
+  the synthetic two-capacity swap/refusal fixture remains explicitly two.
+  **Next:** run affected save/core units, checkpoint, then root composes resource
+  QA and owns the final full preflight/canonical sweep plus rendered/windowed
+  acquisition/equip/refusal/sleep/reload proof. No QA manifest/driver edits here.
   Diagnostic ec1acd72 is independently approved: 3,400 fights, eight matching
-  controls; smoke/load/policy units pass. Evidence `/private/tmp/wi-570-evidence`.
-  Band overruns and 96/100 Infiltrator result remain disclosed follow-up risks.
-  No earned acquisition, implementation or overall balance acceptance yet.
+  controls. Band overruns and 96/100 Infiltrator result remain follow-up risks.
+  No actual earned acquisition, overall balance or player-visible acceptance.
 - **Art #577 is merged:** e89770de and squash0bbd96aa share tree0e843291.
   The original checkout remains untouched. Its Web CI waiver applies only to
   art; required checks remain mandatory here. #575/#579 are reviewed designs;

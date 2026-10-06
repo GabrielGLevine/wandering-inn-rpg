@@ -412,7 +412,7 @@ func _emit_shown() -> void:
 		"items": _item_ids.size(),
 		"gold": Game.sim.gold,
 		"item_effect_lines": _rendered_effect_lines(),
-		"resonance": {"used": Game.sim.resonance_used(), "capacity": Game.sim.resonance_capacity},
+		"resonance": {"used": Game.sim.resonance_used(), "capacity": Game.sim.resonance_limit()},
 		"cursor_scroll": _scroll.scroll_vertical,
 		"selected_icon": _corner_icon.visible,
 		"selected_icon_path": _icon_path_for(String(_item_ids[_cursor])) if not _item_ids.is_empty() and _corner_icon.visible else "",
@@ -774,7 +774,7 @@ func _refresh_resources(payload: Dictionary = {}) -> void:
 
 
 func _refresh_gold() -> void:
-	_gold_label.text = "Gold: %d     Resonance: %d/%d" % [Game.sim.gold, Game.sim.resonance_used(), Game.sim.resonance_capacity]
+	_gold_label.text = "Gold: %d     Resonance: %d/%d" % [Game.sim.gold, Game.sim.resonance_used(), Game.sim.resonance_limit()]
 
 
 func _refresh_slots() -> void:

@@ -323,3 +323,40 @@ godot --headless --path wandering_inn_game --script res://tests/sim_capacity_570
 WI_CELL_RANGE=115:115 WI_POLICY=dumb godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
 WI_CELL_RANGE=115:115 WI_POLICY=competent godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
 ```
+
+
+## Staged implementation checkpoint
+
+The staged implementation uses four initial Resonance and adds one at the
+existing second attunement sleep. `data/progression.json` owns those values;
+the simulation, inventory readout and equip gate share the same capacity
+accessor. Item costs, prices, three accessory positions and benchmark windows
+are unchanged.
+
+Save version 11 adds the historical baseline increase of two exactly once to
+valid pre-v11 capacity. Missing legacy capacity uses two, or three when the
+existing growth accomplishment is present. Custom capacities are increased,
+not clamped downward; unrepresentable overflow is rejected. Modern saves must
+carry an explicit nonnegative, finite integral capacity. Rejection precedes
+game mutation. Existing earlier schema migrations retain their prior behavior.
+The v11 step preserves equipped items, inventory, lore and accomplishments,
+as well as present depleted HP, zero MP and potion exposure.
+
+`test_capacity_570.gd` exercises actual simulation equip/refusal verbs, both
+physical-full and capacity-full cases, the existing sleep trigger and reload,
+legacy migration through versions 2–10, malformed-capacity atomic rejection,
+and Stonescale with/without a Warrior's existing Tough Body. Depleted-MP Mage
+combat confirms that equipping does not refill resources or fuel Mana Shield.
+The focused test and Godot 4.7 import pass with zero exit and no error/warning
+noise. Three rejected test-fixture runs are retained separately: one omitted
+Stonescale's authored damage reduction, one used an innate skill instead of a
+class combat grant, and one supplied modern lore to pre-lore save schemas.
+None prompted a combat or earlier-schema migration change.
+
+The existing save test now pins v11 and migrates missing capacity from v10 to
+four. The core test pins four initially and explicitly retains capacity two
+for its synthetic swap/refusal boundary. Those affected suites, full composed
+integration, actual 58-gold acquisition, UI/domain/rendered evidence and
+windowed/touch checks remain separate gates; this checkpoint does not close
+them. Earlier counterfactual combat measurements remain diagnostics, not proof
+of earned gear or sustained resource balance.
