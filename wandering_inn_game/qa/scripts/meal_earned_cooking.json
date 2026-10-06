@@ -1,0 +1,812 @@
+{
+ "_comment": "#569 fresh earned Basic Cooking: real cleaning, Helper sleep, chest armor, pot and alternate kettle, missing-Skill/station and no-output order, inventory capped food recovery. HP headroom comes from earned armor (33/33 to 33/37), not combat damage; no supplied class, food, purse, damage, or teleport. Native touch controls are emulated; window/browser proof remains separate.",
+ "starts_at_title": true,
+ "creation_ui": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "type_text",
+   "text": "Maren"
+  },
+  {
+   "action": "click_char_creation_begin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "difficulty",
+    "options": [
+     "Bronze Rank",
+     "Silver Rank",
+     "Gold Rank"
+    ],
+    "cursor": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "hints",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "cursor": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_char_creation_card",
+   "card": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_confirmed",
+   "payload_contains": {
+    "pc_name": "Maren",
+    "pc_race": "human",
+    "pc_gender": "m",
+    "difficulty_step": 1,
+    "quest_hints": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_gdi_opener_rendered",
+   "payload_contains": {
+    "lines": 4,
+    "race": "human"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_name",
+   "equals": "Maren"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_race",
+   "equals": "human"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_gender",
+   "equals": "m"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_sprite",
+   "equals": "pc_human_m"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "pc_sprite": "pc_human_m"
+   },
+   "from_start": true,
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "skill": "basic_cooking"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "text": "You don't know your way around a stew pot. Yet."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {}
+  },
+  {
+   "action": "screenshot",
+   "name": "01_unknown_cooking"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cleaning"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "target": "dirty_table"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleaned_the_inn",
+    "count": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Basic Cleaning] — The table is spotless. Earned 1 gold."
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "helper"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Helper] class gained! — [Basic Cooking]"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.helper",
+   "equals": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 33
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.max_hp",
+   "equals": 33
+  },
+  {
+   "action": "screenshot",
+   "name": "02_earned_helper"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "leather_jerkin",
+    "source": "inn_chest"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "text": "Got: Leather Jerkin"
+   }
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "leather_jerkin",
+    "slot": "armor"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 33
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.max_hp",
+   "equals": 37
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "reason": "equipment",
+    "before": {
+     "hp": 33,
+     "max_hp": 33,
+     "mp": 0,
+     "max_mp": 0,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 33,
+     "max_hp": 37,
+     "mp": 0,
+     "max_mp": 0,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "03_armor_headroom_without_healing"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cooking"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cooking",
+    "target": "stew_pot"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal",
+    "source": "stew_pot",
+    "count_after": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "text": "Got: Hot Meal"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.hot_meal",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cooking"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "skill": "basic_cooking",
+    "target": "inn_witch_kettle"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "hot_meal",
+    "source": "inn_witch_kettle",
+    "count_after": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "text": "Got: Hot Meal"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.hot_meal",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cooked_meal",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "04_two_actual_stations"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cooking"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_no_effect",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "skill": "basic_cooking"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "text": "Nothing here calls for that."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.hot_meal",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cooked_meal",
+   "equals": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cooking"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "skill": "basic_cooking",
+    "target": "short_order"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "text": "[Basic Cooking] — You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.hot_meal",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cooked_meal",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 33
+  },
+  {
+   "action": "screenshot",
+   "name": "05_no_output_order"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "hot_meal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "hot_meal",
+    "count_before": 2,
+    "restore_hp": 4,
+    "restore_mp": 0,
+    "allowed": true
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "06_capped_food_preview"
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "hot_meal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "hot_meal",
+    "count_before": 2,
+    "count_after": 1,
+    "restore_hp": 4,
+    "restore_mp": 0,
+    "committed": true
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 37
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.max_mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.hot_meal",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "07_earned_meal_recovery"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "item": "hot_meal",
+    "count_before": 1,
+    "allowed": false,
+    "reason": "no_benefit"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.hot_meal",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_used",
+   "count": 1
+  },
+  {
+   "action": "wait_item_use_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "earned_food_capped_recovery_not_combat_injury"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "game_loaded"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "game_reset"
+  }
+ ]
+}

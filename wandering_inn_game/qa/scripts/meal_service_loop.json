@@ -502,7 +502,7 @@
   },
   {
    "action": "assert_dialogue_layout",
-   "contains": "Up the stairs by the south wall, then along the hall to your bed at the far end"
+   "contains": "Staring at the ceiling does not count."
   },
   {
    "action": "screenshot",

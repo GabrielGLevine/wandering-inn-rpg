@@ -34,6 +34,37 @@
    }
   },
   {
+   "script": "meal_earned_cooking",
+   "seed": 9,
+   "fixture": null,
+   "note": "#569 fresh cleaning and Helper sleep earn Basic Cooking; real chest armor creates capped HP headroom; pot/kettle acquisition, missing-Skill/station and no-output checks, actual inventory eating. No combat-injury claim.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [],
+    "systems": [
+     "char_creation",
+     "economy",
+     "exploration",
+     "input",
+     "save"
+    ]
+   }
+  },
+  {
    "script": "vitals_carry_loop",
    "seed": 9,
    "fixture": "vitals_carry_start",
