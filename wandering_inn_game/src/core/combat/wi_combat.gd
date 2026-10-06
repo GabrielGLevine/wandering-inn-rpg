@@ -159,6 +159,7 @@ func _build_combatant(cfg: Dictionary, cell: Vector2i) -> Dictionary:
 	while combatants.has(runtime_id):
 		runtime_id = "%s_%d" % [base_id, suffix]
 		suffix += 1
+	var maxima := WICombatBuild.resource_maxima(cfg, skills)
 	var c := {
 		WIKeys.ID: runtime_id,
 		WIKeys.TEMPLATE_ID: base_id,
@@ -170,7 +171,7 @@ func _build_combatant(cfg: Dictionary, cell: Vector2i) -> Dictionary:
 		WIKeys.AI: String(cfg.get(WIKeys.AI, "")),
 		WIKeys.SKILLS: [],
 		"hit_bonus": 0,
-		WIKeys.MAX_HP: maxi(20 + int(cfg[WIKeys.STATS]["con"]) + int(cfg.get(WIKeys.HP_MOD, 0)), 1),
+		WIKeys.MAX_HP: maxima[WIKeys.MAX_HP],
 		WIKeys.DAMAGE_MOD: int(cfg.get(WIKeys.DAMAGE_MOD, 0)),
 		WIKeys.DAMAGE_REDUCTION: int(cfg.get(WIKeys.DAMAGE_REDUCTION, 0)),
 		WIKeys.WEAPON_RANGE: int(cfg.get(WIKeys.WEAPON_RANGE, 1)),
@@ -187,13 +188,13 @@ func _build_combatant(cfg: Dictionary, cell: Vector2i) -> Dictionary:
 	for sk: Variant in cfg.get(WIKeys.SKILLS, []):
 		c[WIKeys.SKILLS].append(String(sk))
 	_apply_passives(c)
+	c[WIKeys.MAX_MP] = maxima[WIKeys.MAX_MP]
 	c[WIKeys.HP] = c[WIKeys.MAX_HP]
-	c[WIKeys.MAX_MP] = 0
-	for sk: String in c[WIKeys.SKILLS]:
-		if (skills.get(sk, {}) as Dictionary).has(WIKeys.MP_COST):
-			c[WIKeys.MAX_MP] = 8 + int(int(c[WIKeys.STATS]["int"]) / 2)
-			break
 	c[WIKeys.MP] = c[WIKeys.MAX_MP]
+	# Only the PC can carry resources; opening allies and summons start rested.
+	if base_id == "pc":
+		c[WIKeys.HP] = clampi(int(cfg.get("initial_hp", c[WIKeys.MAX_HP])), 1, int(c[WIKeys.MAX_HP]))
+		c[WIKeys.MP] = clampi(int(cfg.get("initial_mp", c[WIKeys.MAX_MP])), 0, int(c[WIKeys.MAX_MP]))
 	return c
 
 
@@ -263,8 +264,6 @@ func _apply_passives(c: Dictionary) -> void:
 		var skill: Dictionary = skills.get(sk, {})
 		var effect: Dictionary = skill.get(WIKeys.EFFECT, {})
 		match String(effect.get(WIKeys.TYPE, "")):
-			"hp_bonus":
-				c[WIKeys.MAX_HP] += int(effect[WIKeys.AMOUNT])
 			"hit_bonus":
 				c["hit_bonus"] += int(effect[WIKeys.AMOUNT])
 				if String(skill.get("family", "")) == "tactic":

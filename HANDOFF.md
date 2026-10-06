@@ -12,11 +12,11 @@ archived, or superseded session blocks.
 - **Resumed at user request:** compose completed art PR #577 and finish this lane.
   Lane #567: `issue/567-hud-contract` in `/private/tmp/wi-567-hud-contract`;
   base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
-  Owned paths: `HANDOFF.md`, `docs/design/567-resource-hud-contract.md`.
+  Owned paths: `HANDOFF.md`, HUD contract, `src/ui/{field_chips,message_layer,sleep_veil,inventory}.gd`, `src/world/main.gd`, `src/core/effect_text.gd`; matching new HUD tests. Core mutation/events and QA shared surfaces stay with #566 until serialized integration.
   Checkpoint before each implementation or validation phase.
   Evidence: `/private/tmp/wi-567-evidence`; independent review:
   `/private/tmp/wi-567-independent-review.md`.
-  **Exact next action:** re-pin the unpublished local art references after art publishes; compose settled resource APIs and measure live HUD/Saved/launcher fit before implementation acceptance. Issue remains open.
+  **Exact next action:** implement authoritative exploration HP/MP and captured recovery receipts on existing chrome; measure live HUD/Saved/launcher fit. Compose #566 settlement updates before acceptance; potion details follow #568. Issue remains open.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code pending its CI/merge. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is

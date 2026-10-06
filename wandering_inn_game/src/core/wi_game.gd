@@ -29,6 +29,7 @@ var blocked_cells: Dictionary = {}
 var skills: Dictionary = {}
 var classes: Dictionary = {}
 var combat: WICombat = null
+var vitals := WIVitals.new()
 ## GH#345 difficulty seam: plain data, PURE (core never touches the
 ## WISettings autoload). Scene layer pushes the current value (settings
 ## row, creation prompt, world boot); start_combat copies it into the
@@ -207,6 +208,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 			"unsteady_toast": m.get("unsteady_toast", ""),
 			"arrival_toasts": m.get("arrival_toasts", []),
 		}
+	vitals.refill(player_resource_maxima())
 	_bind_map(String(scene_config["start_map"]))
 	_emit(WIEvents.SIM_INITIALIZED, {"seed": rng_seed})
 
@@ -2498,10 +2500,16 @@ func start_combat(entity_id: String) -> bool:
 
 
 func _build_player_combatant(template: Dictionary) -> Dictionary:
+	var pc := _player_combatant_config(template, pending_meal)
+	pending_meal = {}
+	return pc
+
+
+func _player_combatant_config(template: Dictionary, meal_bonus: Dictionary = {}) -> Dictionary:
 	var pc: Dictionary = template.duplicate(true)
 	pc[WIKeys.DISPLAY_NAME] = pc_name
-	pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], classes, _combat_config["classes"])
-	var kit: Array = WIProgression.granted_skills(classes, _combat_config["classes"], generalist_classes)
+	pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], classes, _combat_config.get("classes", {}))
+	var kit: Array = WIProgression.granted_skills(classes, _combat_config.get("classes", {}), generalist_classes)
 	var weapon := item(String(equipped.get(WIKeys.WEAPON, "")))
 	pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills)
 	pc[WIKeys.WEAPON_RANGE] = int(weapon.get(WIKeys.RANGE, 1))
@@ -2511,12 +2519,31 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 		accessories.append(item(String(equipped.get(slot_name, ""))))
 	pc[WIKeys.SKILLS] = WICombatBuild.fold_abilities(pc[WIKeys.SKILLS] as Array, accessories)
 	var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
-	var meal_bonus: Dictionary = pending_meal
-	pending_meal = {}
 	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD] + int(meal_bonus.get(WIKeys.DAMAGE_MOD, 0))
 	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD] + (2 if well_fed else 0) + int(meal_bonus.get(WIKeys.HP_MOD, 0)) + _room_tier_bonus()
 	pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION] + int(meal_bonus.get(WIKeys.DAMAGE_REDUCTION, 0))
 	return pc
+
+
+func player_resource_maxima() -> Dictionary:
+	for template: Dictionary in (_combat_config.get("combatants", {}) as Dictionary).get("combatants", []):
+		if String(template.get(WIKeys.ID, "")) == "pc":
+			return WICombatBuild.resource_maxima(_player_combatant_config(template), skills)
+	return {WIKeys.MAX_HP: 1, WIKeys.MAX_MP: 0}
+
+
+func player_resources() -> Dictionary:
+	var state := vitals.serialized()
+	if combat != null and combat.combatants.has("pc"):
+		var pc: Dictionary = combat.combatants["pc"]
+		for key: String in [WIKeys.HP, WIKeys.MP, WIKeys.MAX_HP, WIKeys.MAX_MP]:
+			state[key] = pc[key]
+	else:
+		var maxima := player_resource_maxima()
+		vitals.reconcile(maxima)
+		state = vitals.serialized()
+		state.merge(maxima)
+	return state
 
 
 func _room_tier_bonus() -> int:
@@ -2749,7 +2776,9 @@ func equip(item_id: String) -> bool:
 	if would_be_total > resonance_capacity:
 		_emit(WIEvents.TOAST, {"text": _CAPACITY_REFUSAL_TOAST})
 		return false
+	vitals.reconcile(player_resource_maxima())
 	equipped[target_slot] = item_id
+	vitals.reconcile(player_resource_maxima())
 	_emit(WIEvents.ITEM_EQUIPPED, {"item": item_id, "slot": target_slot})
 	return true
 
@@ -2761,7 +2790,9 @@ func unequip(slot: String) -> bool:
 		return false
 	if String(equipped.get(slot, "")) == "":
 		return false
+	vitals.reconcile(player_resource_maxima())
 	equipped[slot] = ""
+	vitals.reconcile(player_resource_maxima())
 	_emit(WIEvents.ITEM_UNEQUIPPED, {"slot": slot})
 	return true
 
@@ -2851,6 +2882,7 @@ func sleep() -> void:
 	_emit(WIEvents.PHASE_CHANGED, {"phase": phase(), "slept": true})
 	_sleep_beat.run(classes, accomplishments, _combat_config)
 	_auto_slot_new_field_skills(known_before_sleep)
+	vitals.refill(player_resource_maxima())
 
 
 func _bank_reached_two_classes_if_earned() -> void:
@@ -2977,6 +3009,7 @@ func skills_config_raw() -> Dictionary:
 
 func snapshot() -> Dictionary:
 	return {
+		"vitals": player_resources(),
 		"current_map": current_map,
 		"player_cell": [player_cell.x, player_cell.y],
 		"player_facing": [player_facing.x, player_facing.y],
