@@ -1514,7 +1514,7 @@ func _init() -> void:
 	assert(not gAcc.equip("test_charm_over"), "over-capacity equip is refused")
 	assert(String(gAcc.equipped.get("accessory_3", "?")) == "", "refused equip leaves accessory_3 empty")
 	assert(_count("item_equipped") == 0, "refused equip emits no item_equipped")
-	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first.", "over-capacity equip emits the capacity refusal toast idiom")
+	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle. This would take more Resonance than you can hold. Something has to come off first.", "over-capacity equip emits the capacity refusal toast idiom")
 	assert(gAcc.inventory.has("test_charm_over"), "the refused item is still carried (never equipped, never dropped)")
 
 	assert(gAcc.equip("test_charm_reduc"), "equip the third (zero-resonance) accessory, filling all three slots")
@@ -1530,7 +1530,7 @@ func _init() -> void:
 	assert(gAcc.unequip("accessory_1") and gAcc.unequip("accessory_2") and gAcc.unequip("accessory_3"), "unequip clears all three accessory slots")
 	_events.clear()
 	assert(not gAcc.equip("test_charm_over"), "test_charm_over (resonance 3) alone still exceeds capacity 2 even with every slot free")
-	assert(String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first.", "same capacity refusal, now with all slots free -- proves it's a resonance gate, not a slot-count gate")
+	assert(String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle. This would take more Resonance than you can hold. Something has to come off first.", "same capacity refusal, now with all slots free -- proves it's a resonance gate, not a slot-count gate")
 
 	assert(gAcc.equip("test_ring_res1"), "resonance-1 ring equips into the freed accessory slot")
 	assert(gAcc.equip("test_blade_res1"), "resonance-1 weapon swap onto rusty_sword (0->1) fits: total exactly 2")

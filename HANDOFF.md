@@ -23,8 +23,9 @@ archived, or superseded session blocks.
   simulation, item/rule/vendor data, lint and focused core tests in its isolated
   tree. Schema12 counts and shared prepare/commit/cancel use APIs are validated
   at `a8509a19`, including poison, pending loot and captured result payloads.
-  MP potion/vendor content is next. Frontend must compose exact committed APIs;
+  The non-registering preview and MP potion/vendor content are composed at206f36ac. Frontend must compose exact committed APIs;
   UI/effect_text and authored/generated QA remain separately owned.
+
 
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code squashed as `0bbd96aa`. Original art checkout

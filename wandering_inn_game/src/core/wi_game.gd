@@ -1483,6 +1483,7 @@ func start_dialogue(conversation_id: String, source_entity_id: String) -> bool:
 	var graphs: Dictionary = _combat_config.get("dialogue", {})
 	if not graphs.has(conversation_id):
 		return false
+	invalidate_item_use()
 	_dialogue_conversation_id = conversation_id
 	_emit(WIEvents.DIALOGUE_STARTED, {"conversation": conversation_id, "entity": source_entity_id})
 	dialogue = WIDialogue.new(graphs[conversation_id], _build_dialogue_ctx(), _addressed_sink)
@@ -1495,6 +1496,7 @@ func _begin_code_dialogue(graph: Dictionary, conversation_label: String, source_
 	if dialogue != null or combat != null:
 		return false
 	pending_purchase = {}
+	invalidate_item_use()
 	_dialogue_conversation_id = conversation_label
 	_emit(WIEvents.DIALOGUE_STARTED, {"conversation": conversation_label, "entity": source_entity_id})
 	dialogue = WIDialogue.new(graph, _build_dialogue_ctx(), _addressed_sink)
@@ -2765,6 +2767,13 @@ func invalidate_item_use() -> void:
 	_pending_item_use = {}
 
 
+func preview_item_use(item_id: String, context: String) -> Dictionary:
+	var plan := WIItems.preview_use(item(item_id), _item_use_context(item_id, context), _recovery_rules())
+	plan.operation_id = 0
+	plan.committed = false
+	return plan
+
+
 func prepare_item_use(item_id: String, context: String) -> Dictionary:
 	if _settling_item or _dispatching_item_result:
 		return {"allowed": false, "reason": "busy", "operation_id": 0}
@@ -3050,7 +3059,7 @@ func resonance_used() -> int:
 ## ratified 2026-07-07 copy and stays verbatim; the naming sentence and the
 ## remedy are appended after it. The other live moment is the growth beat's lore
 ## toast in sleep_beat.gd.
-const _CAPACITY_REFUSAL_TOAST := "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first."
+const _CAPACITY_REFUSAL_TOAST := "It buzzes once against the others, like a wasp against glass, and will not settle. This would take more Resonance than you can hold. Something has to come off first."
 const _ACCESSORY_SLOTS_FULL_TOAST := "There's nowhere left on you for it to rest. It waits in your palm, patient as stone."
 
 
@@ -3213,6 +3222,7 @@ const _EVOLUTION_WAITING_TOASTS := {
 func sleep() -> void:
 	if combat != null or _settling_sleep:
 		return
+	invalidate_item_use()
 	_settling_sleep = true
 	var before_resources := player_resources()
 	var known_before_sleep: Array = known_skills().duplicate()

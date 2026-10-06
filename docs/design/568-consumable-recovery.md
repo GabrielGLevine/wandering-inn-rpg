@@ -10,7 +10,7 @@ capacity11 migration, followed by quantity schema12.
 ## Quantity checkpoint
 
 `stackable: true` plus `consumable_family: food|hp_potion|mp_potion` is explicit.
-Current declarations cover actual food, Mending Draught and Remedy Draught.
+Current declarations cover actual food, Mending Draught, Remedy Draught and Mana Potion.
 Preparation-only tools/draughts and quest medicine retain singleton identity.
 `item_count(id)` returns owned units. `consumable_counts` has exactly one positive
 integer per owned declared stack and no other keys; zero removes both carriers.
@@ -30,6 +30,8 @@ choice effects. No event callback may save a half-completed stock transaction.
 The shared-use checkpoint implements these APIs:
 
 - `WIItems.preview_use(item, context_snapshot, rules) -> Dictionary` is pure.
+- `WIGame.preview_item_use(item_id, context)` returns a pure display preview
+  with operation_id0 and does not replace the selected operation.
 - `WIGame.prepare_item_use(item_id, context)` returns a deep-copied offer and
   registers its ephemeral `operation_id`. Context is `world` or `combat`.
 - `commit_item_use(operation_id, confirm_risk=false)` returns a frozen result.
@@ -46,7 +48,8 @@ A refusal consumes nothing, so no compensating refund is needed. Confirm compare
 all relevant live resources, maxima, stock, preparation, actor/turn and context
 with the offer. A stale operation is refused and invalidated, requiring a fresh
 preview and deliberate activation. Duplicate or canceled tokens cannot recreate
-an operation. Tokens are never saved and are invalidated on load/context change.
+an operation. Tokens are never saved and are invalidated on load, sleep, dialogue entry and
+world/combat context changes, even when the resulting resources are identical.
 
 UI activation captures the displayed token, latches until result and input
 release, and does not create a fresh token inside repeated queued callbacks.
@@ -108,5 +111,33 @@ loot overflow→reload→consume one→claim once, and nested delivery payout re
 Existing save, vitals_handoff, sim_core, combat_sim and combat_policies pass.
 Evidence: `/private/tmp/wi-568-evidence/recovery*` and `rewards/` (the latter
 preserves the initially failing JSON normalization regression). Numeric tuning
-is unchanged from the accepted proposal. The real MP item/vendor and composed
-frontend/QA/windows remain outstanding at this checkpoint.
+is unchanged from the accepted proposal. The composed frontend/QA/windows remain outstanding; the real MP item/vendor
+is implemented in the following content checkpoint.
+
+
+## Generic Mana Potion content
+
+The [Wiki Mana page](https://wiki.wanderinginn.com/Mana) describes mana-potion
+restoration and overuse poisoning, citing Chapter1.09R. The
+[archived1.08R chapter entry](https://wiki.wanderinginn.com/Chapter_1.08_R_%28Archived%29)
+identifies mana potions and poisoning in Volume1, safely before Book17. Direct
+page fetches returned403; indexed Wiki page text supplied these narrow facts.
+No later growth/resistance experiments or novel potion names enter this slice.
+
+`mana_potion` restores6MP and costs10gold at Xif's existing Pallass stall. These
+are initial game tuning values, comparable to the existing10gold HP draught;
+economy/continuous-journey balance is still an integration measurement. The
+purchase uses the existing confirmation/discount transaction path, repeats for
+real stock and adds no recipe. Its new hub row follows the old banter row and
+precedes the exit (new potion index4, exit5); earlier purchase/banter indices
+remain stable. The existing bought node supplies Xif's spoken response.
+
+Focused authored-catalog, content, dialogue and shipped-ID units pass under
+`/private/tmp/wi-568-evidence/mana-content`. This is unit fixture proof of real
+shop confirmation and dose rules, not earned travel or income. Same-state
+sleep/dialogue invalidation and non-registering slot previews pass in
+`token-lifetime-fixed`; `token-lifetime` preserves the failed fixture assumption
+that empty dialogue options automatically close. The corrected fixture exits
+through `dialogue_choose`. Capacity refusal now accurately says the attempted
+item would exceed Resonance, including when some capacity remains; existing
+simulation assertions pass in `capacity-copy`.
