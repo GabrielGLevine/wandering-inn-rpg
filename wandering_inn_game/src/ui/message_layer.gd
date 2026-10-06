@@ -1,6 +1,22 @@
 extends CanvasLayer
 
 signal layout_changed
+signal item_use_rearmed
+
+var _active_use: Dictionary = {}
+var _use_sim: Variant
+var _use_settled := false
+var _use_rendered := false
+var _use_warning := false
+var _use_warning_armed := false
+var _use_warning_frame := 0
+var _use_warning_msec := 0
+var _use_touches: Dictionary = {}
+var _use_overlay: Control
+var _use_panel: PanelContainer
+var _use_warning_label: Label
+var _use_cancel: Button
+var _use_confirm: Button
 
 var _field_resource_rect := Rect2()
 var _field_launcher_rect := Rect2()
@@ -394,6 +410,7 @@ static func reset_hints() -> void:
 
 
 func _ready() -> void:
+	add_to_group("wi_item_use_presenter")
 	var root := Control.new()
 	UIChrome.apply_theme(root)
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -492,6 +509,14 @@ func _ready() -> void:
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
+	match type:
+		WIEvents.ITEM_USE_OFFERED:
+			_show_use_warning(payload)
+		WIEvents.ITEM_USE_SETTLED, WIEvents.ITEM_USE_REFUSED, WIEvents.ITEM_USE_CANCELLED:
+			_accept_use_result(payload)
+		WIEvents.UI_ITEM_USE_RENDERED:
+			if item_use_busy() and int(payload.get("operation_id", -1)) == int(_active_use.operation_id):
+				_use_rendered = true
 	match type:
 		WIEvents.RESOURCES_CHANGED:
 			if String(payload.get("reason", "")) in ["sleep", "equipment", "dialogue", "preparation", "combat_victory"]:
@@ -716,6 +741,7 @@ func _restore_banked_toasts() -> void:
 
 
 func _process(_delta: float) -> void:
+	_process_item_use()
 	if _toast_panel == null or not WIResponsiveLayout.uses_touch_layout():
 		return
 	var conversation := get_parent().get_node_or_null("DialoguePanel")
@@ -894,6 +920,7 @@ func _hint_panel_height_for(text_h: float) -> float:
 ## panels re-fit here; nothing else in this layer caches a font metric (the
 ## toast/feed budgets all read `get_theme_font_size` at render time).
 func _on_theme_changed() -> void:
+	_fit_use_overlay()
 	if _dialogue_label == null or _hint_label == null:
 		return
 	_resize_dialogue_panel()
@@ -1320,3 +1347,216 @@ func _fit_dialogue_line(text: String) -> String:
 		if _wrapped_line_count(_dialogue_label, candidate, _dialogue_width()) <= capacity:
 			return candidate
 	return (words[0] + "…") if words.size() > 0 else text
+
+
+func item_use_busy() -> bool:
+	return not _active_use.is_empty()
+
+
+func activate_item_offer(offer: Dictionary, source_sim: Variant) -> void:
+	if item_use_busy() or source_sim != Game.sim or not bool(offer.get("allowed", false)):
+		return
+	_active_use = offer.duplicate(true)
+	_use_sim = source_sim
+	_use_rendered = false
+	_use_settled = false
+	_commit_presented_use(false)
+
+
+func _commit_presented_use(confirm_risk: bool) -> void:
+	var result: Dictionary = _use_sim.commit_item_use(int(_active_use.operation_id), confirm_risk)
+	if String(result.get("reason", "")) == "confirmation_required":
+		return
+	if not _use_settled:
+		_accept_use_result(result)
+
+
+func _accept_use_result(result: Dictionary) -> void:
+	if not item_use_busy() or int(result.get("operation_id", -1)) != int(_active_use.operation_id) or _use_settled:
+		return
+	_use_settled = true
+	_use_warning_armed = false
+	if _use_overlay != null:
+		_use_overlay.hide()
+	var frozen := _active_use.duplicate(true)
+	frozen.merge(result, true)
+	_active_use = frozen
+	_fallback_use_receipt.call_deferred(frozen.duplicate(true))
+
+
+func _fallback_use_receipt(result: Dictionary) -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not item_use_busy() or int(result.operation_id) != int(_active_use.operation_id) or _use_rendered:
+		return
+	# A surface may disappear during defeat/load. Keep its captured result visible.
+	_build_use_overlay()
+	_use_warning = false
+	_use_warning_label.text = "%s\n%s" % [String(result.get("name", "Item")), WIEffectText.item_use_text(result)]
+	_use_cancel.text = "Close"
+	_use_cancel.disabled = false
+	_use_confirm.hide()
+	_use_overlay.show()
+	_fit_use_overlay()
+	await get_tree().process_frame
+	var proof := result.duplicate(true)
+	proof.merge({"text": _use_warning_label.text, "surface": "item_receipt"}, true)
+	ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_RENDERED, proof)
+
+
+func _show_use_warning(offer: Dictionary) -> void:
+	if not item_use_busy() or int(offer.get("operation_id", -1)) != int(_active_use.operation_id):
+		return
+	_build_use_overlay()
+	_use_warning = true
+	_use_warning_armed = false
+	_use_warning_frame = Engine.get_process_frames()
+	_use_warning_msec = Time.get_ticks_msec()
+	_use_warning_label.text = "%s — mana poisoning\n%s\nUse this dose?" % [String(_active_use.get("name", "Mana potion")), WIEffectText.item_use_text(offer)]
+	_use_cancel.text = "Cancel"
+	_use_cancel.disabled = false
+	_use_confirm.text = "Use dose"
+	_use_confirm.show()
+	_use_confirm.disabled = true
+	_use_overlay.show()
+	_use_cancel.grab_focus()
+	_fit_use_overlay()
+	var proof := offer.duplicate(true)
+	proof["name"] = String(_active_use.get("name", ""))
+	proof.merge({"text": _use_warning_label.text, "surface": "item_warning", "armed": false}, true)
+	_emit_use_warning.call_deferred(proof)
+
+
+func _emit_use_warning(proof: Dictionary) -> void:
+	await get_tree().process_frame
+	if _use_warning and item_use_busy() and int(proof.operation_id) == int(_active_use.operation_id):
+		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_WARNING_RENDERED, proof)
+
+
+func _build_use_overlay() -> void:
+	if _use_overlay != null:
+		return
+	var canvas := CanvasLayer.new()
+	canvas.layer = 30
+	add_child(canvas)
+	_use_overlay = Control.new()
+	_use_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_use_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	UIChrome.apply_theme(_use_overlay)
+	canvas.add_child(_use_overlay)
+	_use_overlay.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			_cancel_presented_use()
+		elif event is InputEventScreenTouch and event.pressed:
+			_cancel_presented_use()
+	)
+	_use_panel = PanelContainer.new()
+	_use_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_use_overlay.add_child(_use_panel)
+	var margin := MarginContainer.new()
+	UIChrome.add_margins(margin, 20, 16, 20, 16)
+	_use_panel.add_child(margin)
+	var stack := VBoxContainer.new()
+	margin.add_child(stack)
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	stack.add_child(scroll)
+	_use_warning_label = UIChrome.make_label("", "MenuInk")
+	_use_warning_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_use_warning_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(_use_warning_label)
+	_use_cancel = Button.new()
+	_use_cancel.pressed.connect(_cancel_presented_use)
+	stack.add_child(_use_cancel)
+	_use_confirm = Button.new()
+	_use_confirm.pressed.connect(_confirm_presented_use)
+	stack.add_child(_use_confirm)
+	_use_overlay.hide()
+
+
+func _fit_use_overlay() -> void:
+	if _use_overlay == null:
+		return
+	WIResponsiveLayout.apply_readable_theme(_use_overlay, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
+	var safe: Rect2 = WIResponsiveLayout.safe_rect(get_viewport()).grow(-12.0)
+	var extent := Vector2(minf(safe.size.x, 560.0), minf(safe.size.y, 400.0))
+	_use_panel.position = safe.get_center() - extent * 0.5
+	_use_panel.size = extent
+	var target: Vector2 = WIResponsiveLayout.touch_size(get_viewport(), Vector2(0, 44)) if WIResponsiveLayout.uses_touch_layout() else Vector2(0, 40)
+	_use_cancel.custom_minimum_size = target
+	_use_confirm.custom_minimum_size = target
+
+
+func _confirm_presented_use() -> void:
+	if not _use_warning or not _use_warning_armed or not item_use_busy():
+		return
+	_use_warning = false
+	_use_overlay.hide()
+	if _use_sim != Game.sim:
+		_accept_use_result({"operation_id": _active_use.operation_id, "committed": false, "allowed": false, "reason": "stale_operation"})
+		return
+	_commit_presented_use(true)
+
+
+func _cancel_presented_use() -> void:
+	if _use_warning and item_use_busy():
+		_use_warning = false
+		_use_sim.cancel_item_use(int(_active_use.operation_id))
+	elif _use_overlay != null:
+		_use_overlay.hide()
+
+
+func _use_input_released() -> bool:
+	return _use_touches.is_empty() and not Input.is_action_pressed("confirm") and not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			_use_touches[event.index] = true
+		else:
+			_use_touches.erase(event.index)
+	if not _use_warning:
+		return
+	if event.is_action_pressed("move_down") or event.is_action_pressed("move_up") or event.is_action_pressed("move_left") or event.is_action_pressed("move_right"):
+		if _use_warning_armed:
+			if _use_cancel.has_focus():
+				_use_confirm.grab_focus()
+			else:
+				_use_cancel.grab_focus()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("cancel"):
+		_cancel_presented_use()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("confirm"):
+		if _use_warning_armed and not event.is_echo():
+			if _use_confirm.has_focus():
+				_confirm_presented_use()
+			else:
+				_cancel_presented_use()
+		get_viewport().set_input_as_handled()
+
+
+func _process_item_use() -> void:
+	if _use_warning and not _use_warning_armed and Engine.get_process_frames() > _use_warning_frame + 1 and Time.get_ticks_msec() - _use_warning_msec >= 300 and _use_input_released():
+		_use_warning_armed = true
+		_use_confirm.disabled = false
+		var proof := _active_use.duplicate(true)
+		proof["armed"] = true
+		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_WARNING_ARMED, proof)
+	if item_use_busy() and _use_settled and _use_rendered and not _use_warning and _use_input_released():
+		if _use_overlay != null and _use_overlay.visible:
+			return
+		_active_use.clear()
+		_use_sim = null
+		item_use_rearmed.emit()
+
+
+func item_warning_cancel_rect() -> Rect2:
+	return _use_cancel.get_global_rect() if _use_warning and _use_overlay.visible else Rect2()
+
+
+func item_warning_confirm_rect() -> Rect2:
+	return _use_confirm.get_global_rect() if _use_warning and _use_overlay.visible else Rect2()

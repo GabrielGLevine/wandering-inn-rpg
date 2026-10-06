@@ -81,8 +81,9 @@ const EXPECTED_ITEMS := {
 	"hunting_bow": ["+1 damage on ranged hits", "Range 4", "Bow kit replaces other weapon Skills in combat", "Worth 18 gold"],
 	"trap_kit": ["Worth 3 gold"],
 	"warding_salt_pinch": ["Worth 7 gold"],
-	"mending_draught": ["Heals 8 HP in combat (single use)", "Worth 10 gold"],
-	"remedy_draught": ["Heals 8 HP in combat (single use)", "Worth 10 gold"],
+	"mana_potion": ["Restores up to 6 MP (single use)", "Repeated doses risk mana poisoning until sleep", "Worth 10 gold"],
+	"mending_draught": ["Restores up to 8 HP (single use)", "Worth 10 gold"],
+	"remedy_draught": ["Restores up to 8 HP (single use)", "Worth 10 gold"],
 	# 2026-08-02 (GH#334 ruling 7): both lost their `price` key -- a meal is
 	# served or eaten, never merchandise (hot_meal's precedent) -- so the
 	# generated "Worth N gold" row is gone with it.

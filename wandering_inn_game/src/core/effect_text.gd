@@ -14,6 +14,53 @@ const _STATUS_VERB := {
 }
 
 
+static func counted_item_name(item: Dictionary, count: int) -> String:
+	var label := String(item.get("name", item.get("id", "")))
+	return "%s ×%d" % [label, count] if WIItems.stackable(item) else label
+
+
+static func item_use_text(offer: Dictionary) -> String:
+	var committed := bool(offer.get("committed", false))
+	var reason := String(offer.get("reason", ""))
+	if not committed and not bool(offer.get("allowed", false)) and reason != "confirmation_required":
+		return item_use_refusal(reason)
+	var parts: Array[String] = []
+	var hp := int(offer.get("restore_hp", 0))
+	var mp := int(offer.get("restore_mp", 0))
+	if hp > 0:
+		parts.append(("Restored %d HP." if committed else "Restore %d HP.") % hp)
+	if mp > 0:
+		parts.append(("Restored %d MP." if committed else "Restore %d MP.") % mp)
+	var loss := int(offer.get("hp_lost", offer.get("poison_hp", 0))) if committed else int(offer.get("poison_hp", 0))
+	if loss > 0:
+		parts.append(("Lost %d HP to mana poisoning." if committed else "Lose %d HP immediately to mana poisoning.") % loss)
+	if int(offer.get("exposure_after", 0)) > int(offer.get("exposure_before", 0)):
+		parts.append("Dose %d since sleep." % int(offer.get("dose_number", 0)))
+	var after: Dictionary = offer.get("after", {})
+	if not after.is_empty():
+		parts.append(resource_line(after) + ".")
+	if String(offer.get("context", "")) == "combat":
+		parts.append("%d AP%s." % [int(offer.get("ap_cost", 0)), " spent" if committed else " to use"])
+	parts.append("%d left." % int(offer.get("count_after", 0)))
+	if offer.get("preparation", {}) != offer.get("preparation_before", {}):
+		parts.append(" ".join(preparation_lines(offer.get("preparation", {}))))
+	return " ".join(parts)
+
+
+static func item_use_refusal(reason: String) -> String:
+	match reason:
+		"cancelled": return "Cancelled. Nothing used."
+		"stale_operation", "invalid_operation": return "The item or your condition changed. Select Use again."
+		"no_ap", "insufficient_ap": return "Not enough AP."
+		"missing_stock": return "None left."
+		"no_mp", "no_mp_pool": return "You have no MP pool to restore."
+		"no_benefit", "full_resources": return "No recovery or preparation to gain."
+		"lethal_world_poison": return "That dose would leave you with no HP. You cannot drink it here."
+		"wrong_actor": return "Wait for your turn."
+		"not_combat_usable": return "Eat this outside combat."
+	return "Cannot use this item now."
+
+
 static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> Array[String]:
 	var lines: Array[String] = []
 	var damage_mod := int(item.get(WIKeys.DAMAGE_MOD, 0))
@@ -49,14 +96,11 @@ static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> A
 			else:
 				lines.append("Grants %s in combat" % ability_display)
 	var use_effect: Dictionary = item.get(WIKeys.USE_EFFECT, {})
-	if use_effect.has("heal"):
-		# GH#334 note 28 item 2: "in combat" is not decoration. `WIItems.
-		# _resolve_heal_use` refuses outright when `combat == null`, and the
-		# inventory panel silently repurposes confirm into a hotbar toggle for
-		# exactly these items -- so an unqualified "Heals 8 HP" was the card
-		# promising something the only reachable out-of-combat press cannot do.
-		# The `next_fight` branch three lines down already models the idiom.
-		lines.append("Heals %d HP in combat (single use)" % int(use_effect["heal"]))
+	if use_effect.has("restore_hp"):
+		lines.append("Restores up to %d HP (single use)" % int(use_effect["restore_hp"]))
+	if use_effect.has("restore_mp"):
+		lines.append("Restores up to %d MP (single use)" % int(use_effect["restore_mp"]))
+		lines.append("Repeated doses risk mana poisoning until sleep")
 	if use_effect.has("next_fight"):
 		var nf_bits := next_fight_bits(use_effect["next_fight"] as Dictionary)
 		if not nf_bits.is_empty():

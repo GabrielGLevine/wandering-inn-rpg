@@ -25,7 +25,7 @@ archived, or superseded session blocks.
   No partial activation before recovery/#571. Physical devices unproven.
 - **Integration:** root owns `/private/tmp/wi-567-hud-contract`,
   `issue/567-hud-contract`, base1375e375. Touch-driver0e55e381 compiles and
-  load_gate passes; controls await composition. Browser touch at378cbe19 fails
+  load_gate passes; controls now composed. Browser touch at378cbe19 fails
   large-text inventory scroll;14images read under
   `/private/tmp/wi-567-evidence/browser-378cbe19-iphone` (Chromium emulation).
   Capacity refusal wrongly describes2/4 as full; both defects logged.
@@ -35,7 +35,7 @@ archived, or superseded session blocks.
 - **Owners:** resource_plan: `/private/tmp/wi-568-consumables`,206f36ac/PR582
   core/data/tests. Core review clear; Mana Potion/token/copy done.
   #569 meal tree active. capacity570: `/private/tmp/wi-567-consumable-ui`,
-  97001e52, frontend controls/warning/receipt/layout. Root owns QA. #569 then
+  9da54788 composed; controls/warning/layout focused tests pass. Root QA. #569 then
   #512 consume recovery. Registry `/private/tmp/wi-parallel-roadmap-status.json`.
   Evidence `/private/tmp/wi-{566-resumed,567,568,570}-evidence`. Preserve UID,
   private overlay, local node_modules/.gdignore; original art tree untouched.

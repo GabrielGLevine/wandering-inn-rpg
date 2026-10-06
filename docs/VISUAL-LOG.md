@@ -480,12 +480,3 @@ r3–r5 playtest waves — gone from this file.
   panels and a dark border imply little of the stacked city. Fix direction:
   arrival-framed Invrisil structures and Pallass lower-terrace backdrop;
   substantial changes are authorized by the user-approved #564 review.
-
-- [ ] **(P2)** Inventory large-text scrolling — browser touchscreen route
-  `responsive_panels_touch`, seed 9, iPhone-size Chromium at `378cbe19`,
-  fails steps 72/76 because fewer than 44 CSS pixels remain for content and
-  the first item clips. Actual browser touch ran 29 contacts; this is not
-  physical-device evidence. Preserved screenshots and result:
-  `/private/tmp/wi-567-evidence/browser-378cbe19-iphone/`.
-  Fix direction: keep vitals and controls readable while preserving a usable
-  scrolling region at every text scale; frontend #567 owns this correction.
