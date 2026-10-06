@@ -13,7 +13,7 @@ archived, or superseded session blocks.
   `/private/tmp/wi-512-routes`, original dispatch head `7429cd62`.
   Resource worker owns only #512 routes, manifest/generated QA, scoped docs and
   HANDOFF. No gameplay/core/UI ownership. Driver extensions need controller
-  coordination first. Compose d04cf5c7 then91bdac25, then run fresh Rogue and
+  coordination first. Composed d04cf5c7 and91bdac25; run fresh Rogue and
   worker/social prefixes before full histories. No fixtures/teleports/topups.
   Checkpoint before long route runs; preserve actual costs and imperfect forks.
 
@@ -42,7 +42,7 @@ archived, or superseded session blocks.
   repeated-input leg needs viable second use and browser-only registration.
 - **Owners:** resource_plan: `/private/tmp/wi-568-consumables`,206f36ac/PR582
   core/data/tests. Core review clear; Mana Potion/token/copy done.
-  #569 meal tree active. capacity570: `/private/tmp/wi-567-consumable-ui`,
+  #569 core91bdac25 complete; bounded contracts pass. capacity570: `/private/tmp/wi-567-consumable-ui`,
   9da54788 composed; controls/warning/layout focused tests pass. Root QA. #569 then
   #512 consume recovery. Registry `/private/tmp/wi-parallel-roadmap-status.json`.
   Evidence `/private/tmp/wi-{566-resumed,567,568,570}-evidence`. Preserve UID,
