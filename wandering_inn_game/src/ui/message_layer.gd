@@ -1452,7 +1452,7 @@ func _build_use_overlay() -> void:
 		elif event is InputEventScreenTouch and event.pressed:
 			_cancel_presented_use()
 	)
-	_use_panel = PanelContainer.new()
+	_use_panel = UIChrome.make_chrome_panel_container()
 	_use_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_use_overlay.add_child(_use_panel)
 	var margin := MarginContainer.new()
