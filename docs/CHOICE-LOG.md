@@ -23,6 +23,22 @@ merged PRs and `git log -p -- docs/CHOICE-LOG.md`.
 
 ## Current product and system rulings
 
+### User rulings 2026-10-05 (holistic art)
+
+- **#564 / #554 approved:** best art wins per asset within a coherent scene.
+  Owned art replaces a licensed primary when it reads better at gameplay scale;
+  otherwise the licensed primary remains official and owned art supplies the
+  public fallback. A READY harvest label alone does not establish suitability.
+- **Complete records own their geometry.** Sprite fallback replaces animations,
+  scale and anchor together. Terrain inherits from the original descriptor
+  before selecting a complete owned descriptor with its own atlas coordinates.
+  Do not transfer private geometry or accept variants merely to fill a quota.
+- **Scene redesign is authorized:** retain the 16px grid and gameplay identities;
+  recompose the inn, regional materials and landmarks, add Invrisil's commercial
+  cross-street and show Pallass's lower-city depth. The approved direction is
+  `docs/design/2026-10-05-holistic-art-review.md`; unsuitable complete rigs and
+  physical-device observations remain explicit coverage records.
+
 ### User rulings 2026-10-04 (M1)
 
 - **#508 approved:** deliberate drainage-cover use plus actual crossing earns

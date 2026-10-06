@@ -10,29 +10,31 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Approved holistic art program #564:** root owns `issue/564-holistic-art-direction`,
-  base `e1d2edee`, integrated through `307188a1`. User approved full execution
+  base `e1d2edee`, composed source `18628391`. User approved full execution
   on 2026-10-05. Inn/chrome, NPC/PC/prop rigs, cities/cross-street/vistas,
   icons/key art, Garden/camp, Riverfarm, ruin/underground and whole-record
-  terrain fallbacks are composed. Main is settled except the protected
-  untracked companion UID. Browser-startup worker owns only QA driver/web
-  files in `/private/tmp/wi-browser-ready`; other lanes are frozen.
-  Fresh official and public surveys: all33 maps,63 matching captures,318steps
-  each, independently read. Catalog review:473 owned PNGs,187/187 private
-  terrain draws have complete fallbacks; combat rosters/balance unchanged.
-  Full preflight54/54 passes; canonical268/269 plus corrected Archer152 passes.
-  Balance147cells x100seeds passes. Original browser22/26 exposes a runner
-  readiness race, not a demonstrated product-touch failure; bounded startup
-  handshake is being tested without extending individual gesture deadlines.
+  terrain fallbacks are composed. Root now owns selection-ruling/recipe/index
+  closure docs. Browser worker owns only QA driver/web in `/private/tmp/wi-browser-ready`;
+  other lanes are frozen. Preserve untracked companion UID.
+  Fresh official/public surveys:33maps,63 matching captures,318steps each,
+  independently read. Catalog:473 owned PNGs,187/187 private terrain draws
+  have complete fallbacks; combat rosters/balance unchanged. Composed186
+  full54 units and all269 native canonicals pass, complete/no engine noise.
+  Balance147cells x100seeds passes. Initial browser22/26 and the first managed
+  startup repeat expose early rendering/service races, not product-touch proof.
+  Worker adds an actual first-draw/engine-ready handshake; gesture4s and total
+  startup30s bounds stay fixed. The public-pack delayed controls do not establish
+  official-overlay readiness; fresh no-delay official proof is required.
   Evidence: `/private/tmp/wi-art-execution`, `/private/tmp/wi-art-underground-evidence`,
   `/private/tmp/wi-art-riverfarm-evidence`, `/private/tmp/wi-art-creature-evidence`.
-  Independent final verdict awaits settled full native/browser repeats.
+  Failed/interrupted browser output is retained in first-composed-ready-browser-output.
   Optional steel seed9 loss predates art: baseline/city97combat events match,
   both fail499; comparison in art-execution/steel-baseline-independent-review.
-  **Exact next action:** integrate reviewed startup fix, regenerate derived
-  files, rerun full preflight/native/browser, obtain exact-head review, then
-  PR/required CI/squash tree-identity closure. Preserve companion UID.
-  Unsuitable harvested rigs retain strong official primaries/public limits;
-  physical devices and production timing remain unproven. No deployment.
+  **Exact next action:** integrate reviewed engine-ready fix, settle closure
+  docs/index, rerun affected preflight/native/browser gates, exact-head review,
+  then PR/required CI/squash tree-identity closure. No deployment.
+  Unsuitable rigs retain strong official primaries/public limits; physical
+  devices and production timing remain unproven. Constituent coverage stays open.
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
   (standalone tree `5e8af12d`); QA/export source `93016f0b`.
