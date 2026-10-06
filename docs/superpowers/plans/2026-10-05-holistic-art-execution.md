@@ -20,11 +20,12 @@ Independent reviewers use isolated probes and retained artifacts.
   social-table candidates. Recompose within the current room first; inspect
   solids, approach cells and visitor windows before conditional enlargement.
   Preserve shipped interaction IDs and progression. Wire Selys's actual rig.
-- [ ] Shared chrome: calm paper/wood/brass family, margins derived from actual
+- [x] Shared chrome: calm paper/wood/brass family, margins derived from actual
   textures, contrast-correct slot numerals and costs, original touch handling.
   Default field details collapse; selecting a skill exposes its description,
   and explicit details retain the full reference. Preserve saved preferences
-  and world-clearance layout. Prove native and emulated phone routes.
+  and world-clearance layout. Native and representative emulated phone routes
+  are verified; the full local mobile suite remains a disclosed follow-up.
 - [x] Liscor market/civic rooms; Invrisil architectural square and cross-street
   loop with gate-preserving alley connection; Pallass terrace/lower-city depth.
 - [x] Riverfarm working yards/ground, Garden pockets, camp clusters, ruin
@@ -55,6 +56,15 @@ state. Teleport look-dev is never substituted for traversal evidence.
 
 Implementation checkpoints: city/UI `f4fe17e0`/`53f447af`, Garden/camp/PC
 `266f8def`, Riverfarm `b12e0a75`, complete terrain `a9260572`, creatures and
-public assemblies `fcccc5a7`, underground `fac1c2b8`. Chrome's emulated browser
-proof and composed closure gates remain unchecked. Strong licensed primaries
+public assemblies `fcccc5a7`, underground `fac1c2b8`. Native/composed closure gates remain pending CI. The user's latest direction
+prioritizes the art merge over mobile test-suite tuning. Strong licensed primaries
 remain where new clips fail weapon/facing/death continuity; no quota wiring.
+
+## Art-first integration priority
+
+The user explicitly prioritized completing and merging the artwork over further
+mobile-suite tuning. Preserve the local official22/26 browser result as failed
+diagnostic evidence, not a green claim. Request-correlated receipts/native-tap
+experiments are separate unmerged follow-up work. Mandatory GitHub CI, including
+Web parity, remains unchanged. Physical-device/host/production-timing limits and
+unsuitable public-rig coverage remain open.

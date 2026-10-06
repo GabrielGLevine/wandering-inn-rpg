@@ -9,22 +9,24 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Approved holistic art #564:** root owns `issue/564-holistic-art-direction`,
-  original base `e1d2edee`; composed game/QA `18628391`, docs through `ca6dcaef`.
-  All approved regional, roster/icon/key-art, chrome and complete fallback slices
-  are integrated. Official/public33-map63-view surveys and catalog473-PNG/
-  187-private-draw fallback audits pass independent review. Full54 units and
-  all269 native canonicals pass complete/no noise; balance147x100 passes.
-  Browser worker exclusively owns QA driver/web in `/private/tmp/wi-browser-ready`;
-  official-overlay first-draw/runner handshake is pending final integration.
-  Prior browser22/26 and managed-start failure are retained diagnostics, not
-  acceptance. Four-second touch and30-second startup bounds stay unchanged.
-  Evidence: `/private/tmp/wi-art-execution` and regional/creature evidence dirs.
-  Optional steel seed9 loss predates art (97 matching combat events, fail499).
-  **Next:** integrate reviewed startup fix, settle docs/index, final native/web
-  gates, exact-head review, PR/required CI/squash tree identity. Preserve untracked
-  companion UID. Unsuitable rigs retain official art/public limits; physical
-  devices/timing remain unproven. No deployment or premature constituent closure.
+- **Approved holistic art #564:** `issue/564-holistic-art-direction`, original
+  base `e1d2edee`, composed with main `b1c4b02b`; source through `bb5be3ed`.
+  All approved regional, roster, icon, key-art, chrome and fallback slices are
+  integrated. Official/public surveys cover33 maps/63 views; catalog473 PNGs
+  and187 private terrain fallbacks pass review. Astra approves the art.
+  Sol's bb5 full54-unit/preflight passes;269 native sweep runs in
+  `/private/tmp/wi-art-sol-integration` on `issue/564-art-native`.
+  User prioritizes art merge over mobile tuning. Local official browser22/26
+  remains failed diagnostic evidence; initial-frame fix is included, receipt/
+  native-tap work excluded. Follow-up6769/six dirty adapters are stopped in
+  `/private/tmp/wi-browser-ready`; preserved patch/state in art-execution/
+  browser-startup-diagnosis/mobile-followup-stopped. No further tuning planned.
+  Evidence: `/private/tmp/wi-art-execution`, `/private/tmp/wi-art-astra-review`
+  and regional/creature directories. Balance147x100 passes. Optional steel seed9
+  loss predates art (97 matching combat events, fail499). Coverage limits remain.
+  **Next:** art PR, final native evidence, mandatory CI including Web parity,
+  Astra final review, squash/tree-identity closure. Preserve root companion UID.
+  No deployment; physical devices and production timing/audio remain unproven.
 - **Resource/capacity roadmap #565:** planning merged on main `b1c4b02b`;
   #566–#571 own staged resources/HUD/potions/food/capacity/cutover. No gameplay
   validation is claimed. After #564's owned safe checkpoint, dispatch #566 and
