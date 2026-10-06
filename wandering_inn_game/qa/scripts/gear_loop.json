@@ -97,6 +97,8 @@
 
   {"_comment": "Inventory echoes the refusal immediately; the global toast queue renders it after the modal closes.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first."}, "timeout_sec": 30},
 
+  {"_comment": "Drain the first leg through its tool feedback before opening the physical-full leg.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "That isn't something you can equip."}, "timeout_sec": 60},
+
   {"action": "press", "name": "inventory", "_comment": "Separate physical-full refusal: Stonescale2 + two mundane accessories uses2/4. Hedge1 would fit capacity, but all three physical positions are occupied."},
   {"action": "wait_for_event", "type": "ui_inventory_shown", "timeout_sec": 15, "payload_contains": {"resonance": {"used": 2, "capacity": 4}}},
   {"action": "press", "name": "move_down"},
@@ -135,6 +137,6 @@
   {"action": "screenshot", "name": "05_physical_positions_full_with_capacity_free"},
   {"action": "press", "name": "inventory"},
   {"action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 15},
-  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "There's nowhere left on you for it to rest. It waits in your palm, patient as stone."}, "timeout_sec": 30}
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "There's nowhere left on you for it to rest. It waits in your palm, patient as stone."}, "timeout_sec": 60}
  ]
 }
