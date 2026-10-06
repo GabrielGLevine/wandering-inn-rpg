@@ -20,19 +20,18 @@ archived, or superseded session blocks.
   rogue-full-ending-current has result/events/checkpoints. Exit0/PASS but
  5shaderRID ERRORs make the authoritative gate INVALID. No full-route window
   or physical-touch claim. Root/capacity570 own lifecycle investigation.
-  Worker bounded recovery: free chest armor/rest earns Mage4, then eligible
- Zevara3+4→Traveler5 and seventh sleep earns Diplomat6. Both retries lose
- round6 with boss10HP. Final1302 atc2d5a964 PASS/exit0 but2shaderERRORs INVALID;
- exact rollback3gold/50HP15MP/1HotMeal, five defeats/three victories. Evidence
- worker-bounded-final-journey_worker + matchinglog under current evidence.
- load_gate2/combat_abandon54 clean; lint/derived/notes pass.
- Tactical extension now authored1423 steps: preserve1302/five losses, actual
- Flame Jet east + Dash/Piercing retry, then sixth loss/rollback. Diagnostic
- suffix99 passes logically, boss39HP round5; OS certificate ERROR means no
- clean evidence. Original1302 shader limits retained. Full fresh replay pending.
- **Next:** run journey_worker seed9, load_gate and combat_abandon, preserve
- artifacts/noise and checkpoint final outcome; then release. No more tactics,
- production edits or mobile/native runs. Preserve companion UID.
+  Worker original1302 retains free chest armor/rest and finite Watch3+4 /
+ Traveler5 losses at boss10HP. Earlier evidence remains archived in
+ current/worker-bounded-final-journey_worker; its shader-noise gate is invalid.
+ Tactical1423 at8ae64053 now replays fresh: original1302/five losses retained,
+ actual Flame Jet/Dash/Piercing retry loses round5 with boss39HP; sixth real
+ rollback preserves50HP15MP/3gold/1HotMeal, seven sleeps and all gear. All1423
+ steps pass/exit0; one ERROR reports3 leaked DummyShader RIDs: gate INVALID.
+ Evidence: current/worker-tactical-fresh-journey_worker[.log/.exit].
+ load_gate2/combat_abandon54 clean, lint/derived/notes/diff pass. No mobile or
+ native claim. **Next:** root composition/review; shader lifecycle still blocks
+ clean full-route acceptance. Tree released; no active process or further
+ tactic/profile retries. Preserve companion UID.
 
 - **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
   Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.

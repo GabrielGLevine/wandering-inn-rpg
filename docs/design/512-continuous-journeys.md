@@ -17,11 +17,12 @@ It contains no fixture install, teleport, state injection or checkpoint load.
 **This is not a clean authoritative gate.** The final headless process exits0,
 printsPASS, and passes all3464 steps, but reports5 leaked DummyShader RIDs.
 Root/capacity570 own the lifecycle investigation. Full continuous windowed
-read, composed-tree rerun and physical touch remain unproven. Worker1302
-retains five losses, including free chest armor/rest and finite earned charm
-retries; the Awakened boss still has10HP after the last round6 loss. Its final
-rollback preserves3gold,50/50HP,15/15MP,1HotMeal and armed+2maxHP. All1302
-steps pass/exit0, but two shader RID ERRORs invalidate its gate too.
+read, composed-tree rerun and physical touch remain unproven. Worker1423
+retains the original1302 steps/five losses, including free chest armor/rest and
+finite earned charm retries (boss10HP after round6). One appended actual-input
+Flame Jet tactical retry loses round5 with boss39HP. The sixth defeat rolls
+back to3gold,50/50HP,15/15MP,1HotMeal and armed+2maxHP. All1423 steps pass/exit0,
+but one shutdown ERROR reports three leaked shader RIDs, invalidating its gate.
 Fresh martial/caster/work-heavy endings and the
 force-crate/other imperfect-choice variants remain separate authoring work.
 
@@ -468,7 +469,7 @@ and renderer-lifecycle fix before authoritative replay/window acceptance.
 No further retry, farming, gear purchase or ending extension was attempted.
 
 
-## One bounded tactical retry: authored, fresh replay pending
+## One bounded tactical retry: fresh1423-step measured loss
 
 The original1302 steps and five defeats remain unchanged. The appended attempt
 walks out of the Deep Tunnels and back to clear defeat grace. It spends no gold,
@@ -485,7 +486,28 @@ up). It hit scout2 for10, vermin for11 (leaving2HP), and scout1 for18. Relc stil
 died in round2; automatic Mana Shield spent10MP that round and the last1MP in
 round3. The attempt lost in round5 with boss39HP, worse than the retained10HP
 outcome. The fixed route pins that result without revising the tactic or seed.
-This is not yet continuous evidence: fresh1423-step replay is the next gate.
-Diagnostic99 passes/exit0 but OS certificate ERROR invalidates a clean claim.
+The unchanged tactic now reproduces in the full fresh1423-step history at
+8ae64053: all steps pass, exit0, valid passing result.json. One shutdown ERROR
+reports three leaked DummyShader RIDs, so the authoritative gate is INVALID.
+The diagnostic99 also passed logically but had an OS certificate ERROR.
 Artifacts: `/private/tmp/wi-worker-tactical-probe-2[.log]`; probe1 preserves the
 pre-combat navigation failure. No mobile/native observation or victory claim.
+
+Final replay evidence: `/private/tmp/wi-512-evidence/current/` contains
+`worker-tactical-fresh-journey_worker` with events/result/checkpoints plus
+matching `.log` and `.exit`; `worker-tactical-load_gate` (2steps) and
+`worker-tactical-combat_abandon` (54steps, seed9) both pass/exit0 without noise.
+Data lint, derived-surface/notes checks and diff whitespace pass. Engine4.7,
+public fallback assets, fresh isolated user directory, manifest seed9; no fixture
+or checkpoint load in the accepted history. Original1302 steps are unchanged.
+
+Flame Jet's actual21damage leaves the vermin alive at2HP. It attacks Relc twice
+for7total before Relc finishes it. Relc still dies in round2; the worker's new
+position admits a10damage scout hit absorbed by Mana Shield immediately.
+Only4MP powers offense; the other11MP absorbs damage. This specific tactical
+attempt did not improve the wall. It does not prove every deliberate strategy
+fails, and there was no additional tactic, seed or equipment search.
+Final rollback:50HP/15MP,3gold,one HotMeal,armed+2maxHP,seventh sleep,
+Mage4/Diplomat6/Warrior1, unchanged spear/Leather/Fang/Traveler kit. No new
+reward, expenditure, potion, repeated farming or ending. Tree released to root;
+no more worker retries/profile expansion authorized by this checkpoint.
