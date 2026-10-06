@@ -97,14 +97,6 @@
    "timeout_sec": 5
   },
   {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "timeout_sec": 15,
-   "payload_contains": {
-    "text": "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first."
-   }
-  },
-  {
    "action": "assert_state",
    "path": "equipped.accessory_1",
    "equals": "moon_bone_amulet"
@@ -139,6 +131,15 @@
    "action": "wait_for_event",
    "type": "ui_inventory_hidden",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "Inventory echoes the refusal immediately; the global toast queue renders it after the modal closes.",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first."
+   },
+   "timeout_sec": 30
   },
   {
    "_comment": "== Sleep 1/3: silent study beat (door_study_sleeps 0 -> 1) ==. #49: sleeping at your_bed fires 'Your own bed.' FIRST (sleep_toast), then sleep()'s own stream. Two toasts now queue back-to-back, so the SECOND toast's ui_toast_rendered confirmation needs a real blocking wait_for_event (the queue drains one hold-duration at a time) rather than an immediate assert_event_logged.",
