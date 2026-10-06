@@ -71,3 +71,36 @@ leveling, actual phase wrap, current/legacy saves, corrupt resources and version
 and live-versus-world projection. Existing defaults require full preflight,
 canonical QA and the shared numerical balance batch. These prove foundation
 compatibility; they do not prove player-facing carried-resource delivery.
+
+
+## Recorded foundation evidence
+
+Implementation source: `6d3a0a883372313a35285e2b6733e9374a73e855`, tree
+`d8d77929ec791593e73084d312909c07dd4d4795`; engine
+`4.7.stable.official.5b4e0cb0f`. The public checkout was tested without the
+licensed overlay. Logs/verdicts live at `/private/tmp/wi-566-evidence`.
+
+| Gate | Observed result |
+|---|---|
+| `scripts/preflight.sh --full` | 47 Godot unit suites: exit 0, nonempty PASS, zero noise each. Overall exit 1 due to the two Python cases below; 265 Python cases and 43 subtests pass. |
+| Final `test_vitals.gd` / `test_vitals_initialization.gd` contracts through preflight's unit-command seam | Exit 0, nonempty PASS, zero noise after adding the sparse-config and literal passive/tactic cases. |
+| `wandering_inn_game/qa/ci_sweep.sh` | Exit 0; all 266 manifest routes have passing result.json, nonempty PASS and zero noise, verified individually in canonical-evidence.json. |
+| `sim_combat_batch.gd`, default policy | Exit 0, clean PASS across 147 cells × 100 seeds. |
+| `WI_POLICY=competent sim_combat_batch.gd` | Exit 0, clean required 4-rung order PASS across 147 cells × 100 seeds. Cell-band FAIL lines are the existing report-only competent-policy output, not an all-bands acceptance claim. |
+| Comment census, leak check, diff whitespace | Pass. |
+| Independent source review | Approved for this bounded draft at 6d3a0a88; external record `/private/tmp/wi-566-independent-review.md`. No merge/full-issue approval. |
+
+Full preflight is not green. `test_choice_log_stays_a_decision_index` finds
+the untouched base CHOICE-LOG at 31,122 bytes (limit 30,000). The base HANDOFF
+also exceeded its 12,000-byte cap; this lane's current handoff is trimmed.
+`test_head_tree_findings_are_the_known_set` reports four line-number drifts:
+`sworn_fang_boon`, `basic_command_boon`, `pack_bond_boon`, and
+`flarepepper_powder`. Repin the actual granting lines after composing the tree.
+The shared data-lint validator and CHOICE-LOG are owned by the art lane; this
+lane leaves them untouched and records those fixes for serialized integration.
+No behavior/fixture/golden/balance assertion was weakened.
+
+There is no new player-visible surface to inspect in this staged slice.
+Existing native routes establish compatibility only. Carried-resource gameplay,
+new rendered receipts, browser touch, physical devices and human understanding
+remain unproven until the follow-up wiring/recovery work lands.

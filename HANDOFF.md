@@ -22,9 +22,16 @@ archived, or superseded session blocks.
   Forbidden: art checkout, assets/maps/content, event/key catalogs,
   UI/world/combat presentation, `core/game.gd`, QA manifests/driver/generated
   outputs. No gameplay cutover or #566 closure in this slice.
-  Next: red/green resource/save contracts, full units/canonical sweep/balance,
-  independent review, draft PR using Refs #566. Shared presentation/autosave/
-  terminal handoff acceptance remains for serialized follow-up and #571.
+  Foundation source committed/reviewed at `6d3a0a88`; 47 clean Godot units,
+  266 clean canonicals and both 147×100 balance gates pass on Godot 4.7-stable.
+  Final targeted contracts pass after review. Evidence: `/private/tmp/wi-566-evidence`;
+  review: `/private/tmp/wi-566-independent-review.md`.
+  Full preflight remains RED: four WIGame code-grant line pins in art-owned
+  `scripts/data_lint.py` need repinning; unchanged CHOICE-LOG is 31,122 bytes
+  against 30,000. This lane's HANDOFF cap is repaired. No pins/windows relaxed.
+  Next: draft PR (Refs #566), then after art releases ownership compose the
+  four pin updates and log trim; wire battle handoff/autosave/events/UI and
+  actual player QA before #571 activation. No merge/deploy/issue closure yet.
 
 - **Recovery program #565:** #566–#571 own core, HUD, consumables, food,
   capacity and composed cutover. Plan:
@@ -37,9 +44,8 @@ archived, or superseded session blocks.
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
   (standalone tree `5e8af12d`); QA/export source `93016f0b`.
-  CI run `37355007466` passes all eight jobs on composed checkout `4f315958`,
-  whose tree exactly matches the squash. Independent source and post-merge
-  reviews approve. Incoming #552/#553 tooling and backup guidance are preserved.
+  PR #551 owns required CI and independent source/post-merge approval.
+  QA/export source `93016f0b`; preserve incoming #552/#553 guidance.
   #507/#508/#509 are closed; #504/#505/#506/#510/#253/#511 and M1 stay open
   for their physical/actual-host/human criteria. Production is unchanged from
   the `ab279415` 36-case local browser baseline.
@@ -48,10 +54,6 @@ archived, or superseded session blocks.
   manifest and observation checklist alongside; PCK `cccbe5f4…`.
   Evidence: `/private/tmp/wi-m1-evidence`, private/public audio roots and
   `/private/tmp/wi-m1-audio-stale-negative-93016f0b`.
-  Root's implementation tree is `/private/tmp/wi-m1-506`; final handoff only
-  uses `/private/tmp/wi-m1-closeout`, based on merged main `6148d1e5`.
-  Other lanes are integrated/idle. Preserve untracked node_modules/companion UID
-  and the unrelated PixelLab note in the original main tree's dirty HANDOFF.
   **Exact next action:** collect #511 physical iPhone Safari/Android Chrome
   observations and three unfamiliar-player sessions with desktop reference,
   using the same private candidate and `qa/M1-OBSERVATIONS.md`. None supplied.
