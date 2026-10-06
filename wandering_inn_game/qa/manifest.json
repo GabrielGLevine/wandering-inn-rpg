@@ -8230,6 +8230,41 @@
      "quests"
     ]
    }
+  },
+  {
+   "script": "poor_retired_producer_recovery",
+   "seed": 9,
+   "fixture": "poor_retired_producer_earned",
+   "tiers": [
+    "full"
+   ],
+   "note": "#513/#515 checkpoint-based earned-state regression: actual optional purchase14\u21920g, scout depletion10HP/0MP, retired road stays absent, no income during walked free-bed recovery44HP/14MP; exact production-timing bed receipt. Inherited kit/history are not new acquisition proof.",
+   "surfaces": {
+    "maps": [
+     "deep_tunnels",
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "sewers",
+     "street"
+    ],
+    "fixtures": [
+     "poor_retired_producer_earned"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "night_phase"
+    ]
+   }
   }
  ],
  "browser_scripts": [
