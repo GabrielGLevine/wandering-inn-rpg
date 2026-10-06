@@ -61,8 +61,14 @@ not earned acquisition or production-input/window proof. The first run caught
 an incorrect unit assertion reading vitals outside WISave's state envelope;
 its noisy log remains under `first`, and is not passing evidence.
 
-Data lint and import pass. Affected compatibility units, authored UI routes,
-full units/canonicals/balance and windows remain after this checkpoint.
+Data lint and import pass. Affected dialogue, consumable recovery/counts,
+simulation, content, shipped-ID, vitals-handoff, save, reachability and copy-fit
+units pass under `compat`, `compat-fixed` and `content-extra`. The first content
+run rejected the new effect until its explicit verb/schema validation was
+registered; that failed log remains in `compat`. Expanded meal cases also prove
+both errand reward poor branches, overflow without cooking-counter gain, and
+authored no-output cookware. Authored UI routes, full units/canonicals/balance
+and windows remain for composed integration.
 Root owns QA and frontend composition; physical-phone/human evidence remains
 separate. Unlimited kitchen recovery must be measured in #513/#453, not capped
 silently to preserve a former full-rest baseline.

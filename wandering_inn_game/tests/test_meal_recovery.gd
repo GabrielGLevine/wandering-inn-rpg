@@ -140,5 +140,27 @@ func _init() -> void:
 	assert(WISave.apply(game, saved) and game.item_count("hot_meal") == 3)
 	game.vitals.hp -= 2
 	assert(_eat("hot_meal").restore_hp == 2 and game.item_count("hot_meal") == 2)
+	for reward: String in ["gave_reward", "kept_reward"]:
+		game = _new_game()
+		game.accomplishments[reward] = 1
+		game.accomplishments["errand_decided"] = 1
+		game.gold = 2
+		game.vitals.hp = 1
+		_service()
+		assert(not game.dialogue_choose(0) and game.gold == 2 and game.vitals.hp == 1)
+		assert(game.dialogue_choose(1), "either errand reward leaves poor-player bed directions reachable")
+	game = _new_game()
+	game.player_skills.append("basic_cooking")
+	game.pickup("hot_meal", "unit")
+	game.consumable_counts.hot_meal = WIItems.MAX_COUNT
+	game.player_cell = Vector2i(4, 2)
+	game.player_facing = Vector2i.UP
+	game.use_skill_field("basic_cooking")
+	assert(game.item_count("hot_meal") == WIItems.MAX_COUNT and game.accomplishment_count("cooked_meal") == 0, "overflow cannot farm a cooking counter")
+	game.consumable_counts.hot_meal = 1
+	game.player_cell = Vector2i(1, 2)
+	var resources_before := game.player_resources()
+	game.use_skill_field("basic_cooking")
+	assert(game.item_count("hot_meal") == 1 and game.player_resources() == resources_before, "authored no-output cookware remains no-output")
 	print("PASS test_meal_recovery: early service, atomic confirmation/gates, free bed, held cookware, capped food and reload")
 	quit(0)

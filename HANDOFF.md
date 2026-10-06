@@ -20,10 +20,13 @@ archived, or superseded session blocks.
   retains legal unlimited station access and preparation caps/no resale.
   Frozen service resource events settle gold/pools/gate before observers;
   `service_recovery_settled` drives autosave after dialogue advance.
-  Focused meal contract test, import and data lint pass under
-  `/private/tmp/wi-569-evidence`; full current evidence scope in design569.
-  **Next:** checkpoint API, run affected existing pure units serially, then
-  controller composes actual input/routes/windows and full integration gates.
+  API checkpoint `a5ef4012`; focused meal, dialogue, consumable/counts, sim,
+  content/shipped-ID, save/handoff, reachability and copy-fit units pass.
+  Import/data lint pass; logs under `/private/tmp/wi-569-evidence`, precise
+  passing/failure history in design569. No active tests or tracked dirty files
+  after the final compatibility checkpoint; core tree is released.
+  **Next:** controller composes frontend, actual input/routes/windows and full
+  integration gates; independent core review can read the committed checkpoint.
   No earned acquisition/window/touch or full-gate claim from focused units.
 
 - **#568 core/catalog checkpoint:** `issue/568-consumable-recovery`, isolated
