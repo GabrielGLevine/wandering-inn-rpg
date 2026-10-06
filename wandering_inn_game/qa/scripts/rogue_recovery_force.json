@@ -790,7 +790,8 @@
     "text": "[Warrior] class gained! \u2014 [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
    },
    "from_start": true,
-   "timeout_sec": 10
+   "_comment": "The arrival sign, Relc advice and bed text finish their production holds first.",
+   "timeout_sec": 45
   },
   {
    "action": "assert_state",
