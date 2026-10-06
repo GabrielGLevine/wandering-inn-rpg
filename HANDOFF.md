@@ -9,7 +9,7 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed at user request:** compose completed art PR #577 and finish this lane.
+- **Resumed at user request:** compose merged art PR #577 and finish this lane.
   Lane #570: `issue/570-capacity-analysis` in `/private/tmp/wi-570-capacity`;
   base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
   Owned paths: `HANDOFF.md`, `docs/design/570-capacity-analysis.md`, `scripts/analysis/capacity_570.py`, new `tests/sim_capacity_570.gd` + UID.
@@ -24,9 +24,10 @@ archived, or superseded session blocks.
   candidate: Infiltrator/Hedault 96/100 is a balance risk,
   not balance acceptance. Root owns subsequent core/save/UI implementation.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
-  is composed here as completed code pending its CI/merge. Original art checkout
+  is composed here as completed code squashed as `0bbd96aa`. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
-  included. Refresh main and verify squash tree identity after art lands.
+  included. Squash tree `0e843291` matches the reviewed source. Its Web CI waiver
+  was art-only; required CI remains mandatory for these lanes.
   Other checkpoints: #572 foundation, #573 capacity, #574 routes, #575 homecomings,
   #578 HUD contract and #579 encounter design. Serialize shared source/catalogs.
 - **#566 resource foundation:** staged in draft PR #572, isolated
