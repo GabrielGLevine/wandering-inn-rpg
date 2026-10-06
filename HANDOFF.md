@@ -39,8 +39,8 @@ archived, or superseded session blocks.
   walked bed44HP/14MP. Portable regression6f4cc5ec awaits final composed check.
 - **Next:** desktop earned field bar clips later skills/Details at13–17slots.
   resource_plan owns `/private/tmp/wi-567-desktop-field` from289f0984;
-  fixb080e0ad reuses paging after live hint reserve; independent review pending.
-  Root composes martial/desktop and checks bounded regression, units/load and
+  fixb080e0ad reviewed, paging after live hint reserve; native proof pending.
+  Root composes reviewed martial/desktop and checks regression, units/load and
   native earned-bar controls. Preserve exact noisy/failed journey limits;
   #453 holds measured combat walls; caster438/economic variants remain open.
   Final571 waits for core/economic acceptance, not mobile585. No deployment.
