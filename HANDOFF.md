@@ -10,35 +10,40 @@ archived, or superseded session blocks.
 ## Current state
 
 - **User direction:** finish paused art-blocked roadmap work; checkpoint often.
-  Art577 merged0bbd96aa with reviewed/squash tree identity. Original art tree
-  remains untouched. Web parity may be waived when a merge bottleneck; record
-  waiver, keep other CI/review and actual gameplay/device acceptance.
+  Art577 merged0bbd96aa; original art tree untouched. Additional mobile testing
+  is deferred to #585 and does not block core delivery. Reuse existing proof;
+  no new mobile matrices. Web parity may be waived when a merge bottleneck;
+  preserve other required CI/review and report remaining core acceptance.
 - **Closed designs:** #517/PR5755823356f and #521/PR57953bd4c68; seven non-Web
   jobs passed, sole Web blocker waived, squash trees verified. Runtime separate.
-- **Integration owner:** root only, `/private/tmp/wi-567-hud-contract`,
-  `issue/567-hud-contract`, base1375e375. #56685af0621/#5708676a0be,
-  #568206f36ac and #56991bdac25 have bounded independent review. Frontend
-  3bd7f529 fixes four input/mobile findings plus erroneous food-poisoning copy;
-  focused units/load and independent re-review pass. No partial activation/deployment.
-- **Evidence:** c6eb280b full65units/7tools PASS; six affected native controls
-  pass individually. c4 canonical276PASS/rested balance remain baselines.
-  Native lifecycle174+7readcaptures closes receipt clipping. c6 browser
-  repeat28both/6images and2144 inventory55both/4images pass/read, seven real
-  touch contacts/profile each; keyboard startup, no device claim.
-  c4 combat133/poison67both remain; native force350/arc298/message48 reviewed.
-- **Next:** integration2144c984; publish browser review/checkpoint.
-  Lifecycle/receipt repair c6 reviewed; registered browserQA2144.
-  Failed native invocation of browser-only repeat and incomplete broad phone
-  lifecycle/title-touch attempts retained; no claims from those runs.
-  Rogue3464 ending/Inn and worker1302 finite armor/charm retries reviewed;
-  `/private/tmp/wi-512-routes`33dab52e. Worker still loses with boss10HP;
-  gold22−19=3. Longruns INVALID2–5shaderRID errors; other profiles unrun.
-  resource_plan reads worker tactics only. capacity570 c1d6895d rebuilding
-  exact engine with project loading enabled before tracing cache cleanup.
-  Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence
-  `/private/tmp/wi-*-evidence`. Preserve companionUID/privateoverlay.
-  Two workers max; native lane free. DraftPR578/582/583/574. Final571 waits
-  for earned/economic findings; no activation/deployment.
+- **Integration owner:** root, `/private/tmp/wi-567-hud-contract`,
+  `issue/567-hud-contract`, base1375e375, code c6eb280b/QA2144c984.
+  #56685af0621/#5708676a0be/#568206f36ac/#56991bdac25 independently reviewed
+  and composed. Draft PR578/582/583; no partial activation/deployment.
+- **Evidence:** c6 full65units/7tools PASS; six native controls pass.
+  c4 canonical276PASS/rested balance remain baselines. Native lifecycle174
+  and seven read captures close receipt clipping. c6 browser repeat28both
+  and2144 inventory55both pass; all ten captures independently read.
+  Seven inventory touch contacts/profile, keyboard startup, no device claim.
+  Earlier combat133/poison67both and native force350/arc298/message48 reviewed.
+  PR578 at893a9395 has seven non-Web CI successes; Web still running.
+- **Core checkpoints:** released journey tree `/private/tmp/wi-512-routes`
+  d7033d7f (QA8ae64053), draftPR574. Rogue3464 reaches ending/Inn.
+  Worker1423 preserves six losses: final held-FlameJet tactic loses round5,
+  boss39HP, rollback50HP/15MP/3g/one Hot Meal. Load/abandon controls clean.
+  Long routes remain INVALID from shader RID errors; no victory claim.
+  Engine diagnosis `/private/tmp/wi-512-leak-probe`9874ca61 released: official
+  engine leaks in bare reproduction; unmodified custom build/MRE/prefix798
+  clean after import. Earlier cache-error controls invalidated. Build/config
+  differences remain unexplained; no production replacement or active build.
+- **Next:** independently review/publish final journey/engine checkpoints.
+  Unchanged martial steel_thread fails at697 entering awakened fight; zero
+  engine noise. Inspect carried resources and actual retreat/bed route before
+  editing QA. Caster438 and imperfect/economic variants remain core work.
+  Final571 waits for accepted core/economic findings, not extra mobile checks.
+  Failed broad phone/title attempts retained and tracked in #585. Registry
+  `/private/tmp/wi-parallel-roadmap-status.json`; evidence `/private/tmp/wi-*-evidence`.
+  No active implementation workers/runtimes. Preserve companionUID/overlay.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
@@ -145,17 +150,10 @@ The live index and milestones are authoritative:
 - [Roadmap #502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502)
 - [M1: mobile parity and first session](https://github.com/GabrielGLevine/wandering-inn-rpg/milestone/13)
 
-Immediate dispatch order:
-
-1. #511 shared physical-phone observations and three unfamiliar-player sessions
-   with desktop reference. The owner retained these gates and offered results;
-   no observations have arrived. Software repairs and automated gates are done.
-2. Diagnose supplied observations against the same candidate; close only the
-   corresponding #504/#505/#506/#510/#253 physical/actual-host criteria that
-   pass. A failed observation may authorize a scoped repair in its issue.
-3. Bound compiler work to a safe checkpoint and #542/#543 acceptance repairs
-   before further equivalence claims. No new compiler expansion wave ahead
-   of actionable M1 work without a concrete dependency or owner reprioritization.
+Immediate dispatch: finish the active recovery core work above. Additional mobile
+validation is deferred to #585 per user direction. #511 hardware/human work
+remains open without blocking core implementation; no observations supplied.
+Compiler work stays bounded to existing acceptance repairs and #438 ownership.
 
 Later milestones and dependencies are linked from the index. Respect
 `roadmap:blocked` and `taste-gate`; `successor-ready` means a brief can start,
