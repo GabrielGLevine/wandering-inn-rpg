@@ -9,30 +9,28 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Holistic art merged in PR #577:** squash `0bbd96aa`, reviewed head
-  `e89770de`, identical tree `0e843291`. #564 and W0 #554 are closed; other
-  harvest coverage records and plan-only #563 remain open. All approved regions,
-  the Invrisil cross-street, chrome and curated art/fallbacks are on main.
-  Sol verified54 units,269 native routes and495 Python tests; Astra independently
-  approved source/art/evidence. CI run37417305595 has seven passing jobs.
-  User explicitly waived its still-running Web parity job for this merge;
-  it is not a PASS claim. Future branch requirements remain unchanged.
-  Authorized follow-ups: #576 mobile contact/receipt correctness, #580 Web
-  parity runtime. Local official browser22/26 is retained failed diagnostic
-  evidence. Receipt6769/six dirty adapters remain stopped in `/private/tmp/wi-browser-ready`;
-  patch/state: art-execution/browser-startup-diagnosis/mobile-followup-stopped.
-  Evidence: `/private/tmp/wi-art-execution`, `/private/tmp/wi-art-astra-review`
-  and regional directories. Physical devices/timing/audio and unsuitable public
-  rigs remain disclosed limits. Optional steel seed9 loss predates art.
-  **Next:** user-selected follow-up or staged #565 work; no further art task is
-  active. Preserve root companion UID. No deployment was performed.
-- **Resource/capacity roadmap #565:** planning merged on main `b1c4b02b`;
-  #566–#571 own staged resources/HUD/potions/food/capacity/cutover. No gameplay
-  validation is claimed. After #564's owned safe checkpoint, dispatch #566 and
-  independent #570; serialize core/save/UI writers and keep #571's cutover gate.
-  The plan is `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`;
-  `/private/tmp/wi-vitals-planning` holds planning evidence. M1 physical/human
-  and #494/#495 semantic choices remain open; proposed tuning is not a ruling.
+- **Resumed at user request:** compose merged art PR #577 and finish this lane.
+  Lane #517: `issue/517-homecoming-design` in `/private/tmp/wi-517-homecoming`;
+  base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
+  Owned paths: `HANDOFF.md`, `docs/design/517-homecoming-arcs.md`.
+  Checkpoint before each implementation or validation phase.
+  Evidence: `/private/tmp/wi-517-evidence`; independent review:
+  `/private/tmp/wi-517-independent-review.md`.
+  **Exact next action:** finish required CI and design closure review; #518/#520 own implementation and emotional acceptance.
+- **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
+  is composed here as completed code squashed as `0bbd96aa`. Original art checkout
+  remains separately owned and untouched. Previous choice-log ceiling fix is
+  included. Squash tree `0e843291` matches the reviewed source. Its Web CI waiver
+  was art-only; required CI remains mandatory for these lanes.
+  Other checkpoints: #572 foundation, #573 capacity, #574 routes, #575 homecomings,
+  #578 HUD contract and #579 encounter design. Serialize shared source/catalogs.
+- **#566 resource foundation:** staged in draft PR #572, isolated
+  `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
+  Battle handoff, recovery presentation and composed #571 acceptance remain open.
+- **Resource/capacity roadmap #565:** planning is merged at base `b1c4b02b`;
+  `docs/design/2026-10-05-persistent-vitals-recovery-plan.md` and #566–#571 own
+  the staged resource/HUD/potion/food/capacity/cutover work. Proposed tuning
+  remains subject to measurement. M1 devices and #494/#495 choices stay open.
 
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
@@ -43,7 +41,8 @@ archived, or superseded session blocks.
   #507/#508/#509 are closed; #504/#505/#506/#510/#253/#511 and M1 stay open
   for their physical/actual-host/human criteria. Production is unchanged from
   the `ab279415` 36-case local browser baseline.
-  PR #551 records final native/browser/audio evidence and causal corrections.
+  PR #551 owns native/browser/audio validation and causal corrections;
+  retained private/public evidence roots are listed below.
   Private candidate: `/private/tmp/wi-m1-candidate-93016f0b/m1-web-93016f0b.zip`,
   manifest and observation checklist alongside; PCK `cccbe5f4…`.
   Evidence: `/private/tmp/wi-m1-evidence`, private/public audio roots and
@@ -57,11 +56,10 @@ archived, or superseded session blocks.
   using the same private candidate and `qa/M1-OBSERVATIONS.md`. None supplied.
   OS keyboard/chooser/background/audio policy and actual itch remain unproven.
   No release/deploy/outreach/recruitment authorized. M1 stays open.
-- Prior M1 scoped repairs (#504/#505/#508/#510) are merged through PRs
-  #547–#550. Their evidence and remaining physical criteria are recorded in
-  those PRs and #511; #505/#510 evidence roots remain `/private/tmp/wi-505-evidence`
-  and `/private/tmp/wi-510-evidence`. Do not rerun completed software closure
-  merely because physical observations remain outstanding.
+- Prior scoped M1 repairs are merged through PRs #547–#551; their PR bodies
+  own detailed validation. #507/#508/#509 are closed. Remaining physical-device,
+  actual-host and human clauses stay open; do not rerun software closure merely
+  because those observations are missing.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.
