@@ -660,13 +660,21 @@
     ]
    },
     "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-     "tile_px": 16,
-     "coords": [
-      4,
-      2
-     ]
-    }
+                        "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                        "tile_px": 16,
+                        "coords": [
+                         4,
+                         2
+                        ],
+                        "tone": {
+                         "base": [
+                          0.4,
+                          0.34,
+                          0.26
+                         ],
+                         "detail": 0.55
+                        }
+                       }
   },
   {
    "_pick": "Layer 2/5: cream plaster upper floors, Building_Walls (26,2) (picks.md sec.1, MOCKUP-PROVEN flat #ddccb8) -- y=-1 (above-grid loom row) + y=0 (in-grid blocked row, cover_skip'd). Two plaster rows over a glass row = the 2-cell-facade scale-shock read, plus the cornice above.",
@@ -685,13 +693,21 @@
     ]
    },
     "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-     "tile_px": 16,
-     "coords": [
-      4,
-      3
-     ]
-    }
+                        "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                        "tile_px": 16,
+                        "coords": [
+                         4,
+                         3
+                        ],
+                        "tone": {
+                         "base": [
+                          0.4,
+                          0.34,
+                          0.26
+                         ],
+                         "detail": 0.55
+                        }
+                       }
   },
   {
    "_pick": "Layer 3/5: the leaded-glass storefront line, Building_Walls (13,35) (picks.md sec.1, MOCKUP-PROVEN, 'USE SPARINGLY -- one shopfront band') -- exactly one band, the ground-floor row y=1 the player walks past.",
@@ -847,13 +863,21 @@
     ]
    },
     "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-     "tile_px": 16,
-     "coords": [
-      2,
-      3
-     ]
-    }
+                        "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                        "tile_px": 16,
+                        "coords": [
+                         2,
+                         3
+                        ],
+                        "tone": {
+                         "base": [
+                          0.4,
+                          0.34,
+                          0.26
+                         ],
+                         "detail": 0.55
+                        }
+                       }
   },
   {
    "_pick": "Layer 5/5: the south band (y 16-17) -- building BACKS/rooftops seen from the street's north side, textured masonry variant Wall_Tiles (8,17) (picks.md sec.2's darker band) instead of the flat cool slab the windowed read flagged. Roofline texture, not facade (their fronts face away).",
@@ -872,13 +896,21 @@
     ]
    },
     "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-     "tile_px": 16,
-     "coords": [
-      4,
-      3
-     ]
-    }
+                        "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                        "tile_px": 16,
+                        "coords": [
+                         4,
+                         3
+                        ],
+                        "tone": {
+                         "base": [
+                          0.4,
+                          0.34,
+                          0.26
+                         ],
+                         "detail": 0.55
+                        }
+                       }
   },
   {
    "_pick": "v0.16.1 #9, layer 6/6: the ALLEY GROUND, beyond the new east wall AND in the break itself. Reuses mercantile_alleys' own first floor layer verbatim (Floors_Tiles (16,2)/(17,2)/(18,2), already MOCKUP-PROVEN on the sibling map) across x=27 y4..15 plus the mouth cells [26,7..9]. Presentation only; its job is that the gap reads as a way INTO somewhere. Blocked cells take the biome's own blocked tile (Wall_Tiles (8,2)) and get no layer entry -- hence no [27,3].",
@@ -963,13 +995,21 @@
     ]
    },
     "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-     "tile_px": 16,
-     "coords": [
-      0,
-      3
-     ]
-    }
+                        "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+                        "tile_px": 16,
+                        "coords": [
+                         0,
+                         3
+                        ],
+                        "tone": {
+                         "base": [
+                          0.33,
+                          0.34,
+                          0.36
+                         ],
+                         "detail": 0.5
+                        }
+                       }
   }
  ],
  "decor": [

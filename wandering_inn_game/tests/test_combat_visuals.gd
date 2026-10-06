@@ -583,6 +583,10 @@ func _init() -> void:
 ##     and NOT head-to-feet-plane (which reads the anchor, not the silhouette).
 ## Facing recorded per row so a re-derivation can reproduce it exactly.
 const FIGURE_ROWS := {
+	"cave_bat_harvest": 69.0,
+	"river_wolf_harvest": 31.0,
+	"razorbeak_harvest": 41.0,
+	"watchgolem_harvest": 57.0,
 	"bat": 36.0,                   # idle_side, 96px frame
 	"briar_collector": 62.0,       # idle_side, 84x86px frame
 	"briar_collector_deep": 59.0,  # idle (non-directional), 64px frame
@@ -696,6 +700,8 @@ func _assert_board_legibility_contracts(combatants: Dictionary) -> void:
 		"hired_blade_knife_a", "hired_blade_knife_b", "fence_doorman",
 		"footpad_lookout", "footpad_bruiser",
 		"mothbear_a", "mothbear_b", "line_stalker_a", "line_stalker_b"])
+	audited.append_array(["river_wolf_a", "river_wolf_b", "river_wolf_c",
+		"razorbeak_a", "razorbeak_b", "watchgolem_a", "watchgolem_b"])
 	for id: String in audited:
 		var cfg: Dictionary = _combatant_config(combatants, id)
 		assert(not cfg.is_empty(), "audited roster missing combatant: " + id)

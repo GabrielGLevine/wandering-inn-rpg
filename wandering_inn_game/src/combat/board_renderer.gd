@@ -225,6 +225,17 @@ func build(view: WICombatView, main_ref: Node) -> void:
 		var visual := make_combatant_visual(id, c)
 		_board.add_child(visual)
 		_squares[id] = visual
+		if visual.has_meta("sprite"):
+			var sprite_id := String(visual.get_meta("sprite"))
+			var sprite := visual.get_child(0) as AnimatedSprite2D
+			ObservableBus.emit_domain_event(WIEvents.UI_COMBATANT_VISUAL_RENDERED, {
+				"id": id,
+				"sprite": sprite_id,
+				"resolved_sprite": WISpriteRegistry.resolved_id(sprite_id),
+				"animation": String(sprite.animation),
+				"scale": sprite.scale.x,
+				"frames": sprite.sprite_frames.get_frame_count(sprite.animation),
+			})
 	_build_arena_decor(view.arena_config().get("decor", []))
 	_rebuild_combat_labels()
 
@@ -414,6 +425,7 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 		spr.set_meta("rest_modulate", spr.modulate)
 		spr.self_modulate = _legibility_boost
 		holder.add_child(spr)
+		holder.set_meta("sprite", sprite_id)
 	else:
 		var rect := ColorRect.new()
 		rect.color = PLAYER_COLOR if String(c["side"]) == "player" else ENEMY_COLOR

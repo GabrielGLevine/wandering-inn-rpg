@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 268 native canonical QA scripts. The manifest is the
+This is the human index for 269 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -276,6 +276,7 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `rogue_recovery_guile` | 9 | full | `—` | #508 fresh earned Mage/Light guile-crate route: deliberate cleared-road cover transit earns Rogue at sleep without respawning enemies. |
 | `stage_guidance_fresh` | 9 | full | `—` | #507 fresh earned cleaning, actual rendered Erin sleep cue, ordinary upstairs reward, History/Help/Replay, manual Save/Load and Quest Hints OFF/ON across UI rebuild. Native input; physical comprehension remains #511. |
 | `owned_icons_key_art` | 9 | full | `owned_icon_kit` | #558/#562 curated co-visible owned icons and title/journal art; icon-kit setup fixture, real inventory selection and J opening; text-only ActII fallback |
+| `harvest_creature_visuals` | 9 | full | `—` | #564 complete bat/razorbeak rigs through actual encounters, renderer-bound sprite confirmations and desktop alpha bounds. |
 
 ## Browser-only QA
 

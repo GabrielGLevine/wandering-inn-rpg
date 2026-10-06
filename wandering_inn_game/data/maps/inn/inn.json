@@ -173,17 +173,25 @@
      7
     ],
      "fallback_render": {
-      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-      "tile_px": 16,
-      "cap": [
-       4,
-       2
-      ],
-      "face": [
-       4,
-       3
-      ]
-     }
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "face": [
+                          4,
+                          3
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -199,13 +207,21 @@
      6
     ],
      "fallback_render": {
-      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-      "tile_px": 16,
-      "cap": [
-       4,
-       2
-      ]
-     }
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -221,13 +237,21 @@
      6
     ],
      "fallback_render": {
-      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-      "tile_px": 16,
-      "cap": [
-       4,
-       2
-      ]
-     }
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -243,13 +267,21 @@
      6
     ],
      "fallback_render": {
-      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-      "tile_px": 16,
-      "cap": [
-       4,
-       2
-      ]
-     }
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -265,13 +297,21 @@
      6
     ],
      "fallback_render": {
-      "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-      "tile_px": 16,
-      "cap": [
-       4,
-       2
-      ]
-     }
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    }
   ]
  },

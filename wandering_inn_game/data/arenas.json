@@ -83,13 +83,21 @@
       "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
       "tile_px": 16,
       "fallback_render": {
-       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-       "tile_px": 16,
-       "coords": [
-        0,
-        3
-       ]
-      }
+                          "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+                          "tile_px": 16,
+                          "coords": [
+                           0,
+                           3
+                          ],
+                          "tone": {
+                           "base": [
+                            0.33,
+                            0.34,
+                            0.36
+                           ],
+                           "detail": 0.5
+                          }
+                         }
     },
     {
      "_pick": "dirt-transition edge strips at the north/south grid edges (rows 0 and 7) -- whole-image tile.",
@@ -108,21 +116,21 @@
       ]
      },
       "fallback_render": {
-       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-       "tile_px": 16,
-       "coords": [
-        1,
-        2
-       ],
-       "tone": {
-        "base": [
-         0.31,
-         0.32,
-         0.23
-        ],
-        "detail": 0.6
-       }
-      }
+                          "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+                          "tile_px": 16,
+                          "coords": [
+                           1,
+                           2
+                          ],
+                          "tone": {
+                           "base": [
+                            0.33,
+                            0.34,
+                            0.36
+                           ],
+                           "detail": 0.5
+                          }
+                         }
     },
     {
      "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
@@ -140,21 +148,21 @@
       ]
      },
       "fallback_render": {
-       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-       "tile_px": 16,
-       "coords": [
-        3,
-        0
-       ],
-       "tone": {
-        "base": [
-         0.31,
-         0.32,
-         0.23
-        ],
-        "detail": 0.6
-       }
-      }
+                          "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+                          "tile_px": 16,
+                          "coords": [
+                           3,
+                           0
+                          ],
+                          "tone": {
+                           "base": [
+                            0.33,
+                            0.34,
+                            0.36
+                           ],
+                           "detail": 0.5
+                          }
+                         }
     }
    ],
    "decor": [
@@ -679,13 +687,21 @@
       "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
       "tile_px": 16,
       "fallback_render": {
-       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-       "tile_px": 16,
-       "coords": [
-        0,
-        3
-       ]
-      }
+                          "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+                          "tile_px": 16,
+                          "coords": [
+                           0,
+                           3
+                          ],
+                          "tone": {
+                           "base": [
+                            0.33,
+                            0.34,
+                            0.36
+                           ],
+                           "detail": 0.5
+                          }
+                         }
     },
     {
      "_pick": "dirt-transition edge strips at the north/south grid edges (rows 0 and 7) -- whole-image tile.",
@@ -704,21 +720,21 @@
       ]
      },
       "fallback_render": {
-       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-       "tile_px": 16,
-       "coords": [
-        1,
-        2
-       ],
-       "tone": {
-        "base": [
-         0.31,
-         0.32,
-         0.23
-        ],
-        "detail": 0.6
-       }
-      }
+                          "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+                          "tile_px": 16,
+                          "coords": [
+                           1,
+                           2
+                          ],
+                          "tone": {
+                           "base": [
+                            0.33,
+                            0.34,
+                            0.36
+                           ],
+                           "detail": 0.5
+                          }
+                         }
     },
     {
      "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
@@ -736,21 +752,21 @@
       ]
      },
       "fallback_render": {
-       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-       "tile_px": 16,
-       "coords": [
-        3,
-        0
-       ],
-       "tone": {
-        "base": [
-         0.31,
-         0.32,
-         0.23
-        ],
-        "detail": 0.6
-       }
-      }
+                          "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+                          "tile_px": 16,
+                          "coords": [
+                           3,
+                           0
+                          ],
+                          "tone": {
+                           "base": [
+                            0.33,
+                            0.34,
+                            0.36
+                           ],
+                           "detail": 0.5
+                          }
+                         }
     }
    ],
    "decor": [
@@ -1681,13 +1697,21 @@
       "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
       "tile_px": 16,
       "fallback_render": {
-       "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-       "tile_px": 16,
-       "coords": [
-        0,
-        3
-       ]
-      }
+                          "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+                          "tile_px": 16,
+                          "coords": [
+                           0,
+                           3
+                          ],
+                          "tone": {
+                           "base": [
+                            0.33,
+                            0.34,
+                            0.36
+                           ],
+                           "detail": 0.5
+                          }
+                         }
     }
    ],
    "decor": [
@@ -2161,15 +2185,22 @@
       0
      ],
      "cells": "all",
-
-      "fallback_render": {
-       "sheet": "res://assets/tiles/harvest/meadow_paths.png",
-       "tile_px": 16,
-       "coords": [
-        0,
-        3
-       ]
-      }
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+      "tile_px": 16,
+      "coords": [
+       0,
+       3
+      ]
+     },
+     "tone": {
+      "base": [
+       0.29,
+       0.34,
+       0.23
+      ],
+      "detail": 0.3
+     }
     }
    ],
    "decor": [

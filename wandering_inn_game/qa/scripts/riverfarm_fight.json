@@ -4437,6 +4437,40 @@
    "equals": "player"
   },
   {
+   "action": "assert_event_logged",
+   "type": "ui_combatant_visual_rendered",
+   "payload_contains": {
+    "id": "river_wolf_a",
+    "sprite": "river_wolf_harvest",
+    "resolved_sprite": "river_wolf_harvest",
+    "animation": "idle"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_combatant_visual_rendered",
+   "payload_contains": {
+    "id": "river_wolf_b",
+    "sprite": "river_wolf_harvest",
+    "resolved_sprite": "river_wolf_harvest",
+    "animation": "idle"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_combatant_visual_rendered",
+   "payload_contains": {
+    "id": "river_wolf_c",
+    "sprite": "river_wolf_harvest",
+    "resolved_sprite": "river_wolf_harvest",
+    "animation": "idle"
+   }
+  },
+  {
+   "action": "assert_combat_layout",
+   "desktop": true
+  },
+  {
    "action": "screenshot",
    "name": "03_night_wolf_arena"
   },

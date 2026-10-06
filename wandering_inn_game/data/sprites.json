@@ -2246,7 +2246,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "counter_segment_owned"
  },
  "counter_mid": {
   "render_scale": 0.5,
@@ -2265,7 +2266,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "counter_segment_owned"
  },
  "counter_right": {
   "render_scale": 0.5,
@@ -2284,7 +2286,8 @@
     ],
     "fps": 1
    }
-  }
+  },
+  "fallback_sprite": "counter_segment_owned"
  },
  "shelf_bottles": {
   "render_scale": 0.5,
@@ -2675,7 +2678,8 @@
     "fps": 1
    }
   },
-  "shadow": true
+  "shadow": true,
+  "fallback_sprite": "city_roof_owned"
  },
  "wandering_inn_facade": {
   "anchor": [
@@ -9675,6 +9679,235 @@
     "frame_size": [
      112,
      96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "cave_bat_harvest": {
+  "render_scale": 0.31884058,
+  "anchor": [
+   0.5,
+   0.80357143
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_creatures/cave_bat_harvest/Idle-Sheet.png",
+    "frame_size": [
+     112,
+     112
+    ],
+    "fps": 6
+   },
+   "move": {
+    "sheet": "res://assets/sprites/harvest_creatures/cave_bat_harvest/Move-Sheet.png",
+    "frame_size": [
+     112,
+     112
+    ],
+    "fps": 10
+   },
+   "slice": {
+    "sheet": "res://assets/sprites/harvest_creatures/cave_bat_harvest/Slice-Sheet.png",
+    "frame_size": [
+     112,
+     112
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet": "res://assets/sprites/harvest_creatures/cave_bat_harvest/Hit-Sheet.png",
+    "frame_size": [
+     112,
+     112
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet": "res://assets/sprites/harvest_creatures/cave_bat_harvest/Death-Sheet.png",
+    "frame_size": [
+     112,
+     112
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "river_wolf_harvest": {
+  "render_scale": 0.64516129,
+  "anchor": [
+   0.5,
+   0.67391304
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_creatures/river_wolf_harvest/Idle-Sheet.png",
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 1
+   },
+   "walk": {
+    "sheet": "res://assets/sprites/harvest_creatures/river_wolf_harvest/Walk-Sheet.png",
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet": "res://assets/sprites/harvest_creatures/river_wolf_harvest/Slice-Sheet.png",
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet": "res://assets/sprites/harvest_creatures/river_wolf_harvest/Hit-Sheet.png",
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet": "res://assets/sprites/harvest_creatures/river_wolf_harvest/Death-Sheet.png",
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "razorbeak_harvest": {
+  "render_scale": 0.53658537,
+  "anchor": [
+   0.5,
+   0.79411765
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_creatures/razorbeak_harvest/Idle-Sheet.png",
+    "frame_size": [
+     68,
+     68
+    ],
+    "fps": 6
+   },
+   "slice": {
+    "sheet": "res://assets/sprites/harvest_creatures/razorbeak_harvest/Slice-Sheet.png",
+    "frame_size": [
+     68,
+     68
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet": "res://assets/sprites/harvest_creatures/razorbeak_harvest/Hit-Sheet.png",
+    "frame_size": [
+     68,
+     68
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet": "res://assets/sprites/harvest_creatures/razorbeak_harvest/Death-Sheet.png",
+    "frame_size": [
+     68,
+     68
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "watchgolem_harvest": {
+  "render_scale": 0.38596491,
+  "anchor": [
+   0.5,
+   0.85
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_creatures/watchgolem_harvest/Idle-Sheet.png",
+    "frame_size": [
+     80,
+     80
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet": "res://assets/sprites/harvest_creatures/watchgolem_harvest/Walk-Sheet.png",
+    "frame_size": [
+     80,
+     80
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet": "res://assets/sprites/harvest_creatures/watchgolem_harvest/Slice-Sheet.png",
+    "frame_size": [
+     80,
+     80
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet": "res://assets/sprites/harvest_creatures/watchgolem_harvest/Hit-Sheet.png",
+    "frame_size": [
+     80,
+     80
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet": "res://assets/sprites/harvest_creatures/watchgolem_harvest/Death-Sheet.png",
+    "frame_size": [
+     80,
+     80
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "counter_segment_owned": {
+  "render_scale": 0.266667,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/counter_segment_owned/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "city_roof_owned": {
+  "render_scale": 0.03555556,
+  "anchor": [
+   0.5,
+   0.9078341
+  ],
+  "field_y_sort_bias_px": 20.0,
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/city_roof_owned/Idle-Sheet.png",
+    "frame_size": [
+     1812,
+     868
     ],
     "fps": 1
    }

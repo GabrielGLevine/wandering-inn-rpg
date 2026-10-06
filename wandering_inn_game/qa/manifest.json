@@ -7797,6 +7797,34 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "harvest_creature_visuals",
+   "seed": 9,
+   "note": "#564 complete bat/razorbeak rigs through actual encounters, renderer-bound sprite confirmations and desktop alpha bounds.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "guild"
+    ],
+    "fixtures": [
+     "floodplains_bestiary_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "razorbeak_nest"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ],
  "browser_scripts": [

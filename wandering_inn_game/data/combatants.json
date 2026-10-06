@@ -145,8 +145,8 @@
    "id": "cave_spider",
    "power_level": 1.8,
    "display_name": "Cave Bat",
-   "sprite": "bat",
-   "combat_scale": 0.56,
+   "sprite": "cave_bat_harvest",
+   "combat_scale": 0.31884058,
    "side": "enemy",
    "stats": {
     "str": 9,
@@ -655,7 +655,7 @@
    "id": "river_wolf_a",
    "power_level": 7.0,
    "display_name": "River Wolf",
-   "sprite": "river_wolf",
+   "sprite": "river_wolf_harvest",
    "side": "enemy",
    "stats": {
     "str": 11,
@@ -667,13 +667,14 @@
    },
    "weapon_die": 5,
    "ai": "skirmisher",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.645162
   },
   {
    "id": "river_wolf_b",
    "power_level": 7.0,
    "display_name": "River Wolf",
-   "sprite": "river_wolf",
+   "sprite": "river_wolf_harvest",
    "side": "enemy",
    "stats": {
     "str": 11,
@@ -685,14 +686,15 @@
    },
    "weapon_die": 5,
    "ai": "skirmisher",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.645162
   },
   {
    "_comment": "River_wolf_pack's third member, the pack's alpha -- see river_wolf_a's _comment for the canon cite.",
    "id": "river_wolf_c",
    "power_level": 8.5,
    "display_name": "River Wolf Alpha",
-   "sprite": "river_wolf",
+   "sprite": "river_wolf_harvest",
    "side": "enemy",
    "stats": {
     "str": 13,
@@ -706,7 +708,8 @@
    "ai": "melee",
    "skills": [
     "power_strike"
-   ]
+   ],
+   "combat_scale": 0.645162
   },
   {
    "id": "footpad_lookout",
@@ -1053,7 +1056,7 @@
    "id": "razorbeak_a",
    "power_level": 1.5,
    "display_name": "Razorbeak",
-   "sprite": "razorbeak",
+   "sprite": "razorbeak_harvest",
    "side": "enemy",
    "stats": {
     "str": 9,
@@ -1065,14 +1068,15 @@
    },
    "weapon_die": 5,
    "ai": "coward",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.53658537
   },
   {
    "_comment": "Razorbeak nest's second member -- see razorbeak_a's own _comment for the canon cite + the `coward` profile rationale.",
    "id": "razorbeak_b",
    "power_level": 1.5,
    "display_name": "Razorbeak",
-   "sprite": "razorbeak",
+   "sprite": "razorbeak_harvest",
    "side": "enemy",
    "stats": {
     "str": 9,
@@ -1084,7 +1088,8 @@
    },
    "weapon_die": 5,
    "ai": "coward",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.53658537
   },
   {
    "_comment": "Mothbear, T3 NIGHT-ONLY pack encounter (`road_mothbears`, floodplains wagon road). v0.16.1 #21: re-homed off invrisil_boulevard. No cite exists for `mothbear` in the wiki, data/ or docs/design/ -- an ORIGINAL beast on wilderness logic, not a cited one.",
@@ -1204,7 +1209,7 @@
    "id": "watchgolem_a",
    "power_level": 12.5,
    "display_name": "Stone Golem",
-   "sprite": "watchgolem",
+   "sprite": "watchgolem_harvest",
    "side": "enemy",
    "stats": {
     "str": 14,
@@ -1217,14 +1222,15 @@
    "weapon_die": 6,
    "damage_reduction": 3,
    "ai": "guard",
-   "skills": []
+   "skills": [],
+   "combat_scale": 0.38596491
   },
   {
    "_comment": "The market guard pair's escort half -- see watchgolem_a's own _comment for the canon cite + the paired-guard rationale.",
    "id": "watchgolem_b",
    "power_level": 13.0,
    "display_name": "Stone Golem",
-   "sprite": "watchgolem",
+   "sprite": "watchgolem_harvest",
    "side": "enemy",
    "stats": {
     "str": 15,
@@ -1239,7 +1245,8 @@
    "ai": "guard",
    "skills": [
     "power_strike"
-   ]
+   ],
+   "combat_scale": 0.38596491
   },
   {
    "_comment": "Balance: sim_combat_batch.gd RIVERFARM_CELLS' `riverfarm_thicket_patch_t3_solo`, GATED 0.55-0.95 at `t3_warrior10` (measured 0.81 -- solo, no hunter ally, the renewable-cull's own design point).",
