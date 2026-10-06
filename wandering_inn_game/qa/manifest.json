@@ -1972,7 +1972,7 @@
    "script": "gear_loop",
    "seed": 9,
    "fixture": "gear_loop_start",
-   "note": "resonance-gear UI proof (accessory rows, capacity refusal)",
+   "note": "fixture-backed four-point fit, capacity refusal with a free position, distinct physical-full refusal, inventory card/scroll/drag coverage",
    "tiers": [
     "full"
    ],
@@ -2537,7 +2537,7 @@
    "script": "door_awakening",
    "seed": 9,
    "fixture": "door_awakening_start",
-   "note": "Magical Door plan Task D4 (issue #8): the full awakening chain from a beat-3-ready fixture through 3 real sleeps -- 2 silent study beats then door_awakened banks + the GDI line queues under the sleep veil -- to the awakened pantry_door's interact rewire (opens the portal menu, not the flavor toast); v0.15 A2 seam 3: the journal open on the awakening sleep pins the spine lead (2 rows, catalog order -- this fixture never started the delve either)",
+   "note": "fixture-backed awakening through real sleeps; same five-point loadout refuses before4\u21925 growth and fits after; later sleep proves once-only growth; journal and portal coverage",
    "tiers": [
     "full"
    ],

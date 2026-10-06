@@ -366,3 +366,35 @@ integration, actual 58-gold acquisition, UI/domain/rendered evidence and
 windowed/touch checks remain separate gates; this checkpoint does not close
 them. Earlier counterfactual combat measurements remain diagnostics, not proof
 of earned gear or sustained resource balance.
+
+
+The staged QA routes now use actual catalog costs to keep refusal meaningful
+under four capacity: Moon Bone (2) plus Stonescale (2) fits; Hedge (1) refuses
+with the third position free. A separate three-position-full check uses only
+two capacity points and expects the physical-position refusal instead. The
+awakening fixture wears Moon Bone (2), then attempts Anchor Sliver (3) both
+before and after the existing growth sleep. A further real sleep must retain
+five and the single growth event. These fixtures preserve their historical
+schema and prove no earned acquisition. Targeted headless checks pass with
+seed 9 and production message timing: gear (124 steps), awakening (94), the
+shared-fixture journal hints (43), and untouched fresh-start vitals (122).
+The final load gate and fixture-coherence suite (209/209) also pass. Each
+runtime gate has zero exit, its PASS marker and no error/warning noise; each
+canonical has a passing result JSON. Gear ran at `7fa79946`; the remaining
+settled checks ran at `f79e4a37`. Only the independent awakening route changed
+between those heads. Root-owned windowed/browser verification remains open.
+
+The production toast queue pauses while inventory is open and can replay an
+interrupted message. QA captures the panel refusal first, closes inventory,
+and then requires the exact rendered toast. It lets earlier equipment/tool
+messages drain before the separate physical-full leg. Rejected authoring runs
+retain the initial modal-wait and short-queue-timeout failures; no production
+holds were shortened to obtain these passes.
+
+For actual acquisition, append the 58-gold purchase leg to a continuous #512
+journey with recorded ordinary quest/job receipts and all intervening spending.
+Do not infer purse balance from gross catalog payouts or seed the needed gold.
+Keep imperfect reward/forced-crate histories; if that declared route cannot
+afford the set, record the blocker rather than insert undisclosed wage loops.
+Then prove purchase confirmation, depleted-resource equip behavior, a declared
+combat consequence, actual sleep/save/reload, and the browser path separately.

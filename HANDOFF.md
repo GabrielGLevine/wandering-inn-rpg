@@ -9,21 +9,20 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #567 integration:** `issue/567-hud-contract`, isolated tree
-  `/private/tmp/wi-567-hud-contract`; controller owns validation here.
-  Composed #56685af0621, HUDa9e839d3, capacity60aebdaa (schema11). All three
-  have bounded independent source approval. No partial resource deployment.
-  **Next:** import and full preflight on this settled tree; then compose #570
-  gear/door QA repair and run canonical/balance/window gates. #568 core/schema12
-  is owned by resource_plan in `/private/tmp/wi-568-consumables`; capacity570
-  owns gear/door routes plus shared QA generation in its own tree.
-  Official bundle-v7 windowed gear/tutorial/sewers passes at8a4591cd (19images).
-  New production-timing fresh-start/carry routes pass at690f49f1 (9images read):
-  earned armor32/36 without healing, sleep47/47; actual casts/potion and reload
-  retain15HP/8MP, real sleep43HP/12MP. Frozen domain/HUD receipts match pixels.
-  Passive max-HP wording corrected; browser/touch/device proof remains open.
-  Evidence `/private/tmp/wi-567-evidence/window-{8a4591cd,690f49f1}`; source
-  reviews `/private/tmp/wi-567-hud-independent-review.md` and sibling artifacts.
+- **Active #567 integration:** `issue/567-hud-contract`, controller-owned
+  `/private/tmp/wi-567-hud-contract`. Composed resource85af0621, HUDa9e839d3,
+  capacity60aebdaa and gear/door QA8676a0be; bounded source reviews approve.
+  Core at3d2ae361:59Godot units pass; grant-reference repindcac4795 yields
+ 282Python/109subtests passing. Both full combat policies pass atdcac4795.
+  Bundle-v7 window gear/tutorial/dark and fresh-start/carry pass (28images read).
+  **Next:** compose main1375e375, regenerate QA, window-test new gear/door routes,
+  run canonical sweep and targeted browser-touch layout. Initial browser export
+  imported Playwright SVGs from local node_modules; add local.gdignore and rerun.
+  No partial resource deployment. #568 core/data/tests are resource_plan's in
+  `/private/tmp/wi-568-consumables`; quantitiesd53bcc74/PR582 pending review fixes
+  and shared use/poison. Frontend owner prepares separately; QA ownership is free.
+  Evidence `/private/tmp/wi-567-evidence`, `/private/tmp/wi-570-evidence/qa`;
+  review paths and earlier acceptance remain in draft PRs572/573/578/582.
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code squashed as `0bbd96aa`. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
