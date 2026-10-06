@@ -346,7 +346,7 @@
      },
      {
       "effect_lines": [
-       "Heals 8 HP in combat (single use)"
+       "Restores up to 8 HP (single use)"
       ],
       "locked": false,
       "requirement": "",
