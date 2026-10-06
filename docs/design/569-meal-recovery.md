@@ -136,3 +136,33 @@ Next: independently review the exact composed head, then run and inspect each
 meal route windowed with the same seed and timing argument. The controller
 owns window/browser scheduling, composed full integration and publication.
 The lane has no remaining intended runtime or QA edits.
+
+Native window runs at `d242e87e` pass all three routes with the current private
+asset overlay; all 19 captures were read. Service and earned-cooking captures
+are readable. Station captures 02/03 exposed clipped retained receipts after
+final-unit rearm selected the sword. The bounded inventory fix waits for the
+rearm layout and scrolls the captured receipt into view, guarded by operation
+and render generation; it does not alter readiness, mint tokens or resize the
+panel. The production frontend regression fails on the original geometry and
+passes after the fix. The affected station window rerun passes all 92 steps;
+all four captures were read and both receipts are now fully visible. The
+corresponding VISUAL-LOG row is removed with this fix.
+
+Evidence is retained under `/private/tmp/wi-569-qa-evidence`: original native
+`{service,earned,station}-window`, corrected `station-window-fixed`, and
+`receipt-red-clean.log` / `receipt-green.log`. Native clicks remain emulated
+input, with no browser or physical-device claim. The window lane is released;
+next is independent exact-head review and controller composition/full gates.
+
+The six composed canonical pin repairs also pass headless at manifest seed 9:
+`riverfarm_talk`, `trader_earn_loop`, `quest_errand_parley`,
+`mixer_alchemist_loop`, `witch_brew_loop`, and `stage3_perks_loop`. Recovery
+wording and appended meal options retain full option/price/locked assertions.
+Ingredient tests now follow the settled loss-before-gain event order and pin
+source/count deltas; the no-ingredient and no-duplicate-output refusals remain.
+The stage-3 route explicitly asserts that the spent free meal disappears while
+the paid-service row remains, then exits the four-option hub. These runs use
+existing canonical timing, not new native/browser acceptance. Full logs,
+results and prior rejected sweep evidence are in
+`/private/tmp/wi-569-qa-evidence/stale-pins/`. No gameplay or fixture change was
+needed for these six repairs.
