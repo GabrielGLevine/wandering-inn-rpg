@@ -551,3 +551,30 @@ longhouse_communal_table_owned/Idle-Sheet.png: owned PixelLab generation 59fd5b7
 mill_tally_sticks_owned/Idle-Sheet.png: owned PixelLab generation a4a8ebf8-947f-48eb-938f-b99ca6dfad05; source L2_props/mill_tally_sticks.png; copied unchanged; canvas 64x64; alpha (17, 4, 47, 60); feet anchor [0.5, 0.9375], scale 0.466667 (visible width 14px).
 
 mill_high_shelf_owned/Idle-Sheet.png: owned PixelLab generation ed3e42f4-73c4-4061-ab4e-962fdbb3bb6b; source L2_props/mill_high_shelf.png; copied unchanged; canvas 64x64; alpha (10, 1, 58, 63); feet anchor [0.53125, 0.984375], scale 0.458333 (visible width 22px).
+
+Owned terrain kit, complete render fallback candidates:
+{"asset": "res://assets/tiles/harvest/cobble_over_dirt_v1.png", "generation_id": "07298975-6858-47a6-b9b0-b0deb3921308", "operation": "PNG and named-corner metadata copied unchanged", "sha256": "ff96c89a49cf434d39d058e0ed5db99f9d44c64154624e53c2194808f339f38b", "source": "L4_tiles_ui_art/tiles/street/cobble_over_dirt_v1.png"}
+{"asset": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png", "generation_id": "157d30cc-f607-479f-94a8-b79fa4bf0e94", "operation": "PNG and named-corner metadata copied unchanged", "sha256": "98fba41dd5e1e9cd68eef13f1b404f9f1d0e5e417e3819eddfa0fd6544e1d69b", "source": "L4_tiles_ui_art/tiles/cave/rock_over_cavefloor_v3.png"}
+{"asset": "res://assets/tiles/harvest/wall_over_flagstone_v1.png", "generation_id": "443b5631-57c1-473f-8aa6-96eb31c1b6d0", "operation": "PNG and named-corner metadata copied unchanged", "sha256": "7573722846134378d2a38f5bbe4acce6c11a248e0bd803924679b86fcb165d2b", "source": "L4_tiles_ui_art/tiles/dungeon/wall_over_flagstone_v1.png"}
+{"asset": "res://assets/tiles/harvest/carpet_over_floorboards_v2_square.png", "generation_id": "d403230d-9cb8-45fe-ab78-7a8494b5bb50", "operation": "PNG and named-corner metadata copied unchanged", "sha256": "69156e309f1ba753f33438bc984e9a4fcec89c2df31068b166f833a363cdba59", "source": "L4_tiles_ui_art/tiles/library/carpet_over_floorboards_v2_square.png"}
+{"asset": "res://assets/tiles/harvest/bramble_over_moss_v2.png", "generation_id": "85970e6c-bbdd-4c5d-8e21-9c54d9dcc87e", "operation": "PNG and named-corner metadata copied unchanged", "sha256": "ada7f3ece80dc518d1c3484dfe39b0892e30f287b8dbe6e90ecc6e89ff33049c", "source": "L4_tiles_ui_art/tiles/witch_hollow/bramble_over_moss_v2.png"}
+{"asset": "res://assets/tiles/harvest/hedge_over_lawn_v1.png", "generation_id": "dc247799-6cad-4195-a2d9-e6859a7894d1", "operation": "PNG and named-corner metadata copied unchanged", "sha256": "68cf68ff55b5dbb2e77e6a9ab030077ca82131386169004ae3e38d1eaab77859", "source": "L4_tiles_ui_art/tiles/garden/hedge_over_lawn_v1.png"}
+{"asset": "res://assets/tiles/harvest/gravel_over_lawn_v1.png", "generation_id": "0c4a7094-8e3a-4c08-91df-b243a8890eb1", "operation": "PNG and named-corner metadata copied unchanged", "sha256": "ccfb14ec9a09f627ed83dd12e63bb56a9b2edd16d2a47bd8105a38c88cf7cd46", "source": "L4_tiles_ui_art/tiles/garden/gravel_over_lawn_v1.png"}
+{"asset": "res://assets/tiles/harvest/ashlar_over_checker_v1.png", "generation_id": "8ac19462-a5e3-483e-ac34-af3d9dacce21", "operation": "PNG and named-corner metadata copied unchanged", "sha256": "b70fa3e12aa14cd6309159ab4d248aa5cd8ca46fa21620b9939bd5884a5d1bdf", "source": "L4_tiles_ui_art/tiles/castle/ashlar_over_checker_v1.png"}
+{"asset": "res://assets/tiles/harvest/plaster_wall.png", "generation_id": "722976a0-fd8f-4e8f-8dfc-21a4a27fba37", "operation": "source PNG copied unchanged; runtime atlas regions only", "sha256": "5bd39a03d0b44bb45c7e35130073b96d81252c9c8888e6e6db440e9d291a9a3c", "source": "L2_props/facade_plaster.png"}
+{"asset": "res://assets/tiles/harvest/window_facade.png", "generation_id": "cb2904c3-0062-4571-8c95-59187ba252a0", "operation": "source PNG copied unchanged; runtime atlas regions only", "sha256": "715e35c6bf271162bccd21b94234b19849ce869736c1da4fcaf865875e28d87e", "source": "L2_props/window_blue.png"}
+Plaster atlas (source128x96): fully opaque face[4,3], beam-cap[4,2], post[2,3] at16px; measured alpha255. Window atlas uses complete64x64 image at64px, over a plaster underlay; never maps old private coordinates onto this source.
+
+dig_camp_tent_owned/Idle-Sheet.png: owned PixelLab generation 804d6314-5baf-41dd-9ba2-7614c51b5e97; source L2_props/set_pieces/dig_camp_tent.png; copied unchanged; canvas 96x80; alpha (8, 8, 92, 72); feet anchor [0.520833, 0.9], scale 0.404762 (visible width 34px).
+
+ruin_fallen_column_owned/Idle-Sheet.png: owned PixelLab generation 4c9ed892-9a4e-4dab-aef6-d30e9be34041; source L2_props/set_pieces/fallen_column_cover__r3.png; copied unchanged; canvas 128x64; alpha (8, 8, 122, 58); feet anchor [0.507812, 0.90625], scale 0.263158 (visible width 30px).
+
+dig_survey_stakes_owned/Idle-Sheet.png: owned PixelLab generation bd7be25e-e47a-434a-9b44-c9950e8f5c13; source L2_props/set_pieces/dig_survey_stakes.png; copied unchanged; canvas 160x48; alpha (0, 20, 160, 39); feet anchor [0.5, 0.8125], scale 0.1 (visible width 16px).
+
+dungeon_brazier_owned/Idle-Sheet.png: owned PixelLab generation 272e022e-ac07-4751-9a05-85c2c82fdd3a; source L2_props/set_pieces/dungeon_standing_brazier.png; copied unchanged; canvas 48x88; alpha (7, 7, 42, 80); feet anchor [0.510417, 0.909091], scale 0.428571 (visible width 15px).
+
+dungeon_wall_chains_owned/Idle-Sheet.png: owned PixelLab generation a57f6178-0b3f-4288-8ad4-a3e8e37e92de; source L2_props/set_pieces/dungeon_wall_chains.png; copied unchanged; canvas 96x72; alpha (9, 8, 87, 60); feet anchor [0.5, 0.833333], scale 0.179487 (visible width 14px).
+
+crypt_sarcophagus_owned/Idle-Sheet.png: owned PixelLab generation 6cdb9478-96a6-445f-bf8c-8ee49d338ab0; source L2_props/set_pieces/crypt_sarcophagus.png; copied unchanged; canvas 96x64; alpha (13, 4, 83, 59); feet anchor [0.5, 0.921875], scale 0.4 (visible width 28px).
+
+gallery_mouth_owned/Idle-Sheet.png: owned PixelLab generation 145a1300-a82d-4df3-80b0-e126fae1b92e; source L2_props/set_pieces/collapsed_gallery_mouth__r2.png; copied unchanged; canvas 112x96; alpha (17, 19, 93, 77); feet anchor [0.491071, 0.802083], scale 0.421053 (visible width 32px).

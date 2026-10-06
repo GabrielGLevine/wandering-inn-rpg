@@ -200,7 +200,8 @@ func build(view: WICombatView, main_ref: Node) -> void:
 	world.enter_combat_camera(view.grid_size())
 	_board.visible = true
 	_legibility_boost = _legibility_modulate(view)
-	var biome: Dictionary = _biome_for_combat(view)
+	var original_biome: Dictionary = _biome_for_combat(view)
+	var biome := WITileBoardBuilder.resolve_biome_render(original_biome, WISpriteRegistry)
 	WITileBoardBuilder.build_skirt(_board, view.grid_size(), 20, biome, WISpriteRegistry)  # 20 == world.gd SKIRT_MARGIN_CELLS (single-source someday)
 	var tile_px := int(biome["tile_px"])
 	var floor_layer := WITileBoardBuilder.make_tile_layer(_board, String(biome["sheet"]), tile_px, WISpriteRegistry)
@@ -208,9 +209,10 @@ func build(view: WICombatView, main_ref: Node) -> void:
 	for x in view.grid_size().x:
 		for y in view.grid_size().y:
 			floor_layer.set_cell(Vector2i(x, y), 0, floor_coord)
+	WITileBoardBuilder.apply_ground_tone(floor_layer, biome.get("floor_tone", {}))
 	_board.add_child(floor_layer)
-	WITileBoardBuilder.build_floor_layers(_board, view.arena_config().get("floor_layers", []), view.grid_size(), biome, WISpriteRegistry)
-	WITileBoardBuilder.build_walls(_board, view.arena_config().get("walls", {}), view.grid_size(), biome, WISpriteRegistry)
+	WITileBoardBuilder.build_floor_layers(_board, view.arena_config().get("floor_layers", []), view.grid_size(), original_biome, WISpriteRegistry)
+	WITileBoardBuilder.build_walls(_board, view.arena_config().get("walls", {}), view.grid_size(), original_biome, WISpriteRegistry)
 
 	_build_arena_blocked_cover(String(view.arena_config().get("biome", "street")), biome, tile_px, view.blocked())
 	ObservableBus.emit_domain_event(WIEvents.UI_ARENA_RENDERED, {

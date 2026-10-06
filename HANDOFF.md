@@ -9,33 +9,29 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Approved holistic art program #564:** root owns the main workspace on
-  `issue/564-holistic-art-direction`, main base `e1d2edee` plus approved review
-  `6cd8264b`. User authorized the full regional/layout/UI program on 2026-10-05.
-  Foundation/crate/inn/chrome, 37 complete rigs and regional bindings, owned
-  icons/title/journal are integrated through `f4fe17e0`. UI lane is idle;
-  exact source/hash/geometry evidence: `/private/tmp/wi-art-icon-evidence`.
-  Root owns dirty catalogs/renderers, Garden/camp/roof QA and provenance.
-  City checkpoint `53f447af` has independent clean native city/
-  pointer/feel routes. Its roof strip defect is corrected in the next checkpoint:
-  facade-bound Eagle Eyes refusal and walking through the old street cell pass.
-  Garden 147-step unlock/memorial/day-bright dusk/rest/return passes with three
-  connected pockets. Camp 89-step entry/work/exit passes with tents/cooking/
-  supplies/lookout and authored feet. New Wang ground matches all 16 metadata
-  corner cases; existing tile coordinates never transfer to another atlas.
-  Human PC and 52 complete prop fallbacks are integrated; registry, combat
-  visuals and 197-step inn work route pass. Riverfarm art kit is registered
-  for the next isolated map lane. Exact logs/PNGs: `/private/tmp/wi-art-execution`.
-  Creature asset checkpoint `a77fcbc` is frozen, unintegrated; bat/wolf/razorbeak/
-  watchgolem candidates and explicit rejections: `/private/tmp/wi-art-creature-evidence`.
-  Read-only terrain descriptor audit: `/private/tmp/wi-art-terrain-audit`.
-  Optional steel seed9 loss is pre-existing: base `e1d2edee` and city checkpoint
-  have identical 97 combat events and fail at 499/2582; comparison evidence in
+- **Approved holistic art program #564:** root owns main workspace on
+  `issue/564-holistic-art-direction`, base `e1d2edee`. User approved the full
+  regional/layout/UI program on 2026-10-05. Inn/chrome, 37 complete rigs,
+  city/cross-street/vistas, icons/key art, Garden, camp, human PC and 52 prop
+  fallbacks are integrated. Riverfarm composition is integrated at `b12e0a75`:
+  25 affected canonical routes and five native routes pass; actual yard probe
+  verifies approaches, blockers, herd states and saved-player escapes.
+  Root owns terrain fallback runtime/catalog metadata, creature integration,
+  shared catalogs and provenance. Complete terrain descriptor selection and
+  lint/unit contracts pass; real-map fallback bindings remain to attach.
+  Ruin/dungeon prop kit is registered for an isolated regional map lane.
+  Logs/PNGs: `/private/tmp/wi-art-execution`; Riverfarm evidence:
+  `/private/tmp/wi-art-riverfarm-evidence`; terrain audit:
+  `/private/tmp/wi-art-terrain-audit`. Creature checkpoint `a77fcbc` is frozen,
+  unintegrated; four complete battlers and rejected candidates are documented
+  in `/private/tmp/wi-art-creature-evidence`. Other lanes are idle.
+  Optional steel seed9 loss predates art: baseline and city checkpoint have
+  identical 97 combat events, both fail at step 499. Comparison evidence:
   `/private/tmp/wi-art-execution/steel-baseline-independent-review`.
-  **Exact next action:** finish Riverfarm/hollow/longhouse/mill and ruin/
-  underground composition, whole-config terrain fallback, creature integration,
-  then composed full gates/browser and independent review/CI/PR closure. Keep
-  companion UID untracked. Physical-device/production timing remain unproven.
+  **Exact next action:** compose ruin/underground; attach complete terrain
+  fallbacks, integrate creatures, then full gates/browser and independent
+  review/CI/PR closure. Preserve untracked companion UID. Physical devices and
+  production timing remain unproven. No release/deploy/outreach authorized.
 - **M1 software merged through PR #551:** squash `6148d1e5`, tree
   `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
   (standalone tree `5e8af12d`); QA/export source `93016f0b`.

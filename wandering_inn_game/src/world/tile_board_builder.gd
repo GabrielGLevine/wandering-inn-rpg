@@ -243,6 +243,53 @@ static func build_vistas(parent: Node2D, config: Array, registry: Variant) -> in
 	return count
 
 
+const TILE_RENDER_FIELDS := [
+	"sheet", "tile_px", "coords", "variants", "cap", "face", "top_coords", "base_coords",
+	"floor", "blocked_sheet", "blocked_tile_px", "blocked", "skirt_sheet", "skirt_tile_px", "skirt",
+	"tone", "floor_tone", "blocked_tone", "skirt_tone", "wang_corners", "terrain_lower_cells", "underlay",
+]
+
+
+static func _tile_descriptor_available(config: Dictionary, registry) -> bool:
+	if not registry.tile_sheet_available(String(config.get("sheet", ""))):
+		return false
+	for key: String in ["blocked_sheet", "skirt_sheet"]:
+		if config.has(key) and not registry.tile_sheet_available(String(config[key])):
+			return false
+	var underlay: Variant = config.get("underlay", {})
+	return underlay is Dictionary and (underlay.is_empty() or registry.tile_sheet_available(String(underlay.get("sheet", ""))))
+
+
+static func _select_tile_render(primary: Dictionary, registry) -> Dictionary:
+	if _tile_descriptor_available(primary, registry):
+		return primary
+	var fallback: Variant = primary.get("fallback_render", {})
+	if not fallback is Dictionary or fallback.is_empty() or fallback.has("fallback_render"):
+		return primary
+	if not fallback.has("tile_px") or not _tile_descriptor_available(fallback, registry):
+		return primary
+	var resolved := primary.duplicate(true)
+	for key: String in TILE_RENDER_FIELDS:
+		resolved.erase(key)
+	for key: String in fallback:
+		if TILE_RENDER_FIELDS.has(key):
+			resolved[key] = fallback[key]
+	resolved["_using_fallback"] = true
+	return resolved
+
+
+static func resolve_biome_render(config: Dictionary, registry) -> Dictionary:
+	return _select_tile_render(config.duplicate(true), registry)
+
+
+## Inheritance is expanded before selection; old coordinates never inherit an owned fallback sheet.
+static func resolve_tile_render(config: Dictionary, original_parent: Dictionary, registry) -> Dictionary:
+	var primary := config.duplicate(true)
+	primary["sheet"] = String(config.get("sheet", original_parent["sheet"]))
+	primary["tile_px"] = int(config.get("tile_px", original_parent["tile_px"]))
+	return _select_tile_render(primary, registry)
+
+
 static func terrain_vertex_bits(vertex: Vector2i, lower_cells: Dictionary) -> int:
 	return 15 ^ vertex_water_bits(vertex, lower_cells)
 
@@ -255,6 +302,7 @@ static func build_ground_transition(parent: Node2D, config: Dictionary, grid: Ve
 	var sheet := String(config.get("sheet", biome_cfg["sheet"]))
 	var tile_px := int(config.get("tile_px", biome_cfg["tile_px"]))
 	var layer := make_tile_layer(parent, sheet, tile_px, registry)
+	layer.set_meta("owned_terrain_fallback", bool(config.get("_using_fallback", false)))
 	layer.position = Vector2(-CELL / 2.0, -CELL / 2.0)
 	apply_ground_tone(layer, config.get("tone", {}))
 	var corners: Array = config["wang_corners"]
@@ -277,7 +325,12 @@ static func build_floor_layers(parent: Node2D, layers_cfg: Array, grid: Vector2i
 	for raw: Variant in layers_cfg:
 		if not (raw is Dictionary):
 			continue
-		var layer_cfg := raw as Dictionary
+		var layer_cfg := resolve_tile_render(raw as Dictionary, biome_cfg, registry)
+		if layer_cfg.has("underlay"):
+			var underlay: Dictionary = layer_cfg["underlay"].duplicate(true)
+			underlay["cells"] = layer_cfg.get("cells", "all")
+			underlay["_using_fallback"] = bool(layer_cfg.get("_using_fallback", false))
+			build_floor_layers(parent, [underlay], grid, biome_cfg, registry)
 		if layer_cfg.has("wang_corners"):
 			build_ground_transition(parent, layer_cfg, grid, biome_cfg, registry)
 			transitions += 1
@@ -285,6 +338,7 @@ static func build_floor_layers(parent: Node2D, layers_cfg: Array, grid: Vector2i
 		var sheet := String(layer_cfg.get("sheet", biome_cfg["sheet"]))
 		var tile_px := int(layer_cfg.get("tile_px", biome_cfg["tile_px"]))
 		var tile_layer := make_tile_layer(parent, sheet, tile_px, registry)
+		tile_layer.set_meta("owned_terrain_fallback", bool(layer_cfg.get("_using_fallback", false)))
 		apply_ground_tone(tile_layer, layer_cfg.get("tone", {}))
 		var cells := resolve_layer_cells(layer_cfg.get("cells", "all"), grid)
 		var variants: Array = layer_cfg.get("variants", [])
@@ -318,6 +372,8 @@ static func build_skirt(parent: Node2D, grid: Vector2i, margin: int, biome_cfg: 
 	var coord := Vector2i(int(biome_cfg["skirt"][0]), int(biome_cfg["skirt"][1]))
 	var layer := make_tile_layer(parent, sheet, tile_px, registry)
 	layer.z_index = -20
+	layer.set_meta("owned_terrain_fallback", bool(biome_cfg.get("_using_fallback", false)))
+	apply_ground_tone(layer, biome_cfg.get("skirt_tone", {}))
 	var lo := Vector2i(-margin, -margin)
 	var hi := Vector2i(grid.x + margin, grid.y + margin)
 	for x in range(lo.x, hi.x):
@@ -330,14 +386,20 @@ static func build_walls(parent: Node2D, walls_cfg: Dictionary, grid: Vector2i, b
 	var covered := {}
 	if walls_cfg.is_empty():
 		return covered
-	var sheet := String(walls_cfg.get("sheet", biome_cfg["sheet"]))
-	var tile_px := int(walls_cfg.get("tile_px", biome_cfg["tile_px"]))
-	if walls_cfg.has("top_coords"):
-		var band_rows := int(walls_cfg.get("band_rows", 1))
-		var top_coords := Vector2i(int(walls_cfg["top_coords"][0]), int(walls_cfg["top_coords"][1]))
-		var base_raw: Variant = walls_cfg.get("base_coords", null)
+	var parent_config := resolve_tile_render(walls_cfg, biome_cfg, registry)
+	var original_parent := walls_cfg.duplicate(true)
+	original_parent["sheet"] = walls_cfg.get("sheet", biome_cfg["sheet"])
+	original_parent["tile_px"] = walls_cfg.get("tile_px", biome_cfg["tile_px"])
+	var sheet := String(parent_config["sheet"])
+	var tile_px := int(parent_config["tile_px"])
+	if parent_config.has("top_coords"):
+		var band_rows := int(parent_config.get("band_rows", 1))
+		var top_coords := Vector2i(int(parent_config["top_coords"][0]), int(parent_config["top_coords"][1]))
+		var base_raw: Variant = parent_config.get("base_coords", null)
 		var base_coords := Vector2i(int(base_raw[0]), int(base_raw[1])) if base_raw != null else top_coords
 		var layer := make_tile_layer(parent, sheet, tile_px, registry)
+		layer.set_meta("owned_terrain_fallback", bool(parent_config.get("_using_fallback", false)))
+		apply_ground_tone(layer, parent_config.get("tone", {}))
 		for row_offset in band_rows:
 			var y := -band_rows + row_offset
 			var coord := top_coords if row_offset == 0 else base_coords
@@ -348,13 +410,15 @@ static func build_walls(parent: Node2D, walls_cfg: Dictionary, grid: Vector2i, b
 	for raw_seg: Variant in segments:
 		if not (raw_seg is Dictionary):
 			continue
-		var seg := raw_seg as Dictionary
+		var seg := resolve_tile_render(raw_seg as Dictionary, original_parent, registry)
 		var cells := WIGame.segment_cells(seg)
 		if cells.is_empty():
 			continue
 		var seg_sheet := String(seg.get("sheet", sheet))
 		var seg_tile_px := int(seg.get("tile_px", tile_px))
 		var seg_layer := make_tile_layer(parent, seg_sheet, seg_tile_px, registry)
+		seg_layer.set_meta("owned_terrain_fallback", bool(seg.get("_using_fallback", false)))
+		apply_ground_tone(seg_layer, seg.get("tone", {}))
 		var cell_set := {}
 		for cell: Vector2i in cells:
 			cell_set[cell] = true

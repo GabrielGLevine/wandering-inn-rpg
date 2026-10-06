@@ -9553,5 +9553,131 @@
     "fps": 1
    }
   }
+ },
+ "dig_camp_tent_owned": {
+  "render_scale": 0.404762,
+  "anchor": [
+   0.520833,
+   0.9
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/dig_camp_tent_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     80
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "ruin_fallen_column_owned": {
+  "render_scale": 0.263158,
+  "anchor": [
+   0.507812,
+   0.90625
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/ruin_fallen_column_owned/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "dig_survey_stakes_owned": {
+  "render_scale": 0.1,
+  "anchor": [
+   0.5,
+   0.8125
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/dig_survey_stakes_owned/Idle-Sheet.png",
+    "frame_size": [
+     160,
+     48
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "dungeon_brazier_owned": {
+  "render_scale": 0.428571,
+  "anchor": [
+   0.510417,
+   0.909091
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/dungeon_brazier_owned/Idle-Sheet.png",
+    "frame_size": [
+     48,
+     88
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "dungeon_wall_chains_owned": {
+  "render_scale": 0.179487,
+  "anchor": [
+   0.5,
+   0.833333
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/dungeon_wall_chains_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     72
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "crypt_sarcophagus_owned": {
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.921875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/crypt_sarcophagus_owned/Idle-Sheet.png",
+    "frame_size": [
+     96,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "gallery_mouth_owned": {
+  "render_scale": 0.421053,
+  "anchor": [
+   0.491071,
+   0.802083
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/gallery_mouth_owned/Idle-Sheet.png",
+    "frame_size": [
+     112,
+     96
+    ],
+    "fps": 1
+   }
+  }
  }
 }

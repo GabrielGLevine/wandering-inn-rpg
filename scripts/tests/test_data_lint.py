@@ -64,6 +64,33 @@ class TestMapRenderingGeometry(unittest.TestCase):
                     "terrain_lower_cells": bad}]}))
 
 
+class TestTerrainFallbacks(unittest.TestCase):
+    def check(self, fallback, role="floor_layer", primary=None):
+        errors = []
+        config = {**(primary or {}), "fallback_render": fallback}
+        fn = getattr(data_lint, "_check_tile_fallback", None)
+        if fn is not None:
+            fn(config, role, "fixture", errors)
+        return errors
+
+    def test_complete_owned_descriptor_is_valid(self):
+        self.assertEqual(self.check({"sheet": "res://assets/tiles/harvest/meadow_paths.png",
+            "tile_px": 16, "coords": [2, 1]}), [])
+
+    def test_old_coordinates_bad_units_and_nested_fallbacks_are_rejected(self):
+        base = {"sheet": "res://assets/tiles/harvest/meadow_paths.png", "tile_px": 16, "coords": [2, 1]}
+        for fallback in [None, {}, {**base, "tile_px": 540}, {**base, "coords": [8, 13]},
+                {**base, "coords": [True, 1]}, {**base, "fallback_render": base},
+                {**base, "cells": "all"}, {**base, "sheet": "res://assets/__missing_target__.png"}]:
+            with self.subTest(fallback=fallback):
+                self.assertTrue(self.check(fallback))
+
+    def test_wall_and_biome_roles_cannot_drop_drawn_surfaces(self):
+        base = {"sheet": "res://assets/tiles/harvest/meadow_paths.png", "tile_px": 16, "coords": [2, 1]}
+        self.assertTrue(self.check(base, "wall_segment", {"face": [1, 2], "cap": [1, 1]}))
+        self.assertTrue(self.check(base, "biome", {"floor": [1, 2], "blocked": [1, 1], "skirt": [0, 0]}))
+
+
 class TestBrokenFixtures(unittest.TestCase):
     def _errs(self, fn, *args):
         errors = []

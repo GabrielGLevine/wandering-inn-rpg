@@ -955,7 +955,8 @@ func _map_transition_stale_cover() -> bool:
 ## Y-sorted biome props/decor/entities. Segment and cover_skip cells own their
 ## art; generic covers must never double-draw them.
 func _build_floor() -> void:
-	var biome: Dictionary = _biome_for_current_map()
+	var original_biome: Dictionary = _biome_for_current_map()
+	var biome := WITileBoardBuilder.resolve_biome_render(original_biome, WISpriteRegistry)
 	var map_cfg: Dictionary = _current_map_cfg()
 	var grid_size := Game.sim.grid_size
 	WITileBoardBuilder.build_skirt(_field_root, grid_size, SKIRT_MARGIN_CELLS, biome, WISpriteRegistry)
@@ -965,9 +966,11 @@ func _build_floor() -> void:
 	for x in grid_size.x:
 		for y in grid_size.y:
 			floor_layer.set_cell(Vector2i(x, y), 0, floor_coord)
+	floor_layer.set_meta("owned_terrain_fallback", bool(biome.get("_using_fallback", false)))
+	WITileBoardBuilder.apply_ground_tone(floor_layer, biome.get("floor_tone", {}))
 	_field_root.add_child(floor_layer)
-	var ground_transitions := WITileBoardBuilder.build_floor_layers(_field_root, map_cfg.get("floor_layers", []), grid_size, biome, WISpriteRegistry)
-	var segment_covered := WITileBoardBuilder.build_walls(_field_root, map_cfg.get("walls", {}), grid_size, biome, WISpriteRegistry)
+	var ground_transitions := WITileBoardBuilder.build_floor_layers(_field_root, map_cfg.get("floor_layers", []), grid_size, original_biome, WISpriteRegistry)
+	var segment_covered := WITileBoardBuilder.build_walls(_field_root, map_cfg.get("walls", {}), grid_size, original_biome, WISpriteRegistry)
 
 	var cover_skip := {}
 	for c: Array in (map_cfg.get("cover_skip", []) as Array):
@@ -1000,10 +1003,15 @@ func _build_floor() -> void:
 		var blocked_coord := Vector2i(int(biome["blocked"][0]), int(biome["blocked"][1]))
 		for cell: Vector2i in fallback_cells:
 			blocked_layer.set_cell(cell, 0, blocked_coord)
-		WITileBoardBuilder.apply_ground_tone(blocked_layer, map_cfg.get("boundary_tone", {}))
+		blocked_layer.set_meta("owned_terrain_fallback", bool(biome.get("_using_fallback", false)))
+		WITileBoardBuilder.apply_ground_tone(blocked_layer, map_cfg.get("boundary_tone", biome.get("blocked_tone", {})))
 		boundary_toned = blocked_layer.material is ShaderMaterial
 		_field_root.add_child(blocked_layer)
 	var vista_count := WITileBoardBuilder.build_vistas(_field_root, map_cfg.get("vistas", []), WISpriteRegistry)
+	var owned_terrain_layers := 0
+	for layer: Node in _field_root.get_children():
+		if bool(layer.get_meta("owned_terrain_fallback", false)):
+			owned_terrain_layers += 1
 	ObservableBus.emit_domain_event(WIEvents.UI_MAP_RENDERED, {
 		"map": Game.sim.current_map,
 		"floor_cells": grid_size.x * grid_size.y,
@@ -1011,6 +1019,7 @@ func _build_floor() -> void:
 		"vistas": vista_count,
 		"ground_transitions": ground_transitions,
 		"boundary_toned": boundary_toned,
+		"owned_terrain_layers": owned_terrain_layers,
 	})
 
 

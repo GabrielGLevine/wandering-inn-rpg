@@ -78,6 +78,7 @@ import math
 import re
 import sys
 import time
+import struct
 from pathlib import Path
 
 from wi_data_lib import DATA, GAME_ROOT
@@ -154,6 +155,114 @@ def _numeric_vector(value, size: int, nonnegative: bool = False) -> bool:
 
 
 
+
+TERRAIN_RENDER_KEYS = {
+	"sheet", "tile_px", "coords", "variants", "cap", "face", "top_coords", "base_coords",
+	"floor", "blocked_sheet", "blocked_tile_px", "blocked", "skirt_sheet", "skirt_tile_px", "skirt",
+	"tone", "floor_tone", "blocked_tone", "skirt_tone", "wang_corners", "terrain_lower_cells", "underlay",
+}
+
+
+def _terrain_atlas_size(sheet, tile_px):
+	if (not isinstance(sheet, str) or not sheet.startswith("res://assets/") or ".." in Path(sheet).parts
+			or type(tile_px) not in (int, float) or not _int_like(tile_px) or tile_px <= 0):
+		return None
+	path = GAME_ROOT / sheet.removeprefix("res://")
+	try:
+		with path.open("rb") as image:
+			header = image.read(24)
+		if header[:8] != b"\x89PNG\r\n\x1a\n":
+			return None
+		width, height = struct.unpack(">II", header[16:24])
+		unit = int(tile_px)
+		return (width // unit, height // unit) if width >= unit and height >= unit else None
+	except (OSError, ValueError, struct.error):
+		return None
+
+
+def _check_tile_fallback(config: dict, role: str, label: str, errors: list) -> None:
+	if "fallback_render" not in config:
+		return
+	fallback = config["fallback_render"]
+	if not isinstance(fallback, dict) or not fallback:
+		errors.append(f"{label}: fallback_render must be a complete render object")
+		return
+	if set(fallback) - TERRAIN_RENDER_KEYS:
+		errors.append(f"{label}: fallback_render may not replace geometry, gameplay or chain another fallback")
+	atlas = _terrain_atlas_size(fallback.get("sheet"), fallback.get("tile_px"))
+	if atlas is None:
+		errors.append(f"{label}: fallback_render needs a real PNG sheet and matching positive tile unit")
+		return
+	def coord_valid(coord, size):
+		return (_numeric_vector(coord, 2, True) and all(_int_like(v) for v in coord)
+			and coord[0] < size[0] and coord[1] < size[1])
+	for key in ("coords", "cap", "face", "top_coords", "base_coords", "floor"):
+		if key in fallback and not coord_valid(fallback[key], atlas):
+			errors.append(f"{label}: fallback_render.{key} is outside its own atlas")
+	for key in ("variants", "wang_corners"):
+		if key in fallback and (not isinstance(fallback[key], list) or not fallback[key]
+				or (key == "wang_corners" and len(fallback[key]) != 16)
+				or not all(coord_valid(coord, atlas) for coord in fallback[key])):
+			errors.append(f"{label}: fallback_render.{key} needs valid coordinates on its own atlas")
+	for key in ("blocked", "skirt"):
+		if key not in fallback:
+			continue
+		size = _terrain_atlas_size(fallback.get(key + "_sheet", fallback["sheet"]),
+			fallback.get(key + "_tile_px", fallback["tile_px"]))
+		if size is None or not coord_valid(fallback[key], size):
+			errors.append(f"{label}: fallback_render.{key} needs its own valid sheet/unit/coordinate")
+	if role == "biome":
+		for key in ("floor", "blocked", "skirt"):
+			if key in config and key not in fallback:
+				errors.append(f"{label}: fallback_render cannot drop biome {key}")
+	elif role == "floor_layer" and not any(key in fallback for key in ("coords", "variants", "wang_corners")):
+		errors.append(f"{label}: fallback_render needs a fixed, variant or Wang floor selector")
+	elif role == "wall_segment":
+		for key in ("face", "cap"):
+			if key in config and key not in fallback:
+				errors.append(f"{label}: fallback_render cannot drop wall {key}")
+		if not any(key in fallback for key in ("face", "cap")):
+			errors.append(f"{label}: fallback_render needs a visible wall surface")
+	elif role == "wall_band" and "top_coords" in config and "top_coords" not in fallback:
+		errors.append(f"{label}: fallback_render cannot drop the wall band")
+	for key in ("tone", "floor_tone", "blocked_tone", "skirt_tone"):
+		if key not in fallback:
+			continue
+		tone = fallback[key]
+		if (not isinstance(tone, dict) or not _numeric_vector(tone.get("base"), 3)
+				or type(tone.get("detail")) not in (int, float) or not math.isfinite(tone["detail"])
+				or not 0 <= tone["detail"] <= 1):
+			errors.append(f"{label}: fallback_render.{key} needs base[3] and detail in [0,1]")
+	if "underlay" in fallback:
+		underlay = fallback["underlay"]
+		if not isinstance(underlay, dict) or "underlay" in underlay:
+			errors.append(f"{label}: fallback underlay must be one complete floor descriptor")
+		else:
+			_check_tile_fallback({"fallback_render": underlay}, "floor_layer", label + ".underlay", errors)
+
+
+def _check_scene_tile_fallbacks(config: dict, label: str, errors: list) -> None:
+	for index, layer in enumerate(config.get("floor_layers", [])):
+		if isinstance(layer, dict):
+			_check_tile_fallback(layer, "floor_layer", f"{label}.floor_layers[{index}]", errors)
+	walls = config.get("walls", {})
+	if not isinstance(walls, dict):
+		return
+	_check_tile_fallback(walls, "wall_band", label + ".walls", errors)
+	for index, segment in enumerate(walls.get("segments", [])):
+		if isinstance(segment, dict):
+			_check_tile_fallback(segment, "wall_segment", f"{label}.walls.segments[{index}]", errors)
+
+
+def check_catalog_tile_fallbacks(parsed: dict, errors: list) -> None:
+	for name, config in (parsed.get(DATA / "biomes.json") or {}).items():
+		if isinstance(config, dict):
+			_check_tile_fallback(config, "biome", "biomes." + name, errors)
+	for arena in (parsed.get(DATA / "arenas.json") or {}).get("arenas", []):
+		if isinstance(arena, dict):
+			_check_scene_tile_fallbacks(arena, "arenas." + str(arena.get("id", "")), errors)
+
+
 def _ground_cells_valid(value, width: int, height: int) -> bool:
 	if value == "all":
 		return True
@@ -226,6 +335,7 @@ def check_maps(maps: dict, errors: list) -> None:
 		w, h = int(grid["width"]), int(grid["height"])
 		_check_map_rendering_geometry(map_id, m, errors)
 		_check_ground_transitions(map_id, m, errors)
+		_check_scene_tile_fallbacks(m, "maps." + map_id, errors)
 		for cell in m.get("blocked", []):
 			if not _cell_shape_ok(cell):
 				errors.append(f"maps/{map_id}: malformed blocked cell {cell!r}")
@@ -2762,6 +2872,7 @@ def main() -> int:
 		return 1
 	maps = _compose_maps(parsed, errors)
 	check_maps(maps, errors)
+	check_catalog_tile_fallbacks(parsed, errors)
 	check_skill_gates(parsed, maps, errors)
 	# MERGE NOTE (v0.18 W1): this pair is parked HERE, at the top of the check_*
 	# block, and its REPORT print at the very bottom of main() -- both as far as

@@ -794,6 +794,13 @@ func _build_expected_counts() -> Dictionary:
 	counts["longhouse_communal_table_owned/idle"] = 1
 	counts["mill_tally_sticks_owned/idle"] = 1
 	counts["mill_high_shelf_owned/idle"] = 1
+	counts["dig_camp_tent_owned/idle"] = 1
+	counts["ruin_fallen_column_owned/idle"] = 1
+	counts["dig_survey_stakes_owned/idle"] = 1
+	counts["dungeon_brazier_owned/idle"] = 1
+	counts["dungeon_wall_chains_owned/idle"] = 1
+	counts["crypt_sarcophagus_owned/idle"] = 1
+	counts["gallery_mouth_owned/idle"] = 1
 	counts["crate_owned/idle"] = 1
 	counts["inn_hearth/idle"] = 1
 	counts["inn_back_bar/idle"] = 1

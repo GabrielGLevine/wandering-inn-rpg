@@ -164,6 +164,10 @@ static func frames_for(sprite_id: String) -> SpriteFrames:
 	return frames
 
 
+static func tile_sheet_available(sheet_path: String) -> bool:
+	return ResourceLoader.exists(sheet_path)
+
+
 static func tile_set_for(sheet_path: String, tile_px: int) -> TileSet:
 	var key := "%s@%d" % [sheet_path, tile_px]
 	if _tile_sources.has(key):
