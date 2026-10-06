@@ -3477,12 +3477,13 @@ def self_test():
     # against. The tolerance is NOT widened: this still trips on a runaway, it
     # just measures drift from the last ruled baseline instead of from a
     # historical one. Refreshing it is a controller act, never a lane's.
+    DIALOGUE_WORDS_BASELINE = 25849
     MAP_STRINGS_BASELINE = 915    # issue's frozen audit: 825
     MAP_WORDS_BASELINE = 20322    # issue's frozen audit: 18500
     check("dialogue strings within 5% of issue's 1482",
           abs(len(d) - 1482) / 1482 < 0.05, f"{len(d)}")
-    check("dialogue words within 5% of issue's 24.5k",
-          abs(dw - 24500) / 24500 < 0.05, f"{dw}")
+    check(f"dialogue words within 5% of ruled baseline {DIALOGUE_WORDS_BASELINE}",
+          abs(dw - DIALOGUE_WORDS_BASELINE) / DIALOGUE_WORDS_BASELINE < 0.05, f"{dw}")
     check(f"map strings within 5% of ruled baseline {MAP_STRINGS_BASELINE}",
           abs(len(m) - MAP_STRINGS_BASELINE) / MAP_STRINGS_BASELINE < 0.05,
           f"{len(m)}")

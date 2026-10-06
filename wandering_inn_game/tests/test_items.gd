@@ -25,6 +25,8 @@ const NUMERIC_FIELDS: Array[String] = ["damage_mod", "hp_mod", "damage_reduction
 
 const VALID_USE_EFFECT_KEYS: Dictionary = {
 	"heal": true,
+	"restore_hp": true,
+	"restore_mp": true,
 	"next_fight": true,
 }
 
