@@ -9,18 +9,22 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Parallel roadmap #570:** controller owns `issue/570-capacity-analysis` in
-  `/private/tmp/wi-570-capacity`, base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
-  Owned paths: `HANDOFF.md`, `docs/design/570-capacity-analysis.md`, `scripts/analysis/capacity_570.py`. No game/art/shared QA
-  surfaces are owned here. Evidence: `/private/tmp/wi-570-evidence`; source/design
-  validation only, no new gameplay or device acceptance. **Next:** Publish reviewed partial Refs #570 PR; final tuning, runtime equip, migration, sleep and balance acceptance remain open.
-- **Art #564 remains separately owned:** original checkout is read-only to this
-  lane; last observed head `bb5be3ed`, issue open and no implementation PR.
-  User authorizes independent parallel roadmap work until art completes.
-  #570 capacity analysis, #512 journey reconnaissance and #517 homecoming design
-  use separate worktrees. Refresh live art status before any new dispatch;
-  shared core/save/UI, catalogs, manifests and generated outputs serialize.
-  Keep isolated PRs unmerged pending art integration and required CI/review.
+- **Quiesced at user request:** no new dispatch or experiments until resumed.
+  Lane #570: `issue/570-capacity-analysis` in `/private/tmp/wi-570-capacity`;
+  base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
+  Owned paths: `HANDOFF.md`, `docs/design/570-capacity-analysis.md`, `scripts/analysis/capacity_570.py`, new `tests/sim_capacity_570.gd` + UID.
+  Changes are committed; no worker or experiment remains active.
+  Evidence: `/private/tmp/wi-570-evidence`; independent review:
+  `/private/tmp/wi-570-independent-review.md` (#570 benchmark extension still unreviewed).
+  **Exact next action:** On resume, correct the competent-policy completion marker; compare controls 86/125/67 under both policies, then load gate, smoke, policy units and independent review. WIP 7e834e58 completed 3,400 fights and two matching controls. Exact commands/results: /private/tmp/wi-570-evidence/combat/quiesce-checkpoint.json. No balance acceptance.
+- **Art #564 remains separately owned:** original checkout untouched by this lane;
+  last observed local head `bb5be3ed`, issue open. Shared core/save/UI,
+  catalogs, manifests and generated outputs serialize after art integration.
+  Draft PRs #573 (capacity), #574 (routes), #575 (homecomings); HUD #567 and
+  encounter #521 drafts are discoverable by their issue branches.
+  Required CI/review must pass before merge. Published drafts' Python CI found
+  the inherited choice-log ceiling failure (31,122 > 30,000 bytes); art owns
+  its correction. Latest handoff-only commits require fresh CI status reads.
 - **#566 resource foundation:** staged in draft PR #572, isolated
   `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
   Battle handoff, recovery presentation and composed #571 acceptance remain open.
