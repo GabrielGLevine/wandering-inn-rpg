@@ -863,7 +863,8 @@
   {
    "action": "wait_for_event",
    "type": "ui_recovery_rendered",
-   "timeout_sec": 30,
+   "_comment": "Five captured meals drain after the quest and loot messages at production timing.",
+   "timeout_sec": 90,
    "payload_contains": {
     "service": "inn_meal",
     "gold_after": 30
