@@ -19,23 +19,24 @@ archived, or superseded session blocks.
   `issue/567-hud-contract`, base1375e375. #56685af0621/#5708676a0be,
   #568206f36ac and #56991bdac25 have bounded independent review. Frontend
   3bd7f529 fixes four input/mobile findings plus erroneous food-poisoning copy;
-  focused units/load pass, re-review pending. No partial activation/deployment.
-- **Evidence:** native40 accepted images read. Vendor106-step actual purchase,
-  safe/harmful use/cancel/final-stock/reload route passes headless; explicit
-  fixture money/history, not earned acquisition. Browser378cbe19 large-text
-  scroll failed;14images read, corrected frontend needs rerun. Full65-suite
-  preflight5b070257 failed four gates: item schema, oracle rows, prose baseline,
-  food copy. First three corrected/passing at1e7114ba; frontend fixes fourth.
-  Prior full combat policies pass; new full units/canonical/balance pending.
-- **Next:** complete frontend composition/review; window vendor/meal routes,
-  browser layout/repeat/use, full gates on settled tree. Root owns568/569 QA.
-  resource_plan owns #512 journeys in `/private/tmp/wi-512-routes` atd8f74fd4,
-  writing fresh Rogue/worker prefixes without fixtures/teleports/topups.
-  capacity570 frontend tree released at3bd7f529. Meal91 branch pushed/PR583.
+  focused units/load and independent re-review pass. No partial activation/deployment.
+- **Evidence:** native47 accepted images read. Vendor107-step production-timing
+  window route passes: real purchases, safe/harmful doses, cancel, final stock,
+  reload. Opaque warning panel fixes observed overlap; all7 captures read at
+  `/private/tmp/wi-567-evidence/window-vendor-opaque`. Explicit fixture money
+  and history, not earned acquisition. Browser378cbe19 large-text scroll failed;
+  corrected frontend needs rerun. Full65-suite preflight5b070257 failed four
+  gates, all corrected with focused passing checks; full rerun still pending.
+- **Next:** clean export then browser layout/repeat/use, combat recovery QA,
+  meal window routes, full gates on settled tree. Root owns integration/runtime
+  and #568 QA; #569 QA worker capacity570 owns `/private/tmp/wi-569-qa` at
+  de385c24 (service112-step pass, fresh/station drafts). resource_plan owns
+  #512 fresh journeys `/private/tmp/wi-512-routes`, extending earned Rogue and
+  worker routes beyond prefixes; no fixture/teleport/topup proofs.
   Registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence roots
   `/private/tmp/wi-{566-resumed,567,568,569,570}-evidence`. Preserve companion
-  UID/private overlay and local node_modules/.gdignore. User said Continue
-  after quota interruption; fresh usage normal0%. Two implementation workers max.
+  UID/private overlay and local node_modules/.gdignore. Two implementation
+  workers max. #568PR582/#569PR583 draft; frontend3bd7f529 reviewed/integrated.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
