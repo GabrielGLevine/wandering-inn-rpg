@@ -401,7 +401,9 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usab
 			continue
 		var rec: Dictionary = usable_by_id[item_id]
 		slots.append({
-			"type": "item", "id": item_id, "label": String(rec.get("name", item_id)),
+			"type": "item", "id": item_id, "label": WIEffectText.counted_item_name(rec, int(rec.get("count", 1))),
+			"count": int(rec.get("count", 1)),
+			"preview": (rec.get("preview", {}) as Dictionary).duplicate(true),
 			"icon": String(rec.get("icon", "")), "key_hint": str(number),
 			"description": String(rec.get("description", "")),
 			"use_effect": rec.get("use_effect", {}),
@@ -438,8 +440,8 @@ func render_bar_slots(view: RefCounted, bar_slots: Array) -> Array:
 				# affordance a spent once-per-fight skill already gets.
 				d["cooldown_remaining"] = _cooldown_remaining(view, skill_id)
 			"item":
-				d["affordable"] = int(c["ap"]) >= WIItems.FLAT_AP_COST
-				d["ap_cost"] = WIItems.FLAT_AP_COST
+				d["affordable"] = bool((d.get("preview", {}) as Dictionary).get("allowed", false))
+				d["ap_cost"] = int((d.get("preview", {}) as Dictionary).get("ap_cost", 0))
 			"end_turn":
 				d["affordable"] = true
 		out.append(d)
@@ -668,20 +670,7 @@ func _slot_info_line(d: Dictionary) -> String:
 				return "%s — %s" % [skill_name, effect_lines[0]]
 			return line
 		"item":
-			var item_name := String(d.get("label", ""))
-			var item_desc := String(d.get("description", ""))
-			var use_effect: Dictionary = d.get("use_effect", {})
-			var item_lines: Array[String] = []
-			if use_effect.has("heal"):
-				item_lines = WIEffectText.skill_effect_lines({
-					"ap_cost": d.get("ap_cost", WIItems.FLAT_AP_COST), "mp_cost": 0,
-					"effect": {"type": "heal", "amount": int(use_effect["heal"])},
-				})
-			if item_desc == "":
-				return item_name if item_lines.is_empty() else "%s — %s" % [item_name, item_lines[0]]
-			if item_lines.is_empty():
-				return "%s — %s" % [item_name, item_desc]
-			return "%s — %s — %s" % [item_name, item_lines[0], item_desc]
+			return "%s — %s" % [String(d.get("label", "")), WIEffectText.item_use_text(d.get("preview", {}))]
 		_:
 			return ""
 

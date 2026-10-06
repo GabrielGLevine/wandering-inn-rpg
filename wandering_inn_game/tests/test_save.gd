@@ -336,7 +336,7 @@ func _init() -> void:
 	(bad_status_data["state"] as Dictionary)["seen_statuses"] = "slowed"
 	assert(not WISave.apply(_new_game(), bad_status_data), "wrong-typed seen_statuses rejected")
 
-	assert(WISave.VERSION == 9, "VERSION bumped 8 -> 9 for #472's retired pending_consolidation key (8 was the v0.15 A3 lore_notes record)")
+	assert(WISave.VERSION == 12, "VERSION 12 adds quantities after capacity and persisted resources")
 
 	# GH#130 v5->v6 arm: a pre-#130 save with sleeps behind it gains slept=1
 	# exactly once; a never-slept v5 save gains nothing.
@@ -557,11 +557,12 @@ func _init() -> void:
 	assert(res_restored.resonance_capacity == 5, "resonance_capacity round-trips")
 
 	var pre_g1_cap_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	pre_g1_cap_data["version"] = 10
 	(pre_g1_cap_data["state"] as Dictionary).erase("resonance_capacity")
 	var pre_g1_cap_target := _new_game()
 	pre_g1_cap_target.resonance_capacity = 999
 	assert(WISave.apply(pre_g1_cap_target, pre_g1_cap_data), "save missing resonance_capacity still applies")
-	assert(pre_g1_cap_target.resonance_capacity == 2, "absent resonance_capacity restores the default 2, not stale data")
+	assert(pre_g1_cap_target.resonance_limit() == 4, "absent legacy capacity migrates to four, not stale data")
 
 	var bad_cap_data := WISave.serialize(_new_game()).duplicate(true)
 	(bad_cap_data["state"] as Dictionary)["resonance_capacity"] = "two"

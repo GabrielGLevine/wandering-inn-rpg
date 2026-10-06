@@ -94,7 +94,7 @@
     "options": [
      {
       "effect_lines": [
-       "+3 HP",
+       "+3 max HP",
        "Resonance 1",
        "Grants [Dangersense] in combat"
       ],
@@ -114,7 +114,7 @@
      },
      {
       "effect_lines": [
-       "+2 HP",
+       "+2 max HP",
        "Resonance 2",
        "Grants [Mana Shield] in combat"
       ],
@@ -124,7 +124,7 @@
      },
      {
       "effect_lines": [
-       "+2 HP",
+       "+2 max HP",
        "Reduces every hit taken by 1",
        "Resonance 1"
       ],
@@ -149,7 +149,7 @@
     ]
    },
    "timeout_sec": 5,
-   "_comment": "LOW-3: exact hub pin including effect_lines — the fragment option shows its yield preview (+2 HP / DR 1 / Res 1)."
+   "_comment": "LOW-3: exact hub pin including effect_lines — the fragment option shows its yield preview (+2 max HP / DR 1 / Res 1)."
   },
   {
    "action": "click_dialogue_option",

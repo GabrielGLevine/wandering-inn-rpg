@@ -35,3 +35,17 @@ static func fold_abilities(kit: Array, accessories: Array) -> Array:
 			if not out.has(ability_id):
 				out.append(ability_id)
 	return out
+
+
+static func resource_maxima(cfg: Dictionary, skills_by_id: Dictionary) -> Dictionary:
+	var stats: Dictionary = cfg[WIKeys.STATS]
+	var max_hp := maxi(20 + int(stats["con"]) + int(cfg.get(WIKeys.HP_MOD, 0)), 1)
+	var max_mp := 0
+	for raw: Variant in cfg.get(WIKeys.SKILLS, []):
+		var skill: Dictionary = skills_by_id.get(String(raw), {})
+		var effect: Dictionary = skill.get(WIKeys.EFFECT, {})
+		if String(effect.get(WIKeys.TYPE, "")) == "hp_bonus":
+			max_hp += int(effect[WIKeys.AMOUNT])
+		if skill.has(WIKeys.MP_COST):
+			max_mp = 8 + int(int(stats["int"]) / 2)
+	return {WIKeys.MAX_HP: max_hp, WIKeys.MAX_MP: max_mp}

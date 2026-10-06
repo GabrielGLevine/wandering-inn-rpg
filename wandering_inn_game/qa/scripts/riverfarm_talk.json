@@ -756,7 +756,7 @@
      },
      {
       "effect_lines": [
-       "+1 HP",
+       "+1 max HP",
        "Grants [Witch's Warding] in combat"
       ],
       "locked": true,
@@ -765,7 +765,7 @@
      },
      {
       "effect_lines": [
-       "+2 HP",
+       "+2 max HP",
        "Resonance 1"
       ],
       "locked": true,

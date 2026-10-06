@@ -113,17 +113,8 @@ func run(classes: Dictionary, accomplishments: Dictionary, combat_config: Dictio
 				pool_grew = true
 			if not growth.is_empty():
 				text += " (%s)" % ", ".join(growth)
-			# GH#334 notes 19/28: this line is the single largest source of the
-			# false persistent-pool model (combat_screen.gd's own FIRST_MP_HINT
-			# comment names it). A player told at bedtime that sleep raises Max
-			# HP and Max MP reasonably infers a pool that sleep refills -- and
-			# then reads the next fight's full bar as a bug. There is no pool:
-			# `WICombat.build` sets HP = MAX_HP and MP = MAX_MP for every
-			# combatant at every fight, and neither is a WIGame field or a save
-			# key. Keep the numbers, say what they are, and say it only when a
-			# pool number is actually on screen.
 			if pool_grew:
-				text += " — you start every fight full."
+				text += " — sleep restores HP and MP."
 			_emit(WIEvents.TOAST, {"text": text})
 
 	_bank_reached_two_classes.call()
@@ -180,14 +171,14 @@ func run(classes: Dictionary, accomplishments: Dictionary, combat_config: Dictio
 		_record_accomplishment.call("catalyst_attunement_sleeps", 1)
 		if _count("catalyst_attunement_sleeps") >= 2:
 			_record_accomplishment.call("resonance_grown", 1)
-			_grow_resonance.call()
+			var growth := int(_grow_resonance.call())
 			# GH#379: the growth used to be felt and never named -- sleep_veil's
 			# line under the black ("You have room for it now.") is the beat, but
 			# it is gone the moment the veil lifts and it never says Resonance.
 			# Same `lore: true` toast idiom the dungeon_attuned bank above uses
 			# (zero new mechanism), so the word lands in the journal's Lore
 			# section where the player can read it back at leisure.
-			_emit(WIEvents.TOAST, {"text": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by one in the night. The anchor stone paid for it.", "lore": true})
+			_emit(WIEvents.TOAST, {"text": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by %s in the night. The anchor stone paid for it." % ("one" if growth == 1 else str(growth)), "lore": true})
 			anything_happened = true
 
 	_bank_garden_unlock_if_earned()

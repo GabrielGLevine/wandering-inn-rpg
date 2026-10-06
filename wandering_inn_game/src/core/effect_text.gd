@@ -14,6 +14,53 @@ const _STATUS_VERB := {
 }
 
 
+static func counted_item_name(item: Dictionary, count: int) -> String:
+	var label := String(item.get("name", item.get("id", "")))
+	return "%s ×%d" % [label, count] if WIItems.stackable(item) else label
+
+
+static func item_use_text(offer: Dictionary) -> String:
+	var committed := bool(offer.get("committed", false))
+	var reason := String(offer.get("reason", ""))
+	if not committed and not bool(offer.get("allowed", false)) and reason != "confirmation_required":
+		return item_use_refusal(reason)
+	var parts: Array[String] = []
+	var hp := int(offer.get("restore_hp", 0))
+	var mp := int(offer.get("restore_mp", 0))
+	if hp > 0:
+		parts.append(("Restored %d HP." if committed else "Restore %d HP.") % hp)
+	if mp > 0:
+		parts.append(("Restored %d MP." if committed else "Restore %d MP.") % mp)
+	var loss := int(offer.get("hp_lost", offer.get("poison_hp", 0))) if committed else int(offer.get("poison_hp", 0))
+	if loss > 0:
+		parts.append(("Lost %d HP to mana poisoning." if committed else "Lose %d HP immediately to mana poisoning.") % loss)
+	if int(offer.get("exposure_after", 0)) > int(offer.get("exposure_before", 0)):
+		parts.append("Dose %d since sleep." % int(offer.get("dose_number", 0)))
+	var after: Dictionary = offer.get("after", {})
+	if not after.is_empty():
+		parts.append(resource_line(after) + ".")
+	if String(offer.get("context", "")) == "combat":
+		parts.append("%d AP%s." % [int(offer.get("ap_cost", 0)), " spent" if committed else " to use"])
+	parts.append("%d left." % int(offer.get("count_after", 0)))
+	if offer.get("preparation", {}) != offer.get("preparation_before", {}):
+		parts.append(" ".join(preparation_lines(offer.get("preparation", {}))))
+	return " ".join(parts)
+
+
+static func item_use_refusal(reason: String) -> String:
+	match reason:
+		"cancelled": return "Cancelled. Nothing used."
+		"stale_operation", "invalid_operation": return "The item or your condition changed. Select Use again."
+		"no_ap", "insufficient_ap": return "Not enough AP."
+		"missing_stock": return "None left."
+		"no_mp", "no_mp_pool": return "You have no MP pool to restore."
+		"no_benefit", "full_resources": return "No recovery or preparation to gain."
+		"lethal_world_poison": return "That dose would leave you with no HP. You cannot drink it here."
+		"wrong_actor": return "Wait for your turn."
+		"not_combat_usable": return "Eat this outside combat."
+	return "Cannot use this item now."
+
+
 static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> Array[String]:
 	var lines: Array[String] = []
 	var damage_mod := int(item.get(WIKeys.DAMAGE_MOD, 0))
@@ -30,7 +77,7 @@ static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> A
 		lines.append("%s kit replaces other weapon Skills in combat" % weapon_family.capitalize())
 	var hp_mod := int(item.get(WIKeys.HP_MOD, 0))
 	if hp_mod > 0:
-		lines.append("+%d HP" % hp_mod)
+		lines.append("+%d max HP" % hp_mod)
 	var reduction := int(item.get(WIKeys.DAMAGE_REDUCTION, 0))
 	if reduction > 0:
 		lines.append("Reduces every hit taken by %d" % reduction)
@@ -49,14 +96,11 @@ static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> A
 			else:
 				lines.append("Grants %s in combat" % ability_display)
 	var use_effect: Dictionary = item.get(WIKeys.USE_EFFECT, {})
-	if use_effect.has("heal"):
-		# GH#334 note 28 item 2: "in combat" is not decoration. `WIItems.
-		# _resolve_heal_use` refuses outright when `combat == null`, and the
-		# inventory panel silently repurposes confirm into a hotbar toggle for
-		# exactly these items -- so an unqualified "Heals 8 HP" was the card
-		# promising something the only reachable out-of-combat press cannot do.
-		# The `next_fight` branch three lines down already models the idiom.
-		lines.append("Heals %d HP in combat (single use)" % int(use_effect["heal"]))
+	if use_effect.has("restore_hp"):
+		lines.append("Restores up to %d HP (single use)" % int(use_effect["restore_hp"]))
+	if use_effect.has("restore_mp"):
+		lines.append("Restores up to %d MP (single use)" % int(use_effect["restore_mp"]))
+		lines.append("Repeated doses risk mana poisoning until sleep")
 	if use_effect.has("next_fight"):
 		var nf_bits := next_fight_bits(use_effect["next_fight"] as Dictionary)
 		if not nf_bits.is_empty():
@@ -93,6 +137,47 @@ static func pending_meal_line(pending: Dictionary) -> String:
 	if bits.is_empty():
 		return ""
 	return "%s in your next fight." % ", ".join(bits)
+
+
+static func resource_line(resources: Dictionary) -> String:
+	return "HP %d/%d   MP %d/%d" % [resources.get("hp", 0), resources.get("max_hp", 0), resources.get("mp", 0), resources.get("max_mp", 0)]
+
+
+static func preparation_lines(preparation: Dictionary) -> Array[String]:
+	var lines: Array[String] = []
+	for state: String in ["armed", "active"]:
+		var bits := next_fight_bits(preparation.get(state, {}))
+		for i in bits.size():
+			bits[i] = bits[i].replace(" HP", " max HP")
+		if not bits.is_empty():
+			lines.append("%s: %s." % ["Next fight" if state == "armed" else "This fight", ", ".join(bits)])
+	if bool(preparation.get("well_fed", false)):
+		lines.append("Well fed — until sleep.")
+	if int(preparation.get("room_hp", 0)) > 0:
+		lines.append("Room: +%d max HP (permanent)." % int(preparation["room_hp"]))
+	return lines
+
+
+static func resource_receipt(payload: Dictionary) -> String:
+	var before: Dictionary = payload.get("before", {})
+	var after: Dictionary = payload.get("after", {})
+	if before.is_empty() or after.is_empty():
+		return ""
+	var reason := String(payload.get("reason", ""))
+	var parts: Array[String] = []
+	if reason == "sleep":
+		parts.append("Rested: HP %d/%d (%+d), MP %d/%d (%+d)." % [after["hp"], after["max_hp"], int(after["hp"]) - int(before["hp"]), after["mp"], after["max_mp"], int(after["mp"]) - int(before["mp"])])
+	else:
+		parts.append(resource_line(after) + ".")
+	for pool: String in ["hp", "mp"]:
+		var delta := int(after["max_" + pool]) - int(before["max_" + pool])
+		if delta != 0:
+			parts.append("Max %s %+d." % [pool.to_upper(), delta])
+			if reason != "sleep" and int(before[pool]) > int(after["max_" + pool]):
+				parts.append("%s capped at %d/%d." % [pool.to_upper(), after[pool], after["max_" + pool]])
+	var preparation: Dictionary = payload.get("preparation", {})
+	parts.append_array(preparation_lines(preparation))
+	return " ".join(parts)
 
 
 static func skill_effect_lines(skill: Dictionary, combatants_catalog: Array = []) -> Array[String]:

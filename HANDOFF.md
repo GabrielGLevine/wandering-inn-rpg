@@ -9,57 +9,52 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed at user request:** compose merged art PR #577 and finish this lane.
-  Lane #512: `issue/512-route-recon` in `/private/tmp/wi-512-routes`;
-  base `b1c4b02bee71ba0b0926bf1c466ad7eab65a80e6`.
-  Owned paths: `HANDOFF.md`, `docs/design/512-route-reconnaissance.md`.
-  Checkpoint before each implementation or validation phase.
-  Evidence: `/private/tmp/wi-512-evidence`; independent review:
-  `/private/tmp/wi-512-independent-review.md`.
-  **Exact next action:** author earned routes only after composed recovery/capacity is available. Independent source review approved this reconnaissance; issue remains open.
-- **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
-  is composed here as completed code squashed as `0bbd96aa`. Original art checkout
-  remains separately owned and untouched. Previous choice-log ceiling fix is
-  included. Squash tree `0e843291` matches the reviewed source. Its Web CI waiver
-  was art-only; required CI remains mandatory for these lanes.
-  Other checkpoints: #572 foundation, #573 capacity, #574 routes, #575 homecomings,
-  #578 HUD contract and #579 encounter design. Serialize shared source/catalogs.
-- **#566 resource foundation:** staged in draft PR #572, isolated
-  `/private/tmp/wi-566-foundation`; persistence-only build must not deploy.
-  Battle handoff, recovery presentation and composed #571 acceptance remain open.
-- **Resource/capacity roadmap #565:** planning is merged at base `b1c4b02b`;
-  `docs/design/2026-10-05-persistent-vitals-recovery-plan.md` and #566–#571 own
-  the staged resource/HUD/potion/food/capacity/cutover work. Proposed tuning
-  remains subject to measurement. M1 devices and #494/#495 choices stay open.
+- **Active #512 route authoring:** `issue/512-route-recon`, isolated
+  `/private/tmp/wi-512-routes`, original dispatch head `7429cd62`.
+  Resource worker owns only #512 routes, manifest/generated QA, scoped docs and
+  HANDOFF. No gameplay/core/UI ownership. Driver extensions need controller
+  coordination first. Compose d04cf5c7 then91bdac25, then run fresh Rogue and
+  worker/social prefixes before full histories. No fixtures/teleports/topups.
+  Checkpoint before long route runs; preserve actual costs and imperfect forks.
 
-- **M1 software merged through PR #551:** squash `6148d1e5`, tree
-  `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
-  (standalone tree `5e8af12d`); QA/export source `93016f0b`.
-  CI run `37355007466` passes all eight jobs on composed checkout `4f315958`,
-  whose tree exactly matches the squash. Independent source and post-merge
-  reviews approve. Incoming #552/#553 tooling and backup guidance are preserved.
-  #507/#508/#509 are closed; #504/#505/#506/#510/#253/#511 and M1 stay open
-  for their physical/actual-host/human criteria. Production is unchanged from
-  the `ab279415` 36-case local browser baseline.
-  PR #551 owns native/browser/audio validation and causal corrections;
-  retained private/public evidence roots are listed below.
-  Private candidate: `/private/tmp/wi-m1-candidate-93016f0b/m1-web-93016f0b.zip`,
-  manifest and observation checklist alongside; PCK `cccbe5f4…`.
-  Evidence: `/private/tmp/wi-m1-evidence`, private/public audio roots and
-  `/private/tmp/wi-m1-audio-stale-negative-93016f0b`.
-  Root's implementation tree is `/private/tmp/wi-m1-506`; final handoff only
-  uses `/private/tmp/wi-m1-closeout`, based on merged main `6148d1e5`.
-  Other lanes are integrated/idle. Preserve untracked node_modules/companion UID
-  and the unrelated PixelLab note in the original main tree's dirty HANDOFF.
-  **Exact next action:** collect #511 physical iPhone Safari/Android Chrome
-  observations and three unfamiliar-player sessions with desktop reference,
-  using the same private candidate and `qa/M1-OBSERVATIONS.md`. None supplied.
-  OS keyboard/chooser/background/audio policy and actual itch remain unproven.
-  No release/deploy/outreach/recruitment authorized. M1 stays open.
-- Prior scoped M1 repairs are merged through PRs #547–#551; their PR bodies
-  own detailed validation. #507/#508/#509 are closed. Remaining physical-device,
-  actual-host and human clauses stay open; do not rerun software closure merely
-  because those observations are missing.
+- **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
+  Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.
+  Original art checkout remains separately owned and untouched.
+- **User CI permission:** bypass Web parity when it bottlenecks PR merges;
+  record each waiver without calling it a pass. Other CI/review and actual
+  gameplay/device evidence remain required.
+- **Designs closed:** #517/PR575 squash5823356f/treee3203d51; #521/PR579
+  squash53bd4c68/tree95341cea. Reviewed/squash trees match; seven non-Web CI
+  jobs passed and Web was sole waived blocker. Runtime stays #518/#520/#522.
+- **Staged resources:** #566/PR57285af0621, #567/PR5780e55e381,
+  #570/PR5738676a0be. Carry/HUD/capacity have bounded review. All59Godot units
+  pass; four lint pins fixed,282Python/109subtests pass. Both full combat
+  policies pass atdcac4795. Final canonical pending. Native40images read.
+  No partial activation before recovery/#571. Physical devices unproven.
+- **Integration:** root owns `/private/tmp/wi-567-hud-contract`,
+  `issue/567-hud-contract`, base1375e375. Touch-driver0e55e381 compiles and
+  load_gate passes; controls now composed. Browser touch at378cbe19 fails
+  large-text inventory scroll;14images read under
+  `/private/tmp/wi-567-evidence/browser-378cbe19-iphone` (Chromium emulation).
+  Capacity refusal wrongly describes2/4 as full; both defects logged.
+  **Next:** compose reviewed core/frontend, correct QA pins, install
+  `/private/tmp/wi-568-qa-draft`, full gates and window/browser proof. Draft
+  repeated-input leg needs viable second use and browser-only registration.
+- **Owners:** resource_plan: `/private/tmp/wi-568-consumables`,206f36ac/PR582
+  core/data/tests. Core review clear; Mana Potion/token/copy done.
+  #569 meal tree active. capacity570: `/private/tmp/wi-567-consumable-ui`,
+  9da54788 composed; controls/warning/layout focused tests pass. Root QA. #569 then
+  #512 consume recovery. Registry `/private/tmp/wi-parallel-roadmap-status.json`.
+  Evidence `/private/tmp/wi-{566-resumed,567,568,570}-evidence`. Preserve UID,
+  private overlay, local node_modules/.gdignore; original art tree untouched.
+- **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
+  governs #566–#571. Preserve unlimited existing kitchen access and measure it.
+  M1 devices and #494/#495 choices remain open.
+
+- **M1 software:** PR551 merged6148d1e5, reviewed tree78200963. Software
+  checks passed; physical iPhone/Android and unfamiliar-player evidence stay
+  open under #511. Original evidence and provenance remain in PR551. No release
+  or outreach is authorized by this route task.
 - Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
   mobile parity and a clear opening, progression trust, a living inn/world,
   tactical identity, and an accessible reliable release candidate.

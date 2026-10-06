@@ -2,6 +2,71 @@
  "_comment": "The ONE source of truth for the canonical QA sweep. ci_sweep.sh parses this (python3) to build its run list; the CLAUDE.md canonical seed table is generated FROM it and ci_sweep.sh's startup drift-checks the table against this file on every run. Add/rename/reorder a script HERE first, then re-render the CLAUDE.md table row to match -- ci_sweep.sh will hard-fail the sweep if they disagree. seed:null means the script takes no --seed (load_gate, char_creation). fixture is the fixture_save this script's own qa/scripts/<name>.json loads via title Continue (its rng_state overrides --seed when present) -- informational, not consumed by ci_sweep.sh's invocation. note is the one-line purpose column. tiers: hand-curated membership, every entry >=1 of smoke/full, smoke subset of full (ci_sweep.sh drift-checks both facts). smoke = load_gate + one canonical per subsystem, <3min, runs every push. full = everything (unchanged). surfaces: GENERATED ONLY by scripts/derive_qa_surfaces.py from the script+fixture+data files themselves (maps/fixtures/skills/systems referenced) -- never hand-edit; ci_sweep.sh --touching <path> maps changed paths to surface tags to crossing scripts; the drift check re-runs the generator and fails on any mismatch (stale tags = FATAL). browser_scripts is a separate browser-only registry consumed by qa/web/run_browser_suite.py; those entries never join native smoke/full or --touching runs. Profiles name emulated Chromium contexts, not physical devices.",
  "scripts": [
   {
+   "script": "vitals_carry_loop",
+   "seed": 9,
+   "fixture": "vitals_carry_start",
+   "note": "#566 fixture contract: real casting/heal, two carried fights, depleted save/load and final bed refill; fixture kit/item is not earned journey evidence.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "vitals_carry_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_bolt"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "vitals_fresh_start",
+   "seed": 9,
+   "note": "#566 fresh start: earned chest armor cannot heal, two real spars carry resources, real stairs/bed resolve Warrior then refill; no fixture or teleport.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "save"
+    ]
+   }
+  },
+  {
    "script": "load_gate",
    "seed": null,
    "note": "native-only resource compile/load gate",
@@ -1907,7 +1972,7 @@
    "script": "gear_loop",
    "seed": 9,
    "fixture": "gear_loop_start",
-   "note": "resonance-gear UI proof (accessory rows, capacity refusal)",
+   "note": "fixture-backed four-point fit, capacity refusal with a free position, distinct physical-full refusal, inventory card/scroll/drag coverage",
    "tiers": [
     "full"
    ],
@@ -2472,7 +2537,7 @@
    "script": "door_awakening",
    "seed": 9,
    "fixture": "door_awakening_start",
-   "note": "Magical Door plan Task D4 (issue #8): the full awakening chain from a beat-3-ready fixture through 3 real sleeps -- 2 silent study beats then door_awakened banks + the GDI line queues under the sleep veil -- to the awakened pantry_door's interact rewire (opens the portal menu, not the flavor toast); v0.15 A2 seam 3: the journal open on the awakening sleep pins the spine lead (2 rows, catalog order -- this fixture never started the delve either)",
+   "note": "fixture-backed awakening through real sleeps; same five-point loadout refuses before4\u21925 growth and fits after; later sleep proves once-only growth; journal and portal coverage",
    "tiers": [
     "full"
    ],
@@ -7823,6 +7888,38 @@
      "combat",
      "dialogue",
      "exploration"
+    ]
+   }
+  },
+  {
+   "script": "consumable_vendor_loop",
+   "seed": 9,
+   "fixture": "consumable_vendor_start",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "note": "#568 explicit Pallass-history/20gold fixture with no potion stock: buy two actual Mana Potions, safe third dose, harmful fourth cancel/confirm, final unit removal and depleted HP/exposure reload through real controls; native touch is emulated, not earned journey/device proof.",
+   "surfaces": {
+    "maps": [
+     "pallass_market"
+    ],
+    "fixtures": [
+     "consumable_vendor_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "xif"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration",
+     "save"
     ]
    }
   }
