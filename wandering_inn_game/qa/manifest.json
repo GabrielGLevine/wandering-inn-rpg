@@ -7953,6 +7953,7 @@
     "dialogue": [
      "ceria_dig_camp",
      "ceria_intro",
+     "door_mounting",
      "drayman_dispute",
      "erin_errand",
      "krshia_crate",
@@ -7971,6 +7972,7 @@
      "exploration",
      "input",
      "night_phase",
+     "portals",
      "quests"
     ]
    }

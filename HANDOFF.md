@@ -26,7 +26,9 @@ archived, or superseded session blocks.
   consumed by competent policy1→0. Rogue1548 now proves earned slot+capacity
   refusals, Core swap4/4, actual sleep51HP/16MP, guardian victory51HP/0MP,
  20g and Anchor. Warrior7/Mage7/Rogue4/Diplomat6/Helper1. Same shader noise.
-  Next: mount Door, earned bounties, catalyst and regional travel ledger.
+  Rogue1719 mounts/awakens Door: bounties20→37, confirmed catalyst37→19,
+  held Charming Smile free consult,3 required sleeps;51HP/16MP,Mage8.
+  Next: first18g travel stone and regional earnings;58g gear set unproven.
   Evidence /private/tmp/wi-512-evidence/current; exact details in
   docs/design/512-continuous-journeys.md. Endings, force-crate variant,
   affordability and windows remain outstanding.

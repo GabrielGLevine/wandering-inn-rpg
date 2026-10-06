@@ -245,3 +245,18 @@ is diagnostic route evidence, not a clean authoritative gate. Earlier full-slot
 and modal-toast assertion mistakes are preserved separately. Next: mount the
 Door, claim the actual earned Watch bounties, fund catalyst and regional travel,
 and preserve the remaining affordability ledger through the ending.
+
+## Door budget resolved through held social support
+
+Rogue1719 mounts the Door, actually claims the three Watch bounties (3+4+10;
+the shipped gates accept the earlier guile crate and Watch-swept cisterns),
+and raises20gold to37. The catalyst purchase uses the real armed confirmation,
+37→19. Held Charming Smile completes the consultation for no gold; the5g
+alternative is not selected. Three required study sleeps awaken the Door;
+final51HP/16MP,19gold, Mage8 and the other classes unchanged. These are
+required attunement sleeps, not income or victory farming.
+
+rogue-door-current and rogue-door1.log preserve exit0/PASS1719 with the same
+two shader-RID ERRORs; still diagnostic, not a clean gate. The first18g travel
+stone is affordable, leaving1g before regional earnings. The58g purchased gear
+set is not afforded or claimed by this history.
