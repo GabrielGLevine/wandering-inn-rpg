@@ -162,3 +162,26 @@ DummyShader RID leak ERROR during exit. The identical rerun reproduces it.
 Rogue555 and unaffected load_gate exit0/PASS without error/warning noise.
 Worker events/checkpoint remain useful diagnostic evidence, but its final
 authoritative gate is pending a teardown investigation owned by root.
+
+## Rogue setback, fallback and earned gear budget
+
+The882-step fresh Rogue route passes cleanly with two observed defeats retained.
+The optional cistern force attempt loses at43HP/13MP, Warrior2/Mage4/Rogue3,
+6gold. The actual retreat earns Diplomacy through the patient Drayman response
+and a real sleep, then asks the Watch with held Charming Smile and reports to
+Olesm. Act III starts at12gold and43HP/15MP. No quest money is injected.
+
+The next scout attempt loses with the pack leader at2HP. Rather than repeat
+encounters for growth, the player returns for two still-unclaimed Inn chores:
+actual Basic Cleaning and the serving tray pay one gold each,12→14. The tray
+is its first delivered_item counter; Erin's package completion is a different
+counter. Sleep earns Helper1 from the real cleaning. Current build
+Helper1/Diplomat5/Mage4/Rogue3/Warrior2,44HP/14MP,14gold.
+The new Helper changes the derived MP maximum15→14 at sleep; the checkpoint
+pins that actual consequence rather than assuming every added class raises it. This is the exact
+Fang budget for the next equipment decision, not a completed retry.
+
+Evidence rogue-social-fallback-pass and rogue-earned-gear-wages-pass is clean
+exit0/PASS with passing results. Unexpected losses and the initially mistaken
+tray-counter pin remain in separate evidence folders. The route has not won
+the mandatory boss or reached an ending; no balance/seed changes were made.

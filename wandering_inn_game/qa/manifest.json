@@ -7932,24 +7932,29 @@
    "note": "#512 continuous fresh Rogue checkpoint: drainage/Stealth, preserved live road, actual Pisces support and walked sleep. No fixtures/teleports; ending extension in progress.",
    "surfaces": {
     "maps": [
+     "deep_tunnels",
      "floodplains",
      "guild",
      "inn",
      "inn_upstairs",
+     "sewers",
      "street"
     ],
     "fixtures": [],
     "skills": [
+     "basic_cleaning",
      "light",
      "sneak"
     ],
     "dialogue": [
+     "drayman_dispute",
      "erin_errand",
      "krshia_crate",
      "olesm_intro",
      "pisces_magic",
      "relc_intro",
-     "selys_delivery"
+     "selys_delivery",
+     "zevara_intro"
     ],
     "systems": [
      "char_creation",

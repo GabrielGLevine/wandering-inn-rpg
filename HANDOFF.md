@@ -15,14 +15,18 @@ archived, or superseded session blocks.
   HANDOFF. No gameplay/core/UI ownership. Driver extensions need controller
   coordination first. Composed d04cf5c7 and91bdac25; run fresh Rogue and
   worker/social histories through full endings. No fixtures/teleports/topups.
-  Rogue555 fresh steps pass with real martial support/road victory/rest.
+  Rogue882 fresh steps pass: force-nest loss→earned social fallback→ActIII;
+  scouts loss at enemy2HP→two unclaimed1g Inn chores→Helper sleep,14g
+  available for an actual Fang purchase. Current44HP/14MP (Helper sleep
+  changes the prior15MP maximum to14).
   Worker965-step assertions pass but two runs leak DummyShader RID at exit
   (ERROR; authoritative gate invalid): initial scout loss, earned14g Fang
   retry wins scouts, both underrecovered and fully recovered boss attempts
   lose; real rollback preserves1g,44HP/12MP,one HotMeal,no FineMeals.
   Exact fractional/adversity findings in docs/design/512-continuous-journeys.md.
   Root owns worker balance assessment; no arbitrary victory farming.
-  Next: continue Rogue through cisterns/earned utility/regional gates.
+  Next: Rogue actual14g Fang purchase and intended scout retry, then
+  walked recovery/earned utility/regional gates.
   Evidence /private/tmp/wi-512-evidence/current/{worker-wall-contract-clean-pass,
   rogue-support-pass}. Endings, force-crate variant and windows outstanding.
   Checkpoint before long route runs; preserve actual costs and imperfect forks.
