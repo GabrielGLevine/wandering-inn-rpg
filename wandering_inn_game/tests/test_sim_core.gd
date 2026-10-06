@@ -4487,7 +4487,10 @@ func _check_unactivatable_skills_pre_revealed(scene_config: Dictionary, skill_co
 ## keys still both ride; the same key caps at the strongest single value.
 func _check_pending_meal_merges(scene_config: Dictionary, skill_config: Dictionary) -> void:
 	var toasts: Array[String] = []
+	var uses: Array = []
 	var g := WIGame.new(scene_config, skill_config, func(t: String, p: Dictionary) -> void:
+		if t == WIEvents.INVENTORY_USE_RESOLVED:
+			uses.append(p.duplicate(true))
 		if t == WIEvents.TOAST:
 			toasts.append(String(p.get("text", ""))), 77, {
 				"combatants": _load_json("res://data/combatants.json"),
@@ -4495,7 +4498,8 @@ func _check_pending_meal_merges(scene_config: Dictionary, skill_config: Dictiona
 				"arenas": _load_json("res://data/arenas.json"),
 				"items": _load_json("res://data/items.json"),
 			})
-	g.inventory.assign(["tempering_oil", "fine_meal"])
+	g.pickup("tempering_oil", "test")
+	g.pickup("fine_meal", "test")
 
 	assert(g.use_item("tempering_oil"), "tempering_oil is a next_fight item and uses out of combat")
 	assert(int(g.pending_meal.get(WIKeys.DAMAGE_MOD, 0)) == 1, "the oil arms +1 damage")
@@ -4506,8 +4510,8 @@ func _check_pending_meal_merges(scene_config: Dictionary, skill_config: Dictiona
 	assert(int(g.pending_meal.get(WIKeys.DAMAGE_MOD, 0)) == 1,
 		"the meal must NOT clear the oil's damage -- this is the #334 bug")
 	assert(int(g.pending_meal.get(WIKeys.HP_MOD, 0)) == 2, "and the meal's own +2 HP is armed beside it")
-	assert(toasts.back() == "Used: Fine Meal. +1 damage, +2 HP in your next fight.",
-		"the second toast reports the MERGED total, not just its own item, got: %s" % toasts.back())
+	assert(uses.back().preparation.armed == {"damage_mod": 1, "hp_mod": 2},
+		"the settled receipt carries the merged preparation and scope")
 
 	# GH#432: a WEAKER same-key use refreshes rather than stacks. crude_draught's
 	# +1 HP under the meal's armed +2 is a no-op on the number -- the item still
@@ -4537,7 +4541,8 @@ func _check_pending_meal_merges(scene_config: Dictionary, skill_config: Dictiona
 			"arenas": _load_json("res://data/arenas.json"),
 			"items": _load_json("res://data/items.json"),
 		})
-	g2.inventory.assign(["crude_draught", "signature_meal"])
+	g2.pickup("crude_draught", "test")
+	g2.pickup("signature_meal", "test")
 	assert(g2.use_item("crude_draught"), "the weak draught arms first")
 	assert(int(g2.pending_meal.get(WIKeys.HP_MOD, 0)) == 1, "+1 HP armed")
 	assert(g2.use_item("signature_meal"), "the stronger meal uses on top of it")

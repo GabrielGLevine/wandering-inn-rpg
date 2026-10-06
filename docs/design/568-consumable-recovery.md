@@ -25,9 +25,9 @@ Multi-step operations buffer their existing events until gold, stock, inputs and
 one-shot state agree. Pre-combat checkpoint events remain synchronous and precede
 choice effects. No event callback may save a half-completed stock transaction.
 
-## Frozen frontend contract for the next checkpoint
+## Frozen frontend contract
 
-These APIs are planned, not implemented by the quantity-only checkpoint:
+The shared-use checkpoint implements these APIs:
 
 - `WIItems.preview_use(item, context_snapshot, rules) -> Dictionary` is pure.
 - `WIGame.prepare_item_use(item_id, context)` returns a deep-copied offer and
@@ -40,8 +40,8 @@ Offer/result fields: `operation_id`, `item`, `context`, `source`, `allowed`,
 `reason`, `confirmation_required`, `before`, `after`, `preparation_before`,
 `preparation`, `count_before`, `count_after`, `ap_before`, `ap_after`, `ap_cost`,
 `exposure_before`, `exposure_after`, `dose_number`, `restore_hp`, `restore_mp`,
-`poison_hp`. Before/after contain hp/max_hp/mp/max_mp. Result additionally carries
-`committed`; every dictionary is captured and deep-copied before publication.
+`poison_hp`, `hp_lost` (actual bounded HP loss). Before/after contain hp/max_hp/mp/max_mp. Result additionally carries
+`committed`; canceled/stale results report equal actual before/after values and zero deltas. Every dictionary is captured and deep-copied before publication.
 A refusal consumes nothing, so no compensating refund is needed. Confirm compares
 all relevant live resources, maxima, stock, preparation, actor/turn and context
 with the offer. A stale operation is refused and invalidated, requiring a fresh
@@ -72,3 +72,41 @@ simulation units pass. Logs: `/private/tmp/wi-568-evidence/quantities*`.
 Earlier failed logs preserve obsolete schema/singleton expectations and one
 corrected event-batch boundary error. Full units/canonicals/balance, actual input
 routes, windowed proof and touch evidence remain for composed integration.
+
+
+## Shared use and reward settlement
+
+The production world/combat item paths use the same pure preview. The standalone
+combat policy compatibility adapter also validates through it; its old full-HP
+AP-spend expectation now explicitly refuses without cost. Existing HP items keep
+`heal` as a compatibility alias beside authoritative `restore_hp` until the
+standalone policy/item filtering surfaces are composed. No MP use is inferred
+from that alias. Recovery rules are injected from progression.json.
+
+Offer, cancellation, refusal, use result, exposure, poison and settled events
+carry frozen operation data. UI constants are `ui_item_use_preview_rendered`,
+`ui_item_use_warning_rendered`, `ui_item_use_warning_armed` and
+`ui_item_use_rendered`. Event callbacks cannot mint/confirm a nested operation.
+World settled uses and claimed rewards autosave only after state is coherent.
+
+Overflow from fixed loot rolls now enters `pending_loot`, an array of bounded
+unit records `{item,source,count:1}`. Entries retain each earned drop's source;
+modern validation rejects malformed/nonstackable/unknown rewards before load.
+JSON count values normalize to integers. Loot events distinguish rolled items,
+actual delivered items and pending items; victory retirement completes before
+banking events flush, while callbacks still see the finished combat. Existing
+singleton duplicate semantics remain unchanged. `claim_pending_loot()` delivers
+what fits once, retains the remainder and emits `loot_claimed`; it runs on world
+transitions. Inventory should call it before building rows for immediate access.
+Delivery accept/arrival/turn-in similarly expose only settled parcel/claim/gold
+state, including during nested turn-in attempts.
+
+Focused recovery/reward units pass: first-harm cancel/confirm, captured token
+repeats, callback reentrancy, capped combined restoration, JSON/exposure, AP and
+actor refusal, armor/shield/difficulty bypass, lethal combat, exact earned boss
+loot overflow→reload→consume one→claim once, and nested delivery payout refusal.
+Existing save, vitals_handoff, sim_core, combat_sim and combat_policies pass.
+Evidence: `/private/tmp/wi-568-evidence/recovery*` and `rewards/` (the latter
+preserves the initially failing JSON normalization regression). Numeric tuning
+is unchanged from the accepted proposal. The real MP item/vendor and composed
+frontend/QA/windows remain outstanding at this checkpoint.

@@ -620,6 +620,7 @@
       "id": "mending_draught",
       "stackable": true,
       "consumable_family": "hp_potion",
+      "usable_in_combat": true,
       "name": "Mending Draught",
       "kind": "tool",
       "weapon_family": "none",
@@ -631,7 +632,8 @@
       "abilities": [],
       "price": 10,
       "use_effect": {
-        "heal": 8
+        "heal": 8,
+        "restore_hp": 8
       },
       "description": "A corked vial of something dark red, thick as syrup, that smells faintly of yarrow and copper.",
       "lore": "The witch keeps a shelf of these behind the tea things — not magic, she says, just knowing which roots do what. Drink it mid-fight and the wound closes slower than a real healer's work, but it closes."
@@ -831,6 +833,7 @@
       "id": "remedy_draught",
       "stackable": true,
       "consumable_family": "hp_potion",
+      "usable_in_combat": true,
       "name": "Remedy Draught",
       "kind": "tool",
       "weapon_family": "none",
@@ -842,7 +845,8 @@
       "abilities": [],
       "price": 10,
       "use_effect": {
-        "heal": 8
+        "heal": 8,
+        "restore_hp": 8
       },
       "description": "A squat green-glass bottle, stoppered warm, smelling of mint, bitterroot, and woodsmoke.",
       "lore": "A hedge remedy does not promise miracles. It promises that the bleeding slows, the swelling settles, and morning remains possible."

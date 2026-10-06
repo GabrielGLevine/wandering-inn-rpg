@@ -10,17 +10,21 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Active #567 consumable frontend:** `issue/567-consumable-controls`, isolated
-  `/private/tmp/wi-567-consumable-ui`, based on quantity checkpointd53bcc74.
+  `/private/tmp/wi-567-consumable-ui`, quantity/control checkpoints `1065b739`
+  and `86d96081`, composed with validated core API `a8509a19`.
   capacity570 owns UI inventory/message layer, combat screen/HUD, effect_text,
   new frontend tests and this handoff. No core/data/save/QA edits here.
-  **Next:** quantity labels/payloads are staged in inventory and combat slots;
-  wire separate Use/bar actions, displayed operation tokens, shared warning
-  and immediate captured in-panel/feed receipts after the core API checkpoint.
-  Quantity APIs exist; shared-use API contract is in the568design but awaits
-  resource_plan's validated checkpoint. Merge that core checkpoint before
-  claiming API compilation/runtime proof; preserve any core review corrections.
-  Root owns main HUD integration/window/canonical proof in wi-567-hud-contract.
-  No deployment or partial activation merge. Commit each coherent UI slice.
+  **Next:** finish token-bound Use/bar controls, shared first-harm warning and
+  immediate captured in-panel/feed receipts; compile and run focused UI tests.
+  The current UI binding checkpoint is untested. Root owns composed broad gates,
+  window/browser proof and publication. No partial activation/deployment.
+- **#568 dependency:** resource_plan owns core items/game/save transactions,
+  simulation, item/rule/vendor data, lint and focused core tests in its isolated
+  tree. Schema12 counts and shared prepare/commit/cancel use APIs are validated
+  at `a8509a19`, including poison, pending loot and captured result payloads.
+  MP potion/vendor content is next. Frontend must compose exact committed APIs;
+  UI/effect_text and authored/generated QA remain separately owned.
+
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`
   is composed here as completed code squashed as `0bbd96aa`. Original art checkout
   remains separately owned and untouched. Previous choice-log ceiling fix is
