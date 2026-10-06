@@ -409,3 +409,25 @@ reruns this exact continuous route and reads actual window captures. Then
 scope the remaining profiles explicitly: worker wall remediation, fresh
 martial/caster/work-heavy completions, and force-crate/imperfect variants.
 Neither the economic endpoint nor the open ending closes those criteria.
+
+## Bounded free-armor worker continuation
+
+The original965 steps and three losses remain unchanged. After the wall, Maren
+walks out under the real defeat exit grace, opens the untouched upstairs chest,
+and equips its Leather Jerkin. The actual equipment receipt preserves44HP while
+maxHP rises44→48; no equip heal is inferred. A real sixth sleep restores48HP/14MP
+and realizes already-earned Mage4 from the saved nine spell casts. Gold stays1,
+one Hot Meal remains, and the armed Fine Meal bonus stays queued. No new cooking,
+wages, fighting, fixture load, seed change or potion stock is introduced.
+
+The returned joined boss attempt enters48/50HP and14/14MP, then loses in round6;
+the boss has10/50HP left and the other enemies are down. This improves the
+observed remainder but does not clear the gate or isolate armor from rest,
+Mage4, walked action history and the next honest RNG state. Full1095-step
+observation3 exits0 with PASS/result true but two DummyShader RID ERRORs, so
+its authoritative gate is invalid. `worker-free-armor-measured-loss` and
+`worker-free-armor3.log` preserve the evidence; two earlier street navigation
+failures are retained separately. Loss/rollback pins are now authored for the
+next replay. The only authorized next retry claims existing Zevara3+4gold,
+buys Traveler's Charm5 through the real confirmation, rests and returns once.
+No win or ending is promised.
