@@ -9,36 +9,21 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed resource foundation:** PR #572 now composes completed art PR #577
-  head `e89770de61a36564b5e6bc783314ee7ebca64f02` pending art CI/merge.
-  Next: finish staged combat carry, rollback, settled sleep/save ordering and
-  actual QA; retain #571 activation gate. Checkpoint each coherent step.
-
-
-- **Active #566 foundation (separate from #564 art):** owner is this Codex
-  session; worktree `/private/tmp/wi-566-foundation`, branch
-  `issue/566-persistent-vitals-foundation`, base `b1c4b02b` (origin/main).
-  Authorized slice: pure resource state, shared maxima, explicit PC battle
-  initialization, sleep ordering, versioned saves and contract tests.
-  Owned paths: `wandering_inn_game/src/core/{wi_game.gd,combat_build.gd,save.gd,vitals.gd}`,
-  `wandering_inn_game/src/core/combat/wi_combat.gd`, new
-  `wandering_inn_game/tests/test_vitals*.gd` and their UIDs, the version pin
-  in `tests/test_save.gd`, this worktree's
-  HANDOFF and `docs/design/566-vitals-foundation.md`.
-  Forbidden: art checkout, assets/maps/content, event/key catalogs,
-  UI/world/combat presentation, `core/game.gd`, QA manifests/driver/generated
-  outputs. No gameplay cutover or #566 closure in this slice.
-  Foundation source committed/reviewed at `6d3a0a88`; 47 clean Godot units,
-  266 clean canonicals and both 147×100 balance gates pass on Godot 4.7-stable.
-  Final targeted contracts pass after review. Evidence: `/private/tmp/wi-566-evidence`;
-  review: `/private/tmp/wi-566-independent-review.md`.
-  Full preflight remains RED: four WIGame code-grant line pins in art-owned
-  `scripts/data_lint.py` need repinning; unchanged CHOICE-LOG is 31,122 bytes
-  against 30,000. This lane's HANDOFF cap is repaired. No pins/windows relaxed.
-  Draft PR [#572](https://github.com/GabrielGLevine/wandering-inn-rpg/pull/572)
-  is published (Refs #566). Next: after art releases ownership compose the
-  four pin updates and log trim; wire battle handoff/autosave/events/UI and
-  actual player QA before #571 activation. No merge/deploy/issue closure yet.
+- **Resumed #566 resource foundation:** worktree `/private/tmp/wi-566-foundation`,
+  branch `issue/566-persistent-vitals-foundation`, PR #572. Base now includes
+  completed art PR #577 `e89770de61a36564b5e6bc783314ee7ebca64f02` pending CI/merge.
+  Prior staged schema/shared-maxima source `99a3de03` passed its targeted units,
+  canonical sweep and balance gates; evidence `/private/tmp/wi-566-evidence`.
+  That evidence does not prove the upcoming combat handoff implementation.
+  Owned: core resource/combat/save/sleep/Game event orchestration, corresponding
+  tests/QA and required source pins; HANDOFF and foundation design note.
+  Original art checkout remains untouched. #570 owns its optional diagnostic
+  and analysis only until shared core/save edits can be integrated serially.
+  **Exact next action:** implement carried combat entry/terminal commit, exact
+  checkpoint rollback, pre-build save and settled sleep ordering, resource
+  events and actual QA. Retain staged activation until #571 recovery/HUD gates.
+  Commit each coherent step before long gates; record commands, exits, noise
+  and artifacts. No release or persistence-only deployment.
 
 - **Recovery program #565:** #566–#571 own core, HUD, consumables, food,
   capacity and composed cutover. Plan:
