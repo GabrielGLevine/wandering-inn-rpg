@@ -7929,24 +7929,31 @@
    "tiers": [
     "full"
    ],
-   "note": "#512 fresh Rogue opening checkpoint: real drainage transit, walked sleep, earned Stealth and live danger bypass. No fixtures or teleport; ending extension remains in progress.",
+   "note": "#512 continuous fresh Rogue checkpoint: drainage/Stealth, preserved live road, actual Pisces support and walked sleep. No fixtures/teleports; ending extension in progress.",
    "surfaces": {
     "maps": [
      "floodplains",
      "inn",
-     "inn_upstairs"
+     "inn_upstairs",
+     "street"
     ],
     "fixtures": [],
     "skills": [
      "sneak"
     ],
-    "dialogue": [],
+    "dialogue": [
+     "erin_errand",
+     "krshia_crate",
+     "pisces_magic"
+    ],
     "systems": [
      "char_creation",
      "combat",
+     "dialogue",
      "exploration",
      "input",
-     "night_phase"
+     "night_phase",
+     "quests"
     ]
    }
   },
@@ -7956,23 +7963,35 @@
    "tiers": [
     "full"
    ],
-   "note": "#512 fresh worker opening checkpoint: actual wages, walked sleep, Helper and held Basic Cooking stock. No fixtures or teleport; social/ending extension remains in progress.",
+   "note": "#512 continuous fresh worker/social checkpoint: earned cooking/serve, free persuasion, gossip/Pisces lesson, returned reward and actual Diplomat sleep. No fixtures/teleports; ending extension in progress.",
    "surfaces": {
     "maps": [
+     "floodplains",
+     "guild",
      "inn",
-     "inn_upstairs"
+     "inn_upstairs",
+     "street"
     ],
     "fixtures": [],
     "skills": [
      "basic_cleaning",
      "basic_cooking"
     ],
-    "dialogue": [],
+    "dialogue": [
+     "drayman_dispute",
+     "erin_errand",
+     "krshia_crate",
+     "patron_serving",
+     "pisces_magic",
+     "selys_delivery"
+    ],
     "systems": [
      "char_creation",
+     "dialogue",
      "economy",
      "exploration",
-     "input"
+     "input",
+     "quests"
     ]
    }
   }

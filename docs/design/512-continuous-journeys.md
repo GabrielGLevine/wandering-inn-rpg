@@ -46,3 +46,29 @@ the shared regional/warden/ending gates with costs and carried recovery pinned.
 Do not assume historical steel-thread level/gold/full-rest results fit these
 builds. Caster acceptance remains #438. Full endings, variant recovery, per-fight
 ledgers, effective-power analysis and windows are still outstanding.
+
+## Social and support acquisition checkpoint
+
+The same fresh routes now pass265worker steps and228Rogue steps, still seed9
+with no fixtures/teleports/checkpoint loads. Worker serves the actual cooked
+plate (+2gold), carries Erin's package across the drainage route, calms the
+Drayman through the ungated patient response, talks to real residents and takes
+Pisces's lesson. Selys's reward is returned: +3gold, deliberately1gold less
+than keeping it. The purse at home is7gold. The second real sleep yields
+Helper1/Diplomat2/Mage1/Rogue1, HP33/33, MP13/13, zero potion exposure and no
+food remaining. Combined level5 is not effective power. Extra gossip really
+resolves Diplomat2 at acquisition; the initial level1 expectation was corrected
+without changing any inputs. The walk initially hit a blocked Guild frontage
+cell; the route now uses the actual clear y4 lane.
+
+Rogue preserves the road alive while taking the ordinary Krshia errand and
+Pisces lesson, uses held Stealth for the return crossing, accepts Erin's package
+and sleeps. Current build Rogue1/Mage1, gold0, HP32/32, MP12/12, second sleep.
+The package still needs delivery. This is disclosed support acquisition, not a
+pure-Rogue or caster-primary claim.
+
+Passing evidence folders `worker-social-pass` and `rogue-mage-pass` preserve
+results/events/checkpoints; source logs worker-social3/rogue-mage. Failed walk
+and level expectations are retained separately. Next: third-quest/act gates,
+continued Rogue danger credit, meaningful social choices and actual supported
+combat through the regional ending. Full endings and window reads remain open.

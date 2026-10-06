@@ -15,10 +15,12 @@ archived, or superseded session blocks.
   HANDOFF. No gameplay/core/UI ownership. Driver extensions need controller
   coordination first. Composed d04cf5c7 and91bdac25; run fresh Rogue and
   worker/social histories through full endings. No fixtures/teleports/topups.
-  Fresh journey_rogue145-step and journey_worker70-step opening prefixes pass
+  Fresh journey_rogue228-step and journey_worker265-step acquisition prefixes pass
   seed9 headless; captured actual state/receipts in design512-continuous-journeys
   and `/private/tmp/wi-512-evidence/current`. Next: serving/social acquisition
-  and ordinary errands, then full quest/ending continuation. Windows pending.
+  and third-quest/act gates, then full regional/ending continuation. Worker
+  preserves returned-reward history (7g) and earned Diplomat2; Rogue has earned
+  Mage support with the road still live. Windows pending.
   Checkpoint before long route runs; preserve actual costs and imperfect forks.
 
 - **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
