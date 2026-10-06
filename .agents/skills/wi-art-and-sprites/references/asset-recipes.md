@@ -18,7 +18,7 @@ Pin expected animation counts and measure alpha bounds before wiring it.
 
 Terrain `fallback_render` is likewise a complete descriptor. Resolve original
 biome/wall inheritance first, then replace render fields with the owned sheet,
-unit, coordinates, scale, anchor, tone and optional underlay. Keep topology and
+unit, coordinates, tone and optional underlay. Keep topology and
 simulation properties. Owned Wang atlases use their own documented corner-bit
 coordinates; UI regions and NinePatch margins come from the selected artwork.
 
