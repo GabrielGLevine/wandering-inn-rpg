@@ -10,8 +10,8 @@ archived, or superseded session blocks.
 ## Current state
 
 - **#567 consumable frontend checkpoint:** `issue/567-consumable-controls`,
-  isolated `/private/tmp/wi-567-consumable-ui`, source head `9da54788`, composed
-  core/catalog `206f36ac`. capacity570 owns inventory/message layer, combat
+  isolated `/private/tmp/wi-567-consumable-ui`, review fixes `17e8eda1`, composed
+  core/catalog `206f36ac`, food/service `91bdac25`. capacity570 owns inventory/message layer, combat
   screen/HUD, effect_text, new frontend tests and this handoff; no QA/core edits.
   Inventory has quantity labels, separate Use/bar controls, captured operation
   callbacks, first-harm Cancel/Confirm and immediate correlated receipts.
@@ -21,13 +21,14 @@ archived, or superseded session blocks.
   **Next:** controller independent review, compose owned QA, run actual smoke/
   integration tiers and new native/browser input paths; verify large-text phone
   scroll correction and combat feed fit. Physical device proof remains open.
-  No partial activation/deployment. Tree released after metadata checkpoint.
+  No partial activation/deployment. Finish food-copy focused checks, then release for controller integration.
 - **#568 dependency:** resource_plan owns core items/game/save transactions,
   simulation, item/rule/vendor data, lint and focused core tests in its isolated
   tree. Schema12 counts and shared prepare/commit/cancel use APIs are validated
   at `a8509a19`, including poison, pending loot and captured result payloads.
   The non-registering preview and MP potion/vendor content are composed at206f36ac. Frontend must compose exact committed APIs;
   UI/effect_text and authored/generated QA remain separately owned.
+
 
 
 - **Art baseline:** PR #577 head `e89770de61a36564b5e6bc783314ee7ebca64f02`

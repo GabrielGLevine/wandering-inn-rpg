@@ -88,7 +88,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		last_autosave_trigger = type
 		save_auto()
 	if type in [
-		WIEvents.COMBAT_SETTLED, WIEvents.SLEEP_SETTLED, WIEvents.LOOT_CLAIMED, WIEvents.CLASS_LEVEL_UP, WIEvents.QUEST_BEAT_COMPLETED,
+		WIEvents.SERVICE_RECOVERY_SETTLED, WIEvents.COMBAT_SETTLED, WIEvents.SLEEP_SETTLED, WIEvents.LOOT_CLAIMED, WIEvents.CLASS_LEVEL_UP, WIEvents.QUEST_BEAT_COMPLETED,
 		WIEvents.MAP_CHANGED, WIEvents.CLASS_GAINED, WIEvents.CLASS_EVOLVED,
 		WIEvents.CONSOLIDATION_ACCEPTED,
 		WIEvents.PHASE_CHANGED,

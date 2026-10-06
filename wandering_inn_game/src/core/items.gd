@@ -138,6 +138,21 @@ static func preview_use(item: Dictionary, context: Dictionary, rules: Dictionary
 	return plan
 
 
+static func preview_service(effect: Dictionary, resources: Dictionary, preparation: Dictionary, rules: Dictionary) -> Dictionary:
+	var projected := resources.duplicate(true)
+	var prepared := preparation.duplicate(true)
+	if bool(effect.get("well_fed", false)) and not bool(prepared.get("well_fed", false)):
+		projected.max_hp = int(projected.max_hp) + 2
+		prepared.well_fed = true
+	var plan := preview_use({"id": "inn_meal", "use_effect": effect}, {
+		"context": "world", "context_valid": true, "count": 1,
+		"resources": projected, "preparation": prepared,
+		"exposure": resources.get("mp_potion_doses", 0)}, rules)
+	plan.before = resources.duplicate(true)
+	plan.preparation_before = preparation.duplicate(true)
+	return plan
+
+
 static func _refused(plan: Dictionary, reason: String) -> Dictionary:
 	plan.allowed = false
 	plan.reason = reason
