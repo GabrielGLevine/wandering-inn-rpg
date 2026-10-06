@@ -2552,6 +2552,7 @@
     ],
     "dialogue": [
      "door_mounting",
+     "erin_errand",
      "krshia_crate",
      "pisces_magic"
     ],
@@ -2649,6 +2650,7 @@
      "basic_cleaning"
     ],
     "dialogue": [
+     "erin_errand",
      "krshia_crate",
      "pisces_magic"
     ],

@@ -1,5 +1,5 @@
 {
- "_comment": "The FIGHT leg of the 3-path mage-consult parity (cisterns_fight/talk/scout precedent -- three SEPARATE scripts, not one combined 'door_chain_paths', matching that precedent exactly and justified the same way: each leg's route/assertions differ enough that a single script would need multiple fixture re-installs mid-run for no real coverage gain). This is the FLAGSHIP end-to-end script: it runs the FIGHT leg of the mage consult (Pisces sends the player to clear rift_vermin_leak in the inn), then the FULL ruin run (ruin trip -> ruin_guardian fight -> anchor_stone_pedestal opens -> Krshia's resonant_catalyst purchase), ending with the chain's `consult` and `buy_catalyst` beats complete and the quest sitting on its third and last beat, `attune` -- door_that_goes_elsewhere completes only at the door's awakening (door_awakened), door_awakening.json's subject, NOT at the catalyst purchase. The anchor stone still comes up at the pedestal here but no longer completes any beat of this quest: the 2026-07-26 main-quest restructure moved the retrieval into its own quest (`horns_dig`) and deleted the old `recover_stone` beat. Erin's old beat-1 flicker start is gone from this script; Task 2.4 replaced it with the chain's REAL start, the pantry MOUNTING scene, played live from the first step -- see that step's own comment. door_chain_talk/door_chain_scout (door_chain_started pre-banked in their fixtures, same as this one now) cover the other two consult legs plus a partial slice of the recovery beat each (talk proves the pedestal's OR-gate opens WITHOUT fighting the guardian; scout proves the catalyst purchase again from a different angle) -- together the three scripts cover door_understood parity, the pedestal's contains_when OR-gate from both a FIGHT and a non-FIGHT producer, and the full quest completion, without triple-deriving the whole chain three times. Uses `teleport` for every inter-map hop (real navigation across inn/street/floodplains/ruin_surface is ALREADY proven live by inn_walkthrough/gate_district_walkthrough/tutorial_flow/ruin_walkthrough -- this script's subject is the consult-path/combat/container/purchase wiring, not pathing; the arc_flow/deep_descent precedent for teleporting past an already-proven stretch). Every teleport lands one cell short of its target, followed by a `move` INTO the target (sets facing even when blocked, wi_game.gd move_player's unconditional `player_facing = dir` before the blocked check) before interact.",
+ "_comment": "The FIGHT leg of the 3-path mage-consult parity (cisterns_fight/talk/scout precedent -- three SEPARATE scripts, not one combined 'door_chain_paths', matching that precedent exactly and justified the same way: each leg's route/assertions differ enough that a single script would need multiple fixture re-installs mid-run for no real coverage gain). This is the FLAGSHIP end-to-end script: it runs the FIGHT leg of the mage consult (Pisces sends the player to clear rift_vermin_leak in the inn), then the FULL ruin run (ruin trip -> ruin_guardian fight -> anchor_stone_pedestal opens -> Krshia's resonant_catalyst purchase), ending with the chain's `consult` and `buy_catalyst` beats complete and the quest sitting on its third and last beat, `attune` -- door_that_goes_elsewhere completes only at the door's awakening (door_awakened), door_awakening.json's subject, NOT at the catalyst purchase. The anchor stone still comes up at the pedestal here but no longer completes any beat of this quest: the 2026-07-26 main-quest restructure moved the retrieval into its own quest (`horns_dig`) and deleted the old `recover_stone` beat. Erin's old beat-1 flicker start is gone from this script; Task 2.4 replaced it with the chain's REAL start, the pantry MOUNTING scene, played live from the first step -- see that step's own comment. door_chain_talk/door_chain_scout (door_chain_started pre-banked in their fixtures, same as this one now) cover the other two consult legs plus a partial slice of the recovery beat each (talk proves the pedestal's OR-gate opens WITHOUT fighting the guardian; scout proves the catalyst purchase again from a different angle) -- together the three scripts cover door_understood parity, the pedestal's contains_when OR-gate from both a FIGHT and a non-FIGHT producer, and the full quest completion, without triple-deriving the whole chain three times. Uses `teleport` for every inter-map hop (real navigation across inn/street/floodplains/ruin_surface is ALREADY proven live by inn_walkthrough/gate_district_walkthrough/tutorial_flow/ruin_walkthrough -- this script's subject is the consult-path/combat/container/purchase wiring, not pathing; the arc_flow/deep_descent precedent for teleporting past an already-proven stretch). Every teleport lands one cell short of its target, followed by a `move` INTO the target (sets facing even when blocked, wi_game.gd move_player's unconditional `player_facing = dir` before the blocked check) before interact. Recovery integration: the first fight leaves31/46HP and0/14MP. This bounded teleport-based wiring route now actually buys four3g Inn meals before the guardian;40\u219228g, final catalyst balance22\u219210g. No silent refills or continuous-journey claim.",
  "fixture_save": "door_chain_fight_start",
  "starts_at_title": true,
  "steps": [
@@ -73,7 +73,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Mounted and hinged. Observe — already holding a hop to Liscor's gate district, and nobody has offered it so much as a rune of encouragement. It works. The next test is range."
+    "text": "Mounted and hinged. Observe \u2014 already holding a hop to Liscor's gate district, and nobody has offered it so much as a rune of encouragement. It works. The next test is range."
    },
    "timeout_sec": 5
   },
@@ -198,7 +198,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "A door that changes its mind about where it goes. How very like this city — even the fixtures have moods. You could bleed for my curiosity, if that is your instrument. You could attempt to talk me into caring, which has been done, rarely. Or prove you can read a ward without my help, and I will be forced to take you seriously. Choose, and do not waste my morning."
+    "text": "A door that changes its mind about where it goes. How very like this city \u2014 even the fixtures have moods. You could bleed for my curiosity, if that is your instrument. You could attempt to talk me into caring, which has been done, rarely. Or prove you can read a ward without my help, and I will be forced to take you seriously. Choose, and do not waste my morning."
    },
    "timeout_sec": 5
   },
@@ -344,6 +344,403 @@
   {
    "action": "wait_frames",
    "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 31
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 40
+  },
+  {
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Erin"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_line_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "conversation": "erin_errand"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_up"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Erin",
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 40,
+    "gold_after": 37
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 37
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 37
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 37
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 37,
+    "gold_after": 34
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 34
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 43
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 34
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 34,
+    "gold_after": 31
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 31
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 46
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 31
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 31,
+    "gold_after": 28
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 28
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 46
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 28
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 28
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "recovery_before_ruin_guardian"
   },
   {
    "_comment": "== BEAT 3: the ruin recovery run. Teleport straight to the guardian alcove (16,8), west of ruin_guardian (17,8) -- door_chain_started is already banked so ruin_door's own gate is moot for this script (proven live by ruin_walkthrough). The alcove cell is (16,8) -- ruin_guardian itself moved from (17,7) to (17,8) to fix a PC/guardian sprite-fusion bug (see skeleton_scene.json's ruin_guardian _comment). ==",
@@ -752,7 +1149,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 22
+   "equals": 10
   }
  ]
 }
