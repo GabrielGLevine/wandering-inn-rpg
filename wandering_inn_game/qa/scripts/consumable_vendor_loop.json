@@ -148,7 +148,7 @@
    "timeout_sec": 15
   },
   {
-   "action": "assert_dialogue_displayed",
+   "action": "assert_dialogue_layout",
    "contains": "Sold, at the posted price."
   },
   {
@@ -253,7 +253,7 @@
    "timeout_sec": 15
   },
   {
-   "action": "assert_dialogue_displayed",
+   "action": "assert_dialogue_layout",
    "contains": "Sold, at the posted price."
   },
   {
