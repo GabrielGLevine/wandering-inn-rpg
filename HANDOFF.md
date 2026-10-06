@@ -36,14 +36,14 @@ archived, or superseded session blocks.
   engine leaks in bare reproduction; unmodified custom build/MRE/prefix798
   clean after import. Earlier cache-error controls invalidated. Build/config
   differences remain unexplained; no production replacement or active build.
-- **Desktop field overflow #567:** resource_plan owns isolated
-  `/private/tmp/wi-567-desktop-field`, base289f0984; field_hotbar +existing
-  pagination tests only. Desktop capacity reserves live hint/Details/arrows,
-  retains52px slots/originalindices, follows keyboard selection across pages.
-  RED oldcontinuousrow fails; GREEN13/37desktop +unchanged37phone cases pass.
-  Evidence /private/tmp/wi-desktop-field-evidence. Next: load/field controls,
-  checkpoint/release. Root owns native proof; no mobile expansion. Martial
- 1ab7cf1c released: rested Awakened victory, fully rested vault wall pendingreview.
+- **Desktop field overflow #567 released:** `/private/tmp/wi-567-desktop-field`,
+  sourceb080e0ad/base289f0984. Capacity reserves live hint/Details/arrows;
+ 52px slots/originalindices preserved, keyboard selection reveals its page.
+  Focus RED oldrow fails; GREEN13/37desktop +existing37phone pass/no noise.
+  Load2/field_skills_loop110(seed9) clean0/PASS; comment/diff checks pass.
+  Evidence /private/tmp/wi-desktop-field-evidence/source-and-verdict.json.
+  Native actualinput/read proof pending root; no extra mobile or runtime.
+  Preserve companionUID. Martial1ab7cf1c vault wall awaits core review.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
