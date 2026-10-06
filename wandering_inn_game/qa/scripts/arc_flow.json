@@ -103,7 +103,8 @@
   {
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
-   "timeout_sec": 5,
+   "_comment": "The pointer waits behind the initial sleep and arrival messages at production reading speed.",
+   "timeout_sec": 30,
    "payload_contains": {
     "text": "A Watch runner is looking for you."
    }
@@ -822,7 +823,8 @@
   {
    "action": "wait_for_event",
    "type": "ui_recovery_rendered",
-   "timeout_sec": 60,
+   "_comment": "The bed receipt follows the scout, road ambush, and sleep progression messages in the production queue.",
+   "timeout_sec": 120,
    "payload_contains": {
     "reason": "sleep",
     "source": "bed",
