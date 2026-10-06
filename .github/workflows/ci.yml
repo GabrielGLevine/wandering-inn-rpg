@@ -454,8 +454,9 @@ jobs:
       - name: Browser-only interaction registry (emulated iPhone and Android)
         run: python3 wandering_inn_game/qa/web/run_browser_suite.py --skip-export
 
-      - name: Touch gesture negative controls
+      - name: Browser startup and touch gesture negative controls
         run: |
+          node wandering_inn_game/qa/web/runner_startup_test.mjs
           node wandering_inn_game/qa/web/touch_gesture_proof_test.mjs
           node wandering_inn_game/qa/web/touch_dispatch_test.mjs
 

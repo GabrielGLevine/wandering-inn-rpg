@@ -461,7 +461,8 @@
     0.242,
     0.202
    ],
-   "vignette": 0.56
+   "vignette": 0.56,
+   "lights_by_day": true
   },
   "trapped_halls": {
    "day": [
@@ -480,7 +481,8 @@
     0.202
    ],
    "vignette": 0.56,
-   "_comment": "GH-VISUAL-LOG 2026-07-17: base grade lifted ~35% total (12% then a further 20% on user call) (user-ratified USER-EYES item -- vault shots read near-black)."
+   "_comment": "GH-VISUAL-LOG 2026-07-17: base grade lifted ~35% total (12% then a further 20% on user call) (user-ratified USER-EYES item -- vault shots read near-black).",
+   "lights_by_day": true
   },
   "seal_vault": {
    "_comment": "Act V. Brighter/warmer than trapped_halls (0.282): this chamber never fell in; at 0.335 it still read near-black. Tilt is COOL -- ward-light, not a window. `lights_by_day` opts out of day=0.0: a sealed chamber has no sky, so zeroing its lights deleted its only source.",

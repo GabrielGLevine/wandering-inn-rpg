@@ -15,7 +15,7 @@
   {
    "id": "basic_swordwork",
    "display_name": "[Basic Swordwork]",
-   "icon": "icon_power_strike",
+   "icon": "icon_basic_swordwork",
    "contexts": [
     "combat",
     "exploration"

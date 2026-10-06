@@ -109,7 +109,7 @@
    "action": "wait_for_event",
    "type": "map_changed",
    "payload_contains": {
-    "map": "invrisil_boulevard"
+    "map": "invrisil_cross_street"
    },
    "timeout_sec": 10
   },
@@ -124,7 +124,7 @@
   {
    "action": "assert_state",
    "path": "current_map",
-   "equals": "invrisil_boulevard"
+   "equals": "invrisil_cross_street"
   },
   {
    "action": "wait_seconds",

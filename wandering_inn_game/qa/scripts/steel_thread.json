@@ -9313,12 +9313,17 @@
    "path": "player_cell",
    "equals": [
     4,
-    8
+    4
    ]
   },
   {
    "action": "screenshot",
    "name": "07_act_iv_17_boulevard"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
   },
   {
    "action": "wait_frames",
@@ -11012,14 +11017,14 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 6
+   "steps": 2
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
     5,
-    8
+    4
    ]
   },
   {
@@ -11032,14 +11037,13 @@
    "path": "player_cell",
    "equals": [
     4,
-    8
+    4
    ]
   },
   {
    "action": "move",
    "direction": "left",
-   "steps": 1,
-   "_comment": "Bump invrisil_anchor_stone (3,8)."
+   "steps": 1
   },
   {
    "action": "press",
@@ -11413,15 +11417,49 @@
   {
    "action": "move",
    "direction": "left",
-   "steps": 8,
-   "_comment": "The Adventurer's Rest is the boulevard's own north-face door at (18,1)."
+   "steps": 6
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    18,
+    20,
     2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
    ]
   },
   {
@@ -11606,23 +11644,58 @@
   {
    "action": "wait_for_event",
    "type": "map_changed",
-   "timeout_sec": 5,
    "payload_contains": {
-    "map": "invrisil_boulevard"
-   }
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    18,
-    2
+    14,
+    3
    ]
   },
   {
    "action": "move",
+   "direction": "left",
+   "steps": 13
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
    "direction": "right",
-   "steps": 8
+   "steps": 6
   },
   {
    "action": "assert_state",
@@ -11936,14 +12009,14 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 6
+   "steps": 2
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
     5,
-    8
+    4
    ]
   },
   {

@@ -57,6 +57,8 @@ func _ready() -> void:
 			assert(bar._last_selected_index == 35, "resize must preserve original selection")
 			assert(bar.hotbar_node().slot_rect(35).has_area(), "selected slot stays visible after resize")
 			assert(selection_events.back().visible and selection_events.back().index == 35)
+			assert(bar._selection_label_backing.size.x >= bar._selection_label.size.x + 20.0, "selection paper must enclose wrapped label width")
+			assert(bar.world_bottom() <= bar._selection_label_backing.position.y - bar.READOUT_GAP, "world content must clear transient help")
 			var armed_page := bar._page
 			bar._page_previous.pressed.emit()
 			assert(not bar._selection_label.visible and not selection_events.back().visible)

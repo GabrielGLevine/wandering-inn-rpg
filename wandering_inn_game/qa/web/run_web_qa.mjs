@@ -42,9 +42,12 @@ import { createHash } from "node:crypto";
 import { chromium } from "playwright";
 import { gestureProof } from "./touch_gesture_proof.mjs";
 import { dispatchDrag } from "./touch_dispatch.mjs";
+import { runnerStartupInit, releaseRunnerStartup, startupDelay } from "./runner_startup.mjs";
 
 const args = process.argv.slice(2);
 const touchMode = args.includes("--touch");
+const startupDelayMs = startupDelay(args);
+const withholdRunnerReady = args.includes("--withhold-runner-ready");
 // #503 device presets: EMULATED phone contexts (Chromium + a phone UA/viewport/
 // touch). They are labelled emulated in every log line -- a Playwright run is
 // never evidence about real iPhone Safari or Android Chrome.
@@ -249,10 +252,22 @@ page.on("filechooser", async (chooser) => {
 
 await page.addInitScript(
 	({ name, seed }) => {
-		window.__WI_QA__ = { script: `res://qa/scripts/${name}.json`, seed: seed ?? "" };
+		window.__WI_QA__ = { script: `res://qa/scripts/${name}.json`, seed: seed ?? "", wait_for_runner_ready: true };
 	},
 	{ name: scriptName, seed: seedArg ?? "" },
 );
+
+await page.addInitScript(runnerStartupInit);
+const touchSession = touchMode ? await page.context().newCDPSession(page) : null;
+await page.addInitScript(() => {
+	window.__WI_TOUCH_EVENTS__ = [];
+	for (const type of ["touchstart", "touchmove", "touchend", "touchcancel"]) {
+		document.addEventListener(type, (event) => window.__WI_TOUCH_EVENTS__.push({
+			type, time: performance.now(), trusted: event.isTrusted,
+			points: [...event.changedTouches].map((t) => ({x: t.clientX, y: t.clientY})),
+		}), {capture: true, passive: true});
+	}
+});
 
 // Output-level audio probe (silence diagnosis 2026-07-13): taps every
 // AudioNode.connect() into an AnalyserNode wherever the target is the
@@ -322,16 +337,6 @@ if (portraitEntry) {
 // unserviced, which the driver turns into a step FAILURE (no fallback).
 let realTouches = 0;
 const touchRequests = [];
-const touchSession = touchMode ? await page.context().newCDPSession(page) : null;
-await page.evaluate(() => {
-	window.__WI_TOUCH_EVENTS__ = [];
-	for (const type of ["touchstart", "touchmove", "touchend", "touchcancel"]) {
-	 document.addEventListener(type, (event) => window.__WI_TOUCH_EVENTS__.push({
-	  type, time: performance.now(), trusted: event.isTrusted,
-	  points: [...event.changedTouches].map((t) => ({x: t.clientX, y: t.clientY})),
-	 }), {capture: true, passive: true});
-	}
-});
 const serviceTouch = async () => {
 	const req = await page.evaluate(() => window.__WI_QA_TOUCH_REQ__ ?? null);
 	if (!req) return;
@@ -385,8 +390,10 @@ const serviceTouch = async () => {
 	await page.evaluate(() => { window.__WI_QA_TOUCH_DONE__ = (window.__WI_QA_TOUCH_DONE__ || 0) + 1; });
 };
 
-const deadline = Date.now() + TIMEOUT_MS;
 let result = null;
+const startup = await releaseRunnerStartup(page, {delayMs: startupDelayMs, withhold: withholdRunnerReady});
+console.log(`[startup] runner ${withholdRunnerReady ? "withheld" : "ready"} at ${startup.ready_at_ms}ms (delay=${startupDelayMs}ms)`);
+const deadline = Date.now() + TIMEOUT_MS;
 while (Date.now() < deadline) {
 	await serviceTouch();
 	const resize = await page.evaluate(() => window.__WI_QA_RESIZE__ ?? null);
@@ -482,7 +489,7 @@ if (touchMode && result) {
 const gameEvents = await page.evaluate(() => window.__WI_QA_EVENTS__ ?? []);
 const browserEvidence = {
 	emulated: true, device: deviceName, profile: device, browser: browser.version(),
-	host: BASE_URL, script: scriptName, touchMode, requests: touchRequests,
+	host: BASE_URL, script: scriptName, touchMode, startup, requests: touchRequests,
 	buildPckSha256: createHash("sha256").update(await readFile(join(webRoot, "index.pck"))).digest("hex"),
 	runtime: await page.evaluate(() => ({userAgent: navigator.userAgent, maxTouchPoints: navigator.maxTouchPoints, viewport: [innerWidth, innerHeight], devicePixelRatio, events: window.__WI_TOUCH_EVENTS__})),
 	errors: capturedErrors, warnings: capturedWarnings, diagnostics: capturedDiagnostics,

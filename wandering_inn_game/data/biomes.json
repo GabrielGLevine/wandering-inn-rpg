@@ -28,7 +28,35 @@
   "interior_flavor_by_map": {
    "inn": "Nothing there — just the inn's old boards, and the faint smell of something Erin burned once, permanently.",
    "inn_upstairs": "Nothing there — just the inn's old boards, and the faint smell of something Erin burned once, permanently."
-  }
+  },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/inn_floor.png",
+    "tile_px": 16,
+    "floor": [
+     0,
+     3
+    ],
+    "skirt_sheet": "res://assets/tiles/harvest/inn_floor.png",
+    "skirt_tile_px": 16,
+    "skirt": [
+     2,
+     1
+    ],
+    "blocked_sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "blocked_tile_px": 16,
+    "blocked": [
+     4,
+     3
+    ],
+    "floor_tone": {
+     "base": [
+      0.32,
+      0.3,
+      0.25
+     ],
+     "detail": 0.65
+    }
+   }
  },
  "street": {
   "footstep_family": "stone",
@@ -58,7 +86,35 @@
   ],
   "blocked_tile_px": 16,
   "interior_flavor": "Nothing there. Cart ruts worn into the flagstones, one groove deeper than its pair.",
-  "_comment_blocked_props": "#408: was ['crate','barrel']. Blocked cells in this biome used to alternate between exactly two props, so every obstacle cluster read as the same crate-and-barrel pair; rubble_pile and firewood_stack widen the rotation without changing what a blocked cell MEANS (all four are solid)."
+  "_comment_blocked_props": "#408: was ['crate','barrel']. Blocked cells in this biome used to alternate between exactly two props, so every obstacle cluster read as the same crate-and-barrel pair; rubble_pile and firewood_stack widen the rotation without changing what a blocked cell MEANS (all four are solid).",
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+    "tile_px": 16,
+    "floor": [
+     2,
+     1
+    ],
+    "blocked_sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+    "blocked_tile_px": 16,
+    "blocked": [
+     0,
+     3
+    ],
+    "skirt_sheet": "res://assets/tiles/harvest/meadow_paths.png",
+    "skirt_tile_px": 16,
+    "skirt": [
+     2,
+     1
+    ],
+    "floor_tone": {
+     "base": [
+      0.29,
+      0.34,
+      0.23
+     ],
+     "detail": 0.65
+    }
+   }
  },
  "cave": {
   "footstep_family": "stone",
@@ -83,7 +139,35 @@
    2,
    3
   ],
-  "interior_flavor": "Nothing there. Just stone, and the dark listening back."
+  "interior_flavor": "Nothing there. Just stone, and the dark listening back.",
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+    "tile_px": 16,
+    "floor": [
+     2,
+     1
+    ],
+    "blocked_sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+    "blocked_tile_px": 16,
+    "blocked": [
+     0,
+     3
+    ],
+    "skirt_sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+    "skirt_tile_px": 16,
+    "skirt": [
+     0,
+     3
+    ],
+    "floor_tone": {
+     "base": [
+      0.18,
+      0.2,
+      0.22
+     ],
+     "detail": 0.75
+    }
+   }
  },
  "floodplains": {
   "footstep_family": "earth",
@@ -110,7 +194,35 @@
    0,
    0
   ],
-  "interior_flavor": "Nothing there — grass, wind, and somewhere below it all, water thinking about flooding."
+  "interior_flavor": "Nothing there — grass, wind, and somewhere below it all, water thinking about flooding.",
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+    "tile_px": 16,
+    "floor": [
+     0,
+     3
+    ],
+    "blocked_sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+    "blocked_tile_px": 16,
+    "blocked": [
+     0,
+     3
+    ],
+    "skirt_sheet": "res://assets/tiles/harvest/meadow_paths.png",
+    "skirt_tile_px": 16,
+    "skirt": [
+     0,
+     3
+    ],
+    "floor_tone": {
+     "base": [
+      0.29,
+      0.34,
+      0.23
+     ],
+     "detail": 0.65
+    }
+   }
  },
  "garden": {
   "footstep_family": "earth",
@@ -131,7 +243,35 @@
    0,
    0
   ],
-  "interior_flavor": "Nothing there. The garden is quiet in a way that feels deliberate."
+  "interior_flavor": "Nothing there. The garden is quiet in a way that feels deliberate.",
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+    "tile_px": 16,
+    "floor": [
+     0,
+     3
+    ],
+    "blocked_sheet": "res://assets/tiles/harvest/hedge_over_lawn_v1.png",
+    "blocked_tile_px": 16,
+    "blocked": [
+     0,
+     3
+    ],
+    "skirt_sheet": "res://assets/tiles/garden/sky_mist.png",
+    "skirt_tile_px": 32,
+    "skirt": [
+     0,
+     0
+    ],
+    "floor_tone": {
+     "base": [
+      0.29,
+      0.34,
+      0.23
+     ],
+     "detail": 0.65
+    }
+   }
  },
  "riverfarm_village": {
   "footstep_family": "earth",
@@ -154,7 +294,35 @@
    0,
    0
   ],
-  "interior_flavor": "Nothing there. Wheat-dust and river air, and someone's dog considering you from a doorway."
+  "interior_flavor": "Nothing there. Wheat-dust and river air, and someone's dog considering you from a doorway.",
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+    "tile_px": 16,
+    "floor": [
+     0,
+     3
+    ],
+    "blocked_sheet": "res://assets/tiles/harvest/rock_over_cavefloor_v3.png",
+    "blocked_tile_px": 16,
+    "blocked": [
+     0,
+     3
+    ],
+    "skirt_sheet": "res://assets/tiles/harvest/meadow_paths.png",
+    "skirt_tile_px": 16,
+    "skirt": [
+     0,
+     3
+    ],
+    "floor_tone": {
+     "base": [
+      0.29,
+      0.34,
+      0.23
+     ],
+     "detail": 0.65
+    }
+   }
  },
  "witch_hollow": {
   "footstep_family": "earth",
@@ -180,7 +348,35 @@
    2,
    2
   ],
-  "interior_flavor": "Nothing there. Though the trees give the distinct impression of having just stopped talking."
+  "interior_flavor": "Nothing there. Though the trees give the distinct impression of having just stopped talking.",
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/bramble_over_moss_v2.png",
+    "tile_px": 16,
+    "floor": [
+     2,
+     1
+    ],
+    "blocked_sheet": "res://assets/tiles/harvest/bramble_over_moss_v2.png",
+    "blocked_tile_px": 16,
+    "blocked": [
+     0,
+     3
+    ],
+    "skirt_sheet": "res://assets/tiles/harvest/bramble_over_moss_v2.png",
+    "skirt_tile_px": 16,
+    "skirt": [
+     2,
+     1
+    ],
+    "floor_tone": {
+     "base": [
+      0.22,
+      0.3,
+      0.2
+     ],
+     "detail": 0.6
+    }
+   }
  },
  "invrisil_street": {
   "footstep_family": "stone",
@@ -202,7 +398,35 @@
    0,
    0
   ],
-  "interior_flavor": "Nothing there. The City of Adventurers doesn't even slow down to notice you looking."
+  "interior_flavor": "Nothing there. The City of Adventurers doesn't even slow down to notice you looking.",
+   "fallback_render": {
+    "blocked_sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+    "blocked_tile_px": 16,
+    "blocked": [
+     0,
+     3
+    ],
+    "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+    "tile_px": 16,
+    "floor": [
+     0,
+     0
+    ],
+    "skirt_sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+    "skirt_tile_px": 16,
+    "skirt": [
+     0,
+     0
+    ],
+    "floor_tone": {
+     "base": [
+      0.29,
+      0.34,
+      0.23
+     ],
+     "detail": 0.65
+    }
+   }
  },
  "brothers_parlor": {
   "footstep_family": "wood",
@@ -225,7 +449,35 @@
    7,
    21
   ],
-  "interior_flavor": "Nothing there. The furniture is bolted down anyway — hats stay on heads for a reason."
+  "interior_flavor": "Nothing there. The furniture is bolted down anyway — hats stay on heads for a reason.",
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/inn_floor.png",
+    "tile_px": 16,
+    "floor": [
+     0,
+     3
+    ],
+    "skirt_sheet": "res://assets/tiles/harvest/inn_floor.png",
+    "skirt_tile_px": 16,
+    "skirt": [
+     2,
+     1
+    ],
+    "blocked_sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "blocked_tile_px": 16,
+    "blocked": [
+     4,
+     3
+    ],
+    "floor_tone": {
+     "base": [
+      0.32,
+      0.3,
+      0.25
+     ],
+     "detail": 0.65
+    }
+   }
  },
  "invrisil_alley": {
   "footstep_family": "stone",
@@ -248,7 +500,35 @@
    8,
    17
   ],
-  "interior_flavor": "Nothing there. In this alley, that's probably good news."
+  "interior_flavor": "Nothing there. In this alley, that's probably good news.",
+   "fallback_render": {
+    "blocked_sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+    "blocked_tile_px": 16,
+    "blocked": [
+     0,
+     3
+    ],
+    "skirt_sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+    "skirt_tile_px": 16,
+    "skirt": [
+     0,
+     3
+    ],
+    "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+    "tile_px": 16,
+    "floor": [
+     0,
+     0
+    ],
+    "floor_tone": {
+     "base": [
+      0.29,
+      0.34,
+      0.23
+     ],
+     "detail": 0.65
+    }
+   }
  },
  "dungeon": {
   "footstep_family": "stone",
@@ -270,7 +550,35 @@
    8,
    2
   ],
-  "interior_flavor": "Nothing there. In this place, check twice anyway."
+  "interior_flavor": "Nothing there. In this place, check twice anyway.",
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+    "tile_px": 16,
+    "floor": [
+     2,
+     1
+    ],
+    "blocked_sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+    "blocked_tile_px": 16,
+    "blocked": [
+     0,
+     3
+    ],
+    "skirt_sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+    "skirt_tile_px": 16,
+    "skirt": [
+     0,
+     3
+    ],
+    "floor_tone": {
+     "base": [
+      0.29,
+      0.34,
+      0.23
+     ],
+     "detail": 0.65
+    }
+   }
  },
  "pallass_market": {
   "footstep_family": "stone",
