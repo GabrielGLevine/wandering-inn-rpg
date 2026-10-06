@@ -9,6 +9,22 @@ archived, or superseded session blocks.
 
 ## Current state
 
+- **#568 quantity checkpoint:** `issue/568-consumable-recovery`, isolated
+  `/private/tmp/wi-568-consumables`, base `8b5602ab` (capacity schema11 composed).
+  Owner: resource core worker; exact ownership is core items/game/save/inventory
+  transactions, combat simulation, item/rule/vendor data, lint, focused tests and
+  this handoff/design568. UI, effect_text and authored/generated QA are excluded.
+  Schema12 saves explicit food/potion counts beside ordered unique item IDs.
+  Legacy counts initialize once; modern malformed counts refuse before mutation.
+  Quantity, save, vitals-handoff and simulation units pass; evidence under
+  `/private/tmp/wi-568-evidence`. Inventory transactions preflight overflow and
+  ingredients, then publish events only after complete purchase/craft/sale state.
+  **Next:** shared pure preview and tokenized use/poison, followed by reachable
+  canon-checked MP potion data. Frozen frontend contract and unimplemented parts
+  are in `docs/design/568-consumable-recovery.md`. No broad gates/activation claim.
+  Preserve generated untracked companion-counter UID; do not publish it here.
+
+
 - **Active #568 dependency:** `issue/568-consumable-recovery`, isolated tree
   `/private/tmp/wi-568-consumables`. Base HUD/resource690f49f1 plus capacity
   schema11/JSON-boundary60aebdaa; schema12 is reserved for quantities.

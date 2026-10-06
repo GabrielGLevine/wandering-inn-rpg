@@ -2,6 +2,42 @@ class_name WIItems
 extends RefCounted
 
 const FLAT_AP_COST := 1
+const MAX_COUNT := 2147483647
+
+
+static func stackable(item: Dictionary) -> bool:
+	return item.get("stackable", false) == true
+
+
+static func valid_count(value: Variant) -> bool:
+	if not (value is int or value is float):
+		return false
+	var number := float(value)
+	return is_finite(number) and number == floor(number) and number >= 1 and number <= MAX_COUNT
+
+
+static func legacy_counts(inventory: Array, catalog: Dictionary) -> Dictionary:
+	var counts: Dictionary = {}
+	for id: Variant in inventory:
+		if stackable(catalog.get(String(id), {})):
+			counts[String(id)] = 1
+	return counts
+
+
+static func valid_counts(inventory: Array, counts: Variant, catalog: Dictionary) -> bool:
+	if not (counts is Dictionary):
+		return false
+	var seen: Dictionary = {}
+	for id: Variant in inventory:
+		if not (id is String) or seen.has(id):
+			return false
+		seen[id] = true
+		if stackable(catalog.get(id, {})) and not valid_count(counts.get(id)):
+			return false
+	for id: Variant in counts:
+		if not (id is String) or not seen.has(id) or not stackable(catalog.get(id, {})) or not valid_count(counts[id]):
+			return false
+	return true
 
 
 static func resolve_use(item: Dictionary, combat: WICombat) -> Dictionary:

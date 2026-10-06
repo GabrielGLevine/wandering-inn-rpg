@@ -53,6 +53,9 @@ var generalist_classes: Array[String] = []
 var used_skills: Array[String] = []
 var seen_statuses: Array[String] = []
 var inventory: Array[String] = []
+var consumable_counts: Dictionary = {}
+var _item_event_depth := 0
+var _item_events: Array = []
 # Every non-empty equipped id must also remain in inventory.
 var equipped: Dictionary = {WIKeys.WEAPON: "", "armor": "", "accessory_1": "", "accessory_2": "", "accessory_3": ""}
 var resonance_capacity: int = WIResonance.DEFAULT_INITIAL
@@ -125,7 +128,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	# data/interactions.json into it) -- INJECTED, never read from disk here, so
 	# core stays pure and a hand-built scene_config can run with no table at all.
 	_field_skills = WIFieldSkills.new(sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _toggle_light, _blink_field, _ward_field, _animate_field, _door_openable, scene_config.get("interactions", {}), accomplishment_count)
-	_interactions = WIInteractions.new(sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, encounter_gate_met, start_combat, pickup, _has_required_items)
+	_interactions = WIInteractions.new(sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, encounter_gate_met, start_combat, pickup, _has_required_items, can_change_items, _begin_item_events, _end_item_events)
 	_sleep_beat = WISleepBeat.new(sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _apply_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
 	_banking = WICombatBanking.new(sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
 	rng.seed = rng_seed
@@ -146,6 +149,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 		player_skills.append(String(sk))
 	for it: Variant in p.get("inventory", []):
 		inventory.append(String(it))
+	consumable_counts = WIItems.legacy_counts(inventory, _items)
 	var eq_raw: Dictionary = p.get("equipped", {})
 	equipped = {
 		WIKeys.WEAPON: String(eq_raw.get(WIKeys.WEAPON, "")),
@@ -732,13 +736,15 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	# holds an item the SAME prop hands out (the lamb pen's wool tuft bricked
 	# its [Beast's Mending] arm). Capped props bank and hand over nothing --
 	# the behavior interact() has always had for a failed pickup.
-	if effect.has("item") and inventory.has(String(effect["item"])) \
+	if effect.has("item") and inventory.has(String(effect["item"])) and not WIItems.stackable(item(String(effect["item"]))) \
 			and (effect.has("remove_item") or not bool(target.get("once_per_waking", false))):
 		var dup_toast := "Your pack already holds one of those. The bench keeps its patience, and you keep your reagents."
 		if not effect.has("remove_item"):
 			dup_toast = "Your pack already holds one of those. No sense making a second you cannot carry."
 		_emit(WIEvents.TOAST, {"text": dup_toast})
 		return {"blocked_duplicate": String(effect["item"])}
+	if not can_change_items(_as_item_list(effect.get("item", "")), _as_item_list(effect.get("remove_item", ""))):
+		return {"inventory_refused": true}
 	# GH#156 review M1: once_per_waking is OPT-IN here exactly as in interact()
 	# and SHARES interact's serve: key -- one careful visit per waking TOTAL
 	# (a soothe burns the mend and vice versa). Bench props never set the flag:
@@ -750,6 +756,7 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 			_emit(WIEvents.TOAST, {"text": String(target.get("once_per_waking_toast", "Nothing more to carry out right now. Come back another day."))})
 			return {"once_per_waking_spent": true}
 		entity_first_use[waking_key] = true
+	_begin_item_events()
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
 	# #398-P3: `accomplishment` is String|ARRAY, the contract `on_victory` /
@@ -781,11 +788,12 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 				_apply_gold_effect(int(effect["gold"]), target_id)
 		else:
 			_apply_gold_effect(int(effect["gold"]), target_id)
-	if effect.has("item"):
-		pickup(String(effect["item"]), target_id)
 	if effect.has("remove_item"):
 		for rem_item: String in _as_item_list(effect["remove_item"]):
 			remove_item(rem_item, target_id)
+	if effect.has("item"):
+		pickup(String(effect["item"]), target_id)
+	_end_item_events()
 	return effect
 
 
@@ -809,10 +817,7 @@ func _door_openable(target: Dictionary) -> bool:
 
 
 func _has_required_items(raw: Variant) -> bool:
-	for req_item: String in _as_item_list(raw):
-		if not inventory.has(req_item):
-			return false
-	return true
+	return can_change_items([], _as_item_list(raw), true)
 
 
 func _as_item_list(raw: Variant) -> Array:
@@ -1520,7 +1525,7 @@ func purchase_confirm() -> bool:
 		and String(fresh["text"]) == String(offer["text"]) \
 		and int(fresh["price"]) == int(offer["price"]) \
 		and String(fresh["item"]) == String(offer["item"])
-	if not same_row or gold < int(offer["price"]):
+	if not same_row or gold < int(offer["price"]) or not _dialogue_items_available(dialogue.choose(int(offer["index"]), false)):
 		_emit(WIEvents.PURCHASE_CANCELLED, {"index": int(offer["index"]), "conversation": String(offer["conversation"]), "reason": "revalidation"})
 		return false
 	_emit(WIEvents.PURCHASE_CONFIRMED, offer.duplicate(true))
@@ -1534,10 +1539,55 @@ func purchase_cancel() -> bool:
 	return true
 
 
-func _commit_dialogue_choice(index: int) -> bool:
-	var result: Dictionary = dialogue.choose(index)
+func _dialogue_items_available(result: Dictionary) -> bool:
 	if result.is_empty():
 		return false
+	var gained: Array = []
+	var removed: Array = []
+	var purse := gold
+	var running_counts: Dictionary = {}
+	for id: String in inventory:
+		running_counts[id] = item_count(id)
+	var spends := false
+	for effect: Dictionary in result["effects"]:
+		if effect.has("item"):
+			var gained_id := String(effect["item"])
+			if WIItems.stackable(item(gained_id)):
+				if int(running_counts.get(gained_id, 0)) >= WIItems.MAX_COUNT:
+					return false
+				running_counts[gained_id] = int(running_counts.get(gained_id, 0)) + 1
+			gained.append(gained_id)
+		if effect.has("remove_item"):
+			var removed_id := String(effect["remove_item"])
+			running_counts[removed_id] = int(running_counts.get(removed_id, 0)) - 1
+			removed.append(removed_id)
+		if effect.has("sell_item"):
+			var sold := String(effect["sell_item"])
+			if not sellable_items().has(sold):
+				return false
+			removed.append(sold)
+		if effect.has("gold"):
+			spends = spends or int(effect["gold"]) < 0
+			purse += int(effect["gold"])
+			if purse < 0:
+				return false
+	if spends:
+		for id: String in gained:
+			if inventory.has(id) and not WIItems.stackable(item(id)) and not removed.has(id):
+				return false
+	return can_change_items(gained, removed, true)
+
+
+func _commit_dialogue_choice(index: int) -> bool:
+	var result: Dictionary = dialogue.choose(index, false)
+	if not _dialogue_items_available(result):
+		return false
+	for effect: Dictionary in result["effects"]:
+		if effect.has("start_combat"):
+			_emit(WIEvents.PRE_COMBAT_CHOICE, {"encounter": String(effect["start_combat"])})
+			break
+	_begin_item_events()
+	result = dialogue.choose(index)
 	_emit(WIEvents.DIALOGUE_CHOICE, {"index": index})
 	var walker := dialogue
 	if bool(result["ended"]):
@@ -1547,12 +1597,6 @@ func _commit_dialogue_choice(index: int) -> bool:
 	var pending_board_voice := "selys"
 	var pending_travel := ""
 	var pending_sell_vendor := ""
-	for effect: Dictionary in result["effects"]:
-		if effect.has("start_combat"):
-			# Snapshot precedes option effects; synchronous COMBAT_PREPARING consumes it,
-			# or DIALOGUE_EFFECT_FAILED disarms the snapshot guard.
-			_emit(WIEvents.PRE_COMBAT_CHOICE, {"encounter": String(effect["start_combat"])})
-			break
 	for effect: Dictionary in result["effects"]:
 		var before_resources := player_resources()
 		var before_preparation := preparation_snapshot()
@@ -1621,6 +1665,7 @@ func _commit_dialogue_choice(index: int) -> bool:
 			# resolves something, so talk resolutions stop being silent.
 			_emit(WIEvents.TOAST, {"text": String(effect["toast"])})
 		_resources_changed(before_resources, "dialogue", _dialogue_conversation_id, before_preparation != preparation_snapshot())
+	_end_item_events()
 	if not bool(result["ended"]):
 		walker.set_ctx(_build_dialogue_ctx())
 		walker.advance(String(result["next"]))
@@ -2604,24 +2649,78 @@ func _holds_weapon_family(family: String) -> bool:
 	return false
 
 
+func item_count(item_id: String) -> int:
+	if not inventory.has(item_id):
+		return 0
+	return int(consumable_counts.get(item_id, 0)) if WIItems.stackable(item(item_id)) else 1
+
+
+func can_change_items(gained: Array, removed: Array = [], allow_equipped := false) -> bool:
+	var counts: Dictionary = {}
+	for id: String in inventory:
+		counts[id] = item_count(id)
+	for raw: Variant in removed:
+		var id := String(raw)
+		if int(counts.get(id, 0)) <= 0 or (not allow_equipped and equipped.values().has(id)):
+			return false
+		counts[id] -= 1
+	for raw: Variant in gained:
+		var id := String(raw)
+		if id == "":
+			continue
+		if WIItems.stackable(item(id)):
+			if int(counts.get(id, 0)) >= WIItems.MAX_COUNT:
+				return false
+			counts[id] = int(counts.get(id, 0)) + 1
+		else:
+			counts[id] = 1
+	return true
+
+
+func _begin_item_events() -> void:
+	_item_event_depth += 1
+
+
+func _end_item_events() -> void:
+	_item_event_depth -= 1
+	if _item_event_depth != 0:
+		return
+	var events := _item_events
+	_item_events = []
+	for event: Dictionary in events:
+		_addressed_sink(String(event["type"]), event["payload"])
+
+
+func _consume_item_unit(item_id: String) -> void:
+	if WIItems.stackable(item(item_id)):
+		var remaining := item_count(item_id) - 1
+		if remaining > 0:
+			consumable_counts[item_id] = remaining
+			return
+		consumable_counts.erase(item_id)
+	inventory.erase(item_id)
+
+
 func pickup(item_id: String, source_id: String) -> bool:
-	if inventory.has(item_id):
+	var before := item_count(item_id)
+	if (before > 0 and not WIItems.stackable(item(item_id))) or not can_change_items([item_id]):
 		return false
-	inventory.append(item_id)
-	_emit(WIEvents.ITEM_GAINED, {"item": item_id, "source": source_id})
+	if not inventory.has(item_id):
+		inventory.append(item_id)
+	if WIItems.stackable(item(item_id)):
+		consumable_counts[item_id] = before + 1
+	_emit(WIEvents.ITEM_GAINED, {"item": item_id, "source": source_id, "count_before": before, "count_after": item_count(item_id)})
 	var display := String(item(item_id).get("name", item_id))
 	_emit(WIEvents.TOAST, {"text": "Got: %s" % display})
 	return true
 
 
 func remove_item(item_id: String, source_id: String) -> bool:
-	if not inventory.has(item_id):
+	if not can_change_items([], [item_id]):
 		return false
-	for slot_name: String in equipped:
-		if String(equipped[slot_name]) == item_id:
-			return false
-	inventory.erase(item_id)
-	_emit(WIEvents.ITEM_LOST, {"item": item_id, "source": source_id})
+	var before := item_count(item_id)
+	_consume_item_unit(item_id)
+	_emit(WIEvents.ITEM_LOST, {"item": item_id, "source": source_id, "count_before": before, "count_after": item_count(item_id)})
 	return true
 
 
@@ -2638,7 +2737,7 @@ func use_item(item_id: String) -> bool:
 		return false
 	var before_resources := player_resources()
 	_merge_pending_meal(result.get("pending_meal", {}) as Dictionary)
-	inventory.erase(item_id)
+	_consume_item_unit(item_id)
 	_emit(WIEvents.ITEM_USED, {"item": item_id})
 	_resources_changed(before_resources, "preparation", item_id, true)
 	# GH#334 note 28 item 3: the toast used to be "Used: Fine Meal." and nothing
@@ -2710,7 +2809,7 @@ func combat_use_item(item_id: String) -> bool:
 	var result := WIItems.resolve_use(rec, combat)
 	if not bool(result.get("ok", false)):
 		return false
-	inventory.erase(item_id)
+	_consume_item_unit(item_id)
 	var healed := int(result.get("healed", 0))
 	_emit(WIEvents.ITEM_USED, {"item": item_id, "healed": healed})
 	_emit(WIEvents.TOAST, {"text": "Used: %s. Healed %d HP." % [String(rec.get("name", item_id)), healed]})
@@ -2755,10 +2854,13 @@ func sell_item(item_id: String) -> bool:
 	var worth := int(rec.get(WIKeys.PRICE, 0))
 	if worth <= 0:
 		return false
-	if not remove_item(item_id, _dialogue_conversation_id):
+	if not can_change_items([], [item_id]):
 		return false
+	_begin_item_events()
+	remove_item(item_id, _dialogue_conversation_id)
 	earn_gold(sell_price(worth), _dialogue_conversation_id)
 	record_accomplishment("deliberate_commerce", 1)
+	_end_item_events()
 	return true
 
 
@@ -3098,6 +3200,7 @@ func snapshot() -> Dictionary:
 		"seen_statuses": seen_statuses.duplicate(),
 		"lore_notes": lore_notes.duplicate(),
 		"inventory": inventory.duplicate(),
+		"consumable_counts": consumable_counts.duplicate(),
 		"equipped": equipped.duplicate(true),
 		"container_state": container_state.duplicate(true),
 		"actions_since_sleep": actions_since_sleep,
@@ -3215,6 +3318,9 @@ func _emit(type: String, payload: Dictionary) -> void:
 ## why the lore capture lives here: it fires whether or not anything is
 ## listening, so `lore_notes` can never depend on a toast winning a render race.
 func _addressed_sink(type: String, payload: Dictionary) -> void:
+	if _item_event_depth > 0:
+		_item_events.append({"type": type, "payload": payload.duplicate(true)})
+		return
 	var resolved := WIAddress.resolve_payload(payload, pc_gender)
 	if type == WIEvents.TOAST and bool(resolved.get("lore", false)):
 		_record_lore_note(String(resolved.get("text", "")))
