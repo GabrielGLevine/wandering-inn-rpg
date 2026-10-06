@@ -9,7 +9,7 @@ Recommend **4 at creation, 5 after the existing once-only sleep growth** for
 the implementation candidate. Actual catalog combinations show a useful
 additional enchanted item at each boundary while retaining three accessory
 positions and a capacity refusal above five. The catalog analysis and the
-provisional diagnostic below are not combat balance acceptance. No game values, item
+bounded diagnostic below are not combat balance acceptance. No game values, item
 costs, save rules, physical positions, UI or balance windows change here.
 The recommendation is ready for combat measurement; it does not establish
 that the larger capacity avoids auto-wins.
@@ -217,17 +217,20 @@ Remaining gates before #570 can close:
    batch, full canonical sweep and independent review after composition.
    Keep zero-exit, success-marker, noise-scan and QA `result.json` evidence.
 
-## Provisional combat diagnostic — quiesced checkpoint
+## Calibrated combat diagnostic
 
-At the user's quiesce request, the new
+The new
 [`sim_capacity_570.gd`](../../wandering_inn_game/tests/sim_capacity_570.gd)
-had completed **34 cells × 100 seeds = 3,400 fights** on Godot
+completed **34 cells × 100 seeds = 3,400 fights** on Godot
 `4.7.stable.official.5b4e0cb0f`. It preloads the authoritative batch script
 without instantiating its SceneTree and calls the existing static `_build_pc`.
 Resolution uses `WICombat`; both default (`dumb`) and `competent` policies
 come from `WICombatPolicies`. No combat formula or alternative builder is
-introduced. Source game data is unchanged from the analysis snapshot;
-the experiment started at branch head `7e01a08b0eec6171fc5fac525a87c18a9b5251c2`.
+introduced. The experiment was refreshed on composed art head
+`a5b6dee5b1dc91e085d30da7247aa404a5240781`, tree
+`86f1881bc6f74918665b507c6d50110598f6abe2`, on 2026-10-06. Art composition
+changed catalog bytes; all 3,400 seed outcomes and PC Skill-event counts
+nevertheless match the initial run at `7e834e58` exactly.
 
 Four existing batch cells are read directly from its constants:
 
@@ -280,24 +283,20 @@ caster default AI also casts spells, so “default” must not be described as
 universally basic-attacks-only. Capacity does not repair every policy/build
 weakness; the Mage D result is still 47/100 under competent policy.
 
-**Validation is incomplete.** Import completed with zero exit and no error
-or warning noise. After correcting an initial parse error in script-resource
-inspection, the diagnostic completed with zero exit, its expected PASS marker
-and no `SCRIPT ERROR|Parse Error|ERROR:|WARNING`. The two index-115 controls
-were then run through the unchanged authoritative batch. Both policies match
-win rate, median/min/max rounds and the complete rounds histogram exactly.
-The comparison wrapper stopped because it expected the default PASS marker
-from the competent report-only run; that engine run exited zero with its
-actual `[policy-sweep] policy=competent complete` marker. The remaining six
-controls were not started. Public fallback-art informational lines are
-present; this is not a private-overlay or visual run.
+The composed import and diagnostic completed with zero exit and no
+`SCRIPT ERROR|Parse Error|ERROR:|WARNING`; the diagnostic emitted its expected
+PASS marker. All four source controls were run under both policies through
+the unchanged authoritative batch. **All eight match win rate,
+median/min/max rounds and the complete rounds histogram exactly.** Default
+batch runs emitted their PASS marker; competent report-only runs emitted
+`[policy-sweep] policy=competent complete`. A first composed import with an
+existing companion test's missing-UID warning was rejected and rerun cleanly
+after Godot recreated that local UID. This is a public-checkout numerical
+run, not a private-overlay or visual run.
 
-Resume with existing diagnostic artifacts, correct the comparison's
-policy-specific completion marker, and check indices 86, 125 and 67 under
-both policies before treating those cells as calibrated. Then run load_gate,
-the smoke tier, affected combat-policy units and independent review. These
-checks were not started because the user requested quiescence. No thresholds
-or pins were changed. Actual acquisition, runtime equip/refusal, persistent
+The load gate, smoke tier, affected combat-policy units and independent
+review remain next at this checkpoint. No thresholds or pins were changed.
+Actual acquisition, runtime equip/refusal, persistent
 resource interaction, migration, sleep rendering and touch remain unproven.
 
 Reproducer (choose an evidence directory outside the project):
