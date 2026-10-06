@@ -29,7 +29,8 @@ archived, or superseded session blocks.
   Full preflight remains RED: four WIGame code-grant line pins in art-owned
   `scripts/data_lint.py` need repinning; unchanged CHOICE-LOG is 31,122 bytes
   against 30,000. This lane's HANDOFF cap is repaired. No pins/windows relaxed.
-  Next: draft PR (Refs #566), then after art releases ownership compose the
+  Draft PR [#572](https://github.com/GabrielGLevine/wandering-inn-rpg/pull/572)
+  is published (Refs #566). Next: after art releases ownership compose the
   four pin updates and log trim; wire battle handoff/autosave/events/UI and
   actual player QA before #571 activation. No merge/deploy/issue closure yet.
 
