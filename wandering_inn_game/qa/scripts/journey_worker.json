@@ -174,7 +174,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Basic Cleaning] — The table is spotless. Earned 1 gold."
+    "text": "[Basic Cleaning] \u2014 The table is spotless. Earned 1 gold."
    },
    "timeout_sec": 15
   },
@@ -304,7 +304,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Helper] class gained! — [Basic Cooking]"
+    "text": "[Helper] class gained! \u2014 [Basic Cooking]"
    },
    "timeout_sec": 15
   },
@@ -1501,7 +1501,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Diplomat] class gained! — [Charming Smile], [Calming Touch]"
+    "text": "[Diplomat] class gained! \u2014 [Charming Smile], [Calming Touch]"
    },
    "timeout_sec": 15
   },
@@ -3184,6 +3184,1098 @@
   {
    "action": "dump_checkpoint",
    "slot": "worker_ready_training"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "== WALKED (was teleport): back from bed to the stairs. (9,2) -> (2,2)."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "stairs_down: bump-face then interact."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ],
+   "_comment": "Back at the ground-floor lane head; the gift-node route below reuses the spawn choreography."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Meet (met_relc+sparred, given_spear unset): visible options ['What's out here'(0), 'You said you had something for me?'(1), 'Spar'(2), 'Keep walking'(3)] -- select index 1, the gift.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "relcs_spare_spear",
+    "source": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Got: Relc's Spare Spear"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "given_spear_by_relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Gift node: the 'press I' teaching line.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "My spare spear. Held gates wider than that one. Now listen. It won't help you from inside a pack. Check your pack, get the spear in your hand before you're back on the road. Sword arm, spear arm. What you carry decides which moves you get."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Gift option 0 'I'll try it on.' ends the conversation.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "payload_contains": {
+    "item": "relcs_spare_spear",
+    "slot": "weapon"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_earned_spear_equipped"
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "sneak"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 18
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Zevara holds the gatehouse at (2,6). Drop to the y4 lane and come at her from above."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump-move into Zevara's cell: blocked, so it only sets facing. Never trust facing carried over from a walk."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "NEW WAKING: the first interact with a pool-carrying NPC spends her rotating line and nothing else. Her pool is on the cisterns-neutral stage by now."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Second interact this waking opens the graph."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Hub cursor -> visible row 1, 'You sent a runner for me?'. Row 0 is 'Long shift?', row 2 is 'Just getting my bearings.' -- that is the WHOLE visible list here. dialogue.gd:_visible_options drops progress-gated (accomplishment) requires ENTIRELY rather than rendering them locked, so the unearned 'It's done.' and the chatted_with_zevara>=2 rows are absent, not greyed."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "There you are. The cisterns crew found something under the new grates: tunnels nobody dug, going down past where their lanterns reached. Olesm's maps say they shouldn't exist. You've been down there. You're going again, this time for the Watch."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "summons node row 0 = 'Then I'll go down.' -- THIS is the row that carries the heard_the_deep_tremor effect; the hub row above only walks you to it."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_the_deep_tremor"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "something_beneath",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "Good. See Olesm before you climb down. He's been up since the second bell drawing what shouldn't be there, and he'll want you carrying it. Relc goes with you. I will put him on the roster as your escort and sign it before you are past the gate."
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "summons_send: row 0 loops to the hub, row 1 ('On it.') ends. Close clean."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "To the sewer grate (16,11): sidestep Zevara's column, drop to the clear y7 lane, run east, then come down the x16 column so we arrive at the approach cell (16,10) already facing DOWN."
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    10
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9,
+   "_comment": "West wall column to the y11 walkway (the two water channels span x3-16 on y5/y9), then east to the fissure's approach cell."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump deep_fissure (8,12) -- a present entity blocks its cell, so this only turns us to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "door_when gate is MET (heard_the_deep_tremor banked at the gatehouse). NOTE: the door_when arm short-circuits BEFORE on_interact_accomplishment, so found_the_fissure never banks on this path -- pin the open_toast instead."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "Cold Hearth (5,4) flavor read: down the landing column, east along y4, bump the hearth."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "found_cold_hearth"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "A pit at the middle of the stone ring, the ash dead to the bottom. Bones banked against the stones, every one opened for the marrow."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Raskghar scouts (8,4) bar the way east. The hearth plugs y4, so route over the top on y3 and drop onto them."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "hot_meal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "hot_meal",
+    "allowed": false,
+    "reason": "no_benefit",
+    "count_before": 4
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.hot_meal",
+   "equals": 4
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_full_hp_food_refusal_before_scouts"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_scouts_entry_carried"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_actual_scout_defeat_underprepared"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_real_defeat_rollback"
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 13
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "sewers"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 10
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_road_entry_after_warren_retreat"
+  },
+  {
+   "action": "combat_autoplay",
+   "policy": "competent",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_road_clear_carried_exit"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 15
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "advanced_cooking",
+   "_comment": "Four fine expedition meals supply HP/MP on the next two-stage descent; no sales or empty production."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_after": 1
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Fine Meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "advanced_cooking",
+   "_comment": "Four fine expedition meals supply HP/MP on the next two-stage descent; no sales or empty production."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_after": 2
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Fine Meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "advanced_cooking",
+   "_comment": "Four fine expedition meals supply HP/MP on the next two-stage descent; no sales or empty production."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_after": 3
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Fine Meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "advanced_cooking",
+   "_comment": "Four fine expedition meals supply HP/MP on the next two-stage descent; no sales or empty production."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_after": 4
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Fine Meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_four_fine_meals_after_real_setback"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 9
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "slept": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_road_training_recovery_sleep"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_retry_ready"
   }
  ]
 }

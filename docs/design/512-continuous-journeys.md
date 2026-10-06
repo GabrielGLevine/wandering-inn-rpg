@@ -99,3 +99,21 @@ The failed Relc-seat walk and observed Rogue-level pin are retained. Regional
 continuation, full endings, force-crate variant, complete expense/power ledgers
 and window reads remain open. Compose the reviewed frontend input guard before
 actual inventory recovery in the next continuation.
+
+## First mandatory-fight loss and earned retreat
+
+The worker's first Raskghar scout attempt loses in four rounds at seed9,
+44HP/14MP, Warrior1/Mage1 and Relc's earned spear. That real failure is retained
+in the continuous route: confirm defeat, production pre-combat reload, walk
+out through the tunnels/sewers/street, then clear the still-live road encounter.
+The road victory pays2gold (13→15). No reload reroll, seed change or repeated
+spar was used. Full-HP Hot Meal correctly displays no-benefit and remains in
+stock before the lost fight. The next recovery pass reaches the actual chef
+counter via its east end aisle, makes four finite Fine Meals with held Advanced
+Cooking, and walks to bed. This is disclosed expedition supply, never sold.
+
+The732-step fresh route passes with the loss as an expected observed event;
+this does not claim the mandatory gate is cleared. Evidence is
+worker-earned-recovery-pass; the original unexpected defeat is preserved in
+worker-scouts-earned-defeat. Next is a paid equipment decision from15gold and
+an earned, prepared retry. No balance change is authorized by this wall.

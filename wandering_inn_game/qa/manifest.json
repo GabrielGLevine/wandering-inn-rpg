@@ -7970,14 +7970,17 @@
    "note": "#512 continuous fresh worker/social checkpoint: earned cooking/serve, free persuasion, gossip/Pisces lesson, returned reward and actual Diplomat sleep. No fixtures/teleports; ending extension in progress.",
    "surfaces": {
     "maps": [
+     "deep_tunnels",
      "floodplains",
      "guild",
      "inn",
      "inn_upstairs",
+     "sewers",
      "street"
     ],
     "fixtures": [],
     "skills": [
+     "advanced_cooking",
      "basic_cleaning",
      "basic_cooking",
      "sneak"

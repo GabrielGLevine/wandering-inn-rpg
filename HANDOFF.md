@@ -15,13 +15,15 @@ archived, or superseded session blocks.
   HANDOFF. No gameplay/core/UI ownership. Driver extensions need controller
   coordination first. Composed d04cf5c7 and91bdac25; run fresh Rogue and
   worker/social histories through full endings. No fixtures/teleports/topups.
-  Fresh journey_rogue385-step and journey_worker545-step routes pass seed9
-  headless. Worker reaches ActIII, real Relc spar, Warrior/Cook support and
-  four actual travel meals (13g,44HP/14MP); Rogue earns Pick Lock/Find Trap
-  through live crossings and actual Light/guile quest rewards (4g).
-  Evidence in design512-continuous-journeys and /private/tmp/wi-512-evidence/current.
-  Next: compose frontend3bd7f529 then198a7711; continue actual paid regional
-  gates and ending. Force-crate variant and windows remain outstanding.
+  Rogue385 fresh steps pass. Worker732 now includes a real first mandatory
+  scout defeat, actual pre-combat reload, walked retreat, road victory (+2g),
+  four held-Skill Fine Meals and bed; all fresh seed9, no fixtures/topups.
+  Worker has15g at next equipment/retry decision. Mandatory gate not cleared.
+  Evidence: /private/tmp/wi-512-evidence/current/worker-earned-recovery-pass.
+  Composed frontend3bd and warning198a; parent-authorized driver ff6/e48
+  readiness helpers are present. Next: earned prepared scout retry and
+  regional continuation, then Rogue support/combat continuation. Endings,
+  force-crate variant and windows remain outstanding.
   Checkpoint before long route runs; preserve actual costs and imperfect forks.
 
 - **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
