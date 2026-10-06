@@ -18,26 +18,27 @@ archived, or superseded session blocks.
 - **Designs closed:** #517/PR575 squash5823356f/treee3203d51; #521/PR579
   squash53bd4c68/tree95341cea. Reviewed/squash trees match; seven non-Web CI
   jobs passed and Web was sole waived blocker. Runtime stays #518/#520/#522.
-- **Staged resources:** PR572/#56685af0621, PR578/#5673d2ae361, PR573/#570
-  core60aebdaa plus QA checkpoints. Carry, HUD/receipts and capacity4→5/v11
-  have bounded source review; JSON precision fix approved. No partial deployment
-  or activation merge before recovery/#571. All59 Godot units pass; four lint
-  line pins needed repinning, then282Python tests/109subtests pass. Final
-  canonical/balance follows capacity QA. Bundle-v7 windowed gear/tutorial/dark
-  and fresh-start/carry routes pass; all28images read. Browser/device unproven.
-- **This integration tree:** controller owns `/private/tmp/wi-567-hud-contract`,
-  branch `issue/567-hud-contract`, composed main1375e375 and capacityQA8676a0be.
-  Both full combat policies pass atdcac4795; capacity fixture routes pass.
-  **Next:** regenerate QA, window-test new gear/door, full canonical and targeted
-  browser-touch layout. Add local node_modules/.gdignore before re-export;
-  first diagnostic export imported Playwright SVGs and emitted warnings.
-  resource_plan owns #568 core/data/tests in `/private/tmp/wi-568-consumables`;
-  d53bcc74/PR582 quantities checkpoint awaits overflow/delivery review fixes
-  and shared token-use/poison. capacity570 prepares disjoint frontend ownership;
-  shared QA is released. #569 services then #512 journeys consume recovery.
-  No shared mutable trees; preserve companion UID and ignored private assets.
-  Exact registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence roots
-  `/private/tmp/wi-{566-resumed,567,570}-evidence`; branch HANDOFFs pin heads.
+- **Staged resources:** #566/PR57285af0621, #567/PR5780e55e381,
+  #570/PR5738676a0be. Carry/HUD/capacity have bounded review. All59Godot units
+  pass; four lint pins fixed,282Python/109subtests pass. Both full combat
+  policies pass atdcac4795. Final canonical pending. Native40images read.
+  No partial activation before recovery/#571. Physical devices unproven.
+- **Integration:** root owns `/private/tmp/wi-567-hud-contract`,
+  `issue/567-hud-contract`, base1375e375. Touch-driver0e55e381 compiles and
+  load_gate passes; controls await composition. Browser touch at378cbe19 fails
+  large-text inventory scroll;14images read under
+  `/private/tmp/wi-567-evidence/browser-378cbe19-iphone` (Chromium emulation).
+  Capacity refusal wrongly describes2/4 as full; both defects logged.
+  **Next:** compose reviewed core/frontend, correct QA pins, install
+  `/private/tmp/wi-568-qa-draft`, full gates and window/browser proof. Draft
+  repeated-input leg needs viable second use and browser-only registration.
+- **Owners:** resource_plan: `/private/tmp/wi-568-consumables`,a8509a19/PR582
+  core/data/tests. Loot/delivery clear; token lifetime fix, Mana Potion vendor
+  and capacity copy active. capacity570: `/private/tmp/wi-567-consumable-ui`,
+  97001e52, frontend controls/warning/receipt/layout. Root owns QA. #569 then
+  #512 consume recovery. Registry `/private/tmp/wi-parallel-roadmap-status.json`.
+  Evidence `/private/tmp/wi-{566-resumed,567,568,570}-evidence`. Preserve UID,
+  private overlay, local node_modules/.gdignore; original art tree untouched.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
