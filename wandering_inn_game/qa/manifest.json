@@ -7938,6 +7938,7 @@
      "guild",
      "inn",
      "inn_upstairs",
+     "ruin_surface",
      "sewers",
      "street",
      "trapped_halls"
@@ -7950,6 +7951,7 @@
      "sneak"
     ],
     "dialogue": [
+     "ceria_dig_camp",
      "ceria_intro",
      "drayman_dispute",
      "erin_errand",

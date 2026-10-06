@@ -23,8 +23,10 @@ archived, or superseded session blocks.
   still leaked and was removed. Earlier Rogue882 was clean.
   Rogue1365 now reaches gallery report:20g,29/49HP,0/15MP. Actual
   Find Trap plate cast and Ksmvr17HP guided-cost observed; earned draught
-  consumed by competent policy1→0. Next: earned Core Shard capacity swap,
-  actual sleep before ruin guardian, then regional gates.
+  consumed by competent policy1→0. Rogue1548 now proves earned slot+capacity
+  refusals, Core swap4/4, actual sleep51HP/16MP, guardian victory51HP/0MP,
+ 20g and Anchor. Warrior7/Mage7/Rogue4/Diplomat6/Helper1. Same shader noise.
+  Next: mount Door, earned bounties, catalyst and regional travel ledger.
   Evidence /private/tmp/wi-512-evidence/current; exact details in
   docs/design/512-continuous-journeys.md. Endings, force-crate variant,
   affordability and windows remain outstanding.

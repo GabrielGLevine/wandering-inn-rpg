@@ -223,3 +223,25 @@ the vault. The next choice is the earned Core Shard and actual capacity refusal/
 swap, followed by rest before the ruin guardian. This route still carries the
 known shutdown shader leak;1365 result assertions pass but the overall gate is
 invalid. Evidence rogue-gallery-current and rogue-gallery2.log.
+
+## Earned capacity swap and guardian
+
+Rogue1548 assertions pass through the ruin guardian and anchor retrieval. The
+earned inventory first refuses Core Shard because all three positions are full;
+removing Moonhide frees a position but leaves3/4 Resonance, so Core2 receives
+the distinct capacity refusal. Both exact toasts render after inventory closes.
+Removing Moon-Bone permits Core, then Moonhide returns: Fang1/Core2/Moonhide1,
+4/4. HP stays29 through the changes; the final maximum is49.
+
+The actual Ceria invitation and walked bed resolve the gallery progress into
+Warrior7/Mage7/Rogue4/Diplomat6/Helper1 and51HP/16MP. The subsequent real
+guardian encounter with Relc wins; carried exit is51HP/0MP,20gold, one Remedy
+Draught and Guardian Ward Fragment. The pedestal yields the actual Anchor
+Stone. No fixture, top-up, enemy or seed change is involved.
+
+Evidence rogue-anchor-current, rogue-guardian3.log: exit0, markerPASS, passing
+1548-step result, but two DummyShader RID allocations leak at shutdown. This
+is diagnostic route evidence, not a clean authoritative gate. Earlier full-slot
+and modal-toast assertion mistakes are preserved separately. Next: mount the
+Door, claim the actual earned Watch bounties, fund catalyst and regional travel,
+and preserve the remaining affordability ledger through the ending.
