@@ -1,5 +1,5 @@
 {
- "_comment": "#569 disclosed held-station fixture: supplied Chef10/Mage1, held cooking Skills, depletion and legal station position. No meal stock or earned class history. Production, consumption and save/load are actual inputs.",
+ "_comment": "#569 disclosed held-station fixture: supplied Chef10/Mage1, held cooking Skills, depletion and legal station position. No meal stock or earned class history. Production, consumption and save/load are actual inputs. Required class prerequisite accomplishment history is supplied, not earned by this route.",
  "version": 12,
  "state": {
   "pc_race": "human",
@@ -16,7 +16,10 @@
    "chef": 10,
    "mage": 1
   },
-  "accomplishments": {},
+  "accomplishments": {
+   "learned_magic_from_pisces": 1,
+   "cooked_meal": 68
+  },
   "player_skills": [
    "basic_cleaning",
    "basic_cooking",

@@ -1,5 +1,5 @@
 {
- "_comment": "#569 mechanical service fixture: pre-errand non-cook Mage1, 7HP/0MP and 6gold at Erin. Class, depletion, purse and position are setup, not earned history. No cooking Skill, food, or completed quest is supplied.",
+ "_comment": "#569 mechanical service fixture: pre-errand non-cook Mage1, 7HP/0MP and 6gold at Erin. Class, depletion, purse and position are setup, not earned history. No cooking Skill, food, or completed quest is supplied. Required class prerequisite accomplishment history is supplied, not earned by this route.",
  "version": 12,
  "state": {
   "pc_race": "human",
@@ -15,7 +15,9 @@
   "classes": {
    "mage": 1
   },
-  "accomplishments": {},
+  "accomplishments": {
+   "learned_magic_from_pisces": 1
+  },
   "player_skills": [
    "basic_cleaning"
   ],
