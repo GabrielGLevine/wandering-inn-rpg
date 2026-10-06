@@ -7771,6 +7771,31 @@
      "settings"
     ]
    }
+  },
+  {
+   "script": "owned_icons_key_art",
+   "seed": 9,
+   "fixture": "owned_icon_kit",
+   "note": "#558/#562 curated co-visible owned icons and title/journal art; icon-kit setup fixture, real inventory selection and J opening; text-only ActII fallback",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "owned_icon_kit"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
   }
  ],
  "browser_scripts": [

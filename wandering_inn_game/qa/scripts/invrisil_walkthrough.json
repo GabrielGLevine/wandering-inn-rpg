@@ -116,6 +116,14 @@
    "name": "00_scale_shock_arrival"
   },
   {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "screenshot",
+   "name": "00a_city_landmarks_unobstructed"
+  },
+  {
    "action": "move",
    "direction": "down",
    "steps": 4
