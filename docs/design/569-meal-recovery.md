@@ -95,7 +95,8 @@ the game. This establishes real acquisition and consumption, not class-band
 combat balance or an economy based on repeated wage farming.
 
 The station fixture explicitly supplies Chef10/Mage1, held cooking Skills,
-depletion and a legal station position; its class history is not earned.
+depletion, required class-prerequisite accomplishments and a legal station
+position; its class history is not earned.
 Two actual Advanced Cooking casts produce two Fine Meals, both eaten for
 8 HP/4 MP without stacking the +2 next-fight maximum-HP preparation. A walked
 Signature Dish cast produces a meal whose use restores 10 HP and the remaining
@@ -112,3 +113,26 @@ Rejected route drafts are preserved alongside final evidence, including the
 headless CSS probe, last-page text, event-order/new-game reset, complete nested
 receipt payload, and blocked kitchen traversal corrections. None changed
 runtime behavior or relaxed a refusal.
+
+### QA checkpoint and next action
+
+QA implementation is released from `/private/tmp/wi-569-qa`, branch
+`issue/569-recovery-qa`, base `de5bf08f`; runtime and driver changes were composed
+only from controller-owned commits. Owned paths are the three meal scripts,
+two meal fixtures, manifest/generated notes, this document and the HANDOFF
+pointer. The pre-existing untracked companion-test UID is preserved.
+
+At code checkpoint `53a2e614`, `meal_service_loop` (112 steps),
+`meal_earned_cooking` (134), and `meal_station_loop` (92) pass headless with
+seed 9 and `--qa-real-message-timing=1`, without fail-fast on their final runs.
+Fixture coherence, meal recovery unit, load gate, unaffected `char_creation`,
+data lint and generated QA notes checks pass. Logs require exit zero, expected
+PASS, no engine error/warning noise, and passing QA result JSON. Final results,
+events and logs are retained in `/private/tmp/wi-569-qa-evidence`; earlier
+rejected fixture-history checks remain there too. Adding the Mage/Chef
+prerequisite histories changed disclosed setup, not claimed route acquisition.
+
+Next: independently review the exact composed head, then run and inspect each
+meal route windowed with the same seed and timing argument. The controller
+owns window/browser scheduling, composed full integration and publication.
+The lane has no remaining intended runtime or QA edits.
