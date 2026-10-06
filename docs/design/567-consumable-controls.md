@@ -35,3 +35,20 @@ heal, cancellation preserves the full saved tuple, confirmed fourth mana dose
 records HP/MP/exposure/count, and receipt text remains captured after live state
 changes. Import is clean. This is native logical evidence; current browser layout,
 actual pointer routes, combat rendered fit and physical touch remain unproven.
+
+
+The composed checkpoint includes core/catalog206f36ac: pure previews do not replace
+pending use tokens, and real Mana Potions appear in combat slots. Focused checks
+also cover held confirm through receipt, core-driven AP refusal, MP recovery copy,
+quantity labels and preservation of a selected token while inspecting another item.
+Existing effect-text, resource-HUD and combat-visual units pass without engine noise.
+The load gate passes with its result artifact. The controller owns the actual smoke
+and full integration tiers plus new input QA; an attempted standalone `smoke` route
+was rejected before gameplay because no such route exists.
+
+Selectors for authored input are inventory `item_use_rect()`/`item_bar_rect()` and
+message-layer `item_warning_cancel_rect()`/`item_warning_confirm_rect()`; the latter
+is discoverable in group `wi_item_use_presenter`. Render events preserve frozen
+core fields plus `text`/`surface`; previews add `generation`. Warning arming emits
+`UI_ITEM_USE_WARNING_ARMED` only after release and the reading guard. These native
+control tests do not establish the final combat feed fit or responsive touch path.

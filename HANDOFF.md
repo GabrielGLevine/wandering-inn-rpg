@@ -9,16 +9,19 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Active #567 consumable frontend:** `issue/567-consumable-controls`, isolated
-  `/private/tmp/wi-567-consumable-ui`, quantity/control checkpoints `1065b739`
-  and `86d96081`, composed with validated core API `a8509a19`.
-  capacity570 owns UI inventory/message layer, combat screen/HUD, effect_text,
-  new frontend tests and this handoff. No core/data/save/QA edits here.
-  **Next:** finish token-bound Use/bar controls, shared first-harm warning and
-  immediate captured in-panel/feed receipts; compile and run focused UI tests.
-  The focused production-control regression passes; browser/combat proof remains.
-  Root owns composed broad gates,
-  window/browser proof and publication. No partial activation/deployment.
+- **#567 consumable frontend checkpoint:** `issue/567-consumable-controls`,
+  isolated `/private/tmp/wi-567-consumable-ui`, source head `9da54788`, composed
+  core/catalog `206f36ac`. capacity570 owns inventory/message layer, combat
+  screen/HUD, effect_text, new frontend tests and this handoff; no QA/core edits.
+  Inventory has quantity labels, separate Use/bar controls, captured operation
+  callbacks, first-harm Cancel/Confirm and immediate correlated receipts.
+  Focused frontend, effect-text, resource-HUD and combat-visual units and load
+  gate pass. Exact commands/hashes and rejected attempts are preserved under
+  `/private/tmp/wi-567-consumable-evidence`; no runtime smoke route exists.
+  **Next:** controller independent review, compose owned QA, run actual smoke/
+  integration tiers and new native/browser input paths; verify large-text phone
+  scroll correction and combat feed fit. Physical device proof remains open.
+  No partial activation/deployment. Tree released after metadata checkpoint.
 - **#568 dependency:** resource_plan owns core items/game/save transactions,
   simulation, item/rule/vendor data, lint and focused core tests in its isolated
   tree. Schema12 counts and shared prepare/commit/cancel use APIs are validated
