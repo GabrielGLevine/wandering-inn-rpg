@@ -507,6 +507,10 @@
    "name": "06_harmful_dose_final_unit"
   },
   {
+   "action": "wait_item_use_ready",
+   "timeout_sec": 15
+  },
+  {
    "action": "press",
    "name": "inventory"
   },
