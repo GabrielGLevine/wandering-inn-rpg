@@ -26,7 +26,7 @@ archived, or superseded session blocks.
   and2144 inventory55both pass; all ten captures independently read.
   Seven inventory touch contacts/profile, keyboard startup, no device claim.
   Earlier combat133/poison67both and native force350/arc298/message48 reviewed.
-  PR578 at893a9395 has seven non-Web CI successes; Web still running.
+  PR578 atf71d8e8c has all eight CI jobs PASS, including Web parity.
 - **Core checkpoints:** released journey tree `/private/tmp/wi-512-routes`
   d7033d7f (QA8ae64053), draftPR574. Rogue3464 reaches ending/Inn.
   Worker1423 preserves six losses: final held-FlameJet tactic loses round5,
@@ -36,14 +36,14 @@ archived, or superseded session blocks.
   engine leaks in bare reproduction; unmodified custom build/MRE/prefix798
   clean after import. Earlier cache-error controls invalidated. Build/config
   differences remain unexplained; no production replacement or active build.
-- **Next:** independently review/publish final journey/engine checkpoints.
-  Unchanged martial steel_thread fails at697 entering awakened fight; zero
-  engine noise. Inspect carried resources and actual retreat/bed route before
-  editing QA. Caster438 and imperfect/economic variants remain core work.
+- **Next:** final journey/engine checkpoints reviewed/pushed; compose journey
+  source unchanged into integration. resource_plan owns isolated
+  `/private/tmp/wi-512-martial` fromf71d8e8c: actual walked free-bed detour
+  after sixth win, boss-entry baseline4/49HP/0/13MP. Caster438 remains open.
   Final571 waits for accepted core/economic findings, not extra mobile checks.
   Failed broad phone/title attempts retained and tracked in #585. Registry
   `/private/tmp/wi-parallel-roadmap-status.json`; evidence `/private/tmp/wi-*-evidence`.
-  No active implementation workers/runtimes. Preserve companionUID/overlay.
+  One martial worker; root integration/QA. Preserve companionUID/overlay.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.

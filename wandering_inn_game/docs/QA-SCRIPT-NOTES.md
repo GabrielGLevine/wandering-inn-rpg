@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 277 native canonical QA scripts. The manifest is the
+This is the human index for 279 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -285,6 +285,8 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `owned_icons_key_art` | 9 | full | `owned_icon_kit` | #558/#562 curated co-visible owned icons and title/journal art; icon-kit setup fixture, real inventory selection and J opening; text-only ActII fallback |
 | `harvest_creature_visuals` | 9 | full | `—` | #564 complete bat/razorbeak rigs through actual encounters, renderer-bound sprite confirmations and desktop alpha bounds. |
 | `consumable_vendor_loop` | 9 | full | `consumable_vendor_start` | #568 explicit Pallass-history/20gold fixture with no potion stock: buy two actual Mana Potions, safe third dose, harmful fourth cancel/confirm, final unit removal and depleted HP/exposure reload through real controls; native touch is emulated, not earned journey/device proof. |
+| `journey_rogue` | 9 | full | `—` | #512 continuous fresh Rogue through earned regional travel,58g gear, preserved defeats/rollback/recovery, live Skill utility and open-ending epilogue. No fixtures/teleports; shutdown shader noise still invalidates authoritative gates until fixed. |
+| `journey_worker` | 9 | full | `—` | Fresh worker/social history with retained losses: earned cooking and multiclass support, Fang purchase, free chest armor/rest, finite Watch3+4 and Traveler5; bounded retries retain measured Awakened boss wall, including one actual-input Flame Jet tactical loss. No fixtures/top-ups/farming or ending claim. |
 
 ## Browser-only QA
 

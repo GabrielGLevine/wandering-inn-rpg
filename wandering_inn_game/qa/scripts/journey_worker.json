@@ -1,0 +1,8395 @@
+{
+ "_comment": "#512 continuous worker/social history, seed9: fresh wages, actual cooking/serving, free drayman persuasion/gossip, returned reward (3g rather than4g), earned support at real sleep. No fixture/teleport/topup. Ending extension in progress. Bounded continuation preserves the965-step wall, then claims untouched free Inn chest armor, equips before real sleep and records one lost boss attempt; no potion funds, fixture reload, extra fight or farming. After the retained free-armor loss, claim exactly two already-earned Watch bounties3+4, buy Traveler Charm5 via confirmation, equip without refill, sleep and attempt once; no repeat wage or combat farming.",
+ "starts_at_title": true,
+ "creation_ui": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "type_text",
+   "text": "Maren"
+  },
+  {
+   "action": "click_char_creation_begin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "difficulty",
+    "options": [
+     "Bronze Rank",
+     "Silver Rank",
+     "Gold Rank"
+    ],
+    "cursor": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "hints",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "cursor": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_char_creation_card",
+   "card": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_confirmed",
+   "payload_contains": {
+    "pc_name": "Maren",
+    "pc_race": "human",
+    "pc_gender": "m",
+    "difficulty_step": 1,
+    "quest_hints": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_gdi_opener_rendered",
+   "payload_contains": {
+    "lines": 4,
+    "race": "human"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_name",
+   "equals": "Maren"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_race",
+   "equals": "human"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_gender",
+   "equals": "m"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_sprite",
+   "equals": "pc_human_m"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "pc_sprite": "pc_human_m"
+   },
+   "from_start": true,
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cleaning"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "target": "dirty_table"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleaned_the_inn",
+    "count": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Basic Cleaning] \u2014 The table is spotless. Earned 1 gold."
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "delivered_item",
+    "count": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You carry the laden tray out to the tables. Earned 1 gold."
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 2
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_first_wages_no_repeat_farming"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 9
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "helper"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Helper] class gained! \u2014 [Basic Cooking]"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.helper",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 2
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_helper_after_first_real_sleep"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_worker_earned_helper"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cooking"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cooking",
+    "target": "stew_pot"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal",
+    "source": "stew_pot",
+    "count_after": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Hot Meal"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.hot_meal",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cooked_meal",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 2
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_first_held_skill_meal"
+  },
+  {
+   "action": "screenshot",
+   "name": "02_worker_cooked_meal"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "patron_serving"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_lost",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_served_first_real_meal"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Erin"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "erin_errand"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "the_errand"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.has_package",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains",
+    "cell": [
+     7,
+     6
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    26,
+    24
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    26,
+    24
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    26,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "took_the_low_road",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You go down into the channel and follow it east at a crouch, the roadline above your shoulder the whole way."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "count": 1,
+    "id": "crossed_under_cover"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_rendered",
+   "payload_contains": {
+    "text": "Watch Guard: Gate's clear. Keep it that way and we'll get on fine."
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "drayman_dispute"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "persuaded_someone",
+    "count": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.soothed_the_drayman",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "missing_crate"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 16
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Pisces"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "pisces_magic"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_act_ii_00_pisces_lessons"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "met_pisces"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "learned_magic_from_pisces"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.learned_magic_from_pisces",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "guild"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Selys"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "selys_delivery"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "the_errand",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "the_errand"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "gave_reward"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 7
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_returned_reward_real_1g_opportunity_cost"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    27,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     14,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_upstairs"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "rogue"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "mage"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "diplomat"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Diplomat] class gained! \u2014 [Charming Smile], [Calming Touch]"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.diplomat",
+   "equals": 2,
+   "_comment": "Actual accumulated gossip resolves Diplomat2 in this sleep, not merely entry1; no inputs changed to obtain it."
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.mage",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 7
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_social_and_support_earned_second_sleep"
+  },
+  {
+   "action": "screenshot",
+   "name": "03_worker_earned_diplomat"
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "sneak"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sneak_started",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains",
+    "cell": [
+     7,
+     6
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    26,
+    22
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "watch_crate"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "recovered_crate_watch"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Krshia"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "missing_crate",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "missing_crate"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.crate_returned",
+   "equals": 1
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_charming_smile_crate_no_fee"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Olesm"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "olesm_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "cisterns"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_about_cisterns"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 27
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Zevara"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "watch_swept_cisterns"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 27
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "olesm_intro"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3,
+   "_comment": "After accepting cisterns, the initial worried row retires. Any word on the cisterns is visible index3."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "cisterns"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 13
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_three_quests_social_results"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 22
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "sneak"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sneak_started",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     14,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_upstairs"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "slept": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "watch_runner_pointed"
+   }
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_act_iii_pointer_earned"
+  },
+  {
+   "action": "screenshot",
+   "name": "04_worker_act_iii"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains",
+    "cell": [
+     7,
+     6
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "met_relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_first_combat_entry_relc_training"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "opening"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     3,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "first_step"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     4,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     5,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "pool_empty"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.move_pool",
+   "equals": 0
+  },
+  {
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dashed",
+   "payload_contains": {
+    "id": "pc",
+    "move_pool": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "dash"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     6,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "aim"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "first_blood"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_ended",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "watch"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_training_after_actual_attack_dash_inputs"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "wrap"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.sparred_with_relc",
+   "equals": 1
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_training_carried_exit"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cooking",
+   "_comment": "Prepare four actual travel meals; together with served plate these earn Cook. Legal repeat cooking, no gold or empty-output farming."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal",
+    "count_after": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Hot Meal"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cooking",
+   "_comment": "Next expedition plate."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal",
+    "count_after": 2
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Hot Meal"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cooking",
+   "_comment": "Next expedition plate."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal",
+    "count_after": 3
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Hot Meal"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cooking",
+   "_comment": "Next expedition plate."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal",
+    "count_after": 4
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Hot Meal"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cooked_meal",
+   "equals": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.hot_meal",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 13
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_four_earned_travel_meals"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "slept": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "warrior"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "cook"
+   }
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_disclosed_martial_cooking_support_sleep"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_ready_training"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "== WALKED (was teleport): back from bed to the stairs. (9,2) -> (2,2)."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "stairs_down: bump-face then interact."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ],
+   "_comment": "Back at the ground-floor lane head; the gift-node route below reuses the spawn choreography."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Meet (met_relc+sparred, given_spear unset): visible options ['What's out here'(0), 'You said you had something for me?'(1), 'Spar'(2), 'Keep walking'(3)] -- select index 1, the gift.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "relcs_spare_spear",
+    "source": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Got: Relc's Spare Spear"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "given_spear_by_relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Gift node: the 'press I' teaching line.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "My spare spear. Held gates wider than that one. Now listen. It won't help you from inside a pack. Check your pack, get the spear in your hand before you're back on the road. Sword arm, spear arm. What you carry decides which moves you get."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Gift option 0 'I'll try it on.' ends the conversation.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "payload_contains": {
+    "item": "relcs_spare_spear",
+    "slot": "weapon"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "payload_contains": {},
+   "timeout_sec": 15
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_earned_spear_equipped"
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "sneak"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 18
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Zevara holds the gatehouse at (2,6). Drop to the y4 lane and come at her from above."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump-move into Zevara's cell: blocked, so it only sets facing. Never trust facing carried over from a walk."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "NEW WAKING: the first interact with a pool-carrying NPC spends her rotating line and nothing else. Her pool is on the cisterns-neutral stage by now."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Second interact this waking opens the graph."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Hub cursor -> visible row 1, 'You sent a runner for me?'. Row 0 is 'Long shift?', row 2 is 'Just getting my bearings.' -- that is the WHOLE visible list here. dialogue.gd:_visible_options drops progress-gated (accomplishment) requires ENTIRELY rather than rendering them locked, so the unearned 'It's done.' and the chatted_with_zevara>=2 rows are absent, not greyed."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "There you are. The cisterns crew found something under the new grates: tunnels nobody dug, going down past where their lanterns reached. Olesm's maps say they shouldn't exist. You've been down there. You're going again, this time for the Watch."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "summons node row 0 = 'Then I'll go down.' -- THIS is the row that carries the heard_the_deep_tremor effect; the hub row above only walks you to it."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_the_deep_tremor"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "something_beneath",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "Good. See Olesm before you climb down. He's been up since the second bell drawing what shouldn't be there, and he'll want you carrying it. Relc goes with you. I will put him on the roster as your escort and sign it before you are past the gate."
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "summons_send: row 0 loops to the hub, row 1 ('On it.') ends. Close clean."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "To the sewer grate (16,11): sidestep Zevara's column, drop to the clear y7 lane, run east, then come down the x16 column so we arrive at the approach cell (16,10) already facing DOWN."
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    10
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9,
+   "_comment": "West wall column to the y11 walkway (the two water channels span x3-16 on y5/y9), then east to the fissure's approach cell."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump deep_fissure (8,12) -- a present entity blocks its cell, so this only turns us to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "door_when gate is MET (heard_the_deep_tremor banked at the gatehouse). NOTE: the door_when arm short-circuits BEFORE on_interact_accomplishment, so found_the_fissure never banks on this path -- pin the open_toast instead."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "Cold Hearth (5,4) flavor read: down the landing column, east along y4, bump the hearth."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "found_cold_hearth"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "A pit at the middle of the stone ring, the ash dead to the bottom. Bones banked against the stones, every one opened for the marrow."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Raskghar scouts (8,4) bar the way east. The hearth plugs y4, so route over the top on y3 and drop onto them."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "hot_meal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "hot_meal",
+    "allowed": false,
+    "reason": "no_benefit",
+    "count_before": 4
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.hot_meal",
+   "equals": 4
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_full_hp_food_refusal_before_scouts"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_scouts_entry_carried"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_actual_scout_defeat_underprepared"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_real_defeat_rollback"
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 13
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "sewers"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 10
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_road_entry_after_warren_retreat"
+  },
+  {
+   "action": "combat_autoplay",
+   "policy": "competent",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_road_clear_carried_exit"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 15
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "advanced_cooking",
+   "_comment": "Four fine expedition meals supply HP/MP on the next two-stage descent; no sales or empty production."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_after": 1
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Fine Meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "advanced_cooking",
+   "_comment": "Four fine expedition meals supply HP/MP on the next two-stage descent; no sales or empty production."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_after": 2
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Fine Meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "advanced_cooking",
+   "_comment": "Four fine expedition meals supply HP/MP on the next two-stage descent; no sales or empty production."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_after": 3
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Fine Meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "advanced_cooking",
+   "_comment": "Four fine expedition meals supply HP/MP on the next two-stage descent; no sales or empty production."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "fine_meal",
+    "count_after": 4
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Fine Meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_four_fine_meals_after_real_setback"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 9
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "slept": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_road_training_recovery_sleep"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_retry_ready"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "== WALKED (was teleport): back from bed to the stairs. (9,2) -> (2,2)."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "stairs_down: bump-face then interact."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ],
+   "_comment": "Back at the ground-floor lane head; the gift-node route below reuses the spawn choreography."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "liscor_gate (31,25) -- the last step already left us facing down onto it."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "payload_contains": {
+    "item": "hunters_fang_talisman",
+    "price": 14,
+    "gold_before": 15,
+    "gold_after": 1
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "payload_contains": {
+    "item": "hunters_fang_talisman"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "payload_contains": {
+    "item": "hunters_fang_talisman"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hunters_fang_talisman"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 1
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 5,
+   "_comment": "Native keyboard selection scrolls the actual list; no browser-touch proof claimed."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "payload_contains": {
+    "item": "hunters_fang_talisman",
+    "slot": "accessory_1"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_earned_fang_purchase_15_to_1"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "sewers"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9,
+   "_comment": "West wall column to the y11 walkway (the two water channels span x3-16 on y5/y9), then east to the fissure's approach cell."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump deep_fissure (8,12) -- a present entity blocks its cell, so this only turns us to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "door_when gate is MET (heard_the_deep_tremor banked at the gatehouse). NOTE: the door_when arm short-circuits BEFORE on_interact_accomplishment, so found_the_fissure never banks on this path -- pin the open_toast instead."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2,
+   "_comment": "Cold Hearth (5,4) flavor read: down the landing column, east along y4, bump the hearth."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "found_cold_hearth"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "A pit at the middle of the stone ring, the ash dead to the bottom. Bones banked against the stones, every one opened for the marrow."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Raskghar scouts (8,4) bar the way east. The hearth plugs y4, so route over the top on y3 and drop onto them."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4,
+   "_comment": "Native keyboard selection scrolls the actual list; no browser-touch proof claimed."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "fine_meal",
+    "allowed": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "fine_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "payload_contains": {
+    "item": "fine_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_fine_meal_retry_preparation"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_scout_retry_entry_earned_kit"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Dismiss the banner -- resolve_combat runs on the dismiss."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_scout_retry_exit_carried"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleared_raskghar_scouts"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Gnawed Bones (9,6) flavor read: the scout cell still blocks, so step east first and come down the x9 column."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "found_gnaw_pile"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Cracked bones in a heap, dry and light in the hand. Most of them Gnoll; one a Drake's."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2,
+   "_comment": "Warren Mouth (12,5). Interacting it banks reached_the_warren, which is also what conjures Relc's field cameo at (11,4)."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "reached_the_warren"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4,
+   "_comment": "Native keyboard selection scrolls the actual list; no browser-touch proof claimed."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "fine_meal",
+    "allowed": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "fine_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "payload_contains": {
+    "item": "fine_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_fine_meal_between_scouts_and_awakened"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Past the threshold to the Awakened Raskghar (12,7): the warren_mouth prop plugs (12,5), so go under it and bump the boss from (12,6)."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "The encounter carries a conversation (relc_descent), so the veto beat opens BEFORE combat."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "relc_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Row 0 = [Go together.]: banks relc_joined_descent (the boss's ally_requires) and starts the fight with Relc fielded. Our PC is a low warrior/mage -- the join is not optional at this level."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_awakened_entry_after_prepared_retry"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_boss_defeat_insufficient_recovery"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_boss_reload_preserves_earned_stock"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "fine_meal",
+    "allowed": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "fine_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "payload_contains": {
+    "item": "fine_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_boss_retry_fine_1"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "fine_meal",
+    "allowed": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "fine_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "payload_contains": {
+    "item": "fine_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_boss_retry_fine_2"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "hot_meal",
+    "allowed": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_boss_retry_hot_1"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "hot_meal",
+    "allowed": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_boss_retry_hot_2"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "hot_meal",
+    "allowed": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "payload_contains": {},
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_boss_retry_hot_3"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 44
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 12
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "The encounter carries a conversation (relc_descent), so the veto beat opens BEFORE combat."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "relc_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Row 0 = [Go together.]: banks relc_joined_descent (the boss's ally_requires) and starts the fight with Relc fielded. Our PC is a low warrior/mage -- the join is not optional at this level."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_awakened_second_entry_fully_healed"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_full_recovery_boss_readiness_wall"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "timeout_sec": 20
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_wall_restored_stock_and_resources"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_boss_readiness_wall",
+   "_comment": "Original965-step wall retained. Bounded continuation now walks out under defeat exit grace; no loaded fixture, seed change, extra fight or farming."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 10
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 15
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "item": "leather_jerkin",
+    "source": "inn_chest"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "text": "Got: Leather Jerkin"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    4
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 1
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "item": "leather_jerkin"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "item": "leather_jerkin",
+    "slot": "armor"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "leather_jerkin",
+    "before": {
+     "hp": 44,
+     "max_hp": 44,
+     "mp": 12,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 44,
+     "max_hp": 48,
+     "mp": 12,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "surface": "inventory",
+    "after": {
+     "hp": 44,
+     "max_hp": 48,
+     "mp": 12,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 44
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.armor",
+   "equals": "leather_jerkin"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_04_free_chest_armor_no_refill"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "reason": "sleep",
+    "surface": "field"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "reason": "sleep"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.mage",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 1
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_free_chest_armor_real_rest"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_free_armor_rested"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_05_free_armor_actual_rest"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "== WALKED (was teleport): back from bed to the stairs. (9,2) -> (2,2)."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "stairs_down: bump-face then interact."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ],
+   "_comment": "Back at the ground-floor lane head; the gift-node route below reuses the spawn choreography."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "liscor_gate (31,25) -- the last step already left us facing down onto it."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    10
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9,
+   "_comment": "West wall column to the y11 walkway (the two water channels span x3-16 on y5/y9), then east to the fissure's approach cell."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump deep_fissure (8,12) -- a present entity blocks its cell, so this only turns us to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "door_when gate is MET (heard_the_deep_tremor banked at the gatehouse). NOTE: the door_when arm short-circuits BEFORE on_interact_accomplishment, so found_the_fissure never banks on this path -- pin the open_toast instead."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "The encounter carries a conversation (relc_descent), so the veto beat opens BEFORE combat."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "relc_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Row 0 = [Go together.]: banks relc_joined_descent (the boss's ally_requires) and starts the fight with Relc fielded. Our PC is a low warrior/mage -- the join is not optional at this level."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_free_armor_rested_boss_entry"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "victory": false,
+    "rounds": 6
+   }
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_free_armor_rested_boss_outcome"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_06_free_armor_boss_outcome"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.raskghar_awakened.hp",
+   "equals": 10
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 48
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.armor",
+   "equals": "leather_jerkin"
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_free_armor_loss_rollback"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_free_armor_loss_rollback"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 10
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 13
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "speaker": "Zevara"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Zevara"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "id": "claimed_bounty_crate"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Zevara"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Zevara"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "id": "claimed_bounty_cisterns"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Zevara"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_finite_watch_claims_1_to_8"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_07_finite_watch_rewards"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 11
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "speaker": "Krshia"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Krshia"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "item": "traveler_charm",
+    "price": 5,
+    "gold_before": 8,
+    "gold_after": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "item": "traveler_charm"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "item": "traveler_charm"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_08_earned_charm_confirmation"
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "item": "traveler_charm"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Krshia"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 3
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "item": "traveler_charm"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "item": "traveler_charm",
+    "slot": "accessory_2"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "traveler_charm",
+    "before": {
+     "hp": 48,
+     "max_hp": 48,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 48,
+     "max_hp": 50,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "surface": "inventory",
+    "after": {
+     "hp": 48,
+     "max_hp": 50,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_1",
+   "equals": "hunters_fang_talisman"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 48
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_09_charm_raises_cap_without_heal"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_charm_bought_from_earned_rewards_8_to_3"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 15
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 45,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "reason": "sleep",
+    "surface": "field",
+    "after": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "reason": "sleep"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 3
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_charm_recovery_seventh_sleep"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_charm_rested"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "== WALKED (was teleport): back from bed to the stairs. (9,2) -> (2,2)."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "stairs_down: bump-face then interact."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ],
+   "_comment": "Back at the ground-floor lane head; the gift-node route below reuses the spawn choreography."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "liscor_gate (31,25) -- the last step already left us facing down onto it."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    10
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9,
+   "_comment": "West wall column to the y11 walkway (the two water channels span x3-16 on y5/y9), then east to the fissure's approach cell."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump deep_fissure (8,12) -- a present entity blocks its cell, so this only turns us to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "door_when gate is MET (heard_the_deep_tremor banked at the gatehouse). NOTE: the door_when arm short-circuits BEFORE on_interact_accomplishment, so found_the_fissure never banks on this path -- pin the open_toast instead."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "The encounter carries a conversation (relc_descent), so the veto beat opens BEFORE combat."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "relc_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Row 0 = [Go together.]: banks relc_joined_descent (the boss's ally_requires) and starts the fight with Relc fielded. Our PC is a low warrior/mage -- the join is not optional at this level."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_charm_rested_boss_entry"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "victory": false,
+    "rounds": 6
+   }
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_charm_rested_boss_outcome"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_10_finite_charm_retry_outcome"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.raskghar_awakened.hp",
+   "equals": 10
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 50
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.diplomat",
+   "equals": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.mage",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.armor",
+   "equals": "leather_jerkin"
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_1",
+   "equals": "hunters_fang_talisman"
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_2",
+   "equals": "traveler_charm"
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "hot_meal": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 7
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "surface": "field",
+    "after": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   },
+   "count": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "count": 3
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_finite_recovery_wall_retained"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_finite_recovery_wall"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_11_finite_recovery_wall_rollback"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_comment": "One bounded tactical retry after the preserved1302-step/five-defeat history. Walk out/back to clear encounter grace; no rest, stock, gear, seed or tuning changes. Round2 held Flame Jet uses real hotbar/aim inputs; competent policy finishes. No outcome fishing."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump deep_fissure (8,12) -- a present entity blocks its cell, so this only turns us to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "door_when gate is MET (heard_the_deep_tremor banked at the gatehouse). NOTE: the door_when arm short-circuits BEFORE on_interact_accomplishment, so found_the_fissure never banks on this path -- pin the open_toast instead."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "The encounter carries a conversation (relc_descent), so the veto beat opens BEFORE combat."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "relc_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Row 0 = [Go together.]: banks relc_joined_descent (the boss's ally_requires) and starts the fight with Relc fielded. Our PC is a low warrior/mage -- the join is not optional at this level."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 50
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.round",
+   "equals": 1
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     2,
+     3
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     3,
+     3
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     4,
+     3
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "round_started",
+   "payload_contains": {
+    "round": 2
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_ai_playback_done",
+   "payload_contains": {},
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    4,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.cell",
+   "equals": [
+    5,
+    5
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.sewer_vermin.cell",
+   "equals": [
+    6,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.raskghar_scout.cell",
+   "equals": [
+    6,
+    5
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.raskghar_scout_2.cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_tactical_round2_before"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     4,
+     4
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     4,
+     5
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     4,
+     6
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "hotbar_4"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "skill": "flame_jet"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_aim_preview_rendered",
+   "payload_contains": {
+    "kind": "line",
+    "cells": [
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      6
+     ],
+     [
+      7,
+      6
+     ],
+     [
+      8,
+      6
+     ]
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "pc",
+    "skill": "flame_jet",
+    "target": "right",
+    "hit_ids": [
+     "raskghar_scout_2",
+     "sewer_vermin"
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_beat",
+   "payload_contains": {
+    "beat_type": "skill_resolved",
+    "actor": "pc",
+    "skill": "flame_jet",
+    "target": "right",
+    "hit_ids": [
+     "raskghar_scout_2",
+     "sewer_vermin"
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc",
+    "target": "raskghar_scout_2",
+    "damage": 10,
+    "target_hp": 24,
+    "hit": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_beat",
+   "payload_contains": {
+    "beat_type": "attack_resolved",
+    "attacker": "pc",
+    "target": "raskghar_scout_2",
+    "damage": 10,
+    "target_hp": 24,
+    "hit": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc",
+    "target": "sewer_vermin",
+    "damage": 11,
+    "target_hp": 2,
+    "hit": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_beat",
+   "payload_contains": {
+    "beat_type": "attack_resolved",
+    "attacker": "pc",
+    "target": "sewer_vermin",
+    "damage": 11,
+    "target_hp": 2,
+    "hit": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 11
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_tactical_flame_jet_result"
+  },
+  {
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dashed",
+   "payload_contains": {
+    "id": "pc",
+    "move_pool": 3
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     5,
+     6
+    ]
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "hotbar_6"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "skill": "piercing_strikes"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "click",
+   "cell": [
+    6,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "pc",
+    "skill": "piercing_strikes",
+    "target": "raskghar_scout"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc",
+    "target": "raskghar_scout",
+    "damage": 18,
+    "target_hp": 16
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_beat",
+   "payload_contains": {
+    "beat_type": "attack_resolved",
+    "attacker": "pc",
+    "target": "raskghar_scout",
+    "damage": 18,
+    "target_hp": 16
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 11
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_tactical_manual_round2_complete"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_12_tactical_flame_jet"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false,
+    "rounds": 5
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.raskghar_awakened.hp",
+   "equals": 39
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_tactical_outcome"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_13_tactical_outcome"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 50
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.diplomat",
+   "equals": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.mage",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.armor",
+   "equals": "leather_jerkin"
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_1",
+   "equals": "hunters_fang_talisman"
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_2",
+   "equals": "traveler_charm"
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "hot_meal": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 7
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 45,
+   "payload_contains": {
+    "surface": "field",
+    "after": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   },
+   "count": 6
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "count": 3
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_tactical_loss_rollback"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_tactical_loss_rollback"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_14_tactical_loss_rollback"
+  }
+ ]
+}
