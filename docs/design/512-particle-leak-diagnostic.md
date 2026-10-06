@@ -154,3 +154,28 @@ not a game downgrade or acceptance run. The project's configured engine is
 unchanged. Selected game observer/log hashes are recorded separately in
 `diagnostic-checkpoint-sha256.json`; the standalone bundle retains its own
 `sha256.json` and exact command matrix.
+
+
+## Engine instrumentation in progress
+
+An unmodified source build of exact archive `5b4e0cb0f` is in progress in
+`/private/tmp/wi-512-engine-source`. Pinned SCons4.9.1 lives in a temporary venv;
+source/archive hashes, the command, and machine limits are preserved in
+`engine-build-metadata.json`. The command is:
+
+```sh
+/private/tmp/wi-512-engine-tools/bin/scons platform=macos arch=arm64 target=template_debug debug_symbols=no use_volk=yes -j2
+```
+
+Metal, ANGLE, OpenGL3, Vulkan, particles, and accessibility remain compiled.
+Official AccessKit and ARM64 ANGLE dependencies are installed only in the
+source tree. Vulkan uses its supported dynamic loader because the local
+MoltenVK SDK is absent. This custom build is diagnostic; it does not replace
+the game binary. The unchanged local build must first reproduce the minimal
+failure before an instrumented result can identify a mechanism.
+
+The external, unapplied `particle-cache-trace.patch` records raw keys, cache
+lookups, users, insertion, destruction, and cache entries retained at engine
+shutdown. Baseline source remains untouched while compiling. A standalone
+AppleClang21 copy-construction check on the same key layout was clean; that
+limited negative does not establish the compiled engine's behavior.
