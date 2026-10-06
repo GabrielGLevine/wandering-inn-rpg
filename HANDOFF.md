@@ -32,8 +32,10 @@ archived, or superseded session blocks.
  2g field wage,2g rumors; live Stealth twice then missed return reactivation
   retained as ambush victory. Rogue2659 completes bounded heirloom25g/name30g
   portfolio→81g; actual Pick Lock room acquisition + Stealth block arm.
-  Stop optional expansion. Next required Pallass costs/58g gear/finale;
- 3RID shutdown ERROR persists, route assertions only.
+  Rogue3115 pays Pallass46g then buys remaining44g set: Fang14 earlier,
+  Hedge9/Stone35 now,4g left; actually equipped4/4. Required sleeps restore
+ 48HP16MP, Rogue5/Diplomat9/Warrior7/Mage8/Helper1/Archer2/Trader2.
+  Next warden/ending only.3RID shutdown ERROR persists, assertions only.
   Evidence /private/tmp/wi-512-evidence/current; exact details in
   docs/design/512-continuous-journeys.md. Endings, force-crate variant,
   affordability and windows remain outstanding.

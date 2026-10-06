@@ -300,3 +300,28 @@ scoped gear purchases once the normal single board payment and sale land;
 no more sidequest expansion is planned. Current48/51HP,0/16MP still reflects
 the alley mistake. rogue-portfolio-current/rogue-name1.log records exit0 and
 PASS2659, but the shader leak now reports3RIDs. The gate remains invalid.
+
+## Earned58gold equipment after required regional costs
+
+Rogue3115 pays every actual Pallass charge with armed confirmations: sponsorship
+10, attunement stone18, market stamp2, filing5, examination8, final stamp3,
+total46gold. The prior81 purse gains the single Selys board payment5 and sells
+the vault Tonic for8 (Remedy remains), so it holds48 after all46 are paid.
+Actual Hedge-Ward9 and Stonescale35 purchases leave4gold. With the earlier
+Fang14, total gear spending is58. Actual inventory equips Fang/Hedge/Stonescale
+at4/4 Resonance before later growth. No fixture, repeated wages, or gold grant
+was used. The mundane True Gauge and commission locket remain unsold.
+
+Swapping the earned Core/Moonhide set for these purchases preserves carried
+resources and applies caps:48/51HP becomes47/49HP, MP remains0/16. The two
+required dungeon-attunement sleeps resolve the accumulated classes to
+Warrior7/Mage8/Rogue5/Diplomat9/Helper1/Archer2/Trader2 and refill48HP/16MP.
+Derived maxHP falls49→48 across that class change; the route records the actual
+result. Purchasing redundant gear is a real spend, not a claim that this set is
+better than the earned alternatives.
+
+rogue-earned-gear-current/rogue-gear1.log: exit0/PASS3115 with3 shaderRID ERRORs,
+so the earned economy/input contract is diagnostic pending clean rerun and
+root's window proof. Next is the actual warden and ending, with no further
+optional portfolio expansion. Other profiles and the force-crate variant remain
+unrun; this history's exercised losses/missed input do not stand in for them.
