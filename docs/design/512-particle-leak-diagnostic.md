@@ -134,3 +134,23 @@ engine correction or independently verified engine version, followed by the
 minimal red/control cases, repeated unchanged worker/rogue routes, and native
 visual checks. No engine upgrade, external report, or waiver is authorized by
 this diagnostic checkpoint.
+
+
+## Lifetime and installed-version controls
+
+Keeping two or200 minimal materials alive together, then explicitly clearing
+the array before quit, completes cleanly. Adding frames around that clear also
+stays clean. However, an external wrapper retaining all52 actual materials
+through the unchanged worker798 prefix still leaks after explicit release:
+`PARTICLE_RETAINED_RELEASE: 52`, `PARTICLE_ALIVE: []`, then DummyShader error.
+The assertion result passes but the run is rejected. See `retain798.log`, its
+`result.json`, and `probe-particle-retain.gd` in the evidence directory. This
+refutes simple retained lifetime as a reliable game workaround; an immutable
+template cache has not been implemented or validated.
+
+The already installed Godot `4.6.2.stable.71f334935` also leaks on the bare serial
+reproducer (`engine46-repro.log`). This is only a diagnostic version comparison,
+not a game downgrade or acceptance run. The project's configured engine is
+unchanged. Selected game observer/log hashes are recorded separately in
+`diagnostic-checkpoint-sha256.json`; the standalone bundle retains its own
+`sha256.json` and exact command matrix.
