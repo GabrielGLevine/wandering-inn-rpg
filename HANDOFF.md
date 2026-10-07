@@ -9,32 +9,28 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **QUIESCED at user request:** `/private/tmp/wi-567-hud-contract`, branch
-  `issue/567-hud-contract`, base1375e375, draft PR578. Production bdd30b80;
-  QA8621c754; finding1272b234. No owned local jobs/workers active. Desktop
-  worker clean at2c8f6615; remaining Details height fix NOT started. Preserve
-  companion UID/private overlay and unrelated main audio584 edits.
+- **Resumed (user: merge #572–#583 when ready):** root
+  `/private/tmp/wi-567-hud-contract`, branch `issue/567-hud-contract`, PR578
+  composes every lane head (572/573/574/582/583 are ancestors). Merging 578
+  lands them; close lane PRs as landed via 578. #584 audio parked in
+  `/private/tmp/wi-584-audio` (docs patch; also main `stash@{0}`).
 - **Constraints:** core first; extra mobile testing deferred to #585,
   nonblocking. Web parity may be waived as a merge bottleneck; other required
   CI/review remain gates. #586 tracks shader shutdown errors. Requested
   exception has NO answer and is NOT authorized. No more engine probes/builds
   or deployment. No balance/seed changes.
-- **Reviewed/composed:** #56685af0621/#5708676a0be/#568206f36ac/#56991bdac25,
-  journey d7033d7f, martial1ab7cf1c, desktop b080e0ad. Draft PRs572/573/574/
-  578/582/583 remain staged. Designs517/PR575 and521/PR579 merged as5823356f/
-  53bd4c68; squash trees verified.
-- **Evidence:** bdd30b80 full preflight65units+7tools PASS; poor167/load2/
-  combat-abandon54 PASS, zero engine noise. At8621c754 load2 PASS; native
-  desktop27 FAIL step26: expanded Details covers world view. Earlier paging,
-  brackets and skill16 use pass; three produced pictures read. Fourth unrun.
-  CI run37528779273 atbdd: Python/canonical FAIL, five jobs PASS, Web running
-  at last read. Failed logs unavailable while run active. Triage next session;
-  old all-green CI/canonical results are baselines, not current acceptance.
-- **Exact next action:** inspect failed CI logs; bound desktop Details using
-  its existing ScrollContainer (height currently clamped only for touch),
-  add meaningful expanded long-list regression, rerun native
-  `desktop_field_earned_overflow`27/load/relevant checks and read four images.
-  Open P2 in `docs/VISUAL-LOG.md` retains defect. No new mobile matrix.
+- **CI repair at 6d8f0beb (tree977b9097):** run37530813602 failures fixed:
+  steel_thread contract pins (+116 after martial insert), stale coherence
+  rules (Riverfarm gate is door_awakened; Olesm briefing optional), desktop
+  Details cap+selection follow+wheel proof, and journey_rogue desync from
+  desktop paging (driver now touches page controls). Local: preflight65+tools,
+  pytest495, journey_rogue PASS20s (macOS #586 leak noise only), windowed
+  desktop44 PASS with six captures read, reveal mutation probe red. Evidence
+  `/private/tmp/wi-567-evidence/desktop-follow-977b9097`.
+- **Exact next action:** read CI on 6d8f0beb (Web parity waivable); merge PR578
+  by squash, verify squash tree, close 572/573/574/582/583 as landed, then
+  update this file on main. Issues #566–#570 keep open acceptance (#571
+  cutover, earned journeys, devices #585).
 - **Journey limits:** native Rogue3464 reaches ending/Inn,146g−142g=4;
   39 unique images read, two shader ERRORs make gate INVALID. Epilogue picture
   shows toast, not17-line body. Worker1423 retains six losses/boss39HP.
