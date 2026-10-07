@@ -168,9 +168,19 @@ not the finger); `real` = physical device observation.
 `manifest.json` registers the three timed purchase scenarios under
 `browser_scripts`, separately from native `scripts` and their smoke/full tiers.
 `python3 wandering_inn_game/qa/web/run_browser_suite.py` exports once and runs
-both emulated profiles through trusted browser contacts. CI uses the same
-entrypoint with `--skip-export` after its Web export. Native `--touching`
+both emulated profiles through trusted browser contacts. Native `--touching`
 selection excludes these scripts and points to the browser entrypoint.
+
+CI (#580) exports once per checkout and stamps every build file plus the commit;
+each downstream job refuses a build from any other checkout. Six runners each
+execute one `--shard K/6` partition serially; no runner hosts two browser cases
+at once, so contact timing sees serial-run load. `browser_case_seconds.json`
+holds measured per-script seconds that only balance shards. The required
+`Web parity (headless Chromium)` check runs `--merge`: it re-derives the
+partition, requires every registered script/profile exactly once, re-evaluates
+each case from its own artifacts and requires one PCK hash, then fails unless
+the export, other browser legs and every shard passed. Nothing moved to a
+scheduled-only lane.
 
 Each producer checks a held opening contact through the arming delay, a rapid
 second contact on the rendered Buy row before arming, touch Cancel, outside
@@ -189,7 +199,9 @@ and pre-arm proof. It rejects missing results/proofs, mismatched profiles,
 nonzero exits, and unexpected error/warning diagnostics. Exact Chromium
 ReadPixels performance messages and the existing Ubuntu SVG 51500 canvas
 warning remain in artifacts as known renderer diagnostics; other warnings fail.
-CI uploads this directory as `browser-purchase-confirmation`.
+CI uploads each shard as `browser-suite-shard-K` and the merged directory as
+`browser-purchase-confirmation`. Each row records wall seconds, page-ready,
+in-page and contact milliseconds.
 
 On 2026-09-06, the composed tree after `a3b85afd` passed all six full-asset
 cases on Chromium `149.0.7827.55`, exported PCK SHA-256

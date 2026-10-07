@@ -4,8 +4,10 @@ import copy
 import importlib.util
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import sys
+import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -123,6 +125,168 @@ class BrowserRegistryTest(unittest.TestCase):
                                 (0, "QA_RESULT: PASS", {"passed": False})]:
             with self.subTest(rc=rc, log=log):
                 self.assertTrue(suite.evaluate_run(self.entry, "iphone", rc, log, result, self.evidence()))
+
+
+class BrowserShardTest(unittest.TestCase):
+    def setUp(self):
+        self.cases = suite.validated_cases()
+        self.costs = suite.case_costs(self.cases, json.loads(suite.COSTS.read_text()))
+
+    def keys(self, selected):
+        return [(entry["script"], profile) for entry, profile in selected]
+
+    def test_every_shard_count_partitions_the_registry_in_order(self):
+        everything = self.keys(self.cases)
+        for count in range(1, len(self.cases) + 1):
+            shards = [self.keys(suite.shard_cases(self.cases, self.costs, index, count)) for index in range(1, count + 1)]
+            with self.subTest(count=count):
+                self.assertTrue(all(shards))
+                self.assertEqual(sorted(sum(shards, [])), sorted(everything))
+                self.assertEqual(len(sum(shards, [])), len(everything))
+                for shard in shards:
+                    self.assertEqual(shard, [key for key in everything if key in shard])
+
+    def test_longest_routes_never_share_a_shard(self):
+        for count in range(2, 7):
+            owners = [index for index in range(1, count + 1)
+                      for entry, _ in suite.shard_cases(self.cases, self.costs, index, count)
+                      if entry["script"] == "touch_opening_continuous"]
+            self.assertEqual(len(set(owners)), 2, count)
+
+    def test_shards_stay_within_the_longest_first_bound(self):
+        for count in range(2, 9):
+            loads = [sum(self.costs[self.cases.index(case)] for case in suite.shard_cases(self.cases, self.costs, index, count))
+                     for index in range(1, count + 1)]
+            with self.subTest(count=count):
+                self.assertLessEqual(max(loads), 4 / 3 * max(max(self.costs), sum(self.costs) / count))
+
+    def test_shard_specs_and_cost_hints_fail_closed(self):
+        for text in ["0/6", "7/6", "1/0", "a/b", "1/6/2", " 1/6", f"1/{len(self.cases) + 1}"]:
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                suite.parse_shard(text, len(self.cases))
+        self.assertEqual(suite.parse_shard("6/6", len(self.cases)), (6, 6))
+        good = json.loads(suite.COSTS.read_text())
+        for hints in [[], {"seconds": []}, {"secs": {}}, good | {"extra": 1},
+                      {"seconds": {"save_load_roundtrip": 30}}, {"seconds": {"purchase_touch_static": 0}},
+                      {"seconds": {"purchase_touch_static": 30.5}}, {"seconds": {"purchase_touch_static": True}}]:
+            with self.subTest(hints=hints), self.assertRaises(ValueError):
+                suite.case_costs(self.cases, hints)
+        unhinted = suite.case_costs(self.cases, {"seconds": {}})
+        self.assertEqual(unhinted, [suite.script_timeout(entry["script"]) for entry, _ in self.cases])
+
+
+class BrowserMergeTest(unittest.TestCase):
+    PCK = "a" * 64
+    COUNT = 3
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.cases = suite.validated_cases()
+        self.costs = suite.case_costs(self.cases, json.loads(suite.COSTS.read_text()))
+        self.shards = [self.write_shard(index) for index in range(1, self.COUNT + 1)]
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def write_shard(self, index):
+        directory = self.root / f"browser-suite-shard-{index}"
+        rows = []
+        for entry, profile in suite.shard_cases(self.cases, self.costs, index, self.COUNT):
+            name = entry["script"]
+            case = directory / profile / name
+            case.mkdir(parents=True)
+            steps = len(json.loads((GAME / "qa/scripts" / f"{name}.json").read_text())["steps"])
+            (case / "result.json").write_text(json.dumps({
+                "passed": True, "aborted": False, "failures": [], "steps_run": steps, "steps_total": steps,
+                "script": f"res://qa/scripts/{name}.json"}))
+            (case / "browser-evidence.json").write_text(json.dumps({
+                "emulated": True, "device": profile, "touchMode": True, "timedTouchPassed": True,
+                "buildPckSha256": self.PCK, "errors": [], "warnings": [],
+                "runtime": {"events": [{"type": "touchstart", "trusted": True}]},
+                "requests": [{suite.PROOFS[proof]: {"passed": True}} for proof in entry["required_touch_proofs"]]}))
+            (case / "runner.log").write_text("[game] QA_RESULT: PASS\n")
+            rows.append({"script": name, "profile": profile, "passed": True, "runner_exit": 0, "failures": [],
+                         "timing": {"seconds": 1.0}})
+        (directory / "result.json").write_text(json.dumps(
+            {"passed": True, "shard": {"index": index, "count": self.COUNT}, "cases": rows}))
+        return directory
+
+    def merge(self, shards=None, expected=PCK):
+        output = self.root / "merged"
+        shutil.rmtree(output, ignore_errors=True)
+        return suite.merge(self.shards if shards is None else shards, output, expected), output
+
+    def edit_json(self, path, change):
+        data = json.loads(path.read_text())
+        change(data)
+        path.write_text(json.dumps(data))
+
+    def test_complete_shards_merge_into_one_verified_suite(self):
+        problems, output = self.merge()
+        self.assertEqual(problems, [])
+        merged = json.loads((output / "result.json").read_text())
+        self.assertTrue(merged["passed"])
+        self.assertEqual(merged["shards"], self.COUNT)
+        self.assertEqual(merged["build_pck_sha256"], self.PCK)
+        self.assertEqual([(row["script"], row["profile"]) for row in merged["cases"]],
+                         [(entry["script"], profile) for entry, profile in self.cases])
+        for entry, profile in self.cases:
+            self.assertTrue((output / profile / entry["script"] / "browser-evidence.json").is_file())
+
+    def test_missing_duplicate_or_misplaced_cases_are_rejected(self):
+        first = self.shards[0] / "result.json"
+        moved = json.loads(first.read_text())["cases"][0]
+        self.assertTrue(self.merge(self.shards[:-1])[0])
+        self.assertTrue(self.merge(self.shards + [self.shards[0]])[0])
+        self.edit_json(first, lambda data: data["cases"].pop(0))
+        self.assertTrue(self.merge()[0])
+        self.edit_json(first, lambda data: data["cases"].insert(0, moved))
+        self.assertEqual(self.merge()[0], [])
+        self.edit_json(self.shards[1] / "result.json", lambda data: data["cases"].append(moved))
+        self.assertTrue(self.merge()[0])
+        self.edit_json(first, lambda data: data["cases"].pop(0))
+        shutil.copytree(self.shards[0] / moved["profile"] / moved["script"], self.shards[1] / moved["profile"] / moved["script"])
+        self.assertTrue(self.merge()[0])
+
+    def test_shard_count_and_index_must_describe_one_complete_set(self):
+        for change in [lambda data: data["shard"].update(count=self.COUNT + 1),
+                       lambda data: data["shard"].update(index=2),
+                       lambda data: data.pop("shard")]:
+            path = self.shards[0] / "result.json"
+            original = path.read_text()
+            self.edit_json(path, change)
+            with self.subTest(change=change):
+                self.assertTrue(self.merge()[0])
+            path.write_text(original)
+
+    def test_artifacts_are_reverified_rather_than_trusting_shard_verdicts(self):
+        row = json.loads((self.shards[0] / "result.json").read_text())["cases"][0]
+        case = self.shards[0] / row["profile"] / row["script"]
+        for name, change in [("browser-evidence.json", lambda data: data["runtime"]["events"][0].update(trusted=False)),
+                             ("browser-evidence.json", lambda data: data.update(requests=[])),
+                             ("browser-evidence.json", lambda data: data.update(buildPckSha256="b" * 64)),
+                             ("result.json", lambda data: data.update(steps_run=1))]:
+            original = (case / name).read_text()
+            self.edit_json(case / name, change)
+            with self.subTest(name=name, change=change):
+                self.assertTrue(self.merge()[0])
+            (case / name).write_text(original)
+        (case / "runner.log").write_text("[game] QA_RESULT: PASS\nERROR: hidden\n")
+        self.assertTrue(self.merge()[0])
+        (case / "runner.log").unlink()
+        self.assertTrue(self.merge()[0])
+
+    def test_shard_failure_or_nonzero_exit_is_not_laundered(self):
+        path = self.shards[2] / "result.json"
+        self.edit_json(path, lambda data: data["cases"][0].update(runner_exit=1))
+        self.assertTrue(self.merge()[0])
+        self.edit_json(path, lambda data: data["cases"][0].update(runner_exit=0, passed=False))
+        self.assertTrue(self.merge()[0])
+
+    def test_every_case_must_use_the_one_expected_export(self):
+        self.assertTrue(self.merge(expected="c" * 64)[0])
+        self.assertTrue(self.merge(expected="")[0])
 
 
 if __name__ == "__main__":

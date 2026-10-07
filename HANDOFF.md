@@ -9,6 +9,11 @@ archived, or superseded session blocks.
 
 ## Current state
 
+- **#580 Web CI speed (in progress):** branch `issue/580-web-parity-speed`,
+  worktree `/private/tmp/wi-580-web-ci`, base `243a1b90`. One verified export
+  → core/lifecycle legs + 6 registry shards → required aggregator re-verifies.
+  Baseline Web job 2682–2873 s (runs 37491882597/37497741955/37565824794).
+  Next: PR CI evidence, independent review, merge.
 - **Recovery integration MERGED:** PR578 squash `58b5510d`, tree `4086a39a`
   identical to reviewed head `55a86ab2`. CI run37565824794: all eight jobs
   pass incl. Web parity (not waived). Lane PRs 572/573/574/582/583 closed as

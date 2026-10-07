@@ -1,0 +1,21 @@
+{
+	"_comment": "Mean seconds per profile run from CI run 37565824794; balances run_browser_suite.py --shard only. Unlisted scripts cost their full timeout.",
+	"seconds": {
+		"consumable_poison_touch": 25,
+		"responsive_field_overflow": 38,
+		"combat_responsive_touch": 114,
+		"responsive_dialogue_touch": 85,
+		"responsive_field_layout": 38,
+		"responsive_panels_touch": 100,
+		"purchase_touch_static": 41,
+		"purchase_touch_fence": 43,
+		"purchase_touch_service": 35,
+		"touch_gesture_inventory": 23,
+		"touch_gesture_journal": 27,
+		"touch_opening_continuous": 412,
+		"creation_explanations_touch": 38,
+		"touch_reference_pages": 66,
+		"consumable_repeat_touch": 29,
+		"inventory_recovery_equipment_touch": 33
+	}
+}
