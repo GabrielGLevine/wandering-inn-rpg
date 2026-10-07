@@ -9,28 +9,26 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Resumed (user: merge #572–#583 when ready):** root
-  `/private/tmp/wi-567-hud-contract`, branch `issue/567-hud-contract`, PR578
-  composes every lane head (572/573/574/582/583 are ancestors). Merging 578
-  lands them; close lane PRs as landed via 578. #584 audio parked in
+- **Recovery integration MERGED:** PR578 squash `58b5510d`, tree `4086a39a`
+  identical to reviewed head `55a86ab2`. CI run37565824794: all eight jobs
+  pass incl. Web parity (not waived). Lane PRs 572/573/574/582/583 closed as
+  landed (heads are ancestors). Issues #566–#570/#512 stay open for their
+  remaining acceptance. No deployment. #584 audio parked in
   `/private/tmp/wi-584-audio` (docs patch; also main `stash@{0}`).
 - **Constraints:** core first; extra mobile testing deferred to #585,
   nonblocking. Web parity may be waived as a merge bottleneck; other required
   CI/review remain gates. #586 tracks shader shutdown errors. Requested
   exception has NO answer and is NOT authorized. No more engine probes/builds
   or deployment. No balance/seed changes.
-- **CI repair at 6d8f0beb (tree977b9097):** run37530813602 failures fixed:
-  steel_thread contract pins (+116 after martial insert), stale coherence
-  rules (Riverfarm gate is door_awakened; Olesm briefing optional), desktop
-  Details cap+selection follow+wheel proof, and journey_rogue desync from
-  desktop paging (driver now touches page controls). Local: preflight65+tools,
-  pytest495, journey_rogue PASS20s (macOS #586 leak noise only), windowed
-  desktop44 PASS with six captures read, reveal mutation probe red. Evidence
-  `/private/tmp/wi-567-evidence/desktop-follow-977b9097`.
-- **Exact next action:** read CI on 6d8f0beb (Web parity waivable); merge PR578
-  by squash, verify squash tree, close 572/573/574/582/583 as landed, then
-  update this file on main. Issues #566–#570 keep open acceptance (#571
-  cutover, earned journeys, devices #585).
+- **Pre-merge repair:** steel_thread pins (+116), coherence rules
+  (Riverfarm gate is door_awakened; Olesm briefing optional), desktop Details
+  cap with keyboard/gamepad follow (expand waits for scroll sort; glyph-bound
+  QA), and journey_rogue desync from desktop paging (driver touches page
+  controls). journey_rogue/worker pass CI; macOS headless still prints #586
+  exit leak. Evidence `/private/tmp/wi-567-evidence/desktop-expand-4086a39a`.
+- **Exact next action:** #571 cutover gate (continuous attrition proof) and
+  #512/#513 caster/economic variants; worker boss wall and vault wall remain.
+  #585 devices stay deferred. Then the queue below.
 - **Journey limits:** native Rogue3464 reaches ending/Inn,146g−142g=4;
   39 unique images read, two shader ERRORs make gate INVALID. Epilogue picture
   shows toast, not17-line body. Worker1423 retains six losses/boss39HP.
