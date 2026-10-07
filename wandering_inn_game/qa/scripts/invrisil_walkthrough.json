@@ -51,6 +51,20 @@
    ]
   },
   {
+   "_comment": "Desktop Details stays open across the portal so its player cap must pick up the boulevard's camera offset.",
+   "action": "press",
+   "name": "field_readout"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "expanded": true,
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
    "_comment": "== BEAT 1: portal arrival -- the awakened pantry_door offers THREE destinations this fixture (liscor_street, riverfarm, invrisil, catalog order): riverfarm_attuned rides along now that the chain is coherent (invrisil_attuned implies blight_lifted implies riverfarm_attuned -- the fixture's own _comment + test_fixture_coherence.gd's monotone arms), so Riverfarm genuinely enters the filtered list; Invrisil is the THIRD option (index 2), 'Let it be.' fourth. ==",
    "action": "press",
    "name": "interact"
@@ -110,6 +124,22 @@
     4,
     4
    ]
+  },
+  {
+   "action": "assert_field_layout"
+  },
+  {
+   "action": "press",
+   "name": "field_readout"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "expanded": false,
+    "reason": "player"
+   },
+   "timeout_sec": 5
   },
   {
    "action": "screenshot",

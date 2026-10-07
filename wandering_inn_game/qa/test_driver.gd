@@ -2068,8 +2068,13 @@ func _assert_field_layout(step: Dictionary = {}) -> void:
 	# and stops it below the cell a following camera holds the player on.
 	if readout_open and WIResponsiveLayout.uses_touch_layout() and world_rect.intersects(readout.get_global_rect()):
 		_fail("assert_field_layout: expanded details cover the world view")
-	if readout_open and not WIResponsiveLayout.uses_touch_layout() and readout.get_global_rect().position.y < float(main.world_focus_bottom()) - 0.5:
-		_fail("assert_field_layout: expanded details cover the followed player cell (top %s, cell bottom %s)" % [readout.get_global_rect().position.y, main.world_focus_bottom()])
+	if readout_open and not WIResponsiveLayout.uses_touch_layout():
+		var focus_bottom := float(main.world_focus_bottom())
+		if not is_equal_approx(float(field.get("_world_focus_bottom")), focus_bottom):
+			_fail("assert_field_layout: details cap is stale (%s, live %s)" % [field.get("_world_focus_bottom"), focus_bottom])
+		var readout_rect := readout.get_global_rect()
+		if readout_rect.position.y < focus_bottom - 0.5 and readout_rect.size.y > float(field.readout_min_height()) + 0.5:
+			_fail("assert_field_layout: expanded details cover the followed player cell (top %s, cell bottom %s)" % [readout_rect.position.y, focus_bottom])
 	var world_view := String(step.get("world_view", ""))
 	match world_view:
 		"":
@@ -2085,7 +2090,7 @@ func _assert_field_layout(step: Dictionary = {}) -> void:
 		for id: String in rects:
 			if readout.get_global_rect().intersects(rects[id]):
 				_fail("assert_field_layout: expanded details overlap %s" % id)
-	ObservableBus.emit_domain_event("qa_field_layout_measured", {"controls_css": measurements, "touch_layout": WIResponsiveLayout.uses_touch_layout(), "text_scale": WISettings.text_scale_label(), "player": [player_position.x, player_position.y], "world": [world_rect.position.x, world_rect.position.y, world_rect.size.x, world_rect.size.y], "player_under_details": readout_open and readout.get_global_rect().has_point(player_position)})
+	ObservableBus.emit_domain_event("qa_field_layout_measured", {"controls_css": measurements, "touch_layout": WIResponsiveLayout.uses_touch_layout(), "text_scale": WISettings.text_scale_label(), "player": [player_position.x, player_position.y], "world": [world_rect.position.x, world_rect.position.y, world_rect.size.x, world_rect.size.y], "player_under_details": readout_open and readout.get_global_rect().has_point(player_position), "focus_bottom": float(main.world_focus_bottom()), "details": [readout.get_global_rect().position.y, readout.get_global_rect().end.y] if readout_open else []})
 
 
 ## GH#324 DISPLAY PROOF. `ui_dialogue_rendered` is a bus confirmation that the
