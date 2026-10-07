@@ -9,11 +9,12 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **#580 Web CI speed (in progress):** branch `issue/580-web-parity-speed`,
-  worktree `/private/tmp/wi-580-web-ci`, base `243a1b90`. One verified export
-  → core/lifecycle legs + 6 registry shards → required aggregator re-verifies.
-  Baseline Web job 2682–2873 s (runs 37491882597/37497741955/37565824794).
-  Next: PR CI evidence, independent review, merge.
+- **#580 Web CI speed MERGED:** PR587 squash `b4dd4653`, tree identical to
+  reviewed head `dd00c52b`; independent review approved. Web gate 2682–2873 s
+  → 477/533/519 s; workflow wall ~45–49 min → ~9 min (Canonical QA sweep now
+  bounds it). Required check name unchanged; it is the aggregator over export,
+  two browser legs and 6 registry shards. Coverage authority:
+  `run_browser_suite.py --merge`; cost hints `qa/web/browser_case_seconds.json`.
 - **Recovery integration MERGED:** PR578 squash `58b5510d`, tree `4086a39a`
   identical to reviewed head `55a86ab2`. CI run37565824794: all eight jobs
   pass incl. Web parity (not waived). Lane PRs 572/573/574/582/583 closed as
