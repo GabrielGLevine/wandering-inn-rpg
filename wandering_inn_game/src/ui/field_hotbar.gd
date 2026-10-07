@@ -269,6 +269,10 @@ func world_bottom() -> float:
 	if not visible or _last_slots.is_empty():
 		return bottom
 	bottom = minf(bottom, _hotbar.global_position.y - READOUT_SELECTION_CLEARANCE)
+	# Desktop Details and the selection paper overlay the world. Reserving them
+	# re-centred the world view on every toggle, the jitter this layer refuses.
+	if not _uses_touch_layout():
+		return bottom
 	if _readout_panel.visible:
 		bottom = minf(bottom, _readout_panel.position.y - READOUT_GAP)
 	if _selection_label_backing.visible:

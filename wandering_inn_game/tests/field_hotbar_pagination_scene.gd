@@ -65,6 +65,10 @@ func _ready() -> void:
 			assert(bar._last_selected_index == 35 and selection_events.back().index == 35, "paging hides the label without disarming the selected skill")
 			bar._page_next.pressed.emit()
 			assert(bar._page == armed_page and bar._selection_label.visible and selection_events.back().visible, "returning to the armed page restores the label and its visibility event")
+	bar._readout_lines = ["1  [Field Skill 0]"]
+	bar._set_expanded(true, false, "test")
+	assert(bar.world_bottom() <= bar._readout_panel.position.y - bar.READOUT_GAP, "phone world content must end above expanded Details")
+	bar._set_expanded(false, false, "test")
 	var desktop := WIFieldHotbar.new()
 	add_child(desktop)
 	var original_hint_band := WIFieldHotbar.MESSAGE_LAYER_SCRIPT.hint_band_width
@@ -113,6 +117,14 @@ func _ready() -> void:
 	assert(desktop.hotbar_node().get_child_count() == 3, "small desktop bars stay continuous")
 	assert(not desktop._page_previous.visible and not desktop._page_next.visible)
 	_assert_desktop_controls(desktop, 340.0)
+	desktop._readout_lines = ["1  [Field Skill 0]", "2  [Field Skill 1]", "3  [Field Skill 2]"]
+	var desktop_world_bottom := desktop.world_bottom()
+	assert(desktop._selection_label_backing.visible, "probe needs the transient selection paper on screen")
+	desktop._set_expanded(true, false, "test")
+	assert(desktop._readout_panel.visible)
+	assert(is_equal_approx(desktop.world_bottom(), desktop_world_bottom), "desktop Details and selection paper overlay the world instead of resizing it")
+	desktop._set_expanded(false, false, "test")
+	assert(is_equal_approx(desktop.world_bottom(), desktop_world_bottom), "collapsing desktop Details leaves the world view unchanged")
 	desktop._field_skills = bar._field_skills.duplicate()
 	desktop._last_slots = bar._last_slots.duplicate(true)
 	desktop._layout_controls()

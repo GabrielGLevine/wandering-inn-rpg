@@ -45,7 +45,8 @@
       }
     },
     {
-      "action": "assert_field_layout"
+      "action": "assert_field_layout",
+      "world_view": "record"
     },
     {
       "action": "screenshot",
@@ -128,7 +129,8 @@
       }
     },
     {
-      "action": "assert_field_layout"
+      "action": "assert_field_layout",
+      "world_view": "unchanged"
     },
     {
       "action": "press",
@@ -144,7 +146,8 @@
       }
     },
     {
-      "action": "assert_field_layout"
+      "action": "assert_field_layout",
+      "world_view": "unchanged"
     },
     {
       "action": "touch_field_details"
@@ -158,7 +161,8 @@
       }
     },
     {
-      "action": "assert_field_layout"
+      "action": "assert_field_layout",
+      "world_view": "unchanged"
     },
     {
       "action": "screenshot",
@@ -184,7 +188,8 @@
       "action": "assert_field_readout_selection_visible"
     },
     {
-      "action": "assert_field_layout"
+      "action": "assert_field_layout",
+      "world_view": "unchanged"
     },
     {
       "action": "screenshot",
@@ -218,7 +223,8 @@
       }
     },
     {
-      "action": "assert_field_layout"
+      "action": "assert_field_layout",
+      "world_view": "unchanged"
     },
     {
       "action": "screenshot",
@@ -236,7 +242,8 @@
       }
     },
     {
-      "action": "assert_field_layout"
+      "action": "assert_field_layout",
+      "world_view": "unchanged"
     },
     {
       "action": "press",
@@ -332,7 +339,8 @@
       }
     },
     {
-      "action": "assert_field_layout"
+      "action": "assert_field_layout",
+      "world_view": "unchanged"
     }
   ]
 }

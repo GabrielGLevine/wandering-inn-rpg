@@ -65,6 +65,7 @@ var _events_seen: Array = []
 var _initial_title_gate_seen := false
 var _initial_web_draw_seen := false
 var _last_purchase_buy_pos := Vector2.ZERO
+var _recorded_world_view := Rect2()
 var _screenshots: PackedStringArray = []
 var _wait_cursor := 0
 var _wants_creation_ui := false
@@ -903,7 +904,7 @@ func _execute(step: Dictionary) -> void:
 		"assert_dialogue_displayed":
 			await _assert_dialogue_displayed(step)
 		"assert_field_layout":
-			await _assert_field_layout()
+			await _assert_field_layout(step)
 		"assert_combat_layout":
 			await _assert_combat_layout(step)
 		"assert_panel_layout":
@@ -2021,7 +2022,7 @@ func _assert_creation_layout() -> void:
 	ObservableBus.emit_domain_event("qa_creation_layout_measured", {"text_scale": scale, "text": measurements, "controls": controls.size()})
 
 
-func _assert_field_layout() -> void:
+func _assert_field_layout(step: Dictionary = {}) -> void:
 	await _settle_for_capture()
 	var main := get_tree().root.find_child("Main", true, false)
 	var field := get_tree().root.find_child("FieldHotbar", true, false)
@@ -2061,13 +2062,22 @@ func _assert_field_layout() -> void:
 		if world_rect.intersects(rects[id]):
 			_fail("assert_field_layout: world view overlaps %s" % id)
 	var readout := field.find_child("FieldReadout", true, false) as Control
-	if readout != null and readout.visible and world_rect.intersects(readout.get_global_rect()):
+	var readout_open := readout != null and readout.visible
+	# Phone reserves the world view above Details; desktop overlays it so the
+	# world never re-centres on a toggle (`world_view: unchanged` proves that).
+	if readout_open and WIResponsiveLayout.uses_touch_layout() and world_rect.intersects(readout.get_global_rect()):
 		_fail("assert_field_layout: expanded details cover the world view")
-	if readout != null and readout.visible:
+	match String(step.get("world_view", "")):
+		"record":
+			_recorded_world_view = world_rect
+		"unchanged":
+			if not _recorded_world_view.has_area() or not world_rect.is_equal_approx(_recorded_world_view):
+				_fail("assert_field_layout: world view moved from %s to %s" % [_recorded_world_view, world_rect])
+	if readout_open:
 		for id: String in rects:
 			if readout.get_global_rect().intersects(rects[id]):
 				_fail("assert_field_layout: expanded details overlap %s" % id)
-	ObservableBus.emit_domain_event("qa_field_layout_measured", {"controls_css": measurements, "touch_layout": WIResponsiveLayout.uses_touch_layout(), "text_scale": WISettings.text_scale_label(), "player": [player_position.x, player_position.y]})
+	ObservableBus.emit_domain_event("qa_field_layout_measured", {"controls_css": measurements, "touch_layout": WIResponsiveLayout.uses_touch_layout(), "text_scale": WISettings.text_scale_label(), "player": [player_position.x, player_position.y], "world": [world_rect.position.x, world_rect.position.y, world_rect.size.x, world_rect.size.y], "player_under_details": readout_open and readout.get_global_rect().has_point(player_position)})
 
 
 ## GH#324 DISPLAY PROOF. `ui_dialogue_rendered` is a bus confirmation that the

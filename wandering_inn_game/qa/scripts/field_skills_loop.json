@@ -236,6 +236,10 @@
    "timeout_sec": 5
   },
   {
+   "action": "assert_field_layout",
+   "world_view": "record"
+  },
+  {
    "_comment": "Keyboard toggle reopens and recloses details without touching dispatch/order.",
    "action": "press",
    "name": "field_readout"
@@ -249,6 +253,11 @@
     "reason": "player"
    },
    "timeout_sec": 5
+  },
+  {
+   "_comment": "Desktop Details overlays the world; the view must not re-centre.",
+   "action": "assert_field_layout",
+   "world_view": "unchanged"
   },
   {
    "action": "screenshot",
@@ -267,6 +276,10 @@
     "reason": "player"
    },
    "timeout_sec": 5
+  },
+  {
+   "action": "assert_field_layout",
+   "world_view": "unchanged"
   },
   {
    "action": "assert_settings_file_exists"
