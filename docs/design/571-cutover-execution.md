@@ -68,5 +68,5 @@ Windowed read of each journey's key captures at production timing.
 | C: martial vault → ending | not started |
 | D: worker wall → ending | not started |
 | E: caster journey | not started |
-| F: imperfect variant + fee list | not started |
+| F: imperfect variant + fee list | fee list done (`571-fee-audit.md`: 82g mandatory, no hard soft-lock, Pallass grind; possible warden-bypass flagged). Variant not started. |
 | G: Rogue per-fight pins | done: exact entry/exit pins for all 11 fights (19 counts) and an earned pause Save→Load at 10/44 HP, 0/14 MP in `deep_tunnels`; 3509/3509, noise clean. Windowed read pending integration. Rogue never fights twice without sleep, so criterion 5 item 1 comes from lanes C/E. |
