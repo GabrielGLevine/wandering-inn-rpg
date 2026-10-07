@@ -283,6 +283,16 @@ class BrowserMergeTest(unittest.TestCase):
         self.assertTrue(self.merge()[0])
         self.edit_json(path, lambda data: data["cases"][0].update(runner_exit=0, passed=False))
         self.assertTrue(self.merge()[0])
+        for runner_exit in [False, 0.0, None, "0"]:
+            self.edit_json(path, lambda data: data["cases"][0].update(runner_exit=runner_exit, passed=True))
+            with self.subTest(runner_exit=runner_exit):
+                self.assertTrue(self.merge()[0])
+
+    def test_malformed_timing_cannot_leave_a_green_summary_behind_a_crash(self):
+        self.edit_json(self.shards[0] / "result.json", lambda data: data["cases"][0].update(timing={"seconds": "slow"}))
+        problems, output = self.merge()
+        self.assertEqual(problems, [])
+        self.assertTrue(json.loads((output / "result.json").read_text())["passed"])
 
     def test_every_case_must_use_the_one_expected_export(self):
         self.assertTrue(self.merge(expected="c" * 64)[0])

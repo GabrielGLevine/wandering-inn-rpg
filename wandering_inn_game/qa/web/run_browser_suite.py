@@ -67,7 +67,7 @@ def cases(manifest: dict) -> list[tuple[dict, str]]:
 
 def evaluate_run(entry: dict, profile: str, returncode: int, log: str, result: dict, evidence: dict, expected_steps: int | None = None) -> list[str]:
     failures = []
-    if returncode != 0 or result.get("passed") is not True or "QA_RESULT: PASS" not in log:
+    if type(returncode) is not int or returncode != 0 or result.get("passed") is not True or "QA_RESULT: PASS" not in log:
         failures.append("runner failed or produced no successful game result")
     count = result.get("steps_run")
     if (type(count) is not int or count <= 0 or count != result.get("steps_total")
@@ -163,6 +163,13 @@ def run(selected: list[tuple[dict, str]], shard: tuple[int, int], output: Path) 
         shutil.rmtree(output)
     output.mkdir(parents=True)
     results = []
+
+    # Rewritten after every case so a job timeout still leaves per-case verdicts.
+    def write_summary() -> bool:
+        passed = len(results) == len(selected) and all(row["passed"] for row in results)
+        summary = {"passed": passed, "shard": {"index": shard[0], "count": shard[1]}, "cases": results}
+        (output / "result.json").write_text(json.dumps(summary, indent=2) + "\n")
+        return passed
     for entry, profile in selected:
         name = entry["script"]
         destination = output / profile / name
@@ -191,12 +198,11 @@ def run(selected: list[tuple[dict, str]], shard: tuple[int, int], output: Path) 
         row = {"script": name, "profile": profile, "passed": not failures, "runner_exit": returncode, "failures": failures,
                "timing": case_timing(destination, elapsed)}
         results.append(row)
+        write_summary()
         print(f"BROWSER CASE {'PASS' if not failures else 'FAIL'}: {name} {profile} ({elapsed:.1f}s)", flush=True)
         for failure in failures:
             print(f"  {failure}", flush=True)
-    passed = all(row["passed"] for row in results)
-    summary = {"passed": passed, "shard": {"index": shard[0], "count": shard[1]}, "cases": results}
-    (output / "result.json").write_text(json.dumps(summary, indent=2) + "\n")
+    passed = write_summary()
     print(f"BROWSER SUITE {'PASS' if passed else 'FAIL'}: {len(results)} cases (shard {shard[0]}/{shard[1]}); artifacts {output}")
     return passed
 
@@ -261,12 +267,13 @@ def merge(shard_dirs: list[Path], output: Path, expected_pck: str | None) -> lis
         problems.append(f"cases not run exactly once: {sorted((ran - expected) + (expected - ran))}")
     if len(pcks) != 1 or not expected_pck or pcks != {expected_pck}:
         problems.append(f"cases used exports {sorted(map(str, pcks))}, expected one export {expected_pck!r}")
+    for index in sorted(summaries):
+        timings = [row.get("timing") for row in summaries[index][2]["cases"] if isinstance(row, dict)]
+        seconds = sum(t["seconds"] for t in timings if isinstance(t, dict) and type(t.get("seconds")) in (int, float))
+        print(f"BROWSER SHARD {index}/{count}: {len(timings)} cases, {seconds:.1f}s")
     merged = {"passed": not problems, "shards": count, "build_pck_sha256": expected_pck,
               "cases": [rows[key] for key in entries if key in rows], "problems": problems}
     (output / "result.json").write_text(json.dumps(merged, indent=2) + "\n")
-    for index in sorted(summaries):
-        seconds = sum(row.get("timing", {}).get("seconds", 0) for row in summaries[index][2]["cases"] if isinstance(row, dict))
-        print(f"BROWSER SHARD {index}/{count}: {len(summaries[index][2]['cases'])} cases, {seconds:.1f}s")
     return problems
 
 
@@ -288,7 +295,7 @@ def main() -> int:
             problems = merge(args.merge, output, args.expect_pck_sha256)
             for problem in problems:
                 print(f"  {problem}", flush=True)
-            print(f"BROWSER SUITE {'FAIL' if problems else 'PASS'}: {len(selected)} cases merged; artifacts {output}")
+            print(f"BROWSER SUITE {'FAIL' if problems else 'PASS'}: merge of {len(selected)} registered cases; artifacts {output}")
             return 1 if problems else 0
         shard = parse_shard(args.shard, len(selected)) if args.shard else (1, 1)
         selected = shard_cases(selected, case_costs(selected, json.loads(COSTS.read_text())), *shard)

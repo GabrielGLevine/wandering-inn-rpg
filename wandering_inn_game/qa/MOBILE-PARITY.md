@@ -134,7 +134,7 @@ emulated clicks and the `qa_touch` event says `real:false`.
 | `mobile_touch_smoke 9 --device=iphone` (no `--touch`) | FAIL by design: requests unserviced, steps red (no fallback) |
 | `qa/run_qa.sh mobile_touch_smoke headless --seed=9` (native) | PASS; 12 emulated taps (`qa_touch real:false`) |
 
-CI runs the iPhone + portrait-entry variant in the web-parity job and pins the
+CI runs the iPhone + portrait-entry variant in the Web parity gate's core leg and pins the
 real-tap count and the rotation probe.
 
 ## Flow matrix (acceptance 1–2)

@@ -427,8 +427,8 @@ jobs:
           name: web-build
           path: wandering_inn_game/build
 
-      - name: Verify the export belongs to this exact checkout
-        run: bash wandering_inn_game/qa/web/web_build_stamp.sh verify
+      - name: Verify the export belongs to this exact checkout and export job
+        run: test "$(bash wandering_inn_game/qa/web/web_build_stamp.sh verify)" = "${{ needs.web-export.outputs.pck_sha256 }}"
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -524,8 +524,8 @@ jobs:
           name: web-build
           path: wandering_inn_game/build
 
-      - name: Verify the export belongs to this exact checkout
-        run: bash wandering_inn_game/qa/web/web_build_stamp.sh verify
+      - name: Verify the export belongs to this exact checkout and export job
+        run: test "$(bash wandering_inn_game/qa/web/web_build_stamp.sh verify)" = "${{ needs.web-export.outputs.pck_sha256 }}"
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -605,8 +605,8 @@ jobs:
           name: web-build
           path: wandering_inn_game/build
 
-      - name: Verify the export belongs to this exact checkout
-        run: bash wandering_inn_game/qa/web/web_build_stamp.sh verify
+      - name: Verify the export belongs to this exact checkout and export job
+        run: test "$(bash wandering_inn_game/qa/web/web_build_stamp.sh verify)" = "${{ needs.web-export.outputs.pck_sha256 }}"
 
       - name: Set up Node
         uses: actions/setup-node@v4
