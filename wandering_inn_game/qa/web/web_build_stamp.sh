@@ -18,7 +18,7 @@ verify)
 		echo "::error::Web build was exported from $recorded, not this checkout $HEAD_SHA" >&2
 		exit 1
 	fi
-	sha256sum --quiet --strict -c web-build.sha256
+	sha256sum --quiet --strict -c web-build.sha256 >&2
 	if ! diff <(find web -type f | LC_ALL=C sort) <(awk '{print $2}' web-build.sha256) >&2; then
 		echo "::error::Web build files differ from the recorded export" >&2
 		exit 1
