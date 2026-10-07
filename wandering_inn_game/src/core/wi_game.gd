@@ -29,6 +29,11 @@ var blocked_cells: Dictionary = {}
 var skills: Dictionary = {}
 var classes: Dictionary = {}
 var combat: WICombat = null
+var vitals := WIVitals.new()
+var _active_meal: Dictionary = {}
+var _observed_resources: Dictionary = {}
+var _resolving_combat := false
+var _settling_sleep := false
 ## GH#345 difficulty seam: plain data, PURE (core never touches the
 ## WISettings autoload). Scene layer pushes the current value (settings
 ## row, creation prompt, world boot); start_combat copies it into the
@@ -48,9 +53,19 @@ var generalist_classes: Array[String] = []
 var used_skills: Array[String] = []
 var seen_statuses: Array[String] = []
 var inventory: Array[String] = []
+var consumable_counts: Dictionary = {}
+var pending_loot: Array = []
+var _pending_item_use: Dictionary = {}
+var _item_use_serial := 0
+var _item_use_epoch := 0
+var _item_turn_serial := 0
+var _settling_item := false
+var _dispatching_item_result := false
+var _item_event_depth := 0
+var _item_events: Array = []
 # Every non-empty equipped id must also remain in inventory.
 var equipped: Dictionary = {WIKeys.WEAPON: "", "armor": "", "accessory_1": "", "accessory_2": "", "accessory_3": ""}
-var resonance_capacity: int = 2
+var resonance_capacity: int = WIResonance.DEFAULT_INITIAL
 var container_state: Dictionary = {}
 var actions_since_sleep: int = 0
 var gold: int = 0
@@ -69,6 +84,7 @@ var delivery_last_seen_times_slept: int = 0
 var social_talked: Dictionary = {}
 var entity_first_use: Dictionary = {}
 var light_active := false
+var _settling_dialogue_choice := false
 var well_fed := false
 var pending_meal: Dictionary = {}
 var frozen_cells: Dictionary = {}
@@ -114,13 +130,13 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	# into the PC's honorific. Bound method, not a lambda (leak seam, #194a).
 	var sink := _addressed_sink
 	_run_seed = rng_seed
-	_economy = WIEconomy.new(sink, pickup, _set_gold)
+	_economy = WIEconomy.new(sink, _set_gold)
 	_social = WISocial.new(sink, accomplishment_count, record_accomplishment, find_entity)
 	# #348 slice 1: the property table rides scene_config (WISceneCatalog composes
 	# data/interactions.json into it) -- INJECTED, never read from disk here, so
 	# core stays pure and a hand-built scene_config can run with no table at all.
 	_field_skills = WIFieldSkills.new(sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _toggle_light, _blink_field, _ward_field, _animate_field, _door_openable, scene_config.get("interactions", {}), accomplishment_count)
-	_interactions = WIInteractions.new(sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, encounter_gate_met, start_combat, pickup, _has_required_items)
+	_interactions = WIInteractions.new(sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, encounter_gate_met, start_combat, pickup, _has_required_items, can_change_items, _begin_item_events, _end_item_events)
 	_sleep_beat = WISleepBeat.new(sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _apply_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
 	_banking = WICombatBanking.new(sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
 	rng.seed = rng_seed
@@ -132,6 +148,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	pc_race = _sanitize_pc_race(String(creation_config.get("pc_race", "human")))
 	pc_gender = _sanitize_pc_gender(String(creation_config.get("pc_gender", "m")))
 	_combat_config = combat_config
+	resonance_capacity = WIResonance.initial(_resonance_config())
 	_phase_config = phase_config
 	for it: Dictionary in (combat_config.get("items", {}) as Dictionary).get("items", []):
 		_items[String(it[WIKeys.ID])] = it
@@ -140,6 +157,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 		player_skills.append(String(sk))
 	for it: Variant in p.get("inventory", []):
 		inventory.append(String(it))
+	consumable_counts = WIItems.legacy_counts(inventory, _items)
 	var eq_raw: Dictionary = p.get("equipped", {})
 	equipped = {
 		WIKeys.WEAPON: String(eq_raw.get(WIKeys.WEAPON, "")),
@@ -207,6 +225,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 			"unsteady_toast": m.get("unsteady_toast", ""),
 			"arrival_toasts": m.get("arrival_toasts", []),
 		}
+	vitals.refill(player_resource_maxima())
 	_bind_map(String(scene_config["start_map"]))
 	_emit(WIEvents.SIM_INITIALIZED, {"seed": rng_seed})
 
@@ -243,6 +262,7 @@ func _bind_map(map_id: String) -> void:
 
 
 func bind_map_silent(map_id: String, cell: Vector2i) -> void:
+	invalidate_item_use()
 	_bind_map(map_id)
 	player_cell = cell
 
@@ -252,6 +272,8 @@ func has_map(map_id: String) -> bool:
 
 
 func transition(to_map: String, to_cell: Vector2i) -> void:
+	invalidate_item_use()
+	claim_pending_loot()
 	_bind_map(to_map)
 	player_cell = to_cell
 	_emit(WIEvents.MAP_CHANGED, {"map": to_map, "cell": [to_cell.x, to_cell.y]})
@@ -609,6 +631,9 @@ func _check_delivery_arrival() -> void:
 	var dist := maxi(absi(player_cell.x - target_cell.x), absi(player_cell.y - target_cell.y))
 	if dist > 1:
 		return
+	if not can_change_items([], [parcel_id]):
+		return
+	_begin_item_events()
 	record_accomplishment("delivered_%s" % accepted_delivery_id)
 	record_accomplishment("completed_delivery")
 	remove_item(parcel_id, accepted_delivery_id)
@@ -621,6 +646,7 @@ func _check_delivery_arrival() -> void:
 	# sim emitter toasts out of `move_player` -- the trigger-radius path opens
 	# combat, which speaks through the feed and never toasts.
 	_emit(WIEvents.TOAST, {"text": "Delivered: %s." % String(parcel.get("display_name", parcel_id)), "sticky": true})
+	_end_item_events()
 
 
 func interact() -> Dictionary:
@@ -725,13 +751,15 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	# holds an item the SAME prop hands out (the lamb pen's wool tuft bricked
 	# its [Beast's Mending] arm). Capped props bank and hand over nothing --
 	# the behavior interact() has always had for a failed pickup.
-	if effect.has("item") and inventory.has(String(effect["item"])) \
+	if effect.has("item") and inventory.has(String(effect["item"])) and not WIItems.stackable(item(String(effect["item"]))) \
 			and (effect.has("remove_item") or not bool(target.get("once_per_waking", false))):
 		var dup_toast := "Your pack already holds one of those. The bench keeps its patience, and you keep your reagents."
 		if not effect.has("remove_item"):
 			dup_toast = "Your pack already holds one of those. No sense making a second you cannot carry."
 		_emit(WIEvents.TOAST, {"text": dup_toast})
 		return {"blocked_duplicate": String(effect["item"])}
+	if not can_change_items(_as_item_list(effect.get("item", "")), _as_item_list(effect.get("remove_item", ""))):
+		return {"inventory_refused": true}
 	# GH#156 review M1: once_per_waking is OPT-IN here exactly as in interact()
 	# and SHARES interact's serve: key -- one careful visit per waking TOTAL
 	# (a soothe burns the mend and vice versa). Bench props never set the flag:
@@ -743,6 +771,7 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 			_emit(WIEvents.TOAST, {"text": String(target.get("once_per_waking_toast", "Nothing more to carry out right now. Come back another day."))})
 			return {"once_per_waking_spent": true}
 		entity_first_use[waking_key] = true
+	_begin_item_events()
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
 	# #398-P3: `accomplishment` is String|ARRAY, the contract `on_victory` /
@@ -774,11 +803,12 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 				_apply_gold_effect(int(effect["gold"]), target_id)
 		else:
 			_apply_gold_effect(int(effect["gold"]), target_id)
-	if effect.has("item"):
-		pickup(String(effect["item"]), target_id)
 	if effect.has("remove_item"):
 		for rem_item: String in _as_item_list(effect["remove_item"]):
 			remove_item(rem_item, target_id)
+	if effect.has("item"):
+		pickup(String(effect["item"]), target_id)
+	_end_item_events()
 	return effect
 
 
@@ -802,10 +832,7 @@ func _door_openable(target: Dictionary) -> bool:
 
 
 func _has_required_items(raw: Variant) -> bool:
-	for req_item: String in _as_item_list(raw):
-		if not inventory.has(req_item):
-			return false
-	return true
+	return can_change_items([], _as_item_list(raw), true)
 
 
 func _as_item_list(raw: Variant) -> Array:
@@ -1457,6 +1484,7 @@ func start_dialogue(conversation_id: String, source_entity_id: String) -> bool:
 	var graphs: Dictionary = _combat_config.get("dialogue", {})
 	if not graphs.has(conversation_id):
 		return false
+	invalidate_item_use()
 	_dialogue_conversation_id = conversation_id
 	_emit(WIEvents.DIALOGUE_STARTED, {"conversation": conversation_id, "entity": source_entity_id})
 	dialogue = WIDialogue.new(graphs[conversation_id], _build_dialogue_ctx(), _addressed_sink)
@@ -1469,6 +1497,7 @@ func _begin_code_dialogue(graph: Dictionary, conversation_label: String, source_
 	if dialogue != null or combat != null:
 		return false
 	pending_purchase = {}
+	invalidate_item_use()
 	_dialogue_conversation_id = conversation_label
 	_emit(WIEvents.DIALOGUE_STARTED, {"conversation": conversation_label, "entity": source_entity_id})
 	dialogue = WIDialogue.new(graph, _build_dialogue_ctx(), _addressed_sink)
@@ -1481,13 +1510,19 @@ func _begin_code_dialogue(graph: Dictionary, conversation_label: String, source_
 ## the offer parks on `pending_purchase` and purchase_confirm() runs the
 ## commit path once. Every non-purchase row commits immediately as before.
 func dialogue_choose(index: int) -> bool:
-	if dialogue == null:
+	if dialogue == null or _settling_dialogue_choice:
 		return false
 	if not pending_purchase.is_empty():
 		return false
 	var offer: Dictionary = dialogue.purchase_offer(index)
 	if offer.is_empty():
 		return _commit_dialogue_choice(index)
+	var service := _dialogue_recovery_plan(dialogue.choose(index, false))
+	if not service.is_empty():
+		if not bool(service.allowed):
+			_emit(WIEvents.TOAST, {"text": "You do not need another meal yet. Your bed upstairs is free when you need to rest."})
+			return false
+		offer["recovery"] = service.duplicate(true)
 	offer["conversation"] = _dialogue_conversation_id
 	offer["gold_before"] = gold
 	offer["gold_after"] = gold - int(offer["price"])
@@ -1501,7 +1536,7 @@ func dialogue_choose(index: int) -> bool:
 ## the row (same node/text/price/item) and the live purse -- the offer's own
 ## snapshot is never trusted.
 func purchase_confirm() -> bool:
-	if pending_purchase.is_empty():
+	if pending_purchase.is_empty() or _settling_dialogue_choice:
 		return false
 	var offer := pending_purchase
 	pending_purchase = {}
@@ -1513,11 +1548,12 @@ func purchase_confirm() -> bool:
 		and String(fresh["text"]) == String(offer["text"]) \
 		and int(fresh["price"]) == int(offer["price"]) \
 		and String(fresh["item"]) == String(offer["item"])
-	if not same_row or gold < int(offer["price"]):
+	var choice := dialogue.choose(int(offer["index"]), false)
+	var service := _dialogue_recovery_plan(choice)
+	if not same_row or gold < int(offer["price"]) or not _dialogue_items_available(choice) or service != offer.get("recovery", {}):
 		_emit(WIEvents.PURCHASE_CANCELLED, {"index": int(offer["index"]), "conversation": String(offer["conversation"]), "reason": "revalidation"})
 		return false
-	_emit(WIEvents.PURCHASE_CONFIRMED, offer.duplicate(true))
-	return _commit_dialogue_choice(int(offer["index"]))
+	return _commit_dialogue_choice(int(offer["index"]), offer)
 
 
 func purchase_cancel() -> bool:
@@ -1527,10 +1563,70 @@ func purchase_cancel() -> bool:
 	return true
 
 
-func _commit_dialogue_choice(index: int) -> bool:
-	var result: Dictionary = dialogue.choose(index)
+func _dialogue_recovery_plan(result: Dictionary) -> Dictionary:
+	for effect: Dictionary in result.get("effects", []):
+		if effect.has("recovery"):
+			return WIItems.preview_service(effect.recovery, player_resources(), preparation_snapshot(), _recovery_rules())
+	return {}
+
+
+func _dialogue_items_available(result: Dictionary) -> bool:
 	if result.is_empty():
 		return false
+	var service := _dialogue_recovery_plan(result)
+	if not service.is_empty() and (combat != null or not bool(service.allowed)):
+		return false
+	var gained: Array = []
+	var removed: Array = []
+	var purse := gold
+	var running_counts: Dictionary = {}
+	for id: String in inventory:
+		running_counts[id] = item_count(id)
+	var spends := false
+	for effect: Dictionary in result["effects"]:
+		if effect.has("item"):
+			var gained_id := String(effect["item"])
+			if WIItems.stackable(item(gained_id)):
+				if int(running_counts.get(gained_id, 0)) >= WIItems.MAX_COUNT:
+					return false
+				running_counts[gained_id] = int(running_counts.get(gained_id, 0)) + 1
+			gained.append(gained_id)
+		if effect.has("remove_item"):
+			var removed_id := String(effect["remove_item"])
+			running_counts[removed_id] = int(running_counts.get(removed_id, 0)) - 1
+			removed.append(removed_id)
+		if effect.has("sell_item"):
+			var sold := String(effect["sell_item"])
+			if not sellable_items().has(sold):
+				return false
+			removed.append(sold)
+		if effect.has("gold"):
+			spends = spends or int(effect["gold"]) < 0
+			purse += int(effect["gold"])
+			if purse < 0:
+				return false
+	if spends:
+		for id: String in gained:
+			if inventory.has(id) and not WIItems.stackable(item(id)) and not removed.has(id):
+				return false
+	return can_change_items(gained, removed, true)
+
+
+func _commit_dialogue_choice(index: int, purchase: Dictionary = {}) -> bool:
+	var result: Dictionary = dialogue.choose(index, false)
+	if not _dialogue_items_available(result):
+		return false
+	var service := _dialogue_recovery_plan(result)
+	var service_gold_before := gold
+	_settling_dialogue_choice = true
+	for effect: Dictionary in result["effects"]:
+		if effect.has("start_combat"):
+			_emit(WIEvents.PRE_COMBAT_CHOICE, {"encounter": String(effect["start_combat"])})
+			break
+	_begin_item_events()
+	if not purchase.is_empty():
+		_emit(WIEvents.PURCHASE_CONFIRMED, purchase.duplicate(true))
+	result = dialogue.choose(index)
 	_emit(WIEvents.DIALOGUE_CHOICE, {"index": index})
 	var walker := dialogue
 	if bool(result["ended"]):
@@ -1541,12 +1637,8 @@ func _commit_dialogue_choice(index: int) -> bool:
 	var pending_travel := ""
 	var pending_sell_vendor := ""
 	for effect: Dictionary in result["effects"]:
-		if effect.has("start_combat"):
-			# Snapshot precedes option effects; synchronous COMBAT_STARTED consumes it,
-			# or DIALOGUE_EFFECT_FAILED disarms the snapshot guard.
-			_emit(WIEvents.PRE_COMBAT_CHOICE, {"encounter": String(effect["start_combat"])})
-			break
-	for effect: Dictionary in result["effects"]:
+		var before_resources := player_resources()
+		var before_preparation := preparation_snapshot()
 		if effect.has("accomplishment"):
 			record_accomplishment(String(effect["accomplishment"]))
 		elif effect.has("quest"):
@@ -1563,7 +1655,10 @@ func _commit_dialogue_choice(index: int) -> bool:
 		elif effect.has("item"):
 			pickup(String(effect["item"]), _dialogue_conversation_id)
 		elif effect.has("gold"):
-			_apply_gold_effect(int(effect["gold"]), _dialogue_conversation_id)
+			if service.is_empty():
+				_apply_gold_effect(int(effect["gold"]), _dialogue_conversation_id)
+			else:
+				gold = _economy.apply_gold_effect(gold, int(effect["gold"]), _dialogue_conversation_id)
 		elif effect.has("bank_first_use"):
 			entity_first_use[String(effect["bank_first_use"])] = true
 		elif effect.has("remove_item"):
@@ -1579,6 +1674,10 @@ func _commit_dialogue_choice(index: int) -> bool:
 			remove_item(removed_id, _dialogue_conversation_id)
 		elif effect.has("well_fed"):
 			well_fed = bool(effect["well_fed"])
+		elif effect.has("recovery"):
+			well_fed = bool(service.preparation.get("well_fed", well_fed))
+			vitals.hp = int(service.after.hp)
+			vitals.mp = int(service.after.mp)
 		elif effect.has("start_combat"):
 			pending_combat = String(effect["start_combat"])
 		elif effect.has("travel_to"):
@@ -1611,6 +1710,17 @@ func _commit_dialogue_choice(index: int) -> bool:
 			# toast: an authored line at the moment a dialogue pick
 			# resolves something, so talk resolutions stop being silent.
 			_emit(WIEvents.TOAST, {"text": String(effect["toast"])})
+		if service.is_empty():
+			_resources_changed(before_resources, "dialogue", _dialogue_conversation_id, before_preparation != preparation_snapshot())
+	if not service.is_empty():
+		service = {"service": "inn_meal", "source": _dialogue_conversation_id, "reason": "dialogue",
+			"before": service.before.duplicate(true), "after": player_resources(),
+			"preparation_before": service.preparation_before.duplicate(true), "preparation": preparation_snapshot(),
+			"restore_hp": service.restore_hp, "restore_mp": service.restore_mp,
+			"gold_before": service_gold_before, "gold_after": gold}
+		_observed_resources = player_resources().duplicate(true)
+		_emit(WIEvents.RESOURCES_CHANGED, service.duplicate(true))
+	_end_item_events()
 	if not bool(result["ended"]):
 		walker.set_ctx(_build_dialogue_ctx())
 		walker.advance(String(result["next"]))
@@ -1632,6 +1742,9 @@ func _commit_dialogue_choice(index: int) -> bool:
 		_open_sell_dialogue(pending_sell_vendor)
 	if pending_travel != "":
 		_travel_to_portal(pending_travel)
+	if not service.is_empty():
+		_emit(WIEvents.SERVICE_RECOVERY_SETTLED, service.duplicate(true))
+	_settling_dialogue_choice = false
 	return true
 
 
@@ -1817,13 +1930,18 @@ func accept_delivery(id: String) -> void:
 		return
 	if not bool(delivery.get("standing", false)) and accomplishment_count("completed_delivery_%s" % id) >= 1:
 		return
+	var parcel_id := String((delivery.get("parcel", {}) as Dictionary).get("item_id", ""))
+	if parcel_id == "" or inventory.has(parcel_id) or not can_change_items([parcel_id]):
+		return
+	_begin_item_events()
 	accepted_delivery_id = id
 	var baseline: Dictionary = {}
 	for key: String in (delivery.get("condition", {}) as Dictionary):
 		baseline[key] = accomplishment_count(key)
 	accepted_delivery_baseline = baseline
 	record_accomplishment("accepted_delivery_%s" % id)
-	pickup(String((delivery.get("parcel", {}) as Dictionary).get("item_id", "")), id)
+	pickup(parcel_id, id)
+	_end_item_events()
 
 
 func _delivery_condition_met() -> bool:
@@ -1840,11 +1958,13 @@ func turn_in_delivery() -> bool:
 		return false
 	var delivery := _delivery_by_id(accepted_delivery_id)
 	var id := accepted_delivery_id
+	_begin_item_events()
 	earn_gold(int(delivery.get("gold", 0)), "delivery_%s" % id)
 	record_accomplishment("completed_delivery_%s" % id)
 	record_accomplishment("deliberate_commerce", 1)
 	accepted_delivery_id = ""
 	accepted_delivery_baseline = {}
+	_end_item_events()
 	return true
 
 
@@ -2401,7 +2521,6 @@ func start_combat(entity_id: String) -> bool:
 	var by_id := {}
 	for c: Dictionary in _combat_config["combatants"]["combatants"]:
 		by_id[String(c[WIKeys.ID])] = c
-	var cfgs: Array = [_build_player_combatant(by_id["pc"])]
 	var allies: Array = (entity.get("allies", []) as Array).duplicate()
 	var ally_req: Dictionary = entity.get("ally_requires", {})
 	var ally_gate_met := true
@@ -2420,6 +2539,9 @@ func start_combat(entity_id: String) -> bool:
 			arena = a
 	if arena.is_empty():
 		return false
+	var before_resources := player_resources()
+	_emit(WIEvents.COMBAT_PREPARING, {"encounter": entity_id})
+	var cfgs: Array = [_build_player_combatant(by_id["pc"])]
 	# ORDER/CAPACITY: inject after ally_requires, before ally_hp_penalty.
 	# PC + allies + companion must fit arena player_spawns.
 	if companion != "" and by_id.has(companion) and not allies.has(companion):
@@ -2493,15 +2615,26 @@ func start_combat(entity_id: String) -> bool:
 	combat.summon_catalog = by_id
 	if ambush and combat.grant_ambush("pc"):
 		_emit(WIEvents.TOAST, {"text": "It is still turning toward the sound when you reach it. The first move is yours."})
+	_resources_changed(before_resources, "combat_entry", entity_id, true)
 	combat.begin()
 	return true
 
 
 func _build_player_combatant(template: Dictionary) -> Dictionary:
+	vitals.reconcile(player_resource_maxima())
+	_active_meal = pending_meal.duplicate(true)
+	var pc := _player_combatant_config(template, _active_meal)
+	pc["initial_hp"] = vitals.hp
+	pc["initial_mp"] = vitals.mp
+	pending_meal = {}
+	return pc
+
+
+func _player_combatant_config(template: Dictionary, meal_bonus: Dictionary = {}) -> Dictionary:
 	var pc: Dictionary = template.duplicate(true)
 	pc[WIKeys.DISPLAY_NAME] = pc_name
-	pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], classes, _combat_config["classes"])
-	var kit: Array = WIProgression.granted_skills(classes, _combat_config["classes"], generalist_classes)
+	pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], classes, _combat_config.get("classes", {}))
+	var kit: Array = WIProgression.granted_skills(classes, _combat_config.get("classes", {}), generalist_classes)
 	var weapon := item(String(equipped.get(WIKeys.WEAPON, "")))
 	pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills)
 	pc[WIKeys.WEAPON_RANGE] = int(weapon.get(WIKeys.RANGE, 1))
@@ -2511,12 +2644,50 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 		accessories.append(item(String(equipped.get(slot_name, ""))))
 	pc[WIKeys.SKILLS] = WICombatBuild.fold_abilities(pc[WIKeys.SKILLS] as Array, accessories)
 	var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
-	var meal_bonus: Dictionary = pending_meal
-	pending_meal = {}
 	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD] + int(meal_bonus.get(WIKeys.DAMAGE_MOD, 0))
 	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD] + (2 if well_fed else 0) + int(meal_bonus.get(WIKeys.HP_MOD, 0)) + _room_tier_bonus()
 	pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION] + int(meal_bonus.get(WIKeys.DAMAGE_REDUCTION, 0))
 	return pc
+
+
+func player_resource_maxima() -> Dictionary:
+	for template: Dictionary in (_combat_config.get("combatants", {}) as Dictionary).get("combatants", []):
+		if String(template.get(WIKeys.ID, "")) == "pc":
+			return WICombatBuild.resource_maxima(_player_combatant_config(template), skills)
+	return {WIKeys.MAX_HP: 1, WIKeys.MAX_MP: 0}
+
+
+func player_resources() -> Dictionary:
+	var state := vitals.serialized()
+	if combat != null and combat.combatants.has("pc"):
+		var pc: Dictionary = combat.combatants["pc"]
+		for key: String in [WIKeys.HP, WIKeys.MP, WIKeys.MAX_HP, WIKeys.MAX_MP]:
+			state[key] = pc[key]
+	else:
+		var maxima := player_resource_maxima()
+		vitals.reconcile(maxima)
+		state = vitals.serialized()
+		state.merge(maxima)
+	return state
+
+
+func preparation_snapshot() -> Dictionary:
+	return {"armed": pending_meal.duplicate(true), "active": _active_meal.duplicate(true),
+		"well_fed": well_fed, "room_hp": _room_tier_bonus()}
+
+
+func save_settlement_pending() -> bool:
+	return combat != null or _resolving_combat or _settling_sleep or _settling_item or _item_event_depth > 0
+
+
+func _resources_changed(before: Dictionary, reason: String, source: String = "", force: bool = false) -> void:
+	var after := player_resources()
+	_observed_resources = after.duplicate(true)
+	if not force and before == after:
+		return
+	_emit(WIEvents.RESOURCES_CHANGED, {"before": before.duplicate(true),
+		"after": after.duplicate(true), "reason": reason, "source": source,
+		"preparation": preparation_snapshot()})
 
 
 func _room_tier_bonus() -> int:
@@ -2543,28 +2714,226 @@ func _holds_weapon_family(family: String) -> bool:
 	return false
 
 
+func item_count(item_id: String) -> int:
+	if not inventory.has(item_id):
+		return 0
+	return int(consumable_counts.get(item_id, 0)) if WIItems.stackable(item(item_id)) else 1
+
+
+func can_change_items(gained: Array, removed: Array = [], allow_equipped := false) -> bool:
+	var counts: Dictionary = {}
+	for id: String in inventory:
+		counts[id] = item_count(id)
+	for raw: Variant in removed:
+		var id := String(raw)
+		if int(counts.get(id, 0)) <= 0 or (not allow_equipped and equipped.values().has(id)):
+			return false
+		counts[id] -= 1
+	for raw: Variant in gained:
+		var id := String(raw)
+		if id == "":
+			continue
+		if WIItems.stackable(item(id)):
+			if int(counts.get(id, 0)) >= WIItems.MAX_COUNT:
+				return false
+			counts[id] = int(counts.get(id, 0)) + 1
+		else:
+			counts[id] = 1
+	return true
+
+
+func _begin_item_events() -> void:
+	_item_event_depth += 1
+
+
+func _end_item_events() -> void:
+	_item_event_depth -= 1
+	if _item_event_depth != 0:
+		return
+	var events := _item_events
+	_item_events = []
+	for event: Dictionary in events:
+		_addressed_sink(String(event["type"]), event["payload"])
+
+
+func _consume_item_unit(item_id: String) -> void:
+	if WIItems.stackable(item(item_id)):
+		var remaining := item_count(item_id) - 1
+		if remaining > 0:
+			consumable_counts[item_id] = remaining
+			return
+		consumable_counts.erase(item_id)
+	inventory.erase(item_id)
+
+
 func pickup(item_id: String, source_id: String) -> bool:
-	if inventory.has(item_id):
+	var before := item_count(item_id)
+	if (before > 0 and not WIItems.stackable(item(item_id))) or not can_change_items([item_id]):
 		return false
-	inventory.append(item_id)
-	_emit(WIEvents.ITEM_GAINED, {"item": item_id, "source": source_id})
+	if not inventory.has(item_id):
+		inventory.append(item_id)
+	if WIItems.stackable(item(item_id)):
+		consumable_counts[item_id] = before + 1
+	_emit(WIEvents.ITEM_GAINED, {"item": item_id, "source": source_id, "count_before": before, "count_after": item_count(item_id)})
 	var display := String(item(item_id).get("name", item_id))
 	_emit(WIEvents.TOAST, {"text": "Got: %s" % display})
 	return true
 
 
 func remove_item(item_id: String, source_id: String) -> bool:
-	if not inventory.has(item_id):
+	if not can_change_items([], [item_id]):
 		return false
-	for slot_name: String in equipped:
-		if String(equipped[slot_name]) == item_id:
-			return false
-	inventory.erase(item_id)
-	_emit(WIEvents.ITEM_LOST, {"item": item_id, "source": source_id})
+	var before := item_count(item_id)
+	_consume_item_unit(item_id)
+	_emit(WIEvents.ITEM_LOST, {"item": item_id, "source": source_id, "count_before": before, "count_after": item_count(item_id)})
 	return true
 
 
+func _item_use_context(item_id: String, context: String) -> Dictionary:
+	var pc: Dictionary = combat.combatants.get("pc", {}) if combat != null else {}
+	return {"context": context, "context_valid": (context == "world" and combat == null and dialogue == null) or (context == "combat" and combat != null),
+		"resources": player_resources().duplicate(true), "preparation": preparation_snapshot(),
+		"count": item_count(item_id), "exposure": vitals.mp_potion_doses,
+		"ap": int(pc.get(WIKeys.AP, 0)), "alive": bool(pc.get(WIKeys.ALIVE, true)),
+		"finished": combat.finished if combat != null else false,
+		"player_turn": combat.get_active() == "pc" if combat != null else false,
+		"map": current_map, "cell": player_cell, "turn": _item_turn_serial, "epoch": _item_use_epoch}
+
+
+func _recovery_rules() -> Dictionary:
+	return (_combat_config.get("progression", {}) as Dictionary).get("recovery", {})
+
+
+func invalidate_item_use() -> void:
+	_item_use_epoch += 1
+	_pending_item_use = {}
+
+
+func preview_item_use(item_id: String, context: String) -> Dictionary:
+	var plan := WIItems.preview_use(item(item_id), _item_use_context(item_id, context), _recovery_rules())
+	plan.operation_id = 0
+	plan.committed = false
+	return plan
+
+
+func prepare_item_use(item_id: String, context: String) -> Dictionary:
+	if _settling_item or _dispatching_item_result:
+		return {"allowed": false, "reason": "busy", "operation_id": 0}
+	_pending_item_use = {}
+	var snapshot := _item_use_context(item_id, context)
+	var plan := WIItems.preview_use(item(item_id), snapshot, _recovery_rules())
+	_item_use_serial += 1
+	plan.operation_id = _item_use_serial
+	plan.committed = false
+	if bool(plan.allowed):
+		_pending_item_use = {"plan": plan.duplicate(true), "snapshot": snapshot.duplicate(true)}
+	return plan.duplicate(true)
+
+
+func _item_use_noop(offer: Dictionary, reason: String) -> Dictionary:
+	var result := offer.duplicate(true)
+	var current := _item_use_context(String(offer.item), String(offer.context))
+	result.allowed = false
+	result.committed = false
+	result.reason = reason
+	result.confirmation_required = false
+	result.before = current.resources.duplicate(true)
+	result.after = current.resources.duplicate(true)
+	result.preparation_before = current.preparation.duplicate(true)
+	result.preparation = current.preparation.duplicate(true)
+	result.count_before = current.count
+	result.count_after = current.count
+	result.ap_before = current.ap
+	result.ap_after = current.ap
+	result.exposure_before = current.exposure
+	result.exposure_after = current.exposure
+	for key: String in ["restore_hp", "restore_mp", "poison_hp", "hp_lost", "ap_cost"]:
+		result[key] = 0
+	return result
+
+
+func _emit_item_result(type: String, result: Dictionary) -> void:
+	_dispatching_item_result = true
+	_emit(type, result.duplicate(true))
+	_dispatching_item_result = false
+
+
+func cancel_item_use(operation_id: int) -> bool:
+	if _pending_item_use.is_empty() or int(_pending_item_use.plan.operation_id) != operation_id:
+		return false
+	var result: Dictionary = _pending_item_use.plan.duplicate(true)
+	_pending_item_use = {}
+	result = _item_use_noop(result, "cancelled")
+	_emit_item_result(WIEvents.ITEM_USE_CANCELLED, result)
+	return true
+
+
+func commit_item_use(operation_id: int, confirm_risk := false) -> Dictionary:
+	if _settling_item or _dispatching_item_result or _pending_item_use.is_empty() or int(_pending_item_use.plan.operation_id) != operation_id:
+		return {"operation_id": operation_id, "committed": false, "allowed": false, "reason": "invalid_operation"}
+	var offer: Dictionary = _pending_item_use.plan.duplicate(true)
+	var context := String(offer.context)
+	var item_id := String(offer.item)
+	var snapshot := _item_use_context(item_id, context)
+	var fresh := WIItems.preview_use(item(item_id), snapshot, _recovery_rules())
+	var comparable := offer.duplicate(true)
+	comparable.erase("operation_id")
+	comparable.erase("committed")
+	if snapshot != _pending_item_use.snapshot or fresh != comparable or not bool(fresh.allowed):
+		_pending_item_use = {}
+		offer = _item_use_noop(offer, "stale_operation")
+		_emit_item_result(WIEvents.ITEM_USE_REFUSED, offer)
+		return offer
+	if bool(offer.confirmation_required) and not confirm_risk:
+		offer.reason = "confirmation_required"
+		_emit_item_result(WIEvents.ITEM_USE_OFFERED, offer)
+		return offer
+	_pending_item_use = {}
+	_settling_item = true
+	_begin_item_events()
+	var battle := combat
+	_consume_item_unit(item_id)
+	vitals.mp_potion_doses = int(offer.exposure_after)
+	pending_meal = (offer.preparation.armed as Dictionary).duplicate(true)
+	if battle == null:
+		vitals.hp = int(offer.after.hp)
+		vitals.mp = int(offer.after.mp)
+	else:
+		var pc: Dictionary = battle.combatants["pc"]
+		pc[WIKeys.HP] = int(offer.before.hp) + int(offer.restore_hp)
+		pc[WIKeys.MP] = int(offer.after.mp)
+		pc[WIKeys.AP] = int(offer.ap_after)
+	offer.committed = true
+	offer.reason = "used"
+	# Queue frozen results before terminal events; all callbacks run after the tuple settles.
+	_emit(WIEvents.ITEM_USED, {"item": item_id, "healed": offer.restore_hp, "source": item_id,
+		"operation_id": operation_id, "count_before": offer.count_before, "count_after": offer.count_after})
+	_emit(WIEvents.INVENTORY_USE_RESOLVED, offer.duplicate(true))
+	if int(offer.exposure_after) != int(offer.exposure_before):
+		_emit(WIEvents.POTION_EXPOSURE_CHANGED, offer.duplicate(true))
+	if int(offer.poison_hp) > 0:
+		_emit(WIEvents.MANA_POISONED, offer.duplicate(true))
+	var resource_payload := offer.duplicate(true)
+	resource_payload.reason = "item_use"
+	_emit(WIEvents.RESOURCES_CHANGED, resource_payload)
+	if battle != null:
+		battle._emit(WIEvents.AP_CHANGED, {"id": "pc", "ap": offer.ap_after})
+		if int(offer.restore_mp) > 0:
+			battle._emit(WIEvents.MP_CHANGED, {"id": "pc", "mp": offer.after.mp})
+		battle._emit(WIEvents.SKILL_RESOLVED, {"actor": "pc", "skill": item_id, "target": "pc", "healed": offer.restore_hp, "restored_mp": offer.restore_mp})
+		if int(offer.poison_hp) > 0:
+			battle.apply_unmitigated_loss("pc", int(offer.poison_hp))
+	_observed_resources = (offer.after as Dictionary).duplicate(true)
+	_end_item_events()
+	_settling_item = false
+	_emit_item_result(WIEvents.ITEM_USE_SETTLED, offer)
+	return offer.duplicate(true)
+
+
 func use_item(item_id: String) -> bool:
+	if WIItems.stackable(item(item_id)):
+		var offer := prepare_item_use(item_id, "world")
+		return bool(commit_item_use(int(offer.operation_id)).get("committed", false))
 	if combat != null:
 		return false
 	if not inventory.has(item_id):
@@ -2575,9 +2944,11 @@ func use_item(item_id: String) -> bool:
 	var result := WIItems.resolve_use(rec, null)
 	if not bool(result.get("ok", false)):
 		return false
+	var before_resources := player_resources()
 	_merge_pending_meal(result.get("pending_meal", {}) as Dictionary)
-	inventory.erase(item_id)
+	_consume_item_unit(item_id)
 	_emit(WIEvents.ITEM_USED, {"item": item_id})
+	_resources_changed(before_resources, "preparation", item_id, true)
 	# GH#334 note 28 item 3: the toast used to be "Used: Fine Meal." and nothing
 	# else -- the payload the player just spent an item and a walk to the cook
 	# for was never restated, and its one-fight scope was stated nowhere in the
@@ -2637,6 +3008,9 @@ func _merge_pending_meal(gained: Dictionary) -> void:
 
 
 func combat_use_item(item_id: String) -> bool:
+	if WIItems.stackable(item(item_id)):
+		var offer := prepare_item_use(item_id, "combat")
+		return bool(commit_item_use(int(offer.operation_id)).get("committed", false))
 	if combat == null:
 		return false
 	if not inventory.has(item_id):
@@ -2647,7 +3021,7 @@ func combat_use_item(item_id: String) -> bool:
 	var result := WIItems.resolve_use(rec, combat)
 	if not bool(result.get("ok", false)):
 		return false
-	inventory.erase(item_id)
+	_consume_item_unit(item_id)
 	var healed := int(result.get("healed", 0))
 	_emit(WIEvents.ITEM_USED, {"item": item_id, "healed": healed})
 	_emit(WIEvents.TOAST, {"text": "Used: %s. Healed %d HP." % [String(rec.get("name", item_id)), healed]})
@@ -2692,10 +3066,13 @@ func sell_item(item_id: String) -> bool:
 	var worth := int(rec.get(WIKeys.PRICE, 0))
 	if worth <= 0:
 		return false
-	if not remove_item(item_id, _dialogue_conversation_id):
+	if not can_change_items([], [item_id]):
 		return false
+	_begin_item_events()
+	remove_item(item_id, _dialogue_conversation_id)
 	earn_gold(sell_price(worth), _dialogue_conversation_id)
 	record_accomplishment("deliberate_commerce", 1)
+	_end_item_events()
 	return true
 
 
@@ -2704,6 +3081,14 @@ func _equipped_resonance_total() -> int:
 	for slot_name: String in equipped:
 		total += int(item(String(equipped[slot_name])).get(WIKeys.RESONANCE, 0))
 	return total
+
+
+func _resonance_config() -> Dictionary:
+	return (_combat_config.get("progression", {}) as Dictionary).get("resonance", {})
+
+
+func resonance_limit() -> int:
+	return resonance_capacity
 
 
 func resonance_used() -> int:
@@ -2716,7 +3101,7 @@ func resonance_used() -> int:
 ## ratified 2026-07-07 copy and stays verbatim; the naming sentence and the
 ## remedy are appended after it. The other live moment is the growth beat's lore
 ## toast in sleep_beat.gd.
-const _CAPACITY_REFUSAL_TOAST := "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first."
+const _CAPACITY_REFUSAL_TOAST := "It buzzes once against the others, like a wasp against glass, and will not settle. This would take more Resonance than you can hold. Something has to come off first."
 const _ACCESSORY_SLOTS_FULL_TOAST := "There's nowhere left on you for it to rest. It waits in your palm, patient as stone."
 
 
@@ -2746,11 +3131,14 @@ func equip(item_id: String) -> bool:
 			return false
 	var displaced_resonance := int(item(String(equipped.get(target_slot, ""))).get(WIKeys.RESONANCE, 0))
 	var would_be_total := _equipped_resonance_total() - displaced_resonance + int(rec.get(WIKeys.RESONANCE, 0))
-	if would_be_total > resonance_capacity:
+	if would_be_total > resonance_limit():
 		_emit(WIEvents.TOAST, {"text": _CAPACITY_REFUSAL_TOAST})
 		return false
+	var before_resources := player_resources()
 	equipped[target_slot] = item_id
+	vitals.reconcile(player_resource_maxima())
 	_emit(WIEvents.ITEM_EQUIPPED, {"item": item_id, "slot": target_slot})
+	_resources_changed(before_resources, "equipment", item_id, true)
 	return true
 
 
@@ -2761,21 +3149,90 @@ func unequip(slot: String) -> bool:
 		return false
 	if String(equipped.get(slot, "")) == "":
 		return false
+	var before_resources := player_resources()
 	equipped[slot] = ""
+	vitals.reconcile(player_resource_maxima())
 	_emit(WIEvents.ITEM_UNEQUIPPED, {"slot": slot})
+	_resources_changed(before_resources, "equipment", slot, true)
 	return true
 
 
 func resolve_combat() -> void:
-	if combat == null or not combat.finished:
+	if combat == null or not combat.finished or _resolving_combat:
 		return
-	_banking.resolve(combat, _pending_encounter, dormant_encounters, classes, fractional_bank)
+	_resolving_combat = true
+	var before_resources := player_resources()
+	var encounter := _pending_encounter
+	var victory := bool(combat.outcome.get("victory", false))
+	if victory:
+		vitals.hp = int(before_resources[WIKeys.HP])
+		vitals.mp = int(before_resources[WIKeys.MP])
+		vitals.reconcile(player_resource_maxima())
+	# Banking listeners still read the finished combat. Autosaves wait for settlement.
+	if victory:
+		_begin_item_events()
+	_banking.resolve(combat, encounter, dormant_encounters, classes, fractional_bank)
+	if victory:
+		_end_item_events()
 	combat = null
 	_pending_encounter = ""
+	_active_meal = {}
+	_resolving_combat = false
+	if victory:
+		_resources_changed(before_resources, "combat_victory", encounter, true)
+		_emit(WIEvents.COMBAT_SETTLED, {"encounter": encounter, "vitals": player_resources()})
 
 
 func _roll_loot(entity: Dictionary) -> void:
-	gold = _economy.roll_loot(gold, _run_seed, entity)
+	var rolled := _economy.roll_loot(_run_seed, entity)
+	if rolled.is_empty():
+		return
+	var source := String(entity.get(WIKeys.ID, ""))
+	var delivered: Array[String] = []
+	var deferred: Array[String] = []
+	var planned: Dictionary = {}
+	for raw: Variant in rolled.get("items", []):
+		var id := String(raw)
+		var count := int(planned.get(id, item_count(id)))
+		if WIItems.stackable(item(id)) and count >= WIItems.MAX_COUNT:
+			deferred.append(id)
+		else:
+			if WIItems.stackable(item(id)) or count == 0:
+				delivered.append(id)
+				planned[id] = count + 1
+	_begin_item_events()
+	for id: String in deferred:
+		pending_loot.append({"item": id, "source": source, "count": 1})
+	var payload := rolled.duplicate(true)
+	payload.source = source
+	payload.delivered = delivered.duplicate()
+	payload.pending = deferred.duplicate()
+	_emit(WIEvents.LOOT_DROPPED, payload)
+	for id: String in delivered:
+		pickup(id, source)
+	if int(rolled.get("gold", 0)) > 0:
+		earn_gold(int(rolled.gold), source)
+	if not deferred.is_empty():
+		_emit(WIEvents.LOOT_PENDING, {"source": source, "items": deferred.duplicate(), "pending": pending_loot.duplicate(true)})
+	_end_item_events()
+
+
+func claim_pending_loot() -> int:
+	if combat != null or pending_loot.is_empty():
+		return 0
+	_begin_item_events()
+	var retained: Array = []
+	var claimed := 0
+	for entry: Dictionary in pending_loot:
+		if pickup(String(entry.item), String(entry.source)):
+			claimed += 1
+		else:
+			retained.append(entry)
+	pending_loot = retained
+	if claimed > 0:
+		_emit(WIEvents.LOOT_CLAIMED, {"count": claimed, "pending": pending_loot.duplicate(true)})
+	_end_item_events()
+	return claimed
 
 
 func remove_entity(id: String) -> void:
@@ -2805,6 +3262,11 @@ const _EVOLUTION_WAITING_TOASTS := {
 
 
 func sleep() -> void:
+	if combat != null or _settling_sleep:
+		return
+	invalidate_item_use()
+	_settling_sleep = true
+	var before_resources := player_resources()
 	var known_before_sleep: Array = known_skills().duplicate()
 	for encounter_id: String in warded_encounters.keys():
 		var ward: Dictionary = warded_encounters[encounter_id]
@@ -2851,6 +3313,10 @@ func sleep() -> void:
 	_emit(WIEvents.PHASE_CHANGED, {"phase": phase(), "slept": true})
 	_sleep_beat.run(classes, accomplishments, _combat_config)
 	_auto_slot_new_field_skills(known_before_sleep)
+	vitals.refill(player_resource_maxima())
+	_settling_sleep = false
+	_resources_changed(before_resources, "sleep", "bed", true)
+	_emit(WIEvents.SLEEP_SETTLED, {"vitals": player_resources(), "times_slept": times_slept})
 
 
 func _bank_reached_two_classes_if_earned() -> void:
@@ -2868,8 +3334,10 @@ func _holds_consolidated_class() -> bool:
 	return false
 
 
-func _grow_resonance() -> void:
-	resonance_capacity += 1
+func _grow_resonance() -> int:
+	var amount := mini(WIResonance.growth(_resonance_config()), WIResonance.MAX_CAPACITY - resonance_capacity)
+	resonance_capacity += amount
+	return amount
 
 
 func _resolve_evolutions() -> bool:
@@ -2977,6 +3445,8 @@ func skills_config_raw() -> Dictionary:
 
 func snapshot() -> Dictionary:
 	return {
+		"vitals": player_resources(),
+		"preparation": preparation_snapshot(),
 		"current_map": current_map,
 		"player_cell": [player_cell.x, player_cell.y],
 		"player_facing": [player_facing.x, player_facing.y],
@@ -2995,6 +3465,8 @@ func snapshot() -> Dictionary:
 		"seen_statuses": seen_statuses.duplicate(),
 		"lore_notes": lore_notes.duplicate(),
 		"inventory": inventory.duplicate(),
+		"consumable_counts": consumable_counts.duplicate(),
+		"pending_loot": pending_loot.duplicate(true),
 		"equipped": equipped.duplicate(true),
 		"container_state": container_state.duplicate(true),
 		"actions_since_sleep": actions_since_sleep,
@@ -3076,6 +3548,9 @@ func _tick_action() -> void:
 
 
 func _combat_event_relay(type: String, payload: Dictionary) -> void:
+	if type == WIEvents.TURN_STARTED:
+		_item_turn_serial += 1
+		invalidate_item_use()
 	if type == WIEvents.TURN_STARTED and String(payload.get(WIKeys.ID, "")) == "pc":
 		_tick_action()
 	if type == WIEvents.STATUS_APPLIED:
@@ -3088,6 +3563,8 @@ func _combat_event_relay(type: String, payload: Dictionary) -> void:
 		if reaction_skill != "" and not used_skills.has(reaction_skill):
 			used_skills.append(reaction_skill)
 	_emit(type, payload)
+	if combat != null and not _settling_item and not _observed_resources.is_empty():
+		_resources_changed(_observed_resources, "combat_action", type)
 
 
 func _enrich_status_applied(payload: Dictionary) -> Dictionary:
@@ -3110,6 +3587,9 @@ func _emit(type: String, payload: Dictionary) -> void:
 ## why the lore capture lives here: it fires whether or not anything is
 ## listening, so `lore_notes` can never depend on a toast winning a render race.
 func _addressed_sink(type: String, payload: Dictionary) -> void:
+	if _item_event_depth > 0:
+		_item_events.append({"type": type, "payload": payload.duplicate(true)})
+		return
 	var resolved := WIAddress.resolve_payload(payload, pc_gender)
 	if type == WIEvents.TOAST and bool(resolved.get("lore", false)):
 		_record_lore_note(String(resolved.get("text", "")))

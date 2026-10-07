@@ -167,6 +167,7 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		UIChrome.full_rect(selection)
 		root.add_child(selection)
 
+	var text_label: Label
 	var icon_id := String(slot.get("icon", ""))
 	if icon_id != "" and WISpriteRegistry.has_sprite(icon_id):
 		var tex_rect := TextureRect.new()
@@ -182,7 +183,7 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 			tex_rect.position.y = _slot_size.y * 0.07
 		root.add_child(tex_rect)
 	else:
-		var text_label := UIChrome.make_label("", "Small")
+		text_label = UIChrome.make_label("", "Small")
 		text_label.text = String(slot.get("fallback_label", slot.get("label", "")))
 		text_label.add_theme_color_override("font_color", SLOT_INK)
 		text_label.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -245,10 +246,19 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		cost.add_theme_color_override("font_color", AP_PIP_COLOR)
 		cost.add_theme_constant_override("line_spacing", 0)
 		cost.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		cost.position = Vector2(2.0, _slot_size.y * 0.4)
-		cost.size = Vector2(_slot_size.x - 4.0, _slot_size.y * 0.58)
 		cost.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		root.add_child(cost)
+		var cost_height := get_theme_font("font", "Label").get_height(_touch_font_size) * (2 if mp_cost > 0 else 1)
+		cost.position = Vector2(2.0, _slot_size.y - cost_height - 2.0)
+		cost.size = Vector2(_slot_size.x - 4.0, cost_height)
+		if text_label != null:
+			text_label.anchor_bottom = 0.0
+			text_label.offset_left = 2.0
+			text_label.offset_top = 2.0
+			text_label.offset_right = -2.0
+			text_label.offset_bottom = cost.position.y - 2.0
+			var line_height := get_theme_font("font", "Small").get_height(_touch_font_size)
+			text_label.max_lines_visible = maxi(1, floori((cost.position.y - 4.0) / line_height))
 
 	# THE COOLDOWN BADGE (GH#337, fixed under GH#386's badge trio). It used to be
 	# a bare numeral at the chip's top-RIGHT, twin in size and weight to the key

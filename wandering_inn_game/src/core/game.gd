@@ -79,13 +79,16 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_write_slot("auto_pre_combat")
 	if type == WIEvents.DIALOGUE_EFFECT_FAILED and String(payload.get("effect", "")) == "start_combat":
 		_choice_snapshot_armed = false
-	if type == WIEvents.COMBAT_STARTED:
+	if type == WIEvents.COMBAT_PREPARING:
 		if _choice_snapshot_armed:
 			_choice_snapshot_armed = false
 		else:
 			_write_slot("auto_pre_combat")
+	if type == WIEvents.ITEM_USE_SETTLED and String(payload.get("context", "")) == "world":
+		last_autosave_trigger = type
+		save_auto()
 	if type in [
-		WIEvents.COMBAT_RESOLVED, WIEvents.CLASS_LEVEL_UP, WIEvents.QUEST_BEAT_COMPLETED,
+		WIEvents.SERVICE_RECOVERY_SETTLED, WIEvents.COMBAT_SETTLED, WIEvents.SLEEP_SETTLED, WIEvents.LOOT_CLAIMED, WIEvents.CLASS_LEVEL_UP, WIEvents.QUEST_BEAT_COMPLETED,
 		WIEvents.MAP_CHANGED, WIEvents.CLASS_GAINED, WIEvents.CLASS_EVOLVED,
 		WIEvents.CONSOLIDATION_ACCEPTED,
 		WIEvents.PHASE_CHANGED,
@@ -95,6 +98,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 
 
 func save_auto() -> void:
+	# An unserialized fight or unfinished sleep cannot replace the rollback checkpoint.
+	if sim.save_settlement_pending():
+		return
 	if _rotate_auto_pending:
 		_rotate_auto_pending = false
 		_rotate_slot("auto", "auto_prev")

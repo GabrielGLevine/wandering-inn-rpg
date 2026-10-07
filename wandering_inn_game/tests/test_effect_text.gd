@@ -16,31 +16,31 @@ const EXPECTED_ITEMS := {
 	"wyvernbone_lance": ["+2 damage on melee hits", "Spear kit replaces other weapon Skills in combat"],
 	"recurve_of_the_watch": ["+1 damage on ranged hits", "Range 4", "Bow kit replaces other weapon Skills in combat"],
 	"ashwood_warbow": ["+2 damage on ranged hits", "Range 4", "Bow kit replaces other weapon Skills in combat"],
-	"graveflame_wand": ["+1 damage on melee hits", "+3 HP", "Resonance 2", "Worth 30 gold"],
-	"lichbone_wand": ["+1 damage on melee hits", "+3 HP", "Reduces every hit taken by 1", "Resonance 3"],
-	"weighted_apron": ["+2 HP", "Worth 12 gold"],
+	"graveflame_wand": ["+1 damage on melee hits", "+3 max HP", "Resonance 2", "Worth 30 gold"],
+	"lichbone_wand": ["+1 damage on melee hits", "+3 max HP", "Reduces every hit taken by 1", "Resonance 3"],
+	"weighted_apron": ["+2 max HP", "Worth 12 gold"],
 	"runners_sandals": ["Resonance 1", "Grants [Second Wind] in combat"],
 	"rusty_sword": ["Sword kit replaces other weapon Skills in combat"],
 	"relcs_spare_spear": ["+1 damage on melee hits", "Spear kit replaces other weapon Skills in combat"],
 	"crude_blade": ["Sword kit replaces other weapon Skills in combat"],
 	"chipped_spear": ["Spear kit replaces other weapon Skills in combat"],
 	"solid_oak_spear": ["Spear kit replaces other weapon Skills in combat"],
-	"leather_jerkin": ["+4 HP", "Worth 24 gold"],
+	"leather_jerkin": ["+4 max HP", "Worth 24 gold"],
 	"watch_issue_gambeson": ["Reduces every hit taken by 1", "Worth 20 gold"],
-	"traveler_charm": ["+2 HP", "Resonance 1", "Worth 5 gold"],
+	"traveler_charm": ["+2 max HP", "Resonance 1", "Worth 5 gold"],
 	"carved_chess_pawn": ["Resonance 1", "Worth 12 gold"],
-	"ratici_gray_feather": ["+1 HP", "Resonance 1", "Worth 11 gold"],
+	"ratici_gray_feather": ["+1 max HP", "Resonance 1", "Worth 11 gold"],
 	"ratici_parlor_coin": ["Resonance 1", "Worth 13 gold"],
-	"hedaults_warded_setting": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Worth 45 gold"],
-	"old_delvers_clasp": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Worth 35 gold"],
+	"hedaults_warded_setting": ["+2 max HP", "Reduces every hit taken by 1", "Resonance 1", "Worth 45 gold"],
+	"old_delvers_clasp": ["+2 max HP", "Reduces every hit taken by 1", "Resonance 1", "Worth 35 gold"],
 	"gnollish_hunting_knife": ["+1 damage on melee hits", "Sword kit replaces other weapon Skills in combat", "Worth 15 gold"],
-	"wool_lined_cloak": ["+3 HP", "Worth 18 gold"],
-	"copper_luck_band": ["+1 HP", "Grants [Dangersense] in combat", "Worth 4 gold"],
-	"hedge_ward_charm": ["+2 HP", "Resonance 1", "Worth 9 gold"],
+	"wool_lined_cloak": ["+3 max HP", "Worth 18 gold"],
+	"copper_luck_band": ["+1 max HP", "Grants [Dangersense] in combat", "Worth 4 gold"],
+	"hedge_ward_charm": ["+2 max HP", "Resonance 1", "Worth 9 gold"],
 	"hunters_fang_talisman": ["+1 damage on melee hits", "Resonance 1", "Worth 14 gold"],
-	"phosphor_pendant": ["+3 HP", "Resonance 1", "Worth 20 gold"],
+	"phosphor_pendant": ["+3 max HP", "Resonance 1", "Worth 20 gold"],
 	"stonescale_talisman": ["Reduces every hit taken by 1", "Resonance 2", "Grants [Tough Body] in combat", "Worth 35 gold"],
-	"moon_bone_amulet": ["+1 damage on melee hits", "+3 HP", "Resonance 2", "Grants [Invisibility]"],
+	"moon_bone_amulet": ["+1 damage on melee hits", "+3 max HP", "Resonance 2", "Grants [Invisibility]"],
 	"watch_token": [],
 	"brothers_marker": [],
 	"field_whetstone": ["Worth 5 gold"],
@@ -51,7 +51,7 @@ const EXPECTED_ITEMS := {
 	# GH#380/#383 yields: both priceless (never merchandise), so only the
 	# next_fight clause composes.
 	"improvised_cudgel": ["Next fight: +1 damage (single use)"],
-	"seared_venison": ["Next fight: +2 HP (single use)"],
+	"seared_venison": ["Restores up to 6 HP (single use)", "Next fight: +2 HP (single use)"],
 	"parcel_plains_wool": [],
 	"parcel_that_ticks": [],
 	"parcel_watch_dispatch": [],
@@ -62,7 +62,7 @@ const EXPECTED_ITEMS := {
 	"parcel_tactics_brief": [],
 	"parcel_sealed_letter": [],
 	"parcel_seed_grain": [],
-	"hot_meal": [],
+	"hot_meal": ["Restores up to 6 HP (single use)"],
 	"flarepepper_powder": ["Next fight: +1 damage (single use)", "Worth 6 gold"],
 	"cups_debt_chit": [],
 	"renns_warhammer": [],
@@ -73,36 +73,37 @@ const EXPECTED_ITEMS := {
 	"anchor_stone": [],
 	"dried_yarrow_bundle": ["Worth 4 gold"],
 	"sleeproot_draught": ["Worth 5 gold"],
-	"hollow_herb_sachet": ["+1 HP", "Grants [Witch\'s Warding] in combat", "Worth 6 gold"],
-	"witch_wardstone_bead": ["+2 HP", "Resonance 1", "Worth 16 gold"],
+	"hollow_herb_sachet": ["+1 max HP", "Grants [Witch\'s Warding] in combat", "Worth 6 gold"],
+	"witch_wardstone_bead": ["+2 max HP", "Resonance 1", "Worth 16 gold"],
 	"invrisil_attunement_stone": ["Worth 18 gold"],
 	"pallass_attunement_stone": ["Worth 18 gold"],
 	"training_bow": ["Range 4", "Bow kit replaces other weapon Skills in combat", "Worth 8 gold"],
 	"hunting_bow": ["+1 damage on ranged hits", "Range 4", "Bow kit replaces other weapon Skills in combat", "Worth 18 gold"],
 	"trap_kit": ["Worth 3 gold"],
 	"warding_salt_pinch": ["Worth 7 gold"],
-	"mending_draught": ["Heals 8 HP in combat (single use)", "Worth 10 gold"],
-	"remedy_draught": ["Heals 8 HP in combat (single use)", "Worth 10 gold"],
+	"mana_potion": ["Restores up to 6 MP (single use)", "Repeated doses risk mana poisoning until sleep", "Worth 10 gold"],
+	"mending_draught": ["Restores up to 8 HP (single use)", "Worth 10 gold"],
+	"remedy_draught": ["Restores up to 8 HP (single use)", "Worth 10 gold"],
 	# 2026-08-02 (GH#334 ruling 7): both lost their `price` key -- a meal is
 	# served or eaten, never merchandise (hot_meal's precedent) -- so the
 	# generated "Worth N gold" row is gone with it.
-	"fine_meal": ["Next fight: +2 HP (single use)"],
-	"signature_meal": ["Next fight: +1 damage, +2 HP (single use)"],
+	"fine_meal": ["Restores up to 8 HP (single use)", "Restores up to 4 MP (single use)", "Next fight: +2 HP (single use)"],
+	"signature_meal": ["Restores up to 10 HP (single use)", "Restores up to 6 MP (single use)", "Next fight: +1 damage, +2 HP (single use)"],
 	"tempering_oil": ["Next fight: +1 damage (single use)", "Worth 12 gold"],
 	"crude_draught": ["Next fight: +1 HP (single use)", "Worth 4 gold"],
 	"solvent_phial": ["Worth 6 gold"],
 	"mineral_salts": ["Worth 6 gold"],
 	"tonic_of_the_clear_eye": ["Next fight: +1 damage, +2 HP (single use)", "Worth 16 gold"],
-	"construct_core_shard": ["+3 HP", "Reduces every hit taken by 1", "Resonance 2", "Grants [Read the Field] in combat"],
-	"warded_coil_charm": ["+2 HP", "Resonance 1"],
-	"kingslayer_fang": ["+1 damage on melee hits", "+1 HP", "Resonance 1", "Grants [Battle Momentum] in combat"],
-	"guardian_ward_fragment": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Grants [Guarding Ward] in combat"],
+	"construct_core_shard": ["+3 max HP", "Reduces every hit taken by 1", "Resonance 2", "Grants [Read the Field] in combat"],
+	"warded_coil_charm": ["+2 max HP", "Resonance 1"],
+	"kingslayer_fang": ["+1 damage on melee hits", "+1 max HP", "Resonance 1", "Grants [Battle Momentum] in combat"],
+	"guardian_ward_fragment": ["+2 max HP", "Reduces every hit taken by 1", "Resonance 1", "Grants [Guarding Ward] in combat"],
 	# #398 P5 briar-arch coffer yield. warded_coil_charm's curve (hp_mod 2,
 	# damage_reduction 0, resonance 1) plus guardian_ward_fragment's grant, and no
 	# price -- so its lines are that fragment's MINUS the reduction clause. The
 	# missing row here was review C2: the suite printed FAIL and still exited 0.
-	"rootbound_ward_token": ["+2 HP", "Resonance 1", "Grants [Guarding Ward] in combat"],
-	"wardwrights_counterweight": ["+2 HP", "Resonance 1", "Grants [Dangersense] in combat"],
+	"rootbound_ward_token": ["+2 max HP", "Resonance 1", "Grants [Guarding Ward] in combat"],
+	"wardwrights_counterweight": ["+2 max HP", "Resonance 1", "Grants [Dangersense] in combat"],
 	"sealed_factor_bale": ["Worth 28 gold"],
 	"riverfarm_ferry_tally": ["Worth 28 gold"],
 	# #423 the enchanter work-room reward, banded on the two rows above it.
@@ -112,18 +113,18 @@ const EXPECTED_ITEMS := {
 	# 2026-07-26 Act V terminus reward (data/maps/dungeon/seal_vault.json's
 	# vault_anchor_stone). construct_core_shard's curve, guardian_ward's grant,
 	# no price (one-of-a-kind find, never vendored).
-	"seal_anchor_rune": ["+3 HP", "Reduces every hit taken by 1", "Resonance 2", "Grants [Guarding Ward] in combat"],
-	"hedaults_traveler_charm": ["+3 HP", "Resonance 1", "Grants [Dangersense] in combat", "Worth 18 gold"],
+	"seal_anchor_rune": ["+3 max HP", "Reduces every hit taken by 1", "Resonance 2", "Grants [Guarding Ward] in combat"],
+	"hedaults_traveler_charm": ["+3 max HP", "Resonance 1", "Grants [Dangersense] in combat", "Worth 18 gold"],
 	"hedaults_hunters_fang": ["+1 damage on melee hits", "Resonance 1", "Grants [Eagle Eyes]", "Worth 45 gold"],
-	"hedaults_wardstone": ["+2 HP", "Resonance 2", "Grants [Mana Shield] in combat", "Worth 50 gold"],
+	"hedaults_wardstone": ["+2 max HP", "Resonance 2", "Grants [Mana Shield] in combat", "Worth 50 gold"],
 	# v0.16 I1 (#306), inserted at the `hedaults_wardstone` anchor this lane also
 	# uses in items.json (ruling C). EXPECTED_ITEMS is exhaustive both ways, so a
 	# new item id with no row here reds this suite. It used to red it QUIETLY --
 	# see the `_failed` block at `_check` for the #398 P5 fix that made the exit
 	# code, not just a zero-noise grep, the detector.
-	"plum_silk_locket": ["+1 HP", "Resonance 1", "Worth 30 gold"],
-	"moonhide_fetish": ["+1 damage on melee hits", "+1 HP", "Resonance 1", "Grants [Second Wind] in combat"],
-	"anchor_sliver": ["+4 HP", "Reduces every hit taken by 1", "Resonance 3"],
+	"plum_silk_locket": ["+1 max HP", "Resonance 1", "Worth 30 gold"],
+	"moonhide_fetish": ["+1 damage on melee hits", "+1 max HP", "Resonance 1", "Grants [Second Wind] in combat"],
+	"anchor_sliver": ["+4 max HP", "Reduces every hit taken by 1", "Resonance 3"],
 }
 
 const EXPECTED_SKILLS := {
@@ -488,8 +489,8 @@ func _test_status_exact() -> void:
 
 
 func _test_tripwires() -> void:
-	_check(WIEffectText.item_effect_lines({"hp_mod": 4}) == ["+4 HP"], "item hp tripwire base")
-	_check(WIEffectText.item_effect_lines({"hp_mod": 7}) == ["+7 HP"], "item hp tripwire moved")
+	_check(WIEffectText.item_effect_lines({"hp_mod": 4}) == ["+4 max HP"], "item hp tripwire base")
+	_check(WIEffectText.item_effect_lines({"hp_mod": 7}) == ["+7 max HP"], "item hp tripwire moved")
 	_check(WIEffectText.item_effect_lines({"damage_mod": 9}) == ["+9 damage on melee hits"], "item damage tripwire")
 	_check(
 		WIEffectText.item_effect_lines({"damage_mod": 3, "range": 4}) == ["+3 damage on ranged hits", "Range 4"],

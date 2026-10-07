@@ -327,7 +327,7 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 		if is_banner:
 			var viewport := _root.get_viewport()
 			var board := _mobile.board_rect()
-			var size := WIResponsiveLayout.touch_size(viewport, Vector2(360.0, 76.0))
+			var size: Vector2 = WIResponsiveLayout.touch_size(viewport, Vector2(360.0, 76.0))
 			WIResponsiveLayout.place_panel(_banner_panel, Rect2(board.get_center() - size * 0.5, size))
 			_banner_label.add_theme_font_size_override("font_size", WIResponsiveLayout.readable_font_size(viewport, 24, text_scale))
 
@@ -401,7 +401,9 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usab
 			continue
 		var rec: Dictionary = usable_by_id[item_id]
 		slots.append({
-			"type": "item", "id": item_id, "label": String(rec.get("name", item_id)),
+			"type": "item", "id": item_id, "label": WIEffectText.counted_item_name(rec, int(rec.get("count", 1))),
+			"count": int(rec.get("count", 1)),
+			"preview": (rec.get("preview", {}) as Dictionary).duplicate(true),
 			"icon": String(rec.get("icon", "")), "key_hint": str(number),
 			"description": String(rec.get("description", "")),
 			"use_effect": rec.get("use_effect", {}),
@@ -438,8 +440,8 @@ func render_bar_slots(view: RefCounted, bar_slots: Array) -> Array:
 				# affordance a spent once-per-fight skill already gets.
 				d["cooldown_remaining"] = _cooldown_remaining(view, skill_id)
 			"item":
-				d["affordable"] = int(c["ap"]) >= WIItems.FLAT_AP_COST
-				d["ap_cost"] = WIItems.FLAT_AP_COST
+				d["affordable"] = bool((d.get("preview", {}) as Dictionary).get("allowed", false))
+				d["ap_cost"] = int((d.get("preview", {}) as Dictionary).get("ap_cost", 0))
 			"end_turn":
 				d["affordable"] = true
 		out.append(d)
@@ -668,20 +670,7 @@ func _slot_info_line(d: Dictionary) -> String:
 				return "%s — %s" % [skill_name, effect_lines[0]]
 			return line
 		"item":
-			var item_name := String(d.get("label", ""))
-			var item_desc := String(d.get("description", ""))
-			var use_effect: Dictionary = d.get("use_effect", {})
-			var item_lines: Array[String] = []
-			if use_effect.has("heal"):
-				item_lines = WIEffectText.skill_effect_lines({
-					"ap_cost": d.get("ap_cost", WIItems.FLAT_AP_COST), "mp_cost": 0,
-					"effect": {"type": "heal", "amount": int(use_effect["heal"])},
-				})
-			if item_desc == "":
-				return item_name if item_lines.is_empty() else "%s — %s" % [item_name, item_lines[0]]
-			if item_lines.is_empty():
-				return "%s — %s" % [item_name, item_desc]
-			return "%s — %s — %s" % [item_name, item_lines[0], item_desc]
+			return "%s — %s" % [String(d.get("label", "")), WIEffectText.item_use_text(d.get("preview", {}))]
 		_:
 			return ""
 
@@ -1063,3 +1052,7 @@ func _resize_feed_panel(height: float) -> void:
 	panel.custom_minimum_size = Vector2(FEED_PANEL_BASE_SIZE.x, height)
 	panel.size = Vector2(FEED_PANEL_BASE_SIZE.x, height)
 	UIChrome.set_offsets(panel, FEED_OFFSET_LEFT, FEED_OFFSET_BOTTOM - height, FEED_OFFSET_RIGHT, FEED_OFFSET_BOTTOM)
+
+
+func rendered_feed_has(text: String) -> bool:
+	return _feed_label != null and _feed_label.is_visible_in_tree() and _feed_label.text.contains(text)

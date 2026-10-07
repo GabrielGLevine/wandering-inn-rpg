@@ -88,10 +88,12 @@ const MAP_REQUIRES := {
 	# in there without it is a position no player can occupy.
 	"rags_camp": ["rags_meeting_settled"],
 	"garden_sanctuary": ["garden_door_unlocked"],
-	"riverfarm_village": ["door_awakened", "riverfarm_attuned"],
-	"witch_hollow": ["door_awakened", "riverfarm_attuned"],
-	"riverfarm_mill": ["door_awakened", "riverfarm_attuned"],
-	"witch_hut": ["door_awakened", "riverfarm_attuned"],
+	# data/portals.json gates Riverfarm on door_awakened alone; riverfarm_attuned
+	# is board-rumor lore, and the earned Rogue journey arrives without it.
+	"riverfarm_village": ["door_awakened"],
+	"witch_hollow": ["door_awakened"],
+	"riverfarm_mill": ["door_awakened"],
+	"witch_hut": ["door_awakened"],
 	"invrisil_boulevard": ["door_awakened", "invrisil_attuned"],
 	"mercantile_alleys": ["door_awakened", "invrisil_attuned"],
 	# v0.16 Invrisil (#306): both interiors are reachable only off
@@ -127,8 +129,10 @@ const LOAD_DERIVED := ["reached_two_classes"]
 
 const POST_GAME_BACKBONE := [
 	"reached_liscor", "reached_two_classes", "met_relc", "sparred_with_relc", "given_spear_by_relc",
-	"watch_runner_pointed", "heard_the_deep_tremor", "heard_olesm_briefing", "cleared_the_warren", "raskghar_sealed",
+	"watch_runner_pointed", "heard_the_deep_tremor", "cleared_the_warren", "raskghar_sealed",
 ]
+# heard_olesm_briefing is optional colour: only olesm_intro reads it, and the
+# earned Rogue journey reaches post_game without it.
 
 const POST_GAME_BACKBONE_EXEMPT := {
 	"near_invrisil": "classes locked to the alley_footpads combat-tuning baseline; see const's own doc comment",
@@ -307,8 +311,8 @@ func _check_monotone_chains(name: String, game: WIGame, data: Dictionary) -> voi
 			_fail(name, "invrisil_attuned banked without blight_lifted -- Eloise's stone (the only producer) sells from a shop node gated on it")
 		if not game.inventory.has("invrisil_attunement_stone"):
 			_fail(name, "invrisil_attuned banked without invrisil_attunement_stone in inventory -- the purchase grants both on one option and the stone is never removable")
-	if int(accs.get("blight_lifted", 0)) >= 1 and int(accs.get("riverfarm_attuned", 0)) < 1:
-		_fail(name, "blight_lifted banked without riverfarm_attuned -- every producer lives on the riverfarm-gated witch_hollow map")
+	if int(accs.get("blight_lifted", 0)) >= 1 and int(accs.get("door_awakened", 0)) < 1:
+		_fail(name, "blight_lifted banked without door_awakened -- every producer lives on witch_hollow, behind the door_awakened Riverfarm portal")
 	if int(accs.get("seal_kept_reported", 0)) >= 1 and int(accs.get("seal_kept_found", 0)) < 1:
 		_fail(name, "seal_kept_reported banked without seal_kept_found -- Olesm's report option is gated on the find beat")
 	if int(accs.get("seal_kept_found", 0)) >= 1 and int(accs.get("vault_construct_downed", 0)) < 1:

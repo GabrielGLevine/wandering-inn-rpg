@@ -1,5 +1,5 @@
 {
- "_comment": "Fresh fight-first/force-crate recovery: real victories, ordinary drainage return, deliberate crossing receipt, Rogue at sleep; no respawn or direct grant. Keyboard/native route; phone profiles are emulation, physical acceptance remains #511. Recovery messages use production timing after a naturally drained accelerated prelude; no queue clearing or synthetic receipts.",
+ "_comment": "Fresh fight-first/force-crate recovery: real victories, ordinary drainage return, deliberate crossing receipt, Rogue at sleep; no respawn or direct grant. Keyboard/native route; phone profiles are emulation, physical acceptance remains #511. Recovery messages use production timing after a naturally drained accelerated prelude; no queue clearing or synthetic receipts. Persistent recovery: road victory leaves3HP; walk home, use the real bed and return before force-crate combat. Rest banks earned progress and world consequences; no fixtures or teleport topups.",
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [
@@ -790,7 +790,8 @@
     "text": "[Warrior] class gained! \u2014 [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
    },
    "from_start": true,
-   "timeout_sec": 10
+   "_comment": "The arrival sign, Relc advice and bed text finish their production holds first.",
+   "timeout_sec": 45
   },
   {
    "action": "assert_state",
@@ -1152,6 +1153,266 @@
    ]
   },
   {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Actual bed recovery banks earned road-fight progress before returning to the crate fight."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "sleep"
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "_comment": "Capture the earned road-fight rest receipt after earlier sleep, reward, and class messages finish reading.",
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 120,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {"hp": 3, "max_hp": 43, "mp": 0, "max_mp": 0, "mp_potion_doses": 0},
+    "after": {"hp": 46, "max_hp": 46, "mp": 0, "max_mp": 0, "mp_potion_doses": 0}
+   }
+  },
+  {
+   "action": "dump_state"
+  },
+  {
+   "action": "screenshot",
+   "name": "earned_rest_after_road_fight"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "== WALKED (was teleport): back from bed to the stairs. (9,2) -> (2,2)."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "stairs_down: bump-face then interact."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ],
+   "_comment": "Back at the ground-floor lane head; the gift-node route below reuses the spawn choreography."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
    "action": "press",
    "name": "interact"
   },
@@ -1492,7 +1753,9 @@
    "timeout_sec": 5
   },
   {
-   "action": "begin_production_message_timing"
+   "action": "begin_production_message_timing",
+   "_comment": "When production timing is enabled from boot, both earned sleeps and quest messages must drain.",
+   "timeout_sec": 120
   },
   {
    "action": "move",

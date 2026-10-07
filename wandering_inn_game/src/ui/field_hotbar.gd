@@ -214,10 +214,48 @@ func slot_count() -> int:
 
 func set_selected(index: int) -> void:
 	_last_selected_index = index
-	if index >= 0 and _uses_touch_layout():
+	if index >= 0:
 		_page = index / maxi(1, _page_size)
 	_layout_controls()
 	_update_selection_label(index)
+	_queue_readout_reveal(index)
+
+
+## Global rect of readout line `index`; lines follow slot order.
+func readout_line_rect(index: int) -> Rect2:
+	if _readout_label == null or index < 0 or index >= _field_skills.size():
+		return Rect2()
+	var width := _readout_label.size.x
+	var top := 0.0
+	if index > 0:
+		top = _readout_text_height(_readout_lines.slice(0, index), width) + float(_readout_label.get_theme_constant("line_spacing"))
+	var bottom := _readout_text_height(_readout_lines.slice(0, index + 1), width)
+	return Rect2(_readout_label.global_position + Vector2(0.0, top), Vector2(width, bottom - top))
+
+
+## Keyboard and gamepad parity: the capped readout scrolls to the selected
+## Skill. Only selection changes and expansion call this, so wheel scrolling
+## is not snapped back by layout refreshes. Expansion waits for the scroll
+## container's own sort, which is when its range covers the shown text.
+func _queue_readout_reveal(index: int, after_sort := false) -> void:
+	if not _expanded or index < 0 or not is_inside_tree():
+		return
+	var settled: Signal = _readout_scroll.sort_children if after_sort else get_tree().process_frame
+	if not settled.is_connected(_reveal_selected_line):
+		settled.connect(_reveal_selected_line, CONNECT_ONE_SHOT)
+
+
+func _reveal_selected_line() -> void:
+	if _readout_panel == null or not _readout_panel.visible:
+		return
+	var line := readout_line_rect(_last_selected_index)
+	var view := _readout_scroll.get_global_rect()
+	if line.size == Vector2.ZERO:
+		return
+	if line.position.y < view.position.y:
+		_readout_scroll.scroll_vertical -= int(ceilf(view.position.y - line.position.y))
+	elif line.end.y > view.end.y:
+		_readout_scroll.scroll_vertical += int(ceilf(line.end.y - view.end.y))
 
 
 func toggle_rect() -> Rect2:
@@ -365,6 +403,8 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 			_apply_visibility()
 		WIEvents.UI_SETTINGS_RENDERED:
 			_layout_controls()
+		WIEvents.UI_HINT_RENDERED:
+			_refresh_layout()
 
 
 func _apply_visibility() -> void:
@@ -425,6 +465,7 @@ func _set_expanded(value: bool, persist: bool, reason: String) -> void:
 	_update_toggle_label()
 	if _layout_controls():
 		_update_selection_label(_last_selected_index)
+		_queue_readout_reveal(_last_selected_index, true)
 		_emit_rendered(reason)
 	else:
 		call_deferred("_emit_rendered", reason)
@@ -515,8 +556,14 @@ func _layout_controls() -> bool:
 	_toggle.custom_minimum_size = toggle_size
 	_toggle.size = toggle_size
 	var slot_size := WIHotbar.SLOT_SIZE
-	_page_previous.visible = false
-	_page_next.visible = false
+	var slot_gap := float(WIHotbar.SLOT_GAP)
+	var slot_font := 0
+	var page_button_size := WIHotbar.SLOT_SIZE.x
+	var page_font := base_font
+	var hint_band: float = MESSAGE_LAYER_SCRIPT.hint_band_width
+	if hint_band <= 0.0:
+		hint_band = HINT_BAND_FALLBACK
+	var hint_reserve := 0.0 if touch_layout else hint_band + HINT_BAND_GAP
 	if touch_layout:
 		var css := _css_scale()
 		var minimum := ceilf(44.0 / css)
@@ -526,31 +573,32 @@ func _layout_controls() -> bool:
 		_toggle.custom_minimum_size = toggle_size
 		_toggle.size = toggle_size
 		slot_size = Vector2.ONE * minimum
-		var available := safe.size.x - toggle_size.x - TOGGLE_GAP
-		var slot_gap := slot_size.x / 15.0
-		var capacity := maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))
-		var paged := _last_slots.size() > capacity
-		if paged:
-			available -= 2.0 * (minimum + TOGGLE_GAP)
-			capacity = maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))
-		var first_visible := _page * _page_size
-		if capacity != _page_size and _last_selected_index >= first_visible and _last_selected_index < first_visible + _page_size:
-			first_visible = _last_selected_index
-		_page_size = capacity
-		_page = clampi(first_visible / _page_size, 0, WIHotbar.page_count(_last_slots.size(), _page_size) - 1)
-		for button: Button in [_page_previous, _page_next]:
-			button.visible = paged
-			button.custom_minimum_size = Vector2.ONE * minimum
-			button.size = Vector2.ONE * minimum
-			button.add_theme_font_size_override("font_size", mobile_font)
-		_page_previous.disabled = _page == 0
-		_page_next.disabled = _page >= WIHotbar.page_count(_last_slots.size(), _page_size) - 1
-		_hotbar.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-		_hotbar.render_page(_last_slots, _last_selected_index, slot_size, _page, _page_size, mobile_font)
-	else:
-		_page = 0
-		_page_size = maxi(1, _last_slots.size())
-		_hotbar.render(_last_slots, _last_selected_index, slot_size)
+		slot_gap = slot_size.x / 15.0
+		slot_font = mobile_font
+		page_button_size = minimum
+		page_font = mobile_font
+	# Reserve the live hint ribbon before capacity, including Details and both
+	# page buttons. Moving an oversized group right cannot make it fit.
+	var available := safe.size.x - hint_reserve - toggle_size.x - TOGGLE_GAP
+	var capacity := maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))
+	var paged := _last_slots.size() > capacity
+	if paged:
+		available -= 2.0 * (page_button_size + TOGGLE_GAP)
+		capacity = maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))
+	var first_visible := _page * _page_size
+	if capacity != _page_size and _last_selected_index >= first_visible and _last_selected_index < first_visible + _page_size:
+		first_visible = _last_selected_index
+	_page_size = capacity
+	_page = clampi(first_visible / _page_size, 0, WIHotbar.page_count(_last_slots.size(), _page_size) - 1)
+	for button: Button in [_page_previous, _page_next]:
+		button.visible = paged
+		button.custom_minimum_size = Vector2.ONE * page_button_size
+		button.size = Vector2.ONE * page_button_size
+		button.add_theme_font_size_override("font_size", page_font)
+	_page_previous.disabled = _page == 0
+	_page_next.disabled = _page >= WIHotbar.page_count(_last_slots.size(), _page_size) - 1
+	_hotbar.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	_hotbar.render_page(_last_slots, _last_selected_index, slot_size, _page, _page_size, slot_font)
 	var group_width := _group_width()
 	var group_left := safe.position.x + (safe.size.x - group_width) * 0.5
 	# Finding 19 (playtest): at 9 slots the centred group ran under the
@@ -558,11 +606,8 @@ func _layout_controls() -> bool:
 	# ribbon's LIVE band (device labels and text scale both change its width;
 	# the first fix used a constant and a larger text scale walked the ribbon
 	# over slot 1). Centring is cosmetic, the ribbon is information.
-	var hint_band: float = MESSAGE_LAYER_SCRIPT.hint_band_width
-	if hint_band <= 0.0:
-		hint_band = HINT_BAND_FALLBACK
 	if not touch_layout:
-		group_left = maxf(group_left, safe.position.x + hint_band + HINT_BAND_GAP)
+		group_left = maxf(group_left, safe.position.x + hint_reserve)
 	var page_reserve := _page_previous.size.x + TOGGLE_GAP if _page_previous.visible else 0.0
 	_bar_left = group_left + page_reserve
 	# `rendered_width()`, NEVER `_hotbar.size.x`: the bar's size IS the offsets
@@ -586,9 +631,8 @@ func _layout_controls() -> bool:
 	var panel_width := minf(READOUT_MAX_WIDTH, maxf(1.0, safe.size.x - WIFieldHotbarLayout.OUTER_MARGIN * 2.0))
 	var text_width := panel_width - frame_size.x - READOUT_SCROLLBAR_RESERVE
 	var content_height := _readout_content_height(text_width)
-	var desired_height := content_height + frame_size.y
-	if touch_layout:
-		desired_height = minf(desired_height, safe.size.y / 3.0)
+	# Every layout caps the panel; earned desktop lists scroll instead of eating the world view.
+	var desired_height := minf(content_height + frame_size.y, safe.size.y / 3.0)
 	var reserved_bottom := maxf(_hotbar.size.y, toggle_size.y) + CONTROLS_BOTTOM_MARGIN + READOUT_GAP + READOUT_SELECTION_CLEARANCE
 	reserved_bottom = maxf(reserved_bottom, TOAST_BAND_RESERVE + READOUT_GAP)
 	# The strip is bottom-RIGHT anchored on the viewport (not on this layer's
@@ -611,9 +655,13 @@ func _current_safe_rect() -> Rect2:
 	return WIResponsiveLayout.safe_rect(get_viewport())
 
 func _readout_content_height(width: float) -> float:
-	if _readout_lines.is_empty() or width <= 0.0:
+	return _readout_text_height(_readout_lines, width)
+
+
+func _readout_text_height(lines_text: Array, width: float) -> float:
+	if lines_text.is_empty() or width <= 0.0:
 		return 1.0
-	var text := "\n".join(_readout_lines)
+	var text := "\n".join(lines_text)
 	var font := _readout_label.get_theme_font("font")
 	var font_size := _readout_label.get_theme_font_size("font_size")
 	var measured := font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, width, font_size)

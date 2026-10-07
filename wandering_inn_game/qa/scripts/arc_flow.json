@@ -1,5 +1,5 @@
 {
- "_comment": "THE WHOLE-ARC PROOF, fixture-accelerated. Loads near_act3 (inn bed, Act II complete: Warrior 5 + Diplomat 1, 3 quests; no Act III keys) via title Continue and drives the ENTIRE Act III arc live: (1) tremor sleep pointer; (2) Zevara summons (banks heard_the_deep_tremor); (3) Olesm briefing; (4) THE DESCENT -- teleport to the deep_tunnels landing (the surface arc consumes ZERO rng, so the fights sit at the SAME deterministic rng deep_descent wins at; deep_descent still PASSES with warrior5+diplomat1, so this splice of its winning nav wins here too) -> Cold Hearth -> raskghar_scouts route-fight -> Gnawed Bones -> Warren Mouth -> the Relc JOIN veto -> boss VICTORY (Relc fielded) -> cleared_the_warren; (5) Zevara seal -> raskghar_sealed; (6) PHASE 8 NEGATIVE: the seal dialogue_ended fires NO closing sequence (the epilogue retired to Act V's seal_resolved) and banks NO post_game; (7) the journal act line, which the seal ALONE advances into Act IV (2026-07-26 reframe -- the door is no longer part of Act III's gate); (8) post-game Zevara greeting variant (also proves no epilogue re-fire on re-entry); (9) free-play sanity (move + the plain sleep that DOES bank post_game, carrying the seal's one-line light transition under the veil, with ui_gdi_epilogue_rendered proven absent across the whole run). This is the arc's END-TO-END seam; the piecewise beats stay covered by climax_chain/deep_descent/climax_seal.",
+ "_comment": "#566 carried-resource adaptation: original near_act3 fixture, RNG and setup/seam teleports retained. Between scouts and boss, walk out through the sewers, resolve the live road ambush, walk to the Inn bed, then walk back. Earn the omitted grate-access fact through Olesm. Re-derive sleep progression from actual events; no fixture vitals, teleport or enemy shortcuts in the new recovery segment. Fixture prerequisites are supplied, not earned.",
  "fixture_save": "near_act3",
  "starts_at_title": true,
  "steps": [
@@ -80,7 +80,7 @@
    }
   },
   {
-   "_comment": "v0.16.1 finding 25: the pointer's GUARANTEED read. The toast above is spoken UNDER the sleep veil (veil layer 30, toasts layer 12) and its hold expires around the time the black lifts, so sleep_veil now mirrors the beat as a veil line on the ACCOMPLISHMENT_RECORDED arm. This veil is the ONLY one in the whole game that fires under `watch_runner_pointed`, and it is otherwise line-less: `lines` 0 -> 1 IS the new line, measured on this seed (arc_flow's other two veils are the pinned 4-line and 0-line ones far below, so the count is unambiguous here). Without this pin the only guaranteed-read line in the arc had no canonical proof at all.",
+   "_comment": "The initial pointer sleep renders one line. The added recovery sleep comes later, so this exact assertion still isolates the guaranteed pointer read.",
    "action": "assert_event_logged",
    "type": "ui_sleep_veil_rendered",
    "payload_contains": {
@@ -103,7 +103,8 @@
   {
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
-   "timeout_sec": 5,
+   "_comment": "The pointer waits behind the initial sleep and arrival messages at production reading speed.",
+   "timeout_sec": 30,
    "payload_contains": {
     "text": "A Watch runner is looking for you."
    }
@@ -292,6 +293,68 @@
    "timeout_sec": 5
   },
   {
+   "action": "press",
+   "name": "interact",
+   "_comment": "near_act3 omits heard_about_cisterns despite its resolved history. Ask the real cistern route question so the walked return grate opens; no fixture repair or teleport bypass."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "olesm_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Olesm",
+    "text": "The cisterns are off my ledger and onto the Council's, thanks to you. Quiet streets. I could get used to it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heard_about_cisterns"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
    "action": "teleport",
    "map": "deep_tunnels",
    "cell": [
@@ -468,6 +531,605 @@
     8,
     3
    ]
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 14
+  },
+  {
+   "action": "dump_state",
+   "label": "scout_carried_depletion_before_walked_retreat"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "sewers"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 10
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.sign_defended",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    23
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 8
+  },
+  {
+   "action": "dump_state",
+   "label": "retreat_live_road_ambush_resolved"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 15
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "_comment": "The bed receipt follows the scout, road ambush, and sleep progression messages in the production queue.",
+   "timeout_sec": 120,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 8,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 0,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 51,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 0,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 51
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.max_hp",
+   "equals": 51
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 9,
+    "diplomat": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "day"
+  },
+  {
+   "action": "assert_event_count",
+   "type": "class_level_up",
+   "payload_contains": {
+    "class": "diplomat",
+    "level": 2
+   },
+   "count": 1
+  },
+  {
+   "action": "dump_state",
+   "label": "walked_inn_bed_restores_carried_resources"
+  },
+  {
+   "action": "screenshot",
+   "name": "recovery_01_real_inn_bed"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7,
+   "_comment": "== WALKED (was teleport): back from bed to the stairs. (9,2) -> (2,2)."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "stairs_down: bump-face then interact."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ],
+   "_comment": "Back at the ground-floor lane head; the gift-node route below reuses the spawn choreography."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "liscor_gate (31,25) -- the last step already left us facing down onto it."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "dump_state",
+   "label": "rested_return_to_scout_route"
+  },
+  {
+   "action": "screenshot",
+   "name": "recovery_02_walked_return"
   },
   {
    "_comment": "== GNAWED BONES (9,6) flavor ==. The scout cell (8,4) still blocks, so route right: right 1 to (9,3), then down 3 bumps the bones (9,6) -> face them, interact.",
@@ -710,7 +1372,7 @@
     2,
     7
    ],
-   "_comment": "== THE SEAL BEAT == (same waking as summons -> Zevara pool spent -> one interact)"
+   "_comment": "Seal beat after the walked recovery sleep: Zevara has a fresh ambient line before her graph."
   },
   {
    "action": "wait_frames",
@@ -720,6 +1382,18 @@
    "action": "move",
    "direction": "up",
    "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Zevara"
+   },
+   "timeout_sec": 5
   },
   {
    "action": "press",
@@ -962,13 +1636,31 @@
    }
   },
   {
-   "_comment": "THE SEAL'S LIGHT TRANSITION rides this sleep: 4 veil lines, re-derived from the run's own events.jsonl -- Warrior 10, Warrior 11, Diplomat 2, and the GDI's seal beat. #441 re-derivation (2026-08-12): this pin was 7 when near_act3 started at Warrior 5 and the arc's banked counters walked it 6->7->8 here. The re-fixture starts at Warrior 9 + Diplomat 1 (Act III band top) with the melee_hit ledger that level honestly requires, so the same arc's banking now spends its rungs at 10 and 11 instead. A build-dependent count, re-derived from the run, not a contract that moved.",
+   "_comment": "The walked recovery bed already earned Diplomat 2. This first post-seal sleep renders exactly Warrior 10, Warrior 11 and the seal line; preserve the once-only empty veil on the next sleep.",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "lines": 4
+    "lines": 3
    }
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 11,
+    "diplomat": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 53
   },
   {
    "_comment": "THE BANK, at the sleep and not before.",
@@ -1026,6 +1718,19 @@
    "timeout_sec": 5,
    "payload_contains": {
     "lines": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 11,
+    "diplomat": 2
    }
   },
   {

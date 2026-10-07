@@ -7,7 +7,7 @@ suite is the mechanical half of each:
      M3 golden measured missing in 2569 corpus steps. Both are EXACT-CLASS in
      goldens, which means their emitted shape is a promise and not a
      preference, so each is pinned step for step against the corpus rows it was
-     shaped from (steel_thread 74-115 and 561-566 / 2330-2335).
+     shaped from (steel_thread 74-115 and 561-566 / 2446-2451).
   2. The `creation:` prelude §8 already ruled buildable-as-a-pass.
   3. The pass-2 plan-spine equality fence: refine may tighten pins, never
      re-plan.
@@ -225,10 +225,10 @@ class JournalTest(unittest.TestCase):
         acts = bare(Emitter().emit("n", [{"kind": "journal", "capture": "05_act_iii_01_journal_acts", "act": ""}]))
         self.assertEqual(acts, [row for row in shipped(561, 566) if row["action"] != "wait_frames"])
 
-        # steel_thread 2330-2335: the same idiom, tightened to the act page the
+        # steel_thread 2446-2451: the same idiom, tightened to the act page the
         # book opened on.
         act_v = bare(Emitter().emit("n", [{"kind": "journal", "capture": "08_act_v_00_journal_act_v", "act": "act_v"}]))
-        self.assertEqual(act_v, [row for row in shipped(2330, 2335) if row["action"] != "wait_frames"])
+        self.assertEqual(act_v, [row for row in shipped(2446, 2451) if row["action"] != "wait_frames"])
 
         # MUTATION: the `act` pin is a real claim, not decoration -- dropping
         # it turns the Act V read into the Act III one.

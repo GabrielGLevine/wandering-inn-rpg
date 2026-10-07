@@ -1,0 +1,1202 @@
+{
+ "_comment": "#571 disclosed fixture contract only. Actual depleted equip/unequip toggles do not heal; food creates auto checkpoint; later gear is deliberately different at precombat checkpoint. Real cast/potion/heal changes HP/MP/exposure/stock, then confirmed Abandon restores older auto exactly. Retry activates one-fight food, heals into bonus HP, wins and clamps expired max; re-equipping cannot restore discarded HP. Native clicks do not prove browser/physical touch; screenshots require a windowed read.",
+ "fixture_save": "vitals_lifecycle_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "leather_jerkin"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "leather_jerkin",
+    "before": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_unequipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "slot": "armor"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "armor",
+    "before": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "leather_jerkin"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "leather_jerkin",
+    "before": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_unequipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "slot": "armor"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "armor",
+    "before": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "screenshot",
+   "name": "01_equipment_toggles_do_not_restore"
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "fine_meal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "fine_meal",
+    "allowed": true,
+    "restore_hp": 8,
+    "restore_mp": 4
+   }
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "fine_meal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "fine_meal",
+    "committed": true,
+    "restore_hp": 8,
+    "restore_mp": 4
+   }
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2
+   },
+   "_comment": "World food settlement creates the real auto checkpoint at 32/32 HP, 8/12 MP, doses2, no armor and armed +2 max HP."
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "leather_jerkin"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "leather_jerkin",
+    "before": {
+     "hp": 32,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 32,
+     "max_hp": 36,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 32,
+     "max_hp": 36,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "screenshot",
+   "name": "02_after_auto_gear_differs_from_checkpoint"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Relc"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "conversation": "relc_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 30
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Relc"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.max_hp",
+   "equals": 38
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.active",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     3,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "hotbar_3"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "skill": "frost_bolt"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "status_applied",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "status": "slowed"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 6
+  },
+  {
+   "action": "press",
+   "name": "hotbar_5"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "mana_potion",
+    "context": "combat",
+    "allowed": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "mana_potion"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "mana_potion",
+    "committed": true,
+    "restore_mp": 6
+   }
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 3
+  },
+  {
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "action": "press",
+   "name": "hotbar_4"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "mending_draught",
+    "context": "combat",
+    "allowed": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "mending_draught"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "mending_draught",
+    "committed": true,
+    "restore_hp": 6
+   }
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 38
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.mending_draught",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "mending_draught": 1
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "03_changed_resources_before_abandon"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 30
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "screenshot",
+   "name": "04_abandon_confirmation"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.max_hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.mending_draught",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.mana_potion",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.armor",
+   "equals": ""
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.active",
+   "equals": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "surface": "field",
+    "after": {
+     "hp": 32,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_resolved"
+  },
+  {
+   "action": "screenshot",
+   "name": "05_exact_auto_rollback_not_precombat_gear"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Relc"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "conversation": "relc_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 30
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Relc"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.max_hp",
+   "equals": 34
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.active",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "press",
+   "name": "hotbar_4"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "mending_draught",
+    "context": "combat",
+    "allowed": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "mending_draught"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "mending_draught",
+    "committed": true,
+    "restore_hp": 2
+   }
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 34
+  },
+  {
+   "action": "combat_autoplay"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.max_hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.active",
+   "equals": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {}
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "relc_spar",
+    "before": {
+     "hp": 34,
+     "max_hp": 34,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 32,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "relc_spar",
+    "before": {
+     "hp": 34,
+     "max_hp": 34,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 32,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "field"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "relc_spar",
+    "before": {
+     "hp": 34,
+     "max_hp": 34,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 32,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "06_one_fight_buff_expires_and_clamps"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "leather_jerkin"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "leather_jerkin",
+    "before": {
+     "hp": 32,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 32,
+     "max_hp": 36,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 32,
+     "max_hp": 36,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_unequipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "slot": "armor"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "armor",
+    "before": {
+     "hp": 32,
+     "max_hp": 36,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 32,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 32,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "screenshot",
+   "name": "07_post_expiry_toggle_cannot_recover_clamp"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_resolved",
+   "count": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "game_reset"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "vitals_lifecycle_complete"
+  }
+ ]
+}

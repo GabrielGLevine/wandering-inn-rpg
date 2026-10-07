@@ -9,32 +9,41 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **User-directed resumption:** finish art-blocked roadmap work, checkpoint often.
-  Art577 merged0bbd96aa; reviewed e89770de/squash share tree0e843291.
-  Original art checkout remains separately owned and untouched.
-- **User CI permission:** bypass Web parity when it bottlenecks PR merges;
-  record each waiver without calling it a pass. Other CI/review and actual
-  gameplay/device evidence remain required.
-- **Designs closed:** #517/PR575 squash5823356f/treee3203d51; #521/PR579
-  squash53bd4c68/tree95341cea. Reviewed/squash trees match; seven non-Web CI
-  jobs passed and Web was sole waived blocker. Runtime stays #518/#520/#522.
-- **Staged resources:** PR572/#56685af0621, PR578/#5673d2ae361, PR573/#570
-  core60aebdaa plus QA checkpoints. Carry, HUD/receipts and capacity4→5/v11
-  have bounded source review; JSON precision fix approved. No partial deployment
-  or activation merge before recovery/#571. All59 Godot units pass; four lint
-  line pins needed repinning, then282Python tests/109subtests pass. Final
-  canonical/balance follows capacity QA. Bundle-v7 windowed gear/tutorial/dark
-  and fresh-start/carry routes pass; all28images read. Browser/device unproven.
-- **Active owners:** resource_plan owns #568 core/counts/schema12/transactions/
-  poison/data/tests in `/private/tmp/wi-568-consumables`, branch
-  `issue/568-consumable-recovery`, base8b5602ab. capacity570 owns gear/door
-  QA/fixtures/manifest/generated/docs only in `/private/tmp/wi-570-capacity`.
-  Controller validates `/private/tmp/wi-567-hud-contract`; preserve companionUID.
-  **Next:** checkpoint quantities, shared preview/token use and poison; then
-  frontend. Compose capacity QA and window/final gates. #569 services follow568;
-  #512 earned journeys follow recovery (PR574 recon). No shared mutable trees.
-  Exact live registry `/private/tmp/wi-parallel-roadmap-status.json`; evidence
-  `/private/tmp/wi-{566-resumed,567,570}-evidence`; branch HANDOFFs pin heads.
+- **Resumed (user: merge #572–#583 when ready):** root
+  `/private/tmp/wi-567-hud-contract`, branch `issue/567-hud-contract`, PR578
+  composes every lane head (572/573/574/582/583 are ancestors). Merging 578
+  lands them; close lane PRs as landed via 578. #584 audio parked in
+  `/private/tmp/wi-584-audio` (docs patch; also main `stash@{0}`).
+- **Constraints:** core first; extra mobile testing deferred to #585,
+  nonblocking. Web parity may be waived as a merge bottleneck; other required
+  CI/review remain gates. #586 tracks shader shutdown errors. Requested
+  exception has NO answer and is NOT authorized. No more engine probes/builds
+  or deployment. No balance/seed changes.
+- **CI repair at 6d8f0beb (tree977b9097):** run37530813602 failures fixed:
+  steel_thread contract pins (+116 after martial insert), stale coherence
+  rules (Riverfarm gate is door_awakened; Olesm briefing optional), desktop
+  Details cap+selection follow+wheel proof, and journey_rogue desync from
+  desktop paging (driver now touches page controls). Local: preflight65+tools,
+  pytest495, journey_rogue PASS20s (macOS #586 leak noise only), windowed
+  desktop44 PASS with six captures read, reveal mutation probe red. Evidence
+  `/private/tmp/wi-567-evidence/desktop-follow-977b9097`.
+- **Exact next action:** read CI on 6d8f0beb (Web parity waivable); merge PR578
+  by squash, verify squash tree, close 572/573/574/582/583 as landed, then
+  update this file on main. Issues #566–#570 keep open acceptance (#571
+  cutover, earned journeys, devices #585).
+- **Journey limits:** native Rogue3464 reaches ending/Inn,146g−142g=4;
+  39 unique images read, two shader ERRORs make gate INVALID. Epilogue picture
+  shows toast, not17-line body. Worker1423 retains six losses/boss39HP.
+  Martial walked bed restores49HP/13MP; Awakened wins26HP. Next fully rested
+  vault loses/construct46HP; vault analysis NOT started. Poor167 checkpoint
+  control proves purchase14g→0g, scouts10HP/0MP, retired road/no income,
+  walked bed44HP/14MP; native clean/pictures read. Not fresh acquisition or
+  full513 closure. #453 holds combat walls; caster/economic variants remain
+  open. #571 waits for core acceptance, not585.
+- **Resume:** `/private/tmp/wi-parallel-roadmap-resume.md` and status JSON
+  retain lane heads/reviews. Latest `/private/tmp/wi-567-evidence/` subdirs:
+  `composed-bdd30b80`, `desktop-final-8621c754`, `rogue-window-289f0984`.
+  See `docs/design/512-martial-recovery.md` and `513-low-gold-recovery.md`.
 - **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
   governs #566–#571. Preserve unlimited existing kitchen access and measure it.
   M1 devices and #494/#495 choices remain open.
@@ -108,9 +117,6 @@ archived, or superseded session blocks.
 - Open presentation debt lives in `docs/VISUAL-LOG.md`, including inn/HUD
   clearance, dialogue lifetime and pending sprite/icon/ear reads. Fresh
   captures under `qa_output/` are disposable; inspect before rerunning.
-- GitHub repository milestones, issue labels and dependency links are updated.
-  Projects v2 board synchronization was unavailable because the current token
-  lacks `read:project`; no authentication settings were changed.
 
 ## User-held
 
@@ -141,17 +147,10 @@ The live index and milestones are authoritative:
 - [Roadmap #502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502)
 - [M1: mobile parity and first session](https://github.com/GabrielGLevine/wandering-inn-rpg/milestone/13)
 
-Immediate dispatch order:
-
-1. #511 shared physical-phone observations and three unfamiliar-player sessions
-   with desktop reference. The owner retained these gates and offered results;
-   no observations have arrived. Software repairs and automated gates are done.
-2. Diagnose supplied observations against the same candidate; close only the
-   corresponding #504/#505/#506/#510/#253 physical/actual-host criteria that
-   pass. A failed observation may authorize a scoped repair in its issue.
-3. Bound compiler work to a safe checkpoint and #542/#543 acceptance repairs
-   before further equivalence claims. No new compiler expansion wave ahead
-   of actionable M1 work without a concrete dependency or owner reprioritization.
+Immediate dispatch: finish the active recovery core work above. Additional mobile
+validation is deferred to #585 per user direction. #511 hardware/human work
+remains open without blocking core implementation; no observations supplied.
+Compiler work stays bounded to existing acceptance repairs and #438 ownership.
 
 Later milestones and dependencies are linked from the index. Respect
 `roadmap:blocked` and `taste-gate`; `successor-ready` means a brief can start,

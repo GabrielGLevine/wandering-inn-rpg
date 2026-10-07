@@ -1,7 +1,7 @@
 class_name WISave
 extends RefCounted
 
-const VERSION := 9
+const VERSION := 12
 
 
 const DEPRECATED_IDS := {
@@ -18,7 +18,9 @@ const MIGRATABLE_ID_CLASSES := ["classes"]
 
 
 static func serialize(game: WIGame) -> Dictionary:
+	game.vitals.reconcile(game.player_resource_maxima())
 	return {"version": VERSION, "state": {
+		"vitals": game.vitals.serialized(),
 		"current_map": game.current_map,
 		"player_cell": [game.player_cell.x, game.player_cell.y],
 		"player_facing": [game.player_facing.x, game.player_facing.y],
@@ -34,13 +36,15 @@ static func serialize(game: WIGame) -> Dictionary:
 		"seen_statuses": game.seen_statuses.duplicate(),
 		"lore_notes": game.lore_notes.duplicate(),
 		"inventory": game.inventory.duplicate(),
+		"consumable_counts": game.consumable_counts.duplicate(),
+		"pending_loot": game.pending_loot.duplicate(true),
 		"equipped": game.equipped.duplicate(true),
 		"container_state": game.container_state.duplicate(true),
 		"actions_since_sleep": game.actions_since_sleep,
 		"social_talked": game.social_talked.duplicate(true),
 		"entity_first_use": game.entity_first_use.duplicate(true),
 		"gold": game.gold,
-		"resonance_capacity": game.resonance_capacity,
+		"resonance_capacity": game.resonance_limit(),
 		"light_active": game.light_active,
 		"well_fed": game.well_fed,
 		"pending_meal": game.pending_meal.duplicate(true),
@@ -64,6 +68,13 @@ static func serialize(game: WIGame) -> Dictionary:
 		"delivery_failed": game.delivery_failed,
 		"delivery_last_seen_times_slept": game.delivery_last_seen_times_slept,
 	}}
+
+
+static func _supported_version(value: Variant) -> bool:
+	if not (value is int or value is float):
+		return false
+	var number := float(value)
+	return is_finite(number) and number == floor(number) and number >= 2 and number <= VERSION
 
 
 static func _migrated(data: Dictionary) -> Dictionary:
@@ -114,7 +125,23 @@ static func _migrated(data: Dictionary) -> Dictionary:
 		# simply drops it; the merge is not lost, because the very next sleep
 		# re-derives the same qualifying pair from `classes` and applies it.
 		state.erase("pending_consolidation")
-		version = VERSION
+		version = 9
+	if version == 9:
+		# Missing legacy pools are derived after restored kit/equipment is applied.
+		version = 10
+	if version == 10:
+		if not (state.get("accomplishments", {}) is Dictionary):
+			return out
+		var legacy_default := 3 if int(state.get("accomplishments", {}).get("resonance_grown", 0)) >= 1 else 2
+		var capacity: Variant = state.get("resonance_capacity", legacy_default)
+		if not WIResonance.valid_capacity(capacity):
+			return out
+		if int(capacity) > WIResonance.MAX_CAPACITY - WIResonance.LEGACY_BASELINE_INCREASE:
+			return out
+		state["resonance_capacity"] = int(capacity) + WIResonance.LEGACY_BASELINE_INCREASE
+		version = 11
+	if version == 11:
+		version = 12
 	out["version"] = version
 	var class_map: Dictionary = DEPRECATED_IDS["classes"]
 	var cls_raw: Variant = state.get("classes", {})
@@ -136,6 +163,8 @@ static func _migrated(data: Dictionary) -> Dictionary:
 
 
 static func metadata(data: Dictionary) -> Dictionary:
+	if not _supported_version(data.get("version")):
+		return {}
 	# Pure preview path: migrate a copy and never apply to WIGame or mutate caller data.
 	var migrated := _migrated(data)
 	if int(migrated.get("version", -1)) != VERSION:
@@ -162,6 +191,10 @@ static func metadata(data: Dictionary) -> Dictionary:
 
 
 static func apply(game: WIGame, data: Dictionary) -> bool:
+	if not _supported_version(data.get("version")):
+		return false
+	var legacy_counts := int(data.get("version", -1)) < 12
+	var legacy_vitals := int(data.get("version", -1)) < 10
 	data = _migrated(data)
 	if int(data.get("version", -1)) != VERSION:
 		return false
@@ -169,6 +202,11 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	if not (raw_state is Dictionary):
 		return false
 	var s: Dictionary = raw_state
+	if s.has("vitals"):
+		if not WIVitals.valid_saved(s["vitals"]):
+			return false
+	elif not legacy_vitals:
+		return false
 	var required := ["current_map", "player_cell", "player_facing", "classes", "accomplishments", "player_skills", "removed_entities", "dormant_encounters", "started_quests", "rng_state", "inventory", "equipped", "container_state", "actions_since_sleep"]
 	for key: String in required:
 		if not s.has(key):
@@ -199,7 +237,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 		return false
 	if s.has("gold") and not (s["gold"] is int or s["gold"] is float):
 		return false
-	if s.has("resonance_capacity") and not (s["resonance_capacity"] is int or s["resonance_capacity"] is float):
+	if not s.has("resonance_capacity") or not WIResonance.valid_capacity(s["resonance_capacity"]):
 		return false
 	if s.has("light_active") and not (s["light_active"] is bool):
 		return false
@@ -247,6 +285,14 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	if not (s["actions_since_sleep"] is int or s["actions_since_sleep"] is float):
 		return false
 	if not game.has_map(String(s["current_map"])):
+		return false
+
+	var counts: Variant = WIItems.legacy_counts(s["inventory"], game._items) if legacy_counts else s.get("consumable_counts")
+	if not WIItems.valid_counts(s["inventory"], counts, game._items):
+		return false
+
+	var pending: Variant = [] if legacy_counts else s.get("pending_loot")
+	if not WIItems.valid_pending_loot(pending, game._items):
 		return false
 
 	var player_cell: Array = s["player_cell"]
@@ -297,13 +343,19 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.lore_notes.assign(lore_notes)
 	game.inventory.clear()
 	game.inventory.assign(inventory)
+	game.pending_loot = []
+	for entry: Dictionary in pending:
+		game.pending_loot.append({"item": String(entry.item), "source": String(entry.source), "count": 1})
+	game.consumable_counts = {}
+	for id: String in counts:
+		game.consumable_counts[id] = int(counts[id])
 	game.equipped = equipped.duplicate(true)
 	game.container_state = container_state.duplicate(true)
 	game.actions_since_sleep = int(s["actions_since_sleep"])
 	game.social_talked = social_talked.duplicate(true)
 	game.entity_first_use = entity_first_use.duplicate(true)
 	game.gold = int(s.get("gold", 0))
-	game.resonance_capacity = int(s.get("resonance_capacity", 2))
+	game.resonance_capacity = int(s["resonance_capacity"])
 	game.light_active = bool(s.get("light_active", false))
 	game.well_fed = bool(s.get("well_fed", false))
 	game.pending_meal = (s.get("pending_meal", {}) as Dictionary).duplicate(true)
@@ -357,5 +409,9 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.accepted_delivery_baseline = (s.get("accepted_delivery_baseline", {}) as Dictionary).duplicate(true)
 	game.delivery_failed = bool(s.get("delivery_failed", false))
 	game.delivery_last_seen_times_slept = int(s.get("delivery_last_seen_times_slept", 0))
+	if s.has("vitals"):
+		game.vitals.restore(s["vitals"], game.player_resource_maxima())
+	else:
+		game.vitals.refill(game.player_resource_maxima())
 	game.reprime_quests()
 	return true

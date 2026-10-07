@@ -1,5 +1,5 @@
 {
- "_comment": "8d E1 (issue #14) 'What the Seal Kept' -- THE FULL END-TO-END FIGHT-ROUTE PROOF: accept at Olesm -> travel to the reopened gallery -> recruit the Horns (Ceria) -> FIGHT the promoted snare -> the vault boss (4-ally party, windup live) -> the FIND beat -> report, quest_completed. Loads delve_fight_start (street, facing Olesm, quest fresh, T4 gear/classes -- the ONLY canonical resolving BOTH the trapped_halls_snare skirmish and the vault fight to completion). Teleports across the ALREADY-tested sewers/deep_tunnels stretch (dungeon_peek's own teleport-only precedent) -- the SUBJECT here is the delve itself, not re-proving pre-existing travel. TRAP: Olesm's hub option list is cursor-index-navigated (olesm_intro.json's own documented trap) -- the accept option sits at VISIBLE index 6 (options 0-5 unrelated/visible-locked entries, this fixture's own accomplishment set), and by the report visit the SAME visible index 6 holds the report option (the accept option hides on horns_delve_started exactly as the report option reveals on seal_kept_found -- re-derive both indices together if any olesm_intro.json option gate changes).",
+ "_comment": "8d E1 (issue #14) 'What the Seal Kept' -- THE FULL END-TO-END FIGHT-ROUTE PROOF: accept at Olesm -> travel to the reopened gallery -> recruit the Horns (Ceria) -> FIGHT the promoted snare -> the vault boss (4-ally party, windup live) -> the FIND beat -> report, quest_completed. Loads delve_fight_start (street, facing Olesm, quest fresh, T4 gear/classes -- the ONLY canonical resolving BOTH the trapped_halls_snare skirmish and the vault fight to completion). Teleports across the ALREADY-tested sewers/deep_tunnels stretch (dungeon_peek's own teleport-only precedent) -- the SUBJECT here is the delve itself, not re-proving pre-existing travel. TRAP: Olesm's hub option list is cursor-index-navigated (olesm_intro.json's own documented trap) -- the accept option sits at VISIBLE index 6 (options 0-5 unrelated/visible-locked entries, this fixture's own accomplishment set), and by the report visit the SAME visible index 6 holds the report option (the accept option hides on horns_delve_started exactly as the report option reveals on seal_kept_found -- re-derive both indices together if any olesm_intro.json option gate changes). Recovery integration: actual five3g Inn services between authored fights,15/43HP0/19MP\u219243/43HP19/19MP,45\u219230g; final report balance45. This existing teleport wiring test is not continuous travel evidence.",
  "fixture_save": "delve_fight_start",
  "starts_at_title": true,
  "steps": [
@@ -104,7 +104,7 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "text": "The Watch wants eyes on the reopened gallery — proper eyes. The last guardsman down there filed three words: 'it is dark.' Five gold now, fifteen when you bring me something I can put in a report. The Guild is sending a Silver-rank team to meet you there."
+    "text": "The Watch wants eyes on the reopened gallery \u2014 proper eyes. The last guardsman down there filed three words: 'it is dark.' Five gold now, fifteen when you bring me something I can put in a report. The Guild is sending a Silver-rank team to meet you there."
    },
    "timeout_sec": 5
   },
@@ -238,7 +238,7 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "text": "You're the one Olesm's paying to poke the gallery? Good. The Guild sent us along to make sure you come back out. Ceria Springwalker — Horns of Hammerad."
+    "text": "You're the one Olesm's paying to poke the gallery? Good. The Guild sent us along to make sure you come back out. Ceria Springwalker \u2014 Horns of Hammerad."
    },
    "timeout_sec": 5
   },
@@ -283,7 +283,7 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "text": "All right. Four of us on the roster, three of us actually walking in — Pisces bills from a distance. Try to keep up."
+    "text": "All right. Four of us on the roster, three of us actually walking in \u2014 Pisces bills from a distance. Try to keep up."
    },
    "timeout_sec": 5
   },
@@ -399,6 +399,488 @@
    "action": "wait_for_event",
    "type": "ui_combat_hidden",
    "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 45
+  },
+  {
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Erin"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_line_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "conversation": "erin_errand"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_up"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 45,
+    "gold_after": 42
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 42
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 21
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 42
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 42,
+    "gold_after": 39
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 39
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 27
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 39
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 39,
+    "gold_after": 36
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 36
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 33
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 36
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 36,
+    "gold_after": 33
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 33
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 39
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 33
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 33,
+    "gold_after": 30
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 30
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 43
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 19
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "_comment": "Five captured meals drain after the quest and loot messages at production timing.",
+   "timeout_sec": 90,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 30
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "recovery_paid_meals_before_vault"
+  },
+  {
+   "action": "teleport",
+   "map": "trapped_halls",
+   "cell": [
+    16,
+    8
+   ]
   },
   {
    "action": "wait_frames",
@@ -653,14 +1135,14 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "text": "A construct. A vault. Another rune-door — another. Do you know what this does to my casualty projections? Nothing good. Here is your fifteen. Earned."
+    "text": "A construct. A vault. Another rune-door \u2014 another. Do you know what this does to my casualty projections? Nothing good. Here is your fifteen. Earned."
    },
    "timeout_sec": 5
   },
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 60
+   "equals": 45
   },
   {
    "action": "move",

@@ -72,7 +72,7 @@
    "name": "confirm"
   },
   {
-   "_comment": "Order is the engine's: the picker closes, the pause menu closes, THEN the slot writes (game_saved) and the ribbon pill renders, then the housekeeping toast.",
+   "_comment": "The picker and pause close before game_saved; its housekeeping toast precedes the deferred rendered status pill.",
    "action": "wait_for_event",
    "type": "ui_pause_hidden",
    "timeout_sec": 5
@@ -87,17 +87,17 @@
   },
   {
    "action": "wait_for_event",
-   "type": "ui_save_status_rendered",
+   "type": "toast",
    "payload_contains": {
-    "slot": "manual"
+    "text": "Game saved."
    },
    "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
-   "type": "toast",
+   "type": "ui_save_status_rendered",
    "payload_contains": {
-    "text": "Game saved."
+    "slot": "manual"
    },
    "timeout_sec": 5
   },

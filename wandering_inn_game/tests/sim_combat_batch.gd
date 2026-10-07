@@ -1128,6 +1128,7 @@ static func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalo
 		pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION]
 	else:
 		pc[WIKeys.SKILLS] = kit
+	# Omit initial pools: construction rests after caller gear/probe amendments.
 	return pc
 
 

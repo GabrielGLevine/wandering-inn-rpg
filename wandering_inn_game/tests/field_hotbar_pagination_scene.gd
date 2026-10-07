@@ -67,14 +67,82 @@ func _ready() -> void:
 			assert(bar._page == armed_page and bar._selection_label.visible and selection_events.back().visible, "returning to the armed page restores the label and its visibility event")
 	var desktop := WIFieldHotbar.new()
 	add_child(desktop)
-	desktop._last_slots = bar._last_slots.duplicate(true)
+	var original_hint_band := WIFieldHotbar.MESSAGE_LAYER_SCRIPT.hint_band_width
+	var desktop_clicked: Array[int] = []
+	desktop.slot_activate_requested.connect(func(index: int) -> void: desktop_clicked.append(index))
+	for count in [13, 37]:
+		desktop._field_skills = bar._field_skills.slice(0, count)
+		desktop._last_slots = bar._last_slots.slice(0, count)
+		for text_scale in 3:
+			WISettings.set_text_scale_step(text_scale)
+			for hint_width: float in [340.0, 580.0]:
+				WIFieldHotbar.MESSAGE_LAYER_SCRIPT.hint_band_width = hint_width
+				desktop._page = 0
+				desktop._last_selected_index = -1
+				desktop._update_toggle_label()
+				desktop._layout_controls()
+				desktop_clicked.clear()
+				var pages := WIHotbar.page_count(count, desktop._page_size)
+				if count == 37 or hint_width == 580.0:
+					assert(pages > 1, "desktop overflow must page rather than push Details offscreen")
+				for page in pages:
+					assert(desktop._page == page)
+					_assert_desktop_controls(desktop, hint_width)
+					for child: Control in desktop.hotbar_node().get_children():
+						assert(child.size == WIHotbar.SLOT_SIZE, "desktop paging preserves readable slot dimensions")
+						desktop.hotbar_node().slot_clicked.emit(int(child.get_meta("slot_index")))
+					if page < pages - 1:
+						desktop._page_next.pressed.emit()
+				assert(desktop_clicked == range(1, count + 1), "desktop pages dispatch every original skill index once")
+				desktop.set_selected(0)
+				assert(desktop.hotbar_node().slot_rect(0).has_area(), "keyboard selection returns to the first page")
+				desktop.set_selected(count - 1)
+				assert(desktop.hotbar_node().slot_rect(count - 1).has_area(), "keyboard selection reveals the final desktop page")
+				assert(selection_events.back().visible and selection_events.back().index == count - 1)
+				desktop._page_previous.pressed.emit()
+				if pages > 1:
+					assert(not desktop._selection_label.visible, "manual paging hides off-page selection without changing its index")
+					assert(desktop._last_selected_index == count - 1)
+	WISettings.set_text_scale_step(0)
+	WIFieldHotbar.MESSAGE_LAYER_SCRIPT.hint_band_width = 340.0
+	desktop._field_skills = bar._field_skills.slice(0, 3)
+	desktop._last_slots = bar._last_slots.slice(0, 3)
+	desktop.set_selected(0)
 	desktop._update_toggle_label()
 	desktop._layout_controls()
-	assert(desktop.hotbar_node().get_child_count() == 37, "desktop retains the continuous row")
+	assert(desktop.hotbar_node().get_child_count() == 3, "small desktop bars stay continuous")
 	assert(not desktop._page_previous.visible and not desktop._page_next.visible)
+	_assert_desktop_controls(desktop, 340.0)
+	desktop._field_skills = bar._field_skills.duplicate()
+	desktop._last_slots = bar._last_slots.duplicate(true)
+	desktop._layout_controls()
+	desktop.set_selected(30)
+	var old_page_size := desktop._page_size
+	WIFieldHotbar.MESSAGE_LAYER_SCRIPT.hint_band_width = 580.0
+	ObservableBus.emit_domain_event(WIEvents.UI_HINT_RENDERED, {})
+	assert(desktop._page_size < old_page_size, "a newly rendered wider hint must reduce desktop capacity")
+	assert(desktop.hotbar_node().slot_rect(30).has_area(), "live hint resizing preserves the visible original selection")
+	_assert_desktop_controls(desktop, 580.0)
+	WIFieldHotbar.MESSAGE_LAYER_SCRIPT.hint_band_width = original_hint_band
 	desktop.queue_free()
 	bar.queue_free()
 	await get_tree().process_frame
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(settings_path))
-	print("PASS: phone field pagination reaches 37 original slots with safe 44 CSS controls at all text scales; resize preserves selection")
+	print("PASS: field pagination preserves original indices and safe controls on phone and overflowing desktop bars")
 	get_tree().quit()
+
+
+func _assert_desktop_controls(bar: WIFieldHotbar, hint_width: float) -> void:
+	var controls: Array[Rect2] = [bar._toggle.get_global_rect()]
+	if bar._page_previous.visible:
+		controls.append(bar._page_previous.get_global_rect())
+		controls.append(bar._page_next.get_global_rect())
+	for child: Control in bar.hotbar_node().get_children():
+		controls.append(child.get_global_rect())
+	var safe := bar._current_safe_rect()
+	for rect: Rect2 in controls:
+		assert(safe.encloses(rect), "desktop control clipped: %s outside %s" % [rect, safe])
+		assert(rect.position.x >= safe.position.x + hint_width + bar.HINT_BAND_GAP, "desktop controls overlap the live hint ribbon")
+	for i in controls.size():
+		for j in range(i + 1, controls.size()):
+			assert(not controls[i].intersects(controls[j]), "desktop paging/skill/Details controls overlap")

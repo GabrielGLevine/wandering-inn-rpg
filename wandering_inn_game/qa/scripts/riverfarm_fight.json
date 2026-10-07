@@ -1,5 +1,5 @@
 {
- "_comment": "8b R3 (issue #11) 'The Price of a Favor' FIGHT path. Loads riverfarm_fight_start (GEARED t3_warrior10 -- warrior 10, no mage, #396 ruling 5 -- met_relc, 11,10 facing up beside the headman; rng_state=1 seed-searched so all three live fights land victories -- see r3-report.md for the derivation). Full loop: GIVE (headman) -> travel to the hollow -> clear briar_collectors (the shallow wave, intermediate drove_off_collectors) -> clear briar_collectors_deep (the escalation R2 tuned, banks drove_off_collectors AGAIN + blight_lifted, the FIGHT path's own convergence producer) -> REPORT to the headman (price_of_a_favor_reported -> quest_completed). PLUS the night-wolf POSITIVE leg (the arrival negative is R1's): a real actions_since_sleep burst to night, then river_wolf_pack's trigger_radius fires for real and is WON (riverfarm_hunter allied -- the ONE fight of the three that still fields an ally; the two briar waves are solo since #396).",
+ "_comment": "8b R3 (issue #11) 'The Price of a Favor' FIGHT path. Loads riverfarm_fight_start (GEARED t3_warrior10 -- warrior 10, no mage, #396 ruling 5 -- met_relc, 11,10 facing up beside the headman; rng_state=1 seed-searched so all three live fights land victories -- see r3-report.md for the derivation). Full loop: GIVE (headman) -> travel to the hollow -> clear briar_collectors (the shallow wave, intermediate drove_off_collectors) -> clear briar_collectors_deep (the escalation R2 tuned, banks drove_off_collectors AGAIN + blight_lifted, the FIGHT path's own convergence producer) -> REPORT to the headman (price_of_a_favor_reported -> quest_completed). PLUS the night-wolf POSITIVE leg (the arrival negative is R1's): a real actions_since_sleep burst to night, then river_wolf_pack's trigger_radius fires for real and is WON (riverfarm_hunter allied -- the ONE fight of the three that still fields an ally; the two briar waves are solo since #396). Recovery integration: shallow collectors leave2HP; the existing teleport wiring route now uses the actual free regional cot before the deep wave. Rest banks real progress/expiry; no silent refill or continuous travel claim. A second cot rest after reporting the deep collectors restores20HP/0MP before waiting for the night wolves; new-waking greeting is exercised before the report.",
  "fixture_save": "riverfarm_fight_start",
  "starts_at_title": true,
  "steps": [
@@ -417,6 +417,62 @@
    }
   },
   {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 2
+  },
+  {
+   "action": "teleport",
+   "map": "riverfarm_longhouse",
+   "cell": [
+    8,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "reason": "sleep",
+    "after": {
+     "hp": 56,
+     "max_hp": 56,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "before": {
+     "hp": 2,
+     "max_hp": 58,
+     "mp": 0,
+     "max_mp": 0,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "dump_state"
+  },
+  {
+   "action": "screenshot",
+   "name": "regional_cot_before_deep_collectors"
+  },
+  {
    "_comment": "== CLEAR THE DEEP WAVE, SOLO (#396): briar_collectors_deep (4,11). The escalation, and also allyless now -- gate is briar_collectors_deep_t3_warrior10_solo, 0.56-0.70 with check_rounds, the tightest window of the run. This victory is still the FIGHT path's own blight_lifted producer. Screenshot pins the deep-variant sprite read (darker/taller than the shallow wave's). ==",
    "action": "teleport",
    "map": "witch_hollow",
@@ -560,6 +616,23 @@
   },
   {
    "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Former Headman"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_line_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
    "type": "dialogue_started",
    "payload_contains": {
     "conversation": "riverfarm_headman"
@@ -618,6 +691,58 @@
    "action": "wait_for_event",
    "type": "ui_dialogue_hidden",
    "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 20
+  },
+  {
+   "action": "teleport",
+   "map": "riverfarm_longhouse",
+   "cell": [
+    8,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "sleep",
+    "after": {
+     "hp": 57,
+     "max_hp": 57,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "before": {
+     "hp": 20,
+     "max_hp": 56,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "timeout_sec": 15
+  },
+  {
+   "action": "dump_state"
   },
   {
    "_comment": "== THE NIGHT-WOLF POSITIVE LEG (the arrival negative is R1's canonical, riverfarm_walkthrough): a real actions_since_sleep burst clears night_at (900, data/moods.json meta.phase_thresholds -- a6 #206 doubled it from 450; lineage #62 doubled 225->450) via no-op interacts facing an empty cell, zero side effects. Burst size doubled again for a6 #206 (470 -> 940 interacts; baseline 17 + 1 move + 940 = 958, a 58-action buffer over night_at 900; lineage #62 doubled 235->470). river_wolf_pack's encounter_when then reads night and its trigger_radius fires for real. Issue #56: `village_edge_night` now opens SURROUNDED (PC center at [6,3], `riverfarm_hunter` adjacent west, the 3-wolf pack ringed N/E/S) instead of the old player-left/enemies-right line -- `03_night_wolf_arena` below (already shot at fight-open, pre-existing) is now ALSO the surround-opens proof; win/loss shape at seed 9 unchanged (still a clean win), river_wolf_pack stays MEASURED-only (no gate) per user directive. ==",

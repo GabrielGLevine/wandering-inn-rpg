@@ -61,7 +61,7 @@ func set_ctx(ctx: Dictionary) -> void:
 	_ctx = ctx
 
 
-func choose(index: int) -> Dictionary:
+func choose(index: int, commit := true) -> Dictionary:
 	# Resolution only: the owner applies effects, rebuilds ctx, then calls
 	# advance(). Entering the next node here would evaluate stale state.
 	if finished:
@@ -80,7 +80,7 @@ func choose(index: int) -> Dictionary:
 			if effect.has("gold") and int(effect["gold"]) == -int(req["gold"]):
 				effect["gold"] = -discounted
 	var ended := bool(opt.get("end", false))
-	if ended:
+	if ended and commit:
 		finished = true
 		_emit(WIEvents.DIALOGUE_ENDED, {})
 	return {"effects": effects, "ended": ended, "next": "" if ended else String(opt["goto"])}

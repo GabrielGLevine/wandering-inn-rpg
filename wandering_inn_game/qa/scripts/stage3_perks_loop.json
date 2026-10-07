@@ -60,7 +60,7 @@
    "equals": 0
   },
   {
-   "_comment": "== (1) ERIN'S MEAL == social_talked already carries {erin:true}, so this first interact opens the real hub directly. Fixture pins has_package/errand_decided (hides the package row) with cleaned_the_inn/gave_reward/kept_reward unmet and basic_cleaning unknown (hides the cleaning/reward rows), leaving exactly 4 visible options: [0] Just passing through. [1] I heard you play chess. [2] You never talk about where you're from. [3] (Take the seat. The cook is already ladling.) -- the new perk option, visible because stage 3 (resolved_wrong_order+chatted_with_erin:4) is met and meal:erin is unused this waking.",
+   "_comment": "Fixture stage-3 Erin history exposes the waking meal at index3, followed by the always-available paid meal service at index4.",
    "action": "press",
    "name": "interact"
   },
@@ -91,7 +91,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Sit. Eat. That's an order. New recipe — still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math."
+    "text": "Sit down before I eat your bread. This restores up to 6 HP and 4 MP, with +2 max HP until you sleep. I did say it would stick to your ribs."
    },
    "timeout_sec": 5
   },
@@ -119,15 +119,37 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Back already? The inn feels almost manageable since you sorted that delivery. I even got to sit down this morning, for about a minute."
+    "text": "Back already? The inn feels almost manageable since you sorted that delivery. I even got to sit down this morning, for about a minute.",
+    "options": [
+     {
+      "text": "Just passing through.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I heard you play chess.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "You never talk about where you're from.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Could I get something to eat?",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
    },
    "timeout_sec": 5
   },
   {
-   "_comment": "== (2) OPTION GONE, SAME WAKING == meal:erin is now banked, so the hub shrinks to 3 visible options: [0] Just passing through. [1] chess [2] home. The dialogue panel resets its cursor to 0 on every new node (dialogue_panel.gd's _render_node) and wraps on move (wrapi), so 'move down 3' cycles 0->1->2->0 and lands BACK on 'Just passing through.' (end:true) -- the exact navigation that reached the meal the first time now resolves to a DIFFERENT, ending option, proving the meal option is genuinely gone rather than just reordered.",
+   "_comment": "The exact four-option hub excludes the spent waking meal and retains paid service. Four downward moves wrap to Just passing through; the meal cannot be selected again this waking.",
    "action": "move",
    "direction": "down",
-   "steps": 3
+   "steps": 4
   },
   {
    "action": "press",
@@ -653,7 +675,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Sit. Eat. That's an order. New recipe — still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math."
+    "text": "Sit down before I eat your bread. This restores up to 6 HP and 4 MP, with +2 max HP until you sleep. I did say it would stick to your ribs."
    },
    "timeout_sec": 5
   },
@@ -671,7 +693,29 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Back already? The inn feels almost manageable since you sorted that delivery. I even got to sit down this morning, for about a minute."
+    "text": "Back already? The inn feels almost manageable since you sorted that delivery. I even got to sit down this morning, for about a minute.",
+    "options": [
+     {
+      "text": "Just passing through.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I heard you play chess.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "You never talk about where you're from.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Could I get something to eat?",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
    },
    "timeout_sec": 5
   },

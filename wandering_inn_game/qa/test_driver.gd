@@ -12,6 +12,8 @@ const ACTION_KEYS := {
 	"cancel": KEY_ESCAPE,
 	"cycle": KEY_TAB,
 	"hotbar_prime": KEY_TAB,
+	"slot_prev": KEY_BRACKETLEFT,
+	"slot_next": KEY_BRACKETRIGHT,
 	"field_readout": KEY_H,
 	"journal": KEY_J,
 	"inventory": KEY_I,
@@ -288,7 +290,8 @@ func _execute(step: Dictionary) -> void:
 			await get_tree().process_frame
 		"begin_production_message_timing":
 			var layer := get_tree().root.find_child("MessageLayer", true, false)
-			var deadline := Time.get_ticks_msec() + 15000
+			var wait_msec := int(clampf(float(step.get("timeout_sec", 15.0)), 1.0, 120.0) * 1000.0)
+			var deadline := Time.get_ticks_msec() + wait_msec
 			while layer != null and (bool(layer.get("_toast_draining")) or not (layer.get("_toast_queue") as Array).is_empty()) and Time.get_ticks_msec() < deadline:
 				await get_tree().process_frame
 			if layer == null or bool(layer.get("_toast_draining")) or not (layer.get("_toast_queue") as Array).is_empty():
@@ -564,6 +567,7 @@ func _execute(step: Dictionary) -> void:
 			if index < 0 or field == null:
 				_fail("touch_field_skill: skill is not on the live bar: " + skill_id)
 			else:
+				await _touch_field_page_to(field, index)
 				var rect: Rect2 = field.hotbar_node().slot_rect(index)
 				if rect.size == Vector2.ZERO:
 					_fail("touch_field_skill: skill has no rendered control")
@@ -587,8 +591,34 @@ func _execute(step: Dictionary) -> void:
 			await _touch_field_pages()
 		"touch_scroll_field_to_end":
 			await _touch_scroll_field_to_end()
+		"wheel_scroll_field_to_end":
+			await _wheel_scroll_field_to_end()
+		"assert_field_readout_selection_visible":
+			await _assert_field_readout_selection_visible()
 		"touch_inventory_item":
 			await _touch_inventory_item(String(step["item"]))
+		"wait_item_use_ready":
+			var presenter := get_tree().get_first_node_in_group("wi_item_use_presenter")
+			var deadline := Time.get_ticks_msec() + int(float(step.get("timeout_sec", 15)) * 1000.0)
+			if presenter == null:
+				_fail("wait_item_use_ready: item-use presenter is absent")
+			else:
+				while presenter.item_use_busy() and Time.get_ticks_msec() < deadline:
+					await get_tree().process_frame
+				if presenter.item_use_busy():
+					_fail("wait_item_use_ready: receipt/input guard did not release")
+		"touch_inventory_use":
+			await _touch_rect_of("Inventory", "item_use_rect", null, "touch_inventory_use", step.get("gesture", {}))
+		"touch_inventory_bar":
+			await _touch_rect_of("Inventory", "item_bar_rect", null, "touch_inventory_bar", step.get("gesture", {}))
+		"touch_item_warning_cancel", "touch_item_warning_confirm", "touch_item_receipt_close":
+			var action := String(step["action"])
+			var presenter := get_tree().get_first_node_in_group("wi_item_use_presenter")
+			if presenter == null:
+				_fail("%s: item-use presenter is absent" % action)
+			else:
+				var method: String = {"touch_item_warning_cancel": "item_warning_cancel_rect", "touch_item_warning_confirm": "item_warning_confirm_rect", "touch_item_receipt_close": "item_receipt_close_rect"}[action]
+				await _touch_rect_of(String(presenter.name), method, null, action, step.get("gesture", {}))
 		"touch_inventory_row":
 			await _touch_rect_of("Inventory", "item_row_rect", int(step["row"]) - 1, "touch_inventory_row", step.get("gesture", {}))
 		"touch_journal_skill":
@@ -869,7 +899,7 @@ func _execute(step: Dictionary) -> void:
 		"assert_message_layout":
 			await _assert_message_layout(String(step.get("kind", "dialogue")))
 		"assert_dialogue_layout":
-			await _assert_dialogue_layout()
+			await _assert_dialogue_layout(step)
 		"assert_dialogue_displayed":
 			await _assert_dialogue_displayed(step)
 		"assert_field_layout":
@@ -1539,8 +1569,15 @@ func _assert_message_layout(kind: String) -> void:
 		if WIResponsiveLayout.uses_touch_layout() and font_size * WIResponsiveLayout.css_scale(get_viewport()) + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
 			_fail("assert_message_layout: message text is too small")
 		var field := get_tree().root.find_child("FieldHotbar", true, false)
-		if field != null and field.visible and bounds.end.y > field.world_bottom() + 0.01:
-			_fail("assert_message_layout: message overlaps field controls or details")
+		if field != null and field.visible:
+			if WIResponsiveLayout.uses_touch_layout():
+				if bounds.end.y > field.world_bottom() + 0.01:
+					_fail("assert_message_layout: message overlaps field controls or details")
+			else:
+				for property: String in ["_hotbar", "_toggle", "_readout_panel", "_selection_label_backing", "_page_previous", "_page_next"]:
+					var control: Control = field.get(property)
+					if control != null and control.is_visible_in_tree() and bounds.intersects(control.get_global_rect()):
+						_fail("assert_message_layout: message overlaps field controls or details")
 		ObservableBus.emit_domain_event("qa_message_layout_measured", {"kind": kind, "font_css": font_size * WIResponsiveLayout.css_scale(get_viewport()), "text_scale": WISettings.text_scale_label()})
 	_capture_depth -= 1
 
@@ -1561,7 +1598,7 @@ func _resize_browser(step: Dictionary) -> void:
 	_fail("resize_browser: viewport request was not acknowledged")
 
 
-func _assert_dialogue_layout() -> void:
+func _assert_dialogue_layout(step: Dictionary = {}) -> void:
 	await _settle_for_capture()
 	var panel := get_tree().root.find_child("DialoguePanel", true, false)
 	if panel == null or not bool(panel.get("_shown")):
@@ -1576,13 +1613,15 @@ func _assert_dialogue_layout() -> void:
 	if toast != null and toast.is_visible_in_tree() and toast.get_global_rect().intersects(bounds):
 		_fail("assert_dialogue_layout: toast overlaps conversation")
 	var body: Label = panel.get("_text_label")
+	if step.has("contains") and not body.text.contains(String(step["contains"])):
+		_fail("assert_dialogue_layout: rendered page does not contain requested text")
 	var font := body.get_theme_font("font")
 	var font_size := body.get_theme_font_size("font_size")
 	var text_height := font.get_multiline_string_size(body.text, HORIZONTAL_ALIGNMENT_LEFT, body.size.x, font_size).y
 	if text_height > body.size.y + 1.0 or not bounds.encloses(body.get_global_rect()):
 		_fail("assert_dialogue_layout: body text is clipped")
 	var css_font := font_size * WIResponsiveLayout.css_scale(get_viewport())
-	if css_font + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
+	if WIResponsiveLayout.uses_touch_layout() and css_font + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
 		_fail("assert_dialogue_layout: body text is too small")
 	var scroll: ScrollContainer = panel.get("_options_scroll")
 	var options: Array = panel.get("_option_controls")
@@ -1594,7 +1633,7 @@ func _assert_dialogue_layout() -> void:
 		if visible_rect.intersects(body.get_global_rect()):
 			_fail("assert_dialogue_layout: option overlaps dialogue text")
 		var css := WIResponsiveLayout.css_rect(get_viewport(), rect)
-		if minf(css.size.x, css.size.y) + 0.01 < WIResponsiveLayout.MIN_TOUCH_CSS:
+		if WIResponsiveLayout.uses_touch_layout() and minf(css.size.x, css.size.y) + 0.01 < WIResponsiveLayout.MIN_TOUCH_CSS:
 			_fail("assert_dialogue_layout: option is smaller than 44 CSS pixels")
 	ObservableBus.emit_domain_event("qa_dialogue_layout_measured", {"text_scale": WISettings.text_scale_label(), "font_css": css_font, "panel_height": bounds.size.y})
 
@@ -1674,6 +1713,22 @@ func _touch_combat_pages(step: Dictionary) -> void:
 	ObservableBus.emit_domain_event("qa_combat_pages_read", {"mode": "tutor" if tutor else "details", "pages": count, "text": text})
 
 
+## A paged bar shows the target slot only after real page-control touches.
+func _touch_field_page_to(field: Node, index: int) -> void:
+	for attempt in 30:
+		if field.hotbar_node().slot_rect(index).size != Vector2.ZERO:
+			return
+		var shown: Array[int] = []
+		for child: Control in field.hotbar_node().get_children():
+			shown.append(int(child.get_meta("slot_index")))
+		var direction := "next" if shown.is_empty() or index > shown.max() else "previous"
+		var control: Rect2 = field.page_control_rect(direction)
+		if not control.has_area():
+			return
+		await _touch_at(control.get_center(), "touch_field_pages")
+		await _wait_for_event("ui_field_hotbar_rendered", 5.0, {"reason": "page"})
+
+
 func _touch_field_pages() -> void:
 	var field := get_tree().root.find_child("FieldHotbar", true, false)
 	if field == null:
@@ -1724,6 +1779,62 @@ func _touch_scroll_field_to_end() -> void:
 	if scroll.scroll_vertical < bar.max_value - bar.page - 1.0 or label.get_global_rect().end.y > scroll.get_global_rect().end.y + 1.0:
 		_fail("touch_scroll_field_to_end: final readout line remains clipped")
 	ObservableBus.emit_domain_event("qa_field_readout_end_visible", {"scroll": scroll.scroll_vertical, "text": label.text})
+
+
+## Keyboard/gamepad parity: the selected Skill's readout line is in view.
+func _assert_field_readout_selection_visible() -> void:
+	await _settle_for_capture()
+	var field := get_tree().root.find_child("FieldHotbar", true, false)
+	if field == null or not bool(field.get("_expanded")):
+		_fail("assert_field_readout_selection_visible: details must be expanded")
+		return
+	var index := int(field.get("_last_selected_index"))
+	var lines: Array = field.get("_readout_lines")
+	var label := field.get("_readout_label") as Label
+	var view := (field.get("_readout_scroll") as ScrollContainer).get_global_rect().grow(1.0)
+	if index < 0 or index >= lines.size():
+		_fail("assert_field_readout_selection_visible: no selected readout line")
+		return
+	# Engine glyph bounds, independent of the presenter's own line measurement.
+	var start := 0
+	for i in index:
+		start += String(lines[i]).length() + 1
+	var first := label.get_character_bounds(start)
+	var last := label.get_character_bounds(start + String(lines[index]).length() - 1)
+	var line := Rect2(label.global_position + first.position, first.size).merge(Rect2(label.global_position + last.position, last.size))
+	if first.size == Vector2.ZERO or last.size == Vector2.ZERO or not view.encloses(line):
+		_fail("assert_field_readout_selection_visible: line %d %s outside %s" % [index, line, view])
+	ObservableBus.emit_domain_event("qa_field_readout_selection_visible", {"index": index})
+
+
+## Desktop counterpart: real mouse-wheel input over the bounded readout.
+func _wheel_scroll_field_to_end() -> void:
+	var field := get_tree().root.find_child("FieldHotbar", true, false)
+	if field == null or not bool(field.get("_expanded")):
+		_fail("wheel_scroll_field_to_end: details must be expanded")
+		return
+	var scroll := field.get("_readout_scroll") as ScrollContainer
+	var label := field.get("_readout_label") as Label
+	var bar := scroll.get_v_scroll_bar()
+	if bar.max_value <= bar.page:
+		_fail("wheel_scroll_field_to_end: fixture does not overflow")
+		return
+	var pos := scroll.get_global_rect().get_center()
+	for attempt in 80:
+		if scroll.scroll_vertical >= bar.max_value - bar.page - 1.0:
+			break
+		for pressed: bool in [true, false]:
+			var wheel := InputEventMouseButton.new()
+			wheel.button_index = MOUSE_BUTTON_WHEEL_DOWN
+			wheel.pressed = pressed
+			wheel.factor = 1.0
+			wheel.position = pos
+			wheel.global_position = pos
+			get_tree().root.push_input(wheel, true)
+		await _settle_for_capture()
+	if scroll.scroll_vertical < bar.max_value - bar.page - 1.0 or label.get_global_rect().end.y > scroll.get_global_rect().end.y + 1.0:
+		_fail("wheel_scroll_field_to_end: final readout line remains clipped")
+	ObservableBus.emit_domain_event("qa_field_readout_end_visible", {"scroll": scroll.scroll_vertical, "text": label.text, "input": "mouse_wheel"})
 
 
 func _assert_combat_layout(step: Dictionary) -> void:
@@ -1952,6 +2063,10 @@ func _assert_field_layout() -> void:
 	var readout := field.find_child("FieldReadout", true, false) as Control
 	if readout != null and readout.visible and world_rect.intersects(readout.get_global_rect()):
 		_fail("assert_field_layout: expanded details cover the world view")
+	if readout != null and readout.visible:
+		for id: String in rects:
+			if readout.get_global_rect().intersects(rects[id]):
+				_fail("assert_field_layout: expanded details overlap %s" % id)
 	ObservableBus.emit_domain_event("qa_field_layout_measured", {"controls_css": measurements, "touch_layout": WIResponsiveLayout.uses_touch_layout(), "text_scale": WISettings.text_scale_label(), "player": [player_position.x, player_position.y]})
 
 

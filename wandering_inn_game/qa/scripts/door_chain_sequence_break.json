@@ -1,5 +1,5 @@
 {
- "_comment": "A player who clears rift_vermin_leak BEFORE ever consulting Pisces (the SEQUENCE BREAK -- door_chain_fight/talk/scout's three canonicals all consult FIRST, fight/persuade/read SECOND) reaches door_understood + pedestal_unsealed the same way (rift_vermin_leak's own on_victory banks all three), but had never heard Pisces's recap of what any of it means -- the rescue option (pisces_magic.json's 'About the pantry door -- I understand what it is now...' recap, gated on door_chain_started+door_understood, hide_when recovered_anchor_stone) exists for exactly this player, but no canonical had ever proven it surfaces from a REAL fight-first run. This script: fight rift_vermin_leak FIRST from the door_chain_sequence_break_start fixture (door_chain_started already banked, met_pisces still 0), then visit Pisces for the first time ever and assert the recap option is visible + its door_recap node renders (NOT the 3-path consult opener, which door_understood already hid), then complete the chain exactly like door_chain_fight's own tail (ruin recovery, Krshia's catalyst) to prove the sequence-break path still finishes clean. Same rng_state as door_chain_fight_start (dialogue/teleports/purchases consume no rng -- start_combat's own rng.randi() draw is the sim's ONLY consumer -- so the extra Pisces detour between the two fights cannot shift either fight's seed off the already-proven win).",
+ "_comment": "A player who clears rift_vermin_leak BEFORE ever consulting Pisces (the SEQUENCE BREAK -- door_chain_fight/talk/scout's three canonicals all consult FIRST, fight/persuade/read SECOND) reaches door_understood + pedestal_unsealed the same way (rift_vermin_leak's own on_victory banks all three), but had never heard Pisces's recap of what any of it means -- the rescue option (pisces_magic.json's 'About the pantry door -- I understand what it is now...' recap, gated on door_chain_started+door_understood, hide_when recovered_anchor_stone) exists for exactly this player, but no canonical had ever proven it surfaces from a REAL fight-first run. This script: fight rift_vermin_leak FIRST from the door_chain_sequence_break_start fixture (door_chain_started already banked, met_pisces still 0), then visit Pisces for the first time ever and assert the recap option is visible + its door_recap node renders (NOT the 3-path consult opener, which door_understood already hid), then complete the chain exactly like door_chain_fight's own tail (ruin recovery, Krshia's catalyst) to prove the sequence-break path still finishes clean. Same rng_state as door_chain_fight_start (dialogue/teleports/purchases consume no rng -- start_combat's own rng.randi() draw is the sim's ONLY consumer -- so the extra Pisces detour between the two fights cannot shift either fight's seed off the already-proven win). Recovery integration: the first fight leaves31/46HP and0/14MP. This bounded teleport-based wiring route now actually buys four3g Inn meals before the guardian;40\u219228g, final catalyst balance22\u219210g. No silent refills or continuous-journey claim.",
  "fixture_save": "door_chain_sequence_break_start",
  "starts_at_title": true,
  "steps": [
@@ -203,7 +203,7 @@
       "requirement": ""
      },
      {
-      "text": "About the pantry door — I understand what it is now. Where does that leave me?",
+      "text": "About the pantry door \u2014 I understand what it is now. Where does that leave me?",
       "locked": false,
       "requirement": ""
      },
@@ -241,7 +241,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Then attend, because I dislike repeating myself. The door remembers being elsewhere; what it lacks is an anchor to remember by. East across the floodplains, well past the gate road, there is a seam of old dressed stone in the open grass — a ruin, collapsed and rude, but its plinth still cradles an anchor stone. Retrieve it. Krshia's resonant catalyst will attune the pairing. The ruin itself was indifferently cut before it ever collapsed. Mind the overhangs going in."
+    "text": "Then attend, because I dislike repeating myself. The door remembers being elsewhere; what it lacks is an anchor to remember by. East across the floodplains, well past the gate road, there is a seam of old dressed stone in the open grass \u2014 a ruin, collapsed and rude, but its plinth still cradles an anchor stone. Retrieve it. Krshia's resonant catalyst will attune the pairing. The ruin itself was indifferently cut before it ever collapsed. Mind the overhangs going in."
    },
    "timeout_sec": 5
   },
@@ -263,6 +263,403 @@
    "action": "wait_for_event",
    "type": "ui_dialogue_hidden",
    "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 31
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 40
+  },
+  {
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Erin"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_line_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "conversation": "erin_errand"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "move_up"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "speaker": "Erin",
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 40,
+    "gold_after": 37
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 37
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 37
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 37
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 37,
+    "gold_after": 34
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 34
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 43
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 34
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 34,
+    "gold_after": 31
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 31
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 46
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 31
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Sure. I can get you a hot meal, and you can sit as long as you like. If you need sleep, the stairs are by the south wall. Your bed upstairs is free."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3,
+    "gold_before": 31,
+    "gold_after": 28
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_purchase_row",
+   "row": "buy"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "service_recovery_settled",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 28
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 46
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 28
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "service": "inn_meal",
+    "gold_after": 28
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "recovery_before_ruin_guardian"
   },
   {
    "_comment": "== the chain still completes: the ruin recovery run, same cells door_chain_fight uses. Teleport straight to the guardian alcove (16,8), west of ruin_guardian (17,8). ==",
@@ -671,7 +1068,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 22
+   "equals": 10
   }
  ]
 }

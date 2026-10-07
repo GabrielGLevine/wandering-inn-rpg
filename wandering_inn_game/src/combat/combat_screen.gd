@@ -1,4 +1,8 @@
 extends CanvasLayer
+
+var _item_offer: Dictionary = {}
+var _item_offer_sim: Variant
+var _item_generation := 0
 ## Functional-minimal combat presentation. Renders the WICombat snapshot as
 ## a grid of squares with HP bars and AP pips, a turn-order strip, a hotbar-
 ## driven action UI (arrows move the active unit directly), and a
@@ -128,30 +132,12 @@ var _acting_skill_flash_color: Color = Color.TRANSPARENT
 static var _first_combat_hint_shown := false
 static var _combat_hint_reset_hooked := false
 
-## v0.16.1 finding 19. The playtest question was "why did my MP recharge without
-## sleeping?" -- and the answer is that MP is not a persistent resource at all,
-## so nothing recharges: WICombat.build sets MAX_MP and then MP = MAX_MP for
-## every combatant at every fight (HP likewise), and an exhaustive search of the
-## MP surface finds no per-turn tick, no overworld tick, no item and no sleep
-## hook. There is nothing to carry, so nothing can be depleted between fights.
-## That IS the design -- evolution-reachability.md prices [Flame Dart]'s "AP/MP
-## premium" as fewer casts PER FIGHT -- but the game never said so, while
-## surfaces DO show MP (sleep_beat announces "+N Max MP", the journal prints
-## "3 MP"), which invites the player to model a persistent pool and then read
-## its refill as a bug. So: say it, once, on the first fight where the PC
-## actually has a pool. Own flag, not `_first_combat_hint_shown`'s -- a Warrior's
-## opening fights must not spend a disclosure that would mean nothing to them.
-const FIRST_MP_HINT_LINE := "[Mana gathers fresh at every battle's start.]"
+## The MP hint waits for a real mana pool; noncasters must not spend its one-shot flag.
+const FIRST_MP_HINT_LINE := "[MP carries between battles. Sleep restores MP.]"
 static var _first_mp_hint_shown := false
 
-## GH#334 notes 19/28, the HP half of the disclosure above. The MP line's own
-## comment named HP in the same breath ("HP likewise") and then said only the MP
-## half -- and because that line correctly waits for MAX_MP > 0, a Warrior gets
-## NO disclosure of the model at all, ever, while the game keeps showing them HP
-## bars in combat and announcing "+N Max HP" at every level. So: a sibling that
-## fires on the FIRST COMBAT REGARDLESS OF POOL. Own flag, same one-shot shape,
-## same UI_COMBAT_HINT_RENDERED so QA can pin it.
-const FIRST_HP_HINT_LINE := "[You come to every fight whole. Wounds do not follow you out of one.]"
+## HP carry applies to every build, including classless opening fights.
+const FIRST_HP_HINT_LINE := "[HP carries between battles. Sleep restores HP.]"
 static var _first_hp_hint_shown := false
 
 
@@ -213,6 +199,8 @@ func _combat_or_null() -> WICombat:
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
+	if type in [WIEvents.ITEM_USE_SETTLED, WIEvents.ITEM_USE_REFUSED, WIEvents.ITEM_USE_CANCELLED] and String(payload.get("context", "")) == "combat" and _item_presenter_busy():
+		_render_item_receipt(payload.duplicate(true))
 	# match_tutor_line's doc comment for why this must be capture-time, not
 	# dequeue-time. combat_started resets the per-combat tutor state FIRST
 	# (reading `combat.arena_config` directly -- `_view` doesn't exist yet at
@@ -430,6 +418,10 @@ func _refresh() -> void:
 		return
 	if not _ai_playback.is_playing():
 		_refresh_combatants()
+	for raw: Variant in _bar_slots:
+		var slot: Dictionary = raw
+		if String(slot.get("type", "")) == "item":
+			slot["preview"] = Game.sim.preview_item_use(String(slot.id), "combat")
 	var bar_active := _mode in [Mode.HOTBAR, Mode.ATTACK, Mode.SKILL_TARGET, Mode.DASH_CONFIRM]
 	var in_targeting := _mode in [Mode.ATTACK, Mode.SKILL_TARGET]
 	var ai_skip_hint: bool = _mode == Mode.WAIT_AI and _ai_playback.is_playing()
@@ -842,6 +834,8 @@ func _numbered_slot_pressed(event: InputEvent) -> int:
 
 
 func _activate_bar_slot(index: int) -> void:
+	if _item_presenter_busy():
+		return
 	if index < 0 or index >= _bar_slots.size():
 		return
 	var slot: Dictionary = _bar_slots[index]
@@ -859,7 +853,14 @@ func _activate_bar_slot(index: int) -> void:
 				_info_slot_index = index
 				_mode = Mode.DASH_CONFIRM
 		"item":
-			if int(c["ap"]) >= WIItems.FLAT_AP_COST:
+			_info_slot_index = index
+			_retire_item_offer()
+			_item_offer_sim = Game.sim
+			_item_offer = Game.sim.prepare_item_use(String(slot.id), "combat").duplicate(true)
+			_item_offer["name"] = String(slot.get("label", slot.id))
+			_item_generation += 1
+			_emit_item_preview.call_deferred(_item_offer.duplicate(true), _item_generation)
+			if bool(_item_offer.get("allowed", false)):
 				_bar_index = index
 				_info_slot_index = index
 				_mode = Mode.DASH_CONFIRM
@@ -891,6 +892,8 @@ func hotbar_node() -> WIHotbar:
 
 
 func _on_hotbar_slot_clicked(index: int) -> void:
+	if _item_presenter_busy():
+		return
 	if WIResponsiveLayout.uses_touch_layout() and _hud.mobile_hud().details_open():
 		return
 	if _mode != Mode.HOTBAR and _mode != Mode.ATTACK and _mode != Mode.SKILL_TARGET and _mode != Mode.DASH_CONFIRM:
@@ -913,6 +916,8 @@ func _switch_bar_slot(index: int) -> void:
 
 
 func handle_board_click(world_pos: Vector2) -> void:
+	if _item_presenter_busy():
+		return
 	if WIResponsiveLayout.uses_touch_layout() and _hud.mobile_hud().details_open():
 		return
 	# review M4: with the combat pause open (now a mainline touch state via
@@ -994,20 +999,17 @@ func _apply_turn_started(id: String) -> void:
 		_refresh()
 
 
-## Issue #92 R2: the PC's currently-carried combat-usable consumable
-## records (a `use_effect.heal` shape only -- a `next_fight` meal never
-## belongs on this bar, see `rebuild_slots`' own doc comment) -- threaded
-## into `_hud.rebuild_slots` above the SAME way `Game.sim.hotbar_loadout`
-## already is (this file freely references `Game.sim`; combat_hud.gd itself
-## stays autoload-free). Recomputed fresh every turn start, matching
-## `hotbar_loadout` itself never being cached either.
+## HUD previews must not replace the selected action token.
 func _usable_combat_items() -> Array:
 	var out: Array = []
 	for raw_id: Variant in Game.sim.inventory:
 		var id := String(raw_id)
 		var rec: Dictionary = Game.sim.item(id)
-		if (rec.get("use_effect", {}) as Dictionary).has("heal"):
-			out.append(rec)
+		if bool(rec.get("usable_in_combat", false)) and Game.sim.item_count(id) > 0:
+			var counted := rec.duplicate(true)
+			counted["count"] = Game.sim.item_count(id)
+			counted["preview"] = Game.sim.preview_item_use(id, "combat")
+			out.append(counted)
 	return out
 
 
@@ -1026,6 +1028,9 @@ func _emit_ai_playback_done(beats: int) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _item_presenter_busy():
+		get_viewport().set_input_as_handled()
+		return
 	if _mode != Mode.INACTIVE and WIResponsiveLayout.uses_touch_layout() and _hud.mobile_hud().details_open():
 		if event.is_action_pressed("cancel"):
 			_on_mobile_action("drawer_close")
@@ -1236,16 +1241,62 @@ func _input_dash_confirm(event: InputEvent) -> void:
 
 
 func _confirm_bar_action() -> void:
+	if _item_presenter_busy() or _mode != Mode.DASH_CONFIRM:
+		return
 	var slot: Dictionary = _bar_slots[_bar_index] if _bar_index >= 0 and _bar_index < _bar_slots.size() else {}
 	_mode = Mode.HOTBAR
 	_bar_index = -1
 	match String(slot.get("type", "dash")):
 		"item":
-			Game.sim.combat_use_item(String(slot.get("id", "")))
+			var presenter := get_tree().get_first_node_in_group("wi_item_use_presenter")
+			if presenter != null and _item_offer_sim == Game.sim and String(_item_offer.get("item", "")) == String(slot.get("id", "")):
+				if not presenter.item_use_rearmed.is_connected(_on_item_rearmed):
+					presenter.item_use_rearmed.connect(_on_item_rearmed)
+				presenter.activate_item_offer(_item_offer.duplicate(true), _item_offer_sim)
 		_:
 			_combat().dash()
 
 
 func _cancel_bar_action() -> void:
+	_retire_item_offer()
 	_mode = Mode.HOTBAR
 	_bar_index = -1
+
+
+func _item_presenter_busy() -> bool:
+	var presenter := get_tree().get_first_node_in_group("wi_item_use_presenter") if is_inside_tree() else null
+	return presenter != null and presenter.item_use_busy()
+
+
+func _retire_item_offer() -> void:
+	if not _item_offer.is_empty() and not _item_presenter_busy():
+		_item_offer_sim.cancel_item_use(int(_item_offer.operation_id))
+	_item_offer.clear()
+
+
+func _on_item_rearmed() -> void:
+	_item_offer.clear()
+	if _combat_or_null() == null or _mode in [Mode.INACTIVE, Mode.BANNER]:
+		return
+	_bar_slots = _hud.rebuild_slots(_view, _view.active_id(), Game.sim.hotbar_loadout, _usable_combat_items())
+	_info_slot_index = mini(_info_slot_index, _bar_slots.size() - 1)
+	_refresh()
+
+
+func _render_item_receipt(result: Dictionary) -> void:
+	if _mode == Mode.INACTIVE:
+		return
+	var text := WIEffectText.item_use_text(result)
+	_hud.feed_push(text)
+	_refresh()
+	await get_tree().process_frame
+	if _mode != Mode.INACTIVE and _hud.rendered_feed_has(text):
+		result.merge({"text": text, "surface": "combat_feed"}, true)
+		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_RENDERED, result)
+
+
+func _emit_item_preview(offer: Dictionary, generation: int) -> void:
+	await get_tree().process_frame
+	if generation == _item_generation and _mode != Mode.INACTIVE:
+		offer.merge({"text": WIEffectText.item_use_text(offer), "surface": "combat_readout", "generation": generation}, true)
+		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_PREVIEW_RENDERED, offer)
