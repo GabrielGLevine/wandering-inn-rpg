@@ -8177,7 +8177,8 @@
      "input",
      "night_phase",
      "portals",
-     "quests"
+     "quests",
+     "save"
     ]
    }
   },
