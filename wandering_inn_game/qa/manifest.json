@@ -1480,7 +1480,7 @@
    "script": "field_skills_loop",
    "seed": 9,
    "fixture": "near_tactician",
-   "note": "field-skill hotbar loop (Basic Cleaning -> Observe); loadout remap; #557 compact default, explicit keyboard Details toggle, settings persistence",
+   "note": "field-skill hotbar loop (Basic Cleaning -> Observe); loadout remap; #557 compact default, explicit keyboard Skills toggle, settings persistence",
    "tiers": [
     "full"
    ],

@@ -51,7 +51,7 @@
    ]
   },
   {
-   "_comment": "Desktop Details stays open across the portal so its player cap must pick up the boulevard's camera offset.",
+   "_comment": "The desktop Skills readout stays open across the portal so its player cap must pick up the boulevard's camera offset.",
    "action": "press",
    "name": "field_readout"
   },
