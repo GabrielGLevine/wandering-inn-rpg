@@ -97,6 +97,7 @@ var _readout_lines: Array = []
 var _slot_numbers: Array = []
 var _fallback_labels: Array = []
 var _expanded := false
+var _reveal_queued := false
 var _combat_hidden := false
 var _dialogue_open := false
 var _panel_open := false
@@ -218,6 +219,43 @@ func set_selected(index: int) -> void:
 		_page = index / maxi(1, _page_size)
 	_layout_controls()
 	_update_selection_label(index)
+	_queue_readout_reveal(index)
+
+
+## Global rect of readout line `index`; lines follow slot order.
+func readout_line_rect(index: int) -> Rect2:
+	if _readout_label == null or index < 0 or index >= _field_skills.size():
+		return Rect2()
+	var width := _readout_label.size.x
+	var top := 0.0
+	if index > 0:
+		top = _readout_text_height(_readout_lines.slice(0, index), width) + float(_readout_label.get_theme_constant("line_spacing"))
+	var bottom := _readout_text_height(_readout_lines.slice(0, index + 1), width)
+	return Rect2(_readout_label.global_position + Vector2(0.0, top), Vector2(width, bottom - top))
+
+
+## Keyboard and gamepad parity: the capped readout scrolls to the selected
+## Skill. Only selection changes and expansion call this, so wheel scrolling
+## is not snapped back by layout refreshes. Next frame: scroll range settles.
+func _queue_readout_reveal(index: int) -> void:
+	if not _expanded or index < 0 or _reveal_queued or not is_inside_tree():
+		return
+	_reveal_queued = true
+	get_tree().process_frame.connect(_reveal_selected_line, CONNECT_ONE_SHOT)
+
+
+func _reveal_selected_line() -> void:
+	_reveal_queued = false
+	if _readout_panel == null or not _readout_panel.visible:
+		return
+	var line := readout_line_rect(_last_selected_index)
+	var view := _readout_scroll.get_global_rect()
+	if line.size == Vector2.ZERO:
+		return
+	if line.position.y < view.position.y:
+		_readout_scroll.scroll_vertical -= int(ceilf(view.position.y - line.position.y))
+	elif line.end.y > view.end.y:
+		_readout_scroll.scroll_vertical += int(ceilf(line.end.y - view.end.y))
 
 
 func toggle_rect() -> Rect2:
@@ -427,6 +465,7 @@ func _set_expanded(value: bool, persist: bool, reason: String) -> void:
 	_update_toggle_label()
 	if _layout_controls():
 		_update_selection_label(_last_selected_index)
+		_queue_readout_reveal(_last_selected_index)
 		_emit_rendered(reason)
 	else:
 		call_deferred("_emit_rendered", reason)
@@ -592,9 +631,8 @@ func _layout_controls() -> bool:
 	var panel_width := minf(READOUT_MAX_WIDTH, maxf(1.0, safe.size.x - WIFieldHotbarLayout.OUTER_MARGIN * 2.0))
 	var text_width := panel_width - frame_size.x - READOUT_SCROLLBAR_RESERVE
 	var content_height := _readout_content_height(text_width)
-	var desired_height := content_height + frame_size.y
-	if touch_layout:
-		desired_height = minf(desired_height, safe.size.y / 3.0)
+	# Every layout caps the panel; earned desktop lists scroll instead of eating the world view.
+	var desired_height := minf(content_height + frame_size.y, safe.size.y / 3.0)
 	var reserved_bottom := maxf(_hotbar.size.y, toggle_size.y) + CONTROLS_BOTTOM_MARGIN + READOUT_GAP + READOUT_SELECTION_CLEARANCE
 	reserved_bottom = maxf(reserved_bottom, TOAST_BAND_RESERVE + READOUT_GAP)
 	# The strip is bottom-RIGHT anchored on the viewport (not on this layer's
@@ -617,9 +655,13 @@ func _current_safe_rect() -> Rect2:
 	return WIResponsiveLayout.safe_rect(get_viewport())
 
 func _readout_content_height(width: float) -> float:
-	if _readout_lines.is_empty() or width <= 0.0:
+	return _readout_text_height(_readout_lines, width)
+
+
+func _readout_text_height(lines_text: Array, width: float) -> float:
+	if lines_text.is_empty() or width <= 0.0:
 		return 1.0
-	var text := "\n".join(_readout_lines)
+	var text := "\n".join(lines_text)
 	var font := _readout_label.get_theme_font("font")
 	var font_size := _readout_label.get_theme_font_size("font_size")
 	var measured := font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, width, font_size)

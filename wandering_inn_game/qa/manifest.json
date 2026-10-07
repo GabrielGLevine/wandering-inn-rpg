@@ -8273,7 +8273,7 @@
    "tiers": [
     "full"
    ],
-   "note": "#567 desktop17-skill earned-state fixture: actual paging exposes every original slot, slot16 clicks dispatch Keen Eye, keyboard brackets reveal last/first selection, and Details stays visible. Native mouse emulation; inheritedkit is not acquisition/mobile proof.",
+   "note": "#567 desktop17-skill earned-state fixture: actual paging exposes every original slot, slot16 clicks dispatch Keen Eye, keyboard brackets reveal last/first selection, and expanded Details stays bounded above the controls while a real mouse wheel reaches its last line. Native mouse emulation; inheritedkit is not acquisition/mobile proof.",
    "surfaces": {
     "maps": [
      "inn_upstairs"

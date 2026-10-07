@@ -150,11 +150,93 @@
       "action": "touch_field_details"
     },
     {
+      "action": "wait_for_event",
+      "type": "ui_field_hotbar_rendered",
+      "timeout_sec": 20,
+      "payload_contains": {
+        "expanded": true
+      }
+    },
+    {
       "action": "assert_field_layout"
     },
     {
       "action": "screenshot",
       "name": "desktop_earned_details"
+    },
+    {
+      "action": "assert_field_readout_selection_visible"
+    },
+    {
+      "action": "press",
+      "name": "slot_prev"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_field_hotbar_selection_rendered",
+      "timeout_sec": 20,
+      "payload_contains": {
+        "index": 16,
+        "visible": true
+      }
+    },
+    {
+      "action": "assert_field_readout_selection_visible"
+    },
+    {
+      "action": "assert_field_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "desktop_earned_details_keyboard_last"
+    },
+    {
+      "action": "press",
+      "name": "slot_next"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_field_hotbar_selection_rendered",
+      "timeout_sec": 20,
+      "payload_contains": {
+        "index": 0,
+        "visible": true
+      }
+    },
+    {
+      "action": "assert_field_readout_selection_visible"
+    },
+    {
+      "action": "wheel_scroll_field_to_end"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "qa_field_readout_end_visible",
+      "timeout_sec": 20,
+      "payload_contains": {
+        "input": "mouse_wheel"
+      }
+    },
+    {
+      "action": "assert_field_layout"
+    },
+    {
+      "action": "screenshot",
+      "name": "desktop_earned_details_end"
+    },
+    {
+      "action": "touch_field_details"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_field_hotbar_rendered",
+      "timeout_sec": 20,
+      "payload_contains": {
+        "expanded": false
+      }
+    },
+    {
+      "action": "assert_field_layout"
     }
   ]
 }

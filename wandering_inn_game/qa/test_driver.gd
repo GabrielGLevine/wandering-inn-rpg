@@ -567,6 +567,7 @@ func _execute(step: Dictionary) -> void:
 			if index < 0 or field == null:
 				_fail("touch_field_skill: skill is not on the live bar: " + skill_id)
 			else:
+				await _touch_field_page_to(field, index)
 				var rect: Rect2 = field.hotbar_node().slot_rect(index)
 				if rect.size == Vector2.ZERO:
 					_fail("touch_field_skill: skill has no rendered control")
@@ -590,6 +591,10 @@ func _execute(step: Dictionary) -> void:
 			await _touch_field_pages()
 		"touch_scroll_field_to_end":
 			await _touch_scroll_field_to_end()
+		"wheel_scroll_field_to_end":
+			await _wheel_scroll_field_to_end()
+		"assert_field_readout_selection_visible":
+			await _assert_field_readout_selection_visible()
 		"touch_inventory_item":
 			await _touch_inventory_item(String(step["item"]))
 		"wait_item_use_ready":
@@ -1708,6 +1713,22 @@ func _touch_combat_pages(step: Dictionary) -> void:
 	ObservableBus.emit_domain_event("qa_combat_pages_read", {"mode": "tutor" if tutor else "details", "pages": count, "text": text})
 
 
+## A paged bar shows the target slot only after real page-control touches.
+func _touch_field_page_to(field: Node, index: int) -> void:
+	for attempt in 30:
+		if field.hotbar_node().slot_rect(index).size != Vector2.ZERO:
+			return
+		var shown: Array[int] = []
+		for child: Control in field.hotbar_node().get_children():
+			shown.append(int(child.get_meta("slot_index")))
+		var direction := "next" if shown.is_empty() or index > shown.max() else "previous"
+		var control: Rect2 = field.page_control_rect(direction)
+		if not control.has_area():
+			return
+		await _touch_at(control.get_center(), "touch_field_pages")
+		await _wait_for_event("ui_field_hotbar_rendered", 5.0, {"reason": "page"})
+
+
 func _touch_field_pages() -> void:
 	var field := get_tree().root.find_child("FieldHotbar", true, false)
 	if field == null:
@@ -1758,6 +1779,51 @@ func _touch_scroll_field_to_end() -> void:
 	if scroll.scroll_vertical < bar.max_value - bar.page - 1.0 or label.get_global_rect().end.y > scroll.get_global_rect().end.y + 1.0:
 		_fail("touch_scroll_field_to_end: final readout line remains clipped")
 	ObservableBus.emit_domain_event("qa_field_readout_end_visible", {"scroll": scroll.scroll_vertical, "text": label.text})
+
+
+## Keyboard/gamepad parity: the selected Skill's readout line is in view.
+func _assert_field_readout_selection_visible() -> void:
+	await _settle_for_capture()
+	var field := get_tree().root.find_child("FieldHotbar", true, false)
+	if field == null or not bool(field.get("_expanded")):
+		_fail("assert_field_readout_selection_visible: details must be expanded")
+		return
+	var index := int(field.get("_last_selected_index"))
+	var line: Rect2 = field.readout_line_rect(index)
+	var view := (field.get("_readout_scroll") as ScrollContainer).get_global_rect()
+	if line.size == Vector2.ZERO or not view.grow(1.0).encloses(line):
+		_fail("assert_field_readout_selection_visible: line %d %s outside %s" % [index, line, view])
+	ObservableBus.emit_domain_event("qa_field_readout_selection_visible", {"index": index})
+
+
+## Desktop counterpart: real mouse-wheel input over the bounded readout.
+func _wheel_scroll_field_to_end() -> void:
+	var field := get_tree().root.find_child("FieldHotbar", true, false)
+	if field == null or not bool(field.get("_expanded")):
+		_fail("wheel_scroll_field_to_end: details must be expanded")
+		return
+	var scroll := field.get("_readout_scroll") as ScrollContainer
+	var label := field.get("_readout_label") as Label
+	var bar := scroll.get_v_scroll_bar()
+	if bar.max_value <= bar.page:
+		_fail("wheel_scroll_field_to_end: fixture does not overflow")
+		return
+	var pos := scroll.get_global_rect().get_center()
+	for attempt in 80:
+		if scroll.scroll_vertical >= bar.max_value - bar.page - 1.0:
+			break
+		for pressed: bool in [true, false]:
+			var wheel := InputEventMouseButton.new()
+			wheel.button_index = MOUSE_BUTTON_WHEEL_DOWN
+			wheel.pressed = pressed
+			wheel.factor = 1.0
+			wheel.position = pos
+			wheel.global_position = pos
+			get_tree().root.push_input(wheel, true)
+		await _settle_for_capture()
+	if scroll.scroll_vertical < bar.max_value - bar.page - 1.0 or label.get_global_rect().end.y > scroll.get_global_rect().end.y + 1.0:
+		_fail("wheel_scroll_field_to_end: final readout line remains clipped")
+	ObservableBus.emit_domain_event("qa_field_readout_end_visible", {"scroll": scroll.scroll_vertical, "text": label.text, "input": "mouse_wheel"})
 
 
 func _assert_combat_layout(step: Dictionary) -> void:
@@ -1986,6 +2052,10 @@ func _assert_field_layout() -> void:
 	var readout := field.find_child("FieldReadout", true, false) as Control
 	if readout != null and readout.visible and world_rect.intersects(readout.get_global_rect()):
 		_fail("assert_field_layout: expanded details cover the world view")
+	if readout != null and readout.visible:
+		for id: String in rects:
+			if readout.get_global_rect().intersects(rects[id]):
+				_fail("assert_field_layout: expanded details overlap %s" % id)
 	ObservableBus.emit_domain_event("qa_field_layout_measured", {"controls_css": measurements, "touch_layout": WIResponsiveLayout.uses_touch_layout(), "text_scale": WISettings.text_scale_label(), "player": [player_position.x, player_position.y]})
 
 
