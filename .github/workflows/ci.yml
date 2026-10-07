@@ -7,7 +7,8 @@
 #
 # The QA suite IS the CI: a smoke boot, the unit suites, the smoke-tier QA
 # sweep (always on), the full canonical QA sweep (qa/ci_sweep.sh, PR/[ci-
-# full]/nightly), and a web-parity run.
+# full]/nightly), and the Web parity gate: one verified export fanned out to
+# browser legs and registry shards, then re-verified as one required check.
 #
 # Engine integrity: pinned by exact release URL + verified at run time
 # against the official SHA512-SUMS.txt from the SAME release tag — no
@@ -22,7 +23,7 @@ on:
   push:
     branches: [main]
   # Actions-budget conservation (user directive 2026-07-10, 21-day
-  # squeeze): the two heavy jobs below (sweep, web-parity) SKIP plain
+  # squeeze): the heavy jobs below (sweep and the web-* group) SKIP plain
   # pushes to main -- every push is already gated by the identical local
   # sweep per wi-verifying-changes. They still run on: every PR (external
   # code gets full rigor), a nightly schedule (drift catch), manual
@@ -339,12 +340,20 @@ jobs:
           set -euo pipefail
           bash wandering_inn_game/qa/ci_sweep.sh
 
-  # -------------------------------------------------------------- web-parity
-  web-parity:
-    name: Web parity (headless Chromium)
+  # ------------------------------------------------------------- web group
+  # One export of this exact checkout feeds every browser leg; registry cases
+  # run in cost-balanced shards on separate runners, never concurrently inside
+  # one browser host, so gesture timing sees the same load as a serial run.
+  # The required "Web parity (headless Chromium)" check is the aggregator: it
+  # fails unless every leg passed, every registered script/profile ran exactly
+  # once against that export, and each case re-verifies from its artifacts.
+  web-export:
+    name: Web export (pinned Godot 4.7)
     if: github.event_name != 'push' || contains(github.event.head_commit.message, '[ci-full]')
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 20
+    outputs:
+      pck_sha256: ${{ steps.export.outputs.pck_sha256 }}
     steps:
       - uses: actions/checkout@v4
 
@@ -378,6 +387,53 @@ jobs:
             exit 1
           fi
 
+      - name: Export the Web build once for every browser leg
+        id: export
+        run: |
+          set -euo pipefail
+          log=web_export.log
+          perl -e 'alarm 600; exec @ARGV' \
+            bash wandering_inn_game/qa/web/export_web.sh >"$log" 2>&1 || rc=$?
+          cat "$log"
+          [ "${rc:-0}" = 0 ] || { echo "::error::Web export failed"; exit 1; }
+          # The same error/warning grep the combat parity step applied while it exported inline.
+          if grep -nE 'SCRIPT ERROR|Parse Error|ERROR:|WARNING|\[console:error\]|\[pageerror\]' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+            echo "::error::Web export tripped the error/warning grep"; exit 1
+          fi
+          pck="$(bash wandering_inn_game/qa/web/web_build_stamp.sh write)"
+          echo "pck_sha256=$pck" >>"$GITHUB_OUTPUT"
+          echo "exported index.pck sha256 $pck from $(git rev-parse HEAD)"
+
+      - name: Share the verified export
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: wandering_inn_game/build/
+          if-no-files-found: error
+          retention-days: 3
+
+  web-core:
+    name: Web legs — parity, touch smoke, save port
+    needs: web-export
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[ci-full]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the Web export
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: wandering_inn_game/build
+
+      - name: Verify the export belongs to this exact checkout and export job
+        run: |
+          set -euo pipefail
+          pck="$(bash wandering_inn_game/qa/web/web_build_stamp.sh verify)"
+          echo "verified index.pck $pck; export job recorded ${{ needs.web-export.outputs.pck_sha256 }}"
+          test "$pck" = "${{ needs.web-export.outputs.pck_sha256 }}"
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -400,7 +456,7 @@ jobs:
           # was written (empty log, green check). The assignment belongs in
           # front of perl, and an empty log is now a failure in its own right.
           WI_REQUIRE_AUDIO_OUTPUT=1 perl -e 'alarm 600; exec @ARGV' \
-            bash wandering_inn_game/qa/web/run_web_qa.sh combat_walkthrough 9 >"$log" 2>&1 || rc=$?
+            bash wandering_inn_game/qa/web/run_web_qa.sh combat_walkthrough 9 --skip-export >"$log" 2>&1 || rc=$?
           cat "$log"
           grep -q 'QA_RESULT: PASS' "$log" || { echo "::error::web-parity run produced no QA_RESULT: PASS (did the runner even start?)"; exit 1; }
           # Known-harmless runner-only line (first public CI run, 2026-07-06):
@@ -448,17 +504,48 @@ jobs:
           done
           exit "$fail"
 
-      - name: Browser registry routing and evidence checks
+      - name: Browser registry routing, sharding and merge checks
         run: python3 -m unittest scripts.tests.test_browser_suite -v
-
-      - name: Browser-only interaction registry (emulated iPhone and Android)
-        run: python3 wandering_inn_game/qa/web/run_browser_suite.py --skip-export
 
       - name: Browser startup and touch gesture negative controls
         run: |
           node wandering_inn_game/qa/web/runner_startup_test.mjs
           node wandering_inn_game/qa/web/touch_gesture_proof_test.mjs
           node wandering_inn_game/qa/web/touch_dispatch_test.mjs
+
+  web-lifecycle:
+    name: Web legs — reload, import lifetime, input/audio
+    needs: web-export
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[ci-full]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the Web export
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: wandering_inn_game/build
+
+      - name: Verify the export belongs to this exact checkout and export job
+        run: |
+          set -euo pipefail
+          pck="$(bash wandering_inn_game/qa/web/web_build_stamp.sh verify)"
+          echo "verified index.pck $pck; export job recorded ${{ needs.web-export.outputs.pck_sha256 }}"
+          test "$pck" = "${{ needs.web-export.outputs.pck_sha256 }}"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install web QA deps (playwright)
+        run: |
+          set -euo pipefail
+          cd wandering_inn_game/qa/web
+          npm ci
+          npx playwright install --with-deps chromium
 
       - name: Lifecycle runner negative controls
         run: node wandering_inn_game/qa/web/lifecycle_result_test.mjs
@@ -507,6 +594,76 @@ jobs:
             web_lifecycle_*.log
           if-no-files-found: error
 
+  web-registry:
+    name: Web registry shard ${{ matrix.shard }}/${{ strategy.job-total }} (emulated iPhone and Android)
+    needs: web-export
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[ci-full]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the Web export
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: wandering_inn_game/build
+
+      - name: Verify the export belongs to this exact checkout and export job
+        run: |
+          set -euo pipefail
+          pck="$(bash wandering_inn_game/qa/web/web_build_stamp.sh verify)"
+          echo "verified index.pck $pck; export job recorded ${{ needs.web-export.outputs.pck_sha256 }}"
+          test "$pck" = "${{ needs.web-export.outputs.pck_sha256 }}"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install web QA deps (playwright)
+        run: |
+          set -euo pipefail
+          cd wandering_inn_game/qa/web
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Browser-only interaction registry shard
+        run: python3 wandering_inn_game/qa/web/run_browser_suite.py --skip-export --shard ${{ matrix.shard }}/${{ strategy.job-total }}
+
+      - name: Preserve shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-suite-shard-${{ matrix.shard }}
+          path: wandering_inn_game/qa_output/browser_suite/
+          if-no-files-found: error
+          retention-days: 7
+
+  web-parity:
+    name: Web parity (headless Chromium)
+    needs: [web-export, web-core, web-lifecycle, web-registry]
+    if: always() && (github.event_name != 'push' || contains(github.event.head_commit.message, '[ci-full]'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download every registry shard's evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: browser-suite-shard-*
+          path: browser-shards
+
+      - name: Merge shards and re-verify every registry case against the one export
+        run: |
+          python3 wandering_inn_game/qa/web/run_browser_suite.py \
+            --merge browser-shards/* --expect-pck-sha256 "${{ needs.web-export.outputs.pck_sha256 }}"
+
       - name: Preserve browser-only evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -514,3 +671,12 @@ jobs:
           name: browser-purchase-confirmation
           path: wandering_inn_game/qa_output/browser_suite/
           if-no-files-found: error
+
+      - name: Require every Web leg to pass
+        if: always()
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          set -euo pipefail
+          echo "$NEEDS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
+          echo "$NEEDS" | jq -e 'length == 4 and (to_entries | all(.value.result == "success"))' >/dev/null
