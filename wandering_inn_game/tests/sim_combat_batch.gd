@@ -231,6 +231,12 @@ var _summon_catalog: Dictionary = {}
 ## was actually holding.
 var _policy: WICombatPolicies = null
 var _policy_sweep := false
+## #453/#571: `WI_ENTRY_FRACTION=<0..1)` seeds the PC at floor(fraction x max)
+## HP and MP through WICombat's own carried-resource entry (`initial_hp/mp`),
+## the depleted counterpart of the rested baseline. Every band in this file is
+## authored fully rested, so this leg is REPORT ONLY, like the tier and policy legs.
+var _entry_fraction := 1.0
+var _entry_sweep := false
 
 func _take_turn(combat: WICombat) -> void:
 	if _policy == null:
@@ -249,6 +255,8 @@ func _cell_in_range() -> bool:
 ## THE one construction site for every fight in this file, so the tier hook is
 ## applied once rather than at each of the eleven per-family loops.
 func _new_combat(arena: Dictionary, cfgs: Array, skills_cfg: Dictionary, sink: Callable, rng_seed: int) -> WICombat:
+	if _entry_sweep:
+		cfgs = _depleted_entry(arena, cfgs, skills_cfg)
 	var combat := WICombat.new(arena, cfgs, skills_cfg, sink, rng_seed)
 	combat.difficulty_damage_taken_mult = _difficulty_mult
 	# #460 rides this single site for the same reason the tier hook does: the
@@ -257,6 +265,21 @@ func _new_combat(arena: Dictionary, cfgs: Array, skills_cfg: Dictionary, sink: C
 	# exactly what `wi_game.start_combat` hands the live game.
 	combat.summon_catalog = _summon_catalog
 	return combat
+
+
+## Maxima come from a rested probe of the same roster, so the fraction applies to
+## the derived HP/MP the runtime would compute, not to the template's base stats.
+func _depleted_entry(arena: Dictionary, cfgs: Array, skills_cfg: Dictionary) -> Array:
+	var probe := WICombat.new(arena, cfgs, skills_cfg, func(_t: String, _p: Dictionary) -> void: pass, 1)
+	var pc: Dictionary = probe.combatants.get("pc", {})
+	if pc.is_empty():
+		return cfgs
+	var out := cfgs.duplicate(true)
+	for cfg: Dictionary in out:
+		if String(cfg.get(WIKeys.ID, "")) == "pc":
+			cfg["initial_hp"] = maxi(1, floori(float(pc[WIKeys.MAX_HP]) * _entry_fraction))
+			cfg["initial_mp"] = floori(float(pc[WIKeys.MAX_MP]) * _entry_fraction)
+	return out
 
 
 func _note_ladder(cell: Dictionary, win_rate: float) -> void:
@@ -1152,6 +1175,13 @@ func _init() -> void:
 		_policy_sweep = true
 		print("[policy-sweep] pc turn driver=%s -- REPORT ONLY (every band in this file is authored against the floor policy)" % policy_env)
 
+	var entry_env := OS.get_environment("WI_ENTRY_FRACTION")
+	if entry_env != "":
+		_entry_fraction = float(entry_env)
+		assert(_entry_fraction > 0.0 and _entry_fraction < 1.0, "WI_ENTRY_FRACTION must be in (0, 1)")
+		_entry_sweep = true
+		print("[entry-sweep] pc enters at %.2f of max HP/MP -- REPORT ONLY (every band in this file is authored fully rested)" % _entry_fraction)
+
 	var range_env := OS.get_environment("WI_CELL_RANGE")
 	if range_env != "":
 		var parts := range_env.split(":")
@@ -1881,7 +1911,7 @@ func _init() -> void:
 		print("[ladder] main-quest stops, descending: ", " > ".join(ladder_line))
 		# A tier leg never asserts either -- every band in this file is authored at
 		# Silver, so an ordering read at 0.75/1.3 is a measurement, not a contract.
-		var ladder_gated := _policy_sweep and not _tier_sweep \
+		var ladder_gated := _policy_sweep and not _tier_sweep and not _entry_sweep \
 				and _policy != null and _policy.policy == WICombatPolicies.COMPETENT
 		for i in range(LADDER_RUNGS.size() - 1):
 			var upper := String(LADDER_RUNGS[i])
@@ -1913,6 +1943,13 @@ func _init() -> void:
 	if _tier_sweep:
 		print("[tier-sweep] mult=%.2f complete over %d cells x %d seeded runs — any FAIL lines above are the REPORT, not a regression" % [
 			_difficulty_mult, total_cells, RUNS_PER_CELL,
+		])
+		quit(0)
+		return
+
+	if _entry_sweep:
+		print("[entry-sweep] fraction=%.2f complete over %d cells x %d seeded runs — any FAIL lines above are the REPORT, not a regression" % [
+			_entry_fraction, total_cells, RUNS_PER_CELL,
 		])
 		quit(0)
 		return

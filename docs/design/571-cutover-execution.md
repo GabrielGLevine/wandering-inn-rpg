@@ -64,7 +64,7 @@ Windowed read of each journey's key captures at production timing.
 |---|---|
 | A: #586 noise deferral | done `35b0f988` (`qa/noise_scan.sh`, ci_sweep) |
 | A: journey tier/budget/report/guard | done: `qa/journeys.json`, `qa/journey_gate.py`, `journey` tier ⊂ `full`, nightly CI job. Measured locally under two concurrent lanes: Rogue 17.8 s (budget 90), Worker 10.4 s (budget 60). Real negative run: wrong checkpoint and registry drop both FAIL. Register martial/caster/imperfect as lanes land. |
-| B: depleted harness + reruns | not started |
+| B: depleted harness + reruns | done: report-only `WI_ENTRY_FRACTION` leg, `scripts/harness_entry_report.py`, `571-attrition-measurements.md` (rested PASS; vault 0.85–0.90 → 0.20–0.24 at 75% entry). Surfaced to #453; no tuning. |
 | C: martial vault → ending | not started |
 | D: worker wall → ending | not started |
 | E: caster journey | not started |
