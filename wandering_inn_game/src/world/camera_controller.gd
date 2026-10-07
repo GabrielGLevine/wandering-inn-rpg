@@ -37,14 +37,19 @@ func set_field_framing(offset_cells: Vector2, margins_cells: Vector4) -> void:
 
 func _field_position(grid_size: Vector2i, player_cell: Vector2i) -> Vector2:
 	var content_size := Vector2(grid_size) * _cell
-	var offset := _field_offset.clamp(-_view_size * 0.25, _view_size * 0.25)
-	var focus := (Vector2(player_cell) + Vector2.ONE * 0.5) * _cell + offset
+	var focus := (Vector2(player_cell) + Vector2.ONE * 0.5) * _cell - field_focus_offset()
 	return Vector2(
 		axis(content_size.x + _field_margins.x + _field_margins.z,
 			_view_size.x, focus.x + _field_margins.x) - _field_margins.x,
 		axis(content_size.y + _field_margins.y + _field_margins.w,
 			_view_size.y, focus.y + _field_margins.y) - _field_margins.y
 	)
+
+
+## Where an unclamped field camera holds the player, in world px from the view
+## centre (positive = below). Map edges can still clamp the camera.
+func field_focus_offset() -> Vector2:
+	return -_field_offset.clamp(-_view_size * 0.25, _view_size * 0.25)
 
 
 func set_view_size(view_size: Vector2) -> void:

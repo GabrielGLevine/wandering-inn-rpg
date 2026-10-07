@@ -100,6 +100,8 @@ var _expanded := false
 var _combat_hidden := false
 var _dialogue_open := false
 var _panel_open := false
+## Main.world_focus_bottom(); 0 until Main has laid out a world.
+var _world_focus_bottom := 0.0
 
 
 func _ready() -> void:
@@ -269,11 +271,29 @@ func world_bottom() -> float:
 	if not visible or _last_slots.is_empty():
 		return bottom
 	bottom = minf(bottom, _hotbar.global_position.y - READOUT_SELECTION_CLEARANCE)
+	# Desktop Details and the selection paper overlay the world. Reserving them
+	# re-centred the world view on every toggle, the jitter this layer refuses.
+	if not _uses_touch_layout():
+		return bottom
 	if _readout_panel.visible:
 		bottom = minf(bottom, _readout_panel.position.y - READOUT_GAP)
 	if _selection_label_backing.visible:
 		bottom = minf(bottom, _selection_label_backing.position.y - READOUT_GAP)
 	return bottom
+
+
+## Frame plus one line; the desktop player cap never shrinks Details below it.
+func readout_min_height() -> float:
+	var frame_size := WIFieldHotbarLayout.style_frame_size(_readout_panel.get_theme_stylebox("panel"))
+	return frame_size.y + _readout_label.get_theme_font("font").get_height(_readout_label.get_theme_font_size("font_size"))
+
+
+func set_world_focus_bottom(y: float) -> void:
+	if is_equal_approx(y, _world_focus_bottom):
+		return
+	_world_focus_bottom = y
+	if _expanded and not _uses_touch_layout():
+		_refresh_layout()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -635,6 +655,11 @@ func _layout_controls() -> bool:
 	var desired_height := minf(content_height + frame_size.y, safe.size.y / 3.0)
 	var reserved_bottom := maxf(_hotbar.size.y, toggle_size.y) + CONTROLS_BOTTOM_MARGIN + READOUT_GAP + READOUT_SELECTION_CLEARANCE
 	reserved_bottom = maxf(reserved_bottom, TOAST_BAND_RESERVE + READOUT_GAP)
+	# Desktop Details overlays the world, so it stops below the followed player
+	# and scrolls; a camera clamped at a map edge can still put them lower.
+	if not touch_layout and _world_focus_bottom > 0.0:
+		var panel_bottom := safe.end.y - reserved_bottom - WIFieldHotbarLayout.OUTER_MARGIN
+		desired_height = minf(desired_height, maxf(readout_min_height(), panel_bottom - _world_focus_bottom - READOUT_GAP))
 	# The strip is bottom-RIGHT anchored on the viewport (not on this layer's
 	# safe rect), so its left edge is the viewport width plus its own negative
 	# offset -- read live, because text scale and window size both move it.
