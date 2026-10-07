@@ -8099,9 +8099,10 @@
    "script": "journey_rogue",
    "seed": 9,
    "tiers": [
-    "full"
+    "full",
+    "journey"
    ],
-   "note": "#512 continuous fresh Rogue through earned regional travel,58g gear, preserved defeats/rollback/recovery, live Skill utility and open-ending epilogue. No fixtures/teleports; shutdown shader noise still invalidates authoritative gates until fixed.",
+   "note": "#512 continuous fresh Rogue through earned regional travel,58g gear, preserved defeats/rollback/recovery, live Skill utility and open-ending epilogue. No fixtures/teleports; the #586 shutdown leak line is deferred (qa/noise_scan.sh).",
    "surfaces": {
     "maps": [
      "adventurers_rest",
@@ -8184,7 +8185,8 @@
    "script": "journey_worker",
    "seed": 9,
    "tiers": [
-    "full"
+    "full",
+    "journey"
    ],
    "note": "Fresh worker/social history with retained losses: earned cooking and multiclass support, Fang purchase, free chest armor/rest, finite Watch3+4 and Traveler5; bounded retries retain measured Awakened boss wall, including one actual-input Flame Jet tactical loss. No fixtures/top-ups/farming or ending claim.",
    "surfaces": {

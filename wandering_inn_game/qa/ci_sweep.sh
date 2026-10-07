@@ -118,7 +118,7 @@ path = os.environ["MANIFEST_PATH"]
 with open(path) as f:
 	data = json.load(f)
 
-ALLOWED = {"smoke", "full"}
+ALLOWED = {"smoke", "full", "journey"}
 out = []
 for entry in data["scripts"]:
 	name = entry["script"]
@@ -130,9 +130,10 @@ for entry in data["scripts"]:
 	if unknown:
 		print(f"ci_sweep: FATAL — {name} has unknown tier name(s) {unknown} (allowed: {sorted(ALLOWED)})", file=sys.stderr)
 		sys.exit(1)
-	if "smoke" in tiers and "full" not in tiers:
-		print(f"ci_sweep: FATAL — {name} is tagged 'smoke' but not 'full' — smoke must be a structural subset of full", file=sys.stderr)
-		sys.exit(1)
+	for subset in ("smoke", "journey"):
+		if subset in tiers and "full" not in tiers:
+			print(f"ci_sweep: FATAL — {name} is tagged '{subset}' but not 'full' — {subset} must be a structural subset of full", file=sys.stderr)
+			sys.exit(1)
 	out.append(f"{name}:{','.join(tiers)}")
 
 print("\n".join(out))

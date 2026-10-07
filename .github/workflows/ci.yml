@@ -340,6 +340,52 @@ jobs:
           set -euo pipefail
           bash wandering_inn_game/qa/ci_sweep.sh
 
+  # ---------------------------------------------------------- journey gate
+  # #515: every registered continuous journey (qa/journeys.json) runs serially
+  # with its own budget, final checkpoint and resource ledger; a missing or
+  # unregistered journey fails. PRs already run them inside the full sweep, so
+  # this report runs nightly, on dispatch and on [ci-full] pushes.
+  journey-gate:
+    name: Journey gate (continuous routes)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[ci-full]'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pinned Godot 4.7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  ${GODOT_BIN}.zip$" SHA512-SUMS.txt | sed "s#  ${GODOT_BIN}.zip#  godot.zip#" | sha512sum -c -
+          unzip -q godot.zip
+          sudo install -m 0755 "$GODOT_BIN" /usr/local/bin/godot
+          godot --version
+
+      - name: Import pass
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 300; exec @ARGV' \
+            godot --headless --path wandering_inn_game --import
+
+      - name: Journey gate (qa/journey_gate.py)
+        run: python3 wandering_inn_game/qa/journey_gate.py
+
+      - name: Upload journey report and artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: journey-gate
+          path: |
+            wandering_inn_game/qa_output/journey_gate/
+            wandering_inn_game/qa_output/journey_*/result.json
+            wandering_inn_game/qa_output/journey_*/events.jsonl
+            wandering_inn_game/qa_output/steel_thread/result.json
+            wandering_inn_game/qa_output/steel_thread/events.jsonl
+          if-no-files-found: error
+          retention-days: 14
+
   # ------------------------------------------------------------- web group
   # One export of this exact checkout feeds every browser leg; registry cases
   # run in cost-balanced shards on separate runners, never concurrently inside
