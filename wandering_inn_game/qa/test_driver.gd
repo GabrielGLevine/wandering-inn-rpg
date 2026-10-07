@@ -1789,9 +1789,20 @@ func _assert_field_readout_selection_visible() -> void:
 		_fail("assert_field_readout_selection_visible: details must be expanded")
 		return
 	var index := int(field.get("_last_selected_index"))
-	var line: Rect2 = field.readout_line_rect(index)
-	var view := (field.get("_readout_scroll") as ScrollContainer).get_global_rect()
-	if line.size == Vector2.ZERO or not view.grow(1.0).encloses(line):
+	var lines: Array = field.get("_readout_lines")
+	var label := field.get("_readout_label") as Label
+	var view := (field.get("_readout_scroll") as ScrollContainer).get_global_rect().grow(1.0)
+	if index < 0 or index >= lines.size():
+		_fail("assert_field_readout_selection_visible: no selected readout line")
+		return
+	# Engine glyph bounds, independent of the presenter's own line measurement.
+	var start := 0
+	for i in index:
+		start += String(lines[i]).length() + 1
+	var first := label.get_character_bounds(start)
+	var last := label.get_character_bounds(start + String(lines[index]).length() - 1)
+	var line := Rect2(label.global_position + first.position, first.size).merge(Rect2(label.global_position + last.position, last.size))
+	if first.size == Vector2.ZERO or last.size == Vector2.ZERO or not view.encloses(line):
 		_fail("assert_field_readout_selection_visible: line %d %s outside %s" % [index, line, view])
 	ObservableBus.emit_domain_event("qa_field_readout_selection_visible", {"index": index})
 

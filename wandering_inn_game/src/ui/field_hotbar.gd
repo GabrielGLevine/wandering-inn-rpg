@@ -97,7 +97,6 @@ var _readout_lines: Array = []
 var _slot_numbers: Array = []
 var _fallback_labels: Array = []
 var _expanded := false
-var _reveal_queued := false
 var _combat_hidden := false
 var _dialogue_open := false
 var _panel_open := false
@@ -236,16 +235,17 @@ func readout_line_rect(index: int) -> Rect2:
 
 ## Keyboard and gamepad parity: the capped readout scrolls to the selected
 ## Skill. Only selection changes and expansion call this, so wheel scrolling
-## is not snapped back by layout refreshes. Next frame: scroll range settles.
-func _queue_readout_reveal(index: int) -> void:
-	if not _expanded or index < 0 or _reveal_queued or not is_inside_tree():
+## is not snapped back by layout refreshes. Expansion waits for the scroll
+## container's own sort, which is when its range covers the shown text.
+func _queue_readout_reveal(index: int, after_sort := false) -> void:
+	if not _expanded or index < 0 or not is_inside_tree():
 		return
-	_reveal_queued = true
-	get_tree().process_frame.connect(_reveal_selected_line, CONNECT_ONE_SHOT)
+	var settled: Signal = _readout_scroll.sort_children if after_sort else get_tree().process_frame
+	if not settled.is_connected(_reveal_selected_line):
+		settled.connect(_reveal_selected_line, CONNECT_ONE_SHOT)
 
 
 func _reveal_selected_line() -> void:
-	_reveal_queued = false
 	if _readout_panel == null or not _readout_panel.visible:
 		return
 	var line := readout_line_rect(_last_selected_index)
@@ -465,7 +465,7 @@ func _set_expanded(value: bool, persist: bool, reason: String) -> void:
 	_update_toggle_label()
 	if _layout_controls():
 		_update_selection_label(_last_selected_index)
-		_queue_readout_reveal(_last_selected_index)
+		_queue_readout_reveal(_last_selected_index, true)
 		_emit_rendered(reason)
 	else:
 		call_deferred("_emit_rendered", reason)
