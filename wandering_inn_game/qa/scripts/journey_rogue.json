@@ -5761,6 +5761,152 @@
    ]
   },
   {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 10,
+   "_comment": "#571: earned low HP/MP carried out of the scout win, saved and reloaded through the real pause menu before the walk home."
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 0
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "save"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "payload_contains": {
+    "slot": "manual"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 0
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "payload_contains": {
+    "after": {
+     "hp": 10,
+     "max_hp": 44,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "surface": "field"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "rogue_depleted_reload"
+  },
+  {
    "action": "move",
    "direction": "left",
    "steps": 6
@@ -20711,6 +20857,311 @@
    "payload_contains": {
     "id": "seal_rewarded"
    }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "relc_spar",
+    "after": {
+     "hp": 32,
+     "max_hp": 32,
+     "max_mp": 12,
+     "mp": 12,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1,
+   "_comment": "#571: exact entry/exit HP/MP for every fight on this route (journey_ledger.py reads the same events)."
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "relc_spar",
+    "after": {
+     "hp": 32,
+     "max_hp": 32,
+     "max_mp": 12,
+     "mp": 10,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "goblin_encounter_1",
+    "after": {
+     "hp": 43,
+     "max_hp": 43,
+     "max_mp": 12,
+     "mp": 12,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "goblin_encounter_1",
+    "after": {
+     "hp": 43,
+     "max_hp": 43,
+     "max_mp": 12,
+     "mp": 0,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "shield_spiders",
+    "after": {
+     "hp": 43,
+     "max_hp": 43,
+     "max_mp": 13,
+     "mp": 13,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "raskghar_scouts",
+    "after": {
+     "hp": 43,
+     "max_hp": 43,
+     "max_mp": 15,
+     "mp": 15,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "raskghar_scouts",
+    "after": {
+     "hp": 44,
+     "max_hp": 44,
+     "max_mp": 14,
+     "mp": 14,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "raskghar_scouts",
+    "after": {
+     "hp": 10,
+     "max_hp": 44,
+     "max_mp": 14,
+     "mp": 0,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "awakened_boss",
+    "after": {
+     "hp": 44,
+     "max_hp": 44,
+     "max_mp": 14,
+     "mp": 14,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "awakened_boss",
+    "after": {
+     "hp": 44,
+     "max_hp": 44,
+     "max_mp": 14,
+     "mp": 4,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "vault_boss_slot",
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "max_mp": 15,
+     "mp": 15,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "vault_boss_slot",
+    "after": {
+     "hp": 29,
+     "max_hp": 49,
+     "max_mp": 15,
+     "mp": 0,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "ruin_guardian",
+    "after": {
+     "hp": 51,
+     "max_hp": 51,
+     "max_mp": 16,
+     "mp": 16,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "ruin_guardian",
+    "after": {
+     "hp": 51,
+     "max_hp": 51,
+     "max_mp": 16,
+     "mp": 0,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "alley_footpads_b",
+    "after": {
+     "hp": 51,
+     "max_hp": 51,
+     "max_mp": 16,
+     "mp": 16,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "alley_footpads_b",
+    "after": {
+     "hp": 48,
+     "max_hp": 51,
+     "max_mp": 16,
+     "mp": 0,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "seal_warden_alcove",
+    "after": {
+     "hp": 48,
+     "max_hp": 48,
+     "max_mp": 16,
+     "mp": 16,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "seal_warden_alcove",
+    "after": {
+     "hp": 51,
+     "max_hp": 51,
+     "max_mp": 16,
+     "mp": 16,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "seal_warden_alcove",
+    "after": {
+     "hp": 10,
+     "max_hp": 51,
+     "max_mp": 16,
+     "mp": 0,
+     "mp_potion_doses": 0
+    }
+   },
+   "count": 1
   },
   {
    "action": "dump_state",

@@ -69,4 +69,4 @@ Windowed read of each journey's key captures at production timing.
 | D: worker wall → ending | not started |
 | E: caster journey | not started |
 | F: imperfect variant + fee list | not started |
-| G: Rogue per-fight pins | not started |
+| G: Rogue per-fight pins | done: exact entry/exit pins for all 11 fights (19 counts) and an earned pause Save→Load at 10/44 HP, 0/14 MP in `deep_tunnels`; 3509/3509, noise clean. Windowed read pending integration. Rogue never fights twice without sleep, so criterion 5 item 1 comes from lanes C/E. |
