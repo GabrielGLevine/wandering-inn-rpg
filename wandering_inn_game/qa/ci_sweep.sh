@@ -340,13 +340,10 @@ for pair in "${LAUNCHED[@]}"; do
 		echo "----- end $NAME evidence -----"
 	fi
 
-	# Grep discipline: any SCRIPT ERROR / Parse Error / WARNING is a failure.
-	# Zero exemptions — the tree is clean.
-	# Bare `ERROR:` (the Godot engine error prefix) is NOW a failure too —
-	# it slipped the old net (a re-connect/orphan-signal spam printed 242
-	# `ERROR:` lines that ci_sweep read as green, a4 #216 review). Audited
-	# clean across all 148 current logs before widening.
-	HITS="$(grep -nE 'SCRIPT ERROR|Parse Error|WARNING|ERROR:' "$LOG" || true)"
+	# Grep discipline: any SCRIPT ERROR / Parse Error / WARNING / bare `ERROR:`
+	# is a failure (bare `ERROR:` once hid 242 orphan-signal lines, a4 #216).
+	# noise_scan.sh owns the pattern and its single #586 shutdown-leak deferral.
+	HITS="$("$HERE/noise_scan.sh" "$LOG" || true)"
 	if [ -n "$HITS" ]; then
 		echo "FAIL  $NAME — log tripped the error/warning grep:"
 		echo "$HITS" | sed 's/^/        /'

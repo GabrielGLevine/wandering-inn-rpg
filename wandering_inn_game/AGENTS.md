@@ -36,7 +36,9 @@ specified by the issue.
 
 For any authoritative run, preserve the exit code, require its expected
 success marker, reject `SCRIPT ERROR`, `Parse Error`, `ERROR:`, and
-`WARNING`, and require a valid passing `result.json` for QA. A final `PASS`
+`WARNING`, and require a valid passing `result.json` for QA. The only deferred
+line is #586's exact macOS shutdown `DummyShader` RID leak
+(`qa/noise_scan.sh`). A final `PASS`
 cannot override a nonzero exit or noise. Do not pipe a gate into `head` or
 `tail` to decide its status. Settle the tree before a sweep; any edit during a
 run invalidates it. Run one Godot process class per tree at a time.
