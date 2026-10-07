@@ -81,7 +81,7 @@ const MOUSE_LABELS := {
 	"interact": "Click adjacent target",
 	"confirm": "Click a row / option",
 	"hotbar": "Click a hotbar slot",
-	"field_readout": "Click Details",
+	"field_readout": "Click Show Skills",
 }
 
 const TOUCH_LABELS := {
@@ -94,7 +94,7 @@ const TOUCH_LABELS := {
 	"inventory": "Tap Inventory",
 	"end_turn": "Tap End Turn",
 	"hotbar": "Tap a hotbar slot",
-	"field_readout": "Tap Details",
+	"field_readout": "Tap Show Skills",
 }
 
 enum State { ROWS, CONTROLS, HELP, CREDITS }

@@ -95,7 +95,7 @@ func world_view_rect() -> Rect2:
 
 
 ## Screen y of the bottom edge of the cell a following field camera holds the
-## player on. Desktop Details stays below it.
+## player on. The desktop Skills readout stays below it.
 func world_focus_bottom() -> float:
 	var focus := _world.field_focus_offset() if _world != null else Vector2.ZERO
 	return world_view_rect().get_center().y + (focus.y + WIWorld.CELL * 0.5) * _container.scale.y
@@ -461,7 +461,7 @@ func _spawn_world() -> void:
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	# UI_MAP_RENDERED: a transition keeps the World but can change the map's
-	# camera offset, which moves the desktop Details cap.
+	# camera offset, which moves the desktop Skills readout cap.
 	if type in [WIEvents.WORLD_READY, WIEvents.UI_MAP_RENDERED, WIEvents.UI_FIELD_HOTBAR_RENDERED, WIEvents.COMBAT_STARTED, WIEvents.UI_COMBAT_HIDDEN]:
 		_layout_viewport_container.call_deferred()
 	if type == WIEvents.GAME_RESET or type == WIEvents.GAME_LOADED:

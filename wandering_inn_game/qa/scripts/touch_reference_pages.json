@@ -50,7 +50,7 @@
           "inventory": "Tap Inventory",
           "end_turn": "Tap End Turn",
           "hotbar": "Tap a hotbar slot",
-          "field_readout": "Tap Details"
+          "field_readout": "Tap Show Skills"
         }
       },
       "timeout_sec": 10
@@ -151,7 +151,7 @@
           "inventory": "Tap Inventory",
           "end_turn": "Tap End Turn",
           "hotbar": "Tap a hotbar slot",
-          "field_readout": "Tap Details"
+          "field_readout": "Tap Show Skills"
         }
       },
       "timeout_sec": 10
@@ -252,7 +252,7 @@
           "inventory": "Tap Inventory",
           "end_turn": "Tap End Turn",
           "hotbar": "Tap a hotbar slot",
-          "field_readout": "Tap Details"
+          "field_readout": "Tap Show Skills"
         }
       },
       "timeout_sec": 10

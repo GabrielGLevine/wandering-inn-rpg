@@ -173,7 +173,7 @@
    "type": "ui_help_rendered",
    "payload_contains": {
     "sections": 8,
-    "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Details control to show or hide that readout."
+    "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Skills toggle to show or hide that readout."
    },
    "timeout_sec": 5
   },
@@ -385,7 +385,7 @@
    "type": "ui_help_rendered",
    "payload_contains": {
     "sections": 8,
-    "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Details control to show or hide that readout."
+    "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Skills toggle to show or hide that readout."
    },
    "timeout_sec": 5
   },

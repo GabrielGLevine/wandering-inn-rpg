@@ -46,7 +46,7 @@
    "payload_contains": {
     "slots": 2,
     "expanded": false,
-    "toggle_label": "Show details [H]"
+    "toggle_label": "Show Skills [H]"
    },
    "timeout_sec": 5
   },
@@ -99,7 +99,7 @@
    "payload_contains": {
     "expanded": true,
     "reason": "player",
-    "toggle_label": "Hide details [H]"
+    "toggle_label": "Hide Skills [H]"
    },
    "timeout_sec": 5
   },
