@@ -28,8 +28,10 @@ uses the remaining height, including in small interiors. Phone field details
 start collapsed unless the player has saved a preference. Expanded details
 scroll within a capped region and have a visible Hide details control. On
 phones the world viewport also ends above expanded details and the selection
-label; on desktop both overlay the world, so toggling Details never re-centres
-the world view.
+label. On desktop both overlay the world, so toggling Details never re-centres
+the world view; expanded details stop below the cell a following camera holds
+the player on and scroll beyond it. A camera clamped at a map edge can still
+place the player beneath them.
 
 Phone inventory and journal use the available width beneath navigation. Their
 navigation chip reads Close while open. Inventory equipment replaces the item

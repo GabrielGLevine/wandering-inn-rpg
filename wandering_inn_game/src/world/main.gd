@@ -37,6 +37,9 @@ var _title_screen: Node
 var _sleep_veil: Node
 var _settings_panel: Node
 var _combat_focus_cells: Array[Vector2i] = []
+## [world id, view size, combat] last pushed to the world. Re-pushing the same
+## size snaps the camera mid-pan, and every hotbar render relays out.
+var _world_view_key: Array = []
 var _combat_screen: Node
 var _map_transition_layer: CanvasLayer
 var _map_transition_overlay: ColorRect
@@ -89,6 +92,13 @@ func world_to_screen(world_pos: Vector2) -> Vector2:
 
 func world_view_rect() -> Rect2:
 	return Rect2(_container.position, Vector2(_sub_viewport.size) * _container.scale)
+
+
+## Screen y of the bottom edge of the cell a following field camera holds the
+## player on. Desktop Details stays below it.
+func world_focus_bottom() -> float:
+	var focus := _world.field_focus_offset() if _world != null else Vector2.ZERO
+	return world_view_rect().get_center().y + (focus.y + WIWorld.CELL * 0.5) * _container.scale.y
 
 
 ## The exact inverse of `world_to_screen` (issue #57's screen->cell trap):
@@ -319,9 +329,14 @@ func _layout_viewport_container() -> void:
 	_container.scale = Vector2(scale, scale)
 	_container.position = bounds.position + (bounds.size - scaled_size) * 0.5
 	if _world != null:
-		_world.set_view_size(view_size)
+		var view_key := [_world.get_instance_id(), Vector2i(view_size), combat_layout]
+		if combat_layout or view_key != _world_view_key:
+			_world_view_key = view_key
+			_world.set_view_size(view_size)
 		if combat_layout:
 			_world.focus_combat_camera(_combat_focus_cells)
+		elif _field_hotbar != null:
+			_field_hotbar.set_world_focus_bottom(world_focus_bottom())
 
 
 func _clear_world_viewport() -> void:

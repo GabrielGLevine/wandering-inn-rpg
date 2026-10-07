@@ -2064,15 +2064,23 @@ func _assert_field_layout(step: Dictionary = {}) -> void:
 	var readout := field.find_child("FieldReadout", true, false) as Control
 	var readout_open := readout != null and readout.visible
 	# Phone reserves the world view above Details; desktop overlays it so the
-	# world never re-centres on a toggle (`world_view: unchanged` proves that).
+	# world never re-centres on a toggle (`world_view: unchanged` proves that)
+	# and stops it below the cell a following camera holds the player on.
 	if readout_open and WIResponsiveLayout.uses_touch_layout() and world_rect.intersects(readout.get_global_rect()):
 		_fail("assert_field_layout: expanded details cover the world view")
-	match String(step.get("world_view", "")):
+	if readout_open and not WIResponsiveLayout.uses_touch_layout() and readout.get_global_rect().position.y < float(main.world_focus_bottom()) - 0.5:
+		_fail("assert_field_layout: expanded details cover the followed player cell (top %s, cell bottom %s)" % [readout.get_global_rect().position.y, main.world_focus_bottom()])
+	var world_view := String(step.get("world_view", ""))
+	match world_view:
+		"":
+			pass
 		"record":
 			_recorded_world_view = world_rect
 		"unchanged":
 			if not _recorded_world_view.has_area() or not world_rect.is_equal_approx(_recorded_world_view):
 				_fail("assert_field_layout: world view moved from %s to %s" % [_recorded_world_view, world_rect])
+		_:
+			_fail("assert_field_layout: unknown world_view %s" % world_view)
 	if readout_open:
 		for id: String in rects:
 			if readout.get_global_rect().intersects(rects[id]):

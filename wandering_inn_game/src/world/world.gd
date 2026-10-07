@@ -1287,6 +1287,13 @@ func _configure_field_camera() -> void:
 	)
 
 
+func field_focus_offset() -> Vector2:
+	if _camera_ctl == null:
+		return Vector2.ZERO
+	_configure_field_camera()
+	return _camera_ctl.field_focus_offset()
+
+
 func set_view_size(view_size: Vector2) -> void:
 	if _camera_ctl == null:
 		return
