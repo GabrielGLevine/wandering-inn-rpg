@@ -2063,8 +2063,8 @@ func _assert_field_layout(step: Dictionary = {}) -> void:
 			_fail("assert_field_layout: world view overlaps %s" % id)
 	var readout := field.find_child("FieldReadout", true, false) as Control
 	var readout_open := readout != null and readout.visible
-	# Phone reserves the world view above Details; desktop overlays it so the
-	# world never re-centres on a toggle (`world_view: unchanged` proves that)
+	# Phone reserves the world view above the Skills readout; desktop overlays
+	# it so the world never re-centres on a toggle (`world_view: unchanged` proves that)
 	# and stops it below the cell a following camera holds the player on.
 	if readout_open and WIResponsiveLayout.uses_touch_layout() and world_rect.intersects(readout.get_global_rect()):
 		_fail("assert_field_layout: expanded details cover the world view")

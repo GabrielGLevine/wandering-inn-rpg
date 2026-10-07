@@ -271,8 +271,9 @@ func world_bottom() -> float:
 	if not visible or _last_slots.is_empty():
 		return bottom
 	bottom = minf(bottom, _hotbar.global_position.y - READOUT_SELECTION_CLEARANCE)
-	# Desktop Details and the selection paper overlay the world. Reserving them
-	# re-centred the world view on every toggle, the jitter this layer refuses.
+	# The desktop Skills readout and selection paper overlay the world.
+	# Reserving them re-centred the world view on every toggle, the jitter
+	# this layer refuses.
 	if not _uses_touch_layout():
 		return bottom
 	if _readout_panel.visible:
@@ -282,7 +283,7 @@ func world_bottom() -> float:
 	return bottom
 
 
-## Frame plus one line; the desktop player cap never shrinks Details below it.
+## Frame plus one line; the desktop player cap never goes below it.
 func readout_min_height() -> float:
 	var frame_size := WIFieldHotbarLayout.style_frame_size(_readout_panel.get_theme_stylebox("panel"))
 	return frame_size.y + _readout_label.get_theme_font("font").get_height(_readout_label.get_theme_font_size("font_size"))
@@ -503,7 +504,7 @@ func _update_toggle_label() -> void:
 		return
 	_toggle.visible = not _last_slots.is_empty()
 	var verb := "Hide" if _expanded else "Show"
-	_toggle_label.text = "%s details" % verb if WIResponsiveLayout.uses_touch_layout() else "%s details [%s]" % [verb, WIInputHints.label("field_readout")]
+	_toggle_label.text = "%s Skills" % verb if WIResponsiveLayout.uses_touch_layout() else "%s Skills [%s]" % [verb, WIInputHints.label("field_readout")]
 
 
 ## CONTRACT: payload mirrors visible mode, order, numbering, and fallbacks.
@@ -529,7 +530,7 @@ func _emit_rendered(reason: String) -> void:
 	})
 
 
-## Width of the bottom cluster (slot row + gap + Details toggle). One
+## Width of the bottom cluster (slot row + gap + Skills toggle). One
 ## derivation, read by `_layout_controls` and reported in the rendered payload,
 ## so the number the log carries is the number the layout used.
 func _group_width() -> float:
@@ -597,8 +598,8 @@ func _layout_controls() -> bool:
 		slot_font = mobile_font
 		page_button_size = minimum
 		page_font = mobile_font
-	# Reserve the live hint ribbon before capacity, including Details and both
-	# page buttons. Moving an oversized group right cannot make it fit.
+	# Reserve the live hint ribbon before capacity, including the Skills toggle
+	# and both page buttons. Moving an oversized group right cannot make it fit.
 	var available := safe.size.x - hint_reserve - toggle_size.x - TOGGLE_GAP
 	var capacity := maxi(1, floori((available + slot_gap) / (slot_size.x + slot_gap)))
 	var paged := _last_slots.size() > capacity
@@ -655,7 +656,7 @@ func _layout_controls() -> bool:
 	var desired_height := minf(content_height + frame_size.y, safe.size.y / 3.0)
 	var reserved_bottom := maxf(_hotbar.size.y, toggle_size.y) + CONTROLS_BOTTOM_MARGIN + READOUT_GAP + READOUT_SELECTION_CLEARANCE
 	reserved_bottom = maxf(reserved_bottom, TOAST_BAND_RESERVE + READOUT_GAP)
-	# Desktop Details overlays the world, so it stops below the followed player
+	# The desktop Skills readout overlays the world, so it stops below the player
 	# and scrolls; a camera clamped at a map edge can still put them lower.
 	if not touch_layout and _world_focus_bottom > 0.0:
 		var panel_bottom := safe.end.y - reserved_bottom - WIFieldHotbarLayout.OUTER_MARGIN

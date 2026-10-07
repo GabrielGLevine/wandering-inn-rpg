@@ -55,13 +55,13 @@
    ]
   },
   {
-   "_comment": "Fresh settings keep the full list collapsed; Details remains discoverable.",
+   "_comment": "Fresh settings keep the full list collapsed; the Skills toggle remains discoverable.",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
     "slots": 2,
     "expanded": false,
-    "toggle_label": "Show details [H]",
+    "toggle_label": "Show Skills [H]",
     "slot_numbers": [
      "1",
      "2"
@@ -255,7 +255,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Desktop Details overlays the world; the view must not re-centre.",
+   "_comment": "The desktop Skills readout overlays the world; the view must not re-centre.",
    "action": "assert_field_layout",
    "world_view": "unchanged"
   },

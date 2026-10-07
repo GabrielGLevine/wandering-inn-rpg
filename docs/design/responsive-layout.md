@@ -22,15 +22,15 @@ establish its size in the browser.
 
 ## Field and panels
 
-Field navigation occupies the top band; skills and the Details control occupy
-the bottom band. The world viewport ends before those bands. The player camera
-uses the remaining height, including in small interiors. Phone field details
-start collapsed unless the player has saved a preference. Expanded details
-scroll within a capped region and have a visible Hide details control. On
-phones the world viewport also ends above expanded details and the selection
-label. On desktop both overlay the world, so toggling Details never re-centres
-the world view; expanded details stop below the cell a following camera holds
-the player on and scroll beyond it, down to one line. A camera clamped at a
+Field navigation occupies the top band; skills and the Show Skills toggle
+occupy the bottom band. The world viewport ends before those bands. The player
+camera uses the remaining height, including in small interiors. The phone Skill
+readout starts collapsed unless the player has saved a preference. The expanded
+readout scrolls within a capped region and has a visible Hide Skills control. On
+phones the world viewport also ends above the expanded readout and the selection
+label. On desktop both overlay the world, so toggling the readout never
+re-centres the world view; it stops below the cell a following camera holds
+the player on and scrolls beyond it, down to one line. A camera clamped at a
 map edge, or a map camera offset that leaves less than one line of room, can
 still place the player beneath them.
 

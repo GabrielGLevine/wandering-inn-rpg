@@ -447,7 +447,7 @@ merged PRs and `git log -p -- docs/CHOICE-LOG.md`.
 
 ### Presentation and art
 
-- **#588:** desktop Details overlays the world; cap and ruling: `responsive-layout.md`.
+- **#588:** desktop Skills readout overlays the world; see `responsive-layout.md`.
 - **Tint is not identity.** Distinct adjacent/named subjects need distinct
   silhouettes. Anonymous extras may share a rig when separated; named
   characters should not share another named character's rig.

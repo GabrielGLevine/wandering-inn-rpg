@@ -173,7 +173,7 @@
    "type": "ui_help_rendered",
    "payload_contains": {
     "sections": 8,
-    "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Details control to show or hide that readout."
+    "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Skills toggle to show or hide that readout."
    },
    "timeout_sec": 5
   },
@@ -215,7 +215,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== THE HUD-JUMP GUARD, first half (GH#386 P3). The bottom cluster's own geometry at a clean boot: `group_width` is the exact slot-row + gap + Details-toggle sum (52 + 8 + 144), and `bar_left` is where the layout PLACED it, not the node's live rect (which is a frame behind the offsets just written to it). Both numbers used to drift across re-layouts of an unchanged bar because the layout read the bar's own size back in.",
+   "_comment": "== THE HUD-JUMP GUARD, first half (GH#386 P3). The bottom cluster's own geometry at a clean boot: `group_width` is the exact slot-row + gap + Skills-toggle sum (52 + 8 + 144), and `bar_left` is where the layout PLACED it, not the node's live rect (which is a frame behind the offsets just written to it). Both numbers used to drift across re-layouts of an unchanged bar because the layout read the bar's own size back in.",
    "action": "wait_for_event",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
@@ -358,9 +358,25 @@
    "action": "wait_for_event",
    "type": "ui_controls_rendered",
    "payload_contains": {
-    "rows": 10
+    "rows": 10,
+    "actions": [
+     "Move",
+     "Interact",
+     "Confirm",
+     "Cancel",
+     "Cycle",
+     "Journal",
+     "Inventory",
+     "End Turn",
+     "Hotbar",
+     "Skills"
+    ]
    },
    "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00a_settings_controls"
   },
   {
    "action": "press",
@@ -385,7 +401,7 @@
    "type": "ui_help_rendered",
    "payload_contains": {
     "sections": 8,
-    "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Details control to show or hide that readout."
+    "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Skills toggle to show or hide that readout."
    },
    "timeout_sec": 5
   },

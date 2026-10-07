@@ -173,4 +173,4 @@ func _assert_desktop_controls(bar: WIFieldHotbar, hint_width: float) -> void:
 		assert(rect.position.x >= safe.position.x + hint_width + bar.HINT_BAND_GAP, "desktop controls overlap the live hint ribbon")
 	for i in controls.size():
 		for j in range(i + 1, controls.size()):
-			assert(not controls[i].intersects(controls[j]), "desktop paging/skill/Details controls overlap")
+			assert(not controls[i].intersects(controls[j]), "desktop paging/skill/Skills-toggle controls overlap")

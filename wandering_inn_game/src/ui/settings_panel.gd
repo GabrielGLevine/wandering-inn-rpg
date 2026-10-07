@@ -81,7 +81,7 @@ const MOUSE_LABELS := {
 	"interact": "Click adjacent target",
 	"confirm": "Click a row / option",
 	"hotbar": "Click a hotbar slot",
-	"field_readout": "Click Details",
+	"field_readout": "Click Show Skills",
 }
 
 const TOUCH_LABELS := {
@@ -94,7 +94,7 @@ const TOUCH_LABELS := {
 	"inventory": "Tap Inventory",
 	"end_turn": "Tap End Turn",
 	"hotbar": "Tap a hotbar slot",
-	"field_readout": "Tap Details",
+	"field_readout": "Tap Show Skills",
 }
 
 enum State { ROWS, CONTROLS, HELP, CREDITS }
@@ -315,6 +315,9 @@ func _add_controls_cell(text: String) -> void:
 
 
 func _format_action_name(action: String) -> String:
+	# The field toggle's on-screen name, not its action id ("Field Readout").
+	if action == "field_readout":
+		return "Skills"
 	var words := action.split("_")
 	for i in words.size():
 		var w: String = words[i]
@@ -601,7 +604,7 @@ func _enter_controls() -> void:
 	_layout_reference_panels()
 	_controls_scroll.scroll_vertical = 0
 	_controls_root.show()
-	ObservableBus.emit_domain_event(WIEvents.UI_CONTROLS_RENDERED, {"rows": (WIInputHints.LABELS["kb"] as Dictionary).size(), "touch": _controls_touch_layout, "columns": _controls_grid.columns, "touch_instructions": TOUCH_LABELS.duplicate() if _controls_touch_layout else {}})
+	ObservableBus.emit_domain_event(WIEvents.UI_CONTROLS_RENDERED, {"rows": (WIInputHints.LABELS["kb"] as Dictionary).size(), "actions": (WIInputHints.LABELS["kb"] as Dictionary).keys().map(_format_action_name), "touch": _controls_touch_layout, "columns": _controls_grid.columns, "touch_instructions": TOUCH_LABELS.duplicate() if _controls_touch_layout else {}})
 
 
 func _exit_controls() -> void:

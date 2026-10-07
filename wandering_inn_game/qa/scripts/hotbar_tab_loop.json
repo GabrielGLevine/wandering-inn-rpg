@@ -67,7 +67,7 @@
    }
   },
   {
-   "_comment": "Pointer Details control opens and closes the full readout from its compact default.",
+   "_comment": "Pointer Skills toggle opens and closes the full readout from its compact default.",
    "action": "click_field_readout"
   },
   {
