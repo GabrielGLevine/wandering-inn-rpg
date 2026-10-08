@@ -102,7 +102,7 @@ def evaluate(entry: dict, out: Path, qa_output: Path, runner: Runner) -> dict:
 		report["artifacts"]["events"] = str(events)
 		rows = [json.loads(line) for line in events.read_text().splitlines() if line.strip()]
 		summary = journey_ledger.build(rows)["summary"]
-		report["ledger"] = {key: summary[key] for key in ("fights", "wins", "losses", "retried", "sleeps", "gold_final")}
+		report["ledger"] = {key: summary[key] for key in ("fights", "wins", "losses", "abandoned", "retried", "sleeps", "gold_final")}
 	return report
 
 
@@ -136,7 +136,7 @@ def markdown(report: dict) -> str:
 	lines += ["| Route | Script | Seed | Duration / budget | Steps | Checkpoint | Ledger | Result |", "|---|---|---|---|---|---|---|---|"]
 	for j in report["journeys"]:
 		ledger = j.get("ledger", {})
-		ledger_text = f"{ledger.get('wins')}W/{ledger.get('losses')}L, {ledger.get('sleeps')} sleeps, {ledger.get('gold_final')}g" if ledger else "-"
+		ledger_text = f"{ledger.get('wins')}W/{ledger.get('losses')}L/{ledger.get('abandoned')}A, {ledger.get('sleeps')} sleeps, {ledger.get('gold_final')}g" if ledger else "-"
 		verdict = "ok" if not j["errors"] else "; ".join(j["errors"])
 		lines.append(f"| {j['route']} | {j['script']} | {j['seed']} | {j.get('duration_sec')}s / {j['budget_sec']}s | {j.get('steps')} | {j.get('reached_checkpoint')} | {ledger_text} | {verdict} |")
 	return "\n".join(lines) + "\n"

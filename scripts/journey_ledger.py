@@ -10,6 +10,9 @@ that ends in a load without `combat_finished` (pause-menu Abandon) is recorded
 as `abandoned` with the same exit/rollback treatment. Act boundaries replay
 `WIActs.current_index` over the run's accomplishment, class and quest events
 against data/acts.json, recording class levels, gold, sleeps and fights at each.
+Limitation: a reload does not undo accomplishment, class or quest counts here, so
+a gate milestone recorded inside a rolled-back fight would mark its act early.
+Each journey's acts were cross-checked against the runtime's journal act.
 
     python3 scripts/journey_ledger.py wandering_inn_game/qa_output/<script>/events.jsonl [--json]
 """
@@ -59,6 +62,7 @@ def build(events: list[dict], acts: list[dict] | None = None) -> dict:
 	quests = 0
 	gold_total = 0
 	act_index = 0
+	sleeps_started = 0
 	current_map = ""
 	vitals: dict | None = None
 	fight: dict | None = None
@@ -139,13 +143,19 @@ def build(events: list[dict], acts: list[dict] | None = None) -> dict:
 		elif kind == "class_evolved":
 			classes.pop(str(payload.get("from")), None)
 			classes[str(payload.get("to"))] = int(payload.get("level", 1))
+		elif kind == "consolidation_accepted":
+			for parent in payload.get("parents", []):
+				classes.pop(str(parent), None)
+			classes[str(payload.get("target"))] = int(payload.get("level", 1))
+		elif kind == "phase_changed" and payload.get("slept"):
+			sleeps_started += 1
 		elif kind == "accomplishment_recorded":
 			accomplishments[str(payload.get("id"))] = int(payload.get("count", 1))
 		elif kind == "quest_completed":
 			quests += 1
 		while act_index < len(acts) - 1 and _act_met(acts[act_index].get("advance_when", {}), classes, accomplishments, quests):
 			ledger["acts"].append({"entered": acts[act_index + 1].get("id"), "map": current_map, "classes": dict(classes),
-				"gold": gold_total, "sleeps": len(ledger["sleeps"]), "fights": len(ledger["fights"]),
+				"gold": gold_total, "sleeps": sleeps_started, "fights": len(ledger["fights"]),
 				"losses": sum(1 for row in ledger["fights"] if row["result"] != "win")})
 			act_index += 1
 	for row in ledger["fights"]:

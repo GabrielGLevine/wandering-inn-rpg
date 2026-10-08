@@ -36,6 +36,22 @@ history with no fixture, teleport, top-up or `combat_autoplay` step.
   Regenerated at integration (`b68cda65` plus registration) with the ledger
   tool that records each world dose once.
 
+## Captures read (windowed, seed 9)
+
+Copied to `/private/tmp/wi-571-evidence/caster/`:
+- 00: the [Mage] gained toast.
+- 01: Frost Bolt hits for 6; MP 8/12.
+- 02a: the MP max +2 receipt.
+- 02: "[Mage] has become [Ice Mage]!"
+- 03: the combat feed shows Mana Potion doses 1 and 2 at 1 AP each; MP 12/19.
+- 04: the warden falls to Calming Touch.
+- 05: the dose 3 receipt.
+- 06: the poisoning warning with Cancel focused.
+- 07: "Lost 4 HP"; 21/38.
+- 08: after the Load the HUD shows 21/38 HP, 12/19 MP.
+- 09: the post-finale bedroom. The epilogue fade finishes before capture, so
+  the run asserts `ui_gdi_epilogue_rendered` (15 lines) instead.
+
 | # | Encounter | Map | Entry | Exit | Result | Rounds | Items |
 |---|---|---|---|---|---|---|---|
 | 1 | goblin_encounter_1 | floodplains | 32/32 HP, 12/12 MP | 32/32 HP, 0/12 MP | win | 4 | - |
@@ -49,7 +65,7 @@ history with no fixture, teleport, top-up or `combat_autoplay` step.
 
 Fights 8 (wins 8, losses 0, abandoned 0); retried none; sleeps 12; gold +144 -144 = 0; final 38/38 HP, 19/19 MP.
 
-Act boundaries: act_ii @ inn_upstairs: mage 1; 0g; 0 sleeps; 0 fights (0 not won); act_iii @ street: diplomat 3, mage 4, rogue 2; 6g; 2 sleeps; 2 fights (0 not won); act_iv @ street: diplomat 5, mage 6, rogue 2; 12g; 4 sleeps; 4 fights (0 not won); act_v @ pallass_market: diplomat 6, ice_mage 13, rogue 3; 60g; 9 sleeps; 7 fights (0 not won)
+Act boundaries: act_ii @ inn_upstairs: mage 1; 0g; 1 sleeps; 0 fights (0 not won); act_iii @ street: diplomat 3, mage 4, rogue 2; 6g; 2 sleeps; 2 fights (0 not won); act_iv @ street: diplomat 5, mage 6, rogue 2; 12g; 4 sleeps; 4 fights (0 not won); act_v @ pallass_market: diplomat 6, ice_mage 13, rogue 3; 60g; 9 sleeps; 7 fights (0 not won)
 Sleeps: inn_upstairs bed → 32/32 HP, 12/12 MP; inn_upstairs bed → 32/32 HP, 14/14 MP; inn_upstairs bed → 32/32 HP, 15/15 MP; inn_upstairs bed → 32/32 HP, 16/16 MP; inn_upstairs bed → 36/36 HP, 16/16 MP; inn_upstairs bed → 36/36 HP, 17/17 MP; inn_upstairs bed → 36/36 HP, 19/19 MP; inn_upstairs bed → 36/36 HP, 19/19 MP; inn_upstairs bed → 36/36 HP, 19/19 MP; inn_upstairs bed → 38/38 HP, 19/19 MP; inn_upstairs bed → 38/38 HP, 19/19 MP; inn_upstairs bed → 38/38 HP, 19/19 MP
 Recovery outside combat: trapped_halls item_use:mana_potion 25/38 HP, 0/19 MP, 2 doses → 25/38 HP, 6/19 MP, 3 doses; trapped_halls item_use:mana_potion 25/38 HP, 6/19 MP, 3 doses → 21/38 HP, 12/19 MP, 4 doses
 Equipment: deep_tunnels moonhide_fetish 30/32 HP, 0/16 MP → 30/33 HP, 0/16 MP; street moon_bone_amulet 30/33 HP, 0/16 MP → 30/36 HP, 0/16 MP; street accessory_2 36/36 HP, 0/16 MP → 33/33 HP, 0/16 MP; street construct_core_shard 33/33 HP, 0/16 MP → 33/36 HP, 0/16 MP; inn guardian_ward_fragment 30/36 HP, 0/19 MP → 30/38 HP, 0/19 MP
