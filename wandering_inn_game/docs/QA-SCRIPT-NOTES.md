@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 281 native canonical QA scripts. The manifest is the
+This is the human index for 282 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -289,6 +289,7 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `journey_worker` | 9 | full, journey | `—` | Fresh worker/social history with retained losses: earned cooking and multiclass support, Fang purchase, free chest armor/rest, finite Watch3+4 and Traveler5; bounded retries retain measured Awakened boss wall, including one actual-input Flame Jet tactical loss. No fixtures/top-ups/farming or ending claim. |
 | `poor_retired_producer_recovery` | 9 | full | `poor_retired_producer_earned` | #513/#515 checkpoint-based earned-state regression: actual optional purchase14→0g, scout depletion10HP/0MP, retired road stays absent, no income during walked free-bed recovery44HP/14MP; exact production-timing bed receipt. Inherited kit/history are not new acquisition proof. |
 | `desktop_field_earned_overflow` | 9 | full | `desktop_field_earned_start` | #567 desktop17-skill earned-state fixture: actual paging exposes every original slot, slot16 clicks dispatch Keen Eye, keyboard brackets reveal last/first selection, and expanded Details stays bounded above the controls while a real mouse wheel reaches its last line. Native mouse emulation; inheritedkit is not acquisition/mobile proof. |
+| `steel_thread` | 37 | full, journey | `—` | #571 martial continuous journey to the open-seal epilogue. Retains two vault defeats and one guardian defeat with real rollback; retries after worn carried gear and walked Inn-bed rests. Exact HP/MP pins on every Act IV-V fight, the footpad no-sleep pair and a depleted pause Save/Load. No fixtures, teleports, tuning or farming. |
 
 ## Browser-only QA
 

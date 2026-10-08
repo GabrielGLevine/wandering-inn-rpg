@@ -19571,6 +19571,10 @@
    "payload_contains": {
     "id": "seal_rewarded"
    }
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "martial_full_ending"
   }
  ]
 }

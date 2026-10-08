@@ -2,6 +2,7 @@
 	"_comment": "#515 continuous-journey registry, read by qa/journey_gate.py. Every entry must exist in qa/manifest.json carrying the `journey` tier, and every manifest row carrying `journey` must be listed here, so content changes cannot silently drop a route. checkpoint = the dump_checkpoint slot the route must reach; budget_sec = measured headless wall time with headroom (see docs/design/571-cutover-execution.md).",
 	"journeys": [
 		{"script": "journey_rogue", "route": "rogue", "checkpoint": "rogue_full_ending", "budget_sec": 90},
-		{"script": "journey_worker", "route": "generalist", "checkpoint": "worker_tactical_loss_rollback", "budget_sec": 60}
+		{"script": "journey_worker", "route": "generalist", "checkpoint": "worker_tactical_loss_rollback", "budget_sec": 60},
+		{"script": "steel_thread", "route": "martial", "checkpoint": "martial_full_ending", "budget_sec": 90}
 	]
 }

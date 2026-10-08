@@ -65,7 +65,7 @@ Windowed read of each journey's key captures at production timing.
 | A: #586 noise deferral | done `35b0f988` (`qa/noise_scan.sh`, ci_sweep) |
 | A: journey tier/budget/report/guard | done: `qa/journeys.json`, `qa/journey_gate.py`, `journey` tier ⊂ `full`, nightly CI job. Measured locally under two concurrent lanes: Rogue 17.8 s (budget 90), Worker 10.4 s (budget 60). Real negative run: wrong checkpoint and registry drop both FAIL. Register martial/caster/imperfect as lanes land. |
 | B: depleted harness + reruns | done: report-only `WI_ENTRY_FRACTION` leg, `scripts/harness_entry_report.py`, `571-attrition-measurements.md` (rested PASS; vault 0.85–0.90 → 0.20–0.24 at 75% entry). Surfaced to #453; no tuning. |
-| C: martial vault → ending | not started |
+| C: martial vault → ending | merged `dec3b309`: `steel_thread` 3134/3134 to `martial_full_ending`, registered (`journey` tier, gate 16.7 s/90 s). Vault: identical retry replays the same seed (rollback restores RNG), so the route wears carried gear and rests at the Inn bed before winning; guardian retried after rest. No-sleep footpad pair + depleted Save/Load pinned. Ledger `571-ledger-martial.md`. Review: m36 census change, post-detour route choices. |
 | D: worker wall → ending | not started |
 | E: caster journey | not started |
 | F: imperfect variant + fee list | fee list done (`571-fee-audit.md`: 82g mandatory, no hard soft-lock, Pallass grind; possible warden-bypass flagged). Variant not started. |
