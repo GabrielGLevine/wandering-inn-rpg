@@ -1,5 +1,5 @@
 {
- "_comment": "#512/#571 continuous worker/social history, seed9: fresh wages, actual cooking/serving, free drayman persuasion/gossip, returned reward (3g rather than4g), earned support at real sleep. No fixture/teleport/topup. The first 1423 inputs are unchanged and retain six measured Awakened boss losses. #571 ruling 1 detour: identical retries replay one seed, so the route takes the untouched optional Chieftain's Raid once (after one real pause-menu Abandon with exact rollback), earns Warrior2 at a real sleep and wins the boss. Every earned meal eaten is pinned exactly; a meal preparation is pinned armed->active->expired with its clamp; a worn-armor toggle heals nothing.",
+ "_comment": "#512/#571 continuous worker/social history to the Inn epilogue, seed9, checkpoint worker_full_ending. Fresh wages, actual cooking/serving, free drayman persuasion/gossip, returned reward (3g rather than4g), earned support at real sleep. No fixture/teleport/topup. The first 1423 inputs are unchanged and retain six measured Awakened boss losses. #571 ruling-1 walls and detours (ledger: docs/design/571-ledger-worker.md): identical retries replay one seed, so the route takes the untouched optional Chieftain's Raid once (after one real pause-menu Abandon with exact rollback), earns Warrior2 at a real sleep and wins the boss; the seal warden's first loss is answered with the optional ruin guardian (its Remedy and Guardian Ward Fragment), a cooked Fine Meal, an owned-gear swap and a rest. Worker-identity forks: [Detect Magic] reads the ruin wardwork, [Charming Smile] persuades Pisces, [Stealth] crosses the Invrisil alley ambushes, and two wakings of Inn work pay the Pallass shortfall. Every earned meal eaten is pinned exactly; meal preparations are pinned armed->active->expired with their clamps; worn-gear toggles heal nothing.",
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [
@@ -19546,6 +19546,10 @@
    "equals": 5
   },
   {
+   "action": "screenshot",
+   "name": "worker_24_exam_locked_short"
+  },
+  {
    "action": "move",
    "direction": "down",
    "steps": 2
@@ -19567,10 +19571,6 @@
   {
    "action": "dump_state",
    "label": "worker_exam_locked_short_of_gold"
-  },
-  {
-   "action": "screenshot",
-   "name": "worker_24_exam_locked_short"
   },
   {
    "action": "move",
