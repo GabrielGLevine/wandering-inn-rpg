@@ -227,6 +227,10 @@ Remaining gates before #570 can close:
 
 ## Calibrated combat diagnostic
 
+[#514 note, 2026-10-08: the D/E/F/G win rates below were measured with the
+pre-#514 wand and Hedault stats (wand +1 weapon damage, untrued resonance).
+They are historical diagnostics, not current values.]
+
 The new
 [`sim_capacity_570.gd`](../../wandering_inn_game/tests/sim_capacity_570.gd)
 completed **34 cells × 100 seeds = 3,400 fights** on Godot

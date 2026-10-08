@@ -94,7 +94,9 @@ and chronology belong in issue PRs. Earlier context:
     gear only, so enemy-only casts (e.g. [Raskghar Maul]) do not read "spell
     damage". [Instantaneous Barrage] (the Tactician's illusory arrows) is not
     a spell. Both carry a data-driven `"damage_source": "innate"`: INT scaling
-    as before, no gear add, plain "damage" on the card.
+    as before, no gear add, plain "damage" on the card. Exemption: enemy-only
+    [Slam] keeps "weapon damage", because it really adds the enemy's
+    `damage_mod` (bounty scaling); no player card shows it.
 - **#494 resonance (2026-10-07):** a power budget, with stronger gear costing
   more. Hedault's trueing lowers an item's resonance (a craft discount, matching
   canon's "better craft interferes less"), and the toast is reworded to match.
