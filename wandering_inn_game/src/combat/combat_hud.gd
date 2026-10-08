@@ -375,6 +375,8 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usab
 			"icon": String(sk.get("icon", "")), "key_hint": str(number),
 			"description": String(sk.get("description", "")),
 			"effect": sk.get("effect", {}),
+			# #514: the damage source (weapon vs spell) is read off this gate.
+			WIKeys.WEAPON: String(sk.get(WIKeys.WEAPON, "")),
 			# GH#334 ruling 14: the slot record was NARROWER than the formatter
 			# it feeds. `WIEffectText.skill_effect_lines` generates the "Once per
 			# fight." clause from this key, and it was simply never carried here
@@ -624,6 +626,7 @@ func _slot_info_line(d: Dictionary) -> String:
 				"ap_cost": d.get("ap_cost", 0),
 				"mp_cost": d.get("mp_cost", 0),
 				"effect": d.get("effect", {}),
+				WIKeys.WEAPON: d.get(WIKeys.WEAPON, ""),
 				"once_per_fight": d.get("once_per_fight", false),
 				# While the Skill is actually cooling, the STANDING rule is
 				# suppressed: "Recovering — ready in 2 rounds." already says

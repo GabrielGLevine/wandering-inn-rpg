@@ -61,15 +61,19 @@ static func item_use_refusal(reason: String) -> String:
 	return "Cannot use this item now."
 
 
-static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> Array[String]:
+## `trued_source`: the item a Hedault trueing consumes to make `item`; when the
+## craft discount lowered the cost, the resonance line shows the drop (#514).
+static func item_effect_lines(item: Dictionary, skills_catalog: Array = [], trued_source: Dictionary = {}) -> Array[String]:
 	var lines: Array[String] = []
 	var damage_mod := int(item.get(WIKeys.DAMAGE_MOD, 0))
 	var weapon_range := int(item.get(WIKeys.RANGE, 0))
+	# #514: one weapon-damage pool reaches attacks, strikes and weapon-gated
+	# lines alike (`WICombatBuild.damage_source`); spell power reaches the rest.
 	if damage_mod > 0:
-		if weapon_range > 1:
-			lines.append("+%d damage on ranged hits" % damage_mod)
-		else:
-			lines.append("+%d damage on melee hits" % damage_mod)
+		lines.append("+%d damage on attacks and weapon Skills" % damage_mod)
+	var spell_power := int(item.get(WIKeys.SPELL_POWER, 0))
+	if spell_power > 0:
+		lines.append("+%d damage on spells" % spell_power)
 	if weapon_range > 1:
 		lines.append("Range %d" % weapon_range)
 	var weapon_family := String(item.get("weapon_family", ""))
@@ -81,8 +85,13 @@ static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> A
 	var reduction := int(item.get(WIKeys.DAMAGE_REDUCTION, 0))
 	if reduction > 0:
 		lines.append("Reduces every hit taken by %d" % reduction)
-	if item.has(WIKeys.RESONANCE) and int(item[WIKeys.RESONANCE]) > 0:
-		lines.append("Resonance %d" % int(item[WIKeys.RESONANCE]))
+	var resonance := int(item.get(WIKeys.RESONANCE, 0))
+	var source_resonance := int(trued_source.get(WIKeys.RESONANCE, 0))
+	if not trued_source.is_empty() and source_resonance > resonance:
+		lines.append("Resonance %d → %d" % [source_resonance, resonance])
+	elif resonance > 0 or String(item.get("tier", "")) == "enchanted":
+		# A trued enchanted piece can cost nothing; say so rather than go silent.
+		lines.append("Resonance %d" % resonance)
 	for raw_ability: Variant in (item.get(WIKeys.ABILITIES, []) as Array):
 		var ability_display := _skill_display_name(String(raw_ability), skills_catalog)
 		if ability_display != "":
@@ -109,6 +118,45 @@ static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> A
 	if item.has(WIKeys.PRICE) and int(item[WIKeys.PRICE]) > 0:
 		lines.append(PRICE_LINE_PREFIX + "%d gold" % int(item[WIKeys.PRICE]))
 	return lines
+
+
+## #514: which of the player's own attacks and Skills a piece of gear improves,
+## from `WIGame.gear_reach` (the kit they would carry with it worn).
+static func gear_reach_lines(item: Dictionary, reach: Dictionary, skills_catalog: Array = []) -> Array[String]:
+	var lines: Array[String] = []
+	if int(item.get(WIKeys.DAMAGE_MOD, 0)) > 0:
+		var weapon_names: Array[String] = ["attacks"]
+		for raw: Variant in (reach.get(WICombatBuild.SOURCE_WEAPON, []) as Array):
+			weapon_names.append(_skill_display_name(String(raw), skills_catalog))
+		lines.append("Improves your %s." % _and_list(weapon_names))
+	if int(item.get(WIKeys.SPELL_POWER, 0)) > 0:
+		var spell_names: Array[String] = []
+		for raw: Variant in (reach.get(WICombatBuild.SOURCE_SPELL, []) as Array):
+			spell_names.append(_skill_display_name(String(raw), skills_catalog))
+		if spell_names.is_empty():
+			lines.append("Improves none of your current Skills.")
+		else:
+			lines.append("Improves your %s." % _and_list(spell_names))
+	return lines
+
+
+## #514: the "If worn" preview, read off the same `WIGame.equip_plan` that
+## equip() refuses by. "" for a plan with nothing to preview.
+static func equip_plan_line(plan: Dictionary) -> String:
+	match String(plan.get("reason", "")):
+		"":
+			return "If worn: Resonance %d/%d" % [int(plan.get("resonance", 0)), int(plan.get("capacity", 0))]
+		"over_capacity":
+			return "If worn: Resonance %d/%d, more than you can hold" % [int(plan.get("resonance", 0)), int(plan.get("capacity", 0))]
+		"no_accessory_slot":
+			return "If worn: no free accessory slot"
+	return ""
+
+
+static func _and_list(names: Array[String]) -> String:
+	if names.size() <= 1:
+		return "".join(names)
+	return "%s and %s" % [", ".join(names.slice(0, names.size() - 1)), names[-1]]
 
 
 ## The mod-dict phrasebook shared by the item CARD (the "Next fight: ..." line
@@ -183,7 +231,7 @@ static func resource_receipt(payload: Dictionary) -> String:
 
 static func skill_effect_lines(skill: Dictionary, combatants_catalog: Array = []) -> Array[String]:
 	var effect: Dictionary = skill.get(WIKeys.EFFECT, {})
-	var phrase := _effect_phrase(effect, combatants_catalog, int(skill.get(WIKeys.AP_COST, 0)))
+	var phrase := _effect_phrase(effect, combatants_catalog, int(skill.get(WIKeys.AP_COST, 0)), WICombatBuild.damage_source(skill))
 	if phrase == "":
 		return []
 	var prefix := _cost_prefix(skill)
@@ -317,12 +365,14 @@ static func _cost_prefix(skill: Dictionary) -> String:
 	return ", ".join(parts)
 
 
-static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], ap_cost: int = 0) -> String:
+## `source` names the gear stat a hit takes (#514): it is how a wand's "damage on
+## spells" and a sword's "weapon Skills" map onto the Skill cards they improve.
+static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], ap_cost: int = 0, source: String = "") -> String:
 	match String(effect.get(WIKeys.TYPE, "")):
 		"spell_damage":
-			return "damage 1d%d at range %d" % [_caster_weapon_die(combatants_catalog), int(effect.get(WIKeys.RANGE, 0))]
+			return "%s damage 1d%d at range %d" % [source, _caster_weapon_die(combatants_catalog), int(effect.get(WIKeys.RANGE, 0))]
 		"line_damage":
-			return "damage everything in a line %d cells long" % int(effect.get(WIKeys.LENGTH, 0))
+			return "%s damage to everything in a line %d cells long" % [source, int(effect.get(WIKeys.LENGTH, 0))]
 		"damage_mult":
 			return "×%s damage" % _fmt_mult(float(effect.get(WIKeys.MULT, 1.0)))
 		"heal":
@@ -337,8 +387,8 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 		"blast_damage":
 			var blast_side := int(effect.get(WIKeys.RADIUS, 0)) * 2 + 1
 			var windup_timing := " after a round's gathering" if int(effect.get(WIKeys.WINDUP_ROUNDS, 0)) > 0 else ""
-			return "blast a %d×%d area around the target for 1d%d%s. Hits friend and foe." % [
-				blast_side, blast_side, _caster_weapon_die(combatants_catalog), windup_timing,
+			return "blast a %d×%d area around the target for 1d%d %s damage%s. Hits friend and foe." % [
+				blast_side, blast_side, _caster_weapon_die(combatants_catalog), source, windup_timing,
 			]
 		"move_pool_bonus":
 			if ap_cost <= 0:

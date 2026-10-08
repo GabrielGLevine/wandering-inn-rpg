@@ -297,6 +297,7 @@ func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dict
 		pc[WIKeys.SKILLS] = pcs
 	var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, [])
 	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD]
+	pc[WIKeys.SPELL_POWER] = mods[WIKeys.SPELL_POWER]
 	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD]
 	pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION]
 	return pc

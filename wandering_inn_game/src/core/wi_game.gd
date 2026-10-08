@@ -2639,20 +2639,44 @@ func _player_combatant_config(template: Dictionary, meal_bonus: Dictionary = {})
 	var pc: Dictionary = template.duplicate(true)
 	pc[WIKeys.DISPLAY_NAME] = pc_name
 	pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], classes, _combat_config.get("classes", {}))
-	var kit: Array = WIProgression.granted_skills(classes, _combat_config.get("classes", {}), generalist_classes)
 	var weapon := item(String(equipped.get(WIKeys.WEAPON, "")))
-	pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills)
 	pc[WIKeys.WEAPON_RANGE] = int(weapon.get(WIKeys.RANGE, 1))
 	var armor := item(String(equipped.get("armor", "")))
-	var accessories: Array = []
-	for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
-		accessories.append(item(String(equipped.get(slot_name, ""))))
-	pc[WIKeys.SKILLS] = WICombatBuild.fold_abilities(pc[WIKeys.SKILLS] as Array, accessories)
+	var accessories := _equipped_accessories()
+	pc[WIKeys.SKILLS] = _combat_kit(weapon, accessories)
 	var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
 	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD] + int(meal_bonus.get(WIKeys.DAMAGE_MOD, 0))
+	pc[WIKeys.SPELL_POWER] = mods[WIKeys.SPELL_POWER]
 	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD] + (2 if well_fed else 0) + int(meal_bonus.get(WIKeys.HP_MOD, 0)) + _room_tier_bonus()
 	pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION] + int(meal_bonus.get(WIKeys.DAMAGE_REDUCTION, 0))
 	return pc
+
+
+func _equipped_accessories() -> Array:
+	var accessories: Array = []
+	for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
+		accessories.append(item(String(equipped.get(slot_name, ""))))
+	return accessories
+
+
+## Weapon gating strips first, then worn abilities fold in: the order the
+## combat kit has always been built in.
+func _combat_kit(weapon: Dictionary, accessories: Array) -> Array:
+	var kit: Array = WIProgression.granted_skills(classes, _combat_config.get("classes", {}), generalist_classes)
+	kit = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills)
+	return WICombatBuild.fold_abilities(kit, accessories)
+
+
+## #514: the combat Skills a piece of gear would add damage to, read off the kit
+## the player would carry with it worn -- the inventory's reach line.
+func gear_reach(item_id: String) -> Dictionary:
+	var rec := item(item_id)
+	var kind := String(rec.get(WIKeys.KIND, ""))
+	var weapon := rec if kind == "weapon" else item(String(equipped.get(WIKeys.WEAPON, "")))
+	var accessories := _equipped_accessories()
+	if kind == "accessory" and not equipped.values().has(item_id):
+		accessories.append(rec)
+	return WICombatBuild.damage_reach(_combat_kit(weapon, accessories), skills)
 
 
 func player_resource_maxima() -> Dictionary:
@@ -3110,35 +3134,53 @@ const _CAPACITY_REFUSAL_TOAST := "It buzzes once against the others, like a wasp
 const _ACCESSORY_SLOTS_FULL_TOAST := "There's nowhere left on you for it to rest. It waits in your palm, patient as stone."
 
 
-func equip(item_id: String) -> bool:
-	if combat != null:
-		return false
-	if not inventory.has(item_id):
-		return false
+## #514: equip()'s slot choice and capacity check, also read by the inventory's
+## "If worn" line, so the preview and the refusal are one computation.
+## `resonance` is the total the loadout would carry with the item worn.
+func equip_plan(item_id: String) -> Dictionary:
+	var plan := {"ok": false, "reason": "", "slot": "", "resonance": _equipped_resonance_total(), "capacity": resonance_limit()}
 	var rec := item(item_id)
-	if rec.is_empty():
-		return false
 	var kind := String(rec.get(WIKeys.KIND, ""))
-	if kind != "weapon" and kind != "armor" and kind != "accessory":
-		return false
+	if rec.is_empty() or (kind != "weapon" and kind != "armor" and kind != "accessory"):
+		plan["reason"] = "not_equipment"
+		return plan
 	var target_slot := kind
 	if kind == "accessory":
 		for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
 			if String(equipped.get(slot_name, "")) == item_id:
-				return false
+				plan["reason"] = "already_worn"
+				return plan
 		target_slot = ""
 		for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
 			if String(equipped.get(slot_name, "")) == "":
 				target_slot = slot_name
 				break
 		if target_slot == "":
-			_emit(WIEvents.TOAST, {"text": _ACCESSORY_SLOTS_FULL_TOAST})
-			return false
+			plan["reason"] = "no_accessory_slot"
+			return plan
 	var displaced_resonance := int(item(String(equipped.get(target_slot, ""))).get(WIKeys.RESONANCE, 0))
-	var would_be_total := _equipped_resonance_total() - displaced_resonance + int(rec.get(WIKeys.RESONANCE, 0))
-	if would_be_total > resonance_limit():
-		_emit(WIEvents.TOAST, {"text": _CAPACITY_REFUSAL_TOAST})
+	plan["slot"] = target_slot
+	plan["resonance"] = _equipped_resonance_total() - displaced_resonance + int(rec.get(WIKeys.RESONANCE, 0))
+	if int(plan["resonance"]) > resonance_limit():
+		plan["reason"] = "over_capacity"
+		return plan
+	plan["ok"] = true
+	return plan
+
+
+func equip(item_id: String) -> bool:
+	if combat != null:
 		return false
+	if not inventory.has(item_id):
+		return false
+	var plan := equip_plan(item_id)
+	if not bool(plan["ok"]):
+		if String(plan["reason"]) == "no_accessory_slot":
+			_emit(WIEvents.TOAST, {"text": _ACCESSORY_SLOTS_FULL_TOAST})
+		elif String(plan["reason"]) == "over_capacity":
+			_emit(WIEvents.TOAST, {"text": _CAPACITY_REFUSAL_TOAST})
+		return false
+	var target_slot := String(plan["slot"])
 	var before_resources := player_resources()
 	equipped[target_slot] = item_id
 	vitals.reconcile(player_resource_maxima())
