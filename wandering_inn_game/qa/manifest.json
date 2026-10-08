@@ -8577,6 +8577,35 @@
      "save"
     ]
    }
+  },
+  {
+   "script": "seal_fed_gate",
+   "seed": 9,
+   "fixture": "seal_fed_gate_start",
+   "note": "#590: Olesm's seal-funding row is gated on seal_warden_downed, the same compound as Pisces' THE CHOICE row (#440 holds). From the post-reading state with the warden armed: Olesm's hub is whole-list pinned WITHOUT the ward row (and the pitch never renders), the alcove warden is sprung from its approach cell and won under autoplay, then the same hub is pinned WITH the ward row last and it opens seal_bounty_pitch. Leaves by the pitch's exit: seal_kept_fed and seal_resolved stay unbanked and gold is unchanged. Fixture rng_state governs the fight and overrides --seed.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "seal_fed_gate_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "olesm_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ],
  "browser_scripts": [
