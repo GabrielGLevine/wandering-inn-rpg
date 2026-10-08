@@ -27,9 +27,10 @@ Conditionally mandatory, each with a free route (fight, sneak, rune read or
 - the Tactician entry, which checks for 2g on hand without spending it.
 
 The seal "kept fed" route costs 12 (`olesm_intro.json:268`).
-**To verify:** the audit reports that this route skips `seal_warden_downed`. That
-would contradict the 2026-08-12 ruling that the warden fight fires on every
-descent before any ending resolves. Surfaced for a ruling; not changed in #571.
+**Confirmed gap, filed as #590:** Olesm's ward-funding path needs only
+`read_the_feeding_ward`, the warden's own arming gate. It can therefore settle the
+seal without `seal_warden_downed`, contradicting the 2026-08-12 #440 ruling that
+every ending resolves after the warden fight. Not changed in #571.
 
 Everything else is optional: shops, enchanting, the fence, Erin's meal, the
 room ledger, wagers, donations, the scribe and the broker. Beds are free.
