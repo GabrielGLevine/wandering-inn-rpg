@@ -10,13 +10,15 @@ archived, or superseded session blocks.
 ## Current state
 
 - **Active program (user, 2026-10-07), in order:**
-  1. Quick fixes: #590 (Olesm seal option gated on the warden) and #591 (corner
-     melee allowed for all) in `/private/tmp/wi-q-seal-melee`; #513 fee
-     shortfall text, delivery gold toast and deliveries every waking in
-     `/private/tmp/wi-q-economy-ui`.
-  2. #514 gear rules from the #494/#495 rulings (one balance re-measure).
-  3. #453 rest signposting before chokepoints, then the Pallass side quest and/or
-     Runner's Guild (#513; canon and spoiler check first).
+  1. DONE: #590 (PR #594) and #591 (PR #595) closed; #513's fee shortfall,
+     delivery toast and daily standing delivery merged (PR #598). Follow-ups
+     #596 (bounty turn-in toast) and #597 (toast over tall panels).
+  2. IN PROGRESS: #514 gear rules in `/private/tmp/wi-514-gear` (branch
+     `issue/514-gear-rules`): design doc, then a re-measure; journeys rebase and
+     re-pin after main `842ef6e9`. STOP-and-report if a ruled window is
+     unreachable.
+  3. DESIGNING: #453 rest signposting and #513 Pallass side quest/Runner's
+     Guild in `/private/tmp/wi-item3-design`; implement after #514 lands.
   Each issue closes through its own PR after independent review and CI.
 - **Recovery cutover is done:** #571 and #512 closed by PR #592 (`17d635f8`).
   Carried HP/MP has no switch. Five continuous journeys (martial, Rogue,
