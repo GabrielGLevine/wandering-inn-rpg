@@ -9,185 +9,99 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **#580 Web CI speed MERGED:** PR587 squash `b4dd4653`, tree identical to
-  reviewed head `dd00c52b`; independent review approved. Web gate 2682–2873 s
-  → 477/533/519 s; workflow wall ~45–49 min → ~9 min (Canonical QA sweep now
-  bounds it). Required check name unchanged; it is the aggregator over export,
-  two browser legs and 6 registry shards. Coverage authority:
-  `run_browser_suite.py --merge`; cost hints `qa/web/browser_case_seconds.json`.
-- **Recovery integration MERGED:** PR578 squash `58b5510d`, tree `4086a39a`
-  identical to reviewed head `55a86ab2`. CI run37565824794: all eight jobs
-  pass incl. Web parity (not waived). Lane PRs 572/573/574/582/583 closed as
-  landed (heads are ancestors). Issues #566–#570/#512 stay open for their
-  remaining acceptance. No deployment. #584 audio parked in
-  `/private/tmp/wi-584-audio` (docs patch; also main `stash@{0}`).
-- **Constraints:** core first; extra mobile testing deferred to #585,
-  nonblocking. Web parity may be waived as a merge bottleneck; other required
-  CI/review remain gates. #586 tracks shader shutdown errors. Requested
-  exception has NO answer and is NOT authorized. No more engine probes/builds
-  or deployment. No balance/seed changes.
-- **Pre-merge repair:** steel_thread pins (+116), coherence rules
-  (Riverfarm gate is door_awakened; Olesm briefing optional), desktop Details
-  cap with keyboard/gamepad follow (expand waits for scroll sort; glyph-bound
-  QA), and journey_rogue desync from desktop paging (driver touches page
-  controls). journey_rogue/worker pass CI; macOS headless still prints #586
-  exit leak. Evidence `/private/tmp/wi-567-evidence/desktop-expand-4086a39a`.
-- **Exact next action:** #571 cutover gate (continuous attrition proof) and
-  #512/#513 caster/economic variants; worker boss wall and vault wall remain.
-  #585 devices stay deferred. Then the queue below.
-- **Journey limits:** native Rogue3464 reaches ending/Inn,146g−142g=4;
-  39 unique images read, two shader ERRORs make gate INVALID. Epilogue picture
-  shows toast, not17-line body. Worker1423 retains six losses/boss39HP.
-  Martial walked bed restores49HP/13MP; Awakened wins26HP. Next fully rested
-  vault loses/construct46HP; vault analysis NOT started. Poor167 checkpoint
-  control proves purchase14g→0g, scouts10HP/0MP, retired road/no income,
-  walked bed44HP/14MP; native clean/pictures read. Not fresh acquisition or
-  full513 closure. #453 holds combat walls; caster/economic variants remain
-  open. #571 waits for core acceptance, not585.
-- **Resume:** `/private/tmp/wi-parallel-roadmap-resume.md` and status JSON
-  retain lane heads/reviews. Latest `/private/tmp/wi-567-evidence/` subdirs:
-  `composed-bdd30b80`, `desktop-final-8621c754`, `rogue-window-289f0984`.
-  See `docs/design/512-martial-recovery.md` and `513-low-gold-recovery.md`.
-- **#565 accepted plan:** `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`
-  governs #566–#571. Preserve unlimited existing kitchen access and measure it.
-  M1 devices and #494/#495 choices remain open.
-
-- **M1 software merged through PR #551:** squash `6148d1e5`, tree
-  `78200963`. Reviewed branch `issue/506-touch-flow` head `83fc36ae`
-  (standalone tree `5e8af12d`); QA/export source `93016f0b`.
-  CI run `37355007466` passes all eight jobs on composed checkout `4f315958`,
-  whose tree exactly matches the squash. Independent source and post-merge
-  reviews approve. Incoming #552/#553 tooling and backup guidance are preserved.
-  #507/#508/#509 are closed; #504/#505/#506/#510/#253/#511 and M1 stay open
-  for their physical/actual-host/human criteria. Production is unchanged from
-  the `ab279415` 36-case local browser baseline.
-  PR #551 owns native/browser/audio validation and causal corrections;
-  retained private/public evidence roots are listed below.
-  Private candidate: `/private/tmp/wi-m1-candidate-93016f0b/m1-web-93016f0b.zip`,
-  manifest and observation checklist alongside; PCK `cccbe5f4…`.
-  Evidence: `/private/tmp/wi-m1-evidence`, private/public audio roots and
-  `/private/tmp/wi-m1-audio-stale-negative-93016f0b`.
-  Root's implementation tree is `/private/tmp/wi-m1-506`; final handoff only
-  uses `/private/tmp/wi-m1-closeout`, based on merged main `6148d1e5`.
-  Other lanes are integrated/idle. Preserve untracked node_modules/companion UID
-  and the unrelated PixelLab note in the original main tree's dirty HANDOFF.
-  **Exact next action:** collect #511 physical iPhone Safari/Android Chrome
-  observations and three unfamiliar-player sessions with desktop reference,
-  using the same private candidate and `qa/M1-OBSERVATIONS.md`. None supplied.
-  OS keyboard/chooser/background/audio policy and actual itch remain unproven.
-  No release/deploy/outreach/recruitment authorized. M1 stays open.
-- Current roadmap: [#502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502). Five outcome milestones prioritize
-  mobile parity and a clear opening, progression trust, a living inn/world,
-  tactical identity, and an accessible reliable release candidate.
-- User-confirmed mobile targets: **iPhone Safari and Android Chrome**,
-  compared with desktop. Rogue discovery is a priority; purchases require
-  explicit confirmation before any gold or item effects commit.
-- **M1 local machine verification is complete.** #503 diagnostics and #477 schema
-  readers remain delivered. The #506 issue PR records the composed software
-  repairs for #507/#508/#509 and scoped #253/#510 evidence. Physical and human
-  acceptance belongs to #511; keep device-dependent issues open until the
-  named observations land. Follow the
-  [execution contract](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502#execution-contract).
-- **Remaining acceptance corrections:** #504 needs physical-device purchase
-  observations; the M1 issue PR records #508/#509 software closure evidence.
-  #253 still needs physical target-device/itch import
-  verification. Preserve useful implementations from PRs #535–#537;
-  merged partial work does not satisfy their missing criteria.
-- **Compiler corrections in PR #545:** comparator #542 preserves event-history
-  mode, checkpoint order, movement tails, and single-use facing-bump credit;
-  #543 obtains bypass credit and waking/ward state from real sim projections.
-  Unknown-clock phase-sensitive crossings fail explicitly. Act III route
-  authoring and dialogue/post-fight pins are retained; no gameplay rules changed.
-  Current authored slice residue is Act I **1 exact / 0 net** (missing hotbar
-  assertion), Act II **1 exact / 0 net** (Mage-toast history-mode mismatch),
-  Act III **0 / 0**. The compiled 1,077-step Acts I–III route passes at seed 37.
-  #434 remains open for those claims, later acts, and caster acceptance; M3.6
-  and M4 are not complete. Resume actionable M1 work before more act expansion.
-- Real-device columns of `qa/MOBILE-PARITY.md` stay UNTESTED until hardware
-  observations (#511). CI's web-parity job had been a silent no-op since it
-  was written; it now runs for real (combat parity, touch smoke, save port).
-- Local dev env now has Godot 4.7 stable web export templates + Playwright, so
-  `qa/web/run_web_qa.sh` runs here.
-- Preserve pre-existing untracked `wandering_inn_game/tests/test_companion_counter.gd.uid`.
+- **Active program (user, 2026-10-07), in order:**
+  1. Quick fixes: #590 (Olesm seal option gated on the warden) and #591 (corner
+     melee allowed for all) in `/private/tmp/wi-q-seal-melee`; #513 fee
+     shortfall text, delivery gold toast and deliveries every waking in
+     `/private/tmp/wi-q-economy-ui`.
+  2. #514 gear rules from the #494/#495 rulings (one balance re-measure).
+  3. #453 rest signposting before chokepoints, then the Pallass side quest and/or
+     Runner's Guild (#513; canon and spoiler check first).
+  Each issue closes through its own PR after independent review and CI.
+- **Recovery cutover is done:** #571 and #512 closed by PR #592 (`17d635f8`).
+  Carried HP/MP has no switch. Five continuous journeys (martial, Rogue,
+  caster, worker, imperfect) are a `journey` manifest tier, gated nightly by
+  `qa/journey_gate.py` against `qa/journeys.json`; ledgers live in
+  `docs/design/571-ledger-*.md`, the plan and criterion map in
+  `docs/design/571-cutover-execution.md`. Linux CI runs journeys ~8x slower
+  than local macOS; budgets and `timeout_sec` are CI-measured.
+- **Open findings to carry:** #453 depleted chokepoints (ruled: signpost rest,
+  no tuning); #513 remaining Pallass content and gear-affordability audit
+  (`docs/design/513-low-gold-recovery.md`, `571-fee-audit.md`); #515 criterion
+  4 (automated geometry/capture checks); #586 shutdown leak (exact lines
+  deferred via `qa/noise_scan.sh`, leak still open).
+- **#566–#570 stay open:** PR #578 used Refs. Reconcile each against #592's
+  journeys and close what is met; device/human items move to #585/#516. The
+  plan is `docs/design/2026-10-05-persistent-vitals-recovery-plan.md`; preserve
+  unlimited existing kitchen access and measure it.
+- **M1 mobile:** software merged through PR #551; #504/#505/#506/#510/#253/#511
+  stay open only for physical iPhone Safari/Android Chrome and unfamiliar-player
+  observations, deferred to #585 by the user. Prepared candidate:
+  `/private/tmp/wi-m1-candidate-93016f0b/` (PCK `cccbe5f4…`); checklist
+  `wandering_inn_game/qa/M1-OBSERVATIONS.md`; evidence `/private/tmp/wi-m1-evidence`
+  and `/private/tmp/wi-m1-audio-stale-negative-93016f0b`. Purchases must confirm
+  before any gold or item effect commits (#504, P0).
+- **Constraints:** core work first; no balance or seed changes except the ruled
+  #514 re-window, and re-measure on current builds rather than repeating stale
+  win rates. No engine probes/builds, release, deployment, outreach or
+  recruitment. Web parity may be waived as a merge bottleneck; other CI and
+  review stay required.
+- **Compiler (#434/#438):** work stays bounded to acceptance repairs. The
+  compiled Acts I–III route last ran at seed 37 before carried HP/MP; Acts
+  IV–V carried-resource pins are runtime-only, and current residue is in
+  `scripts/itinerary/README.md`. #452/#348 addenda must be reconciled with
+  current code before executing their remaining work.
+- **Parked work:** #584 audio staging docs in `/private/tmp/wi-584-audio` and
+  `stash@{0}` ("584-staging-docs"); an unverified #397 cadence partial in
+  `stash@{1}`. Open presentation debt lives in `docs/VISUAL-LOG.md`.
+- Preserve the untracked `wandering_inn_game/tests/test_companion_counter.gd.uid`
+  and the private asset overlays.
 - Latest release recorded by the repository: **v0.20.0** (2026-08-14).
-  Shipped IDs and asset manifests remain their own authorities; this roadmap
-  does not cut a release or alter gameplay.
-- #438 retains playthrough-engine/caster acceptance ownership. Oracle,
-  checkpoints and pre-sim pieces #435/#436/#437 already shipped. New journey
-  work can proceed independently using existing tools.
-- #452 and #348 began as exploration/implementation briefs and now overlap
-  shipped tooling/content. Their roadmap addenda require reconciling current
-  code and merged PRs before executing only the remaining work.
-- Open presentation debt lives in `docs/VISUAL-LOG.md`, including inn/HUD
-  clearance, dialogue lifetime and pending sprite/icon/ear reads. Fresh
-  captures under `qa_output/` are disposable; inspect before rerunning.
+  `docs/RELEASE-HISTORY.md` indexes earlier releases.
 
 ## User-held
 
-- **#494 resonance semantics** and **#495 gear damage/scaling semantics** need
-  explicit recorded choices. Their post-tag scheduling hold has elapsed;
-  roadmap authorization does not select a model. Implementation is #514.
-- **#485's six coverage sets and proposed first-order names already have GO**
-  (August comments and CHOICE-LOG). The blanket hold is removed. Inventory
-  shipped versus remaining authorized work; only specific unresolved names,
-  unproposed mappings or post-bar exceptions need a new decision. Parked
-  pairs remain loss-proof until coverage exists; do not wait on all #452 tooling.
-- **#452 doctrine/spec ratification** and **#347 dynamic unique-class scope**
-  retain existing user gates. #347 is deferred beyond the committed outcomes.
-- Prior class-specific balance flags and sanctioned tuning limits remain in
-  #453 and `docs/CHOICE-LOG.md`. Re-measure against current builds rather than
-  repeating stale win rates or assuming old walls still exist.
-- **#19 commercial/distribution gate:** any paid Steam path requires
-  pirateaba's explicit permission. M-STEAM remains separate from this roadmap.
-- Milestone human/real-device gates remain open until actually observed.
-  Unavailable hardware/testers do not prevent diagnostics and scoped repairs.
-  No numeric progression UI, new canon, or doctrine exception is authorized
-  merely by adding a roadmap issue.
+- **#485** coverage sets and first-order names have GO; only specific
+  unresolved names, unproposed mappings or post-bar exceptions need a decision.
+- **#452** doctrine/spec ratification and **#347** dynamic unique classes keep
+  their user gates; #347 is deferred.
+- **#584 audio:** music adds and the swish-on-miss change need an explicit ear
+  verdict; new footsteps, beds and foley are ear-checked in place (acceptance 5)
+  through a prepared playtest state.
+- **#19:** any paid Steam path needs pirateaba's explicit permission.
+- Human and real-device milestone gates stay open until actually observed. No
+  numeric progression UI, new canon or doctrine exception is authorized merely
+  by a roadmap issue.
 
 ## Queue
 
-The live index and milestones are authoritative:
-
-- [Roadmap #502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502)
-- [M1: mobile parity and first session](https://github.com/GabrielGLevine/wandering-inn-rpg/milestone/13)
-
-Immediate dispatch: finish the active recovery core work above. Additional mobile
-validation is deferred to #585 per user direction. #511 hardware/human work
-remains open without blocking core implementation; no observations supplied.
-Compiler work stays bounded to existing acceptance repairs and #438 ownership.
-
-Later milestones and dependencies are linked from the index. Respect
-`roadmap:blocked` and `taste-gate`; `successor-ready` means a brief can start,
-not that a later milestone outranks current P0 work.
-
-#524/#528 are dependency-ready but remain M4/M5 work. Refresh issue comments
-and CHOICE-LOG before treating historical approval holds as current blockers.
+Live index: [Roadmap #502](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502)
+and its milestones. Work by milestone, then priority and stated dependencies;
+`successor-ready` means a brief can start. Refresh issue comments and
+CHOICE-LOG before treating an old hold as a current blocker.
 
 ## Commands and environment
 
 ```sh
-# Queue
 gh issue list -R GabrielGLevine/wandering-inn-rpg --state open
-gh issue view 502 -R GabrielGLevine/wandering-inn-rpg
-
-# Play
-/usr/local/bin/godot --path wandering_inn_game
-
-# Verification (choose exact gates through wi-verifying-changes)
-scripts/preflight.sh --full
+/usr/local/bin/godot --path wandering_inn_game          # play
+scripts/preflight.sh --full                             # units + tools
 wandering_inn_game/qa/run_qa.sh load_gate headless
-wandering_inn_game/qa/ci_sweep.sh
-python3 scripts/sync_agent_guidance.py
-python3 scripts/render_qa_notes.py
+wandering_inn_game/qa/ci_sweep.sh                       # full canonical sweep
+python3 wandering_inn_game/qa/journey_gate.py           # continuous journeys
+python3 scripts/journey_ledger.py <qa_output>/<script>/events.jsonl
+python3 scripts/sync_agent_guidance.py --write
+python3 scripts/render_qa_notes.py --write
 ```
 
-- Current local engine reports **4.7-stable (5b4e0cb0f)**; CI pins **4.7-stable**. Toolchain
-  alignment is tracked in #529; report actual version with evidence.
-- macOS has no `timeout`; use the documented alarm wrapper. Shell scripts
-  must remain compatible with Bash 3.2.
-- Windowed QA serializes. Reruns replace their `qa_output/` evidence; a full
-  sweep flushes prior artifacts. Headless warnings/errors require triage.
-- Licensed overlays and `potential_assets/` are local-only; never commit them.
-  Backup: private `potential-assets-v2` release.
-- Provider capacity fails soft when telemetry is unavailable. Roles and
-  exact file ownership govern dispatch, not historical provider assignments.
+- Local engine **4.7-stable (5b4e0cb0f)**; CI pins **4.7-stable** (#529).
+- macOS has no `timeout`; use the alarm wrapper. Shell stays Bash 3.2-safe,
+  and zsh does not word-split unquoted variables in loops.
+- Windowed QA serializes. Reruns replace `qa_output/`; a full sweep flushes it.
+- Godot 4.7 web export templates and Playwright are installed locally, so
+  `qa/web/run_web_qa.sh` and `qa/web/run_browser_suite.py` run here.
+- A new lane worktree needs the private overlay copied
+  (`git ls-files --others --ignored --exclude-standard wandering_inn_game/assets`)
+  and a Godot `--import` pass before QA.
+- Licensed overlays and `potential_assets/` stay local; never commit them.
+  Backup: the private `potential-assets-v2` release.
