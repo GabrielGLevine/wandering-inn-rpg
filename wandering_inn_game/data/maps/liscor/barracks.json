@@ -440,6 +440,24 @@
     "note_old_dread"
    ],
    "on_open_accomplishment": "found_old_dread_note"
+  },
+  {
+   "_comment": "#453 P1 rest signposting: a Liscor-side bed, present once the Watch first sends the player below the city. Cell (1,1) is the empty north-west corner, off every canonical walked cell; (2,1) and (1,2) stay open, so no prior-version save is trapped. Mechanically identical to every other sleep prop.",
+   "id": "watch_spare_bunk",
+   "kind": "prop",
+   "cell": [
+    1,
+    1
+   ],
+   "display_name": "A Watch Bunk",
+   "sprite": "bed",
+   "present_when": {
+    "requires": {
+     "heard_about_cisterns": 1
+    }
+   },
+   "sleep": true,
+   "sleep_toast": "Watch bedding, scratchy and clean."
   }
  ]
 }

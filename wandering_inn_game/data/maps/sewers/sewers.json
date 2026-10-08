@@ -767,6 +767,21 @@
    "once": true,
    "gold": 6,
    "toast": "The hinge shears off in your hand and the lid comes away with it. Wax-wrapped and dry under the silt, 6 gold in a roll."
+  },
+  {
+   "_comment": "#453 P2: one-shot recovery loot on the first ledge below the grate arrival's walk-down column. (4,6) is off every canonical walked or faced cell and clear of the x=3 frozen-channel shortcut; (3,6), (5,6) and (4,7) stay open.",
+   "id": "grate_crew_pail",
+   "kind": "prop",
+   "cell": [
+    4,
+    6
+   ],
+   "display_name": "A Grate-Crew Pail",
+   "sprite": "wooden_pail",
+   "contains": [
+    "hot_meal"
+   ],
+   "open_toast": "A crew number is chalked on the pail. Inside, stew in a wired-shut tin, packed in a cloth."
   }
  ]
 }

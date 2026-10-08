@@ -823,6 +823,9 @@ func _build_expected_counts() -> Dictionary:
 	counts["counter_segment_owned/idle"] = 1
 	counts["city_roof_owned/idle"] = 1
 	counts["crate_owned/idle"] = 1
+	# #453 rest-signposting props (OWNED PixelLab statics, one frame each).
+	for rest_prop: String in ["wooden_pail", "leather_satchel", "arrow_quiver"]:
+		counts["%s/idle" % rest_prop] = 1
 	counts["inn_hearth/idle"] = 1
 	counts["inn_back_bar/idle"] = 1
 	counts["inn_bar_station/idle"] = 1

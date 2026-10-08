@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 289 native canonical QA scripts. The manifest is the
+This is the human index for 294 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -297,6 +297,11 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `gear_damage_loop` | 9 | full | `gear_damage_start` | #514/#495 through real input: an Archer buys the hunting bow (cancel, then buy), reads its card and the inventory reach line, equips it, and fires [Piercing Shot] at Relc's dummy; the bow-gated line takes str and the bow's weapon damage, pinned on the live combatant and the hit |
 | `hedault_trueing_loop` | 7 | full | `hedault_trueing_start` | #514/#494 Hedault craft discount: a full 4/4 loadout refuses the Hedge-Ward Charm (If-worn line + toast), the trueing row previews Resonance 1 -> 0, the trued charm costs nothing and the refused charm then fits at 4/4 |
 | `line_skill_readout` | 9 | full | `line_skill_readout_start` | #514 L1: a Sharpshooter L12 spars Relc; [Piercing Volley]'s one-line combat readout keeps its weapon-damage tag and Once-every-2-rounds rule when ready, and leads with Recovering when cooling (windowed read: 00_volley_ready, 01_volley_recovering) |
+| `rest_before_warren` | 9 | full | `rest_before_warren_start` | #453 P1-P3 checkpoint-based (journey_rogue step 1001: deep_tunnels, 10/44 HP, 0/14 MP after the scout win): Gnoll satchel open + Empty negative, field Mending Draught +8 with autosave and Saved pill, sewer pail open + Empty negative, field Hot Meal +6 with autosave, then the Watch bunk's real sleep to 44/14 with no floodplains crossing and no fight (windowed reads: 00-07). Inherited kit/history are setup, not acquisition proof. |
+| `watch_bunk_gate` | 9 | full | `near_barracks` | #453 P1 negative: before heard_about_cisterns the Watch bunk renders nothing, the barracks count stays 9 and the player walks onto its cell (1,1). |
+| `rest_delve_camp` | 9 | full | `rest_delve_camp_start` | #453 P4 checkpoint-based (steel_thread step 1229, post-vault 35/49 HP, 0/14 MP): walk out of the halls to the Horns' camp and sleep (full refill, sleep beat, autosave, delve-time line); pause-menu Load of steel_thread step 2921 (horns_dig_started) proves the post-dig line on the same camp. Inherited kit is setup only. |
+| `rest_dig_camp` | 9 | full | `rest_dig_camp_start` | #453 P5 checkpoint-based (steel_thread step 1405, guardian defeat rollback 35/49 HP, 0/14 MP): sleep on the dig-camp bedroll (full refill, autosave), then win the guardian rested at the ledger's own 49/49, 1/15 exit. Inherited kit is setup only. |
+| `gate_road_arrows_read` | 9 | full | `near_ambush_sneak` | #453 P6: the gate-road quiver read from the road outside the ambush band; scenery only, nothing granted, no fight (windowed reads: 00_arrows_from_the_road, 01_arrows_read). |
 
 ## Browser-only QA
 

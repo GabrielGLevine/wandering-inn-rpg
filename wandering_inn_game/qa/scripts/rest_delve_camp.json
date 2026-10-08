@@ -1,0 +1,456 @@
+{
+ "_comment": "#453 P4 through real input. Checkpoint fixtures from steel_thread: step 1229 (post-vault, trapped_halls (17,6), 35/49 HP, 0/14 MP) and step 2921 (Act V arrival, horns_dig_started). Walk out of the halls to the Horns' camp and sleep (full refill, autosave, delve-time toast); then load the post-dig state and sleep on the same camp for its second line. Inherited kit is setup only.",
+ "fixture_save": "rest_delve_camp_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "trapped_halls"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 35
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump the return door (1,7)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "map": "dungeon_approach",
+    "cell": [
+     13,
+     6
+    ]
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "dungeon_approach",
+    "entity": "horns_delve_camp",
+    "sprite": "bed",
+    "hidden": false
+   },
+   "_comment": "horns_party_formed is banked, so the delve camp is present."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    4
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "00_delve_camp_in_context"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump the camp (14,4) to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_affordance_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "entity": "horns_delve_camp",
+    "cell": [
+     14,
+     4
+    ],
+    "showing": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "text": "A spare bedroll between the Horns' packs, a rolled cloak for a pillow."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slept": true
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slot": "auto"
+   },
+   "_comment": "SLEEP_SETTLED autosave (nested in its dispatch, so seen first); the Saved pill is suppressed under the sleep veil by design (message_layer _show_save_status)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "vitals": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "slept"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "timeout_sec": 20
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 35,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 120,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 35,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_delve_camp_slept"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "class_level_up",
+   "payload_contains": {
+    "class": "spearmaster",
+    "level": 15
+   },
+   "_comment": "The camp sleep resolves the same sleep beat as any bed."
+  },
+  {
+   "action": "install_fixture",
+   "fixture": "rest_delve_camp_after_dig",
+   "slot": "manual",
+   "_comment": "Second look: an earned Act V state (steel_thread step 2921, horns_dig_started + door_mounted) through the real pause-menu Load."
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "mode": "load"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_entity_visual_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "map": "dungeon_approach",
+    "entity": "horns_delve_camp",
+    "sprite": "bed",
+    "hidden": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 20
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "dungeon_approach"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.horns_dig_started",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    4
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "02_camp_after_dig"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "text": "The last bedroll, left rolled against the wall. It unrolls stiff with dust."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slept": true
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slot": "auto"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 20,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "timeout_sec": 20
+  },
+  {
+   "action": "screenshot",
+   "name": "03_camp_after_dig_slept"
+  },
+  {
+   "action": "assert_event_count",
+   "type": "toast",
+   "count": 1,
+   "payload_contains": {
+    "text": "A spare bedroll between the Horns' packs, a rolled cloak for a pillow."
+   },
+   "_comment": "The delve-time line spoke once, on the first leg only."
+  },
+  {
+   "action": "assert_event_count",
+   "type": "sleep_settled",
+   "count": 2
+  }
+ ]
+}
