@@ -1,0 +1,156 @@
+{
+ "_comment": "corner_melee canonical's start (#591). journey_caster at seed 9, serialized by run_qa.sh --checkpoint-at=932 one cell above the Awakened Raskghar's encounter (deep_tunnels (12,6), facing it): diplomat5/mage6/rogue2 holding a rusty sword (weapon range 1) with [Calming Touch] (spell_damage, range 1, LoS-gated) on the bar. rng_state is the checkpoint's own.",
+ "version": 12,
+ "state": {
+  "accepted_bounty_baseline": {},
+  "accepted_bounty_id": "",
+  "accepted_bounty_tier": "",
+  "accepted_delivery_baseline": {},
+  "accepted_delivery_id": "",
+  "accomplishments": {
+   "asked_about_crate": 1,
+   "chatted_with_erin": 1,
+   "chatted_with_krshia": 2,
+   "chatted_with_olesm": 2,
+   "chatted_with_pisces": 1,
+   "chatted_with_relc": 1,
+   "chatted_with_selys": 1,
+   "chatted_with_zevara": 2,
+   "cisterns_reported": 1,
+   "cleared_raskghar_scouts": 1,
+   "cleared_sewer_vermin": 1,
+   "commended_by_olesm": 1,
+   "crate_returned": 1,
+   "crossed_under_cover": 1,
+   "errand_decided": 1,
+   "fought_goblin_encounter_1": 1,
+   "fought_raskghar_scouts": 1,
+   "fought_sewer_vermin": 1,
+   "found_cold_hearth": 1,
+   "found_gnaw_pile": 1,
+   "found_the_crate": 1,
+   "has_package": 1,
+   "heard_about_cisterns": 1,
+   "heard_gossip": 19,
+   "heard_the_deep_tremor": 1,
+   "ice_cast": 21,
+   "kept_reward": 1,
+   "learned_magic_from_pisces": 1,
+   "melee_hit": 18,
+   "met_pisces": 1,
+   "met_relc": 1,
+   "package_delivered": 1,
+   "persuaded_someone": 5,
+   "reached_liscor": 5,
+   "reached_the_warren": 1,
+   "reached_two_classes": 1,
+   "recovered_crate_guile": 1,
+   "resolved_the_cisterns": 1,
+   "sign_defended": 1,
+   "slept": 4,
+   "sneaked_past_danger": 2,
+   "soothed_the_drayman": 1,
+   "spell_cast": 21,
+   "studied_the_cellar": 1,
+   "took_the_low_road": 1,
+   "victories": 3,
+   "visited_guild": 1,
+   "visited_own_room": 4,
+   "watch_runner_pointed": 1,
+   "watch_swept_cisterns": 1,
+   "won_combat": 2
+  },
+  "actions_since_sleep": 126,
+  "board_last_seen_times_slept": 0,
+  "classes": {
+   "diplomat": 5,
+   "mage": 6,
+   "rogue": 2
+  },
+  "companion": "",
+  "companion_source": "",
+  "consumable_counts": {},
+  "container_state": {},
+  "current_map": "deep_tunnels",
+  "delivery_failed": false,
+  "delivery_last_seen_times_slept": 0,
+  "dormant_encounters": [],
+  "entity_first_use": {},
+  "equipped": {
+   "accessory_1": "",
+   "accessory_2": "",
+   "accessory_3": "",
+   "armor": "",
+   "weapon": "rusty_sword"
+  },
+  "fractional_bank": {
+   "heard_gossip": 0,
+   "ice_cast": 0.74078605879925,
+   "melee_hit": 0,
+   "persuaded_someone": 0,
+   "sneaked_past_danger": 0,
+   "spell_cast": 0.74078605879925,
+   "won_combat": 0
+  },
+  "frozen_cells": {},
+  "generalist_classes": [],
+  "gold": 12,
+  "hotbar_loadout": [],
+  "inventory": [
+   "rusty_sword",
+   "watch_token"
+  ],
+  "light_active": false,
+  "lore_notes": [
+   "A Watch runner is looking for you."
+  ],
+  "pc_gender": "m",
+  "pc_name": "Wren",
+  "pc_race": "human",
+  "pending_loot": [],
+  "pending_meal": {},
+  "player_cell": [
+   12,
+   6
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [
+   "goblin_encounter_1",
+   "sewer_vermin",
+   "shield_spiders",
+   "raskghar_scouts"
+  ],
+  "resonance_capacity": 4,
+  "rng_state": "6999962570053609116",
+  "seen_statuses": [
+   "slowed"
+  ],
+  "social_talked": {},
+  "started_quests": [
+   "missing_crate",
+   "the_errand",
+   "cisterns",
+   "something_beneath"
+  ],
+  "times_slept": 4,
+  "used_skills": [
+   "frost_bolt",
+   "light",
+   "mana_shield",
+   "calming_touch"
+  ],
+  "vitals": {
+   "hp": 32,
+   "mp": 16,
+   "mp_potion_doses": 0
+  },
+  "warded_encounters": {},
+  "well_fed": false
+ }
+}

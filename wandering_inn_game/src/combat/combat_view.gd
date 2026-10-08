@@ -135,6 +135,10 @@ func has_los(a: String, b: String) -> bool:
 	return _combat.has_los(a, b)
 
 
+func in_weapon_range(a: String, b: String) -> bool:
+	return _combat.in_weapon_range(a, b)
+
+
 func grid_size() -> Vector2i:
 	return _combat.grid_size
 

@@ -6472,7 +6472,7 @@
   {
    "action": "press",
    "name": "move_up",
-   "_comment": "From (5,3) the blocked (6,3) corner sits between us and the Awakened: the bar's melee targeting requires line of sight, so strike square-on from (5,2)."
+   "_comment": "Strike square-on from (5,2). Stepping right to (5,3) and swinging diagonally past the blocked (6,3) corner is also legal since #591; this route keeps the square-on approach."
   },
   {
    "action": "wait_for_event",

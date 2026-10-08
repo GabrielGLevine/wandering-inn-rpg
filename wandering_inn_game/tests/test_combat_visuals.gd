@@ -153,6 +153,45 @@ func _init() -> void:
 	power_targeting_far.enter(0, "power_strike")
 	assert(not (power_targeting_far.state()["targets"] as Array).has("goblin_raider"), "power_strike (melee, no range field) must NOT offer a non-adjacent enemy -- skill_effects.gd's damage_mult arm would silently refuse it downstream")
 
+	# #591: a reach-1 weapon strike lists the diagonal neighbour past a blocked
+	# corner because WICombat.attack/damage_mult resolve it; spells and reach > 1
+	# still refuse it. goblin_ambush blocks (5,3): PC (4,3), goblin (5,2).
+	var cn_pc_cfg: Dictionary = (_combatant_config(tc_combatants, "pc") as Dictionary).duplicate(true)
+	cn_pc_cfg["skills"] = ["power_strike", "calming_touch", "frost_bolt"]
+	var cn_combat := WICombat.new(tc_arena, [cn_pc_cfg, (_combatant_config(tc_combatants, "goblin_raider") as Dictionary).duplicate(true)], tc_skills, func(_t: String, _p: Dictionary) -> void: pass, 9)
+	cn_combat.begin()
+	cn_combat.active_index = cn_combat.turn_order.find("pc")
+	cn_combat._start_turn()
+	cn_combat.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)
+	cn_combat.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(5, 2)
+	assert(cn_combat.blocked.has(Vector2i(5, 3)) and not cn_combat.blocked.has(Vector2i(4, 2)), "corner setup: exactly one corner of the diagonal is blocked")
+	assert(not cn_combat.has_los("pc", "goblin_raider") and cn_combat.in_weapon_range("pc", "goblin_raider"), "corner setup: no LoS, but the sim's reach-1 weapon gate accepts the diagonal")
+	var cn_view := WICombatView.new(cn_combat)
+	var cn_attack: RefCounted = targeting_script.new(cn_view, stub_screen)
+	cn_attack.enter(0, "")
+	assert((cn_attack.state()["targets"] as Array) == ["goblin_raider"] and not bool(cn_attack.state()["los_blocked"]), "Attack must list the diagonal neighbour past the blocked corner (#591)")
+	assert(cn_attack.select_at_cell(Vector2i(5, 2)) and cn_attack.tap_at_cell(Vector2i(5, 2)), "a click/tap on the diagonal cell must select it, not cancel")
+	assert((cn_attack.aim_preview()["ring_cell"] as Vector2i) == Vector2i(5, 2), "the aim ring must sit on the diagonal target")
+	var cn_attack_action: Dictionary = cn_attack.confirm()
+	assert(cn_attack_action == {"kind": "attack", "target_id": "goblin_raider"}, "confirm() must aim the attack at the diagonal neighbour")
+	assert(cn_combat.attack(String(cn_attack_action["target_id"])), "the listed diagonal attack must resolve through WICombat.attack")
+	cn_combat.combatants["pc"][WIKeys.AP] = 4
+	var cn_power: RefCounted = targeting_script.new(cn_view, stub_screen)
+	cn_power.enter(0, "power_strike")
+	assert((cn_power.state()["targets"] as Array) == ["goblin_raider"], "power_strike (damage_mult, in_weapon_range in the sim) must list the diagonal neighbour too")
+	assert(cn_combat.use_skill("power_strike", "goblin_raider"), "the listed power_strike must resolve")
+	cn_combat.combatants["pc"][WIKeys.AP] = 4
+	for los_skill: String in ["calming_touch", "frost_bolt"]:
+		var cn_spell: RefCounted = targeting_script.new(cn_view, stub_screen)
+		cn_spell.enter(0, los_skill)
+		assert((cn_spell.state()["targets"] as Array).is_empty() and bool(cn_spell.state()["los_blocked"]), "%s (spell_damage, LoS-gated) must NOT list the diagonal past the corner" % los_skill)
+	assert(not cn_combat.use_skill("calming_touch", "goblin_raider"), "the sim must refuse calming_touch past the corner, matching its empty target list")
+	cn_combat.combatants["pc"][WIKeys.WEAPON_RANGE] = 4
+	var cn_bow: RefCounted = targeting_script.new(cn_view, stub_screen)
+	cn_bow.enter(0, "")
+	assert((cn_bow.state()["targets"] as Array).is_empty() and bool(cn_bow.state()["los_blocked"]), "a reach > 1 Attack keeps its LoS rule: no diagonal past the corner")
+	assert(not cn_combat.attack("goblin_raider"), "the sim must refuse the reach > 1 attack past the corner, matching its empty target list")
+
 	var sel_pc_cfg: Dictionary = (_combatant_config(tc_combatants, "pc") as Dictionary).duplicate(true)
 	var sel_g1_cfg: Dictionary = (_combatant_config(tc_combatants, "goblin_raider") as Dictionary).duplicate(true)
 	var sel_g2_cfg: Dictionary = (_combatant_config(tc_combatants, "goblin_raider") as Dictionary).duplicate(true)
