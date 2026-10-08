@@ -193,6 +193,11 @@ and chronology belong in issue PRs. Earlier context:
   home to other races such as Garuda and Dullahans (canon-check each at build).
   Re-theme existing Pallass quests so only one (`papers_for_pallass`) stays
   paperwork-focused; ids, rewards and fees stay. "Grand Lift" stays.
+  Approved design (`docs/design/513-pallass-income.md`): "Room on the Row"
+  (talk/help, no fight); `forge_tier_permit` → Grimalkin's fitness,
+  `tempered_standards` → smiths and alchemists, `ledger_eats_first` → City of
+  Inventions. New owned art (PixelLab, best art wins) for the Gnoll trader and
+  on-screen Garuda and Dullahan residents. A third floodplains quest: not now.
 - **Purchases confirm before any gold or item effect commits** (#504).
 - **Serve stays cooking-gated;** `source_hint` tells a blocked player where a
   meal comes from, and combat builds are not entitled to bypass the cooking
