@@ -57,7 +57,13 @@ def run_qa(entry: dict, log: Path) -> int:
 		command.append(f"--seed={entry['seed']}")
 	with log.open("w") as handle:
 		return subprocess.run(command, cwd=ROOT, stdout=handle, stderr=subprocess.STDOUT,
-			timeout=int(entry["budget_sec"]) * 3).returncode
+			timeout=hang_limit(entry)).returncode
+
+
+def hang_limit(entry: dict) -> int:
+	"""A run past 1.5x its budget is treated as hung and killed, so even several
+	hangs leave the CI job time to write report.json."""
+	return int(entry["budget_sec"] * 1.5)
 
 
 def evaluate(entry: dict, out: Path, qa_output: Path, runner: Runner) -> dict:
@@ -70,6 +76,9 @@ def evaluate(entry: dict, out: Path, qa_output: Path, runner: Runner) -> dict:
 	started = time.monotonic()
 	try:
 		code = runner(entry, log)
+	except subprocess.TimeoutExpired:
+		report["errors"].append(f"hung: killed after {hang_limit(entry)}s")
+		return report
 	except (OSError, subprocess.SubprocessError) as error:
 		report["errors"].append(f"launch failed: {error}")
 		return report

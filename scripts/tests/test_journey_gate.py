@@ -58,6 +58,7 @@ class JourneyGateTest(unittest.TestCase):
 			"checkpoint a_end not reached": {"checkpoint": "a_mid"},
 			"engine noise": {"noise": "ERROR: something else\n"},
 			"launch failed": {"raise_error": OSError("no such file")},
+			"hung: killed after 90s": {"raise_error": __import__("subprocess").TimeoutExpired("run_qa.sh", 90)},
 		}
 		for expected, runner in cases.items():
 			report = self.run_gate(**runner)
