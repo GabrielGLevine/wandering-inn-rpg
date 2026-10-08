@@ -57,7 +57,31 @@ ABANDON = [
 ]
 
 
+ACTS = [
+	{"id": "act_i", "advance_when": {"min_classes": 1, "accomplishments": {"reached_town": 1}}},
+	{"id": "act_ii", "advance_when": {"quests_completed": 1, "accomplishments": {"boss_down": 1}}},
+	{"id": "act_iii", "advance_when": {}},
+]
+PROGRESS = [
+	ev("map_changed", map="town", cell=[0, 0]),
+	ev("accomplishment_recorded", id="reached_town", count=1),
+	ev("class_gained", **{"class": "mage"}),
+	ev("gold_changed", delta=5, source="job", total=5),
+	ev("class_level_up", **{"class": "mage", "level": 4}),
+	ev("class_evolved", **{"from": "mage", "to": "ice_mage", "level": 4}),
+	ev("accomplishment_recorded", id="boss_down", count=1),
+	ev("quest_completed", id="q1"),
+]
+
+
 class JourneyLedgerTest(unittest.TestCase):
+	def test_act_boundaries_follow_acts_gates(self) -> None:
+		ledger = journey_ledger.build(PROGRESS, ACTS)
+		self.assertEqual([a["entered"] for a in ledger["acts"]], ["act_ii", "act_iii"])
+		self.assertEqual(ledger["acts"][0]["classes"], {"mage": 1})
+		self.assertEqual((ledger["acts"][1]["classes"], ledger["acts"][1]["gold"]), ({"ice_mage": 4}, 5))
+		self.assertIn("Act boundaries: act_ii @ town: mage 1; 0g", journey_ledger.markdown(ledger))
+
 	def test_abandon_and_unfinished_fights_are_kept(self) -> None:
 		ledger = journey_ledger.build(ABANDON)
 		results = [(f["encounter"], f["result"]) for f in ledger["fights"]]

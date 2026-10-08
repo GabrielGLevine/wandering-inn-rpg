@@ -7,7 +7,9 @@ out-of-combat recovery. Entry/exit come from `resources_changed`
 (`combat_entry` / `combat_victory`); a defeat's exit is its last in-combat
 resource change and its rollback state the next rendered field vitals. A fight
 that ends in a load without `combat_finished` (pause-menu Abandon) is recorded
-as `abandoned` with the same exit/rollback treatment.
+as `abandoned` with the same exit/rollback treatment. Act boundaries replay
+`WIActs.current_index` over the run's accomplishment, class and quest events
+against data/acts.json, recording class levels, gold, sleeps and fights at each.
 
     python3 scripts/journey_ledger.py wandering_inn_game/qa_output/<script>/events.jsonl [--json]
 """
@@ -18,6 +20,16 @@ import argparse
 import json
 import sys
 from pathlib import Path
+
+ACTS = Path(__file__).resolve().parents[1] / "wandering_inn_game" / "data" / "acts.json"
+
+
+def _act_met(cond: dict, classes: dict, accomplishments: dict, quests: int) -> bool:
+	if len(classes) < int(cond.get("min_classes", 0)):
+		return False
+	if quests < int(cond.get("quests_completed", 0)):
+		return False
+	return all(int(accomplishments.get(key, 0)) >= int(need) for key, need in cond.get("accomplishments", {}).items())
 
 
 def _vitals(state: dict | None) -> str:
@@ -38,8 +50,15 @@ def _close(ledger: dict, fight: dict, result: str) -> None:
 	ledger["fights"].append(fight)
 
 
-def build(events: list[dict]) -> dict:
-	ledger: dict = {"fights": [], "sleeps": [], "reloads": [], "gold": [], "equipment": [], "recovery": [], "maps": []}
+def build(events: list[dict], acts: list[dict] | None = None) -> dict:
+	if acts is None:
+		acts = json.loads(ACTS.read_text())["acts"] if ACTS.exists() else []
+	ledger: dict = {"fights": [], "sleeps": [], "reloads": [], "gold": [], "equipment": [], "recovery": [], "maps": [], "acts": []}
+	classes: dict = {}
+	accomplishments: dict = {}
+	quests = 0
+	gold_total = 0
+	act_index = 0
 	current_map = ""
 	vitals: dict | None = None
 	fight: dict | None = None
@@ -112,6 +131,23 @@ def build(events: list[dict]) -> dict:
 		elif kind == "gold_changed":
 			ledger["gold"].append({"delta": payload.get("delta"), "source": payload.get("source"),
 				"total": payload.get("total"), "map": current_map})
+			gold_total = int(payload.get("total") or 0)
+		elif kind == "class_gained":
+			classes.setdefault(str(payload.get("class")), 1)
+		elif kind == "class_level_up":
+			classes[str(payload.get("class"))] = int(payload.get("level", 1))
+		elif kind == "class_evolved":
+			classes.pop(str(payload.get("from")), None)
+			classes[str(payload.get("to"))] = int(payload.get("level", 1))
+		elif kind == "accomplishment_recorded":
+			accomplishments[str(payload.get("id"))] = int(payload.get("count", 1))
+		elif kind == "quest_completed":
+			quests += 1
+		while act_index < len(acts) - 1 and _act_met(acts[act_index].get("advance_when", {}), classes, accomplishments, quests):
+			ledger["acts"].append({"entered": acts[act_index + 1].get("id"), "map": current_map, "classes": dict(classes),
+				"gold": gold_total, "sleeps": len(ledger["sleeps"]), "fights": len(ledger["fights"]),
+				"losses": sum(1 for row in ledger["fights"] if row["result"] != "win")})
+			act_index += 1
 	for row in ledger["fights"]:
 		row.pop("last_action", None)
 		row.pop("before_entry", None)
@@ -147,6 +183,9 @@ def markdown(ledger: dict) -> str:
 	lines += ["", f"Fights {summary['fights']} (wins {summary['wins']}, losses {summary['losses']}, abandoned {summary['abandoned']}); "
 		f"retried {summary['retried'] or 'none'}; sleeps {summary['sleeps']}; gold +{summary['gold_earned']} "
 		f"-{summary['gold_spent']} = {summary['gold_final']}; final {_vitals(summary['final_vitals'])}.", ""]
+	lines.append("Act boundaries: " + ("; ".join(
+		f"{a['entered']} @ {a['map']}: " + ", ".join(f"{name} {level}" for name, level in sorted(a["classes"].items()))
+		+ f"; {a['gold']}g; {a['sleeps']} sleeps; {a['fights']} fights ({a['losses']} not won)" for a in ledger["acts"]) or "none"))
 	lines.append("Sleeps: " + ("; ".join(f"{s['map']} {s['source']} → {_vitals(s['after'])}" for s in ledger["sleeps"]) or "none"))
 	lines.append("Recovery outside combat: " + ("; ".join(f"{r['map']} {r['reason']}:{r['source']} {_vitals(r['before'])} → {_vitals(r['after'])}" for r in ledger["recovery"]) or "none"))
 	lines.append("Equipment: " + ("; ".join(f"{e['map']} {e['source']} {_vitals(e['before'])} → {_vitals(e['after'])}" for e in ledger["equipment"]) or "none"))

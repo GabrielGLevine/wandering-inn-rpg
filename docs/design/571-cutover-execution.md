@@ -72,3 +72,52 @@ Windowed read of each journey's key captures at production timing.
 | E: caster journey | merged `b68cda65`: `journey_caster` 3782/3782 to `caster_full_ending`, registered (gate 18.7 s/120 s). Fresh Pisces→[Mage]→[Ice Mage] 14, every fight player-driven (no autoplay), 8/8 wins; road + sewer bats in one waking at 0 MP; 4 bought Mana Potions: 2 in combat at 1 AP, dose 3 safe, dose 4 warning→Cancel→accept −4 HP; pause Save/Load at 21/38, 12/19, 4 doses. Windowed log clean under the extended #586 deferral. Found combat LoS asymmetry (filed separately). |
 | F: imperfect variant + fee list | done: fee audit (`571-fee-audit.md`) and `journey_imperfect` 4115/4115 to `imperfect_full_ending` (gate 16.9 s/90 s). Declared imperfect choices: unused knife + handline leave 0g after the catalyst, Coyle exposed, 80g Invrisil one-shots skipped; every later fee earned back from repeatable producers over 4 extra wakings, locked fee rows pinned at 7/13/2g. #513 notes: delivery slips rotate out of the Pallass stretch; delivery gold toast missing; locked fee rows don't show the shortfall. |
 | G: Rogue per-fight pins | done: exact entry pins for all 11 fights and exit pins for the 8 wins (19 counts; the 3 defeats enter at full HP, so defeat rollback is proven by `steel_thread`, not here) and an earned pause Save→Load at 10/44 HP, 0/14 MP in `deep_tunnels`; 3509/3509, noise clean. Windowed read pending integration. Rogue never fights twice without sleep, so criterion 5 item 1 comes from lanes C/E. |
+
+## Criterion 7: no rollout switch, no legacy refill path
+
+This branch changes no `src/`. Carried HP/MP shipped with #578 without a
+switch. `WIVitals.refill` has exactly three call sites:
+
+- new game: `wi_game.gd:228`;
+- actual sleep, after the sleep beat resolves maxima: `wi_game.gd:3316`;
+- a legacy save that has no `vitals` block: `save.gd:415`.
+
+Combat seeds the PC from carried values (`wi_game.gd:2627–2628`
+`initial_hp/initial_mp`). Victory, defeat rollback, transitions and day wraps
+do not refill. The journey ledgers show the depleted carries this proves:
+- martial footpad pair: entered at 40/49 HP, 0/16 MP;
+- caster sewer bats: entered at 0 MP;
+- worker meals: eaten at 3/44 HP after a fight;
+- every reload pin returns the saved depleted values.
+
+## Criterion map (for the closing PR)
+
+1. Composed tree: `issue/571-recovery-cutover` head; CI's Web export is the
+   export identity.
+2. Journeys: `571-ledger-{rogue,worker,martial,caster,imperfect}.md`, with
+   per-fight entry/exit, sleeps, recovery, gear, gold, reloads and act
+   boundaries.
+3. `571-attrition-measurements.md` (#453, rested vs depleted, surfaced not
+   tuned); `571-fee-audit.md` plus `journey_imperfect` (#513 low gold);
+   `poor_retired_producer_recovery` (exhausted producer).
+4. Journey gate and `journey` tier (#515). Martial goldens residue is recorded
+   in `scripts/itinerary/README.md`; runtime proof is kept separate.
+5. Earned items:
+   - two fights without sleep: martial footpads, caster road + bats;
+   - low-resource reload: Rogue, martial, caster;
+   - sleep after progression: caster, all routes;
+   - non-cook Inn recovery: beds on every route; Inn chores on the worker;
+   - held-Skill cooking then eating: worker;
+   - consecutive MP doses across the threshold with save/load: caster;
+   - AP cost and Cancel: caster;
+   - defeat rollback: Rogue, martial, worker, imperfect;
+   - Abandon rollback: worker;
+   - buff expiry: worker;
+   - no-heal equip toggle: worker.
+   Fixture-based negatives remain in `vitals_lifecycle_negatives`,
+   `item_use_loop` and `consumable_poison_defeat`.
+6. Windowed reads at production timing: every journey's captures were read
+   (see each ledger). Exported browser touch: CI Web registry on the PR head;
+   physical devices #516/#585.
+7. Above.
+8. Linked in the closing comments on #565, #516, #526 and #530.
