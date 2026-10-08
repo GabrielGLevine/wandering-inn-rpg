@@ -116,7 +116,7 @@ on top of what each correction already added.
 | Correct it (35g) | `relcs_spare_spear` (0) → `hedault_trued_spear` | 0 → 0 (mundane; nothing to discount) |
 
 Data marker: each product carries `"trued_from": "<source id>"`.
-`tests/test_items.gd` enforces these rules:
+`tests/test_items.gd` and `tests/test_gear_rules.gd` enforce these rules:
 
 - A product may be enchanted at resonance 0, which is otherwise a
   mundane-only value.
@@ -335,7 +335,29 @@ table. Row D's three Hedault pieces cost 1, not 4, and wand flat damage moved
 to spell power. That table is a snapshot of `b1c4b02b`; it is not
 regenerated here.
 
-## 9. Open questions
+## 9. Journey impact
+
+`python3 wandering_inn_game/qa/journey_gate.py` at `38948d63`:
+
+| Route | Script | Result |
+|---|---|---|
+| rogue | `journey_rogue` | ok (3509/3509 steps, full-ending checkpoint) |
+| generalist | `journey_worker` | ok (3998/3998) |
+| martial | `steel_thread` | ok (3134/3134) |
+| caster | `journey_caster` | ok (3782/3782) |
+| imperfect | `journey_imperfect` | FAIL on two text pins only |
+
+`journey_imperfect` fails at steps 3048 and 3163. Both are Krshia's `charms`
+preview, pinning the Hunter's Fang Talisman card as "+1 damage on melee
+hits"; it now reads "+1 damage on attacks and weapon Skills".
+
+The route itself still completes. It runs all 4115 steps, reaches
+`imperfect_full_ending` and keeps the same ledger (8 wins, 2 losses). No fight
+outcome moved in any journey, because no journey wears an implement or casts
+a gated line. Pins are left for the controller's post-rebase update, as
+instructed.
+
+## 10. Open questions
 
 - Spell power reaches [Evil Eye], [Calming Touch] and [Phantom Barrage]
   because the rule classifies by weapon gate. Narrowing it to elemental or
@@ -344,6 +366,11 @@ regenerated here.
   included ("like ordinary melee"), not the weapon's `damage_mod` alone.
 - Meal and oil cards still read "Next fight: +N damage"; that pool now also
   reaches gated lines. The wording is unchanged here.
+- The batch harness cannot see the #495 line change: neither policy aims a
+  gated line in any matrix cell. A cell or policy that lines up two foes would
+  be needed to measure it as anything but a report.
+- The combat bar's one-line readout already clipped [Piercing Shot]'s cooldown
+  clause; the "weapon damage to" wording clips seven more characters of it.
 - A Hedault swap unequips the consumed piece silently (shipped behaviour).
   Re-equipping the product into the same slot would now always fit, because
   of the trueing invariant, but it is not done here.
