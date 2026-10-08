@@ -1,0 +1,44 @@
+{
+ "_comment": "#514 gear-damage fixture: an [Archer] L4 (so [Piercing Shot], the bow-gated line, is in the kit) standing at Krshia's stall (13,3) facing her, training_bow equipped (no weapon damage), 30 gold for the 18g hunting_bow. Same accomplishments as near_barracks so Relc's re-spar is offered; rng_state is near_barracks's derived seed-9 state.",
+ "version": 5,
+ "state": {
+  "current_map": "street",
+  "player_cell": [
+   13,
+   3
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "archer": 4
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "training_bow"
+  ],
+  "equipped": {
+   "weapon": "training_bow",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 30,
+  "rng_state": "-6393592048753323481"
+ }
+}

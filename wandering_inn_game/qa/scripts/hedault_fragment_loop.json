@@ -95,7 +95,7 @@
      {
       "effect_lines": [
        "+3 max HP",
-       "Resonance 1",
+       "Resonance 1 → 0",
        "Grants [Dangersense] in combat"
       ],
       "locked": true,
@@ -104,8 +104,8 @@
      },
      {
       "effect_lines": [
-       "+1 damage on melee hits",
-       "Resonance 1",
+       "+1 damage on attacks and weapon Skills",
+       "Resonance 1 → 0",
        "Grants [Eagle Eyes]"
       ],
       "locked": false,
@@ -115,7 +115,7 @@
      {
       "effect_lines": [
        "+2 max HP",
-       "Resonance 2",
+       "Resonance 1",
        "Grants [Mana Shield] in combat"
       ],
       "locked": true,
@@ -126,7 +126,7 @@
       "effect_lines": [
        "+2 max HP",
        "Reduces every hit taken by 1",
-       "Resonance 1"
+       "Resonance 1 → 0"
       ],
       "locked": false,
       "requirement": "",
@@ -139,7 +139,7 @@
      },
      {
       "effect_lines": [
-       "+2 damage on melee hits",
+       "+2 damage on attacks and weapon Skills",
        "Spear kit replaces other weapon Skills in combat"
       ],
       "locked": true,

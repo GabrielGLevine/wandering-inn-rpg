@@ -1142,6 +1142,9 @@ func snapshot() -> Dictionary:
 			"alive": c[WIKeys.ALIVE], "side": c[WIKeys.SIDE],
 			"skills": (c[WIKeys.SKILLS] as Array).duplicate(),
 			"weapon_range": int(c.get(WIKeys.WEAPON_RANGE, 1)),
+			# #514: the gear adds a hit carries, by source (QA reads them live).
+			"damage_mod": int(c.get(WIKeys.DAMAGE_MOD, 0)),
+			"spell_power": int(c.get(WIKeys.SPELL_POWER, 0)),
 			"cooldowns": _cooldown_snapshot(id),
 		}
 	return {

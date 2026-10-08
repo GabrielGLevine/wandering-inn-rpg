@@ -358,7 +358,7 @@
    "type": "toast",
    "payload_contains": {
     "lore": true,
-    "text": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by one in the night. The anchor stone paid for it."
+    "text": "Resonance is how much enchantment you can wear at once. Stronger pieces take more of it, and crude work argues more than it should; a properly trued piece keeps quiet. Yours grew by one in the night. The anchor stone paid for it."
    }
   },
   {
@@ -366,14 +366,14 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by one in the night. The anchor stone paid for it."
+    "text": "Resonance is how much enchantment you can wear at once. Stronger pieces take more of it, and crude work argues more than it should; a properly trued piece keeps quiet. Yours grew by one in the night. The anchor stone paid for it."
    },
    "timeout_sec": 60
   },
   {
    "action": "assert_state",
    "path": "lore_notes",
-   "contains": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by one in the night. The anchor stone paid for it."
+   "contains": "Resonance is how much enchantment you can wear at once. Stronger pieces take more of it, and crude work argues more than it should; a properly trued piece keeps quiet. Yours grew by one in the night. The anchor stone paid for it."
   },
   {
    "_comment": "== Issue #92 R4 post-bump proof: the SAME anchor_sliver equip now succeeds at capacity 3 ==",
