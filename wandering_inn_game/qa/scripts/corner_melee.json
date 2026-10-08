@@ -1,0 +1,337 @@
+{
+ "_comment": "#591 canonical: diagonal melee past a blocked corner is legal for everyone, so the player's Attack targets what WICombat.attack resolves. Loads corner_melee_start (journey_caster's pre-boss state) via title Continue, joins Relc into awakened_boss, and on the PC's first turn places the issue's repro geometry: PC (5,3), Awakened (6,2), (6,3) blocked. NEGATIVE: [Calming Touch] (range-1 spell, LoS-gated) offers zero targets and spends nothing. POSITIVES: Attack lists exactly one target and resolves on the Awakened twice, once by keyboard confirm and once by a board click plus the confirm chip, without the PC moving.",
+ "fixture_save": "corner_melee_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down to Continue; confirm loads the corner_melee_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "_comment": "Facing the encounter already: relc_descent opens on the first interact, row 0 is [Go together.].",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "relc_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "arena": "deep_warren"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc",
+    "ap": 4
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "_comment": "SETUP, not proof: the #591 repro geometry from journey_caster's round 4, placed directly. deep_warren blocks (6,3), so the PC at (5,3) and the Awakened at (6,2) are diagonal neighbours with the corner between them (supercover LoS fails); (5,2) stays open. Every other enemy is 3+ cells away, so nothing else is in range 1.",
+   "action": "combat_set_cells",
+   "cells": {
+    "pc": [
+     5,
+     3
+    ],
+    "raskghar_awakened": [
+     6,
+     2
+    ]
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.raskghar_awakened.cell",
+   "equals": [
+    6,
+    2
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "_comment": "NEGATIVE: [Calming Touch] is a range-1 spell and spells keep their line-of-sight rule, so the adjacent diagonal past the corner is NOT offered. Its only in-range foe fails LoS: zero targets, readout says why.",
+   "action": "press",
+   "name": "hotbar_7"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "skill",
+    "skill": "calming_touch",
+    "targets": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "01_calming_touch_no_los"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "pc"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "_comment": "#591 POSITIVE, KEYBOARD: Attack lists the diagonal Awakened (WICombat.attack's own adjacency rule) and Enter resolves it.",
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "attack",
+    "targets": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "02_attack_diagonal_target"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc",
+    "target": "raskghar_awakened",
+    "melee": true
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_beat",
+   "payload_contains": {
+    "beat_type": "attack_resolved",
+    "attacker": "pc",
+    "target": "raskghar_awakened"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "_comment": "#591 POSITIVE, MOUSE: the board click selects the same diagonal cell (select_at_cell over the same target list) and the confirm chip fires it.",
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "attack",
+    "targets": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click",
+   "cell": [
+    6,
+    2
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "03_click_selects_diagonal"
+  },
+  {
+   "action": "click_confirm_chip"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc",
+    "target": "raskghar_awakened",
+    "melee": true
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_beat",
+   "payload_contains": {
+    "beat_type": "attack_resolved",
+    "attacker": "pc",
+    "target": "raskghar_awakened"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 0
+  },
+  {
+   "action": "assert_event_count",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc",
+    "target": "raskghar_awakened"
+   },
+   "count": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_two_diagonal_hits"
+  }
+ ]
+}

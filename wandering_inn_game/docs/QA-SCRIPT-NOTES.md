@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 285 native canonical QA scripts. The manifest is the
+This is the human index for 286 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -293,6 +293,7 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `journey_caster` | 9 | full, journey | `—` | #571/#512 fresh caster: Pisces lesson -> [Mage] first -> [Ice Mage] 14; every fight player-driven (no autoplay), 8/8 wins, no retries; road then optional sewer bats in one waking at 0 MP; sleeps refill new maxima; four bought Mana Potions: two in the warden fight at 1 AP, dose 3 safe, dose 4 warning -> Cancel -> accept -4 HP, pause Save/Load keeps 21/38 HP, 12/19 MP, 4 doses; open-ending epilogue. No fixtures/teleports/top-ups. |
 | `journey_imperfect` | 9 | full, journey | `—` | #571/#513 fresh imperfect-spend variant: a never-equipped knife and unused handline leave 0g after the catalyst, Coyle exposed, the 80g Invrisil one-shots skipped; every later mandatory fee earned back only from repeatable producers over four extra wakings; sponsorship, Pallass stone and lift pass rows pinned locked at 7/13/2g; warden first try on earned loot; epilogue. No fixtures/teleports/top-ups. |
 | `seal_fed_gate` | 9 | full | `seal_fed_gate_start` | #590: Olesm's seal-funding row is gated on seal_warden_downed, the same compound as Pisces' THE CHOICE row (#440 holds). From the post-reading state with the warden armed: Olesm's hub is whole-list pinned WITHOUT the ward row (and the pitch never renders), the alcove warden is sprung from its approach cell and won under autoplay, then the same hub is pinned WITH the ward row last and it opens seal_bounty_pitch. Leaves by the pitch's exit: seal_kept_fed and seal_resolved stay unbanked and gold is unchanged. Fixture rng_state governs the fight and overrides --seed. |
+| `corner_melee` | 9 | full | `corner_melee_start` | #591: diagonal melee past a blocked corner is legal for everyone, so the player's Attack lists what WICombat.attack resolves. From journey_caster's pre-boss checkpoint, joins Relc into awakened_boss and places the issue's repro on the PC's first turn (combat_set_cells: PC (5,3), Awakened (6,2), deep_warren's (6,3) blocked). NEGATIVE: [Calming Touch] (range-1 spell, LoS-gated) shows zero targets and spends nothing. POSITIVES: Attack shows exactly one target and resolves on the Awakened by keyboard confirm, then again by a board click plus the confirm chip, with the PC unmoved. |
 
 ## Browser-only QA
 

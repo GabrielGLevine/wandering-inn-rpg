@@ -8606,6 +8606,36 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "corner_melee",
+   "seed": 9,
+   "fixture": "corner_melee_start",
+   "note": "#591: diagonal melee past a blocked corner is legal for everyone, so the player's Attack lists what WICombat.attack resolves. From journey_caster's pre-boss checkpoint, joins Relc into awakened_boss and places the issue's repro on the PC's first turn (combat_set_cells: PC (5,3), Awakened (6,2), deep_warren's (6,3) blocked). NEGATIVE: [Calming Touch] (range-1 spell, LoS-gated) shows zero targets and spends nothing. POSITIVES: Attack shows exactly one target and resolves on the Awakened by keyboard confirm, then again by a board click plus the confirm chip, with the PC unmoved.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels"
+    ],
+    "fixtures": [
+     "corner_melee_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "calming_touch"
+    ],
+    "dialogue": [
+     "relc_descent"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "input"
+    ]
+   }
   }
  ],
  "browser_scripts": [
