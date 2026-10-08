@@ -15,12 +15,17 @@ archived, or superseded session blocks.
      #596 (bounty turn-in toast) and #597 (toast over tall panels).
   2. DONE: #514 gear rules (PR #601; closes #494/#495). #495's balance effect
      is unmeasured by the harness; follow-up #599.
-  3. DESIGNED, awaiting user picks: #453 environmental rest signposting
-     (Watch bunk, recovery loot, bedrolls; no toasts) and a Pallass side quest
-     (#513), on branch `design/item3-rest-pallass` (`/private/tmp/wi-item3-design`).
-     The drafted bonded-room premise repeats Pallass's paperwork theme; the user
-     is choosing among Gnoll–Drake social, high-wall exploration, a Watch
-     mystery, or a re-textured bonded room. Runners' Post follows as #600.
+  3. IN PROGRESS (user approved a third concurrent lane, 2026-10-08):
+     - #453 environmental rest signposting: `/private/tmp/wi-453-rest`.
+     - Pallass art (PixelLab trader, Garuda and Dullahan residents):
+       `/private/tmp/wi-pallass-art`.
+     - Pallass content ("Room on the Row" plus re-themes of `forge_tier_permit`,
+       `tempered_standards`, `ledger_eats_first`) with placeholder sprites:
+       `/private/tmp/wi-pallass-content`. Journey re-pins wait for the rest lane;
+       real sprite ids swap in after the art lane. Heavy runs are staggered
+       (`WI_SWEEP_JOBS=3`).
+     Design docs: `docs/design/453-rest-signposting.md`, `513-pallass-income.md`.
+     A third floodplains quest: not now. Runners' Post: #600.
   Each issue closes through its own PR after independent review and CI.
 - **Recovery cutover is done:** #571 and #512 closed by PR #592 (`17d635f8`).
   Carried HP/MP has no switch. Five continuous journeys (martial, Rogue,
