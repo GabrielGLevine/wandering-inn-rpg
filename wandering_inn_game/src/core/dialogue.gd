@@ -61,6 +61,10 @@ func gold_shortfall() -> Array:
 
 func _item_effect_lines(opt: Dictionary) -> Array:
 	var items: Dictionary = _ctx.get("items", {})
+	var removed: Array = []
+	for effect: Dictionary in opt.get("effects", []):
+		if effect.has("remove_item"):
+			removed.append(String(effect["remove_item"]))
 	var out: Array = []
 	for effect: Dictionary in opt.get("effects", []):
 		if not effect.has("item"):
@@ -68,7 +72,10 @@ func _item_effect_lines(opt: Dictionary) -> Array:
 		var rec: Dictionary = items.get(String(effect["item"]), {})
 		if rec.is_empty():
 			continue
-		for line: String in WIEffectText.item_effect_lines(rec):
+		# #514: a trueing swap previews its craft discount against the piece it consumes.
+		var trued_from := String(rec.get(WIKeys.TRUED_FROM, ""))
+		var source: Dictionary = items.get(trued_from, {}) if removed.has(trued_from) else {}
+		for line: String in WIEffectText.item_effect_lines(rec, [], source):
 			if not line.begins_with(WIEffectText.PRICE_LINE_PREFIX):
 				out.append(line)
 	return out

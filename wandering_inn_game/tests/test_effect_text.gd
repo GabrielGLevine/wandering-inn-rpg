@@ -11,17 +11,17 @@ const EXPECTED_ITEMS := {
 	# all, the moon_bone_amulet convention; and runners_sandals is the only
 	# statless row in the file -- resonance and one granted Skill, nothing else,
 	# which is exactly what a civil-utility item is supposed to look like.
-	"guardsmans_pike": ["+1 damage on melee hits", "Spear kit replaces other weapon Skills in combat", "Worth 18 gold"],
-	"hedault_trued_spear": ["+2 damage on melee hits", "Spear kit replaces other weapon Skills in combat", "Worth 45 gold"],
-	"wyvernbone_lance": ["+2 damage on melee hits", "Spear kit replaces other weapon Skills in combat"],
-	"recurve_of_the_watch": ["+1 damage on ranged hits", "Range 4", "Bow kit replaces other weapon Skills in combat"],
-	"ashwood_warbow": ["+2 damage on ranged hits", "Range 4", "Bow kit replaces other weapon Skills in combat"],
-	"graveflame_wand": ["+1 damage on melee hits", "+3 max HP", "Resonance 2", "Worth 30 gold"],
-	"lichbone_wand": ["+1 damage on melee hits", "+3 max HP", "Reduces every hit taken by 1", "Resonance 3"],
+	"guardsmans_pike": ["+1 damage on attacks and weapon Skills", "Spear kit replaces other weapon Skills in combat", "Worth 18 gold"],
+	"hedault_trued_spear": ["+2 damage on attacks and weapon Skills", "Spear kit replaces other weapon Skills in combat", "Worth 45 gold"],
+	"wyvernbone_lance": ["+2 damage on attacks and weapon Skills", "Spear kit replaces other weapon Skills in combat"],
+	"recurve_of_the_watch": ["+1 damage on attacks and weapon Skills", "Range 4", "Bow kit replaces other weapon Skills in combat"],
+	"ashwood_warbow": ["+2 damage on attacks and weapon Skills", "Range 4", "Bow kit replaces other weapon Skills in combat"],
+	"graveflame_wand": ["+1 damage on spells", "+3 max HP", "Resonance 2", "Worth 30 gold"],
+	"lichbone_wand": ["+2 damage on spells", "+3 max HP", "Reduces every hit taken by 1", "Resonance 3"],
 	"weighted_apron": ["+2 max HP", "Worth 12 gold"],
 	"runners_sandals": ["Resonance 1", "Grants [Second Wind] in combat"],
 	"rusty_sword": ["Sword kit replaces other weapon Skills in combat"],
-	"relcs_spare_spear": ["+1 damage on melee hits", "Spear kit replaces other weapon Skills in combat"],
+	"relcs_spare_spear": ["+1 damage on attacks and weapon Skills", "Spear kit replaces other weapon Skills in combat"],
 	"crude_blade": ["Sword kit replaces other weapon Skills in combat"],
 	"chipped_spear": ["Spear kit replaces other weapon Skills in combat"],
 	"solid_oak_spear": ["Spear kit replaces other weapon Skills in combat"],
@@ -31,16 +31,16 @@ const EXPECTED_ITEMS := {
 	"carved_chess_pawn": ["Resonance 1", "Worth 12 gold"],
 	"ratici_gray_feather": ["+1 max HP", "Resonance 1", "Worth 11 gold"],
 	"ratici_parlor_coin": ["Resonance 1", "Worth 13 gold"],
-	"hedaults_warded_setting": ["+2 max HP", "Reduces every hit taken by 1", "Resonance 1", "Worth 45 gold"],
+	"hedaults_warded_setting": ["+2 max HP", "Reduces every hit taken by 1", "Resonance 0", "Worth 45 gold"],
 	"old_delvers_clasp": ["+2 max HP", "Reduces every hit taken by 1", "Resonance 1", "Worth 35 gold"],
-	"gnollish_hunting_knife": ["+1 damage on melee hits", "Sword kit replaces other weapon Skills in combat", "Worth 15 gold"],
+	"gnollish_hunting_knife": ["+1 damage on attacks and weapon Skills", "Sword kit replaces other weapon Skills in combat", "Worth 15 gold"],
 	"wool_lined_cloak": ["+3 max HP", "Worth 18 gold"],
 	"copper_luck_band": ["+1 max HP", "Grants [Dangersense] in combat", "Worth 4 gold"],
 	"hedge_ward_charm": ["+2 max HP", "Resonance 1", "Worth 9 gold"],
-	"hunters_fang_talisman": ["+1 damage on melee hits", "Resonance 1", "Worth 14 gold"],
+	"hunters_fang_talisman": ["+1 damage on attacks and weapon Skills", "Resonance 1", "Worth 14 gold"],
 	"phosphor_pendant": ["+3 max HP", "Resonance 1", "Worth 20 gold"],
 	"stonescale_talisman": ["Reduces every hit taken by 1", "Resonance 2", "Grants [Tough Body] in combat", "Worth 35 gold"],
-	"moon_bone_amulet": ["+1 damage on melee hits", "+3 max HP", "Resonance 2", "Grants [Invisibility]"],
+	"moon_bone_amulet": ["+1 damage on attacks and weapon Skills", "+3 max HP", "Resonance 2", "Grants [Invisibility]"],
 	"watch_token": [],
 	"brothers_marker": [],
 	"field_whetstone": ["Worth 5 gold"],
@@ -78,7 +78,7 @@ const EXPECTED_ITEMS := {
 	"invrisil_attunement_stone": ["Worth 18 gold"],
 	"pallass_attunement_stone": ["Worth 18 gold"],
 	"training_bow": ["Range 4", "Bow kit replaces other weapon Skills in combat", "Worth 8 gold"],
-	"hunting_bow": ["+1 damage on ranged hits", "Range 4", "Bow kit replaces other weapon Skills in combat", "Worth 18 gold"],
+	"hunting_bow": ["+1 damage on attacks and weapon Skills", "Range 4", "Bow kit replaces other weapon Skills in combat", "Worth 18 gold"],
 	"trap_kit": ["Worth 3 gold"],
 	"warding_salt_pinch": ["Worth 7 gold"],
 	"mana_potion": ["Restores up to 6 MP (single use)", "Repeated doses risk mana poisoning until sleep", "Worth 10 gold"],
@@ -96,7 +96,7 @@ const EXPECTED_ITEMS := {
 	"tonic_of_the_clear_eye": ["Next fight: +1 damage, +2 HP (single use)", "Worth 16 gold"],
 	"construct_core_shard": ["+3 max HP", "Reduces every hit taken by 1", "Resonance 2", "Grants [Read the Field] in combat"],
 	"warded_coil_charm": ["+2 max HP", "Resonance 1"],
-	"kingslayer_fang": ["+1 damage on melee hits", "+1 max HP", "Resonance 1", "Grants [Battle Momentum] in combat"],
+	"kingslayer_fang": ["+1 damage on attacks and weapon Skills", "+1 max HP", "Resonance 1", "Grants [Battle Momentum] in combat"],
 	"guardian_ward_fragment": ["+2 max HP", "Reduces every hit taken by 1", "Resonance 1", "Grants [Guarding Ward] in combat"],
 	# #398 P5 briar-arch coffer yield. warded_coil_charm's curve (hp_mod 2,
 	# damage_reduction 0, resonance 1) plus guardian_ward_fragment's grant, and no
@@ -114,16 +114,16 @@ const EXPECTED_ITEMS := {
 	# vault_anchor_stone). construct_core_shard's curve, guardian_ward's grant,
 	# no price (one-of-a-kind find, never vendored).
 	"seal_anchor_rune": ["+3 max HP", "Reduces every hit taken by 1", "Resonance 2", "Grants [Guarding Ward] in combat"],
-	"hedaults_traveler_charm": ["+3 max HP", "Resonance 1", "Grants [Dangersense] in combat", "Worth 18 gold"],
-	"hedaults_hunters_fang": ["+1 damage on melee hits", "Resonance 1", "Grants [Eagle Eyes]", "Worth 45 gold"],
-	"hedaults_wardstone": ["+2 max HP", "Resonance 2", "Grants [Mana Shield] in combat", "Worth 50 gold"],
+	"hedaults_traveler_charm": ["+3 max HP", "Resonance 0", "Grants [Dangersense] in combat", "Worth 18 gold"],
+	"hedaults_hunters_fang": ["+1 damage on attacks and weapon Skills", "Resonance 0", "Grants [Eagle Eyes]", "Worth 45 gold"],
+	"hedaults_wardstone": ["+2 max HP", "Resonance 1", "Grants [Mana Shield] in combat", "Worth 50 gold"],
 	# v0.16 I1 (#306), inserted at the `hedaults_wardstone` anchor this lane also
 	# uses in items.json (ruling C). EXPECTED_ITEMS is exhaustive both ways, so a
 	# new item id with no row here reds this suite. It used to red it QUIETLY --
 	# see the `_failed` block at `_check` for the #398 P5 fix that made the exit
 	# code, not just a zero-noise grep, the detector.
 	"plum_silk_locket": ["+1 max HP", "Resonance 1", "Worth 30 gold"],
-	"moonhide_fetish": ["+1 damage on melee hits", "+1 max HP", "Resonance 1", "Grants [Second Wind] in combat"],
+	"moonhide_fetish": ["+1 damage on attacks and weapon Skills", "+1 max HP", "Resonance 1", "Grants [Second Wind] in combat"],
 	"anchor_sliver": ["+4 max HP", "Reduces every hit taken by 1", "Resonance 3"],
 }
 
@@ -135,8 +135,8 @@ const EXPECTED_SKILLS := {
 	"counter_strike": ["Strike back for ×0.8 damage when hit in melee."],
 	"battle_momentum": ["+1 AP when you down a foe"],
 	"flame_bolt": ["2 AP — damage 1d6 at range 4. Burns."],
-	"flame_jet": ["2 AP, 4 MP — damage everything in a line 4 cells long"],
-	"frost_bolt": ["1 AP, 2 MP — damage 1d6 at range 4. Slows."],
+	"flame_jet": ["2 AP, 4 MP — spell damage to all in a 4-cell line"],
+	"frost_bolt": ["1 AP, 2 MP — spell damage 1d6 at range 4. Slows."],
 	"mana_shield": ["Spend MP to absorb incoming damage."],
 	"quick_cast": ["Your first spell each turn costs 1 less AP."],
 	"light": [],
@@ -154,12 +154,12 @@ const EXPECTED_SKILLS := {
 	"triple_thrust": ["3 AP — ×2 damage. Once every 2 rounds."],
 	"extended_sweep": ["2 AP — ×1.3 damage"],
 	"spear_flurry": ["3 AP — ×2.6 damage. Once every 2 rounds."],
-	"ice_shard": ["2 AP, 3 MP — damage 1d6 at range 4"],
+	"ice_shard": ["2 AP, 3 MP — spell damage 1d6 at range 4"],
 	"icy_floor": ["2 AP, 4 MP — glaze a 3×3 patch of ground at range 3 for 2 rounds. Slows."],
-	"flame_scythe": ["2 AP, 4 MP — damage 1d6 at range 1"],
-	"flare_burst": ["1 AP, 2 MP — damage 1d6 at range 3"],
-	"flame_pillar": ["3 AP, 5 MP — blast a 3×3 area around the target for 1d6. Hits friend and foe."],
-	"slam": ["4 AP — blast a 3×3 area around the target for 1d6 after a round's gathering. Hits friend and foe. Roots."],
+	"flame_scythe": ["2 AP, 4 MP — spell damage 1d6 at range 1"],
+	"flare_burst": ["1 AP, 2 MP — spell damage 1d6 at range 3"],
+	"flame_pillar": ["3 AP, 5 MP — spell damage 1d6 to friend and foe in a 3×3 area"],
+	"slam": ["4 AP — weapon damage 1d6 to friend and foe in a 3×3 area after a round's gathering. Roots."],
 	"keener_edge": ["2 AP — ×1.6 damage"],
 	"spellbound_strike": ["3 AP, 3 MP — ×3 damage. Once every 2 rounds."],
 	# #449 [Spellspear]: the spear-flavored twins of the two rows directly
@@ -189,7 +189,7 @@ const EXPECTED_SKILLS := {
 	"sweep_the_tables": [],
 	"servers_prescience": [],
 	"charming_smile": [],
-	"calming_touch": ["2 AP — damage 1d6 at range 1. Slows."],
+	"calming_touch": ["2 AP — spell damage 1d6 at range 1. Slows."],
 	"raskghar_maul": ["3 AP — damage 1d6 at range 2. Slows. Weakens."],
 	# #474 [Sunder the Bond], the companion counter. Enemy-kit only, and the
 	# `target_rule: bonded` half is deliberately INVISIBLE in this string: the
@@ -206,7 +206,7 @@ const EXPECTED_SKILLS := {
 	"lich_grave_lance": ["2 AP, 4 MP — damage 1d6 at range 4. Weakens."],
 	"power_shot": ["3 AP — ×2 damage. Once every 2 rounds."],
 	"quick_nock": ["1 AP — ×0.7 damage"],
-	"piercing_shot": ["3 AP — damage everything in a line 4 cells long. Once every 2 rounds."],
+	"piercing_shot": ["3 AP — weapon damage to all in a 4-cell line. Once every 2 rounds."],
 	"keen_eye": [],
 	"directed_strike": ["2 AP — ×1.6 damage"],
 	"flanking_step": ["+1 move cell every turn"],
@@ -219,8 +219,8 @@ const EXPECTED_SKILLS := {
 	"disarm_trap": [],
 	"sudden_strike": ["2 AP — ×1.8 damage. Once per fight."],
 	"called_shot": ["3 AP — ×2.2 damage. Once every 2 rounds."],
-	"piercing_volley": ["3 AP — damage everything in a line 5 cells long. Once every 2 rounds."],
-	"flame_dart": ["2 AP, 3 MP — damage 1d6 at range 4"],
+	"piercing_volley": ["3 AP — weapon damage to all in a 5-cell line. Once every 2 rounds."],
+	"flame_dart": ["2 AP, 3 MP — spell damage 1d6 at range 4"],
 	"perfect_hospitality": [],
 	"steady_draw": ["+8 to hit"],
 	# #438 [Skirmisher]: the spear-gated twin of the row above. The readout is
@@ -239,9 +239,9 @@ const EXPECTED_SKILLS := {
 	"enhanced_movement": ["+1 move cell every turn"],
 	"hedge_remedy": [],
 	"witchs_warding": ["+8 max HP"],
-	"evil_eye": ["2 AP — damage 1d6 at range 3. Weakens."],
-	"bone_dart": ["1 AP, 2 MP — damage 1d6 at range 4"],
-	"deathbolt": ["2 AP, 4 MP — damage 1d6 at range 4. Weakens."],
+	"evil_eye": ["2 AP — spell damage 1d6 at range 3. Weakens."],
+	"bone_dart": ["1 AP, 2 MP — spell damage 1d6 at range 4"],
+	"deathbolt": ["2 AP, 4 MP — spell damage 1d6 at range 4. Weakens."],
 	"detect_magic": [],
 	"advanced_cooking": [],
 	"perfect_recall": [],
@@ -260,22 +260,22 @@ const EXPECTED_SKILLS := {
 	"pack_bond": [],
 	"pack_bond_boon": ["+4 max HP"],
 	"peace_of_the_wild": [],
-	"thorn_hand": ["2 AP, 3 MP — damage 1d6 at range 1. Roots."],
+	"thorn_hand": ["2 AP, 3 MP — spell damage 1d6 at range 1. Roots."],
 	# #438 [Wild Sage]: the twins of the two rows directly above. [Counsel of
 	# the Wild] pins [] like its baseline -- BOTH carry their mechanics in
 	# wi_game.gd::_wild_affinity_reduction rather than an `effect` block, so an
 	# empty readout here is correct and NOT the signature of an inert twin.
 	"counsel_of_the_wild": [],
-	"bramble_hand": ["2 AP, 3 MP — damage 1d6 at range 1. Roots."],
+	"bramble_hand": ["2 AP, 3 MP — spell damage 1d6 at range 1. Roots."],
 	"hearthward_charm": [],
 	"greater_hearthward": [],
-	"crescent_cut": ["3 AP — damage everything in a line 3 cells long"],
-	"pierce_thrust": ["3 AP — damage everything in a line 3 cells long"],
+	"crescent_cut": ["3 AP — weapon damage to all in a 3-cell line"],
+	"pierce_thrust": ["3 AP — weapon damage to all in a 3-cell line"],
 	"ice_wall": ["Spend MP to absorb incoming damage."],
 	"flashfire_spellcraft": ["Your first spell each turn costs 1 less AP."],
 	"blinding_arrow": ["2 AP — ×1.2 damage. Weakens."],
 	"shadowstep": ["+2 move cells every turn"],
-	"phantom_barrage": ["3 AP — damage everything in a line 4 cells long. Once every 2 rounds."],
+	"phantom_barrage": ["3 AP — damage to all in a 4-cell line. Once every 2 rounds."],
 	"trusted_voice": [],
 	"barmaids_prescience": [],
 	"swift_service": ["+1 move cell every turn"],
@@ -491,14 +491,28 @@ func _test_status_exact() -> void:
 func _test_tripwires() -> void:
 	_check(WIEffectText.item_effect_lines({"hp_mod": 4}) == ["+4 max HP"], "item hp tripwire base")
 	_check(WIEffectText.item_effect_lines({"hp_mod": 7}) == ["+7 max HP"], "item hp tripwire moved")
-	_check(WIEffectText.item_effect_lines({"damage_mod": 9}) == ["+9 damage on melee hits"], "item damage tripwire")
+	_check(WIEffectText.item_effect_lines({"damage_mod": 9}) == ["+9 damage on attacks and weapon Skills"], "item damage tripwire")
 	_check(
-		WIEffectText.item_effect_lines({"damage_mod": 3, "range": 4}) == ["+3 damage on ranged hits", "Range 4"],
+		WIEffectText.item_effect_lines({"damage_mod": 3, "range": 4}) == ["+3 damage on attacks and weapon Skills", "Range 4"],
 		"item ranged-damage tripwire base"
 	)
 	_check(
-		WIEffectText.item_effect_lines({"damage_mod": 3, "range": 6}) == ["+3 damage on ranged hits", "Range 6"],
+		WIEffectText.item_effect_lines({"damage_mod": 3, "range": 6}) == ["+3 damage on attacks and weapon Skills", "Range 6"],
 		"item ranged-damage tripwire: range moves"
+	)
+	# #514: spell power is its own line; the trueing swap names the discount.
+	_check(WIEffectText.item_effect_lines({"spell_power": 2}) == ["+2 damage on spells"], "item spell-power tripwire")
+	_check(
+		WIEffectText.item_effect_lines({"resonance": 0, "tier": "enchanted"}) == ["Resonance 0"],
+		"item resonance tripwire: an enchanted piece at 0 still says so"
+	)
+	_check(
+		WIEffectText.item_effect_lines({"resonance": 1, "tier": "enchanted"}, [], {"resonance": 2}) == ["Resonance 2 → 1"],
+		"item resonance tripwire: a trued swap shows the discount"
+	)
+	_check(
+		WIEffectText.item_effect_lines({"resonance": 1, "tier": "enchanted"}, [], {"resonance": 1}) == ["Resonance 1"],
+		"item resonance tripwire: no discount, no arrow"
 	)
 	_check(
 		WIEffectText.item_effect_lines({"range": 1}) == [],
@@ -506,15 +520,15 @@ func _test_tripwires() -> void:
 	)
 
 	var spell := {"ap_cost": 1, "mp_cost": 2, "effect": {"type": "spell_damage", "range": 4}}
-	_check(WIEffectText.skill_effect_lines(spell) == ["1 AP, 2 MP — damage 1d6 at range 4"], "skill spell tripwire base (default pc weapon_die 6)")
+	_check(WIEffectText.skill_effect_lines(spell) == ["1 AP, 2 MP — spell damage 1d6 at range 4"], "skill spell tripwire base (default pc weapon_die 6)")
 	spell["effect"]["die"] = 99
-	_check(WIEffectText.skill_effect_lines(spell) == ["1 AP, 2 MP — damage 1d6 at range 4"], "skill spell tripwire: effect.die is vestigial, ignored")
+	_check(WIEffectText.skill_effect_lines(spell) == ["1 AP, 2 MP — spell damage 1d6 at range 4"], "skill spell tripwire: effect.die is vestigial, ignored")
 	spell["effect"].erase("die")
 	spell["effect"]["range"] = 2
-	_check(WIEffectText.skill_effect_lines(spell) == ["1 AP, 2 MP — damage 1d6 at range 2"], "skill spell tripwire: range still moves")
+	_check(WIEffectText.skill_effect_lines(spell) == ["1 AP, 2 MP — spell damage 1d6 at range 2"], "skill spell tripwire: range still moves")
 	var combatants_catalog := [{"id": "pc", "weapon_die": 9}]
 	_check(
-		WIEffectText.skill_effect_lines(spell, combatants_catalog) == ["1 AP, 2 MP — damage 1d9 at range 2"],
+		WIEffectText.skill_effect_lines(spell, combatants_catalog) == ["1 AP, 2 MP — spell damage 1d9 at range 2"],
 		"skill spell tripwire: die follows the injected pc catalog, not effect.die"
 	)
 
@@ -527,9 +541,16 @@ func _test_tripwires() -> void:
 	_check(WIEffectText.skill_effect_lines({"effect": {"type": "hp_bonus", "amount": 10}}) == ["+10 max HP"], "hp_bonus tripwire base")
 	_check(WIEffectText.skill_effect_lines({"effect": {"type": "hp_bonus", "amount": 25}}) == ["+25 max HP"], "hp_bonus tripwire: amount moves")
 	var line_skill := {"ap_cost": 2, "mp_cost": 4, "effect": {"type": "line_damage", "length": 4}}
-	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — damage everything in a line 4 cells long"], "line_damage tripwire base")
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — spell damage to all in a 4-cell line"], "line_damage tripwire base")
 	line_skill["effect"]["length"] = 7
-	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — damage everything in a line 7 cells long"], "line_damage tripwire: length moves")
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — spell damage to all in a 7-cell line"], "line_damage tripwire: length moves")
+	# #514: the `weapon` gate, and nothing else, makes a line a weapon Skill.
+	line_skill["weapon"] = "sword"
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — weapon damage to all in a 7-cell line"], "line_damage tripwire: a weapon gate makes it weapon damage")
+	line_skill["weapon"] = ""
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — spell damage to all in a 7-cell line"], "line_damage tripwire: an empty gate (HUD slot record) is no gate")
+	line_skill["damage_source"] = "innate"
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — damage to all in a 7-cell line"], "line_damage tripwire: an innate arm takes no gear tag")
 
 	var catalog := [{"id": "x", "effect": {"type": "spell_damage", "applies": {"slowed": {"pool_penalty": 5}}}}]
 	_check(

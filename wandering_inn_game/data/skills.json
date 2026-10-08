@@ -91,6 +91,7 @@
    "_comment": "GH#90 rider: `applies.burning` (2 dmg/round tick, 3 rounds) -- a fire bolt catching cloth/fur alight is the direct fictional read, no reach needed.",
    "id": "flame_bolt",
    "display_name": "[Flame Bolt]",
+   "damage_source": "innate",
    "contexts": [
     "combat"
    ],
@@ -687,6 +688,7 @@
    "_comment": "raskghar_awakened's ONLY skill, so the AI (`_act_ranged`'s spell_id scan) always picks it -- guaranteed real, no dead-code risk, cast almost every turn it's in range.",
    "id": "raskghar_maul",
    "display_name": "[Raskghar Maul]",
+   "damage_source": "innate",
    "contexts": [
     "combat"
    ],
@@ -1291,6 +1293,7 @@
    "_comment": "Enemy-kit-only distinct id; never reuse player-granted Bone Dart/Deathbolt as an enemy tuning knob, because sim_class_parity measures them. Shape mirrors Bone Dart. CANON: name ORIGINAL/generic; death magic itself is Volume1 canon(Pisces).",
    "id": "lich_bone_splinter",
    "display_name": "[Bone Splinter]",
+   "damage_source": "innate",
    "contexts": [
     "combat"
    ],
@@ -1307,6 +1310,7 @@
    "_comment": "#460 enemy-kit only, the heavy half -- [Deathbolt]'s shape verbatim under a new id, for the reason [Bone Splinter] gives. KIT ORDER IS THE MP CURVE: `WICombatAI._act_ranged` takes the FIRST affordable spell_damage in kit order, so the Lich spends this while its pool lasts and drops to the splinter after. CANON-VERDICT: ORIGINAL.",
    "id": "lich_grave_lance",
    "display_name": "[Grave Lance]",
+   "damage_source": "innate",
    "contexts": [
     "combat"
    ],
@@ -1798,6 +1802,7 @@
    "_comment": "CANON-VERDICT: ATTESTED [Instantaneous Barrage (Phantom Arrows)]. Strategist L14, weaponless line_damage (no weapon gate -- conjured arrows). Ship id phantom_barrage; display keeps the shorter attested form.",
    "id": "phantom_barrage",
    "display_name": "[Instantaneous Barrage]",
+   "damage_source": "innate",
    "icon": "icon_phantom_barrage",
    "family": "tactic",
    "contexts": [

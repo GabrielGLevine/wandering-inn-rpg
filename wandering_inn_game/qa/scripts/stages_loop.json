@@ -296,7 +296,7 @@
       "locked": true,
       "requirement": "costs 15 gold",
       "effect_lines": [
-       "+1 damage on melee hits",
+       "+1 damage on attacks and weapon Skills",
        "Sword kit replaces other weapon Skills in combat"
       ]
      },
@@ -331,7 +331,7 @@
       "locked": true,
       "requirement": "costs 18 gold",
       "effect_lines": [
-       "+1 damage on ranged hits",
+       "+1 damage on attacks and weapon Skills",
        "Range 4",
        "Bow kit replaces other weapon Skills in combat"
       ]
@@ -479,7 +479,7 @@
       "locked": true,
       "requirement": "costs 13 gold",
       "effect_lines": [
-       "+1 damage on melee hits",
+       "+1 damage on attacks and weapon Skills",
        "Sword kit replaces other weapon Skills in combat"
       ]
      },
@@ -504,7 +504,7 @@
       "locked": true,
       "requirement": "costs 18 gold",
       "effect_lines": [
-       "+1 damage on ranged hits",
+       "+1 damage on attacks and weapon Skills",
        "Range 4",
        "Bow kit replaces other weapon Skills in combat"
       ]

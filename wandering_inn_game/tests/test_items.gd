@@ -146,8 +146,31 @@ func _init() -> void:
 		var expect_enchanted := resonance >= 1
 		if expect_enchanted and tier != "enchanted":
 			_fail("item %s has resonance %d but tier %s (resonance >= 1 must be tier enchanted)" % [id, resonance, tier])
-		if not expect_enchanted and tier != "mundane":
-			_fail("item %s has resonance 0 but tier %s (resonance 0 must be tier mundane)" % [id, tier])
+		# #514: a trued piece (Hedault's craft discount) may be enchanted at 0.
+		if not expect_enchanted and tier != "mundane" and not entry.has("trued_from"):
+			_fail("item %s has resonance 0 but tier %s (resonance 0 must be tier mundane unless trued)" % [id, tier])
+
+		if entry.has("spell_power"):
+			var sp: Variant = entry["spell_power"]
+			if (typeof(sp) != TYPE_INT and typeof(sp) != TYPE_FLOAT) or int(sp) != sp or int(sp) < 0:
+				_fail("item %s spell_power must be a non-negative int, got %s" % [id, str(sp)])
+			if kind != "weapon" and kind != "armor" and kind != "accessory":
+				_fail("item %s carries spell_power but is not equippable (kind %s)" % [id, kind])
+
+	# #514: a trueing never costs more resonance than the piece it consumes, so
+	# re-wearing the product always fits where the source did.
+	for id: String in by_id:
+		var entry: Dictionary = by_id[id]
+		if not entry.has("trued_from"):
+			continue
+		var source_id := String(entry["trued_from"])
+		if not by_id.has(source_id):
+			_fail("item %s trued_from names unknown item %s" % [id, source_id])
+			continue
+		if int(entry["resonance"]) > int((by_id[source_id] as Dictionary)["resonance"]):
+			_fail("trued item %s costs more resonance than its source %s" % [id, source_id])
+		if String(entry["kind"]) != String((by_id[source_id] as Dictionary)["kind"]):
+			_fail("trued item %s changes kind from its source %s" % [id, source_id])
 
 	var skills_config: Dictionary = skills_config_early
 

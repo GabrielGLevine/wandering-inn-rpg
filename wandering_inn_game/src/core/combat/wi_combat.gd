@@ -173,6 +173,7 @@ func _build_combatant(cfg: Dictionary, cell: Vector2i) -> Dictionary:
 		"hit_bonus": 0,
 		WIKeys.MAX_HP: maxima[WIKeys.MAX_HP],
 		WIKeys.DAMAGE_MOD: int(cfg.get(WIKeys.DAMAGE_MOD, 0)),
+		WIKeys.SPELL_POWER: int(cfg.get(WIKeys.SPELL_POWER, 0)),
 		WIKeys.DAMAGE_REDUCTION: int(cfg.get(WIKeys.DAMAGE_REDUCTION, 0)),
 		WIKeys.WEAPON_RANGE: int(cfg.get(WIKeys.WEAPON_RANGE, 1)),
 		WIKeys.AP: 0,
@@ -784,7 +785,29 @@ func _post_damage(target_id: String, source_id: String) -> void:
 			_advance_turn()
 
 
-func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bool, allow_riposte: bool) -> void:
+## #514: what a hit adds up from, by source (`WICombatBuild.damage_source`).
+## `qa/combat_policies.gd` prices hits through these same two reads, so its
+## ranking cannot drift from the engine. `melee` alone still decides ripostes,
+## tallies and the payload; an empty `source` keeps the pre-#514 meaning.
+static func hit_source(melee: bool, source: String) -> String:
+	if source != "":
+		return source
+	return WICombatBuild.SOURCE_WEAPON if melee else WICombatBuild.SOURCE_SPELL
+
+
+static func hit_stat(a: Dictionary, source: String) -> int:
+	return int(a[WIKeys.STATS]["str"]) if source == WICombatBuild.SOURCE_WEAPON else int(a[WIKeys.STATS]["int"])
+
+
+static func hit_flat(a: Dictionary, source: String) -> int:
+	if source == WICombatBuild.SOURCE_WEAPON:
+		return int(a.get(WIKeys.DAMAGE_MOD, 0))
+	if source == WICombatBuild.SOURCE_SPELL:
+		return int(a.get(WIKeys.SPELL_POWER, 0))
+	return 0
+
+
+func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bool, allow_riposte: bool, source: String = "") -> void:
 	var a: Dictionary = combatants[attacker_id]
 	var t: Dictionary = combatants[target_id]
 	var hit_chance: int = BASE_HIT + int(a["hit_bonus"]) - int(t[WIKeys.STATS]["dex"]) / 4
@@ -792,10 +815,10 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 	var damage := 0
 	var target_hp := int(t[WIKeys.HP])
 	if hit:
-		var stat: int = int(a[WIKeys.STATS]["str"]) if melee else int(a[WIKeys.STATS]["int"])
+		var src := hit_source(melee, source)
+		var stat: int = hit_stat(a, src)
 		var base_damage := int((stat / 2 + rng.randi_range(1, int(a[WIKeys.WEAPON_DIE]))) * mult)
-		if melee:
-			base_damage += int(a.get(WIKeys.DAMAGE_MOD, 0))
+		base_damage += hit_flat(a, src)
 		damage = maxi(1, base_damage)
 		damage = _apply_status_damage_mods(a, t, damage)
 		target_hp = _deduct_hp(target_id, damage)
@@ -1121,6 +1144,9 @@ func snapshot() -> Dictionary:
 			"alive": c[WIKeys.ALIVE], "side": c[WIKeys.SIDE],
 			"skills": (c[WIKeys.SKILLS] as Array).duplicate(),
 			"weapon_range": int(c.get(WIKeys.WEAPON_RANGE, 1)),
+			# #514: the gear adds a hit carries, by source (QA reads them live).
+			"damage_mod": int(c.get(WIKeys.DAMAGE_MOD, 0)),
+			"spell_power": int(c.get(WIKeys.SPELL_POWER, 0)),
 			"cooldowns": _cooldown_snapshot(id),
 		}
 	return {

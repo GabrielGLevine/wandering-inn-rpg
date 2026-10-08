@@ -88,6 +88,15 @@ and chronology belong in issue PRs. Earlier context:
   re-window. Rejected (options presented): `damage_mod` at full weight on every
   arm including spells (largest re-window), and keeping melee-only (no gear
   path for Skill users or casters).
+  - (A), 2026-10-08: weapon-gated Skills take the whole melee damage bonus,
+    like an ordinary attack (weapon, accessories and meals).
+  - (B), 2026-10-08: keep the "spell damage" wording. Spell power is player
+    gear only, so enemy-only casts (e.g. [Raskghar Maul]) do not read "spell
+    damage". [Instantaneous Barrage] (the Tactician's illusory arrows) is not
+    a spell. Both carry a data-driven `"damage_source": "innate"`: INT scaling
+    as before, no gear add, plain "damage" on the card. Exemption: enemy-only
+    [Slam] keeps "weapon damage", because it really adds the enemy's
+    `damage_mod` (bounty scaling); no player card shows it.
 - **#494 resonance (2026-10-07):** a power budget, with stronger gear costing
   more. Hedault's trueing lowers an item's resonance (a craft discount, matching
   canon's "better craft interferes less"), and the toast is reworded to match.

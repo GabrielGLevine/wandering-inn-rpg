@@ -272,6 +272,16 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "#514 L1: the readout leads with the damage tag and fits it on the bar's one line (2 AP: [Quick Cast]'s discount, live). tests/test_combat_readout_fit.gd pins the fitted text; 00a_aim_preview_blast is its windowed read.",
+   "action": "wait_for_event",
+   "type": "ui_slot_info_rendered",
+   "payload_contains": {
+    "slot": 4,
+    "text": "[lb]Flame Pillar[rb] — 2 AP, 5 MP — spell damage 1d6 to friend and foe in a 3×3 area — A ring of fire blooms at the target's feet, then erupts into a roaring pillar."
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "screenshot",
    "name": "00a_aim_preview_blast"
   },

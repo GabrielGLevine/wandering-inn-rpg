@@ -562,7 +562,7 @@
       "Worth 24 gold"
      ],
      [
-      "+1 damage on melee hits",
+      "+1 damage on attacks and weapon Skills",
       "Spear kit replaces other weapon Skills in combat"
      ]
     ]
@@ -578,14 +578,14 @@
    "name": "move_down"
   },
   {
-   "_comment": "Corner follows the cursor onto relcs_spare_spear (index 2): the per-move ui_inventory_selection_rendered pin -- selected_icon:true (relcs_spare_spear.png ships) and mech_line joins its two card lines ('+1 damage on melee hits' + issue #79's kit-family line) from the item_effect_lines pin above, ' | '-joined.",
+   "_comment": "Corner follows the cursor onto relcs_spare_spear (index 2): the per-move ui_inventory_selection_rendered pin -- selected_icon:true (relcs_spare_spear.png ships) and mech_line joins its two card lines ('+1 damage on attacks and weapon Skills' + issue #79's kit-family line) from the item_effect_lines pin above, ' | '-joined.",
    "action": "wait_for_event",
    "type": "ui_inventory_selection_rendered",
    "payload_contains": {
     "cursor": 2,
     "item": "relcs_spare_spear",
     "selected_icon": true,
-    "mech_line": "+1 damage on melee hits | Spear kit replaces other weapon Skills in combat"
+    "mech_line": "+1 damage on attacks and weapon Skills | Spear kit replaces other weapon Skills in combat"
    },
    "timeout_sec": 5
   },

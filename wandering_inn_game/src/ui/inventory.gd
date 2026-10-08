@@ -75,6 +75,7 @@ var _equipment_label: Label
 var _equipment_expanded := false
 var _detail_scroll: ScrollContainer
 var _detail_box: VBoxContainer
+var _comparison_lines: Array[String] = []
 var _item_actions: VBoxContainer
 var _use_button: Button
 var _bar_button: Button
@@ -418,6 +419,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_emit_shown()
 	elif type == WIEvents.ITEM_EQUIPPED or type == WIEvents.ITEM_UNEQUIPPED:
 		_refresh_slots()
+		_render_detail()
 		_emit_shown()
 	elif type == WIEvents.TOAST:
 		# See `_status_label`'s doc comment above -- kept belt-and-braces
@@ -462,6 +464,7 @@ func _emit_shown() -> void:
 		"selected_icon_path": _icon_path_for(String(_item_ids[_cursor])) if not _item_ids.is_empty() and _corner_icon.visible else "",
 		"list_icon_paths": _item_ids.map(func(id: Variant) -> String: return _icon_path_for(String(id)) if _icon_texture_for(String(id)) != null else ""),
 		"mech_line": _corner_mech_line,
+		"comparison_lines": _comparison_lines.duplicate(),
 	})
 
 
@@ -480,6 +483,7 @@ func _emit_selection() -> void:
 		"selected_icon_path": _icon_path_for(String(_item_ids[_cursor])) if not _item_ids.is_empty() and _corner_icon.visible else "",
 		"list_icon_paths": _item_ids.map(func(id: Variant) -> String: return _icon_path_for(String(id)) if _icon_texture_for(String(id)) != null else ""),
 		"mech_line": _corner_mech_line,
+		"comparison_lines": _comparison_lines.duplicate(),
 	})
 
 
@@ -916,6 +920,7 @@ func _render_detail() -> void:
 			continue
 		_detail_box.remove_child(child)
 		child.queue_free()
+	_comparison_lines = []
 	for line: String in WIEffectText.preparation_lines(_resource_payload.get("preparation", {})):
 		var preparation_label := UIChrome.make_label(line, "Small")
 		preparation_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -953,6 +958,11 @@ func _render_detail() -> void:
 			var effect := UIChrome.make_label(line, "MenuInk")
 			effect.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			_detail_box.add_child(effect)
+	_comparison_lines = _gear_comparison_lines(item_id, rec, equipped_here)
+	for line: String in _comparison_lines:
+		var compare := UIChrome.make_label(line, "MenuInk")
+		compare.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_detail_box.add_child(compare)
 	var lore := String(rec.get("lore", ""))
 	if lore != "":
 		var lore_label := UIChrome.make_label(lore, "Lore")
@@ -961,6 +971,26 @@ func _render_detail() -> void:
 	var desc_label := UIChrome.make_label(String(rec.get("description", "")), "Small")
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_detail_box.add_child(desc_label)
+
+
+## #514: drawn under the item's name -- the Resonance an unworn piece would
+## leave, then which of the player's own attacks and Skills it improves. Both
+## come from the sim's own `equip_plan` (what equip() refuses by) and kit build.
+## The Resonance line is shown where it can move: accessories, or any piece
+## whose swap would change the total.
+func _gear_comparison_lines(item_id: String, rec: Dictionary, equipped_here: bool) -> Array[String]:
+	var lines: Array[String] = []
+	var kind := String(rec.get("kind", ""))
+	if kind != "weapon" and kind != "armor" and kind != "accessory":
+		return lines
+	if not equipped_here:
+		var plan: Dictionary = Game.sim.equip_plan(item_id)
+		if kind == "accessory" or int(plan["resonance"]) != Game.sim.resonance_used():
+			var plan_line := WIEffectText.equip_plan_line(plan)
+			if plan_line != "":
+				lines.append(plan_line)
+	lines.append_array(WIEffectText.gear_reach_lines(rec, Game.sim.gear_reach(item_id), Game.sim.skills.values()))
+	return lines
 
 
 ## Renders the selection-driven corner (top right of the panel, previously

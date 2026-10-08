@@ -8636,6 +8636,95 @@
      "input"
     ]
    }
+  },
+  {
+   "script": "gear_damage_loop",
+   "seed": 9,
+   "fixture": "gear_damage_start",
+   "note": "#514/#495 through real input: an Archer buys the hunting bow (cancel, then buy), reads its card and the inventory reach line, equips it, and fires [Piercing Shot] at Relc's dummy; the bow-gated line takes str and the bow's weapon damage, pinned on the live combatant and the hit",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "street"
+    ],
+    "fixtures": [
+     "gear_damage_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "piercing_shot"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "hedault_trueing_loop",
+   "seed": 7,
+   "fixture": "hedault_trueing_start",
+   "note": "#514/#494 Hedault craft discount: a full 4/4 loadout refuses the Hedge-Ward Charm (If-worn line + toast), the trueing row previews Resonance 1 -> 0, the trued charm costs nothing and the refused charm then fits at 4/4",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "enchanter_shop"
+    ],
+    "fixtures": [
+     "hedault_trueing_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "hedault_enchanting"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "line_skill_readout",
+   "seed": 9,
+   "fixture": "line_skill_readout_start",
+   "note": "#514 L1: a Sharpshooter L12 spars Relc; [Piercing Volley]'s one-line combat readout keeps its weapon-damage tag and Once-every-2-rounds rule when ready, and leads with Recovering when cooling (windowed read: 00_volley_ready, 01_volley_recovering)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "line_skill_readout_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "piercing_volley"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ],
  "browser_scripts": [

@@ -178,7 +178,9 @@ func run(classes: Dictionary, accomplishments: Dictionary, combat_config: Dictio
 			# Same `lore: true` toast idiom the dungeon_attuned bank above uses
 			# (zero new mechanism), so the word lands in the journal's Lore
 			# section where the player can read it back at leisure.
-			_emit(WIEvents.TOAST, {"text": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by %s in the night. The anchor stone paid for it." % ("one" if growth == 1 else str(growth)), "lore": true})
+			# #494 ruling: a power budget. Stronger pieces cost more; crude work
+			# argues past its strength, and a trued piece (Hedault) costs less.
+			_emit(WIEvents.TOAST, {"text": "Resonance is how much enchantment you can wear at once. Stronger pieces take more of it, and crude work argues more than it should; a properly trued piece keeps quiet. Yours grew by %s in the night. The anchor stone paid for it." % ("one" if growth == 1 else str(growth)), "lore": true})
 			anything_happened = true
 
 	_bank_garden_unlock_if_earned()

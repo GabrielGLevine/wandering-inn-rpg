@@ -1,0 +1,224 @@
+{
+ "_comment": "#514 L1: the combat bar's one-line readout keeps a line Skill's damage tag and its cooldown clause. A [Sharpshooter] L12 spars Relc; [Piercing Volley]'s readout is read ready (tag + 'Once every 2 rounds.'), then cast, then read cooling, where the live 'Recovering' clause leads and the effect is what the ellipsis eats. The slot-info payload is the HUD's composed line; the fitted on-screen text is pinned by tests/test_combat_readout_fit.gd and read here windowed.",
+ "fixture_save": "line_skill_readout_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.sharpshooter",
+   "equals": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Again? Fine. The dummies heal fast. Straw's forgiving that way. Same rules. Move and hit."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.skills",
+   "contains": "piercing_volley"
+  },
+  {
+   "_comment": "Bar: Attack 1, Dash 2, then the kit in order -- [Called Shot] 3, [Piercing Volley] 4, [Power Shot] 5, [Quick Nock] 6, [Piercing Shot] 7 ([Keen Eye] is passive).",
+   "action": "press",
+   "name": "hotbar_4"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "skill",
+    "skill": "piercing_volley"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "READY: the description yields to the standing rule, and the short tag-first phrase leaves room for it.",
+   "action": "wait_for_event",
+   "type": "ui_slot_info_rendered",
+   "payload_contains": {
+    "slot": 3,
+    "text": "[lb]Piercing Volley[rb] — 3 AP — weapon damage to all in a 5-cell line. Once every 2 rounds."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_volley_ready"
+  },
+  {
+   "_comment": "Line aim starts up; cycle down, left, right. (2,3) right reaches (3..7,3), so training_dummy_a at (7,3) is in the line.",
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "COOLING: the cost stamps the cooldown before the hit resolves, so the HUD re-renders first. The live clause leads after the cost; the effect phrase is what the ellipsis takes.",
+   "action": "wait_for_event",
+   "type": "ui_slot_info_rendered",
+   "payload_contains": {
+    "slot": 3,
+    "text": "[lb]Piercing Volley[rb] — 3 AP — Recovering — ready in 2 rounds. — weapon damage to all in a 5-cell line"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "pc",
+    "skill": "piercing_volley",
+    "target": "right",
+    "hit_ids": [
+     "training_dummy_a"
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "01_volley_recovering"
+  },
+  {
+   "action": "combat_autoplay"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  }
+ ]
+}

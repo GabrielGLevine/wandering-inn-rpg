@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 286 native canonical QA scripts. The manifest is the
+This is the human index for 289 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -294,6 +294,9 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `journey_imperfect` | 9 | full, journey | `—` | #571/#513 fresh imperfect-spend variant: a never-equipped knife and unused handline leave 0g after the catalyst, Coyle exposed, the 80g Invrisil one-shots skipped; every later mandatory fee earned back only from repeatable producers over four extra wakings; sponsorship, Pallass stone and lift pass rows pinned locked at 7/13/2g; warden first try on earned loot; epilogue. No fixtures/teleports/top-ups. |
 | `seal_fed_gate` | 9 | full | `seal_fed_gate_start` | #590: Olesm's seal-funding row is gated on seal_warden_downed, the same compound as Pisces' THE CHOICE row (#440 holds). From the post-reading state with the warden armed: Olesm's hub is whole-list pinned WITHOUT the ward row (and the pitch never renders), the alcove warden is sprung from its approach cell and won under autoplay, then the same hub is pinned WITH the ward row last and it opens seal_bounty_pitch. Leaves by the pitch's exit: seal_kept_fed and seal_resolved stay unbanked and gold is unchanged. Fixture rng_state governs the fight and overrides --seed. |
 | `corner_melee` | 9 | full | `corner_melee_start` | #591: diagonal melee past a blocked corner is legal for everyone, so the player's Attack lists what WICombat.attack resolves. From journey_caster's pre-boss checkpoint, joins Relc into awakened_boss and places the issue's repro on the PC's first turn (combat_set_cells: PC (5,3), Awakened (6,2), deep_warren's (6,3) blocked). NEGATIVE: [Calming Touch] (range-1 spell, LoS-gated) shows zero targets and spends nothing. POSITIVES: Attack shows exactly one target and resolves on the Awakened by keyboard confirm, then again by a board click plus the confirm chip, with the PC unmoved. |
+| `gear_damage_loop` | 9 | full | `gear_damage_start` | #514/#495 through real input: an Archer buys the hunting bow (cancel, then buy), reads its card and the inventory reach line, equips it, and fires [Piercing Shot] at Relc's dummy; the bow-gated line takes str and the bow's weapon damage, pinned on the live combatant and the hit |
+| `hedault_trueing_loop` | 7 | full | `hedault_trueing_start` | #514/#494 Hedault craft discount: a full 4/4 loadout refuses the Hedge-Ward Charm (If-worn line + toast), the trueing row previews Resonance 1 -> 0, the trued charm costs nothing and the refused charm then fits at 4/4 |
+| `line_skill_readout` | 9 | full | `line_skill_readout_start` | #514 L1: a Sharpshooter L12 spars Relc; [Piercing Volley]'s one-line combat readout keeps its weapon-damage tag and Once-every-2-rounds rule when ready, and leads with Recovering when cooling (windowed read: 00_volley_ready, 01_volley_recovering) |
 
 ## Browser-only QA
 

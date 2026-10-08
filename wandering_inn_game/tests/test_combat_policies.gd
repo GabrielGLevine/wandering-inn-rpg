@@ -134,23 +134,30 @@ func _init() -> void:
 	# helper's prediction. Both a bare target and a damage_reduction target,
 	# because DR is subtracted per hit and is exactly what the helper exists to
 	# price correctly when it ranks a x2 skill against two ordinary swings.
-	for probe: Array in [["goblin_raider", 1.0, true], ["goblin_raider", 2.0, true], ["goblin_raider", 1.0, false], ["rock_crab", 1.0, true], ["rock_crab", 2.0, true]]:
+	# #514 rows carry a source: a weapon-gated line (non-melee, weapon damage) and
+	# a spell with spell power, on an attacker holding both gear adds.
+	for probe: Array in [["goblin_raider", 1.0, true, ""], ["goblin_raider", 2.0, true, ""], ["goblin_raider", 1.0, false, ""], ["rock_crab", 1.0, true, ""], ["rock_crab", 2.0, true, ""],
+			["rock_crab", 1.0, false, WICombatBuild.SOURCE_WEAPON], ["rock_crab", 1.0, false, WICombatBuild.SOURCE_SPELL]]:
 		var target_id := String(probe[0])
 		var mult := float(probe[1])
 		var melee := bool(probe[2])
+		var source := String(probe[3])
 		var probe_combat := WICombat.new(goblin_ambush, _cfgs(catalog, ["pc", target_id]), skills, _quiet, 5)
 		probe_combat.begin()
 		var attacker: Dictionary = probe_combat.combatants["pc"]
 		attacker[WIKeys.SKILLS] = []
 		attacker["hit_bonus"] = 0
+		if source != "":
+			attacker[WIKeys.DAMAGE_MOD] = 2
+			attacker[WIKeys.SPELL_POWER] = 3
 		var defender: Dictionary = probe_combat.combatants[target_id]
 		defender[WIKeys.MAX_HP] = 4_000_000
 		defender[WIKeys.HP] = 4_000_000
-		var predicted := WICombatPolicies.expected_damage(probe_combat, attacker, defender, mult, melee)
+		var predicted := WICombatPolicies.expected_damage(probe_combat, attacker, defender, mult, melee, source)
 		var rolls := 4000
 		var before := int(defender[WIKeys.HP])
 		for _i in rolls:
-			probe_combat._resolve_hit("pc", target_id, mult, melee, false)
+			probe_combat._resolve_hit("pc", target_id, mult, melee, false, source)
 		var observed := float(before - int(defender[WIKeys.HP])) / float(rolls)
 		assert(absf(observed - predicted) <= maxf(0.25, predicted * 0.03),
 			"expected_damage(%s mult=%.1f melee=%s) predicted %.3f but the engine measured %.3f over %d rolls" % [

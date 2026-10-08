@@ -375,6 +375,9 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usab
 			"icon": String(sk.get("icon", "")), "key_hint": str(number),
 			"description": String(sk.get("description", "")),
 			"effect": sk.get("effect", {}),
+			# #514: the damage source (weapon vs spell) is read off this gate.
+			WIKeys.WEAPON: String(sk.get(WIKeys.WEAPON, "")),
+			WIKeys.DAMAGE_SOURCE: String(sk.get(WIKeys.DAMAGE_SOURCE, "")),
 			# GH#334 ruling 14: the slot record was NARROWER than the formatter
 			# it feeds. `WIEffectText.skill_effect_lines` generates the "Once per
 			# fight." clause from this key, and it was simply never carried here
@@ -624,6 +627,8 @@ func _slot_info_line(d: Dictionary) -> String:
 				"ap_cost": d.get("ap_cost", 0),
 				"mp_cost": d.get("mp_cost", 0),
 				"effect": d.get("effect", {}),
+				WIKeys.WEAPON: d.get(WIKeys.WEAPON, ""),
+				WIKeys.DAMAGE_SOURCE: d.get(WIKeys.DAMAGE_SOURCE, ""),
 				"once_per_fight": d.get("once_per_fight", false),
 				# While the Skill is actually cooling, the STANDING rule is
 				# suppressed: "Recovering — ready in 2 rounds." already says
@@ -649,6 +654,14 @@ func _slot_info_line(d: Dictionary) -> String:
 			if effect_lines.is_empty():
 				return "%s — %s" % [skill_name, tail]
 			var line := "%s — %s — %s" % [skill_name, effect_lines[0], tail]
+			# #514: a cooling Skill whose line overflows keeps its live clause in
+			# view -- cost, then "Recovering", then the effect the ellipsis eats.
+			if recovering != "" and _readout_label != null \
+					and _rtl_wrapped_line_count(_readout_label, line, READOUT_TEXT_WIDTH) > 1:
+				var parts := effect_lines[0].split(" — ", true, 1)
+				if parts.size() == 2:
+					return "%s — %s — %s — %s" % [skill_name, parts[0], recovering, parts[1]]
+				return "%s — %s — %s" % [skill_name, recovering, effect_lines[0]]
 			# ...and the READY state needed the SAME rule, which the first pass
 			# missed. A cooled Skill at full readiness carries BOTH the standing
 			# clause (inside `effect_lines[0]`) and the description, and that pushed

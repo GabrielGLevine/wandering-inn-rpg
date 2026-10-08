@@ -73,7 +73,7 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 			combat.spend_skill_costs(a, skill)
 			combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": target_id})
 			var hp_before := int(combat.combatants[target_id][WIKeys.HP])
-			combat._resolve_hit(actor_id, target_id, 1.0, false, false)
+			combat._resolve_hit(actor_id, target_id, 1.0, false, false, WICombatBuild.damage_source(skill))
 			if int(combat.combatants.get(target_id, {}).get(WIKeys.HP, hp_before)) < hp_before:
 				_apply_status_from_effect(combat, target_id, effect)
 			return true
@@ -215,7 +215,7 @@ static func _resolve_line_damage(combat: WICombat, actor_id: String, a: Dictiona
 	for id: String in hit_ids:
 		if not bool(combat.combatants[id][WIKeys.ALIVE]):
 			continue  # an earlier hit in this same line may have already downed them
-		combat._resolve_hit(actor_id, id, 1.0, false, false)
+		combat._resolve_hit(actor_id, id, 1.0, false, false, WICombatBuild.damage_source(skill))
 		if combat.finished:
 			return true
 	return true
@@ -275,7 +275,7 @@ static func _resolve_blast_damage(combat: WICombat, actor_id: String, a: Diction
 	for id: String in hit_ids:
 		if not bool(combat.combatants[id][WIKeys.ALIVE]):
 			continue  # an earlier hit in this same blast may have already downed them
-		combat._resolve_hit(actor_id, id, 1.0, false, false)
+		combat._resolve_hit(actor_id, id, 1.0, false, false, WICombatBuild.damage_source(skill))
 		if combat.finished:
 			return true
 	return true
