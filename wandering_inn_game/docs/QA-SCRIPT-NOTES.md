@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 283 native canonical QA scripts. The manifest is the
+This is the human index for 284 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -291,6 +291,7 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `desktop_field_earned_overflow` | 9 | full | `desktop_field_earned_start` | #567 desktop17-skill earned-state fixture: actual paging exposes every original slot, slot16 clicks dispatch Keen Eye, keyboard brackets reveal last/first selection, and expanded Details stays bounded above the controls while a real mouse wheel reaches its last line. Native mouse emulation; inheritedkit is not acquisition/mobile proof. |
 | `steel_thread` | 37 | full, journey | `—` | #571 martial continuous journey to the open-seal epilogue. Retains two vault defeats and one guardian defeat with real rollback; retries after worn carried gear and walked Inn-bed rests. Exact HP/MP pins on every Act IV-V fight, the footpad no-sleep pair and a depleted pause Save/Load. No fixtures, teleports, tuning or farming. |
 | `journey_caster` | 9 | full, journey | `—` | #571/#512 fresh caster: Pisces lesson -> [Mage] first -> [Ice Mage] 14; every fight player-driven (no autoplay), 8/8 wins, no retries; road then optional sewer bats in one waking at 0 MP; sleeps refill new maxima; four bought Mana Potions: two in the warden fight at 1 AP, dose 3 safe, dose 4 warning -> Cancel -> accept -4 HP, pause Save/Load keeps 21/38 HP, 12/19 MP, 4 doses; open-ending epilogue. No fixtures/teleports/top-ups. |
+| `journey_imperfect` | 9 | full, journey | `—` | #571/#513 fresh imperfect-spend variant: a never-equipped knife and unused handline leave 0g after the catalyst, Coyle exposed, the 80g Invrisil one-shots skipped; every later mandatory fee earned back only from repeatable producers over four extra wakings; sponsorship, Pallass stone and lift pass rows pinned locked at 7/13/2g; warden first try on earned loot; epilogue. No fixtures/teleports/top-ups. |
 
 ## Browser-only QA
 

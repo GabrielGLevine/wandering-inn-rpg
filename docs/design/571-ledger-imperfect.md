@@ -19,8 +19,8 @@ or enemy changed.
   225 s and produces 49 captures, copied to `/private/tmp/wi-571-evidence/imperfect/`.
   Its log has two shutdown-only Metal lines after `QA_RESULT`:
   `ParticlesShaderRD` never freed, and a `MaterialStorage6ShaderE` RID leak.
-  They are the rendering-device form of #586, outside its exact headless
-  exemption, the same open gate as the martial and caster lanes.
+  They are the rendering-device form of #586, now deferred by the extended
+  ruling, so `noise_scan.sh` reads this log clean.
 - Captures read:
   - Krshia's bought node with "Paid 15 gold." for the knife.
   - The catalyst sold with "Paid 18 gold.".

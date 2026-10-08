@@ -8489,6 +8489,89 @@
      "save"
     ]
    }
+  },
+  {
+   "script": "journey_imperfect",
+   "seed": 9,
+   "tiers": [
+    "full",
+    "journey"
+   ],
+   "note": "#571/#513 fresh imperfect-spend variant: a never-equipped knife and unused handline leave 0g after the catalyst, Coyle exposed, the 80g Invrisil one-shots skipped; every later mandatory fee earned back only from repeatable producers over four extra wakings; sponsorship, Pallass stone and lift pass rows pinned locked at 7/13/2g; warden first try on earned loot; epilogue. No fixtures/teleports/top-ups.",
+   "surfaces": {
+    "maps": [
+     "barracks",
+     "brothers_parlor",
+     "deep_tunnels",
+     "dungeon_approach",
+     "enchanter_shop",
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "invrisil_boulevard",
+     "mercantile_alleys",
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "ruin_surface",
+     "runners_guild",
+     "seal_vault",
+     "sewers",
+     "street",
+     "trapped_halls",
+     "witch_hollow"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning",
+     "find_trap",
+     "light",
+     "sneak"
+    ],
+    "dialogue": [
+     "ceria_dig_camp",
+     "ceria_intro",
+     "door_mounting",
+     "drayman_dispute",
+     "erin_errand",
+     "hedault_enchanting",
+     "invrisil_fixer",
+     "invrisil_house_steward",
+     "invrisil_merchant_prince",
+     "invrisil_stationer_client",
+     "invrisil_wilovan",
+     "krshia_crate",
+     "olesm_intro",
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "pisces_magic",
+     "pisces_seal",
+     "relc_descent",
+     "relc_intro",
+     "riverfarm_headman",
+     "riverfarm_hunter",
+     "riverfarm_witch",
+     "selys_delivery",
+     "vess_counter",
+     "zevara_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase",
+     "portals",
+     "quests",
+     "save"
+    ]
+   }
   }
  ],
  "browser_scripts": [

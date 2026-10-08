@@ -4,6 +4,7 @@
 		{"script": "journey_rogue", "route": "rogue", "checkpoint": "rogue_full_ending", "budget_sec": 90},
 		{"script": "journey_worker", "route": "generalist", "checkpoint": "worker_full_ending", "budget_sec": 90},
 		{"script": "steel_thread", "route": "martial", "checkpoint": "martial_full_ending", "budget_sec": 90},
-		{"script": "journey_caster", "route": "caster", "checkpoint": "caster_full_ending", "budget_sec": 120}
+		{"script": "journey_caster", "route": "caster", "checkpoint": "caster_full_ending", "budget_sec": 120},
+		{"script": "journey_imperfect", "route": "imperfect", "checkpoint": "imperfect_full_ending", "budget_sec": 90}
 	]
 }
