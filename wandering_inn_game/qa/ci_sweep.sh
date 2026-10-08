@@ -149,6 +149,37 @@ while IFS= read -r line; do
 	[ -n "$line" ] && TIER_ENTRIES+=("$line")
 done <<< "$TIER_PAIRS"
 
+# Per-script alarm (#571): a manifest row's optional `timeout_sec` RAISES the
+# alarm for a measured long route (continuous journeys run ~150-215s serially
+# on CI runners); it never lowers the global CI_SWEEP_TIMEOUT.
+TIMEOUT_PAIRS="$(MANIFEST_PATH="$MANIFEST" python3 - <<'PY'
+import json, os, sys
+
+with open(os.environ["MANIFEST_PATH"]) as f:
+	data = json.load(f)
+for entry in data["scripts"]:
+	t = entry.get("timeout_sec")
+	if t is None:
+		continue
+	if not isinstance(t, int) or isinstance(t, bool) or not 1 <= t <= 900:
+		print(f"ci_sweep: FATAL — {entry['script']} timeout_sec must be an integer in 1..900", file=sys.stderr)
+		sys.exit(1)
+	print(f"{entry['script']}:{t}")
+PY
+)" || { echo "ci_sweep: FATAL — timeout_sec check failed; exiting." >&2; exit 1; }
+declare -a TIMEOUT_ENTRIES=()
+while IFS= read -r line; do
+	[ -n "$line" ] && TIMEOUT_ENTRIES+=("$line")
+done <<< "$TIMEOUT_PAIRS"
+
+script_timeout() {
+	local t="$PER_SCRIPT_TIMEOUT" e
+	for e in ${TIMEOUT_ENTRIES[@]+"${TIMEOUT_ENTRIES[@]}"}; do
+		if [ "${e%%:*}" = "$1" ] && [ "${e#*:}" -gt "$t" ]; then t="${e#*:}"; fi
+	done
+	echo "$t"
+}
+
 # has_tier NAME TIER -> 0 iff NAME's manifest entry carries TIER. Linear
 # scan (103 entries, called O(103) times worst case) — bash 3.2 on macOS
 # has no associative arrays, same constraint the --only lookup below lives
@@ -268,7 +299,7 @@ run_one() {
 		# shellcheck disable=SC2206 — tokens are validated space-free at parse
 		ARGS+=($SCRIPT_ARGS)
 	fi
-	perl -e 'alarm shift; exec @ARGV' "$PER_SCRIPT_TIMEOUT" \
+	perl -e 'alarm shift; exec @ARGV' "$(script_timeout "$NAME")" \
 		bash "$RUN_QA" "${ARGS[@]}" >"$LOG" 2>&1
 	echo $? >"$LOGDIR/$NAME.rc"
 }
@@ -299,7 +330,7 @@ for pair in "${RUNLIST[@]}"; do
 		FAILURES=$((FAILURES + 1)); FAILED_NAMES+=("$NAME(missing)")
 		continue
 	fi
-	echo "==> $NAME (seed=$SEED, timeout=${PER_SCRIPT_TIMEOUT}s, jobs=$JOBS${SCRIPT_ARGS:+, args=$SCRIPT_ARGS})"
+	echo "==> $NAME (seed=$SEED, timeout=$(script_timeout "$NAME")s, jobs=$JOBS${SCRIPT_ARGS:+, args=$SCRIPT_ARGS})"
 	if [ "$JOBS" -gt 1 ]; then
 		# macOS ships bash 3.2: `wait -n` is unsupported there (it errors and
 		# the loop busy-spins). Sleep-poll instead — throttle behavior is

@@ -1,10 +1,10 @@
 {
-	"_comment": "#515 continuous-journey registry, read by qa/journey_gate.py. Every entry must exist in qa/manifest.json carrying the `journey` tier, and every manifest row carrying `journey` must be listed here, so content changes cannot silently drop a route. checkpoint = the dump_checkpoint slot the route must reach; budget_sec = measured headless wall time with headroom (see docs/design/571-cutover-execution.md).",
+	"_comment": "#515 continuous-journey registry, read by qa/journey_gate.py. Every entry must exist in qa/manifest.json carrying the `journey` tier, and every manifest row carrying `journey` must be listed here, so content changes cannot silently drop a route. checkpoint = the dump_checkpoint slot the route must reach; budget_sec = serial headless wall time measured on the CI runner (run 37716072056: rogue 145, worker 164, martial 214, caster 126, imperfect 156 s) x ~1.5; local macOS runs take ~17-25 s.",
 	"journeys": [
-		{"script": "journey_rogue", "route": "rogue", "checkpoint": "rogue_full_ending", "budget_sec": 90},
-		{"script": "journey_worker", "route": "generalist", "checkpoint": "worker_full_ending", "budget_sec": 90},
-		{"script": "steel_thread", "route": "martial", "checkpoint": "martial_full_ending", "budget_sec": 90},
-		{"script": "journey_caster", "route": "caster", "checkpoint": "caster_full_ending", "budget_sec": 120},
-		{"script": "journey_imperfect", "route": "imperfect", "checkpoint": "imperfect_full_ending", "budget_sec": 90}
+		{"script": "journey_rogue", "route": "rogue", "checkpoint": "rogue_full_ending", "budget_sec": 220},
+		{"script": "journey_worker", "route": "generalist", "checkpoint": "worker_full_ending", "budget_sec": 250},
+		{"script": "steel_thread", "route": "martial", "checkpoint": "martial_full_ending", "budget_sec": 320},
+		{"script": "journey_caster", "route": "caster", "checkpoint": "caster_full_ending", "budget_sec": 200},
+		{"script": "journey_imperfect", "route": "imperfect", "checkpoint": "imperfect_full_ending", "budget_sec": 240}
 	]
 }

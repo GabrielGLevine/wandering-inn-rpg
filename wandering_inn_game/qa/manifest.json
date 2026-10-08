@@ -8098,6 +8098,7 @@
   {
    "script": "journey_rogue",
    "seed": 9,
+   "timeout_sec": 420,
    "tiers": [
     "full",
     "journey"
@@ -8185,6 +8186,7 @@
   {
    "script": "journey_worker",
    "seed": 9,
+   "timeout_sec": 420,
    "tiers": [
     "full",
     "journey"
@@ -8330,6 +8332,7 @@
   {
    "script": "steel_thread",
    "seed": 37,
+   "timeout_sec": 420,
    "tiers": [
     "full",
     "journey"
@@ -8406,6 +8409,7 @@
   {
    "script": "journey_caster",
    "seed": 9,
+   "timeout_sec": 420,
    "tiers": [
     "full",
     "journey"
@@ -8493,6 +8497,7 @@
   {
    "script": "journey_imperfect",
    "seed": 9,
+   "timeout_sec": 420,
    "tiers": [
     "full",
     "journey"
