@@ -111,9 +111,10 @@ do not refill. The journey ledgers show the depleted carries this proves:
      `meal_service_loop`, which uses real input from a disclosed fixture start;
    - held-Skill cooking then eating: worker;
    - consecutive MP doses across the threshold with save/load: caster;
-   - AP cost and Cancel: caster (earned). Refusal comes from fixture scripts
-     with real input: full-health no-benefit refusal in `item_use_loop`,
-     lethal-dose refusal and settlement in `consumable_poison_defeat`;
+   - AP cost and Cancel: caster (earned). Refusal comes from one fixture
+     script with real input: the full-health no-benefit refusal in
+     `item_use_loop` (`consumable_poison_defeat` accepts a lethal dose and
+     proves the defeat/reload settlement, not a refusal);
    - defeat rollback: Rogue, martial, worker, imperfect;
    - Abandon rollback: worker;
    - buff expiry: worker;

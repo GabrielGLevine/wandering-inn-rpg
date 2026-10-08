@@ -69,10 +69,11 @@ PROGRESS = [
 	ev("gold_changed", delta=5, source="job", total=5),
 	ev("class_level_up", **{"class": "mage", "level": 4}),
 	ev("class_evolved", **{"from": "mage", "to": "ice_mage", "level": 4}),
+	ev("class_gained", **{"class": "warrior"}),
+	ev("consolidation_accepted", parents=["ice_mage", "warrior"], target="frost_sage", level=6),
 	ev("phase_changed", phase="day", slept=True),
 	ev("accomplishment_recorded", id="boss_down", count=1),
 	ev("quest_completed", id="q1"),
-	ev("consolidation_accepted", parents=["ice_mage"], target="frost_sage", level=6),
 ]
 
 
@@ -81,7 +82,7 @@ class JourneyLedgerTest(unittest.TestCase):
 		ledger = journey_ledger.build(PROGRESS, ACTS)
 		self.assertEqual([a["entered"] for a in ledger["acts"]], ["act_ii", "act_iii"])
 		self.assertEqual(ledger["acts"][0]["classes"], {"mage": 1})
-		self.assertEqual((ledger["acts"][1]["classes"], ledger["acts"][1]["gold"], ledger["acts"][1]["sleeps"]), ({"ice_mage": 4}, 5, 1))
+		self.assertEqual((ledger["acts"][1]["classes"], ledger["acts"][1]["gold"], ledger["acts"][1]["sleeps"]), ({"frost_sage": 6}, 5, 1))
 		self.assertIn("Act boundaries: act_ii @ town: mage 1; 0g", journey_ledger.markdown(ledger))
 
 	def test_abandon_and_unfinished_fights_are_kept(self) -> None:
