@@ -18460,7 +18460,7 @@
      },
      {
       "effect_lines": [
-       "+1 damage on melee hits",
+       "+1 damage on attacks and weapon Skills",
        "Resonance 1"
       ],
       "locked": true,
@@ -19223,7 +19223,7 @@
      },
      {
       "effect_lines": [
-       "+1 damage on melee hits",
+       "+1 damage on attacks and weapon Skills",
        "Resonance 1"
       ],
       "locked": false,
