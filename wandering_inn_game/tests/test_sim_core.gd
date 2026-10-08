@@ -3472,9 +3472,30 @@ func _init() -> void:
 		"items": _load_json("res://data/items.json"),
 		"deliveries": _load_json("res://data/deliveries.json"),
 	}
+	# #513: a standing slip is posted every waking; the 3-slot window is unchanged.
+	var del_pool: Array = (del_cc["deliveries"] as Dictionary)["deliveries"]
+	var is_standing := func(d: Dictionary) -> bool: return bool(d.get("standing", false))
+	var standing_ids: Array = del_pool.filter(is_standing).map(func(d: Dictionary) -> String: return String(d["id"]))
+	assert(standing_ids == ["delivery_standing_dispatch_run", "delivery_standing_inn_hamper", "delivery_standing_barracks_kit"], "three standing slips ship, in pool order")
+	var window_without_standing := 0
+	for ts: int in 39:
+		var window: Array = WIBounties.active_slate(del_pool, ts)
+		var slate: Array = WIBounties.delivery_slate(del_pool, ts)
+		var window_has_standing: bool = window.any(is_standing)
+		if not window_has_standing:
+			window_without_standing += 1
+		assert(slate.slice(0, window.size()) == window, "ts %d: the rotating window keeps its slots and order" % ts)
+		assert(slate.any(is_standing), "ts %d: a standing slip is on the board" % ts)
+		assert(slate.size() == (3 if window_has_standing else 4), "ts %d: at most one slip is added, only when the window has none" % ts)
+		if not window_has_standing:
+			assert(String((slate[3] as Dictionary)["id"]) == standing_ids[ts % 3], "ts %d: the added standing slip rotates through the three" % ts)
+	assert(window_without_standing == 24, "the window alone left 8 of every 13 wakings without a standing slip")
+	var one_shot_pool: Array = del_pool.filter(func(d: Dictionary) -> bool: return not bool(d.get("standing", false)))
+	assert(WIBounties.delivery_slate(one_shot_pool, 5) == WIBounties.active_slate(one_shot_pool, 5), "no standing slip in the pool: the plain window")
+	assert(WIBounties.delivery_slate([], 5).is_empty(), "empty pool: empty board")
 	var gDel := WIGame.new(scene_config, skill_config, _sink, 7, del_cc)
 	var del_slate_ids: Array = gDel.delivery_board_deliveries().map(func(d: Dictionary) -> String: return String(d["id"]))
-	assert(del_slate_ids == ["delivery_krshia_wool", "delivery_pisces_parcel", "delivery_gate_dispatch"], "times_slept 0 slate = pool window [0..2] (the DP2 rotation function, shared)")
+	assert(del_slate_ids == ["delivery_krshia_wool", "delivery_pisces_parcel", "delivery_gate_dispatch", "delivery_standing_dispatch_run"], "times_slept 0 slate = pool window [0..2] plus standing slip 0 % 3")
 	_events.clear()
 	gDel.accept_delivery("delivery_krshia_wool")
 	assert(gDel.accepted_delivery_id == "delivery_krshia_wool", "accept banks the slip")
@@ -3512,7 +3533,7 @@ func _init() -> void:
 	assert(_toast_texts().has("The undelivered parcel goes back on the night ledger."), "the return is toasted at the sleep beat")
 	assert(gDel.accomplishment_count("completed_delivery_delivery_gate_dispatch") == 0 and gDel.gold == 1, "no pay, no completion on a failed run")
 	var del_slate_after: Array = gDel.delivery_board_deliveries().map(func(d: Dictionary) -> String: return String(d["id"]))
-	assert(del_slate_after == ["delivery_gate_dispatch", "delivery_grate_phials", "delivery_inn_hamper"], "the sleep rotates the slate over the RETIREMENT-FILTERED pool (times_slept 1 window, krshia_wool excluded)")
+	assert(del_slate_after == ["delivery_gate_dispatch", "delivery_grate_phials", "delivery_inn_hamper", "delivery_standing_inn_hamper"], "the sleep rotates the slate over the RETIREMENT-FILTERED pool (times_slept 1 window, krshia_wool excluded) plus standing slip 1 % 3")
 	assert(not del_slate_after.has("delivery_krshia_wool"), "a completed delivery never reappears in the slate, permanently")
 
 	_events.clear()
@@ -3552,6 +3573,25 @@ func _init() -> void:
 	assert(gDel.accomplishment_count("delivered_delivery_standing_dispatch_run") == 2, "fresh arrival banks the second delivered_<id>")
 	assert(gDel.turn_in_delivery() and gDel.gold == 6, "the standing route pays AGAIN -- the loop's whole point")
 	assert(gDel.accomplishment_count("completed_delivery_delivery_standing_dispatch_run") == 2, "second completion tallies")
+	# #513: the receipt conversation opens BEFORE the payout, so its start can no
+	# longer interrupt the "Earned N gold." toast.
+	gDel.accept_delivery("delivery_standing_dispatch_run")
+	assert(gDel.move_player(Vector2i.UP), "step to (3,6), adjacent to zevara again")
+	_events.clear()
+	gDel._open_delivery_turnin_dialogue()
+	var turnin_types: Array = _events.map(func(e: Dictionary) -> String: return String(e["type"]))
+	assert(gDel.gold == 8 and gDel.accepted_delivery_id == "", "the counter route pays the standing 2g")
+	assert(turnin_types.find("dialogue_started") < turnin_types.find("dialogue_node")
+		and turnin_types.find("dialogue_node") < turnin_types.find("gold_changed")
+		and turnin_types.find("gold_changed") < turnin_types.find("toast"),
+		"receipt opens first, then the payout and its toast")
+	assert(_toast_texts() == ["Earned 2 gold."], "exactly one earn toast")
+	gDel.dialogue_choose(0)
+	assert(gDel.dialogue == null, "Continue closes the receipt")
+	_events.clear()
+	gDel._open_delivery_turnin_dialogue()
+	assert(_count("gold_changed") == 0 and _toast_texts().is_empty() and gDel.gold == 8, "no slip held: Vess's not-yet line, no pay")
+	gDel.dialogue_choose(0)
 	while gDel.times_slept < 8:
 		gDel.sleep()
 	var standing_slate: Array = gDel.delivery_board_deliveries().map(func(d: Dictionary) -> String: return String(d["id"]))

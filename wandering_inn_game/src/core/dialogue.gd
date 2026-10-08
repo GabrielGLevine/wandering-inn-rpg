@@ -42,6 +42,23 @@ func current_options() -> Array:
 	return out
 
 
+## #513: gold each visible row still needs, lockstep with current_options().
+## 0 when the row is affordable or has no gold gate. A separate array so the
+## pinned option rows keep their exact shape.
+func gold_shortfall() -> Array:
+	if finished:
+		return []
+	var out: Array = []
+	for entry: Dictionary in _visible_options():
+		var opt: Dictionary = entry["option"]
+		var req: Dictionary = opt.get("requires", {})
+		var short := 0
+		if req.has("gold"):
+			short = maxi(0, _priced_gold(int(req["gold"]), opt) - int(_ctx.get("gold", 0)))
+		out.append(short)
+	return out
+
+
 func _item_effect_lines(opt: Dictionary) -> Array:
 	var items: Dictionary = _ctx.get("items", {})
 	var out: Array = []
@@ -222,7 +239,7 @@ func _enter(id: String) -> void:
 	current_id = id
 	var n := _node()
 	var visible_options := current_options()
-	_emit(WIEvents.DIALOGUE_NODE, {"speaker": String(n["speaker"]), "text": _resolved_text(n), "options": visible_options})
+	_emit(WIEvents.DIALOGUE_NODE, {"speaker": String(n["speaker"]), "text": _resolved_text(n), "options": visible_options, "gold_shortfall": gold_shortfall()})
 	if visible_options.is_empty() and not (n.get("options", []) as Array).is_empty():
 		finished = true
 		_emit(WIEvents.DIALOGUE_ENDED, {})

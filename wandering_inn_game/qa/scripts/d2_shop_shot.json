@@ -164,12 +164,18 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Playtest fix wave (findings 11/13): THE TRAP PIN, at the 130% step. Before the fix the panel grew unbounded (autowrap rows measured at width 0 inflated `needed`, and non-picker dialogue had NO height cap), pushing its own exit row off-screen -- the only way out was killing the process. The fit now measures rows by font metrics at the real width and caps at 684 with a scrolling options region. 585 is the stall node's HONEST height at 130%; any regression in the measurement or the cap moves this number.",
+   "_comment": "Playtest fix wave (findings 11/13): THE TRAP PIN, at the 130% step. Before the fix the panel grew unbounded (autowrap rows measured at width 0 inflated `needed`, and non-picker dialogue had NO height cap), pushing its own exit row off-screen -- the only way out was killing the process. The fit now measures rows by font metrics at the real width and caps at 684 with a scrolling options region. 651 is the stall node's HONEST height at 130% (585 before #513 appended \"(needs N more gold)\" to the four rows the 5-gold purse cannot cover, which wraps three of them); any regression in the measurement or the cap moves this number.",
    "action": "wait_for_event",
    "type": "ui_dialogue_page_rendered",
    "payload_contains": {
     "panel_capped": false,
-    "panel_height": 585.0
+    "panel_height": 651.0,
+    "shortfall_rows": [
+     {"row": 2, "text": "needs 10 more gold"},
+     {"row": 3, "text": "needs 13 more gold"},
+     {"row": 4, "text": "needs 19 more gold"},
+     {"row": 7, "text": "needs 13 more gold"}
+    ]
    },
    "timeout_sec": 5
   },
@@ -309,6 +315,23 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "#513: at 0 gold every priced row names its exact shortfall, and the 130% panel still fits under the cap.",
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "panel_capped": false,
+    "panel_height": 651.0,
+    "shortfall_rows": [
+     {"row": 1, "text": "needs 5 more gold"},
+     {"row": 2, "text": "needs 15 more gold"},
+     {"row": 3, "text": "needs 18 more gold"},
+     {"row": 4, "text": "needs 24 more gold"},
+     {"row": 7, "text": "needs 18 more gold"}
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "screenshot",
    "name": "03_shop_all_greyed_broke"
   },
@@ -385,6 +408,22 @@
       "requirement": "",
       "text": "Back to the regular stall."
      }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "shortfall_rows": [
+     {"row": 1, "text": "needs 4 more gold"},
+     {"row": 2, "text": "needs 4 more gold"},
+     {"row": 3, "text": "needs 5 more gold"},
+     {"row": 4, "text": "needs 9 more gold"},
+     {"row": 5, "text": "needs 14 more gold"},
+     {"row": 6, "text": "needs 35 more gold"},
+     {"row": 7, "text": "needs 18 more gold"}
     ]
    },
    "timeout_sec": 5

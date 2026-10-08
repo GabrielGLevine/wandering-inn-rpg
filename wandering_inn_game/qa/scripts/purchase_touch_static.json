@@ -148,6 +148,24 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "#513: in the touch layout each locked buy ends in its shortfall (5 gold in hand).",
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "shortfall_rows": [
+     {"row": 2, "text": "needs 10 more gold"},
+     {"row": 3, "text": "needs 13 more gold"},
+     {"row": 4, "text": "needs 19 more gold"},
+     {"row": 7, "text": "needs 13 more gold"}
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_touch_shortfall_rows"
+  },
+  {
    "action": "touch_dialogue_option",
    "option": 1,
    "gesture": {

@@ -11137,11 +11137,33 @@
   {
    "action": "press",
    "name": "confirm",
-   "_comment": "The hub row is end:true: the turn-in pays before the receipt graph opens."
+   "_comment": "The hub row is end:true: Vess's receipt opens, then the turn-in pays (#513)."
   },
   {
    "action": "wait_for_event",
    "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "delivery_turnin"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Vess",
+    "text": "Mark confirmed. Hah — sorry, came in at a sprint myself. Coin's counted. Nice legs on that run. Hawk started on a board like this one, you know. Well. A board LIKE it."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
    "timeout_sec": 5
   },
   {
@@ -11164,26 +11186,16 @@
   },
   {
    "action": "wait_for_event",
-   "type": "dialogue_started",
+   "type": "ui_toast_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "conversation": "delivery_turnin"
-   }
+    "text": "Earned 2 gold."
+   },
+   "_comment": "#513: paying after the receipt opens lets the earn toast render over Vess's line."
   },
   {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "speaker": "Vess",
-    "text": "Mark confirmed. Hah — sorry, came in at a sprint myself. Coin's counted. Nice legs on that run. Hawk started on a board like this one, you know. Well. A board LIKE it."
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_shown",
-   "timeout_sec": 5,
-   "_comment": "The receipt line is the rendered confirmation: the 'Earned 2 gold.' toast is emitted under the opening receipt and never renders."
+   "action": "screenshot",
+   "name": "imperfect_04b_standing_turnin_earned_2_gold"
   },
   {
    "action": "press",
@@ -12193,11 +12205,33 @@
   {
    "action": "press",
    "name": "confirm",
-   "_comment": "The hub row is end:true: the turn-in pays before the receipt graph opens."
+   "_comment": "The hub row is end:true: Vess's receipt opens, then the turn-in pays (#513)."
   },
   {
    "action": "wait_for_event",
    "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "delivery_turnin"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Vess",
+    "text": "Mark confirmed. Hah — sorry, came in at a sprint myself. Coin's counted. Nice legs on that run. Hawk started on a board like this one, you know. Well. A board LIKE it."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
    "timeout_sec": 5
   },
   {
@@ -12220,26 +12254,12 @@
   },
   {
    "action": "wait_for_event",
-   "type": "dialogue_started",
+   "type": "ui_toast_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "conversation": "delivery_turnin"
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "speaker": "Vess",
-    "text": "Mark confirmed. Hah — sorry, came in at a sprint myself. Coin's counted. Nice legs on that run. Hawk started on a board like this one, you know. Well. A board LIKE it."
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_shown",
-   "timeout_sec": 5,
-   "_comment": "The receipt line is the rendered confirmation: the 'Earned 2 gold.' toast is emitted under the opening receipt and never renders."
+    "text": "Earned 2 gold."
+   },
+   "_comment": "#513: paying after the receipt opens lets the earn toast render over Vess's line."
   },
   {
    "action": "press",
@@ -16940,7 +16960,13 @@
   {
    "action": "wait_for_event",
    "type": "ui_dialogue_page_rendered",
-   "timeout_sec": 5
+   "timeout_sec": 5,
+   "payload_contains": {
+    "shortfall_rows": [
+     {"row": 1, "text": "needs 3 more gold"}
+    ]
+   },
+   "_comment": "#513: the locked sponsorship row names its shortfall: 10 gold against 7."
   },
   {
    "action": "assert_state",
@@ -18473,12 +18499,32 @@
   {
    "action": "wait_for_event",
    "type": "ui_dialogue_page_rendered",
-   "timeout_sec": 5
+   "timeout_sec": 5,
+   "payload_contains": {
+    "shortfall_rows": [
+     {"row": 5, "text": "needs 1 more gold"},
+     {"row": 6, "text": "needs 22 more gold"},
+     {"row": 7, "text": "needs 5 more gold"},
+     {"row": 9, "text": "needs 5 more gold"}
+    ]
+   },
+   "_comment": "#513: every unaffordable charm names its shortfall; row 9 is the Pallass stone, 18 against 13."
   },
   {
    "action": "assert_state",
    "path": "gold",
    "equals": 13
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "board_active_deliveries",
+   "equals": ["delivery_gate_dispatch", "delivery_grate_phials", "delivery_inn_hamper", "delivery_standing_dispatch_run"],
+   "_comment": "#513: Vess's board carries a standing slip through the Pallass stretch. Before #513 this waking (times_slept % 13 = 2) had none."
   },
   {
    "action": "screenshot",
@@ -21618,12 +21664,29 @@
   {
    "action": "wait_for_event",
    "type": "ui_dialogue_page_rendered",
-   "timeout_sec": 5
+   "timeout_sec": 5,
+   "payload_contains": {
+    "shortfall_rows": [
+     {"row": 1, "text": "needs 1 more gold"}
+    ]
+   },
+   "_comment": "#513: the locked lift-pass row names its shortfall: 3 gold against 2."
   },
   {
    "action": "assert_state",
    "path": "gold",
    "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 17
+  },
+  {
+   "action": "assert_state",
+   "path": "board_active_deliveries",
+   "equals": ["delivery_inn_hamper", "delivery_barracks_gear", "delivery_guild_ledger", "delivery_standing_barracks_kit"],
+   "_comment": "#513: Vess's board carries a standing slip through the Pallass stretch. Before #513 this waking (times_slept % 13 = 4) had none."
   },
   {
    "action": "screenshot",
@@ -24983,7 +25046,7 @@
     "source": "delivery_delivery_standing_barracks_kit"
    },
    "count": 2,
-   "_comment": "Standing barracks-kit slip x2 (T11, T12; the only wakings it sat on the rotating slate)."
+   "_comment": "Standing barracks-kit slip x2 (T11, T12). The route takes it only on those wakings; since #513 a standing slip is posted every waking."
   },
   {
    "action": "assert_event_count",

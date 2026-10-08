@@ -321,6 +321,31 @@ func test_bargain_price_mod_haggle_optin_display_equals_charge() -> void:
 	assert(String(d4.current_options()[0]["text"]) == "The yarrow bundle. (4 gold)", "haggle node without [Bargain]: authored price, untouched")
 
 
+func test_gold_shortfall_names_the_missing_amount() -> void:
+	var graph := {"start": "shop", "nodes": {"shop": {"speaker": "Eloise", "text": "t", "haggle": true, "options": [
+		{"text": "The yarrow bundle. (4 gold)", "requires": {"gold": 4}, "effects": [{"gold": -4}], "end": true},
+		{"text": "That pinch of warding salt. (20 gold)", "requires": {"gold": 20}, "effects": [{"gold": -20}], "end": true},
+		{"text": "Set the board.", "requires": {"gold": 9}, "end": true},
+		{"text": "Improve the charm. (12 gold)", "requires": {"gold": 12, "item": "traveler_charm"}, "effects": [{"gold": -12}], "end": true},
+		{"text": "Leave.", "end": true},
+	]}}}
+	var nodes: Array = []
+	var sink := func(type: String, payload: Dictionary) -> void:
+		if type == "dialogue_node":
+			nodes.append(payload)
+	var ctx := {"skills": ["bargain"], "classes": {}, "accomplishments": {}, "names": {}, "gold": 5, "inventory": [], "items": {}}
+	var d := WIDialogue.new(graph, ctx, sink)
+	d.begin()
+	# Haggled prices: yarrow 3 (affordable), salt 18, board 9 (not a purchase), charm 10.
+	assert(d.gold_shortfall() == [0, 13, 4, 5, 0], "each visible row's missing gold, at the haggled price the lock uses")
+	assert((nodes[0] as Dictionary)["gold_shortfall"] == [0, 13, 4, 5, 0], "DIALOGUE_NODE carries the same lockstep array")
+	assert((nodes[0] as Dictionary)["options"] == d.current_options(), "the option rows keep their exact shape")
+	var rich := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "gold": 40, "inventory": [], "items": {}}, Callable())
+	rich.begin()
+	assert(rich.gold_shortfall() == [0, 0, 0, 0, 0], "an affordable purse needs nothing, even where another gate (the charm) still locks")
+	assert(bool(rich.current_options()[3]["locked"]), "item leg still locks the charm row")
+
+
 func test_once_per_waking_requires_hides_until_used() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "meal", "requires": {"once_per_waking": "meal:erin"}, "end": true},
@@ -1365,6 +1390,7 @@ func _init() -> void:
 	test_gold_affordability_greys_when_broke()
 	test_compound_gold_accomplishment_gate()
 	test_bargain_price_mod_haggle_optin_display_equals_charge()
+	test_gold_shortfall_names_the_missing_amount()
 	test_once_per_waking_requires_hides_until_used()
 	test_once_per_waking_refused_in_hide_when()
 	test_erin_meal_seat_is_requires_seated_and_holds_one_per_waking()
