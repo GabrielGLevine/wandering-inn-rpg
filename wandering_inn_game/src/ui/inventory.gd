@@ -973,19 +973,23 @@ func _render_detail() -> void:
 	_detail_box.add_child(desc_label)
 
 
-## #514: drawn under the item's name -- which of the player's own attacks and
-## Skills the piece improves, and the Resonance it would leave worn. Both come
-## from the sim's own kit build and `equip_plan`, the computation equip() refuses by.
+## #514: drawn under the item's name -- the Resonance an unworn piece would
+## leave, then which of the player's own attacks and Skills it improves. Both
+## come from the sim's own `equip_plan` (what equip() refuses by) and kit build.
+## The Resonance line is shown where it can move: accessories, or any piece
+## whose swap would change the total.
 func _gear_comparison_lines(item_id: String, rec: Dictionary, equipped_here: bool) -> Array[String]:
 	var lines: Array[String] = []
 	var kind := String(rec.get("kind", ""))
 	if kind != "weapon" and kind != "armor" and kind != "accessory":
 		return lines
-	lines.append_array(WIEffectText.gear_reach_lines(rec, Game.sim.gear_reach(item_id), Game.sim.skills.values()))
 	if not equipped_here:
-		var plan_line := WIEffectText.equip_plan_line(Game.sim.equip_plan(item_id))
-		if plan_line != "":
-			lines.append(plan_line)
+		var plan := Game.sim.equip_plan(item_id)
+		if kind == "accessory" or int(plan["resonance"]) != Game.sim.resonance_used():
+			var plan_line := WIEffectText.equip_plan_line(plan)
+			if plan_line != "":
+				lines.append(plan_line)
+	lines.append_array(WIEffectText.gear_reach_lines(rec, Game.sim.gear_reach(item_id), Game.sim.skills.values()))
 	return lines
 
 

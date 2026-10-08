@@ -1,5 +1,5 @@
 {
- "_comment": "#514 (#495 ruling) through real input: an [Archer] L4 buys the hunting bow at Krshia's stall (cancel first, then buy), reads its card and the inventory comparison (which of HER attacks and Skills it improves, and the Resonance it leaves), equips it, and spars Relc. [Piercing Shot] is bow-gated, so it now takes str and the bow's +1 weapon damage instead of int and nothing. The receipt is the attack_resolved damage on the dummy; the combat snapshot proves the bow's damage reached the live combatant. Relc teleport is the archer_earn_loop vantage: the walk is not this script's subject.",
+ "_comment": "#514 (#495 ruling) through real input: an [Archer] L4 buys the hunting bow at Krshia's stall (cancel first, then buy), reads its card and the inventory comparison (which of HER attacks and Skills it improves; a weapon cannot move Resonance, so no 'If worn' line), equips it, and spars Relc. [Piercing Shot] is bow-gated, so it now takes str and the bow's +1 weapon damage instead of int and nothing. The receipt is the attack_resolved damage on the dummy; the combat snapshot proves the bow's damage reached the live combatant. Relc teleport is the archer_earn_loop vantage: the walk is not this script's subject.",
  "fixture_save": "gear_damage_start",
  "starts_at_title": true,
  "steps": [
@@ -58,7 +58,7 @@
   {"action": "press", "name": "move_down"},
   {"action": "wait_for_event", "type": "ui_inventory_selection_rendered", "payload_contains": {"cursor": 1, "item": "training_bow", "comparison_lines": []}, "timeout_sec": 5},
   {"action": "press", "name": "move_down"},
-  {"_comment": "THE READ: the card says what the bow adds; the comparison names the archer's own attacks and Skills it reaches -- [Piercing Shot] among them, the bow-gated line #495 brought in -- and what wearing it costs.", "action": "wait_for_event", "type": "ui_inventory_selection_rendered", "payload_contains": {"cursor": 2, "item": "hunting_bow", "mech_line": "+1 damage on attacks and weapon Skills | Range 4 | Bow kit replaces other weapon Skills in combat | Worth 18 gold", "comparison_lines": ["Improves your attacks, [Power Shot], [Quick Nock] and [Piercing Shot].", "If worn: Resonance 0/4"]}, "timeout_sec": 5},
+  {"_comment": "THE READ: the card says what the bow adds; the comparison names the archer's own attacks and Skills it reaches -- [Piercing Shot] among them, the bow-gated line #495 brought in -- and no 'If worn' line, because a weapon cannot move Resonance.", "action": "wait_for_event", "type": "ui_inventory_selection_rendered", "payload_contains": {"cursor": 2, "item": "hunting_bow", "mech_line": "+1 damage on attacks and weapon Skills | Range 4 | Bow kit replaces other weapon Skills in combat | Worth 18 gold", "comparison_lines": ["Improves your attacks, [Power Shot], [Quick Nock] and [Piercing Shot]."]}, "timeout_sec": 5},
   {"action": "screenshot", "name": "01_inventory_preview"},
   {"action": "press", "name": "confirm"},
   {"action": "wait_for_event", "type": "item_equipped", "payload_contains": {"item": "hunting_bow", "slot": "weapon"}, "timeout_sec": 5},
