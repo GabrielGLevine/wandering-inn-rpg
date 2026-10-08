@@ -37,10 +37,14 @@ and chronology belong in issue PRs. Earlier context:
 - **Ruled bands gate in CI via `RULED_WINDOWS`** at 100 seeds on both edges,
   with documented per-row `RULED_SLACK`. Never widen a reference window or use
   a 0.5 categorical the defect shape would pass.
-- **Hurt entry (#453, 2026-10-07):** chokepoints collapse when entered
-  depleted. Keep balance as is; signpost a reachable rest before each
-  chokepoint when the player approaches hurt. Rejected (option presented):
-  retuning for hurt entry, which would move ruled windows.
+- **Hurt entry (#453, 2026-10-07/08):** chokepoints collapse when entered
+  depleted. Keep balance as is. Signposting is environmental and implicit,
+  never a triggered toast or hint: a Watch bunk in Liscor's barracks once the
+  Watch sends you below, recovery loot (a sewer meal +6 HP, a Gnoll satchel
+  draught +8 HP past the Raskghar scouts), bedrolls at the dungeon approach and
+  the ruin, and a visual cue on the gate road; the existing autosaves supply the
+  checkpoints (`docs/design/453-rest-signposting.md`). Rejected: retuning for
+  hurt entry (moves ruled windows) and toast hints at an HP threshold.
 - **The main-quest stop ladder is gated on the competent column**, restored by
   `hired_blades` composition with frozen stat blocks. The wiring pin (all
   rungs measured) is hard on every leg.
@@ -180,9 +184,14 @@ and chronology belong in issue PRs. Earlier context:
   - offer standing deliveries every waking: one rotating standing slip joins
     the 3-slot window whenever it holds none (rejected: all three always,
     7 cards and overlong board pages);
-  - add a Pallass side quest with a sizable gold or sellable-loot reward and/or
-    a Pallass Runner's Guild.
-  Rejected: another grinding job.
+  - add a Pallass side quest: a Gnoll–Drake social quest paying about 12g plus
+    a sellable trade bale (2026-10-08). The Runners' Post guild follows later
+    (#600). Rejected: another grinding job, and a bonded-room paperwork quest
+    (repeats Pallass's paperwork theme).
+- **Pallass themes (2026-10-08):** besides bureaucracy, Pallass is the City of
+  Inventions, famous for alchemists and smiths, with Grimalkin's fitness.
+  Re-theme existing Pallass quests so only one (`papers_for_pallass`) stays
+  paperwork-focused; ids, rewards and fees stay. "Grand Lift" stays.
 - **Purchases confirm before any gold or item effect commits** (#504).
 - **Serve stays cooking-gated;** `source_hint` tells a blocked player where a
   meal comes from, and combat builds are not entitled to bypass the cooking
