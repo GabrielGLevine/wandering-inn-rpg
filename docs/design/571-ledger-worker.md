@@ -21,11 +21,11 @@ No data, source, seed or enemy changed.
 - `run_qa.sh journey_worker windowed --seed=9` passes 3998/3998 with 74
   captures, copied to `/private/tmp/wi-571-evidence/worker/windowed/`. Its log
   ends with two shutdown-only rendering-device lines (`ParticlesShaderRD` never
-  freed, a `MaterialStorage6ShaderE` RID leak), the windowed form of #586 that
-  falls outside its exact headless exemption, as on the martial lane.
-- The table below is `scripts/journey_ledger.py` on the headless run's
-  `events.jsonl`. Its "Recovery outside combat" line lists each meal twice
-  (`resources_changed` and `item_use_settled`); that is a ledger-tool quirk.
+  freed, a `MaterialStorage6ShaderE` RID leak), the windowed form of #586,
+  now deferred by the extended ruling, so `noise_scan.sh` reads the log clean.
+- The table below is `scripts/journey_ledger.py` on the integrated gate run's
+  `events.jsonl` (regenerated at integration; each meal is listed once and the
+  pause-menu Abandon appears as an `abandoned` fight with its exact rollback).
 - Captures read:
   - Raid before Abandon: Maren 50/52 HP, MP 11/15; Relc 29/40; Cave Bat 5/26.
   - Abandon confirmation: "Abandon the fight? You return to your last autosave."
@@ -218,17 +218,18 @@ Step numbers are 0-based indices into `qa/scripts/journey_worker.json`.
 | 7 | awakened_boss | deep_tunnels | 48/50 HP, 14/14 MP | 0/50 HP, 0/14 MP → rollback 48/48 HP, 14/14 MP | loss | 6 | - |
 | 8 | awakened_boss | deep_tunnels | 50/52 HP, 15/15 MP | 0/52 HP, 0/15 MP → rollback 50/50 HP, 15/15 MP | loss | 6 | - |
 | 9 | awakened_boss | deep_tunnels | 50/52 HP, 15/15 MP | 0/52 HP, 0/15 MP → rollback 50/50 HP, 15/15 MP | loss | 5 | - |
-| 10 | chieftains_raid | floodplains | 50/52 HP, 15/15 MP | 50/50 HP, 1/15 MP | win | 3 | - |
-| 11 | awakened_boss | deep_tunnels | 51/51 HP, 15/15 MP | 42/51 HP, 0/15 MP | win | 5 | - |
-| 12 | vault_boss_slot | trapped_halls | 53/55 HP, 16/16 MP | 53/53 HP, 0/16 MP | win | 6 | - |
-| 13 | seal_warden_alcove | trapped_halls | 54/54 HP, 16/16 MP | 0/54 HP, 0/16 MP → rollback 54/54 HP, 16/16 MP | loss | 5 | mending_draught |
-| 14 | ruin_guardian | ruin_surface | 54/54 HP, 16/16 MP | 37/54 HP, 0/16 MP | win | 3 | - |
-| 15 | seal_warden_alcove | trapped_halls | 57/59 HP, 16/16 MP | 35/57 HP, 0/16 MP | win | 9 | mending_draught; remedy_draught |
+| 10 | chieftains_raid | floodplains | 50/52 HP, 15/15 MP | 50/52 HP, 11/15 MP → rollback 50/50 HP, 15/15 MP | abandoned | None | - |
+| 11 | chieftains_raid | floodplains | 50/52 HP, 15/15 MP | 50/50 HP, 1/15 MP | win | 3 | - |
+| 12 | awakened_boss | deep_tunnels | 51/51 HP, 15/15 MP | 42/51 HP, 0/15 MP | win | 5 | - |
+| 13 | vault_boss_slot | trapped_halls | 53/55 HP, 16/16 MP | 53/53 HP, 0/16 MP | win | 6 | - |
+| 14 | seal_warden_alcove | trapped_halls | 54/54 HP, 16/16 MP | 0/54 HP, 0/16 MP → rollback 54/54 HP, 16/16 MP | loss | 5 | mending_draught |
+| 15 | ruin_guardian | ruin_surface | 54/54 HP, 16/16 MP | 37/54 HP, 0/16 MP | win | 3 | - |
+| 16 | seal_warden_alcove | trapped_halls | 57/59 HP, 16/16 MP | 35/57 HP, 0/16 MP | win | 9 | mending_draught; remedy_draught |
 
-Fights 15 (wins 8, losses 7); retried {'raskghar_scouts': ['loss', 'win'], 'awakened_boss': ['loss', 'loss', 'loss', 'loss', 'loss', 'win'], 'seal_warden_alcove': ['loss', 'win']}; sleeps 16; gold +105 -103 = 2; final 59/59 HP, 16/16 MP.
+Fights 16 (wins 8, losses 7, abandoned 1); retried {'raskghar_scouts': ['loss', 'win'], 'awakened_boss': ['loss', 'loss', 'loss', 'loss', 'loss', 'win'], 'chieftains_raid': ['abandoned', 'win'], 'seal_warden_alcove': ['loss', 'win']}; sleeps 16; gold +105 -103 = 2; final 59/59 HP, 16/16 MP.
 
 Sleeps: inn_upstairs bed → 33/33 HP; inn_upstairs bed → 33/33 HP, 13/13 MP; inn_upstairs bed → 33/33 HP, 14/14 MP; inn_upstairs bed → 44/44 HP, 14/14 MP; inn_upstairs bed → 44/44 HP, 14/14 MP; inn_upstairs bed → 48/48 HP, 14/14 MP; inn_upstairs bed → 50/50 HP, 15/15 MP; inn_upstairs bed → 51/51 HP, 15/15 MP; inn_upstairs bed → 53/53 HP, 16/16 MP; inn_upstairs bed → 54/54 HP, 16/16 MP; inn_upstairs bed → 54/54 HP, 16/16 MP; inn_upstairs bed → 54/54 HP, 16/16 MP; inn_upstairs bed → 53/53 HP, 16/16 MP; inn_upstairs bed → 54/54 HP, 16/16 MP; inn_upstairs bed → 57/57 HP, 16/16 MP; inn_upstairs bed → 59/59 HP, 16/16 MP
-Recovery outside combat: deep_tunnels item_use:fine_meal 44/44 HP, 14/14 MP → 44/44 HP, 14/14 MP; deep_tunnels item_use:fine_meal 44/44 HP, 14/14 MP → 44/44 HP, 14/14 MP; deep_tunnels item_use:fine_meal 3/44 HP, 0/14 MP → 11/44 HP, 4/14 MP; deep_tunnels item_use:fine_meal 3/44 HP, 0/14 MP → 11/44 HP, 4/14 MP; deep_tunnels item_use:fine_meal 11/44 HP, 4/14 MP → 19/44 HP, 8/14 MP; deep_tunnels item_use:fine_meal 11/44 HP, 4/14 MP → 19/44 HP, 8/14 MP; deep_tunnels item_use:fine_meal 19/44 HP, 8/14 MP → 27/44 HP, 12/14 MP; deep_tunnels item_use:fine_meal 19/44 HP, 8/14 MP → 27/44 HP, 12/14 MP; deep_tunnels item_use:hot_meal 27/44 HP, 12/14 MP → 33/44 HP, 12/14 MP; deep_tunnels item_use:hot_meal 27/44 HP, 12/14 MP → 33/44 HP, 12/14 MP; deep_tunnels item_use:hot_meal 33/44 HP, 12/14 MP → 39/44 HP, 12/14 MP; deep_tunnels item_use:hot_meal 33/44 HP, 12/14 MP → 39/44 HP, 12/14 MP; deep_tunnels item_use:hot_meal 39/44 HP, 12/14 MP → 44/44 HP, 12/14 MP; deep_tunnels item_use:hot_meal 39/44 HP, 12/14 MP → 44/44 HP, 12/14 MP; deep_tunnels item_use:fine_meal 42/52 HP, 0/15 MP → 50/52 HP, 4/15 MP; deep_tunnels item_use:fine_meal 42/52 HP, 0/15 MP → 50/52 HP, 4/15 MP; inn item_use:fine_meal 37/57 HP, 0/16 MP → 45/57 HP, 4/16 MP; inn item_use:fine_meal 37/57 HP, 0/16 MP → 45/57 HP, 4/16 MP
+Recovery outside combat: deep_tunnels item_use:fine_meal 44/44 HP, 14/14 MP → 44/44 HP, 14/14 MP; deep_tunnels item_use:fine_meal 3/44 HP, 0/14 MP → 11/44 HP, 4/14 MP; deep_tunnels item_use:fine_meal 11/44 HP, 4/14 MP → 19/44 HP, 8/14 MP; deep_tunnels item_use:fine_meal 19/44 HP, 8/14 MP → 27/44 HP, 12/14 MP; deep_tunnels item_use:hot_meal 27/44 HP, 12/14 MP → 33/44 HP, 12/14 MP; deep_tunnels item_use:hot_meal 33/44 HP, 12/14 MP → 39/44 HP, 12/14 MP; deep_tunnels item_use:hot_meal 39/44 HP, 12/14 MP → 44/44 HP, 12/14 MP; deep_tunnels item_use:fine_meal 42/52 HP, 0/15 MP → 50/52 HP, 4/15 MP; inn item_use:fine_meal 37/57 HP, 0/16 MP → 45/57 HP, 4/16 MP
 Equipment: floodplains relcs_spare_spear 44/44 HP, 14/14 MP → 44/44 HP, 14/14 MP; street hunters_fang_talisman 44/44 HP, 14/14 MP → 44/44 HP, 14/14 MP; inn_upstairs leather_jerkin 44/44 HP, 12/14 MP → 44/48 HP, 12/14 MP; street traveler_charm 48/48 HP, 14/14 MP → 48/50 HP, 14/14 MP; deep_tunnels armor 42/51 HP, 0/15 MP → 42/47 HP, 0/15 MP; deep_tunnels leather_jerkin 42/47 HP, 0/15 MP → 42/51 HP, 0/15 MP; deep_tunnels moonhide_fetish 42/51 HP, 0/15 MP → 42/52 HP, 0/15 MP; inn accessory_1 37/54 HP, 0/16 MP → 37/54 HP, 0/16 MP; inn accessory_2 37/54 HP, 0/16 MP → 37/52 HP, 0/16 MP; inn moon_bone_amulet 37/52 HP, 0/16 MP → 37/55 HP, 0/16 MP; inn guardian_ward_fragment 37/55 HP, 0/16 MP → 37/57 HP, 0/16 MP
-Reloads: defeat@deep_tunnels; defeat@deep_tunnels; defeat@deep_tunnels; defeat@deep_tunnels; defeat@deep_tunnels; defeat@deep_tunnels; @floodplains; defeat@trapped_halls
+Reloads: defeat@deep_tunnels; defeat@deep_tunnels; defeat@deep_tunnels; defeat@deep_tunnels; defeat@deep_tunnels; defeat@deep_tunnels; load@floodplains; defeat@trapped_halls
 Gold: dirty_table +1→1; serving_tray +1→2; patron_serving +2→4; selys_delivery +3→7; olesm_intro +6→13; goblin_encounter_1 +2→15; krshia_crate -14→1; zevara_intro +3→4; zevara_intro +4→8; krshia_crate -5→3; chieftains_raid +5→8; olesm_intro +5→13; olesm_intro +15→28; zevara_intro +10→38; krshia_crate -18→20; riverfarm_witch -18→2; riverfarm_field_board +2→4; invrisil_fixer -1→3; invrisil_fixer -1→2; invrisil_wilovan +25→27; selys_delivery +5→32; selys_delivery -10→22; krshia_sell +8→30; krshia_crate -18→12; pallass_market_clerk -2→10; pallass_forge_clerk -5→5; patron_serving +2→7; dirty_table +1→8; serving_tray +1→9; patron_serving +2→11; dirty_table +1→12; serving_tray +1→13; pallass_grimalkin -8→5; pallass_forge_clerk -3→2

@@ -181,10 +181,10 @@ records the current residue, including #578's 68 unauthored Act III rows.
 | 14 | alley_footpads_b | mercantile_alleys | 40/49 HP, 0/16 MP | 24/49 HP, 0/16 MP | win | 2 | - |
 | 15 | seal_warden_alcove | trapped_halls | 48/50 HP, 17/17 MP | 4/50 HP, 0/17 MP | win | 7 | remedy_draught |
 
-Fights 15 (wins 12, losses 3); retried {'vault_boss_slot': ['loss', 'loss', 'win'], 'ruin_guardian': ['loss', 'win']}; sleeps 14; gold +89 -89 = 0; final 50/50 HP, 17/17 MP.
+Fights 15 (wins 12, losses 3, abandoned 0); retried {'vault_boss_slot': ['loss', 'loss', 'win'], 'ruin_guardian': ['loss', 'win']}; sleeps 14; gold +89 -89 = 0; final 50/50 HP, 17/17 MP.
 
 Sleeps: inn_upstairs bed → 43/43 HP; inn_upstairs bed → 45/45 HP, 12/12 MP; inn_upstairs bed → 46/46 HP, 13/13 MP; inn_upstairs bed → 49/49 HP, 13/13 MP; inn_upstairs bed → 49/49 HP, 13/13 MP; inn_upstairs bed → 42/42 HP, 14/14 MP; inn_upstairs bed → 49/49 HP, 14/14 MP; inn_upstairs bed → 49/49 HP, 15/15 MP; inn_upstairs bed → 49/49 HP, 16/16 MP; inn_upstairs bed → 49/49 HP, 16/16 MP; inn_upstairs bed → 49/49 HP, 16/16 MP; inn_upstairs bed → 49/49 HP, 17/17 MP; inn_upstairs bed → 49/49 HP, 17/17 MP; inn_upstairs bed → 50/50 HP, 17/17 MP
 Recovery outside combat: none
 Equipment: floodplains relcs_spare_spear 43/43 HP → 43/43 HP; trapped_halls phosphor_pendant 42/42 HP, 14/14 MP → 42/45 HP, 14/14 MP; trapped_halls moonhide_fetish 42/45 HP, 14/14 MP → 42/46 HP, 14/14 MP; trapped_halls moon_bone_amulet 42/46 HP, 14/14 MP → 42/49 HP, 14/14 MP; inn_upstairs accessory_2 49/49 HP, 17/17 MP → 48/48 HP, 17/17 MP; inn_upstairs guardian_ward_fragment 48/48 HP, 17/17 MP → 48/50 HP, 17/17 MP
-Reloads: defeat@trapped_halls; defeat@trapped_halls; defeat@ruin_surface; @mercantile_alleys
+Reloads: defeat@trapped_halls; defeat@trapped_halls; defeat@ruin_surface; load@mercantile_alleys
 Gold: goblin_encounter_1 +2→2; selys_delivery +4→6; olesm_intro +6→12; olesm_intro +5→17; olesm_intro +15→32; zevara_intro +3→35; zevara_intro +4→39; zevara_intro +10→49; krshia_crate -18→31; pisces_magic -5→26; riverfarm_witch -18→8; riverfarm_field_board +2→10; invrisil_fixer -1→9; invrisil_fixer -1→8; invrisil_wilovan +25→33; selys_delivery +5→38; selys_delivery -10→28; krshia_sell +8→36; krshia_crate -18→18; pallass_market_clerk -2→16; pallass_forge_clerk -5→11; pallass_grimalkin -8→3; pallass_forge_clerk -3→0
