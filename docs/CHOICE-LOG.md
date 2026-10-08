@@ -168,7 +168,9 @@ and chronology belong in issue PRs. Earlier context:
 - **#513 (2026-10-07):**
   - show the shortfall on locked fee rows;
   - fix the delivery gold toast;
-  - offer standing deliveries every waking;
+  - offer standing deliveries every waking: one rotating standing slip joins
+    the 3-slot window whenever it holds none (rejected: all three always,
+    7 cards and overlong board pages);
   - add a Pallass side quest with a sizable gold or sellable-loot reward and/or
     a Pallass Runner's Guild.
   Rejected: another grinding job.
