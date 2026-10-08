@@ -5,6 +5,11 @@ Analysis date: 2026-10-05. Source snapshot:
 Scope: the approved capacity direction in [#570](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/570)
 and the [recovery plan](2026-10-05-persistent-vitals-recovery-plan.md).
 
+The tables below describe this snapshot. #514 later lowered Hedault products'
+resonance and moved the wands' damage point to spell power
+([514-gear-rules.md](514-gear-rules.md) §8), so `--check` against a later tree
+reports that drift.
+
 Recommend **4 at creation, 5 after the existing once-only sleep growth** for
 the implementation candidate. Actual catalog combinations show a useful
 additional enchanted item at each boundary while retaining three accessory

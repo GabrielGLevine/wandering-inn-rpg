@@ -984,7 +984,7 @@ func _gear_comparison_lines(item_id: String, rec: Dictionary, equipped_here: boo
 	if kind != "weapon" and kind != "armor" and kind != "accessory":
 		return lines
 	if not equipped_here:
-		var plan := Game.sim.equip_plan(item_id)
+		var plan: Dictionary = Game.sim.equip_plan(item_id)
 		if kind == "accessory" or int(plan["resonance"]) != Game.sim.resonance_used():
 			var plan_line := WIEffectText.equip_plan_line(plan)
 			if plan_line != "":

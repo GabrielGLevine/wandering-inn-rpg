@@ -1949,7 +1949,7 @@ SKILL_CODE_GRANTS = {
 		"[Pack Bond] folds it onto the COMPANION's kit"),
 }
 ITEM_CODE_GRANTS = {
-	"flarepepper_powder": ("src/core/wi_game.gd", 3308,
+	"flarepepper_powder": ("src/core/wi_game.gd", 3349,
 		"[Supplies: Flarepepper Powder] restocks one per rest"),
 }
 

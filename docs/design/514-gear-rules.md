@@ -143,13 +143,15 @@ attribute names.
 | Skill card, `damage_mult` | "×2 damage" | unchanged (it multiplies the weapon hit) |
 | Inventory detail, damage item | — | "Improves your attacks, [Power Strike] and [Crescent Cut]." (the Skills you would hold with it equipped) |
 | Inventory detail, spell item | — | "Improves your [Frost Bolt] and [Flame Jet]." or "Improves none of your current Skills." |
-| Inventory detail, unworn equipment | — | "If worn: Resonance 3/4" or "If worn: Resonance 6/5, more than you can hold" or "No free accessory position" |
+| Inventory detail, unworn accessory (or any piece whose swap would move the total) | — | "If worn: Resonance 3/4", "If worn: Resonance 5/4, more than you can hold" or "If worn: no free accessory slot", drawn above the reach line |
 | Hedault option preview (swap) | product card | product card with "Resonance 1 → 0" in place of its resonance line when the trueing lowers it |
 | Sleep-beat toast | "…before the pieces start arguing…" | "Resonance is how much enchantment you can wear at once. Stronger pieces take more of it, and crude work argues louder than its strength; a properly trued piece keeps quiet. Yours grew by one in the night. The anchor stone paid for it." |
 
 The "If worn" line and `equip()` share one plan function (slot choice,
 displaced-slot subtraction, capacity check), so the preview and the refusal
-cannot disagree. The equip-refusal toast keeps its ratified copy. The four
+cannot disagree. Weapons and armour cannot move the total, so they show only
+the reach line. The combat HUD's slot record carries each Skill's weapon gate,
+so the bar's readout and the journal compose the same source tag. The equip-refusal toast keeps its ratified copy. The four
 trued accessories' descriptions gain one sentence of quiet-craft fiction.
 
 ## 5. Implementation map
@@ -168,6 +170,8 @@ trued accessories' descriptions gain one sentence of quiet-craft fiction.
   `equip_plan()`, shared by `equip()` and the preview, and `gear_reach()`.
 - `effect_text.gd`, `dialogue.gd`, `inventory.gd`: the wording in §4.
 - `sleep_beat.gd`: the toast.
+- `combat_hud.gd`: the slot record carries `weapon`. The combat snapshot exposes
+  per-combatant `damage_mod` and `spell_power` for QA.
 - `data/items.json`: wand stats, Hedault resonance, `trued_from` and
   descriptions (surgical edits, `data_lint` before and after).
 - Harness builders (`sim_combat_batch._build_pc` and the loadout loop,
@@ -230,7 +234,106 @@ Doctrine bindings:
 
 ## 8. Measurements
 
-Pending: filled in after implementation from the legs above.
+Base `69bd9cf5` against `cf3e680a`, the last commit that touches combat
+resolution or data; later commits change UI, QA, wording and the combat
+snapshot only. Every leg ran 100 seeds, exited 0, printed its success marker
+and logged no engine noise.
+
+| Leg | Base | Branch | Cells moved |
+|---|---|---|---|
+| `sim_combat_batch` rested (gated bands) | PASS, 147 cells | PASS; log byte-identical | 0 |
+| `WI_POLICY=competent` (ladder gate) | PASS, 0.88 > 0.89 > 0.87 > 0.70 | identical | 0 |
+| `WI_ENTRY_FRACTION=0.75` | report | byte-identical | 0 |
+| `sim_spine_viability` (5 calibration, 5 climaxes, 2 ruled) | PASS | log byte-identical | 0 |
+| `sim_progression_pace` floor | PASS | byte-identical | none |
+| `sim_progression_pace` competent | PASS | ranger spine only | see below |
+
+`harness_entry_report.py` against the base logs: rested, competent and 0.75
+read the same 147 cells at the same rates on both trees. The summaries are
+mean drop vs rested 0.000 / −0.070 / 0.209 and cells below 0.55 48 / 39 / 90,
+each identical to base.
+
+The only change is in the competent pace leg's ranger spine (archer then
+sharpshooter, bow at every act):
+
+- Act III: p10 total level 17 → 18; the p50 build reads sharpshooter11/warrior7
+  where it read sharpshooter11/warrior8; ranged_hit p50 73 → 74.
+- Act V: ranged_hit p50 159 → 158.
+- No other spine moved.
+
+**Why the gated matrix cannot move.**
+
+- No harness build wears an implement, so spell power is 0 in every cell.
+- Both policies fire a line only when it would cross two or more enemies and no
+  ally (`WICombatAI._act_line`). A scratch count of the competent leg's gated-line
+  holders found zero casts in 100 fights each: swordsman14_solo ([Crescent Cut]),
+  spearmaster14_solo ([Pierce Thrust]), sharpshooter14_solo ([Piercing Shot],
+  [Piercing Volley]) and side_vault_construct_t5_swordsman14_solo. The floor
+  policy never casts a line.
+- The pace sim's ranger spine is the one measured place a gated line fires.
+
+**Gated bands:** all hold. No band was widened and no encounter, seed or
+window was touched. No lever was pulled and there is no STOP.
+
+### Spell power (`tests/_spell_power_probe.gd`)
+
+The caster cells at spell power 0–3, and with each wand worn. "Pre" is the
+wand as it shipped before #514 (one inert point of weapon damage), so
+pre → shipped is the ruling's effect on a wand-wearer. The sp0 column
+reproduces the matrix exactly.
+
+| Cell | Policy | sp0 | sp1 | sp2 | sp3 | Graveflame pre | Graveflame | Lichbone pre | Lichbone |
+|---|---|---|---|---|---|---|---|---|---|
+| second_wind / fire_mage14_solo | dumb | 0.74 | 0.77 | 0.81 | 0.81 | 0.82 | 0.81 | 0.90 | 0.91 |
+| second_wind / fire_mage14_solo | competent | 0.79 | 0.83 | 0.85 | 0.85 | 0.85 | 0.86 | 0.92 | 0.93 |
+| second_wind / ice_mage14_solo | dumb | 0.60 | 0.61 | 0.63 | 0.64 | 0.70 | 0.65 | 0.80 | 0.71 |
+| second_wind / ice_mage14_solo | competent | 0.51 | 0.53 | 0.54 | 0.54 | 0.62 | 0.60 | 0.72 | 0.62 |
+| encounter / mage3_necromancer3_goblin_ambush_solo | dumb | 0.57 | 0.73 | 0.77 | 0.80 | 0.64 | 0.75 | 0.72 | 0.88 |
+| encounter / mage3_necromancer3_goblin_ambush_solo | competent | 0.65 | 0.77 | 0.78 | 0.81 | 0.84 | 0.85 | 0.90 | 0.92 |
+| encounter / mage5_necromancer7_raskghar_scouts_solo | dumb | 0.72 | 0.74 | 0.78 | 0.79 | 0.83 | 0.79 | 0.93 | 0.94 |
+| encounter / mage5_necromancer7_raskghar_scouts_solo | competent | 0.64 | 0.66 | 0.70 | 0.70 | 0.74 | 0.71 | 0.82 | 0.83 |
+| encounter / mage3_necromancer3_goblin_ambush_with_skeleton | dumb | 0.62 | 0.73 | 0.75 | 0.78 | 0.68 | 0.74 | 0.77 | 0.81 |
+| encounter / mage3_necromancer3_goblin_ambush_with_skeleton | competent | 0.46 | 0.55 | 0.57 | 0.58 | 0.55 | 0.55 | 0.66 | 0.66 |
+| encounter / mage5_necromancer7_raskghar_scouts_with_skeleton | dumb | 0.92 | 0.92 | 0.92 | 0.92 | 0.94 | 0.93 | 0.96 | 0.95 |
+| encounter / mage5_necromancer7_raskghar_scouts_with_skeleton | competent | 0.92 | 0.92 | 0.92 | 0.92 | 0.94 | 0.93 | 0.95 | 0.94 |
+| encounter / druid14_raskghar_scouts_with_wolf | dumb | 0.90 | 0.91 | 0.93 | 0.94 | 0.90 | 0.91 | 0.95 | 0.97 |
+| encounter / druid14_raskghar_scouts_with_wolf | competent | 0.90 | 0.90 | 0.93 | 0.94 | 0.92 | 0.90 | 0.96 | 0.98 |
+| ruin / briar_arch_wards_mage11_relc | dumb | 0.65 | 0.78 | 0.84 | 0.85 | 0.78 | 0.85 | 0.86 | 0.91 |
+| ruin / briar_arch_wards_mage11_relc | competent | 0.54 | 0.58 | 0.63 | 0.66 | 0.93 | 0.95 | 0.96 | 0.98 |
+| ruin / briar_arch_wards_mage11_solo | dumb | 0.38 | 0.40 | 0.43 | 0.49 | 0.55 | 0.49 | 0.63 | 0.56 |
+| ruin / briar_arch_wards_mage11_solo | competent | 0.09 | 0.08 | 0.08 | 0.08 | 0.47 | 0.41 | 0.57 | 0.43 |
+| composition / goblin_ambush | dumb | 0.98 | 0.98 | 1.00 | 1.00 | 0.98 | 0.98 | 1.00 | 1.00 |
+| composition / goblin_ambush | competent | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
+| composition / chieftains_raid | dumb | 0.84 | 0.85 | 0.85 | 0.85 | 0.86 | 0.87 | 0.88 | 0.89 |
+| composition / chieftains_raid | competent | 0.72 | 0.73 | 0.73 | 0.75 | 0.76 | 0.75 | 0.80 | 0.78 |
+
+Reading:
+
+- One point of spell power lifts the caster cells by 0.00–0.16; the
+  necromancer and briar-arch cells gain most.
+- Moving the wand's point from weapon damage to spell power is a sidegrade.
+  It rises where the build casts (mage3_necromancer3 0.64 → 0.75 floor) and
+  falls where an out-of-MP caster bonks (ice_mage14 0.70 → 0.65 floor,
+  briar_arch_wards_mage11_solo 0.47 → 0.41 competent).
+- With the Lichbone Wand, druid14 (0.96 → 0.98) and briar_arch_wards_mage11
+  with Relc (0.96 → 0.98) sit above a 0.95 ceiling at competent. The
+  pre-#514 wand already put both there through its +3 HP and 1 DR, so spell
+  power adds 0.02.
+- None of these is a gated cell (every band is authored gearless), so the
+  wand values hold at 1 and 2.
+
+### Trueing
+
+No harness, spine or pace build carries a Hedault product, so the trueing
+values cannot move a measured cell. Their effect is capacity, proven in
+`tests/test_gear_rules.gd` and `hedault_trueing_loop`: Traveler's Charm plus
+Anchor Sliver is 4/4 and refuses the Hedge-Ward Charm. After the trueing the
+charm costs 0, and the same Hedge-Ward Charm fits at 4/4.
+
+`scripts/analysis/capacity_570.py --check` now differs from the dated #570
+table. Row D's three Hedault pieces cost 1, not 4, and wand flat damage moved
+to spell power. That table is a snapshot of `b1c4b02b`; it is not
+regenerated here.
 
 ## 9. Open questions
 

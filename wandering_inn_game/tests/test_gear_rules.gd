@@ -196,6 +196,21 @@ func _check_trueing() -> void:
 		assert(int(game.item(id)[WIKeys.RESONANCE]) == int(discount[id]), "%s resonance %d" % [id, discount[id]])
 		var source := game.item(String(game.item(id)[WIKeys.TRUED_FROM]))
 		assert(int(game.item(id)[WIKeys.RESONANCE]) <= int(source[WIKeys.RESONANCE]))
+	# Every trued product is exactly what one of Hedault's arms makes from its
+	# `trued_from` piece, and every such arm's product is marked.
+	var swaps := {}
+	for opt: Dictionary in (_load("res://data/dialogue/hedault_enchanting.json")["nodes"]["hub"]["options"] as Array):
+		var removed := ""
+		var made := ""
+		for effect: Dictionary in opt.get("effects", []):
+			removed = String(effect.get("remove_item", removed))
+			made = String(effect.get("item", made))
+		if removed != "" and made != "":
+			swaps[made] = removed
+	for id: String in discount:
+		assert(swaps.get(id, "") == String(game.item(id)[WIKeys.TRUED_FROM]), "%s is trued from what Hedault consumes" % id)
+	for made: String in swaps:
+		assert(discount.has(made), "Hedault product %s carries a pinned trueing" % made)
 
 	# Real route: a full loadout refuses one more charm until Hedault trues one.
 	game.resonance_capacity = 4

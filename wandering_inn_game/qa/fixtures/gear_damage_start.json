@@ -1,5 +1,5 @@
 {
- "_comment": "#514 gear-damage fixture: an [Archer] L4 (so [Piercing Shot], the bow-gated line, is in the kit) standing at Krshia's stall (13,3) facing her, training_bow equipped (no weapon damage), 30 gold for the 18g hunting_bow. Same accomplishments as near_barracks so Relc's re-spar is offered; rng_state is near_barracks's derived seed-9 state.",
+ "_comment": "#514 gear-damage fixture: an [Archer] L4 (so [Piercing Shot], the bow-gated line, is in the kit) standing at Krshia's stall (13,3) facing her, training_bow equipped (no weapon damage), 30 gold for the 18g hunting_bow. ranged_hit 12 / won_combat 1 back [Archer] L4 (test_fixture_coherence); otherwise near_barracks's accomplishments, so Relc's re-spar is offered; rng_state is near_barracks's derived seed-9 state.",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -15,6 +15,8 @@
    "archer": 4
   },
   "accomplishments": {
+   "ranged_hit": 12,
+   "won_combat": 1,
    "reached_liscor": 1,
    "met_relc": 1,
    "sparred_with_relc": 1,
