@@ -32,9 +32,9 @@ history with no fixture, teleport, top-up or `combat_autoplay` step.
 - **Gold:** 144 gold came in and 144 went out. The mandatory fees were 84:
   catalyst 18, Invrisil stone 18, rumors 2 and Pallass 46. Xif's six bottles cost 60.
   The final purse is 0.
-- **Reading this table:** "Recovery outside combat" lists each of the two world
-  doses twice, because the tool records both `resources_changed` and
-  `item_use_settled`. "Reloads: @trapped_halls" is the pause-menu Load.
+- **Reading this table:** "Reloads: load@trapped_halls" is the pause-menu Load.
+  Regenerated at integration (`b68cda65` plus registration) with the ledger
+  tool that records each world dose once.
 
 | # | Encounter | Map | Entry | Exit | Result | Rounds | Items |
 |---|---|---|---|---|---|---|---|
@@ -47,10 +47,10 @@ history with no fixture, teleport, top-up or `combat_autoplay` step.
 | 7 | alley_footpads_b | mercantile_alleys | 36/36 HP, 19/19 MP | 30/36 HP, 0/19 MP | win | 2 | - |
 | 8 | seal_warden_alcove | trapped_halls | 38/38 HP, 19/19 MP | 25/38 HP, 0/19 MP, 2 doses | win | 4 | mana_potion (dose 1); mana_potion (dose 2) |
 
-Fights 8 (wins 8, losses 0); retried none; sleeps 12; gold +144 -144 = 0; final 38/38 HP, 19/19 MP.
+Fights 8 (wins 8, losses 0, abandoned 0); retried none; sleeps 12; gold +144 -144 = 0; final 38/38 HP, 19/19 MP.
 
 Sleeps: inn_upstairs bed → 32/32 HP, 12/12 MP; inn_upstairs bed → 32/32 HP, 14/14 MP; inn_upstairs bed → 32/32 HP, 15/15 MP; inn_upstairs bed → 32/32 HP, 16/16 MP; inn_upstairs bed → 36/36 HP, 16/16 MP; inn_upstairs bed → 36/36 HP, 17/17 MP; inn_upstairs bed → 36/36 HP, 19/19 MP; inn_upstairs bed → 36/36 HP, 19/19 MP; inn_upstairs bed → 36/36 HP, 19/19 MP; inn_upstairs bed → 38/38 HP, 19/19 MP; inn_upstairs bed → 38/38 HP, 19/19 MP; inn_upstairs bed → 38/38 HP, 19/19 MP
-Recovery outside combat: trapped_halls item_use:mana_potion 25/38 HP, 0/19 MP, 2 doses → 25/38 HP, 6/19 MP, 3 doses; trapped_halls item_use:mana_potion 25/38 HP, 0/19 MP, 2 doses → 25/38 HP, 6/19 MP, 3 doses; trapped_halls item_use:mana_potion 25/38 HP, 6/19 MP, 3 doses → 21/38 HP, 12/19 MP, 4 doses; trapped_halls item_use:mana_potion 25/38 HP, 6/19 MP, 3 doses → 21/38 HP, 12/19 MP, 4 doses
+Recovery outside combat: trapped_halls item_use:mana_potion 25/38 HP, 0/19 MP, 2 doses → 25/38 HP, 6/19 MP, 3 doses; trapped_halls item_use:mana_potion 25/38 HP, 6/19 MP, 3 doses → 21/38 HP, 12/19 MP, 4 doses
 Equipment: deep_tunnels moonhide_fetish 30/32 HP, 0/16 MP → 30/33 HP, 0/16 MP; street moon_bone_amulet 30/33 HP, 0/16 MP → 30/36 HP, 0/16 MP; street accessory_2 36/36 HP, 0/16 MP → 33/33 HP, 0/16 MP; street construct_core_shard 33/33 HP, 0/16 MP → 33/36 HP, 0/16 MP; inn guardian_ward_fragment 30/36 HP, 0/19 MP → 30/38 HP, 0/19 MP
-Reloads: @trapped_halls
+Reloads: load@trapped_halls
 Gold: goblin_encounter_1 +2→2; selys_delivery +4→6; olesm_intro +6→12; olesm_intro +5→17; olesm_intro +15→32; zevara_intro +3→35; zevara_intro +4→39; zevara_intro +10→49; krshia_crate -18→31; riverfarm_witch -18→13; riverfarm_field_board +2→15; invrisil_fixer -1→14; invrisil_fixer -1→13; invrisil_wilovan +25→38; invrisil_stationer_client +25→63; invrisil_house_steward +30→93; selys_delivery +5→98; selys_delivery -10→88; krshia_sell +8→96; krshia_crate -18→78; pallass_market_clerk -2→76; pallass_forge_clerk -5→71; pallass_grimalkin -8→63; pallass_forge_clerk -3→60; xif -10→50; xif -10→40; xif -10→30; xif -10→20; xif -10→10; xif -10→0

@@ -47,6 +47,7 @@ ABANDON = [
 	ev("ui_resources_rendered", surface="field", after=vit(30, 6)),
 	ev("item_use_settled", committed=True, item="mending_draught", context="field", before=vit(30, 6), after=vit(38, 6),
 		dose_number=0, exposure_after=0, ap_cost=0),
+	ev("resources_changed", reason="item_use", source="mending_draught", before=vit(30, 6), after=vit(38, 6)),
 	ev("combat_preparing", encounter="rats"),
 	ev("resources_changed", reason="combat_entry", source="rats", before=vit(38, 6), after=vit(38, 6)),
 	ev("combat_preparing", encounter="sneaked_past"),

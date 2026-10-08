@@ -23720,6 +23720,10 @@
   {
    "action": "dump_state",
    "label": "caster_ending_epilogue"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "caster_full_ending"
   }
  ]
 }

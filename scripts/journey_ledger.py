@@ -72,7 +72,7 @@ def build(events: list[dict]) -> dict:
 			elif reason == "equipment":
 				ledger["equipment"].append({"map": current_map, "source": payload.get("source"),
 					"before": payload.get("before"), "after": after})
-			elif fight is None and reason not in ("combat_action",):
+			elif fight is None and reason not in ("combat_action", "item_use"):
 				ledger["recovery"].append({"map": current_map, "reason": reason, "source": payload.get("source"),
 					"before": payload.get("before"), "after": after})
 			if fight is not None and reason == "combat_action" and after:
