@@ -1,506 +1,307 @@
 # Choice log
 
-Durable user/controller rulings for shipped and open work. The 2026-07-18
-user directive permits controller judgment on unreserved decisions.
+Durable user/controller rulings for shipped and open work, grouped by domain.
+The 2026-07-18 user directive permits controller judgment on unreserved
+decisions.
 
 Insertion: head within the relevant section. Amend existing entries; preserve
-the call, significant rejected alternative and reason. Evidence and chronology
-belong in issue PRs. Earlier context: `git show 1aee127d:docs/CHOICE-LOG.md`,
-merged PRs and `git log -p -- docs/CHOICE-LOG.md`.
+the call, significant rejected alternative and reason. Evidence, measurements
+and chronology belong in issue PRs. Earlier context:
+`git show 1aee127d:docs/CHOICE-LOG.md`, merged PRs and
+`git log -p -- docs/CHOICE-LOG.md` (compacted 2026-10-07).
 
 ## Open decisions
 
-- **#19 — Steam commercial gate:** free-on-Steam is recommended. A paid path
+- **#19 Steam commercial gate:** free-on-Steam is recommended. A paid path
   requires pirateaba's explicit permission before store or release work.
-
-- **[Blademaster]'s aspiration — naming ruling wanted (2026-08-14).**
-  `data/classes.json` still points the class at "the title of
-  [Swordmaster]", but the canon spike
-  (`docs/superpowers/spike/wiki-warrior-line.md:91`) puts
-  `[Blademaster]` ALONGSIDE `[Swordmaster]`, not beneath it — the text
-  now aims a class at a peer. Keep it, promote to `[Sword Saint]`, or
-  retire it. The ruled rename ships ahead of this.
+- **#452/#347:** doctrine-spec ratification and dynamic unique classes keep
+  their user gates; #347 is deferred.
+- **#584:** music adds and the swish-on-miss change need an explicit ear
+  verdict; new footsteps, beds and foley are ear-checked in place.
 
 ## Current product and system rulings
 
-### User rulings 2026-10-07 (journeys, gear, combat, economy)
+### Balance and encounter doctrine
 
-- **#571 journeys:** walls may be retried after defeat and cleared with existing
-  optional content, all logged; no tuning, new content or XP-only repeats.
-  #586's exact shutdown particle-shader leak lines (headless and windowed) are
-  nonblocking; `qa/noise_scan.sh` owns them.
-- **#494 resonance:** power budget stays; Hedault's trueing lowers an item's
-  resonance (craft discount); the toast text is reworded to match. Implemented
-  by #514.
-- **#495 gear damage:** weapon-gated physical Skills take the weapon's
-  `damage_mod` and scale off STR; spells and blasts keep INT and gain a new
-  caster spell-power stat on implements. A re-window event; implemented by #514.
-- **#453 hurt entry:** keep chokepoint balance; signpost a reachable rest
-  before each chokepoint when the player approaches hurt. No stat tuning.
-- **#591:** diagonal melee past a blocked corner is allowed for everyone.
-- **#590:** Olesm's seal-funding option requires the warden down (#440 holds).
-- **#513:** show the shortfall on locked fee rows, fix the delivery gold toast,
-  offer standing deliveries every waking, and add a Pallass side quest with a
-  sizable gold or sellable-loot reward and/or a Pallass Runner's Guild.
-- **#588/#589:** desktop Skills readout overlays the world, capped below the
-  followed player (`responsive-layout.md`); the toggle reads "Show/Hide Skills".
-- **Mobile acceptance** (#511, #504–#506, #510, #253, #585) stays deferred.
+- **No build auto-wins; QA proves completability, sims prove balance.**
+  Dumb-autoplay victory pins were a ratchet that shipped fights a tier easy.
+  Tune against the competent-policy-at-band column; pinned combat canonicals
+  use fixtures at or over band so the weakest policy wins deterministically.
+  **Never tune an encounter to green an autoplay pin.** A build no tuning can
+  make win is a red flag to surface, not to tune around.
+- **Combat chokepoints are sanctioned leveling gates.** Acts must require
+  leveling; an unwinnable spine fight is the signal to do side content. Civil
+  spines are expected to multiclass into a martial line for climax fights
+  (ruled option c); their climax losses are design, and the civil pace
+  overshoot (G6) is the multiclass level budget.
+- **Ruled bands gate in CI via `RULED_WINDOWS`** at 100 seeds on both edges,
+  with documented per-row `RULED_SLACK`. Never widen a reference window or use
+  a 0.5 categorical the defect shape would pass.
+- **Hurt entry (#453, 2026-10-07):** chokepoints collapse when entered
+  depleted. Keep balance as is; signpost a reachable rest before each
+  chokepoint when the player approaches hurt. Rejected (option presented):
+  retuning for hurt entry, which would move ruled windows.
+- **The main-quest stop ladder is gated on the competent column**, restored by
+  `hired_blades` composition with frozen stat blocks. The wiring pin (all
+  rungs measured) is hard on every leg.
+- **Spine builds must be holdable.** `derived_stat_bonuses` has no table-floor
+  check, and Acts I–IV levels 2/3/5/7 precede evolved floors of 10. Evolved
+  parents in `parent_lines` follow #449's spear-owned convention; future
+  evolved-lineage targets need the holdable-line walk, including all of
+  spellspear III. Over-levelled harness builds are fixed, not relabelled.
+- **[Ranger]'s Warden wall gets a kit-gap lane;** binding: it must not push any
+  other cell above 0.85. **Skirmisher walls are a kit/Skill gap:** measure what
+  the spearmaster x archer spine lacks at act2 and act5, propose additions
+  (names via the clearance flow), implement to window.
+- **`act2_cistern_nest` 0.40 is an accepted mid-act wall.** Rejected: the
+  cheapest reaching edit trades one wall for two ceiling breaches, and Acts
+  I–IV measure parent lines, so a pre-consolidation wall is correct. Cisterns
+  and `arc_flow` headroom flags are monitors.
+- **The six window-drift cells are one re-window lane;** the same lane repairs
+  `beast_master14` by broadening growth to con 1 + str 1, while the flat-growth
+  rule itself stands. wild_sage V is the NO-AUTO-WIN case: keep druid in
+  window and surface wild_sage V rather than strengthen the counter, which
+  drops druid below floor.
+- **spellspear/skirmisher I/IV are accepted corrected measurements, parked.**
+  Capping [Piercing Strikes] once per round would reauthor steel-thread victory
+  pins, so it needs a budgeted lane.
+- **Act V capstone:** trim capstone growth and/or raise Warden difficulty, then
+  give too-weak spines composition or kit relief; Warden-side movement is a
+  sanctioned frozen-block exception.
+- **Tactician-split Act V ceiling:** fix without trivialising the climax, using
+  measurement-led composition/class-data levers only; STOP and report if the
+  window is unreachable without policy or frozen-stat movement.
+- **The Warden gains a counter to companions**, not a companion nerf: the wolf
+  is the spine's identity, and a companion-threatening boss generalises.
+- **Relc's veto (#448)** branches to a hard solo fight at 0.35–0.45
+  competent-at-band via a different solo composition, without trivialising
+  the with-Relc fight (measured 0.78). It is a hard-mode choice, not a trap or
+  a free skip.
+- **#451:** the once-per-round cap at L2 ships alone; [Improved Counter Strike]
+  waits for a martial-table adjudication.
 
-### User rulings 2026-10-05 (resources and capacity)
+### Combat rules and gear
 
-- **#565:** HP/MP persist between battles; actual sleep refills. Inn meals,
-  relevant held-Skill cooking, inventory food and potions can restore them. Combat
-  potions cost AP; excess MP potion use causes mana poisoning/HP loss. Show current/max HP/MP
-  and preparation. The [plan](design/2026-10-05-persistent-vitals-recovery-plan.md)
-  owns sequencing; gameplay is not implemented.
-- **#570:** expand resonance independently of #494/#495; retain Hedault's
-  flat/lower-cost upgrade direction. No extra physical gear positions selected.
-  Proposed 1 AP potions, 3 safe MP doses/waking then 4 HP excess loss, capacity 4→5
-  at the existing once-only beat need measurement; they are not numeric/cadence rulings. Preserve #432 meal caps and
-  repeatable cooking.
+- **#495 gear damage (2026-10-07):** weapon-gated physical Skills take the
+  weapon's `damage_mod` and scale off STR. Spells and blasts keep INT and gain
+  a new caster spell-power stat on implements. Implemented by #514 as one
+  re-window. Rejected (options presented): `damage_mod` at full weight on every
+  arm including spells (largest re-window), and keeping melee-only (no gear
+  path for Skill users or casters).
+- **#494 resonance (2026-10-07):** a power budget, with stronger gear costing
+  more. Hedault's trueing lowers an item's resonance (a craft discount, matching
+  canon's "better craft interferes less"), and the toast is reworded to match.
+  Rejected: inverse-quality repricing of all 26 enchanted items with every
+  affected spine re-measured.
+- **#570:** capacity grows at the existing once-only beat, independently of the
+  semantic ruling; no extra physical gear positions are selected.
+- **#591 (2026-10-07):** diagonal melee past a blocked corner is allowed for
+  everyone. Rejected (option presented): blocking it for all, which removes
+  enemy attacks and forces a re-measure.
+- **Worn-accessory abilities are known while worn;** the field bar re-renders
+  on equip, and effect text drops "in combat" exactly for field-capable
+  abilities. Rejected: a Warden retune (erases the intended wall), a mage-grind
+  route, or shipping a red finale.
+- **Equipment:** the nine-item sketch
+  (`docs/superpowers/specs/2026-08-13-equipment-gaps-design.md`) implements
+  under its balance rails, and missing gear is added across tracks (spear first) through vendors,
+  loot, treasure, quest rewards and Hedault upgrades. Domination defects are
+  fixed as defects.
 
-### User rulings 2026-10-05 (holistic art)
+### Classes, Skills and naming
 
-- **#564/#554:** best art wins per asset within a coherent scene. Owned replaces licensed
-  art when better at gameplay scale; otherwise retain official primary/owned
-  public fallback. READY is not acceptance; no quota wiring.
-- Sprite animation/geometry/scale/anchor swap together. Terrain inherits the
-  original parent before complete fallback selection with owned coordinates.
-- Retain the 16px grid and gameplay identities; recompose inn/regions, add Invrisil's
-  cross-street/Pallass's lower-city depth per
-  `docs/design/2026-10-05-holistic-art-review.md`. Unsuitable rigs/physical devices remain
-  explicit coverage records.
+- **Consolidation is automatic** (supersedes the #472 choice request). It never
+  removes Skills (upgrades are allowed), and advancement paths stay open because
+  consolidated classes carry their parents' lineage credit.
+- **Evolved lineages consolidate into their own unique classes** (#449:
+  spearmaster + mage → [Spellspear]). Rejected: evolved parents reusing the
+  base target (erases lineage identity), and deferring evolution while
+  consolidation is in reach.
+- **#347 doctrine (ratified):** authored uniques with derived triggers; every
+  consolidation-eligible lineage pair resolves to a unique authored target.
+  Generative-at-runtime classes stay NO-BUILD.
+- **Coverage before go-live:** a reuse pair ships only when its coverage is
+  authored (rows proving no Skill loss), not via a `maps_to` note.
+  Necromancer is consolidation-eligible (warrior-line x necromancer family;
+  spear owns its hybrids). Orphan mappings are approved as inventoried, with
+  swordsman x mage-line into [Spellsword]. #452 ships unnamed orphans as
+  `_exempt` rather than scaffolding them silently.
+- **Naming (#485):** blanket GO for proposed first-order names. Wiki-verify at
+  build still binds, post-bar hits return for clearance, and a later user edit
+  supersedes a shipped display name (ids freeze at release cut only). Base x
+  base pairs keep the base target; evolved or elemental pairs earn distinct
+  names. Swordsman displays as [Blademaster], whose aspiration becomes [Sword
+  Saint] (wiki-verify at build). Class and Skill names past the Book 17 bar are
+  proposable with user clearance; content spoilers stay barred. Renames change
+  a class's renders, never common-noun prose that shares the word.
+- **[Ice Floor] is one dual-context id** (`icy_floor`). **[Rope Arrow]** is the
+  display name for `rope_work`. **[Pick Lock]** is a rogue L2 active for literal
+  locks only (not bars, tripwires or wedged crates), debuting at Hedault's work
+  room with a legitimate non-Skill trust route.
+- **Grants:** [Dangersense] at rogue L4 (warrior L5 already); [Firefly]/`kindle`
+  at hedge_witch L2; [Snap Freeze]/`frost_touch` at hedge_witch L4. [Flame Jet]
+  has field `burns`. [Durable Picks] waits for a labour-line class.
+- **Martial allocation:** [Greater Strength] stays; [Power Strike] and
+  [Piercing Strikes] are combat-only; [Basic Repair] is helper L2; [Basic
+  Swordwork] owns the sword-gated `cuts` field action via `field_weapon`.
+- **#450:** [Evil Eye] gains `field: true` and an occult ambient read. Free
+  scenery reads apply to armless props only; armed props keep their interact
+  action, except danger-bearing ones, which the trap-perception family covers.
+  Passive tactic Skills tally at their proc site, and actives tally on use.
+  Rejected: a new free-inspection mechanism, and an ap_cost-0 activation engine
+  (every passive would become slottable).
+- **Property effects stay declarative:** `cell_properties` replaced the freeze
+  flag; verbs widen deliberately; target counters can override the default;
+  one Skill use may bank several accomplishments.
 
-### User rulings 2026-10-04 (M1)
+### Recovery, items and economy
 
-- **#508 approved:** deliberate drainage-cover use plus actual crossing earns
-  covered-crossing credit after goblin defeat. Bare/prop-only visits earn none;
-  once per crossing/waking, no respawn, Rogue only at sleep. Live-danger credit
-  still needs a threat. `docs/design/rogue-recovery-proposal.md` owns details.
-- **#507 approved:** selected race/gender footer beneath unlabeled art states
-  appearance only; difficulty explanation beneath its prompt; keep Settings Help.
-- **M1 acceptance retained:** physical iPhone Safari/Android Chrome, three
-  unfamiliar players and desktop reference. User supplies observations.
+- **#565 recovery (shipped #578, cut over #592):** HP/MP persist between battles,
+  and actual sleep refills them. Inn meals, held-Skill cooking, food and potions
+  restore; combat potions cost AP; excess MP doses poison. Show current/max
+  HP/MP and preparation (#567). The proposed numbers are tuning, not rulings.
+  Preserve unlimited existing kitchen access and measure it.
+- **Meal buffs cap at the strongest single meal per key (#432);** re-eating
+  refreshes. #334 ruling 5 (pay twice, get both) still holds for different
+  keys. Cudgel and food-prop production stays unbounded; duplicate refusal
+  bounds only what is carried.
+- **#513 (2026-10-07):**
+  - show the shortfall on locked fee rows;
+  - fix the delivery gold toast;
+  - offer standing deliveries every waking;
+  - add a Pallass side quest with a sizable gold or sellable-loot reward and/or
+    a Pallass Runner's Guild.
+  Rejected: another grinding job.
+- **Purchases confirm before any gold or item effect commits** (#504).
+- **Serve stays cooking-gated;** `source_hint` tells a blocked player where a
+  meal comes from, and combat builds are not entitled to bypass the cooking
+  pillar.
+- **Producer gaps G1–G5** are approved at their recommended shapes (#478).
+- **Regional odd jobs** are once-per-waking props with flat pay, up to 12g per
+  waking for a marker-holding helper with [Perfect Hospitality].
+- **Quest rewards describe the route actually taken** (resolution fallbacks,
+  `complete_when_any`, distinct force/disarm accomplishments).
+- **Item specifics:** Hedault's 40g bead grants `hedaults_wardstone`. The
+  `improvised_cudgel` comes from [Bar Fighting] on taproom furniture, the
+  `solid_oak_spear` from the barracks crate. Coyle's bounty suppresses
+  alley-nest re-arming.
 
-### User rulings 2026-08-14 (tag night)
+### World, content and narrative
 
-- **wild_sage V0.96 accepted, parked post-tag.** Counter reads0.94 at2.0
-  and0.65 at2.2: one blow must kill a30/34HP companion. That setting puts
-  druid0.36 below floor. Keep druid in window; surface wild_sage per NO-AUTO-WIN.
-- **spellspear/skirmisher I/IV accepted as corrected measurements, parked.**
-  `holdable_line` alone reproduces0.88/0.92 and0.88/0.89 on main.
-  Capping [Piercing Strikes] once/round raises ship to0.12 and reauthors
-  steel-thread victory pins; that needs a budgeted lane.
-- **Spine builds must be holdable.** `derived_stat_bonuses` sums growth*held
-  without table-floor checks; Acts I–IV levels2/3/5/7 precede evolved floors10.
-  Evolved parents in `parent_lines` are #449's spear-owned consolidation
-  convention. Future evolved-lineage targets need the holdable-line walk,
-  including all of spellspear III.
-
-### User rulings 2026-08-14 (post-wave decision batch, 11 calls)
-
-- **M3.6 §6.3 tightening EXTENDS to compiled-only `wait_for_event`**
-  (reclassifies 12 of 50; M4 unblocks on the remaining 38 exact + 9
-  net). A compiled-only wait is strictly stricter and cannot hide — if
-  it never fires the run fails, which `ITINERARY_RUN_GREEN` gates.
-  Rejected: per-node emitter keys, which push corpus knowledge back
-  into itineraries.
-- **[Ranger]'s Warden wall gets a kit-gap lane** like skirmisher's.
-  BINDING: must not push any other cell above 0.85.
-- **`act2_cistern_nest` 0.40 ACCEPTED as an intended wall.** Reachable,
-  but the cheapest reaching edit trades one wall for two ceiling
-  breaches (act3→0.88, act1→0.96), and Acts I–IV measure PARENT lines —
-  a mid-act wall before consolidation is correct.
-- **The six WINDOW DRIFT cells are ONE lane** (spellspear III 0.92;
-  wild_sage II/III/V 0.91/0.90/0.98; druid II/III 0.91/0.90) — one
-  re-window covers the set; wild_sage V is the NO-AUTO-WIN case. Same
-  lane repairs `beast_master14` 0.63→0.27 by **broadening growth to
-  con 1 + str 1**; the flat-growth rule itself stands.
-- **The Warden gains a COUNTER to companions**, not a companion nerf:
-  the wolf is worth +0.79 there but is the spine's identity, and a boss
-  that can threaten a companion generalises to every future one.
-- **Book 17 = the WIKI's ebook index** (*Lady of Fire*, Vol 7 Pt 3),
-  superseding this repo's *Garden of Sanctuary* (Vol 7 Pt 1) reading.
-  LOOSENS the bar ~18 chapters, so nothing shipped needs re-auditing;
-  the discrepancy note in `docs/design/spoiler-cutoff.md` retires.
-- **"Runner's Sandals of the Second Wind" CLEARED** — [Second Wind]
-  already ships as a grandfathered Skill, so the name introduces no new
-  canon element.
-- **[Blademaster]'s aspiration promotes to [Sword Saint]** (wiki-verify
-  at build): canon groups [Blademaster] alongside [Swordmaster], so the
-  old text aimed a class at a peer.
-- **Over-levelled harness builds get FIXED, not relabelled** —
-  t6/t12/s16 measure 17.8–24.7 effective power against a 14–16 band, so
-  any "capstone too strong" reading of those rows is unsound.
-- **Eye-gates ride a PREPARED SAVE** (Playtest-States): autoplay cannot
-  cast, so the PC death-cast recolour needs a save the user loads.
-
-- **Resonance semantics DEFERRED past this tag (user, 2026-08-14);
-  evidence and the full question on #494.** The shipped fiction calls
-  resonance interference while the shipped numbers scale it UP with
-  power; canon implies the inverse. Lanes write NO resonance doctrine
-  meanwhile and fix domination defects as defects. Approved direction:
-  a Hedault trueing holding or LOWERING resonance is the right upgrade
-  axis — his craft buys room to wear more.
-- **Rename lanes change RENDERS of a class name, never common-noun
-  prose that shares the word (controller call, 2026-08-14).** Pisces'
-  "you hold yourself like a swordsman" survives the [Blademaster]
-  rename: it is gated on conversation flags, not on holding the class,
-  and means "someone who fights with a sword". "Blademaster" would
-  assert mastery the line does not; anything else is unrequested new
-  prose.
-- **#485 name proposal: blanket GO, user edits stragglers later
-  (2026-08-13 night).** All proposed first-order names proceed;
-  wiki-verify at build still binds; post-bar hits still return for
-  clearance; any user edit later supersedes the shipped display name
-  (ids freeze at release cut only).
-- **Equipment sketch GO (2026-08-13 night)** — the nine-item table in
-  docs/superpowers/specs/2026-08-13-equipment-gaps-design.md
-  implements under its balance rails.
-
-- **Act V capstone trivialization: trim capstone stat growth AND/OR
-  raise Warden difficulty, then re-balance builds that fall too weak
-  (user, 2026-08-13).** Binding: **NO build auto-wins**, and any build
-  the Warden can never beat regardless of tuning is a red flag to
-  surface, not tune around. Warden-side movement is a sanctioned
-  frozen-block exception; too-weak spines get composition/kit relief.
-  SHIPPED #488 (every at-band climax row now in window).
-- **Skirmisher walls are a kit/Skill gap (user, 2026-08-13).** Fill
-  the kit: measure what the spearmaster x archer spine lacks at act2
-  and act5, propose skill/kit additions (names via the clearance
-  flow), implement to window.
-- **#432 RULED: cap pending_meal stacking (user, 2026-08-13).**
-  Repeatable produce/use props no longer stack next_fight meal
-  modifiers; implementation default: strongest-single-meal cap,
-  re-eating refreshes rather than stacks (controller detail, document
-  in-data). The Open-decisions entry retires.
-
-- **#485 naming: six kit decisions GO; evolved/elemental pairs earn
-  DISTINCT names (user, 2026-08-13).** Coverage authoring for all six
-  sets proceeds. Naming layer amended: a pair with real combined
-  identity (e.g. swordsman x ice_mage) resolves to its OWN excitingly
-  named class ([Frostblade Knight] register), NOT reuse into the base
-  target — base x base pairs (warrior x mage → [Spellsword]) keep the
-  base target. Name-mapping proposal lives on #485. Also ruled:
-  **swordsman renames to [Blademaster]** (display only; id frozen) —
-  SHIPPED #492.
-
-- **Class AND Skill names past the spoiler bar are PROPOSABLE with
-  user clearance (user, 2026-08-13, extended to Skills same day).** The
-  wiki-verify flow gains a third outcome: a canon-attested name that
-  sits past the Book-17 bar may be PROPOSED to the user and ships only
-  on explicit clearance — no more silent auto-fallback when the best
-  name is post-bar. Content spoilers are unchanged (the
-  [Door of Portals]-class rule stands); this covers class and [Skill]
-  NAMES only.
-
-- **Necromancer becomes consolidation-eligible (user, 2026-08-13).**
-  New family seeded warrior-line x necromancer: one authored base
-  target covers warrior x necromancer and swordsman x necromancer
-  (approved reuse pattern); spearmaster x necromancer follows the
-  spear-owns-its-hybrids precedent (exempt pending naming unless
-  authored in the same pass). Target name wiki-verifies at build.
-  Post-#482: a reuse pair goes live only when its coverage is AUTHORED
-  (upgrades/inherits rows proving no Skill loss), not via a `maps_to`
-  annotation.
-
-- **Orphan consolidation mappings APPROVED as inventoried**; swordsman
-  x mage (and its ice/fire siblings) map into [Spellsword] — target
-  reuse with the warrior pairs explicitly accepted. Two reuse-reducing
-  targets added on #438: beast_master x mage-line, spearmaster x
-  archer-line.
-- **KIT walls resolved by RULED MULTICLASSING (option c).** Civil
-  spines are expected to carry a martial line to clear combat
-  chokepoints; their climax losses are design, not defects, and the
-  civil pace overshoot (G6) is the multiclass level budget.
-- **Producer gaps G1-G5 APPROVED at recommended shapes** (per-gap
-  detail in #478's PR body). SHIPPED.
-- **Ladder stop-order: RESTORE via hired_blades composition** (frozen
-  stat blocks hold); ordering assert re-arms on the competent column
-  once monotone.
-- **Tactician-split Act V ceiling: fix without trivializing the
-  climax** — measurement-led, composition/class-data levers only,
-  STOP-and-report if the window is unreachable without policy or
-  frozen-stat movement.
-- **Equipment gaps: ADD missing gear across tracks (spear first)** via
-  vendors, encounter loot, trap/puzzle/sealed-area treasure, quest
-  rewards, and Hedault upgrades of existing gear — a content lane.
-- **Coyle bounty completion suppresses alley-nest re-arming** (other
-  respawners unchanged); cisterns/arc_flow headroom flags accepted as
-  monitors; #448 with-Relc ruling number restated to the measured 0.78.
-- **CONSOLIDATION IS AUTOMATIC (supersedes the #472 ruling request).**
-  No player choice: consolidation fires when qualified, with two
-  binding constraints — (1) it never removes existing Skills (upgrades
-  allowed), (2) advancement paths stay OPEN: a [Spellsword] can still
-  level toward the warrior × ice_mage target, i.e. consolidated classes
-  carry their parents' lineage credit. SHIPPED #482.
-
-### Sol wave ≥434 — controller calls under wave autonomy (2026-08-12)
-
-- **Ladder ordering claims are demoted to report-only until re-ruled
-  (2026-08-13).** Post-cap, the main-quest stop ladder is non-monotone
-  under BOTH policies (floor 2/3 by 0.09; competent 1/2 by 0.01 past the
-  tie band) — an ordering assert has no honest column to ride. The
-  wiring pin (all rungs measured) stays hard. Reopening the claim means
-  pulling a composition or stat lever on hired_blades (user batch).
-- **Ruled balance bands CI-gate via RULED_WINDOWS (2026-08-13).** A
-  user-ruled band (first case: the #448 veto solo at [0.35,0.45]) gates
-  in the sim at 100 seeds both edges, and in calibration with measured
-  per-row slack (RULED_SLACK, documented in-file) — never by widening
-  the reference window and never by a 0.5 categorical that the defect
-  shape would pass.
-
-- **#450 spec contradictions ruled (three, all intent-preserving).**
-  (1) [Evil Eye] gains `field: true` + an occult ambient read.
-  (2) Free scenery reads apply to ARMLESS props only; armed props keep
-  their interact action, except danger-bearing ones, which the
-  trap-perception family must cover. Rejected: a new free-inspection
-  mechanism. (3) Passive tactic-family Skills emit
-  `tactic_used` at their
-  proc site (weapon-family tally precedent); actives tally on use.
-  Rejected: an ap_cost==0 activation engine change (blast radius =
-  every passive becomes slottable).
-
-- **#444:** move Hedault's door out of [23,1] sign adjacency into open facade.
-  Defer a bespoke sign to VISUAL-LOG if the windowed read still misleads;
-  a real Coyle door belongs to its
-  quest, not this polish lane.
-- **#451 scope:** once-per-round cap at L2 ships alone. [Improved Counter
-  Strike] is NOT shipped this wave — the lane reports a martial-table
-  recommendation and the reopen stays a controller/user adjudication.
-- **#452 B1 exemption posture:** every inventoried orphan pair ships as
-  `_exempt` pending the user's naming pass (spearmaster×mage exempt-annotated
-  as resolved-by-#449); nothing is scaffolded into existence silently and main
-  goes green immediately.
-- **#475 parity:** the overlay's `encounter_when` filter was a defect hiding
-  the unavoidable Act I fight, not a design exclusion. Read the sim predicate
-  instead of duplicating rules. `counting_room_guard` uses
-  `encounter_when.requires{counting_room_open}` for #398's sealed pocket;
-  do not add an OR arm to the gate vocabulary.
-- **#474 placement:** `road_mothbears` was never on water. The pond actor,
-  `goblin_night_patrol`, moved ashore to (7,21).
-
-### Steel thread and item abilities (2026-08-11)
-
-- **#347 doctrine RATIFIED (user, 2026-08-12).** "Authored uniques,
-  derived triggers" is standing policy, plus the combination rule:
-  every consolidation-eligible lineage pair (evolved lines included)
-  resolves to a unique authored target class. Enforcement machinery is
-  #452; generative-at-runtime stays NO-BUILD per the spec's four fatal
-  grounds.
-- **Relc's veto branches to a hard solo fight, not a wall (user
-  ruling, 2026-08-12, #448).** Target ~0.35-0.45 competent-at-band via
-  a DIFFERENT solo composition — and explicitly must NOT trivialize
-  the with-Relc fight (current 0.70 stands). The veto is a hard-mode
-  choice, not a trap and not a free skip.
-- **Evolved lineages consolidate into unique classes (user ruling,
-  2026-08-12, #449).** Spearmaster + mage does NOT lineage-carry into
-  [Spellsword]; it consolidates into its own class, [Spellspear] —
-  #347's high-level-unique-class case on the existing machinery.
-  Rejected: recipes accepting evolved parents into the SAME target
-  (erases lineage identity), and evolution deferring while
-  consolidation is in reach. SHIPPED.
-- **The warden wakes for every descent; endings stay three-path
-  (2026-08-12).** #437 refuted the "warden stat wall" (competent 0.73
-  shipped, 0.77 at band), so #440 does zero stat work. Satisfied
-  structurally: the fight fires before `the_choice` resolves, all three
-  endings become post-fight resolutions, and sneak holders get an
-  in-fight edge, never a skip.
-  Two durable constraints (mechanism detail in #440's PR body): (1) the
-  seal door's `door_when` is deliberately NOT gated on the new counter —
-  it would be inert behind the choice gate, and `seal_opened` is a
-  frozen shipped id; the refusal is a `variants` rung, not a closed
-  door. (2) A save holding any resolution counter without
-  `seal_warden_downed` is unreachable and `test_fixture_coherence`
-  fails it, so the bypass cannot be reopened by a fixture edit.
-- **QA proves completability; sims prove balance (user finding,
-  2026-08-11).** Dumb-autoplay victory pins were a balance ratchet:
-  fights stayed winnable by the weakest policy and shipped ~a tier easy.
-  Doctrine: pinned combat canonicals fixture at/over band so the dumb
-  policy wins deterministically; difficulty is tuned against the
-  competent-policy-at-band column. **Never tune an encounter to green an
-  autoplay pin.**
-- **Combat chokepoints are sanctioned leveling gates (user ruling,
-  2026-08-11 debrief).** Acts must require leveling progress: an
-  unwinnable spine encounter is the intended signal to do side content
-  (#439 bands). The Seal Warden is the climactic chokepoint and its
-  item bypass is a defect; every player fights it (#440). REFINES the
-  three-pillars
-  directive: pillars govern breadth of viable playstyles, not that every
-  gate is bypassable. The worn-abilities mechanic stands; the finale's
-  exposure to it goes.
-
-- **The steel thread is continuous (user directive).** One PC, title to
-  epilogue, true act order, zero `install_fixture`/`teleport`
-  (grep-gated); the stitched six-fixture album misrepresented act order
-  and mixed four PC iterations. Its in-run route choices are recorded in
-  `qa/STEEL-THREAD.md`.
-- **Worn-accessory abilities are known while worn (user ruling).**
-  `known_skills()` folds equipped-accessory abilities; the field bar
-  re-renders on equip/unequip; effect-text drops "in combat" exactly for
-  field-capable abilities. Rejected: warden retune (erases the intended
-  wall), mage-grind route, shipping the red finale.
-
-
-### Skills, classes, and field interactions
-
-- **[Ice Floor] is one dual-context skill id.** Extend `icy_floor`; do not mint
-  a second skill with the same display name. Its field behavior is data-driven
-  through the property system.
-- **Final martial allocation:** [Greater Strength] remains; [Power Strike] and
-  [Piercing Strikes] are combat-only; [Basic Repair] moved to helper L2;
-  [Basic Swordwork] owns the sword-required `cuts` field action. The separate
-  `field_weapon` key gates field use without filtering combat passives.
-- **[Dangersense]** is granted to rogue L4 (warrior L5 already existed) and is
-  a passive-held field aura over existing encounter trigger regions.
-- **[Pick Lock]** is an active rogue L2 skill. Its debut is Hedault's locked
-  work room: a legitimate non-skill trust route reaches identical contents.
-  Only literal locks qualify; bars, tripwires, and wedged crates do not. The
-  `icon_open_doors` reuse is interim and remains visual debt.
-- **[Rope Arrow]** is the final, user-approved display name; the stable id stays
-  `rope_work`. This supersedes the invented [Rope Work] name.
-- **[Firefly]/`kindle`** is granted by hedge_witch L2. **[Snap Freeze]/
-  `frost_touch`** is granted by hedge_witch L4. The earlier Eloise dialogue-
-  grant proposal is void because dialogue has no skill-grant verb.
-- **[Flame Jet] has field `burns`.** This later #398 ruling supersedes the
-  v0.19 planning call that would have kept corpse cooking as its only field
-  effect.
-- **[Durable Picks] remains deferred** until a granting labour-line class
-  exists; classless skill rows are dead content.
-- **Field gates have two honest modes.** A gated pocket needs a skill route and
-  a legitimate alternative, with equivalent payoff where the user directed it.
-  Negative QA legs walk into the gate and assert refusal; they do not teleport.
-- **Property effects stay declarative.** `cell_properties` replaced the narrow
-  freeze flag; shipped verbs started with `state_set`/`thaw_cell` and widened
-  deliberately. Target counters can override the default, and one skill use
-  may bank multiple accomplishments.
-
-### Items, rewards, and economy
-
-- **Hedault's 40g bead option grants `hedaults_wardstone`.** The lesser
-  `hedaults_warded_setting` remains the fragment-commission product; this
-  restores the intended base-to-upgrade chain.
-- **`improvised_cudgel`** is yielded by using [Bar Fighting] on taproom
-  furniture. **`solid_oak_spear`** is stocked in the barracks spare-kit crate.
-- **Meal buffs cap at the strongest single meal (#432).** `_merge_pending_meal`
-  keeps the MAXIMUM per key, never a sum: a stronger meal replaces that key, an
-  equal-or-weaker one refreshes it. The cap is per key, so #334 ruling 5 (pay
-  twice, get both) still holds for different keys. Cudgel and food-prop
-  production stays unbounded-on-precedent — duplicate refusal bounds only what
-  is carried, and consuming re-arms the producer — but the loop is now a
-  walk-cost rather than a damage curve.
-- **Serve remains cooking-gated.** Requirements use item `source_hint` text to
-  tell a blocked player where the needed meal comes from; combat builds are not
-  entitled to bypass the cooking pillar.
-- **Regional odd jobs use once-per-waking props, not bounty/delivery systems.**
-  Base pay is flat; the accepted ceiling is 12g per waking for a marker-holding
-  helper with [Perfect Hospitality].
-- **Quest rewards describe the route actually taken.** Single-ending quests
-  use resolution fallbacks; OR-gated beats use `complete_when_any`; force and
-  disarm routes carry distinct accomplishments rather than sharing a false
-  fallback.
-
-### World, content, and narrative
-
-- **Three Pillars is a standing content gate:** meaningful talk/help/fight
-  routes must all remain real. It is a review criterion, not a future feature.
-- **Riverfarm was redesigned rather than reskinned (#396).** `a_winter_of_teeth`
-  replaces `what_the_thicket_keeps` for new saves; legacy completion remains;
-  briar fights are solo-gated; `the_makings` wraps the [Hedge Witch] grant.
-- **The Invrisil mothbear encounter belongs on the floodplains road verge.** It
-  remains an original wilderness placement, not a fabricated canon citation.
-- **Horns presence reconciliation defers until dialogue ends.** This prevents
-  actors popping out while their conversation is open; same-map
-  `present_when` changes are safe and reconcile on accomplishment. The old
-  claim that same-map presence was unsafe is withdrawn.
-- **Inn visitors (#371) will schedule one canonical party at a time.** This is
-  queued v0.20 work; do not revive the earlier always-present crowd shape.
-- **Unique-Class creation (#347) remains behind its designed migration/feature
-  gate.** Do not expose prototype naming as shipped behavior, and do not use
-  “Five Families” in player copy under the spoiler cutoff.
-- **Dead content must be honest while queued.** Remove hints that advertise an
-  unobtainable skill, but keep truthful data/use copy when a grant path is
-  planned. Orphan detectors promote to hard-fail category-by-category once the
-  shipped set is clean.
+- **Three Pillars is a standing content gate:** real talk, help and fight
+  routes. Pillars govern breadth of viable playstyles, not that every gate is
+  bypassable.
+- **The Seal Warden fights on every descent (#440);** all three endings resolve
+  after it, and sneak gives an in-fight edge, never a skip. #590 gates Olesm's
+  seal-funding option on the warden too. The seal door's `door_when` stays
+  `seal_opened` alone, not gated on the warden counter (it would be inert behind
+  the choice gate, and `seal_opened` is frozen); the refusal is a `variants`
+  rung. `test_fixture_coherence` rejects resolution counters without
+  `seal_warden_downed`.
+- **Book 17 is the wiki's ebook index** (*Lady of Fire*, Vol 7 Pt 3). "Runner's
+  Sandals of the Second Wind" is cleared ([Second Wind] already ships).
+- **Field gates have two honest modes:** a Skill route plus a legitimate
+  alternative, with equivalent payoff where directed. Negative QA walks into
+  the gate and asserts refusal; it never teleports.
+- **Riverfarm was redesigned (#396):** `a_winter_of_teeth` replaces
+  `what_the_thicket_keeps` for new saves; legacy completion remains; briar
+  fights are solo-gated; `the_makings` wraps [Hedge Witch].
+- **Placement:** the Invrisil mothbear sits on the floodplains verge (original,
+  not canon); `goblin_night_patrol` is ashore at (7,21); Hedault's door sits on
+  the open facade, with a bespoke sign deferred to VISUAL-LOG (#444).
+- **Presence:** Horns reconciliation defers until dialogue ends. Inn visitors
+  (#371) schedule one canonical party at a time; do not revive the
+  always-present crowd. `encounter_when` is read from the sim predicate, and the
+  gate vocabulary gains no OR arm (#475).
+- **Unique-class creation (#347) stays behind its gate;** no prototype naming
+  in player copy, and no "Five Families" under the spoiler cutoff.
+- **Dead content stays honest:** remove hints for unobtainable Skills but keep
+  truthful copy when a grant path is planned; orphan detectors harden category
+  by category once the shipped set is clean.
 
 ### Prose and dialogue
 
-- **Discovery beats instruction.** Field-gate prose should describe physical
-  capability, not tell the player to select a named menu skill. Receipt toasts
-  may state what the used Skill did.
-- **Zero-inference scenery is the default for map-register prose.** Preserve
-  character-bearing peaks, quoted documents, and facts; do not invent motives,
-  quantities, ownership, or outcomes from decorative objects.
-- **Uniform plainness is also a machine signature.** The #397 round-two pass
-  removed button closers, then rebalanced sentence cadence before the blind
-  read. Its revised corpus passed the purpose test even though readers detected
-  a withheld-agent pattern that lived in control rows.
-- **#406 is one follow-up pass:** draw a fresh holdout, release the held rows,
-  drain the named residue/“Nothing there.” family, and address missing
-  interruption/silence shapes together. Do not split off a separate
+- **Discovery beats instruction:** field-gate prose describes capability;
+  receipt toasts may name the Skill used.
+- **Zero-inference scenery** for map-register prose: keep facts, quoted
+  documents and character beats; invent no motives, quantities or outcomes.
+- **Uniform plainness is a machine signature;** #397 round two rebalanced
+  cadence before the blind read. #406 is one follow-up pass (fresh holdout,
+  residue drain, interruption and silence shapes); do not split off a separate
   ending-variety rewrite.
-- **Conversation hubs are append-sensitive.** Add hidden options last unless a
-  lane explicitly re-derives every index-based QA path. Reactive copy uses the
-  least invasive existing mechanism (`text_variants`, pool stages, or twin
-  presence rows) that preserves first-interact behavior.
+- **Conversation hubs are append-sensitive:** add hidden options last; reactive
+  copy uses `text_variants`, pool stages or twin presence rows.
 
-### Simulation, reachability, and QA
+### Simulation, reachability and QA
 
-- **`qa/manifest.json` is the canonical script/seed inventory.** Generated QA
-  notes and the sweep derive from it; prose docs must not duplicate the table.
-- **Reachability uses two authorities:** data lint owns grant/item/dialogue/door
-  graph reachability; GDScript tests over the real loader own cell adjacency and
-  walkability. A Python mirror must not redefine sim truth.
-- **A declared resource is not a wire.** Grant-path checks require a real
-  producer and cell checks require a reachable interaction surface. Categories
-  become blocking only after existing orphans are drained or explicitly
-  allowlisted.
-- **Difficulty x1.0 is inert.** Tier sweeps must preserve monotonic direction;
-  named extreme-flip exceptions are allowed only with written justification.
-  `weapon_die`, not constitution, was the accepted rung-4 tuning lever.
-- **Time of day is a loop, not a progress meter.** The indoor cue is a compact
-  day/dusk/night glyph; no action count or fill bar implies progress toward a
-  deadline.
-- **Presence gates distinguish structure from activation.** `present_when`
-  controls existence; `encounter_when` controls trigger/interact eligibility.
-  Tests must walk the real cell and assert both blocking and non-trigger states.
-- **Verification reads Godot output, not exit code alone.** Unit scripts require
-  `PASS` and reject `SCRIPT ERROR`, `Parse Error`, or `WARNING`; a green process
-  code can still contain a failed assertion.
+- **`qa/manifest.json` is the script/seed inventory;** notes and sweeps derive
+  from it. A `journey` row must also be `full` and registered in
+  `qa/journeys.json` (#515).
+- **Continuous journeys (#571):** one PC, title to ending, true act order, no
+  `install_fixture` or `teleport` (the stitched six-fixture album was rejected).
+  Walls may be retried after defeat and cleared with existing optional content,
+  all logged; no tuning, new content or XP-only repeats. A defeat rollback
+  replays the same fight, so retries follow a real state change.
+- **Engine noise:** unit scripts require `PASS` and reject `SCRIPT ERROR`,
+  `Parse Error`, `ERROR:` and `WARNING` beyond exit codes. The only deferred
+  lines are #586's exact shutdown particle-shader leaks, owned by
+  `qa/noise_scan.sh`; an unreadable log fails.
+- **Itinerary equivalence (M3.6 §6.3)** extends to compiled-only
+  `wait_for_event`, which is strictly stricter. Rejected: per-node emitter keys,
+  which push corpus knowledge back into itineraries.
+- **Reachability has two authorities:** data lint for graph reachability, and
+  GDScript over the real loader for cells. A declared resource is not a wire.
+- **Difficulty x1.0 is inert;** tier sweeps keep monotonic direction.
+  `weapon_die` was the rung-4 lever.
+- **Time of day is a loop, not a progress meter.**
+- **Presence gates:** `present_when` controls existence; `encounter_when`
+  controls trigger eligibility. Tests walk the real cell.
+- **Eye and ear gates ride a prepared save** (Playtest States).
 
-### Presentation and art
+### Presentation, art and mobile
 
-- **Tint is not identity.** Distinct adjacent/named subjects need distinct
-  silhouettes. Anonymous extras may share a rig when separated; named
-  characters should not share another named character's rig.
-- **`pc_*` sprites are player-only.** A registry test rejects map entities or
-  decor using player skins.
-- **Combat figure acceptance is measured from the animation actually rendered**
-  (bar 1.25–3.55 cells; move subject data rather than relax it).
-- **Blocked board cells use biome prop data before renderer fallbacks.** A cell
-  that affects pathing is gameplay geometry, not dim background dressing.
-- **Named payoff moments need visible lanes.** Event emission alone does not
-  prove a toast, class evolution, hint, or sprite reached pixels. Windowed eyes
-  arbitrate player-facing claims.
-- **Pause scrim:** one full-rect black `ColorRect`, alpha 0.55,
-  `MOUSE_FILTER_STOP`, unless a windowed read justifies a small opacity change.
+- **Best art wins per asset (#564/#554)** within a coherent scene, at gameplay
+  scale; otherwise keep the official or owned public fallback. READY is not
+  acceptance, and there is no quota wiring. Animation, geometry, scale and
+  anchor swap together; terrain inherits the original parent before complete
+  fallback selection with owned coordinates. Keep the 16px grid; unsuitable
+  rigs and physical devices remain explicit coverage records.
+- **Tint is not identity:** named subjects need distinct silhouettes; named
+  characters do not share another named character's rig; `pc_*` sprites are
+  player-only.
+- **Combat figure acceptance** is measured from the rendered animation (1.25–3.55
+  cells); move subject data rather than relax the bar.
+- **Blocked board cells use biome prop data before renderer fallbacks.**
+- **Visible lanes:** event emission does not prove pixels; windowed reads decide.
+- **Pause scrim:** full-rect black at alpha 0.55, `MOUSE_FILTER_STOP`.
+- **HUD (#588/#589):** the desktop Skills readout overlays the world, capped
+  below the followed player. The field toggle reads "Show/Hide Skills".
+  Rejected: "Details" (vague, and phone combat keeps its own Details panel)
+  and "Skill info" (immersion-breaking on an always-visible label).
+- **M1:** #508 grants covered-crossing credit for deliberate drainage-cover use
+  plus an actual crossing after goblin defeat; bare or prop-only visits earn
+  none; once per crossing per waking, no respawn, Rogue only at sleep; live
+  danger still needs a threat (`docs/design/rogue-recovery-proposal.md`). #507
+  puts an appearance-only footer under the art and the difficulty explanation
+  under its prompt, keeping Settings Help. Mobile acceptance (#511,
+  #504–#506, #510, #253, #585) needs physical iPhone Safari/Android Chrome,
+  three unfamiliar players and a desktop reference, and is deferred.
 
 ## Superseded calls — do not resurrect
 
-- `[Rope Work]` → **[Rope Arrow]**; id remains `rope_work`.
-- `frost_touch` via Eloise dialogue → **hedge_witch L4**; no dialogue grant
-  mechanism exists.
-- [Flame Jet] without `burns` → **field `burns` enabled** in #398.
-- “Same-map `present_when` is unsafe” → **false**; accomplishment reconciliation
-  and dialogue-end deferral make it safe.
-- “Duplicate refusal bounds cudgel production” and “armed next-fight meal
-  mods sum” → **both false since #432**; production stays unbounded and
-  `_merge_pending_meal` keeps the per-key maximum. The summing was #334
-  ruling 5's fix for wholesale replacement and outlived its purpose.
-- “Passing event assertions proves a visible feature” → **false**; windowed
-  rendering is required for player-visible claims.
-- #397 engineering-green prose did not meet blind-reader acceptance. Round
-  two passed after map-register/cadence corrections; #406 owns the holdout.
+- `[Rope Work]` → **[Rope Arrow]**; `frost_touch` via Eloise dialogue →
+  **hedge_witch L4**; [Flame Jet] without `burns` → **field `burns`**.
+- "Same-map `present_when` is unsafe" → **false**.
+- "Same-key meal mods sum" and "duplicate refusal bounds cudgel production" →
+  **false since #432**.
+- "Passing events prove a visible feature" → **false;** windowed reads decide.
+- #472's consolidation choice → **automatic consolidation**.
+- Ladder ordering "report-only until re-ruled" → **gated on the competent
+  column**.
+- Resonance "deferred, no doctrine" → **#494 power budget with craft discount**.
+- [Blademaster] aspiration open question → **[Sword Saint]**.
+- Book 17 as *Garden of Sanctuary* (Vol 7 Pt 1) → **the wiki's ebook index**.
+- #397 engineering-green prose → **blind-reader acceptance required**.
 
 ## Historical release index
 

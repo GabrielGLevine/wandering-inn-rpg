@@ -9,6 +9,10 @@
 set -euo pipefail
 
 LOG="${1:?usage: noise_scan.sh <log>}"
+if [ ! -r "$LOG" ]; then
+	echo "noise_scan.sh: cannot read $LOG" >&2
+	exit 2
+fi
 KNOWN_586="^[0-9]+:ERROR: [0-9]+ (RID allocations of type '(N13RendererDummy15MaterialStorage11DummyShaderE|N10RendererRD15MaterialStorage6ShaderE)' were leaked at exit\.|shaders of type ParticlesShaderRD were never freed)$"
 
 HITS="$(grep -nE 'SCRIPT ERROR|Parse Error|WARNING|ERROR:' "$LOG" | grep -vE "$KNOWN_586" || true)"

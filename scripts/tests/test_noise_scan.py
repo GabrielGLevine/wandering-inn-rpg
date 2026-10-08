@@ -31,6 +31,10 @@ class NoiseScanTest(unittest.TestCase):
 			result = scan("QA_RESULT: PASS\n" + LEAK.replace("4", count, 1) + "\n")
 			self.assertEqual(result.returncode, 0, count)
 
+	def test_unreadable_log_fails(self) -> None:
+		result = subprocess.run(["bash", str(SCAN), "/nonexistent/qa.log"], capture_output=True, text=True)
+		self.assertEqual(result.returncode, 2)
+
 	def test_windowed_586_leaks_are_deferred(self) -> None:
 		result = scan("QA_RESULT: PASS\n" + "\n".join(WINDOWED) + "\n   at: cleanup (servers/rendering)\n")
 		self.assertEqual(result.returncode, 0, result.stdout)
