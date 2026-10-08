@@ -11,7 +11,8 @@ under "Combat rules and gear":
   sleep-beat toast is reworded to match. The #570 capacity curve (4 at
   creation, 5 after the once-only growth) is unchanged.
 
-Base: `69bd9cf5` (main). Branch: `issue/514-gear-rules`.
+Base: `69bd9cf5` (main), rebased onto `842ef6e9` (#513, #590, #591).
+Branch: `issue/514-gear-rules`.
 
 ## 1. Classification rule
 
@@ -234,10 +235,14 @@ Doctrine bindings:
 
 ## 8. Measurements
 
-Base `69bd9cf5` against `cf3e680a`, the last commit that touches combat
-resolution or data; later commits change UI, QA, wording and the combat
-snapshot only. Every leg ran 100 seeds, exited 0, printed its success marker
-and logged no engine noise.
+Measured twice, with the same result:
+
+- base `69bd9cf5` against `cf3e680a`, the last pre-rebase commit to touch
+  combat resolution or data;
+- after the rebase, main `842ef6e9` (tree `efc36598`) against `b6f77e8d`.
+
+Every leg ran 100 seeds, exited 0, printed its success marker and logged no
+engine noise. The table reads the post-rebase pair.
 
 | Leg | Base | Branch | Cells moved |
 |---|---|---|---|
@@ -248,8 +253,9 @@ and logged no engine noise.
 | `sim_progression_pace` floor | PASS | byte-identical | none |
 | `sim_progression_pace` competent | PASS | ranger spine only | see below |
 
-`harness_entry_report.py` against the base logs: rested, competent and 0.75
-read the same 147 cells at the same rates on both trees. The summaries are
+`harness_entry_report.py` against the base logs (full table in the appendix):
+rested, competent and 0.75 read the same 147 cells at the same rates on both
+trees. The summaries are
 mean drop vs rested 0.000 / −0.070 / 0.209 and cells below 0.55 48 / 39 / 90,
 each identical to base.
 
@@ -337,7 +343,8 @@ regenerated here.
 
 ## 9. Journey impact
 
-`python3 wandering_inn_game/qa/journey_gate.py` at `38948d63`:
+Before the rebase, `python3 wandering_inn_game/qa/journey_gate.py` at
+`38948d63`:
 
 | Route | Script | Result |
 |---|---|---|
@@ -357,6 +364,24 @@ outcome moved in any journey, because no journey wears an implement or casts
 a gated line. Pins are left for the controller's post-rebase update, as
 instructed.
 
+After the rebase onto `842ef6e9`, the controller released the journey pins.
+`journey_imperfect`'s two charms waits now pin the new wording. That is the
+fang's actual reach under #495, and both waits assert the same full options
+array. The rerun at `b6f77e8d` passes every journey:
+
+| Route | Script | Steps | Ledger | Result |
+|---|---|---|---|---|
+| rogue | `journey_rogue` | 3509/3509 | 8W/3L/0A, 18 sleeps, 4g | ok |
+| generalist | `journey_worker` | 3998/3998 | 8W/7L/1A, 16 sleeps, 2g | ok |
+| martial | `steel_thread` | 3134/3134 | 12W/3L/0A, 14 sleeps, 0g | ok |
+| caster | `journey_caster` | 3782/3782 | 8W/0L/0A, 12 sleeps, 0g | ok |
+| imperfect | `journey_imperfect` | 4122/4122 | 8W/2L/0A, 20 sleeps, 2g | ok |
+
+`scripts/journey_ledger.py` regenerated over the passing `journey_imperfect`
+run reproduces `571-ledger-imperfect.md`'s ledger block byte for byte (main's
+#513 version). No other journey's script changed and no ledger needed an edit.
+No wall moved, so the 2026-10-07 retry ruling was not exercised.
+
 ## 10. Open questions
 
 - Spell power reaches [Evil Eye], [Calming Touch] and [Phantom Barrage]
@@ -374,3 +399,169 @@ instructed.
 - A Hedault swap unequips the consumed piece silently (shipped behaviour).
   Re-equipping the product into the same slot would now always fit, because
   of the trueing invariant, but it is not done here.
+
+## Appendix: harness entry report
+
+`python3 scripts/harness_entry_report.py` over the post-rebase logs, baseline
+`base_rested` (main `842ef6e9`); `head_*` is `b6f77e8d`.
+
+<details><summary>All 147 cells</summary>
+
+| Cell | Build | base_rested | head_rested | base_competent | head_competent | base_0.75 | head_0.75 |
+|---|---|---|---|---|---|---|---|
+| encounter / rock_crab_nest_t1_relc | warrior2 | 0.84 | 0.84 | 0.97 | 0.97 | 0.07 | 0.07 |
+| party / vault_construct_t4_spellsword14_party (measured) | t4_spellsword14_party | 0.90 | 0.90 | 0.93 | 0.93 | 0.24 | 0.24 |
+| party / vault_construct_t4_party | t4_spellsword11_party | 0.85 | 0.85 | 0.78 | 0.78 | 0.20 | 0.20 |
+| party / vault_construct_t4_party_guided (measured) | t4_spellsword11_party | 0.85 | 0.85 | 0.78 | 0.78 | 0.20 | 0.20 |
+| encounter / camp_ground_press_t1_rags_ally | warrior2 | 0.63 | 0.63 | 0.70 | 0.70 | 0.08 | 0.08 |
+| bestiary / forge_temper_golem_t5_sw14_solo | t4_spellsword14_party | 0.67 | 0.67 | 0.89 | 0.89 | 0.20 | 0.20 |
+| second_wind / beast_master14_raskghar_scouts_with_wolf (measured) | beast_master14 | 0.69 | 0.69 | 0.70 | 0.70 | 0.24 | 0.24 |
+| riverfarm / river_wolf_pack_t3_hunter (measured) | t3_warrior10 | 0.86 | 0.86 | 0.84 | 0.84 | 0.42 | 0.42 |
+| encounter / camp_ground_press_t1_spear_ally | warrior2 | 0.63 | 0.63 | 0.78 | 0.78 | 0.20 | 0.20 |
+| ruin / rift_vermin_leak_w8_relc | warrior5_mage5 | 0.72 | 0.72 | 0.99 | 0.99 | 0.29 | 0.29 |
+| bestiary / forge_calibration_golem_t5_sw14_solo | t4_spellsword14_party | 0.69 | 0.69 | 0.87 | 0.87 | 0.26 | 0.26 |
+| scaled / forge_calibration_golem_t5_gold | gold_spellsword22 | 0.70 | 0.70 | 0.87 | 0.87 | 0.27 | 0.27 |
+| bestiary / market_watchgolems_t4_solo (measured) | t4_spellsword11_party | 0.84 | 0.84 | 0.96 | 0.96 | 0.42 | 0.42 |
+| bestiary / forge_calibration_golem_t4_solo (measured) | t4_spellsword11_party | 0.57 | 0.57 | 0.62 | 0.62 | 0.16 | 0.16 |
+| riverfarm / briar_collectors_deep_t5_sw14_solo | t4_spellsword14_party | 0.87 | 0.87 | 0.88 | 0.88 | 0.48 | 0.48 |
+| encounter / beast_master10_raskghar_scouts_with_wolf | beast_master10_melee | 0.95 | 0.95 | 0.94 | 0.94 | 0.56 | 0.56 |
+| scaled / gallery_vermin_nest_t4_silver | t4_spellsword14_party | 0.67 | 0.67 | 0.99 | 0.99 | 0.29 | 0.29 |
+| encounter / pond_guardian_t1_runner5_warrior5_solo | t1_runner5_warrior5 | 0.61 | 0.61 | 0.81 | 0.81 | 0.23 | 0.23 |
+| invrisil / rest_bravos_t3_warrior10_solo | t3_warrior10 | 0.77 | 0.77 | 0.73 | 0.73 | 0.39 | 0.39 |
+| second_wind / strategist14_solo (measured) | strategist14 | 0.77 | 0.77 | 0.98 | 0.98 | 0.39 | 0.39 |
+| scaled / gallery_vermin_nest_t4_gold | gold_spellsword16 | 0.54 | 0.54 | 0.97 | 0.97 | 0.16 | 0.16 |
+| encounter / mage5_necromancer7_raskghar_scouts_solo | mage5_necromancer7_caster | 0.72 | 0.72 | 0.64 | 0.64 | 0.34 | 0.34 |
+| second_wind / sharpshooter14_solo | sharpshooter14 | 0.66 | 0.66 | 0.97 | 0.97 | 0.29 | 0.29 |
+| encounter / shield_spiders_w2_solo (measured) | warrior2 | 0.54 | 0.54 | 0.70 | 0.70 | 0.18 | 0.18 |
+| riverfarm / granary_scavengers_t3_warrior10_solo | t3_warrior10 | 0.58 | 0.58 | 0.50 | 0.50 | 0.22 | 0.22 |
+| second_wind / infiltrator14_solo | infiltrator14 | 0.62 | 0.62 | 0.75 | 0.75 | 0.26 | 0.26 |
+| scaled / forge_calibration_golem_t5_silver | t4_spellsword14_party | 0.53 | 0.53 | 0.76 | 0.76 | 0.18 | 0.18 |
+| riverfarm / riverfarm_thicket_patch_t3_solo | t3_warrior10 | 0.50 | 0.50 | 0.52 | 0.52 | 0.15 | 0.15 |
+| ruin / briar_arch_wards_mage11_relc (measured) | p5_mage11_caster | 0.65 | 0.65 | 0.54 | 0.54 | 0.31 | 0.31 |
+| riverfarm / thicket_line_den_t3_warrior10_solo | t3_warrior10 | 0.53 | 0.53 | 0.47 | 0.47 | 0.19 | 0.19 |
+| invrisil / counting_room_guard_t3_warrior10_solo | t3_warrior10 | 0.38 | 0.38 | 0.53 | 0.53 | 0.04 | 0.04 |
+| encounter / rags_scouting_party_t1_solo | warrior2 | 0.72 | 0.72 | 0.76 | 0.76 | 0.38 | 0.38 |
+| bestiary / corusdeer_range_t1_solo (measured) | warrior2 | 0.72 | 0.72 | 0.88 | 0.88 | 0.38 | 0.38 |
+| bestiary / kingslayer_den_t4_solo (measured) | t4_spellsword11_party | 0.86 | 0.86 | 0.87 | 0.87 | 0.52 | 0.52 |
+| invrisil / boulevard_duel_ring_t3_solo | t3_warrior10 | 0.64 | 0.64 | 0.71 | 0.71 | 0.31 | 0.31 |
+| encounter / raskghar_scouts_w2_solo (measured) | warrior2 | 0.49 | 0.49 | 0.59 | 0.59 | 0.16 | 0.16 |
+| encounter / goblin_night_patrol_t1_solo (measured) | warrior2 | 0.72 | 0.72 | 0.79 | 0.79 | 0.39 | 0.39 |
+| encounter / beast_tamer5_goblin_ambush_with_wolf | beast_tamer5_melee | 0.87 | 0.87 | 0.82 | 0.82 | 0.54 | 0.54 |
+| chieftains_raid / warrior2_helper2 (measured) | warrior2_helper2 | 0.78 | 0.78 | 0.77 | 0.77 | 0.46 | 0.46 |
+| encounter / raskghar_scouts_w5_solo (measured) | warrior5_mage5 | 0.94 | 0.94 | 0.94 | 0.94 | 0.62 | 0.62 |
+| chieftains_raid / warrior2 | warrior2 | 0.77 | 0.77 | 0.76 | 0.76 | 0.46 | 0.46 |
+| dungeon / gallery_vermin_nest_t4_solo | t4_spellsword11_party | 0.81 | 0.81 | 0.98 | 0.98 | 0.51 | 0.51 |
+| loadout / warrior1_tutorial_solo_armored (measured) | warrior1_tutorial_solo | 0.43 | 0.43 | 0.43 | 0.43 | 0.13 | 0.13 |
+| encounter / mage3_necromancer3_goblin_ambush_with_skeleton | mage3_necromancer3_caster | 0.62 | 0.62 | 0.46 | 0.46 | 0.32 | 0.32 |
+| loadout / warrior1_tutorial_solo_max_legal_kit (measured) | warrior1_tutorial_solo | 0.52 | 0.52 | 0.52 | 0.52 | 0.23 | 0.23 |
+| ruin / briar_arch_wards_warrior11_relc | p5_warrior11 | 0.81 | 0.81 | 0.88 | 0.88 | 0.52 | 0.52 |
+| ruin / briar_arch_wards_mage11_solo (measured) | p5_mage11_caster | 0.38 | 0.38 | 0.09 | 0.09 | 0.10 | 0.10 |
+| invrisil / alley_fence_t3_warrior10_solo | t3_warrior10 | 0.38 | 0.38 | 0.45 | 0.45 | 0.09 | 0.09 |
+| second_wind / swordsman14_solo | swordsman14 | 0.33 | 0.33 | 0.63 | 0.63 | 0.04 | 0.04 |
+| goblin_ambush / pure_warrior10 (measured) | pure_warrior10 | 0.97 | 0.97 | 0.99 | 0.99 | 0.68 | 0.68 |
+| loadout / chieftains_hp_stack (measured) | warrior2 | 0.81 | 0.81 | 0.78 | 0.78 | 0.53 | 0.53 |
+| ruin / briar_arch_wards_warrior11_solo (measured) | p5_warrior11 | 0.46 | 0.46 | 0.43 | 0.43 | 0.18 | 0.18 |
+| invrisil / alley_footpads_w2_solo | warrior2 | 0.86 | 0.86 | 0.91 | 0.91 | 0.58 | 0.58 |
+| bestiary / road_mothbears_t3_solo (measured) | t3_warrior10 | 0.57 | 0.57 | 0.49 | 0.49 | 0.29 | 0.29 |
+| invrisil / hired_blades_t3_spellsword9_wilovan (measured) | t3_spellsword9 | 0.47 | 0.47 | 0.74 | 0.74 | 0.20 | 0.20 |
+| chieftains_raid / warrior2_mage2 (measured) | warrior2_mage2 | 0.94 | 0.94 | 0.94 | 0.94 | 0.67 | 0.67 |
+| goblin_ambush / warrior1_tutorial_solo (measured) | warrior1_tutorial_solo | 0.34 | 0.34 | 0.43 | 0.43 | 0.08 | 0.08 |
+| encounter / druid14_raskghar_scouts_with_wolf | druid14_caster | 0.90 | 0.90 | 0.90 | 0.90 | 0.64 | 0.64 |
+| riverfarm / briar_collectors_deep_t3_warrior10_solo | t3_warrior10 | 0.38 | 0.38 | 0.30 | 0.30 | 0.12 | 0.12 |
+| second_wind / spearmaster14_solo | spearmaster14 | 0.37 | 0.37 | 0.64 | 0.64 | 0.11 | 0.11 |
+| ruin / ruin_guardian_w8_relc | warrior5_mage5 | 0.38 | 0.38 | 0.95 | 0.95 | 0.13 | 0.13 |
+| chieftains_raid / warrior1_tutorial (measured) | warrior1_tutorial | 0.47 | 0.47 | 0.51 | 0.51 | 0.23 | 0.23 |
+| invrisil / hired_blades_t5_sw14_wilovan | t4_spellsword14_party | 0.70 | 0.70 | 0.89 | 0.89 | 0.46 | 0.46 |
+| dungeon / trapped_halls_snare_t4_solo | t4_spellsword11_party | 0.42 | 0.42 | 0.91 | 0.91 | 0.19 | 0.19 |
+| second_wind / fire_mage14_solo | fire_mage14 | 0.74 | 0.74 | 0.79 | 0.79 | 0.51 | 0.51 |
+| loadout / warrior2_mage2_gambeson (measured) | warrior2_mage2 | 0.96 | 0.96 | 0.96 | 0.96 | 0.74 | 0.74 |
+| invrisil / hired_blades_t4_sw11_wilovan (measured) | t4_spellsword11_party | 0.49 | 0.49 | 0.78 | 0.78 | 0.27 | 0.27 |
+| bestiary / market_watchgolems_t5_sw14_solo (measured) | t4_spellsword14_party | 0.97 | 0.97 | 0.98 | 0.98 | 0.75 | 0.75 |
+| second_wind / ice_mage14_solo | ice_mage14 | 0.60 | 0.60 | 0.51 | 0.51 | 0.38 | 0.38 |
+| boss / awakened_boss_w2_relc | warrior2 | 0.49 | 0.49 | 0.54 | 0.54 | 0.28 | 0.28 |
+| dungeon / seal_warden_t5_sw14_solo | t4_spellsword14_party | 0.34 | 0.34 | 0.70 | 0.70 | 0.14 | 0.14 |
+| riverfarm / briar_collectors_t3_warrior10_solo | t3_warrior10 | 0.33 | 0.33 | 0.28 | 0.28 | 0.14 | 0.14 |
+| encounter / pond_guardian_t1_warrior2_solo (measured) | warrior2 | 0.24 | 0.24 | 0.59 | 0.59 | 0.06 | 0.06 |
+| chieftains_raid / warrior5_mage5 (measured) | warrior5_mage5 | 0.97 | 0.97 | 1.00 | 1.00 | 0.79 | 0.79 |
+| loadout / warrior2_spear (measured) | warrior2 | 0.97 | 0.97 | 0.99 | 0.99 | 0.79 | 0.79 |
+| loadout / warrior2_mage2_stonescale_dr2 (measured) | warrior2_mage2 | 0.97 | 0.97 | 1.00 | 1.00 | 0.79 | 0.79 |
+| goblin_ambush / warrior1_tutorial (measured) | warrior1_tutorial | 0.97 | 0.97 | 0.97 | 0.97 | 0.80 | 0.80 |
+| goblin_ambush / warrior5_mage5 (measured) | warrior5_mage5 | 0.99 | 0.99 | 1.00 | 1.00 | 0.83 | 0.83 |
+| loadout / kingslayer_fang_solo (measured) | warrior2 | 0.99 | 0.99 | 0.99 | 0.99 | 0.83 | 0.83 |
+| loadout / moonhide_fetish_solo (measured) | warrior2 | 0.99 | 0.99 | 1.00 | 1.00 | 0.83 | 0.83 |
+| dungeon / side_vault_construct_t5_infiltrator14_solo | infiltrator14 | 0.61 | 0.61 | 0.73 | 0.73 | 0.45 | 0.45 |
+| encounter / mage3_necromancer3_goblin_ambush_solo | mage3_necromancer3_caster | 0.57 | 0.57 | 0.65 | 0.65 | 0.42 | 0.42 |
+| chieftains_raid / warrior2_mage2_caster (measured) | warrior2_mage2_caster | 0.95 | 0.95 | 0.94 | 0.94 | 0.80 | 0.80 |
+| goblin_ambush / warrior2_helper2 (measured) | warrior2_helper2 | 0.99 | 0.99 | 0.99 | 0.99 | 0.85 | 0.85 |
+| chieftains_raid / pure_warrior10 (measured) | pure_warrior10 | 0.96 | 0.96 | 0.95 | 0.95 | 0.82 | 0.82 |
+| invrisil / alley_footpads_w1_tutorial_solo (measured) | warrior1_tutorial | 0.22 | 0.22 | 0.35 | 0.35 | 0.08 | 0.08 |
+| invrisil / hired_blades_t3_warrior10_wilovan | t3_warrior10 | 0.42 | 0.42 | 0.47 | 0.47 | 0.28 | 0.28 |
+| goblin_ambush / warrior2 (measured) | warrior2 | 0.98 | 0.98 | 0.99 | 0.99 | 0.85 | 0.85 |
+| chieftains_raid / pure_mage10_caster (measured) | pure_mage10_caster | 0.84 | 0.84 | 0.72 | 0.72 | 0.71 | 0.71 |
+| loadout / warrior2_sword (measured) | warrior2 | 0.98 | 0.98 | 0.98 | 0.98 | 0.85 | 0.85 |
+| encounter / goblin_night_patrol_t1_relc (measured) | warrior2 | 0.98 | 0.98 | 0.99 | 0.99 | 0.85 | 0.85 |
+| encounter / mage5_necromancer7_raskghar_scouts_with_skeleton | mage5_necromancer7_caster | 0.92 | 0.92 | 0.92 | 0.92 | 0.79 | 0.79 |
+| dungeon / seal_warden_t4_sw11_solo (measured) | t4_spellsword11_party | 0.22 | 0.22 | 0.21 | 0.21 | 0.09 | 0.09 |
+| bestiary / razorbeak_nest_t1_solo (measured) | warrior2 | 0.98 | 0.98 | 0.98 | 0.98 | 0.85 | 0.85 |
+| encounter / shield_spiders_w1_solo (measured) | warrior1_tutorial | 0.15 | 0.15 | 0.27 | 0.27 | 0.03 | 0.03 |
+| encounter / raskghar_scouts_w2_relc (measured) | warrior2 | 0.97 | 0.97 | 0.97 | 0.97 | 0.85 | 0.85 |
+| invrisil / hired_blades_t3_warrior9_wilovan (measured) | t3_warrior9 | 0.35 | 0.35 | 0.44 | 0.44 | 0.23 | 0.23 |
+| encounter / crate_scavengers_w1_solo (measured) | warrior1_tutorial | 0.17 | 0.17 | 0.34 | 0.34 | 0.06 | 0.06 |
+| encounter / supplier_scavengers_w1_solo (measured) | warrior1_tutorial | 0.17 | 0.17 | 0.34 | 0.34 | 0.06 | 0.06 |
+| invrisil / hired_blades_w10_wilovan (measured) | warrior5_mage5 | 0.14 | 0.14 | 0.33 | 0.33 | 0.03 | 0.03 |
+| goblin_ambush / t3_spellsword9 (measured) | t3_spellsword9 | 1.00 | 1.00 | 1.00 | 1.00 | 0.89 | 0.89 |
+| chieftains_raid / t3_warrior9 (measured) | t3_warrior9 | 0.98 | 0.98 | 0.96 | 0.96 | 0.87 | 0.87 |
+| goblin_ambush / t4_spellsword11_party (measured) | t4_spellsword11_party | 1.00 | 1.00 | 1.00 | 1.00 | 0.90 | 0.90 |
+| loadout / warrior2_sword_armored (measured) | warrior2 | 0.99 | 0.99 | 0.99 | 0.99 | 0.89 | 0.89 |
+| loadout / moon_bone_solo (measured) | warrior2 | 0.99 | 0.99 | 0.98 | 0.98 | 0.89 | 0.89 |
+| encounter / collapsed_gallery_nest_w10_solo | warrior5_mage5 | 0.12 | 0.12 | 0.44 | 0.44 | 0.03 | 0.03 |
+| chieftains_raid / warrior5_mage5_caster (measured) | warrior5_mage5_caster | 0.99 | 0.99 | 1.00 | 1.00 | 0.90 | 0.90 |
+| chieftains_raid / t3_warrior10 (measured) | t3_warrior10 | 1.00 | 1.00 | 0.96 | 0.96 | 0.91 | 0.91 |
+| encounter / rock_crab_nest_t1_solo (measured) | warrior2 | 0.07 | 0.07 | 0.14 | 0.14 | 0.00 | 0.00 |
+| chieftains_raid / t3_spellsword9 (measured) | t3_spellsword9 | 0.99 | 0.99 | 1.00 | 1.00 | 0.92 | 0.92 |
+| chieftains_raid / t4_spellsword11_party (measured) | t4_spellsword11_party | 1.00 | 1.00 | 1.00 | 1.00 | 0.94 | 0.94 |
+| loadout / warrior2_max_legal_kit (measured) | warrior2 | 1.00 | 1.00 | 1.00 | 1.00 | 0.94 | 0.94 |
+| loadout / hollow_herb_solo (measured) | warrior2 | 1.00 | 1.00 | 1.00 | 1.00 | 0.94 | 0.94 |
+| goblin_ambush / t3_warrior9 (measured) | t3_warrior9 | 0.99 | 0.99 | 1.00 | 1.00 | 0.93 | 0.93 |
+| goblin_ambush / t3_warrior10 (measured) | t3_warrior10 | 0.99 | 0.99 | 1.00 | 1.00 | 0.93 | 0.93 |
+| goblin_ambush / warrior2_mage2_caster (measured) | warrior2_mage2_caster | 0.99 | 0.99 | 1.00 | 1.00 | 0.94 | 0.94 |
+| goblin_ambush / t4_spellsword14_party (measured) | t4_spellsword14_party | 1.00 | 1.00 | 1.00 | 1.00 | 0.95 | 0.95 |
+| loadout / guardian_ward_solo (measured) | warrior2 | 1.00 | 1.00 | 1.00 | 1.00 | 0.95 | 0.95 |
+| loadout / pond_seal_solo (measured) | warrior2 | 1.00 | 1.00 | 1.00 | 1.00 | 0.95 | 0.95 |
+| goblin_ambush / classless_solo (measured) | classless_solo | 0.07 | 0.07 | 0.07 | 0.07 | 0.02 | 0.02 |
+| ruin / rift_vermin_leak_w8_solo (measured) | warrior5_mage5 | 0.05 | 0.05 | 0.64 | 0.64 | 0.00 | 0.00 |
+| riverfarm / river_wolf_pack_t3_solo (measured) | t3_warrior10 | 0.06 | 0.06 | 0.04 | 0.04 | 0.01 | 0.01 |
+| goblin_ambush / warrior2_mage2 (measured) | warrior2_mage2 | 1.00 | 1.00 | 1.00 | 1.00 | 0.96 | 0.96 |
+| encounter / shield_spiders_w2_relc (measured) | warrior2 | 1.00 | 1.00 | 1.00 | 1.00 | 0.96 | 0.96 |
+| encounter / crate_scavengers_w1_klbkch (measured) | warrior1_tutorial | 0.98 | 0.98 | 0.98 | 0.98 | 0.94 | 0.94 |
+| riverfarm / briar_collectors_deep_w10_solo (measured) | warrior5_mage5 | 0.05 | 0.05 | 0.41 | 0.41 | 0.01 | 0.01 |
+| goblin_ambush / pure_mage10_caster (measured) | pure_mage10_caster | 0.98 | 0.98 | 1.00 | 1.00 | 0.95 | 0.95 |
+| chieftains_raid / t4_spellsword14_party (measured) | t4_spellsword14_party | 1.00 | 1.00 | 1.00 | 1.00 | 0.97 | 0.97 |
+| loadout / construct_core_solo (measured) | warrior2 | 1.00 | 1.00 | 1.00 | 1.00 | 0.97 | 0.97 |
+| invrisil / alley_footpads_t3_warrior10_solo (measured) | t3_warrior10 | 1.00 | 1.00 | 0.98 | 0.98 | 0.97 | 0.97 |
+| invrisil / boulevard_night_footpads_t3_warrior10_solo (measured) | t3_warrior10 | 1.00 | 1.00 | 0.98 | 0.98 | 0.97 | 0.97 |
+| ruin / ruin_guardian_w8_solo (measured) | warrior5_mage5 | 0.03 | 0.03 | 0.46 | 0.46 | 0.00 | 0.00 |
+| ruin / crypt_lich_w8_solo (measured) | warrior5_mage5 | 0.03 | 0.03 | 0.66 | 0.66 | 0.00 | 0.00 |
+| goblin_ambush / warrior5_mage5_caster (measured) | warrior5_mage5_caster | 1.00 | 1.00 | 1.00 | 1.00 | 0.98 | 0.98 |
+| invrisil / alley_footpads_t3_spellsword9_solo (measured) | t3_spellsword9 | 1.00 | 1.00 | 1.00 | 1.00 | 0.98 | 0.98 |
+| invrisil / boulevard_night_footpads_t3_spellsword9_solo (measured) | t3_spellsword9 | 1.00 | 1.00 | 1.00 | 1.00 | 0.98 | 0.98 |
+| dungeon / side_vault_construct_t5_swordsman14_solo | swordsman14 | 0.93 | 0.93 | 0.98 | 0.98 | 0.91 | 0.91 |
+| riverfarm / briar_collectors_w10_solo (measured) | warrior5_mage5 | 0.02 | 0.02 | 0.45 | 0.45 | 0.00 | 0.00 |
+| encounter / sewer_vermin_w2_solo (measured) | warrior2 | 1.00 | 1.00 | 1.00 | 1.00 | 0.99 | 0.99 |
+| chieftains_raid / warrior1_tutorial_solo (measured) | warrior1_tutorial_solo | 0.01 | 0.01 | 0.01 | 0.01 | 0.00 | 0.00 |
+| invrisil / hired_blades_t3_spellsword9_solo (measured) | t3_spellsword9 | 0.01 | 0.01 | 0.06 | 0.06 | 0.00 | 0.00 |
+| invrisil / hired_blades_t3_warrior10_solo (measured) | t3_warrior10 | 0.01 | 0.01 | 0.02 | 0.02 | 0.00 | 0.00 |
+| chieftains_raid / classless_solo (measured) | classless_solo | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| encounter / shield_spiders_w2_klbkch (measured) | warrior2 | 0.98 | 0.98 | 1.00 | 1.00 | 0.99 | 0.99 |
+| boss / awakened_boss_w2_solo (measured) | warrior2 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| invrisil / hired_blades_w10_solo (measured) | warrior5_mage5 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| party / raskghar_awakened_t4_party (measured) | t4_spellsword11_party | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
+
+- **base_rested:** 147 cells; mean drop vs base_rested 0.000; cells below 0.55: 48.
+- **head_rested:** 147 cells; mean drop vs base_rested 0.000; cells below 0.55: 48.
+- **base_competent:** 147 cells; mean drop vs base_rested -0.070; cells below 0.55: 39.
+- **head_competent:** 147 cells; mean drop vs base_rested -0.070; cells below 0.55: 39.
+- **base_0.75:** 147 cells; mean drop vs base_rested 0.209; cells below 0.55: 90.
+- **head_0.75:** 147 cells; mean drop vs base_rested 0.209; cells below 0.55: 90.
+
+</details>
