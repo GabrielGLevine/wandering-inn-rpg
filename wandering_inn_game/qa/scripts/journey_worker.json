@@ -1,5 +1,5 @@
 {
- "_comment": "#512 continuous worker/social history, seed9: fresh wages, actual cooking/serving, free drayman persuasion/gossip, returned reward (3g rather than4g), earned support at real sleep. No fixture/teleport/topup. Ending extension in progress. Bounded continuation preserves the965-step wall, then claims untouched free Inn chest armor, equips before real sleep and records one lost boss attempt; no potion funds, fixture reload, extra fight or farming. After the retained free-armor loss, claim exactly two already-earned Watch bounties3+4, buy Traveler Charm5 via confirmation, equip without refill, sleep and attempt once; no repeat wage or combat farming.",
+ "_comment": "#512/#571 continuous worker/social history, seed9: fresh wages, actual cooking/serving, free drayman persuasion/gossip, returned reward (3g rather than4g), earned support at real sleep. No fixture/teleport/topup. The first 1423 inputs are unchanged and retain six measured Awakened boss losses. #571 ruling 1 detour: identical retries replay one seed, so the route takes the untouched optional Chieftain's Raid once (after one real pause-menu Abandon with exact rollback), earns Warrior2 at a real sleep and wins the boss. Every earned meal eaten is pinned exactly; a meal preparation is pinned armed->active->expired with its clamp; a worn-armor toggle heals nothing.",
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [
@@ -4821,6 +4821,34 @@
    "action": "wait_item_use_ready"
   },
   {
+   "action": "assert_event_logged",
+   "type": "item_use_settled",
+   "payload_contains": {
+    "item": "fine_meal",
+    "context": "world",
+    "committed": true,
+    "count_before": 4,
+    "count_after": 3,
+    "restore_hp": 0,
+    "restore_mp": 0,
+    "before": {
+     "hp": 44,
+     "max_hp": 44,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 44,
+     "max_hp": 44,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   },
+   "_comment": "#571 criterion 5: every earned meal eaten on this route is pinned exactly (cooked earlier with held [Basic Cooking]/[Advanced Cooking]). The first Fine Meal at full pools restores nothing and only arms +2 max HP."
+  },
+  {
    "action": "press",
    "name": "inventory"
   },
@@ -5046,6 +5074,33 @@
    "action": "wait_item_use_ready"
   },
   {
+   "action": "assert_event_logged",
+   "type": "item_use_settled",
+   "payload_contains": {
+    "item": "fine_meal",
+    "context": "world",
+    "committed": true,
+    "count_before": 3,
+    "count_after": 2,
+    "restore_hp": 8,
+    "restore_mp": 4,
+    "before": {
+     "hp": 3,
+     "max_hp": 44,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 11,
+     "max_hp": 44,
+     "mp": 4,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
    "action": "press",
    "name": "inventory"
   },
@@ -5230,6 +5285,33 @@
    "action": "wait_item_use_ready"
   },
   {
+   "action": "assert_event_logged",
+   "type": "item_use_settled",
+   "payload_contains": {
+    "item": "fine_meal",
+    "context": "world",
+    "committed": true,
+    "count_before": 2,
+    "count_after": 1,
+    "restore_hp": 8,
+    "restore_mp": 4,
+    "before": {
+     "hp": 11,
+     "max_hp": 44,
+     "mp": 4,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 19,
+     "max_hp": 44,
+     "mp": 8,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
    "action": "press",
    "name": "inventory"
   },
@@ -5291,6 +5373,33 @@
   },
   {
    "action": "wait_item_use_ready"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "item_use_settled",
+   "payload_contains": {
+    "item": "fine_meal",
+    "context": "world",
+    "committed": true,
+    "count_before": 1,
+    "count_after": 0,
+    "restore_hp": 8,
+    "restore_mp": 4,
+    "before": {
+     "hp": 19,
+     "max_hp": 44,
+     "mp": 8,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 27,
+     "max_hp": 44,
+     "mp": 12,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
   },
   {
    "action": "press",
@@ -5356,6 +5465,33 @@
    "action": "wait_item_use_ready"
   },
   {
+   "action": "assert_event_logged",
+   "type": "item_use_settled",
+   "payload_contains": {
+    "item": "hot_meal",
+    "context": "world",
+    "committed": true,
+    "count_before": 4,
+    "count_after": 3,
+    "restore_hp": 6,
+    "restore_mp": 0,
+    "before": {
+     "hp": 27,
+     "max_hp": 44,
+     "mp": 12,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 33,
+     "max_hp": 44,
+     "mp": 12,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
    "action": "press",
    "name": "inventory"
   },
@@ -5419,6 +5555,33 @@
    "action": "wait_item_use_ready"
   },
   {
+   "action": "assert_event_logged",
+   "type": "item_use_settled",
+   "payload_contains": {
+    "item": "hot_meal",
+    "context": "world",
+    "committed": true,
+    "count_before": 3,
+    "count_after": 2,
+    "restore_hp": 6,
+    "restore_mp": 0,
+    "before": {
+     "hp": 33,
+     "max_hp": 44,
+     "mp": 12,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 39,
+     "max_hp": 44,
+     "mp": 12,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
    "action": "press",
    "name": "inventory"
   },
@@ -5480,6 +5643,33 @@
   },
   {
    "action": "wait_item_use_ready"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "item_use_settled",
+   "payload_contains": {
+    "item": "hot_meal",
+    "context": "world",
+    "committed": true,
+    "count_before": 2,
+    "count_after": 1,
+    "restore_hp": 5,
+    "restore_mp": 0,
+    "before": {
+     "hp": 39,
+     "max_hp": 44,
+     "mp": 12,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 44,
+     "max_hp": 44,
+     "mp": 12,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
   },
   {
    "action": "press",
@@ -8390,6 +8580,1785 @@
   {
    "action": "screenshot",
    "name": "worker_14_tactical_loss_rollback"
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_wall_detour_start",
+   "_comment": "#571 ruling 1 detour: identical boss retries replay one seed, so the route takes the untouched optional Chieftain's Raid (Relc ally, banks won_combat at challenge weight) for an earned Warrior level, then sleeps and returns once. Not repeated."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 10
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 50,
+    "max_hp": 50,
+    "mp": 15,
+    "max_mp": 15,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.active",
+   "equals": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "hot_meal": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 3
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_raid_detour_floodplains_autosave"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_preparing",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "encounter": "chieftains_raid"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "chieftains_raid",
+    "before": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 50,
+     "max_hp": 52,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "arena": "cave_mouth"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.active",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "action": "press",
+   "name": "hotbar_4",
+   "_comment": "Abandon pin: one real Flame Jet changes MP before the pause-menu Abandon."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "skill": "flame_jet"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "actor": "pc",
+    "skill": "flame_jet"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 50
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.max_hp",
+   "equals": 52
+  },
+  {
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "round_started",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "round": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.round",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 50
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.hp",
+   "equals": 29
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.cave_spider.hp",
+   "equals": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_15_raid_changed_before_abandon"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_16_abandon_confirmation"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 50,
+    "max_hp": 50,
+    "mp": 15,
+    "max_mp": 15,
+    "mp_potion_doses": 0
+   },
+   "_comment": "Abandon reloads the floodplains map-change autosave exactly: pools, max, armed meal, stock, exposure, purse, cell."
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.active",
+   "equals": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "hot_meal": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "surface": "field",
+    "after": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_resolved",
+   "payload_contains": {},
+   "count": 3
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   },
+   "count": 6
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "count": 3
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_abandon_exact_rollback"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_17_abandon_exact_rollback"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_preparing",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "encounter": "chieftains_raid"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "chieftains_raid",
+    "before": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 50,
+     "max_hp": 52,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "arena": "cave_mouth"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.active",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "victory": true,
+    "rounds": 3
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 50
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.goblin_chieftain.hp",
+   "equals": 0
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "loot_dropped",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "source": "chieftains_raid",
+    "gold": 5,
+    "items": [
+     "chipped_spear"
+    ]
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "delta": 5,
+    "source": "chieftains_raid",
+    "total": 8
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "chieftains_raid",
+    "before": {
+     "hp": 50,
+     "max_hp": 52,
+     "mp": 1,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 1,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   },
+   "_comment": "Meal preparation expiry: armed (earlier Fine Meal) -> active at entry -> expired at this exit; max HP clamps 52->50."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "chieftains_raid",
+    "before": {
+     "hp": 50,
+     "max_hp": 52,
+     "mp": 1,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 1,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.active",
+   "equals": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 50,
+    "max_hp": 50,
+    "mp": 1,
+    "max_mp": 15,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.won_combat",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "hot_meal": 1
+   }
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_raid_won_prep_expired"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_18_raid_won_prep_expired"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     14,
+     3
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    1
+   ]
+  },
+  {
+   "action": "touch_field_skill",
+   "skill": "advanced_cooking",
+   "_comment": "Held [Advanced Cooking] at the chef counter; slot10 has no number key, so the rendered field control is used (native click, not touch proof)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "skill": "advanced_cooking",
+    "target": "inn_chef_counter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "fine_meal",
+    "source": "inn_chef_counter",
+    "count_after": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "hot_meal": 1,
+    "fine_meal": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 8
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 9
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_bump": true
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_level_up",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "class": "warrior",
+    "level": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "times_slept": 8,
+    "vitals": {
+     "hp": 51,
+     "max_hp": 51,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 1,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 51,
+     "max_hp": 51,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 8
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_warrior2_earned_sleep"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_warrior2_rested"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_19_warrior2_rested"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    10
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "conversation": "relc_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "awakened_boss",
+    "before": {
+     "hp": 51,
+     "max_hp": 51,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 51,
+     "max_hp": 51,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "arena": "deep_warren"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_warrior2_boss_entry"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_20_warrior2_boss_entry"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "victory": true,
+    "rounds": 5
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 42
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.raskghar_awakened.hp",
+   "equals": 0
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "loot_dropped",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "source": "awakened_boss",
+    "items": [
+     "mending_draught",
+     "moonhide_fetish"
+    ]
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "awakened_boss",
+    "before": {
+     "hp": 42,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 42,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "awakened_boss",
+    "after": {
+     "hp": 42,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cleared_the_warren",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   },
+   "count": 6
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "count": 5
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_warren_cleared_after_detour"
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_21_warren_cleared"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "leather_jerkin"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Equip-toggle negative on worn armor at 42/51: unequip lowers the cap only; re-equip raises it and heals nothing."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_unequipped",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "slot": "armor"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "armor",
+    "before": {
+     "hp": 42,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 42,
+     "max_hp": 47,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "surface": "inventory",
+    "after": {
+     "hp": 42,
+     "max_hp": 47,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 42
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "leather_jerkin",
+    "slot": "armor"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "leather_jerkin",
+    "before": {
+     "hp": 42,
+     "max_hp": 47,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 42,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "surface": "inventory",
+    "after": {
+     "hp": 42,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 42,
+    "max_hp": 51,
+    "mp": 0,
+    "max_mp": 15,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "worker_22_equip_toggle_no_heal"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "moonhide_fetish"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Wear the boss-dropped Moonhide Fetish in the empty third accessory position (resonance 3/4); disclosed gear choice."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "moonhide_fetish",
+    "slot": "accessory_3"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "moonhide_fetish",
+    "before": {
+     "hp": 42,
+     "max_hp": 51,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 42,
+     "max_hp": 52,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 42,
+    "max_hp": 52,
+    "mp": 0,
+    "max_mp": 15,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "fine_meal",
+    "allowed": true
+   }
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "touch_inventory_use",
+   "_comment": "Eat the Fine Meal cooked with held [Advanced Cooking] after the raid."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "fine_meal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "fine_meal",
+    "committed": true
+   }
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "item_use_settled",
+   "payload_contains": {
+    "item": "fine_meal",
+    "context": "world",
+    "committed": true,
+    "count_before": 1,
+    "count_after": 0,
+    "restore_hp": 8,
+    "restore_mp": 4,
+    "before": {
+     "hp": 42,
+     "max_hp": 52,
+     "mp": 0,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 50,
+     "max_hp": 52,
+     "mp": 4,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 50,
+    "max_hp": 52,
+    "mp": 4,
+    "max_mp": 15,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "hot_meal": 1,
+    "mending_draught": 1
+   }
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "dump_state",
+   "label": "worker_post_warren_meal_and_gear"
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "worker_warren_cleared"
   }
  ]
 }
