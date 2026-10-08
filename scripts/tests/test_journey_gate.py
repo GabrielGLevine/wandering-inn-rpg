@@ -74,6 +74,12 @@ class JourneyGateTest(unittest.TestCase):
 		self.assertIn("no journeys selected", self.errors(self.run_gate(registry=[], manifest=[])))
 		self.assertIn("unknown journeys selected", self.errors(self.run_gate(only={"journey_z"})))
 
+	def test_shipped_registry_matches_manifest(self) -> None:
+		qa = ROOT / "wandering_inn_game" / "qa"
+		registry = json.loads((qa / "journeys.json").read_text())["journeys"]
+		manifest = json.loads((qa / "manifest.json").read_text())["scripts"]
+		self.assertEqual(gate_module.registration_errors(registry, manifest), [])
+
 	def test_over_budget_fails(self) -> None:
 		registry = [dict(REGISTRY[0], budget_sec=-1)]
 		self.assertIn("over budget", self.errors(self.run_gate(registry=registry)))

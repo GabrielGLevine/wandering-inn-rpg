@@ -5,7 +5,9 @@ Reports per fight: encounter, map, entry and exit HP/MP, result, rounds and
 items used, plus the route's sleeps, reloads, gold, equipment changes and
 out-of-combat recovery. Entry/exit come from `resources_changed`
 (`combat_entry` / `combat_victory`); a defeat's exit is its last in-combat
-resource change and its rollback state the next rendered field vitals.
+resource change and its rollback state the next rendered field vitals. A fight
+that ends in a load without `combat_finished` (pause-menu Abandon) is recorded
+as `abandoned` with the same exit/rollback treatment.
 
     python3 scripts/journey_ledger.py wandering_inn_game/qa_output/<script>/events.jsonl [--json]
 """
@@ -29,6 +31,13 @@ def _vitals(state: dict | None) -> str:
 	return text
 
 
+def _close(ledger: dict, fight: dict, result: str) -> None:
+	fight["result"] = result
+	if fight["exit"] is None:
+		fight["exit"] = fight.get("last_action") or fight["entry"]
+	ledger["fights"].append(fight)
+
+
 def build(events: list[dict]) -> dict:
 	ledger: dict = {"fights": [], "sleeps": [], "reloads": [], "gold": [], "equipment": [], "recovery": [], "maps": []}
 	current_map = ""
@@ -43,6 +52,9 @@ def build(events: list[dict]) -> dict:
 			current_map = str(payload.get("map", ""))
 			ledger["maps"].append(current_map)
 		elif kind == "combat_preparing":
+			if fight is not None and fight["entry"] is not None:
+				_close(ledger, fight, "abandoned")
+				awaiting_rollback = fight
 			finished = None
 			fight = {"encounter": payload.get("encounter"), "map": current_map, "entry": None, "exit": None,
 				"result": None, "rounds": None, "items": [], "before_entry": vitals}
@@ -86,7 +98,13 @@ def build(events: list[dict]) -> dict:
 			finished = fight
 			fight = None
 		elif kind == "game_loaded":
-			ledger["reloads"].append({"reason": payload.get("reason"), "map": current_map})
+			ledger["reloads"].append({"reason": payload.get("reason") or "load", "map": current_map})
+			if fight is not None and fight["entry"] is not None:
+				_close(ledger, fight, "abandoned")
+				awaiting_rollback = fight
+			if fight is not None:
+				finished = None
+				fight = None
 		elif kind == "ui_resources_rendered" and awaiting_rollback is not None and payload.get("surface") == "field":
 			awaiting_rollback["rollback"] = payload.get("after")
 			vitals = payload.get("after") or vitals
@@ -106,6 +124,7 @@ def build(events: list[dict]) -> dict:
 		"fights": len(ledger["fights"]),
 		"wins": sum(1 for r in ledger["fights"] if r["result"] == "win"),
 		"losses": sum(1 for r in ledger["fights"] if r["result"] == "loss"),
+		"abandoned": sum(1 for r in ledger["fights"] if r["result"] == "abandoned"),
 		"retried": {k: v for k, v in attempts.items() if len(v) > 1},
 		"sleeps": len(ledger["sleeps"]),
 		"gold_earned": earned,
@@ -121,11 +140,11 @@ def markdown(ledger: dict) -> str:
 	for index, row in enumerate(ledger["fights"], 1):
 		items = "; ".join(f"{i['item']} (dose {i['dose']})" if i.get("dose") else str(i["item"]) for i in row["items"]) or "-"
 		exit_text = _vitals(row["exit"])
-		if row["result"] == "loss":
+		if row["result"] in ("loss", "abandoned"):
 			exit_text += f" → rollback {_vitals(row.get('rollback'))}"
 		lines.append(f"| {index} | {row['encounter']} | {row['map']} | {_vitals(row['entry'])} | {exit_text} | {row['result']} | {row['rounds']} | {items} |")
 	summary = ledger["summary"]
-	lines += ["", f"Fights {summary['fights']} (wins {summary['wins']}, losses {summary['losses']}); "
+	lines += ["", f"Fights {summary['fights']} (wins {summary['wins']}, losses {summary['losses']}, abandoned {summary['abandoned']}); "
 		f"retried {summary['retried'] or 'none'}; sleeps {summary['sleeps']}; gold +{summary['gold_earned']} "
 		f"-{summary['gold_spent']} = {summary['gold_final']}; final {_vitals(summary['final_vitals'])}.", ""]
 	lines.append("Sleeps: " + ("; ".join(f"{s['map']} {s['source']} → {_vitals(s['after'])}" for s in ledger["sleeps"]) or "none"))

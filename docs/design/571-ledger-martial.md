@@ -11,12 +11,12 @@ changed.
 - Script commit `06efea7c` on `lane/571-martial` (base `ab851994`); this
   ledger lands in the commit after it. Tree `ad065e57`.
 - `wandering_inn_game/qa/run_qa.sh steel_thread headless --seed=37` exits 0
-  with `QA_RESULT: PASS`. `result.json` reports `passed: true` and 3133/3133
+  with `QA_RESULT: PASS`. `result.json` reports `passed: true` and 3134/3134
   steps. `qa/noise_scan.sh` is clean; the only engine line is the #586
   DummyShader shutdown leak. Log: `/private/tmp/wi-571-evidence/martial/headless.log`.
 - The table below is `scripts/journey_ledger.py` run on that run's
   `events.jsonl`.
-- `run_qa.sh steel_thread windowed --seed=37` passes 3133/3133 steps with 88
+- `run_qa.sh steel_thread windowed --seed=37` passes 3134/3134 steps with 88
   captures, copied to `/private/tmp/wi-571-evidence/martial/`. Its log has
   two shutdown-only Metal lines after `QA_RESULT`: `ParticlesShaderRD` never
   freed, and a `MaterialStorage6ShaderE` RID leak. They are the

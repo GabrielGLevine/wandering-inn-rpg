@@ -38,7 +38,35 @@ EVENTS = [
 ]
 
 
+ABANDON = [
+	ev("map_changed", map="sewers", cell=[1, 1]),
+	ev("combat_preparing", encounter="spiders"),
+	ev("resources_changed", reason="combat_entry", source="spiders", before=vit(30, 6), after=vit(30, 6)),
+	ev("resources_changed", reason="combat_action", source="attack_resolved", before=vit(30, 6), after=vit(12, 6)),
+	ev("game_loaded", reason=""),
+	ev("ui_resources_rendered", surface="field", after=vit(30, 6)),
+	ev("item_use_settled", committed=True, item="mending_draught", context="field", before=vit(30, 6), after=vit(38, 6),
+		dose_number=0, exposure_after=0, ap_cost=0),
+	ev("combat_preparing", encounter="rats"),
+	ev("resources_changed", reason="combat_entry", source="rats", before=vit(38, 6), after=vit(38, 6)),
+	ev("combat_preparing", encounter="sneaked_past"),
+	ev("combat_preparing", encounter="bats"),
+	ev("resources_changed", reason="combat_entry", source="bats", before=vit(38, 6), after=vit(38, 6)),
+	ev("combat_finished", victory=True, draw=False, rounds=2),
+]
+
+
 class JourneyLedgerTest(unittest.TestCase):
+	def test_abandon_and_unfinished_fights_are_kept(self) -> None:
+		ledger = journey_ledger.build(ABANDON)
+		results = [(f["encounter"], f["result"]) for f in ledger["fights"]]
+		self.assertEqual(results, [("spiders", "abandoned"), ("rats", "abandoned"), ("bats", "win")])
+		spiders = ledger["fights"][0]
+		self.assertEqual((spiders["exit"]["hp"], spiders["rollback"]["hp"]), (12, 30))
+		self.assertEqual([r["source"] for r in ledger["recovery"]], ["mending_draught"])
+		self.assertEqual(ledger["summary"]["abandoned"], 2)
+		self.assertEqual(ledger["reloads"], [{"reason": "load", "map": "sewers"}])
+
 	def test_fights_carry_entry_exit_and_rollback(self) -> None:
 		ledger = journey_ledger.build(EVENTS)
 		win, loss = ledger["fights"]

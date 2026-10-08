@@ -344,7 +344,12 @@ for pair in "${LAUNCHED[@]}"; do
 	# Grep discipline: any SCRIPT ERROR / Parse Error / WARNING / bare `ERROR:`
 	# is a failure (bare `ERROR:` once hid 242 orphan-signal lines, a4 #216).
 	# noise_scan.sh owns the pattern and its single #586 shutdown-leak deferral.
-	HITS="$("$HERE/noise_scan.sh" "$LOG" || true)"
+	# Fail closed: noise_scan exits 1 with hits; any other nonzero is a broken scan.
+	SCAN_RC=0
+	HITS="$("$HERE/noise_scan.sh" "$LOG")" || SCAN_RC=$?
+	if [ "$SCAN_RC" -ne 0 ] && [ "$SCAN_RC" -ne 1 ]; then
+		HITS="noise_scan.sh could not scan $LOG (rc=$SCAN_RC)"
+	fi
 	if [ -n "$HITS" ]; then
 		echo "FAIL  $NAME — log tripped the error/warning grep:"
 		echo "$HITS" | sed 's/^/        /'
