@@ -1,0 +1,441 @@
+{
+ "_comment": "#590 canonical: Olesm's seal-funding row is gated on the warden, as Pisces' THE CHOICE row is (#440 holds: every Act V ending is a post-fight resolution). Loads seal_fed_gate_start (both reads taken, warden armed, seal_warden_downed not banked) via title Continue. Flow: the Guild steps, where the hub is whole-list pinned WITHOUT the ward row -> the alcove warden, sprung from its approach cell and won under autoplay -> the same hub, now pinned WITH the ward row last -> the row opens seal_bounty_pitch, and its exit leaves without paying. NEGATIVES: the pitch never renders before the warden is down, and neither seal_kept_fed nor seal_resolved banks.",
+ "fixture_save": "seal_fed_gate_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down to Continue; confirm loads the seal_fed_gate_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    5
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.read_the_feeding_ward",
+   "equals": 1
+  },
+  {
+   "_comment": "== THE GUILD STEPS, WARDEN STANDING == bump up into Olesm (29,3) from (29,4). He carries a real talk_pool, so the first interact this waking is a bark and the second opens olesm_intro.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Olesm"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "olesm_intro"
+   }
+  },
+  {
+   "_comment": "#590 NEGATIVE, THE GATE. WHOLE-LIST option pin with the ward read and the warden standing: the TALK-path row is GONE, because accomplishment gates hide and its gate now compounds seal_warden_downed. Drop that leg and this pin reds with the ward row appended last.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Olesm",
+    "text": "The gallery's sealed and the report is filed, which means my column finally has its number. I would still rather there were nothing under my streets at all. The file says 'under control'. I will take it. My thanks, again.",
+    "options": [
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "That board. You're playing yourself?"
+     },
+     {
+      "locked": true,
+      "requirement": "requires [Appraise Foe]",
+      "text": "[Appraise Foe] What's the city's real weak point?"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "You look worried about something."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "It's dead. Zevara's sealing the gallery."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "I'll leave you to your tally."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "You run half this city from that desk. You know that, right?"
+     }
+    ]
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_hub_warden_standing"
+  },
+  {
+   "_comment": "Row 4 is his exit. Nothing on this hub can reach seal_bounty_pitch now.",
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Olesm",
+    "text": "Fed, on a schedule, with no end written anywhere. A posting like that sits on the ledger forever. Every quarter, somebody new asks why we're paying a Gnoll to walk down and feed a door, and every quarter somebody has to be brave enough to sign it again."
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "seal_warden_downed"
+   }
+  },
+  {
+   "_comment": "== THE WARDEN == teleport to trapped_halls (18,8), one step off the door's approach cell and outside the alcove's radius. Stepping up onto (18,7) springs the armed warden, seal_fed's own trigger.",
+   "action": "teleport",
+   "map": "trapped_halls",
+   "cell": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "trapped_halls"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.seal_warden.alive",
+   "equals": true
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "_comment": "on_victory banks on the combat DISMISS.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "seal_warden_downed"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "_comment": "== THE GUILD STEPS, WARDEN DOWN == same approach. Olesm's bark already played this waking, so the first interact opens the graph.",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    29,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "olesm_intro"
+   }
+  },
+  {
+   "_comment": "#590 POSITIVE: the same hub, one row longer. seal_warden_downed is the only change of gate state between the two pins, and the ward row renders last.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Olesm",
+    "text": "The gallery's sealed and the report is filed, which means my column finally has its number. I would still rather there were nothing under my streets at all. The file says 'under control'. I will take it. My thanks, again.",
+    "options": [
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "That board. You're playing yourself?"
+     },
+     {
+      "locked": true,
+      "requirement": "requires [Appraise Foe]",
+      "text": "[Appraise Foe] What's the city's real weak point?"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "You look worried about something."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "It's dead. Zevara's sealing the gallery."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "I'll leave you to your tally."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "You run half this city from that desk. You know that, right?"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "There's a ward under the city that has to go on being fed. The Watch needs to pay for it."
+     }
+    ]
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_hub_warden_down"
+  },
+  {
+   "_comment": "Row 6 is the ward row.",
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Olesm",
+    "text": "Fed, on a schedule, with no end written anywhere. A posting like that sits on the ledger forever. Every quarter, somebody new asks why we're paying a Gnoll to walk down and feed a door, and every quarter somebody has to be brave enough to sign it again.",
+    "options": [
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "[Charming Smile] You've been dreading that door since the survey. Sign it and sleep."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Then I'll fund the first season myself, and you can explain the second. (12 gold)"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "I'll come back when I've thought it through."
+     }
+    ]
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_bounty_pitch"
+  },
+  {
+   "_comment": "Row 2 is the pitch's always-available exit: the gate is the subject here, so nothing is paid and the seal stays open.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "seal_kept_fed"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "seal_resolved"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 20
+  }
+ ]
+}
