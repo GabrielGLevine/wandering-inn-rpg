@@ -189,7 +189,8 @@ and chronology belong in issue PRs. Earlier context:
     (#600). Rejected: another grinding job, and a bonded-room paperwork quest
     (repeats Pallass's paperwork theme).
 - **Pallass themes (2026-10-08):** besides bureaucracy, Pallass is the City of
-  Inventions, famous for alchemists and smiths, with Grimalkin's fitness.
+  Inventions, famous for alchemists and smiths, with Grimalkin's fitness, and
+  home to other races such as Garuda and Dullahans (canon-check each at build).
   Re-theme existing Pallass quests so only one (`papers_for_pallass`) stays
   paperwork-focused; ids, rewards and fees stay. "Grand Lift" stays.
 - **Purchases confirm before any gold or item effect commits** (#504).
