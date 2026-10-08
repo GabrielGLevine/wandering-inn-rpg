@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 281 native canonical QA scripts. The manifest is the
+This is the human index for 284 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -285,10 +285,13 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `owned_icons_key_art` | 9 | full | `owned_icon_kit` | #558/#562 curated co-visible owned icons and title/journal art; icon-kit setup fixture, real inventory selection and J opening; text-only ActII fallback |
 | `harvest_creature_visuals` | 9 | full | `—` | #564 complete bat/razorbeak rigs through actual encounters, renderer-bound sprite confirmations and desktop alpha bounds. |
 | `consumable_vendor_loop` | 9 | full | `consumable_vendor_start` | #568 explicit Pallass-history/20gold fixture with no potion stock: buy two actual Mana Potions, safe third dose, harmful fourth cancel/confirm, final unit removal and depleted HP/exposure reload through real controls; native touch is emulated, not earned journey/device proof. |
-| `journey_rogue` | 9 | full | `—` | #512 continuous fresh Rogue through earned regional travel,58g gear, preserved defeats/rollback/recovery, live Skill utility and open-ending epilogue. No fixtures/teleports; shutdown shader noise still invalidates authoritative gates until fixed. |
-| `journey_worker` | 9 | full | `—` | Fresh worker/social history with retained losses: earned cooking and multiclass support, Fang purchase, free chest armor/rest, finite Watch3+4 and Traveler5; bounded retries retain measured Awakened boss wall, including one actual-input Flame Jet tactical loss. No fixtures/top-ups/farming or ending claim. |
+| `journey_rogue` | 9 | full, journey | `—` | #512 continuous fresh Rogue through earned regional travel,58g gear, preserved defeats/rollback/recovery, live Skill utility and open-ending epilogue. No fixtures/teleports; the #586 shutdown leak line is deferred (qa/noise_scan.sh). |
+| `journey_worker` | 9 | full, journey | `—` | #571/#512 fresh worker/social history to the Inn epilogue: earned cooking and multiclass support; Awakened wall cleared after one optional Chieftain's Raid (Warrior 2 at sleep), seal warden after the optional ruin guardian loot, a cooked meal, owned gear and rest (kept losses, real rollback); all 82g mandatory fees paid, Pallass shortfall worked off with Inn chores. Exact pins on every meal, meal-bonus armed/active/expired with clamp, a no-heal equip toggle and a real pause-menu Abandon rollback. No fixtures/top-ups/farming. |
 | `poor_retired_producer_recovery` | 9 | full | `poor_retired_producer_earned` | #513/#515 checkpoint-based earned-state regression: actual optional purchase14→0g, scout depletion10HP/0MP, retired road stays absent, no income during walked free-bed recovery44HP/14MP; exact production-timing bed receipt. Inherited kit/history are not new acquisition proof. |
 | `desktop_field_earned_overflow` | 9 | full | `desktop_field_earned_start` | #567 desktop17-skill earned-state fixture: actual paging exposes every original slot, slot16 clicks dispatch Keen Eye, keyboard brackets reveal last/first selection, and expanded Details stays bounded above the controls while a real mouse wheel reaches its last line. Native mouse emulation; inheritedkit is not acquisition/mobile proof. |
+| `steel_thread` | 37 | full, journey | `—` | #571 martial continuous journey to the open-seal epilogue. Retains two vault defeats and one guardian defeat with real rollback; retries after worn carried gear and walked Inn-bed rests. Exact HP/MP pins on every Act IV-V fight, the footpad no-sleep pair and a depleted pause Save/Load. No fixtures, teleports, tuning or farming. |
+| `journey_caster` | 9 | full, journey | `—` | #571/#512 fresh caster: Pisces lesson -> [Mage] first -> [Ice Mage] 14; every fight player-driven (no autoplay), 8/8 wins, no retries; road then optional sewer bats in one waking at 0 MP; sleeps refill new maxima; four bought Mana Potions: two in the warden fight at 1 AP, dose 3 safe, dose 4 warning -> Cancel -> accept -4 HP, pause Save/Load keeps 21/38 HP, 12/19 MP, 4 doses; open-ending epilogue. No fixtures/teleports/top-ups. |
+| `journey_imperfect` | 9 | full, journey | `—` | #571/#513 fresh imperfect-spend variant: a never-equipped knife and unused handline leave 0g after the catalyst, Coyle exposed, the 80g Invrisil one-shots skipped; every later mandatory fee earned back only from repeatable producers over four extra wakings; sponsorship, Pallass stone and lift pass rows pinned locked at 7/13/2g; warden first try on earned loot; epilogue. No fixtures/teleports/top-ups. |
 
 ## Browser-only QA
 

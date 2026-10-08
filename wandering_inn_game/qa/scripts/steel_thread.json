@@ -5962,8 +5962,1483 @@
    "_comment": "The talk route's price, paid: ally_hp_penalty -18 off Ksmvr's 35."
   },
   {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 42
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 14
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "vault_boss_slot",
+    "before": {
+     "hp": 42,
+     "max_hp": 42,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 42,
+     "max_hp": 42,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   },
+   "_comment": "Entry pin, first attempt: fully rested after the sixth sleep, route kit only (spear, no accessories worn, one Mending Draught)."
+  },
+  {
    "action": "screenshot",
    "name": "07_act_iv_03_vault_construct"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": false,
+    "rounds": 7
+   },
+   "_comment": "#571 RULED RETRY (user 2026-10-07): the fully rested route kit loses the vault in round 7 at seed 37 (construct 46/220). Keep the defeat and its production rollback; every retry/detour is logged in docs/design/571-ledger-martial.md. No tuning, seed change, fixture or teleport."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.vault_construct.hp",
+   "equals": 46
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "mending_draught",
+    "count_before": 1,
+    "count_after": 0,
+    "healed": 8
+   },
+   "count": 1,
+   "_comment": "The competent policy drinks the carried Mending Draught (round 6, 20 -> 28 HP) before the loss."
+  },
+  {
+   "action": "dump_state",
+   "label": "martial_vault_defeat_1"
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Dismiss the defeat banner: the real auto_pre_combat rollback restores the entry state."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "reason": "defeat"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "map": "trapped_halls"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_finished",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "continue": true
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "surface": "field",
+    "after": {
+     "hp": 42,
+     "max_hp": 42,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "text": "HP 42/42   MP 14/14"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 42,
+    "max_hp": 42,
+    "mp": 14,
+    "max_mp": 14,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "mending_draught": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 17
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped",
+   "equals": {
+    "accessory_1": "",
+    "accessory_2": "",
+    "accessory_3": "",
+    "armor": "",
+    "weapon": "relcs_spare_spear"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_03a_vault_defeat_rollback"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "press",
+   "name": "inventory",
+   "_comment": "RETRY PREP 1/2: wear the carried enchanted accessories (pendant 1 + fetish 1 + amulet 2 = resonance 4 of 4). Gear never heals: current HP stays 42 while the maximum rises to 49."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "items": 6,
+    "resonance": {
+     "used": 0,
+     "capacity": 4
+    }
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "phosphor_pendant"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "phosphor_pendant",
+    "slot": "accessory_1"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "phosphor_pendant",
+    "before": {
+     "hp": 42,
+     "max_hp": 42,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 42,
+     "max_hp": 45,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "moonhide_fetish"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "moonhide_fetish",
+    "slot": "accessory_2"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "moonhide_fetish",
+    "before": {
+     "hp": 42,
+     "max_hp": 45,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 42,
+     "max_hp": 46,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "moon_bone_amulet"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "moon_bone_amulet",
+    "slot": "accessory_3"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "moon_bone_amulet",
+    "before": {
+     "hp": 42,
+     "max_hp": 46,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 42,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 42,
+    "max_hp": 49,
+    "mp": 14,
+    "max_mp": 14,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Retry 1, immediately and from the same cell."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "arena": "vault"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.ksmvr.max_hp",
+   "equals": 17
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 42
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 14
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "vault_boss_slot",
+    "before": {
+     "hp": 42,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 42,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": false,
+    "rounds": 7
+   },
+   "_comment": "Measured: worn gear alone is not enough (construct 36/220). The rollback restores the same RNG state, so each retry sees the same combat seed; only the kit differs."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.vault_construct.hp",
+   "equals": 36
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "mending_draught",
+    "count_before": 1,
+    "count_after": 0,
+    "healed": 8
+   },
+   "count": 2
+  },
+  {
+   "action": "dump_state",
+   "label": "martial_vault_defeat_2"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "reason": "defeat"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "map": "trapped_halls"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_finished",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "continue": true
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "surface": "field",
+    "after": {
+     "hp": 42,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "text": "HP 42/49   MP 14/14"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 42,
+    "max_hp": 49,
+    "mp": 14,
+    "max_mp": 14,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "mending_draught": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "RETRY PREP 2/2: walk to the existing free Inn bed and back, the route's own recovery idiom (halls y8 lane -> return door -> gallery -> tunnels -> sewers -> street -> gate -> floodplains -> inn)."
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump the return door (1,7)."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "dungeon_approach"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The rubble gives at your push; the path through it was cleared before you got here. The old gallery beyond is dark, but it is open."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump tunnel_up (2,1)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    12
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 9
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 15
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     14,
+     3
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 42,
+    "max_hp": 49,
+    "mp": 14,
+    "max_mp": 14,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 6
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Seventh sleep. It also banks the progress this waking already earned: Spearmaster 10 -> 14."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 42,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "times_slept": 7,
+    "vitals": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 42,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "class_level_up",
+   "payload_contains": {
+    "class": "spearmaster",
+    "level": 14
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "mage": 6,
+    "spearmaster": 14
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 49,
+    "max_hp": 49,
+    "mp": 14,
+    "max_mp": 14,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 17
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "mending_draught": 1
+   }
+  },
+  {
+   "action": "dump_state",
+   "label": "martial_vault_retry_rested"
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_03b_rested_before_retry"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump inn_door (15,3)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 28
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 13
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    10
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Bump deep_fissure (8,12)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "deep_tunnels"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 9
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump warren_mouth (12,5)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The gallery floor slopes down past where the den used to be. You come out in the delve's staging chamber."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "dungeon_approach"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "trapped_halls"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 15,
+   "_comment": "The y6 lane is clear now that the halls are cleared; arrive facing the threshold."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 49,
+    "max_hp": 49,
+    "mp": 14,
+    "max_mp": 14,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Retry 2: rested, worn gear, same RNG state as both defeats."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "arena": "vault"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.ksmvr.max_hp",
+   "equals": 17
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 49
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 14
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "vault_boss_slot",
+    "before": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_03c_vault_retry"
   },
   {
    "action": "wait_frames",
@@ -5983,6 +7458,33 @@
    }
   },
   {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 35,
+   "_comment": "Exit pin, winning retry: round 7, 35/49 HP and 0/14 MP; the draught is spent again (third and final use)."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.vault_construct.hp",
+   "equals": 0
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "mending_draught",
+    "count_before": 1,
+    "count_after": 0,
+    "healed": 8
+   },
+   "count": 3
+  },
+  {
    "action": "press",
    "name": "confirm",
    "_comment": "Dismiss -- resolve_combat runs on the dismiss."
@@ -5995,6 +7497,42 @@
   {
    "action": "wait_frames",
    "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 35,
+    "max_hp": 49,
+    "mp": 0,
+    "max_mp": 14,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "vault_boss_slot",
+    "after": {
+     "hp": 35,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {}
+  },
+  {
+   "action": "dump_state",
+   "label": "martial_vault_victory"
   },
   {
    "action": "assert_event_logged",
@@ -6306,7 +7844,25 @@
   {
    "action": "press",
    "name": "interact",
-   "_comment": "SAME WAKING as the survey offer -- social_talked only clears on sleep, so his pool line is spent and this single interact opens the graph."
+   "_comment": "The vault-retry sleep (seventh) opened a NEW waking, so Olesm's talk pool is fresh: hear the line, wait for its actual teardown, then interact again to open the existing report graph."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Olesm: I set the board up when the bells go quiet now, on the chance you wander past. A [Tactician] plans for the likely contingencies. You count as one."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_line_hidden",
+   "timeout_sec": 30,
+   "payload_contains": {}
+  },
+  {
+   "action": "press",
+   "name": "interact"
   },
   {
    "action": "wait_for_event",
@@ -6402,7 +7958,7 @@
    "_comment": "== ACT IV: THE DIG AND THE DOOR ==. seal_kept_reported is what unbolts Ceria's dig invitation at the inn, so the segment opens by walking home from Olesm's desk."
   },
   {
-   "_comment": "== PUT THE REWARD ON (GEAR/PACING) == The #437 viability table's finding 7: the old thread carried Zevara's amulet from Act III to the finale WITHOUT WEARING IT, and equipping it alone moved the warden read 0.48 -> 0.69. A player who has just watched a construct nearly take the party puts on the enchanted thing in their pack. Resonance 2 of 2, so it is the whole budget until the catalyst sleeps grow it; its [Invisibility] is a KIT entry from here on, which the competent policy spends as an escape under 35% HP and which Act V's alcove reads as the ambush edge.",
+   "_comment": "== PUT THE REWARD ON (GEAR/PACING) == The #437 finding still holds: a player who has just watched the construct take the party wears what is in the pack. This route already did that at the vault retry (pendant, fetish, amulet = resonance 4 of 4, all three accessory positions), so the warm core shard has nowhere to sit: the real slot refusal is the beat, and the worn set stays.",
    "action": "press",
    "name": "inventory"
   },
@@ -6411,29 +7967,25 @@
    "type": "ui_inventory_shown",
    "timeout_sec": 5,
    "payload_contains": {
-    "items": 7
+    "items": 7,
+    "resonance": {
+     "used": 4,
+     "capacity": 4
+    }
    }
   },
   {
-   "action": "press",
-   "name": "move_down",
-   "_comment": "#451 seed-37 inventory: 0 rusty_sword, 1 spear, 2 phosphor_pendant, 3 moonhide_fetish, 4 moon_bone_amulet, 5 construct_core_shard, 6 tonic. Five downs equip the shard; the guaranteed cistern pendant accounts for the added row."
+   "action": "move",
+   "direction": "down",
+   "steps": 5
   },
   {
-   "action": "press",
-   "name": "move_down"
-  },
-  {
-   "action": "press",
-   "name": "move_down"
-  },
-  {
-   "action": "press",
-   "name": "move_down"
-  },
-  {
-   "action": "press",
-   "name": "move_down"
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "construct_core_shard"
+   }
   },
   {
    "action": "press",
@@ -6441,10 +7993,10 @@
   },
   {
    "action": "wait_for_event",
-   "type": "item_equipped",
+   "type": "toast",
    "timeout_sec": 5,
    "payload_contains": {
-    "item": "construct_core_shard"
+    "text": "There's nowhere left on you for it to rest. It waits in your palm, patient as stone."
    }
   },
   {
@@ -6458,12 +8010,29 @@
   },
   {
    "action": "assert_state",
-   "path": "equipped.accessory_1",
-   "equals": "construct_core_shard"
+   "path": "equipped",
+   "equals": {
+    "accessory_1": "phosphor_pendant",
+    "accessory_2": "moonhide_fetish",
+    "accessory_3": "moon_bone_amulet",
+    "armor": "",
+    "weapon": "relcs_spare_spear"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 35,
+    "max_hp": 49,
+    "mp": 0,
+    "max_mp": 14,
+    "mp_potion_doses": 0
+   }
   },
   {
    "action": "screenshot",
-   "name": "07_act_iv_05b_core_shard_worn"
+   "name": "07_act_iv_05b_core_shard_no_room"
   },
   {
    "action": "wait_frames",
@@ -6966,6 +8535,694 @@
    "_comment": "Relc fields off the encounter's met_relc ally_requires -- earned back in Act I."
   },
   {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 35,
+   "_comment": "Entry pin, first guardian attempt: the vault win's exit carried with no sleep between."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "ruin_guardian",
+    "before": {
+     "hp": 35,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 35,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": false,
+    "rounds": 4
+   },
+   "_comment": "#571 RULED RETRY: carried straight on from the vault win (no sleep between), the guardian takes the party in round 4 with 10/50 left. Keep the defeat and its real rollback, walk to the free Inn bed and back, retry."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.ruin_guardian.hp",
+   "equals": 10
+  },
+  {
+   "action": "dump_state",
+   "label": "martial_guardian_defeat_1"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "reason": "defeat"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "map": "ruin_surface"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_finished",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "continue": true
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "surface": "field",
+    "after": {
+     "hp": 35,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "text": "HP 35/49   MP 0/14"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 35,
+    "max_hp": 49,
+    "mp": 0,
+    "max_mp": 14,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 32
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_07a_guardian_defeat_rollback"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "RETRY PREP: back out through Cracked Daylight, across the floodplains to the inn, upstairs to the free bed."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 17
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump ruin_exit (2,1)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    37,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     14,
+     3
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 35,
+    "max_hp": 49,
+    "mp": 0,
+    "max_mp": 14,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Eighth sleep: the free bed refills the carried vault depletion and banks the waking's progress (Diplomat forms; Spearmaster 15)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 35,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "times_slept": 8,
+    "vitals": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 60,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 35,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "diplomat"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "mage": 6,
+    "spearmaster": 15,
+    "diplomat": 4
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 49,
+    "max_hp": 49,
+    "mp": 15,
+    "max_mp": 15,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 32
+  },
+  {
+   "action": "dump_state",
+   "label": "martial_guardian_retry_rested"
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_07b_rested_before_guardian_retry"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump inn_door (15,3)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "floodplains"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    37,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump ruin_door (38,11)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "ruin_surface"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 17
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    19,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    19,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_comment": "Bump ruin_guardian (17,8)."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Retry: rested, same worn gear, same RNG state as the defeat."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5,
+   "payload_contains": {}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 49
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 15
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "ruin_guardian",
+    "before": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_07c_guardian_retry"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
    "action": "combat_autoplay",
    "max_turns": 300,
    "policy": "competent"
@@ -6977,6 +9234,22 @@
    "payload_contains": {
     "victory": true
    }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 49,
+   "_comment": "Exit pin, guardian retry: round 3, 49/49 HP, 1/15 MP."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.ruin_guardian.hp",
+   "equals": 0
   },
   {
    "action": "press",
@@ -6998,6 +9271,33 @@
   {
    "action": "wait_frames",
    "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 49,
+    "max_hp": 49,
+    "mp": 1,
+    "max_mp": 15,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "ruin_guardian",
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 1,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
   },
   {
    "action": "move",
@@ -7780,6 +10080,49 @@
   },
   {
    "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "resonant_catalyst",
+    "price": 18,
+    "gold_before": 49,
+    "gold_after": 31
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "resonant_catalyst"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "PURCHASE CONFIRM (#504): the modal opens on Cancel; down + confirm is the Buy row."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "resonant_catalyst",
+    "price": 18
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
    "type": "item_gained",
    "timeout_sec": 5,
    "payload_contains": {
@@ -8304,7 +10647,7 @@
    "action": "move",
    "direction": "left",
    "steps": 7,
-   "_comment": "8th waking. The spine quest does not auto-start: pisces_magic's door_awakened row is its only producer, so walk back to the Guild steps and report the awakening."
+   "_comment": "The waking after the third study sleep (eleventh sleep overall). The spine quest does not auto-start: pisces_magic's door_awakened row is its only producer, so walk back to the Guild steps and report the awakening."
   },
   {
    "action": "move",
@@ -9158,7 +11501,7 @@
   {
    "action": "press",
    "name": "confirm",
-   "_comment": "Row 0 = \"What's this blight really about?\"; row 1 is the [Calming Touch] mediation. The run HAS that skill now, unplanned: the [Diplomat] class formed during the attunement sleeps off what_the_seal_kept's own resolution grant (persuaded_someone 3 / befriended_moments 5, paid for TALKING Ksmvr through the plates), and diplomat level 1 grants charming_smile + calming_touch. The talk route through the halls bought the talk route through the hollow."
+   "_comment": "Row 0 = \"What's this blight really about?\"; row 1 is the [Calming Touch] mediation. The run HAS that skill now, unplanned: the [Diplomat] class formed at the guardian-retry sleep (eighth) off what_the_seal_kept's own resolution grant (persuaded_someone 3 / befriended_moments 5, paid for TALKING Ksmvr through the plates), and diplomat level 1 grants charming_smile + calming_touch. The talk route through the halls bought the talk route through the hollow."
   },
   {
    "action": "wait_for_event",
@@ -9336,6 +11679,47 @@
   {
    "action": "press",
    "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "invrisil_attunement_stone",
+    "price": 18
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "invrisil_attunement_stone"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "PURCHASE CONFIRM (#504): the modal opens on Cancel; down + confirm is the Buy row."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "invrisil_attunement_stone",
+    "price": 18
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
@@ -10244,6 +12628,48 @@
   },
   {
    "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "",
+    "price": 1,
+    "conversation": "invrisil_fixer",
+    "text": "The alley boys. What's their round? (1 gold)"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": ""
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "PURCHASE CONFIRM (#504): a priced row offers first; the modal opens on Cancel, down + confirm pays."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "price": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
    "type": "accomplishment_recorded",
    "timeout_sec": 5,
    "payload_contains": {
@@ -10275,6 +12701,48 @@
    "action": "press",
    "name": "confirm",
    "_comment": "Row 0 is now 'The men in the hats.' -- the second cup."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "",
+    "price": 1,
+    "conversation": "invrisil_fixer",
+    "text": "The men in the hats. (1 gold)"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": ""
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "PURCHASE CONFIRM (#504): a priced row offers first; the modal opens on Cancel, down + confirm pays."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "price": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
@@ -10416,6 +12884,52 @@
    "timeout_sec": 5
   },
   {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 49,
+   "_comment": "NO-SLEEP PAIR 1/2, entry: 49/49 HP, 16/16 MP after the study sleeps (eleventh sleep)."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 11
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "alley_footpads_a",
+    "before": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 16,
+     "max_mp": 16,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 16,
+     "max_mp": 16,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_18a_footpads_1"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
    "action": "combat_autoplay",
    "max_turns": 300,
    "policy": "competent"
@@ -10427,6 +12941,17 @@
    "payload_contains": {
     "victory": true
    }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 40,
+   "_comment": "NO-SLEEP PAIR 1/2, exit: round 2, 40/49 HP, 0/16 MP."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 0
   },
   {
    "action": "press",
@@ -10449,6 +12974,33 @@
   {
    "action": "wait_frames",
    "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 40,
+    "max_hp": 49,
+    "mp": 0,
+    "max_mp": 16,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "alley_footpads_a",
+    "after": {
+     "hp": 40,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 16,
+     "mp_potion_doses": 0
+    }
+   }
   },
   {
    "action": "move",
@@ -10503,6 +13055,52 @@
    "timeout_sec": 5
   },
   {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 40,
+   "_comment": "NO-SLEEP PAIR 2/2, entry: the first ambush's exit carried unchanged (still the eleventh sleep)."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 11
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "alley_footpads_b",
+    "before": {
+     "hp": 40,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 16,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 40,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 16,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_18b_footpads_2"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
+  },
+  {
    "action": "combat_autoplay",
    "max_turns": 300,
    "policy": "competent"
@@ -10514,6 +13112,17 @@
    "payload_contains": {
     "victory": true
    }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 24,
+   "_comment": "NO-SLEEP PAIR 2/2, exit: round 2, 24/49 HP, 0/16 MP."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 0
   },
   {
    "action": "press",
@@ -10536,6 +13145,196 @@
   {
    "action": "wait_frames",
    "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 24,
+    "max_hp": 49,
+    "mp": 0,
+    "max_mp": 16,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "alley_footpads_b",
+    "after": {
+     "hp": 24,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 16,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    11
+   ]
+  },
+  {
+   "action": "press",
+   "name": "cancel",
+   "_comment": "DEPLETED SAVE/LOAD: pause-menu Save to the first manual slot at 24/49 HP, 0/16 MP, then Load it back."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "mode": "save"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_hidden",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "slot": "manual"
+   }
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "mode": "load"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "reason": ""
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 24,
+    "max_hp": 49,
+    "mp": 0,
+    "max_mp": 16,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    11
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "mercantile_alleys"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "surface": "field",
+    "after": {
+     "hp": 24,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 16,
+     "mp_potion_doses": 0
+    },
+    "text": "HP 24/49   MP 0/16"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "07_act_iv_18c_depleted_reload"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 240
   },
   {
    "action": "move",
@@ -13017,6 +15816,46 @@
   },
   {
    "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "",
+    "price": 10
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": ""
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "PURCHASE CONFIRM (#504): a priced row offers first; the modal opens on Cancel, down + confirm pays."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "price": 10
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
    "type": "accomplishment_recorded",
    "timeout_sec": 5,
    "payload_contains": {
@@ -13186,13 +16025,26 @@
    "timeout_sec": 5,
    "payload_contains": {
     "speaker": "Krshia",
-    "text": "Let me see what you're carrying."
-   }
-  },
-  {
-   "action": "press",
-   "name": "move_down",
-   "_comment": "#451 seed-37 re-derivation: the guaranteed phosphor pendant is the first sellable row and stays in the pack; move to the vault tonic. The remedy draught also stays. The tonic is dead weight because its next-fight buff has no heal key, so the competent policy never reaches for it."
+    "text": "Let me see what you're carrying.",
+    "options": [
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Sell: Tonic of the Clear Eye. (+8 gold)"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Sell: Remedy Draught. (+5 gold)"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Never mind."
+     }
+    ]
+   },
+   "_comment": "The phosphor pendant has been WORN since the vault retry, and worn gear is not offered for sale, so the vault tonic is the first sellable row and the cursor is already on it. The remedy draught stays. The tonic is dead weight because its next-fight buff has no heal key, so the competent policy never reaches for it."
   },
   {
    "action": "press",
@@ -13313,6 +16165,47 @@
   {
    "action": "press",
    "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "pallass_attunement_stone",
+    "price": 18
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "pallass_attunement_stone"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "PURCHASE CONFIRM (#504): the modal opens on Cancel; down + confirm is the Buy row."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "pallass_attunement_stone",
+    "price": 18
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
@@ -13561,6 +16454,46 @@
   },
   {
    "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "",
+    "price": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": ""
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "PURCHASE CONFIRM (#504): a priced row offers first; the modal opens on Cancel, down + confirm pays."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "price": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
    "type": "accomplishment_recorded",
    "timeout_sec": 5,
    "payload_contains": {
@@ -13708,6 +16641,46 @@
   },
   {
    "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "",
+    "price": 5
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": ""
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "PURCHASE CONFIRM (#504): a priced row offers first; the modal opens on Cancel, down + confirm pays."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "price": 5
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
    "type": "accomplishment_recorded",
    "timeout_sec": 5,
    "payload_contains": {
@@ -13795,6 +16768,46 @@
    "action": "press",
    "name": "confirm",
    "_comment": "Row 0 = \"I'm here for the forge-tier fitness read. (8 gold)\" -- the examination is a PAID reading, not a fight: pallass_grimalkin's exam node has no combat arm at all."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "",
+    "price": 8
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": ""
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "PURCHASE CONFIRM (#504): a priced row offers first; the modal opens on Cancel, down + confirm pays."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "price": 8
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
@@ -13899,6 +16912,47 @@
   {
    "action": "press",
    "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_offered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "",
+    "price": 3,
+    "text": "Collect the stamped pass. (3 gold)"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_armed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": ""
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "PURCHASE CONFIRM (#504): a priced row offers first; the modal opens on Cancel, down + confirm pays."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "purchase_confirmed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "price": 3
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_purchase_confirm_hidden",
+   "timeout_sec": 5
   },
   {
    "action": "wait_for_event",
@@ -14892,7 +17946,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== THE DESCENT KIT == Resonance capacity grew to 3 at the catalyst attunement sleeps (`resonance_grown`), which is exactly enough for the moon-bone amulet (2) beside the moonhide fetish (1) -- so the vault's core shard comes OFF. That is the trade the finale wants: the shard is +3 HP and a point of damage reduction against a warden that hits for 28-30 (a point it barely notices), while the amulet is +3 HP, +1 damage and [Invisibility] in the kit -- which the competent policy spends as an escape under 35% HP, and which the alcove reads as the cloaked approach. Per #440 the cloak is an EDGE, not a skip: the warden wakes for every descent now, and the choice does not resolve until it is down.",
+   "_comment": "== THE DESCENT KIT == The amulet has been worn since the vault retry; resonance grew to 5 at the catalyst attunement sleeps and three positions are full (pendant 1, fetish 1, amulet 2 = 4 of 5). The descent trade keeps the shipped reasoning: the ruin guardian's ward fragment (+2 max HP, damage reduction 1, [Guarding Ward]) takes the moonhide fetish's place, because a warden that lands 26-28 a swing is answered by reduction, not by +1 damage. The core shard stays in the pack (resonance 2 would overflow). Gear never heals: the swap clamps 49/49 to 48/48, then the fragment raises the maximum to 50 without raising current HP.",
    "action": "press",
    "name": "inventory"
   },
@@ -14901,87 +17955,66 @@
    "type": "ui_inventory_shown",
    "timeout_sec": 5,
    "payload_contains": {
-    "items": 14
+    "items": 14,
+    "resonance": {
+     "used": 4,
+     "capacity": 5
+    }
    }
   },
   {
-   "action": "press",
-   "name": "move_down",
-   "_comment": "#451 seed-37 inventory: 0 rusty_sword, 1 spear, 2 phosphor_pendant, 3 moonhide_fetish, 4 moon_bone_amulet, 5 construct_core_shard, 6 remedy_draught, 7 guardian_ward_fragment, then quest tokens. Confirming an equipped row unequips it."
-  },
-  {
-   "action": "press",
-   "name": "move_down"
-  },
-  {
-   "action": "press",
-   "name": "move_down"
-  },
-  {
-   "action": "press",
-   "name": "move_down"
-  },
-  {
-   "action": "press",
-   "name": "move_down"
+   "action": "move",
+   "direction": "down",
+   "steps": 3
   },
   {
    "action": "wait_for_event",
    "type": "ui_inventory_selection_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "item": "construct_core_shard"
+    "item": "moonhide_fetish"
    }
   },
   {
    "action": "press",
-   "name": "confirm"
+   "name": "confirm",
+   "_comment": "Confirming an equipped row unequips it."
   },
   {
    "action": "wait_for_event",
    "type": "item_unequipped",
    "timeout_sec": 5,
    "payload_contains": {
-    "slot": "accessory_1"
+    "slot": "accessory_2"
    }
-  },
-  {
-   "action": "press",
-   "name": "move_up"
   },
   {
    "action": "wait_for_event",
-   "type": "ui_inventory_selection_rendered",
+   "type": "resources_changed",
    "timeout_sec": 5,
    "payload_contains": {
-    "item": "moon_bone_amulet"
+    "reason": "equipment",
+    "source": "accessory_2",
+    "before": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 17,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 48,
+     "max_hp": 48,
+     "mp": 17,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    }
    }
   },
   {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "item_equipped",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "item": "moon_bone_amulet",
-    "slot": "accessory_1"
-   }
-  },
-  {
-   "action": "press",
-   "name": "move_down",
-   "_comment": "4 -> 7, the ruin guardian's ward fragment (accessory, hp+2, damage reduction 1, resonance 1, ability [Guarding Ward]). It takes the last point of resonance ahead of the moonhide fetish because a warden that lands 26-28 a swing is answered by reduction, not by the fetish's +1 damage -- and this is the second reward the old thread carried to the finale without wearing."
-  },
-  {
-   "action": "press",
-   "name": "move_down"
-  },
-  {
-   "action": "press",
-   "name": "move_down"
+   "action": "move",
+   "direction": "down",
+   "steps": 4
   },
   {
    "action": "wait_for_event",
@@ -15005,6 +18038,29 @@
    }
   },
   {
+   "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "guardian_ward_fragment",
+    "before": {
+     "hp": 48,
+     "max_hp": 48,
+     "mp": 17,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 48,
+     "max_hp": 50,
+     "mp": 17,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
    "action": "press",
    "name": "inventory"
   },
@@ -15016,7 +18072,7 @@
   {
    "action": "assert_state",
    "path": "equipped.accessory_1",
-   "equals": "moon_bone_amulet"
+   "equals": "phosphor_pendant"
   },
   {
    "action": "assert_state",
@@ -15026,8 +18082,18 @@
   {
    "action": "assert_state",
    "path": "equipped.accessory_3",
-   "equals": "",
-   "_comment": "Resonance 3 of 3 -- the third slot cannot be filled, which is the budget doing its job."
+   "equals": "moon_bone_amulet"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 48,
+    "max_hp": 50,
+    "mp": 17,
+    "max_mp": 17,
+    "mp_potion_doses": 0
+   }
   },
   {
    "action": "screenshot",
@@ -15077,7 +18143,7 @@
    "action": "move",
    "direction": "right",
    "steps": 3,
-   "_comment": "Oracle-derived at this waking: taproom traffic closes both the y7 and the y8 lanes at different columns, so the run zig-zags y7 -> y8 -> y6 to reach the pantry door."
+   "_comment": "Oracle-derived at this waking (two extra recovery sleeps moved the taproom traffic): a guest holds (12,6), so run the y8 lane east to the x13 column and climb to the pantry approach."
   },
   {
    "action": "move",
@@ -15087,17 +18153,12 @@
   {
    "action": "move",
    "direction": "right",
-   "steps": 6
+   "steps": 9
   },
   {
    "action": "move",
    "direction": "up",
    "steps": 2
-  },
-  {
-   "action": "move",
-   "direction": "right",
-   "steps": 3
   },
   {
    "action": "assert_state",
@@ -15610,6 +18671,39 @@
    "frames": 240
   },
   {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 48,
+   "_comment": "Entry pin: 48/50 HP after the descent swap (gear never heals), 17/17 MP."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 17
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "combat_entry",
+    "source": "seal_warden_alcove",
+    "before": {
+     "hp": 48,
+     "max_hp": 50,
+     "mp": 17,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 48,
+     "max_hp": 50,
+     "mp": 17,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
    "action": "combat_autoplay",
    "max_turns": 300,
    "policy": "competent"
@@ -15623,6 +18717,25 @@
    }
   },
   {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 4,
+   "_comment": "Exit pin: round 7, 4/50 HP, 0/17 MP; the policy drinks the guardian's Remedy Draught."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_used",
+   "payload_contains": {
+    "item": "remedy_draught"
+   },
+   "count": 1
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
@@ -15634,6 +18747,33 @@
   {
    "action": "wait_frames",
    "frames": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 4,
+    "max_hp": 50,
+    "mp": 0,
+    "max_mp": 17,
+    "mp_potion_doses": 0
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "reason": "combat_victory",
+    "source": "seal_warden_alcove",
+    "after": {
+     "hp": 4,
+     "max_hp": 50,
+     "mp": 0,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    }
+   }
   },
   {
    "action": "assert_event_logged",
@@ -16281,6 +19421,44 @@
   },
   {
    "action": "wait_for_event",
+   "type": "resources_changed",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 4,
+     "max_hp": 50,
+     "mp": 0,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 17,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "times_slept": 14,
+    "vitals": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 17,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
    "type": "ui_sleep_veil_finished",
    "timeout_sec": 15
   },
@@ -16296,6 +19474,53 @@
   {
    "action": "wait_frames",
    "frames": 300
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals",
+   "equals": {
+    "hp": 50,
+    "max_hp": 50,
+    "mp": 17,
+    "max_mp": 17,
+    "mp_potion_doses": 0
+   },
+   "_comment": "Final ledger: fourteenth sleep refills 4/50 -> 50/50 HP, 0/17 -> 17/17 MP; purse 0 (+89 earned, -89 spent)."
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 14
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_resources_rendered",
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "surface": "field",
+    "before": {
+     "hp": 4,
+     "max_hp": 50,
+     "mp": 0,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 50,
+     "max_hp": 50,
+     "mp": 17,
+     "max_mp": 17,
+     "mp_potion_doses": 0
+    },
+    "text": "HP 50/50   MP 17/17"
+   },
+   "_comment": "The epilogue holds the toast queue, so the field HUD render is the last sleep's rendered receipt."
   },
   {
    "action": "assert_state",
@@ -16346,6 +19571,10 @@
    "payload_contains": {
     "id": "seal_rewarded"
    }
+  },
+  {
+   "action": "dump_checkpoint",
+   "slot": "martial_full_ending"
   }
  ]
 }

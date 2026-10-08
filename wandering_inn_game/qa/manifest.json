@@ -8098,10 +8098,12 @@
   {
    "script": "journey_rogue",
    "seed": 9,
+   "timeout_sec": 420,
    "tiers": [
-    "full"
+    "full",
+    "journey"
    ],
-   "note": "#512 continuous fresh Rogue through earned regional travel,58g gear, preserved defeats/rollback/recovery, live Skill utility and open-ending epilogue. No fixtures/teleports; shutdown shader noise still invalidates authoritative gates until fixed.",
+   "note": "#512 continuous fresh Rogue through earned regional travel,58g gear, preserved defeats/rollback/recovery, live Skill utility and open-ending epilogue. No fixtures/teleports; the #586 shutdown leak line is deferred (qa/noise_scan.sh).",
    "surfaces": {
     "maps": [
      "adventurers_rest",
@@ -8176,45 +8178,80 @@
      "input",
      "night_phase",
      "portals",
-     "quests"
+     "quests",
+     "save"
     ]
    }
   },
   {
    "script": "journey_worker",
    "seed": 9,
+   "timeout_sec": 420,
    "tiers": [
-    "full"
+    "full",
+    "journey"
    ],
-   "note": "Fresh worker/social history with retained losses: earned cooking and multiclass support, Fang purchase, free chest armor/rest, finite Watch3+4 and Traveler5; bounded retries retain measured Awakened boss wall, including one actual-input Flame Jet tactical loss. No fixtures/top-ups/farming or ending claim.",
+   "note": "#571/#512 fresh worker/social history to the Inn epilogue: earned cooking and multiclass support; Awakened wall cleared after one optional Chieftain's Raid (Warrior 2 at sleep), seal warden after the optional ruin guardian loot, a cooked meal, owned gear and rest (kept losses, real rollback); all 82g mandatory fees paid, Pallass shortfall worked off with Inn chores. Exact pins on every meal, meal-bonus armed/active/expired with clamp, a no-heal equip toggle and a real pause-menu Abandon rollback. No fixtures/top-ups/farming.",
    "surfaces": {
     "maps": [
+     "adventurers_rest",
+     "brothers_parlor",
      "deep_tunnels",
+     "dungeon_approach",
+     "enchanter_shop",
      "floodplains",
      "guild",
      "inn",
      "inn_upstairs",
+     "invrisil_boulevard",
+     "invrisil_cross_street",
+     "mercantile_alleys",
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "ruin_surface",
+     "seal_vault",
      "sewers",
-     "street"
+     "street",
+     "trapped_halls",
+     "witch_hollow"
     ],
     "fixtures": [],
     "skills": [
      "advanced_cooking",
      "basic_cleaning",
      "basic_cooking",
+     "detect_magic",
      "flame_jet",
+     "invisibility",
      "piercing_strikes",
      "sneak"
     ],
     "dialogue": [
+     "ceria_dig_camp",
+     "ceria_intro",
+     "door_mounting",
      "drayman_dispute",
      "erin_errand",
+     "hedault_enchanting",
+     "invrisil_fixer",
+     "invrisil_merchant_prince",
+     "invrisil_wilovan",
      "krshia_crate",
      "olesm_intro",
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
      "patron_serving",
      "pisces_magic",
+     "pisces_seal",
      "relc_descent",
      "relc_intro",
+     "riverfarm_headman",
+     "riverfarm_hunter",
+     "riverfarm_witch",
      "selys_delivery",
      "watch_crate",
      "zevara_intro"
@@ -8227,6 +8264,7 @@
      "exploration",
      "input",
      "night_phase",
+     "portals",
      "quests"
     ]
    }
@@ -8288,6 +8326,255 @@
     "dialogue": [],
     "systems": [
      "exploration"
+    ]
+   }
+  },
+  {
+   "script": "steel_thread",
+   "seed": 37,
+   "timeout_sec": 420,
+   "tiers": [
+    "full",
+    "journey"
+   ],
+   "note": "#571 martial continuous journey to the open-seal epilogue. Retains two vault defeats and one guardian defeat with real rollback; retries after worn carried gear and walked Inn-bed rests. Exact HP/MP pins on every Act IV-V fight, the footpad no-sleep pair and a depleted pause Save/Load. No fixtures, teleports, tuning or farming.",
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "brothers_parlor",
+     "deep_tunnels",
+     "dungeon_approach",
+     "enchanter_shop",
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "invrisil_boulevard",
+     "invrisil_cross_street",
+     "mercantile_alleys",
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "ruin_surface",
+     "seal_vault",
+     "sewers",
+     "street",
+     "trapped_halls",
+     "witch_hollow"
+    ],
+    "fixtures": [],
+    "skills": [
+     "invisibility"
+    ],
+    "dialogue": [
+     "ceria_dig_camp",
+     "ceria_intro",
+     "door_mounting",
+     "erin_errand",
+     "hedault_enchanting",
+     "invrisil_fixer",
+     "invrisil_merchant_prince",
+     "invrisil_wilovan",
+     "krshia_crate",
+     "olesm_intro",
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "pisces_magic",
+     "pisces_seal",
+     "relc_descent",
+     "relc_intro",
+     "riverfarm_headman",
+     "riverfarm_hunter",
+     "riverfarm_witch",
+     "selys_delivery",
+     "zevara_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase",
+     "portals",
+     "quests",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "journey_caster",
+   "seed": 9,
+   "timeout_sec": 420,
+   "tiers": [
+    "full",
+    "journey"
+   ],
+   "note": "#571/#512 fresh caster: Pisces lesson -> [Mage] first -> [Ice Mage] 14; every fight player-driven (no autoplay), 8/8 wins, no retries; road then optional sewer bats in one waking at 0 MP; sleeps refill new maxima; four bought Mana Potions: two in the warden fight at 1 AP, dose 3 safe, dose 4 warning -> Cancel -> accept -4 HP, pause Save/Load keeps 21/38 HP, 12/19 MP, 4 doses; open-ending epilogue. No fixtures/teleports/top-ups.",
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "brothers_parlor",
+     "deep_tunnels",
+     "dungeon_approach",
+     "enchanter_shop",
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "invrisil_boulevard",
+     "invrisil_cross_street",
+     "mercantile_alleys",
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "ruin_surface",
+     "seal_vault",
+     "sewers",
+     "stationer",
+     "street",
+     "trapped_halls",
+     "witch_hollow"
+    ],
+    "fixtures": [],
+    "skills": [
+     "calming_touch",
+     "frost_bolt",
+     "ice_shard",
+     "invisibility",
+     "light"
+    ],
+    "dialogue": [
+     "ceria_dig_camp",
+     "ceria_intro",
+     "door_mounting",
+     "drayman_dispute",
+     "erin_errand",
+     "hedault_enchanting",
+     "invrisil_fixer",
+     "invrisil_hired_scribe",
+     "invrisil_house_steward",
+     "invrisil_merchant_prince",
+     "invrisil_seal_broker",
+     "invrisil_stationer_client",
+     "invrisil_wilovan",
+     "krshia_crate",
+     "olesm_intro",
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "pisces_magic",
+     "pisces_seal",
+     "relc_descent",
+     "relc_intro",
+     "riverfarm_headman",
+     "riverfarm_hunter",
+     "riverfarm_witch",
+     "selys_delivery",
+     "xif",
+     "zevara_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase",
+     "portals",
+     "quests",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "journey_imperfect",
+   "seed": 9,
+   "timeout_sec": 420,
+   "tiers": [
+    "full",
+    "journey"
+   ],
+   "note": "#571/#513 fresh imperfect-spend variant: a never-equipped knife and unused handline leave 0g after the catalyst, Coyle exposed, the 80g Invrisil one-shots skipped; every later mandatory fee earned back only from repeatable producers over four extra wakings; sponsorship, Pallass stone and lift pass rows pinned locked at 7/13/2g; warden first try on earned loot; epilogue. No fixtures/teleports/top-ups.",
+   "surfaces": {
+    "maps": [
+     "barracks",
+     "brothers_parlor",
+     "deep_tunnels",
+     "dungeon_approach",
+     "enchanter_shop",
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "invrisil_boulevard",
+     "mercantile_alleys",
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "ruin_surface",
+     "runners_guild",
+     "seal_vault",
+     "sewers",
+     "street",
+     "trapped_halls",
+     "witch_hollow"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning",
+     "find_trap",
+     "light",
+     "sneak"
+    ],
+    "dialogue": [
+     "ceria_dig_camp",
+     "ceria_intro",
+     "door_mounting",
+     "drayman_dispute",
+     "erin_errand",
+     "hedault_enchanting",
+     "invrisil_fixer",
+     "invrisil_house_steward",
+     "invrisil_merchant_prince",
+     "invrisil_stationer_client",
+     "invrisil_wilovan",
+     "krshia_crate",
+     "olesm_intro",
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "pisces_magic",
+     "pisces_seal",
+     "relc_descent",
+     "relc_intro",
+     "riverfarm_headman",
+     "riverfarm_hunter",
+     "riverfarm_witch",
+     "selys_delivery",
+     "vess_counter",
+     "zevara_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase",
+     "portals",
+     "quests",
+     "save"
     ]
    }
   }
