@@ -21,8 +21,10 @@ entry while HANDOFF is at its size cap; update the status table in place.
 
 1. **#586 deferral:** the exact macOS headless shutdown line
    `ERROR: N RID allocations of type '…DummyShaderE' were leaked at exit.` is
-   nonblocking. `qa/noise_scan.sh` owns the single exemption; anything else
-   still fails.
+   nonblocking. A later ruling the same day added the two windowed (Metal/RD)
+   shutdown variants: `ERROR: N shaders of type ParticlesShaderRD were never
+   freed` and the `N10RendererRD15MaterialStorage6ShaderE` RID leak.
+   `qa/noise_scan.sh` owns these exemptions; anything else still fails.
 2. **Journey walls:** a continuous journey may retry after a defeat (normal
    rollback, as a player would) and take optional side content that already
    exists before the wall. Every retry and detour is logged in the ledger. No
@@ -65,8 +67,8 @@ Windowed read of each journey's key captures at production timing.
 | A: #586 noise deferral | done `35b0f988` (`qa/noise_scan.sh`, ci_sweep) |
 | A: journey tier/budget/report/guard | done: `qa/journeys.json`, `qa/journey_gate.py`, `journey` tier ⊂ `full`, nightly CI job. Measured locally under two concurrent lanes: Rogue 17.8 s (budget 90), Worker 10.4 s (budget 60). Real negative run: wrong checkpoint and registry drop both FAIL. Register martial/caster/imperfect as lanes land. |
 | B: depleted harness + reruns | done: report-only `WI_ENTRY_FRACTION` leg, `scripts/harness_entry_report.py`, `571-attrition-measurements.md` (rested PASS; vault 0.85–0.90 → 0.20–0.24 at 75% entry). Surfaced to #453; no tuning. |
-| C: martial vault → ending | merged `dec3b309`: `steel_thread` 3134/3134 to `martial_full_ending`, registered (`journey` tier, gate 16.7 s/90 s). Vault: identical retry replays the same seed (rollback restores RNG), so the route wears carried gear and rests at the Inn bed before winning; guardian retried after rest. No-sleep footpad pair + depleted Save/Load pinned. Ledger `571-ledger-martial.md`. Reviewed (early review HOLDS). **Open evidence gate:** its windowed log carries Metal `ParticlesShaderRD`/`…ShaderE` shutdown leaks outside the #586 deferral; the headless run is clean. |
+| C: martial vault → ending | merged `dec3b309`: `steel_thread` 3134/3134 to `martial_full_ending`, registered (`journey` tier, gate 16.7 s/90 s). Vault: identical retry replays the same seed (rollback restores RNG), so the route wears carried gear and rests at the Inn bed before winning; guardian retried after rest. No-sleep footpad pair + depleted Save/Load pinned. Ledger `571-ledger-martial.md`. Reviewed (early review HOLDS). Windowed log clean under the extended #586 deferral. |
 | D: worker wall → ending | not started |
-| E: caster journey | merged `b68cda65`: `journey_caster` 3782/3782 to `caster_full_ending`, registered (gate 18.7 s/120 s). Fresh Pisces→[Mage]→[Ice Mage] 14, every fight player-driven (no autoplay), 8/8 wins; road + sewer bats in one waking at 0 MP; 4 bought Mana Potions: 2 in combat at 1 AP, dose 3 safe, dose 4 warning→Cancel→accept −4 HP; pause Save/Load at 21/38, 12/19, 4 doses. **Open evidence gate:** windowed Metal shutdown leaks (as martial). Found combat LoS asymmetry (filed separately). |
+| E: caster journey | merged `b68cda65`: `journey_caster` 3782/3782 to `caster_full_ending`, registered (gate 18.7 s/120 s). Fresh Pisces→[Mage]→[Ice Mage] 14, every fight player-driven (no autoplay), 8/8 wins; road + sewer bats in one waking at 0 MP; 4 bought Mana Potions: 2 in combat at 1 AP, dose 3 safe, dose 4 warning→Cancel→accept −4 HP; pause Save/Load at 21/38, 12/19, 4 doses. Windowed log clean under the extended #586 deferral. Found combat LoS asymmetry (filed separately). |
 | F: imperfect variant + fee list | fee list done (`571-fee-audit.md`: 82g mandatory, no hard soft-lock, Pallass grind; possible warden-bypass flagged). Variant not started. |
 | G: Rogue per-fight pins | done: exact entry pins for all 11 fights and exit pins for the 8 wins (19 counts; the 3 defeats enter at full HP, so defeat rollback is proven by `steel_thread`, not here) and an earned pause Save→Load at 10/44 HP, 0/14 MP in `deep_tunnels`; 3509/3509, noise clean. Windowed read pending integration. Rogue never fights twice without sleep, so criterion 5 item 1 comes from lanes C/E. |
