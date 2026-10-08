@@ -13,6 +13,19 @@ static func active_slate(pool: Array, times_slept: int) -> Array:
 	return out
 
 
+## #513: a standing slip is posted every waking. The 3-slot window over `pool`
+## is unchanged; when it holds no standing slip, the standing slip at
+## `times_slept % standing count` is appended as a fourth, so window indices
+## and one-shot availability stay exactly as before.
+static func delivery_slate(pool: Array, times_slept: int) -> Array:
+	var slate := active_slate(pool, times_slept)
+	var standing: Array = pool.filter(func(delivery: Dictionary) -> bool: return bool(delivery.get("standing", false)))
+	if standing.is_empty() or slate.any(func(delivery: Dictionary) -> bool: return bool(delivery.get("standing", false))):
+		return slate
+	slate.append(standing[times_slept % standing.size()])
+	return slate
+
+
 static func condition_met(condition: Dictionary, baseline: Dictionary, accomplishment_count_cb: Callable, mode: String = "delta") -> bool:
 	for key: String in condition:
 		var current := int(accomplishment_count_cb.call(key))

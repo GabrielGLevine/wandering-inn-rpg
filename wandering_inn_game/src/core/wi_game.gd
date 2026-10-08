@@ -1919,7 +1919,7 @@ func delivery_board_deliveries() -> Array:
 	for delivery: Dictionary in _delivery_pool():
 		if bool(delivery.get("standing", false)) or accomplishment_count("completed_delivery_%s" % String(delivery[WIKeys.ID])) < 1:
 			remaining.append(delivery)
-	return WIBounties.active_slate(remaining, times_slept)
+	return WIBounties.delivery_slate(remaining, times_slept)
 
 
 func accept_delivery(id: String) -> void:
@@ -2002,9 +2002,14 @@ func _open_delivery_picker_dialogue() -> void:
 	_begin_code_dialogue(WIBounties.build_delivery_picker_graph(delivery_board_deliveries()), "delivery_picker", "vess")
 
 
+## #513: pay AFTER the receipt conversation starts. Its DIALOGUE_STARTED
+## interrupts whatever toast is on the strip, so a payout emitted first lost its
+## "Earned N gold." before the first frame (accelerated QA retires it).
 func _open_delivery_turnin_dialogue() -> void:
-	var met := turn_in_delivery()
+	var met := _delivery_condition_met()
 	_begin_code_dialogue(WIBounties.build_delivery_turnin_graph(met), "delivery_turnin", "vess")
+	if met:
+		turn_in_delivery()
 
 
 func _open_sell_dialogue(vendor_id: String) -> void:

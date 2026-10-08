@@ -13,7 +13,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "street" },
   { "action": "assert_state", "path": "player_cell", "equals": [18, 17] },
 
-  { "_comment": "== (0) ROTATION PRE-STATE == times_slept 0 -> pool window [0,1,2] = krshia_wool/pisces_parcel/gate_dispatch (data/deliveries.json order, the board_loop determinism convention).", "action": "assert_state", "path": "board_active_deliveries", "equals": ["delivery_krshia_wool", "delivery_pisces_parcel", "delivery_gate_dispatch"] },
+  { "_comment": "== (0) ROTATION PRE-STATE == times_slept 0 -> pool window [0,1,2] = krshia_wool/pisces_parcel/gate_dispatch (data/deliveries.json order, the board_loop determinism convention), plus #513's standing slip 0 % 3 = the dispatch run, because the window holds none. Before #513 this waking offered no standing slip.", "action": "assert_state", "path": "board_active_deliveries", "equals": ["delivery_krshia_wool", "delivery_pisces_parcel", "delivery_gate_dispatch", "delivery_standing_dispatch_run"] },
 
   { "_comment": "== (1) IN THROUGH THE DOOR == (18,17) right 2 -> (20,17) -- open ground now (issue #53 finding 13: runners_guild_door moved into the facade line at (20,16), the gap between the twin facade_plaster tiles, flush with the wall instead of floating a cell out in the street), up 1 blocks on runners_guild_door (20,16) & faces it. Interact transitions to runners_guild (5,6) and banks visited_runners_guild (door on_enter_accomplishment).", "action": "move", "direction": "right", "steps": 2 },
   { "action": "assert_state", "path": "player_cell", "equals": [20, 17] },
@@ -57,8 +57,13 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "delivery_picker", "entity": "vess" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Vess" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_picker_rendered", "payload_contains": { "conversation": "delivery_picker", "row_count": 4, "visible_rows": 4, "cursor": 0, "selected_title": "Wool Bolt to Silverfang Stall", "page_count": 1, "fits_viewport": true }, "timeout_sec": 5 },
+  { "_comment": "#513: four slips plus Never mind -- the standing slip is the fourth card.", "action": "wait_for_event", "type": "ui_picker_rendered", "payload_contains": { "conversation": "delivery_picker", "row_count": 5, "visible_rows": 5, "cursor": 0, "selected_title": "Wool Bolt to Silverfang Stall", "page_count": 1, "fits_viewport": true }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "03_vess_picker" },
+  { "_comment": "#513 AVAILABILITY: walk the cursor to card 4, the standing dispatch run on a waking that used to have no standing slip.", "action": "move", "direction": "down", "steps": 3 },
+  { "action": "wait_for_event", "type": "ui_picker_rendered", "payload_contains": { "conversation": "delivery_picker", "row_count": 5, "cursor": 3, "selected_title": "The Morning Dispatch Run", "selected_reward": "2 gold" }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "03a_vess_picker_standing_slip" },
+  { "action": "move", "direction": "up", "steps": 3 },
+  { "action": "wait_for_event", "type": "ui_picker_rendered", "payload_contains": { "conversation": "delivery_picker", "cursor": 0, "selected_title": "Wool Bolt to Silverfang Stall" }, "timeout_sec": 5 },
   { "_comment": "MOUSE route: click the entry-visible first card. Downstream acceptance/item/issue-line pins are identical to keyboard confirm, proving click selection+confirmation shares the result.", "action": "click_dialogue_option", "option": 1 },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "accepted_delivery_delivery_krshia_wool", "count": 1 }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "parcel_plains_wool", "source": "delivery_krshia_wool" }, "timeout_sec": 5 },
@@ -126,11 +131,12 @@
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "vess_counter" }, "timeout_sec": 5 },
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "confirm" },
-  { "_comment": "Emission order (turn_in_bounty's traced twin): turn_in_delivery resolves BEFORE the result graph opens -- gold_changed (delta 1, total 1: the fixture starts at 0 gold so the total pins the exact payout), the earn toast, completed_delivery_<id>, THEN dialogue_started{delivery_turnin} and Vess's mark-confirmed line.", "action": "wait_for_event", "type": "gold_changed", "payload_contains": { "delta": 1, "total": 1, "source": "delivery_delivery_krshia_wool" }, "timeout_sec": 5 },
+  { "_comment": "Emission order (#513): Vess's receipt opens FIRST -- dialogue_started{delivery_turnin} and her mark-confirmed line -- then turn_in_delivery pays: gold_changed (delta 1, total 1: the fixture starts at 0 gold so the total pins the exact payout), the earn toast, completed_delivery_<id>. Paying first let the receipt's own start retire the toast before it rendered.", "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "delivery_turnin", "entity": "vess" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Vess", "text": "Mark confirmed. Hah — sorry, came in at a sprint myself. Coin's counted. Nice legs on that run. Hawk started on a board like this one, you know. Well. A board LIKE it." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "gold_changed", "payload_contains": { "delta": 1, "total": 1, "source": "delivery_delivery_krshia_wool" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Earned 1 gold." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "completed_delivery_delivery_krshia_wool", "count": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "delivery_turnin", "entity": "vess" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Vess", "text": "Mark confirmed. Hah — sorry, came in at a sprint myself. Coin's counted. Nice legs on that run. Hawk started on a board like this one, you know. Well. A board LIKE it." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "Earned 1 gold." }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "05_turn_in_paid" },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
@@ -175,7 +181,7 @@
   { "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
 
-  { "_comment": "== (8) ROTATION + THE ONE-SHOT FAILED-RUN BARK + THE RETIREMENT PROOF (item D bug fix, user report) == the sleep advanced the window over the RETIREMENT-FILTERED 4-item pool (krshia_wool excluded, completed above): [gate_dispatch, grate_phials, inn_hamper] -- WITHOUT the fix this would read [pisces_parcel, gate_dispatch, grate_phials] (the raw 5-item pool's own times_slept-1 window), i.e. krshia_wool's retirement is what pushes inn_hamper into view one sleep early. delivery_krshia_wool never appears in this array again for the rest of the run (see step 9's own re-pin below) -- a completed delivery is retired PERMANENTLY, not just skipped-this-rotation.", "action": "assert_state", "path": "board_active_deliveries", "equals": ["delivery_gate_dispatch", "delivery_grate_phials", "delivery_inn_hamper"] },
+  { "_comment": "== (8) ROTATION + THE ONE-SHOT FAILED-RUN BARK + THE RETIREMENT PROOF (item D bug fix, user report) == the sleep advanced the window over the RETIREMENT-FILTERED 4-item pool (krshia_wool excluded, completed above): [gate_dispatch, grate_phials, inn_hamper] -- WITHOUT the fix this would read [pisces_parcel, gate_dispatch, grate_phials] (the raw 5-item pool's own times_slept-1 window), i.e. krshia_wool's retirement is what pushes inn_hamper into view one sleep early. delivery_krshia_wool never appears in this array again for the rest of the run (see step 9's own re-pin below) -- a completed delivery is retired PERMANENTLY, not just skipped-this-rotation. #513 appends standing slip 1 % 3, the Inn's order, since the window holds none.", "action": "assert_state", "path": "board_active_deliveries", "equals": ["delivery_gate_dispatch", "delivery_grate_phials", "delivery_inn_hamper", "delivery_standing_inn_hamper"] },
   { "action": "teleport", "map": "runners_guild", "cell": [5, 4] },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "runners_guild", "cell": [5, 4] }, "timeout_sec": 5 },
   { "action": "move", "direction": "up", "steps": 1 },
@@ -201,7 +207,7 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "delivery_picker" }, "timeout_sec": 5 },
   { "action": "assert_event_count", "type": "dialogue_line", "payload_contains": { "text": "Parcel came back on the night ledger. Happens. Happens ONCE, usually. Board's still live. Take another slip and run it like you mean it." }, "count": 1 },
-  { "_comment": "MOUSE cancel: click the fourth visible card ('Never mind.'); same ended/hidden/empty-slip result as Esc.", "action": "click_dialogue_option", "option": 4 },
+  { "_comment": "MOUSE cancel: click the fifth visible card ('Never mind.', after #513's standing slip); same ended/hidden/empty-slip result as Esc.", "action": "click_dialogue_option", "option": 5 },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
   { "action": "assert_state", "path": "accepted_delivery_id", "equals": "" },
@@ -214,7 +220,7 @@
   { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
   { "action": "assert_state", "path": "times_slept", "equals": 2 },
   { "action": "assert_state", "path": "delivery_failed", "equals": false },
-  { "action": "assert_state", "path": "board_active_deliveries", "equals": ["delivery_grate_phials", "delivery_inn_hamper", "delivery_barracks_gear"] },
+  { "_comment": "#513: standing slip 2 % 3, the barracks kit, joins the window.", "action": "assert_state", "path": "board_active_deliveries", "equals": ["delivery_grate_phials", "delivery_inn_hamper", "delivery_barracks_gear", "delivery_standing_barracks_kit"] },
 
   { "action": "teleport", "map": "runners_guild", "cell": [5, 4] },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "runners_guild", "cell": [5, 4] }, "timeout_sec": 5 },
@@ -240,8 +246,9 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "delivery_picker" }, "timeout_sec": 5 },
   { "action": "assert_event_count", "type": "dialogue_line", "payload_contains": { "text": "Board turned over while you slept. Grab a slip before somebody faster does." }, "count": 1 },
-  { "action": "move", "direction": "down", "steps": 3 },
+  { "_comment": "Never mind is the fifth card after #513's standing slip.", "action": "move", "direction": "down", "steps": 4 },
   { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 }
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "accepted_delivery_id", "equals": "" }
  ]
 }

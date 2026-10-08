@@ -78,6 +78,12 @@ the whole pool by `times_slept`. With no one-shot slip completed, a standing
 slip is on the board only when `times_slept % 13` is 8-12. In this route that
 means T11 and T12; it was absent for every Pallass waking.
 
+**#513 update (2026-10-07):** a standing slip is now posted every waking. When
+the 3-slot window holds none, standing slip `times_slept % 3` joins it as a
+fourth. A rerun on the #513 branch reproduces this ledger exactly, because the
+route still takes the barracks slip only at T11 and T12. The run now also pins
+a standing slip on the board at T15 and T17.
+
 The recovery purchases and slips also earned [Trader] at the T12 -> T13
 sleep. Its [Bargain] took the Invrisil stone from 18 to 16. Mandatory fees
 paid: 80, plus 2 for Cups's rumors. Gold in after the catalyst was 66 and
@@ -103,15 +109,18 @@ gold out was 64.
   Dungeon at the T15 -> T16 sleep, so the Rogue's two attunement sleeps were
   not needed.
 
-## Observations (not fixed here)
+## Observations
 
 - A standing slip's "Earned 2 gold." toast is emitted at turn-in but never
   renders, in headless or windowed. Vess's receipt dialogue opens over it and
   the walk away dismisses it. The receipt line is the only visible
-  confirmation.
+  confirmation. **Fixed by #513:** the receipt now opens before the payout,
+  and the run asserts the rendered "Earned 2 gold." at both turn-ins.
 - The field HUD shows HP/MP but not gold. A fee row the player cannot afford
   is greyed with no shortfall shown, so the purse is visible only in the
-  inventory.
+  inventory. **#513:** each such row now ends in "(needs N more gold)". The
+  run pins "needs 3 more gold" (sponsorship), "needs 5 more gold" (Pallass
+  stone) and "needs 1 more gold" (lift pass). The HUD still omits gold.
 
 ## Ledger
 
