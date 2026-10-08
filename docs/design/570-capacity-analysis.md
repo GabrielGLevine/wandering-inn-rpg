@@ -5,10 +5,12 @@ Analysis date: 2026-10-05. Source snapshot:
 Scope: the approved capacity direction in [#570](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/570)
 and the [recovery plan](2026-10-05-persistent-vitals-recovery-plan.md).
 
-The tables below describe this snapshot. #514 later lowered Hedault products'
-resonance and moved the wands' damage point to spell power
-([514-gear-rules.md](514-gear-rules.md) §8), so `--check` against a later tree
-reports that drift.
+**Regenerated 2026-10-08 for #514** ([514-gear-rules.md](514-gear-rules.md)).
+The generated block below reads current data: Hedault's trueing lowered his
+products' resonance, and the wands carry spell power in place of a weapon
+damage point. That block adds a flat spell power column, so `--check`
+passes. The prose that follows the block was written against the 10-05
+snapshot. It still holds except where a bracketed #514 note says otherwise.
 
 Recommend **4 at creation, 5 after the existing once-only sleep growth** for
 the implementation candidate. Actual catalog combinations show a useful
@@ -43,27 +45,27 @@ rows use at most three positions. The examples assume resonance-zero weapon
 and armor; production capacity counts every equipped position.
 
 <!-- capacity-570:begin -->
-| Loadout | Resonance | Accessory positions | Flat HP | Flat damage | Flat reduction | Item-granted Skills | Budget fits 2 / 3 / 4 / 5 |
-|---|---:|---:|---:|---:|---:|---|---|
-| A: current shop pair | 2 | 2 | 2 | 1 | 0 | — | yes / yes / yes / yes |
-| B: current pair + Stonescale | 4 | 3 | 2 | 1 | 1 | [Tough Body] | no / no / yes / yes |
-| C: current grown trio | 3 | 3 | 5 | 1 | 0 | — | no / yes / yes / yes |
-| D: shield + two Hedault pieces | 4 | 3 | 5 | 1 | 0 | [Dangersense], [Eagle Eyes], [Mana Shield] | no / no / yes / yes |
-| E: earned Lichbone alone | 3 | 1 | 3 | 1 | 1 | — | no / yes / yes / yes |
-| F: earned Lichbone + Fang | 4 | 2 | 3 | 2 | 1 | — | no / no / yes / yes |
-| G: earned Lichbone + pair | 5 | 3 | 5 | 2 | 1 | — | no / no / no / yes |
-| H: earned Anchor + pair | 5 | 3 | 6 | 1 | 1 | — | no / no / no / yes |
-| I: two costly pieces | 6 | 2 | 7 | 1 | 2 | — | no / no / no / no |
-| J: four pieces, budget fits | 3 | 4 | 6 | 1 | 0 | [Dangersense] | no / yes / yes / yes |
+| Loadout | Resonance | Accessory positions | Flat HP | Flat damage | Flat spell power | Flat reduction | Item-granted Skills | Budget fits 2 / 3 / 4 / 5 |
+|---|---:|---:|---:|---:|---:|---:|---|---|
+| A: current shop pair | 2 | 2 | 2 | 1 | 0 | 0 | — | yes / yes / yes / yes |
+| B: current pair + Stonescale | 4 | 3 | 2 | 1 | 0 | 1 | [Tough Body] | no / no / yes / yes |
+| C: current grown trio | 3 | 3 | 5 | 1 | 0 | 0 | — | no / yes / yes / yes |
+| D: shield + two Hedault pieces | 1 | 3 | 5 | 1 | 0 | 0 | [Dangersense], [Eagle Eyes], [Mana Shield] | yes / yes / yes / yes |
+| E: earned Lichbone alone | 3 | 1 | 3 | 0 | 2 | 1 | — | no / yes / yes / yes |
+| F: earned Lichbone + Fang | 4 | 2 | 3 | 1 | 2 | 1 | — | no / no / yes / yes |
+| G: earned Lichbone + pair | 5 | 3 | 5 | 1 | 2 | 1 | — | no / no / no / yes |
+| H: earned Anchor + pair | 5 | 3 | 6 | 1 | 0 | 1 | — | no / no / no / yes |
+| I: two costly pieces | 6 | 2 | 7 | 0 | 2 | 2 | — | no / no / no / no |
+| J: four pieces, budget fits | 3 | 4 | 6 | 1 | 0 | 0 | [Dangersense] | no / yes / yes / yes |
 
-Catalog scope: 27 positive-resonance accessories with a nonzero flat modifier or an ability.
+Catalog scope: 24 positive-resonance accessories with a nonzero flat modifier or an ability.
 
 | Capacity | Single items | Two-item sets | Three-item sets |
 |---:|---:|---:|---:|
-| 2 | 25 | 171 | 0 |
-| 3 | 27 | 285 | 969 |
-| 4 | 27 | 338 | 1995 |
-| 5 | 27 | 350 | 2622 |
+| 2 | 22 | 136 | 0 |
+| 3 | 24 | 221 | 680 |
+| 4 | 24 | 265 | 1360 |
+| 5 | 24 | 275 | 1802 |
 
 Actual dialogue gold debits (excluding travel and prerequisites):
 
@@ -102,7 +104,8 @@ At current grown capacity 3, Lichbone alone fits (E) but cannot retain the
 Fang or Ward. At proposed starting 4 it can retain Fang (F). The earned
 growth to 5 admits Ward too (G), adding 2 flat HP to F. Thus sleep still
 buys something tangible. Anchor offers a parallel 3+1+1 witness (H), trading
-one flat damage modifier for one flat HP relative to G. Existing 3-cost
+G's two spell power for one flat HP [#514; the 10-05 snapshot traded one flat
+damage modifier]. Existing 3-cost
 items become wearable before resonance growth if acquired; this is a real
 progression change to measure, not just more room for small items.
 
@@ -156,7 +159,7 @@ measured win-rate changes or new class requirements.
 |---|---|---|
 | Warrior → Blademaster / Spearmaster; Spellsword / Spellspear / Deathknight | Stonescale's flat reduction helps while its [Tough Body] duplicates the inherited kit. Extra Fang/Lichbone flat damage can affect repeated weapon hits. | A→B, E→F→G with the spine's actual weapon and allies |
 | Mage → Ice Mage / Fire Mage; Druid / Wild Sage | Pure caster paths can gain [Tough Body] from B. Mage level 2 already grants [Mana Shield], inherited by these Mage descendants, so D does not grant a second shield. | B versus cheaper HP/ward combinations; D with the actual held kit and MP |
-| Necromancer → Deathknight | Graveflame and Lichbone are accessories in this engine. Capacity admits their defensive/damage modifiers beside other pieces; these are not new spell-power formulas. | Graveflame+pair (4) versus Lichbone+pair (5), solo and companion routes |
+| Necromancer → Deathknight | Graveflame and Lichbone are accessories in this engine. Capacity admits their defensive modifiers and, since #514, their spell power beside other pieces. | Graveflame+pair (4) versus Lichbone+pair (5), solo and companion routes |
 | Archer → Sharpshooter / Scout / Ranger / Skirmisher; Rogue → Infiltrator | D grants [Eagle Eyes] (+8 hit bonus) if missing. Scout grants it at 14; duplicates give no extra bonus. Rogue grants [Dangersense] at 4, Warrior-derived hybrids inherit it. | D versus B/C with ranged/Skill use; do not infer bow behavior from melee autoplay |
 | Beast Tamer → Beast Master | More personal defense can change survival while the companion deals damage; caster consolidations also inherit Mage's shield. | B/C with the real companion and earned equipment timing |
 | Helper / service / Innkeeper; Trader / Merchant; Runner / Courier; Cook / Chef; Mixer / Alchemist; Diplomat / Emissary; Tactician / Strategist; Hedge Witch / Witch | Equipment can supply combat abilities absent from the class kit. Tactician gets [Dangersense] at 3; Hedge Witch gets [Witch's Warding] at 3. Added equipment must not be assumed to repair progression-route gaps. | Purchased B/D versus zero-resonance ring/sachet choices on the actual spine; include constrained gold and low resources |

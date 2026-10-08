@@ -134,8 +134,8 @@ const EXPECTED_SKILLS := {
 	"power_strike": ["3 AP — ×2 damage. Once every 2 rounds."],
 	"counter_strike": ["Strike back for ×0.8 damage when hit in melee."],
 	"battle_momentum": ["+1 AP when you down a foe"],
-	"flame_bolt": ["2 AP — spell damage 1d6 at range 4. Burns."],
-	"flame_jet": ["2 AP, 4 MP — spell damage to everything in a line 4 cells long"],
+	"flame_bolt": ["2 AP — damage 1d6 at range 4. Burns."],
+	"flame_jet": ["2 AP, 4 MP — spell damage to all in a 4-cell line"],
 	"frost_bolt": ["1 AP, 2 MP — spell damage 1d6 at range 4. Slows."],
 	"mana_shield": ["Spend MP to absorb incoming damage."],
 	"quick_cast": ["Your first spell each turn costs 1 less AP."],
@@ -158,8 +158,8 @@ const EXPECTED_SKILLS := {
 	"icy_floor": ["2 AP, 4 MP — glaze a 3×3 patch of ground at range 3 for 2 rounds. Slows."],
 	"flame_scythe": ["2 AP, 4 MP — spell damage 1d6 at range 1"],
 	"flare_burst": ["1 AP, 2 MP — spell damage 1d6 at range 3"],
-	"flame_pillar": ["3 AP, 5 MP — blast a 3×3 area around the target for 1d6 spell damage. Hits friend and foe."],
-	"slam": ["4 AP — blast a 3×3 area around the target for 1d6 weapon damage after a round's gathering. Hits friend and foe. Roots."],
+	"flame_pillar": ["3 AP, 5 MP — spell damage 1d6 to friend and foe in a 3×3 area"],
+	"slam": ["4 AP — weapon damage 1d6 to friend and foe in a 3×3 area after a round's gathering. Roots."],
 	"keener_edge": ["2 AP — ×1.6 damage"],
 	"spellbound_strike": ["3 AP, 3 MP — ×3 damage. Once every 2 rounds."],
 	# #449 [Spellspear]: the spear-flavored twins of the two rows directly
@@ -190,7 +190,7 @@ const EXPECTED_SKILLS := {
 	"servers_prescience": [],
 	"charming_smile": [],
 	"calming_touch": ["2 AP — spell damage 1d6 at range 1. Slows."],
-	"raskghar_maul": ["3 AP — spell damage 1d6 at range 2. Slows. Weakens."],
+	"raskghar_maul": ["3 AP — damage 1d6 at range 2. Slows. Weakens."],
 	# #474 [Sunder the Bond], the companion counter. Enemy-kit only, and the
 	# `target_rule: bonded` half is deliberately INVISIBLE in this string: the
 	# effect-text vocabulary describes what a Skill does, not who it may be spent
@@ -202,11 +202,11 @@ const EXPECTED_SKILLS := {
 	## here anyway -- the bestiary and the journal read the same composer, and a
 	## Skill whose card says nothing is how a data key reaches a reader.
 	"raise_bones": ["3 AP — raise Bone Thrall to fight beside you, up to 2 a fight. Once per round."],
-	"lich_bone_splinter": ["1 AP, 2 MP — spell damage 1d6 at range 4"],
-	"lich_grave_lance": ["2 AP, 4 MP — spell damage 1d6 at range 4. Weakens."],
+	"lich_bone_splinter": ["1 AP, 2 MP — damage 1d6 at range 4"],
+	"lich_grave_lance": ["2 AP, 4 MP — damage 1d6 at range 4. Weakens."],
 	"power_shot": ["3 AP — ×2 damage. Once every 2 rounds."],
 	"quick_nock": ["1 AP — ×0.7 damage"],
-	"piercing_shot": ["3 AP — weapon damage to everything in a line 4 cells long. Once every 2 rounds."],
+	"piercing_shot": ["3 AP — weapon damage to all in a 4-cell line. Once every 2 rounds."],
 	"keen_eye": [],
 	"directed_strike": ["2 AP — ×1.6 damage"],
 	"flanking_step": ["+1 move cell every turn"],
@@ -219,7 +219,7 @@ const EXPECTED_SKILLS := {
 	"disarm_trap": [],
 	"sudden_strike": ["2 AP — ×1.8 damage. Once per fight."],
 	"called_shot": ["3 AP — ×2.2 damage. Once every 2 rounds."],
-	"piercing_volley": ["3 AP — weapon damage to everything in a line 5 cells long. Once every 2 rounds."],
+	"piercing_volley": ["3 AP — weapon damage to all in a 5-cell line. Once every 2 rounds."],
 	"flame_dart": ["2 AP, 3 MP — spell damage 1d6 at range 4"],
 	"perfect_hospitality": [],
 	"steady_draw": ["+8 to hit"],
@@ -269,13 +269,13 @@ const EXPECTED_SKILLS := {
 	"bramble_hand": ["2 AP, 3 MP — spell damage 1d6 at range 1. Roots."],
 	"hearthward_charm": [],
 	"greater_hearthward": [],
-	"crescent_cut": ["3 AP — weapon damage to everything in a line 3 cells long"],
-	"pierce_thrust": ["3 AP — weapon damage to everything in a line 3 cells long"],
+	"crescent_cut": ["3 AP — weapon damage to all in a 3-cell line"],
+	"pierce_thrust": ["3 AP — weapon damage to all in a 3-cell line"],
 	"ice_wall": ["Spend MP to absorb incoming damage."],
 	"flashfire_spellcraft": ["Your first spell each turn costs 1 less AP."],
 	"blinding_arrow": ["2 AP — ×1.2 damage. Weakens."],
 	"shadowstep": ["+2 move cells every turn"],
-	"phantom_barrage": ["3 AP — spell damage to everything in a line 4 cells long. Once every 2 rounds."],
+	"phantom_barrage": ["3 AP — damage to all in a 4-cell line. Once every 2 rounds."],
 	"trusted_voice": [],
 	"barmaids_prescience": [],
 	"swift_service": ["+1 move cell every turn"],
@@ -541,14 +541,16 @@ func _test_tripwires() -> void:
 	_check(WIEffectText.skill_effect_lines({"effect": {"type": "hp_bonus", "amount": 10}}) == ["+10 max HP"], "hp_bonus tripwire base")
 	_check(WIEffectText.skill_effect_lines({"effect": {"type": "hp_bonus", "amount": 25}}) == ["+25 max HP"], "hp_bonus tripwire: amount moves")
 	var line_skill := {"ap_cost": 2, "mp_cost": 4, "effect": {"type": "line_damage", "length": 4}}
-	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — spell damage to everything in a line 4 cells long"], "line_damage tripwire base")
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — spell damage to all in a 4-cell line"], "line_damage tripwire base")
 	line_skill["effect"]["length"] = 7
-	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — spell damage to everything in a line 7 cells long"], "line_damage tripwire: length moves")
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — spell damage to all in a 7-cell line"], "line_damage tripwire: length moves")
 	# #514: the `weapon` gate, and nothing else, makes a line a weapon Skill.
 	line_skill["weapon"] = "sword"
-	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — weapon damage to everything in a line 7 cells long"], "line_damage tripwire: a weapon gate makes it weapon damage")
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — weapon damage to all in a 7-cell line"], "line_damage tripwire: a weapon gate makes it weapon damage")
 	line_skill["weapon"] = ""
-	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — spell damage to everything in a line 7 cells long"], "line_damage tripwire: an empty gate (HUD slot record) is no gate")
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — spell damage to all in a 7-cell line"], "line_damage tripwire: an empty gate (HUD slot record) is no gate")
+	line_skill["damage_source"] = "innate"
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — damage to all in a 7-cell line"], "line_damage tripwire: an innate arm takes no gear tag")
 
 	var catalog := [{"id": "x", "effect": {"type": "spell_damage", "applies": {"slowed": {"pool_penalty": 5}}}}]
 	_check(

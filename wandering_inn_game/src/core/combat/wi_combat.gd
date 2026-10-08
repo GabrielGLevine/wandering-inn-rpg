@@ -802,7 +802,9 @@ static func hit_stat(a: Dictionary, source: String) -> int:
 static func hit_flat(a: Dictionary, source: String) -> int:
 	if source == WICombatBuild.SOURCE_WEAPON:
 		return int(a.get(WIKeys.DAMAGE_MOD, 0))
-	return int(a.get(WIKeys.SPELL_POWER, 0))
+	if source == WICombatBuild.SOURCE_SPELL:
+		return int(a.get(WIKeys.SPELL_POWER, 0))
+	return 0
 
 
 func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bool, allow_riposte: bool, source: String = "") -> void:

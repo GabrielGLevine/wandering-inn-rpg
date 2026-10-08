@@ -86,20 +86,51 @@ func _init() -> void:
 func _check_classifier() -> void:
 	var expect := {
 		"crescent_cut": "weapon", "pierce_thrust": "weapon", "piercing_shot": "weapon", "piercing_volley": "weapon",
-		"flame_jet": "spell", "phantom_barrage": "spell", "frost_bolt": "spell", "evil_eye": "spell",
+		"flame_jet": "spell", "phantom_barrage": "innate", "frost_bolt": "spell", "evil_eye": "spell",
+		"raskghar_maul": "innate", "flame_bolt": "innate", "lich_grave_lance": "innate",
 		"calming_touch": "spell", "flame_pillar": "spell", "slam": "weapon", "power_strike": "weapon",
 		"spellbound_strike": "weapon", "counter_strike": "weapon", "second_wind": "", "icy_floor": "",
 	}
 	for id: String in expect:
 		assert(WICombatBuild.damage_source(_skills_by_id[id]) == expect[id], "%s classifies as %s" % [id, expect[id]])
-	# Every shipped spell/line/blast arm: weapon exactly when it carries a weapon gate.
+	# Every shipped spell/line/blast arm: weapon exactly when it carries a weapon
+	# gate. Of the rest, a Skill no class or item can give the player is innate
+	# (spell power is player gear, so its card must not promise "spell damage"),
+	# and the one player-held innate arm is the Tactician's illusory barrage.
+	var reachable := {}
+	_collect_ids(_load("res://data/classes.json"), reachable)
+	for it: Dictionary in _load("res://data/items.json")["items"]:
+		for ability: Variant in (it.get(WIKeys.ABILITIES, []) as Array):
+			reachable[String(ability)] = true
 	for id: String in _skills_by_id:
 		var skill: Dictionary = _skills_by_id[id]
 		var effect_type := String((skill.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.TYPE, ""))
-		if effect_type in ["spell_damage", "line_damage", "blast_damage"] \
-				and int((skill[WIKeys.EFFECT] as Dictionary).get(WIKeys.WINDUP_ROUNDS, 0)) == 0:
-			var want := WICombatBuild.SOURCE_WEAPON if skill.has(WIKeys.WEAPON) else WICombatBuild.SOURCE_SPELL
-			assert(WICombatBuild.damage_source(skill) == want, "%s: the weapon gate decides the source" % id)
+		var innate := String(skill.get(WIKeys.DAMAGE_SOURCE, "")) == WICombatBuild.SOURCE_INNATE
+		if skill.has(WIKeys.DAMAGE_SOURCE):
+			assert(innate, "%s: the only authored damage_source is innate" % id)
+		if not (effect_type in ["spell_damage", "line_damage", "blast_damage"]) \
+				or int((skill[WIKeys.EFFECT] as Dictionary).get(WIKeys.WINDUP_ROUNDS, 0)) > 0:
+			assert(not innate, "%s: innate marks only spell/line/blast arms" % id)
+			continue
+		if skill.has(WIKeys.WEAPON):
+			assert(not innate and WICombatBuild.damage_source(skill) == WICombatBuild.SOURCE_WEAPON, "%s: the weapon gate decides the source" % id)
+		elif not reachable.has(id):
+			assert(innate, "%s is enemy-only, so it must be innate, not spell damage" % id)
+		elif innate:
+			assert(id == "phantom_barrage", "%s: a player-held innate arm needs a ruling" % id)
+		else:
+			assert(WICombatBuild.damage_source(skill) == WICombatBuild.SOURCE_SPELL, "%s takes spell power" % id)
+
+
+func _collect_ids(node: Variant, out: Dictionary) -> void:
+	if node is Dictionary:
+		for value: Variant in (node as Dictionary).values():
+			_collect_ids(value, out)
+	elif node is Array:
+		for value: Variant in node:
+			_collect_ids(value, out)
+	elif node is String and _skills_by_id.has(node):
+		out[node] = true
 
 
 func _check_arms() -> void:
@@ -125,13 +156,21 @@ func _check_arms() -> void:
 		assert(is_equal_approx(policy, float(WEAPON_HIT)), "the competent policy prices %s like the engine" % skill_id)
 
 	# Spells, spell lines and blasts: int and spell power, never weapon damage.
-	var spell_targets := {"frost_bolt": "dummy_a", "evil_eye": "dummy_a", "flame_jet": "right", "phantom_barrage": "right", "flame_pillar": "dummy_b"}
+	var spell_targets := {"frost_bolt": "dummy_a", "evil_eye": "dummy_a", "flame_jet": "right", "flame_pillar": "dummy_b"}
 	for skill_id: String in spell_targets:
 		combat = _fight(skill_id)
 		assert(combat.use_skill(skill_id, String(spell_targets[skill_id])), "%s resolves" % skill_id)
 		assert(int(_first_hit()["damage"]) == SPELL_HIT, "%s takes int and spell power" % skill_id)
 		var policy := WICombatPolicies.expected_damage(combat, combat.combatants["pc"], combat.combatants["dummy_a"], 1.0, false, WICombatBuild.damage_source(_skills_by_id[skill_id]))
 		assert(is_equal_approx(policy, float(SPELL_HIT)), "the competent policy prices %s like the engine" % skill_id)
+
+	# Innate arms keep int scaling and take no gear: the barrage and enemy casts.
+	for skill_id: String in ["phantom_barrage", "raskghar_maul"]:
+		combat = _fight(skill_id)
+		assert(combat.use_skill(skill_id, "right" if skill_id == "phantom_barrage" else "dummy_a"), "%s resolves" % skill_id)
+		assert(int(_first_hit()["damage"]) == 4, "%s: int/2 + die, no spell power, no weapon damage" % skill_id)
+		var innate_price := WICombatPolicies.expected_damage(combat, combat.combatants["pc"], combat.combatants["dummy_a"], 1.0, false, WICombatBuild.damage_source(_skills_by_id[skill_id]))
+		assert(is_equal_approx(innate_price, 4.0), "the competent policy prices %s like the engine" % skill_id)
 
 	# A combatant row without the field (every enemy and ally) casts as before.
 	combat = _fight("frost_bolt")

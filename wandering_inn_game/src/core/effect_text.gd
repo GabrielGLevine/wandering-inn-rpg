@@ -367,12 +367,15 @@ static func _cost_prefix(skill: Dictionary) -> String:
 
 ## `source` names the gear stat a hit takes (#514): it is how a wand's "damage on
 ## spells" and a sword's "weapon Skills" map onto the Skill cards they improve.
+## An innate hit takes no gear, so it reads as plain damage. Phrases lead with
+## the tag and stay short: the combat readout gives this clause one line.
 static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], ap_cost: int = 0, source: String = "") -> String:
+	var damage := "%s damage" % source if source == WICombatBuild.SOURCE_WEAPON or source == WICombatBuild.SOURCE_SPELL else "damage"
 	match String(effect.get(WIKeys.TYPE, "")):
 		"spell_damage":
-			return "%s damage 1d%d at range %d" % [source, _caster_weapon_die(combatants_catalog), int(effect.get(WIKeys.RANGE, 0))]
+			return "%s 1d%d at range %d" % [damage, _caster_weapon_die(combatants_catalog), int(effect.get(WIKeys.RANGE, 0))]
 		"line_damage":
-			return "%s damage to everything in a line %d cells long" % [source, int(effect.get(WIKeys.LENGTH, 0))]
+			return "%s to all in a %d-cell line" % [damage, int(effect.get(WIKeys.LENGTH, 0))]
 		"damage_mult":
 			return "×%s damage" % _fmt_mult(float(effect.get(WIKeys.MULT, 1.0)))
 		"heal":
@@ -387,8 +390,8 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 		"blast_damage":
 			var blast_side := int(effect.get(WIKeys.RADIUS, 0)) * 2 + 1
 			var windup_timing := " after a round's gathering" if int(effect.get(WIKeys.WINDUP_ROUNDS, 0)) > 0 else ""
-			return "blast a %d×%d area around the target for 1d%d %s damage%s. Hits friend and foe." % [
-				blast_side, blast_side, _caster_weapon_die(combatants_catalog), source, windup_timing,
+			return "%s 1d%d to friend and foe in a %d×%d area%s" % [
+				damage, _caster_weapon_die(combatants_catalog), blast_side, blast_side, windup_timing,
 			]
 		"move_pool_bonus":
 			if ap_cost <= 0:

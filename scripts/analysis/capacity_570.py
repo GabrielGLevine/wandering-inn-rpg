@@ -58,23 +58,23 @@ def grant_option(filename, node, item_id, required_item=None):
 def report():
     items = {item["id"]: item for item in read("items.json")["items"]}
     skills = {skill["id"]: skill for skill in read("skills.json")["skills"]}
-    lines = ["| Loadout | Resonance | Accessory positions | Flat HP | Flat damage | Flat reduction | Item-granted Skills | Budget fits 2 / 3 / 4 / 5 |",
-             "|---|---:|---:|---:|---:|---:|---|---|"]
+    lines = ["| Loadout | Resonance | Accessory positions | Flat HP | Flat damage | Flat spell power | Flat reduction | Item-granted Skills | Budget fits 2 / 3 / 4 / 5 |",
+             "|---|---:|---:|---:|---:|---:|---:|---|---|"]
     for name, ids in LOADOUTS.items():
         records = [items[item_id] for item_id in ids]
         if len(set(ids)) != len(ids) or any(item["kind"] != "accessory" for item in records):
             raise ValueError(f"Expected distinct accessories: {name}")
         totals = {field: sum(item.get(field, 0) for item in records)
-                  for field in ("resonance", "hp_mod", "damage_mod", "damage_reduction")}
+                  for field in ("resonance", "hp_mod", "damage_mod", "spell_power", "damage_reduction")}
         abilities = sorted({ability for item in records for ability in item.get("abilities", [])})
         names = ", ".join(skills[ability]["display_name"] for ability in abilities) or "—"
         fits = " / ".join("yes" if totals["resonance"] <= cap else "no" for cap in CAPACITIES)
         lines.append(f"| {name} | {totals['resonance']} | {len(ids)} | {totals['hp_mod']} | "
-                     f"{totals['damage_mod']} | {totals['damage_reduction']} | {names} | {fits} |")
+                     f"{totals['damage_mod']} | {totals['spell_power']} | {totals['damage_reduction']} | {names} | {fits} |")
 
     useful = [item for item in items.values() if item.get("kind") == "accessory"
               and item.get("resonance", 0) > 0
-              and (any(item.get(field, 0) for field in ("hp_mod", "damage_mod", "damage_reduction"))
+              and (any(item.get(field, 0) for field in ("hp_mod", "damage_mod", "spell_power", "damage_reduction"))
                    or item.get("abilities"))]
     lines += ["", f"Catalog scope: {len(useful)} positive-resonance accessories with a nonzero flat modifier or an ability.",
               "", "| Capacity | Single items | Two-item sets | Three-item sets |",
@@ -103,9 +103,15 @@ def report():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="Check the document's generated table against current data")
+    parser.add_argument("--write", action="store_true", help="Replace the document's generated block with current data")
     args = parser.parse_args()
     generated = report()
-    if args.check:
+    if args.write:
+        document = DOC.read_text()
+        head, rest = document.split(START, 1)
+        DOC.write_text(f"{head}{START}\n{generated}\n{END}{rest.split(END, 1)[1]}")
+        print("WROTE: #570 generated block")
+    elif args.check:
         document = DOC.read_text()
         actual = document.split(START, 1)[1].split(END, 1)[0].strip()
         if actual != generated:

@@ -8696,6 +8696,35 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "line_skill_readout",
+   "seed": 9,
+   "fixture": "line_skill_readout_start",
+   "note": "#514 L1: a Sharpshooter L12 spars Relc; [Piercing Volley]'s one-line combat readout keeps its weapon-damage tag and Once-every-2-rounds rule when ready, and leads with Recovering when cooling (windowed read: 00_volley_ready, 01_volley_recovering)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "line_skill_readout_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "piercing_volley"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ],
  "browser_scripts": [

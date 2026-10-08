@@ -1,0 +1,47 @@
+{
+ "_comment": "#514 L1 readout fixture: a [Sharpshooter] L12 (so both bow-gated lines, [Piercing Shot] and [Piercing Volley], are in the kit) standing beside Relc at the floodplains spar vantage (12,12) with the hunting bow. ranged_hit 80 / won_combat 1 / bow_skill_used 12 back archer -> sharpshooter L12 (test_fixture_coherence); otherwise near_barracks's accomplishments and its derived seed-9 rng_state.",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   12,
+   12
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "sharpshooter": 12
+  },
+  "accomplishments": {
+   "ranged_hit": 80,
+   "won_combat": 1,
+   "bow_skill_used": 12,
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "hunting_bow"
+  ],
+  "equipped": {
+   "weapon": "hunting_bow",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

@@ -27,6 +27,7 @@ can disagree.
 | `riposte` ([Counter Strike]) | n/a | weapon |
 | `blast_damage` with `windup_rounds` (resolves through the windup strike) | n/a | weapon |
 | `spell_damage`, `line_damage`, `blast_damage` | yes | weapon |
+| `spell_damage`, `line_damage`, `blast_damage` authored `"damage_source": "innate"` | no | innate |
 | `spell_damage`, `line_damage`, `blast_damage` | no | spell |
 | anything else | n/a | none (deals no hit damage) |
 
@@ -34,6 +35,20 @@ A Skill is weapon-gated physical exactly when its record has a `weapon` key.
 That is the same key `WICombatBuild.weapon_gated_kit` already uses to strip a
 Skill when the wrong weapon is held, so a Skill can never be "physical" for
 damage and "ungated" for the kit.
+
+**Innate (ruling B, 2026-10-08).** A spell, line or blast arm authored
+`"damage_source": "innate"` keeps its INT scaling and takes no gear add. Two
+groups carry it:
+
+- [Instantaneous Barrage] (`phantom_barrage`), the Tactician's illusory
+  arrows, which is not a spell.
+- Every cast that only enemies field: [Flame Bolt], [Raskghar Maul], and the
+  Lich's Bone Splinter and Grave Lance. Spell power is player gear only, so
+  their cards must not promise "spell damage".
+
+`tests/test_gear_rules.gd` derives player reachability from class grants and
+item abilities. It fails if an enemy-only spell arm lacks the tag, or if any
+player-held arm other than the barrage carries it.
 
 ## 2. Effect matrix
 
@@ -51,8 +66,9 @@ combatant does.
 | `riposte` | [Counter Strike] | weapon die × mult | STR (unchanged) | weapon damage (unchanged) | n/a |
 | Windup blast | [Slam] (enemy only) | weapon die | STR (unchanged) | weapon damage (unchanged) | unchanged |
 | **Weapon-gated line** | [Crescent Cut] (sword), [Pierce Thrust] (spear), [Piercing Shot], [Piercing Volley] (bow) | weapon die | **STR** (was INT) | **weapon damage** (was none) | unchanged: no riposte, no `melee_hit` tally, `ATTACK_RESOLVED.melee` stays false |
-| Spell line | [Flame Jet], [Phantom Barrage] | die | INT (unchanged) | **spell power** (was none) | unchanged |
-| `spell_damage` | [Flame Bolt], [Frost Bolt], [Ice Shard], [Flame Scythe], [Flare Burst], [Flame Dart], [Bone Dart], [Deathbolt], [Thorn Hand], [Bramble Hand], [Evil Eye], [Calming Touch]; enemy [Raskghar Maul], Lich casts | die | INT (unchanged) | **spell power** (was none) | unchanged |
+| Spell line | [Flame Jet] | die | INT (unchanged) | **spell power** (was none) | unchanged |
+| `spell_damage` | [Frost Bolt], [Ice Shard], [Flame Scythe], [Flare Burst], [Flame Dart], [Bone Dart], [Deathbolt], [Thorn Hand], [Bramble Hand], [Evil Eye], [Calming Touch] | die | INT (unchanged) | **spell power** (was none) | unchanged |
+| Innate arm | [Instantaneous Barrage]; enemy [Flame Bolt], [Raskghar Maul], Lich casts | die | INT (unchanged) | none (unchanged) | unchanged |
 | Spell blast | [Flame Pillar] | die | INT (unchanged) | **spell power** (was none) | unchanged |
 | Burning tick | [Flame Bolt]'s rider | fixed tick | none | none (unchanged) | unchanged |
 
@@ -61,16 +77,12 @@ contribution is multiplied by an arm's `mult`; both are added after it, as
 `damage_mod` already was. Difficulty, damage reduction, weakened/guarded and
 [Mana Shield] apply afterwards, unchanged.
 
-Spell power applies to every non-weapon spell, line and blast arm, including
-[Evil Eye], [Calming Touch] and [Phantom Barrage]. These already scale off
-INT, and the controller's rule classifies by the `weapon` gate rather than
-by element or MP cost. This is surfaced as an open question (§9) rather than
-silently narrowed.
+Spell power applies to every player-held non-weapon spell, line and blast
+arm, including [Evil Eye] and [Calming Touch], and excluding the innate arms
+above.
 
-The combined weapon-damage pool for gated lines (weapon plus accessories plus
-meal, rather than the weapon alone) follows "like ordinary melee". A
-weapon-only split would need a second field, and every accessory card that
-says "+1 damage on attacks and weapon Skills" would then be false for lines.
+Gated lines take the whole melee damage bonus (weapon, accessories and meal),
+exactly like an ordinary attack. This is user ruling (A), 2026-10-08.
 
 ## 3. Affected items
 
@@ -138,27 +150,39 @@ attribute names.
 | Item card, `spell_power` | — | "+N damage on spells" |
 | Item card, enchanted at resonance 0 | (no line) | "Resonance 0" |
 | Skill card, `spell_damage` | "damage 1d6 at range 4" | "spell damage 1d6 at range 4" |
-| Skill card, gated line | "damage everything in a line 3 cells long" | "weapon damage to everything in a line 3 cells long" |
-| Skill card, spell line | "damage everything in a line 4 cells long" | "spell damage to everything in a line 4 cells long" |
-| Skill card, blast | "…for 1d6. Hits friend and foe." | "…for 1d6 spell damage. Hits friend and foe." (windup: "weapon damage") |
+| Skill card, gated line | "damage everything in a line 3 cells long" | "weapon damage to all in a 3-cell line" |
+| Skill card, spell line | "damage everything in a line 4 cells long" | "spell damage to all in a 4-cell line" |
+| Skill card, blast | "blast a 3×3 area around the target for 1d6. Hits friend and foe." | "spell damage 1d6 to friend and foe in a 3×3 area" (windup: "weapon damage …") |
+| Skill card, innate arm | as above | the same phrases with plain "damage" (e.g. "damage 1d6 at range 2", "damage to all in a 4-cell line") |
 | Skill card, `damage_mult` | "×2 damage" | unchanged (it multiplies the weapon hit) |
 | Inventory detail, damage item | — | "Improves your attacks, [Power Strike] and [Crescent Cut]." (the Skills you would hold with it equipped) |
 | Inventory detail, spell item | — | "Improves your [Frost Bolt] and [Flame Jet]." or "Improves none of your current Skills." |
 | Inventory detail, unworn accessory (or any piece whose swap would move the total) | — | "If worn: Resonance 3/4", "If worn: Resonance 5/4, more than you can hold" or "If worn: no free accessory slot", drawn above the reach line |
 | Hedault option preview (swap) | product card | product card with "Resonance 1 → 0" in place of its resonance line when the trueing lowers it |
-| Sleep-beat toast | "…before the pieces start arguing…" | "Resonance is how much enchantment you can wear at once. Stronger pieces take more of it, and crude work argues louder than its strength; a properly trued piece keeps quiet. Yours grew by one in the night. The anchor stone paid for it." |
+| Sleep-beat toast | "…before the pieces start arguing…" | "Resonance is how much enchantment you can wear at once. Stronger pieces take more of it, and crude work argues more than it should; a properly trued piece keeps quiet. Yours grew by one in the night. The anchor stone paid for it." |
 
 The "If worn" line and `equip()` share one plan function (slot choice,
 displaced-slot subtraction, capacity check), so the preview and the refusal
 cannot disagree. Weapons and armour cannot move the total, so they show only
-the reach line. The combat HUD's slot record carries each Skill's weapon gate,
-so the bar's readout and the journal compose the same source tag. The equip-refusal toast keeps its ratified copy. The four
+the reach line. The combat HUD's slot record carries each Skill's weapon gate
+and `damage_source`, so the bar's readout and the journal compose the same
+source tag.
+
+The combat bar gives a Skill's readout one line, so the damage phrases lead
+with their tag and stay short. When a cooling Skill's line would overflow, the
+readout places "Recovering — ready in N rounds." right after the cost, and the
+effect phrase is what gets truncated. `tests/test_combat_readout_fit.gd`
+measures through the HUD's own fitter on the shipped font. It pins the tag,
+the cooldown rule and the Recovering clause for [Piercing Shot], [Piercing
+Volley] and [Flame Pillar]. The equip-refusal toast keeps its ratified copy. The four
 trued accessories' descriptions gain one sentence of quiet-craft fiction.
 
 ## 5. Implementation map
 
-- `combat_build.gd`: `damage_source()`, `damage_reach()`, and `spell_power`
-  in `equipment_mods()`.
+- `combat_build.gd`: `damage_source()` (weapon, spell or authored innate),
+  `damage_reach()`, and `spell_power` in `equipment_mods()`.
+- `data/skills.json`: `"damage_source": "innate"` on [Instantaneous Barrage]
+  and the four enemy-only casts.
 - `wi_combat.gd`: `_build_combatant` carries `spell_power`. `_resolve_hit`
   takes an optional source, and two statics, `hit_stat()` and `hit_flat()`,
   replace the inline `str`/`int` and `damage_mod` reads.
@@ -216,12 +240,11 @@ Legs at base `69bd9cf5` and at the branch head, all 100 seeds:
 
 Expected movers, from the matrix above:
 
-- The floor policy never casts a line, and no harness caster wears an
-  implement, so the plain gated bands should not move.
-- Competent cells whose kit holds a gated line should move: [Crescent Cut]
-  on swordsman14, [Pierce Thrust] on spearmaster14 and spellspear/skirmisher
-  at Act V, and [Piercing Shot] and [Piercing Volley] on sharpshooter14,
-  ranger and scout.
+- No harness caster wears an implement, so spell power cannot move a cell.
+- Cells whose kit holds a gated line could move: [Crescent Cut] on
+  swordsman14, [Pierce Thrust] on spearmaster14 and spellspear/skirmisher at
+  Act V, and [Piercing Shot] and [Piercing Volley] on sharpshooter14, ranger
+  and scout. §8 records that none of them did, and why.
 
 Doctrine bindings:
 
@@ -267,19 +290,42 @@ sharpshooter, bow at every act):
 - Act V: ranged_hit p50 159 → 158.
 - No other spine moved.
 
-**Why the gated matrix cannot move.**
+**#495's balance effect is unmeasured by the harness.** No matrix cell lands
+a gated-line hit, so "the gated bands hold" says nothing about #495. Review
+confirmed this independently: with gated-line damage multiplied by ten, both
+batch logs stayed byte-identical. The mechanics are pinned in unit tests and
+`gear_damage_loop`, not by the harness. The reasons, measured:
 
-- No harness build wears an implement, so spell power is 0 in every cell.
-- Both policies fire a line only when it would cross two or more enemies and no
-  ally (`WICombatAI._act_line`). A scratch count of the competent leg's gated-line
-  holders found zero casts in 100 fights each: swordsman14_solo ([Crescent Cut]),
-  spearmaster14_solo ([Pierce Thrust]), sharpshooter14_solo ([Piercing Shot],
-  [Piercing Volley]) and side_vault_construct_t5_swordsman14_solo. The floor
-  policy never casts a line.
-- The pace sim's ranger spine is the one measured place a gated line fires.
+- **Spell power.** No harness build wears an implement, so spell power is 0 in
+  every cell. `tests/_spell_power_probe.gd` below reports its effect, and no
+  gate checks it.
+- **Floor leg.** Only the `caster` profile casts lines
+  (`WICombatAI._act_ranged` → `_act_line`), and no caster build holds a gated
+  line. The three cells whose kit does are swordsman14, spearmaster14 and
+  sharpshooter14, and they run the `melee` profile, which never casts one.
+- **Competent leg.** `_nuke_area` does pick the gated line first whenever two
+  or more foes stand: the first castable line Skill in kit order is
+  [Crescent Cut], [Pierce Thrust] or [Piercing Volley]. A scratch probe of
+  100 fights per cell counted these turns:
 
-**Gated bands:** all hold. No band was widened and no encounter, seed or
-window was touched. No lever was pulled and there is no STOP.
+  | Cell | Turns with a castable gated line and 2+ foes |
+  |---|---:|
+  | swordsman14_solo | 270 |
+  | spearmaster14_solo | 253 |
+  | sharpshooter14_solo | 195 |
+
+  `WICombatAI._act_line` then needs two enemies inside one orthogonal line
+  from the PC's own cell. At the start of every one of those turns the most
+  any line held was one. The policy never steps to line foes up, so the cast
+  never fires.
+- **Pace.** The pace sim's competent ranger spine is the one measured place a
+  gated line fires (the Act III and Act V deltas above).
+- **Follow-up.** Measuring #495 needs a cell or policy that lines foes up. No
+  harness cell is added here; the controller is filing that follow-up.
+
+**Gated bands:** all hold, without moving. No band was widened and no
+encounter, seed or window was touched. No lever was pulled and there is no
+STOP.
 
 ### Spell power (`tests/_spell_power_probe.gd`)
 
@@ -336,10 +382,10 @@ values cannot move a measured cell. Their effect is capacity, proven in
 Anchor Sliver is 4/4 and refuses the Hedge-Ward Charm. After the trueing the
 charm costs 0, and the same Hedge-Ward Charm fits at 4/4.
 
-`scripts/analysis/capacity_570.py --check` now differs from the dated #570
-table. Row D's three Hedault pieces cost 1, not 4, and wand flat damage moved
-to spell power. That table is a snapshot of `b1c4b02b`; it is not
-regenerated here.
+`scripts/analysis/capacity_570.py` now counts a flat spell power column and
+gained `--write`. Its #570 block is regenerated with a dated note, and
+`--check` passes. Row D's three Hedault pieces cost 1 where they cost 4, and
+the Lichbone rows read spell power 2 where they read flat damage 1.
 
 ## 9. Journey impact
 
@@ -384,18 +430,16 @@ No wall moved, so the 2026-10-07 retry ruling was not exercised.
 
 ## 10. Open questions
 
-- Spell power reaches [Evil Eye], [Calming Touch] and [Phantom Barrage]
-  because the rule classifies by weapon gate. Narrowing it to elemental or
-  MP-cost spells would be a separate ruling.
-- Gated lines take the whole weapon-damage pool, accessories and meals
-  included ("like ordinary melee"), not the weapon's `damage_mod` alone.
-- Meal and oil cards still read "Next fight: +N damage"; that pool now also
+- Ruled 2026-10-08:
+  - (A) gated lines take the whole melee bonus;
+  - (B) "spell damage" stays, the barrage and enemy casts are innate.
+  Both are in `docs/CHOICE-LOG.md`.
+- Spell power still reaches [Evil Eye] and [Calming Touch], which are
+  player-held and not weapon-gated.
+- Meal and oil cards still read "Next fight: +N damage"; that bonus now also
   reaches gated lines. The wording is unchanged here.
-- The batch harness cannot see the #495 line change: neither policy aims a
-  gated line in any matrix cell. A cell or policy that lines up two foes would
-  be needed to measure it as anything but a report.
-- The combat bar's one-line readout already clipped [Piercing Shot]'s cooldown
-  clause; the "weapon damage to" wording clips seven more characters of it.
+- #495 is unmeasured by the batch harness (§8). A line-aware cell or policy
+  is the controller's follow-up.
 - A Hedault swap unequips the consumed piece silently (shipped behaviour).
   Re-equipping the product into the same slot would now always fit, because
   of the trueing invariant, but it is not done here.

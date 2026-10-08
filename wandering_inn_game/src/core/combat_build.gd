@@ -36,8 +36,12 @@ static func equipment_mods(weapon: Dictionary, armor: Dictionary, accessories: A
 ## A `weapon` gate is what makes a spell/line/blast arm physical: it is the same
 ## key `weapon_gated_kit` strips by, so "physical for damage" and "gated for the
 ## kit" cannot diverge. Windup blasts resolve through the melee strike path.
+## A Skill authored `"damage_source": "innate"` is neither: it keeps its int
+## scaling and takes no gear add (the Tactician's illusory barrage; casts only
+## enemies field, since spell power is player gear).
 const SOURCE_WEAPON := "weapon"
 const SOURCE_SPELL := "spell"
+const SOURCE_INNATE := "innate"
 const _SKILL_HIT_TYPES := ["spell_damage", "line_damage", "blast_damage"]
 
 static func damage_source(skill: Dictionary) -> String:
@@ -49,6 +53,8 @@ static func damage_source(skill: Dictionary) -> String:
 		return ""
 	if String(skill.get(WIKeys.WEAPON, "")) != "" or int(effect.get(WIKeys.WINDUP_ROUNDS, 0)) > 0:
 		return SOURCE_WEAPON
+	if String(skill.get(WIKeys.DAMAGE_SOURCE, "")) == SOURCE_INNATE:
+		return SOURCE_INNATE
 	return SOURCE_SPELL
 
 
