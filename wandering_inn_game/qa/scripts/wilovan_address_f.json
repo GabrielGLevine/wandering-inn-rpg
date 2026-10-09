@@ -186,7 +186,7 @@
    "equals": 1
   },
   {
-   "_comment": "== RE-INTERACT #2: gentleman_bowler (10,6) (moved off the card stool cell in the #608 art-read fix), approached from the WEST -- row 4 east of here is the card table and its two stools (8,4)/(9,4)/(10,4), all blocking. Drop to row 6 and walk east to (9,6), then bump east into him. The repeat banks nothing -- chatted_with_ stays 1 -- which is what keeps a repeat from rotating the pool mid-waking or inflating heard_gossip. ==",
+   "_comment": "== RE-INTERACT #2: gentleman_bowler (10,6) (moved one cell south from (10,5), the cell below the card stool at (10,4), in the #608 art-read fix), approached from the WEST -- row 4 east of here is the card table and its two stools (8,4)/(9,4)/(10,4), all blocking. Drop to row 6 and walk east to (9,6), then bump east into him. The repeat banks nothing -- chatted_with_ stays 1 -- which is what keeps a repeat from rotating the pool mid-waking or inflating heard_gossip. ==",
    "action": "move",
    "direction": "down",
    "steps": 2
