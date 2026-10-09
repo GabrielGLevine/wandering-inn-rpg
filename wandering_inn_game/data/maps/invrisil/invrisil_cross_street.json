@@ -1846,7 +1846,7 @@
     2
    ],
    "display_name": "A Stationer's Window",
-   "sprite": "invrisil_shop_door",
+   "sprite": "@shop_door",
    "to_map": "stationer",
    "to_cell": [
     6,
@@ -1862,7 +1862,7 @@
     2
    ],
    "display_name": "The Adventurer's Rest",
-   "sprite": "invrisil_shop_door",
+   "sprite": "@shop_door",
    "observe": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Two men come out and let the door swing shut behind them.",
    "to_map": "adventurers_rest",
    "to_cell": [
