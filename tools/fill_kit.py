@@ -246,12 +246,62 @@ def select(args, paths, cands, ktext, catalog, pool, like) -> int:
     raise wa.Refused("--select lands in Task 11")
 
 
-def render_contact_sheet(cands, materials, out: Path) -> None:
-    raise wa.Refused("--contact-sheet lands in Task 10")
+def candidate_image(c: Candidate) -> Image.Image:
+    with Image.open(c.path) as raw:
+        img = raw.convert("RGBA")
+    if c.mode == "pack":
+        return img
+    pr = wa.probe(c.path, c.frame_w)
+    x0, y0, x1, y1 = pr["bbox"]
+    crop = img.crop((x0, y0, x1, y1))
+    size = (max(1, round((x1 - x0) * c.scale)), max(1, round((y1 - y0) * c.scale)))
+    return crop.resize(size, Image.NEAREST)
 
 
-def material_swatches(kits: dict, region: str, paths: wa.Paths) -> list:
-    raise wa.Refused("--contact-sheet lands in Task 10")
+def material_swatches(kits: dict, region: str, paths: wa.Paths) -> list[tuple[str, Image.Image | None]]:
+    mats = dict((kits.get("_common") or {}).get("materials") or {})
+    mats.update((kits.get(region) or {}).get("materials") or {})
+    out = []
+    for name, m in mats.items():
+        sheet = paths.game / str(m.get("sheet", "")).replace("res://", "")
+        coords = m.get("coords") or m.get("face")
+        tile = None
+        if sheet.is_file() and coords:
+            px = int(m.get("tile_px", 16))
+            cx, cy = int(coords[0]), int(coords[1])
+            with Image.open(sheet) as im:
+                tile = im.convert("RGBA").crop((cx * px, cy * px, cx * px + px, cy * px + px))
+        out.append((name, tile))
+    return out
+
+
+def render_contact_sheet(cands: list[Candidate], materials: list[tuple[str, Image.Image | None]],
+                         out: Path) -> None:
+    cols, swatch_h = 8, SWATCH_H
+    rows = max(1, (len(cands) + cols - 1) // cols)
+    sheet = Image.new("RGBA", (cols * CELL, swatch_h + rows * (CELL + 28)), (40, 40, 44, 255))
+    draw = ImageDraw.Draw(sheet)
+    x = 4
+    for name, tile in materials:
+        if tile is not None:
+            sheet.alpha_composite(tile.resize((32, 32), Image.NEAREST), (x, 4))
+        else:
+            draw.rectangle((x, 4, x + 31, 35), outline=(200, 80, 80, 255))
+        draw.text((x, 38), name[:10], fill=(220, 220, 220, 255))
+        x += CELL
+    for i, c in enumerate(cands):
+        cx, cy = (i % cols) * CELL, swatch_h + (i // cols) * (CELL + 28)
+        one_x = candidate_image(c)
+        two_x = one_x.resize((one_x.width * 2, one_x.height * 2), Image.NEAREST)
+        two_x.thumbnail((CELL, CELL), Image.NEAREST)
+        sheet.alpha_composite(two_x, (cx + (CELL - two_x.width) // 2, cy + CELL - two_x.height))
+        small = one_x.copy()
+        small.thumbnail((CELL - 24, 24), Image.NEAREST)
+        sheet.alpha_composite(small, (cx + 2, cy + CELL + 2))
+        draw.text((cx + CELL - 20, cy + CELL + 2), str(c.n), fill=(255, 230, 120, 255))
+        draw.text((cx + CELL - 20, cy + CELL + 14), c.size_class, fill=(180, 220, 180, 255))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    sheet.save(out)
 
 
 if __name__ == "__main__":
