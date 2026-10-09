@@ -1724,7 +1724,8 @@
    ]
   },
   {
-   "sprite": "@shop_sign",
+   "_comment": "#608 final review: the Adventurer's Rest sign is pinned to the blank hanging board. Its observe text says the sign has no name, only cards face down and a hat on a peg, so the pool's coin sign would contradict it. The cards-and-hat sign is on the generation list.",
+   "sprite": "invrisil_hanging_sign",
    "cell": [
     13,
     1
