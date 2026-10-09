@@ -22,7 +22,7 @@ pack files are searched from docs/asset-index.json at query time).
 | kind | owned-public | owned-unverified | pack-bundle | shipped-bundle | shipped-public |
 |---|---|---|---|---|---|
 | icon | 881 |  |  |  | 106 |
-| prop | 556 | 20 | 2481 | 65 | 243 |
+| prop | 556 | 20 | 2489 | 65 | 243 |
 | rig | 122 |  |  | 7 | 77 |
 | setpiece | 83 |  |  |  |  |
 | tileset | 29 |  | 76 |  |  |
@@ -164,6 +164,11 @@ pack files are searched from docs/asset-index.json at query time).
 | _sliced/Pixel Crawler - Library/Tiles | SLICES.json | 57 |
 | _sliced/Pixel Crawler - Sewer/Props | SLICES.json | 65 |
 | _sliced/Pixel Crawler - Sewer/Tiles | SLICES.json | 20 |
+| _sliced/goblin-huts-pack/goblin-huts-pack_goblin-huts-spritesheet | SLICES.json | 4 |
+| _sliced/goblin_watchtower/goblin_watchtower_01_front | SLICES.json | 1 |
+| _sliced/goblin_watchtower/goblin_watchtower_02_back | SLICES.json | 1 |
+| _sliced/goblin_watchtower/goblin_watchtower_03_left | SLICES.json | 1 |
+| _sliced/goblin_watchtower/goblin_watchtower_04_right | SLICES.json | 1 |
 | _sliced/Pixel Crawler - Castle Environment 0.3 | TILESETS.json | 1 |
 | _sliced/Pixel Crawler - Cave | TILESETS.json | 1 |
 | _sliced/Pixel Crawler - Cemetery 0.4 | TILESETS.json | 3 |
