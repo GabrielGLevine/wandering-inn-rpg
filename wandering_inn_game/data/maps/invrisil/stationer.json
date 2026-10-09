@@ -303,7 +303,7 @@
     3
    ],
    "display_name": "The Scribe's Desk",
-   "sprite": "library_desk",
+   "sprite": "owned_fallback_library_desk",
    "observe": "The desk sits at an angle to the window. The page faces the wall, the scribe faces the street. A second chair stands on the page side, pushed back and left at a slant."
   },
   {
