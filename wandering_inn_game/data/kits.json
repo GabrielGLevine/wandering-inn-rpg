@@ -35,6 +35,61 @@
       ],
       "detail": 0.5
      }
+    },
+    "floor_shop": {
+     "_comment": "#608 1b pool read floor_shop #1 PASS: owned woodplank_over_stone_v1 (PixelLab, public). Lower terrain = cool blue-grey flagstone, wang_0 at [2,1]: the quiet low-contrast shop floor (stationer, enchanter shop, work room, parlor). Pale limestone/checker is the real target and is on the generation list.",
+     "sheet": "res://assets/tiles/harvest/woodplank_over_stone_v1.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ],
+     "tone": {
+      "base": [
+       0.36,
+       0.37,
+       0.4
+      ],
+      "detail": 0.4
+     }
+    },
+    "floor_rest": {
+     "_comment": "#608 1b pool read floor_shop #1: the same atlas's upper terrain, honey plank wang_15 at [0,3], for the Adventurer's Rest.",
+     "sheet": "res://assets/tiles/harvest/woodplank_over_stone_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.42,
+       0.32,
+       0.22
+      ],
+      "detail": 0.55
+     }
+    },
+    "wall_shop": {
+     "_comment": "#608 1b pool read wall_shop #4 PASS: owned timberwall_over_plank_v1 (PixelLab, public), pale gold timber over dark plank. cap = wang_15 [0,3]; face = wang_12 [3,0]. Cosy rather than wealthy; pale plaster + wainscot + gold cornice is on the generation list.",
+     "sheet": "res://assets/tiles/harvest/timberwall_over_plank_v1.png",
+     "tile_px": 16,
+     "cap": [
+      0,
+      3
+     ],
+     "face": [
+      3,
+      0
+     ],
+     "tone": {
+      "base": [
+       0.4,
+       0.34,
+       0.26
+      ],
+      "detail": 0.55
+     }
     }
    },
    "roles": {
