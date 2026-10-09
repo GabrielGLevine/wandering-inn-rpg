@@ -18,15 +18,13 @@ archived, or superseded session blocks.
   - A region closes only on a blind Fable art-direction read (spec §5.2). User eye-gates are prepared saves, non-blocking under wave autonomy.
   - Status:
     - #607 Phase 0 is merged: PR #609, squash `108689ef`, with the tree verified. CI is all green; the journey gate stays nightly.
-    - #608 pilot 1a (Invrisil streets), branch `issue/608-invrisil-streets` in `/private/tmp/wi-608a`:
-      - Done: pools wired, 33 rows converted, a module variant cap, the G2 converted-maps scope, and a G4 `_kits_recompose` marker.
-      - Blind Fable art reads: round 1 was 6 PASS / 45 FIX / 6 REJECT. After FIX loop 1, round 2 is 6 / 20 / 0 / 31 DEFERRED; the reader says the streets now look better than before.
-      - FIX round 2 is done. The r3 read found that the alley pose hid the player, so it moved to (18,12) (tip `6e791828`).
-      - Both builds are re-captured with the naming fixed. The scripts hard-code `official`, so public captures must be renamed (`scratchpad/recap4.sh`).
-      - Next, after the usage reset: the r4 scoped re-read with the same reader. Then the CHOICE-LOG G3 line (four regens), the generation-list rows, 4 follow-up issues, and the PR. The drafts are in the session scratchpad.
-      - The ledger is `.superpowers/sdd/2026-10-08-regional-kits-invrisil-pilot/progress.md`.
-      - Captures live in the session scratchpad under `captures-1a/{after,before}`. `qa_output` gets flushed by sweeps.
-      - Extra worktrees to remove at close: `/private/tmp/wi-608a-public` and `/private/tmp/wi-608a-before`.
+    - #608 pilot 1a (Invrisil streets) is **PR #614** (branch `issue/608-invrisil-streets`, worktree `/private/tmp/wi-608a`). It says Refs #608; 1b closes it.
+      - Art gate closed: after five blind Fable reads, 0 FIX / 0 REJECT. The deferred items are #610–#613 plus generation-list rows.
+      - The final Opus review's I1–I3 and M1–M8 are fixed, and the scoped re-review is CLEAN.
+      - Evidence: `/private/tmp/wi-608-art-evidence/`. The ledger is `.superpowers/sdd/2026-10-08-regional-kits-invrisil-pilot/progress.md`.
+      - Next: CI green, then squash-merge, then pilot 1b (interiors and cast).
+      - Remove `/private/tmp/wi-608a-public` and `/private/tmp/wi-608a-before` at close.
+      - Trap: the `kits_*` capture scripts hard-code `official` in their PNG names, so rename the public output before reading.
     - Untracked slices (1,258, labeled 40/44) live in `potential_assets/_sliced/`.
   - Skill-library proposal (for Fable): document the `slice_atlases` → `label_slices` → `asset_candidates` → `fill_kit` → `wire_asset` pipeline in `wi-art-and-sprites`. Include `--allow-unverified` (codex batches) and the rule to run slicing from the main checkout.
   - Pre-existing debt: 406 pytest warnings on main (`data_lint.py:1129` `Image.getdata`, removed in Pillow 14; `harness_metrics.py:58` unclosed files).
