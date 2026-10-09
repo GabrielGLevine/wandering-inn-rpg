@@ -313,6 +313,13 @@ and chronology belong in issue PRs. Earlier context:
     regions.
   - **G3:** `qa/baselines/scene-repetition.json` was first generated on
     #607; regenerate only with `--regen-scene-baseline` plus an entry here.
+  - **G3 regens (#608 pilot 1a, controller):** each regen follows a
+    reviewed conversion and never hides repetition. The Invrisil generic
+    placements went 84 → 76 after the street conversions (share 43.3% →
+    39.18%), → 75 with the dedicated rigged-crate-stack sprite, held at 75
+    when the art-read fixes added three cross-street lamps and dropped the
+    stationery bundle, and → 74 when the boulevard's generic door at (4,1)
+    was pinned to the Invrisil shop door (share 37.76%).
 - **Best art wins per asset (#564/#554)** within a coherent scene, at gameplay
   scale; otherwise keep the official or owned public fallback. READY is not
   acceptance, and there is no quota wiring. Animation, geometry, scale and
