@@ -76,6 +76,7 @@ from __future__ import annotations
 import json
 import math
 import re
+import subprocess
 import sys
 import time
 import struct
@@ -1497,6 +1498,257 @@ def check_kits(parsed: dict, maps: dict, errors: list, advisories: list, report:
 				errors.append(f"maps/{map_id}: floor_layers[{i}] ends with both coords and variants after @{fl['material_ref']}")
 		resolved[map_id] = doc
 	return resolved
+
+
+def _lint_inputs() -> tuple:
+	"""(parsed, maps) for the real tree, errors discarded (tests, baseline tooling)."""
+	scratch: list = []
+	parsed = check_wellformed(scratch)
+	return parsed, _compose_maps(parsed, scratch)
+
+
+def _placements(doc: dict) -> list:
+	"""Placement = a decor row, or an entity row with a non-empty `sprite` and
+	no `hide_sprite: true` (hide_sprite rows are interact-only overlays, the
+	art lives on the decor under them). Sprite is the RESOLVED id. Returns
+	[{"sprite", "role"}], role = "" for explicitly authored ids."""
+	out = []
+	for layer in ("decor", "entities"):
+		for row in doc.get(layer) or []:
+			if not isinstance(row, dict) or not row.get("sprite"):
+				continue
+			if layer == "entities" and row.get("hide_sprite") is True:
+				continue
+			out.append({"sprite": str(row["sprite"]), "role": str(row.get("sprite_role", ""))})
+	return out
+
+
+def _pct(part: int, whole: int) -> float:
+	return round(100.0 * part / whole, 2) if whole else 0.0
+
+
+def _sprite_regions(resolved: dict, regions: dict) -> dict:
+	"""sprite -> set of regions whose maps place it."""
+	seen: dict = {}
+	for map_id, doc in resolved.items():
+		region = regions.get(map_id)
+		if region is None:
+			continue
+		for p in _placements(doc):
+			seen.setdefault(p["sprite"], set()).add(region)
+	return seen
+
+
+GENERIC_REGIONS = 3  # G3: a sprite placed in >= this many regions is "generic"
+
+
+def build_scene_baseline(resolved: dict, regions: dict, tolerance: dict) -> dict:
+	"""G3 baseline: freeze each sprite's generic-or-regional class (generic =
+	placed in >= GENERIC_REGIONS regions) and the per-region/per-map counters."""
+	seen = _sprite_regions(resolved, regions)
+	classes = {s: ("generic" if len(r) >= GENERIC_REGIONS else "regional") for s, r in seen.items()}
+	out: dict = {}
+	for map_id, doc in sorted(resolved.items()):
+		region = regions.get(map_id)
+		if region is None:
+			continue
+		ps = _placements(doc)
+		g = sum(1 for p in ps if classes[p["sprite"]] == "generic")
+		reg = out.setdefault(region, {"placements": 0, "generic_placements": 0, "maps": {}})
+		reg["placements"] += len(ps)
+		reg["generic_placements"] += g
+		reg["maps"][map_id] = {"placements": len(ps), "generic_placements": g}
+	for reg in out.values():
+		reg["generic_share_pct"] = _pct(reg["generic_placements"], reg["placements"])
+	return {"_comment": "G3 scene-repetition ratchet (#607). Regenerate ONLY with `data_lint.py --regen-scene-baseline`, and every regen needs a CHOICE-LOG line saying why. generic = sprite placed in >= 3 regions.",
+		"tolerance": tolerance, "generic_class": classes, "regions": out}
+
+
+def _g4_signature(doc: dict) -> dict:
+	cells = sorted((layer, int(r["cell"][0]), int(r["cell"][1]))
+		for layer in ("decor", "entities") for r in doc.get(layer) or []
+		if isinstance(r, dict) and isinstance(r.get("cell"), list) and len(r["cell"]) >= 2)
+	walls = doc.get("walls") if isinstance(doc.get("walls"), dict) else {}
+	return {
+		"decor/entities cells": cells,
+		"blocked": sorted(tuple(c) for c in doc.get("blocked") or []),
+		"walls": sorted((tuple(s.get("from", [])), tuple(s.get("to", []))) for s in walls.get("segments") or [] if isinstance(s, dict)),
+		"scatter": [(s.get("density"), s.get("cluster")) for s in doc.get("scatter") or [] if isinstance(s, dict)],
+	}
+
+
+def _has_ref(doc: dict) -> bool:
+	return any(isinstance(r, dict) and str(r.get("sprite", "")).startswith("@")
+		for layer in ("decor", "entities") for r in doc.get(layer) or [])
+
+
+def _g4_compare(current: dict, base: dict, errors: list) -> None:
+	"""G4 clutter: a map that carries an @ref must keep the base tree's
+	(layer, cell) multiset, blocked, wall geometry and scatter density. Only
+	sprite/material/tint/light fields may change on conversion."""
+	for map_id, doc in sorted(current.items()):
+		if map_id not in base or not _has_ref(doc):
+			continue
+		a, b = _g4_signature(base[map_id]), _g4_signature(doc)
+		for comp in a:
+			if a[comp] != b[comp]:
+				errors.append(f"maps/{map_id}: G4 clutter -- {comp} changed on conversion (only sprite/material/tint/light may change)")
+				break
+
+
+def _git(*args: str) -> str:
+	return subprocess.run(["git", *args], cwd=str(GAME_ROOT.parent), capture_output=True, text=True, check=True, timeout=60).stdout
+
+
+def _g4_base_maps(base_ref, advisories: list):
+	"""{map_id: doc} at the base ref (default: merge-base HEAD origin/main), or
+	None plus ONE advisory when no base resolves (shallow CI, no origin/main)."""
+	try:
+		ref = base_ref or _git("merge-base", "HEAD", "origin/main").strip()
+		prefix = f"{GAME_ROOT.name}/data/maps"
+		out = {}
+		for path in _git("ls-tree", "-r", "--name-only", ref, "--", prefix).splitlines():
+			parts = path.split("/")
+			if len(parts) == 4 and path.endswith(".json"):
+				out[Path(path).stem] = json.loads(_git("show", f"{ref}:{path}"))
+		return out
+	except (subprocess.SubprocessError, OSError, ValueError):
+		advisories.append("kits G4: no base ref (shallow clone or no origin/main) -- structural diff skipped")
+		return None
+
+
+def _status(errs: list) -> str:
+	return "ok" if not errs else f"FAIL({len(errs)})"
+
+
+def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: list, advisories: list,
+		report: list, base_ref=None, baseline=None) -> None:
+	"""Spec 5.1 metric gates over the RESOLVED maps. Lint never chooses art.
+	Region = kit name; placement per _placements(). A region is CONVERTED when
+	its kit declares a pool role and a map of it holds a resolved @ref row.
+	G1: (region, role) with >= 5 placements needs a pool of >= 3 variants;
+	  per (map, role) the top variant <= ceil(n/k)+1, k = subset_size (cell picks).
+	G2 (converted regions only): >= 50% of non-_common placements use a variant
+	  no other region places; floor/wall material_ref names exclusive to region.
+	G3: ratchet vs qa/baselines/scene-repetition.json over baseline maps only.
+	G4: _g4_compare vs the base tree; the base is resolved only when a map carries
+	  an @ref or --base is explicit (Phase 0: nothing to compare, no git call).
+	G5 is a process gate (fallback boot run), reported not computed."""
+	common_roles = set(((kits.get("_common") or {}).get("roles")) or {})
+	common_mats = set(((kits.get("_common") or {}).get("materials")) or {})
+	by_region: dict = {}
+	for map_id, doc in sorted(resolved.items()):
+		if map_id in regions:
+			by_region.setdefault(regions[map_id], {})[map_id] = doc
+	converted = sorted(r for r, docs in by_region.items()
+		if any(isinstance(v, dict) for v in ((kits.get(r) or {}).get("roles") or {}).values())
+		and any(p["role"] for d in docs.values() for p in _placements(d)))
+	total = sum(len(_placements(d)) for d in resolved.values())
+	g1: list = []
+	g2: list = []
+	g3: list = []
+	for region in converted:
+		role_n: dict = {}
+		for map_id, doc in by_region[region].items():
+			per_map: dict = {}
+			for p in _placements(doc):
+				if p["role"]:
+					per_map.setdefault(p["role"], {}).setdefault(p["sprite"], 0)
+					per_map[p["role"]][p["sprite"]] += 1
+			for role_name, counts in per_map.items():
+				n = sum(counts.values())
+				role_n[role_name] = role_n.get(role_name, 0) + n
+				role = kl.lookup(kits, region, "roles", role_name)
+				pool = kl.pool_of(role) if role is not None else []
+				pick = str(role.get("pick", "cell")) if isinstance(role, dict) else "fixed"
+				if pick == "cell" and pool:
+					k = kl.subset_size(n, len(pool))
+					cap = math.ceil(n / k) + 1
+					if max(counts.values()) > cap:
+						g1.append(f"G1 repetition: maps/{map_id} role '{role_name}' uses one variant {max(counts.values())}x, over ceil({n}/{k})+1={cap}")
+		for role_name, n in sorted(role_n.items()):
+			role = kl.lookup(kits, region, "roles", role_name)
+			if n >= 5 and len(kl.pool_of(role)) < 3:
+				g1.append(f"G1 repetition: {region} role '{role_name}' has {n} placements but a pool of {len(kl.pool_of(role))} -- needs a pool of at least 3")
+		pooled = {vid for role in ((kits.get(region) or {}).get("roles") or {}).values() if isinstance(role, dict)
+			for vid, _ in kl.pool_of(role)}
+		explicit = sum(1 for d in by_region[region].values() for p in _placements(d) if not p["role"] and p["sprite"] in pooled)
+		report.append(f"kits G1: {region} conversion coverage: {explicit} explicit id(s) remaining for kinds that have a pool")
+	seen = _sprite_regions(resolved, regions)
+	for region in converted:
+		eligible = [p for d in by_region[region].values() for p in _placements(d) if p["role"] not in common_roles]
+		unique = sum(1 for p in eligible if seen[p["sprite"]] == {region})
+		pct = _pct(unique, len(eligible))
+		others = [(len(seen_set(seen, region) & seen_set(seen, o)) / max(1, len(seen_set(seen, region) | seen_set(seen, o))), o)
+			for o in by_region if o != region]
+		jac = max(others)[0] if others else 0.0
+		report.append(f"kits G2: {region} identity {pct}% unique variants, max region Jaccard {jac:.2f} (report only)")
+		if eligible and pct < 50.0:
+			g2.append(f"G2 identity: {region} has {pct}% placements on variants unique to it, below 50%")
+		for map_id, doc in by_region[region].items():
+			names = {fl.get("material_ref") for fl in doc.get("floor_layers") or [] if isinstance(fl, dict)}
+			walls = doc.get("walls") if isinstance(doc.get("walls"), dict) else {}
+			names |= {walls.get("material_ref")} | {s.get("material_ref") for s in walls.get("segments") or [] if isinstance(s, dict)}
+			for name in sorted(n for n in names if n and n not in common_mats):
+				for o, odocs in by_region.items():
+					if o != region and any(_uses_material(d, name) for d in odocs.values()):
+						g2.append(f"G2 identity: maps/{map_id} material '{name}' is also used by region {o}")
+						break
+	classes = (baseline or {}).get("generic_class") or {}
+	fly: set = set()
+	if baseline:
+		tol = baseline.get("tolerance") or {}
+		tol_n, tol_pp = int(tol.get("placements", 1)), float(tol.get("pp", 2))
+		for region, brow in sorted((baseline.get("regions") or {}).items()):
+			gen = plc = bgen = bplc = 0
+			for map_id, doc in by_region.get(region, {}).items():
+				bm = (brow.get("maps") or {}).get(map_id)
+				if bm is None:
+					continue
+				ps = _placements(doc)
+				for p in ps:
+					cls = classes.get(p["sprite"])
+					if cls is None:
+						fly.add(p["sprite"])
+						cls = "generic" if len(seen.get(p["sprite"], ())) >= GENERIC_REGIONS else "regional"
+					gen += cls == "generic"
+				plc += len(ps)
+				bgen += int(bm.get("generic_placements", 0))
+				bplc += int(bm.get("placements", 0))
+			if gen > bgen + tol_n:
+				g3.append(f"G3 ratchet: {region} generic placements {gen} exceed baseline {bgen} + {tol_n}")
+			if _pct(gen, plc) > _pct(bgen, bplc) + tol_pp:
+				g3.append(f"G3 ratchet: {region} generic share {_pct(gen, plc)}% exceeds baseline {_pct(bgen, bplc)}% + {tol_pp}pp")
+		for map_id in sorted(resolved):
+			region = regions.get(map_id)
+			if region is not None and map_id not in ((baseline.get("regions") or {}).get(region, {}).get("maps") or {}):
+				advisories.append(f"kits G3: maps/{map_id} not in baseline (advisory)")
+	n_adv = sum(1 for a in advisories if a.startswith("kits G3:"))
+	if fly:
+		report.append(f"kits G3: {len(fly)} sprite(s) not in the baseline generic_class, classed on the fly")
+	g4_state = "ok"
+	g4: list = []
+	raw = _compose_maps(parsed, []) if isinstance(parsed, dict) else {}
+	if base_ref or any(_has_ref(d) for d in raw.values()):
+		base_maps = _g4_base_maps(base_ref, advisories)
+		if base_maps is None:
+			g4_state = "skipped"
+		else:
+			_g4_compare(raw, base_maps, g4)
+	errors.extend(g1 + g2 + g3 + g4)
+	report.append("kits G5: run qa/check_fallback_boot.sh and scripts/ship_asset_scan.py on the overlay before a region close (not computed here)")
+	report.append(f"kits: {len(set(regions.values()))} regions, {len(converted)} converted, {total} placements; G1 {_status(g1)}, "
+		f"G2 {_status(g2)}, G3 {_status(g3)} ({n_adv} maps advisory), G4 {g4_state if g4_state == 'skipped' else _status(g4)}")
+
+
+def seen_set(seen: dict, region: str) -> set:
+	return {s for s, r in seen.items() if region in r}
+
+
+def _uses_material(doc: dict, name: str) -> bool:
+	walls = doc.get("walls") if isinstance(doc.get("walls"), dict) else {}
+	rows = list(doc.get("floor_layers") or []) + [walls] + list(walls.get("segments") or [])
+	return any(isinstance(r, dict) and r.get("material_ref") == name for r in rows)
 
 
 def check_moods(parsed: dict, maps: dict, errors: list) -> None:
@@ -3136,6 +3388,17 @@ def main() -> int:
 	check_placements_off_water(maps, errors)
 	advisories: list = []
 	resolved_maps = check_kits(parsed, maps, errors, advisories, report)
+	base_ref = sys.argv[sys.argv.index("--base") + 1] if "--base" in sys.argv else None
+	baseline_path = GAME_ROOT / "qa" / "baselines" / "scene-repetition.json"
+	baseline = json.loads(baseline_path.read_text()) if baseline_path.exists() else None
+	if "--regen-scene-baseline" in sys.argv:
+		baseline = build_scene_baseline(resolved_maps, _map_regions(parsed),
+			(baseline or {}).get("tolerance", {"placements": 1, "pp": 2}))
+		baseline_path.parent.mkdir(parents=True, exist_ok=True)
+		baseline_path.write_text(json.dumps(baseline, indent=1, sort_keys=True) + "\n")
+		report.append("kits G3: baseline regenerated -- add a CHOICE-LOG line")
+	check_kit_gates(resolved_maps, _map_regions(parsed), parsed.get(DATA / "kits.json") or {}, parsed,
+		errors, advisories, report, base_ref=base_ref, baseline=baseline)
 	check_moods(parsed, maps, errors)
 	check_stat_growth_flat(parsed, errors)
 	check_companion_counter(parsed, maps, errors)

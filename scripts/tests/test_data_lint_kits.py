@@ -118,6 +118,152 @@ class TestKitRules(unittest.TestCase):
         self.assertTrue(any("ghost" in e for e in errs) and any("3 decor" in e for e in errs))
 
 
+def run_with_sprites(sprites, kits=KITS, maps=None):
+    errors = []
+    parsed = {data_lint.DATA / "kits.json": kits, data_lint.DATA / "sprites.json": sprites,
+              data_lint.DATA / "arenas.json": {"arenas": []}}
+    for mid, doc in (maps or {}).items():
+        parsed[data_lint.DATA / "maps" / "r" / f"{mid}.json"] = doc
+    data_lint.check_kits(parsed, data_lint._compose_maps(parsed, errors), errors, [], [], bundle_paths=BUNDLE, canon=frozenset())
+    return errors
+
+
+class TestTask5Gaps(unittest.TestCase):
+    def door_sprites(self, a, b):
+        s = copy.deepcopy(SPRITES)
+        s["d1"].update(a); s["d2"].update(b)
+        return s
+
+    def test_door_footprint_uses_rendered_size(self):
+        # raw sheets differ (34x44 vs 68x88) but render_scale makes them 34x44 -> pass
+        s = self.door_sprites({}, {"animations": {"idle": {"sheet": "res://assets/own.png", "frame_size": [68, 88]}}, "render_scale": 0.5})
+        self.assertEqual([e for e in run_with_sprites(s) if "footprint" in e], [])
+        # raw sheets match but render_scale makes the footprints differ -> fail
+        s = self.door_sprites({}, {"render_scale": 2.0})
+        self.assertTrue(any("footprint" in e for e in run_with_sprites(s)))
+
+    def test_denylist_whole_word(self):
+        k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["deny"] = ["sack"]
+        def errs(name):
+            return run(k, maps={"m": {**GRID, "decor": [], "entities": [
+                {"id": "p", "kind": "prop", "display_name": name, "sprite": "@cargo", "cell": [1, 1]}]}})
+        self.assertEqual([e for e in errs("Sackcloth bundle") if "deny" in e], [])
+        self.assertTrue(any("deny" in e and "sack" in e for e in errs("A Sack")))
+
+    def test_rule11_coords_and_variants(self):
+        base = {**GRID, "decor": [], "entities": []}
+        errs = run(maps={"m": {**base, "floor_layers": [{"material": "@fa", "variants": [[1, 1]], "cells": "all"}]}})
+        self.assertTrue(any("both coords and variants" in e for e in errs))
+        errs = run(maps={"m": {**base, "floor_layers": [{"material": "@fa", "cells": "all"}]}})
+        self.assertEqual([e for e in errs if "both coords" in e], [])
+
+
+class TestGates(unittest.TestCase):
+    def test_g1_pool_size_and_ceiling(self):
+        k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["pool"] = ["c1", "c2"]
+        resolved = {"m": {**GRID, "decor": [{"sprite": "c1", "sprite_role": "cargo", "cell": [i, 0]} for i in range(6)], "entities": []}}
+        errors = []
+        data_lint.check_kit_gates(resolved, {"m": "r"}, k, [], errors, [], [], base_ref=None, baseline=None)
+        self.assertTrue(any("G1" in e and "pool of at least 3" in e for e in errors))
+        self.assertTrue(any("G1" in e and "ceil" in e for e in errors))
+
+    def test_g1_clean_and_coverage_report(self):
+        decor = [{"sprite": v, "sprite_role": "cargo", "cell": [i, 0]} for i, v in enumerate(["c1", "c2", "c3", "c1", "c2", "c3"])]
+        decor.append({"sprite": "c1", "cell": [0, 1]})  # explicit id for a pooled kind
+        errors, report = [], []
+        data_lint.check_kit_gates({"m": {**GRID, "decor": decor, "entities": []}}, {"m": "r"}, KITS, [], errors, [], report, base_ref=None, baseline=None)
+        self.assertEqual([e for e in errors if "G1" in e], [])
+        self.assertTrue(any("conversion coverage" in r and "r" in r and "1" in r for r in report))
+        self.assertTrue(any(r.startswith("kits:") for r in report))
+
+    def test_g2_identity_share(self):
+        resolved = {"m": {**GRID, "decor": [{"sprite": "c1", "sprite_role": "cargo", "cell": [0, 0]}, {"sprite": "c2", "cell": [1, 0]}, {"sprite": "c2", "cell": [2, 0]}], "entities": []},
+                    "other": {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}, {"sprite": "c2", "cell": [1, 0]}], "entities": []}}
+        errors = []
+        data_lint.check_kit_gates(resolved, {"m": "r", "other": "q"}, KITS, [], errors, [], [], base_ref=None, baseline=None)
+        self.assertTrue(any("G2" in e for e in errors))
+
+    def test_g2_inactive_without_converted_region(self):
+        resolved = {"m": {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}], "entities": []},
+                    "o": {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}], "entities": []}}
+        errors = []
+        data_lint.check_kit_gates(resolved, {"m": "r", "o": "q"}, KITS, [], errors, [], [], base_ref=None, baseline=None)
+        self.assertEqual(errors, [])
+
+    def test_g2_material_exclusive(self):
+        m = {**GRID, "entities": [], "decor": [{"sprite": "c1", "sprite_role": "cargo", "cell": [0, 0]}],
+             "floor_layers": [{"material_ref": "fa", "cells": "all"}]}
+        resolved = {"m": m, "o": {**GRID, "entities": [], "decor": [], "floor_layers": [{"material_ref": "fa", "cells": "all"}]}}
+        errors = []
+        data_lint.check_kit_gates(resolved, {"m": "r", "o": "q"}, KITS, [], errors, [], [], base_ref=None, baseline=None)
+        self.assertTrue(any("G2" in e and "fa" in e for e in errors))
+
+    def test_g3_ratchet_and_tolerance(self):
+        baseline = {"tolerance": {"placements": 1, "pp": 2}, "generic_class": {"c1": "generic", "c2": "regional"},
+                    "regions": {"r": {"placements": 4, "generic_placements": 1, "generic_share_pct": 25.0, "maps": {"m": {"placements": 4, "generic_placements": 1}}}}}
+        ok = {"m": {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}, {"sprite": "c1", "cell": [1, 0]}, {"sprite": "c2", "cell": [2, 0]}, {"sprite": "c2", "cell": [3, 0]}], "entities": []}}
+        errors, adv = [], []
+        data_lint.check_kit_gates(ok, {"m": "r"}, KITS, [], errors, adv, [], base_ref=None, baseline=baseline)
+        self.assertTrue(any("G3" in e for e in errors))  # +1 placement is inside tolerance but +25pp is not
+        errors, adv = [], []
+        data_lint.check_kit_gates({"new_map": ok["m"]}, {"new_map": "r"}, KITS, [], errors, adv, [], base_ref=None, baseline=baseline)
+        self.assertEqual([e for e in errors if "G3" in e], [])
+        self.assertTrue(any("not in baseline" in a for a in adv))
+
+    def test_g3_within_tolerance_passes(self):
+        baseline = {"tolerance": {"placements": 1, "pp": 2}, "generic_class": {"c1": "generic", "c2": "regional"},
+                    "regions": {"r": {"placements": 4, "generic_placements": 2, "generic_share_pct": 50.0, "maps": {"m": {"placements": 4, "generic_placements": 2}}}}}
+        cur = {"m": {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}, {"sprite": "c1", "cell": [1, 0]}, {"sprite": "c2", "cell": [2, 0]}, {"sprite": "c2", "cell": [3, 0]}], "entities": []}}
+        errors = []
+        data_lint.check_kit_gates(cur, {"m": "r"}, KITS, [], errors, [], [], base_ref=None, baseline=baseline)
+        self.assertEqual([e for e in errors if "G3" in e], [])
+
+    def test_hidden_sprite_entities_are_not_placements(self):
+        doc = {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}],
+               "entities": [{"id": "a", "sprite": "c2", "hide_sprite": True, "cell": [1, 1]}, {"id": "b", "cell": [2, 2]}]}
+        self.assertEqual([p["sprite"] for p in data_lint._placements(doc)], ["c1"])
+
+    def test_g4_structural_diff(self):
+        base = {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}], "entities": [], "blocked": [[1, 1]]}
+        cur = copy.deepcopy(base); cur["decor"][0]["sprite"] = "@cargo"; cur["blocked"] = [[1, 2]]
+        errors = []
+        data_lint._g4_compare({"m": cur}, {"m": base}, errors)
+        self.assertTrue(any("G4" in e and "blocked" in e for e in errors))
+        cur["blocked"] = [[1, 1]]; errors = []
+        data_lint._g4_compare({"m": cur}, {"m": base}, errors)
+        self.assertEqual(errors, [])
+
+    def test_g4_other_components_and_unconverted_maps(self):
+        base = {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}], "entities": [], "walls": {"segments": [{"from": [0, 0], "to": [3, 0]}]},
+                "scatter": [{"density": 0.1, "cluster": 0.5}]}
+        for comp, mutate in (("decor", lambda d: d["decor"].append({"sprite": "@cargo", "cell": [5, 5]})),
+                             ("walls", lambda d: d["walls"]["segments"][0].update({"to": [4, 0]})),
+                             ("scatter", lambda d: d["scatter"][0].update({"density": 0.2}))):
+            cur = copy.deepcopy(base); cur["decor"][0]["sprite"] = "@cargo"; mutate(cur)
+            errors = []
+            data_lint._g4_compare({"m": cur}, {"m": base}, errors)
+            self.assertTrue(any("G4" in e and comp in e for e in errors), comp)
+        cur = copy.deepcopy(base); cur["decor"].append({"sprite": "c2", "cell": [5, 5]})  # no @ ref -> not a conversion
+        errors = []
+        data_lint._g4_compare({"m": cur}, {"m": base}, errors)
+        self.assertEqual(errors, [])
+
+    def test_g4_skips_without_base(self):
+        adv = []
+        self.assertEqual(data_lint._g4_base_maps("refs/does-not-exist", adv), None)
+        self.assertTrue(any("G4" in a for a in adv))
+
+    def test_baseline_on_head_is_self_consistent(self):
+        path = GAME / "qa" / "baselines" / "scene-repetition.json"
+        baseline = json.loads(path.read_text())
+        self.assertEqual(set(baseline), {"_comment", "tolerance", "generic_class", "regions"})
+        parsed, maps = data_lint._lint_inputs()
+        resolved = data_lint.check_kits(parsed, maps, [], [], [])
+        regen = data_lint.build_scene_baseline(resolved, data_lint._map_regions(parsed), baseline["tolerance"])
+        self.assertEqual(regen["regions"], baseline["regions"])
+        self.assertEqual(regen["generic_class"], baseline["generic_class"])
+
+
 class TestRealTree(unittest.TestCase):
     def test_clean_on_head(self):
         r = subprocess.run([sys.executable, str(GAME / "scripts" / "data_lint.py")], capture_output=True, text=True, cwd=str(REPO_ROOT))
