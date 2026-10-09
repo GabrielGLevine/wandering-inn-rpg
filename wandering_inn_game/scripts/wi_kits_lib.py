@@ -195,6 +195,64 @@ def _resolve_role(placements: list, role_name: str, role, map_id: str, errors: l
         _apply(p["row"], role_name, role, variant)
 
 
+class SheetHasher:
+    """sha256 of a game-root-relative sheet ('assets/...'), cached. An absent file (a public
+    checkout without the overlay) hashes to None and is listed in `missing`."""
+
+    def __init__(self, game_root: Path, overrides: dict | None = None):
+        self.game_root = Path(game_root)
+        self.cache: dict = dict(overrides or {})
+        self.missing: set = set()
+
+    def __call__(self, path: str):
+        if path not in self.cache:
+            f = self.game_root / path
+            self.cache[path] = hashlib.sha256(f.read_bytes()).hexdigest() if f.is_file() else None
+            if self.cache[path] is None:
+                self.missing.add(path)
+        return self.cache[path]
+
+
+def _identity_anim(entry) -> dict | None:
+    anims = entry.get("animations") if isinstance(entry, dict) else None
+    if not isinstance(anims, dict):
+        return None
+    anim = anims.get("idle") or next(iter(anims.values()), None)
+    return anim if isinstance(anim, dict) else None
+
+
+def art_identity(sprite_id: str, entry, sheet_sha) -> tuple:
+    """#623: the art a sprites.json entry draws, so two ids of one picture count as one.
+    Region rows key on ("R", sheet path, rect); frame sheets on ("S", sheet sha256, frame
+    size), or the path when `sheet_sha` returns None. Only the entry's own idle (else first)
+    animation counts: never its fallback_sprite, and render_scale, tint and anchor do not."""
+    anim = _identity_anim(entry)
+    sheet = None
+    if anim is not None:
+        sheet = anim.get("sheet") or anim.get("sheet_down") or next(
+            (v for k, v in anim.items() if k.startswith("sheet") and isinstance(v, str)), None)
+    if not isinstance(sheet, str) or not sheet:
+        return ("id", sprite_id)
+    path = sheet.removeprefix("res://")
+    rect = anim.get("region") or anim.get("region_down")
+    if rect:
+        return ("R", path, tuple(int(v) for v in rect))
+    return ("S", sheet_sha(path) or "path:" + path, tuple(int(v) for v in anim.get("frame_size") or ()))
+
+
+def art_identities(sprites: dict, sheet_sha) -> dict:
+    return {sid: art_identity(sid, e, sheet_sha) for sid, e in sprites.items() if not sid.startswith("_")}
+
+
+def identity_label(ident: tuple) -> str:
+    if ident[0] == "R":
+        return f"{ident[1]} region {list(ident[2])}"
+    if ident[0] == "S":
+        digest = ident[1] if ident[1].startswith("path:") else "sha256 " + ident[1][:12]
+        return f"frame sheet {digest} at {'x'.join(map(str, ident[2]))}"
+    return f"id {ident[1]}"
+
+
 def rows_of(resolved: dict) -> list:
     out = []
     for layer in ("decor", "entities"):

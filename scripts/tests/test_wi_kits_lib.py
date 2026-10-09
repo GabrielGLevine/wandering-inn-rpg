@@ -3,6 +3,7 @@
 Pinned picks are the values tests/test_kit_resolver.gd asserts."""
 import collections
 import copy
+import hashlib
 import json
 import math
 import sys
@@ -267,6 +268,87 @@ class TestCanonNames(unittest.TestCase):
                 {"kind": "npc", "display_name": "Cups Smith", "sprite": "cups"},
                 {"kind": "npc", "display_name": "Other One", "sprite": "townswoman"}]}))
             self.assertEqual(kl.canon_names(root), {"Foo Bar", "Foo", "Cups Smith", "Cups"})
+
+
+def _region(sheet, rect, **extra):
+    return {"animations": {"idle": {"sheet": "res://" + sheet, "frame_size": rect[2:], "region": rect, "fps": 1}}, **extra}
+
+
+def _frames(sheet, size, **extra):
+    return {"animations": {"idle": {"sheet": "res://" + sheet, "frame_size": size, "fps": 6}}, **extra}
+
+
+class TestArtIdentity(unittest.TestCase):
+    """#623: G2/G3 count art, not ids."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.game = Path(self._tmp.name)
+        (self.game / "assets").mkdir()
+        for name, payload in (("a.png", b"sheet-a"), ("copy_of_a.png", b"sheet-a"), ("b.png", b"sheet-b")):
+            (self.game / "assets" / name).write_bytes(payload)
+        self.sha = kl.SheetHasher(self.game)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def ident(self, entry, sid="x"):
+        return kl.art_identity(sid, entry, self.sha)
+
+    def test_region_rows_key_on_sheet_path_and_rect(self):
+        a = self.ident(_region("assets/props/Furniture.png", [132, 355, 24, 25]), "window_blue")
+        b = self.ident(_region("assets/props/Furniture.png", [132, 355, 24, 25]), "invrisil_facade_window_1")
+        self.assertEqual(a, b)
+        self.assertEqual(a, ("R", "assets/props/Furniture.png", (132, 355, 24, 25)))
+        self.assertNotEqual(a, self.ident(_region("assets/props/Furniture.png", [132, 355, 24, 26])))
+        self.assertNotEqual(a, self.ident(_region("assets/props/Other.png", [132, 355, 24, 25])))
+
+    def test_frame_sheets_key_on_bytes_and_frame_size(self):
+        a = self.ident(_frames("assets/a.png", [32, 32]))
+        self.assertEqual(a, self.ident(_frames("assets/copy_of_a.png", [32, 32])), "byte-identical copies are one picture")
+        self.assertEqual(a[1], hashlib.sha256(b"sheet-a").hexdigest())
+        self.assertNotEqual(a, self.ident(_frames("assets/a.png", [16, 32])), "a different frame size cuts different frames")
+        self.assertNotEqual(a, self.ident(_frames("assets/b.png", [32, 32])))
+
+    def test_same_sheet_at_another_scale_or_tint_is_the_same_art(self):
+        base = _frames("assets/a.png", [32, 32])
+        scaled = _frames("assets/a.png", [32, 32], render_scale=0.62, anchor=[0.5, 0.8], field_tint_override=[1, 0, 0, 1])
+        self.assertEqual(self.ident(base), self.ident(scaled))
+        self.assertEqual(self.ident(_region("assets/p.png", [0, 0, 16, 16])),
+                         self.ident(_region("assets/p.png", [0, 0, 16, 16], render_scale=2.0, shadow=True)))
+
+    def test_fallback_sprite_is_ignored(self):
+        own = _region("assets/p.png", [0, 0, 16, 16], fallback_sprite="owned_a")
+        self.assertEqual(self.ident(own), self.ident(_region("assets/p.png", [0, 0, 16, 16], fallback_sprite="owned_b")))
+        self.assertNotEqual(self.ident(own), self.ident(_region("assets/p.png", [16, 0, 16, 16], fallback_sprite="owned_a")),
+                            "a shared fallback never merges two different pictures")
+
+    def test_absent_sheet_keys_on_path_and_is_reported(self):
+        a = self.ident(_frames("assets/bundle_only.png", [32, 32]))
+        self.assertEqual(a, ("S", "path:assets/bundle_only.png", (32, 32)))
+        self.assertEqual(self.sha.missing, {"assets/bundle_only.png"})
+
+    def test_idle_first_directional_region_and_no_art(self):
+        entry = {"animations": {"walk": {"sheet": "res://assets/b.png", "frame_size": [8, 8]},
+                                "idle": {"sheet_down": "res://assets/g.png", "region_down": [0, 32, 16, 16], "frame_size": [16, 16]}}}
+        self.assertEqual(self.ident(entry), ("R", "assets/g.png", (0, 32, 16, 16)))
+        self.assertEqual(self.ident({"animations": {"walk": {"sheet": "res://assets/b.png", "frame_size": [8, 8]}}})[0], "S")
+        self.assertEqual(self.ident({"animations": {}}, "ghost"), ("id", "ghost"))
+
+    def test_identity_label(self):
+        self.assertEqual(kl.identity_label(("R", "assets/p.png", (1, 2, 3, 4))), "assets/p.png region [1, 2, 3, 4]")
+        self.assertEqual(kl.identity_label(("S", "ab" * 32, (32, 32))), "frame sheet sha256 abababababab at 32x32")
+
+    def test_real_catalog_has_the_twelve_measured_groups(self):
+        sprites = json.loads((GAME / "data" / "sprites.json").read_text())
+        groups = collections.defaultdict(set)
+        for sid, ident in kl.art_identities(sprites, kl.SheetHasher(GAME)).items():
+            groups[ident].add(sid)
+        shared = {frozenset(ids) for ids in groups.values() if len(ids) > 1}
+        # region-row twins need no overlay; frame-sheet twins of tracked owned sheets need none either
+        for pair in ({"window_blue", "invrisil_facade_window_1"}, {"sconce", "campfire"},
+                     {"invrisil_door_street_4", "invrisil_shop_door_2"}, {"invrisil_facade_window_2", "window_blue__alt1"}):
+            self.assertIn(frozenset(pair), shared)
 
 
 if __name__ == "__main__":
