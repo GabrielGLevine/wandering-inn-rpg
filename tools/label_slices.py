@@ -43,24 +43,39 @@ Read the two images of page {page}: {png_2x} (2x zoom) and {png_1x} (1x, gamepla
 Each sprite has a yellow number above it; the numbers on this page are {numbers}.
 
 For EVERY number, choose exactly one kind from this closed list and nothing else:
-crate barrel sack door window lamp table seat shelf bed plant rock debris tool sign wall_module container other
+{kinds}
 
 Guidance:
-- crate = boxy wooden/metal box; barrel = round-bodied cask; sack = soft bag/pouch/bale;
-  container = chest, urn, pot, basket, bucket or other vessel that is not a crate/barrel/sack;
-- door, window, wall_module (wall/roof/fence/railing segment meant to tile with neighbours);
-- lamp = any light source (lantern, candle, torch, sconce, brazier, campfire);
-- table (also counters, desks, benches used as surfaces), seat (chair, stool, bench to sit on),
-  shelf (bookcase, rack, cabinet), bed;
+- crate = boxy wooden/metal box; barrel = round-bodied cask; sack = soft bag, pouch or bale;
+  container = storage (chest, basket, bucket, urn, storage pot);
+- door, window, wall_module (wall/roof segment meant to tile with neighbours);
+- fence = a standalone fence, railing, gate post or net (not a tiling wall or roof module);
+- lamp = any light source (lantern, candle, torch, sconce, brazier, chandelier);
+- station = an operated workstation with fire or a work surface (furnace, forge, kiln, anvil, stove,
+  grill or spit, butcher block, cauldron on a fire, fire pit); not handheld, not plain furniture;
+- table = flat furniture, counters and workbenches without fire; seat (chair, stool, bench to sit on);
+  shelf (bookcase, rack, cabinet); bed; rug = floor carpets and mats;
 - plant = tree, bush, flower, grass, crop, mushroom, reeds; rock = stone, boulder, pebble, crystal;
-- debris = rubble, bones, broken pieces, scattered litter; tool = tools, weapons racks, workshop items;
-- sign = signboard, banner, flag, notice; other = anything that fits none of the above
-  (food, statues, grates, scrolls, machines).
+- debris = loose rubble and scrap; tool = handheld tools only; sign = signboard, banner, flag, notice;
+- food = produce, meat, bread, dishes of food;
+- vessel = cookware, tableware, mugs, goblets, bowls, bottles, potions (eating, drinking, cooking or
+  potions; NOT storage);
+- pipe = plumbing, valves, grates; book = books, scrolls, paper, tomes;
+- decor = non-functional display (statues, busts, idols, trophy heads, mirrors, paintings, curtains);
+  anything that emits light is a lamp, including chandeliers;
+- grave = tombstone, cross, coffin, grave marker;
+- resource = ingots, ore, coal, planks, logs, stumps, horns (bales stay in sack);
+- item = small carried loot (keys, coins, gems, feathers, swords, bows, shields);
+- structure = huts, towers, wells, fountains, pools (setpiece buildings);
+- fx = light cones, glows, particles, effect streaks;
+- other = anything else: palette swatches, mis-sliced composites, unclear items.
 Do not invent a kind. Confidence is 0.0-1.0 for how sure you are of the kind.
 
 Answer with ONLY this JSON (no prose), one entry per number:
 {{"page": "{page}", "labels": {{"1": {{"kind": "crate", "confidence": 0.9}}, "2": {{"kind": "plant", "confidence": 0.7}}}}}}
 """
+
+PROMPT_TEMPLATE = PROMPT_TEMPLATE.replace("{kinds}", " ".join(sa.KINDS))
 
 
 def find_slices(assets_root: Path) -> list[Path]:

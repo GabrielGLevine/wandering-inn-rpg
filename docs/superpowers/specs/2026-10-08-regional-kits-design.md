@@ -275,9 +275,15 @@ animation strips (`*-Sheet.png`) and tileset, wang or terrain sheets.
 - **Labeling:**
   - A vision subagent labels the numbered contact sheets with a closed
     vocabulary plus size class and confidence, at about 100k tokens. The
-    vocabulary is `wi_kits_lib.KINDS`, 18 kinds: crate, barrel, sack, door,
+    vocabulary is `wi_kits_lib.KINDS`, 31 kinds: crate, barrel, sack, door,
     window, lamp, table, seat, shelf, bed, plant, rock, debris, tool, sign,
-    wall_module, container and other.
+    wall_module, container, other, station, food, vessel, pipe, book, decor,
+    grave, fence, resource, item, rug, structure and fx. Definitions live in
+    the `tools/label_slices.py` prompt (tool = handheld only; table = flat
+    furniture without fire; station = fire or work-surface workstation;
+    lamp = anything that emits light; container = storage; vessel = eating,
+    drinking, cooking or potions). The Tier A common kinds stay crate,
+    barrel, sack and container.
   - The ~55 already-wired regions serve as the accuracy check.
   - Labels land in `targets`.
 - **Tool changes:**

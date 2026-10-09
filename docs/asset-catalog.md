@@ -56,6 +56,12 @@ slices and registry rows; a sheet the intake skipped stays invisible (#624).
 2. **Label.** `python3 tools/label_slices.py export` and
    `python3 tools/label_tilesets.py export`; the controller dispatches the
    vision agent on the pages, then `... import --answers DIR` for both.
+   Slice kinds come from the closed 31-kind vocabulary `wi_kits_lib.KINDS`
+   (definitions in the `label_slices.py` prompt: station = fire or work-surface
+   workstation, tool = handheld only, vessel = eating/drinking/cooking/potions,
+   container = storage, decor and fx for display and effects; Tier A common kinds
+   stay crate, barrel, sack, container). Re-label slices of kind `other` or
+   confidence under 0.6 when the vocabulary grows.
 3. **Register.** `python3 tools/asset_candidates.py` rebuilds
    `docs/asset-candidates.*` (slices, tilesets with `material_labels`).
 4. **Check coverage.** `python3 tools/asset_coverage.py --check` must show
