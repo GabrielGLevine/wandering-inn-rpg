@@ -1,0 +1,185 @@
+{
+ "grid": {
+  "width": 9,
+  "height": 9
+ },
+ "blocked": [],
+ "entities": [],
+ "decor": [
+  {
+   "sprite": "@cargo",
+   "cell": [
+    0,
+    0
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    2,
+    0
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    4,
+    0
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    6,
+    0
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    8,
+    0
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    0,
+    2
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    2,
+    2
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    4,
+    2
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    6,
+    2
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    8,
+    2
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    0,
+    4
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    2,
+    4
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    4,
+    4
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    6,
+    4
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    8,
+    4
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    0,
+    6
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    2,
+    6
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    4,
+    6
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    6,
+    6
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    8,
+    6
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    0,
+    8
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    2,
+    8
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    4,
+    8
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    6,
+    8
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    8,
+    8
+   ]
+  }
+ ]
+}

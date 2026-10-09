@@ -1,0 +1,4 @@
+{
+  "_comment": "Regional kits: role pools, materials and anonymous casts per region. Spec docs/superpowers/specs/2026-10-08-regional-kits-design.md. Role value: a sprite id string, or {pick: cell|map|door, module: bool, pool: [id | [id, weight]], light: {}, deny: [word, ...]}. `deny` words are matched whole-word, case-insensitive, against display_name and observe of any row using the role (data_lint). Lookup: region (map folder or top-level map `kit`), then _common.",
+  "_common": {"materials": {}, "roles": {}, "cast": []}
+}

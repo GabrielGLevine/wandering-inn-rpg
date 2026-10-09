@@ -1,0 +1,113 @@
+{
+ "_common": {
+  "materials": {},
+  "roles": {
+   "common_lamp": "street_lamp"
+  },
+  "cast": []
+ },
+ "r": {
+  "materials": {
+   "floor_a": {
+    "sheet": "res://a.png",
+    "tile_px": 16,
+    "coords": [
+     1,
+     2
+    ],
+    "tone": {
+     "base": [
+      0.1,
+      0.1,
+      0.1
+     ],
+     "detail": 0.5
+    }
+   },
+   "wall_b": {
+    "sheet": "res://b.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "wang_corners": {
+     "nw": 1
+    },
+    "cap": [
+     2,
+     0
+    ],
+    "face": [
+     3,
+     0
+    ],
+    "fallback_render": "flat"
+   }
+  },
+  "roles": {
+   "cargo": {
+    "pick": "cell",
+    "pool": [
+     "c1",
+     [
+      "c2",
+      2
+     ],
+     "c3",
+     "c4",
+     "c5"
+    ]
+   },
+   "seat": {
+    "pick": "map",
+    "pool": [
+     "s1",
+     "s2",
+     "s3"
+    ]
+   },
+   "facade": {
+    "pick": "cell",
+    "module": true,
+    "pool": [
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "door_x": {
+    "pick": "door",
+    "pool": [
+     "d1",
+     "d2",
+     "d3"
+    ]
+   },
+   "lamp": {
+    "pick": "map",
+    "pool": [
+     "l1",
+     "l2"
+    ],
+    "light": {
+     "color": [
+      1,
+      0.85,
+      0.5
+     ],
+     "energy": 0.9,
+     "radius": 32
+    }
+   },
+   "fixed": "plaza_fountain"
+  },
+  "cast": []
+ }
+}

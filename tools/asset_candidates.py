@@ -59,6 +59,8 @@ IMAGE_EXT = {".png", ".gif", ".webp", ".jpg", ".jpeg"}
 AUDIO_EXT = {".ogg", ".wav", ".mp3"}
 MAX_PROMPT = 160
 MAX_NOTES = 200
+SLICE_KEYS = ("source_sheet", "region", "sheet_sha256", "method", "has_shadow", "size_class",
+              "label_confidence", "label_kind", "bundled", "game_sheet", "wired_ids", "duplicate_sheets")
 
 # Header-cell substrings -> registry field (first match wins, checked in order).
 HEADER_FIELDS = (
@@ -287,7 +289,8 @@ def rows_from_manifest_json(batch_dir: Path, manifest: Path) -> list[dict]:
         row["prompt"] = clip(row["prompt"], MAX_PROMPT)
         row["notes"] = clip(row["notes"], MAX_NOTES)
         row["manifest_ref"] = manifest.name
-        out.append({k: v for k, v in row.items() if v not in ("", None, [])} | {"path": row["path"]})
+        out.append({k: v for k, v in row.items() if v not in ("", None, [])} | {"path": row["path"]}
+                   | {k: a[k] for k in SLICE_KEYS if k in a})
     return out
 
 
@@ -409,6 +412,7 @@ def rows_from_files(batch_dir: Path) -> list[dict]:
 # ------------------------------------------------------------ batches
 
 MANIFEST_NAMES = ("MANIFEST.json", "MANIFEST.md", "manifest.json")
+SLICES_NAME = "SLICES.json"
 
 
 def present(d: Path) -> set[str]:
@@ -432,7 +436,14 @@ def find_batches(assets_root: Path) -> list[Path]:
             batches.extend(lanes)
         else:
             batches.append(top)
+    # tools/slice_atlases.py output: _sliced/<pack>/<stem>/SLICES.json, tier pack-bundle
+    # (top-level root: the pack folders themselves are read-only)
+    batches += [sj.parent for sj in sorted(assets_root.glob(f"_sliced/*/*/{SLICES_NAME}"))]
     return batches
+
+
+def is_sliced(batch_rel: Path) -> bool:
+    return batch_rel.parts[:1] == ("_sliced",)
 
 
 def read_batch(batch_dir: Path) -> tuple[str, list[dict]]:
@@ -441,6 +452,12 @@ def read_batch(batch_dir: Path) -> tuple[str, list[dict]]:
     mj, md, lj = (batch_dir / n for n in MANIFEST_NAMES)
     names = present(batch_dir)
     try:
+        if SLICES_NAME in names:
+            # SLICES.json paths are repo-relative; finish_row wants batch-relative
+            rows = rows_from_manifest_json(batch_dir, batch_dir / SLICES_NAME)
+            for r in rows:
+                r["path"] = Path(r["path"]).name
+            return SLICES_NAME, rows
         if mj.name in names:
             rows = rows_from_manifest_json(batch_dir, mj)
             if rows:
@@ -503,7 +520,7 @@ def finish_row(row: dict, batch_dir: Path, assets_root: Path, repo_root: Path,
         size = png_size(south) if south else None
     if size:
         out["w"], out["h"] = size
-    for k in ("pixellab_id", "prompt", "notes", "anchor_feet", "contact_sheet"):
+    for k in ("pixellab_id", "prompt", "notes", "anchor_feet", "contact_sheet", *SLICE_KEYS):
         if row.get(k) not in (None, "", []):
             out[k] = row[k]
     ref = row.get("manifest_ref", "")
@@ -565,12 +582,16 @@ def build(assets_root: Path, repo_root: Path, write_manifests: bool = False) -> 
     assets, batches = [], []
     if assets_root.is_dir():
         for bdir in find_batches(assets_root):
-            source, tier, family = classify_batch(bdir.relative_to(assets_root).parts[0])
+            batch_rel = bdir.relative_to(assets_root)
+            if is_sliced(batch_rel):
+                source, tier, family = "pack", "pack-bundle", pack_family(batch_rel.parts[1])
+            else:
+                source, tier, family = classify_batch(batch_rel.parts[0])
             origin, rows = read_batch(bdir)
             rows = dedupe(rows)
             # never write MANIFEST.json beside a legacy manifest.json: on a
             # case-insensitive filesystem that clobbers it (see present()).
-            if (write_manifests and origin != "MANIFEST.json" and rows
+            if (write_manifests and origin not in ("MANIFEST.json", SLICES_NAME) and rows
                     and "manifest.json" not in present(bdir)):
                 write_manifest_json(bdir, rows, source, tier, family, origin)
             done = [finish_row(r, bdir, assets_root, repo_root, source, tier, family) for r in rows]

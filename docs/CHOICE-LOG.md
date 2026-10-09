@@ -292,6 +292,27 @@ and chronology belong in issue PRs. Earlier context:
 
 ### Presentation, art and mobile
 
+- **Regional kits (#606, user 2026-10-08; spec
+  `docs/superpowers/specs/2026-10-08-regional-kits-design.md`):**
+  - **Goal:** regional identity without within-region monotony or clutter.
+    Use the pool first; gaps go to `docs/art-generation-list.md`, and
+    generation needs user approval. Scenes close only on a blind Fable
+    art-direction read; the read beats the metrics.
+  - **Hash (controller, #607):** the pick hash is a SHA-256 32-bit prefix,
+    not `String.hash()`. Rejected: djb2, because it is linear and a shared
+    cell suffix collapses picks (3 of 24 rank orders, the same subset on
+    every map).
+  - **Slices** live under a top-level untracked `potential_assets/_sliced/`.
+    Some pack folders are read-only on disk and are never modified.
+  - **Pack art** is wired only as a `region` row on an already-bundled
+    sheet; there are no loose pack copies and no bundle release.
+  - **Label check:** ground truth follows the prompt's own vocabulary
+    (`food_basket` is a container). It is never tuned to the labels, so the
+    potted plant stays "plant".
+  - **G2:** biome sharing is report-only, because biomes are shared across
+    regions.
+  - **G3:** `qa/baselines/scene-repetition.json` was first generated on
+    #607; regenerate only with `--regen-scene-baseline` plus an entry here.
 - **Best art wins per asset (#564/#554)** within a coherent scene, at gameplay
   scale; otherwise keep the official or owned public fallback. READY is not
   acceptance, and there is no quota wiring. Animation, geometry, scale and

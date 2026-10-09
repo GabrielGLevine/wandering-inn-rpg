@@ -17,14 +17,14 @@ verified), `shipped-public` / `shipped-bundle` (wired in data/sprites.json),
 
 ## Rows by kind and tier
 
-| kind | owned-public | owned-unverified | shipped-bundle | shipped-public |
-|---|---|---|---|---|
-| icon | 881 |  |  | 106 |
-| prop | 556 | 20 | 59 | 230 |
-| rig | 122 |  | 7 | 76 |
-| setpiece | 83 |  |  |  |
-| tileset | 29 |  |  |  |
-| ui | 27 |  |  |  |
+| kind | owned-public | owned-unverified | pack-bundle | shipped-bundle | shipped-public |
+|---|---|---|---|---|---|
+| icon | 881 |  |  |  | 106 |
+| prop | 556 | 20 | 1258 | 59 | 233 |
+| rig | 122 |  |  | 7 | 76 |
+| setpiece | 83 |  |  |  |  |
+| tileset | 29 |  |  |  |  |
+| ui | 27 |  |  |  |  |
 
 ## Owned batches
 
@@ -56,3 +56,36 @@ verified), `shipped-public` / `shipped-bundle` (wired in data/sprites.json),
 | pixellab_harvest_2026-10/L3a_rigs | MANIFEST.json | 28 |
 | pixellab_harvest_2026-10/L3b_npcs | MANIFEST.json | 35 |
 | pixellab_harvest_2026-10/L4_tiles_ui_art | MANIFEST.json | 175 |
+| _sliced/Pixel Crawler - Cave/Props | SLICES.json | 18 |
+| _sliced/Pixel Crawler - Cemetery 0.4/Graves | SLICES.json | 25 |
+| _sliced/Pixel Crawler - Cemetery 0.4/Props | SLICES.json | 20 |
+| _sliced/Pixel Crawler - Cemetery 0.4/Tree | SLICES.json | 16 |
+| _sliced/Pixel Crawler - Desert/Props | SLICES.json | 21 |
+| _sliced/Pixel Crawler - Fairy Forest 1.7/Props | SLICES.json | 94 |
+| _sliced/Pixel Crawler - Fairy Forest 1.7/Tree | SLICES.json | 140 |
+| _sliced/Pixel Crawler - Free Pack/Dungeon_Props | SLICES.json | 20 |
+| _sliced/Pixel Crawler - Free Pack/Esoteric | SLICES.json | 40 |
+| _sliced/Pixel Crawler - Free Pack/Farm | SLICES.json | 81 |
+| _sliced/Pixel Crawler - Free Pack/Furniture | SLICES.json | 91 |
+| _sliced/Pixel Crawler - Free Pack/Interior_Props_01 | SLICES.json | 141 |
+| _sliced/Pixel Crawler - Free Pack/Meat | SLICES.json | 33 |
+| _sliced/Pixel Crawler - Free Pack/Model_01_Size_02 | SLICES.json | 20 |
+| _sliced/Pixel Crawler - Free Pack/Model_01_Size_03 | SLICES.json | 6 |
+| _sliced/Pixel Crawler - Free Pack/Model_01_Size_04 | SLICES.json | 12 |
+| _sliced/Pixel Crawler - Free Pack/Model_01_Size_05 | SLICES.json | 12 |
+| _sliced/Pixel Crawler - Free Pack/Model_02_Size_02 | SLICES.json | 8 |
+| _sliced/Pixel Crawler - Free Pack/Model_02_Size_03 | SLICES.json | 7 |
+| _sliced/Pixel Crawler - Free Pack/Model_02_Size_04 | SLICES.json | 7 |
+| _sliced/Pixel Crawler - Free Pack/Model_02_Size_05 | SLICES.json | 7 |
+| _sliced/Pixel Crawler - Free Pack/Model_03_Size_02 | SLICES.json | 12 |
+| _sliced/Pixel Crawler - Free Pack/Model_03_Size_03 | SLICES.json | 7 |
+| _sliced/Pixel Crawler - Free Pack/Model_03_Size_04 | SLICES.json | 4 |
+| _sliced/Pixel Crawler - Free Pack/Model_03_Size_04-export | SLICES.json | 4 |
+| _sliced/Pixel Crawler - Free Pack/Model_03_Size_05 | SLICES.json | 5 |
+| _sliced/Pixel Crawler - Free Pack/Pan | SLICES.json | 53 |
+| _sliced/Pixel Crawler - Free Pack/Props | SLICES.json | 19 |
+| _sliced/Pixel Crawler - Free Pack/Resources | SLICES.json | 24 |
+| _sliced/Pixel Crawler - Free Pack/Rocks | SLICES.json | 54 |
+| _sliced/Pixel Crawler - Free Pack/Tools | SLICES.json | 105 |
+| _sliced/Pixel Crawler - Free Pack/Vegetation | SLICES.json | 87 |
+| _sliced/Pixel Crawler - Sewer/Props | SLICES.json | 65 |

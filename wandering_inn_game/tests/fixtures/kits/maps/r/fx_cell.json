@@ -1,0 +1,132 @@
+{
+ "grid": {
+  "width": 7,
+  "height": 7
+ },
+ "blocked": [],
+ "entities": [
+  {
+   "id": "p1",
+   "kind": "prop",
+   "sprite": "@cargo",
+   "cell": [
+    6,
+    6
+   ]
+  }
+ ],
+ "decor": [
+  {
+   "sprite": "@cargo",
+   "cell": [
+    0,
+    0
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    1,
+    0
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    2,
+    0
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    3,
+    0
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    0,
+    1
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    2,
+    1
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    4,
+    1
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    0,
+    3
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    3,
+    3
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    6,
+    3
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    1,
+    5
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    2,
+    5
+   ]
+  },
+  {
+   "sprite": "@cargo",
+   "cell": [
+    3,
+    5
+   ]
+  },
+  {
+   "sprite": "@facade",
+   "cell": [
+    0,
+    6
+   ]
+  },
+  {
+   "sprite": "@facade",
+   "cell": [
+    1,
+    6
+   ]
+  },
+  {
+   "sprite": "@facade",
+   "cell": [
+    2,
+    6
+   ]
+  }
+ ]
+}
