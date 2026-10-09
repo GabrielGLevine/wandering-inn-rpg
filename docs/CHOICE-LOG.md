@@ -326,6 +326,14 @@ and chronology belong in issue PRs. Earlier context:
     paper stand left the generic `crate` for dedicated regional sprites
     (`invrisil_returned_work_tray`, `invrisil_paper_stand`): Invrisil generic
     placements 74 → 72 (share 36.73%), two new regional class rows.
+  - **G3 regen (#608 pilot 1b, Task 11):** the interior conversions (tables,
+    rugs, interior windows, one cargo row) and the pool-member reclassification
+    (`window_blue`, `table_brown__alt1`, `window_blue__alt1`,
+    `enchanter_floor_mat` now count as regional): Invrisil generic placements
+    72 → 63 (share 32.14%). The same reclassification moved `inn` 39 → 35
+    (50.0%) and `riverfarm` 30 → 29 (24.79%) with no map edit in either;
+    `window_blue` is the only shared id. Sconces stayed explicit: `lamp_wall`
+    has 4 street placements and a pool of 2, so a fifth trips G1.
   - **Counting-room guard rig (#608 final review):** `counting_room_guard`
     (The Factor's Closed Account) wears `invrisil_enforcer`, the owned
     2026-07-06 `hired_blade_a` generation (broad build, club), wired at 28px

@@ -72,6 +72,7 @@
   "dungeon_statue": "regional",
   "dusty_scroll": "regional",
   "eloise": "regional",
+  "enchanter_floor_mat": "regional",
   "enchanter_stock_shelf": "regional",
   "enchanter_vial_case": "regional",
   "erin": "regional",
@@ -250,6 +251,7 @@
   "stool": "generic",
   "street_lamp": "regional",
   "table_brown": "generic",
+  "table_brown__alt1": "regional",
   "tallyman": "regional",
   "temper_bench": "regional",
   "tier_clerk": "regional",
@@ -274,7 +276,8 @@
   "watchgolem": "regional",
   "wax_seal_tray": "regional",
   "wilovan": "regional",
-  "window_blue": "generic",
+  "window_blue": "regional",
+  "window_blue__alt1": "regional",
   "witch_cauldron": "regional",
   "witch_cottage": "regional",
   "witch_kettle_hook": "regional",
@@ -333,38 +336,38 @@
    "placements": 29
   },
   "inn": {
-   "generic_placements": 39,
-   "generic_share_pct": 55.71,
+   "generic_placements": 35,
+   "generic_share_pct": 50.0,
    "maps": {
     "inn": {
-     "generic_placements": 22,
+     "generic_placements": 20,
      "placements": 50
     },
     "inn_player_room": {
-     "generic_placements": 9,
+     "generic_placements": 8,
      "placements": 11
     },
     "inn_upstairs": {
-     "generic_placements": 8,
+     "generic_placements": 7,
      "placements": 9
     }
    },
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 72,
-   "generic_share_pct": 36.73,
+   "generic_placements": 63,
+   "generic_share_pct": 32.14,
    "maps": {
     "adventurers_rest": {
-     "generic_placements": 11,
+     "generic_placements": 9,
      "placements": 21
     },
     "brothers_parlor": {
-     "generic_placements": 18,
+     "generic_placements": 14,
      "placements": 26
     },
     "enchanter_shop": {
-     "generic_placements": 8,
+     "generic_placements": 6,
      "placements": 14
     },
     "enchanter_work_room": {
@@ -384,7 +387,7 @@
      "placements": 30
     },
     "stationer": {
-     "generic_placements": 14,
+     "generic_placements": 13,
      "placements": 18
     }
    },
@@ -437,8 +440,8 @@
    "placements": 96
   },
   "riverfarm": {
-   "generic_placements": 30,
-   "generic_share_pct": 25.64,
+   "generic_placements": 29,
+   "generic_share_pct": 24.79,
    "maps": {
     "riverfarm_longhouse": {
      "generic_placements": 7,
@@ -457,7 +460,7 @@
      "placements": 32
     },
     "witch_hut": {
-     "generic_placements": 6,
+     "generic_placements": 5,
      "placements": 9
     }
    },
