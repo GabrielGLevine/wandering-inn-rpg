@@ -1341,7 +1341,7 @@
     2
    ],
    "display_name": "Into the Alleys",
-   "sprite": "door",
+   "sprite": "@door_street",
    "hide_sprite": true,
    "observe": "A gap in the row of shopfronts, three strides wide and going darker the further in it goes. A stride past the wall line the paving changes underfoot, boulevard marble to whatever the alleys were laid with.",
    "to_map": "mercantile_alleys",
@@ -1823,7 +1823,7 @@
     1
    ],
    "display_name": "Commercial Cross-street",
-   "sprite": "door",
+   "sprite": "@door_street",
    "to_map": "invrisil_cross_street",
    "to_cell": [
     1,
