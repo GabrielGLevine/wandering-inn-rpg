@@ -555,8 +555,10 @@ def wire_one(candidate: Path, sprite_id: str, args: argparse.Namespace, paths: P
         raise Refused(f"{sprite_id}: pc_* ids are the player's own skin; give it an NPC/prop id")
     if not candidate.is_file():
         raise Refused(f"{candidate}: no such file")
-    if paths.potential not in candidate.parents:
+    real_root = paths.potential.resolve()   # potential_assets is a symlink in a worktree
+    if real_root not in candidate.parents:
         raise Refused(f"{candidate}: candidates live under potential_assets/")
+    candidate = paths.potential / candidate.relative_to(real_root)   # repo-relative logical path from here on
     text, catalog = load_catalog(paths)
     if args.fallback:
         check_fallback(args.fallback, catalog, bundle_paths(paths))

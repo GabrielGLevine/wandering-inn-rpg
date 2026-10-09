@@ -349,3 +349,26 @@ def test_owned_path_refuses_pack_png_and_unverified_codex(tree, capsys):
     assert "--allow-unverified" in capsys.readouterr().out
     assert not changed(before, snapshot(tree))
     assert run(tree, codex, "--id", "codex_chest", "--allow-unverified", "--dry-run") == 0
+
+
+def test_symlinked_potential_assets_root_is_accepted(tree, tmp_path):
+    """A worktree's potential_assets is a symlink to the real pack store; resolved candidates must still match."""
+    import shutil
+    real = tmp_path / "real_store"
+    shutil.move(str(tree / "potential_assets"), str(real))
+    (tree / "potential_assets").symlink_to(real, target_is_directory=True)
+    assert run(tree, OWNED, "--id", "parcel_stack") == 0
+
+
+def test_candidate_outside_symlinked_potential_assets_is_refused(tree, tmp_path, capsys):
+    import shutil
+    real = tmp_path / "real_store"
+    shutil.move(str(tree / "potential_assets"), str(real))
+    (tree / "potential_assets").symlink_to(real, target_is_directory=True)
+    stray = tmp_path / "stray" / "parcel_stack.png"
+    stray.parent.mkdir()
+    shutil.copy(real / "pixellab_test/L2_props/parcel_stack.png", stray)
+    before = snapshot(tree)
+    assert run(tree, str(stray), "--id", "parcel_stack") == wa.EXIT_REFUSED
+    assert snapshot(tree) == before
+    assert "potential_assets" in capsys.readouterr().out
