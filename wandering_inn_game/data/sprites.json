@@ -10441,5 +10441,41 @@
     "fps": 1
    }
   }
+ },
+ "invrisil_returned_work_tray": {
+  "render_scale": 0.3,
+  "anchor": [
+   0.5,
+   0.7969
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_returned_work_tray/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_paper_stand": {
+  "render_scale": 0.6,
+  "anchor": [
+   0.5,
+   0.6875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_paper_stand/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
  }
 }

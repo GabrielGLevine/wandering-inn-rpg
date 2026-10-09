@@ -339,6 +339,8 @@
   "invrisil_lady_client/walk": 6,
   "invrisil_lamp_wall_1/idle": 1,
   "invrisil_ornate_bench/idle": 1,
+  "invrisil_paper_stand/idle": 1,
+  "invrisil_returned_work_tray/idle": 1,
   "invrisil_rigged_crate_stack/idle": 1,
   "invrisil_roofline/idle": 1,
   "invrisil_shop_door/idle": 1,
