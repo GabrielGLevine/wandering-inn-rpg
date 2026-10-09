@@ -6,6 +6,7 @@ const SKIP := {
 	"v1_format": "pre-v2 save format, deliberately REJECTED by WISave.apply (test_save.gd's own migration-rejection proof) -- not a loadable story position at all",
 	"v2_format": "pre-v3 migration INPUT (consumed by _migrated(), never applied verbatim) -- not itself a playtest destination",
 	"dp2_fixwave_absolute_start": "a deliberately MID-ANOMALY soft-lock repro (found_spider_silk banked before its posting was ever accepted), explicitly 'NOT registered in qa/manifest.json' per its own _comment -- its incoherence IS its subject",
+	"sprite_frame_counts": "not a save: the C7 frame-count pin table tests/test_sprite_registry.gd reads (regional kits Phase 0); tools/wire_asset.py appends rows to it",
 }
 
 # Intentionally narrow: only late-gate fixtures receive rigorous gear/story
