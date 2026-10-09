@@ -1,5 +1,5 @@
 {
- "_comment": "#608 pilot 1b EYE-GATE (eye-gates ride a prepared save). Derived from the feel_peek_day_start fixture (a post-game Invrisil visitor, warrior 10). Differences: actions_since_sleep 0 (DAY) and the player placed inside the stationer at its arrival cell (6,7), one cell north of the door (6,8), facing north into the shop. The interior grades match across phases, but four interiors add dust motes at dusk/night, so this save covers the day view only.",
+ "_comment": "Invrisil stationer by day, just inside its door (#608 pilot 1b eye-gate). Fixture copy of qa/playtest_saves/2026-10-09-kits-invrisil-interiors/kits-invrisil-stationer-day.json, so fixture coherence validates it and the Playtest States picker lists it; keep the two states identical. Derived from feel_peek_day_start: actions_since_sleep 0 (DAY) and the player at the stationer's arrival cell (6,7), one cell north of the door (6,8), facing north into the shop. Four interiors add dust motes at dusk/night; this is the day view only.",
  "version": 5,
  "state": {
   "current_map": "stationer",

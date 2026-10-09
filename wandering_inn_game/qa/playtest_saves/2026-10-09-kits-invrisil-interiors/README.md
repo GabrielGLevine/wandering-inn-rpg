@@ -5,8 +5,15 @@
 
 ## How to load
 
-The Title -> Playtest States picker only scans `res://qa/fixtures`, so this save
-will NOT appear there. Use the manual slot:
+The same state ships as the fixture `qa/fixtures/kits_invrisil_stationer_day_start.json`, so the
+picker lists it:
+
+1. Launch (`/usr/local/bin/godot --path wandering_inn_game`).
+2. Pick **Playtest States** on the title screen, then
+   **Kits Invrisil Stationer Day Start** (listed after the curated
+   entries).
+
+Or load this file through the manual slot:
 
 1. Quit the game if it is running.
 2. Copy the save in as the **manual** slot:
@@ -23,7 +30,7 @@ will NOT appear there. Use the manual slot:
 
 ## Where it puts you
 
-`stationer` at its arrival cell **[6,7]**, one cell north of the door at [6,8], facing north into the shop, by **day** (`actions_since_sleep` 0). Interiors have no dusk grade, so day is the honest read.
+`stationer` at its arrival cell **[6,7]**, one cell north of the door at [6,8], facing north into the shop, by **day** (`actions_since_sleep` 0). The interior grades match across phases, but four interiors add dust motes at dusk and night, so this save covers the day view only.
 
 ## What to do
 
@@ -38,6 +45,9 @@ will NOT appear there. Use the manual slot:
 - Is every NPC still reachable around the converted tables?
 
 ## Verified
+
+`tests/test_fixture_coherence.gd` validates the fixture copy on every unit run.
+Keep its `state` identical to this save's.
 
 The save loads and lands where this README claims -- applied through
 `WISave.apply` on a real `WIGame` with the shipped 400/900 phase thresholds:
