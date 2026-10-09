@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """#607 lane A: every kit lint rule proven able to FAIL, and clean on HEAD."""
-import copy, json, subprocess, sys, unittest
+import copy, json, os, subprocess, sys, unittest
 from unittest import mock
 from pathlib import Path
 
@@ -474,8 +474,11 @@ class TestRealTree(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertIn("kits:", r.stdout)
         # The G-gate REPORT line (Task 6). #608: real maps carry @refs now, so G4 compares
-        # against the base tree ("skipped" only where no origin/main resolves).
-        self.assertRegex(r.stdout, r"kits: .*; G1 ok, G2 ok, G3 ok \(\d+ maps advisory\), G4 (ok|skipped)")
+        # against the base tree ("skipped" only where no origin/main resolves). CI's python-suites
+        # job is the one place G4 runs (fetch-depth: 0), so there it must compare, as TestLiveParity
+        # refuses to skip Godot.
+        g4 = "ok" if os.environ.get("CI") else "(ok|skipped)"
+        self.assertRegex(r.stdout, r"kits: .*; G1 ok, G2 ok, G3 ok \(\d+ maps advisory\), G4 " + g4)
 
 
 if __name__ == "__main__":
