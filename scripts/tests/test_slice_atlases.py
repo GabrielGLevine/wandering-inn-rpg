@@ -132,22 +132,59 @@ def sprite_sheet(path: Path, boxes, size=(64, 32)) -> Image.Image:
     return im
 
 
+def tile_floor(path: Path, w: int, h: int, im: Image.Image | None = None, x0: int = 0, y0: int = 0) -> Image.Image:
+    """Flush 16px floor tiles (fill + 1px dark joint), the way a tileset lays
+    them: one opaque component whose boundary runs on cell edges."""
+    if im is None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        im = Image.new("RGBA", (w, h), CLEAR)
+    d = ImageDraw.Draw(im)
+    for y in range(y0, y0 + h, 16):
+        for x in range(x0, x0 + w, 16):
+            d.rectangle((x, y, x + 15, y + 15), fill=(120, 110, 100, 255), outline=(40, 35, 30, 255))
+    im.save(path)
+    return im
+
+
+def layout_of(path: Path) -> tuple[str, dict]:
+    a = sa.analyze(path)
+    return a.layout, a.metrics
+
+
 def test_eligible_rules():
+    # #624: names and environment folders no longer skip; content decides.
     ok = ["Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png",
           "Pixel Crawler - Cave/Pixel Crawler - Cave/Assets/Props.png",
-          "Pixel Crawler - Fairy Forest 1.7/Pixel Crawler - Fairy Forest 1.7/Assets/Tree.png"]
-    bad = ["Admurins_Freebies-2/x/Props.png",
-           "Pixel Crawler - Cave/Pixel Crawler - Cave/Enemies/Fungus/Idle-Sheet.png",
-           "Pixel Crawler - Cave/Pixel Crawler - Cave/Social/Props.png",
-           "Pixel Crawler - Cave/Pixel Crawler - Cave/Assets/Tiles.png",
-           "Pixel Crawler - Free Pack/Environment/Tilesets/Floors_Tiles.png",
-           "Pixel Crawler - Free Pack/Environment/Props/Static/Shadows.png",
-           "Pixel Crawler - Free Pack/Environment/Structures/Stations/Anvil/Anvil.png",
-           "Pixel Crawler - Free Pack/Environment/Props/Static/Bonfire_01-Sheet.png",
-           "_sliced/Pixel Crawler - Free Pack/Furniture/Furniture__x0_y0_w16_h16.png",
-           "Pixel Crawler - Free Pack/MockUps/Tavern_01.png"]
-    assert [sa.eligible(Path(p)) for p in ok] == [True] * 3
+          "Pixel Crawler - Fairy Forest 1.7/Pixel Crawler - Fairy Forest 1.7/Assets/Tree.png",
+          "Pixel Crawler - Cave/Pixel Crawler - Cave/Assets/Tiles.png",
+          "Pixel Crawler - Free Pack/Environment/Tilesets/Floors_Tiles.png",
+          "Pixel Crawler - Free Pack/Environment/Props/Static/Shadows.png",
+          "Pixel Crawler - Hideout 1.0/Pixel Crawler - Hideout/Assets/Light.png",
+          "Pixel Crawler - Free Pack/Environment/Structures/Stations/Anvil/Anvil.png",
+          "Pixel Crawler - Free Pack/Environment/Structures/Stations/Furnace/Bricks_01-Sheet.png",
+          "Pixel Crawler - Free Pack/Environment/Props/Static/Bonfire_01-Sheet.png"]
+    bad = {"Admurins_Freebies-2/x/Props.png": "",
+           "Pixel Crawler - Cave/Pixel Crawler - Cave/Enemies/Fungus/Idle-Sheet.png": "",
+           "Pixel Crawler - Cave/Pixel Crawler - Cave/Social/Props.png": "promo_render",
+           "Pixel Crawler - Free Pack/MockUps/Tavern_01.png": "promo_render",
+           "Pixel Crawler - Free Pack/Weapons/Wood/Wood.png": "weapon_sheet",
+           "_sliced/Pixel Crawler - Free Pack/Furniture/Furniture__x0_y0_w16_h16.png": "",
+           "Pixel Crawler - Cave/_sliced/Props/Props__x0_y0_w16_h16.png": ""}
+    assert [sa.eligible(Path(p)) for p in ok] == [True] * len(ok)
     assert [sa.eligible(Path(p)) for p in bad] == [False] * len(bad)
+    assert {p: sa.path_skip(Path(p)) for p in bad if sa.in_scope(Path(p))} == {
+        p: r for p, r in bad.items() if sa.in_scope(Path(p))}
+
+
+def test_only_frame_regular_entity_strips_are_animation():
+    idle = Path("Pixel Crawler - Cave/Pixel Crawler - Cave/Enemies/Fungus/Idle-Sheet.png")
+    walk = Path("Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Walk_Base/Walk_Down-Sheet.png")
+    assert sa.animation_strip(idle, (128, 32)) and sa.animation_strip(walk, (64, 256))
+    assert sa.animation_strip(idle, (576, 80)), "nine 64x80 frames"
+    assert not sa.animation_strip(idle, (100, 36)), "not frame-regular: content decides"
+    station = Path("Pixel Crawler - Free Pack/Environment/Structures/Stations/Furnace/Bricks_01-Sheet.png")
+    assert not sa.animation_strip(station, (64, 96)), "station strips are environment art"
+    assert not sa.animation_strip(Path("Pixel Crawler - Cave/Pixel Crawler - Cave/Enemies/Fungus/Idle.png"))
 
 
 def test_find_sheets_dedupes_by_sha_and_records_duplicates(tmp_path):
@@ -280,8 +317,9 @@ def test_cli_is_idempotent_and_skips_strips_and_dupes(tmp_path, capsys):
     dupe = assets / "Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"
     dupe.parent.mkdir(parents=True)
     dupe.write_bytes(src.read_bytes())
-    sprite_sheet(assets / "Pixel Crawler - Cave/Pixel Crawler - Cave/Enemies/Fungus/Idle-Sheet.png", [(0, 0, 16, 16)])
-    sprite_sheet(assets / "Pixel Crawler - Cave/Pixel Crawler - Cave/Assets/Tiles.png", [(0, 0, 16, 16)])
+    sprite_sheet(assets / "Pixel Crawler - Cave/Pixel Crawler - Cave/Enemies/Fungus/Idle-Sheet.png",
+                 [(0, 0, 16, 16)], size=(128, 32))
+    tile_floor(assets / "Pixel Crawler - Cave/Pixel Crawler - Cave/Assets/Tiles.png", 128, 96)
     game_fixture(tmp_path, src)
     assert run_cli(tmp_path) == 0
     out = assets / "_sliced/Pixel Crawler - Free Pack/Furniture"
@@ -291,11 +329,21 @@ def test_cli_is_idempotent_and_skips_strips_and_dupes(tmp_path, capsys):
                      "Furniture__x32_y1_w16_h22.png", "SLICES.json", "contact.png"]
     assert not (assets / "Pixel Crawler - Free Pack 2.1/_sliced/Pixel Crawler - Free Pack").exists()
     assert not list(assets.glob("*/**/_sliced"))
-    assert not (assets / "_sliced/Pixel Crawler - Cave").exists()
+    cave = assets / "_sliced/Pixel Crawler - Cave"
+    assert sorted(p.name for p in cave.iterdir()) == ["SKIPPED.json", "TILESETS.json"], \
+        "a tileset is registered, not sliced; the strip is listed as skipped"
+    skipped = json.loads((cave / "SKIPPED.json").read_text())["files"]
+    assert [(r["path"].split("/")[-1], r["reason"]) for r in skipped] == [
+        ("Tiles.png", "tileset"), ("Idle-Sheet.png", "animation_strip")]
+    dupes = json.loads((assets / "_sliced/Pixel Crawler - Free Pack 2.1/SKIPPED.json").read_text())["files"]
+    assert [(r["reason"], r["detail"]) for r in dupes] == [
+        ("duplicate", "potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png")]
+    lists = {p: (cave / p).read_text() for p in ("SKIPPED.json", "TILESETS.json")}
     shas = {p.name: sa.sha256(p) for p in out.iterdir()}
     assert run_cli(tmp_path) == 0
     assert (out / "SLICES.json").read_text() == first
     assert {p.name: sa.sha256(p) for p in out.iterdir()} == shas
+    assert {p: (cave / p).read_text() for p in lists} == lists
     doc = json.loads(first)
     assert doc["assets"][0]["duplicate_sheets"] == [
         "potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"]
@@ -370,3 +418,146 @@ def test_outputs_land_in_top_level_sliced_even_when_pack_is_read_only(tmp_path):
     assert (out / "SLICES.json").is_file()
     row = json.loads((out / "SLICES.json").read_text())["assets"][0]
     assert row["path"].startswith("potential_assets/_sliced/Pixel Crawler - Free Pack/Furniture/Furniture__x")
+
+
+# ---------------------------------------------------------------- #624 layouts
+
+def test_dense_grid_is_a_tileset_and_census_counts_cells(tmp_path):
+    src = tmp_path / "Tiles.png"
+    tile_floor(src, 128, 96)
+    layout, m = layout_of(src)
+    assert layout == "tileset"
+    assert (m["full_cells"], m["nonempty_cells"], m["islands"], m["blocks"]) == (48, 48, 1, 1)
+    labels, boxes = sa.components(Image.open(src).tobytes()[3::4], 128, 96)
+    assert sa.edge_alignment(labels, 1, 128, 96, boxes[0]) == 1.0
+
+
+def test_organic_canopy_is_props_even_with_many_full_cells(tmp_path):
+    # A round canopy: dozens of fully opaque cells, but its outline crosses
+    # cells anywhere (~0.25 on cell edges), so it is never a tile block.
+    src = tmp_path / "Tree.png"
+    im = Image.new("RGBA", (192, 192), CLEAR)
+    ImageDraw.Draw(im).ellipse((2, 3, 189, 186), fill=(40, 120, 50, 255), outline=BLACK)
+    im.save(src)
+    layout, m = layout_of(src)
+    assert m["full_cells"] >= sa.BLOCK_CELLS and m["full_share"] >= sa.SHEET_FULL
+    assert m["max_align"] < sa.BLOCK_ALIGN and layout == "props"
+
+
+def test_aligned_rug_on_a_sparse_prop_sheet_stays_props(tmp_path):
+    # Interior_Props_01: a grid-aligned 45-cell piece among 100+ props. Its
+    # sheet has 17% full cells, so SHEET_FULL keeps the whole atlas props.
+    src = tmp_path / "Interior_Props_01.png"
+    im = Image.new("RGBA", (320, 320), CLEAR)
+    tile_floor(src, 96, 96, im)
+    for i in range(40):
+        x, y = 112 + (i % 10) * 20, (i // 10) * 20 + 4
+        outlined_box(im, x, y, 12, 12)
+        outlined_box(im, (i % 10) * 20 + 4, 120 + (i // 10) * 40, 12, 30)
+    im.save(src)
+    layout, m = layout_of(src)
+    assert m["full_cells"] == 36 and m["full_share"] < sa.SHEET_FULL and layout == "props"
+
+
+def test_mixed_sheet_slices_islands_and_records_tile_part(tmp_path):
+    assets = tmp_path / "potential_assets"
+    src = assets / "Pixel Crawler - Forge 1.2/Pixel Crawler - Forge/Assets/Tiles.png"
+    src.parent.mkdir(parents=True)
+    im = Image.new("RGBA", (192, 96), CLEAR)
+    tile_floor(src, 128, 96, im, x0=8)    # floor x 8..135: 42 full cells
+    outlined_box(im, 137, 3, 10, 10)      # its 16px cell holds floor pixels
+    outlined_box(im, 164, 40, 20, 30)     # clear of the floor: grid-expanded
+    outlined_box(im, 140, 80, 8, 8)
+    im.save(src)
+    doc, crops = sa.slice_sheet(src, assets, sa.out_dir_for(src, assets, "x"), [], {}, {}, [])
+    assert doc["layout"] == "mixed" and doc["tile_regions"] == [[8, 0, 128, 96]]
+    assert [(r["region"], r["method"]) for r in doc["assets"]] == [
+        ([137, 3, 10, 10], "component"), ([160, 32, 32, 48], "grid16"), ([140, 80, 8, 8], "component")]
+    assert list(doc) == ["schema", "source", "tier", "family", "sheet", "sheet_sha256", "grid",
+                         "layout", "tile_regions", "overrides", "check_notes", "assets"]
+    a = sa.analyze(src)
+    assert sa._holds_block(a.labels, a.blocks, 192, [128, 0, 144, 16])
+    assert not sa._holds_block(a.labels, a.blocks, 192, [160, 32, 192, 80])
+
+
+def test_props_doc_keys_are_unchanged(tmp_path):
+    src = tmp_path / "Pixel Crawler - Free Pack/Environment/Props/Static/Meat.png"
+    sprite_sheet(src, [(3, 3, 10, 10), (19, 3, 10, 10)], size=(64, 32))
+    doc, _ = sa.slice_sheet(src, tmp_path, sa.out_dir_for(src, tmp_path, "x"), [], {}, {}, [])
+    assert list(doc) == ["schema", "source", "tier", "family", "sheet", "sheet_sha256", "grid",
+                         "overrides", "check_notes", "assets"]
+
+
+def test_translucent_and_empty_sheets_are_skipped(tmp_path):
+    shadow = Image.new("RGBA", (64, 32), CLEAR)
+    ImageDraw.Draw(shadow).ellipse((4, 4, 40, 20), fill=(0, 0, 0, 80))
+    assert sa.opaque_skip(shadow) == "translucent_overlay"
+    assert sa.opaque_skip(Image.new("RGBA", (16, 16), CLEAR)) == "empty"
+    lamp = shadow.copy()
+    outlined_box(lamp, 44, 4, 12, 20)
+    assert sa.opaque_skip(lamp) == "", "a light sheet with a lamp is sliced"
+    flat = Image.new("RGBA", (64, 32), CLEAR)
+    ImageDraw.Draw(flat).ellipse((4, 4, 40, 20), fill=(57, 88, 100, 255))
+    assert sa.opaque_skip(flat) == "flat_overlay", "Fairy Forest Shadown.png: one opaque colour"
+
+
+def test_cli_writes_tilesets_skipped_and_merges_only_runs(tmp_path):
+    assets = tmp_path / "potential_assets"
+    pack = assets / "Pixel Crawler - Hideout 1.0/Pixel Crawler - Hideout"
+    tile_floor(pack / "Assets/Tiles.png", 128, 64)
+    light = Image.new("RGBA", (64, 32), CLEAR)
+    ImageDraw.Draw(light).ellipse((0, 0, 40, 30), fill=(255, 200, 80, 60))
+    outlined_box(light, 44, 4, 12, 20)
+    light.save(pack / "Assets/Light.png")
+    shadow = Image.new("RGBA", (32, 32), CLEAR)
+    ImageDraw.Draw(shadow).rectangle((2, 2, 20, 20), fill=(0, 0, 0, 90))
+    shadow.save(pack / "Assets/Shadows.png")
+    sprite_sheet(pack / "Weapons/Rustic.png", [(0, 0, 16, 16)])
+    assert run_cli(tmp_path) == 0
+    base = assets / "_sliced/Pixel Crawler - Hideout 1.0"
+    tiles = json.loads((base / "TILESETS.json").read_text())
+    assert [(t["sheet"].split("/")[-1], t["layout"], t["evidence"], t["tile_regions"]) for t in tiles["sheets"]] == [
+        ("Tiles.png", "tileset", ["content", "directory"], [[0, 0, 128, 64]])]
+    skipped = {r["path"].split("/")[-1]: r["reason"] for r in json.loads((base / "SKIPPED.json").read_text())["files"]}
+    assert skipped == {"Tiles.png": "tileset", "Shadows.png": "translucent_overlay", "Rustic.png": "weapon_sheet"}
+    assert (base / "Light/SLICES.json").is_file(), "Light.png holds a lamp: sliced"
+    assert all(json.loads((base / "SKIPPED.json").read_text())["files"][i]["why"] for i in range(3))
+    # an --only run replaces its own rows and keeps the rest
+    assert run_cli(tmp_path, "--only", "Shadows") == 0
+    again = {r["path"].split("/")[-1] for r in json.loads((base / "SKIPPED.json").read_text())["files"]}
+    assert again == {"Tiles.png", "Shadows.png", "Rustic.png"}
+    assert json.loads((base / "TILESETS.json").read_text()) == tiles
+
+
+def test_measure_writes_nothing(tmp_path, capsys):
+    assets = tmp_path / "potential_assets"
+    tile_floor(assets / "Pixel Crawler - Cave/Assets/Tiles.png", 128, 64)
+    assert run_cli(tmp_path, "--measure") == 0
+    assert not (assets / "_sliced").exists()
+    assert "tileset" in capsys.readouterr().out
+
+
+GOLDEN = REPO_ROOT / "scripts/tests/fixtures/slices_golden_cemetery.json"
+LIVE_ASSETS = REPO_ROOT / "potential_assets"
+
+
+def test_golden_cemetery_slices_and_layouts_are_stable():
+    """The 61 Cemetery 0.4 slices fed docs/kits-allocation.md before #624;
+    content classification must keep their ids and regions, and pin the
+    layout of every other Cemetery sheet. Local only: CI has no packs."""
+    golden = json.loads(GOLDEN.read_text())
+    if not (LIVE_ASSETS / golden["pack"]).is_dir():
+        pytest.skip("potential_assets/ absent (CI)")
+    got_layouts = {}
+    for rel, want in golden["sheets"].items():
+        src = LIVE_ASSETS / rel
+        a = sa.analyze(src)
+        skip = sa.opaque_skip(a.im)
+        got_layouts[rel] = skip or a.layout
+        if "tile_regions" in want:
+            assert sa.tile_regions(a) == want["tile_regions"], rel
+        if "slices" in want:
+            out_dir = LIVE_ASSETS / "_sliced" / golden["pack"] / sa.sheet_stem(src)
+            doc, _ = sa.slice_sheet(src, LIVE_ASSETS, out_dir, [], {}, {}, [], a)
+            assert [[Path(r["path"]).name, r["region"], r["method"]] for r in doc["assets"]] == want["slices"], rel
+    assert got_layouts == {rel: w["layout"] for rel, w in golden["sheets"].items()}

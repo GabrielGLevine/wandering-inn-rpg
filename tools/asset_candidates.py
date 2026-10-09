@@ -164,6 +164,17 @@ def pack_family(pack: str) -> str:
     return next((fam for prefix, fam in PACK_FAMILIES if pack.startswith(prefix)), "")
 
 
+TILESET_WORDS = {"tiles", "tileset", "tilesets", "tilemap", "tilemaps"}
+
+
+def tileset_evidence(rel: Path) -> bool:
+    """A pack PNG whose folder or file name says tileset (Tilesets/,
+    TileSets/, Tiles.png, Floors_Tiles.png, topdown_floor_tiles_12/).
+    Whole words only, so Tilesetter.png or Stiles/ never match."""
+    names = [p.lower() for p in rel.parts[:-1]] + [Path(rel.name).stem.lower()]
+    return any(set(re.split(r"[^a-z0-9]+", n)) & TILESET_WORDS for n in names)
+
+
 def classify_batch(name: str) -> tuple[str, str, str]:
     """(source, tier, family) for an owned batch dir name."""
     low = name.lower()
