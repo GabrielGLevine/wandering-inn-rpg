@@ -1615,14 +1615,17 @@ def _common_utility(p: dict, region: str, kits: dict) -> bool:
 	return isinstance(common, dict) and common.get("kind") in kl.COMMON_KINDS
 
 
-GENERIC_REGIONS = 3  # G3: a sprite placed in >= this many regions is "generic"
+GENERIC_REGIONS = 3  # G3: a sprite whose art is placed in >= this many regions is "generic"
 
 
-def build_scene_baseline(resolved: dict, regions: dict, tolerance: dict) -> dict:
-	"""G3 baseline: freeze each sprite's generic-or-regional class (generic =
-	placed in >= GENERIC_REGIONS regions) and the per-region/per-map counters."""
-	seen = _sprite_regions(resolved, regions)
-	classes = {s: ("generic" if len(r) >= GENERIC_REGIONS else "regional") for s, r in seen.items()}
+def build_scene_baseline(resolved: dict, regions: dict, tolerance: dict, ident=None) -> dict:
+	"""G3 baseline: freeze each sprite's generic-or-regional class (generic = its ART,
+	per `ident` (ArtIdent, #623), placed in >= GENERIC_REGIONS regions under any id)
+	and the per-region/per-map counters. ident None classes by id."""
+	art = ident or (lambda sid: sid)
+	seen = _sprite_regions(resolved, regions, art)
+	classes = {s: ("generic" if len(seen[art(s)]) >= GENERIC_REGIONS else "regional")
+		for s in _sprite_regions(resolved, regions)}
 	out: dict = {}
 	for map_id, doc in sorted(resolved.items()):
 		region = regions.get(map_id)
@@ -1636,7 +1639,7 @@ def build_scene_baseline(resolved: dict, regions: dict, tolerance: dict) -> dict
 		reg["maps"][map_id] = {"placements": len(ps), "generic_placements": g}
 	for reg in out.values():
 		reg["generic_share_pct"] = _pct(reg["generic_placements"], reg["placements"])
-	return {"_comment": "G3 scene-repetition ratchet (#607). Regenerate ONLY with `data_lint.py --regen-scene-baseline`, and every regen needs a CHOICE-LOG line saying why. generic = sprite placed in >= 3 regions.",
+	return {"_comment": "G3 scene-repetition ratchet (#607). Regenerate ONLY with `data_lint.py --regen-scene-baseline`, and every regen needs a CHOICE-LOG line saying why. generic = a sprite whose art (wi_kits_lib.art_identity, #623) is placed in >= 3 regions under any id.",
 		"tolerance": tolerance, "generic_class": classes, "regions": out}
 
 
@@ -1756,7 +1759,8 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 	  _common utility role (kl.COMMON_KINDS) leave numerator and denominator, and
 	  may be at most kl.COMMON_CAP_PCT% of any region's converted-map placements.
 	  Each converted map's floor/wall material_ref names are exclusive to the region.
-	G3: ratchet vs qa/baselines/scene-repetition.json over baseline maps only.
+	G3: ratchet vs qa/baselines/scene-repetition.json over baseline maps only; a
+	  sprite missing from its generic_class is classed on the fly by its art.
 	G4: _g4_compare vs the base tree; the base is resolved only when a map carries
 	  an @ref or --base is explicit (Phase 0: nothing to compare, no git call).
 	G5 is a process gate (fallback boot run), reported not computed."""
@@ -1799,7 +1803,6 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 			for vid, _ in kl.pool_of(role)}
 		explicit = sum(1 for d in by_region[region].values() for p in _placements(d) if not p["role"] and p["sprite"] in pooled)
 		report.append(f"kits G1: {region} conversion coverage: {explicit} explicit id(s) remaining for kinds that have a pool")
-	seen = _sprite_regions(resolved, regions)
 	seen_art = _sprite_regions(resolved, regions, art)
 	cap = kl.COMMON_CAP_PCT
 	for region, docs in sorted(by_region.items()):
@@ -1850,7 +1853,7 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 					cls = classes.get(p["sprite"])
 					if cls is None:
 						fly.add(p["sprite"])
-						cls = "generic" if len(seen.get(p["sprite"], ())) >= GENERIC_REGIONS else "regional"
+						cls = "generic" if len(seen_art.get(art(p["sprite"]), ())) >= GENERIC_REGIONS else "regional"
 					gen += cls == "generic"
 				plc += len(ps)
 				bgen += int(bm.get("generic_placements", 0))
@@ -3553,7 +3556,7 @@ def main() -> int:
 	baseline = json.loads(baseline_path.read_text()) if baseline_path.exists() else None
 	if "--regen-scene-baseline" in sys.argv:
 		baseline = build_scene_baseline(resolved_maps, _map_regions(parsed),
-			(baseline or {}).get("tolerance", {"placements": 1, "pp": 2}))
+			(baseline or {}).get("tolerance", {"placements": 1, "pp": 2}), art_ident)
 		baseline_path.parent.mkdir(parents=True, exist_ok=True)
 		baseline_path.write_text(json.dumps(baseline, indent=1, sort_keys=True) + "\n")
 		report.append("kits G3: baseline regenerated -- add a CHOICE-LOG line")

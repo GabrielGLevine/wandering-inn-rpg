@@ -410,7 +410,8 @@ class TestGates(unittest.TestCase):
         self.assertEqual(set(baseline), {"_comment", "tolerance", "generic_class", "regions"})
         parsed, maps = data_lint._lint_inputs()
         resolved = data_lint.check_kits(parsed, maps, [], [], [])
-        regen = data_lint.build_scene_baseline(resolved, data_lint._map_regions(parsed), baseline["tolerance"])
+        regen = data_lint.build_scene_baseline(resolved, data_lint._map_regions(parsed), baseline["tolerance"],
+                                               data_lint.ArtIdent.from_parsed(parsed))
         self.assertEqual(regen["regions"], baseline["regions"])
         self.assertEqual(regen["generic_class"], baseline["generic_class"])
 
@@ -549,6 +550,32 @@ class TestArtIdentityG2(unittest.TestCase):
         resolved = {"o": {**GRID, "entities": [], "decor": [row("c1", 0, 0, "utility"), row("c2", 1)]}}
         errors, _, _ = gates(resolved, {"o": "q"}, kits)
         self.assertTrue(any("G2 _common cap: q" in e for e in errors), errors)
+
+
+class TestArtIdentityG3(unittest.TestCase):
+    """#623: G3 classes generic/regional on art identity."""
+    THREE = {"m": {**GRID, "entities": [], "decor": [row("lamp_r", 0)]},
+             "o": {**GRID, "entities": [], "decor": [row("lamp_q", 0)]},
+             "p": {**GRID, "entities": [], "decor": [row("lamp_q", 0), row("lamp_mine", 1)]}}
+    REGIONS = {"m": "r", "o": "q", "p": "s"}
+
+    def test_baseline_classes_each_id_by_its_art(self):
+        ident = data_lint.ArtIdent(ART_SPRITES, lambda _path: None)
+        art = data_lint.build_scene_baseline(self.THREE, self.REGIONS, {"placements": 1, "pp": 2}, ident)
+        self.assertEqual(art["generic_class"], {"lamp_r": "generic", "lamp_q": "generic", "lamp_mine": "regional"})
+        self.assertEqual(art["regions"]["r"]["generic_placements"], 1)
+        by_id = data_lint.build_scene_baseline(self.THREE, self.REGIONS, {"placements": 1, "pp": 2})
+        self.assertEqual(by_id["generic_class"]["lamp_r"], "regional", "by id, lamp_r sits in one region")
+
+    def test_unbaselined_id_is_classed_on_the_fly_by_its_art(self):
+        baseline = {"tolerance": {"placements": 1, "pp": 2}, "generic_class": {"lamp_mine": "regional"},
+                    "regions": {"s": {"placements": 2, "generic_placements": 0, "generic_share_pct": 0.0,
+                                      "maps": {"p": {"placements": 2, "generic_placements": 0}}}}}
+        errors, _, report = gates(self.THREE, self.REGIONS, baseline=baseline)
+        self.assertTrue(any("G3 ratchet: s generic share 50.0%" in e for e in errors), errors)
+        self.assertTrue(any("classed on the fly" in r for r in report), report)
+        errors, _, _ = gates(self.THREE, self.REGIONS, baseline=baseline, art=False)
+        self.assertEqual([e for e in errors if "G3" in e], [], "by id, lamp_q sits in two regions and stays regional")
 
 
 class TestCommonTierA(unittest.TestCase):

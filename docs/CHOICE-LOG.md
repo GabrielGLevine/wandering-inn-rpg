@@ -313,6 +313,13 @@ and chronology belong in issue PRs. Earlier context:
     regions.
   - **G3:** `qa/baselines/scene-repetition.json` was first generated on
     #607; regenerate only with `--regen-scene-baseline` plus an entry here.
+  - **G3 regen (#623, art identity):** no map changed; the counting did. A
+    sprite is generic when its art, not its id, sits in 3+ regions.
+    `window_blue` and `invrisil_facade_window_1` are one Furniture.png region
+    placed in inn, Invrisil and Riverfarm, so both now class generic:
+    Invrisil 52 → 58 generic placements (26.67% → 29.74%), inn 35 → 39
+    (50.0% → 55.71%), Riverfarm 29 → 30 (24.79% → 25.64%); every other
+    region unchanged.
   - **G3 regens (#608 pilot 1a, controller):** each regen follows a
     reviewed conversion and never hides repetition. The Invrisil generic
     placements went 84 → 76 after the street conversions (share 43.3% →
