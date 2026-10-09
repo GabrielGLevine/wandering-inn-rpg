@@ -1,6 +1,6 @@
 {
  "_comment": "Regional kits #620 (R1 Liscor) capture utility (non-canonical, windowed only, absent from qa/manifest.json). Same route before/after conversion; screenshots feed the blind art-direction read (spec 5.2). Cells are walkable, off every solid entity, clear of encounter triggers and not directly north/south of a door or prop.",
- "fixture_save": "feel_peek_night_start",
+ "fixture_save": "kits_liscor_barracks_armed_night_start",
  "starts_at_title": true,
  "steps": [
   {
