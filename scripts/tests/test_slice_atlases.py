@@ -120,7 +120,10 @@ def test_size_class_shadow_and_overlap():
     assert sa.iou([0, 0, 16, 16], [0, 0, 16, 16]) == 1.0
     assert set(sa.KINDS) == {"crate", "barrel", "sack", "door", "window", "lamp", "table", "seat",
                              "shelf", "bed", "plant", "rock", "debris", "tool", "sign",
-                             "wall_module", "container", "other"}
+                             "wall_module", "container", "other", "station", "food", "vessel",
+                             "pipe", "book", "decor", "grave", "fence", "resource", "item", "rug",
+                             "structure", "fx"}
+    assert len(sa.KINDS) == 31
 
 
 def sprite_sheet(path: Path, boxes, size=(64, 32)) -> Image.Image:

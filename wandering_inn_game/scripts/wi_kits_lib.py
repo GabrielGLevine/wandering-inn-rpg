@@ -23,7 +23,9 @@ GENERIC_FIRST_WORDS = {"Master", "Grand", "Tier", "Recruit", "Frazzled", "Gnoll"
                        "Drake", "Human", "Den-Shop", "Forge-Tier"}
 # Closed kind vocabulary (spec 4.1): slice labels, role "kind" values and WIRED_KINDS.
 KINDS = ("crate", "barrel", "sack", "door", "window", "lamp", "table", "seat", "shelf", "bed",
-         "plant", "rock", "debris", "tool", "sign", "wall_module", "container", "other")
+         "plant", "rock", "debris", "tool", "sign", "wall_module", "container", "other",
+         "station", "food", "vessel", "pipe", "book", "decor", "grave", "fence", "resource",
+         "item", "rug", "structure", "fx")
 # #623 (user 2026-10-09): _common holds only the utility Tier A. Its placements leave G2's
 # numerator and denominator, and may be at most COMMON_CAP_PCT of a region's converted maps.
 COMMON_KINDS = ("crate", "barrel", "sack", "container")
@@ -50,12 +52,12 @@ WIRED_KINDS = MappingProxyType({
     "hollow_mushroom_cluster": "plant", "hollow_canopy_tree": "plant", "hollow_small_tree": "plant",
     "hollow_bent_tree": "plant",
     "pebble": "rock", "boulder": "rock", "scree_spill": "rock", "hollow_glow_stone": "rock",
-    "dungeon_rubble": "debris", "grill": "tool",
+    "dungeon_rubble": "debris", "grill": "station",
     "chest": "container", "chest_open": "container",
     "facade_plaster": "wall_module", "inn_roof": "wall_module", "pallass_rail_post": "wall_module",
-    "dungeon_statue": "other", "pedestal": "other", "sewer_grate": "other", "dusty_scroll": "other",
-    "food_bread": "other", "food_ham": "other", "food_basket": "container",
-    "garden_fountain_basin": "other", "garden_fountain_statue": "other",
+    "dungeon_statue": "decor", "pedestal": "decor", "sewer_grate": "pipe", "dusty_scroll": "book",
+    "food_bread": "food", "food_ham": "food", "food_basket": "container",
+    "garden_fountain_basin": "structure", "garden_fountain_statue": "decor",
 })
 
 
