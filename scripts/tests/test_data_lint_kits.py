@@ -540,6 +540,28 @@ class TestArtIdentityG2(unittest.TestCase):
         errors, _, _ = gates(self._util_map(3), {"m": "r", "o": "q"}, kits)
         self.assertTrue(any("G2 identity" in e and "40.0%" in e for e in errors), "a region role of the same name counts")
 
+    def test_region_unique_utility_art_leaves_the_numerator_too(self):
+        # #623 review M5: counted, the 3 utility rows (art unique to r) would lift 3/7 to 6/10 and pass
+        decor = ([row("lamp_mine", i, 1, "utility") for i in range(3)] + [row("c3", i, 2, "cargo") for i in range(3)]
+                 + [row("c2", i, 3) for i in range(4)])
+        resolved = {"m": {**GRID, "entities": [], "decor": decor}, "o": {**GRID, "entities": [], "decor": [row("c2", 0)]}}
+        errors, _, report = gates(resolved, {"m": "r", "o": "q"}, UTIL_KITS)
+        self.assertTrue(any("G2 identity" in e and "42.86%" in e for e in errors), errors)
+        self.assertTrue(any("_common utility 3/10" in r for r in report), report)
+
+    def test_non_tier_a_common_role_placements_are_counted(self):
+        # #623 review M5: the old code excluded every _common role name; only Tier A leaves G2 now
+        kits = copy.deepcopy(KITS)
+        kits["_common"]["roles"]["street_lamp"] = {"kind": "lamp", "pick": "cell", "pool": ["lamp_mine", "c3"]}
+        decor = ([row("lamp_mine", i, 1, "street_lamp") for i in range(3)] + [row("c3", i, 2, "cargo") for i in range(3)]
+                 + [row("c2", i, 3) for i in range(4)])
+        resolved = {"m": {**GRID, "entities": [], "decor": decor}, "o": {**GRID, "entities": [], "decor": [row("c2", 0)]}}
+        errors, _, report = gates(resolved, {"m": "r", "o": "q"}, kits)
+        self.assertEqual([e for e in errors if "G2" in e], [], errors)
+        line = next(r for r in report if r.startswith("kits G2: r identity"))
+        self.assertIn("60.0% unique art", line)
+        self.assertIn("_common utility 0/10", line)
+
     def test_common_cap_passes_at_30_and_fails_above(self):
         errors, _, _ = gates(self._util_map(3), {"m": "r", "o": "q"}, UTIL_KITS)
         self.assertEqual([e for e in errors if "cap" in e], [])
