@@ -319,7 +319,18 @@ and chronology belong in issue PRs. Earlier context:
     39.18%), → 75 with the dedicated rigged-crate-stack sprite, held at 75
     when the art-read fixes added three cross-street lamps and dropped the
     stationery bundle, and → 74 when the boulevard's generic door at (4,1)
-    was pinned to the Invrisil shop door (share 37.76%).
+    was pinned to the Invrisil shop door (share 37.76%). It held at 74 when
+    the counting-room guard took the new regional `invrisil_enforcer` rig
+    (one new class row, no counter change).
+  - **Counting-room guard rig (#608 final review):** `counting_room_guard`
+    (The Factor's Closed Account) wears `invrisil_enforcer`, the owned
+    2026-07-06 `hired_blade_a` generation (broad build, club), wired at 28px
+    like the alley's other heavy, `footpad_bruiser`. No named character
+    wears it. Rejected: `former_headman` (the only rig of Riverfarm's named
+    Former Headman), `hired_blade` (already on the alley as Coyle's crew,
+    the duplicate the art read removed), and `brothers_lieutenant` /
+    `gentleman_bowler` (they read as the Brothers of the Door, not the
+    Factor's man).
   - **Cross-street recomposition (#608 art read, `_kits_recompose`):** three
     street lamps at (3,4), (12,4) and (9,11), each blocking its cell; both
     shop signs moved from row 2 to row 1; the stationery display was

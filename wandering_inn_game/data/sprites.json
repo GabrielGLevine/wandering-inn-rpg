@@ -10366,5 +10366,37 @@
    }
   },
   "fallback_sprite": "crate_owned"
+ },
+ "invrisil_enforcer": {
+  "_comment": "#608 final review I3: the alley counting-room guard (The Factor's Closed Account). Owned PixelLab generation (2026-07-06 expansion batch hired_blade_a: broad build, maroon/grey doublet, club); worn by no named character. Scale 28px tall like the alley's other heavy (footpad_bruiser); provenance in assets/LICENSES/v019-owned-art-provenance.txt.",
+  "directional": true,
+  "render_scale": 0.54902,
+  "anchor": [
+   0.5,
+   0.75
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/invrisil_enforcer/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/invrisil_enforcer/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/invrisil_enforcer/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/invrisil_enforcer/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/invrisil_enforcer/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/invrisil_enforcer/Walk_Up-Sheet.png"
+   }
+  }
  }
 }
