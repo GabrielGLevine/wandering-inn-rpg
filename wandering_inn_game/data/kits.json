@@ -79,6 +79,14 @@
       "invrisil_hanging_sign",
       "invrisil_shop_sign_1"
      ]
+    },
+    "shop_door": {
+     "pick": "cell",
+     "pool": [
+      "invrisil_shop_door",
+      "invrisil_shop_door_1",
+      "invrisil_shop_door_2"
+     ]
     }
    },
    "cast": []
