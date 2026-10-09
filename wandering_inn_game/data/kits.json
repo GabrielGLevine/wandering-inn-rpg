@@ -100,10 +100,10 @@
      ]
     },
     "shop_door": {
+     "_comment": "#608 art read: glazed invrisil_shop_door_1 left the pool; on the glass shopfront band it read as a window, not a threshold.",
      "pick": "cell",
      "pool": [
       "invrisil_shop_door",
-      "invrisil_shop_door_1",
       "invrisil_shop_door_2"
      ]
     }
