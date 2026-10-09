@@ -50,7 +50,7 @@ import find_asset as fa  # noqa: E402
 import splice_json  # noqa: E402
 import wire_asset as wa  # noqa: E402
 
-EXIT_OK, EXIT_USAGE = 0, 2
+EXIT_OK, EXIT_USAGE, EXIT_UNRESOLVED = 0, 2, 5
 SIZE_CLASSES = ("S", "M", "L", "XL")
 CELL = 72        # contact-sheet cell edge, px
 SWATCH_H = 52    # material swatch strip height (32px tile + label)
@@ -279,6 +279,7 @@ def preview(paths: wa.Paths, region: str, role: str) -> int:
     import wi_kits_lib as kl  # code from this repo, data from --repo-root
 
     kits = kl.load_kits(paths.game)
+    unresolved = 0
     maps_dir = paths.game / "data" / "maps" / region
     if not maps_dir.is_dir():
         raise wa.Refused(f"no maps under {maps_dir}")
@@ -288,13 +289,14 @@ def preview(paths: wa.Paths, region: str, role: str) -> int:
         m = json.loads(mp.read_text(encoding="utf-8"))
         errors: list = []
         resolved = kl.resolve_map(m, mp.stem, kl.map_region(mp), kits, errors)
+        unresolved += len(errors)
         for err in errors:
             print(f"unresolved: {err}", file=sys.stderr)
         for layer in ("decor", "entities"):
             for row in resolved.get(layer, []):
                 if row.get("sprite_role") == role:
                     print(f"{mp.stem} {layer} {row.get('cell')} {row['sprite']}")
-    return EXIT_OK
+    return EXIT_UNRESOLVED if unresolved else EXIT_OK
 
 
 

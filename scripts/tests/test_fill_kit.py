@@ -384,3 +384,15 @@ def test_preview_prints_resolved_picks_per_map(tree, capsys):
             for row in expected.get(layer, []) if row.get("sprite_role") == "cargo"]
     assert out == want and len(want) == 3
     assert all(line.split()[-1] in ("crate_owned", "crate") for line in out)
+
+
+def test_preview_unresolved_ref_exits_nonzero_and_writes_nothing(tree, capsys):
+    pytest.importorskip("wi_kits_lib")
+    maps = tree / "wandering_inn_game/data/maps/invrisil"
+    maps.mkdir(parents=True)
+    m = {"biome": "inn", "grid": [8, 6], "decor": [{"sprite": "@nosuchrole", "cell": [1, 1]}]}
+    (maps / "bad_map.json").write_text(json.dumps(m, indent=1) + "\n")
+    before = snapshot(tree)
+    assert run(tree, "invrisil", "nosuchrole", "--preview") == fk.EXIT_UNRESOLVED
+    assert "unresolved:" in capsys.readouterr().err
+    assert not changed(before, snapshot(tree))
