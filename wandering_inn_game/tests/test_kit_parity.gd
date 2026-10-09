@@ -78,14 +78,12 @@ func _init() -> void:
 	var maps: Dictionary = WISceneCatalog.compose()["maps"]
 	for map_id: String in maps:
 		real[map_id] = _parity(maps[map_id])
+	# #608: real maps carry resolved rows now; scripts/tests/test_kit_parity.py diffs them against Python.
 	var out_path := OS.get_environment("WI_KIT_PARITY_OUT")
 	if out_path != "":
 		var f := FileAccess.open(out_path, FileAccess.WRITE)
 		assert(f != null, "cannot write " + out_path)
 		f.store_string(JSON.stringify(real, "\t", true))
 		f.close()
-	else:
-		for map_id: String in real:
-			assert((real[map_id]["rows"] as Array).is_empty() and (real[map_id]["materials"] as Array).is_empty(), "Phase 0: real map %s must carry no resolved rows" % map_id)
 	print("PASS test_kit_parity (%d fixture maps, %d real maps)" % [golden.size(), real.size()])
 	quit(0)

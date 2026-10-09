@@ -356,7 +356,9 @@ class TestRealTree(unittest.TestCase):
         r = subprocess.run([sys.executable, str(GAME / "scripts" / "data_lint.py")], capture_output=True, text=True, cwd=str(REPO_ROOT))
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertIn("kits:", r.stdout)
-        self.assertIn("G4 n/a", r.stdout)  # the G-gate REPORT line (Task 6)
+        # The G-gate REPORT line (Task 6). #608: real maps carry @refs now, so G4 compares
+        # against the base tree ("skipped" only where no origin/main resolves).
+        self.assertRegex(r.stdout, r"kits: .*; G1 ok, G2 ok, G3 ok \(\d+ maps advisory\), G4 (ok|skipped)")
 
 
 if __name__ == "__main__":

@@ -184,8 +184,12 @@ class TestTreeAndLoad(unittest.TestCase):
             (root / "data" / "kits.json").write_text(json.dumps(KITS))
             self.assertEqual(kl.load_kits(root), KITS)
 
-    def test_resolve_all_real_tree_is_empty_in_phase0(self):
-        self.assertEqual({k: v for k, v in kl.resolve_all(GAME).items() if v}, {})
+    def test_resolve_all_real_tree_resolves(self):
+        # #608: real maps carry @refs now; resolve_all raises on any that does not resolve.
+        sprites = json.loads((GAME / "data" / "sprites.json").read_text())
+        for rows in kl.resolve_all(GAME).values():
+            for r in rows:
+                self.assertIn(r["sprite"], sprites)
 
 
 class TestCanonNames(unittest.TestCase):
