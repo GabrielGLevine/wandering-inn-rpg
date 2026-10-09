@@ -20,7 +20,7 @@ class TestGolden(unittest.TestCase):
     def test_golden_exercises_every_mode(self):
         golden = json.loads((FIX / "golden.json").read_text())
         roles = {r["sprite_role"] for m in golden.values() for r in m["rows"]}
-        self.assertTrue({"cargo", "facade", "seat", "lamp", "door_x", "fixed", "common_lamp", "wide"} <= roles, roles)
+        self.assertTrue({"cargo", "facade", "seat", "lamp", "door_x", "fixed", "common_lamp", "wide", "pair"} <= roles, roles)
 
     def test_radius_override_in_the_golden(self):
         # fx_radius: a module role with "radius": 3 on a 3-cell pitch -- neighbours never share
@@ -45,6 +45,17 @@ class TestGolden(unittest.TestCase):
         self.assertEqual(sum(facade.values()), 9)
         self.assertLessEqual(max(facade.values()), 3, facade)
         self.assertEqual(cargo["c4"], 7, cargo)
+
+    def test_cap_fallback_in_the_golden(self):
+        # fx_cap_fallback (#608 final review M2): five adjacent module cells, radius 3, two variants. From
+        # the third cell on the radius excludes both variants, so the fallback that ignores the radius
+        # picks the first variant under ceil(5/2) = 3; neighbours then share a variant.
+        golden = json.loads((FIX / "golden.json").read_text())
+        picks = [r["sprite"] for r in golden["fx_cap_fallback"]["rows"]]
+        self.assertEqual(len(picks), 5)
+        self.assertEqual(set(picks), {"p1", "p2"})
+        self.assertLessEqual(max(Counter(picks).values()), 3, picks)
+        self.assertTrue(any(a == b for a, b in zip(picks, picks[1:])), picks)
 
     def test_weighted_pool_entry_is_picked(self):
         golden = json.loads((FIX / "golden.json").read_text())

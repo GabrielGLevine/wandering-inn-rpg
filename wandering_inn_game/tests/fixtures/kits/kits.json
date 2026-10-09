@@ -116,7 +116,16 @@
      "w3"
     ]
    },
-   "fixed": "plaza_fountain"
+   "fixed": "plaza_fountain",
+   "pair": {
+    "pick": "cell",
+    "module": true,
+    "radius": 3,
+    "pool": [
+     "p1",
+     "p2"
+    ]
+   }
   },
   "cast": []
  }

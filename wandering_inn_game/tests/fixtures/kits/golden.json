@@ -1,4 +1,59 @@
 {
+ "fx_cap_fallback": {
+  "materials": [],
+  "rows": [
+   {
+    "cell": [
+     0,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "p2",
+    "sprite_role": "pair"
+   },
+   {
+    "cell": [
+     1,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "p1",
+    "sprite_role": "pair"
+   },
+   {
+    "cell": [
+     2,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "p2",
+    "sprite_role": "pair"
+   },
+   {
+    "cell": [
+     3,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "p2",
+    "sprite_role": "pair"
+   },
+   {
+    "cell": [
+     4,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "p1",
+    "sprite_role": "pair"
+   }
+  ]
+ },
  "fx_cell": {
   "materials": [],
   "rows": [
