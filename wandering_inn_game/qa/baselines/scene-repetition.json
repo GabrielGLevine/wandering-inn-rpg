@@ -16,6 +16,7 @@
   "bat": "generic",
   "bed": "generic",
   "bench": "generic",
+  "bonus_round_table": "regional",
   "boulder": "generic",
   "briar_collector": "regional",
   "briar_collector_deep": "regional",
@@ -60,6 +61,7 @@
   "dig_survey_stakes_owned": "regional",
   "dirty_table": "regional",
   "door": "generic",
+  "door__alt3": "regional",
   "door_locked_heavy": "regional",
   "dormant_guardian_statue": "regional",
   "drake_patron": "regional",
@@ -134,6 +136,7 @@
   "inn_room_ledger": "generic",
   "inn_round_table": "regional",
   "inn_sign": "regional",
+  "inn_table_dirty__before": "regional",
   "inn_table_soiled": "regional",
   "invrisil_cargo_1": "regional",
   "invrisil_cargo_2": "regional",
@@ -166,7 +169,11 @@
   "leather_satchel": "regional",
   "library_desk": "generic",
   "library_shelf": "generic",
+  "liscor_bracket_lantern": "regional",
   "liscor_bread_stall": "regional",
+  "liscor_chair": "regional",
+  "liscor_sconce_copper": "regional",
+  "liscor_side_chair": "regional",
   "liscor_watch_guard": "regional",
   "longhouse_communal_table_owned": "regional",
   "lyonette": "regional",
@@ -250,9 +257,9 @@
   "stairs_up": "regional",
   "stallkeeper": "regional",
   "steam_vent": "regional",
-  "stool": "generic",
+  "stool": "regional",
   "street_lamp": "regional",
-  "table_brown": "generic",
+  "table_brown": "regional",
   "table_brown__alt1": "regional",
   "tallyman": "regional",
   "temper_bench": "regional",
@@ -338,15 +345,15 @@
    "placements": 29
   },
   "inn": {
-   "generic_placements": 35,
-   "generic_share_pct": 50.0,
+   "generic_placements": 33,
+   "generic_share_pct": 47.14,
    "maps": {
     "inn": {
-     "generic_placements": 20,
+     "generic_placements": 19,
      "placements": 50
     },
     "inn_player_room": {
-     "generic_placements": 8,
+     "generic_placements": 7,
      "placements": 11
     },
     "inn_upstairs": {
@@ -357,15 +364,15 @@
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 52,
-   "generic_share_pct": 26.67,
+   "generic_placements": 45,
+   "generic_share_pct": 23.08,
    "maps": {
     "adventurers_rest": {
-     "generic_placements": 6,
+     "generic_placements": 4,
      "placements": 21
     },
     "brothers_parlor": {
-     "generic_placements": 12,
+     "generic_placements": 10,
      "placements": 25
     },
     "enchanter_shop": {
@@ -389,30 +396,30 @@
      "placements": 30
     },
     "stationer": {
-     "generic_placements": 10,
+     "generic_placements": 7,
      "placements": 18
     }
    },
    "placements": 195
   },
   "liscor": {
-   "generic_placements": 48,
-   "generic_share_pct": 44.86,
+   "generic_placements": 35,
+   "generic_share_pct": 32.71,
    "maps": {
     "barracks": {
-     "generic_placements": 10,
+     "generic_placements": 7,
      "placements": 13
     },
     "guild": {
-     "generic_placements": 10,
+     "generic_placements": 5,
      "placements": 18
     },
     "runners_guild": {
-     "generic_placements": 6,
+     "generic_placements": 5,
      "placements": 10
     },
     "street": {
-     "generic_placements": 22,
+     "generic_placements": 18,
      "placements": 66
     }
    },
