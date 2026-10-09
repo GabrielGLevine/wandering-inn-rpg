@@ -61,6 +61,15 @@ class TestKitRules(unittest.TestCase):
             k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["radius"] = ok
             self.assertEqual([e for e in run(k) if "radius" in e or "unknown keys" in e], [], ok)
 
+    def test_schema_radius_rejected_on_door_and_map_picks(self):
+        # #608 final review M8b: only cell picks read radius; a door or map pick would silently ignore it
+        for role in ("door_x", "cargo"):
+            for pick in ("door", "map"):
+                k = copy.deepcopy(KITS); k["r"]["roles"][role]["pick"] = pick; k["r"]["roles"][role]["radius"] = 2
+                self.assertTrue(any("radius applies only to cell picks" in e for e in run(k)), (role, pick))
+        k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["radius"] = 2
+        self.assertEqual([e for e in run(k) if "radius" in e], [])
+
     def test_pool_and_cast_ids_must_exist(self):
         k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["pool"].append("ghost")
         self.assertTrue(any("ghost" in e for e in run(k)))

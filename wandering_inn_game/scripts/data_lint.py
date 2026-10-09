@@ -1359,6 +1359,8 @@ def _check_kit_schema(kits: dict, sprites: dict, errors: list, bundle_paths: set
 				errors.append(f"kits.{region}.roles.{name}: module must be a bool")
 			if "radius" in role and (isinstance(role["radius"], bool) or not isinstance(role["radius"], int) or role["radius"] < 0):
 				errors.append(f"kits.{region}.roles.{name}: radius must be a non-negative int")
+			if "radius" in role and role.get("pick", "cell") in ("door", "map"):
+				errors.append(f"kits.{region}.roles.{name}: radius applies only to cell picks (a {role['pick']} pick ignores it)")
 			pool = role.get("pool")
 			if not isinstance(pool, list) or not pool:
 				errors.append(f"kits.{region}.roles.{name}: pool must be a non-empty list"); continue
