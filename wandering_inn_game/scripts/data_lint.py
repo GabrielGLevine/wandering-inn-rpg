@@ -1626,6 +1626,11 @@ def _g4_base_maps(base_ref, advisories: list):
 		return None
 
 
+def _is_converted_map(doc: dict) -> bool:
+	"""A resolved map that carried an @ sprite or material ref (G2's scope)."""
+	return bool(kl.rows_of(doc) or kl.materials_of(doc))
+
+
 def _status(errs: list) -> str:
 	return "ok" if not errs else f"FAIL({len(errs)})"
 
@@ -1637,8 +1642,10 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 	its kit declares a pool role and a map of it holds a resolved @ref row.
 	G1: (region, role) with >= 5 placements needs a pool of >= 3 variants;
 	  per (map, role) the top variant <= ceil(n/k)+1, k = subset_size (cell picks).
-	G2 (converted regions only): >= 50% of non-_common placements use a variant
-	  no other region places; floor/wall material_ref names exclusive to region.
+	G2 (converted regions only): >= 50% of non-_common placements on the region's
+	  CONVERTED maps (an @ sprite or material ref) use a variant no other region
+	  places (#608 ruling; the region-wide share is report-only); each converted
+	  map's floor/wall material_ref names are exclusive to the region.
 	G3: ratchet vs qa/baselines/scene-repetition.json over baseline maps only.
 	G4: _g4_compare vs the base tree; the base is resolved only when a map carries
 	  an @ref or --base is explicit (Phase 0: nothing to compare, no git call).
@@ -1684,16 +1691,20 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 		report.append(f"kits G1: {region} conversion coverage: {explicit} explicit id(s) remaining for kinds that have a pool")
 	seen = _sprite_regions(resolved, regions)
 	for region in converted:
-		eligible = [p for d in by_region[region].values() for p in _placements(d) if p["role"] not in common_roles]
+		conv_docs = {m: d for m, d in by_region[region].items() if _is_converted_map(d)}
+		eligible = [p for d in conv_docs.values() for p in _placements(d) if p["role"] not in common_roles]
 		unique = sum(1 for p in eligible if seen[p["sprite"]] == {region})
 		pct = _pct(unique, len(eligible))
+		region_wide = [p for d in by_region[region].values() for p in _placements(d) if p["role"] not in common_roles]
+		pct_region = _pct(sum(1 for p in region_wide if seen[p["sprite"]] == {region}), len(region_wide))
 		others = [(len(seen_set(seen, region) & seen_set(seen, o)) / max(1, len(seen_set(seen, region) | seen_set(seen, o))), o)
 			for o in by_region if o != region]
 		jac = max(others)[0] if others else 0.0
-		report.append(f"kits G2: {region} identity {pct}% unique variants, max region Jaccard {jac:.2f} (report only)")
+		report.append(f"kits G2: {region} identity {pct}% unique variants over {len(conv_docs)} converted map(s); "
+			f"{pct_region}% region-wide (report only), max region Jaccard {jac:.2f} (report only)")
 		if eligible and pct < 50.0:
-			g2.append(f"G2 identity: {region} has {pct}% placements on variants unique to it, below 50%")
-		for map_id, doc in by_region[region].items():
+			g2.append(f"G2 identity: {region}'s {len(conv_docs)} converted map(s) have {pct}% placements on variants unique to it, below 50%")
+		for map_id, doc in conv_docs.items():
 			names = {fl.get("material_ref") for fl in doc.get("floor_layers") or [] if isinstance(fl, dict)}
 			walls = doc.get("walls") if isinstance(doc.get("walls"), dict) else {}
 			names |= {walls.get("material_ref")} | {s.get("material_ref") for s in walls.get("segments") or [] if isinstance(s, dict)}

@@ -184,6 +184,38 @@ class TestGates(unittest.TestCase):
         data_lint.check_kit_gates(resolved, {"m": "r", "other": "q"}, KITS, [], errors, [], [], base_ref=None, baseline=None)
         self.assertTrue(any("G2" in e for e in errors))
 
+    def test_g2_share_counts_only_converted_maps(self):
+        # #608 ruling: the >=50% share is over the region's CONVERTED maps (an @ sprite or
+        # material ref); unconverted maps of the same region only feed the report-only share.
+        conv = {**GRID, "entities": [], "decor": [{"sprite": "c3", "sprite_role": "cargo", "cell": [0, 0]},
+                                                 {"sprite": "c3", "sprite_role": "cargo", "cell": [3, 0]},
+                                                 {"sprite": "c1", "cell": [5, 5]}]}
+        plain = {**GRID, "entities": [], "decor": [{"sprite": s, "cell": [i, 0]} for i, s in enumerate(["c1", "c2", "c1"])]}
+        resolved = {"conv": conv, "plain1": plain, "plain2": copy.deepcopy(plain),
+                    "other": {**GRID, "entities": [], "decor": [{"sprite": "c1", "cell": [0, 0]}, {"sprite": "c2", "cell": [1, 0]}]}}
+        errors, report = [], []
+        data_lint.check_kit_gates(resolved, {"conv": "r", "plain1": "r", "plain2": "r", "other": "q"}, KITS, [], errors, [], report,
+                                  base_ref=None, baseline=None)
+        self.assertEqual([e for e in errors if "G2" in e], [])  # 2/3 over the converted map; 2/9 region-wide
+        line = next(r for r in report if r.startswith("kits G2: r identity"))
+        self.assertIn("66.67% unique variants over 1 converted map(s)", line)
+        self.assertIn("22.22% region-wide (report only)", line)
+
+    def test_g2_converted_map_below_half_fails_even_when_region_passes(self):
+        conv = {**GRID, "entities": [], "decor": [{"sprite": "c3", "sprite_role": "cargo", "cell": [0, 0]},
+                                                 {"sprite": "c1", "cell": [3, 0]}, {"sprite": "c2", "cell": [5, 0]}]}
+        mat_only = {**GRID, "entities": [], "decor": [{"sprite": "c1", "cell": [0, 0]}],
+                    "floor_layers": [{"material_ref": "fa", "cells": "all"}]}
+        unique = {**GRID, "entities": [], "decor": [{"sprite": "c3", "cell": [i, 1]} for i in range(8)]}
+        resolved = {"conv": conv, "mat_only": mat_only, "unique": unique,
+                    "other": {**GRID, "entities": [], "decor": [{"sprite": "c1", "cell": [0, 0]}, {"sprite": "c2", "cell": [1, 0]}]}}
+        errors, report = [], []
+        data_lint.check_kit_gates(resolved, {"conv": "r", "mat_only": "r", "unique": "r", "other": "q"}, KITS, [], errors, [], report,
+                                  base_ref=None, baseline=None)
+        # converted maps = conv + mat_only (a material ref counts): 1/4 unique; region-wide 9/12 would pass
+        self.assertTrue(any("G2" in e and "25.0%" in e for e in errors), errors)
+        self.assertTrue(any("75.0% region-wide" in r for r in report), report)
+
     def test_g2_inactive_without_converted_region(self):
         resolved = {"m": {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}], "entities": []},
                     "o": {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}], "entities": []}}
