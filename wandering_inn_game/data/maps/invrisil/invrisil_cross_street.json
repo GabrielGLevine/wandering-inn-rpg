@@ -1674,14 +1674,14 @@
    ]
   },
   {
-   "sprite": "invrisil_hanging_sign",
+   "sprite": "@shop_sign",
    "cell": [
     5,
     2
    ]
   },
   {
-   "sprite": "invrisil_hanging_sign",
+   "sprite": "@shop_sign",
    "cell": [
     13,
     2
@@ -1723,7 +1723,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     2,
     0
@@ -1737,7 +1737,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     5,
     0
@@ -1751,7 +1751,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     8,
     0
@@ -1765,7 +1765,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     11,
     0
@@ -1779,7 +1779,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     14,
     0
@@ -1793,7 +1793,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     17,
     0
@@ -1807,7 +1807,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     20,
     0
@@ -1830,7 +1830,7 @@
     7
    ],
    "display_name": "Boulevard Square",
-   "sprite": "door",
+   "sprite": "@door_street",
    "to_map": "invrisil_boulevard",
    "to_cell": [
     20,
