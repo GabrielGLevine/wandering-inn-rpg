@@ -83,8 +83,8 @@ Sprite ids above are illustrative. Real pools come from `fill_kit` (§4.2). A
 role value is either a plain string (one sprite) or a pool object. Pool
 entries take the form `id` or `[id, weight]`. A role may carry a default
 `light`, which a placement's own `light` overrides, and a `"kind"` from the
-closed vocabulary (§4.1). Enemy pools are deferred; the format has no key
-reserved for them.
+closed vocabulary `wi_kits_lib.KINDS` (§4.1). Enemy pools are deferred; the
+format has no key reserved for them.
 
 **`_common` is the utility pool (#623 amendment, user 2026-10-09).** It holds
 only the Tier A utility kinds: crate, barrel, sack and container.
@@ -274,9 +274,10 @@ animation strips (`*-Sheet.png`) and tileset, wang or terrain sheets.
 - The stable key is (sheet sha256, x, y, w, h).
 - **Labeling:**
   - A vision subagent labels the numbered contact sheets with a closed
-    vocabulary of about 15 kinds (crate, barrel, sack, door, window, lamp,
-    table, seat, shelf, bed, plant, rock, debris, tool, sign) plus size class
-    and confidence, at about 100k tokens.
+    vocabulary plus size class and confidence, at about 100k tokens. The
+    vocabulary is `wi_kits_lib.KINDS`, 18 kinds: crate, barrel, sack, door,
+    window, lamp, table, seat, shelf, bed, plant, rock, debris, tool, sign,
+    wall_module, container and other.
   - The ~55 already-wired regions serve as the accuracy check.
   - Labels land in `targets`.
 - **Tool changes:**
@@ -347,7 +348,8 @@ status. Generation runs only as a user-approved batch (Phase 3).
 - **Art identity (#623 amendment, user 2026-10-09).** G2 and G3 count art,
   not sprite ids, because a new id over old art is not regional identity.
   `wi_kits_lib.art_identity` keys:
-  - a region row on its sheet path and region rect. Rows on one sheet whose
+  - a region row on its sheet path and region rect (a directional row on
+    `sheet_down` and `region_down`). Rows on one sheet whose
     rects overlap at IoU ≥ 0.7 (`wi_kits_lib.NEAR_IOU`) are one picture: a
     tight slice and a padded hand cut of the same sprite. They join as
     connected components keyed by the component's minimum, independent of
