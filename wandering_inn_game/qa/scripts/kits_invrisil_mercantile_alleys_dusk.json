@@ -1,0 +1,88 @@
+{
+ "_comment": "Regional kits #608 capture utility (non-canonical, windowed only, absent from qa/manifest.json). Same route before/after conversion; screenshots feed the blind art-direction read (spec 5.2). Cells are walkable, off every solid entity and clear of encounter triggers.",
+ "fixture_save": "feel_peek_dusk_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "kits_invrisil_mercantile_alleys_official_dusk_arrival"
+  },
+  {
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
+    18,
+    11
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "kits_invrisil_mercantile_alleys_official_dusk_landmark"
+  },
+  {
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "kits_invrisil_mercantile_alleys_official_dusk_focus"
+  }
+ ]
+}
