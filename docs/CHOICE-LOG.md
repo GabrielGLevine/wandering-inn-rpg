@@ -356,6 +356,23 @@ and chronology belong in issue PRs. Earlier context:
       Neither map was edited and nothing visual changed; these are classifier
       artifacts.
     - G2 for Liscor is 53.27%.
+    - **FIX loop 1 (art read):** Liscor's own generic placements fell
+      35 → 19 (share 32.71% → 18.63%, placements 107 → 102): doors pinned
+      to `door__alt2`/`door__alt3`, owned crates, roofs and facades, and the
+      deleted repeats, trees and rug. The other regions moved only through
+      the classifier, with no map edits:
+      - floodplains 21 → 17 (24.14% → 19.54%) and pallass 28 → 27
+        (29.17% → 28.12%): `tree_round` is no longer placed in Liscor and
+        reads as regional.
+      - inn 33 → 32 (47.14% → 45.71%): the deleted guild rug left
+        `rug_woven_cream` regional.
+      - riverfarm 29 → 28 (24.79% → 23.93%): same classifier shift.
+      - Invrisil is unchanged (23.08%). The guild rug was deleted instead of
+        swapped to `rug_woven_red`, which would have made that id generic
+        and added three Invrisil generic placements.
+    - **Global pebble scale:** `owned_fallback_pebble` `render_scale` 0.53 →
+      0.3 applies wherever the fallback shows, not only on the Liscor street
+      (ruled acceptable; it read as boulders everywhere).
   - **Counting-room guard rig (#608 final review):** `counting_room_guard`
     (The Factor's Closed Account) wears `invrisil_enforcer`, the owned
     2026-07-06 `hired_blade_a` generation (broad build, club), wired at 28px

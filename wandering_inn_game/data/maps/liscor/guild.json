@@ -278,13 +278,6 @@
    ]
   },
   {
-   "sprite": "rug_woven_red",
-   "cell": [
-    8,
-    4
-   ]
-  },
-  {
    "sprite": "bonus_round_table",
    "cell": [
     13,
