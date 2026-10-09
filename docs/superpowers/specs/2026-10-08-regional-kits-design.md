@@ -343,7 +343,12 @@ status. Generation runs only as a user-approved batch (Phase 3).
 - **Art identity (#623 amendment, user 2026-10-09).** G2 and G3 count art,
   not sprite ids, because a new id over old art is not regional identity.
   `wi_kits_lib.art_identity` keys:
-  - a region row on its sheet path and region rect;
+  - a region row on its sheet path and region rect. Rows on one sheet whose
+    rects overlap at IoU ≥ 0.7 (`wi_kits_lib.NEAR_IOU`) are one picture: a
+    tight slice and a padded hand cut of the same sprite. They join as
+    connected components keyed by the component's minimum, independent of
+    order. Containment alone never merges (a small prop inside a big one);
+    `wire_asset` applies the same predicate;
   - a frame sheet on the sha256 of the sheet file plus its frame size;
   - the entry's own idle (else first) animation, never its `fallback_sprite`.
     `render_scale`, tint and anchor do not count.

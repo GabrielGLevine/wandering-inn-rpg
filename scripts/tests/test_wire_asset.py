@@ -480,3 +480,18 @@ def test_rerun_of_a_wired_id_is_not_a_duplicate(tree, capsys):
     assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
     assert "no change" in capsys.readouterr().out
     assert snapshot(tree) == before
+
+
+def test_near_identical_rect_is_refused(tree, capsys):
+    # #623 review I1: the slice [16,8,16,23] vs a hand-cut [16,9,16,22] of the same picture (IoU 0.96)
+    p = tree / SPRITES
+    cat = json.loads(p.read_text())
+    cat["crate"]["animations"]["idle"]["region"] = [16, 9, 16, 22]
+    p.write_text(json.dumps(cat, indent=1) + "\n")
+    before = snapshot(tree)
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == wa.EXIT_DUPLICATE
+    assert "already registered as crate." in capsys.readouterr().out
+    assert snapshot(tree) == before
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned", "--alias-of", "crate",
+               "--reason", "tight slice of the same crate") == 0
+    assert sprites(tree)["crate_lidded"]["_alias_of"] == "crate"

@@ -27,6 +27,9 @@ KINDS = ("crate", "barrel", "sack", "door", "window", "lamp", "table", "seat", "
 # numerator and denominator, and may be at most COMMON_CAP_PCT of a region's converted maps.
 COMMON_KINDS = ("crate", "barrel", "sack", "container")
 COMMON_CAP_PCT = 30
+# #623 review I1: region rows on one sheet at this IoU or more are one picture. Today's catalog
+# tops out at 0.26 between distinct art; slicer twins of hand-cut legacy rows run 0.72-0.98.
+NEAR_IOU = 0.7
 # Kind of every data/sprites.json `region` animation at 7155db91: the label check's
 # ground truth (tools/label_slices.py) and data_lint's known kinds for wired ids. Ids on
 # sheets the slicer skips (tiles, -Sheet strips, Admurin, owned) are excluded by the label
@@ -272,8 +275,45 @@ def art_identity(sprite_id: str, entry, sheet_sha) -> tuple:
     return ("S", sheet_sha(path) or "path:" + path, tuple(int(v) for v in anim.get("frame_size") or ()))
 
 
+def rect_iou(a, b) -> float:
+    ix = min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0])
+    iy = min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1])
+    inter = max(0, ix) * max(0, iy)
+    union = a[2] * a[3] + b[2] * b[3] - inter
+    return inter / union if union > 0 else 0.0
+
+
+def merge_near_regions(keys) -> dict:
+    """{identity: canonical identity}. Region rows on one sheet whose rects overlap at IoU >=
+    NEAR_IOU are one picture (a tight slice vs a padded hand cut), chained into connected
+    components whose canonical key is the component's minimum, so the result is independent
+    of input order. Containment alone never merges: a small prop inside a big one is its own."""
+    uniq = sorted(set(keys))
+    parent = {k: k for k in uniq}
+
+    def find(k):
+        while parent[k] != k:
+            parent[k] = parent[parent[k]]
+            k = parent[k]
+        return k
+
+    by_sheet: dict = {}
+    for k in uniq:
+        if k[0] == "R":
+            by_sheet.setdefault(k[1], []).append(k)
+    for rows in by_sheet.values():
+        for i, a in enumerate(rows):
+            for b in rows[i + 1:]:
+                if rect_iou(a[2], b[2]) >= NEAR_IOU:
+                    ra, rb = find(a), find(b)
+                    parent[max(ra, rb)] = min(ra, rb)
+    return {k: find(k) for k in uniq}
+
+
 def art_identities(sprites: dict, sheet_sha) -> dict:
-    return {sid: art_identity(sid, e, sheet_sha) for sid, e in sprites.items() if not sid.startswith("_")}
+    raw = {sid: art_identity(sid, e, sheet_sha) for sid, e in sprites.items() if not sid.startswith("_")}
+    canon = merge_near_regions(raw.values())
+    return {sid: canon[k] for sid, k in raw.items()}
 
 
 def identity_label(ident: tuple) -> str:

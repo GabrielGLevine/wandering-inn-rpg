@@ -339,6 +339,40 @@ class TestArtIdentity(unittest.TestCase):
         self.assertEqual(kl.identity_label(("R", "assets/p.png", (1, 2, 3, 4))), "assets/p.png region [1, 2, 3, 4]")
         self.assertEqual(kl.identity_label(("S", "ab" * 32, (32, 32))), "frame sheet sha256 abababababab at 32x32")
 
+    def test_near_identical_rects_on_one_sheet_are_one_art(self):
+        # #623 review I1: the slicer's tight boulder vs the hand-cut legacy row (IoU 0.90)
+        sprites = {"boulder": _region("assets/Rocks.png", [96, 19, 32, 43]),
+                   "rocks_slice": _region("assets/Rocks.png", [96, 16, 32, 48]),
+                   "elsewhere": _region("assets/Other.png", [96, 16, 32, 48])}
+        self.assertAlmostEqual(kl.rect_iou([96, 19, 32, 43], [96, 16, 32, 48]), 1376 / 1536)
+        ids = kl.art_identities(sprites, self.sha)
+        self.assertEqual(ids["boulder"], ids["rocks_slice"])
+        self.assertEqual(ids["boulder"], ("R", "assets/Rocks.png", (96, 16, 32, 48)), "canonical = component minimum")
+        self.assertNotEqual(ids["boulder"], ids["elsewhere"], "never across sheets")
+
+    def test_containment_alone_never_merges(self):
+        sprites = {"mushroom": _region("assets/cave/Props.png", [32, 32, 16, 16]),
+                   "mushroom_purple_l": _region("assets/cave/Props.png", [0, 0, 64, 88])}
+        ids = kl.art_identities(sprites, self.sha)
+        self.assertNotEqual(ids["mushroom"], ids["mushroom_purple_l"])
+        self.assertLess(kl.rect_iou([32, 32, 16, 16], [0, 0, 64, 88]), kl.NEAR_IOU)
+
+    def test_near_merge_chains_and_ignores_order(self):
+        a, b, c = (("R", "s.png", (0, 0, 20, 20)), ("R", "s.png", (2, 0, 20, 20)), ("R", "s.png", (4, 0, 20, 20)))
+        self.assertGreaterEqual(kl.rect_iou(a[2], b[2]), kl.NEAR_IOU)
+        self.assertLess(kl.rect_iou(a[2], c[2]), kl.NEAR_IOU)
+        frame = ("S", "abc", (16, 16))
+        for order in ([a, b, c, frame], [c, frame, b, a], [b, a, frame, c]):
+            canon = kl.merge_near_regions(order)
+            self.assertEqual({canon[a], canon[b], canon[c]}, {min(a, b, c)}, order)
+            self.assertEqual(canon[frame], frame)
+
+    def test_real_catalog_has_no_near_twins_today(self):
+        sprites = json.loads((GAME / "data" / "sprites.json").read_text())
+        raw = {sid: kl.art_identity(sid, e, lambda _p: None) for sid, e in sprites.items() if not sid.startswith("_")}
+        canon = kl.merge_near_regions(raw.values())
+        self.assertEqual([k for k, v in canon.items() if k != v], [], "a near-merge here would move G2/G3 numbers")
+
     def test_real_catalog_has_the_twelve_measured_groups(self):
         sprites = json.loads((GAME / "data" / "sprites.json").read_text())
         groups = collections.defaultdict(set)

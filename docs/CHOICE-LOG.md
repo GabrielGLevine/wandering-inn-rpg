@@ -313,12 +313,16 @@ and chronology belong in issue PRs. Earlier context:
     regions.
   - **Art identity and `_common` (#623, user 2026-10-09):** G2 and G3 count
     art, not ids: a region row by its sheet and rect, a frame sheet by its
-    sha256 and frame size. Rejected: id counting, because Liscor's
-    "exclusive" lamp, tables and facade fallback were other regions' art
-    under new ids. `_common` holds only the utility Tier A (crate, barrel,
-    sack, container); those placements leave G2 and are capped at 30% of a
-    region's converted-map placements. `wire_asset` refuses a second id for
-    registered art unless `--alias-of` names it with a reason.
+    sha256 and frame size. Rects on one sheet at IoU ≥ 0.7 are one picture
+    (controller, review I1: the slicer's tight cuts of hand-cut legacy rows
+    run 0.72–0.98, distinct art tops out at 0.26; containment never merges,
+    because `mushroom` sits inside `mushroom_purple_l`). Rejected: id
+    counting, because Liscor's "exclusive" lamp, tables and facade fallback
+    were other regions' art under new ids. `_common` holds only the utility
+    Tier A (crate, barrel, sack, container); those placements leave G2 and
+    are capped at 30% of a region's converted-map placements. `wire_asset`
+    refuses a second id for registered art unless `--alias-of` names it
+    with a reason.
   - **G3:** `qa/baselines/scene-repetition.json` was first generated on
     #607; regenerate only with `--regen-scene-baseline` plus an entry here.
   - **G3 regen (#623, art identity):** no map changed; the counting did. A

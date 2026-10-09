@@ -11,8 +11,9 @@ bad --fallback, --alias-of naming no twin, non-canonical fixture); 5 probe
 failure (empty alpha, bad strip); 6 duplicate art.
 
 Duplicate art (#623): a new id whose art identity (wi_kits_lib.art_identity: a
-region row's sheet and rect, a frame sheet's sha256 and frame size; scale, tint
-and fallback never count) is already registered is refused with exit 6 and
+region row's sheet and rect, merged with near-identical rects on that sheet at
+IoU >= kl.NEAR_IOU; a frame sheet's sha256 and frame size; scale, tint and
+fallback never count) is already registered is refused with exit 6 and
 `DUPLICATE-ART`, naming the existing id. Reuse that id. A deliberate second id
 needs --alias-of <that id> --reason "<why>" (one candidate per call), which
 records "_alias_of" and "_alias_reason" on the entry; G2/G3 still count both ids
@@ -297,19 +298,24 @@ def sibling(catalog: dict, mode: str, like: str | None, sheet_res: str,
 
 
 def art_twins(sprite_id: str, entry: dict, catalog: dict, sheets: kl.SheetHasher) -> tuple[tuple, list[str]]:
-    """(the entry's art identity, every OTHER catalog id drawing that art). Frame sheets are
-    hashed only for entries of the same identity type and frame size."""
+    """(the entry's art identity, every OTHER catalog id drawing that art), by the predicate
+    data_lint uses: equal frame-sheet keys, or region rows of one near-identical component
+    (kl.merge_near_regions). Frame sheets are hashed only for same-type, same-size entries."""
     ident = kl.art_identity(sprite_id, entry, sheets)
-    twins = []
+    others = {}
     for sid, other in catalog.items():
         if sid == sprite_id or sid.startswith("_") or not isinstance(other, dict):
             continue
         cheap = kl.art_identity(sid, other, lambda _path: None)
         if cheap[0] != ident[0] or (ident[0] == "S" and cheap[2] != ident[2]):
             continue
-        if kl.art_identity(sid, other, sheets) == ident:
-            twins.append(sid)
-    return ident, twins
+        if ident[0] == "R" and cheap[1] != ident[1]:
+            continue
+        others[sid] = cheap if ident[0] == "R" else kl.art_identity(sid, other, sheets)
+    if ident[0] != "R":
+        return ident, [sid for sid, k in others.items() if k == ident]
+    canon = kl.merge_near_regions(list(others.values()) + [ident])
+    return canon[ident], [sid for sid, k in others.items() if canon[k] == canon[ident]]
 
 
 def refuse_duplicate_art(sprite_id: str, entry: dict, catalog: dict, args: argparse.Namespace, paths: Paths,
