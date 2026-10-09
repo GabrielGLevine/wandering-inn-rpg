@@ -31,9 +31,9 @@ archived, or superseded session blocks.
   `docs/design/571-cutover-execution.md`. Linux CI runs journeys ~8x slower
   than local macOS; budgets and `timeout_sec` are CI-measured.
 - **Open findings to carry:** #453 per-spine verification (rest signposting
-  shipped in #602; no tuning); #513 gear-affordability audit and the worker under band at Act III
-  (`docs/design/513-low-gold-recovery.md`, `571-fee-audit.md`); #515 criterion
-  4 (automated geometry/capture checks); #586 shutdown leak (exact lines
+  shipped in #602; no tuning); #513 gear-affordability audit and the worker
+  under band at Act III (`docs/design/513-low-gold-recovery.md`,
+  `571-fee-audit.md`); #515 criterion 4 (automated geometry/capture checks); #586 shutdown leak (exact lines
   deferred via `qa/noise_scan.sh`, leak still open).
 - **#566–#570 stay open:** PR #578 used Refs. Reconcile each against #592's
   journeys and close what is met; device/human items move to #585/#516. The
