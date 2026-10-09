@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Asset intake coverage: every PNG under potential_assets/ is sliced,
-registered or explicitly excluded (#624).
+registered, explicitly excluded, or waiting on a named ruling (#624).
 
 The regional-kit pool reads see only what the intake made searchable: slices
 in _sliced/<pack>/<stem>/SLICES.json and rows in docs/asset-candidates.json.
@@ -8,9 +8,10 @@ A sheet that neither the slicer nor the registry covered stayed invisible
 (Forge/Hideout/Library Tiles.png, Desert Ground.png, the furnace bricks).
 This tool puts every PNG in exactly one class, first match wins:
 
-  sliced(n)         a SLICES.json names it as `sheet` or in `duplicate_sheets`
-                    and holds n >= 1 slices (a mixed sheet's tile part is also
-                    a registered tileset; it still counts here)
+  sliced(n)         a SLICES.json names it as `sheet`, in `duplicate_sheets`
+                    or in `frame_exports` (an atlas cell's per-frame PNG) and
+                    holds n >= 1 slices (a mixed sheet's tile part is also a
+                    registered tileset; it still counts here)
   tileset           a docs/asset-candidates.json row of kind tileset (path or
                     duplicate_sheets)
   rig_or_animation  a registry rig row (file, or a file under a rig dir row),
@@ -22,7 +23,13 @@ This tool puts every PNG in exactly one class, first match wins:
                     (AUDIO_WORDS)
   owned_wired       any other registry row: the owned PixelLab/Codex batches
                     the harvest registered (MANIFEST rows)
-  excluded(reason)  a glob in docs/asset-coverage-exclusions.json; an entry
+  pending_ruling(reason)
+                    a `pending_rulings` glob in docs/asset-coverage-exclusions.json:
+                    usable art whose pool use waits on a named decision (a
+                    family verification, a manifest verdict). Reported in its
+                    own section, never a --check failure, never `excluded`
+  excluded(reason)  an `exclusions` glob in the same file: not pool material
+                    (promo renders, work files, a catalog ruling). An entry
                     may carry "class" to record a rig/ui/audio file the path
                     words cannot see (goblin rigs), else it is `excluded`
   UNCLASSIFIED      none of the above: the intake never looked at it
@@ -31,9 +38,10 @@ Directory words match whole words of a directory name ("Npc's" -> npc,
 "UI Elements" -> ui), never the file name, so an environment sheet is never
 waved through by its name.
 
-Outputs docs/asset-coverage.md (per-pack table, exclusion use, UNCLASSIFIED
-list). --check writes nothing and exits 1 when any PNG is UNCLASSIFIED; it
-exits 0 with a SKIP note when potential_assets/ is absent (CI).
+Outputs docs/asset-coverage.md (pending rulings first, then the per-pack
+table, exclusion use and the UNCLASSIFIED list). --check writes nothing and
+exits 1 when any PNG is UNCLASSIFIED; pending rulings are printed, not
+failed. It exits 0 with a SKIP note when potential_assets/ is absent (CI).
 
 Usage:
   python3 tools/asset_coverage.py [--assets-root DIR] [--registry FILE]
@@ -50,7 +58,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CLASSES = ("sliced", "tileset", "rig_or_animation", "ui_or_icon", "audio", "owned_wired",
-           "excluded", "UNCLASSIFIED")
+           "pending_ruling", "excluded", "UNCLASSIFIED")
 OVERRIDE_CLASSES = ("excluded", "rig_or_animation", "ui_or_icon", "audio")
 SKIP_TOP = {"_sliced", "license-notes"}
 RIG_WORDS = {"entities", "entity", "enemies", "enemy", "characters", "character", "characteranimated",
@@ -86,9 +94,10 @@ def _strip(path: str) -> str:
     return path[len("potential_assets/"):] if path.startswith("potential_assets/") else path
 
 
-def sliced_index(assets_root: Path) -> dict[str, tuple[int, bool]]:
-    """sheet or duplicate path -> (slice count, is the SLICES.json primary)."""
-    out: dict[str, tuple[int, bool]] = {}
+def sliced_index(assets_root: Path) -> dict[str, tuple[int, str]]:
+    """sheet, duplicate or frame-export path -> (slice count, primary |
+    duplicate | frame export). Only a primary's slices are counted."""
+    out: dict[str, tuple[int, str]] = {}
     for sj in sorted(assets_root.glob("_sliced/*/*/SLICES.json")):
         try:
             doc = json.loads(sj.read_text(encoding="utf-8"))
@@ -98,8 +107,10 @@ def sliced_index(assets_root: Path) -> dict[str, tuple[int, bool]]:
         if not rows or not doc.get("sheet"):
             continue
         for dup in {d for r in rows for d in r.get("duplicate_sheets", [])}:
-            out.setdefault(_strip(dup), (len(rows), False))
-        out[_strip(doc["sheet"])] = (len(rows), True)
+            out.setdefault(_strip(dup), (len(rows), "duplicate"))
+        for frame in doc.get("frame_exports", {}):
+            out.setdefault(_strip(frame), (len(rows), "frame export"))
+        out[_strip(doc["sheet"])] = (len(rows), "primary")
     return out
 
 
@@ -148,17 +159,21 @@ def glob_regex(glob: str) -> re.Pattern:
 
 
 def load_exclusions(path: Path) -> list[dict]:
+    """Pending rulings first, then exclusions, so a broad exclusion glob can
+    never swallow art that is only waiting on a decision."""
     if not path.exists():
         return []
     data = json.loads(path.read_text(encoding="utf-8"))
     out = []
-    for e in data.get("exclusions", []):
-        cls = e.get("class", "excluded")
-        if not e.get("glob") or not e.get("reason") or cls not in OVERRIDE_CLASSES:
-            raise ValueError(f"{path}: every exclusion needs glob + reason and class in "
-                             f"{OVERRIDE_CLASSES}: {e}")
-        out.append({"glob": e["glob"], "reason": e["reason"], "class": cls,
-                    "re": glob_regex(e["glob"])})
+    for key, default, allowed in (("pending_rulings", "pending_ruling", ("pending_ruling",)),
+                                  ("exclusions", "excluded", OVERRIDE_CLASSES)):
+        for e in data.get(key, []):
+            cls = e.get("class", default)
+            if not e.get("glob") or not e.get("reason") or cls not in allowed:
+                raise ValueError(f"{path}: every {key} entry needs glob + reason and class in "
+                                 f"{allowed}: {e}")
+            out.append({"glob": e["glob"], "reason": e["reason"], "class": cls,
+                        "re": glob_regex(e["glob"])})
     return out
 
 
@@ -171,10 +186,10 @@ def dir_words(rel: str) -> set[str]:
 def classify(rel: str, sliced: dict[str, tuple[int, bool]], reg_files: dict[str, str],
              reg_dirs: list[tuple[str, str]], exclusions: list[dict]) -> tuple[str, str]:
     """(class, detail) for one potential_assets-relative path. A sliced
-    detail is the slice count, or `duplicate` for a byte-identical copy."""
+    detail is the slice count, or `duplicate` / `frame export`."""
     if rel in sliced:
-        n, primary = sliced[rel]
-        return "sliced", str(n) if primary else "duplicate"
+        n, role = sliced[rel]
+        return "sliced", str(n) if role == "primary" else role
     kind = reg_files.get(rel)
     if kind is None:
         kind = next((k for d, k in reg_dirs if rel.startswith(d)), None)
@@ -206,28 +221,32 @@ def run(assets_root: Path, registry: Path, exclusions_path: Path) -> dict:
     slices_per_pack: Counter = Counter()
     glob_use: Counter = Counter()
     unclassified: list[str] = []
+    pending: dict[str, list[str]] = {}
     for rel in list_pngs(assets_root):
         cls, detail = classify(rel, sliced, reg_files, reg_dirs, exclusions)
         pack = pack_of(rel)
         per_pack.setdefault(pack, Counter())[cls] += 1
-        if cls == "sliced" and detail != "duplicate":
+        if cls == "sliced" and detail.isdigit():
             slices_per_pack[pack] += int(detail)
         if detail and any(e["glob"] == detail for e in exclusions):
             glob_use[detail] += 1
+        if cls == "pending_ruling":
+            pending.setdefault(detail, []).append(rel)
         if cls == "UNCLASSIFIED":
             unclassified.append(rel)
     return {"per_pack": per_pack, "slices": slices_per_pack, "exclusions": exclusions,
-            "glob_use": glob_use, "unclassified": unclassified}
+            "glob_use": glob_use, "pending": pending, "unclassified": unclassified}
 
 
 # ----------------------------------------------------------------- output
 
 def render_md(res: dict) -> str:
     cols = ("sliced", "tileset", "rig_or_animation", "ui_or_icon", "audio", "owned_wired",
-            "excluded", "UNCLASSIFIED")
+            "pending_ruling", "excluded", "UNCLASSIFIED")
     total = Counter()
     for c in res["per_pack"].values():
         total.update(c)
+    pending = res["pending"]
     lines = [
         "# Asset intake coverage (generated — do not edit)",
         "",
@@ -235,19 +254,36 @@ def render_md(res: dict) -> str:
         "`python3 tools/asset_coverage.py --check` (run by `scripts/preflight.sh`):",
         "0 UNCLASSIFIED before any pool read. Every PNG under `potential_assets/`",
         "(except `_sliced/` and `license-notes/`) sits in exactly one class; the",
-        "rules are in the `tools/asset_coverage.py` docstring and explicit",
-        "exclusions in `docs/asset-coverage-exclusions.json`.",
+        "rules are in the `tools/asset_coverage.py` docstring, and the explicit",
+        "pending rulings and exclusions in `docs/asset-coverage-exclusions.json`.",
         "",
         f"**{sum(total.values())} PNGs: " + ", ".join(f"{total[c]} {c}" for c in cols if total[c]) + ".**",
+        "",
+        f"## Pending rulings ({total['pending_ruling']})",
+        "",
+        "Usable art that waits on a named decision. It does not fail the gate and is",
+        "not excluded: settle each ruling, then slice, register or exclude the files.",
+        "",
+    ]
+    for e in res["exclusions"]:
+        if e["class"] != "pending_ruling":
+            continue
+        files = pending.get(e["glob"], [])
+        lines.append(f"- **`{e['glob']}`** ({len(files)} PNGs): {e['reason']}")
+        lines += [f"  - `{f}`" for f in files]
+    if not pending:
+        lines.append("None.")
+    lines += [
         "",
         "## Per pack",
         "",
         "`sliced` counts source sheets, with their slices in brackets; a byte-identical",
-        "copy (Free Pack 2.1) counts as sliced, but its slices are counted once, under",
-        "the primary sheet. `rig/anim` is rig_or_animation and `owned` is owned_wired.",
+        "copy (Free Pack 2.1) or an atlas cell's frame export counts as sliced, but its",
+        "slices are counted once, under the atlas. `rig/anim` is rig_or_animation,",
+        "`owned` is owned_wired and `pending` is pending_ruling.",
         "",
-        "| pack | PNGs | sliced [slices] | tileset | rig/anim | ui/icon | audio | owned | excluded | UNCLASSIFIED |",
-        "|---|---|---|---|---|---|---|---|---|---|",
+        "| pack | PNGs | sliced [slices] | tileset | rig/anim | ui/icon | audio | owned | pending | excluded | UNCLASSIFIED |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for pack in sorted(res["per_pack"], key=str.lower):
         c = res["per_pack"][pack]
@@ -257,7 +293,8 @@ def render_md(res: dict) -> str:
     lines += ["", "## Exclusions in use", "",
               "| glob | class | PNGs | reason |", "|---|---|---|---|"]
     for e in res["exclusions"]:
-        lines.append(f"| `{e['glob']}` | {e['class']} | {res['glob_use'][e['glob']]} | {e['reason']} |")
+        if e["class"] != "pending_ruling":
+            lines.append(f"| `{e['glob']}` | {e['class']} | {res['glob_use'][e['glob']]} | {e['reason']} |")
     lines += ["", f"## UNCLASSIFIED ({len(res['unclassified'])})", ""]
     lines += [f"- `{p}`" for p in res["unclassified"]] or ["None."]
     lines.append("")
@@ -286,10 +323,14 @@ def main(argv: list[str] | None = None) -> int:
             print(f"UNCLASSIFIED {p}")
         if len(bad) > 40:
             print(f"... and {len(bad) - 40} more (python3 tools/asset_coverage.py writes them all)")
-        print(f"asset coverage: {n} PNGs, {len(bad)} UNCLASSIFIED")
+        for glob, files in res["pending"].items():
+            print(f"PENDING {len(files)} {glob}")
+        print(f"asset coverage: {n} PNGs, {len(bad)} UNCLASSIFIED, "
+              f"{sum(map(len, res['pending'].values()))} pending_ruling")
         return 1 if bad else 0
     args.out.write_text(render_md(res), encoding="utf-8")
-    print(f"asset coverage: {n} PNGs, {len(bad)} UNCLASSIFIED -> {args.out}")
+    print(f"asset coverage: {n} PNGs, {len(bad)} UNCLASSIFIED, "
+          f"{sum(map(len, res['pending'].values()))} pending_ruling -> {args.out}")
     return 0
 
 
