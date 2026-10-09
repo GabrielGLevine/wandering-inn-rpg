@@ -248,7 +248,7 @@
    ]
   },
   {
-   "sprite": "shelf_bottles",
+   "sprite": "owned_fallback_shelf_bottles",
    "cell": [
     9,
     2
@@ -406,7 +406,7 @@
     6
    ],
    "display_name": "An Overlooked Kit Crate",
-   "sprite": "crate",
+   "sprite": "crate_owned",
    "tint": [
     0.5,
     0.42,

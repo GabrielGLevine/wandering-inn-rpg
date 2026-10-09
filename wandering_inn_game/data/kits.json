@@ -224,7 +224,7 @@
     "cargo": {
      "pick": "cell",
      "pool": [
-      "crate",
+      "crate_owned",
       "barrel",
       "bonus_produce_crate",
       "barrel__alt1"

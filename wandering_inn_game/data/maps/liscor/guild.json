@@ -588,7 +588,7 @@
     1
    ],
    "display_name": "A Forgotten Gear Stash",
-   "sprite": "crate",
+   "sprite": "crate_owned",
    "tint": [
     0.45,
     0.38,
