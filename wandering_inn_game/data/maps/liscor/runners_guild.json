@@ -66,34 +66,24 @@
      9,
      0
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     10,
-     6
+     4,
+     2
     ],
     "face": [
-     10,
-     7
+     4,
+     3
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "face": [
-                          4,
-                          3
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
+     ],
+     "detail": 0.55
+    }
    },
    {
     "from": [
@@ -104,26 +94,20 @@
      0,
      7
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     10,
-     6
+     4,
+     2
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
+     ],
+     "detail": 0.55
+    }
    },
    {
     "from": [
@@ -134,26 +118,20 @@
      9,
      7
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     10,
-     6
+     4,
+     2
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
+     ],
+     "detail": 0.55
+    }
    },
    {
     "from": [
@@ -164,26 +142,20 @@
      4,
      7
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     10,
-     6
+     4,
+     2
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
+     ],
+     "detail": 0.55
+    }
    },
    {
     "from": [
@@ -194,26 +166,20 @@
      8,
      7
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     10,
-     6
+     4,
+     2
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
+     ],
+     "detail": 0.55
+    }
    }
   ]
  },
