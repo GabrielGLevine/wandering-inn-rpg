@@ -94,6 +94,13 @@ run "doc drift"            python3 "$ROOT/scripts/check_doc_drift.py"
 # allowlist read-back was shouting into a suite no gate ran. Cheap (~8s, no
 # Godot boot), so it belongs in the FAST tier rather than behind --full.
 run "python tool suites"   python3 -m pytest -q "$ROOT/scripts/tests"
+# #624: every potential_assets PNG is sliced, registered or excluded with a
+# reason, so a pool read never misses a pack. CI has no potential_assets/.
+if [ -d "$ROOT/potential_assets" ]; then
+	run "asset coverage --check" python3 "$ROOT/tools/asset_coverage.py" --check
+else
+	say "skip asset coverage --check (no potential_assets/; CI)"
+fi
 # one Godot suite always: the registry catches missing sheets/regions/uids
 unit test_sprite_registry
 if [ "${1:-}" = "--full" ]; then
