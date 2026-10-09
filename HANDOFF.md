@@ -9,52 +9,37 @@ archived, or superseded session blocks.
 
 ## Current state
 
-- **Regional kits (#606; user 2026-10-08: "write all plans and execute without
-  further approval; parallelize where possible"):**
-  - Spec: `docs/superpowers/specs/2026-10-08-regional-kits-design.md`.
-  - Plans: `docs/superpowers/plans/2026-10-08-regional-kits-{phase0,phase0-lane-a,-b,-c,invrisil-pilot,rollout}.md`.
-  - Order: #607 Phase 0 (lanes A, B and C on `issue/607-kits-foundation`, worktrees `/private/tmp/wi-607-*`) → #608 Invrisil pilot (1a streets, 1b interiors) → one issue per region in the rollout plan's order.
-  - Rules: pool first; gaps go to `docs/art-generation-list.md`, and unbundled pack sheets to `docs/art-bundle-pending.md`. No PixelLab (lapsed) and no bundle release.
-  - A region closes only on a blind Fable art-direction read (spec §5.2). User eye-gates are prepared saves, non-blocking under wave autonomy.
-  - Status:
-    - #607 Phase 0 merged (PR #609).
-    - #608 Invrisil pilot DONE: 1a streets (PR #614, `d858d040`) and 1b interiors (PR #619, `34393bbc`); #608 closed.
-      - The blind Fable reads closed at 0 FIX / 0 REJECT, day and night. Invrisil G2 is 60%.
-      - The usage delta is on #606.
-      - Follow-ups: #610 (art batch), #611–#613, #615–#618.
-      - Evidence (local, licensed): `/private/tmp/wi-608-art-evidence/`.
-      - Ledger: `.superpowers/sdd/2026-10-08-regional-kits-invrisil-pilot/progress.md`.
-    - **R1 Liscor (#620)** is in progress on `issue/620-kits-liscor`, worktree `/private/tmp/wi-620`.
-      - Task 1 is done: capture scripts plus before-shots in the session scratchpad `captures-r1/before`.
-      - The pool read is done. It found props only: there are no facade, roof, street-paving or civic-wall candidates, so those are generation rows.
-      - Tasks 1–4 and FIX loop 1 are done; the local tip is `58498c42`. The pushed tip `59ac4333` is behind it.
-      - Review caught Liscor pools written into the Invrisil kit, which created a duplicate key. data_lint now rejects duplicate JSON keys.
-      - Next: Task 4, converting the props. The steps are in the ledger.
-      - The branch was cut from the 1b tip `1635f136`; rebase it with `--onto origin/main 1635f136`.
-      - Ledger: `.superpowers/sdd/2026-10-08-regional-kits-rollout/progress.md`.
-    - **Allocation and bundle (#621, PR #622, `1cfa3dd4`):**
-      - `docs/kits-allocation.md` allocates 238 dormant-pack pieces plus doors, lamps and windows to the region kits and shared pools. Every region's pool read starts from it.
-      - `bundle-v8` (Latest in the private assets repo) adds 18 Pixel Crawler sheets.
-      - The local main overlay lacks those 18 sheets. Run `scripts/fetch_private_assets.sh`, or copy them from `potential_assets`, before QA in main.
-    - **User rulings (2026-10-09):**
-      - Global allocation over first-come claiming.
-      - `_common` covers utility props only (crate, barrel, sack, container), with guardrails: G2 counted on non-common placements; common share at most 30%; G1 and G3 still bind; the common pool gets its own Fable read. Not implemented yet.
-    - **Pending the user:**
-      - PixelLab renewal and generation tiers. The review is in the session scratchpad, `generation-review.md`. The estimate is 550–750 generations, about 1 month of Tier 1.
-      - Go on the art-identity gate fix: G2 and G3 should key on art (sheet plus region, or the frame sha), not the sprite id. Liscor's lamps duplicated Invrisil's under new ids.
-    - **Liscor (#620):** r2 read: 27 PASS / 34 FIX / 0 REJECT. Paused before FIX loop 2 (data items N1–N6, plus the lamp re-pin) at the user's request.
-    - **Bottleneck:** regional identity beyond props needs generated architecture (#610 + the Liscor rows). That needs a PixelLab renewal and a user-approved batch.
-    - **Worktrees to remove later:** `/private/tmp/wi-608a`, `wi-608a-before`, `wi-608b` and `wi-docs`. Keep `wi-608a-public`, the public-build capture worktree.
-  - Lessons (also in the rollout plan's checklist):
+- **Regional kits (#606).** User, 2026-10-08: "write all plans and execute without further approval".
+  - Spec: `docs/superpowers/specs/2026-10-08-regional-kits-design.md`. Plans: `docs/superpowers/plans/2026-10-08-regional-kits-*.md`.
+  - Ledger: `.superpowers/sdd/2026-10-08-regional-kits-rollout/progress.md`.
+  - Rules:
+    - Pool first, starting from `docs/kits-allocation.md`; gaps go to `docs/art-generation-list.md`.
+    - A region closes only on a blind Fable read (§5.2).
+    - Read the dusk/night views when ambience is phase-gated.
+  - Done:
+    - #607 (PR #609).
+    - #608 Invrisil (PRs #614 and #619; G2 60%).
+    - #621 (PR #622): bundle-v8 (18 Pixel Crawler sheets, now Latest) plus the allocation table. Before running QA in main, fetch bundle-v8 (`scripts/fetch_private_assets.sh`).
+  - Open:
+    - #623 (PR #625): G2/G3 count art identity, not sprite ids, plus the `_common` utility guardrails.
+    - #624: asset-intake coverage. Several Pixel Crawler packs and their tilesets were never sliced or registered.
+    - #620 Liscor (`issue/620-kits-liscor`, `/private/tmp/wi-620`, tip `58498c42`) is paused before FIX loop 2 at the user's request. Its pins duplicate inn/Invrisil art, so it fails art-identity G2 until it gets its own art.
+  - User rulings, 2026-10-09:
+    - Allocate assets globally (no first-come claiming).
+    - `_common` takes Tier A utility props only, with a 30% cap.
+    - After re-intake, run a design-led gap pass over the generation list before any generation.
+  - Pending the user: PixelLab renewal and generation tiers. The review is `generation-review.md` in the session scratchpad.
+  - Remove the stale worktrees `/private/tmp/wi-608a`, `wi-608a-before`, `wi-608b` and `wi-docs`. Keep `wi-608a-public`.
+  - Lessons:
     - Writing tools take `--repo-root <worktree>` only.
-    - Capture scripts hard-code `official`; rename the public output.
-    - Read the dusk and night views when ambience is phase-gated.
-    - Run `python3 -m pytest -q scripts/`, which is CI's scope.
-    - Re-routed journey scripts shift the `scripts/itinerary` contract pins.
-    - Workers never use `git stash`: the stash is shared across worktrees, and `stash@{0}`/`{1}` hold parked work.
-  - The untracked slices (1,260; labels checked against 44 hand-labelled samples, 40 matched) live in `potential_assets/_sliced/`.
-  - Skill-library proposal (for Fable): document the `slice_atlases` → `label_slices` → `asset_candidates` → `fill_kit` → `wire_asset` pipeline in `wi-art-and-sprites`. Include `--allow-unverified` (codex batches) and the rule to run slicing from the main checkout.
-  - Pre-existing debt: 406 pytest warnings on main (`data_lint.py:1129` `Image.getdata`, removed in Pillow 14; `harness_metrics.py:58` unclosed files).
+    - Capture scripts hard-code `official` in their output names.
+    - Run `pytest -q scripts/`: that is CI's scope, and journey re-routes shift the itinerary pins.
+    - Never `git stash`: the stash is shared across worktrees.
+  - Skill-library proposal, for Fable to apply to `wi-art-and-sprites`:
+    - the intake → `fill_kit` → `wire_asset` pipeline;
+    - running slicing from the main checkout;
+    - the intake coverage gate (#624).
+- Pre-existing debt: pytest warnings come from `Image.getdata` in `data_lint.py`, which Pillow 14 removes, and from unclosed files in `harness_metrics.py:58`.
 - **Active program (user, 2026-10-07), in order:**
   1. DONE: #590 (PR #594) and #591 (PR #595) closed; #513's fee shortfall,
      delivery toast and daily standing delivery merged (PR #598). Follow-ups
