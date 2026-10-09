@@ -9048,24 +9048,6 @@
    }
   }
  },
- "owned_fallback_library_shelf": {
-  "shadow": true,
-  "render_scale": 0.30188679,
-  "anchor": [
-   0.4921875,
-   0.984375
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/sprites/harvest_fallbacks/library_shelf/Idle-Sheet.png",
-    "frame_size": [
-     64,
-     64
-    ],
-    "fps": 1
-   }
-  }
- },
  "owned_fallback_mushroom": {
   "render_scale": 0.76190476,
   "anchor": [
@@ -10364,23 +10346,6 @@
   "animations": {
    "idle": {
     "sheet": "res://assets/sprites/table_brown__alt1/Idle-Sheet.png",
-    "frame_size": [
-     32,
-     32
-    ],
-    "fps": 1
-   }
-  }
- },
- "bonus_round_table": {
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   0.875
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/sprites/bonus_round_table/Idle-Sheet.png",
     "frame_size": [
      32,
      32
