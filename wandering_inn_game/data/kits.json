@@ -169,6 +169,14 @@
       "table_brown__alt1",
       "bonus_round_table"
      ]
+    },
+    "shelf": {
+     "pick": "cell",
+     "pool": [
+      "library_shelf",
+      "shelf_bottles",
+      "library_shelf__alt1"
+     ]
     }
    },
    "cast": []
