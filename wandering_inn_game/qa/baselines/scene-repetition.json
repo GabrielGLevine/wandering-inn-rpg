@@ -146,6 +146,7 @@
   "invrisil_gentlewoman_2": "regional",
   "invrisil_hanging_sign": "regional",
   "invrisil_lady_client": "regional",
+  "invrisil_lamp_wall_1": "regional",
   "invrisil_ornate_bench": "regional",
   "invrisil_paper_stand": "regional",
   "invrisil_returned_work_tray": "regional",
@@ -356,23 +357,23 @@
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 61,
-   "generic_share_pct": 31.28,
+   "generic_placements": 52,
+   "generic_share_pct": 26.67,
    "maps": {
     "adventurers_rest": {
-     "generic_placements": 9,
+     "generic_placements": 6,
      "placements": 21
     },
     "brothers_parlor": {
-     "generic_placements": 14,
+     "generic_placements": 12,
      "placements": 25
     },
     "enchanter_shop": {
-     "generic_placements": 6,
+     "generic_placements": 4,
      "placements": 14
     },
     "enchanter_work_room": {
-     "generic_placements": 4,
+     "generic_placements": 3,
      "placements": 5
     },
     "invrisil_boulevard": {
@@ -388,7 +389,7 @@
      "placements": 30
     },
     "stationer": {
-     "generic_placements": 11,
+     "generic_placements": 10,
      "placements": 18
     }
    },

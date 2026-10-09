@@ -326,6 +326,8 @@ and chronology belong in issue PRs. Earlier context:
     desk and stove pins left the generic ids, and one new regional class row
     (`owned_fallback_library_desk`); the deleted parlor rug took the Invrisil
     placement count 196 → 195.
+    The r2 identity-cue pins (lamps and doors off `sconce`/`door`) took it 61 → 52
+    (share 26.67%) with one new regional class row (`invrisil_lamp_wall_1`).
   - **G3 regen (#608 pilot 1b, Task 9c):** the enchanter tray and stationer
     paper stand left the generic `crate` for dedicated regional sprites
     (`invrisil_returned_work_tray`, `invrisil_paper_stand`): Invrisil generic
