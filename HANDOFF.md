@@ -18,7 +18,14 @@ archived, or superseded session blocks.
   - A region closes only on a blind Fable art-direction read (spec §5.2). User eye-gates are prepared saves, non-blocking under wave autonomy.
   - Status:
     - #607 Phase 0 is merged: PR #609, squash `108689ef`, with the tree verified. CI is all green; the journey gate stays nightly.
-    - #608 pilot 1a (Invrisil streets) is running in worktree `/private/tmp/wi-608a` (`issue/608-invrisil-streets`). Its ledger is `.superpowers/sdd/2026-10-08-regional-kits-invrisil-pilot/progress.md`.
+    - #608 pilot 1a (Invrisil streets), branch `issue/608-invrisil-streets` in `/private/tmp/wi-608a`:
+      - Done: pools wired, 33 rows converted, a module variant cap, the G2 converted-maps scope, and a G4 `_kits_recompose` marker.
+      - Blind Fable art reads: round 1 was 6 PASS / 45 FIX / 6 REJECT. After FIX loop 1, round 2 is 6 / 20 / 0 / 31 DEFERRED; the reader says the streets now look better than before.
+      - In flight: FIX round 2 (four small items), then re-capture the affected views and re-read with the same reader.
+      - Then the CHOICE-LOG line for the G3 regens, and a PR with `Refs #608`.
+      - The ledger is `.superpowers/sdd/2026-10-08-regional-kits-invrisil-pilot/progress.md`.
+      - Captures live in the session scratchpad under `captures-1a/{after,before}`. `qa_output` gets flushed by sweeps.
+      - Extra worktrees to remove at close: `/private/tmp/wi-608a-public` and `/private/tmp/wi-608a-before`.
     - Untracked slices (1,258, labeled 40/44) live in `potential_assets/_sliced/`.
   - Skill-library proposal (for Fable): document the `slice_atlases` → `label_slices` → `asset_candidates` → `fill_kit` → `wire_asset` pipeline in `wi-art-and-sprites`. Include `--allow-unverified` (codex batches) and the rule to run slicing from the main checkout.
   - Pre-existing debt: 406 pytest warnings on main (`data_lint.py:1129` `Image.getdata`, removed in Pillow 14; `harness_metrics.py:58` unclosed files).
