@@ -1605,6 +1605,28 @@ class ArtIdent:
 		return self.table.get(sprite_id, ("id", sprite_id))
 
 
+def report_shared_art(ident: ArtIdent, resolved: dict, regions: dict, report: list) -> None:
+	"""#623, report only: art identities that more than one sprite id carries. A group is
+	CROSS-REGION when its ids, taken together, are placed in more than one region; an id
+	wired through `wire_asset --alias-of` is marked alias."""
+	groups: dict = {}
+	for sid, key in ident.table.items():
+		groups.setdefault(key, []).append(sid)
+	placed = _sprite_regions(resolved, regions)
+	parts, n_cross = [], 0
+	for ids in sorted(sorted(g) for g in groups.values() if len(g) > 1):
+		text = " = ".join(f"{i} (alias)" if ident.sprites[i].get("_alias_of") else i for i in ids)
+		where = sorted(set().union(*(placed.get(i, set()) for i in ids)))
+		if len(where) > 1:
+			n_cross += 1
+			text += f" CROSS-REGION [{', '.join(where)}]"
+		parts.append(text)
+	missing = sorted(getattr(ident.sheets, "missing", ()))
+	tail = f"; {len(missing)} frame sheet(s) absent on disk, keyed by path" if missing else ""
+	report.append(f"kits art: {len(parts)} art identit{'y' if len(parts) == 1 else 'ies'} carry more than one sprite id "
+		f"({n_cross} cross-region; report only){': ' + '; '.join(parts) if parts else ''}{tail}")
+
+
 def _common_utility(p: dict, region: str, kits: dict) -> bool:
 	"""#623: the placement resolved through a _common Tier A role. A region role of the same
 	name resolves first (wi_kits_lib.lookup), so it never counts here."""
@@ -3560,6 +3582,7 @@ def main() -> int:
 		baseline_path.parent.mkdir(parents=True, exist_ok=True)
 		baseline_path.write_text(json.dumps(baseline, indent=1, sort_keys=True) + "\n")
 		report.append("kits G3: baseline regenerated -- add a CHOICE-LOG line")
+	report_shared_art(art_ident, resolved_maps, _map_regions(parsed), report)
 	check_kit_gates(resolved_maps, _map_regions(parsed), parsed.get(DATA / "kits.json") or {}, parsed,
 		errors, advisories, report, base_ref=base_ref, baseline=baseline, ident=art_ident)
 	check_moods(parsed, maps, errors)

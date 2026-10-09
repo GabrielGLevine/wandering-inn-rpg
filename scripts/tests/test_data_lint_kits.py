@@ -578,6 +578,39 @@ class TestArtIdentityG3(unittest.TestCase):
         self.assertEqual([e for e in errors if "G3" in e], [], "by id, lamp_q sits in two regions and stays regional")
 
 
+class TestSharedArtReport(unittest.TestCase):
+    """#623: a REPORT line lists art carried by more than one sprite id (never an error)."""
+
+    def test_groups_cross_region_and_alias_marks(self):
+        sprites = copy.deepcopy(ART_SPRITES)
+        sprites["lamp_alias"] = {**copy.deepcopy(sprites["lamp_mine"]), "_alias_of": "lamp_mine", "_alias_reason": "test"}
+        ident = data_lint.ArtIdent(sprites, kl_hasher_missing())
+        resolved = {"m": {**GRID, "entities": [], "decor": [row("lamp_r", 0), row("lamp_mine", 1)]},
+                    "o": {**GRID, "entities": [], "decor": [row("lamp_q", 0)]}}
+        report = []
+        data_lint.report_shared_art(ident, resolved, {"m": "r", "o": "q"}, report)
+        self.assertEqual(len(report), 1)
+        line = report[0]
+        self.assertTrue(line.startswith("kits art: 5 art identities carry more than one sprite id (1 cross-region; report only): "), line)
+        self.assertIn("lamp_q = lamp_r CROSS-REGION [q, r]", line)
+        self.assertIn("lamp_alias (alias) = lamp_mine;", line)
+        self.assertNotIn("lamp_mine CROSS", line, "both ids of that picture sit in r only")
+        self.assertIn("c1 = c2;", line)
+        self.assertTrue(line.endswith("frame sheet(s) absent on disk, keyed by path"), line)
+
+    def test_real_tree_reports_the_twelve_groups(self):
+        r = subprocess.run([sys.executable, str(GAME / "scripts" / "data_lint.py")], capture_output=True, text=True, cwd=str(REPO_ROOT))
+        self.assertEqual(r.returncode, 0, r.stderr)
+        line = next(l for l in r.stdout.splitlines() if "REPORT -- kits art:" in l)
+        self.assertIn("invrisil_facade_window_1 = window_blue CROSS-REGION [inn, invrisil, riverfarm]", line)
+        self.assertRegex(line, r"kits art: 1[12] art identities")  # 11 without the overlay: body_a's sheet is bundle-only
+
+
+def kl_hasher_missing():
+    """A SheetHasher rooted where no sheet exists, so every frame sheet keys on its path."""
+    return data_lint.kl.SheetHasher(Path("/nonexistent-wi-623"))
+
+
 class TestCommonTierA(unittest.TestCase):
     def errs(self, role, where="_common"):
         k = copy.deepcopy(KITS); k[where]["roles"]["utility"] = role
