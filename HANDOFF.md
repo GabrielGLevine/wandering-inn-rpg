@@ -9,6 +9,20 @@ archived, or superseded session blocks.
 
 ## Current state
 
+- **Regional kits (#606; user 2026-10-08: "write all plans and execute without
+  further approval; parallelize where possible"):**
+  - Spec: `docs/superpowers/specs/2026-10-08-regional-kits-design.md`.
+  - Plans: `docs/superpowers/plans/2026-10-08-regional-kits-{phase0,phase0-lane-a,-b,-c,invrisil-pilot,rollout}.md`.
+  - Order: #607 Phase 0 (lanes A, B and C on `issue/607-kits-foundation`, worktrees `/private/tmp/wi-607-*`) → #608 Invrisil pilot (1a streets, 1b interiors) → one issue per region in the rollout plan's order.
+  - Rules: pool first; gaps go to `docs/art-generation-list.md`, and unbundled pack sheets to `docs/art-bundle-pending.md`. No PixelLab (lapsed) and no bundle release.
+  - A region closes only on a blind Fable art-direction read (spec §5.2). User eye-gates are prepared saves, non-blocking under wave autonomy.
+  - Status:
+    - Lanes run subagent-driven development. The ledgers in `.superpowers/sdd/2026-10-08-regional-kits-phase0-lane-{a,b,c}/progress.md` are the resume map.
+    - Lane B (`/private/tmp/wi-607-b`): Task 1 is done (`0990b016`, review clean); Task 2's brief is extracted but not yet dispatched.
+    - Lane C (`/private/tmp/wi-607-c`): Tasks 1–2 (fixture migration) are in flight.
+    - Lane A (`/private/tmp/wi-607-a`): not started; the Task 1 brief is ready.
+    - The worktrees symlink `potential_assets`, and the shared `.git/info/exclude` ignores `/potential_assets`.
+    - Usage guard QUIESCE (session 100%, 2026-10-08). Resume after the reset: run `bash scripts/usage_status.sh --fresh`, then continue each ledger at its first incomplete task (two workers at most).
 - **Active program (user, 2026-10-07), in order:**
   1. DONE: #590 (PR #594) and #591 (PR #595) closed; #513's fee shortfall,
      delivery toast and daily standing delivery merged (PR #598). Follow-ups
