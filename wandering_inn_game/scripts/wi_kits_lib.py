@@ -184,7 +184,7 @@ def _resolve_role(placements: list, role_name: str, role, map_id: str, errors: l
         _apply(p["row"], role_name, role, variant)
 
 
-def _rows_of(resolved: dict) -> list:
+def rows_of(resolved: dict) -> list:
     out = []
     for layer in ("decor", "entities"):
         for row in resolved.get(layer) or []:
@@ -198,7 +198,7 @@ def resolve_tree(maps_dir: Path, kits: dict) -> dict:
     result: dict = {}
     for path in sorted(Path(maps_dir).glob("*/*.json")):
         doc = json.loads(path.read_text())
-        result[path.stem] = _rows_of(resolve_map(doc, path.stem, map_kit(doc, path), kits))
+        result[path.stem] = rows_of(resolve_map(doc, path.stem, map_kit(doc, path), kits))
     return result
 
 

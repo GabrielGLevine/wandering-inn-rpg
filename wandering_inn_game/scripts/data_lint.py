@@ -1651,7 +1651,7 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 			by_region.setdefault(regions[map_id], {})[map_id] = doc
 	converted = sorted(r for r, docs in by_region.items()
 		if any(isinstance(v, dict) for v in ((kits.get(r) or {}).get("roles") or {}).values())
-		and any(kl._rows_of(d) for d in docs.values()))
+		and any(kl.rows_of(d) for d in docs.values()))
 	total = sum(len(_placements(d)) for d in resolved.values())
 	g1: list = []
 	g2: list = []
@@ -1660,7 +1660,7 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 		role_n: dict = {}
 		for map_id, doc in by_region[region].items():
 			per_map: dict = {}
-			for p in kl._rows_of(doc):  # the resolver's own count: every @role row, hide_sprite included
+			for p in kl.rows_of(doc):  # the resolver's own count: every @role row, hide_sprite included
 				per_map.setdefault(p["sprite_role"], {}).setdefault(p["sprite"], 0)
 				per_map[p["sprite_role"]][p["sprite"]] += 1
 			for role_name, counts in per_map.items():
