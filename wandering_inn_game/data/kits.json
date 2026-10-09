@@ -177,6 +177,13 @@
       "shelf_bottles",
       "library_shelf__alt1"
      ]
+    },
+    "window_interior": {
+     "pick": "map",
+     "pool": [
+      "window_blue",
+      "window_blue__alt1"
+     ]
     }
    },
    "cast": []
