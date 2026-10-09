@@ -157,19 +157,25 @@ the tagged cargo pallet.
 Picks are edit-stable: they depend only on (map, role, cell), never on array
 order.
 
-`H` is Godot `String.hash()` (uint32) over the key
-`"%s|%s|%s[|%d,%d]" % [map, role, variant(, cell.x, cell.y)]`. The Python
-port in `scripts/wi_kits_lib.py` reproduces it, verified against
-`core/string/ustring.cpp` and pinned by the parity test. The weighted
+`H` is the first 32 bits of SHA-256 over the UTF-8 key
+`"%s|%s|%s[|%d,%d]" % [map, role, variant(, cell.x, cell.y)]`:
+- GDScript: `key.sha256_text().substr(0, 8).hex_to_int()`;
+- Python: `int(hashlib.sha256(key.encode("utf-8")).hexdigest()[:8], 16)`.
+
+The two were verified identical on 2026-10-08, including non-ASCII keys, and
+the parity test pins them. *Not* `String.hash()`: djb2 is linear, so a shared
+suffix (the cell) shifts every variant's hash by about the same amount, and
+picks collapse to a few patterns. The Task 2 review measured 3 of 24 rank
+orders over a 40x30 map and identical subsets on all 12 map ids. The weighted
 rendezvous score is `-ln((H + 0.5) / 2^32) / weight`, and the k **smallest**
 scores win.
 
-1. **Map subset:** take the top `k` pool variants by `H(map, role, v) / weight`,
-   using weighted rendezvous. `k = min(|pool|, 2 + n_map_role // 6)`, with a
-   floor of 2 and a cap of 4. Adding a pool variant evicts at most one
+1. **Map subset:** take the `k` pool variants with the smallest variant-key
+   score, using weighted rendezvous. `k = min(|pool|, 2 + n_map_role // 6)`,
+   with a floor of 2 and a cap of 4. Adding a pool variant evicts at most one
    incumbent per map.
-2. **Per-placement rank:** `rank_p` is the subset sorted by
-   `H(map, role, v, cell)`.
+2. **Per-placement rank:** `rank_p` is the subset sorted by placement-key
+   score, ascending, with ties broken by variant id.
 3. **Resolve:**
    - Visit placements in `(y, x)` cell order.
    - Take the first `rank_p` entry not used by an already-visited same-role
@@ -178,7 +184,9 @@ scores win.
    - If no entry qualifies, fall back to `rank_p[0]`.
 
    An edit therefore changes only cells within `r`, plus any contiguous chain
-   of forced fallbacks.
+   of forced fallbacks. The exception is when a role's placement count in a
+   map crosses a multiple of 6: k changes, the subset grows, and picks can
+   shift across the whole map.
 4. **`pick` modes:**
    - `"cell"` runs steps 1–3.
    - `"map"` takes the subset's top-ranked variant for the whole map, so a

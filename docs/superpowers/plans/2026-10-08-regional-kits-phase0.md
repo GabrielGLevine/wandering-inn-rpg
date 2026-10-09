@@ -73,7 +73,11 @@ The lane plans are separate files. This index pins the shared contracts that all
 
 ### C3. Pick algorithm (GDScript and Python must agree bit for bit)
 
-- `H(key) = String(key).hash()`, Godot's 32-bit djb2 over UTF-32 code points: `h = 5381; h = (h * 33 + c) & 0xFFFFFFFF`. The Python port is verified against `core/string/ustring.cpp`, and the parity test pins it.
+- `H(key)` is the first 32 bits of SHA-256 over the UTF-8 key:
+  - GDScript: `key.sha256_text().substr(0, 8).hex_to_int()`;
+  - Python: `int(hashlib.sha256(key.encode("utf-8")).hexdigest()[:8], 16)`.
+
+  The two were verified identical on 2026-10-08, including non-ASCII keys, and the parity test pins them. This amends the original `String.hash()` (djb2), which is linear and collapses picks (lane A Task 2 review).
 - Keys:
   - variant key: `"%s|%s|%s" % [map_id, role, variant]`;
   - placement key: `"%s|%s|%s|%d,%d" % [map_id, role, variant, x, y]`.
