@@ -14,10 +14,17 @@ folds every source into one registry keyed by what an asset is FOR:
       3. manifest.json  (2026-07 legacy {"jobs": {...}} shape),
       4. the file listing (UNREVIEWED; PixelLab rig dirs collapse to one row);
   - every data/sprites.json record (verdict SHIPPED), tiered by whether its
-    sheets are bundle-only in assets_manifest.json.
+    sheets are bundle-only in assets_manifest.json;
+  - every third-party TILESET sheet as kind tileset (#624): Pixel Crawler
+    sheets from tools/slice_atlases.py's _sliced/<pack>/TILESETS.json
+    (content classification plus folder/name evidence), other packs from
+    folder/name evidence (tileset_evidence). Every tileset row, owned ones
+    included, carries material_labels from _sliced/TILESET_LABELS.json
+    (tools/label_tilesets.py import; empty until labeled).
 
-Third-party pack files are NOT duplicated here: tools/find_asset.py searches
-docs/asset-index.json for those at query time.
+Other third-party pack files are NOT duplicated here: atlas slices come in
+through SLICES.json, and tools/find_asset.py searches docs/asset-index.json
+for the rest at query time.
 
 Outputs (text only, safe to commit; the PNGs stay gitignored):
   docs/asset-candidates.json  machine-readable registry
@@ -587,6 +594,87 @@ def shipped_rows(repo_root: Path) -> list[dict]:
     return out
 
 
+# ------------------------------------------------------------ tilesets
+
+TILESETS_NAME = "TILESETS.json"
+LABELS_NAME = "TILESET_LABELS.json"   # _sliced/TILESET_LABELS.json, tools/label_tilesets.py
+TILESET_KEYS = ("layout", "evidence", "tile_regions", "sheet_sha256", "duplicate_sheets")
+
+
+def _sha256(path: Path) -> str:
+    import hashlib
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def tileset_labels(assets_root: Path) -> dict[str, dict]:
+    """potential_assets path -> {material_labels, material_confidence, ...}."""
+    path = assets_root / "_sliced" / LABELS_NAME
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8")).get("labels", {})
+    except (json.JSONDecodeError, OSError) as exc:
+        print(f"WARN {path}: {exc}", file=sys.stderr)
+        return {}
+
+
+def _tileset_row(sheet: str, batch: str, family: str, w: int, h: int, extra: dict) -> dict:
+    row = {"path": sheet, "batch": batch, "kind": "tileset",
+           "targets": [stem_target(sheet).lower()], "verdict": "UNREVIEWED",
+           "tier": "pack-bundle", "family": family, "source": "pack", "exists": True,
+           "w": w, "h": h, "material_labels": []}
+    row.update({k: extra[k] for k in TILESET_KEYS if extra.get(k) not in (None, "", [])})
+    return row
+
+
+def pack_tileset_rows(assets_root: Path) -> tuple[list[dict], list[dict]]:
+    """(rows, batch summaries) for every third-party tileset sheet."""
+    rows: list[dict] = []
+    batches: list[dict] = []
+    seen: set[str] = set()
+    for tj in sorted(assets_root.glob(f"_sliced/*/{TILESETS_NAME}")):
+        try:
+            sheets = json.loads(tj.read_text(encoding="utf-8")).get("sheets", [])
+        except (json.JSONDecodeError, OSError) as exc:
+            print(f"WARN {tj}: {exc}", file=sys.stderr)
+            continue
+        batch = str(tj.parent.relative_to(assets_root))
+        for s in sheets:
+            rows.append(_tileset_row(s["sheet"], batch, s.get("family", ""), s.get("w", 0),
+                                     s.get("h", 0), s))
+            seen.add(s["sheet"])
+        batches.append({"batch": batch, "origin": TILESETS_NAME, "rows": len(sheets),
+                        "tier": "pack-bundle", "source": "pack"})
+    # Pixel Crawler packs come only through the slicer, which also knows their
+    # promo folders (Social/Tiles.png is a 4x upscale, not a tileset).
+    for top in sorted(p for p in assets_root.iterdir() if p.is_dir()):
+        fam = pack_family(top.name)
+        if not fam or top.name.startswith("Pixel Crawler"):
+            continue
+        by_sha: dict[str, dict] = {}
+        for p in sorted(top.rglob("*"), key=lambda p: (len(p.name), p.parts)):
+            rel = p.relative_to(assets_root)
+            if (p.suffix.lower() != ".png" or not p.is_file() or "__MACOSX" in rel.parts
+                    or p.name.startswith("._") or not tileset_evidence(rel)):
+                continue
+            sheet = str(Path("potential_assets") / rel)
+            if sheet in seen:
+                continue
+            sha = _sha256(p)
+            if sha in by_sha:
+                by_sha[sha]["duplicate_sheets"].append(sheet)
+                continue
+            size = png_size(p) or (0, 0)
+            by_sha[sha] = {"sheet": sheet, "w": size[0], "h": size[1], "layout": "unsliced",
+                           "evidence": ["directory"], "sheet_sha256": sha, "duplicate_sheets": []}
+        found = sorted(by_sha.values(), key=lambda s: s["sheet"])
+        rows += [_tileset_row(s["sheet"], top.name, fam, s["w"], s["h"], s) for s in found]
+        if found:
+            batches.append({"batch": top.name, "origin": "(tileset folder/name)", "rows": len(found),
+                            "tier": "pack-bundle", "source": "pack"})
+    return rows, batches
+
+
 # --------------------------------------------------------------- build
 
 def build(assets_root: Path, repo_root: Path, write_manifests: bool = False) -> dict:
@@ -609,6 +697,16 @@ def build(assets_root: Path, repo_root: Path, write_manifests: bool = False) -> 
             assets += done
             batches.append({"batch": str(bdir.relative_to(assets_root)), "origin": origin,
                             "rows": len(done), "tier": tier, "source": source})
+        tile_rows, tile_batches = pack_tileset_rows(assets_root)
+        assets += tile_rows
+        batches += tile_batches
+        labels = tileset_labels(assets_root)
+        for row in assets:
+            if row["kind"] != "tileset":
+                continue
+            lab = labels.get(row["path"].rstrip("/"), {})
+            stale = lab.get("sheet_sha256") and row.get("sheet_sha256") not in (None, lab["sheet_sha256"])
+            row["material_labels"] = [] if stale else list(lab.get("material_labels", []))
     else:
         print(f"WARN no assets root at {assets_root}; registry holds shipped sprites only",
               file=sys.stderr)
@@ -649,12 +747,14 @@ def summary_md(reg: dict) -> str:
         "python3 tools/find_asset.py renn --kind rig",
         "python3 tools/find_asset.py flame bolt --kind icon --tier owned",
         "python3 tools/find_asset.py barrel --tier public --json",
+        "python3 tools/find_asset.py brick --kind tileset     # material_labels match",
         "```",
         "",
         "Verdict order: " + " > ".join(VERDICTS) + ". Tiers: `owned-public` (PixelLab, ",
         "redistributable), `owned-unverified` (Codex gpt-image, bundle-tier until",
         "verified), `shipped-public` / `shipped-bundle` (wired in data/sprites.json),",
-        "`pack-bundle` (third-party, searched from docs/asset-index.json at query time).",
+        "`pack-bundle` (third-party: atlas slices and tileset sheets are rows here; other",
+        "pack files are searched from docs/asset-index.json at query time).",
         "",
         "## Rows by kind and tier",
         "",
