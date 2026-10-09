@@ -89,9 +89,11 @@ reserved for them.
 **`_common` is the utility pool (#623 amendment, user 2026-10-09).** It holds
 only the Tier A utility kinds: crate, barrel, sack and container.
 - Every `_common` role is a pool object that declares `"kind"`, one of those
-  four. Most wired ids have no kind on record, so the declaration is required.
-  A pool id whose wired kind is on record (`wi_kits_lib.WIRED_KINDS`) must be
-  Tier A as well. Lint rejects any other kind.
+  four.
+- Every pool id needs a kind on record, and it must be one of the four. The
+  record is the sprites.json entry's own `"kind"` (`wire_asset` writes a
+  slice's `label_kind` there), else `wi_kits_lib.WIRED_KINDS`. An id with no
+  kind on record is an error: the rule fails closed (review I2).
 - Its placements are excluded from G2 and capped at 30% (§5.1).
 - The pool stays empty until its Fable pool read (§5.2).
 
@@ -300,6 +302,8 @@ candidate:
 - Pack variants require a `fallback_sprite`. **Each pool's set of public
   fallbacks contains at least 2 distinct owned sprites**, so the public build
   does not collapse a pool into one sprite.
+- A slice's `label_kind` is recorded as the entry's `"kind"`, the kind on
+  record for the `_common` rule (§2.1).
 - **Duplicate art is refused (#623).** A new id whose art identity (§5.1) is
   already registered exits 6 and names the existing id; reuse that id. A
   deliberate second id needs `--alias-of <existing_id> --reason "<text>"`,

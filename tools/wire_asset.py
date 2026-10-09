@@ -17,7 +17,9 @@ fallback never count) is already registered is refused with exit 6 and
 `DUPLICATE-ART`, naming the existing id. Reuse that id. A deliberate second id
 needs --alias-of <that id> --reason "<why>" (one candidate per call), which
 records "_alias_of" and "_alias_reason" on the entry; G2/G3 still count both ids
-as one picture.
+as one picture. A slice's SLICES.json `label_kind` (closed vocabulary
+wi_kits_lib.KINDS) is recorded as the entry's "kind": the kind on record that
+data_lint's _common Tier A rule requires.
 
 Owned PNG (potential_assets/pixellab_*/…, codex_*/…): copied unchanged to
 assets/sprites/<id>/Idle-Sheet.png; a static sprites.json entry; a
@@ -345,10 +347,12 @@ def refuse_duplicate_art(sprite_id: str, entry: dict, catalog: dict, args: argpa
 
 def build_entry(mode: str, sheet_res: str, frame: tuple[int, int], region: list[int] | None,
                 anchor: list[float], sib: tuple[str, dict] | None, kind: str,
-                fallback: str | None, fps: int, comment: str) -> dict:
+                fallback: str | None, fps: int, comment: str, art_kind: str | None = None) -> dict:
     entry: dict = {}
     if comment:
         entry["_comment"] = comment
+    if art_kind:
+        entry["kind"] = art_kind
     entry["render_scale"] = sib[1].get("render_scale", DEFAULT_SCALE[mode]) if sib else DEFAULT_SCALE[mode]
     entry["anchor"] = anchor
     shadow = sib[1].get("shadow", False) if sib else (kind == "prop")
@@ -456,8 +460,9 @@ def plan_slice(candidate: Path, sprite_id: str, args: argparse.Namespace, paths:
     sib = sibling(catalog, "pack", args.like, sheet_res, (w, h))
     comment = (f"slice of {row['source_sheet']} region {[x, y, w, h]} sheet sha256 "
                f"{row['sheet_sha256'][:12]}; wired by tools/wire_asset.py")
+    label = row.get("label_kind")
     entry = build_entry("pack", sheet_res, (w, h), [x, y, w, h], pr["anchor"], sib, args.kind,
-                        args.fallback, args.fps or 1, comment)
+                        args.fallback, args.fps or 1, comment, label if label in kl.KINDS else None)
     entry = refuse_duplicate_art(sprite_id, entry, catalog, args, paths)
     plan = WirePlan(sprite_id, entry, 1)
     plan.notes.append(f"pack: bundled sheet {rel_sheet}; sibling {sib[0] if sib else '(none; defaults)'}; "

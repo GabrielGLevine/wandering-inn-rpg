@@ -1333,6 +1333,9 @@ def _footprint(entry: dict) -> tuple:
 def _check_kit_schema(kits: dict, sprites: dict, errors: list, bundle_paths: set) -> None:
 	if "_common" not in kits:
 		errors.append("kits: _common block missing")
+	for sid, entry in sorted(sprites.items()):
+		if isinstance(entry, dict) and "kind" in entry and entry["kind"] not in kl.KINDS:
+			errors.append(f"sprites.{sid}: kind '{entry['kind']}' is not in the closed vocabulary {list(kl.KINDS)}")
 	for region, block in kits.items():
 		if region.startswith("_") and region != "_common":
 			continue
@@ -1346,7 +1349,7 @@ def _check_kit_schema(kits: dict, sprites: dict, errors: list, bundle_paths: set
 				errors.append(f"kits.{region}.materials.{name}: keys must be within {sorted(kl.MATERIAL_FIELDS)}")
 		for name, role in (block.get("roles") or {}).items():
 			if region == "_common":
-				_check_common_role(name, role, errors)
+				_check_common_role(name, role, sprites, errors)
 			if isinstance(role, dict) and "kind" in role and role["kind"] not in kl.KINDS:
 				errors.append(f"kits.{region}.roles.{name}: kind '{role['kind']}' is not in the closed vocabulary {list(kl.KINDS)}")
 			if isinstance(role, str):
@@ -1388,10 +1391,10 @@ def _check_kit_schema(kits: dict, sprites: dict, errors: list, bundle_paths: set
 				errors.append(f"kits.{region}.cast: '{cid}' is not in sprites.json")
 
 
-def _check_common_role(name: str, role, errors: list) -> None:
-	"""#623 (user 2026-10-09): _common holds only the utility Tier A (kl.COMMON_KINDS). Every
-	_common role declares its kind, because most wired ids have none on record; a pool id whose
-	kind IS on record (kl.WIRED_KINDS) must be Tier A too."""
+def _check_common_role(name: str, role, sprites: dict, errors: list) -> None:
+	"""#623 (user 2026-10-09; review I2, fail closed): _common holds only the utility Tier A
+	(kl.COMMON_KINDS). Every _common role declares its kind, and every pool id must have a
+	kind on record (kl.kind_of: the entry's "kind", else kl.WIRED_KINDS) inside Tier A."""
 	label = f"kits._common.roles.{name}"
 	tier_a = ", ".join(kl.COMMON_KINDS)
 	if not isinstance(role, dict) or "kind" not in role:
@@ -1401,8 +1404,13 @@ def _check_common_role(name: str, role, errors: list) -> None:
 		errors.append(f"{label}: kind '{role['kind']}' is not a _common utility kind ({tier_a}); give each region its own role")
 	for entry in role.get("pool") if isinstance(role.get("pool"), list) else []:
 		vid = entry[0] if isinstance(entry, list) and entry else entry
-		known = kl.WIRED_KINDS.get(vid) if isinstance(vid, str) else None
-		if known is not None and known not in kl.COMMON_KINDS:
+		if not isinstance(vid, str):
+			continue
+		known = kl.kind_of(vid, sprites.get(vid))
+		if known is None:
+			errors.append(f"{label}: pool id '{vid}' has no kind on record (sprites.json \"kind\" or "
+				f"wi_kits_lib.WIRED_KINDS); _common takes only ids of a recorded Tier A kind")
+		elif known not in kl.COMMON_KINDS:
 			errors.append(f"{label}: pool id '{vid}' is a {known}, not a _common utility kind ({tier_a})")
 
 

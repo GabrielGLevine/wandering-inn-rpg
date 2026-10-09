@@ -485,12 +485,13 @@ class TestFixRound1(unittest.TestCase):
 
 
 PACK = {"sheet": "res://assets/pack.png", "frame_size": [16, 32]}
-ART_SPRITES = {**SPRITES,
+ART_SPRITES = {**copy.deepcopy(SPRITES),
                "lamp_r": {"animations": {"idle": {**PACK, "region": [0, 0, 16, 32]}}},
                "lamp_q": {"animations": {"idle": {**PACK, "region": [0, 0, 16, 32]}}, "render_scale": 0.5, "fallback_sprite": "own_b"},
                "lamp_mine": {"animations": {"idle": {**PACK, "region": [16, 0, 16, 32]}}},
                "door": {"animations": {"idle": {**PACK, "region": [32, 0, 16, 32]}}},
                "barrel": {"animations": {"idle": {**PACK, "region": [48, 0, 16, 32]}}}}
+ART_SPRITES["c1"]["kind"] = ART_SPRITES["c2"]["kind"] = "crate"   # recorded kinds, as wire_asset writes them
 UTIL_KITS = copy.deepcopy(KITS)
 UTIL_KITS["_common"]["roles"]["utility"] = {"kind": "crate", "pick": "cell", "pool": ["c1", "c2", "c3"]}
 
@@ -637,6 +638,25 @@ class TestCommonTierA(unittest.TestCase):
     def test_region_role_kind_must_be_in_the_vocabulary(self):
         self.assertTrue(any("closed vocabulary" in e for e in self.errs({"kind": "spaceship", "pool": ["c1", "c2"]}, where="r")))
         self.assertEqual(self.errs({"kind": "lamp", "pool": ["c1", "c2"]}, where="r"), [])
+
+    def test_unknown_kind_fails_closed(self):
+        # #623 review I2: c3 has neither a recorded kind nor a WIRED_KINDS row
+        errs = self.errs({"kind": "crate", "pool": ["c1", "c2", "c3"]})
+        self.assertTrue(any("pool id 'c3' has no kind on record" in e for e in errs), errs)
+        self.assertEqual([e for e in errs if "'c1'" in e or "'c2'" in e], [], "recorded crates pass")
+
+    def test_recorded_kind_wins_over_wired_kinds(self):
+        sprites = copy.deepcopy(ART_SPRITES)
+        sprites["door"]["kind"] = "crate"     # a hand-declared, reviewable per-id kind
+        sprites["c1"]["kind"] = "lamp"
+        k = copy.deepcopy(KITS); k["_common"]["roles"]["utility"] = {"kind": "crate", "pool": ["c2", "door", "c1"]}
+        errs = [e for e in run_with_sprites(sprites, k) if "utility" in e]
+        self.assertEqual([e for e in errs if "'door'" in e], [])
+        self.assertTrue(any("pool id 'c1' is a lamp" in e for e in errs), errs)
+
+    def test_sprite_kind_must_be_in_the_vocabulary(self):
+        sprites = copy.deepcopy(ART_SPRITES); sprites["c3"]["kind"] = "spaceship"
+        self.assertTrue(any("sprites.c3: kind 'spaceship'" in e for e in run_with_sprites(sprites)))
 
     def test_real_common_pool_stays_empty_until_its_read(self):
         kits = json.loads((GAME / "data" / "kits.json").read_text())

@@ -55,6 +55,15 @@ WIRED_KINDS = {
     "food_bread": "other", "food_ham": "other", "food_basket": "container",
     "garden_fountain_basin": "other", "garden_fountain_statue": "other",
 }
+
+
+def kind_of(sprite_id: str, entry) -> str | None:
+    """The kind on record for a wired id: its sprites.json "kind" (wire_asset records the
+    slice's label), else WIRED_KINDS; None when unknown."""
+    recorded = entry.get("kind") if isinstance(entry, dict) else None
+    return recorded if isinstance(recorded, str) else WIRED_KINDS.get(sprite_id)
+
+
 _HEADING_NAME = re.compile(r"^[A-Z][A-Za-z'\-]*( [A-Za-z'\-]+)*$")
 
 

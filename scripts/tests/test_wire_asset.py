@@ -495,3 +495,18 @@ def test_near_identical_rect_is_refused(tree, capsys):
     assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned", "--alias-of", "crate",
                "--reason", "tight slice of the same crate") == 0
     assert sprites(tree)["crate_lidded"]["_alias_of"] == "crate"
+
+
+@pytest.mark.parametrize("label,recorded", [("crate", "crate"), ("spaceship", None), (None, None)])
+def test_slice_label_kind_is_recorded(tree, label, recorded):
+    # #623 review I2: the kind on record that data_lint's _common Tier A rule reads
+    sj = tree / f"potential_assets/_sliced/{PACK}/Furniture/SLICES.json"
+    d = json.loads(sj.read_text())
+    if label:
+        d["assets"][0]["label_kind"] = label
+    sj.write_text(json.dumps(d, indent=1) + "\n")
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    e = sprites(tree)["crate_lidded"]
+    assert e.get("kind") == recorded
+    if recorded:
+        assert list(e)[:2] == ["_comment", "kind"]
