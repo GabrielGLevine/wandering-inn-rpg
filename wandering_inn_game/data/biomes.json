@@ -488,17 +488,17 @@
    0,
    0
   ],
-  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked_sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
   "blocked": [
-   8,
-   17
+   0,
+   3
   ],
   "blocked_tile_px": 16,
-  "skirt_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "skirt_sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
   "skirt_tile_px": 16,
   "skirt": [
-   8,
-   17
+   0,
+   3
   ],
   "interior_flavor": "Nothing there. In this alley, that's probably good news.",
    "fallback_render": {
