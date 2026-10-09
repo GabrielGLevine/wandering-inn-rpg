@@ -358,9 +358,11 @@ and chronology belong in issue PRs. Earlier context:
     enforces material exclusivity by material name only. Pixel-level sheet
     exclusivity is a rollout concern and is not enforced.
   - **`library_shelf` public fallback (#608 pilot 1b art read, controller):**
-    `fallback_sprite` is now `mill_high_shelf_owned` (owned, tall shelf, alpha
-    bbox 48x62) instead of `owned_fallback_library_shelf`, which the blind read
-    called pixel noise in all five interiors. The change is global, so the
+    `fallback_sprite` is `library_shelf__alt1` (owned PixelLab bookshelf, provenance
+    line in v019-owned-art-provenance.txt, alpha bbox 24x30 of 32x32, about 16x20 px
+    at its 0.67 scale), the only owned bookshelf `find_asset` returns. Round 1 used
+    `mill_high_shelf_owned`, which the r2 read called a gallows post, and before that
+    `owned_fallback_library_shelf` read as pixel noise. The change is global, so the
     public build also changes on `witch_hut`, `inn_player_room` and
     `pallass_forge_hall` (two rows); accepted as a strict improvement.
     Rejected: `shelf_bottles` (bottles under a library row is the wrong kind).

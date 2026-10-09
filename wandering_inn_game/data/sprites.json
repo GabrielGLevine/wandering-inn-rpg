@@ -2799,7 +2799,7 @@
    }
   },
   "shadow": true,
-  "fallback_sprite": "mill_high_shelf_owned"
+  "fallback_sprite": "library_shelf__alt1"
  },
  "royal_soldier": {
   "animations": {
