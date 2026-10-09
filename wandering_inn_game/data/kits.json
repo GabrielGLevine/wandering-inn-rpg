@@ -184,6 +184,14 @@
       "window_blue",
       "window_blue__alt1"
      ]
+    },
+    "rug": {
+     "pick": "map",
+     "pool": [
+      "rug_woven_red",
+      "rug_woven_cream",
+      "enchanter_floor_mat"
+     ]
     }
    },
    "cast": []

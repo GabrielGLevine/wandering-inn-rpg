@@ -10422,5 +10422,24 @@
     "fps": 1
    }
   }
+ },
+ "enchanter_floor_mat": {
+  "_comment_ysort": "GH#127: flat floor decor renders under sorted content; same bias as rug_woven_red/cream.",
+  "field_y_sort_bias_px": -160.0,
+  "render_scale": 0.35,
+  "anchor": [
+   0.5,
+   0.9219
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/enchanter_floor_mat/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
  }
 }
