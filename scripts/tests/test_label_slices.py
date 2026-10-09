@@ -99,3 +99,84 @@ def test_import_rejects_bad_kind_and_bad_number(tmp_path, capsys):
     assert "unknown kind 'chest'" in out and "number 9" in out and "confidence 1.5" in out
     rows = json.loads((assets / "Pixel Crawler - Free Pack/_sliced/Furniture/SLICES.json").read_text())["assets"]
     assert all(r["label_kind"] == "" for r in rows), "an invalid answer file writes nothing"
+
+
+SHEET = "res://assets/props/free_pack/Furniture.png"
+
+
+def labeled_fixture(tmp_path, labels: dict, wired: dict):
+    assets, game = sliced_fixture(tmp_path, n=3, wired=wired)
+    ls.export(assets)
+    answers = tmp_path / "answers"
+    write_answer(answers, "Pixel Crawler - Free Pack/Furniture/p01", labels)
+    assert ls.import_labels(assets, answers) == 0
+    return assets, game
+
+
+def test_check_passes_at_full_agreement_and_strips_old_notes(tmp_path, capsys):
+    assets, game = labeled_fixture(
+        tmp_path, {"1": {"kind": "crate", "confidence": 0.9}, "2": {"kind": "barrel", "confidence": 0.9}},
+        {"crate": (SHEET, [0, 0, 16, 16]), "barrel": (SHEET, [19, 3, 10, 10])})
+    sj = assets / "Pixel Crawler - Free Pack/_sliced/Furniture/SLICES.json"
+    doc = json.loads(sj.read_text())
+    doc["assets"][0]["notes"] = "keep me check-miss: stale"
+    sj.write_text(json.dumps(doc))
+    assert ls.check(assets, game) == 0
+    out = capsys.readouterr().out
+    assert "agreement 2/2 = 100.0%" in out
+    assert json.loads(sj.read_text())["assets"][0]["notes"] == "keep me"
+
+
+def test_check_fails_under_threshold_and_writes_misses(tmp_path, capsys):
+    assets, game = labeled_fixture(
+        tmp_path, {"1": {"kind": "crate", "confidence": 0.9}, "2": {"kind": "plant", "confidence": 0.5}},
+        {"crate": (SHEET, [0, 0, 16, 16]), "barrel": (SHEET, [16, 0, 16, 16]),
+         "ghost": (SHEET, [100, 100, 8, 8])})
+    ls.WIRED_KINDS["ghost"] = "other"
+    try:
+        assert ls.check(assets, game) == 1
+    finally:
+        del ls.WIRED_KINDS["ghost"]
+    out = capsys.readouterr().out
+    assert "agreement 1/3 = 33.3%" in out
+    assert "barrel -> plant" in out and "ghost" in out
+    doc = json.loads((assets / "Pixel Crawler - Free Pack/_sliced/Furniture/SLICES.json").read_text())
+    assert doc["assets"][1]["notes"] == "check-miss: wired barrel expects barrel, got plant"
+    assert doc["check_notes"] == ["check-miss: wired ghost expects other, got no overlapping slice"]
+    assert doc["assets"][0]["notes"] == ""
+
+
+def test_check_excludes_unsliced_sheets(tmp_path, capsys):
+    assets, game = labeled_fixture(
+        tmp_path, {"1": {"kind": "crate", "confidence": 0.9}},
+        {"crate": (SHEET, [0, 0, 16, 16]),
+         "library_desk": ("res://assets/tiles/library/Tiles.png", [160, 272, 48, 32]),
+         "sconce": ("res://assets/props/free_pack/Bonfire_01-Sheet.png", [0, 0, 128, 32])})
+    assert ls.check(assets, game) == 0
+    out = capsys.readouterr().out
+    assert "agreement 1/1 = 100.0%" in out
+    assert "excluded 2 wired regions on unsliced sheets" in out and "library_desk" in out
+
+
+def test_check_skips_ids_outside_wired_kinds(tmp_path, capsys):
+    assets, game = labeled_fixture(tmp_path, {"1": {"kind": "crate", "confidence": 0.9}},
+                                   {"crate": (SHEET, [0, 0, 16, 16]), "brand_new_id": (SHEET, [16, 0, 16, 16])})
+    assert ls.check(assets, game) == 0
+    assert "SKIP brand_new_id: not in WIRED_KINDS" in capsys.readouterr().out
+
+
+def test_best_slice_prefers_exact_size_over_spanning_piece():
+    rows = [{"region": [98, 466, 44, 62], "label_kind": "table"},
+            {"region": [112, 514, 16, 14], "label_kind": "seat"},
+            {"region": [736, 73, 32, 23], "label_kind": "crate"}]
+    best, ratio = ls.best_slice(rows, [112, 514, 16, 14])
+    assert (best["label_kind"], ratio) == ("seat", 1.0)
+    best, ratio = ls.best_slice(rows, [752, 74, 16, 22])
+    assert (best["label_kind"], ratio) == ("crate", 1.0), "a wired sub-region of a fused slice still matches"
+    assert ls.best_slice([], [0, 0, 1, 1]) == (None, 0.0)
+
+
+def test_main_dispatch(tmp_path):
+    assets, game = sliced_fixture(tmp_path, n=2)
+    assert ls.main(["export", "--assets-root", str(assets)]) == 0
+    assert ls.main(["check", "--assets-root", str(assets), "--game-root", str(game)]) == 0, "no wired regions: vacuous pass"

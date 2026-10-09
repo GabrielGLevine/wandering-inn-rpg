@@ -143,6 +143,99 @@ def import_labels(assets_root: Path, answers_dir: Path) -> int:
     return 0
 
 
+# ------------------------------------------------------------------ check
+
+# Expected kind for every data/sprites.json `region` animation at 7155db91.
+# Ids on sheets the slicer skips (tiles, -Sheet strips, Admurin, owned) are
+# excluded by check() at run time, so listing them here is harmless.
+WIRED_KINDS = {
+    "crate": "crate", "barrel": "barrel", "door": "door", "window_blue": "window",
+    "unlit_lantern": "lamp", "sconce": "lamp", "campfire": "lamp",
+    "table_brown": "table", "bar_counter": "table", "counter_left": "table", "counter_mid": "table",
+    "counter_right": "table", "library_desk": "table", "stool": "seat",
+    "shelf_bottles": "shelf", "library_shelf": "shelf", "bed": "bed",
+    "plant_pot": "plant", "bush_green": "plant", "grass_tuft": "plant", "flower_purple": "plant",
+    "flower_tiny": "plant", "pond_reeds": "plant", "tree_big": "plant", "tree_round": "plant",
+    "tree_autumn_orange": "plant", "tree_autumn_red": "plant", "crop_row_orange": "plant",
+    "crop_row_green": "plant", "crop_row_dark_green": "plant", "mushroom": "plant",
+    "mushroom_purple_l": "plant", "mushroom_purple_m": "plant", "mushroom_purple_s": "plant",
+    "hollow_mushroom_cluster": "plant", "hollow_canopy_tree": "plant", "hollow_small_tree": "plant",
+    "hollow_bent_tree": "plant",
+    "pebble": "rock", "boulder": "rock", "scree_spill": "rock", "hollow_glow_stone": "rock",
+    "dungeon_rubble": "debris", "grill": "tool",
+    "chest": "container", "chest_open": "container",
+    "facade_plaster": "wall_module", "inn_roof": "wall_module", "pallass_rail_post": "wall_module",
+    "dungeon_statue": "other", "pedestal": "other", "sewer_grate": "other", "dusty_scroll": "other",
+    "food_bread": "other", "food_ham": "other", "food_basket": "other",
+    "garden_fountain_basin": "other", "garden_fountain_statue": "other",
+}
+
+
+def _strip_check(note: str) -> str:
+    idx = note.find(CHECK_TAG)
+    return (note[:idx] if idx != -1 else note).strip()
+
+
+def best_slice(rows: list[dict], region: list[int]) -> tuple[dict | None, float]:
+    """The slice a wired region lands on: highest containment overlap, ties
+    broken by IoU so an exact-size slice beats a larger piece whose box
+    merely spans the region (Furniture's stool sits inside a table's box)."""
+    if not rows:
+        return None, 0.0
+    best = max(rows, key=lambda r: (sa.overlap_ratio(region, r["region"]), sa.iou(region, r["region"])))
+    return best, sa.overlap_ratio(region, best["region"])
+
+
+def check(assets_root: Path, game_root: Path, threshold: float = 0.9) -> int:
+    by_sheet: dict[str, tuple[Path, dict]] = {}
+    for sj in find_slices(assets_root):
+        doc = json.loads(sj.read_text(encoding="utf-8"))
+        rows = doc.get("assets", [])
+        if rows and rows[0].get("game_sheet"):
+            by_sheet[rows[0]["game_sheet"]] = (sj, doc)
+    wired = sa.wired_regions(game_root)
+    total = hits = 0
+    confusion: Counter = Counter()
+    misses: list[str] = []
+    excluded: list[str] = []
+    for res, regs in sorted(wired.items()):
+        if res not in by_sheet:
+            excluded += [f"{sid} on {res}" for sid, _ in regs]
+            continue
+        sj, doc = by_sheet[res]
+        for row in doc["assets"]:
+            row["notes"] = _strip_check(row.get("notes", ""))
+        doc["check_notes"] = []
+        for sid, region in regs:
+            expect = WIRED_KINDS.get(sid)
+            if expect is None:
+                print(f"SKIP {sid}: not in WIRED_KINDS")
+                continue
+            total += 1
+            best, ratio = best_slice(doc["assets"], region)
+            got = best.get("label_kind", "") if best and ratio >= 0.5 else ""
+            confusion[(expect, got or "(none)")] += 1
+            if got == expect:
+                hits += 1
+                continue
+            msg = f"{CHECK_TAG} wired {sid} expects {expect}, got {got or 'no overlapping slice'}"
+            misses.append(f"{sid}: {expect} -> {got or 'no overlapping slice'}  [{res}]")
+            if ratio >= 0.5:
+                best["notes"] = (best["notes"] + " " + msg).strip()
+            else:
+                doc["check_notes"].append(msg)
+        sj.write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
+    print("expected -> labeled : count")
+    for (expect, got), n in sorted(confusion.items()):
+        print(f"  {expect:12s} -> {got:12s} : {n}")
+    for m in misses:
+        print("MISS " + m)
+    print(f"excluded {len(excluded)} wired regions on unsliced sheets" + (": " + ", ".join(excluded) if excluded else ""))
+    rate = hits / total if total else 1.0
+    print(f"agreement {hits}/{total} = {rate * 100:.1f}% (threshold {threshold * 100:.0f}%)")
+    return 0 if rate >= threshold else 1
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -153,11 +246,17 @@ def main(argv: list[str] | None = None) -> int:
     im = sub.add_parser("import")
     im.add_argument("--assets-root", type=Path, default=default_root)
     im.add_argument("--answers", type=Path, required=True)
+    ck = sub.add_parser("check")
+    ck.add_argument("--assets-root", type=Path, default=default_root)
+    ck.add_argument("--game-root", type=Path, default=ROOT / "wandering_inn_game")
+    ck.add_argument("--threshold", type=float, default=0.9)
     args = ap.parse_args(argv)
     if args.cmd == "export":
         export(args.assets_root, args.page_size)
         return 0
-    return import_labels(args.assets_root, args.answers)
+    if args.cmd == "import":
+        return import_labels(args.assets_root, args.answers)
+    return check(args.assets_root, args.game_root, args.threshold)
 
 
 if __name__ == "__main__":
