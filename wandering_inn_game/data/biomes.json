@@ -744,7 +744,7 @@
   }
  },
  "invrisil_shop": {
-  "_comment": "#607 Phase 0: copies inn's look so regional interiors stop borrowing the `inn` key; render fields are restyled per region in Phase 2. Referenced by no map yet.",
+  "_comment": "#607 Phase 0: copies inn's look so regional interiors stop borrowing the `inn` key; render fields are restyled per region in Phase 2. Used by adventurers_rest since #608 1b with these render fields unchanged; its all-cell floor layer hides them (CHOICE-LOG, Regional kits).",
   "footstep_family": "wood",
   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
   "tile_px": 16,

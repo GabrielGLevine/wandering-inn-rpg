@@ -114,6 +114,13 @@ For each region below, open the issue, then run pilot Tasks 1–7 with these sub
 - **Direction:** holistic art review section "Garden of Sanctuary".
 - **Traps:** the memorial plinths are story props and stay explicit.
 
+### Invrisil carry-over (pilot 1b deviations, #608 final review)
+
+Logged in `docs/CHOICE-LOG.md` (Regional kits). Land both before another map adopts `invrisil_shop` or the enchanter rooms change, each with a scoped read.
+
+- [ ] `invrisil_shop` (`data/biomes.json`): replace the `inn` render clone with its own floor, skirt and blocked look from the Invrisil materials (`floor_rest`, `wall_shop`) and its own `blocked_props` from the pool.
+- [ ] `enchanter_shop` and `enchanter_work_room`: author `floor_layers` geometry on `@floor_shop`; they render the `brothers_parlor` biome floor (the inn plank) today.
+
 ## Per-region checklist (copy into each region issue)
 
 - [ ] Issue opened; branch and worktree created; overlay copied; import pass done.

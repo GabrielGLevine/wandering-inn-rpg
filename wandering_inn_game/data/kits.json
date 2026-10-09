@@ -37,7 +37,7 @@
      }
     },
     "floor_shop": {
-     "_comment": "#608 1b pool read floor_shop #1 PASS: owned woodplank_over_stone_v1 (PixelLab, public). Lower terrain = cool blue-grey flagstone, wang_0 at [2,1]: the quiet low-contrast shop floor (stationer, enchanter shop, work room, parlor). Pale limestone/checker is the real target and is on the generation list.",
+     "_comment": "#608 1b pool read floor_shop #1 PASS: owned woodplank_over_stone_v1 (PixelLab, public). Lower terrain = cool blue-grey flagstone, wang_0 at [2,1]: the quiet low-contrast shop floor (stationer, parlor; the enchanter rooms have no floor layer yet). Pale limestone/checker is the real target and is on the generation list.",
      "sheet": "res://assets/tiles/harvest/woodplank_over_stone_v1.png",
      "tile_px": 16,
      "coords": [

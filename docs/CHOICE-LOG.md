@@ -368,6 +368,15 @@ and chronology belong in issue PRs. Earlier context:
     public build also changes on `witch_hut`, `inn_player_room` and
     `pallass_forge_hall` (two rows); accepted as a strict improvement.
     Rejected: `shelf_bottles` (bottles under a library row is the wrong kind).
+  - **Pilot 1b deviations (#608 final review, controller):** two plan steps
+    were not done. Both are follow-ups in the rollout plan's Invrisil
+    carry-over section.
+    - `invrisil_shop` still clones `inn`'s render fields (floor [1,21], skirt
+      [7,21], `blocked_props` crate and barrel). It is not visible today
+      because the Rest's floor layer covers every cell.
+    - The enchanter rooms have no `floor_layers`, so they render the biome
+      floor (`brothers_parlor`, the inn plank [1,21]). Converting them needs
+      authored geometry, and the read passed.
 - **Best art wins per asset (#564/#554)** within a coherent scene, at gameplay
   scale; otherwise keep the official or owned public fallback. READY is not
   acceptance, and there is no quota wiring. Animation, geometry, scale and
