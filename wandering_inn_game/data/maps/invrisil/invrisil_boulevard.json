@@ -900,23 +900,8 @@
                        }
   },
   {
-   "_pick": "v0.16.1 #9, layer 6/6: the ALLEY GROUND, beyond the new east wall AND in the break itself. Reuses mercantile_alleys' own first floor layer verbatim (Floors_Tiles (16,2)/(17,2)/(18,2), already MOCKUP-PROVEN on the sibling map) across x=27 y4..15 plus the mouth cells [26,7..9]. Presentation only; its job is that the gap reads as a way INTO somewhere. Blocked cells take the biome's own blocked tile (Wall_Tiles (8,2)) and get no layer entry -- hence no [27,3].",
-   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
-   "tile_px": 16,
-   "variants": [
-    [
-     16,
-     2
-    ],
-    [
-     17,
-     2
-    ],
-    [
-     18,
-     2
-    ]
-   ],
+   "_pick": "v0.16.1 #9, layer 6/6: the ALLEY GROUND, beyond the new east wall AND in the break itself. Takes mercantile_alleys' own first floor material, @floor_alley (#608: Invrisil's ashlar paving, which replaced the Floors_Tiles (16,2)/(17,2)/(18,2) cobble both layers shared) across x=27 y4..15 plus the mouth cells [26,7..9]. Presentation only; its job is that the gap reads as a way INTO somewhere. Blocked cells take the biome's own blocked tile (Wall_Tiles (8,2)) and get no layer entry -- hence no [27,3].",
+   "material": "@floor_alley",
    "cells": {
     "list": [
      [
@@ -980,23 +965,7 @@
       9
      ]
     ]
-   },
-    "fallback_render": {
-                        "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-                        "tile_px": 16,
-                        "coords": [
-                         0,
-                         3
-                        ],
-                        "tone": {
-                         "base": [
-                          0.33,
-                          0.34,
-                          0.36
-                         ],
-                         "detail": 0.5
-                        }
-                       }
+   }
   }
  ],
  "decor": [
