@@ -333,6 +333,24 @@ class TestFixRound1(unittest.TestCase):
         self.assertEqual([e for e in errors if "biome" in e], [])
 
 
+class TestBiomeRows(unittest.TestCase):
+    NEW = ["riverfarm_interior", "liscor_civic", "invrisil_shop", "pallass_interior"]
+
+    def test_rows_copy_inn_sim_and_render_fields(self):
+        biomes = json.loads((GAME / "data" / "biomes.json").read_text())
+        inn = biomes["inn"]
+        for bid in self.NEW:
+            row = biomes[bid]
+            for key in ("footstep_family", "interior_flavor", "fallback_render", "sheet", "tile_px", "floor", "blocked_sheet", "blocked", "blocked_props", "skirt_sheet", "skirt_tile_px", "skirt"):
+                self.assertEqual(row[key], inn[key], f"{bid}.{key}")
+            self.assertNotIn("interior_flavor_by_map", row)
+        world = (GAME / "src" / "world" / "world.gd").read_text()
+        for bid in self.NEW:
+            self.assertIn(f'"{bid}": {{"preset": "dust_motes", "phase": ["dusk", "night"]}},', world)
+        maps = (GAME / "data" / "maps").glob("*/*.json")
+        self.assertEqual([p.name for p in maps if json.loads(p.read_text()).get("biome") in self.NEW], [])  # Phase 0: referenced by no map
+
+
 class TestRealTree(unittest.TestCase):
     def test_clean_on_head(self):
         r = subprocess.run([sys.executable, str(GAME / "scripts" / "data_lint.py")], capture_output=True, text=True, cwd=str(REPO_ROOT))
