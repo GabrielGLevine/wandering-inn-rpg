@@ -16,7 +16,7 @@ renders):
   3. expand to the 16/32 px cell when the sheet is grid-laid and the cell
      holds no other piece (method grid16/grid32); else keep the trimmed box
      (component/seam). Manual --split regions are method override;
-  4. write <pack>/_sliced/<stem>/<stem>__x{X}_y{Y}_w{W}_h{H}.png, SLICES.json
+  4. write _sliced/<pack>/<stem>/<stem>__x{X}_y{Y}_w{W}_h{H}.png, SLICES.json
      and a numbered contact.png. Re-runs are idempotent and keep labels.
 Byte-identical sheets slice once (first pack in sorted order); the other
 paths land in duplicate_sheets. Every output stays untracked.
@@ -284,7 +284,7 @@ def _xywh(box: list[int]) -> list[int]:
 
 def out_dir_for(sheet: Path, assets_root: Path, sha: str) -> Path:
     stem = sheet_stem(sheet)
-    base = assets_root / sheet.relative_to(assets_root).parts[0] / "_sliced" / stem
+    base = assets_root / "_sliced" / sheet.relative_to(assets_root).parts[0] / stem
     existing = base / "SLICES.json"
     if existing.exists():
         try:

@@ -436,14 +436,14 @@ def find_batches(assets_root: Path) -> list[Path]:
             batches.extend(lanes)
         else:
             batches.append(top)
-    # tools/slice_atlases.py output: <pack>/_sliced/<stem>/SLICES.json, tier pack-bundle
-    for sliced in sorted(assets_root.glob("*/_sliced")):
-        batches += [d for d in sorted(sliced.iterdir()) if d.is_dir() and SLICES_NAME in present(d)]
+    # tools/slice_atlases.py output: _sliced/<pack>/<stem>/SLICES.json, tier pack-bundle
+    # (top-level root: the pack folders themselves are read-only)
+    batches += [sj.parent for sj in sorted(assets_root.glob(f"_sliced/*/*/{SLICES_NAME}"))]
     return batches
 
 
 def is_sliced(batch_rel: Path) -> bool:
-    return "_sliced" in batch_rel.parts
+    return batch_rel.parts[:1] == ("_sliced",)
 
 
 def read_batch(batch_dir: Path) -> tuple[str, list[dict]]:
@@ -584,7 +584,7 @@ def build(assets_root: Path, repo_root: Path, write_manifests: bool = False) -> 
         for bdir in find_batches(assets_root):
             batch_rel = bdir.relative_to(assets_root)
             if is_sliced(batch_rel):
-                source, tier, family = "pack", "pack-bundle", pack_family(batch_rel.parts[0])
+                source, tier, family = "pack", "pack-bundle", pack_family(batch_rel.parts[1])
             else:
                 source, tier, family = classify_batch(batch_rel.parts[0])
             origin, rows = read_batch(bdir)

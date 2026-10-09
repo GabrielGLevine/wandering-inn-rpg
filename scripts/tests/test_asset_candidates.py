@@ -232,19 +232,19 @@ class TestHelpers(unittest.TestCase):
 class TestSlicedBatches(Fixture):
     def slices(self):
         pack = self.assets / "Pixel Crawler - Free Pack"
-        d = pack / "_sliced" / "Furniture"
+        d = self.assets / "_sliced" / "Pixel Crawler - Free Pack" / "Furniture"
         png(d / "Furniture__x736_y73_w16_h23.png", 16, 23)
         png(d / "Furniture__x0_y0_w32_h32.png", 32, 32)
         png(pack / "Environment" / "Props" / "Static" / "Furniture.png", 800, 864)
         rows = [
-            {"path": "potential_assets/Pixel Crawler - Free Pack/_sliced/Furniture/Furniture__x736_y73_w16_h23.png",
+            {"path": "potential_assets/_sliced/Pixel Crawler - Free Pack/Furniture/Furniture__x736_y73_w16_h23.png",
              "kind": "prop", "targets": ["crate"], "verdict": "UNREVIEWED", "notes": "",
              "source_sheet": "potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png",
              "region": [736, 73, 16, 23], "sheet_sha256": "ab" * 32, "method": "seam", "has_shadow": False,
              "size_class": "M", "label_confidence": 0.9, "label_kind": "crate", "bundled": True,
              "game_sheet": "res://assets/props/free_pack/Furniture.png", "wired_ids": ["crate"],
              "duplicate_sheets": []},
-            {"path": "potential_assets/Pixel Crawler - Free Pack/_sliced/Furniture/Furniture__x0_y0_w32_h32.png",
+            {"path": "potential_assets/_sliced/Pixel Crawler - Free Pack/Furniture/Furniture__x0_y0_w32_h32.png",
              "kind": "prop", "targets": [], "verdict": "UNREVIEWED", "notes": "",
              "source_sheet": "potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png",
              "region": [0, 0, 32, 32], "sheet_sha256": "ab" * 32, "method": "grid16", "has_shadow": False,
@@ -259,7 +259,7 @@ class TestSlicedBatches(Fixture):
     def test_sliced_dir_is_a_pack_bundle_batch_with_passthrough(self):
         d = self.slices()
         reg = self.build()
-        rows = self.rows(reg, "Pixel Crawler - Free Pack/_sliced/Furniture")
+        rows = self.rows(reg, "_sliced/Pixel Crawler - Free Pack/Furniture")
         crate = rows["Furniture__x736_y73_w16_h23.png"]
         self.assertEqual((crate["tier"], crate["source"], crate["family"], crate["kind"]),
                          ("pack-bundle", "pack", "PC16", "prop"))
@@ -270,12 +270,12 @@ class TestSlicedBatches(Fixture):
         self.assertEqual(crate["game_sheet"], "res://assets/props/free_pack/Furniture.png")
         self.assertEqual(crate["label_confidence"], 0.9)
         self.assertEqual((crate["w"], crate["h"]), (16, 23))
-        self.assertTrue(crate["manifest_ref"].endswith("_sliced/Furniture/SLICES.json"))
+        self.assertTrue(crate["manifest_ref"].endswith("_sliced/Pixel Crawler - Free Pack/Furniture/SLICES.json"))
         other = rows["Furniture__x0_y0_w32_h32.png"]
         self.assertIs(other["bundled"], False)
         self.assertEqual(other["label_confidence"], 0.0)
         self.assertEqual(other["targets"], ["Furniture__x0_y0_w32_h32"], "unlabeled slices stay searchable by stem")
-        batch = [b for b in reg["batches"] if b["batch"].endswith("_sliced/Furniture")][0]
+        batch = [b for b in reg["batches"] if b["batch"] == "_sliced/Pixel Crawler - Free Pack/Furniture"][0]
         self.assertEqual((batch["origin"], batch["tier"], batch["rows"]), ("SLICES.json", "pack-bundle", 2))
 
     def test_write_manifests_never_touches_sliced_dirs(self):

@@ -3,7 +3,7 @@
 vocabulary, through a controller-dispatched vision agent.
 
   export  write numbered contact pages (1x and 2x, <= 40 slices each) under
-          <pack>/_sliced/<stem>/pages/ and potential_assets/_sliced_task.json
+          _sliced/<pack>/<stem>/pages/ and potential_assets/_sliced_task.json
   import  merge the agent's JSON answers (one file per page) into SLICES.json:
           label_kind, label_confidence, targets = [kind] + wired ids
   check   agreement of label_kind with the kind expected for every wired
@@ -62,7 +62,7 @@ Answer with ONLY this JSON (no prose), one entry per number:
 
 
 def find_slices(assets_root: Path) -> list[Path]:
-    return sorted(assets_root.glob("*/_sliced/*/SLICES.json"))
+    return sorted(assets_root.glob("_sliced/*/*/SLICES.json"))
 
 
 def _rel(path: Path, assets_root: Path) -> str:
@@ -75,7 +75,7 @@ def export(assets_root: Path, page_size: int = 40) -> dict:
         doc = json.loads(sj.read_text(encoding="utf-8"))
         rows = doc["assets"]
         stem_dir = sj.parent
-        pack = stem_dir.parent.parent.name
+        pack = stem_dir.parent.name
         crops = [Image.open(assets_root / Path(r["path"]).relative_to("potential_assets")).convert("RGBA")
                  for r in rows]
         for start in range(0, len(rows), page_size):

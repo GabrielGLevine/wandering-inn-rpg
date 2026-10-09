@@ -80,7 +80,7 @@ def test_import_merges_labels_into_slices_json(tmp_path):
     write_answer(answers, "Pixel Crawler - Free Pack/Furniture/p01",
                  {"1": {"kind": "barrel", "confidence": 0.8}, "2": {"kind": "crate", "confidence": 0.95}})
     assert ls.import_labels(assets, answers) == 0
-    rows = json.loads((assets / "Pixel Crawler - Free Pack/_sliced/Furniture/SLICES.json").read_text())["assets"]
+    rows = json.loads((assets / "_sliced/Pixel Crawler - Free Pack/Furniture/SLICES.json").read_text())["assets"]
     assert (rows[0]["label_kind"], rows[0]["label_confidence"], rows[0]["targets"]) == ("barrel", 0.8, ["barrel"])
     assert (rows[1]["label_kind"], rows[1]["targets"]) == ("crate", ["crate"]), "kind first, wired id kept"
     assert rows[1]["size_class"] == "S", "measured size class is never overwritten"
@@ -97,7 +97,7 @@ def test_import_rejects_bad_kind_and_bad_number(tmp_path, capsys):
     assert ls.import_labels(assets, answers) == 2
     out = capsys.readouterr().out
     assert "unknown kind 'chest'" in out and "number 9" in out and "confidence 1.5" in out
-    rows = json.loads((assets / "Pixel Crawler - Free Pack/_sliced/Furniture/SLICES.json").read_text())["assets"]
+    rows = json.loads((assets / "_sliced/Pixel Crawler - Free Pack/Furniture/SLICES.json").read_text())["assets"]
     assert all(r["label_kind"] == "" for r in rows), "an invalid answer file writes nothing"
 
 
@@ -117,7 +117,7 @@ def test_check_passes_at_full_agreement_and_strips_old_notes(tmp_path, capsys):
     assets, game = labeled_fixture(
         tmp_path, {"1": {"kind": "crate", "confidence": 0.9}, "2": {"kind": "barrel", "confidence": 0.9}},
         {"crate": (SHEET, [0, 0, 16, 16]), "barrel": (SHEET, [19, 3, 10, 10])})
-    sj = assets / "Pixel Crawler - Free Pack/_sliced/Furniture/SLICES.json"
+    sj = assets / "_sliced/Pixel Crawler - Free Pack/Furniture/SLICES.json"
     doc = json.loads(sj.read_text())
     doc["assets"][0]["notes"] = "keep me check-miss: stale"
     sj.write_text(json.dumps(doc))
@@ -140,7 +140,7 @@ def test_check_fails_under_threshold_and_writes_misses(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "agreement 1/3 = 33.3%" in out
     assert "barrel -> plant" in out and "ghost" in out
-    doc = json.loads((assets / "Pixel Crawler - Free Pack/_sliced/Furniture/SLICES.json").read_text())
+    doc = json.loads((assets / "_sliced/Pixel Crawler - Free Pack/Furniture/SLICES.json").read_text())
     assert doc["assets"][1]["notes"] == "check-miss: wired barrel expects barrel, got plant"
     assert doc["check_notes"] == ["check-miss: wired ghost expects other, got no overlapping slice"]
     assert doc["assets"][0]["notes"] == ""

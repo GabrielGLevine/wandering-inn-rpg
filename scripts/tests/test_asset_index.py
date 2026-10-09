@@ -22,8 +22,8 @@ def png(path: Path, w: int = 16, h: int = 16) -> None:
 def test_sliced_dirs_are_excluded(tmp_path):
     assets = tmp_path / "potential_assets"
     png(assets / "Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png", 800, 864)
-    png(assets / "Pixel Crawler - Free Pack/_sliced/Furniture/Furniture__x0_y0_w16_h16.png")
-    png(assets / "Pixel Crawler - Free Pack/_sliced/Furniture/contact.png", 64, 64)
+    png(assets / "_sliced/Pixel Crawler - Free Pack/Furniture/Furniture__x0_y0_w16_h16.png")
+    png(assets / "_sliced/Pixel Crawler - Free Pack/Furniture/contact.png", 64, 64)
     packs = ai.build(assets)
     assert [e["path"] for e in packs["Pixel Crawler - Free Pack"]] == [
         "Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"]
