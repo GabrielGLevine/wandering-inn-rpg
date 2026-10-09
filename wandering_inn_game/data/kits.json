@@ -45,6 +45,16 @@
       "invrisil_door_street_1",
       "invrisil_door_street_2"
      ]
+    },
+    "facade_window": {
+     "pick": "cell",
+     "module": true,
+     "pool": [
+      "invrisil_upper_window",
+      "invrisil_facade_window_1",
+      "invrisil_facade_window_2",
+      "invrisil_facade_window_3"
+     ]
     }
    },
    "cast": []

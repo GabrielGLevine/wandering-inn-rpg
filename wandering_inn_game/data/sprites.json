@@ -10118,5 +10118,75 @@
     "fps": 1
    }
   }
+ },
+ "invrisil_facade_window_1": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [132, 355, 24, 25] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     24,
+     25
+    ],
+    "region": [
+     132,
+     355,
+     24,
+     25
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "invrisil_upper_window"
+ },
+ "invrisil_facade_window_2": {
+  "render_scale": 0.461538,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_facade_window_2/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_facade_window_3": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [98, 176, 28, 32] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
+  "render_scale": 0.428571,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "frame_size": [
+     28,
+     32
+    ],
+    "region": [
+     98,
+     176,
+     28,
+     32
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "invrisil_upper_window"
  }
 }
