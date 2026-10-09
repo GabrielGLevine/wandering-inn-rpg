@@ -178,7 +178,7 @@ def _resolve_role(placements: list, role_name: str, role, map_id: str, errors: l
     r = radius_for(role)
     # #608: a module role uses each variant at most ceil(n/k) times per map, on top of the radius;
     # when the radius excludes every variant under the cap, the cap wins, then rank_p[0].
-    cap = math.ceil(len(placements) / len(sub)) if isinstance(role, dict) and bool(role.get("module", False)) else None
+    cap = -(-len(placements) // len(sub)) if isinstance(role, dict) and bool(role.get("module", False)) else None
     uses: dict = {}
     chosen: list = []
     for p in placements:

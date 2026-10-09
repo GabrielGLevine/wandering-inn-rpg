@@ -234,9 +234,11 @@ class TestTreeAndLoad(unittest.TestCase):
     def test_resolve_all_real_tree_resolves(self):
         # #608: real maps carry @refs now; resolve_all raises on any that does not resolve.
         sprites = json.loads((GAME / "data" / "sprites.json").read_text())
-        for rows in kl.resolve_all(GAME).values():
+        resolved = kl.resolve_all(GAME)
+        for rows in resolved.values():
             for r in rows:
                 self.assertIn(r["sprite"], sprites)
+        self.assertTrue(any(resolved.values()), "no kit row resolves on the real tree")
 
 
 class TestCanonNames(unittest.TestCase):
