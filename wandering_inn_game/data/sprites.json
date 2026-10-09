@@ -10249,5 +10249,41 @@
     "fps": 1
    }
   }
+ },
+ "invrisil_shop_sign_1": {
+  "render_scale": 0.428571,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil/shop_sign_v2.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_shop_sign_2": {
+  "render_scale": 0.214286,
+  "anchor": [
+   0.5,
+   0.9688
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_shop_sign_2/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
  }
 }

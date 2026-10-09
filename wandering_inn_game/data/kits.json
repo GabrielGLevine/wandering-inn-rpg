@@ -71,6 +71,14 @@
       "invrisil_cargo_1",
       "invrisil_cargo_2"
      ]
+    },
+    "shop_sign": {
+     "pick": "cell",
+     "pool": [
+      "invrisil_hanging_sign",
+      "invrisil_shop_sign_1",
+      "invrisil_shop_sign_2"
+     ]
     }
    },
    "cast": []
