@@ -62,6 +62,15 @@
       "sconce",
       "invrisil_lamp_wall_1"
      ]
+    },
+    "cargo": {
+     "pick": "cell",
+     "pool": [
+      "crate_owned",
+      "owned_fallback_barrel",
+      "invrisil_cargo_1",
+      "invrisil_cargo_2"
+     ]
     }
    },
    "cast": []

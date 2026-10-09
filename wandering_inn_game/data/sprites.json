@@ -10213,5 +10213,41 @@
    }
   },
   "fallback_sprite": "owned_fallback_unlit_lantern"
+ },
+ "invrisil_cargo_1": {
+  "render_scale": 0.6,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_cargo_1/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_cargo_2": {
+  "render_scale": 0.296296,
+  "anchor": [
+   0.5,
+   0.9688
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_cargo_2/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
  }
 }

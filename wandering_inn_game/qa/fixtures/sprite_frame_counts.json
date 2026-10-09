@@ -318,6 +318,8 @@
   "inn_sign/idle": 1,
   "inn_table_clean/idle": 1,
   "inn_table_soiled/idle": 1,
+  "invrisil_cargo_1/idle": 1,
+  "invrisil_cargo_2/idle": 1,
   "invrisil_door_street_1/idle": 1,
   "invrisil_door_street_2/idle": 1,
   "invrisil_facade_window_1/idle": 1,
