@@ -123,6 +123,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "stationer" },
   { "action": "assert_state", "path": "player_cell", "equals": [6, 7] },
   { "action": "wait_frames", "frames": 10 },
+  { "_comment": "#608 1b kits: the stationer's @table and @window_interior decor rows resolve at compose time; the decor build reports each role with the variants it drew (sorted). Exact pin of the resolver's picks: a pool or pick-rule change moves it on purpose.", "action": "assert_event_logged", "type": "ui_decor_rendered", "payload_contains": {"map": "stationer", "roles": {"table": ["table_brown"], "window_interior": ["window_blue__alt1"]}} },
   { "action": "screenshot", "name": "01_the_stationers" },
   { "_comment": "== THREE FREE SCENERY READS. None touches the Lady at (3,2): this loop is the room, not the quest. ==", "action": "wait_frames", "frames": 1 },
   { "action": "move", "direction": "up", "steps": 5 },
