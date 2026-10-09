@@ -1,5 +1,9 @@
 {
- "_comment": "Explicit coverage decisions for tools/asset_coverage.py (#624). Each glob is relative to potential_assets/ (`**/` spans folders, `*` stays in one). It applies only to PNGs that no SLICES.json, registry row or path rule already classified, so a glob over a pack catches just its leftovers. `class` records a rig, ui or audio file the path words cannot see; without it the PNG is `excluded`. Every entry needs a reason a reviewer can check.",
+ "_comment": "Explicit coverage decisions for tools/asset_coverage.py (#624). Globs are relative to potential_assets/ (`**/` spans folders, `*` stays in one) and apply only to PNGs that no SLICES.json, registry row or path rule already classified. `pending_rulings` holds usable art waiting on a named decision: reported first in docs/asset-coverage.md, never a --check failure, never excluded, and checked before `exclusions`. `exclusions` holds what is not pool material; `class` records a rig, ui or audio file the path words cannot see, otherwise the PNG is `excluded`. Every entry needs a reason a reviewer can check.",
+ "pending_rulings": [
+  {"glob": "Ninja Adventure - Asset Pack/**/Backgrounds/Animated/**", "reason": "NINJA16 animated map pieces (flags, mills, water ripples, waterfall): the family is unverified beside PC16 (asset-catalog sec. 1, LOW-CONFIDENCE). Needs a windowed side-by-side ruling, then slice or exclude"},
+  {"glob": "Ninja Adventure - Asset Pack/**/Backgrounds/Vehicles/**", "reason": "NINJA16 boat, crane, sail and nets: the family is unverified beside PC16 (asset-catalog sec. 1, LOW-CONFIDENCE). Needs a windowed side-by-side ruling, then slice or exclude"}
+ ],
  "exclusions": [
   {"glob": "Pixel Crawler - */**/Social/**", "reason": "Social/: 4x promo upscales and mockups of the Assets/ sheets (slicer SKIPPED promo_render)"},
   {"glob": "Pixel Crawler - Free Pack*/**/MockUps/**", "reason": "MockUps/: finished tavern scene renders (slicer SKIPPED promo_render)"},
@@ -14,8 +18,6 @@
   {"glob": "Tiny Swords*/**/Terrain/**", "reason": "TS-CARTOON terrain dressing (resources, decorations, water, bridge) clashes with PC16 maps (asset-catalog sec. 1); its Tileset/ and Ground/ tilemaps are registered"},
   {"glob": "Tiny Swords/**/Deco/**", "reason": "TS-CARTOON world art clashes with PC16 maps (asset-catalog sec. 1); only its UI kit and VFX are used"},
   {"glob": "Tiny Swords/**/Resources/**", "reason": "TS-CARTOON resource and sheep sprites clash with PC16 maps (asset-catalog sec. 1)"},
-  {"glob": "Ninja Adventure - Asset Pack/**/Backgrounds/Animated/**", "reason": "NINJA16 animated map pieces: family unverified beside PC16 (asset-catalog sec. 1, LOW-CONFIDENCE); not sliced until a windowed side-by-side clears it; searchable through docs/asset-index.json"},
-  {"glob": "Ninja Adventure - Asset Pack/**/Backgrounds/Vehicles/**", "reason": "NINJA16 boats, crane and nets: family unverified beside PC16 (asset-catalog sec. 1, LOW-CONFIDENCE); searchable through docs/asset-index.json"},
   {"glob": "Ninja Adventure - Asset Pack/Ninja Adventure - Asset Pack/*.png", "reason": "pack preview renders, palette and music cover"},
   {"glob": "Cute_Fantasy_Free/**/Outdoor decoration/**", "reason": "CUTE16 decorations: the pack licence is non-commercial (asset-catalog sec. 1), so they stay out of pools"},
   {"glob": "Admurins_Freebies-2/**/Canines/**", "class": "rig_or_animation", "reason": "ADMURIN creature animation sheets"},

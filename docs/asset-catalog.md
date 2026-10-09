@@ -59,11 +59,18 @@ slices and registry rows; a sheet the intake skipped stays invisible (#624).
 3. **Register.** `python3 tools/asset_candidates.py` rebuilds
    `docs/asset-candidates.*` (slices, tilesets with `material_labels`).
 4. **Check coverage.** `python3 tools/asset_coverage.py --check` must show
-   0 UNCLASSIFIED (preflight runs it). A PNG that is not pool material goes
-   into `docs/asset-coverage-exclusions.json` with a reason a reviewer can
-   check: a promo render, a work file, a catalog family ruling. Environment
-   art from a PC16 pack is sliced or registered, never excluded. Then
-   regenerate `docs/asset-coverage.md`.
+   0 UNCLASSIFIED (preflight runs it). A PNG left over after slicing and
+   registering goes into one of two lists in
+   `docs/asset-coverage-exclusions.json`:
+   - `pending_rulings`: usable art whose pool use waits on a named
+     decision, such as a family side-by-side or a manifest verdict. It is
+     listed first in `docs/asset-coverage.md` and does not fail the gate.
+     Settle the ruling, then slice, register or exclude it.
+   - `exclusions`: not pool material, with a reason a reviewer can check:
+     a promo render, a work file, a catalog family ruling.
+
+   Usable environment art is never excluded. Then regenerate
+   `docs/asset-coverage.md`.
 
 Only then does a pool read start, from `docs/kits-allocation.md`.
 
