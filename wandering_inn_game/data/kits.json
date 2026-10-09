@@ -68,10 +68,16 @@
     "cargo": {
      "pick": "cell",
      "pool": [
-      "crate_owned",
+      [
+       "crate_owned",
+       2
+      ],
       "owned_fallback_barrel",
       "invrisil_cargo_1",
-      "invrisil_cargo_2"
+      [
+       "invrisil_cargo_2",
+       2
+      ]
      ],
      "deny": [
       "tray",
