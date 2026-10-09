@@ -80,6 +80,7 @@ import subprocess
 import sys
 import time
 import struct
+from collections import Counter
 from pathlib import Path
 
 from wi_data_lib import DATA, GAME_ROOT
@@ -1590,32 +1591,49 @@ def _has_ref(doc: dict) -> bool:
 	return any(isinstance(r, dict) and str(r.get(key, "")).startswith("@") for r, key in rows)
 
 
-def _g4_compare(current: dict, base: dict, errors: list, report: list | None = None) -> int:
+def _g4_deltas(base_sig: dict, cur_sig: dict) -> list:
+	"""Every differing G4 component as "<comp> +added/-removed" (multiset counts;
+	"reordered" when only the order moved)."""
+	out = []
+	for comp in base_sig:
+		if base_sig[comp] == cur_sig[comp]:
+			continue
+		was, now = Counter(map(repr, base_sig[comp])), Counter(map(repr, cur_sig[comp]))
+		add, rem = sum((now - was).values()), sum((was - now).values())
+		out.append(f"{comp} " + ("/".join(t for t in (f"+{add}" if add else "", f"-{rem}" if rem else "") if t) or "reordered"))
+	return out
+
+
+def _g4_compare(current: dict, base: dict, errors: list, report: list | None = None, advised: list | None = None) -> int:
 	"""G4 clutter: a map that carries an @ref must keep the base tree's
 	(layer, cell) multiset, blocked, wall geometry and scatter density. Only
 	sprite/material/tint/light fields may change on conversion.
 	A top-level "_kits_recompose": "<#issue> -- <reason>" makes a structural diff
-	ADVISORY (a REPORT line) only when its value differs from the base map's, so a
-	marker is a one-change-set pass; a carried-over marker enforces again. The marker
-	must be a non-empty string naming an issue (#N).
-	Returns how many maps were actually compared (0 -> the gate is n/a)."""
+	ADVISORY (a REPORT line naming every differing component, map id appended to
+	`advised`) only when its value differs from the base map's, so a marker is a
+	one-change-set pass; a carried-over marker enforces again. A new marker that
+	waives nothing is reported too. The marker must be a non-empty string naming
+	an issue (#N). Returns how many maps were actually compared (0 -> n/a)."""
 	compared = 0
 	for map_id, doc in sorted(current.items()):
 		marker = doc.get(RECOMPOSE_KEY)
-		if RECOMPOSE_KEY in doc and not (isinstance(marker, str) and re.search(r"#\d+", marker)):
+		valid = isinstance(marker, str) and bool(re.search(r"#\d+", marker))
+		if RECOMPOSE_KEY in doc and not valid:
 			errors.append(f"maps/{map_id}: {RECOMPOSE_KEY} must be a non-empty string naming an issue (#N)")
-		if map_id not in base or not _has_ref(doc):
-			continue
-		compared += 1
-		a, b = _g4_signature(base[map_id]), _g4_signature(doc)
-		for comp in a:
-			if a[comp] != b[comp]:
-				if isinstance(marker, str) and re.search(r"#\d+", marker) and marker != base[map_id].get(RECOMPOSE_KEY):
-					if report is not None:
-						report.append(f"kits G4: maps/{map_id} {comp} changed -- advisory via {RECOMPOSE_KEY}: {marker}")
-					break
-				errors.append(f"maps/{map_id}: G4 clutter -- {comp} changed on conversion (only sprite/material/tint/light may change)")
-				break
+		fresh = valid and marker != (base.get(map_id) or {}).get(RECOMPOSE_KEY)
+		deltas: list = []
+		if map_id in base and _has_ref(doc):
+			compared += 1
+			deltas = _g4_deltas(_g4_signature(base[map_id]), _g4_signature(doc))
+		if fresh and report is not None:
+			if deltas:
+				report.append(f"kits G4: maps/{map_id} {', '.join(deltas)} changed -- advisory via {RECOMPOSE_KEY}: {marker}")
+			else:
+				report.append(f"kits G4: maps/{map_id} {RECOMPOSE_KEY} waives nothing (no structural diff vs base) -- advisory, remove it: {marker}")
+		if fresh and advised is not None:
+			advised.append(map_id)
+		if deltas and not fresh:
+			errors.append(f"maps/{map_id}: G4 clutter -- {', '.join(deltas)} changed on conversion (only sprite/material/tint/light may change)")
 	return compared
 
 
@@ -1763,12 +1781,13 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 		report.append(f"kits G3: {len(fly)} sprite(s) not in the baseline generic_class, classed on the fly")
 	g4_state = "n/a"
 	g4: list = []
+	g4_adv: list = []
 	raw = _compose_maps(parsed, []) if isinstance(parsed, dict) else {}
 	if base_ref or any(_has_ref(d) for d in raw.values()):
 		base_maps = _g4_base_maps(base_ref, advisories)
 		if base_maps is None:
 			g4_state = "skipped"
-		elif _g4_compare(raw, base_maps, g4, report):
+		elif _g4_compare(raw, base_maps, g4, report, g4_adv):
 			g4_state = "ok"
 	biomes: dict = {}
 	for map_id, doc in resolved.items():
@@ -1784,7 +1803,8 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 	errors.extend(g1 + g2 + g3 + g4)
 	report.append("kits G5: run qa/check_fallback_boot.sh and scripts/ship_asset_scan.py on the overlay before a region close (not computed here)")
 	report.append(f"kits: {len(set(regions.values()))} regions, {len(converted)} converted, {total} placements; G1 {_status(g1)}, "
-		f"G2 {_status(g2)}, G3 {_status(g3)} ({n_adv} maps advisory), G4 {_status(g4) if g4 else g4_state}")
+		f"G2 {_status(g2)}, G3 {_status(g3)} ({n_adv} maps advisory), G4 {_status(g4) if g4 else g4_state}"
+		+ (f" ({len(g4_adv)} advisor{'y' if len(g4_adv) == 1 else 'ies'}: {', '.join(g4_adv)})" if g4_adv else ""))
 
 
 def seen_set(seen: dict, region: str) -> set:

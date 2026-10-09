@@ -344,6 +344,13 @@ status. Generation runs only as a user-approved batch (Phase 3).
   - On a conversion PR, each map's multiset of (layer, cell), `blocked`,
     `walls` and scatter density must stay identical; only sprite, material and
     tint fields may change.
+  - A deliberate recomposition carries a top-level
+    `_kits_recompose: "#issue — reason"` marker. The marker makes G4
+    advisory for that map only while it is new or changed versus the base.
+    Lint reports every differing component with its deltas (for example
+    `cells +5/-3, blocked +3`), names the map in the summary
+    (`G4 ok (1 advisory: <map>)`), and reports a new marker that waives
+    nothing. A carried-over marker re-arms the gate (#608).
   - The "3+ decor on one cell" rule (scene_dynamism.gd `_score_clutter` :759)
     becomes a hard lint.
 - **G5 public build.**

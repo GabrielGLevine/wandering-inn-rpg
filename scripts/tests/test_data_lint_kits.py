@@ -309,6 +309,36 @@ class TestGates(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertTrue(report)
 
+    def test_g4_recompose_reports_every_component(self):
+        # #608 final review I1: a marker waives the whole map, so every differing component is named
+        base = {**GRID, "decor": [{"sprite": "@cargo", "cell": [0, 0]}], "entities": [], "blocked": [[1, 1]]}
+        cur = copy.deepcopy(base)
+        cur["decor"].append({"sprite": "@cargo", "cell": [4, 4]}); cur["decor"][0]["cell"] = [2, 0]
+        cur["blocked"].append([4, 4])
+        cur["_kits_recompose"] = "#608 - lamps"
+        errors, report, advised = [], [], []
+        data_lint._g4_compare({"m": cur}, {"m": base}, errors, report, advised)
+        self.assertEqual(errors, [])
+        self.assertEqual(advised, ["m"])
+        self.assertEqual(len(report), 1, report)
+        self.assertIn("decor/entities cells +2/-1, blocked +1 changed", report[0])
+        cur.pop("_kits_recompose"); errors = []
+        data_lint._g4_compare({"m": cur}, {"m": base}, errors)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("decor/entities cells +2/-1, blocked +1", errors[0])
+
+    def test_g4_new_marker_that_waives_nothing_is_reported(self):
+        base = {**GRID, "decor": [{"sprite": "@cargo", "cell": [0, 0]}], "entities": [], "blocked": [[1, 1]]}
+        cur = copy.deepcopy(base); cur["_kits_recompose"] = "#608 - sprite swap only"
+        errors, report, advised = [], [], []
+        data_lint._g4_compare({"m": cur}, {"m": base}, errors, report, advised)
+        self.assertEqual(errors, [])
+        self.assertEqual(advised, ["m"])
+        self.assertTrue(any("waives nothing" in r for r in report), report)
+        base["_kits_recompose"] = cur["_kits_recompose"]; report = []
+        data_lint._g4_compare({"m": cur}, {"m": base}, [], report)
+        self.assertEqual(report, [])
+
     def test_g4_recompose_marker_unchanged_from_base_enforces(self):
         errors, report = self._recompose_case("#608 - lamp composition fix", "#608 - lamp composition fix")
         self.assertTrue(any("G4" in e and "blocked" in e for e in errors), errors)
@@ -334,6 +364,7 @@ class TestGates(unittest.TestCase):
         data_lint.check_kit_gates({"street": cur}, {"street": "liscor"}, KITS, {path: cur}, errors, [], report, base_ref="HEAD", baseline=None)
         self.assertEqual([e for e in errors if "G4" in e], [])
         self.assertTrue(any("G4" in r and "#608 - add lamp" in r for r in report), report)
+        self.assertTrue(report[-1].endswith("G4 ok (1 advisory: street)"), report[-1])
 
     def test_g4_skips_without_base(self):
         adv = []

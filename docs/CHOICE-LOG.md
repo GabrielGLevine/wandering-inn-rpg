@@ -320,6 +320,11 @@ and chronology belong in issue PRs. Earlier context:
     when the art-read fixes added three cross-street lamps and dropped the
     stationery bundle, and → 74 when the boulevard's generic door at (4,1)
     was pinned to the Invrisil shop door (share 37.76%).
+  - **Cross-street recomposition (#608 art read, `_kits_recompose`):** three
+    street lamps at (3,4), (12,4) and (9,11), each blocking its cell; both
+    shop signs moved from row 2 to row 1; the stationery display was
+    removed. G4 reports it as an advisory naming both the cells and the
+    blocked change, not as a silent pass.
 - **Best art wins per asset (#564/#554)** within a coherent scene, at gameplay
   scale; otherwise keep the official or owned public fallback. READY is not
   acceptance, and there is no quota wiring. Animation, geometry, scale and
