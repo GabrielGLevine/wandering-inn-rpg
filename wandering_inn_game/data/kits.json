@@ -275,6 +275,10 @@
      ]
     }
    },
-   "cast": []
+   "_comment_cast": "#620: rigs worn by Liscor's anonymous \"A ...\" NPCs (A Road-Peddler, A Frazzled Drayman). The role-titled Watch Guard, Watch Sergeant, Resting Runner and Antinium Workers are not anonymous townsfolk and keep their own rigs; the Resting Runner's gnoll_traveler is shared with the Invrisil cast by role.",
+   "cast": [
+    "road_peddler",
+    "frazzled_drayman"
+   ]
   }
 }
