@@ -15,6 +15,26 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-08-regional-kits-design.md` (§2, §3, §4.2, §5, §6 1a/1b)
 
+## Phase 0 as built (read first; it overrides the tool usage below)
+
+- **Task 0, the first commit on `issue/608-invrisil-streets`:** lane worktrees reach `potential_assets` through a symlink. `tools/wire_asset.py` resolves the candidate but not `paths.potential`, so it refuses candidates in a worktree. Fix it by comparing resolved roots, and add a test that runs through a symlinked `potential_assets`.
+- **`tools/fill_kit.py <region> <role>`** takes these flags:
+  - listing and preview: `--kind <tag>` (a slice label kind from C8 or owned target words), `--need N`, `--size S|M|L|XL`, `--contact-sheet PATH`, `--preview`, `--repo-root <worktree>`;
+  - selection: `--select 1,3,4` (listing numbers), `--ids a,b,c`, `--pick cell|map|door`, `--module`, `--fallback <owned_id>` (required for pack slices);
+  - generation-list fields: `--lacked "…"`, `--base <id>`.
+  - Exit codes: `--preview` exits 5 when rows are unresolved, and a refusal exits 4.
+- **`tools/wire_asset.py`:**
+  - `--id` is given once per candidate, and `--like <id>` copies scale and shadow from that entry.
+  - The owned path only accepts `pixellab*` batches, plus `codex*` with `--allow-unverified`.
+  - Pack slices become `region` rows on the bundled sheet, and an unbundled sheet exits 3 and writes a `docs/art-bundle-pending.md` row.
+- **Candidate supply:**
+  - 1,258 labeled slices live under `potential_assets/_sliced/`, and `docs/asset-candidates.json` holds 3,457 rows.
+  - After any re-slice or re-label, regenerate the registry with `python3 tools/asset_candidates.py`, run from the pilot worktree.
+- **When the first map converts:**
+  - `tests/test_kit_parity.gd` asserts that real maps carry no resolved rows. Drop that assertion, since the live pytest diff then covers real rows.
+  - Add a QA assertion of a non-empty `ui_decor_rendered.roles` and an entity `sprite_role` on that map (ruling from the lane A Task 7 review).
+- **Lint:** `python3 wandering_inn_game/scripts/data_lint.py --base origin/main` prints the `kits:` REPORT line (G1–G4). G4 compares only once a map has `@` references.
+
 ## Global Constraints
 
 - **Starts only after #607 is merged.**
