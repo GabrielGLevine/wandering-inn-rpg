@@ -1,6 +1,6 @@
 {
  "_comment": "v0.16 I2 (#306). Walk-in only. Biome `inn` + every sprite reused. Perimeter is walls.segments (NEVER also in `blocked`) -- a raw blocked ring in this biome renders 39 crates. `blocked` is furniture only, each cell with a decor row. Plates + bravos gate on hat_job_taken.",
- "biome": "inn",
+ "biome": "invrisil_shop",
  "grid": {
   "width": 13,
   "height": 9
