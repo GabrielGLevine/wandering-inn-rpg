@@ -1251,7 +1251,7 @@ func _build_scatter(specs: Array) -> void:
 		# grammar) confines a spec to a region. The hash below is untouched, so
 		# every cell a spec keeps decides exactly as it did before (#620).
 		var only_cells := {}
-		var confined := spec.has("cells") and not (spec["cells"] is String and spec["cells"] == "all")
+		var confined: bool = spec.has("cells") and not (spec["cells"] is String and spec["cells"] == "all")
 		if confined:
 			for allowed: Vector2i in WITileBoardBuilder.resolve_layer_cells(spec["cells"], grid_size):
 				only_cells[allowed] = true
