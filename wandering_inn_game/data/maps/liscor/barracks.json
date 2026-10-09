@@ -1,6 +1,7 @@
 {
  "_comment": "Zevara Sunderscale STAYS at the gate (zevara_intro's own framing untouched)",
  "biome": "liscor_civic",
+ "_kits_recompose": "#620 — art-read FIX loop 1: sconce, note and crate moves",
  "interior_flavor": [
   "Nothing there. Bare stone, and a rack of spare kit with every strap buckled the same way.",
   "Nothing there. A shield knocks against its peg down the corridor, then goes quiet."
@@ -222,6 +223,23 @@
   ]
  },
  "decor": [
+  {
+   "sprite": "liscor_sconce_copper",
+   "cell": [
+    7,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.72,
+     0.38
+    ],
+    "energy": 0.85,
+    "radius": 36,
+    "flicker": true
+   }
+  },
   {
    "sprite": "inn_table_dirty__before",
    "cell": [
