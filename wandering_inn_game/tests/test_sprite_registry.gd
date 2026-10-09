@@ -3,6 +3,17 @@ extends SceneTree
 
 func _init() -> void:
 	WITestWatchdog.arm(self)
+	## One-shot C7 fixture generator (removed in the next commit): dumps the
+	## hand-written table so qa/fixtures/sprite_frame_counts.json is exact.
+	var dump_to := OS.get_environment("WI_DUMP_FRAME_COUNTS")
+	if dump_to != "":
+		var out := FileAccess.open(dump_to, FileAccess.WRITE)
+		assert(out != null, "cannot open dump path: " + dump_to)
+		out.store_string(JSON.stringify({"_comment": "", "counts": _build_expected_counts()}, "\t", true) + "\n")
+		out.close()
+		print("PASS: dumped frame counts to " + dump_to)
+		quit(0)
+		return
 	var catalog: Dictionary = _load_json("res://data/sprites.json")
 	var expected_counts: Dictionary = _build_expected_counts()
 	for required_prop: String in ["dusty_scroll", "inn_room_ledger", "cellar_wardwork", "pantry_door_runes", "dirty_table", "bed", "door"]:
