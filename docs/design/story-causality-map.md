@@ -655,7 +655,7 @@ lead rows exist solely to name it (§6.3.1).
 * `pallass_attuned` also gates `pallass_market#pallass_market_arrival_anchor`
   (`portal_menu_when` — the return carrier).
 
-#### `forge_tier_permit` — "Clearance for the Forge Tier"
+#### `forge_tier_permit` — "Fit for the Forge Tier" (#513 re-theme; ids unchanged)
 
 * **Trigger:** `pallass_forge_clerk:hub#0` (`pallass_market#forge_permit_clerk`),
   requires `pallass_entry_stamped`, hides on `forge_permit_filed`. Banks
@@ -693,7 +693,7 @@ lead rows exist solely to name it (§6.3.1).
 * `standards_commission_taken` arms `pallass_forge_hall#forge_temper_golem`
   (`encounter_when.requires`).
 
-#### `ledger_eats_first` — "The Ledger Eats First"
+#### `ledger_eats_first` — "The Crate the Cage Refuses" (#513 re-theme; ids unchanged)
 
 * **Trigger:** `pallass_lift_attendant:ledger_pitch#0` (`pallass_forge#lift_attendant`),
   banks `ledger_loop_started`. **Learned at:** `leads.json:lead_ledger_eats_first`
@@ -705,6 +705,27 @@ lead rows exist solely to name it (§6.3.1).
 | `report` | `ledger_unstuck` | `pallass_lift_attendant:ledger_report#0/#1/#2` |
 
 * **Resolution ladder:** `shipment_carried` < `loop_walked` < `exemption_found`.
+* **Talk-route producers (#513):** `queue_notice_endorsed` is banked by
+  `xif:regulator#0` (hub row requires `ledger_loop_started`) and
+  `queue_notice_countersigned` by `pallass_forge_smith:lead_wrap#0` (hub row
+  requires `queue_notice_endorsed`). Both rows are appended last; the two
+  clerks no longer carry them.
+
+#### `room_on_the_row` — "Room on the Row" (#513)
+
+* **Trigger:** `pallass_wool_trader:hub#0` (`pallass_market#wool_trader`),
+  no gate (startable on arrival with 0 gold, before the stamp), hides on
+  `wool_trade_started`. **Learned at:** `leads.json:lead_room_on_the_row`
+  (requires `pallass_attuned`; hides on the shipped proxy
+  `elevator_pass_stamped`, the whole pre-lift window, until
+  `wool_trade_started` freezes).
+
+| Beat | Completes on | Produced by |
+| --- | --- | --- |
+| `place` | `wool_consigned` OR `row_opened` | `pallass_den_keeper:wool#0` (needs `wool_bales_carried` 2: `pallass_market#wool_bale_stack` then `pallass_den_shop#den_shop_wool_shelf`, both `variants`); `pallass_market_local:row_wool#0` ([Charming Smile]) or `row_wool#2` (needs `weights_proved` from `pallass_market#market_public_scales` `variants`, armed by `heard_row_grievance` from `row_wool#1`) |
+| `report` | `wool_trade_settled` | `pallass_wool_trader:hub#3` (+12 gold, `plains_wool_bale`) |
+
+* **Resolution ladder:** `wool_consigned` < `row_opened`.
 
 ---
 

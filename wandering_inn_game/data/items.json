@@ -1573,6 +1573,22 @@
      },
      "description": "A small, stoppered bottle of mana potion.",
      "lore": "Kept beside the healing draughts, with a warning to count your doses. Another bottle cannot do everything a night's sleep can."
+    },
+    {
+     "_comment": "#513 Room on the Row reward. A mundane trade good, not gear: every combat modifier 0, resonance 0, no use_effect. price 16 sells for floor(16 * 0.5 * (1 + trade_bonus)) = 8 at the market-tier stallkeeper with no trade-bonus Skill, so the quest pays 12g + 8g of value, under every Invrisil one-shot (25/25/30).",
+     "id": "plains_wool_bale",
+     "name": "Bale of Plains Wool",
+     "kind": "tool",
+     "weapon_family": "none",
+     "damage_mod": 0,
+     "hp_mod": 0,
+     "damage_reduction": 0,
+     "resonance": 0,
+     "tier": "mundane",
+     "abilities": [],
+     "price": 16,
+     "description": "A bale of washed plains wool, tied with twine. It smells of lanolin and dry grass.",
+     "lore": "Plains wool, washed twice and baled tight, carried up to Pallass through the Door alongside a set of Liscor brass weights."
     }
   ]
 }

@@ -530,7 +530,7 @@
    "display_name": "The Grand Lift",
    "sprite": "great_lift",
    "observe": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight.",
-   "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
+   "locked_toast": "The brass gate is locked. A stencilled plate: LIFT TOKEN REQUIRED.",
    "door_when": {
     "requires": {
      "elevator_pass_stamped": 1
@@ -629,8 +629,8 @@
       "standards_tempered": 1
      },
      "lines": [
-      "She passed it this morning. Same hand, same steel, honest measure. Nothing else changed.",
-      "The examiner sent the file up himself. He has never once walked up a flight for me.",
+      "She passed it this morning. Same hand, same steel, slow quench.",
+      "The examiner came out of the hall to watch her bend one, head under his arm.",
       "You did not make her better, {addr}. You made the reading true. That is the harder favor."
      ]
     }
@@ -668,7 +668,7 @@
       "seal_resolved": 1
      },
      "lines": [
-      "Liscor's news rode up on the quarter-bell cage, same as the tin does.",
+      "Liscor's news rode up on the quarter-bell cage, same as the charcoal does.",
       "People asked me about it all morning. I told them what I knew, then I ran the cage."
      ]
     },
@@ -867,7 +867,7 @@
    "sprite": "price_board",
    "observe": "A slate of what the cage is carrying today, chalked by hour. Two lines have been rewritten so many times the slate has gone smooth under them.",
    "on_interact_accomplishment": "read_the_lift_manifest",
-   "toast": "One crate of tin, den shop, market tier. Logged three cycles running and carried none of them. Beside it, chalked in a tidier hand: HELD, QUEUE.",
+   "toast": "One crate, den shop, market tier, logged three cycles running. Beside it in a tidier hand: refused, cage runes.",
    "visual_states": [
     {
      "when": {
@@ -896,7 +896,26 @@
    "on_interact_accomplishment": "shipment_leg_carried",
    "once_per_waking": true,
    "once_per_waking_toast": "The attendant has stopped counting loads for the day. Come back for the pallet on tomorrow's bell.",
-   "toast": "You walk the pallet the last hand's width onto the loading square and square the strapping after it. The attendant looks at the load, then writes an hour beside it on the cage slate."
+   "toast": "You walk the crate off the pallet to the head of the service stair and start it down. Nine flights. The attendant watches it go and writes nothing on the cage slate."
+  },
+  {
+   "_comment": "#513 Pallass themes: an on-screen Garuda resident (canon within the bar: Garuda runners and Garuda flying in Pallass, 7.02/7.03), an unnamed civic role. Owned rig `garuda_runner` (#603). (24,8) is below-right of the Grand Lift's base, clear of its tall sprite (the art proof: the lift occludes neighbours above row 7), off every journey's walked/bumped forge cells, off pallass_peek's bounds lap and its (24,7) rail/lift approach; talk_pool only, no quest surface.",
+   "id": "garuda_runner",
+   "kind": "npc",
+   "cell": [
+    24,
+    8
+   ],
+   "display_name": "Garuda Runner",
+   "sprite": "garuda_runner",
+   "facing": "down",
+   "observe": "A Garuda with a blue runner's sash across his chest, brown feathers lying close along both arms and yellow talons on the stone.",
+   "friendly_line": "He fluffs his feathers up and smooths them flat again, quick, and tips his head at you.",
+   "talk_pool": [
+    "The quarter bell's an age off. I'll be on the ninth tier before it rings.",
+    "Ninth tier, one parcel, no waiting. The shaft's open all the way down.",
+    "Don't lean on the rail to watch me go. Everyone does, and the attendant shouts at them."
+   ]
   }
  ]
 }

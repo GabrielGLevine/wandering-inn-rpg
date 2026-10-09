@@ -17157,7 +17157,7 @@
    "timeout_sec": 5,
    "payload_contains": {
     "speaker": "Forge-Tier Clerk",
-    "text": "Five gold, filed same-day, no exceptions and no discounts: that is the posted price. Grimalkin reads your fitness afterward, at the exam floor on the far end of this office. I only handle paper."
+    "text": "Five gold books a slot on the exam floor, same day, posted price. Grimalkin reads you at the far end of this office. The forge tier carries loads all day, and he writes down whether you can."
    }
   },
   {
@@ -17317,7 +17317,7 @@
    "timeout_sec": 5,
    "payload_contains": {
     "speaker": "Grimalkin",
-    "text": "Grip, cleared. Wind, cleared \u2014 barely. The last measure was whether you quit before I did. You did not. The numbers say you will survive the forge tier. The file will say 'adequate.' Ask around this office what I usually write."
+    "text": "Sinew read first: the forearm takes load the way it should. Grip on the bar Maughin forged me, cleared, four short of my Dullahan student. The stair at pace, twice, cleared, barely. You did not quit before I did. Load class four. The forge tier wants three. Ask around this office what I usually write."
    }
   },
   {
@@ -17405,7 +17405,7 @@
    "timeout_sec": 5,
    "payload_contains": {
     "speaker": "Forge-Tier Clerk",
-    "text": "Grimalkin's mark is on the file. Three gold for the stamp itself: posted price, same as the filing."
+    "text": "Your load class is on the slate. Three gold for the lift token, posted price, cut to the class he wrote."
    }
   },
   {

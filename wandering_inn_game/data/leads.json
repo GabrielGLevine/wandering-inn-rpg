@@ -14,7 +14,7 @@
 		{ "id": "lead_setting_for_a_lady", "requires": { "invrisil_attuned": 1 }, "hide_when": { "heirloom_commission_started": 1 }, "lead_text": "A woman has been sitting in the stationer's for an hour holding a closed box.", "place": "The stationer's, Invrisil boulevard" },
 		{ "id": "lead_hat_stays_on", "requires": { "brothers_job_done": 1 }, "hide_when": { "hat_job_taken": 1 }, "lead_text": "Wilovan has an errand that wants a quiet pair of hands.", "place": "The Brothers' parlor, Invrisil" },
 		{ "id": "lead_tempered_standards", "requires": { "elevator_pass_stamped": 1, "chatted_with_forge_smith": 1 }, "hide_when": { "standards_commission_taken": 1 }, "lead_text": "The smith's reject bin is filling up with work that should have passed.", "place": "The forge tier, Pallass" },
-		{ "id": "lead_ledger_eats_first", "requires": { "elevator_pass_stamped": 1, "chatted_with_lift_attendant": 1 }, "hide_when": { "ledger_loop_started": 1 }, "lead_text": "One crate of tin has been held on the landing manifest three cycles running.", "place": "The forge tier, Pallass" },
+		{ "id": "lead_ledger_eats_first", "requires": { "elevator_pass_stamped": 1, "chatted_with_lift_attendant": 1 }, "hide_when": { "ledger_loop_started": 1 }, "lead_text": "One crate has sat on the forge-tier landing three cycles, and the cage will not take it.", "place": "The forge tier, Pallass" },
 		{ "id": "lead_camp_winter", "requires": { "rags_meeting_settled": 1 }, "hide_when": { "rags_price_kept": 1, "drove_off_rags": 1 }, "lead_text": "Rags stood on the rise the whole time you were leaving, and did not sit down.", "place": "The southern floodplains" },
 		{
 			"_comment": "#508 Rogue discovery cue: the WATCH route is offered, not hidden. Appears the moment Krshia asks, gone once the crate is found by any path.",
@@ -51,6 +51,18 @@
 			},
 			"lead_text": "Where the floodplain water goes out under the wall on the gate road there is a stone channel, and the grass at its lip is walked flat by things that do not wear boots.",
 			"place": "The gate road, floodplains"
+		},
+		{
+			"_comment": "#513 Room on the Row. requires mirrors the earliest the trader is reachable (the Door row's pallass_attuned). hide_when is a SHIPPED PROXY, the #396 lead_winter precedent: _validate_leads takes only frozen ids, and the start counter wool_trade_started freezes at the next release step-0, when this row should switch to it. elevator_pass_stamped (review, 2026-10-08) keeps the pointer up for the whole pre-lift window the quest funds; pallass_entry_stamped retired it three cells from arrival, before the player reached her. Trade-off: it also stays up after she is placed, until the lift pass.",
+			"id": "lead_room_on_the_row",
+			"requires": {
+				"pallass_attuned": 1
+			},
+			"hide_when": {
+				"elevator_pass_stamped": 1
+			},
+			"lead_text": "A Gnoll trader stands by the arrival plinth with bales of wool and nowhere to sell them.",
+			"place": "The arrival plinth, Pallass market tier"
 		}
 	]
 }

@@ -48,6 +48,114 @@
     {
      "text": "Morning.",
      "end": true
+    },
+    {
+     "_comment": "#513 Room on the Row. APPENDED LAST and requires-hidden on wool_trade_started, so every ungated reader still sees exactly [sell, Morning.] and trader_earn_loop/pallass_peek's row indices hold.",
+     "text": "About the Gnoll with the wool.",
+     "requires": {
+      "accomplishment": {
+       "wool_trade_started": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "trader_placed": 1
+      }
+     },
+     "goto": "row_wool"
+    }
+   ]
+  },
+  "row_wool": {
+   "speaker": "Market-Tier Local",
+   "text": "The counter's free. It stays free till I see her weights checked. Eight years back a trader sold this row short with a hollow weight, and I was paying off that season for two more.",
+   "options": [
+    {
+     "_comment": "TALK route, Skill arm. Skill gates render visible-locked, so a player without it still sees the route exists.",
+     "text": "[Charming Smile] Ask her to come and look at the brass herself.",
+     "requires": {
+      "skill": "charming_smile"
+     },
+     "effects": [
+      {
+       "accomplishment": "row_opened"
+      },
+      {
+       "accomplishment": "trader_placed"
+      }
+     ],
+     "goto": "row_opened_smile"
+    },
+    {
+     "_comment": "TALK route, Skill-free arm: arms the public scales' variants row.",
+     "text": "Then check her weights at the public scales, in front of everyone.",
+     "hide_when": {
+      "accomplishment": {
+       "heard_row_grievance": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "heard_row_grievance"
+      }
+     ],
+     "goto": "row_scales"
+    },
+    {
+     "text": "[Her weights matched the city's.]",
+     "requires": {
+      "accomplishment": {
+       "weights_proved": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "row_opened": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "row_opened"
+      },
+      {
+       "accomplishment": "trader_placed"
+      }
+     ],
+     "goto": "row_opened_scales"
+    },
+    {
+     "text": "I'll leave it with you.",
+     "end": true
+    }
+   ]
+  },
+  "row_scales": {
+   "speaker": "Market-Tier Local",
+   "text": "Fine. I'll send her brass over to the public scales by the parapet myself. Weigh it against the city's chained weights. If it sits level, I've nothing to say against it.",
+   "options": [
+    {
+     "text": "I'll go and weigh it.",
+     "end": true
+    }
+   ]
+  },
+  "row_opened_smile": {
+   "speaker": "Market-Tier Local",
+   "text": "Don't smile at me like that, I'm working. Fine. Counter three, posted rent, settled at week's end like everyone. I'll look at her brass when she sets up. I look at everyone's.",
+   "options": [
+    {
+     "text": "I'll tell her.",
+     "end": true
+    }
+   ]
+  },
+  "row_opened_scales": {
+   "speaker": "Market-Tier Local",
+   "text": "Level, was it. Fine. Counter three, posted rent, settled at week's end like everyone. She brings the weights every morning, mind. I'll be looking.",
+   "options": [
+    {
+     "text": "I'll tell her.",
+     "end": true
     }
    ]
   }

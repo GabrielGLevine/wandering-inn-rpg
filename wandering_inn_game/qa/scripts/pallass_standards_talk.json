@@ -1,5 +1,5 @@
 {
- "_comment": "v0.16 #307 P1 'Tempered Standards' TALK route, end to end and live. Off pallass_standards_talk_start (the commission already taken, nothing past it). Reads the examination standard in the forge hall -- the beat the whole route turns on, because the standard measures RECOVERY and the apprentice has been failing hardness -- carries it back to the smith, brokers the six-year argument (standards_brokered), and settles the commission on that arm alone (standards_tempered) with temper_run and golem_recalibrated provably unbanked and zero combat all run. Then walks down to the market tier and renders Grimalkin's NEW standards_tempered hub text_variant, which is the only thing this lane adds to his graph: ruling 4 forbids a new option there because grimalkin_study_loop pins his option array three times and pallass_peek does index navigation on it.",
+ "_comment": "v0.16 #307 P1 'Tempered Standards' TALK route, end to end and live. Off pallass_standards_talk_start (the commission already taken, nothing past it). Reads the examiner's bend jig in the forge hall (#513 re-theme: a Dullahan examiner's jig, not a printed notice) -- the beat the whole route turns on, because the jig's second notch measures RECOVERY and the apprentice's fast-quenched blades crack instead -- carries it back to the smith, brokers the six-year argument (standards_brokered), and settles the commission on that arm alone (standards_tempered) with temper_run and golem_recalibrated provably unbanked and zero combat all run. Then walks down to the market tier and renders Grimalkin's NEW standards_tempered hub text_variant, which is the only thing this lane adds to his graph: ruling 4 forbids a new option there because grimalkin_study_loop pins his option array three times and pallass_peek does index navigation on it.",
  "fixture_save": "pallass_standards_talk_start",
  "starts_at_title": true,
  "steps": [
@@ -95,7 +95,7 @@
    ]
   },
   {
-   "_comment": "== The examination standard at (7,2), pinned at the hall's north wall. ==",
+   "_comment": "== The examiner's bend jig at (7,2), against the hall's north wall (#513: was 'The Examination Standard', a printed notice). ==",
    "action": "move",
    "direction": "right",
    "steps": 2
@@ -112,6 +112,73 @@
    "action": "move",
    "direction": "up",
    "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    3
+   ]
+  },
+  {
+   "_comment": "== #513: the examiner on screen, a Dullahan at his own jig (8,2). One step east, bump-face him, and his first-waking line renders; then back to the jig's approach cell. ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     8,
+     2
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Dullahan Examiner",
+    "text": "Stand clear of the jig, please. A blade that lets go can travel."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_rendered",
+   "payload_contains": {
+    "text": "Dullahan Examiner: Stand clear of the jig, please. A blade that lets go can travel."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_dullahan_examiner"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
   },
   {
    "action": "assert_state",
@@ -152,7 +219,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The standard does not measure how hard a blade comes out. It measures how it recovers."
+    "text": "The jig bends a blade to the first notch and lets go. The mark that counts is the second notch, where the blade comes back to."
    },
    "timeout_sec": 5
   },
@@ -163,7 +230,7 @@
   },
   {
    "action": "screenshot",
-   "name": "01_examination_standard"
+   "name": "01_bend_jig"
   },
   {
    "_comment": "== Back out through the hall's own door at (5,8). ==",
@@ -291,7 +358,19 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Forge-Tier Smith"
+    "speaker": "Forge-Tier Smith",
+    "options": [
+     {
+      "text": "[The jig's second notch is where it springs back.]",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Still working on it.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
    },
    "timeout_sec": 5
   },
@@ -316,7 +395,8 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Forge-Tier Smith"
+    "speaker": "Forge-Tier Smith",
+    "text": "Recovery. Two notches on his jig, one for the bend and one for the spring. Six years at this bench and I never once asked him about the second notch. She kept bringing him harder steel. Harder is what I taught her. I had Xif blend her a fast quench to get it. Nine fails."
    },
    "timeout_sec": 5
   },
@@ -366,9 +446,14 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Forge-Tier Smith"
+    "speaker": "Forge-Tier Smith",
+    "text": "Six years I argued with that man, and we were reading the same jig all six years. She quenches slow from tomorrow."
    },
    "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01b_smith_settled_on_the_jig"
   },
   {
    "action": "press",

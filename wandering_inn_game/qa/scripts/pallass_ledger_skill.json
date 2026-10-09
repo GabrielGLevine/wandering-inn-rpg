@@ -1,5 +1,5 @@
 {
- "_comment": "v0.16 #307 P2 'The Ledger Eats First' SKILL route. Off pallass_ledger_skill_start, standing inside pallass_den_shop with [Appraise Goods] known -- the fixture that makes MAP_REQUIRES['pallass_den_shop'] bite. Reads the consignee's own file through the requires_skill/on_skill_use seam and finds the exemption that was on the paper the whole time (exemption_found), walks back out through the shopfront door onto the market tier, rides the lift up and reports to the attendant on that arm alone (ledger_unstuck), with loop_walked and shipment_carried provably unbanked.",
+ "_comment": "v0.16 #307 P2 'The Crate the Cage Refuses' (renamed from 'The Ledger Eats First', #513) SKILL route. Off pallass_ledger_skill_start, standing inside pallass_den_shop with [Appraise Goods] known -- the fixture that makes MAP_REQUIRES['pallass_den_shop'] bite. Reads the maker's drawings through the requires_skill/on_skill_use seam and finds the shipping catch nobody set (exemption_found, frozen id), walks back out through the shopfront door onto the market tier, rides the lift up and reports to the attendant on that arm alone (ledger_unstuck), with loop_walked and shipment_carried provably unbanked.",
  "fixture_save": "pallass_ledger_skill_start",
  "starts_at_title": true,
  "steps": [
@@ -51,7 +51,7 @@
    ]
   },
   {
-   "_comment": "== The consignee's file at (7,2). requires_skill/visible-locked; [Appraise Goods] is on the field bar. ==",
+   "_comment": "== The maker's drawings at (7,2). requires_skill/visible-locked; [Appraise Goods] is on the field bar. ==",
    "action": "move",
    "direction": "up",
    "steps": 1
@@ -91,7 +91,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Appraise Goods] — Four cycles of manifests list the tin and the salt packed with it on one line, and the salt is perishable household stock where the tin is not. Under form nine, clause four, that stock carries an exemption from queue hold — and one manifest line puts the crate inside it."
+    "text": "[Appraise Goods] — Sheet nine shows a brass catch that swings a shutter over the rune-plate for shipping. The packing list ticks every fitting on the regulator except that catch."
    },
    "timeout_sec": 5
   },
@@ -102,7 +102,7 @@
   },
   {
    "action": "screenshot",
-   "name": "01_consignment_file_exemption"
+   "name": "01_makers_drawings_catch"
   },
   {
    "_comment": "== Back to the shopfront door at (4,7). ==",
@@ -313,12 +313,24 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Lift Attendant"
+    "speaker": "Lift Attendant",
+    "options": [
+     {
+      "text": "[The regulator has a shipping catch. Nobody set it.]",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Still working on it.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
    },
    "timeout_sec": 5
   },
   {
-   "_comment": "ledger_report renders 2 rows on this route: '[The exemption was in the forms the whole time.]' (requires exemption_found) at row 0, then 'Still working on it.'",
+   "_comment": "ledger_report renders 2 rows on this route: '[The regulator has a shipping catch. Nobody set it.]' (requires exemption_found) at row 0, then 'Still working on it.'",
    "action": "wait_frames",
    "frames": 2
   },
@@ -346,9 +358,14 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Lift Attendant"
+    "speaker": "Lift Attendant",
+    "text": "A catch. Three cycles, and it was one brass catch. Don't speak to me until the half bell."
    },
    "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_attendant_catch_settled"
   },
   {
    "action": "press",

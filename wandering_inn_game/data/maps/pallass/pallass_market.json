@@ -487,11 +487,11 @@
     19,
     4
    ],
-   "display_name": "Permit Office Window",
+   "display_name": "Exam-Floor Window",
    "sprite": "bar_counter",
-   "observe": "The window ledge is worn smooth where a thousand wrists have rested, waiting on a stamp. A stencilled plate lists the posted fees.",
+   "observe": "The ledge is chalk-white where a thousand hands have rested on it. A slate beside the glass lists load classes one to six, and the posted fees.",
    "on_interact_accomplishment": "leaned_on_the_permit_counter",
-   "toast": "You put your weight on the ledge, and beyond the glass a clerk stamps a form, drops it beside her inkwell and rings the bell."
+   "toast": "You put your weight on the ledge. Beyond the glass, a clerk chalks a load class beside a name on the slate and rings the bell."
   },
   {
    "_comment": "Static `dialogue` = no-graph fallback only.",
@@ -547,7 +547,7 @@
    "display_name": "The Grand Lift",
    "sprite": "great_lift",
    "observe": "A bronze-riveted cage with room in it for a wagon, counterweights racked in a shaft that drops past the tiers below this one.",
-   "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
+   "locked_toast": "The brass gate is locked. A stencilled plate: LIFT TOKEN REQUIRED. The exam-floor window is open.",
    "door_when": {
     "requires": {
      "elevator_pass_stamped": 1
@@ -817,7 +817,31 @@
    ],
    "observe": "A weighing pillar set out where anyone can use it, brass pans hanging true, the city's own test weights chained to the column. Any stallkeeper's measure can be checked here against the city's, in front of everyone.",
    "on_interact_accomplishment": "eyed_the_public_scales",
-   "toast": "You set a hand on the pan and it swings back level. The chained weights have inspection dates stamped into them, the last one this month."
+   "toast": "You set a hand on the pan and it swings back level. The chained weights have inspection dates stamped into them, the last one this month.",
+   "_comment_variants": "#513 Room on the Row, Skill-free TALK arm. Later-satisfied wins. heard_row_grievance (the stallkeeper's challenge) turns one interact into the public weighing and banks weights_proved; the two rungs after it restore the plain read, so the weighing happens once and an ungated player sees the pinned toast unchanged.",
+   "variants": [
+    {
+     "when": {
+      "heard_row_grievance": 1
+     },
+     "accomplishment": "weights_proved",
+     "toast": "Her brass is waiting on the scale's ledge in a cloth, sent over from the row. You weigh it piece by piece against the city's chained weights, and the beam settles level each time."
+    },
+    {
+     "when": {
+      "weights_proved": 1
+     },
+     "accomplishment": "eyed_the_public_scales",
+     "toast": "You set a hand on the pan and it swings back level. The chained weights have inspection dates stamped into them, the last one this month."
+    },
+    {
+     "when": {
+      "trader_placed": 1
+     },
+     "accomplishment": "eyed_the_public_scales",
+     "toast": "You set a hand on the pan and it swings back level. The chained weights have inspection dates stamped into them, the last one this month."
+    }
+   ]
   },
   {
    "id": "den_shop_door",
@@ -845,17 +869,17 @@
    ],
    "display_name": "The Dray Rank",
    "sprite": "market_stall_wood",
-   "observe": "Low carts for hire in a rank, shafts down on the stone. A tier number and a rate chalked on every tailboard. The queue board at the head of the rank has no one at it.",
+   "observe": "Low carts for hire in a rank, shafts down on the stone. A tier number and a rate chalked on every tailboard. The rate board at the head of the rank has no one at it.",
    "on_interact_accomplishment": "shipment_leg_carried",
    "once_per_waking": true,
    "once_per_waking_toast": "Every cart on the rank is out. The next rotation brings them back.",
-   "toast": "You take a cart off the rank, walk the crate off the lift apron and across two blocks of very orderly stone, and nobody stops you once.",
+   "toast": "You take a cart off the rank and meet the crate at the foot of the service stair. Two blocks of very orderly stone later, nobody has stopped you.",
    "variants": [
     {
      "when": {
       "shipment_leg_carried": 1
      },
-     "toast": "Second leg, same cart, same two blocks. The rank clerk chalks it onto the queue board under the first."
+     "toast": "Second leg. A cart off the rank, the crate off the bottom step of the service stair, two blocks of orderly stone. The rank clerk chalks it onto the rate board."
     }
    ]
   },
@@ -874,7 +898,7 @@
    },
    "observe": "Empty crates stacked a head above the awnings behind the stalls. The razorbeak has decided they belong to the razorbeak, and no stallkeeper has argued yet.",
    "on_interact_accomplishment": "found_market_vantage",
-   "toast": "It goes up off the crates and comes back screaming about the west end. The two standing things down there step aside for anyone whose permit is already filed — and the office that files it is the counter four stalls behind you.",
+   "toast": "It goes up off the crates and comes back screaming about the west end. The two standing things down there step aside for anyone booked on the exam floor — and the window that books it is four stalls behind you.",
    "visual_states": [
     {
      "when": {
@@ -886,6 +910,79 @@
       0.7,
       0.74
      ]
+    }
+   ]
+  },
+  {
+   "_comment": "#513 Room on the Row giver, on her own owned rig `wool_trader` (#603; the bale on her back is the silhouette tell, A/B'd over gnoll_traveler in docs/design/513-pallass-art.md), facing down per that art note. Cell (2,4) is off every continuous journey's walked and bumped cells (census from their events.jsonl) and off pallass_peek's y2/y9/x0/x25 bounds lap. Pool = first talk of a waking; the conversation carries every later talk.",
+   "id": "wool_trader",
+   "kind": "npc",
+   "cell": [
+    2,
+    4
+   ],
+   "display_name": "Gnoll Wool Trader",
+   "sprite": "wool_trader",
+   "facing": "down",
+   "observe": "A Gnoll with a bale of wool strapped high on her back and a red cord at her waist. Her other bales are stacked beside her.",
+   "friendly_line": "She looks at your hands before your face, then lifts a corner of the cloth so you can see the brass.",
+   "talk_pool": [
+    "Plains wool, yes? Washed twice. Nobody on the row will rent me a counter to sell it from.",
+    "Liscor brass, my grandmother's. Every piece has her mark on the bottom."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "trader_wool_settled",
+     "requires_accomplishment": {
+      "wool_trade_settled": 1
+     },
+     "lines": [
+      "Two bales sold before the bell. Nobody asked to weigh them twice.",
+      "More bales come up through the Door next week, if the shearing holds."
+     ]
+    }
+   ],
+   "conversation": "pallass_wool_trader"
+  },
+  {
+   "_comment": "#513 Room on the Row HELP leg 1 of 2. Later-satisfied `variants` gate the carry on wool_trade_started and retire it once wool_bales_carried banks, so it fires once and only inside the quest; the shelf in pallass_den_shop is leg 2 and gates on this leg. Solid like every prop: (1,3) sits north-west of the trader, OFF her cardinal axes, because world.gd's dialogue separation nudges a speaker 10px away from the player and from (3,4) that pushed her into a stack at (1,4). Off every journey cell and every canonical's walked cell.",
+   "id": "wool_bale_stack",
+   "kind": "prop",
+   "cell": [
+    1,
+    3
+   ],
+   "display_name": "Wool Bales",
+   "sprite": "grain_sacks",
+   "tint": [
+    1.0,
+    0.97,
+    0.88
+   ],
+   "observe": "Bales of plains wool in sacking, tied with twine and stacked against each other.",
+   "on_interact_accomplishment": "eyed_the_wool_bales",
+   "toast": "The sacking is rough and the wool inside gives under your hand. Each bale is tied twice with the same twine.",
+   "variants": [
+    {
+     "when": {
+      "wool_trade_started": 1
+     },
+     "accomplishment": "wool_bales_carried",
+     "toast": "You get two bales up on your shoulders, for the den shop's shelf. They are lighter than they look and twice as wide."
+    },
+    {
+     "when": {
+      "wool_bales_carried": 1
+     },
+     "accomplishment": "eyed_the_wool_bales",
+     "toast": "The stack is two bales lighter now, the rest still tied with the same twine."
+    },
+    {
+     "when": {
+      "row_opened": 1
+     },
+     "accomplishment": "eyed_the_wool_bales",
+     "toast": "The bales are tied and stacked, ready to go to counter three."
     }
    ]
   }

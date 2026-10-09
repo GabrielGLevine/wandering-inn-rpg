@@ -106,6 +106,8 @@ const EXPECTED_ITEMS := {
 	"wardwrights_counterweight": ["+2 max HP", "Resonance 1", "Grants [Dangersense] in combat"],
 	"sealed_factor_bale": ["Worth 28 gold"],
 	"riverfarm_ferry_tally": ["Worth 28 gold"],
+	# #513 Room on the Row reward: a mundane trade good, price only.
+	"plains_wool_bale": ["Worth 16 gold"],
 	# #423 the enchanter work-room reward, banded on the two rows above it.
 	"enchanters_true_gauge": ["Worth 28 gold"],
 	"hollow_thorn_tally": ["Worth 28 gold"],

@@ -1,5 +1,5 @@
 {
- "_comment": "v0.16 #307 P2 'The Ledger Eats First' TALK route: the office loop that outranks itself. Off pallass_ledger_offices_start (the attendant's pitch already taken). Rides the Grand Lift down as a real door_when crossing, gets the market tier clerk to ENDORSE the queue entry, carries that to the forge-tier permit clerk who COUNTERSIGNS the release, walks it through the den shop door to the consignee who signs last (loop_walked) -- each office's arm is requires-gated on the previous office's product, so the three-way cycle can only be walked in order -- then rides back up and reports to the attendant (ledger_unstuck). shipment_carried and exemption_found are provably unbanked: this is the offices route and nothing else.",
+ "_comment": "v0.16 #307 P2 'The Crate the Cage Refuses' (renamed from 'The Ledger Eats First', #513) TALK route, re-authored for the City of Inventions re-theme. Off pallass_ledger_offices_start (the attendant's pitch already taken). Rides the Grand Lift down as a real door_when crossing; Xif names the rune-ink as his own batch and prescribes two fingers of lead (queue_notice_endorsed, frozen id); back up the lift, the forge smith folds the lead wrap from her apron offcuts (queue_notice_countersigned, frozen id) -- each arm is requires-gated on the previous one's product and APPENDED LAST on a shipped hub, so the chain can only be walked in order and no ungated hub moved; down again to the den shop, where the keeper takes delivery (loop_walked); then up to the attendant (ledger_unstuck). shipment_carried and exemption_found are provably unbanked: this is the talk route and nothing else. The two clerks lost only hidden rows.",
  "fixture_save": "pallass_ledger_offices_start",
  "starts_at_title": true,
  "steps": [
@@ -107,11 +107,11 @@
    ]
   },
   {
-   "_comment": "== OFFICE 1: the tier clerk at (7,5). Her queue arm opened the moment ledger_loop_started banked. ==",
+   "_comment": "== STEP 1: Xif at (5,5), market tier. His regulator arm opened the moment ledger_loop_started banked; it is APPENDED LAST on his hub (#513 moved it off the stamp clerk). ==",
    "action": "teleport",
    "map": "pallass_market",
    "cell": [
-    7,
+    5,
     6
    ]
   },
@@ -129,7 +129,7 @@
    "type": "player_blocked",
    "payload_contains": {
     "cell": [
-     7,
+     5,
      5
     ]
    }
@@ -142,8 +142,8 @@
    "action": "wait_for_event",
    "type": "dialogue_started",
    "payload_contains": {
-    "conversation": "pallass_market_clerk",
-    "entity": "tier_clerk_market"
+    "conversation": "xif",
+    "entity": "xif"
    },
    "timeout_sec": 5
   },
@@ -153,10 +153,10 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Hub renders 2 rows here: 'Just looking.' then the crate arm (the stamp arm is spent). Row 1.",
+   "_comment": "Hub renders 7 rows with ledger_loop_started held: the six shipped rows, then the regulator arm LAST. Row 6.",
    "action": "move",
    "direction": "down",
-   "steps": 1
+   "steps": 6
   },
   {
    "action": "press",
@@ -166,14 +166,22 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Tier Clerk"
+    "speaker": "Xif",
+    "text": "My ink, yes? I sold that workshop a jar. It sings near mana-stone if nothing is between them. Lead is between them. Tell the smith two fingers of lead. This advice is not on the board, so it is free.",
+    "options": [
+     {
+      "text": "Two fingers of lead. I'll tell her.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Back to business.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
    },
    "timeout_sec": 5
-  },
-  {
-   "_comment": "'Then endorse the entry, and I'll take it up.'",
-   "action": "wait_frames",
-   "frames": 2
   },
   {
    "action": "press",
@@ -191,13 +199,14 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Tier Clerk"
+    "speaker": "Xif",
+    "text": "Two fingers. With one, it still sings a little, and then people come back to my stall to complain about it."
    },
    "timeout_sec": 5
   },
   {
    "action": "screenshot",
-   "name": "01_market_clerk_endorsed"
+   "name": "01_xif_names_the_ink"
   },
   {
    "action": "press",
@@ -214,12 +223,68 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== OFFICE 2: the forge-tier permit clerk at (20,4). His countersign arm needed office 1's endorsement. ==",
+   "_comment": "== The Grand Lift again: up to the forge tier for the smith. ==",
    "action": "teleport",
    "map": "pallass_market",
    "cell": [
-    20,
-    5
+    23,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     7
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge",
+    "cell": [
+     23,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "_comment": "== STEP 2: the smith at her anvil (11,6). Her lead-wrap arm needed Xif's product; it is APPENDED LAST on her hub (#513 moved it off the forge clerk). ==",
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    11,
+    7
    ]
   },
   {
@@ -236,8 +301,8 @@
    "type": "player_blocked",
    "payload_contains": {
     "cell": [
-     20,
-     4
+     11,
+     6
     ]
    }
   },
@@ -247,10 +312,22 @@
   },
   {
    "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
    "type": "dialogue_started",
    "payload_contains": {
-    "conversation": "pallass_forge_clerk",
-    "entity": "forge_permit_clerk"
+    "conversation": "pallass_forge_smith",
+    "entity": "forge_smith"
    },
    "timeout_sec": 5
   },
@@ -260,10 +337,39 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Hub renders 3 rows: the visible-LOCKED oil row (gold gate), 'Not now.', then the countersign arm. Row 2.",
+   "_comment": "Hub renders 4 rows here: spec / standard / exit, then the lead-wrap arm (the reject-bin and commission arms are requires-hidden at this fixture). Row 3.",
+   "action": "assert_event_logged",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith",
+    "options": [
+     {
+      "text": "What's the bench rated for?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Who decides how a thing gets built up here?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I'll let you work.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Xif says two fingers of lead around the regulator.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
    "action": "move",
    "direction": "down",
-   "steps": 2
+   "steps": 3
   },
   {
    "action": "press",
@@ -273,30 +379,13 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Forge-Tier Clerk"
+    "speaker": "Forge-Tier Smith",
+    "text": "Two fingers. I cast that case, so I know its size. Apron offcuts, lead in the hem. Hold this end while I fold."
    },
    "timeout_sec": 5
   },
   {
-   "_comment": "Take the 'Why has nobody used it?' branch first -- it is the joke's whole payload and it lands on the same countersign.",
-   "action": "move",
-   "direction": "down",
-   "steps": 1
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "payload_contains": {
-    "speaker": "Forge-Tier Clerk"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "_comment": "'Then countersign it.'",
+   "_comment": "'Holding it.' -- row 0.",
    "action": "wait_frames",
    "frames": 2
   },
@@ -316,13 +405,14 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Forge-Tier Clerk"
+    "speaker": "Forge-Tier Smith",
+    "text": "There. Wrap it round the case and the cage can stop flickering. Bench is mine again."
    },
    "timeout_sec": 5
   },
   {
    "action": "screenshot",
-   "name": "02_permit_clerk_countersigned"
+   "name": "02_smith_folds_the_lead"
   },
   {
    "action": "press",
@@ -339,7 +429,63 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== OFFICE 3: the consignee herself, who signs last. ==",
+   "_comment": "== The Grand Lift: back down to the market tier for the den shop. ==",
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     7
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market",
+    "cell": [
+     23,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "_comment": "== STEP 3: the den keeper, who takes delivery. ==",
    "action": "teleport",
    "map": "pallass_market",
    "cell": [
@@ -397,7 +543,7 @@
   },
   {
    "action": "screenshot",
-   "name": "03_den_shop_arrival"
+   "name": "02b_den_shop_arrival"
   },
   {
    "_comment": "== The keeper stands AT her counter, (4,2), between its two solid ends (3,2)/(5,2) -- the shipped Erin (7,2) / Selys (8,2) shape. `interact` resolves exactly ONE cell (`entity_at(player_cell + player_facing)`, wi_game.gd:400), so the customer-side cell (4,3) IS the service point: walk straight up the shop floor and bump her. This route is the fix for the DEN-KEEPER-UNREACHABLE-FROM-COUNTER finding -- the old route went round the counter's west end and parked the PC behind her serving counter, which is exactly what a player would never do. ==",
@@ -459,7 +605,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Hub renders 3 rows here (the crate arm is requires-gated on ledger_loop_started, which this fixture holds): row 1 is 'I'm here about a crate of tin.'",
+   "_comment": "Hub renders 3 rows here (the regulator arm is requires-gated on ledger_loop_started, which this fixture holds; the appended wool arm is requires-hidden): row 1 is 'I'm here about your oven regulator.'",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -472,12 +618,25 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Den-Shop Keeper"
+    "speaker": "Den-Shop Keeper",
+    "text": "I ordered it. I've been promised it twice and shouted at once, down from the landing. Get it into the cage or get it down the stair, and it goes into my oven wall the same hour.",
+    "options": [
+     {
+      "text": "[It's in a lead wrap. The cage can take it now.]",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I'll come back when it's moving.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
    },
    "timeout_sec": 5
   },
   {
-   "_comment": "consignee renders 2 rows here: '[Hand her the countersigned queue notice.]' at row 0 (the carry arm needs three legs and this run walked none), then the plain exit.",
+   "_comment": "consignee renders 2 rows here: '[It's in a lead wrap. The cage can take it now.]' at row 0 (the carry arm needs three legs and this run walked none), then the plain exit.",
    "action": "wait_frames",
    "frames": 2
   },
@@ -497,13 +656,14 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Den-Shop Keeper"
+    "speaker": "Den-Shop Keeper",
+    "text": "A lead coat for it. Then tell the attendant, and I'll have it fitted in the oven wall before the evening bake."
    },
    "timeout_sec": 5
   },
   {
    "action": "screenshot",
-   "name": "04_den_keeper_released"
+   "name": "03_den_keeper_released"
   },
   {
    "action": "press",
@@ -723,12 +883,24 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Lift Attendant"
+    "speaker": "Lift Attendant",
+    "options": [
+     {
+      "text": "[Xif's ink, the smith's lead. It rides the cage now.]",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Still working on it.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
    },
    "timeout_sec": 5
   },
   {
-   "_comment": "ledger_report renders 2 rows on this route: '[The offices countersigned each other. It's released.]' (requires loop_walked) at row 0, then 'Still working on it.'",
+   "_comment": "ledger_report renders 2 rows on this route: '[Xif's ink, the smith's lead. It rides the cage now.]' (requires loop_walked) at row 0, then 'Still working on it.'",
    "action": "wait_frames",
    "frames": 2
   },
@@ -756,9 +928,14 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Lift Attendant"
+    "speaker": "Lift Attendant",
+    "text": "You got an alchemist and a smith to agree about my cage. I am going to tell that story at every quarter bell for a month. The crate goes down on the next cycle, on top of the load."
    },
    "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_attendant_regulator_settled"
   },
   {
    "action": "press",

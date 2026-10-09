@@ -12,7 +12,7 @@
        "seal_resolved": 1
       }
      },
-     "text": "Down at the quarter bell, up at the half. The Liscor news rode up on the same cycle as the tin did. I heard it four times before the cage reached the landing."
+     "text": "Down at the quarter bell, up at the half. The Liscor news rode up on the same cycle as the charcoal did. I heard it four times before the cage reached the landing."
     }
    ],
    "options": [
@@ -39,7 +39,7 @@
     },
     {
      "_comment": "v0.16 P2 start. requires-hidden on read_the_lift_manifest (banked only by lift_manifest_slate, which near_pallass never interacts), so the 3-row pin and index navigation are untouched.",
-     "text": "Your manifest says one crate of tin, three cycles held.",
+     "text": "Your manifest says one crate, refused three cycles.",
      "requires": {
       "accomplishment": {
        "read_the_lift_manifest": 1
@@ -84,7 +84,7 @@
   },
   "traffic": {
    "speaker": "Lift Attendant",
-   "text": "Smiths down at the quarter bell, clerks up at the half, and one crate of tin that has been late three cycles running. This morning it was charcoal and a coop of live hens for the ninth tier. You I haven't placed yet, {addr}. Came up on a stamp, then. Stamps don't show on my schedule.",
+   "text": "Smiths down at the quarter bell, clerks up at the half, and one crate my cage won't take. This morning it was charcoal and a coop of live hens for the ninth tier. A Garuda runner wouldn't wait for the cage and went down the shaft on his own wings. You I haven't placed yet, {addr}. Came up on a token, then. Tokens don't show on my schedule.",
    "options": [
     {
      "text": "Give it a cycle.",
@@ -98,7 +98,7 @@
   },
   "seal": {
    "speaker": "Lift Attendant",
-   "text": "It came up the shaft the way everything does, one voice at a time, each louder than the last. Liscor settled what was under its stone. The tier will talk about it for a week and then it will talk about tin again. The tin is four cycles late, {addr}. Liscor is two hundred miles away.",
+   "text": "It came up the shaft the way everything does, one voice at a time, each louder than the last. Liscor settled what was under its stone. The tier will talk about it for a week. Then it'll be back to the den shop's crate. That crate is three cycles late, {addr}. Liscor is two hundred miles away.",
    "options": [
     {
      "text": "That's fairer than most of what I've heard.",
@@ -112,10 +112,10 @@
   },
   "ledger_pitch": {
    "speaker": "Lift Attendant",
-   "text": "Four cycles, and it will be five. The permit office holds the queue, and the office's own requisitions are sitting in that queue with everything else. Until their paper moves, nothing behind it moves, and nobody up there will sign out of order.",
+   "text": "Three cycles, and it will be four. Every time it goes in the cage, the feather-fall runes under the floor flicker. I don't send a cage down flickering.",
    "options": [
     {
-     "text": "Somebody should unstick that.",
+     "text": "Somebody should get it down.",
      "effects": [
       {
        "quest": "ledger_eats_first"
@@ -134,10 +134,10 @@
   },
   "ledger_brief": {
    "speaker": "Lift Attendant",
-   "text": "Walk the offices in order, {addr}, and get it in writing. Start at the quarter bell or you will spend the day at windows. Read the forms properly, if you read forms. Or put the crate on the cart yourself and carry it down, which is not how it is done. The consignee is a den shop on the market tier.",
+   "text": "There's a regulator in that crate, rune-set on this tier, for a bread oven. Its runes and my cage's runes don't get on. Find out what quiets it, {addr}. Or carry it down the service stair. Nine flights, and not how it's done. The consignee is the den shop on the market tier.",
    "options": [
     {
-     "text": "Which office starts it?",
+     "text": "Who would know about the runes?",
      "goto": "ledger_brief_two"
     },
     {
@@ -148,7 +148,7 @@
   },
   "ledger_brief_two": {
    "speaker": "Lift Attendant",
-   "text": "The stamp clerk on the market tier holds the entry side. The permit window holds the release side. The consignee signs last. She cannot sign first. Down at the quarter bell.",
+   "text": "Xif on the market tier sold the workshop its ink. The smith by the second bench cast the case. The den shop takes delivery last. Down at the quarter bell.",
    "options": [
     {
      "text": "@down_at_the_quarter",
@@ -161,7 +161,7 @@
    "text": "Say it plainly. I have a cage to run in three minutes and I would like to run it happy.",
    "options": [
     {
-     "text": "[The offices countersigned each other. It's released.]",
+     "text": "[Xif's ink, the smith's lead. It rides the cage now.]",
      "requires": {
       "accomplishment": {
        "loop_walked": 1
@@ -175,7 +175,7 @@
      "goto": "ledger_settled"
     },
     {
-     "text": "[The exemption was in the forms the whole time.]",
+     "text": "[The regulator has a shipping catch. Nobody set it.]",
      "requires": {
       "accomplishment": {
        "exemption_found": 1
@@ -226,7 +226,7 @@
        "loop_walked": 1
       }
      },
-     "text": "You made the offices sign each other's paper. I am going to tell that story at every quarter bell for a month. The crate goes down on the next cycle, on top of the load."
+     "text": "You got an alchemist and a smith to agree about my cage. I am going to tell that story at every quarter bell for a month. The crate goes down on the next cycle, on top of the load."
     },
     {
      "requires": {
@@ -234,7 +234,7 @@
        "exemption_found": 1
       }
      },
-     "text": "It was in the forms. Four cycles, and it was in the forms. Do not speak to me until the half bell."
+     "text": "A catch. Three cycles, and it was one brass catch. Don't speak to me until the half bell."
     }
    ],
    "options": [

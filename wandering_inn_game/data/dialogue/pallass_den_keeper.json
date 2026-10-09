@@ -1,5 +1,5 @@
 {
- "_comment": "v0.16 P2 (#307). Voice: character-profiles.md 'Den-Shop Keeper'. NEW graph on a NEW entity, so the loop and sign-off surfaces never ride a pinned hub.",
+ "_comment": "v0.16 P2 (#307). Voice: character-profiles.md 'Den-Shop Keeper'. NEW graph on a NEW entity, so the loop and sign-off surfaces never ride a pinned hub. #513: the crate is an oven regulator the cage refuses (City of Inventions), and the wool row is appended last.",
  "start": "hub",
  "nodes": {
   "hub": {
@@ -12,7 +12,7 @@
        "ledger_unstuck": 1
       }
      },
-     "text": "The tin came up. Four cycles late and every stamp on it correct. Sit down, {addr}. You are eating something."
+     "text": "The regulator came down. The loaves come out even now. Sit down, {addr}. You are eating something."
     }
    ],
    "options": [
@@ -21,7 +21,7 @@
      "goto": "month"
     },
     {
-     "text": "I'm here about a crate of tin.",
+     "text": "I'm here about your oven regulator.",
      "requires": {
       "accomplishment": {
        "ledger_loop_started": 1
@@ -37,15 +37,30 @@
     {
      "text": "Just looking.",
      "end": true
+    },
+    {
+     "_comment": "#513 Room on the Row HELP route. APPENDED LAST, requires-hidden on wool_trade_started, so an ungated reader's hub is unchanged.",
+     "text": "About the Gnoll's wool.",
+     "requires": {
+      "accomplishment": {
+       "wool_trade_started": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "trader_placed": 1
+      }
+     },
+     "goto": "wool"
     }
    ]
   },
   "month": {
    "speaker": "Den-Shop Keeper",
-   "text": "A crate of tin, four cycles late, and every stamp on it correct. The permit office cannot release it. Their own supplies have not come in, and nobody up there will put a day to it. I have hatchlings upstairs chewing yesterday's bread and a shelf with a tin-shaped hole in it.",
+   "text": "A regulator for my oven, three cycles late, on a landing two tiers up. The cage won't carry it. I have hatchlings upstairs chewing yesterday's bread and an oven that burns the bottom of every loaf.",
    "options": [
     {
-     "text": "That can't be how it works.",
+     "text": "Why won't the cage take it?",
      "goto": "month_two"
     },
     {
@@ -56,10 +71,10 @@
   },
   "month_two": {
    "speaker": "Den-Shop Keeper",
-   "text": "It is exactly how it works and every single person in that chain is doing their job correctly. Nobody up here is lazy, {addr}. The clerk at the release window checks every stamp twice, both sides, and the dock behind her fills up while she does it.",
+   "text": "Something in that crate makes the runes under the cage floor flicker. The attendant won't send a flickering cage down, and I wouldn't ride in one. So I turn every loaf by hand, twice.",
    "options": [
     {
-     "text": "Somebody has to be able to sign.",
+     "text": "Somebody should look at that crate.",
      "goto": "hub"
     },
     {
@@ -70,11 +85,11 @@
   },
   "consignee": {
    "speaker": "Den-Shop Keeper",
-   "text": "I am the consignee. I have been offered promises and one shout down from the landing. The procedure needs a notice with a stamp on it, one I am allowed to act on. Hand me that and the crate moves the same hour.",
+   "text": "I ordered it. I've been promised it twice and shouted at once, down from the landing. Get it into the cage or get it down the stair, and it goes into my oven wall the same hour.",
    "options": [
     {
-     "_comment": "TALK route terminal rung. Requires the countersigned notice, i.e. offices 1 and 2 walked in order.",
-     "text": "[Hand her the countersigned queue notice.]",
+     "_comment": "TALK route terminal rung. Requires the smith's lead wrap, i.e. Xif then the smith, in order. Worded as CAN ride: the attendant is told last and sends it.",
+     "text": "[It's in a lead wrap. The cage can take it now.]",
      "requires": {
       "accomplishment": {
        "queue_notice_countersigned": 1
@@ -113,14 +128,14 @@
      "goto": "carried"
     },
     {
-     "text": "I'll come back with something you can act on.",
+     "text": "I'll come back when it's moving.",
      "end": true
     }
    ]
   },
   "released": {
    "speaker": "Den-Shop Keeper",
-   "text": "Countersigned. A stamp I can act on, four cycles late. I will send for the crate before the shop closes. I am going to frame this notice.",
+   "text": "A lead coat for it. Then tell the attendant, and I'll have it fitted in the oven wall before the evening bake.",
    "options": [
     {
      "text": "Glad it came through.",
@@ -133,7 +148,49 @@
    "text": "You carried it. Two tiers and three legs and no stamp on any of it. That is not how it is done and I am not going to say another word about it. Take the small jar. No, take it.",
    "options": [
     {
-     "text": "It's just tin.",
+     "text": "It's just a crate.",
+     "end": true
+    }
+   ]
+  },
+  "wool": {
+   "speaker": "Den-Shop Keeper",
+   "text": "Plains wool. I said yes to the shelf if it gets here. My cut is on the slate like everyone's.",
+   "options": [
+    {
+     "text": "[Two bales are on your shelf.]",
+     "requires": {
+      "accomplishment": {
+       "wool_bales_carried": 2
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "wool_consigned": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "wool_consigned"
+      },
+      {
+       "accomplishment": "trader_placed"
+      }
+     ],
+     "goto": "wool_shelved"
+    },
+    {
+     "text": "I'll bring them in.",
+     "end": true
+    }
+   ]
+  },
+  "wool_shelved": {
+   "speaker": "Den-Shop Keeper",
+   "text": "Two bales, counted onto the shelf. The small ones have been told not to sit on them.",
+   "options": [
+    {
+     "text": "I'll tell her.",
      "end": true
     }
    ]

@@ -184,6 +184,18 @@ func _init() -> void:
 	assert(String(WIQuests.resolved_path(p_ledger, {"shipment_carried": 1, "loop_walked": 1})["accomplishment"]) == "loop_walked", "carried THEN walked the offices records the LOOP")
 	assert(String(WIQuests.resolved_path(p_ledger, {"loop_walked": 1, "exemption_found": 1})["accomplishment"]) == "exemption_found", "walked it THEN found the exemption records the EXEMPTION -- the fix that outlives the crate")
 
+	# #513 Room on the Row: both entry rows hide on trader_placed, so one route
+	# normally banks; the ladder still has to read right if a save holds both.
+	var p_row: Dictionary = WIQuests.quest_by_id(shipped, "room_on_the_row")
+	assert(String(WIQuests.resolved_path(p_row, {"wool_consigned": 1})["accomplishment"]) == "wool_consigned", "a shelf-only run still records the help route")
+	assert(String(WIQuests.resolved_path(p_row, {"row_opened": 1})["accomplishment"]) == "row_opened", "a row-only run records the talk route")
+	assert(String(WIQuests.resolved_path(p_row, {"wool_consigned": 1, "row_opened": 1})["accomplishment"]) == "row_opened", "consigned THEN the row records the ROW -- a counter on the row outranks a shelf in someone else's shop")
+	assert(int((WIQuests.resolved_path(p_row, {"row_opened": 1})["grant"] as Dictionary).get("persuaded_someone", 0)) == 3, "the talk route pays the talk grant")
+	assert(int((WIQuests.resolved_path(p_row, {"wool_consigned": 1})["grant"] as Dictionary).get("befriended_moments", 0)) == 2, "the help route pays the help grant")
+	assert(WIQuests.beat_index(p_row, {"row_opened": 1}) == 1 and WIQuests.beat_index(p_row, {"wool_consigned": 1}) == 1, "either route closes the place beat")
+	assert(WIQuests.beat_index(p_row, {"wool_trade_started": 1, "trader_placed": 1}) == 0, "trader_placed alone is not a route")
+	assert(WIQuests.beat_index(p_row, {"row_opened": 1, "wool_trade_settled": 1}) == 2, "...and the trader's report completes it")
+
 	# EVERY shipped array with 2+ real rungs must carry its ladder in writing --
 	# the ordering is load-bearing now, and an unnoted array is an unreviewed one.
 	for quest: Dictionary in shipped.get("quests", []):

@@ -1,5 +1,5 @@
 {
- "_comment": "8e E1 (issue #16, the milestone's exit-criteria canonical) THE pallass_walkthrough proof: the LIVE end-to-end 'Papers for Pallass' + 'Clearance for the Forge Tier' route from a near_pallass fixture (invrisil_attuned-era, quest NOT started). Selys sponsors (10g, pallass_sponsored) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g, pallass_attuned + the item) -> real travel through the Magical Door to pallass_market's arrival cell (4,8) -- the FIRST live proof of the has_map-guarded portals row -- the NEGATIVE lift-locked read BEFORE any permit progress -- the market-tier checkpoint clerk's 2g stamp AND the race-variant read (pc_race defaults 'human', the QA everyman, so the HUMAN FRICTION line is the live pin), completing papers_for_pallass -- THE PERMIT OFFICE chain (5g file -> Grimalkin's 8g exam, his voiced register pinned verbatim -> the 3g stamp), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT now open, a REAL continuous walk (not a re-teleport) across the forge tier's own floor to Grimalkin's old bench (eyed_grimalkins_bench) -- the round trip back down. Gold ledger exact at every spend (60 -> 50 -> 32 -> 30 -> 25 -> 17 -> 14, matching the documented 10+18+2+5+8+3=46g chain with a 14g margin). Zero combat anywhere (assert_event_absent, whole run) -- the route is bureaucratic/travel only, so seed stability is trivial; rng_state is the repo's own canonical seed=9 derived value, inert for outcome purposes here. This canonical is the first LIVE (non-teleport) proof of the portals.json `pallass` arrival cell, now (4,8): the reconciled (4,7) was alchemy_bench_reduction's own cell, so travel landed the player inside a solid prop (v0.15 hygiene; data_lint's arrival-vs-blocking arm refuses the class).",
+ "_comment": "8e E1 (issue #16, the milestone's exit-criteria canonical) THE pallass_walkthrough proof: the LIVE end-to-end 'Papers for Pallass' + 'Fit for the Forge Tier' (was 'Clearance for the Forge Tier' before the #513 re-theme) route from a near_pallass fixture (invrisil_attuned-era, quest NOT started). Selys sponsors (10g, pallass_sponsored) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g, pallass_attuned + the item) -> real travel through the Magical Door to pallass_market's arrival cell (4,8) -- the FIRST live proof of the has_map-guarded portals row -- the NEGATIVE lift-locked read BEFORE any permit progress -- the market-tier checkpoint clerk's 2g stamp AND the race-variant read (pc_race defaults 'human', the QA everyman, so the HUMAN FRICTION line is the live pin), completing papers_for_pallass -- THE PERMIT OFFICE chain (5g file -> Grimalkin's 8g exam, his voiced register pinned verbatim -> the 3g stamp), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT now open, a REAL continuous walk (not a re-teleport) across the forge tier's own floor to Grimalkin's old bench (eyed_grimalkins_bench) -- the round trip back down. Gold ledger exact at every spend (60 -> 50 -> 32 -> 30 -> 25 -> 17 -> 14, matching the documented 10+18+2+5+8+3=46g chain with a 14g margin). Zero combat anywhere (assert_event_absent, whole run) -- the route is bureaucratic/travel only, so seed stability is trivial; rng_state is the repo's own canonical seed=9 derived value, inert for outcome purposes here. This canonical is the first LIVE (non-teleport) proof of the portals.json `pallass` arrival cell, now (4,8): the reconciled (4,7) was alchemy_bench_reduction's own cell, so travel landed the player inside a solid prop (v0.15 hygiene; data_lint's arrival-vs-blocking arm refuses the class).",
  "starts_at_title": true,
  "fixture_save": "near_pallass",
  "steps": [
@@ -670,7 +670,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open."
+    "text": "The brass gate is locked. A stencilled plate: LIFT TOKEN REQUIRED. The exam-floor window is open."
    },
    "timeout_sec": 5
   },
@@ -815,7 +815,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== BEAT 7: THE PERMIT OFFICE, forge_permit_clerk (20,4) -- beat 'apply' of 'Clearance for the Forge Tier'. Fresh-state visible hub options: 0 'I need clearance for the forge tier.' (requires pallass_entry_stamped, HELD), 1 'Not now.' -- confirm row 0. Starts forge_tier_permit, lands on permit_intro. 'File it. (5 gold)' is row 0. ==",
+   "_comment": "== BEAT 7: THE PERMIT OFFICE, forge_permit_clerk (20,4) -- beat 'apply' of 'Fit for the Forge Tier'. Fresh-state visible hub options: 0 'I need clearance for the forge tier.' (requires pallass_entry_stamped, HELD), 1 'Not now.' -- confirm row 0. Starts forge_tier_permit, lands on permit_intro. 'Book the slot. (5 gold)' is row 0. ==",
    "action": "teleport",
    "map": "pallass_market",
    "cell": [
@@ -883,7 +883,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Forge-Tier Clerk",
-    "text": "Five gold, filed same-day, no exceptions and no discounts: that is the posted price. Grimalkin reads your fitness afterward, at the exam floor on the far end of this office. I only handle paper."
+    "text": "Five gold books a slot on the exam floor, same day, posted price. Grimalkin reads you at the far end of this office. The forge tier carries loads all day, and he writes down whether you can."
    },
    "timeout_sec": 5
   },
@@ -1034,7 +1034,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Grimalkin",
-    "text": "Grip, cleared. Wind, cleared — barely. The last measure was whether you quit before I did. You did not. The numbers say you will survive the forge tier. The file will say 'adequate.' Ask around this office what I usually write."
+    "text": "Sinew read first: the forearm takes load the way it should. Grip on the bar Maughin forged me, cleared, four short of my Dullahan student. The stair at pace, twice, cleared, barely. You did not quit before I did. Load class four. The forge tier wants three. Ask around this office what I usually write."
    },
    "timeout_sec": 5
   },
@@ -1079,7 +1079,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== BEAT 9: back to forge_permit_clerk (20,4) for the stamp -- beat 'stamped', THE producer the elevator's door_when waits on. Now that forge_permit_filed+grimalkin_examination_passed are both held, options 0/1 hide -- 'The exam's done. About that stamp.' is row 0 of the hub -- confirm to reach collect_stamp. 'Collect the stamped pass. (3 gold)' is row 0 there. Banks elevator_pass_stamped, completes beat 'stamped' (index 2, LAST beat), fires quest_completed for forge_tier_permit. ==",
+   "_comment": "== BEAT 9: back to forge_permit_clerk (20,4) for the stamp -- beat 'stamped', THE producer the elevator's door_when waits on. Now that forge_permit_filed+grimalkin_examination_passed are both held, options 0/1 hide -- 'Grimalkin wrote my load class. About the token.' is row 0 of the hub -- confirm to reach collect_stamp. 'Take the token. (3 gold)' is row 0 there. Banks elevator_pass_stamped, completes beat 'stamped' (index 2, LAST beat), fires quest_completed for forge_tier_permit. ==",
    "action": "teleport",
    "map": "pallass_market",
    "cell": [
@@ -1131,7 +1131,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Forge-Tier Clerk",
-    "text": "Grimalkin's mark is on the file. Three gold for the stamp itself: posted price, same as the filing."
+    "text": "Your load class is on the slate. Three gold for the lift token, posted price, cut to the class he wrote."
    },
    "timeout_sec": 5
   },
@@ -1838,7 +1838,7 @@
    "name": "09_market_tier_return"
   },
   {
-   "_comment": "Scope guard: the whole 'Papers for Pallass' + 'Clearance for the Forge Tier' route is bureaucratic/travel only -- zero combat anywhere in the run.",
+   "_comment": "Scope guard: the whole 'Papers for Pallass' + 'Fit for the Forge Tier' route is bureaucratic/travel only -- zero combat anywhere in the run.",
    "action": "assert_event_absent",
    "type": "combat_started"
   }

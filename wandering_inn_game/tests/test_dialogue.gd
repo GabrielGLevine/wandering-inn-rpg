@@ -129,6 +129,201 @@ func test_grimalkin_studies_gates_on_the_real_graph() -> void:
 		"casting-study completion variant verbatim")
 
 
+# --- #513 Room on the Row, on the SHIPPED graphs and the real map props. The
+# QA canonicals walk each route through input; these pin the gate ladder in
+# every state a route can leave behind, including the ones no canonical sits in.
+func _make_pallass_game() -> WIGame:
+	var shared := WIDialogueBanks.load_shared()
+	var graphs := {}
+	for id: String in ["pallass_wool_trader", "pallass_market_local", "pallass_den_keeper", "pallass_forge_smith", "pallass_lift_attendant"]:
+		graphs[id] = WIDialogueBanks.expand(_load_json("res://data/dialogue/%s.json" % id), shared)
+	var combat_config := {
+		"combatants": _load_json("res://data/combatants.json"),
+		"classes": _load_json("res://data/classes.json"),
+		"arenas": _load_json("res://data/arenas.json"),
+		"dialogue": graphs,
+		"items": _load_json("res://data/items.json"),
+		"quests": _load_json("res://data/quests.json"),
+	}
+	return WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+
+
+func _row_texts(game: WIGame) -> Array:
+	return (game.dialogue.current_options() as Array).map(func(o: Dictionary) -> String: return String(o["text"]))
+
+
+func _interact_at(game: WIGame, map_id: String, cell: Vector2i, facing: Vector2i) -> void:
+	game.transition(map_id, cell)
+	game.player_facing = facing
+	game.interact()
+
+
+func test_room_on_the_row_talk_route_on_the_real_graphs() -> void:
+	_events.clear()
+	var game := _make_pallass_game()
+	var quest: Dictionary = WIQuests.quest_by_id(_load_json("res://data/quests.json"), "room_on_the_row")
+	var purse := game.gold
+	# Outside the quest every appended row stays hidden and the props bank nothing.
+	game.start_dialogue("pallass_market_local", "market_stallkeeper")
+	assert(_row_texts(game) == ["Anything on you worth my coin?", "Morning."], "an ungated stallkeeper hub is the shipped two rows")
+	game.dialogue_choose(1)
+	_interact_at(game, "pallass_market", Vector2i(14, 9), Vector2i.UP)
+	assert(game.accomplishment_count("weights_proved") == 0 and game.accomplishment_count("eyed_the_public_scales") == 1, "an ungated weighing is the plain read")
+	game.start_dialogue("pallass_wool_trader", "wool_trader")
+	assert(_row_texts(game) == ["I'll talk to the row.", "What's wrong with Gnoll weights?", "Good luck with it."], "fresh trader hub: start row, no route or report rows")
+	game.dialogue_choose(0)
+	assert(game.started_quests.has("room_on_the_row") and game.accomplishment_count("wool_trade_started") == 1, "the start row starts the quest with no gold and no stamp")
+	assert(game.gold == purse, "starting costs nothing")
+	game.dialogue_choose(1)
+	game.start_dialogue("pallass_wool_trader", "wool_trader")
+	assert(_row_texts(game) == ["What's wrong with Gnoll weights?", "Where else could you sell it?", "Good luck with it."], "no report row before trader_placed")
+	game.dialogue_choose(2)
+	# Scales before the grievance: still the plain read.
+	_interact_at(game, "pallass_market", Vector2i(14, 9), Vector2i.UP)
+	assert(game.accomplishment_count("weights_proved") == 0, "the scales do not weigh her brass until the row has asked for it")
+	game.start_dialogue("pallass_market_local", "market_stallkeeper")
+	assert(_row_texts(game) == ["Anything on you worth my coin?", "Morning.", "About the Gnoll with the wool."], "the wool row appends LAST once the quest starts")
+	game.dialogue_choose(2)
+	var rows: Array = game.dialogue.current_options()
+	assert(_row_texts(game) == ["[Charming Smile] Ask her to come and look at the brass herself.", "Then check her weights at the public scales, in front of everyone.", "I'll leave it with you."], "row_wool before the weighing")
+	assert(bool(rows[0]["locked"]) and String(rows[0]["requirement"]) != "", "the Skill row is visible-locked without [Charming Smile]")
+	game.dialogue_choose(0)
+	assert(game.accomplishment_count("row_opened") == 0, "a locked Skill row cannot open the row")
+	game.dialogue_choose(1)
+	assert(game.accomplishment_count("heard_row_grievance") == 1, "the challenge banks the grievance")
+	game.dialogue_choose(0)
+	_interact_at(game, "pallass_market", Vector2i(14, 9), Vector2i.UP)
+	assert(game.accomplishment_count("weights_proved") == 1, "the public weighing banks weights_proved")
+	_interact_at(game, "pallass_market", Vector2i(14, 9), Vector2i.UP)
+	assert(game.accomplishment_count("weights_proved") == 1, "the weighing happens once; the next read is plain again")
+	game.start_dialogue("pallass_market_local", "market_stallkeeper")
+	game.dialogue_choose(2)
+	assert(_row_texts(game) == ["[Charming Smile] Ask her to come and look at the brass herself.", "[Her weights matched the city's.]", "I'll leave it with you."], "the proof row replaces the challenge row")
+	game.dialogue_choose(1)
+	assert(game.accomplishment_count("row_opened") == 1 and game.accomplishment_count("trader_placed") == 1, "the proof opens the row")
+	game.dialogue_choose(0)
+	game.start_dialogue("pallass_market_local", "market_stallkeeper")
+	assert(_row_texts(game) == ["Anything on you worth my coin?", "Morning."], "the wool row retires once she is placed")
+	game.dialogue_choose(1)
+	game.start_dialogue("pallass_wool_trader", "wool_trader")
+	assert(_row_texts(game) == ["What's wrong with Gnoll weights?", "[Tell her where she is selling.]", "Good luck with it."], "the report row appears once she is placed")
+	game.dialogue_choose(1)
+	assert(game.gold == purse + 12 and game.inventory.has("plains_wool_bale"), "the report pays 12 gold and the bale")
+	assert(game.sell_price(int(game.item("plains_wool_bale")["price"])) == 8, "the bale sells for 8 gold with no trade bonus")
+	assert(WIQuests.beat_index(quest, game.accomplishments) == 2, "the report completes the quest")
+	assert(String(WIQuests.resolved_path(quest, game.accomplishments)["accomplishment"]) == "row_opened", "the journal records the talk route")
+	game.dialogue_choose(0)
+	game.start_dialogue("pallass_wool_trader", "wool_trader")
+	assert(_row_texts(game) == ["What's wrong with Gnoll weights?", "Good luck with it."], "no second payout row")
+	game.dialogue_choose(1)
+	assert(game.gold == purse + 12 and game.item_count("plains_wool_bale") == 1, "nothing paid twice")
+
+
+func test_room_on_the_row_help_route_on_the_real_graphs() -> void:
+	_events.clear()
+	var game := _make_pallass_game()
+	var quest: Dictionary = WIQuests.quest_by_id(_load_json("res://data/quests.json"), "room_on_the_row")
+	var purse := game.gold
+	# Props before the quest: plain reads, no carry. The stack sits at (1,3),
+	# off the trader's cardinal axes (dialogue separation nudges her 10px).
+	_interact_at(game, "pallass_market", Vector2i(2, 3), Vector2i.LEFT)
+	assert(game.accomplishment_count("wool_bales_carried") == 0 and game.accomplishment_count("eyed_the_wool_bales") == 1, "the stack is scenery outside the quest")
+	game.start_dialogue("pallass_den_keeper", "den_shop_keeper")
+	assert(_row_texts(game) == ["Long month how?", "Just looking."], "an ungated den keeper hub is unchanged")
+	game.dialogue_choose(1)
+	game.start_dialogue("pallass_wool_trader", "wool_trader")
+	game.dialogue_choose(0)
+	game.dialogue_choose(1)
+	# Leg order: the shelf refuses to bank before the stack.
+	_interact_at(game, "pallass_den_shop", Vector2i(2, 4), Vector2i.LEFT)
+	assert(game.accomplishment_count("wool_bales_carried") == 0, "the shelf leg cannot bank before the stack leg")
+	game.start_dialogue("pallass_den_keeper", "den_shop_keeper")
+	assert(_row_texts(game) == ["Long month how?", "Just looking.", "About the Gnoll's wool."], "the wool row appends LAST once the quest starts")
+	game.dialogue_choose(2)
+	assert(_row_texts(game) == ["I'll bring them in."], "no consign row before both legs")
+	game.dialogue_choose(0)
+	_interact_at(game, "pallass_market", Vector2i(2, 3), Vector2i.LEFT)
+	assert(game.accomplishment_count("wool_bales_carried") == 1, "leg 1 banks once the quest has started")
+	_interact_at(game, "pallass_market", Vector2i(2, 3), Vector2i.LEFT)
+	assert(game.accomplishment_count("wool_bales_carried") == 1, "the stack does not bank twice")
+	_interact_at(game, "pallass_den_shop", Vector2i(2, 4), Vector2i.LEFT)
+	assert(game.accomplishment_count("wool_bales_carried") == 2, "leg 2 banks after leg 1")
+	_interact_at(game, "pallass_den_shop", Vector2i(2, 4), Vector2i.LEFT)
+	assert(game.accomplishment_count("wool_bales_carried") == 2, "the shelf does not bank twice")
+	game.start_dialogue("pallass_den_keeper", "den_shop_keeper")
+	game.dialogue_choose(2)
+	assert(_row_texts(game) == ["[Two bales are on your shelf.]", "I'll bring them in."], "the consign row after both legs")
+	game.dialogue_choose(0)
+	assert(game.accomplishment_count("wool_consigned") == 1 and game.accomplishment_count("trader_placed") == 1, "the den keeper takes the bales")
+	assert(game.accomplishment_count("row_opened") == 0, "the help route never opens the row")
+	game.dialogue_choose(0)
+	game.start_dialogue("pallass_wool_trader", "wool_trader")
+	game.dialogue_choose(1)
+	assert(game.gold == purse + 12 and game.inventory.has("plains_wool_bale"), "the help route pays the same")
+	assert(String(WIQuests.resolved_path(quest, game.accomplishments)["accomplishment"]) == "wool_consigned", "the journal records the help route")
+
+
+func test_room_on_the_row_shelf_retires_once_the_row_opens() -> void:
+	_events.clear()
+	var game := _make_pallass_game()
+	game.start_dialogue("pallass_wool_trader", "wool_trader")
+	game.dialogue_choose(0)
+	game.dialogue_choose(1)
+	_interact_at(game, "pallass_market", Vector2i(2, 3), Vector2i.LEFT)
+	assert(game.accomplishment_count("wool_bales_carried") == 1, "leg 1 carried")
+	# The player then wins the row with [Charming Smile] instead.
+	game.player_skills.append("charming_smile")
+	game.start_dialogue("pallass_market_local", "market_stallkeeper")
+	game.dialogue_choose(2)
+	game.dialogue_choose(0)
+	assert(game.accomplishment_count("row_opened") == 1, "the Skill row opened the row")
+	game.dialogue_choose(0)
+	_interact_at(game, "pallass_den_shop", Vector2i(2, 4), Vector2i.LEFT)
+	assert(game.accomplishment_count("wool_bales_carried") == 1, "the shelf no longer takes bales once the row is open")
+	assert(game.accomplishment_count("eyed_the_den_wool_shelf") == 1, "...it reads plain instead")
+
+
+# #513 moved the ledger talk route's two rows off the clerks. A save made
+# mid-route under the OLD wiring holds queue_notice_endorsed (the market
+# clerk's product) and nothing after it; it must still complete.
+func test_ledger_legacy_endorsed_save_still_completes() -> void:
+	_events.clear()
+	var game := _make_pallass_game()
+	var quest: Dictionary = WIQuests.quest_by_id(_load_json("res://data/quests.json"), "ledger_eats_first")
+	game.started_quests.append("ledger_eats_first")
+	for id: String in ["read_the_lift_manifest", "ledger_loop_started", "queue_notice_endorsed"]:
+		game.record_accomplishment(id, 1)
+	game.start_dialogue("pallass_forge_smith", "forge_smith")
+	var smith_rows := _row_texts(game)
+	assert(smith_rows.has("Xif says two fingers of lead around the regulator."), "a legacy endorsed save reaches the smith's lead-wrap row")
+	game.dialogue_choose(smith_rows.find("Xif says two fingers of lead around the regulator."))
+	game.dialogue_choose(0)
+	assert(game.accomplishment_count("queue_notice_countersigned") == 1, "the smith banks the countersign")
+	game.dialogue_choose(0)
+	game.start_dialogue("pallass_den_keeper", "den_shop_keeper")
+	game.dialogue_choose(_row_texts(game).find("I'm here about your oven regulator."))
+	assert(_row_texts(game)[0] == "[It's in a lead wrap. The cage can take it now.]", "the den keeper's talk rung is offered")
+	game.dialogue_choose(0)
+	assert(game.accomplishment_count("loop_walked") == 1, "loop_walked banks")
+	game.dialogue_choose(0)
+	game.start_dialogue("pallass_lift_attendant", "lift_attendant")
+	game.dialogue_choose(_row_texts(game).find("About that crate."))
+	assert(_row_texts(game)[0] == "[Xif's ink, the smith's lead. It rides the cage now.]", "the attendant's report rung is offered")
+	game.dialogue_choose(0)
+	assert(game.accomplishment_count("ledger_unstuck") == 1 and WIQuests.beat_index(quest, game.accomplishments) == 2, "the legacy save completes the quest")
+	# A save that got as far as the OLD forge clerk's countersign goes straight to the den keeper.
+	var later := _make_pallass_game()
+	later.started_quests.append("ledger_eats_first")
+	for id: String in ["read_the_lift_manifest", "ledger_loop_started", "queue_notice_endorsed", "queue_notice_countersigned"]:
+		later.record_accomplishment(id, 1)
+	later.start_dialogue("pallass_forge_smith", "forge_smith")
+	assert(not _row_texts(later).has("Xif says two fingers of lead around the regulator."), "a countersigned save is not asked for the wrap twice")
+	later.dialogue_choose(_row_texts(later).find("I'll let you work."))
+	later.start_dialogue("pallass_den_keeper", "den_shop_keeper")
+	later.dialogue_choose(_row_texts(later).find("I'm here about your oven regulator."))
+	assert(_row_texts(later)[0] == "[It's in a lead wrap. The cage can take it now.]", "a countersigned legacy save goes straight to the den keeper")
+
+
 # 2026-07-28 (#308, F1): the can-fail pair NO live script can reach. The
 # betrayal branch REMOVES the rags_scouting_party entity on victory, so a
 # player holding drove_off_rags can never render the settled hub at all --
@@ -1410,6 +1605,10 @@ func _init() -> void:
 	test_phase_requires_on_option_stays_visible_locked()
 	test_grimalkin_studies_gates_on_the_real_graph()
 	test_rags_winter_offer_hides_for_a_betrayer()
+	test_room_on_the_row_talk_route_on_the_real_graphs()
+	test_room_on_the_row_help_route_on_the_real_graphs()
+	test_room_on_the_row_shelf_retires_once_the_row_opens()
+	test_ledger_legacy_endorsed_save_still_completes()
 	test_finished_walker_survives_a_goto_into_an_all_hidden_node()
 	test_wigame_nulls_the_walker_the_fail_safe_finished()
 	test_wigame_nulls_a_walker_the_fail_safe_finished_at_begin()
