@@ -363,3 +363,24 @@ def test_generation_cells_are_sanitized():
     out = fk.generation_list_with("", "r", "x", ["a"], 2, "no | pipes\nor lines", "b|c")
     row = out.rstrip("\n").split("\n")[-1]
     assert row == "| r | x | a | 2 | no / pipes or lines | b/c | open |"
+
+
+def test_preview_prints_resolved_picks_per_map(tree, capsys):
+    kl = pytest.importorskip("wi_kits_lib")
+    k = tree / KITS
+    d = json.loads(k.read_text())
+    d["invrisil"]["roles"]["cargo"] = {"pick": "cell", "pool": ["crate_owned", "crate"]}
+    k.write_text(json.dumps(d, indent=1) + "\n")
+    maps = tree / "wandering_inn_game/data/maps/invrisil"
+    maps.mkdir(parents=True)
+    m = {"biome": "inn", "grid": [8, 6], "decor": [{"sprite": "@cargo", "cell": [1, 1]}, {"sprite": "@cargo", "cell": [5, 1]},
+                                                   {"sprite": "plant_pot", "cell": [2, 2]}],
+         "entities": [{"id": "c", "kind": "prop", "cell": [3, 4], "sprite": "@cargo"}]}
+    (maps / "test_map.json").write_text(json.dumps(m, indent=1) + "\n")
+    assert run(tree, "invrisil", "cargo", "--preview") == 0
+    out = capsys.readouterr().out.rstrip("\n").split("\n")
+    expected = kl.resolve_map(m, "test_map", "invrisil", kl.load_kits(tree / "wandering_inn_game"))
+    want = [f"test_map {layer} {row['cell']} {row['sprite']}" for layer in ("decor", "entities")
+            for row in expected.get(layer, []) if row.get("sprite_role") == "cargo"]
+    assert out == want and len(want) == 3
+    assert all(line.split()[-1] in ("crate_owned", "crate") for line in out)

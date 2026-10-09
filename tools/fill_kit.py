@@ -276,7 +276,25 @@ def fill(args: argparse.Namespace, paths: wa.Paths) -> int:
 
 
 def preview(paths: wa.Paths, region: str, role: str) -> int:
-    raise wa.Refused("preview lands with lane A's wi_kits_lib (Task 12)")
+    import wi_kits_lib as kl  # code from this repo, data from --repo-root
+
+    kits = kl.load_kits(paths.game)
+    maps_dir = paths.game / "data" / "maps" / region
+    if not maps_dir.is_dir():
+        raise wa.Refused(f"no maps under {maps_dir}")
+    for mp in sorted(maps_dir.glob("*.json")):
+        if mp.name.startswith("_"):
+            continue
+        m = json.loads(mp.read_text(encoding="utf-8"))
+        errors: list = []
+        resolved = kl.resolve_map(m, mp.stem, kl.map_region(mp), kits, errors)
+        for err in errors:
+            print(f"unresolved: {err}", file=sys.stderr)
+        for layer in ("decor", "entities"):
+            for row in resolved.get(layer, []):
+                if row.get("sprite_role") == role:
+                    print(f"{mp.stem} {layer} {row.get('cell')} {row['sprite']}")
+    return EXIT_OK
 
 
 
