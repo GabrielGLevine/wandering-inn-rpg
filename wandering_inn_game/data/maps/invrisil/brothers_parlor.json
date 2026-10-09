@@ -1,4 +1,5 @@
 {
+ "_kits_recompose": "#608 — parlor: centre rug removed, two patrons off prop cells",
  "biome": "brothers_parlor",
  "grid": {
   "width": 14,
@@ -210,22 +211,10 @@
      0.85,
      0.6
     ],
-    "energy": 1.0,
-    "radius": 40,
+    "energy": 0.5,
+    "radius": 28,
     "flicker": false
    }
-  },
-  {
-   "sprite": "@rug",
-   "cell": [
-    6,
-    6
-   ],
-   "tint": [
-    1.0,
-    0.92,
-    0.9
-   ]
   },
   {
    "sprite": "@window_interior",
