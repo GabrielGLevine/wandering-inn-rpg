@@ -166,8 +166,7 @@
      "pick": "map",
      "pool": [
       "table_brown",
-      "table_brown__alt1",
-      "bonus_round_table"
+      "table_brown__alt1"
      ]
     },
     "shelf": {
