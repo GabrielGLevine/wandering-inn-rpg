@@ -321,30 +321,45 @@ def slice_row(candidate: Path, paths: Paths) -> dict:
 
 
 _SHEET_INDEX: dict[Path, dict[str, str]] = {}
+_SHEET_SIG: dict[Path, tuple[int, int]] = {}
+
+
+def _assets_signature(assets: Path) -> tuple[int, int]:
+    """(png count, newest mtime_ns): cheap stat-only change detector for the assets tree."""
+    count, newest = 0, 0
+    for p in assets.rglob("*.png"):
+        count += 1
+        newest = max(newest, p.stat().st_mtime_ns)
+    return count, newest
 
 
 def bundled_sheet_for(sha: str, paths: Paths) -> str | None:
-    """'assets/...' path (game-root relative) of the PNG under assets/ hashing to sha, else None."""
+    """'assets/...' path (game-root relative) of the PNG under assets/ hashing to sha, else None.
+
+    The SHA index is rebuilt after a miss only when the assets tree changed since the last build.
+    """
     def build() -> dict[str, str]:
         index: dict[str, str] = {}
         for p in sorted(paths.assets.rglob("*.png")):
             index.setdefault(sha256_file(p), p.relative_to(paths.game).as_posix())
         _SHEET_INDEX[paths.assets] = index
+        _SHEET_SIG[paths.assets] = _assets_signature(paths.assets)
         return index
 
     index = _SHEET_INDEX.get(paths.assets)
     if index is None:
         index = build()
-    if sha not in index:
+    if sha not in index and _assets_signature(paths.assets) != _SHEET_SIG.get(paths.assets):
         index = build()
     return index.get(sha)
 
 
 def hinted_sheet(hint: object, sha: str, paths: Paths) -> str | None:
-    """The slicer's game_sheet hint, trusted only inside assets/ and only when its bytes hash to sha."""
+    """The slicer's game_sheet hint ('res://assets/...' or 'assets/...'), trusted only inside assets/
+    and only when its bytes hash to sha."""
     if not isinstance(hint, str) or not hint:
         return None
-    path = (paths.game / hint).resolve()
+    path = (paths.game / hint.removeprefix("res://")).resolve()
     if paths.assets.resolve() not in path.parents or not path.is_file() or sha256_file(path) != sha:
         return None
     return path.relative_to(paths.game.resolve()).as_posix()
@@ -519,6 +534,18 @@ def regenerate_candidates(paths: Paths) -> None:
 
 # ------------------------------------------------------------------- main
 
+def check_owned_batch(candidate: Path, paths: Paths, args: argparse.Namespace) -> None:
+    """Only owned batches (the registry's ^(pixellab|codex) rule) may take the owned path."""
+    batch = candidate.relative_to(paths.potential).parts[0]
+    if not re.match(r"(pixellab|codex)", batch, re.I):
+        raise Refused(f"{candidate.name}: batch '{batch}' is not an owned batch (pixellab_*/codex_*); "
+                      "pack art must come in as a _sliced slice with --fallback")
+    tier = ac.classify_batch(batch)[1]
+    if tier == "owned-unverified" and not args.allow_unverified:
+        raise Refused(f"{candidate.name}: batch '{batch}' is {tier} (public redistribution unverified); "
+                      "pass --allow-unverified to wire it anyway")
+
+
 def wire_one(candidate: Path, sprite_id: str, args: argparse.Namespace, paths: Paths) -> bool:
     """Returns True when files changed. Raises Refused/ProbeError/BundlePending."""
     candidate = (candidate if candidate.is_absolute() else paths.repo_root / candidate).resolve()
@@ -546,6 +573,7 @@ def wire_one(candidate: Path, sprite_id: str, args: argparse.Namespace, paths: P
                     paths.bundle_pending.write_text(new, encoding="utf-8")
             raise
     else:
+        check_owned_batch(candidate, paths, args)
         plan = plan_owned(candidate, sprite_id, args, paths, text, catalog)
     for n in plan.notes:
         print(f"{sprite_id}: {n}")
@@ -574,6 +602,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--fallback", help="owned public sprite id (required for pack slices)")
     ap.add_argument("--like", help="copy render_scale/shadow from this catalog entry")
     ap.add_argument("--fps", type=int, help="default 1 for one frame, 6 for strips")
+    ap.add_argument("--allow-unverified", action="store_true",
+                    help="permit owned-unverified (codex_*) batches on the owned path")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-regen", action="store_true", help="skip docs/asset-candidates.* rebuild")
     ap.add_argument("--repo-root", type=Path, default=REPO_ROOT)

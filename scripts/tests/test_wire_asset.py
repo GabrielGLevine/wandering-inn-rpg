@@ -285,6 +285,29 @@ def test_sheet_bundled_after_first_lookup_is_found(tree):
     assert wa.bundled_sheet_for(sha(late), paths) == "assets/props/late.png"
 
 
+def test_real_res_form_hint_short_circuits_index(tree, monkeypatch):
+    sj = tree / f"potential_assets/_sliced/{UNBUNDLED_PACK}/Props/SLICES.json"
+    d = json.loads(sj.read_text())
+    d["assets"][0]["game_sheet"] = "res://assets/props/free_pack/Furniture.png"
+    d["assets"][0]["sheet_sha256"] = sha(tree / "wandering_inn_game/assets/props/free_pack/Furniture.png")
+    sj.write_text(json.dumps(d, indent=1) + "\n")
+    monkeypatch.setattr(wa, "bundled_sheet_for", lambda *a, **k: pytest.fail("index rebuilt despite valid hint"))
+    assert run(tree, PENDING_SLICE, "--id", "hinted_crate", "--fallback", "crate_owned") == 0
+    assert sprites(tree)["hinted_crate"]["animations"]["idle"]["sheet"] == "res://assets/props/free_pack/Furniture.png"
+
+
+def test_misses_rebuild_index_at_most_once(tree, monkeypatch):
+    paths = wa.Paths(tree)
+    wa._SHEET_INDEX.clear()
+    calls = []
+    real = wa.sha256_file
+    monkeypatch.setattr(wa, "sha256_file", lambda p: calls.append(p) or real(p))
+    for i in range(6):
+        assert wa.bundled_sheet_for(f"{i:064x}", paths) is None
+    n_png = len(list(paths.assets.rglob("*.png")))
+    assert len(calls) <= 2 * n_png
+
+
 ALLOWED = {SPRITES, FIXTURE, PROVENANCE, "docs/asset-candidates.json", "docs/asset-candidates.md",
            "docs/art-bundle-pending.md"}
 
@@ -311,3 +334,18 @@ def test_candidates_regenerated_once_with_repo_root(tree):
 def test_no_regen_flag(tree):
     assert run(tree, OWNED, "--id", "parcel_stack", "--no-regen") == 0
     assert not (tree / "docs/asset-candidates.json").exists()
+
+
+def test_owned_path_refuses_pack_png_and_unverified_codex(tree, capsys):
+    from wi_fake_tree import png_box
+    pack = "potential_assets/Pixel Crawler - Free Pack 2.1/Env/Chest.png"
+    codex = "potential_assets/codex_test/L2_props/chest.png"
+    png_box(tree / pack, 64, 64, (8, 8, 40, 40))
+    png_box(tree / codex, 64, 64, (8, 8, 40, 40))
+    before = snapshot(tree)
+    assert run(tree, pack, "--id", "pack_chest") == wa.EXIT_REFUSED
+    assert "pack_chest" not in sprites(tree)
+    assert run(tree, codex, "--id", "codex_chest") == wa.EXIT_REFUSED
+    assert "--allow-unverified" in capsys.readouterr().out
+    assert not changed(before, snapshot(tree))
+    assert run(tree, codex, "--id", "codex_chest", "--allow-unverified", "--dry-run") == 0
