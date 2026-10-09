@@ -53,11 +53,12 @@
    "name": "kits_invrisil_invrisil_cross_street_official_day_arrival"
   },
   {
+   "_comment": "#608 art read: landmark pose one cell west of the flower cart's footprint (9-10,5); from (10,4) the cart drew over the player.",
    "action": "teleport",
    "map": "invrisil_cross_street",
    "cell": [
-    10,
-    4
+    8,
+    5
    ]
   },
   {
