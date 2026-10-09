@@ -2,7 +2,9 @@
  "_comment": "Explicit coverage decisions for tools/asset_coverage.py (#624). Globs are relative to potential_assets/ (`**/` spans folders, `*` stays in one) and apply only to PNGs that no SLICES.json, registry row or path rule already classified. `pending_rulings` holds usable art waiting on a named decision: reported first in docs/asset-coverage.md, never a --check failure, never excluded, and checked before `exclusions`. `exclusions` holds what is not pool material; `class` records a rig, ui or audio file the path words cannot see, otherwise the PNG is `excluded`. Every entry needs a reason a reviewer can check.",
  "pending_rulings": [
   {"glob": "Ninja Adventure - Asset Pack/**/Backgrounds/Animated/**", "reason": "NINJA16 animated map pieces (flags, mills, water ripples, waterfall): the family is unverified beside PC16 (asset-catalog sec. 1, LOW-CONFIDENCE). Needs a windowed side-by-side ruling, then slice or exclude"},
-  {"glob": "Ninja Adventure - Asset Pack/**/Backgrounds/Vehicles/**", "reason": "NINJA16 boat, crane, sail and nets: the family is unverified beside PC16 (asset-catalog sec. 1, LOW-CONFIDENCE). Needs a windowed side-by-side ruling, then slice or exclude"}
+  {"glob": "Ninja Adventure - Asset Pack/**/Backgrounds/Vehicles/**", "reason": "NINJA16 boat, crane, sail and nets: the family is unverified beside PC16 (asset-catalog sec. 1, LOW-CONFIDENCE). Needs a windowed side-by-side ruling, then slice or exclude"},
+  {"glob": "pixellab_harvest_2026-10/L2_props/*__after.png", "reason": "needs L2_props MANIFEST row + verdict (harvest after-states with no manifest row)"},
+  {"glob": "pixellab_harvest_2026-10/L2_props/forge_molten_trough_wide.png", "reason": "needs L2_props MANIFEST row + verdict (wide variant of forge_molten_trough)"}
  ],
  "exclusions": [
   {"glob": "Pixel Crawler - */**/Social/**", "reason": "Social/: 4x promo upscales and mockups of the Assets/ sheets (slicer SKIPPED promo_render)"},
@@ -35,8 +37,6 @@
   {"glob": "pixellab_*/**/*_4x*.png", "reason": "4x preview upscales of registered sheets (asset_candidates skips _4x)"},
   {"glob": "pixellab_*/**/palette_*.png", "reason": "palette swatch, not an asset"},
   {"glob": "pixellab_*/**/preview_*.png", "reason": "PixelLab preview renders of a registered rig"},
-  {"glob": "pixellab_2026-10-08_pallass_513/sheets/**", "class": "rig_or_animation", "reason": "assembled animation sheets of the #513 rigs, whose rig folders are registered"},
-  {"glob": "pixellab_harvest_2026-10/L2_props/*__after.png", "reason": "harvest after-state with no L2_props MANIFEST.json row (unreviewed; needs a manifest row and verdict before pool use)"},
-  {"glob": "pixellab_harvest_2026-10/L2_props/forge_molten_trough_wide.png", "reason": "harvest prop with no L2_props MANIFEST.json row (unreviewed wide variant of forge_molten_trough; needs a manifest row and verdict before pool use)"}
+  {"glob": "pixellab_2026-10-08_pallass_513/sheets/**", "class": "rig_or_animation", "reason": "assembled animation sheets of the #513 rigs, whose rig folders are registered"}
  ]
 }
