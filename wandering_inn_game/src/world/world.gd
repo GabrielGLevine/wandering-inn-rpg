@@ -1247,9 +1247,19 @@ func _build_scatter(specs: Array) -> void:
 		# the few non-foliage instances in a mixed pool is imperceptible in
 		# practice.
 		var sway := bool(spec.get("sway", false))
+		# Optional `cells` ("all" | {"rect":..} | {"list":..}, the floor_layers
+		# grammar) confines a spec to a region. The hash below is untouched, so
+		# every cell a spec keeps decides exactly as it did before (#620).
+		var only_cells := {}
+		var confined := spec.has("cells") and not (spec["cells"] is String and spec["cells"] == "all")
+		if confined:
+			for allowed: Vector2i in WITileBoardBuilder.resolve_layer_cells(spec["cells"], grid_size):
+				only_cells[allowed] = true
 		for x in grid_size.x:
 			for y in grid_size.y:
 				var cell := Vector2i(x, y)
+				if confined and not only_cells.has(cell):
+					continue
 				if Game.sim.is_cell_blocked(cell) or occupied.has(cell) or cell == Game.sim.player_cell:
 					continue
 				var block := Vector2i(x / 4, y / 4)
