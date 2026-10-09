@@ -602,20 +602,7 @@
  ],
  "floor_layers": [
   {
-   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
-   "tile_px": 16,
-   "coords": [
-    0,
-    0
-   ],
-   "tone": {
-    "base": [
-     0.36,
-     0.35,
-     0.38
-    ],
-    "detail": 0.2
-   },
+   "material": "@floor_street",
    "cells": "all"
   },
   {

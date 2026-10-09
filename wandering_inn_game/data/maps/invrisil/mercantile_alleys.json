@@ -820,40 +820,9 @@
  ],
  "floor_layers": [
   {
-   "_pick": "#225 first floor layer (was pristine biome-default invrisil marble, zero floor_layers): the back-alley reads as grimy worn cobble underfoot, distinct from the boulevard's marble plaza. Reuses the Free Pack Floors_Tiles cobble band already VERIFIED as the Liscor street/gate cobble ([16,2]/[17,2]/[18,2], rgb~116,106,94). Footstep-stone stays honest.",
-   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
-   "tile_px": 16,
-   "variants": [
-    [
-     16,
-     2
-    ],
-    [
-     17,
-     2
-    ],
-    [
-     18,
-     2
-    ]
-   ],
-   "cells": "all",
-    "fallback_render": {
-                        "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-                        "tile_px": 16,
-                        "coords": [
-                         0,
-                         3
-                        ],
-                        "tone": {
-                         "base": [
-                          0.33,
-                          0.34,
-                          0.36
-                         ],
-                         "detail": 0.5
-                        }
-                       }
+   "_pick": "#608: @floor_alley, Invrisil's own ashlar paving (data/kits.json), replaces the Free Pack Floors_Tiles cobble band ([16,2]/[17,2]/[18,2]) it shared with Liscor's street. #225 gave the alleys this first floor layer (was the biome-default marble) so the back-alley reads apart from the boulevard's marble plaza; the material keeps that split. Footstep-stone stays honest.",
+   "material": "@floor_alley",
+   "cells": "all"
   }
  ],
  "decor": [
