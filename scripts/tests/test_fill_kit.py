@@ -333,10 +333,26 @@ def test_failed_selection_is_resumable_without_duplicates(tree, monkeypatch, cap
 
 
 def test_reuse_only_matches_this_roles_ids(tree):
-    # the shipped `crate` entry shares the slice's sheet region but must never become a pool member
+    # a fresh pick takes this role's next auto id; other entries on the same sheet are never reused
     assert run(tree, "invrisil", "cargo", "--need", "1", "--kind", "crate", "--select", "2",
                "--fallback", "crate_owned") == 0
     assert kits(tree)["invrisil"]["roles"]["cargo"]["pool"] == ["invrisil_cargo_1"]
+
+
+def test_shipped_twin_is_refused_never_pooled(tree, capsys):
+    # #623: when a shipped entry already draws the slice's art, wire_asset refuses a second id
+    # (exit 6) and the pool is left alone; the user pools the existing id or aliases it by hand
+    p = tree / "wandering_inn_game/data/sprites.json"
+    cat = json.loads(p.read_text())
+    cat["crate"]["animations"]["idle"]["region"] = [16, 8, 16, 23]
+    p.write_text(json.dumps(cat, indent=1) + "\n")
+    before = snapshot(tree)
+    assert run(tree, "invrisil", "cargo", "--need", "1", "--kind", "crate", "--select", "2",
+               "--fallback", "crate_owned") == wa.EXIT_REFUSED
+    out = capsys.readouterr().out
+    assert "DUPLICATE-ART invrisil_cargo_1" in out and "already registered as crate." in out
+    assert "wire_asset exit 6" in out
+    assert changed(before, snapshot(tree)) == set()
 
 
 def test_filled_pool_closes_the_open_row(tree):

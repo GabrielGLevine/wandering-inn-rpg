@@ -3,11 +3,20 @@
 
   python3 tools/wire_asset.py <candidate.png>… --id <sprite_id> [--id …] [--kind prop|setpiece]
         [--fallback <owned_sprite_id>] [--like <sprite_id>] [--fps N] [--dry-run]
-        [--no-regen] [--repo-root DIR]
+        [--alias-of <existing_id> --reason "<text>"] [--no-regen] [--repo-root DIR]
 
 One --id per candidate, in order. Exit codes: 0 wired or no change; 2 usage;
 3 bundle pending; 4 refused (pc_* id, id already wired with different content,
-bad --fallback, non-canonical fixture); 5 probe failure (empty alpha, bad strip).
+bad --fallback, --alias-of naming no twin, non-canonical fixture); 5 probe
+failure (empty alpha, bad strip); 6 duplicate art.
+
+Duplicate art (#623): a new id whose art identity (wi_kits_lib.art_identity: a
+region row's sheet and rect, a frame sheet's sha256 and frame size; scale, tint
+and fallback never count) is already registered is refused with exit 6 and
+`DUPLICATE-ART`, naming the existing id. Reuse that id. A deliberate second id
+needs --alias-of <that id> --reason "<why>" (one candidate per call), which
+records "_alias_of" and "_alias_reason" on the entry; G2/G3 still count both ids
+as one picture.
 
 Owned PNG (potential_assets/pixellab_*/…, codex_*/…): copied unchanged to
 assets/sprites/<id>/Idle-Sheet.png; a static sprites.json entry; a
@@ -61,8 +70,9 @@ sys.path.insert(0, str(REPO_ROOT / "tools"))
 sys.path.insert(0, str(REPO_ROOT / "wandering_inn_game" / "scripts"))
 import asset_candidates as ac  # noqa: E402
 import splice_json  # noqa: E402
+import wi_kits_lib as kl  # noqa: E402
 
-EXIT_OK, EXIT_USAGE, EXIT_BUNDLE_PENDING, EXIT_REFUSED, EXIT_PROBE = 0, 2, 3, 4, 5
+EXIT_OK, EXIT_USAGE, EXIT_BUNDLE_PENDING, EXIT_REFUSED, EXIT_PROBE, EXIT_DUPLICATE = 0, 2, 3, 4, 5, 6
 ALPHA_FLOOR = 8
 ID_RE = re.compile(r"^[a-z0-9_]+$")
 DEFAULT_SCALE = {"owned": 0.4, "pack": 1.0}
@@ -96,6 +106,10 @@ class Refused(Exception):
 
 class ProbeError(Exception):
     exit_code = EXIT_PROBE
+
+
+class DuplicateArt(Exception):
+    exit_code = EXIT_DUPLICATE
 
 
 class BundlePending(Exception):
@@ -282,6 +296,47 @@ def sibling(catalog: dict, mode: str, like: str | None, sheet_res: str,
     return None
 
 
+def art_twins(sprite_id: str, entry: dict, catalog: dict, sheets: kl.SheetHasher) -> tuple[tuple, list[str]]:
+    """(the entry's art identity, every OTHER catalog id drawing that art). Frame sheets are
+    hashed only for entries of the same identity type and frame size."""
+    ident = kl.art_identity(sprite_id, entry, sheets)
+    twins = []
+    for sid, other in catalog.items():
+        if sid == sprite_id or sid.startswith("_") or not isinstance(other, dict):
+            continue
+        cheap = kl.art_identity(sid, other, lambda _path: None)
+        if cheap[0] != ident[0] or (ident[0] == "S" and cheap[2] != ident[2]):
+            continue
+        if kl.art_identity(sid, other, sheets) == ident:
+            twins.append(sid)
+    return ident, twins
+
+
+def refuse_duplicate_art(sprite_id: str, entry: dict, catalog: dict, args: argparse.Namespace, paths: Paths,
+                         new_sheets: dict | None = None) -> dict:
+    """#623: the entry to write, or DuplicateArt when its art is registered under another id.
+    --alias-of <twin> --reason lets it through and records both on the entry. A re-run of an
+    id already in the catalog is left to sprites_with (no change, or exit 4)."""
+    alias = getattr(args, "alias_of", None)
+    if alias is None and sprite_id in catalog:
+        return entry
+    ident, twins = art_twins(sprite_id, entry, catalog, kl.SheetHasher(paths.game, new_sheets))
+    if not twins:
+        if alias:
+            raise Refused(f"{sprite_id}: --alias-of {alias}, but no registered id draws this art "
+                          f"({kl.identity_label(ident)}); drop --alias-of")
+        return entry
+    if alias not in twins:
+        raise DuplicateArt(f"DUPLICATE-ART {sprite_id}: {kl.identity_label(ident)} is already registered as "
+                           f"{', '.join(twins)}. Use that id, or pass --alias-of {twins[0]} --reason \"<why a "
+                           f"second id>\" to wire a deliberate alias")
+    out = {k: v for k, v in entry.items() if k == "_comment"}
+    out["_alias_of"] = alias
+    out["_alias_reason"] = args.reason
+    out.update({k: v for k, v in entry.items() if k != "_comment"})
+    return out
+
+
 def build_entry(mode: str, sheet_res: str, frame: tuple[int, int], region: list[int] | None,
                 anchor: list[float], sib: tuple[str, dict] | None, kind: str,
                 fallback: str | None, fps: int, comment: str) -> dict:
@@ -397,6 +452,7 @@ def plan_slice(candidate: Path, sprite_id: str, args: argparse.Namespace, paths:
                f"{row['sheet_sha256'][:12]}; wired by tools/wire_asset.py")
     entry = build_entry("pack", sheet_res, (w, h), [x, y, w, h], pr["anchor"], sib, args.kind,
                         args.fallback, args.fps or 1, comment)
+    entry = refuse_duplicate_art(sprite_id, entry, catalog, args, paths)
     plan = WirePlan(sprite_id, entry, 1)
     plan.notes.append(f"pack: bundled sheet {rel_sheet}; sibling {sib[0] if sib else '(none; defaults)'}; "
                       f"probe bbox {pr['bbox']} feet {pr['feet']}/{h} anchor {pr['anchor']}")
@@ -497,6 +553,8 @@ def plan_owned(candidate: Path, sprite_id: str, args: argparse.Namespace, paths:
     fps = args.fps or (1 if count == 1 else 6)
     entry = build_entry("owned", sheet_res, (fw, fh), None, pr["anchor"], sib, args.kind,
                         args.fallback, fps, "")
+    entry = refuse_duplicate_art(sprite_id, entry, catalog, args, paths,
+                                 {sheet_res.removeprefix("res://"): sha})
     plan = WirePlan(sprite_id, entry, count)
     plan.notes.append(f"owned: {count} frame(s) of {fw}x{fh}; sibling {sib[0] if sib else '(none; defaults)'}; "
                       f"probe bbox {pr['bbox']} feet {pr['feet']}/{fh} anchor {pr['anchor']}")
@@ -619,6 +677,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--allow-unverified", action="store_true",
                     help="permit owned-unverified (codex_*) batches on the owned path")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--alias-of", help="existing id drawing the same art; wires a deliberate second id (#623)")
+    ap.add_argument("--reason", help="why the alias exists (required with --alias-of; recorded on the entry)")
     ap.add_argument("--no-regen", action="store_true", help="skip docs/asset-candidates.* rebuild")
     ap.add_argument("--repo-root", type=Path, default=REPO_ROOT)
     args = ap.parse_args(argv)
@@ -626,12 +686,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"wire_asset: {len(args.candidates)} candidate(s) need exactly {len(args.candidates)} --id value(s)",
               file=sys.stderr)
         return EXIT_USAGE
+    if (args.alias_of is None) != (args.reason is None) or (args.reason is not None and not args.reason.strip()):
+        print("wire_asset: --alias-of and a non-empty --reason go together", file=sys.stderr)
+        return EXIT_USAGE
+    if args.alias_of is not None and len(args.candidates) != 1:
+        print("wire_asset: --alias-of takes exactly one candidate", file=sys.stderr)
+        return EXIT_USAGE
     paths = Paths(args.repo_root)
     rc, any_change = EXIT_OK, False
     for candidate, sprite_id in zip(args.candidates, args.id):
         try:
             any_change = wire_one(candidate, sprite_id, args, paths) or any_change
-        except (Refused, ProbeError, BundlePending) as exc:
+        except (Refused, ProbeError, BundlePending, DuplicateArt) as exc:
             print(str(exc))
             rc = max(rc, exc.exit_code)
     if any_change and not args.no_regen:

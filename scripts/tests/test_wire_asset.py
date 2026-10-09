@@ -13,7 +13,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent.parent / "tools"))
 import wire_asset as wa  # noqa: E402
-from wi_fake_tree import (BENCH, OWNED, PACK, PENDING_SLICE, PIXELLAB_ID, SLICE, STRIP,  # noqa: E402
+from wi_fake_tree import (BENCH, OWNED, OWNED_DUP, PACK, PENDING_SLICE, PIXELLAB_ID, SLICE, STRIP,  # noqa: E402
                           UNBUNDLED_PACK, changed, make_tree, sha, snapshot)
 
 SPRITES = "wandering_inn_game/data/sprites.json"
@@ -396,3 +396,87 @@ def test_pack_slice_wires_through_symlinked_potential_assets(tree, tmp_path):
     _symlink_store(tree, tmp_path)
     assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
     assert sprites(tree)["crate_lidded"]["animations"]["idle"]["region"] == [16, 8, 16, 23]
+
+
+# ---------------------------------------------------------------- #623 duplicate art
+
+def _twin_crate(tree):
+    """Point the shipped `crate` at the slice's region: the slice's art is then already registered."""
+    p = tree / SPRITES
+    cat = json.loads(p.read_text())
+    cat["crate"]["animations"]["idle"]["region"] = [16, 8, 16, 23]
+    p.write_text(json.dumps(cat, indent=1) + "\n")
+
+
+def test_pack_slice_of_registered_art_is_refused_naming_the_id(tree, capsys):
+    _twin_crate(tree)
+    before = snapshot(tree)
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == wa.EXIT_DUPLICATE == 6
+    out = capsys.readouterr().out
+    assert "DUPLICATE-ART crate_lidded" in out and "already registered as crate." in out
+    assert "--alias-of crate --reason" in out
+    assert snapshot(tree) == before
+
+
+def test_owned_byte_identical_copy_is_refused(tree, capsys):
+    assert run(tree, OWNED, "--id", "parcel_stack") == 0
+    before = snapshot(tree)
+    assert run(tree, OWNED_DUP, "--id", "parcel_stack_b") == wa.EXIT_DUPLICATE
+    assert "already registered as parcel_stack" in capsys.readouterr().out
+    assert snapshot(tree) == before
+
+
+def test_another_scale_does_not_hide_a_duplicate(tree, capsys):
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    before = snapshot(tree)
+    assert run(tree, SLICE, "--id", "crate_big", "--fallback", "crate_owned", "--like", "crate_owned") == wa.EXIT_DUPLICATE
+    assert "already registered as crate_lidded" in capsys.readouterr().out
+    assert snapshot(tree) == before
+
+
+def test_alias_of_records_the_alias_and_reason(tree):
+    _twin_crate(tree)
+    argv = (SLICE, "--id", "crate_lidded", "--fallback", "crate_owned", "--alias-of", "crate",
+            "--reason", "quest crate keeps its own id")
+    assert run(tree, *argv) == 0
+    e = sprites(tree)["crate_lidded"]
+    assert list(e)[:3] == ["_comment", "_alias_of", "_alias_reason"]
+    assert e["_alias_of"] == "crate" and e["_alias_reason"] == "quest crate keeps its own id"
+    assert e["animations"]["idle"]["region"] == [16, 8, 16, 23]
+    before = snapshot(tree)
+    assert run(tree, *argv) == 0
+    assert snapshot(tree) == before
+
+
+def test_alias_of_must_name_a_twin(tree, capsys):
+    _twin_crate(tree)
+    before = snapshot(tree)
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned",
+               "--alias-of", "crate_owned", "--reason", "x") == wa.EXIT_DUPLICATE
+    assert "already registered as crate." in capsys.readouterr().out
+    assert run(tree, OWNED, "--id", "parcel_stack", "--alias-of", "crate_owned", "--reason", "x") == wa.EXIT_REFUSED
+    assert "no registered id draws this art" in capsys.readouterr().out
+    assert snapshot(tree) == before
+
+
+@pytest.mark.parametrize("extra", [("--alias-of", "crate"), ("--reason", "why"), ("--alias-of", "crate", "--reason", " ")])
+def test_alias_flags_go_together(tree, extra):
+    before = snapshot(tree)
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned", *extra) == wa.EXIT_USAGE
+    assert snapshot(tree) == before
+
+
+def test_alias_takes_one_candidate(tree):
+    before = snapshot(tree)
+    assert run(tree, OWNED, SLICE, "--id", "a_one", "--id", "a_two", "--fallback", "crate_owned",
+               "--alias-of", "crate", "--reason", "x") == wa.EXIT_USAGE
+    assert snapshot(tree) == before
+
+
+def test_rerun_of_a_wired_id_is_not_a_duplicate(tree, capsys):
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    _twin_crate(tree)   # a legacy twin appears later; re-running the finished wiring stays a no-op
+    before = snapshot(tree)
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    assert "no change" in capsys.readouterr().out
+    assert snapshot(tree) == before
