@@ -16,6 +16,10 @@ from pathlib import Path
 MATERIAL_FIELDS = ["sheet", "tile_px", "coords", "variants", "tone", "wang_corners", "cap", "face", "fallback_render"]
 TWO_32 = 4294967296.0
 NON_PERSON_HEADINGS = {"The PC", "Antinium", "Horns roster note", "Invrisil civilian rigs"}
+# Title/race words that open a heading ("Master Ilvriss", "Gnoll Tribe") but
+# name no one: adding them as canon would ban every "Master"/"Gnoll" NPC.
+GENERIC_FIRST_WORDS = {"Master", "Grand", "Tier", "Recruit", "Frazzled", "Gnoll", "Garuda", "Dullahan",
+                       "Drake", "Human", "Den-Shop", "Forge-Tier"}
 _HEADING_NAME = re.compile(r"^[A-Z][A-Za-z'\-]*( [A-Za-z'\-]+)*$")
 
 
@@ -216,7 +220,8 @@ def canon_names(repo_root: Path) -> set:
         if not name or name in NON_PERSON_HEADINGS or not _HEADING_NAME.match(name):
             continue
         names.add(name)
-        names.add(name.split(" ")[0])
+        if name.split(" ")[0] not in GENERIC_FIRST_WORDS:
+            names.add(name.split(" ")[0])
     for path in sorted((Path(repo_root) / "wandering_inn_game" / "data" / "maps").glob("*/*.json")):
         for e in json.loads(path.read_text()).get("entities") or []:
             dn = str(e.get("display_name", ""))

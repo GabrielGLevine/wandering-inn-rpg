@@ -196,6 +196,13 @@ class TestCanonNames(unittest.TestCase):
         for n in ["The PC", "Antinium", "Horns roster note", "Invrisil civilian rigs", "at", "2026-07-12)"]:
             self.assertNotIn(n, names, n)
 
+    def test_generic_first_words_are_not_canon(self):
+        names = kl.canon_names(REPO_ROOT)
+        for n in ["Master", "Grand", "Tier", "Recruit", "Frazzled", "Gnoll", "Garuda", "Dullahan", "Drake", "Human", "Den-Shop", "Forge-Tier"]:
+            self.assertNotIn(n, names, n)
+        for n in ["Relc", "Erin", "Klbkch"]:
+            self.assertIn(n, names, n)
+
     def test_sprite_equals_first_name_rule(self):
         with tempfile.TemporaryDirectory() as t:
             root = Path(t)

@@ -82,6 +82,7 @@ import struct
 from pathlib import Path
 
 from wi_data_lib import DATA, GAME_ROOT
+import wi_kits_lib as kl
 
 GATE_KEYS = ("door_when", "contains_when", "portal_menu_when", "fence_menu_when")
 SKILL_GATE_MECHANISMS = {"property", "blink", "arm", "social", "endure"}
@@ -100,6 +101,10 @@ MONO_EPS = 1e-9  # float-noise guard on the strict-monotone comparisons
 # (map_id, entity_id, gate_key) -> the follow-up issue that owns the fix.
 # EMPTY BY DESIGN: a masked always-true gate is a shipped bug, never a waiver.
 VACUOUS_GATE_ALLOWLIST: dict = {}
+
+KIT_PICKS = {"cell", "map", "door"}
+KIT_ROLE_KEYS = {"pick", "module", "pool", "light", "deny", "_comment"}
+ANON_NAME = re.compile(r"^(A|An) ")
 
 
 def check_wellformed(errors: list, root: Path = DATA) -> dict:
@@ -1295,6 +1300,203 @@ def _light_row_counts(maps: dict) -> dict:
 					n += 1
 		counts[map_id] = n
 	return counts
+
+
+def _kit_region_of(path: Path) -> str:
+	return path.parent.name
+
+
+def _map_regions(parsed: dict) -> dict:
+	"""map_id -> kit name (folder, or the map's top-level `kit`)."""
+	out = {}
+	for path, doc in parsed.items():
+		if path.parent.parent.name == "maps" and isinstance(doc, dict):
+			out[path.stem] = str(doc.get("kit", _kit_region_of(path)))
+	return out
+
+
+def _sprite_public(entry: dict, bundle_paths: set) -> bool:
+	sheets = [v for anim in (entry.get("animations") or {}).values() if isinstance(anim, dict)
+		for k, v in anim.items() if k.startswith("sheet") and isinstance(v, str)]
+	return bool(sheets) and not any(s.removeprefix("res://") in bundle_paths for s in sheets)
+
+
+def _footprint(entry: dict) -> tuple:
+	anim = (entry.get("animations") or {}).get("idle") or next(iter((entry.get("animations") or {}).values()), {})
+	size = anim.get("frame_size", [0, 0]) if isinstance(anim, dict) else [0, 0]
+	scale = float(entry.get("render_scale", 1.0))
+	return (float(size[0]) * scale, float(size[1]) * scale)
+
+
+def _check_kit_schema(kits: dict, sprites: dict, errors: list, bundle_paths: set) -> None:
+	if "_common" not in kits:
+		errors.append("kits: _common block missing")
+	for region, block in kits.items():
+		if region.startswith("_") and region != "_common":
+			continue
+		if not isinstance(block, dict):
+			errors.append(f"kits.{region}: must be an object"); continue
+		for section in ("materials", "roles", "cast"):
+			if section not in block:
+				errors.append(f"kits.{region}: missing {section}")
+		for name, mat in (block.get("materials") or {}).items():
+			if not isinstance(mat, dict) or set(mat) - set(kl.MATERIAL_FIELDS) - {"_comment"}:
+				errors.append(f"kits.{region}.materials.{name}: keys must be within {sorted(kl.MATERIAL_FIELDS)}")
+		for name, role in (block.get("roles") or {}).items():
+			if isinstance(role, str):
+				if role not in sprites:
+					errors.append(f"kits.{region}.roles.{name}: sprite '{role}' is not in sprites.json")
+				continue
+			if not isinstance(role, dict):
+				errors.append(f"kits.{region}.roles.{name}: must be a sprite id or a pool object"); continue
+			if set(role) - KIT_ROLE_KEYS:
+				errors.append(f"kits.{region}.roles.{name}: unknown keys {sorted(set(role) - KIT_ROLE_KEYS)}")
+			if role.get("pick", "cell") not in KIT_PICKS:
+				errors.append(f"kits.{region}.roles.{name}: pick must be one of {sorted(KIT_PICKS)}")
+			if not isinstance(role.get("module", False), bool):
+				errors.append(f"kits.{region}.roles.{name}: module must be a bool")
+			pool = role.get("pool")
+			if not isinstance(pool, list) or not pool:
+				errors.append(f"kits.{region}.roles.{name}: pool must be a non-empty list"); continue
+			ids = []
+			for entry in pool:
+				vid, weight = (entry[0], entry[1]) if isinstance(entry, list) and len(entry) == 2 else (entry, 1)
+				if not isinstance(vid, str) or vid not in sprites:
+					errors.append(f"kits.{region}.roles.{name}: pool id '{vid}' is not in sprites.json")
+				if not _int_like(weight) or int(weight) < 1:
+					errors.append(f"kits.{region}.roles.{name}: weight for '{vid}' must be a positive int")
+				ids.append(vid)
+			if "deny" in role and (not isinstance(role["deny"], list) or any(not isinstance(w, str) or w != w.lower() for w in role["deny"])):
+				errors.append(f"kits.{region}.roles.{name}: deny must be a list of lowercase words")
+			if "light" in role and not isinstance(role["light"], dict):
+				errors.append(f"kits.{region}.roles.{name}: light must be an object")
+			_check_pool_public(region, name, [i for i in ids if i in sprites], sprites, errors, bundle_paths)
+			if role.get("pick") == "door":
+				_check_door_family(region, name, [i for i in ids if i in sprites], sprites, errors)
+		for cid in block.get("cast") or []:
+			if cid not in sprites:
+				errors.append(f"kits.{region}.cast: '{cid}' is not in sprites.json")
+
+
+def _check_pool_public(region: str, name: str, ids: list, sprites: dict, errors: list, bundle_paths: set) -> None:
+	if len(ids) < 2:
+		return
+	owned = set()
+	for vid in ids:
+		entry = sprites[vid]
+		if _sprite_public(entry, bundle_paths):
+			owned.add(vid)
+		elif isinstance(entry.get("fallback_sprite"), str) and entry["fallback_sprite"]:
+			owned.add(entry["fallback_sprite"])
+		else:
+			errors.append(f"kits.{region}.roles.{name}: bundle-only pool member '{vid}' needs a fallback_sprite")
+	if len(owned) < 2:
+		errors.append(f"kits.{region}.roles.{name}: the pool's public fallback set must hold >= 2 distinct owned sprites (has {sorted(owned)})")
+
+
+def _check_door_family(region: str, name: str, ids: list, sprites: dict, errors: list) -> None:
+	if not ids:
+		return
+	first = sprites[ids[0]]
+	fw, fh = _footprint(first)
+	for vid in ids:
+		entry = sprites[vid]
+		w, h = _footprint(entry)
+		if abs(w - fw) > 2 or abs(h - fh) > 2:
+			errors.append(f"kits.{region}.roles.{name}: door family footprint of '{vid}' ({w:.0f}x{h:.0f}) is not within 2px of '{ids[0]}' ({fw:.0f}x{fh:.0f})")
+		if [float(v) for v in entry.get("anchor", [0.5, 1.0])] != [0.5, 1.0]:
+			errors.append(f"kits.{region}.roles.{name}: door family member '{vid}' must anchor at [0.5, 1.0]")
+		if bool(entry.get("shadow", False)) != bool(first.get("shadow", False)):
+			errors.append(f"kits.{region}.roles.{name}: door family member '{vid}' shadow differs from '{ids[0]}'")
+
+
+def _deny_hit(role: dict, row: dict) -> str:
+	words = role.get("deny") or []
+	texts = [str(row.get("display_name", ""))]
+	obs = row.get("observe", "")
+	texts += obs if isinstance(obs, list) else [str(obs)]
+	for w in words:
+		if any(re.search(rf"\b{re.escape(w)}\b", t, re.IGNORECASE) for t in texts):
+			return w
+	return ""
+
+
+def check_kits(parsed: dict, maps: dict, errors: list, advisories: list, report: list,
+		bundle_paths: set | None = None, canon: frozenset | None = None) -> dict:
+	"""Returns {map_id: resolved_doc} for the G-gates (Task 6)."""
+	kits = parsed.get(DATA / "kits.json")
+	sprites = {k: v for k, v in (parsed.get(DATA / "sprites.json") or {}).items() if not k.startswith("_")}
+	if kits is None:
+		errors.append("kits: data/kits.json missing"); return {}
+	if bundle_paths is None:
+		manifest = json.loads((GAME_ROOT / "assets_manifest.json").read_text(encoding="utf-8"))
+		bundle_paths = {a["path"] for a in manifest.get("assets", []) if a.get("bundle")}
+	if canon is None:
+		canon = frozenset(kl.canon_names(GAME_ROOT.parent))
+	_check_kit_schema(kits, sprites, errors, bundle_paths)
+	for arena in (parsed.get(DATA / "arenas.json") or {}).get("arenas", []):
+		for layer in ("decor", "entities"):
+			for row in arena.get(layer) or []:
+				if isinstance(row, dict) and str(row.get("sprite", "")).startswith("@"):
+					errors.append(f"arenas.{arena.get('id')}: kit refs are not allowed on arena {layer}")
+	regions = _map_regions(parsed)
+	resolved = {}
+	for map_id, m in sorted(maps.items()):
+		region = regions.get(map_id, "")
+		cells = {}
+		for i, d in enumerate(m.get("decor") or []):
+			spr = str(d.get("sprite", ""))
+			if spr and not spr.startswith("@") and spr not in sprites:
+				errors.append(f"maps/{map_id}: decor[{i}] sprite '{spr}' is not in sprites.json")
+			cells[tuple(d.get("cell", []))] = cells.get(tuple(d.get("cell", [])), 0) + 1
+		for cell, n in cells.items():
+			if n >= 3:
+				errors.append(f"maps/{map_id}: {n} decor rows on cell {list(cell)} -- 3 decor on one cell is clutter (spec G4)")
+		for e in m.get("entities") or []:
+			spr = str(e.get("sprite", ""))
+			eid = e.get("id", "<no id>")
+			if spr and not spr.startswith("@") and spr not in sprites:
+				errors.append(f"maps/{map_id}: entity '{eid}' sprite '{spr}' is not in sprites.json")
+			for vs in e.get("visual_states") or []:
+				vspr = str(vs.get("sprite", "")) if isinstance(vs, dict) else ""
+				if vspr.startswith("@"):
+					errors.append(f"maps/{map_id}: entity '{eid}' visual_states may not use a kit ref")
+				elif vspr and vspr not in sprites:
+					errors.append(f"maps/{map_id}: entity '{eid}' visual_states sprite '{vspr}' is not in sprites.json")
+			if spr.startswith("@"):
+				if e.get("visual_states"):
+					errors.append(f"maps/{map_id}: entity '{eid}' has visual_states and may not use a kit ref")
+				if str(e.get("display_name", "")) in canon:
+					errors.append(f"maps/{map_id}: named NPC '{eid}' ({e.get('display_name')}) may not use a kit ref")
+				role = kl.lookup(kits, region, "roles", spr[1:])
+				if isinstance(role, dict):
+					hit = _deny_hit(role, e)
+					if hit:
+						errors.append(f"maps/{map_id}: entity '{eid}' uses '{spr}' but its text names '{hit}' (role deny list)")
+		for i, d in enumerate(m.get("decor") or []):
+			spr = str(d.get("sprite", ""))
+			role = kl.lookup(kits, region, "roles", spr[1:]) if spr.startswith("@") else None
+			if isinstance(role, dict) and _deny_hit(role, d):
+				errors.append(f"maps/{map_id}: decor[{i}] uses '{spr}' but its text names '{_deny_hit(role, d)}' (role deny list)")
+		# cast rules -- only where the region declares a cast
+		cast = set((kits.get(region) or {}).get("cast") or []) | set(kits["_common"].get("cast") or [])
+		if cast:
+			for e in m.get("entities") or []:
+				if e.get("kind") != "npc":
+					continue
+				dn, spr = str(e.get("display_name", "")), str(e.get("sprite", ""))
+				if ANON_NAME.match(dn) and spr not in cast:
+					errors.append(f"maps/{map_id}: anonymous npc '{dn}' must use a cast rig of {region} or _common (has '{spr}')")
+				if dn in canon and spr in cast:
+					errors.append(f"maps/{map_id}: canon character '{dn}' uses cast rig '{spr}' -- named characters never share cast rigs")
+		res_errors: list = []
+		doc = kl.resolve_map(m, map_id, region, kits, res_errors)
+		errors.extend(res_errors)
+		for i, fl in enumerate(doc.get("floor_layers") or []):
+			if isinstance(fl, dict) and "material_ref" in fl and "coords" in fl and "variants" in fl:
+				errors.append(f"maps/{map_id}: floor_layers[{i}] ends with both coords and variants after @{fl['material_ref']}")
+		resolved[map_id] = doc
+	return resolved
 
 
 def check_moods(parsed: dict, maps: dict, errors: list) -> None:
@@ -2932,12 +3134,13 @@ def main() -> int:
 	check_solid_decor_blocks(maps, errors)
 	check_spriteless_entities(maps, errors)
 	check_placements_off_water(maps, errors)
+	advisories: list = []
+	resolved_maps = check_kits(parsed, maps, errors, advisories, report)
 	check_moods(parsed, maps, errors)
 	check_stat_growth_flat(parsed, errors)
 	check_companion_counter(parsed, maps, errors)
 	check_lineage_completeness(parsed, errors)
 	check_consolidation_skill_coverage(parsed, errors, report)
-	advisories: list = []
 	skill_gate_advisories: list = []
 	prose_template_advisories: list = []
 	advise_prose_templates(maps, prose_template_advisories)
