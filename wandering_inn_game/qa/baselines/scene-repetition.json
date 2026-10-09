@@ -1,0 +1,486 @@
+{
+ "_comment": "G3 scene-repetition ratchet (#607). Regenerate ONLY with `data_lint.py --regen-scene-baseline`, and every regen needs a CHOICE-LOG line saying why. generic = sprite placed in >= 3 regions.",
+ "generic_class": {
+  "a_shepherd": "regional",
+  "alchemy_bench": "generic",
+  "alchemy_bench_dark": "regional",
+  "alchemy_bench_true": "regional",
+  "alchemy_still": "regional",
+  "anchor_waystone": "generic",
+  "anchor_waystone_slate": "regional",
+  "antinium_worker": "regional",
+  "arrow_quiver": "regional",
+  "bar_counter": "regional",
+  "barrel": "generic",
+  "basket_stack": "regional",
+  "bat": "generic",
+  "bed": "generic",
+  "bench": "generic",
+  "boulder": "generic",
+  "briar_collector": "regional",
+  "briar_collector_deep": "regional",
+  "briar_wall": "regional",
+  "bush_green": "regional",
+  "camp_cooking_spit_owned": "regional",
+  "camp_hide_tent_owned": "regional",
+  "camp_lookout_owned": "regional",
+  "camp_palisade_owned": "regional",
+  "camp_weapon_rack_owned": "regional",
+  "campfire": "generic",
+  "cauldron": "regional",
+  "cellar_wardwork": "regional",
+  "ceria": "generic",
+  "chest": "generic",
+  "city_gate_arch": "regional",
+  "city_gatehouse": "regional",
+  "city_runner": "regional",
+  "city_scribe": "regional",
+  "coin_shop_sign": "regional",
+  "cold_hearth": "generic",
+  "corusdeer": "regional",
+  "corusdeer_carcass": "regional",
+  "corusdeer_wounded": "regional",
+  "cottage_thatch_a": "regional",
+  "cottage_thatch_b": "regional",
+  "counter_left": "generic",
+  "counter_mid": "regional",
+  "counter_right": "generic",
+  "coyle_shop_sign": "regional",
+  "crate": "generic",
+  "crop_row_dark_green": "regional",
+  "crop_row_green": "regional",
+  "crop_row_orange": "regional",
+  "crypt_lich": "regional",
+  "crystal_lamp": "regional",
+  "cups": "regional",
+  "dart_slit_tell": "regional",
+  "deep_fissure": "generic",
+  "delivery_board": "regional",
+  "den_shop_keeper": "regional",
+  "dig_survey_stakes_owned": "regional",
+  "dirty_table": "regional",
+  "door": "generic",
+  "door_locked_heavy": "regional",
+  "dormant_guardian_statue": "regional",
+  "drake_patron": "regional",
+  "dresk_ashgrave": "regional",
+  "drying_rack": "regional",
+  "drying_rack_hung": "regional",
+  "dullahan_examiner": "regional",
+  "dungeon_brazier_owned": "regional",
+  "dungeon_rubble": "generic",
+  "dungeon_statue": "regional",
+  "dusty_scroll": "regional",
+  "eloise": "regional",
+  "enchanter_stock_shelf": "regional",
+  "enchanter_vial_case": "regional",
+  "erin": "regional",
+  "facade_plaster": "regional",
+  "firewood_stack": "regional",
+  "food_basket": "regional",
+  "food_bread": "regional",
+  "footpad": "regional",
+  "footpad_bruiser": "regional",
+  "forge_golem": "regional",
+  "forge_hall_apprentice": "regional",
+  "forge_station": "regional",
+  "forge_tier_smith": "regional",
+  "former_headman": "regional",
+  "frazzled_drayman": "regional",
+  "gallery_mouth_owned": "regional",
+  "garden_blossom_purple": "regional",
+  "garden_blossom_white": "regional",
+  "garden_door_inner": "regional",
+  "garden_fountain_basin": "regional",
+  "garden_fountain_statue": "regional",
+  "garden_low_hedge": "regional",
+  "garden_rest_bench": "regional",
+  "garden_shelter_tree": "regional",
+  "garuda_runner": "regional",
+  "gentleman_bowler": "regional",
+  "gnaw_pile": "generic",
+  "gnoll_ranger": "regional",
+  "gnoll_traveler": "regional",
+  "goblin_base": "regional",
+  "goblin_sword": "regional",
+  "grain_sacks": "generic",
+  "grass_tuft": "regional",
+  "great_lift": "regional",
+  "grill": "regional",
+  "grimalkin": "regional",
+  "guild_banner": "regional",
+  "guild_handbill_wall": "regional",
+  "guild_notice_wall": "regional",
+  "guild_roofed_board": "regional",
+  "hat_stand": "regional",
+  "hearth": "regional",
+  "hedault": "regional",
+  "hide_rack": "regional",
+  "hired_blade": "regional",
+  "hollow_canopy_tree": "regional",
+  "hollow_glow_stone": "regional",
+  "hollow_mushroom_cluster": "regional",
+  "hollow_small_tree": "regional",
+  "house_factor": "regional",
+  "human_laborer": "regional",
+  "illusory_floor_tell": "regional",
+  "ilvo": "regional",
+  "inn_back_bar": "regional",
+  "inn_bar_station": "regional",
+  "inn_hearth": "regional",
+  "inn_kitchen_prep": "regional",
+  "inn_roof": "regional",
+  "inn_room_ledger": "generic",
+  "inn_round_table": "regional",
+  "inn_sign": "regional",
+  "inn_table_soiled": "regional",
+  "invrisil_flower_cart": "regional",
+  "invrisil_gentlewoman_2": "regional",
+  "invrisil_hanging_sign": "regional",
+  "invrisil_lady_client": "regional",
+  "invrisil_ornate_bench": "regional",
+  "invrisil_roofline": "regional",
+  "invrisil_shop_door": "regional",
+  "invrisil_stationery_display": "regional",
+  "invrisil_timber_panel": "regional",
+  "invrisil_upper_window": "regional",
+  "kingslayer_spider": "regional",
+  "klbkch": "regional",
+  "krshia": "regional",
+  "ksmvr": "generic",
+  "lamb": "regional",
+  "lamb_lying": "regional",
+  "leather_satchel": "regional",
+  "library_desk": "generic",
+  "library_shelf": "generic",
+  "liscor_bread_stall": "regional",
+  "liscor_watch_guard": "regional",
+  "longhouse_communal_table_owned": "regional",
+  "lyonette": "regional",
+  "market_stall_pallass": "regional",
+  "market_stall_pallass_b": "regional",
+  "market_stall_pallass_c": "regional",
+  "market_stall_wood": "regional",
+  "master_coyle": "regional",
+  "memorial_plinth": "regional",
+  "mill_high_shelf_owned": "regional",
+  "mill_tally_sticks_owned": "regional",
+  "mothbear": "regional",
+  "mothbear_harvest": "regional",
+  "mushroom": "regional",
+  "mushroom_purple_m": "regional",
+  "mushroom_purple_s": "regional",
+  "nest_ledge": "regional",
+  "note_pinned": "generic",
+  "octavia": "regional",
+  "olesm": "regional",
+  "owned_fallback_table_brown": "regional",
+  "pallass_billet_rack": "regional",
+  "pallass_rail_post": "regional",
+  "pallass_reject_bin": "regional",
+  "pallass_tagged_pallet": "regional",
+  "pallass_tool_wall": "regional",
+  "pedestal": "generic",
+  "phosphor_moss": "regional",
+  "pisces": "generic",
+  "plant_pot": "generic",
+  "plaza_fountain": "regional",
+  "pond_cache": "regional",
+  "pond_reeds": "regional",
+  "pressure_plate": "regional",
+  "price_board": "regional",
+  "rags": "regional",
+  "raskghar_awakened": "regional",
+  "raskghar_scout": "regional",
+  "ratici": "regional",
+  "razorbeak": "regional",
+  "recruit_pell": "regional",
+  "relc": "generic",
+  "renn": "regional",
+  "request_board": "regional",
+  "river_wolf": "regional",
+  "river_wolf_idle": "regional",
+  "riverfarm_dock_pier": "regional",
+  "riverfarm_earthwork": "regional",
+  "riverfarm_fence_ew": "regional",
+  "riverfarm_fence_ns": "regional",
+  "riverfarm_granary_owned": "regional",
+  "riverfarm_haystack": "regional",
+  "riverfarm_longhouse": "regional",
+  "riverfarm_rowboat": "regional",
+  "riverfarm_scarecrow": "regional",
+  "riverfarm_waterwheel_owned": "regional",
+  "riverfarm_well_owned": "regional",
+  "riverfarm_wheelwright_owned": "regional",
+  "riverfarm_windmill": "regional",
+  "road_peddler": "regional",
+  "rock_crab": "regional",
+  "rug_woven_cream": "generic",
+  "rug_woven_red": "regional",
+  "ruin_fallen_column_owned": "regional",
+  "ruin_gate": "regional",
+  "ruin_warden": "regional",
+  "rune_door": "regional",
+  "sconce": "generic",
+  "scree_spill": "regional",
+  "selys": "regional",
+  "sewer_grate": "regional",
+  "shaft_ladder": "regional",
+  "shelf_bottles": "generic",
+  "shield_spider": "regional",
+  "shop_oil_lamp": "regional",
+  "short_order_range": "regional",
+  "silverfang_stall_cutout": "regional",
+  "snare_coil": "generic",
+  "spider_web": "regional",
+  "stairs_up": "regional",
+  "stallkeeper": "regional",
+  "steam_vent": "regional",
+  "stool": "generic",
+  "street_lamp": "regional",
+  "table_brown": "generic",
+  "tallyman": "regional",
+  "temper_bench": "regional",
+  "tier_clerk": "regional",
+  "tier_wall": "regional",
+  "townswoman": "regional",
+  "trail_gap": "regional",
+  "training_dummy": "regional",
+  "tree_autumn_orange": "regional",
+  "tree_autumn_red": "regional",
+  "tree_big": "regional",
+  "tree_round": "generic",
+  "turf_cut_mouth": "regional",
+  "unlit_lantern": "generic",
+  "vault_construct": "regional",
+  "vess": "regional",
+  "wandering_inn_facade": "regional",
+  "warded_seam": "regional",
+  "wardstone_anchor": "regional",
+  "warren_mouth": "regional",
+  "watch_report_desk": "regional",
+  "watch_sergeant": "regional",
+  "watchgolem": "regional",
+  "wax_seal_tray": "regional",
+  "wilovan": "regional",
+  "window_blue": "generic",
+  "witch_cauldron": "regional",
+  "witch_cottage": "regional",
+  "witch_kettle_hook": "regional",
+  "wooden_pail": "regional",
+  "wool_trader": "regional",
+  "worn_grass_bed": "regional",
+  "xif": "regional",
+  "yelra": "regional",
+  "yvlon": "generic",
+  "zevara": "regional"
+ },
+ "regions": {
+  "dungeon": {
+   "generic_placements": 31,
+   "generic_share_pct": 55.36,
+   "maps": {
+    "dungeon_approach": {
+     "generic_placements": 10,
+     "placements": 15
+    },
+    "seal_vault": {
+     "generic_placements": 3,
+     "placements": 10
+    },
+    "trapped_halls": {
+     "generic_placements": 18,
+     "placements": 31
+    }
+   },
+   "placements": 56
+  },
+  "floodplains": {
+   "generic_placements": 21,
+   "generic_share_pct": 24.14,
+   "maps": {
+    "floodplains": {
+     "generic_placements": 17,
+     "placements": 67
+    },
+    "rags_camp": {
+     "generic_placements": 4,
+     "placements": 20
+    }
+   },
+   "placements": 87
+  },
+  "garden": {
+   "generic_placements": 1,
+   "generic_share_pct": 3.45,
+   "maps": {
+    "garden_sanctuary": {
+     "generic_placements": 1,
+     "placements": 29
+    }
+   },
+   "placements": 29
+  },
+  "inn": {
+   "generic_placements": 39,
+   "generic_share_pct": 55.71,
+   "maps": {
+    "inn": {
+     "generic_placements": 22,
+     "placements": 50
+    },
+    "inn_player_room": {
+     "generic_placements": 9,
+     "placements": 11
+    },
+    "inn_upstairs": {
+     "generic_placements": 8,
+     "placements": 9
+    }
+   },
+   "placements": 70
+  },
+  "invrisil": {
+   "generic_placements": 84,
+   "generic_share_pct": 43.3,
+   "maps": {
+    "adventurers_rest": {
+     "generic_placements": 11,
+     "placements": 21
+    },
+    "brothers_parlor": {
+     "generic_placements": 18,
+     "placements": 26
+    },
+    "enchanter_shop": {
+     "generic_placements": 9,
+     "placements": 14
+    },
+    "enchanter_work_room": {
+     "generic_placements": 4,
+     "placements": 5
+    },
+    "invrisil_boulevard": {
+     "generic_placements": 4,
+     "placements": 51
+    },
+    "invrisil_cross_street": {
+     "generic_placements": 2,
+     "placements": 29
+    },
+    "mercantile_alleys": {
+     "generic_placements": 21,
+     "placements": 30
+    },
+    "stationer": {
+     "generic_placements": 15,
+     "placements": 18
+    }
+   },
+   "placements": 194
+  },
+  "liscor": {
+   "generic_placements": 48,
+   "generic_share_pct": 44.86,
+   "maps": {
+    "barracks": {
+     "generic_placements": 10,
+     "placements": 13
+    },
+    "guild": {
+     "generic_placements": 10,
+     "placements": 18
+    },
+    "runners_guild": {
+     "generic_placements": 6,
+     "placements": 10
+    },
+    "street": {
+     "generic_placements": 22,
+     "placements": 66
+    }
+   },
+   "placements": 107
+  },
+  "pallass": {
+   "generic_placements": 28,
+   "generic_share_pct": 29.17,
+   "maps": {
+    "pallass_den_shop": {
+     "generic_placements": 12,
+     "placements": 15
+    },
+    "pallass_forge": {
+     "generic_placements": 4,
+     "placements": 30
+    },
+    "pallass_forge_hall": {
+     "generic_placements": 7,
+     "placements": 14
+    },
+    "pallass_market": {
+     "generic_placements": 5,
+     "placements": 37
+    }
+   },
+   "placements": 96
+  },
+  "riverfarm": {
+   "generic_placements": 30,
+   "generic_share_pct": 25.64,
+   "maps": {
+    "riverfarm_longhouse": {
+     "generic_placements": 7,
+     "placements": 11
+    },
+    "riverfarm_mill": {
+     "generic_placements": 7,
+     "placements": 12
+    },
+    "riverfarm_village": {
+     "generic_placements": 7,
+     "placements": 53
+    },
+    "witch_hollow": {
+     "generic_placements": 3,
+     "placements": 32
+    },
+    "witch_hut": {
+     "generic_placements": 6,
+     "placements": 9
+    }
+   },
+   "placements": 117
+  },
+  "ruin": {
+   "generic_placements": 28,
+   "generic_share_pct": 73.68,
+   "maps": {
+    "ruin_surface": {
+     "generic_placements": 28,
+     "placements": 38
+    }
+   },
+   "placements": 38
+  },
+  "sewers": {
+   "generic_placements": 23,
+   "generic_share_pct": 52.27,
+   "maps": {
+    "deep_tunnels": {
+     "generic_placements": 12,
+     "placements": 23
+    },
+    "sewers": {
+     "generic_placements": 11,
+     "placements": 21
+    }
+   },
+   "placements": 44
+  }
+ },
+ "tolerance": {
+  "placements": 1,
+  "pp": 2
+ }
+}

@@ -626,5 +626,221 @@
    0
   ],
   "interior_flavor": "Nothing there — just heat shimmer and the tier's endless clang of someone improving something."
+ },
+ "riverfarm_interior": {
+  "_comment": "#607 Phase 0: copies inn's look so regional interiors stop borrowing the `inn` key; render fields are restyled per region in Phase 2. Referenced by no map yet.",
+  "footstep_family": "wood",
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "floor": [
+   1,
+   21
+  ],
+  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked": [
+   2,
+   2
+  ],
+  "blocked_props": [
+   "crate",
+   "barrel"
+  ],
+  "skirt_sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   7,
+   21
+  ],
+  "interior_flavor": "Nothing there — just old boards, and the particular silence of a room with a roof on it.",
+  "fallback_render": {
+   "sheet": "res://assets/tiles/harvest/inn_floor.png",
+   "tile_px": 16,
+   "floor": [
+    0,
+    3
+   ],
+   "skirt_sheet": "res://assets/tiles/harvest/inn_floor.png",
+   "skirt_tile_px": 16,
+   "skirt": [
+    2,
+    1
+   ],
+   "blocked_sheet": "res://assets/tiles/harvest/plaster_wall.png",
+   "blocked_tile_px": 16,
+   "blocked": [
+    4,
+    3
+   ],
+   "floor_tone": {
+    "base": [
+     0.32,
+     0.3,
+     0.25
+    ],
+    "detail": 0.65
+   }
+  }
+ },
+ "liscor_civic": {
+  "_comment": "#607 Phase 0: copies inn's look so regional interiors stop borrowing the `inn` key; render fields are restyled per region in Phase 2. Referenced by no map yet.",
+  "footstep_family": "wood",
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "floor": [
+   1,
+   21
+  ],
+  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked": [
+   2,
+   2
+  ],
+  "blocked_props": [
+   "crate",
+   "barrel"
+  ],
+  "skirt_sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   7,
+   21
+  ],
+  "interior_flavor": "Nothing there — just old boards, and the particular silence of a room with a roof on it.",
+  "fallback_render": {
+   "sheet": "res://assets/tiles/harvest/inn_floor.png",
+   "tile_px": 16,
+   "floor": [
+    0,
+    3
+   ],
+   "skirt_sheet": "res://assets/tiles/harvest/inn_floor.png",
+   "skirt_tile_px": 16,
+   "skirt": [
+    2,
+    1
+   ],
+   "blocked_sheet": "res://assets/tiles/harvest/plaster_wall.png",
+   "blocked_tile_px": 16,
+   "blocked": [
+    4,
+    3
+   ],
+   "floor_tone": {
+    "base": [
+     0.32,
+     0.3,
+     0.25
+    ],
+    "detail": 0.65
+   }
+  }
+ },
+ "invrisil_shop": {
+  "_comment": "#607 Phase 0: copies inn's look so regional interiors stop borrowing the `inn` key; render fields are restyled per region in Phase 2. Referenced by no map yet.",
+  "footstep_family": "wood",
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "floor": [
+   1,
+   21
+  ],
+  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked": [
+   2,
+   2
+  ],
+  "blocked_props": [
+   "crate",
+   "barrel"
+  ],
+  "skirt_sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   7,
+   21
+  ],
+  "interior_flavor": "Nothing there — just old boards, and the particular silence of a room with a roof on it.",
+  "fallback_render": {
+   "sheet": "res://assets/tiles/harvest/inn_floor.png",
+   "tile_px": 16,
+   "floor": [
+    0,
+    3
+   ],
+   "skirt_sheet": "res://assets/tiles/harvest/inn_floor.png",
+   "skirt_tile_px": 16,
+   "skirt": [
+    2,
+    1
+   ],
+   "blocked_sheet": "res://assets/tiles/harvest/plaster_wall.png",
+   "blocked_tile_px": 16,
+   "blocked": [
+    4,
+    3
+   ],
+   "floor_tone": {
+    "base": [
+     0.32,
+     0.3,
+     0.25
+    ],
+    "detail": 0.65
+   }
+  }
+ },
+ "pallass_interior": {
+  "_comment": "#607 Phase 0: copies inn's look so regional interiors stop borrowing the `inn` key; render fields are restyled per region in Phase 2. Referenced by no map yet.",
+  "footstep_family": "wood",
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "floor": [
+   1,
+   21
+  ],
+  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked": [
+   2,
+   2
+  ],
+  "blocked_props": [
+   "crate",
+   "barrel"
+  ],
+  "skirt_sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   7,
+   21
+  ],
+  "interior_flavor": "Nothing there — just old boards, and the particular silence of a room with a roof on it.",
+  "fallback_render": {
+   "sheet": "res://assets/tiles/harvest/inn_floor.png",
+   "tile_px": 16,
+   "floor": [
+    0,
+    3
+   ],
+   "skirt_sheet": "res://assets/tiles/harvest/inn_floor.png",
+   "skirt_tile_px": 16,
+   "skirt": [
+    2,
+    1
+   ],
+   "blocked_sheet": "res://assets/tiles/harvest/plaster_wall.png",
+   "blocked_tile_px": 16,
+   "blocked": [
+    4,
+    3
+   ],
+   "floor_tone": {
+    "base": [
+     0.32,
+     0.3,
+     0.25
+    ],
+    "detail": 0.65
+   }
+  }
  }
 }
