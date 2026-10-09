@@ -73,6 +73,10 @@ def test_listing_prints_numbered_candidates(tree, capsys):
     assert "-- 2 candidates for invrisil/cargo (have 0, need 4)" in out
 
 
+def _px(im):
+    return list(im.get_flattened_data()) if hasattr(im, "get_flattened_data") else list(im.getdata())
+
+
 def test_contact_sheet_renders_numbered_cells_and_swatches(tree, tmp_path):
     out = tmp_path / "cargo.png"
     assert run(tree, "invrisil", "cargo", "--need", "4", "--kind", "crate", "--contact-sheet", str(out)) == 0
@@ -80,14 +84,14 @@ def test_contact_sheet_renders_numbered_cells_and_swatches(tree, tmp_path):
     with Image.open(out) as img:
         assert img.size == (8 * fk.CELL, fk.SWATCH_H + (fk.CELL + 28))
         tile = img.crop((4, 4, 36, 36))
-        assert any(px != bg and px[3] == 255 for px in tile.getdata())   # floor_street tile from Furniture.png
+        assert any(px != bg and px[3] == 255 for px in _px(tile))   # floor_street tile from Furniture.png
         y0 = fk.SWATCH_H
         cell1 = img.crop((0, y0, fk.CELL, y0 + fk.CELL))
-        assert any(px != bg and px[3] == 255 for px in cell1.getdata())   # the 2x render of #1
+        assert any(px != bg and px[3] == 255 for px in _px(cell1))   # the 2x render of #1
         label = img.crop((fk.CELL - 20, y0 + fk.CELL + 2, fk.CELL - 8, y0 + fk.CELL + 14))
-        assert any(px != bg for px in label.getdata())                   # the number "1"
+        assert any(px != bg for px in _px(label))                   # the number "1"
         empty = img.crop((2 * fk.CELL, y0, 3 * fk.CELL, y0 + fk.CELL))
-        assert all(px == bg for px in empty.getdata())                   # only two candidates: cell 3 stays empty
+        assert all(px == bg for px in _px(empty))                   # only two candidates: cell 3 stays empty
 
 
 def test_missing_material_sheet_is_outlined_not_fatal(tree, tmp_path):
@@ -99,3 +103,55 @@ def test_missing_material_sheet_is_outlined_not_fatal(tree, tmp_path):
     assert run(tree, "invrisil", "cargo", "--need", "4", "--kind", "crate", "--contact-sheet", str(out)) == 0
     with Image.open(out) as img:
         assert img.getpixel((76, 4)) == (200, 80, 80, 255)
+
+
+def _cand(tmp_path, n, w, h, color=(10, 200, 30, 255)):
+    p = tmp_path / f"c{n}.png"
+    Image.new("RGBA", (w, h), color).save(p)
+    return fk.Candidate(n, {"path": p.name}, p, "pack", "x", 0.4, w, h, fk.size_class(h), None, None)
+
+
+def test_one_x_render_is_exact_scale_for_tall_candidates(tmp_path):
+    out = tmp_path / "s.png"
+    fk.render_contact_sheet([_cand(tmp_path, 1, 16, 40)], [], out)
+    with Image.open(out) as img:
+        strip_y = fk.SWATCH_H + max(fk.CELL, 80)   # 2x area (80 tall) ends here; 1x strip below
+        rows = {y for y in range(strip_y, img.height)
+                for x in range(img.width) if img.getpixel((x, y)) == (10, 200, 30, 255)}
+        assert len(rows) == 40
+
+
+def test_reduced_two_x_prints_its_real_scale(tmp_path):
+    out = tmp_path / "s.png"
+    fk.render_contact_sheet([_cand(tmp_path, 1, 16, 100)], [], out)   # 2x = 200 tall, over the cap
+    with Image.open(out) as img:
+        # label "<f>x" sits top-left of the cell; absent when 2x is exact
+        corner = img.crop((2, fk.SWATCH_H + 2, 40, fk.SWATCH_H + 14))
+        assert any(px not in ((40, 40, 44, 255), (10, 200, 30, 255)) for px in _px(corner))
+
+
+def test_swatches_wrap_instead_of_clipping(tree, tmp_path):
+    k = tree / KITS
+    d = json.loads(k.read_text())
+    mat = next(iter(d["invrisil"]["materials"].values()))
+    d["invrisil"]["materials"] = {f"m{i}": dict(mat) for i in range(10)}
+    k.write_text(json.dumps(d, indent=1) + "\n")
+    out = tmp_path / "cargo.png"
+    assert run(tree, "invrisil", "cargo", "--need", "4", "--kind", "crate", "--contact-sheet", str(out)) == 0
+    n = len(fk.material_swatches(json.loads(k.read_text()), "invrisil", wa.Paths(tree)))
+    bg = (40, 40, 44, 255)
+    assert n >= 10
+    with Image.open(out) as img:
+        for i in range(n):
+            x, y = 4 + (i % 8) * fk.CELL, 4 + (i // 8) * fk.SWATCH_H
+            assert any(px != bg for px in _px(img.crop((x, y, x + 32, y + 32)))), i
+
+
+def test_number_labels_differ_between_cells(tmp_path):
+    out = tmp_path / "s.png"
+    fk.render_contact_sheet([_cand(tmp_path, 1, 16, 16), _cand(tmp_path, 2, 16, 16)], [], out)
+    with Image.open(out) as img:
+        y = fk.SWATCH_H + fk.CELL + 2
+        a = img.crop((fk.CELL - 20, y, fk.CELL - 8, y + 12))
+        b = img.crop((2 * fk.CELL - 20, y, 2 * fk.CELL - 8, y + 12))
+        assert _px(a) != _px(b)

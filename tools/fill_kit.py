@@ -277,29 +277,43 @@ def material_swatches(kits: dict, region: str, paths: wa.Paths) -> list[tuple[st
 
 def render_contact_sheet(cands: list[Candidate], materials: list[tuple[str, Image.Image | None]],
                          out: Path) -> None:
-    cols, swatch_h = 8, SWATCH_H
-    rows = max(1, (len(cands) + cols - 1) // cols)
-    sheet = Image.new("RGBA", (cols * CELL, swatch_h + rows * (CELL + 28)), (40, 40, 44, 255))
+    cols = 8
+    bg = (40, 40, 44, 255)
+    ones = [candidate_image(c) for c in cands]
+    cw = max([CELL] + [im.width + 24 for im in ones])   # 1x is never shrunk; the cell grows instead
+    cap = 2 * CELL                                      # only the 2x render may be reduced
+    twos, factors = [], []
+    for im in ones:
+        two = im.resize((im.width * 2, im.height * 2), Image.NEAREST)
+        two.thumbnail((min(cap, cw), cap), Image.NEAREST)
+        twos.append(two)
+        factors.append(two.width / im.width)
+    swatch_rows = max(1, (len(materials) + cols - 1) // cols)
+    swatch_h = swatch_rows * SWATCH_H
+    cand_rows = [list(range(r, min(r + cols, len(cands)))) for r in range(0, max(1, len(cands)), cols)]
+    heights = [(max([CELL] + [twos[k].height for k in row]), max([24] + [ones[k].height for k in row]))
+               for row in cand_rows]
+    total_h = swatch_h + sum(a + b + 4 for a, b in heights)
+    sheet = Image.new("RGBA", (cols * cw, total_h), bg)
     draw = ImageDraw.Draw(sheet)
-    x = 4
-    for name, tile in materials:
+    for i, (name, tile) in enumerate(materials):
+        x, y = 4 + (i % cols) * CELL, (i // cols) * SWATCH_H + 4
         if tile is not None:
-            sheet.alpha_composite(tile.resize((32, 32), Image.NEAREST), (x, 4))
+            sheet.alpha_composite(tile.resize((32, 32), Image.NEAREST), (x, y))
         else:
-            draw.rectangle((x, 4, x + 31, 35), outline=(200, 80, 80, 255))
-        draw.text((x, 38), name[:10], fill=(220, 220, 220, 255))
-        x += CELL
-    for i, c in enumerate(cands):
-        cx, cy = (i % cols) * CELL, swatch_h + (i // cols) * (CELL + 28)
-        one_x = candidate_image(c)
-        two_x = one_x.resize((one_x.width * 2, one_x.height * 2), Image.NEAREST)
-        two_x.thumbnail((CELL, CELL), Image.NEAREST)
-        sheet.alpha_composite(two_x, (cx + (CELL - two_x.width) // 2, cy + CELL - two_x.height))
-        small = one_x.copy()
-        small.thumbnail((CELL - 24, 24), Image.NEAREST)
-        sheet.alpha_composite(small, (cx + 2, cy + CELL + 2))
-        draw.text((cx + CELL - 20, cy + CELL + 2), str(c.n), fill=(255, 230, 120, 255))
-        draw.text((cx + CELL - 20, cy + CELL + 14), c.size_class, fill=(180, 220, 180, 255))
+            draw.rectangle((x, y, x + 31, y + 31), outline=(200, 80, 80, 255))
+        draw.text((x, y + 34), name[:10], fill=(220, 220, 220, 255))
+    y0 = swatch_h
+    for row, (a, b) in zip(cand_rows, heights):
+        for col, k in enumerate(row):
+            c, cx = cands[k], col * cw
+            sheet.alpha_composite(twos[k], (cx + (cw - twos[k].width) // 2, y0 + a - twos[k].height))
+            if factors[k] != 2:
+                draw.text((cx + 2, y0 + 2), f"{factors[k]:g}x", fill=(255, 160, 80, 255))
+            sheet.alpha_composite(ones[k], (cx + 2, y0 + a + 2))
+            draw.text((cx + cw - 20, y0 + a + 2), str(c.n), fill=(255, 230, 120, 255))
+            draw.text((cx + cw - 20, y0 + a + 14), c.size_class, fill=(180, 220, 180, 255))
+        y0 += a + b + 4
     out.parent.mkdir(parents=True, exist_ok=True)
     sheet.save(out)
 
