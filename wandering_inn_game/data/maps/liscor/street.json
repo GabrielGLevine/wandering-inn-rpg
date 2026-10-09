@@ -1,5 +1,6 @@
 {
  "biome": "street",
+ "_kits_recompose": "#620 — art-read FIX loop 1: peddler/Krshia cells, deleted repeats and trees, roof/facade swaps",
  "interior_flavor": [
   "Nothing there. A Drake shoulders past you without slowing.",
   "Nothing there. Gutter runoff and market noise two streets over, off a wall repointed twice.",
@@ -679,13 +680,6 @@
 
 
 
-  {
-   "sprite": "food_basket",
-   "cell": [
-    18,
-    1
-   ]
-  },
   {
    "sprite": "inn_roof",
    "cell": [
@@ -1401,7 +1395,7 @@
    "id": "peddler",
    "kind": "npc",
    "cell": [
-    18,
+    19,
     2
    ],
    "display_name": "A Road-Peddler",
