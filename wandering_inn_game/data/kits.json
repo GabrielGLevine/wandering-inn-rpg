@@ -50,6 +50,7 @@
     "facade_window": {
      "pick": "cell",
      "module": true,
+     "radius": 3,
      "pool": [
       "invrisil_upper_window",
       "invrisil_facade_window_1",
