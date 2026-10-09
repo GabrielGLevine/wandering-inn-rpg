@@ -10338,6 +10338,7 @@
   }
  },
  "table_brown__alt1": {
+  "shadow": true,
   "render_scale": 0.88,
   "anchor": [
    0.5,
@@ -10355,6 +10356,7 @@
   }
  },
  "library_shelf__alt1": {
+  "shadow": true,
   "render_scale": 0.67,
   "anchor": [
    0.5,
