@@ -16,13 +16,16 @@ archived, or superseded session blocks.
   2. DONE: #514 gear rules (PR #601; closes #494/#495). #495's balance effect
      is unmeasured by the harness; follow-up #599.
   3. IN PROGRESS (user approved a third concurrent lane, 2026-10-08):
-     - #453 environmental rest signposting: `/private/tmp/wi-453-rest`.
+     - DONE: #453 rest signposting, six data-only placements (PR #602,
+       `06eea743`; #453 stays open for per-spine verification). Visual debt
+       in `docs/VISUAL-LOG.md`.
      - Pallass art (PixelLab trader, Garuda and Dullahan residents):
        `/private/tmp/wi-pallass-art`.
      - Pallass content ("Room on the Row" plus re-themes of `forge_tier_permit`,
        `tempered_standards`, `ledger_eats_first`) with placeholder sprites:
-       `/private/tmp/wi-pallass-content`. Journey re-pins wait for the rest lane;
-       real sprite ids swap in after the art lane. Heavy runs are staggered
+       `/private/tmp/wi-pallass-content`. Rebasing onto `06eea743` to re-pin
+       journeys; real sprite ids swap in after the art lane. A peer session's
+       regional-kits work holds off `data/maps/pallass/*` until this merges. Heavy runs are staggered
        (`WI_SWEEP_JOBS=3`).
      Design docs: `docs/design/453-rest-signposting.md`, `513-pallass-income.md`.
      A third floodplains quest: not now. Runners' Post: #600.
@@ -34,8 +37,8 @@ archived, or superseded session blocks.
   `docs/design/571-ledger-*.md`, the plan and criterion map in
   `docs/design/571-cutover-execution.md`. Linux CI runs journeys ~8x slower
   than local macOS; budgets and `timeout_sec` are CI-measured.
-- **Open findings to carry:** #453 depleted chokepoints (ruled: signpost rest,
-  no tuning); #513 remaining Pallass content and gear-affordability audit
+- **Open findings to carry:** #453 per-spine verification (rest signposting
+  shipped in #602; no tuning); #513 remaining Pallass content and gear-affordability audit
   (`docs/design/513-low-gold-recovery.md`, `571-fee-audit.md`); #515 criterion
   4 (automated geometry/capture checks); #586 shutdown leak (exact lines
   deferred via `qa/noise_scan.sh`, leak still open).
