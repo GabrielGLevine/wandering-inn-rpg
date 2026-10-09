@@ -12,6 +12,7 @@ import json
 import math
 import re
 from pathlib import Path
+from types import MappingProxyType
 
 MATERIAL_FIELDS = ["sheet", "tile_px", "coords", "variants", "tone", "wang_corners", "cap", "face", "fallback_render"]
 TWO_32 = 4294967296.0
@@ -34,7 +35,8 @@ NEAR_IOU = 0.7
 # ground truth (tools/label_slices.py) and data_lint's known kinds for wired ids. Ids on
 # sheets the slicer skips (tiles, -Sheet strips, Admurin, owned) are excluded by the label
 # check at run time, so listing them here is harmless. An id missing here has no known kind.
-WIRED_KINDS = {
+# Read-only (review M8): data_lint and the label check share it; label_slices copies it.
+WIRED_KINDS = MappingProxyType({
     "crate": "crate", "barrel": "barrel", "door": "door", "window_blue": "window",
     "unlit_lantern": "lamp", "sconce": "lamp", "campfire": "lamp",
     "table_brown": "table", "bar_counter": "table", "counter_left": "table", "counter_mid": "table",
@@ -54,7 +56,7 @@ WIRED_KINDS = {
     "dungeon_statue": "other", "pedestal": "other", "sewer_grate": "other", "dusty_scroll": "other",
     "food_bread": "other", "food_ham": "other", "food_basket": "container",
     "garden_fountain_basin": "other", "garden_fountain_statue": "other",
-}
+})
 
 
 def kind_of(sprite_id: str, entry) -> str | None:

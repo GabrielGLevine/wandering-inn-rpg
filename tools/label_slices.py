@@ -147,8 +147,9 @@ def import_labels(assets_root: Path, answers_dir: Path) -> int:
 
 # ------------------------------------------------------------------ check
 
-# Ground truth for the label check; the shared copy lives in wi_kits_lib so data_lint can read it.
-WIRED_KINDS = kl.WIRED_KINDS
+# Ground truth for the label check: a private copy of wi_kits_lib's read-only table, which
+# data_lint reads too.
+WIRED_KINDS = dict(kl.WIRED_KINDS)
 
 
 def _strip_check(note: str) -> str:

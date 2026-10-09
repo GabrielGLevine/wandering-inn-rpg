@@ -373,6 +373,14 @@ class TestArtIdentity(unittest.TestCase):
         canon = kl.merge_near_regions(raw.values())
         self.assertEqual([k for k, v in canon.items() if k != v], [], "a near-merge here would move G2/G3 numbers")
 
+    def test_wired_kinds_is_read_only(self):
+        # review M8: data_lint and tools/label_slices.py share it
+        with self.assertRaises(TypeError):
+            kl.WIRED_KINDS["ghost"] = "other"
+        self.assertEqual(kl.kind_of("food_basket", {}), "container")
+        self.assertEqual(kl.kind_of("food_basket", {"kind": "sack"}), "sack", "a recorded kind wins")
+        self.assertIsNone(kl.kind_of("invrisil_cargo_1", {}))
+
     def test_real_catalog_has_the_twelve_measured_groups(self):
         sprites = json.loads((GAME / "data" / "sprites.json").read_text())
         groups = collections.defaultdict(set)
