@@ -21,3 +21,4 @@ PixelLab object-state variants from) · status (`open` | `done <ids>` | `dropped
 | invrisil | roofline | - | 3 | neither pool contains a roofline module (eave, slate, tile, parapet). Current invrisil_roofline stays. | invrisil_roofline | open |
 | invrisil | lamp_street | - | 2 | no tall, formal post lamp in the navy-and-brass family of the boulevard; 7 is the only standing lamp and it is short and rough. Current street_lamp stays. | street_lamp | open |
 | invrisil | shop_sign | invrisil_hanging_sign, invrisil_shop_sign_1 | 3 | a third readable shop sign without inn lettering | invrisil_hanging_sign | open |
+| invrisil | door_street | door, invrisil_door_street_2, invrisil_door_street_3, invrisil_door_street_4 | 1 | a second OWNED street door so the public build keeps door variety (official build already has pack variety) | owned_fallback_door | open |

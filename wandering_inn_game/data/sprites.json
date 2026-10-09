@@ -10243,5 +10243,57 @@
     "fps": 1
    }
   }
+ },
+ "invrisil_door_street_3": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [229, 178, 38, 46] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "frame_size": [
+     38,
+     46
+    ],
+    "region": [
+     229,
+     178,
+     38,
+     46
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "invrisil_door_street_2"
+ },
+ "invrisil_door_street_4": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [197, 320, 22, 32] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     22,
+     32
+    ],
+    "region": [
+     197,
+     320,
+     22,
+     32
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "invrisil_door_street_2"
  }
 }

@@ -42,7 +42,9 @@
      "pick": "door",
      "pool": [
       "door",
-      "invrisil_door_street_2"
+      "invrisil_door_street_2",
+      "invrisil_door_street_3",
+      "invrisil_door_street_4"
      ]
     },
     "facade_window": {
