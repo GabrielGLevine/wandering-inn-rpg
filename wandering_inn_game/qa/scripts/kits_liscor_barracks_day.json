@@ -1,0 +1,88 @@
+{
+ "_comment": "Regional kits #620 (R1 Liscor) capture utility (non-canonical, windowed only, absent from qa/manifest.json). Same route before/after conversion; screenshots feed the blind art-direction read (spec 5.2). Cells are walkable, off every solid entity, clear of encounter triggers and not directly north/south of a door or prop.",
+ "fixture_save": "feel_peek_day_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "barracks",
+   "cell": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "kits_liscor_barracks_official_day_arrival"
+  },
+  {
+   "action": "teleport",
+   "map": "barracks",
+   "cell": [
+    7,
+    5
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "kits_liscor_barracks_official_day_landmark"
+  },
+  {
+   "action": "teleport",
+   "map": "barracks",
+   "cell": [
+    9,
+    4
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "kits_liscor_barracks_official_day_focus"
+  }
+ ]
+}
