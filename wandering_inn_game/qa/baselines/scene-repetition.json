@@ -148,9 +148,8 @@
   "invrisil_rigged_crate_stack": "regional",
   "invrisil_roofline": "regional",
   "invrisil_shop_door": "regional",
-  "invrisil_shop_door_1": "regional",
   "invrisil_shop_door_2": "regional",
-  "invrisil_stationery_display": "regional",
+  "invrisil_shop_sign_1": "regional",
   "invrisil_timber_panel": "regional",
   "invrisil_upper_window": "regional",
   "kingslayer_spider": "regional",
@@ -351,7 +350,7 @@
   },
   "invrisil": {
    "generic_placements": 75,
-   "generic_share_pct": 38.66,
+   "generic_share_pct": 38.27,
    "maps": {
     "adventurers_rest": {
      "generic_placements": 11,
@@ -375,7 +374,7 @@
     },
     "invrisil_cross_street": {
      "generic_placements": 1,
-     "placements": 29
+     "placements": 31
     },
     "mercantile_alleys": {
      "generic_placements": 14,
@@ -386,7 +385,7 @@
      "placements": 18
     }
    },
-   "placements": 194
+   "placements": 196
   },
   "liscor": {
    "generic_placements": 48,
