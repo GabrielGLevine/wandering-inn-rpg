@@ -14,7 +14,7 @@
  ],
  "floor_layers": [
   {
-   "_pick": "#225 floor differentiation (census-FREE key). The `inn` biome default is Erin's own light tavern plank [1,21] -- shipping it here would make the Rest read as a second Wandering Inn, which is the exact `brothers_parlor` pre-#49 smell. Reuses riverfarm_longhouse's darker, rougher timber swatch off the SAME Interior_Walls_01 sheet ([12,21]/[13,21]/[12,22]/[13,22], rgb~87,64,49): same wood family, same license, footstep-wood stays honest, and the hall reads as one that has been walked on harder than Erin's. Different city from the longhouse, same board -- an acceptable reuse for a working common hall.",
+   "_pick": "#608 1b: the Rest's floor is @floor_rest (data/kits.json), the honey plank of owned woodplank_over_stone_v1 (tile [0,3]) with tone.detail 0.3 so the near-black plank gaps stay quieter than the furniture. It replaces the riverfarm_longhouse timber swatch ([12,21]/[13,21]/[12,22]/[13,22]) an earlier pass reused here, and the `inn` biome's own light tavern plank [1,21] that would have read as a second Wandering Inn (the original #225 differentiation). Footstep-wood stays honest.",
    "material": "@floor_rest",
    "cells": "all"
   }
