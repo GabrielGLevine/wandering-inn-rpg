@@ -241,7 +241,7 @@ animation strips (`*-Sheet.png`) and tileset, wang or terrain sheets.
   separately.
 - **Output (untracked):**
   - each sprite as a trimmed PNG at
-    `potential_assets/<pack>/_sliced/<sheet-stem>/<sheet-stem>__x736_y73_w16_h23.png`;
+    `potential_assets/_sliced/<pack>/<sheet-stem>/<sheet-stem>__x736_y73_w16_h23.png` (a top-level `_sliced/` root, because some pack folders are read-only on disk);
   - `SLICES.json` in the standard MANIFEST schema
     (`assets[{path, kind, targets, verdict, notes, source_sheet, region, sheet_sha256, method}]`);
   - a numbered contact sheet.

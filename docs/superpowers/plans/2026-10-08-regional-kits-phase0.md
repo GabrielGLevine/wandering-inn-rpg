@@ -133,8 +133,8 @@ The lane plans are separate files. This index pins the shared contracts that all
 
 ### C8. Slice candidates
 
-- Each `_sliced/<sheet-stem>/SLICES.json` is `{"assets": [row, …]}`.
-- A row: `{"path": "potential_assets/…/_sliced/<stem>/<stem>__x{X}_y{Y}_w{W}_h{H}.png", "kind": "prop", "targets": ["<kind-tag>", …], "verdict": "UNREVIEWED", "notes": "", "source_sheet": "potential_assets/…/<sheet>.png", "region": [X, Y, W, H], "sheet_sha256": "<hex>", "method": "grid16|grid32|seam|component|override", "has_shadow": false, "size_class": "S|M|L|XL", "label_confidence": 0.0}`
+- Each `potential_assets/_sliced/<pack>/<sheet-stem>/SLICES.json` (top-level root; pack folders may be read-only) is `{"assets": [row, …]}`.
+- A row: `{"path": "potential_assets/_sliced/<pack>/<stem>/<stem>__x{X}_y{Y}_w{W}_h{H}.png", "kind": "prop", "targets": ["<kind-tag>", …], "verdict": "UNREVIEWED", "notes": "", "source_sheet": "potential_assets/…/<sheet>.png", "region": [X, Y, W, H], "sheet_sha256": "<hex>", "method": "grid16|grid32|seam|component|override", "has_shadow": false, "size_class": "S|M|L|XL", "label_confidence": 0.0}`
 - Kind vocabulary (closed): `crate barrel sack door window lamp table seat shelf bed plant rock debris tool sign wall_module container other`.
 
 ### C9. Wiring CLI
