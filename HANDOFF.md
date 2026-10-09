@@ -23,7 +23,13 @@ archived, or superseded session blocks.
   - Open:
     - #623 (PR #625): G2/G3 count art identity, not sprite ids, plus the `_common` utility guardrails.
     - Merged: #625 (PR #625) art-identity G2/G3 and `_common` guardrails; #624 (PR #626) intake coverage; PR #627 labels and the 31-kind vocabulary.
-    - In progress (ledger): allocating 1,010 re-intake pieces. Natural and goods are done; architecture is still in flight. After that, the allocation PR (plus bundle-v9 for the newly used sheets), then the design-led gap pass. Allocation outputs are in the session scratchpad under `newpieces/ALLOC-*.md`.
+    - Re-intake allocation: 380 pieces (618 in total) in PR #628. It is docs-only and not merged; merge it once CI and a review pass. bundle-v9 needs 24 sheets.
+    - Design-led gap pass: `design-led-gaps.md` in the session scratchpad. It cuts generation to ~70–250 (firm list: Antinium worker rig, cold wall lantern, owned stool, second owned street door).
+    - Awaiting four user decisions:
+      - Liscor: sandstone-brick wall and gate, brick ground storey, shingle roofs (no brick kit);
+      - window night glow overlay;
+      - Pallass lamp is the crystal_lamp plus a glow cone;
+      - Invrisil alley workbench becomes a cargo-yard cluster.
     - #620 Liscor (`issue/620-kits-liscor`, `/private/tmp/wi-620`, tip `58498c42`) is paused before FIX loop 2 at the user's request. Its pins duplicate inn/Invrisil art, so it fails art-identity G2 until it gets its own art.
   - User rulings, 2026-10-09:
     - Allocate assets globally (no first-come claiming).
