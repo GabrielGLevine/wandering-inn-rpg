@@ -820,81 +820,50 @@
  ],
  "floor_layers": [
   {
-   "_pick": "#225 first floor layer (was pristine biome-default invrisil marble, zero floor_layers): the back-alley reads as grimy worn cobble underfoot, distinct from the boulevard's marble plaza. Reuses the Free Pack Floors_Tiles cobble band already VERIFIED as the Liscor street/gate cobble ([16,2]/[17,2]/[18,2], rgb~116,106,94). Footstep-stone stays honest.",
-   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
-   "tile_px": 16,
-   "variants": [
-    [
-     16,
-     2
-    ],
-    [
-     17,
-     2
-    ],
-    [
-     18,
-     2
-    ]
-   ],
-   "cells": "all",
-    "fallback_render": {
-                        "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-                        "tile_px": 16,
-                        "coords": [
-                         0,
-                         3
-                        ],
-                        "tone": {
-                         "base": [
-                          0.33,
-                          0.34,
-                          0.36
-                         ],
-                         "detail": 0.5
-                        }
-                       }
+   "_pick": "#608: @floor_alley, Invrisil's own ashlar paving (data/kits.json), replaces the Free Pack Floors_Tiles cobble band ([16,2]/[17,2]/[18,2]) it shared with Liscor's street. #225 gave the alleys this first floor layer (was the biome-default marble) so the back-alley reads apart from the boulevard's marble plaza; the material keeps that split. Footstep-stone stays honest.",
+   "material": "@floor_alley",
+   "cells": "all"
   }
  ],
  "decor": [
   {
    "_comment": "#423: Hedault stood on (0,6) and blocked it. With him gone the cell would render as alley floor that no player can ever reach -- (0,5) is wall, (0,7) is the boulevard door entity and (1,6) is the apothecary bench, so the nook is an island. Crated shut and added to `blocked`, so it reads as a stuffed dead corner instead of phantom floor. Blocking is byte-identical to the pre-#423 map.",
-   "sprite": "crate",
+   "sprite": "@cargo",
    "cell": [
     0,
     6
    ]
   },
   {
-   "sprite": "crate",
+   "sprite": "@cargo",
    "cell": [
     5,
     8
    ]
   },
   {
-   "sprite": "crate",
+   "sprite": "@cargo",
    "cell": [
     7,
     8
    ]
   },
   {
-   "sprite": "crate",
+   "sprite": "@cargo",
    "cell": [
     12,
     9
    ]
   },
   {
-   "sprite": "barrel",
+   "sprite": "@cargo",
    "cell": [
     15,
     10
    ]
   },
   {
-   "sprite": "sconce",
+   "sprite": "@lamp_wall",
    "cell": [
     3,
     5
@@ -911,7 +880,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "@lamp_wall",
    "cell": [
     7,
     8
@@ -928,7 +897,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "@lamp_wall",
    "cell": [
     11,
     10
@@ -945,7 +914,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "@lamp_wall",
    "cell": [
     16,
     13
@@ -1021,7 +990,7 @@
     7
    ],
    "display_name": "Back to the Boulevard",
-   "sprite": "door",
+   "sprite": "@door_street",
    "to_map": "invrisil_boulevard",
    "to_cell": [
     26,
@@ -1252,7 +1221,7 @@
     12
    ],
    "display_name": "A Rigged Crate Stack",
-   "sprite": "crate",
+   "sprite": "invrisil_rigged_crate_stack",
    "requires_skill": "disarm_trap",
    "skill_hint_toast": "One low oak wedge takes the whole lean, shaved flat where it faces out. Pulling at the crates will not do it; working that wedge out might.",
    "locked_toast": "The crate stack looks ordinary until you notice the angle: top-heavy, wedged to fall. The wedge is set low, where you would have to reach in under the weight.",
@@ -1457,7 +1426,7 @@
     }
    },
    "display_name": "The Factor's Closed Account",
-   "sprite": "hired_blade",
+   "sprite": "invrisil_enforcer",
    "arena": "mercantile_alley",
    "enemies": [
     "factor_enforcer",

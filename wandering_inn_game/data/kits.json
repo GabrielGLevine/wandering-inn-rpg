@@ -1,4 +1,113 @@
 {
   "_comment": "Regional kits: role pools, materials and anonymous casts per region. Spec docs/superpowers/specs/2026-10-08-regional-kits-design.md. Role value: a sprite id string, or {pick: cell|map|door, module: bool, pool: [id | [id, weight]], light: {}, deny: [word, ...]}. `deny` words are matched whole-word, case-insensitive, against display_name and observe of any row using the role (data_lint). Lookup: region (map folder or top-level map `kit`), then _common.",
-  "_common": {"materials": {}, "roles": {}, "cast": []}
+  "_common": {"materials": {}, "roles": {}, "cast": []},
+  "invrisil": {
+   "materials": {
+    "floor_street": {
+     "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      0
+     ],
+     "tone": {
+      "base": [
+       0.36,
+       0.35,
+       0.38
+      ],
+      "detail": 0.2
+     }
+    },
+    "floor_alley": {
+     "_comment": "#608 pool read floor_alley #3 PASS: owned ashlar_over_checker_v1 (public, already in assets/tiles/harvest). [0,3] = wang_15 pure ashlar paving, the low-contrast tile; [2,1] is the high-contrast checker. Tone = the alleys' existing fallback tone.",
+     "sheet": "res://assets/tiles/harvest/ashlar_over_checker_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.33,
+       0.34,
+       0.36
+      ],
+      "detail": 0.5
+     }
+    }
+   },
+   "roles": {
+    "door_street": {
+     "pick": "door",
+     "pool": [
+      "door",
+      "invrisil_door_street_2",
+      "invrisil_door_street_3",
+      "invrisil_door_street_4"
+     ]
+    },
+    "facade_window": {
+     "pick": "cell",
+     "module": true,
+     "radius": 3,
+     "pool": [
+      "invrisil_upper_window",
+      "invrisil_facade_window_1",
+      "invrisil_facade_window_2",
+      "invrisil_facade_window_3"
+     ]
+    },
+    "lamp_wall": {
+     "pick": "map",
+     "pool": [
+      "sconce",
+      "invrisil_lamp_wall_1"
+     ]
+    },
+    "cargo": {
+     "pick": "cell",
+     "pool": [
+      [
+       "crate_owned",
+       2
+      ],
+      "owned_fallback_barrel",
+      "invrisil_cargo_1",
+      [
+       "invrisil_cargo_2",
+       2
+      ]
+     ],
+     "deny": [
+      "tray",
+      "paper",
+      "bale",
+      "sack",
+      "dock",
+      "yoke",
+      "stash",
+      "nook",
+      "vantage",
+      "satchel"
+     ]
+    },
+    "shop_sign": {
+     "pick": "cell",
+     "pool": [
+      "invrisil_hanging_sign",
+      "invrisil_shop_sign_1"
+     ]
+    },
+    "shop_door": {
+     "_comment": "#608 art read: glazed invrisil_shop_door_1 left the pool; on the glass shopfront band it read as a window, not a threshold.",
+     "pick": "cell",
+     "pool": [
+      "invrisil_shop_door",
+      "invrisil_shop_door_2"
+     ]
+    }
+   },
+   "cast": []
+  }
 }

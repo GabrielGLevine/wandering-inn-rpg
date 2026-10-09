@@ -1,4 +1,5 @@
 {
+ "_kits_recompose": "#608 — art-direction read: cross-street lamps/signs/props",
  "biome": "invrisil_street",
  "grid": {
   "width": 22,
@@ -456,6 +457,18 @@
   [
    18,
    5
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   12,
+   4
+  ],
+  [
+   9,
+   11
   ]
  ],
  "cover_skip": [
@@ -898,20 +911,7 @@
  ],
  "floor_layers": [
   {
-   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
-   "tile_px": 16,
-   "coords": [
-    0,
-    0
-   ],
-   "tone": {
-    "base": [
-     0.36,
-     0.35,
-     0.38
-    ],
-    "detail": 0.2
-   },
+   "material": "@floor_street",
    "cells": "all"
   },
   {
@@ -1669,6 +1669,35 @@
                          "detail": 0.55
                         }
                        }
+  },
+  {
+   "_pick": "#608 art read: timber-and-plaster jambs on the two wall cells flanking the west door (0,7), so it sits in a wall instead of floating on a flat strip. Owned plaster_wall (2,3), the public strip's own tile and tone, in both builds.",
+   "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+   "tile_px": 16,
+   "coords": [
+    2,
+    3
+   ],
+   "tone": {
+    "base": [
+     0.4,
+     0.34,
+     0.26
+    ],
+    "detail": 0.55
+   },
+   "cells": {
+    "list": [
+     [
+      0,
+      6
+     ],
+     [
+      0,
+      8
+     ]
+    ]
+   }
   }
  ],
  "decor": [
@@ -1687,17 +1716,19 @@
    ]
   },
   {
-   "sprite": "invrisil_hanging_sign",
+   "_comment": "#608 art read: signs hang at row 1 beside each door; on row 2 the bracket sign sat at street level and read as a box.",
+   "sprite": "@shop_sign",
    "cell": [
     5,
-    2
+    1
    ]
   },
   {
+   "_comment": "#608 final review: the Adventurer's Rest sign is pinned to the blank hanging board. Its observe text says the sign has no name, only cards face down and a hat on a peg, so the pool's coin sign would contradict it. The cards-and-hat sign is on the generation list.",
    "sprite": "invrisil_hanging_sign",
    "cell": [
     13,
-    2
+    1
    ]
   },
   {
@@ -1736,7 +1767,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     2,
     0
@@ -1750,7 +1781,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     5,
     0
@@ -1764,7 +1795,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     8,
     0
@@ -1778,7 +1809,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     11,
     0
@@ -1792,7 +1823,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     14,
     0
@@ -1806,7 +1837,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     17,
     0
@@ -1820,18 +1851,63 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     20,
     0
    ]
   },
   {
-   "sprite": "invrisil_stationery_display",
+   "_comment": "#608 art read: lamps one row in from the facade's first walkable row (the boulevard's row-3 spacing) plus one south; each cell is blocked, off every QA walk, the door approaches and both NPCs' cardinal axes.",
+   "sprite": "street_lamp",
    "cell": [
-    5,
-    2
-   ]
+    3,
+    4
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.85,
+     0.5
+    ],
+    "energy": 0.9,
+    "radius": 32,
+    "flicker": false
+   }
+  },
+  {
+   "sprite": "street_lamp",
+   "cell": [
+    12,
+    4
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.85,
+     0.5
+    ],
+    "energy": 0.9,
+    "radius": 32,
+    "flicker": false
+   }
+  },
+  {
+   "sprite": "street_lamp",
+   "cell": [
+    9,
+    11
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.85,
+     0.5
+    ],
+    "energy": 0.9,
+    "radius": 32,
+    "flicker": false
+   }
   }
  ],
  "entities": [
@@ -1843,7 +1919,7 @@
     7
    ],
    "display_name": "Boulevard Square",
-   "sprite": "door",
+   "sprite": "@door_street",
    "to_map": "invrisil_boulevard",
    "to_cell": [
     20,
@@ -1859,7 +1935,7 @@
     2
    ],
    "display_name": "A Stationer's Window",
-   "sprite": "invrisil_shop_door",
+   "sprite": "@shop_door",
    "to_map": "stationer",
    "to_cell": [
     6,
@@ -1875,7 +1951,7 @@
     2
    ],
    "display_name": "The Adventurer's Rest",
-   "sprite": "invrisil_shop_door",
+   "sprite": "@shop_door",
    "observe": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Two men come out and let the door swing shut behind them.",
    "to_map": "adventurers_rest",
    "to_cell": [

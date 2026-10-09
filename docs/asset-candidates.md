@@ -20,8 +20,8 @@ verified), `shipped-public` / `shipped-bundle` (wired in data/sprites.json),
 | kind | owned-public | owned-unverified | pack-bundle | shipped-bundle | shipped-public |
 |---|---|---|---|---|---|
 | icon | 881 |  |  |  | 106 |
-| prop | 556 | 20 | 1258 | 59 | 233 |
-| rig | 122 |  |  | 7 | 76 |
+| prop | 556 | 20 | 1260 | 65 | 238 |
+| rig | 122 |  |  | 7 | 77 |
 | setpiece | 83 |  |  |  |  |
 | tileset | 29 |  |  |  |  |
 | ui | 27 |  |  |  |  |
@@ -66,7 +66,7 @@ verified), `shipped-public` / `shipped-bundle` (wired in data/sprites.json),
 | _sliced/Pixel Crawler - Free Pack/Dungeon_Props | SLICES.json | 20 |
 | _sliced/Pixel Crawler - Free Pack/Esoteric | SLICES.json | 40 |
 | _sliced/Pixel Crawler - Free Pack/Farm | SLICES.json | 81 |
-| _sliced/Pixel Crawler - Free Pack/Furniture | SLICES.json | 91 |
+| _sliced/Pixel Crawler - Free Pack/Furniture | SLICES.json | 93 |
 | _sliced/Pixel Crawler - Free Pack/Interior_Props_01 | SLICES.json | 141 |
 | _sliced/Pixel Crawler - Free Pack/Meat | SLICES.json | 33 |
 | _sliced/Pixel Crawler - Free Pack/Model_01_Size_02 | SLICES.json | 20 |

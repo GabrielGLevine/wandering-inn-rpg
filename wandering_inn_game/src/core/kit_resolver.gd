@@ -71,6 +71,8 @@ static func rank_for(map_id: String, role_name: String, variants: Array, cell: V
 
 static func radius_for(role: Variant) -> int:
 	if role is Dictionary:
+		if (role as Dictionary).has("radius"):  # #608: a role's own radius overrides the defaults below
+			return int((role as Dictionary)["radius"])
 		if String((role as Dictionary).get("pick", "cell")) == "door":
 			return 0
 		if bool((role as Dictionary).get("module", false)):
@@ -144,6 +146,11 @@ static func _resolve_role(placements: Array, role_name: String, role: Variant, m
 			_apply(p["row"], role_name, role, sub[0])
 		return
 	var r := radius_for(role)
+	# #608: a module role uses each variant at most ceil(n/k) times per map, on top of the radius;
+	# when the radius excludes every variant under the cap, the cap wins, then rank_p[0].
+	var capped: bool = role is Dictionary and bool((role as Dictionary).get("module", false))
+	var cap: int = (placements.size() + sub.size() - 1) / sub.size()
+	var uses := {}
 	var chosen: Array = []  # [[cell, variant], ...] already visited
 	for p: Dictionary in placements:
 		var cell: Vector2i = p["cell"]
@@ -153,10 +160,23 @@ static func _resolve_role(placements: Array, role_name: String, role: Variant, m
 			if maxi(absi(c[0].x - cell.x), absi(c[0].y - cell.y)) <= r:
 				taken[c[1]] = true
 		var variant: String = rank[0]
-		for v: String in rank:
-			if not taken.has(v):
-				variant = v
-				break
+		if capped:
+			var under: Array = []
+			for v: String in rank:
+				if int(uses.get(v, 0)) < cap:
+					under.append(v)
+			if not under.is_empty():
+				variant = under[0]
+			for v: String in under:
+				if not taken.has(v):
+					variant = v
+					break
+		else:
+			for v: String in rank:
+				if not taken.has(v):
+					variant = v
+					break
+		uses[variant] = int(uses.get(variant, 0)) + 1
 		chosen.append([cell, variant])
 		_apply(p["row"], role_name, role, variant)
 

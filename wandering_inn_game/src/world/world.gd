@@ -96,14 +96,13 @@ static var _sky_cache: Dictionary = {}
 ## Entries exist for biomes whose maps all currently declare rows too --
 ## the table is the DEFAULT for the kind of place, not a patch list.
 ## `phase: []` here means "as far as the BIOME is concerned, every phase" --
-## a sky-bearing MAP inside such a biome (ruin_surface in `cave`,
-## mercantile_alleys in `invrisil_alley`) is still forced to dusk/night by
+## a sky-bearing MAP inside such a biome (ruin_surface in `cave`) is still
+## forced to dusk/night by
 ## `_biome_default_ambience`, because daylight is a property of the room, not
 ## of the tileset it was built from.
 const BIOME_DEFAULT_AMBIENCE := {
 	"dungeon": {"preset": "dust_motes", "phase": []},
 	"cave": {"preset": "dust_motes", "phase": []},
-	"invrisil_alley": {"preset": "dust_motes", "phase": []},
 	"brothers_parlor": {"preset": "dust_motes", "phase": []},
 	"inn": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 	"riverfarm_interior": {"preset": "dust_motes", "phase": ["dusk", "night"]},
@@ -116,7 +115,6 @@ const BIOME_DEFAULT_AMBIENCE := {
 	"floodplains": {"preset": "leaves", "phase": ["dusk", "night"]},
 	"riverfarm_village": {"preset": "leaves", "phase": ["dusk", "night"]},
 	"street": {"preset": "dust_motes", "phase": ["dusk", "night"]},
-	"invrisil_street": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 	"pallass_market": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 }
 const SWAY_SHADER := preload("res://src/world/shaders/foliage_sway.gdshader")

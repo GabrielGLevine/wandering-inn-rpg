@@ -82,6 +82,8 @@ def rank_for(map_id: str, role_name: str, variants: list, cell) -> list:
 
 def radius_for(role) -> int:
     if isinstance(role, dict):
+        if "radius" in role:  # #608: a role's own radius overrides the defaults below
+            return int(role["radius"])
         if str(role.get("pick", "cell")) == "door":
             return 0
         if bool(role.get("module", False)):
@@ -174,12 +176,21 @@ def _resolve_role(placements: list, role_name: str, role, map_id: str, errors: l
             _apply(p["row"], role_name, role, sub[0])
         return
     r = radius_for(role)
+    # #608: a module role uses each variant at most ceil(n/k) times per map, on top of the radius;
+    # when the radius excludes every variant under the cap, the cap wins, then rank_p[0].
+    cap = -(-len(placements) // len(sub)) if isinstance(role, dict) and bool(role.get("module", False)) else None
+    uses: dict = {}
     chosen: list = []
     for p in placements:
         cx, cy = p["cell"]
         rank = rank_for(map_id, role_name, sub, p["cell"])
         taken = {v for (ox, oy), v in chosen if max(abs(ox - cx), abs(oy - cy)) <= r}
-        variant = next((v for v in rank if v not in taken), rank[0])
+        if cap is None:
+            variant = next((v for v in rank if v not in taken), rank[0])
+        else:
+            under = [v for v in rank if uses.get(v, 0) < cap]
+            variant = next((v for v in under if v not in taken), under[0] if under else rank[0])
+        uses[variant] = uses.get(variant, 0) + 1
         chosen.append(((cx, cy), variant))
         _apply(p["row"], role_name, role, variant)
 

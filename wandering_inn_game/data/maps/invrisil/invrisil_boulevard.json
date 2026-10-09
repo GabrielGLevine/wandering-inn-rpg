@@ -602,20 +602,7 @@
  ],
  "floor_layers": [
   {
-   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
-   "tile_px": 16,
-   "coords": [
-    0,
-    0
-   ],
-   "tone": {
-    "base": [
-     0.36,
-     0.35,
-     0.38
-    ],
-    "detail": 0.2
-   },
+   "material": "@floor_street",
    "cells": "all"
   },
   {
@@ -913,23 +900,8 @@
                        }
   },
   {
-   "_pick": "v0.16.1 #9, layer 6/6: the ALLEY GROUND, beyond the new east wall AND in the break itself. Reuses mercantile_alleys' own first floor layer verbatim (Floors_Tiles (16,2)/(17,2)/(18,2), already MOCKUP-PROVEN on the sibling map) across x=27 y4..15 plus the mouth cells [26,7..9]. Presentation only; its job is that the gap reads as a way INTO somewhere. Blocked cells take the biome's own blocked tile (Wall_Tiles (8,2)) and get no layer entry -- hence no [27,3].",
-   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
-   "tile_px": 16,
-   "variants": [
-    [
-     16,
-     2
-    ],
-    [
-     17,
-     2
-    ],
-    [
-     18,
-     2
-    ]
-   ],
+   "_pick": "v0.16.1 #9, layer 6/6: the ALLEY GROUND, beyond the new east wall AND in the break itself. Takes mercantile_alleys' own first floor material, @floor_alley (#608: Invrisil's ashlar paving, which replaced the Floors_Tiles (16,2)/(17,2)/(18,2) cobble both layers shared) across x=27 y4..15 plus the mouth cells [26,7..9]. Presentation only; its job is that the gap reads as a way INTO somewhere. Blocked cells take the biome's own blocked tile (Wall_Tiles (8,2)) and get no layer entry -- hence no [27,3].",
+   "material": "@floor_alley",
    "cells": {
     "list": [
      [
@@ -993,23 +965,7 @@
       9
      ]
     ]
-   },
-    "fallback_render": {
-                        "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
-                        "tile_px": 16,
-                        "coords": [
-                         0,
-                         3
-                        ],
-                        "tone": {
-                         "base": [
-                          0.33,
-                          0.34,
-                          0.36
-                         ],
-                         "detail": 0.5
-                        }
-                       }
+   }
   }
  ],
  "decor": [
@@ -1171,7 +1127,7 @@
    ]
   },
   {
-   "sprite": "door",
+   "sprite": "invrisil_shop_door",
    "cell": [
     4,
     1
@@ -1185,7 +1141,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     2,
     0
@@ -1199,7 +1155,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     5,
     0
@@ -1213,7 +1169,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     8,
     0
@@ -1227,7 +1183,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     11,
     0
@@ -1241,7 +1197,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     14,
     0
@@ -1255,7 +1211,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     17,
     0
@@ -1269,7 +1225,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     20,
     0
@@ -1283,7 +1239,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     23,
     0
@@ -1297,7 +1253,7 @@
    ]
   },
   {
-   "sprite": "invrisil_upper_window",
+   "sprite": "@facade_window",
    "cell": [
     26,
     0
@@ -1385,7 +1341,7 @@
     2
    ],
    "display_name": "Into the Alleys",
-   "sprite": "door",
+   "sprite": "@door_street",
    "hide_sprite": true,
    "observe": "A gap in the row of shopfronts, three strides wide and going darker the further in it goes. A stride past the wall line the paving changes underfoot, boulevard marble to whatever the alleys were laid with.",
    "to_map": "mercantile_alleys",
@@ -1867,7 +1823,7 @@
     1
    ],
    "display_name": "Commercial Cross-street",
-   "sprite": "door",
+   "sprite": "@door_street",
    "to_map": "invrisil_cross_street",
    "to_cell": [
     1,

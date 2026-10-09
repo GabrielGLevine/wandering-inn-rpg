@@ -412,3 +412,16 @@ def test_preview_honors_map_kit_override(tree, capsys):
     assert run(tree, "invrisil", "cargo", "--preview") == 0
     out = capsys.readouterr().out.strip().split("\n")
     assert out == ["kit_map decor [1, 1] crate"]
+
+
+def test_pack_slice_lists_and_selects_through_symlinked_potential_assets(tree, tmp_path, capsys):
+    import shutil
+    real = tmp_path / "real_store"
+    shutil.move(str(tree / "potential_assets"), str(real))
+    (tree / "potential_assets").symlink_to(real, target_is_directory=True)
+    assert run(tree, "invrisil", "cargo", "--kind", "crate", "--limit", "3") == 0
+    assert "Furniture" in capsys.readouterr().out
+    assert run(tree, "invrisil", "cargo", "--need", "1", "--kind", "crate", "--select", "2",
+               "--ids", "invrisil_slice_crate", "--fallback", "crate_owned") == 0
+    cat = json.loads((tree / "wandering_inn_game/data/sprites.json").read_text())
+    assert cat["invrisil_slice_crate"]["animations"]["idle"]["region"] == [16, 8, 16, 23]

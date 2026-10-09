@@ -313,6 +313,34 @@ and chronology belong in issue PRs. Earlier context:
     regions.
   - **G3:** `qa/baselines/scene-repetition.json` was first generated on
     #607; regenerate only with `--regen-scene-baseline` plus an entry here.
+  - **G3 regens (#608 pilot 1a, controller):** each regen follows a
+    reviewed conversion and never hides repetition. The Invrisil generic
+    placements went 84 → 76 after the street conversions (share 43.3% →
+    39.18%), → 75 with the dedicated rigged-crate-stack sprite, held at 75
+    when the art-read fixes added three cross-street lamps and dropped the
+    stationery bundle, and → 74 when the boulevard's generic door at (4,1)
+    was pinned to the Invrisil shop door (share 37.76%). It held at 74 when
+    the counting-room guard took the new regional `invrisil_enforcer` rig
+    (one new class row, no counter change).
+  - **Counting-room guard rig (#608 final review):** `counting_room_guard`
+    (The Factor's Closed Account) wears `invrisil_enforcer`, the owned
+    2026-07-06 `hired_blade_a` generation (broad build, club), wired at 28px
+    like the alley's other heavy, `footpad_bruiser`. No named character
+    wears it. Rejected: `former_headman` (the only rig of Riverfarm's named
+    Former Headman), `hired_blade` (already on the alley as Coyle's crew,
+    the duplicate the art read removed), and `brothers_lieutenant` /
+    `gentleman_bowler` (they read as the Brothers of the Door, not the
+    Factor's man).
+  - **Cross-street recomposition (#608 art read, `_kits_recompose`):** three
+    street lamps at (3,4), (12,4) and (9,11), each blocking its cell; both
+    shop signs moved from row 2 to row 1; the stationery display was
+    removed. G4 reports it as an advisory naming both the cells and the
+    blocked change, not as a silent pass.
+  - **Shared floor sheet (#608 final review):** `ashlar_over_checker_v1` is
+    Invrisil's `floor_alley` material (tile [0,3]) and also Pallass's public
+    fallback floor sheet (`pallass_market`, `pallass_forge`, tile [2,1]). G2
+    enforces material exclusivity by material name only. Pixel-level sheet
+    exclusivity is a rollout concern and is not enforced.
 - **Best art wins per asset (#564/#554)** within a coherent scene, at gameplay
   scale; otherwise keep the official or owned public fallback. READY is not
   acceptance, and there is no quota wiring. Animation, geometry, scale and

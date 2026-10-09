@@ -134,14 +134,23 @@
   "inn_round_table": "regional",
   "inn_sign": "regional",
   "inn_table_soiled": "regional",
+  "invrisil_cargo_1": "regional",
+  "invrisil_cargo_2": "regional",
+  "invrisil_door_street_2": "regional",
+  "invrisil_door_street_3": "regional",
+  "invrisil_enforcer": "regional",
+  "invrisil_facade_window_1": "regional",
+  "invrisil_facade_window_3": "regional",
   "invrisil_flower_cart": "regional",
   "invrisil_gentlewoman_2": "regional",
   "invrisil_hanging_sign": "regional",
   "invrisil_lady_client": "regional",
   "invrisil_ornate_bench": "regional",
+  "invrisil_rigged_crate_stack": "regional",
   "invrisil_roofline": "regional",
   "invrisil_shop_door": "regional",
-  "invrisil_stationery_display": "regional",
+  "invrisil_shop_door_2": "regional",
+  "invrisil_shop_sign_1": "regional",
   "invrisil_timber_panel": "regional",
   "invrisil_upper_window": "regional",
   "kingslayer_spider": "regional",
@@ -341,8 +350,8 @@
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 84,
-   "generic_share_pct": 43.3,
+   "generic_placements": 74,
+   "generic_share_pct": 37.76,
    "maps": {
     "adventurers_rest": {
      "generic_placements": 11,
@@ -361,15 +370,15 @@
      "placements": 5
     },
     "invrisil_boulevard": {
-     "generic_placements": 4,
+     "generic_placements": 2,
      "placements": 51
     },
     "invrisil_cross_street": {
-     "generic_placements": 2,
-     "placements": 29
+     "generic_placements": 1,
+     "placements": 31
     },
     "mercantile_alleys": {
-     "generic_placements": 21,
+     "generic_placements": 14,
      "placements": 30
     },
     "stationer": {
@@ -377,7 +386,7 @@
      "placements": 18
     }
    },
-   "placements": 194
+   "placements": 196
   },
   "liscor": {
    "generic_placements": 48,

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """#607 lane A: every kit lint rule proven able to FAIL, and clean on HEAD."""
-import copy, json, subprocess, sys, unittest
+import copy, json, os, subprocess, sys, unittest
 from unittest import mock
 from pathlib import Path
 
@@ -52,6 +52,23 @@ class TestKitRules(unittest.TestCase):
         self.assertTrue(any("pick" in e for e in run(k)))
         k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["pool"] = [["c1", 0]]
         self.assertTrue(any("weight" in e for e in run(k)))
+
+    def test_schema_radius_is_a_non_negative_int(self):
+        for bad in (-1, "3", True, 1.5, None):
+            k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["radius"] = bad
+            self.assertTrue(any("radius" in e for e in run(k)), bad)
+        for ok in (0, 3):
+            k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["radius"] = ok
+            self.assertEqual([e for e in run(k) if "radius" in e or "unknown keys" in e], [], ok)
+
+    def test_schema_radius_rejected_on_door_and_map_picks(self):
+        # #608 final review M8b: only cell picks read radius; a door or map pick would silently ignore it
+        for role in ("door_x", "cargo"):
+            for pick in ("door", "map"):
+                k = copy.deepcopy(KITS); k["r"]["roles"][role]["pick"] = pick; k["r"]["roles"][role]["radius"] = 2
+                self.assertTrue(any("radius applies only to cell picks" in e for e in run(k)), (role, pick))
+        k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["radius"] = 2
+        self.assertEqual([e for e in run(k) if "radius" in e], [])
 
     def test_pool_and_cast_ids_must_exist(self):
         k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["pool"].append("ghost")
@@ -184,6 +201,38 @@ class TestGates(unittest.TestCase):
         data_lint.check_kit_gates(resolved, {"m": "r", "other": "q"}, KITS, [], errors, [], [], base_ref=None, baseline=None)
         self.assertTrue(any("G2" in e for e in errors))
 
+    def test_g2_share_counts_only_converted_maps(self):
+        # #608 ruling: the >=50% share is over the region's CONVERTED maps (an @ sprite or
+        # material ref); unconverted maps of the same region only feed the report-only share.
+        conv = {**GRID, "entities": [], "decor": [{"sprite": "c3", "sprite_role": "cargo", "cell": [0, 0]},
+                                                 {"sprite": "c3", "sprite_role": "cargo", "cell": [3, 0]},
+                                                 {"sprite": "c1", "cell": [5, 5]}]}
+        plain = {**GRID, "entities": [], "decor": [{"sprite": s, "cell": [i, 0]} for i, s in enumerate(["c1", "c2", "c1"])]}
+        resolved = {"conv": conv, "plain1": plain, "plain2": copy.deepcopy(plain),
+                    "other": {**GRID, "entities": [], "decor": [{"sprite": "c1", "cell": [0, 0]}, {"sprite": "c2", "cell": [1, 0]}]}}
+        errors, report = [], []
+        data_lint.check_kit_gates(resolved, {"conv": "r", "plain1": "r", "plain2": "r", "other": "q"}, KITS, [], errors, [], report,
+                                  base_ref=None, baseline=None)
+        self.assertEqual([e for e in errors if "G2" in e], [])  # 2/3 over the converted map; 2/9 region-wide
+        line = next(r for r in report if r.startswith("kits G2: r identity"))
+        self.assertIn("66.67% unique variants over 1 converted map(s)", line)
+        self.assertIn("22.22% region-wide (report only)", line)
+
+    def test_g2_converted_map_below_half_fails_even_when_region_passes(self):
+        conv = {**GRID, "entities": [], "decor": [{"sprite": "c3", "sprite_role": "cargo", "cell": [0, 0]},
+                                                 {"sprite": "c1", "cell": [3, 0]}, {"sprite": "c2", "cell": [5, 0]}]}
+        mat_only = {**GRID, "entities": [], "decor": [{"sprite": "c1", "cell": [0, 0]}],
+                    "floor_layers": [{"material_ref": "fa", "cells": "all"}]}
+        unique = {**GRID, "entities": [], "decor": [{"sprite": "c3", "cell": [i, 1]} for i in range(8)]}
+        resolved = {"conv": conv, "mat_only": mat_only, "unique": unique,
+                    "other": {**GRID, "entities": [], "decor": [{"sprite": "c1", "cell": [0, 0]}, {"sprite": "c2", "cell": [1, 0]}]}}
+        errors, report = [], []
+        data_lint.check_kit_gates(resolved, {"conv": "r", "mat_only": "r", "unique": "r", "other": "q"}, KITS, [], errors, [], report,
+                                  base_ref=None, baseline=None)
+        # converted maps = conv + mat_only (a material ref counts): 1/4 unique; region-wide 9/12 would pass
+        self.assertTrue(any("G2" in e and "25.0%" in e for e in errors), errors)
+        self.assertTrue(any("75.0% region-wide" in r for r in report), report)
+
     def test_g2_inactive_without_converted_region(self):
         resolved = {"m": {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}], "entities": []},
                     "o": {**GRID, "decor": [{"sprite": "c1", "cell": [0, 0]}], "entities": []}}
@@ -248,6 +297,83 @@ class TestGates(unittest.TestCase):
         errors = []
         data_lint._g4_compare({"m": cur}, {"m": base}, errors)
         self.assertEqual(errors, [])
+
+    def _recompose_case(self, cur_marker, base_marker):
+        base = {**GRID, "decor": [{"sprite": "@cargo", "cell": [0, 0]}], "entities": [], "blocked": [[1, 1]]}
+        if base_marker is not None:
+            base["_kits_recompose"] = base_marker
+        cur = copy.deepcopy(base); cur["blocked"] = [[1, 2]]
+        cur.pop("_kits_recompose", None)
+        if cur_marker is not None:
+            cur["_kits_recompose"] = cur_marker
+        errors, report = [], []
+        data_lint._g4_compare({"m": cur}, {"m": base}, errors, report)
+        return errors, report
+
+    def test_g4_recompose_new_marker_is_advisory(self):
+        errors, report = self._recompose_case("#608 - lamp composition fix", None)
+        self.assertEqual(errors, [])
+        self.assertTrue(any("G4" in r and "m" in r and "#608 - lamp composition fix" in r for r in report), report)
+        errors, report = self._recompose_case("#608 - second reason", "#608 - lamp composition fix")  # changed value
+        self.assertEqual(errors, [])
+        self.assertTrue(report)
+
+    def test_g4_recompose_reports_every_component(self):
+        # #608 final review I1: a marker waives the whole map, so every differing component is named
+        base = {**GRID, "decor": [{"sprite": "@cargo", "cell": [0, 0]}], "entities": [], "blocked": [[1, 1]]}
+        cur = copy.deepcopy(base)
+        cur["decor"].append({"sprite": "@cargo", "cell": [4, 4]}); cur["decor"][0]["cell"] = [2, 0]
+        cur["blocked"].append([4, 4])
+        cur["_kits_recompose"] = "#608 - lamps"
+        errors, report, advised = [], [], []
+        data_lint._g4_compare({"m": cur}, {"m": base}, errors, report, advised)
+        self.assertEqual(errors, [])
+        self.assertEqual(advised, ["m"])
+        self.assertEqual(len(report), 1, report)
+        self.assertIn("decor/entities cells +2/-1, blocked +1 changed", report[0])
+        cur.pop("_kits_recompose"); errors = []
+        data_lint._g4_compare({"m": cur}, {"m": base}, errors)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("decor/entities cells +2/-1, blocked +1", errors[0])
+
+    def test_g4_new_marker_that_waives_nothing_is_reported(self):
+        base = {**GRID, "decor": [{"sprite": "@cargo", "cell": [0, 0]}], "entities": [], "blocked": [[1, 1]]}
+        cur = copy.deepcopy(base); cur["_kits_recompose"] = "#608 - sprite swap only"
+        errors, report, advised = [], [], []
+        data_lint._g4_compare({"m": cur}, {"m": base}, errors, report, advised)
+        self.assertEqual(errors, [])
+        self.assertEqual(advised, ["m"])
+        self.assertTrue(any("waives nothing" in r for r in report), report)
+        base["_kits_recompose"] = cur["_kits_recompose"]; report = []
+        data_lint._g4_compare({"m": cur}, {"m": base}, [], report)
+        self.assertEqual(report, [])
+
+    def test_g4_recompose_marker_unchanged_from_base_enforces(self):
+        errors, report = self._recompose_case("#608 - lamp composition fix", "#608 - lamp composition fix")
+        self.assertTrue(any("G4" in e and "blocked" in e for e in errors), errors)
+        self.assertEqual(report, [])
+
+    def test_g4_no_marker_enforces(self):
+        errors, _ = self._recompose_case(None, None)
+        self.assertTrue(any("G4" in e and "blocked" in e for e in errors), errors)
+
+    def test_g4_malformed_marker_errors(self):
+        for bad in ("", "   ", "no issue number here", 608, ["#608"]):
+            errors, _ = self._recompose_case(bad, None)
+            self.assertTrue(any("_kits_recompose" in e for e in errors), (bad, errors))
+
+    def test_g4_recompose_through_real_base_loader(self):
+        base = data_lint._g4_base_maps("HEAD", [])
+        cur = copy.deepcopy(base["street"])
+        cur["decor"][0]["sprite"] = "@cargo"
+        cur["decor"].append(copy.deepcopy(cur["decor"][0]))
+        cur["_kits_recompose"] = "#608 - add lamp"
+        path = data_lint.DATA / "maps" / "liscor" / "street.json"
+        errors, report = [], []
+        data_lint.check_kit_gates({"street": cur}, {"street": "liscor"}, KITS, {path: cur}, errors, [], report, base_ref="HEAD", baseline=None)
+        self.assertEqual([e for e in errors if "G4" in e], [])
+        self.assertTrue(any("G4" in r and "#608 - add lamp" in r for r in report), report)
+        self.assertTrue(report[-1].endswith("G4 ok (1 advisory: street)"), report[-1])
 
     def test_g4_skips_without_base(self):
         adv = []
@@ -356,7 +482,12 @@ class TestRealTree(unittest.TestCase):
         r = subprocess.run([sys.executable, str(GAME / "scripts" / "data_lint.py")], capture_output=True, text=True, cwd=str(REPO_ROOT))
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertIn("kits:", r.stdout)
-        self.assertIn("G4 n/a", r.stdout)  # the G-gate REPORT line (Task 6)
+        # The G-gate REPORT line (Task 6). #608: real maps carry @refs now, so G4 compares
+        # against the base tree ("skipped" only where no origin/main resolves). CI's python-suites
+        # job is the one place G4 runs (fetch-depth: 0), so there it must compare, as TestLiveParity
+        # refuses to skip Godot.
+        g4 = "ok" if os.environ.get("CI") else "(ok|skipped)"
+        self.assertRegex(r.stdout, r"kits: .*; G1 ok, G2 ok, G3 ok \(\d+ maps advisory\), G4 " + g4)
 
 
 if __name__ == "__main__":

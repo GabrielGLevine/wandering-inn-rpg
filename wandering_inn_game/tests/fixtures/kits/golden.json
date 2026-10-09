@@ -1,4 +1,59 @@
 {
+ "fx_cap_fallback": {
+  "materials": [],
+  "rows": [
+   {
+    "cell": [
+     0,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "p2",
+    "sprite_role": "pair"
+   },
+   {
+    "cell": [
+     1,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "p1",
+    "sprite_role": "pair"
+   },
+   {
+    "cell": [
+     2,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "p2",
+    "sprite_role": "pair"
+   },
+   {
+    "cell": [
+     3,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "p2",
+    "sprite_role": "pair"
+   },
+   {
+    "cell": [
+     4,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "p1",
+    "sprite_role": "pair"
+   }
+  ]
+ },
  "fx_cell": {
   "materials": [],
   "rows": [
@@ -455,6 +510,191 @@
   ],
   "rows": []
  },
+ "fx_module_cap": {
+  "materials": [],
+  "rows": [
+   {
+    "cell": [
+     0,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "f1",
+    "sprite_role": "facade"
+   },
+   {
+    "cell": [
+     3,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "f2",
+    "sprite_role": "facade"
+   },
+   {
+    "cell": [
+     6,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "f1",
+    "sprite_role": "facade"
+   },
+   {
+    "cell": [
+     9,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "f1",
+    "sprite_role": "facade"
+   },
+   {
+    "cell": [
+     12,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "f3",
+    "sprite_role": "facade"
+   },
+   {
+    "cell": [
+     15,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "f3",
+    "sprite_role": "facade"
+   },
+   {
+    "cell": [
+     18,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "f2",
+    "sprite_role": "facade"
+   },
+   {
+    "cell": [
+     21,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "f3",
+    "sprite_role": "facade"
+   },
+   {
+    "cell": [
+     24,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "f2",
+    "sprite_role": "facade"
+   },
+   {
+    "cell": [
+     0,
+     1
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "c4",
+    "sprite_role": "cargo"
+   },
+   {
+    "cell": [
+     3,
+     1
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "c4",
+    "sprite_role": "cargo"
+   },
+   {
+    "cell": [
+     6,
+     1
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "c4",
+    "sprite_role": "cargo"
+   },
+   {
+    "cell": [
+     9,
+     1
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "c4",
+    "sprite_role": "cargo"
+   },
+   {
+    "cell": [
+     12,
+     1
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "c4",
+    "sprite_role": "cargo"
+   },
+   {
+    "cell": [
+     15,
+     1
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "c1",
+    "sprite_role": "cargo"
+   },
+   {
+    "cell": [
+     18,
+     1
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "c1",
+    "sprite_role": "cargo"
+   },
+   {
+    "cell": [
+     21,
+     1
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "c4",
+    "sprite_role": "cargo"
+   },
+   {
+    "cell": [
+     24,
+     1
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "c4",
+    "sprite_role": "cargo"
+   }
+  ]
+ },
  "fx_other": {
   "materials": [],
   "rows": [
@@ -467,6 +707,71 @@
     "light": null,
     "sprite": "street_lamp",
     "sprite_role": "common_lamp"
+   }
+  ]
+ },
+ "fx_radius": {
+  "materials": [],
+  "rows": [
+   {
+    "cell": [
+     0,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "w2",
+    "sprite_role": "wide"
+   },
+   {
+    "cell": [
+     3,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "w1",
+    "sprite_role": "wide"
+   },
+   {
+    "cell": [
+     6,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "w3",
+    "sprite_role": "wide"
+   },
+   {
+    "cell": [
+     9,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "w2",
+    "sprite_role": "wide"
+   },
+   {
+    "cell": [
+     12,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "w1",
+    "sprite_role": "wide"
+   },
+   {
+    "cell": [
+     15,
+     0
+    ],
+    "layer": "decor",
+    "light": null,
+    "sprite": "w3",
+    "sprite_role": "wide"
    }
   ]
  },
