@@ -10070,5 +10070,53 @@
     "fps": 8
    }
   }
+ },
+ "invrisil_door_street_1": {
+  "render_scale": 0.36666667,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_shop_door/Idle-Sheet.png",
+    "frame_size": [
+     46,
+     61
+    ],
+    "region": [
+     9,
+     2,
+     46,
+     61
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_door_street_2": {
+  "render_scale": 0.36666667,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/harvest_fallbacks/door/Idle-Sheet.png",
+    "frame_size": [
+     46,
+     60
+    ],
+    "region": [
+     9,
+     2,
+     46,
+     60
+    ],
+    "fps": 1
+   }
+  }
  }
 }

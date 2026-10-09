@@ -37,7 +37,16 @@
      }
     }
    },
-   "roles": {},
+   "roles": {
+    "door_street": {
+     "pick": "door",
+     "pool": [
+      "door",
+      "invrisil_door_street_1",
+      "invrisil_door_street_2"
+     ]
+    }
+   },
    "cast": []
   }
 }
