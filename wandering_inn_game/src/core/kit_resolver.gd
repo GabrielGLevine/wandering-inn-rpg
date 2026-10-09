@@ -4,6 +4,7 @@ extends RefCounted
 ## #607 regional kits: resolves "@role" sprites and "@material" looks at compose
 ## time (index C3/C4). Pure static -- no I/O, no autoloads. Mirror:
 ## scripts/wi_kits_lib.py; tests/test_kit_parity.gd pins both runtimes together.
+## H is the first 32 bits of SHA-256 (djb2 is linear and correlates variants).
 ## Picks depend only on (map, role, cell), never on pool order. An unresolvable
 ## ref is appended to `errors` and its row is returned untouched; the CATALOG
 ## asserts, because an assert here would hang every --script suite.
@@ -13,7 +14,7 @@ const TWO_32 := 4294967296.0
 
 
 static func hash32(key: String) -> int:
-	return key.hash()
+	return key.sha256_text().substr(0, 8).hex_to_int()
 
 
 static func score(key: String, weight: float) -> float:
@@ -93,6 +94,10 @@ static func resolve_map(map: Dictionary, map_id: String, region: String, kits: D
 			if not spr.begins_with("@"):
 				continue
 			var role_name := spr.substr(1)
+			var cell_v: Variant = (row as Dictionary).get("cell", null)
+			if not (cell_v is Array) or (cell_v as Array).size() < 2:
+				errors.append("maps/%s: %s[%d] sprite '@%s' has no cell" % [map_id, layer, i, role_name])
+				continue
 			if not by_role.has(role_name):
 				by_role[role_name] = []
 			by_role[role_name].append({"layer": layer, "index": i, "row": row,
@@ -103,6 +108,10 @@ static func resolve_map(map: Dictionary, map_id: String, region: String, kits: D
 		if role == null:
 			for p: Dictionary in placements:
 				errors.append("maps/%s: %s[%d] sprite '@%s' does not resolve (region %s, _common)" % [map_id, p["layer"], p["index"], role_name, region])
+			continue
+		if pool_of(role).is_empty():
+			for p: Dictionary in placements:
+				errors.append("maps/%s: %s[%d] role '%s' has an empty pool" % [map_id, p["layer"], p["index"], role_name])
 			continue
 		placements.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 			if a["cell"].y != b["cell"].y:

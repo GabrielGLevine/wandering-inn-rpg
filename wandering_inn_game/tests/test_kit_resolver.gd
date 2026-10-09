@@ -19,13 +19,6 @@ const KITS := {
 }
 
 
-func _py_djb2(s: String) -> int:
-	var h := 5381
-	for i in s.length():
-		h = (h * 33 + s.unicode_at(i)) & 0xFFFFFFFF
-	return h
-
-
 func _cells(n: int, role: String) -> Array:
 	var out: Array = []
 	for i in n:
@@ -35,13 +28,13 @@ func _cells(n: int, role: String) -> Array:
 
 func _init() -> void:
 	WITestWatchdog.arm(self)
-	# hash: Godot String.hash() == djb2 over UTF-32 code points, incl. non-ASCII.
-	for k: String in ["", "a", "inn|cargo|crate|3,4", "a<>b", "naïve|ρ|日本"]:
-		assert(WIKitResolver.hash32(k) == k.hash() and WIKitResolver.hash32(k) == _py_djb2(k), "hash32 mismatch on %s" % k)
-	assert(WIKitResolver.hash32("naïve|ρ|日本") == 413680424, "pinned non-ASCII hash (verified against Python 2026-10-08)")
+	# hash: first 32 bits of SHA-256 over UTF-8 (pins computed with Python hashlib).
+	assert(WIKitResolver.hash32("abc") == 3128432319 and WIKitResolver.hash32("x") == 762385986, "sha pins")
+	assert(WIKitResolver.hash32("invrisil_boulevard|cargo|crate_lidded|12,7") == 537148620, "sha pin, placement key")
+	assert(WIKitResolver.hash32("naïve|ρ|日本") == 2814704703, "sha pin, non-ASCII")
 	# score: smaller for heavier weight; strictly positive; weight 1 reproduces -ln((H+0.5)/2^32).
 	var k1 := "m|cargo|c1"
-	assert(is_equal_approx(WIKitResolver.score(k1, 1.0), -log((float(k1.hash()) + 0.5) / 4294967296.0)), "score formula")
+	assert(is_equal_approx(WIKitResolver.score(k1, 1.0), -log((float(WIKitResolver.hash32(k1)) + 0.5) / 4294967296.0)), "score formula")
 	assert(WIKitResolver.score(k1, 2.0) < WIKitResolver.score(k1, 1.0), "weight divides the score")
 
 	# identity: a map with no refs comes back equal (no sprite_role leaks).
@@ -66,6 +59,9 @@ func _init() -> void:
 		used[row["sprite"]] = true
 	assert(used.size() <= 4 and used.size() >= 2, "subset of k=4 variants, got %s" % [used.keys()])
 	assert(WIKitResolver.resolve_map(m, "m", "r", KITS) == out, "edit-stable: same input, same picks")
+	var exact := ["c4", "c3", "c2", "c4", "c1", "c3", "c4", "c1", "c3", "c3", "c2", "c1", "c4", "c2"]
+	for i in exact.size():
+		assert(out["decor"][i]["sprite"] == exact[i], "pinned pick %d (python hashlib reference)" % i)
 	# stability under pool reorder: picks depend on (map, role, cell), never on array order.
 	var kits2: Dictionary = KITS.duplicate(true)
 	kits2["r"]["roles"]["cargo"]["pool"] = ["c5", "c4", "c3", ["c2", 2], "c1"]
@@ -130,6 +126,62 @@ func _init() -> void:
 	# region absent entirely => _common only.
 	var nr: Array = []
 	assert(WIKitResolver.resolve_map(fx, "m", "zz", KITS, nr)["decor"][1]["sprite"] == "street_lamp" and nr.size() == 1, "unknown region falls back to _common")
+
+	# variety: sha-256 de-correlates variants across cells, maps and doors.
+	var orders := {}
+	for x in 10:
+		for y in 10:
+			orders[WIKitResolver.rank_for("m", "r", ["v1", "v2", "v3", "v4"], Vector2i(x, y))] = true
+	assert(orders.size() >= 12, "rank orders over a 10x10 grid: %d" % orders.size())
+	var subs := {}
+	for i in 3:
+		subs[WIKitResolver.subset("map%d" % i, "cargo", WIKitResolver.pool_of(KITS["r"]["roles"]["cargo"]), 4)] = true
+	assert(subs.size() > 1, "subsets differ across maps")
+
+	# door seed precondition: the map id alone would pick differently from the pair.
+	var dpool := WIKitResolver.pool_of(KITS["r"]["roles"]["door_x"])
+	assert(WIKitResolver.subset("a", "door_x", dpool, 1)[0] != "d3" and WIKitResolver.subset("b", "door_x", dpool, 1)[0] != "d3", "map-id seeds differ from pair seed")
+	assert(a_out["entities"][0]["sprite"] == "d3", "pair seed a<>b picks d3 (python reference)")
+	assert(door_errs.size() == 1, "door error row")
+	var bad_door := {"grid": {"width": 7, "height": 7}, "decor": [{"sprite": "@door_x", "cell": [1, 1]}], "entities": []}
+	assert(WIKitResolver.resolve_map(bad_door, "a", "r", KITS, []) == bad_door, "door-mode error row unchanged")
+
+	# radius exactness: module r=1 reuses at distance 2; prop r=2 reuses at 3 but not 2.
+	var f2 := {"grid": {"width": 7, "height": 7}, "decor": [{"sprite": "@facade", "cell": [0, 0]}, {"sprite": "@facade", "cell": [2, 0]}], "entities": []}
+	var f2o: Dictionary = WIKitResolver.resolve_map(f2, "m", "r", KITS)
+	assert(f2o["decor"][0]["sprite"] == "f2" and f2o["decor"][1]["sprite"] == "f2", "module may reuse at distance 2")
+	var c3 := {"grid": {"width": 7, "height": 7}, "decor": [{"sprite": "@cargo", "cell": [0, 0]}, {"sprite": "@cargo", "cell": [3, 0]}], "entities": []}
+	var c3o: Dictionary = WIKitResolver.resolve_map(c3, "m", "r", KITS)
+	assert(c3o["decor"][0]["sprite"] == "c3" and c3o["decor"][1]["sprite"] == "c3", "prop may reuse at distance 3")
+	var c2: Dictionary = WIKitResolver.resolve_map(far, "m", "r", KITS)
+	assert(c2["decor"][0]["sprite"] == "c3" and c2["decor"][1]["sprite"] == "c2", "prop excludes at distance 2")
+
+	# decor and entities share one count and one exclusion namespace.
+	var mix := {"grid": {"width": 12, "height": 12}, "decor": [], "entities": []}
+	for i in 12:
+		mix["decor" if i < 6 else "entities"].append({"id": "p%d" % i, "sprite": "@cargo", "cell": [(i % 3) * 3, (i / 3) * 3]})
+	var mix_out: Dictionary = WIKitResolver.resolve_map(mix, "m", "r", KITS)
+	var mix_used := {}
+	for row: Dictionary in mix_out["decor"] + mix_out["entities"]:
+		mix_used[row["sprite"]] = true
+	assert(mix_used.size() == 4, "12 combined placements => k=4 (split counts would give 3), got %s" % [mix_used.keys()])
+	var same := {"grid": {"width": 7, "height": 7}, "decor": [{"sprite": "@cargo", "cell": [1, 1]}], "entities": [{"id": "e", "kind": "prop", "sprite": "@cargo", "cell": [1, 1]}]}
+	var same_out: Dictionary = WIKitResolver.resolve_map(same, "m", "r", KITS)
+	assert(same_out["decor"][0]["sprite"] == "c3" and same_out["entities"][0]["sprite"] == "c2", "same cell: decor visited first, entity excluded")
+
+	# map mode takes the smallest variant-key score (python reference: yard -> s3).
+	var yard: Dictionary = WIKitResolver.resolve_map({"grid": {"width": 7, "height": 7}, "decor": _cells(2, "seat"), "entities": []}, "yard", "r", KITS)
+	assert(yard["decor"][0]["sprite"] == "s3" and yard["decor"][1]["sprite"] == "s3", "map mode smallest score")
+
+	# error paths leave rows untouched: non-@ material, empty pool, @ row without cell.
+	var nm := {"grid": {"width": 7, "height": 7}, "decor": [], "entities": [], "floor_layers": [{"material": "floor_a", "cells": "all"}]}
+	var nm_errs: Array = []
+	assert(WIKitResolver.resolve_map(nm, "m", "r", KITS, nm_errs) == nm and nm_errs.size() == 1, "non-@ material is an error")
+	var kits4: Dictionary = KITS.duplicate(true)
+	kits4["r"]["roles"]["empty"] = {"pick": "cell", "pool": []}
+	var ep := {"grid": {"width": 7, "height": 7}, "decor": [{"sprite": "@empty", "cell": [1, 1]}, {"sprite": "@cargo"}], "entities": []}
+	var ep_errs: Array = []
+	assert(WIKitResolver.resolve_map(ep, "m", "r", kits4, ep_errs) == ep and ep_errs.size() == 2, "empty pool and missing cell: errors, rows untouched, got %s" % [ep_errs])
 
 	print("PASS test_kit_resolver")
 	quit(0)
