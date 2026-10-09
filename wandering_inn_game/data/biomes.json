@@ -403,8 +403,8 @@
     "blocked_sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
     "blocked_tile_px": 16,
     "blocked": [
-     0,
-     3
+     2,
+     1
     ],
     "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
     "tile_px": 16,
