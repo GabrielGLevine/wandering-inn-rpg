@@ -500,8 +500,9 @@ class TestBiomeRows(unittest.TestCase):
             # #608 1b night read: invrisil_shop drops its mote default (sourceless discs); the others keep it.
             (self.assertNotIn if bid == "invrisil_shop" else self.assertIn)(row, world)
         maps = (GAME / "data" / "maps").glob("*/*.json")
-        # Pilot 1b adopted invrisil_shop on the Rest only; any other adoption must be planned.
-        self.assertEqual(sorted(f"{p.parent.name}/{p.name}" for p in maps if json.loads(p.read_text()).get("biome") in self.NEW), ["invrisil/adventurers_rest.json"])
+        # Pilot 1b adopted invrisil_shop on the Rest only; #620 R1 adopted liscor_civic on the three civic
+        # interiors. Any other adoption must be planned.
+        self.assertEqual(sorted(f"{p.parent.name}/{p.name}" for p in maps if json.loads(p.read_text()).get("biome") in self.NEW), ["invrisil/adventurers_rest.json", "liscor/barracks.json", "liscor/guild.json", "liscor/runners_guild.json"])
 
 
 class TestRealTree(unittest.TestCase):
