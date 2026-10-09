@@ -226,6 +226,13 @@
    ]
   },
   {
+   "sprite": "counter_mid",
+   "cell": [
+    5,
+    2
+   ]
+  },
+  {
    "sprite": "counter_right",
    "cell": [
     6,
@@ -272,7 +279,7 @@
    "kind": "npc",
    "cell": [
     5,
-    2
+    1
    ],
    "display_name": "Vess",
    "person": true,
@@ -296,7 +303,7 @@
    "kind": "prop",
    "cell": [
     8,
-    3
+    1
    ],
    "display_name": "The Delivery Board",
    "sprite": "delivery_board",
