@@ -126,14 +126,17 @@ Logged in `docs/CHOICE-LOG.md` (Regional kits). Land both before another map ado
 - [ ] Issue opened; branch and worktree created; overlay copied; import pass done.
 - [ ] Capture scripts written; before-captures preserved in `qa_output/kits/<region>/before/`.
 - [ ] Materials: region-exclusive floor and walls selected (pool read PASS) and wired; or a generation-list row added.
+- [ ] Null rule (spec §2.2): a map field set to `null` blocks the material's value, and only wall-segment `face`/`cap` may be nulled (caps-only or face-only segments). `data_lint` rejects any other null, and a nulled key on a material that carries a `fallback_render`.
 - [ ] Roles: each pool selected via `fill_kit` with a pool read; fallback set ≥2 distinct owned sprites; lint and commit per role.
 - [ ] Rows converted opt-in; skip list with reasons recorded; stand-ins replaced or listed; cardinal-axis check done.
 - [ ] `data_lint --base origin/main` green: G1–G5, cast and denylist rules.
 - [ ] `preflight --full`, `ci_sweep --touching <maps, kits.json, biomes.json>` and `journey_gate --only <affected>` green.
 - [ ] Combat capture where a biome row changed.
 - [ ] Official and public after-captures plus the region strip.
+- [ ] Dusk/night views captured and read wherever ambience is phase-gated: check each map's `ambience` rows for `phase` and the biome's row in `BIOME_DEFAULT_AMBIENCE` (`src/world/world.gd`). Equal mood grades do not make night identical: four pilot interiors share one grade across phases but add dust motes at dusk and night.
 - [ ] Blind Fable scene read: all PASS after the FIX loop; reconcile done; CHOICE-LOG entries made.
 - [ ] Prepared save `qa/playtest_saves/<date>-kits-<region>` with a "load X, do Y, judge Z" line.
+- [ ] Identity cues pinned explicitly (as Invrisil pinned `invrisil_lamp_wall_1` ×3 and `invrisil_door_street_2`/`_3`) are invisible to G1's per-role check; only its coverage line counts them. List them in the PR.
 - [ ] PR (issue-close template): independent review, CI green, squash-merge.
 - [ ] `tools/asset_usage.py` delta posted on #606.
 
