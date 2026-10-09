@@ -186,6 +186,7 @@
   "note_pinned": "generic",
   "octavia": "regional",
   "olesm": "regional",
+  "owned_fallback_library_desk": "regional",
   "owned_fallback_table_brown": "regional",
   "pallass_billet_rack": "regional",
   "pallass_rail_post": "regional",
@@ -355,8 +356,8 @@
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 63,
-   "generic_share_pct": 32.14,
+   "generic_placements": 61,
+   "generic_share_pct": 31.28,
    "maps": {
     "adventurers_rest": {
      "generic_placements": 9,
@@ -364,7 +365,7 @@
     },
     "brothers_parlor": {
      "generic_placements": 14,
-     "placements": 26
+     "placements": 25
     },
     "enchanter_shop": {
      "generic_placements": 6,
@@ -387,11 +388,11 @@
      "placements": 30
     },
     "stationer": {
-     "generic_placements": 13,
+     "generic_placements": 11,
      "placements": 18
     }
    },
-   "placements": 196
+   "placements": 195
   },
   "liscor": {
    "generic_placements": 48,

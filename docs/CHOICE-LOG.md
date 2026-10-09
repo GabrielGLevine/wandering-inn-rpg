@@ -322,6 +322,10 @@ and chronology belong in issue PRs. Earlier context:
     was pinned to the Invrisil shop door (share 37.76%). It held at 74 when
     the counting-room guard took the new regional `invrisil_enforcer` rig
     (one new class row, no counter change).
+    The 1b FIX loop (art read) took it 63 → 61 (share 31.28%): the stationer
+    desk and stove pins left the generic ids, and one new regional class row
+    (`owned_fallback_library_desk`); the deleted parlor rug took the Invrisil
+    placement count 196 → 195.
   - **G3 regen (#608 pilot 1b, Task 9c):** the enchanter tray and stationer
     paper stand left the generic `crate` for dedicated regional sprites
     (`invrisil_returned_work_tray`, `invrisil_paper_stand`): Invrisil generic
