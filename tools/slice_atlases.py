@@ -274,3 +274,179 @@ def wired_regions(game_root: Path) -> dict[str, list[tuple[str, list[int]]]]:
             if isinstance(anim, dict) and anim.get("region") and isinstance(anim.get("sheet"), str):
                 out.setdefault(anim["sheet"], []).append((sid, [int(v) for v in anim["region"]]))
     return out
+
+
+# ------------------------------------------------------------- slicing
+
+def _xywh(box: list[int]) -> list[int]:
+    return [box[0], box[1], box[2] - box[0], box[3] - box[1]]
+
+
+def out_dir_for(sheet: Path, assets_root: Path, sha: str) -> Path:
+    stem = sheet_stem(sheet)
+    base = assets_root / sheet.relative_to(assets_root).parts[0] / "_sliced" / stem
+    existing = base / "SLICES.json"
+    if existing.exists():
+        try:
+            if json.loads(existing.read_text(encoding="utf-8")).get("sheet_sha256") != sha:
+                return base.with_name(f"{stem}-{sha[:8]}")
+        except (json.JSONDecodeError, OSError):
+            pass
+    return base
+
+
+def _carry_labels(out_dir: Path) -> tuple[dict[tuple, dict], list[list[int]]]:
+    """Labels and overrides from a previous run, keyed by (sha, region)."""
+    sj = out_dir / "SLICES.json"
+    if not sj.exists():
+        return {}, []
+    try:
+        old = json.loads(sj.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}, []
+    keep = {(r.get("sheet_sha256"), tuple(r.get("region", []))): {k: r[k] for k in LABEL_KEYS if k in r}
+            for r in old.get("assets", [])}
+    return keep, [list(o) for o in old.get("overrides", [])]
+
+
+def slice_sheet(sheet: Path, assets_root: Path, out_dir: Path, overrides: list[list[int]],
+                bundled: dict[str, str], wired: dict, duplicates: list[str]) -> tuple[dict, list[Image.Image]]:
+    im = Image.open(sheet).convert("RGBA")
+    w, h = im.size
+    data = im.tobytes()
+    labels, boxes = components(data[3::4], w, h)
+    pieces: list[tuple[list[int], str]] = []
+    for cid, box in enumerate(boxes, 1):
+        if box[4] >= MIN_AREA:
+            pieces += split_box(data, labels, cid, w, box)
+    carried, old_overrides = _carry_labels(out_dir)
+    overrides = [list(o) for o in dict.fromkeys(tuple(o) for o in old_overrides + overrides)]
+    for ov in overrides:
+        pieces = [p for p in pieces if overlap_ratio(_xywh(p[0]), ov) < 0.5]
+        pieces.append(([ov[0], ov[1], ov[0] + ov[2], ov[1] + ov[3], ov[2] * ov[3]], "override"))
+    cell = sheet_grid(w, h, [p[0] for p in pieces])
+    sha = sha256(sheet)
+    rel = sheet.relative_to(assets_root)
+    game_sheet = bundled.get(sha, "")
+    wired_here = wired.get(game_sheet, []) if game_sheet else []
+    stem = sheet_stem(sheet)
+    rows, crops = [], []
+    for box, method in sorted(pieces, key=lambda p: (p[0][1], p[0][0])):
+        x0, y0, x1, y1 = box[:4]
+        if cell and method != "override":
+            e = cell_box(box, cell)
+            if not any(o is not box and intersects(e, o) for o, _ in pieces):
+                x0, y0, x1, y1 = e
+                method = f"grid{cell}"
+        region = [x0, y0, x1 - x0, y1 - y0]
+        crop = im.crop((x0, y0, x1, y1))
+        wired_ids = [sid for sid, r in wired_here if overlap_ratio(region, r) >= 0.5]
+        row = {
+            "path": (Path("potential_assets") / out_dir.relative_to(assets_root)
+                     / f"{stem}__x{x0}_y{y0}_w{region[2]}_h{region[3]}.png").as_posix(),
+            "kind": "prop", "targets": list(wired_ids), "verdict": "UNREVIEWED", "notes": "",
+            "source_sheet": (Path("potential_assets") / rel).as_posix(),
+            "region": region, "sheet_sha256": sha, "method": method,
+            "has_shadow": has_shadow(crop), "size_class": size_class(region[2], region[3]),
+            "label_confidence": 0.0, "label_kind": "",
+            "bundled": bool(game_sheet), "game_sheet": game_sheet,
+            "wired_ids": wired_ids, "duplicate_sheets": list(duplicates),
+        }
+        row.update(carried.get((sha, tuple(region)), {}))
+        rows.append(row)
+        crops.append(crop)
+    doc = {"schema": SCHEMA, "source": "pack", "tier": "pack-bundle",
+           "family": ac.pack_family(rel.parts[0]),
+           "sheet": (Path("potential_assets") / rel).as_posix(), "sheet_sha256": sha,
+           "grid": cell, "overrides": overrides, "check_notes": [], "assets": rows}
+    return doc, crops
+
+
+def render_contact(crops: list[Image.Image], out: Path, scale: int, start: int = 1,
+                   cols: int = 8, max_px: int = 96) -> None:
+    """Numbered grid on mid-grey so dark outlines and pale shadows both read.
+    Slices above max_px are shrunk to it first (trees); the number is the
+    1-based index into the SLICES.json rows."""
+    shown = []
+    for c in crops:
+        m = max(c.size)
+        if m > max_px:
+            c = c.resize((max(1, c.size[0] * max_px // m), max(1, c.size[1] * max_px // m)), Image.BOX)
+        shown.append(c.resize((c.size[0] * scale, c.size[1] * scale), Image.NEAREST))
+    cw = max((s.size[0] for s in shown), default=16) + 8
+    ch = max((s.size[1] for s in shown), default=16) + 18
+    rows = -(-len(shown) // cols) if shown else 1
+    page = Image.new("RGBA", (cols * cw, rows * ch), (107, 107, 107, 255))
+    draw = ImageDraw.Draw(page)
+    for i, s in enumerate(shown):
+        x, y = (i % cols) * cw, (i // cols) * ch
+        page.alpha_composite(s, (x + 4, y + 14))
+        label = str(start + i)
+        for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            draw.text((x + 3 + dx, y + 1 + dy), label, fill=(0, 0, 0, 255))
+        draw.text((x + 3, y + 1), label, fill=(255, 255, 0, 255))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    page.save(out)
+
+
+def write_outputs(doc: dict, crops: list[Image.Image], out_dir: Path) -> None:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    keep = {Path(r["path"]).name for r in doc["assets"]}
+    for stale in out_dir.glob("*.png"):
+        if stale.name != "contact.png" and stale.name not in keep:
+            stale.unlink()
+    for row, crop in zip(doc["assets"], crops):
+        crop.save(out_dir / Path(row["path"]).name)
+    (out_dir / "SLICES.json").write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
+    render_contact(crops, out_dir / "contact.png", scale=2)
+
+
+def parse_split(spec: str) -> tuple[str, list[int]]:
+    stem, _, nums = spec.partition(":")
+    parts = [int(v) for v in nums.split(",")]
+    if not stem or len(parts) != 4 or parts[2] <= 0 or parts[3] <= 0:
+        raise argparse.ArgumentTypeError(f"--split wants <stem>:<x>,<y>,<w>,<h>, got {spec!r}")
+    return stem, parts
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--assets-root", type=Path, default=ROOT / "potential_assets")
+    ap.add_argument("--game-root", type=Path, default=ROOT / "wandering_inn_game")
+    ap.add_argument("--only", default="", help="only sheets whose relative path contains this")
+    ap.add_argument("--split", type=parse_split, action="append", default=[],
+                    help="manual region <stem>:<x>,<y>,<w>,<h> where <stem> is the _sliced/ dir "
+                         "name (Furniture, Model_01_Size_02); recorded as method override")
+    ap.add_argument("--dry-run", action="store_true")
+    args = ap.parse_args(argv)
+    assets_root = args.assets_root.resolve()
+    if not assets_root.is_dir():
+        print(f"no assets root at {assets_root}", file=sys.stderr)
+        return 2
+    splits: dict[str, list[list[int]]] = {}
+    for stem, region in args.split:
+        splits.setdefault(stem, []).append(region)
+    bundled = bundled_index(args.game_root)
+    wired = wired_regions(args.game_root)
+    sheets = find_sheets(assets_root, args.only)
+    dupes = sum(len(d) for _, d in sheets)
+    total, methods = 0, {}
+    for sheet, duplicates in sheets:
+        sha = sha256(sheet)
+        out_dir = out_dir_for(sheet, assets_root, sha)
+        if args.dry_run:
+            print(f"would slice {sheet.relative_to(assets_root)} -> {out_dir.relative_to(assets_root)}")
+            continue
+        doc, crops = slice_sheet(sheet, assets_root, out_dir, splits.get(sheet_stem(sheet), []), bundled, wired, duplicates)
+        write_outputs(doc, crops, out_dir)
+        total += len(doc["assets"])
+        for r in doc["assets"]:
+            methods[r["method"]] = methods.get(r["method"], 0) + 1
+        print(f"{len(doc['assets']):4d} slices  grid={doc['grid']}  {sheet.relative_to(assets_root)}")
+    print(f"sliced {len(sheets)} sheets ({dupes} duplicates skipped) -> {total} slices; "
+          + ", ".join(f"{k} {v}" for k, v in sorted(methods.items())))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

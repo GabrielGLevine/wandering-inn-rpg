@@ -193,3 +193,155 @@ def test_bundled_index_and_wired_regions(tmp_path):
     assert idx == {sa.sha256(sheet): "res://assets/props/free_pack/Furniture.png"}
     assert sa.wired_regions(game) == {"res://assets/props/free_pack/Furniture.png": [("crate", [0, 0, 16, 16])]}
     assert sa.wired_regions(tmp_path / "nowhere") == {}
+
+
+def game_fixture(tmp_path, sheet_src: Path, wired=None):
+    game = tmp_path / "wandering_inn_game"
+    dst = game / "assets/props/free_pack" / sheet_src.name
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    dst.write_bytes(sheet_src.read_bytes())
+    (game / "data").mkdir(exist_ok=True)
+    sprites = {"_comment": "x"}
+    for sid, region in (wired or {}).items():
+        sprites[sid] = {"animations": {"idle": {"sheet": "res://assets/props/free_pack/" + sheet_src.name,
+                                                "region": region}}}
+    (game / "data/sprites.json").write_text(json.dumps(sprites))
+    return game
+
+
+def test_slice_sheet_rows_follow_c8_and_record_bundled_and_wired(tmp_path):
+    assets = tmp_path / "potential_assets"
+    src = assets / "Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"
+    src.parent.mkdir(parents=True)
+    packed_crates(src)
+    game = game_fixture(tmp_path, src, {"crate": [16, 0, 16, 23]})
+    out_dir = sa.out_dir_for(src, assets, sa.sha256(src))
+    assert out_dir == assets / "Pixel Crawler - Free Pack/_sliced/Furniture"
+    doc, crops = sa.slice_sheet(src, assets, out_dir, [], sa.bundled_index(game), sa.wired_regions(game), ["dupe"])
+    rows = doc["assets"]
+    assert [r["region"] for r in rows] == [[0, 0, 16, 23], [16, 0, 16, 23], [32, 1, 16, 22]]
+    crate = rows[1]
+    assert crate["path"] == "potential_assets/Pixel Crawler - Free Pack/_sliced/Furniture/Furniture__x16_y0_w16_h23.png"
+    assert crate["source_sheet"] == "potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"
+    assert crate["sheet_sha256"] == sa.sha256(src) and crate["method"] == "seam"
+    assert (crate["kind"], crate["verdict"], crate["notes"], crate["has_shadow"]) == ("prop", "UNREVIEWED", "", False)
+    assert crate["size_class"] == "M" and crate["label_confidence"] == 0.0 and crate["label_kind"] == ""
+    assert crate["bundled"] is True and crate["game_sheet"] == "res://assets/props/free_pack/Furniture.png"
+    assert crate["wired_ids"] == ["crate"] and crate["targets"] == ["crate"]
+    assert rows[0]["wired_ids"] == [] and rows[0]["targets"] == []
+    assert crate["duplicate_sheets"] == ["dupe"]
+    assert doc["grid"] is None and doc["tier"] == "pack-bundle" and doc["family"] == "PC16"
+    assert crops[1].size == (16, 23)
+
+
+def test_grid_sheet_expands_to_cells_and_marks_method(tmp_path):
+    assets = tmp_path / "potential_assets"
+    src = assets / "Pixel Crawler - Free Pack/Environment/Props/Static/Meat.png"
+    sprite_sheet(src, [(3, 3, 10, 10), (19, 3, 10, 10), (35, 3, 10, 10), (3, 19, 10, 10)], size=(64, 32))
+    doc, crops = sa.slice_sheet(src, assets, sa.out_dir_for(src, assets, "x"), [], {}, {}, [])
+    assert doc["grid"] == 16
+    assert [r["region"] for r in doc["assets"]] == [[0, 0, 16, 16], [16, 0, 16, 16], [32, 0, 16, 16], [0, 16, 16, 16]]
+    assert {r["method"] for r in doc["assets"]} == {"grid16"} and {r["size_class"] for r in doc["assets"]} == {"S"}
+    assert doc["assets"][0]["bundled"] is False and doc["assets"][0]["game_sheet"] == ""
+
+
+def test_override_replaces_overlapping_auto_slice(tmp_path):
+    assets = tmp_path / "potential_assets"
+    src = assets / "Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"
+    src.parent.mkdir(parents=True)
+    packed_crates(src)
+    doc, _ = sa.slice_sheet(src, assets, sa.out_dir_for(src, assets, "x"), [[0, 0, 32, 23]], {}, {}, [])
+    assert [(r["region"], r["method"]) for r in doc["assets"]] == [([0, 0, 32, 23], "override"), ([32, 1, 16, 22], "seam")]
+    assert doc["overrides"] == [[0, 0, 32, 23]]
+
+
+def test_shadow_flag_from_semi_alpha(tmp_path):
+    assets = tmp_path / "potential_assets"
+    src = assets / "Pixel Crawler - Desert/Pixel Crawler - Desert/Assets/Props.png"
+    im = sprite_sheet(src, [(2, 2, 12, 12), (34, 2, 12, 12)], size=(64, 32))
+    for x in range(34, 46):
+        im.putpixel((x, 15), (0, 0, 0, 80))
+    im.save(src)
+    doc, _ = sa.slice_sheet(src, assets, sa.out_dir_for(src, assets, "x"), [], {}, {}, [])
+    assert [r["has_shadow"] for r in doc["assets"]] == [False, True]
+
+
+def run_cli(tmp_path, *extra):
+    assets = tmp_path / "potential_assets"
+    game = tmp_path / "wandering_inn_game"
+    return sa.main(["--assets-root", str(assets), "--game-root", str(game), *extra])
+
+
+def test_cli_is_idempotent_and_skips_strips_and_dupes(tmp_path, capsys):
+    assets = tmp_path / "potential_assets"
+    src = assets / "Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"
+    src.parent.mkdir(parents=True)
+    packed_crates(src)
+    dupe = assets / "Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"
+    dupe.parent.mkdir(parents=True)
+    dupe.write_bytes(src.read_bytes())
+    sprite_sheet(assets / "Pixel Crawler - Cave/Pixel Crawler - Cave/Enemies/Fungus/Idle-Sheet.png", [(0, 0, 16, 16)])
+    sprite_sheet(assets / "Pixel Crawler - Cave/Pixel Crawler - Cave/Assets/Tiles.png", [(0, 0, 16, 16)])
+    game_fixture(tmp_path, src)
+    assert run_cli(tmp_path) == 0
+    out = assets / "Pixel Crawler - Free Pack/_sliced/Furniture"
+    first = (out / "SLICES.json").read_text()
+    names = sorted(p.name for p in out.iterdir())
+    assert names == ["Furniture__x0_y0_w16_h23.png", "Furniture__x16_y0_w16_h23.png",
+                     "Furniture__x32_y1_w16_h22.png", "SLICES.json", "contact.png"]
+    assert not (assets / "Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/_sliced").exists()
+    assert not list((assets / "Pixel Crawler - Cave").rglob("_sliced"))
+    shas = {p.name: sa.sha256(p) for p in out.iterdir()}
+    assert run_cli(tmp_path) == 0
+    assert (out / "SLICES.json").read_text() == first
+    assert {p.name: sa.sha256(p) for p in out.iterdir()} == shas
+    doc = json.loads(first)
+    assert doc["assets"][0]["duplicate_sheets"] == [
+        "potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"]
+    assert "sliced 1 sheets (1 duplicates skipped) -> 3 slices" in capsys.readouterr().out
+
+
+def test_rerun_preserves_labels_and_removes_orphans(tmp_path):
+    assets = tmp_path / "potential_assets"
+    src = assets / "Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"
+    src.parent.mkdir(parents=True)
+    packed_crates(src)
+    assert run_cli(tmp_path) == 0
+    sj = assets / "Pixel Crawler - Free Pack/_sliced/Furniture/SLICES.json"
+    doc = json.loads(sj.read_text())
+    doc["assets"][1].update({"label_kind": "crate", "label_confidence": 0.9, "targets": ["crate"],
+                             "verdict": "READY", "notes": "hand-checked"})
+    sj.write_text(json.dumps(doc))
+    assert run_cli(tmp_path, "--split", "Furniture:0,0,16,23") == 0
+    doc2 = json.loads(sj.read_text())
+    crate = [r for r in doc2["assets"] if r["region"] == [16, 0, 16, 23]][0]
+    assert (crate["label_kind"], crate["label_confidence"], crate["targets"], crate["verdict"], crate["notes"]) == \
+        ("crate", 0.9, ["crate"], "READY", "hand-checked")
+    assert [r["method"] for r in doc2["assets"]] == ["override", "seam", "seam"]
+    assert run_cli(tmp_path, "--split", "Furniture:0,0,8,23") == 0
+    names = sorted(p.name for p in sj.parent.glob("*.png"))
+    assert "Furniture__x0_y0_w16_h23.png" not in names and "Furniture__x0_y0_w8_h23.png" in names
+
+
+def test_stem_collision_gets_sha_suffix(tmp_path):
+    # Two generic parents (Assets/, Props/) give the same stem with different content.
+    assets = tmp_path / "potential_assets"
+    a = assets / "Pixel Crawler - Cave/Pixel Crawler - Cave/Assets/Props.png"
+    b = assets / "Pixel Crawler - Cave/Pixel Crawler - Cave/Props/Props.png"
+    sprite_sheet(a, [(0, 0, 16, 16)])
+    sprite_sheet(b, [(0, 0, 16, 16), (32, 0, 16, 16)])
+    assert run_cli(tmp_path) == 0
+    dirs = sorted(p.name for p in (assets / "Pixel Crawler - Cave/_sliced").iterdir())
+    assert dirs == ["Props", "Props-" + sa.sha256(b)[:8]]
+    assert run_cli(tmp_path) == 0
+    assert sorted(p.name for p in (assets / "Pixel Crawler - Cave/_sliced").iterdir()) == dirs
+
+
+def test_dry_run_writes_nothing(tmp_path, capsys):
+    assets = tmp_path / "potential_assets"
+    src = assets / "Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"
+    src.parent.mkdir(parents=True)
+    packed_crates(src)
+    assert run_cli(tmp_path, "--dry-run") == 0
+    assert not (assets / "Pixel Crawler - Free Pack/_sliced").exists()
+    assert "Furniture.png" in capsys.readouterr().out
