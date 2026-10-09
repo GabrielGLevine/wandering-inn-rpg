@@ -162,6 +162,17 @@
    "frames": 10
   },
   {
+   "_comment": "#608 kits: the cross-street door is an @door_street row; it draws the variant seeded on the {invrisil_boulevard, invrisil_cross_street} portal pair and its visual payload carries the role.",
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "entity": "boulevard_to_cross_street",
+    "sprite": "invrisil_door_street_3",
+    "sprite_role": "door_street"
+   }
+  },
+  {
    "action": "screenshot",
    "name": "01_boulevard_arrival"
   },
@@ -263,6 +274,34 @@
   {
    "action": "wait_frames",
    "frames": 10
+  },
+  {
+   "_comment": "#608 kits: the alleys' loose cargo and wall lamps are @cargo / @lamp_wall rows, resolved at compose time; the decor build reports each role with the variants it drew (sorted; lamp_wall picks one per map). Exact pin of the resolver's picks: a pool or pick-rule change moves it on purpose.",
+   "action": "assert_event_logged",
+   "type": "ui_decor_rendered",
+   "payload_contains": {
+    "map": "mercantile_alleys",
+    "roles": {
+     "cargo": [
+      "invrisil_cargo_1",
+      "invrisil_cargo_2"
+     ],
+     "lamp_wall": [
+      "sconce"
+     ]
+    }
+   }
+  },
+  {
+   "_comment": "#608 kits: the door just walked through draws the {invrisil_boulevard, mercantile_alleys} pair's @door_street variant, the same one its hide_sprite twin boulevard_to_alleys resolves to.",
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "mercantile_alleys",
+    "entity": "alleys_to_boulevard",
+    "sprite": "invrisil_door_street_2",
+    "sprite_role": "door_street"
+   }
   },
   {
    "action": "screenshot",
