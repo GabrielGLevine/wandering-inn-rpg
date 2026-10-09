@@ -3478,8 +3478,8 @@ def self_test():
     # just measures drift from the last ruled baseline instead of from a
     # historical one. Refreshing it is a controller act, never a lane's.
     DIALOGUE_WORDS_BASELINE = 25849
-    # #453 (2026-10-08): 955 -> 962, the six rest-signposting placements
-    # (seven player-visible lines); controller ratifies at merge.
+    # Controller refresh 2026-10-08 (#453): 915 -> 962 = seven rest-signposting
+    # lines plus 40 shipped map strings added since the previous refresh.
     MAP_STRINGS_BASELINE = 962    # issue's frozen audit: 825
     MAP_WORDS_BASELINE = 20322    # issue's frozen audit: 18500
     check("dialogue strings within 5% of issue's 1482",

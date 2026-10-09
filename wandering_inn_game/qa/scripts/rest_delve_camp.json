@@ -173,7 +173,7 @@
    "type": "toast",
    "timeout_sec": 20,
    "payload_contains": {
-    "text": "A spare bedroll between the Horns' packs, a rolled cloak for a pillow."
+    "text": "A spare bedroll, a rolled cloak for a pillow."
    }
   },
   {
@@ -443,7 +443,7 @@
    "type": "toast",
    "count": 1,
    "payload_contains": {
-    "text": "A spare bedroll between the Horns' packs, a rolled cloak for a pillow."
+    "text": "A spare bedroll, a rolled cloak for a pillow."
    },
    "_comment": "The delve-time line spoke once, on the first leg only."
   },

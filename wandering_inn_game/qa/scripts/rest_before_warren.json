@@ -152,7 +152,7 @@
    "type": "toast",
    "timeout_sec": 20,
    "payload_contains": {
-    "text": "A Gnoll hunter's satchel, the strap bitten through. One corked draught in the side pocket, the wax unbroken."
+    "text": "A satchel, the strap bitten through. One corked draught in the side pocket, the wax unbroken."
    }
   },
   {
@@ -160,7 +160,7 @@
    "type": "ui_toast_rendered",
    "timeout_sec": 30,
    "payload_contains": {
-    "text": "A Gnoll hunter's satchel, the strap bitten through. One corked draught in the side pocket, the wax unbroken."
+    "text": "A satchel, the strap bitten through. One corked draught in the side pocket, the wax unbroken."
    }
   },
   {
