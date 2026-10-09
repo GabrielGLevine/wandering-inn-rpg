@@ -660,3 +660,15 @@ enchanter_floor_mat/Idle-Sheet.png: owned PixelLab generation bb0b4ffa-4258-420d
 invrisil_returned_work_tray/Idle-Sheet.png: owned PixelLab generation 3921567f-b32b-410e-8dcd-8d007042894b; source potential_assets/pixellab_harvest_2026-10/L2_props/serving_tray__after.png; copied unchanged; canvas 64x64; frames 1 of 64x64; alpha (2, 16, 63, 51); feet anchor [0.5, 0.7969]; sha256 993a88bc1de6eab20398a04f589c935c1e74d166d1d664eb4259701fec261a67; wired by tools/wire_asset.py.
 
 invrisil_paper_stand/Idle-Sheet.png: owned PixelLab generation 836fc40b-054f-4695-b84e-76ba731934e2; source potential_assets/pixellab_harvest_2026-10/L2_props/bonus_scroll_shelf.png; copied unchanged; canvas 32x32; frames 1 of 32x32; alpha (2, 4, 30, 22); feet anchor [0.5, 0.6875]; sha256 3cd12922115d6c90559912f7a210b3130ebd5921db292cb628091a6f5ab3a957; wired by tools/wire_asset.py.
+
+door__alt2/Idle-Sheet.png: owned PixelLab generation a65c3e34-f01c-4c0f-8d72-251be9dab27c; source potential_assets/pixellab_harvest_2026-10/L2_props/door__alt2.png; copied unchanged; canvas 32x32; frames 1 of 32x32; alpha (4, 1, 28, 32); feet anchor [0.5, 1.0]; sha256 8479af4d722a0045a6993b77a99c370ae3118e68680a5affea46f5e3b7364790; wired by tools/wire_asset.py.
+
+door__alt3/Idle-Sheet.png: owned PixelLab generation e7ceb4d8-e3d5-4b21-b89f-616d77361b9e; source potential_assets/pixellab_harvest_2026-10/L2_props/door__alt3.png; copied unchanged; canvas 32x32; frames 1 of 32x32; alpha (4, 1, 28, 32); feet anchor [0.5, 1.0]; sha256 1fd47acc82082b42caa5a39935079034178d2c8a04fb1dab2ed7c0ae47a735b8; wired by tools/wire_asset.py.
+
+bonus_produce_crate/Idle-Sheet.png: owned PixelLab generation 7213e6d2-b93b-4b8f-8751-f5330cf500d0; source potential_assets/pixellab_harvest_2026-10/L2_props/bonus_produce_crate.png; copied unchanged; canvas 32x32; frames 1 of 32x32; alpha (2, 3, 30, 32); feet anchor [0.5, 1.0]; sha256 77686ba57bf562d2515d1ae4d0823a8577051bd8ac45f14738c4ccab6373c076; wired by tools/wire_asset.py.
+
+barrel__alt1/Idle-Sheet.png: owned PixelLab generation b1bb4517-939e-406c-90fd-ed31ee81c214; source potential_assets/pixellab_harvest_2026-10/L2_props/barrel__alt1.png; copied unchanged; canvas 32x32; frames 1 of 32x32; alpha (5, 1, 27, 31); feet anchor [0.5, 0.9688]; sha256 817c987c0de496c97bb8ec6ca922e8c47fdf928db293bfebd23e175a61f66749; wired by tools/wire_asset.py.
+
+note_pinned_alt/Idle-Sheet.png: source potential_assets/pixellab_2026-07-19_198/note_pinned_alt.png; copied unchanged; canvas 64x64; frames 1 of 64x64; alpha (13, 3, 52, 58); feet anchor [0.5, 0.9062]; sha256 21effe4c5b12088d0133f5acdee17d6d8dbebb8813c118919934610c3156ea85; wired by tools/wire_asset.py.
+
+guild_notice_board/Idle-Sheet.png: owned PixelLab generation d2b45afb-404d-4ed6-b6af-80350d91a5b7; source potential_assets/pixellab_harvest_2026-10/L2_props/guild_notice_board.png; copied unchanged; canvas 64x64; frames 1 of 64x64; alpha (3, 5, 61, 57); feet anchor [0.5, 0.8906]; sha256 6d74e514564a216f2d3a78ce4b2b78f2ac255929ec2ef0ec7dfebd8b93c3e13d; wired by tools/wire_asset.py.

@@ -93,6 +93,31 @@
     }
    },
    "roles": {
+    "cargo": {
+     "pick": "cell",
+     "pool": [
+      "crate",
+      "barrel",
+      "bonus_produce_crate",
+      "barrel__alt1"
+     ],
+     "deny": [
+      "sack",
+      "sacks",
+      "bale",
+      "bales",
+      "grain",
+      "satchel"
+     ]
+    },
+    "notice": {
+     "pick": "cell",
+     "pool": [
+      "note_pinned",
+      "guild_notice_board",
+      "note_pinned_alt"
+     ]
+    },
     "door_street": {
      "pick": "door",
      "pool": [
@@ -197,5 +222,27 @@
     "drake_patron",
     "city_runner"
    ]
+  },
+  "liscor": {
+   "materials": {},
+   "roles": {
+    "door_street": {
+     "pick": "door",
+     "pool": [
+      "door",
+      "door__alt2",
+      "door__alt3"
+     ]
+    },
+    "seating": {
+     "pick": "map",
+     "pool": [
+      "liscor_bench",
+      "liscor_side_chair",
+      "liscor_chair"
+     ]
+    }
+   },
+   "cast": []
   }
 }
