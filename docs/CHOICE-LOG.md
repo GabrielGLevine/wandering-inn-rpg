@@ -370,6 +370,15 @@ and chronology belong in issue PRs. Earlier context:
       - Invrisil is unchanged (23.08%). The guild rug was deleted instead of
         swapped to `rug_woven_red`, which would have made that id generic
         and added three Invrisil generic placements.
+    - **FIX loop 1 deviations from the art read:** Krshia stays at (13,2)
+      (the ruled move to (13,3) blocks the street's y3 lane and the
+      bump-from-(13,3) approach used by about 35 QA scripts). Street dusk is
+      [0.62,0.54,0.63], not [0.72,0.56,0.5] (lint RULE 1 needs day>dusk
+      temperature and day is neutral). The Runners' wall lamp, hearth and mud
+      table keep their art (their copy says dry, cold and muddy). The barracks
+      sconce sits at (7,1) because the veteran's note takes (8,1). Barracks
+      dusk is [0.64,0.7,0.8] for the same RULE 1 monotone check.
+      Scatter now honours a `cells` key in `_build_scatter`.
     - **Global pebble scale:** `owned_fallback_pebble` `render_scale` 0.53 →
       0.3 applies wherever the fallback shows, not only on the Liscor street
       (ruled acceptable; it read as boulders everywhere).
