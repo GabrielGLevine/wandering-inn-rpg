@@ -1,4 +1,5 @@
 {
+ "_kits_recompose": "#608 — sconce off the proof bench; ledger wall against the east wall",
  "_comment": "#423: the room behind Hedault's lock -- the gated AREA the [Pick Lock] debut opens (user directive: true use of [Pick Lock] is access to gated areas, and a legitimate route must exist). Reached ONLY through enchanter_shop's `enchanter_work_room_door`, whose door_when requires `enchanter_work_room_opened`; that counter has exactly two producers, the pick and Hedault's own trust arm, and the room is identical on both. Small interior, stationer.json schema. Every entity here has at least one orthogonally-adjacent standable cell reachable from the (3,4) landing.",
  "biome": "brothers_parlor",
  "grid": {
@@ -7,8 +8,7 @@
  },
  "blocked": [],
  "walls": {
-  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
-  "tile_px": 16,
+  "material": "@wall_shop",
   "segments": [
    {
     "from": [
@@ -19,34 +19,7 @@
      7,
      0
     ],
-    "cap": [
-     14,
-     6
-    ],
-    "face": [
-     14,
-     7
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "face": [
-                          4,
-                          3
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop"
    },
    {
     "from": [
@@ -57,26 +30,8 @@
      0,
      5
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -87,26 +42,8 @@
      7,
      5
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -117,26 +54,8 @@
      2,
      5
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -147,34 +66,16 @@
      6,
      5
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    }
   ]
  },
  "decor": [
   {
-   "sprite": "sconce",
+   "sprite": "crystal_lamp",
    "cell": [
-    4,
+    3,
     1
    ],
    "light": {
@@ -187,16 +88,6 @@
     "radius": 30,
     "flicker": false
    }
-  }
- ],
- "ambience": [
-  {
-   "preset": "dust_motes",
-   "rect": "all",
-   "phase": [
-    "dusk",
-    "night"
-   ]
   }
  ],
  "entities": [
@@ -247,7 +138,7 @@
    "id": "work_room_ledger_wall",
    "kind": "prop",
    "cell": [
-    5,
+    6,
     4
    ],
    "display_name": "A Wall of Weights",

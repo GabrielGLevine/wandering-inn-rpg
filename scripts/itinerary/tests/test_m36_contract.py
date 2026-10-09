@@ -348,7 +348,7 @@ class EffectDerivedWaitsTest(unittest.TestCase):
         self.assertEqual(len(priced), 10, "priced rows that ride the purchase modal")
         # The closing rows are corpus sites, not a category: naming them is
         # what makes the 9 auditable.
-        self.assertEqual(closing, [1374, 1375, 1562, 1563, 1564, 2473, 2474, 2701, 2702])
+        self.assertEqual(closing, [1374, 1375, 1562, 1563, 1564, 2475, 2476, 2703, 2704])
         # And the post-dismiss eight are the ones `expect_banks_after_dismiss`
         # owns -- exactly the list the superseded M3.5 table carried.
         after_dismiss = [index for index in outside if _preceding_press(steps, index) == "confirm"]
@@ -418,7 +418,7 @@ class FrameFlexibilityTest(unittest.TestCase):
     def test_arena_tightens_the_combat_started_pin(self) -> None:
         steps = bare(Emitter().emit("n", [self.operation(entry="interact", arena="vault")]))
         started = next(step for step in steps if step.get("type") == "combat_started")
-        self.assertEqual(started, shipped(2989, 2989)[0])
+        self.assertEqual(started, shipped(2991, 2991)[0])
         # MUTATION: without it the wait is LOOSER than the corpus, which §6.3
         # rules fatal rather than tolerable.
         loose = next(s for s in bare(Emitter().emit("n", [self.operation()])) if s.get("type") == "combat_started")
@@ -426,7 +426,7 @@ class FrameFlexibilityTest(unittest.TestCase):
 
     def test_the_two_missing_event_kinds_have_shapes(self) -> None:
         rendered = bare(Emitter().emit("n", [{"kind": "map_rendered", "map": "seal_vault"}]))
-        self.assertEqual(rendered, shipped(3037, 3038))
+        self.assertEqual(rendered, shipped(3039, 3040))
 
         preview = {"class_gains": [], "level_ups": [], "classes_after": {}, "consolidation": {}}
         epilogue = bare(Emitter().emit("n", [{"kind": "sleep", "preview": preview, "merge": None, "epilogue": True}]))
@@ -501,10 +501,10 @@ class SneakLifetimeTest(unittest.TestCase):
         drop = bare(Emitter().emit("n", [{"kind": "field_skill", "skill": "invisibility", "target": "", "accomplishment": "", "sneak": "end"}]))
         self.assertEqual([step.get("type") for step in drop[1:]], ["skill_used", "sneak_ended", "toast"])
         self.assertEqual(drop[3]["payload_contains"], {"text": "You straighten up."})
-        # The shipped cloak (2976-2978). The one difference is a TIGHTENING:
+        # The shipped cloak (2978-2980). The one difference is a TIGHTENING:
         # the compiled `skill_used` pin carries `context: exploration` as
         # well, which is a superset of the corpus row and not a second claim.
-        corpus = [row for row in shipped(2976, 2978) if row["action"] != "screenshot"]
+        corpus = [row for row in shipped(2978, 2980) if row["action"] != "screenshot"]
         self.assertEqual([step["action"] for step in cloak[:3]], [row["action"] for row in corpus])
         self.assertEqual(cloak[1]["payload_contains"],
                          dict(corpus[1]["payload_contains"], context="exploration"))

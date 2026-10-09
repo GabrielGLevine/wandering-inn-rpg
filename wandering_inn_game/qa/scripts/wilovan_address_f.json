@@ -186,7 +186,7 @@
    "equals": 1
   },
   {
-   "_comment": "== RE-INTERACT #2: gentleman_bowler (10,5), approached from BELOW -- row 4 east of here is the card table and its two stools (8,4)/(9,4)/(10,4), all blocking. Drop to row 6 and come at him from (10,6). The repeat banks nothing -- chatted_with_ stays 1 -- which is what keeps a repeat from rotating the pool mid-waking or inflating heard_gossip. ==",
+   "_comment": "== RE-INTERACT #2: gentleman_bowler (10,6) (moved one cell south from (10,5), the cell below the card stool at (10,4), in the #608 art-read fix), approached from the WEST -- row 4 east of here is the card table and its two stools (8,4)/(9,4)/(10,4), all blocking. Drop to row 6 and walk east to (9,6), then bump east into him. The repeat banks nothing -- chatted_with_ stays 1 -- which is what keeps a repeat from rotating the pool mid-waking or inflating heard_gossip. ==",
    "action": "move",
    "direction": "down",
    "steps": 2
@@ -202,19 +202,19 @@
   {
    "action": "move",
    "direction": "right",
-   "steps": 3
+   "steps": 2
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    10,
+    9,
     6
    ]
   },
   {
    "action": "move",
-   "direction": "up",
+   "direction": "right",
    "steps": 1
   },
   {
@@ -223,7 +223,7 @@
    "payload_contains": {
     "cell": [
      10,
-     5
+     6
     ]
    }
   },
@@ -259,16 +259,16 @@
    "equals": 1
   },
   {
-   "_comment": "== RE-INTERACT #3: gentleman_quiet (11,7). One step east to (11,6), bump south. ==",
+   "_comment": "== RE-INTERACT #3: gentleman_quiet (8,7) (moved from (11,7) in the #608 art-read fixes). One step west to (8,6), bump south. ==",
    "action": "move",
-   "direction": "right",
+   "direction": "left",
    "steps": 1
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    11,
+    8,
     6
    ]
   },
@@ -282,7 +282,7 @@
    "type": "player_blocked",
    "payload_contains": {
     "cell": [
-     11,
+     8,
      7
     ]
    }

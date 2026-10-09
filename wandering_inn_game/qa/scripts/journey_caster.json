@@ -16465,6 +16465,20 @@
   },
   {
    "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    7
+   ]
+  },
+  {
+   "_comment": "#608 art-read fix: the gnoll now stands at (2,6), so column 2 is shut; go up column 5 and across row 2.",
+   "action": "move",
    "direction": "up",
    "steps": 5
   },
@@ -16472,14 +16486,14 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    2,
+    5,
     2
    ]
   },
   {
    "action": "move",
    "direction": "right",
-   "steps": 8
+   "steps": 5
   },
   {
    "action": "assert_state",

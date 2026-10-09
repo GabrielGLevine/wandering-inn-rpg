@@ -175,6 +175,30 @@ class TestTask5Gaps(unittest.TestCase):
         errs = run(maps={"m": {**base, "floor_layers": [{"material": "@fa", "cells": "all"}]}})
         self.assertEqual([e for e in errs if "both coords" in e], [])
 
+    def test_null_blocks_only_wall_segment_face_and_cap(self):
+        k = copy.deepcopy(KITS)
+        k["r"]["materials"]["wb"] = {"sheet": "res://assets/own.png", "tile_px": 16, "cap": [0, 0], "face": [1, 0]}
+        base = {**GRID, "decor": [], "entities": []}
+        def errs(**doc):
+            return [e for e in run(k, maps={"m": {**base, **doc}}) if "null" in e]
+        self.assertEqual(errs(walls={"segments": [{"material": "@wb", "face": None, "from": [0, 0], "to": [1, 0]}]}), [])
+        self.assertEqual(errs(walls={"segments": [{"material": "@wb", "cap": None, "from": [0, 0], "to": [1, 0]}]}), [])
+        bad = errs(walls={"segments": [{"material": "@wb", "tone": None, "from": [0, 0], "to": [1, 0]}]})
+        self.assertTrue(any("walls.segments[0]" in e and "'tone'" in e for e in bad), bad)
+        bad = errs(floor_layers=[{"material": "@fa", "face": None, "cells": "all"}])
+        self.assertTrue(any("floor_layers[0]" in e and "'face'" in e for e in bad), bad)
+
+    def test_null_with_fallback_render_is_an_error(self):
+        k = copy.deepcopy(KITS)
+        k["r"]["materials"]["wb"] = {"sheet": "res://assets/own.png", "tile_px": 16, "cap": [0, 0], "face": [1, 0],
+                                     "fallback_render": {"sheet": "res://assets/own.png", "tile_px": 16, "cap": [0, 0], "face": [1, 0]}}
+        seg = {"material": "@wb", "face": None, "from": [0, 0], "to": [1, 0]}
+        errs = run(k, maps={"m": {**GRID, "decor": [], "entities": [], "walls": {"segments": [seg]}}})
+        self.assertTrue(any("walls.segments[0]" in e and "fallback_render" in e and "'face'" in e for e in errs), errs)
+        del k["r"]["materials"]["wb"]["fallback_render"]
+        errs = run(k, maps={"m": {**GRID, "decor": [], "entities": [], "walls": {"segments": [dict(seg)]}}})
+        self.assertEqual([e for e in errs if "fallback_render" in e], [])
+
 
 class TestGates(unittest.TestCase):
     def test_g1_pool_size_and_ceiling(self):
@@ -472,9 +496,12 @@ class TestBiomeRows(unittest.TestCase):
             self.assertNotIn("interior_flavor_by_map", row)
         world = (GAME / "src" / "world" / "world.gd").read_text()
         for bid in self.NEW:
-            self.assertIn(f'"{bid}": {{"preset": "dust_motes", "phase": ["dusk", "night"]}},', world)
+            row = f'"{bid}": {{"preset": "dust_motes", "phase": ["dusk", "night"]}},'
+            # #608 1b night read: invrisil_shop drops its mote default (sourceless discs); the others keep it.
+            (self.assertNotIn if bid == "invrisil_shop" else self.assertIn)(row, world)
         maps = (GAME / "data" / "maps").glob("*/*.json")
-        self.assertEqual([p.name for p in maps if json.loads(p.read_text()).get("biome") in self.NEW], [])  # Phase 0: referenced by no map
+        # Pilot 1b adopted invrisil_shop on the Rest only; any other adoption must be planned.
+        self.assertEqual(sorted(f"{p.parent.name}/{p.name}" for p in maps if json.loads(p.read_text()).get("biome") in self.NEW), ["invrisil/adventurers_rest.json"])
 
 
 class TestRealTree(unittest.TestCase):

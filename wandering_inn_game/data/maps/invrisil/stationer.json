@@ -1,5 +1,5 @@
 {
- "_comment": "v0.16 I1 (#306). Walk-in only (no portals row). Biome + every sprite reused -- zero biomes.json/sprites.json edits. Perimeter is walls.segments, so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each cell with a matching decor row.",
+ "_comment": "v0.16 I1 (#306); kit-converted in #608 1b. Walk-in only (no portals row). Biome `brothers_parlor` under @floor_shop/@wall_shop and kit roles (@table, @window_interior). Perimeter is walls.segments, so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each cell with a matching decor row.",
  "biome": "brothers_parlor",
  "grid": {
   "width": 12,
@@ -13,41 +13,13 @@
  ],
  "floor_layers": [
   {
-   "_pick": "#225 floor differentiation (this key is census-FREE -- _pick carries the rationale so _comment does not have to). The brothers_parlor biome's default floor is the inn plank [1,21], and the parlor itself sits on Library-pack parquet; a stationer one street over must read as neither. Reuses the SAME Interior_Walls_01 sheet's plain pale-board swatch [16,21]/[17,21] -- the shipped runners_guild floor, so sheet, license and footstep-wood are all unchanged. Reads as a swept shop board: cooler and plainer than the parlor's brandy-lit parquet, warmer than stone.",
-   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
-   "tile_px": 16,
-   "variants": [
-    [
-     16,
-     21
-    ],
-    [
-     17,
-     21
-    ]
-   ],
-   "cells": "all",
-    "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/inn_floor.png",
-     "tile_px": 16,
-     "coords": [
-      0,
-      3
-     ],
-     "tone": {
-      "base": [
-       0.33,
-       0.27,
-       0.2
-      ],
-      "detail": 0.65
-     }
-    }
+   "_pick": "#608 1b (census-free key: _pick carries the rationale so _comment does not have to): the stationer's floor is @floor_shop (data/kits.json), the cool blue-grey flagstone of owned woodplank_over_stone_v1 (wang_0 [2,1]), the quiet shop floor it shares with the Brothers' parlor. It replaces the Interior_Walls_01 pale-board swatch [16,21]/[17,21] an earlier pass reused here, and the brothers_parlor biome's default inn plank [1,21] that would have read as the inn (the original #225 differentiation). Walls are @wall_shop.",
+   "material": "@floor_shop",
+   "cells": "all"
   }
  ],
  "walls": {
-  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
-  "tile_px": 16,
+  "material": "@wall_shop",
   "segments": [
    {
     "from": [
@@ -58,34 +30,7 @@
      11,
      0
     ],
-    "cap": [
-     14,
-     6
-    ],
-    "face": [
-     14,
-     7
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "face": [
-                          4,
-                          3
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop"
    },
    {
     "from": [
@@ -96,26 +41,8 @@
      0,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -126,26 +53,8 @@
      11,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -156,26 +65,8 @@
      5,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -186,32 +77,14 @@
      10,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    }
   ]
  },
  "decor": [
   {
-   "sprite": "table_brown",
+   "sprite": "@table",
    "cell": [
     4,
     5
@@ -232,7 +105,7 @@
    ]
   },
   {
-   "sprite": "rug_woven_cream",
+   "sprite": "rug_woven_red",
    "cell": [
     6,
     4
@@ -244,14 +117,14 @@
    ]
   },
   {
-   "sprite": "window_blue",
+   "sprite": "@window_interior",
    "cell": [
     7,
     1
    ]
   },
   {
-   "sprite": "sconce",
+   "sprite": "shop_oil_lamp",
    "cell": [
     4,
     1
@@ -272,16 +145,6 @@
    "cell": [
     10,
     7
-   ]
-  }
- ],
- "ambience": [
-  {
-   "preset": "dust_motes",
-   "rect": "all",
-   "phase": [
-    "dusk",
-    "night"
    ]
   }
  ],
@@ -364,7 +227,7 @@
     1
    ],
    "display_name": "Ruled Paper in Three Weights",
-   "sprite": "crate",
+   "sprite": "invrisil_paper_stand",
    "observe": "Stacked lightest at the top, each price chalked on the shelf edge rather than the stock. The stock itself carries no mark at all."
   },
   {
@@ -430,7 +293,7 @@
     3
    ],
    "display_name": "The Scribe's Desk",
-   "sprite": "library_desk",
+   "sprite": "owned_fallback_library_desk",
    "observe": "The desk sits at an angle to the window. The page faces the wall, the scribe faces the street. A second chair stands on the page side, pushed back and left at a slant."
   },
   {
@@ -441,7 +304,7 @@
     1
    ],
    "display_name": "A Small Iron Stove",
-   "sprite": "barrel",
+   "sprite": "cold_hearth",
    "observe": "The fire is low, the ash under the grate deep. The nearest stacks of paper stand a hand's width off the iron."
   }
  ]

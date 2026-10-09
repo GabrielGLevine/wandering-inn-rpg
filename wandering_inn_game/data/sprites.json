@@ -2799,7 +2799,7 @@
    }
   },
   "shadow": true,
-  "fallback_sprite": "owned_fallback_library_shelf"
+  "fallback_sprite": "library_shelf__alt1"
  },
  "royal_soldier": {
   "animations": {
@@ -9048,24 +9048,6 @@
    }
   }
  },
- "owned_fallback_library_shelf": {
-  "shadow": true,
-  "render_scale": 0.30188679,
-  "anchor": [
-   0.4921875,
-   0.984375
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/sprites/harvest_fallbacks/library_shelf/Idle-Sheet.png",
-    "frame_size": [
-     64,
-     64
-    ],
-    "fps": 1
-   }
-  }
- },
  "owned_fallback_mushroom": {
   "render_scale": 0.76190476,
   "anchor": [
@@ -10352,6 +10334,114 @@
     "sheet_down": "res://assets/sprites/invrisil_enforcer/Walk_Down-Sheet.png",
     "sheet_side": "res://assets/sprites/invrisil_enforcer/Walk_Side-Sheet.png",
     "sheet_up": "res://assets/sprites/invrisil_enforcer/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "table_brown__alt1": {
+  "shadow": true,
+  "render_scale": 0.88,
+  "anchor": [
+   0.5,
+   0.9688
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/table_brown__alt1/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "library_shelf__alt1": {
+  "shadow": true,
+  "render_scale": 0.67,
+  "anchor": [
+   0.5,
+   0.9688
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/library_shelf__alt1/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "window_blue__alt1": {
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/window_blue__alt1/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "enchanter_floor_mat": {
+  "_comment_ysort": "GH#127: flat floor decor renders under sorted content; same bias as rug_woven_red/cream.",
+  "field_y_sort_bias_px": -160.0,
+  "render_scale": 0.35,
+  "anchor": [
+   0.5,
+   0.9219
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/enchanter_floor_mat/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_returned_work_tray": {
+  "render_scale": 0.3,
+  "anchor": [
+   0.5,
+   0.7969
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_returned_work_tray/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_paper_stand": {
+  "render_scale": 0.6,
+  "anchor": [
+   0.5,
+   0.6875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_paper_stand/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
    }
   }
  }

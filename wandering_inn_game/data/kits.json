@@ -1,5 +1,5 @@
 {
-  "_comment": "Regional kits: role pools, materials and anonymous casts per region. Spec docs/superpowers/specs/2026-10-08-regional-kits-design.md. Role value: a sprite id string, or {pick: cell|map|door, module: bool, pool: [id | [id, weight]], light: {}, deny: [word, ...]}. `deny` words are matched whole-word, case-insensitive, against display_name and observe of any row using the role (data_lint). Lookup: region (map folder or top-level map `kit`), then _common.",
+  "_comment": "Regional kits: role pools, materials and anonymous casts per region. Spec docs/superpowers/specs/2026-10-08-regional-kits-design.md. Role value: a sprite id string, or {pick: cell|map|door, module: bool, pool: [id | [id, weight]], light: {}, deny: [word, ...]}. `deny` words are matched whole-word, case-insensitive, against display_name and observe of any row using the role (data_lint). Lookup: region (map folder or top-level map `kit`), then _common. A map field set to `null` blocks the material's value. Supported only for wall-segment `face` and `cap` (caps-only or face-only segments).",
   "_common": {"materials": {}, "roles": {}, "cast": []},
   "invrisil": {
    "materials": {
@@ -34,6 +34,61 @@
        0.36
       ],
       "detail": 0.5
+     }
+    },
+    "floor_shop": {
+     "_comment": "#608 1b pool read floor_shop #1 PASS: owned woodplank_over_stone_v1 (PixelLab, public). Lower terrain = cool blue-grey flagstone, wang_0 at [2,1]: the quiet low-contrast shop floor (stationer, parlor; the enchanter rooms have no floor layer yet). Pale limestone/checker is the real target and is on the generation list.",
+     "sheet": "res://assets/tiles/harvest/woodplank_over_stone_v1.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ],
+     "tone": {
+      "base": [
+       0.36,
+       0.37,
+       0.4
+      ],
+      "detail": 0.4
+     }
+    },
+    "floor_rest": {
+     "_comment": "#608 1b pool read floor_shop #1: the same atlas's upper terrain, honey plank wang_15 at [0,3], for the Adventurer's Rest.",
+     "sheet": "res://assets/tiles/harvest/woodplank_over_stone_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.42,
+       0.32,
+       0.22
+      ],
+      "detail": 0.3
+     }
+    },
+    "wall_shop": {
+     "_comment": "#608 1b pool read wall_shop #4 PASS: owned timberwall_over_plank_v1 (PixelLab, public), pale gold timber over dark plank. cap = wang_15 [0,3]; face = wang_12 [3,0]. Cosy rather than wealthy; pale plaster + wainscot + gold cornice is on the generation list.",
+     "sheet": "res://assets/tiles/harvest/timberwall_over_plank_v1.png",
+     "tile_px": 16,
+     "cap": [
+      0,
+      3
+     ],
+     "face": [
+      3,
+      0
+     ],
+     "tone": {
+      "base": [
+       0.4,
+       0.34,
+       0.26
+      ],
+      "detail": 0.55
      }
     }
    },
@@ -106,8 +161,41 @@
       "invrisil_shop_door",
       "invrisil_shop_door_2"
      ]
+    },
+    "table": {
+     "pick": "map",
+     "pool": [
+      "table_brown",
+      "table_brown__alt1"
+     ]
+    },
+    "window_interior": {
+     "pick": "map",
+     "pool": [
+      "window_blue",
+      "window_blue__alt1"
+     ]
+    },
+    "rug": {
+     "pick": "map",
+     "pool": [
+      "rug_woven_red",
+      "rug_woven_cream"
+     ]
     }
    },
-   "cast": []
+   "cast": [
+    "townswoman",
+    "human_laborer",
+    "city_scribe",
+    "hired_blade",
+    "invrisil_lady_client",
+    "gnoll_traveler",
+    "gnoll_ranger",
+    "invrisil_gentlewoman_2",
+    "gentleman_bowler",
+    "drake_patron",
+    "city_runner"
+   ]
   }
 }

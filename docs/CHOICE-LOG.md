@@ -322,6 +322,29 @@ and chronology belong in issue PRs. Earlier context:
     was pinned to the Invrisil shop door (share 37.76%). It held at 74 when
     the counting-room guard took the new regional `invrisil_enforcer` rig
     (one new class row, no counter change).
+  - **G3 regen (#608 pilot 1b, Task 9c):** the enchanter tray and stationer
+    paper stand left the generic `crate` for dedicated regional sprites
+    (`invrisil_returned_work_tray`, `invrisil_paper_stand`): Invrisil generic
+    placements 74 → 72 (share 36.73%), two new regional class rows.
+  - **G3 regen (#608 pilot 1b, Task 11):** the interior conversions (tables,
+    rugs, interior windows, one cargo row) and the pool-member reclassification
+    (`window_blue`, `table_brown__alt1`, `window_blue__alt1`,
+    `enchanter_floor_mat` now count as regional): Invrisil generic placements
+    72 → 63 (share 32.14%). The same reclassification moved `inn` 39 → 35
+    (50.0%) and `riverfarm` 30 → 29 (24.79%) with no map edit in either;
+    `window_blue` is the only shared id. Sconces stayed explicit: `lamp_wall`
+    has 4 street placements and a pool of 2, so a fifth trips G1.
+    Frozen-class residual: `window_blue` stays in the `window_interior` pool
+    while all three Invrisil maps pick `__alt1`, so a future map that draws
+    it places a three-region sprite that G3's frozen class keeps counting as
+    regional until the next regen.
+  - **G3 regens (#608 pilot 1b FIX loop, art read):** the stationer desk and
+    stove pins left the generic ids, with one new regional class row
+    (`owned_fallback_library_desk`), and the deleted parlor rug took the
+    Invrisil placement count 196 → 195: generic placements 63 → 61 (share
+    31.28%). The r2 identity-cue pins (lamps and doors off `sconce`/`door`)
+    took it 61 → 52 (share 26.67%) with one new regional class row
+    (`invrisil_lamp_wall_1`).
   - **Counting-room guard rig (#608 final review):** `counting_room_guard`
     (The Factor's Closed Account) wears `invrisil_enforcer`, the owned
     2026-07-06 `hired_blade_a` generation (broad build, club), wired at 28px
@@ -341,6 +364,24 @@ and chronology belong in issue PRs. Earlier context:
     fallback floor sheet (`pallass_market`, `pallass_forge`, tile [2,1]). G2
     enforces material exclusivity by material name only. Pixel-level sheet
     exclusivity is a rollout concern and is not enforced.
+  - **`library_shelf` public fallback (#608 pilot 1b art read, controller):**
+    `fallback_sprite` is `library_shelf__alt1` (owned PixelLab bookshelf, provenance
+    line in v019-owned-art-provenance.txt, alpha bbox 24x30 of 32x32, about 16x20 px
+    at its 0.67 scale), the only owned bookshelf `find_asset` returns. Round 1 used
+    `mill_high_shelf_owned`, which the r2 read called a gallows post, and before that
+    `owned_fallback_library_shelf` read as pixel noise. The change is global, so the
+    public build also changes on `witch_hut`, `inn_player_room` and
+    `pallass_forge_hall` (two rows); accepted as a strict improvement.
+    Rejected: `shelf_bottles` (bottles under a library row is the wrong kind).
+  - **Pilot 1b deviations (#608 final review, controller):** two plan steps
+    were not done. Both are follow-ups in the rollout plan's Invrisil
+    carry-over section.
+    - `invrisil_shop` still clones `inn`'s render fields (floor [1,21], skirt
+      [7,21], `blocked_props` crate and barrel). It is not visible today
+      because the Rest's floor layer covers every cell.
+    - The enchanter rooms have no `floor_layers`, so they render the biome
+      floor (`brothers_parlor`, the inn plank [1,21]). Converting them needs
+      authored geometry, and the read passed.
 - **Best art wins per asset (#564/#554)** within a coherent scene, at gameplay
   scale; otherwise keep the official or owned public fallback. READY is not
   acceptance, and there is no quota wiring. Animation, geometry, scale and

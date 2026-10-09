@@ -64,11 +64,15 @@ class TestGolden(unittest.TestCase):
     def test_material_merge_and_light_are_in_the_golden(self):
         golden = json.loads((FIX / "golden.json").read_text())
         mats = {m["layer"]: m for m in golden["fx_material"]["materials"]}
-        self.assertEqual(set(mats), {"floor_layers[0]", "floor_layers[1]", "walls", "walls.segments[0]", "walls.segments[1]"})
+        self.assertEqual(set(mats), {"floor_layers[0]", "floor_layers[1]", "walls", "walls.segments[0]", "walls.segments[1]",
+                                     "walls.segments[2]"})
         self.assertEqual(mats["floor_layers[1]"]["fields"]["tile_px"], 32)  # explicit field beats the material's 16
         self.assertEqual(mats["floor_layers[0]"]["fields"]["tile_px"], 16)
         self.assertEqual(mats["walls.segments[0]"]["fields"]["tone"]["detail"], 0)
         self.assertEqual(set(mats["walls"]["fields"]), {"sheet", "tile_px", "variants", "wang_corners", "cap", "face", "fallback_render"})
+        # an authored null blocks the material's face (spec 2.2): the segment keeps the material's cap only
+        self.assertIsNone(mats["walls.segments[2]"]["fields"]["face"])
+        self.assertEqual(mats["walls.segments[2]"]["fields"]["cap"], [2, 0])
         lights = [r["light"] for r in golden["fx_map"]["rows"] if r["sprite_role"] == "lamp"]
         self.assertEqual([l["energy"] for l in lights], [0.9, 2])  # role default, then the row's own
 
