@@ -49,12 +49,13 @@ def frame_guess(name: str, w: int, h: int) -> int | None:
     return None
 
 
-def build() -> dict:
+def build(assets: Path = ASSETS) -> dict:
     packs: dict[str, list[dict]] = {}
-    for p in sorted(ASSETS.rglob("*.png")):
-        rel = p.relative_to(ASSETS)
+    for p in sorted(assets.rglob("*.png")):
+        rel = p.relative_to(assets)
         pack = rel.parts[0]
-        if pack.endswith(".zip"):
+        # _sliced/ holds tools/slice_atlases.py output, already registry rows
+        if pack.endswith(".zip") or "_sliced" in rel.parts:
             continue
         size = png_size(p)
         if size is None:

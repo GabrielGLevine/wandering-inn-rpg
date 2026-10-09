@@ -123,6 +123,10 @@ def fmt(r: dict) -> str:
         extra.append(r["manifest_ref"])
     if r.get("contact_sheet"):
         extra.append(f"sheet={r['contact_sheet']}")
+    if r.get("source_sheet"):
+        region = ",".join(str(v) for v in r.get("region", []))
+        extra.append(f"region={region} of {Path(r['source_sheet']).name}")
+        extra.append(f"bundled={r['game_sheet']}" if r.get("game_sheet") else "BUNDLE-PENDING")
     line = f"{r.get('verdict', ''):<15} {r.get('tier', ''):<16} {r.get('kind', ''):<8} {size:>9}  {r['path']}"
     out = line + ("\n" + " " * 52 + "  ".join(extra) if extra else "")
     if r.get("notes"):
