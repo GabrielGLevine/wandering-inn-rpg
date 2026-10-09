@@ -238,7 +238,7 @@
   },
   {
    "id": "parlor_sconce_e",
-   "sprite": "sconce",
+   "sprite": "invrisil_lamp_wall_1",
    "cell": [
     7,
     1
@@ -265,7 +265,7 @@
     4
    ],
    "display_name": "Out to the Alley",
-   "sprite": "door",
+   "sprite": "invrisil_door_street_3",
    "to_map": "mercantile_alleys",
    "to_cell": [
     18,
