@@ -10354,5 +10354,39 @@
     "sheet_up": "res://assets/sprites/invrisil_enforcer/Walk_Up-Sheet.png"
    }
   }
+ },
+ "table_brown__alt1": {
+  "render_scale": 0.88,
+  "anchor": [
+   0.5,
+   0.9688
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/table_brown__alt1/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "bonus_round_table": {
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/bonus_round_table/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
  }
 }

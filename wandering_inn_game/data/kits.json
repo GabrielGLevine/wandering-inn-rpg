@@ -161,6 +161,14 @@
       "invrisil_shop_door",
       "invrisil_shop_door_2"
      ]
+    },
+    "table": {
+     "pick": "map",
+     "pool": [
+      "table_brown",
+      "table_brown__alt1",
+      "bonus_round_table"
+     ]
     }
    },
    "cast": []
