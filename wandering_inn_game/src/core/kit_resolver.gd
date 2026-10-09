@@ -71,6 +71,8 @@ static func rank_for(map_id: String, role_name: String, variants: Array, cell: V
 
 static func radius_for(role: Variant) -> int:
 	if role is Dictionary:
+		if (role as Dictionary).has("radius"):  # #608: a role's own radius overrides the defaults below
+			return int((role as Dictionary)["radius"])
 		if String((role as Dictionary).get("pick", "cell")) == "door":
 			return 0
 		if bool((role as Dictionary).get("module", false)):

@@ -104,7 +104,7 @@ MONO_EPS = 1e-9  # float-noise guard on the strict-monotone comparisons
 VACUOUS_GATE_ALLOWLIST: dict = {}
 
 KIT_PICKS = {"cell", "map", "door"}
-KIT_ROLE_KEYS = {"pick", "module", "pool", "light", "deny", "_comment"}
+KIT_ROLE_KEYS = {"pick", "module", "pool", "light", "deny", "radius", "_comment"}
 ANON_NAME = re.compile(r"^(A|An) ")
 
 
@@ -1356,6 +1356,8 @@ def _check_kit_schema(kits: dict, sprites: dict, errors: list, bundle_paths: set
 				errors.append(f"kits.{region}.roles.{name}: pick must be one of {sorted(KIT_PICKS)}")
 			if not isinstance(role.get("module", False), bool):
 				errors.append(f"kits.{region}.roles.{name}: module must be a bool")
+			if "radius" in role and (isinstance(role["radius"], bool) or not isinstance(role["radius"], int) or role["radius"] < 0):
+				errors.append(f"kits.{region}.roles.{name}: radius must be a non-negative int")
 			pool = role.get("pool")
 			if not isinstance(pool, list) or not pool:
 				errors.append(f"kits.{region}.roles.{name}: pool must be a non-empty list"); continue

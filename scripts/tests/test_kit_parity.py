@@ -19,7 +19,14 @@ class TestGolden(unittest.TestCase):
     def test_golden_exercises_every_mode(self):
         golden = json.loads((FIX / "golden.json").read_text())
         roles = {r["sprite_role"] for m in golden.values() for r in m["rows"]}
-        self.assertTrue({"cargo", "facade", "seat", "lamp", "door_x", "fixed", "common_lamp"} <= roles, roles)
+        self.assertTrue({"cargo", "facade", "seat", "lamp", "door_x", "fixed", "common_lamp", "wide"} <= roles, roles)
+
+    def test_radius_override_in_the_golden(self):
+        # fx_radius: a module role with "radius": 3 on a 3-cell pitch -- neighbours never share
+        golden = json.loads((FIX / "golden.json").read_text())
+        picks = [r["sprite"] for r in golden["fx_radius"]["rows"]]
+        self.assertGreaterEqual(len(picks), 5)
+        self.assertTrue(all(a != b for a, b in zip(picks, picks[1:])), picks)
 
     def test_door_pair_shares_variant_across_both_sides(self):
         golden = json.loads((FIX / "golden.json").read_text())

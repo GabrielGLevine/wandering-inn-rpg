@@ -52,6 +52,9 @@ class TestHashScore(unittest.TestCase):
         self.assertEqual(kl.pool_of("x"), [["x", 1.0]])
         self.assertEqual(kl.pool_of({"pool": ["a", ["b", 2]]}), [["a", 1.0], ["b", 2.0]])
         self.assertEqual([kl.radius_for("x"), kl.radius_for({"pick": "door"}), kl.radius_for({"module": True}), kl.radius_for({})], [2, 0, 1, 2])
+        # #608: a role's own "radius" overrides the door/module/prop default (JSON may hand it over as a float)
+        self.assertEqual([kl.radius_for({"radius": 3}), kl.radius_for({"module": True, "radius": 3}), kl.radius_for({"module": True, "radius": 0}),
+                          kl.radius_for({"pick": "door", "radius": 1}), kl.radius_for({"radius": 3.0})], [3, 3, 0, 1, 3])
 
 
 class TestResolve(unittest.TestCase):
@@ -88,6 +91,17 @@ class TestResolve(unittest.TestCase):
         self.assertEqual([r["sprite"] for r in c3["decor"]], ["c3", "c3"])
         c2 = kl.resolve_map(mk([{"sprite": "@cargo", "cell": [0, 0]}, {"sprite": "@cargo", "cell": [2, 0]}]), "m", "r", KITS)
         self.assertEqual([r["sprite"] for r in c2["decor"]], ["c3", "c2"])
+
+    def test_radius_override_widens_exclusion(self):
+        pair = mk([{"sprite": "@facade", "cell": [0, 0]}, {"sprite": "@facade", "cell": [2, 0]}])
+        self.assertEqual([r["sprite"] for r in kl.resolve_map(pair, "m", "r", KITS)["decor"]], ["f2", "f2"])  # module r=1 reuses at 2
+        wide = copy.deepcopy(KITS)
+        wide["r"]["roles"]["facade"]["radius"] = 3
+        got = [r["sprite"] for r in kl.resolve_map(pair, "m", "r", wide)["decor"]]
+        self.assertEqual(got[0], "f2")
+        self.assertEqual(got[1], "f3")  # radius 3 excludes the distance-2 neighbour (GD pins the same pair)
+        far = mk([{"sprite": "@facade", "cell": [0, 0]}, {"sprite": "@facade", "cell": [4, 0]}])
+        self.assertEqual(kl.resolve_map(far, "m", "r", wide)["decor"], kl.resolve_map(far, "m", "r", KITS)["decor"])  # beyond 3: untouched
 
     def test_map_mode_light_and_yard_pin(self):
         seats = mk(cells(5, "seat"), [{"id": "l1", "kind": "prop", "sprite": "@lamp", "cell": [6, 6]},

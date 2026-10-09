@@ -106,6 +106,16 @@
      "radius": 32
     }
    },
+   "wide": {
+    "pick": "cell",
+    "module": true,
+    "radius": 3,
+    "pool": [
+     "w1",
+     "w2",
+     "w3"
+    ]
+   },
    "fixed": "plaza_fountain"
   },
   "cast": []

@@ -155,6 +155,15 @@ func _init() -> void:
 	assert(c3o["decor"][0]["sprite"] == "c3" and c3o["decor"][1]["sprite"] == "c3", "prop may reuse at distance 3")
 	var c2: Dictionary = WIKitResolver.resolve_map(far, "m", "r", KITS)
 	assert(c2["decor"][0]["sprite"] == "c3" and c2["decor"][1]["sprite"] == "c2", "prop excludes at distance 2")
+	# #608: a role's own "radius" overrides the default (door 0 / module 1 / prop 2); JSON hands it over as a float.
+	assert(WIKitResolver.radius_for({"radius": 3}) == 3 and WIKitResolver.radius_for({"module": true, "radius": 3}) == 3, "radius override")
+	assert(WIKitResolver.radius_for({"module": true, "radius": 0}) == 0 and WIKitResolver.radius_for({"pick": "door", "radius": 1}) == 1 and WIKitResolver.radius_for({"radius": 3.0}) == 3, "radius override, edges")
+	var kits5: Dictionary = KITS.duplicate(true)
+	kits5["r"]["roles"]["facade"]["radius"] = 3
+	var f2w: Dictionary = WIKitResolver.resolve_map(f2, "m", "r", kits5)
+	assert(f2w["decor"][0]["sprite"] == "f2" and f2w["decor"][1]["sprite"] == "f3", "radius 3 excludes the distance-2 neighbour (python reference: f2, f3)")
+	var f4 := {"grid": {"width": 7, "height": 7}, "decor": [{"sprite": "@facade", "cell": [0, 0]}, {"sprite": "@facade", "cell": [4, 0]}], "entities": []}
+	assert(WIKitResolver.resolve_map(f4, "m", "r", kits5) == WIKitResolver.resolve_map(f4, "m", "r", KITS), "beyond the radius: picks untouched")
 
 	# decor and entities share one count and one exclusion namespace.
 	var mix := {"grid": {"width": 12, "height": 12}, "decor": [], "entities": []}

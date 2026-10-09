@@ -82,6 +82,8 @@ def rank_for(map_id: str, role_name: str, variants: list, cell) -> list:
 
 def radius_for(role) -> int:
     if isinstance(role, dict):
+        if "radius" in role:  # #608: a role's own radius overrides the defaults below
+            return int(role["radius"])
         if str(role.get("pick", "cell")) == "door":
             return 0
         if bool(role.get("module", False)):

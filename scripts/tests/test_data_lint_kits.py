@@ -53,6 +53,14 @@ class TestKitRules(unittest.TestCase):
         k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["pool"] = [["c1", 0]]
         self.assertTrue(any("weight" in e for e in run(k)))
 
+    def test_schema_radius_is_a_non_negative_int(self):
+        for bad in (-1, "3", True, 1.5, None):
+            k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["radius"] = bad
+            self.assertTrue(any("radius" in e for e in run(k)), bad)
+        for ok in (0, 3):
+            k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["radius"] = ok
+            self.assertEqual([e for e in run(k) if "radius" in e or "unknown keys" in e], [], ok)
+
     def test_pool_and_cast_ids_must_exist(self):
         k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["pool"].append("ghost")
         self.assertTrue(any("ghost" in e for e in run(k)))
