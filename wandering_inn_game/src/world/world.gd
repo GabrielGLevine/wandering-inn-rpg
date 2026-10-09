@@ -1199,6 +1199,7 @@ func _spawn_burn_poof(cell: Vector2i) -> void:
 ## that payload stays scoped to real entities per the design doc's
 ## "payloads unchanged" contract).
 func _build_decor(decor_list: Array) -> void:
+	var roles := {}
 	for raw: Variant in decor_list:
 		if not (raw is Dictionary):
 			continue
@@ -1208,6 +1209,16 @@ func _build_decor(decor_list: Array) -> void:
 			continue
 		var cell := Vector2i(int(entry["cell"][0]), int(entry["cell"][1]))
 		_make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)), null, "decor")
+		if entry.has("sprite_role"):
+			var role := String(entry["sprite_role"])
+			if not roles.has(role):
+				roles[role] = []
+			if not (roles[role] as Array).has(sprite_id):
+				(roles[role] as Array).append(sprite_id)
+	for role: String in roles:
+		(roles[role] as Array).sort()
+	# #607: one aggregate per build (decor emits no per-row event); fires before world_ready.
+	ObservableBus.emit_domain_event(WIEvents.UI_DECOR_RENDERED, {"map": Game.sim.current_map, "roles": roles})
 
 
 func _build_scatter(specs: Array) -> void:
@@ -1387,20 +1398,23 @@ func _build_entities() -> Array[Node2D]:
 		)
 		visual.visible = not bool(render["hidden"])
 		_entity_visuals[String(ent["id"])] = visual
-		_emit_entity_visual_rendered(String(ent["id"]), render)
+		_emit_entity_visual_rendered(String(ent["id"]), render, ent)
 		visuals.append(visual)
 	return visuals
 
 
-func _emit_entity_visual_rendered(id: String, render: Dictionary) -> void:
+func _emit_entity_visual_rendered(id: String, render: Dictionary, ent: Dictionary) -> void:
 	var sprite_id := String(render["sprite"])
-	ObservableBus.emit_domain_event(WIEvents.UI_ENTITY_VISUAL_RENDERED, {
+	var payload := {
 		"map": Game.sim.current_map,
 		"entity": id,
 		"sprite": sprite_id,
 		"resolved_sprite": WISpriteRegistry.resolved_id(sprite_id),
 		"hidden": bool(render["hidden"]),
-	})
+	}
+	if ent.has("sprite_role"):
+		payload["sprite_role"] = String(ent["sprite_role"])
+	ObservableBus.emit_domain_event(WIEvents.UI_ENTITY_VISUAL_RENDERED, payload)
 
 
 ## Resolves a `prop`/`npc` entity's CURRENT
@@ -1472,7 +1486,7 @@ func _refresh_entity_visual(id: String) -> void:
 	var new_visual := _make_entity_visual(cell, String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"], false, ent.get("field_y_sort_bias_px", null))
 	new_visual.visible = not bool(render["hidden"])
 	_entity_visuals[id] = new_visual
-	_emit_entity_visual_rendered(id, render)
+	_emit_entity_visual_rendered(id, render, ent)
 	assert(_light_count <= LIGHT_BUDGET,
 		"map %s exceeds the %d-light budget (%d) after a visual_states refresh -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])
 
@@ -1577,7 +1591,7 @@ func _reconcile_entity_presence() -> void:
 			var visual := _make_entity_visual(ent["cell"], String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"], false, ent.get("field_y_sort_bias_px", null))
 			visual.visible = not bool(render["hidden"])
 			_entity_visuals[id] = visual
-			_emit_entity_visual_rendered(id, render)
+			_emit_entity_visual_rendered(id, render, ent)
 		else:
 			var old_visual := _entity_visuals[id] as Node2D
 			for child: Node in old_visual.get_children():

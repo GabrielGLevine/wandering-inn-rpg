@@ -183,5 +183,14 @@ func _init() -> void:
 	var ep_errs: Array = []
 	assert(WIKitResolver.resolve_map(ep, "m", "r", kits4, ep_errs) == ep and ep_errs.size() == 2, "empty pool and missing cell: errors, rows untouched, got %s" % [ep_errs])
 
+	var src: String = FileAccess.get_file_as_string("res://src/world/world.gd")
+	var decor_body: String = src.get_slice("func _build_decor(", 1).get_slice("\nfunc ", 0)
+	assert(decor_body.find("WIEvents.UI_DECOR_RENDERED") != -1 and decor_body.count("emit_domain_event") == 1, "one ui_decor_rendered per build")
+	var emit_body: String = src.get_slice("func _emit_entity_visual_rendered(", 1).get_slice("\nfunc ", 0)
+	assert(emit_body.find('"sprite_role"') != -1 and emit_body.find('ent.has("sprite_role")') != -1, "sprite_role rides the entity payload when present")
+	assert(src.count("_emit_entity_visual_rendered(") == 4, "all three callers pass the entity row")
+	var ev: String = FileAccess.get_file_as_string("res://src/core/wi_events.gd")
+	assert(ev.find('const UI_DECOR_RENDERED := &"ui_decor_rendered"') != -1, "event registered in WIEvents")
+
 	print("PASS test_kit_resolver")
 	quit(0)
