@@ -10119,7 +10119,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "invrisil_upper_window"
+  "fallback_sprite": "invrisil_facade_window_2"
  },
  "invrisil_facade_window_2": {
   "render_scale": 0.461538,
