@@ -21,7 +21,7 @@ verified), `shipped-public` / `shipped-bundle` (wired in data/sprites.json),
 |---|---|---|---|---|
 | icon | 881 |  |  | 106 |
 | prop | 556 | 20 | 59 | 230 |
-| rig | 118 |  | 7 | 73 |
+| rig | 122 |  | 7 | 76 |
 | setpiece | 83 |  |  |  |
 | tileset | 29 |  |  |  |
 | ui | 27 |  |  |  |
@@ -50,6 +50,7 @@ verified), `shipped-public` / `shipped-bundle` (wired in data/sprites.json),
 | pixellab_2026-08-05_390 | MANIFEST.json | 1 |
 | pixellab_2026-08-05_396 | MANIFEST.json | 1 |
 | pixellab_2026-08-06 | MANIFEST.json | 96 |
+| pixellab_2026-10-08_pallass_513 | MANIFEST.json | 4 |
 | pixellab_harvest_2026-10/L1_icons | MANIFEST.json | 698 |
 | pixellab_harvest_2026-10/L2_props | MANIFEST.json | 339 |
 | pixellab_harvest_2026-10/L3a_rigs | MANIFEST.json | 28 |

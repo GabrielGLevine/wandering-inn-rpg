@@ -1080,6 +1080,9 @@ func _execute(step: Dictionary) -> void:
 			# GH#435: authoring scaffolding, never shipped inside a script.
 			_dump_checkpoint(String(step.get("slot", "checkpoint")))
 			await get_tree().process_frame
+		"stage_sprite":
+			_stage_sprite(step)
+			await get_tree().process_frame
 		_:
 			_fail("unknown action: " + String(step["action"]))
 
@@ -1142,6 +1145,58 @@ func _inject_diag(a: String, b: String) -> void:
 	release_b.keycode = key_b
 	release_b.pressed = false
 	Input.parse_input_event(release_b)
+
+
+## Art proof for a rig no map row wears yet: draws `sprite` at `cell` of the
+## live map through World's own entity-visual path (anchor, render_scale,
+## shadow, mood tint). Presentation only, with no sim entity; the next map
+## build frees it. `qa_sprite_staged` reports the resolved art and where the
+## first frame's opaque feet row lands relative to the cell's bottom edge
+## (0 = standing on the cell, the padded-sprite trap's measure).
+func _stage_sprite(step: Dictionary) -> void:
+	var sprite_id := String(step["sprite"])
+	var world := get_tree().root.find_child("World", true, false)
+	if world == null or not world.has_method("_make_entity_visual"):
+		_fail("stage_sprite: no live World")
+		return
+	if not WISpriteRegistry.has_sprite(sprite_id):
+		_fail("stage_sprite: unknown sprite " + sprite_id)
+		return
+	var raw_cell: Array = step["cell"]
+	var cell := Vector2i(int(raw_cell[0]), int(raw_cell[1]))
+	var facing := String(step.get("facing", "down"))
+	var holder: Node2D = world.call("_make_entity_visual", cell, sprite_id, [], Color.MAGENTA, facing)
+	var spr: AnimatedSprite2D = null
+	for child: Node in holder.get_children():
+		if child is AnimatedSprite2D:
+			spr = child as AnimatedSprite2D
+	if spr == null:
+		_fail("stage_sprite: %s drew no sprite" % sprite_id)
+		return
+	var anim := WIEntityVisualFactory.anim_for(spr.sprite_frames, String(step.get("anim", "idle")), facing)
+	spr.flip_h = WIEntityVisualFactory.flip_for(facing) and anim.ends_with("_side")
+	spr.play(anim)
+	var resolved := WISpriteRegistry.resolved_id(sprite_id)
+	var placeholder := false
+	for anim_rec: Dictionary in (WISpriteRegistry.entry_for(sprite_id)["animations"] as Dictionary).values():
+		for key: String in anim_rec:
+			if key.begins_with("sheet") and WISpriteRegistry.is_fallback_sheet(String(anim_rec[key])):
+				placeholder = true
+	var used := spr.sprite_frames.get_frame_texture(anim, 0).get_image().get_used_rect()
+	var feet_y := holder.position.y + spr.position.y + float(used.end.y) * spr.scale.y
+	# TRAP: naming WIWorld here breaks the tests' autoload-stubbed driver copy.
+	var cell_px := float(world.get_script().get_script_constant_map()["CELL"])
+	var cell_bottom := float(cell.y + 1) * cell_px
+	ObservableBus.emit_domain_event("qa_sprite_staged", {
+		"sprite": sprite_id,
+		"resolved": resolved,
+		"cell": [cell.x, cell.y],
+		"anim": anim,
+		"frames": spr.sprite_frames.get_frame_count(anim),
+		"placeholder": placeholder,
+		"visible_h_px": roundi(float(used.size.y) * spr.scale.y),
+		"feet_offset_px": roundi(feet_y - cell_bottom),
+	})
 
 
 func _world_to_screen(world_pos: Vector2) -> Variant:

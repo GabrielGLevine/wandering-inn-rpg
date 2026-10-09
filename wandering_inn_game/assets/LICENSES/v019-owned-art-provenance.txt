@@ -595,3 +595,31 @@ Counter fallback uses one coordinated straight L2 middle segment at 16px visible
 wooden_pail/Idle-Sheet.png: owned PixelLab generation a99a9434-f6e5-4180-bbc4-72e86e398495 ("wooden water bucket"); source bonus_water_bucket.png; sha256 dc441cf7659024877f53b924e557f26e4e74516b94e9e16f80c6f970956b179f; canvas 32x32; alpha (6, 7, 26, 30); feet anchor [0.5, 0.9375], scale 0.625 (visible width 12.5px).
 leather_satchel/Idle-Sheet.png: owned PixelLab generation 05f308b4-c320-48ea-831a-e998a936a689 ("satchel flap open"); source runner_dropped_satchel__alt1.png; sha256 ad72974e5b94d7194ef31a7888668c0082232345eb46a5fa37a93a9f598b8f67; canvas 32x32; alpha (2, 5, 31, 31); feet anchor [0.515625, 0.96875], scale 0.55 (visible width 16px).
 arrow_quiver/Idle-Sheet.png: owned PixelLab generation 9f491d8d-34bc-49e6-a37c-aa92e280e56b ("arrow quiver"); source bonus_quiver.png; sha256 f21c4107889bbae47469891743968f72a4aa72214e6f7a788c73db35ca4ce8a1; canvas 32x32; alpha (3, 2, 30, 30); feet anchor [0.515625, 0.9375], scale 0.55 (visible width 15px).
+
+#513 Pallass residents (2026-10-08, docs/design/513-pallass-art.md). PixelLab v2 REST,
+paid from account credits after the Tier 1 subscription lapsed: create-character-v3
+(64px, low top-down, 8 rotations, mannequin) + animate-character mode=v3 (idle 4f with
+the rotation kept as frame 0; walk 6f). Lossless horizontal sheet packing with transparent
+integer padding only: every frame shares one canvas and one feet row; source RGBA pixels
+unchanged. PixelLab outputs are user-owned and redistributable (same footing as above).
+wool_trader: character 5d0d247c-ddf0-4068-813b-7d8e8a790ab5 (create job 5ebf2515-f6ae-4563-bf39-2617bb16c390).
+assets/sprites/wool_trader/Idle_Down-Sheet.png: animation group 384ace32-4ba7-4c71-9b01-bf0a3ef82709 (job ad35adf8-646e-47e5-8623-18217a5d87fd), frames [0, 1, 2, 1]; SHA256 4d5c4e815d2aec1900f241a226c98df69a23e9032f74dcd7787b2320695b0f3c.
+assets/sprites/wool_trader/Idle_Side-Sheet.png: animation group 90cf397e-3fcc-4478-b0e1-ec953b4d7451 (job 2c15a4d1-e1b0-4e3b-abc7-6e1ece0178a3), frames [0, 1, 2, 3]; SHA256 d3e0d8f86104aba7b62529d07028567497e3f2a267b620cd1258cd2180be696c.
+assets/sprites/wool_trader/Idle_Up-Sheet.png: animation group 6474b8d4-5506-493d-b9d9-674dc435fa12 (job ee9fb405-2965-42fe-8452-6567c9db68e1), frames [0, 1, 2, 3]; SHA256 6b1ffcfa5f6880ccb4aabdaa4fb506f6c04fcd3256d913bb8c92a2e3fa0702d3.
+assets/sprites/wool_trader/Walk_Down-Sheet.png: animation group 79566576-68d6-483e-bd32-99b004756753 (job 738352ee-d423-4e3f-b183-ff8ff4e032e3), frames [0, 1, 2, 3, 4, 5]; SHA256 a8bc0dce5212bd75cdc277b04a5fe5ee1bf9da0dbf9f90b851b003dba09378bd.
+assets/sprites/wool_trader/Walk_Side-Sheet.png: animation group e620510b-3725-4f68-8ef6-e09e13be9d20 (job 90489372-d16a-47eb-8117-8631a5446b28), frames [0, 1, 2, 3, 4, 5]; SHA256 38d52f18583a309aba47dd7a72d0d56aca02edb999390da49de9f3e962a08845.
+assets/sprites/wool_trader/Walk_Up-Sheet.png: animation group edf128dc-d9ce-4027-8a17-67b866c2ca0f (job 83ca79f1-37d0-40cb-9fa3-00ba861921a3), frames [0, 1, 2, 3, 4, 5]; SHA256 4e67c2d35f8fc199a5a83be3cdb804779eddbdc4fd67127a090504e7b970c604.
+garuda_runner: character 7f970cc3-f375-4877-bcf4-94fb7dc0dd4e (create job 51272464-d253-41f2-8c16-da54900959f1).
+assets/sprites/garuda_runner/Idle_Down-Sheet.png: animation group 226321d8-70be-4253-ae22-8330219e35c6 (job 8e011e06-38f9-434f-9cbe-0bc1fda33f64), frames [1, 2, 3, 4]; SHA256 9fb7f7d69fd259a4a77233920bd0e8cdf00c3ad56dda22bd6da6aca8f49927be.
+assets/sprites/garuda_runner/Idle_Side-Sheet.png: animation group 9d46b6af-52f6-4554-b58d-4e8c25384036 (job 98afd5a8-ff6d-47fb-a25d-a29261e54ab8), frames [0, 1, 2, 3]; SHA256 2e925422db220600312cc203897bd7e9b21e7243382544fd360d71ee5b7a0ca0.
+assets/sprites/garuda_runner/Idle_Up-Sheet.png: animation group 14d090d5-c184-4a91-a706-a29416c80873 (job 3d131978-0855-42ce-ac43-27eb49b0518e), frames [0, 1, 2, 3]; SHA256 70c89eac0397f66692db4b2e0e3b1ccbbfec04e566f881f806b6d4775efc0d50.
+assets/sprites/garuda_runner/Walk_Down-Sheet.png: animation group 5e244f50-c0c9-4c06-8819-e56ab8b75c1c (job 7e411d22-f9f1-49eb-b8bb-bf6e54b579c7), frames [0, 1, 2, 3, 4, 5]; SHA256 cff130acbec7d2c9f734b55f09fac4103e9b2bbe1f1c22863be6a2966c8054a6.
+assets/sprites/garuda_runner/Walk_Side-Sheet.png: animation group fb6c27ac-8979-40e3-a2a6-13c2c0541445 (job 2e23718e-5e91-4fdf-9b0e-53f38de025f0), frames [0, 1, 2, 3, 4, 5]; SHA256 2961eb585da51a84377234df9b4c472906ebff6c00794cc0872d577466819a30.
+assets/sprites/garuda_runner/Walk_Up-Sheet.png: animation group 539097b7-c126-419a-ab73-9dfbfc5e5953 (job c3d62a76-25d3-4d64-9124-3b9eb6b701d9), frames [0, 1, 2, 3, 4, 5]; SHA256 80cbaedb313cf9aa40d68d568585528958c8565db9babacc87fac02f24465524.
+dullahan_examiner: character 57a4ba79-8eed-4983-a65a-b08885a7ab2e (create job 589562c8-4d95-4d2f-b499-a1f2ba5c8f89).
+assets/sprites/dullahan_examiner/Idle_Down-Sheet.png: animation group be72e86d-14c0-401e-b2fc-6e166cdc6942 (job 3b50b46f-2b70-486c-ad9e-21a05ca5a641), frames [0, 1, 2, 3]; SHA256 2972654ca10d3f1745cc16cebb80ec7abc71238ffcfd54250bc1ab0dcc0e8995.
+assets/sprites/dullahan_examiner/Idle_Side-Sheet.png: animation group 8d62cb82-f0ad-47f6-a01e-be5e2a2f683f (job 7d560cbf-e50d-4655-9e42-f874fb15313c), frames [0, 1, 2, 3]; SHA256 58f282c27b3e51d9896dbed48c5e73914a683cec0c0e70a11015871dbf94203d.
+assets/sprites/dullahan_examiner/Idle_Up-Sheet.png: animation group 49eb198f-ec10-4fa7-bfad-408a1b0862d2 (job 05afe92b-c499-4a31-bbd4-096823569a3a), frames [0, 1, 2, 3]; SHA256 dc2311d1b03ee094fda64a79959d17852384b45930a803817ecd5759b9c2f9d7.
+assets/sprites/dullahan_examiner/Walk_Down-Sheet.png: animation group 525f32c0-485a-42f9-84ca-fa5a7cf211a8 (job 03b9bf1f-df5a-4b16-b9f3-4df7a0b801d3), frames [0, 1, 2, 3, 4, 5]; SHA256 20240febaf8e26143c991f44d608a29cc7f01883f260f2668f73c339d0a0186b.
+assets/sprites/dullahan_examiner/Walk_Side-Sheet.png: animation group a1b8ff06-44f5-400d-9e7d-c7c4ede27d80 (job edff8e5d-2a36-4e78-8b58-0242a2365dca), frames [0, 1, 2, 3, 4, 5]; SHA256 8970453ed15a228214674a1d06030c3f60d73facdc25ed0494f37bde1517dc74.
+assets/sprites/dullahan_examiner/Walk_Up-Sheet.png: animation group b1890bc2-749c-442a-b824-6021ac4ee572 (job 3c87e022-9d55-4d2a-aa5d-fc1b3b7951cd), frames [0, 1, 2, 3, 4, 5]; SHA256 c1509457a5936774c04c13b90f7b632e85a1eba5b5b6af33479c9fc38f2f14e7.

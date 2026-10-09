@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 294 native canonical QA scripts. The manifest is the
+This is the human index for 295 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -302,6 +302,7 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `rest_delve_camp` | 9 | full | `rest_delve_camp_start` | #453 P4 checkpoint-based (steel_thread step 1229, post-vault 35/49 HP, 0/14 MP): walk out of the halls to the Horns' camp and sleep (full refill, sleep beat, autosave, delve-time line); pause-menu Load of steel_thread step 2921 (horns_dig_started) proves the post-dig line on the same camp. Inherited kit is setup only. |
 | `rest_dig_camp` | 9 | full | `rest_dig_camp_start` | #453 P5 checkpoint-based (steel_thread step 1405, guardian defeat rollback 35/49 HP, 0/14 MP): sleep on the dig-camp bedroll (full refill, autosave), then win the guardian rested at the ledger's own 49/49, 1/15 exit. Inherited kit is setup only. |
 | `gate_road_arrows_read` | 9 | full | `near_ambush_sneak` | #453 P6: the gate-road quiver read from the road outside the ambush band; scenery only, nothing granted, no fight (windowed reads: 00_arrows_from_the_road, 01_arrows_read). |
+| `pallass_resident_art_peek` | 9 | full | `near_pallass_drake` | #513 art proof: QA-only stage_sprite draws the unplaced owned rigs wool_trader, garuda_runner and dullahan_examiner through World's entity-visual path beside Pallass Drake NPCs; pins resolved art, frame counts, feet on the cell edge and idle figure heights; windowed captures include the trader-vs-gnoll_traveler A/B and idle/walk facing lineups |
 
 ## Browser-only QA
 
