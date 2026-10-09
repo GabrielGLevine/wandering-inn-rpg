@@ -125,7 +125,7 @@
    ]
   },
   {
-   "sprite": "sconce",
+   "sprite": "invrisil_lamp_wall_1",
    "cell": [
     4,
     1
@@ -142,7 +142,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "invrisil_lamp_wall_1",
    "cell": [
     9,
     1
@@ -185,7 +185,7 @@
     8
    ],
    "display_name": "Out to the Cross-street",
-   "sprite": "door",
+   "sprite": "invrisil_door_street_2",
    "to_map": "invrisil_cross_street",
    "to_cell": [
     14,
