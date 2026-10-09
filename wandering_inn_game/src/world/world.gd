@@ -106,7 +106,6 @@ const BIOME_DEFAULT_AMBIENCE := {
 	"inn": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 	"riverfarm_interior": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 	"liscor_civic": {"preset": "dust_motes", "phase": ["dusk", "night"]},
-	"invrisil_shop": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 	"pallass_interior": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 	"pallass_forge": {"preset": "embers", "phase": []},
 	"garden": {"preset": "fireflies", "phase": ["dusk", "night"]},

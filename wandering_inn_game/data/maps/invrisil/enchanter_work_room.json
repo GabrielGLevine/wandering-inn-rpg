@@ -90,16 +90,6 @@
    }
   }
  ],
- "ambience": [
-  {
-   "preset": "dust_motes",
-   "rect": "all",
-   "phase": [
-    "dusk",
-    "night"
-   ]
-  }
- ],
  "entities": [
   {
    "_comment": "Round-trip pair with enchanter_shop's enchanter_work_room_door (8,3). The return landing (8,4) is the open cell directly south of it.",

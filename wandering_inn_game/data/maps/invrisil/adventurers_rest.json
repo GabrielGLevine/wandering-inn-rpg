@@ -166,16 +166,6 @@
    ]
   }
  ],
- "ambience": [
-  {
-   "preset": "dust_motes",
-   "rect": "all",
-   "phase": [
-    "dusk",
-    "night"
-   ]
-  }
- ],
  "entities": [
   {
    "id": "adventurers_rest_to_boulevard",

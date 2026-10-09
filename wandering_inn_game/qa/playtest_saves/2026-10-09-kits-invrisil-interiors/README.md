@@ -30,7 +30,7 @@ Or load this file through the manual slot:
 
 ## Where it puts you
 
-`stationer` at its arrival cell **[6,7]**, one cell north of the door at [6,8], facing north into the shop, by **day** (`actions_since_sleep` 0). The interior grades match across phases, but four interiors add dust motes at dusk and night, so this save covers the day view only.
+`stationer` at its arrival cell **[6,7]**, one cell north of the door at [6,8], facing north into the shop, by **day** (`actions_since_sleep` 0). The interior grades match across phases and the four pilot interiors no longer add dust motes at dusk and night (dropped in the #608 1b night read), so night differs only by the authored lights.
 
 ## What to do
 

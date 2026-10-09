@@ -496,7 +496,9 @@ class TestBiomeRows(unittest.TestCase):
             self.assertNotIn("interior_flavor_by_map", row)
         world = (GAME / "src" / "world" / "world.gd").read_text()
         for bid in self.NEW:
-            self.assertIn(f'"{bid}": {{"preset": "dust_motes", "phase": ["dusk", "night"]}},', world)
+            row = f'"{bid}": {{"preset": "dust_motes", "phase": ["dusk", "night"]}},'
+            # #608 1b night read: invrisil_shop drops its mote default (sourceless discs); the others keep it.
+            (self.assertNotIn if bid == "invrisil_shop" else self.assertIn)(row, world)
         maps = (GAME / "data" / "maps").glob("*/*.json")
         # Pilot 1b adopted invrisil_shop on the Rest only; any other adoption must be planned.
         self.assertEqual(sorted(f"{p.parent.name}/{p.name}" for p in maps if json.loads(p.read_text()).get("biome") in self.NEW), ["invrisil/adventurers_rest.json"])

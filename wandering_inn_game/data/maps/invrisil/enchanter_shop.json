@@ -174,16 +174,6 @@
    ]
   }
  ],
- "ambience": [
-  {
-   "preset": "dust_motes",
-   "rect": "all",
-   "phase": [
-    "dusk",
-    "night"
-   ]
-  }
- ],
  "skill_gates": {
   "enchanter_work_room": {
    "_comment": "Descriptive registry (runtime never reads it): the work-room's TWO modes, contents identical. Mode 0 is the [Pick Lock] debut. Mode 1 is the virtuous path -- Hedault opens the door himself once the lady's commission is settled (hedault_enchanting's `work_room` arm), which is why it declares the non-skill `dialogue` gate rather than a skill union.",
