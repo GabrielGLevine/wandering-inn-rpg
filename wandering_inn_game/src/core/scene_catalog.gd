@@ -34,6 +34,11 @@ static func kits() -> Dictionary:
 	return _kits_cache
 
 
+## Test seam: honoured until the next reset(); tests must not edit data/kits.json.
+static func kits_override(kits_doc: Dictionary) -> void:
+	_kits_cache = kits_doc
+
+
 static func _compose() -> Dictionary:
 	var root: Dictionary = _read_json(ROOT_PATH)
 	var maps: Dictionary = {}
@@ -43,6 +48,9 @@ static func _compose() -> Dictionary:
 		assert(not maps.has(map_id), "duplicate map key '%s' (%s)" % [map_id, path])
 		var region: String = path.get_base_dir().get_file()
 		var map: Dictionary = _expand_talk_banks(_read_json(path), map_id)
+		var kit_errors: Array = []
+		map = WIKitResolver.resolve_map(map, map_id, String(map.get("kit", region)), kits_doc, kit_errors)
+		assert(kit_errors.is_empty(), "maps/%s: kit refs do not resolve: %s" % [map_id, "; ".join(kit_errors)])
 		maps[map_id] = map
 	root["maps"] = maps
 	root["interactions"] = _read_json(INTERACTIONS_PATH)
