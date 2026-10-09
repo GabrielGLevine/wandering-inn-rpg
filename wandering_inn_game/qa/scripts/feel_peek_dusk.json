@@ -1,5 +1,5 @@
 {
- "_comment": "v0.17 L3 FEEL EVIDENCE, DUSK leg. Same cell, same framing as feel_peek_day -- the ONLY difference is the fixture's actions_since_sleep, so the pair is a real A/B of the grade plus the newly-defaulted invrisil_street ambience (that biome declared no ambience row at all before this wave).",
+ "_comment": "v0.17 L3 FEEL EVIDENCE, DUSK leg. Same cell, same framing as feel_peek_day -- the ONLY difference is the fixture's actions_since_sleep, so the pair is a real A/B of the grade. The biome-default emitter gate is pinned on Liscor's street (#608 dropped invrisil_street's default).",
  "fixture_save": "feel_peek_dusk_start",
  "starts_at_title": true,
  "steps": [
@@ -66,6 +66,48 @@
   {
    "action": "screenshot",
    "name": "01_boulevard_dusk"
+  },
+  {
+   "_comment": "== EMITTER GATE on a still-emitting sky map. A teleport to Liscor's street and straight back to the start cell: no screenshot is taken there, and every shot below keeps its route and framing.",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    2,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The gate is a gate, not a deletion: the same Liscor `street` emitter that reads `emitting: 0` in the day leg is running at dusk. #608 moved this pin off the boulevard, which builds no emitter now.",
+   "action": "assert_event_logged",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "street",
+    "emitting": 1
+   }
+  },
+  {
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    20,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
   },
   {
    "action": "move",

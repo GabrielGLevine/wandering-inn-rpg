@@ -68,6 +68,48 @@
    "name": "01_boulevard_night"
   },
   {
+   "_comment": "== EMITTER GATE on a still-emitting sky map. A teleport to Liscor's street and straight back to the start cell: no screenshot is taken there, and every shot below keeps its route and framing.",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    2,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The sky-bearing biome default is forced to dusk/night, so at NIGHT Liscor's `street` emitter is actually running; the day leg pins the same map at 0. #608 moved this pin off the boulevard, which builds no emitter now.",
+   "action": "assert_event_logged",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "street",
+    "emitting": 1
+   }
+  },
+  {
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    20,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "move",
    "direction": "up",
    "steps": 1
@@ -169,7 +211,7 @@
    "frames": 10
   },
   {
-   "_comment": "== REDUCE-MOTION CONTROL, live. The pause menu opens over the boulevard and the toggle is flipped without leaving it, so no _rebuild_field runs between shot 01 and shot 03 -- world.gd's _tick_motion_settings is the only thing that can stop the motes, the sway and the shimmer. Pause row 8 = 'Settings' (index 7); inside, down x5 from 'Master volume' = 'Reduce Motion' (index 5) -- settings_loop's own pins, reused rather than re-derived. ==",
+   "_comment": "== REDUCE-MOTION CONTROL, live. The pause menu opens over the boulevard and the toggle is flipped without leaving it, so no _rebuild_field runs between shot 01 and shot 03 -- world.gd's _tick_motion_settings is the only thing that can stop the sway and the shimmer (#608: the boulevard builds no ambient emitter, so there are no motes to stop here; the emitter gate is pinned on the street leg above). Pause row 8 = 'Settings' (index 7); inside, down x5 from 'Master volume' = 'Reduce Motion' (index 5) -- settings_loop's own pins, reused rather than re-derived. ==",
    "action": "press",
    "name": "cancel"
   },
