@@ -1221,7 +1221,7 @@
     12
    ],
    "display_name": "A Rigged Crate Stack",
-   "sprite": "crate",
+   "sprite": "invrisil_rigged_crate_stack",
    "requires_skill": "disarm_trap",
    "skill_hint_toast": "One low oak wedge takes the whole lean, shaved flat where it faces out. Pulling at the crates will not do it; working that wedge out might.",
    "locked_toast": "The crate stack looks ordinary until you notice the angle: top-heavy, wedged to fall. The wedge is set low, where you would have to reach in under the weight.",

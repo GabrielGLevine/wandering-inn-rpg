@@ -145,6 +145,7 @@
   "invrisil_hanging_sign": "regional",
   "invrisil_lady_client": "regional",
   "invrisil_ornate_bench": "regional",
+  "invrisil_rigged_crate_stack": "regional",
   "invrisil_roofline": "regional",
   "invrisil_shop_door": "regional",
   "invrisil_shop_door_1": "regional",
@@ -349,8 +350,8 @@
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 76,
-   "generic_share_pct": 39.18,
+   "generic_placements": 75,
+   "generic_share_pct": 38.66,
    "maps": {
     "adventurers_rest": {
      "generic_placements": 11,
@@ -377,7 +378,7 @@
      "placements": 29
     },
     "mercantile_alleys": {
-     "generic_placements": 15,
+     "generic_placements": 14,
      "placements": 30
     },
     "stationer": {

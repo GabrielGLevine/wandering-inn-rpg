@@ -10347,5 +10347,24 @@
    }
   },
   "fallback_sprite": "owned_fallback_door"
+ },
+ "invrisil_rigged_crate_stack": {
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   0.9688
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_rigged_crate_stack/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "crate_owned"
  }
 }
