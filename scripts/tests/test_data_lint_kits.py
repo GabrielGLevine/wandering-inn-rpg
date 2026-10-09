@@ -474,7 +474,8 @@ class TestBiomeRows(unittest.TestCase):
         for bid in self.NEW:
             self.assertIn(f'"{bid}": {{"preset": "dust_motes", "phase": ["dusk", "night"]}},', world)
         maps = (GAME / "data" / "maps").glob("*/*.json")
-        self.assertEqual([p.name for p in maps if json.loads(p.read_text()).get("biome") in self.NEW], [])  # Phase 0: referenced by no map
+        # Pilot 1b adopted invrisil_shop on the Rest only; any other adoption must be planned.
+        self.assertEqual(sorted(f"{p.parent.name}/{p.name}" for p in maps if json.loads(p.read_text()).get("biome") in self.NEW), ["invrisil/adventurers_rest.json"])
 
 
 class TestRealTree(unittest.TestCase):
