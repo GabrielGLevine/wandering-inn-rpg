@@ -45,7 +45,9 @@ func _init() -> void:
 		"cached compose must NOT see the new file (this failing means the cache is gone and reload_data's reset is redundant -- re-read GH#278)")
 	WISceneCatalog.reset()
 	# Compose resolves refs (#607): kits_override survives until the next reset().
-	WISceneCatalog.kits_override({"_common": {"materials": {}, "roles": {"zz_probe": "crate_owned"}, "cast": []}})
+	var probe_kits: Dictionary = WISceneCatalog.kits().duplicate(true)
+	probe_kits["_common"]["roles"]["zz_probe"] = "crate_owned"
+	WISceneCatalog.kits_override(probe_kits)
 	var fresh: Dictionary = WISceneCatalog.compose()
 	assert(fresh["maps"].has("zz_qa_tmp_map"), "post-reset compose must see the new file")
 	assert(fresh["maps"]["zz_qa_tmp_map"]["decor"][0]["sprite"] == "crate_owned" and fresh["maps"]["zz_qa_tmp_map"]["decor"][0]["sprite_role"] == "zz_probe",
