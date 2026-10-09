@@ -288,7 +288,7 @@ def preview(paths: wa.Paths, region: str, role: str) -> int:
             continue
         m = json.loads(mp.read_text(encoding="utf-8"))
         errors: list = []
-        resolved = kl.resolve_map(m, mp.stem, kl.map_region(mp), kits, errors)
+        resolved = kl.resolve_map(m, mp.stem, kl.map_kit(m, mp), kits, errors)
         unresolved += len(errors)
         for err in errors:
             print(f"unresolved: {err}", file=sys.stderr)

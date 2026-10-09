@@ -396,3 +396,19 @@ def test_preview_unresolved_ref_exits_nonzero_and_writes_nothing(tree, capsys):
     assert run(tree, "invrisil", "nosuchrole", "--preview") == fk.EXIT_UNRESOLVED
     assert "unresolved:" in capsys.readouterr().err
     assert not changed(before, snapshot(tree))
+
+
+def test_preview_honors_map_kit_override(tree, capsys):
+    kl = pytest.importorskip("wi_kits_lib")
+    k = tree / KITS
+    d = json.loads(k.read_text())
+    d["invrisil"]["roles"]["cargo"] = {"pick": "cell", "pool": ["crate_owned"]}
+    d["otherkit"] = {"roles": {"cargo": {"pick": "cell", "pool": ["crate"]}}}
+    k.write_text(json.dumps(d, indent=1) + "\n")
+    maps = tree / "wandering_inn_game/data/maps/invrisil"
+    maps.mkdir(parents=True)
+    m = {"kit": "otherkit", "biome": "inn", "grid": [8, 6], "decor": [{"sprite": "@cargo", "cell": [1, 1]}]}
+    (maps / "kit_map.json").write_text(json.dumps(m, indent=1) + "\n")
+    assert run(tree, "invrisil", "cargo", "--preview") == 0
+    out = capsys.readouterr().out.strip().split("\n")
+    assert out == ["kit_map decor [1, 1] crate"]
