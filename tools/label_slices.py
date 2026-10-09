@@ -166,7 +166,7 @@ WIRED_KINDS = {
     "chest": "container", "chest_open": "container",
     "facade_plaster": "wall_module", "inn_roof": "wall_module", "pallass_rail_post": "wall_module",
     "dungeon_statue": "other", "pedestal": "other", "sewer_grate": "other", "dusty_scroll": "other",
-    "food_bread": "other", "food_ham": "other", "food_basket": "other",
+    "food_bread": "other", "food_ham": "other", "food_basket": "container",
     "garden_fountain_basin": "other", "garden_fountain_statue": "other",
 }
 

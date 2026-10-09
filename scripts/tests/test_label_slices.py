@@ -180,3 +180,10 @@ def test_main_dispatch(tmp_path):
     assets, game = sliced_fixture(tmp_path, n=2)
     assert ls.main(["export", "--assets-root", str(assets)]) == 0
     assert ls.main(["check", "--assets-root", str(assets), "--game-root", str(game)]) == 0, "no wired regions: vacuous pass"
+
+
+def test_wired_kinds_consistency():
+    """Verify food_basket is 'container' per prompt guidance and all values are in closed kind list."""
+    assert ls.WIRED_KINDS["food_basket"] == "container", "food_basket ground truth must match prompt guidance"
+    for kind in ls.WIRED_KINDS.values():
+        assert kind in sa.KINDS, f"WIRED_KINDS value {kind!r} not in closed kind list {sa.KINDS}"
