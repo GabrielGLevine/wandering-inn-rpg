@@ -349,8 +349,8 @@
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 75,
-   "generic_share_pct": 38.27,
+   "generic_placements": 74,
+   "generic_share_pct": 37.76,
    "maps": {
     "adventurers_rest": {
      "generic_placements": 11,
@@ -369,7 +369,7 @@
      "placements": 5
     },
     "invrisil_boulevard": {
-     "generic_placements": 3,
+     "generic_placements": 2,
      "placements": 51
     },
     "invrisil_cross_street": {
