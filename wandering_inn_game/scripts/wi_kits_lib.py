@@ -20,6 +20,38 @@ NON_PERSON_HEADINGS = {"The PC", "Antinium", "Horns roster note", "Invrisil civi
 # name no one: adding them as canon would ban every "Master"/"Gnoll" NPC.
 GENERIC_FIRST_WORDS = {"Master", "Grand", "Tier", "Recruit", "Frazzled", "Gnoll", "Garuda", "Dullahan",
                        "Drake", "Human", "Den-Shop", "Forge-Tier"}
+# Closed kind vocabulary (spec 4.1): slice labels, role "kind" values and WIRED_KINDS.
+KINDS = ("crate", "barrel", "sack", "door", "window", "lamp", "table", "seat", "shelf", "bed",
+         "plant", "rock", "debris", "tool", "sign", "wall_module", "container", "other")
+# #623 (user 2026-10-09): _common holds only the utility Tier A. Its placements leave G2's
+# numerator and denominator, and may be at most COMMON_CAP_PCT of a region's converted maps.
+COMMON_KINDS = ("crate", "barrel", "sack", "container")
+COMMON_CAP_PCT = 30
+# Kind of every data/sprites.json `region` animation at 7155db91: the label check's
+# ground truth (tools/label_slices.py) and data_lint's known kinds for wired ids. Ids on
+# sheets the slicer skips (tiles, -Sheet strips, Admurin, owned) are excluded by the label
+# check at run time, so listing them here is harmless. An id missing here has no known kind.
+WIRED_KINDS = {
+    "crate": "crate", "barrel": "barrel", "door": "door", "window_blue": "window",
+    "unlit_lantern": "lamp", "sconce": "lamp", "campfire": "lamp",
+    "table_brown": "table", "bar_counter": "table", "counter_left": "table", "counter_mid": "table",
+    "counter_right": "table", "library_desk": "table", "stool": "seat",
+    "shelf_bottles": "shelf", "library_shelf": "shelf", "bed": "bed",
+    "plant_pot": "plant", "bush_green": "plant", "grass_tuft": "plant", "flower_purple": "plant",
+    "flower_tiny": "plant", "pond_reeds": "plant", "tree_big": "plant", "tree_round": "plant",
+    "tree_autumn_orange": "plant", "tree_autumn_red": "plant", "crop_row_orange": "plant",
+    "crop_row_green": "plant", "crop_row_dark_green": "plant", "mushroom": "plant",
+    "mushroom_purple_l": "plant", "mushroom_purple_m": "plant", "mushroom_purple_s": "plant",
+    "hollow_mushroom_cluster": "plant", "hollow_canopy_tree": "plant", "hollow_small_tree": "plant",
+    "hollow_bent_tree": "plant",
+    "pebble": "rock", "boulder": "rock", "scree_spill": "rock", "hollow_glow_stone": "rock",
+    "dungeon_rubble": "debris", "grill": "tool",
+    "chest": "container", "chest_open": "container",
+    "facade_plaster": "wall_module", "inn_roof": "wall_module", "pallass_rail_post": "wall_module",
+    "dungeon_statue": "other", "pedestal": "other", "sewer_grate": "other", "dusty_scroll": "other",
+    "food_bread": "other", "food_ham": "other", "food_basket": "container",
+    "garden_fountain_basin": "other", "garden_fountain_statue": "other",
+}
 _HEADING_NAME = re.compile(r"^[A-Z][A-Za-z'\-]*( [A-Za-z'\-]+)*$")
 
 

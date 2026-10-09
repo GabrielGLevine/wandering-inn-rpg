@@ -239,7 +239,7 @@ class TestGates(unittest.TestCase):
                                   base_ref=None, baseline=None)
         self.assertEqual([e for e in errors if "G2" in e], [])  # 2/3 over the converted map; 2/9 region-wide
         line = next(r for r in report if r.startswith("kits G2: r identity"))
-        self.assertIn("66.67% unique variants over 1 converted map(s)", line)
+        self.assertIn("66.67% unique art over 1 converted map(s)", line)
         self.assertIn("22.22% region-wide (report only)", line)
 
     def test_g2_converted_map_below_half_fails_even_when_region_passes(self):
@@ -481,6 +481,106 @@ class TestFixRound1(unittest.TestCase):
         self.assertTrue(any("biome cave shared with 2 regions" in r for r in report), report)
         self.assertTrue(any("biome cave" in a for a in adv))
         self.assertEqual([e for e in errors if "biome" in e], [])
+
+
+PACK = {"sheet": "res://assets/pack.png", "frame_size": [16, 32]}
+ART_SPRITES = {**SPRITES,
+               "lamp_r": {"animations": {"idle": {**PACK, "region": [0, 0, 16, 32]}}},
+               "lamp_q": {"animations": {"idle": {**PACK, "region": [0, 0, 16, 32]}}, "render_scale": 0.5, "fallback_sprite": "own_b"},
+               "lamp_mine": {"animations": {"idle": {**PACK, "region": [16, 0, 16, 32]}}},
+               "door": {"animations": {"idle": {**PACK, "region": [32, 0, 16, 32]}}},
+               "barrel": {"animations": {"idle": {**PACK, "region": [48, 0, 16, 32]}}}}
+UTIL_KITS = copy.deepcopy(KITS)
+UTIL_KITS["_common"]["roles"]["utility"] = {"kind": "crate", "pick": "cell", "pool": ["c1", "c2", "c3"]}
+
+
+def gates(resolved, regions, kits=KITS, art=True, baseline=None):
+    errors, advisories, report = [], [], []
+    ident = data_lint.ArtIdent(ART_SPRITES, lambda _path: None) if art else None
+    data_lint.check_kit_gates(resolved, regions, kits, [], errors, advisories, report,
+                              base_ref=None, baseline=baseline, ident=ident)
+    return errors, advisories, report
+
+
+def row(sprite, x, y=0, role=""):
+    return {"sprite": sprite, "cell": [x, y], **({"sprite_role": role} if role else {})}
+
+
+class TestArtIdentityG2(unittest.TestCase):
+    """#623: G2 counts art identity; _common holds the utility Tier A only, capped at 30%."""
+
+    def test_two_ids_of_one_picture_in_two_regions_are_exclusive_to_neither(self):
+        resolved = {"m": {**GRID, "entities": [], "decor": [row("c3", 0, role="cargo"), row("lamp_r", 1), row("lamp_r", 2)]},
+                    "o": {**GRID, "entities": [], "decor": [row("lamp_q", 0)]}}
+        regions = {"m": "r", "o": "q"}
+        errors, _, report = gates(resolved, regions, art=False)
+        self.assertEqual([e for e in errors if "G2" in e], [], "by id, lamp_r looks exclusive to r")
+        errors, _, report = gates(resolved, regions)
+        self.assertTrue(any("G2 identity" in e and "33.33%" in e for e in errors), errors)
+        resolved["o"]["decor"] = [row("lamp_mine", 0)]
+        errors, _, _ = gates(resolved, regions)
+        self.assertEqual([e for e in errors if "G2" in e], [], "different art in q leaves r exclusive")
+
+    def _util_map(self, n_util):
+        decor = [row("c1", i, 1, "utility") for i in range(n_util)]
+        decor += [row("c3", i, 2, "cargo") for i in range(4)] + [row("c2", i, 3) for i in range(3)]
+        return {"m": {**GRID, "entities": [], "decor": decor},
+                "o": {**GRID, "entities": [], "decor": [row("c1", 0), row("c2", 1)]}}
+
+    def test_tier_a_common_placements_leave_numerator_and_denominator(self):
+        errors, _, report = gates(self._util_map(3), {"m": "r", "o": "q"}, UTIL_KITS)
+        self.assertEqual([e for e in errors if "G2" in e], [], errors)
+        line = next(r for r in report if r.startswith("kits G2: r identity"))
+        self.assertIn("57.14% unique art", line)  # 4 of 7: the 3 utility rows are out of both sides
+        self.assertIn("_common utility 3/10 (30.0%, cap 30%", line)
+        kits = copy.deepcopy(UTIL_KITS)
+        kits["r"]["roles"]["utility"] = {"pick": "cell", "pool": ["c1", "c2", "c3"]}
+        errors, _, _ = gates(self._util_map(3), {"m": "r", "o": "q"}, kits)
+        self.assertTrue(any("G2 identity" in e and "40.0%" in e for e in errors), "a region role of the same name counts")
+
+    def test_common_cap_passes_at_30_and_fails_above(self):
+        errors, _, _ = gates(self._util_map(3), {"m": "r", "o": "q"}, UTIL_KITS)
+        self.assertEqual([e for e in errors if "cap" in e], [])
+        errors, _, _ = gates(self._util_map(4), {"m": "r", "o": "q"}, UTIL_KITS)
+        self.assertTrue(any("G2 _common cap" in e and "4/11" in e and "over 30%" in e for e in errors), errors)
+
+    def test_cap_holds_for_a_region_whose_own_kit_has_no_pools(self):
+        kits = copy.deepcopy(UTIL_KITS); kits["q"] = {"materials": {}, "roles": {}, "cast": []}
+        resolved = {"o": {**GRID, "entities": [], "decor": [row("c1", 0, 0, "utility"), row("c2", 1)]}}
+        errors, _, _ = gates(resolved, {"o": "q"}, kits)
+        self.assertTrue(any("G2 _common cap: q" in e for e in errors), errors)
+
+
+class TestCommonTierA(unittest.TestCase):
+    def errs(self, role, where="_common"):
+        k = copy.deepcopy(KITS); k[where]["roles"]["utility"] = role
+        return [e for e in run_with_sprites(ART_SPRITES, k) if "utility" in e]
+
+    def test_tier_a_roles_pass(self):
+        for kind in ("crate", "barrel", "sack", "container"):
+            self.assertEqual(self.errs({"kind": kind, "pool": ["c1", "c2", "barrel"]}), [], kind)
+
+    def test_other_kinds_are_rejected(self):
+        self.assertTrue(any("not a _common utility kind" in e for e in self.errs({"kind": "lamp", "pool": ["c1", "c2"]})))
+        self.assertTrue(any("closed vocabulary" in e for e in self.errs({"kind": "spaceship", "pool": ["c1", "c2"]})))
+
+    def test_kind_is_required_on_common_roles(self):
+        self.assertTrue(any('declaring "kind"' in e for e in self.errs({"pool": ["c1", "c2"]})))
+        self.assertTrue(any('declaring "kind"' in e for e in self.errs("c3")))
+        self.assertEqual(self.errs({"pool": ["c1", "c2"]}, where="r"), [], "region roles need no kind")
+
+    def test_wired_kind_vocabulary_rejects_a_door_in_a_crate_role(self):
+        self.assertEqual(data_lint.kl.WIRED_KINDS["door"], "door")
+        errs = self.errs({"kind": "crate", "pool": ["c1", "c2", "door"]})
+        self.assertTrue(any("pool id 'door' is a door" in e for e in errs), errs)
+
+    def test_region_role_kind_must_be_in_the_vocabulary(self):
+        self.assertTrue(any("closed vocabulary" in e for e in self.errs({"kind": "spaceship", "pool": ["c1", "c2"]}, where="r")))
+        self.assertEqual(self.errs({"kind": "lamp", "pool": ["c1", "c2"]}, where="r"), [])
+
+    def test_real_common_pool_stays_empty_until_its_read(self):
+        kits = json.loads((GAME / "data" / "kits.json").read_text())
+        self.assertEqual(kits["_common"]["roles"], {})
 
 
 class TestBiomeRows(unittest.TestCase):

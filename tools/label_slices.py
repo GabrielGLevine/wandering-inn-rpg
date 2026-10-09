@@ -32,6 +32,8 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import slice_atlases as sa  # noqa: E402
 
+kl = sa.kl
+
 ROOT = sa.ROOT
 TASK_NAME = "_sliced_task.json"
 CHECK_TAG = "check-miss:"
@@ -145,30 +147,8 @@ def import_labels(assets_root: Path, answers_dir: Path) -> int:
 
 # ------------------------------------------------------------------ check
 
-# Expected kind for every data/sprites.json `region` animation at 7155db91.
-# Ids on sheets the slicer skips (tiles, -Sheet strips, Admurin, owned) are
-# excluded by check() at run time, so listing them here is harmless.
-WIRED_KINDS = {
-    "crate": "crate", "barrel": "barrel", "door": "door", "window_blue": "window",
-    "unlit_lantern": "lamp", "sconce": "lamp", "campfire": "lamp",
-    "table_brown": "table", "bar_counter": "table", "counter_left": "table", "counter_mid": "table",
-    "counter_right": "table", "library_desk": "table", "stool": "seat",
-    "shelf_bottles": "shelf", "library_shelf": "shelf", "bed": "bed",
-    "plant_pot": "plant", "bush_green": "plant", "grass_tuft": "plant", "flower_purple": "plant",
-    "flower_tiny": "plant", "pond_reeds": "plant", "tree_big": "plant", "tree_round": "plant",
-    "tree_autumn_orange": "plant", "tree_autumn_red": "plant", "crop_row_orange": "plant",
-    "crop_row_green": "plant", "crop_row_dark_green": "plant", "mushroom": "plant",
-    "mushroom_purple_l": "plant", "mushroom_purple_m": "plant", "mushroom_purple_s": "plant",
-    "hollow_mushroom_cluster": "plant", "hollow_canopy_tree": "plant", "hollow_small_tree": "plant",
-    "hollow_bent_tree": "plant",
-    "pebble": "rock", "boulder": "rock", "scree_spill": "rock", "hollow_glow_stone": "rock",
-    "dungeon_rubble": "debris", "grill": "tool",
-    "chest": "container", "chest_open": "container",
-    "facade_plaster": "wall_module", "inn_roof": "wall_module", "pallass_rail_post": "wall_module",
-    "dungeon_statue": "other", "pedestal": "other", "sewer_grate": "other", "dusty_scroll": "other",
-    "food_bread": "other", "food_ham": "other", "food_basket": "container",
-    "garden_fountain_basin": "other", "garden_fountain_statue": "other",
-}
+# Ground truth for the label check; the shared copy lives in wi_kits_lib so data_lint can read it.
+WIRED_KINDS = kl.WIRED_KINDS
 
 
 def _strip_check(note: str) -> str:
