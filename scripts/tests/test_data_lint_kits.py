@@ -646,6 +646,21 @@ class TestSharedArtReport(unittest.TestCase):
         self.assertIn("c1 = c2;", line)
         self.assertTrue(line.endswith("frame sheet(s) absent on disk, keyed by path"), line)
 
+    def test_alias_must_name_a_live_twin_with_a_reason(self):
+        sprites = copy.deepcopy(ART_SPRITES)
+        sprites["lamp_alias"] = {**copy.deepcopy(sprites["lamp_mine"]), "_alias_of": "lamp_mine", "_alias_reason": "quest pin"}
+        sprites["dangling"] = {**copy.deepcopy(sprites["lamp_mine"]), "_alias_of": "ghost", "_alias_reason": "x"}
+        sprites["drifted"] = {**copy.deepcopy(sprites["lamp_r"]), "_alias_of": "lamp_mine", "_alias_reason": "x"}
+        sprites["no_reason"] = {**copy.deepcopy(sprites["lamp_mine"]), "_alias_of": "lamp_mine", "_alias_reason": " "}
+        sprites["reason_only"] = {**copy.deepcopy(sprites["lamp_mine"]), "_alias_reason": "x"}
+        errors = []
+        data_lint.check_aliases(data_lint.ArtIdent(sprites, lambda _p: None), errors)
+        self.assertEqual([e for e in errors if "lamp_alias" in e], [])
+        self.assertTrue(any("sprites.dangling: _alias_of 'ghost' is not a sprites.json id" in e for e in errors), errors)
+        self.assertTrue(any("sprites.drifted: _alias_of 'lamp_mine' no longer draws the same art" in e for e in errors), errors)
+        self.assertTrue(any("sprites.no_reason: _alias_of needs a non-empty _alias_reason" in e for e in errors), errors)
+        self.assertTrue(any("sprites.reason_only: _alias_of 'None' is not a sprites.json id" in e for e in errors), errors)
+
     def test_real_tree_reports_the_twelve_groups(self):
         r = subprocess.run([sys.executable, str(GAME / "scripts" / "data_lint.py")], capture_output=True, text=True, cwd=str(REPO_ROOT))
         self.assertEqual(r.returncode, 0, r.stderr)

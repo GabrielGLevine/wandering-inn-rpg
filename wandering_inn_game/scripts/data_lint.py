@@ -1635,6 +1635,22 @@ def report_shared_art(ident: ArtIdent, resolved: dict, regions: dict, report: li
 		f"({n_cross} cross-region; report only){': ' + '; '.join(parts) if parts else ''}{tail}")
 
 
+def check_aliases(ident: ArtIdent, errors: list) -> None:
+	"""#623 review M6: an `_alias_of` (written by wire_asset --alias-of) names an existing id
+	that still draws the same art, and carries a non-empty `_alias_reason`."""
+	for sid, entry in sorted(ident.sprites.items()):
+		if not isinstance(entry, dict) or not ({"_alias_of", "_alias_reason"} & set(entry)):
+			continue
+		target, reason = entry.get("_alias_of"), entry.get("_alias_reason")
+		if not isinstance(reason, str) or not reason.strip():
+			errors.append(f"sprites.{sid}: _alias_of needs a non-empty _alias_reason")
+		if not isinstance(target, str) or target not in ident.sprites:
+			errors.append(f"sprites.{sid}: _alias_of '{target}' is not a sprites.json id")
+		elif ident(target) != ident(sid):
+			errors.append(f"sprites.{sid}: _alias_of '{target}' no longer draws the same art "
+				f"({kl.identity_label(ident(sid))} vs {kl.identity_label(ident(target))})")
+
+
 def _common_utility(p: dict, region: str, kits: dict) -> bool:
 	"""#623: the placement resolved through a _common Tier A role. A region role of the same
 	name resolves first (wi_kits_lib.lookup), so it never counts here."""
@@ -3591,6 +3607,7 @@ def main() -> int:
 		baseline_path.write_text(json.dumps(baseline, indent=1, sort_keys=True) + "\n")
 		report.append("kits G3: baseline regenerated -- add a CHOICE-LOG line")
 	report_shared_art(art_ident, resolved_maps, _map_regions(parsed), report)
+	check_aliases(art_ident, errors)
 	check_kit_gates(resolved_maps, _map_regions(parsed), parsed.get(DATA / "kits.json") or {}, parsed,
 		errors, advisories, report, base_ref=base_ref, baseline=baseline, ident=art_ident)
 	check_moods(parsed, maps, errors)
