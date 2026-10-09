@@ -1,5 +1,5 @@
 {
- "_comment": "G3 scene-repetition ratchet (#607). Regenerate ONLY with `data_lint.py --regen-scene-baseline`, and every regen needs a CHOICE-LOG line saying why. generic = sprite placed in >= 3 regions.",
+ "_comment": "G3 scene-repetition ratchet (#607). Regenerate ONLY with `data_lint.py --regen-scene-baseline`, and every regen needs a CHOICE-LOG line saying why. generic = a sprite whose art (wi_kits_lib.art_identity, #623) is placed in >= 3 regions under any id.",
  "generic_class": {
   "a_shepherd": "regional",
   "alchemy_bench": "generic",
@@ -140,7 +140,7 @@
   "invrisil_door_street_2": "regional",
   "invrisil_door_street_3": "regional",
   "invrisil_enforcer": "regional",
-  "invrisil_facade_window_1": "regional",
+  "invrisil_facade_window_1": "generic",
   "invrisil_facade_window_3": "regional",
   "invrisil_flower_cart": "regional",
   "invrisil_gentlewoman_2": "regional",
@@ -278,7 +278,7 @@
   "watchgolem": "regional",
   "wax_seal_tray": "regional",
   "wilovan": "regional",
-  "window_blue": "regional",
+  "window_blue": "generic",
   "window_blue__alt1": "regional",
   "witch_cauldron": "regional",
   "witch_cottage": "regional",
@@ -338,27 +338,27 @@
    "placements": 29
   },
   "inn": {
-   "generic_placements": 35,
-   "generic_share_pct": 50.0,
+   "generic_placements": 39,
+   "generic_share_pct": 55.71,
    "maps": {
     "inn": {
-     "generic_placements": 20,
+     "generic_placements": 22,
      "placements": 50
     },
     "inn_player_room": {
-     "generic_placements": 8,
+     "generic_placements": 9,
      "placements": 11
     },
     "inn_upstairs": {
-     "generic_placements": 7,
+     "generic_placements": 8,
      "placements": 9
     }
    },
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 52,
-   "generic_share_pct": 26.67,
+   "generic_placements": 58,
+   "generic_share_pct": 29.74,
    "maps": {
     "adventurers_rest": {
      "generic_placements": 6,
@@ -377,11 +377,11 @@
      "placements": 5
     },
     "invrisil_boulevard": {
-     "generic_placements": 2,
+     "generic_placements": 5,
      "placements": 51
     },
     "invrisil_cross_street": {
-     "generic_placements": 1,
+     "generic_placements": 4,
      "placements": 31
     },
     "mercantile_alleys": {
@@ -442,8 +442,8 @@
    "placements": 96
   },
   "riverfarm": {
-   "generic_placements": 29,
-   "generic_share_pct": 24.79,
+   "generic_placements": 30,
+   "generic_share_pct": 25.64,
    "maps": {
     "riverfarm_longhouse": {
      "generic_placements": 7,
@@ -462,7 +462,7 @@
      "placements": 32
     },
     "witch_hut": {
-     "generic_placements": 5,
+     "generic_placements": 6,
      "placements": 9
     }
    },

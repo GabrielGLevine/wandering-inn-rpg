@@ -239,7 +239,7 @@ class TestGates(unittest.TestCase):
                                   base_ref=None, baseline=None)
         self.assertEqual([e for e in errors if "G2" in e], [])  # 2/3 over the converted map; 2/9 region-wide
         line = next(r for r in report if r.startswith("kits G2: r identity"))
-        self.assertIn("66.67% unique variants over 1 converted map(s)", line)
+        self.assertIn("66.67% unique art over 1 converted map(s)", line)
         self.assertIn("22.22% region-wide (report only)", line)
 
     def test_g2_converted_map_below_half_fails_even_when_region_passes(self):
@@ -410,9 +410,35 @@ class TestGates(unittest.TestCase):
         self.assertEqual(set(baseline), {"_comment", "tolerance", "generic_class", "regions"})
         parsed, maps = data_lint._lint_inputs()
         resolved = data_lint.check_kits(parsed, maps, [], [], [])
-        regen = data_lint.build_scene_baseline(resolved, data_lint._map_regions(parsed), baseline["tolerance"])
+        regen = data_lint.build_scene_baseline(resolved, data_lint._map_regions(parsed), baseline["tolerance"],
+                                               data_lint.ArtIdent.from_parsed(parsed))
         self.assertEqual(regen["regions"], baseline["regions"])
         self.assertEqual(regen["generic_class"], baseline["generic_class"])
+
+class TestGatesArtMode(TestGates):
+    """#623 review M4: every TestGates case again with an art ident, as production runs them
+    (in SPRITES, c1 = c2 and c3 = own_a = own_b are one picture each)."""
+
+    def setUp(self):
+        real, ident = data_lint.check_kit_gates, data_lint.ArtIdent(SPRITES, lambda _path: None)
+
+        def with_art(*args, **kwargs):
+            kwargs.setdefault("ident", ident)
+            return real(*args, **kwargs)
+        patcher = mock.patch.object(data_lint, "check_kit_gates", with_art)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def test_converted_scope_counts_art_where_ids_diverge(self):
+        conv = {**GRID, "entities": [], "decor": [row("c3", 0, role="cargo"), row("c3", 3, role="cargo"), row("c1", 5, 5)]}
+        resolved = {"conv": conv, "other": {**GRID, "entities": [], "decor": [row("c2", 0)]}}
+        report = []
+        data_lint.check_kit_gates(resolved, {"conv": "r", "other": "q"}, KITS, [], [], [], report, base_ref=None, baseline=None)
+        self.assertIn("66.67% unique art", next(r for r in report if r.startswith("kits G2: r identity")))
+        report = []
+        data_lint.check_kit_gates(resolved, {"conv": "r", "other": "q"}, KITS, [], [], [], report, base_ref=None, baseline=None, ident=None)
+        self.assertIn("100.0% unique art", next(r for r in report if r.startswith("kits G2: r identity")), "id mode: c1 looks unique")
+
 
 class TestFixRound1(unittest.TestCase):
     def test_base_maps_load_real_ref(self):
@@ -481,6 +507,222 @@ class TestFixRound1(unittest.TestCase):
         self.assertTrue(any("biome cave shared with 2 regions" in r for r in report), report)
         self.assertTrue(any("biome cave" in a for a in adv))
         self.assertEqual([e for e in errors if "biome" in e], [])
+
+
+PACK = {"sheet": "res://assets/pack.png", "frame_size": [16, 32]}
+ART_SPRITES = {**copy.deepcopy(SPRITES),
+               "lamp_r": {"animations": {"idle": {**PACK, "region": [0, 0, 16, 32]}}},
+               "lamp_q": {"animations": {"idle": {**PACK, "region": [0, 0, 16, 32]}}, "render_scale": 0.5, "fallback_sprite": "own_b"},
+               "lamp_mine": {"animations": {"idle": {**PACK, "region": [16, 0, 16, 32]}}},
+               "door": {"animations": {"idle": {**PACK, "region": [32, 0, 16, 32]}}},
+               "barrel": {"animations": {"idle": {**PACK, "region": [48, 0, 16, 32]}}}}
+ART_SPRITES["c1"]["kind"] = ART_SPRITES["c2"]["kind"] = "crate"   # recorded kinds, as wire_asset writes them
+UTIL_KITS = copy.deepcopy(KITS)
+UTIL_KITS["_common"]["roles"]["utility"] = {"kind": "crate", "pick": "cell", "pool": ["c1", "c2", "c3"]}
+
+
+def gates(resolved, regions, kits=KITS, art=True, baseline=None):
+    errors, advisories, report = [], [], []
+    ident = data_lint.ArtIdent(ART_SPRITES, lambda _path: None) if art else None
+    data_lint.check_kit_gates(resolved, regions, kits, [], errors, advisories, report,
+                              base_ref=None, baseline=baseline, ident=ident)
+    return errors, advisories, report
+
+
+def row(sprite, x, y=0, role=""):
+    return {"sprite": sprite, "cell": [x, y], **({"sprite_role": role} if role else {})}
+
+
+class TestArtIdentityG2(unittest.TestCase):
+    """#623: G2 counts art identity; _common holds the utility Tier A only, capped at 30%."""
+
+    def test_two_ids_of_one_picture_in_two_regions_are_exclusive_to_neither(self):
+        resolved = {"m": {**GRID, "entities": [], "decor": [row("c3", 0, role="cargo"), row("lamp_r", 1), row("lamp_r", 2)]},
+                    "o": {**GRID, "entities": [], "decor": [row("lamp_q", 0)]}}
+        regions = {"m": "r", "o": "q"}
+        errors, _, report = gates(resolved, regions, art=False)
+        self.assertEqual([e for e in errors if "G2" in e], [], "by id, lamp_r looks exclusive to r")
+        errors, _, report = gates(resolved, regions)
+        self.assertTrue(any("G2 identity" in e and "33.33%" in e for e in errors), errors)
+        resolved["o"]["decor"] = [row("lamp_mine", 0)]
+        errors, _, _ = gates(resolved, regions)
+        self.assertEqual([e for e in errors if "G2" in e], [], "different art in q leaves r exclusive")
+
+    def _util_map(self, n_util):
+        decor = [row("c1", i, 1, "utility") for i in range(n_util)]
+        decor += [row("c3", i, 2, "cargo") for i in range(4)] + [row("c2", i, 3) for i in range(3)]
+        return {"m": {**GRID, "entities": [], "decor": decor},
+                "o": {**GRID, "entities": [], "decor": [row("c1", 0), row("c2", 1)]}}
+
+    def test_tier_a_common_placements_leave_numerator_and_denominator(self):
+        errors, _, report = gates(self._util_map(3), {"m": "r", "o": "q"}, UTIL_KITS)
+        self.assertEqual([e for e in errors if "G2" in e], [], errors)
+        line = next(r for r in report if r.startswith("kits G2: r identity"))
+        self.assertIn("57.14% unique art", line)  # 4 of 7: the 3 utility rows are out of both sides
+        self.assertIn("_common utility 3/10 (30.0%, cap 30%", line)
+        kits = copy.deepcopy(UTIL_KITS)
+        kits["r"]["roles"]["utility"] = {"pick": "cell", "pool": ["c1", "c2", "c3"]}
+        errors, _, _ = gates(self._util_map(3), {"m": "r", "o": "q"}, kits)
+        self.assertTrue(any("G2 identity" in e and "40.0%" in e for e in errors), "a region role of the same name counts")
+
+    def test_region_unique_utility_art_leaves_the_numerator_too(self):
+        # #623 review M5: counted, the 3 utility rows (art unique to r) would lift 3/7 to 6/10 and pass
+        decor = ([row("lamp_mine", i, 1, "utility") for i in range(3)] + [row("c3", i, 2, "cargo") for i in range(3)]
+                 + [row("c2", i, 3) for i in range(4)])
+        resolved = {"m": {**GRID, "entities": [], "decor": decor}, "o": {**GRID, "entities": [], "decor": [row("c2", 0)]}}
+        errors, _, report = gates(resolved, {"m": "r", "o": "q"}, UTIL_KITS)
+        self.assertTrue(any("G2 identity" in e and "42.86%" in e for e in errors), errors)
+        self.assertTrue(any("_common utility 3/10" in r for r in report), report)
+
+    def test_non_tier_a_common_role_placements_are_counted(self):
+        # #623 review M5: the old code excluded every _common role name; only Tier A leaves G2 now
+        kits = copy.deepcopy(KITS)
+        kits["_common"]["roles"]["street_lamp"] = {"kind": "lamp", "pick": "cell", "pool": ["lamp_mine", "c3"]}
+        decor = ([row("lamp_mine", i, 1, "street_lamp") for i in range(3)] + [row("c3", i, 2, "cargo") for i in range(3)]
+                 + [row("c2", i, 3) for i in range(4)])
+        resolved = {"m": {**GRID, "entities": [], "decor": decor}, "o": {**GRID, "entities": [], "decor": [row("c2", 0)]}}
+        errors, _, report = gates(resolved, {"m": "r", "o": "q"}, kits)
+        self.assertEqual([e for e in errors if "G2" in e], [], errors)
+        line = next(r for r in report if r.startswith("kits G2: r identity"))
+        self.assertIn("60.0% unique art", line)
+        self.assertIn("_common utility 0/10", line)
+
+    def test_common_cap_passes_at_30_and_fails_above(self):
+        errors, _, _ = gates(self._util_map(3), {"m": "r", "o": "q"}, UTIL_KITS)
+        self.assertEqual([e for e in errors if "cap" in e], [])
+        errors, _, _ = gates(self._util_map(4), {"m": "r", "o": "q"}, UTIL_KITS)
+        self.assertTrue(any("G2 _common cap" in e and "4/11" in e and "over 30%" in e for e in errors), errors)
+
+    def test_cap_holds_for_a_region_whose_own_kit_has_no_pools(self):
+        kits = copy.deepcopy(UTIL_KITS); kits["q"] = {"materials": {}, "roles": {}, "cast": []}
+        resolved = {"o": {**GRID, "entities": [], "decor": [row("c1", 0, 0, "utility"), row("c2", 1)]}}
+        errors, _, _ = gates(resolved, {"o": "q"}, kits)
+        self.assertTrue(any("G2 _common cap: q" in e for e in errors), errors)
+
+
+class TestArtIdentityG3(unittest.TestCase):
+    """#623: G3 classes generic/regional on art identity."""
+    THREE = {"m": {**GRID, "entities": [], "decor": [row("lamp_r", 0)]},
+             "o": {**GRID, "entities": [], "decor": [row("lamp_q", 0)]},
+             "p": {**GRID, "entities": [], "decor": [row("lamp_q", 0), row("lamp_mine", 1)]}}
+    REGIONS = {"m": "r", "o": "q", "p": "s"}
+
+    def test_baseline_classes_each_id_by_its_art(self):
+        ident = data_lint.ArtIdent(ART_SPRITES, lambda _path: None)
+        art = data_lint.build_scene_baseline(self.THREE, self.REGIONS, {"placements": 1, "pp": 2}, ident)
+        self.assertEqual(art["generic_class"], {"lamp_r": "generic", "lamp_q": "generic", "lamp_mine": "regional"})
+        self.assertEqual(art["regions"]["r"]["generic_placements"], 1)
+        by_id = data_lint.build_scene_baseline(self.THREE, self.REGIONS, {"placements": 1, "pp": 2})
+        self.assertEqual(by_id["generic_class"]["lamp_r"], "regional", "by id, lamp_r sits in one region")
+
+    def test_unbaselined_id_is_classed_on_the_fly_by_its_art(self):
+        baseline = {"tolerance": {"placements": 1, "pp": 2}, "generic_class": {"lamp_mine": "regional"},
+                    "regions": {"s": {"placements": 2, "generic_placements": 0, "generic_share_pct": 0.0,
+                                      "maps": {"p": {"placements": 2, "generic_placements": 0}}}}}
+        errors, _, report = gates(self.THREE, self.REGIONS, baseline=baseline)
+        self.assertTrue(any("G3 ratchet: s generic share 50.0%" in e for e in errors), errors)
+        self.assertTrue(any("classed on the fly" in r for r in report), report)
+        errors, _, _ = gates(self.THREE, self.REGIONS, baseline=baseline, art=False)
+        self.assertEqual([e for e in errors if "G3" in e], [], "by id, lamp_q sits in two regions and stays regional")
+
+
+class TestSharedArtReport(unittest.TestCase):
+    """#623: a REPORT line lists art carried by more than one sprite id (never an error)."""
+
+    def test_groups_cross_region_and_alias_marks(self):
+        sprites = copy.deepcopy(ART_SPRITES)
+        sprites["lamp_alias"] = {**copy.deepcopy(sprites["lamp_mine"]), "_alias_of": "lamp_mine", "_alias_reason": "test"}
+        ident = data_lint.ArtIdent(sprites, kl_hasher_missing())
+        resolved = {"m": {**GRID, "entities": [], "decor": [row("lamp_r", 0), row("lamp_mine", 1)]},
+                    "o": {**GRID, "entities": [], "decor": [row("lamp_q", 0)]}}
+        report = []
+        data_lint.report_shared_art(ident, resolved, {"m": "r", "o": "q"}, report)
+        self.assertEqual(len(report), 1)
+        line = report[0]
+        self.assertTrue(line.startswith("kits art: 5 art identities carry more than one sprite id (1 cross-region; report only): "), line)
+        self.assertIn("lamp_q = lamp_r CROSS-REGION [q, r]", line)
+        self.assertIn("lamp_alias (alias) = lamp_mine;", line)
+        self.assertNotIn("lamp_mine CROSS", line, "both ids of that picture sit in r only")
+        self.assertIn("c1 = c2;", line)
+        self.assertTrue(line.endswith("frame sheet(s) absent on disk, keyed by path"), line)
+
+    def test_alias_must_name_a_live_twin_with_a_reason(self):
+        sprites = copy.deepcopy(ART_SPRITES)
+        sprites["lamp_alias"] = {**copy.deepcopy(sprites["lamp_mine"]), "_alias_of": "lamp_mine", "_alias_reason": "quest pin"}
+        sprites["dangling"] = {**copy.deepcopy(sprites["lamp_mine"]), "_alias_of": "ghost", "_alias_reason": "x"}
+        sprites["drifted"] = {**copy.deepcopy(sprites["lamp_r"]), "_alias_of": "lamp_mine", "_alias_reason": "x"}
+        sprites["no_reason"] = {**copy.deepcopy(sprites["lamp_mine"]), "_alias_of": "lamp_mine", "_alias_reason": " "}
+        sprites["reason_only"] = {**copy.deepcopy(sprites["lamp_mine"]), "_alias_reason": "x"}
+        errors = []
+        data_lint.check_aliases(data_lint.ArtIdent(sprites, lambda _p: None), errors)
+        self.assertEqual([e for e in errors if "lamp_alias" in e], [])
+        self.assertTrue(any("sprites.dangling: _alias_of 'ghost' is not a sprites.json id" in e for e in errors), errors)
+        self.assertTrue(any("sprites.drifted: _alias_of 'lamp_mine' no longer draws the same art" in e for e in errors), errors)
+        self.assertTrue(any("sprites.no_reason: _alias_of needs a non-empty _alias_reason" in e for e in errors), errors)
+        self.assertTrue(any("sprites.reason_only: _alias_of 'None' is not a sprites.json id" in e for e in errors), errors)
+
+    def test_real_tree_reports_the_twelve_groups(self):
+        r = subprocess.run([sys.executable, str(GAME / "scripts" / "data_lint.py")], capture_output=True, text=True, cwd=str(REPO_ROOT))
+        self.assertEqual(r.returncode, 0, r.stderr)
+        line = next(l for l in r.stdout.splitlines() if "REPORT -- kits art:" in l)
+        self.assertIn("invrisil_facade_window_1 = window_blue CROSS-REGION [inn, invrisil, riverfarm]", line)
+        self.assertRegex(line, r"kits art: 1[12] art identities")  # 11 without the overlay: body_a's sheet is bundle-only
+
+
+def kl_hasher_missing():
+    """A SheetHasher rooted where no sheet exists, so every frame sheet keys on its path."""
+    return data_lint.kl.SheetHasher(Path("/nonexistent-wi-623"))
+
+
+class TestCommonTierA(unittest.TestCase):
+    def errs(self, role, where="_common"):
+        k = copy.deepcopy(KITS); k[where]["roles"]["utility"] = role
+        return [e for e in run_with_sprites(ART_SPRITES, k) if "utility" in e]
+
+    def test_tier_a_roles_pass(self):
+        for kind in ("crate", "barrel", "sack", "container"):
+            self.assertEqual(self.errs({"kind": kind, "pool": ["c1", "c2", "barrel"]}), [], kind)
+
+    def test_other_kinds_are_rejected(self):
+        self.assertTrue(any("not a _common utility kind" in e for e in self.errs({"kind": "lamp", "pool": ["c1", "c2"]})))
+        self.assertTrue(any("closed vocabulary" in e for e in self.errs({"kind": "spaceship", "pool": ["c1", "c2"]})))
+
+    def test_kind_is_required_on_common_roles(self):
+        self.assertTrue(any('declaring "kind"' in e for e in self.errs({"pool": ["c1", "c2"]})))
+        self.assertTrue(any('declaring "kind"' in e for e in self.errs("c3")))
+        self.assertEqual(self.errs({"pool": ["c1", "c2"]}, where="r"), [], "region roles need no kind")
+
+    def test_wired_kind_vocabulary_rejects_a_door_in_a_crate_role(self):
+        self.assertEqual(data_lint.kl.WIRED_KINDS["door"], "door")
+        errs = self.errs({"kind": "crate", "pool": ["c1", "c2", "door"]})
+        self.assertTrue(any("pool id 'door' is a door" in e for e in errs), errs)
+
+    def test_region_role_kind_must_be_in_the_vocabulary(self):
+        self.assertTrue(any("closed vocabulary" in e for e in self.errs({"kind": "spaceship", "pool": ["c1", "c2"]}, where="r")))
+        self.assertEqual(self.errs({"kind": "lamp", "pool": ["c1", "c2"]}, where="r"), [])
+
+    def test_unknown_kind_fails_closed(self):
+        # #623 review I2: c3 has neither a recorded kind nor a WIRED_KINDS row
+        errs = self.errs({"kind": "crate", "pool": ["c1", "c2", "c3"]})
+        self.assertTrue(any("pool id 'c3' has no kind on record" in e for e in errs), errs)
+        self.assertEqual([e for e in errs if "'c1'" in e or "'c2'" in e], [], "recorded crates pass")
+
+    def test_recorded_kind_wins_over_wired_kinds(self):
+        sprites = copy.deepcopy(ART_SPRITES)
+        sprites["door"]["kind"] = "crate"     # a hand-declared, reviewable per-id kind
+        sprites["c1"]["kind"] = "lamp"
+        k = copy.deepcopy(KITS); k["_common"]["roles"]["utility"] = {"kind": "crate", "pool": ["c2", "door", "c1"]}
+        errs = [e for e in run_with_sprites(sprites, k) if "utility" in e]
+        self.assertEqual([e for e in errs if "'door'" in e], [])
+        self.assertTrue(any("pool id 'c1' is a lamp" in e for e in errs), errs)
+
+    def test_sprite_kind_must_be_in_the_vocabulary(self):
+        sprites = copy.deepcopy(ART_SPRITES); sprites["c3"]["kind"] = "spaceship"
+        self.assertTrue(any("sprites.c3: kind 'spaceship'" in e for e in run_with_sprites(sprites)))
+
+    def test_real_common_pool_stays_empty_until_its_read(self):
+        kits = json.loads((GAME / "data" / "kits.json").read_text())
+        self.assertEqual(kits["_common"]["roles"], {})
 
 
 class TestBiomeRows(unittest.TestCase):
