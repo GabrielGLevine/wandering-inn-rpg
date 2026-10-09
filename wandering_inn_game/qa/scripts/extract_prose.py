@@ -1366,6 +1366,39 @@ HOLDOUT_EXCLUSIONS = {
                       "foreshadow survives without lying about the fight the "
                       "player just finished.",
     },
+    # --- #513 (user-ruled Pallass re-theme, approved design
+    # docs/design/513-pallass-income.md section 4.3) ------------------------
+    # ledger_eats_first stopped being a paperwork queue for a crate of tin and
+    # became a refused rune-set oven regulator (City of Inventions). The tin and
+    # the office countersign no longer exist in the fiction, so three attendant
+    # strings had to move with it. Content fix forced by a ruled redesign, not
+    # a prose edit; the control was already spent (#406 draws a fresh holdout).
+    "dlg:pallass_lift_attendant.json:$.nodes.hub.text_variants[0].text": {
+        "excluded": True,
+        "excluded_reason": "changed by the #513 Pallass re-theme (user "
+                           "ruling 2026-10-08), not by the prose pass",
+        "what_moved": "one noun, `tin` -> `charcoal`: the crate of tin is "
+                      "now a regulator the cage refuses, and charcoal is "
+                      "what the cage still carries. Sentence shape unchanged.",
+    },
+    "dlg:pallass_lift_attendant.json:$.nodes.ledger_report.options[0].text": {
+        "excluded": True,
+        "excluded_reason": "changed by the #513 Pallass re-theme (user "
+                           "ruling 2026-10-08), not by the prose pass",
+        "what_moved": "the TALK route's report row: the offices that "
+                      "countersigned each other are gone, so the row names "
+                      "what replaced them ('[Xif's ink, the smith's lead. It "
+                      "rides the cage now.]'). Same gate, same effect.",
+    },
+    "dlg:pallass_lift_attendant.json:$.nodes.traffic.text": {
+        "excluded": True,
+        "excluded_reason": "changed by the #513 Pallass re-theme (user "
+                           "ruling 2026-10-08), not by the prose pass",
+        "what_moved": "'one crate of tin that has been late three cycles' "
+                      "-> 'one crate my cage won't take', a Garuda runner "
+                      "joins the morning's traffic (the ruled multi-racial "
+                      "Pallass), and the lift pass is now a token.",
+    },
 }
 EXCLUSIONS_NOTE = (
     "verify-untouched SKIPS these ids and reports them by count; the blind "

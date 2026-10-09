@@ -8,6 +8,8 @@ Read `docs/dialogue-voice-bible.md` first. **The smith's reveal LOSES its shape*
 
 **FORCED:** Hands-keep-working (move 2) at least twice — she talks through the hammer. Forge jargon: billet, temper, slab, tongs, second bell, tolerance. Sentences shorten when the apprentice comes up. PEAK: `commission_settled` tv[2] — "we agreed the entire time. Do not repeat that. Especially to him." is the file's one button and stays (rework "the entire time" → "all six years" to clear ban 6's cousin-phrasing).
 
+**#513 (2026-10-08):** smiths-and-alchemists re-theme. The examiner is a Dullahan with a bend jig (on screen in the hall); the `broker` reveal is the jig's second notch plus her own fast quench (Xif's blend), kept as procedure, not a reframe. `commission_settled` tv[2] stays the PEAK ("all six years"). New appended nodes `lead_wrap`/`lead_wrapped` (the regulator's lead wrap) keep hands-keep-working.
+
 **CANON-VOICE:** A Pallass forge-tier smith: Drake city craft culture, spec-bound and proud of it. Teaching pride and teaching guilt in the same hands — she taught the apprentice the wrong instinct and pays attention accordingly. Affection is expressed as bench access and corrections.
 
 **SAMPLE:** node `broker` —
@@ -21,6 +23,8 @@ All facts survive — the notice, the recovery standard, her teaching, the nine 
 **BANNED:** Ban 9 adjacency: "The release side is held because this office is waiting on its own supplies, which are in the queue." (`queue_release`) — trims to plain procedure; no self-referential loop, that gag's single survivor lives in the lift attendant's file. Ban 2: "which is the only part of this that was ever simple." (`queue_release_done`) — button; dies. Watch-list: "so we are finally in agreement about something" — wit; the clerk's register is now T3 dull-formal, so it flattens. "It is generally no. It is not no today." — keep; procedural, flat, and quietly human.
 
 **FORCED:** T3 stats, procedural-formal: posted prices, filing verbs, cross-references to offices by title. No wit anywhere — the clerk is the one Pallass functionary who is *genuinely dull*, which the corpus needs (critique tell 10). Contractions rare. PEAK: no button.
+
+**#513 (2026-10-08):** fitness re-theme. The window books Grimalkin's exam floor and cuts a lift token to the load class he writes; same T3 procedural register, no paper texture. The queue-release nodes moved off this file (to the smith).
 
 **CANON-VOICE:** A forge-tier records clerk in Pallass, the City of Inventions: nine tiers of procedure and proud of every stamp. Not obstructive, not kind — exactly correct. Grimalkin reads fitness; this window only handles paper, and says so often.
 

@@ -3770,7 +3770,7 @@
    "script": "pallass_walkthrough",
    "seed": 9,
    "fixture": "near_pallass",
-   "note": "8e E1 (issue #16, the milestone's exit-criteria canonical): the LIVE end-to-end 'Papers for Pallass' + 'Clearance for the Forge Tier' route -- Selys sponsors (10g) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g) -> real travel to pallass_market's arrival cell (4,8) -- the negative lift-locked read pre-permit -- the checkpoint clerk's 2g stamp + the human race-variant read, completing papers_for_pallass -- THE PERMIT OFFICE chain (5g file, Grimalkin's 8g exam voiced verbatim, 3g stamp), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT open, a real walk across the forge tier to grimalkin_station and the round trip back down; gold ledger exact at every spend (60->50->32->30->25->17->14); zero combat whole run",
+   "note": "8e E1 (issue #16, the milestone's exit-criteria canonical): the LIVE end-to-end 'Papers for Pallass' + 'Fit for the Forge Tier' (#513 re-theme of 'Clearance for the Forge Tier') route -- Selys sponsors (10g) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g) -> real travel to pallass_market's arrival cell (4,8) -- the negative lift-locked read pre-permit -- the checkpoint clerk's 2g stamp + the human race-variant read, completing papers_for_pallass -- THE EXAM-FLOOR chain (5g booking, Grimalkin's 8g read voiced verbatim, 3g lift token), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT open, a real walk across the forge tier to grimalkin_station and the round trip back down; gold ledger exact at every spend (60->50->32->30->25->17->14); zero combat whole run",
    "tiers": [
     "full"
    ],
@@ -3811,7 +3811,7 @@
    "script": "pallass_depth_gates_check",
    "seed": 9,
    "fixture": "pallass_depth_gates_start",
-   "note": "v0.16 #307 THE GATE-PROOF LEG: stands on a save holding NONE of the Pallass depth lane's 22 counters and proves nothing new leaked into it -- the smith's hub and the attendant's hub still render exactly three rows (the lane's only two option-array pins), both clerk hubs unchanged, both requires_skill props (temper bench, consignee's file) render their locked_toast through the skill_unknown seam and bank nothing, the temper golem STANDS at (8,6) present and INERT -- encounter_when is an interact/trigger gate, never structural absence (present_when is validator-forbidden on encounters), so the rig blocks the cell and the gate is proved at the interact: player_blocked on (8,6), then the refusal's gate_closed_toast, with combat_started and the forge_temper_golem parley both asserted ABSENT -- and the run closes with assert_event_absent over all sixteen quest-shaped counters plus combat_started. Cheapest failure detector in the lane; registered in both tiers",
+   "note": "v0.16 #307 THE GATE-PROOF LEG: stands on a save holding NONE of the Pallass depth lane's 22 counters and proves nothing new leaked into it -- the smith's hub and the attendant's hub still render exactly three rows (the lane's only two option-array pins), both clerk hubs unchanged, both requires_skill props (temper bench, maker's drawings) render their locked_toast through the skill_unknown seam and bank nothing, the temper golem STANDS at (8,6) present and INERT -- encounter_when is an interact/trigger gate, never structural absence (present_when is validator-forbidden on encounters), so the rig blocks the cell and the gate is proved at the interact: player_blocked on (8,6), then the refusal's gate_closed_toast, with combat_started and the forge_temper_golem parley both asserted ABSENT -- and the run closes with assert_event_absent over all sixteen quest-shaped counters plus combat_started. Cheapest failure detector in the lane; registered in both tiers",
    "tiers": [
     "smoke",
     "full"
@@ -3849,7 +3849,7 @@
    "script": "pallass_standards_talk",
    "seed": 9,
    "fixture": "pallass_standards_talk_start",
-   "note": "v0.16 #307 P1 'Tempered Standards' TALK route: read the examination standard in pallass_forge_hall (it measures RECOVERY, not hardness), carry it back to the smith, broker the six-year argument (standards_brokered) and settle the commission on that arm alone (standards_tempered) -- temper_run and golem_recalibrated provably unbanked, zero combat -- then down to the market tier for Grimalkin's NEW standards_tempered hub text_variant, the lane's only edit to his graph (ruling 4: text_variants only, three scripts pin his option array)",
+   "note": "v0.16 #307 P1 'Tempered Standards' TALK route: greet the Dullahan examiner at his jig and read the bend jig in pallass_forge_hall (#513 re-theme: its second notch measures RECOVERY), carry it back to the smith, broker the six-year argument (standards_brokered) and settle the commission on that arm alone (standards_tempered) -- temper_run and golem_recalibrated provably unbanked, zero combat -- then down to the market tier for Grimalkin's NEW standards_tempered hub text_variant, the lane's only edit to his graph (ruling 4: text_variants only, three scripts pin his option array)",
    "tiers": [
     "full"
    ],
@@ -3944,7 +3944,7 @@
    "script": "pallass_ledger_offices",
    "seed": 9,
    "fixture": "pallass_ledger_offices_start",
-   "note": "v0.16 #307 P2 'The Ledger Eats First' TALK route, the office loop that outranks itself: the Grand Lift down as a real door_when crossing, the market tier clerk ENDORSES the queue entry, the forge-tier permit clerk COUNTERSIGNS the release, the den-shop consignee signs last (loop_walked) -- each office's arm is requires-gated on the previous office's product, so the three-way cycle can only be walked in order -- then back up to the attendant (ledger_unstuck). shipment_carried and exemption_found provably unbanked",
+   "note": "v0.16 #307 P2 'The Crate the Cage Refuses' (#513 re-theme of 'The Ledger Eats First') TALK route: the Grand Lift down as a real door_when crossing, Xif names his rune-ink and prescribes two fingers of lead (queue_notice_endorsed), back up the lift the forge smith folds the lead wrap (queue_notice_countersigned), down again the den keeper takes delivery (loop_walked) -- each arm is requires-gated on the previous one's product and appended last on its hub, so the chain can only be walked in order -- then back up to the attendant (ledger_unstuck). shipment_carried and exemption_found provably unbanked",
    "tiers": [
     "full"
    ],
@@ -3962,9 +3962,9 @@
     ],
     "dialogue": [
      "pallass_den_keeper",
-     "pallass_forge_clerk",
+     "pallass_forge_smith",
      "pallass_lift_attendant",
-     "pallass_market_clerk"
+     "xif"
     ],
     "systems": [
      "combat",
@@ -3978,7 +3978,7 @@
    "script": "pallass_ledger_carry",
    "seed": 9,
    "fixture": "pallass_ledger_offices_start",
-   "note": "v0.16 #307 P2 'The Ledger Eats First' HELP route and the ruling-7 proof: a staged lift carry composed ENTIRELY from shipped primitives (three once_per_waking props + variants counter thresholds + repeated door_when transitions), because the Grand Lift is one boolean-gated prop pair and no staged-transit affordance exists. Pins each leg's EXACT toast, which is what makes a dead variants threshold fail loud -- both staged toasts key on (leg index - 1), dray rank at 1 and dock at 2, since variants resolve BEFORE the interact banks. Three legs in ONE waking -> the keeper's carry arm -> the attendant",
+   "note": "v0.16 #307 P2 'The Crate the Cage Refuses' (#513 re-theme) HELP route, down the service stair and the ruling-7 proof: a staged lift carry composed ENTIRELY from shipped primitives (three once_per_waking props + variants counter thresholds + repeated door_when transitions), because the Grand Lift is one boolean-gated prop pair and no staged-transit affordance exists. Pins each leg's EXACT toast, which is what makes a dead variants threshold fail loud -- both staged toasts key on (leg index - 1), dray rank at 1 and dock at 2, since variants resolve BEFORE the interact banks. Three legs in ONE waking -> the keeper's carry arm -> the attendant",
    "tiers": [
     "full"
    ],
@@ -4010,7 +4010,7 @@
    "script": "pallass_ledger_skill",
    "seed": 9,
    "fixture": "pallass_ledger_skill_start",
-   "note": "v0.16 #307 P2 'The Ledger Eats First' SKILL route: standing inside pallass_den_shop (the fixture that makes MAP_REQUIRES['pallass_den_shop'] bite), read the consignee's own file through the requires_skill/on_skill_use seam and find the exemption that was on the paper the whole time (exemption_found), out through the shopfront door, a real market walk, the lift up, and the attendant's report on that arm alone (ledger_unstuck)",
+   "note": "v0.16 #307 P2 'The Crate the Cage Refuses' (#513 re-theme of 'The Ledger Eats First') SKILL route: standing inside pallass_den_shop (the fixture that makes MAP_REQUIRES['pallass_den_shop'] bite), read the maker's drawings through the requires_skill/on_skill_use seam and find the exemption that was on the paper the whole time (exemption_found), out through the shopfront door, a real market walk, the lift up, and the attendant's report on that arm alone (ledger_unstuck)",
    "tiers": [
     "full"
    ],
@@ -4033,6 +4033,139 @@
     "systems": [
      "combat",
      "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_row_scales",
+   "seed": 9,
+   "fixture": "pallass_row_start",
+   "note": "#513 'Room on the Row' TALK route, Skill-free arm, plus the design's pacing proof: 0 gold after the stone, walked through the Door with real input; the journal lead on arrival; quest started at the Gnoll trader before the stamp; the stallkeeper's [Charming Smile] row visible-locked; the public-scales challenge (heard_row_grievance) and weighing (weights_proved, a variants row); the row opens (row_opened, trader_placed); report pays exactly +12 gold and plains_wool_bale, quest_completed, journal route line, no second payout row. Then stamp 2, booking 5, Grimalkin's row 'needs 3 more gold', the bale sold for 8, the read 8, the token 3 and the lift in the same waking: 2 gold left, times_slept unchanged.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "pallass_forge",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_row_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "pallass_market_local",
+     "pallass_wool_trader"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "portals",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_row_smile",
+   "seed": 9,
+   "fixture": "pallass_row_smile_start",
+   "note": "#513 'Room on the Row' TALK route, Skill arm: [Diplomat] 1 holds [Charming Smile], so the stallkeeper's appended wool row opens counter three by itself (row_opened, trader_placed); report pays exactly +12 gold and plains_wool_bale, quest_completed, journal route line, no second payout row; the scales and help counters stay unbanked.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_row_smile_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_market_local",
+     "pallass_wool_trader"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_row_help",
+   "seed": 9,
+   "fixture": "pallass_row_market_start",
+   "note": "#513 'Room on the Row' HELP route: the trader names the den shop, two bales carried off her stack (leg 1, gated on the quest start) onto the den shop's cleared shelf through the real door (leg 2, gated on leg 1), the den keeper's appended wool row consigns them (wool_consigned, trader_placed); report pays exactly +12 gold and plains_wool_bale, quest_completed, journal help-route line, no second payout row; the stack reads plain afterward.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_den_shop",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_row_market_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_den_keeper",
+     "pallass_wool_trader"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_row_negatives",
+   "seed": 9,
+   "fixture": "pallass_row_market_start",
+   "note": "#513 'Room on the Row' negatives through real input: before the quest the stack, shelf and scales read plain and the stallkeeper/den keeper hubs are their shipped rows; after starting with nothing done there is no report row, the shelf will not bank before the stack, no consign row at zero legs, the scales will not weigh before the challenge, no proof row, and a confirm on the locked [Charming Smile] row banks nothing. Gold stays 0 and the quest never completes.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_den_shop",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_row_market_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_den_keeper",
+     "pallass_market_local",
+     "pallass_wool_trader"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
      "exploration",
      "quests"
     ]

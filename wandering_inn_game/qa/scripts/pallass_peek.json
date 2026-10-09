@@ -8,7 +8,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "pallass_market" },
   { "action": "assert_event_logged", "type": "ui_mood_applied", "payload_contains": { "map": "pallass_market" } },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "pallass_market", "floor_cells": 286, "blocked_cells": 80 } },
-  { "_comment": "v0.15 T4.1 re-derived: +2 market observables (ordinance wall, public scales). blocked_cells is unchanged on purpose -- entities block their own cell in the SIM but the payload counts `blocked` + wall segments only. v0.16 #307 re-derived AGAIN, 25 -> 27: the den shop door (12,4) and the dray rank (16,4), both UNCONDITIONAL.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 27, "fallbacks": 0 } },
+  { "_comment": "v0.15 T4.1 re-derived: +2 market observables (ordinance wall, public scales). blocked_cells is unchanged on purpose -- entities block their own cell in the SIM but the payload counts `blocked` + wall segments only. v0.16 #307 re-derived AGAIN, 25 -> 27: the den shop door (12,4) and the dray rank (16,4), both UNCONDITIONAL. #513 re-derived AGAIN, 27 -> 29: the Gnoll wool trader (2,4) and her bale stack (1,4), both UNCONDITIONAL.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 29, "fallbacks": 0 } },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "00_pallass_market_arrival_corner" },
 
@@ -139,7 +139,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "pallass_forge" },
   { "action": "assert_event_logged", "type": "ui_mood_applied", "payload_contains": { "map": "pallass_forge" } },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "pallass_forge", "floor_cells": 286, "blocked_cells": 85 } },
-  { "_comment": "v0.15 T4.1 re-derived: the tier went from 6 interactables and nobody to 15 (T4.4 adds the fetch slips) -- +2 NPCs (smith, lift attendant) and +6 observables. v0.16 #307 re-derived AGAIN, 16 -> 20: the forge hall door (15,3), the reject bin (10,4), the landing manifest (23,4) and the held pallet (19,4), all UNCONDITIONAL, so the count moves in every state and this pin is the only place it is asserted. blocked_cells stays 85 for the reason above -- entities block in the SIM, not in this payload.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 20, "fallbacks": 0 } },
+  { "_comment": "v0.15 T4.1 re-derived: the tier went from 6 interactables and nobody to 15 (T4.4 adds the fetch slips) -- +2 NPCs (smith, lift attendant) and +6 observables. v0.16 #307 re-derived AGAIN, 16 -> 20: the forge hall door (15,3), the reject bin (10,4), the landing manifest (23,4) and the held pallet (19,4), all UNCONDITIONAL, so the count moves in every state and this pin is the only place it is asserted. blocked_cells stays 85 for the reason above -- entities block in the SIM, not in this payload. #513 re-derived AGAIN, 20 -> 21: the Garuda runner (24,8), UNCONDITIONAL.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 21, "fallbacks": 0 } },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "10_pallass_forge_arrival_corner" },
 
@@ -200,6 +200,13 @@
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "leaned_on_the_parapet_rail" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You lean on the bronze rail. Warm brass under your palm; from the shaft, cold air and the clank of the cage somewhere below." }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "14c_forge_parapet_rail" },
+  { "_comment": "== #513: the Garuda runner (24,8), one cell south of this rail approach and clear of the Grand Lift sprite. Bump-face him; his first-waking line renders through the real message layer. ==", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [24, 8] } },
+  { "action": "assert_state", "path": "player_cell", "equals": [24, 7] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Garuda Runner", "text": "The quarter bell's an age off. I'll be on the ninth tier before it rings." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": { "text": "Garuda Runner: The quarter bell's an age off. I'll be on the ninth tier before it rings." }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "14c2_forge_garuda_runner" },
 
   { "_comment": "== 3/3: the slag heap (19,6), the tier's east working end. ==", "action": "teleport", "map": "pallass_forge", "cell": [19, 7] },
   { "action": "wait_frames", "frames": 10 },

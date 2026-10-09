@@ -226,13 +226,13 @@
    ],
    "display_name": "The Temper Bench",
    "sprite": "temper_bench",
-   "observe": "A billet clamped mid-process, the quench beside it, a gauge still reading where the last failure left it.",
+   "observe": "A billet clamped mid-process, two quench barrels beside it, a gauge still reading where the last failure left it.",
    "requires_skill": "appraise_goods",
    "skill_hint_toast": "Colour and quench you can read off the billet yourself. The count between them takes a trained eye — appraise it and the numbers come clear.",
    "locked_toast": "The gauge on the bench is reading in marks you do not know. Setting the count by guess would spoil the billet and the week of work in it.",
    "on_skill_use": {
     "accomplishment": "temper_run",
-    "toast": "[Appraise Goods] — You read the grain off the colour, hold the count two beats longer than the slate says, and quench. The billet comes out with the standard's own answer in it."
+    "toast": "[Appraise Goods] — You read the grain off the colour, set the fast oil aside for the slow barrel, and quench. On the jig, the billet comes back to the second notch."
    }
   },
   {
@@ -242,11 +242,11 @@
     7,
     2
    ],
-   "display_name": "The Examination Standard",
+   "display_name": "The Examiner's Bend Jig",
    "sprite": "price_board",
-   "observe": "Two thumbprints gone grey in the margin of the examination standard. The examiner's seal is down in the corner, the sheet pinned at eye height.",
+   "observe": "A steel jig on a stand, two notches filed into its arm. The examiner's seal is stamped into the base.",
    "on_interact_accomplishment": "read_the_examination_standard",
-   "toast": "The standard does not measure how hard a blade comes out. It measures how it recovers.",
+   "toast": "The jig bends a blade to the first notch and lets go. The mark that counts is the second notch, where the blade comes back to.",
    "visual_states": [
     {
      "when": {
@@ -361,6 +361,36 @@
    "observe": "A squat rig on three legs, gauges banked along its front, correcting its own posture a half-beat after it needs to.",
    "gate_closed_toast": "The rig overshoots its marks and settles wrong, then does it again while you watch. The smith has not asked you to put a hand on it.",
    "on_victory": "golem_recalibrated"
+  },
+  {
+   "_comment": "#513 tempered_standards re-theme: the examiner on screen, a Dullahan bend-tester at his jig (canon within the bar: Dullahan smiths in Pallass, Maughin and Lorent, 6.09). Unnamed civic role. Owned rig `dullahan_examiner` (#603), faced down because his side view hides the head (docs/design/513-pallass-art.md). (8,2) sits east of the jig, off the hall's scripted lanes ((7,3) jig approach, row 7, (4,3) bench, (8,6) rig) and off the journeys' only hall cell (5,7). talk_pool only: the quest's routes stay on the jig, the bench and the rig.",
+   "id": "forge_hall_examiner",
+   "kind": "npc",
+   "cell": [
+    8,
+    2
+   ],
+   "display_name": "Dullahan Examiner",
+   "sprite": "dullahan_examiner",
+   "facing": "down",
+   "observe": "A Dullahan in dark plate, his head carried at his hip under one arm and a blade held point-down in the other hand.",
+   "friendly_line": "He tips the head under his arm a few degrees toward you and holds it there a moment.",
+   "talk_pool": [
+    "Stand clear of the jig, please. A blade that lets go can travel.",
+    "I hold my head out level with the edge so I can sight along it. You may stop looking at it now.",
+    "My seal goes on the tag, or the blade goes in her bin. I do not argue a reading, with the smith or anyone."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "examiner_standards_tempered",
+     "requires_accomplishment": {
+      "standards_tempered": 1
+     },
+     "lines": [
+      "Her blades come back to the second notch now. I sealed four of them this morning."
+     ]
+    }
+   ]
   }
  ]
 }

@@ -14,7 +14,8 @@
 				{ "text": "That mending draught, then. (10 gold)", "requires": { "gold": 10 }, "effects": [ { "gold": -10 }, { "item": "mending_draught" }, { "accomplishment": "bought_from_xif" } ], "goto": "bought" },
 				{ "text": "Who is the best alchemist in Pallass?", "goto": "banter" },
 				{ "text": "A mana potion. (10 gold)", "requires": { "gold": 10 }, "effects": [ { "gold": -10 }, { "item": "mana_potion" }, { "accomplishment": "bought_from_xif" } ], "goto": "bought" },
-				{ "text": "Nothing today.", "end": true }
+				{ "text": "Nothing today.", "end": true },
+				{ "_comment": "#513 ledger_eats_first TALK route, moved here from pallass_market_clerk (gates and effects unchanged). APPENDED LAST and requires-hidden, so the six-row hub test_mana_potion_catalog and the caster journey pin is unchanged for anyone outside the quest.", "text": "That crate on the forge landing. The regulator.", "requires": { "accomplishment": { "ledger_loop_started": 1 } }, "hide_when": { "accomplishment": { "queue_notice_endorsed": 1 } }, "goto": "regulator" }
 			]
 		},
 		"bought": {
@@ -22,6 +23,21 @@
 			"text": "Sold, at the posted price. Prices are final. You will run out. Come back when you do. The shop opens at the first bell.",
 			"options": [
 				{ "text": "Anything else?", "goto": "hub" },
+				{ "text": "That is all.", "end": true }
+			]
+		},
+		"regulator": {
+			"speaker": "Xif",
+			"text": "My ink, yes? I sold that workshop a jar. It sings near mana-stone if nothing is between them. Lead is between them. Tell the smith two fingers of lead. This advice is not on the board, so it is free.",
+			"options": [
+				{ "text": "Two fingers of lead. I'll tell her.", "effects": [ { "accomplishment": "queue_notice_endorsed" } ], "goto": "regulator_done" },
+				{ "text": "Back to business.", "goto": "hub" }
+			]
+		},
+		"regulator_done": {
+			"speaker": "Xif",
+			"text": "Two fingers. With one, it still sings a little, and then people come back to my stall to complain about it.",
+			"options": [
 				{ "text": "That is all.", "end": true }
 			]
 		},

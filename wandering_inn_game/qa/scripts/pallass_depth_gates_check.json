@@ -524,7 +524,7 @@
    "frames": 8
   },
   {
-   "_comment": "== GATE 4/6: the market clerk. Her queue arm is requires-gated on ledger_loop_started. ==",
+   "_comment": "== GATE 4/6: the market clerk. #513 moved the ledger talk arm off her hub, so it must stay exactly the shipped paperwork window. ==",
    "action": "teleport",
    "map": "pallass_market",
    "cell": [
@@ -570,7 +570,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Her hub is UNCHANGED by this lane at this position: one row. The queue arm is requires-hidden on ledger_loop_started; the elevator_pass_stamped greeting variant is shipped, not new.",
+   "_comment": "Her hub is UNCHANGED by this lane at this position: one row. No ledger arm remains on it (#513); the elevator_pass_stamped greeting variant is shipped, not new.",
    "action": "assert_event_logged",
    "type": "dialogue_node",
    "payload_contains": {
@@ -590,7 +590,7 @@
    "name": "04_market_clerk_hub"
   },
   {
-   "_comment": "Only 'Just looking.' is visible: the stamp arm is spent (hide_when pallass_entry_stamped) and the queue arm is requires-hidden.",
+   "_comment": "Only 'Just looking.' is visible: the stamp arm is spent (hide_when pallass_entry_stamped).",
    "action": "wait_frames",
    "frames": 2
   },
@@ -609,7 +609,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== GATE 5/6: the forge permit clerk. His countersign arm is requires-gated on queue_notice_endorsed. ==",
+   "_comment": "== GATE 5/6: the forge permit clerk. #513 moved the ledger countersign arm to the forge smith, so his hub must hold its shipped rows. ==",
    "action": "teleport",
    "map": "pallass_market",
    "cell": [
@@ -655,12 +655,12 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "His hub is UNCHANGED by this lane at this position: two rows, the oil row visible-LOCKED on its gold gate (11 held, 12 asked) because a gold `requires` is not progress-gated. The countersign arm is requires-hidden on queue_notice_endorsed.",
+   "_comment": "His hub is UNCHANGED by this lane at this position: two rows, the oil row visible-LOCKED on its gold gate (11 held, 12 asked) because a gold `requires` is not progress-gated. The ledger talk-route arm no longer lives here (#513 moved it to Xif and the forge smith, both requires-hidden).",
    "action": "assert_event_logged",
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Forge-Tier Clerk",
-    "text": "State your business and your sponsor, or stand aside for the next in line.",
+    "text": "Exam-floor bookings, lift tokens, floor kit. State which, or stand aside for the next in line.",
     "options": [
      {
       "text": "A vial of tempering oil, if you're headed to the floor. (12 gold)",
@@ -833,7 +833,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Twelve forms about one crate. You get four pages in before the words stop meaning anything."
+    "text": "Ten sheets of brass fittings drawn to scale. By the third sheet the lines stop meaning anything to you."
    },
    "timeout_sec": 5
   },

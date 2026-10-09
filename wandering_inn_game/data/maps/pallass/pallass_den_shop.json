@@ -307,15 +307,15 @@
     7,
     2
    ],
-   "display_name": "The Consignee's File",
+   "display_name": "The Maker's Drawings",
    "sprite": "inn_room_ledger",
-   "observe": "The shop's own copy of every form the crate has generated, in a stack tall enough to stand a cup on.",
+   "observe": "The workshop's drawings for the oven regulator, ten sheets held flat under a jar. A packing list is pinned to the last sheet.",
    "requires_skill": "appraise_goods",
-   "skill_hint_toast": "The forms are stacked in filing order, oldest at the bottom — appraise the stack and the clause comes out of it.",
-   "locked_toast": "Twelve forms about one crate. You get four pages in before the words stop meaning anything.",
+   "skill_hint_toast": "Every fitting on the regulator is drawn and numbered. Appraise the sheets and the fittings come clear.",
+   "locked_toast": "Ten sheets of brass fittings drawn to scale. By the third sheet the lines stop meaning anything to you.",
    "on_skill_use": {
     "accomplishment": "exemption_found",
-    "toast": "[Appraise Goods] — Four cycles of manifests list the tin and the salt packed with it on one line, and the salt is perishable household stock where the tin is not. Under form nine, clause four, that stock carries an exemption from queue hold — and one manifest line puts the crate inside it."
+    "toast": "[Appraise Goods] — Sheet nine shows a brass catch that swings a shutter over the rune-plate for shipping. The packing list ticks every fitting on the regulator except that catch."
    }
   },
   {
@@ -391,6 +391,36 @@
       0.7,
       0.74
      ]
+    }
+   ]
+  },
+  {
+   "_comment": "#513 Room on the Row HELP leg 2 of 2. Later-satisfied `variants`: the shelf banks wool_bales_carried only once leg 1 (the market's wool_bale_stack) has, and retires at 2, so the den keeper's [Two bales are on your shelf.] row can only be earned in order. Cell (1,4) on the west wall, approached from (2,4); no shipped QA route and no journey enters the den shop.",
+   "id": "den_shop_wool_shelf",
+   "kind": "prop",
+   "cell": [
+    1,
+    4
+   ],
+   "display_name": "A Cleared Shelf",
+   "sprite": "mill_high_shelf_owned",
+   "observe": "A shelf on the west wall, cleared to bare boards.",
+   "on_interact_accomplishment": "eyed_the_den_wool_shelf",
+   "toast": "The boards are bare and still damp from a cloth. A chalk line runs along the front edge.",
+   "variants": [
+    {
+     "when": {
+      "wool_bales_carried": 1
+     },
+     "accomplishment": "wool_bales_carried",
+     "toast": "You set both bales on the shelf, inside the chalk line. Behind the low bench, something small takes an interest."
+    },
+    {
+     "when": {
+      "wool_bales_carried": 2
+     },
+     "accomplishment": "eyed_the_den_wool_shelf",
+     "toast": "Two bales of plains wool sit on the shelf, inside the chalk line."
     }
    ]
   }

@@ -172,28 +172,28 @@
 			"region": "Pallass",
 			"beats": [
 				{ "id": "commission", "description": "Take the smith's commission through to an answer, in the forge hall past her second bench.", "complete_when": { "golem_recalibrated": 1 }, "complete_when_any": { "temper_run": 1, "standards_brokered": 1 } },
-				{ "id": "report", "description": "Bring the smith the answer at her anvil, and let her file it.", "complete_when": { "standards_tempered": 1 } }
+				{ "id": "report", "description": "Bring the smith the answer at her anvil.", "complete_when": { "standards_tempered": 1 } }
 			],
 			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). All three co-bank -- a player can fight the rig, run a billet AND read the notice in one visit -- so the STRONGER claim must be what the journal records. Ladder: brokered > temper > rig. Putting the rig down fixes an instrument; running one temper right proves the apprentice's work; brokering ends the six-year disagreement that made the work fail in the first place, which is the only outcome that survives the player leaving the tier.",
 			"resolution_paths": [
 				{ "accomplishment": "golem_recalibrated", "text": "You put the drifting calibration rig back inside its own tolerance.", "grant": { "melee_hit": 6, "won_combat": 1 } },
-				{ "accomplishment": "temper_run", "text": "You ran the temper yourself, and the billet came back.", "grant": { "observed_things": 4, "deliberate_commerce": 2 } },
-				{ "accomplishment": "standards_brokered", "text": "You proved the smith and the examiner had agreed all along, and got it in writing.", "grant": { "persuaded_someone": 3, "heard_gossip": 3 } }			]
+				{ "accomplishment": "temper_run", "text": "You quenched the billet slow yourself, and it came back to the second notch.", "grant": { "observed_things": 4, "deliberate_commerce": 2 } },
+				{ "accomplishment": "standards_brokered", "text": "You read the examiner's jig to the smith, and she changed the quench.", "grant": { "persuaded_someone": 3, "heard_gossip": 3 } }			]
 		},
 		{
 			"_comment": "v0.16 P2 (#307). Giver is on pallass_forge and every route resolves on pallass_den_shop, so the unstick beat must name the den shop (the travel-landmark check arms when no producer map is the giver map).",
 			"id": "ledger_eats_first",
-			"title": "The Ledger Eats First",
+			"title": "The Crate the Cage Refuses",
 			"region": "Pallass",
 			"beats": [
-				{ "id": "unstick", "description": "Get the held crate to its consignee at the den shop on the market tier — by the offices, by the forms, or on your own back.", "complete_when": { "loop_walked": 1 }, "complete_when_any": { "exemption_found": 1, "shipment_carried": 1 } },
+				{ "id": "unstick", "description": "Get the refused crate to the den shop on the market tier. Quiet its runes, find out why they sing, or carry it down yourself.", "complete_when": { "loop_walked": 1 }, "complete_when_any": { "exemption_found": 1, "shipment_carried": 1 } },
 				{ "id": "report", "description": "Tell the lift attendant at the forge-tier landing that his manifest is clean.", "complete_when": { "ledger_unstuck": 1 } }
 			],
-			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). All three co-bank -- nothing stops a player carrying the crate AND walking the offices AND reading the forms. Ladder: exemption > loop > carry. Carrying it moves one crate and leaves the loop exactly as it was; walking the offices produces a countersignature that works ONCE; finding the exemption fixes the rule itself, so the next crate never enters the queue at all.",
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). All three co-bank -- nothing stops a player carrying the crate AND getting the lead wrap AND reading the drawings. Ladder: exemption > loop > carry. Carrying it moves one crate down the stair and leaves the cage refusing; the lead wrap (Xif, then the smith) quiets this one regulator; the shipping catch is the packing fault itself, so the next regulator rides the cage set. Counter ids are frozen from the paperwork version (#513 re-theme).",
 			"resolution_paths": [
 				{ "accomplishment": "shipment_carried", "text": "You carried the crate down two tiers yourself and put it on her dock.", "grant": { "observed_things": 3, "befriended_moments": 2 } },
-				{ "accomplishment": "loop_walked", "text": "You walked the offices in order and made the queue countersign itself.", "grant": { "persuaded_someone": 3, "heard_gossip": 4 } },
-				{ "accomplishment": "exemption_found", "text": "You found the exemption that had been on the paper the whole time.", "grant": { "observed_things": 5, "deliberate_commerce": 2 } }
+				{ "accomplishment": "loop_walked", "text": "Xif named the ink, the smith folded the lead, and the cage took the crate.", "grant": { "persuaded_someone": 3, "heard_gossip": 4 } },
+				{ "accomplishment": "exemption_found", "text": "You found the shipping catch on the maker's drawings, and one brass catch got the crate into the cage.", "grant": { "observed_things": 5, "deliberate_commerce": 2 } }
 			]
 		},
 		{
@@ -300,15 +300,15 @@
 		},
 		{
 			"id": "forge_tier_permit",
-			"title": "Clearance for the Forge Tier",
+			"title": "Fit for the Forge Tier",
 			"region": "Pallass",
 			"beats": [
-				{ "id": "apply", "description": "File your permit application at the permit office by the Grand Lift, on Pallass's market tier.", "complete_when": { "forge_permit_filed": 1 } },
-				{ "id": "examined", "description": "Pass Grimalkin's fitness examination at the permit office by the Grand Lift.", "complete_when": { "grimalkin_examination_passed": 1 } },
-				{ "id": "stamped", "description": "Collect your stamped lift pass at the permit office window, back beside the Grand Lift.", "complete_when": { "elevator_pass_stamped": 1 } }
+				{ "id": "apply", "description": "Book a slot on Grimalkin's exam floor at the window by the Grand Lift, on Pallass's market tier.", "complete_when": { "forge_permit_filed": 1 } },
+				{ "id": "examined", "description": "Pass Grimalkin's read at the far end of the exam-floor office, by the Grand Lift.", "complete_when": { "grimalkin_examination_passed": 1 } },
+				{ "id": "stamped", "description": "Collect your lift token, cut to the load class he wrote, at the same window beside the Grand Lift.", "complete_when": { "elevator_pass_stamped": 1 } }
 			],
 			"resolution_paths": [
-				{ "accomplishment": "", "text": "You passed Grimalkin's examination on your own legs, and the lift pass came back stamped." }
+				{ "accomplishment": "", "text": "Grimalkin read you, wrote your load class, and the lift answers to the token." }
 			]
 		},
 		{
@@ -486,6 +486,48 @@
 			],
 			"resolution_paths": [
 				{ "accomplishment": "", "text": "You filled her pot, sat with a lamb that could not thank you for it, and she taught you the first of the craft." }
+			]
+		},
+		{
+			"_comment": "#513 Room on the Row (docs/design/513-pallass-income.md). Talk (stallkeeper: [Charming Smile], or the public scales) and help (two bales to the den shop's shelf); no fight route on a Watch-patrolled tier. Startable on arrival with 0g, before the lift pass. The payout (12g + plains_wool_bale) rides the trader's report row.",
+			"id": "room_on_the_row",
+			"title": "Room on the Row",
+			"region": "Pallass",
+			"beats": [
+				{
+					"id": "place",
+					"description": "Get the Gnoll wool trader somewhere to sell on Pallass's market tier: a counter on the stall row, if it will rent to her, or a shelf somewhere else.",
+					"complete_when_any": {
+						"wool_consigned": 1,
+						"row_opened": 1
+					}
+				},
+				{
+					"id": "report",
+					"description": "Tell the wool trader by the arrival plinth where she is selling.",
+					"complete_when": {
+						"wool_trade_settled": 1
+					}
+				}
+			],
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). Ladder: wool_consigned < row_opened. Both entry rows hide on trader_placed, so one route normally banks; the order still matters if a save ever holds both. A shelf in someone else's shop is a workaround; a counter on the row changes the row.",
+			"resolution_paths": [
+				{
+					"accomplishment": "wool_consigned",
+					"text": "You carried two bales into the den shop, and the wool sold off a Drake's shelf before the bell.",
+					"grant": {
+						"befriended_moments": 2,
+						"observed_things": 2
+					}
+				},
+				{
+					"accomplishment": "row_opened",
+					"text": "The stall row rented her counter three at the posted rate, brass weights and all.",
+					"grant": {
+						"persuaded_someone": 3,
+						"heard_gossip": 2
+					}
+				}
 			]
 		}
 	]

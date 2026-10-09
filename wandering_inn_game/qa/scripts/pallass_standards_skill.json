@@ -91,7 +91,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Appraise Goods] — You read the grain off the colour, hold the count two beats longer than the slate says, and quench. The billet comes out with the standard's own answer in it."
+    "text": "[Appraise Goods] — You read the grain off the colour, set the fast oil aside for the slow barrel, and quench. On the jig, the billet comes back to the second notch."
    },
    "timeout_sec": 5
   },
@@ -295,7 +295,8 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Forge-Tier Smith"
+    "speaker": "Forge-Tier Smith",
+    "text": "You ran it once and it came back. She has run it forty-one times and it came back too. Now the jig says so. Pull the vent chain on your way past. I have a billet in and she will want the bench."
    },
    "timeout_sec": 5
   },
