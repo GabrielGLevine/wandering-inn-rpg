@@ -8862,6 +8862,33 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "pallass_resident_art_peek",
+   "seed": 9,
+   "fixture": "near_pallass_drake",
+   "note": "#513 art proof: QA-only stage_sprite draws the unplaced owned rigs wool_trader, garuda_runner and dullahan_examiner through World's entity-visual path beside Pallass Drake NPCs; pins resolved art, frame counts, feet on the cell edge and idle figure heights; windowed captures include the trader-vs-gnoll_traveler A/B and idle/walk facing lineups",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "near_pallass_drake"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   }
  ],
  "browser_scripts": [

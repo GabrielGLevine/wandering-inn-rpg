@@ -894,6 +894,12 @@ func _build_expected_counts() -> Dictionary:
 	counts["forge_hall_apprentice/walk"] = 6
 	counts["stallkeeper/idle"] = 4
 	counts["stallkeeper/walk"] = 6
+	counts["wool_trader/idle"] = 4
+	counts["wool_trader/walk"] = 6
+	counts["garuda_runner/idle"] = 4
+	counts["garuda_runner/walk"] = 6
+	counts["dullahan_examiner/idle"] = 4
+	counts["dullahan_examiner/walk"] = 6
 	counts["gentleman_bowler/idle"] = 4
 	counts["gentleman_bowler/walk"] = 6
 	counts["recruit_pell/idle"] = 4

@@ -9974,5 +9974,101 @@
     "fps": 1
    }
   }
+ },
+ "wool_trader": {
+  "_comment": "#513 owned PixelLab v3 rig (provenance: assets/LICENSES/v019-owned-art-provenance.txt). Bale on the back is the silhouette tell; beats gnoll_traveler at gameplay scale (docs/design/513-pallass-art.md).",
+  "directional": true,
+  "render_scale": 0.45,
+  "anchor": [
+   0.5,
+   0.829545
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/wool_trader/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/wool_trader/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/wool_trader/Idle_Up-Sheet.png",
+    "frame_size": [
+     84,
+     88
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/wool_trader/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/wool_trader/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/wool_trader/Walk_Up-Sheet.png",
+    "frame_size": [
+     84,
+     88
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "garuda_runner": {
+  "_comment": "#513 owned PixelLab v3 rig (provenance: assets/LICENSES/v019-owned-art-provenance.txt). Wing-arms, beak and fan tail; scale matches the Pallass harvest NPC pixel density.",
+  "directional": true,
+  "render_scale": 0.45,
+  "anchor": [
+   0.5,
+   0.818182
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/garuda_runner/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/garuda_runner/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/garuda_runner/Idle_Up-Sheet.png",
+    "frame_size": [
+     84,
+     88
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/garuda_runner/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/garuda_runner/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/garuda_runner/Walk_Up-Sheet.png",
+    "frame_size": [
+     84,
+     88
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "dullahan_examiner": {
+  "_comment": "#513 owned PixelLab v3 rig (provenance: assets/LICENSES/v019-owned-art-provenance.txt). Head carried under the arm, so the generated 60px figure is shoulders-up headless: scale puts the gorget at shoulder height (23px), not a 27px whole-figure height.",
+  "directional": true,
+  "render_scale": 0.3833,
+  "anchor": [
+   0.5,
+   0.83908
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/dullahan_examiner/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/dullahan_examiner/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/dullahan_examiner/Idle_Up-Sheet.png",
+    "frame_size": [
+     84,
+     87
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/dullahan_examiner/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/dullahan_examiner/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/dullahan_examiner/Walk_Up-Sheet.png",
+    "frame_size": [
+     84,
+     87
+    ],
+    "fps": 8
+   }
+  }
  }
 }

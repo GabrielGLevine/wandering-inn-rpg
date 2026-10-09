@@ -1,0 +1,919 @@
+{
+ "_comment": "#513 art proof: the three new owned Pallass rigs (wool_trader, garuda_runner, dullahan_examiner) drawn through World's own entity-visual path by the QA-only stage_sprite action, since no map row wears them yet. Each stage pins the resolved art (no placeholder, no fallback), the frame count, and a feet plane exactly on the cell's bottom edge; the idle-down stages also pin the visible figure height. Windowed captures: each rig in its Pallass context beside a Drake NPC, the trader-vs-gnoll_traveler best-art-wins A/B, and idle/walk facing lineups.",
+ "fixture_save": "near_pallass_drake",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_market"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_race",
+   "equals": "drake"
+  },
+  {
+   "_comment": "Trader at the design's plinth-side candidate cell (2,4); Xif, Octavia and the Drake checkpoint clerk (7,5) share the frame with the Drake player. Player cells sit high on each map because the camera clamps to the vista band below the terrace and would crop rows 2-5.",
+   "action": "wait_frames",
+   "frames": 6
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    23,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "wool_trader",
+   "cell": [
+    2,
+    4
+   ],
+   "facing": "down",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "wool_trader",
+    "resolved": "wool_trader",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4,
+    "visible_h_px": 27
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "wait_frames",
+   "frames": 20
+  },
+  {
+   "action": "screenshot",
+   "name": "01_market_wool_trader"
+  },
+  {
+   "_comment": "Best-art-wins A/B at gameplay scale: the new rig and the gnoll_traveler fallback side by side on the same row.",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    23,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "wool_trader",
+   "cell": [
+    2,
+    4
+   ],
+   "facing": "down",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "wool_trader",
+    "resolved": "wool_trader",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "gnoll_traveler",
+   "cell": [
+    3,
+    4
+   ],
+   "facing": "down",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "gnoll_traveler",
+    "resolved": "gnoll_traveler",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "wait_frames",
+   "frames": 20
+  },
+  {
+   "action": "screenshot",
+   "name": "02_ab_wool_trader_vs_gnoll_traveler"
+  },
+  {
+   "_comment": "Garuda runner beside the Drake checkpoint clerk (7,5); the stallkeeper (15,5) stands behind his stall awning, which would hide a neighbour.",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    23,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    11,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "garuda_runner",
+   "cell": [
+    8,
+    5
+   ],
+   "facing": "down",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "garuda_runner",
+    "resolved": "garuda_runner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4,
+    "visible_h_px": 26
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "wait_frames",
+   "frames": 20
+  },
+  {
+   "action": "screenshot",
+   "name": "03_market_garuda_by_checkpoint_clerk"
+  },
+  {
+   "_comment": "Dullahan examiner under the bend-jig notice (7,2), beside the Drake apprentice (5,4).",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_forge_hall",
+   "cell": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge_hall"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "dullahan_examiner",
+   "cell": [
+    7,
+    3
+   ],
+   "facing": "down",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "dullahan_examiner",
+    "resolved": "dullahan_examiner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4,
+    "visible_h_px": 23
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "wait_frames",
+   "frames": 20
+  },
+  {
+   "action": "screenshot",
+   "name": "04_forge_hall_dullahan_by_apprentice"
+  },
+  {
+   "_comment": "Garuda runner at the Grand Lift's west edge, the Drake forge smith (11,6) in frame; the lift sprite itself covers its attendant and anything east of (21,y).",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    12,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "garuda_runner",
+   "cell": [
+    20,
+    5
+   ],
+   "facing": "down",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "garuda_runner",
+    "resolved": "garuda_runner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "wait_frames",
+   "frames": 20
+  },
+  {
+   "action": "screenshot",
+   "name": "05_forge_garuda_at_lift"
+  },
+  {
+   "_comment": "Facing lineup on the market's open front row 9 (the back row sits under Grimalkin and the ordinance wall): idle down / right / up per rig, then walk down / left (mirrored side) / up.",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    23,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    11,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "wool_trader",
+   "cell": [
+    3,
+    9
+   ],
+   "facing": "down",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "wool_trader",
+    "resolved": "wool_trader",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "wool_trader",
+   "cell": [
+    5,
+    9
+   ],
+   "facing": "right",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "wool_trader",
+    "resolved": "wool_trader",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "wool_trader",
+   "cell": [
+    7,
+    9
+   ],
+   "facing": "up",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "wool_trader",
+    "resolved": "wool_trader",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "garuda_runner",
+   "cell": [
+    9,
+    9
+   ],
+   "facing": "down",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "garuda_runner",
+    "resolved": "garuda_runner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "garuda_runner",
+   "cell": [
+    11,
+    9
+   ],
+   "facing": "right",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "garuda_runner",
+    "resolved": "garuda_runner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "garuda_runner",
+   "cell": [
+    13,
+    9
+   ],
+   "facing": "up",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "garuda_runner",
+    "resolved": "garuda_runner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "dullahan_examiner",
+   "cell": [
+    15,
+    9
+   ],
+   "facing": "down",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "dullahan_examiner",
+    "resolved": "dullahan_examiner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "dullahan_examiner",
+   "cell": [
+    17,
+    9
+   ],
+   "facing": "right",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "dullahan_examiner",
+    "resolved": "dullahan_examiner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "dullahan_examiner",
+   "cell": [
+    19,
+    9
+   ],
+   "facing": "up",
+   "anim": "idle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "dullahan_examiner",
+    "resolved": "dullahan_examiner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 4
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "wait_frames",
+   "frames": 20
+  },
+  {
+   "action": "screenshot",
+   "name": "06_lineup_idle"
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    23,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    11,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "wool_trader",
+   "cell": [
+    3,
+    9
+   ],
+   "facing": "down",
+   "anim": "walk"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "wool_trader",
+    "resolved": "wool_trader",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 6
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "wool_trader",
+   "cell": [
+    5,
+    9
+   ],
+   "facing": "left",
+   "anim": "walk"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "wool_trader",
+    "resolved": "wool_trader",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 6
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "wool_trader",
+   "cell": [
+    7,
+    9
+   ],
+   "facing": "up",
+   "anim": "walk"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "wool_trader",
+    "resolved": "wool_trader",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 6
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "garuda_runner",
+   "cell": [
+    9,
+    9
+   ],
+   "facing": "down",
+   "anim": "walk"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "garuda_runner",
+    "resolved": "garuda_runner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 6
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "garuda_runner",
+   "cell": [
+    11,
+    9
+   ],
+   "facing": "left",
+   "anim": "walk"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "garuda_runner",
+    "resolved": "garuda_runner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 6
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "garuda_runner",
+   "cell": [
+    13,
+    9
+   ],
+   "facing": "up",
+   "anim": "walk"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "garuda_runner",
+    "resolved": "garuda_runner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 6
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "dullahan_examiner",
+   "cell": [
+    15,
+    9
+   ],
+   "facing": "down",
+   "anim": "walk"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "dullahan_examiner",
+    "resolved": "dullahan_examiner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 6
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "dullahan_examiner",
+   "cell": [
+    17,
+    9
+   ],
+   "facing": "left",
+   "anim": "walk"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "dullahan_examiner",
+    "resolved": "dullahan_examiner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 6
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "stage_sprite",
+   "sprite": "dullahan_examiner",
+   "cell": [
+    19,
+    9
+   ],
+   "facing": "up",
+   "anim": "walk"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "qa_sprite_staged",
+   "payload_contains": {
+    "sprite": "dullahan_examiner",
+    "resolved": "dullahan_examiner",
+    "placeholder": false,
+    "feet_offset_px": 0,
+    "frames": 6
+   },
+   "timeout_sec": 2
+  },
+  {
+   "action": "wait_frames",
+   "frames": 6
+  },
+  {
+   "action": "screenshot",
+   "name": "07_lineup_walk_a"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "08_lineup_walk_b"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  }
+ ]
+}
