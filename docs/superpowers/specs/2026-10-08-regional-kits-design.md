@@ -191,10 +191,14 @@ scores win.
        radius;
      - otherwise, or if no entry is under the cap, take `rank_p[0]`.
 
-   An edit therefore changes only cells within `r`, plus any contiguous chain
-   of forced fallbacks. The exception is when a role's placement count in a
-   map crosses a multiple of 6: k changes, the subset grows, and picks can
-   shift across the whole map.
+   For non-module roles, an edit therefore changes only cells within `r`,
+   plus any contiguous chain of forced fallbacks. The exception is when a
+   role's placement count in a map crosses a multiple of 6: k changes, the
+   subset grows, and picks can shift across the whole map.
+
+   Module roles trade this locality for even spread. Adding or removing a
+   module placement can re-pick later placements in visit order, because
+   the per-variant cap counts uses across the map.
 4. **`pick` modes:**
    - `"cell"` runs steps 1–3.
    - `"map"` takes the subset's top-ranked variant for the whole map, so a
