@@ -199,7 +199,7 @@
  ],
  "decor": [
   {
-   "sprite": "table_brown",
+   "sprite": "@table",
    "cell": [
     6,
     5
@@ -216,7 +216,7 @@
    }
   },
   {
-   "sprite": "rug_woven_cream",
+   "sprite": "@rug",
    "cell": [
     6,
     6
@@ -228,7 +228,7 @@
    ]
   },
   {
-   "sprite": "window_blue",
+   "sprite": "@window_interior",
    "cell": [
     10,
     1
@@ -236,7 +236,7 @@
   },
   {
    "id": "parlor_rug_east",
-   "sprite": "rug_woven_red",
+   "sprite": "@rug",
    "cell": [
     9,
     5
@@ -499,7 +499,7 @@
     4
    ],
    "display_name": "The Card Table",
-   "sprite": "table_brown",
+   "sprite": "@table",
    "observe": "Coppers, a dog-eared deck, and chalk tallies in three different handwritings. A hand reaches past you and adds a chalk stroke to the middle column."
   },
   {

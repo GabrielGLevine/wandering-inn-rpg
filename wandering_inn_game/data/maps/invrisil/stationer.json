@@ -84,7 +84,7 @@
  },
  "decor": [
   {
-   "sprite": "table_brown",
+   "sprite": "@table",
    "cell": [
     4,
     5
@@ -105,7 +105,7 @@
    ]
   },
   {
-   "sprite": "rug_woven_cream",
+   "sprite": "@rug",
    "cell": [
     6,
     4
@@ -117,7 +117,7 @@
    ]
   },
   {
-   "sprite": "window_blue",
+   "sprite": "@window_interior",
    "cell": [
     7,
     1

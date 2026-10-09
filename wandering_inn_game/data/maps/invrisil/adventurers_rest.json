@@ -84,7 +84,7 @@
  },
  "decor": [
   {
-   "sprite": "barrel",
+   "sprite": "@cargo",
    "cell": [
     8,
     1
@@ -112,7 +112,7 @@
    ]
   },
   {
-   "sprite": "rug_woven_red",
+   "sprite": "@rug",
    "cell": [
     6,
     5
@@ -343,7 +343,7 @@
     2
    ],
    "display_name": "The Corner Table",
-   "sprite": "table_brown",
+   "sprite": "@table",
    "present_when": {
     "requires": {
      "hat_job_taken": 1

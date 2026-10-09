@@ -157,14 +157,14 @@
    }
   },
   {
-   "sprite": "window_blue",
+   "sprite": "@window_interior",
    "cell": [
     6,
     1
    ]
   },
   {
-   "sprite": "rug_woven_cream",
+   "sprite": "@rug",
    "cell": [
     4,
     5
