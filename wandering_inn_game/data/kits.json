@@ -169,14 +169,6 @@
       "table_brown__alt1"
      ]
     },
-    "shelf": {
-     "pick": "cell",
-     "pool": [
-      "library_shelf",
-      "shelf_bottles",
-      "library_shelf__alt1"
-     ]
-    },
     "window_interior": {
      "pick": "map",
      "pool": [
