@@ -334,6 +334,10 @@ and chronology belong in issue PRs. Earlier context:
     (50.0%) and `riverfarm` 30 → 29 (24.79%) with no map edit in either;
     `window_blue` is the only shared id. Sconces stayed explicit: `lamp_wall`
     has 4 street placements and a pool of 2, so a fifth trips G1.
+    Frozen-class residual: `window_blue` stays in the `window_interior` pool
+    while all three Invrisil maps pick `__alt1`, so a future map that draws
+    it places a three-region sprite that G3's frozen class keeps counting as
+    regional until the next regen.
   - **G3 regens (#608 pilot 1b FIX loop, art read):** the stationer desk and
     stove pins left the generic ids, with one new regional class row
     (`owned_fallback_library_desk`), and the deleted parlor rug took the
