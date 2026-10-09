@@ -39,6 +39,7 @@ archived, or superseded session blocks.
     - Read the dusk and night views when ambience is phase-gated.
     - Run `python3 -m pytest -q scripts/`, which is CI's scope.
     - Re-routed journey scripts shift the `scripts/itinerary` contract pins.
+  - The untracked slices (1,260; labels checked against 44 hand-labelled samples, 40 matched) live in `potential_assets/_sliced/`.
   - Skill-library proposal (for Fable): document the `slice_atlases` → `label_slices` → `asset_candidates` → `fill_kit` → `wire_asset` pipeline in `wi-art-and-sprites`. Include `--allow-unverified` (codex batches) and the rule to run slicing from the main checkout.
   - Pre-existing debt: 406 pytest warnings on main (`data_lint.py:1129` `Image.getdata`, removed in Pillow 14; `harness_metrics.py:58` unclosed files).
 - **Active program (user, 2026-10-07), in order:**
