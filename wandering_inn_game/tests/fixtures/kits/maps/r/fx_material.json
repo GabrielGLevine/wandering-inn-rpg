@@ -15,14 +15,40 @@
      0
     ]
    ]
+  },
+  {
+   "material": "@floor_a",
+   "tile_px": 32,
+   "cells": [
+    [
+     1,
+     1
+    ]
+   ]
   }
  ],
  "walls": {
+  "material": "@wall_b",
   "segments": [
    {
     "material": "@floor_a",
+    "tone": {
+     "base": [
+      0,
+      0,
+      0
+     ],
+     "detail": 0
+    },
     "cell": [
      0,
+     0
+    ]
+   },
+   {
+    "material": "@wall_b",
+    "cell": [
+     1,
      0
     ]
    }

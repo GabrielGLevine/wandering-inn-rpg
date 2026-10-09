@@ -194,6 +194,44 @@ def rows_of(resolved: dict) -> list:
     return out
 
 
+def materials_of(resolved: dict) -> list:
+    out = []
+    walls = resolved.get("walls")
+    targets = [(f"floor_layers[{i}]", r) for i, r in enumerate(resolved.get("floor_layers") or [])]
+    if isinstance(walls, dict):
+        targets.append(("walls", walls))
+        targets += [(f"walls.segments[{i}]", s) for i, s in enumerate(walls.get("segments") or [])]
+    for label, row in targets:
+        if isinstance(row, dict) and "material_ref" in row:
+            out.append({"layer": label, "material_ref": row["material_ref"],
+                        "fields": {k: row[k] for k in MATERIAL_FIELDS if k in row}})
+    return out
+
+
+def parity_of(resolved: dict) -> dict:
+    """What both runtimes must agree on: rows (with their effective light) and merged materials."""
+    rows = rows_of(resolved)
+    by_key = {}
+    for layer in ("decor", "entities"):
+        for row in resolved.get(layer) or []:
+            if isinstance(row, dict) and "sprite_role" in row:
+                by_key.setdefault(layer, []).append(row)
+    for r in rows:
+        r["light"] = None
+    flat = [row for layer in ("decor", "entities") for row in by_key.get(layer, [])]
+    for r, row in zip(rows, flat):
+        r["light"] = row.get("light")
+    return {"rows": rows, "materials": materials_of(resolved)}
+
+
+def resolve_tree_parity(maps_dir: Path, kits: dict) -> dict:
+    result: dict = {}
+    for path in sorted(Path(maps_dir).glob("*/*.json")):
+        doc = json.loads(path.read_text())
+        result[path.stem] = parity_of(resolve_map(doc, path.stem, map_kit(doc, path), kits))
+    return result
+
+
 def resolve_tree(maps_dir: Path, kits: dict) -> dict:
     result: dict = {}
     for path in sorted(Path(maps_dir).glob("*/*.json")):
@@ -236,10 +274,11 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--maps", type=Path, help="maps root (default data/maps)")
     ap.add_argument("--kits", type=Path, help="kits.json (default data/kits.json)")
+    ap.add_argument("--parity", action="store_true", help="emit rows+light+materials (the cross-runtime parity shape)")
     ap.add_argument("--out", type=Path, help="write the resolution JSON here (stdout otherwise)")
     a = ap.parse_args()
     game = Path(__file__).resolve().parent.parent
     kits = json.loads(a.kits.read_text()) if a.kits else load_kits(game)
-    result = resolve_tree(a.maps or game / "data" / "maps", kits)
+    result = (resolve_tree_parity if a.parity else resolve_tree)(a.maps or game / "data" / "maps", kits)
     text = json.dumps(result, indent=1, sort_keys=True) + "\n"
     (a.out.write_text(text) if a.out else sys.stdout.write(text))
