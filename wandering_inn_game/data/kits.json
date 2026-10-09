@@ -258,14 +258,6 @@
       "note_pinned_alt"
      ]
     },
-    "door_street": {
-     "pick": "door",
-     "pool": [
-      "door",
-      "door__alt2",
-      "door__alt3"
-     ]
-    },
     "seating": {
      "pick": "map",
      "pool": [

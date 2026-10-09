@@ -324,7 +324,7 @@
     11
    ],
    "display_name": "Liscor Street",
-   "sprite": "@door_street",
+   "sprite": "door__alt2",
    "to_map": "street",
    "to_cell": [
     27,
