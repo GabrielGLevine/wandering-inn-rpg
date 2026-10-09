@@ -347,12 +347,15 @@ and chronology belong in issue PRs. Earlier context:
     (`invrisil_lamp_wall_1`).
   - **G3 regens (#620 R1 Liscor):** the Liscor conversion pins the five wall
     sconces to `liscor_sconce_copper`/`liscor_bracket_lantern`, the guild and
-    barracks tables to `bonus_round_table`/`inn_table_dirty__before` and the
-    two stools to `liscor_side_chair`, so Liscor's own generic placements fell
-    (35 → 33). With `table_brown` and `stool` no longer placed generically
-    outside Invrisil, the classifier now reads them as regional, which also
-    lowers Invrisil's share (26.67% → 23.08%) and the inn's (44.86% → 32.71%)
-    without any edit to those maps. G2 for Liscor is 53.27%.
+    barracks tables to `bonus_round_table`/`inn_table_dirty__before`, and the
+    two stools to `liscor_side_chair`.
+    - Liscor's own generic placements fell 48 → 35 (share 44.86% → 32.71%).
+    - With `table_brown` and `stool` no longer placed in Liscor, the
+      classifier reads them as regional. That lowered the inn's generic count
+      (35 → 33, share 50.0% → 47.14%) and Invrisil's share (26.67% → 23.08%).
+      Neither map was edited and nothing visual changed; these are classifier
+      artifacts.
+    - G2 for Liscor is 53.27%.
   - **Counting-room guard rig (#608 final review):** `counting_room_guard`
     (The Factor's Closed Account) wears `invrisil_enforcer`, the owned
     2026-07-06 `hired_blade_a` generation (broad build, club), wired at 28px
