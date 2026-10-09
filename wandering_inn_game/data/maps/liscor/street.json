@@ -54,10 +54,6 @@
    10
   ],
   [
-   25,
-   8
-  ],
-  [
    8,
    17
   ],
@@ -78,19 +74,11 @@
    1
   ],
   [
-   13,
-   1
-  ],
-  [
    14,
    1
   ],
   [
    15,
-   1
-  ],
-  [
-   16,
    1
   ],
   [
@@ -651,14 +639,6 @@
 
 
 
-  {
-   "_comment": "#408 prop variety: was `barrel`. Second basket stack mid-row: repetition is diegetic in a market, a third barrel was not. Cell stays in `blocked`.",
-   "sprite": "basket_stack",
-   "cell": [
-    13,
-    1
-   ]
-  },
 
 
 
@@ -723,7 +703,7 @@
    ]
   },
   {
-   "sprite": "library_desk",
+   "sprite": "liscor_bench",
    "cell": [
     26,
     3
@@ -869,20 +849,6 @@
    }
   },
   {
-   "sprite": "tree_round",
-   "cell": [
-    23,
-    12
-   ]
-  },
-  {
-   "sprite": "tree_round",
-   "cell": [
-    6,
-    13
-   ]
-  },
-  {
    "sprite": "@cargo",
    "cell": [
     5,
@@ -894,14 +860,6 @@
    "cell": [
     6,
     10
-   ]
-  },
-  {
-   "_comment": "#408 prop variety: was `crate`. Cell stays in `blocked`.",
-   "sprite": "firewood_stack",
-   "cell": [
-    25,
-    8
    ]
   },
   {
@@ -973,13 +931,6 @@
    "cell": [
     11,
     17
-   ]
-  },
-  {
-   "sprite": "grain_sacks",
-   "cell": [
-    16,
-    1
    ]
   }
  ],
@@ -1534,7 +1485,7 @@
    "kind": "npc",
    "cell": [
     13,
-    2
+    3
    ],
    "display_name": "Krshia",
    "person": true,
