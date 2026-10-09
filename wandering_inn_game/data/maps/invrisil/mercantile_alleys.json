@@ -828,42 +828,42 @@
  "decor": [
   {
    "_comment": "#423: Hedault stood on (0,6) and blocked it. With him gone the cell would render as alley floor that no player can ever reach -- (0,5) is wall, (0,7) is the boulevard door entity and (1,6) is the apothecary bench, so the nook is an island. Crated shut and added to `blocked`, so it reads as a stuffed dead corner instead of phantom floor. Blocking is byte-identical to the pre-#423 map.",
-   "sprite": "crate",
+   "sprite": "@cargo",
    "cell": [
     0,
     6
    ]
   },
   {
-   "sprite": "crate",
+   "sprite": "@cargo",
    "cell": [
     5,
     8
    ]
   },
   {
-   "sprite": "crate",
+   "sprite": "@cargo",
    "cell": [
     7,
     8
    ]
   },
   {
-   "sprite": "crate",
+   "sprite": "@cargo",
    "cell": [
     12,
     9
    ]
   },
   {
-   "sprite": "barrel",
+   "sprite": "@cargo",
    "cell": [
     15,
     10
    ]
   },
   {
-   "sprite": "sconce",
+   "sprite": "@lamp_wall",
    "cell": [
     3,
     5
@@ -880,7 +880,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "@lamp_wall",
    "cell": [
     7,
     8
@@ -897,7 +897,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "@lamp_wall",
    "cell": [
     11,
     10
@@ -914,7 +914,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "@lamp_wall",
    "cell": [
     16,
     13
@@ -990,7 +990,7 @@
     7
    ],
    "display_name": "Back to the Boulevard",
-   "sprite": "door",
+   "sprite": "@door_street",
    "to_map": "invrisil_boulevard",
    "to_cell": [
     26,
