@@ -22,7 +22,8 @@ archived, or superseded session blocks.
     - #621 (PR #622): bundle-v8 (18 Pixel Crawler sheets, now Latest) plus the allocation table. Before running QA in main, fetch bundle-v8 (`scripts/fetch_private_assets.sh`).
   - Open:
     - #623 (PR #625): G2/G3 count art identity, not sprite ids, plus the `_common` utility guardrails.
-    - #624: asset-intake coverage. Several Pixel Crawler packs and their tilesets were never sliced or registered.
+    - Merged: #625 (PR #625) art-identity G2/G3 and `_common` guardrails; #624 (PR #626) intake coverage; PR #627 labels and the 31-kind vocabulary.
+    - In progress (ledger): allocating 1,010 re-intake pieces. Natural and goods are done; architecture is still in flight. After that, the allocation PR (plus bundle-v9 for the newly used sheets), then the design-led gap pass. Allocation outputs are in the session scratchpad under `newpieces/ALLOC-*.md`.
     - #620 Liscor (`issue/620-kits-liscor`, `/private/tmp/wi-620`, tip `58498c42`) is paused before FIX loop 2 at the user's request. Its pins duplicate inn/Invrisil art, so it fails art-identity G2 until it gets its own art.
   - User rulings, 2026-10-09:
     - Allocate assets globally (no first-come claiming).
