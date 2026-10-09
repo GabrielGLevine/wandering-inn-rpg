@@ -1,5 +1,5 @@
 {
- "_kits_recompose": "#608 — sconce onto the partition face",
+ "_kits_recompose": "#608 — sconce onto the partition face; partition wall faces shown",
  "_comment": "#423: Hedault's own shop, indoors off the boulevard (user ruling 2026-08-10). Schema modelled on stationer.json -- small interior, perimeter is walls.segments so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each with a matching decor row. Biome + every sprite reused, zero biomes.json edits. No floor_layers: the brothers_parlor biome default is the plain interior board, which is neither the parlor's parquet nor the stationer's pale swatch -- a bespoke enchanter floor is a VISUAL-LOG art follow-up, not a blind region pick. THE POINT OF THE MAP: Hedault stands at (2,3) with THREE orthogonally-adjacent standable cells -- (1,3), (3,3), (2,4) -- every one of them walk-reachable from the shop door's landing at (6,7). The alleys placement he came from had none, which is issue #423.",
  "biome": "brothers_parlor",
  "grid": {
@@ -79,8 +79,7 @@
      7,
      2
     ],
-    "material": "@wall_shop",
-    "face": null
+    "material": "@wall_shop"
    },
    {
     "_comment": "M5 (review): the 3x2 area behind the partition is SOLID MASS, not a room. The work room is its own map; leaving these cells as floor rendered a walkable-looking pocket no player could ever enter. Walled in both rows so the partition reads as the back of the building.",
@@ -92,8 +91,7 @@
      10,
      1
     ],
-    "material": "@wall_shop",
-    "face": null
+    "material": "@wall_shop"
    },
    {
     "from": [
@@ -104,8 +102,7 @@
      10,
      2
     ],
-    "material": "@wall_shop",
-    "face": null
+    "material": "@wall_shop"
    },
    {
     "_comment": "The partition's south arm. The gap it leaves at (8,3) carries the work-room door -- the [Pick Lock] debut gate. That gap is a DOORWAY, not an opening: the door prop blocks the cell, and what lies through it is a separate map.",
