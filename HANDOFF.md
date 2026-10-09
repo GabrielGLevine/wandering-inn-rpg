@@ -19,14 +19,14 @@ archived, or superseded session blocks.
      - DONE: #453 rest signposting, six data-only placements (PR #602,
        `06eea743`; #453 stays open for per-spine verification). Visual debt
        in `docs/VISUAL-LOG.md`.
-     - Pallass art (PixelLab trader, Garuda and Dullahan residents):
-       `/private/tmp/wi-pallass-art`.
+     - DONE: Pallass art, owned rigs `wool_trader`, `garuda_runner`,
+       `dullahan_examiner` registered (PR #603, `1c364227`); not yet placed.
      - Pallass content ("Room on the Row" plus re-themes of `forge_tier_permit`,
        `tempered_standards`, `ledger_eats_first`) with placeholder sprites:
-       `/private/tmp/wi-pallass-content`. Rebasing onto `06eea743` to re-pin
-       journeys; real sprite ids swap in after the art lane. A peer session's
-       regional-kits work holds off `data/maps/pallass/*` until this merges. Heavy runs are staggered
-       (`WI_SWEEP_JOBS=3`).
+       `/private/tmp/wi-pallass-content`. Rebasing onto `1c364227` to swap in
+       the real sprite ids and re-pin journeys. A peer session's
+       regional-kits work holds off `data/maps/pallass/*` until this merges.
+       Heavy runs are staggered (`WI_SWEEP_JOBS=3`).
      Design docs: `docs/design/453-rest-signposting.md`, `513-pallass-income.md`.
      A third floodplains quest: not now. Runners' Post: #600.
   Each issue closes through its own PR after independent review and CI.
@@ -108,7 +108,13 @@ python3 scripts/render_qa_notes.py --write
 
 - Local engine **4.7-stable (5b4e0cb0f)**; CI pins **4.7-stable** (#529).
 - macOS has no `timeout`; use the alarm wrapper. Shell stays Bash 3.2-safe,
-  and zsh does not word-split unquoted variables in loops.
+  and zsh does not word-split unquoted variables in loops; write `${rev}:path`
+  in zsh, since `$rev:w…` is read as a history modifier.
+- PixelLab's subscription lapsed 2026-10-06. #603 was paid from prepaid credit
+  via the REST API ($0.40; $0.05 left). More art needs a renewal (user purchase).
+- Skill-library proposals (from the #603 art lane, for Fable): document the
+  QA-only `stage_sprite` action in the QA DSL reference; record the PixelLab
+  REST credit route and its one-job concurrency limit in `wi-art-and-sprites`.
 - Windowed QA serializes. Reruns replace `qa_output/`; a full sweep flushes it.
 - Godot 4.7 web export templates and Playwright are installed locally, so
   `qa/web/run_web_qa.sh` and `qa/web/run_browser_suite.py` run here.
