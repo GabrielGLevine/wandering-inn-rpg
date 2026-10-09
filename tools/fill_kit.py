@@ -35,6 +35,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shlex
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -330,16 +331,49 @@ def _span(text: str, path: list[str]) -> tuple[int, int]:
     return o, c
 
 
+def _item_starts(text: str, o: int, c: int) -> list[int]:
+    """Start index of every direct child of the container span (array items or object keys)."""
+    if text[o] == "{":
+        return [ki for _k, ki, _vi, _ve in _children(text, o, c)]
+    out, i = [], o + 1
+    while i < c:
+        if text[i] in " \t\r\n,":
+            i += 1
+            continue
+        out.append(i)
+        if text[i] in "{[":
+            _, vc = splice_json.scan_container_span(text, text[i], "}" if text[i] == "{" else "]", i)
+            i = vc + 1
+        elif text[i] == '"':
+            i = _string_end(text, i)
+        else:
+            i = re.compile(r"[^,\s\]}]+").match(text, i).end()
+    return out
+
+
 def _insert(text: str, o: int, c: int, body_json: str, key: str | None) -> str:
+    """Splice one member in. last_sibling_indent returns the whole line prefix, which is
+    not whitespace for inline containers, so layout is decided here instead."""
+    inline_body = ('"%s": %s' % (key, body_json)) if key is not None else body_json
+    if "\n" not in text[o:c]:
+        if text[o + 1:c].strip():
+            tail = c
+            while text[tail - 1] in " \t":
+                tail -= 1
+            return text[:tail] + ", " + inline_body + text[tail:]
+        return text[:o + 1] + inline_body + text[c:]
     if text[o + 1:c].strip():
-        indent = splice_json.last_sibling_indent(text, o, c)
-        body = splice_json.reindent(body_json, indent)
+        last = _item_starts(text, o, c)[-1]
+        prefix = text[text.rfind("\n", 0, last) + 1:last]
+        tail = c
+        while text[tail - 1] in " \t\r\n":
+            tail -= 1
+        if prefix.strip():
+            return text[:tail] + ", " + inline_body + text[tail:]
+        body = splice_json.reindent(body_json, prefix)
         if key is not None:
             body = '"%s": %s' % (key, body)
-        tail = c
-        while text[tail - 1] in " \t\n":
-            tail -= 1
-        return text[:tail] + ",\n" + indent + body + text[tail:]
+        return text[:tail] + ",\n" + prefix + body + text[tail:]
     line_start = text.rfind("\n", 0, o) + 1
     base = re.match(r"[ \t]*", text[line_start:o]).group(0)
     indent = base + ("\t" if "\t" in base or text.startswith("{\n\t") else " ")
@@ -350,9 +384,12 @@ def _insert(text: str, o: int, c: int, body_json: str, key: str | None) -> str:
 
 
 def _prove(before: str, after: str, path: list[str]) -> None:
-    node = json.loads(after)
-    for key in path:
-        node = node[key]
+    try:
+        node = json.loads(after)
+        for key in path:
+            node = node[key]
+    except (json.JSONDecodeError, KeyError, TypeError) as exc:
+        raise wa.Refused(f"kits.json splice produced invalid JSON at {'.'.join(path)}: {exc}") from exc
     pre = 0
     while pre < min(len(before), len(after)) and before[pre] == after[pre]:
         pre += 1
@@ -418,18 +455,62 @@ def next_ids(region: str, role: str, n: int, catalog: dict, pool: list[str]) -> 
     return out
 
 
+def _cell(value: str) -> str:
+    return re.sub(r"[\r\n]+", " ", str(value)).replace("|", "/").strip()
+
+
+def _open_row(lines: list[str], region: str, role: str) -> int | None:
+    for i, line in enumerate(lines):
+        cells = [c.strip() for c in line.strip().strip("|").split("|")] if line.startswith("|") else []
+        if len(cells) == 7 and cells[0] == region and cells[1] == role and cells[6] == "open":
+            return i
+    return None
+
+
 def generation_list_with(text: str, region: str, role: str, have: list[str], need: int,
                          lacked: str, base: str) -> str:
     if not text:
         text = GENERATION_LIST_HEADER
-    row = f"| {region} | {role} | {', '.join(have) or '-'} | {need} | {lacked or '-'} | {base or '-'} | open |"
+    row = (f"| {_cell(region)} | {_cell(role)} | {_cell(', '.join(have)) or '-'} | {need} | "
+           f"{_cell(lacked) or '-'} | {_cell(base) or '-'} | open |")
     lines = text.rstrip("\n").split("\n")
-    for i, line in enumerate(lines):
-        cells = [c.strip() for c in line.strip().strip("|").split("|")] if line.startswith("|") else []
-        if len(cells) == 7 and cells[0] == region and cells[1] == role and cells[6] == "open":
-            lines[i] = row
-            return "\n".join(lines) + "\n"
+    i = _open_row(lines, region, role)
+    if i is not None:
+        lines[i] = row
+        return "\n".join(lines) + "\n"
     return "\n".join(lines + [row]) + "\n"
+
+
+def generation_list_closed(text: str, region: str, role: str, have: list[str]) -> str:
+    """Close the open (region, role) row as `done <ids>`; rows are never deleted."""
+    lines = text.rstrip("\n").split("\n")
+    i = _open_row(lines, region, role)
+    if i is None:
+        return text
+    cells = [c.strip() for c in lines[i].strip().strip("|").split("|")]
+    cells[2] = _cell(", ".join(have))
+    cells[6] = "done " + _cell(", ".join(have))
+    lines[i] = "| " + " | ".join(cells) + " |"
+    return "\n".join(lines) + "\n"
+
+
+def matching_entry(c: Candidate, catalog: dict, paths: wa.Paths, region: str, role: str,
+                   explicit: str | None) -> str | None:
+    """An already-wired entry holding this candidate's art, so a re-run after a partial
+    failure reuses it. Only this role's auto ids (or the explicit id) qualify: shipped
+    entries such as `crate` share pack regions and must not become pool members."""
+    auto = re.compile(rf"^{re.escape(region)}_{re.escape(role)}_\d+$")
+    for sid, entry in catalog.items():
+        if not isinstance(entry, dict) or not (sid == explicit if explicit else auto.match(sid)):
+            continue
+        idle = (entry.get("animations") or {}).get("idle") or {}
+        sheet = str(idle.get("sheet", "")).replace("res://", "")
+        if c.mode == "pack":
+            if sheet == c.sheet and idle.get("region") and [int(v) for v in idle["region"]] == c.region:
+                return sid
+        elif not idle.get("region") and (paths.game / sheet).is_file() and wa.sha256_file(paths.game / sheet) == c.sha:
+            return sid
+    return None
 
 
 def warn_fallback_set(catalog: dict, pool: list[str]) -> None:
@@ -454,25 +535,36 @@ def select(args: argparse.Namespace, paths: wa.Paths, cands: list[Candidate], kt
     if not picks or len(set(picks)) != len(picks) or any(n not in known for n in picks):
         print(f"fill_kit: --select {args.select} is not a set of listed numbers 1..{len(cands)}")
         return EXIT_USAGE
-    ids = args.ids.split(",") if args.ids else next_ids(args.region, args.role, len(picks), catalog, pool)
-    if len(ids) != len(picks) or any(not wa.ID_RE.match(i) for i in ids):
+    explicit = args.ids.split(",") if args.ids else None
+    if explicit is not None and (len(explicit) != len(picks) or any(not wa.ID_RE.match(i) for i in explicit)):
         print(f"fill_kit: --ids needs {len(picks)} valid id(s)")
         return EXIT_USAGE
     chosen = [known[n] for n in picks]
-    if any(c.mode == "pack" for c in chosen) and not args.fallback:
+    reused = [matching_entry(c, catalog, paths, args.region, args.role, explicit[k] if explicit else None)
+              for k, c in enumerate(chosen)]
+    if explicit:
+        ids = explicit
+    else:
+        fresh = iter(next_ids(args.region, args.role, reused.count(None), catalog,
+                              pool + [r for r in reused if r]))
+        ids = [r or next(fresh) for r in reused]
+    if any(c.mode == "pack" for c, r in zip(chosen, reused) if r is None) and not args.fallback:
         raise wa.Refused("a pack pick needs --fallback <owned public sprite_id> (public builds must not lose the pool)")
     # kits.json must be editable before any wire_asset call mutates anything
     kits_with_pool(ktext, args.region, args.role, ids, args.pick, args.module)
     wired: list[str] = []
-    for c, sid in zip(chosen, ids):
-        argv = [str(c.path), "--id", sid, "--repo-root", str(paths.repo_root), "--no-regen"]
-        if c.mode == "pack":
-            argv += ["--fallback", args.fallback]
-        if like:
-            argv += ["--like", like]
-        rc = wa.main(argv)
-        if rc != 0:
-            raise wa.Refused(f"wire_asset exit {rc} for #{c.n} ({c.path.name}); pool not updated")
+    for c, sid, hit in zip(chosen, ids, reused):
+        if hit is None:
+            argv = [str(c.path), "--id", sid, "--repo-root", str(paths.repo_root), "--no-regen"]
+            if c.mode == "pack":
+                argv += ["--fallback", args.fallback]
+            if like:
+                argv += ["--like", like]
+            rc = wa.main(argv)
+            if rc != 0:
+                raise wa.Refused(f"wire_asset exit {rc} for #{c.n} ({c.path.name}); pool not updated. "
+                                 f"Already wired, not yet pooled: {wired or 'none'}. "
+                                 f"Re-run (wired picks are reused): {rerun_command(args)}")
         wired.append(sid)
     wa.regenerate_candidates(paths)
     new_text = kits_with_pool(ktext, args.region, args.role, wired, args.pick, args.module)
@@ -481,12 +573,29 @@ def select(args: argparse.Namespace, paths: wa.Paths, cands: list[Candidate], kt
     have = role_pool_ids(json.loads(new_text), args.region, args.role)
     warn_fallback_set(wa.load_catalog(paths)[1], have)
     print(f"pool {args.region}/{args.role}: {have}")
-    if len(wired) < args.need:
-        gl = paths.docs / "art-generation-list.md"
+    gl = paths.docs / "art-generation-list.md"
+    if len(have) < args.need:
         gl.write_text(generation_list_with(wa.read_text(gl), args.region, args.role, have, args.need,
                                            args.lacked, args.base or (have[0] if have else "")), encoding="utf-8")
-        print(f"shortfall: selected {len(wired)} < need {args.need}; open row in docs/art-generation-list.md")
+        print(f"shortfall: pool {len(have)} < need {args.need}; open row in docs/art-generation-list.md")
+    elif gl.is_file():
+        closed = generation_list_closed(wa.read_text(gl), args.region, args.role, have)
+        if closed != wa.read_text(gl):
+            gl.write_text(closed, encoding="utf-8")
+            print("pool filled: generation-list row closed")
     return EXIT_OK
+
+
+def rerun_command(args: argparse.Namespace) -> str:
+    parts = ["python3", "tools/fill_kit.py", args.region, args.role, "--need", str(args.need)]
+    for flag, val in (("--kind", args.kind), ("--size", args.size), ("--select", args.select), ("--ids", args.ids),
+                      ("--pick", args.pick), ("--fallback", args.fallback), ("--lacked", args.lacked or None),
+                      ("--base", args.base), ("--repo-root", args.repo_root)):
+        if val:
+            parts += [flag, str(val)]
+    if args.module:
+        parts.append("--module")
+    return " ".join(shlex.quote(x) for x in parts)
 
 
 def candidate_image(c: Candidate) -> Image.Image:

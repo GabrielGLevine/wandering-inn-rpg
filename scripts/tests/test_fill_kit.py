@@ -260,3 +260,106 @@ def test_never_calls_pixellab():
     src = (HERE.parent.parent / "tools" / "fill_kit.py").read_text()
     assert not re.search(r"^\s*(import|from)\s+(requests|urllib|http|socket)\b", src, re.M)
     assert "mcp__pixellab" not in src and "pixellab.ai" not in src
+
+
+_INLINE = ('{"_comment": "c", "_common": {"materials": {}, "roles": {}, "cast": []}, '
+           '"invrisil": {"materials": {}, "roles": {"cargo": {"pick": "cell", "pool": ["a", ["b", 2]]}}, "cast": []}}\n')
+_TABS = ('{\n\t"_comment": "c",\n\t"_common": {"materials": {}, "roles": {}, "cast": []},\n'
+         '\t"invrisil": {\n\t\t"materials": {},\n\t\t"roles": {\n\t\t\t"cargo": {"pick": "cell", "pool": ["a", ["b", 2]]}\n\t\t},\n\t\t"cast": []\n\t}\n}\n')
+_ONE = json.dumps(json.loads(_INLINE), indent=1) + "\n"
+LAYOUTS = {"inline": _INLINE, "tabs": _TABS, "indent1": _ONE}
+
+
+def _pure_insertion(before: str, after: str) -> bool:
+    pre = 0
+    while pre < min(len(before), len(after)) and before[pre] == after[pre]:
+        pre += 1
+    suf = 0
+    while suf < min(len(before), len(after)) - pre and before[-1 - suf] == after[-1 - suf]:
+        suf += 1
+    return pre + suf >= len(before)
+
+
+@pytest.mark.parametrize("layout", LAYOUTS)
+def test_splice_survives_every_layout(layout):
+    text = LAYOUTS[layout]
+    base = json.loads(text)
+    out = fk.kits_with_pool(text, "invrisil", "cargo", ["c"], "cell", False)
+    want = json.loads(text)
+    want["invrisil"]["roles"]["cargo"]["pool"].append("c")
+    assert json.loads(out) == want and _pure_insertion(text, out)
+    out = fk.kits_with_pool(text, "invrisil", "door", ["d1"], "door", True)
+    want = json.loads(text)
+    want["invrisil"]["roles"]["door"] = {"pick": "door", "module": True, "pool": ["d1"]}
+    assert json.loads(out) == want and _pure_insertion(text, out)
+    out = fk.kits_with_pool(text, "liscor", "cargo", ["l1"], "cell", False)
+    want = json.loads(text)
+    want["liscor"] = {"materials": {}, "roles": {"cargo": {"pick": "cell", "pool": ["l1"]}}, "cast": []}
+    assert json.loads(out) == want and _pure_insertion(text, out)
+    assert json.loads(out)["invrisil"] == base["invrisil"]
+    if layout != "indent1":
+        assert '["a", ["b", 2]' in out
+
+
+def test_splice_failure_is_refused_not_a_traceback(monkeypatch):
+    monkeypatch.setattr(fk, "_insert", lambda *a, **k: "{ not json")
+    with pytest.raises(wa.Refused):
+        fk.add_key(_INLINE, [], "z", 1)
+
+
+def _fail_second_wire(monkeypatch):
+    real, calls = wa.main, []
+
+    def flaky(argv):
+        calls.append(argv)
+        return 4 if len(calls) == 2 else real(argv)
+    monkeypatch.setattr(wa, "main", flaky)
+    return real
+
+
+def test_failed_selection_is_resumable_without_duplicates(tree, monkeypatch, capsys):
+    real = _fail_second_wire(monkeypatch)
+    args = ("invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "1,2", "--fallback", "crate_owned")
+    assert run(tree, *args) == wa.EXIT_REFUSED
+    out = capsys.readouterr().out
+    assert "invrisil_cargo_1" in out and "python3 tools/fill_kit.py invrisil cargo" in out and "--select 1,2" in out
+    assert "invrisil_cargo_1" not in kits(tree)["invrisil"]["roles"].get("cargo", {}).get("pool", [])
+    monkeypatch.setattr(wa, "main", real)
+    write_registry(tree)
+    assert run(tree, *args) == 0
+    cat = json.loads((tree / "wandering_inn_game/data/sprites.json").read_text())
+    assert sorted(k for k in cat if k.startswith("invrisil_cargo")) == ["invrisil_cargo_1", "invrisil_cargo_2"]
+    assert kits(tree)["invrisil"]["roles"]["cargo"]["pool"] == ["invrisil_cargo_1", "invrisil_cargo_2"]
+
+
+def test_reuse_only_matches_this_roles_ids(tree):
+    # the shipped `crate` entry shares the slice's sheet region but must never become a pool member
+    assert run(tree, "invrisil", "cargo", "--need", "1", "--kind", "crate", "--select", "2",
+               "--fallback", "crate_owned") == 0
+    assert kits(tree)["invrisil"]["roles"]["cargo"]["pool"] == ["invrisil_cargo_1"]
+
+
+def test_filled_pool_closes_the_open_row(tree):
+    assert run(tree, "invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "1",
+               "--lacked", "x") == 0
+    assert "| open |" in (tree / GEN).read_text()
+    write_registry(tree)
+    assert run(tree, "invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "1",
+               "--fallback", "crate_owned") == 0
+    text = (tree / GEN).read_text()
+    assert "| invrisil | cargo | invrisil_cargo_1, invrisil_cargo_2 | 2 | x | invrisil_cargo_1 | done invrisil_cargo_1, invrisil_cargo_2 |" in text
+    assert "| open |" not in text
+
+
+def test_shortfall_counts_the_whole_pool(tree):
+    assert run(tree, "invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "1") == 0
+    write_registry(tree)
+    assert run(tree, "invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "1",
+               "--fallback", "crate_owned") == 0
+    assert "| open |" not in (tree / GEN).read_text()   # 1 new pick < need, but the pool of 2 is full
+
+
+def test_generation_cells_are_sanitized():
+    out = fk.generation_list_with("", "r", "x", ["a"], 2, "no | pipes\nor lines", "b|c")
+    row = out.rstrip("\n").split("\n")[-1]
+    assert row == "| r | x | a | 2 | no / pipes or lines | b/c | open |"
