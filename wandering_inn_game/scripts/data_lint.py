@@ -1578,22 +1578,29 @@ def _g4_signature(doc: dict) -> dict:
 
 
 def _has_ref(doc: dict) -> bool:
-	return any(isinstance(r, dict) and str(r.get("sprite", "")).startswith("@")
-		for layer in ("decor", "entities") for r in doc.get(layer) or [])
+	"""True when the map uses any @ref: a sprite role, or a floor/wall material."""
+	walls = doc.get("walls") if isinstance(doc.get("walls"), dict) else {}
+	rows = [(r, "sprite") for layer in ("decor", "entities") for r in doc.get(layer) or []]
+	rows += [(r, "material") for r in list(doc.get("floor_layers") or []) + [walls] + list(walls.get("segments") or [])]
+	return any(isinstance(r, dict) and str(r.get(key, "")).startswith("@") for r, key in rows)
 
 
-def _g4_compare(current: dict, base: dict, errors: list) -> None:
+def _g4_compare(current: dict, base: dict, errors: list) -> int:
 	"""G4 clutter: a map that carries an @ref must keep the base tree's
 	(layer, cell) multiset, blocked, wall geometry and scatter density. Only
-	sprite/material/tint/light fields may change on conversion."""
+	sprite/material/tint/light fields may change on conversion.
+	Returns how many maps were actually compared (0 -> the gate is n/a)."""
+	compared = 0
 	for map_id, doc in sorted(current.items()):
 		if map_id not in base or not _has_ref(doc):
 			continue
+		compared += 1
 		a, b = _g4_signature(base[map_id]), _g4_signature(doc)
 		for comp in a:
 			if a[comp] != b[comp]:
 				errors.append(f"maps/{map_id}: G4 clutter -- {comp} changed on conversion (only sprite/material/tint/light may change)")
 				break
+	return compared
 
 
 def _git(*args: str) -> str:
@@ -1608,9 +1615,11 @@ def _g4_base_maps(base_ref, advisories: list):
 		prefix = f"{GAME_ROOT.name}/data/maps"
 		out = {}
 		for path in _git("ls-tree", "-r", "--name-only", ref, "--", prefix).splitlines():
-			parts = path.split("/")
-			if len(parts) == 4 and path.endswith(".json"):
-				out[Path(path).stem] = json.loads(_git("show", f"{ref}:{path}"))
+			p = Path(path)
+			if p.suffix == ".json" and p.parent.parent.name == "maps" and p.stem != "_shared_talk":
+				out[p.stem] = json.loads(_git("show", f"{ref}:{path}"))
+		if not out:
+			raise ValueError("no maps at base ref")
 		return out
 	except (subprocess.SubprocessError, OSError, ValueError):
 		advisories.append("kits G4: no base ref (shallow clone or no origin/main) -- structural diff skipped")
@@ -1642,7 +1651,7 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 			by_region.setdefault(regions[map_id], {})[map_id] = doc
 	converted = sorted(r for r, docs in by_region.items()
 		if any(isinstance(v, dict) for v in ((kits.get(r) or {}).get("roles") or {}).values())
-		and any(p["role"] for d in docs.values() for p in _placements(d)))
+		and any(kl._rows_of(d) for d in docs.values()))
 	total = sum(len(_placements(d)) for d in resolved.values())
 	g1: list = []
 	g2: list = []
@@ -1651,10 +1660,9 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 		role_n: dict = {}
 		for map_id, doc in by_region[region].items():
 			per_map: dict = {}
-			for p in _placements(doc):
-				if p["role"]:
-					per_map.setdefault(p["role"], {}).setdefault(p["sprite"], 0)
-					per_map[p["role"]][p["sprite"]] += 1
+			for p in kl._rows_of(doc):  # the resolver's own count: every @role row, hide_sprite included
+				per_map.setdefault(p["sprite_role"], {}).setdefault(p["sprite"], 0)
+				per_map[p["sprite_role"]][p["sprite"]] += 1
 			for role_name, counts in per_map.items():
 				n = sum(counts.values())
 				role_n[role_name] = role_n.get(role_name, 0) + n
@@ -1726,19 +1734,30 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 	n_adv = sum(1 for a in advisories if a.startswith("kits G3:"))
 	if fly:
 		report.append(f"kits G3: {len(fly)} sprite(s) not in the baseline generic_class, classed on the fly")
-	g4_state = "ok"
+	g4_state = "n/a"
 	g4: list = []
 	raw = _compose_maps(parsed, []) if isinstance(parsed, dict) else {}
 	if base_ref or any(_has_ref(d) for d in raw.values()):
 		base_maps = _g4_base_maps(base_ref, advisories)
 		if base_maps is None:
 			g4_state = "skipped"
-		else:
-			_g4_compare(raw, base_maps, g4)
+		elif _g4_compare(raw, base_maps, g4):
+			g4_state = "ok"
+	biomes: dict = {}
+	for map_id, doc in resolved.items():
+		if map_id in regions and doc.get("biome"):
+			biomes.setdefault(str(doc["biome"]), set()).add(regions[map_id])
+	for region in converted:
+		for map_id, doc in sorted(by_region[region].items()):
+			n = len(biomes.get(str(doc.get("biome", "")), ()))
+			if n:
+				report.append(f"kits G2: biome {doc['biome']} shared with {n} regions (maps/{map_id}, report only)")
+				if n > 1:
+					advisories.append(f"kits G2: maps/{map_id} biome {doc['biome']} is shared with {n} regions")
 	errors.extend(g1 + g2 + g3 + g4)
 	report.append("kits G5: run qa/check_fallback_boot.sh and scripts/ship_asset_scan.py on the overlay before a region close (not computed here)")
 	report.append(f"kits: {len(set(regions.values()))} regions, {len(converted)} converted, {total} placements; G1 {_status(g1)}, "
-		f"G2 {_status(g2)}, G3 {_status(g3)} ({n_adv} maps advisory), G4 {g4_state if g4_state == 'skipped' else _status(g4)}")
+		f"G2 {_status(g2)}, G3 {_status(g3)} ({n_adv} maps advisory), G4 {_status(g4) if g4 else g4_state}")
 
 
 def seen_set(seen: dict, region: str) -> set:
@@ -3388,7 +3407,13 @@ def main() -> int:
 	check_placements_off_water(maps, errors)
 	advisories: list = []
 	resolved_maps = check_kits(parsed, maps, errors, advisories, report)
-	base_ref = sys.argv[sys.argv.index("--base") + 1] if "--base" in sys.argv else None
+	base_ref = None
+	if "--base" in sys.argv:
+		at = sys.argv.index("--base") + 1
+		if at >= len(sys.argv) or sys.argv[at].startswith("--"):
+			print("data_lint: usage -- --base <git-ref> needs a ref", file=sys.stderr)
+			return 2
+		base_ref = sys.argv[at]
 	baseline_path = GAME_ROOT / "qa" / "baselines" / "scene-repetition.json"
 	baseline = json.loads(baseline_path.read_text()) if baseline_path.exists() else None
 	if "--regen-scene-baseline" in sys.argv:

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """#607 lane A: every kit lint rule proven able to FAIL, and clean on HEAD."""
 import copy, json, subprocess, sys, unittest
+from unittest import mock
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -263,12 +264,81 @@ class TestGates(unittest.TestCase):
         self.assertEqual(regen["regions"], baseline["regions"])
         self.assertEqual(regen["generic_class"], baseline["generic_class"])
 
+class TestFixRound1(unittest.TestCase):
+    def test_base_maps_load_real_ref(self):
+        adv = []
+        base = data_lint._g4_base_maps("HEAD", adv)
+        parsed, maps = data_lint._lint_inputs()
+        self.assertIsNotNone(base, adv)
+        self.assertGreater(len(base), 30)
+        self.assertIn("street", base)
+        self.assertEqual(set(base) - {"_shared_talk"}, set(base))
+        self.assertTrue(set(maps) <= set(base) | {"_shared_talk"})
+
+    def test_empty_base_is_advisory_none(self):
+        adv = []
+        with mock.patch.object(data_lint, "_git", return_value=""):
+            self.assertIsNone(data_lint._g4_base_maps("HEAD", adv))
+        self.assertTrue(any("G4" in a for a in adv))
+
+    def test_g4_through_real_base_loader(self):
+        base = data_lint._g4_base_maps("HEAD", [])
+        cur = copy.deepcopy(base["street"])
+        cur["decor"][0]["sprite"] = "@cargo"
+        path = data_lint.DATA / "maps" / "liscor" / "street.json"
+        def go(doc):
+            errors, report = [], []
+            data_lint.check_kit_gates({"street": doc}, {"street": "liscor"}, KITS, {path: doc}, errors, [], report, base_ref="HEAD", baseline=None)
+            return errors, report
+        errors, report = go(cur)
+        self.assertEqual([e for e in errors if "G4" in e], [])
+        self.assertTrue(report[-1].endswith("G4 ok"), report[-1])
+        cur["decor"].append(copy.deepcopy(cur["decor"][0]))
+        errors, _ = go(cur)
+        self.assertTrue(any("G4" in e and "decor" in e for e in errors))
+
+    def test_main_base_without_value_exits_2(self):
+        r = subprocess.run([sys.executable, str(GAME / "scripts" / "data_lint.py"), "--base"], capture_output=True, text=True, cwd=str(REPO_ROOT))
+        self.assertEqual(r.returncode, 2)
+        self.assertIn("--base", r.stderr)
+        self.assertNotIn("Traceback", r.stderr)
+
+    def test_g1_counts_hidden_role_rows_like_resolver(self):
+        # 6 @role entities, all hide_sprite: resolver counts 6 and picks one variant for a map pick
+        k = copy.deepcopy(KITS); k["r"]["roles"]["cargo"]["pool"] = ["c1", "c2"]
+        ents = [{"id": f"e{i}", "sprite": "c1", "sprite_role": "cargo", "hide_sprite": True, "cell": [i, 0]} for i in range(6)]
+        errors = []
+        data_lint.check_kit_gates({"m": {**GRID, "decor": [], "entities": ents}}, {"m": "r"}, k, [], errors, [], [], base_ref=None, baseline=None)
+        self.assertTrue(any("G1" in e and "pool of at least 3" in e for e in errors))
+        self.assertTrue(any("G1" in e and "ceil" in e for e in errors))
+
+    def test_has_ref_detects_material_refs(self):
+        self.assertTrue(data_lint._has_ref({"floor_layers": [{"material": "@fa"}]}))
+        self.assertTrue(data_lint._has_ref({"walls": {"material": "@fa"}}))
+        self.assertTrue(data_lint._has_ref({"walls": {"segments": [{"material": "@fa"}]}}))
+        self.assertFalse(data_lint._has_ref({"floor_layers": [{"material": "plain"}], "decor": []}))
+
+    def test_g4_na_when_nothing_compared(self):
+        report = []
+        data_lint.check_kit_gates({"m": {**GRID, "decor": [], "entities": []}}, {"m": "r"}, KITS, {}, [], [], report, base_ref=None, baseline=None)
+        self.assertTrue(report[-1].endswith("G4 n/a"), report[-1])
+
+    def test_biome_shared_report_and_advisory(self):
+        def doc(): return {**GRID, "biome": "cave", "entities": [], "decor": [{"sprite": "c1", "sprite_role": "cargo", "cell": [0, 0]}]}
+        resolved = {"m": doc(), "o": {**GRID, "biome": "cave", "entities": [], "decor": []}}
+        errors, adv, report = [], [], []
+        data_lint.check_kit_gates(resolved, {"m": "r", "o": "q"}, KITS, {}, errors, adv, report, base_ref=None, baseline=None)
+        self.assertTrue(any("biome cave shared with 2 regions" in r for r in report), report)
+        self.assertTrue(any("biome cave" in a for a in adv))
+        self.assertEqual([e for e in errors if "biome" in e], [])
+
 
 class TestRealTree(unittest.TestCase):
     def test_clean_on_head(self):
         r = subprocess.run([sys.executable, str(GAME / "scripts" / "data_lint.py")], capture_output=True, text=True, cwd=str(REPO_ROOT))
         self.assertEqual(r.returncode, 0, r.stderr)
-        self.assertIn("kits:", r.stdout)  # the G-gate REPORT line (Task 6)
+        self.assertIn("kits:", r.stdout)
+        self.assertIn("G4 n/a", r.stdout)  # the G-gate REPORT line (Task 6)
 
 
 if __name__ == "__main__":
