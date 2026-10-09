@@ -171,3 +171,63 @@ def test_odd_sheet_is_a_probe_error(tree):
     before = snapshot(tree)
     assert run(tree, str(odd), "--id", "odd_prop") == wa.EXIT_PROBE
     assert snapshot(tree) == before
+
+
+def test_pack_slice_becomes_region_row(tree):
+    before = snapshot(tree)
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    e = sprites(tree)["crate_lidded"]
+    assert e["animations"]["idle"] == {"sheet": "res://assets/props/free_pack/Furniture.png",
+                                       "frame_size": [16, 23], "region": [16, 8, 16, 23], "fps": 1}
+    assert e["fallback_sprite"] == "crate_owned" and e["render_scale"] == 1.0
+    assert e["anchor"] == [0.5, 1.0] and "shadow" not in e
+    assert e["_comment"].startswith("slice of potential_assets/Pixel Crawler - Free Pack 2.1/Furniture.png "
+                                    "region [16, 8, 16, 23]")
+    assert fixture(tree)["crate_lidded/idle"] == 1
+    after = snapshot(tree)
+    assert not any(p.startswith("wandering_inn_game/assets/") for p in set(after) - set(before))
+    for untouched in ("wandering_inn_game/assets_manifest.json", PROVENANCE):
+        assert after[untouched] == before[untouched]
+
+
+def test_pack_slice_rerun_is_noop(tree):
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    before = snapshot(tree)
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    assert snapshot(tree) == before
+
+
+@pytest.mark.parametrize("fallback", [None, "crate", "pc_human_m", "nope"])
+def test_pack_slice_requires_public_one_hop_fallback(tree, fallback):
+    before = snapshot(tree)
+    argv = [SLICE, "--id", "crate_lidded"] + (["--fallback", fallback] if fallback else [])
+    assert run(tree, *argv) == wa.EXIT_REFUSED
+    assert snapshot(tree) == before
+
+
+def test_unbundled_sheet_exits_3_and_logs_pending(tree, capsys):
+    before = snapshot(tree)
+    assert run(tree, PENDING_SLICE, "--id", "hideout_crate", "--fallback", "crate_owned") == wa.EXIT_BUNDLE_PENDING
+    assert f"BUNDLE-PENDING potential_assets/{UNBUNDLED_PACK}/Props.png" in capsys.readouterr().out
+    assert changed(before, snapshot(tree)) == {"docs/art-bundle-pending.md"}
+    doc = (tree / "docs/art-bundle-pending.md").read_text()
+    assert doc.startswith(wa.BUNDLE_PENDING_HEADER)
+    assert doc.count("Props__x0_y0_w16_h16.png") == 1 and "| hideout_crate | [0, 0, 16, 16] |" in doc
+    assert run(tree, PENDING_SLICE, "--id", "hideout_crate", "--fallback", "crate_owned") == wa.EXIT_BUNDLE_PENDING
+    assert (tree / "docs/art-bundle-pending.md").read_text() == doc
+
+
+def test_unbundled_dry_run_logs_nothing(tree):
+    before = snapshot(tree)
+    assert run(tree, PENDING_SLICE, "--id", "hideout_crate", "--fallback", "crate_owned",
+               "--dry-run") == wa.EXIT_BUNDLE_PENDING
+    assert snapshot(tree) == before
+
+
+def test_slicer_game_sheet_hint_short_circuits_hash(tree):
+    sj = tree / f"potential_assets/{UNBUNDLED_PACK}/_sliced/Props/SLICES.json"
+    d = json.loads(sj.read_text())
+    d["assets"][0]["game_sheet"] = "assets/props/free_pack/Furniture.png"
+    sj.write_text(json.dumps(d, indent=1) + "\n")
+    assert run(tree, PENDING_SLICE, "--id", "hinted_crate", "--fallback", "crate_owned") == 0
+    assert sprites(tree)["hinted_crate"]["animations"]["idle"]["sheet"] == "res://assets/props/free_pack/Furniture.png"

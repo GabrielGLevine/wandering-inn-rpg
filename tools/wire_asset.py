@@ -307,6 +307,61 @@ def is_slice(candidate: Path) -> bool:
     return "_sliced" in candidate.parts and (candidate.parent / "SLICES.json").is_file()
 
 
+def slice_row(candidate: Path, paths: Paths) -> dict:
+    """The C8 row for this slice in its SLICES.json (path matched repo-relative)."""
+    rel = candidate.relative_to(paths.repo_root).as_posix()
+    rows = json.loads((candidate.parent / "SLICES.json").read_text(encoding="utf-8")).get("assets", [])
+    row = next((r for r in rows if r.get("path") == rel), None)
+    if row is None:
+        raise Refused(f"{rel}: no row in {candidate.parent / 'SLICES.json'}")
+    for key in ("region", "sheet_sha256", "source_sheet"):
+        if key not in row:
+            raise Refused(f"{rel}: SLICES.json row lacks {key}")
+    return row
+
+
+_SHEET_INDEX: dict[Path, dict[str, str]] = {}
+
+
+def bundled_sheet_for(sha: str, paths: Paths) -> str | None:
+    """'assets/...' path (game-root relative) of the PNG under assets/ hashing to sha, else None."""
+    index = _SHEET_INDEX.get(paths.assets)
+    if index is None:
+        index = {}
+        for p in sorted(paths.assets.rglob("*.png")):
+            index.setdefault(sha256_file(p), p.relative_to(paths.game).as_posix())
+        _SHEET_INDEX[paths.assets] = index
+    return index.get(sha)
+
+
+def plan_slice(candidate: Path, sprite_id: str, args: argparse.Namespace, paths: Paths,
+               text: str, catalog: dict) -> WirePlan:
+    row = slice_row(candidate, paths)
+    x, y, w, h = (int(v) for v in row["region"])
+    if not args.fallback:
+        raise Refused(f"{sprite_id}: pack art needs --fallback <owned public sprite_id>")
+    hint = row.get("game_sheet")
+    rel_sheet = hint if hint and (paths.game / hint).is_file() else bundled_sheet_for(row["sheet_sha256"], paths)
+    if rel_sheet is None:
+        raise BundlePending(row["source_sheet"], [x, y, w, h])
+    pr = probe(candidate)
+    if (pr["w"], pr["h"]) != (w, h):
+        raise ProbeError(f"{candidate.name}: slice PNG is {pr['w']}x{pr['h']} but region says {w}x{h}")
+    sheet_res = f"res://{rel_sheet}"
+    sib = sibling(catalog, "pack", args.like, sheet_res, (w, h))
+    comment = (f"slice of {row['source_sheet']} region {[x, y, w, h]} sheet sha256 "
+               f"{row['sheet_sha256'][:12]}; wired by tools/wire_asset.py")
+    entry = build_entry("pack", sheet_res, (w, h), [x, y, w, h], pr["anchor"], sib, args.kind,
+                        args.fallback, args.fps or 1, comment)
+    plan = WirePlan(sprite_id, entry, 1)
+    plan.notes.append(f"pack: bundled sheet {rel_sheet}; sibling {sib[0] if sib else '(none; defaults)'}; "
+                      f"probe bbox {pr['bbox']} feet {pr['feet']}/{h} anchor {pr['anchor']}")
+    plan.edits.append(TextEdit(paths.sprites, text, sprites_with(text, catalog, sprite_id, entry)))
+    ftext = read_text(paths.fixture)
+    plan.edits.append(TextEdit(paths.fixture, ftext, fixture_with(ftext, f"{sprite_id}/idle", 1)))
+    return plan
+
+
 # ------------------------------------------------------------ text edits
 
 def splice_top_level(text: str, key: str, value: dict) -> str:
@@ -462,7 +517,20 @@ def wire_one(candidate: Path, sprite_id: str, args: argparse.Namespace, paths: P
     text, catalog = load_catalog(paths)
     if args.fallback:
         check_fallback(args.fallback, catalog, bundle_paths(paths))
-    plan = plan_owned(candidate, sprite_id, args, paths, text, catalog)
+    if is_slice(candidate):
+        try:
+            plan = plan_slice(candidate, sprite_id, args, paths, text, catalog)
+        except BundlePending as exc:
+            if not args.dry_run:
+                rel = candidate.relative_to(paths.repo_root).as_posix()
+                doc = read_text(paths.bundle_pending)
+                new = bundle_pending_with(doc, exc.source_sheet, rel, sprite_id, exc.region)
+                if new != doc:
+                    paths.bundle_pending.parent.mkdir(parents=True, exist_ok=True)
+                    paths.bundle_pending.write_text(new, encoding="utf-8")
+            raise
+    else:
+        plan = plan_owned(candidate, sprite_id, args, paths, text, catalog)
     for n in plan.notes:
         print(f"{sprite_id}: {n}")
     if plan.is_noop():
