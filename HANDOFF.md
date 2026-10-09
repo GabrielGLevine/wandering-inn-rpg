@@ -17,10 +17,17 @@ archived, or superseded session blocks.
   - Rules: pool first; gaps go to `docs/art-generation-list.md`, and unbundled pack sheets to `docs/art-bundle-pending.md`. No PixelLab (lapsed) and no bundle release.
   - A region closes only on a blind Fable art-direction read (spec §5.2). User eye-gates are prepared saves, non-blocking under wave autonomy.
   - Status:
-    - Phase 0 is complete. PR #609 (`issue/607-kits-foundation` @ `12b095b0`, composition worktree `/private/tmp/wi-607`) passed every task review and the final Fable review with its fixes. Gates are green: preflight full, load_gate, full sweep (299), data_lint, leak.
-    - CI is pending, then squash-merge.
-    - The untracked slices (1,258) and their labels live in `potential_assets/_sliced/`, with the task file at `potential_assets/_sliced_task.json`.
-    - Next: #608 pilot 1a. First commit: make `wire_asset`'s potential_assets containment check symlink-safe (compare resolved roots), because lane worktrees reach `potential_assets` through a symlink.
+    - #607 Phase 0 is merged: PR #609, squash `108689ef`, with the tree verified. CI is all green; the journey gate stays nightly.
+    - #608 pilot 1a (Invrisil streets), branch `issue/608-invrisil-streets` in `/private/tmp/wi-608a`:
+      - Done: pools wired, 33 rows converted, a module variant cap, the G2 converted-maps scope, and a G4 `_kits_recompose` marker.
+      - Blind Fable art reads: round 1 was 6 PASS / 45 FIX / 6 REJECT. After FIX loop 1, round 2 is 6 / 20 / 0 / 31 DEFERRED; the reader says the streets now look better than before.
+      - FIX round 2 is done. The r3 read found that the alley pose hid the player, so it moved to (18,12) (tip `6e791828`).
+      - Both builds are re-captured with the naming fixed. The scripts hard-code `official`, so public captures must be renamed (`scratchpad/recap4.sh`).
+      - Next, after the usage reset: the r4 scoped re-read with the same reader. Then the CHOICE-LOG G3 line (four regens), the generation-list rows, 4 follow-up issues, and the PR. The drafts are in the session scratchpad.
+      - The ledger is `.superpowers/sdd/2026-10-08-regional-kits-invrisil-pilot/progress.md`.
+      - Captures live in the session scratchpad under `captures-1a/{after,before}`. `qa_output` gets flushed by sweeps.
+      - Extra worktrees to remove at close: `/private/tmp/wi-608a-public` and `/private/tmp/wi-608a-before`.
+    - Untracked slices (1,258, labeled 40/44) live in `potential_assets/_sliced/`.
   - Skill-library proposal (for Fable): document the `slice_atlases` → `label_slices` → `asset_candidates` → `fill_kit` → `wire_asset` pipeline in `wi-art-and-sprites`. Include `--allow-unverified` (codex batches) and the rule to run slicing from the main checkout.
   - Pre-existing debt: 406 pytest warnings on main (`data_lint.py:1129` `Image.getdata`, removed in Pillow 14; `harness_metrics.py:58` unclosed files).
 - **Active program (user, 2026-10-07), in order:**

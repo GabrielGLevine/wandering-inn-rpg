@@ -180,13 +180,25 @@ scores win.
    - Visit placements in `(y, x)` cell order.
    - Take the first `rank_p` entry not used by an already-visited same-role
      placement within radius `r`. `r` is 2 for props, 1 for `module` roles
-     (facades, windows) and 0 for doors.
-   - If no entry qualifies, fall back to `rank_p[0]`.
+     (facades, windows) and 0 for doors. A role may override this with
+     `"radius": <int>`, for example a facade whose modules sit 3 cells apart
+     (#608).
+   - Module roles also cap each variant at `ceil(n / k)` uses per map. A
+     placement skips any variant at the cap. Without the cap, a dominant
+     first-ranked variant took 5 of 9 boulevard windows (#608).
+   - If no entry qualifies:
+     - for module roles, take the first entry under the cap, ignoring the
+       radius;
+     - otherwise, or if no entry is under the cap, take `rank_p[0]`.
 
-   An edit therefore changes only cells within `r`, plus any contiguous chain
-   of forced fallbacks. The exception is when a role's placement count in a
-   map crosses a multiple of 6: k changes, the subset grows, and picks can
-   shift across the whole map.
+   For non-module roles, an edit therefore changes only cells within `r`,
+   plus any contiguous chain of forced fallbacks. The exception is when a
+   role's placement count in a map crosses a multiple of 6: k changes, the
+   subset grows, and picks can shift across the whole map.
+
+   Module roles trade this locality for even spread. Adding or removing a
+   module placement can re-pick later placements in visit order, because
+   the per-variant cap counts uses across the map.
 4. **`pick` modes:**
    - `"cell"` runs steps 1–3.
    - `"map"` takes the subset's top-ranked variant for the whole map, so a
@@ -312,8 +324,10 @@ status. Generation runs only as a user-approved batch (Phase 3).
   - Each region reports **conversion coverage**: explicit ids remaining for
     kinds that have a pool.
 - **G2 identity (primary).**
-  - In converted regions, at least 50% of placements use a variant found in no
-    other region. Kinds in `_common` are excluded.
+  - Across a region's converted maps (maps with at least one `@` reference),
+    at least 50% of placements use a variant found in no other region. Kinds
+    in `_common` are excluded. The region-wide share is report-only, because
+    a region can convert over several PRs (#608 1a/1b).
   - Each converted map's floor and blocked materials are exclusive to its
     region.
   - Generic-core share and `scene_dynamism`'s Jaccard
