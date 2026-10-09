@@ -82,8 +82,18 @@ riverfarm 28%, garden 3%.
 Sprite ids above are illustrative. Real pools come from `fill_kit` (§4.2). A
 role value is either a plain string (one sprite) or a pool object. Pool
 entries take the form `id` or `[id, weight]`. A role may carry a default
-`light`, which a placement's own `light` overrides. Enemy pools are deferred;
-the format has no key reserved for them.
+`light`, which a placement's own `light` overrides, and a `"kind"` from the
+closed vocabulary (§4.1). Enemy pools are deferred; the format has no key
+reserved for them.
+
+**`_common` is the utility pool (#623 amendment, user 2026-10-09).** It holds
+only the Tier A utility kinds: crate, barrel, sack and container.
+- Every `_common` role is a pool object that declares `"kind"`, one of those
+  four. Most wired ids have no kind on record, so the declaration is required.
+  A pool id whose wired kind is on record (`wi_kits_lib.WIRED_KINDS`) must be
+  Tier A as well. Lint rejects any other kind.
+- Its placements are excluded from G2 and capped at 30% (§5.1).
+- The pool stays empty until its Fable pool read (§5.2).
 
 ### 2.2 Binding and references
 
@@ -290,6 +300,11 @@ candidate:
 - Pack variants require a `fallback_sprite`. **Each pool's set of public
   fallbacks contains at least 2 distinct owned sprites**, so the public build
   does not collapse a pool into one sprite.
+- **Duplicate art is refused (#623).** A new id whose art identity (§5.1) is
+  already registered exits 6 and names the existing id; reuse that id. A
+  deliberate second id needs `--alias-of <existing_id> --reason "<text>"`,
+  which records `_alias_of` and `_alias_reason` on the entry. G2 and G3 still
+  count both ids as one picture.
 
 The frame-count pins move to `qa/fixtures/sprite_frame_counts.json`. It is
 generated once from `_build_expected_counts` (tests/test_sprite_registry.gd:254)
@@ -325,11 +340,25 @@ status. Generation runs only as a user-approved batch (Phase 3).
     `ceil(n / k) + 1` times, where k is the subset size actually used.
   - Each region reports **conversion coverage**: explicit ids remaining for
     kinds that have a pool.
+- **Art identity (#623 amendment, user 2026-10-09).** G2 and G3 count art,
+  not sprite ids, because a new id over old art is not regional identity.
+  `wi_kits_lib.art_identity` keys:
+  - a region row on its sheet path and region rect;
+  - a frame sheet on the sha256 of the sheet file plus its frame size;
+  - the entry's own idle (else first) animation, never its `fallback_sprite`.
+    `render_scale`, tint and anchor do not count.
+
+  An absent sheet (a checkout without the overlay) keys on its path. Lint
+  REPORTs every art identity carried by more than one sprite id, marking the
+  cross-region ones; that line is never an error.
 - **G2 identity (primary).**
   - Across a region's converted maps (maps with at least one `@` reference),
-    at least 50% of placements use a variant found in no other region. Kinds
-    in `_common` are excluded. The region-wide share is report-only, because
-    a region can convert over several PRs (#608 1a/1b).
+    at least 50% of placements use art found in no other region, under any
+    id. Placements that resolve through a `_common` Tier A role are excluded
+    from the numerator and the denominator. The region-wide share is
+    report-only, because a region can convert over several PRs (#608 1a/1b).
+  - **`_common` cap:** those Tier A placements may be at most 30% of all
+    placements on a region's converted maps. Over the cap is a lint error.
   - Each converted map's floor and blocked materials are exclusive to its
     region.
   - Generic-core share and `scene_dynamism`'s Jaccard
@@ -338,7 +367,8 @@ status. Generation runs only as a user-approved batch (Phase 3).
 - **G3 ratchet.**
   - `qa/baselines/scene-repetition.json` freezes each sprite's generic-or-not
     class and ratchets per-region counters, with a tolerance of +1 placement or
-    +2pp.
+    +2pp. A sprite is generic when its art is placed in 3+ regions under any
+    id; a sprite missing from the baseline is classed the same way on the fly.
   - Maps missing from the baseline are advisory.
   - The baseline is regenerated only via an explicit flag plus a CHOICE-LOG
     line.

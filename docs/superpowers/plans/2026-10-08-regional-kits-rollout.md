@@ -134,6 +134,7 @@ Logged in `docs/CHOICE-LOG.md` (Regional kits). Land both before another map ado
 - [ ] Roles: each pool selected via `fill_kit` with a pool read; fallback set ≥2 distinct owned sprites; lint and commit per role.
 - [ ] Rows converted opt-in; skip list with reasons recorded; stand-ins replaced or listed; cardinal-axis check done.
 - [ ] `data_lint --base origin/main` green: G1–G5, cast and denylist rules.
+- [ ] G2/G3 count art; check `wire_asset` duplicate refusals.
 - [ ] `preflight --full`, `ci_sweep --touching <maps, kits.json, biomes.json>` and `journey_gate --only <affected>` green.
 - [ ] Combat capture where a biome row changed.
 - [ ] Official and public after-captures plus the region strip.
