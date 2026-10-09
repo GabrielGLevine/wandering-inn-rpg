@@ -10864,7 +10864,7 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 3
+   "steps": 4
   },
   {
    "action": "assert_state",
@@ -11219,7 +11219,7 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 3
+   "steps": 4
   },
   {
    "action": "assert_state",
@@ -11944,7 +11944,7 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 3
+   "steps": 4
   },
   {
    "action": "assert_state",
@@ -12283,7 +12283,7 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 3
+   "steps": 4
   },
   {
    "action": "assert_state",

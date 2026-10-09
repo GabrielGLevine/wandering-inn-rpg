@@ -985,11 +985,11 @@
    "type": "ui_gdi_epilogue_rendered"
   },
   {
-   "_comment": "== NEGATIVE: AN UNRELATED CONVERSATION IS NOT A CURTAIN == (coordinator fix round 1) the dialogue-end hook is FILTERED to FINALE_CURTAIN_CONVERSATIONS, because on THIS path seal_resolved banked at a container and an unfiltered hook would credit-roll the next shopkeeper the player greets. The peddler (18,2) carries no talk_pool, so one interact opens peddler_stall directly.",
+   "_comment": "== NEGATIVE: AN UNRELATED CONVERSATION IS NOT A CURTAIN == (coordinator fix round 1) the dialogue-end hook is FILTERED to FINALE_CURTAIN_CONVERSATIONS, because on THIS path seal_resolved banked at a container and an unfiltered hook would credit-roll the next shopkeeper the player greets. The peddler (19,2) carries no talk_pool, so one interact opens peddler_stall directly.",
    "action": "teleport",
    "map": "street",
    "cell": [
-    18,
+    19,
     3
    ]
   },
@@ -1011,11 +1011,11 @@
    "steps": 1
   },
   {
-   "_comment": "Blocked by the peddler, so the PC stays at (18,3) and faces up into him.",
+   "_comment": "Blocked by the peddler, so the PC stays at (19,3) and faces up into him.",
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    18,
+    19,
     3
    ]
   },

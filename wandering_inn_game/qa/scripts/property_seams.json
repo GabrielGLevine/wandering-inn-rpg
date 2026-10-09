@@ -864,16 +864,17 @@
    ]
   },
   {
+   "_comment": "#620 art read: Vess stands behind a filled counter at (5,1); the first up step enters the counter gap (5,2), the second bumps her and faces up.",
    "action": "move",
    "direction": "up",
-   "steps": 1
+   "steps": 2
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
     5,
-    3
+    2
    ]
   },
   {
