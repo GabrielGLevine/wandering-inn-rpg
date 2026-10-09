@@ -223,7 +223,7 @@
  },
  "decor": [
   {
-   "sprite": "table_brown",
+   "sprite": "inn_table_dirty__before",
    "cell": [
     6,
     2
@@ -237,14 +237,14 @@
    ]
   },
   {
-   "sprite": "crate",
+   "sprite": "@cargo",
    "cell": [
     3,
     2
    ]
   },
   {
-   "sprite": "stool",
+   "sprite": "liscor_side_chair",
    "cell": [
     7,
     2
@@ -270,7 +270,7 @@
     7
    ],
    "display_name": "Liscor Street",
-   "sprite": "door",
+   "sprite": "@door_street",
    "to_map": "street",
    "to_cell": [
     21,
