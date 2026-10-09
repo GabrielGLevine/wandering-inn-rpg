@@ -1,0 +1,31 @@
+{
+ "grid": {
+  "width": 7,
+  "height": 7
+ },
+ "blocked": [],
+ "decor": [],
+ "entities": [],
+ "floor_layers": [
+  {
+   "material": "@floor_a",
+   "cells": [
+    [
+     0,
+     0
+    ]
+   ]
+  }
+ ],
+ "walls": {
+  "segments": [
+   {
+    "material": "@floor_a",
+    "cell": [
+     0,
+     0
+    ]
+   }
+  ]
+ }
+}

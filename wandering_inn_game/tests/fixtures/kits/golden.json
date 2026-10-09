@@ -1,0 +1,285 @@
+{
+ "fx_cell": [
+  {
+   "cell": [
+    0,
+    0
+   ],
+   "layer": "decor",
+   "sprite": "c4",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    1,
+    0
+   ],
+   "layer": "decor",
+   "sprite": "c5",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    2,
+    0
+   ],
+   "layer": "decor",
+   "sprite": "c3",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    3,
+    0
+   ],
+   "layer": "decor",
+   "sprite": "c4",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    0,
+    1
+   ],
+   "layer": "decor",
+   "sprite": "c1",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    2,
+    1
+   ],
+   "layer": "decor",
+   "sprite": "c5",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    4,
+    1
+   ],
+   "layer": "decor",
+   "sprite": "c1",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    0,
+    3
+   ],
+   "layer": "decor",
+   "sprite": "c3",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    3,
+    3
+   ],
+   "layer": "decor",
+   "sprite": "c3",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    6,
+    3
+   ],
+   "layer": "decor",
+   "sprite": "c5",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    1,
+    5
+   ],
+   "layer": "decor",
+   "sprite": "c1",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    2,
+    5
+   ],
+   "layer": "decor",
+   "sprite": "c5",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    3,
+    5
+   ],
+   "layer": "decor",
+   "sprite": "c4",
+   "sprite_role": "cargo"
+  },
+  {
+   "cell": [
+    0,
+    6
+   ],
+   "layer": "decor",
+   "sprite": "f3",
+   "sprite_role": "facade"
+  },
+  {
+   "cell": [
+    1,
+    6
+   ],
+   "layer": "decor",
+   "sprite": "f2",
+   "sprite_role": "facade"
+  },
+  {
+   "cell": [
+    2,
+    6
+   ],
+   "layer": "decor",
+   "sprite": "f3",
+   "sprite_role": "facade"
+  },
+  {
+   "cell": [
+    6,
+    6
+   ],
+   "layer": "entities",
+   "sprite": "c4",
+   "sprite_role": "cargo"
+  }
+ ],
+ "fx_common": [
+  {
+   "cell": [
+    1,
+    1
+   ],
+   "layer": "decor",
+   "sprite": "street_lamp",
+   "sprite_role": "common_lamp"
+  },
+  {
+   "cell": [
+    2,
+    2
+   ],
+   "layer": "decor",
+   "sprite": "plaza_fountain",
+   "sprite_role": "fixed"
+  }
+ ],
+ "fx_door_a": [
+  {
+   "cell": [
+    1,
+    1
+   ],
+   "layer": "entities",
+   "sprite": "d2",
+   "sprite_role": "door_x"
+  },
+  {
+   "cell": [
+    5,
+    1
+   ],
+   "layer": "entities",
+   "sprite": "d2",
+   "sprite_role": "door_x"
+  }
+ ],
+ "fx_door_b": [
+  {
+   "cell": [
+    3,
+    3
+   ],
+   "layer": "entities",
+   "sprite": "d2",
+   "sprite_role": "door_x"
+  }
+ ],
+ "fx_map": [
+  {
+   "cell": [
+    0,
+    2
+   ],
+   "layer": "decor",
+   "sprite": "s2",
+   "sprite_role": "seat"
+  },
+  {
+   "cell": [
+    1,
+    2
+   ],
+   "layer": "decor",
+   "sprite": "s2",
+   "sprite_role": "seat"
+  },
+  {
+   "cell": [
+    2,
+    2
+   ],
+   "layer": "decor",
+   "sprite": "s2",
+   "sprite_role": "seat"
+  },
+  {
+   "cell": [
+    3,
+    2
+   ],
+   "layer": "decor",
+   "sprite": "s2",
+   "sprite_role": "seat"
+  },
+  {
+   "cell": [
+    4,
+    2
+   ],
+   "layer": "decor",
+   "sprite": "s2",
+   "sprite_role": "seat"
+  },
+  {
+   "cell": [
+    1,
+    4
+   ],
+   "layer": "entities",
+   "sprite": "l2",
+   "sprite_role": "lamp"
+  },
+  {
+   "cell": [
+    5,
+    4
+   ],
+   "layer": "entities",
+   "sprite": "l2",
+   "sprite_role": "lamp"
+  }
+ ],
+ "fx_material": [],
+ "fx_other": [
+  {
+   "cell": [
+    1,
+    1
+   ],
+   "layer": "decor",
+   "sprite": "street_lamp",
+   "sprite_role": "common_lamp"
+  }
+ ]
+}
