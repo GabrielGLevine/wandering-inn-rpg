@@ -561,3 +561,36 @@ def test_golden_cemetery_slices_and_layouts_are_stable():
             doc, _ = sa.slice_sheet(src, LIVE_ASSETS, out_dir, [], {}, {}, [], a)
             assert [[Path(r["path"]).name, r["region"], r["method"]] for r in doc["assets"]] == want["slices"], rel
     assert got_layouts == {rel: w["layout"] for rel, w in golden["sheets"].items()}
+
+
+def test_atlas_frames_count_through_the_atlas_and_reference_renders_skip(tmp_path):
+    # goblin-huts-pack: a 2x2 hut atlas, frames/hut_0N.png equal to its cells
+    # (plus a Windows-zip byte copy), and an opaque source-reference render.
+    assets = tmp_path / "potential_assets"
+    pack = assets / "goblin-huts-pack"
+    atlas = sprite_sheet(pack / "goblin-huts-spritesheet.png",
+                         [(10, 12, 40, 30), (74, 8, 44, 40), (6, 70, 50, 50), (70, 72, 40, 44)], size=(128, 128))
+    for i, (x, y) in enumerate(((0, 0), (64, 0), (0, 64), (64, 64)), 1):
+        frame = pack / "frames" / f"hut_0{i}.png"
+        frame.parent.mkdir(parents=True, exist_ok=True)
+        atlas.crop((x, y, x + 64, y + 64)).save(frame)
+    (pack / "frames\\hut_01.png").write_bytes((pack / "frames/hut_01.png").read_bytes())
+    Image.new("RGB", (100, 100), (90, 80, 70)).save(pack / "source-reference.png")
+    sprite_sheet(assets / "goblin_watchtower/frames/goblin_watchtower_01_front.png", [(4, 4, 30, 50)], size=(40, 60))
+    assert sa.path_skip(Path("goblin-huts-pack/source-reference.png")) == "promo_render"
+    sheets, skipped, exports = sa.scan(assets)
+    assert [s.name for s, _ in sheets] == ["goblin-huts-spritesheet.png", "goblin_watchtower_01_front.png"]
+    assert exports == {pack / "goblin-huts-spritesheet.png": {
+        "potential_assets/goblin-huts-pack/frames/hut_01.png": [0, 0, 64, 64],
+        "potential_assets/goblin-huts-pack/frames\\hut_01.png": [0, 0, 64, 64],
+        "potential_assets/goblin-huts-pack/frames/hut_02.png": [64, 0, 64, 64],
+        "potential_assets/goblin-huts-pack/frames/hut_03.png": [0, 64, 64, 64],
+        "potential_assets/goblin-huts-pack/frames/hut_04.png": [64, 64, 64, 64]}}
+    assert sorted((Path(s["path"]).name, s["reason"]) for s in skipped) == [
+        ("frames\\hut_01.png", "frame_export"), ("hut_01.png", "frame_export"), ("hut_02.png", "frame_export"),
+        ("hut_03.png", "frame_export"), ("hut_04.png", "frame_export"), ("source-reference.png", "promo_render")]
+    assert run_cli(tmp_path) == 0
+    doc = json.loads((assets / "_sliced/goblin-huts-pack/goblin-huts-pack_goblin-huts-spritesheet/SLICES.json").read_text())
+    assert len(doc["assets"]) == 4 and doc["family"] == "CUSTOM-HD"
+    assert doc["frame_exports"]["potential_assets/goblin-huts-pack/frames/hut_04.png"] == [64, 64, 64, 64]
+    assert (assets / "_sliced/goblin_watchtower/goblin_watchtower_01_front/SLICES.json").is_file()

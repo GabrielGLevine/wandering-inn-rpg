@@ -51,7 +51,8 @@ slices and registry rows; a sheet the intake skipped stays invisible (#624).
    each sheet by content: props and mixed sheets are sliced under
    `potential_assets/_sliced/<pack>/`, tile parts are listed in
    `TILESETS.json`, and everything left over is listed in `SKIPPED.json`
-   with a reason.
+   with a reason. A new atlas pack outside the Pixel Crawler line joins
+   `PACK_PREFIXES` in the slicer first (the goblin-camp packs did).
 2. **Label.** `python3 tools/label_slices.py export` and
    `python3 tools/label_tilesets.py export`; the controller dispatches the
    vision agent on the pages, then `... import --answers DIR` for both.

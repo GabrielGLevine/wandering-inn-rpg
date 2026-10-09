@@ -4,11 +4,13 @@
 Spec: docs/superpowers/specs/2026-10-08-regional-kits-design.md section 4.1.
 Row contract: docs/superpowers/plans/2026-10-08-regional-kits-phase0.md C8.
 
-Every PNG of a Pixel Crawler pack is decided by its content, never its name
-(#624: name skips hid Forge/Hideout/Library Tiles.png, Light.png and the
-furnace Bricks sheets). Path skips remain only for what is not environment
-art: Social/ and MockUps/ promo renders, Weapons/ held-weapon sheets, and
-frame-regular `-Sheet` animation strips under Entities/Enemies/Characters.
+Every PNG of a Pixel Crawler or goblin-camp pack (PACK_PREFIXES) is decided
+by its content, never its name (#624: name skips hid Forge/Hideout/Library
+Tiles.png, Light.png and the furnace Bricks sheets). Path skips remain only
+for what is not environment art: Social/ and MockUps/ promo renders and
+source-reference renders, Weapons/ held-weapon sheets, and frame-regular
+`-Sheet` animation strips under Entities/Enemies/Characters. A frames/ PNG
+equal to a grid cell of a larger sheet is that atlas's frame export.
 A sheet without one alpha-255 pixel in OPAQUE_MIN is a translucent overlay
 (shadows, smoke). The rest get a layout from their 16px cell census:
 
@@ -59,6 +61,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from collections import deque
 from pathlib import Path
@@ -85,8 +88,12 @@ BLOCK_CELLS = 32   # a tile block holds this many fully opaque cells...
 BLOCK_ALIGN = 0.35  # ...with this share of its boundary on cell edges
 PART_CELLS = 8     # once a sheet has a block, smaller grid blocks join the
 PART_ALIGN = 0.5   # tile part at these looser limits
-PACK_PREFIXES = ("Pixel Crawler",)
+# The PC16 packs plus the CUSTOM-HD goblin-camp environment packs. Other
+# families are registered by folder evidence (asset_candidates) or ruled in
+# docs/asset-coverage-exclusions.json.
+PACK_PREFIXES = ("Pixel Crawler", "goblin-huts-pack", "goblin_watchtower")
 PROMO_DIRS = {"social", "mockups"}
+PROMO_WORDS = {"reference", "mockup", "preview", "thumbnail", "cover"}
 WEAPON_DIRS = {"weapons", "weapon"}
 ENTITY_DIRS = {"entities", "enemies", "enemy", "characters", "mobs", "npc's", "npcs"}
 KINDS = ("crate", "barrel", "sack", "door", "window", "lamp", "table", "seat", "shelf", "bed",
@@ -323,7 +330,8 @@ def sha256(path: Path) -> str:
 
 
 SKIP_REASONS = {
-    "promo_render": "Social/ or MockUps/ promo render (4x upscale or finished scene)",
+    "promo_render": "promo or reference render (Social/, MockUps/, source-reference.png)",
+    "frame_export": "per-frame export of an atlas cell; counted through the atlas SLICES.json",
     "weapon_sheet": "Weapons/ held-weapon sheet for character rigs",
     "animation_strip": "frame-regular -Sheet animation strip under Entities/Enemies/Characters",
     "duplicate": "byte-identical duplicate of another sheet",
@@ -345,9 +353,12 @@ def in_scope(rel: Path) -> bool:
 
 
 def path_skip(rel: Path) -> str:
-    """SKIP_REASONS key for a PNG that is not environment art by its folder, or ''."""
+    """SKIP_REASONS key for a PNG that is not environment art by its folder
+    (or, for reference renders, its file name: an opaque concept render reads
+    as one tile block), or ''."""
     dirs = {p.lower() for p in rel.parts[1:-1]}
-    if dirs & PROMO_DIRS:
+    stem_words = set(re.split(r"[^a-z0-9]+", Path(rel.name).stem.lower()))
+    if dirs & PROMO_DIRS or stem_words & PROMO_WORDS:
         return "promo_render"
     if dirs & WEAPON_DIRS:
         return "weapon_sheet"
@@ -372,7 +383,7 @@ def eligible(rel: Path, size: tuple[int, int] | None = None) -> bool:
     return in_scope(rel) and not path_skip(rel) and not animation_strip(rel, size)
 
 
-GENERIC_DIRS = {"static", "assets", "props", "interior", "buildings", "environment", "structures"}
+GENERIC_DIRS = {"static", "assets", "props", "interior", "buildings", "environment", "structures", "frames"}
 
 
 def sheet_stem(sheet: Path) -> str:
@@ -383,12 +394,50 @@ def sheet_stem(sheet: Path) -> str:
     return sheet.stem if parent.lower() in GENERIC_DIRS else f"{parent}_{sheet.stem}"
 
 
-def scan(assets_root: Path, only: str = "") -> tuple[list[tuple[Path, list[str]]], list[dict]]:
-    """(sheets, skipped). Sheets: one entry per unique sha256 among the
-    eligible PNGs; the shortest file name, then the first path in part order,
-    wins (Size_03.png over Size_03-export.png, Free Pack over Free Pack 2.1),
-    and the other paths are its duplicates. Skipped: a SKIPPED.json row for
-    every path skip and duplicate."""
+def _cell_match(atlas: Path, frame: Path, fsize: tuple[int, int]) -> list[int] | None:
+    """[x, y, w, h] of the atlas grid cell whose pixels equal the frame's."""
+    want = Image.open(frame).convert("RGBA").tobytes()
+    im = Image.open(atlas).convert("RGBA")
+    fw, fh = fsize
+    for y in range(0, im.size[1], fh):
+        for x in range(0, im.size[0], fw):
+            if im.crop((x, y, x + fw, y + fh)).tobytes() == want:
+                return [x, y, fw, fh]
+    return None
+
+
+def frame_exports(assets_root: Path, sheets: dict[Path, list[str]]) -> dict[Path, dict[str, list[int]]]:
+    """atlas -> {frame path: cell} for every PNG under a frames/ folder whose
+    pixels equal one grid cell of a larger sheet in the same pack (the
+    CUSTOM-HD packs ship frames/hut_01.png beside the hut atlas). Such a frame
+    is not sliced again: it counts through its atlas. Its byte-identical
+    copies map to the same cell."""
+    sizes = {p: ac.png_size(p) for p in sheets}
+    out: dict[Path, dict[str, list[int]]] = {}
+    for f in sorted(sheets):
+        rel = f.relative_to(assets_root)
+        fs = sizes[f]
+        if "frames" not in {p.lower() for p in rel.parts[1:-1]} or not fs:
+            continue
+        for a in sorted(sheets):
+            asz = sizes[a]
+            if (a == f or a not in sheets or not asz or a.relative_to(assets_root).parts[0] != rel.parts[0]
+                    or asz == fs or asz[0] % fs[0] or asz[1] % fs[1]):
+                continue
+            cell = _cell_match(a, f, fs)
+            if cell:
+                out.setdefault(a, {}).update({p: cell for p in [_pa(rel), *sheets[f]]})
+                break
+    return out
+
+
+def scan(assets_root: Path, only: str = "") -> tuple[list[tuple[Path, list[str]]], list[dict],
+                                                     dict[Path, dict[str, list[int]]]]:
+    """(sheets, skipped, frame exports). Sheets: one entry per unique sha256
+    among the eligible PNGs; the shortest file name, then the first path in
+    part order, wins (Size_03.png over Size_03-export.png, Free Pack over
+    Free Pack 2.1), and the other paths are its duplicates. Skipped: a
+    SKIPPED.json row for every path skip, duplicate and frame export."""
     files = [p for top in sorted(assets_root.iterdir()) if top.is_dir() and top.name.startswith(PACK_PREFIXES)
              for p in top.rglob("*") if p.suffix.lower() == ".png" and p.is_file()]
     by_sha: dict[str, tuple[Path, list[str]]] = {}
@@ -408,7 +457,16 @@ def scan(assets_root: Path, only: str = "") -> tuple[list[tuple[Path, list[str]]
                             "detail": _pa(by_sha[h][0].relative_to(assets_root))})
         else:
             by_sha[h] = (p, [])
-    return sorted(by_sha.values(), key=lambda e: str(e[0])), skipped
+    sheets = dict(by_sha.values())
+    exports = frame_exports(assets_root, sheets)
+    for atlas, frames in exports.items():
+        for path in frames:
+            src = assets_root / Path(path).relative_to("potential_assets")
+            sheets.pop(src, None)
+            skipped[:] = [s for s in skipped if s["path"] != path]
+            skipped.append({"path": path, "reason": "frame_export",
+                            "detail": _pa(atlas.relative_to(assets_root))})
+    return sorted(sheets.items(), key=lambda e: str(e[0])), skipped, exports
 
 
 def find_sheets(assets_root: Path, only: str = "") -> list[tuple[Path, list[str]]]:
@@ -518,7 +576,8 @@ def _holds_block(labels: list[int], blocks: set[int], w: int, box: list[int]) ->
 
 def slice_sheet(sheet: Path, assets_root: Path, out_dir: Path, overrides: list[list[int]],
                 bundled: dict[str, str], wired: dict, duplicates: list[str],
-                analysis: Analysis | None = None) -> tuple[dict, list[Image.Image]]:
+                analysis: Analysis | None = None,
+                exports: dict[str, list[int]] | None = None) -> tuple[dict, list[Image.Image]]:
     """C8 rows for every island outside the tile blocks. A props sheet has
     no blocks, so its rows and doc keys are exactly the pre-#624 output."""
     a = analysis or analyze(sheet)
@@ -573,6 +632,8 @@ def slice_sheet(sheet: Path, assets_root: Path, out_dir: Path, overrides: list[l
         # absent on props sheets, so their SLICES.json stays byte-identical
         doc["layout"] = "mixed" if rows else "tileset"
         doc["tile_regions"] = tile_regions(a)
+    if exports:
+        doc["frame_exports"] = dict(sorted(exports.items()))
     doc.update({"overrides": overrides, "check_notes": [], "assets": rows})
     return doc, crops
 
@@ -649,7 +710,7 @@ def main(argv: list[str] | None = None) -> int:
         splits.setdefault(stem, []).append(region)
     bundled = bundled_index(args.game_root)
     wired = wired_regions(args.game_root)
-    sheets, skipped = scan(assets_root, args.only)
+    sheets, skipped, exports = scan(assets_root, args.only)
     dupes = sum(len(d) for _, d in sheets)
     tilesets: list[dict] = []
     total, n_sliced, methods = 0, 0, {}
@@ -668,7 +729,7 @@ def main(argv: list[str] | None = None) -> int:
         out_dir = out_dir_for(sheet, assets_root, sha)
         doc, crops = (({"assets": []}, []) if a.layout == "tileset" and not splits.get(stem)
                       else slice_sheet(sheet, assets_root, out_dir, splits.get(stem, []), bundled, wired,
-                                       duplicates, a))
+                                       duplicates, a, exports.get(sheet)))
         rows = doc["assets"]
         evidence = (["content"] if a.blocks else []) + (["directory"] if ac.tileset_evidence(rel) else [])
         if evidence:
