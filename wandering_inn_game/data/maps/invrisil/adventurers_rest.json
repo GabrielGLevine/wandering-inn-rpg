@@ -1,6 +1,6 @@
 {
  "_kits_recompose": "#608 — sconce off open floor; gnoll off the bench",
- "_comment": "v0.16 I2 (#306). Walk-in only. Biome `inn` + every sprite reused. Perimeter is walls.segments (NEVER also in `blocked`) -- a raw blocked ring in this biome renders 39 crates. `blocked` is furniture only, each cell with a decor row. Plates + bravos gate on hat_job_taken.",
+ "_comment": "v0.16 I2 (#306); kit-converted in #608 1b. Walk-in only. Biome `invrisil_shop`, whose render fields are still an `inn` clone, covered here by the all-cell @floor_rest layer. Walls are @wall_shop. Kit roles (@table, @cargo) sit beside reused sprites and explicit Invrisil identity pins (invrisil_lamp_wall_1, invrisil_door_street_2). Perimeter is walls.segments (NEVER also in `blocked`) -- a raw blocked ring in this biome renders crates and barrels. `blocked` is furniture only, each cell with a decor row. Plates + bravos gate on hat_job_taken.",
  "biome": "invrisil_shop",
  "grid": {
   "width": 13,

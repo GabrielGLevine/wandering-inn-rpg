@@ -1,5 +1,5 @@
 {
- "_comment": "v0.16 I1 (#306). Walk-in only (no portals row). Biome + every sprite reused -- zero biomes.json/sprites.json edits. Perimeter is walls.segments, so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each cell with a matching decor row.",
+ "_comment": "v0.16 I1 (#306); kit-converted in #608 1b. Walk-in only (no portals row). Biome `brothers_parlor` under @floor_shop/@wall_shop and kit roles (@table, @window_interior). Perimeter is walls.segments, so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each cell with a matching decor row.",
  "biome": "brothers_parlor",
  "grid": {
   "width": 12,
@@ -13,7 +13,7 @@
  ],
  "floor_layers": [
   {
-   "_pick": "#225 floor differentiation (this key is census-FREE -- _pick carries the rationale so _comment does not have to). The brothers_parlor biome's default floor is the inn plank [1,21], and the parlor itself sits on Library-pack parquet; a stationer one street over must read as neither. Reuses the SAME Interior_Walls_01 sheet's plain pale-board swatch [16,21]/[17,21] -- the shipped runners_guild floor, so sheet, license and footstep-wood are all unchanged. Reads as a swept shop board: cooler and plainer than the parlor's brandy-lit parquet, warmer than stone.",
+   "_pick": "#608 1b (census-free key: _pick carries the rationale so _comment does not have to): the stationer's floor is @floor_shop (data/kits.json), the cool blue-grey flagstone of owned woodplank_over_stone_v1 (wang_0 [2,1]), the quiet shop floor it shares with the Brothers' parlor. It replaces the Interior_Walls_01 pale-board swatch [16,21]/[17,21] an earlier pass reused here, and the brothers_parlor biome's default inn plank [1,21] that would have read as the inn (the original #225 differentiation). Walls are @wall_shop.",
    "material": "@floor_shop",
    "cells": "all"
   }
