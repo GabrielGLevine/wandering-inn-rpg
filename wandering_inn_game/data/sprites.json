@@ -10188,5 +10188,30 @@
    }
   },
   "fallback_sprite": "invrisil_upper_window"
+ },
+ "invrisil_lamp_wall_1": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [176, 451, 14, 20] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     14,
+     20
+    ],
+    "region": [
+     176,
+     451,
+     14,
+     20
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_unlit_lantern"
  }
 }

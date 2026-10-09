@@ -55,6 +55,13 @@
       "invrisil_facade_window_2",
       "invrisil_facade_window_3"
      ]
+    },
+    "lamp_wall": {
+     "pick": "map",
+     "pool": [
+      "sconce",
+      "invrisil_lamp_wall_1"
+     ]
     }
    },
    "cast": []
