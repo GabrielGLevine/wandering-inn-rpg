@@ -262,7 +262,6 @@
      "pick": "map",
      "pool": [
       "liscor_bench",
-      "liscor_side_chair",
       "liscor_chair"
      ]
     }
