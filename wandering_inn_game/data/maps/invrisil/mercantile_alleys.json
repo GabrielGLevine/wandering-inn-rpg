@@ -1426,7 +1426,7 @@
     }
    },
    "display_name": "The Factor's Closed Account",
-   "sprite": "hired_blade",
+   "sprite": "former_headman",
    "arena": "mercantile_alley",
    "enemies": [
     "factor_enforcer",
