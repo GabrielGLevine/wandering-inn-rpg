@@ -1669,6 +1669,35 @@
                          "detail": 0.55
                         }
                        }
+  },
+  {
+   "_pick": "#608 art read: timber-and-plaster jambs on the two wall cells flanking the west door (0,7), so it sits in a wall instead of floating on a flat strip. Owned plaster_wall (2,3), the public strip's own tile and tone, in both builds.",
+   "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+   "tile_px": 16,
+   "coords": [
+    2,
+    3
+   ],
+   "tone": {
+    "base": [
+     0.4,
+     0.34,
+     0.26
+    ],
+    "detail": 0.55
+   },
+   "cells": {
+    "list": [
+     [
+      0,
+      6
+     ],
+     [
+      0,
+      8
+     ]
+    ]
+   }
   }
  ],
  "decor": [
