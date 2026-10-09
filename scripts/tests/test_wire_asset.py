@@ -510,3 +510,31 @@ def test_slice_label_kind_is_recorded(tree, label, recorded):
     assert e.get("kind") == recorded
     if recorded:
         assert list(e)[:2] == ["_comment", "kind"]
+
+
+def _label(tree, kind):
+    sj = tree / f"potential_assets/_sliced/{PACK}/Furniture/SLICES.json"
+    d = json.loads(sj.read_text())
+    d["assets"][0]["label_kind"] = kind
+    sj.write_text(json.dumps(d, indent=1) + "\n")
+
+
+def test_rerun_of_an_id_wired_without_kind_is_a_noop(tree, capsys):
+    # an id wired before kinds were recorded: the re-run must not exit 4 or write anything
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    assert "kind" not in sprites(tree)["crate_lidded"]
+    _label(tree, "crate")
+    before = snapshot(tree)
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    assert "no change" in capsys.readouterr().out
+    assert snapshot(tree) == before
+
+
+def test_rerun_with_a_different_recorded_kind_is_refused(tree):
+    _label(tree, "barrel")
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    assert sprites(tree)["crate_lidded"]["kind"] == "barrel"
+    _label(tree, "crate")
+    before = snapshot(tree)
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == wa.EXIT_REFUSED
+    assert snapshot(tree) == before

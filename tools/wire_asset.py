@@ -495,7 +495,10 @@ def splice_top_level(text: str, key: str, value: dict) -> str:
 def sprites_with(text: str, catalog: dict, sprite_id: str, entry: dict) -> str:
     existing = catalog.get(sprite_id)
     if existing is not None:
-        if existing == entry:
+        # An id wired before #623 recorded no "kind"; its re-run stays a no-op. A different
+        # recorded kind is still a mismatch.
+        unrecorded = isinstance(existing, dict) and "kind" not in existing
+        if existing == entry or (unrecorded and existing == {k: v for k, v in entry.items() if k != "kind"}):
             return text
         raise Refused(f"{sprite_id}: already in sprites.json with different content:\n"
                       f"  have {json.dumps(existing, sort_keys=True)}\n  want {json.dumps(entry, sort_keys=True)}")
