@@ -1,6 +1,6 @@
 {
- "_comment": "Regional kits #608 capture utility (non-canonical, windowed only, absent from qa/manifest.json). Same route before/after conversion; screenshots feed the blind art-direction read (spec 5.2). Cells are walkable, off every solid entity and clear of encounter triggers.",
- "fixture_save": "feel_peek_night_start",
+ "_comment": "Regional kits #608 capture utility (non-canonical, windowed only, absent from qa/manifest.json). Same route before/after conversion; screenshots feed the blind art-direction read (spec 5.2). The armed fixture holds hat_job_taken + house_card_shown so the present_when-gated peg rail, Corner Table and house steward spawn; the steward view stands one cell diagonal-south of her (never due south of a tall NPC). Cells are walkable, off every solid entity and clear of encounter triggers.",
+ "fixture_save": "kits_invrisil_rest_armed_night_start",
  "starts_at_title": true,
  "steps": [
   {
@@ -83,6 +83,22 @@
   {
    "action": "screenshot",
    "name": "kits_invrisil_adventurers_rest_official_night_focus"
+  },
+  {
+   "action": "teleport",
+   "map": "adventurers_rest",
+   "cell": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "screenshot",
+   "name": "kits_invrisil_adventurers_rest_official_night_steward"
   }
  ]
 }
