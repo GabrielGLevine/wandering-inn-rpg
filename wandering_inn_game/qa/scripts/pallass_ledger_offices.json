@@ -622,7 +622,7 @@
     "text": "I ordered it. I've been promised it twice and shouted at once, down from the landing. Get it into the cage or get it down the stair, and it goes into my oven wall the same hour.",
     "options": [
      {
-      "text": "[It rides the cage in a lead wrap now.]",
+      "text": "[It's in a lead wrap. The cage can take it now.]",
       "locked": false,
       "requirement": ""
      },
@@ -636,7 +636,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "consignee renders 2 rows here: '[It rides the cage in a lead wrap now.]' at row 0 (the carry arm needs three legs and this run walked none), then the plain exit.",
+   "_comment": "consignee renders 2 rows here: '[It's in a lead wrap. The cage can take it now.]' at row 0 (the carry arm needs three legs and this run walked none), then the plain exit.",
    "action": "wait_frames",
    "frames": 2
   },
@@ -657,7 +657,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Den-Shop Keeper",
-    "text": "A lead coat for it. I'll have it fitted in the oven wall before the evening bake."
+    "text": "A lead coat for it. Then tell the attendant, and I'll have it fitted in the oven wall before the evening bake."
    },
    "timeout_sec": 5
   },

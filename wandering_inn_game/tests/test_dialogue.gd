@@ -135,7 +135,7 @@ func test_grimalkin_studies_gates_on_the_real_graph() -> void:
 func _make_pallass_game() -> WIGame:
 	var shared := WIDialogueBanks.load_shared()
 	var graphs := {}
-	for id: String in ["pallass_wool_trader", "pallass_market_local", "pallass_den_keeper"]:
+	for id: String in ["pallass_wool_trader", "pallass_market_local", "pallass_den_keeper", "pallass_forge_smith", "pallass_lift_attendant"]:
 		graphs[id] = WIDialogueBanks.expand(_load_json("res://data/dialogue/%s.json" % id), shared)
 	var combat_config := {
 		"combatants": _load_json("res://data/combatants.json"),
@@ -224,8 +224,9 @@ func test_room_on_the_row_help_route_on_the_real_graphs() -> void:
 	var game := _make_pallass_game()
 	var quest: Dictionary = WIQuests.quest_by_id(_load_json("res://data/quests.json"), "room_on_the_row")
 	var purse := game.gold
-	# Props before the quest: plain reads, no carry.
-	_interact_at(game, "pallass_market", Vector2i(1, 5), Vector2i.UP)
+	# Props before the quest: plain reads, no carry. The stack sits at (1,3),
+	# off the trader's cardinal axes (dialogue separation nudges her 10px).
+	_interact_at(game, "pallass_market", Vector2i(2, 3), Vector2i.LEFT)
 	assert(game.accomplishment_count("wool_bales_carried") == 0 and game.accomplishment_count("eyed_the_wool_bales") == 1, "the stack is scenery outside the quest")
 	game.start_dialogue("pallass_den_keeper", "den_shop_keeper")
 	assert(_row_texts(game) == ["Long month how?", "Just looking."], "an ungated den keeper hub is unchanged")
@@ -241,9 +242,9 @@ func test_room_on_the_row_help_route_on_the_real_graphs() -> void:
 	game.dialogue_choose(2)
 	assert(_row_texts(game) == ["I'll bring them in."], "no consign row before both legs")
 	game.dialogue_choose(0)
-	_interact_at(game, "pallass_market", Vector2i(1, 5), Vector2i.UP)
+	_interact_at(game, "pallass_market", Vector2i(2, 3), Vector2i.LEFT)
 	assert(game.accomplishment_count("wool_bales_carried") == 1, "leg 1 banks once the quest has started")
-	_interact_at(game, "pallass_market", Vector2i(1, 5), Vector2i.UP)
+	_interact_at(game, "pallass_market", Vector2i(2, 3), Vector2i.LEFT)
 	assert(game.accomplishment_count("wool_bales_carried") == 1, "the stack does not bank twice")
 	_interact_at(game, "pallass_den_shop", Vector2i(2, 4), Vector2i.LEFT)
 	assert(game.accomplishment_count("wool_bales_carried") == 2, "leg 2 banks after leg 1")
@@ -260,6 +261,67 @@ func test_room_on_the_row_help_route_on_the_real_graphs() -> void:
 	game.dialogue_choose(1)
 	assert(game.gold == purse + 12 and game.inventory.has("plains_wool_bale"), "the help route pays the same")
 	assert(String(WIQuests.resolved_path(quest, game.accomplishments)["accomplishment"]) == "wool_consigned", "the journal records the help route")
+
+
+func test_room_on_the_row_shelf_retires_once_the_row_opens() -> void:
+	_events.clear()
+	var game := _make_pallass_game()
+	game.start_dialogue("pallass_wool_trader", "wool_trader")
+	game.dialogue_choose(0)
+	game.dialogue_choose(1)
+	_interact_at(game, "pallass_market", Vector2i(2, 3), Vector2i.LEFT)
+	assert(game.accomplishment_count("wool_bales_carried") == 1, "leg 1 carried")
+	# The player then wins the row with [Charming Smile] instead.
+	game.player_skills.append("charming_smile")
+	game.start_dialogue("pallass_market_local", "market_stallkeeper")
+	game.dialogue_choose(2)
+	game.dialogue_choose(0)
+	assert(game.accomplishment_count("row_opened") == 1, "the Skill row opened the row")
+	game.dialogue_choose(0)
+	_interact_at(game, "pallass_den_shop", Vector2i(2, 4), Vector2i.LEFT)
+	assert(game.accomplishment_count("wool_bales_carried") == 1, "the shelf no longer takes bales once the row is open")
+	assert(game.accomplishment_count("eyed_the_den_wool_shelf") == 1, "...it reads plain instead")
+
+
+# #513 moved the ledger talk route's two rows off the clerks. A save made
+# mid-route under the OLD wiring holds queue_notice_endorsed (the market
+# clerk's product) and nothing after it; it must still complete.
+func test_ledger_legacy_endorsed_save_still_completes() -> void:
+	_events.clear()
+	var game := _make_pallass_game()
+	var quest: Dictionary = WIQuests.quest_by_id(_load_json("res://data/quests.json"), "ledger_eats_first")
+	game.started_quests.append("ledger_eats_first")
+	for id: String in ["read_the_lift_manifest", "ledger_loop_started", "queue_notice_endorsed"]:
+		game.record_accomplishment(id, 1)
+	game.start_dialogue("pallass_forge_smith", "forge_smith")
+	var smith_rows := _row_texts(game)
+	assert(smith_rows.has("Xif says two fingers of lead around the regulator."), "a legacy endorsed save reaches the smith's lead-wrap row")
+	game.dialogue_choose(smith_rows.find("Xif says two fingers of lead around the regulator."))
+	game.dialogue_choose(0)
+	assert(game.accomplishment_count("queue_notice_countersigned") == 1, "the smith banks the countersign")
+	game.dialogue_choose(0)
+	game.start_dialogue("pallass_den_keeper", "den_shop_keeper")
+	game.dialogue_choose(_row_texts(game).find("I'm here about your oven regulator."))
+	assert(_row_texts(game)[0] == "[It's in a lead wrap. The cage can take it now.]", "the den keeper's talk rung is offered")
+	game.dialogue_choose(0)
+	assert(game.accomplishment_count("loop_walked") == 1, "loop_walked banks")
+	game.dialogue_choose(0)
+	game.start_dialogue("pallass_lift_attendant", "lift_attendant")
+	game.dialogue_choose(_row_texts(game).find("About that crate."))
+	assert(_row_texts(game)[0] == "[Xif's ink, the smith's lead. It rides the cage now.]", "the attendant's report rung is offered")
+	game.dialogue_choose(0)
+	assert(game.accomplishment_count("ledger_unstuck") == 1 and WIQuests.beat_index(quest, game.accomplishments) == 2, "the legacy save completes the quest")
+	# A save that got as far as the OLD forge clerk's countersign goes straight to the den keeper.
+	var later := _make_pallass_game()
+	later.started_quests.append("ledger_eats_first")
+	for id: String in ["read_the_lift_manifest", "ledger_loop_started", "queue_notice_endorsed", "queue_notice_countersigned"]:
+		later.record_accomplishment(id, 1)
+	later.start_dialogue("pallass_forge_smith", "forge_smith")
+	assert(not _row_texts(later).has("Xif says two fingers of lead around the regulator."), "a countersigned save is not asked for the wrap twice")
+	later.dialogue_choose(_row_texts(later).find("I'll let you work."))
+	later.start_dialogue("pallass_den_keeper", "den_shop_keeper")
+	later.dialogue_choose(_row_texts(later).find("I'm here about your oven regulator."))
+	assert(_row_texts(later)[0] == "[It's in a lead wrap. The cage can take it now.]", "a countersigned legacy save goes straight to the den keeper")
 
 
 # 2026-07-28 (#308, F1): the can-fail pair NO live script can reach. The
@@ -1545,6 +1607,8 @@ func _init() -> void:
 	test_rags_winter_offer_hides_for_a_betrayer()
 	test_room_on_the_row_talk_route_on_the_real_graphs()
 	test_room_on_the_row_help_route_on_the_real_graphs()
+	test_room_on_the_row_shelf_retires_once_the_row_opens()
+	test_ledger_legacy_endorsed_save_still_completes()
 	test_finished_walker_survives_a_goto_into_an_all_hidden_node()
 	test_wigame_nulls_the_walker_the_fail_safe_finished()
 	test_wigame_nulls_a_walker_the_fail_safe_finished_at_begin()

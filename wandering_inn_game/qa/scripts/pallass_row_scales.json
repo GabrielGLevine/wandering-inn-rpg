@@ -158,7 +158,7 @@
     "lead_lines": [
      "· Pisces keeps looking at the Door like it owes him a letter. (Guild steps, Market Street)",
      "· A woman has been sitting in the stationer's for an hour holding a closed box. (The stationer's, Invrisil boulevard)",
-     "· A Gnoll trader stands by the plinth with six bales of wool and nowhere to sell them. (The arrival plinth, Pallass market tier)"
+     "· A Gnoll trader stands by the arrival plinth with bales of wool and nowhere to sell them. (The arrival plinth, Pallass market tier)"
     ]
    },
    "timeout_sec": 5
@@ -312,7 +312,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Gnoll Wool Trader",
-    "text": "Good. Start with the stallkeeper at the middle stall, the one with the lamps. She is the one who tells the story."
+    "text": "Good. Start with the stallkeeper at the middle stall, under the green awning. She is the one who tells the story."
    },
    "timeout_sec": 5
   },
@@ -492,7 +492,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Market-Tier Local",
-    "text": "Fine. The city's weights are chained to the scales by the parapet. If her brass sits level with them in front of the row, I've nothing to say against it."
+    "text": "Fine. I'll send her brass over to the public scales by the parapet myself. Weigh it against the city's chained weights. If it sits level, I've nothing to say against it."
    },
    "timeout_sec": 5
   },
@@ -555,7 +555,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "She brings her brass over from the bales. Her weights go in one pan and the city's chained weights in the other, and the beam settles level. Two stallkeepers watching from the row go back to their counters."
+    "text": "Her brass is waiting on the scale's ledge in a cloth, sent over from the row. You weigh it piece by piece against the city's chained weights, and the beam settles level each time."
    },
    "timeout_sec": 5
   },

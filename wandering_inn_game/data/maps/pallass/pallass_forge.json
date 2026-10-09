@@ -530,7 +530,7 @@
    "display_name": "The Grand Lift",
    "sprite": "great_lift",
    "observe": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight.",
-   "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
+   "locked_toast": "The brass gate is locked. A stencilled plate: LIFT TOKEN REQUIRED.",
    "door_when": {
     "requires": {
      "elevator_pass_stamped": 1

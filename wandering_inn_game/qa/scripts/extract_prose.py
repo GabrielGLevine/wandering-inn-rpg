@@ -1399,6 +1399,17 @@ HOLDOUT_EXCLUSIONS = {
                       "joins the morning's traffic (the ruled multi-racial "
                       "Pallass), and the lift pass is now a token.",
     },
+    "map:pallass/pallass_market.json:$.entities[26].toast": {
+        "excluded": True,
+        "excluded_reason": "changed by the #513 Pallass re-theme (user "
+                           "ruling 2026-10-08), not by the prose pass",
+        "what_moved": "the razorbeak's lead on the watchgolems named the "
+                      "forge-tier permit (forge_permit_filed), which is now "
+                      "an exam-floor booking: 'whose permit is already "
+                      "filed ... the office that files it is the counter' "
+                      "-> 'booked on the exam floor ... the window that "
+                      "books it'. Same gate, same sentence shape.",
+    },
 }
 EXCLUSIONS_NOTE = (
     "verify-untouched SKIPS these ids and reports them by count; the blind "

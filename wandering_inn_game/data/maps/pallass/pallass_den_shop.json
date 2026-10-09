@@ -416,6 +416,14 @@
      "toast": "You set both bales on the shelf, inside the chalk line. Behind the low bench, something small takes an interest."
     },
     {
+     "_comment": "#513 review item 10: once the stall row has opened (talk route) the shelf stops taking bales, so a half-carried help route cannot end on an unacknowledged shelf. Sits BELOW the carried-2 rung on purpose: later-satisfied wins, so bales already set (carried 2) still read as set.",
+     "when": {
+      "row_opened": 1
+     },
+     "accomplishment": "eyed_the_den_wool_shelf",
+     "toast": "The boards are bare and still damp from a cloth. A chalk line runs along the front edge."
+    },
+    {
      "when": {
       "wool_bales_carried": 2
      },

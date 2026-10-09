@@ -98,7 +98,7 @@
   },
   "seal": {
    "speaker": "Lift Attendant",
-   "text": "It came up the shaft the way everything does, one voice at a time, each louder than the last. Liscor settled what was under its stone. The tier will talk about it for a week. Then it'll be back to the den shop's crate. That crate is four cycles late, {addr}. Liscor is two hundred miles away.",
+   "text": "It came up the shaft the way everything does, one voice at a time, each louder than the last. Liscor settled what was under its stone. The tier will talk about it for a week. Then it'll be back to the den shop's crate. That crate is three cycles late, {addr}. Liscor is two hundred miles away.",
    "options": [
     {
      "text": "That's fairer than most of what I've heard.",
@@ -112,7 +112,7 @@
   },
   "ledger_pitch": {
    "speaker": "Lift Attendant",
-   "text": "Four cycles, and it will be five. Every time it goes in the cage, the feather-fall runes under the floor flicker. I don't send a cage down flickering.",
+   "text": "Three cycles, and it will be four. Every time it goes in the cage, the feather-fall runes under the floor flicker. I don't send a cage down flickering.",
    "options": [
     {
      "text": "Somebody should get it down.",

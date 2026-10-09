@@ -717,7 +717,8 @@ lead rows exist solely to name it (§6.3.1).
   no gate (startable on arrival with 0 gold, before the stamp), hides on
   `wool_trade_started`. **Learned at:** `leads.json:lead_room_on_the_row`
   (requires `pallass_attuned`; hides on the shipped proxy
-  `pallass_entry_stamped` until `wool_trade_started` freezes).
+  `elevator_pass_stamped`, the whole pre-lift window, until
+  `wool_trade_started` freezes).
 
 | Beat | Completes on | Produced by |
 | --- | --- | --- |

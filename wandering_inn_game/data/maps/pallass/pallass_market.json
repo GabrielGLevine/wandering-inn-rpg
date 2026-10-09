@@ -547,7 +547,7 @@
    "display_name": "The Grand Lift",
    "sprite": "great_lift",
    "observe": "A bronze-riveted cage with room in it for a wagon, counterweights racked in a shaft that drops past the tiers below this one.",
-   "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
+   "locked_toast": "The brass gate is locked. A stencilled plate: LIFT TOKEN REQUIRED. The exam-floor window is open.",
    "door_when": {
     "requires": {
      "elevator_pass_stamped": 1
@@ -825,7 +825,7 @@
       "heard_row_grievance": 1
      },
      "accomplishment": "weights_proved",
-     "toast": "She brings her brass over from the bales. Her weights go in one pan and the city's chained weights in the other, and the beam settles level. Two stallkeepers watching from the row go back to their counters."
+     "toast": "Her brass is waiting on the scale's ledge in a cloth, sent over from the row. You weigh it piece by piece against the city's chained weights, and the beam settles level each time."
     },
     {
      "when": {
@@ -898,7 +898,7 @@
    },
    "observe": "Empty crates stacked a head above the awnings behind the stalls. The razorbeak has decided they belong to the razorbeak, and no stallkeeper has argued yet.",
    "on_interact_accomplishment": "found_market_vantage",
-   "toast": "It goes up off the crates and comes back screaming about the west end. The two standing things down there step aside for anyone whose permit is already filed — and the office that files it is the counter four stalls behind you.",
+   "toast": "It goes up off the crates and comes back screaming about the west end. The two standing things down there step aside for anyone booked on the exam floor — and the window that books it is four stalls behind you.",
    "visual_states": [
     {
      "when": {
@@ -924,7 +924,7 @@
    "display_name": "Gnoll Wool Trader",
    "sprite": "wool_trader",
    "facing": "down",
-   "observe": "A Gnoll with a bale of wool strapped high on her back and a red cord at her waist. Her other bales are stacked beside her, a cloth bundle on top.",
+   "observe": "A Gnoll with a bale of wool strapped high on her back and a red cord at her waist. Her other bales are stacked beside her.",
    "friendly_line": "She looks at your hands before your face, then lifts a corner of the cloth so you can see the brass.",
    "talk_pool": [
     "Plains wool, yes? Washed twice. Nobody on the row will rent me a counter to sell it from.",
@@ -945,12 +945,12 @@
    "conversation": "pallass_wool_trader"
   },
   {
-   "_comment": "#513 Room on the Row HELP leg 1 of 2. Later-satisfied `variants` gate the carry on wool_trade_started and retire it once wool_bales_carried banks, so it fires once and only inside the quest; the shelf in pallass_den_shop is leg 2 and gates on this leg. Solid like every prop: (1,4) sits west of the trader, off every journey cell.",
+   "_comment": "#513 Room on the Row HELP leg 1 of 2. Later-satisfied `variants` gate the carry on wool_trade_started and retire it once wool_bales_carried banks, so it fires once and only inside the quest; the shelf in pallass_den_shop is leg 2 and gates on this leg. Solid like every prop: (1,3) sits north-west of the trader, OFF her cardinal axes, because world.gd's dialogue separation nudges a speaker 10px away from the player and from (3,4) that pushed her into a stack at (1,4). Off every journey cell and every canonical's walked cell.",
    "id": "wool_bale_stack",
    "kind": "prop",
    "cell": [
     1,
-    4
+    3
    ],
    "display_name": "Wool Bales",
    "sprite": "grain_sacks",
@@ -959,30 +959,30 @@
     0.97,
     0.88
    ],
-   "observe": "Bales of plains wool, tied with twine, a set of brass weights in a cloth on top.",
+   "observe": "Bales of plains wool in sacking, tied with twine and stacked against each other.",
    "on_interact_accomplishment": "eyed_the_wool_bales",
-   "toast": "You lift a corner of the cloth. Brass weights, a full set, each stamped on the bottom with the same small mark.",
+   "toast": "The sacking is rough and the wool inside gives under your hand. Each bale is tied twice with the same twine.",
    "variants": [
     {
      "when": {
       "wool_trade_started": 1
      },
      "accomplishment": "wool_bales_carried",
-     "toast": "You get two bales up on your shoulders. She tightens the twine on both and points you at the den shop door."
+     "toast": "You get two bales up on your shoulders, for the den shop's shelf. They are lighter than they look and twice as wide."
     },
     {
      "when": {
       "wool_bales_carried": 1
      },
      "accomplishment": "eyed_the_wool_bales",
-     "toast": "Four bales on the stack now, the brass weights back on top in their cloth."
+     "toast": "The stack is two bales lighter now, the rest still tied with the same twine."
     },
     {
      "when": {
       "row_opened": 1
      },
      "accomplishment": "eyed_the_wool_bales",
-     "toast": "The bales are tied and stacked. The cloth of brass weights is under her arm now."
+     "toast": "The bales are tied and stacked, ready to go to counter three."
     }
    ]
   }

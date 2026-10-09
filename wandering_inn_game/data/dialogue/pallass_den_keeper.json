@@ -57,7 +57,7 @@
   },
   "month": {
    "speaker": "Den-Shop Keeper",
-   "text": "A regulator for my oven, four cycles late, on a landing two tiers up. The cage won't carry it. I have hatchlings upstairs chewing yesterday's bread and an oven that burns the bottom of every loaf.",
+   "text": "A regulator for my oven, three cycles late, on a landing two tiers up. The cage won't carry it. I have hatchlings upstairs chewing yesterday's bread and an oven that burns the bottom of every loaf.",
    "options": [
     {
      "text": "Why won't the cage take it?",
@@ -88,8 +88,8 @@
    "text": "I ordered it. I've been promised it twice and shouted at once, down from the landing. Get it into the cage or get it down the stair, and it goes into my oven wall the same hour.",
    "options": [
     {
-     "_comment": "TALK route terminal rung. Requires the smith's lead wrap, i.e. Xif then the smith, in order.",
-     "text": "[It rides the cage in a lead wrap now.]",
+     "_comment": "TALK route terminal rung. Requires the smith's lead wrap, i.e. Xif then the smith, in order. Worded as CAN ride: the attendant is told last and sends it.",
+     "text": "[It's in a lead wrap. The cage can take it now.]",
      "requires": {
       "accomplishment": {
        "queue_notice_countersigned": 1
@@ -135,7 +135,7 @@
   },
   "released": {
    "speaker": "Den-Shop Keeper",
-   "text": "A lead coat for it. I'll have it fitted in the oven wall before the evening bake.",
+   "text": "A lead coat for it. Then tell the attendant, and I'll have it fitted in the oven wall before the evening bake.",
    "options": [
     {
      "text": "Glad it came through.",

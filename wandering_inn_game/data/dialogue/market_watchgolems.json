@@ -15,7 +15,7 @@
      "end": true
     },
     {
-     "text": "Show the filed forge permit. Let the carving read it.",
+     "text": "Show your exam-floor booking. Let the carving read it.",
      "requires": {
       "accomplishment": {
        "forge_permit_filed": 1

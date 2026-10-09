@@ -498,3 +498,23 @@ r3–r5 playtest waves — gone from this file.
   Opened one-shot containers (`gnoll_hunters_satchel`, `grate_crew_pail`) also
   keep their closed look. Fix direction: a small arrows-standing-in-turf sprite
   for the tell, and opened `visual_states` for the satchel and pail.
+- [ ] **(P2)** pallass_forge_hall `forge_hall_standard_notice` (#513) — the
+  examiner's bend jig still draws as `price_board`, a chalkboard on a stand.
+  Its observe was reworded to "a test board on a stand" with a steel arm and
+  two notches, but the arm and notches are not drawn. Evidence:
+  `qa/run_qa.sh pallass_standards_talk windowed --seed=9` → `01_bend_jig.png`.
+  Fix direction: an owned bend-jig prop (stand, bolted steel arm, two notch
+  marks), swapped in with the observe kept.
+- [ ] **(P3)** pallass_den_shop `den_shop_wool_shelf` (#513) — the two wool
+  bales set on the cleared shelf have no visual state, so the shelf still
+  draws empty after the help route. Evidence: `qa/run_qa.sh pallass_row_help
+  windowed --seed=9` → `03_den_shop_shelf.png`. Fix direction: a stocked-shelf
+  sprite (`mill_high_shelf_owned` with two cream bales) as a `visual_states`
+  arm at `wool_bales_carried` 2.
+- [ ] **(P3)** pallass_forge_hall `forge_hall_examiner` (#513) — talked to from
+  (8,3), the canonical's approach, the player sprite covers the Dullahan while
+  his line shows (the 10px dialogue separation is too small for a
+  north-south pair). Evidence: `qa/run_qa.sh pallass_standards_talk windowed
+  --seed=9` → `00_dullahan_examiner.png`. Fix direction: a larger vertical
+  separation in `world.gd` `_begin_dialogue_separation`, or take his line
+  from (8,1), north of him, where the player draws behind.

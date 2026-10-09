@@ -53,15 +53,15 @@
 			"place": "The gate road, floodplains"
 		},
 		{
-			"_comment": "#513 Room on the Row. requires mirrors the earliest the trader is reachable (the Door row's pallass_attuned). hide_when is a SHIPPED PROXY, the #396 lead_winter precedent: _validate_leads takes only frozen ids, and the start counter wool_trade_started freezes at the next release step-0, when this row should switch to it. pallass_entry_stamped retires it at the stamp window by the plinth. Trade-off: a player who stamps in before meeting her loses the pointer, and one who starts the quest before stamping keeps it until the stamp.",
+			"_comment": "#513 Room on the Row. requires mirrors the earliest the trader is reachable (the Door row's pallass_attuned). hide_when is a SHIPPED PROXY, the #396 lead_winter precedent: _validate_leads takes only frozen ids, and the start counter wool_trade_started freezes at the next release step-0, when this row should switch to it. elevator_pass_stamped (review, 2026-10-08) keeps the pointer up for the whole pre-lift window the quest funds; pallass_entry_stamped retired it three cells from arrival, before the player reached her. Trade-off: it also stays up after she is placed, until the lift pass.",
 			"id": "lead_room_on_the_row",
 			"requires": {
 				"pallass_attuned": 1
 			},
 			"hide_when": {
-				"pallass_entry_stamped": 1
+				"elevator_pass_stamped": 1
 			},
-			"lead_text": "A Gnoll trader stands by the plinth with six bales of wool and nowhere to sell them.",
+			"lead_text": "A Gnoll trader stands by the arrival plinth with bales of wool and nowhere to sell them.",
 			"place": "The arrival plinth, Pallass market tier"
 		}
 	]

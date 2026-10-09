@@ -1,6 +1,6 @@
 {
  "_count": 229,
- "_excluded_count": 11,
+ "_excluded_count": 12,
  "_excluded_note": "verify-untouched SKIPS these ids and reports them by count; the blind control instrument omits their rows. They remain in `ids` and in `_count` -- an exclusion never shrinks the committed inventory. Authority is the INTERSECTION of this block and HOLDOUT_EXCLUSIONS in qa/scripts/extract_prose.py, so neither edit excuses drift on its own.",
  "_fraction": 0.1,
  "_min_words": 6,
@@ -50,6 +50,11 @@
    "excluded": true,
    "excluded_reason": "#450's approved scope fix retires standalone flavor reads from action-bearing props",
    "what_moved": "hallway_door_a keeps its locked/open interaction but no longer carries an Appraise-only ownership read."
+  },
+  "map:pallass/pallass_market.json:$.entities[26].toast": {
+   "excluded": true,
+   "excluded_reason": "changed by the #513 Pallass re-theme (user ruling 2026-10-08), not by the prose pass",
+   "what_moved": "the razorbeak's lead on the watchgolems named the forge-tier permit (forge_permit_filed), which is now an exam-floor booking: 'whose permit is already filed ... the office that files it is the counter' -> 'booked on the exam floor ... the window that books it'. Same gate, same sentence shape."
   },
   "map:riverfarm/riverfarm_village.json:$.entities[25].toast": {
    "excluded": true,

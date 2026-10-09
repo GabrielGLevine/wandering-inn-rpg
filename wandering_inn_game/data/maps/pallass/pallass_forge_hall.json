@@ -244,7 +244,7 @@
    ],
    "display_name": "The Examiner's Bend Jig",
    "sprite": "price_board",
-   "observe": "A steel jig on a stand, two notches filed into its arm. The examiner's seal is stamped into the base.",
+   "observe": "A test board on a stand. A steel arm is bolted across its face, two notches filed into the arm, and the examiner's seal is stamped at the foot.",
    "on_interact_accomplishment": "read_the_examination_standard",
    "toast": "The jig bends a blade to the first notch and lets go. The mark that counts is the second notch, where the blade comes back to.",
    "visual_states": [

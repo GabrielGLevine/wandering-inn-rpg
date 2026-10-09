@@ -131,10 +131,10 @@
   },
   "row_scales": {
    "speaker": "Market-Tier Local",
-   "text": "Fine. The city's weights are chained to the scales by the parapet. If her brass sits level with them in front of the row, I've nothing to say against it.",
+   "text": "Fine. I'll send her brass over to the public scales by the parapet myself. Weigh it against the city's chained weights. If it sits level, I've nothing to say against it.",
    "options": [
     {
-     "text": "I'll fetch her.",
+     "text": "I'll go and weigh it.",
      "end": true
     }
    ]
