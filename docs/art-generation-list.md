@@ -16,3 +16,7 @@ PixelLab object-state variants from) · status (`open` | `done <ids>` | `dropped
 
 | region | role | have (ids) | need | what the pool lacked | base sprite | status |
 |---|---|---|---|---|---|---|
+| invrisil | shop_door | - | 3 | pool has no ready shopfront door; the only candidate shape (6, green double door) is buried in a stacked slice; the owned shopfront_door (door_street 3) is the real shop door and is absent from this pool [shopfront_door is the art of the current invrisil_shop_door] | invrisil_shop_door | open |
+| invrisil | facade_panel | - | 4 | the pool is round fence posts and plank strips; there is no wall module (timber-frame panel, plaster, or masonry) that tiles beside the existing windows and doors. Current invrisil_timber_panel stays by default. | invrisil_timber_panel | open |
+| invrisil | roofline | - | 3 | neither pool contains a roofline module (eave, slate, tile, parapet). Current invrisil_roofline stays. | invrisil_roofline | open |
+| invrisil | lamp_street | - | 2 | no tall, formal post lamp in the navy-and-brass family of the boulevard; 7 is the only standing lamp and it is short and rough. Current street_lamp stays. | street_lamp | open |
