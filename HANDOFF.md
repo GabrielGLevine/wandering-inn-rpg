@@ -17,15 +17,28 @@ archived, or superseded session blocks.
   - Rules: pool first; gaps go to `docs/art-generation-list.md`, and unbundled pack sheets to `docs/art-bundle-pending.md`. No PixelLab (lapsed) and no bundle release.
   - A region closes only on a blind Fable art-direction read (spec §5.2). User eye-gates are prepared saves, non-blocking under wave autonomy.
   - Status:
-    - #607 Phase 0 is merged: PR #609, squash `108689ef`, with the tree verified. CI is all green; the journey gate stays nightly.
-    - #608 pilot 1a (Invrisil streets) is **PR #614** (branch `issue/608-invrisil-streets`, worktree `/private/tmp/wi-608a`). It says Refs #608; 1b closes it.
-      - Art gate closed: after five blind Fable reads, 0 FIX / 0 REJECT. The deferred items are #610–#613 plus generation-list rows.
-      - The final Opus review's I1–I3 and M1–M8 are fixed, and the scoped re-review is CLEAN.
-      - Evidence: `/private/tmp/wi-608-art-evidence/`. The ledger is `.superpowers/sdd/2026-10-08-regional-kits-invrisil-pilot/progress.md`.
-      - Next: CI green, then squash-merge, then pilot 1b (interiors and cast).
-      - Remove `/private/tmp/wi-608a-public` and `/private/tmp/wi-608a-before` at close.
-      - Trap: the `kits_*` capture scripts hard-code `official` in their PNG names, so rename the public output before reading.
-    - Untracked slices (1,258, labeled 40/44) live in `potential_assets/_sliced/`.
+    - #607 Phase 0 merged (PR #609).
+    - #608 Invrisil pilot DONE: 1a streets (PR #614, `d858d040`) and 1b interiors (PR #619, `34393bbc`); #608 closed.
+      - The blind Fable reads closed at 0 FIX / 0 REJECT, day and night. Invrisil G2 is 60%.
+      - The usage delta is on #606.
+      - Follow-ups: #610 (art batch), #611–#613, #615–#618.
+      - Evidence (local, licensed): `/private/tmp/wi-608-art-evidence/`.
+      - Ledger: `.superpowers/sdd/2026-10-08-regional-kits-invrisil-pilot/progress.md`.
+    - **R1 Liscor (#620)** is in progress on `issue/620-kits-liscor`, worktree `/private/tmp/wi-620`.
+      - Task 1 is done: capture scripts plus before-shots in the session scratchpad `captures-r1/before`.
+      - The pool read is done. It found props only: there are no facade, roof, street-paving or civic-wall candidates, so those are generation rows.
+      - Task 3 (pools, biome, cast, generation rows) is running.
+      - The branch was cut from the 1b tip `1635f136`; rebase it with `--onto origin/main 1635f136`.
+      - Ledger: `.superpowers/sdd/2026-10-08-regional-kits-rollout/progress.md`.
+    - **Bottleneck:** regional identity beyond props needs generated architecture (#610 + the Liscor rows). That needs a PixelLab renewal and a user-approved batch.
+    - **User action needed (blocks pulling main in `~/wandering-inn-rpg`):** a #608 subagent wrote stray, uncommitted edits into the main checkout. The backup and a dry-run-first script are in the session scratchpad at `stray-main-writes/cleanup.sh` (pass `--apply`).
+    - **Worktrees to remove later:** `/private/tmp/wi-608a`, `wi-608a-public`, `wi-608a-before`, `wi-608b` and `wi-docs`. Keep a public-build worktree for the rollout reads.
+  - Lessons (also in the rollout plan's checklist):
+    - Writing tools take `--repo-root <worktree>` only.
+    - Capture scripts hard-code `official`; rename the public output.
+    - Read the dusk and night views when ambience is phase-gated.
+    - Run `python3 -m pytest -q scripts/`, which is CI's scope.
+    - Re-routed journey scripts shift the `scripts/itinerary` contract pins.
   - Skill-library proposal (for Fable): document the `slice_atlases` → `label_slices` → `asset_candidates` → `fill_kit` → `wire_asset` pipeline in `wi-art-and-sprites`. Include `--allow-unverified` (codex batches) and the rule to run slicing from the main checkout.
   - Pre-existing debt: 406 pytest warnings on main (`data_lint.py:1129` `Image.getdata`, removed in Pillow 14; `harness_metrics.py:58` unclosed files).
 - **Active program (user, 2026-10-07), in order:**
