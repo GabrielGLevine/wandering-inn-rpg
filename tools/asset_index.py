@@ -55,7 +55,8 @@ def build(assets: Path = ASSETS) -> dict:
         rel = p.relative_to(assets)
         pack = rel.parts[0]
         # _sliced/ holds tools/slice_atlases.py output, already registry rows
-        if pack.endswith(".zip") or "_sliced" in rel.parts:
+        # art_direction_review_* are review captures, not packs
+        if pack.endswith(".zip") or "_sliced" in rel.parts or pack.startswith("art_direction_review_"):
             continue
         size = png_size(p)
         if size is None:

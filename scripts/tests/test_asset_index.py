@@ -27,3 +27,10 @@ def test_sliced_dirs_are_excluded(tmp_path):
     packs = ai.build(assets)
     assert [e["path"] for e in packs["Pixel Crawler - Free Pack"]] == [
         "Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"]
+
+
+def test_art_direction_review_batches_are_excluded(tmp_path):
+    assets = tmp_path / "potential_assets"
+    png(assets / "Pack A/x.png", 32, 32)
+    png(assets / "art_direction_review_2026-10-08/capture.png", 320, 180)
+    assert list(ai.build(assets)) == ["Pack A"]
