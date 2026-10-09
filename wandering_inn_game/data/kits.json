@@ -42,7 +42,6 @@
      "pick": "door",
      "pool": [
       "door",
-      "invrisil_door_street_1",
       "invrisil_door_street_2"
      ]
     },
@@ -76,8 +75,7 @@
      "pick": "cell",
      "pool": [
       "invrisil_hanging_sign",
-      "invrisil_shop_sign_1",
-      "invrisil_shop_sign_2"
+      "invrisil_shop_sign_1"
      ]
     }
    },

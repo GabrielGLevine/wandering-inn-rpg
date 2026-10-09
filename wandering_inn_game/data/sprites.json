@@ -10071,30 +10071,6 @@
    }
   }
  },
- "invrisil_door_street_1": {
-  "render_scale": 0.36666667,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/sprites/invrisil_shop_door/Idle-Sheet.png",
-    "frame_size": [
-     46,
-     61
-    ],
-    "region": [
-     9,
-     2,
-     46,
-     61
-    ],
-    "fps": 1
-   }
-  }
- },
  "invrisil_door_street_2": {
   "render_scale": 0.36666667,
   "anchor": [
@@ -10263,24 +10239,6 @@
     "frame_size": [
      32,
      32
-    ],
-    "fps": 1
-   }
-  }
- },
- "invrisil_shop_sign_2": {
-  "render_scale": 0.214286,
-  "anchor": [
-   0.5,
-   0.9688
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/sprites/invrisil_shop_sign_2/Idle-Sheet.png",
-    "frame_size": [
-     64,
-     64
     ],
     "fps": 1
    }

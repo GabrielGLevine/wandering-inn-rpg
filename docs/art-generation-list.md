@@ -20,3 +20,4 @@ PixelLab object-state variants from) · status (`open` | `done <ids>` | `dropped
 | invrisil | facade_panel | - | 4 | the pool is round fence posts and plank strips; there is no wall module (timber-frame panel, plaster, or masonry) that tiles beside the existing windows and doors. Current invrisil_timber_panel stays by default. | invrisil_timber_panel | open |
 | invrisil | roofline | - | 3 | neither pool contains a roofline module (eave, slate, tile, parapet). Current invrisil_roofline stays. | invrisil_roofline | open |
 | invrisil | lamp_street | - | 2 | no tall, formal post lamp in the navy-and-brass family of the boulevard; 7 is the only standing lamp and it is short and rough. Current street_lamp stays. | street_lamp | open |
+| invrisil | shop_sign | invrisil_hanging_sign, invrisil_shop_sign_1 | 3 | a third readable shop sign without inn lettering | invrisil_hanging_sign | open |
