@@ -33,8 +33,7 @@ archived, or superseded session blocks.
       - The branch was cut from the 1b tip `1635f136`; rebase it with `--onto origin/main 1635f136`.
       - Ledger: `.superpowers/sdd/2026-10-08-regional-kits-rollout/progress.md`.
     - **Bottleneck:** regional identity beyond props needs generated architecture (#610 + the Liscor rows). That needs a PixelLab renewal and a user-approved batch.
-    - **User action needed (blocks pulling main in `~/wandering-inn-rpg`):** a #608 subagent wrote stray, uncommitted edits into the main checkout. The backup and a dry-run-first script are in the session scratchpad at `stray-main-writes/cleanup.sh` (pass `--apply`).
-    - **Worktrees to remove later:** `/private/tmp/wi-608a`, `wi-608a-public`, `wi-608a-before`, `wi-608b` and `wi-docs`. Keep a public-build worktree for the rollout reads.
+    - **Worktrees to remove later:** `/private/tmp/wi-608a`, `wi-608a-before`, `wi-608b` and `wi-docs`. Keep `wi-608a-public`, the public-build capture worktree.
   - Lessons (also in the rollout plan's checklist):
     - Writing tools take `--repo-root <worktree>` only.
     - Capture scripts hard-code `official`; rename the public output.
