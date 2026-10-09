@@ -237,12 +237,7 @@
     4
    ],
    "display_name": "A Man Not Drinking",
-   "sprite": "human_laborer",
-   "tint": [
-    0.62,
-    0.62,
-    0.7
-   ],
+   "sprite": "city_runner",
    "facing": "left",
    "observe": "A full cup, untouched, at his right hand, and his chair turned three degrees off the table so he can see both doors without turning his head.",
    "talk_pool": [
