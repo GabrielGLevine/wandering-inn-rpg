@@ -162,6 +162,21 @@
    "frames": 10
   },
   {
+   "_comment": "#608 kits: the boulevard's nine upper windows are @facade_window rows (radius 3, the facade pitch), resolved at compose time; the decor build reports the role with the variants it drew (sorted). Exact pin of the resolver's picks: a pool or pick-rule change moves it on purpose.",
+   "action": "assert_event_logged",
+   "type": "ui_decor_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "roles": {
+     "facade_window": [
+      "invrisil_facade_window_1",
+      "invrisil_facade_window_3",
+      "invrisil_upper_window"
+     ]
+    }
+   }
+  },
+  {
    "_comment": "#608 kits: the cross-street door is an @door_street row; it draws the variant seeded on the {invrisil_boulevard, invrisil_cross_street} portal pair and its visual payload carries the role.",
    "action": "assert_event_logged",
    "type": "ui_entity_visual_rendered",
