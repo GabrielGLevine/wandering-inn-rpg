@@ -1,5 +1,6 @@
 # Regional Kits Phase 0 — Lane B (atlas slicing and labeling) Implementation Plan
 
+> Status: **ACTIVE**
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Slice every static multi-sprite Pixel Crawler prop atlas under untracked `potential_assets/` into individually indexed, vision-labeled candidate sprites that `tools/find_asset.py` returns and Lane C's `wire_asset` can consume (issue #607, Lane B).

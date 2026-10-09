@@ -1,5 +1,6 @@
 # Regional Kits Phase 0 — Lane C (wiring) Implementation Plan
 
+> Status: **ACTIVE**
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Move the frame-count pins out of `tests/test_sprite_registry.gd` into a data fixture, and ship `tools/wire_asset.py` and `tools/fill_kit.py` so a pool candidate becomes a registered sprite (and a kit-pool member) with one command instead of ~7 hand edits — without changing any shipped map (issue #607).

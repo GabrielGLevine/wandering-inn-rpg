@@ -1,5 +1,6 @@
 # Regional Kits Invrisil Pilot Implementation Plan
 
+> Status: **ACTIVE**
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Give Invrisil a recognisable regional kit and remove within-region repetition, in two PRs (1a streets, 1b interiors), each closed by a blind Fable art-direction read (issue #608).

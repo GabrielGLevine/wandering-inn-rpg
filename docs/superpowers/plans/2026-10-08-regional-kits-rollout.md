@@ -1,5 +1,6 @@
 # Regional Kits Phase 2 Rollout (per-region template) Implementation Plan
 
+> Status: **ACTIVE**
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Convert every remaining region to its kit after the Invrisil pilot, one PR per region, each closed by a blind Fable art-direction read.

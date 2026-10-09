@@ -1,5 +1,6 @@
 # Regional Kits Phase 0 (Foundations) Implementation Plan
 
+> Status: **ACTIVE**
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the kit resolver, the atlas-slicing supply pipeline and the pool-first wiring tools without changing any shipped map (issue #607).
