@@ -198,6 +198,8 @@ and chronology belong in issue PRs. Earlier context:
   `tempered_standards` → smiths and alchemists, `ledger_eats_first` → City of
   Inventions. New owned art (PixelLab, best art wins) for the Gnoll trader and
   on-screen Garuda and Dullahan residents. A third floodplains quest: not now.
+  Shipped in #603/#604 (2026-10-08). Lift plates and the market toasts follow
+  the theme (lift token, exam-floor booking).
 - **Purchases confirm before any gold or item effect commits** (#504).
 - **Serve stays cooking-gated;** `source_hint` tells a blocked player where a
   meal comes from, and combat builds are not entitled to bypass the cooking
@@ -257,6 +259,10 @@ and chronology belong in issue PRs. Earlier context:
   ending-variety rewrite.
 - **Conversation hubs are append-sensitive:** add hidden options last; reactive
   copy uses `text_variants`, pool stages or twin presence rows.
+- **A ruled redesign may rewrite frozen holdout strings.** Each rewritten
+  string is excluded from the holdout in both `holdout.json` and
+  `HOLDOUT_EXCLUSIONS`, with a reason and a note of what moved. The ids stay in
+  the inventory. Precedents: #396, #450, #513 (four strings).
 
 ### Simulation, reachability and QA
 

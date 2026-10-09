@@ -15,20 +15,13 @@ archived, or superseded session blocks.
      #596 (bounty turn-in toast) and #597 (toast over tall panels).
   2. DONE: #514 gear rules (PR #601; closes #494/#495). #495's balance effect
      is unmeasured by the harness; follow-up #599.
-  3. IN PROGRESS (user approved a third concurrent lane, 2026-10-08):
-     - DONE: #453 rest signposting, six data-only placements (PR #602,
-       `06eea743`; #453 stays open for per-spine verification). Visual debt
-       in `docs/VISUAL-LOG.md`.
-     - DONE: Pallass art, owned rigs `wool_trader`, `garuda_runner`,
-       `dullahan_examiner` registered (PR #603, `1c364227`); not yet placed.
-     - Pallass content ("Room on the Row" plus re-themes of `forge_tier_permit`,
-       `tempered_standards`, `ledger_eats_first`) with placeholder sprites:
-       `/private/tmp/wi-pallass-content`. Rebasing onto `1c364227` to swap in
-       the real sprite ids and re-pin journeys. A peer session's
-       regional-kits work holds off `data/maps/pallass/*` until this merges.
-       Heavy runs are staggered (`WI_SWEEP_JOBS=3`).
-     Design docs: `docs/design/453-rest-signposting.md`, `513-pallass-income.md`.
-     A third floodplains quest: not now. Runners' Post: #600.
+  3. DONE (2026-10-08): #453 rest signposting (PR #602, `06eea743`); Pallass
+     resident art (PR #603, `1c364227`); Pallass "Room on the Row" plus three
+     quests re-themed off paperwork (PR #604, `038caf8a`). #453 and #513 stay
+     open (per-spine verification; gear audit and worker band). Follow-ups:
+     #605 (lead proxy → `wool_trade_started` at next freeze), #600 (Runners'
+     Post). Visual debt in `docs/VISUAL-LOG.md`: bedrolls, arrows-in-turf,
+     opened containers, the bend jig, the stocked shelf, Dullahan occlusion.
   Each issue closes through its own PR after independent review and CI.
 - **Recovery cutover is done:** #571 and #512 closed by PR #592 (`17d635f8`).
   Carried HP/MP has no switch. Five continuous journeys (martial, Rogue,
@@ -38,7 +31,7 @@ archived, or superseded session blocks.
   `docs/design/571-cutover-execution.md`. Linux CI runs journeys ~8x slower
   than local macOS; budgets and `timeout_sec` are CI-measured.
 - **Open findings to carry:** #453 per-spine verification (rest signposting
-  shipped in #602; no tuning); #513 remaining Pallass content and gear-affordability audit
+  shipped in #602; no tuning); #513 gear-affordability audit and the worker under band at Act III
   (`docs/design/513-low-gold-recovery.md`, `571-fee-audit.md`); #515 criterion
   4 (automated geometry/capture checks); #586 shutdown leak (exact lines
   deferred via `qa/noise_scan.sh`, leak still open).
@@ -112,9 +105,11 @@ python3 scripts/render_qa_notes.py --write
   in zsh, since `$rev:w…` is read as a history modifier.
 - PixelLab's subscription lapsed 2026-10-06. #603 was paid from prepaid credit
   via the REST API ($0.40; $0.05 left). More art needs a renewal (user purchase).
-- Skill-library proposals (from the #603 art lane, for Fable): document the
-  QA-only `stage_sprite` action in the QA DSL reference; record the PixelLab
-  REST credit route and its one-job concurrency limit in `wi-art-and-sprites`.
+- Skill-library proposals (for Fable): document the QA-only `stage_sprite`
+  action in the QA DSL reference; record the PixelLab REST credit route and
+  its one-job concurrency limit in `wi-art-and-sprites`; trap for scene work:
+  dialogue separation pushes the NPC away from the player, so keep props off
+  an NPC's cardinal axes or the NPC hides behind them (#604).
 - Windowed QA serializes. Reruns replace `qa_output/`; a full sweep flushes it.
 - Godot 4.7 web export templates and Playwright are installed locally, so
   `qa/web/run_web_qa.sh` and `qa/web/run_browser_suite.py` run here.
