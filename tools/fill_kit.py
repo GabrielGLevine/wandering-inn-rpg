@@ -120,10 +120,21 @@ def role_pool_ids(kits: dict, region: str, role: str) -> list[str]:
     return [p[0] if isinstance(p, list) else p for p in spec.get("pool", [])]
 
 
-def entry_rendered_h(entry: dict) -> float:
+def entry_rendered_h(entry: dict, paths: wa.Paths | None = None) -> float:
+    """Rendered gameplay height. Owned entries measure the alpha bbox, as query() does for
+    candidates: frame height would class a wired member L and hide its M siblings."""
     idle = (entry.get("animations") or {}).get("idle") or {}
-    h = idle["region"][3] if idle.get("region") else idle["frame_size"][1]
-    return float(h) * float(entry.get("render_scale", 1.0))
+    scale = float(entry.get("render_scale", 1.0))
+    if idle.get("region"):
+        return float(idle["region"][3]) * scale
+    sheet = paths.game / str(idle.get("sheet", "")).replace("res://", "") if paths else None
+    if sheet is not None and sheet.is_file():
+        try:
+            _x0, y0, _x1, y1 = wa.probe(sheet, idle["frame_size"][0])["bbox"]
+            return float(y1 - y0) * scale
+        except wa.ProbeError:
+            pass
+    return float(idle["frame_size"][1]) * scale
 
 
 def query(paths: wa.Paths, kind: str | None, scale: float) -> list[Candidate]:
@@ -190,6 +201,28 @@ def number(cands: list[Candidate]) -> list[Candidate]:
     return cands
 
 
+def pool_signatures(catalog: dict, pool: list[str], paths: wa.Paths) -> tuple[set[str], set[tuple]]:
+    """(sha256 of owned members' sheets, (sheet, region) of pack members) for the role's pool."""
+    shas: set[str] = set()
+    regions: set[tuple] = set()
+    for sid in pool:
+        entry = catalog.get(sid)
+        if not isinstance(entry, dict):
+            continue
+        idle = (entry.get("animations") or {}).get("idle") or {}
+        sheet = str(idle.get("sheet", "")).replace("res://", "")
+        if idle.get("region"):
+            regions.add((sheet, tuple(int(v) for v in idle["region"])))
+        elif (paths.game / sheet).is_file():
+            shas.add(wa.sha256_file(paths.game / sheet))
+    return shas, regions
+
+
+def not_yet_wired(cands: list[Candidate], shas: set[str], regions: set[tuple]) -> list[Candidate]:
+    return [c for c in cands if c.sha not in shas
+            and (c.mode != "pack" or (c.sheet, tuple(c.region)) not in regions)]
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("region")
@@ -222,11 +255,14 @@ def main(argv: list[str] | None = None) -> int:
 def fill(args: argparse.Namespace, paths: wa.Paths) -> int:
     _text, catalog = wa.load_catalog(paths)
     ktext, kits = load_kits_text(paths)
+    if args.select and isinstance(((kits.get(args.region) or {}).get("roles") or {}).get(args.role), str):
+        raise wa.Refused(f"{args.region}.roles.{args.role} is a fixed sprite; convert it by hand before pooling")
     pool = role_pool_ids(kits, args.region, args.role)
-    members = {size_class(entry_rendered_h(catalog[i])) for i in pool if isinstance(catalog.get(i), dict)}
+    members = {size_class(entry_rendered_h(catalog[i], paths)) for i in pool if isinstance(catalog.get(i), dict)}
     like = next((i for i in pool if isinstance(catalog.get(i), dict)), None)
     scale = float(catalog[like].get("render_scale", wa.DEFAULT_SCALE["owned"])) if like else wa.DEFAULT_SCALE["owned"]
-    cands = number(compatible(query(paths, args.kind, scale), members, args.size)[: args.limit])
+    shas, regions = pool_signatures(catalog, pool, paths)
+    cands = number(not_yet_wired(compatible(query(paths, args.kind, scale), members, args.size), shas, regions)[: args.limit])
     for c in cands:
         print(f"#{c.n:<3} {c.size_class:<2} {c.mode:<5} {c.row.get('verdict', ''):<15} {c.row['path']}")
     print(f"-- {len(cands)} candidates for {args.region}/{args.role} (have {len(pool)}, need {args.need})")
@@ -242,8 +278,215 @@ def preview(paths: wa.Paths, region: str, role: str) -> int:
     raise wa.Refused("preview lands with lane A's wi_kits_lib (Task 12)")
 
 
-def select(args, paths, cands, ktext, catalog, pool, like) -> int:
-    raise wa.Refused("--select lands in Task 11")
+
+
+# ----------------------------------------------------- surgical kits.json
+
+def _string_end(text: str, i: int) -> int:
+    j = i + 1
+    while True:
+        c = text[j]
+        if c == "\\":
+            j += 2
+            continue
+        if c == '"':
+            return j + 1
+        j += 1
+
+
+def _children(text: str, open_idx: int, close_idx: int):
+    i = open_idx + 1
+    while i < close_idx:
+        if text[i] in " \t\r\n,":
+            i += 1
+            continue
+        key_end = _string_end(text, i)
+        key = json.loads(text[i:key_end])
+        j = text.index(":", key_end) + 1
+        while text[j] in " \t\r\n":
+            j += 1
+        if text[j] in "{[":
+            _, vc = splice_json.scan_container_span(text, text[j], "}" if text[j] == "{" else "]", j)
+            val_end = vc + 1
+        elif text[j] == '"':
+            val_end = _string_end(text, j)
+        else:
+            val_end = re.compile(r"[^,\s\]}]+").match(text, j).end()
+        yield key, i, j, val_end
+        i = val_end
+
+
+def _span(text: str, path: list[str]) -> tuple[int, int]:
+    o, c = splice_json.scan_container_span(text, "{", "}", 0)
+    for key in path:
+        for k, _ki, vi, _ve in _children(text, o, c):
+            if k == key:
+                if text[vi] not in "{[":
+                    raise wa.Refused(f"kits.json: {'.'.join(path)} is not a container")
+                o, c = splice_json.scan_container_span(text, text[vi], "}" if text[vi] == "{" else "]", vi)
+                break
+        else:
+            raise wa.Refused(f"kits.json: missing key {'.'.join(path)}")
+    return o, c
+
+
+def _insert(text: str, o: int, c: int, body_json: str, key: str | None) -> str:
+    if text[o + 1:c].strip():
+        indent = splice_json.last_sibling_indent(text, o, c)
+        body = splice_json.reindent(body_json, indent)
+        if key is not None:
+            body = '"%s": %s' % (key, body)
+        tail = c
+        while text[tail - 1] in " \t\n":
+            tail -= 1
+        return text[:tail] + ",\n" + indent + body + text[tail:]
+    line_start = text.rfind("\n", 0, o) + 1
+    base = re.match(r"[ \t]*", text[line_start:o]).group(0)
+    indent = base + ("\t" if "\t" in base or text.startswith("{\n\t") else " ")
+    body = splice_json.reindent(body_json, indent)
+    if key is not None:
+        body = '"%s": %s' % (key, body)
+    return text[:o + 1] + "\n" + indent + body + "\n" + base + text[c:]
+
+
+def _prove(before: str, after: str, path: list[str]) -> None:
+    node = json.loads(after)
+    for key in path:
+        node = node[key]
+    pre = 0
+    while pre < min(len(before), len(after)) and before[pre] == after[pre]:
+        pre += 1
+    suf = 0
+    while suf < min(len(before), len(after)) - pre and before[-1 - suf] == after[-1 - suf]:
+        suf += 1
+    if pre + suf < len(before):
+        raise wa.Refused("kits.json splice changed bytes outside the insertion")
+
+
+def add_key(text: str, path: list[str], key: str, value) -> str:
+    o, c = _span(text, path)
+    if text[o] != "{":
+        raise wa.Refused(f"kits.json: {'.'.join(path) or '<root>'} is not an object")
+    out = _insert(text, o, c, json.dumps(value, ensure_ascii=False), key)
+    _prove(text, out, path + [key])
+    return out
+
+
+def append_item(text: str, path: list[str], value) -> str:
+    o, c = _span(text, path)
+    if text[o] != "[":
+        raise wa.Refused(f"kits.json: {'.'.join(path)} is not an array")
+    out = _insert(text, o, c, json.dumps(value, ensure_ascii=False), None)
+    _prove(text, out, path)
+    return out
+
+
+def kits_with_pool(text: str, region: str, role: str, ids: list[str], pick: str, module: bool) -> str:
+    data = json.loads(text)
+    if region not in data:
+        text = add_key(text, [], region, {"materials": {}, "roles": {}, "cast": []})
+        data = json.loads(text)
+    if "roles" not in data[region]:
+        text = add_key(text, [region], "roles", {})
+        data = json.loads(text)
+    spec = data[region]["roles"].get(role)
+    if spec is None:
+        obj: dict = {"pick": pick}
+        if module:
+            obj["module"] = True
+        obj["pool"] = list(ids)
+        return add_key(text, [region, "roles"], role, obj)
+    if isinstance(spec, str):
+        raise wa.Refused(f"{region}.roles.{role} is a fixed sprite '{spec}'; convert it by hand before pooling")
+    have = role_pool_ids(data, region, role)
+    for sid in ids:
+        if sid not in have:
+            text = append_item(text, [region, "roles", role, "pool"], sid)
+            have.append(sid)
+    return text
+
+
+# ------------------------------------------------------------- selection
+
+def next_ids(region: str, role: str, n: int, catalog: dict, pool: list[str]) -> list[str]:
+    out, k = [], len(pool) + 1
+    while len(out) < n:
+        sid = f"{region}_{role}_{k}"
+        if sid not in catalog and sid not in pool:
+            out.append(sid)
+        k += 1
+    return out
+
+
+def generation_list_with(text: str, region: str, role: str, have: list[str], need: int,
+                         lacked: str, base: str) -> str:
+    if not text:
+        text = GENERATION_LIST_HEADER
+    row = f"| {region} | {role} | {', '.join(have) or '-'} | {need} | {lacked or '-'} | {base or '-'} | open |"
+    lines = text.rstrip("\n").split("\n")
+    for i, line in enumerate(lines):
+        cells = [c.strip() for c in line.strip().strip("|").split("|")] if line.startswith("|") else []
+        if len(cells) == 7 and cells[0] == region and cells[1] == role and cells[6] == "open":
+            lines[i] = row
+            return "\n".join(lines) + "\n"
+    return "\n".join(lines + [row]) + "\n"
+
+
+def warn_fallback_set(catalog: dict, pool: list[str]) -> None:
+    public: set[str] = set()
+    for sid in pool:
+        entry = catalog.get(sid) or {}
+        idle = (entry.get("animations") or {}).get("idle") or {}
+        public.add(entry.get("fallback_sprite") if idle.get("region") else sid)
+    public.discard(None)
+    if len(public) < 2:
+        print(f"warning: public fallback set {sorted(public)} has < 2 distinct owned sprites; lane A lint will refuse this pool")
+
+
+def select(args: argparse.Namespace, paths: wa.Paths, cands: list[Candidate], ktext: str,
+           catalog: dict, pool: list[str], like: str | None) -> int:
+    try:
+        picks = [int(s) for s in args.select.split(",") if s.strip()]
+    except ValueError:
+        print(f"fill_kit: --select wants numbers from the listing, got {args.select!r}")
+        return EXIT_USAGE
+    known = {c.n: c for c in cands}
+    if not picks or len(set(picks)) != len(picks) or any(n not in known for n in picks):
+        print(f"fill_kit: --select {args.select} is not a set of listed numbers 1..{len(cands)}")
+        return EXIT_USAGE
+    ids = args.ids.split(",") if args.ids else next_ids(args.region, args.role, len(picks), catalog, pool)
+    if len(ids) != len(picks) or any(not wa.ID_RE.match(i) for i in ids):
+        print(f"fill_kit: --ids needs {len(picks)} valid id(s)")
+        return EXIT_USAGE
+    chosen = [known[n] for n in picks]
+    if any(c.mode == "pack" for c in chosen) and not args.fallback:
+        raise wa.Refused("a pack pick needs --fallback <owned public sprite_id> (public builds must not lose the pool)")
+    # kits.json must be editable before any wire_asset call mutates anything
+    kits_with_pool(ktext, args.region, args.role, ids, args.pick, args.module)
+    wired: list[str] = []
+    for c, sid in zip(chosen, ids):
+        argv = [str(c.path), "--id", sid, "--repo-root", str(paths.repo_root), "--no-regen"]
+        if c.mode == "pack":
+            argv += ["--fallback", args.fallback]
+        if like:
+            argv += ["--like", like]
+        rc = wa.main(argv)
+        if rc != 0:
+            raise wa.Refused(f"wire_asset exit {rc} for #{c.n} ({c.path.name}); pool not updated")
+        wired.append(sid)
+    wa.regenerate_candidates(paths)
+    new_text = kits_with_pool(ktext, args.region, args.role, wired, args.pick, args.module)
+    if new_text != ktext:
+        kits_path(paths).write_text(new_text, encoding="utf-8")
+    have = role_pool_ids(json.loads(new_text), args.region, args.role)
+    warn_fallback_set(wa.load_catalog(paths)[1], have)
+    print(f"pool {args.region}/{args.role}: {have}")
+    if len(wired) < args.need:
+        gl = paths.docs / "art-generation-list.md"
+        gl.write_text(generation_list_with(wa.read_text(gl), args.region, args.role, have, args.need,
+                                           args.lacked, args.base or (have[0] if have else "")), encoding="utf-8")
+        print(f"shortfall: selected {len(wired)} < need {args.need}; open row in docs/art-generation-list.md")
+    return EXIT_OK
 
 
 def candidate_image(c: Candidate) -> Image.Image:

@@ -225,7 +225,7 @@ def test_unbundled_dry_run_logs_nothing(tree):
 
 
 def test_slicer_game_sheet_hint_short_circuits_hash(tree):
-    sj = tree / f"potential_assets/{UNBUNDLED_PACK}/_sliced/Props/SLICES.json"
+    sj = tree / f"potential_assets/_sliced/{UNBUNDLED_PACK}/Props/SLICES.json"
     d = json.loads(sj.read_text())
     d["assets"][0]["game_sheet"] = "assets/props/free_pack/Furniture.png"
     d["assets"][0]["sheet_sha256"] = sha(tree / "wandering_inn_game/assets/props/free_pack/Furniture.png")
@@ -235,7 +235,7 @@ def test_slicer_game_sheet_hint_short_circuits_hash(tree):
 
 
 def _set_hint(tree, hint):
-    sj = tree / f"potential_assets/{UNBUNDLED_PACK}/_sliced/Props/SLICES.json"
+    sj = tree / f"potential_assets/_sliced/{UNBUNDLED_PACK}/Props/SLICES.json"
     d = json.loads(sj.read_text())
     d["assets"][0]["game_sheet"] = hint
     sj.write_text(json.dumps(d, indent=1) + "\n")
@@ -252,7 +252,7 @@ def test_hint_with_wrong_sha_is_ignored(tree, capsys):
 
 
 def test_hint_with_wrong_sha_falls_back_to_index(tree):
-    sj = tree / f"potential_assets/{PACK}/_sliced/Furniture/SLICES.json"
+    sj = tree / f"potential_assets/_sliced/{PACK}/Furniture/SLICES.json"
     d = json.loads(sj.read_text())
     d["assets"][0]["game_sheet"] = "assets/sprites/crate_owned/Idle-Sheet.png"
     sj.write_text(json.dumps(d, indent=1) + "\n")
@@ -261,7 +261,7 @@ def test_hint_with_wrong_sha_falls_back_to_index(tree):
 
 
 def test_hint_outside_assets_is_ignored(tree):
-    sj = tree / f"potential_assets/{PACK}/_sliced/Furniture/SLICES.json"
+    sj = tree / f"potential_assets/_sliced/{PACK}/Furniture/SLICES.json"
     d = json.loads(sj.read_text())
     d["assets"][0]["game_sheet"] = "assets/../data/../../potential_assets/x.png"
     sj.write_text(json.dumps(d, indent=1) + "\n")

@@ -3,7 +3,8 @@
 
 Builds a throwaway copy of the parts those tools touch (sprites.json, the C7
 fixture, assets_manifest.json, provenance, docs, one bundled pack sheet, one
-owned batch with MANIFEST.json, two atlas slices with SLICES.json) so the tools
+owned batch with MANIFEST.json, two atlas slices under the top-level
+potential_assets/_sliced/<pack>/<stem>/ layout with SLICES.json) so the tools
 run with --repo-root and never see the real tree. PNGs are drawn with PIL.
 """
 from __future__ import annotations
@@ -25,8 +26,8 @@ OWNED = "potential_assets/pixellab_test/L2_props/parcel_stack.png"
 OWNED_DUP = "potential_assets/pixellab_test/L2_props/parcel_stack__alt1.png"
 STRIP = "potential_assets/pixellab_test/L2_props/lantern_flicker.png"
 BENCH = "potential_assets/pixellab_test/L2_props/wide_bench.png"
-SLICE = f"potential_assets/{PACK}/_sliced/Furniture/Furniture__x16_y8_w16_h23.png"
-PENDING_SLICE = f"potential_assets/{UNBUNDLED_PACK}/_sliced/Props/Props__x0_y0_w16_h16.png"
+SLICE = f"potential_assets/_sliced/{PACK}/Furniture/Furniture__x16_y8_w16_h23.png"
+PENDING_SLICE = f"potential_assets/_sliced/{UNBUNDLED_PACK}/Props/Props__x0_y0_w16_h16.png"
 PIXELLAB_ID = "0a4384ab-702d-4998-8e26-8e15c4c97585"
 
 
@@ -105,7 +106,7 @@ def make_tree(root: Path) -> Path:
              "frame_size": [48, 32]},
         ]}, indent=1) + "\n", encoding="utf-8")
     # pack slices: one cut from the bundled sheet, one from a sheet absent under assets/
-    sliced = root / "potential_assets" / PACK / "_sliced" / "Furniture"
+    sliced = root / "potential_assets" / "_sliced" / PACK / "Furniture"
     sliced.mkdir(parents=True)
     with Image.open(sheet) as im:
         im.crop((16, 8, 32, 31)).save(sliced / "Furniture__x16_y8_w16_h23.png")
@@ -114,7 +115,7 @@ def make_tree(root: Path) -> Path:
         "source_sheet": f"potential_assets/{PACK}/Furniture.png", "region": [16, 8, 16, 23],
         "sheet_sha256": sha(sheet), "method": "grid16", "has_shadow": False, "size_class": "M",
         "label_confidence": 0.9}]}, indent=1) + "\n", encoding="utf-8")
-    pending = root / "potential_assets" / UNBUNDLED_PACK / "_sliced" / "Props"
+    pending = root / "potential_assets" / "_sliced" / UNBUNDLED_PACK / "Props"
     png_box(pending / "Props__x0_y0_w16_h16.png", 16, 16, (1, 1, 14, 14))
     (pending / "SLICES.json").write_text(json.dumps({"assets": [{
         "path": PENDING_SLICE, "kind": "prop", "targets": ["crate"], "verdict": "UNREVIEWED", "notes": "",

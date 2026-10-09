@@ -69,7 +69,7 @@ def test_listing_prints_numbered_candidates(tree, capsys):
     assert run(tree, "invrisil", "cargo", "--need", "4", "--kind", "crate") == 0
     out = capsys.readouterr().out
     assert re.search(r"^#1 +M +owned +READY +potential_assets/pixellab_test/L2_props/parcel_stack.png", out, re.M)
-    assert re.search(r"^#2 +M +pack +UNREVIEWED +potential_assets/Pixel Crawler - Free Pack 2.1/", out, re.M)
+    assert re.search(r"^#2 +M +pack +UNREVIEWED +potential_assets/_sliced/Pixel Crawler - Free Pack 2.1/", out, re.M)
     assert "-- 2 candidates for invrisil/cargo (have 0, need 4)" in out
 
 
@@ -155,3 +155,108 @@ def test_number_labels_differ_between_cells(tmp_path):
         a = img.crop((fk.CELL - 20, y, fk.CELL - 8, y + 12))
         b = img.crop((2 * fk.CELL - 20, y, 2 * fk.CELL - 8, y + 12))
         assert _px(a) != _px(b)
+
+
+def test_select_wires_and_pools(tree):
+    before_common = re.search(r'^ "_common": .*$', (tree / KITS).read_text(), re.M).group(0)
+    assert run(tree, "invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "1,2",
+               "--fallback", "crate_owned") == 0
+    cat = json.loads((tree / "wandering_inn_game/data/sprites.json").read_text())
+    assert cat["invrisil_cargo_1"]["animations"]["idle"]["sheet"] == "res://assets/sprites/invrisil_cargo_1/Idle-Sheet.png"
+    assert cat["invrisil_cargo_2"]["animations"]["idle"]["region"] == [16, 8, 16, 23]
+    assert cat["invrisil_cargo_2"]["fallback_sprite"] == "crate_owned"
+    assert kits(tree)["invrisil"]["roles"]["cargo"] == {"pick": "cell", "pool": ["invrisil_cargo_1", "invrisil_cargo_2"]}
+    text = (tree / KITS).read_text()
+    assert re.search(r'^ "_common": .*$', text, re.M).group(0) == before_common
+    assert '"floor_street"' in text
+    assert not (tree / GEN).exists()
+    reg = json.loads((tree / "docs/asset-candidates.json").read_text())
+    assert {"invrisil_cargo_1", "invrisil_cargo_2"} <= {r.get("sprite_id") for r in reg["assets"]}
+
+
+def test_top_level_sliced_layout_is_selectable(tree):
+    assert SLICE.startswith("potential_assets/_sliced/") and (tree / SLICE).parent.name == "Furniture"
+    assert (tree / SLICE).parent.joinpath("SLICES.json").is_file()
+    assert run(tree, "invrisil", "cargo", "--need", "1", "--kind", "crate", "--select", "2",
+               "--ids", "invrisil_slice_crate", "--fallback", "crate_owned") == 0
+    cat = json.loads((tree / "wandering_inn_game/data/sprites.json").read_text())
+    assert cat["invrisil_slice_crate"]["animations"]["idle"]["region"] == [16, 8, 16, 23]
+    assert kits(tree)["invrisil"]["roles"]["cargo"]["pool"] == ["invrisil_slice_crate"]
+
+
+def test_shortfall_row_is_written_once_and_updated(tree):
+    assert run(tree, "invrisil", "cargo", "--need", "4", "--kind", "crate", "--select", "1",
+               "--lacked", "no lidded or banded variants") == 0
+    text = (tree / GEN).read_text()
+    assert text.startswith(fk.GENERATION_LIST_HEADER)
+    assert "| invrisil | cargo | invrisil_cargo_1 | 4 | no lidded or banded variants | invrisil_cargo_1 | open |" in text
+    # the first run regenerated docs/asset-candidates.json from the fake batch (no slices
+    # until lane B); restore the hand-written registry, as lane B's rebuild would list them
+    write_registry(tree)
+    # parcel_stack is now IN the pool, so it is no longer listed: the slice is #1
+    assert run(tree, "invrisil", "cargo", "--need", "4", "--kind", "crate", "--select", "1",
+               "--fallback", "crate_owned", "--lacked", "still no banded variant", "--base", "crate") == 0
+    text = (tree / GEN).read_text()
+    assert text.count("| invrisil | cargo |") == 1
+    assert "| invrisil | cargo | invrisil_cargo_1, invrisil_cargo_2 | 4 | still no banded variant | crate | open |" in text
+    assert kits(tree)["invrisil"]["roles"]["cargo"]["pool"] == ["invrisil_cargo_1", "invrisil_cargo_2"]
+
+
+def test_new_region_module_role_and_explicit_ids(tree):
+    assert run(tree, "liscor", "facade_window", "--need", "1", "--kind", "crate", "--select", "1",
+               "--ids", "liscor_window_a", "--pick", "map", "--module") == 0
+    k = kits(tree)
+    assert k["liscor"]["materials"] == {} and k["liscor"]["cast"] == []
+    assert k["liscor"]["roles"]["facade_window"] == {"pick": "map", "module": True, "pool": ["liscor_window_a"]}
+    assert "liscor_window_a" in json.loads((tree / "wandering_inn_game/data/sprites.json").read_text())
+
+
+def test_pack_pick_without_fallback_wires_nothing(tree):
+    before = snapshot(tree)
+    assert run(tree, "invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "2") == wa.EXIT_REFUSED
+    assert snapshot(tree) == before
+
+
+def test_select_validation_wires_nothing(tree):
+    before = snapshot(tree)
+    assert run(tree, "invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "1,9") == fk.EXIT_USAGE
+    assert run(tree, "invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "1,1") == fk.EXIT_USAGE
+    assert run(tree, "invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "1", "--ids", "a,b") == fk.EXIT_USAGE
+    assert snapshot(tree) == before
+
+
+def test_fixed_string_role_is_refused(tree):
+    k = tree / KITS
+    d = json.loads(k.read_text())
+    d["invrisil"]["roles"]["cargo"] = "crate_owned"
+    k.write_text(json.dumps(d, indent=1) + "\n")
+    before = snapshot(tree)
+    assert run(tree, "invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "1") == wa.EXIT_REFUSED
+    assert changed(before, snapshot(tree)) == set()   # kits.json is checked BEFORE any wire_asset call
+
+
+def test_fallback_set_warning(tree, capsys):
+    assert run(tree, "invrisil", "cargo", "--need", "1", "--kind", "crate", "--select", "2",
+               "--fallback", "crate_owned") == 0
+    assert "warning: public fallback set" in capsys.readouterr().out
+
+
+def test_splice_helpers_are_byte_surgical():
+    text = '{\n\t"a": {"x": 1},\n\t"b": {\n\t\t"r": {\n\t\t\t"pool": [\n\t\t\t\t"p"\n\t\t\t]\n\t\t}\n\t}\n}\n'
+    out = fk.append_item(text, ["b", "r", "pool"], "q")
+    assert json.loads(out)["b"]["r"]["pool"] == ["p", "q"] and out.startswith(text[:text.index('"p"') + 3])
+    out = fk.add_key('{\n\t"a": {}\n}\n', [], "z", {"k": 1})
+    assert json.loads(out) == {"a": {}, "z": {"k": 1}}
+    assert json.loads(fk.add_key('{"a": {}}', ["a"], "k", 1)) == {"a": {"k": 1}}
+    with pytest.raises(wa.Refused):
+        fk.append_item(text, ["a"], 1)
+
+
+def test_next_ids_skips_taken():
+    assert fk.next_ids("r", "x", 2, {"r_x_2": {}}, ["r_x_1"]) == ["r_x_3", "r_x_4"]
+
+
+def test_never_calls_pixellab():
+    src = (HERE.parent.parent / "tools" / "fill_kit.py").read_text()
+    assert not re.search(r"^\s*(import|from)\s+(requests|urllib|http|socket)\b", src, re.M)
+    assert "mcp__pixellab" not in src and "pixellab.ai" not in src
