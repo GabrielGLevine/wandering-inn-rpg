@@ -20,7 +20,7 @@ verified), `shipped-public` / `shipped-bundle` (wired in data/sprites.json),
 | kind | owned-public | owned-unverified | pack-bundle | shipped-bundle | shipped-public |
 |---|---|---|---|---|---|
 | icon | 881 |  |  |  | 106 |
-| prop | 556 | 20 | 1260 | 68 | 249 |
+| prop | 556 | 20 | 1260 | 70 | 251 |
 | rig | 122 |  |  | 7 | 77 |
 | setpiece | 83 |  |  |  |  |
 | tileset | 29 |  |  |  |  |
