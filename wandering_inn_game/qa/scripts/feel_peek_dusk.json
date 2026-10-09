@@ -50,12 +50,13 @@
    }
   },
   {
-   "_comment": "The same emitter that reads `emitting: 0` in the day leg is running at dusk -- the gate is a gate, not a deletion.",
+   "_comment": "#608 art read: invrisil_street dropped its biome dust-mote default (motes with no source over a lamp-lit street), so the boulevard builds no emitter at any phase.",
    "action": "assert_event_logged",
    "type": "ui_ambience_rendered",
    "payload_contains": {
     "map": "invrisil_boulevard",
-    "emitting": 1
+    "emitters": 0,
+    "emitting": 0
    }
   },
   {

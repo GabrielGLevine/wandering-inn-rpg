@@ -116,7 +116,6 @@ const BIOME_DEFAULT_AMBIENCE := {
 	"floodplains": {"preset": "leaves", "phase": ["dusk", "night"]},
 	"riverfarm_village": {"preset": "leaves", "phase": ["dusk", "night"]},
 	"street": {"preset": "dust_motes", "phase": ["dusk", "night"]},
-	"invrisil_street": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 	"pallass_market": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 }
 const SWAY_SHADER := preload("res://src/world/shaders/foliage_sway.gdshader")

@@ -50,12 +50,13 @@
    }
   },
   {
-   "_comment": "The biome default for invrisil_street is gated to dusk/night, so at NIGHT it is actually running -- `emitting` is the count moving at build time; the day leg pins the same map at 0.",
+   "_comment": "#608 art read: invrisil_street dropped its biome dust-mote default (motes with no source over a lamp-lit street), so the boulevard builds no emitter at any phase.",
    "action": "assert_event_logged",
    "type": "ui_ambience_rendered",
    "payload_contains": {
     "map": "invrisil_boulevard",
-    "emitting": 1
+    "emitters": 0,
+    "emitting": 0
    }
   },
   {

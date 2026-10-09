@@ -322,6 +322,25 @@
    ],
    "vignette": 0.35
   },
+  "invrisil_cross_street": {
+   "_comment": "#608 art read: the boulevard's card, so the hour holds across the door between them.",
+   "day": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "dusk": [
+    0.44,
+    0.48,
+    0.8
+   ],
+   "night": [
+    0.27,
+    0.32,
+    0.68
+   ],
+   "vignette": 0.35
+  },
   "mercantile_alleys": {
    "_comment": "Hedault's bench: night read 22 mean, floor/wall/enchanter indistinguishable, half the next-darkest scene. Lifted to the boulevard family; still the darkest Invrisil exterior.",
    "day": [
