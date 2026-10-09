@@ -336,6 +336,11 @@ and chronology belong in issue PRs. Earlier context:
     shop signs moved from row 2 to row 1; the stationery display was
     removed. G4 reports it as an advisory naming both the cells and the
     blocked change, not as a silent pass.
+  - **Shared floor sheet (#608 final review):** `ashlar_over_checker_v1` is
+    Invrisil's `floor_alley` material (tile [0,3]) and also Pallass's public
+    fallback floor sheet (`pallass_market`, `pallass_forge`, tile [2,1]). G2
+    enforces material exclusivity by material name only. Pixel-level sheet
+    exclusivity is a rollout concern and is not enforced.
 - **Best art wins per asset (#564/#554)** within a coherent scene, at gameplay
   scale; otherwise keep the official or owned public fallback. READY is not
   acceptance, and there is no quota wiring. Animation, geometry, scale and
