@@ -322,6 +322,10 @@ and chronology belong in issue PRs. Earlier context:
     was pinned to the Invrisil shop door (share 37.76%). It held at 74 when
     the counting-room guard took the new regional `invrisil_enforcer` rig
     (one new class row, no counter change).
+  - **G3 regen (#608 pilot 1b, Task 9c):** the enchanter tray and stationer
+    paper stand left the generic `crate` for dedicated regional sprites
+    (`invrisil_returned_work_tray`, `invrisil_paper_stand`): Invrisil generic
+    placements 74 → 72 (share 36.73%), two new regional class rows.
   - **Counting-room guard rig (#608 final review):** `counting_room_guard`
     (The Factor's Closed Account) wears `invrisil_enforcer`, the owned
     2026-07-06 `hired_blade_a` generation (broad build, club), wired at 28px

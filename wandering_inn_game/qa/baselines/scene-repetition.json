@@ -146,6 +146,8 @@
   "invrisil_hanging_sign": "regional",
   "invrisil_lady_client": "regional",
   "invrisil_ornate_bench": "regional",
+  "invrisil_paper_stand": "regional",
+  "invrisil_returned_work_tray": "regional",
   "invrisil_rigged_crate_stack": "regional",
   "invrisil_roofline": "regional",
   "invrisil_shop_door": "regional",
@@ -350,8 +352,8 @@
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 74,
-   "generic_share_pct": 37.76,
+   "generic_placements": 72,
+   "generic_share_pct": 36.73,
    "maps": {
     "adventurers_rest": {
      "generic_placements": 11,
@@ -362,7 +364,7 @@
      "placements": 26
     },
     "enchanter_shop": {
-     "generic_placements": 9,
+     "generic_placements": 8,
      "placements": 14
     },
     "enchanter_work_room": {
@@ -382,7 +384,7 @@
      "placements": 30
     },
     "stationer": {
-     "generic_placements": 15,
+     "generic_placements": 14,
      "placements": 18
     }
    },
