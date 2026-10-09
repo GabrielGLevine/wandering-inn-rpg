@@ -289,6 +289,52 @@ class TestGates(unittest.TestCase):
         data_lint._g4_compare({"m": cur}, {"m": base}, errors)
         self.assertEqual(errors, [])
 
+    def _recompose_case(self, cur_marker, base_marker):
+        base = {**GRID, "decor": [{"sprite": "@cargo", "cell": [0, 0]}], "entities": [], "blocked": [[1, 1]]}
+        if base_marker is not None:
+            base["_kits_recompose"] = base_marker
+        cur = copy.deepcopy(base); cur["blocked"] = [[1, 2]]
+        cur.pop("_kits_recompose", None)
+        if cur_marker is not None:
+            cur["_kits_recompose"] = cur_marker
+        errors, report = [], []
+        data_lint._g4_compare({"m": cur}, {"m": base}, errors, report)
+        return errors, report
+
+    def test_g4_recompose_new_marker_is_advisory(self):
+        errors, report = self._recompose_case("#608 - lamp composition fix", None)
+        self.assertEqual(errors, [])
+        self.assertTrue(any("G4" in r and "m" in r and "#608 - lamp composition fix" in r for r in report), report)
+        errors, report = self._recompose_case("#608 - second reason", "#608 - lamp composition fix")  # changed value
+        self.assertEqual(errors, [])
+        self.assertTrue(report)
+
+    def test_g4_recompose_marker_unchanged_from_base_enforces(self):
+        errors, report = self._recompose_case("#608 - lamp composition fix", "#608 - lamp composition fix")
+        self.assertTrue(any("G4" in e and "blocked" in e for e in errors), errors)
+        self.assertEqual(report, [])
+
+    def test_g4_no_marker_enforces(self):
+        errors, _ = self._recompose_case(None, None)
+        self.assertTrue(any("G4" in e and "blocked" in e for e in errors), errors)
+
+    def test_g4_malformed_marker_errors(self):
+        for bad in ("", "   ", "no issue number here", 608, ["#608"]):
+            errors, _ = self._recompose_case(bad, None)
+            self.assertTrue(any("_kits_recompose" in e for e in errors), (bad, errors))
+
+    def test_g4_recompose_through_real_base_loader(self):
+        base = data_lint._g4_base_maps("HEAD", [])
+        cur = copy.deepcopy(base["street"])
+        cur["decor"][0]["sprite"] = "@cargo"
+        cur["decor"].append(copy.deepcopy(cur["decor"][0]))
+        cur["_kits_recompose"] = "#608 - add lamp"
+        path = data_lint.DATA / "maps" / "liscor" / "street.json"
+        errors, report = [], []
+        data_lint.check_kit_gates({"street": cur}, {"street": "liscor"}, KITS, {path: cur}, errors, [], report, base_ref="HEAD", baseline=None)
+        self.assertEqual([e for e in errors if "G4" in e], [])
+        self.assertTrue(any("G4" in r and "#608 - add lamp" in r for r in report), report)
+
     def test_g4_skips_without_base(self):
         adv = []
         self.assertEqual(data_lint._g4_base_maps("refs/does-not-exist", adv), None)

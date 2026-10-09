@@ -1566,6 +1566,9 @@ def build_scene_baseline(resolved: dict, regions: dict, tolerance: dict) -> dict
 		"tolerance": tolerance, "generic_class": classes, "regions": out}
 
 
+RECOMPOSE_KEY = "_kits_recompose"
+
+
 def _g4_signature(doc: dict) -> dict:
 	cells = sorted((layer, int(r["cell"][0]), int(r["cell"][1]))
 		for layer in ("decor", "entities") for r in doc.get(layer) or []
@@ -1587,19 +1590,30 @@ def _has_ref(doc: dict) -> bool:
 	return any(isinstance(r, dict) and str(r.get(key, "")).startswith("@") for r, key in rows)
 
 
-def _g4_compare(current: dict, base: dict, errors: list) -> int:
+def _g4_compare(current: dict, base: dict, errors: list, report: list | None = None) -> int:
 	"""G4 clutter: a map that carries an @ref must keep the base tree's
 	(layer, cell) multiset, blocked, wall geometry and scatter density. Only
 	sprite/material/tint/light fields may change on conversion.
+	A top-level "_kits_recompose": "<#issue> -- <reason>" makes a structural diff
+	ADVISORY (a REPORT line) only when its value differs from the base map's, so a
+	marker is a one-change-set pass; a carried-over marker enforces again. The marker
+	must be a non-empty string naming an issue (#N).
 	Returns how many maps were actually compared (0 -> the gate is n/a)."""
 	compared = 0
 	for map_id, doc in sorted(current.items()):
+		marker = doc.get(RECOMPOSE_KEY)
+		if RECOMPOSE_KEY in doc and not (isinstance(marker, str) and re.search(r"#\d+", marker)):
+			errors.append(f"maps/{map_id}: {RECOMPOSE_KEY} must be a non-empty string naming an issue (#N)")
 		if map_id not in base or not _has_ref(doc):
 			continue
 		compared += 1
 		a, b = _g4_signature(base[map_id]), _g4_signature(doc)
 		for comp in a:
 			if a[comp] != b[comp]:
+				if isinstance(marker, str) and re.search(r"#\d+", marker) and marker != base[map_id].get(RECOMPOSE_KEY):
+					if report is not None:
+						report.append(f"kits G4: maps/{map_id} {comp} changed -- advisory via {RECOMPOSE_KEY}: {marker}")
+					break
 				errors.append(f"maps/{map_id}: G4 clutter -- {comp} changed on conversion (only sprite/material/tint/light may change)")
 				break
 	return compared
@@ -1754,7 +1768,7 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 		base_maps = _g4_base_maps(base_ref, advisories)
 		if base_maps is None:
 			g4_state = "skipped"
-		elif _g4_compare(raw, base_maps, g4):
+		elif _g4_compare(raw, base_maps, g4, report):
 			g4_state = "ok"
 	biomes: dict = {}
 	for map_id, doc in resolved.items():
