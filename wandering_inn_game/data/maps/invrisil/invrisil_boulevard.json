@@ -1,5 +1,4 @@
 {
- "_kits_recompose": "#608 — art-direction read r2: boulevard shop door at (4,1) pinned to the solid invrisil_shop_door",
  "_comment": "Reachable ONLY via the portal contract (data/portals.json's new 'invrisil' row, requires_accomplishment invrisil_attuned, banked by the Guild-board letter beat)",
  "biome": "invrisil_street",
  "camera": {"offset": [0, -3], "margins": [0, 3, 0, 0]},
