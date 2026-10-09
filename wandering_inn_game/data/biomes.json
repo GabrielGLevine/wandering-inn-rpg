@@ -400,12 +400,20 @@
   ],
   "interior_flavor": "Nothing there. The City of Adventurers doesn't even slow down to notice you looking.",
    "fallback_render": {
-    "blocked_sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+    "blocked_sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
     "blocked_tile_px": 16,
     "blocked": [
-     2,
-     1
+     3,
+     3
     ],
+    "blocked_tone": {
+     "base": [
+      0.4,
+      0.4,
+      0.43
+     ],
+     "detail": 0.2
+    },
     "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
     "tile_px": 16,
     "floor": [
