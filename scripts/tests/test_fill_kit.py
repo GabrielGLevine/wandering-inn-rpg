@@ -339,19 +339,36 @@ def test_reuse_only_matches_this_roles_ids(tree):
     assert kits(tree)["invrisil"]["roles"]["cargo"]["pool"] == ["invrisil_cargo_1"]
 
 
-def test_shipped_twin_is_refused_never_pooled(tree, capsys):
-    # #623: when a shipped entry already draws the slice's art, wire_asset refuses a second id
-    # (exit 6) and the pool is left alone; the user pools the existing id or aliases it by hand
+@pytest.mark.parametrize("crate_region", [[16, 8, 16, 23], [16, 9, 16, 22]], ids=["exact", "near"])
+def test_shipped_twin_is_refused_never_pooled(tree, capsys, crate_region):
+    # #623: when a shipped entry already draws the slice's art (exactly, or a near-identical
+    # rect), nothing is wired; the listing and the refusal point at pooling the existing id
     p = tree / "wandering_inn_game/data/sprites.json"
     cat = json.loads(p.read_text())
-    cat["crate"]["animations"]["idle"]["region"] = [16, 8, 16, 23]
+    cat["crate"]["animations"]["idle"]["region"] = crate_region
     p.write_text(json.dumps(cat, indent=1) + "\n")
+    before = snapshot(tree)
+    assert run(tree, "invrisil", "cargo", "--need", "2", "--kind", "crate", "--select", "1,2",
+               "--fallback", "crate_owned") == wa.EXIT_REFUSED
+    out = capsys.readouterr().out
+    assert "Furniture__x16_y8_w16_h23.png  [art registered as crate: pool it with --select 2 --ids crate]" in out
+    assert "nothing wired: #2 (Furniture__x16_y8_w16_h23.png) is art already registered as crate" in out
+    assert "Re-run (wired picks are reused)" not in out, "the old hint repeated the same refusal"
+    assert changed(before, snapshot(tree)) == set()
+    # the hint works: the existing id is pooled without wiring anything
+    assert run(tree, "invrisil", "cargo", "--need", "1", "--kind", "crate", "--select", "2", "--ids", "crate") == 0
+    assert kits(tree)["invrisil"]["roles"]["cargo"]["pool"] == ["crate"]
+    assert json.loads(p.read_text()) == cat
+
+
+def test_duplicate_exit_from_wire_asset_gets_the_pool_hint(tree, monkeypatch, capsys):
+    # backstop: if wire_asset still exits 6, the hint names the twin path, never a looping re-run
+    monkeypatch.setattr(wa, "main", lambda argv: wa.EXIT_DUPLICATE)
     before = snapshot(tree)
     assert run(tree, "invrisil", "cargo", "--need", "1", "--kind", "crate", "--select", "2",
                "--fallback", "crate_owned") == wa.EXIT_REFUSED
     out = capsys.readouterr().out
-    assert "DUPLICATE-ART invrisil_cargo_1" in out and "already registered as crate." in out
-    assert "wire_asset exit 6" in out
+    assert "is art already registered as the id named above" in out and "Re-run" not in out
     assert changed(before, snapshot(tree)) == set()
 
 
