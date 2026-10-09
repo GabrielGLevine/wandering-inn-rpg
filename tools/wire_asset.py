@@ -236,7 +236,7 @@ def load_catalog(paths: Paths) -> tuple[str, dict]:
 
 def bundle_paths(paths: Paths) -> set[str]:
     if not paths.manifest.is_file():
-        return set()
+        raise Refused(f"{paths.manifest}: missing; cannot tell which sheets are bundle-only")
     data = json.loads(paths.manifest.read_text(encoding="utf-8"))
     return {a["path"] for a in data.get("assets", []) if a.get("bundle")}
 
@@ -325,13 +325,29 @@ _SHEET_INDEX: dict[Path, dict[str, str]] = {}
 
 def bundled_sheet_for(sha: str, paths: Paths) -> str | None:
     """'assets/...' path (game-root relative) of the PNG under assets/ hashing to sha, else None."""
-    index = _SHEET_INDEX.get(paths.assets)
-    if index is None:
-        index = {}
+    def build() -> dict[str, str]:
+        index: dict[str, str] = {}
         for p in sorted(paths.assets.rglob("*.png")):
             index.setdefault(sha256_file(p), p.relative_to(paths.game).as_posix())
         _SHEET_INDEX[paths.assets] = index
+        return index
+
+    index = _SHEET_INDEX.get(paths.assets)
+    if index is None:
+        index = build()
+    if sha not in index:
+        index = build()
     return index.get(sha)
+
+
+def hinted_sheet(hint: object, sha: str, paths: Paths) -> str | None:
+    """The slicer's game_sheet hint, trusted only inside assets/ and only when its bytes hash to sha."""
+    if not isinstance(hint, str) or not hint:
+        return None
+    path = (paths.game / hint).resolve()
+    if paths.assets.resolve() not in path.parents or not path.is_file() or sha256_file(path) != sha:
+        return None
+    return path.relative_to(paths.game.resolve()).as_posix()
 
 
 def plan_slice(candidate: Path, sprite_id: str, args: argparse.Namespace, paths: Paths,
@@ -340,8 +356,8 @@ def plan_slice(candidate: Path, sprite_id: str, args: argparse.Namespace, paths:
     x, y, w, h = (int(v) for v in row["region"])
     if not args.fallback:
         raise Refused(f"{sprite_id}: pack art needs --fallback <owned public sprite_id>")
-    hint = row.get("game_sheet")
-    rel_sheet = hint if hint and (paths.game / hint).is_file() else bundled_sheet_for(row["sheet_sha256"], paths)
+    rel_sheet = (hinted_sheet(row.get("game_sheet"), row["sheet_sha256"], paths)
+                 or bundled_sheet_for(row["sheet_sha256"], paths))
     if rel_sheet is None:
         raise BundlePending(row["source_sheet"], [x, y, w, h])
     pr = probe(candidate)

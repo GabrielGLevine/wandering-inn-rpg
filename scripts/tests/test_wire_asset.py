@@ -13,7 +13,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent.parent / "tools"))
 import wire_asset as wa  # noqa: E402
-from wi_fake_tree import (BENCH, OWNED, PENDING_SLICE, PIXELLAB_ID, SLICE, STRIP,  # noqa: E402
+from wi_fake_tree import (BENCH, OWNED, PACK, PENDING_SLICE, PIXELLAB_ID, SLICE, STRIP,  # noqa: E402
                           UNBUNDLED_PACK, changed, make_tree, sha, snapshot)
 
 SPRITES = "wandering_inn_game/data/sprites.json"
@@ -228,6 +228,58 @@ def test_slicer_game_sheet_hint_short_circuits_hash(tree):
     sj = tree / f"potential_assets/{UNBUNDLED_PACK}/_sliced/Props/SLICES.json"
     d = json.loads(sj.read_text())
     d["assets"][0]["game_sheet"] = "assets/props/free_pack/Furniture.png"
+    d["assets"][0]["sheet_sha256"] = sha(tree / "wandering_inn_game/assets/props/free_pack/Furniture.png")
     sj.write_text(json.dumps(d, indent=1) + "\n")
     assert run(tree, PENDING_SLICE, "--id", "hinted_crate", "--fallback", "crate_owned") == 0
     assert sprites(tree)["hinted_crate"]["animations"]["idle"]["sheet"] == "res://assets/props/free_pack/Furniture.png"
+
+
+def _set_hint(tree, hint):
+    sj = tree / f"potential_assets/{UNBUNDLED_PACK}/_sliced/Props/SLICES.json"
+    d = json.loads(sj.read_text())
+    d["assets"][0]["game_sheet"] = hint
+    sj.write_text(json.dumps(d, indent=1) + "\n")
+
+
+def test_hint_with_wrong_sha_is_ignored(tree, capsys):
+    from wi_fake_tree import png_box
+    png_box(tree / "wandering_inn_game/assets/props/other.png", 32, 32, (1, 1, 20, 20))
+    _set_hint(tree, "assets/props/other.png")
+    before = snapshot(tree)
+    assert run(tree, PENDING_SLICE, "--id", "hinted_crate", "--fallback", "crate_owned") == wa.EXIT_BUNDLE_PENDING
+    assert "BUNDLE-PENDING" in capsys.readouterr().out
+    assert "hinted_crate" not in sprites(tree) and SPRITES not in changed(before, snapshot(tree))
+
+
+def test_hint_with_wrong_sha_falls_back_to_index(tree):
+    sj = tree / f"potential_assets/{PACK}/_sliced/Furniture/SLICES.json"
+    d = json.loads(sj.read_text())
+    d["assets"][0]["game_sheet"] = "assets/sprites/crate_owned/Idle-Sheet.png"
+    sj.write_text(json.dumps(d, indent=1) + "\n")
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    assert sprites(tree)["crate_lidded"]["animations"]["idle"]["sheet"] == "res://assets/props/free_pack/Furniture.png"
+
+
+def test_hint_outside_assets_is_ignored(tree):
+    sj = tree / f"potential_assets/{PACK}/_sliced/Furniture/SLICES.json"
+    d = json.loads(sj.read_text())
+    d["assets"][0]["game_sheet"] = "assets/../data/../../potential_assets/x.png"
+    sj.write_text(json.dumps(d, indent=1) + "\n")
+    (tree / "potential_assets/x.png").write_bytes((tree / "wandering_inn_game/assets/props/free_pack/Furniture.png").read_bytes())
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    assert sprites(tree)["crate_lidded"]["animations"]["idle"]["sheet"] == "res://assets/props/free_pack/Furniture.png"
+
+
+def test_missing_manifest_refuses_fallback(tree):
+    (tree / "wandering_inn_game/assets_manifest.json").unlink()
+    before = snapshot(tree)
+    assert run(tree, SLICE, "--id", "crate_lidded", "--fallback", "crate_owned") == wa.EXIT_REFUSED
+    assert snapshot(tree) == before
+
+
+def test_sheet_bundled_after_first_lookup_is_found(tree):
+    paths = wa.Paths(tree) if hasattr(wa, "Paths") else None
+    assert wa.bundled_sheet_for("0" * 64, paths) is None
+    from wi_fake_tree import png_box
+    late = png_box(tree / "wandering_inn_game/assets/props/late.png", 16, 16, (1, 1, 14, 14))
+    assert wa.bundled_sheet_for(sha(late), paths) == "assets/props/late.png"
