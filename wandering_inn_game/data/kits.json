@@ -194,6 +194,19 @@
      ]
     }
    },
-   "cast": []
+   "cast": [
+    "townswoman",
+    "human_laborer",
+    "city_scribe",
+    "hired_blade",
+    "invrisil_lady_client",
+    "gnoll_traveler",
+    "gnoll_ranger",
+    "invrisil_gentlewoman_2",
+    "gentleman_bowler",
+    "drake_patron",
+    "city_runner",
+    "invrisil_enforcer"
+   ]
   }
 }
