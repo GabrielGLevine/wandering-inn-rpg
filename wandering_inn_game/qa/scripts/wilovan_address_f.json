@@ -259,22 +259,22 @@
    "equals": 1
   },
   {
-   "_comment": "== RE-INTERACT #3: gentleman_quiet (10,7) (moved from (11,7) in the #608 art-read fix). One step south to (9,7), bump east. ==",
+   "_comment": "== RE-INTERACT #3: gentleman_quiet (8,7) (moved from (11,7) in the #608 art-read fixes). One step west to (8,6), bump south. ==",
    "action": "move",
-   "direction": "down",
+   "direction": "left",
    "steps": 1
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    9,
-    7
+    8,
+    6
    ]
   },
   {
    "action": "move",
-   "direction": "right",
+   "direction": "down",
    "steps": 1
   },
   {
@@ -282,7 +282,7 @@
    "type": "player_blocked",
    "payload_contains": {
     "cell": [
-     10,
+     8,
      7
     ]
    }
