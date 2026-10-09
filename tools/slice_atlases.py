@@ -208,3 +208,69 @@ def overlap_ratio(a: list[int], b: list[int]) -> float:
 def iou(a: list[int], b: list[int]) -> float:
     inter = _inter(a, b)
     return inter / (a[2] * a[3] + b[2] * b[3] - inter) if inter else 0.0
+
+
+# ------------------------------------------------------------- lookups
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def eligible(rel: Path) -> bool:
+    if not rel.parts or not rel.parts[0].startswith(PACK_PREFIXES):
+        return False
+    if "_sliced" in rel.parts or {p.lower() for p in rel.parts[1:-1]} & SKIP_DIRS:
+        return False
+    return rel.suffix.lower() == ".png" and not SKIP_NAME.search(rel.name)
+
+
+GENERIC_DIRS = {"static", "assets", "props", "interior", "buildings", "environment", "structures"}
+
+
+def sheet_stem(sheet: Path) -> str:
+    """The _sliced/<stem> name. Trees/Model_01/Size_02.png and
+    Trees/Model_02/Size_02.png share a stem in one pack, so a non-generic
+    parent folder is prefixed: Model_01_Size_02."""
+    parent = sheet.parent.name
+    return sheet.stem if parent.lower() in GENERIC_DIRS else f"{parent}_{sheet.stem}"
+
+
+def find_sheets(assets_root: Path, only: str = "") -> list[tuple[Path, list[str]]]:
+    """One entry per unique sha256; the shortest file name, then the first
+    path in part order, wins (Size_03.png over Size_03-export.png, Free Pack
+    over Free Pack 2.1). The other paths are returned as duplicates."""
+    by_sha: dict[str, tuple[Path, list[str]]] = {}
+    for p in sorted(assets_root.rglob("*.png"), key=lambda p: (len(p.name), p.parts)):
+        rel = p.relative_to(assets_root)
+        if not eligible(rel) or (only and only not in str(rel)):
+            continue
+        h = sha256(p)
+        if h in by_sha:
+            by_sha[h][1].append((Path("potential_assets") / rel).as_posix())
+        else:
+            by_sha[h] = (p, [])
+    return sorted(by_sha.values(), key=lambda e: str(e[0]))
+
+
+def bundled_index(game_root: Path) -> dict[str, str]:
+    out: dict[str, str] = {}
+    assets = game_root / "assets"
+    if not assets.is_dir():
+        return out
+    for p in sorted(assets.rglob("*.png")):
+        out.setdefault(sha256(p), "res://" + p.relative_to(game_root).as_posix())
+    return out
+
+
+def wired_regions(game_root: Path) -> dict[str, list[tuple[str, list[int]]]]:
+    path = game_root / "data" / "sprites.json"
+    if not path.exists():
+        return {}
+    out: dict[str, list[tuple[str, list[int]]]] = {}
+    for sid, rec in json.loads(path.read_text(encoding="utf-8")).items():
+        if sid.startswith("_") or not isinstance(rec, dict):
+            continue
+        for anim in (rec.get("animations") or {}).values():
+            if isinstance(anim, dict) and anim.get("region") and isinstance(anim.get("sheet"), str):
+                out.setdefault(anim["sheet"], []).append((sid, [int(v) for v in anim["region"]]))
+    return out

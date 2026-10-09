@@ -121,3 +121,75 @@ def test_size_class_shadow_and_overlap():
     assert set(sa.KINDS) == {"crate", "barrel", "sack", "door", "window", "lamp", "table", "seat",
                              "shelf", "bed", "plant", "rock", "debris", "tool", "sign",
                              "wall_module", "container", "other"}
+
+
+def sprite_sheet(path: Path, boxes, size=(64, 32)) -> Image.Image:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    im = Image.new("RGBA", size, CLEAR)
+    for x, y, w, h in boxes:
+        outlined_box(im, x, y, w, h)
+    im.save(path)
+    return im
+
+
+def test_eligible_rules():
+    ok = ["Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png",
+          "Pixel Crawler - Cave/Pixel Crawler - Cave/Assets/Props.png",
+          "Pixel Crawler - Fairy Forest 1.7/Pixel Crawler - Fairy Forest 1.7/Assets/Tree.png"]
+    bad = ["Admurins_Freebies-2/x/Props.png",
+           "Pixel Crawler - Cave/Pixel Crawler - Cave/Enemies/Fungus/Idle-Sheet.png",
+           "Pixel Crawler - Cave/Pixel Crawler - Cave/Social/Props.png",
+           "Pixel Crawler - Cave/Pixel Crawler - Cave/Assets/Tiles.png",
+           "Pixel Crawler - Free Pack/Environment/Tilesets/Floors_Tiles.png",
+           "Pixel Crawler - Free Pack/Environment/Props/Static/Shadows.png",
+           "Pixel Crawler - Free Pack/Environment/Structures/Stations/Anvil/Anvil.png",
+           "Pixel Crawler - Free Pack/Environment/Props/Static/Bonfire_01-Sheet.png",
+           "Pixel Crawler - Free Pack/_sliced/Furniture/Furniture__x0_y0_w16_h16.png",
+           "Pixel Crawler - Free Pack/MockUps/Tavern_01.png"]
+    assert [sa.eligible(Path(p)) for p in ok] == [True] * 3
+    assert [sa.eligible(Path(p)) for p in bad] == [False] * len(bad)
+
+
+def test_find_sheets_dedupes_by_sha_and_records_duplicates(tmp_path):
+    assets = tmp_path / "potential_assets"
+    a = assets / "Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"
+    b = assets / "Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"
+    c = assets / "Pixel Crawler - Cave/Pixel Crawler - Cave/Assets/Props.png"
+    sprite_sheet(a, [(0, 0, 16, 16)])
+    b.parent.mkdir(parents=True)
+    b.write_bytes(a.read_bytes())
+    sprite_sheet(c, [(0, 0, 16, 16), (32, 0, 16, 16)])
+    trees = assets / "Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_03"
+    sprite_sheet(trees / "Size_03-export.png", [(0, 0, 16, 16), (16, 0, 16, 16)])
+    (trees / "Size_03.png").write_bytes((trees / "Size_03-export.png").read_bytes())
+    found = sa.find_sheets(assets)
+    assert [s.relative_to(assets).parts[0] for s, _ in found] == [
+        "Pixel Crawler - Cave", "Pixel Crawler - Free Pack", "Pixel Crawler - Free Pack"]
+    assert found[1][1] == ["potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png"]
+    assert found[0][1] == []
+    assert found[2][0].name == "Size_03.png", "the shorter twin is primary"
+    assert found[2][1] == ["potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_03/Size_03-export.png"]
+    assert [s.name for s, _ in sa.find_sheets(assets, only="Cave")] == ["Props.png"]
+
+
+def test_sheet_stem_prefixes_non_generic_parent():
+    assert sa.sheet_stem(Path("P/Environment/Props/Static/Furniture.png")) == "Furniture"
+    assert sa.sheet_stem(Path("P/Assets/Props.png")) == "Props"
+    assert sa.sheet_stem(Path("P/Environment/Structures/Buildings/Props.png")) == "Props"
+    assert sa.sheet_stem(Path("P/Environment/Props/Static/Trees/Model_01/Size_02.png")) == "Model_01_Size_02"
+
+
+def test_bundled_index_and_wired_regions(tmp_path):
+    game = tmp_path / "wandering_inn_game"
+    sheet = game / "assets/props/free_pack/Furniture.png"
+    sprite_sheet(sheet, [(0, 0, 16, 16)])
+    (game / "data").mkdir()
+    (game / "data/sprites.json").write_text(json.dumps({
+        "_comment": "x",
+        "crate": {"animations": {"idle": {"sheet": "res://assets/props/free_pack/Furniture.png",
+                                          "region": [0, 0, 16, 16]}}},
+        "walker": {"animations": {"idle": {"sheet": "res://assets/sprites/w/Idle-Sheet.png"}}}}))
+    idx = sa.bundled_index(game)
+    assert idx == {sa.sha256(sheet): "res://assets/props/free_pack/Furniture.png"}
+    assert sa.wired_regions(game) == {"res://assets/props/free_pack/Furniture.png": [("crate", [0, 0, 16, 16])]}
+    assert sa.wired_regions(tmp_path / "nowhere") == {}
