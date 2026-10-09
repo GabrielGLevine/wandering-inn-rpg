@@ -21,7 +21,8 @@ archived, or superseded session blocks.
     - #608 pilot 1a (Invrisil streets), branch `issue/608-invrisil-streets` in `/private/tmp/wi-608a`:
       - Done: pools wired, 33 rows converted, a module variant cap, the G2 converted-maps scope, and a G4 `_kits_recompose` marker.
       - Blind Fable art reads: round 1 was 6 PASS / 45 FIX / 6 REJECT. After FIX loop 1, round 2 is 6 / 20 / 0 / 31 DEFERRED; the reader says the streets now look better than before.
-      - In flight: FIX round 2 (four small items), then re-capture the affected views and re-read with the same reader.
+      - FIX round 2 is done (tip `0054d988`), and the affected views have been re-captured.
+      - Next, after the usage reset: re-read with the same reader. Then add the CHOICE-LOG G3 line (four regens), the generation-list rows, the 5 follow-up issues, and the PR. Drafts are in the session scratchpad, and the ledger has the exact next steps.
       - Then the CHOICE-LOG line for the G3 regens, and a PR with `Refs #608`.
       - The ledger is `.superpowers/sdd/2026-10-08-regional-kits-invrisil-pilot/progress.md`.
       - Captures live in the session scratchpad under `captures-1a/{after,before}`. `qa_output` gets flushed by sweeps.
