@@ -20,7 +20,10 @@ material swatches from data/kits.json.
 <region>_<role>_<n> unless --ids), appends them to data/kits.json
 <region>.roles.<role>.pool with a surgical splice (a new role gets --pick,
 default cell, and --module), and on a shortfall (selected < --need) writes one
-open row to docs/art-generation-list.md. --preview prints the picks every map
+open row to docs/art-generation-list.md. A candidate whose art is already
+registered (wire_asset.art_twins, #623) is marked in the listing; --select
+refuses it before wiring anything unless --ids names that existing id, which is
+then pooled as is. --preview prints the picks every map
 of the region resolves to, through scripts/wi_kits_lib.resolve_map (lane A).
 Step 4 of the spec, the pool art-direction read, happens between the contact
 sheet and --select and is a Fable read, not code. This tool never calls
@@ -219,6 +222,25 @@ def pool_signatures(catalog: dict, pool: list[str], paths: wa.Paths) -> tuple[se
     return shas, regions
 
 
+def registered_twins(c: Candidate, catalog: dict, sheets) -> list[str]:
+    """#623: catalog ids already drawing this candidate's art (wire_asset.art_twins), which
+    wire_asset refuses to wire under a new id."""
+    if c.mode == "pack":
+        idle = {"sheet": "res://" + c.sheet, "frame_size": c.region[2:], "region": c.region}
+    else:
+        with Image.open(c.path) as img:
+            frame_h = img.size[1]
+        key = f"__candidate__/{c.sha}.png"
+        sheets.cache[key] = c.sha
+        idle = {"sheet": "res://" + key, "frame_size": [c.frame_w, frame_h]}
+    return wa.art_twins("__candidate__", {"animations": {"idle": idle}}, catalog, sheets)[1]
+
+
+def twin_hint(c: Candidate, twins: list[str]) -> str:
+    return (f"#{c.n} ({c.path.name}) is art already registered as {', '.join(twins)}: pool that id instead "
+            f"(--select {c.n} --ids {twins[0]}), or wire a deliberate alias with tools/wire_asset.py --alias-of")
+
+
 def not_yet_wired(cands: list[Candidate], shas: set[str], regions: set[tuple]) -> list[Candidate]:
     return [c for c in cands if c.sha not in shas
             and (c.mode != "pack" or (c.sheet, tuple(c.region)) not in regions)]
@@ -264,15 +286,19 @@ def fill(args: argparse.Namespace, paths: wa.Paths) -> int:
     scale = float(catalog[like].get("render_scale", wa.DEFAULT_SCALE["owned"])) if like else wa.DEFAULT_SCALE["owned"]
     shas, regions = pool_signatures(catalog, pool, paths)
     cands = number(not_yet_wired(compatible(query(paths, args.kind, scale), members, args.size), shas, regions)[: args.limit])
+    sheets = wa.kl.SheetHasher(paths.game)
+    twins = {c.n: registered_twins(c, catalog, sheets) for c in cands}
     for c in cands:
-        print(f"#{c.n:<3} {c.size_class:<2} {c.mode:<5} {c.row.get('verdict', ''):<15} {c.row['path']}")
+        mark = (f"  [art registered as {', '.join(twins[c.n])}: pool it with --select {c.n} --ids {twins[c.n][0]}]"
+                if twins[c.n] else "")
+        print(f"#{c.n:<3} {c.size_class:<2} {c.mode:<5} {c.row.get('verdict', ''):<15} {c.row['path']}{mark}")
     print(f"-- {len(cands)} candidates for {args.region}/{args.role} (have {len(pool)}, need {args.need})")
     if args.contact_sheet:
         render_contact_sheet(cands, material_swatches(kits, args.region, paths), args.contact_sheet)
         print(f"contact sheet: {args.contact_sheet}")
     if not args.select:
         return EXIT_OK
-    return select(args, paths, cands, ktext, catalog, pool, like)
+    return select(args, paths, cands, ktext, catalog, pool, like, twins)
 
 
 def preview(paths: wa.Paths, region: str, role: str) -> int:
@@ -515,10 +541,13 @@ def generation_list_closed(text: str, region: str, role: str, have: list[str]) -
 
 
 def matching_entry(c: Candidate, catalog: dict, paths: wa.Paths, region: str, role: str,
-                   explicit: str | None) -> str | None:
+                   explicit: str | None, twins: list[str] = ()) -> str | None:
     """An already-wired entry holding this candidate's art, so a re-run after a partial
     failure reuses it. Only this role's auto ids (or the explicit id) qualify: shipped
-    entries such as `crate` share pack regions and must not become pool members."""
+    entries such as `crate` never become pool members by accident. An explicit id that
+    already draws the art (`twins`, #623) is pooled as is, without wiring."""
+    if explicit and explicit in twins:
+        return explicit
     auto = re.compile(rf"^{re.escape(region)}_{re.escape(role)}_\d+$")
     for sid, entry in catalog.items():
         if not isinstance(entry, dict) or not (sid == explicit if explicit else auto.match(sid)):
@@ -545,7 +574,7 @@ def warn_fallback_set(catalog: dict, pool: list[str]) -> None:
 
 
 def select(args: argparse.Namespace, paths: wa.Paths, cands: list[Candidate], ktext: str,
-           catalog: dict, pool: list[str], like: str | None) -> int:
+           catalog: dict, pool: list[str], like: str | None, twins: dict | None = None) -> int:
     try:
         picks = [int(s) for s in args.select.split(",") if s.strip()]
     except ValueError:
@@ -560,8 +589,13 @@ def select(args: argparse.Namespace, paths: wa.Paths, cands: list[Candidate], kt
         print(f"fill_kit: --ids needs {len(picks)} valid id(s)")
         return EXIT_USAGE
     chosen = [known[n] for n in picks]
-    reused = [matching_entry(c, catalog, paths, args.region, args.role, explicit[k] if explicit else None)
+    twins = twins or {}
+    reused = [matching_entry(c, catalog, paths, args.region, args.role, explicit[k] if explicit else None,
+                             twins.get(c.n, []))
               for k, c in enumerate(chosen)]
+    dupes = [twin_hint(c, twins[c.n]) for c, r in zip(chosen, reused) if r is None and twins.get(c.n)]
+    if dupes:
+        raise wa.Refused("nothing wired: " + "; ".join(dupes))
     if explicit:
         ids = explicit
     else:
@@ -581,6 +615,9 @@ def select(args: argparse.Namespace, paths: wa.Paths, cands: list[Candidate], kt
             if like:
                 argv += ["--like", like]
             rc = wa.main(argv)
+            if rc == wa.EXIT_DUPLICATE:
+                raise wa.Refused(f"{twin_hint(c, twins.get(c.n) or ['the id named above'])}. Pool not updated; "
+                                 f"already wired, not yet pooled: {wired or 'none'}")
             if rc != 0:
                 raise wa.Refused(f"wire_asset exit {rc} for #{c.n} ({c.path.name}); pool not updated. "
                                  f"Already wired, not yet pooled: {wired or 'none'}. "

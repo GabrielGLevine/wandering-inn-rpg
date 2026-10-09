@@ -12,6 +12,7 @@ import json
 import math
 import re
 from pathlib import Path
+from types import MappingProxyType
 
 MATERIAL_FIELDS = ["sheet", "tile_px", "coords", "variants", "tone", "wang_corners", "cap", "face", "fallback_render"]
 TWO_32 = 4294967296.0
@@ -20,6 +21,51 @@ NON_PERSON_HEADINGS = {"The PC", "Antinium", "Horns roster note", "Invrisil civi
 # name no one: adding them as canon would ban every "Master"/"Gnoll" NPC.
 GENERIC_FIRST_WORDS = {"Master", "Grand", "Tier", "Recruit", "Frazzled", "Gnoll", "Garuda", "Dullahan",
                        "Drake", "Human", "Den-Shop", "Forge-Tier"}
+# Closed kind vocabulary (spec 4.1): slice labels, role "kind" values and WIRED_KINDS.
+KINDS = ("crate", "barrel", "sack", "door", "window", "lamp", "table", "seat", "shelf", "bed",
+         "plant", "rock", "debris", "tool", "sign", "wall_module", "container", "other")
+# #623 (user 2026-10-09): _common holds only the utility Tier A. Its placements leave G2's
+# numerator and denominator, and may be at most COMMON_CAP_PCT of a region's converted maps.
+COMMON_KINDS = ("crate", "barrel", "sack", "container")
+COMMON_CAP_PCT = 30
+# #623 review I1: region rows on one sheet at this IoU or more are one picture. Today's catalog
+# tops out at 0.26 between distinct art; slicer twins of hand-cut legacy rows run 0.72-0.98.
+NEAR_IOU = 0.7
+# Kind of every data/sprites.json `region` animation at 7155db91: the label check's
+# ground truth (tools/label_slices.py) and data_lint's known kinds for wired ids. Ids on
+# sheets the slicer skips (tiles, -Sheet strips, Admurin, owned) are excluded by the label
+# check at run time, so listing them here is harmless. An id missing here has no known kind.
+# Read-only (review M8): data_lint and the label check share it; label_slices copies it.
+WIRED_KINDS = MappingProxyType({
+    "crate": "crate", "barrel": "barrel", "door": "door", "window_blue": "window",
+    "unlit_lantern": "lamp", "sconce": "lamp", "campfire": "lamp",
+    "table_brown": "table", "bar_counter": "table", "counter_left": "table", "counter_mid": "table",
+    "counter_right": "table", "library_desk": "table", "stool": "seat",
+    "shelf_bottles": "shelf", "library_shelf": "shelf", "bed": "bed",
+    "plant_pot": "plant", "bush_green": "plant", "grass_tuft": "plant", "flower_purple": "plant",
+    "flower_tiny": "plant", "pond_reeds": "plant", "tree_big": "plant", "tree_round": "plant",
+    "tree_autumn_orange": "plant", "tree_autumn_red": "plant", "crop_row_orange": "plant",
+    "crop_row_green": "plant", "crop_row_dark_green": "plant", "mushroom": "plant",
+    "mushroom_purple_l": "plant", "mushroom_purple_m": "plant", "mushroom_purple_s": "plant",
+    "hollow_mushroom_cluster": "plant", "hollow_canopy_tree": "plant", "hollow_small_tree": "plant",
+    "hollow_bent_tree": "plant",
+    "pebble": "rock", "boulder": "rock", "scree_spill": "rock", "hollow_glow_stone": "rock",
+    "dungeon_rubble": "debris", "grill": "tool",
+    "chest": "container", "chest_open": "container",
+    "facade_plaster": "wall_module", "inn_roof": "wall_module", "pallass_rail_post": "wall_module",
+    "dungeon_statue": "other", "pedestal": "other", "sewer_grate": "other", "dusty_scroll": "other",
+    "food_bread": "other", "food_ham": "other", "food_basket": "container",
+    "garden_fountain_basin": "other", "garden_fountain_statue": "other",
+})
+
+
+def kind_of(sprite_id: str, entry) -> str | None:
+    """The kind on record for a wired id: its sprites.json "kind" (wire_asset records the
+    slice's label), else WIRED_KINDS; None when unknown."""
+    recorded = entry.get("kind") if isinstance(entry, dict) else None
+    return recorded if isinstance(recorded, str) else WIRED_KINDS.get(sprite_id)
+
+
 _HEADING_NAME = re.compile(r"^[A-Z][A-Za-z'\-]*( [A-Za-z'\-]+)*$")
 
 
@@ -193,6 +239,101 @@ def _resolve_role(placements: list, role_name: str, role, map_id: str, errors: l
         uses[variant] = uses.get(variant, 0) + 1
         chosen.append(((cx, cy), variant))
         _apply(p["row"], role_name, role, variant)
+
+
+class SheetHasher:
+    """sha256 of a game-root-relative sheet ('assets/...'), cached. An absent file (a public
+    checkout without the overlay) hashes to None and is listed in `missing`."""
+
+    def __init__(self, game_root: Path, overrides: dict | None = None):
+        self.game_root = Path(game_root)
+        self.cache: dict = dict(overrides or {})
+        self.missing: set = set()
+
+    def __call__(self, path: str):
+        if path not in self.cache:
+            f = self.game_root / path
+            self.cache[path] = hashlib.sha256(f.read_bytes()).hexdigest() if f.is_file() else None
+            if self.cache[path] is None:
+                self.missing.add(path)
+        return self.cache[path]
+
+
+def _identity_anim(entry) -> dict | None:
+    anims = entry.get("animations") if isinstance(entry, dict) else None
+    if not isinstance(anims, dict):
+        return None
+    anim = anims.get("idle") or next(iter(anims.values()), None)
+    return anim if isinstance(anim, dict) else None
+
+
+def art_identity(sprite_id: str, entry, sheet_sha) -> tuple:
+    """#623: the art a sprites.json entry draws, so two ids of one picture count as one.
+    Region rows key on ("R", sheet path, rect); frame sheets on ("S", sheet sha256, frame
+    size), or the path when `sheet_sha` returns None. Only the entry's own idle (else first)
+    animation counts: never its fallback_sprite, and render_scale, tint and anchor do not."""
+    anim = _identity_anim(entry)
+    sheet = None
+    if anim is not None:
+        sheet = anim.get("sheet") or anim.get("sheet_down") or next(
+            (v for k, v in anim.items() if k.startswith("sheet") and isinstance(v, str)), None)
+    if not isinstance(sheet, str) or not sheet:
+        return ("id", sprite_id)
+    path = sheet.removeprefix("res://")
+    rect = anim.get("region") or anim.get("region_down")
+    if rect:
+        return ("R", path, tuple(int(v) for v in rect))
+    return ("S", sheet_sha(path) or "path:" + path, tuple(int(v) for v in anim.get("frame_size") or ()))
+
+
+def rect_iou(a, b) -> float:
+    ix = min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0])
+    iy = min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1])
+    inter = max(0, ix) * max(0, iy)
+    union = a[2] * a[3] + b[2] * b[3] - inter
+    return inter / union if union > 0 else 0.0
+
+
+def merge_near_regions(keys) -> dict:
+    """{identity: canonical identity}. Region rows on one sheet whose rects overlap at IoU >=
+    NEAR_IOU are one picture (a tight slice vs a padded hand cut), chained into connected
+    components whose canonical key is the component's minimum, so the result is independent
+    of input order. Containment alone never merges: a small prop inside a big one is its own."""
+    uniq = sorted(set(keys))
+    parent = {k: k for k in uniq}
+
+    def find(k):
+        while parent[k] != k:
+            parent[k] = parent[parent[k]]
+            k = parent[k]
+        return k
+
+    by_sheet: dict = {}
+    for k in uniq:
+        if k[0] == "R":
+            by_sheet.setdefault(k[1], []).append(k)
+    for rows in by_sheet.values():
+        for i, a in enumerate(rows):
+            for b in rows[i + 1:]:
+                if rect_iou(a[2], b[2]) >= NEAR_IOU:
+                    ra, rb = find(a), find(b)
+                    parent[max(ra, rb)] = min(ra, rb)
+    return {k: find(k) for k in uniq}
+
+
+def art_identities(sprites: dict, sheet_sha) -> dict:
+    raw = {sid: art_identity(sid, e, sheet_sha) for sid, e in sprites.items() if not sid.startswith("_")}
+    canon = merge_near_regions(raw.values())
+    return {sid: canon[k] for sid, k in raw.items()}
+
+
+def identity_label(ident: tuple) -> str:
+    if ident[0] == "R":
+        return f"{ident[1]} region {list(ident[2])}"
+    if ident[0] == "S":
+        digest = ident[1] if ident[1].startswith("path:") else "sha256 " + ident[1][:12]
+        return f"frame sheet {digest} at {'x'.join(map(str, ident[2]))}"
+    return f"id {ident[1]}"
 
 
 def rows_of(resolved: dict) -> list:

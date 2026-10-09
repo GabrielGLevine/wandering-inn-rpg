@@ -40,6 +40,9 @@ from PIL import Image, ImageDraw
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import asset_candidates as ac  # noqa: E402
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "wandering_inn_game" / "scripts"))
+import wi_kits_lib as kl  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMA = 1
 MIN_AREA = 32      # px of alpha; the wired Rocks.png pebble is exactly 32
@@ -55,8 +58,7 @@ SKIP_NAME = re.compile(
     r"(-sheet\.png$|^shadows?\.png$|^shadown\.png$|^light\.png$|^tiles\.png$|^floor\.png$"
     r"|^walls?\.png$|^roofs?\.png$|^ground\.png$|^sand\.png$|^water\.png$|^interior_walls"
     r"|^wall_|^floors_|^water_|^dungeon_tiles)", re.I)
-KINDS = ("crate", "barrel", "sack", "door", "window", "lamp", "table", "seat", "shelf", "bed",
-         "plant", "rock", "debris", "tool", "sign", "wall_module", "container", "other")
+KINDS = kl.KINDS  # the closed vocabulary, shared with data_lint's _common kind rule
 LABEL_KEYS = ("targets", "verdict", "notes", "label_kind", "label_confidence")
 
 
