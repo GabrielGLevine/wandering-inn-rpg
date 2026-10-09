@@ -924,11 +924,20 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Exactly two matching renders must exist here: the deep-tunnels rebuild, then the same-map cameo reconcile after reached_the_warren. The COUNT is the load-bearing half -- a regression that rebuilds the map an extra time, or one that reconciles when it should not, keeps every payload matching and only moves the count. #398-p2 seats four more visible entities (three gallery blockers + the nest encounter), so the established 9 re-derives to 13 with this route untouched; the pocket's three strongboxes are present_when-absent here and render nothing, and the y5-9 seal is wall tiles, never entities. Captured stream (seed 9, this tree): sewers entry {14} -> deep-tunnels rebuild {13} -> post-reached reconcile {13} (this pin) -> post-clear {12} (the pin below).",
+   "_comment": "Exactly two matching renders must exist here: the deep-tunnels rebuild, then the same-map cameo reconcile after reached_the_warren. The COUNT is the load-bearing half -- a regression that rebuilds the map an extra time, or one that reconciles when it should not, keeps every payload matching and only moves the count. #398-p2 seats four more visible entities (three gallery blockers + the nest encounter), so the established 9 re-derives to 13 with this route untouched; the pocket's three strongboxes are present_when-absent here and render nothing, and the y5-9 seal is wall tiles, never entities. #453: gnoll_hunters_satchel appears when cleared_raskghar_scouts banks, so every post-scout deep-tunnels render carries +1. Captured stream (seed 9, this tree): sewers entry {15} -> deep-tunnels rebuild {13} -> post-scout reconcile {14} -> return rebuild {13} -> post-reached reconcile {14} -> post-clear {13}. Here: the two rebuilds are the two {13}s and the two reconciles the two {14}s (the step after).",
    "action": "assert_event_count",
    "type": "ui_entities_rendered",
    "payload_contains": {
     "sprites": 13,
+    "fallbacks": 0
+   },
+   "count": 2
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 14,
     "fallbacks": 0
    },
    "count": 2
@@ -1072,14 +1081,14 @@
    "equals": "deep_tunnels"
   },
   {
-   "_comment": "The cleared scout remains removed on the walked return, rendering 12 entities before the warren cameo. The post-boss cleared reconcile renders 12 again (Relc leaves; the defeated boss is removed afterward). Exact stream on seed 9: 14 -> 13 -> 12 -> 13 -> 12; two 13 and two 12 renders.",
+   "_comment": "The cleared scout remains removed on the walked return, rendering 13 entities (12 plus the #453 satchel) before the warren cameo. The post-boss cleared reconcile renders 13 again (Relc leaves; the defeated boss is removed afterward). Exact stream on seed 9: 15 -> 13 -> 14 -> 13 -> 14 -> 13; three 13 renders.",
    "action": "assert_event_count",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 12,
+    "sprites": 13,
     "fallbacks": 0
    },
-   "count": 2
+   "count": 3
   },
   {
    "action": "screenshot",

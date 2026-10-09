@@ -226,8 +226,9 @@ func _check_armless_prop_reads(scene_config: Dictionary, skill_config: Dictionar
 			var expected_text := String(entity.get("locked_toast", own_text))
 			assert(_toast_texts() == [expected_text],
 				"armless prop %s must emit its exact authored flavor" % String(entity[WIKeys.ID]))
-	assert(checked == 103, "the reusable #445 surface guard covers all 103 armless shipped props")
-	assert(flavored == 89, "89 armless props currently carry an authored free-read line")
+	# #453 added gate_road_arrows, an armless scenery tell with its own read.
+	assert(checked == 104, "the reusable #445 surface guard covers all 104 armless shipped props")
+	assert(flavored == 90, "90 armless props currently carry an authored free-read line")
 
 
 func _init() -> void:

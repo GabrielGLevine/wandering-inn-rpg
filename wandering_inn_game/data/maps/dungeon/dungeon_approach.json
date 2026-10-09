@@ -356,6 +356,35 @@
      "chance": 1.0
     }
    ]
+  },
+  {
+   "_comment": "#453 P4: a full-sleep rest two cells from the depths door, present once the Horns form the party and kept through Act V. (14,4) is off every canonical walked or faced cell; (13,4), (14,3), (14,5) and (15,4) stay open. Its two looks key on horns_dig_started: the sleep_toast ladder now, a visual_states arm once bedroll art lands (VISUAL-LOG).",
+   "id": "horns_delve_camp",
+   "kind": "prop",
+   "cell": [
+    14,
+    4
+   ],
+   "display_name": "The Horns' Bedrolls",
+   "sprite": "bed",
+   "present_when": {
+    "requires": {
+     "horns_party_formed": 1
+    }
+   },
+   "sleep": true,
+   "sleep_toast": [
+    {
+     "when": {},
+     "text": "A spare bedroll, a rolled cloak for a pillow."
+    },
+    {
+     "when": {
+      "horns_dig_started": 1
+     },
+     "text": "The last bedroll, left rolled against the wall. It unrolls stiff with dust."
+    }
+   ]
   }
  ]
 }

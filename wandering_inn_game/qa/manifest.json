@@ -8725,6 +8725,143 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "rest_before_warren",
+   "seed": 9,
+   "fixture": "rest_before_warren_start",
+   "note": "#453 P1-P3 checkpoint-based (journey_rogue step 1001: deep_tunnels, 10/44 HP, 0/14 MP after the scout win): Gnoll satchel open + Empty negative, field Mending Draught +8 with autosave and Saved pill, sewer pail open + Empty negative, field Hot Meal +6 with autosave, then the Watch bunk's real sleep to 44/14 with no floodplains crossing and no fight (windowed reads: 00-07). Inherited kit/history are setup, not acquisition proof.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "barracks",
+     "deep_tunnels",
+     "floodplains",
+     "sewers",
+     "street"
+    ],
+    "fixtures": [
+     "rest_before_warren_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "watch_bunk_gate",
+   "seed": 9,
+   "fixture": "near_barracks",
+   "note": "#453 P1 negative: before heard_about_cisterns the Watch bunk renders nothing, the barracks count stays 9 and the player walks onto its cell (1,1).",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "barracks",
+     "street"
+    ],
+    "fixtures": [
+     "near_barracks"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "rest_delve_camp",
+   "seed": 9,
+   "fixture": "rest_delve_camp_start",
+   "note": "#453 P4 checkpoint-based (steel_thread step 1229, post-vault 35/49 HP, 0/14 MP): walk out of the halls to the Horns' camp and sleep (full refill, sleep beat, autosave, delve-time line); pause-menu Load of steel_thread step 2921 (horns_dig_started) proves the post-dig line on the same camp. Inherited kit is setup only.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "dungeon_approach",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "rest_delve_camp_after_dig",
+     "rest_delve_camp_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "night_phase",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "rest_dig_camp",
+   "seed": 9,
+   "fixture": "rest_dig_camp_start",
+   "note": "#453 P5 checkpoint-based (steel_thread step 1405, guardian defeat rollback 35/49 HP, 0/14 MP): sleep on the dig-camp bedroll (full refill, autosave), then win the guardian rested at the ledger's own 49/49, 1/15 exit. Inherited kit is setup only.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "ruin_surface"
+    ],
+    "fixtures": [
+     "rest_dig_camp_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "gate_road_arrows_read",
+   "seed": 9,
+   "fixture": "near_ambush_sneak",
+   "note": "#453 P6: the gate-road quiver read from the road outside the ambush band; scenery only, nothing granted, no fight (windowed reads: 00_arrows_from_the_road, 01_arrows_read).",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "near_ambush_sneak"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe",
+     "sneak"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   }
  ],
  "browser_scripts": [

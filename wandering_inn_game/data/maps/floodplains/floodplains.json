@@ -2117,6 +2117,18 @@
      "toast": "You go down into the channel without breaking step this time. You know where it turns and where it shallows out."
     }
    ]
+  },
+  {
+   "_comment": "#453 P6: scenery tell only, no arm keys, so interact reads the observe line. (32,19) sits beside the gate road at Chebyshev 4 from goblin_encounter_1 (outside its radius-2 band) and off every canonical walked or faced cell.",
+   "id": "gate_road_arrows",
+   "kind": "prop",
+   "cell": [
+    32,
+    19
+   ],
+   "display_name": "Crude Arrows",
+   "sprite": "arrow_quiver",
+   "observe": "A hide quiver lies in the turf beside the road, three crude arrows still in it, the fletching bound on with sinew."
   }
  ],
  "cover_skip": [

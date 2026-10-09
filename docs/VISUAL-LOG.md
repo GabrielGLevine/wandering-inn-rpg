@@ -480,3 +480,21 @@ r3–r5 playtest waves — gone from this file.
   panels and a dark border imply little of the stacked city. Fix direction:
   arrival-framed Invrisil structures and Pallass lower-terrace backdrop;
   substantial changes are authorized by the user-approved #564 review.
+- [ ] **(P2)** #453 camp bedrolls draw a carved bed frame —
+  `qa/run_qa.sh rest_delve_camp windowed --seed=9` → `00_delve_camp_in_context.png`,
+  `02_camp_after_dig.png`; `qa/run_qa.sh rest_dig_camp windowed --seed=9` →
+  `00_dig_bedroll_in_context.png`. `horns_delve_camp` (dungeon_approach (14,4))
+  and `dig_camp_bedroll` (ruin_surface (1,4)) use the shipped `bed` sprite as
+  the only in-hand sleep silhouette, so a quilted bedstead stands in a dungeon
+  staging chamber and a ruin dig camp, and the delve camp's two looks (four
+  laid-out bedrolls during the delve; one rolled against the wall after
+  `horns_dig_started`) differ only in copy. Fix direction: a ground bedroll pair
+  (laid out, rolled and strapped), about one cell, wired as the base sprite and
+  a `visual_states` arm on `horns_dig_started`; keep a strong sleep read.
+- [ ] **(P3)** #453 gate-road tell is a dropped quiver, not arrows in turf —
+  `qa/run_qa.sh gate_road_arrows_read windowed --seed=9` →
+  `00_arrows_from_the_road.png`. `gate_road_arrows` (floodplains (32,19)) uses
+  the owned `arrow_quiver` art; the observe copy names the quiver to match.
+  Opened one-shot containers (`gnoll_hunters_satchel`, `grate_crew_pail`) also
+  keep their closed look. Fix direction: a small arrows-standing-in-turf sprite
+  for the tell, and opened `visual_states` for the satchel and pail.

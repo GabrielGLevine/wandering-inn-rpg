@@ -647,6 +647,26 @@
    ],
    "on_open_accomplishment": "opened_collapsed_gallery_strongbox",
    "open_toast": "The strongbox yields an old brass clasp, still carrying a steady protective enchantment."
+  },
+  {
+   "_comment": "#453 P3: one-shot recovery loot beside the sorted bones, present only once the scouts are cleared, so it is found past that fight and short of the Awakened. (10,7) is off every canonical walked or faced cell; (9,7), (11,7) and (10,8) stay open.",
+   "id": "gnoll_hunters_satchel",
+   "kind": "prop",
+   "cell": [
+    10,
+    7
+   ],
+   "display_name": "A Hunting Satchel",
+   "sprite": "leather_satchel",
+   "present_when": {
+    "requires": {
+     "cleared_raskghar_scouts": 1
+    }
+   },
+   "contains": [
+    "mending_draught"
+   ],
+   "open_toast": "A satchel, the strap bitten through. One corked draught in the side pocket, the wax unbroken."
   }
  ]
 }
