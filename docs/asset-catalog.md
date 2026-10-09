@@ -41,6 +41,39 @@ new ones); sec. 3a records that check plus a prop-gap filename hunt.
 region pick must be verified by a windowed QA screenshot — this catalog gets
 you to the right sheet, not the right pixel coordinates.
 
+### New pack intake
+
+A pack is not in any pool until all four steps are done. Pool reads see only
+slices and registry rows; a sheet the intake skipped stays invisible (#624).
+
+1. **Slice.** `python3 tools/slice_atlases.py` (needs the private bundle's
+   `wandering_inn_game/assets/` for the `bundled` flags). The slicer decides
+   each sheet by content: props and mixed sheets are sliced under
+   `potential_assets/_sliced/<pack>/`, tile parts are listed in
+   `TILESETS.json`, and everything left over is listed in `SKIPPED.json`
+   with a reason. A new atlas pack outside the Pixel Crawler line joins
+   `PACK_PREFIXES` in the slicer first (the goblin-camp packs did).
+2. **Label.** `python3 tools/label_slices.py export` and
+   `python3 tools/label_tilesets.py export`; the controller dispatches the
+   vision agent on the pages, then `... import --answers DIR` for both.
+3. **Register.** `python3 tools/asset_candidates.py` rebuilds
+   `docs/asset-candidates.*` (slices, tilesets with `material_labels`).
+4. **Check coverage.** `python3 tools/asset_coverage.py --check` must show
+   0 UNCLASSIFIED (preflight runs it). A PNG left over after slicing and
+   registering goes into one of two lists in
+   `docs/asset-coverage-exclusions.json`:
+   - `pending_rulings`: usable art whose pool use waits on a named
+     decision, such as a family side-by-side or a manifest verdict. It is
+     listed first in `docs/asset-coverage.md` and does not fail the gate.
+     Settle the ruling, then slice, register or exclude it.
+   - `exclusions`: not pool material, with a reason a reviewer can check:
+     a promo render, a work file, a catalog family ruling.
+
+   Usable environment art is never excluded. Then regenerate
+   `docs/asset-coverage.md`.
+
+Only then does a pool read start, from `docs/kits-allocation.md`.
+
 ---
 
 ## 1. Style families

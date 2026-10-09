@@ -4,9 +4,34 @@
 Spec: docs/superpowers/specs/2026-10-08-regional-kits-design.md section 4.1.
 Row contract: docs/superpowers/plans/2026-10-08-regional-kits-phase0.md C8.
 
-For every eligible sheet under potential_assets/ (Pixel Crawler prop atlases;
-never animation strips, tilesets, shadows, lights, enemies, stations or promo
-renders):
+Every PNG of a Pixel Crawler or goblin-camp pack (PACK_PREFIXES) is decided
+by its content, never its name (#624: name skips hid Forge/Hideout/Library
+Tiles.png, Light.png and the furnace Bricks sheets). Path skips remain only
+for what is not environment art: Social/ and MockUps/ promo renders and
+source-reference renders, Weapons/ held-weapon sheets, and frame-regular
+`-Sheet` animation strips under Entities/Enemies/Characters. A frames/ PNG
+equal to a grid cell of a larger sheet is that atlas's frame export.
+A sheet without one alpha-255 pixel in OPAQUE_MIN is a translucent overlay
+(shadows, smoke). The rest get a layout from their 16px cell census:
+
+  tile block  a component with >= BLOCK_CELLS fully opaque 16px cells whose
+              boundary lies >= BLOCK_ALIGN on 16px cell edges, on a sheet
+              where >= SHEET_FULL of the non-empty cells are fully opaque.
+              Once a sheet has one, smaller grid blocks (>= PART_CELLS cells,
+              >= PART_ALIGN aligned) join its tile part.
+  props       no tile block: slice every island (the pre-#624 behaviour,
+              byte-identical output for every sheet sliced before it);
+  tileset     tile blocks and no other island: nothing is sliced;
+  mixed       both: slice the islands, record the blocks as tile_regions.
+
+Measured over every Pixel Crawler sheet on 2026-10-09 (`--measure` prints
+the census): the tile blocks of Tiles/Walls/Ground/Water sheets hold 34-339
+full cells at 48-100% alignment, on sheets with 31-100% full cells. Tree
+canopies hold up to 52 full cells at 15-33% alignment. The one prop atlas
+with a grid-aligned block (Interior_Props_01: 45 cells, 54%) has only 17%
+full cells, which SHEET_FULL keeps out.
+
+For each props/mixed sheet:
   1. find 8-connected alpha components (area >= MIN_AREA);
   2. split components on DOUBLE outline seams. #398: two flush crates and a
      barrel are ONE alpha component; the seam is two adjacent near-black
@@ -14,16 +39,22 @@ renders):
      single dark column is a shared edge and a dark mass is a sprite, never
      a seam; components taller than SEAM_MAX_H (trees) are never split;
   3. expand to the 16/32 px cell when the sheet is grid-laid and the cell
-     holds no other piece (method grid16/grid32); else keep the trimmed box
-     (component/seam). Manual --split regions are method override;
+     holds no other piece or tile-block pixel (method grid16/grid32); else
+     keep the trimmed box (component/seam). Manual --split regions are
+     method override;
   4. write _sliced/<pack>/<stem>/<stem>__x{X}_y{Y}_w{W}_h{H}.png, SLICES.json
      and a numbered contact.png. Re-runs are idempotent and keep labels.
-Byte-identical sheets slice once (first pack in sorted order); the other
-paths land in duplicate_sheets. Every output stays untracked.
+Per pack, _sliced/<pack>/TILESETS.json lists every tileset and mixed sheet
+plus every sheet with tileset directory or name evidence
+(asset_candidates.tileset_evidence), and _sliced/<pack>/SKIPPED.json lists
+every PNG not sliced with its reason. Byte-identical sheets slice once (first
+pack in sorted order); the other paths land in duplicate_sheets. Every output
+stays untracked.
 
 Usage:
   python3 tools/slice_atlases.py [--assets-root DIR] [--game-root DIR]
       [--only SUBSTRING] [--split <stem>:<x>,<y>,<w>,<h> ...] [--dry-run]
+      [--measure]
 """
 from __future__ import annotations
 
@@ -34,6 +65,7 @@ import re
 import sys
 from collections import deque
 from pathlib import Path
+from typing import NamedTuple
 
 from PIL import Image, ImageDraw
 
@@ -52,12 +84,21 @@ FLANK_FRAC = 0.9   # the lines beside a seam must not be seam-dark themselves
                    # (a barrel's curved edge leaves its 2nd column ~75% dark)
 SEAM_MAX_H = 64    # taller components are trees/structures: never seam-split
 GRID_CLEAN = 0.8   # share of pieces that must sit alone in their cells
-PACK_PREFIXES = ("Pixel Crawler",)
-SKIP_DIRS = {"enemies", "social", "mockups", "weapons", "weapon", "tilesets", "stations"}
-SKIP_NAME = re.compile(
-    r"(-sheet\.png$|^shadows?\.png$|^shadown\.png$|^light\.png$|^tiles\.png$|^floor\.png$"
-    r"|^walls?\.png$|^roofs?\.png$|^ground\.png$|^sand\.png$|^water\.png$|^interior_walls"
-    r"|^wall_|^floors_|^water_|^dungeon_tiles)", re.I)
+CELL = 16          # census cell: the PC16 tile unit
+OPAQUE_MIN = 0.01  # alpha-255 share below this is a translucent overlay (Shadows 0%)
+SHEET_FULL = 0.25  # tile part needs this share of non-empty cells fully opaque
+BLOCK_CELLS = 32   # a tile block holds this many fully opaque cells...
+BLOCK_ALIGN = 0.35  # ...with this share of its boundary on cell edges
+PART_CELLS = 8     # once a sheet has a block, smaller grid blocks join the
+PART_ALIGN = 0.5   # tile part at these looser limits
+# The PC16 packs plus the CUSTOM-HD goblin-camp environment packs. Other
+# families are registered by folder evidence (asset_candidates) or ruled in
+# docs/asset-coverage-exclusions.json.
+PACK_PREFIXES = ("Pixel Crawler", "goblin-huts-pack", "goblin_watchtower")
+PROMO_DIRS = {"social", "mockups"}
+PROMO_WORDS = {"reference", "mockup", "preview", "thumbnail", "cover"}
+WEAPON_DIRS = {"weapons", "weapon"}
+ENTITY_DIRS = {"entities", "enemies", "enemy", "characters", "mobs", "npc's", "npcs"}
 KINDS = kl.KINDS  # the closed vocabulary, shared with data_lint's _common kind rule
 LABEL_KEYS = ("targets", "verdict", "notes", "label_kind", "label_confidence")
 
@@ -212,21 +253,139 @@ def iou(a: list[int], b: list[int]) -> float:
     return inter / (a[2] * a[3] + b[2] * b[3] - inter) if inter else 0.0
 
 
+# ------------------------------------------------------------- layout
+
+def cell_census(alpha: bytes, labels: list[int], w: int, h: int) -> tuple[int, int, dict[int, int]]:
+    """(non-empty CELL cells, fully opaque cells, component id -> its full
+    cells). A full cell is 8-connected, so it always belongs to one component."""
+    full_row = b"\xff" * CELL
+    empty_row = bytes(CELL)
+    nonempty = full = 0
+    per: dict[int, int] = {}
+    for cy in range(0, h, CELL):
+        for cx in range(0, w, CELL):
+            cw, ch = min(CELL, w - cx), min(CELL, h - cy)
+            rows = [alpha[(cy + y) * w + cx:(cy + y) * w + cx + cw] for y in range(ch)]
+            if all(r == empty_row[:cw] for r in rows):
+                continue
+            nonempty += 1
+            if cw == ch == CELL and all(r == full_row for r in rows):
+                full += 1
+                cid = labels[cy * w + cx]
+                per[cid] = per.get(cid, 0) + 1
+    return nonempty, full, per
+
+
+def edge_alignment(labels: list[int], cid: int, w: int, h: int, box: list[int]) -> float:
+    """Share of the component's boundary pixels (a 4-neighbour outside it)
+    that sit on a CELL edge: ~0.25 by chance for an organic outline, near 1.0
+    for tiles laid on the grid."""
+    on = bnd = 0
+    last = CELL - 1
+    for y in range(box[1], box[3]):
+        row = y * w
+        for x in range(box[0], box[2]):
+            if labels[row + x] != cid:
+                continue
+            if (x == 0 or y == 0 or x == w - 1 or y == h - 1 or labels[row + x - 1] != cid
+                    or labels[row + x + 1] != cid or labels[row - w + x] != cid
+                    or labels[row + w + x] != cid):
+                bnd += 1
+                if x % CELL in (0, last) or y % CELL in (0, last):
+                    on += 1
+    return on / bnd if bnd else 0.0
+
+
+def sheet_layout(alpha: bytes, labels: list[int], boxes: list[list[int]], w: int,
+                 h: int) -> tuple[str, set[int], dict]:
+    """(props | tileset | mixed, tile-block component ids, census metrics)."""
+    nonempty, full, per = cell_census(alpha, labels, w, h)
+    share = full / nonempty if nonempty else 0.0
+    islands = [cid for cid, b in enumerate(boxes, 1) if b[4] >= MIN_AREA]
+    align: dict[int, float] = {}
+
+    def aligned(cid: int, cells: int, limit: float) -> bool:
+        if per.get(cid, 0) < cells:
+            return False
+        if cid not in align:
+            align[cid] = edge_alignment(labels, cid, w, h, boxes[cid - 1])
+        return align[cid] >= limit
+
+    blocks: set[int] = set()
+    if share >= SHEET_FULL:
+        blocks = {cid for cid in islands if aligned(cid, BLOCK_CELLS, BLOCK_ALIGN)}
+        if blocks:
+            blocks |= {cid for cid in islands if aligned(cid, PART_CELLS, PART_ALIGN)}
+    rest = len(islands) - len(blocks)
+    layout = "props" if not blocks else "mixed" if rest else "tileset"
+    metrics = {"full_share": round(share, 3), "full_cells": full, "nonempty_cells": nonempty,
+               "islands": len(islands), "blocks": len(blocks),
+               "block_cells": sorted((per.get(c, 0) for c in blocks), reverse=True),
+               "max_align": round(max(align.values()), 2) if align else 0.0}
+    return layout, blocks, metrics
+
+
 # ------------------------------------------------------------- lookups
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def eligible(rel: Path) -> bool:
-    if not rel.parts or not rel.parts[0].startswith(PACK_PREFIXES):
-        return False
-    if "_sliced" in rel.parts or {p.lower() for p in rel.parts[1:-1]} & SKIP_DIRS:
-        return False
-    return rel.suffix.lower() == ".png" and not SKIP_NAME.search(rel.name)
+SKIP_REASONS = {
+    "promo_render": "promo or reference render (Social/, MockUps/, source-reference.png)",
+    "frame_export": "per-frame export of an atlas cell; counted through the atlas SLICES.json",
+    "weapon_sheet": "Weapons/ held-weapon sheet for character rigs",
+    "animation_strip": "frame-regular -Sheet animation strip under Entities/Enemies/Characters",
+    "duplicate": "byte-identical duplicate of another sheet",
+    "empty": "no visible pixel",
+    "translucent_overlay": "under OPAQUE_MIN alpha-255 pixels: a shadow or smoke overlay",
+    "flat_overlay": "every visible pixel one colour: a shadow silhouette overlay",
+    "tileset": "dense 16px tile grid with no islands: registered as kind tileset (TILESETS.json)",
+    "no_islands": f"no island of {MIN_AREA}+ px to slice",
+}
 
 
-GENERIC_DIRS = {"static", "assets", "props", "interior", "buildings", "environment", "structures"}
+def _pa(rel: Path) -> str:
+    return (Path("potential_assets") / rel).as_posix()
+
+
+def in_scope(rel: Path) -> bool:
+    return (bool(rel.parts) and rel.parts[0].startswith(PACK_PREFIXES) and "_sliced" not in rel.parts
+            and rel.suffix.lower() == ".png")
+
+
+def path_skip(rel: Path) -> str:
+    """SKIP_REASONS key for a PNG that is not environment art by its folder
+    (or, for reference renders, its file name: an opaque concept render reads
+    as one tile block), or ''."""
+    dirs = {p.lower() for p in rel.parts[1:-1]}
+    stem_words = set(re.split(r"[^a-z0-9]+", Path(rel.name).stem.lower()))
+    if dirs & PROMO_DIRS or stem_words & PROMO_WORDS:
+        return "promo_render"
+    if dirs & WEAPON_DIRS:
+        return "weapon_sheet"
+    return ""
+
+
+def animation_strip(rel: Path, size: tuple[int, int] | None = None) -> bool:
+    """A `-Sheet` PNG under an entity folder whose frames tile it: one side
+    divides the other, or both sit on the 16px frame grid (Orc Death 576x80
+    is nine 64x80 frames). Station and prop `-Sheet` strips are environment
+    art and go through content classification."""
+    if not rel.name.lower().endswith("-sheet.png") or not {p.lower() for p in rel.parts[1:-1]} & ENTITY_DIRS:
+        return False
+    if size is None:
+        return True
+    w, h = size
+    return w > 0 and h > 0 and (w % h == 0 or h % w == 0 or (w % CELL == 0 and h % CELL == 0))
+
+
+def eligible(rel: Path, size: tuple[int, int] | None = None) -> bool:
+    """A Pixel Crawler PNG whose fate its content decides."""
+    return in_scope(rel) and not path_skip(rel) and not animation_strip(rel, size)
+
+
+GENERIC_DIRS = {"static", "assets", "props", "interior", "buildings", "environment", "structures", "frames"}
 
 
 def sheet_stem(sheet: Path) -> str:
@@ -237,21 +396,83 @@ def sheet_stem(sheet: Path) -> str:
     return sheet.stem if parent.lower() in GENERIC_DIRS else f"{parent}_{sheet.stem}"
 
 
-def find_sheets(assets_root: Path, only: str = "") -> list[tuple[Path, list[str]]]:
-    """One entry per unique sha256; the shortest file name, then the first
-    path in part order, wins (Size_03.png over Size_03-export.png, Free Pack
-    over Free Pack 2.1). The other paths are returned as duplicates."""
+def _cell_match(atlas: Path, frame: Path, fsize: tuple[int, int]) -> list[int] | None:
+    """[x, y, w, h] of the atlas grid cell whose pixels equal the frame's."""
+    want = Image.open(frame).convert("RGBA").tobytes()
+    im = Image.open(atlas).convert("RGBA")
+    fw, fh = fsize
+    for y in range(0, im.size[1], fh):
+        for x in range(0, im.size[0], fw):
+            if im.crop((x, y, x + fw, y + fh)).tobytes() == want:
+                return [x, y, fw, fh]
+    return None
+
+
+def frame_exports(assets_root: Path, sheets: dict[Path, list[str]]) -> dict[Path, dict[str, list[int]]]:
+    """atlas -> {frame path: cell} for every PNG under a frames/ folder whose
+    pixels equal one grid cell of a larger sheet in the same pack (the
+    CUSTOM-HD packs ship frames/hut_01.png beside the hut atlas). Such a frame
+    is not sliced again: it counts through its atlas. Its byte-identical
+    copies map to the same cell."""
+    sizes = {p: ac.png_size(p) for p in sheets}
+    out: dict[Path, dict[str, list[int]]] = {}
+    for f in sorted(sheets):
+        rel = f.relative_to(assets_root)
+        fs = sizes[f]
+        if "frames" not in {p.lower() for p in rel.parts[1:-1]} or not fs:
+            continue
+        for a in sorted(sheets):
+            asz = sizes[a]
+            if (a == f or a not in sheets or not asz or a.relative_to(assets_root).parts[0] != rel.parts[0]
+                    or asz == fs or asz[0] % fs[0] or asz[1] % fs[1]):
+                continue
+            cell = _cell_match(a, f, fs)
+            if cell:
+                out.setdefault(a, {}).update({p: cell for p in [_pa(rel), *sheets[f]]})
+                break
+    return out
+
+
+def scan(assets_root: Path, only: str = "") -> tuple[list[tuple[Path, list[str]]], list[dict],
+                                                     dict[Path, dict[str, list[int]]]]:
+    """(sheets, skipped, frame exports). Sheets: one entry per unique sha256
+    among the eligible PNGs; the shortest file name, then the first path in
+    part order, wins (Size_03.png over Size_03-export.png, Free Pack over
+    Free Pack 2.1), and the other paths are its duplicates. Skipped: a
+    SKIPPED.json row for every path skip, duplicate and frame export."""
+    files = [p for top in sorted(assets_root.iterdir()) if top.is_dir() and top.name.startswith(PACK_PREFIXES)
+             for p in top.rglob("*") if p.suffix.lower() == ".png" and p.is_file()]
     by_sha: dict[str, tuple[Path, list[str]]] = {}
-    for p in sorted(assets_root.rglob("*.png"), key=lambda p: (len(p.name), p.parts)):
+    skipped: list[dict] = []
+    for p in sorted(files, key=lambda p: (len(p.name), p.parts)):
         rel = p.relative_to(assets_root)
-        if not eligible(rel) or (only and only not in str(rel)):
+        if not in_scope(rel) or (only and only not in str(rel)):
+            continue
+        reason = path_skip(rel) or ("animation_strip" if animation_strip(rel, ac.png_size(p)) else "")
+        if reason:
+            skipped.append({"path": _pa(rel), "reason": reason})
             continue
         h = sha256(p)
         if h in by_sha:
-            by_sha[h][1].append((Path("potential_assets") / rel).as_posix())
+            by_sha[h][1].append(_pa(rel))
+            skipped.append({"path": _pa(rel), "reason": "duplicate",
+                            "detail": _pa(by_sha[h][0].relative_to(assets_root))})
         else:
             by_sha[h] = (p, [])
-    return sorted(by_sha.values(), key=lambda e: str(e[0]))
+    sheets = dict(by_sha.values())
+    exports = frame_exports(assets_root, sheets)
+    for atlas, frames in exports.items():
+        for path in frames:
+            src = assets_root / Path(path).relative_to("potential_assets")
+            sheets.pop(src, None)
+            skipped[:] = [s for s in skipped if s["path"] != path]
+            skipped.append({"path": path, "reason": "frame_export",
+                            "detail": _pa(atlas.relative_to(assets_root))})
+    return sorted(sheets.items(), key=lambda e: str(e[0])), skipped, exports
+
+
+def find_sheets(assets_root: Path, only: str = "") -> list[tuple[Path, list[str]]]:
+    return scan(assets_root, only)[0]
 
 
 def bundled_index(game_root: Path) -> dict[str, str]:
@@ -311,15 +532,62 @@ def _carry_labels(out_dir: Path) -> tuple[dict[tuple, dict], list[list[int]]]:
     return keep, [list(o) for o in old.get("overrides", [])]
 
 
-def slice_sheet(sheet: Path, assets_root: Path, out_dir: Path, overrides: list[list[int]],
-                bundled: dict[str, str], wired: dict, duplicates: list[str]) -> tuple[dict, list[Image.Image]]:
+class Analysis(NamedTuple):
+    im: Image.Image
+    data: bytes
+    labels: list[int]
+    boxes: list[list[int]]
+    layout: str
+    blocks: set[int]
+    metrics: dict
+
+
+def analyze(sheet: Path) -> Analysis:
     im = Image.open(sheet).convert("RGBA")
     w, h = im.size
     data = im.tobytes()
-    labels, boxes = components(data[3::4], w, h)
+    alpha = data[3::4]
+    labels, boxes = components(alpha, w, h)
+    layout, blocks, metrics = sheet_layout(alpha, labels, boxes, w, h)
+    return Analysis(im, data, labels, boxes, layout, blocks, metrics)
+
+
+def opaque_skip(im: Image.Image) -> str:
+    """SKIP_REASONS key for an empty, translucent or single-colour sheet, or ''."""
+    alpha = im.getchannel("A").tobytes()
+    visible = len(alpha) - alpha.count(0)
+    if not visible:
+        return "empty"
+    if alpha.count(255) < OPAQUE_MIN * visible:
+        return "translucent_overlay"
+    colors = im.getcolors(4)
+    if colors is not None and len([c for _, c in colors if c[3]]) == 1:
+        return "flat_overlay"
+    return ""
+
+
+def _holds_block(labels: list[int], blocks: set[int], w: int, box: list[int]) -> bool:
+    if not blocks:
+        return False
+    for y in range(box[1], box[3]):
+        row = y * w
+        if any(labels[row + x] in blocks for x in range(box[0], box[2])):
+            return True
+    return False
+
+
+def slice_sheet(sheet: Path, assets_root: Path, out_dir: Path, overrides: list[list[int]],
+                bundled: dict[str, str], wired: dict, duplicates: list[str],
+                analysis: Analysis | None = None,
+                exports: dict[str, list[int]] | None = None) -> tuple[dict, list[Image.Image]]:
+    """C8 rows for every island outside the tile blocks. A props sheet has
+    no blocks, so its rows and doc keys are exactly the pre-#624 output."""
+    a = analysis or analyze(sheet)
+    im, data, labels, boxes = a.im, a.data, a.labels, a.boxes
+    w, h = im.size
     pieces: list[tuple[list[int], str]] = []
     for cid, box in enumerate(boxes, 1):
-        if box[4] >= MIN_AREA:
+        if box[4] >= MIN_AREA and cid not in a.blocks:
             pieces += split_box(data, labels, cid, w, box)
     carried, old_overrides = _carry_labels(out_dir)
     overrides = [list(o) for o in dict.fromkeys(tuple(o) for o in old_overrides + overrides)]
@@ -337,7 +605,8 @@ def slice_sheet(sheet: Path, assets_root: Path, out_dir: Path, overrides: list[l
         x0, y0, x1, y1 = box[:4]
         if cell and method != "override":
             e = cell_box(box, cell)
-            if not any(o is not box and intersects(e, o) for o, _ in pieces):
+            if (not any(o is not box and intersects(e, o) for o, _ in pieces)
+                    and not _holds_block(labels, a.blocks, w, e)):
                 x0, y0, x1, y1 = e
                 method = f"grid{cell}"
         region = [x0, y0, x1 - x0, y1 - y0]
@@ -360,8 +629,19 @@ def slice_sheet(sheet: Path, assets_root: Path, out_dir: Path, overrides: list[l
     doc = {"schema": SCHEMA, "source": "pack", "tier": "pack-bundle",
            "family": ac.pack_family(rel.parts[0]),
            "sheet": (Path("potential_assets") / rel).as_posix(), "sheet_sha256": sha,
-           "grid": cell, "overrides": overrides, "check_notes": [], "assets": rows}
+           "grid": cell}
+    if a.blocks:
+        # absent on props sheets, so their SLICES.json stays byte-identical
+        doc["layout"] = "mixed" if rows else "tileset"
+        doc["tile_regions"] = tile_regions(a)
+    if exports:
+        doc["frame_exports"] = dict(sorted(exports.items()))
+    doc.update({"overrides": overrides, "check_notes": [], "assets": rows})
     return doc, crops
+
+
+def tile_regions(a: Analysis) -> list[list[int]]:
+    return sorted((_xywh(a.boxes[c - 1]) for c in a.blocks), key=lambda r: (r[1], r[0]))
 
 
 def render_contact(crops: list[Image.Image], out: Path, scale: int, start: int = 1,
@@ -419,7 +699,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--split", type=parse_split, action="append", default=[],
                     help="manual region <stem>:<x>,<y>,<w>,<h> where <stem> is the _sliced/ dir "
                          "name (Furniture, Model_01_Size_02); recorded as method override")
-    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--dry-run", action="store_true", help="classify and report; write nothing")
+    ap.add_argument("--measure", action="store_true",
+                    help="print each sheet's layout and cell census; write nothing")
     args = ap.parse_args(argv)
     assets_root = args.assets_root.resolve()
     if not assets_root.is_dir():
@@ -430,24 +712,87 @@ def main(argv: list[str] | None = None) -> int:
         splits.setdefault(stem, []).append(region)
     bundled = bundled_index(args.game_root)
     wired = wired_regions(args.game_root)
-    sheets = find_sheets(assets_root, args.only)
+    sheets, skipped, exports = scan(assets_root, args.only)
     dupes = sum(len(d) for _, d in sheets)
-    total, methods = 0, {}
+    tilesets: list[dict] = []
+    total, n_sliced, methods = 0, 0, {}
     for sheet, duplicates in sheets:
+        rel = sheet.relative_to(assets_root)
+        a = analyze(sheet)
+        skip = opaque_skip(a.im)
+        if args.measure:
+            print(f"{skip or a.layout:19s} {json.dumps(a.metrics)}  {rel}")
+            continue
+        if skip:
+            skipped.append({"path": _pa(rel), "reason": skip})
+            continue
+        stem = sheet_stem(sheet)
         sha = sha256(sheet)
         out_dir = out_dir_for(sheet, assets_root, sha)
-        if args.dry_run:
-            print(f"would slice {sheet.relative_to(assets_root)} -> {out_dir.relative_to(assets_root)}")
+        doc, crops = (({"assets": []}, []) if a.layout == "tileset" and not splits.get(stem)
+                      else slice_sheet(sheet, assets_root, out_dir, splits.get(stem, []), bundled, wired,
+                                       duplicates, a, exports.get(sheet)))
+        rows = doc["assets"]
+        evidence = (["content"] if a.blocks else []) + (["directory"] if ac.tileset_evidence(rel) else [])
+        if evidence:
+            tilesets.append({
+                "sheet": _pa(rel), "sheet_sha256": sha, "w": a.im.size[0], "h": a.im.size[1],
+                "layout": doc.get("layout", a.layout if not rows else "props"), "evidence": evidence,
+                "grid": CELL, "tile_regions": tile_regions(a), "slices": len(rows),
+                "full_share": a.metrics["full_share"], "islands": a.metrics["islands"],
+                "family": ac.pack_family(rel.parts[0]), "duplicate_sheets": list(duplicates)})
+        if not rows:
+            skipped.append({"path": _pa(rel), "reason": "tileset" if a.blocks else "no_islands"})
+            print(f"   0 slices  {a.layout:8s} {rel}")
             continue
-        doc, crops = slice_sheet(sheet, assets_root, out_dir, splits.get(sheet_stem(sheet), []), bundled, wired, duplicates)
-        write_outputs(doc, crops, out_dir)
-        total += len(doc["assets"])
-        for r in doc["assets"]:
+        n_sliced += 1
+        total += len(rows)
+        for r in rows:
             methods[r["method"]] = methods.get(r["method"], 0) + 1
-        print(f"{len(doc['assets']):4d} slices  grid={doc['grid']}  {sheet.relative_to(assets_root)}")
-    print(f"sliced {len(sheets)} sheets ({dupes} duplicates skipped) -> {total} slices; "
+        print(f"{len(rows):4d} slices  {doc.get('layout', 'props'):8s} grid={doc['grid']}  {rel}")
+        if not args.dry_run:
+            write_outputs(doc, crops, out_dir)
+    if args.measure:
+        return 0
+    print(f"sliced {n_sliced} sheets ({dupes} duplicates skipped) -> {total} slices; "
           + ", ".join(f"{k} {v}" for k, v in sorted(methods.items())))
+    reasons: dict[str, int] = {}
+    for s in skipped:
+        reasons[s["reason"]] = reasons.get(s["reason"], 0) + 1
+    print(f"tilesets {len(tilesets)} ({sum(1 for t in tilesets if t['layout'] == 'mixed')} mixed); "
+          f"skipped {len(skipped)}: " + ", ".join(f"{k} {v}" for k, v in sorted(reasons.items())))
+    if not args.dry_run:
+        write_pack_lists(assets_root, sheets, skipped, tilesets)
     return 0
+
+
+def write_pack_lists(assets_root: Path, sheets: list[tuple[Path, list[str]]], skipped: list[dict],
+                     tilesets: list[dict]) -> None:
+    """_sliced/<pack>/SKIPPED.json and TILESETS.json. Rows for paths this run
+    decided are replaced; rows for paths an --only run never saw are kept."""
+    decided = {_pa(s.relative_to(assets_root)) for s, _ in sheets} | {s["path"] for s in skipped}
+    packs = {Path(p).parts[1] for p in decided}
+    for pack in sorted(packs):
+        base = assets_root / "_sliced" / pack
+        for name, key, ident, new in (("SKIPPED.json", "files", "path", skipped),
+                                      ("TILESETS.json", "sheets", "sheet", tilesets)):
+            path = base / name
+            old = []
+            if path.exists():
+                try:
+                    old = json.loads(path.read_text(encoding="utf-8")).get(key, [])
+                except (json.JSONDecodeError, OSError):
+                    old = []
+            mine = [r for r in new if Path(r[ident]).parts[1] == pack]
+            rows = sorted([r for r in old if r.get(ident) not in decided] + mine, key=lambda r: r[ident])
+            if not rows and not path.exists():
+                continue
+            base.mkdir(parents=True, exist_ok=True)
+            for r in rows:
+                if key == "files":
+                    r.setdefault("why", SKIP_REASONS.get(r["reason"], ""))
+            path.write_text(json.dumps({"schema": SCHEMA, "pack": pack, key: rows}, indent=1) + "\n",
+                            encoding="utf-8")
 
 
 if __name__ == "__main__":

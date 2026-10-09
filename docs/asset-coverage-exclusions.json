@@ -1,0 +1,42 @@
+{
+ "_comment": "Explicit coverage decisions for tools/asset_coverage.py (#624). Globs are relative to potential_assets/ (`**/` spans folders, `*` stays in one) and apply only to PNGs that no SLICES.json, registry row or path rule already classified. `pending_rulings` holds usable art waiting on a named decision: reported first in docs/asset-coverage.md, never a --check failure, never excluded, and checked before `exclusions`. `exclusions` holds what is not pool material; `class` records a rig, ui or audio file the path words cannot see, otherwise the PNG is `excluded`. Every entry needs a reason a reviewer can check.",
+ "pending_rulings": [
+  {"glob": "Ninja Adventure - Asset Pack/**/Backgrounds/Animated/**", "reason": "NINJA16 animated map pieces (flags, mills, water ripples, waterfall): the family is unverified beside PC16 (asset-catalog sec. 1, LOW-CONFIDENCE). Needs a windowed side-by-side ruling, then slice or exclude"},
+  {"glob": "Ninja Adventure - Asset Pack/**/Backgrounds/Vehicles/**", "reason": "NINJA16 boat, crane, sail and nets: the family is unverified beside PC16 (asset-catalog sec. 1, LOW-CONFIDENCE). Needs a windowed side-by-side ruling, then slice or exclude"},
+  {"glob": "pixellab_harvest_2026-10/L2_props/*__after.png", "reason": "needs L2_props MANIFEST row + verdict (harvest after-states with no manifest row)"},
+  {"glob": "pixellab_harvest_2026-10/L2_props/forge_molten_trough_wide.png", "reason": "needs L2_props MANIFEST row + verdict (wide variant of forge_molten_trough)"}
+ ],
+ "exclusions": [
+  {"glob": "Pixel Crawler - */**/Social/**", "reason": "Social/: 4x promo upscales and mockups of the Assets/ sheets (slicer SKIPPED promo_render)"},
+  {"glob": "Pixel Crawler - Free Pack*/**/MockUps/**", "reason": "MockUps/: finished tavern scene renders (slicer SKIPPED promo_render)"},
+  {"glob": "Pixel Crawler - */**/Weapons/**", "reason": "held-weapon item sheets for character rigs and gear UI, not world art (slicer SKIPPED weapon_sheet)"},
+  {"glob": "Pixel Crawler - */**/Weapon/**", "reason": "held-weapon item sheets for character rigs and gear UI, not world art (slicer SKIPPED weapon_sheet)"},
+  {"glob": "Pixel Crawler - */**/Shadows.png", "reason": "shadow overlay without one opaque pixel (slicer SKIPPED translucent_overlay)"},
+  {"glob": "Pixel Crawler - */**/Smoke-Sheet.png", "reason": "translucent smoke strip (slicer SKIPPED translucent_overlay)"},
+  {"glob": "Pixel Crawler - */**/Shadown.png", "reason": "one-colour shadow silhouettes (slicer SKIPPED flat_overlay)"},
+  {"glob": "Pixel Crawler - */_sliced/**", "reason": "stale in-pack slicer output from before the top-level potential_assets/_sliced/ root; superseded copies"},
+  {"glob": "**/__MACOSX/**", "reason": "macOS AppleDouble resource forks (._ files), not images"},
+  {"glob": "Tiny Swords*/**/Buildings/**", "reason": "TS-CARTOON world art clashes with PC16 maps (asset-catalog sec. 1); only its UI kit and VFX are used"},
+  {"glob": "Tiny Swords*/**/Terrain/**", "reason": "TS-CARTOON terrain dressing (resources, decorations, water, bridge) clashes with PC16 maps (asset-catalog sec. 1); its Tileset/ and Ground/ tilemaps are registered"},
+  {"glob": "Tiny Swords/**/Deco/**", "reason": "TS-CARTOON world art clashes with PC16 maps (asset-catalog sec. 1); only its UI kit and VFX are used"},
+  {"glob": "Tiny Swords/**/Resources/**", "reason": "TS-CARTOON resource and sheep sprites clash with PC16 maps (asset-catalog sec. 1)"},
+  {"glob": "Ninja Adventure - Asset Pack/Ninja Adventure - Asset Pack/*.png", "reason": "pack preview renders, palette and music cover"},
+  {"glob": "Cute_Fantasy_Free/**/Outdoor decoration/**", "reason": "CUTE16 decorations: the pack licence is non-commercial (asset-catalog sec. 1), so they stay out of pools"},
+  {"glob": "Admurins_Freebies-2/**/Canines/**", "class": "rig_or_animation", "reason": "ADMURIN creature animation sheets"},
+  {"glob": "Admurins_Freebies-2/**/Gollux/**", "class": "rig_or_animation", "reason": "ADMURIN creature animation sheets"},
+  {"glob": "Admurins_Freebies-2/**/PixelHorse_V1.0/**", "class": "rig_or_animation", "reason": "ADMURIN layered horse animation sheets"},
+  {"glob": "Admurins_Freebies-2/**/Animated Chests/**", "class": "rig_or_animation", "reason": "ADMURIN animated loot-chest strips (5 tiers x 8 frames; asset-catalog sec. 3)"},
+  {"glob": "Admurins_Freebies-2/**/5/MCBlocks*.png", "reason": "ADMURIN block sprite sheets: over a thousand outlined block icons, icon-scale, not PC16 world art; searchable through docs/asset-index.json"},
+  {"glob": "Admurins_Freebies-2/**/Tileset Scroller - Summer/**", "reason": "preview, thumbnail and map renders of the Summer scroller (its tile sheets are registered)"},
+  {"glob": "goblin-pack/**", "class": "rig_or_animation", "reason": "CUSTOM-HD goblin rigs: frames, sheets and source references (in use as goblin_base/female/sword)"},
+  {"glob": "goblin-huts-pack/source-reference.png", "reason": "opaque concept reference render of the hut atlas, not a sprite (slicer SKIPPED promo_render)"},
+  {"glob": "_benchmarks/**", "reason": "art-direction benchmark renders: reference images, not assets"},
+  {"glob": "art_direction_review_2026-10-05/**", "reason": "art-direction review captures and contact sheets of the game, not assets"},
+  {"glob": "research_2026-07-05/**", "reason": "research copy of the Ninja Adventure Godot demo (themes, system sprites); duplicates pack art"},
+  {"glob": "pixellab_*/**/mockups/**", "reason": "PixelLab-era mockup scene renders, not assets"},
+  {"glob": "pixellab_*/**/*_4x*.png", "reason": "4x preview upscales of registered sheets (asset_candidates skips _4x)"},
+  {"glob": "pixellab_*/**/palette_*.png", "reason": "palette swatch, not an asset"},
+  {"glob": "pixellab_*/**/preview_*.png", "reason": "PixelLab preview renders of a registered rig"},
+  {"glob": "pixellab_2026-10-08_pallass_513/sheets/**", "class": "rig_or_animation", "reason": "assembled animation sheets of the #513 rigs, whose rig folders are registered"}
+ ]
+}

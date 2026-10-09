@@ -7,8 +7,9 @@ wired data/sprites.json id; built by tools/asset_candidates.py) and, unless
 an image: it ranks on targets, paths, prompts and verdicts, then prints the
 paths (and contact sheets / manifest lines) worth a controller look.
 
-Ranking: exact target match > target-word match > path-word match >
-prompt/notes match; ties break on verdict (SHIPPED > READY > USABLE-WITH-FIX >
+Ranking: exact target match > target-word or material-label match >
+path-word match > prompt/notes match (a tileset's material_labels, e.g.
+`brick --kind tileset`, score like its targets); ties break on verdict (SHIPPED > READY > USABLE-WITH-FIX >
 ALT > UNREVIEWED) then tier (shipped-public > owned-public > shipped-bundle >
 owned-unverified > pack-bundle). Every query word must match somewhere.
 
@@ -65,7 +66,8 @@ def pack_rows(index_path: Path) -> list[dict]:
 
 def score(row: dict, terms: list[str], joined: str) -> int:
     targets = [t.lower() for t in row.get("targets", [])]
-    t_words = set().union(*(words(t) for t in targets)) if targets else set()
+    named = targets + [m.lower() for m in row.get("material_labels") or []]
+    t_words = set().union(*(words(t) for t in named)) if named else set()
     p_words = words(row.get("path", ""))
     x_words = words(row.get("prompt", "")) | words(row.get("notes", ""))
     s = 0
@@ -123,6 +125,10 @@ def fmt(r: dict) -> str:
         extra.append(r["manifest_ref"])
     if r.get("contact_sheet"):
         extra.append(f"sheet={r['contact_sheet']}")
+    if r.get("material_labels"):
+        extra.append("materials=" + ",".join(r["material_labels"]))
+    if r.get("layout"):
+        extra.append(f"layout={r['layout']}")
     if r.get("source_sheet"):
         region = ",".join(str(v) for v in r.get("region", []))
         extra.append(f"region={region} of {Path(r['source_sheet']).name}")
@@ -152,7 +158,9 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     rows = json.loads(args.registry.read_text(encoding="utf-8"))["assets"]
     if not args.no_packs:
-        rows += pack_rows(args.pack_index)
+        # a registered sheet (pack tilesets) outranks its bare index row
+        known = {r["path"] for r in rows} | {d for r in rows for d in r.get("duplicate_sheets") or []}
+        rows += [r for r in pack_rows(args.pack_index) if r["path"] not in known]
     hits = search(rows, args.query, args.kind, args.tier, args.family, args.include_rejected)
     shown = [r for _, r in hits[: args.limit]]
     if args.json:

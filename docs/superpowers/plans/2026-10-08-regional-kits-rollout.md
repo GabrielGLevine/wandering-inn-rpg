@@ -129,6 +129,7 @@ Logged in `docs/CHOICE-LOG.md` (Regional kits). Land both before another map ado
 
 - [ ] Issue opened; branch and worktree created; overlay copied; import pass done.
 - [ ] Capture scripts written; before-captures preserved in `qa_output/kits/<region>/before/`.
+- [ ] `python3 tools/asset_coverage.py --check` shows 0 UNCLASSIFIED; pool read starts from `docs/kits-allocation.md`.
 - [ ] Materials: region-exclusive floor and walls selected (pool read PASS) and wired; or a generation-list row added.
 - [ ] Null rule (spec §2.2): a map field set to `null` blocks the material's value, and only wall-segment `face`/`cap` may be nulled (caps-only or face-only segments). `data_lint` rejects any other null, and a nulled key on a material that carries a `fallback_render`.
 - [ ] Roles: each pool selected via `fill_kit` with a pool read; fallback set ≥2 distinct owned sprites; lint and commit per role.
