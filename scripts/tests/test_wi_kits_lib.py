@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """#607 lane A: wi_kits_lib mirrors WIKitResolver (index C3/C4/C5).
 Pinned picks are the values tests/test_kit_resolver.gd asserts."""
+import collections
 import copy
 import json
 import math
@@ -20,6 +21,24 @@ G = {"width": 7, "height": 7}
 
 def cells(n, role):
     return [{"sprite": "@" + role, "cell": [i % 7, i // 7]} for i in range(n)]
+
+
+TRIO = [{"sprite": "@facade", "cell": [0, 0]}, {"sprite": "@facade", "cell": [2, 0]}, {"sprite": "@facade", "cell": [6, 6]}]
+
+
+def uncapped(map_id, role_name, rows, kits):
+    """The pre-#608-cap cell pick (radius exclusion only), for before/after comparisons."""
+    role = kits["r"]["roles"][role_name]
+    pool = kl.pool_of(role)
+    sub = kl.subset(map_id, role_name, pool, kl.subset_size(len(rows), len(pool)))
+    r, chosen, out = kl.radius_for(role), [], []
+    for c in sorted((tuple(x["cell"]) for x in rows), key=lambda c: (c[1], c[0])):
+        rank = kl.rank_for(map_id, role_name, sub, c)
+        taken = {v for o, v in chosen if max(abs(o[0] - c[0]), abs(o[1] - c[1])) <= r}
+        v = next((x for x in rank if x not in taken), rank[0])
+        chosen.append((c, v))
+        out.append(v)
+    return out
 
 
 def mk(decor=None, entities=None, **extra):
@@ -85,23 +104,37 @@ class TestResolve(unittest.TestCase):
         self.assertEqual(tri["decor"][2]["sprite"], kl.rank_for("m", "tri", ["t1", "t2"], (3, 1))[0])
 
     def test_radius_exactness(self):
-        f2 = kl.resolve_map(mk([{"sprite": "@facade", "cell": [0, 0]}, {"sprite": "@facade", "cell": [2, 0]}]), "m", "r", KITS)
-        self.assertEqual([r["sprite"] for r in f2["decor"]], ["f2", "f2"])
+        # three placements, so the #608 module cap (ceil(3/2) = 2) leaves room for the reuse
+        f2 = kl.resolve_map(mk(TRIO), "m", "r", KITS)
+        self.assertEqual([r["sprite"] for r in f2["decor"]], ["f2", "f2", "f3"])
         c3 = kl.resolve_map(mk([{"sprite": "@cargo", "cell": [0, 0]}, {"sprite": "@cargo", "cell": [3, 0]}]), "m", "r", KITS)
         self.assertEqual([r["sprite"] for r in c3["decor"]], ["c3", "c3"])
         c2 = kl.resolve_map(mk([{"sprite": "@cargo", "cell": [0, 0]}, {"sprite": "@cargo", "cell": [2, 0]}]), "m", "r", KITS)
         self.assertEqual([r["sprite"] for r in c2["decor"]], ["c3", "c2"])
 
     def test_radius_override_widens_exclusion(self):
-        pair = mk([{"sprite": "@facade", "cell": [0, 0]}, {"sprite": "@facade", "cell": [2, 0]}])
-        self.assertEqual([r["sprite"] for r in kl.resolve_map(pair, "m", "r", KITS)["decor"]], ["f2", "f2"])  # module r=1 reuses at 2
+        trio = mk(TRIO)
+        self.assertEqual([r["sprite"] for r in kl.resolve_map(trio, "m", "r", KITS)["decor"]], ["f2", "f2", "f3"])  # module r=1 reuses at 2
         wide = copy.deepcopy(KITS)
         wide["r"]["roles"]["facade"]["radius"] = 3
-        got = [r["sprite"] for r in kl.resolve_map(pair, "m", "r", wide)["decor"]]
-        self.assertEqual(got[0], "f2")
-        self.assertEqual(got[1], "f3")  # radius 3 excludes the distance-2 neighbour (GD pins the same pair)
+        got = [r["sprite"] for r in kl.resolve_map(trio, "m", "r", wide)["decor"]]
+        self.assertEqual(got, ["f2", "f3", "f3"])  # radius 3 excludes the distance-2 neighbour (GD pins the same)
         far = mk([{"sprite": "@facade", "cell": [0, 0]}, {"sprite": "@facade", "cell": [4, 0]}])
         self.assertEqual(kl.resolve_map(far, "m", "r", wide)["decor"], kl.resolve_map(far, "m", "r", KITS)["decor"])  # beyond 3: untouched
+
+    def test_module_cap_limits_each_variant_per_map(self):
+        # #608 ruling: a module role's variant is used at most ceil(n/k) times per map, on top of the radius.
+        row = [{"sprite": "@facade", "cell": [3 * i, 1]} for i in range(9)]
+        self.assertEqual(max(collections.Counter(uncapped("m", "facade", row, KITS)).values()), 5)  # the old rule: f3 x5
+        got = collections.Counter(r["sprite"] for r in kl.resolve_map(mk(row), "m", "r", KITS)["decor"])
+        self.assertLessEqual(max(got.values()), 3, got)  # ceil(9/3)
+        self.assertEqual(sum(got.values()), 9)
+
+    def test_module_cap_leaves_non_module_roles_alone(self):
+        row = [{"sprite": "@cargo", "cell": [3 * i, 3]} for i in range(9)]
+        want = uncapped("m", "cargo", row, KITS)
+        self.assertEqual(collections.Counter(want)["c3"], 5)  # over ceil(9/3), and still allowed
+        self.assertEqual([r["sprite"] for r in kl.resolve_map(mk(row), "m", "r", KITS)["decor"]], want)
 
     def test_map_mode_light_and_yard_pin(self):
         seats = mk(cells(5, "seat"), [{"id": "l1", "kind": "prop", "sprite": "@lamp", "cell": [6, 6]},

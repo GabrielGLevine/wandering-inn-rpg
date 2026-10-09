@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """#607 parity, Python half: golden regeneration + live Godot vs Python on the real tree."""
 import json, os, subprocess, sys, tempfile, unittest
+from collections import Counter
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -33,6 +34,17 @@ class TestGolden(unittest.TestCase):
         variants = {r["sprite"] for m in ("fx_door_a", "fx_door_b") for r in golden[m]["rows"]}
         self.assertEqual(len(variants), 1, variants)
 
+
+    def test_module_cap_in_the_golden(self):
+        # fx_module_cap: 9 module placements on a 3-cell pitch (the old rule drew f1 x6) are capped at
+        # ceil(9/3) = 3 per variant; the 9 non-module cargo rows beside them keep their c4 x7.
+        golden = json.loads((FIX / "golden.json").read_text())
+        rows = golden["fx_module_cap"]["rows"]
+        facade = Counter(r["sprite"] for r in rows if r["sprite_role"] == "facade")
+        cargo = Counter(r["sprite"] for r in rows if r["sprite_role"] == "cargo")
+        self.assertEqual(sum(facade.values()), 9)
+        self.assertLessEqual(max(facade.values()), 3, facade)
+        self.assertEqual(cargo["c4"], 7, cargo)
 
     def test_weighted_pool_entry_is_picked(self):
         golden = json.loads((FIX / "golden.json").read_text())

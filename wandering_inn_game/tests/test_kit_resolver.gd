@@ -26,6 +26,37 @@ func _cells(n: int, role: String) -> Array:
 	return out
 
 
+# The pre-#608-cap cell pick (radius exclusion only), for before/after comparisons. Cells in (y, x) order.
+func _uncapped(map_id: String, role_name: String, cells: Array, kits: Dictionary) -> Array:
+	var role: Dictionary = kits["r"]["roles"][role_name]
+	var pool := WIKitResolver.pool_of(role)
+	var sub := WIKitResolver.subset(map_id, role_name, pool, WIKitResolver.subset_size(cells.size(), pool.size()))
+	var r := WIKitResolver.radius_for(role)
+	var chosen: Array = []
+	var out: Array = []
+	for c: Vector2i in cells:
+		var rank := WIKitResolver.rank_for(map_id, role_name, sub, c)
+		var v: String = rank[0]
+		for cand: String in rank:
+			var hit := false
+			for o: Array in chosen:
+				if o[1] == cand and maxi(absi(o[0].x - c.x), absi(o[0].y - c.y)) <= r:
+					hit = true
+			if not hit:
+				v = cand
+				break
+		chosen.append([c, v])
+		out.append(v)
+	return out
+
+
+func _counts(names: Array) -> Dictionary:
+	var out := {}
+	for n: String in names:
+		out[n] = int(out.get(n, 0)) + 1
+	return out
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	# hash: first 32 bits of SHA-256 over UTF-8 (pins computed with Python hashlib).
@@ -147,9 +178,10 @@ func _init() -> void:
 	assert(WIKitResolver.resolve_map(bad_door, "a", "r", KITS, []) == bad_door, "door-mode error row unchanged")
 
 	# radius exactness: module r=1 reuses at distance 2; prop r=2 reuses at 3 but not 2.
-	var f2 := {"grid": {"width": 7, "height": 7}, "decor": [{"sprite": "@facade", "cell": [0, 0]}, {"sprite": "@facade", "cell": [2, 0]}], "entities": []}
+	# three placements, so the #608 module cap (ceil(3/2) = 2) leaves room for the reuse
+	var f2 := {"grid": {"width": 7, "height": 7}, "decor": [{"sprite": "@facade", "cell": [0, 0]}, {"sprite": "@facade", "cell": [2, 0]}, {"sprite": "@facade", "cell": [6, 6]}], "entities": []}
 	var f2o: Dictionary = WIKitResolver.resolve_map(f2, "m", "r", KITS)
-	assert(f2o["decor"][0]["sprite"] == "f2" and f2o["decor"][1]["sprite"] == "f2", "module may reuse at distance 2")
+	assert(f2o["decor"][0]["sprite"] == "f2" and f2o["decor"][1]["sprite"] == "f2" and f2o["decor"][2]["sprite"] == "f3", "module may reuse at distance 2")
 	var c3 := {"grid": {"width": 7, "height": 7}, "decor": [{"sprite": "@cargo", "cell": [0, 0]}, {"sprite": "@cargo", "cell": [3, 0]}], "entities": []}
 	var c3o: Dictionary = WIKitResolver.resolve_map(c3, "m", "r", KITS)
 	assert(c3o["decor"][0]["sprite"] == "c3" and c3o["decor"][1]["sprite"] == "c3", "prop may reuse at distance 3")
@@ -161,7 +193,28 @@ func _init() -> void:
 	var kits5: Dictionary = KITS.duplicate(true)
 	kits5["r"]["roles"]["facade"]["radius"] = 3
 	var f2w: Dictionary = WIKitResolver.resolve_map(f2, "m", "r", kits5)
-	assert(f2w["decor"][0]["sprite"] == "f2" and f2w["decor"][1]["sprite"] == "f3", "radius 3 excludes the distance-2 neighbour (python reference: f2, f3)")
+	assert(f2w["decor"][0]["sprite"] == "f2" and f2w["decor"][1]["sprite"] == "f3" and f2w["decor"][2]["sprite"] == "f3", "radius 3 excludes the distance-2 neighbour (python reference: f2, f3, f3)")
+	# #608 ruling: a module role's variant is used at most ceil(n/k) times per map, on top of the radius.
+	var mrow := {"grid": {"width": 25, "height": 7}, "decor": [], "entities": []}
+	var mcells: Array = []
+	for i in 9:
+		mrow["decor"].append({"sprite": "@facade", "cell": [3 * i, 1]})
+		mcells.append(Vector2i(3 * i, 1))
+	assert(_counts(_uncapped("m", "facade", mcells, KITS)).values().max() == 5, "precondition: the old rule draws one variant 5x")
+	var mpicks: Array = []
+	for row: Dictionary in WIKitResolver.resolve_map(mrow, "m", "r", KITS)["decor"]:
+		mpicks.append(row["sprite"])
+	assert(mpicks.size() == 9 and _counts(mpicks).values().max() <= 3, "module cap ceil(9/3) = 3, got %s" % [mpicks])
+	var crow := {"grid": {"width": 25, "height": 7}, "decor": [], "entities": []}
+	var ccells: Array = []
+	for i in 9:
+		crow["decor"].append({"sprite": "@cargo", "cell": [3 * i, 3]})
+		ccells.append(Vector2i(3 * i, 3))
+	var cwant := _uncapped("m", "cargo", ccells, KITS)
+	var cpicks: Array = []
+	for row: Dictionary in WIKitResolver.resolve_map(crow, "m", "r", KITS)["decor"]:
+		cpicks.append(row["sprite"])
+	assert(cpicks == cwant and int(_counts(cpicks).get("c3", 0)) == 5, "non-module roles are not capped: %s vs %s" % [cpicks, cwant])
 	var f4 := {"grid": {"width": 7, "height": 7}, "decor": [{"sprite": "@facade", "cell": [0, 0]}, {"sprite": "@facade", "cell": [4, 0]}], "entities": []}
 	assert(WIKitResolver.resolve_map(f4, "m", "r", kits5) == WIKitResolver.resolve_map(f4, "m", "r", KITS), "beyond the radius: picks untouched")
 
