@@ -423,8 +423,8 @@
    "id": "note_watch_veteran",
    "kind": "prop",
    "cell": [
-    9,
-    6
+    8,
+    1
    ],
    "display_name": "A Watch Veteran's Letter",
    "sprite": "note_pinned",
@@ -443,8 +443,8 @@
    "id": "note_old_dread",
    "kind": "prop",
    "cell": [
-    11,
-    6
+    12,
+    1
    ],
    "display_name": "A Ward-Charm Scrap",
    "sprite": "note_pinned",

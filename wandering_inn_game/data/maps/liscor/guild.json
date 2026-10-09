@@ -1,5 +1,6 @@
 {
  "biome": "liscor_civic",
+ "_kits_recompose": "#620 — art-read FIX loop 1: notice wall and Ilvo cells",
  "interior_flavor": [
   "Nothing there. The floorboard in front of the desk is walked pale, chalk dust in the grain.",
   "Nothing there. Somewhere behind the desk a drawer shuts."
@@ -482,7 +483,7 @@
    "kind": "prop",
    "cell": [
     2,
-    5
+    1
    ],
    "display_name": "Notice Wall",
    "sprite": "guild_handbill_wall",
@@ -534,8 +535,8 @@
    "id": "ilvo",
    "kind": "npc",
    "cell": [
-    2,
-    4
+    3,
+    5
    ],
    "display_name": "Ilvo",
    "person": true,
