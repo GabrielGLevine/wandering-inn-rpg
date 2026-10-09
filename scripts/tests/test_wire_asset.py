@@ -135,3 +135,39 @@ def test_fixture_rejects_non_integer_pins(tree):
     before = snapshot(tree)
     assert run(tree, OWNED, "--id", "parcel_stack") == wa.EXIT_REFUSED
     assert snapshot(tree) == before
+
+
+def test_strip_frames_from_height(tree):
+    assert run(tree, STRIP, "--id", "lantern_flicker") == 0
+    idle = sprites(tree)["lantern_flicker"]["animations"]["idle"]
+    assert idle["frame_size"] == [64, 64] and idle["fps"] == 6
+    assert sprites(tree)["lantern_flicker"]["anchor"] == [0.5, 0.9531]
+    assert fixture(tree)["lantern_flicker/idle"] == 3
+    line = [l for l in provenance(tree).splitlines() if l.startswith("lantern_flicker/Idle-Sheet.png:")][0]
+    assert "frames 3 of 64x64" in line and "11111111-2222-4333-8444-555555555555" in line
+
+
+def test_manifest_frame_size_wins(tree):
+    assert run(tree, BENCH, "--id", "wide_bench", "--fps", "4") == 0
+    idle = sprites(tree)["wide_bench"]["animations"]["idle"]
+    assert idle["frame_size"] == [48, 32] and idle["fps"] == 4
+    assert fixture(tree)["wide_bench/idle"] == 2
+
+
+def test_frame_pin_conflict_refused(tree):
+    f = tree / FIXTURE
+    d = json.loads(f.read_text())
+    d["counts"]["lantern_flicker/idle"] = 4
+    f.write_text(json.dumps(d, indent=1, sort_keys=True) + "\n")
+    before = snapshot(tree)
+    assert run(tree, STRIP, "--id", "lantern_flicker") == wa.EXIT_REFUSED
+    assert snapshot(tree) == before
+
+
+def test_odd_sheet_is_a_probe_error(tree):
+    from wi_fake_tree import png_box
+    odd = tree / "potential_assets/pixellab_test/L2_props/odd.png"
+    png_box(odd, 100, 64, (2, 2, 60, 60))
+    before = snapshot(tree)
+    assert run(tree, str(odd), "--id", "odd_prop") == wa.EXIT_PROBE
+    assert snapshot(tree) == before
