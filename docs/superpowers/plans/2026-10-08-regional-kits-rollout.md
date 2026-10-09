@@ -25,6 +25,10 @@
 - Each region gets its own issue (`Regional kits: <region>`, part of #606) and branch `issue/<n>-kits-<region>`.
 - **Out of scope:** enemy rosters, arena kits and Phase 3 generation. Generation needs a user-approved batch, and the PixelLab subscription has lapsed.
 
+## Allocation table
+
+Each region's pool read starts from `docs/kits-allocation.md`. That table gives every kept piece to the region where it fits best, not to the first region that asks for it. To use a candidate that is allocated to another region, get a `docs/CHOICE-LOG.md` ruling first; the PR that moves it also updates its line in the table. Since `bundle-v8` (#621), every source sheet in the table is bundled.
+
 ## Review Focus
 
 1. **Shared rigs between region casts and canon characters:** for example inn guests, and Liscor's role NPCs on `gnoll_traveler`. Pinned by the cast lint, which is re-run on the composed main after each merge.

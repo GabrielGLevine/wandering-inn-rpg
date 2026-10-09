@@ -113,7 +113,9 @@ fi
 
 mkdir -p "$(dirname "$OUT")"
 # -C "$ROOT" so stored paths stay repo-root-relative (the overlay contract).
-tar -czf "$OUT" -C "$ROOT" "${REAL[@]}"
+# COPYFILE_DISABLE keeps macOS tar from adding AppleDouble ._* entries, which
+# Linux CI would unpack as junk files (bundle-v7 carried 357 of them).
+COPYFILE_DISABLE=1 tar -czf "$OUT" -C "$ROOT" "${REAL[@]}"
 
 echo "Bundled ${#REAL[@]} protected path(s) into:"
 echo "  $OUT"
