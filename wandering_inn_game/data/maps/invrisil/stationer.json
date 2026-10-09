@@ -314,7 +314,7 @@
     1
    ],
    "display_name": "A Small Iron Stove",
-   "sprite": "barrel",
+   "sprite": "cold_hearth",
    "observe": "The fire is low, the ash under the grate deep. The nearest stacks of paper stand a hand's width off the iron."
   }
  ]
