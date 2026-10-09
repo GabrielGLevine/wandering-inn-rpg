@@ -9,7 +9,10 @@ const ROOT_PATH := "res://data/scene_root.json"
 ## injects it into WIFieldSkills -- core itself never touches disk).
 const INTERACTIONS_PATH := "res://data/interactions.json"
 
+const KITS_PATH := "res://data/kits.json"
+
 static var _cache: Dictionary = {}
+static var _kits_cache: Dictionary = {}
 
 
 static func compose() -> Dictionary:
@@ -20,15 +23,35 @@ static func compose() -> Dictionary:
 
 static func reset() -> void:
 	_cache = {}
+	_kits_cache = {}
+
+
+## Kits (#607): region role pools / materials / casts. Cached once per process;
+## reset() is the live-reload seam (GH#278 pattern).
+static func kits() -> Dictionary:
+	if _kits_cache.is_empty() and FileAccess.file_exists(KITS_PATH):
+		_kits_cache = _read_json(KITS_PATH)
+	return _kits_cache
+
+
+## Test seam: honoured until the next reset(); tests must not edit data/kits.json.
+static func kits_override(kits_doc: Dictionary) -> void:
+	_kits_cache = kits_doc
 
 
 static func _compose() -> Dictionary:
 	var root: Dictionary = _read_json(ROOT_PATH)
 	var maps: Dictionary = {}
+	var kits_doc: Dictionary = kits()
 	for path: String in _sorted_map_paths():
 		var map_id: String = path.get_file().get_basename()
 		assert(not maps.has(map_id), "duplicate map key '%s' (%s)" % [map_id, path])
-		maps[map_id] = _expand_talk_banks(_read_json(path), map_id)
+		var region: String = path.get_base_dir().get_file()
+		var map: Dictionary = _expand_talk_banks(_read_json(path), map_id)
+		var kit_errors: Array = []
+		map = WIKitResolver.resolve_map(map, map_id, String(map.get("kit", region)), kits_doc, kit_errors)
+		assert(kit_errors.is_empty(), "maps/%s: kit refs do not resolve: %s" % [map_id, "; ".join(kit_errors)])
+		maps[map_id] = map
 	root["maps"] = maps
 	root["interactions"] = _read_json(INTERACTIONS_PATH)
 	return root
