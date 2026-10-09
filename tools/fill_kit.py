@@ -153,7 +153,7 @@ def query(paths: wa.Paths, kind: str | None, scale: float) -> list[Candidate]:
             continue
         if terms and not fa.score(row, terms, "_".join(terms)):
             continue
-        path = (paths.repo_root / row["path"]).resolve()
+        path = wa.logical_candidate(paths.repo_root / row["path"], paths)
         if not path.is_file():
             continue
         sha = wa.sha256_file(path)

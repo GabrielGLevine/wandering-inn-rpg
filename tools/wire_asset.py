@@ -303,12 +303,25 @@ def build_entry(mode: str, sheet_res: str, frame: tuple[int, int], region: list[
     return entry
 
 
+def logical_candidate(candidate: Path, paths: Paths) -> Path:
+    """Map a path under the REAL potential_assets back to its repo-relative logical form.
+
+    potential_assets is a symlink in a worktree, so a resolved path never sits under
+    repo_root; every candidate/slice comparison goes through here."""
+    real_root = paths.potential.resolve()
+    resolved = candidate.resolve()
+    if real_root in resolved.parents:
+        return paths.potential / resolved.relative_to(real_root)
+    return candidate
+
+
 def is_slice(candidate: Path) -> bool:
     return "_sliced" in candidate.parts and (candidate.parent / "SLICES.json").is_file()
 
 
 def slice_row(candidate: Path, paths: Paths) -> dict:
     """The C8 row for this slice in its SLICES.json (path matched repo-relative)."""
+    candidate = logical_candidate(candidate, paths)
     rel = candidate.relative_to(paths.repo_root).as_posix()
     rows = json.loads((candidate.parent / "SLICES.json").read_text(encoding="utf-8")).get("assets", [])
     row = next((r for r in rows if r.get("path") == rel), None)
@@ -555,10 +568,9 @@ def wire_one(candidate: Path, sprite_id: str, args: argparse.Namespace, paths: P
         raise Refused(f"{sprite_id}: pc_* ids are the player's own skin; give it an NPC/prop id")
     if not candidate.is_file():
         raise Refused(f"{candidate}: no such file")
-    real_root = paths.potential.resolve()   # potential_assets is a symlink in a worktree
-    if real_root not in candidate.parents:
+    if paths.potential.resolve() not in candidate.parents:   # potential_assets is a symlink in a worktree
         raise Refused(f"{candidate}: candidates live under potential_assets/")
-    candidate = paths.potential / candidate.relative_to(real_root)   # repo-relative logical path from here on
+    candidate = logical_candidate(candidate, paths)   # repo-relative logical path from here on
     text, catalog = load_catalog(paths)
     if args.fallback:
         check_fallback(args.fallback, catalog, bundle_paths(paths))
