@@ -96,7 +96,9 @@ def test_tileset_evidence_is_whole_words():
     yes = ["P/Environment/Tilesets/Wall_Variations.png", "P/Environment/TileSets/Floor.png",
            "P/Assets/Tiles.png", "P/Environment/Tilesets/Floors_Tiles.png", "topdown_floor_tiles_12/dirt/dirt_01.png",
            "Pixel_16_interiors_v2_free/x/tiles and items.png", "Admurin/Tileset Scroller - Summer/a.png"]
-    no = ["P/Assets/Props.png", "P/Stiles/a.png", "P/Assets/Tilesetter.png", "P/Assets/Ground.png"]
+    no = ["P/Assets/Props.png", "P/Stiles/a.png", "P/Assets/Tilesetter.png", "P/Assets/Ground.png",
+          "Admurin/Tileset Scroller - Summer/Preview 0.png", "Admurin/Tileset Scroller - Summer/Summer Map.png",
+          "Admurin/Tileset Scroller - Summer/Thumbnail.png"]
     assert [ac.tileset_evidence(Path(p)) for p in yes] == [True] * len(yes)
     assert [ac.tileset_evidence(Path(p)) for p in no] == [False] * len(no)
 

@@ -172,14 +172,18 @@ def pack_family(pack: str) -> str:
 
 
 TILESET_WORDS = {"tiles", "tileset", "tilesets", "tilemap", "tilemaps"}
+PREVIEW_WORDS = {"preview", "thumbnail", "thumb", "cover", "mockup", "screenshot", "sample", "map"}
 
 
 def tileset_evidence(rel: Path) -> bool:
     """A pack PNG whose folder or file name says tileset (Tilesets/,
-    TileSets/, Tiles.png, Floors_Tiles.png, topdown_floor_tiles_12/).
-    Whole words only, so Tilesetter.png or Stiles/ never match."""
-    names = [p.lower() for p in rel.parts[:-1]] + [Path(rel.name).stem.lower()]
-    return any(set(re.split(r"[^a-z0-9]+", n)) & TILESET_WORDS for n in names)
+    TileSets/, Tiles.png, Floors_Tiles.png, topdown_floor_tiles_12/), unless
+    the file is a preview render (Tileset Scroller/Preview 0.png, Summer
+    Map.png). Whole words only, so Tilesetter.png or Stiles/ never match."""
+    words = lambda n: set(re.split(r"[^a-z0-9]+", n.lower()))  # noqa: E731
+    if words(Path(rel.name).stem) & PREVIEW_WORDS:
+        return False
+    return any(words(n) & TILESET_WORDS for n in [*rel.parts[:-1], Path(rel.name).stem])
 
 
 def classify_batch(name: str) -> tuple[str, str, str]:
