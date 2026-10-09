@@ -26,6 +26,13 @@ func _init() -> void:
 	WISceneCatalog.reset()
 	assert(WISceneCatalog.compose() == before, "recompose after reset must equal on unchanged disk")
 
+	# Kits cache (#607): populated by compose, cleared by reset.
+	assert(not WISceneCatalog._kits_cache.is_empty(), "compose must load kits.json")
+	WISceneCatalog.reset()
+	assert(WISceneCatalog._kits_cache.is_empty(), "reset must clear _kits_cache")
+	assert(WISceneCatalog.kits().has("_common"), "kits() must reload after reset")
+	WISceneCatalog.compose()
+
 	# --- Staleness proof: new map file invisible until reset().
 	assert(not before["maps"].has("zz_qa_tmp_map"), "temp map must not pre-exist")
 	DirAccess.make_dir_recursive_absolute(TMP_DIR)
