@@ -1344,6 +1344,31 @@ class TestRealTree(unittest.TestCase):
             self.assertIn("broken.json: invalid JSON", errors[0])
             self.assertEqual(len(parsed), 1)
 
+    def test_duplicate_key_fails_loud_with_key_path(self):
+        """#620 task-3 review C1: json keeps the last duplicate silently."""
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "kits.json").write_text(
+                '{"invrisil": {"roles": {"cargo": {"pick": "cell"}, "cargo": {"pick": "map"}}}, "ok": {}}')
+            errors = []
+            data_lint.check_wellformed(errors, root=Path(tmp))
+            self.assertEqual(len(errors), 1)
+            self.assertIn("kits.json: duplicate key at invrisil.roles.cargo", errors[0])
+
+    def test_duplicate_key_inside_array_item_is_found(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "m.json").write_text('{"decor": [{"id": 1}, {"a": 1, "a": 2}]}')
+            errors = []
+            data_lint.check_wellformed(errors, root=Path(tmp))
+            self.assertEqual(len(errors), 1)
+            self.assertIn("decor[1].a", errors[0])
+
+    def test_real_data_tree_has_no_duplicate_keys(self):
+        errors = []
+        data_lint.check_wellformed(errors)
+        self.assertEqual([e for e in errors if "duplicate key" in e], [])
+
 
 class ConsolidationSkillCoverageTest(unittest.TestCase):
     """#472 no-Skill-loss. The guarantee is only worth what its RED proves, so

@@ -109,12 +109,40 @@ KIT_ROLE_KEYS = {"pick", "module", "pool", "light", "deny", "radius", "_comment"
 ANON_NAME = re.compile(r"^(A|An) ")
 
 
+def _dup_paths_via_pairs(text: str) -> list:
+	"""Dotted key path of every duplicated object key (json.loads silently keeps
+	the LAST one; #620 task-3 review C1: a pasted second `cargo` role did)."""
+	out: list = []
+	raw = json.loads(text, object_pairs_hook=lambda pairs: pairs)
+
+	def rec(node, path: str) -> None:
+		if isinstance(node, list) and node and all(isinstance(x, tuple) and len(x) == 2 for x in node):
+			seen: set = set()
+			for k, v in node:
+				here = f"{path}.{k}" if path else str(k)
+				if k in seen:
+					out.append(here)
+				seen.add(k)
+				rec(v, here)
+		elif isinstance(node, list):
+			for i, v in enumerate(node):
+				rec(v, f"{path}[{i}]")
+
+	rec(raw, "")
+	return out
+
+
 def check_wellformed(errors: list, root: Path = DATA) -> dict:
-	"""Parse every <root>/**/*.json individually; return {path: parsed}."""
+	"""Parse every <root>/**/*.json individually; return {path: parsed}.
+	A duplicated object key is an error (kits, maps, biomes, sprites, all of
+	data/): json would silently keep the last one."""
 	parsed = {}
 	for path in sorted(root.rglob("*.json")):
 		try:
-			parsed[path] = json.loads(path.read_text())
+			text = path.read_text()
+			parsed[path] = json.loads(text)
+			for dup in _dup_paths_via_pairs(text):
+				errors.append(f"{path.name}: duplicate key at {dup}")
 		except (json.JSONDecodeError, UnicodeDecodeError) as exc:
 			errors.append(f"{path.name}: invalid JSON -- {exc}")
 	return parsed
