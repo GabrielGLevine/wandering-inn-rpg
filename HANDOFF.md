@@ -27,11 +27,22 @@ archived, or superseded session blocks.
     - **R1 Liscor (#620)** is in progress on `issue/620-kits-liscor`, worktree `/private/tmp/wi-620`.
       - Task 1 is done: capture scripts plus before-shots in the session scratchpad `captures-r1/before`.
       - The pool read is done. It found props only: there are no facade, roof, street-paving or civic-wall candidates, so those are generation rows.
-      - Task 3 is done and reviewed: pools, biome, cast and generation rows. Branch pushed, tip `59ac4333`.
+      - Tasks 1–4 and FIX loop 1 are done; the local tip is `58498c42`. The pushed tip `59ac4333` is behind it.
       - Review caught Liscor pools written into the Invrisil kit, which created a duplicate key. data_lint now rejects duplicate JSON keys.
       - Next: Task 4, converting the props. The steps are in the ledger.
       - The branch was cut from the 1b tip `1635f136`; rebase it with `--onto origin/main 1635f136`.
       - Ledger: `.superpowers/sdd/2026-10-08-regional-kits-rollout/progress.md`.
+    - **Allocation and bundle (#621, PR #622, `1cfa3dd4`):**
+      - `docs/kits-allocation.md` allocates 238 dormant-pack pieces plus doors, lamps and windows to the region kits and shared pools. Every region's pool read starts from it.
+      - `bundle-v8` (Latest in the private assets repo) adds 18 Pixel Crawler sheets.
+      - The local main overlay lacks those 18 sheets. Run `scripts/fetch_private_assets.sh`, or copy them from `potential_assets`, before QA in main.
+    - **User rulings (2026-10-09):**
+      - Global allocation over first-come claiming.
+      - `_common` covers utility props only (crate, barrel, sack, container), with guardrails: G2 counted on non-common placements; common share at most 30%; G1 and G3 still bind; the common pool gets its own Fable read. Not implemented yet.
+    - **Pending the user:**
+      - PixelLab renewal and generation tiers. The review is in the session scratchpad, `generation-review.md`. The estimate is 550–750 generations, about 1 month of Tier 1.
+      - Go on the art-identity gate fix: G2 and G3 should key on art (sheet plus region, or the frame sha), not the sprite id. Liscor's lamps duplicated Invrisil's under new ids.
+    - **Liscor (#620):** r2 read: 27 PASS / 34 FIX / 0 REJECT. Paused before FIX loop 2 (data items N1–N6, plus the lamp re-pin) at the user's request.
     - **Bottleneck:** regional identity beyond props needs generated architecture (#610 + the Liscor rows). That needs a PixelLab renewal and a user-approved batch.
     - **Worktrees to remove later:** `/private/tmp/wi-608a`, `wi-608a-before`, `wi-608b` and `wi-docs`. Keep `wi-608a-public`, the public-build capture worktree.
   - Lessons (also in the rollout plan's checklist):
