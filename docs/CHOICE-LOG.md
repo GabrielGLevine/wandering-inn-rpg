@@ -319,10 +319,16 @@ and chronology belong in issue PRs. Earlier context:
     because `mushroom` sits inside `mushroom_purple_l`). Rejected: id
     counting, because Liscor's "exclusive" lamp, tables and facade fallback
     were other regions' art under new ids. `_common` holds only the utility
-    Tier A (crate, barrel, sack, container); those placements leave G2 and
-    are capped at 30% of a region's converted-map placements. `wire_asset`
-    refuses a second id for registered art unless `--alias-of` names it
-    with a reason.
+    Tier A (crate, barrel, sack, container), and every pool id needs a
+    recorded Tier A kind (review I2: an unknown kind fails closed); those
+    placements leave G2 and are capped at 30% of a region's converted-map
+    placements. `wire_asset` refuses a second id for registered art unless
+    `--alias-of` names it with a reason. Accepted limits (review M1/M2): a
+    frame sheet absent on disk keys on its path, so a bundle-only byte copy
+    of another sheet merges only where the overlay is present, and region
+    rows key on the sheet path, so byte-identical sheet copies at two paths
+    stay split; neither occurs today, and path keying keeps CI, which has no
+    overlay to hash, at parity with local runs.
   - **G3:** `qa/baselines/scene-repetition.json` was first generated on
     #607; regenerate only with `--regen-scene-baseline` plus an entry here.
   - **G3 regen (#623, art identity):** no map changed; the counting did. A
