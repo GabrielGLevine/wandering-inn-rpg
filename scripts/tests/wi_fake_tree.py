@@ -121,4 +121,38 @@ def make_tree(root: Path) -> Path:
         "source_sheet": f"potential_assets/{UNBUNDLED_PACK}/Props.png", "region": [0, 0, 16, 16],
         "sheet_sha256": "f" * 64, "method": "grid16", "has_shadow": False, "size_class": "M",
         "label_confidence": 0.5}]}, indent=1) + "\n", encoding="utf-8")
+    kits = {
+        "_comment": "fake kits",
+        "_common": {"materials": {}, "roles": {}, "cast": []},
+        "invrisil": {"materials": {"floor_street": {"sheet": "res://assets/props/free_pack/Furniture.png",
+                                                    "tile_px": 16, "coords": [1, 0]}},
+                     "roles": {}, "cast": []},
+    }
+    (game / "data" / "kits.json").write_text(json.dumps(kits, indent=1) + "\n", encoding="utf-8")
     return root
+
+
+def registry_rows() -> list[dict]:
+    """A hand-written docs/asset-candidates.json: owned rows, a byte-identical dup,
+    a wrong-kind row, a REJECTED row, a bundled slice, an unbundled slice, a shipped row."""
+    owned = {"kind": "prop", "tier": "owned-public", "family": "PIXELLAB-AI", "source": "pixellab", "exists": True}
+    return [
+        {"path": OWNED, "targets": ["parcel_stack", "crate"], "verdict": "READY", "w": 64, "h": 64,
+         "pixellab_id": PIXELLAB_ID, "prompt": "stacked parcels", **owned},
+        {"path": OWNED_DUP, "targets": ["parcel_stack", "crate"], "verdict": "ALT", "w": 64, "h": 64, **owned},
+        {"path": STRIP, "targets": ["lamp"], "verdict": "READY", "w": 192, "h": 64, **owned},
+        {"path": BENCH, "targets": ["seat", "crate"], "verdict": "REJECTED", "w": 96, "h": 32, **owned},
+        {"path": SLICE, "kind": "prop", "targets": ["crate"], "verdict": "UNREVIEWED", "tier": "pack-bundle",
+         "family": "PC16", "source": "pack", "exists": True, "w": 16, "h": 23},
+        {"path": PENDING_SLICE, "kind": "prop", "targets": ["crate"], "verdict": "UNREVIEWED",
+         "tier": "pack-bundle", "family": "PC16", "source": "pack", "exists": True, "w": 16, "h": 16},
+        {"path": "wandering_inn_game/assets/sprites/crate_owned/Idle-Sheet.png", "kind": "prop",
+         "targets": ["crate_owned"], "verdict": "SHIPPED", "tier": "shipped-public", "family": "",
+         "source": "sprites.json", "exists": True, "sprite_id": "crate_owned", "w": 64, "h": 64},
+    ]
+
+
+def write_registry(root: Path, rows: list[dict] | None = None) -> None:
+    (root / "docs" / "asset-candidates.json").write_text(
+        json.dumps({"schema": 1, "generated_by": "test", "batches": [], "assets": rows or registry_rows()},
+                   indent=1) + "\n", encoding="utf-8")
