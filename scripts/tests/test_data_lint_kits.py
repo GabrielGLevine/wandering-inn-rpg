@@ -415,6 +415,31 @@ class TestGates(unittest.TestCase):
         self.assertEqual(regen["regions"], baseline["regions"])
         self.assertEqual(regen["generic_class"], baseline["generic_class"])
 
+class TestGatesArtMode(TestGates):
+    """#623 review M4: every TestGates case again with an art ident, as production runs them
+    (in SPRITES, c1 = c2 and c3 = own_a = own_b are one picture each)."""
+
+    def setUp(self):
+        real, ident = data_lint.check_kit_gates, data_lint.ArtIdent(SPRITES, lambda _path: None)
+
+        def with_art(*args, **kwargs):
+            kwargs.setdefault("ident", ident)
+            return real(*args, **kwargs)
+        patcher = mock.patch.object(data_lint, "check_kit_gates", with_art)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def test_converted_scope_counts_art_where_ids_diverge(self):
+        conv = {**GRID, "entities": [], "decor": [row("c3", 0, role="cargo"), row("c3", 3, role="cargo"), row("c1", 5, 5)]}
+        resolved = {"conv": conv, "other": {**GRID, "entities": [], "decor": [row("c2", 0)]}}
+        report = []
+        data_lint.check_kit_gates(resolved, {"conv": "r", "other": "q"}, KITS, [], [], [], report, base_ref=None, baseline=None)
+        self.assertIn("66.67% unique art", next(r for r in report if r.startswith("kits G2: r identity")))
+        report = []
+        data_lint.check_kit_gates(resolved, {"conv": "r", "other": "q"}, KITS, [], [], [], report, base_ref=None, baseline=None, ident=None)
+        self.assertIn("100.0% unique art", next(r for r in report if r.startswith("kits G2: r identity")), "id mode: c1 looks unique")
+
+
 class TestFixRound1(unittest.TestCase):
     def test_base_maps_load_real_ref(self):
         adv = []
