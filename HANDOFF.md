@@ -27,7 +27,9 @@ archived, or superseded session blocks.
     - **R1 Liscor (#620)** is in progress on `issue/620-kits-liscor`, worktree `/private/tmp/wi-620`.
       - Task 1 is done: capture scripts plus before-shots in the session scratchpad `captures-r1/before`.
       - The pool read is done. It found props only: there are no facade, roof, street-paving or civic-wall candidates, so those are generation rows.
-      - Task 3 (pools, biome, cast, generation rows) is running.
+      - Task 3 is done and reviewed: pools, biome, cast and generation rows. Branch pushed, tip `59ac4333`.
+      - Review caught Liscor pools written into the Invrisil kit, which created a duplicate key. data_lint now rejects duplicate JSON keys.
+      - Next: Task 4, converting the props. The steps are in the ledger.
       - The branch was cut from the 1b tip `1635f136`; rebase it with `--onto origin/main 1635f136`.
       - Ledger: `.superpowers/sdd/2026-10-08-regional-kits-rollout/progress.md`.
     - **Bottleneck:** regional identity beyond props needs generated architecture (#610 + the Liscor rows). That needs a PixelLab renewal and a user-approved batch.
@@ -39,6 +41,7 @@ archived, or superseded session blocks.
     - Read the dusk and night views when ambience is phase-gated.
     - Run `python3 -m pytest -q scripts/`, which is CI's scope.
     - Re-routed journey scripts shift the `scripts/itinerary` contract pins.
+    - Workers never use `git stash`: the stash is shared across worktrees, and `stash@{0}`/`{1}` hold parked work.
   - The untracked slices (1,260; labels checked against 44 hand-labelled samples, 40 matched) live in `potential_assets/_sliced/`.
   - Skill-library proposal (for Fable): document the `slice_atlases` → `label_slices` → `asset_candidates` → `fill_kit` → `wire_asset` pipeline in `wi-art-and-sprites`. Include `--allow-unverified` (codex batches) and the rule to run slicing from the main checkout.
   - Pre-existing debt: 406 pytest warnings on main (`data_lint.py:1129` `Image.getdata`, removed in Pillow 14; `harness_metrics.py:58` unclosed files).
