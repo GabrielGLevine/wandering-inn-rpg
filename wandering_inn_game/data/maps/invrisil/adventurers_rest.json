@@ -14,48 +14,12 @@
  "floor_layers": [
   {
    "_pick": "#225 floor differentiation (census-FREE key). The `inn` biome default is Erin's own light tavern plank [1,21] -- shipping it here would make the Rest read as a second Wandering Inn, which is the exact `brothers_parlor` pre-#49 smell. Reuses riverfarm_longhouse's darker, rougher timber swatch off the SAME Interior_Walls_01 sheet ([12,21]/[13,21]/[12,22]/[13,22], rgb~87,64,49): same wood family, same license, footstep-wood stays honest, and the hall reads as one that has been walked on harder than Erin's. Different city from the longhouse, same board -- an acceptable reuse for a working common hall.",
-   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
-   "tile_px": 16,
-   "variants": [
-    [
-     12,
-     21
-    ],
-    [
-     13,
-     21
-    ],
-    [
-     12,
-     22
-    ],
-    [
-     13,
-     22
-    ]
-   ],
-   "cells": "all",
-    "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/inn_floor.png",
-     "tile_px": 16,
-     "coords": [
-      0,
-      3
-     ],
-     "tone": {
-      "base": [
-       0.33,
-       0.27,
-       0.2
-      ],
-      "detail": 0.65
-     }
-    }
+   "material": "@floor_rest",
+   "cells": "all"
   }
  ],
  "walls": {
-  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
-  "tile_px": 16,
+  "material": "@wall_shop",
   "segments": [
    {
     "from": [
@@ -66,34 +30,7 @@
      12,
      0
     ],
-    "cap": [
-     14,
-     6
-    ],
-    "face": [
-     14,
-     7
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "face": [
-                          4,
-                          3
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop"
    },
    {
     "from": [
@@ -104,26 +41,8 @@
      0,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -134,26 +53,8 @@
      12,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -164,26 +65,8 @@
      5,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -194,26 +77,8 @@
      11,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    }
   ]
  },

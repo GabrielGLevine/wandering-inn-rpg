@@ -7,8 +7,7 @@
  },
  "blocked": [],
  "walls": {
-  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
-  "tile_px": 16,
+  "material": "@wall_shop",
   "segments": [
    {
     "from": [
@@ -19,34 +18,7 @@
      11,
      0
     ],
-    "cap": [
-     14,
-     6
-    ],
-    "face": [
-     14,
-     7
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "face": [
-                          4,
-                          3
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop"
    },
    {
     "from": [
@@ -57,26 +29,8 @@
      0,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -87,26 +41,8 @@
      11,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -117,26 +53,8 @@
      5,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -147,26 +65,8 @@
      10,
      8
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "_comment": "The work-room partition, west arm.",
@@ -178,26 +78,8 @@
      7,
      2
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "_comment": "M5 (review): the 3x2 area behind the partition is SOLID MASS, not a room. The work room is its own map; leaving these cells as floor rendered a walkable-looking pocket no player could ever enter. Walled in both rows so the partition reads as the back of the building.",
@@ -209,26 +91,8 @@
      10,
      1
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -239,26 +103,8 @@
      10,
      2
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "_comment": "The partition's south arm. The gap it leaves at (8,3) carries the work-room door -- the [Pick Lock] debut gate. That gap is a DOORWAY, not an opening: the door prop blocks the cell, and what lies through it is a separate map.",
@@ -270,26 +116,8 @@
      10,
      3
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_shop",
+    "face": null
    }
   ]
  },
