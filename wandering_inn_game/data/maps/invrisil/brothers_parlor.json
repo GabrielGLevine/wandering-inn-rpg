@@ -376,7 +376,7 @@
    "kind": "npc",
    "cell": [
     10,
-    5
+    6
    ],
    "display_name": "A Gentleman in a Bowler",
    "sprite": "gentleman_bowler",
@@ -412,7 +412,7 @@
    "id": "gentleman_quiet",
    "kind": "npc",
    "cell": [
-    11,
+    10,
     7
    ],
    "display_name": "A Quiet Gentleman",

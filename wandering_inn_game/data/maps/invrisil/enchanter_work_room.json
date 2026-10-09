@@ -1,5 +1,5 @@
 {
- "_kits_recompose": "#608 — sconce off the proof bench",
+ "_kits_recompose": "#608 — sconce off the proof bench; ledger wall against the east wall",
  "_comment": "#423: the room behind Hedault's lock -- the gated AREA the [Pick Lock] debut opens (user directive: true use of [Pick Lock] is access to gated areas, and a legitimate route must exist). Reached ONLY through enchanter_shop's `enchanter_work_room_door`, whose door_when requires `enchanter_work_room_opened`; that counter has exactly two producers, the pick and Hedault's own trust arm, and the room is identical on both. Small interior, stationer.json schema. Every entity here has at least one orthogonally-adjacent standable cell reachable from the (3,4) landing.",
  "biome": "brothers_parlor",
  "grid": {
@@ -148,7 +148,7 @@
    "id": "work_room_ledger_wall",
    "kind": "prop",
    "cell": [
-    5,
+    6,
     4
    ],
    "display_name": "A Wall of Weights",

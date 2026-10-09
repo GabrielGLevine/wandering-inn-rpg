@@ -1,5 +1,5 @@
 {
- "_kits_recompose": "#608 — sconce off open floor",
+ "_kits_recompose": "#608 — sconce off open floor; gnoll off the bench",
  "_comment": "v0.16 I2 (#306). Walk-in only. Biome `inn` + every sprite reused. Perimeter is walls.segments (NEVER also in `blocked`) -- a raw blocked ring in this biome renders 39 crates. `blocked` is furniture only, each cell with a decor row. Plates + bravos gate on hat_job_taken.",
  "biome": "invrisil_shop",
  "grid": {
@@ -215,7 +215,7 @@
    "id": "rest_gnoll_ranger",
    "kind": "npc",
    "cell": [
-    3,
+    2,
     6
    ],
    "display_name": "A Gnoll with a Bad Ankle",
