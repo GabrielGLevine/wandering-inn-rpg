@@ -71,6 +71,18 @@
       "owned_fallback_barrel",
       "invrisil_cargo_1",
       "invrisil_cargo_2"
+     ],
+     "deny": [
+      "tray",
+      "paper",
+      "bale",
+      "sack",
+      "dock",
+      "yoke",
+      "stash",
+      "nook",
+      "vantage",
+      "satchel"
      ]
     },
     "shop_sign": {
