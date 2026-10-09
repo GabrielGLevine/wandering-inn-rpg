@@ -283,3 +283,31 @@ def test_sheet_bundled_after_first_lookup_is_found(tree):
     from wi_fake_tree import png_box
     late = png_box(tree / "wandering_inn_game/assets/props/late.png", 16, 16, (1, 1, 14, 14))
     assert wa.bundled_sheet_for(sha(late), paths) == "assets/props/late.png"
+
+
+ALLOWED = {SPRITES, FIXTURE, PROVENANCE, "docs/asset-candidates.json", "docs/asset-candidates.md",
+           "docs/art-bundle-pending.md"}
+
+
+def test_only_allowed_paths_change_never_manifest_or_potential(tree):
+    manifest = {a["path"] for a in json.loads((tree / "wandering_inn_game/assets_manifest.json").read_text())["assets"]}
+    before = snapshot(tree)
+    assert run(tree, OWNED, SLICE, "--id", "parcel_stack", "--id", "crate_lidded", "--fallback", "crate_owned") == 0
+    delta = changed(before, snapshot(tree))
+    assert delta <= ALLOWED | {"wandering_inn_game/assets/sprites/parcel_stack/Idle-Sheet.png"}
+    assert not any(p.startswith("potential_assets/") for p in delta)
+    assert not any(p.removeprefix("wandering_inn_game/") in manifest for p in delta)
+
+
+def test_candidates_regenerated_once_with_repo_root(tree):
+    assert run(tree, OWNED, "--id", "parcel_stack") == 0
+    reg = json.loads((tree / "docs/asset-candidates.json").read_text())
+    batches = {b["batch"] for b in reg["batches"]}
+    assert "pixellab_test/L2_props" in batches
+    assert {r["sprite_id"] for r in reg["assets"] if r.get("sprite_id")} == {"crate", "crate_owned", "pc_human_m", "parcel_stack"}
+    assert (tree / "docs/asset-candidates.md").read_text().startswith("# Asset candidates registry")
+
+
+def test_no_regen_flag(tree):
+    assert run(tree, OWNED, "--id", "parcel_stack", "--no-regen") == 0
+    assert not (tree / "docs/asset-candidates.json").exists()
