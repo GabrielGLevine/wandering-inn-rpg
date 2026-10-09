@@ -518,3 +518,11 @@ r3–r5 playtest waves — gone from this file.
   --seed=9` → `00_dullahan_examiner.png`. Fix direction: a larger vertical
   separation in `world.gd` `_begin_dialogue_separation`, or take his line
   from (8,1), north of him, where the player draws behind.
+- [ ] **(P3)** Invrisil streets, #608 pilot 1a art read — the FIX loop's
+  deferrals were not opened as rows here (plan Task 6 Step 5). They live in
+  #610 (deferred art, generation batch), #611 (alley lantern falloff and
+  side-wall door placement), #612 (pack NPC rigs at ~60% player height,
+  oversized courier shadow), #613 (Liscor street magenta placeholder by the
+  gate-side stall) and the `invrisil` rows of `docs/art-generation-list.md`.
+  Evidence: #608 final review M7. Fix direction: close this row when
+  #610–#613 close; generation-list rows close in their batch PR.
