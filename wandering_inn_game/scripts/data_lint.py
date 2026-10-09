@@ -1427,6 +1427,19 @@ def _deny_hit(role: dict, row: dict) -> str:
 	return ""
 
 
+NULLABLE_MATERIAL_KEYS = ("face", "cap")
+
+
+def _material_rows(doc: dict, key: str) -> list:
+	"""(label, row) for each floor layer, the walls block and each wall segment carrying `key`."""
+	walls = doc.get("walls") if isinstance(doc.get("walls"), dict) else None
+	rows = [(f"floor_layers[{i}]", r) for i, r in enumerate(doc.get("floor_layers") or [])]
+	if walls is not None:
+		rows.append(("walls", walls))
+		rows += [(f"walls.segments[{i}]", s) for i, s in enumerate(walls.get("segments") or [])]
+	return [(label, r) for label, r in rows if isinstance(r, dict) and key in r]
+
+
 def check_kits(parsed: dict, maps: dict, errors: list, advisories: list, report: list,
 		bundle_paths: set | None = None, canon: frozenset | None = None) -> dict:
 	"""Returns {map_id: resolved_doc} for the G-gates (Task 6)."""
@@ -1495,9 +1508,18 @@ def check_kits(parsed: dict, maps: dict, errors: list, advisories: list, report:
 					errors.append(f"maps/{map_id}: anonymous npc '{dn}' must use a cast rig of {region} or _common (has '{spr}')")
 				if dn in canon and spr in cast:
 					errors.append(f"maps/{map_id}: canon character '{dn}' uses cast rig '{spr}' -- named characters never share cast rigs")
+		for label, row in _material_rows(m, "material"):
+			for key in sorted(k for k, v in row.items() if v is None):
+				if not (key in NULLABLE_MATERIAL_KEYS and label.startswith("walls.segments")):
+					errors.append(f"maps/{map_id}: {label} sets '{key}' to null -- only a wall segment's face/cap may block a material value")
 		res_errors: list = []
 		doc = kl.resolve_map(m, map_id, region, kits, res_errors)
 		errors.extend(res_errors)
+		for label, row in _material_rows(doc, "material_ref"):
+			nulled = sorted(k for k, v in row.items() if v is None)
+			if nulled and row.get("fallback_render") is not None:
+				# _select_tile_render swaps in the fallback's face/cap, so the public build would draw the blocked value.
+				errors.append(f"maps/{map_id}: {label} nulls {nulled} but resolves with a fallback_render (@{row['material_ref']})")
 		for i, fl in enumerate(doc.get("floor_layers") or []):
 			if isinstance(fl, dict) and "material_ref" in fl and "coords" in fl and "variants" in fl:
 				errors.append(f"maps/{map_id}: floor_layers[{i}] ends with both coords and variants after @{fl['material_ref']}")

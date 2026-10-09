@@ -506,6 +506,19 @@
     },
     "layer": "walls.segments[1]",
     "material_ref": "wall_b"
+   },
+   {
+    "fields": {
+     "cap": [
+      2,
+      0
+     ],
+     "face": null,
+     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+     "tile_px": 16
+    },
+    "layer": "walls.segments[2]",
+    "material_ref": "wall_c"
    }
   ],
   "rows": []

@@ -175,6 +175,30 @@ class TestTask5Gaps(unittest.TestCase):
         errs = run(maps={"m": {**base, "floor_layers": [{"material": "@fa", "cells": "all"}]}})
         self.assertEqual([e for e in errs if "both coords" in e], [])
 
+    def test_null_blocks_only_wall_segment_face_and_cap(self):
+        k = copy.deepcopy(KITS)
+        k["r"]["materials"]["wb"] = {"sheet": "res://assets/own.png", "tile_px": 16, "cap": [0, 0], "face": [1, 0]}
+        base = {**GRID, "decor": [], "entities": []}
+        def errs(**doc):
+            return [e for e in run(k, maps={"m": {**base, **doc}}) if "null" in e]
+        self.assertEqual(errs(walls={"segments": [{"material": "@wb", "face": None, "from": [0, 0], "to": [1, 0]}]}), [])
+        self.assertEqual(errs(walls={"segments": [{"material": "@wb", "cap": None, "from": [0, 0], "to": [1, 0]}]}), [])
+        bad = errs(walls={"segments": [{"material": "@wb", "tone": None, "from": [0, 0], "to": [1, 0]}]})
+        self.assertTrue(any("walls.segments[0]" in e and "'tone'" in e for e in bad), bad)
+        bad = errs(floor_layers=[{"material": "@fa", "face": None, "cells": "all"}])
+        self.assertTrue(any("floor_layers[0]" in e and "'face'" in e for e in bad), bad)
+
+    def test_null_with_fallback_render_is_an_error(self):
+        k = copy.deepcopy(KITS)
+        k["r"]["materials"]["wb"] = {"sheet": "res://assets/own.png", "tile_px": 16, "cap": [0, 0], "face": [1, 0],
+                                     "fallback_render": {"sheet": "res://assets/own.png", "tile_px": 16, "cap": [0, 0], "face": [1, 0]}}
+        seg = {"material": "@wb", "face": None, "from": [0, 0], "to": [1, 0]}
+        errs = run(k, maps={"m": {**GRID, "decor": [], "entities": [], "walls": {"segments": [seg]}}})
+        self.assertTrue(any("walls.segments[0]" in e and "fallback_render" in e and "'face'" in e for e in errs), errs)
+        del k["r"]["materials"]["wb"]["fallback_render"]
+        errs = run(k, maps={"m": {**GRID, "decor": [], "entities": [], "walls": {"segments": [dict(seg)]}}})
+        self.assertEqual([e for e in errs if "fallback_render" in e], [])
+
 
 class TestGates(unittest.TestCase):
     def test_g1_pool_size_and_ceiling(self):

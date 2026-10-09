@@ -49,6 +49,18 @@
      0
     ],
     "fallback_render": "flat"
+   },
+   "wall_c": {
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
+    "cap": [
+     2,
+     0
+    ],
+    "face": [
+     3,
+     0
+    ]
    }
   },
   "roles": {

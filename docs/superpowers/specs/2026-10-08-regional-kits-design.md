@@ -100,6 +100,8 @@ the format has no key reserved for them.
   only absent fields: `sheet`, `tile_px`, `coords|variants`, `tone`,
   `wang_corners`, `cap/face` and `fallback_render`. `cells`,
   `terrain_lower_cells`, `from/to` and `band_rows` stay authored.
+- A map field set to `null` blocks the material's value. Supported only for
+  wall-segment `face` and `cap` (caps-only or face-only segments).
 - No references are allowed on:
   - entities with `visual_states` (world.gd:1432 overrides `sprite` per state);
   - arenas;
