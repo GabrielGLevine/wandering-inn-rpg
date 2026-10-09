@@ -353,6 +353,13 @@ and chronology belong in issue PRs. Earlier context:
     fallback floor sheet (`pallass_market`, `pallass_forge`, tile [2,1]). G2
     enforces material exclusivity by material name only. Pixel-level sheet
     exclusivity is a rollout concern and is not enforced.
+  - **`library_shelf` public fallback (#608 pilot 1b art read, controller):**
+    `fallback_sprite` is now `mill_high_shelf_owned` (owned, tall shelf, alpha
+    bbox 48x62) instead of `owned_fallback_library_shelf`, which the blind read
+    called pixel noise in all five interiors. The change is global, so the
+    public build also changes on `witch_hut`, `inn_player_room` and
+    `pallass_forge_hall` (two rows); accepted as a strict improvement.
+    Rejected: `shelf_bottles` (bottles under a library row is the wrong kind).
 - **Best art wins per asset (#564/#554)** within a coherent scene, at gameplay
   scale; otherwise keep the official or owned public fallback. READY is not
   acceptance, and there is no quota wiring. Animation, geometry, scale and
