@@ -17,10 +17,9 @@ archived, or superseded session blocks.
   - Rules: pool first; gaps go to `docs/art-generation-list.md`, and unbundled pack sheets to `docs/art-bundle-pending.md`. No PixelLab (lapsed) and no bundle release.
   - A region closes only on a blind Fable art-direction read (spec §5.2). User eye-gates are prepared saves, non-blocking under wave autonomy.
   - Status:
-    - Phase 0 is complete. PR #609 (`issue/607-kits-foundation` @ `12b095b0`, composition worktree `/private/tmp/wi-607`) passed every task review and the final Fable review with its fixes. Gates are green: preflight full, load_gate, full sweep (299), data_lint, leak.
-    - CI is pending, then squash-merge.
-    - The untracked slices (1,258) and their labels live in `potential_assets/_sliced/`, with the task file at `potential_assets/_sliced_task.json`.
-    - Next: #608 pilot 1a. First commit: make `wire_asset`'s potential_assets containment check symlink-safe (compare resolved roots), because lane worktrees reach `potential_assets` through a symlink.
+    - #607 Phase 0 is merged: PR #609, squash `108689ef`, with the tree verified. CI is all green; the journey gate stays nightly.
+    - #608 pilot 1a (Invrisil streets) is running in worktree `/private/tmp/wi-608a` (`issue/608-invrisil-streets`). Its ledger is `.superpowers/sdd/2026-10-08-regional-kits-invrisil-pilot/progress.md`.
+    - Untracked slices (1,258, labeled 40/44) live in `potential_assets/_sliced/`.
   - Skill-library proposal (for Fable): document the `slice_atlases` → `label_slices` → `asset_candidates` → `fill_kit` → `wire_asset` pipeline in `wi-art-and-sprites`. Include `--allow-unverified` (codex batches) and the rule to run slicing from the main checkout.
   - Pre-existing debt: 406 pytest warnings on main (`data_lint.py:1129` `Image.getdata`, removed in Pillow 14; `harness_metrics.py:58` unclosed files).
 - **Active program (user, 2026-10-07), in order:**
