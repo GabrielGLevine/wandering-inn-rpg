@@ -60,7 +60,7 @@ def test_every_class_and_first_match_wins(tmp_path):
     pc = "Pixel Crawler - Forge 1.2/Pixel Crawler - Forge"
     assert got == {
         f"{pc}/Assets/Props.png": ("sliced", "2"),
-        "Pixel Crawler - Forge 2/Assets/Props.png": ("sliced", "2"),
+        "Pixel Crawler - Forge 2/Assets/Props.png": ("sliced", "duplicate"),
         f"{pc}/Assets/Tiles.png": ("tileset", "tileset"),
         f"{pc}/Assets/Odd.png": ("UNCLASSIFIED", ""),
         f"{pc}/Enemy/Stone/Idle/Idle-Sheet.png": ("rig_or_animation", "path"),
@@ -131,6 +131,7 @@ def test_check_mode_writes_nothing_and_fails_on_unclassified(tmp_path, capsys):
     assert cov.main(base) == 0
     md = out.read_text()
     assert "| Pixel Crawler - Forge 1.2 | 5 | 1 [2] | 1 | 1 |  |  |  | 1 | 1 |" in md
+    assert "| Pixel Crawler - Forge 2 | 1 | 1 [0] |" in md, "a duplicate's slices are counted once"
     assert "- `Pixel Crawler - Forge 1.2/Pixel Crawler - Forge/Assets/Odd.png`" in md
     first = md
     assert cov.main(base) == 0 and out.read_text() == first, "output is deterministic"

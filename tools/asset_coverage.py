@@ -14,8 +14,8 @@ This tool puts every PNG in exactly one class, first match wins:
   tileset           a docs/asset-candidates.json row of kind tileset (path or
                     duplicate_sheets)
   rig_or_animation  a registry rig row (file, or a file under a rig dir row),
-                    or a path under a character/creature/animation/VFX dir
-                    (RIG_WORDS, FX_WORDS)
+                    or a path under a character, creature, animation-state
+                    or VFX dir (RIG_WORDS, FX_WORDS)
   ui_or_icon        a registry icon/ui row, or a path under a UI/icon/item dir
                     (UI_WORDS)
   audio             a registry audio row, or a path under an audio pack dir
@@ -56,7 +56,9 @@ SKIP_TOP = {"_sliced", "license-notes"}
 RIG_WORDS = {"entities", "entity", "enemies", "enemy", "characters", "character", "characteranimated",
              "mobs", "mob", "npc", "npcs", "actor", "actors", "monster", "monsters", "boss", "bosses",
              "animal", "animals", "units", "unit", "factions", "troops", "player", "rotations",
-             "animations", "rig", "rigs"}
+             "animations", "rig", "rigs",
+             # animation-state folders (Bat_Fur/Idle/, Attack_01/)
+             "idle", "walk", "run", "move", "hit", "hurt", "death", "dead", "attack", "jump"}
 FX_WORDS = {"fx", "vfx", "effects", "effect", "particle", "particles", "projectile", "projectiles"}
 UI_WORDS = {"ui", "gui", "hud", "icon", "icons", "items", "item", "font", "fonts", "emote", "emotes",
             "cursor", "cursors"}
@@ -84,9 +86,9 @@ def _strip(path: str) -> str:
     return path[len("potential_assets/"):] if path.startswith("potential_assets/") else path
 
 
-def sliced_index(assets_root: Path) -> dict[str, int]:
-    """sheet (and duplicate) path -> slice count, from every SLICES.json."""
-    out: dict[str, int] = {}
+def sliced_index(assets_root: Path) -> dict[str, tuple[int, bool]]:
+    """sheet or duplicate path -> (slice count, is the SLICES.json primary)."""
+    out: dict[str, tuple[int, bool]] = {}
     for sj in sorted(assets_root.glob("_sliced/*/*/SLICES.json")):
         try:
             doc = json.loads(sj.read_text(encoding="utf-8"))
@@ -95,9 +97,9 @@ def sliced_index(assets_root: Path) -> dict[str, int]:
         rows = doc.get("assets", [])
         if not rows or not doc.get("sheet"):
             continue
-        dupes = {d for r in rows for d in r.get("duplicate_sheets", [])}
-        for path in {doc["sheet"], *dupes}:
-            out[_strip(path)] = out.get(_strip(path), 0) + len(rows)
+        for dup in {d for r in rows for d in r.get("duplicate_sheets", [])}:
+            out.setdefault(_strip(dup), (len(rows), False))
+        out[_strip(doc["sheet"])] = (len(rows), True)
     return out
 
 
@@ -166,11 +168,13 @@ def dir_words(rel: str) -> set[str]:
     return {w for part in rel.split("/")[:-1] for w in re.split(r"[^a-z0-9]+", part.lower()) if w}
 
 
-def classify(rel: str, sliced: dict[str, int], reg_files: dict[str, str],
+def classify(rel: str, sliced: dict[str, tuple[int, bool]], reg_files: dict[str, str],
              reg_dirs: list[tuple[str, str]], exclusions: list[dict]) -> tuple[str, str]:
-    """(class, detail) for one potential_assets-relative path."""
-    if sliced.get(rel, 0) > 0:
-        return "sliced", str(sliced[rel])
+    """(class, detail) for one potential_assets-relative path. A sliced
+    detail is the slice count, or `duplicate` for a byte-identical copy."""
+    if rel in sliced:
+        n, primary = sliced[rel]
+        return "sliced", str(n) if primary else "duplicate"
     kind = reg_files.get(rel)
     if kind is None:
         kind = next((k for d, k in reg_dirs if rel.startswith(d)), None)
@@ -206,7 +210,7 @@ def run(assets_root: Path, registry: Path, exclusions_path: Path) -> dict:
         cls, detail = classify(rel, sliced, reg_files, reg_dirs, exclusions)
         pack = pack_of(rel)
         per_pack.setdefault(pack, Counter())[cls] += 1
-        if cls == "sliced":
+        if cls == "sliced" and detail != "duplicate":
             slices_per_pack[pack] += int(detail)
         if detail and any(e["glob"] == detail for e in exclusions):
             glob_use[detail] += 1
@@ -238,8 +242,9 @@ def render_md(res: dict) -> str:
         "",
         "## Per pack",
         "",
-        "`sliced` counts source sheets, with their slices in brackets. `rig/anim`",
-        "is rig_or_animation and `owned` is owned_wired.",
+        "`sliced` counts source sheets, with their slices in brackets; a byte-identical",
+        "copy (Free Pack 2.1) counts as sliced, but its slices are counted once, under",
+        "the primary sheet. `rig/anim` is rig_or_animation and `owned` is owned_wired.",
         "",
         "| pack | PNGs | sliced [slices] | tileset | rig/anim | ui/icon | audio | owned | excluded | UNCLASSIFIED |",
         "|---|---|---|---|---|---|---|---|---|---|",
