@@ -14,39 +14,22 @@ archived, or superseded session blocks.
   - Ledger: `.superpowers/sdd/2026-10-08-regional-kits-rollout/progress.md`.
   - Rules:
     - Pool first, starting from `docs/kits-allocation.md`; gaps go to `docs/art-generation-list.md`.
-    - A region closes only on a blind Fable read (§5.2).
-    - Read the dusk/night views when ambience is phase-gated.
-  - Done:
-    - #607 (PR #609).
-    - #608 Invrisil (PRs #614 and #619; G2 60%).
-    - #621 (PR #622): bundle-v8 (18 Pixel Crawler sheets, now Latest) plus the allocation table. Before running QA in main, fetch bundle-v8 (`scripts/fetch_private_assets.sh`).
-  - Open:
-    - #623 (PR #625): G2/G3 count art identity, not sprite ids, plus the `_common` utility guardrails.
-    - Merged: #625 (PR #625) art-identity G2/G3 and `_common` guardrails; #624 (PR #626) intake coverage; PR #627 labels and the 31-kind vocabulary.
-    - Re-intake allocation: 380 pieces (618 in total) in PR #628. It is docs-only and not merged; merge it once CI and a review pass. bundle-v9 needs 24 sheets.
-    - Design-led gap pass: `docs/design/2026-10-09-kits-design-led-gaps.md`. It cuts generation to ~70–250 (firm list: Antinium worker rig, cold wall lantern, owned stool, second owned street door).
-    - Awaiting four user decisions:
-      - Liscor: sandstone-brick wall and gate, brick ground storey, shingle roofs (no brick kit);
-      - window night glow overlay;
-      - Pallass lamp is the crystal_lamp plus a glow cone;
-      - Invrisil alley workbench becomes a cargo-yard cluster.
-    - #620 Liscor (`issue/620-kits-liscor`, `/private/tmp/wi-620`, tip `58498c42`) is paused before FIX loop 2 at the user's request. Its pins duplicate inn/Invrisil art, so it fails art-identity G2 until it gets its own art.
-  - User rulings, 2026-10-09:
-    - Allocate assets globally (no first-come claiming).
-    - `_common` takes Tier A utility props only, with a 30% cap.
-    - After re-intake, run a design-led gap pass over the generation list before any generation.
-  - Pending the user: PixelLab renewal and generation tiers. See `docs/design/2026-10-09-kits-{generation-review,generation-crosscheck,design-led-gaps}.md`.
-  - **Restart, 2026-10-09:** `/private/tmp` was wiped. The session scratchpad, the art evidence and the uncommitted state of older `/private/tmp` worktrees are backed up in `.superpowers/restart-backup-2026-10-09/`; its README has the restore steps. After the reboot:
-    - run `git worktree prune`;
-    - recreate `/private/tmp/wi-620` from `issue/620-kits-liscor` when Liscor resumes.
-  - Remove the stale worktrees `/private/tmp/wi-608a`, `wi-608a-before`, `wi-608b` and `wi-docs`. Keep `wi-608a-public`.
+    - A region closes only on a blind Fable read (§5.2). Read dusk/night views when ambience is phase-gated.
+    - G2 counts art identity (#625): a regional pin must be exclusive *art*, not just a new sprite id.
+  - Done: #607 (PR #609); #608 Invrisil (PRs #614, #619); #621 bundle-v8 + allocation (PR #622); #623 art-identity G2/G3 + `_common` guardrails (PR #625); #624 intake coverage (PR #626); 31-kind labels (PR #627); re-intake allocation, 618 pieces (PR #628); **#620 Liscor R1 (PR #630, `56dd2573`; G2 art: Liscor 68.83%, Invrisil 56.92%)**. Fetch bundle-v8 before QA in main (`scripts/fetch_private_assets.sh`).
+  - User decisions, 2026-10-09 (CHOICE-LOG): all four design-led cuts are YES for now (Liscor sandstone-brick wall/gate + brick ground storey + shingle roofs from existing art; window night-glow overlay; Pallass lamp = `crystal_lamp` + glow cone; Invrisil alley workbench -> cargo-yard cluster). Earlier rulings: global allocation; `_common` Tier A utility props only, 30% cap; design-led gap pass before any generation.
+  - Next, in order:
+    1. #629: Liscor identity build-out (decision 1), bundle-v9 (24 sheets), Liscor-only waystone alias, inn-table duplicate art, official dirt seams (N6).
+    2. `_common` Tier A pool population, then R2 (underground) per the rollout plan.
+    3. #610 generation batch, deferred: firm list is 4 items (Antinium worker rig, owned cold wall lantern, owned stool, second owned street door). Needs PixelLab renewal + user approval.
+  - Restart backup: `.superpowers/restart-backup-2026-10-09/` (scratchpad, art evidence, WIP worktree patches; `README.md` restore steps; `FRESH-SESSION-PROMPT.md`). Remaining worktrees are WIP and backed up: `wi-584-audio`, `wi-art-public`, `wi-browser-ready`. If a reboot wipes `/private/tmp`, run `git worktree prune` and restore from the README.
   - Lessons:
     - Writing tools take `--repo-root <worktree>` only.
-    - Capture scripts hard-code `official` in their output names.
-    - Run `pytest -q scripts/`: that is CI's scope, and journey re-routes shift the itinerary pins.
+    - Capture scripts hard-code `official` in output names; public recaps rename via `recap-*.sh`.
+    - Run `pytest -q scripts/` before every push: CI's scope; journey re-routes shift itinerary pins and map edits need a G3 regen.
     - Never `git stash`: the stash is shared across worktrees.
   - Skill-library proposal, for Fable to apply to `wi-art-and-sprites`:
-    - the intake → `fill_kit` → `wire_asset` pipeline;
+    - the intake -> `fill_kit` -> `wire_asset` pipeline;
     - running slicing from the main checkout;
     - the intake coverage gate (#624).
 - Pre-existing debt: pytest warnings come from `Image.getdata` in `data_lint.py`, which Pillow 14 removes, and from unclosed files in `harness_metrics.py:58`.
