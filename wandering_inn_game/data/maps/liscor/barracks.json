@@ -263,7 +263,7 @@
    ]
   },
   {
-   "sprite": "@cargo",
+   "sprite": "crate_owned",
    "cell": [
     3,
     2
