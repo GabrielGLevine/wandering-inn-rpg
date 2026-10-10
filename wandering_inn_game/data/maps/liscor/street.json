@@ -668,7 +668,7 @@
    ]
   },
   {
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     22,
     2
@@ -689,14 +689,14 @@
    ]
   },
   {
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     27,
     2
    ]
   },
   {
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     29,
     2
@@ -717,7 +717,7 @@
    ]
   },
   {
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     10,
     9
@@ -731,7 +731,7 @@
    ]
   },
   {
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     19,
     9
@@ -745,7 +745,7 @@
    ]
   },
   {
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     12,
     15
@@ -767,14 +767,14 @@
   },
   {
    "_comment": "Realigned to the guild building's own precedent (26-30,1-3: two roof/facade pairs at matching x, spaced 2 apart)",
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     19,
     16
    ]
   },
   {
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     21,
     16
@@ -887,7 +887,7 @@
   },
   {
    "_comment": "Repositioned to the valid (6,19) and added to `blocked` (wall-family, same facade_plaster-is-a-wall contract).",
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     6,
     19
@@ -895,7 +895,7 @@
   },
   {
    "_comment": "was y=20 (one past the grid's last valid row), repositioned to (15,19) and blocked.",
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     15,
     19
@@ -903,7 +903,7 @@
   },
   {
    "_comment": "was y=20 (one past the grid's last valid row), repositioned to (24,19) and blocked.",
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     24,
     19
@@ -911,7 +911,7 @@
   },
   {
    "_comment": "Repositioned to the valid (31,7) and added to `blocked` below (a wall face, same facade_plaster-is-a-wall contract every other freestanding segment on this map follows).",
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     31,
     7
@@ -919,7 +919,7 @@
   },
   {
    "_comment": "was x=32 (one past the grid's last valid column), repositioned to (31,14) and blocked.",
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     31,
     14
@@ -927,7 +927,7 @@
   },
   {
    "_comment": "TRAP: keep facade cell (11,17) blocked; scripted-route checks miss free-roam traversal.",
-   "sprite": "owned_fallback_facade_plaster",
+   "sprite": "facade_plaster",
    "cell": [
     11,
     17
