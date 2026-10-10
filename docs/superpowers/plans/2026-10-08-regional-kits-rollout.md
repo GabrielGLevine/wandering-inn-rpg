@@ -231,6 +231,8 @@ Per-regen numbers for the `scene-repetition.json` ratchet. CHOICE-LOG keeps one 
       with no map edit: floodplains 21 → 17, inn 39 → 36 (51.43%),
       invrisil 58 → 51 (26.15%), pallass 28 → 27, riverfarm 30 → 29.
 
+- **#620 r3 N8 (Runners' Guild counter ends → `counter_segment_owned`):** Liscor generic placements 19 → 17 (18.63% → 16.67%); no other region moved. Regenerated with `--regen-scene-baseline`.
+
 ## Per-region checklist (copy into each region issue)
 
 - [ ] Issue opened; branch and worktree created; overlay copied; import pass done.
