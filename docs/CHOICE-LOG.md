@@ -416,6 +416,38 @@ and chronology belong in issue PRs. Earlier context:
     - **Global pebble scale:** `owned_fallback_pebble` `render_scale` 0.53 →
       0.3 applies wherever the fallback shows, not only on the Liscor street
       (ruled acceptable; it read as boulders everywhere).
+    - **R1 land (merge of #625 art identity, then FIX loop 2):** under art
+      counting Invrisil fell to 47.18% G2 because Liscor reused its art under
+      new ids.
+      - The 14 street facades went back to `facade_plaster`, untinted.
+        `owned_fallback_facade_plaster` is the same art as
+        `invrisil_timber_panel` (sha 5bd39a03). This is an interim state: a
+        follow-up issue builds Liscor's sandstone-brick identity from
+        Cemetery Walls (decision 1 above).
+      - `liscor_bracket_lantern` keeps its id, but now draws lamp #6
+        (`Sewer Props__x116_y5_w9_h20`) instead of `invrisil_lamp_wall_1`'s
+        Furniture slice. The light block is unchanged.
+      - Left as they are: `bonus_round_table` (≡ `inn_round_table`) and
+        `inn_table_dirty__before` (≡ `inn_table_soiled`) are inn art. The
+        inn is not converted, so no gate fails yet. This is a follow-up for
+        the inn conversion.
+      - N3: the barracks cargo at (3,2) is pinned to `crate_owned`. A deny
+        word cannot do the job, because kit deny lists screen row prose,
+        not pool picks. That pin was the barracks' only @ref, so the
+        barracks has left G2's converted set.
+      - N5: the `floor_civic` trial of [22,3] kept the same dark tile lip
+        on every row and added a vertical seam (headless capture row-mean
+        sd 5.29-6.48). So `carpet_over_floorboards_v2_square` [2,1] became
+        the primary (row-mean sd 0.18-0.20).
+      - N2: `anchor_waystone` 0.4 → 0.55 is global. It also changes the
+        Invrisil boulevard, Riverfarm village and the inn's mounted-door
+        state.
+      - G2 is now 68.83% for Liscor (street and guild converted) and
+        56.92% for Invrisil.
+      - The G3 regen (once, against main's art-counted baseline) puts
+        Liscor at 19/102 (18.63%). The classifier moved the other regions
+        with no map edit: floodplains 21 → 17, inn 39 → 36 (51.43%),
+        invrisil 58 → 51 (26.15%), pallass 28 → 27, riverfarm 30 → 29.
   - **Counting-room guard rig (#608 final review):** `counting_room_guard`
     (The Factor's Closed Account) wears `invrisil_enforcer`, the owned
     2026-07-06 `hired_blade_a` generation (broad build, club), wired at 28px
