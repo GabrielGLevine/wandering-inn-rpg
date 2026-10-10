@@ -201,23 +201,13 @@
   "liscor": {
    "materials": {
     "floor_civic": {
-     "_comment": "#620: the Adventurers' Guild floor row's descriptor copied verbatim (library parquet variants, public carpet_over_floorboards_v2_square fallback). Pool read floor_civic #3 PASS; the Runners' Guild and barracks have no civic floor of their own, so they stay explicit and are on the generation list. Rows are not converted yet.",
-     "sheet": "res://assets/tiles/library/Tiles.png",
+     "_comment": "#620: the guild's civic floor. R1 r2 read N5: the library parquet [21,3] banded horizontally by day, and the [22,3] trial kept the same dark tile lip on every row (headless capture row-mean sd 5.3-6.5 vs column 4.3-4.5, the dark rows 76-84 unchanged) and added a vertical seam, so the public carpet_over_floorboards_v2_square [2,1] (owned, public; the public build's floor, which the read passed as quiet) is promoted to primary. The Runners' Guild and barracks have no civic floor of their own, so they stay explicit and are on the generation list.",
+     "sheet": "res://assets/tiles/harvest/carpet_over_floorboards_v2_square.png",
      "tile_px": 16,
-     "variants": [
-      [
-       21,
-       3
-      ]
-     ],
-     "fallback_render": {
-      "sheet": "res://assets/tiles/harvest/carpet_over_floorboards_v2_square.png",
-      "tile_px": 16,
-      "coords": [
-       2,
-       1
-      ]
-     }
+     "coords": [
+      2,
+      1
+     ]
     }
    },
    "roles": {
