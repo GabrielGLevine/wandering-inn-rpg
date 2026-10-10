@@ -24,7 +24,7 @@ archived, or superseded session blocks.
     - #623 (PR #625): G2/G3 count art identity, not sprite ids, plus the `_common` utility guardrails.
     - Merged: #625 (PR #625) art-identity G2/G3 and `_common` guardrails; #624 (PR #626) intake coverage; PR #627 labels and the 31-kind vocabulary.
     - Re-intake allocation: 380 pieces (618 in total) in PR #628. It is docs-only and not merged; merge it once CI and a review pass. bundle-v9 needs 24 sheets.
-    - Design-led gap pass: `design-led-gaps.md` in the session scratchpad. It cuts generation to ~70–250 (firm list: Antinium worker rig, cold wall lantern, owned stool, second owned street door).
+    - Design-led gap pass: `docs/design/2026-10-09-kits-design-led-gaps.md`. It cuts generation to ~70–250 (firm list: Antinium worker rig, cold wall lantern, owned stool, second owned street door).
     - Awaiting four user decisions:
       - Liscor: sandstone-brick wall and gate, brick ground storey, shingle roofs (no brick kit);
       - window night glow overlay;
@@ -35,7 +35,10 @@ archived, or superseded session blocks.
     - Allocate assets globally (no first-come claiming).
     - `_common` takes Tier A utility props only, with a 30% cap.
     - After re-intake, run a design-led gap pass over the generation list before any generation.
-  - Pending the user: PixelLab renewal and generation tiers. The review is `generation-review.md` in the session scratchpad.
+  - Pending the user: PixelLab renewal and generation tiers. See `docs/design/2026-10-09-kits-{generation-review,generation-crosscheck,design-led-gaps}.md`.
+  - **Restart, 2026-10-09:** `/private/tmp` was wiped. The session scratchpad, the art evidence and the uncommitted state of older `/private/tmp` worktrees are backed up in `.superpowers/restart-backup-2026-10-09/`; its README has the restore steps. After the reboot:
+    - run `git worktree prune`;
+    - recreate `/private/tmp/wi-620` from `issue/620-kits-liscor` when Liscor resumes.
   - Remove the stale worktrees `/private/tmp/wi-608a`, `wi-608a-before`, `wi-608b` and `wi-docs`. Keep `wi-608a-public`.
   - Lessons:
     - Writing tools take `--repo-root <worktree>` only.
