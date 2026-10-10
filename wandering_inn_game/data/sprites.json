@@ -10668,24 +10668,25 @@
   "fallback_sprite": "owned_fallback_unlit_lantern"
  },
  "liscor_bracket_lantern": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [176, 451, 14, 20] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
+  "_comment": "slice of potential_assets/Pixel Crawler - Sewer/Pixel Crawler - Sewer/Assets/Props.png region [116, 5, 9, 20] sheet sha256 2e610b86c054; wired by tools/wire_asset.py (re-wired from Furniture [176, 451, 14, 20], which is invrisil_lamp_wall_1's art: lamp #6 in docs/kits-allocation.md)",
   "render_scale": 0.9,
   "anchor": [
    0.5,
    1.0
   ],
   "shadow": true,
+  "kind": "lamp",
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "sheet": "res://assets/props/sewer/Props.png",
     "frame_size": [
-     14,
+     9,
      20
     ],
     "region": [
-     176,
-     451,
-     14,
+     116,
+     5,
+     9,
      20
     ],
     "fps": 1
