@@ -2559,7 +2559,7 @@
  },
  "anchor_waystone": {
   "_comment": "Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a small freestanding stone waystone archway/doorframe silhouette with a faint painted glow in the opening -- reads as a portal, not a rock.",
-  "render_scale": 0.55,
+  "render_scale": 0.4,
   "anchor": [
    0.5,
    0.95
