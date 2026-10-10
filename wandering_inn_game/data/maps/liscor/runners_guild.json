@@ -194,13 +194,6 @@
   {
    "sprite": "counter_segment_owned",
    "cell": [
-    5,
-    2
-   ]
-  },
-  {
-   "sprite": "counter_segment_owned",
-   "cell": [
     6,
     2
    ]
@@ -245,7 +238,7 @@
    "kind": "npc",
    "cell": [
     5,
-    1
+    2
    ],
    "display_name": "Vess",
    "person": true,
