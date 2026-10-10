@@ -232,6 +232,7 @@ Per-regen numbers for the `scene-repetition.json` ratchet. CHOICE-LOG keeps one 
       invrisil 58 → 51 (26.15%), pallass 28 → 27, riverfarm 30 → 29.
 
 - **#620 r3 N8 (Runners' Guild counter ends → `counter_segment_owned`):** Liscor generic placements 19 → 17 (18.63% → 16.67%); no other region moved. Regenerated with `--regen-scene-baseline`.
+  - **Final review (#620):** the Runners' counter returned to the Selys pattern (Vess back at (5,2), the filled (5,2) counter segment removed): Liscor placements 102 → 101 with 17 generic (share 16.67% → 16.83%), `runners_guild` 11 → 10; the waystone scale reverted to 0.4 (Liscor-only alias is a #629 follow-up).
 
 ## Per-region checklist (copy into each region issue)
 

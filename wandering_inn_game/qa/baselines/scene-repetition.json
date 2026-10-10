@@ -410,7 +410,7 @@
   },
   "liscor": {
    "generic_placements": 17,
-   "generic_share_pct": 16.67,
+   "generic_share_pct": 16.83,
    "maps": {
     "barracks": {
      "generic_placements": 3,
@@ -422,14 +422,14 @@
     },
     "runners_guild": {
      "generic_placements": 2,
-     "placements": 11
+     "placements": 10
     },
     "street": {
      "generic_placements": 10,
      "placements": 60
     }
    },
-   "placements": 102
+   "placements": 101
   },
   "pallass": {
    "generic_placements": 27,
