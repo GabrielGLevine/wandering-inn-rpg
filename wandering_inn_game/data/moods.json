@@ -36,11 +36,7 @@
     1.0,
     1.0
    ],
-   "dusk": [
-    0.35,
-    0.4,
-    0.65
-   ],
+   "dusk": [0.62, 0.54, 0.63],
    "night": [
     0.2,
     0.26,
@@ -154,41 +150,25 @@
    "lights_by_day": true
   },
   "barracks": {
-   "_comment": "TIME-INVARIANT (inn_upstairs precedent): staffed day and night, so it never tracks the outside clock.",
+   "_comment": "#620 art read: the room follows the guild day/dusk/night ladder (a time-invariant pin read as night = day); the wall sconce lights at dusk and night.",
    "day": [
     0.68,
     0.74,
     0.82
    ],
-   "dusk": [
-    0.68,
-    0.74,
-    0.82
-   ],
-   "night": [
-    0.68,
-    0.74,
-    0.82
-   ],
+   "dusk": [0.64, 0.7, 0.8],
+   "night": [0.44, 0.49, 0.62],
    "vignette": 0.36
   },
   "runners_guild": {
-   "_comment": "TIME-INVARIANT (barracks/inn_upstairs precedent): couriers keep counter hours, so the room reads the same at any phase.",
+   "_comment": "#620 art read: the room follows the guild day/dusk/night ladder (a time-invariant pin read as night = day).",
    "day": [
     0.83,
     0.86,
     0.89
    ],
-   "dusk": [
-    0.83,
-    0.86,
-    0.89
-   ],
-   "night": [
-    0.83,
-    0.86,
-    0.89
-   ],
+   "dusk": [0.66, 0.7, 0.8],
+   "night": [0.44, 0.49, 0.62],
    "vignette": 0.28
   },
   "ruin_surface": {

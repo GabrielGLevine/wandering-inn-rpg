@@ -347,38 +347,32 @@ and chronology belong in issue PRs. Earlier context:
     3. The Pallass lamp is the owned `crystal_lamp` as it is, plus a cold glow cone at night. Indoors it is the chain-cage crystal lamp. There is no bronze wall-arm variant.
     4. The Invrisil alley workbench cluster becomes a cargo-yard cluster, unless dialogue names a workbench.
     - Generation is deferred to its own issue. The firm list is: Antinium worker rig, an owned cold wall lantern, an owned stool, and a second owned street door.
-  - **G3 regens (#608 pilot 1a, controller):** each regen follows a
-    reviewed conversion and never hides repetition. The Invrisil generic
-    placements went 84 → 76 after the street conversions (share 43.3% →
-    39.18%), → 75 with the dedicated rigged-crate-stack sprite, held at 75
-    when the art-read fixes added three cross-street lamps and dropped the
-    stationery bundle, and → 74 when the boulevard's generic door at (4,1)
-    was pinned to the Invrisil shop door (share 37.76%). It held at 74 when
-    the counting-room guard took the new regional `invrisil_enforcer` rig
-    (one new class row, no counter change).
-  - **G3 regen (#608 pilot 1b, Task 9c):** the enchanter tray and stationer
-    paper stand left the generic `crate` for dedicated regional sprites
-    (`invrisil_returned_work_tray`, `invrisil_paper_stand`): Invrisil generic
-    placements 74 → 72 (share 36.73%), two new regional class rows.
-  - **G3 regen (#608 pilot 1b, Task 11):** the interior conversions (tables,
-    rugs, interior windows, one cargo row) and the pool-member reclassification
-    (`window_blue`, `table_brown__alt1`, `window_blue__alt1`,
-    `enchanter_floor_mat` now count as regional): Invrisil generic placements
-    72 → 63 (share 32.14%). The same reclassification moved `inn` 39 → 35
-    (50.0%) and `riverfarm` 30 → 29 (24.79%) with no map edit in either;
-    `window_blue` is the only shared id. Sconces stayed explicit: `lamp_wall`
-    has 4 street placements and a pool of 2, so a fifth trips G1.
-    Frozen-class residual: `window_blue` stays in the `window_interior` pool
-    while all three Invrisil maps pick `__alt1`, so a future map that draws
-    it places a three-region sprite that G3's frozen class keeps counting as
-    regional until the next regen.
-  - **G3 regens (#608 pilot 1b FIX loop, art read):** the stationer desk and
-    stove pins left the generic ids, with one new regional class row
-    (`owned_fallback_library_desk`), and the deleted parlor rug took the
-    Invrisil placement count 196 → 195: generic placements 63 → 61 (share
-    31.28%). The r2 identity-cue pins (lamps and doors off `sconce`/`door`)
-    took it 61 → 52 (share 26.67%) with one new regional class row
-    (`invrisil_lamp_wall_1`).
+  - **G3 regens (#608, #620):** each regen follows a reviewed conversion and
+    never hides repetition. The per-regen numbers are in the rollout plan's
+    "G3 regen log" (`docs/superpowers/plans/2026-10-08-regional-kits-rollout.md`).
+    Invrisil (#608 pilots and FIX loops): generic placements 84 → 52
+    (26.67%); 51 (26.15%) under #625 art counting. Liscor (#620 R1):
+    48 → 19 (18.63%) over the conversion, FIX loop 1 and the R1 land, whose
+    one regen ran on the art-counted tree after the #625 merge.
+  - **R1 Liscor rulings (#620):**
+    - FIX loop 1 deviations: Krshia stays at (13,2), because the ruled
+      (13,3) blocks the y3 lane that about 35 QA scripts use. Street dusk is
+      [0.62,0.54,0.63] and barracks dusk [0.64,0.7,0.8] (lint RULE 1). The
+      Runners' wall lamp, hearth and mud table keep their art, because their
+      copy says dry, cold and muddy. The barracks sconce sits at (7,1).
+      `owned_fallback_pebble` 0.53 → 0.3 is global.
+    - R1 land (art counting): the street facades are back on untinted
+      `facade_plaster`. `owned_fallback_facade_plaster` is
+      `invrisil_timber_panel`'s art, and this interim holds until the
+      sandstone-brick follow-up (decision 1 above). `liscor_bracket_lantern`
+      draws lamp #6. `bonus_round_table` and `inn_table_dirty__before` are
+      inn art, left for the inn conversion.
+    - FIX loop 2: the barracks cargo at (3,2) is pinned to `crate_owned`
+      (deny lists screen prose, not picks), so the barracks has left G2's
+      converted set. `floor_civic` is `carpet_over_floorboards_v2_square`
+      [2,1], because the [22,3] trial still banded. `anchor_waystone` 0.55
+      is global.
+    - G2: Liscor 68.83%, Invrisil 56.92%.
   - **Counting-room guard rig (#608 final review):** `counting_room_guard`
     (The Factor's Closed Account) wears `invrisil_enforcer`, the owned
     2026-07-06 `hired_blade_a` generation (broad build, club), wired at 28px

@@ -7436,7 +7436,6 @@
    0.5,
    0.83333333
   ],
-  "shadow": true,
   "animations": {
    "idle": {
     "frame_size": [
@@ -9119,7 +9118,7 @@
   }
  },
  "owned_fallback_pebble": {
-  "render_scale": 0.53333333,
+  "render_scale": 0.3,
   "anchor": [
    0.5,
    0.71875
@@ -10440,6 +10439,291 @@
     "frame_size": [
      32,
      32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "door__alt2": {
+  "render_scale": 0.7,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/door__alt2/Idle-Sheet.png",
+    "frame_size": [
+     24,
+     31
+    ],
+    "fps": 1,
+    "region": [
+     4,
+     1,
+     24,
+     31
+    ]
+   }
+  },
+  "shadow": true,
+  "_comment": "#620: region crops the 32x32 canvas to its alpha bbox (24x31) so the footprint reads 16.8x21.7 at 0.7, within 2px of `door` 17x22 (data_lint door-family rule); owned PixelLab, anchor feet 32/32."
+ },
+ "door__alt3": {
+  "render_scale": 0.7,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/door__alt3/Idle-Sheet.png",
+    "frame_size": [
+     24,
+     31
+    ],
+    "fps": 1,
+    "region": [
+     4,
+     1,
+     24,
+     31
+    ]
+   }
+  },
+  "shadow": true,
+  "_comment": "#620: region crops the 32x32 canvas to its alpha bbox (24x31) so the footprint reads 16.8x21.7 at 0.7, within 2px of `door` 17x22 (data_lint door-family rule); owned PixelLab, anchor feet 32/32."
+ },
+ "bonus_produce_crate": {
+  "render_scale": 0.6,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/bonus_produce_crate/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "barrel__alt1": {
+  "render_scale": 0.73,
+  "anchor": [
+   0.5,
+   0.9688
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/barrel__alt1/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "note_pinned_alt": {
+  "render_scale": 0.26,
+  "anchor": [
+   0.5,
+   0.95
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/note_pinned_alt/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "guild_notice_board": {
+  "render_scale": 0.28,
+  "anchor": [
+   0.5,
+   0.8906
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/guild_notice_board/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "liscor_bench": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [32, 320, 32, 12] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     32,
+     12
+    ],
+    "region": [
+     32,
+     320,
+     32,
+     12
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "bench"
+ },
+ "liscor_chair": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [114, 489, 12, 20] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
+  "render_scale": 0.55,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     12,
+     20
+    ],
+    "region": [
+     114,
+     489,
+     12,
+     20
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_stool"
+ },
+ "liscor_side_chair": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [130, 489, 11, 20] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
+  "render_scale": 0.55,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     11,
+     20
+    ],
+    "region": [
+     130,
+     489,
+     11,
+     20
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_stool"
+ },
+ "liscor_sconce_copper": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Sewer/Pixel Crawler - Sewer/Assets/Props.png region [100, 5, 9, 20] sheet sha256 2e610b86c054; wired by tools/wire_asset.py",
+  "render_scale": 0.9,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/sewer/Props.png",
+    "frame_size": [
+     9,
+     20
+    ],
+    "region": [
+     100,
+     5,
+     9,
+     20
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_unlit_lantern"
+ },
+ "liscor_bracket_lantern": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Sewer/Pixel Crawler - Sewer/Assets/Props.png region [116, 5, 9, 20] sheet sha256 2e610b86c054; wired by tools/wire_asset.py (re-wired from Furniture [176, 451, 14, 20], which is invrisil_lamp_wall_1's art: lamp #6 in docs/kits-allocation.md)",
+  "render_scale": 0.9,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "kind": "lamp",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/sewer/Props.png",
+    "frame_size": [
+     9,
+     20
+    ],
+    "region": [
+     116,
+     5,
+     9,
+     20
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_unlit_lantern"
+ },
+ "bonus_round_table": {
+  "render_scale": 0.8,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/bonus_round_table/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_table_dirty__before": {
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.9688
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_table_dirty__before/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
     ],
     "fps": 1
    }

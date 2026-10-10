@@ -65,16 +65,16 @@
    "equals": "rusty_sword"
   },
   {
-   "_comment": "== (1) THE PEDDLER'S BOW == (1,3) right17 -> (18,3), up1 blocks on peddler (18,2) & faces it. No pool bark here (peddler carries no talk_pool, barracks_walkthrough's own identical interact already confirms straight-to-dialogue_started).",
+   "_comment": "== (1) THE PEDDLER'S BOW == (1,3) right18 -> (19,3), up1 blocks on peddler (19,2) & faces it (#620 art read: the peddler moved off the (18,1)/(18,2) stack). No pool bark here (peddler carries no talk_pool, barracks_walkthrough's own identical interact already confirms straight-to-dialogue_started).",
    "action": "move",
    "direction": "right",
-   "steps": 17
+   "steps": 18
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    18,
+    19,
     3
    ]
   },
@@ -290,10 +290,10 @@
    "equals": "training_bow"
   },
   {
-   "_comment": "== (2) INTO THE BARRACKS == (18,3) right3 -> (21,3), right1 -> (22,3) (open ground, issue #53 finding 13), up1 blocks on barracks_door (22,2) & faces it.",
+   "_comment": "== (2) INTO THE BARRACKS == (19,3) right2 -> (21,3), right1 -> (22,3) (open ground, issue #53 finding 13), up1 blocks on barracks_door (22,2) & faces it.",
    "action": "move",
    "direction": "right",
-   "steps": 3
+   "steps": 2
   },
   {
    "action": "assert_state",

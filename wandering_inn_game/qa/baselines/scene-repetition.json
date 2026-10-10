@@ -16,6 +16,8 @@
   "bat": "generic",
   "bed": "generic",
   "bench": "generic",
+  "bonus_produce_crate": "regional",
+  "bonus_round_table": "regional",
   "boulder": "generic",
   "briar_collector": "regional",
   "briar_collector_deep": "regional",
@@ -33,6 +35,7 @@
   "chest": "generic",
   "city_gate_arch": "regional",
   "city_gatehouse": "regional",
+  "city_roof_owned": "regional",
   "city_runner": "regional",
   "city_scribe": "regional",
   "coin_shop_sign": "regional",
@@ -45,8 +48,10 @@
   "counter_left": "generic",
   "counter_mid": "regional",
   "counter_right": "generic",
+  "counter_segment_owned": "regional",
   "coyle_shop_sign": "regional",
   "crate": "generic",
+  "crate_owned": "regional",
   "crop_row_dark_green": "regional",
   "crop_row_green": "regional",
   "crop_row_orange": "regional",
@@ -60,6 +65,8 @@
   "dig_survey_stakes_owned": "regional",
   "dirty_table": "regional",
   "door": "generic",
+  "door__alt2": "regional",
+  "door__alt3": "regional",
   "door_locked_heavy": "regional",
   "dormant_guardian_statue": "regional",
   "drake_patron": "regional",
@@ -130,10 +137,10 @@
   "inn_bar_station": "regional",
   "inn_hearth": "regional",
   "inn_kitchen_prep": "regional",
-  "inn_roof": "regional",
   "inn_room_ledger": "generic",
   "inn_round_table": "regional",
   "inn_sign": "regional",
+  "inn_table_dirty__before": "regional",
   "inn_table_soiled": "regional",
   "invrisil_cargo_1": "regional",
   "invrisil_cargo_2": "regional",
@@ -166,7 +173,12 @@
   "leather_satchel": "regional",
   "library_desk": "generic",
   "library_shelf": "generic",
+  "liscor_bench": "regional",
+  "liscor_bracket_lantern": "regional",
   "liscor_bread_stall": "regional",
+  "liscor_chair": "regional",
+  "liscor_sconce_copper": "regional",
+  "liscor_side_chair": "regional",
   "liscor_watch_guard": "regional",
   "longhouse_communal_table_owned": "regional",
   "lyonette": "regional",
@@ -188,6 +200,7 @@
   "octavia": "regional",
   "olesm": "regional",
   "owned_fallback_library_desk": "regional",
+  "owned_fallback_shelf_bottles": "regional",
   "owned_fallback_table_brown": "regional",
   "pallass_billet_rack": "regional",
   "pallass_rail_post": "regional",
@@ -229,7 +242,7 @@
   "riverfarm_windmill": "regional",
   "road_peddler": "regional",
   "rock_crab": "regional",
-  "rug_woven_cream": "generic",
+  "rug_woven_cream": "regional",
   "rug_woven_red": "regional",
   "ruin_fallen_column_owned": "regional",
   "ruin_gate": "regional",
@@ -250,9 +263,9 @@
   "stairs_up": "regional",
   "stallkeeper": "regional",
   "steam_vent": "regional",
-  "stool": "generic",
+  "stool": "regional",
   "street_lamp": "regional",
-  "table_brown": "generic",
+  "table_brown": "regional",
   "table_brown__alt1": "regional",
   "tallyman": "regional",
   "temper_bench": "regional",
@@ -264,7 +277,7 @@
   "tree_autumn_orange": "regional",
   "tree_autumn_red": "regional",
   "tree_big": "regional",
-  "tree_round": "generic",
+  "tree_round": "regional",
   "turf_cut_mouth": "regional",
   "unlit_lantern": "generic",
   "vault_construct": "regional",
@@ -312,11 +325,11 @@
    "placements": 56
   },
   "floodplains": {
-   "generic_placements": 21,
-   "generic_share_pct": 24.14,
+   "generic_placements": 17,
+   "generic_share_pct": 19.54,
    "maps": {
     "floodplains": {
-     "generic_placements": 17,
+     "generic_placements": 13,
      "placements": 67
     },
     "rags_camp": {
@@ -338,34 +351,34 @@
    "placements": 29
   },
   "inn": {
-   "generic_placements": 39,
-   "generic_share_pct": 55.71,
+   "generic_placements": 36,
+   "generic_share_pct": 51.43,
    "maps": {
     "inn": {
-     "generic_placements": 22,
+     "generic_placements": 21,
      "placements": 50
     },
     "inn_player_room": {
-     "generic_placements": 9,
+     "generic_placements": 8,
      "placements": 11
     },
     "inn_upstairs": {
-     "generic_placements": 8,
+     "generic_placements": 7,
      "placements": 9
     }
    },
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 58,
-   "generic_share_pct": 29.74,
+   "generic_placements": 51,
+   "generic_share_pct": 26.15,
    "maps": {
     "adventurers_rest": {
-     "generic_placements": 6,
+     "generic_placements": 4,
      "placements": 21
     },
     "brothers_parlor": {
-     "generic_placements": 12,
+     "generic_placements": 10,
      "placements": 25
     },
     "enchanter_shop": {
@@ -389,41 +402,41 @@
      "placements": 30
     },
     "stationer": {
-     "generic_placements": 10,
+     "generic_placements": 7,
      "placements": 18
     }
    },
    "placements": 195
   },
   "liscor": {
-   "generic_placements": 48,
-   "generic_share_pct": 44.86,
+   "generic_placements": 17,
+   "generic_share_pct": 16.83,
    "maps": {
     "barracks": {
-     "generic_placements": 10,
-     "placements": 13
+     "generic_placements": 3,
+     "placements": 14
     },
     "guild": {
-     "generic_placements": 10,
-     "placements": 18
+     "generic_placements": 2,
+     "placements": 17
     },
     "runners_guild": {
-     "generic_placements": 6,
+     "generic_placements": 2,
      "placements": 10
     },
     "street": {
-     "generic_placements": 22,
-     "placements": 66
+     "generic_placements": 10,
+     "placements": 60
     }
    },
-   "placements": 107
+   "placements": 101
   },
   "pallass": {
-   "generic_placements": 28,
-   "generic_share_pct": 29.17,
+   "generic_placements": 27,
+   "generic_share_pct": 28.12,
    "maps": {
     "pallass_den_shop": {
-     "generic_placements": 12,
+     "generic_placements": 11,
      "placements": 15
     },
     "pallass_forge": {
@@ -442,8 +455,8 @@
    "placements": 96
   },
   "riverfarm": {
-   "generic_placements": 30,
-   "generic_share_pct": 25.64,
+   "generic_placements": 29,
+   "generic_share_pct": 24.79,
    "maps": {
     "riverfarm_longhouse": {
      "generic_placements": 7,
@@ -454,7 +467,7 @@
      "placements": 12
     },
     "riverfarm_village": {
-     "generic_placements": 7,
+     "generic_placements": 6,
      "placements": 53
     },
     "witch_hollow": {

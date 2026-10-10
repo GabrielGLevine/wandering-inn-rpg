@@ -666,7 +666,11 @@ class TestSharedArtReport(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         line = next(l for l in r.stdout.splitlines() if "REPORT -- kits art:" in l)
         self.assertIn("invrisil_facade_window_1 = window_blue CROSS-REGION [inn, invrisil, riverfarm]", line)
-        self.assertRegex(line, r"kits art: 1[12] art identities")  # 11 without the overlay: body_a's sheet is bundle-only
+        # 14 without the overlay (body_a's sheet is bundle-only). #620 R1 added three second ids
+        # for existing art: bonus_round_table, inn_table_dirty__before (inn art, a follow-up for
+        # the inn conversion) and guild_notice_board (= guild_handbill_wall).
+        self.assertRegex(line, r"kits art: 1[45] art identities")
+        self.assertIn("bonus_round_table = inn_round_table CROSS-REGION [inn, liscor]", line)
 
 
 def kl_hasher_missing():
@@ -742,8 +746,9 @@ class TestBiomeRows(unittest.TestCase):
             # #608 1b night read: invrisil_shop drops its mote default (sourceless discs); the others keep it.
             (self.assertNotIn if bid == "invrisil_shop" else self.assertIn)(row, world)
         maps = (GAME / "data" / "maps").glob("*/*.json")
-        # Pilot 1b adopted invrisil_shop on the Rest only; any other adoption must be planned.
-        self.assertEqual(sorted(f"{p.parent.name}/{p.name}" for p in maps if json.loads(p.read_text()).get("biome") in self.NEW), ["invrisil/adventurers_rest.json"])
+        # Pilot 1b adopted invrisil_shop on the Rest only; #620 R1 adopted liscor_civic on the three civic
+        # interiors. Any other adoption must be planned.
+        self.assertEqual(sorted(f"{p.parent.name}/{p.name}" for p in maps if json.loads(p.read_text()).get("biome") in self.NEW), ["invrisil/adventurers_rest.json", "liscor/barracks.json", "liscor/guild.json", "liscor/runners_guild.json"])
 
 
 class TestRealTree(unittest.TestCase):

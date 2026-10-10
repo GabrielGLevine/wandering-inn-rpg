@@ -1,6 +1,6 @@
 {
  "_comment": "THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one.",
- "biome": "inn",
+ "biome": "liscor_civic",
  "interior_flavor": [
   "Nothing there. Blank slips under a stone weight, and a block of rope wax with a thumb-groove worn into it.",
   "Nothing there. A pair of spare boots by the door, laces slack through every eyelet."
@@ -66,34 +66,24 @@
      9,
      0
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     10,
-     6
+     4,
+     2
     ],
     "face": [
-     10,
-     7
+     4,
+     3
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "face": [
-                          4,
-                          3
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
+     ],
+     "detail": 0.55
+    }
    },
    {
     "from": [
@@ -104,26 +94,20 @@
      0,
      7
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     10,
-     6
+     4,
+     2
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
+     ],
+     "detail": 0.55
+    }
    },
    {
     "from": [
@@ -134,26 +118,20 @@
      9,
      7
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     10,
-     6
+     4,
+     2
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
+     ],
+     "detail": 0.55
+    }
    },
    {
     "from": [
@@ -164,26 +142,20 @@
      4,
      7
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     10,
-     6
+     4,
+     2
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
+     ],
+     "detail": 0.55
+    }
    },
    {
     "from": [
@@ -194,46 +166,40 @@
      8,
      7
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     10,
-     6
+     4,
+     2
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
+     ],
+     "detail": 0.55
+    }
    }
   ]
  },
  "decor": [
   {
-   "sprite": "counter_left",
+   "sprite": "counter_segment_owned",
    "cell": [
     4,
     2
    ]
   },
   {
-   "sprite": "counter_right",
+   "sprite": "counter_segment_owned",
    "cell": [
     6,
     2
    ]
   },
   {
-   "sprite": "bench",
+   "sprite": "liscor_bench",
    "cell": [
     1,
     5
@@ -259,7 +225,7 @@
     7
    ],
    "display_name": "Liscor Street",
-   "sprite": "door",
+   "sprite": "door__alt2",
    "to_map": "street",
    "to_cell": [
     19,
@@ -296,7 +262,7 @@
    "kind": "prop",
    "cell": [
     8,
-    3
+    1
    ],
    "display_name": "The Delivery Board",
    "sprite": "delivery_board",

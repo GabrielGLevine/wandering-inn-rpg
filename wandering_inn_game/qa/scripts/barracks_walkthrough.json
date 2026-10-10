@@ -56,7 +56,7 @@
    "payload_contains": {
     "map": "street",
     "floor_cells": 640,
-    "blocked_cells": 119
+    "blocked_cells": 116
    }
   },
   {
@@ -112,16 +112,16 @@
    "name": "01_bread_stall"
   },
   {
-   "_comment": "== (2) PEDDLER'S MINI-BUY == (11,3) right7 -> (18,3), up1 blocks on peddler (18,2) & faces it. Buy option is index 0 (default cursor) -- press confirm immediately. Same emission order as economy_loop's Krshia buy: gold_changed BEFORE the 'Paid' toast, then item_gained.",
+   "_comment": "== (2) PEDDLER'S MINI-BUY == (11,3) right8 -> (19,3), up1 blocks on peddler (19,2) & faces it (#620 art read: the peddler moved off the (18,1)/(18,2) stack). Buy option is index 0 (default cursor) -- press confirm immediately. Same emission order as economy_loop's Krshia buy: gold_changed BEFORE the 'Paid' toast, then item_gained.",
    "action": "move",
    "direction": "right",
-   "steps": 7
+   "steps": 8
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    18,
+    19,
     3
    ]
   },
@@ -243,10 +243,10 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== (3) INTO THE BARRACKS == (18,3) right3 -> (21,3), right1 -> (22,3) -- open ground now (issue #53 finding 13: barracks_door moved into the facade line at (22,2), flush with the wall instead of floating a cell out in the street), up1 blocks on barracks_door (22,2) & faces it (the former watch_guard flavor cell -- zero canonical QA touches on watch_guard were found before this task's move, confirmed by grep). to_cell (2,6) lands one cell north of barracks_exit (2,7), the same offset convention as guild_door/guild_exit.",
+   "_comment": "== (3) INTO THE BARRACKS == (19,3) right2 -> (21,3), right1 -> (22,3) -- open ground now (issue #53 finding 13: barracks_door moved into the facade line at (22,2), flush with the wall instead of floating a cell out in the street), up1 blocks on barracks_door (22,2) & faces it (the former watch_guard flavor cell -- zero canonical QA touches on watch_guard were found before this task's move, confirmed by grep). to_cell (2,6) lands one cell north of barracks_exit (2,7), the same offset convention as guild_door/guild_exit.",
    "action": "move",
    "direction": "right",
-   "steps": 3
+   "steps": 2
   },
   {
    "action": "assert_state",
@@ -504,17 +504,27 @@
    "name": "07_the_cell"
   },
   {
-   "_comment": "== (6b) ISSUE #81 DISCOVERY PROPS == (11,3) down3 -> (11,5) (the third down step blocks on note_old_dread at (11,6) & faces it -- all three new props sit on row y6, approached from directly above since they'd otherwise block a straight sideways walk between them). Container interact grants the note (kind:parcel) + banks the flavor-only found_old_dread_note. (Relocated here from an original guild placement -- see that entity's own skeleton_scene.json comment for the scene_dynamism re-derivation.)",
+   "_comment": "== (6b) ISSUE #81 DISCOVERY PROPS == (11,3) up1 -> (11,2), right1 -> (12,2), up1 blocks on note_old_dread at (12,1) & faces it (#620 art read: both notes moved from the floor row y6 onto the wall row y1). Container interact grants the note (kind:parcel) + banks the flavor-only found_old_dread_note. (Relocated here from an original guild placement -- see that entity's own skeleton_scene.json comment for the scene_dynamism re-derivation.)",
    "action": "move",
-   "direction": "down",
-   "steps": 3
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    11,
-    5
+    12,
+    2
    ]
   },
   {
@@ -550,7 +560,22 @@
    "name": "07b_dread_note"
   },
   {
-   "_comment": "up1 -> (11,4), left2 -> (9,4), down2 -> (9,5) (the second down step blocks on note_watch_veteran at (9,6) & faces it).",
+   "_comment": "left2 -> (10,2), down1 -> (10,3), left2 -> (8,3), up1 -> (8,2), up1 blocks on note_watch_veteran at (8,1) & faces it (shelf_bottles (9,2) blocks the direct row-2 walk).",
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
    "action": "move",
    "direction": "up",
    "steps": 1
@@ -559,34 +584,21 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    11,
-    4
+    8,
+    2
    ]
   },
   {
    "action": "move",
-   "direction": "left",
-   "steps": 2
+   "direction": "up",
+   "steps": 1
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    9,
-    4
-   ]
-  },
-  {
-   "action": "move",
-   "direction": "down",
-   "steps": 2
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    9,
-    5
+    8,
+    2
    ]
   },
   {
@@ -622,10 +634,15 @@
    "name": "08_watch_veteran_note"
   },
   {
-   "_comment": "left5 -> (4,5), down1 blocks on spare_kit_crate (4,6) & faces it. Grants field_whetstone -- ALREADY a purchasable Krshia item (krshia_crate.json), so no new item catalog entry backs the reward itself.",
+   "_comment": "down3 -> (8,5), left4 -> (4,5), down1 blocks on spare_kit_crate (4,6) & faces it. Grants field_whetstone -- ALREADY a purchasable Krshia item (krshia_crate.json), so no new item catalog entry backs the reward itself.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
    "action": "move",
    "direction": "left",
-   "steps": 5
+   "steps": 4
   },
   {
    "action": "assert_state",
@@ -772,7 +789,7 @@
    "payload_contains": {
     "map": "street",
     "floor_cells": 640,
-    "blocked_cells": 119
+    "blocked_cells": 116
    },
    "timeout_sec": 5
   },

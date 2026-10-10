@@ -32,10 +32,9 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Resting Runner", "text": "Floodplains double, both legs mud. Wake me for a fire or a Courier." }, "timeout_sec": 5 },
 
-  { "_comment": "== (3) THE DELIVERY BOARD == (3,5) right 4 -> (7,5), up 2 -> (7,3), right 1 blocks on runner_board (8,3) & faces it. Browse-only code-built dialogue: header + the 3 live slips + the standing-notice footer.", "action": "move", "direction": "right", "steps": 4 },
-  { "action": "move", "direction": "up", "steps": 2 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 3] },
+  { "_comment": "== (3) THE DELIVERY BOARD == (3,5) right 5 -> (8,5), up 4 -> (8,2) (the fourth step blocks on runner_board (8,1) & faces it; #620 art read moved the board to the wall row and Vess behind a filled counter). Browse-only code-built dialogue: header + the 3 live slips + the standing-notice footer.", "action": "move", "direction": "right", "steps": 5 },
+  { "action": "move", "direction": "up", "steps": 4 },
+  { "action": "assert_state", "path": "player_cell", "equals": [8, 2] },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "read_the_delivery_board", "count": 1 }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "the_delivery_board", "entity": "runner_board" }, "timeout_sec": 5 },
@@ -46,7 +45,8 @@
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
 
-  { "_comment": "== (4) TAKE A SLIP == (7,3) left 2 -> (5,3), up 1 blocks on Vess (5,2) & faces her. First interact of the waking plays her counter bark (talk_pool, banks heard_gossip); second opens vess_counter. Fresh options: idx0 'Just passing through.', idx1 'Take a slip.' ('Turn in a slip.' hidden -- delivery_accepted false).", "action": "move", "direction": "left", "steps": 2 },
+  { "_comment": "== (4) TAKE A SLIP == (8,2) down 1 -> (8,3), left 3 -> (5,3), up 1 blocks on Vess (5,2) & faces her. First interact of the waking plays her counter bark (talk_pool, banks heard_gossip); second opens vess_counter. Fresh options: idx0 'Just passing through.', idx1 'Take a slip.' ('Turn in a slip.' hidden -- delivery_accepted false).", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "move", "direction": "left", "steps": 3 },
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
   { "action": "press", "name": "interact" },

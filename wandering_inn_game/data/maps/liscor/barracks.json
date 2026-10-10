@@ -1,6 +1,7 @@
 {
  "_comment": "Zevara Sunderscale STAYS at the gate (zevara_intro's own framing untouched)",
- "biome": "inn",
+ "biome": "liscor_civic",
+ "_kits_recompose": "#620 — art-read FIX loop 1: sconce, note and crate moves",
  "interior_flavor": [
   "Nothing there. Bare stone, and a rack of spare kit with every strap buckled the same way.",
   "Nothing there. A shield knocks against its peg down the corridor, then goes quiet."
@@ -53,7 +54,15 @@
      "coords": [
       2,
       1
-     ]
+     ],
+     "tone": {
+      "base": [
+       0.41,
+       0.38,
+       0.32
+      ],
+      "detail": 0.4
+     }
     }
   }
  ],
@@ -223,28 +232,45 @@
  },
  "decor": [
   {
-   "sprite": "table_brown",
+   "sprite": "liscor_sconce_copper",
+   "cell": [
+    7,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.72,
+     0.38
+    ],
+    "energy": 0.85,
+    "radius": 36,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "inn_table_dirty__before",
    "cell": [
     6,
     2
    ]
   },
   {
-   "sprite": "shelf_bottles",
+   "sprite": "owned_fallback_shelf_bottles",
    "cell": [
     9,
     2
    ]
   },
   {
-   "sprite": "crate",
+   "sprite": "crate_owned",
    "cell": [
     3,
     2
    ]
   },
   {
-   "sprite": "stool",
+   "sprite": "liscor_side_chair",
    "cell": [
     7,
     2
@@ -270,7 +296,7 @@
     7
    ],
    "display_name": "Liscor Street",
-   "sprite": "door",
+   "sprite": "door__alt2",
    "to_map": "street",
    "to_cell": [
     21,
@@ -347,7 +373,7 @@
     3
    ],
    "display_name": "The Cell",
-   "sprite": "door",
+   "sprite": "door__alt3",
    "tint": [
     0.5,
     0.5,
@@ -388,7 +414,7 @@
     6
    ],
    "display_name": "An Overlooked Kit Crate",
-   "sprite": "crate",
+   "sprite": "crate_owned",
    "tint": [
     0.5,
     0.42,
@@ -405,8 +431,8 @@
    "id": "note_watch_veteran",
    "kind": "prop",
    "cell": [
-    9,
-    6
+    8,
+    1
    ],
    "display_name": "A Watch Veteran's Letter",
    "sprite": "note_pinned",
@@ -425,8 +451,8 @@
    "id": "note_old_dread",
    "kind": "prop",
    "cell": [
-    11,
-    6
+    12,
+    1
    ],
    "display_name": "A Ward-Charm Scrap",
    "sprite": "note_pinned",

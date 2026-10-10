@@ -1,5 +1,6 @@
 {
  "biome": "street",
+ "_kits_recompose": "#620 — art-read FIX loop 1: peddler/Krshia cells, deleted repeats and trees, roof/facade swaps",
  "interior_flavor": [
   "Nothing there. A Drake shoulders past you without slowing.",
   "Nothing there. Gutter runoff and market noise two streets over, off a wall repointed twice.",
@@ -53,10 +54,6 @@
    10
   ],
   [
-   25,
-   8
-  ],
-  [
    8,
    17
   ],
@@ -77,19 +74,11 @@
    1
   ],
   [
-   13,
-   1
-  ],
-  [
    14,
    1
   ],
   [
    15,
-   1
-  ],
-  [
-   16,
    1
   ],
   [
@@ -334,7 +323,7 @@
      0,
      2,
      32,
-     3
+     4
     ]
    },
     "fallback_render": {
@@ -350,7 +339,7 @@
                           0.34,
                           0.36
                          ],
-                         "detail": 0.5
+                         "detail": 0.25
                         }
                        }
   },
@@ -393,7 +382,7 @@
                           0.34,
                           0.36
                          ],
-                         "detail": 0.5
+                         "detail": 0.25
                         }
                        }
   },
@@ -436,7 +425,7 @@
                           0.34,
                           0.36
                          ],
-                         "detail": 0.5
+                         "detail": 0.25
                         }
                        }
   },
@@ -487,6 +476,10 @@
      [
       19,
       1
+     ],
+     [
+      9,
+      1
      ]
     ]
    },
@@ -503,7 +496,7 @@
                           0.34,
                           0.36
                          ],
-                         "detail": 0.5
+                         "detail": 0.25
                         }
                        }
   },
@@ -542,7 +535,7 @@
                           0.34,
                           0.36
                          ],
-                         "detail": 0.5
+                         "detail": 0.25
                         }
                        }
   }
@@ -625,7 +618,7 @@
    }
   },
   {
-   "sprite": "crate",
+   "sprite": "@cargo",
    "cell": [
     1,
     5
@@ -650,14 +643,6 @@
 
 
 
-  {
-   "_comment": "#408 prop variety: was `barrel`. Second basket stack mid-row: repetition is diegetic in a market, a third barrel was not. Cell stays in `blocked`.",
-   "sprite": "basket_stack",
-   "cell": [
-    13,
-    1
-   ]
-  },
 
 
 
@@ -680,22 +665,10 @@
 
 
   {
-   "sprite": "food_basket",
-   "cell": [
-    18,
-    1
-   ]
-  },
-  {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     22,
     1
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
@@ -703,35 +676,20 @@
    "cell": [
     22,
     2
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     27,
     1
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     29,
     1
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
@@ -739,11 +697,6 @@
    "cell": [
     27,
     2
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
@@ -751,30 +704,20 @@
    "cell": [
     29,
     2
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "library_desk",
+   "sprite": "liscor_bench",
    "cell": [
     26,
     3
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     10,
     8
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
@@ -782,23 +725,13 @@
    "cell": [
     10,
     9
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     19,
     8
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
@@ -806,23 +739,13 @@
    "cell": [
     19,
     9
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     12,
     14
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
@@ -830,35 +753,20 @@
    "cell": [
     12,
     15
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     19,
     15
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     21,
     15
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
@@ -867,11 +775,6 @@
    "cell": [
     19,
     16
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
@@ -879,11 +782,6 @@
    "cell": [
     21,
     16
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
@@ -904,7 +802,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "liscor_sconce_copper",
    "cell": [
     14,
     7
@@ -921,7 +819,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "liscor_bracket_lantern",
    "cell": [
     15,
     12
@@ -938,7 +836,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "liscor_sconce_copper",
    "cell": [
     14,
     17
@@ -955,39 +853,17 @@
    }
   },
   {
-   "sprite": "tree_round",
-   "cell": [
-    23,
-    12
-   ]
-  },
-  {
-   "sprite": "tree_round",
-   "cell": [
-    6,
-    13
-   ]
-  },
-  {
-   "sprite": "crate",
+   "sprite": "@cargo",
    "cell": [
     5,
     10
    ]
   },
   {
-   "sprite": "barrel",
+   "sprite": "@cargo",
    "cell": [
     6,
     10
-   ]
-  },
-  {
-   "_comment": "#408 prop variety: was `crate`. Cell stays in `blocked`.",
-   "sprite": "firewood_stack",
-   "cell": [
-    25,
-    8
    ]
   },
   {
@@ -1019,11 +895,6 @@
    "cell": [
     6,
     19
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
@@ -1032,11 +903,6 @@
    "cell": [
     15,
     19
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
@@ -1045,11 +911,6 @@
    "cell": [
     24,
     19
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
@@ -1058,11 +919,6 @@
    "cell": [
     31,
     7
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
@@ -1071,11 +927,6 @@
    "cell": [
     31,
     14
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
@@ -1084,18 +935,6 @@
    "cell": [
     11,
     17
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
-   ]
-  },
-  {
-   "sprite": "grain_sacks",
-   "cell": [
-    16,
-    1
    ]
   }
  ],
@@ -1106,17 +945,17 @@
     "pebble",
     "flower_tiny"
    ],
-   "density": 0.06,
+   "density": 0.03,
    "cluster": 0.7,
-   "seed": 5
-  },
-  {
-   "pool": [
-    "flower_purple"
-   ],
-   "density": 0.012,
-   "cluster": 0.9,
-   "seed": 11
+   "seed": 5,
+   "cells": {
+    "rect": [
+     0,
+     6,
+     32,
+     14
+    ]
+   }
   }
  ],
  "entities": [
@@ -1370,7 +1209,7 @@
     2
    ],
    "display_name": "Watch Barracks",
-   "sprite": "door",
+   "sprite": "door__alt2",
    "to_map": "barracks",
    "to_cell": [
     2,
@@ -1401,7 +1240,7 @@
    "id": "peddler",
    "kind": "npc",
    "cell": [
-    18,
+    19,
     2
    ],
    "display_name": "A Road-Peddler",
@@ -1449,7 +1288,7 @@
     2
    ],
    "display_name": "Adventurer's Guild",
-   "sprite": "door",
+   "sprite": "door__alt2",
    "to_map": "guild",
    "to_cell": [
     8,
@@ -1466,7 +1305,7 @@
     16
    ],
    "display_name": "Runner's Guild",
-   "sprite": "door",
+   "sprite": "door__alt2",
    "to_map": "runners_guild",
    "to_cell": [
     5,
