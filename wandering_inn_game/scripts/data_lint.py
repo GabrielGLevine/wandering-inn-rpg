@@ -105,7 +105,7 @@ MONO_EPS = 1e-9  # float-noise guard on the strict-monotone comparisons
 VACUOUS_GATE_ALLOWLIST: dict = {}
 
 KIT_PICKS = {"cell", "map", "door"}
-KIT_ROLE_KEYS = {"pick", "module", "pool", "light", "deny", "radius", "_comment"}
+KIT_ROLE_KEYS = {"pick", "module", "pool", "light", "deny", "radius", "kind", "_comment"}
 ANON_NAME = re.compile(r"^(A|An) ")
 
 
@@ -1361,6 +1361,9 @@ def _footprint(entry: dict) -> tuple:
 def _check_kit_schema(kits: dict, sprites: dict, errors: list, bundle_paths: set) -> None:
 	if "_common" not in kits:
 		errors.append("kits: _common block missing")
+	for sid, entry in sorted(sprites.items()):
+		if isinstance(entry, dict) and "kind" in entry and entry["kind"] not in kl.KINDS:
+			errors.append(f"sprites.{sid}: kind '{entry['kind']}' is not in the closed vocabulary {list(kl.KINDS)}")
 	for region, block in kits.items():
 		if region.startswith("_") and region != "_common":
 			continue
@@ -1373,6 +1376,10 @@ def _check_kit_schema(kits: dict, sprites: dict, errors: list, bundle_paths: set
 			if not isinstance(mat, dict) or set(mat) - set(kl.MATERIAL_FIELDS) - {"_comment"}:
 				errors.append(f"kits.{region}.materials.{name}: keys must be within {sorted(kl.MATERIAL_FIELDS)}")
 		for name, role in (block.get("roles") or {}).items():
+			if region == "_common":
+				_check_common_role(name, role, sprites, errors)
+			if isinstance(role, dict) and "kind" in role and role["kind"] not in kl.KINDS:
+				errors.append(f"kits.{region}.roles.{name}: kind '{role['kind']}' is not in the closed vocabulary {list(kl.KINDS)}")
 			if isinstance(role, str):
 				if role not in sprites:
 					errors.append(f"kits.{region}.roles.{name}: sprite '{role}' is not in sprites.json")
@@ -1410,6 +1417,29 @@ def _check_kit_schema(kits: dict, sprites: dict, errors: list, bundle_paths: set
 		for cid in block.get("cast") or []:
 			if cid not in sprites:
 				errors.append(f"kits.{region}.cast: '{cid}' is not in sprites.json")
+
+
+def _check_common_role(name: str, role, sprites: dict, errors: list) -> None:
+	"""#623 (user 2026-10-09; review I2, fail closed): _common holds only the utility Tier A
+	(kl.COMMON_KINDS). Every _common role declares its kind, and every pool id must have a
+	kind on record (kl.kind_of: the entry's "kind", else kl.WIRED_KINDS) inside Tier A."""
+	label = f"kits._common.roles.{name}"
+	tier_a = ", ".join(kl.COMMON_KINDS)
+	if not isinstance(role, dict) or "kind" not in role:
+		errors.append(f"{label}: a _common role must be a pool object declaring \"kind\" (one of {tier_a})")
+		return
+	if role["kind"] not in kl.COMMON_KINDS:
+		errors.append(f"{label}: kind '{role['kind']}' is not a _common utility kind ({tier_a}); give each region its own role")
+	for entry in role.get("pool") if isinstance(role.get("pool"), list) else []:
+		vid = entry[0] if isinstance(entry, list) and entry else entry
+		if not isinstance(vid, str):
+			continue
+		known = kl.kind_of(vid, sprites.get(vid))
+		if known is None:
+			errors.append(f"{label}: pool id '{vid}' has no kind on record (sprites.json \"kind\" or "
+				f"wi_kits_lib.WIRED_KINDS); _common takes only ids of a recorded Tier A kind")
+		elif known not in kl.COMMON_KINDS:
+			errors.append(f"{label}: pool id '{vid}' is a {known}, not a _common utility kind ({tier_a})")
 
 
 def _check_pool_public(region: str, name: str, ids: list, sprites: dict, errors: list, bundle_paths: set) -> None:
@@ -1582,26 +1612,94 @@ def _pct(part: int, whole: int) -> float:
 	return round(100.0 * part / whole, 2) if whole else 0.0
 
 
-def _sprite_regions(resolved: dict, regions: dict) -> dict:
-	"""sprite -> set of regions whose maps place it."""
+def _sprite_regions(resolved: dict, regions: dict, key=None) -> dict:
+	"""key(sprite) -> set of regions whose maps place it (key defaults to the sprite id)."""
 	seen: dict = {}
 	for map_id, doc in resolved.items():
 		region = regions.get(map_id)
 		if region is None:
 			continue
 		for p in _placements(doc):
-			seen.setdefault(p["sprite"], set()).add(region)
+			seen.setdefault(key(p["sprite"]) if key else p["sprite"], set()).add(region)
 	return seen
 
 
-GENERIC_REGIONS = 3  # G3: a sprite placed in >= this many regions is "generic"
+class ArtIdent:
+	"""sprite id -> wi_kits_lib.art_identity (#623: G2/G3 count art, not ids). Ids missing
+	from sprites.json key on themselves; `sheets.missing` lists frame sheets absent on disk."""
+
+	def __init__(self, sprites: dict, sheet_sha=None):
+		self.sprites = {k: v for k, v in sprites.items() if not k.startswith("_")}
+		self.sheets = sheet_sha or kl.SheetHasher(GAME_ROOT)
+		self.table = kl.art_identities(self.sprites, self.sheets)
+
+	@classmethod
+	def from_parsed(cls, parsed: dict) -> "ArtIdent":
+		return cls(parsed.get(DATA / "sprites.json") or {})
+
+	def __call__(self, sprite_id: str) -> tuple:
+		return self.table.get(sprite_id, ("id", sprite_id))
 
 
-def build_scene_baseline(resolved: dict, regions: dict, tolerance: dict) -> dict:
-	"""G3 baseline: freeze each sprite's generic-or-regional class (generic =
-	placed in >= GENERIC_REGIONS regions) and the per-region/per-map counters."""
-	seen = _sprite_regions(resolved, regions)
-	classes = {s: ("generic" if len(r) >= GENERIC_REGIONS else "regional") for s, r in seen.items()}
+def report_shared_art(ident: ArtIdent, resolved: dict, regions: dict, report: list) -> None:
+	"""#623, report only: art identities that more than one sprite id carries. A group is
+	CROSS-REGION when its ids, taken together, are placed in more than one region; an id
+	wired through `wire_asset --alias-of` is marked alias."""
+	groups: dict = {}
+	for sid, key in ident.table.items():
+		groups.setdefault(key, []).append(sid)
+	placed = _sprite_regions(resolved, regions)
+	parts, n_cross = [], 0
+	for ids in sorted(sorted(g) for g in groups.values() if len(g) > 1):
+		text = " = ".join(f"{i} (alias)" if ident.sprites[i].get("_alias_of") else i for i in ids)
+		where = sorted(set().union(*(placed.get(i, set()) for i in ids)))
+		if len(where) > 1:
+			n_cross += 1
+			text += f" CROSS-REGION [{', '.join(where)}]"
+		parts.append(text)
+	missing = sorted(getattr(ident.sheets, "missing", ()))
+	tail = f"; {len(missing)} frame sheet(s) absent on disk, keyed by path" if missing else ""
+	report.append(f"kits art: {len(parts)} art identit{'y' if len(parts) == 1 else 'ies'} carry more than one sprite id "
+		f"({n_cross} cross-region; report only){': ' + '; '.join(parts) if parts else ''}{tail}")
+
+
+def check_aliases(ident: ArtIdent, errors: list) -> None:
+	"""#623 review M6: an `_alias_of` (written by wire_asset --alias-of) names an existing id
+	that still draws the same art, and carries a non-empty `_alias_reason`."""
+	for sid, entry in sorted(ident.sprites.items()):
+		if not isinstance(entry, dict) or not ({"_alias_of", "_alias_reason"} & set(entry)):
+			continue
+		target, reason = entry.get("_alias_of"), entry.get("_alias_reason")
+		if not isinstance(reason, str) or not reason.strip():
+			errors.append(f"sprites.{sid}: _alias_of needs a non-empty _alias_reason")
+		if not isinstance(target, str) or target not in ident.sprites:
+			errors.append(f"sprites.{sid}: _alias_of '{target}' is not a sprites.json id")
+		elif ident(target) != ident(sid):
+			errors.append(f"sprites.{sid}: _alias_of '{target}' no longer draws the same art "
+				f"({kl.identity_label(ident(sid))} vs {kl.identity_label(ident(target))})")
+
+
+def _common_utility(p: dict, region: str, kits: dict) -> bool:
+	"""#623: the placement resolved through a _common Tier A role. A region role of the same
+	name resolves first (wi_kits_lib.lookup), so it never counts here."""
+	role = p["role"]
+	if not role or role in ((kits.get(region) or {}).get("roles") or {}):
+		return False
+	common = ((kits.get("_common") or {}).get("roles") or {}).get(role)
+	return isinstance(common, dict) and common.get("kind") in kl.COMMON_KINDS
+
+
+GENERIC_REGIONS = 3  # G3: a sprite whose art is placed in >= this many regions is "generic"
+
+
+def build_scene_baseline(resolved: dict, regions: dict, tolerance: dict, ident=None) -> dict:
+	"""G3 baseline: freeze each sprite's generic-or-regional class (generic = its ART,
+	per `ident` (ArtIdent, #623), placed in >= GENERIC_REGIONS regions under any id)
+	and the per-region/per-map counters. ident None classes by id."""
+	art = ident or (lambda sid: sid)
+	seen = _sprite_regions(resolved, regions, art)
+	classes = {s: ("generic" if len(seen[art(s)]) >= GENERIC_REGIONS else "regional")
+		for s in _sprite_regions(resolved, regions)}
 	out: dict = {}
 	for map_id, doc in sorted(resolved.items()):
 		region = regions.get(map_id)
@@ -1615,7 +1713,7 @@ def build_scene_baseline(resolved: dict, regions: dict, tolerance: dict) -> dict
 		reg["maps"][map_id] = {"placements": len(ps), "generic_placements": g}
 	for reg in out.values():
 		reg["generic_share_pct"] = _pct(reg["generic_placements"], reg["placements"])
-	return {"_comment": "G3 scene-repetition ratchet (#607). Regenerate ONLY with `data_lint.py --regen-scene-baseline`, and every regen needs a CHOICE-LOG line saying why. generic = sprite placed in >= 3 regions.",
+	return {"_comment": "G3 scene-repetition ratchet (#607). Regenerate ONLY with `data_lint.py --regen-scene-baseline`, and every regen needs a CHOICE-LOG line saying why. generic = a sprite whose art (wi_kits_lib.art_identity, #623) is placed in >= 3 regions under any id.",
 		"tolerance": tolerance, "generic_class": classes, "regions": out}
 
 
@@ -1722,21 +1820,25 @@ def _status(errs: list) -> str:
 
 
 def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: list, advisories: list,
-		report: list, base_ref=None, baseline=None) -> None:
+		report: list, base_ref=None, baseline=None, ident=None) -> None:
 	"""Spec 5.1 metric gates over the RESOLVED maps. Lint never chooses art.
 	Region = kit name; placement per _placements(). A region is CONVERTED when
 	its kit declares a pool role and a map of it holds a resolved @ref row.
+	`ident` maps a sprite id to its art identity (ArtIdent; #623); None counts ids.
 	G1: (region, role) with >= 5 placements needs a pool of >= 3 variants;
 	  per (map, role) the top variant <= ceil(n/k)+1, k = subset_size (cell picks).
-	G2 (converted regions only): >= 50% of non-_common placements on the region's
-	  CONVERTED maps (an @ sprite or material ref) use a variant no other region
-	  places (#608 ruling; the region-wide share is report-only); each converted
-	  map's floor/wall material_ref names are exclusive to the region.
-	G3: ratchet vs qa/baselines/scene-repetition.json over baseline maps only.
+	G2 (converted regions only): >= 50% of the placements on the region's
+	  CONVERTED maps (an @ sprite or material ref) use ART no other region places
+	  (#608 ruling; the region-wide share is report-only). Placements through a
+	  _common utility role (kl.COMMON_KINDS) leave numerator and denominator, and
+	  may be at most kl.COMMON_CAP_PCT% of any region's converted-map placements.
+	  Each converted map's floor/wall material_ref names are exclusive to the region.
+	G3: ratchet vs qa/baselines/scene-repetition.json over baseline maps only; a
+	  sprite missing from its generic_class is classed on the fly by its art.
 	G4: _g4_compare vs the base tree; the base is resolved only when a map carries
 	  an @ref or --base is explicit (Phase 0: nothing to compare, no git call).
 	G5 is a process gate (fallback boot run), reported not computed."""
-	common_roles = set(((kits.get("_common") or {}).get("roles")) or {})
+	art = ident or (lambda sid: sid)
 	common_mats = set(((kits.get("_common") or {}).get("materials")) or {})
 	by_region: dict = {}
 	for map_id, doc in sorted(resolved.items()):
@@ -1775,21 +1877,31 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 			for vid, _ in kl.pool_of(role)}
 		explicit = sum(1 for d in by_region[region].values() for p in _placements(d) if not p["role"] and p["sprite"] in pooled)
 		report.append(f"kits G1: {region} conversion coverage: {explicit} explicit id(s) remaining for kinds that have a pool")
-	seen = _sprite_regions(resolved, regions)
+	seen_art = _sprite_regions(resolved, regions, art)
+	cap = kl.COMMON_CAP_PCT
+	for region, docs in sorted(by_region.items()):
+		conv_all = [p for d in docs.values() if _is_converted_map(d) for p in _placements(d)]
+		n_util = sum(1 for p in conv_all if _common_utility(p, region, kits))
+		if n_util * 100 > cap * len(conv_all):
+			g2.append(f"G2 _common cap: {region}'s converted map(s) place {n_util}/{len(conv_all)} "
+				f"({_pct(n_util, len(conv_all))}%) through _common utility roles, over {cap}%")
 	for region in converted:
 		conv_docs = {m: d for m, d in by_region[region].items() if _is_converted_map(d)}
-		eligible = [p for d in conv_docs.values() for p in _placements(d) if p["role"] not in common_roles]
-		unique = sum(1 for p in eligible if seen[p["sprite"]] == {region})
+		conv_all = [p for d in conv_docs.values() for p in _placements(d)]
+		eligible = [p for p in conv_all if not _common_utility(p, region, kits)]
+		unique = sum(1 for p in eligible if seen_art[art(p["sprite"])] == {region})
 		pct = _pct(unique, len(eligible))
-		region_wide = [p for d in by_region[region].values() for p in _placements(d) if p["role"] not in common_roles]
-		pct_region = _pct(sum(1 for p in region_wide if seen[p["sprite"]] == {region}), len(region_wide))
-		others = [(len(seen_set(seen, region) & seen_set(seen, o)) / max(1, len(seen_set(seen, region) | seen_set(seen, o))), o)
+		region_wide = [p for d in by_region[region].values() for p in _placements(d) if not _common_utility(p, region, kits)]
+		pct_region = _pct(sum(1 for p in region_wide if seen_art[art(p["sprite"])] == {region}), len(region_wide))
+		others = [(len(seen_set(seen_art, region) & seen_set(seen_art, o)) / max(1, len(seen_set(seen_art, region) | seen_set(seen_art, o))), o)
 			for o in by_region if o != region]
 		jac = max(others)[0] if others else 0.0
-		report.append(f"kits G2: {region} identity {pct}% unique variants over {len(conv_docs)} converted map(s); "
+		n_util = len(conv_all) - len(eligible)
+		report.append(f"kits G2: {region} identity {pct}% unique art over {len(conv_docs)} converted map(s); "
+			f"_common utility {n_util}/{len(conv_all)} ({_pct(n_util, len(conv_all))}%, cap {cap}%, excluded); "
 			f"{pct_region}% region-wide (report only), max region Jaccard {jac:.2f} (report only)")
 		if eligible and pct < 50.0:
-			g2.append(f"G2 identity: {region}'s {len(conv_docs)} converted map(s) have {pct}% placements on variants unique to it, below 50%")
+			g2.append(f"G2 identity: {region}'s {len(conv_docs)} converted map(s) have {pct}% placements on art unique to it, below 50%")
 		for map_id, doc in conv_docs.items():
 			names = {fl.get("material_ref") for fl in doc.get("floor_layers") or [] if isinstance(fl, dict)}
 			walls = doc.get("walls") if isinstance(doc.get("walls"), dict) else {}
@@ -1815,7 +1927,7 @@ def check_kit_gates(resolved: dict, regions: dict, kits: dict, parsed, errors: l
 					cls = classes.get(p["sprite"])
 					if cls is None:
 						fly.add(p["sprite"])
-						cls = "generic" if len(seen.get(p["sprite"], ())) >= GENERIC_REGIONS else "regional"
+						cls = "generic" if len(seen_art.get(art(p["sprite"]), ())) >= GENERIC_REGIONS else "regional"
 					gen += cls == "generic"
 				plc += len(ps)
 				bgen += int(bm.get("generic_placements", 0))
@@ -3506,6 +3618,7 @@ def main() -> int:
 	check_placements_off_water(maps, errors)
 	advisories: list = []
 	resolved_maps = check_kits(parsed, maps, errors, advisories, report)
+	art_ident = ArtIdent.from_parsed(parsed)
 	base_ref = None
 	if "--base" in sys.argv:
 		at = sys.argv.index("--base") + 1
@@ -3517,12 +3630,14 @@ def main() -> int:
 	baseline = json.loads(baseline_path.read_text()) if baseline_path.exists() else None
 	if "--regen-scene-baseline" in sys.argv:
 		baseline = build_scene_baseline(resolved_maps, _map_regions(parsed),
-			(baseline or {}).get("tolerance", {"placements": 1, "pp": 2}))
+			(baseline or {}).get("tolerance", {"placements": 1, "pp": 2}), art_ident)
 		baseline_path.parent.mkdir(parents=True, exist_ok=True)
 		baseline_path.write_text(json.dumps(baseline, indent=1, sort_keys=True) + "\n")
 		report.append("kits G3: baseline regenerated -- add a CHOICE-LOG line")
+	report_shared_art(art_ident, resolved_maps, _map_regions(parsed), report)
+	check_aliases(art_ident, errors)
 	check_kit_gates(resolved_maps, _map_regions(parsed), parsed.get(DATA / "kits.json") or {}, parsed,
-		errors, advisories, report, base_ref=base_ref, baseline=baseline)
+		errors, advisories, report, base_ref=base_ref, baseline=baseline, ident=art_ident)
 	check_moods(parsed, maps, errors)
 	check_stat_growth_flat(parsed, errors)
 	check_companion_counter(parsed, maps, errors)

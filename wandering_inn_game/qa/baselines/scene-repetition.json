@@ -1,5 +1,5 @@
 {
- "_comment": "G3 scene-repetition ratchet (#607). Regenerate ONLY with `data_lint.py --regen-scene-baseline`, and every regen needs a CHOICE-LOG line saying why. generic = sprite placed in >= 3 regions.",
+ "_comment": "G3 scene-repetition ratchet (#607). Regenerate ONLY with `data_lint.py --regen-scene-baseline`, and every regen needs a CHOICE-LOG line saying why. generic = a sprite whose art (wi_kits_lib.art_identity, #623) is placed in >= 3 regions under any id.",
  "generic_class": {
   "a_shepherd": "regional",
   "alchemy_bench": "generic",
@@ -16,8 +16,6 @@
   "bat": "generic",
   "bed": "generic",
   "bench": "generic",
-  "bonus_produce_crate": "regional",
-  "bonus_round_table": "regional",
   "boulder": "generic",
   "briar_collector": "regional",
   "briar_collector_deep": "regional",
@@ -35,7 +33,6 @@
   "chest": "generic",
   "city_gate_arch": "regional",
   "city_gatehouse": "regional",
-  "city_roof_owned": "regional",
   "city_runner": "regional",
   "city_scribe": "regional",
   "coin_shop_sign": "regional",
@@ -50,7 +47,6 @@
   "counter_right": "generic",
   "coyle_shop_sign": "regional",
   "crate": "generic",
-  "crate_owned": "regional",
   "crop_row_dark_green": "regional",
   "crop_row_green": "regional",
   "crop_row_orange": "regional",
@@ -64,8 +60,6 @@
   "dig_survey_stakes_owned": "regional",
   "dirty_table": "regional",
   "door": "generic",
-  "door__alt2": "regional",
-  "door__alt3": "regional",
   "door_locked_heavy": "regional",
   "dormant_guardian_statue": "regional",
   "drake_patron": "regional",
@@ -82,6 +76,7 @@
   "enchanter_stock_shelf": "regional",
   "enchanter_vial_case": "regional",
   "erin": "regional",
+  "facade_plaster": "regional",
   "firewood_stack": "regional",
   "food_basket": "regional",
   "food_bread": "regional",
@@ -135,17 +130,17 @@
   "inn_bar_station": "regional",
   "inn_hearth": "regional",
   "inn_kitchen_prep": "regional",
+  "inn_roof": "regional",
   "inn_room_ledger": "generic",
   "inn_round_table": "regional",
   "inn_sign": "regional",
-  "inn_table_dirty__before": "regional",
   "inn_table_soiled": "regional",
   "invrisil_cargo_1": "regional",
   "invrisil_cargo_2": "regional",
   "invrisil_door_street_2": "regional",
   "invrisil_door_street_3": "regional",
   "invrisil_enforcer": "regional",
-  "invrisil_facade_window_1": "regional",
+  "invrisil_facade_window_1": "generic",
   "invrisil_facade_window_3": "regional",
   "invrisil_flower_cart": "regional",
   "invrisil_gentlewoman_2": "regional",
@@ -171,12 +166,7 @@
   "leather_satchel": "regional",
   "library_desk": "generic",
   "library_shelf": "generic",
-  "liscor_bench": "regional",
-  "liscor_bracket_lantern": "regional",
   "liscor_bread_stall": "regional",
-  "liscor_chair": "regional",
-  "liscor_sconce_copper": "regional",
-  "liscor_side_chair": "regional",
   "liscor_watch_guard": "regional",
   "longhouse_communal_table_owned": "regional",
   "lyonette": "regional",
@@ -197,9 +187,7 @@
   "note_pinned": "generic",
   "octavia": "regional",
   "olesm": "regional",
-  "owned_fallback_facade_plaster": "regional",
   "owned_fallback_library_desk": "regional",
-  "owned_fallback_shelf_bottles": "regional",
   "owned_fallback_table_brown": "regional",
   "pallass_billet_rack": "regional",
   "pallass_rail_post": "regional",
@@ -241,7 +229,7 @@
   "riverfarm_windmill": "regional",
   "road_peddler": "regional",
   "rock_crab": "regional",
-  "rug_woven_cream": "regional",
+  "rug_woven_cream": "generic",
   "rug_woven_red": "regional",
   "ruin_fallen_column_owned": "regional",
   "ruin_gate": "regional",
@@ -262,9 +250,9 @@
   "stairs_up": "regional",
   "stallkeeper": "regional",
   "steam_vent": "regional",
-  "stool": "regional",
+  "stool": "generic",
   "street_lamp": "regional",
-  "table_brown": "regional",
+  "table_brown": "generic",
   "table_brown__alt1": "regional",
   "tallyman": "regional",
   "temper_bench": "regional",
@@ -276,7 +264,7 @@
   "tree_autumn_orange": "regional",
   "tree_autumn_red": "regional",
   "tree_big": "regional",
-  "tree_round": "regional",
+  "tree_round": "generic",
   "turf_cut_mouth": "regional",
   "unlit_lantern": "generic",
   "vault_construct": "regional",
@@ -290,7 +278,7 @@
   "watchgolem": "regional",
   "wax_seal_tray": "regional",
   "wilovan": "regional",
-  "window_blue": "regional",
+  "window_blue": "generic",
   "window_blue__alt1": "regional",
   "witch_cauldron": "regional",
   "witch_cottage": "regional",
@@ -324,11 +312,11 @@
    "placements": 56
   },
   "floodplains": {
-   "generic_placements": 17,
-   "generic_share_pct": 19.54,
+   "generic_placements": 21,
+   "generic_share_pct": 24.14,
    "maps": {
     "floodplains": {
-     "generic_placements": 13,
+     "generic_placements": 17,
      "placements": 67
     },
     "rags_camp": {
@@ -350,34 +338,34 @@
    "placements": 29
   },
   "inn": {
-   "generic_placements": 32,
-   "generic_share_pct": 45.71,
+   "generic_placements": 39,
+   "generic_share_pct": 55.71,
    "maps": {
     "inn": {
-     "generic_placements": 19,
+     "generic_placements": 22,
      "placements": 50
     },
     "inn_player_room": {
-     "generic_placements": 7,
+     "generic_placements": 9,
      "placements": 11
     },
     "inn_upstairs": {
-     "generic_placements": 6,
+     "generic_placements": 8,
      "placements": 9
     }
    },
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 45,
-   "generic_share_pct": 23.08,
+   "generic_placements": 58,
+   "generic_share_pct": 29.74,
    "maps": {
     "adventurers_rest": {
-     "generic_placements": 4,
+     "generic_placements": 6,
      "placements": 21
     },
     "brothers_parlor": {
-     "generic_placements": 10,
+     "generic_placements": 12,
      "placements": 25
     },
     "enchanter_shop": {
@@ -389,11 +377,11 @@
      "placements": 5
     },
     "invrisil_boulevard": {
-     "generic_placements": 2,
+     "generic_placements": 5,
      "placements": 51
     },
     "invrisil_cross_street": {
-     "generic_placements": 1,
+     "generic_placements": 4,
      "placements": 31
     },
     "mercantile_alleys": {
@@ -401,41 +389,41 @@
      "placements": 30
     },
     "stationer": {
-     "generic_placements": 7,
+     "generic_placements": 10,
      "placements": 18
     }
    },
    "placements": 195
   },
   "liscor": {
-   "generic_placements": 19,
-   "generic_share_pct": 18.63,
+   "generic_placements": 48,
+   "generic_share_pct": 44.86,
    "maps": {
     "barracks": {
-     "generic_placements": 3,
-     "placements": 14
+     "generic_placements": 10,
+     "placements": 13
     },
     "guild": {
-     "generic_placements": 2,
-     "placements": 17
+     "generic_placements": 10,
+     "placements": 18
     },
     "runners_guild": {
-     "generic_placements": 4,
-     "placements": 11
+     "generic_placements": 6,
+     "placements": 10
     },
     "street": {
-     "generic_placements": 10,
-     "placements": 60
+     "generic_placements": 22,
+     "placements": 66
     }
    },
-   "placements": 102
+   "placements": 107
   },
   "pallass": {
-   "generic_placements": 27,
-   "generic_share_pct": 28.12,
+   "generic_placements": 28,
+   "generic_share_pct": 29.17,
    "maps": {
     "pallass_den_shop": {
-     "generic_placements": 11,
+     "generic_placements": 12,
      "placements": 15
     },
     "pallass_forge": {
@@ -454,8 +442,8 @@
    "placements": 96
   },
   "riverfarm": {
-   "generic_placements": 28,
-   "generic_share_pct": 23.93,
+   "generic_placements": 30,
+   "generic_share_pct": 25.64,
    "maps": {
     "riverfarm_longhouse": {
      "generic_placements": 7,
@@ -466,7 +454,7 @@
      "placements": 12
     },
     "riverfarm_village": {
-     "generic_placements": 6,
+     "generic_placements": 7,
      "placements": 53
     },
     "witch_hollow": {
@@ -474,7 +462,7 @@
      "placements": 32
     },
     "witch_hut": {
-     "generic_placements": 5,
+     "generic_placements": 6,
      "placements": 9
     }
    },

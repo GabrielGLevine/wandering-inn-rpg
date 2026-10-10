@@ -25,6 +25,10 @@
 - Each region gets its own issue (`Regional kits: <region>`, part of #606) and branch `issue/<n>-kits-<region>`.
 - **Out of scope:** enemy rosters, arena kits and Phase 3 generation. Generation needs a user-approved batch, and the PixelLab subscription has lapsed.
 
+## Allocation table
+
+Each region's pool read starts from `docs/kits-allocation.md`. That table gives every kept piece to the region where it fits best, not to the first region that asks for it. To use a candidate that is allocated to another region, get a `docs/CHOICE-LOG.md` ruling first; the PR that moves it also updates its line in the table. Since `bundle-v8` (#621), every source sheet in the table is bundled.
+
 ## Review Focus
 
 1. **Shared rigs between region casts and canon characters:** for example inn guests, and Liscor's role NPCs on `gnoll_traveler`. Pinned by the cast lint, which is re-run on the composed main after each merge.
@@ -125,11 +129,13 @@ Logged in `docs/CHOICE-LOG.md` (Regional kits). Land both before another map ado
 
 - [ ] Issue opened; branch and worktree created; overlay copied; import pass done.
 - [ ] Capture scripts written; before-captures preserved in `qa_output/kits/<region>/before/`.
+- [ ] `python3 tools/asset_coverage.py --check` shows 0 UNCLASSIFIED; pool read starts from `docs/kits-allocation.md`.
 - [ ] Materials: region-exclusive floor and walls selected (pool read PASS) and wired; or a generation-list row added.
 - [ ] Null rule (spec §2.2): a map field set to `null` blocks the material's value, and only wall-segment `face`/`cap` may be nulled (caps-only or face-only segments). `data_lint` rejects any other null, and a nulled key on a material that carries a `fallback_render`.
 - [ ] Roles: each pool selected via `fill_kit` with a pool read; fallback set ≥2 distinct owned sprites; lint and commit per role.
 - [ ] Rows converted opt-in; skip list with reasons recorded; stand-ins replaced or listed; cardinal-axis check done.
 - [ ] `data_lint --base origin/main` green: G1–G5, cast and denylist rules.
+- [ ] G2/G3 count art; check `wire_asset` duplicate refusals.
 - [ ] `preflight --full`, `ci_sweep --touching <maps, kits.json, biomes.json>` and `journey_gate --only <affected>` green.
 - [ ] Combat capture where a biome row changed.
 - [ ] Official and public after-captures plus the region strip.

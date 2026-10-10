@@ -58,6 +58,9 @@ def make_tree(root: Path) -> Path:
     game = root / "wandering_inn_game"
     png_box(game / "assets" / "sprites" / "crate_owned" / "Idle-Sheet.png", 64, 64, (20, 30, 43, 59))
     sheet = png_box(game / "assets" / "props" / "free_pack" / "Furniture.png", 128, 64, (16, 8, 31, 30))
+    with Image.open(sheet) as im:   # the shipped `crate` (48, 8): never the slice's art, or #623 refuses the slice
+        ImageDraw.Draw(im).rectangle((48, 8, 63, 30), fill=(120, 70, 30, 255), outline=(20, 10, 5, 255))
+        im.save(sheet)
     sprites = {
         "pc_human_m": {"directional": True, "render_scale": 0.62, "animations": {"idle": {
             "sheet_down": "res://assets/sprites/pc_human_m/Idle_Down-Sheet.png",
@@ -69,7 +72,7 @@ def make_tree(root: Path) -> Path:
                      "frame_size": [64, 64], "fps": 1}}},
         "crate": {"fallback_sprite": "crate_owned", "render_scale": 1.0, "anchor": [0.5, 1.0], "animations": {
             "idle": {"sheet": "res://assets/props/free_pack/Furniture.png", "frame_size": [16, 23],
-                     "region": [16, 8, 16, 23], "fps": 1}}},
+                     "region": [48, 8, 16, 23], "fps": 1}}},
     }
     (game / "data").mkdir(parents=True)
     (game / "data" / "sprites.json").write_text(json.dumps(sprites, indent=1) + "\n", encoding="utf-8")

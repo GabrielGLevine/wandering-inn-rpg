@@ -111,6 +111,22 @@
    "_comment": "8a A1: anchor_stone_pedestal + rubble-scatter candidates (region table in docs/archive/design/8a-asset-assembly.md)."
   },
   {
+   "path": "assets/props/cemetery/Tree.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 9 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Cemetery 0.4/Pixel Crawler - Cemetery/Environment/Props/Tree.png."
+  },
+  {
+   "path": "assets/props/desert/Props.png",
+   "source_pack": "Pixel Crawler - Desert",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 12 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Desert/Pixel Crawler - Desert/Assets/Props.png."
+  },
+  {
    "path": "assets/props/fairy_forest/Props.png",
    "source_pack": "Pixel Crawler - Fairy Forest 1.7",
    "verdict": "FORBIDDEN",
@@ -132,6 +148,14 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Building_Props.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 10 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Structures/Buildings/Props.png."
   },
   {
    "path": "assets/props/free_pack/Building_Roofs.png",
@@ -160,6 +184,14 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Dungeon_Props.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 8 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Dungeon_Props.png."
   },
   {
    "path": "assets/props/free_pack/Esoteric.png",
@@ -219,11 +251,51 @@
    "fallback": "placeholder"
   },
   {
+   "path": "assets/props/free_pack/Pan.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 27 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Pan.png."
+  },
+  {
+   "path": "assets/props/free_pack/Resources.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 11 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Resources.png."
+  },
+  {
    "path": "assets/props/free_pack/Rocks.png",
    "source_pack": "Pixel Crawler - Free Pack 2.1",
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Tools.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 18 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Tools.png."
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M1_S2.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 5 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_01/Size_02.png."
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M1_S3.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 1 kept piece (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_01/Size_03.png."
   },
   {
    "path": "assets/props/free_pack/Tree_M1_S4.png",
@@ -233,11 +305,83 @@
    "fallback": "placeholder"
   },
   {
+   "path": "assets/props/free_pack/Tree_M1_S5.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 5 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_01/Size_05.png."
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M2_S2.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 3 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_02/Size_02.png."
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M2_S3.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 3 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_02/Size_03.png."
+  },
+  {
    "path": "assets/props/free_pack/Tree_M2_S4.png",
    "source_pack": "Pixel Crawler - Free Pack 2.1",
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M2_S5.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 3 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_02/Size_05.png."
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M3_S2.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 3 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_03/Size_02.png."
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M3_S3.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 3 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_03/Size_03.png."
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M3_S4-export.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 1 kept piece (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_03/Size_04-export.png."
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M3_S4.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 1 kept piece (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_03/Size_04.png."
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M3_S5.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 1 kept piece (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Trees/Model_03/Size_05.png."
   },
   {
    "path": "assets/props/free_pack/Vegetation.png",
