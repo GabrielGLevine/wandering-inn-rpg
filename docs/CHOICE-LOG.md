@@ -338,6 +338,15 @@ and chronology belong in issue PRs. Earlier context:
     Invrisil 52 → 58 generic placements (26.67% → 29.74%), inn 35 → 39
     (50.0% → 55.71%), Riverfarm 29 → 30 (24.79% → 25.64%); every other
     region unchanged.
+  - **Design-led generation decisions (user, 2026-10-09; `docs/design/2026-10-09-kits-design-led-gaps.md`), all YES for now:**
+    1. Liscor reads as warm sandstone-brick and plaster, NOT a generated full-brick facade kit:
+       - a tan brick city wall and gate, from Cemetery Walls (12,0)-(17,12) plus the owned gatehouse recoloured;
+       - a brick ground storey under the cream plaster upper storey;
+       - shingle roofs.
+    2. Windows get a night state from a warm pane-glow overlay, not generated object states.
+    3. The Pallass lamp is the owned `crystal_lamp` as it is, plus a cold glow cone at night. Indoors it is the chain-cage crystal lamp. There is no bronze wall-arm variant.
+    4. The Invrisil alley workbench cluster becomes a cargo-yard cluster, unless dialogue names a workbench.
+    - Generation is deferred to its own issue. The firm list is: Antinium worker rig, an owned cold wall lantern, an owned stool, and a second owned street door.
   - **G3 regens (#608 pilot 1a, controller):** each regen follows a
     reviewed conversion and never hides repetition. The Invrisil generic
     placements went 84 → 76 after the street conversions (share 43.3% →
