@@ -18,10 +18,11 @@ archived, or superseded session blocks.
     - G2 counts art identity (#625): a regional pin must be exclusive *art*, not just a new sprite id.
   - Done: #607 (PR #609); #608 Invrisil (PRs #614, #619); #621 bundle-v8 + allocation (PR #622); #623 art-identity G2/G3 + `_common` guardrails (PR #625); #624 intake coverage (PR #626); 31-kind labels (PR #627); re-intake allocation, 618 pieces (PR #628); **#620 Liscor R1 (PR #630, `56dd2573`; G2 art: Liscor 68.83%, Invrisil 56.92%)**. Fetch bundle-v8 before QA in main (`scripts/fetch_private_assets.sh`).
   - User decisions, 2026-10-09 (CHOICE-LOG): all four design-led cuts are YES for now (Liscor sandstone-brick wall/gate + brick ground storey + shingle roofs from existing art; window night-glow overlay; Pallass lamp = `crystal_lamp` + glow cone; Invrisil alley workbench -> cargo-yard cluster). Earlier rulings: global allocation; `_common` Tier A utility props only, 30% cap; design-led gap pass before any generation.
-  - Next, in order:
-    1. #629: Liscor identity build-out (decision 1), bundle-v9 (24 sheets), Liscor-only waystone alias, inn-table duplicate art, official dirt seams (N6).
-    2. `_common` Tier A pool population, then R2 (underground) per the rollout plan.
-    3. #610 generation batch, deferred: firm list is 4 items (Antinium worker rig, owned cold wall lantern, owned stool, second owned street door). Needs PixelLab renewal + user approval.
+  - 2026-10-10 (user: "generate, release bundle-v9, file/expand rebuild issues"):
+    - **bundle-v9 released** (private, Latest, 412 paths = v8 + 24 re-intake sheets); public manifest/ignore PR #639 (preflight --full green, awaiting review + CI).
+    - **#610 firm list generated** on PixelLab USD credits via REST (the MCP refuses on an expired subscription; 1 concurrent job). Candidates, picks, prompts and the A/B board are in `potential_assets/pixellab_2026-10-10/README.md` (untracked, local only): stool #43, cold lantern #32, second door #0, and Antinium rig `9091ff10…` (4 dir; walk and idle animations). About $0.4 spent; about $4.6 credits left. The client is a scratchpad script; recreate it from the README endpoints if needed.
+    - **Rebuild issues:** #631 `_common` + scatter (first), #629 Liscor (expanded: all 73 allocated pieces + stool + Antinium), #632 Invrisil rebuild (50 pieces + lantern + door), #633–#638 for R2–R7. Indexed on #606.
+  - Next, in order: merge #639 → #631 → #629 and #632 → R2–R7 (#633–#638).
   - Restart backup: `.superpowers/restart-backup-2026-10-09/` (scratchpad, art evidence, WIP worktree patches; `README.md` restore steps; `FRESH-SESSION-PROMPT.md`). Remaining worktrees are WIP and backed up: `wi-584-audio`, `wi-art-public`, `wi-browser-ready`. If a reboot wipes `/private/tmp`, run `git worktree prune` and restore from the README.
   - Lessons:
     - Writing tools take `--repo-root <worktree>` only.
