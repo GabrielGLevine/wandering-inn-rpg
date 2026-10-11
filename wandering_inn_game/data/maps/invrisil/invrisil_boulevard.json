@@ -1,5 +1,5 @@
 {
- "_kits_recompose": "#632 — re-intake pieces: purple banners flank the cross-street door; topiary urns at the square's south corners (blocked)",
+ "_kits_recompose": "#632 — re-intake pieces: purple banners flank the cross-street door; a topiary urn on the west square's blocked cell (3,8), which had no visible reason",
  "_comment": "Reachable ONLY via the portal contract (data/portals.json's new 'invrisil' row, requires_accomplishment invrisil_attuned, banked by the Guild-board letter beat)",
  "biome": "invrisil_street",
  "camera": {"offset": [0, -3], "margins": [0, 3, 0, 0]},
@@ -599,14 +599,6 @@
   [
    27,
    15
-  ],
-  [
-   10,
-   9
-  ],
-  [
-   19,
-   9
   ]
  ],
  "floor_layers": [
@@ -1464,30 +1456,15 @@
   {
    "sprite": "invrisil_planter_urn",
    "cell": [
-    10,
-    9
+    3,
+    8
    ]
   },
   {
    "sprite": "invrisil_topiary",
    "cell": [
-    10,
-    9
-   ],
-   "lift": 18
-  },
-  {
-   "sprite": "invrisil_planter_urn",
-   "cell": [
-    19,
-    9
-   ]
-  },
-  {
-   "sprite": "invrisil_topiary",
-   "cell": [
-    19,
-    9
+    3,
+    8
    ],
    "lift": 18
   }
