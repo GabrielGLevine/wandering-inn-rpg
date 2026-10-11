@@ -347,7 +347,7 @@
     3
    ],
    "display_name": "The Work-Room Door",
-   "sprite": "door_locked_heavy",
+   "sprite": "invrisil_door_street_3",
    "requires_skill": "pick_lock",
    "observe": "A plain door in a plain partition, and a lock on it worth more than the door is. Three brass wards on the escutcheon, and the wear around the keyhole is all on one side.",
    "skill_hint_toast": "Three wards and a shallow throw, and every scratch on the plate says the key goes in at an angle. Working it would take the picks and the patience.",

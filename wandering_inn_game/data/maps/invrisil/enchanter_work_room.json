@@ -130,7 +130,7 @@
     5
    ],
    "display_name": "Back into the Shop",
-   "sprite": "door",
+   "sprite": "invrisil_door_street_3",
    "to_map": "enchanter_shop",
    "to_cell": [
     8,
