@@ -53,6 +53,118 @@
       "detail": 0.4
      }
     },
+    "floor_marble": {
+     "_comment": "#632 (#610 floor_shop, design-led): Free Pack Floors_Tiles pale marble, the full-tile rows of the white blob (cols 0-4, rows 22-23), for the front-of-house shops (stationer, enchanter shop). Private sheet; the public build keeps the owned flagstone.",
+     "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+     "tile_px": 16,
+     "tone": {
+      "base": [
+       0.47,
+       0.47,
+       0.5
+      ],
+      "detail": 0.35
+     },
+     "variants": [
+      [
+       0,
+       22
+      ],
+      [
+       1,
+       22
+      ],
+      [
+       2,
+       22
+      ],
+      [
+       3,
+       22
+      ],
+      [
+       4,
+       22
+      ],
+      [
+       0,
+       23
+      ],
+      [
+       1,
+       23
+      ],
+      [
+       2,
+       23
+      ],
+      [
+       3,
+       23
+      ],
+      [
+       4,
+       23
+      ]
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/woodplank_over_stone_v1.png",
+      "tile_px": 16,
+      "coords": [
+       2,
+       1
+      ],
+      "tone": {
+       "base": [
+        0.36,
+        0.37,
+        0.4
+       ],
+       "detail": 0.4
+      }
+     }
+    },
+    "wall_dado": {
+     "_comment": "#632 (#610 wall_shop, design-led): Building_Walls pale plaster panel (24,13) as the shop wall face, with the owned 1-px gold cornice trim. North segments only; caps-only side segments stay @wall_shop. Private sheet; the public build keeps the owned timber face and the trim.",
+     "sheet": "res://assets/props/free_pack/Building_Walls.png",
+     "tile_px": 16,
+     "cap": [
+      24,
+      12
+     ],
+     "face": [
+      24,
+      13
+     ],
+     "trim": {
+      "sheet": "res://assets/tiles/invrisil/cornice_gold_line.png",
+      "tile_px": 16,
+      "coords": [
+       0,
+       0
+      ]
+     },
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/timberwall_over_plank_v1.png",
+      "tile_px": 16,
+      "cap": [
+       0,
+       3
+      ],
+      "face": [
+       3,
+       0
+      ],
+      "tone": {
+       "base": [
+        0.4,
+        0.34,
+        0.26
+       ],
+       "detail": 0.55
+      }
+     }
+    },
     "floor_rest": {
      "_comment": "#608 1b pool read floor_shop #1: the same atlas's upper terrain, honey plank wang_15 at [0,3], for the Adventurer's Rest.",
      "sheet": "res://assets/tiles/harvest/woodplank_over_stone_v1.png",
@@ -99,7 +211,8 @@
       "door",
       "invrisil_door_street_2",
       "invrisil_door_street_3",
-      "invrisil_door_street_4"
+      "invrisil_door_street_4",
+      "door_street_townhouse_owned"
      ]
     },
     "facade_window": {
@@ -113,13 +226,7 @@
       "invrisil_facade_window_3"
      ]
     },
-    "lamp_wall": {
-     "pick": "map",
-     "pool": [
-      "sconce",
-      "invrisil_lamp_wall_1"
-     ]
-    },
+    "lamp_wall": "invrisil_lamp_wall_1",
     "cargo": {
      "pick": "cell",
      "pool": [

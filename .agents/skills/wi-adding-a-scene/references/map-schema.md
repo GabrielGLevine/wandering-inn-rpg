@@ -9,6 +9,17 @@ expanded cells drive sim blocking and wall rendering. Atlas `cap`/`face`
 coordinates are art coordinates, not gameplay cells. Decorative skirts are
 nonblocking.
 
+A decor row may carry `night_glow: {sprite, phase}` (phase defaults to dusk and
+night): World draws that sprite additively over the row's art, only in those
+phases, lifted toward its own colour under the grade. It spends no light from
+the per-map light budget and is not a decor row, so the one-cell decor count is
+unchanged. Use it for lit windows (decision 2, #632); entities change look
+through `visual_states` instead.
+
+A decor row's `lift` (whole pixels, 1-48) raises its art onto a surface drawn
+on the same cell, such as a quill on a counter, and sorts it just in front of
+that surface. Fallback art lifts the same way.
+
 Every entity has ID, kind, cell, display name, and sprite, with optional facing
 and tint. NPCs may start a conversation or provide fallback dialogue. Props may
 sleep, bank an interaction accomplishment, or invoke a known field skill. Doors

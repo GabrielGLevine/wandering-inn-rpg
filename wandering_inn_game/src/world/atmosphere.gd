@@ -93,6 +93,23 @@ static func night_attenuation_modulate(rgb: Color, retained: float) -> Color:
 	)
 
 
+## #632: share of a map's phase grade a decor `night_glow` keeps. 0 would draw
+## the glow as if unlit by the grade; a little grade keeps it in the scene's key.
+const GLOW_RETAINED := 0.25
+
+
+## Local modulate that lifts an additive glow back toward its own colour under
+## the current phase grade (identity at day / ungraded maps).
+static func glow_modulate(map_id: String, phase: String) -> Color:
+	var mood: Dictionary = (_moods_data().get("moods", {}) as Dictionary).get(map_id, {})
+	var rgb: Variant = mood.get(phase, [1.0, 1.0, 1.0])
+	if not (rgb is Array) or (rgb as Array).size() != 3:
+		return Color.WHITE
+	return night_attenuation_modulate(
+		Color(float(rgb[0]), float(rgb[1]), float(rgb[2])), GLOW_RETAINED
+	)
+
+
 static func layer_night_modulate(map_id: String, phase: String, layer: String) -> Color:
 	if phase != "night":
 		return Color.WHITE

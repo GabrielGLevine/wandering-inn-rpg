@@ -1,5 +1,5 @@
 {
- "_kits_recompose": "#608 — sconce off open floor; gnoll off the bench",
+ "_kits_recompose": "#632 — re-intake pieces: one three-cell bench for the two, helmeted bust beside the rack of retired kit (blocked)",
  "_comment": "v0.16 I2 (#306); kit-converted in #608 1b. Walk-in only. Biome `invrisil_shop`, whose render fields are still an `inn` clone, covered here by the all-cell @floor_rest layer. Walls are @wall_shop. Kit roles (@table, @cargo) sit beside reused sprites and explicit Invrisil identity pins (invrisil_lamp_wall_1, invrisil_door_street_2). Perimeter is walls.segments (NEVER also in `blocked`) -- a raw blocked ring in this biome renders crates and barrels. `blocked` is furniture only, each cell with a decor row. Plates + bravos gate on hat_job_taken.",
  "biome": "invrisil_shop",
  "grid": {
@@ -9,6 +9,10 @@
  "blocked": [
   [
    8,
+   1
+  ],
+  [
+   11,
    1
   ]
  ],
@@ -92,14 +96,7 @@
    ]
   },
   {
-   "sprite": "bench",
-   "cell": [
-    3,
-    5
-   ]
-  },
-  {
-   "sprite": "bench",
+   "sprite": "invrisil_bench",
    "cell": [
     4,
     5
@@ -163,6 +160,13 @@
    "cell": [
     11,
     4
+   ]
+  },
+  {
+   "sprite": "invrisil_bust",
+   "cell": [
+    11,
+    1
    ]
   }
  ],
@@ -287,7 +291,7 @@
     4
    ],
    "display_name": "The Long Table",
-   "sprite": "table_brown",
+   "sprite": "table_brown__alt1",
    "observe": "Long enough for a full company and set for four. The factor walks its empty half twice while you stand there and adds nothing to it."
   },
   {

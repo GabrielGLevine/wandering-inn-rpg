@@ -10183,7 +10183,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_unlit_lantern"
+  "fallback_sprite": "invrisil_lamp_wall_cold"
  },
  "invrisil_cargo_1": {
   "render_scale": 0.6,
@@ -10263,7 +10263,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "invrisil_door_street_2"
+  "fallback_sprite": "door_street_townhouse_owned"
  },
  "invrisil_door_street_4": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [197, 320, 22, 32] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
@@ -10956,5 +10956,635 @@
    }
   },
   "kind": "crate"
+ },
+ "invrisil_sealed_bale": {
+  "render_scale": 1.0,
+  "shadow": true,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_sealed_bale/Idle-Sheet.png",
+    "frame_size": [
+     24,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_rest_sign": {
+  "_comment": "#632: the Adventurer's Rest house sign as its prose describes it (a hand of cards face down and a hat on a peg, no name). Owned: a hand-pixel edit of the owned invrisil_hanging_sign board.",
+  "render_scale": 0.428571,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/invrisil_rest_sign/Idle-Sheet.png"
+   }
+  }
+ },
+ "invrisil_lamp_wall_cold": {
+  "_comment": "#632 r1 read: the owned cold wall lantern (#610 firm list) with its steel lifted two value steps and a dark outline, an owned edit of lamp_wall_cold_owned (the unedited art read as a grey ghost on the alley brick). Serves as invrisil_lamp_wall_1's public fallback.",
+  "kind": "lamp",
+  "render_scale": 0.7,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_lamp_wall_cold/Idle-Sheet.png",
+    "frame_size": [
+     24,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "window_glow_warm": {
+  "_comment": "#632 decision 2: the window night state. Drawn only through a decor row's night_glow (additive, phase-gated, world.gd _build_night_glow), never placed as a row of its own.",
+  "kind": "fx",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/window_glow_warm/Idle-Sheet.png"
+   }
+  }
+ },
+ "invrisil_planter_urn": {
+  "shadow": true,
+  "_comment": "slice of potential_assets/Pixel Crawler - Garden Environment/Pixel Crawler - Garden Environment/Assets/Tiles.png region [400, 320, 16, 32] sheet sha256 f554dbc04df9; wired by tools/wire_asset.py",
+  "kind": "container",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/tiles/garden/Tiles.png",
+    "frame_size": [
+     16,
+     32
+    ],
+    "region": [
+     400,
+     320,
+     16,
+     32
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "invrisil_urn_owned"
+ },
+ "invrisil_potted_plant": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [64, 354, 16, 30] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
+  "kind": "plant",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "frame_size": [
+     16,
+     30
+    ],
+    "region": [
+     64,
+     354,
+     16,
+     30
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_plant_pot"
+ },
+ "invrisil_planter": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Library/Pixel Crawler - Library/Assets/Tiles.png region [368, 320, 16, 48] sheet sha256 858832171fa4; wired by tools/wire_asset.py",
+  "kind": "plant",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   0.9583
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/tiles/library/Tiles.png",
+    "frame_size": [
+     16,
+     48
+    ],
+    "region": [
+     368,
+     320,
+     16,
+     48
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_plant_pot"
+ },
+ "invrisil_bell_jar": {
+  "shadow": false,
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Esoteric.png region [32, 80, 16, 32] sheet sha256 a45dfec687b0; wired by tools/wire_asset.py",
+  "kind": "container",
+  "render_scale": 0.6,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Esoteric.png",
+    "frame_size": [
+     16,
+     32
+    ],
+    "region": [
+     32,
+     80,
+     16,
+     32
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_dusty_scroll"
+ },
+ "invrisil_tube_rack": {
+  "shadow": false,
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Esoteric.png region [80, 16, 32, 16] sheet sha256 a45dfec687b0; wired by tools/wire_asset.py",
+  "kind": "container",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Esoteric.png",
+    "frame_size": [
+     32,
+     16
+    ],
+    "region": [
+     80,
+     16,
+     32,
+     16
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_dusty_scroll"
+ },
+ "invrisil_inkpot": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [546, 192, 12, 16] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
+  "kind": "vessel",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "frame_size": [
+     12,
+     16
+    ],
+    "region": [
+     546,
+     192,
+     12,
+     16
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_dusty_scroll"
+ },
+ "invrisil_glass": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [532, 245, 9, 10] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
+  "kind": "vessel",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "frame_size": [
+     9,
+     10
+    ],
+    "region": [
+     532,
+     245,
+     9,
+     10
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_dusty_scroll"
+ },
+ "invrisil_quill": {
+  "shadow": false,
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Esoteric.png region [16, 128, 16, 16] sheet sha256 a45dfec687b0; wired by tools/wire_asset.py",
+  "kind": "item",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   0.8125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Esoteric.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "region": [
+     16,
+     128,
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_dusty_scroll"
+ },
+ "invrisil_scroll": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Hideout 1.0/Pixel Crawler - Hideout/Assets/Tiles.png region [304, 208, 16, 16] sheet sha256 40bce7b26eb3; wired by tools/wire_asset.py",
+  "kind": "item",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   0.6875
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/tiles/hideout/Tiles.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "region": [
+     304,
+     208,
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_dusty_scroll"
+ },
+ "invrisil_book": {
+  "shadow": false,
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Esoteric.png region [0, 176, 16, 16] sheet sha256 a45dfec687b0; wired by tools/wire_asset.py",
+  "kind": "book",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   0.8125
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Esoteric.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "region": [
+     0,
+     176,
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_dusty_scroll"
+ },
+ "invrisil_display_case": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [32, 52, 48, 28] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
+  "kind": "table",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     48,
+     28
+    ],
+    "region": [
+     32,
+     52,
+     48,
+     28
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "enchanter_vial_case"
+ },
+ "invrisil_sideboard": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [65, 227, 45, 28] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
+  "kind": "table",
+  "render_scale": 0.7,
+  "anchor": [
+   0.254,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "frame_size": [
+     45,
+     28
+    ],
+    "region": [
+     65,
+     227,
+     45,
+     28
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_table_brown"
+ },
+ "invrisil_bench": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [0, 204, 48, 20] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
+  "kind": "seat",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "frame_size": [
+     48,
+     20
+    ],
+    "region": [
+     0,
+     204,
+     48,
+     20
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "bench"
+ },
+ "invrisil_settee": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [83, 301, 42, 17] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
+  "kind": "seat",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "frame_size": [
+     42,
+     17
+    ],
+    "region": [
+     83,
+     301,
+     42,
+     17
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "bench"
+ },
+ "invrisil_oak_chair": {
+  "shadow": true,
+  "_comment": "slice of potential_assets/Pixel Crawler - Sewer/Pixel Crawler - Sewer/Assets/Props.png region [49, 112, 14, 31] sheet sha256 2e610b86c054; wired by tools/wire_asset.py",
+  "kind": "seat",
+  "render_scale": 0.6,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/sewer/Props.png",
+    "frame_size": [
+     14,
+     31
+    ],
+    "region": [
+     49,
+     112,
+     14,
+     31
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_stool"
+ },
+ "invrisil_oak_chair_side": {
+  "shadow": true,
+  "_comment": "slice of potential_assets/Pixel Crawler - Sewer/Pixel Crawler - Sewer/Assets/Props.png region [65, 112, 14, 31] sheet sha256 2e610b86c054; wired by tools/wire_asset.py",
+  "kind": "seat",
+  "render_scale": 0.6,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/sewer/Props.png",
+    "frame_size": [
+     14,
+     31
+    ],
+    "region": [
+     65,
+     112,
+     14,
+     31
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_stool"
+ },
+ "invrisil_banner": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Castle Environment 0.3/Pixel Crawler - Castle Environment 0.3/Assets/Tiles.png region [288, 160, 16, 64] sheet sha256 9c576b24d59a; wired by tools/wire_asset.py",
+  "kind": "sign",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   0.9062
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/tiles/castle/Tiles.png",
+    "frame_size": [
+     16,
+     64
+    ],
+    "region": [
+     288,
+     160,
+     16,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "guild_banner"
+ },
+ "invrisil_bust": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Castle Environment 0.3/Pixel Crawler - Castle Environment 0.3/Assets/Tiles.png region [342, 75, 20, 32] sheet sha256 9c576b24d59a; wired by tools/wire_asset.py",
+  "kind": "decor",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/tiles/castle/Tiles.png",
+    "frame_size": [
+     20,
+     32
+    ],
+    "region": [
+     342,
+     75,
+     20,
+     32
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "memorial_statue_human"
+ },
+ "invrisil_iron_stove": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [144, 19, 32, 45] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
+  "kind": "station",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "frame_size": [
+     32,
+     45
+    ],
+    "region": [
+     144,
+     19,
+     32,
+     45
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "invrisil_stove_fallback"
+ },
+ "invrisil_urn_owned": {
+  "_comment": "#632 r2: owned pale stone urn, the public fallback for invrisil_planter_urn (the plant-pot fallback read as a pot plant).",
+  "kind": "container",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     16,
+     21
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/invrisil_urn_owned/Idle-Sheet.png"
+   }
+  }
+ },
+ "invrisil_stove_fallback": {
+  "_comment": "#632 r2: lamp-scale alias of the owned short_order_range, the public fallback for invrisil_iron_stove (cold_hearth read as a spiked disc).",
+  "_alias_of": "short_order_range",
+  "_alias_reason": "a one-cell scale for the stationer stove public fallback",
+  "render_scale": 0.3,
+  "anchor": [
+   0.4922,
+   0.875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/short_order_range/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
  }
 }

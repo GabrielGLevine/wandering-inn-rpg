@@ -15,7 +15,7 @@
   "basket_stack": "regional",
   "bat": "generic",
   "bed": "generic",
-  "bench": "generic",
+  "bench": "regional",
   "bonus_produce_crate": "regional",
   "bonus_round_table": "regional",
   "boulder": "generic",
@@ -40,6 +40,10 @@
   "city_scribe": "regional",
   "coin_shop_sign": "regional",
   "cold_hearth": "generic",
+  "common_crate_braced": "regional",
+  "common_crate_lowwide": "regional",
+  "common_keg": "regional",
+  "common_sack_pair": "regional",
   "corusdeer": "regional",
   "corusdeer_carcass": "regional",
   "corusdeer_wounded": "regional",
@@ -67,7 +71,7 @@
   "door": "generic",
   "door__alt2": "regional",
   "door__alt3": "regional",
-  "door_locked_heavy": "regional",
+  "door_street_townhouse_owned": "regional",
   "dormant_guardian_statue": "regional",
   "drake_patron": "regional",
   "dresk_ashgrave": "regional",
@@ -142,8 +146,14 @@
   "inn_sign": "regional",
   "inn_table_dirty__before": "regional",
   "inn_table_soiled": "regional",
+  "invrisil_banner": "regional",
+  "invrisil_bell_jar": "regional",
+  "invrisil_bench": "regional",
+  "invrisil_book": "regional",
+  "invrisil_bust": "regional",
   "invrisil_cargo_1": "regional",
   "invrisil_cargo_2": "regional",
+  "invrisil_display_case": "regional",
   "invrisil_door_street_2": "regional",
   "invrisil_door_street_3": "regional",
   "invrisil_enforcer": "regional",
@@ -151,18 +161,33 @@
   "invrisil_facade_window_3": "regional",
   "invrisil_flower_cart": "regional",
   "invrisil_gentlewoman_2": "regional",
+  "invrisil_glass": "regional",
   "invrisil_hanging_sign": "regional",
+  "invrisil_inkpot": "regional",
+  "invrisil_iron_stove": "regional",
   "invrisil_lady_client": "regional",
   "invrisil_lamp_wall_1": "regional",
+  "invrisil_oak_chair": "regional",
+  "invrisil_oak_chair_side": "regional",
   "invrisil_ornate_bench": "regional",
   "invrisil_paper_stand": "regional",
+  "invrisil_planter": "regional",
+  "invrisil_planter_urn": "regional",
+  "invrisil_potted_plant": "regional",
+  "invrisil_quill": "regional",
+  "invrisil_rest_sign": "regional",
   "invrisil_returned_work_tray": "regional",
   "invrisil_rigged_crate_stack": "regional",
   "invrisil_roofline": "regional",
+  "invrisil_scroll": "regional",
+  "invrisil_sealed_bale": "regional",
+  "invrisil_settee": "regional",
   "invrisil_shop_door": "regional",
   "invrisil_shop_door_2": "regional",
   "invrisil_shop_sign_1": "regional",
+  "invrisil_sideboard": "regional",
   "invrisil_timber_panel": "regional",
+  "invrisil_tube_rack": "regional",
   "invrisil_upper_window": "regional",
   "kingslayer_spider": "regional",
   "klbkch": "regional",
@@ -210,7 +235,7 @@
   "pedestal": "generic",
   "phosphor_moss": "regional",
   "pisces": "generic",
-  "plant_pot": "generic",
+  "plant_pot": "regional",
   "plaza_fountain": "regional",
   "pond_cache": "regional",
   "pond_reeds": "regional",
@@ -351,15 +376,15 @@
    "placements": 29
   },
   "inn": {
-   "generic_placements": 36,
-   "generic_share_pct": 51.43,
+   "generic_placements": 33,
+   "generic_share_pct": 47.14,
    "maps": {
     "inn": {
-     "generic_placements": 21,
+     "generic_placements": 19,
      "placements": 50
     },
     "inn_player_room": {
-     "generic_placements": 8,
+     "generic_placements": 7,
      "placements": 11
     },
     "inn_upstairs": {
@@ -370,43 +395,43 @@
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 51,
-   "generic_share_pct": 26.15,
+   "generic_placements": 38,
+   "generic_share_pct": 18.01,
    "maps": {
     "adventurers_rest": {
-     "generic_placements": 4,
+     "generic_placements": 2,
      "placements": 21
     },
     "brothers_parlor": {
-     "generic_placements": 10,
-     "placements": 25
+     "generic_placements": 9,
+     "placements": 26
     },
     "enchanter_shop": {
-     "generic_placements": 4,
-     "placements": 14
+     "generic_placements": 3,
+     "placements": 15
     },
     "enchanter_work_room": {
-     "generic_placements": 3,
-     "placements": 5
+     "generic_placements": 2,
+     "placements": 8
     },
     "invrisil_boulevard": {
      "generic_placements": 5,
-     "placements": 51
+     "placements": 54
     },
     "invrisil_cross_street": {
-     "generic_placements": 4,
+     "generic_placements": 3,
      "placements": 31
     },
     "mercantile_alleys": {
-     "generic_placements": 14,
-     "placements": 30
+     "generic_placements": 9,
+     "placements": 34
     },
     "stationer": {
-     "generic_placements": 7,
-     "placements": 18
+     "generic_placements": 5,
+     "placements": 22
     }
    },
-   "placements": 195
+   "placements": 211
   },
   "liscor": {
    "generic_placements": 17,
@@ -432,11 +457,11 @@
    "placements": 101
   },
   "pallass": {
-   "generic_placements": 27,
-   "generic_share_pct": 28.12,
+   "generic_placements": 25,
+   "generic_share_pct": 26.04,
    "maps": {
     "pallass_den_shop": {
-     "generic_placements": 11,
+     "generic_placements": 9,
      "placements": 15
     },
     "pallass_forge": {

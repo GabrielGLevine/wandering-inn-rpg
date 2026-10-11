@@ -724,6 +724,63 @@ func _dangersense_world_contract_holds(source: String, overlay_source: String, s
 		and rebuild.find("_build_dangersense_overlay()") < rebuild.find("_entities_root = Node2D.new()")
 
 
+## #632: a decor row's night_glow builds an additive sibling that shows only in
+## its phases and carries WIAtmosphere.glow_modulate. Compiled from World's real
+## functions and run through the real visual factory and sprite registry.
+func _assert_night_glow_behavior(source: String, atmo: Node) -> void:
+	var day_tint: Color = atmo.glow_modulate("invrisil_boulevard", "day")
+	assert(day_tint.is_equal_approx(Color.WHITE), "a glow on a day-graded map is drawn at identity")
+	var dusk_tint: Color = atmo.glow_modulate("invrisil_boulevard", "dusk")
+	var night_tint: Color = atmo.glow_modulate("invrisil_boulevard", "night")
+	assert(night_tint.r > 1.0 and night_tint.b > 1.0,
+		"at night the glow is lifted back toward its own colour, not left under the grade")
+	var glow_script := GDScript.new()
+	glow_script.source_code = """extends Node
+const PROP_COLOR := Color(0.55, 0.55, 0.58)
+var _visual_factory: WIEntityVisualFactory
+var _entities_root := Node2D.new()
+var _night_glows: Array = []
+func _init() -> void:
+	_visual_factory = WIEntityVisualFactory.new(16.0, null)
+	add_child(_entities_root)
+%s
+%s
+""" % [_function_source(source, "_build_night_glow"), _function_source(source, "_apply_night_glows")]
+	assert(glow_script.reload() == OK, "night_glow behavior harness failed to compile")
+	var glows: Node = glow_script.new()
+	root.add_child(glows)
+	glows.call("_build_night_glow", Vector2i(2, 0), {"sprite": "window_glow_warm"})
+	glows.call("_build_night_glow", Vector2i(5, 0), {"sprite": "window_glow_warm", "phase": ["night"]})
+	glows.call("_build_night_glow", Vector2i(8, 0), {"sprite": "no_such_sprite"})
+	var built: Array = glows.get("_night_glows")
+	assert(built.size() == 2, "an unregistered glow sprite builds nothing")
+	assert(int(glows.call("_apply_night_glows", "day", day_tint)) == 0
+		and not (built[0]["node"] as Node2D).visible, "glows are hidden by day")
+	assert(int(glows.call("_apply_night_glows", "dusk", dusk_tint)) == 1,
+		"the default phases are dusk and night; a night-only glow stays dark at dusk")
+	assert(int(glows.call("_apply_night_glows", "night", night_tint)) == 2,
+		"every glow shows at night")
+	var lit := built[0]["node"] as Node2D
+	assert(lit.modulate.is_equal_approx(night_tint), "a lit glow carries glow_modulate")
+	var additive := false
+	for child: Node in lit.get_children():
+		if child is AnimatedSprite2D and (child as AnimatedSprite2D).material is CanvasItemMaterial:
+			additive = ((child as AnimatedSprite2D).material as CanvasItemMaterial).blend_mode == CanvasItemMaterial.BLEND_MODE_ADD
+	assert(additive, "the glow sprite blends additively")
+	glows.queue_free()
+	var lift_script := GDScript.new()
+	lift_script.source_code = "extends Node\n%s" % _function_source(source, "_lift_decor")
+	assert(lift_script.reload() == OK, "decor lift harness failed to compile")
+	var lifter: Node = lift_script.new()
+	var holder := WIEntityVisualFactory.new(16.0, null).make(Vector2i(3, 4), "window_glow_warm", [], Color.WHITE)
+	var art_y := (holder.get_child(0) as Node2D).position.y
+	lifter.call("_lift_decor", holder, 10)
+	assert(holder.position.y == 4 * 16 + 1.0 and is_equal_approx((holder.get_child(0) as Node2D).position.y, art_y - 11.0),
+		"a lifted decor row sorts 1px south of its cell while its art rises by the lift")
+	holder.free()
+	lifter.free()
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var source := FileAccess.get_file_as_string("res://src/world/world.gd")
@@ -970,6 +1027,7 @@ func _spawn_light(_holder: Node2D, _light: Dictionary) -> void:
 	assert(companion_holder.modulate.is_equal_approx(street_layer),
 		"a companion constructed later in the same night-map pass must receive the same attenuation immediately")
 	builder.queue_free()
+	_assert_night_glow_behavior(source, atmo)
 	assert(atmo.map_lights_by_day("seal_vault"),
 		"seal_vault is sealed -- no sky, so its ward light is the room's only source at any hour")
 	assert(not atmo.map_lights_by_day("inn") and not atmo.map_lights_by_day("street"),

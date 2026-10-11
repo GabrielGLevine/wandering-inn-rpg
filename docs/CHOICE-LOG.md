@@ -295,6 +295,9 @@ and chronology belong in issue PRs. Earlier context:
 - **Regional kits (#606, user 2026-10-08; spec
   `docs/superpowers/specs/2026-10-08-regional-kits-design.md`; full ruling
   text, deviations and numbers: rollout plan "Kits ruling details"):**
+  - **#632 Invrisil rebuild:** window glow is a decor `night_glow` (no light,
+    no extra row); (1,6) stays the apothecary bench; the sealed bale is owned
+    generated art. Rulings and G3 regen: rollout plan "#632 rulings".
   - **Goal:** regional identity without within-region monotony or clutter.
     Pool first; gaps
     go to `docs/art-generation-list.md`, and generation needs user approval.

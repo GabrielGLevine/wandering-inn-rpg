@@ -1,5 +1,5 @@
 {
- "_kits_recompose": "#608 — parlor: centre rug removed; art read moved two patrons (bowler (10,5)->(10,6), quiet gentleman (11,7)->(8,7)), neither from a prop cell",
+ "_kits_recompose": "#632 — re-intake pieces: settee for the guest couch, a glass on the counter",
  "biome": "brothers_parlor",
  "grid": {
   "width": 14,
@@ -253,6 +253,14 @@
     "radius": 36,
     "flicker": true
    }
+  },
+  {
+   "sprite": "invrisil_glass",
+   "cell": [
+    9,
+    1
+   ],
+   "lift": 9
   }
  ],
  "entities": [
@@ -319,7 +327,7 @@
     7
    ],
    "display_name": "The Guest Couch",
-   "sprite": "bench",
+   "sprite": "invrisil_settee",
    "sleep": true,
    "sleep_toast": "Even the couch here fits like it was fitted for you. You sleep through to morning without waking once."
   },

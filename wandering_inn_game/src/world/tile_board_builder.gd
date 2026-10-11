@@ -439,4 +439,14 @@ static func build_walls(parent: Node2D, walls_cfg: Dictionary, grid: Vector2i, b
 			for cell: Vector2i in cells:
 				seg_layer.set_cell(cell, 0, cap_only)
 		parent.add_child(seg_layer)
+		# #632: `trim` ({sheet, tile_px, coords}) overlays one tile on every face
+		# cell, e.g. the Invrisil gold cornice line. Not a render field, so an
+		# owned-fallback swap keeps it.
+		var trim: Variant = seg.get("trim", null)
+		if trim is Dictionary and face_raw != null:
+			var trim_layer := make_tile_layer(parent, String(trim["sheet"]), int(trim.get("tile_px", seg_tile_px)), registry)
+			var trim_coord := Vector2i(int(trim["coords"][0]), int(trim["coords"][1]))
+			for cell: Vector2i in cells:
+				trim_layer.set_cell(cell, 0, trim_coord)
+			parent.add_child(trim_layer)
 	return covered

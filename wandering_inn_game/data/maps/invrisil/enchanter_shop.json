@@ -1,5 +1,5 @@
 {
- "_kits_recompose": "#608 — sconce onto the partition face; partition wall faces shown",
+ "_kits_recompose": "#632 — re-intake pieces: lamp to (2,1) beside the glass case, potted plant",
  "_comment": "#423: Hedault's own shop, indoors off the boulevard (user ruling 2026-08-10). Schema modelled on stationer.json -- small interior, perimeter is walls.segments so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each with a matching decor row. Biome + every sprite reused, zero biomes.json edits. No floor_layers: the brothers_parlor biome default is the plain interior board, which is neither the parlor's parquet nor the stationer's pale swatch -- a bespoke enchanter floor is a VISUAL-LOG art follow-up, not a blind region pick. THE POINT OF THE MAP: Hedault stands at (2,3) with THREE orthogonally-adjacent standable cells -- (1,3), (3,3), (2,4) -- every one of them walk-reachable from the shop door's landing at (6,7). The alleys placement he came from had none, which is issue #423.",
  "biome": "brothers_parlor",
  "grid": {
@@ -7,6 +7,13 @@
   "height": 9
  },
  "blocked": [],
+ "floor_layers": [
+  {
+   "_pick": "#632 (rollout carry-over: the enchanter rooms author floor_layers before they change): pale marble shop floor, as the stationer.",
+   "material": "@floor_marble",
+   "cells": "all"
+  }
+ ],
  "walls": {
   "material": "@wall_shop",
   "segments": [
@@ -19,7 +26,7 @@
      11,
      0
     ],
-    "material": "@wall_shop"
+    "material": "@wall_dado"
    },
    {
     "from": [
@@ -123,7 +130,7 @@
   {
    "sprite": "crystal_lamp",
    "cell": [
-    3,
+    2,
     1
    ],
    "light": {
@@ -171,6 +178,13 @@
     0.92,
     0.95,
     1.0
+   ]
+  },
+  {
+   "sprite": "invrisil_potted_plant",
+   "cell": [
+    10,
+    7
    ]
   }
  ],
@@ -277,7 +291,7 @@
     1
    ],
    "display_name": "The Front Case",
-   "sprite": "shelf_bottles",
+   "sprite": "invrisil_display_case",
    "observe": "Glass, and behind the glass a great deal of empty velvet. Four pieces are out, spaced far enough apart that you look at each one on its own."
   },
   {
@@ -333,7 +347,7 @@
     3
    ],
    "display_name": "The Work-Room Door",
-   "sprite": "door_locked_heavy",
+   "sprite": "invrisil_door_street_3",
    "requires_skill": "pick_lock",
    "observe": "A plain door in a plain partition, and a lock on it worth more than the door is. Three brass wards on the escutcheon, and the wear around the keyhole is all on one side.",
    "skill_hint_toast": "Three wards and a shallow throw, and every scratch on the plate says the key goes in at an angle. Working it would take the picks and the patience.",

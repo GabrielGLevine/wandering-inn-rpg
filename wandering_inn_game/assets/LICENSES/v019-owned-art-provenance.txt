@@ -710,3 +710,16 @@ common_crate_cube/Idle-Sheet.png: owned PixelLab generation a0c95f7e-4335-4822-8
 common_crate_lowwide/Idle-Sheet.png: owned PixelLab generation ce234f65-d2ca-4579-8077-be674b492210; source potential_assets/pixellab_2026-10-10/crate_lowwide_v2/img_00.png; copied, then a detached 6-pixel bar removed (blind pool read); canvas 20x16; frames 1 of 20x16; alpha (0, 0, 18, 14); feet anchor [0.5, 0.875]; sha256 25fa63c6eee092e1b80df020716842c90c670937d1e0d33e01c418815507046b; wired by tools/wire_asset.py.
 
 common_crate_braced/Idle-Sheet.png: owned PixelLab generation ed98a1ec-8da6-4f06-a743-36788b69f442; source potential_assets/pixellab_2026-10-10/crate_braced_v1/img_00.png; copied unchanged; canvas 16x24; frames 1 of 16x24; alpha (0, 0, 15, 23); feet anchor [0.5, 0.9583]; sha256 d89b034224e18bac4c6f83eeaae81a30ed609ccd6c465ea23e2c5f6f8dc41595; wired by tools/wire_asset.py.
+
+invrisil_sealed_bale/Idle-Sheet.png: owned PixelLab generation 78f84060-0740-4f04-81ab-b4b0a340dc73; source potential_assets/pixellab_2026-10-10/sealed_bale_v1/img_09.png; copied unchanged; canvas 24x16; frames 1 of 24x16; alpha (3, 2, 21, 15); feet anchor [0.5, 0.9375]; sha256 92a8d81a995e1bf00c632dbfc0021de33d9cc8b4c7d9a28e2010ac8ae1cc421b; wired by tools/wire_asset.py.
+
+invrisil_rest_sign/Idle-Sheet.png: owned hand-pixel edit (#632) of invrisil_hanging_sign/Idle-Sheet.png (owned): three face-down cards and a hat on a peg drawn on the blank board; canvas 32x32; frames 1 of 32x32; feet anchor [0.5, 0.84375]; sha256 a03a34bd4887b6c66dc53724aa256795f61786b38dc1b2e0f5be3146075cb15d.
+
+window_glow_warm/Idle-Sheet.png: owned procedural art (#632): a warm amber rounded-rectangle pane glow in three alpha steps, drawn by a Python script for the window night-glow overlay; canvas 16x16; frames 1 of 16x16; anchor [0.5, 1.0]; sha256 644a1e1d481bed7c5ddaa6929657e612ee900b2844f027592c63124dc2745dd7.
+
+tiles/invrisil/cornice_gold_line.png: owned procedural art (#632): a 1-px gold cornice line with a dark lip above and a shade below on a transparent 16x16 tile, drawn by a Python script as the Invrisil shop wall trim (design-led gold cornice data line); sha256 328ae452dadd78e6748d46195797899d609a54498778a9b9771db19b8b73ff01.
+
+
+invrisil_lamp_wall_cold/Idle-Sheet.png: owned hand edit (#632 r1) of lamp_wall_cold_owned/Idle-Sheet.png (owned PixelLab): steel greys lifted about two value steps and a 1-px dark outline added; canvas 24x32; frames 1 of 24x32; feet anchor [0.5, 0.9375]; sha256 bb37b54b2bafcf1564625c4832646a9a4e3a80b4487a8403ebfc9c8aa4c37db3.
+
+invrisil_urn_owned/Idle-Sheet.png: owned procedural pixel art (#632 r2): a pale stone urn (lip, neck, swelling body, foot) drawn by script; canvas 16x21; frames 1 of 16x21; anchor [0.5, 1.0]; sha256 e6f9b61dc4966fe26e9e067621cf6c596209fe49676a3dc7f518755bfa64b95b.
