@@ -698,3 +698,5 @@ antinium_worker_owned/Idle_Side-Sheet.png: owned PixelLab generation 9091ff10-c3
 invrisil_sealed_bale/Idle-Sheet.png: owned PixelLab generation 78f84060-0740-4f04-81ab-b4b0a340dc73; source potential_assets/pixellab_2026-10-10/sealed_bale_v1/img_09.png; copied unchanged; canvas 24x16; frames 1 of 24x16; alpha (3, 2, 21, 15); feet anchor [0.5, 0.9375]; sha256 92a8d81a995e1bf00c632dbfc0021de33d9cc8b4c7d9a28e2010ac8ae1cc421b; wired by tools/wire_asset.py.
 
 invrisil_rest_sign/Idle-Sheet.png: owned hand-pixel edit (#632) of invrisil_hanging_sign/Idle-Sheet.png (owned): three face-down cards and a hat on a peg drawn on the blank board; canvas 32x32; frames 1 of 32x32; feet anchor [0.5, 0.84375]; sha256 a03a34bd4887b6c66dc53724aa256795f61786b38dc1b2e0f5be3146075cb15d.
+
+window_glow_warm/Idle-Sheet.png: owned procedural art (#632): a warm amber rounded-rectangle pane glow in three alpha steps, drawn by a Python script for the window night-glow overlay; canvas 16x16; frames 1 of 16x16; anchor [0.5, 1.0]; sha256 644a1e1d481bed7c5ddaa6929657e612ee900b2844f027592c63124dc2745dd7.

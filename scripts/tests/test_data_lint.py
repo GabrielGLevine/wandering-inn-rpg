@@ -64,6 +64,30 @@ class TestMapRenderingGeometry(unittest.TestCase):
                     "terrain_lower_cells": bad}]}))
 
 
+class TestNightGlow(unittest.TestCase):
+    """#632: decor night_glow rows name a registered sprite and real phases."""
+    SPRITES = {data_lint.DATA / "sprites.json": {"window_glow_warm": {}}}
+
+    def check(self, decor=None, entities=None):
+        errors = []
+        data_lint.check_night_glow({"m": {**GRID, "entities": entities or [], "decor": decor or []}},
+            self.SPRITES, errors)
+        return errors
+
+    def test_valid_rows_pass(self):
+        self.assertEqual(self.check([{"sprite": "w", "cell": [0, 0], "night_glow": {"sprite": "window_glow_warm"}},
+            {"sprite": "w", "cell": [1, 0], "night_glow": {"sprite": "window_glow_warm", "phase": ["night"]}}]), [])
+
+    def test_broken_rows_fail(self):
+        for glow in ["window_glow_warm", {"sprite": "nope"}, {"sprite": "window_glow_warm", "phase": []},
+                {"sprite": "window_glow_warm", "phase": ["midnight"]}, {"sprite": "window_glow_warm", "tint": [1, 1, 1]}]:
+            with self.subTest(glow=glow):
+                self.assertTrue(self.check([{"sprite": "w", "cell": [0, 0], "night_glow": glow}]))
+
+    def test_entities_cannot_carry_it(self):
+        self.assertTrue(self.check(entities=[{"id": "e", "night_glow": {"sprite": "window_glow_warm"}}]))
+
+
 class TestTerrainFallbacks(unittest.TestCase):
     def check(self, fallback, role="floor_layer", primary=None):
         errors = []

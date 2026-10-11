@@ -10870,5 +10870,25 @@
     "fps": 1
    }
   }
+ },
+ "window_glow_warm": {
+  "_comment": "#632 decision 2: the window night state. Drawn only through a decor row's night_glow (additive, phase-gated, world.gd _build_night_glow), never placed as a row of its own.",
+  "kind": "fx",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/window_glow_warm/Idle-Sheet.png"
+   }
+  }
  }
 }
