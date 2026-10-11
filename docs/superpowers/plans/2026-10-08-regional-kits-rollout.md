@@ -123,7 +123,44 @@ For each region below, open the issue, then run pilot Tasks 1–7 with these sub
 Logged in `docs/CHOICE-LOG.md` (Regional kits). Land both before another map adopts `invrisil_shop` or the enchanter rooms change, each with a scoped read.
 
 - [ ] `invrisil_shop` (`data/biomes.json`): replace the `inn` render clone with its own floor, skirt and blocked look from the Invrisil materials (`floor_rest`, `wall_shop`) and its own `blocked_props` from the pool.
-- [ ] `enchanter_shop` and `enchanter_work_room`: author `floor_layers` geometry on `@floor_shop`; they render the `brothers_parlor` biome floor (the inn plank) today.
+- [x] `enchanter_shop` and `enchanter_work_room`: author `floor_layers` geometry. Done in #632: the shop on `@floor_marble`, the work room on `@floor_checker`.
+
+### #632 rulings (Invrisil rebuild, 2026-10-11)
+
+Controller rulings:
+1. **Decision 4.** No dialogue or observe text in `mercantile_alleys` names a workbench. The read's "workbench cluster" is the Apothecary Corner at (1,6), whose text names a burner on the bench, so it stays. The cargo-yard cluster goes on alley cells that are already blocked, built from the `_common` `barrel`, `sack` and `crate` roles once #631 (PR #640) merges. No new blocking without a visible reason.
+2. **Window night state (decision 2).** A decor row's `night_glow` draws an additive, phase-gated sibling (`world.gd`), using the owned procedural `window_glow_warm`. Lights could not do it: the boulevard's 8 street lamps fill `LIGHT_BUDGET`. Extra decor rows could not either: the facade cells already carry two rows, and a third trips the one-cell decor lint.
+3. **Sealed bale.** The owned PixelLab `invrisil_sealed_bale` (controller generation). sack#15 is not pixel-edited, because a derived FORBIDDEN asset would need a new bundle.
+4. **`_common` pieces.** barrel#8, sack#15 and container#29 are not registered in this lane; #631 replaces the `_common` members.
+5. **door#14/#16.** Still waiting on the user's ruling; unused.
+
+Implementer rulings:
+- **Rest sign.** `invrisil_rest_sign` is an owned hand-pixel edit of `invrisil_hanging_sign` (three face-down cards and a hat on a peg). It is pinned at cross-street (13,1) and not pooled.
+- **`lamp_wall` pool.** `sconce` (a campfire sheet) leaves the pool for `invrisil_lamp_wall_cold`, an alias of `lamp_wall_cold_owned` at 0.7 (about 13x20, level with `invrisil_lamp_wall_1`). The alley lights turn cool white. `invrisil_lamp_wall_1` keeps `owned_fallback_unlit_lantern`, because lint needs two distinct owned fallbacks per pool.
+- **`door_street`.** `door_street_townhouse_owned` joins the pool at 0.55, and `invrisil_door_street_3` falls back to it. The boulevard–alleys portal now draws the townhouse door in both builds.
+- **Marble curb.** A Wang edge-ring floor layer over the plaza patch, in the street's own tone. A null `wang_corners` entry leaves its vertex unpainted (`tile_board_builder.gd`). The same ring runs round the cross-street walks, which closes `paving_apron`.
+- **Shop walls and floors.** `wall_dado` (Building_Walls plaster (24,13)) with the owned `cornice_gold_line` as a material `trim` goes on the stationer's and enchanter shop's north walls; caps-only side walls stay `@wall_shop`. `floor_marble` (Floors_Tiles pale marble, toned to limestone) covers both shops, and the work room gets `floor_checker`. The parlor keeps its flagstone and the Rest its honey plank and timber. The work room wall stays timber, because `ashlar_over_checker_v1` has no wall face.
+- **Decor `lift`.** Tabletop pieces (inkpot, quill, scroll, book, glass, test-tube rack, bell jar) sit on their surface through the row's `lift`, so their public fallbacks lift too.
+- **Work-room door pair.** Both pinned to `invrisil_door_street_3` (a plain framed interior door). `door_locked_heavy` read as a barred cabinet (#610).
+- **Parapet line (#610 c3).** The Castle cornice band (5-7,3) runs over the flat roof mass on both streets, with an owned fallback. It reopens c3 if the blind read fails.
+- **Skipped, with reasons:**
+  - other#27 potion column: at 16px it reads as stacked coloured blocks.
+  - book#1 tome: floats as a blue kite over the order-book desk.
+  - rug#11: a loud flat purple square that breaks lowest-contrast ground.
+  - plant_c#45 to #48 blooms: upright stems on paving read as giant flowers, and no map has a bed.
+  - seat#1 armchair: throne height.
+  - bed#1: no bed in the eight maps; the parlor's cots are cots by their text.
+  - rug#4 and rug#14: a 5x5 fur rug has no room, and rug#14 has a hole in it.
+  - tool#12 and table#11: three to five cells wide, with no room in the 8x6 work room.
+  - tool#18, tool#20, table#10 and table#30: the front counters are wood by their text, and table#18 took the case.
+  - station#33: the stationer stove is pinned to `cold_hearth` by the #608 read.
+  - decor#3 and decor#4: one bust is enough.
+  - decor#20 curtains: five cells tall.
+  - decor#10 painting: needs a recut and has no owned fallback.
+  - wall_module#3, #11 and #17: railings would need a new blocked ring round the fountain beside the porter, and the glass gable is six cells tall.
+  - container#15, container#31 and vessel#33: the work-room surface reads cluttered past two items.
+  - sign#2 and sign#3: two banners already frame the cross-street door.
+  - pipe#4: lands with the cargo cluster.
 
 ## G3 regen log (moved from CHOICE-LOG, 2026-10-09)
 

@@ -215,6 +215,18 @@ def _terrain_atlas_size(sheet, tile_px):
 		return None
 
 
+def _check_wall_trim(trim, label: str, errors: list) -> None:
+	"""#632: a wall `trim` overlays one tile on each face cell (tile_board_builder.build_walls)."""
+	if not isinstance(trim, dict) or set(trim) - {"sheet", "tile_px", "coords"}:
+		errors.append(f"{label} must be {{sheet, tile_px, coords}}")
+		return
+	atlas = _terrain_atlas_size(trim.get("sheet"), trim.get("tile_px", 16))
+	coords = trim.get("coords")
+	if atlas is None or not (_numeric_vector(coords, 2, True) and all(_int_like(v) for v in coords)
+			and coords[0] < atlas[0] and coords[1] < atlas[1]):
+		errors.append(f"{label} needs a real PNG sheet and coords inside it")
+
+
 def _check_tile_fallback(config: dict, role: str, label: str, errors: list) -> None:
 	if "fallback_render" not in config:
 		return
@@ -323,9 +335,11 @@ def _check_ground_transitions(map_id: str, config: dict, errors: list) -> None:
 		if not isinstance(layer, dict) or "wang_corners" not in layer:
 			continue
 		corners = layer["wang_corners"]
-		if (not isinstance(corners, list) or len(corners) != 16 or not all(
-				_numeric_vector(coord, 2, True) and all(_int_like(v) for v in coord) for coord in corners)):
-			errors.append(f"maps/{map_id}: floor layer {index} needs 16 nonnegative integer Wang atlas coordinates")
+		if (not isinstance(corners, list) or len(corners) != 16 or all(c is None for c in corners) or not all(
+				coord is None or (_numeric_vector(coord, 2, True) and all(_int_like(v) for v in coord))
+				for coord in corners)):
+			errors.append(f"maps/{map_id}: floor layer {index} needs 16 Wang atlas coordinates "
+				"(nonnegative integers; null leaves a vertex unpainted)")
 		grid = config["grid"]
 		if not _ground_cells_valid(layer.get("terrain_lower_cells"), int(grid["width"]), int(grid["height"])):
 			errors.append(f"maps/{map_id}: floor layer {index} needs terrain_lower_cells within its grid")
@@ -1256,6 +1270,47 @@ def check_solid_decor_blocks(maps: dict, errors: list) -> None:
 					"add the cell to `blocked` (solid props are solid; user ruling 2026-08-08)")
 
 
+GLOW_PHASES = {"day", "dusk", "night"}
+
+
+def check_decor_lift(maps: dict, errors: list) -> None:
+	"""#632: a decor `lift` raises art onto a surface on its own cell (world.gd
+	_lift_decor): a whole number of pixels in 1..48."""
+	for map_id, m in sorted(maps.items()):
+		for d in m.get("decor", []) or []:
+			if isinstance(d, dict) and "lift" in d:
+				lift = d["lift"]
+				if isinstance(lift, bool) or not isinstance(lift, int) or not 1 <= lift <= 48:
+					errors.append(f"maps/{map_id}: decor {d.get('cell')} lift must be an integer in 1..48")
+
+
+def check_night_glow(maps: dict, parsed: dict, errors: list) -> None:
+	"""#632: a decor row's `night_glow` (world.gd _build_night_glow) names a
+	registered sprite and an optional non-empty `phase` list drawn from the
+	ambience phases. Decor only: an entity's look changes through visual_states."""
+	sprites = parsed.get(DATA / "sprites.json") or {}
+	for map_id, m in sorted(maps.items()):
+		for e in m.get("entities", []) or []:
+			if isinstance(e, dict) and "night_glow" in e:
+				errors.append(f"maps/{map_id}: entity '{e.get('id')}' carries night_glow -- decor rows only")
+		for d in m.get("decor", []) or []:
+			if not isinstance(d, dict) or "night_glow" not in d:
+				continue
+			glow = d["night_glow"]
+			where = f"maps/{map_id}: decor {d.get('cell')} night_glow"
+			if not isinstance(glow, dict):
+				errors.append(f"{where} must be an object {{sprite, phase}}")
+				continue
+			unknown = set(glow) - {"sprite", "phase", "_comment"}
+			if unknown:
+				errors.append(f"{where} has unknown keys {sorted(unknown)}")
+			if str(glow.get("sprite", "")) not in sprites:
+				errors.append(f"{where} sprite '{glow.get('sprite')}' is not in sprites.json")
+			phase = glow.get("phase", ["dusk", "night"])
+			if not isinstance(phase, list) or not phase or not set(phase) <= GLOW_PHASES:
+				errors.append(f"{where} phase must be a non-empty list from {sorted(GLOW_PHASES)}")
+
+
 def check_placements_off_water(maps: dict, errors: list) -> None:
 	"""#474 (user eye-gate 2026-08-13): goblin_night_patrol's marker rendered
 	two goblins STANDING IN THE POND. Nothing caught it because a cell can be
@@ -1375,6 +1430,8 @@ def _check_kit_schema(kits: dict, sprites: dict, errors: list, bundle_paths: set
 		for name, mat in (block.get("materials") or {}).items():
 			if not isinstance(mat, dict) or set(mat) - set(kl.MATERIAL_FIELDS) - {"_comment"}:
 				errors.append(f"kits.{region}.materials.{name}: keys must be within {sorted(kl.MATERIAL_FIELDS)}")
+			elif "trim" in mat:
+				_check_wall_trim(mat["trim"], f"kits.{region}.materials.{name}.trim", errors)
 		for name, role in (block.get("roles") or {}).items():
 			if region == "_common":
 				_check_common_role(name, role, sprites, errors)
@@ -3614,6 +3671,8 @@ def main() -> int:
 	check_gate_shapes(maps, errors)
 	check_companion_toasts(maps, errors)
 	check_solid_decor_blocks(maps, errors)
+	check_night_glow(maps, parsed, errors)
+	check_decor_lift(maps, errors)
 	check_spriteless_entities(maps, errors)
 	check_placements_off_water(maps, errors)
 	advisories: list = []

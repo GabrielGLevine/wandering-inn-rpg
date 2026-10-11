@@ -1,5 +1,5 @@
 {
- "_kits_recompose": "#608 — art-direction read: cross-street lamps/signs/props",
+ "_kits_recompose": "#632 — the plant pot at (18,5) becomes a topiary urn",
  "biome": "invrisil_street",
  "grid": {
   "width": 22,
@@ -1295,6 +1295,443 @@
    }
   },
   {
+   "_pick": "#632 (#610 paving_apron, design-led: the marble Wang's own edge ids): a curb ring round the marble walks, as on the boulevard square. Same corner table and street tone; terrain_lower_cells repeats the marble layer's cell list.",
+   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+   "tile_px": 16,
+   "wang_corners": [
+    null,
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    null
+   ],
+   "terrain_lower_cells": {
+    "list": [
+     [
+      1,
+      6
+     ],
+     [
+      1,
+      7
+     ],
+     [
+      1,
+      8
+     ],
+     [
+      2,
+      6
+     ],
+     [
+      2,
+      7
+     ],
+     [
+      2,
+      8
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      3,
+      7
+     ],
+     [
+      3,
+      8
+     ],
+     [
+      4,
+      6
+     ],
+     [
+      4,
+      7
+     ],
+     [
+      4,
+      8
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      5,
+      7
+     ],
+     [
+      5,
+      8
+     ],
+     [
+      6,
+      6
+     ],
+     [
+      6,
+      7
+     ],
+     [
+      6,
+      8
+     ],
+     [
+      7,
+      6
+     ],
+     [
+      7,
+      7
+     ],
+     [
+      7,
+      8
+     ],
+     [
+      8,
+      6
+     ],
+     [
+      8,
+      7
+     ],
+     [
+      8,
+      8
+     ],
+     [
+      9,
+      6
+     ],
+     [
+      9,
+      7
+     ],
+     [
+      9,
+      8
+     ],
+     [
+      10,
+      6
+     ],
+     [
+      10,
+      7
+     ],
+     [
+      10,
+      8
+     ],
+     [
+      11,
+      6
+     ],
+     [
+      11,
+      7
+     ],
+     [
+      11,
+      8
+     ],
+     [
+      12,
+      6
+     ],
+     [
+      12,
+      7
+     ],
+     [
+      12,
+      8
+     ],
+     [
+      13,
+      6
+     ],
+     [
+      13,
+      7
+     ],
+     [
+      13,
+      8
+     ],
+     [
+      14,
+      6
+     ],
+     [
+      14,
+      7
+     ],
+     [
+      14,
+      8
+     ],
+     [
+      15,
+      6
+     ],
+     [
+      15,
+      7
+     ],
+     [
+      15,
+      8
+     ],
+     [
+      16,
+      6
+     ],
+     [
+      16,
+      7
+     ],
+     [
+      16,
+      8
+     ],
+     [
+      17,
+      6
+     ],
+     [
+      17,
+      7
+     ],
+     [
+      17,
+      8
+     ],
+     [
+      18,
+      6
+     ],
+     [
+      18,
+      7
+     ],
+     [
+      18,
+      8
+     ],
+     [
+      19,
+      6
+     ],
+     [
+      19,
+      7
+     ],
+     [
+      19,
+      8
+     ],
+     [
+      20,
+      6
+     ],
+     [
+      20,
+      7
+     ],
+     [
+      20,
+      8
+     ],
+     [
+      5,
+      3
+     ],
+     [
+      5,
+      4
+     ],
+     [
+      5,
+      5
+     ],
+     [
+      6,
+      3
+     ],
+     [
+      6,
+      4
+     ],
+     [
+      6,
+      5
+     ],
+     [
+      7,
+      3
+     ],
+     [
+      7,
+      4
+     ],
+     [
+      7,
+      5
+     ],
+     [
+      13,
+      3
+     ],
+     [
+      13,
+      4
+     ],
+     [
+      13,
+      5
+     ],
+     [
+      14,
+      3
+     ],
+     [
+      14,
+      4
+     ],
+     [
+      14,
+      5
+     ],
+     [
+      15,
+      3
+     ],
+     [
+      15,
+      4
+     ],
+     [
+      15,
+      5
+     ],
+     [
+      17,
+      9
+     ],
+     [
+      17,
+      10
+     ],
+     [
+      17,
+      11
+     ],
+     [
+      18,
+      9
+     ],
+     [
+      18,
+      10
+     ],
+     [
+      18,
+      11
+     ],
+     [
+      19,
+      9
+     ],
+     [
+      19,
+      10
+     ],
+     [
+      19,
+      11
+     ],
+     [
+      20,
+      9
+     ],
+     [
+      20,
+      10
+     ],
+     [
+      20,
+      11
+     ]
+    ]
+   },
+   "tone": {
+    "base": [
+     0.36,
+     0.35,
+     0.38
+    ],
+    "detail": 0.2
+   }
+  },
+  {
    "_pick": "FIX WAVE facade assembly, handoff.md's recipe executed DATA-SIDE (per-cell picks; a committed composite of licensed pieces is forbidden in the public repo, and floor_layers rects accept negative y -- verified in tile_board_builder.resolve_layer_cells, plain range(), no grid clamp -- so the above-grid loom rows need no code). Layer 1/5: the cornice/roofline cap, Wall_Tiles (8,2) cool blue-grey stone (picks.md sec.2, MOCKUP-PROVEN), one row above the visible plaster at y=-2.",
    "sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
    "tile_px": 16,
@@ -1326,6 +1763,49 @@
                          "detail": 0.55
                         }
                        }
+  },
+  {
+   "_pick": "#632 c3 audition (design-led): Castle Environment cornice band (5-7,3) as the parapet line, as on the boulevard. Private sheet; the public build keeps the owned fallback band.",
+   "sheet": "res://assets/tiles/castle/Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     3
+    ]
+   ],
+   "cells": {
+    "rect": [
+     0,
+     -2,
+     22,
+     1
+    ]
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
+    "coords": [
+     4,
+     2
+    ],
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
+     ],
+     "detail": 0.55
+    }
+   }
   },
   {
    "_pick": "Layer 2/5: cream plaster upper floors, Building_Walls (26,2) (picks.md sec.1, MOCKUP-PROVEN flat #ddccb8) -- y=-1 (above-grid loom row) + y=0 (in-grid blocked row, cover_skip'd). Two plaster rows over a glass row = the 2-cell-facade scale-shock read, plus the cornice above.",
@@ -1724,8 +2204,8 @@
    ]
   },
   {
-   "_comment": "#608 final review: the Adventurer's Rest sign is pinned to the blank hanging board. Its observe text says the sign has no name, only cards face down and a hat on a peg, so the pool's coin sign would contradict it. The cards-and-hat sign is on the generation list.",
-   "sprite": "invrisil_hanging_sign",
+   "_comment": "#632: the Adventurer's Rest house sign, pinned to its own art: the observe text names no house name, only cards face down and a hat on a peg.",
+   "sprite": "invrisil_rest_sign",
    "cell": [
     13,
     1
@@ -1753,7 +2233,7 @@
    ]
   },
   {
-   "sprite": "plant_pot",
+   "sprite": "invrisil_planter_urn",
    "cell": [
     18,
     5
@@ -1768,6 +2248,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     2,
     0
@@ -1782,6 +2265,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     5,
     0
@@ -1796,6 +2282,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     8,
     0
@@ -1810,6 +2299,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     11,
     0
@@ -1824,6 +2316,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     14,
     0
@@ -1838,6 +2333,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     17,
     0
@@ -1852,6 +2350,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     20,
     0
@@ -1908,6 +2409,14 @@
     "radius": 32,
     "flicker": false
    }
+  },
+  {
+   "sprite": "invrisil_topiary",
+   "cell": [
+    18,
+    5
+   ],
+   "lift": 18
   }
  ],
  "entities": [

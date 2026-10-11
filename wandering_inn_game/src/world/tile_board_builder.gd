@@ -309,7 +309,11 @@ static func build_ground_transition(parent: Node2D, config: Dictionary, grid: Ve
 	for x in grid.x + 1:
 		for y in grid.y + 1:
 			var vertex := Vector2i(x, y)
-			var coord: Array = corners[terrain_vertex_bits(vertex, lower)]
+			# A null corner leaves its vertex to the layers below (#632: the
+			# boulevard's marble curb paints only around the square).
+			var coord: Variant = corners[terrain_vertex_bits(vertex, lower)]
+			if coord == null:
+				continue
 			layer.set_cell(vertex, 0, Vector2i(int(coord[0]), int(coord[1])))
 	parent.add_child(layer)
 
@@ -439,4 +443,14 @@ static func build_walls(parent: Node2D, walls_cfg: Dictionary, grid: Vector2i, b
 			for cell: Vector2i in cells:
 				seg_layer.set_cell(cell, 0, cap_only)
 		parent.add_child(seg_layer)
+		# #632: `trim` ({sheet, tile_px, coords}) overlays one tile on every face
+		# cell, e.g. the Invrisil gold cornice line. Not a render field, so an
+		# owned-fallback swap keeps it.
+		var trim: Variant = seg.get("trim", null)
+		if trim is Dictionary and face_raw != null:
+			var trim_layer := make_tile_layer(parent, String(trim["sheet"]), int(trim.get("tile_px", seg_tile_px)), registry)
+			var trim_coord := Vector2i(int(trim["coords"][0]), int(trim["coords"][1]))
+			for cell: Vector2i in cells:
+				trim_layer.set_cell(cell, 0, trim_coord)
+			parent.add_child(trim_layer)
 	return covered

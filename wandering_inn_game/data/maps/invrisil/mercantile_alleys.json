@@ -1,4 +1,5 @@
 {
+ "_kits_recompose": "#632 — wall-foot tuft scatter, a broad-leaf weed in the south-west corner, owned sealed bale, cold lanterns",
  "biome": "invrisil_alley",
  "grid": {
   "width": 20,
@@ -870,9 +871,9 @@
    ],
    "light": {
     "color": [
-     1.0,
-     0.78,
-     0.45
+     0.82,
+     0.9,
+     1.0
     ],
     "energy": 0.8,
     "radius": 22,
@@ -887,9 +888,9 @@
    ],
    "light": {
     "color": [
-     1.0,
-     0.78,
-     0.45
+     0.82,
+     0.9,
+     1.0
     ],
     "energy": 0.8,
     "radius": 22,
@@ -904,9 +905,9 @@
    ],
    "light": {
     "color": [
-     1.0,
-     0.78,
-     0.45
+     0.82,
+     0.9,
+     1.0
     ],
     "energy": 0.8,
     "radius": 22,
@@ -921,14 +922,21 @@
    ],
    "light": {
     "color": [
-     1.0,
-     0.78,
-     0.45
+     0.82,
+     0.9,
+     1.0
     ],
     "energy": 0.8,
     "radius": 22,
     "flicker": false
    }
+  },
+  {
+   "sprite": "invrisil_broadleaf",
+   "cell": [
+    2,
+    12
+   ]
   }
  ],
  "skill_gates": {
@@ -980,6 +988,147 @@
    ]
   }
  },
+ "scatter": [
+  {
+   "_comment": "#632 scatter (allocation Scatter 66/64, invrisil): grass and leafy tufts at the foot of the alley walls only, so no tuft lands mid-lane or on an interaction approach in open paving.",
+   "pool": [
+    "invrisil_grass_tuft",
+    "invrisil_leafy_tuft",
+    "invrisil_leafy_tuft"
+   ],
+   "density": 0.15,
+   "cluster": 0.5,
+   "seed": 632,
+   "cells": {
+    "list": [
+     [
+      3,
+      6
+     ],
+     [
+      4,
+      6
+     ],
+     [
+      6,
+      6
+     ],
+     [
+      7,
+      6
+     ],
+     [
+      8,
+      6
+     ],
+     [
+      9,
+      6
+     ],
+     [
+      10,
+      6
+     ],
+     [
+      10,
+      7
+     ],
+     [
+      8,
+      8
+     ],
+     [
+      10,
+      8
+     ],
+     [
+      2,
+      9
+     ],
+     [
+      3,
+      9
+     ],
+     [
+      5,
+      9
+     ],
+     [
+      6,
+      9
+     ],
+     [
+      10,
+      9
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      6,
+      10
+     ],
+     [
+      8,
+      10
+     ],
+     [
+      10,
+      10
+     ],
+     [
+      2,
+      11
+     ],
+     [
+      11,
+      11
+     ],
+     [
+      12,
+      11
+     ],
+     [
+      13,
+      11
+     ],
+     [
+      14,
+      11
+     ],
+     [
+      15,
+      11
+     ],
+     [
+      16,
+      11
+     ],
+     [
+      17,
+      11
+     ],
+     [
+      18,
+      11
+     ],
+     [
+      2,
+      12
+     ],
+     [
+      6,
+      12
+     ],
+     [
+      8,
+      12
+     ]
+    ]
+   }
+  }
+ ],
  "entities": [
   {
    "_comment": "Round-trip pair with boulevard_to_alleys (invrisil_boulevard cell 26,8).",
@@ -1446,7 +1595,7 @@
     11
    ],
    "display_name": "A Factor-Sealed Bale",
-   "sprite": "crate",
+   "sprite": "invrisil_sealed_bale",
    "present_when": {
     "requires": {
      "cleared_counting_room_guard": 1

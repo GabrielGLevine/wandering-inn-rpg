@@ -203,6 +203,10 @@ var _player_tween_is_move := false
 var _camera_ctl: WICameraController
 var _entity_visuals: Dictionary = {}
 var _mood_layer_visuals: Dictionary = {}
+## #632 decor `night_glow` siblings: [{node, phases}]. Kept OUT of MOOD_LAYERS
+## (its data_lint mirror names only night_attenuation layers); their modulate is
+## WIAtmosphere.glow_modulate, refreshed with visibility on every UI_MOOD_APPLIED.
+var _night_glows: Array = []
 var _dialogue_separation: Dictionary = {}
 var _field_blocked_prop_plan: Dictionary = {}
 var _journal: Node
@@ -854,6 +858,7 @@ func _rebuild_field() -> void:
 	_mood_layer_visuals = {}
 	for mood_layer: String in MOOD_LAYERS:
 		_mood_layer_visuals[mood_layer] = []
+	_night_glows = []
 	_dialogue_separation = {}
 	# GH#335: field furniture, freed with everything else above -- the
 	# end-of-rebuild reconcile rebuilds it against the new map.
@@ -1208,7 +1213,11 @@ func _build_decor(decor_list: Array) -> void:
 		if sprite_id == "" or not WISpriteRegistry.has_sprite(sprite_id):
 			continue
 		var cell := Vector2i(int(entry["cell"][0]), int(entry["cell"][1]))
-		_make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)), null, "decor")
+		var decor_visual := _make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)), null, "decor")
+		if entry.has("lift"):
+			_lift_decor(decor_visual, int(entry["lift"]))
+		if entry.get("night_glow") is Dictionary:
+			_build_night_glow(cell, entry["night_glow"] as Dictionary)
 		if entry.has("sprite_role"):
 			var role := String(entry["sprite_role"])
 			if not roles.has(role):
@@ -1217,8 +1226,70 @@ func _build_decor(decor_list: Array) -> void:
 				(roles[role] as Array).append(sprite_id)
 	for role: String in roles:
 		(roles[role] as Array).sort()
+	var glows_lit := _refresh_night_glows()
 	# #607: one aggregate per build (decor emits no per-row event); fires before world_ready.
-	ObservableBus.emit_domain_event(WIEvents.UI_DECOR_RENDERED, {"map": Game.sim.current_map, "roles": roles})
+	ObservableBus.emit_domain_event(WIEvents.UI_DECOR_RENDERED, {
+		"map": Game.sim.current_map, "roles": roles,
+		"night_glow": {"rows": _night_glows.size(), "lit": glows_lit},
+	})
+
+
+## #632: a decor row's `lift` (px) raises its art onto a surface drawn on the
+## same cell (a quill on a counter, a glass on a bar) and sorts it 1px south so it
+## draws over that surface. The holder keeps its cell, so a fallback sprite lifts
+## the same way.
+func _lift_decor(holder: Node2D, lift: int) -> void:
+	holder.position.y += 1.0
+	for child: Node in holder.get_children():
+		if child is Node2D:
+			(child as Node2D).position.y -= float(lift) + 1.0
+
+
+## #632 decision 2 (window night state): a decor row's `night_glow`
+## ({"sprite": id, "phase": [...], default dusk+night}) draws an additive sibling
+## over the row's art, shown only in its phases. It spends no PointLight2D, so
+## LIGHT_BUDGET is untouched, and it is not a decor row of its own, so the
+## one-cell decor count (G4/clutter lint) is unchanged. 1px south sort bias puts
+## it over the art it lights; keep glow rows off cells a PC can stand south of
+## by less than a cell (none can: a bias under one cell never outsorts the PC).
+func _build_night_glow(cell: Vector2i, glow: Dictionary) -> void:
+	var sprite_id := String(glow.get("sprite", ""))
+	if sprite_id == "" or not WISpriteRegistry.has_sprite(sprite_id):
+		return
+	var holder := _visual_factory.make(cell, sprite_id, [], PROP_COLOR, "", false, 1)
+	var additive := CanvasItemMaterial.new()
+	additive.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	for child: Node in holder.get_children():
+		if child is AnimatedSprite2D:
+			(child as AnimatedSprite2D).material = additive
+	_entities_root.add_child(holder)
+	_night_glows.append({"node": holder, "phases": glow.get("phase", ["dusk", "night"])})
+
+
+## Returns how many glows are visible after the refresh.
+func _refresh_night_glows() -> int:
+	if _night_glows.is_empty() or _atmosphere == null:
+		return 0
+	var phase := _atmosphere.phase_now()
+	return _apply_night_glows(phase, WIAtmosphere.glow_modulate(Game.sim.current_map, phase))
+
+
+func _apply_night_glows(phase: String, tint: Color) -> int:
+	var lit := 0
+	var live: Array = []
+	for raw: Variant in _night_glows:
+		var glow := raw as Dictionary
+		var node: Variant = glow["node"]
+		if not is_instance_valid(node):
+			continue
+		var holder := node as Node2D
+		holder.visible = (glow["phases"] as Array).has(phase)
+		holder.modulate = tint
+		if holder.visible:
+			lit += 1
+		live.append(glow)
+	_night_glows = live
+	return lit
 
 
 func _build_scatter(specs: Array) -> void:
@@ -2042,6 +2113,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		if not _map_transition_stale_cover() and Game.sim.combat == null:
 			_apply_field_legibility()
 			_apply_dangersense_night_compensation()
+			_refresh_night_glows()
 	elif type == WIEvents.PHASE_CHANGED:
 		if _map_transition_stale_cover():
 			return

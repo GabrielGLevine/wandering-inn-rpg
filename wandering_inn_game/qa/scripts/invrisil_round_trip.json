@@ -302,7 +302,7 @@
       "invrisil_cargo_2"
      ],
      "lamp_wall": [
-      "sconce"
+      "invrisil_lamp_wall_cold"
      ]
     }
    }
@@ -314,7 +314,7 @@
    "payload_contains": {
     "map": "mercantile_alleys",
     "entity": "alleys_to_boulevard",
-    "sprite": "invrisil_door_street_2",
+    "sprite": "door_street_townhouse_owned",
     "sprite_role": "door_street"
    }
   },
