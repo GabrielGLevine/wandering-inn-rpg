@@ -981,7 +981,7 @@ The common kinds named by the resolver's pool rule (at least 3, ideally 4 to 6, 
 - **sack:** `common_sack_tied`, `common_sack_slumped`, `common_sack_pair`;
 - **crate:** `crate`, `common_crate_cube`, `common_crate_braced`, `common_crate_lowwide`.
 
-The pack `crate`'s public fallback is now `common_crate_cube`, because `crate_owned` read as noise. The rejected pieces stay unallocated.
+barrel#4, the pale keg, was rejected because it reads as a plank bundle. sack#14 was dropped as a pickup-sized scale variant of the tied sack. The rejected pieces stay unallocated. The pack `crate`'s public fallback `crate_owned` read as noise; swapping it for `common_crate_cube` is a follow-up that needs a windowed public-build A/B.
 
 ### Flagged (not applied)
 
@@ -1038,7 +1038,7 @@ Recuts come from bundled sheets unless noted. A recolour of pack art stays bundl
 
 ### Generation asks that remain after the re-intake
 
-- **Shared pool:** two generic plank crate silhouettes (a squat 16x12 and a strapped 16x20), bundle-tier, to bring `common:crate` from 1 to at least 3.
+- **Shared pool:** resolved by #631 with owned art (`common_crate_cube`, `common_crate_braced`, `common_crate_lowwide`).
 - **Pallass:** a bronze post or wall arm lamp with a cold white lamp, day and lit (lamp#28 covers only a hanging lit state); a Pallass stone door proper (door#7 is a plank door in a stone rim). The natural sheets gave no bronze fixture, cold white light or beige prop-scale stone.
 - **Sewers:** one lit fixture (wall pier lamp or hanging cage lamp with local glow); still 0 lit pieces.
 - **Ruin and dungeon lit fixtures:** ruin now has lamp#6, #7, #8 (campfire states) and dungeon has lamp#5, lamp#24 and decor#6, but the cold or pale light asks stand: the two amber fx cones go to Riverfarm and Liscor and do not answer them.
