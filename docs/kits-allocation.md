@@ -1,13 +1,13 @@
 # Regional kits: piece allocation (living)
 
-> Living document. Rulings dated 2026-10-09. The sheets were bundled in `bundle-v8` (#621).
+> Living document. Rulings dated 2026-10-09. The earlier sheets were bundled in `bundle-v8` (#621), the re-intake sheets in `bundle-v9` (#629).
 
 Each kept piece goes to the region where it fits best, not to whichever region asked for it first. The rulings judged each piece on its own merits against the visual grammar and region sections of `docs/design/2026-10-05-holistic-art-review.md`, the rollout in `docs/superpowers/plans/2026-10-08-regional-kits-rollout.md`, and the day context shot of every region. List rank and pack theme played no part.
 
 A region's pool read starts here: take that region's section and the scatter lines that name it. A piece allocated to another region moves only with a `docs/CHOICE-LOG.md` ruling, and the PR that moves it updates its line here.
 
 - **Coverage.** 238 kept pieces: 114 plants out of 334 judged, and 124 props out of 270 judged. Rejected pieces are not listed; most were tint-only duplicates, slicer composites, item-icon scale, or had no role in any region. Identity pieces (doors, lamps, sconces, windows) are ruled in their own section below. The re-intake (#624/#627) adds 380 more pieces in its own section at the end: 238 + 380 = 618 allocated pieces.
-- **Bundling.** Every source sheet in the table below is bundled (the 238 earlier pieces). 114 pieces sit on five sheets that were already in the bundle, and 124 sit on the 18 sheets that `bundle-v8` added. Fetch the bundle (`scripts/fetch_private_assets.sh`) before wiring, so `tools/wire_asset.py` finds the sheet under `wandering_inn_game/assets/`. Of the 380 re-intake pieces, 284 sit on bundled sheets and 96 sit on 24 sheets that need `bundle-v9` (see Bundle needs in the last section).
+- **Bundling.** Every source sheet in the table below is bundled (the 238 earlier pieces). 114 pieces sit on five sheets that were already in the bundle, and 124 sit on the 18 sheets that `bundle-v8` added. Fetch the bundle (`scripts/fetch_private_assets.sh`) before wiring, so `tools/wire_asset.py` finds the sheet under `wandering_inn_game/assets/`. Of the 380 re-intake pieces, 284 sit on bundled sheets and 96 sit on the 24 sheets that `bundle-v9` (#629) added (see Bundle needs in the last section).
 - **Destinations.** `region:<region>/<role>` is one region's role. `scatter:<regions>` is ground dressing for the listed regions, best fit first. `common:<kind>` is generic utility for any region's pool.
 
 ## Source sheets
@@ -1046,7 +1046,7 @@ Marked in place, never deleted. `docs/art-generation-list.md` carries the three 
 
 ### Bundle needs (bundle-v9)
 
-Kept pieces that sit on source sheets not yet under `wandering_inn_game/assets/`. They need a `bundle-v9` release before `tools/wire_asset.py` can wire them. The other 284 new pieces are on bundled sheets.
+Kept pieces whose source sheets were not under `wandering_inn_game/assets/` before `bundle-v9` (#629, released 2026-10-10). bundle-v9 now ships all 24 sheets, so `tools/wire_asset.py` can wire every piece once the bundle is fetched. The other 284 new pieces were already on bundled sheets. Bundle paths follow the bundle-v8 layout: tilesets go under `assets/tiles/<pack>/`, and station sheets are flattened into `assets/props/free_pack/`, with `Cooking Station.png` renamed `Cooking_Station.png` and the Sawmill sheets prefixed `Sawmill_`.
 
 | source sheet (under `potential_assets/`) | kept pieces |
 |---|---|
