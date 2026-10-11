@@ -25,6 +25,17 @@ func _init() -> void:
 	assert(floor.position == Vector2(-8, -8), "corner tiles must align to cell boundaries")
 	assert(floor.get_cell_atlas_coords(Vector2i(1, 1)) == Vector2i(corners[14][0], corners[14][1]), "northwest dirt corner must use the metadata's matching tile")
 	assert(floor.get_cell_atlas_coords(Vector2i(0, 0)) == Vector2i(corners[7][0], corners[7][1]), "southeast dirt corner must use its own tile")
+	# #632: a null corner leaves that vertex unpainted (here: every all-upper vertex).
+	var sparse := corners.duplicate()
+	sparse[15] = null
+	var sparse_root := Node2D.new()
+	var sparse_config := config.duplicate()
+	sparse_config["wang_corners"] = sparse
+	WITileBoardBuilder.build_floor_layers(sparse_root, [sparse_config], Vector2i(3, 3), sparse_config, WISpriteRegistry)
+	var sparse_floor := sparse_root.get_child(0) as TileMapLayer
+	assert(sparse_floor.get_used_cells().size() == 4 and sparse_floor.get_cell_source_id(Vector2i(3, 3)) == -1,
+		"null corners paint only the vertices touching the lower cell")
+	sparse_root.free()
 	var builder := WITileBoardBuilder.new()
 	for mask in 16:
 		var lower := {}
