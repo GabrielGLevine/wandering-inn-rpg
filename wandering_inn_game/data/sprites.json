@@ -10891,38 +10891,11 @@
    }
   }
  },
- "invrisil_shelf_potions": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Resources.png region [32, 0, 16, 16] sheet sha256 46cb1578decf; wired by tools/wire_asset.py",
-  "kind": "other",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Resources.png",
-    "frame_size": [
-     16,
-     16
-    ],
-    "region": [
-     32,
-     0,
-     16,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_shelf_bottles"
- },
  "invrisil_topiary": {
   "shadow": false,
   "_comment": "slice of potential_assets/Pixel Crawler - Fairy Forest 1.7/Pixel Crawler - Fairy Forest 1.7/Assets/Props.png region [160, 112, 32, 32] sheet sha256 082e19c4cfcc; wired by tools/wire_asset.py",
   "kind": "plant",
-  "render_scale": 0.55,
+  "render_scale": 0.65,
   "anchor": [
    0.5,
    1.0
@@ -11188,33 +11161,6 @@
   },
   "fallback_sprite": "owned_fallback_dusty_scroll"
  },
- "invrisil_tome": {
-  "shadow": false,
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Esoteric.png region [48, 128, 16, 16] sheet sha256 a45dfec687b0; wired by tools/wire_asset.py",
-  "kind": "book",
-  "render_scale": 0.75,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Esoteric.png",
-    "frame_size": [
-     16,
-     16
-    ],
-    "region": [
-     48,
-     128,
-     16,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_dusty_scroll"
- },
  "invrisil_book": {
   "shadow": false,
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Esoteric.png region [0, 176, 16, 16] sheet sha256 a45dfec687b0; wired by tools/wire_asset.py",
@@ -11274,7 +11220,7 @@
   "kind": "table",
   "render_scale": 0.7,
   "anchor": [
-   0.5,
+   0.254,
    1.0
   ],
   "shadow": true,
@@ -11458,34 +11404,6 @@
   },
   "fallback_sprite": "owned_fallback_stool"
  },
- "invrisil_rug_floral": {
-  "field_y_sort_bias_px": -160.0,
-  "shadow": false,
-  "_comment": "slice of potential_assets/Pixel Crawler - Garden Environment/Pixel Crawler - Garden Environment/Assets/Tiles.png region [96, 400, 48, 48] sheet sha256 f554dbc04df9; wired by tools/wire_asset.py",
-  "kind": "rug",
-  "render_scale": 0.5,
-  "anchor": [
-   0.5,
-   0.9167
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/tiles/garden/Tiles.png",
-    "frame_size": [
-     48,
-     48
-    ],
-    "region": [
-     96,
-     400,
-     48,
-     48
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "rug_woven_red"
- },
  "invrisil_banner": {
   "_comment": "slice of potential_assets/Pixel Crawler - Castle Environment 0.3/Pixel Crawler - Castle Environment 0.3/Assets/Tiles.png region [288, 160, 16, 64] sheet sha256 9c576b24d59a; wired by tools/wire_asset.py",
   "kind": "sign",
@@ -11544,7 +11462,7 @@
   "shadow": false,
   "_comment": "slice of potential_assets/Pixel Crawler - Fairy Forest 1.7/Pixel Crawler - Fairy Forest 1.7/Assets/Props.png region [272, 96, 16, 16] sheet sha256 082e19c4cfcc; wired by tools/wire_asset.py",
   "kind": "plant",
-  "render_scale": 1.0,
+  "render_scale": 0.65,
   "anchor": [
    0.5,
    1.0
@@ -11598,7 +11516,7 @@
   "shadow": false,
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Vegetation.png region [80, 144, 32, 32] sheet sha256 1a3bdf11e561; wired by tools/wire_asset.py",
   "kind": "plant",
-  "render_scale": 1.0,
+  "render_scale": 0.75,
   "anchor": [
    0.5,
    0.875
@@ -11620,113 +11538,5 @@
    }
   },
   "fallback_sprite": "owned_fallback_bush_green"
- },
- "invrisil_flower_pink": {
-  "shadow": false,
-  "_comment": "slice of potential_assets/Pixel Crawler - Garden Environment/Pixel Crawler - Garden Environment/Assets/Tiles.png region [224, 304, 16, 16] sheet sha256 f554dbc04df9; wired by tools/wire_asset.py",
-  "kind": "plant",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   0.8125
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/tiles/garden/Tiles.png",
-    "frame_size": [
-     16,
-     16
-    ],
-    "region": [
-     224,
-     304,
-     16,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_flower_tiny"
- },
- "invrisil_flower_blue": {
-  "shadow": false,
-  "_comment": "slice of potential_assets/Pixel Crawler - Garden Environment/Pixel Crawler - Garden Environment/Assets/Tiles.png region [224, 336, 16, 16] sheet sha256 f554dbc04df9; wired by tools/wire_asset.py",
-  "kind": "plant",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   0.8125
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/tiles/garden/Tiles.png",
-    "frame_size": [
-     16,
-     16
-    ],
-    "region": [
-     224,
-     336,
-     16,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_flower_tiny"
- },
- "invrisil_flower_red": {
-  "shadow": false,
-  "_comment": "slice of potential_assets/Pixel Crawler - Garden Environment/Pixel Crawler - Garden Environment/Assets/Tiles.png region [224, 368, 16, 16] sheet sha256 f554dbc04df9; wired by tools/wire_asset.py",
-  "kind": "plant",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   0.8125
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/tiles/garden/Tiles.png",
-    "frame_size": [
-     16,
-     16
-    ],
-    "region": [
-     224,
-     368,
-     16,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_flower_tiny"
- },
- "invrisil_flower_white": {
-  "shadow": false,
-  "_comment": "slice of potential_assets/Pixel Crawler - Garden Environment/Pixel Crawler - Garden Environment/Assets/Tiles.png region [224, 400, 16, 16] sheet sha256 f554dbc04df9; wired by tools/wire_asset.py",
-  "kind": "plant",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   0.8125
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/tiles/garden/Tiles.png",
-    "frame_size": [
-     16,
-     16
-    ],
-    "region": [
-     224,
-     400,
-     16,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_flower_tiny"
  }
 }

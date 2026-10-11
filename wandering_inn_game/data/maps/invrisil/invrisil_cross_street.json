@@ -1,5 +1,5 @@
 {
- "_kits_recompose": "#632 — the plant pot at (18,5) becomes a topiary urn; flowers scattered by the flower cart",
+ "_kits_recompose": "#632 — the plant pot at (18,5) becomes a topiary urn",
  "biome": "invrisil_street",
  "grid": {
   "width": 22,
@@ -2373,29 +2373,7 @@
     18,
     5
    ],
-   "lift": 17
-  }
- ],
- "scatter": [
-  {
-   "_comment": "#632 scatter (allocation Scatter 64, invrisil): single blooms dropped from the flower cart, on the cart's walk only.",
-   "pool": [
-    "invrisil_flower_pink",
-    "invrisil_flower_blue",
-    "invrisil_flower_red",
-    "invrisil_flower_white"
-   ],
-   "density": 0.3,
-   "cluster": 0.0,
-   "seed": 632,
-   "cells": {
-    "rect": [
-     8,
-     4,
-     5,
-     4
-    ]
-   }
+   "lift": 18
   }
  ],
  "entities": [
