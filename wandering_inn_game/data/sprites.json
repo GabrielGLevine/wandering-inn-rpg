@@ -11060,7 +11060,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_bush_green"
+  "fallback_sprite": "owned_fallback_blank"
  },
  "invrisil_planter_urn": {
   "shadow": true,
@@ -11709,5 +11709,24 @@
    }
   },
   "fallback_sprite": "owned_fallback_sewer_grate"
+ },
+ "owned_fallback_blank": {
+  "_comment": "#632: a public fallback that draws nothing, for a piece whose partner already carries the public read (the topiary on an urn: the urn falls back to a potted plant, so a lifted fallback bush would float). Never placed as a row of its own.",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     1,
+     1
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/owned_fallback_blank/Idle-Sheet.png"
+   }
+  }
  }
 }

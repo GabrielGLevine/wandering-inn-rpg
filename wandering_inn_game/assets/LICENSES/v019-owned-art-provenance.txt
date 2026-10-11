@@ -718,3 +718,5 @@ invrisil_rest_sign/Idle-Sheet.png: owned hand-pixel edit (#632) of invrisil_hang
 window_glow_warm/Idle-Sheet.png: owned procedural art (#632): a warm amber rounded-rectangle pane glow in three alpha steps, drawn by a Python script for the window night-glow overlay; canvas 16x16; frames 1 of 16x16; anchor [0.5, 1.0]; sha256 644a1e1d481bed7c5ddaa6929657e612ee900b2844f027592c63124dc2745dd7.
 
 tiles/invrisil/cornice_gold_line.png: owned procedural art (#632): a 1-px gold cornice line with a dark lip above and a shade below on a transparent 16x16 tile, drawn by a Python script as the Invrisil shop wall trim (design-led gold cornice data line); sha256 328ae452dadd78e6748d46195797899d609a54498778a9b9771db19b8b73ff01.
+
+owned_fallback_blank/Idle-Sheet.png: owned procedural (#632): one fully transparent pixel, the draw-nothing public fallback; sha256 c2153f77e11087fcb078ae38527fa83bef29791e3700e30cc87fec4405a66d0f.

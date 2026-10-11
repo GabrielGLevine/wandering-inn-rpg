@@ -455,6 +455,7 @@
   "owned_fallback_bar_counter/idle": 1,
   "owned_fallback_barrel/idle": 1,
   "owned_fallback_bed/idle": 1,
+  "owned_fallback_blank/idle": 1,
   "owned_fallback_boulder/idle": 1,
   "owned_fallback_bush_green/idle": 1,
   "owned_fallback_campfire/idle": 1,
