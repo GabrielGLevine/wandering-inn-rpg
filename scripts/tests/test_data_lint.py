@@ -88,6 +88,24 @@ class TestNightGlow(unittest.TestCase):
         self.assertTrue(self.check(entities=[{"id": "e", "night_glow": {"sprite": "window_glow_warm"}}]))
 
 
+class TestWallTrim(unittest.TestCase):
+    """#632: a material's wall trim names a real sheet and coords inside it."""
+    def errs(self, trim):
+        errors = []
+        data_lint._check_wall_trim(trim, "t", errors)
+        return errors
+
+    def test_valid_trim_passes(self):
+        self.assertEqual(self.errs({"sheet": "res://assets/tiles/invrisil/cornice_gold_line.png", "tile_px": 16, "coords": [0, 0]}), [])
+
+    def test_broken_trim_fails(self):
+        for trim in [[0, 0], {"sheet": "res://assets/tiles/invrisil/cornice_gold_line.png", "tile_px": 16, "coords": [1, 0]},
+                {"sheet": "res://assets/nope.png", "tile_px": 16, "coords": [0, 0]},
+                {"sheet": "res://assets/tiles/invrisil/cornice_gold_line.png", "tile_px": 16, "coords": [0, 0], "tone": {}}]:
+            with self.subTest(trim=trim):
+                self.assertTrue(self.errs(trim))
+
+
 class TestTerrainFallbacks(unittest.TestCase):
     def check(self, fallback, role="floor_layer", primary=None):
         errors = []

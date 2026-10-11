@@ -36,6 +36,19 @@ func _init() -> void:
 	assert(sparse_floor.get_used_cells().size() == 4 and sparse_floor.get_cell_source_id(Vector2i(3, 3)) == -1,
 		"null corners paint only the vertices touching the lower cell")
 	sparse_root.free()
+	# #632: a wall segment's `trim` overlays its tile on every face cell, in its own layer.
+	var wall_root := Node2D.new()
+	var trim_tile := {"sheet": "res://assets/tiles/invrisil/cornice_gold_line.png", "tile_px": 16, "coords": [0, 0]}
+	var trim_walls := {"sheet": "res://assets/tiles/harvest/timberwall_over_plank_v1.png", "tile_px": 16, "segments": [
+		{"from": [0, 0], "to": [2, 0], "cap": [0, 3], "face": [3, 0], "trim": trim_tile},
+		{"from": [0, 1], "to": [0, 2], "cap": [0, 3], "face": null, "trim": trim_tile},
+	]}
+	WITileBoardBuilder.build_walls(wall_root, trim_walls, Vector2i(3, 3), trim_walls, WISpriteRegistry)
+	assert(wall_root.get_child_count() == 3, "a faced segment gains one trim layer; a caps-only one never does")
+	var trim_layer := wall_root.get_child(1) as TileMapLayer
+	assert(trim_layer.get_used_cells().size() == 3 and trim_layer.get_cell_atlas_coords(Vector2i(2, 0)) == Vector2i.ZERO,
+		"the trim tile covers exactly the face cells")
+	wall_root.free()
 	var builder := WITileBoardBuilder.new()
 	for mask in 16:
 		var lower := {}
