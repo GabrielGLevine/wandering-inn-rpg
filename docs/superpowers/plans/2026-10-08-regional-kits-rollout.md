@@ -370,6 +370,8 @@ CHOICE-LOG keeps the one-line rulings. This is the full text as it stood before 
       floor (`brothers_parlor`, the inn plank [1,21]). Converting them needs
       authored geometry, and the read passed.
 
+- **G3 regen (#629 Liscor rebuild, before the blind read):** Liscor generic placements 17/101 → 13/159 (16.83% → 8.18%); street 10/60 → 6/93, guild 2/17 → 2/25, runners_guild 2/10 → 2/19, barracks 3/14 → 3/22. No other region moved. Regenerated with `--regen-scene-baseline` on main `7dacb3b3` + #629.
+
 ## Per-region checklist (copy into each region issue)
 
 - [ ] Issue opened; branch and worktree created; overlay copied; import pass done.
