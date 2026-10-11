@@ -271,6 +271,8 @@ Per-regen numbers for the `scene-repetition.json` ratchet. CHOICE-LOG keeps one 
 - **#620 r3 N8 (Runners' Guild counter ends → `counter_segment_owned`):** Liscor generic placements 19 → 17 (18.63% → 16.67%); no other region moved. Regenerated with `--regen-scene-baseline`.
   - **Final review (#620):** the Runners' counter returned to the Selys pattern (Vess back at (5,2), the filled (5,2) counter segment removed): Liscor placements 102 → 101 with 17 generic (share 16.67% → 16.83%), `runners_guild` 11 → 10; the waystone scale reverted to 0.4 (Liscor-only alias is a #629 follow-up).
 
+- **#632 Invrisil rebuild (one regen, on the tree rebased onto #640):** Invrisil generic placements 51 → 39 (26.15% → 18.14%) over 195 → 215 placements; G2 Invrisil identity 56.92% → 67.3%, `_common` utility 4/215 (1.86%). The classifier moved two regions with no map edit: inn 36 → 33 (51.43% → 47.14%) and Pallass 27 → 25 (28.12% → 26.04%), because `sconce`, the pack `barrel` and `crate` and the other art Invrisil stopped placing now sit in fewer regions. Regenerated with `--regen-scene-baseline`.
+
 ## Kits ruling details (moved verbatim from CHOICE-LOG, 2026-10-11)
 
 CHOICE-LOG keeps the one-line rulings. This is the full text as it stood before compaction, including rejected alternatives, deviations and numbers.
