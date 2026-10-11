@@ -143,11 +143,83 @@
    "_comment": "8b Task R1 (issue #10): witch_hollow canopy enclosure (deep-shade y457 row, docs/archive/design/riverfarm-art/picks.md sec.5)."
   },
   {
+   "path": "assets/props/free_pack/Alchemy_Table_01-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Alchemy/Alchemy_Table_01-Sheet.png."
+  },
+  {
+   "path": "assets/props/free_pack/Alchemy_Table_02-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Alchemy/Alchemy_Table_02-Sheet.png."
+  },
+  {
+   "path": "assets/props/free_pack/Anvil.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 2 kept pieces (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Anvil/Anvil.png."
+  },
+  {
+   "path": "assets/props/free_pack/Anvil_02-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Anvil/Anvil_02-Sheet.png."
+  },
+  {
+   "path": "assets/props/free_pack/Bonfire.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 6 kept pieces (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Bonfire/Bonfire.png."
+  },
+  {
    "path": "assets/props/free_pack/Bonfire_01-Sheet.png",
    "source_pack": "Pixel Crawler - Free Pack 2.1",
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Bonfire_02-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Bonfire/Bonfire_02-Sheet.png."
+  },
+  {
+   "path": "assets/props/free_pack/Bonfire_04-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Bonfire/Bonfire_04-Sheet.png."
+  },
+  {
+   "path": "assets/props/free_pack/Bonfire_09-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Bonfire/Bonfire_09-Sheet.png."
+  },
+  {
+   "path": "assets/props/free_pack/Bonfire_10-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Bonfire/Bonfire_10-Sheet.png."
   },
   {
    "path": "assets/props/free_pack/Building_Props.png",
@@ -179,11 +251,43 @@
    "fallback": "placeholder"
   },
   {
+   "path": "assets/props/free_pack/Butchery_02.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Cooking Station/Butchery/Butchery_02.png."
+  },
+  {
+   "path": "assets/props/free_pack/Butchery_03.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Cooking Station/Butchery/Butchery_03.png."
+  },
+  {
+   "path": "assets/props/free_pack/Butchery_04.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Cooking Station/Butchery/Butchery_04.png."
+  },
+  {
    "path": "assets/props/free_pack/Cooking_Estructure.png",
    "source_pack": "Pixel Crawler - Free Pack 2.1",
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Cooking_Station.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 5 kept pieces (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Cooking Station/Cooking Station.png."
   },
   {
    "path": "assets/props/free_pack/Dungeon_Props.png",
@@ -207,6 +311,14 @@
    "bundle": true,
    "fallback": "placeholder",
    "_comment": "8b Task R1 (issue #10): riverfarm_village crop rows + farm-prop dressing (region table docs/archive/design/riverfarm-art/picks.md sec.3)."
+  },
+  {
+   "path": "assets/props/free_pack/Fire_02-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Bonfire/Fire_02-Sheet.png."
   },
   {
    "path": "assets/props/free_pack/Furnace.png",
@@ -259,6 +371,14 @@
    "_comment": "#621 (bundle-v8): regional-kits dormant-pack sheet, 27 kept pieces (allocation in docs/kits-allocation.md). Source: Pixel Crawler - Free Pack/Environment/Props/Static/Pan.png."
   },
   {
+   "path": "assets/props/free_pack/Pan_04-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Props/Animated/Pan_04-Sheet.png."
+  },
+  {
    "path": "assets/props/free_pack/Resources.png",
    "source_pack": "Pixel Crawler - Free Pack 2.1",
    "verdict": "FORBIDDEN",
@@ -272,6 +392,22 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Sawmill_Base.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 3 kept pieces (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Sawmill/Base.png."
+  },
+  {
+   "path": "assets/props/free_pack/Sawmill_Level_2-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 1 kept piece (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Sawmill/Level_2-Sheet.png."
   },
   {
    "path": "assets/props/free_pack/Tools.png",
@@ -389,6 +525,14 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Workbench.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 10 kept pieces (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Structures/Stations/Workbench/Workbench.png."
   },
   {
    "path": "assets/props/garden/Feminine-Idle-Sheet.png",
@@ -1232,12 +1376,28 @@
    "_comment": "8a A1: ruin floor-tile candidate (region table in docs/archive/design/8a-asset-assembly.md)."
   },
   {
+   "path": "assets/tiles/cemetery/Roof.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 5 kept pieces (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Cemetery 0.4/Pixel Crawler - Cemetery/Environment/Structures/Roof.png."
+  },
+  {
    "path": "assets/tiles/cemetery/Walls.png",
    "source_pack": "Pixel Crawler - Cemetery 0.4",
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder",
    "_comment": "8a A1: ruin wall-tile candidate (region table in docs/archive/design/8a-asset-assembly.md)."
+  },
+  {
+   "path": "assets/tiles/desert/Ground.png",
+   "source_pack": "Pixel Crawler - Desert",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 4 kept pieces (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Desert/Pixel Crawler - Desert/Assets/Ground.png."
   },
   {
    "path": "assets/tiles/fairy_forest/Tiles.png",
@@ -1283,6 +1443,22 @@
    "fallback": "placeholder"
   },
   {
+   "path": "assets/tiles/forge/Tiles.png",
+   "source_pack": "Pixel Crawler - Forge 1.2",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 10 kept pieces (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Forge 1.2/Pixel Crawler - Forge/Assets/Tiles.png."
+  },
+  {
+   "path": "assets/tiles/free_pack/Dungeon_Tiles.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 2 kept pieces (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Free Pack/Environment/Tilesets/Dungeon_Tiles.png."
+  },
+  {
    "path": "assets/tiles/free_pack/Floors_Tiles.png",
    "source_pack": "Pixel Crawler - Free Pack 2.1",
    "verdict": "FORBIDDEN",
@@ -1319,11 +1495,27 @@
    "_comment": "8a A1 (issue #9 pre-work): garden hedge/fountain/petal-swatch candidates (region table in docs/archive/design/8a-asset-assembly.md)."
   },
   {
+   "path": "assets/tiles/hideout/Tiles.png",
+   "source_pack": "Pixel Crawler - Hideout 1.0",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 29 kept pieces (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Hideout 1.0/Pixel Crawler - Hideout/Assets/Tiles.png."
+  },
+  {
    "path": "assets/tiles/library/Tiles.png",
    "source_pack": "Pixel Crawler - Library",
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/sewer/Tiles.png",
+   "source_pack": "Pixel Crawler - Sewer",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "#629 (bundle-v9): regional-kits re-intake sheet, 7 kept pieces (allocation in docs/kits-allocation.md, Bundle needs). Source: Pixel Crawler - Sewer/Pixel Crawler - Sewer/Assets/Tiles.png."
   },
   {
    "path": "assets/ui/chrome/Banner_Horizontal.png",

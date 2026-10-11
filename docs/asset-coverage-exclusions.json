@@ -37,6 +37,8 @@
   {"glob": "pixellab_*/**/*_4x*.png", "reason": "4x preview upscales of registered sheets (asset_candidates skips _4x)"},
   {"glob": "pixellab_*/**/palette_*.png", "reason": "palette swatch, not an asset"},
   {"glob": "pixellab_*/**/preview_*.png", "reason": "PixelLab preview renders of a registered rig"},
-  {"glob": "pixellab_2026-10-08_pallass_513/sheets/**", "class": "rig_or_animation", "reason": "assembled animation sheets of the #513 rigs, whose rig folders are registered"}
+  {"glob": "pixellab_2026-10-08_pallass_513/sheets/**", "class": "rig_or_animation", "reason": "assembled animation sheets of the #513 rigs, whose rig folders are registered"},
+  {"glob": "pixellab_2026-10-10/*.png", "reason": "#610 batch work files: contact sheets, the A/B board and animation strips (README.md); not pool material"},
+  {"glob": "pixellab_2026-10-10/antinium_rig/**", "class": "rig_or_animation", "reason": "#610 Antinium rig source frames, assembled into assets/sprites/antinium_worker_owned/ (provenance in v019-owned-art-provenance.txt)"}
  ]
 }
