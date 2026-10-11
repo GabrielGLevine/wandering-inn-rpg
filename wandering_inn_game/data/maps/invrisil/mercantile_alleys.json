@@ -1,5 +1,5 @@
 {
- "_kits_recompose": "#632 — wall-foot tuft scatter, a broad-leaf weed in the south-west corner, owned sealed bale, cold lanterns",
+ "_kits_recompose": "#632 — cargo-yard cluster from the _common roles and the alley drain on blocked wall-foot cells, wall-foot tuft scatter, a broad-leaf weed, owned sealed bale, cold lanterns",
  "biome": "invrisil_alley",
  "grid": {
   "width": 20,
@@ -936,6 +936,42 @@
    "cell": [
     2,
     12
+   ]
+  },
+  {
+   "_comment": "#632 decision 4: the cargo-yard cluster from the _common Tier A roles, on wall-foot cells that were already blocked; the alley drain runs along the same wall.",
+   "sprite": "invrisil_alley_pipe",
+   "cell": [
+    6,
+    5
+   ]
+  },
+  {
+   "sprite": "@crate",
+   "cell": [
+    8,
+    5
+   ]
+  },
+  {
+   "sprite": "@barrel",
+   "cell": [
+    9,
+    5
+   ]
+  },
+  {
+   "sprite": "@crate",
+   "cell": [
+    10,
+    5
+   ]
+  },
+  {
+   "sprite": "@sack",
+   "cell": [
+    11,
+    6
    ]
   }
  ],

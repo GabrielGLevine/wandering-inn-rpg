@@ -11682,5 +11682,32 @@
    }
   },
   "fallback_sprite": "owned_fallback_bush_green"
+ },
+ "invrisil_alley_pipe": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [144, 0, 32, 19] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
+  "kind": "pipe",
+  "render_scale": 1.0,
+  "anchor": [
+   0.25,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "frame_size": [
+     32,
+     19
+    ],
+    "region": [
+     144,
+     0,
+     32,
+     19
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_sewer_grate"
  }
 }
