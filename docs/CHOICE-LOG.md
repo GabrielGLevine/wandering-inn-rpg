@@ -354,6 +354,7 @@ and chronology belong in issue PRs. Earlier context:
     (26.67%); 51 (26.15%) under #625 art counting. Liscor (#620 R1):
     48 → 19 (18.63%) over the conversion, FIX loop 1 and the R1 land, whose
     one regen ran on the art-counted tree after the #625 merge.
+  - **#631 `_common`:** allocation utility pieces failed 3 blind pool reads; pools are owned generated art (detail: kits-allocation "Shared pool").
   - **R1 Liscor rulings (#620):**
     - FIX loop 1 deviations: Krshia stays at (13,2), because the ruled
       (13,3) blocks the y3 lane that about 35 QA scripts use. Street dusk is

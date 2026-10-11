@@ -724,9 +724,20 @@ class TestCommonTierA(unittest.TestCase):
         sprites = copy.deepcopy(ART_SPRITES); sprites["c3"]["kind"] = "spaceship"
         self.assertTrue(any("sprites.c3: kind 'spaceship'" in e for e in run_with_sprites(sprites)))
 
-    def test_real_common_pool_stays_empty_until_its_read(self):
+    def test_real_common_pool_holds_only_read_approved_members(self):
+        # #631: the pools passed their blind Fable pool read (three rounds, 2026-10-11).
+        # A new member needs its own read; extend this pin only alongside one.
+        approved = {
+            "barrel": ["barrel", "common_barrel_lying", "common_keg"],
+            "sack": ["common_sack_tied", "common_sack_slumped", "common_sack_pair"],
+            "crate": ["crate", "common_crate_cube", "common_crate_braced", "common_crate_lowwide"],
+        }
         kits = json.loads((GAME / "data" / "kits.json").read_text())
-        self.assertEqual(kits["_common"]["roles"], {})
+        roles = kits["_common"]["roles"]
+        self.assertEqual(sorted(roles), sorted(approved))
+        for name, role in roles.items():
+            self.assertEqual(role["kind"], name)
+            self.assertEqual(role["pool"], approved[name])
 
 
 class TestBiomeRows(unittest.TestCase):

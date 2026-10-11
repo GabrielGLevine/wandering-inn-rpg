@@ -970,6 +970,19 @@ The common kinds named by the resolver's pool rule (at least 3, ideally 4 to 6, 
 - **crate: still 1.** Only the existing empty tall plank crate (container#29). The pool needs at least 3. No new sheet has a generic empty crate that is not already the in-game `crate`: the Farm crates (crate#2 to #4) are produce displays and went to Liscor. The ask is in the generation asks below.
 - **container: 0.** Every new container reads as one region's object.
 
+**Outcome (#631, 2026-10-11).** Three blind Fable pool reads at gameplay scale rejected most allocated utility pieces:
+- the Hideout sacks (sack#15 and sack#16) and the flat sack read as cushions;
+- the Hideout barrels (barrel#7 and barrel#8) read as dark blobs, and the upright one is a tint variant of the pack barrel;
+- container#29 reads as a void cabinet;
+- the Tools tub and keg read as buckets.
+
+`_common` is therefore built from owned PixelLab art in the pack's style (batch `pixellab_2026-10-10`, generated with style references, no upscaling):
+- **barrel:** `barrel`, `common_barrel_lying`, `common_keg`;
+- **sack:** `common_sack_tied`, `common_sack_slumped`, `common_sack_pair`;
+- **crate:** `crate`, `common_crate_cube`, `common_crate_braced`, `common_crate_lowwide`.
+
+The pack `crate`'s public fallback is now `common_crate_cube`, because `crate_owned` read as noise. The rejected pieces stay unallocated.
+
 ### Flagged (not applied)
 
 Each item below needs a `docs/CHOICE-LOG.md` line or a user ruling before it moves anything.

@@ -926,7 +926,7 @@
   "fallback_sprite": "owned_fallback_barrel"
  },
  "crate": {
-  "fallback_sprite": "crate_owned",
+  "fallback_sprite": "common_crate_cube",
   "_comment": "#398: WAS [690,71,38,26] -- bbox only (30,2)-(38,25), an 8x23 scrap of the FIRST crate's left plank edge, drawn as a ~14x41 near-black sliver offset right (the anchor centred a frame 81% empty). The sheet draws TWO 16x23 crates flush at x720-751 sharing a DOUBLE divider (x735 = left crate's right outline, x736 = right crate's left) plus a barrel flush at x752 -- one alpha component, so cut on drawn edges, not alpha. Took the CLOSED twin over the open-top left one: meanL 47.3 vs 32.3, 29% vs 48% near-black, and the open one's 10x7 black interior reads as a hole at 1x -- fatal in deep_tunnels (world band 13/255). rs 1.0 = native 16px grid: one cell wide, 0.44-cell overhang UP into air. Probe: bbox (0,0,16,23), pad 0/0; its OPAQUE-CANVAS flag is expected (solid wooden box, not a keyed canvas).",
   "render_scale": 1.0,
   "anchor": [
@@ -10902,5 +10902,59 @@
     "fps": 1
    }
   }
+ },
+ "common_crate_cube": {
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/common_crate_cube/Idle-Sheet.png",
+    "frame_size": [
+     20,
+     20
+    ],
+    "fps": 1
+   }
+  },
+  "kind": "crate"
+ },
+ "common_crate_lowwide": {
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   0.875
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/common_crate_lowwide/Idle-Sheet.png",
+    "frame_size": [
+     20,
+     16
+    ],
+    "fps": 1
+   }
+  },
+  "kind": "crate"
+ },
+ "common_crate_braced": {
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   0.9583
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/common_crate_braced/Idle-Sheet.png",
+    "frame_size": [
+     16,
+     24
+    ],
+    "fps": 1
+   }
+  },
+  "kind": "crate"
  }
 }
