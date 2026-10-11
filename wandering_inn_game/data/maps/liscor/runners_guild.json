@@ -17,40 +17,56 @@
   [
    6,
    2
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   6,
+   1
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   1,
+   3
   ]
  ],
  "floor_layers": [
   {
-   "_pick": "#225 floor differentiation: the Runner's Guild reads as a patterned herringbone wood hall, distinct from the inn's straight tavern planks. Reuses the inn's OWN verified bedroom-corner herringbone swatch (Interior_Walls_01 [16,21]/[17,21], rgb~97,76,38) -- same sheet/family, no new license, footstep-wood stays honest.",
-   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "_pick": "#629 scene plan: the Runners' Guild floor is the Library pack's plain vertical plank boards (20-21,11), its own wood instead of the inn bedroom herringbone it borrowed.",
+   "sheet": "res://assets/tiles/library/Tiles.png",
    "tile_px": 16,
    "variants": [
     [
-     16,
-     21
+     20,
+     11
     ],
     [
-     17,
-     21
+     21,
+     11
     ]
    ],
    "cells": "all",
-    "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/inn_floor.png",
-     "tile_px": 16,
-     "coords": [
-      0,
-      3
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/inn_floor.png",
+    "tile_px": 16,
+    "coords": [
+     0,
+     3
+    ],
+    "tone": {
+     "base": [
+      0.33,
+      0.27,
+      0.2
      ],
-     "tone": {
-      "base": [
-       0.33,
-       0.27,
-       0.2
-      ],
-      "detail": 0.65
-     }
+     "detail": 0.65
     }
+   }
   }
  ],
  "walls": {
@@ -204,6 +220,76 @@
     1,
     5
    ]
+  },
+  {
+   "sprite": "liscor_sorting_shelf",
+   "cell": [
+    4,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_papers",
+   "cell": [
+    4,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_scroll",
+   "cell": [
+    6,
+    2
+   ]
+  },
+  {
+   "sprite": "liscor_peg_rail",
+   "cell": [
+    6,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_runner_pack",
+   "cell": [
+    6,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_banner_runners",
+   "cell": [
+    1,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_runners_desk",
+   "cell": [
+    2,
+    4
+   ]
+  },
+  {
+   "sprite": "liscor_ledger",
+   "cell": [
+    2,
+    4
+   ]
+  },
+  {
+   "sprite": "liscor_drawers",
+   "cell": [
+    1,
+    3
+   ]
+  },
+  {
+   "sprite": "liscor_quill",
+   "cell": [
+    1,
+    3
+   ]
   }
  ],
  "ambience": [
@@ -225,7 +311,7 @@
     7
    ],
    "display_name": "Liscor Street",
-   "sprite": "door__alt2",
+   "sprite": "liscor_door_civic",
    "to_map": "street",
    "to_cell": [
     19,

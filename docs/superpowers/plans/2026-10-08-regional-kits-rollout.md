@@ -61,6 +61,18 @@ For each region below, open the issue, then run pilot Tasks 1–7 with these sub
   - `barracks` was touched by #602 rest signposting; keep its rest props explicit.
   - Watch Guard and Resting Runner are role NPCs and may share cast rigs.
 
+#### #629 rulings (Liscor rebuild, controller under wave autonomy)
+
+- **Identity (decision 1):** the city wall is the Cemetery Walls tan brick (kit materials `wall_city`, face (14,2) / cap (14,1), and `wall_city_side`, cap (17,3)); the barracks walls take the same brick because the barracks sits in the wall. The gate is `liscor_gate_arch`, an owned gradient-map recolour of `city_gate_arch` onto that palette (provenance line in v019). The 14 street facades are `liscor_facade_brick`, Building_Walls [480,192,96,48]: the same panel run as `facade_plaster` with a brick course under the cream plaster. That region was unallocated and also named in the Invrisil scene plan; it is Liscor's (warm brick is Liscor's palette), so Invrisil should not wire it.
+- **Roofs:** the Cemetery Roof modules (wall_module#4/#5) were auditioned on the barracks and guild and rejected. They are chevron tiles for assembling mausoleum roofs; one module at street scale reads as a dark slab. The owned clay-tile `city_roof_owned` stays (best art wins).
+- **Not placed, with reasons:** c#27 (superseded by plant_d#42, Flagged ruling); station#16 (a second butcher stall beside table#6 repeats the kind); station#55 (a loose hanging side of meat read as a giant ham beside the stall); station#26 and container#34 (the unlit day states of the oven and cookpot need phase-gated decor, which #632's `night_glow` brings; the lit states stand); fx#2 (the amber night cone, same dependency); window#13 (a 48x12 strip that reads as green-glazed glass, not a window box); wall_module#14 (no facade gaps to fill: the facades are free-standing panels; wall_module#8 closes the alley at (25,1)); table#16/#26 (the guild keeps the R1 counter set, never mixed; a second, unstaffed counter crowds the hall); food#7 (G4's three-decor cap per cell on the stall counter; tomato and carrot carry the colour).
+- **Window night glow (decision 2)** consumes #632's `night_glow` decor field after it lands; a follow-up wires the Liscor windows and fx#2.
+- **Waystone:** `liscor_waystone` is an `_alias_of: anchor_waystone` at 0.55 for the street stone and its lit state; the global id stays 0.4.
+- **Stool A/B:** `owned_fallback_stool` stays the public fallback for `stool`; `stool_owned` reads darker and muddier at gameplay scale. `stool_owned` is a Liscor seat (guild reading table) and joins the `seating` pool.
+- **Raised anchors:** wall-hung pieces (boards, crest, pennants, peg rails and the kit hung on them) and goods on counters lift their art with an anchor above 1.0 (the `food_bread` precedent) and no shadow. Their public fallbacks keep floor anchors.
+- **`cold_hearth` and `dirty_table`:** not edited; the R1 ruling stands (their copy says cold and muddy).
+- **Floodplains gatehouse:** the floodplains side of the gate keeps the grey `city_gatehouse`; recolouring it is a floodplains map edit outside this lane (follow-up; the same recolour script applies).
+
 ### R2. Underground: ruin, dungeon, sewers (`ruin_surface`, `dungeon_approach`, `seal_vault`, `trapped_halls`, `sewers`, `deep_tunnels`)
 
 - **Problem:** `dungeon_rubble` makes up 41% of ruin placements and 27% of dungeon placements; `boulder` repeats in the sewers.

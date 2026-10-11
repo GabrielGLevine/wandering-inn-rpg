@@ -208,26 +208,86 @@
       2,
       1
      ]
+    },
+    "floor_earth": {
+     "_comment": "#629 (#620 r3 N6): the street's base ground. The biome's dirt_01 (540px tile) drew a horizontal seam on every row; the Free Pack Floors_Tiles orange packed-earth fill cells (11-13,10) are flat (luma sd ~2) and seam-free. Public fallback keeps the street biome's meadow path tone.",
+     "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       11,
+       10
+      ],
+      [
+       12,
+       10
+      ],
+      [
+       13,
+       10
+      ]
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+      "tile_px": 16,
+      "coords": [
+       2,
+       1
+      ],
+      "tone": {
+       "base": [
+        0.29,
+        0.34,
+        0.23
+       ],
+       "detail": 0.65
+      }
+     }
+    },
+    "wall_city": {
+     "_comment": "#629 decision 1: Liscor's tan sandstone-brick city wall, Cemetery Walls (12-17,0-12) (bundled; the dungeon uses only columns 0-11). Face = brick course (14,2), cap = capped top course (14,1). Public fallback is the owned GH#184 city wall.",
+     "sheet": "res://assets/tiles/cemetery/Walls.png",
+     "tile_px": 16,
+     "cap": [
+      14,
+      1
+     ],
+     "face": [
+      14,
+      2
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/city_wall/Tiles.png",
+      "tile_px": 32,
+      "cap": [
+       0,
+       0
+      ],
+      "face": [
+       1,
+       0
+      ]
+     }
+    },
+    "wall_city_side": {
+     "_comment": "#629 decision 1: the west run of the same tan city wall seen from the top (cap-only segments): the enclosure's right pier (17,3), pale cap edge toward the street.",
+     "sheet": "res://assets/tiles/cemetery/Walls.png",
+     "tile_px": 16,
+     "cap": [
+      17,
+      3
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/city_wall/Tiles.png",
+      "tile_px": 32,
+      "cap": [
+       1,
+       0
+      ]
+     }
     }
    },
    "roles": {
-    "cargo": {
-     "pick": "cell",
-     "pool": [
-      "crate_owned",
-      "barrel",
-      "bonus_produce_crate",
-      "barrel__alt1"
-     ],
-     "deny": [
-      "sack",
-      "sacks",
-      "bale",
-      "bales",
-      "grain",
-      "satchel"
-     ]
-    },
     "notice": {
      "pick": "cell",
      "pool": [
@@ -240,7 +300,9 @@
      "pick": "map",
      "pool": [
       "liscor_bench",
-      "liscor_chair"
+      "liscor_chair",
+      "liscor_bench_plank",
+      "stool_owned"
      ]
     }
    },

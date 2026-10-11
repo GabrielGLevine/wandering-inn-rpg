@@ -1,7 +1,7 @@
 {
  "_comment": "Zevara Sunderscale STAYS at the gate (zevara_intro's own framing untouched)",
  "biome": "liscor_civic",
- "_kits_recompose": "#620 — art-read FIX loop 1: sconce, note and crate moves",
+ "_kits_recompose": "#629 — Liscor rebuild: tan city-wall brick walls (the barracks sits in the wall), cot row, lockers, composed kit rack, duty table and bench, Watch crest",
  "interior_flavor": [
   "Nothing there. Bare stone, and a rack of spare kit with every strap buckled the same way.",
   "Nothing there. A shield knocks against its peg down the corridor, then goes quiet."
@@ -22,6 +22,22 @@
   [
    3,
    2
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   7,
+   6
   ]
  ],
  "floor_layers": [
@@ -48,22 +64,22 @@
     ]
    ],
    "cells": "all",
-    "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
-     "tile_px": 16,
-     "coords": [
-      2,
-      1
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+    "tile_px": 16,
+    "coords": [
+     2,
+     1
+    ],
+    "tone": {
+     "base": [
+      0.41,
+      0.38,
+      0.32
      ],
-     "tone": {
-      "base": [
-       0.41,
-       0.38,
-       0.32
-      ],
-      "detail": 0.4
-     }
+     "detail": 0.4
     }
+   }
   }
  ],
  "walls": {
@@ -79,34 +95,7 @@
      13,
      0
     ],
-    "cap": [
-     14,
-     6
-    ],
-    "face": [
-     14,
-     7
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "face": [
-                          4,
-                          3
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_city"
    },
    {
     "from": [
@@ -117,26 +106,7 @@
      0,
      7
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_city_side"
    },
    {
     "from": [
@@ -147,26 +117,7 @@
      13,
      7
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_city_side"
    },
    {
     "from": [
@@ -177,26 +128,7 @@
      1,
      7
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_city_side"
    },
    {
     "from": [
@@ -207,26 +139,7 @@
      12,
      7
     ],
-    "cap": [
-     14,
-     6
-    ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "material": "@wall_city_side"
    }
   ]
  },
@@ -249,21 +162,21 @@
    }
   },
   {
-   "sprite": "inn_table_dirty__before",
+   "sprite": "liscor_duty_table",
    "cell": [
     6,
     2
    ]
   },
   {
-   "sprite": "owned_fallback_shelf_bottles",
+   "sprite": "liscor_locker_tall",
    "cell": [
     9,
     2
    ]
   },
   {
-   "sprite": "crate_owned",
+   "sprite": "liscor_locker",
    "cell": [
     3,
     2
@@ -274,6 +187,62 @@
    "cell": [
     7,
     2
+   ]
+  },
+  {
+   "sprite": "liscor_cot",
+   "cell": [
+    2,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_cot",
+   "cell": [
+    3,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_footlocker",
+   "cell": [
+    5,
+    2
+   ]
+  },
+  {
+   "sprite": "liscor_peg_rail",
+   "cell": [
+    5,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_shield_round",
+   "cell": [
+    4,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_sword_laid",
+   "cell": [
+    5,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_watch_crest",
+   "cell": [
+    10,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_barracks_bench",
+   "cell": [
+    7,
+    6
    ]
   }
  ],
@@ -296,7 +265,7 @@
     7
    ],
    "display_name": "Liscor Street",
-   "sprite": "door__alt2",
+   "sprite": "liscor_door_barracks",
    "to_map": "street",
    "to_cell": [
     21,

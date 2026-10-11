@@ -326,6 +326,9 @@ and chronology belong in issue PRs. Earlier context:
     Invrisil alley workbench becomes a cargo-yard cluster unless dialogue
     names a workbench. Firm generation list (#639): Antinium worker rig, cold
     wall lantern, stool, second street door.
+  - **#629 Liscor:** the facades are the Building_Walls brick-footed plaster
+    (Liscor's, not Invrisil's); the Cemetery shingle modules were rejected for
+    the owned clay roofs. Skips and details: rollout plan R1 "#629 rulings".
   - **Fallback swaps are global** and land only as windowed-read strict
     improvements (`library_shelf` → `library_shelf__alt1`; rejected
     `shelf_bottles`, wrong kind). The pack `crate` swap waits on #641.

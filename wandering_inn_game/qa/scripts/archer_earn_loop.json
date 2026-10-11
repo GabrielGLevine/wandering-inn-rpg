@@ -351,7 +351,7 @@
    "payload_contains": {
     "map": "barracks",
     "floor_cells": 112,
-    "blocked_cells": 42
+    "blocked_cells": 46
    },
    "timeout_sec": 5
   },

@@ -1,6 +1,6 @@
 {
  "biome": "liscor_civic",
- "_kits_recompose": "#620 — art-read FIX loop 1: notice wall and Ilvo cells",
+ "_kits_recompose": "#629 — Liscor rebuild: reading tables for the inn round tables, back-wall cabinets and boards, plank bench",
  "interior_flavor": [
   "Nothing there. The floorboard in front of the desk is walked pale, chalk dust in the grain.",
   "Nothing there. Somewhere behind the desk a drawer shuts."
@@ -40,6 +40,26 @@
   [
    12,
    9
+  ],
+  [
+   14,
+   3
+  ],
+  [
+   14,
+   4
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   5,
+   9
+  ],
+  [
+   13,
+   9
   ]
  ],
  "floor_layers": [
@@ -70,26 +90,26 @@
      14,
      7
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "face": [
-                          4,
-                          3
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+     "tile_px": 16,
+     "cap": [
+      4,
+      2
+     ],
+     "face": [
+      4,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.4,
+       0.34,
+       0.26
+      ],
+      "detail": 0.55
+     }
+    }
    },
    {
     "from": [
@@ -104,22 +124,22 @@
      14,
      6
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+     "tile_px": 16,
+     "cap": [
+      4,
+      2
+     ],
+     "tone": {
+      "base": [
+       0.4,
+       0.34,
+       0.26
+      ],
+      "detail": 0.55
+     }
+    }
    },
    {
     "from": [
@@ -134,22 +154,22 @@
      14,
      6
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+     "tile_px": 16,
+     "cap": [
+      4,
+      2
+     ],
+     "tone": {
+      "base": [
+       0.4,
+       0.34,
+       0.26
+      ],
+      "detail": 0.55
+     }
+    }
    },
    {
     "from": [
@@ -164,22 +184,22 @@
      14,
      6
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+     "tile_px": 16,
+     "cap": [
+      4,
+      2
+     ],
+     "tone": {
+      "base": [
+       0.4,
+       0.34,
+       0.26
+      ],
+      "detail": 0.55
+     }
+    }
    },
    {
     "from": [
@@ -194,22 +214,22 @@
      14,
      6
     ],
-     "fallback_render": {
-                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-                         "tile_px": 16,
-                         "cap": [
-                          4,
-                          2
-                         ],
-                         "tone": {
-                          "base": [
-                           0.4,
-                           0.34,
-                           0.26
-                          ],
-                          "detail": 0.55
-                         }
-                        }
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+     "tile_px": 16,
+     "cap": [
+      4,
+      2
+     ],
+     "tone": {
+      "base": [
+       0.4,
+       0.34,
+       0.26
+      ],
+      "detail": 0.55
+     }
+    }
    }
   ]
  },
@@ -278,14 +298,14 @@
    ]
   },
   {
-   "sprite": "bonus_round_table",
+   "sprite": "liscor_reading_table",
    "cell": [
     13,
     6
    ]
   },
   {
-   "sprite": "bonus_round_table",
+   "sprite": "liscor_reading_table",
    "cell": [
     12,
     9
@@ -296,6 +316,62 @@
    "cell": [
     14,
     6
+   ]
+  },
+  {
+   "sprite": "liscor_cabinet",
+   "cell": [
+    14,
+    3
+   ]
+  },
+  {
+   "sprite": "liscor_drawers",
+   "cell": [
+    14,
+    4
+   ]
+  },
+  {
+   "sprite": "liscor_strongbox",
+   "cell": [
+    1,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_board_blank",
+   "cell": [
+    12,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_board_chalk",
+   "cell": [
+    13,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_red_book",
+   "cell": [
+    7,
+    2
+   ]
+  },
+  {
+   "sprite": "liscor_bench_plank",
+   "cell": [
+    5,
+    9
+   ]
+  },
+  {
+   "sprite": "stool_owned",
+   "cell": [
+    13,
+    9
    ]
   }
  ],
