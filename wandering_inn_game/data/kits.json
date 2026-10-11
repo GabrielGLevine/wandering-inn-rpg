@@ -99,7 +99,8 @@
       "door",
       "invrisil_door_street_2",
       "invrisil_door_street_3",
-      "invrisil_door_street_4"
+      "invrisil_door_street_4",
+      "door_street_townhouse_owned"
      ]
     },
     "facade_window": {
@@ -114,10 +115,11 @@
      ]
     },
     "lamp_wall": {
+     "_comment": "#632: sconce (a campfire sheet that read as a floating flame) leaves the pool for the owned cold wall lantern (#610 firm list) at the pool scale.",
      "pick": "map",
      "pool": [
-      "sconce",
-      "invrisil_lamp_wall_1"
+      "invrisil_lamp_wall_1",
+      "invrisil_lamp_wall_cold"
      ]
     },
     "cargo": {

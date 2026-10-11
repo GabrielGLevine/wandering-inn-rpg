@@ -22,7 +22,7 @@ pack files are searched from docs/asset-index.json at query time).
 | kind | owned-public | owned-unverified | pack-bundle | shipped-bundle | shipped-public |
 |---|---|---|---|---|---|
 | icon | 881 |  |  |  | 106 |
-| prop | 956 | 20 | 2489 | 70 | 255 |
+| prop | 956 | 20 | 2489 | 70 | 257 |
 | rig | 123 |  |  | 7 | 78 |
 | setpiece | 83 |  |  |  |  |
 | tileset | 29 |  | 76 |  |  |

@@ -10263,7 +10263,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "invrisil_door_street_2"
+  "fallback_sprite": "door_street_townhouse_owned"
  },
  "invrisil_door_street_4": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [197, 320, 22, 32] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
@@ -10826,6 +10826,46 @@
     "frame_size": [
      24,
      16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "invrisil_rest_sign": {
+  "_comment": "#632: the Adventurer's Rest house sign as its prose describes it (a hand of cards face down and a hat on a peg, no name). Owned: a hand-pixel edit of the owned invrisil_hanging_sign board.",
+  "render_scale": 0.428571,
+  "anchor": [
+   0.5,
+   0.84375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/invrisil_rest_sign/Idle-Sheet.png"
+   }
+  }
+ },
+ "invrisil_lamp_wall_cold": {
+  "_comment": "#632: the owned cold wall lantern (#610 firm list) at Invrisil wall-lamp scale. Same art as lamp_wall_cold_owned (rs 0.5, the owned-fallback scale); 0.7 renders it about 13x20, level with invrisil_lamp_wall_1 (14x20) in the lamp_wall pool.",
+  "_alias_of": "lamp_wall_cold_owned",
+  "_alias_reason": "a second render_scale for the Invrisil lamp_wall pool beside invrisil_lamp_wall_1; lamp_wall_cold_owned keeps the owned-fallback scale",
+  "kind": "lamp",
+  "render_scale": 0.7,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/lamp_wall_cold_owned/Idle-Sheet.png",
+    "frame_size": [
+     24,
+     32
     ],
     "fps": 1
    }
