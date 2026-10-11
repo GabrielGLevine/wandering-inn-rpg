@@ -1213,7 +1213,9 @@ func _build_decor(decor_list: Array) -> void:
 		if sprite_id == "" or not WISpriteRegistry.has_sprite(sprite_id):
 			continue
 		var cell := Vector2i(int(entry["cell"][0]), int(entry["cell"][1]))
-		_make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)), null, "decor")
+		var decor_visual := _make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)), null, "decor")
+		if entry.has("lift"):
+			_lift_decor(decor_visual, int(entry["lift"]))
 		if entry.get("night_glow") is Dictionary:
 			_build_night_glow(cell, entry["night_glow"] as Dictionary)
 		if entry.has("sprite_role"):
@@ -1230,6 +1232,17 @@ func _build_decor(decor_list: Array) -> void:
 		"map": Game.sim.current_map, "roles": roles,
 		"night_glow": {"rows": _night_glows.size(), "lit": glows_lit},
 	})
+
+
+## #632: a decor row's `lift` (px) raises its art onto a surface drawn on the
+## same cell (a quill on a counter, a glass on a bar) and sorts it 1px south so it
+## draws over that surface. The holder keeps its cell, so a fallback sprite lifts
+## the same way.
+func _lift_decor(holder: Node2D, lift: int) -> void:
+	holder.position.y += 1.0
+	for child: Node in holder.get_children():
+		if child is Node2D:
+			(child as Node2D).position.y -= float(lift) + 1.0
 
 
 ## #632 decision 2 (window night state): a decor row's `night_glow`

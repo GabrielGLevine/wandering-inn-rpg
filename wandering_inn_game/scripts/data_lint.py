@@ -1273,6 +1273,17 @@ def check_solid_decor_blocks(maps: dict, errors: list) -> None:
 GLOW_PHASES = {"day", "dusk", "night"}
 
 
+def check_decor_lift(maps: dict, errors: list) -> None:
+	"""#632: a decor `lift` raises art onto a surface on its own cell (world.gd
+	_lift_decor): a whole number of pixels in 1..48."""
+	for map_id, m in sorted(maps.items()):
+		for d in m.get("decor", []) or []:
+			if isinstance(d, dict) and "lift" in d:
+				lift = d["lift"]
+				if isinstance(lift, bool) or not isinstance(lift, int) or not 1 <= lift <= 48:
+					errors.append(f"maps/{map_id}: decor {d.get('cell')} lift must be an integer in 1..48")
+
+
 def check_night_glow(maps: dict, parsed: dict, errors: list) -> None:
 	"""#632: a decor row's `night_glow` (world.gd _build_night_glow) names a
 	registered sprite and an optional non-empty `phase` list drawn from the
@@ -3661,6 +3672,7 @@ def main() -> int:
 	check_companion_toasts(maps, errors)
 	check_solid_decor_blocks(maps, errors)
 	check_night_glow(maps, parsed, errors)
+	check_decor_lift(maps, errors)
 	check_spriteless_entities(maps, errors)
 	check_placements_off_water(maps, errors)
 	advisories: list = []

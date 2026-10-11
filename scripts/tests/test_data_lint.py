@@ -88,6 +88,19 @@ class TestNightGlow(unittest.TestCase):
         self.assertTrue(self.check(entities=[{"id": "e", "night_glow": {"sprite": "window_glow_warm"}}]))
 
 
+class TestDecorLift(unittest.TestCase):
+    def errs(self, lift):
+        errors = []
+        data_lint.check_decor_lift({"m": {**GRID, "entities": [], "decor": [{"sprite": "s", "cell": [0, 0], "lift": lift}]}}, errors)
+        return errors
+
+    def test_lift_range(self):
+        self.assertEqual(self.errs(10), [])
+        for bad in [0, 49, 2.5, True, "3"]:
+            with self.subTest(bad=bad):
+                self.assertTrue(self.errs(bad))
+
+
 class TestWallTrim(unittest.TestCase):
     """#632: a material's wall trim names a real sheet and coords inside it."""
     def errs(self, trim):

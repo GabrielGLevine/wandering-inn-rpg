@@ -768,6 +768,17 @@ func _init() -> void:
 			additive = ((child as AnimatedSprite2D).material as CanvasItemMaterial).blend_mode == CanvasItemMaterial.BLEND_MODE_ADD
 	assert(additive, "the glow sprite blends additively")
 	glows.queue_free()
+	var lift_script := GDScript.new()
+	lift_script.source_code = "extends Node\n%s" % _function_source(source, "_lift_decor")
+	assert(lift_script.reload() == OK, "decor lift harness failed to compile")
+	var lifter: Node = lift_script.new()
+	var holder := WIEntityVisualFactory.new(16.0, null).make(Vector2i(3, 4), "window_glow_warm", [], Color.WHITE)
+	var art_y := (holder.get_child(0) as Node2D).position.y
+	lifter.call("_lift_decor", holder, 10)
+	assert(holder.position.y == 4 * 16 + 1.0 and is_equal_approx((holder.get_child(0) as Node2D).position.y, art_y - 11.0),
+		"a lifted decor row sorts 1px south of its cell while its art rises by the lift")
+	holder.free()
+	lifter.free()
 
 
 func _init() -> void:
