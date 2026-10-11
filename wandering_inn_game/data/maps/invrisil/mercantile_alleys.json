@@ -901,7 +901,7 @@
    "sprite": "@lamp_wall",
    "cell": [
     11,
-    10
+    9
    ],
    "light": {
     "color": [
@@ -918,7 +918,7 @@
    "sprite": "@lamp_wall",
    "cell": [
     16,
-    13
+    10
    ],
    "light": {
     "color": [

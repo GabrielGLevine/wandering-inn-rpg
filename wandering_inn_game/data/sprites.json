@@ -11058,7 +11058,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_plant_pot"
+  "fallback_sprite": "invrisil_urn_owned"
  },
  "invrisil_potted_plant": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [64, 354, 16, 30] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
@@ -11544,6 +11544,47 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "cold_hearth"
+  "fallback_sprite": "invrisil_stove_fallback"
+ },
+ "invrisil_urn_owned": {
+  "_comment": "#632 r2: owned pale stone urn, the public fallback for invrisil_planter_urn (the plant-pot fallback read as a pot plant).",
+  "kind": "container",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     16,
+     21
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/invrisil_urn_owned/Idle-Sheet.png"
+   }
+  }
+ },
+ "invrisil_stove_fallback": {
+  "_comment": "#632 r2: lamp-scale alias of the owned short_order_range, the public fallback for invrisil_iron_stove (cold_hearth read as a spiked disc).",
+  "_alias_of": "short_order_range",
+  "_alias_reason": "a one-cell scale for the stationer stove public fallback",
+  "render_scale": 0.3,
+  "anchor": [
+   0.4922,
+   0.875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/short_order_range/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
  }
 }

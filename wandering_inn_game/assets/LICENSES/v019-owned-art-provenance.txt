@@ -721,3 +721,5 @@ tiles/invrisil/cornice_gold_line.png: owned procedural art (#632): a 1-px gold c
 
 
 invrisil_lamp_wall_cold/Idle-Sheet.png: owned hand edit (#632 r1) of lamp_wall_cold_owned/Idle-Sheet.png (owned PixelLab): steel greys lifted about two value steps and a 1-px dark outline added; canvas 24x32; frames 1 of 24x32; feet anchor [0.5, 0.9375]; sha256 bb37b54b2bafcf1564625c4832646a9a4e3a80b4487a8403ebfc9c8aa4c37db3.
+
+invrisil_urn_owned/Idle-Sheet.png: owned procedural pixel art (#632 r2): a pale stone urn (lip, neck, swelling body, foot) drawn by script; canvas 16x21; frames 1 of 16x21; anchor [0.5, 1.0]; sha256 e6f9b61dc4966fe26e9e067621cf6c596209fe49676a3dc7f518755bfa64b95b.
