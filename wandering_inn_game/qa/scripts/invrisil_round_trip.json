@@ -303,6 +303,16 @@
      ],
      "lamp_wall": [
       "invrisil_lamp_wall_cold"
+     ],
+     "barrel": [
+      "common_keg"
+     ],
+     "crate": [
+      "common_crate_braced",
+      "common_crate_lowwide"
+     ],
+     "sack": [
+      "common_sack_pair"
      ]
     }
    }
