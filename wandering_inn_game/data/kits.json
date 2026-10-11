@@ -1,6 +1,6 @@
 {
   "_comment": "Regional kits: role pools, materials and anonymous casts per region. Spec docs/superpowers/specs/2026-10-08-regional-kits-design.md. Role value: a sprite id string, or {pick: cell|map|door, module: bool, pool: [id | [id, weight]], light: {}, deny: [word, ...]}. `deny` words are matched whole-word, case-insensitive, against display_name and observe of any row using the role (data_lint). Lookup: region (map folder or top-level map `kit`), then _common. A map field set to `null` blocks the material's value. Supported only for wall-segment `face` and `cap` (caps-only or face-only segments).",
-  "_common": {"materials": {}, "roles": {}, "cast": []},
+  "_common": {"materials": {}, "roles": {"barrel": {"kind": "barrel", "pick": "cell", "pool": ["barrel", "common_barrel_lying", "common_keg"]}, "sack": {"kind": "sack", "pick": "cell", "pool": ["common_sack_tied", "common_sack_slumped", "common_sack_pair"]}, "crate": {"kind": "crate", "pick": "cell", "pool": ["crate", "common_crate_cube", "common_crate_braced", "common_crate_lowwide"]}}, "cast": []},
   "invrisil": {
    "materials": {
     "floor_street": {

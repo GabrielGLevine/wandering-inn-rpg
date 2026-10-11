@@ -970,6 +970,19 @@ The common kinds named by the resolver's pool rule (at least 3, ideally 4 to 6, 
 - **crate: still 1.** Only the existing empty tall plank crate (container#29). The pool needs at least 3. No new sheet has a generic empty crate that is not already the in-game `crate`: the Farm crates (crate#2 to #4) are produce displays and went to Liscor. The ask is in the generation asks below.
 - **container: 0.** Every new container reads as one region's object.
 
+**Outcome (#631, 2026-10-11).** Three blind Fable pool reads at gameplay scale rejected most allocated utility pieces:
+- the Hideout sacks (sack#15 and sack#16) and the flat sack read as cushions;
+- the Hideout barrels (barrel#7 and barrel#8) read as dark blobs, and the upright one is a tint variant of the pack barrel;
+- container#29 reads as a void cabinet;
+- the Tools tub and keg read as buckets.
+
+`_common` is therefore built from owned PixelLab art in the pack's style (batch `pixellab_2026-10-10`, generated with style references, no upscaling):
+- **barrel:** `barrel`, `common_barrel_lying`, `common_keg`;
+- **sack:** `common_sack_tied`, `common_sack_slumped`, `common_sack_pair`;
+- **crate:** `crate`, `common_crate_cube`, `common_crate_braced`, `common_crate_lowwide`.
+
+barrel#4, the pale keg, was rejected because it reads as a plank bundle. sack#14 was dropped as a pickup-sized scale variant of the tied sack. The rejected pieces stay unallocated. The pack `crate`'s public fallback `crate_owned` read as noise; swapping it for `common_crate_cube` is a follow-up that needs a windowed public-build A/B.
+
 ### Flagged (not applied)
 
 Each item below needs a `docs/CHOICE-LOG.md` line or a user ruling before it moves anything.
@@ -1025,7 +1038,7 @@ Recuts come from bundled sheets unless noted. A recolour of pack art stays bundl
 
 ### Generation asks that remain after the re-intake
 
-- **Shared pool:** two generic plank crate silhouettes (a squat 16x12 and a strapped 16x20), bundle-tier, to bring `common:crate` from 1 to at least 3.
+- **Shared pool:** resolved by #631 with owned art (`common_crate_cube`, `common_crate_braced`, `common_crate_lowwide`).
 - **Pallass:** a bronze post or wall arm lamp with a cold white lamp, day and lit (lamp#28 covers only a hanging lit state); a Pallass stone door proper (door#7 is a plank door in a stone rim). The natural sheets gave no bronze fixture, cold white light or beige prop-scale stone.
 - **Sewers:** one lit fixture (wall pier lamp or hanging cage lamp with local glow); still 0 lit pieces.
 - **Ruin and dungeon lit fixtures:** ruin now has lamp#6, #7, #8 (campfire states) and dungeon has lamp#5, lamp#24 and decor#6, but the cold or pale light asks stand: the two amber fx cones go to Riverfarm and Liscor and do not answer them.

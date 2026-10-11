@@ -18,11 +18,16 @@ archived, or superseded session blocks.
     - G2 counts art identity (#625): a regional pin must be exclusive *art*, not just a new sprite id.
   - Done: #607 (PR #609); #608 Invrisil (PRs #614, #619); #621 bundle-v8 + allocation (PR #622); #623 art-identity G2/G3 + `_common` guardrails (PR #625); #624 intake coverage (PR #626); 31-kind labels (PR #627); re-intake allocation, 618 pieces (PR #628); **#620 Liscor R1 (PR #630, `56dd2573`; G2 art: Liscor 68.83%, Invrisil 56.92%)**. Fetch bundle-v9 (Latest) before QA in main (`scripts/fetch_private_assets.sh`).
   - User decisions, 2026-10-09 (CHOICE-LOG): all four design-led cuts are YES for now (Liscor sandstone-brick wall/gate + brick ground storey + shingle roofs from existing art; window night-glow overlay; Pallass lamp = `crystal_lamp` + glow cone; Invrisil alley workbench -> cargo-yard cluster). Earlier rulings: global allocation; `_common` Tier A utility props only, 30% cap; design-led gap pass before any generation.
-  - 2026-10-10 (user: "generate, release bundle-v9, file/expand rebuild issues"):
-    - **bundle-v9 released** (private, Latest, 412 paths = v8 + 24 re-intake sheets); PR #639 lands the manifest/ignore rows plus the four owned sprite ids: `stool_owned`, `lamp_wall_cold_owned`, `door_street_townhouse_owned`, and `antinium_worker_owned` (34x51 4-dir rig, idle 4/walk 8). Registered only; #629 and #632 place them.
-    - **#610 firm list generated** on PixelLab USD credits via REST (the MCP refuses on an expired subscription; 1 concurrent job). Candidates, picks, prompts and the A/B board are in `potential_assets/pixellab_2026-10-10/README.md` (untracked, local only): stool #43, cold lantern #32, second door #0, and Antinium rig `9091ff10…` (4 dir; walk and idle animations). About $0.6 spent; about $4.4 credits left. The client is a scratchpad script; recreate it from the README endpoints if needed.
-    - **Rebuild issues:** #631 `_common` + scatter (first), #629 Liscor (expanded: all 73 allocated pieces + stool + Antinium), #632 Invrisil rebuild (50 pieces + lantern + door), #633–#638 for R2–R7. Indexed on #606.
-  - Next, in order: merge #639 → #631 → #629 and #632 → R2–R7 (#633–#638).
+  - 2026-10-11 state (user: "finish #639; see how much of #631/#629/#632 lands; keep the repo stable"):
+    - **#639 MERGED** (`403b26ee`): bundle-v9 manifest, plus owned `stool_owned`, `lamp_wall_cold_owned`, `door_street_townhouse_owned` and `antinium_worker_owned` (registered only). The PixelLab batch `potential_assets/pixellab_2026-10-10/` (README + MANIFEST) is archived as `potential-assets-v2` part5.
+    - **#631, PR #640:** `_common` barrel, sack and crate pools built from owned pack-style generations after three blind pool reads rejected the allocation pieces. Owned `invrisil_sealed_bale` is also generated for #632.
+    - **Lanes (worktrees off `403b26ee`, pushed branches; not PRs yet):**
+      - #629 `/private/tmp/wi-629-liscor` (`wi-629-liscor`).
+      - #632 `/private/tmp/wi-632-invrisil` (`wi-632-invrisil`). It owns the new world.gd decor `night_glow`; Liscor consumes it later. `d17484e0` is an unverified WIP checkpoint made after a spend-limit cutoff.
+      - Both rebase on #640 when it merges, then: captures → blind Fable scene read → FIX loop → PR → review → merge.
+    - **CHOICE-LOG** is at about 29.7 of its 30 KB cap: one short line per issue; rulings go in the rollout plan.
+    - Next, in order: merge #640 → land #629 and #632 → R2–R7 (#633–#638).
+    - **PixelLab:** the subscription has expired, so the MCP refuses. USD credits work through REST v2 (about $3.6 left), limited to 1 concurrent job.
   - Restart backup: `.superpowers/restart-backup-2026-10-09/` (scratchpad, art evidence, WIP worktree patches; `README.md` restore steps; `FRESH-SESSION-PROMPT.md`). Remaining worktrees are WIP and backed up: `wi-584-audio`, `wi-art-public`, `wi-browser-ready`. If a reboot wipes `/private/tmp`, run `git worktree prune` and restore from the README.
   - Lessons:
     - Writing tools take `--repo-root <worktree>` only.
