@@ -4698,7 +4698,7 @@
      34,
      51
     ],
-    "fps": 6,
+    "fps": 8,
     "sheet_down": "res://assets/sprites/antinium_worker_owned/Walk_Down-Sheet.png",
     "sheet_side": "res://assets/sprites/antinium_worker_owned/Walk_Side-Sheet.png",
     "sheet_up": "res://assets/sprites/antinium_worker_owned/Walk_Up-Sheet.png"
@@ -10796,7 +10796,7 @@
   }
  },
  "door_street_townhouse_owned": {
-  "render_scale": 0.5,
+  "render_scale": 0.55,
   "anchor": [
    0.5,
    1.0
