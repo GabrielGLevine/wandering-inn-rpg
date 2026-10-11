@@ -335,11 +335,9 @@ def _check_ground_transitions(map_id: str, config: dict, errors: list) -> None:
 		if not isinstance(layer, dict) or "wang_corners" not in layer:
 			continue
 		corners = layer["wang_corners"]
-		if (not isinstance(corners, list) or len(corners) != 16 or all(c is None for c in corners) or not all(
-				coord is None or (_numeric_vector(coord, 2, True) and all(_int_like(v) for v in coord))
-				for coord in corners)):
-			errors.append(f"maps/{map_id}: floor layer {index} needs 16 Wang atlas coordinates "
-				"(nonnegative integers; null leaves a vertex unpainted)")
+		if (not isinstance(corners, list) or len(corners) != 16 or not all(
+				_numeric_vector(coord, 2, True) and all(_int_like(v) for v in coord) for coord in corners)):
+			errors.append(f"maps/{map_id}: floor layer {index} needs 16 nonnegative integer Wang atlas coordinates")
 		grid = config["grid"]
 		if not _ground_cells_valid(layer.get("terrain_lower_cells"), int(grid["width"]), int(grid["height"])):
 			errors.append(f"maps/{map_id}: floor layer {index} needs terrain_lower_cells within its grid")

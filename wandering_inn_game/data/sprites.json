@@ -10183,7 +10183,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_unlit_lantern"
+  "fallback_sprite": "invrisil_lamp_wall_cold"
  },
  "invrisil_cargo_1": {
   "render_scale": 0.6,
@@ -10995,9 +10995,7 @@
   }
  },
  "invrisil_lamp_wall_cold": {
-  "_comment": "#632: the owned cold wall lantern (#610 firm list) at Invrisil wall-lamp scale. Same art as lamp_wall_cold_owned (rs 0.5, the owned-fallback scale); 0.7 renders it about 13x20, level with invrisil_lamp_wall_1 (14x20) in the lamp_wall pool.",
-  "_alias_of": "lamp_wall_cold_owned",
-  "_alias_reason": "a second render_scale for the Invrisil lamp_wall pool beside invrisil_lamp_wall_1; lamp_wall_cold_owned keeps the owned-fallback scale",
+  "_comment": "#632 r1 read: the owned cold wall lantern (#610 firm list) with its steel lifted two value steps and a dark outline, an owned edit of lamp_wall_cold_owned (the unedited art read as a grey ghost on the alley brick). Serves as invrisil_lamp_wall_1's public fallback.",
   "kind": "lamp",
   "render_scale": 0.7,
   "anchor": [
@@ -11006,7 +11004,7 @@
   ],
   "animations": {
    "idle": {
-    "sheet": "res://assets/sprites/lamp_wall_cold_owned/Idle-Sheet.png",
+    "sheet": "res://assets/sprites/invrisil_lamp_wall_cold/Idle-Sheet.png",
     "frame_size": [
      24,
      32
@@ -11034,33 +11032,6 @@
     "sheet": "res://assets/sprites/window_glow_warm/Idle-Sheet.png"
    }
   }
- },
- "invrisil_topiary": {
-  "shadow": false,
-  "_comment": "slice of potential_assets/Pixel Crawler - Fairy Forest 1.7/Pixel Crawler - Fairy Forest 1.7/Assets/Props.png region [160, 112, 32, 32] sheet sha256 082e19c4cfcc; wired by tools/wire_asset.py",
-  "kind": "plant",
-  "render_scale": 0.65,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/fairy_forest/Props.png",
-    "frame_size": [
-     32,
-     32
-    ],
-    "region": [
-     160,
-     112,
-     32,
-     32
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_blank"
  },
  "invrisil_planter_urn": {
   "shadow": true,
@@ -11386,60 +11357,6 @@
   },
   "fallback_sprite": "owned_fallback_table_brown"
  },
- "invrisil_table_cloth": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [7, 163, 34, 29] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
-  "kind": "table",
-  "render_scale": 0.75,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
-    "frame_size": [
-     34,
-     29
-    ],
-    "region": [
-     7,
-     163,
-     34,
-     29
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_table_brown"
- },
- "invrisil_table_steel": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [7, 99, 34, 29] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
-  "kind": "table",
-  "render_scale": 0.75,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
-    "frame_size": [
-     34,
-     29
-    ],
-    "region": [
-     7,
-     99,
-     34,
-     29
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_table_brown"
- },
  "invrisil_bench": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [0, 204, 48, 20] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
   "kind": "seat",
@@ -11602,131 +11519,31 @@
   },
   "fallback_sprite": "memorial_statue_human"
  },
- "invrisil_grass_tuft": {
-  "shadow": false,
-  "_comment": "slice of potential_assets/Pixel Crawler - Fairy Forest 1.7/Pixel Crawler - Fairy Forest 1.7/Assets/Props.png region [272, 96, 16, 16] sheet sha256 082e19c4cfcc; wired by tools/wire_asset.py",
-  "kind": "plant",
-  "render_scale": 0.65,
+ "invrisil_iron_stove": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [144, 19, 32, 45] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
+  "kind": "station",
+  "render_scale": 0.5,
   "anchor": [
    0.5,
    1.0
   ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/fairy_forest/Props.png",
-    "frame_size": [
-     16,
-     16
-    ],
-    "region": [
-     272,
-     96,
-     16,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_grass_tuft"
- },
- "invrisil_leafy_tuft": {
-  "shadow": false,
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Vegetation.png region [64, 160, 16, 16] sheet sha256 1a3bdf11e561; wired by tools/wire_asset.py",
-  "kind": "plant",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   0.75
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Vegetation.png",
-    "frame_size": [
-     16,
-     16
-    ],
-    "region": [
-     64,
-     160,
-     16,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_grass_tuft"
- },
- "invrisil_broadleaf": {
-  "shadow": false,
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Vegetation.png region [80, 144, 32, 32] sheet sha256 1a3bdf11e561; wired by tools/wire_asset.py",
-  "kind": "plant",
-  "render_scale": 0.75,
-  "anchor": [
-   0.5,
-   0.875
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Vegetation.png",
-    "frame_size": [
-     32,
-     32
-    ],
-    "region": [
-     80,
-     144,
-     32,
-     32
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_bush_green"
- },
- "invrisil_alley_pipe": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [144, 0, 32, 19] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
-  "kind": "pipe",
-  "render_scale": 1.0,
-  "anchor": [
-   0.25,
-   1.0
-  ],
-  "shadow": false,
+  "shadow": true,
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
     "frame_size": [
      32,
-     19
+     45
     ],
     "region": [
      144,
-     0,
+     19,
      32,
-     19
+     45
     ],
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_sewer_grate"
- },
- "owned_fallback_blank": {
-  "_comment": "#632: a public fallback that draws nothing, for a piece whose partner already carries the public read (the topiary on an urn: the urn falls back to a potted plant, so a lifted fallback bush would float). Never placed as a row of its own.",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": false,
-  "animations": {
-   "idle": {
-    "frame_size": [
-     1,
-     1
-    ],
-    "fps": 1,
-    "sheet": "res://assets/sprites/owned_fallback_blank/Idle-Sheet.png"
-   }
-  }
+  "fallback_sprite": "cold_hearth"
  }
 }

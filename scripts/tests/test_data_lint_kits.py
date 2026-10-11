@@ -668,9 +668,8 @@ class TestSharedArtReport(unittest.TestCase):
         self.assertIn("invrisil_facade_window_1 = window_blue CROSS-REGION [inn, invrisil, riverfarm]", line)
         # 14 without the overlay (body_a's sheet is bundle-only). #620 R1 added three second ids
         # for existing art: bonus_round_table, inn_table_dirty__before (inn art, a follow-up for
-        # the inn conversion) and guild_notice_board (= guild_handbill_wall). #632 added the
-        # deliberate alias invrisil_lamp_wall_cold (= lamp_wall_cold_owned at the pool scale).
-        self.assertRegex(line, r"kits art: 1[56] art identities")
+        # the inn conversion) and guild_notice_board (= guild_handbill_wall).
+        self.assertRegex(line, r"kits art: 1[45] art identities")
         self.assertIn("bonus_round_table = inn_round_table CROSS-REGION [inn, liscor]", line)
 
 

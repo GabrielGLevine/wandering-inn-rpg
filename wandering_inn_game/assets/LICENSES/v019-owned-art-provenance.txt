@@ -719,4 +719,5 @@ window_glow_warm/Idle-Sheet.png: owned procedural art (#632): a warm amber round
 
 tiles/invrisil/cornice_gold_line.png: owned procedural art (#632): a 1-px gold cornice line with a dark lip above and a shade below on a transparent 16x16 tile, drawn by a Python script as the Invrisil shop wall trim (design-led gold cornice data line); sha256 328ae452dadd78e6748d46195797899d609a54498778a9b9771db19b8b73ff01.
 
-owned_fallback_blank/Idle-Sheet.png: owned procedural (#632): one fully transparent pixel, the draw-nothing public fallback; sha256 c2153f77e11087fcb078ae38527fa83bef29791e3700e30cc87fec4405a66d0f.
+
+invrisil_lamp_wall_cold/Idle-Sheet.png: owned hand edit (#632 r1) of lamp_wall_cold_owned/Idle-Sheet.png (owned PixelLab): steel greys lifted about two value steps and a 1-px dark outline added; canvas 24x32; frames 1 of 24x32; feet anchor [0.5, 0.9375]; sha256 bb37b54b2bafcf1564625c4832646a9a4e3a80b4487a8403ebfc9c8aa4c37db3.

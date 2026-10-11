@@ -7,13 +7,6 @@
   "height": 6
  },
  "blocked": [[5, 1], [6, 1]],
- "floor_layers": [
-  {
-   "_pick": "#632 (rollout carry-over: the enchanter rooms author floor_layers before they change): the work room's own checker floor.",
-   "material": "@floor_checker",
-   "cells": "all"
-  }
- ],
  "walls": {
   "material": "@wall_shop",
   "segments": [

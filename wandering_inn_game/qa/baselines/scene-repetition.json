@@ -146,12 +146,10 @@
   "inn_sign": "regional",
   "inn_table_dirty__before": "regional",
   "inn_table_soiled": "regional",
-  "invrisil_alley_pipe": "regional",
   "invrisil_banner": "regional",
   "invrisil_bell_jar": "regional",
   "invrisil_bench": "regional",
   "invrisil_book": "regional",
-  "invrisil_broadleaf": "regional",
   "invrisil_bust": "regional",
   "invrisil_cargo_1": "regional",
   "invrisil_cargo_2": "regional",
@@ -166,9 +164,9 @@
   "invrisil_glass": "regional",
   "invrisil_hanging_sign": "regional",
   "invrisil_inkpot": "regional",
+  "invrisil_iron_stove": "regional",
   "invrisil_lady_client": "regional",
   "invrisil_lamp_wall_1": "regional",
-  "invrisil_lamp_wall_cold": "regional",
   "invrisil_oak_chair": "regional",
   "invrisil_oak_chair_side": "regional",
   "invrisil_ornate_bench": "regional",
@@ -188,9 +186,7 @@
   "invrisil_shop_door_2": "regional",
   "invrisil_shop_sign_1": "regional",
   "invrisil_sideboard": "regional",
-  "invrisil_table_steel": "regional",
   "invrisil_timber_panel": "regional",
-  "invrisil_topiary": "regional",
   "invrisil_tube_rack": "regional",
   "invrisil_upper_window": "regional",
   "kingslayer_spider": "regional",
@@ -295,6 +291,7 @@
   "stool": "regional",
   "street_lamp": "regional",
   "table_brown": "regional",
+  "table_brown__alt1": "regional",
   "tallyman": "regional",
   "temper_bench": "regional",
   "tier_clerk": "regional",
@@ -398,8 +395,8 @@
    "placements": 70
   },
   "invrisil": {
-   "generic_placements": 39,
-   "generic_share_pct": 18.14,
+   "generic_placements": 38,
+   "generic_share_pct": 18.01,
    "maps": {
     "adventurers_rest": {
      "generic_placements": 2,
@@ -419,22 +416,22 @@
     },
     "invrisil_boulevard": {
      "generic_placements": 5,
-     "placements": 55
+     "placements": 54
     },
     "invrisil_cross_street": {
      "generic_placements": 3,
-     "placements": 32
+     "placements": 31
     },
     "mercantile_alleys": {
      "generic_placements": 9,
-     "placements": 36
+     "placements": 34
     },
     "stationer": {
-     "generic_placements": 6,
+     "generic_placements": 5,
      "placements": 22
     }
    },
-   "placements": 215
+   "placements": 211
   },
   "liscor": {
    "generic_placements": 17,

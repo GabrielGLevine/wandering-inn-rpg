@@ -123,7 +123,7 @@ For each region below, open the issue, then run pilot Tasks 1–7 with these sub
 Logged in `docs/CHOICE-LOG.md` (Regional kits). Land both before another map adopts `invrisil_shop` or the enchanter rooms change, each with a scoped read.
 
 - [ ] `invrisil_shop` (`data/biomes.json`): replace the `inn` render clone with its own floor, skirt and blocked look from the Invrisil materials (`floor_rest`, `wall_shop`) and its own `blocked_props` from the pool.
-- [x] `enchanter_shop` and `enchanter_work_room`: author `floor_layers` geometry. Done in #632: the shop on `@floor_marble`, the work room on `@floor_checker`.
+- [ ] `enchanter_shop` and `enchanter_work_room`: author `floor_layers` geometry. #632 put the shop on `@floor_marble`; the work room keeps the biome plank, because a checker floor inside the dark skirt band read as a rug (r1 read; the band is #616).
 
 ### #632 rulings (Invrisil rebuild, 2026-10-11)
 
@@ -136,13 +136,13 @@ Controller rulings:
 
 Implementer rulings:
 - **Rest sign.** `invrisil_rest_sign` is an owned hand-pixel edit of `invrisil_hanging_sign` (three face-down cards and a hat on a peg). It is pinned at cross-street (13,1) and not pooled.
-- **`lamp_wall` pool.** `sconce` (a campfire sheet) leaves the pool for `invrisil_lamp_wall_cold`, an alias of `lamp_wall_cold_owned` at 0.7 (about 13x20, level with `invrisil_lamp_wall_1`). The alley lights turn cool white. `invrisil_lamp_wall_1` keeps `owned_fallback_unlit_lantern`, because lint needs two distinct owned fallbacks per pool.
+- **`lamp_wall`.** `sconce` (a campfire sheet) is gone. After the r1 read the role is the fixed `invrisil_lamp_wall_1`, whose public fallback is `invrisil_lamp_wall_cold`: an owned edit of `lamp_wall_cold_owned`, outlined and lifted two value steps, at 0.7.
 - **`door_street`.** `door_street_townhouse_owned` joins the pool at 0.55, and `invrisil_door_street_3` falls back to it. The boulevard–alleys portal now draws the townhouse door in both builds.
-- **Marble curb.** A Wang edge-ring floor layer over the plaza patch, in the street's own tone. A null `wang_corners` entry leaves its vertex unpainted (`tile_board_builder.gd`). The same ring runs round the cross-street walks, which closes `paving_apron`.
-- **Shop walls and floors.** `wall_dado` (Building_Walls plaster (24,13)) with the owned `cornice_gold_line` as a material `trim` goes on the stationer's and enchanter shop's north walls; caps-only side walls stay `@wall_shop`. `floor_marble` (Floors_Tiles pale marble, toned to limestone) covers both shops, and the work room gets `floor_checker`. The parlor keeps its flagstone and the Rest its honey plank and timber. The work room wall stays timber, because `ashlar_over_checker_v1` has no wall face.
+- **Marble curb.** Auditioned as a Wang edge ring on both streets; reverted after the r1 read (see below).
+- **Shop walls and floors.** `wall_dado` (Building_Walls plaster (24,13)) with the owned `cornice_gold_line` as a material `trim` goes on the stationer's and enchanter shop's north walls; caps-only side walls stay `@wall_shop`. `floor_marble` (Floors_Tiles pale marble, toned to mid limestone) covers both shops. The parlor keeps its flagstone, the Rest its honey plank and timber, and the work room the biome plank.
 - **Decor `lift`.** Tabletop pieces (inkpot, quill, scroll, book, glass, test-tube rack, bell jar) sit on their surface through the row's `lift`, so their public fallbacks lift too.
 - **Work-room door pair.** Both pinned to `invrisil_door_street_3` (a plain framed interior door). `door_locked_heavy` read as a barred cabinet (#610).
-- **Parapet line (#610 c3).** The Castle cornice band (5-7,3) runs over the flat roof mass on both streets, with an owned fallback. It reopens c3 if the blind read fails.
+- **Parapet line (#610 c3).** The Castle cornice band failed the r1 read and was reverted; c3 stays open.
 - **Skipped, with reasons:**
   - other#27 potion column: at 16px it reads as stacked coloured blocks.
   - book#1 tome: floats as a blue kite over the order-book desk.
@@ -161,6 +161,29 @@ Implementer rulings:
   - container#15, container#31 and vessel#33: the work-room surface reads cluttered past two items.
   - sign#2 and sign#3: two banners already frame the cross-street door.
   - pipe#4: lands with the cargo cluster.
+
+#### #632 r1 blind read: reconcile and fixes (2026-10-11)
+
+Official 1 PASS / 17 FIX / 1 REJECT; public 5 / 13 / 1. Each finding was sorted against main's before-captures.
+
+| # | finding | class | action |
+|---|---|---|---|
+| 1 | alleys: opaque dark square behind the figure at the bend | pre-existing | #643 |
+| 2 | alleys: hard-edged orange light pools by day | pre-existing | #611 |
+| 3 | alleys: grey "ghosts holding blue lanterns" | introduced (`invrisil_lamp_wall_cold` on the brick) | `lamp_wall` is now the fixed `invrisil_lamp_wall_1` (steel lantern on an arm), and alley lights go back to warm. The cold lantern, outlined and lifted two value steps as an owned edit, becomes its public fallback |
+| 4 | dusk reads as 80% night on the streets | pre-existing (data) | boulevard and cross-street dusk [0.62,0.54,0.63] (the Liscor card), alleys [0.5,0.44,0.55] |
+| 5 | interiors have no night state | pre-existing | #618 |
+| 6 | cross-street: serrated paving edges | introduced (Wang curb ring) | ring reverted on both streets; `curb_marble`/`paving_apron` reopened. Teal west strip and emptiness: pre-existing, #643 |
+| 7 | parlor reads as a bunkhouse; centre table reads as a crate | table introduced (`invrisil_table_steel`); cots, kegs and chest pre-existing and prose-bound | table pool additions reverted; the rest is #643 |
+| 8 | no cold cue: warm garden arch, green tree and ferns | arch pre-existing (#643); topiary and alley ferns introduced | topiary removed (bare pale urns stay); alley tuft scatter and broad-leaf removed |
+| 9 | enchanter floor near-white; tray reads as a crate | floor introduced; tray pre-existing (#610) | `floor_marble` toned down to [0.47,0.47,0.5] |
+| 10 | work room: brown band round a checker "rug" | introduced (`floor_checker`) | checker floor removed; band is #616 |
+| 11 | Rest: tables read as a wardrobe and an iron bed | introduced (`invrisil_table_steel`) | reverted with 7 |
+| 12 | stationer: spiked disc; clerk in the wall band | disc pre-existing (`cold_hearth`), fixed cheaply; clerk pre-existing and route-bound | stove pinned to `invrisil_iron_stove` (station#33); clerk is #643 |
+| 13 | alleys: drain reads as a cannon; wall/lane share one brick; lane door panels; ferns | drain and ferns introduced; wall and doors pre-existing | drain removed; ferns removed (8); wall and doors #611/#643 |
+| 14 | boulevard: row of heads in the roofline; arch; green door; marble decal | heads introduced (Castle cornice, c3) | c3 FAILED: reverted on both streets and `roofline` reopened. Arch, door and decal pre-existing, #643 |
+
+Skipped after the read: c#36 topiary, d#10, plant_c#2 and plant_a#35 (scatter), table#24, table#25 and pipe#4, plus the `floor_checker` material and the null Wang-corner renderer support (no consumer left).
 
 ## G3 regen log (moved from CHOICE-LOG, 2026-10-09)
 
@@ -271,7 +294,7 @@ Per-regen numbers for the `scene-repetition.json` ratchet. CHOICE-LOG keeps one 
 - **#620 r3 N8 (Runners' Guild counter ends → `counter_segment_owned`):** Liscor generic placements 19 → 17 (18.63% → 16.67%); no other region moved. Regenerated with `--regen-scene-baseline`.
   - **Final review (#620):** the Runners' counter returned to the Selys pattern (Vess back at (5,2), the filled (5,2) counter segment removed): Liscor placements 102 → 101 with 17 generic (share 16.67% → 16.83%), `runners_guild` 11 → 10; the waystone scale reverted to 0.4 (Liscor-only alias is a #629 follow-up).
 
-- **#632 Invrisil rebuild (one regen, on the tree rebased onto #640):** Invrisil generic placements 51 → 39 (26.15% → 18.14%) over 195 → 215 placements; G2 Invrisil identity 56.92% → 67.3%, `_common` utility 4/215 (1.86%). The classifier moved two regions with no map edit: inn 36 → 33 (51.43% → 47.14%) and Pallass 27 → 25 (28.12% → 26.04%), because `sconce`, the pack `barrel` and `crate` and the other art Invrisil stopped placing now sit in fewer regions. Regenerated with `--regen-scene-baseline`.
+- **#632 Invrisil rebuild (one regen, on the tree rebased onto #640):** Invrisil generic placements 51 → 38 (26.15% → 18.01%) over 195 → 211 placements; G2 Invrisil identity 56.92% → 66.67%, `_common` utility 4/211 (1.9%). Re-run after the r1 read fixes. The classifier moved two regions with no map edit: inn 36 → 33 (51.43% → 47.14%) and Pallass 27 → 25 (28.12% → 26.04%), because `sconce`, the pack `barrel` and `crate` and the other art Invrisil stopped placing now sit in fewer regions. Regenerated with `--regen-scene-baseline`.
 
 ## Kits ruling details (moved verbatim from CHOICE-LOG, 2026-10-11)
 

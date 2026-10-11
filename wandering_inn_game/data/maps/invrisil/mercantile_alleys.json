@@ -1,5 +1,5 @@
 {
- "_kits_recompose": "#632 — cargo-yard cluster from the _common roles and the alley drain on blocked wall-foot cells, wall-foot tuft scatter, a broad-leaf weed, owned sealed bale, cold lanterns",
+ "_kits_recompose": "#632 — cargo-yard cluster from the _common roles on blocked wall-foot cells, owned sealed bale",
  "biome": "invrisil_alley",
  "grid": {
   "width": 20,
@@ -871,9 +871,9 @@
    ],
    "light": {
     "color": [
-     0.82,
-     0.9,
-     1.0
+     1.0,
+     0.78,
+     0.45
     ],
     "energy": 0.8,
     "radius": 22,
@@ -888,9 +888,9 @@
    ],
    "light": {
     "color": [
-     0.82,
-     0.9,
-     1.0
+     1.0,
+     0.78,
+     0.45
     ],
     "energy": 0.8,
     "radius": 22,
@@ -905,9 +905,9 @@
    ],
    "light": {
     "color": [
-     0.82,
-     0.9,
-     1.0
+     1.0,
+     0.78,
+     0.45
     ],
     "energy": 0.8,
     "radius": 22,
@@ -922,29 +922,14 @@
    ],
    "light": {
     "color": [
-     0.82,
-     0.9,
-     1.0
+     1.0,
+     0.78,
+     0.45
     ],
     "energy": 0.8,
     "radius": 22,
     "flicker": false
    }
-  },
-  {
-   "sprite": "invrisil_broadleaf",
-   "cell": [
-    2,
-    12
-   ]
-  },
-  {
-   "_comment": "#632 decision 4: the cargo-yard cluster from the _common Tier A roles, on wall-foot cells that were already blocked; the alley drain runs along the same wall.",
-   "sprite": "invrisil_alley_pipe",
-   "cell": [
-    6,
-    5
-   ]
   },
   {
    "sprite": "@crate",
@@ -1024,147 +1009,6 @@
    ]
   }
  },
- "scatter": [
-  {
-   "_comment": "#632 scatter (allocation Scatter 66/64, invrisil): grass and leafy tufts at the foot of the alley walls only, so no tuft lands mid-lane or on an interaction approach in open paving.",
-   "pool": [
-    "invrisil_grass_tuft",
-    "invrisil_leafy_tuft",
-    "invrisil_leafy_tuft"
-   ],
-   "density": 0.15,
-   "cluster": 0.5,
-   "seed": 632,
-   "cells": {
-    "list": [
-     [
-      3,
-      6
-     ],
-     [
-      4,
-      6
-     ],
-     [
-      6,
-      6
-     ],
-     [
-      7,
-      6
-     ],
-     [
-      8,
-      6
-     ],
-     [
-      9,
-      6
-     ],
-     [
-      10,
-      6
-     ],
-     [
-      10,
-      7
-     ],
-     [
-      8,
-      8
-     ],
-     [
-      10,
-      8
-     ],
-     [
-      2,
-      9
-     ],
-     [
-      3,
-      9
-     ],
-     [
-      5,
-      9
-     ],
-     [
-      6,
-      9
-     ],
-     [
-      10,
-      9
-     ],
-     [
-      2,
-      10
-     ],
-     [
-      6,
-      10
-     ],
-     [
-      8,
-      10
-     ],
-     [
-      10,
-      10
-     ],
-     [
-      2,
-      11
-     ],
-     [
-      11,
-      11
-     ],
-     [
-      12,
-      11
-     ],
-     [
-      13,
-      11
-     ],
-     [
-      14,
-      11
-     ],
-     [
-      15,
-      11
-     ],
-     [
-      16,
-      11
-     ],
-     [
-      17,
-      11
-     ],
-     [
-      18,
-      11
-     ],
-     [
-      2,
-      12
-     ],
-     [
-      6,
-      12
-     ],
-     [
-      8,
-      12
-     ]
-    ]
-   }
-  }
- ],
  "entities": [
   {
    "_comment": "Round-trip pair with boulevard_to_alleys (invrisil_boulevard cell 26,8).",

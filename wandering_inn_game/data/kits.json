@@ -59,11 +59,11 @@
      "tile_px": 16,
      "tone": {
       "base": [
-       0.6,
-       0.58,
-       0.55
+       0.47,
+       0.47,
+       0.5
       ],
-      "detail": 0.45
+      "detail": 0.35
      },
      "variants": [
       [
@@ -122,23 +122,6 @@
        ],
        "detail": 0.4
       }
-     }
-    },
-    "floor_checker": {
-     "_comment": "#632 (design-led): the enchanter's work room on the owned ashlar_over_checker_v1 checker [2,1], toned down so the ground stays the lowest contrast.",
-     "sheet": "res://assets/tiles/harvest/ashlar_over_checker_v1.png",
-     "tile_px": 16,
-     "coords": [
-      2,
-      1
-     ],
-     "tone": {
-      "base": [
-       0.34,
-       0.35,
-       0.4
-      ],
-      "detail": 0.2
      }
     },
     "wall_dado": {
@@ -243,14 +226,7 @@
       "invrisil_facade_window_3"
      ]
     },
-    "lamp_wall": {
-     "_comment": "#632: sconce (a campfire sheet that read as a floating flame) leaves the pool for the owned cold wall lantern (#610 firm list) at the pool scale.",
-     "pick": "map",
-     "pool": [
-      "invrisil_lamp_wall_1",
-      "invrisil_lamp_wall_cold"
-     ]
-    },
+    "lamp_wall": "invrisil_lamp_wall_1",
     "cargo": {
      "pick": "cell",
      "pool": [
@@ -297,9 +273,7 @@
      "pick": "map",
      "pool": [
       "table_brown",
-      "table_brown__alt1",
-      "invrisil_table_cloth",
-      "invrisil_table_steel"
+      "table_brown__alt1"
      ]
     },
     "window_interior": {

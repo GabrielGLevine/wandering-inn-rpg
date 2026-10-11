@@ -309,11 +309,7 @@ static func build_ground_transition(parent: Node2D, config: Dictionary, grid: Ve
 	for x in grid.x + 1:
 		for y in grid.y + 1:
 			var vertex := Vector2i(x, y)
-			# A null corner leaves its vertex to the layers below (#632: the
-			# boulevard's marble curb paints only around the square).
-			var coord: Variant = corners[terrain_vertex_bits(vertex, lower)]
-			if coord == null:
-				continue
+			var coord: Array = corners[terrain_vertex_bits(vertex, lower)]
 			layer.set_cell(vertex, 0, Vector2i(int(coord[0]), int(coord[1])))
 	parent.add_child(layer)
 
