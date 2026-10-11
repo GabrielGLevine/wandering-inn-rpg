@@ -293,124 +293,47 @@ and chronology belong in issue PRs. Earlier context:
 ### Presentation, art and mobile
 
 - **Regional kits (#606, user 2026-10-08; spec
-  `docs/superpowers/specs/2026-10-08-regional-kits-design.md`):**
+  `docs/superpowers/specs/2026-10-08-regional-kits-design.md`; full ruling
+  text, deviations and numbers: rollout plan "Kits ruling details"):**
   - **Goal:** regional identity without within-region monotony or clutter.
-    Use the pool first; gaps go to `docs/art-generation-list.md`, and
-    generation needs user approval. Scenes close only on a blind Fable
-    art-direction read; the read beats the metrics.
-  - **Hash (controller, #607):** the pick hash is a SHA-256 32-bit prefix,
-    not `String.hash()`. Rejected: djb2, because it is linear and a shared
-    cell suffix collapses picks (3 of 24 rank orders, the same subset on
-    every map).
-  - **Slices** live under a top-level untracked `potential_assets/_sliced/`.
-    Some pack folders are read-only on disk and are never modified.
-  - **Pack art** is wired only as a `region` row on an already-bundled
-    sheet; there are no loose pack copies and no bundle release.
-  - **Label check:** ground truth follows the prompt's own vocabulary
-    (`food_basket` is a container). It is never tuned to the labels, so the
-    potted plant stays "plant".
-  - **G2:** biome sharing is report-only, because biomes are shared across
-    regions.
-  - **Art identity and `_common` (#623, user 2026-10-09):** G2 and G3 count
-    art, not ids: a region row by its sheet and rect, a frame sheet by its
-    sha256 and frame size. Rects on one sheet at IoU ≥ 0.7 are one picture
-    (controller, review I1: the slicer's tight cuts of hand-cut legacy rows
-    run 0.72–0.98, distinct art tops out at 0.26; containment never merges,
-    because `mushroom` sits inside `mushroom_purple_l`). Rejected: id
-    counting, because Liscor's "exclusive" lamp, tables and facade fallback
-    were other regions' art under new ids. `_common` holds only the utility
-    Tier A (crate, barrel, sack, container), and every pool id needs a
-    recorded Tier A kind (review I2: an unknown kind fails closed); those
-    placements leave G2 and are capped at 30% of a region's converted-map
-    placements. `wire_asset` refuses a second id for registered art unless
-    `--alias-of` names it with a reason. Accepted limits (review M1/M2): a
-    frame sheet absent on disk keys on its path, so a bundle-only byte copy
-    of another sheet merges only where the overlay is present, and region
-    rows key on the sheet path, so byte-identical sheet copies at two paths
-    stay split; neither occurs today, and path keying keeps CI, which has no
-    overlay to hash, at parity with local runs.
-  - **G3:** `qa/baselines/scene-repetition.json` was first generated on
-    #607; regenerate only with `--regen-scene-baseline` plus an entry here.
-  - **G3 regen (#623, art identity):** no map changed; the counting did. A
-    sprite is generic when its art, not its id, sits in 3+ regions.
-    `window_blue` and `invrisil_facade_window_1` are one Furniture.png region
-    placed in inn, Invrisil and Riverfarm, so both now class generic:
-    Invrisil 52 → 58 generic placements (26.67% → 29.74%), inn 35 → 39
-    (50.0% → 55.71%), Riverfarm 29 → 30 (24.79% → 25.64%); every other
-    region unchanged.
-  - **Design-led generation decisions (user, 2026-10-09; `docs/design/2026-10-09-kits-design-led-gaps.md`), all YES for now:**
-    1. Liscor reads as warm sandstone-brick and plaster, NOT a generated full-brick facade kit:
-       - a tan brick city wall and gate, from Cemetery Walls (12,0)-(17,12) plus the owned gatehouse recoloured;
-       - a brick ground storey under the cream plaster upper storey;
-       - shingle roofs.
-    2. Windows get a night state from a warm pane-glow overlay, not generated object states.
-    3. The Pallass lamp is the owned `crystal_lamp` as it is, plus a cold glow cone at night. Indoors it is the chain-cage crystal lamp. There is no bronze wall-arm variant.
-    4. The Invrisil alley workbench cluster becomes a cargo-yard cluster, unless dialogue names a workbench.
-    - Generation is deferred to its own issue. The firm list is: Antinium worker rig, an owned cold wall lantern, an owned stool, and a second owned street door.
-  - **G3 regens (#608, #620):** each regen follows a reviewed conversion and
-    never hides repetition. The per-regen numbers are in the rollout plan's
-    "G3 regen log" (`docs/superpowers/plans/2026-10-08-regional-kits-rollout.md`).
-    Invrisil (#608 pilots and FIX loops): generic placements 84 → 52
-    (26.67%); 51 (26.15%) under #625 art counting. Liscor (#620 R1):
-    48 → 19 (18.63%) over the conversion, FIX loop 1 and the R1 land, whose
-    one regen ran on the art-counted tree after the #625 merge.
-  - **#631 `_common`:** allocation utility pieces failed 3 blind pool reads; pools are owned generated art (detail: kits-allocation "Shared pool").
-  - **R1 Liscor rulings (#620):**
-    - FIX loop 1 deviations: Krshia stays at (13,2), because the ruled
-      (13,3) blocks the y3 lane that about 35 QA scripts use. Street dusk is
-      [0.62,0.54,0.63] and barracks dusk [0.64,0.7,0.8] (lint RULE 1). The
-      Runners' wall lamp, hearth and mud table keep their art, because their
-      copy says dry, cold and muddy. The barracks sconce sits at (7,1).
-      `owned_fallback_pebble` 0.53 → 0.3 is global.
-    - R1 land (art counting): the street facades are back on untinted
-      `facade_plaster`. `owned_fallback_facade_plaster` is
-      `invrisil_timber_panel`'s art, and this interim holds until the
-      sandstone-brick follow-up (decision 1 above). `liscor_bracket_lantern`
-      draws lamp #6. `bonus_round_table` and `inn_table_dirty__before` are
-      inn art, left for the inn conversion.
-    - FIX loop 2: the barracks cargo at (3,2) is pinned to `crate_owned`
-      (deny lists screen prose, not picks), so the barracks has left G2's
-      converted set. `floor_civic` is `carpet_over_floorboards_v2_square`
-      [2,1], because the [22,3] trial still banded. `anchor_waystone` 0.55
-      is global.
-    - G2: Liscor 68.83%, Invrisil 56.92%.
-  - **Counting-room guard rig (#608 final review):** `counting_room_guard`
-    (The Factor's Closed Account) wears `invrisil_enforcer`, the owned
-    2026-07-06 `hired_blade_a` generation (broad build, club), wired at 28px
-    like the alley's other heavy, `footpad_bruiser`. No named character
-    wears it. Rejected: `former_headman` (the only rig of Riverfarm's named
-    Former Headman), `hired_blade` (already on the alley as Coyle's crew,
-    the duplicate the art read removed), and `brothers_lieutenant` /
-    `gentleman_bowler` (they read as the Brothers of the Door, not the
-    Factor's man).
-  - **Cross-street recomposition (#608 art read, `_kits_recompose`):** three
-    street lamps at (3,4), (12,4) and (9,11), each blocking its cell; both
-    shop signs moved from row 2 to row 1; the stationery display was
-    removed. G4 reports it as an advisory naming both the cells and the
-    blocked change, not as a silent pass.
-  - **Shared floor sheet (#608 final review):** `ashlar_over_checker_v1` is
-    Invrisil's `floor_alley` material (tile [0,3]) and also Pallass's public
-    fallback floor sheet (`pallass_market`, `pallass_forge`, tile [2,1]). G2
-    enforces material exclusivity by material name only. Pixel-level sheet
-    exclusivity is a rollout concern and is not enforced.
-  - **`library_shelf` public fallback (#608 pilot 1b art read, controller):**
-    `fallback_sprite` is `library_shelf__alt1` (owned PixelLab bookshelf, provenance
-    line in v019-owned-art-provenance.txt, alpha bbox 24x30 of 32x32, about 16x20 px
-    at its 0.67 scale), the only owned bookshelf `find_asset` returns. Round 1 used
-    `mill_high_shelf_owned`, which the r2 read called a gallows post, and before that
-    `owned_fallback_library_shelf` read as pixel noise. The change is global, so the
-    public build also changes on `witch_hut`, `inn_player_room` and
-    `pallass_forge_hall` (two rows); accepted as a strict improvement.
-    Rejected: `shelf_bottles` (bottles under a library row is the wrong kind).
-  - **Pilot 1b deviations (#608 final review, controller):** two plan steps
-    were not done. Both are follow-ups in the rollout plan's Invrisil
-    carry-over section.
-    - `invrisil_shop` still clones `inn`'s render fields (floor [1,21], skirt
-      [7,21], `blocked_props` crate and barrel). It is not visible today
-      because the Rest's floor layer covers every cell.
-    - The enchanter rooms have no `floor_layers`, so they render the biome
-      floor (`brothers_parlor`, the inn plank [1,21]). Converting them needs
-      authored geometry, and the read passed.
+    Pool first; gaps
+    go to `docs/art-generation-list.md`, and generation needs user approval.
+    A scene closes only on a blind Fable art read; the read beats the metrics.
+  - **Pick hash (#607):** SHA-256 32-bit prefix. Rejected: djb2 (linear; a
+    shared cell suffix collapses picks).
+  - **Pack art** wires only as a `region` row on a bundled sheet; slices live
+    in untracked `potential_assets/_sliced/`. Labels follow the prompt's own
+    vocabulary and are never tuned to the labels.
+  - **G2/G3 count art, not ids (#623, user 2026-10-09):** rects at IoU ≥ 0.7
+    are one picture; containment never merges. Rejected: id counting
+    (Liscor's "exclusive" pieces were other regions' art). Biome sharing is
+    report-only, because biomes are shared across regions. `wire_asset` refuses a second id for registered art unless
+    `--alias-of` gives a reason.
+  - **`_common` (#623):** utility Tier A only (crate, barrel, sack,
+    container), each id with a recorded kind (fails closed); excluded from G2
+    and capped at 30%. #631: the allocated pieces failed three blind pool
+    reads, so the pools are owned generated art.
+  - **G3 baseline** regenerates only via `--regen-scene-baseline` after a
+    reviewed conversion, logged in the rollout plan; a regen never hides
+    repetition.
+  - **Design-led decisions (user, 2026-10-09;
+    `docs/design/2026-10-09-kits-design-led-gaps.md`):** (1) Liscor is tan
+    brick wall and gate, brick ground storey and shingle roofs from existing
+    art, not a generated facade kit (interim: plain `facade_plaster` until
+    #629); (2) window night state is a warm
+    pane-glow overlay, not object states; (3) the Pallass lamp is the owned
+    `crystal_lamp` plus a cold glow cone, with no bronze wall arm; (4) the
+    Invrisil alley workbench becomes a cargo-yard cluster unless dialogue
+    names a workbench. Firm generation list (#639): Antinium worker rig, cold
+    wall lantern, stool, second street door.
+  - **Fallback swaps are global** and land only as windowed-read strict
+    improvements (`library_shelf` → `library_shelf__alt1`; rejected
+    `shelf_bottles`, wrong kind). The pack `crate` swap waits on #641.
+  - **Counting-room guard (#608):** `counting_room_guard` wears the unnamed
+    owned `invrisil_enforcer`; no named character wears it. Rejected:
+    `former_headman` (a named character's only rig), `hired_blade` (already
+    Coyle's crew on the alley) and `brothers_lieutenant`/`gentleman_bowler`
+    (they read as the Brothers of the Door).
 - **Best art wins per asset (#564/#554)** within a coherent scene, at gameplay
   scale; otherwise keep the official or owned public fallback. READY is not
   acceptance, and there is no quota wiring. Animation, geometry, scale and
