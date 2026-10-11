@@ -338,6 +338,7 @@ and chronology belong in issue PRs. Earlier context:
     Invrisil 52 → 58 generic placements (26.67% → 29.74%), inn 35 → 39
     (50.0% → 55.71%), Riverfarm 29 → 30 (24.79% → 25.64%); every other
     region unchanged.
+  - **#632 Invrisil rebuild (controller + implementer, 2026-10-11):** see the rollout plan's "#632 rulings".
   - **Design-led generation decisions (user, 2026-10-09; `docs/design/2026-10-09-kits-design-led-gaps.md`), all YES for now:**
     1. Liscor reads as warm sandstone-brick and plaster, NOT a generated full-brick facade kit:
        - a tan brick city wall and gate, from Cemetery Walls (12,0)-(17,12) plus the owned gatehouse recoloured;
