@@ -9,7 +9,7 @@ extends RefCounted
 ## ref is appended to `errors` and its row is returned untouched; the CATALOG
 ## asserts, because an assert here would hang every --script suite.
 
-const MATERIAL_FIELDS := ["sheet", "tile_px", "coords", "variants", "tone", "wang_corners", "cap", "face", "fallback_render"]
+const MATERIAL_FIELDS := ["sheet", "tile_px", "coords", "variants", "tone", "wang_corners", "cap", "face", "trim", "fallback_render"]
 const TWO_32 := 4294967296.0
 
 

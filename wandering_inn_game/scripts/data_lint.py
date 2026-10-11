@@ -215,6 +215,18 @@ def _terrain_atlas_size(sheet, tile_px):
 		return None
 
 
+def _check_wall_trim(trim, label: str, errors: list) -> None:
+	"""#632: a wall `trim` overlays one tile on each face cell (tile_board_builder.build_walls)."""
+	if not isinstance(trim, dict) or set(trim) - {"sheet", "tile_px", "coords"}:
+		errors.append(f"{label} must be {{sheet, tile_px, coords}}")
+		return
+	atlas = _terrain_atlas_size(trim.get("sheet"), trim.get("tile_px", 16))
+	coords = trim.get("coords")
+	if atlas is None or not (_numeric_vector(coords, 2, True) and all(_int_like(v) for v in coords)
+			and coords[0] < atlas[0] and coords[1] < atlas[1]):
+		errors.append(f"{label} needs a real PNG sheet and coords inside it")
+
+
 def _check_tile_fallback(config: dict, role: str, label: str, errors: list) -> None:
 	if "fallback_render" not in config:
 		return
@@ -1407,6 +1419,8 @@ def _check_kit_schema(kits: dict, sprites: dict, errors: list, bundle_paths: set
 		for name, mat in (block.get("materials") or {}).items():
 			if not isinstance(mat, dict) or set(mat) - set(kl.MATERIAL_FIELDS) - {"_comment"}:
 				errors.append(f"kits.{region}.materials.{name}: keys must be within {sorted(kl.MATERIAL_FIELDS)}")
+			elif "trim" in mat:
+				_check_wall_trim(mat["trim"], f"kits.{region}.materials.{name}.trim", errors)
 		for name, role in (block.get("roles") or {}).items():
 			if region == "_common":
 				_check_common_role(name, role, sprites, errors)

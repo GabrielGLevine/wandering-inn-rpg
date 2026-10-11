@@ -7,6 +7,13 @@
   "height": 9
  },
  "blocked": [],
+ "floor_layers": [
+  {
+   "_pick": "#632 (rollout carry-over: the enchanter rooms author floor_layers before they change): pale marble shop floor, as the stationer.",
+   "material": "@floor_marble",
+   "cells": "all"
+  }
+ ],
  "walls": {
   "material": "@wall_shop",
   "segments": [
@@ -19,7 +26,7 @@
      11,
      0
     ],
-    "material": "@wall_shop"
+    "material": "@wall_dado"
    },
    {
     "from": [

@@ -14,7 +14,7 @@
  "floor_layers": [
   {
    "_pick": "#608 1b (census-free key: _pick carries the rationale so _comment does not have to): the stationer's floor is @floor_shop (data/kits.json), the cool blue-grey flagstone of owned woodplank_over_stone_v1 (wang_0 [2,1]), the quiet shop floor it shares with the Brothers' parlor. It replaces the Interior_Walls_01 pale-board swatch [16,21]/[17,21] an earlier pass reused here, and the brothers_parlor biome's default inn plank [1,21] that would have read as the inn (the original #225 differentiation). Walls are @wall_shop.",
-   "material": "@floor_shop",
+   "material": "@floor_marble",
    "cells": "all"
   }
  ],
@@ -30,7 +30,7 @@
      11,
      0
     ],
-    "material": "@wall_shop"
+    "material": "@wall_dado"
    },
    {
     "from": [
