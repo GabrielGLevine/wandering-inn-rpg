@@ -201,13 +201,21 @@
   "liscor": {
    "materials": {
     "floor_civic": {
-     "_comment": "#620: the guild's civic floor. R1 r2 read N5: the library parquet [21,3] banded horizontally by day, and the [22,3] trial kept the same dark tile lip on every row (headless capture row-mean sd 5.3-6.5 vs column 4.3-4.5, the dark rows 76-84 unchanged) and added a vertical seam, so the public carpet_over_floorboards_v2_square [2,1] (owned, public; the public build's floor, which the read passed as quiet) is promoted to primary. The Runners' Guild and barracks have no civic floor of their own, so they stay explicit and are on the generation list.",
+     "_comment": "#620: the guild's civic floor. R1 r2 read N5: the library parquet [21,3] banded horizontally by day, and the [22,3] trial kept the same dark tile lip on every row (headless capture row-mean sd 5.3-6.5 vs column 4.3-4.5, the dark rows 76-84 unchanged) and added a vertical seam, so the public carpet_over_floorboards_v2_square [2,1] (owned, public; the public build's floor, which the read passed as quiet) is promoted to primary. The Runners' Guild and barracks have no civic floor of their own, so they stay explicit and are on the generation list. #629 r1: a warm tone softens the dark board grout that read as palisade bars.",
      "sheet": "res://assets/tiles/harvest/carpet_over_floorboards_v2_square.png",
      "tile_px": 16,
      "coords": [
       2,
       1
-     ]
+     ],
+     "tone": {
+      "base": [
+       0.42,
+       0.27,
+       0.16
+      ],
+      "detail": 0.75
+     }
     },
     "floor_earth": {
      "_comment": "#629 (#620 r3 N6): the street's base ground. The biome's dirt_01 (540px tile) drew a horizontal seam on every row; the Free Pack Floors_Tiles orange packed-earth fill cells are flat (luma sd ~2) and seam-free; the darker row (11-13,11) keeps the ground the lowest-contrast layer. Public fallback keeps the street biome's meadow path tone.",
@@ -245,7 +253,7 @@
      }
     },
     "wall_city": {
-     "_comment": "#629 decision 1: Liscor's tan sandstone-brick city wall, Cemetery Walls (12-17,0-12) (bundled; the dungeon uses only columns 0-11). Face = brick course (14,2), cap = capped top course (14,1). Public fallback is the owned GH#184 city wall.",
+     "_comment": "#629 decision 1: Liscor's tan sandstone-brick city wall, Cemetery Walls (12-17,0-12) (bundled; the dungeon uses only columns 0-11). Face = brick course (14,2), cap = capped top course (14,1). Public fallback is the owned GH#184 city wall. r1 read: warmed toward sandstone with a tone (the muted tan read cold beside the cobble).",
      "sheet": "res://assets/tiles/cemetery/Walls.png",
      "tile_px": 16,
      "cap": [
@@ -266,7 +274,23 @@
       "face": [
        1,
        0
-      ]
+      ],
+      "tone": {
+       "base": [
+        0.55,
+        0.42,
+        0.3
+       ],
+       "detail": 0.6
+      }
+     },
+     "tone": {
+      "base": [
+       0.62,
+       0.45,
+       0.28
+      ],
+      "detail": 0.72
      }
     },
     "wall_city_side": {
@@ -283,7 +307,23 @@
       "cap": [
        1,
        0
-      ]
+      ],
+      "tone": {
+       "base": [
+        0.55,
+        0.42,
+        0.3
+       ],
+       "detail": 0.6
+      }
+     },
+     "tone": {
+      "base": [
+       0.62,
+       0.45,
+       0.28
+      ],
+      "detail": 0.72
      }
     },
     "wall_city_side_east": {
@@ -300,7 +340,23 @@
       "cap": [
        1,
        0
-      ]
+      ],
+      "tone": {
+       "base": [
+        0.55,
+        0.42,
+        0.3
+       ],
+       "detail": 0.6
+      }
+     },
+     "tone": {
+      "base": [
+       0.62,
+       0.45,
+       0.28
+      ],
+      "detail": 0.72
      }
     },
     "wall_city_ledge": {
@@ -317,7 +373,23 @@
       "cap": [
        1,
        0
-      ]
+      ],
+      "tone": {
+       "base": [
+        0.55,
+        0.42,
+        0.3
+       ],
+       "detail": 0.6
+      }
+     },
+     "tone": {
+      "base": [
+       0.62,
+       0.45,
+       0.28
+      ],
+      "detail": 0.72
      }
     }
    },

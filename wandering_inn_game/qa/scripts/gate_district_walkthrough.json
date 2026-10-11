@@ -455,7 +455,7 @@
    "payload_contains": {
     "map": "street",
     "floor_cells": 640,
-    "blocked_cells": 139
+    "blocked_cells": 135
    }
   },
   {
@@ -864,7 +864,7 @@
    "payload_contains": {
     "map": "guild",
     "floor_cells": 192,
-    "blocked_cells": 62
+    "blocked_cells": 65
    },
    "timeout_sec": 5
   },

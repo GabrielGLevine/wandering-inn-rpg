@@ -11092,60 +11092,6 @@
   },
   "fallback_sprite": "bench"
  },
- "liscor_stall_pot": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Pan.png region [0, 32, 16, 16] sheet sha256 4ae4324e057f; wired by tools/wire_asset.py",
-  "kind": "container",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Pan.png",
-    "frame_size": [
-     16,
-     16
-    ],
-    "region": [
-     0,
-     32,
-     16,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_food_basket"
- },
- "liscor_cookpot_lit": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Pan.png region [144, 64, 16, 32] sheet sha256 4ae4324e057f; wired by tools/wire_asset.py",
-  "kind": "container",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Pan.png",
-    "frame_size": [
-     16,
-     32
-    ],
-    "region": [
-     144,
-     64,
-     16,
-     32
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_campfire"
- },
  "liscor_window_grille": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Props.png region [101, 100, 22, 22] sheet sha256 d8dacb0e07d8; wired by tools/wire_asset.py",
   "kind": "window",
@@ -11600,32 +11546,6 @@
   },
   "fallback_sprite": "owned_fallback_food_bread"
  },
- "liscor_preserve_jar": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Farm.png region [0, 16, 16, 16] sheet sha256 02540c850be5; wired by tools/wire_asset.py",
-  "kind": "vessel",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Farm.png",
-    "frame_size": [
-     16,
-     16
-    ],
-    "region": [
-     0,
-     16,
-     16,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_food_basket"
- },
  "liscor_carrot": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Farm.png region [128, 16, 16, 16] sheet sha256 02540c850be5; wired by tools/wire_asset.py",
   "kind": "food",
@@ -11740,7 +11660,7 @@
   "render_scale": 0.75,
   "anchor": [
    0.5,
-   2.7778
+   3.963
   ],
   "shadow": false,
   "animations": {
@@ -11767,7 +11687,7 @@
   "render_scale": 0.75,
   "anchor": [
    0.5,
-   1.75
+   2.1667
   ],
   "shadow": false,
   "animations": {
@@ -12004,60 +11924,6 @@
   },
   "fallback_sprite": "owned_fallback_facade_plaster"
  },
- "liscor_hitching_rail": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [188, 422, 32, 23] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
-  "kind": "wall_module",
-  "render_scale": 0.5,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Furniture.png",
-    "frame_size": [
-     32,
-     23
-    ],
-    "region": [
-     188,
-     422,
-     32,
-     23
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "pallass_rail_post"
- },
- "liscor_hitching_post": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [220, 422, 17, 23] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
-  "kind": "fence",
-  "render_scale": 0.5,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Furniture.png",
-    "frame_size": [
-     17,
-     23
-    ],
-    "region": [
-     220,
-     422,
-     17,
-     23
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "pallass_rail_post"
- },
  "liscor_stall_butcher": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Stations/Cooking Station/Butchery/Butchery_04.png region [16, 16, 64, 64] sheet sha256 aa7185e94c87; wired by tools/wire_asset.py",
   "kind": "table",
@@ -12111,33 +11977,6 @@
    }
   },
   "fallback_sprite": "owned_fallback_table_brown"
- },
- "liscor_strongbox": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [64, 256, 32, 32] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
-  "kind": "table",
-  "render_scale": 0.6,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
-    "frame_size": [
-     32,
-     32
-    ],
-    "region": [
-     64,
-     256,
-     32,
-     32
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_chest"
  },
  "liscor_runners_desk": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [128, 104, 32, 18] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
@@ -12407,7 +12246,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "drying_rack"
+  "fallback_sprite": "pallass_tool_wall"
  },
  "liscor_cot": {
   "_comment": "slice of potential_assets/Pixel Crawler - Hideout 1.0/Pixel Crawler - Hideout/Assets/Tiles.png region [272, 48, 32, 48] sheet sha256 40bce7b26eb3; wired by tools/wire_asset.py",
@@ -12462,33 +12301,6 @@
    }
   },
   "fallback_sprite": "guild_banner"
- },
- "liscor_board_blank": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [194, 264, 28, 19] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
-  "kind": "sign",
-  "render_scale": 0.75,
-  "anchor": [
-   0.5,
-   2.2632
-  ],
-  "shadow": false,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
-    "frame_size": [
-     28,
-     19
-    ],
-    "region": [
-     194,
-     264,
-     28,
-     19
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "guild_notice_wall"
  },
  "liscor_board_chalk": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [226, 264, 28, 19] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
@@ -12623,87 +12435,6 @@
    }
   },
   "fallback_sprite": "owned_fallback_grass_tuft"
- },
- "liscor_scatter_plank": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Resources.png region [32, 64, 32, 16] sheet sha256 46cb1578decf; wired by tools/wire_asset.py",
-  "kind": "resource",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   0.6875
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Resources.png",
-    "frame_size": [
-     32,
-     16
-    ],
-    "region": [
-     32,
-     64,
-     32,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_pebble"
- },
- "liscor_scatter_plank_upright": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Resources.png region [0, 80, 16, 32] sheet sha256 46cb1578decf; wired by tools/wire_asset.py",
-  "kind": "resource",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Resources.png",
-    "frame_size": [
-     16,
-     32
-    ],
-    "region": [
-     0,
-     80,
-     16,
-     32
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_pebble"
- },
- "liscor_scatter_plank_offcut": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Resources.png region [16, 64, 16, 16] sheet sha256 46cb1578decf; wired by tools/wire_asset.py",
-  "kind": "resource",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   0.6875
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Resources.png",
-    "frame_size": [
-     16,
-     16
-    ],
-    "region": [
-     16,
-     64,
-     16,
-     16
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_pebble"
  },
  "liscor_scatter_broadleaf": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Vegetation.png region [80, 144, 32, 32] sheet sha256 1a3bdf11e561; wired by tools/wire_asset.py",
@@ -12862,60 +12593,6 @@
   },
   "fallback_sprite": "owned_fallback_pebble"
  },
- "liscor_scatter_plank_lean_l": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [82, 593, 29, 29] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
-  "kind": "resource",
-  "render_scale": 0.5,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Furniture.png",
-    "frame_size": [
-     29,
-     29
-    ],
-    "region": [
-     82,
-     593,
-     29,
-     29
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_pebble"
- },
- "liscor_scatter_plank_lean_r": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [146, 561, 28, 29] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
-  "kind": "resource",
-  "render_scale": 0.5,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Furniture.png",
-    "frame_size": [
-     28,
-     29
-    ],
-    "region": [
-     146,
-     561,
-     28,
-     29
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "owned_fallback_pebble"
- },
  "liscor_scatter_log_round": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Stations/Sawmill/Base.png region [9, 113, 14, 15] sheet sha256 b49c43161a6a; wired by tools/wire_asset.py",
   "kind": "resource",
@@ -13011,27 +12688,6 @@
   },
   "fallback_sprite": "owned_fallback_facade_plaster"
  },
- "liscor_waystone": {
-  "_comment": "#629 (from #620 N2): Liscor-only scale of anchor_waystone. anchor_waystone render_scale is global (inn, Invrisil boulevard, Riverfarm), so the Liscor street stone reads at 0.55 through this alias instead.",
-  "_alias_of": "anchor_waystone",
-  "_alias_reason": "Liscor-only render_scale 0.55 for the street waystone; the global anchor_waystone stays 0.4 for the inn, Invrisil and Riverfarm",
-  "render_scale": 0.55,
-  "anchor": [
-   0.5,
-   0.95
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/sprites/anchor_waystone/Idle-Sheet.png",
-    "frame_size": [
-     64,
-     80
-    ],
-    "fps": 1
-   }
-  }
- },
  "liscor_window_arch": {
   "_comment": "#629 recut of door#2 (Furniture [99,269,26,83], a composite): the brown-arched blue-glass window alone, alpha bbox [101,320,22,32]. Hand-registered region on the bundled Free Pack Furniture.png; kind window.",
   "kind": "window",
@@ -13058,5 +12714,149 @@
    }
   },
   "fallback_sprite": "owned_fallback_window_blue"
+ },
+ "goblin_raider_field_owned": {
+  "_comment": "#629 public fallback for the Liscor street goblin encounter markers: owned PixelLab goblin_raider rig 7be8ec3a (harvest 2026-10, L3a_rigs), idle 4 + walk 6 for south/east/north, frames cropped to the union alpha box (66x89). Provenance in v019-owned-art-provenance.txt.",
+  "directional": true,
+  "render_scale": 0.25,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     66,
+     89
+    ],
+    "fps": 6,
+    "sheet_down": "res://assets/sprites/goblin_raider_field_owned/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/goblin_raider_field_owned/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/goblin_raider_field_owned/Idle_Up-Sheet.png"
+   },
+   "walk": {
+    "frame_size": [
+     66,
+     89
+    ],
+    "fps": 8,
+    "sheet_down": "res://assets/sprites/goblin_raider_field_owned/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/goblin_raider_field_owned/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/goblin_raider_field_owned/Walk_Up-Sheet.png"
+   }
+  }
+ },
+ "liscor_goblin_lurker": {
+  "directional": true,
+  "render_scale": 0.09,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "sheet_side": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "sheet_up": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "frame_size": [
+     256,
+     256
+    ],
+    "region_down": [
+     0,
+     0,
+     1536,
+     256
+    ],
+    "region_side": [
+     0,
+     768,
+     1536,
+     256
+    ],
+    "region_up": [
+     0,
+     256,
+     1536,
+     256
+    ],
+    "fps": 3
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "sheet_side": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "sheet_up": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "frame_size": [
+     256,
+     256
+    ],
+    "region_down": [
+     0,
+     0,
+     1536,
+     256
+    ],
+    "region_side": [
+     0,
+     768,
+     1536,
+     256
+    ],
+    "region_up": [
+     0,
+     256,
+     1536,
+     256
+    ],
+    "fps": 8
+   }
+  },
+  "_comment": "#629: the Liscor street's goblin encounter marker. Same art as goblin_base (an alias) so the street can carry an owned public fallback; goblin_base itself has none (follow-up issue).",
+  "_alias_of": "goblin_base",
+  "_alias_reason": "Liscor street encounter marker with an owned public fallback; goblin_base has no fallback and draws a placeholder chip in the public build",
+  "fallback_sprite": "goblin_raider_field_owned"
+ },
+ "liscor_waystone": {
+  "_comment": "#629: Liscor's street waystone, an owned recolour of anchor_waystone onto the warm Cemetery Walls sandstone palette (r1 read: the grey arch read as a gallows), at 0.55 (Liscor-only scale; anchor_waystone stays 0.4).",
+  "render_scale": 0.55,
+  "anchor": [
+   0.5,
+   0.95
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/liscor_waystone/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     80
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "liscor_oven_cold": {
+  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Stations/Furnace/Furnace.png region [54, 263, 36, 51] sheet sha256 a5814ce312cd; wired by tools/wire_asset.py",
+  "kind": "station",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furnace.png",
+    "frame_size": [
+     36,
+     51
+    ],
+    "region": [
+     54,
+     263,
+     36,
+     51
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "cold_hearth"
  }
 }

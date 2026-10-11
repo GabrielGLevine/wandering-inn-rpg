@@ -58,11 +58,11 @@
   ],
   [
    4,
-   1
+   2
   ],
   [
    6,
-   1
+   2
   ],
   [
    9,
@@ -75,10 +75,6 @@
   [
    25,
    10
-  ],
-  [
-   23,
-   14
   ]
  ],
  "blocked": [
@@ -97,10 +93,6 @@
   [
    6,
    10
-  ],
-  [
-   8,
-   17
   ],
   [
    24,
@@ -347,20 +339,24 @@
    19
   ],
   [
+   7,
+   17
+  ],
+  [
    1,
    1
   ],
   [
    5,
-   1
+   2
   ],
   [
    4,
-   1
+   2
   ],
   [
    6,
-   1
+   2
   ],
   [
    8,
@@ -399,23 +395,11 @@
    10
   ],
   [
-   26,
-   10
-  ],
-  [
-   9,
-   2
-  ],
-  [
    3,
    1
   ],
   [
    31,
-   1
-  ],
-  [
-   13,
    1
   ],
   [
@@ -427,16 +411,12 @@
    16
   ],
   [
-   24,
-   14
+   31,
+   6
   ],
   [
-   23,
-   14
-  ],
-  [
-   26,
-   14
+   31,
+   13
   ]
  ],
  "_comment": "Liscor gate district, grown from the 10x6 street (per accepted Floodplains sec.5).",
@@ -483,6 +463,14 @@
      ],
      "detail": 0.25
     }
+   },
+   "tone": {
+    "base": [
+     0.6,
+     0.47,
+     0.33
+    ],
+    "detail": 0.72
    }
   },
   {
@@ -526,6 +514,14 @@
      ],
      "detail": 0.25
     }
+   },
+   "tone": {
+    "base": [
+     0.6,
+     0.47,
+     0.33
+    ],
+    "detail": 0.72
    }
   },
   {
@@ -569,6 +565,14 @@
      ],
      "detail": 0.25
     }
+   },
+   "tone": {
+    "base": [
+     0.6,
+     0.47,
+     0.33
+    ],
+    "detail": 0.72
    }
   },
   {
@@ -640,28 +644,84 @@
      ],
      "detail": 0.25
     }
+   },
+   "tone": {
+    "base": [
+     0.6,
+     0.47,
+     0.33
+    ],
+    "detail": 0.72
    }
   },
   {
-   "_pick": "South-district square where the side street widens",
+   "_pick": "#629 r1: ragged kerb, cobble cells stepping into the first earth row so the band's south edge is not ruler-straight.",
    "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
    "tile_px": 16,
    "variants": [
     [
-     16,
-     2
+     17,
+     1
     ],
     [
-     17,
-     2
+     18,
+     1
     ]
    ],
+   "tone": {
+    "base": [
+     0.6,
+     0.47,
+     0.33
+    ],
+    "detail": 0.72
+   },
    "cells": {
-    "rect": [
-     12,
-     10,
-     5,
-     3
+    "list": [
+     [
+      2,
+      6
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      6
+     ],
+     [
+      9,
+      6
+     ],
+     [
+      13,
+      6
+     ],
+     [
+      14,
+      6
+     ],
+     [
+      18,
+      6
+     ],
+     [
+      22,
+      6
+     ],
+     [
+      23,
+      6
+     ],
+     [
+      27,
+      6
+     ],
+     [
+      30,
+      6
+     ]
     ]
    },
    "fallback_render": {
@@ -724,7 +784,7 @@
  "decor": [
   {
    "_comment": "was unlit, read as a second fake sewer_grate near the gate plaza.",
-   "sprite": "campfire",
+   "sprite": "owned_fallback_campfire",
    "cell": [
     3,
     5
@@ -899,7 +959,7 @@
    ]
   },
   {
-   "sprite": "liscor_cookpot_lit",
+   "sprite": "owned_fallback_campfire",
    "cell": [
     13,
     10
@@ -967,7 +1027,7 @@
    }
   },
   {
-   "sprite": "@crate",
+   "sprite": "@barrel",
    "cell": [
     5,
     10
@@ -984,7 +1044,7 @@
    "_comment": "#408 prop variety: was `barrel`. Cell stays in `blocked`.",
    "sprite": "liscor_basket_stack",
    "cell": [
-    8,
+    7,
     17
    ]
   },
@@ -1062,7 +1122,7 @@
    "sprite": "liscor_stall_butcher",
    "cell": [
     5,
-    1
+    2
    ]
   },
   {
@@ -1167,20 +1227,6 @@
    ]
   },
   {
-   "sprite": "liscor_preserve_jar",
-   "cell": [
-    26,
-    10
-   ]
-  },
-  {
-   "sprite": "liscor_stall_pot",
-   "cell": [
-    9,
-    2
-   ]
-  },
-  {
    "sprite": "liscor_stall_tray",
    "cell": [
     23,
@@ -1230,13 +1276,6 @@
    ]
   },
   {
-   "sprite": "liscor_planter_shrub",
-   "cell": [
-    13,
-    1
-   ]
-  },
-  {
    "sprite": "liscor_planter_seedlings",
    "cell": [
     24,
@@ -1258,38 +1297,24 @@
    ]
   },
   {
-   "sprite": "liscor_hitching_rail",
-   "cell": [
-    24,
-    14
-   ]
-  },
-  {
-   "sprite": "liscor_hitching_post",
-   "cell": [
-    26,
-    14
-   ]
-  },
-  {
-   "sprite": "liscor_scatter_plank_lean_l",
-   "cell": [
-    17,
-    16
-   ]
-  },
-  {
-   "sprite": "liscor_scatter_plank_lean_r",
-   "cell": [
-    23,
-    15
-   ]
-  },
-  {
    "sprite": "liscor_scatter_bush_low",
    "cell": [
     1,
     8
+   ]
+  },
+  {
+   "sprite": "city_roof_owned",
+   "cell": [
+    31,
+    6
+   ]
+  },
+  {
+   "sprite": "city_roof_owned",
+   "cell": [
+    31,
+    13
    ]
   }
  ],
@@ -1316,14 +1341,11 @@
   },
   {
    "pool": [
-    "liscor_scatter_plank",
-    "liscor_scatter_plank_offcut",
     "liscor_scatter_sawdust",
     "liscor_scatter_log_round",
     "liscor_scatter_stakes",
     "liscor_scatter_straw_tuft",
-    "liscor_scatter_hay",
-    "liscor_scatter_plank_upright"
+    "liscor_scatter_hay"
    ],
    "density": 0.12,
    "cluster": 0.3,
@@ -1827,7 +1849,7 @@
     11
    ],
    "display_name": "Sewer Grate",
-   "sprite": "sewer_grate",
+   "sprite": "owned_fallback_sewer_grate",
    "observe": "Rust holds the bars, not a lock. The draft coming up through them is steady and cold, and it carries the sound of water moving somewhere further in.",
    "visual_states": [
     {
@@ -2027,7 +2049,7 @@
     16
    ],
    "display_name": "Crate Scavengers",
-   "sprite": "goblin_base",
+   "sprite": "liscor_goblin_lurker",
    "arena": "goblin_ambush",
    "enemies": [
     "goblin_raider",
@@ -2059,7 +2081,7 @@
     16
    ],
    "display_name": "Supplier's Scavengers",
-   "sprite": "goblin_base",
+   "sprite": "liscor_goblin_lurker",
    "arena": "goblin_ambush",
    "enemies": [
     "goblin_raider",
@@ -2150,11 +2172,6 @@
    ],
    "display_name": "The Weathered Stone",
    "sprite": "liscor_waystone",
-   "tint": [
-    0.55,
-    0.58,
-    0.62
-   ],
    "observe": "A worn marker stone, older than the buildings that grew up around it. Nobody living remembers who set it, or why it sits exactly here.",
    "_comment_task_2_4": "Task 2.4: portal_menu_when and the lit-waystone visual_state both moved door_awakened -> door_mounted, in lockstep with inn.json's `pantry_door` (the pair's other end) and portals.json's two Liscor rows. This stone is the Liscor-side carrier, so gating it later would have stranded the return leg. Sight and passage still flip together, the garden_door contract. Old saves reach door_mounted through Task 2.6's backfill.",
    "portal_menu": true,
@@ -2194,7 +2211,7 @@
    "id": "antinium_worker_a",
    "kind": "npc",
    "cell": [
-    24,
+    25,
     3
    ],
    "display_name": "Antinium Worker",

@@ -19,6 +19,10 @@
    2
   ],
   [
+   8,
+   6
+  ],
+  [
    4,
    1
   ],
@@ -222,6 +226,30 @@
    ]
   },
   {
+   "sprite": "liscor_sconce_copper",
+   "cell": [
+    5,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.72,
+     0.38
+    ],
+    "energy": 0.85,
+    "radius": 34,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "@crate",
+   "cell": [
+    8,
+    6
+   ]
+  },
+  {
    "sprite": "liscor_sorting_shelf",
    "cell": [
     4,
@@ -268,6 +296,11 @@
    "cell": [
     2,
     4
+   ],
+   "tint": [
+    0.72,
+    0.66,
+    0.56
    ]
   },
   {
@@ -394,7 +427,7 @@
     1
    ],
    "display_name": "The Common Hearth",
-   "sprite": "cold_hearth",
+   "sprite": "liscor_oven_cold",
    "hearth": true,
    "state_counter": "lit_the_runners_hearth",
    "observe": "A wide stone hearth swept to the brick: split kindling, dry birch laid over it in a lattice. Cold air comes down the flue and stirs the loose bark.",
@@ -406,7 +439,7 @@
       "counter": "lit_the_runners_hearth",
       "at": 1
      },
-     "sprite": "hearth",
+     "sprite": "liscor_bread_oven",
      "light": {
       "color": [
        1.0,
@@ -490,5 +523,6 @@
     }
    ]
   }
- ]
+ ],
+ "_kits_recompose": "#629 — Liscor rebuild: sorting shelf, peg rail and pack, desk with ledger, a parcel crate and a lit sconce"
 }

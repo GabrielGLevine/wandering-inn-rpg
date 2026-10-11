@@ -690,7 +690,7 @@
   }
  },
  "liscor_civic": {
-  "_comment": "#607 Phase 0: copies inn's look so regional interiors stop borrowing the `inn` key; render fields are restyled per region in Phase 2. Referenced by no map yet.",
+  "_comment": "#629: Liscor's civic interiors (guild, Runners' Guild, barracks). Simulation fields as inn's; the skirt around the rooms is the tan city-wall brick, darkened (r1 read: the grey-green and public navy surrounds read cold).",
   "footstep_family": "wood",
   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
   "tile_px": 16,
@@ -707,11 +707,11 @@
    "crate",
    "barrel"
   ],
-  "skirt_sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "skirt_sheet": "res://assets/tiles/cemetery/Walls.png",
   "skirt_tile_px": 16,
   "skirt": [
-   7,
-   21
+   14,
+   2
   ],
   "interior_flavor": "Nothing there — just old boards, and the particular silence of a room with a roof on it.",
   "fallback_render": {
@@ -740,7 +740,23 @@
      0.25
     ],
     "detail": 0.65
+   },
+   "skirt_tone": {
+    "base": [
+     0.3,
+     0.21,
+     0.14
+    ],
+    "detail": 0.45
    }
+  },
+  "skirt_tone": {
+   "base": [
+    0.3,
+    0.21,
+    0.14
+   ],
+   "detail": 0.55
   }
  },
  "invrisil_shop": {

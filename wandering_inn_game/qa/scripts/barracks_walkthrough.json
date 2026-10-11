@@ -56,7 +56,7 @@
    "payload_contains": {
     "map": "street",
     "floor_cells": 640,
-    "blocked_cells": 139
+    "blocked_cells": 135
    }
   },
   {
@@ -789,7 +789,7 @@
    "payload_contains": {
     "map": "street",
     "floor_cells": 640,
-    "blocked_cells": 139
+    "blocked_cells": 135
    },
    "timeout_sec": 5
   },

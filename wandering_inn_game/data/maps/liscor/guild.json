@@ -50,16 +50,28 @@
    4
   ],
   [
-   1,
-   1
-  ],
-  [
    5,
    9
   ],
   [
    13,
    9
+  ],
+  [
+   3,
+   8
+  ],
+  [
+   4,
+   8
+  ],
+  [
+   1,
+   10
+  ],
+  [
+   14,
+   10
   ]
  ],
  "floor_layers": [
@@ -298,14 +310,14 @@
    ]
   },
   {
-   "sprite": "liscor_reading_table",
+   "sprite": "table_brown__alt1",
    "cell": [
     13,
     6
    ]
   },
   {
-   "sprite": "liscor_reading_table",
+   "sprite": "table_brown__alt1",
    "cell": [
     12,
     9
@@ -330,20 +342,6 @@
    "cell": [
     14,
     4
-   ]
-  },
-  {
-   "sprite": "liscor_strongbox",
-   "cell": [
-    1,
-    1
-   ]
-  },
-  {
-   "sprite": "liscor_board_blank",
-   "cell": [
-    12,
-    1
    ]
   },
   {
@@ -372,6 +370,34 @@
    "cell": [
     13,
     9
+   ]
+  },
+  {
+   "sprite": "table_brown__alt1",
+   "cell": [
+    3,
+    8
+   ]
+  },
+  {
+   "sprite": "liscor_chair",
+   "cell": [
+    4,
+    8
+   ]
+  },
+  {
+   "sprite": "liscor_planter_shrub",
+   "cell": [
+    1,
+    10
+   ]
+  },
+  {
+   "sprite": "liscor_planter_shrub",
+   "cell": [
+    14,
+    10
    ]
   }
  ],
@@ -659,11 +685,6 @@
    ],
    "display_name": "A Forgotten Gear Stash",
    "sprite": "crate_owned",
-   "tint": [
-    0.45,
-    0.38,
-    0.3
-   ],
    "observe": "A crate shoved against the back wall, half-buried under a spill of unclaimed kit.",
    "contains": [
     "renns_warhammer"

@@ -669,9 +669,9 @@ class TestSharedArtReport(unittest.TestCase):
         # 15 without the overlay (body_a's sheet is bundle-only). #620 R1 added three second ids
         # for existing art: bonus_round_table, inn_table_dirty__before (inn art, left registered for
         # the inn conversion; #629 took both off Liscor's maps) and guild_notice_board
-        # (= guild_handbill_wall). #629 adds the Liscor-only waystone scale alias.
+        # (= guild_handbill_wall). #629 adds the Liscor street goblin marker alias (owned public fallback).
         self.assertRegex(line, r"kits art: 1[56] art identities")
-        self.assertIn("anchor_waystone = liscor_waystone (alias) CROSS-REGION", line)
+        self.assertIn("goblin_base = liscor_goblin_lurker (alias) CROSS-REGION", line)
 
 
 def kl_hasher_missing():
