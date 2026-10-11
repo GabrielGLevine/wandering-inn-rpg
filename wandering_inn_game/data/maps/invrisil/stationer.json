@@ -1,4 +1,5 @@
 {
+ "_kits_recompose": "#632 — re-intake pieces: inkpot and quill on the counter, scroll on the desk, book on the table, oak chairs, planter",
  "_comment": "v0.16 I1 (#306); kit-converted in #608 1b. Walk-in only (no portals row). Biome `brothers_parlor` under @floor_shop/@wall_shop and kit roles (@table, @window_interior). Perimeter is walls.segments, so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each cell with a matching decor row.",
  "biome": "brothers_parlor",
  "grid": {
@@ -91,14 +92,14 @@
    ]
   },
   {
-   "sprite": "stool",
+   "sprite": "invrisil_oak_chair",
    "cell": [
     3,
     5
    ]
   },
   {
-   "sprite": "stool",
+   "sprite": "invrisil_oak_chair_side",
    "cell": [
     5,
     5
@@ -141,11 +142,43 @@
    }
   },
   {
-   "sprite": "plant_pot",
+   "sprite": "invrisil_planter",
    "cell": [
     10,
     7
    ]
+  },
+  {
+   "sprite": "invrisil_inkpot",
+   "cell": [
+    5,
+    1
+   ],
+   "lift": 8
+  },
+  {
+   "sprite": "invrisil_quill",
+   "cell": [
+    5,
+    1
+   ],
+   "lift": 8
+  },
+  {
+   "sprite": "invrisil_scroll",
+   "cell": [
+    9,
+    3
+   ],
+   "lift": 9
+  },
+  {
+   "sprite": "invrisil_book",
+   "cell": [
+    4,
+    5
+   ],
+   "lift": 7
   }
  ],
  "entities": [
@@ -238,7 +271,7 @@
     1
    ],
    "display_name": "A Rank of Inks",
-   "sprite": "barrel",
+   "sprite": "invrisil_shelf_potions",
    "observe": "Four inks in the rank, and the fourth costs twice what the third does for a difference that only shows in daylight. The man behind the counter carries a bottle to the window before he will name a price for it."
   },
   {

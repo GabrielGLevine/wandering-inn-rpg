@@ -297,7 +297,9 @@
      "pick": "map",
      "pool": [
       "table_brown",
-      "table_brown__alt1"
+      "table_brown__alt1",
+      "invrisil_table_cloth",
+      "invrisil_table_steel"
      ]
     },
     "window_interior": {
