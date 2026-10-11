@@ -210,21 +210,21 @@
      ]
     },
     "floor_earth": {
-     "_comment": "#629 (#620 r3 N6): the street's base ground. The biome's dirt_01 (540px tile) drew a horizontal seam on every row; the Free Pack Floors_Tiles orange packed-earth fill cells (11-13,10) are flat (luma sd ~2) and seam-free. Public fallback keeps the street biome's meadow path tone.",
+     "_comment": "#629 (#620 r3 N6): the street's base ground. The biome's dirt_01 (540px tile) drew a horizontal seam on every row; the Free Pack Floors_Tiles orange packed-earth fill cells are flat (luma sd ~2) and seam-free; the darker row (11-13,11) keeps the ground the lowest-contrast layer. Public fallback keeps the street biome's meadow path tone.",
      "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
      "tile_px": 16,
      "variants": [
       [
        11,
-       10
+       11
       ],
       [
        12,
-       10
+       11
       ],
       [
        13,
-       10
+       11
       ]
      ],
      "fallback_render": {
@@ -276,6 +276,40 @@
      "cap": [
       17,
       3
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/city_wall/Tiles.png",
+      "tile_px": 32,
+      "cap": [
+       1,
+       0
+      ]
+     }
+    },
+    "wall_city_side_east": {
+     "_comment": "#629: east run of the tan city-wall brick (cap-only), the enclosure's left pier (12,3) so its pale cap edge faces into the room.",
+     "sheet": "res://assets/tiles/cemetery/Walls.png",
+     "tile_px": 16,
+     "cap": [
+      12,
+      3
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/city_wall/Tiles.png",
+      "tile_px": 32,
+      "cap": [
+       1,
+       0
+      ]
+     }
+    },
+    "wall_city_ledge": {
+     "_comment": "#629: an east-west run of the tan city-wall brick seen from the top (cap-only, e.g. an interior's south wall): the capped top course (14,1).",
+     "sheet": "res://assets/tiles/cemetery/Walls.png",
+     "tile_px": 16,
+     "cap": [
+      14,
+      1
      ],
      "fallback_render": {
       "sheet": "res://assets/tiles/city_wall/Tiles.png",

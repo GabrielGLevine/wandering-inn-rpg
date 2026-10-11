@@ -117,7 +117,7 @@
      13,
      7
     ],
-    "material": "@wall_city_side"
+    "material": "@wall_city_side_east"
    },
    {
     "from": [
@@ -128,7 +128,7 @@
      1,
      7
     ],
-    "material": "@wall_city_side"
+    "material": "@wall_city_ledge"
    },
    {
     "from": [
@@ -139,7 +139,7 @@
      12,
      7
     ],
-    "material": "@wall_city_side"
+    "material": "@wall_city_ledge"
    }
   ]
  },

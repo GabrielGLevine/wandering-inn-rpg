@@ -10963,7 +10963,7 @@
   "render_scale": 1.0,
   "anchor": [
    0.5,
-   1.4062
+   0.8438
   ],
   "shadow": false,
   "animations": {
@@ -12057,33 +12057,6 @@
    }
   },
   "fallback_sprite": "pallass_rail_post"
- },
- "liscor_sign_post": {
-  "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [147, 448, 27, 46] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
-  "kind": "structure",
-  "render_scale": 1.0,
-  "anchor": [
-   0.5,
-   1.0
-  ],
-  "shadow": true,
-  "animations": {
-   "idle": {
-    "sheet": "res://assets/props/free_pack/Furniture.png",
-    "frame_size": [
-     27,
-     46
-    ],
-    "region": [
-     147,
-     448,
-     27,
-     46
-    ],
-    "fps": 1
-   }
-  },
-  "fallback_sprite": "inn_sign"
  },
  "liscor_stall_butcher": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Stations/Cooking Station/Butchery/Butchery_04.png region [16, 16, 64, 64] sheet sha256 aa7185e94c87; wired by tools/wire_asset.py",
