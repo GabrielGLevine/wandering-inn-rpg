@@ -1446,7 +1446,7 @@
     11
    ],
    "display_name": "A Factor-Sealed Bale",
-   "sprite": "crate",
+   "sprite": "invrisil_sealed_bale",
    "present_when": {
     "requires": {
      "cleared_counting_room_guard": 1

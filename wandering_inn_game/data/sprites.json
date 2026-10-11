@@ -10812,5 +10812,23 @@
     "fps": 1
    }
   }
+ },
+ "invrisil_sealed_bale": {
+  "render_scale": 1.0,
+  "shadow": true,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil_sealed_bale/Idle-Sheet.png",
+    "frame_size": [
+     24,
+     16
+    ],
+    "fps": 1
+   }
+  }
  }
 }
