@@ -10812,5 +10812,95 @@
     "fps": 1
    }
   }
+ },
+ "common_barrel_lying": {
+  "kind": "barrel",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/common_barrel_lying/Idle-Sheet.png",
+    "frame_size": [
+     24,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "common_keg": {
+  "kind": "barrel",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/common_keg/Idle-Sheet.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "common_sack_tied": {
+  "kind": "sack",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/common_sack_tied/Idle-Sheet.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "common_sack_slumped": {
+  "kind": "sack",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/common_sack_slumped/Idle-Sheet.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "common_sack_pair": {
+  "kind": "sack",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/common_sack_pair/Idle-Sheet.png",
+    "frame_size": [
+     24,
+     16
+    ],
+    "fps": 1
+   }
+  }
  }
 }

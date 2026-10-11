@@ -22,7 +22,7 @@ pack files are searched from docs/asset-index.json at query time).
 | kind | owned-public | owned-unverified | pack-bundle | shipped-bundle | shipped-public |
 |---|---|---|---|---|---|
 | icon | 881 |  |  |  | 106 |
-| prop | 764 | 20 | 2489 | 70 | 254 |
+| prop | 1468 | 20 | 2489 | 70 | 259 |
 | rig | 123 |  |  | 7 | 78 |
 | setpiece | 83 |  |  |  |  |
 | tileset | 29 |  | 76 |  |  |
@@ -53,7 +53,7 @@ pack files are searched from docs/asset-index.json at query time).
 | pixellab_2026-08-05_396 | MANIFEST.json | 1 |
 | pixellab_2026-08-06 | MANIFEST.json | 96 |
 | pixellab_2026-10-08_pallass_513 | MANIFEST.json | 4 |
-| pixellab_2026-10-10 | MANIFEST.json | 209 |
+| pixellab_2026-10-10 | MANIFEST.json | 913 |
 | pixellab_harvest_2026-10/L1_icons | MANIFEST.json | 698 |
 | pixellab_harvest_2026-10/L2_props | MANIFEST.json | 339 |
 | pixellab_harvest_2026-10/L3a_rigs | MANIFEST.json | 28 |
