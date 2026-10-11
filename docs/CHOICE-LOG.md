@@ -295,18 +295,19 @@ and chronology belong in issue PRs. Earlier context:
 - **Regional kits (#606, user 2026-10-08; spec
   `docs/superpowers/specs/2026-10-08-regional-kits-design.md`; full ruling
   text, deviations and numbers: rollout plan "Kits ruling details"):**
-  - **Goal:** regional identity without monotony or clutter. Pool first; gaps
+  - **Goal:** regional identity without within-region monotony or clutter.
+    Pool first; gaps
     go to `docs/art-generation-list.md`, and generation needs user approval.
     A scene closes only on a blind Fable art read; the read beats the metrics.
   - **Pick hash (#607):** SHA-256 32-bit prefix. Rejected: djb2 (linear; a
     shared cell suffix collapses picks).
   - **Pack art** wires only as a `region` row on a bundled sheet; slices live
     in untracked `potential_assets/_sliced/`. Labels follow the prompt's own
-    vocabulary and are never tuned to the checker.
+    vocabulary and are never tuned to the labels.
   - **G2/G3 count art, not ids (#623, user 2026-10-09):** rects at IoU ≥ 0.7
     are one picture; containment never merges. Rejected: id counting
     (Liscor's "exclusive" pieces were other regions' art). Biome sharing is
-    report-only. `wire_asset` refuses a second id for registered art unless
+    report-only, because biomes are shared across regions. `wire_asset` refuses a second id for registered art unless
     `--alias-of` gives a reason.
   - **`_common` (#623):** utility Tier A only (crate, barrel, sack,
     container), each id with a recorded kind (fails closed); excluded from G2
@@ -318,18 +319,21 @@ and chronology belong in issue PRs. Earlier context:
   - **Design-led decisions (user, 2026-10-09;
     `docs/design/2026-10-09-kits-design-led-gaps.md`):** (1) Liscor is tan
     brick wall and gate, brick ground storey and shingle roofs from existing
-    art, not a generated facade kit; (2) window night state is a warm
+    art, not a generated facade kit (interim: plain `facade_plaster` until
+    #629); (2) window night state is a warm
     pane-glow overlay, not object states; (3) the Pallass lamp is the owned
     `crystal_lamp` plus a cold glow cone, with no bronze wall arm; (4) the
     Invrisil alley workbench becomes a cargo-yard cluster unless dialogue
-    names a workbench. Firm generation list (generated 2026-10-10, #639):
-    Antinium worker rig, cold wall lantern, stool, second street door.
+    names a workbench. Firm generation list (#639): Antinium worker rig, cold
+    wall lantern, stool, second street door.
   - **Fallback swaps are global** and land only as windowed-read strict
     improvements (`library_shelf` → `library_shelf__alt1`; rejected
     `shelf_bottles`, wrong kind). The pack `crate` swap waits on #641.
-  - **Anonymous extras** may wear unnamed owned rigs (`counting_room_guard` →
-    `invrisil_enforcer`), never a named character's only rig (rejected
-    `former_headman`).
+  - **Counting-room guard (#608):** `counting_room_guard` wears the unnamed
+    owned `invrisil_enforcer`; no named character wears it. Rejected:
+    `former_headman` (a named character's only rig), `hired_blade` (already
+    Coyle's crew on the alley) and `brothers_lieutenant`/`gentleman_bowler`
+    (they read as the Brothers of the Door).
 - **Best art wins per asset (#564/#554)** within a coherent scene, at gameplay
   scale; otherwise keep the official or owned public fallback. READY is not
   acceptance, and there is no quota wiring. Animation, geometry, scale and
