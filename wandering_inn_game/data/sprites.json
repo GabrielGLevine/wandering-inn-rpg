@@ -11139,7 +11139,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_dusty_scroll"
+  "fallback_sprite": "invrisil_bell_jar_owned"
  },
  "invrisil_tube_rack": {
   "shadow": false,
@@ -11166,7 +11166,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_dusty_scroll"
+  "fallback_sprite": "invrisil_tube_rack_owned"
  },
  "invrisil_inkpot": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [546, 192, 12, 16] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
@@ -11193,7 +11193,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_dusty_scroll"
+  "fallback_sprite": "invrisil_inkpot_owned"
  },
  "invrisil_glass": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [532, 245, 9, 10] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
@@ -11220,7 +11220,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_dusty_scroll"
+  "fallback_sprite": "invrisil_glass_owned"
  },
  "invrisil_quill": {
   "shadow": false,
@@ -11247,7 +11247,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_dusty_scroll"
+  "fallback_sprite": "invrisil_quill_owned"
  },
  "invrisil_scroll": {
   "_comment": "slice of potential_assets/Pixel Crawler - Hideout 1.0/Pixel Crawler - Hideout/Assets/Tiles.png region [304, 208, 16, 16] sheet sha256 40bce7b26eb3; wired by tools/wire_asset.py",
@@ -11301,7 +11301,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_dusty_scroll"
+  "fallback_sprite": "invrisil_book_owned"
  },
  "invrisil_display_case": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [32, 52, 48, 28] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
@@ -11584,6 +11584,126 @@
      64
     ],
     "fps": 1
+   }
+  }
+ },
+ "invrisil_inkpot_owned": {
+  "_comment": "#632: owned procedural pixel art, the public fallback for invrisil_inkpot (a squat dark glass inkpot with a cork). Native scale; feet plane is the frame bottom.",
+  "kind": "vessel",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     7,
+     8
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/invrisil_inkpot_owned/Idle-Sheet.png"
+   }
+  }
+ },
+ "invrisil_quill_owned": {
+  "_comment": "#632: owned procedural pixel art, the public fallback for invrisil_quill (a white feather quill leaning nib-down). Native scale; feet plane is the frame bottom.",
+  "kind": "item",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     9,
+     13
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/invrisil_quill_owned/Idle-Sheet.png"
+   }
+  }
+ },
+ "invrisil_book_owned": {
+  "_comment": "#632: owned procedural pixel art, the public fallback for invrisil_book (a closed red book lying flat, gilt title bar, page edge along the bottom). Native scale; feet plane is the frame bottom.",
+  "kind": "book",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     10,
+     8
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/invrisil_book_owned/Idle-Sheet.png"
+   }
+  }
+ },
+ "invrisil_glass_owned": {
+  "_comment": "#632: owned procedural pixel art, the public fallback for invrisil_glass (a stemmed glass with an amber pour). Native scale; feet plane is the frame bottom.",
+  "kind": "vessel",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     7,
+     9
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/invrisil_glass_owned/Idle-Sheet.png"
+   }
+  }
+ },
+ "invrisil_tube_rack_owned": {
+  "_comment": "#632: owned procedural pixel art, the public fallback for invrisil_tube_rack (a two-rail wooden rack holding three stoppered vials). Native scale; feet plane is the frame bottom.",
+  "kind": "container",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     13,
+     10
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/invrisil_tube_rack_owned/Idle-Sheet.png"
+   }
+  }
+ },
+ "invrisil_bell_jar_owned": {
+  "_comment": "#632: owned procedural pixel art, the public fallback for invrisil_bell_jar (a glass bell jar on a wooden base over a green specimen). Native scale; feet plane is the frame bottom.",
+  "kind": "container",
+  "render_scale": 1.0,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "frame_size": [
+     7,
+     13
+    ],
+    "fps": 1,
+    "sheet": "res://assets/sprites/invrisil_bell_jar_owned/Idle-Sheet.png"
    }
   }
  }

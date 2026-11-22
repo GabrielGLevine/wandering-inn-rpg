@@ -723,3 +723,15 @@ tiles/invrisil/cornice_gold_line.png: owned procedural art (#632): a 1-px gold c
 invrisil_lamp_wall_cold/Idle-Sheet.png: owned hand edit (#632 r1) of lamp_wall_cold_owned/Idle-Sheet.png (owned PixelLab): steel greys lifted about two value steps and a 1-px dark outline added; canvas 24x32; frames 1 of 24x32; feet anchor [0.5, 0.9375]; sha256 bb37b54b2bafcf1564625c4832646a9a4e3a80b4487a8403ebfc9c8aa4c37db3.
 
 invrisil_urn_owned/Idle-Sheet.png: owned procedural pixel art (#632 r2): a pale stone urn (lip, neck, swelling body, foot) drawn by script; canvas 16x21; frames 1 of 16x21; anchor [0.5, 1.0]; sha256 e6f9b61dc4966fe26e9e067621cf6c596209fe49676a3dc7f518755bfa64b95b.
+
+invrisil_inkpot_owned/Idle-Sheet.png: owned procedural pixel art (#632 review round): a squat dark glass inkpot with a cork, drawn from a character grid by a Python script (no vendor pixels read); public fallback for invrisil_inkpot; canvas 7x8; frames 1 of 7x8; alpha (0, 0, 7, 8); anchor [0.5, 1.0]; sha256 e3401044ebaed8cfb031317b5463c0b5e5be8e72fcc61fc4614e2c35579ff47c.
+
+invrisil_quill_owned/Idle-Sheet.png: owned procedural pixel art (#632 review round): a white feather quill leaning nib-down; three clear rows under the nib so it stands in the inkpot sharing its cell, drawn from a character grid by a Python script (no vendor pixels read); public fallback for invrisil_quill; canvas 9x13; frames 1 of 9x13; alpha (1, 0, 9, 10); anchor [0.5, 1.0]; sha256 a199708921e73d6272f7b202dd22e4da27aa28e8549087b1516ab67e7565930a.
+
+invrisil_book_owned/Idle-Sheet.png: owned procedural pixel art (#632 review round): a closed red book lying flat, gilt title bar, page edge along the bottom, drawn from a character grid by a Python script (no vendor pixels read); public fallback for invrisil_book; canvas 10x8; frames 1 of 10x8; alpha (0, 0, 10, 8); anchor [0.5, 1.0]; sha256 0540a8e3347d5664ccb776d02d8843589aee6454061add4ff01fb1036fd2d4f0.
+
+invrisil_glass_owned/Idle-Sheet.png: owned procedural pixel art (#632 review round): a stemmed glass with an amber pour, drawn from a character grid by a Python script (no vendor pixels read); public fallback for invrisil_glass; canvas 7x9; frames 1 of 7x9; alpha (0, 0, 7, 9); anchor [0.5, 1.0]; sha256 128914cfdfffca6b3892f646f5c7a3f780937e149f3bde62d59783c208aa1e53.
+
+invrisil_tube_rack_owned/Idle-Sheet.png: owned procedural pixel art (#632 review round): a two-rail wooden rack holding three stoppered vials, drawn from a character grid by a Python script (no vendor pixels read); public fallback for invrisil_tube_rack; canvas 13x10; frames 1 of 13x10; alpha (0, 0, 13, 10); anchor [0.5, 1.0]; sha256 38d12bc0a5eb9ca791091c8cf936c079e434ce15b872061f3ed666a2dbce116e.
+
+invrisil_bell_jar_owned/Idle-Sheet.png: owned procedural pixel art (#632 review round): a glass bell jar on a wooden base over a green specimen, drawn from a character grid by a Python script (no vendor pixels read); public fallback for invrisil_bell_jar; canvas 7x13; frames 1 of 7x13; alpha (0, 0, 7, 13); anchor [0.5, 1.0]; sha256 e845a83b8ee5bc6fc457c06fd0270b809231a455d37046c35af3be4cdf6a1d5e.
