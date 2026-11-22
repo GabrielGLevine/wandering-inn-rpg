@@ -1,0 +1,413 @@
+{
+ "_comment": "#632 window night-state wiring, through production triggers only (no teleport). Four saves on invrisil_boulevard: a day load one action before dusk (glows built, none lit) and the real step that crosses the threshold (UI_MOOD_APPLIED refresh, confirmed by ui_night_glow_rendered); a dusk load and a night load (ui_decor_rendered's night_glow payload); the door into invrisil_cross_street from the night boulevard (rows 7 there, not 16: the _rebuild_field reset pin); and a night fight that the clock ticks into dawn, whose field re-show must re-tint the glows. Headless proves the wiring; the look is a windowed read.",
+ "fixture_save": "invrisil_glow_day_edge_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "DAY, through the real load -> _rebuild_field -> _build_decor path: the nine @facade_window rows each built a night_glow sibling and none is shown. Ordered waits, not whole-run asserts: every later build must emit its own event.",
+   "action": "wait_for_event",
+   "type": "ui_decor_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "night_glow": {
+     "rows": 9,
+     "lit": 0,
+     "phase": "day"
+    }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "day"
+  },
+  {
+   "_comment": "== THE PHASE CROSSING. == The fixture sits on the last day action; one real step is the dusk threshold. No map rebuild happens, so the lit glows can only come from the UI_MOOD_APPLIED refresh.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "dusk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "phase": "dusk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_night_glow_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "phase": "dusk",
+    "rows": 9,
+    "lit": 9
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "01_dusk_crossing_glows_lit"
+  },
+  {
+   "_comment": "== DUSK FROM LOAD. == Swap saves through the real pause-menu Load path.",
+   "action": "install_fixture",
+   "fixture": "feel_peek_dusk_start",
+   "slot": "manual"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_decor_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "night_glow": {
+     "rows": 9,
+     "lit": 9,
+     "phase": "dusk"
+    }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "dusk"
+  },
+  {
+   "_comment": "== NIGHT FROM LOAD. ==",
+   "action": "install_fixture",
+   "fixture": "feel_peek_night_start",
+   "slot": "manual"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_decor_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "night_glow": {
+     "rows": 9,
+     "lit": 9,
+     "phase": "night"
+    }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "night"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "02_night_glows_lit"
+  },
+  {
+   "_comment": "== THE FIELD RESET. == Through the real door at (20,1) into invrisil_cross_street in the SAME World: the boulevard's nine glows are queued for free but still alive on the frame the cross street's decor builds, so a rebuild that kept the list would report 16 rows, not the street's own seven.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_decor_rendered",
+   "payload_contains": {
+    "map": "invrisil_cross_street",
+    "night_glow": {
+     "rows": 7,
+     "lit": 7,
+     "phase": "night"
+    }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "_comment": "== A FIGHT THE CLOCK TICKS THROUGH. == boulevard_night_footpads_loop's route, started two actions before the night band ends: the phase crosses on the PC's first combat turn, while World skips its mood refresh. The glows must be re-tinted when the field re-shows.",
+   "action": "install_fixture",
+   "fixture": "invrisil_glow_fight_dawn_start",
+   "slot": "manual"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_decor_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "night_glow": {
+     "rows": 9,
+     "lit": 9,
+     "phase": "night"
+    }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "night"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The crossing lands inside the fight: the PC's first turn_started ticks the clock, and the relay emits phase_changed just ahead of that turn_started.",
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "dusk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_night_glow_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "phase": "dusk",
+    "rows": 9,
+    "lit": 9
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "dusk"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "03_after_fight_dawn_glows"
+  }
+ ]
+}

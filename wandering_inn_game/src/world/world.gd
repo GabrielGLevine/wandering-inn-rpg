@@ -1205,6 +1205,7 @@ func _spawn_burn_poof(cell: Vector2i) -> void:
 ## "payloads unchanged" contract).
 func _build_decor(decor_list: Array) -> void:
 	var roles := {}
+	var lifted := 0
 	for raw: Variant in decor_list:
 		if not (raw is Dictionary):
 			continue
@@ -1215,7 +1216,7 @@ func _build_decor(decor_list: Array) -> void:
 		var cell := Vector2i(int(entry["cell"][0]), int(entry["cell"][1]))
 		var decor_visual := _make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)), null, "decor")
 		if entry.has("lift"):
-			_lift_decor(decor_visual, int(entry["lift"]))
+			lifted += _lift_decor(decor_visual, int(entry["lift"]))
 		if entry.get("night_glow") is Dictionary:
 			_build_night_glow(cell, entry["night_glow"] as Dictionary)
 		if entry.has("sprite_role"):
@@ -1228,21 +1229,25 @@ func _build_decor(decor_list: Array) -> void:
 		(roles[role] as Array).sort()
 	var glows_lit := _refresh_night_glows()
 	# #607: one aggregate per build (decor emits no per-row event); fires before world_ready.
+	# `lifted` counts rows whose art actually moved; `night_glow.phase` is the phase the glows were lit for.
 	ObservableBus.emit_domain_event(WIEvents.UI_DECOR_RENDERED, {
-		"map": Game.sim.current_map, "roles": roles,
-		"night_glow": {"rows": _night_glows.size(), "lit": glows_lit},
+		"map": Game.sim.current_map, "roles": roles, "lifted": lifted,
+		"night_glow": {"rows": _night_glows.size(), "lit": glows_lit, "phase": Game.sim.phase()},
 	})
 
 
 ## #632: a decor row's `lift` (px) raises its art onto a surface drawn on the
 ## same cell (a quill on a counter, a glass on a bar) and sorts it 1px south so it
 ## draws over that surface. The holder keeps its cell, so a fallback sprite lifts
-## the same way.
-func _lift_decor(holder: Node2D, lift: int) -> void:
+## the same way. Returns 1 when art moved, for the decor payload's `lifted` count.
+func _lift_decor(holder: Node2D, lift: int) -> int:
 	holder.position.y += 1.0
+	var moved := 0
 	for child: Node in holder.get_children():
 		if child is Node2D:
 			(child as Node2D).position.y -= float(lift) + 1.0
+			moved = 1
+	return moved
 
 
 ## #632 decision 2 (window night state): a decor row's `night_glow`
@@ -1272,6 +1277,20 @@ func _refresh_night_glows() -> int:
 		return 0
 	var phase := _atmosphere.phase_now()
 	return _apply_night_glows(phase, WIAtmosphere.glow_modulate(Game.sim.current_map, phase))
+
+
+## Re-tints the live glows without a decor rebuild (a phase crossing, or the
+## field re-show after a fight the clock ticked through) and confirms it.
+## Silent on maps with no glow rows, and from a World a save load has already
+## swapped out (it stays on the bus until its queued free lands).
+func _reconcile_night_glows() -> void:
+	if _night_glows.is_empty() or _atmosphere == null or not is_inside_tree():
+		return
+	var lit := _refresh_night_glows()
+	ObservableBus.emit_domain_event(WIEvents.UI_NIGHT_GLOW_RENDERED, {
+		"map": Game.sim.current_map, "phase": _atmosphere.phase_now(),
+		"rows": _night_glows.size(), "lit": lit,
+	})
 
 
 func _apply_night_glows(phase: String, tint: Color) -> int:
@@ -2046,6 +2065,8 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_field_root.visible = true
 		_refresh_entities_watching_dormant()
 		_reconcile_dangersense_overlay()
+		# The UI_MOOD_APPLIED arm skips its refresh while combat holds the field.
+		_reconcile_night_glows()
 	elif type == WIEvents.ACCOMPLISHMENT_RECORDED:
 		# CONTRACT (#119, stale-cover guard — stated once here, shared by the
 		# ENTITY_REMOVED/ITEM_GAINED/PHASE_CHANGED arms): while the transition
@@ -2113,7 +2134,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		if not _map_transition_stale_cover() and Game.sim.combat == null:
 			_apply_field_legibility()
 			_apply_dangersense_night_compensation()
-			_refresh_night_glows()
+			_reconcile_night_glows()
 	elif type == WIEvents.PHASE_CHANGED:
 		if _map_transition_stale_cover():
 			return
