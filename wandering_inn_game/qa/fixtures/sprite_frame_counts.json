@@ -458,6 +458,7 @@
   "liscor_watch_guard/idle": 4,
   "liscor_watch_guard/walk": 6,
   "liscor_water_barrel/idle": 1,
+  "liscor_wall_sconce/idle": 1,
   "liscor_waystone/idle": 1,
   "liscor_window_arch/idle": 1,
   "liscor_window_grille/idle": 1,
