@@ -31,8 +31,8 @@
    1
   ],
   [
-   7,
-   3
+   2,
+   4
   ],
   [
    1,
@@ -280,15 +280,15 @@
   {
    "sprite": "liscor_runners_desk",
    "cell": [
-    7,
-    3
+    2,
+    4
    ]
   },
   {
    "sprite": "liscor_ledger",
    "cell": [
-    7,
-    3
+    2,
+    4
    ],
    "tint": [
     0.72,

@@ -12,8 +12,8 @@
  },
  "blocked": [
   [
-   8,
-   4
+   6,
+   2
   ],
   [
    9,
@@ -160,8 +160,8 @@
   {
    "sprite": "liscor_duty_table",
    "cell": [
-    8,
-    4
+    6,
+    2
    ]
   },
   {
@@ -237,8 +237,8 @@
   {
    "sprite": "liscor_papers",
    "cell": [
-    8,
-    4
+    6,
+    2
    ]
   }
  ],
