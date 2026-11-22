@@ -12003,7 +12003,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_library_desk"
+  "fallback_sprite": "owned_fallback_table_brown"
  },
  "liscor_duty_table": {
   "_comment": "slice of potential_assets/Pixel Crawler - Hideout 1.0/Pixel Crawler - Hideout/Assets/Tiles.png region [352, 128, 48, 48] sheet sha256 40bce7b26eb3; wired by tools/wire_asset.py",
@@ -12111,7 +12111,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "mill_high_shelf_owned"
+  "fallback_sprite": "library_shelf__alt1"
  },
  "liscor_drawers": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [160, 104, 16, 24] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
@@ -12192,7 +12192,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "mill_high_shelf_owned"
+  "fallback_sprite": "library_shelf__alt1"
  },
  "liscor_locker_tall": {
   "_comment": "slice of potential_assets/Pixel Crawler - Hideout 1.0/Pixel Crawler - Hideout/Assets/Tiles.png region [320, 160, 16, 48] sheet sha256 40bce7b26eb3; wired by tools/wire_asset.py",
@@ -12858,5 +12858,33 @@
    }
   },
   "fallback_sprite": "cold_hearth"
+ },
+ "liscor_wall_sconce": {
+  "_comment": "#629 r2: the copper sconce hung on an interior wall band. The floor-anchored id put it a cell below the band.",
+  "_alias_of": "liscor_sconce_copper",
+  "_alias_reason": "wall-hung placement needs a raised anchor and no ground shadow; the street keeps the floor-anchored id",
+  "render_scale": 0.9,
+  "anchor": [
+   0.5,
+   1.9
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/sewer/Props.png",
+    "frame_size": [
+     9,
+     20
+    ],
+    "region": [
+     100,
+     5,
+     9,
+     20
+    ],
+    "fps": 1
+   }
+  },
+  "fallback_sprite": "owned_fallback_unlit_lantern",
+  "shadow": false
  }
 }

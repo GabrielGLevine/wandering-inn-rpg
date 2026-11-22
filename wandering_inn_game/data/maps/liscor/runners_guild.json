@@ -31,8 +31,8 @@
    1
   ],
   [
-   2,
-   4
+   7,
+   3
   ],
   [
    1,
@@ -219,16 +219,9 @@
    ]
   },
   {
-   "sprite": "liscor_bench",
+   "sprite": "liscor_wall_sconce",
    "cell": [
-    1,
-    5
-   ]
-  },
-  {
-   "sprite": "liscor_sconce_copper",
-   "cell": [
-    5,
+    3,
     1
    ],
    "light": {
@@ -287,15 +280,15 @@
   {
    "sprite": "liscor_runners_desk",
    "cell": [
-    2,
-    4
+    7,
+    3
    ]
   },
   {
    "sprite": "liscor_ledger",
    "cell": [
-    2,
-    4
+    7,
+    3
    ],
    "tint": [
     0.72,
@@ -337,7 +330,7 @@
     7
    ],
    "display_name": "Liscor Street",
-   "sprite": "liscor_door_civic",
+   "sprite": "door__alt2",
    "to_map": "street",
    "to_cell": [
     19,
@@ -427,7 +420,7 @@
     1
    ],
    "display_name": "The Common Hearth",
-   "sprite": "liscor_oven_cold",
+   "sprite": "cold_hearth",
    "hearth": true,
    "state_counter": "lit_the_runners_hearth",
    "observe": "A wide stone hearth swept to the brick: split kindling, dry birch laid over it in a lattice. Cold air comes down the flue and stirs the loose bark.",

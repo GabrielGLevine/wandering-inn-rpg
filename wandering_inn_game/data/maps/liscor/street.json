@@ -1,5 +1,6 @@
 {
  "biome": "street",
+ "camera": {"offset": [0, -1], "margins": [0, 2, 0, 1]},
  "_kits_recompose": "#629 — Liscor identity rebuild: tan brick city wall and gate, earth base floor, brick-footed facades, market stalls and dressing from the allocation, dray rank and wood yard",
  "interior_flavor": [
   "Nothing there. A Drake shoulders past you without slowing.",
@@ -80,10 +81,6 @@
  "blocked": [
   [
    2,
-   1
-  ],
-  [
-   7,
    1
   ],
   [
@@ -457,20 +454,20 @@
     ],
     "tone": {
      "base": [
-      0.33,
-      0.34,
-      0.36
+      0.55,
+      0.44,
+      0.32
      ],
-     "detail": 0.25
+     "detail": 0.3
     }
    },
    "tone": {
     "base": [
-     0.6,
-     0.47,
-     0.33
+     0.78,
+     0.52,
+     0.27
     ],
-    "detail": 0.72
+    "detail": 0.62
    }
   },
   {
@@ -508,20 +505,20 @@
     ],
     "tone": {
      "base": [
-      0.33,
-      0.34,
-      0.36
+      0.55,
+      0.44,
+      0.32
      ],
-     "detail": 0.25
+     "detail": 0.3
     }
    },
    "tone": {
     "base": [
-     0.6,
-     0.47,
-     0.33
+     0.78,
+     0.52,
+     0.27
     ],
-    "detail": 0.72
+    "detail": 0.62
    }
   },
   {
@@ -559,20 +556,20 @@
     ],
     "tone": {
      "base": [
-      0.33,
-      0.34,
-      0.36
+      0.55,
+      0.44,
+      0.32
      ],
-     "detail": 0.25
+     "detail": 0.3
     }
    },
    "tone": {
     "base": [
-     0.6,
-     0.47,
-     0.33
+     0.78,
+     0.52,
+     0.27
     ],
-    "detail": 0.72
+    "detail": 0.62
    }
   },
   {
@@ -638,111 +635,71 @@
     ],
     "tone": {
      "base": [
-      0.33,
-      0.34,
-      0.36
+      0.55,
+      0.44,
+      0.32
      ],
-     "detail": 0.25
+     "detail": 0.3
     }
    },
    "tone": {
     "base": [
-     0.6,
-     0.47,
-     0.33
+     0.78,
+     0.52,
+     0.27
     ],
-    "detail": 0.72
+    "detail": 0.62
    }
   },
   {
-   "_pick": "#629 r1: ragged kerb, cobble cells stepping into the first earth row so the band's south edge is not ruler-straight.",
+   "_pick": "#629 r2: kerb. The earth blob's ragged top-edge cells over the band's last row, so paving meets earth along a worn lip (r1's cell-square teeth read as notches). Toned down to the base earth's darker row.",
    "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
    "tile_px": 16,
    "variants": [
     [
-     17,
-     1
+     11,
+     4
     ],
     [
-     18,
-     1
+     12,
+     4
+    ],
+    [
+     13,
+     4
     ]
    ],
-   "tone": {
-    "base": [
-     0.6,
-     0.47,
-     0.33
-    ],
-    "detail": 0.72
-   },
    "cells": {
-    "list": [
-     [
-      2,
-      6
-     ],
-     [
-      9,
-      6
-     ],
-     [
-      14,
-      6
-     ],
-     [
-      22,
-      6
-     ],
-     [
-      27,
-      6
-     ]
+    "rect": [
+     0,
+     5,
+     32,
+     1
     ]
    },
+   "tone": {
+    "base": [
+     0.29,
+     0.195,
+     0.115
+    ],
+    "detail": 0.8
+   },
    "fallback_render": {
-    "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+    "sheet": "res://assets/tiles/harvest/meadow_paths.png",
     "tile_px": 16,
     "coords": [
-     0,
-     3
+     2,
+     1
     ],
     "tone": {
      "base": [
-      0.33,
-      0.34,
-      0.36
+      0.45,
+      0.31,
+      0.19
      ],
-     "detail": 0.25
+     "detail": 0.3
     }
-   }
-  },
-  {
-   "_pick": "#629 r1: worn gaps, packed earth showing through the band's last row.",
-   "material": "@floor_earth",
-   "cells": {
-    "list": [
-     [
-      5,
-      5
-     ],
-     [
-      11,
-      5
-     ],
-     [
-      18,
-      5
-     ],
-     [
-      25,
-      5
-     ],
-     [
-      30,
-      5
-     ]
-    ]
    }
   }
  ],
@@ -816,14 +773,6 @@
    "sprite": "grain_sacks",
    "cell": [
     2,
-    1
-   ]
-  },
-  {
-   "_comment": "#408 prop variety: was `crate`. Woven market baskets read as Liscor's own trade rather than generic storage. Cell stays in `blocked` (basket_stack is solid).",
-   "sprite": "basket_stack",
-   "cell": [
-    7,
     1
    ]
   },
@@ -1320,6 +1269,14 @@
     31,
     13
    ]
+  },
+  {
+   "_pick": "#629 r2: the south-row house had a blank front.",
+   "sprite": "liscor_window_shutter",
+   "cell": [
+    19,
+    9
+   ]
   }
  ],
  "scatter": [
@@ -1347,11 +1304,9 @@
    "pool": [
     "liscor_scatter_sawdust",
     "liscor_scatter_log_round",
-    "liscor_scatter_stakes",
-    "liscor_scatter_straw_tuft",
-    "liscor_scatter_hay"
+    "liscor_scatter_stakes"
    ],
-   "density": 0.12,
+   "density": 0.05,
    "cluster": 0.3,
    "seed": 11,
    "cells": {
@@ -1711,7 +1666,7 @@
     16
    ],
    "display_name": "Runner's Guild",
-   "sprite": "liscor_door_civic",
+   "sprite": "door__alt2",
    "to_map": "runners_guild",
    "to_cell": [
     5,

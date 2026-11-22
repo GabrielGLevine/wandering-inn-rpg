@@ -71,6 +71,11 @@ For each region below, open the issue, then run pilot Tasks 1–7 with these sub
 - **Stool A/B:** `owned_fallback_stool` stays the public fallback for `stool`; `stool_owned` reads darker and muddier at gameplay scale. `stool_owned` is a Liscor seat (guild reading table) and joins the `seating` pool.
 - **Raised anchors:** wall-hung pieces (boards, crest, pennants, peg rails and the kit hung on them) and goods on counters lift their art with an anchor above 1.0 (the `food_bread` precedent) and no shadow. Their public fallbacks keep floor anchors.
 - **`cold_hearth` and `dirty_table`:** not edited; the R1 ruling stands (their copy says cold and muddy).
+- **r2 FIX round (second blind read):**
+  - Street: the cobble band is toned to warm sandstone and the wall brick darker and redder, so wall and paving separate; the r1 kerb teeth and gaps are replaced by the earth blob's ragged top-edge cells over the band's last row; `camera` margins bring the wall cap, the north roofs and the south facades into frame; the wood-yard scatter drops hay and straw and thins to 0.05; the Runners' doors return to the plank `door__alt2` (door#10 read as an iron grate and is no longer placed); `basket_stack` leaves the wall row; the south-row house gets shutters.
+  - Interiors: the guild walls are the same owned plaster as the Runners' Guild (decision 1: the guilds keep plaster, the barracks takes the brick); wall lamps use `liscor_wall_sconce`, an alias of `liscor_sconce_copper` with a raised anchor; the Runners' hearth is `cold_hearth` again (station#26 is back on the not-placed list, as above); the Runners' desk moves off the resting Runner and its bench is cut; the barracks pile is thinned (duty table to (8,4), locker to (12,6), side chair cut) and its floor toned down.
+  - Guild tables: `table_brown__alt1` is in Invrisil's `table` pool, so three Liscor placements cost Invrisil 1.54 points of G2. The guild takes table#38 (`liscor_reading_table`) twice and `liscor_duty_table` once.
+  - Public fallbacks: the lockers and sorting shelf fall back to `library_shelf__alt1` (the mill shelf read as a gallows post), the Runners' desk to `owned_fallback_table_brown`; wall, cobble and earth fallback tones are warm.
 - **Floodplains gatehouse:** the floodplains side of the gate keeps the grey `city_gatehouse`; recolouring it is a floodplains map edit outside this lane (follow-up; the same recolour script applies).
 
 ### R2. Underground: ruin, dungeon, sewers (`ruin_surface`, `dungeon_approach`, `seal_vault`, `trapped_halls`, `sewers`, `deep_tunnels`)
@@ -372,6 +377,7 @@ CHOICE-LOG keeps the one-line rulings. This is the full text as it stood before 
 
 - **G3 regen (#629 Liscor rebuild, before the blind read):** Liscor generic placements 17/101 → 13/159 (16.83% → 8.18%); street 10/60 → 6/93, guild 2/17 → 2/25, runners_guild 2/10 → 2/19, barracks 3/14 → 3/22. No other region moved. Regenerated with `--regen-scene-baseline` on main `7dacb3b3` + #629.
   - **r1 FIX loop regen (#629, after the first blind read):** the clutter cut and public-fallback swaps moved Liscor generic placements 13/159 → 9/159 (8.18% → 5.66%); street 6/93 → 3/88, guild 2/25 → 2/27, runners_guild 2/19 → 1/21, barracks 3/22 → 3/23. `liscor_waystone` replaced the last Liscor `anchor_waystone`, so that art left the three-region class: invrisil 51 → 50 (25.64%), riverfarm 29 → 28 (23.93%), with no map edit there. The cut also removed these allocation pieces from the street and guild: container#32, container#35, vessel#11, wall_module#24, fence#10, table#22, sign#6; table#38 stays registered and unplaced.
+  - **r2 FIX round regen (#629, after the second blind read):** Liscor 9/159 → 10/157 (5.66% → 6.37%); runners_guild 1/21 → 2/20 because the hearth is the three-region `cold_hearth` again, barracks 3/23 → 3/22. No other region moved.
 
 ## Per-region checklist (copy into each region issue)
 

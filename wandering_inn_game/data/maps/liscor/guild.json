@@ -94,33 +94,23 @@
      15,
      0
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     14,
-     6
+     4,
+     2
     ],
     "face": [
-     14,
-     7
+     4,
+     3
     ],
-    "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-     "tile_px": 16,
-     "cap": [
-      4,
-      2
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
      ],
-     "face": [
-      4,
-      3
-     ],
-     "tone": {
-      "base": [
-       0.4,
-       0.34,
-       0.26
-      ],
-      "detail": 0.55
-     }
+     "detail": 0.55
     }
    },
    {
@@ -132,25 +122,19 @@
      0,
      11
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     14,
-     6
+     4,
+     2
     ],
-    "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-     "tile_px": 16,
-     "cap": [
-      4,
-      2
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
      ],
-     "tone": {
-      "base": [
-       0.4,
-       0.34,
-       0.26
-      ],
-      "detail": 0.55
-     }
+     "detail": 0.55
     }
    },
    {
@@ -162,25 +146,19 @@
      15,
      11
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     14,
-     6
+     4,
+     2
     ],
-    "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-     "tile_px": 16,
-     "cap": [
-      4,
-      2
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
      ],
-     "tone": {
-      "base": [
-       0.4,
-       0.34,
-       0.26
-      ],
-      "detail": 0.55
-     }
+     "detail": 0.55
     }
    },
    {
@@ -192,25 +170,19 @@
      7,
      11
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     14,
-     6
+     4,
+     2
     ],
-    "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-     "tile_px": 16,
-     "cap": [
-      4,
-      2
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
      ],
-     "tone": {
-      "base": [
-       0.4,
-       0.34,
-       0.26
-      ],
-      "detail": 0.55
-     }
+     "detail": 0.55
     }
    },
    {
@@ -222,25 +194,19 @@
      14,
      11
     ],
+    "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+    "tile_px": 16,
     "cap": [
-     14,
-     6
+     4,
+     2
     ],
-    "fallback_render": {
-     "sheet": "res://assets/tiles/harvest/plaster_wall.png",
-     "tile_px": 16,
-     "cap": [
-      4,
-      2
+    "tone": {
+     "base": [
+      0.4,
+      0.34,
+      0.26
      ],
-     "tone": {
-      "base": [
-       0.4,
-       0.34,
-       0.26
-      ],
-      "detail": 0.55
-     }
+     "detail": 0.55
     }
    }
   ]
@@ -248,7 +214,7 @@
  "_comment_lights": "v0.17 R2: the hall had ZERO light sources. `sconce` is not in the `inn` biome's blocked_props, so blocked_cells stays 57 (unchanged).",
  "decor": [
   {
-   "sprite": "liscor_sconce_copper",
+   "sprite": "liscor_wall_sconce",
    "cell": [
     4,
     1
@@ -265,7 +231,7 @@
    }
   },
   {
-   "sprite": "liscor_sconce_copper",
+   "sprite": "liscor_wall_sconce",
    "cell": [
     11,
     1
@@ -310,14 +276,14 @@
    ]
   },
   {
-   "sprite": "table_brown__alt1",
+   "sprite": "liscor_reading_table",
    "cell": [
     13,
     6
    ]
   },
   {
-   "sprite": "table_brown__alt1",
+   "sprite": "liscor_duty_table",
    "cell": [
     12,
     9
@@ -373,7 +339,7 @@
    ]
   },
   {
-   "sprite": "table_brown__alt1",
+   "sprite": "liscor_reading_table",
    "cell": [
     3,
     8

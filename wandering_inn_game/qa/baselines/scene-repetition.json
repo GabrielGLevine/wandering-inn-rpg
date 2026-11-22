@@ -12,7 +12,6 @@
   "arrow_quiver": "regional",
   "bar_counter": "regional",
   "barrel": "generic",
-  "basket_stack": "regional",
   "bat": "generic",
   "bed": "generic",
   "bench": "generic",
@@ -192,7 +191,6 @@
   "liscor_clay_jar_tall": "regional",
   "liscor_cot": "regional",
   "liscor_door_barracks": "regional",
-  "liscor_door_civic": "regional",
   "liscor_door_yard": "regional",
   "liscor_drawers": "regional",
   "liscor_duty_table": "regional",
@@ -204,7 +202,6 @@
   "liscor_loaf": "regional",
   "liscor_locker": "regional",
   "liscor_locker_tall": "regional",
-  "liscor_oven_cold": "regional",
   "liscor_papers": "regional",
   "liscor_peg_rail": "regional",
   "liscor_planter_beets": "regional",
@@ -215,6 +212,7 @@
   "liscor_produce_greens": "regional",
   "liscor_produce_pale": "regional",
   "liscor_quill": "regional",
+  "liscor_reading_table": "regional",
   "liscor_red_book": "regional",
   "liscor_runner_pack": "regional",
   "liscor_runners_desk": "regional",
@@ -223,13 +221,13 @@
   "liscor_sconce_copper": "regional",
   "liscor_scroll": "regional",
   "liscor_shield_round": "regional",
-  "liscor_side_chair": "regional",
   "liscor_sorting_shelf": "regional",
   "liscor_stall_butcher": "regional",
   "liscor_stall_counter": "regional",
   "liscor_stall_tray": "regional",
   "liscor_sword_laid": "regional",
   "liscor_tomato": "regional",
+  "liscor_wall_sconce": "regional",
   "liscor_watch_crest": "regional",
   "liscor_watch_guard": "regional",
   "liscor_water_barrel": "regional",
@@ -467,27 +465,27 @@
    "placements": 195
   },
   "liscor": {
-   "generic_placements": 9,
-   "generic_share_pct": 5.66,
+   "generic_placements": 10,
+   "generic_share_pct": 6.37,
    "maps": {
     "barracks": {
      "generic_placements": 3,
-     "placements": 23
+     "placements": 22
     },
     "guild": {
      "generic_placements": 2,
      "placements": 27
     },
     "runners_guild": {
-     "generic_placements": 1,
-     "placements": 21
+     "generic_placements": 2,
+     "placements": 20
     },
     "street": {
      "generic_placements": 3,
      "placements": 88
     }
    },
-   "placements": 159
+   "placements": 157
   },
   "pallass": {
    "generic_placements": 27,
