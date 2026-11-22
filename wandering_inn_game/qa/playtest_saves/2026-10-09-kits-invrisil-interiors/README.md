@@ -1,7 +1,7 @@
-# Prepared Playtest State -- Invrisil stationer by day (#608 pilot 1b eye-gate)
+# Prepared Playtest State -- Invrisil stationer by day (#608 pilot 1b; re-aimed at the #632 rebuild)
 
 **Date:** 2026-10-09
-**Purpose:** eye-gate the regional kit on the five Invrisil interiors, starting at the stationer.
+**Purpose:** eye-gate the #632 Invrisil rebuild on the five interiors, starting at the stationer. The save is the #608 pilot's, unchanged; what to look at below is #632's.
 
 ## How to load
 
@@ -34,15 +34,18 @@ Or load this file through the manual slot:
 
 ## What to do
 
-1. Look around the stationer: floor, walls, table, rug, window.
+1. Look around the stationer: marble floor, plaster north wall with the gold cornice line, the counter and tables with their tabletop pieces, the iron stove.
 2. Step out through the door at [6,8] to the cross-street, then into the Adventurer's Rest, the enchanter shop (door at [25,1] on the boulevard) and the Brothers' parlor (via the alleys) to compare the interiors.
 
 ## What to judge
 
-- Do the interiors read as one shop family (flagstone and timber) rather than the generic Interior_Walls look?
-- Do the table, rug and window variants clash within one room?
-- Do the flat stand-ins (tray, paper stand) read as props?
-- Is every NPC still reachable around the converted tables?
+- Stationer and enchanter shop: does the pale marble floor with the plaster wall and gold cornice read as a good shop, without going near-white?
+- Tabletop pieces sit ON their surface, not in front of or behind it: inkpot and quill on the stationer counter at [5,1], scroll on the desk at [9,3], book on the table at [4,5]; the glass on the parlor counter; the test-tube rack and bell jar on the work-room sideboard at [5,1]-[6,1] (the work room needs the commission settled or [Pick Lock]).
+- Stationer: the iron stove, the oak chairs and the planter. Enchanter shop: the lamp at [2,1] beside the glass case and the potted plant.
+- Parlor: the settee for the guest couch. Adventurer's Rest: the one long bench and the helmeted bust beside the rack.
+- Is every NPC still reachable around the furniture?
+
+In a public checkout (no asset overlay) each tabletop piece draws its own owned stand-in (inkpot, quill, book, glass, rack, bell jar); check that none floats off its surface.
 
 ## Verified
 

@@ -140,9 +140,10 @@ Implementer rulings:
 - **`door_street`.** `door_street_townhouse_owned` joins the pool at 0.55, and `invrisil_door_street_3` falls back to it. The boulevard–alleys portal now draws the townhouse door in both builds.
 - **Marble curb.** Auditioned as a Wang edge ring on both streets; reverted after the r1 read (see below).
 - **Shop walls and floors.** `wall_dado` (Building_Walls plaster (24,13)) with the owned `cornice_gold_line` as a material `trim` goes on the stationer's and enchanter shop's north walls; caps-only side walls stay `@wall_shop`. `floor_marble` (Floors_Tiles pale marble, toned to mid limestone) covers both shops. The parlor keeps its flagstone, the Rest its honey plank and timber, and the work room the biome plank.
-- **Decor `lift`.** Tabletop pieces (inkpot, quill, scroll, book, glass, test-tube rack, bell jar) sit on their surface through the row's `lift`, so their public fallbacks lift too.
+- **Decor `lift`.** Tabletop pieces (inkpot, quill, scroll, book, glass, test-tube rack, bell jar) sit on their surface through the row's `lift`, so their public fallbacks lift too. Each has its own owned public fallback (`invrisil_<piece>_owned`, procedural pixel art; the scroll keeps `owned_fallback_dusty_scroll`), so the public counter does not show seven scrolls.
 - **Work-room door pair.** Both pinned to `invrisil_door_street_3` (a plain framed interior door). `door_locked_heavy` read as a barred cabinet (#610).
 - **Parapet line (#610 c3).** The Castle cornice band failed the r1 read and was reverted; c3 stays open.
+- **Wired after first being skipped:** station#33 is `invrisil_iron_stove`, the stationer stove since the r1 read (finding 12); its public fallback is `invrisil_stove_fallback`.
 - **Skipped, with reasons:**
   - other#27 potion column: at 16px it reads as stacked coloured blocks.
   - book#1 tome: floats as a blue kite over the order-book desk.
@@ -153,14 +154,13 @@ Implementer rulings:
   - rug#4 and rug#14: a 5x5 fur rug has no room, and rug#14 has a hole in it.
   - tool#12 and table#11: three to five cells wide, with no room in the 8x6 work room.
   - tool#18, tool#20, table#10 and table#30: the front counters are wood by their text, and table#18 took the case.
-  - station#33: the stationer stove is pinned to `cold_hearth` by the #608 read.
   - decor#3 and decor#4: one bust is enough.
   - decor#20 curtains: five cells tall.
   - decor#10 painting: needs a recut and has no owned fallback.
   - wall_module#3, #11 and #17: railings would need a new blocked ring round the fountain beside the porter, and the glass gable is six cells tall.
   - container#15, container#31 and vessel#33: the work-room surface reads cluttered past two items.
   - sign#2 and sign#3: two banners already frame the cross-street door.
-  - pipe#4: lands with the cargo cluster.
+  - pipe#4: placed with the cargo cluster, then removed after the r1 read (finding 13: it read as a cannon).
 
 #### #632 r1 blind read: reconcile and fixes (2026-10-11)
 
@@ -294,7 +294,7 @@ Per-regen numbers for the `scene-repetition.json` ratchet. CHOICE-LOG keeps one 
 - **#620 r3 N8 (Runners' Guild counter ends → `counter_segment_owned`):** Liscor generic placements 19 → 17 (18.63% → 16.67%); no other region moved. Regenerated with `--regen-scene-baseline`.
   - **Final review (#620):** the Runners' counter returned to the Selys pattern (Vess back at (5,2), the filled (5,2) counter segment removed): Liscor placements 102 → 101 with 17 generic (share 16.67% → 16.83%), `runners_guild` 11 → 10; the waystone scale reverted to 0.4 (Liscor-only alias is a #629 follow-up).
 
-- **#632 Invrisil rebuild (one regen, on the tree rebased onto #640):** Invrisil generic placements 51 → 38 (26.15% → 18.01%) over 195 → 211 placements; G2 Invrisil identity 56.92% → 66.67%, `_common` utility 4/211 (1.9%). Re-run after the r1 read fixes. The classifier moved two regions with no map edit: inn 36 → 33 (51.43% → 47.14%) and Pallass 27 → 25 (28.12% → 26.04%), because `sconce`, the pack `barrel` and `crate` and the other art Invrisil stopped placing now sit in fewer regions. Regenerated with `--regen-scene-baseline`.
+- **#632 Invrisil rebuild (one regen, on the tree rebased onto #640):** Invrisil generic placements 51 → 38 (26.15% → 18.01%) over 195 → 211 placements; G2 Invrisil identity 56.92% → 67.15% (the lint's figure on the final tree; 66.67% before the r1/r2 fixes), `_common` utility 4/211 (1.9%). Re-run after the r1 read fixes. The classifier moved two regions with no map edit: inn 36 → 33 (51.43% → 47.14%) and Pallass 27 → 25 (28.12% → 26.04%), because `sconce`, the pack `barrel` and `crate` and the other art Invrisil stopped placing now sit in fewer regions. Regenerated with `--regen-scene-baseline`.
 
 ## Kits ruling details (moved verbatim from CHOICE-LOG, 2026-10-11)
 

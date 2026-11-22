@@ -1,6 +1,6 @@
 {
  "_kits_recompose": "#632 — re-intake pieces: inkpot and quill on the counter, scroll on the desk, book on the table, oak chairs, planter",
- "_comment": "v0.16 I1 (#306); kit-converted in #608 1b. Walk-in only (no portals row). Biome `brothers_parlor` under @floor_shop/@wall_shop and kit roles (@table, @window_interior). Perimeter is walls.segments, so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each cell with a matching decor row.",
+ "_comment": "v0.16 I1 (#306); kit-converted in #608 1b. Walk-in only (no portals row). Biome `brothers_parlor` under @floor_marble/@wall_shop and kit roles (@table, @window_interior). Perimeter is walls.segments, so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each cell with a matching decor row.",
  "biome": "brothers_parlor",
  "grid": {
   "width": 12,
@@ -14,7 +14,7 @@
  ],
  "floor_layers": [
   {
-   "_pick": "#608 1b (census-free key: _pick carries the rationale so _comment does not have to): the stationer's floor is @floor_shop (data/kits.json), the cool blue-grey flagstone of owned woodplank_over_stone_v1 (wang_0 [2,1]), the quiet shop floor it shares with the Brothers' parlor. It replaces the Interior_Walls_01 pale-board swatch [16,21]/[17,21] an earlier pass reused here, and the brothers_parlor biome's default inn plank [1,21] that would have read as the inn (the original #225 differentiation). Walls are @wall_shop.",
+   "_pick": "#608 1b (census-free key: _pick carries the rationale so _comment does not have to): the stationer's floor is @floor_marble (data/kits.json) since #632, the pale marble shop floor it shares with the enchanter's shop; #608's @floor_shop flagstone stays with the Brothers' parlor. Either keeps it off the brothers_parlor biome's default inn plank, which would read as the inn (the original #225 differentiation). Walls are @wall_shop with the @wall_dado north face.",
    "material": "@floor_marble",
    "cells": "all"
   }
