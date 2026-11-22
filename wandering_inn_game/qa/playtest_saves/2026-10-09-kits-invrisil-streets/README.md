@@ -1,7 +1,7 @@
-# Prepared Playtest State -- Invrisil streets at dusk (#608 pilot 1a eye-gate)
+# Prepared Playtest State -- Invrisil streets at dusk (#608 pilot 1a; re-aimed at the #632 rebuild)
 
 **Date:** 2026-10-09
-**Purpose:** eye-gate the regional kit on Invrisil's three street maps (boulevard, cross-street, alleys): identity, repetition and clutter, which metrics cannot judge.
+**Purpose:** eye-gate the #632 Invrisil rebuild on the three street maps (boulevard, cross-street, alleys). The save is the #608 pilot's, unchanged; what to look at below is #632's.
 
 ## How to load
 
@@ -34,16 +34,19 @@ Or load this file through the manual slot:
 
 ## What to do
 
-1. Look at the boulevard from the fountain.
+1. Look at the boulevard from the fountain. It is dusk, so the nine upper windows should be lit.
 2. Walk boulevard -> cross-street (door at [20,1]) -> alleys (door at [27,2]).
-3. Do not sleep: sleeping resets the clock to day.
+3. Keep walking until night falls (`actions_since_sleep` 900, about 450 steps) to see the windows and lanterns at night. Do not sleep: sleeping resets the clock to day.
 
 ## What to judge
 
-- Does it read as one Invrisil, distinct from Liscor and the Floodplains (regional identity)?
-- Do windows, doors, lamps and cargo repeat visibly (repetition)?
-- Is any street too busy or too bare (clutter)?
-- Is the dusk grade legible on the marble and ashlar floors?
+- Window night state: do the upper windows on the boulevard (nine) and the cross-street (seven) glow warm at dusk and night, sit on their panes, and stay dark by day?
+- Boulevard: the purple banners flanking the cross-street door, the pale urn on the west square at [3,8], and the townhouse door on the alleys portal.
+- Cross-street: the Adventurer's Rest sign at [13,1] (three cards and a hat) and the pale urn at [18,5].
+- Alleys: the cargo-yard cluster (kegs, crates, sacks, the sealed bale) on the wall-foot cells, and the steel wall lanterns with warm light, on the building wall at [11,9] and [16,10].
+- Does it still read as one Invrisil, distinct from Liscor, and is the dusk grade legible on the paving?
+
+In a public checkout (no asset overlay) the same walk shows the owned fallbacks: the cold steel lantern, the owned urn and the owned townhouse door.
 
 ## Verified
 

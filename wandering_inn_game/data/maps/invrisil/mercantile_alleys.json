@@ -1,4 +1,5 @@
 {
+ "_kits_recompose": "#632 — cargo-yard cluster from the _common roles on blocked wall-foot cells, owned sealed bale",
  "biome": "invrisil_alley",
  "grid": {
   "width": 20,
@@ -900,7 +901,7 @@
    "sprite": "@lamp_wall",
    "cell": [
     11,
-    10
+    9
    ],
    "light": {
     "color": [
@@ -917,7 +918,7 @@
    "sprite": "@lamp_wall",
    "cell": [
     16,
-    13
+    10
    ],
    "light": {
     "color": [
@@ -929,6 +930,34 @@
     "radius": 22,
     "flicker": false
    }
+  },
+  {
+   "sprite": "@crate",
+   "cell": [
+    8,
+    5
+   ]
+  },
+  {
+   "sprite": "@barrel",
+   "cell": [
+    9,
+    5
+   ]
+  },
+  {
+   "sprite": "@crate",
+   "cell": [
+    10,
+    5
+   ]
+  },
+  {
+   "sprite": "@sack",
+   "cell": [
+    11,
+    6
+   ]
   }
  ],
  "skill_gates": {
@@ -1446,7 +1475,7 @@
     11
    ],
    "display_name": "A Factor-Sealed Bale",
-   "sprite": "crate",
+   "sprite": "invrisil_sealed_bale",
    "present_when": {
     "requires": {
      "cleared_counting_room_guard": 1

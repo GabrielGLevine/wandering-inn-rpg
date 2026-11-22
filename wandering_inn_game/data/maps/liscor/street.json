@@ -1128,14 +1128,20 @@
    "cell": [
     27,
     2
-   ]
+   ],
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   }
   },
   {
    "sprite": "liscor_window_arch",
    "cell": [
     29,
     2
-   ]
+   ],
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   }
   },
   {
    "sprite": "liscor_window_shutter",

@@ -14,7 +14,7 @@ import re
 from pathlib import Path
 from types import MappingProxyType
 
-MATERIAL_FIELDS = ["sheet", "tile_px", "coords", "variants", "tone", "wang_corners", "cap", "face", "fallback_render"]
+MATERIAL_FIELDS = ["sheet", "tile_px", "coords", "variants", "tone", "wang_corners", "cap", "face", "trim", "fallback_render"]
 TWO_32 = 4294967296.0
 NON_PERSON_HEADINGS = {"The PC", "Antinium", "Horns roster note", "Invrisil civilian rigs"}
 # Title/race words that open a heading ("Master Ilvriss", "Gnoll Tribe") but

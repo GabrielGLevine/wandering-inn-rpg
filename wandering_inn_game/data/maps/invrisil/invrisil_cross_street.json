@@ -1,5 +1,4 @@
 {
- "_kits_recompose": "#608 — art-direction read: cross-street lamps/signs/props",
  "biome": "invrisil_street",
  "grid": {
   "width": 22,
@@ -1724,8 +1723,8 @@
    ]
   },
   {
-   "_comment": "#608 final review: the Adventurer's Rest sign is pinned to the blank hanging board. Its observe text says the sign has no name, only cards face down and a hat on a peg, so the pool's coin sign would contradict it. The cards-and-hat sign is on the generation list.",
-   "sprite": "invrisil_hanging_sign",
+   "_comment": "#632: the Adventurer's Rest house sign, pinned to its own art: the observe text names no house name, only cards face down and a hat on a peg.",
+   "sprite": "invrisil_rest_sign",
    "cell": [
     13,
     1
@@ -1753,7 +1752,7 @@
    ]
   },
   {
-   "sprite": "plant_pot",
+   "sprite": "invrisil_planter_urn",
    "cell": [
     18,
     5
@@ -1768,6 +1767,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     2,
     0
@@ -1782,6 +1784,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     5,
     0
@@ -1796,6 +1801,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     8,
     0
@@ -1810,6 +1818,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     11,
     0
@@ -1824,6 +1835,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     14,
     0
@@ -1838,6 +1852,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     17,
     0
@@ -1852,6 +1869,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     20,
     0

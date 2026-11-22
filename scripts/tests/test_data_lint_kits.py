@@ -666,12 +666,13 @@ class TestSharedArtReport(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         line = next(l for l in r.stdout.splitlines() if "REPORT -- kits art:" in l)
         self.assertIn("invrisil_facade_window_1 = window_blue CROSS-REGION [inn, invrisil, riverfarm]", line)
-        # 15 without the overlay (body_a's sheet is bundle-only). #620 R1 added three second ids
+        # 17 without the overlay (body_a's sheet is bundle-only). #620 R1 added three second ids
         # for existing art: bonus_round_table, inn_table_dirty__before (inn art, left registered for
         # the inn conversion; #629 took both off Liscor's maps) and guild_notice_board
-        # (= guild_handbill_wall). #629 adds the Liscor street goblin marker alias (owned public fallback)
-        # and liscor_wall_sconce (the copper sconce at a wall-hung anchor): 16 without the overlay.
-        self.assertRegex(line, r"kits art: 1[67] art identities")
+        # (= guild_handbill_wall). #632 added the deliberate alias invrisil_stove_fallback
+        # (= short_order_range at stove scale). #629 adds the Liscor street goblin marker alias
+        # (owned public fallback) and liscor_wall_sconce (the copper sconce at a wall-hung anchor).
+        self.assertRegex(line, r"kits art: 1[78] art identities")
         self.assertIn("goblin_base = liscor_goblin_lurker (alias) CROSS-REGION", line)
 
 
