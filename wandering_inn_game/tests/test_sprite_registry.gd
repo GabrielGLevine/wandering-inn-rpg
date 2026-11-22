@@ -271,6 +271,9 @@ func _assert_expected_region(sprite_id: String, full_name: String, tex: Texture2
 		return
 	var atlas := tex as AtlasTexture
 	assert(atlas != null, "%s %s should use an atlas texture" % [sprite_id, full_name])
+	# The row layout belongs to the shared goblin sheet; owned goblin rigs use one sheet per facing.
+	if atlas.atlas == null or not atlas.atlas.resource_path.ends_with("goblin-spritesheet.png"):
+		return
 	var expected_y := -1
 	if full_name.ends_with("_down"):
 		expected_y = 0
