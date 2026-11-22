@@ -1,4 +1,5 @@
 {
+ "_kits_recompose": "#632 — re-intake pieces: purple banners flank the cross-street door; a pale urn on the west square's blocked cell (3,8), which had no visible reason",
  "_comment": "Reachable ONLY via the portal contract (data/portals.json's new 'invrisil' row, requires_accomplishment invrisil_attuned, banked by the Guild-board letter beat)",
  "biome": "invrisil_street",
  "camera": {"offset": [0, -3], "margins": [0, 3, 0, 0]},
@@ -1142,6 +1143,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     2,
     0
@@ -1156,6 +1160,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     5,
     0
@@ -1170,6 +1177,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     8,
     0
@@ -1184,6 +1194,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     11,
     0
@@ -1198,6 +1211,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     14,
     0
@@ -1212,6 +1228,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     17,
     0
@@ -1226,6 +1245,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     20,
     0
@@ -1240,6 +1262,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     23,
     0
@@ -1254,6 +1279,9 @@
   },
   {
    "sprite": "@facade_window",
+   "night_glow": {
+    "sprite": "window_glow_warm"
+   },
    "cell": [
     26,
     0
@@ -1285,6 +1313,27 @@
    "cell": [
     25,
     -1
+   ]
+  },
+  {
+   "sprite": "invrisil_banner",
+   "cell": [
+    19,
+    1
+   ]
+  },
+  {
+   "sprite": "invrisil_banner",
+   "cell": [
+    21,
+    1
+   ]
+  },
+  {
+   "sprite": "invrisil_planter_urn",
+   "cell": [
+    3,
+    8
    ]
   }
  ],

@@ -4418,6 +4418,38 @@
    }
   },
   {
+   "script": "invrisil_window_glow_phases",
+   "seed": 9,
+   "fixture": "invrisil_glow_day_edge_start",
+   "note": "#632 window night-state wiring on invrisil_boulevard, no teleports: a day load one action short of dusk (ui_decor_rendered night_glow rows 9 / lit 0), the real step across the threshold (ui_night_glow_rendered lit 9 with no rebuild), dusk and night loads through the pause menu, the door into the cross street off the night boulevard (rows 7 there, the field-reset pin), and a night fight the clock ticks into dawn whose field re-show re-tints the glows",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "invrisil_boulevard",
+     "invrisil_cross_street"
+    ],
+    "fixtures": [
+     "feel_peek_dusk_start",
+     "feel_peek_night_start",
+     "invrisil_glow_day_edge_start",
+     "invrisil_glow_fight_dawn_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "night_phase",
+     "save"
+    ]
+   }
+  },
+  {
    "script": "trader_earn_loop",
    "seed": 9,
    "fixture": "near_trader",
