@@ -371,6 +371,7 @@ CHOICE-LOG keeps the one-line rulings. This is the full text as it stood before 
       authored geometry, and the read passed.
 
 - **G3 regen (#629 Liscor rebuild, before the blind read):** Liscor generic placements 17/101 → 13/159 (16.83% → 8.18%); street 10/60 → 6/93, guild 2/17 → 2/25, runners_guild 2/10 → 2/19, barracks 3/14 → 3/22. No other region moved. Regenerated with `--regen-scene-baseline` on main `7dacb3b3` + #629.
+  - **r1 FIX loop regen (#629, after the first blind read):** the clutter cut and public-fallback swaps moved Liscor generic placements 13/159 → 9/159 (8.18% → 5.66%); street 6/93 → 3/88, guild 2/25 → 2/27, runners_guild 2/19 → 1/21, barracks 3/22 → 3/23. `liscor_waystone` replaced the last Liscor `anchor_waystone`, so that art left the three-region class: invrisil 51 → 50 (25.64%), riverfarm 29 → 28 (23.93%), with no map edit there. The cut also removed these allocation pieces from the street and guild: container#32, container#35, vessel#11, wall_module#24, fence#10, table#22, sign#6; table#38 stays registered and unplaced.
 
 ## Per-region checklist (copy into each region issue)
 

@@ -743,6 +743,7 @@ class TestCommonTierA(unittest.TestCase):
 
 class TestBiomeRows(unittest.TestCase):
     NEW = ["riverfarm_interior", "liscor_civic", "invrisil_shop", "pallass_interior"]
+    LISCOR_RESTYLED = ("fallback_render", "skirt_sheet", "skirt")
 
     def test_rows_copy_inn_sim_and_render_fields(self):
         biomes = json.loads((GAME / "data" / "biomes.json").read_text())
@@ -750,8 +751,14 @@ class TestBiomeRows(unittest.TestCase):
         for bid in self.NEW:
             row = biomes[bid]
             for key in ("footstep_family", "interior_flavor", "fallback_render", "sheet", "tile_px", "floor", "blocked_sheet", "blocked", "blocked_props", "skirt_sheet", "skirt_tile_px", "skirt"):
+                if bid == "liscor_civic" and key in self.LISCOR_RESTYLED:
+                    continue
                 self.assertEqual(row[key], inn[key], f"{bid}.{key}")
             self.assertNotIn("interior_flavor_by_map", row)
+        # #629 restyled liscor_civic's skirt only: the tan city-wall brick, plus a public skirt tone.
+        civic = biomes["liscor_civic"]
+        self.assertEqual((civic["skirt_sheet"], civic["skirt"]), ("res://assets/tiles/cemetery/Walls.png", [14, 2]))
+        self.assertEqual({k: v for k, v in civic["fallback_render"].items() if k != "skirt_tone"}, inn["fallback_render"])
         world = (GAME / "src" / "world" / "world.gd").read_text()
         for bid in self.NEW:
             row = f'"{bid}": {{"preset": "dust_motes", "phase": ["dusk", "night"]}},'
