@@ -11732,7 +11732,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "guild_banner"
+  "fallback_sprite": "liscor_pennant_owned"
  },
  "liscor_banner_watch": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Dungeon_Props.png region [64, 64, 16, 32] sheet sha256 19f43283d200; wired by tools/wire_asset.py",
@@ -11759,7 +11759,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "guild_banner"
+  "fallback_sprite": "liscor_pennant_owned"
  },
  "liscor_door_civic": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Dungeon_Props.png region [112, 0, 16, 32] sheet sha256 19f43283d200; wired by tools/wire_asset.py",
@@ -12429,7 +12429,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "camp_weapon_rack_owned"
+  "fallback_sprite": "common_crate_braced"
  },
  "liscor_shield_round": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [129, 272, 14, 16] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
@@ -12456,7 +12456,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "camp_weapon_rack_owned"
+  "fallback_sprite": "common_crate_braced"
  },
  "liscor_quill": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Esoteric.png region [16, 112, 16, 16] sheet sha256 a45dfec687b0; wired by tools/wire_asset.py",
@@ -12861,7 +12861,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "owned_fallback_shelf_bottles"
+  "fallback_sprite": "crate_owned"
  },
  "liscor_drawers": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png region [160, 104, 16, 24] sheet sha256 e6ce1e2bbc30; wired by tools/wire_asset.py",
@@ -12888,7 +12888,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "crate_owned"
+  "fallback_sprite": "common_crate_braced"
  },
  "liscor_cabinet": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png region [720, 73, 16, 23] sheet sha256 a9455be5f7d6; wired by tools/wire_asset.py",
@@ -12915,7 +12915,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "crate_owned"
+  "fallback_sprite": "common_crate_lowwide"
  },
  "liscor_locker": {
   "_comment": "slice of potential_assets/Pixel Crawler - Hideout 1.0/Pixel Crawler - Hideout/Assets/Tiles.png region [352, 96, 32, 32] sheet sha256 40bce7b26eb3; wired by tools/wire_asset.py",
@@ -12996,7 +12996,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "camp_weapon_rack_owned"
+  "fallback_sprite": "common_crate_braced"
  },
  "liscor_cot": {
   "_comment": "slice of potential_assets/Pixel Crawler - Hideout 1.0/Pixel Crawler - Hideout/Assets/Tiles.png region [272, 48, 32, 48] sheet sha256 40bce7b26eb3; wired by tools/wire_asset.py",
@@ -13077,7 +13077,7 @@
     "fps": 1
    }
   },
-  "fallback_sprite": "request_board"
+  "fallback_sprite": "note_pinned"
  },
  "liscor_scatter_bush_low": {
   "_comment": "slice of potential_assets/Pixel Crawler - Free Pack/Environment/Structures/Buildings/Props.png region [50, 154, 28, 17] sheet sha256 d8dacb0e07d8; wired by tools/wire_asset.py",
@@ -13656,6 +13656,25 @@
     ],
     "fps": 1,
     "sheet": "res://assets/sprites/window_glow_warm/Idle-Sheet.png"
+   }
+  }
+ },
+ "liscor_pennant_owned": {
+  "_comment": "#629 r4: owned brick-red recolour of guild_banner; the public fallback for Liscor's pennants (the white banner read as a lit doorway). Provenance in v019-owned-art-provenance.txt.",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   0.9688
+  ],
+  "shadow": false,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/liscor_pennant_owned/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     64
+    ],
+    "fps": 1
    }
   }
  }

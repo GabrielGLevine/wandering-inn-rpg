@@ -16,6 +16,7 @@
   "bat": "generic",
   "bed": "generic",
   "bench": "regional",
+  "bonus_round_table": "regional",
   "boulder": "generic",
   "briar_collector": "regional",
   "briar_collector_deep": "regional",
@@ -212,7 +213,6 @@
   "liscor_clay_jar_slim": "regional",
   "liscor_clay_jar_tall": "regional",
   "liscor_door_barracks": "regional",
-  "liscor_door_yard": "regional",
   "liscor_drawers": "regional",
   "liscor_duty_table": "regional",
   "liscor_facade_brick": "regional",
@@ -480,8 +480,8 @@
    "placements": 211
   },
   "liscor": {
-   "generic_placements": 10,
-   "generic_share_pct": 6.8,
+   "generic_placements": 11,
+   "generic_share_pct": 7.59,
    "maps": {
     "barracks": {
      "generic_placements": 3,
@@ -489,18 +489,18 @@
     },
     "guild": {
      "generic_placements": 2,
-     "placements": 26
+     "placements": 24
     },
     "runners_guild": {
      "generic_placements": 2,
      "placements": 18
     },
     "street": {
-     "generic_placements": 3,
+     "generic_placements": 4,
      "placements": 85
     }
    },
-   "placements": 147
+   "placements": 145
   },
   "pallass": {
    "generic_placements": 25,

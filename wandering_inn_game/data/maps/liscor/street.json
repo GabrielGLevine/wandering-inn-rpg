@@ -72,7 +72,7 @@
  ],
  "blocked": [
   [
-   7,
+   6,
    1
   ],
   [
@@ -1448,7 +1448,7 @@
   {
    "sprite": "basket_stack",
    "cell": [
-    7,
+    6,
     1
    ]
   }
@@ -2238,7 +2238,7 @@
     17
    ],
    "display_name": "Dark Cellar",
-   "sprite": "liscor_door_yard",
+   "sprite": "door",
    "observe": "A plain door with dark behind it. Something heavy came across the sill, and the scuff-marks in the dust all point inward.",
    "requires_skill": "light",
    "skill_hint_toast": "Pitch black past the first step. You'd need a light that travels with you.",

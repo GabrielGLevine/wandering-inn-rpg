@@ -58,14 +58,6 @@
    9
   ],
   [
-   3,
-   8
-  ],
-  [
-   4,
-   8
-  ],
-  [
    1,
    10
   ],
@@ -310,14 +302,14 @@
    ]
   },
   {
-   "sprite": "liscor_runners_desk",
+   "sprite": "bonus_round_table",
    "cell": [
     13,
     6
    ]
   },
   {
-   "sprite": "liscor_runners_desk",
+   "sprite": "bonus_round_table",
    "cell": [
     12,
     9
@@ -363,20 +355,6 @@
    "cell": [
     13,
     9
-   ]
-  },
-  {
-   "sprite": "liscor_runners_desk",
-   "cell": [
-    3,
-    8
-   ]
-  },
-  {
-   "sprite": "liscor_chair",
-   "cell": [
-    4,
-    8
    ]
   },
   {

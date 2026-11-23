@@ -711,7 +711,7 @@ common_crate_lowwide/Idle-Sheet.png: owned PixelLab generation ce234f65-d2ca-457
 
 common_crate_braced/Idle-Sheet.png: owned PixelLab generation ed98a1ec-8da6-4f06-a743-36788b69f442; source potential_assets/pixellab_2026-10-10/crate_braced_v1/img_00.png; copied unchanged; canvas 16x24; frames 1 of 16x24; alpha (0, 0, 15, 23); feet anchor [0.5, 0.9583]; sha256 d89b034224e18bac4c6f83eeaae81a30ed609ccd6c465ea23e2c5f6f8dc41595; wired by tools/wire_asset.py.
 
-liscor_gate_arch/arch.png: derived from the owned GH#184 PixelLab city_gate_arch/arch.png (no vendor pixels): its luminance gradient-mapped onto colour values sampled from the Cemetery Walls tan brick cells (12-17,0-4) (RGB values only), warmed (R x1.12, B x0.80); saturated non-blue accents kept; 64x96; sha256 b1f4fce0fd98190c7dc417dddf7747a10c9e1538c464f1bcd7e4f62174aa463f; recoloured by script for #629 (decision 1).
+liscor_gate_arch/arch.png: derived from the owned GH#184 PixelLab city_gate_arch/arch.png (no vendor pixels): its luminance gradient-mapped onto colour values sampled from the Cemetery Walls tan brick cells (12-17,0-4) (RGB values only), warmed (R x1.12, B x0.80); saturated non-blue accents kept; 64x96; sha256 ff8615d85d9b6f57394cf2e00c50bf79e93aaf0e6ea5811bd76b2c97083d9b0f; recoloured by script for #629 (decision 1).
 
 goblin_raider_field_owned/Idle_Down-Sheet.png: owned PixelLab generation 7be8ec3a-b3ab-443b-85e8-a30fd2ef4c2c (goblin_raider rig, harvest 2026-10); source potential_assets/pixellab_harvest_2026-10/L3a_rigs/goblin_raider/7be8ec3a-b3ab-443b-85e8-a30fd2ef4c2c/Idle/animations; frames cropped to the union alpha box (16,2)-(82,91) of idle and walk and laid out as a strip; frames of 66x89; sha256 f6ab1f3553fca9c7bda35ed665a45c87df77871b4c5c3252613660d411a9255a; assembled by script for #629.
 
@@ -750,3 +750,7 @@ invrisil_glass_owned/Idle-Sheet.png: owned procedural pixel art (#632 review rou
 invrisil_tube_rack_owned/Idle-Sheet.png: owned procedural pixel art (#632 review round): a two-rail wooden rack holding three stoppered vials, drawn from a character grid by a Python script (no vendor pixels read); public fallback for invrisil_tube_rack; canvas 13x10; frames 1 of 13x10; alpha (0, 0, 13, 10); anchor [0.5, 1.0]; sha256 38d12bc0a5eb9ca791091c8cf936c079e434ce15b872061f3ed666a2dbce116e.
 
 invrisil_bell_jar_owned/Idle-Sheet.png: owned procedural pixel art (#632 review round): a glass bell jar on a wooden base over a green specimen, drawn from a character grid by a Python script (no vendor pixels read); public fallback for invrisil_bell_jar; canvas 7x13; frames 1 of 7x13; alpha (0, 0, 7, 13); anchor [0.5, 1.0]; sha256 e845a83b8ee5bc6fc457c06fd0270b809231a455d37046c35af3be4cdf6a1d5e.
+
+liscor_gate_arch/arch.png (#629 r4): every RGB value scaled by 0.85 so the arch takes the night grade no brighter than the grey original; sha256 ff8615d85d9b6f57394cf2e00c50bf79e93aaf0e6ea5811bd76b2c97083d9b0f
+
+liscor_pennant_owned/Idle-Sheet.png: derived from the owned invrisil/guild_banner_v2.png (no vendor pixels): its luminance mapped onto a mid-value brick red (R x0.62, G x0.27, B x0.20); canvas 32x64; frames 1 of 32x64; sha256 574d9263ea70be5b96c8846869eb4448c93fb00b2956afb7a5730ca9cedbee12; the public fallback for Liscor's Watch and Runners' pennants (#629 r4)
