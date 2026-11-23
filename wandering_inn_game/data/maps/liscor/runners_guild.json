@@ -414,7 +414,7 @@
       "counter": "lit_the_runners_hearth",
       "at": 1
      },
-     "sprite": "liscor_bread_oven",
+     "sprite": "hearth",
      "light": {
       "color": [
        1.0,
@@ -499,5 +499,5 @@
    ]
   }
  ],
- "_kits_recompose": "#629 — Liscor rebuild: sorting shelf, peg rail and pack, desk with ledger, a parcel crate and a lit sconce"
+ "_kits_recompose": "#629 — Liscor rebuild: sorting shelf, desk with ledger, drawers, a parcel crate and a wall sconce"
 }

@@ -360,7 +360,7 @@
      }
     },
     "wall_city": {
-     "_comment": "#629 decision 1: Liscor's tan sandstone-brick city wall, Cemetery Walls (12-17,0-12) (bundled; the dungeon uses only columns 0-11). Face = brick course (14,2), cap = capped top course (14,1). Public fallback is the owned GH#184 city wall. r1 read: warmed toward sandstone with a tone (the muted tan read cold beside the cobble).",
+     "_comment": "#629 decision 1: Liscor's tan sandstone-brick city wall, Cemetery Walls (12-17,0-12) (bundled; the dungeon uses only columns 0-11). Face = brick course (14,2), cap = the same brick course (14,2): the capped top course (14,1) read as speckle noise (r3). Public fallback is the owned GH#184 city wall. r1 read: warmed toward sandstone with a tone (the muted tan read cold beside the cobble).",
      "sheet": "res://assets/tiles/cemetery/Walls.png",
      "tile_px": 16,
      "cap": [
@@ -467,7 +467,7 @@
      }
     },
     "wall_city_ledge": {
-     "_comment": "#629: an east-west run of the tan city-wall brick seen from the top (cap-only, e.g. an interior's south wall): the capped top course (14,1).",
+     "_comment": "#629: an east-west run of the tan city-wall brick seen from the top (cap-only, e.g. an interior's south wall): the plain brick course (14,2), as wall_city's cap.",
      "sheet": "res://assets/tiles/cemetery/Walls.png",
      "tile_px": 16,
      "cap": [
