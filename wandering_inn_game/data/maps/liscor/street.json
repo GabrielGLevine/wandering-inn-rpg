@@ -1,6 +1,6 @@
 {
  "biome": "street",
- "camera": {"offset": [0, -1], "margins": [0, 2, 0, 1]},
+ "camera": {"offset": [0, 0], "margins": [0, 1, 0, 1]},
  "_kits_recompose": "#629 — Liscor identity rebuild: tan brick city wall and gate, earth base floor, brick-footed facades, market stalls and dressing from the allocation, dray rank and wood yard",
  "interior_flavor": [
   "Nothing there. A Drake shoulders past you without slowing.",
@@ -58,14 +58,6 @@
    1
   ],
   [
-   4,
-   2
-  ],
-  [
-   6,
-   2
-  ],
-  [
    9,
    1
   ],
@@ -79,6 +71,10 @@
   ]
  ],
  "blocked": [
+  [
+   7,
+   1
+  ],
   [
    2,
    1
@@ -344,18 +340,6 @@
    1
   ],
   [
-   5,
-   2
-  ],
-  [
-   4,
-   2
-  ],
-  [
-   6,
-   2
-  ],
-  [
    8,
    1
   ],
@@ -373,10 +357,6 @@
   ],
   [
    20,
-   1
-  ],
-  [
-   25,
    1
   ],
   [
@@ -463,11 +443,11 @@
    },
    "tone": {
     "base": [
-     0.78,
-     0.52,
-     0.27
+     0.74,
+     0.58,
+     0.38
     ],
-    "detail": 0.62
+    "detail": 0.45
    }
   },
   {
@@ -514,11 +494,11 @@
    },
    "tone": {
     "base": [
-     0.78,
-     0.52,
-     0.27
+     0.74,
+     0.58,
+     0.38
     ],
-    "detail": 0.62
+    "detail": 0.45
    }
   },
   {
@@ -565,11 +545,11 @@
    },
    "tone": {
     "base": [
-     0.78,
-     0.52,
-     0.27
+     0.74,
+     0.58,
+     0.38
     ],
-    "detail": 0.62
+    "detail": 0.45
    }
   },
   {
@@ -644,11 +624,11 @@
    },
    "tone": {
     "base": [
-     0.78,
-     0.52,
-     0.27
+     0.74,
+     0.58,
+     0.38
     ],
-    "detail": 0.62
+    "detail": 0.45
    }
   },
   {
@@ -697,6 +677,215 @@
       0.45,
       0.31,
       0.19
+     ],
+     "detail": 0.3
+    }
+   }
+  },
+  {
+   "_pick": "South-district square where the side street widens (Watch-fire plaza; restored in #629 r3, toned with the street band)",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     2
+    ]
+   ],
+   "cells": {
+    "rect": [
+     12,
+     10,
+     5,
+     3
+    ]
+   },
+   "tone": {
+    "base": [
+     0.74,
+     0.58,
+     0.38
+    ],
+    "detail": 0.45
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+    "tile_px": 16,
+    "coords": [
+     0,
+     3
+    ],
+    "tone": {
+     "base": [
+      0.55,
+      0.44,
+      0.32
+     ],
+     "detail": 0.3
+    }
+   }
+  },
+  {
+   "_pick": "#629 r3: wall-base shadow, the earth a step darker along the city wall's foot.",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     11,
+     11
+    ],
+    [
+     12,
+     11
+    ],
+    [
+     13,
+     11
+    ]
+   ],
+   "cells": {
+    "rect": [
+     9,
+     1,
+     15,
+     1
+    ]
+   },
+   "tone": {
+    "base": [
+     0.3,
+     0.2,
+     0.1
+    ],
+    "detail": 0.55
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+    "tile_px": 16,
+    "coords": [
+     2,
+     1
+    ],
+    "tone": {
+     "base": [
+      0.36,
+      0.25,
+      0.15
+     ],
+     "detail": 0.3
+    }
+   }
+  },
+  {
+   "_pick": "#629 r3: wall-base shadow over the plaza and forecourt slabs.",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     2
+    ],
+    [
+     18,
+     2
+    ]
+   ],
+   "cells": {
+    "list": [
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      1
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      5,
+      1
+     ],
+     [
+      6,
+      1
+     ],
+     [
+      7,
+      1
+     ],
+     [
+      8,
+      1
+     ],
+     [
+      24,
+      1
+     ],
+     [
+      25,
+      1
+     ],
+     [
+      26,
+      1
+     ],
+     [
+      27,
+      1
+     ],
+     [
+      28,
+      1
+     ],
+     [
+      29,
+      1
+     ],
+     [
+      30,
+      1
+     ],
+     [
+      31,
+      1
+     ]
+    ]
+   },
+   "tone": {
+    "base": [
+     0.56,
+     0.43,
+     0.28
+    ],
+    "detail": 0.45
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+    "tile_px": 16,
+    "coords": [
+     0,
+     3
+    ],
+    "tone": {
+     "base": [
+      0.44,
+      0.35,
+      0.26
      ],
      "detail": 0.3
     }
@@ -1072,13 +1261,6 @@
    ]
   },
   {
-   "sprite": "liscor_stall_butcher",
-   "cell": [
-    5,
-    2
-   ]
-  },
-  {
    "sprite": "liscor_bread_oven",
    "cell": [
     8,
@@ -1130,7 +1312,7 @@
     2
    ],
    "night_glow": {
-    "sprite": "window_glow_warm"
+    "sprite": "liscor_window_glow"
    }
   },
   {
@@ -1140,7 +1322,7 @@
     2
    ],
    "night_glow": {
-    "sprite": "window_glow_warm"
+    "sprite": "liscor_window_glow"
    }
   },
   {
@@ -1172,13 +1354,6 @@
    ]
   },
   {
-   "sprite": "liscor_brick_panel",
-   "cell": [
-    25,
-    1
-   ]
-  },
-  {
    "sprite": "liscor_stall_counter",
    "cell": [
     24,
@@ -1200,21 +1375,7 @@
    ]
   },
   {
-   "sprite": "liscor_cabbage",
-   "cell": [
-    24,
-    10
-   ]
-  },
-  {
    "sprite": "liscor_carrot",
-   "cell": [
-    25,
-    10
-   ]
-  },
-  {
-   "sprite": "liscor_tomato",
    "cell": [
     25,
     10
@@ -1283,16 +1444,21 @@
     19,
     9
    ]
+  },
+  {
+   "sprite": "basket_stack",
+   "cell": [
+    7,
+    1
+   ]
   }
  ],
  "scatter": [
   {
    "pool": [
-    "liscor_scatter_grass_tuft",
-    "liscor_scatter_leaf_tuft",
-    "liscor_scatter_sprout",
-    "liscor_scatter_straw_wisp",
-    "liscor_scatter_leafy"
+    "grass_tuft",
+    "pebble",
+    "flower_tiny"
    ],
    "density": 0.03,
    "cluster": 0.7,
@@ -1814,7 +1980,7 @@
     11
    ],
    "display_name": "Sewer Grate",
-   "sprite": "owned_fallback_sewer_grate",
+   "sprite": "sewer_grate",
    "observe": "Rust holds the bars, not a lock. The draft coming up through them is steady and cold, and it carries the sound of water moving somewhere further in.",
    "visual_states": [
     {
@@ -2176,7 +2342,7 @@
    "id": "antinium_worker_a",
    "kind": "npc",
    "cell": [
-    25,
+    24,
     3
    ],
    "display_name": "Antinium Worker",

@@ -56,7 +56,7 @@
    "payload_contains": {
     "map": "street",
     "floor_cells": 640,
-    "blocked_cells": 134
+    "blocked_cells": 131
    }
   },
   {
@@ -305,7 +305,7 @@
    "payload_contains": {
     "map": "barracks",
     "floor_cells": 112,
-    "blocked_cells": 46
+    "blocked_cells": 43
    },
    "timeout_sec": 5
   },
@@ -789,7 +789,7 @@
    "payload_contains": {
     "map": "street",
     "floor_cells": 640,
-    "blocked_cells": 134
+    "blocked_cells": 131
    },
    "timeout_sec": 5
   },

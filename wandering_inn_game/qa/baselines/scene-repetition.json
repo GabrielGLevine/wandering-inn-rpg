@@ -12,6 +12,7 @@
   "arrow_quiver": "regional",
   "bar_counter": "regional",
   "barrel": "generic",
+  "basket_stack": "regional",
   "bat": "generic",
   "bed": "generic",
   "bench": "regional",
@@ -197,7 +198,6 @@
   "library_shelf": "generic",
   "liscor_banner_runners": "regional",
   "liscor_banner_watch": "regional",
-  "liscor_barracks_bench": "regional",
   "liscor_basket_stack": "regional",
   "liscor_bench": "regional",
   "liscor_bench_plank": "regional",
@@ -205,15 +205,12 @@
   "liscor_bracket_lantern": "regional",
   "liscor_bread_oven": "regional",
   "liscor_bread_stall": "regional",
-  "liscor_brick_panel": "regional",
-  "liscor_cabbage": "regional",
   "liscor_cabinet": "regional",
   "liscor_carrot": "regional",
   "liscor_chair": "regional",
   "liscor_clay_jar": "regional",
   "liscor_clay_jar_slim": "regional",
   "liscor_clay_jar_tall": "regional",
-  "liscor_cot": "regional",
   "liscor_door_barracks": "regional",
   "liscor_door_yard": "regional",
   "liscor_drawers": "regional",
@@ -236,9 +233,6 @@
   "liscor_produce_greens": "regional",
   "liscor_produce_pale": "regional",
   "liscor_quill": "regional",
-  "liscor_reading_table": "regional",
-  "liscor_red_book": "regional",
-  "liscor_runner_pack": "regional",
   "liscor_runners_desk": "regional",
   "liscor_scatter_broadleaf": "regional",
   "liscor_scatter_bush_low": "regional",
@@ -246,13 +240,10 @@
   "liscor_scroll": "regional",
   "liscor_shield_round": "regional",
   "liscor_sorting_shelf": "regional",
-  "liscor_stall_butcher": "regional",
   "liscor_stall_counter": "regional",
   "liscor_stall_tray": "regional",
   "liscor_sword_laid": "regional",
-  "liscor_tomato": "regional",
   "liscor_wall_sconce": "regional",
-  "liscor_watch_crest": "regional",
   "liscor_watch_guard": "regional",
   "liscor_water_barrel": "regional",
   "liscor_waystone": "regional",
@@ -280,7 +271,6 @@
   "olesm": "regional",
   "owned_fallback_campfire": "regional",
   "owned_fallback_library_desk": "regional",
-  "owned_fallback_sewer_grate": "regional",
   "owned_fallback_table_brown": "regional",
   "pallass_billet_rack": "regional",
   "pallass_rail_post": "regional",
@@ -331,6 +321,7 @@
   "sconce": "generic",
   "scree_spill": "regional",
   "selys": "regional",
+  "sewer_grate": "regional",
   "shaft_ladder": "regional",
   "shelf_bottles": "generic",
   "shield_spider": "regional",
@@ -490,26 +481,26 @@
   },
   "liscor": {
    "generic_placements": 10,
-   "generic_share_pct": 6.37,
+   "generic_share_pct": 6.8,
    "maps": {
     "barracks": {
      "generic_placements": 3,
-     "placements": 22
+     "placements": 18
     },
     "guild": {
      "generic_placements": 2,
-     "placements": 27
+     "placements": 26
     },
     "runners_guild": {
      "generic_placements": 2,
-     "placements": 20
+     "placements": 18
     },
     "street": {
      "generic_placements": 3,
-     "placements": 88
+     "placements": 85
     }
    },
-   "placements": 157
+   "placements": 147
   },
   "pallass": {
    "generic_placements": 25,

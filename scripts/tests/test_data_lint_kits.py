@@ -666,13 +666,14 @@ class TestSharedArtReport(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         line = next(l for l in r.stdout.splitlines() if "REPORT -- kits art:" in l)
         self.assertIn("invrisil_facade_window_1 = window_blue CROSS-REGION [inn, invrisil, riverfarm]", line)
-        # 17 without the overlay (body_a's sheet is bundle-only). #620 R1 added three second ids
+        # One fewer without the overlay (body_a's sheet is bundle-only). #620 R1 added three second ids
         # for existing art: bonus_round_table, inn_table_dirty__before (inn art, left registered for
         # the inn conversion; #629 took both off Liscor's maps) and guild_notice_board
         # (= guild_handbill_wall). #632 added the deliberate alias invrisil_stove_fallback
         # (= short_order_range at stove scale). #629 adds the Liscor street goblin marker alias
-        # (owned public fallback) and liscor_wall_sconce (the copper sconce at a wall-hung anchor).
-        self.assertRegex(line, r"kits art: 1[78] art identities")
+        # (owned public fallback), liscor_wall_sconce (the copper sconce at a wall-hung anchor) and
+        # liscor_window_glow (the window glow at the arch pane's scale): 18 without the overlay.
+        self.assertRegex(line, r"kits art: 1[89] art identities")
         self.assertIn("goblin_base = liscor_goblin_lurker (alias) CROSS-REGION", line)
 
 
@@ -745,7 +746,6 @@ class TestCommonTierA(unittest.TestCase):
 
 class TestBiomeRows(unittest.TestCase):
     NEW = ["riverfarm_interior", "liscor_civic", "invrisil_shop", "pallass_interior"]
-    LISCOR_RESTYLED = ("fallback_render", "skirt_sheet", "skirt")
 
     def test_rows_copy_inn_sim_and_render_fields(self):
         biomes = json.loads((GAME / "data" / "biomes.json").read_text())
@@ -753,14 +753,8 @@ class TestBiomeRows(unittest.TestCase):
         for bid in self.NEW:
             row = biomes[bid]
             for key in ("footstep_family", "interior_flavor", "fallback_render", "sheet", "tile_px", "floor", "blocked_sheet", "blocked", "blocked_props", "skirt_sheet", "skirt_tile_px", "skirt"):
-                if bid == "liscor_civic" and key in self.LISCOR_RESTYLED:
-                    continue
                 self.assertEqual(row[key], inn[key], f"{bid}.{key}")
             self.assertNotIn("interior_flavor_by_map", row)
-        # #629 restyled liscor_civic's skirt only: the tan city-wall brick, plus a public skirt tone.
-        civic = biomes["liscor_civic"]
-        self.assertEqual((civic["skirt_sheet"], civic["skirt"]), ("res://assets/tiles/cemetery/Walls.png", [14, 2]))
-        self.assertEqual({k: v for k, v in civic["fallback_render"].items() if k != "skirt_tone"}, inn["fallback_render"])
         world = (GAME / "src" / "world" / "world.gd").read_text()
         for bid in self.NEW:
             row = f'"{bid}": {{"preset": "dust_motes", "phase": ["dusk", "night"]}},'
