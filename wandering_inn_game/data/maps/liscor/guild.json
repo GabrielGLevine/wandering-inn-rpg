@@ -1,6 +1,6 @@
 {
  "biome": "liscor_civic",
- "_kits_recompose": "#620 — art-read FIX loop 1: notice wall and Ilvo cells",
+ "_kits_recompose": "#629 — Liscor rebuild: back-wall cabinet, drawers and chalk board, plank bench, planters; the two round member tables are main's",
  "interior_flavor": [
   "Nothing there. The floorboard in front of the desk is walked pale, chalk dust in the grain.",
   "Nothing there. Somewhere behind the desk a drawer shuts."
@@ -40,6 +40,30 @@
   [
    12,
    9
+  ],
+  [
+   14,
+   3
+  ],
+  [
+   14,
+   4
+  ],
+  [
+   5,
+   9
+  ],
+  [
+   13,
+   9
+  ],
+  [
+   1,
+   10
+  ],
+  [
+   14,
+   10
   ]
  ],
  "floor_layers": [
@@ -216,7 +240,7 @@
  "_comment_lights": "v0.17 R2: the hall had ZERO light sources. `sconce` is not in the `inn` biome's blocked_props, so blocked_cells stays 57 (unchanged).",
  "decor": [
   {
-   "sprite": "liscor_sconce_copper",
+   "sprite": "liscor_wall_sconce",
    "cell": [
     4,
     1
@@ -233,7 +257,7 @@
    }
   },
   {
-   "sprite": "liscor_sconce_copper",
+   "sprite": "liscor_wall_sconce",
    "cell": [
     11,
     1
@@ -296,6 +320,55 @@
    "cell": [
     14,
     6
+   ]
+  },
+  {
+   "sprite": "liscor_cabinet",
+   "cell": [
+    14,
+    3
+   ]
+  },
+  {
+   "sprite": "liscor_drawers",
+   "cell": [
+    14,
+    4
+   ]
+  },
+  {
+   "sprite": "liscor_board_chalk",
+   "cell": [
+    12,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_bench_plank",
+   "cell": [
+    5,
+    9
+   ]
+  },
+  {
+   "sprite": "stool_owned",
+   "cell": [
+    13,
+    9
+   ]
+  },
+  {
+   "sprite": "liscor_planter_shrub",
+   "cell": [
+    1,
+    10
+   ]
+  },
+  {
+   "sprite": "liscor_planter_shrub",
+   "cell": [
+    14,
+    10
    ]
   }
  ],
@@ -583,11 +656,6 @@
    ],
    "display_name": "A Forgotten Gear Stash",
    "sprite": "crate_owned",
-   "tint": [
-    0.45,
-    0.38,
-    0.3
-   ],
    "observe": "A crate shoved against the back wall, half-buried under a spill of unclaimed kit.",
    "contains": [
     "renns_warhammer"

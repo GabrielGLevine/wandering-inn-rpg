@@ -17,6 +17,22 @@
   [
    6,
    2
+  ],
+  [
+   8,
+   6
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   1,
+   3
   ]
  ],
  "floor_layers": [
@@ -199,10 +215,81 @@
    ]
   },
   {
-   "sprite": "liscor_bench",
+   "sprite": "liscor_wall_sconce",
+   "cell": [
+    3,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.72,
+     0.38
+    ],
+    "energy": 0.85,
+    "radius": 34,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "@crate",
+   "cell": [
+    8,
+    6
+   ]
+  },
+  {
+   "sprite": "liscor_sorting_shelf",
+   "cell": [
+    4,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_papers",
+   "cell": [
+    4,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_scroll",
+   "cell": [
+    6,
+    2
+   ]
+  },
+  {
+   "sprite": "liscor_runners_desk",
+   "cell": [
+    3,
+    4
+   ]
+  },
+  {
+   "sprite": "liscor_ledger",
+   "cell": [
+    3,
+    4
+   ],
+   "tint": [
+    0.72,
+    0.66,
+    0.56
+   ]
+  },
+  {
+   "sprite": "liscor_drawers",
    "cell": [
     1,
-    5
+    3
+   ]
+  },
+  {
+   "sprite": "liscor_quill",
+   "cell": [
+    1,
+    3
    ]
   }
  ],
@@ -411,5 +498,6 @@
     }
    ]
   }
- ]
+ ],
+ "_kits_recompose": "#629 — Liscor rebuild: sorting shelf, desk with ledger, drawers, a parcel crate and a wall sconce"
 }

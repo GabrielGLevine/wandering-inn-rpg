@@ -666,12 +666,17 @@ class TestSharedArtReport(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         line = next(l for l in r.stdout.splitlines() if "REPORT -- kits art:" in l)
         self.assertIn("invrisil_facade_window_1 = window_blue CROSS-REGION [inn, invrisil, riverfarm]", line)
-        # 14 without the overlay (body_a's sheet is bundle-only). #620 R1 added three second ids
-        # for existing art: bonus_round_table, inn_table_dirty__before (inn art, a follow-up for
-        # the inn conversion) and guild_notice_board (= guild_handbill_wall). #632 added the
-        # deliberate alias invrisil_stove_fallback (= short_order_range at stove scale).
-        self.assertRegex(line, r"kits art: 1[56] art identities")
+        # One fewer without the overlay (body_a's sheet is bundle-only). #620 R1 added three second ids
+        # for existing art: bonus_round_table, inn_table_dirty__before (inn art) and guild_notice_board
+        # (= guild_handbill_wall). #629 took inn_table_dirty__before off Liscor's maps; bonus_round_table
+        # is back on two guild cells (every Liscor table read worse there; #651), so it stays cross-region.
+        # #632 added the deliberate alias invrisil_stove_fallback (= short_order_range at stove scale).
+        # #629 adds three deliberate aliases: the street goblin marker (owned public fallback),
+        # liscor_wall_sconce (wall-hung anchor) and liscor_window_glow (arch-pane scale).
+        self.assertRegex(line, r"kits art: 1[89] art identities")
         self.assertIn("bonus_round_table = inn_round_table CROSS-REGION [inn, liscor]", line)
+        self.assertRegex(line, r"inn_table_dirty__before = inn_table_soiled(;|$)")
+        self.assertIn("goblin_base = liscor_goblin_lurker (alias) CROSS-REGION", line)
 
 
 def kl_hasher_missing():

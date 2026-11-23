@@ -584,6 +584,8 @@ Same rules as above: a piece allocated to one region moves only with a `docs/CHO
 | sign#6 | `Pixel Crawler - Free Pack/Interior_Props_01/Interior_Props_01__x194_y264_w28_h19.png` | `Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png` | `notice_board` | 28x19 | yes | Blank framed board: the guild board wall |
 | sign#7 | `Pixel Crawler - Free Pack/Interior_Props_01/Interior_Props_01__x226_y264_w28_h19.png` | `Pixel Crawler - Free Pack/Environment/Structures/Buildings/Interior/Interior_Props_01.png` | `request_board` | 28x19 | yes | Same board with chalk writing: posted requests |
 
+#629 adds one unlisted piece to Liscor: the Building_Walls brick-footed plaster run [480,192,96,48] (bundled), wired as `liscor_facade_brick` for decision 1's brick ground storey. The Invrisil scene plan also named it; it stays Liscor's. Placement and skip rulings: rollout plan R1, "#629 rulings".
+
 ### Invrisil (48)
 
 | tag | slice (under `potential_assets/_sliced/`) | source sheet (under `potential_assets/`) | role | size | bundled | reason |

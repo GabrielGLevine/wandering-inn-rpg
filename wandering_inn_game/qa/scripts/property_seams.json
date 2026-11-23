@@ -583,6 +583,15 @@
    "timeout_sec": 5
   },
   {
+   "action": "wait_frames",
+   "frames": 20
+  },
+  {
+   "_comment": "#629: the lit state is main's hearth; r1 had left it on the street's bread oven. Windowed-only evidence.",
+   "action": "screenshot",
+   "name": "runners_hearth_lit"
+  },
+  {
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
