@@ -11,24 +11,22 @@ archived, or superseded session blocks.
 
 - **Regional kits (#606).** User, 2026-10-08: "write all plans and execute without further approval".
   - Spec: `docs/superpowers/specs/2026-10-08-regional-kits-design.md`. Plans: `docs/superpowers/plans/2026-10-08-regional-kits-*.md`.
-  - Ledger: `.superpowers/sdd/2026-10-08-regional-kits-rollout/progress.md`.
   - Rules:
     - Pool first, starting from `docs/kits-allocation.md`; gaps go to `docs/art-generation-list.md`.
     - A region closes only on a blind Fable read (§5.2). Read dusk/night views when ambience is phase-gated.
     - G2 counts art identity (#625): a regional pin must be exclusive *art*, not just a new sprite id.
-  - Done: #607 (PR #609); #608 Invrisil (PRs #614, #619); #621 bundle-v8 + allocation (PR #622); #623 art-identity G2/G3 + `_common` guardrails (PR #625); #624 intake coverage (PR #626); 31-kind labels (PR #627); re-intake allocation, 618 pieces (PR #628); **#620 Liscor R1 (PR #630, `56dd2573`; G2 art: Liscor 68.83%, Invrisil 56.92%)**. Fetch bundle-v9 (Latest) before QA in main (`scripts/fetch_private_assets.sh`).
+  - Done: #607 (PR #609); #608 Invrisil (PRs #614, #619); #621 bundle-v8 + allocation (PR #622); #623 art-identity G2/G3 + `_common` guardrails (PR #625); #624 intake coverage (PR #626); 31-kind labels (PR #627); re-intake allocation, 618 pieces (PR #628); #620 Liscor R1 (PR #630); bundle-v9 + owned #610 sprites (PR #639); #631 `_common` pools (PR #640). Fetch bundle-v9 (Latest) before QA in main (`scripts/fetch_private_assets.sh`).
   - User decisions, 2026-10-09 (CHOICE-LOG): all four design-led cuts are YES for now (Liscor sandstone-brick wall/gate + brick ground storey + shingle roofs from existing art; window night-glow overlay; Pallass lamp = `crystal_lamp` + glow cone; Invrisil alley workbench -> cargo-yard cluster). Earlier rulings: global allocation; `_common` Tier A utility props only, 30% cap; design-led gap pass before any generation.
-  - 2026-10-11 state (user: "finish #639; see how much of #631/#629/#632 lands; keep the repo stable"):
-    - **#639 MERGED** (`403b26ee`): bundle-v9 manifest, plus owned `stool_owned`, `lamp_wall_cold_owned`, `door_street_townhouse_owned` and `antinium_worker_owned` (registered only). The PixelLab batch `potential_assets/pixellab_2026-10-10/` (README + MANIFEST) is archived as `potential-assets-v2` part5.
-    - **#631, PR #640:** `_common` barrel, sack and crate pools built from owned pack-style generations after three blind pool reads rejected the allocation pieces. Owned `invrisil_sealed_bale` is also generated for #632.
-    - **Lanes (worktrees off `403b26ee`, pushed branches; not PRs yet):**
-      - #629 `/private/tmp/wi-629-liscor` (`wi-629-liscor`).
-      - #632 `/private/tmp/wi-632-invrisil` (`wi-632-invrisil`). It owns the new world.gd decor `night_glow`; Liscor consumes it later. `d17484e0` is an unverified WIP checkpoint made after a spend-limit cutoff.
-      - Both rebase on #640 when it merges, then: captures → blind Fable scene read → FIX loop → PR → review → merge.
-    - **CHOICE-LOG** is at about 29.7 of its 30 KB cap: one short line per issue; rulings go in the rollout plan.
-    - Next, in order: merge #640 → land #629 and #632 → R2–R7 (#633–#638).
-    - **PixelLab:** the subscription has expired, so the MCP refuses. USD credits work through REST v2 (about $3.6 left), limited to 1 concurrent job.
-  - Restart backup: `.superpowers/restart-backup-2026-10-09/` (scratchpad, art evidence, WIP worktree patches; `README.md` restore steps; `FRESH-SESSION-PROMPT.md`). Remaining worktrees are WIP and backed up: `wi-584-audio`, `wi-art-public`, `wi-browser-ready`. If a reboot wipes `/private/tmp`, run `git worktree prune` and restore from the README.
+  - **2026-11-22 state** (user: "finish inflight work"):
+    - **#632 Invrisil MERGED** (PR #649, `8196512f`; #632 closed). It adds the world.gd decor `night_glow`, proven through play by `invrisil_window_glow_phases`.
+    - **#629 Liscor MERGED** (PR #652, `eff596a4`; G2 art: Liscor 82.27%, Invrisil 67.15%). **#629 stays OPEN:** no blind read PASS was reached. Three read rounds plus a reconcile against before-shots at `7dacb3b3` ended at "every view better than main, none worse". That bar was the controller's, so closing #629 is the user's call.
+    - The revert rounds un-placed 33 allocation pieces and put main's guild timber walls, Runners' floor, round tables and sewer grate back. Deferrals are in **#651**; pre-existing Liscor findings are in **#650** (Invrisil's are in #643).
+    - Gate arch reads warm and bright at night: entities are lifted by `_apply_field_legibility` while tile layers grade darker. Not branch-specific (#651).
+    - **Found missing on 2026-11-22** (`/private/tmp` was wiped; cause unknown for the rest): every lane worktree, `potential_assets/` in the main checkout (so `docs/asset-candidates.*` cannot be regenerated and is stale for Liscor; restore from `potential-assets-v2`), `.superpowers/restart-backup-2026-10-09/`, the rollout ledger, and both stashes (#584 staging docs, #397 cadence partial).
+    - **User rulings wanted:** close #629 or hold it for a PASS; a sandstone-brick band on the two guild interiors (they keep timber and plaster now).
+    - Next, in order: R2–R7 (#633–#638), then #651/#650. Capture before-shots on main first and reconcile each read against them; cap a lane at what reads better than main.
+    - **CHOICE-LOG** has a 30 KB cap: one short line per issue; rulings go in the rollout plan.
+    - **PixelLab:** the subscription has expired, so the MCP refuses. USD credits work through REST v2 (about $3.6 left on 2026-10-11), limited to 1 concurrent job.
   - Lessons:
     - Writing tools take `--repo-root <worktree>` only.
     - Capture scripts hard-code `official` in output names; public recaps rename via `recap-*.sh`.
@@ -86,9 +84,9 @@ archived, or superseded session blocks.
   IV–V carried-resource pins are runtime-only, and current residue is in
   `scripts/itinerary/README.md`. #452/#348 addenda must be reconciled with
   current code before executing their remaining work.
-- **Parked work:** #584 audio staging docs in `/private/tmp/wi-584-audio` and
-  `stash@{0}` ("584-staging-docs"); an unverified #397 cadence partial in
-  `stash@{1}`. Open presentation debt lives in `docs/VISUAL-LOG.md`.
+- **Parked work:** the #584 audio staging docs and the #397 cadence partial were
+  lost with the stashes (see above); redo from the issues. Open presentation
+  debt lives in `docs/VISUAL-LOG.md`.
 - Preserve the untracked `wandering_inn_game/tests/test_companion_counter.gd.uid`
   and the private asset overlays.
 - Latest release recorded by the repository: **v0.20.0** (2026-08-14).
