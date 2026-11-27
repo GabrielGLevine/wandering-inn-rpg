@@ -1,14 +1,19 @@
-# GitHub Pages redirect. The game's web home moved to Firebase Hosting
-# (https://wandering-inn-rpg.web.app, deployed by hosting.yml). Pages now
-# serves ONE static page that forwards the old address
-# https://gabrielglevine.github.io/wandering-inn-rpg/ so existing links keep
-# working. No game build, no secrets.
+# GitHub Pages: the page at the game's former address,
+# https://gabrielglevine.github.io/wandering-inn-rpg/. The game's permanent
+# web home is Firebase Hosting (https://wandering-inn-rpg.web.app), deployed by
+# release.yml and hosting.yml.
+#
+# This workflow publishes the tracked, self-contained directory
+# web/pages-redirect/ exactly as it is: no game build, no build step, no
+# secrets. Browser saves are per origin, so this origin is where pre-move
+# saves live; Pages must stay up indefinitely as the place they can be
+# migrated from. Changing what the old address serves means editing
+# web/pages-redirect/, not this file.
 #
 # Artifact flow only — never a gh-pages branch. Trigger: workflow_dispatch
-# only; run it once after the Firebase site is live. A release tag no longer
-# touches Pages.
+# only. A release tag no longer touches Pages.
 
-name: Publish GitHub Pages redirect
+name: Publish GitHub Pages (former address)
 
 on:
   workflow_dispatch:
@@ -24,7 +29,7 @@ concurrency:
 
 jobs:
   deploy:
-    name: Publish redirect page
+    name: Publish web/pages-redirect
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment:
@@ -35,19 +40,13 @@ jobs:
         with:
           persist-credentials: false
 
-      # 404.html makes every old deep link (e.g. /index.html) redirect too.
-      - name: Stage the redirect site
-        run: |
-          set -euo pipefail
-          mkdir -p _site
-          cp .github/pages-redirect/index.html _site/index.html
-          cp .github/pages-redirect/index.html _site/404.html
-          grep -q 'https://wandering-inn-rpg.web.app/' _site/index.html
+      - name: Guard — the page exists
+        run: test -s web/pages-redirect/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: web/pages-redirect
 
       - name: Deploy
         id: deployment

@@ -39,7 +39,8 @@ a tag. Both deploy through `.github/actions/firebase-hosting-deploy`. Browser
 saves are per origin, so a preview channel never shows live saves. The web
 build bakes licensed assets: it is deployed straight from the runner and must
 never become a workflow artifact, a branch, or a commit. `pages.yml` only
-publishes the redirect from the retired GitHub Pages address. itch.io left the
+publishes `web/pages-redirect/` at the former GitHub Pages address, which
+must stay up because pre-move browser saves live on that origin. itch.io left the
 deploy train on 2026-11-27; nothing pushes there. Roll back a bad live deploy
 from the Firebase console's release history; that is outward-facing like any
 other deploy.
