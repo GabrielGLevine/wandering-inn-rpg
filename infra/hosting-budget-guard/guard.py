@@ -21,12 +21,14 @@ import binascii
 import json
 import math
 import re
+import sys
 import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Any, Callable, Mapping
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 # --------------------------------------------------------------- hard rails
 # The ONLY targets this code may ever act on. Widening either set is a code
@@ -41,10 +43,21 @@ METADATA_TOKEN_URL = (
     "instance/service-accounts/default/token"
 )
 RELEASE_PAGE_SIZE = 100
-MAX_RELEASE_PAGES = 5
+# Live-channel releases only (one per deploy, rollback or disable), so 2000
+# is years of history; past it the guard cannot tell and stays put.
+MAX_RELEASE_PAGES = 20
 HTTP_TIMEOUT_SECONDS = 20
 MAX_MESSAGE_LENGTH = 512  # Release.message limit in the Hosting REST reference
 SUPPORTED_SCHEMA_VERSION = "1.0"
+# Cloud Billing: monthly budget periods start at midnight US Pacific time.
+BUDGET_TIME_ZONE = "America/Los_Angeles"
+
+
+def budget_zone() -> ZoneInfo:
+    try:
+        return ZoneInfo(BUDGET_TIME_ZONE)
+    except ZoneInfoNotFoundError as exc:  # no system tzdata and no `tzdata` wheel
+        raise ConfigError(f"time zone {BUDGET_TIME_ZONE} is unavailable") from exc
 
 
 class ConfigError(Exception):
@@ -113,6 +126,7 @@ class Config:
             raise ConfigError("GUARD_MARKER_GENERATION must match [A-Za-z0-9_.-]{1,32}")
         if self.max_event_age_seconds <= 0:
             raise ConfigError("MAX_EVENT_AGE_SECONDS must be positive")
+        budget_zone()  # fail at startup, not on the first over-budget message
 
     @classmethod
     def from_env(cls, env: Mapping[str, str]) -> "Config":
@@ -141,6 +155,13 @@ class Config:
         # site inside the allowlisted project (the form the Firebase CLI uses).
         return f"projects/{self.project_id}/sites/{self.site_id}"
 
+    @property
+    def live_channel(self) -> str:
+        # Reads use the documented `sites/{site}/channels/{channel}` form
+        # (sites.channels.get, sites.channels.releases.list). Site ids are
+        # globally unique, and a read cannot change anything.
+        return f"sites/{self.site_id}/channels/live"
+
 
 # -------------------------------------------------------------- Hosting API
 def metadata_access_token() -> str:
@@ -154,7 +175,7 @@ def metadata_access_token() -> str:
 
 
 class HostingApi:
-    """The two Hosting calls the guard needs: list releases, disable site."""
+    """The Hosting calls the guard needs: read the live channel, disable site."""
 
     def __init__(
         self,
@@ -190,15 +211,25 @@ class HostingApi:
             raise TransientError("Hosting API returned a non-object")
         return parsed
 
+    def current_live_release(self) -> dict | None:
+        """The release the live channel is serving now (Channel.release)."""
+        channel = self._call("GET", f"{HOSTING_API}/{self._config.live_channel}")
+        release = channel.get("release")
+        return release if isinstance(release, dict) else None
+
     def list_releases(self) -> tuple[list[dict], bool]:
-        """Recent releases of the site, and whether the listing was cut short."""
+        """Releases of the LIVE channel only, and whether the listing was cut short.
+
+        The reference documents no ordering, so every page is read (up to
+        MAX_RELEASE_PAGES) and nothing below assumes newest-first.
+        """
         releases: list[dict] = []
         token = ""
         for _ in range(MAX_RELEASE_PAGES):
             query = {"pageSize": str(RELEASE_PAGE_SIZE)}
             if token:
                 query["pageToken"] = token
-            url = f"{HOSTING_API}/{self._config.site_parent}/releases?" + urllib.parse.urlencode(query)
+            url = f"{HOSTING_API}/{self._config.live_channel}/releases?" + urllib.parse.urlencode(query)
             page = self._call("GET", url)
             for release in page.get("releases") or []:
                 if isinstance(release, dict):
@@ -246,14 +277,19 @@ def _canonical(moment: datetime) -> str:
     return moment.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _add_month(moment: datetime) -> datetime:
-    year, month = (moment.year + 1, 1) if moment.month == 12 else (moment.year, moment.month + 1)
-    for day in (moment.day, 30, 29, 28):
-        try:
-            return moment.replace(year=year, month=month, day=day)
-        except ValueError:
-            continue
-    raise _Malformed("cannot compute period end")
+def period_bounds(moment: datetime) -> tuple[datetime, datetime]:
+    """UTC [start, end) of the budget month containing `moment`.
+
+    Months start at local midnight on the 1st in America/Los_Angeles, so the
+    UTC offset differs between months (07:00Z in PDT, 08:00Z in PST) and a
+    March or November period is an hour shorter or longer than whole days.
+    """
+    zone = budget_zone()
+    local = moment.astimezone(zone)
+    start = datetime(local.year, local.month, 1, tzinfo=zone)
+    year, month = (local.year + 1, 1) if local.month == 12 else (local.year, local.month + 1)
+    end = datetime(year, month, 1, tzinfo=zone)
+    return start.astimezone(timezone.utc), end.astimezone(timezone.utc)
 
 
 def _number(payload: Mapping[str, Any], key: str) -> float:
@@ -293,13 +329,6 @@ def period_marker(config: Config, period: str) -> str:
     return f"[{MARKER_PREFIX} period={period} gen={config.marker_generation}]"
 
 
-def _is_live(release: Mapping[str, Any]) -> bool:
-    # sites.releases.list also returns preview-channel releases; only the
-    # live channel decides whether the public site is serving.
-    name = str(release.get("name") or "")
-    return "/channels/" not in name or "/channels/live/" in name
-
-
 def _release_time(release: Mapping[str, Any]) -> datetime | None:
     try:
         return _parse_time(release.get("releaseTime"))
@@ -307,30 +336,55 @@ def _release_time(release: Mapping[str, Any]) -> datetime | None:
         return None
 
 
+# Answers of _acted_this_period. UNKNOWN means "cannot tell": the guard then
+# does NOT disable (unless REDISABLE_WHILE_OVER_BUDGET), because a false
+# disable loop that undoes every owner re-enable is worse than a missed
+# second disable in a month where the site was already taken down once.
+ACTED_MARKER = "marker"
+ACTED_SERVICE_ACCOUNT = "release_user"
+ACTED_UNKNOWN = "unknown"
+NOT_ACTED = "none"
+
+
 def _acted_this_period(
-    config: Config, releases: list[dict], period_start: datetime, marker: str
-) -> bool:
+    config: Config,
+    releases: list[dict],
+    truncated: bool,
+    period_start: datetime,
+    period_end: datetime,
+    marker: str,
+) -> tuple[str, str]:
+    """(answer, why) -- did the guard already disable the site this period?"""
+    unknown = ""
     for release in releases:
         if release.get("type") != "SITE_DISABLE":
             continue
         message = str(release.get("message") or "")
         if marker in message:
-            return True
+            return ACTED_MARKER, f"{release.get('name')} carries this period's marker"
+        if message:
+            continue  # a disable with some other message: not this marker
         # Fallback for the one thing the reference does not promise: that
-        # `message` is stored on a SITE_DISABLE release. A message-less
-        # disable made by the guard's own service account in this period
-        # counts as the guard's.
-        email = str((release.get("releaseUser") or {}).get("email") or "")
+        # `message` is stored on a SITE_DISABLE release. It depends entirely
+        # on `releaseUser.email`; when that cannot settle it, say so.
         released = _release_time(release)
-        if (
-            not message
-            and config.guard_service_account
-            and email == config.guard_service_account
-            and released is not None
-            and released >= period_start
-        ):
-            return True
-    return False
+        if released is not None and not period_start <= released < period_end:
+            continue  # another month's disable
+        email = str((release.get("releaseUser") or {}).get("email") or "")
+        if released is None:
+            unknown = unknown or f"{release.get('name')}: message-less SITE_DISABLE without releaseTime"
+        elif not email:
+            unknown = unknown or f"{release.get('name')}: message-less SITE_DISABLE without releaseUser.email"
+        elif not config.guard_service_account:
+            unknown = unknown or "GUARD_SERVICE_ACCOUNT unset; cannot attribute a message-less SITE_DISABLE"
+        elif email == config.guard_service_account:
+            return ACTED_SERVICE_ACCOUNT, f"{release.get('name')}: message-less SITE_DISABLE by the guard account"
+        # else: a message-less disable by someone else (manual) -- not ours.
+    if unknown:
+        return ACTED_UNKNOWN, unknown
+    if truncated:
+        return ACTED_UNKNOWN, f"release listing truncated at {MAX_RELEASE_PAGES} pages"
+    return NOT_ACTED, ""
 
 
 # ----------------------------------------------------------------- decision
@@ -396,12 +450,16 @@ def handle_event(
             raise _Malformed("budgetAmount must be > 0 and costAmount >= 0")
         if payload.get("budgetAmountType") != "SPECIFIED_AMOUNT":
             raise _Malformed("budgetAmountType is not SPECIFIED_AMOUNT")
-        period_start = _parse_time(payload.get("costIntervalStart"))
-        period_end = _add_month(period_start)
+        interval_start = _parse_time(payload.get("costIntervalStart"))
+        # The month is derived from costIntervalStart in Pacific time; the
+        # marker uses the computed start so every spelling maps to one period.
+        period_start, period_end = period_bounds(interval_start)
     except _Malformed as exc:
         return done("ignored_malformed", str(exc), "WARNING")
 
     period = _canonical(period_start)
+    if interval_start != period_start:
+        record["cost_interval_start"] = _canonical(interval_start)
     record.update(
         cost_amount=cost,
         budget_amount=budget,
@@ -427,7 +485,7 @@ def handle_event(
     release_message = (
         f"{marker} Hosting spend {cost:.2f} >= budget {budget:.2f} "
         f"{payload.get('currencyCode') or ''}. Site disabled by the budget guard; "
-        "redeploy to live to re-enable."
+        "roll back or redeploy live to re-enable."
     )[:MAX_MESSAGE_LENGTH]
     record["marker"] = marker
 
@@ -442,28 +500,32 @@ def handle_event(
         return done("error_no_api", "armed but no Hosting API client", "ERROR")
 
     try:
-        releases, truncated = api.list_releases()
-        record["releases_seen"] = len(releases)
-        record["release_list_truncated"] = truncated
+        current = api.current_live_release()
+        if current is not None:
+            record["live_release"] = current.get("name")
+        if current is not None and current.get("type") == "SITE_DISABLE":
+            return done("noop_already_disabled", "live channel's current release is SITE_DISABLE")
 
-        live = [r for r in releases if _is_live(r)]
-        latest = max(
-            live,
-            key=lambda r: _release_time(r) or datetime.min.replace(tzinfo=timezone.utc),
-            default=None,
-        )
-        if latest is not None and latest.get("type") == "SITE_DISABLE":
-            record["latest_release"] = latest.get("name")
-            return done("noop_already_disabled", "latest live release is SITE_DISABLE")
-
-        if not config.redisable_while_over_budget and _acted_this_period(
-            config, releases, period_start, marker
-        ):
-            return done(
-                "noop_already_acted_this_period",
-                "site was re-enabled after this period's disable; not disabling again",
-                "WARNING",
+        if not config.redisable_while_over_budget:
+            releases, truncated = api.list_releases()
+            record["releases_seen"] = len(releases)
+            record["release_list_truncated"] = truncated
+            acted, why = _acted_this_period(
+                config, releases, truncated, period_start, period_end, marker
             )
+            record["acted_evidence"] = acted
+            if acted in (ACTED_MARKER, ACTED_SERVICE_ACCOUNT):
+                return done(
+                    "noop_already_acted_this_period",
+                    f"site was re-enabled after this period's disable ({why}); not disabling again",
+                    "WARNING",
+                )
+            if acted == ACTED_UNKNOWN:
+                return done(
+                    "noop_cannot_tell_if_acted",
+                    f"{why}; staying up rather than risk undoing an owner re-enable",
+                    "ERROR",
+                )
 
         created = api.disable_site(release_message)
     except PermanentApiError as exc:
@@ -472,5 +534,39 @@ def handle_event(
         return done("error_api_refused", str(exc), "ERROR")
 
     record["release"] = created.get("name")
-    record["marker_persisted"] = marker in str(created.get("message") or "")
+    persisted = marker in str(created.get("message") or "")
+    record["marker_persisted"] = persisted
+    if not persisted:
+        # The once-per-period rule now rests on releaseUser.email alone, and
+        # --marker-generation cannot re-arm. Loud, so it is fixed before the
+        # owner re-enables.
+        return done(
+            "disabled",
+            "SITE_DISABLE release created but marker_persisted=false: the API did not "
+            "store the message; once-per-period now depends on releaseUser.email",
+            "ERROR",
+        )
     return done("disabled", "SITE_DISABLE release created", "WARNING")
+
+
+# ---------------------------------------------------------------------- CLI
+def _main(argv: list[str]) -> int:
+    """`python3 guard.py period-start [RFC3339]` -> this budget month's start in UTC.
+
+    test-publish.sh uses it so a synthetic notification carries exactly the
+    costIntervalStart (and therefore the marker) a real one would.
+    """
+    if len(argv) not in (1, 2) or argv[0] != "period-start":
+        print("usage: guard.py period-start [RFC3339-instant]", file=sys.stderr)
+        return 2
+    try:
+        moment = _parse_time(argv[1]) if len(argv) == 2 else datetime.now(timezone.utc)
+        print(_canonical(period_bounds(moment)[0]))
+    except (_Malformed, ConfigError) as exc:
+        print(f"guard.py: {exc}", file=sys.stderr)
+        return 2
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(_main(sys.argv[1:]))

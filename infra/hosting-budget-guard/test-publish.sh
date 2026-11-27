@@ -53,9 +53,12 @@ if [ "$_DRY" != 1 ]; then
 	BUDGET_ID="${BUDGET_NAME##*/}"
 fi
 
-# Budget months start at midnight US Pacific time; build this month's start
-# as RFC 3339 with offset (the function normalises it to UTC).
-PERIOD="$(TZ=America/Los_Angeles date +%Y-%m-01T00:00:00%z | sed -E 's/([+-][0-9]{2})([0-9]{2})$/\1:\2/')"
+# Budget months start at midnight US Pacific time on the 1st. The UTC offset
+# is the one in force ON THE 1ST (07:00Z in a PDT month, 08:00Z in PST), not
+# today's -- so compute it with the guard's own zoneinfo code, which is also
+# what the function uses to build its once-per-period marker.
+command -v python3 >/dev/null || die "python3 not found"
+PERIOD="$(python3 "$HERE/guard.py" period-start)" || die "could not compute the budget period start"
 MESSAGE="$(printf '{"budgetDisplayName":"%s","costAmount":%s,"costIntervalStart":"%s","budgetAmount":%s,"budgetAmountType":"SPECIFIED_AMOUNT","alertThresholdExceeded":1.0,"currencyCode":"USD"}' \
 	"$BUDGET_DISPLAY_NAME" "$COST" "$PERIOD" "$AMOUNT")"
 

@@ -10,6 +10,9 @@ import base64
 import importlib.util
 import io
 import json
+import os
+import shutil
+import subprocess
 import sys
 import urllib.error
 from datetime import datetime, timezone
@@ -88,23 +91,36 @@ def deploy_release(n=1, when="2026-11-20T10:00:00Z"):
 
 
 def disable_release(message, when="2026-11-25T10:00:00Z", email=SA):
-    return {
-        "name": "sites/wandering-inn-rpg/releases/999",
+    release = {
+        "name": "sites/wandering-inn-rpg/channels/live/releases/999",
         "type": "SITE_DISABLE",
         "releaseTime": when,
         "message": message,
         "releaseUser": {"email": email},
     }
+    if email is None:
+        del release["releaseUser"]
+    return release
 
 
 class FakeApi:
-    def __init__(self, releases=None, truncated=False, list_error=None, create_error=None):
+    """Live channel of the site. `current` defaults to the newest release."""
+
+    def __init__(
+        self, releases=None, truncated=False, list_error=None, create_error=None, store_message=True
+    ):
         self.releases = list(releases or [])
         self.truncated = truncated
         self.list_error = list_error
         self.create_error = create_error
+        self.store_message = store_message
         self.list_calls = 0
         self.disable_calls: list[str] = []
+
+    def current_live_release(self):
+        if self.list_error:
+            raise self.list_error
+        return max(self.releases, key=lambda r: r["releaseTime"], default=None)
 
     def list_releases(self):
         self.list_calls += 1
@@ -116,7 +132,7 @@ class FakeApi:
         if self.create_error:
             raise self.create_error
         self.disable_calls.append(message)
-        created = disable_release(message, when="2026-11-27T12:00:00Z")
+        created = disable_release(message if self.store_message else "", when="2026-11-27T12:00:00Z")
         self.releases.append(created)
         return created
 
@@ -208,12 +224,61 @@ def test_manual_disable_without_marker_does_not_consume_the_period():
     assert run(api)["decision"] == "disabled"
 
 
-def test_messageless_disable_by_the_guard_account_counts_as_acted():
+# --- once-per-period evidence: message stored / missing + releaseUser ---
+def test_message_stored_marker_is_the_evidence():
+    api = FakeApi(
+        [disable_release(f"{MARKER} over budget", email=None), deploy_release(2, when="2026-11-26T09:00:00Z")]
+    )
+    record = run(api)
+    assert record["decision"] == "noop_already_acted_this_period"
+    assert record["acted_evidence"] == "marker"
+    assert api.disable_calls == []
+
+
+def test_message_missing_and_release_user_is_the_guard_counts_as_acted():
     api = FakeApi(
         [disable_release("", email=SA), deploy_release(2, when="2026-11-26T09:00:00Z")]
     )
-    assert run(api)["decision"] == "noop_already_acted_this_period"
+    record = run(api)
+    assert record["decision"] == "noop_already_acted_this_period"
+    assert record["acted_evidence"] == "release_user"
     assert api.disable_calls == []
+
+
+@pytest.mark.parametrize("email", [None, ""])
+def test_message_missing_and_release_user_missing_stays_up_loudly(email):
+    api = FakeApi(
+        [disable_release("", email=email), deploy_release(2, when="2026-11-26T09:00:00Z")]
+    )
+    record = run(api)
+    assert record["decision"] == "noop_cannot_tell_if_acted"
+    assert record["severity"] == "ERROR"
+    assert record["acted_evidence"] == "unknown"
+    assert api.disable_calls == []
+
+
+def test_cannot_tell_still_disables_under_the_redisable_policy():
+    api = FakeApi(
+        [disable_release("", email=None), deploy_release(2, when="2026-11-26T09:00:00Z")]
+    )
+    record = run(api, config=make_config(redisable_while_over_budget=True))
+    assert record["decision"] == "disabled"
+
+
+def test_messageless_disable_from_last_month_is_ignored():
+    api = FakeApi(
+        [disable_release("", when="2026-10-20T10:00:00Z", email=None), deploy_release(2)]
+    )
+    assert run(api)["decision"] == "disabled"
+
+
+def test_marker_not_persisted_is_logged_at_error():
+    api = FakeApi([deploy_release()], store_message=False)
+    record = run(api)
+    assert record["decision"] == "disabled"
+    assert record["marker_persisted"] is False
+    assert record["severity"] == "ERROR"
+    assert "marker_persisted=false" in record["reason"]
 
 
 def test_marker_generation_bump_rearms_the_same_period():
@@ -237,18 +302,13 @@ def test_redisable_policy_disables_again_after_a_reenable():
     assert len(api.disable_calls) == 1
 
 
-def test_preview_channel_releases_do_not_hide_a_disabled_live_site():
-    api = FakeApi(
-        [
-            disable_release(f"{MARKER} over budget"),
-            {
-                "name": "sites/wandering-inn-rpg/channels/pr-12/releases/5",
-                "type": "DEPLOY",
-                "releaseTime": "2026-11-26T09:00:00Z",
-            },
-        ]
-    )
-    assert run(api)["decision"] == "noop_already_disabled"
+def test_current_live_release_decides_already_disabled_not_list_order():
+    # the listing has no documented order; the channel's current release is
+    # authoritative even when an older entry happens to come last
+    api = FakeApi([disable_release(f"{MARKER} x", when="2026-11-26T10:00:00Z"), deploy_release(1)])
+    record = run(api)
+    assert record["decision"] == "noop_already_disabled"
+    assert api.list_calls == 0
 
 
 # ------------------------------------------------------------------- refusals
@@ -354,11 +414,79 @@ def test_permanent_api_error_is_acked_and_logged_as_error(stage):
     assert record["severity"] == "ERROR"
 
 
-def test_truncated_listing_still_disables_and_says_so():
+def test_truncated_listing_without_the_marker_cannot_tell_and_stays_up():
     api = FakeApi([deploy_release()], truncated=True)
     record = run(api)
-    assert record["decision"] == "disabled"
+    assert record["decision"] == "noop_cannot_tell_if_acted"
+    assert record["severity"] == "ERROR"
     assert record["release_list_truncated"] is True
+    assert api.disable_calls == []
+
+
+def test_truncated_listing_with_the_marker_is_still_acted():
+    api = FakeApi(
+        [disable_release(f"{MARKER} x"), deploy_release(2, when="2026-11-26T09:00:00Z")], truncated=True
+    )
+    assert run(api)["decision"] == "noop_already_acted_this_period"
+
+
+# ------------------------------------------------ budget periods (US Pacific)
+@pytest.mark.parametrize(
+    "instant, start, end",
+    [
+        # March: PST start, PDT end -> 743 hours, not 744
+        ("2026-03-15T12:00:00Z", "2026-03-01T08:00:00Z", "2026-04-01T07:00:00Z"),
+        # November: PDT start, PST end -> 721 hours
+        ("2026-11-27T12:00:00Z", "2026-11-01T07:00:00Z", "2026-12-01T08:00:00Z"),
+        ("2026-11-01T06:59:59Z", "2026-10-01T07:00:00Z", "2026-11-01T07:00:00Z"),
+        ("2026-12-31T23:00:00Z", "2026-12-01T08:00:00Z", "2027-01-01T08:00:00Z"),
+    ],
+)
+def test_period_bounds_follow_pacific_dst(instant, start, end):
+    got = guard.period_bounds(guard._parse_time(instant))
+    assert tuple(guard._canonical(x) for x in got) == (start, end)
+
+
+def test_march_period_ends_at_0700z_not_0800z():
+    march = payload(costIntervalStart="2026-03-01T08:00:00Z")
+    api = FakeApi([deploy_release(when="2026-03-10T10:00:00Z")])
+    late = datetime(2026, 4, 1, 7, 30, tzinfo=timezone.utc)
+    record = run(api, march, now=late, publish_time="2026-04-01T07:29:00Z")
+    assert record["decision"] == "ignored_stale_period"
+
+
+@pytest.mark.parametrize(
+    "instant, expected",
+    [
+        ("2026-03-20T12:00:00Z", "2026-03-01T08:00:00Z"),
+        ("2026-11-27T12:00:00Z", "2026-11-01T07:00:00Z"),
+    ],
+)
+def test_cli_period_start_used_by_test_publish(instant, expected):
+    out = subprocess.run(
+        [sys.executable, str(GUARD_DIR / "guard.py"), "period-start", instant],
+        check=True, capture_output=True, text=True,
+    ).stdout.strip()
+    assert out == expected
+
+
+def test_test_publish_dry_run_uses_the_real_period_and_calls_nothing(tmp_path):
+    if shutil.which("bash") is None:
+        pytest.skip("bash unavailable")
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    log = tmp_path / "gcloud.log"
+    fake = fake_bin / "gcloud"
+    fake.write_text(f'#!/bin/sh\necho "$@" >> "{log}"\nexit 97\n')
+    fake.chmod(0o755)
+    env = {**os.environ, "PATH": f"{fake_bin}{os.pathsep}{os.environ.get('PATH', '')}"}
+    out = subprocess.run(
+        ["bash", str(GUARD_DIR / "test-publish.sh"), "--billing-account", BILLING, "--dry-run"],
+        check=True, capture_output=True, text=True, env=env,
+    ).stdout
+    expected = guard._canonical(guard.period_bounds(datetime.now(timezone.utc))[0])
+    assert f"period {expected}" in out
+    assert not log.exists()
 
 
 # -------------------------------------------------------------------- DRY_RUN
@@ -478,6 +606,15 @@ def test_disable_request_shape_matches_the_rest_reference():
     assert request.get_header("Authorization") == "Bearer tok"
 
 
+def test_current_live_release_reads_the_live_channel():
+    api, calls = make_api([{"name": "sites/wandering-inn-rpg/channels/live", "release": deploy_release(3)}])
+    assert api.current_live_release()["name"].endswith("/3")
+    assert calls[0].get_method() == "GET"
+    assert calls[0].full_url == (
+        "https://firebasehosting.googleapis.com/v1beta1/sites/wandering-inn-rpg/channels/live"
+    )
+
+
 def test_list_follows_pagination_and_only_reads():
     api, calls = make_api(
         [{"releases": [deploy_release(1)], "nextPageToken": "p2"}, {"releases": [deploy_release(2)]}]
@@ -488,7 +625,7 @@ def test_list_follows_pagination_and_only_reads():
     assert "pageToken=p2" in calls[1].full_url
     assert calls[0].full_url.startswith(
         "https://firebasehosting.googleapis.com/v1beta1/"
-        "projects/gpt-development/sites/wandering-inn-rpg/releases?"
+        "sites/wandering-inn-rpg/channels/live/releases?"
     )
 
 
@@ -521,11 +658,16 @@ def test_network_failure_is_transient():
 
 def test_end_to_end_through_the_http_client():
     api, calls = make_api(
-        [{"releases": [deploy_release()]}, {"name": "sites/wandering-inn-rpg/releases/2", "message": MARKER}]
+        [
+            {"name": "sites/wandering-inn-rpg/channels/live", "release": deploy_release()},
+            {"releases": [deploy_release()]},
+            {"name": "sites/wandering-inn-rpg/channels/live/releases/2", "message": MARKER},
+        ]
     )
     record = guard.handle_event(event(), make_config(), api, now=NOW)
     assert record["decision"] == "disabled"
-    assert [c.get_method() for c in calls] == ["GET", "POST"]
+    assert record["severity"] == "WARNING"
+    assert [c.get_method() for c in calls] == ["GET", "GET", "POST"]
 
 
 # ------------------------------------------- entry point (needs the framework)
