@@ -90,11 +90,17 @@ runs:
     # .pck is on disk. Installed outside the workspace and the deploy dir.
     - name: Install locked firebase-tools
       shell: bash
+      env:
+        # Not $GITHUB_ACTION_PATH: a preceding nested action (setup-node) can
+        # leave that variable pointing at its own directory.
+        ACTION_PATH: ${{ github.action_path }}
       run: |
         set -euo pipefail
         tools="$RUNNER_TEMP/firebase-tools"
         mkdir -p "$tools"
-        cp "$GITHUB_ACTION_PATH/package.json" "$GITHUB_ACTION_PATH/package-lock.json" "$tools/"
+        test -f "$ACTION_PATH/package-lock.json" || { echo "::error::firebase-tools lockfile not found at $ACTION_PATH"; exit 1; }
+        grep -q '"firebase-tools"' "$ACTION_PATH/package.json" || { echo "::error::$ACTION_PATH/package.json is not this action's manifest"; exit 1; }
+        cp "$ACTION_PATH/package.json" "$ACTION_PATH/package-lock.json" "$tools/"
         (cd "$tools" && npm ci --ignore-scripts --no-fund --no-audit)
         "$tools/node_modules/.bin/firebase" --version
         echo "FIREBASE_BIN=$tools/node_modules/.bin/firebase" >>"$GITHUB_ENV"
