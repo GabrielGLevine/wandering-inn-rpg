@@ -1,27 +1,27 @@
-# Release — tag-driven itch.io wasm deploy for the Wandering Inn RPG
-# (M-RELEASE Task R3).
+# Release — tag-driven Firebase Hosting deploy for the Wandering Inn RPG.
 #
-# Fires ONLY on a version tag push (v*). Unlike ci.yml (which is secret-free and
-# fork-PR-safe), THIS workflow is the ONLY place repo secrets are used:
+# Fires ONLY on a version tag push (v*). ci.yml is secret-free and fork-PR-safe;
+# this workflow and hosting.yml (manual) are the only places deploy credentials
+# are used:
 #   - PRIVATE_ASSETS_TOKEN : a PAT with read access to the private assets repo,
 #                            used to download the real (non-redistributable)
 #                            asset bundle that overlays the fallback art.
-#   - BUTLER_API_KEY        : itch.io butler credential for the wasm push.
-# Tag pushes are user-only by tag protection (a USER ACTION — see the task
-# report), so secrets are never reachable from a fork PR.
+#   - vars.GCP_WIF_PROVIDER / vars.GCP_DEPLOY_SA : identifiers (repo VARIABLES,
+#                            not secrets) for keyless Workload Identity
+#                            Federation to the Hosting deploy service account.
+# There is no pull_request trigger, so none of this is reachable from a fork
+# PR. Anyone with write access can push a v* tag: a tag protection rule
+# restricting v* tags to the owner is RECOMMENDED and not configured today.
 #
-# Pipeline (spec §4): checkout → fetch private bundle → overlay assets → full QA
-# gate re-run WITH real assets → wasm export (pinned 4.7 templates) → butler push.
+# Pipeline: checkout → fetch private bundle → overlay assets → ship asset scan →
+# full QA gate re-run WITH real assets → wasm export (pinned 4.7 templates) →
+# deploy LIVE to Firebase Hosting site wandering-inn-rpg
+# (https://wandering-inn-rpg.web.app). This is the ONLY tag-triggered deploy:
+# hosting.yml is workflow_dispatch-only, so one tag is exactly one live deploy.
 # Implemented as ONE sequential job: every stage after the overlay needs the
-# overlaid working tree, so splitting into separate GitHub jobs would mean
-# shuttling the whole tree + build as artifacts for no benefit. Each stage below
-# is a clearly delimited step group (a)–(d) mirroring the plan.
-#
-# ┌───────────────────────────────────────────────────────────────────────┐
-# │ ⚠️  PLACEHOLDERS TO FILL BEFORE FIRST TAG (see task-r3-report.md):     │
-# │   GODOT_SHA256 / GODOT_TEMPLATES_SHA256  →  real sha256 (as in ci.yml) │
-# │   BUTLER_VERSION       →  an exact broth version (do NOT float LATEST) │
-# └───────────────────────────────────────────────────────────────────────┘
+# overlaid working tree, and the export bakes licensed assets, so it must never
+# be passed between jobs as a workflow artifact. Each stage below is a clearly
+# delimited step group (a)–(d).
 
 name: Release
 
@@ -31,8 +31,8 @@ on:
       - "v*"
 
 # Read-only for the workflow's own GITHUB_TOKEN. The private-repo fetch uses the
-# separate PRIVATE_ASSETS_TOKEN PAT, not this token; the itch push uses
-# BUTLER_API_KEY. Nothing here needs write scope on THIS repo.
+# separate PRIVATE_ASSETS_TOKEN PAT, not this token. Nothing here needs write
+# scope on THIS repo; only the `release` job adds id-token (for WIF).
 permissions:
   contents: read
 
@@ -49,17 +49,37 @@ env:
   GODOT_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
   GODOT_SUMS_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/SHA512-SUMS.txt"
   GODOT_TEMPLATES_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz"
-  # Butler pinned to an exact broth version — do NOT float LATEST (engine/tool
-  # drift has bitten this project before; same discipline as the Godot pin).
-  BUTLER_VERSION: "15.27.0"
 
 jobs:
   release:
     name: Build + deploy tagged release
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    # GitHub-enforced: environment `hosting` only admits main and v* tags, and
+    # the WIF provider only trusts tokens carrying this environment.
+    environment: hosting
+    # Shared with hosting.yml's live channel: live deploys never interleave.
+    concurrency:
+      group: firebase-hosting-live
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Preconditions (fail before the long gate)
+        env:
+          GCP_WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
+          GCP_DEPLOY_SA: ${{ vars.GCP_DEPLOY_SA }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GCP_WIF_PROVIDER:-}" ] || [ -z "${GCP_DEPLOY_SA:-}" ]; then
+            echo "::error::Repository variables GCP_WIF_PROVIDER and GCP_DEPLOY_SA must both be set — the release deploys to Firebase Hosting via Workload Identity Federation (docs/SECRETS-SETUP.md)."
+            exit 1
+          fi
 
       - name: Set up pinned Godot 4.7
         run: |
@@ -130,10 +150,10 @@ jobs:
 
       # GH#277: the "placeholders never ship" gate — post-overlay, DISK-ONLY
       # scan of every asset path sprites.json/audio.json reference, plus
-      # pending audio slots. This step belongs to the `release` itch job
+      # pending audio slots. This step belongs to the `release` job
       # ONLY: desktop-exports/steampipe ship the committed fallback tree by
       # design and must never gain this step.
-      - name: (a) Ship asset scan (placeholders/pending never reach itch)
+      - name: (a) Ship asset scan (placeholders/pending never ship)
         run: python3 wandering_inn_game/scripts/ship_asset_scan.py
 
       # ------------------------------------------------------------------ (b) gate
@@ -240,38 +260,15 @@ jobs:
           fi
           ls -la wandering_inn_game/build/web
 
-      # ---------------------------------------------------------------- (d) butler
-      - name: (d) Install pinned butler (itch.io broth)
-        run: |
-          set -euo pipefail
-          if [ "$BUTLER_VERSION" = "PIN-ME-butler-version" ]; then
-            echo "::error::BUTLER_VERSION is still the placeholder. Pin an exact broth version (e.g. 15.21.0) in release.yml before tagging."
-            exit 1
-          fi
-          curl -fsSL -o butler.zip \
-            "https://broth.itch.zone/butler/linux-amd64/${BUTLER_VERSION}/archive/default"
-          unzip -q butler.zip -d butler-bin
-          chmod +x butler-bin/butler
-          ./butler-bin/butler -V
-
-      - name: (d) Push wasm build to itch.io
-        env:
-          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
-          # ⚠️ PLACEHOLDER — replace with the real itch project (user/game).
-          ITCH_TARGET: "sibianthegreybird/the-wandering-inn-rpg"
-        run: |
-          set -euo pipefail
-          if [ -z "${BUTLER_API_KEY:-}" ]; then
-            echo "::error::BUTLER_API_KEY secret is not set — cannot push to itch.io. Add it in repo Settings → Secrets and variables → Actions."
-            exit 1
-          fi
-          if [ "$ITCH_TARGET" = "ITCH_USER/ITCH_GAME" ]; then
-            echo "::error::ITCH_TARGET is still the placeholder 'ITCH_USER/ITCH_GAME'. Edit release.yml and set it to the real itch project before tagging."
-            exit 1
-          fi
-          # butler push is atomic per channel; re-runnable from the same tag.
-          ./butler-bin/butler push wandering_inn_game/build/web \
-            "${ITCH_TARGET}:html5" --userversion "${GITHUB_REF_NAME}"
+      # --------------------------------------------------------------- (d) deploy
+      # Shared with hosting.yml so the two deploy paths cannot drift. Re-running
+      # the job from the same tag redeploys the same commit.
+      - name: (d) Deploy the gated export to Firebase Hosting (live)
+        uses: ./.github/actions/firebase-hosting-deploy
+        with:
+          channel: live
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
 
   # ------------------------------------------------------------------------
   # desktop-exports — issue #19 (Steam seed, M-STEAM item 1/4). Tag-triggered
@@ -377,10 +374,9 @@ jobs:
   # user provisions Steam credentials (docs/steam/CHECKLIST.md): the `if:`
   # gate below short-circuits the whole job to "skipped" while
   # vars.STEAM_APP_ID is unset, so this workflow never regresses CI green
-  # just by existing. Follows the SAME secrets idiom as the butler push
-  # above (a build-account credential secret + a target-channel value), NOT
-  # a new convention — see wi-shipping skill. Uploads ONLY to a
-  # private/unlisted Steam branch (vars.STEAM_BRANCH, refused if it resolves
+  # just by existing. Secrets idiom: a build-account credential secret plus
+  # plaintext target values as repo variables — see docs/steam/CHECKLIST.md.
+  # Uploads ONLY to a private/unlisted Steam branch (vars.STEAM_BRANCH, refused if it resolves
   # to "default") — this is a pipeline proof, never a public release path,
   # and per issue #20's binding ruling the game ships FREE with zero
   # payment plumbing, so nothing here touches pricing/purchase config.

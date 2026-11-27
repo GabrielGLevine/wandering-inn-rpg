@@ -32,6 +32,13 @@
 // despite the request demonstrably reaching the server (confirmed via the
 // server's own access log) and succeeding. The server's own log is the only
 // reliable place to see them, so that's what the audio smoke below reads.
+//
+// WI_WEB_BASE_URL=<origin> drives an ALREADY-RUNNING host (the Firebase
+// Hosting emulator, a preview channel) instead of serving build/web here.
+// That host's access log is out of reach, so the worklet 200s and the .pck
+// hash come from this runner fetching those URLs itself. Only loopback hosts
+// are accepted unless WI_WEB_ALLOW_REMOTE=1; result.json and the last log
+// line name the tested origin, so a remote run never reads as a local pass.
 import { browserResultFailures, isKnownRendererDiagnostic } from "./lifecycle_result.mjs";
 import { readFile } from "node:fs/promises";
 import { join, dirname, extname, resolve, sep } from "node:path";
@@ -151,9 +158,18 @@ await rm(outDir, { recursive: true, force: true });
 await mkdir(outDir, { recursive: true });
 
 const requestLog = [];
-const server = await startServer(webRoot, requestLog);
-const port = server.address().port;
-const BASE_URL = `http://127.0.0.1:${port}/`;
+const externalBase = process.env.WI_WEB_BASE_URL ? process.env.WI_WEB_BASE_URL.replace(/\/*$/, "/") : "";
+const server = externalBase ? null : await startServer(webRoot, requestLog);
+const BASE_URL = externalBase || `http://127.0.0.1:${server.address().port}/`;
+if (externalBase) {
+	const host = new URL(externalBase).hostname;
+	if (!["127.0.0.1", "localhost", "[::1]"].includes(host) && process.env.WI_WEB_ALLOW_REMOTE !== "1") {
+		console.error(`FAIL: WI_WEB_BASE_URL host ${host} is not loopback; set WI_WEB_ALLOW_REMOTE=1 to test a remote host on purpose.`);
+		process.exit(2);
+	}
+	console.log(`external host: ${BASE_URL} (not serving build/web locally)`);
+}
+const testedOrigin = externalBase ? `EXTERNAL ${BASE_URL} (not this checkout's build/web)` : `local build/web via ${BASE_URL}`;
 
 const browser = await chromium.launch({ args: ["--single-process"] });
 // Phone contexts exercise high-density canvas backing independently of CSS targets.
@@ -302,7 +318,7 @@ const landing = await page.goto(`${BASE_URL}index.html`);
 if (!landing || landing.status() !== 200) {
 	console.error(`FAIL: ${BASE_URL}index.html answered ${landing ? landing.status() : "nothing"} -- is build/web exported? (webRoot=${webRoot})`);
 	await browser.close();
-	server.close();
+	server?.close();
 	process.exit(1);
 }
 
@@ -490,7 +506,7 @@ const gameEvents = await page.evaluate(() => window.__WI_QA_EVENTS__ ?? []);
 const browserEvidence = {
 	emulated: true, device: deviceName, profile: device, browser: browser.version(),
 	host: BASE_URL, script: scriptName, touchMode, startup, requests: touchRequests,
-	buildPckSha256: createHash("sha256").update(await readFile(join(webRoot, "index.pck"))).digest("hex"),
+	buildPckSha256: createHash("sha256").update(externalBase ? Buffer.from(await (await fetch(`${BASE_URL}index.pck`)).arrayBuffer()) : await readFile(join(webRoot, "index.pck"))).digest("hex"),
 	runtime: await page.evaluate(() => ({userAgent: navigator.userAgent, maxTouchPoints: navigator.maxTouchPoints, viewport: [innerWidth, innerHeight], devicePixelRatio, events: window.__WI_TOUCH_EVENTS__})),
 	errors: capturedErrors, warnings: capturedWarnings, diagnostics: capturedDiagnostics,
 };
@@ -534,7 +550,7 @@ if (result && !timedTouchOk) {
 await writeFile(join(outDir, "events.json"), JSON.stringify(gameEvents, null, 2));
 await writeFile(join(outDir, "browser-evidence.json"), JSON.stringify(browserEvidence, null, 2));
 await browser.close();
-server.close();
+server?.close();
 
 if (!result) {
 	console.error(`FAIL: no result within ${TIMEOUT_MS / 1000}s (game never finished the QA script)`);
@@ -545,6 +561,7 @@ if (verdictFailures.length) {
  result.passed = false;
  result.failures = [...(Array.isArray(result.failures) ? result.failures : []), ...verdictFailures];
 }
+result.testedOrigin = testedOrigin;
 await writeFile(join(outDir, "result.json"), JSON.stringify(result, null, 2));
 console.log(`result: ${JSON.stringify(result, null, 2)}`);
 console.log(`outputs in: ${outDir}`);
@@ -555,6 +572,11 @@ const workletErrors = capturedErrors.filter(isWorkletError);
 // (b) the worklet module URLs were actually requested and returned 200 (via
 // the server's own request log -- see file header for why not
 // page.on('response')).
+if (externalBase) {
+	for (const path of ["/index.audio.worklet.js", "/index.audio.position.worklet.js"]) {
+		requestLog.push({ path, status: (await fetch(`${BASE_URL}${path.slice(1)}`)).status });
+	}
+}
 const workletRequests = requestLog.filter(
 	(r) => r.path.endsWith(".audio.worklet.js") || r.path.endsWith(".audio.position.worklet.js"),
 );
@@ -590,6 +612,7 @@ if (rotationProbe) {
 	console.log(`rotation probe: ${rotationOk ? "OK" : "FAIL"} (overlay shown in portrait, hidden after rotation, no reload)`);
 }
 console.log(`audio smoke: ${audioSmokePassed ? "PASS" : "FAIL"}`);
+console.log(`tested origin: ${testedOrigin}`);
 
 const overallPassed = result.passed && audioSmokePassed && rotationOk && timedTouchOk;
 if (!rotationOk) {

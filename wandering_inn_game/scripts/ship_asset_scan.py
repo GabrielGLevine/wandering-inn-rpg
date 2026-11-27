@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ship_asset_scan.py -- GH#277: the "placeholders never ship" release gate.
 
-Run in release.yml's `release` (itch) job AFTER the private-bundle overlay:
+Run in release.yml's `release` job AFTER the private-bundle overlay:
 every res://assets/ path referenced by data/sprites.json + data/audio.json
 must exist ON DISK, and no audio row may still carry `pending: true`.
 
@@ -12,7 +12,7 @@ the bundle would ship silent with zero other CI signal -- this scan is the
 one place that catches manifest-vs-bundle gaps.
 
 Scope guards:
-  - `release` itch job ONLY. desktop-exports/steampipe intentionally ship
+  - `release` job ONLY. desktop-exports/steampipe intentionally ship
     the committed fallback tree (pipeline proofs) and must NOT run this.
   - On main / public checkouts this FAILS by design (fallback art is
     absent) -- it is a ship gate, not a CI lint. Do not wire into ci.yml.
@@ -90,7 +90,7 @@ def main(argv: list) -> int:
 		for e in errors:
 			print(f"ship_asset_scan: FAIL -- {e}", file=sys.stderr)
 		print(f"ship_asset_scan: {len(errors)} error(s) -- this build must "
-			"not ship (placeholders/pending slots never reach itch).", file=sys.stderr)
+			"not ship (placeholders/pending slots never ship).", file=sys.stderr)
 		return 1
 	print("ship_asset_scan: OK -- every referenced asset exists on disk, no pending slots.")
 	return 0

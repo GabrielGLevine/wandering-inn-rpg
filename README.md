@@ -6,7 +6,7 @@ Erin's inn with no class and no skills — what you become is up to how you
 play: fight, work, talk, or study your way into classes and let them grow,
 merge, and evolve while you sleep.
 
-**[▶ Play the demo](https://gabrielglevine.github.io/wandering-inn-rpg/)**
+**[▶ Play the demo](https://wandering-inn-rpg.web.app/)**
 — runs in your browser; saves live in your browser on this device. The
 demo tracks the latest
 [release](https://github.com/GabrielGLevine/wandering-inn-rpg/releases).

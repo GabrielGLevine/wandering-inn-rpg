@@ -519,3 +519,8 @@ wandering_inn_game/qa/baselines/prose/sample-*.txt
 wandering_inn_game/qa/baselines/prose/sample-key.json
 wandering_inn_game/qa/baselines/prose/round2-*
 wandering_inn_game/qa/baselines/prose/pin-deltas/
+
+# firebase-tools local state (deploy cache, emulator/debug logs).
+/.firebase/
+/firebase-debug.log
+/ui-debug.log

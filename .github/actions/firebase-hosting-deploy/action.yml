@@ -1,0 +1,200 @@
+# The single Firebase Hosting deploy path, shared by release.yml (tag -> live,
+# after the full gate) and hosting.yml (manual preview/live) so the two cannot
+# drift. Expects an already-exported wandering_inn_game/build/web in the
+# workspace and a job with `id-token: write`.
+#
+# The export bakes licensed assets: this action uploads it to Firebase Hosting
+# and nowhere else. Never add an upload-artifact step beside it.
+name: Firebase Hosting deploy
+description: Deploy the exported web build to Firebase Hosting site wandering-inn-rpg (live or the preview channel) via keyless WIF, then verify what the CDN serves.
+
+inputs:
+  channel:
+    description: "live or preview"
+    required: true
+  preview_expires:
+    description: "Preview channel lifetime, e.g. 12h or 7d (Firebase maximum 30d)"
+    required: false
+    default: "7d"
+  workload_identity_provider:
+    description: "vars.GCP_WIF_PROVIDER"
+    required: true
+  service_account:
+    description: "vars.GCP_DEPLOY_SA"
+    required: true
+
+outputs:
+  url:
+    description: "The deployed URL"
+    value: ${{ steps.deploy.outputs.url }}
+
+runs:
+  using: composite
+  steps:
+    - name: Guard — inputs and the dedicated Hosting site
+      shell: bash
+      env:
+        CHANNEL: ${{ inputs.channel }}
+        PREVIEW_EXPIRES: ${{ inputs.preview_expires }}
+        WIF_PROVIDER: ${{ inputs.workload_identity_provider }}
+        DEPLOY_SA: ${{ inputs.service_account }}
+      run: |
+        set -euo pipefail
+        fail=0
+        if [ -z "$WIF_PROVIDER" ]; then
+          echo "::error::Repository variable GCP_WIF_PROVIDER is not set (gh variable set GCP_WIF_PROVIDER --body 'projects/<number>/locations/global/workloadIdentityPools/<pool>/providers/<provider>')."
+          fail=1
+        fi
+        if [ -z "$DEPLOY_SA" ]; then
+          echo "::error::Repository variable GCP_DEPLOY_SA is not set (gh variable set GCP_DEPLOY_SA --body '<name>@gpt-development.iam.gserviceaccount.com')."
+          fail=1
+        fi
+        case "$CHANNEL" in
+          live) ;;
+          preview)
+            if ! printf '%s' "$PREVIEW_EXPIRES" | grep -Eq '^[1-9][0-9]*[hdw]$'; then
+              echo "::error::preview_expires must look like 12h, 7d or 2w (got '$PREVIEW_EXPIRES')."
+              fail=1
+            fi
+            ;;
+          *)
+            echo "::error::unknown channel '$CHANNEL' (expected live or preview)"
+            fail=1
+            ;;
+        esac
+        # Never the project's default site: the target must map to the one
+        # dedicated site, and firebase.json must still point at the export.
+        sites="$(jq -c '.targets["gpt-development"].hosting["wandering-inn-rpg"]' .firebaserc)"
+        if [ "$sites" != '["wandering-inn-rpg"]' ]; then
+          echo "::error::.firebaserc maps deploy target wandering-inn-rpg to $sites, expected [\"wandering-inn-rpg\"]."
+          fail=1
+        fi
+        if [ "$(jq -r '.hosting.target' firebase.json)" != "wandering-inn-rpg" ] || [ "$(jq -r '.hosting.public' firebase.json)" != "wandering_inn_game/build/web" ]; then
+          echo "::error::firebase.json hosting target/public no longer match this action."
+          fail=1
+        fi
+        if [ ! -f wandering_inn_game/build/web/index.html ] || [ ! -f wandering_inn_game/build/web/index.pck ]; then
+          echo "::error::no web export at wandering_inn_game/build/web — run the export before this action."
+          fail=1
+        fi
+        exit $fail
+
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    # firebase-tools and every transitive dependency are locked by the
+    # package-lock.json beside this file (integrity-checked by npm ci).
+    # --ignore-scripts: no dependency install script runs while the licensed
+    # .pck is on disk. Installed outside the workspace and the deploy dir.
+    - name: Install locked firebase-tools
+      shell: bash
+      env:
+        # Not $GITHUB_ACTION_PATH: a preceding nested action (setup-node) can
+        # leave that variable pointing at its own directory.
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        set -euo pipefail
+        tools="$RUNNER_TEMP/firebase-tools"
+        mkdir -p "$tools"
+        test -f "$ACTION_PATH/package-lock.json" || { echo "::error::firebase-tools lockfile not found at $ACTION_PATH"; exit 1; }
+        grep -q '"firebase-tools"' "$ACTION_PATH/package.json" || { echo "::error::$ACTION_PATH/package.json is not this action's manifest"; exit 1; }
+        cp "$ACTION_PATH/package.json" "$ACTION_PATH/package-lock.json" "$tools/"
+        (cd "$tools" && npm ci --ignore-scripts --no-fund --no-audit)
+        "$tools/node_modules/.bin/firebase" --version
+        echo "FIREBASE_BIN=$tools/node_modules/.bin/firebase" >>"$GITHUB_ENV"
+
+    # The GCP identity is minted only here, after every repo script has run.
+    - name: Authenticate to Google Cloud (keyless WIF)
+      uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+      with:
+        project_id: gpt-development
+        workload_identity_provider: ${{ inputs.workload_identity_provider }}
+        service_account: ${{ inputs.service_account }}
+
+    - name: Deploy to Firebase Hosting
+      id: deploy
+      shell: bash
+      env:
+        CHANNEL: ${{ inputs.channel }}
+        PREVIEW_EXPIRES: ${{ inputs.preview_expires }}
+      run: |
+        set -euo pipefail
+        ref="$(printf '%s' "$GITHUB_REF_NAME" | tr -cd 'A-Za-z0-9._/-')"
+        if [ "$CHANNEL" = "live" ]; then
+          "$FIREBASE_BIN" deploy --non-interactive --project gpt-development \
+            --only hosting:wandering-inn-rpg \
+            --message "${ref} @ ${GITHUB_SHA::12}"
+          url="https://wandering-inn-rpg.web.app"
+          expires="never (live channel)"
+        else
+          # One fixed channel id: each preview replaces the last.
+          "$FIREBASE_BIN" hosting:channel:deploy preview --non-interactive \
+            --project gpt-development --only wandering-inn-rpg \
+            --expires "$PREVIEW_EXPIRES" --json >"$RUNNER_TEMP/channel.json"
+          url="$(jq -r '.result | to_entries[0].value.url // empty' "$RUNNER_TEMP/channel.json")"
+          expires="$(jq -r '.result | to_entries[0].value.expireTime // empty' "$RUNNER_TEMP/channel.json")"
+          case "$url" in
+            "https://wandering-inn-rpg--preview-"*".web.app") ;;
+            *)
+              echo "::error::channel deploy returned '$url', not a preview URL on Hosting site wandering-inn-rpg"
+              cat "$RUNNER_TEMP/channel.json"
+              exit 1
+              ;;
+          esac
+        fi
+        echo "url=$url" >>"$GITHUB_OUTPUT"
+        echo "expires=$expires" >>"$GITHUB_OUTPUT"
+
+    # Proves the URL serves THIS build, byte for byte (a stale or wrong site
+    # fails here), plus the revalidating cache policy and the wasm MIME. The
+    # table records the encoding and size a player really downloads.
+    - name: Verify the served build and write the job summary
+      shell: bash
+      env:
+        CHANNEL: ${{ inputs.channel }}
+        DEPLOY_URL: ${{ steps.deploy.outputs.url }}
+        DEPLOY_EXPIRES: ${{ steps.deploy.outputs.expires }}
+      run: |
+        set -euo pipefail
+        fail=0
+        web=wandering_inn_game/build/web
+        ref="$(printf '%s' "$GITHUB_REF_NAME" | tr -cd 'A-Za-z0-9._/-')"
+        {
+          echo "## Firebase Hosting deploy: $CHANNEL"
+          echo
+          echo "**URL:** <$DEPLOY_URL>"
+          echo
+          echo "- Expires: $DEPLOY_EXPIRES"
+          echo "- Source: \`$ref\` @ \`$GITHUB_SHA\`"
+          echo
+          echo "| file | served sha256 = built | cache-control | content-type | content-encoding | content-length |"
+          echo "|---|---|---|---|---|---|"
+        } >>"$GITHUB_STEP_SUMMARY"
+        for f in index.html index.js index.wasm index.pck; do
+          want="$(sha256sum "$web/$f" | cut -d' ' -f1)"
+          match="MISMATCH"
+          # The CDN is purged on deploy; allow a short settle before failing.
+          for attempt in 1 2 3 4 5 6; do
+            got="$(curl -fsS --retry 2 "$DEPLOY_URL/$f?verify=$GITHUB_RUN_ID-$attempt" | sha256sum | cut -d' ' -f1)" || got="fetch-failed"
+            if [ "$got" = "$want" ]; then match="yes ${want:0:12}"; break; fi
+            sleep 10
+          done
+          if [ "$match" = "MISMATCH" ]; then
+            echo "::error::$DEPLOY_URL/$f does not serve this build (built sha256 $want, served $got)"
+            fail=1
+          fi
+          hdr="$(curl -fsS --head -H 'Accept-Encoding: br, gzip' "$DEPLOY_URL/$f" | tr -d '\r')" || { echo "::error::$f not served from $DEPLOY_URL"; fail=1; continue; }
+          get() { printf '%s\n' "$hdr" | awk -v k="$1" 'tolower($1)==k":" {sub(/^[^:]*: */,""); v=$0} END{print v}'; }
+          cc="$(get cache-control)"; ct="$(get content-type)"; ce="$(get content-encoding)"; cl="$(get content-length)"
+          echo "| $f | $match | $cc | $ct | ${ce:-identity} | ${cl:-chunked} |" >>"$GITHUB_STEP_SUMMARY"
+          case "$cc" in
+            *no-cache*) ;;
+            *) echo "::error::$f served with Cache-Control '$cc' — expected no-cache (fixed file names must revalidate)"; fail=1 ;;
+          esac
+          if [ "$f" = "index.wasm" ] && [ "${ct%%;*}" != "application/wasm" ]; then
+            echo "::error::index.wasm served as '$ct', expected application/wasm"; fail=1
+          fi
+        done
+        exit $fail

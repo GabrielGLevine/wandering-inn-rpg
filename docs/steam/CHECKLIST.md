@@ -59,11 +59,10 @@ payment plumbing; keep it that way when you provision the app.
       `unlisted-ci` in the workflow if you don't set it — but you still
       need the branch to exist and not be public).
 
-## 5. CI secrets + variables (the butler-secret pattern, extended)
+## 5. CI secrets + variables
 
-Repo → Settings → Secrets and variables → Actions. Follow the SAME split
-`wi-shipping` already uses for the itch push (`BUTLER_API_KEY` = a secret,
-`ITCH_TARGET` = a plaintext value in the workflow) — Steam's build-account
+Repo → Settings → Secrets and variables → Actions. Credentials are secrets and
+target identifiers are plaintext — Steam's build-account
 credential is the secret; the app id/branch/depot ids are plaintext repo
 **Variables** (not secrets — they're not sensitive, and gating the job on
 `vars.STEAM_APP_ID != ''` only works with a Variable, not a Secret, which

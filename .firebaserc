@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "gpt-development"
+  },
+  "targets": {
+    "gpt-development": {
+      "hosting": {
+        "wandering-inn-rpg": [
+          "wandering-inn-rpg"
+        ]
+      }
+    }
+  }
+}
