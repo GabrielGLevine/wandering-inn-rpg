@@ -6,7 +6,7 @@ you see the game the way a player does. Everything you need is in this file and
 in `BROWSER-CONTROLS.md`.
 
 **Build under test:** the live web build at
-<https://gabrielglevine.github.io/wandering-inn-rpg/> — v0.16.1, released
+<https://wandering-inn-rpg.web.app/> — v0.16.1, released
 2026-07-28. *(Dispatcher: correct this line if a newer version is live.)*
 
 ---

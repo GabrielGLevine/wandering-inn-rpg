@@ -1,0 +1,188 @@
+# Firebase Hosting web deploy — the game's web home is
+# https://wandering-inn-rpg.web.app (GCP project gpt-development, Hosting
+# SITE wandering-inn-rpg; never the project's default site).
+#
+# THE ONE SAFE SHAPE: build and deploy in ONE job, with no upload-artifact
+# step and no git write. The built .pck bakes the licensed bundle-tier
+# assets, so the build must never enter the PUBLIC repo's git history or a
+# downloadable workflow artifact. Here it exists only on the ephemeral runner
+# disk and in Firebase Hosting: GITHUB_TOKEN is contents:read, checkout keeps
+# no credentials, and the only upload is `firebase deploy` of
+# wandering_inn_game/build/web.
+#
+# Trigger: workflow_dispatch ONLY (preview channel, or live). A release tag
+# does NOT run this file: release.yml deploys live after its full gate, so a
+# tag causes exactly one live deploy. No pull_request trigger, so neither the
+# asset PAT nor the GCP identity is reachable from a fork PR.
+# Auth: keyless Workload Identity Federation. Repo VARIABLES (not secrets —
+# they are identifiers, not credentials): GCP_WIF_PROVIDER, GCP_DEPLOY_SA.
+# Secret: PRIVATE_ASSETS_TOKEN (same PAT release.yml uses).
+# Gate: import + smoke boot + the smoke QA tier with real assets — lighter
+# than release.yml's full gate; meant for previews and for re-publishing an
+# already-gated main or tag.
+# The deploy itself is .github/actions/firebase-hosting-deploy, shared with
+# release.yml.
+
+name: Deploy to Firebase Hosting
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: "preview = temporary channel URL for phone testing; live = https://wandering-inn-rpg.web.app"
+        type: choice
+        options:
+          - preview
+          - live
+        default: preview
+      preview_expires:
+        description: "Preview channel lifetime (e.g. 12h, 7d; Firebase maximum 30d)"
+        type: string
+        default: "7d"
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: hosting-${{ inputs.channel }}
+  cancel-in-progress: false
+
+env:
+  GODOT_BIN: "Godot_v4.7-stable_linux.x86_64"
+  GODOT_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
+  GODOT_SUMS_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/SHA512-SUMS.txt"
+  GODOT_TEMPLATES_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz"
+
+jobs:
+  deploy:
+    name: Build web (real assets) and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Preconditions (fail before the long build)
+        env:
+          GCP_WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
+          GCP_DEPLOY_SA: ${{ vars.GCP_DEPLOY_SA }}
+          CHANNEL: ${{ inputs.channel }}
+        run: |
+          set -euo pipefail
+          fail=0
+          if [ -z "${GCP_WIF_PROVIDER:-}" ]; then
+            echo "::error::Repository variable GCP_WIF_PROVIDER is not set. Create the Workload Identity provider, then: gh variable set GCP_WIF_PROVIDER --body 'projects/<number>/locations/global/workloadIdentityPools/<pool>/providers/<provider>'"
+            fail=1
+          fi
+          if [ -z "${GCP_DEPLOY_SA:-}" ]; then
+            echo "::error::Repository variable GCP_DEPLOY_SA is not set. Create the deploy service account, then: gh variable set GCP_DEPLOY_SA --body '<name>@gpt-development.iam.gserviceaccount.com'"
+            fail=1
+          fi
+          case "$CHANNEL" in
+            live)
+              # A live deploy ships to players: only main or a release tag.
+              case "$GITHUB_REF" in
+                refs/heads/main|refs/tags/v*) ;;
+                *)
+                  echo "::error::live deploys run only from main or a v* tag, not $GITHUB_REF. Use channel=preview for other refs."
+                  fail=1
+                  ;;
+              esac
+              ;;
+          esac
+          exit $fail
+
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up pinned Godot 4.7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  ${GODOT_BIN}.zip$" SHA512-SUMS.txt | sed "s#  ${GODOT_BIN}.zip#  godot.zip#" | sha512sum -c -
+          unzip -q godot.zip
+          sudo install -m 0755 "$GODOT_BIN" /usr/local/bin/godot
+          godot --version
+
+      - name: Install pinned web export templates
+        run: |
+          set -euo pipefail
+          curl -fsSL -o templates.tpz "$GODOT_TEMPLATES_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  Godot_v4.7-stable_export_templates.tpz$" SHA512-SUMS.txt | sed "s#  Godot_v4.7-stable_export_templates.tpz#  templates.tpz#" | sha512sum -c -
+          unzip -q templates.tpz
+          dest="$HOME/.local/share/godot/export_templates/4.7.stable"
+          mkdir -p "$dest"
+          mv templates/* "$dest/"
+
+      - name: Fetch private asset bundle
+        env:
+          GH_TOKEN: ${{ secrets.PRIVATE_ASSETS_TOKEN }}
+          PRIVATE_ASSETS_REPO: "GabrielGLevine/wandering-inn-rpg-assets"
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::error::PRIVATE_ASSETS_TOKEN secret is not set — a Hosting deploy must build with the real assets, same as release.yml."
+            exit 1
+          fi
+          mkdir -p bundle
+          gh release download --repo "$PRIVATE_ASSETS_REPO" \
+            --pattern '*.tar.gz' --dir bundle
+          count=$(ls -1 bundle/*.tar.gz 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$count" -eq 0 ]; then
+            echo "::error::No *.tar.gz bundle in the latest release of $PRIVATE_ASSETS_REPO."
+            exit 1
+          fi
+
+      - name: Overlay real assets
+        run: |
+          set -euo pipefail
+          tarball="$(ls -1 bundle/*.tar.gz | head -n1)"
+          tar -xzf "$tarball" -C .
+          if [ -z "$(find wandering_inn_game/assets -type f 2>/dev/null | head -n1)" ]; then
+            echo "::error::assets/ empty after overlay."
+            exit 1
+          fi
+
+      - name: Import pass
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 300; exec @ARGV' \
+            godot --headless --path wandering_inn_game --import
+
+      - name: Headless smoke (--quit)
+        run: |
+          set -euo pipefail
+          log=smoke.log
+          perl -e 'alarm 120; exec @ARGV' \
+            godot --headless --path wandering_inn_game --quit >"$log" 2>&1 || rc=$?
+          cat "$log"
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+            echo "::error::smoke boot tripped the error grep"
+            exit 1
+          fi
+          exit "${rc:-0}"
+
+      - name: Smoke QA tier (real assets)
+        run: |
+          set -euo pipefail
+          bash wandering_inn_game/qa/ci_sweep.sh --tier smoke
+
+      - name: Export wasm build
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 600; exec @ARGV' \
+            bash wandering_inn_game/qa/web/export_web.sh
+          if [ ! -f wandering_inn_game/build/web/index.html ]; then
+            echo "::error::export produced no index.html"
+            exit 1
+          fi
+          ls -la wandering_inn_game/build/web
+
+      - name: Deploy to Firebase Hosting
+        uses: ./.github/actions/firebase-hosting-deploy
+        with:
+          channel: ${{ inputs.channel }}
+          preview_expires: ${{ inputs.preview_expires }}
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}

@@ -57,8 +57,10 @@ def main() -> int:
 			errors.append(f"unexpected docs/superpowers/ subdirectory: {child.name}")
 
 	readme = (ROOT / "README.md").read_text()
-	if "https://gabrielglevine.github.io/wandering-inn-rpg/" not in readme:
-		errors.append("README.md missing the live GitHub Pages demo URL")
+	if "https://wandering-inn-rpg.web.app/" not in readme:
+		errors.append("README.md missing the live Firebase Hosting demo URL")
+	if "gabrielglevine.github.io" in readme:
+		errors.append("README.md still links the retired GitHub Pages address")
 	if "[▶ Play the demo](#)" in readme:
 		errors.append("README.md still carries the placeholder demo link")
 
