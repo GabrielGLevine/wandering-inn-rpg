@@ -4,6 +4,8 @@ const TEST_DIR := "res://qa_output/title_recovery_unit"
 
 class GameStub:
 	const MANUAL_SLOTS: Array[String] = ["manual", "manual_2", "manual_3"]
+	func slot_last_played(slot: String) -> int:
+		return FileAccess.get_modified_time("%s/%s.json" % [TEST_DIR, slot])
 	func _make_sim() -> WIGame:
 		return WIGame.new(WISceneCatalog.compose(), {}, func(_type: String, _payload: Dictionary): pass, 9)
 

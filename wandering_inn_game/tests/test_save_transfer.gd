@@ -155,5 +155,5 @@ func _init() -> void:
 	assert(limit != null and limit.get_string(1).to_int() <= WISaveTransfer.MAX_PAYLOAD_CHARS, "the page never sends more than the game accepts")
 	for slot: String in WISaveTransfer.SLOTS:
 		assert(page.contains('"%s"' % slot), "page reads slot %s" % slot)
-	print("test_save_transfer: PASS")
+	print("PASS: old-site hand-off decodes strictly, refuses hostile payloads quietly, and loads real v0.20.0 saves")
 	quit()
