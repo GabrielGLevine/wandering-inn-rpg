@@ -96,23 +96,23 @@ static var _sky_cache: Dictionary = {}
 ## Entries exist for biomes whose maps all currently declare rows too --
 ## the table is the DEFAULT for the kind of place, not a patch list.
 ## `phase: []` here means "as far as the BIOME is concerned, every phase" --
-## a sky-bearing MAP inside such a biome (ruin_surface in `cave`,
-## mercantile_alleys in `invrisil_alley`) is still forced to dusk/night by
+## a sky-bearing MAP inside such a biome (ruin_surface in `cave`) is still
+## forced to dusk/night by
 ## `_biome_default_ambience`, because daylight is a property of the room, not
 ## of the tileset it was built from.
 const BIOME_DEFAULT_AMBIENCE := {
 	"dungeon": {"preset": "dust_motes", "phase": []},
 	"cave": {"preset": "dust_motes", "phase": []},
-	"invrisil_alley": {"preset": "dust_motes", "phase": []},
-	"brothers_parlor": {"preset": "dust_motes", "phase": []},
 	"inn": {"preset": "dust_motes", "phase": ["dusk", "night"]},
+	"riverfarm_interior": {"preset": "dust_motes", "phase": ["dusk", "night"]},
+	"liscor_civic": {"preset": "dust_motes", "phase": ["dusk", "night"]},
+	"pallass_interior": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 	"pallass_forge": {"preset": "embers", "phase": []},
 	"garden": {"preset": "fireflies", "phase": ["dusk", "night"]},
 	"witch_hollow": {"preset": "fireflies", "phase": ["dusk", "night"]},
 	"floodplains": {"preset": "leaves", "phase": ["dusk", "night"]},
 	"riverfarm_village": {"preset": "leaves", "phase": ["dusk", "night"]},
 	"street": {"preset": "dust_motes", "phase": ["dusk", "night"]},
-	"invrisil_street": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 	"pallass_market": {"preset": "dust_motes", "phase": ["dusk", "night"]},
 }
 const SWAY_SHADER := preload("res://src/world/shaders/foliage_sway.gdshader")
@@ -203,6 +203,10 @@ var _player_tween_is_move := false
 var _camera_ctl: WICameraController
 var _entity_visuals: Dictionary = {}
 var _mood_layer_visuals: Dictionary = {}
+## #632 decor `night_glow` siblings: [{node, phases}]. Kept OUT of MOOD_LAYERS
+## (its data_lint mirror names only night_attenuation layers); their modulate is
+## WIAtmosphere.glow_modulate, refreshed with visibility on every UI_MOOD_APPLIED.
+var _night_glows: Array = []
 var _dialogue_separation: Dictionary = {}
 var _field_blocked_prop_plan: Dictionary = {}
 var _journal: Node
@@ -854,6 +858,7 @@ func _rebuild_field() -> void:
 	_mood_layer_visuals = {}
 	for mood_layer: String in MOOD_LAYERS:
 		_mood_layer_visuals[mood_layer] = []
+	_night_glows = []
 	_dialogue_separation = {}
 	# GH#335: field furniture, freed with everything else above -- the
 	# end-of-rebuild reconcile rebuilds it against the new map.
@@ -955,7 +960,8 @@ func _map_transition_stale_cover() -> bool:
 ## Y-sorted biome props/decor/entities. Segment and cover_skip cells own their
 ## art; generic covers must never double-draw them.
 func _build_floor() -> void:
-	var biome: Dictionary = _biome_for_current_map()
+	var original_biome: Dictionary = _biome_for_current_map()
+	var biome := WITileBoardBuilder.resolve_biome_render(original_biome, WISpriteRegistry)
 	var map_cfg: Dictionary = _current_map_cfg()
 	var grid_size := Game.sim.grid_size
 	WITileBoardBuilder.build_skirt(_field_root, grid_size, SKIRT_MARGIN_CELLS, biome, WISpriteRegistry)
@@ -965,9 +971,11 @@ func _build_floor() -> void:
 	for x in grid_size.x:
 		for y in grid_size.y:
 			floor_layer.set_cell(Vector2i(x, y), 0, floor_coord)
+	floor_layer.set_meta("owned_terrain_fallback", bool(biome.get("_using_fallback", false)))
+	WITileBoardBuilder.apply_ground_tone(floor_layer, biome.get("floor_tone", {}))
 	_field_root.add_child(floor_layer)
-	WITileBoardBuilder.build_floor_layers(_field_root, map_cfg.get("floor_layers", []), grid_size, biome, WISpriteRegistry)
-	var segment_covered := WITileBoardBuilder.build_walls(_field_root, map_cfg.get("walls", {}), grid_size, biome, WISpriteRegistry)
+	var ground_transitions := WITileBoardBuilder.build_floor_layers(_field_root, map_cfg.get("floor_layers", []), grid_size, original_biome, WISpriteRegistry)
+	var segment_covered := WITileBoardBuilder.build_walls(_field_root, map_cfg.get("walls", {}), grid_size, original_biome, WISpriteRegistry)
 
 	var cover_skip := {}
 	for c: Array in (map_cfg.get("cover_skip", []) as Array):
@@ -992,6 +1000,7 @@ func _build_floor() -> void:
 	assert(prop_plan.size() <= FIELD_BLOCKED_PROP_BUDGET,
 		"map %s exceeds the %d blocked-prop budget (%d)" % [Game.sim.current_map, FIELD_BLOCKED_PROP_BUDGET, prop_plan.size()])
 	_field_blocked_prop_plan = prop_plan
+	var boundary_toned := false
 	if not fallback_cells.is_empty():
 		var blocked_sheet := String(biome.get("blocked_sheet", biome["sheet"]))
 		var blocked_tile_px := int(biome.get("blocked_tile_px", tile_px))
@@ -999,11 +1008,23 @@ func _build_floor() -> void:
 		var blocked_coord := Vector2i(int(biome["blocked"][0]), int(biome["blocked"][1]))
 		for cell: Vector2i in fallback_cells:
 			blocked_layer.set_cell(cell, 0, blocked_coord)
+		blocked_layer.set_meta("owned_terrain_fallback", bool(biome.get("_using_fallback", false)))
+		WITileBoardBuilder.apply_ground_tone(blocked_layer, map_cfg.get("boundary_tone", biome.get("blocked_tone", {})))
+		boundary_toned = blocked_layer.material is ShaderMaterial
 		_field_root.add_child(blocked_layer)
+	var vista_count := WITileBoardBuilder.build_vistas(_field_root, map_cfg.get("vistas", []), WISpriteRegistry)
+	var owned_terrain_layers := 0
+	for layer: Node in _field_root.get_children():
+		if bool(layer.get_meta("owned_terrain_fallback", false)):
+			owned_terrain_layers += 1
 	ObservableBus.emit_domain_event(WIEvents.UI_MAP_RENDERED, {
 		"map": Game.sim.current_map,
 		"floor_cells": grid_size.x * grid_size.y,
 		"blocked_cells": Game.sim.blocked_cells.size(),
+		"vistas": vista_count,
+		"ground_transitions": ground_transitions,
+		"boundary_toned": boundary_toned,
+		"owned_terrain_layers": owned_terrain_layers,
 	})
 
 
@@ -1183,6 +1204,8 @@ func _spawn_burn_poof(cell: Vector2i) -> void:
 ## that payload stays scoped to real entities per the design doc's
 ## "payloads unchanged" contract).
 func _build_decor(decor_list: Array) -> void:
+	var roles := {}
+	var lifted := 0
 	for raw: Variant in decor_list:
 		if not (raw is Dictionary):
 			continue
@@ -1191,7 +1214,101 @@ func _build_decor(decor_list: Array) -> void:
 		if sprite_id == "" or not WISpriteRegistry.has_sprite(sprite_id):
 			continue
 		var cell := Vector2i(int(entry["cell"][0]), int(entry["cell"][1]))
-		_make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)), null, "decor")
+		var decor_visual := _make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)), null, "decor")
+		if entry.has("lift"):
+			lifted += _lift_decor(decor_visual, int(entry["lift"]))
+		if entry.get("night_glow") is Dictionary:
+			_build_night_glow(cell, entry["night_glow"] as Dictionary)
+		if entry.has("sprite_role"):
+			var role := String(entry["sprite_role"])
+			if not roles.has(role):
+				roles[role] = []
+			if not (roles[role] as Array).has(sprite_id):
+				(roles[role] as Array).append(sprite_id)
+	for role: String in roles:
+		(roles[role] as Array).sort()
+	var glows_lit := _refresh_night_glows()
+	# #607: one aggregate per build (decor emits no per-row event); fires before world_ready.
+	# `lifted` counts rows whose art actually moved; `night_glow.phase` is the phase the glows were lit for.
+	ObservableBus.emit_domain_event(WIEvents.UI_DECOR_RENDERED, {
+		"map": Game.sim.current_map, "roles": roles, "lifted": lifted,
+		"night_glow": {"rows": _night_glows.size(), "lit": glows_lit, "phase": Game.sim.phase()},
+	})
+
+
+## #632: a decor row's `lift` (px) raises its art onto a surface drawn on the
+## same cell (a quill on a counter, a glass on a bar) and sorts it 1px south so it
+## draws over that surface. The holder keeps its cell, so a fallback sprite lifts
+## the same way. Returns 1 when art moved, for the decor payload's `lifted` count.
+func _lift_decor(holder: Node2D, lift: int) -> int:
+	holder.position.y += 1.0
+	var moved := 0
+	for child: Node in holder.get_children():
+		if child is Node2D:
+			(child as Node2D).position.y -= float(lift) + 1.0
+			moved = 1
+	return moved
+
+
+## #632 decision 2 (window night state): a decor row's `night_glow`
+## ({"sprite": id, "phase": [...], default dusk+night}) draws an additive sibling
+## over the row's art, shown only in its phases. It spends no PointLight2D, so
+## LIGHT_BUDGET is untouched, and it is not a decor row of its own, so the
+## one-cell decor count (G4/clutter lint) is unchanged. 1px south sort bias puts
+## it over the art it lights; keep glow rows off cells a PC can stand south of
+## by less than a cell (none can: a bias under one cell never outsorts the PC).
+func _build_night_glow(cell: Vector2i, glow: Dictionary) -> void:
+	var sprite_id := String(glow.get("sprite", ""))
+	if sprite_id == "" or not WISpriteRegistry.has_sprite(sprite_id):
+		return
+	var holder := _visual_factory.make(cell, sprite_id, [], PROP_COLOR, "", false, 1)
+	var additive := CanvasItemMaterial.new()
+	additive.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	for child: Node in holder.get_children():
+		if child is AnimatedSprite2D:
+			(child as AnimatedSprite2D).material = additive
+	_entities_root.add_child(holder)
+	_night_glows.append({"node": holder, "phases": glow.get("phase", ["dusk", "night"])})
+
+
+## Returns how many glows are visible after the refresh.
+func _refresh_night_glows() -> int:
+	if _night_glows.is_empty() or _atmosphere == null:
+		return 0
+	var phase := _atmosphere.phase_now()
+	return _apply_night_glows(phase, WIAtmosphere.glow_modulate(Game.sim.current_map, phase))
+
+
+## Re-tints the live glows without a decor rebuild (a phase crossing, or the
+## field re-show after a fight the clock ticked through) and confirms it.
+## Silent on maps with no glow rows, and from a World a save load has already
+## swapped out (it stays on the bus until its queued free lands).
+func _reconcile_night_glows() -> void:
+	if _night_glows.is_empty() or _atmosphere == null or not is_inside_tree():
+		return
+	var lit := _refresh_night_glows()
+	ObservableBus.emit_domain_event(WIEvents.UI_NIGHT_GLOW_RENDERED, {
+		"map": Game.sim.current_map, "phase": _atmosphere.phase_now(),
+		"rows": _night_glows.size(), "lit": lit,
+	})
+
+
+func _apply_night_glows(phase: String, tint: Color) -> int:
+	var lit := 0
+	var live: Array = []
+	for raw: Variant in _night_glows:
+		var glow := raw as Dictionary
+		var node: Variant = glow["node"]
+		if not is_instance_valid(node):
+			continue
+		var holder := node as Node2D
+		holder.visible = (glow["phases"] as Array).has(phase)
+		holder.modulate = tint
+		if holder.visible:
+			lit += 1
+		live.append(glow)
+	_night_glows = live
+	return lit
 
 
 func _build_scatter(specs: Array) -> void:
@@ -1220,9 +1337,19 @@ func _build_scatter(specs: Array) -> void:
 		# the few non-foliage instances in a mixed pool is imperceptible in
 		# practice.
 		var sway := bool(spec.get("sway", false))
+		# Optional `cells` ("all" | {"rect":..} | {"list":..}, the floor_layers
+		# grammar) confines a spec to a region. The hash below is untouched, so
+		# every cell a spec keeps decides exactly as it did before (#620).
+		var only_cells := {}
+		var confined: bool = spec.has("cells") and not (spec["cells"] is String and spec["cells"] == "all")
+		if confined:
+			for allowed: Vector2i in WITileBoardBuilder.resolve_layer_cells(spec["cells"], grid_size):
+				only_cells[allowed] = true
 		for x in grid_size.x:
 			for y in grid_size.y:
 				var cell := Vector2i(x, y)
+				if confined and not only_cells.has(cell):
+					continue
 				if Game.sim.is_cell_blocked(cell) or occupied.has(cell) or cell == Game.sim.player_cell:
 					continue
 				var block := Vector2i(x / 4, y / 4)
@@ -1257,7 +1384,25 @@ func _current_map_cfg() -> Dictionary:
 func _update_camera() -> void:
 	# Camera math + pan tween live in WICameraController (#194b seam 2);
 	# wrappers keep the sim reads and QA-paced duration world-side.
+	_configure_field_camera()
 	_camera_ctl.update(Game.sim.grid_size, Game.sim.player_cell)
+
+
+func _configure_field_camera() -> void:
+	var config: Dictionary = _current_map_cfg().get("camera", {})
+	var offset: Array = config.get("offset", [0, 0])
+	var margins: Array = config.get("margins", [0, 0, 0, 0])
+	_camera_ctl.set_field_framing(
+		Vector2(float(offset[0]), float(offset[1])),
+		Vector4(float(margins[0]), float(margins[1]), float(margins[2]), float(margins[3]))
+	)
+
+
+func field_focus_offset() -> Vector2:
+	if _camera_ctl == null:
+		return Vector2.ZERO
+	_configure_field_camera()
+	return _camera_ctl.field_focus_offset()
 
 
 func set_view_size(view_size: Vector2) -> void:
@@ -1273,6 +1418,7 @@ func set_view_size(view_size: Vector2) -> void:
 
 
 func _pan_camera_to_player() -> void:
+	_configure_field_camera()
 	_camera_ctl.pan_to(Game.sim.grid_size, Game.sim.player_cell, _presentation_delay(MOVE_TWEEN_SECONDS))
 
 
@@ -1352,8 +1498,23 @@ func _build_entities() -> Array[Node2D]:
 		)
 		visual.visible = not bool(render["hidden"])
 		_entity_visuals[String(ent["id"])] = visual
+		_emit_entity_visual_rendered(String(ent["id"]), render, ent)
 		visuals.append(visual)
 	return visuals
+
+
+func _emit_entity_visual_rendered(id: String, render: Dictionary, ent: Dictionary) -> void:
+	var sprite_id := String(render["sprite"])
+	var payload := {
+		"map": Game.sim.current_map,
+		"entity": id,
+		"sprite": sprite_id,
+		"resolved_sprite": WISpriteRegistry.resolved_id(sprite_id),
+		"hidden": bool(render["hidden"]),
+	}
+	if ent.has("sprite_role"):
+		payload["sprite_role"] = String(ent["sprite_role"])
+	ObservableBus.emit_domain_event(WIEvents.UI_ENTITY_VISUAL_RENDERED, payload)
 
 
 ## Resolves a `prop`/`npc` entity's CURRENT
@@ -1425,6 +1586,7 @@ func _refresh_entity_visual(id: String) -> void:
 	var new_visual := _make_entity_visual(cell, String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"], false, ent.get("field_y_sort_bias_px", null))
 	new_visual.visible = not bool(render["hidden"])
 	_entity_visuals[id] = new_visual
+	_emit_entity_visual_rendered(id, render, ent)
 	assert(_light_count <= LIGHT_BUDGET,
 		"map %s exceeds the %d-light budget (%d) after a visual_states refresh -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])
 
@@ -1529,6 +1691,7 @@ func _reconcile_entity_presence() -> void:
 			var visual := _make_entity_visual(ent["cell"], String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"], false, ent.get("field_y_sort_bias_px", null))
 			visual.visible = not bool(render["hidden"])
 			_entity_visuals[id] = visual
+			_emit_entity_visual_rendered(id, render, ent)
 		else:
 			var old_visual := _entity_visuals[id] as Node2D
 			for child: Node in old_visual.get_children():
@@ -1902,6 +2065,8 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_field_root.visible = true
 		_refresh_entities_watching_dormant()
 		_reconcile_dangersense_overlay()
+		# The UI_MOOD_APPLIED arm skips its refresh while combat holds the field.
+		_reconcile_night_glows()
 	elif type == WIEvents.ACCOMPLISHMENT_RECORDED:
 		# CONTRACT (#119, stale-cover guard — stated once here, shared by the
 		# ENTITY_REMOVED/ITEM_GAINED/PHASE_CHANGED arms): while the transition
@@ -1969,6 +2134,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		if not _map_transition_stale_cover() and Game.sim.combat == null:
 			_apply_field_legibility()
 			_apply_dangersense_night_compensation()
+			_reconcile_night_glows()
 	elif type == WIEvents.PHASE_CHANGED:
 		if _map_transition_stale_cover():
 			return

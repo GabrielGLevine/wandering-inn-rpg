@@ -326,7 +326,7 @@ func _nuke(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
 					continue
 				if not combat.has_los(id, foe):
 					continue
-			var value := expected_damage(combat, c, combat.combatants[foe], mult, melee)
+			var value := expected_damage(combat, c, combat.combatants[foe], mult, melee, WICombatBuild.damage_source(s))
 			if value > best_value:
 				best_value = value
 				best_skill = sk
@@ -433,8 +433,9 @@ func _is_untargetable(combat: WICombat, id: String) -> bool:
 
 ## Mean HP a single hit removes, used ONLY to rank one action against another.
 ## It mirrors `WICombat._resolve_hit` -> `_deduct_hp`: hit chance, the
-## str/int-halved base plus a weapon die, the melee-only damage_mod, the
-## floor-at-1, then the target's flat per-hit damage_reduction. It is a
+## str/int-halved base plus a weapon die, the source's flat add (#514:
+## `WICombat.hit_stat`/`hit_flat`, the engine's own reads), the floor-at-1,
+## then the target's flat per-hit damage_reduction. It is a
 ## comparison, not an effect -- no engine call is replaced by it, and
 ## `test_combat_policies.gd` pins it against thousands of real `_resolve_hit`
 ## rolls rather than against a re-reading of the formula. If it drifts, that
@@ -443,25 +444,26 @@ func _is_untargetable(combat: WICombat, id: String) -> bool:
 ## land (top die face, no miss-chance discount — a trigger priced on the
 ## average hit dies to the max one; measured: warden expected 19.4 vs actual
 ## power-strike 30). Same truncation/DR/clamp arithmetic as expected_damage.
-static func potential_damage(a: Dictionary, t: Dictionary, mult: float, melee: bool) -> float:
-	var stat: int = int(a[WIKeys.STATS]["str"]) if melee else int(a[WIKeys.STATS]["int"])
+static func potential_damage(a: Dictionary, t: Dictionary, mult: float, melee: bool, source: String = "") -> float:
+	var src := WICombat.hit_source(melee, source)
+	var stat: int = WICombat.hit_stat(a, src)
 	var die := maxi(1, int(a[WIKeys.WEAPON_DIE]))
 	var reduction := int(t.get(WIKeys.DAMAGE_REDUCTION, 0))
-	var base := int((stat / 2 + die) * mult)
-	if melee:
-		base += int(a.get(WIKeys.DAMAGE_MOD, 0))
+	var base := int((stat / 2 + die) * mult) + WICombat.hit_flat(a, src)
 	var damage := maxi(1, base)
 	if reduction > 0:
 		damage = maxi(1, damage - reduction)
 	return float(damage)
 
 
-static func expected_damage(combat: WICombat, a: Dictionary, t: Dictionary, mult: float, melee: bool) -> float:
+static func expected_damage(combat: WICombat, a: Dictionary, t: Dictionary, mult: float, melee: bool, source: String = "") -> float:
 	var hit_chance: int = WICombat.BASE_HIT + int(a["hit_bonus"]) - int(t[WIKeys.STATS]["dex"]) / 4
 	var p_hit := clampf(float(hit_chance) / 100.0, 0.0, 1.0)
 	if p_hit <= 0.0:
 		return 0.0
-	var stat: int = int(a[WIKeys.STATS]["str"]) if melee else int(a[WIKeys.STATS]["int"])
+	var src := WICombat.hit_source(melee, source)
+	var stat: int = WICombat.hit_stat(a, src)
+	var flat := WICombat.hit_flat(a, src)
 	var die := maxi(1, int(a[WIKeys.WEAPON_DIE]))
 	var reduction := int(t.get(WIKeys.DAMAGE_REDUCTION, 0))
 	var total := 0.0
@@ -469,9 +471,7 @@ static func expected_damage(combat: WICombat, a: Dictionary, t: Dictionary, mult
 	# `int((stat/2 + roll) * mult)` per face and then clamps at 1 and again
 	# after DR, so averaging the faces first would misprice both floors.
 	for face in range(1, die + 1):
-		var base := int((stat / 2 + face) * mult)
-		if melee:
-			base += int(a.get(WIKeys.DAMAGE_MOD, 0))
+		var base := int((stat / 2 + face) * mult) + flat
 		var damage := maxi(1, base)
 		if reduction > 0:
 			damage = maxi(1, damage - reduction)

@@ -128,19 +128,15 @@ func _check_transition_precedence() -> void:
 		assert(sim.current_map == ("inn" if kind == "door" else "street"), "kind dispatch, not additive route edges, determines the destination")
 
 
-## THE key query. `erin_errand`'s hub authors FOURTEEN options; under
-## near_invrisil's accomplishments only three survive, because accomplishment
-## gates DROP their row instead of locking it and three more rows are
-## `hide_when`-spent. A script that counted 14 (or 11) `move down` presses would
-## WRAP and silently confirm the wrong row -- the failure this query exists to
-## prevent -- so the count, the order, and the drop reasons are all pinned.
+## Hidden authored rows do not occupy input cursors; the service row stays
+## reachable independently of the story gates.
 func _check_visible_options(oracle: RefCounted, sim: WIGame) -> void:
 	var answer: Dictionary = oracle.call("_q_visible_options", sim, ["erin_errand", "hub"])
 	assert(not answer.has("error"), "visible_options errored: %s" % str(answer.get("error", "")))
 	var node: Dictionary = (sim._combat_config["dialogue"]["erin_errand"]["nodes"] as Dictionary)["hub"]
 	var authored: int = (node["options"] as Array).size()
-	assert(authored == 14, "erin_errand.hub authors 14 options (re-derive this test if the graph changes): got %d" % authored)
-	assert(int(answer["count"]) == 3, "near_invrisil sees 3 of erin_errand.hub's 14 rows: got %d" % int(answer["count"]))
+	assert(authored == 15, "erin_errand.hub authors 15 options (re-derive this test if the graph changes): got %d" % authored)
+	assert(int(answer["count"]) == 4, "near_invrisil sees 4 of erin_errand.hub's 15 rows: got %d" % int(answer["count"]))
 	assert(int(answer["count"]) + (answer["dropped"] as Array).size() == authored,
 			"every authored row is either visible or explained as dropped")
 	var rows: Array = answer["options"]
@@ -154,6 +150,8 @@ func _check_visible_options(oracle: RefCounted, sim: WIGame) -> void:
 	# reports both numbers is that they diverge exactly here.
 	assert(int((rows[2] as Dictionary)["authored_index"]) == 5,
 			"the third visible row is authored index 5, not 2 -- the drop shift the cursor must not be counted against")
+	assert(int(rows[3]["authored_index"]) == 14 and String(rows[3]["text"]) == "Could I get something to eat?",
+			"the ungated meal service remains the fourth visible row")
 	var reasons: Dictionary = {}
 	for d: Dictionary in (answer["dropped"] as Array):
 		reasons[int(d["authored_index"])] = String(d["reason"])

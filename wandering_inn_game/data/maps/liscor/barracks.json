@@ -1,6 +1,7 @@
 {
  "_comment": "Zevara Sunderscale STAYS at the gate (zevara_intro's own framing untouched)",
- "biome": "inn",
+ "biome": "liscor_civic",
+ "_kits_recompose": "#629 — Liscor rebuild: tan city-wall brick walls (the barracks sits in the wall), lockers, footlocker, composed kit rack and duty table",
  "interior_flavor": [
   "Nothing there. Bare stone, and a rack of spare kit with every strap buckled the same way.",
   "Nothing there. A shield knocks against its peg down the corridor, then goes quiet."
@@ -16,11 +17,15 @@
   ],
   [
    9,
-   2
+   1
   ],
   [
-   3,
-   2
+   12,
+   6
+  ],
+  [
+   2,
+   1
   ]
  ],
  "floor_layers": [
@@ -46,7 +51,31 @@
      12
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+    "tile_px": 16,
+    "coords": [
+     2,
+     1
+    ],
+    "tone": {
+     "base": [
+      0.41,
+      0.38,
+      0.32
+     ],
+     "detail": 0.4
+    }
+   },
+   "tone": {
+    "base": [
+     0.3,
+     0.28,
+     0.24
+    ],
+    "detail": 0.6
+   }
   }
  ],
  "walls": {
@@ -62,14 +91,7 @@
      13,
      0
     ],
-    "cap": [
-     14,
-     6
-    ],
-    "face": [
-     14,
-     7
-    ]
+    "material": "@wall_city"
    },
    {
     "from": [
@@ -80,10 +102,7 @@
      0,
      7
     ],
-    "cap": [
-     14,
-     6
-    ]
+    "material": "@wall_city_side"
    },
    {
     "from": [
@@ -94,10 +113,7 @@
      13,
      7
     ],
-    "cap": [
-     14,
-     6
-    ]
+    "material": "@wall_city_side_east"
    },
    {
     "from": [
@@ -108,10 +124,7 @@
      1,
      7
     ],
-    "cap": [
-     14,
-     6
-    ]
+    "material": "@wall_city_ledge"
    },
    {
     "from": [
@@ -122,39 +135,81 @@
      12,
      7
     ],
-    "cap": [
-     14,
-     6
-    ]
+    "material": "@wall_city_ledge"
    }
   ]
  },
  "decor": [
   {
-   "sprite": "table_brown",
+   "sprite": "liscor_wall_sconce",
+   "cell": [
+    7,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.72,
+     0.38
+    ],
+    "energy": 0.85,
+    "radius": 36,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "liscor_duty_table",
    "cell": [
     6,
     2
    ]
   },
   {
-   "sprite": "shelf_bottles",
+   "sprite": "liscor_locker_tall",
    "cell": [
     9,
-    2
+    1
    ]
   },
   {
-   "sprite": "crate",
+   "sprite": "liscor_locker",
    "cell": [
-    3,
-    2
+    12,
+    6
    ]
   },
   {
-   "sprite": "stool",
+   "sprite": "liscor_footlocker",
    "cell": [
-    7,
+    2,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_peg_rail",
+   "cell": [
+    5,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_shield_round",
+   "cell": [
+    4,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_sword_laid",
+   "cell": [
+    5,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_papers",
+   "cell": [
+    6,
     2
    ]
   }
@@ -178,7 +233,7 @@
     7
    ],
    "display_name": "Liscor Street",
-   "sprite": "door",
+   "sprite": "door__alt2",
    "to_map": "street",
    "to_cell": [
     21,
@@ -195,12 +250,7 @@
    ],
    "display_name": "Sergeant Ashgrave",
    "person": true,
-   "sprite": "royal_soldier",
-   "tint": [
-    0.55,
-    0.35,
-    0.3
-   ],
+   "sprite": "dresk_ashgrave",
    "observe": "A belt-slate at his hip, chalk stub worn to a nub, already a line into today's tally. Rust-brown scales, no plate for a desk posting — he'd rather be finishing the count than talking to you.",
    "facing": "down",
    "talk_pool": [
@@ -247,7 +297,7 @@
     5
    ],
    "display_name": "Zevara's Desk",
-   "sprite": "library_desk",
+   "sprite": "watch_report_desk",
    "observe": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it.",
    "on_interact_accomplishment": "saw_zevaras_desk",
    "toast": "Watch Captain's desk. Empty, same as every other time you've walked past it."
@@ -260,7 +310,7 @@
     3
    ],
    "display_name": "The Cell",
-   "sprite": "door",
+   "sprite": "door__alt3",
    "tint": [
     0.5,
     0.5,
@@ -301,7 +351,7 @@
     6
    ],
    "display_name": "An Overlooked Kit Crate",
-   "sprite": "crate",
+   "sprite": "crate_owned",
    "tint": [
     0.5,
     0.42,
@@ -318,8 +368,8 @@
    "id": "note_watch_veteran",
    "kind": "prop",
    "cell": [
-    9,
-    6
+    8,
+    1
    ],
    "display_name": "A Watch Veteran's Letter",
    "sprite": "note_pinned",
@@ -338,8 +388,8 @@
    "id": "note_old_dread",
    "kind": "prop",
    "cell": [
-    11,
-    6
+    12,
+    1
    ],
    "display_name": "A Ward-Charm Scrap",
    "sprite": "note_pinned",
@@ -353,6 +403,24 @@
     "note_old_dread"
    ],
    "on_open_accomplishment": "found_old_dread_note"
+  },
+  {
+   "_comment": "#453 P1 rest signposting: a Liscor-side bed, present once the Watch first sends the player below the city. Cell (1,1) is the empty north-west corner, off every canonical walked cell; (2,1) and (1,2) stay open, so no prior-version save is trapped. Mechanically identical to every other sleep prop.",
+   "id": "watch_spare_bunk",
+   "kind": "prop",
+   "cell": [
+    1,
+    1
+   ],
+   "display_name": "A Watch Bunk",
+   "sprite": "bed",
+   "present_when": {
+    "requires": {
+     "heard_about_cisterns": 1
+    }
+   },
+   "sleep": true,
+   "sleep_toast": "Watch bedding, scratchy and clean."
   }
  ]
 }

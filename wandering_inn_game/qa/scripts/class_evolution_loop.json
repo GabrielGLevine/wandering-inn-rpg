@@ -431,7 +431,7 @@
       "locked": false,
       "requirement": "",
       "effect_lines": [
-       "+1 damage on melee hits",
+       "+1 damage on attacks and weapon Skills",
        "Spear kit replaces other weapon Skills in combat"
       ]
      },

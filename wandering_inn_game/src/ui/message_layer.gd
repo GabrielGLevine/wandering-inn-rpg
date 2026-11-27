@@ -1,5 +1,29 @@
 extends CanvasLayer
 
+signal layout_changed
+signal item_use_rearmed
+
+var _active_use: Dictionary = {}
+var _use_sim: Variant
+var _use_settled := false
+const ITEM_USE_REARM_MSEC := 300
+var _use_rendered := false
+var _use_rendered_msec := 0
+var _use_warning := false
+var _use_warning_armed := false
+var _use_warning_frame := 0
+var _use_warning_msec := 0
+var _use_touches: Dictionary = {}
+var _use_overlay: Control
+var _use_panel: PanelContainer
+var _use_warning_label: Label
+var _use_cancel: Button
+var _use_confirm: Button
+
+var _field_resource_rect := Rect2()
+var _field_launcher_rect := Rect2()
+var _sleep_active := false
+
 ## GH#170: last-N toast texts for the journal's Recent Messages section --
 ## the durable answer to "it went past before I could read it". Static so
 ## the journal (created on open) reads history it never saw live. Sleep
@@ -62,7 +86,7 @@ const TOAST_QUEUE_HOLD_CAP_SECONDS := 1.6
 ## #509 acceptance 2: a step is the "I have read it" signal, but a step taken
 ## before a toast has had a READABLE life must not erase it. A dismiss that
 ## arrives earlier than this retires the toast AT this mark instead of at
-## once; under QA/headless the floor is 0 so canonical timing is untouched.
+## once. Accelerated QA uses zero; production-timing QA keeps the shipped floor.
 const TOAST_MIN_READ_SECONDS := 1.2
 ## #509: how long the hint ribbon carries the compact "Saved" pill after a
 ## slot write. Persistent-enough to be noticed on a phone, never a toast.
@@ -78,20 +102,8 @@ const TOAST_BOTTOM_DEFAULT := -34.0
 const TOAST_BOTTOM_RAISED := -264.0
 const TOAST_PANEL_BASE_SIZE := Vector2(448.0, 96.0)
 const TOAST_TEXT_WIDTH := 412.0
-## Danger zone = 686-658 = 28px, measured from the panel's OWN bottom edge
-## (a 9-slice-art property, independent of the MarginContainer's content
-## margins). Unlike the feed (top-aligned text, single measured deficit),
-## the toast label is VERTICALLY CENTERED (`_ready()`), so growing the
-## panel pushes only HALF of any added headroom above the text block -- the
-## other half lands below it, meaning the danger zone must be budgeted
-## TWICE (`_toast_panel_height`'s derivation) to actually clear the fold
-## rather than just approach it.
-## TRAP (v0.4.0 playtest, the Invrisil ledger toast): that 28px was measured
-## at the BASE 96px panel height -- but Banner_Horizontal's fold art starts
-## 29px above the texture region's bottom while STRIP_PATCH_MARGIN is only
-## 20, so 9 source px of fold live in the 9-patch's STRETCHED CENTER band.
+# Centered message copy keeps conservative breathing room at every text scale.
 const TOAST_FOLD_DANGER_PX := 30.0
-const STRIP_FOLD_PATCH_BOTTOM := 32
 
 ## World hint ribbon ("Esc — menu   J — journal   I — inventory"). The panel
 ## rect and its content margins are BOTH derived, from live font metrics plus
@@ -183,13 +195,10 @@ var _toast_queue: Array[Dictionary] = []
 ## Combat is the one deliberate exception: it has its own feed, so
 ## COMBAT_STARTED BANKS the pending queue (below) and UI_COMBAT_HIDDEN
 ## re-queues it.
-## HAZARD for QA authors: `_defer_toast_display` also calls
-## `dismiss_current_toast_early()`, so a transition CUTS SHORT the showing
-## toast's hold -- including the windowed QA_TOAST_HOLD_SECONDS 0.4s
-## legibility floor that the screenshot discipline leans on. A script that
-## needs a specific toast ON SCREEN across a map change must wait on that
-## toast's OWN `ui_toast_rendered` after the transition (it re-renders on the
-## far side); a bare wait plus a screenshot can catch the panel already hidden.
+## Transitions hide the current panel immediately. Normal timing replays unread
+## authored copy with a fresh hold; accelerated QA retires the current display.
+## A replay capture must wait for that text's new `ui_toast_rendered` after the
+## transition: a prior render event cannot prove the replacement is visible.
 ## Toasts parked for the duration of a fight. Bank/restore move whole entries
 ## between here and `_toast_queue`; nothing is ever dropped in either direction.
 var _banked_toasts: Array[Dictionary] = []
@@ -229,6 +238,10 @@ var _toast_skip_requested := false
 ## #509: when the showing toast started, and whether a step asked for an
 ## early retire before the readable floor (honoured at the floor).
 var _showing_started_msec := 0
+var _dialogue_started_msec := 0
+var _dialogue_generation := 0
+var _showing_entry: Dictionary = {}
+var _toast_interrupted := false
 var _dismiss_at_min_read := false
 var _save_status_serial := 0
 
@@ -306,10 +319,14 @@ func _show_save_status(slot: String) -> void:
 	var serial := _save_status_serial
 	_hint_label.text = "Saved" if WIResponsiveLayout.uses_touch_layout() else "%s   •  Saved" % _hint_text()
 	_resize_hint_panel()
-	ObservableBus.emit_domain_event(WIEvents.UI_SAVE_STATUS_RENDERED, {"slot": slot, "text": _hint_label.text})
 	var tree := get_tree()
 	if tree == null:
 		return
+	await tree.process_frame
+	if not is_inside_tree() or serial != _save_status_serial:
+		return
+	if not _sleep_active and _hint_panel.is_visible_in_tree():
+		ObservableBus.emit_domain_event(WIEvents.UI_SAVE_STATUS_RENDERED, {"slot": slot, "text": _hint_label.text})
 	await tree.create_timer(SAVE_STATUS_SECONDS).timeout
 	if not is_inside_tree() or serial != _save_status_serial:
 		return
@@ -317,7 +334,32 @@ func _show_save_status(slot: String) -> void:
 	_resize_hint_panel()
 
 
+func place_field_hint(resources: Rect2, launchers: Rect2) -> void:
+	_field_resource_rect = resources
+	_field_launcher_rect = launchers
+	_position_field_hint()
+
+
+func field_hint_rect() -> Rect2:
+	return _hint_panel.get_global_rect() if WIResponsiveLayout.uses_touch_layout() and _hint_panel.is_visible_in_tree() else Rect2()
+
+
+func _position_field_hint() -> void:
+	if _hint_panel == null or not WIResponsiveLayout.uses_touch_layout():
+		return
+	var safe: Rect2 = WIResponsiveLayout.safe_rect(get_viewport())
+	var origin := safe.position + Vector2(HINT_PANEL_LEFT, 4.0)
+	if _field_resource_rect.has_area():
+		origin.x = _field_resource_rect.end.x + 8.0
+		if origin.x + _hint_panel.size.x > _field_launcher_rect.position.x - 8.0:
+			origin = Vector2(safe.position.x + HINT_PANEL_LEFT, maxf(_field_resource_rect.end.y, _field_launcher_rect.end.y) + 8.0)
+	UIChrome.set_offsets(_hint_panel, origin.x, origin.y, origin.x + _hint_panel.size.x, origin.y + _hint_panel.size.y)
+	layout_changed.emit()
+
+
 func _first_wake_hint_text() -> String:
+	if WIResponsiveLayout.uses_touch_layout():
+		return "New morning. Every control is listed under Pause — Settings — Help."
 	return "New morning. Every key and control is listed under %s — Settings — Help." % WIInputHints.label("cancel")
 
 
@@ -370,6 +412,7 @@ static func reset_hints() -> void:
 
 
 func _ready() -> void:
+	add_to_group("wi_item_use_presenter")
 	var root := Control.new()
 	UIChrome.apply_theme(root)
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -397,7 +440,6 @@ func _ready() -> void:
 	# IGNORE default -- a click on the toast strip while it is showing must
 	# not leak through to a world click-to-walk/interact underneath it.
 	_toast_panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	(_toast_panel.get_child(0) as NinePatchRect).patch_margin_bottom = STRIP_FOLD_PATCH_BOTTOM
 	_toast_panel.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	_toast_panel.custom_minimum_size = TOAST_PANEL_BASE_SIZE
 	_toast_panel.size = TOAST_PANEL_BASE_SIZE
@@ -416,7 +458,6 @@ func _ready() -> void:
 
 	_dialogue_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_dialogue_panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	(_dialogue_panel.get_child(0) as NinePatchRect).patch_margin_bottom = STRIP_FOLD_PATCH_BOTTOM
 	_dialogue_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	_dialogue_panel.hide()
 	var dialogue_margin := MarginContainer.new()
@@ -471,6 +512,27 @@ func _ready() -> void:
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	match type:
+		WIEvents.ITEM_USE_OFFERED:
+			_show_use_warning(payload)
+		WIEvents.ITEM_USE_SETTLED, WIEvents.ITEM_USE_REFUSED, WIEvents.ITEM_USE_CANCELLED:
+			_accept_use_result(payload)
+		WIEvents.UI_ITEM_USE_RENDERED:
+			_mark_use_rendered(payload)
+	match type:
+		WIEvents.RESOURCES_CHANGED:
+			if String(payload.get("reason", "")) in ["sleep", "equipment", "dialogue", "preparation", "combat_victory"]:
+				var text := WIEffectText.resource_receipt(payload)
+				if not text.is_empty():
+					_queue_toast(text, true, false, true, false, payload)
+		WIEvents.PHASE_CHANGED:
+			if bool(payload.get("slept", false)):
+				_sleep_active = true
+				_defer_toast_display()
+		WIEvents.UI_SLEEP_VEIL_FINISHED:
+			_sleep_active = false
+			if not _toast_draining:
+				_drain_toasts()
+	match type:
 		WIEvents.INPUT_DEVICE_CHANGED:
 			_hint_label.text = _hint_text()
 			_resize_hint_panel()
@@ -517,16 +579,16 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_resize_dialogue_panel()
 			var fitted := _fit_dialogue_line(text)
 			_show_dialogue_line(text, fitted)
-		WIEvents.COMBAT_STARTED:
+		WIEvents.COMBAT_PREPARING, WIEvents.COMBAT_STARTED:
 			_hint_panel.hide()
 			_combat_active = true
 			_clear_dialogue_line()
 			_defer_toast_display()
 			_bank_toasts()
 		WIEvents.UI_COMBAT_HIDDEN:
+			_combat_active = false
 			_hint_panel.show()
 			_resize_hint_panel()
-			_combat_active = false
 			_restore_banked_toasts()
 		WIEvents.CLASS_GAINED:
 			if String(payload.get("class", "")) == "rogue" and not _first_stealth_hint_shown:
@@ -584,6 +646,7 @@ func _shown_event_for(hidden_event: String) -> String:
 
 
 func _clear_dialogue_line() -> void:
+	_dialogue_generation += 1
 	_dialogue_panel.hide()
 
 
@@ -605,6 +668,19 @@ func dialogue_display_state() -> Dictionary:
 		"rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
 		"on_screen": view.intersects(rect),
 		"layer": canvas_layer_of(_dialogue_panel),
+		"elapsed_msec": Time.get_ticks_msec() - _dialogue_started_msec,
+	}
+
+
+func toast_display_state() -> Dictionary:
+	var rect := _toast_panel.get_global_rect()
+	return {
+		"visible": _toast_panel.is_visible_in_tree(),
+		"text": _toast_label.text,
+		"elapsed_msec": Time.get_ticks_msec() - _showing_started_msec,
+		"rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
+		"on_screen": get_viewport().get_visible_rect().intersects(rect),
+		"layer": canvas_layer_of(_toast_panel),
 	}
 
 
@@ -621,17 +697,23 @@ static func canvas_layer_of(node: Node) -> int:
 
 func _show_dialogue_line(text: String, fitted: String) -> void:
 	_dialogue_full_text = text
-	await _show(_dialogue_panel, _dialogue_label, text, _dialogue_hold_seconds(fitted), WIEvents.UI_DIALOGUE_RENDERED, fitted, true)
-	# CONTRACT: audio releases standalone-line duck on the renderer's actual close.
-	ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_LINE_HIDDEN, {})
+	var closed := await _show(_dialogue_panel, _dialogue_label, text, _dialogue_hold_seconds(fitted), WIEvents.UI_DIALOGUE_RENDERED, fitted, true)
+	# Only the current bark may close its panel and release the audio duck.
+	if closed:
+		ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_LINE_HIDDEN, {})
 
 
-## A transition retires the toast that ALREADY RENDERED (it is about the side
-## the player just left, and dialogue needs the raised slot clear) and cuts its
-## remaining hold short so the survivors drain immediately on the far side. The
-## queue itself is untouched -- see `_toast_queue`'s contract.
+## Unread authored copy waits through the transition and gets a fresh readable
+## hold afterwards. It was already recorded, so replay never duplicates history.
 func _defer_toast_display() -> void:
-	dismiss_current_toast_early()
+	if _toast_panel.visible:
+		if not _showing_entry.is_empty() and not _showing_housekeeping \
+				and Time.get_ticks_msec() - _showing_started_msec < _min_read_msec():
+			var deferred := _showing_entry.duplicate()
+			deferred["record"] = false
+			_toast_queue.push_front(deferred)
+		_toast_interrupted = true
+		_toast_skip_requested = true
 	_toast_panel.hide()
 
 
@@ -660,6 +742,7 @@ func _restore_banked_toasts() -> void:
 
 
 func _process(_delta: float) -> void:
+	_process_item_use()
 	if _toast_panel == null or not WIResponsiveLayout.uses_touch_layout():
 		return
 	var conversation := get_parent().get_node_or_null("DialoguePanel")
@@ -673,8 +756,8 @@ func _apply_toast_position() -> void:
 	var bottom := TOAST_BOTTOM_RAISED if _conversation_open else TOAST_BOTTOM_DEFAULT
 	if WIResponsiveLayout.uses_touch_layout():
 		var viewport := get_viewport()
-		var safe := WIResponsiveLayout.safe_rect(viewport)
-		var controls := WIResponsiveLayout.touch_size(viewport, Vector2(52.0, 52.0))
+		var safe: Rect2 = WIResponsiveLayout.safe_rect(viewport)
+		var controls: Vector2 = WIResponsiveLayout.touch_size(viewport, Vector2(52.0, 52.0))
 		bottom = minf(bottom, _message_bottom(safe, controls.y))
 		if _conversation_open:
 			var conversation := get_parent().get_node_or_null("DialoguePanel")
@@ -685,6 +768,7 @@ func _apply_toast_position() -> void:
 		var right := safe.end.x - viewport.get_visible_rect().size.x - 24.0
 		UIChrome.set_offsets(_toast_panel, right - _message_width(), bottom - _toast_panel_height, right, bottom)
 	else:
+		bottom = minf(bottom, _message_bottom(WIResponsiveLayout.safe_rect(get_viewport()), 0.0))
 		UIChrome.set_offsets(_toast_panel, TOAST_LEFT, bottom - _toast_panel_height, TOAST_RIGHT, bottom)
 
 
@@ -757,14 +841,14 @@ func _resize_dialogue_panel() -> void:
 	_dialogue_panel.custom_minimum_size = Vector2(width, panel_height)
 	_dialogue_panel.size = Vector2(width, panel_height)
 	if WIResponsiveLayout.uses_touch_layout():
-		var safe := WIResponsiveLayout.safe_rect(get_viewport())
-		var controls := WIResponsiveLayout.touch_size(get_viewport(), Vector2(52.0, 52.0))
+		var safe: Rect2 = WIResponsiveLayout.safe_rect(get_viewport())
+		var controls: Vector2 = WIResponsiveLayout.touch_size(get_viewport(), Vector2(52.0, 52.0))
 		var bottom := _message_bottom(safe, controls.y)
 		var left := safe.position.x + 24.0
 		UIChrome.set_offsets(_dialogue_panel, left, bottom - panel_height, left + width, bottom)
 	else:
-		const DIALOGUE_BOTTOM := -164.0
-		UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
+		var bottom := minf(-164.0, _message_bottom(WIResponsiveLayout.safe_rect(get_viewport()), 0.0))
+		UIChrome.set_offsets(_dialogue_panel, 36.0, bottom - panel_height, 736.0, bottom)
 
 
 ## Fits the hint ribbon to ONE line of `_hint_label`'s LIVE font metrics plus
@@ -803,10 +887,7 @@ func _resize_hint_panel() -> void:
 		HINT_PANEL_LEFT + size.x, HINT_PANEL_BOTTOM)
 	if WIResponsiveLayout.uses_touch_layout():
 		_hint_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		var safe := WIResponsiveLayout.safe_rect(get_viewport())
-		var left := safe.position.x + HINT_PANEL_LEFT
-		var top := safe.position.y + 4.0
-		UIChrome.set_offsets(_hint_panel, left, top, left + size.x, top + size.y)
+		_position_field_hint()
 		hint_band_width = 0.0
 	# Centre the line in the PAPER, not in the panel rect: the rect's bottom
 	# ~40% is rule/fold/shadow/transparency, so panel-centred (the Label
@@ -840,6 +921,7 @@ func _hint_panel_height_for(text_h: float) -> float:
 ## panels re-fit here; nothing else in this layer caches a font metric (the
 ## toast/feed budgets all read `get_theme_font_size` at render time).
 func _on_theme_changed() -> void:
+	_fit_use_overlay()
 	if _dialogue_label == null or _hint_label == null:
 		return
 	_resize_dialogue_panel()
@@ -900,10 +982,10 @@ func _hint_payload() -> Dictionary:
 ## journal body row, so a modal-response line is one short line by contract.
 ## Nothing else about it differs -- lossless queue, ordering within its class,
 ## the hold cap.
-func _queue_toast(text: String, record := true, housekeeping := false, protected := false, modal_response := false) -> void:
+func _queue_toast(text: String, record := true, housekeeping := false, protected := false, modal_response := false, recovery: Dictionary = {}) -> void:
 	var entry := {
 		"text": text, "record": record, "housekeeping": housekeeping,
-		"protected": protected, "modal_response": modal_response,
+		"protected": protected, "modal_response": modal_response, "recovery": recovery.duplicate(true),
 	}
 	if _combat_active:
 		# The board is up: the feed speaks for the fight (combat_screen mirrors
@@ -913,7 +995,7 @@ func _queue_toast(text: String, record := true, housekeeping := false, protected
 		# them -- otherwise the post-fight drain would double-enter them.
 		# HOUSEKEEPING keeps its record flag: chrome is not mirrored into the
 		# combat feed, so its only entry into Recent Messages is that drain.
-		if not housekeeping:
+		if not housekeeping and recovery.is_empty():
 			entry["record"] = false
 		_banked_toasts.append(entry)
 		return
@@ -930,6 +1012,8 @@ func _queue_toast(text: String, record := true, housekeeping := false, protected
 ## show, leave the queue untouched" (the lossless-queue contract -- the modal's
 ## own HIDDEN event kicks the drain again).
 func _next_toast_index() -> int:
+	if _sleep_active or _combat_active:
+		return -1
 	if _toast_queue.is_empty():
 		return -1
 	if _open_modals.is_empty():
@@ -995,9 +1079,8 @@ func dismiss_current_toast_early() -> void:
 		_dismiss_at_min_read = true
 
 
-## The readable floor in msec: 0 under QA/headless (the hold floors there are
-## already ~0, and 125 canonicals pin the rendered stream), the real constant
-## in play.
+## Accelerated QA keeps its existing event stream; the timing opt-in exercises
+## the same reading floor and hold loop as normal play, including headless.
 func _min_read_msec() -> int:
 	if _production_message_timing():
 		return int(TOAST_MIN_READ_SECONDS * 1000.0)
@@ -1036,12 +1119,14 @@ func _drain_toasts() -> void:
 		if at < 0:
 			break
 		var entry: Dictionary = _toast_queue.pop_at(at)
+		_showing_entry = entry
 		var text := String(entry["text"])
 		_showing_housekeeping = bool(entry.get("housekeeping", false))
 		_showing_protected = bool(entry.get("protected", false))
 		if bool(entry.get("record", true)):
 			record_message(text)
 		await _show(_toast_panel, _toast_label, text, _toast_seconds(text), WIEvents.UI_TOAST_RENDERED, "", true, true)
+		_showing_entry = {}
 		_showing_protected = false
 	_toast_draining = false
 
@@ -1083,24 +1168,47 @@ func _hold_seconds(seconds: float) -> float:
 	return seconds
 
 
-func _show(panel: Control, label: Label, text: String, seconds: float, rendered_event: String, display_text: String = "", collapse_under_qa: bool = false, interruptible: bool = false) -> void:
+func _show(panel: Control, label: Label, text: String, seconds: float, rendered_event: String, display_text: String = "", collapse_under_qa: bool = false, interruptible: bool = false) -> bool:
+	var dialogue_generation := _dialogue_generation
+	if panel == _dialogue_panel:
+		_dialogue_generation += 1
+		dialogue_generation = _dialogue_generation
 	if panel == _toast_panel:
 		_resize_toast_panel(text)
+		_toast_skip_requested = false
+		_dismiss_at_min_read = false
+		_toast_interrupted = false
+		_showing_started_msec = Time.get_ticks_msec()
+	else:
+		_dialogue_started_msec = Time.get_ticks_msec()
 	label.text = display_text if display_text != "" else text
 	panel.show()
 	var tree := get_tree()
 	if tree == null:
-		return
+		return false
 	await tree.process_frame
 	if not is_inside_tree():
-		return
+		return false
+	if panel == _dialogue_panel and dialogue_generation != _dialogue_generation:
+		return false
+	if panel == _toast_panel and _toast_interrupted:
+		return false
 	if panel == _toast_panel:
 		var folded := _fold_gold_toast(text)
 		if folded != text:
 			text = folded
+			_showing_entry["text"] = text
 			label.text = text
 			_resize_toast_panel(text)
+		_showing_started_msec = Time.get_ticks_msec()
+	else:
+		_dialogue_started_msec = Time.get_ticks_msec()
 	ObservableBus.emit_domain_event(rendered_event, {"text": text})
+	if panel == _toast_panel and not (_showing_entry.get("recovery", {}) as Dictionary).is_empty():
+		var proof: Dictionary = _showing_entry["recovery"].duplicate(true)
+		proof["text"] = label.text
+		proof["surface"] = "toast"
+		ObservableBus.emit_domain_event(WIEvents.UI_RECOVERY_RENDERED, proof)
 	var hold := _hold_seconds(seconds) if collapse_under_qa else seconds
 	# Only CHORES yield their reading time to the queue -- see the constant.
 	var chore := panel == _toast_panel and _showing_housekeeping
@@ -1108,10 +1216,7 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 		hold = minf(hold, TOAST_QUEUE_HOLD_CAP_SECONDS)
 	if hold > 0.0:
 		if interruptible:
-			_toast_skip_requested = false
-			_dismiss_at_min_read = false
-			var started_msec := Time.get_ticks_msec()
-			_showing_started_msec = started_msec
+			var started_msec := _showing_started_msec
 			var deadline_msec := started_msec + int(hold * 1000.0)
 			while Time.get_ticks_msec() < deadline_msec and not _toast_skip_requested:
 				# #509: a step before the readable floor retires the toast AT the
@@ -1137,27 +1242,28 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 					deadline_msec = mini(deadline_msec, started_msec + int(chore_cap * 1000.0))
 				tree = get_tree()
 				if tree == null:
-					return
+					return false
 				await tree.process_frame
 				if not is_inside_tree():
-					return
+					return false
 			_toast_skip_requested = false
 		else:
-			# Review (#509): keep the dismiss bookkeeping coherent on this path
-			# too, so a stale skip/floor flag can never leak into the next toast.
-			_toast_skip_requested = false
-			_dismiss_at_min_read = false
-			_showing_started_msec = Time.get_ticks_msec()
 			tree = get_tree()
 			if tree == null:
-				return
+				return false
 			await tree.create_timer(hold).timeout
 			if not is_inside_tree():
-				return
-	await _await_capture_release()
+				return false
+	if panel == _dialogue_panel and dialogue_generation != _dialogue_generation:
+		return false
+	await _await_capture_release(dialogue_generation if panel == _dialogue_panel else -1)
 	if not is_inside_tree():
-		return
+		return false
+	# A cleared or replaced bark owns a new generation; its predecessor cannot hide it.
+	if panel == _dialogue_panel and dialogue_generation != _dialogue_generation:
+		return false
 	panel.hide()
+	return true
 
 
 ## GH#324, the verification-boundary half. The QA hold above is a wall-clock
@@ -1180,7 +1286,7 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 ## shorter bound would hand the race back with no signal. Expiring it is
 ## therefore never routine, so it fails loud (`push_error` prints an `ERROR:`
 ## line, which every run's grep discipline treats as a failure).
-func _await_capture_release() -> void:
+func _await_capture_release(dialogue_generation: int = -1) -> void:
 	if _production_message_timing():
 		return
 	if TestDriver == null or not TestDriver.active():
@@ -1190,13 +1296,15 @@ func _await_capture_release() -> void:
 		ceiling_msec = int(TestDriver.capture_hold_ceiling_msec())
 	var deadline_msec := Time.get_ticks_msec() + ceiling_msec
 	while TestDriver.capture_in_flight() and Time.get_ticks_msec() < deadline_msec:
+		if dialogue_generation >= 0 and dialogue_generation != _dialogue_generation:
+			return
 		var tree := get_tree()
 		if tree == null:
 			return
 		await tree.process_frame
 		if not is_inside_tree():
 			return
-	if TestDriver.capture_in_flight():
+	if TestDriver.capture_in_flight() and (dialogue_generation < 0 or dialogue_generation == _dialogue_generation):
 		push_error("GH#324: capture-hold ceiling (%d ms) expired with a capture still in flight -- a transient panel just retired mid-capture; the evidence race is OPEN for this shot" % ceiling_msec)
 
 
@@ -1240,3 +1348,229 @@ func _fit_dialogue_line(text: String) -> String:
 		if _wrapped_line_count(_dialogue_label, candidate, _dialogue_width()) <= capacity:
 			return candidate
 	return (words[0] + "…") if words.size() > 0 else text
+
+
+func item_use_busy() -> bool:
+	return not _active_use.is_empty()
+
+
+func activate_item_offer(offer: Dictionary, source_sim: Variant) -> void:
+	if item_use_busy() or source_sim != Game.sim or not bool(offer.get("allowed", false)):
+		return
+	_active_use = offer.duplicate(true)
+	_use_sim = source_sim
+	_use_rendered = false
+	_use_settled = false
+	_commit_presented_use(false)
+
+
+func _commit_presented_use(confirm_risk: bool) -> void:
+	var result: Dictionary = _use_sim.commit_item_use(int(_active_use.operation_id), confirm_risk)
+	if String(result.get("reason", "")) == "confirmation_required":
+		return
+	if not _use_settled:
+		_accept_use_result(result)
+
+
+func _accept_use_result(result: Dictionary) -> void:
+	if not item_use_busy() or int(result.get("operation_id", -1)) != int(_active_use.operation_id) or _use_settled:
+		return
+	_use_settled = true
+	_use_warning_armed = false
+	if _use_overlay != null:
+		_use_overlay.hide()
+	var frozen := _active_use.duplicate(true)
+	frozen.merge(result, true)
+	_active_use = frozen
+	_fallback_use_receipt.call_deferred(frozen.duplicate(true))
+
+
+func _fallback_use_receipt(result: Dictionary) -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not item_use_busy() or int(result.operation_id) != int(_active_use.operation_id) or _use_rendered:
+		return
+	# A surface may disappear during defeat/load. Keep its captured result visible.
+	_build_use_overlay()
+	_use_warning = false
+	_use_warning_label.text = "%s\n%s" % [String(result.get("name", "Item")), WIEffectText.item_use_text(result)]
+	_use_cancel.text = "Close"
+	_use_cancel.disabled = false
+	_use_confirm.hide()
+	_use_overlay.show()
+	_fit_use_overlay()
+	await get_tree().process_frame
+	var proof := result.duplicate(true)
+	proof.merge({"text": _use_warning_label.text, "surface": "item_receipt"}, true)
+	ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_RENDERED, proof)
+
+
+func _show_use_warning(offer: Dictionary) -> void:
+	if not item_use_busy() or int(offer.get("operation_id", -1)) != int(_active_use.operation_id):
+		return
+	_build_use_overlay()
+	_use_warning = true
+	_use_warning_armed = false
+	_use_warning_frame = Engine.get_process_frames()
+	_use_warning_msec = Time.get_ticks_msec()
+	_use_warning_label.text = "%s — mana poisoning\n%s\nUse this dose?" % [String(_active_use.get("name", "Mana potion")), WIEffectText.item_use_text(offer)]
+	_use_cancel.text = "Cancel"
+	_use_cancel.disabled = false
+	_use_confirm.text = "Use dose"
+	_use_confirm.show()
+	_use_confirm.disabled = true
+	_use_overlay.show()
+	_use_cancel.grab_focus()
+	_fit_use_overlay()
+	var proof := offer.duplicate(true)
+	proof["name"] = String(_active_use.get("name", ""))
+	proof.merge({"text": _use_warning_label.text, "surface": "item_warning", "armed": false}, true)
+	_emit_use_warning.call_deferred(proof)
+
+
+func _emit_use_warning(proof: Dictionary) -> void:
+	await get_tree().process_frame
+	if _use_warning and item_use_busy() and int(proof.operation_id) == int(_active_use.operation_id):
+		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_WARNING_RENDERED, proof)
+
+
+func _build_use_overlay() -> void:
+	if _use_overlay != null:
+		return
+	var canvas := CanvasLayer.new()
+	canvas.layer = 30
+	add_child(canvas)
+	_use_overlay = Control.new()
+	_use_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_use_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	UIChrome.apply_theme(_use_overlay)
+	canvas.add_child(_use_overlay)
+	_use_overlay.gui_input.connect(func(event: InputEvent) -> void:
+		# The opening touch may also deliver an emulated mouse event to this overlay.
+		if _use_warning and not _use_warning_armed:
+			return
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			_cancel_presented_use()
+		elif event is InputEventScreenTouch and event.pressed:
+			_cancel_presented_use()
+	)
+	_use_panel = UIChrome.make_chrome_panel_container()
+	_use_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_use_overlay.add_child(_use_panel)
+	var margin := MarginContainer.new()
+	UIChrome.add_margins(margin, 20, 16, 20, 16)
+	_use_panel.add_child(margin)
+	var stack := VBoxContainer.new()
+	margin.add_child(stack)
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	stack.add_child(scroll)
+	_use_warning_label = UIChrome.make_label("", "MenuInk")
+	_use_warning_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_use_warning_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(_use_warning_label)
+	_use_cancel = Button.new()
+	_use_cancel.pressed.connect(_cancel_presented_use)
+	stack.add_child(_use_cancel)
+	_use_confirm = Button.new()
+	_use_confirm.pressed.connect(_confirm_presented_use)
+	stack.add_child(_use_confirm)
+	_use_overlay.hide()
+
+
+func _fit_use_overlay() -> void:
+	if _use_overlay == null:
+		return
+	WIResponsiveLayout.apply_readable_theme(_use_overlay, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
+	var safe: Rect2 = WIResponsiveLayout.safe_rect(get_viewport()).grow(-12.0)
+	var extent := Vector2(minf(safe.size.x, 560.0), minf(safe.size.y, 400.0))
+	_use_panel.position = safe.get_center() - extent * 0.5
+	_use_panel.size = extent
+	var target: Vector2 = WIResponsiveLayout.touch_size(get_viewport(), Vector2(0, 44)) if WIResponsiveLayout.uses_touch_layout() else Vector2(0, 40)
+	_use_cancel.custom_minimum_size = target
+	_use_confirm.custom_minimum_size = target
+
+
+func _confirm_presented_use() -> void:
+	if not _use_warning or not _use_warning_armed or not item_use_busy():
+		return
+	_use_warning = false
+	_use_overlay.hide()
+	if _use_sim != Game.sim:
+		_accept_use_result({"operation_id": _active_use.operation_id, "committed": false, "allowed": false, "reason": "stale_operation"})
+		return
+	_commit_presented_use(true)
+
+
+func _cancel_presented_use() -> void:
+	if _use_warning and item_use_busy():
+		_use_warning = false
+		_use_sim.cancel_item_use(int(_active_use.operation_id))
+	elif _use_overlay != null:
+		_use_overlay.hide()
+
+
+func _use_input_released() -> bool:
+	return _use_touches.is_empty() and not Input.is_action_pressed("confirm") and not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			_use_touches[event.index] = true
+		else:
+			_use_touches.erase(event.index)
+	if not _use_warning:
+		return
+	if event.is_action_pressed("move_down") or event.is_action_pressed("move_up") or event.is_action_pressed("move_left") or event.is_action_pressed("move_right"):
+		if _use_warning_armed:
+			if _use_cancel.has_focus():
+				_use_confirm.grab_focus()
+			else:
+				_use_cancel.grab_focus()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("cancel"):
+		_cancel_presented_use()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("confirm"):
+		if _use_warning_armed and not event.is_echo():
+			if _use_confirm.has_focus():
+				_confirm_presented_use()
+			else:
+				_cancel_presented_use()
+		get_viewport().set_input_as_handled()
+
+
+func _process_item_use() -> void:
+	if _use_warning and not _use_warning_armed and Engine.get_process_frames() > _use_warning_frame + 1 and Time.get_ticks_msec() - _use_warning_msec >= 300 and _use_input_released():
+		_use_warning_armed = true
+		_use_confirm.disabled = false
+		var proof := _active_use.duplicate(true)
+		proof["armed"] = true
+		ObservableBus.emit_domain_event(WIEvents.UI_ITEM_USE_WARNING_ARMED, proof)
+	if item_use_busy() and _use_settled and _use_rendered and not _use_warning and _use_input_released() and Time.get_ticks_msec() - _use_rendered_msec >= ITEM_USE_REARM_MSEC:
+		if _use_overlay != null and _use_overlay.visible:
+			return
+		_active_use.clear()
+		_use_sim = null
+		item_use_rearmed.emit()
+
+
+func item_warning_cancel_rect() -> Rect2:
+	return _use_cancel.get_global_rect() if _use_warning and _use_overlay.visible else Rect2()
+
+
+func item_warning_confirm_rect() -> Rect2:
+	return _use_confirm.get_global_rect() if _use_warning and _use_overlay.visible else Rect2()
+
+
+func _mark_use_rendered(payload: Dictionary) -> void:
+	if not _use_rendered and item_use_busy() and int(payload.get("operation_id", -1)) == int(_active_use.operation_id):
+		_use_rendered = true
+		_use_rendered_msec = Time.get_ticks_msec()
+
+
+func item_receipt_close_rect() -> Rect2:
+	return _use_cancel.get_global_rect() if not _use_warning and _use_overlay != null and _use_overlay.visible else Rect2()

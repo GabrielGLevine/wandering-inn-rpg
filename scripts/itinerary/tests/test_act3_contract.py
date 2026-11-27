@@ -4,7 +4,7 @@ to GOLDEN PASS with the compiled Act I-III script green headless at seed 37.
 Each test names the corpus row it stands on. The stand-cell-on-both-sides
 rule and its two differ companions (last-of-run pairing, post-pin bump
 discount) exist because the corpus pins a bump from either side: 413 pins
-BEFORE the bump, 591-593 and 622-624 pin on BOTH sides, 663 merges the bump
+BEFORE the bump, 591-593 and 622-624 pin on BOTH sides, 766 merges the bump
 into the walk and pins AFTER.
 """
 
@@ -85,7 +85,7 @@ class FightVocabularyTest(unittest.TestCase):
             document(body.format(entry="interact").replace("        npc: awakened_boss\n        choose_path: [a]\n", ""))
 
     def test_the_board_closes_where_it_opened(self) -> None:
-        """steel_thread 659-660 and 702: current_map and player_cell after the teardown."""
+        """steel_thread 659-660 and 815: current_map and player_cell after the teardown."""
         operation = {
             "kind": "fight", "entry": "interact", "encounter": "raskghar_scouts", "allies": [],
             "shots": [], "approach_shots": [], "policy": "competent", "max_turns": 200, "victory_pins": [],
@@ -101,7 +101,7 @@ class FightVocabularyTest(unittest.TestCase):
 
 
 class DialogueStatePinTest(unittest.TestCase):
-    """steel_thread 742: `accomplishments.raskghar_sealed == 1` lands after the
+    """steel_thread 858: `accomplishments.raskghar_sealed == 1` lands after the
     teardown of the CLOSING row, not between the seal row and its node."""
 
     GRAPH = {"start": "hub", "nodes": {
@@ -142,7 +142,7 @@ class DialogueStatePinTest(unittest.TestCase):
 
 
 class PostSealSleepTest(unittest.TestCase):
-    """steel_thread 768-770: the first sleep after the seal banks post_game."""
+    """steel_thread 884-886: the first sleep after the seal banks post_game."""
 
     def test_preview_banks_and_emitter_pins_post_game_before_the_veil(self) -> None:
         preview = {"class_gains": [], "level_ups": [], "classes_after": {"warrior": 8, "mage": 4}, "consolidation": {}, "post_game": True}
@@ -177,7 +177,7 @@ class BumpSidesTest(unittest.TestCase):
         self.assertTrue(diff(compiled, shipped).passed)
 
     def test_corpus_merges_the_bump_and_pins_after(self) -> None:
-        """steel_thread 663-665: `down 3` onto the gnaw pile, pin, press."""
+        """steel_thread 766-768: `down 3` onto the gnaw pile, pin, press."""
         compiled = {"steps": [move("down", 2), PIN, move("down", bump=True), PIN, PRESS]}
         shipped = {"steps": [move("down", 3), PIN, PRESS]}
         self.assertTrue(diff(compiled, shipped).passed)
@@ -190,7 +190,7 @@ class BumpSidesTest(unittest.TestCase):
         self.assertEqual(equal, [(1, 0)])
 
     def test_the_one_step_discount_is_directional(self) -> None:
-        """steel_thread 726-727: `left 1` to Zevara's column is a real step;
+        """steel_thread 839-840: `left 1` to Zevara's column is a real step;
         the compiled bump is `down`."""
         compiled = [move("up", 2), move("down", bump=True)]
         shipped = [move("up", 2), move("left")]

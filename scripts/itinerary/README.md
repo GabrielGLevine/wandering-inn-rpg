@@ -226,7 +226,7 @@ silently drifts from the source itinerary (review finding, #434).
 ## Authored steel-thread coverage and acceptance
 
 `steel_thread.yaml` authors Acts I–III through the first post-seal sleep
-(shipped steps 0–772). Earlier reports of Act II/III golden equivalence used
+(shipped steps 0–888). Earlier reports of Act II/III golden equivalence used
 an unsound comparator and are withdrawn. Structural equivalence and runtime
 execution are separate gates: a successful playthrough does not prove that
 all reference claims survive, and the comparator permits additional compiled
@@ -237,19 +237,27 @@ Recompute the authored slices against the unchanged shipped reference:
 ```sh
 python3 scripts/itinerary/compile_itinerary.py scripts/itinerary/steel_thread.yaml --out /tmp/steel-iii.json
 python3 scripts/itinerary/goldens.py /tmp/steel-iii.json wandering_inn_game/qa/scripts/steel_thread.json \
-  --slice itinerary.start,act1.=0:218 --slice act2.=218:559 --slice act3.=559:773
+  --slice itinerary.start,act1.=0:218 --slice act2.=218:559 --slice act3.=559:889
 ```
 
-Measured after the comparator correction in PR #545:
+Measured on the #571 recovery corpus (Act III ends at 889 since #578):
 
 | Authored slice | Exact residue | Net residue | Outstanding claim |
 |---|---:|---:|---|
 | Act I | 1 | 0 | Missing `ui_hotbar_rendered {slots: 4}` assertion at the ambush. |
 | Act II | 1 | 0 | Mage class-toast wait uses `from_start: true`; the reference uses an ordered wait. |
-| Act III | 0 | 0 | None in the authored slice. |
+| Act III | 68 | 1 | #578's walked rest before the Awakened boss (shipped 661–777) is unauthored: its walk, bed and exact HP/MP pins, plus Zevara's fresh-waking line, are shipped-only. The net row (`act3.gnaw.wp1`) is the arrival misaligned by that detour. |
 
-The compiled Acts I–III route runs all 1,077 steps at seed 37. That runtime
-result does not cancel either remaining structural difference.
+Shipped steps 889 onward (Acts IV–V) have no itinerary. Their claims,
+including the #571 vault and guardian retries, the purchase-modal rows and
+every carried-resource pin, are proven only by running `steel_thread` at seed
+37. No structural equivalence is claimed for them. Before #578 the Act III
+slice had zero residue; these rows stay open until `steel_thread.yaml`
+authors them.
+
+The compiled Acts I–III route ran all 1,077 steps at seed 37 before carried
+HP/MP landed. That runtime result does not cancel any remaining structural
+difference.
 
 The comparator preserves event-history mode, checkpoint ordering, and terminal
 movement. A facing bump may be reconciled across corresponding position pins;

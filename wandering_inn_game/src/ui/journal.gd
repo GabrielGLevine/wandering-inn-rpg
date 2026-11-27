@@ -7,6 +7,13 @@ extends CanvasLayer
 ## opaque parchment, bleeding through the title ribbon. `layer = 10` below
 ## wins on the explicit CanvasLayer stacking rule regardless of add order.
 
+const ACT_ART := {
+	"act_i": "res://assets/key_art/harvest/act_i_banner.png",
+	"act_iii": "res://assets/key_art/harvest/act_iii_banner.png",
+	"act_iv": "res://assets/key_art/harvest/act_iv_banner.png",
+	"act_v": "res://assets/key_art/harvest/act_v_banner.png",
+}
+
 const PANEL_SIZE := Vector2(640.0, 560.0)
 
 ## Close-hint placement, panel-local. `_root` is the 9-slice's DESTINATION
@@ -127,6 +134,7 @@ const BODY_PAN_SLOP_PX := 4.0
 ## flag can never outlive the gesture that set it and swallow a later tap.
 var _body_gesture_panned := false
 var _body_gesture_drift := 0.0
+var _skill_row_paragraphs: Dictionary = {}
 var _open_act: Dictionary = {}
 var _open_leads: Array = []
 var _open_quest_lines: Array = []
@@ -401,6 +409,17 @@ func body_rect() -> Rect2:
 	return Rect2(_body_label.global_position, _body_label.size)
 
 
+func skill_row_rect(skill_id: String) -> Rect2:
+	if not open or _active_tab != Tab.SKILLS or not _skill_row_paragraphs.has(skill_id):
+		return Rect2()
+	var paragraph := int(_skill_row_paragraphs[skill_id])
+	var style := _body_label.get_theme_stylebox("normal")
+	var top := float(_body_label.get_paragraph_offset(paragraph)) - _body_label.get_v_scroll_bar().value
+	var pos := _body_label.global_position + Vector2(style.get_content_margin(SIDE_LEFT), top + style.get_content_margin(SIDE_TOP))
+	var rect := Rect2(pos, Vector2(minf(220.0, _body_label.size.x), float(_body_label.get_theme_font_size("normal_font_size"))))
+	return rect if body_rect().encloses(rect) else Rect2()
+
+
 ## Clears the in-flight gesture. Called on every fresh press, on the meta
 ## handler's consume, and on every open/close/tab-switch: a flag latched by a pan
 ## that ended outside the body (or on a tab the player then left) would otherwise
@@ -410,6 +429,12 @@ func body_rect() -> Rect2:
 func _reset_body_gesture() -> void:
 	_body_gesture_panned = false
 	_body_gesture_drift = 0.0
+
+
+func _input(event: InputEvent) -> void:
+	# RichTextLabel's meta_clicked can precede gui_input on release.
+	if open and UIChrome.pointer_canceled(event):
+		_body_gesture_panned = true
 
 
 func _on_body_gui_input(event: InputEvent) -> void:
@@ -433,11 +458,11 @@ func _on_body_gui_input(event: InputEvent) -> void:
 		_reset_body_gesture()
 	elif event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed:
 		_reset_body_gesture()
-	var dy := 0.0
+	var travel := Vector2.ZERO
 	if event is InputEventScreenDrag:
-		dy = (event as InputEventScreenDrag).relative.y
+		travel = (event as InputEventScreenDrag).relative
 	elif event is InputEventMouseMotion and ((event as InputEventMouseMotion).button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
-		dy = (event as InputEventMouseMotion).relative.y
+		travel = (event as InputEventMouseMotion).relative
 	else:
 		return
 	# Total travel, not per-event travel: a slow pan arrives as many small deltas
@@ -445,12 +470,12 @@ func _on_body_gui_input(event: InputEvent) -> void:
 	# but NOT in magnitude -- so this sums absolute values and never resets
 	# mid-gesture. Scrolling itself stays unconditional below: a sub-slop wobble
 	# pans by those same few px, which is invisible, and still counts as a tap.
-	_body_gesture_drift += absf(dy)
+	_body_gesture_drift += travel.length()
 	if _body_gesture_drift > BODY_PAN_SLOP_PX:
 		_body_gesture_panned = true
 	var vbar := _body_label.get_v_scroll_bar()
 	if vbar != null and vbar.max_value > vbar.page:
-		vbar.value = clampf(vbar.value - dy, vbar.min_value, vbar.max_value - vbar.page)
+		vbar.value = clampf(vbar.value - travel.y, vbar.min_value, vbar.max_value - vbar.page)
 		_update_scroll_hint()
 		get_viewport().set_input_as_handled()
 
@@ -700,6 +725,7 @@ func toggle_open() -> bool:
 ## visible tab while every section field stays present and unchanged.
 func _emit_journal_shown() -> void:
 	_journal_payload["active_tab"] = _TAB_IDS[_active_tab]
+	_journal_payload["act_art"] = _act_art_id() if _active_tab == Tab.QUESTS else ""
 	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_SHOWN, _journal_payload)
 
 
@@ -1072,10 +1098,19 @@ func _lead_lines() -> Array:
 ## Completed + Postings. "What am I doing now." Reads the `_open_*` snapshot
 ## fields (captured at `_open()`, immutable while the panel is open). Returns
 ## `{text: String}`.
+func _act_art_id() -> String:
+	var id := String(_open_act.get("id", ""))
+	return id if ACT_ART.has(id) and ResourceLoader.exists(ACT_ART[id]) else ""
+
+
 func _build_quests_tab() -> Dictionary:
 	var parts: Array = []
 	if not _open_act.is_empty():
 		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(_open_act.get("header", ""))))
+		var art_id := _act_art_id()
+		if art_id != "":
+			var width := maxi(1, mini(480, int(_root.size.x) - 84))
+			parts.append("[img width=%d height=%d]%s[/img]" % [width, maxi(1, width / 4), ACT_ART[art_id]])
 		for line: String in _act_beat_lines():
 			parts.append(UIChrome.bb_escape(line))
 		parts.append("")
@@ -1159,6 +1194,7 @@ const EFFECTS_GLOSSARY_NOTE := "One line each, as they behaved in the fight you 
 
 func _build_skills_tab(cursor_index: int) -> Dictionary:
 	var parts: Array = []
+	_skill_row_paragraphs.clear()
 	var cursor_line := -1
 	parts.append("[b]Skills[/b]")
 	parts.append(COMBAT_KIT_NOTE)
@@ -1195,6 +1231,7 @@ func _build_skills_tab(cursor_index: int) -> Dictionary:
 				cursor_line = parts.size()
 				line = "[b]▶ %s[/b]" % line
 			line = "[url=%d]%s[/url]" % [flat_i, line]
+			_skill_row_paragraphs[skill_id] = parts.size()
 			parts.append(line)
 			flat_i += 1
 	# GH#336: class provenance demoted from the outer axis to a per-row suffix,

@@ -1,0 +1,111 @@
+{
+ "_comment": "#506 narrow browser gesture regression: horizontal drag and stationary cancel must not activate the row; subsequent deliberate tap must activate exactly once. Fixture setup proves gestures only, not acquisition. All contacts require browser --touch.",
+ "fixture_save": "gear_loop_start",
+ "starts_at_title": true,
+ "fail_fast": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_title_row",
+   "row": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "touch_journal_tab",
+   "tab": "skills"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "active_tab": "skills"
+   }
+  },
+  {
+   "action": "touch_journal_skill",
+   "skill": "power_strike",
+   "gesture": {
+    "delta": [
+     40,
+     0
+    ]
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "loadout_changed",
+   "count": 0
+  },
+  {
+   "action": "touch_journal_skill",
+   "skill": "power_strike",
+   "gesture": {
+    "cancel": true
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "loadout_changed",
+   "count": 0
+  },
+  {
+   "action": "touch_journal_skill",
+   "skill": "power_strike"
+  },
+  {
+   "action": "assert_event_count",
+   "type": "loadout_changed",
+   "count": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "01_deliberate_tap_works"
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "hotbar_loadout",
+   "equals": [
+    "power_strike"
+   ]
+  }
+ ]
+}

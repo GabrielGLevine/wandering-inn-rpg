@@ -37,6 +37,9 @@ var _title_screen: Node
 var _sleep_veil: Node
 var _settings_panel: Node
 var _combat_focus_cells: Array[Vector2i] = []
+## [world id, view size, combat] last pushed to the world. Re-pushing the same
+## size snaps the camera mid-pan, and every hotbar render relays out.
+var _world_view_key: Array = []
 var _combat_screen: Node
 var _map_transition_layer: CanvasLayer
 var _map_transition_overlay: ColorRect
@@ -89,6 +92,13 @@ func world_to_screen(world_pos: Vector2) -> Vector2:
 
 func world_view_rect() -> Rect2:
 	return Rect2(_container.position, Vector2(_sub_viewport.size) * _container.scale)
+
+
+## Screen y of the bottom edge of the cell a following field camera holds the
+## player on. The desktop Skills readout stays below it.
+func world_focus_bottom() -> float:
+	var focus := _world.field_focus_offset() if _world != null else Vector2.ZERO
+	return world_view_rect().get_center().y + (focus.y + WIWorld.CELL * 0.5) * _container.scale.y
 
 
 ## The exact inverse of `world_to_screen` (issue #57's screen->cell trap):
@@ -296,17 +306,21 @@ func _layout_viewport_container() -> void:
 	if _world != null and Game.sim.combat == null:
 		if _field_chips != null:
 			top = _field_chips.occupied_height() + 10.0
+		if _message_layer != null:
+			top = maxf(top, _message_layer.field_hint_rect().end.y + 10.0)
 		if _field_hotbar != null:
 			bottom = _field_hotbar.world_bottom()
 	var scale := WORLD_SCALE
 	var view_size := Vector2(WORLD_VIEWPORT_SIZE.x, minf(WORLD_VIEWPORT_SIZE.y, floorf(maxf(160.0, bottom - top) / WORLD_SCALE)))
 	var bounds := Rect2(Vector2(0.0, top), Vector2(viewport_size.x, bottom - top))
-	var mobile_combat := _combat_screen != null and Game.sim.combat != null and WIResponsiveLayout.uses_touch_layout()
-	if mobile_combat:
+	var combat_layout := _combat_screen != null and Game.sim.combat != null
+	var mobile_combat := combat_layout and WIResponsiveLayout.uses_touch_layout()
+	if combat_layout:
 		var board_rect: Rect2 = _combat_screen.board_view_rect()
 		if board_rect.has_area():
 			bounds = board_rect
-			scale = ceilf(WICombatMobileLayout.CELL_CSS / WIResponsiveLayout.css_scale(get_viewport())) / 16.0
+			if mobile_combat:
+				scale = ceilf(WICombatMobileLayout.CELL_CSS / WIResponsiveLayout.css_scale(get_viewport())) / 16.0
 			view_size = (bounds.size / scale).floor().max(Vector2.ONE)
 	var scaled_size := view_size * scale
 	if _sub_viewport.size != Vector2i(view_size):
@@ -315,9 +329,14 @@ func _layout_viewport_container() -> void:
 	_container.scale = Vector2(scale, scale)
 	_container.position = bounds.position + (bounds.size - scaled_size) * 0.5
 	if _world != null:
-		_world.set_view_size(view_size)
-		if mobile_combat:
+		var view_key := [_world.get_instance_id(), Vector2i(view_size), combat_layout]
+		if combat_layout or view_key != _world_view_key:
+			_world_view_key = view_key
+			_world.set_view_size(view_size)
+		if combat_layout:
 			_world.focus_combat_camera(_combat_focus_cells)
+		elif _field_hotbar != null:
+			_field_hotbar.set_world_focus_bottom(world_focus_bottom())
 
 
 func _clear_world_viewport() -> void:
@@ -370,6 +389,7 @@ func _spawn_ui_layers() -> void:
 	message_layer.name = "MessageLayer"
 	add_child(message_layer)
 	_message_layer = message_layer
+	_message_layer.layout_changed.connect(_layout_viewport_container.call_deferred)
 	var combat_screen := COMBAT_SCREEN_SCRIPT.new()
 	combat_screen.name = "CombatScreen"
 	combat_screen.main_ref = self
@@ -414,6 +434,8 @@ func _spawn_ui_layers() -> void:
 	_field_chips.inventory_ref = _inventory
 	_field_chips.main_ref = self
 	_field_chips.combat_ref = _combat_screen
+	_field_chips.message_layer_ref = _message_layer
+	_field_chips.layout_changed.connect(_layout_viewport_container.call_deferred)
 	add_child(_field_chips)
 	_sleep_veil = SLEEP_VEIL_SCRIPT.new()
 	_sleep_veil.name = "SleepVeil"
@@ -438,7 +460,9 @@ func _spawn_world() -> void:
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
-	if type in [WIEvents.WORLD_READY, WIEvents.UI_FIELD_HOTBAR_RENDERED, WIEvents.COMBAT_STARTED, WIEvents.UI_COMBAT_HIDDEN]:
+	# UI_MAP_RENDERED: a transition keeps the World but can change the map's
+	# camera offset, which moves the desktop Skills readout cap.
+	if type in [WIEvents.WORLD_READY, WIEvents.UI_MAP_RENDERED, WIEvents.UI_FIELD_HOTBAR_RENDERED, WIEvents.COMBAT_STARTED, WIEvents.UI_COMBAT_HIDDEN]:
 		_layout_viewport_container.call_deferred()
 	if type == WIEvents.GAME_RESET or type == WIEvents.GAME_LOADED:
 		WIDataRegistry.reset()

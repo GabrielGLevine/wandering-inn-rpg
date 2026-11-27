@@ -1,0 +1,332 @@
+{
+  "_comment": "Browser-only import request lifetime: trusted row taps, delayed real FileReader completion injected by import_request_lifetime.mjs. Empty selection is a cancellation surrogate; a genuinely selected zero-byte file refuses. Reopen/cancel/Settings Back must ignore stale reads and preserve live snapshots plus durable manual bytes. Physical OS picker/Back and phone lifecycle remain unproven.",
+  "fixture_save": "near_pallass",
+  "starts_at_title": true,
+  "fail_fast": true,
+  "steps": [
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_gate_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_screen",
+      "pos": [
+        640,
+        360
+      ]
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_title_rendered",
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_title_row",
+      "row": 2
+    },
+    {
+      "action": "wait_for_event",
+      "type": "game_loaded",
+      "timeout_sec": 10
+    },
+    {
+      "action": "wait_for_event",
+      "type": "world_ready",
+      "timeout_sec": 10
+    },
+    {
+      "action": "assert_state",
+      "path": "gold",
+      "equals": 60
+    },
+    {
+      "action": "press",
+      "name": "cancel"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_pause_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "move",
+      "direction": "down",
+      "steps": 7
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "dump_state",
+      "label": "baseline"
+    },
+    {
+      "action": "screenshot",
+      "name": "00_baseline"
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 16
+    },
+    {
+      "action": "wait_for_event",
+      "type": "save_import_requested",
+      "payload_contains": {
+        "arm": "web"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "01_cancel_read_ready"
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 16
+    },
+    {
+      "action": "wait_for_event",
+      "type": "save_import_requested",
+      "payload_contains": {
+        "arm": "web"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "wait_for_event",
+      "type": "save_import_cancelled",
+      "payload_contains": {
+        "arm": "web"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "01_cancel_release"
+    },
+    {
+      "action": "wait_frames",
+      "frames": 30
+    },
+    {
+      "action": "assert_event_absent",
+      "type": "game_loaded",
+      "payload_contains": {
+        "reason": "import"
+      }
+    },
+    {
+      "action": "assert_event_absent",
+      "type": "save_imported"
+    },
+    {
+      "action": "dump_state",
+      "label": "after_cancel"
+    },
+    {
+      "action": "screenshot",
+      "name": "01_cancel_preserved"
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 16
+    },
+    {
+      "action": "wait_for_event",
+      "type": "save_import_requested",
+      "payload_contains": {
+        "arm": "web"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "02_reopen_read_ready"
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 16
+    },
+    {
+      "action": "wait_for_event",
+      "type": "save_import_requested",
+      "payload_contains": {
+        "arm": "web"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "02_reopen_release"
+    },
+    {
+      "action": "wait_frames",
+      "frames": 30
+    },
+    {
+      "action": "assert_event_absent",
+      "type": "game_loaded",
+      "payload_contains": {
+        "reason": "import"
+      }
+    },
+    {
+      "action": "assert_event_absent",
+      "type": "save_imported"
+    },
+    {
+      "action": "dump_state",
+      "label": "after_reopen"
+    },
+    {
+      "action": "screenshot",
+      "name": "02_reopen_preserved"
+    },
+    {
+      "action": "screenshot",
+      "name": "02_replacement_finish"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "toast",
+      "payload_contains": {
+        "text": "That file isn't a Wandering Inn save this build can read. Nothing was changed."
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "assert_event_count",
+      "type": "save_import_cancelled",
+      "count": 1
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 16
+    },
+    {
+      "action": "wait_for_event",
+      "type": "save_import_requested",
+      "payload_contains": {
+        "arm": "web"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "03_close_read_ready"
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 17
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_hidden",
+      "timeout_sec": 10
+    },
+    {
+      "action": "screenshot",
+      "name": "03_close_release"
+    },
+    {
+      "action": "wait_frames",
+      "frames": 30
+    },
+    {
+      "action": "assert_event_absent",
+      "type": "game_loaded",
+      "payload_contains": {
+        "reason": "import"
+      }
+    },
+    {
+      "action": "assert_event_absent",
+      "type": "save_imported"
+    },
+    {
+      "action": "dump_state",
+      "label": "after_close"
+    },
+    {
+      "action": "screenshot",
+      "name": "03_close_preserved"
+    },
+    {
+      "action": "press",
+      "name": "confirm"
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_shown",
+      "timeout_sec": 10
+    },
+    {
+      "action": "touch_settings_row",
+      "row": 16
+    },
+    {
+      "action": "wait_for_event",
+      "type": "game_loaded",
+      "payload_contains": {
+        "reason": "import"
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "wait_for_event",
+      "type": "save_imported",
+      "timeout_sec": 10
+    },
+    {
+      "action": "wait_for_event",
+      "type": "toast",
+      "payload_contains": {
+        "text": "Save imported. Welcome back."
+      },
+      "timeout_sec": 10
+    },
+    {
+      "action": "wait_for_event",
+      "type": "ui_settings_hidden",
+      "timeout_sec": 10
+    },
+    {
+      "action": "assert_event_count",
+      "type": "save_imported",
+      "count": 1
+    },
+    {
+      "action": "assert_event_count",
+      "type": "save_import_cancelled",
+      "count": 1
+    },
+    {
+      "action": "assert_event_count",
+      "type": "toast",
+      "payload_contains": {
+        "text": "That file isn't a Wandering Inn save this build can read. Nothing was changed."
+      },
+      "count": 1
+    },
+    {
+      "action": "assert_state",
+      "path": "gold",
+      "equals": 60
+    },
+    {
+      "action": "dump_state",
+      "label": "after_valid_import"
+    },
+    {
+      "action": "screenshot",
+      "name": "04_valid_import"
+    }
+  ]
+}

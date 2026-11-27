@@ -1,5 +1,6 @@
 {
- "_comment": "v0.16 I1 (#306). Walk-in only (no portals row). Biome + every sprite reused -- zero biomes.json/sprites.json edits. Perimeter is walls.segments, so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each cell with a matching decor row.",
+ "_kits_recompose": "#632 — re-intake pieces: inkpot and quill on the counter, scroll on the desk, book on the table, oak chairs, planter",
+ "_comment": "v0.16 I1 (#306); kit-converted in #608 1b. Walk-in only (no portals row). Biome `brothers_parlor` under @floor_marble/@wall_shop and kit roles (@table, @window_interior). Perimeter is walls.segments, so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each cell with a matching decor row.",
  "biome": "brothers_parlor",
  "grid": {
   "width": 12,
@@ -13,25 +14,13 @@
  ],
  "floor_layers": [
   {
-   "_pick": "#225 floor differentiation (this key is census-FREE -- _pick carries the rationale so _comment does not have to). The brothers_parlor biome's default floor is the inn plank [1,21], and the parlor itself sits on Library-pack parquet; a stationer one street over must read as neither. Reuses the SAME Interior_Walls_01 sheet's plain pale-board swatch [16,21]/[17,21] -- the shipped runners_guild floor, so sheet, license and footstep-wood are all unchanged. Reads as a swept shop board: cooler and plainer than the parlor's brandy-lit parquet, warmer than stone.",
-   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
-   "tile_px": 16,
-   "variants": [
-    [
-     16,
-     21
-    ],
-    [
-     17,
-     21
-    ]
-   ],
+   "_pick": "#608 1b (census-free key: _pick carries the rationale so _comment does not have to): the stationer's floor is @floor_marble (data/kits.json) since #632, the pale marble shop floor it shares with the enchanter's shop; #608's @floor_shop flagstone stays with the Brothers' parlor. Either keeps it off the brothers_parlor biome's default inn plank, which would read as the inn (the original #225 differentiation). Walls are @wall_shop with the @wall_dado north face.",
+   "material": "@floor_marble",
    "cells": "all"
   }
  ],
  "walls": {
-  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
-  "tile_px": 16,
+  "material": "@wall_shop",
   "segments": [
    {
     "from": [
@@ -42,14 +31,7 @@
      11,
      0
     ],
-    "cap": [
-     14,
-     6
-    ],
-    "face": [
-     14,
-     7
-    ]
+    "material": "@wall_dado"
    },
    {
     "from": [
@@ -60,10 +42,8 @@
      0,
      8
     ],
-    "cap": [
-     14,
-     6
-    ]
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -74,10 +54,8 @@
      11,
      8
     ],
-    "cap": [
-     14,
-     6
-    ]
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -88,10 +66,8 @@
      5,
      8
     ],
-    "cap": [
-     14,
-     6
-    ]
+    "material": "@wall_shop",
+    "face": null
    },
    {
     "from": [
@@ -102,37 +78,35 @@
      10,
      8
     ],
-    "cap": [
-     14,
-     6
-    ]
+    "material": "@wall_shop",
+    "face": null
    }
   ]
  },
  "decor": [
   {
-   "sprite": "table_brown",
+   "sprite": "@table",
    "cell": [
     4,
     5
    ]
   },
   {
-   "sprite": "stool",
+   "sprite": "invrisil_oak_chair",
    "cell": [
     3,
     5
    ]
   },
   {
-   "sprite": "stool",
+   "sprite": "invrisil_oak_chair_side",
    "cell": [
     5,
     5
    ]
   },
   {
-   "sprite": "rug_woven_cream",
+   "sprite": "rug_woven_red",
    "cell": [
     6,
     4
@@ -144,14 +118,14 @@
    ]
   },
   {
-   "sprite": "window_blue",
+   "sprite": "@window_interior",
    "cell": [
     7,
     1
    ]
   },
   {
-   "sprite": "sconce",
+   "sprite": "shop_oil_lamp",
    "cell": [
     4,
     1
@@ -168,21 +142,43 @@
    }
   },
   {
-   "sprite": "plant_pot",
+   "sprite": "invrisil_planter",
    "cell": [
     10,
     7
    ]
-  }
- ],
- "ambience": [
+  },
   {
-   "preset": "dust_motes",
-   "rect": "all",
-   "phase": [
-    "dusk",
-    "night"
-   ]
+   "sprite": "invrisil_inkpot",
+   "cell": [
+    5,
+    1
+   ],
+   "lift": 8
+  },
+  {
+   "sprite": "invrisil_quill",
+   "cell": [
+    5,
+    1
+   ],
+   "lift": 8
+  },
+  {
+   "sprite": "invrisil_scroll",
+   "cell": [
+    9,
+    3
+   ],
+   "lift": 9
+  },
+  {
+   "sprite": "invrisil_book",
+   "cell": [
+    4,
+    5
+   ],
+   "lift": 7
   }
  ],
  "entities": [
@@ -193,12 +189,12 @@
     6,
     8
    ],
-   "display_name": "Out to the Boulevard",
+   "display_name": "Out to the Cross-street",
    "sprite": "door",
-   "to_map": "invrisil_boulevard",
+   "to_map": "invrisil_cross_street",
    "to_cell": [
-    20,
-    2
+    6,
+    3
    ]
   },
   {
@@ -264,7 +260,7 @@
     1
    ],
    "display_name": "Ruled Paper in Three Weights",
-   "sprite": "crate",
+   "sprite": "invrisil_paper_stand",
    "observe": "Stacked lightest at the top, each price chalked on the shelf edge rather than the stock. The stock itself carries no mark at all."
   },
   {
@@ -330,7 +326,7 @@
     3
    ],
    "display_name": "The Scribe's Desk",
-   "sprite": "library_desk",
+   "sprite": "owned_fallback_library_desk",
    "observe": "The desk sits at an angle to the window. The page faces the wall, the scribe faces the street. A second chair stands on the page side, pushed back and left at a slant."
   },
   {
@@ -341,7 +337,7 @@
     1
    ],
    "display_name": "A Small Iron Stove",
-   "sprite": "barrel",
+   "sprite": "invrisil_iron_stove",
    "observe": "The fire is low, the ash under the grate deep. The nearest stacks of paper stand a hand's width off the iron."
   }
  ]

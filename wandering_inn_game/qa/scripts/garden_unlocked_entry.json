@@ -16,7 +16,18 @@
   {"_comment": "One interact, straight into the Garden -- the door is already open on the flag alone (no Erin conversation, no chore, no sleep needed from this fixture).", "action": "press", "name": "interact"},
   {"action": "wait_for_event", "type": "toast", "payload_contains": {"text": "The vines part like a curtain, and the light beyond doesn't flicker."}, "timeout_sec": 5},
   {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "garden_sanctuary"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": {"map": "garden_sanctuary", "floor_cells": 168, "blocked_cells": 48}, "timeout_sec": 5},
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "garden_sanctuary",
+    "floor_cells": 168,
+    "blocked_cells": 50,
+    "ground_transitions": 1,
+    "boundary_toned": true
+   },
+   "timeout_sec": 5
+  },
   {"action": "assert_state", "path": "current_map", "equals": "garden_sanctuary"},
   {"action": "assert_state", "path": "player_cell", "equals": [7, 10]},
   {"action": "screenshot", "name": "01_garden_entry_from_garden_unlocked"},

@@ -229,5 +229,71 @@ class TestHelpers(unittest.TestCase):
             self.assertEqual(ac.normalize_verdict(raw), want, raw)
 
 
+class TestSlicedBatches(Fixture):
+    def slices(self):
+        pack = self.assets / "Pixel Crawler - Free Pack"
+        d = self.assets / "_sliced" / "Pixel Crawler - Free Pack" / "Furniture"
+        png(d / "Furniture__x736_y73_w16_h23.png", 16, 23)
+        png(d / "Furniture__x0_y0_w32_h32.png", 32, 32)
+        png(pack / "Environment" / "Props" / "Static" / "Furniture.png", 800, 864)
+        rows = [
+            {"path": "potential_assets/_sliced/Pixel Crawler - Free Pack/Furniture/Furniture__x736_y73_w16_h23.png",
+             "kind": "prop", "targets": ["crate"], "verdict": "UNREVIEWED", "notes": "",
+             "source_sheet": "potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png",
+             "region": [736, 73, 16, 23], "sheet_sha256": "ab" * 32, "method": "seam", "has_shadow": False,
+             "size_class": "M", "label_confidence": 0.9, "label_kind": "crate", "bundled": True,
+             "game_sheet": "res://assets/props/free_pack/Furniture.png", "wired_ids": ["crate"],
+             "duplicate_sheets": []},
+            {"path": "potential_assets/_sliced/Pixel Crawler - Free Pack/Furniture/Furniture__x0_y0_w32_h32.png",
+             "kind": "prop", "targets": [], "verdict": "UNREVIEWED", "notes": "",
+             "source_sheet": "potential_assets/Pixel Crawler - Free Pack/Environment/Props/Static/Furniture.png",
+             "region": [0, 0, 32, 32], "sheet_sha256": "ab" * 32, "method": "grid16", "has_shadow": False,
+             "size_class": "M", "label_confidence": 0.0, "label_kind": "", "bundled": False, "game_sheet": "",
+             "wired_ids": [], "duplicate_sheets": []}]
+        (d / "SLICES.json").write_text(json.dumps({
+            "schema": 1, "source": "pack", "tier": "pack-bundle", "family": "PC16",
+            "sheet": rows[0]["source_sheet"], "sheet_sha256": "ab" * 32, "grid": 16,
+            "overrides": [], "check_notes": [], "assets": rows}))
+        return d
+
+    def test_sliced_dir_is_a_pack_bundle_batch_with_passthrough(self):
+        d = self.slices()
+        reg = self.build()
+        rows = self.rows(reg, "_sliced/Pixel Crawler - Free Pack/Furniture")
+        crate = rows["Furniture__x736_y73_w16_h23.png"]
+        self.assertEqual((crate["tier"], crate["source"], crate["family"], crate["kind"]),
+                         ("pack-bundle", "pack", "PC16", "prop"))
+        self.assertEqual(crate["region"], [736, 73, 16, 23])
+        self.assertEqual(crate["method"], "seam")
+        self.assertIs(crate["has_shadow"], False)
+        self.assertIs(crate["bundled"], True)
+        self.assertEqual(crate["game_sheet"], "res://assets/props/free_pack/Furniture.png")
+        self.assertEqual(crate["label_confidence"], 0.9)
+        self.assertEqual((crate["w"], crate["h"]), (16, 23))
+        self.assertTrue(crate["manifest_ref"].endswith("_sliced/Pixel Crawler - Free Pack/Furniture/SLICES.json"))
+        other = rows["Furniture__x0_y0_w32_h32.png"]
+        self.assertIs(other["bundled"], False)
+        self.assertEqual(other["label_confidence"], 0.0)
+        self.assertEqual(other["targets"], ["Furniture__x0_y0_w32_h32"], "unlabeled slices stay searchable by stem")
+        batch = [b for b in reg["batches"] if b["batch"] == "_sliced/Pixel Crawler - Free Pack/Furniture"][0]
+        self.assertEqual((batch["origin"], batch["tier"], batch["rows"]), ("SLICES.json", "pack-bundle", 2))
+
+    def test_write_manifests_never_touches_sliced_dirs(self):
+        d = self.slices()
+        self.build(write=True)
+        self.assertNotIn("MANIFEST.json", ac.present(d))
+
+    def test_find_asset_crate_returns_slice_with_region(self):
+        self.slices()
+        reg = self.build()
+        hits = fa.search(reg["assets"], ["crate"], tier="pack")
+        self.assertEqual([Path(r["path"]).name for _, r in hits], ["Furniture__x736_y73_w16_h23.png"])
+        text = fa.fmt(hits[0][1])
+        self.assertIn("region=736,73,16,23 of Furniture.png", text)
+        self.assertIn("bundled=res://assets/props/free_pack/Furniture.png", text)
+        pending = dict(hits[0][1], bundled=False, game_sheet="")
+        self.assertIn("BUNDLE-PENDING", fa.fmt(pending))
+
+
 if __name__ == "__main__":
     unittest.main()

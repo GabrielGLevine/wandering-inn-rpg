@@ -1,0 +1,438 @@
+{
+ "_comment": "Browser inventory recovery proof only. Disclosed lifecycle fixture supplies Mage1, depleted pools, gear and one Fine Meal. Keyboard title/opening, then actual touchscreen gear/Use controls prove repeated equipment toggles do not heal and a last-meal receipt stays readable after armor changes. Mixed input; no earned acquisition, combat rollback, title-touch timing or physical-device claim. Browser-only route, excluded from native canonical list.",
+ "fixture_save": "vitals_lifecycle_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 30
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "leather_jerkin"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "leather_jerkin",
+    "before": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_unequipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "slot": "armor"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "armor",
+    "before": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "leather_jerkin"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "leather_jerkin",
+    "before": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_unequipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "slot": "armor"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "armor",
+    "before": {
+     "hp": 24,
+     "max_hp": 36,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 24,
+     "max_hp": 32,
+     "mp": 4,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 4
+  },
+  {
+   "action": "screenshot",
+   "name": "01_equipment_toggles_do_not_restore"
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "fine_meal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "fine_meal",
+    "allowed": true,
+    "restore_hp": 8,
+    "restore_mp": 4
+   }
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "fine_meal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "fine_meal",
+    "committed": true,
+    "restore_hp": 8,
+    "restore_mp": 4
+   }
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "preparation.armed",
+   "equals": {
+    "hp_mod": 2
+   },
+   "_comment": "World food settlement creates the real auto checkpoint at 32/32 HP, 8/12 MP, doses2, no armor and armed +2 max HP."
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "leather_jerkin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "item": "leather_jerkin"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "equipment",
+    "source": "leather_jerkin",
+    "before": {
+     "hp": 32,
+     "max_hp": 32,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "after": {
+     "hp": 32,
+     "max_hp": 36,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "after": {
+     "hp": 32,
+     "max_hp": 36,
+     "mp": 8,
+     "max_mp": 12,
+     "mp_potion_doses": 2
+    },
+    "surface": "inventory"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 32
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 8
+  },
+  {
+   "action": "screenshot",
+   "name": "02_after_auto_gear_differs_from_checkpoint"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts",
+   "equals": {
+    "mending_draught": 2,
+    "mana_potion": 1
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_used",
+   "count": 1
+  }
+ ]
+}

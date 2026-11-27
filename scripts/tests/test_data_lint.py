@@ -21,6 +21,131 @@ import data_lint  # noqa: E402
 GRID = {"grid": {"width": 4, "height": 3}}
 
 
+class TestMapRenderingGeometry(unittest.TestCase):
+    def check(self, extra):
+        errors = []
+        data_lint.check_maps({"m": {**GRID, "entities": [], **extra}}, errors)
+        return errors
+
+    def test_exterior_vista_and_negative_camera_offset_are_valid(self):
+        self.assertEqual(self.check({"camera": {"offset": [0, -3], "margins": [0, 2, 0, 4]},
+            "vistas": [{"sprite": "pallass_lower_city", "cell": [13, 11], "tint": [0.7, 0.8, 0.9]}]}), [])
+
+    def test_malformed_camera_is_rejected_before_world_reads_it(self):
+        for camera in [None, [], {"offset": [0]}, {"offset": [False, 0]},
+                {"margins": [0, -1, 0, 0]}, {"margins": [0, 1, 0]}, {"offset": [float("inf"), 0]}]:
+            with self.subTest(camera=camera):
+                self.assertTrue(self.check({"camera": camera}))
+
+    def test_malformed_vista_is_rejected_before_renderer_reads_it(self):
+        for vistas in [None, {}, [None], [{"sprite": "", "cell": [1, 2]}],
+                [{"sprite": "city", "cell": [1]}], [{"sprite": "city", "cell": [True, 1]}],
+                [{"sprite": "city", "cell": [1, 2], "tint": [1, 1]}],
+                [{"sprite": "city", "cell": [1, 2], "foreground": "true"}]]:
+            with self.subTest(vistas=vistas):
+                self.assertTrue(self.check({"vistas": vistas}))
+
+
+    def test_ground_transition_accepts_complete_corner_table_and_authored_path(self):
+        corners = [[x, y] for y in range(4) for x in range(4)]
+        self.assertEqual(self.check({"floor_layers": [{"wang_corners": corners,
+            "terrain_lower_cells": {"list": [[1, 1], [2, 1]]}}]}), [])
+
+    def test_ground_transition_rejects_malformed_corner_tables_and_paths(self):
+        corners = [[x, y] for y in range(4) for x in range(4)]
+        for bad in [None, [], corners[:15], [[False, 0]] * 16, [[0]] * 16, [[-1, 0]] * 16]:
+            with self.subTest(corners=bad):
+                self.assertTrue(self.check({"floor_layers": [{"wang_corners": bad,
+                    "terrain_lower_cells": {"list": [[1, 1]]}}]}))
+        for bad in [None, [], {"list": [[4, 1]]}, {"list": [[True, 1]]},
+                {"rect": [0, 0, 5, 1]}, {"rect": [0, 0, 0, 1]}, "unknown"]:
+            with self.subTest(cells=bad):
+                self.assertTrue(self.check({"floor_layers": [{"wang_corners": corners,
+                    "terrain_lower_cells": bad}]}))
+
+
+class TestNightGlow(unittest.TestCase):
+    """#632: decor night_glow rows name a registered sprite and real phases."""
+    SPRITES = {data_lint.DATA / "sprites.json": {"window_glow_warm": {}}}
+
+    def check(self, decor=None, entities=None):
+        errors = []
+        data_lint.check_night_glow({"m": {**GRID, "entities": entities or [], "decor": decor or []}},
+            self.SPRITES, errors)
+        return errors
+
+    def test_valid_rows_pass(self):
+        self.assertEqual(self.check([{"sprite": "w", "cell": [0, 0], "night_glow": {"sprite": "window_glow_warm"}},
+            {"sprite": "w", "cell": [1, 0], "night_glow": {"sprite": "window_glow_warm", "phase": ["night"]}}]), [])
+
+    def test_broken_rows_fail(self):
+        for glow in ["window_glow_warm", {"sprite": "nope"}, {"sprite": "window_glow_warm", "phase": []},
+                {"sprite": "window_glow_warm", "phase": ["midnight"]}, {"sprite": "window_glow_warm", "tint": [1, 1, 1]}]:
+            with self.subTest(glow=glow):
+                self.assertTrue(self.check([{"sprite": "w", "cell": [0, 0], "night_glow": glow}]))
+
+    def test_entities_cannot_carry_it(self):
+        self.assertTrue(self.check(entities=[{"id": "e", "night_glow": {"sprite": "window_glow_warm"}}]))
+
+
+class TestDecorLift(unittest.TestCase):
+    def errs(self, lift):
+        errors = []
+        data_lint.check_decor_lift({"m": {**GRID, "entities": [], "decor": [{"sprite": "s", "cell": [0, 0], "lift": lift}]}}, errors)
+        return errors
+
+    def test_lift_range(self):
+        self.assertEqual(self.errs(10), [])
+        for bad in [0, 49, 2.5, True, "3"]:
+            with self.subTest(bad=bad):
+                self.assertTrue(self.errs(bad))
+
+
+class TestWallTrim(unittest.TestCase):
+    """#632: a material's wall trim names a real sheet and coords inside it."""
+    def errs(self, trim):
+        errors = []
+        data_lint._check_wall_trim(trim, "t", errors)
+        return errors
+
+    def test_valid_trim_passes(self):
+        self.assertEqual(self.errs({"sheet": "res://assets/tiles/invrisil/cornice_gold_line.png", "tile_px": 16, "coords": [0, 0]}), [])
+
+    def test_broken_trim_fails(self):
+        for trim in [[0, 0], {"sheet": "res://assets/tiles/invrisil/cornice_gold_line.png", "tile_px": 16, "coords": [1, 0]},
+                {"sheet": "res://assets/nope.png", "tile_px": 16, "coords": [0, 0]},
+                {"sheet": "res://assets/tiles/invrisil/cornice_gold_line.png", "tile_px": 16, "coords": [0, 0], "tone": {}}]:
+            with self.subTest(trim=trim):
+                self.assertTrue(self.errs(trim))
+
+
+class TestTerrainFallbacks(unittest.TestCase):
+    def check(self, fallback, role="floor_layer", primary=None):
+        errors = []
+        config = {**(primary or {}), "fallback_render": fallback}
+        fn = getattr(data_lint, "_check_tile_fallback", None)
+        if fn is not None:
+            fn(config, role, "fixture", errors)
+        return errors
+
+    def test_complete_owned_descriptor_is_valid(self):
+        self.assertEqual(self.check({"sheet": "res://assets/tiles/harvest/meadow_paths.png",
+            "tile_px": 16, "coords": [2, 1]}), [])
+
+    def test_old_coordinates_bad_units_and_nested_fallbacks_are_rejected(self):
+        base = {"sheet": "res://assets/tiles/harvest/meadow_paths.png", "tile_px": 16, "coords": [2, 1]}
+        for fallback in [None, {}, {**base, "tile_px": 540}, {**base, "coords": [8, 13]},
+                {**base, "coords": [True, 1]}, {**base, "fallback_render": base},
+                {**base, "cells": "all"}, {**base, "sheet": "res://assets/__missing_target__.png"}]:
+            with self.subTest(fallback=fallback):
+                self.assertTrue(self.check(fallback))
+
+    def test_wall_and_biome_roles_cannot_drop_drawn_surfaces(self):
+        base = {"sheet": "res://assets/tiles/harvest/meadow_paths.png", "tile_px": 16, "coords": [2, 1]}
+        self.assertTrue(self.check(base, "wall_segment", {"face": [1, 2], "cap": [1, 1]}))
+        self.assertTrue(self.check(base, "biome", {"floor": [1, 2], "blocked": [1, 1], "skirt": [0, 0]}))
+
+
 class TestBrokenFixtures(unittest.TestCase):
     def _errs(self, fn, *args):
         errors = []
@@ -182,6 +307,105 @@ class TestBrokenFixtures(unittest.TestCase):
         maps = {"m": {**GRID, "entities": [
             {"id": "d", "door_when": {"requires": {"door_awakened": 1}}}]}}
         self.assertEqual(self._errs(data_lint.check_gate_shapes, maps), [])
+
+
+class TestSpriteFallbacks(unittest.TestCase):
+    def check(self, sprites, bundle=()):
+        errors = []
+        data_lint.check_sprite_fallbacks(
+            {data_lint.DATA / "sprites.json": sprites}, errors,
+            bundle_paths=set(bundle))
+        return errors
+
+    def entry(self, sheet="res://assets/sprites/owned/Idle.png", **kwargs):
+        return {"animations": {"idle": {"sheet": sheet, "frame_size": [16, 16]}}, **kwargs}
+
+    def test_valid_fallback_and_primary_without_fallback(self):
+        self.assertEqual(self.check({
+            "primary": self.entry(fallback_sprite="owned"),
+            "owned": self.entry(), "other": self.entry()}), [])
+
+    def test_dangling_self_chained_and_player_targets(self):
+        for target, entries, message in [
+            ("missing", {}, "not a sprite id"),
+            ("primary", {}, "points at itself"),
+            ("chain", {"chain": self.entry(fallback_sprite="owned"),
+                       "owned": self.entry()}, "chains"),
+            ("pc_test", {"pc_test": self.entry()}, "player-only"),
+        ]:
+            with self.subTest(target=target):
+                errors = self.check({"primary": self.entry(fallback_sprite=target), **entries})
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn(message, errors[0])
+
+    def test_bundle_target_checks_every_animation_and_facing(self):
+        private = "assets/private.png"
+        for key in ["sheet", "sheet_down", "sheet_side", "sheet_up"]:
+            with self.subTest(key=key):
+                sheet_keys = ["sheet"] if key == "sheet" else ["sheet_down", "sheet_side", "sheet_up"]
+                anim = {field: "res://assets/owned.png" for field in sheet_keys}
+                anim["frame_size"] = [16, 16]
+                target = {"directional": key != "sheet", "animations": {
+                    "idle": copy.deepcopy(anim), "walk": {**anim, key: "res://" + private}}}
+                errors = self.check({"primary": self.entry(fallback_sprite="owned"),
+                                     "owned": target}, [private])
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn("bundle-only", errors[0])
+
+    def test_every_animation_requires_all_facing_sheet_keys(self):
+        for directional, keys in [(False, ["sheet"]),
+                                  (True, ["sheet_down", "sheet_side", "sheet_up"])]:
+            anim = {key: "res://assets/owned.png" for key in keys}
+            anim["frame_size"] = [16, 16]
+            for missing in keys:
+                with self.subTest(directional=directional, missing=missing):
+                    broken = copy.deepcopy(anim)
+                    del broken[missing]
+                    if not directional:
+                        broken["sheet_side"] = "res://assets/owned.png"
+                    target = {"directional": directional, "animations": {
+                        "idle": anim, "walk": broken}}
+                    errors = self.check({"primary": self.entry(fallback_sprite="owned"),
+                                         "owned": target})
+                    self.assertEqual(len(errors), 1, errors)
+                    self.assertIn("valid sheet animations", errors[0])
+            self.assertEqual(self.check({"primary": self.entry(fallback_sprite="owned"),
+                                         "owned": {"directional": directional,
+                                                   "animations": {"idle": anim}}}), [])
+
+    def test_animation_target_requires_valid_frame_geometry(self):
+        for size in [None, [], [16], [16, 0], ["64", 64], [True, 64], [64, 64, 64]]:
+            with self.subTest(size=size):
+                target = self.entry()
+                target["animations"]["idle"]["frame_size"] = size
+                self.assertEqual(len(self.check({
+                    "primary": self.entry(fallback_sprite="owned"), "owned": target})), 1)
+        target = self.entry()
+        del target["animations"]["idle"]["frame_size"]
+        self.assertEqual(len(self.check({"primary": self.entry(fallback_sprite="owned"),
+                                         "owned": target})), 1)
+
+    def test_invalid_target_types_and_animation_records_report_errors(self):
+        for target in [None, 7, [], {}, "", "broken"]:
+            with self.subTest(target=target):
+                errors = self.check({"primary": self.entry(fallback_sprite=target),
+                                     "broken": "not an entry"})
+                self.assertEqual(len(errors), 1, errors)
+        for target in [{}, {"animations": []}, {"animations": {"idle": "bad"}},
+                       {"animations": {"idle": {"sheet": 7}}},
+                       {"animations": {"idle": {"fps": 1}}}]:
+            with self.subTest(target=target):
+                errors = self.check({"primary": self.entry(fallback_sprite="owned"),
+                                     "owned": target})
+                self.assertEqual(len(errors), 1, errors)
+
+    def test_default_bundle_paths_use_manifest_without_overlay_files(self):
+        errors = []
+        data_lint.check_sprite_fallbacks({data_lint.DATA / "sprites.json": {
+            "primary": self.entry(fallback_sprite="owned"),
+            "owned": self.entry("res://assets/props/free_pack/Furniture.png")}}, errors)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("bundle-only", errors[0])
 
 
 class TestStatGrowthFlat(unittest.TestCase):
@@ -1174,6 +1398,31 @@ class TestRealTree(unittest.TestCase):
             self.assertEqual(len(errors), 1)
             self.assertIn("broken.json: invalid JSON", errors[0])
             self.assertEqual(len(parsed), 1)
+
+    def test_duplicate_key_fails_loud_with_key_path(self):
+        """#620 task-3 review C1: json keeps the last duplicate silently."""
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "kits.json").write_text(
+                '{"invrisil": {"roles": {"cargo": {"pick": "cell"}, "cargo": {"pick": "map"}}}, "ok": {}}')
+            errors = []
+            data_lint.check_wellformed(errors, root=Path(tmp))
+            self.assertEqual(len(errors), 1)
+            self.assertIn("kits.json: duplicate key at invrisil.roles.cargo", errors[0])
+
+    def test_duplicate_key_inside_array_item_is_found(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "m.json").write_text('{"decor": [{"id": 1}, {"a": 1, "a": 2}]}')
+            errors = []
+            data_lint.check_wellformed(errors, root=Path(tmp))
+            self.assertEqual(len(errors), 1)
+            self.assertIn("decor[1].a", errors[0])
+
+    def test_real_data_tree_has_no_duplicate_keys(self):
+        errors = []
+        data_lint.check_wellformed(errors)
+        self.assertEqual([e for e in errors if "duplicate key" in e], [])
 
 
 class ConsolidationSkillCoverageTest(unittest.TestCase):

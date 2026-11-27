@@ -94,8 +94,8 @@
     "options": [
      {
       "effect_lines": [
-       "+3 HP",
-       "Resonance 1",
+       "+3 max HP",
+       "Resonance 1 → 0",
        "Grants [Dangersense] in combat"
       ],
       "locked": true,
@@ -104,8 +104,8 @@
      },
      {
       "effect_lines": [
-       "+1 damage on melee hits",
-       "Resonance 1",
+       "+1 damage on attacks and weapon Skills",
+       "Resonance 1 → 0",
        "Grants [Eagle Eyes]"
       ],
       "locked": false,
@@ -114,8 +114,8 @@
      },
      {
       "effect_lines": [
-       "+2 HP",
-       "Resonance 2",
+       "+2 max HP",
+       "Resonance 1",
        "Grants [Mana Shield] in combat"
       ],
       "locked": true,
@@ -124,9 +124,9 @@
      },
      {
       "effect_lines": [
-       "+2 HP",
+       "+2 max HP",
        "Reduces every hit taken by 1",
-       "Resonance 1"
+       "Resonance 1 → 0"
       ],
       "locked": false,
       "requirement": "",
@@ -139,7 +139,7 @@
      },
      {
       "effect_lines": [
-       "+2 damage on melee hits",
+       "+2 damage on attacks and weapon Skills",
        "Spear kit replaces other weapon Skills in combat"
       ],
       "locked": true,
@@ -149,7 +149,7 @@
     ]
    },
    "timeout_sec": 5,
-   "_comment": "LOW-3: exact hub pin including effect_lines — the fragment option shows its yield preview (+2 HP / DR 1 / Res 1)."
+   "_comment": "LOW-3: exact hub pin including effect_lines — the fragment option shows its yield preview (+2 max HP / DR 1 / Res 1)."
   },
   {
    "action": "click_dialogue_option",

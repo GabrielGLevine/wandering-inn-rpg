@@ -5,6 +5,8 @@
   "Nothing there. Warm metal underfoot, and a rhythm below it that never quite stops.",
   "Nothing there. Scale on the flags and the smell of hot iron."
  ],
+ "camera": {"margins": [0, 1, 0, 4]},
+ "vistas": [{"sprite": "pallass_lower_city", "cell": [13, 11], "tint": [0.72, 0.78, 0.88]}, {"sprite": "pallass_parapet_full", "cell": [6.5, 10], "foreground": true}, {"sprite": "pallass_parapet_full", "cell": [19.5, 10], "foreground": true}, {"sprite": "pallass_rail_post", "cell": [13, 10], "foreground": true}],
  "grid": {
   "width": 26,
   "height": 11
@@ -143,28 +145,7 @@
    5
   ]
  ],
- "cover_skip": [
-  [
-   13,
-   5
-  ],
-  [
-   14,
-   5
-  ],
-  [
-   15,
-   5
-  ],
-  [
-   16,
-   5
-  ],
-  [
-   17,
-   5
-  ]
- ],
+ "cover_skip": [[13, 5], [14, 5], [15, 5], [16, 5], [17, 5], [0, 10], [1, 10], [2, 10], [3, 10], [4, 10], [5, 10], [6, 10], [7, 10], [8, 10], [9, 10], [10, 10], [11, 10], [12, 10], [13, 10], [14, 10], [15, 10], [16, 10], [17, 10], [18, 10], [19, 10], [20, 10], [21, 10], [22, 10], [23, 10], [24, 10], [25, 10]],
  "_comment_cover_skip": "cover_skip exposes the molten seam art; the five cells remain blocked.",
  "walls": {
   "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
@@ -201,7 +182,23 @@
      23
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/inn_floor.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ],
+     "tone": {
+      "base": [
+       0.33,
+       0.27,
+       0.2
+      ],
+      "detail": 0.65
+     }
+    }
   },
   {
    "_comment": "Slate rows 2 and 9 frame the neutral working floor at top and bottom. No blocking moves.",
@@ -283,7 +280,15 @@
      4,
      3
     ]
-   }
+   },
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/ashlar_over_checker_v1.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ]
+    }
   }
  ],
  "decor": [
@@ -416,8 +421,7 @@
     "radius": 30,
     "flicker": true
    }
-  }
- ],
+  }],
  "_comment_scatter": "v0.15 T4.1: the tier's floor read as swept-empty slate between stations. Mill scale and scrap, drifted the way a working floor drifts (the street/floodplains scatter idiom, presentation-only).",
  "scatter": [
   {
@@ -526,7 +530,7 @@
    "display_name": "The Grand Lift",
    "sprite": "great_lift",
    "observe": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight.",
-   "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
+   "locked_toast": "The brass gate is locked. A stencilled plate: LIFT TOKEN REQUIRED.",
    "door_when": {
     "requires": {
      "elevator_pass_stamped": 1
@@ -588,12 +592,7 @@
     6
    ],
    "display_name": "Forge-Tier Smith",
-   "sprite": "drake_patron",
-   "tint": [
-    0.62,
-    0.44,
-    0.38
-   ],
+   "sprite": "forge_tier_smith",
    "facing": "left",
    "observe": "A Drake in a leather apron scarred through in three places, both forearms banded with old burn-marks — her eyes on the billet's colour, her free hand finding the tongs without looking.",
    "friendly_line": "She sets the hammer down long enough to look at you properly. The billet on the anvil goes a shade darker while she does.",
@@ -630,8 +629,8 @@
       "standards_tempered": 1
      },
      "lines": [
-      "She passed it this morning. Same hand, same steel, honest measure. Nothing else changed.",
-      "The examiner sent the file up himself. He has never once walked up a flight for me.",
+      "She passed it this morning. Same hand, same steel, slow quench.",
+      "The examiner came out of the hall to watch her bend one, head under his arm.",
       "You did not make her better, {addr}. You made the reading true. That is the harder favor."
      ]
     }
@@ -669,7 +668,7 @@
       "seal_resolved": 1
      },
      "lines": [
-      "Liscor's news rode up on the quarter-bell cage, same as the tin does.",
+      "Liscor's news rode up on the quarter-bell cage, same as the charcoal does.",
       "People asked me about it all morning. I told them what I knew, then I ran the cage."
      ]
     },
@@ -695,12 +694,7 @@
     3
    ],
    "display_name": "The Tool Wall",
-   "sprite": "library_shelf",
-   "tint": [
-    0.55,
-    0.58,
-    0.62
-   ],
+   "sprite": "pallass_tool_wall",
    "observe": "Tongs, swages and fullers hung in size order along a painted rack, every one of them chalk-outlined on the boards behind it. One outline in the middle of the row is bare.",
    "on_interact_accomplishment": "eyed_the_forge_tools",
    "toast": "You lift a set of tongs off its outline and set it back. Heavier than it looks, and it goes back exactly straight."
@@ -739,12 +733,7 @@
     4
    ],
    "display_name": "Billet Rack",
-   "sprite": "crate",
-   "tint": [
-    0.72,
-    0.76,
-    0.82
-   ],
+   "sprite": "pallass_billet_rack",
    "observe": "Bar stock in strapped bundles, sorted by gauge. Wrist-thick at the bottom of the rack, pencil-thin at the top. The paper tag on each gives a tier number and a bench number.",
    "on_interact_accomplishment": "eyed_the_billet_rack",
    "toast": "Cold iron, every bar cut to the same length as the one beside it. The strapping doesn't give under your hand."
@@ -794,12 +783,7 @@
     6
    ],
    "display_name": "The Parapet Rail",
-   "sprite": "riverfarm_fence_ew",
-   "tint": [
-    0.74,
-    0.62,
-    0.42
-   ],
+   "sprite": "pallass_rail_post",
    "observe": "A bronze rail along the tier's open edge, polished bright by a hundred people leaning on the same stretch of it while they waited on the cage. Below it the shaft goes down past where the light gives up.",
    "on_interact_accomplishment": "leaned_on_the_parapet_rail",
    "toast": "You lean on the bronze rail. Warm brass under your palm; from the shaft, cold air and the clank of the cage somewhere below."
@@ -854,7 +838,7 @@
     4
    ],
    "display_name": "The Reject Bin",
-   "sprite": "crate",
+   "sprite": "pallass_reject_bin",
    "observe": "A civic bin beside the second bench, half full of work that never left the tier. Each piece has a tag, and every tag has the same examiner's seal on it.",
    "on_interact_accomplishment": "saw_the_failed_temper",
    "toast": "Nine blades in the bin, all from one hand, all failed on the same measure. Somebody up here is doing careful work and failing it the same way every time.",
@@ -883,7 +867,7 @@
    "sprite": "price_board",
    "observe": "A slate of what the cage is carrying today, chalked by hour. Two lines have been rewritten so many times the slate has gone smooth under them.",
    "on_interact_accomplishment": "read_the_lift_manifest",
-   "toast": "One crate of tin, den shop, market tier. Logged three cycles running and carried none of them. Beside it, chalked in a tidier hand: HELD, QUEUE.",
+   "toast": "One crate, den shop, market tier, logged three cycles running. Beside it in a tidier hand: refused, cage runes.",
    "visual_states": [
     {
      "when": {
@@ -907,12 +891,31 @@
     4
    ],
    "display_name": "The Held Pallet",
-   "sprite": "crate",
+   "sprite": "pallass_tagged_pallet",
    "observe": "A pallet strapped and tagged and standing exactly where it has stood for three cycles, one hand's width outside the loading square.",
    "on_interact_accomplishment": "shipment_leg_carried",
    "once_per_waking": true,
    "once_per_waking_toast": "The attendant has stopped counting loads for the day. Come back for the pallet on tomorrow's bell.",
-   "toast": "You walk the pallet the last hand's width onto the loading square and square the strapping after it. The attendant looks at the load, then writes an hour beside it on the cage slate."
+   "toast": "You walk the crate off the pallet to the head of the service stair and start it down. Nine flights. The attendant watches it go and writes nothing on the cage slate."
+  },
+  {
+   "_comment": "#513 Pallass themes: an on-screen Garuda resident (canon within the bar: Garuda runners and Garuda flying in Pallass, 7.02/7.03), an unnamed civic role. Owned rig `garuda_runner` (#603). (24,8) is below-right of the Grand Lift's base, clear of its tall sprite (the art proof: the lift occludes neighbours above row 7), off every journey's walked/bumped forge cells, off pallass_peek's bounds lap and its (24,7) rail/lift approach; talk_pool only, no quest surface.",
+   "id": "garuda_runner",
+   "kind": "npc",
+   "cell": [
+    24,
+    8
+   ],
+   "display_name": "Garuda Runner",
+   "sprite": "garuda_runner",
+   "facing": "down",
+   "observe": "A Garuda with a blue runner's sash across his chest, brown feathers lying close along both arms and yellow talons on the stone.",
+   "friendly_line": "He fluffs his feathers up and smooths them flat again, quick, and tips his head at you.",
+   "talk_pool": [
+    "The quarter bell's an age off. I'll be on the ninth tier before it rings.",
+    "Ninth tier, one parcel, no waiting. The shaft's open all the way down.",
+    "Don't lean on the rail to watch me go. Everyone does, and the attendant shouts at them."
+   ]
   }
  ]
 }

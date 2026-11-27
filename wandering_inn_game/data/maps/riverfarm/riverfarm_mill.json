@@ -49,7 +49,23 @@
      22
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/inn_floor.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.33,
+       0.27,
+       0.2
+      ],
+      "detail": 0.65
+     }
+    }
   }
  ],
  "walls": {
@@ -72,7 +88,27 @@
     "face": [
      14,
      7
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "face": [
+                          4,
+                          3
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -86,7 +122,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -100,7 +152,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -114,7 +182,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -128,22 +212,31 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    }
   ]
  },
  "decor": [
   {
-   "sprite": "table_brown",
+   "sprite": "riverfarm_wheelwright_owned",
    "cell": [
     5,
-    4
-   ]
-  },
-  {
-   "sprite": "table_brown",
-   "cell": [
-    6,
     4
    ]
   },
@@ -217,7 +310,7 @@
    ],
    "facing": "down",
    "display_name": "The Tallyman",
-   "sprite": "human_laborer",
+   "sprite": "tallyman",
    "observe": "A thin man with a hazel stick in each hand, laying them side by side against the light.",
    "talk_pool": [
     "Barley in, barley out. Anyone who says a mill is complicated has never run one.",
@@ -297,7 +390,7 @@
     2
    ],
    "display_name": "The High Shelf",
-   "sprite": "library_shelf",
+   "sprite": "mill_high_shelf_owned",
    "observe": "A shelf set higher on the wall than any shelf needs to be, with notches and years cut into the post beside it.",
    "on_interact_accomplishment": "observed_mill_high_shelf",
    "toast": "Each notch is a flood with its year cut underneath, the oldest running back past the village's first headman; the shelf clears the highest notch by a hand."
@@ -310,10 +403,16 @@
     1
    ],
    "display_name": "The Tally Sticks",
-   "sprite": "chest",
+   "sprite": "mill_tally_sticks_owned",
    "observe": "A bundle of split hazel sticks hung on a nail, each notched down one edge.",
    "on_interact_accomplishment": "observed_mill_tally_sticks",
    "toast": "Split tallies. One half stays with the mill, one half goes home with the household, and neither can be altered alone."
   }
+ ],
+ "cover_skip": [
+  [
+   6,
+   4
+  ]
  ]
 }

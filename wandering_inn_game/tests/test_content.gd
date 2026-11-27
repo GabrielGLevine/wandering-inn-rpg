@@ -1420,7 +1420,7 @@ func _validate_once_per_waking_shape_cases() -> void:
 
 const DIALOGUE_EFFECT_VERBS := [
 	"accomplishment", "quest", "remove_entity", "dormant_entity", "item", "gold",
-	"bank_first_use", "remove_item", "well_fed", "start_combat", "travel_to",
+	"bank_first_use", "remove_item", "well_fed", "recovery", "start_combat", "travel_to",
 	"accept_bounty", "accept_delivery", "sell_item", "open_board_picker",
 	"open_board_turnin", "open_board_abandon", "open_delivery_picker",
 	"open_delivery_turnin", "open_sell_picker",
@@ -1470,6 +1470,14 @@ func _validate_effect(
 	if effect.has("item"):
 		var granted_item_id: String = String(effect["item"])
 		_check(item_ids.has(granted_item_id), label + " grants unknown item: " + granted_item_id)
+	if effect.has("recovery"):
+		if _require(effect.recovery is Dictionary, label + " recovery must be an object"):
+			for key: String in effect.recovery:
+				_check(key in ["restore_hp", "restore_mp", "well_fed"], label + " unknown recovery field: " + key)
+				if key == "well_fed":
+					_check(effect.recovery[key] is bool, label + " well_fed must be boolean")
+				else:
+					_check((effect.recovery[key] is int or effect.recovery[key] is float) and (effect.recovery[key] == 0 or WIItems.valid_count(effect.recovery[key])), label + " recovery amount must be a nonnegative whole number")
 	if effect.has("bank_first_use"):
 		_check(_is_valid_verb_entity_key(effect["bank_first_use"]), label + " bank_first_use must be a \"<verb>:<entity>\" string with both segments non-empty")
 

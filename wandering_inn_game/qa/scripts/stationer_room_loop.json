@@ -1,5 +1,5 @@
 {
- "_comment": "THE STATIONER'S INTERIOR LOOP (v0.16 #306, I1's host room). Proves the new boulevard->stationer door pair both ways off invrisil_walkthrough's own observation cell (20,2), three non-quest observes inside, the clerk's talk pool, and the return landing back on (20,2). Fixture runs at NIGHT, which is a MEASURED pick: shot against the same route at dusk, only night makes the room's authored light read (the sconce pool, the wall-band bounce and the dust_motes ambience) -- these interiors are mood-invariant across phases by regional convention, so a 1.1-energy light has nothing to show against at dusk. The boulevard's two night encounters do arm at night; both sit on row 15 with trigger_radius 1 and this route never leaves rows 1-2. The Lady at (3,2) is deliberately never interacted with -- the quest's own canonicals are invrisil_setting_*, and the whole-run negative at the end pins that this loop never starts it. Seed inert: no fight resolves.",
+ "_comment": "THE STATIONER'S INTERIOR LOOP (v0.16 #306, I1's host room). Proves the new boulevard->stationer door pair both ways off invrisil_walkthrough's own observation cell (20,2), three non-quest observes inside, the clerk's talk pool, and the return landing back on (20,2). Fixture runs at NIGHT, which is a MEASURED pick: shot against the same route at dusk, only night makes the room's authored light read (the sconce pool and the wall-band bounce; the interior dust_motes were dropped in #608 1b) -- these interiors are mood-invariant across phases by regional convention, so a 1.1-energy light has nothing to show against at dusk. The boulevard's two night encounters do arm at night; both sit on row 15 with trigger_radius 1 and this route never leaves rows 1-2. The Lady at (3,2) is deliberately never interacted with -- the quest's own canonicals are invrisil_setting_*, and the whole-run negative at the end pins that this loop never starts it. Seed inert: no fight resolves.",
  "fixture_save": "invrisil_stationer_start",
  "starts_at_title": true,
  "steps": [
@@ -16,10 +16,114 @@
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [20, 1]} },
   { "action": "press", "name": "interact" },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "invrisil_cross_street",
+    "entity": "cross_street_shopper",
+    "sprite": "townswoman",
+    "resolved_sprite": "townswoman",
+    "hidden": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 19
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The rear gate is barred. The Brothers have not opened this passage to you."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "The rear gate is barred. The Brothers have not opened this passage to you."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "invrisil_cross_street"
+  },
+  {
+   "action": "screenshot",
+   "name": "00a_rear_gate_closed"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 14
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "stationer"}, "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "stationer" },
   { "action": "assert_state", "path": "player_cell", "equals": [6, 7] },
   { "action": "wait_frames", "frames": 10 },
+  { "_comment": "#608 1b kits: the stationer's @table and @window_interior decor rows resolve at compose time; the decor build reports each role with the variants it drew (sorted). Exact pin of the resolver's picks: a pool or pick-rule change moves it on purpose. #632: `lifted` counts the four tabletop rows (inkpot, quill, scroll, book) whose art World actually raised onto its counter/table.", "action": "assert_event_logged", "type": "ui_decor_rendered", "payload_contains": {"map": "stationer", "lifted": 4, "roles": {"table": ["table_brown"], "window_interior": ["window_blue__alt1"]}} },
   { "action": "screenshot", "name": "01_the_stationers" },
   { "_comment": "== THREE FREE SCENERY READS. None touches the Lady at (3,2): this loop is the room, not the quest. ==", "action": "wait_frames", "frames": 1 },
   { "action": "move", "direction": "up", "steps": 5 },
@@ -69,11 +173,118 @@
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [6, 8]} },
   { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "invrisil_boulevard"}, "timeout_sec": 5 },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_cross_street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
   { "action": "assert_state", "path": "player_cell", "equals": [20, 2] },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "04_back_on_the_boulevard" },
   { "_comment": "Scope guards: the room is an exploration surface here, nothing fought and no quest taken.", "action": "assert_event_absent", "type": "combat_started" },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "heirloom_commission_started"} }
+  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "heirloom_commission_started"} },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     24,
+     1
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "payload_contains": {
+    "skill": "eagle_eyes"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Slate roofs and chimney smoke, one ridge behind another. Picking a line through it takes sharper eyes than yours."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_roofline_above_the_facade"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    24,
+    3
+   ]
+  }
  ]
 }

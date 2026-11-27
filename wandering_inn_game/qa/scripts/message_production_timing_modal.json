@@ -1,0 +1,258 @@
+{
+ "_comment": "#509 production modal lifecycle. Setup injects a real toast-domain event while the ordinary journal modal is open; this proves queue delivery, not a gameplay authoring trigger. Empty-interaction input independently proves anti-spam. Reduce Motion is set through the actual settings menu.",
+ "qa_real_message_timing": true,
+ "fixture_save": "mobile_tap_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "REDUCED MOTION: the accessibility toggle must not change delivery -- a toast still renders and the ribbon pill still fires after a save.",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 7
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "reduce_motion": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_left"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "interact_nothing",
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "text": "Nothing there \u2014 just the inn's old boards, and the faint smell of something Erin burned once, permanently."
+   }
+  },
+  {
+   "action": "assert_recent_message_count",
+   "text_contains": "Nothing there \u2014 just the inn's old boards",
+   "count": 0
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 1.3
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "",
+   "visible": false
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 10
+  },
+  {
+   "action": "queue_domain_event",
+   "type": "toast",
+   "payload": {
+    "text": "A long receipt queued while the journal is open must wait here. Closing the journal gives this whole message its ordinary reading time, with Reduce Motion enabled and the field controls still available."
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.3
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "A long receipt queued while the journal is open must wait here. Closing the journal gives this whole message its ordinary reading time, with Reduce Motion enabled and the field controls still available.",
+   "visible": false
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_toast_rendered",
+   "count": 0,
+   "payload_contains": {
+    "text": "A long receipt queued while the journal is open must wait here. Closing the journal gives this whole message its ordinary reading time, with Reduce Motion enabled and the field controls still available."
+   }
+  },
+  {
+   "action": "assert_recent_message_count",
+   "text_contains": "A long receipt queued while the journal is open must wait here. Closing the journal gives this whole message its ordinary reading time, with Reduce Motion enabled and the field controls still available.",
+   "count": 0
+  },
+  {
+   "action": "screenshot",
+   "name": "01_modal_defers_message"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "text": "A long receipt queued while the journal is open must wait here. Closing the journal gives this whole message its ordinary reading time, with Reduce Motion enabled and the field controls still available."
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_toast_rendered",
+   "count": 1,
+   "payload_contains": {
+    "text": "A long receipt queued while the journal is open must wait here. Closing the journal gives this whole message its ordinary reading time, with Reduce Motion enabled and the field controls still available."
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 1.4
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "A long receipt queued while the journal is open must wait here. Closing the journal gives this whole message its ordinary reading time, with Reduce Motion enabled and the field controls still available.",
+   "visible": true,
+   "min_elapsed_msec": 1350
+  },
+  {
+   "action": "assert_message_layout",
+   "kind": "toast"
+  },
+  {
+   "action": "screenshot",
+   "name": "02_readable_after_modal_close_reduce_motion"
+  },
+  {
+   "action": "assert_recent_message_count",
+   "text_contains": "A long receipt queued while the journal is open must wait here. Closing the journal gives this whole message its ordinary reading time, with Reduce Motion enabled and the field controls still available.",
+   "count": 1
+  },
+  {
+   "action": "press",
+   "name": "move_left"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "A long receipt queued while the journal is open must wait here. Closing the journal gives this whole message its ordinary reading time, with Reduce Motion enabled and the field controls still available.",
+   "visible": false
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_toast_rendered",
+   "count": 1,
+   "payload_contains": {
+    "text": "A long receipt queued while the journal is open must wait here. Closing the journal gives this whole message its ordinary reading time, with Reduce Motion enabled and the field controls still available."
+   }
+  }
+ ]
+}

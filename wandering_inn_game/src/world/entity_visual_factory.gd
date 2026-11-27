@@ -110,12 +110,13 @@ func make(
 		spr.flip_h = flip_for(facing) and anim.ends_with("_side")
 		if anim != "":
 			spr.play(anim)
-		if tint is Array and (tint as Array).size() == 3:
-			var tint_values := tint as Array
+		var catalog_entry: Dictionary = WISpriteRegistry.entry_for(sprite_id)
+		var field_tint: Variant = catalog_entry.get("field_tint_override", tint)
+		if field_tint is Array and (field_tint as Array).size() == 3:
+			var tint_values := field_tint as Array
 			spr.modulate = Color(float(tint_values[0]), float(tint_values[1]), float(tint_values[2]))
 		if sway:
 			spr.material = _sway_material
-		var catalog_entry: Dictionary = WISpriteRegistry.entry_for(sprite_id)
 		if catalog_entry.has("render_scale"):
 			var s := float(catalog_entry["render_scale"])
 			spr.scale = Vector2(s, s)

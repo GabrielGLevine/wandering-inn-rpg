@@ -1,5 +1,6 @@
 {
- "biome": "inn",
+ "biome": "liscor_civic",
+ "_kits_recompose": "#629 — Liscor rebuild: back-wall cabinet, drawers and chalk board, plank bench, planters; the two round member tables are main's",
  "interior_flavor": [
   "Nothing there. The floorboard in front of the desk is walked pale, chalk dust in the grain.",
   "Nothing there. Somewhere behind the desk a drawer shuts."
@@ -39,31 +40,36 @@
   [
    12,
    9
+  ],
+  [
+   14,
+   3
+  ],
+  [
+   14,
+   4
+  ],
+  [
+   5,
+   9
+  ],
+  [
+   13,
+   9
+  ],
+  [
+   1,
+   10
+  ],
+  [
+   14,
+   10
   ]
  ],
  "floor_layers": [
   {
    "_pick": "#225 floor differentiation: the Adventurer's Guild reads as a richer, warmer hall than the inn's rough tavern planks. Library pack warm reddish parquet ([21,3]/[22,3]/[21,4]/[23,4], flat wood rgb~135,86,50) -- the pack the asset catalog casts for 'Liscor guild interiors'; already manifest-wired (bundle:true). Wood floor keeps the biome's wood footstep family honest.",
-   "sheet": "res://assets/tiles/library/Tiles.png",
-   "tile_px": 16,
-   "variants": [
-    [
-     21,
-     3
-    ],
-    [
-     22,
-     3
-    ],
-    [
-     21,
-     4
-    ],
-    [
-     23,
-     4
-    ]
-   ],
+   "material": "@floor_civic",
    "cells": "all"
   }
  ],
@@ -87,7 +93,27 @@
     "face": [
      14,
      7
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "face": [
+                          4,
+                          3
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -101,7 +127,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -115,7 +157,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -129,7 +187,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -143,14 +217,30 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    }
   ]
  },
  "_comment_lights": "v0.17 R2: the hall had ZERO light sources. `sconce` is not in the `inn` biome's blocked_props, so blocked_cells stays 57 (unchanged).",
  "decor": [
   {
-   "sprite": "sconce",
+   "sprite": "liscor_wall_sconce",
    "cell": [
     4,
     1
@@ -167,7 +257,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "liscor_wall_sconce",
    "cell": [
     11,
     1
@@ -212,31 +302,73 @@
    ]
   },
   {
-   "sprite": "rug_woven_cream",
-   "cell": [
-    8,
-    4
-   ]
-  },
-  {
-   "sprite": "table_brown",
+   "sprite": "bonus_round_table",
    "cell": [
     13,
     6
    ]
   },
   {
-   "sprite": "table_brown",
+   "sprite": "bonus_round_table",
    "cell": [
     12,
     9
    ]
   },
   {
-   "sprite": "stool",
+   "sprite": "liscor_chair",
    "cell": [
     14,
     6
+   ]
+  },
+  {
+   "sprite": "liscor_cabinet",
+   "cell": [
+    14,
+    3
+   ]
+  },
+  {
+   "sprite": "liscor_drawers",
+   "cell": [
+    14,
+    4
+   ]
+  },
+  {
+   "sprite": "liscor_board_chalk",
+   "cell": [
+    12,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_bench_plank",
+   "cell": [
+    5,
+    9
+   ]
+  },
+  {
+   "sprite": "stool_owned",
+   "cell": [
+    13,
+    9
+   ]
+  },
+  {
+   "sprite": "liscor_planter_shrub",
+   "cell": [
+    1,
+    10
+   ]
+  },
+  {
+   "sprite": "liscor_planter_shrub",
+   "cell": [
+    14,
+    10
    ]
   }
  ],
@@ -259,7 +391,7 @@
     11
    ],
    "display_name": "Liscor Street",
-   "sprite": "door",
+   "sprite": "door__alt2",
    "to_map": "street",
    "to_cell": [
     27,
@@ -373,7 +505,7 @@
     3
    ],
    "display_name": "The Request Board",
-   "sprite": "request_board",
+   "sprite": "guild_roofed_board",
    "facing": "right",
    "board": true,
    "toast": "The Request Board. Paper three layers deep, new notices pinned straight over the dead ones. A posting pays on turn-in; take one at the Guildmistress's desk so it's logged, and only what you do after counts.",
@@ -417,10 +549,10 @@
    "kind": "prop",
    "cell": [
     2,
-    5
+    1
    ],
    "display_name": "Notice Wall",
-   "sprite": "request_board",
+   "sprite": "guild_handbill_wall",
    "facing": "right",
    "on_interact_accomplishment": "read_guild_notices",
    "toast": "The smaller board carries lost gear, rooms going spare, and one duel challenge with nothing written under it. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
@@ -451,12 +583,7 @@
    ],
    "display_name": "Renn",
    "person": true,
-   "sprite": "drake_patron",
-   "tint": [
-    0.55,
-    0.58,
-    0.62
-   ],
+   "sprite": "renn",
    "facing": "left",
    "talk_pool": [
     "Four silver for a nest clear? Four? My arrows cost more than that if it goes badly.",
@@ -474,8 +601,8 @@
    "id": "ilvo",
    "kind": "npc",
    "cell": [
-    2,
-    4
+    3,
+    5
    ],
    "display_name": "Ilvo",
    "person": true,
@@ -507,12 +634,7 @@
    ],
    "display_name": "Yelra",
    "person": true,
-   "sprite": "gnoll_traveler",
-   "tint": [
-    0.62,
-    0.5,
-    0.35
-   ],
+   "sprite": "yelra",
    "facing": "down",
    "talk_pool": [
     "Bronze-rank, six months in. Long enough to know which jobs pay in coin and which pay in regret.",
@@ -533,12 +655,7 @@
     1
    ],
    "display_name": "A Forgotten Gear Stash",
-   "sprite": "crate",
-   "tint": [
-    0.45,
-    0.38,
-    0.3
-   ],
+   "sprite": "crate_owned",
    "observe": "A crate shoved against the back wall, half-buried under a spill of unclaimed kit.",
    "contains": [
     "renns_warhammer"

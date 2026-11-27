@@ -1,0 +1,170 @@
+{
+ "_comment": "#568 browser duplicate-input contract only: explicit fixture-owned three Mana Potions, Mage1,20HP,0MP,zero doses at Inn. After one use another full6MP dose remains affordable and beneficial, so double consumption is observable. No acquisition or physical-device claim. Browser-only gesture route; do not register in native canonical list.",
+ "fixture_save": "consumable_repeat_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_title_row",
+   "row": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_field_chip",
+   "chip": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_inventory_item",
+   "item": "mana_potion"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "mana_potion",
+    "count_before": 3,
+    "restore_mp": 6
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_repeat_has_viable_second_dose"
+  },
+  {
+   "action": "touch_inventory_use",
+   "gesture": {
+    "repeat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "mana_potion"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "mana_potion",
+    "count_before": 3,
+    "count_after": 2,
+    "restore_mp": 6,
+    "committed": true
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.mana_potion",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 20
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_used",
+   "count": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "01_burst_consumes_once"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "payload_contains": {
+    "item": "mana_potion",
+    "count_before": 2,
+    "exposure_before": 1
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_inventory_use"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "mana_potion"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "item": "mana_potion",
+    "count_after": 1,
+    "committed": true
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "consumable_counts.mana_potion",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp_potion_doses",
+   "equals": 2
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_used",
+   "count": 2
+  },
+  {
+   "action": "screenshot",
+   "name": "02_deliberate_next_use"
+  }
+ ]
+}

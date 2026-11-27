@@ -8,6 +8,8 @@ Read `docs/dialogue-voice-bible.md` first. **The lift attendant KEEPS the corpus
 
 **FORCED:** THE KEEP: `ledger_pitch` — "the office cannot clear the queue until the queue clears the office. Nobody may skip it. That includes the queue." stays as the corpus' one bureaucracy gag; you may tighten a word, you may not add to it or repeat its shape anywhere else. Bell-schedule cadence throughout: quarter bell, half bell, cycles — his clock is his syntax. PEAK: `ledger_settled` tv[0] — "Ride free while I am on the gate, {addr}. That is the only thing I own to give." is the file's one button and stays.
 
+**#513 (2026-10-08):** City of Inventions re-theme. The crate is a rune-set oven regulator that makes the cage's feather-fall runes flicker; the recursive-bureaucracy gag retires with the queue (the budget is a ceiling, not a quota). `traffic` gains a Garuda runner who takes the shaft on his own wings. `ledger_settled` tv[0] stays the PEAK.
+
 **CANON-VOICE:** The attendant of a Pallass tier-lift — eleven years on the counterweight cycle, the city's traffic passing through his cage. Courteous, punctual, quietly proud; the lift schedule is his worldview. Knows everyone by their cargo.
 
 **SAMPLE:** node `seal` —

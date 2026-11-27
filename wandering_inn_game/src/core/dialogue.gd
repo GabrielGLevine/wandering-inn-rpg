@@ -42,8 +42,29 @@ func current_options() -> Array:
 	return out
 
 
+## #513: gold each visible row still needs, lockstep with current_options().
+## 0 when the row is affordable or has no gold gate. A separate array so the
+## pinned option rows keep their exact shape.
+func gold_shortfall() -> Array:
+	if finished:
+		return []
+	var out: Array = []
+	for entry: Dictionary in _visible_options():
+		var opt: Dictionary = entry["option"]
+		var req: Dictionary = opt.get("requires", {})
+		var short := 0
+		if req.has("gold"):
+			short = maxi(0, _priced_gold(int(req["gold"]), opt) - int(_ctx.get("gold", 0)))
+		out.append(short)
+	return out
+
+
 func _item_effect_lines(opt: Dictionary) -> Array:
 	var items: Dictionary = _ctx.get("items", {})
+	var removed: Array = []
+	for effect: Dictionary in opt.get("effects", []):
+		if effect.has("remove_item"):
+			removed.append(String(effect["remove_item"]))
 	var out: Array = []
 	for effect: Dictionary in opt.get("effects", []):
 		if not effect.has("item"):
@@ -51,7 +72,10 @@ func _item_effect_lines(opt: Dictionary) -> Array:
 		var rec: Dictionary = items.get(String(effect["item"]), {})
 		if rec.is_empty():
 			continue
-		for line: String in WIEffectText.item_effect_lines(rec):
+		# #514: a trueing swap previews its craft discount against the piece it consumes.
+		var trued_from := String(rec.get(WIKeys.TRUED_FROM, ""))
+		var source: Dictionary = items.get(trued_from, {}) if removed.has(trued_from) else {}
+		for line: String in WIEffectText.item_effect_lines(rec, [], source):
 			if not line.begins_with(WIEffectText.PRICE_LINE_PREFIX):
 				out.append(line)
 	return out
@@ -61,7 +85,7 @@ func set_ctx(ctx: Dictionary) -> void:
 	_ctx = ctx
 
 
-func choose(index: int) -> Dictionary:
+func choose(index: int, commit := true) -> Dictionary:
 	# Resolution only: the owner applies effects, rebuilds ctx, then calls
 	# advance(). Entering the next node here would evaluate stale state.
 	if finished:
@@ -80,7 +104,7 @@ func choose(index: int) -> Dictionary:
 			if effect.has("gold") and int(effect["gold"]) == -int(req["gold"]):
 				effect["gold"] = -discounted
 	var ended := bool(opt.get("end", false))
-	if ended:
+	if ended and commit:
 		finished = true
 		_emit(WIEvents.DIALOGUE_ENDED, {})
 	return {"effects": effects, "ended": ended, "next": "" if ended else String(opt["goto"])}
@@ -222,7 +246,7 @@ func _enter(id: String) -> void:
 	current_id = id
 	var n := _node()
 	var visible_options := current_options()
-	_emit(WIEvents.DIALOGUE_NODE, {"speaker": String(n["speaker"]), "text": _resolved_text(n), "options": visible_options})
+	_emit(WIEvents.DIALOGUE_NODE, {"speaker": String(n["speaker"]), "text": _resolved_text(n), "options": visible_options, "gold_shortfall": gold_shortfall()})
 	if visible_options.is_empty() and not (n.get("options", []) as Array).is_empty():
 		finished = true
 		_emit(WIEvents.DIALOGUE_ENDED, {})

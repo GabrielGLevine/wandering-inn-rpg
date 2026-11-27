@@ -15,6 +15,16 @@ var combat_ref: Node = null
 var journal_ref: Node = null
 var inventory_ref: Node = null
 
+signal layout_changed
+
+var message_layer_ref: Node = null
+var _resource_panel: Control
+var _resource_label: Label
+var _resource_payload: Dictionary = {}
+var _resource_render_serial := 0
+var _sleep_active := false
+var _combat_active := false
+
 var _pause_chip: Control
 var _journal_chip: Control
 var _inventory_chip: Control
@@ -36,6 +46,19 @@ func _ready() -> void:
 	UIChrome.full_rect(host)
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(host)
+	_resource_panel = UIChrome.make_texture_panel(UIChrome.CARVED_PANEL)
+	_resource_panel.name = "ResourceStrip"
+	_resource_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.add_child(_resource_panel)
+	var margin := MarginContainer.new()
+	UIChrome.full_rect(margin)
+	UIChrome.add_margins(margin, 12, 6, 12, 6)
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_resource_panel.add_child(margin)
+	_resource_label = UIChrome.make_label("", "Small")
+	_resource_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin.add_child(_resource_label)
+	_refresh_resources()
 	_inventory_chip = _make_chip(host, "Inventory", 2)
 	_journal_chip = _make_chip(host, "Journal", 1)
 	_pause_chip = _make_chip(host, "Pause", 0)
@@ -71,23 +94,78 @@ func _make_chip(host: Control, label_text: String, slot: int) -> Control:
 func _layout_chips() -> void:
 	if _pause_chip == null or not is_inside_tree():
 		return
-	var safe := WIResponsiveLayout.safe_rect(get_viewport())
+	var safe: Rect2 = WIResponsiveLayout.safe_rect(get_viewport())
 	var right := safe.end.x - get_viewport().get_visible_rect().size.x - CHIP_RIGHT_MARGIN
 	var top := safe.position.y + CHIP_TOP_OFFSET
-	var text_scale := WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]
+	var text_scale: float = WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]
 	for chip: Control in [_pause_chip, _journal_chip, _inventory_chip]:
 		var label := chip.get_node("ChipLabel") as Label
 		var base_size := int(WISettings.scaled_type_font_sizes(WISettings.text_scale_step())["Small"])
 		label.add_theme_font_size_override("font_size", WIResponsiveLayout.readable_font_size(get_viewport(), base_size, text_scale))
-		var chip_size := WIResponsiveLayout.touch_size(get_viewport(), CHIP_SIZE)
+		var chip_size: Vector2 = WIResponsiveLayout.touch_size(get_viewport(), CHIP_SIZE)
 		chip_size.x = maxf(chip_size.x, label.get_minimum_size().x + 24.0)
 		chip.custom_minimum_size = chip_size
 		UIChrome.set_offsets(chip, right - chip_size.x, top, right, top + chip_size.y)
 		right -= chip_size.x + CHIP_GAP
+	_layout_resources(safe)
+	layout_changed.emit()
 
 
 func occupied_height() -> float:
-	return _pause_chip.get_global_rect().end.y if visible and _pause_chip != null else 0.0
+	var bottom := _pause_chip.get_global_rect().end.y if visible and _pause_chip != null else 0.0
+	if _resource_panel != null and _resource_panel.is_visible_in_tree():
+		bottom = maxf(bottom, _resource_panel.get_global_rect().end.y)
+	return bottom
+
+
+func resource_rect() -> Rect2:
+	return _resource_panel.get_global_rect() if visible and _resource_panel.visible else Rect2()
+
+
+func _refresh_resources(payload: Dictionary = {}) -> void:
+	if Game.sim == null:
+		return
+	_resource_payload = payload.duplicate(true)
+	if not _resource_payload.has("after"):
+		_resource_payload["after"] = Game.sim.player_resources().duplicate(true)
+	_resource_label.text = WIEffectText.resource_line(_resource_payload["after"])
+
+
+func _layout_resources(safe: Rect2) -> void:
+	var base_size := int(WISettings.scaled_type_font_sizes(WISettings.text_scale_step())["Small"])
+	_resource_label.add_theme_font_size_override("font_size", WIResponsiveLayout.readable_font_size(get_viewport(), base_size, WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]))
+	var text := WIEffectText.resource_line(_resource_payload.get("after", {}))
+	var font := _resource_label.get_theme_font("font")
+	var font_size := _resource_label.get_theme_font_size("font_size")
+	var available := _inventory_chip.get_global_rect().position.x - safe.position.x - CHIP_TOP_OFFSET - CHIP_GAP
+	var left := safe.position.x + CHIP_TOP_OFFSET
+	var top := safe.position.y + CHIP_TOP_OFFSET
+	if font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x + 24.0 > available:
+		text = text.replace("   ", "\n")
+		var widest := maxf(font.get_string_size(text.get_slice("\n", 0), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x, font.get_string_size(text.get_slice("\n", 1), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x)
+		if widest + 24.0 > available:
+			top = _pause_chip.get_global_rect().end.y + CHIP_GAP
+	_resource_label.text = text
+	_resource_panel.custom_minimum_size = _resource_label.get_minimum_size() + Vector2(24, 12)
+	_resource_panel.size = _resource_panel.custom_minimum_size
+	_resource_panel.position = Vector2(left, top)
+	if message_layer_ref != null:
+		message_layer_ref.place_field_hint(resource_rect(), _inventory_chip.get_global_rect())
+	_publish_resources()
+
+
+func _publish_resources() -> void:
+	_resource_render_serial += 1
+	var serial := _resource_render_serial
+	await get_tree().process_frame
+	if not is_inside_tree() or serial != _resource_render_serial or not visible or not _resource_panel.is_visible_in_tree():
+		return
+	var proof := _resource_payload.duplicate(true)
+	proof["surface"] = "field"
+	proof["text"] = _resource_label.text
+	var rect := resource_rect()
+	proof["rect"] = {"x": rect.position.x, "y": rect.position.y, "width": rect.size.x, "height": rect.size.y}
+	ObservableBus.emit_domain_event(WIEvents.UI_RESOURCES_RENDERED, proof)
 
 
 func _on_pause_chip_gui_input(event: InputEvent) -> void:
@@ -138,7 +216,25 @@ func chip_rect(chip_name: String) -> Rect2:
 	return Rect2(chip.global_position, chip.size)
 
 
-func _on_domain_event(type: String, _payload: Dictionary) -> void:
+func _on_domain_event(type: String, payload: Dictionary) -> void:
+	match type:
+		WIEvents.RESOURCES_CHANGED:
+			_refresh_resources(payload)
+			_apply_visibility()
+		WIEvents.WORLD_READY, WIEvents.GAME_LOADED:
+			_refresh_resources()
+		WIEvents.COMBAT_PREPARING:
+			_combat_active = true
+			_apply_visibility()
+		WIEvents.UI_COMBAT_HIDDEN:
+			_combat_active = false
+		WIEvents.PHASE_CHANGED:
+			if bool(payload.get("slept", false)):
+				_sleep_active = true
+				_apply_visibility()
+		WIEvents.UI_SLEEP_VEIL_FINISHED:
+			_sleep_active = false
+			_apply_visibility()
 	# Order matters: latch the pair BEFORE the re-derive below reads it.
 	match type:
 		WIEvents.DIALOGUE_STARTED:
@@ -162,12 +258,14 @@ func _apply_visibility() -> void:
 	# open the combat pause (keyboard cancel was the only route). Only the
 	# pause chip shows; journal/inventory stay combat-blocked.
 	var combat_resting := Game.sim.combat != null and combat_ref != null and bool(combat_ref.is_resting())
-	var hard_blocked := (Game.sim.combat != null and not combat_resting) or _dialogue_open \
+	var hard_blocked := _sleep_active or (Game.sim.combat != null and not combat_resting) or _dialogue_open \
 			or (main_ref != null and bool(main_ref.veil_modal_active()))
 	visible = not hard_blocked
 	if hard_blocked:
+		_resource_panel.hide()
 		return
 	if combat_resting:
+		_resource_panel.hide()
 		# The chip can go stale-VISIBLE when the player leaves HOTBAR without a
 		# chips-listened event (into targeting/dash) — no event re-derives to
 		# hide it. That is caught by the self-heal in _on_pause_chip_tapped:
@@ -187,6 +285,7 @@ func _apply_visibility() -> void:
 	(_pause_chip.get_node("ChipLabel") as Label).text = "Close" if pause_open else "Pause"
 	(_journal_chip.get_node("ChipLabel") as Label).text = "Close" if journal_open else "Journal"
 	(_inventory_chip.get_node("ChipLabel") as Label).text = "Close" if inventory_open else "Inventory"
+	_resource_panel.visible = not (_combat_active or pause_open or journal_open or inventory_open)
 	_layout_chips()
 	_pause_chip.visible = pause_open or not (journal_open or inventory_open)
 	_journal_chip.visible = journal_open or not (pause_open or inventory_open)

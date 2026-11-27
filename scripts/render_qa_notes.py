@@ -52,6 +52,7 @@ def render() -> str:
 		"",
 		"Run `python3 wandering_inn_game/qa/web/run_browser_suite.py` (add `--skip-export` for an existing build).",
 		"These scripts require browser touch and stay out of the native smoke/full sweep. Profiles are emulated Chromium contexts.",
+		"CI shards them with `--shard K/N` and re-verifies with `--merge`; renaming or removing a script also updates `qa/web/browser_case_seconds.json`.",
 		"",
 		"| script | seed | profiles | fixture | purpose |",
 		"|---|---:|---|---|---|",

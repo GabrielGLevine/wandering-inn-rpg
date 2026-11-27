@@ -1,6 +1,6 @@
 {
- "_comment": "Issue #92 R2: post_tutorial's EXACT twin (warrior L1, rusty_sword equipped -> power_strike fielded, met_relc -> relc allied, floodplains 7,6, SAME rng_state) plus one carried mending_draught (the R1/R2 heal-shaped item -- see items.json's own _comment; not yet vendor-wired, R5's job) -- so item_use_loop can walk the SAME deterministic route to goblin_encounter_2 combat_move_input.json already proves out, with a real combat-usable consumable in the pack. Position/rng_state UNCHANGED from post_tutorial (goblin_encounter_2 is still the first combat after load, still deterministic).",
- "version": 5,
+ "_comment": "Combat recovery fixture: Warrior1,35/43HP and two explicitly supplied draughts. Existing floodplains route/RNG retained. No earned acquisition claim.",
+ "version": 12,
  "state": {
   "current_map": "floodplains",
   "player_cell": [
@@ -38,6 +38,16 @@
   },
   "container_state": {},
   "actions_since_sleep": 0,
-  "rng_state": "-1966449618399012673"
+  "rng_state": "-1966449618399012673",
+  "vitals": {
+   "hp": 35,
+   "mp": 0,
+   "mp_potion_doses": 0
+  },
+  "consumable_counts": {
+   "mending_draught": 2
+  },
+  "resonance_capacity": 4,
+  "pending_loot": []
  }
 }

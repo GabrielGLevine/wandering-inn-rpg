@@ -51,55 +51,73 @@
     "to": [
      7,
      4
-    ]
+    ],
+    "cap": [
+     3,
+     3
+    ],
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+     "tile_px": 16,
+     "cap": [
+      0,
+      3
+     ]
+    }
    }
   ]
  },
  "floor_layers": [
   {
-   "_pick": "Cemetery-floor variation reusing the dungeon biome's own verified floor-tile neighborhood (2,2)/(3,7) plus the genuinely darker worn variant (2,11) for real wear texture.",
-   "variants": [
-    [
-     2,
-     2
-    ],
-    [
-     3,
-     7
-    ],
-    [
-     2,
-     11
-    ]
+   "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+   "tile_px": 16,
+   "coords": [
+    2,
+    1
    ],
-   "cells": "all"
+   "cells": "all",
+   "tone": {
+    "base": [
+     0.59,
+     0.59,
+     0.6
+    ],
+    "detail": 0.35
+   }
   }
  ],
  "decor": [
   {
-   "_comment": "CASTLE 0.3 statue dressing, blocked-pair (THE BLOCKING CONTRACT).",
-   "sprite": "dungeon_statue",
+   "sprite": "dungeon_brazier_owned",
    "cell": [
     4,
     2
    ],
-   "tint": [
-    0.75,
-    0.75,
-    0.78
-   ]
+   "light": {
+    "color": [
+     0.96,
+     0.66,
+     0.36
+    ],
+    "energy": 0.5,
+    "radius": 24
+   }
   },
   {
-   "sprite": "dungeon_statue",
+   "sprite": "dungeon_brazier_owned",
    "cell": [
     11,
     2
    ],
-   "tint": [
-    0.7,
-    0.7,
-    0.74
-   ]
+   "light": {
+    "color": [
+     0.96,
+     0.66,
+     0.36
+    ],
+    "energy": 0.5,
+    "radius": 24
+   }
   },
   {
    "_comment": "CAVE rubble dressing (a collapse band), blocked-pair.",
@@ -336,6 +354,35 @@
     {
      "item": "kingslayer_fang",
      "chance": 1.0
+    }
+   ]
+  },
+  {
+   "_comment": "#453 P4: a full-sleep rest two cells from the depths door, present once the Horns form the party and kept through Act V. (14,4) is off every canonical walked or faced cell; (13,4), (14,3), (14,5) and (15,4) stay open. Its two looks key on horns_dig_started: the sleep_toast ladder now, a visual_states arm once bedroll art lands (VISUAL-LOG).",
+   "id": "horns_delve_camp",
+   "kind": "prop",
+   "cell": [
+    14,
+    4
+   ],
+   "display_name": "The Horns' Bedrolls",
+   "sprite": "bed",
+   "present_when": {
+    "requires": {
+     "horns_party_formed": 1
+    }
+   },
+   "sleep": true,
+   "sleep_toast": [
+    {
+     "when": {},
+     "text": "A spare bedroll, a rolled cloak for a pillow."
+    },
+    {
+     "when": {
+      "horns_dig_started": 1
+     },
+     "text": "The last bedroll, left rolled against the wall. It unrolls stiff with dust."
     }
    ]
   }

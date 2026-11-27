@@ -1,0 +1,886 @@
+{
+ "_comment": "#453 P1-P3 through real input from an earned depleted state. Checkpoint fixture: journey_rogue step 1001 (deep_tunnels (8,3), 10/44 HP, 0/14 MP after the scout win and pause Save/Load); inherited kit/history are setup, not acquisition proof. Satchel open + one-shot negative, field draught +8 with autosave, sewer pail open + negative, field meal +6 with autosave, then the Watch bunk's real sleep: full refill without entering the floodplains or starting a fight.",
+ "fixture_save": "rest_before_warren_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_resources_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "surface": "field",
+    "after": {
+     "hp": 10,
+     "max_hp": 44,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "deep_tunnels",
+    "entity": "gnoll_hunters_satchel",
+    "sprite": "leather_satchel",
+    "hidden": false
+   },
+   "_comment": "The satchel is present: the checkpoint banked cleared_raskghar_scouts (present_when)."
+  },
+  {
+   "action": "screenshot",
+   "name": "00_tunnels_after_scouts"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4,
+   "_comment": "The defeated scouts' cell (8,4) is open now; drop to the y7 row beside the bones."
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump the satchel (10,7) to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_affordance_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "entity": "gnoll_hunters_satchel",
+    "cell": [
+     10,
+     7
+    ],
+    "showing": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "item": "mending_draught"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "text": "A satchel, the strap bitten through. One corked draught in the side pocket, the wax unbroken."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "A satchel, the strap bitten through. One corked draught in the side pocket, the wax unbroken."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_satchel_opened"
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "One-shot negative: the second open is empty and grants nothing."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "text": "Empty."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Empty."
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_gained",
+   "count": 1,
+   "payload_contains": {
+    "item": "mending_draught"
+   }
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 20,
+   "payload_contains": {}
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4,
+   "_comment": "Inventory order = sim.inventory; the picked-up stack is row 5."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "item": "mending_draught",
+    "allowed": true
+   }
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Keyboard confirm on the selected stack is the real use path (inventory._confirm -> _activate_use)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "item": "mending_draught"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slot": "auto"
+   },
+   "_comment": "World-context item use is an autosave trigger (game.gd _on_domain_event); the save lands inside ITEM_USE_SETTLED's dispatch, so it reaches the driver first."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_use_settled",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "item": "mending_draught",
+    "context": "world",
+    "committed": true,
+    "restore_hp": 8,
+    "before": {
+     "hp": 10,
+     "max_hp": 44,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 18,
+     "max_hp": 44,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_status_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slot": "auto"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "item": "mending_draught"
+   }
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "screenshot",
+   "name": "02_draught_drunk"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 20,
+   "payload_contains": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 18
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump tunnel_up (2,1)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "map": "sewers",
+    "cell": [
+     8,
+     12
+    ]
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "sewers",
+    "entity": "grate_crew_pail",
+    "sprite": "wooden_pail",
+    "hidden": false
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "03_pail_in_context"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "Bump the pail (4,6) to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_affordance_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "entity": "grate_crew_pail",
+    "cell": [
+     4,
+     6
+    ],
+    "showing": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "item": "hot_meal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "text": "A crew number is chalked on the pail. Inside, stew in a wired-shut tin, packed in a cloth."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "A crew number is chalked on the pail. Inside, stew in a wired-shut tin, packed in a cloth."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "04_pail_opened"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "text": "Empty."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "text": "Empty."
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_gained",
+   "count": 1,
+   "payload_contains": {
+    "item": "hot_meal"
+   }
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "timeout_sec": 20,
+   "payload_contains": {}
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4,
+   "_comment": "The spent draught stack left the list, so the meal is row 5."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_preview_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "item": "hot_meal",
+    "allowed": true
+   }
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "Keyboard confirm on the selected stack is the real use path (inventory._confirm -> _activate_use)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "item": "hot_meal"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slot": "auto"
+   },
+   "_comment": "World-context item use is an autosave trigger (game.gd _on_domain_event); the save lands inside ITEM_USE_SETTLED's dispatch, so it reaches the driver first."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_use_settled",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "item": "hot_meal",
+    "context": "world",
+    "committed": true,
+    "restore_hp": 6,
+    "before": {
+     "hp": 18,
+     "max_hp": 44,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 24,
+     "max_hp": 44,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_status_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slot": "auto"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_item_use_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "item": "hot_meal"
+   }
+  },
+  {
+   "action": "wait_item_use_ready"
+  },
+  {
+   "action": "screenshot",
+   "name": "05_meal_eaten"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 20,
+   "payload_contains": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 24
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump the ladder (2,1)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "map": "street",
+    "cell": [
+     15,
+     11
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    22,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump barracks_door (22,2)."
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "map": "barracks",
+    "cell": [
+     2,
+     6
+    ]
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "barracks",
+    "entity": "watch_spare_bunk",
+    "sprite": "bed",
+    "hidden": false
+   },
+   "_comment": "heard_about_cisterns is banked, so the Watch bunk is present."
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    2
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "06_bunk_in_context"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1,
+   "_comment": "Bump the bunk (1,1) to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_affordance_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "entity": "watch_spare_bunk",
+    "cell": [
+     1,
+     1
+    ],
+    "showing": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "text": "Watch bedding, scratchy and clean."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slept": true
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slot": "auto"
+   },
+   "_comment": "SLEEP_SETTLED autosave (nested in its dispatch, so seen first); the Saved pill is suppressed under the sleep veil by design (message_layer _show_save_status)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "vitals": {
+     "hp": 44,
+     "max_hp": 44,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "slept"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "timeout_sec": 20
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 24,
+     "max_hp": 44,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 44,
+     "max_hp": 44,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 120,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 24,
+     "max_hp": 44,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 44,
+     "max_hp": 44,
+     "mp": 14,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "07_bunk_slept"
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 44
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 14
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "count": 0,
+   "_comment": "The hurt walk from the warren to a bed crossed no fight."
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "_comment": "The Liscor-side bed keeps the walk off the floodplains gate band entirely."
+  }
+ ]
+}

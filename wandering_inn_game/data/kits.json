@@ -1,0 +1,528 @@
+{
+  "_comment": "Regional kits: role pools, materials and anonymous casts per region. Spec docs/superpowers/specs/2026-10-08-regional-kits-design.md. Role value: a sprite id string, or {pick: cell|map|door, module: bool, pool: [id | [id, weight]], light: {}, deny: [word, ...]}. `deny` words are matched whole-word, case-insensitive, against display_name and observe of any row using the role (data_lint). Lookup: region (map folder or top-level map `kit`), then _common. A map field set to `null` blocks the material's value. Supported only for wall-segment `face` and `cap` (caps-only or face-only segments).",
+  "_common": {"materials": {}, "roles": {"barrel": {"kind": "barrel", "pick": "cell", "pool": ["barrel", "common_barrel_lying", "common_keg"]}, "sack": {"kind": "sack", "pick": "cell", "pool": ["common_sack_tied", "common_sack_slumped", "common_sack_pair"]}, "crate": {"kind": "crate", "pick": "cell", "pool": ["crate", "common_crate_cube", "common_crate_braced", "common_crate_lowwide"]}}, "cast": []},
+  "invrisil": {
+   "materials": {
+    "floor_street": {
+     "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      0
+     ],
+     "tone": {
+      "base": [
+       0.36,
+       0.35,
+       0.38
+      ],
+      "detail": 0.2
+     }
+    },
+    "floor_alley": {
+     "_comment": "#608 pool read floor_alley #3 PASS: owned ashlar_over_checker_v1 (public, already in assets/tiles/harvest). [0,3] = wang_15 pure ashlar paving, the low-contrast tile; [2,1] is the high-contrast checker. Tone = the alleys' existing fallback tone.",
+     "sheet": "res://assets/tiles/harvest/ashlar_over_checker_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.33,
+       0.34,
+       0.36
+      ],
+      "detail": 0.5
+     }
+    },
+    "floor_shop": {
+     "_comment": "#608 1b pool read floor_shop #1 PASS: owned woodplank_over_stone_v1 (PixelLab, public). Lower terrain = cool blue-grey flagstone, wang_0 at [2,1]: the quiet low-contrast shop floor (stationer, parlor; the enchanter rooms have no floor layer yet). Pale limestone/checker is the real target and is on the generation list.",
+     "sheet": "res://assets/tiles/harvest/woodplank_over_stone_v1.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ],
+     "tone": {
+      "base": [
+       0.36,
+       0.37,
+       0.4
+      ],
+      "detail": 0.4
+     }
+    },
+    "floor_marble": {
+     "_comment": "#632 (#610 floor_shop, design-led): Free Pack Floors_Tiles pale marble, the full-tile rows of the white blob (cols 0-4, rows 22-23), for the front-of-house shops (stationer, enchanter shop). Private sheet; the public build keeps the owned flagstone.",
+     "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+     "tile_px": 16,
+     "tone": {
+      "base": [
+       0.47,
+       0.47,
+       0.5
+      ],
+      "detail": 0.35
+     },
+     "variants": [
+      [
+       0,
+       22
+      ],
+      [
+       1,
+       22
+      ],
+      [
+       2,
+       22
+      ],
+      [
+       3,
+       22
+      ],
+      [
+       4,
+       22
+      ],
+      [
+       0,
+       23
+      ],
+      [
+       1,
+       23
+      ],
+      [
+       2,
+       23
+      ],
+      [
+       3,
+       23
+      ],
+      [
+       4,
+       23
+      ]
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/woodplank_over_stone_v1.png",
+      "tile_px": 16,
+      "coords": [
+       2,
+       1
+      ],
+      "tone": {
+       "base": [
+        0.36,
+        0.37,
+        0.4
+       ],
+       "detail": 0.4
+      }
+     }
+    },
+    "wall_dado": {
+     "_comment": "#632 (#610 wall_shop, design-led): Building_Walls pale plaster panel (24,13) as the shop wall face, with the owned 1-px gold cornice trim. North segments only; caps-only side segments stay @wall_shop. Private sheet; the public build keeps the owned timber face and the trim.",
+     "sheet": "res://assets/props/free_pack/Building_Walls.png",
+     "tile_px": 16,
+     "cap": [
+      24,
+      12
+     ],
+     "face": [
+      24,
+      13
+     ],
+     "trim": {
+      "sheet": "res://assets/tiles/invrisil/cornice_gold_line.png",
+      "tile_px": 16,
+      "coords": [
+       0,
+       0
+      ]
+     },
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/timberwall_over_plank_v1.png",
+      "tile_px": 16,
+      "cap": [
+       0,
+       3
+      ],
+      "face": [
+       3,
+       0
+      ],
+      "tone": {
+       "base": [
+        0.4,
+        0.34,
+        0.26
+       ],
+       "detail": 0.55
+      }
+     }
+    },
+    "floor_rest": {
+     "_comment": "#608 1b pool read floor_shop #1: the same atlas's upper terrain, honey plank wang_15 at [0,3], for the Adventurer's Rest.",
+     "sheet": "res://assets/tiles/harvest/woodplank_over_stone_v1.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.42,
+       0.32,
+       0.22
+      ],
+      "detail": 0.3
+     }
+    },
+    "wall_shop": {
+     "_comment": "#608 1b pool read wall_shop #4 PASS: owned timberwall_over_plank_v1 (PixelLab, public), pale gold timber over dark plank. cap = wang_15 [0,3]; face = wang_12 [3,0]. Cosy rather than wealthy; pale plaster + wainscot + gold cornice is on the generation list.",
+     "sheet": "res://assets/tiles/harvest/timberwall_over_plank_v1.png",
+     "tile_px": 16,
+     "cap": [
+      0,
+      3
+     ],
+     "face": [
+      3,
+      0
+     ],
+     "tone": {
+      "base": [
+       0.4,
+       0.34,
+       0.26
+      ],
+      "detail": 0.55
+     }
+    }
+   },
+   "roles": {
+    "door_street": {
+     "pick": "door",
+     "pool": [
+      "door",
+      "invrisil_door_street_2",
+      "invrisil_door_street_3",
+      "invrisil_door_street_4",
+      "door_street_townhouse_owned"
+     ]
+    },
+    "facade_window": {
+     "pick": "cell",
+     "module": true,
+     "radius": 3,
+     "pool": [
+      "invrisil_upper_window",
+      "invrisil_facade_window_1",
+      "invrisil_facade_window_2",
+      "invrisil_facade_window_3"
+     ]
+    },
+    "lamp_wall": "invrisil_lamp_wall_1",
+    "cargo": {
+     "pick": "cell",
+     "pool": [
+      [
+       "crate_owned",
+       2
+      ],
+      "owned_fallback_barrel",
+      "invrisil_cargo_1",
+      [
+       "invrisil_cargo_2",
+       2
+      ]
+     ],
+     "deny": [
+      "tray",
+      "paper",
+      "bale",
+      "sack",
+      "dock",
+      "yoke",
+      "stash",
+      "nook",
+      "vantage",
+      "satchel"
+     ]
+    },
+    "shop_sign": {
+     "pick": "cell",
+     "pool": [
+      "invrisil_hanging_sign",
+      "invrisil_shop_sign_1"
+     ]
+    },
+    "shop_door": {
+     "_comment": "#608 art read: glazed invrisil_shop_door_1 left the pool; on the glass shopfront band it read as a window, not a threshold.",
+     "pick": "cell",
+     "pool": [
+      "invrisil_shop_door",
+      "invrisil_shop_door_2"
+     ]
+    },
+    "table": {
+     "pick": "map",
+     "pool": [
+      "table_brown",
+      "table_brown__alt1"
+     ]
+    },
+    "window_interior": {
+     "pick": "map",
+     "pool": [
+      "window_blue",
+      "window_blue__alt1"
+     ]
+    },
+    "rug": {
+     "pick": "map",
+     "pool": [
+      "rug_woven_red",
+      "rug_woven_cream"
+     ]
+    }
+   },
+   "cast": [
+    "townswoman",
+    "human_laborer",
+    "city_scribe",
+    "hired_blade",
+    "invrisil_lady_client",
+    "gnoll_traveler",
+    "gnoll_ranger",
+    "invrisil_gentlewoman_2",
+    "gentleman_bowler",
+    "drake_patron",
+    "city_runner"
+   ]
+  },
+  "liscor": {
+   "materials": {
+    "floor_civic": {
+     "_comment": "#620: the guild's civic floor. R1 r2 read N5: the library parquet [21,3] banded horizontally by day, and the [22,3] trial kept the same dark tile lip on every row (headless capture row-mean sd 5.3-6.5 vs column 4.3-4.5, the dark rows 76-84 unchanged) and added a vertical seam, so the public carpet_over_floorboards_v2_square [2,1] (owned, public; the public build's floor, which the read passed as quiet) is promoted to primary. The Runners' Guild and barracks have no civic floor of their own, so they stay explicit and are on the generation list. #629 r1: a warm tone softens the dark board grout that read as palisade bars.",
+     "sheet": "res://assets/tiles/harvest/carpet_over_floorboards_v2_square.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      1
+     ],
+     "tone": {
+      "base": [
+       0.42,
+       0.27,
+       0.16
+      ],
+      "detail": 0.75
+     }
+    },
+    "floor_earth": {
+     "_comment": "#629 (#620 r3 N6): the street's base ground. The biome's dirt_01 (540px tile) drew a horizontal seam on every row; the Free Pack Floors_Tiles orange packed-earth fill cells are flat (luma sd ~2) and seam-free; the darker row (11-13,11) keeps the ground the lowest-contrast layer. Public fallback keeps the street biome's meadow path tone.",
+     "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       11,
+       11
+      ],
+      [
+       12,
+       11
+      ],
+      [
+       13,
+       11
+      ]
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+      "tile_px": 16,
+      "coords": [
+       2,
+       1
+      ],
+      "tone": {
+       "base": [
+        0.45,
+        0.31,
+        0.19
+       ],
+       "detail": 0.3
+      }
+     }
+    },
+    "wall_city": {
+     "_comment": "#629 decision 1: Liscor's tan sandstone-brick city wall, Cemetery Walls (12-17,0-12) (bundled; the dungeon uses only columns 0-11). Face = brick course (14,2), cap = the same brick course (14,2): the capped top course (14,1) read as speckle noise (r3). Public fallback is the owned GH#184 city wall. r1 read: warmed toward sandstone with a tone (the muted tan read cold beside the cobble).",
+     "sheet": "res://assets/tiles/cemetery/Walls.png",
+     "tile_px": 16,
+     "cap": [
+      14,
+      2
+     ],
+     "face": [
+      14,
+      2
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/city_wall/Tiles.png",
+      "tile_px": 32,
+      "cap": [
+       0,
+       0
+      ],
+      "face": [
+       1,
+       0
+      ],
+      "tone": {
+       "base": [
+        0.62,
+        0.5,
+        0.34
+       ],
+       "detail": 0.45
+      }
+     },
+     "tone": {
+      "base": [
+       0.66,
+       0.46,
+       0.27
+      ],
+      "detail": 0.7
+     }
+    },
+    "wall_city_side": {
+     "_comment": "#629 decision 1: the west run of the same tan city wall seen from the top (cap-only segments): the enclosure's right pier (17,3), pale cap edge toward the street.",
+     "sheet": "res://assets/tiles/cemetery/Walls.png",
+     "tile_px": 16,
+     "cap": [
+      17,
+      3
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/city_wall/Tiles.png",
+      "tile_px": 32,
+      "cap": [
+       1,
+       0
+      ],
+      "tone": {
+       "base": [
+        0.62,
+        0.5,
+        0.34
+       ],
+       "detail": 0.45
+      }
+     },
+     "tone": {
+      "base": [
+       0.66,
+       0.46,
+       0.27
+      ],
+      "detail": 0.7
+     }
+    },
+    "wall_city_side_east": {
+     "_comment": "#629: east run of the tan city-wall brick (cap-only), the enclosure's left pier (12,3) so its pale cap edge faces into the room.",
+     "sheet": "res://assets/tiles/cemetery/Walls.png",
+     "tile_px": 16,
+     "cap": [
+      12,
+      3
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/city_wall/Tiles.png",
+      "tile_px": 32,
+      "cap": [
+       1,
+       0
+      ],
+      "tone": {
+       "base": [
+        0.62,
+        0.5,
+        0.34
+       ],
+       "detail": 0.45
+      }
+     },
+     "tone": {
+      "base": [
+       0.66,
+       0.46,
+       0.27
+      ],
+      "detail": 0.7
+     }
+    },
+    "wall_city_ledge": {
+     "_comment": "#629: an east-west run of the tan city-wall brick seen from the top (cap-only, e.g. an interior's south wall): the plain brick course (14,2), as wall_city's cap.",
+     "sheet": "res://assets/tiles/cemetery/Walls.png",
+     "tile_px": 16,
+     "cap": [
+      14,
+      2
+     ],
+     "fallback_render": {
+      "sheet": "res://assets/tiles/city_wall/Tiles.png",
+      "tile_px": 32,
+      "cap": [
+       1,
+       0
+      ],
+      "tone": {
+       "base": [
+        0.62,
+        0.5,
+        0.34
+       ],
+       "detail": 0.45
+      }
+     },
+     "tone": {
+      "base": [
+       0.66,
+       0.46,
+       0.27
+      ],
+      "detail": 0.7
+     }
+    }
+   },
+   "roles": {
+    "notice": {
+     "pick": "cell",
+     "pool": [
+      "note_pinned",
+      "guild_notice_board",
+      "note_pinned_alt"
+     ]
+    },
+    "seating": {
+     "pick": "map",
+     "pool": [
+      "liscor_bench",
+      "liscor_chair",
+      "liscor_bench_plank",
+      "stool_owned"
+     ]
+    }
+   },
+   "_comment_cast": "#620: rigs worn by Liscor's anonymous \"A ...\" NPCs (A Road-Peddler, A Frazzled Drayman). The role-titled Watch Guard, Watch Sergeant, Resting Runner and Antinium Workers are not anonymous townsfolk and keep their own rigs; the Resting Runner's gnoll_traveler is shared with the Invrisil cast by role.",
+   "cast": [
+    "road_peddler",
+    "frazzled_drayman"
+   ]
+  }
+}

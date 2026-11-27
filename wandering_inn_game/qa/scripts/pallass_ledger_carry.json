@@ -1,5 +1,5 @@
 {
- "_comment": "v0.16 #307 P2 'The Ledger Eats First' HELP route, and the proof for ruling 7 -- the staged lift carry composed ENTIRELY from shipped primitives (three once_per_waking props + `variants` counter thresholds + repeated door_when transitions), because the Grand Lift is one boolean-gated prop pair and no staged-transit affordance exists or will be added. Shares pallass_ledger_offices_start with the offices route; the fixture is the same story position and the two scripts differ only in what they do from it. Pins each leg's EXACT toast, which is what makes a dead `variants` threshold fail loud: variants resolve before the interact banks, so both staged toasts key on (leg index - 1) -- dray rank at 1, dock at 2 -- and an off-by-one would silently render the base toast forever. Three legs in ONE waking -> the keeper's carry arm -> the attendant.",
+ "_comment": "v0.16 #307 P2 'The Crate the Cage Refuses' (renamed from 'The Ledger Eats First', #513) HELP route: the crate goes down the service stair because the cage refuses it,, and the proof for ruling 7 -- the staged lift carry composed ENTIRELY from shipped primitives (three once_per_waking props + `variants` counter thresholds + repeated door_when transitions), because the Grand Lift is one boolean-gated prop pair and no staged-transit affordance exists or will be added. Shares pallass_ledger_offices_start with the offices route; the fixture is the same story position and the two scripts differ only in what they do from it. Pins each leg's EXACT toast, which is what makes a dead `variants` threshold fail loud: variants resolve before the interact banks, so both staged toasts key on (leg index - 1) -- dray rank at 1, dock at 2 -- and an off-by-one would silently render the base toast forever. Three legs in ONE waking -> the keeper's carry arm -> the attendant.",
  "fixture_save": "pallass_ledger_offices_start",
  "starts_at_title": true,
  "steps": [
@@ -94,7 +94,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "You walk the pallet the last hand's width onto the loading square and square the strapping after it. The attendant looks at the load, then writes an hour beside it on the cage slate."
+    "text": "You walk the crate off the pallet to the head of the service stair and start it down. Nine flights. The attendant watches it go and writes nothing on the cage slate."
    },
    "timeout_sec": 5
   },
@@ -204,7 +204,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Second leg, same cart, same two blocks. The rank clerk chalks it onto the queue board under the first."
+    "text": "Second leg. A cart off the rank, the crate off the bottom step of the service stair, two blocks of orderly stone. The rank clerk chalks it onto the rate board."
    },
    "timeout_sec": 5
   },
@@ -401,12 +401,37 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "#513: the hub is exactly three rows here -- the regulator arm, and NOT the appended wool arm (requires-hidden on wool_trade_started).",
+   "action": "assert_event_logged",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Den-Shop Keeper",
+    "options": [
+     {
+      "text": "Long month how?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I'm here about your oven regulator.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just looking.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
    "action": "wait_for_event",
    "type": "ui_dialogue_shown",
    "timeout_sec": 5
   },
   {
-   "_comment": "Hub renders 3 rows here (the crate arm is requires-gated on ledger_loop_started, which this fixture holds): row 1 is 'I'm here about a crate of tin.'",
+   "_comment": "Hub renders 3 rows here (the crate arm is requires-gated on ledger_loop_started, which this fixture holds): row 1 is 'I'm here about your oven regulator.'",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -424,7 +449,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "consignee renders 2 rows on this route: '[Tell her the crate is already on her dock.]' (requires shipment_leg_carried >= 3) at row 0, then the plain exit. The countersign arm is requires-hidden -- this run walked no office.",
+   "_comment": "consignee renders 2 rows on this route: '[Tell her the crate is already on her dock.]' (requires shipment_leg_carried >= 3) at row 0, then the plain exit. The lead-wrap arm is requires-hidden -- this run never asked Xif or the smith.",
    "action": "wait_frames",
    "frames": 2
   },
@@ -670,7 +695,19 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "speaker": "Lift Attendant"
+    "speaker": "Lift Attendant",
+    "options": [
+     {
+      "text": "[I carried it down myself. It's on her dock.]",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Still working on it.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
    },
    "timeout_sec": 5
   },

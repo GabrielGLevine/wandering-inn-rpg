@@ -1,0 +1,73 @@
+{
+ "grid": {
+  "width": 7,
+  "height": 7
+ },
+ "blocked": [],
+ "decor": [
+  {
+   "sprite": "@seat",
+   "cell": [
+    0,
+    2
+   ]
+  },
+  {
+   "sprite": "@seat",
+   "cell": [
+    1,
+    2
+   ]
+  },
+  {
+   "sprite": "@seat",
+   "cell": [
+    2,
+    2
+   ]
+  },
+  {
+   "sprite": "@seat",
+   "cell": [
+    3,
+    2
+   ]
+  },
+  {
+   "sprite": "@seat",
+   "cell": [
+    4,
+    2
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "l1",
+   "kind": "prop",
+   "sprite": "@lamp",
+   "cell": [
+    1,
+    4
+   ]
+  },
+  {
+   "id": "l2",
+   "kind": "prop",
+   "sprite": "@lamp",
+   "cell": [
+    5,
+    4
+   ],
+   "light": {
+    "color": [
+     1,
+     0,
+     0
+    ],
+    "energy": 2,
+    "radius": 10
+   }
+  }
+ ]
+}

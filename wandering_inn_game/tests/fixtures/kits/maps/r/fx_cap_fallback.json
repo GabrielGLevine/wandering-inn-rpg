@@ -1,0 +1,46 @@
+{
+ "_comment": "#608 final review M2: five module cells in a row, radius 3, two variants. From the third cell on, the radius excludes both variants, so the cap fallback that ignores the radius picks.",
+ "grid": {
+  "width": 5,
+  "height": 1
+ },
+ "blocked": [],
+ "entities": [],
+ "decor": [
+  {
+   "sprite": "@pair",
+   "cell": [
+    0,
+    0
+   ]
+  },
+  {
+   "sprite": "@pair",
+   "cell": [
+    1,
+    0
+   ]
+  },
+  {
+   "sprite": "@pair",
+   "cell": [
+    2,
+    0
+   ]
+  },
+  {
+   "sprite": "@pair",
+   "cell": [
+    3,
+    0
+   ]
+  },
+  {
+   "sprite": "@pair",
+   "cell": [
+    4,
+    0
+   ]
+  }
+ ]
+}

@@ -2,6 +2,230 @@
  "_comment": "The ONE source of truth for the canonical QA sweep. ci_sweep.sh parses this (python3) to build its run list; the CLAUDE.md canonical seed table is generated FROM it and ci_sweep.sh's startup drift-checks the table against this file on every run. Add/rename/reorder a script HERE first, then re-render the CLAUDE.md table row to match -- ci_sweep.sh will hard-fail the sweep if they disagree. seed:null means the script takes no --seed (load_gate, char_creation). fixture is the fixture_save this script's own qa/scripts/<name>.json loads via title Continue (its rng_state overrides --seed when present) -- informational, not consumed by ci_sweep.sh's invocation. note is the one-line purpose column. tiers: hand-curated membership, every entry >=1 of smoke/full, smoke subset of full (ci_sweep.sh drift-checks both facts). smoke = load_gate + one canonical per subsystem, <3min, runs every push. full = everything (unchanged). surfaces: GENERATED ONLY by scripts/derive_qa_surfaces.py from the script+fixture+data files themselves (maps/fixtures/skills/systems referenced) -- never hand-edit; ci_sweep.sh --touching <path> maps changed paths to surface tags to crossing scripts; the drift check re-runs the generator and fails on any mismatch (stale tags = FATAL). browser_scripts is a separate browser-only registry consumed by qa/web/run_browser_suite.py; those entries never join native smoke/full or --touching runs. Profiles name emulated Chromium contexts, not physical devices.",
  "scripts": [
   {
+   "script": "vitals_lifecycle_negatives",
+   "seed": 9,
+   "fixture": "vitals_lifecycle_start",
+   "note": "#571 disclosed fixture: numeric equip-toggle negatives, changed combat pools/stock/exposure abandoned to distinct auto checkpoint, one-fight meal activation and terminal expiry clamp; actual controls and frozen receipts.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "vitals_lifecycle_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_bolt"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "meal_service_loop",
+   "seed": 9,
+   "fixture": "meal_service_start",
+   "note": "#569 disclosed pre-errand non-cook fixture: actual meal purchase cancel/two confirms, frozen recovery receipts, poor free-bed directions and real stairs/hall/bed; supplied class/purse/depletion are not earned history.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "meal_service_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [
+     "erin_errand"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "meal_earned_cooking",
+   "seed": 9,
+   "fixture": null,
+   "note": "#569 fresh cleaning and Helper sleep earn Basic Cooking; real chest armor creates capped HP headroom; pot/kettle acquisition, missing-Skill/station and no-output checks, actual inventory eating. No combat-injury claim.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [],
+    "systems": [
+     "char_creation",
+     "economy",
+     "exploration",
+     "input",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "meal_station_loop",
+   "seed": 9,
+   "fixture": "meal_station_start",
+   "note": "#569 supplied Chef10/Mage1 and held cooking Skills: actual Advanced/Signature station production, repeated/capped recovery, strongest preparation and save/load; not earned class or resale history.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "meal_station_start"
+    ],
+    "skills": [
+     "advanced_cooking",
+     "basic_cleaning",
+     "basic_cooking",
+     "signature_dish"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "consumable_poison_defeat",
+   "seed": 9,
+   "fixture": "consumable_poison_defeat_start",
+   "note": "Disclosed near-lethal Mage fixture: real potion confirmation causes normal defeat with living ally; precombat reload restores dose count, stock, HP/MP.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "consumable_poison_defeat_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "goblin_parley"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "vitals_carry_loop",
+   "seed": 9,
+   "fixture": "vitals_carry_start",
+   "note": "#566 fixture contract: real casting/heal, two carried fights, depleted save/load and final bed refill; fixture kit/item is not earned journey evidence.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "vitals_carry_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_bolt"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "vitals_fresh_start",
+   "seed": 9,
+   "note": "#566 fresh start: earned chest armor cannot heal, two real spars carry resources, real stairs/bed resolve Warrior then refill; no fixture or teleport.",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "save"
+    ]
+   }
+  },
+  {
    "script": "load_gate",
    "seed": null,
    "note": "native-only resource compile/load gate",
@@ -1256,7 +1480,7 @@
    "script": "field_skills_loop",
    "seed": 9,
    "fixture": "near_tactician",
-   "note": "field-skill hotbar loop (Basic Cleaning -> Observe); loadout remap; #115 expanded onboarding -> first-waking auto-collapse, keyboard toggle, settings persistence",
+   "note": "field-skill hotbar loop (Basic Cleaning -> Observe); loadout remap; #557 compact default, explicit keyboard Skills toggle, settings persistence",
    "tiers": [
     "full"
    ],
@@ -1281,10 +1505,38 @@
    }
   },
   {
+   "script": "owned_chrome_compact_help",
+   "seed": 9,
+   "fixture": "near_tactician",
+   "note": "#557 owned paper/walnut chrome; compact default; selected description; explicit Details; settings/inventory screenshot and expanded/collapsed preference roundtrip",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "near_tactician"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration",
+     "input",
+     "save",
+     "settings"
+    ]
+   }
+  },
+  {
    "script": "hotbar_tab_loop",
    "seed": 9,
    "fixture": "near_tactician",
-   "note": "Tab-primed field-hotbar select; #115 mouse/touch Details collapse/expand parity; confirm fires the number-key-equivalent stream",
+   "note": "Tab-primed field-hotbar select; #557 mouse Details expand/collapse; selected skill description; confirm fires the number-key-equivalent stream",
    "tiers": [
     "full"
    ],
@@ -1678,7 +1930,11 @@
    "surfaces": {
     "maps": [
      "deep_tunnels",
-     "sewers"
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "sewers",
+     "street"
     ],
     "fixtures": [
      "deep_descent_start"
@@ -1767,7 +2023,10 @@
    "surfaces": {
     "maps": [
      "deep_tunnels",
+     "floodplains",
+     "inn",
      "inn_upstairs",
+     "sewers",
      "street"
     ],
     "fixtures": [
@@ -1879,7 +2138,7 @@
    "script": "gear_loop",
    "seed": 9,
    "fixture": "gear_loop_start",
-   "note": "resonance-gear UI proof (accessory rows, capacity refusal)",
+   "note": "fixture-backed four-point fit, capacity refusal with a free position, distinct physical-full refusal, inventory card/scroll/drag coverage",
    "tiers": [
     "full"
    ],
@@ -2331,6 +2590,7 @@
     ],
     "dialogue": [
      "door_mounting",
+     "erin_errand",
      "krshia_crate",
      "pisces_magic"
     ],
@@ -2428,6 +2688,7 @@
      "basic_cleaning"
     ],
     "dialogue": [
+     "erin_errand",
      "krshia_crate",
      "pisces_magic"
     ],
@@ -2444,7 +2705,7 @@
    "script": "door_awakening",
    "seed": 9,
    "fixture": "door_awakening_start",
-   "note": "Magical Door plan Task D4 (issue #8): the full awakening chain from a beat-3-ready fixture through 3 real sleeps -- 2 silent study beats then door_awakened banks + the GDI line queues under the sleep veil -- to the awakened pantry_door's interact rewire (opens the portal menu, not the flavor toast); v0.15 A2 seam 3: the journal open on the awakening sleep pins the spine lead (2 rows, catalog order -- this fixture never started the delve either)",
+   "note": "fixture-backed awakening through real sleeps; same five-point loadout refuses before4\u21925 growth and fits after; later sleep proves once-only growth; journal and portal coverage",
    "tiers": [
     "full"
    ],
@@ -2596,6 +2857,7 @@
    ],
    "surfaces": {
     "maps": [
+     "riverfarm_longhouse",
      "riverfarm_village",
      "witch_hollow"
     ],
@@ -3194,6 +3456,7 @@
     "maps": [
      "deep_tunnels",
      "dungeon_approach",
+     "inn",
      "street",
      "trapped_halls"
     ],
@@ -3203,7 +3466,9 @@
     "skills": [
      "basic_cleaning"
     ],
-    "dialogue": [],
+    "dialogue": [
+     "erin_errand"
+    ],
     "systems": [
      "audio",
      "combat",
@@ -3505,7 +3770,7 @@
    "script": "pallass_walkthrough",
    "seed": 9,
    "fixture": "near_pallass",
-   "note": "8e E1 (issue #16, the milestone's exit-criteria canonical): the LIVE end-to-end 'Papers for Pallass' + 'Clearance for the Forge Tier' route -- Selys sponsors (10g) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g) -> real travel to pallass_market's arrival cell (4,8) -- the negative lift-locked read pre-permit -- the checkpoint clerk's 2g stamp + the human race-variant read, completing papers_for_pallass -- THE PERMIT OFFICE chain (5g file, Grimalkin's 8g exam voiced verbatim, 3g stamp), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT open, a real walk across the forge tier to grimalkin_station and the round trip back down; gold ledger exact at every spend (60->50->32->30->25->17->14); zero combat whole run",
+   "note": "8e E1 (issue #16, the milestone's exit-criteria canonical): the LIVE end-to-end 'Papers for Pallass' + 'Fit for the Forge Tier' (#513 re-theme of 'Clearance for the Forge Tier') route -- Selys sponsors (10g) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g) -> real travel to pallass_market's arrival cell (4,8) -- the negative lift-locked read pre-permit -- the checkpoint clerk's 2g stamp + the human race-variant read, completing papers_for_pallass -- THE EXAM-FLOOR chain (5g booking, Grimalkin's 8g read voiced verbatim, 3g lift token), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT open, a real walk across the forge tier to grimalkin_station and the round trip back down; gold ledger exact at every spend (60->50->32->30->25->17->14); zero combat whole run",
    "tiers": [
     "full"
    ],
@@ -3546,7 +3811,7 @@
    "script": "pallass_depth_gates_check",
    "seed": 9,
    "fixture": "pallass_depth_gates_start",
-   "note": "v0.16 #307 THE GATE-PROOF LEG: stands on a save holding NONE of the Pallass depth lane's 22 counters and proves nothing new leaked into it -- the smith's hub and the attendant's hub still render exactly three rows (the lane's only two option-array pins), both clerk hubs unchanged, both requires_skill props (temper bench, consignee's file) render their locked_toast through the skill_unknown seam and bank nothing, the temper golem STANDS at (8,6) present and INERT -- encounter_when is an interact/trigger gate, never structural absence (present_when is validator-forbidden on encounters), so the rig blocks the cell and the gate is proved at the interact: player_blocked on (8,6), then the refusal's gate_closed_toast, with combat_started and the forge_temper_golem parley both asserted ABSENT -- and the run closes with assert_event_absent over all sixteen quest-shaped counters plus combat_started. Cheapest failure detector in the lane; registered in both tiers",
+   "note": "v0.16 #307 THE GATE-PROOF LEG: stands on a save holding NONE of the Pallass depth lane's 22 counters and proves nothing new leaked into it -- the smith's hub and the attendant's hub still render exactly three rows (the lane's only two option-array pins), both clerk hubs unchanged, both requires_skill props (temper bench, maker's drawings) render their locked_toast through the skill_unknown seam and bank nothing, the temper golem STANDS at (8,6) present and INERT -- encounter_when is an interact/trigger gate, never structural absence (present_when is validator-forbidden on encounters), so the rig blocks the cell and the gate is proved at the interact: player_blocked on (8,6), then the refusal's gate_closed_toast, with combat_started and the forge_temper_golem parley both asserted ABSENT -- and the run closes with assert_event_absent over all sixteen quest-shaped counters plus combat_started. Cheapest failure detector in the lane; registered in both tiers",
    "tiers": [
     "smoke",
     "full"
@@ -3584,7 +3849,7 @@
    "script": "pallass_standards_talk",
    "seed": 9,
    "fixture": "pallass_standards_talk_start",
-   "note": "v0.16 #307 P1 'Tempered Standards' TALK route: read the examination standard in pallass_forge_hall (it measures RECOVERY, not hardness), carry it back to the smith, broker the six-year argument (standards_brokered) and settle the commission on that arm alone (standards_tempered) -- temper_run and golem_recalibrated provably unbanked, zero combat -- then down to the market tier for Grimalkin's NEW standards_tempered hub text_variant, the lane's only edit to his graph (ruling 4: text_variants only, three scripts pin his option array)",
+   "note": "v0.16 #307 P1 'Tempered Standards' TALK route: greet the Dullahan examiner at his jig and read the bend jig in pallass_forge_hall (#513 re-theme: its second notch measures RECOVERY), carry it back to the smith, broker the six-year argument (standards_brokered) and settle the commission on that arm alone (standards_tempered) -- temper_run and golem_recalibrated provably unbanked, zero combat -- then down to the market tier for Grimalkin's NEW standards_tempered hub text_variant, the lane's only edit to his graph (ruling 4: text_variants only, three scripts pin his option array)",
    "tiers": [
     "full"
    ],
@@ -3679,7 +3944,7 @@
    "script": "pallass_ledger_offices",
    "seed": 9,
    "fixture": "pallass_ledger_offices_start",
-   "note": "v0.16 #307 P2 'The Ledger Eats First' TALK route, the office loop that outranks itself: the Grand Lift down as a real door_when crossing, the market tier clerk ENDORSES the queue entry, the forge-tier permit clerk COUNTERSIGNS the release, the den-shop consignee signs last (loop_walked) -- each office's arm is requires-gated on the previous office's product, so the three-way cycle can only be walked in order -- then back up to the attendant (ledger_unstuck). shipment_carried and exemption_found provably unbanked",
+   "note": "v0.16 #307 P2 'The Crate the Cage Refuses' (#513 re-theme of 'The Ledger Eats First') TALK route: the Grand Lift down as a real door_when crossing, Xif names his rune-ink and prescribes two fingers of lead (queue_notice_endorsed), back up the lift the forge smith folds the lead wrap (queue_notice_countersigned), down again the den keeper takes delivery (loop_walked) -- each arm is requires-gated on the previous one's product and appended last on its hub, so the chain can only be walked in order -- then back up to the attendant (ledger_unstuck). shipment_carried and exemption_found provably unbanked",
    "tiers": [
     "full"
    ],
@@ -3697,9 +3962,9 @@
     ],
     "dialogue": [
      "pallass_den_keeper",
-     "pallass_forge_clerk",
+     "pallass_forge_smith",
      "pallass_lift_attendant",
-     "pallass_market_clerk"
+     "xif"
     ],
     "systems": [
      "combat",
@@ -3713,7 +3978,7 @@
    "script": "pallass_ledger_carry",
    "seed": 9,
    "fixture": "pallass_ledger_offices_start",
-   "note": "v0.16 #307 P2 'The Ledger Eats First' HELP route and the ruling-7 proof: a staged lift carry composed ENTIRELY from shipped primitives (three once_per_waking props + variants counter thresholds + repeated door_when transitions), because the Grand Lift is one boolean-gated prop pair and no staged-transit affordance exists. Pins each leg's EXACT toast, which is what makes a dead variants threshold fail loud -- both staged toasts key on (leg index - 1), dray rank at 1 and dock at 2, since variants resolve BEFORE the interact banks. Three legs in ONE waking -> the keeper's carry arm -> the attendant",
+   "note": "v0.16 #307 P2 'The Crate the Cage Refuses' (#513 re-theme) HELP route, down the service stair and the ruling-7 proof: a staged lift carry composed ENTIRELY from shipped primitives (three once_per_waking props + variants counter thresholds + repeated door_when transitions), because the Grand Lift is one boolean-gated prop pair and no staged-transit affordance exists. Pins each leg's EXACT toast, which is what makes a dead variants threshold fail loud -- both staged toasts key on (leg index - 1), dray rank at 1 and dock at 2, since variants resolve BEFORE the interact banks. Three legs in ONE waking -> the keeper's carry arm -> the attendant",
    "tiers": [
     "full"
    ],
@@ -3745,7 +4010,7 @@
    "script": "pallass_ledger_skill",
    "seed": 9,
    "fixture": "pallass_ledger_skill_start",
-   "note": "v0.16 #307 P2 'The Ledger Eats First' SKILL route: standing inside pallass_den_shop (the fixture that makes MAP_REQUIRES['pallass_den_shop'] bite), read the consignee's own file through the requires_skill/on_skill_use seam and find the exemption that was on the paper the whole time (exemption_found), out through the shopfront door, a real market walk, the lift up, and the attendant's report on that arm alone (ledger_unstuck)",
+   "note": "v0.16 #307 P2 'The Crate the Cage Refuses' (#513 re-theme of 'The Ledger Eats First') SKILL route: standing inside pallass_den_shop (the fixture that makes MAP_REQUIRES['pallass_den_shop'] bite), read the maker's drawings through the requires_skill/on_skill_use seam and find the exemption that was on the paper the whole time (exemption_found), out through the shopfront door, a real market walk, the lift up, and the attendant's report on that arm alone (ledger_unstuck)",
    "tiers": [
     "full"
    ],
@@ -3768,6 +4033,139 @@
     "systems": [
      "combat",
      "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_row_scales",
+   "seed": 9,
+   "fixture": "pallass_row_start",
+   "note": "#513 'Room on the Row' TALK route, Skill-free arm, plus the design's pacing proof: 0 gold after the stone, walked through the Door with real input; the journal lead on arrival; quest started at the Gnoll trader before the stamp; the stallkeeper's [Charming Smile] row visible-locked; the public-scales challenge (heard_row_grievance) and weighing (weights_proved, a variants row); the row opens (row_opened, trader_placed); report pays exactly +12 gold and plains_wool_bale, quest_completed, journal route line, no second payout row. Then stamp 2, booking 5, Grimalkin's row 'needs 3 more gold', the bale sold for 8, the read 8, the token 3 and the lift in the same waking: 2 gold left, times_slept unchanged.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "pallass_forge",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_row_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "pallass_market_local",
+     "pallass_wool_trader"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "portals",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_row_smile",
+   "seed": 9,
+   "fixture": "pallass_row_smile_start",
+   "note": "#513 'Room on the Row' TALK route, Skill arm: [Diplomat] 1 holds [Charming Smile], so the stallkeeper's appended wool row opens counter three by itself (row_opened, trader_placed); report pays exactly +12 gold and plains_wool_bale, quest_completed, journal route line, no second payout row; the scales and help counters stay unbanked.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_row_smile_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_market_local",
+     "pallass_wool_trader"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_row_help",
+   "seed": 9,
+   "fixture": "pallass_row_market_start",
+   "note": "#513 'Room on the Row' HELP route: the trader names the den shop, two bales carried off her stack (leg 1, gated on the quest start) onto the den shop's cleared shelf through the real door (leg 2, gated on leg 1), the den keeper's appended wool row consigns them (wool_consigned, trader_placed); report pays exactly +12 gold and plains_wool_bale, quest_completed, journal help-route line, no second payout row; the stack reads plain afterward.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_den_shop",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_row_market_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_den_keeper",
+     "pallass_wool_trader"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_row_negatives",
+   "seed": 9,
+   "fixture": "pallass_row_market_start",
+   "note": "#513 'Room on the Row' negatives through real input: before the quest the stack, shelf and scales read plain and the stallkeeper/den keeper hubs are their shipped rows; after starting with nothing done there is no report row, the shelf will not bank before the stack, no consign row at zero legs, the scales will not weigh before the challenge, no proof row, and a confirm on the locked [Charming Smile] row banks nothing. Gold stays 0 and the quest never completes.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_den_shop",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_row_market_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_den_keeper",
+     "pallass_market_local",
+     "pallass_wool_trader"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
      "exploration",
      "quests"
     ]
@@ -4020,6 +4418,38 @@
    }
   },
   {
+   "script": "invrisil_window_glow_phases",
+   "seed": 9,
+   "fixture": "invrisil_glow_day_edge_start",
+   "note": "#632 window night-state wiring on invrisil_boulevard, no teleports: a day load one action short of dusk (ui_decor_rendered night_glow rows 9 / lit 0), the real step across the threshold (ui_night_glow_rendered lit 9 with no rebuild), dusk and night loads through the pause menu, the door into the cross street off the night boulevard (rows 7 there, the field-reset pin), and a night fight the clock ticks into dawn whose field re-show re-tints the glows",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "invrisil_boulevard",
+     "invrisil_cross_street"
+    ],
+    "fixtures": [
+     "feel_peek_dusk_start",
+     "feel_peek_night_start",
+     "invrisil_glow_day_edge_start",
+     "invrisil_glow_fight_dawn_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "night_phase",
+     "save"
+    ]
+   }
+  },
+  {
    "script": "trader_earn_loop",
    "seed": 9,
    "fixture": "near_trader",
@@ -4209,7 +4639,7 @@
    "script": "item_use_loop",
    "seed": 9,
    "fixture": "item_use_loop_start",
-   "note": "Issue #92 R2: the combat-hotbar consumable toggle + real item-use canonical -- inventory-panel toggle (item:<id> onto the shared hotbar_loadout, LOADOUT_CHANGED), the toggled item's 5th hotbar slot renders alongside the un-curated Warrior kit, confirm-gated use spends 1 AP flat, erases the item (consumption = inventory.erase), item_used + a toast fire",
+   "note": "Combat recovery: explicit wounded Warrior fixture with two draughts, Add to bar, actual goblin encounter, capped8HP recovery for1AP and one unit, then full-health refusal preserving stock/AP.",
    "tiers": [
     "full"
    ],
@@ -5342,13 +5772,15 @@
    "surfaces": {
     "maps": [
      "invrisil_boulevard",
+     "invrisil_cross_street",
      "stationer"
     ],
     "fixtures": [
      "invrisil_stationer_start"
     ],
     "skills": [
-     "basic_cleaning"
+     "basic_cleaning",
+     "eagle_eyes"
     ],
     "dialogue": [],
     "systems": [
@@ -5369,7 +5801,9 @@
    "surfaces": {
     "maps": [
      "adventurers_rest",
-     "invrisil_boulevard"
+     "invrisil_boulevard",
+     "invrisil_cross_street",
+     "mercantile_alleys"
     ],
     "fixtures": [
      "invrisil_rest_start"
@@ -7538,8 +7972,1081 @@
     ],
     "skills": [
      "basic_cleaning",
+     "flame_jet",
      "observe",
      "sneak"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "message_production_timing",
+   "seed": 37,
+   "note": "#509 production holds: first-frame dismissal, ordinary movement and recent-message single recording.",
+   "tiers": [
+    "full"
+   ],
+   "fixture": "invrisil_hat_quiet_start",
+   "surfaces": {
+    "maps": [
+     "adventurers_rest"
+    ],
+    "fixtures": [
+     "invrisil_hat_quiet_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "message_production_timing_transition",
+   "seed": 37,
+   "note": "#509 unread authored toast survives a doorway, renders anew and records once.",
+   "tiers": [
+    "full"
+   ],
+   "fixture": "invrisil_hat_quiet_start",
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "invrisil_cross_street"
+    ],
+    "fixtures": [
+     "invrisil_hat_quiet_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "message_production_timing_modal",
+   "seed": 7,
+   "note": "#509 modal pauses actual display age; resume retains the readable floor.",
+   "tiers": [
+    "full"
+   ],
+   "fixture": "mobile_tap_start",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "mobile_tap_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "input",
+     "settings"
+    ]
+   }
+  },
+  {
+   "script": "message_production_timing_arrival",
+   "seed": 9,
+   "note": "#509 dialogue arrival remains visible and readable at production timing.",
+   "tiers": [
+    "full"
+   ],
+   "fixture": "line_display_ab_start",
+   "surfaces": {
+    "maps": [
+     "invrisil_cross_street",
+     "stationer"
+    ],
+    "fixtures": [
+     "line_display_ab_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "rogue_recovery_force",
+   "seed": 7,
+   "note": "#508 fresh fight-first force-crate route: deliberate cleared-road cover transit gives a rendered receipt and Rogue at sleep; defeated enemies stay absent.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "krshia_crate",
+     "relc_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "input",
+     "night_phase",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "rogue_recovery_guile",
+   "seed": 9,
+   "note": "#508 fresh earned Mage/Light guile-crate route: deliberate cleared-road cover transit earns Rogue at sleep without respawning enemies.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [
+     "light"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "pisces_magic",
+     "relc_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "exploration",
+     "input",
+     "night_phase",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "stage_guidance_fresh",
+   "seed": 9,
+   "tiers": [
+    "full"
+   ],
+   "note": "#507 fresh earned cleaning, actual rendered Erin sleep cue, ordinary upstairs reward, History/Help/Replay, manual Save/Load and Quest Hints OFF/ON across UI rebuild. Native input; physical comprehension remains #511.",
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "save",
+     "settings"
+    ]
+   }
+  },
+  {
+   "script": "owned_icons_key_art",
+   "seed": 9,
+   "fixture": "owned_icon_kit",
+   "note": "#558/#562 curated co-visible owned icons and title/journal art; icon-kit setup fixture, real inventory selection and J opening; text-only ActII fallback",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "owned_icon_kit"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "harvest_creature_visuals",
+   "seed": 9,
+   "note": "#564 complete bat/razorbeak rigs through actual encounters, renderer-bound sprite confirmations and desktop alpha bounds.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "guild"
+    ],
+    "fixtures": [
+     "floodplains_bestiary_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "razorbeak_nest"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "consumable_vendor_loop",
+   "seed": 9,
+   "fixture": "consumable_vendor_start",
+   "tiers": [
+    "full"
+   ],
+   "args": [
+    "--qa-real-message-timing=1"
+   ],
+   "note": "#568 explicit Pallass-history/20gold fixture with no potion stock: buy two actual Mana Potions, safe third dose, harmful fourth cancel/confirm, final unit removal and depleted HP/exposure reload through real controls; native touch is emulated, not earned journey/device proof.",
+   "surfaces": {
+    "maps": [
+     "pallass_market"
+    ],
+    "fixtures": [
+     "consumable_vendor_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "xif"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "journey_rogue",
+   "seed": 9,
+   "timeout_sec": 420,
+   "tiers": [
+    "full",
+    "journey"
+   ],
+   "note": "#512 continuous fresh Rogue through earned regional travel,58g gear, preserved defeats/rollback/recovery, live Skill utility and open-ending epilogue. No fixtures/teleports; the #586 shutdown leak line is deferred (qa/noise_scan.sh).",
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "brothers_parlor",
+     "deep_tunnels",
+     "dungeon_approach",
+     "enchanter_shop",
+     "enchanter_work_room",
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "invrisil_boulevard",
+     "invrisil_cross_street",
+     "mercantile_alleys",
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "ruin_surface",
+     "seal_vault",
+     "sewers",
+     "stationer",
+     "street",
+     "trapped_halls",
+     "witch_hollow"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning",
+     "find_trap",
+     "light",
+     "pick_lock",
+     "sneak"
+    ],
+    "dialogue": [
+     "ceria_dig_camp",
+     "ceria_intro",
+     "door_mounting",
+     "drayman_dispute",
+     "erin_errand",
+     "hedault_enchanting",
+     "invrisil_fixer",
+     "invrisil_hired_scribe",
+     "invrisil_house_steward",
+     "invrisil_merchant_prince",
+     "invrisil_seal_broker",
+     "invrisil_stationer_client",
+     "invrisil_wilovan",
+     "krshia_crate",
+     "olesm_intro",
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "pisces_magic",
+     "pisces_seal",
+     "relc_descent",
+     "relc_intro",
+     "riverfarm_headman",
+     "riverfarm_hunter",
+     "riverfarm_witch",
+     "selys_delivery",
+     "zevara_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase",
+     "portals",
+     "quests",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "journey_worker",
+   "seed": 9,
+   "timeout_sec": 420,
+   "tiers": [
+    "full",
+    "journey"
+   ],
+   "note": "#571/#512 fresh worker/social history to the Inn epilogue: earned cooking and multiclass support; Awakened wall cleared after one optional Chieftain's Raid (Warrior 2 at sleep), seal warden after the optional ruin guardian loot, a cooked meal, owned gear and rest (kept losses, real rollback); all 82g mandatory fees paid, Pallass shortfall worked off with Inn chores. Exact pins on every meal, meal-bonus armed/active/expired with clamp, a no-heal equip toggle and a real pause-menu Abandon rollback. No fixtures/top-ups/farming.",
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "brothers_parlor",
+     "deep_tunnels",
+     "dungeon_approach",
+     "enchanter_shop",
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "invrisil_boulevard",
+     "invrisil_cross_street",
+     "mercantile_alleys",
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "ruin_surface",
+     "seal_vault",
+     "sewers",
+     "street",
+     "trapped_halls",
+     "witch_hollow"
+    ],
+    "fixtures": [],
+    "skills": [
+     "advanced_cooking",
+     "basic_cleaning",
+     "basic_cooking",
+     "detect_magic",
+     "flame_jet",
+     "invisibility",
+     "piercing_strikes",
+     "sneak"
+    ],
+    "dialogue": [
+     "ceria_dig_camp",
+     "ceria_intro",
+     "door_mounting",
+     "drayman_dispute",
+     "erin_errand",
+     "hedault_enchanting",
+     "invrisil_fixer",
+     "invrisil_merchant_prince",
+     "invrisil_wilovan",
+     "krshia_crate",
+     "olesm_intro",
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "patron_serving",
+     "pisces_magic",
+     "pisces_seal",
+     "relc_descent",
+     "relc_intro",
+     "riverfarm_headman",
+     "riverfarm_hunter",
+     "riverfarm_witch",
+     "selys_delivery",
+     "watch_crate",
+     "zevara_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase",
+     "portals",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "poor_retired_producer_recovery",
+   "seed": 9,
+   "fixture": "poor_retired_producer_earned",
+   "tiers": [
+    "full"
+   ],
+   "note": "#513/#515 checkpoint-based earned-state regression: actual optional purchase14\u21920g, scout depletion10HP/0MP, retired road stays absent, no income during walked free-bed recovery44HP/14MP; exact production-timing bed receipt. Inherited kit/history are not new acquisition proof.",
+   "surfaces": {
+    "maps": [
+     "deep_tunnels",
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "sewers",
+     "street"
+    ],
+    "fixtures": [
+     "poor_retired_producer_earned"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "desktop_field_earned_overflow",
+   "seed": 9,
+   "fixture": "desktop_field_earned_start",
+   "tiers": [
+    "full"
+   ],
+   "note": "#567 desktop17-skill earned-state fixture: actual paging exposes every original slot, slot16 clicks dispatch Keen Eye, keyboard brackets reveal last/first selection, and expanded Details stays bounded above the controls while a real mouse wheel reaches its last line. Native mouse emulation; inheritedkit is not acquisition/mobile proof.",
+   "surfaces": {
+    "maps": [
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "desktop_field_earned_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "keen_eye"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "steel_thread",
+   "seed": 37,
+   "timeout_sec": 420,
+   "tiers": [
+    "full",
+    "journey"
+   ],
+   "note": "#571 martial continuous journey to the open-seal epilogue. Retains two vault defeats and one guardian defeat with real rollback; retries after worn carried gear and walked Inn-bed rests. Exact HP/MP pins on every Act IV-V fight, the footpad no-sleep pair and a depleted pause Save/Load. No fixtures, teleports, tuning or farming.",
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "brothers_parlor",
+     "deep_tunnels",
+     "dungeon_approach",
+     "enchanter_shop",
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "invrisil_boulevard",
+     "invrisil_cross_street",
+     "mercantile_alleys",
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "ruin_surface",
+     "seal_vault",
+     "sewers",
+     "street",
+     "trapped_halls",
+     "witch_hollow"
+    ],
+    "fixtures": [],
+    "skills": [
+     "invisibility"
+    ],
+    "dialogue": [
+     "ceria_dig_camp",
+     "ceria_intro",
+     "door_mounting",
+     "erin_errand",
+     "hedault_enchanting",
+     "invrisil_fixer",
+     "invrisil_merchant_prince",
+     "invrisil_wilovan",
+     "krshia_crate",
+     "olesm_intro",
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "pisces_magic",
+     "pisces_seal",
+     "relc_descent",
+     "relc_intro",
+     "riverfarm_headman",
+     "riverfarm_hunter",
+     "riverfarm_witch",
+     "selys_delivery",
+     "zevara_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase",
+     "portals",
+     "quests",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "journey_caster",
+   "seed": 9,
+   "timeout_sec": 420,
+   "tiers": [
+    "full",
+    "journey"
+   ],
+   "note": "#571/#512 fresh caster: Pisces lesson -> [Mage] first -> [Ice Mage] 14; every fight player-driven (no autoplay), 8/8 wins, no retries; road then optional sewer bats in one waking at 0 MP; sleeps refill new maxima; four bought Mana Potions: two in the warden fight at 1 AP, dose 3 safe, dose 4 warning -> Cancel -> accept -4 HP, pause Save/Load keeps 21/38 HP, 12/19 MP, 4 doses; open-ending epilogue. No fixtures/teleports/top-ups.",
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "brothers_parlor",
+     "deep_tunnels",
+     "dungeon_approach",
+     "enchanter_shop",
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "invrisil_boulevard",
+     "invrisil_cross_street",
+     "mercantile_alleys",
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "ruin_surface",
+     "seal_vault",
+     "sewers",
+     "stationer",
+     "street",
+     "trapped_halls",
+     "witch_hollow"
+    ],
+    "fixtures": [],
+    "skills": [
+     "calming_touch",
+     "frost_bolt",
+     "ice_shard",
+     "invisibility",
+     "light"
+    ],
+    "dialogue": [
+     "ceria_dig_camp",
+     "ceria_intro",
+     "door_mounting",
+     "drayman_dispute",
+     "erin_errand",
+     "hedault_enchanting",
+     "invrisil_fixer",
+     "invrisil_hired_scribe",
+     "invrisil_house_steward",
+     "invrisil_merchant_prince",
+     "invrisil_seal_broker",
+     "invrisil_stationer_client",
+     "invrisil_wilovan",
+     "krshia_crate",
+     "olesm_intro",
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "pisces_magic",
+     "pisces_seal",
+     "relc_descent",
+     "relc_intro",
+     "riverfarm_headman",
+     "riverfarm_hunter",
+     "riverfarm_witch",
+     "selys_delivery",
+     "xif",
+     "zevara_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase",
+     "portals",
+     "quests",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "journey_imperfect",
+   "seed": 9,
+   "timeout_sec": 420,
+   "tiers": [
+    "full",
+    "journey"
+   ],
+   "note": "#571/#513 fresh imperfect-spend variant: a never-equipped knife and unused handline leave 0g after the catalyst, Coyle exposed, the 80g Invrisil one-shots skipped; every later mandatory fee earned back only from repeatable producers over four extra wakings; sponsorship, Pallass stone and lift pass rows pinned locked at 7/13/2g; warden first try on earned loot; epilogue. No fixtures/teleports/top-ups.",
+   "surfaces": {
+    "maps": [
+     "barracks",
+     "brothers_parlor",
+     "deep_tunnels",
+     "dungeon_approach",
+     "enchanter_shop",
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "invrisil_boulevard",
+     "mercantile_alleys",
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "ruin_surface",
+     "runners_guild",
+     "seal_vault",
+     "sewers",
+     "street",
+     "trapped_halls",
+     "witch_hollow"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning",
+     "find_trap",
+     "light",
+     "sneak"
+    ],
+    "dialogue": [
+     "ceria_dig_camp",
+     "ceria_intro",
+     "door_mounting",
+     "drayman_dispute",
+     "erin_errand",
+     "hedault_enchanting",
+     "invrisil_fixer",
+     "invrisil_house_steward",
+     "invrisil_merchant_prince",
+     "invrisil_stationer_client",
+     "invrisil_wilovan",
+     "krshia_crate",
+     "olesm_intro",
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "pisces_magic",
+     "pisces_seal",
+     "relc_descent",
+     "relc_intro",
+     "riverfarm_headman",
+     "riverfarm_hunter",
+     "riverfarm_witch",
+     "selys_delivery",
+     "vess_counter",
+     "zevara_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase",
+     "portals",
+     "quests",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "seal_fed_gate",
+   "seed": 9,
+   "fixture": "seal_fed_gate_start",
+   "note": "#590: Olesm's seal-funding row is gated on seal_warden_downed, the same compound as Pisces' THE CHOICE row (#440 holds). From the post-reading state with the warden armed: Olesm's hub is whole-list pinned WITHOUT the ward row (and the pitch never renders), the alcove warden is sprung from its approach cell and won under autoplay, then the same hub is pinned WITH the ward row last and it opens seal_bounty_pitch. Leaves by the pitch's exit: seal_kept_fed and seal_resolved stay unbanked and gold is unchanged. Fixture rng_state governs the fight and overrides --seed.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "seal_fed_gate_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "olesm_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "corner_melee",
+   "seed": 9,
+   "fixture": "corner_melee_start",
+   "note": "#591: diagonal melee past a blocked corner is legal for everyone, so the player's Attack lists what WICombat.attack resolves. From journey_caster's pre-boss checkpoint, joins Relc into awakened_boss and places the issue's repro on the PC's first turn (combat_set_cells: PC (5,3), Awakened (6,2), deep_warren's (6,3) blocked). NEGATIVE: [Calming Touch] (range-1 spell, LoS-gated) shows zero targets and spends nothing. POSITIVES: Attack shows exactly one target and resolves on the Awakened by keyboard confirm, then again by a board click plus the confirm chip, with the PC unmoved.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels"
+    ],
+    "fixtures": [
+     "corner_melee_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "calming_touch"
+    ],
+    "dialogue": [
+     "relc_descent"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "input"
+    ]
+   }
+  },
+  {
+   "script": "gear_damage_loop",
+   "seed": 9,
+   "fixture": "gear_damage_start",
+   "note": "#514/#495 through real input: an Archer buys the hunting bow (cancel, then buy), reads its card and the inventory reach line, equips it, and fires [Piercing Shot] at Relc's dummy; the bow-gated line takes str and the bow's weapon damage, pinned on the live combatant and the hit",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "street"
+    ],
+    "fixtures": [
+     "gear_damage_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "piercing_shot"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "hedault_trueing_loop",
+   "seed": 7,
+   "fixture": "hedault_trueing_start",
+   "note": "#514/#494 Hedault craft discount: a full 4/4 loadout refuses the Hedge-Ward Charm (If-worn line + toast), the trueing row previews Resonance 1 -> 0, the trued charm costs nothing and the refused charm then fits at 4/4",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "enchanter_shop"
+    ],
+    "fixtures": [
+     "hedault_trueing_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "hedault_enchanting"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "line_skill_readout",
+   "seed": 9,
+   "fixture": "line_skill_readout_start",
+   "note": "#514 L1: a Sharpshooter L12 spars Relc; [Piercing Volley]'s one-line combat readout keeps its weapon-damage tag and Once-every-2-rounds rule when ready, and leads with Recovering when cooling (windowed read: 00_volley_ready, 01_volley_recovering)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "line_skill_readout_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "piercing_volley"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "rest_before_warren",
+   "seed": 9,
+   "fixture": "rest_before_warren_start",
+   "note": "#453 P1-P3 checkpoint-based (journey_rogue step 1001: deep_tunnels, 10/44 HP, 0/14 MP after the scout win): Gnoll satchel open + Empty negative, field Mending Draught +8 with autosave and Saved pill, sewer pail open + Empty negative, field Hot Meal +6 with autosave, then the Watch bunk's real sleep to 44/14 with no floodplains crossing and no fight (windowed reads: 00-07). Inherited kit/history are setup, not acquisition proof.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "barracks",
+     "deep_tunnels",
+     "floodplains",
+     "sewers",
+     "street"
+    ],
+    "fixtures": [
+     "rest_before_warren_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "watch_bunk_gate",
+   "seed": 9,
+   "fixture": "near_barracks",
+   "note": "#453 P1 negative: before heard_about_cisterns the Watch bunk renders nothing, the barracks count stays 9 and the player walks onto its cell (1,1).",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "barracks",
+     "street"
+    ],
+    "fixtures": [
+     "near_barracks"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "rest_delve_camp",
+   "seed": 9,
+   "fixture": "rest_delve_camp_start",
+   "note": "#453 P4 checkpoint-based (steel_thread step 1229, post-vault 35/49 HP, 0/14 MP): walk out of the halls to the Horns' camp and sleep (full refill, sleep beat, autosave, delve-time line); pause-menu Load of steel_thread step 2921 (horns_dig_started) proves the post-dig line on the same camp. Inherited kit is setup only.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "dungeon_approach",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "rest_delve_camp_after_dig",
+     "rest_delve_camp_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "night_phase",
+     "save"
+    ]
+   }
+  },
+  {
+   "script": "rest_dig_camp",
+   "seed": 9,
+   "fixture": "rest_dig_camp_start",
+   "note": "#453 P5 checkpoint-based (steel_thread step 1405, guardian defeat rollback 35/49 HP, 0/14 MP): sleep on the dig-camp bedroll (full refill, autosave), then win the guardian rested at the ledger's own 49/49, 1/15 exit. Inherited kit is setup only.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "ruin_surface"
+    ],
+    "fixtures": [
+     "rest_dig_camp_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "gate_road_arrows_read",
+   "seed": 9,
+   "fixture": "near_ambush_sneak",
+   "note": "#453 P6: the gate-road quiver read from the road outside the ambush band; scenery only, nothing granted, no fight (windowed reads: 00_arrows_from_the_road, 01_arrows_read).",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "near_ambush_sneak"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe",
+     "sneak"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "pallass_resident_art_peek",
+   "seed": 9,
+   "fixture": "near_pallass_drake",
+   "note": "#513 art proof: QA-only stage_sprite draws the unplaced owned rigs wool_trader, garuda_runner and dullahan_examiner through World's entity-visual path beside Pallass Drake NPCs; pins resolved art, frame counts, feet on the cell edge and idle figure heights; windowed captures include the trader-vs-gnoll_traveler A/B and idle/walk facing lineups",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "near_pallass_drake"
+    ],
+    "skills": [
+     "basic_cleaning"
     ],
     "dialogue": [],
     "systems": [
@@ -7550,6 +9057,40 @@
   }
  ],
  "browser_scripts": [
+  {
+   "script": "consumable_poison_touch",
+   "seed": 9,
+   "fixture": "consumable_poison_defeat_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "Mixed input fixture route: real browser touch potion selection/confirmation, lethal warning and visible phone receipt Close; normal defeat restores precombat stock/vitals. Keyboard route setup, not touch-only or device evidence.",
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "consumable_poison_defeat_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "goblin_parley"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "save"
+    ]
+   }
+  },
   {
    "script": "responsive_field_overflow",
    "seed": 37,
@@ -7808,6 +9349,210 @@
     ],
     "systems": [
      "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "touch_gesture_inventory",
+   "seed": 9,
+   "fixture": "gear_loop_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap",
+    "drag",
+    "cancel"
+   ],
+   "note": "#506 trusted horizontal drift and touch cancellation activate no equipment; subsequent tap activates once. Emulation only.",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "gear_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "touch_gesture_journal",
+   "seed": 9,
+   "fixture": "gear_loop_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap",
+    "drag",
+    "cancel"
+   ],
+   "note": "#506 trusted horizontal drift and touch cancellation assign no Skill; subsequent tap assigns once. Emulation only.",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "gear_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "power_strike"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "touch_opening_continuous",
+   "seed": 9,
+   "fixture": null,
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap",
+    "drag"
+   ],
+   "note": "#506 continuous fresh creation, paid chore, Helper sleep, earned training/Warrior, equipment, aimed combat cancellation and road victory through actual browser contacts. No fixture, keyboard, teleport or sim autoplay. Presentation is accelerated QA; physical phones and human sessions remain #511.",
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking",
+     "piercing_strikes"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "char_creation",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "creation_explanations_touch",
+   "seed": 9,
+   "fixture": null,
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "#507 all six named appearance-only choices, all difficulty explanations before touch commitment and responsive Back/name/setup controls at 130%. Chromium emulation only; physical keyboard and comprehension remain #511.",
+   "surfaces": {
+    "maps": [],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "char_creation",
+     "settings"
+    ]
+   }
+  },
+  {
+   "script": "touch_reference_pages",
+   "seed": 9,
+   "fixture": null,
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap",
+    "drag"
+   ],
+   "note": "Fresh Settings Controls/Help real browser contacts, readable measured geometry at100/115/130, actual scrolling/fixed Back and live narrow resize.",
+   "surfaces": {
+    "maps": [],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "settings"
+    ]
+   }
+  },
+  {
+   "script": "consumable_repeat_touch",
+   "seed": 9,
+   "fixture": "consumable_repeat_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "#568 Chromium touch only: three fixture-owned potions and two viable uses; rapid Use contacts consume once, later deliberate contact consumes next. Stock/HP/MP/exposure explicitly fixture setup; no earned/device claim.",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "consumable_repeat_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "inventory_recovery_equipment_touch",
+   "seed": 9,
+   "fixture": "vitals_lifecycle_start",
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "#571 mixed-input browser inventory: keyboard title/open, actual gear/Use touch. Fixture-owned depleted Mage/food/armor; repeated equip toggles do not heal and final-meal receipt remains readable after armor changes. No combat, acquisition, title-touch timing or device verdict.",
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "vitals_lifecycle_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
      "economy",
      "exploration"
     ]

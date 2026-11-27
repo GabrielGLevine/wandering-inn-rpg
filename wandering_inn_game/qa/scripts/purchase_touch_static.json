@@ -94,7 +94,7 @@
       "locked": false,
       "requirement": "",
       "effect_lines": [
-       "+2 HP",
+       "+2 max HP",
        "Resonance 1"
       ]
      },
@@ -103,7 +103,7 @@
       "locked": true,
       "requirement": "costs 15 gold",
       "effect_lines": [
-       "+1 damage on melee hits",
+       "+1 damage on attacks and weapon Skills",
        "Sword kit replaces other weapon Skills in combat"
       ]
      },
@@ -112,7 +112,7 @@
       "locked": true,
       "requirement": "costs 18 gold",
       "effect_lines": [
-       "+3 HP"
+       "+3 max HP"
       ]
      },
      {
@@ -120,7 +120,7 @@
       "locked": true,
       "requirement": "costs 24 gold",
       "effect_lines": [
-       "+4 HP"
+       "+4 max HP"
       ]
      },
      {
@@ -138,7 +138,7 @@
       "locked": true,
       "requirement": "costs 18 gold",
       "effect_lines": [
-       "+1 damage on ranged hits",
+       "+1 damage on attacks and weapon Skills",
        "Range 4",
        "Bow kit replaces other weapon Skills in combat"
       ]
@@ -146,6 +146,24 @@
     ]
    },
    "timeout_sec": 5
+  },
+  {
+   "_comment": "#513: in the touch layout each locked buy ends in its shortfall (5 gold in hand).",
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "shortfall_rows": [
+     {"row": 2, "text": "needs 10 more gold"},
+     {"row": 3, "text": "needs 13 more gold"},
+     {"row": 4, "text": "needs 19 more gold"},
+     {"row": 7, "text": "needs 13 more gold"}
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_touch_shortfall_rows"
   },
   {
    "action": "touch_dialogue_option",

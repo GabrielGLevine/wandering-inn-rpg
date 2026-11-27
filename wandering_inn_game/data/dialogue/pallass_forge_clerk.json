@@ -3,7 +3,7 @@
  "nodes": {
   "hub": {
    "speaker": "Forge-Tier Clerk",
-   "text": "State your business and your sponsor, or stand aside for the next in line.",
+   "text": "Exam-floor bookings, lift tokens, floor kit. State which, or stand aside for the next in line.",
    "options": [
     {
      "text": "I need clearance for the forge tier.",
@@ -42,7 +42,7 @@
      "goto": "permit_status"
     },
     {
-     "text": "The exam's done. About that stamp.",
+     "text": "Grimalkin wrote my load class. About the token.",
      "requires": {
       "accomplishment": {
        "grimalkin_examination_passed": 1
@@ -76,20 +76,6 @@
     {
      "text": "Not now.",
      "end": true
-    },
-    {
-     "text": "The stamp clerk endorsed the entry side. Countersign the release.",
-     "requires": {
-      "accomplishment": {
-       "queue_notice_endorsed": 1
-      }
-     },
-     "hide_when": {
-      "accomplishment": {
-       "queue_notice_countersigned": 1
-      }
-     },
-     "goto": "queue_release"
     },
     {
      "_comment": "#438 EQUIPMENT GAPS, the two forge-tier retail rows. APPENDED LAST and gated on `pallass_entry_stamped` exactly like the tempering-oil arm above, so they are HIDDEN at every fixture that has not stamped in -- the same shape that kept the oil arm off the earlier pins. Prices are the catalog prices (items.json guardsmans_pike 18, weighted_apron 12), posted-price like everything else this clerk sells: he records fees, he does not haggle.",
@@ -162,10 +148,10 @@
   },
   "permit_intro": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Five gold, filed same-day, no exceptions and no discounts: that is the posted price. Grimalkin reads your fitness afterward, at the exam floor on the far end of this office. I only handle paper.",
+   "text": "Five gold books a slot on the exam floor, same day, posted price. Grimalkin reads you at the far end of this office. The forge tier carries loads all day, and he writes down whether you can.",
    "options": [
     {
-     "text": "File it. (5 gold)",
+     "text": "Book the slot. (5 gold)",
      "requires": {
       "gold": 5
      },
@@ -187,7 +173,7 @@
   },
   "permit_filed_reaction": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Filed. Grimalkin is at the exam floor, far end of this office. See him before you come back asking about a stamp.",
+   "text": "Booked. Chalk your hands at the bucket before you go to him. He notices.",
    "options": [
     {
      "text": "Understood.",
@@ -197,7 +183,7 @@
   },
   "permit_status": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Filed and pending. Grimalkin reads the fitness; he is at the exam floor, far end of this office. This window stamps after he signs. Until his mark arrives, the file sits in my tray.",
+   "text": "Booked and waiting on his read. This window cuts your token after he writes your load class.",
    "options": [
     {
      "text": "Understood.",
@@ -207,10 +193,10 @@
   },
   "collect_stamp": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Grimalkin's mark is on the file. Three gold for the stamp itself: posted price, same as the filing.",
+   "text": "Your load class is on the slate. Three gold for the lift token, posted price, cut to the class he wrote.",
    "options": [
     {
-     "text": "Collect the stamped pass. (3 gold)",
+     "text": "Take the token. (3 gold)",
      "requires": {
       "gold": 3
      },
@@ -232,54 +218,10 @@
   },
   "stamp_reaction": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Stamped. The lift answers to it now. Do not lose the paper. This office does not file duplicates.",
+   "text": "Cut and stamped with your class. The lift answers to it now. Lose it and you sit his read again.",
    "options": [
     {
      "text": "My thanks.",
-     "end": true
-    }
-   ]
-  },
-  "queue_release": {
-   "speaker": "Forge-Tier Clerk",
-   "text": "The release is held pending requisitions filed with the Supply Office, two tiers down. However, an endorsed entry outranks a held release. The rule is posted beside the door, and it has been posted there longer than I have held this window. There is no recorded use of it.",
-   "options": [
-    {
-     "text": "Use it.",
-     "effects": [
-      {
-       "accomplishment": "queue_notice_countersigned"
-      }
-     ],
-     "goto": "queue_release_done"
-    },
-    {
-     "text": "Why has nobody used it?",
-     "goto": "queue_release_why"
-    }
-   ]
-  },
-  "queue_release_why": {
-   "speaker": "Forge-Tier Clerk",
-   "text": "Because you have to walk to the other office first, and everybody assumes the answer is no. On most days that assumption is correct. Today you arrive with an endorsement, and the rule applies.",
-   "options": [
-    {
-     "text": "Then countersign it.",
-     "effects": [
-      {
-       "accomplishment": "queue_notice_countersigned"
-      }
-     ],
-     "goto": "queue_release_done"
-    }
-   ]
-  },
-  "queue_release_done": {
-   "speaker": "Forge-Tier Clerk",
-   "text": "Countersigned. Take it to the consignee. She signs last. The copy stays in my tray; the sheet she signs travels with you.",
-   "options": [
-    {
-     "text": "She signs last.",
      "end": true
     }
    ]

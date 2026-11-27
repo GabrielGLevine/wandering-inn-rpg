@@ -12,21 +12,19 @@ const SLOT_GAP := 6.0
 const END_TURN_GAP := 22.0
 const BOTTOM_MARGIN := 10.0
 const ICON_SIZE := Vector2(28.0, 28.0)
-static var FRAME_TEXTURE: Texture2D = UIChrome.chrome_texture("res://assets/ui/chrome/Carved_9Slides.png")
-static var SELECTED_TEXTURE: Texture2D = UIChrome.chrome_texture("res://assets/ui/chrome/Button_Blue_9Slides.png")
+static var FRAME_TEXTURE: Texture2D = UIChrome.DARK_SLOT
+static var SELECTED_TEXTURE: Texture2D = UIChrome.DARK_SLOT
+const SLOT_INK := Color(0.98, 0.93, 0.81)
+const SELECTION_RIM := Color(0.91, 0.72, 0.36)
 const UNAFFORDABLE_MODULATE := Color(0.55, 0.55, 0.55, 1.0)
-const AP_PIP_COLOR := Color(0.05, 0.05, 0.05)
-const MP_DIAMOND_COLOR := Color(0.1, 0.2, 0.6)
+const AP_PIP_COLOR := SLOT_INK
+const MP_DIAMOND_COLOR := Color(0.66, 0.82, 1.0)
 const COOLDOWN_BADGE_COLOR := Color(0.55, 0.12, 0.08)
 const COOLDOWN_BADGE_RIM := Color(0.98, 0.86, 0.62)
 const COOLDOWN_BADGE_INK := Color(0.99, 0.95, 0.88)
 const COOLDOWN_BADGE_SIZE := 16.0
 const COOLDOWN_BADGE_FONT_PX := 11
-## The key-hint numeral's own ink. The carved slot frame is LIGHT parchment (the
-## AP pips and MP diamonds beside it are both dark for the same reason) -- a
-## first pass here drew the numeral in warm white and it vanished into the
-## corner it sits on, which is the bug it was meant to fix (windowed catch).
-const KEY_HINT_COLOR := Color(0.14, 0.10, 0.06)
+const KEY_HINT_COLOR := SLOT_INK
 
 ## Issue #57: a left-click on a rendered slot activates it EXACTLY as its
 ## number key -- callers (field_hotbar.gd/combat_screen.gd, via combat_hud.gd)
@@ -156,16 +154,20 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 	if not bool(slot.get("affordable", true)):
 		root.modulate = UNAFFORDABLE_MODULATE
 
-	var frame := NinePatchRect.new()
-	frame.texture = SELECTED_TEXTURE if selected else FRAME_TEXTURE
-	frame.patch_margin_left = UIChrome.PATCH_MARGIN
-	frame.patch_margin_right = UIChrome.PATCH_MARGIN
-	frame.patch_margin_top = UIChrome.PATCH_MARGIN
-	frame.patch_margin_bottom = UIChrome.PATCH_MARGIN
-	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	frame.set_anchors_preset(Control.PRESET_FULL_RECT)
+	var frame := UIChrome.make_patch(SELECTED_TEXTURE if selected else FRAME_TEXTURE)
 	root.add_child(frame)
+	if selected:
+		var selection := Panel.new()
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color.TRANSPARENT
+		style.border_color = SELECTION_RIM
+		style.set_border_width_all(2)
+		selection.add_theme_stylebox_override("panel", style)
+		selection.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		UIChrome.full_rect(selection)
+		root.add_child(selection)
 
+	var text_label: Label
 	var icon_id := String(slot.get("icon", ""))
 	if icon_id != "" and WISpriteRegistry.has_sprite(icon_id):
 		var tex_rect := TextureRect.new()
@@ -181,8 +183,9 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 			tex_rect.position.y = _slot_size.y * 0.07
 		root.add_child(tex_rect)
 	else:
-		var text_label := UIChrome.make_label("", "Small")
+		text_label = UIChrome.make_label("", "Small")
 		text_label.text = String(slot.get("fallback_label", slot.get("label", "")))
+		text_label.add_theme_color_override("font_color", SLOT_INK)
 		text_label.set_anchors_preset(Control.PRESET_FULL_RECT)
 		text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		text_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -243,10 +246,19 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		cost.add_theme_color_override("font_color", AP_PIP_COLOR)
 		cost.add_theme_constant_override("line_spacing", 0)
 		cost.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		cost.position = Vector2(2.0, _slot_size.y * 0.4)
-		cost.size = Vector2(_slot_size.x - 4.0, _slot_size.y * 0.58)
 		cost.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		root.add_child(cost)
+		var cost_height := get_theme_font("font", "Label").get_height(_touch_font_size) * (2 if mp_cost > 0 else 1)
+		cost.position = Vector2(2.0, _slot_size.y - cost_height - 2.0)
+		cost.size = Vector2(_slot_size.x - 4.0, cost_height)
+		if text_label != null:
+			text_label.anchor_bottom = 0.0
+			text_label.offset_left = 2.0
+			text_label.offset_top = 2.0
+			text_label.offset_right = -2.0
+			text_label.offset_bottom = cost.position.y - 2.0
+			var line_height := get_theme_font("font", "Small").get_height(_touch_font_size)
+			text_label.max_lines_visible = maxi(1, floori((cost.position.y - 4.0) / line_height))
 
 	# THE COOLDOWN BADGE (GH#337, fixed under GH#386's badge trio). It used to be
 	# a bare numeral at the chip's top-RIGHT, twin in size and weight to the key

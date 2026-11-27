@@ -118,7 +118,7 @@ path = os.environ["MANIFEST_PATH"]
 with open(path) as f:
 	data = json.load(f)
 
-ALLOWED = {"smoke", "full"}
+ALLOWED = {"smoke", "full", "journey"}
 out = []
 for entry in data["scripts"]:
 	name = entry["script"]
@@ -130,9 +130,10 @@ for entry in data["scripts"]:
 	if unknown:
 		print(f"ci_sweep: FATAL — {name} has unknown tier name(s) {unknown} (allowed: {sorted(ALLOWED)})", file=sys.stderr)
 		sys.exit(1)
-	if "smoke" in tiers and "full" not in tiers:
-		print(f"ci_sweep: FATAL — {name} is tagged 'smoke' but not 'full' — smoke must be a structural subset of full", file=sys.stderr)
-		sys.exit(1)
+	for subset in ("smoke", "journey"):
+		if subset in tiers and "full" not in tiers:
+			print(f"ci_sweep: FATAL — {name} is tagged '{subset}' but not 'full' — {subset} must be a structural subset of full", file=sys.stderr)
+			sys.exit(1)
 	out.append(f"{name}:{','.join(tiers)}")
 
 print("\n".join(out))
@@ -147,6 +148,37 @@ declare -a TIER_ENTRIES=()
 while IFS= read -r line; do
 	[ -n "$line" ] && TIER_ENTRIES+=("$line")
 done <<< "$TIER_PAIRS"
+
+# Per-script alarm (#571): a manifest row's optional `timeout_sec` RAISES the
+# alarm for a measured long route (continuous journeys run ~150-215s serially
+# on CI runners); it never lowers the global CI_SWEEP_TIMEOUT.
+TIMEOUT_PAIRS="$(MANIFEST_PATH="$MANIFEST" python3 - <<'PY'
+import json, os, sys
+
+with open(os.environ["MANIFEST_PATH"]) as f:
+	data = json.load(f)
+for entry in data["scripts"]:
+	t = entry.get("timeout_sec")
+	if t is None:
+		continue
+	if not isinstance(t, int) or isinstance(t, bool) or not 1 <= t <= 900:
+		print(f"ci_sweep: FATAL — {entry['script']} timeout_sec must be an integer in 1..900", file=sys.stderr)
+		sys.exit(1)
+	print(f"{entry['script']}:{t}")
+PY
+)" || { echo "ci_sweep: FATAL — timeout_sec check failed; exiting." >&2; exit 1; }
+declare -a TIMEOUT_ENTRIES=()
+while IFS= read -r line; do
+	[ -n "$line" ] && TIMEOUT_ENTRIES+=("$line")
+done <<< "$TIMEOUT_PAIRS"
+
+script_timeout() {
+	local t="$PER_SCRIPT_TIMEOUT" e
+	for e in ${TIMEOUT_ENTRIES[@]+"${TIMEOUT_ENTRIES[@]}"}; do
+		if [ "${e%%:*}" = "$1" ] && [ "${e#*:}" -gt "$t" ]; then t="${e#*:}"; fi
+	done
+	echo "$t"
+}
 
 # has_tier NAME TIER -> 0 iff NAME's manifest entry carries TIER. Linear
 # scan (103 entries, called O(103) times worst case) — bash 3.2 on macOS
@@ -267,7 +299,7 @@ run_one() {
 		# shellcheck disable=SC2206 — tokens are validated space-free at parse
 		ARGS+=($SCRIPT_ARGS)
 	fi
-	perl -e 'alarm shift; exec @ARGV' "$PER_SCRIPT_TIMEOUT" \
+	perl -e 'alarm shift; exec @ARGV' "$(script_timeout "$NAME")" \
 		bash "$RUN_QA" "${ARGS[@]}" >"$LOG" 2>&1
 	echo $? >"$LOGDIR/$NAME.rc"
 }
@@ -298,7 +330,7 @@ for pair in "${RUNLIST[@]}"; do
 		FAILURES=$((FAILURES + 1)); FAILED_NAMES+=("$NAME(missing)")
 		continue
 	fi
-	echo "==> $NAME (seed=$SEED, timeout=${PER_SCRIPT_TIMEOUT}s, jobs=$JOBS${SCRIPT_ARGS:+, args=$SCRIPT_ARGS})"
+	echo "==> $NAME (seed=$SEED, timeout=$(script_timeout "$NAME")s, jobs=$JOBS${SCRIPT_ARGS:+, args=$SCRIPT_ARGS})"
 	if [ "$JOBS" -gt 1 ]; then
 		# macOS ships bash 3.2: `wait -n` is unsupported there (it errors and
 		# the loop busy-spins). Sleep-poll instead — throttle behavior is
@@ -340,13 +372,15 @@ for pair in "${LAUNCHED[@]}"; do
 		echo "----- end $NAME evidence -----"
 	fi
 
-	# Grep discipline: any SCRIPT ERROR / Parse Error / WARNING is a failure.
-	# Zero exemptions — the tree is clean.
-	# Bare `ERROR:` (the Godot engine error prefix) is NOW a failure too —
-	# it slipped the old net (a re-connect/orphan-signal spam printed 242
-	# `ERROR:` lines that ci_sweep read as green, a4 #216 review). Audited
-	# clean across all 148 current logs before widening.
-	HITS="$(grep -nE 'SCRIPT ERROR|Parse Error|WARNING|ERROR:' "$LOG" || true)"
+	# Grep discipline: any SCRIPT ERROR / Parse Error / WARNING / bare `ERROR:`
+	# is a failure (bare `ERROR:` once hid 242 orphan-signal lines, a4 #216).
+	# noise_scan.sh owns the pattern and its single #586 shutdown-leak deferral.
+	# Fail closed: noise_scan exits 1 with hits; any other nonzero is a broken scan.
+	SCAN_RC=0
+	HITS="$("$HERE/noise_scan.sh" "$LOG")" || SCAN_RC=$?
+	if [ "$SCAN_RC" -ne 0 ] && [ "$SCAN_RC" -ne 1 ]; then
+		HITS="noise_scan.sh could not scan $LOG (rc=$SCAN_RC)"
+	fi
 	if [ -n "$HITS" ]; then
 		echo "FAIL  $NAME — log tripped the error/warning grep:"
 		echo "$HITS" | sed 's/^/        /'

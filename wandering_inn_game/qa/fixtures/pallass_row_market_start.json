@@ -1,0 +1,69 @@
+{
+ "_comment": "#513 'Room on the Row' market start for the HELP route and the negatives: pallass_row_start's exact story position (0 gold, sponsored and attuned, stamp NOT taken), already through the Door and standing on the portals row's arrival cell (4,8) on pallass_market. The Door walk itself is pallass_row_scales' subject; these two scripts start where it lands so their own subject (the bale carry, the gates holding in the wrong state) is the whole run. No [Charming Smile]: the help route and the negatives are Skill-free.",
+ "version": 5,
+ "state": {
+  "current_map": "pallass_market",
+  "player_cell": [
+   4,
+   8
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 2
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "catalyst_delivered": 1,
+   "riverfarm_attuned": 1,
+   "blight_lifted": 1,
+   "invrisil_attuned": 1,
+   "won_combat": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1,
+   "pallass_sponsorship_asked": 1,
+   "pallass_sponsored": 1,
+   "pallass_attuned": 1
+  },
+  "gold": 0,
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "papers_for_pallass"
+  ],
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear",
+   "invrisil_attunement_stone",
+   "pallass_attunement_stone"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481",
+  "times_slept": 9
+ }
+}

@@ -4,7 +4,11 @@ extends SceneTree
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var catalog: Dictionary = _load_json("res://data/sprites.json")
-	var expected_counts: Dictionary = _build_expected_counts()
+	## C7: frame-count pins live in data (tools/wire_asset.py appends them).
+	## A sprite animation without a key here is a hard failure below.
+	var fixture: Dictionary = _load_json("res://qa/fixtures/sprite_frame_counts.json")
+	assert(fixture.get("counts") is Dictionary, "sprite_frame_counts.json needs a top-level counts dict")
+	var expected_counts: Dictionary = fixture["counts"]
 	for required_prop: String in ["dusty_scroll", "inn_room_ledger", "cellar_wardwork", "pantry_door_runes", "dirty_table", "bed", "door"]:
 		assert(catalog.has(required_prop), "sprites.json missing field prop sprite: " + required_prop)
 	for required_enemy: String in ["goblin_base", "goblin_female", "goblin_sword", "bat"]:
@@ -12,15 +16,16 @@ func _init() -> void:
 	for sprite_id: String in catalog:
 		assert(WISpriteRegistry.has_sprite(sprite_id), "registry missing sprite: " + sprite_id)
 		var frames: SpriteFrames = WISpriteRegistry.frames_for(sprite_id)
-		var entry: Dictionary = catalog[sprite_id]
+		var resolved: String = WISpriteRegistry.resolved_id(sprite_id)
+		var entry: Dictionary = catalog[resolved]
 		var directional: bool = bool(entry.get("directional", false))
 		for anim_name: String in entry["animations"]:
 			var facings: Array[String] = _facings(directional)
 			for facing: String in facings:
 				var full_name: String = "%s_%s" % [anim_name, facing] if facing != "" else anim_name
 				assert(frames.has_animation(full_name), "%s missing animation: %s" % [sprite_id, full_name])
-				var expected: int = expected_counts.get("%s/%s" % [sprite_id, anim_name], -1)
-				assert(expected >= 0, "no expected frame count for %s/%s" % [sprite_id, anim_name])
+				var expected: int = int(expected_counts.get("%s/%s" % [resolved, anim_name], -1))
+				assert(expected >= 0, "no expected frame count for %s/%s" % [resolved, anim_name])
 				var actual: int = frames.get_frame_count(full_name)
 				var anim_rec: Dictionary = entry["animations"][anim_name]
 				var sheet_key: String = "sheet_%s" % facing if facing != "" else "sheet"
@@ -28,13 +33,15 @@ func _init() -> void:
 					assert(actual >= 1, "%s animation %s: fallback placeholder needs >= 1 frame" % [sprite_id, full_name])
 				else:
 					assert(actual == expected, "%s animation %s: expected %d frames, got %d" % [sprite_id, full_name, expected, actual])
-				_assert_expected_region(sprite_id, full_name, frames.get_frame_texture(full_name, 0))
+				_assert_expected_region(resolved, full_name, frames.get_frame_texture(full_name, 0))
 	_assert_visual_log_assets_are_real(catalog)
 	_assert_no_pc_sprites_in_scene()
 	assert(not WISpriteRegistry.has_sprite("missing_sprite"), "registry should reject unknown sprite ids")
 	_assert_biome_tiles_build()
 	_assert_ice_tile_is_bespoke_and_opaque()
 	_assert_missing_sheet_fallback()
+	_assert_fallback_sprite_resolution()
+	_assert_fallback_target_completeness()
 	print("PASS: sprite registry catalog builds SpriteFrames")
 	quit(0)
 
@@ -133,461 +140,119 @@ func _assert_missing_sheet_fallback() -> void:
 	assert(frames2.get_frame_count("idle") == 4, "region placeholder should yield 4 frames")
 
 
+func _assert_fallback_sprite_resolution() -> void:
+	# Synthetic sheets keep this contract independent of the private overlay.
+	var real_sheet := "res://assets/sprites/door_locked_heavy/Idle-Sheet.png"
+	var missing_sheet := "res://assets/__nonexistent_pack__.png"
+	assert(ResourceLoader.exists(real_sheet), "fixture sheet moved: " + real_sheet)
+	WISpriteRegistry.reset()
+	WISpriteRegistry._load_catalog()
+	var cat: Dictionary = WISpriteRegistry._catalog
+	var owned := {"render_scale": 0.4, "anchor": [0.25, 0.75], "shadow": true,
+		"animations": {"idle": {"sheet": real_sheet, "frame_size": [16, 32],
+			"region": [16, 0, 32, 32], "fps": 2}}}
+	var primary := {"render_scale": 1.0, "anchor": [0.5, 1.0],
+		"fallback_sprite": "__t_owned", "directional": true,
+		"animations": {"idle": {"sheet_down": real_sheet, "sheet_side": real_sheet,
+			"sheet_up": missing_sheet, "frame_size": [64, 64], "fps": 1}}}
+	cat["__t_owned"] = owned
+	cat["__t_missing"] = primary
+	cat["__t_present"] = {"fallback_sprite": "__t_owned",
+		"animations": {"idle": {"sheet": real_sheet, "frame_size": [64, 64], "fps": 1}}}
+	cat["__t_missing_anim"] = cat["__t_present"].duplicate(true)
+	cat["__t_missing_anim"]["animations"]["walk"] = {"sheet": missing_sheet, "frame_size": [64, 64]}
+	assert(WISpriteRegistry.resolved_id("__t_missing") == "__t_owned", "one missing facing must swap the whole entry")
+	assert(WISpriteRegistry.resolved_id("__t_missing_anim") == "__t_owned", "a missing later animation must swap the whole entry")
+	assert(WISpriteRegistry.resolved_id("__t_present") == "__t_present", "present primary must stay primary")
+	assert(WISpriteRegistry.has_sprite("__t_missing"), "existence uses the requested id")
+	assert(not WISpriteRegistry.has_sprite("__t_unknown"), "resolution must not create catalog ids")
+	assert(WISpriteRegistry.resolved_id("__t_unknown") == "__t_unknown", "unknown id stays unknown")
+	assert(WISpriteRegistry.entry_for("__t_unknown").is_empty(), "unknown entry stays empty")
+	assert(WISpriteRegistry.entry_for("__t_missing") == owned, "all presentation fields must follow the fallback")
+	assert(WISpriteRegistry.anchor_for("__t_missing") == Vector2(0.25, 0.75), "anchor must follow fallback art")
+	assert(is_equal_approx(float(WISpriteRegistry.entry_for("__t_missing")["render_scale"]), 0.4), "scale must follow fallback art")
+	var frames := WISpriteRegistry.frames_for("__t_missing")
+	assert(frames == WISpriteRegistry.frames_for("__t_missing"), "requested id must cache frames")
+	assert(frames.has_animation("idle") and not frames.has_animation("idle_down"), "directionality must follow fallback art")
+	assert(frames.get_frame_count("idle") == 2, "frame count must follow fallback region")
+	assert(is_equal_approx(frames.get_animation_speed("idle"), 2.0), "timing must follow fallback art")
+	var tex := frames.get_frame_texture("idle", 0) as AtlasTexture
+	assert(tex.region == Rect2(16, 0, 16, 32), "fallback crop and frame geometry must replace the primary")
+	assert(not WISpriteRegistry.is_fallback_sheet(real_sheet), "owned fallback must load real art")
+	for invalid: Variant in ["__t_nope", "__t_invalid", "__t_chain", "__t_unavailable", "pc_test", 7, "", null]:
+		var id := "__t_bad_%s" % str(invalid)
+		cat[id] = {"fallback_sprite": invalid,
+			"animations": {"idle": {"sheet": missing_sheet, "frame_size": [16, 23], "fps": 1}}}
+		cat["__t_invalid"] = "not an entry"
+		cat["__t_chain"] = {"fallback_sprite": "__t_owned", "animations": owned["animations"]}
+		cat["__t_unavailable"] = {"animations": cat[id]["animations"]}
+		cat["pc_test"] = owned
+		assert(WISpriteRegistry.resolved_id(id) == id, "invalid fallback must retain placeholder path: " + id)
+		var bad_frames := WISpriteRegistry.frames_for(id)
+		assert(bad_frames.get_frame_texture("idle", 0).get_size() == Vector2(16, 23), "invalid fallback must retain primary placeholder geometry")
+	cat["__t_self"] = {"fallback_sprite": "__t_self", "animations": cat["__t_unavailable"]["animations"]}
+	assert(WISpriteRegistry.resolved_id("__t_self") == "__t_self", "self-target must not resolve")
+	primary["animations"]["idle"]["sheet_up"] = real_sheet
+	assert(WISpriteRegistry.resolved_id("__t_missing") == "__t_owned", "resolution must stay consistent with cached frames until reset")
+	WISpriteRegistry.reset()
+	assert(WISpriteRegistry._catalog.is_empty() and WISpriteRegistry._cache.is_empty(), "reset must clear catalog and frames")
+	assert(WISpriteRegistry._resolved_ids.is_empty(), "reset must clear resolved ids")
+	assert(WISpriteRegistry._placeholder_cache.is_empty() and WISpriteRegistry._missing_sheet_logged.is_empty(), "reset must clear placeholder state")
+	WISpriteRegistry._load_catalog()
+	assert(not WISpriteRegistry._catalog.has("__t_missing"), "reset must reload disk without synthetic entries")
+	WISpriteRegistry._catalog["__t_owned"] = owned
+	WISpriteRegistry._catalog["__t_missing"] = primary
+	assert(WISpriteRegistry.resolved_id("__t_missing") == "__t_missing", "reset must reevaluate sheet availability")
+	var fresh := WISpriteRegistry.frames_for("__t_missing")
+	assert(fresh != frames and fresh.has_animation("idle_up"), "reset must rebuild primary frames")
+	WISpriteRegistry.reset()
+
+
+func _assert_fallback_target_completeness() -> void:
+	var real_sheet := "res://assets/sprites/door_locked_heavy/Idle-Sheet.png"
+	var primary := {"fallback_sprite": "__t_target", "animations": {"idle": {
+		"sheet": "res://assets/__nonexistent_pack__.png", "frame_size": [16, 23]}}}
+	var complete := {"directional": true, "animations": {"idle": {
+		"sheet_down": real_sheet, "sheet_side": real_sheet, "sheet_up": real_sheet,
+		"frame_size": [64, 64]}}}
+	for missing_key: String in ["sheet_down", "sheet_side", "sheet_up", "sheet"]:
+		WISpriteRegistry.reset()
+		WISpriteRegistry._load_catalog()
+		var target: Dictionary = complete.duplicate(true) if missing_key != "sheet" else {
+			"animations": {"idle": {"sheet_side": real_sheet, "frame_size": [64, 64]}}}
+		target["animations"]["idle"].erase(missing_key)
+		WISpriteRegistry._catalog["__t_target"] = target
+		WISpriteRegistry._catalog["__t_primary"] = primary
+		assert(WISpriteRegistry.resolved_id("__t_primary") == "__t_primary", "target needs required sheet key: " + missing_key)
+		assert(WISpriteRegistry.frames_for("__t_primary").get_frame_texture("idle", 0).get_size() == Vector2(16, 23), "incomplete target must keep safe primary placeholder")
+		# The same absent key on a primary must select a complete target.
+		WISpriteRegistry.reset()
+		WISpriteRegistry._load_catalog()
+		target["fallback_sprite"] = "__t_target"
+		WISpriteRegistry._catalog["__t_primary"] = target
+		WISpriteRegistry._catalog["__t_target"] = complete
+		assert(WISpriteRegistry.resolved_id("__t_primary") == "__t_target", "primary missing required sheet key must resolve: " + missing_key)
+		assert(WISpriteRegistry.frames_for("__t_primary").has_animation("idle_up"), "complete directional target must build every facing")
+	var invalid_targets: Array = [{}, {"animations": null}, {"animations": []},
+		{"animations": {}}, {"animations": {"idle": null}},
+		{"animations": {"idle": {}}}]
+	for bad_size: Variant in [null, [], [16], [16, 0], ["64", 64], [64, 64, 64]]:
+		invalid_targets.append({"animations": {"idle": {"sheet": real_sheet, "frame_size": bad_size}}})
+	invalid_targets.append({"animations": {"idle": {"sheet": real_sheet}}})
+	for target: Dictionary in invalid_targets:
+		WISpriteRegistry.reset()
+		WISpriteRegistry._load_catalog()
+		WISpriteRegistry._catalog["__t_primary"] = primary
+		WISpriteRegistry._catalog["__t_target"] = target
+		assert(WISpriteRegistry.resolved_id("__t_primary") == "__t_primary", "invalid animation target must not resolve: " + str(target))
+		assert(WISpriteRegistry.frames_for("__t_primary").get_frame_count("idle") == 1, "invalid target must keep safe primary placeholder")
+	WISpriteRegistry.reset()
+
+
 func _load_json(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	assert(parsed is Dictionary, "invalid JSON at " + path)
 	return parsed
-
-
-func _build_expected_counts() -> Dictionary:
-	var counts: Dictionary = {}
-
-	counts["body_a/idle"] = 4      ## 416 / 104 (breathing-idle)
-	counts["body_a/walk"] = 6      ## 624 / 104 (walking)
-	counts["body_a/slice"] = 3     ## 312 / 104 (lead-jab)
-	counts["body_a/cast"] = 6      ## 624 / 104 (fireball; now real down/side/up sheets)
-	counts["body_a/hit"] = 6       ## 624 / 104 (taking-punch)
-	counts["body_a/death"] = 7     ## 728 / 104 (falling-back-death)
-
-	for variant in ["pc_human_m", "pc_human_f", "pc_drake_m", "pc_drake_f", "pc_gnoll_m", "pc_gnoll_f"]:
-		counts["%s/idle" % variant] = 4
-		counts["%s/walk" % variant] = 6
-		counts["%s/slice" % variant] = 3
-		counts["%s/cast" % variant] = 6
-		counts["%s/hit" % variant] = 6
-		counts["%s/death" % variant] = 7
-
-	counts["citizen_f/idle"] = 4   ## 256 / 64
-	counts["citizen_f/walk"] = 6   ## 384 / 64
-
-	counts["dusty_scroll/idle"] = 1
-	## #198 dusty_scroll split: the three inn props' own PixelLab sprites
-	counts["inn_room_ledger/idle"] = 1
-	counts["cellar_wardwork/idle"] = 1
-	counts["pantry_door_runes/idle"] = 1
-	counts["note_pinned/idle"] = 1
-	## #222/#224 batch: stalls, alchemy stations, dormant-guardian marker
-	counts["market_stall_pallass_b/idle"] = 1
-	counts["market_stall_pallass_c/idle"] = 1
-	counts["market_stall_wood/idle"] = 1
-	counts["market_stall_silverfang/idle"] = 1
-	counts["alchemy_bench/idle"] = 1
-	counts["alchemy_still/idle"] = 1
-	counts["alchemy_bench_dark/idle"] = 1
-	counts["alchemy_bench_true/idle"] = 1
-	counts["dormant_guardian_statue/idle"] = 1
-	## #210/#223 character rigs
-	counts["erin/idle"] = 4
-	counts["erin/walk"] = 6
-	counts["rags/idle"] = 4
-	counts["rags/walk"] = 6
-	counts["ruin_warden/idle"] = 4
-	counts["ruin_warden/walk"] = 6
-	counts["ruin_warden/slice"] = 3
-	counts["ruin_warden/hit"] = 6
-	counts["ruin_warden/death"] = 7
-	## #224 batch B: transitions + sewers dressing + the warded-seam tell
-	counts["shaft_ladder/idle"] = 1
-	counts["phosphor_moss/idle"] = 1
-	counts["spider_web/idle"] = 1
-	counts["warded_seam/idle"] = 1
-	counts["dirty_table/idle"] = 1
-	counts["cauldron/idle"] = 1
-	counts["short_order_range/idle"] = 1
-	counts["witch_kettle_hook/idle"] = 1
-	counts["corusdeer_carcass/idle"] = 1
-	counts["bed/idle"] = 1
-	counts["door/idle"] = 1
-
-	counts["rug_woven_cream/idle"] = 1
-	counts["table_brown/idle"] = 1
-	counts["chest/idle"] = 1
-	counts["chest_open/idle"] = 1
-	counts["plant_pot/idle"] = 1
-	counts["bar_counter/idle"] = 1
-	counts["barrel/idle"] = 1
-	counts["crate/idle"] = 1
-	counts["stool/idle"] = 1
-	counts["mushroom/idle"] = 1
-	counts["sconce/idle"] = 4
-
-	for icon_id: String in ["icon_basic_cleaning", "icon_light", "icon_basic_cooking", "icon_observe", "icon_soothe_clientele", "icon_unerring_aim", "icon_sweep_the_tables", "icon_servers_prescience"]:
-		counts[icon_id + "/idle"] = 1
-
-	for icon_id: String in ["icon_charming_smile", "icon_calming_touch"]:
-		counts[icon_id + "/idle"] = 1
-
-	counts["icon_sneak/idle"] = 1
-	counts["icon_invisibility/idle"] = 1
-
-	# Playtest fix wave (finding 3): the martial slate's icons. data_lint's
-	# check_skill_icons is the gate that keeps a field skill from shipping
-	# icon-less again.
-	for icon_id: String in ["icon_even_footing", "icon_greater_strength", "icon_broader_shoulders", "icon_bar_fighting", "icon_rope_work", "icon_basic_repair"]:
-		counts[icon_id + "/idle"] = 1
-
-	for icon_id: String in ["icon_power_shot", "icon_keen_eye", "icon_quick_nock", "icon_piercing_shot", "icon_spellbound_strike", "icon_sudden_strike"]:
-		counts[icon_id + "/idle"] = 1
-
-	for icon_id: String in [
-		"icon_hedge_remedy", "icon_evil_eye", "icon_bone_dart",
-		"icon_deathbolt", "icon_detect_magic", "icon_advanced_cooking",
-		"icon_signature_dish", "icon_eagle_eyes", "icon_marked_quarry",
-	]:
-		counts[icon_id + "/idle"] = 1
-
-	for icon_id: String in ["icon_double_step", "icon_flash_step", "icon_animate_dead", "icon_hearthward_charm", "icon_greater_hearthward"]:
-		counts[icon_id + "/idle"] = 1
-	## Wave D-1 (#155) alchemist kit -- placeholder 16x16 icons (PixelLab drain).
-	for icon_id: String in ["icon_low_grade_synthesis", "icon_cleansing_heat", "icon_magic_water_solvent", "icon_mineral_distillation", "icon_true_synthesis"]:
-		counts[icon_id + "/idle"] = 1
-	## Wave D-2 (#156) tamer/druid kit -- placeholder 16x16 icons (PixelLab drain).
-	for icon_id: String in ["icon_healthy_rearing", "icon_animals_basic_command", "icon_lesser_bond", "icon_beasts_mending", "icon_wild_affinity", "icon_pack_bond", "icon_peace_of_the_wild", "icon_thorn_hand"]:
-		counts[icon_id + "/idle"] = 1
-	## GH#459: directional now (idle keeps its 4 frames per facing, walk is the
-	## template 6-frame cycle).
-	counts["skeleton_ally/idle"] = 4
-	counts["skeleton_ally/walk"] = 6
-	## #460 the crypt-Lich archetype. IDLE ONLY on both rigs, and deliberately: they
-	## are combat-plus-encounter-marker sprites, and combat never plays `walk` (only
-	## world.gd does, for the PC and the companion). 4 = the PixelLab
-	## `breathing-idle` template's own frame count, the skeleton_ally number.
-	counts["crypt_lich/idle"] = 4
-	counts["bone_thrall/idle"] = 4
-	## Second Wind wave (#165) L14 grant kit -- placeholder 16x16 icons (PixelLab drain).
-	for icon_id: String in ["icon_crescent_cut", "icon_pierce_thrust", "icon_ice_wall", "icon_flashfire_spellcraft", "icon_blinding_arrow", "icon_shadowstep", "icon_phantom_barrage", "icon_trusted_voice", "icon_barmaids_prescience", "icon_swift_service", "icon_evaluation_of_wealth", "icon_couriers_double_step", "icon_tea_omens", "icon_flarepepper_supplies", "icon_perfect_reduction", "icon_sworn_fang_ride_together"]:
-		counts[icon_id + "/idle"] = 1
-
-	## GH#145 bespoke rigs (PixelLab drain): ratici sheets are 416/104 idle,
-	## 624/104 walk; hat_stand is a single-frame prop.
-	counts["ratici/idle"] = 4
-	counts["ratici/walk"] = 6
-	counts["hat_stand/idle"] = 1
-	# #423 art follow-ups (2026-08-11): bespoke Pick Lock icon + enchanter set
-	counts["icon_pick_lock/idle"] = 1
-	counts["door_locked_heavy/idle"] = 1
-	counts["enchanter_stock_shelf/idle"] = 1
-	counts["enchanter_vial_case/idle"] = 1
-
-	for icon_id: String in [
-		"icon_appraise_goods", "icon_called_shot", "icon_directed_strike",
-		"icon_disarm_trap", "icon_find_trap", "icon_flame_dart",
-		"icon_flame_pillar", "icon_measured_words", "icon_open_doors",
-		"icon_perfect_hospitality", "icon_piercing_volley", "icon_soothing_presence",
-	]:
-		counts[icon_id + "/idle"] = 1
-
-	## #449 [Spellspear]: the consolidation's own two grants. Code-drawn 16x16
-	## glyphs (PixelLab drain), NEW shapes rather than recolours of their
-	## [Spellsword] twins -- see tools/sync_assets.py's own comment.
-	for icon_id: String in ["icon_keener_point", "icon_spellbound_thrust"]:
-		counts[icon_id + "/idle"] = 1
-
-	## #438 [Deathknight] + [Wild Sage]: their four consolidation-own grants,
-	## same policy. [Skirmisher] adds no row -- [Steady Point] is an ap_cost 0
-	## passive with no `icon` (mirroring [Steady Draw]), and its other L14 grant
-	## is [Dangersense] reused rather than twinned.
-	for icon_id: String in [
-		"icon_grave_edge", "icon_deathbound_strike",
-		"icon_counsel_of_the_wild", "icon_bramble_hand",
-	]:
-		counts[icon_id + "/idle"] = 1
-
-	for visual_log_prop: String in [
-		"dart_slit_tell", "illusory_floor_tell", "delivery_board",
-		"guild_notice_wall", "deep_fissure", "cold_hearth", "gnaw_pile",
-		"warren_mouth", "nest_ledge",
-	]:
-		counts[visual_log_prop + "/idle"] = 1
-
-	counts["shield_spider/idle"] = 4
-	counts["shield_spider/slice"] = 3
-	counts["shield_spider/hit"] = 6
-	counts["shield_spider/death"] = 7
-
-	counts["library_desk/idle"] = 1
-	counts["library_shelf/idle"] = 1
-	counts["sewer_grate/idle"] = 1
-	counts["training_dummy/idle"] = 1
-	counts["royal_soldier/idle"] = 4
-	counts["a_hunter/idle"] = 4
-	counts["a_hunter/walk"] = 6
-
-	## #396 Task 1: a_shepherd succeeds a_hunter on riverfarm_village. Sheet
-	## names and animation keys mirror a_hunter; the FRAME COUNTS do not --
-	## the v3 idle ships its reference pose plus 4 generated frames (5), and
-	## walk is the walking-6-frames template (6, same as a_hunter's Run).
-	counts["a_shepherd/idle"] = 5
-	counts["a_shepherd/walk"] = 6
-
-	## #390: wilovan is a BESPOKE rig, and his COMBAT SET landed 2026-08-05 --
-	## slice/hit/death are real sheets now, pinned at the frame counts v3 actually
-	## produced (reference pose + N generated: 4+1, 4+1, 6+1), which is why slice
-	## and hit no longer carry the borrowed pc_gnoll_m numbers (3 and 6). walk and
-	## cast stay INERT pins -- absent animations are never checked (the loop walks
-	## the ENTRY's animations) -- because nothing in world.gd or board_renderer
-	## plays `walk` for a non-player rig, and his kit carries no spell, so
-	## combat_screen's ranged-cast branch can never pick `cast` for him.
-	for anim_name in [["idle", 4], ["walk", 6], ["slice", 5], ["cast", 6], ["hit", 5], ["death", 7]]:
-		counts["wilovan/%s" % anim_name[0]] = int(anim_name[1])
-
-	## #390 bespoke rigs (OWNED PixelLab v3, 8-dir generated, 3 facings kept +
-	## side mirrored). IDLE ONLY by design: all four are field-only NPCs, so
-	## board_renderer.play_anim's documented fallback (missing anim -> idle_side)
-	## is never reached for them. Wilovan is the exception and keeps his full set
-	## because combatants.json fields him.
-	for bespoke_rig in ["selys", "krshia", "octavia", "ilvo", "gnoll_ranger"]:
-		counts["%s/idle" % bespoke_rig] = 4
-
-	# Playtest fix wave (findings 2, 4, 15): the corusdeer state sprites (a
-	# tint is not a state) and the legible scree dressing.
-	counts["corusdeer_wounded/idle"] = 1
-	counts["scree_spill/idle"] = 1
-
-	## #390 Tier-2/3 art drain: single-frame owned props. `lamb`/`lamb_lying`
-	## ship SPRITE-ONLY (the riverfarm rows that place them are #396's branch),
-	## `corusdeer_stag` replaces the doe rig inside wounded_corusdeer's
-	## visual_states, and `hearth`/`worn_grass_bed`/`rug_woven_cream` moved off
-	## pack regions onto owned sheets -- all still 1 frame, so the pin values
-	## below are unchanged for the three repoints and new for the three adds.
-	for owned_prop in ["lamb", "lamb_lying", "corusdeer_stag", "hearth", "worn_grass_bed", "rug_woven_cream"]:
-		counts["%s/idle" % owned_prop] = 1
-
-	counts["relc/idle"] = 4
-	counts["relc/walk"] = 6
-	counts["relc/slice"] = 3
-
-	counts["pisces/idle"] = 4
-	counts["pisces/walk"] = 6
-
-	counts["olesm/idle"] = 4
-	counts["olesm/walk"] = 6
-	counts["zevara/idle"] = 4
-	counts["zevara/walk"] = 6
-
-	counts["klbkch/idle"] = 4
-	counts["klbkch/walk"] = 6
-	counts["klbkch/slice"] = 3
-
-	counts["ceria/idle"] = 4
-	counts["ceria/walk"] = 6
-	counts["ceria/cast"] = 6
-	counts["yvlon/idle"] = 4
-	counts["yvlon/walk"] = 6
-	counts["yvlon/slice"] = 3
-	counts["ksmvr/idle"] = 4
-	counts["ksmvr/walk"] = 6
-	counts["ksmvr/slice"] = 3
-
-	counts["eloise/idle"] = 4
-	counts["eloise/walk"] = 6
-
-	counts["grimalkin/idle"] = 4
-	counts["grimalkin/walk"] = 6
-	counts["tier_clerk/idle"] = 4
-	counts["tier_clerk/walk"] = 6
-
-	counts["vault_construct/idle"] = 4
-	counts["vault_construct/walk"] = 6
-	counts["vault_construct/slice"] = 3
-
-	counts["antinium_worker/idle"] = 4
-
-	for raskghar_id: String in ["raskghar_scout", "raskghar_awakened"]:
-		counts["%s/idle" % raskghar_id] = 4
-		counts["%s/walk" % raskghar_id] = 6
-		counts["%s/slice" % raskghar_id] = 3
-
-	for e3_static: String in [
-		"hearth", "counter_left", "counter_mid", "counter_right",
-		"shelf_bottles", "window_blue", "food_bread", "food_ham",
-		"food_basket", "rug_woven_red", "facade_plaster", "bush_green",
-		"grass_tuft", "flower_purple", "flower_tiny", "pebble",
-		"boulder", "tree_big",
-		"mushroom_purple_l", "mushroom_purple_m", "mushroom_purple_s",
-		"inn_roof", "tree_round",
-		"pond_reeds",  ## #398 P1 review M2: single-frame Vegetation.png region crop
-	]:
-		counts["%s/idle" % e3_static] = 1
-	counts["grill/idle"] = 4  ## Grill_01-Sheet 256px / 64px frames
-	counts["campfire/idle"] = 4  ## Bonfire strip, 128/32
-
-	for icon_id: String in ["icon_attack", "icon_dash", "icon_power_strike", "icon_flame_bolt", "icon_flame_jet", "icon_frost_bolt"]:
-		counts["%s/idle" % icon_id] = 1
-
-	for icon_id: String in [
-		"icon_second_wind", "icon_piercing_strikes", "icon_quick_slash",
-		"icon_flash_cut", "icon_devastating_slash", "icon_triple_thrust",
-		"icon_extended_sweep", "icon_spear_flurry", "icon_ice_shard",
-		"icon_icy_floor", "icon_flame_scythe", "icon_flare_burst",
-		"icon_keener_edge",
-	]:
-		counts["%s/idle" % icon_id] = 1
-	counts["unlit_lantern/idle"] = 1
-	counts["inn_sign/idle"] = 1
-	counts["wandering_inn_facade/idle"] = 1
-	counts["request_board/idle"] = 1
-	counts["bench/idle"] = 1
-
-	counts["pedestal/idle"] = 1
-	counts["anchor_waystone/idle"] = 1
-	counts["trail_gap/idle"] = 1
-	counts["stairs_up/idle"] = 1
-
-	counts["lyonette/idle"] = 4
-	counts["lyonette/walk"] = 6
-	counts["human_laborer/idle"] = 4
-	counts["human_laborer/walk"] = 6
-	counts["gnoll_traveler/idle"] = 4
-	counts["gnoll_traveler/walk"] = 6
-	counts["drake_patron/idle"] = 4
-	counts["drake_patron/walk"] = 6
-
-	for goblin_id: String in ["goblin_base", "goblin_female", "goblin_sword"]:
-		counts["%s/idle" % goblin_id] = 6
-		counts["%s/walk" % goblin_id] = 6
-	# (b1 #199 interim rows removed 2026-07-19: the c3 bespoke rig landed --
-	# rags counts now live with the other #223 rig rows above.)
-	counts["bat/idle"] = 4
-	counts["bat/move"] = 8
-	counts["bat/hit"] = 4
-	counts["bat/death"] = 6
-
-	counts["garden_door_inner/idle"] = 1
-	counts["garden_fountain_basin/idle"] = 1
-	counts["garden_fountain_statue/idle"] = 1
-
-	counts["memorial_plinth/idle"] = 1
-	counts["memorial_statue_human/idle"] = 1
-	counts["memorial_statue_gnoll/idle"] = 1
-	counts["memorial_statue_drake/idle"] = 1
-	counts["memorial_statue_goblin/idle"] = 1
-
-	for owned_static: String in ["cottage_thatch_a", "cottage_thatch_b", "riverfarm_longhouse",
-			"riverfarm_windmill", "riverfarm_well", "riverfarm_haystack", "riverfarm_scarecrow",
-			"riverfarm_earthwork", "riverfarm_fence_ew", "riverfarm_fence_ns", "riverfarm_dock_pier",
-			"riverfarm_rowboat", "witch_cottage", "riverfarm_witch_elder", "riverfarm_witch_young"]:
-		counts["%s/idle" % owned_static] = 1
-
-	for licensed_static: String in ["crop_row_orange", "crop_row_green", "crop_row_dark_green",
-			"tree_autumn_orange", "tree_autumn_red", "hollow_glow_stone", "hollow_mushroom_cluster",
-			"hollow_canopy_tree", "hollow_small_tree", "hollow_bent_tree"]:
-		counts["%s/idle" % licensed_static] = 1
-
-	counts["river_wolf_idle/idle"] = 4
-
-	counts["rock_crab/idle"] = 4
-
-	counts["briar_collector/idle"] = 1
-	counts["briar_collector_deep/idle"] = 1
-	counts["river_wolf/idle"] = 1
-
-	counts["corusdeer/idle"] = 1
-	## #330 R3: the healed doe's four-frame breathing idle (owned PixelLab rig).
-	counts["corusdeer_doe/idle"] = 4
-	## #330 R3: the deer's bedded hollow (Vegetation atlas region at prop scale).
-	counts["worn_grass_bed/idle"] = 1
-	## #308: the camp hollow's own props (owned PixelLab, one frame each).
-	counts["hide_rack/idle"] = 1
-	counts["drying_rack/idle"] = 1
-	counts["drying_rack_hung/idle"] = 1
-	counts["turf_cut_mouth/idle"] = 1
-	## GH#334: Codex gpt-image concept -> PixelLab image-to-pixelart-pro
-	## hero-art wave (owned, one frame each).
-	counts["codex_hut/idle"] = 1
-	counts["ruin_gate/idle"] = 1
-	counts["rune_door/idle"] = 1
-	counts["wardstone_anchor/idle"] = 1
-	counts["witch_cauldron/idle"] = 1
-	## <!-- v017-L4 BEGIN --> CROSS-OWNERSHIP, DISCLOSED. The v0.17 art lane
-	## owns assets/, data/sprites.json and map sprite fields, and explicitly
-	## NOT .gd files -- but this table is the mechanical mirror of
-	## sprites.json's ids (_build_expected_counts has no default: .get(..., -1)
-	## then assert(expected >= 0), and a failed assert HANGS the headless run),
-	## so a new sprite row cannot ship without its key here. PR #344 set the
-	## same precedent one wave earlier. Appended, never reordered.
-	##
-	## DROPPING THIS BLOCK: it is only safe to remove together with the data
-	## rows it mirrors, or the suite goes red. The complete, mechanically
-	## derived recipe -- three sprite rows, three map sprite fields, three
-	## keys, and nothing else in data/ references these ids:
-	##   data/sprites.json                              drop "temper_bench"
-	##   data/maps/pallass/pallass_forge_hall.json:179  -> "forge_station"
-	##   data/sprites.json                              drop "wax_seal_tray"
-	##   data/maps/invrisil/stationer.json:309          -> "crate"
-	##   data/sprites.json                              drop "shop_oil_lamp"
-	##   data/maps/pallass/pallass_den_shop.json:150    -> "crystal_lamp"
-	##   the three counts lines below
-	## Both states were RUN in the v0.17 fix wave and both print
-	## "PASS: sprite registry catalog builds SpriteFrames". Reverting this
-	## .gd hunk on its own is the one combination that is red.
-	counts["temper_bench/idle"] = 1
-	counts["wax_seal_tray/idle"] = 1
-	counts["shop_oil_lamp/idle"] = 1
-	## <!-- v017-L4 END -->
-	counts["razorbeak/idle"] = 1
-	## GH#156 follower visuals, given their OWN directional dirs by GH#459 (they
-	## no longer alias the combat sheets). Idle keeps its single static frame per
-	## facing; walk is the 6-frame cycle every directional rig here uses.
-	counts["wolf_companion/idle"] = 1
-	counts["wolf_companion/walk"] = 6
-	counts["razorbeak_companion/idle"] = 1
-	counts["razorbeak_companion/walk"] = 6
-	counts["mothbear/idle"] = 1
-	counts["kingslayer_spider/idle"] = 1
-	counts["forge_golem/idle"] = 1
-	counts["watchgolem/idle"] = 1
-
-	counts["hired_blade/idle"] = 4
-	counts["hired_blade/walk"] = 6
-
-	## v0.16.1 art wave: idle-only PixelLab v3 rigs, one frame per facing.
-	## GH#409: the four Invrisil rigs the corrected census found TRULY static
-	## now carry a breathing idle per facing (frame 0 is the shipped rest
-	## pose, byte-identical -- see sprites.json). #409 review H3 widened them
-	## from 2 to the FAMILY STANDARD 4 frames @ fps 6: a 2-frame loop is a
-	## 3 Hz toggle, not a breath, and 41 other rigs already ship 4.
-	## `city_runner` was not in that census and stays a 1-frame rig.
-	for idle_breathing_rig: String in ["invrisil_lady_client", "master_coyle", "hedault",
-			"city_scribe"]:
-		counts["%s/idle" % idle_breathing_rig] = 4
-	counts["city_runner/idle"] = 1
-	counts["coyle_shop_sign/idle"] = 1
-
-	for invrisil_owned_static: String in ["plaza_fountain", "street_lamp", "coin_shop_sign", "guild_banner"]:
-		counts["%s/idle" % invrisil_owned_static] = 1
-
-	counts["dungeon_statue/idle"] = 1
-	counts["dungeon_rubble/idle"] = 1
-	counts["pressure_plate/idle"] = 1
-	counts["snare_coil/idle"] = 1
-	counts["illusory_floor_tell/idle"] = 1
-
-	for pallass_static: String in ["great_lift", "crystal_lamp", "steam_vent",
-			"price_board", "forge_station", "market_stall_pallass", "tier_wall",
-			"anchor_waystone_slate"]:
-		counts["%s/idle" % pallass_static] = 1
-
-	# GH#184 city gate set (PixelLab statics)
-	counts["city_gatehouse/idle"] = 1
-	counts["city_gate_arch/idle"] = 1
-
-	# GH#398 skill-gated-area carriers (OWNED PixelLab statics, one frame each):
-	# briar_wall is the P5 burns/cuts blocker, pond_cache the P1 island reward.
-	counts["briar_wall/idle"] = 1
-	counts["pond_cache/idle"] = 1
-
-	# GH#408 prop-variety pass (OWNED PixelLab statics, one frame each). The
-	# first four are SOLID and carry a matching SOLID_DECOR_SPRITES entry in
-	# scripts/data_lint.py; `battle_debris` is flat ground scatter and stays
-	# walkable, which is why it is deliberately absent from that set.
-	# #409 review H2: `crate_submerged` is GONE -- floodplains' frozen_cache
-	# is invisible:true (submerged under silt), so no sprite backs it.
-	for variety_prop: String in ["grain_sacks", "basket_stack",
-			"firewood_stack", "rubble_pile", "battle_debris"]:
-		counts["%s/idle" % variety_prop] = 1
-
-	return counts
 
 
 func _facings(directional: bool) -> Array[String]:
@@ -606,6 +271,9 @@ func _assert_expected_region(sprite_id: String, full_name: String, tex: Texture2
 		return
 	var atlas := tex as AtlasTexture
 	assert(atlas != null, "%s %s should use an atlas texture" % [sprite_id, full_name])
+	# The row layout belongs to the shared goblin sheet; owned goblin rigs use one sheet per facing.
+	if atlas.atlas == null or not atlas.atlas.resource_path.ends_with("goblin-spritesheet.png"):
+		return
 	var expected_y := -1
 	if full_name.ends_with("_down"):
 		expected_y = 0

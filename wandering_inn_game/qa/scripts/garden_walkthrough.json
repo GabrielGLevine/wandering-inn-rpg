@@ -309,7 +309,9 @@
    "payload_contains": {
     "map": "garden_sanctuary",
     "floor_cells": 168,
-    "blocked_cells": 48
+    "blocked_cells": 50,
+    "ground_transitions": 1,
+    "boundary_toned": true
    },
    "timeout_sec": 5
   },

@@ -1,0 +1,327 @@
+{
+ "_comment": "#507 six selected identities, all difficulty effects before touch commitment, Back and named controls at 130% through actual browser touch. Settings writes are setup, not gameplay evidence. Physical keyboard/device acceptance remains #511.",
+ "starts_at_title": true,
+ "creation_ui": true,
+ "fail_fast": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 15
+  },
+  {
+   "action": "touch_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 15
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 2
+  },
+  {
+   "action": "touch_title_row",
+   "row": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "step": "pick"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_picker_130"
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name",
+    "selected_identity": "Human \u00b7 man \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_back"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick",
+    "selected_identity": "Human \u00b7 man \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name",
+    "selected_identity": "Drake \u00b7 man \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_back"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick",
+    "selected_identity": "Drake \u00b7 man \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name",
+    "selected_identity": "Gnoll \u00b7 man \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_back"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick",
+    "selected_identity": "Gnoll \u00b7 man \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 4
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name",
+    "selected_identity": "Human \u00b7 woman \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_back"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick",
+    "selected_identity": "Human \u00b7 woman \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name",
+    "selected_identity": "Drake \u00b7 woman \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_back"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick",
+    "selected_identity": "Drake \u00b7 woman \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 6
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name",
+    "selected_identity": "Gnoll \u00b7 woman \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_back"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick",
+    "selected_identity": "Gnoll \u00b7 woman \u2014 appearance only"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 6
+  },
+  {
+   "action": "screenshot",
+   "name": "01_name_130"
+  },
+  {
+   "action": "touch_creation_begin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "difficulty",
+    "difficulty_explanation": "Hits on you: Bronze hurts less, Silver is standard, Gold hurts more. Change it later in Settings."
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "02_all_difficulties_130"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "hints"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "screenshot",
+   "name": "03_hints_130"
+  },
+  {
+   "action": "touch_creation_back"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "hints"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_creation_layout"
+  },
+  {
+   "action": "touch_creation_card",
+   "card": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_settings_value",
+   "path": "difficulty_step",
+   "equals": 0
+  },
+  {
+   "action": "assert_settings_value",
+   "path": "show_quest_hints",
+   "equals": false
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_race",
+   "equals": "gnoll"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_gender",
+   "equals": "f"
+  }
+ ]
+}

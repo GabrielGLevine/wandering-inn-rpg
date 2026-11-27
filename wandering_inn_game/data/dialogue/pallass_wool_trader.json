@@ -1,0 +1,184 @@
+{
+ "_comment": "#513 'Room on the Row'. Voice: character-profiles.md 'Gnoll Wool Trader' (T2, Plains Gnoll; ', yes?' at most once per node, 'Hrr.' once in the file). NEW graph on a NEW entity, so no shipped hub index moves. Start row needs no gold or stamp: the quest is startable on arrival with 0g, before the lift pass.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Gnoll Wool Trader",
+   "text": "Plains wool, washed twice and baled tight. I came up through the Door with six bales and my grandmother's weights. The row has a counter free. They say my weights are Gnoll weights.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "wool_trade_started": 1
+      }
+     },
+     "text": "You came back. That counter on the row is still empty. I can see it from here, yes?"
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "trader_placed": 1
+      }
+     },
+     "text": "Hrr. You have news on your face. Sit on a bale and tell me."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "wool_trade_settled": 1,
+       "wool_consigned": 1
+      }
+     },
+     "text": "The den keeper sent one of her small ones up the row with a jar for me. Two more bales go down to her shelf tomorrow."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "wool_trade_settled": 1,
+       "row_opened": 1
+      }
+     },
+     "text": "First bell tomorrow I set up at counter three. The brass goes in the cloth at night and on the counter in the morning."
+    }
+   ],
+   "options": [
+    {
+     "text": "I'll talk to the row.",
+     "hide_when": {
+      "accomplishment": {
+       "wool_trade_started": 1
+      }
+     },
+     "effects": [
+      {
+       "quest": "room_on_the_row"
+      },
+      {
+       "accomplishment": "wool_trade_started"
+      }
+     ],
+     "goto": "started"
+    },
+    {
+     "text": "What's wrong with Gnoll weights?",
+     "goto": "weights"
+    },
+    {
+     "_comment": "HELP route pointer. Hidden until the quest starts, gone once she has a place to sell.",
+     "text": "Where else could you sell it?",
+     "requires": {
+      "accomplishment": {
+       "wool_trade_started": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "trader_placed": 1
+      }
+     },
+     "goto": "elsewhere"
+    },
+    {
+     "_comment": "REPORT. Either route banks trader_placed; the payout is one-shot (hide_when on its own terminal).",
+     "text": "[Tell her where she is selling.]",
+     "requires": {
+      "accomplishment": {
+       "trader_placed": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "wool_trade_settled": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "wool_trade_settled"
+      },
+      {
+       "gold": 12
+      },
+      {
+       "item": "plains_wool_bale"
+      }
+     ],
+     "goto": "payoff"
+    },
+    {
+     "text": "Good luck with it.",
+     "end": true
+    }
+   ]
+  },
+  "started": {
+   "speaker": "Gnoll Wool Trader",
+   "text": "Good. Start with the stallkeeper at the middle stall, under the green awning. She is the one who tells the story.",
+   "options": [
+    {
+     "text": "What story?",
+     "goto": "weights"
+    },
+    {
+     "text": "I'll find her.",
+     "end": true
+    }
+   ]
+  },
+  "weights": {
+   "speaker": "Gnoll Wool Trader",
+   "text": "Brass, cast in Liscor, the same as theirs. Somebody here was cheated once by a trader with a hollow weight. She tells it to everyone who stops at her stall.",
+   "options": [
+    {
+     "text": "About the row, then.",
+     "goto": "hub"
+    },
+    {
+     "text": "I'll let you get on.",
+     "end": true
+    }
+   ]
+  },
+  "elsewhere": {
+   "speaker": "Gnoll Wool Trader",
+   "text": "The den shop up by the stalls, the door with the painted sign. The keeper says she has a shelf if the wool gets there. Two bales fit it. I cannot carry them and stand here with the rest, yes?",
+   "options": [
+    {
+     "text": "I'll carry two.",
+     "end": true
+    },
+    {
+     "text": "About the row, then.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "payoff": {
+   "speaker": "Gnoll Wool Trader",
+   "text": "Twelve gold. And take a bale with you. Somebody on this tier pays for good wool.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "wool_consigned": 1
+      }
+     },
+     "text": "The den keeper's small one brought up twelve gold from the shelf. It is yours. Take a bale too. Somebody on this tier pays for good wool."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "row_opened": 1
+      }
+     },
+     "text": "Counter three, from first bell tomorrow. Here, twelve gold, out of what the row's regulars bought today. Take a bale too. Somebody on this tier pays for good wool."
+    }
+   ],
+   "options": [
+    {
+     "text": "Sell well.",
+     "end": true
+    }
+   ]
+  }
+ }
+}

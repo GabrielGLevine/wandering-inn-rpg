@@ -47,6 +47,30 @@
   {"action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5},
   {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
   {"action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5},
+  {
+   "action": "assert_event_logged",
+   "type": "ui_combatant_visual_rendered",
+   "payload_contains": {
+    "id": "watchgolem_a",
+    "sprite": "watchgolem_harvest",
+    "resolved_sprite": "watchgolem_harvest",
+    "animation": "idle"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_combatant_visual_rendered",
+   "payload_contains": {
+    "id": "watchgolem_b",
+    "sprite": "watchgolem_harvest",
+    "resolved_sprite": "watchgolem_harvest",
+    "animation": "idle"
+   }
+  },
+  {
+   "action": "assert_combat_layout",
+   "desktop": true
+  },
   {"action": "screenshot", "name": "watchgolems_combat"},
   {"action": "combat_autoplay", "max_turns": 200},
   {"action": "wait_for_event", "type": "combat_finished", "payload_contains": {"victory": true}, "timeout_sec": 20},

@@ -12,6 +12,8 @@ const ACTION_KEYS := {
 	"cancel": KEY_ESCAPE,
 	"cycle": KEY_TAB,
 	"hotbar_prime": KEY_TAB,
+	"slot_prev": KEY_BRACKETLEFT,
+	"slot_next": KEY_BRACKETRIGHT,
 	"field_readout": KEY_H,
 	"journal": KEY_J,
 	"inventory": KEY_I,
@@ -60,7 +62,10 @@ var _out_dir := ""
 var _capture_depth := 0
 var _failures: PackedStringArray = []
 var _events_seen: Array = []
+var _initial_title_gate_seen := false
+var _initial_web_draw_seen := false
 var _last_purchase_buy_pos := Vector2.ZERO
+var _recorded_world_view := Rect2()
 var _screenshots: PackedStringArray = []
 var _wait_cursor := 0
 var _wants_creation_ui := false
@@ -139,13 +144,15 @@ func _ready() -> void:
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
+	if type == "ui_title_gate_rendered":
+		_initial_title_gate_seen = true
 	var event := {"type": type, "payload": payload}
 	if OS.has_feature("web"):
 		event["browser_time_ms"] = JavaScriptBridge.eval("performance.now()", true)
 		if type == "ui_purchase_confirm_rendered":
 			var panel := get_tree().root.find_child("PurchaseConfirm", true, false)
 			var buy_rect: Rect2 = panel.call("row_rect", 1)
-			var buy_pos := get_viewport().get_screen_transform() * buy_rect.get_center()
+			var buy_pos := WIResponsiveLayout.css_transform(get_viewport()) * buy_rect.get_center()
 			event["buy_window_pos"] = [buy_pos.x, buy_pos.y]
 	_events_seen.append(event)
 
@@ -163,11 +170,36 @@ func _run() -> void:
 	real_message_timing = bool(parsed.get("qa_real_message_timing", false)) \
 		or _truthy(String(QAPaths.user_args().get("qa-real-message-timing", "")))
 	_fail_fast = _fail_fast or bool(parsed.get("fail_fast", false))
+	var steps: Array = parsed["steps"]
+	_steps_total = steps.size()
+	if OS.has_feature("web") and int(JavaScriptBridge.eval("window.__WI_QA__?.wait_for_runner_ready === true ? 1 : 0", true)) == 1:
+		var startup_deadline := Time.get_ticks_msec() + RUNNER_STARTUP_DEADLINE_MSEC
+		var runner_ready := false
+		var draw_connected := false
+		var engine_ready_published := false
+		while Time.get_ticks_msec() < startup_deadline:
+			if _initial_title_gate_seen and not draw_connected:
+				RenderingServer.frame_post_draw.connect(_on_initial_web_draw, CONNECT_ONE_SHOT)
+				draw_connected = true
+			if _initial_web_draw_seen and not engine_ready_published:
+				JavaScriptBridge.eval("window.__WI_QA_ENGINE_READY__ = {initial_draw_complete: true, rendered_at_ms: performance.now()}", true)
+				ObservableBus.emit_domain_event("qa_engine_ready", {"initial_ui": "ui_title_gate_rendered"})
+				engine_ready_published = true
+			if engine_ready_published and int(JavaScriptBridge.eval("window.__WI_QA_RUNNER_READY__ === true ? 1 : 0", true)) == 1:
+				runner_ready = true
+				break
+			await get_tree().process_frame
+		if RenderingServer.frame_post_draw.is_connected(_on_initial_web_draw):
+			RenderingServer.frame_post_draw.disconnect(_on_initial_web_draw)
+		if not runner_ready:
+			_fail("web runner startup readiness was not received within 30000ms; no QA steps run")
+			_aborted = true
+			_finish()
+			return
+		ObservableBus.emit_domain_event("qa_runner_ready", {})
 	_install_fixture_saves(parsed.get("fixture_save"))
 	if not bool(parsed.get("starts_at_title", false)):
 		await _skip_title()
-	var steps: Array = parsed["steps"]
-	_steps_total = steps.size()
 	for i: int in steps.size():
 		_step_index = i
 		_steps_run = i + 1
@@ -181,6 +213,11 @@ func _run() -> void:
 			break
 	_finish()
 
+
+const RUNNER_STARTUP_DEADLINE_MSEC := 30000
+
+func _on_initial_web_draw() -> void:
+	_initial_web_draw_seen = true
 
 func _install_fixture_saves(spec: Variant) -> void:
 	if spec == null:
@@ -247,6 +284,36 @@ func _execute(step: Dictionary) -> void:
 		"wait_frames":
 			for i in int(step.get("frames", 1)):
 				await get_tree().process_frame
+		"wait_seconds":
+			await get_tree().create_timer(float(step["seconds"])).timeout
+		"queue_domain_event":
+			ObservableBus.emit_domain_event(String(step["type"]), step.get("payload", {}))
+			await get_tree().process_frame
+		"begin_production_message_timing":
+			var layer := get_tree().root.find_child("MessageLayer", true, false)
+			var wait_msec := int(clampf(float(step.get("timeout_sec", 15.0)), 1.0, 120.0) * 1000.0)
+			var deadline := Time.get_ticks_msec() + wait_msec
+			while layer != null and (bool(layer.get("_toast_draining")) or not (layer.get("_toast_queue") as Array).is_empty()) and Time.get_ticks_msec() < deadline:
+				await get_tree().process_frame
+			if layer == null or bool(layer.get("_toast_draining")) or not (layer.get("_toast_queue") as Array).is_empty():
+				_fail("begin_production_message_timing: earlier messages did not drain")
+			else:
+				real_message_timing = true
+				ObservableBus.emit_domain_event("qa_production_message_timing_enabled", {})
+			await get_tree().process_frame
+		"assert_message_visible":
+			_assert_message_visible(step)
+		"end_production_message_timing":
+			real_message_timing = false
+			ObservableBus.emit_domain_event("qa_production_message_timing_disabled", {})
+		"assert_recent_message_count":
+			var recent_count := 0
+			var message_script: GDScript = load("res://src/ui/message_layer.gd")
+			for message: String in message_script.recent_messages:
+				if message.contains(String(step["text_contains"])):
+					recent_count += 1
+			if recent_count != int(step["count"]):
+				_fail("assert_recent_message_count: got %d, expected %d" % [recent_count, int(step["count"])])
 		"press":
 			if String(step.get("device", "keyboard")) == "gamepad":
 				_inject_gamepad_action(String(step["name"]))
@@ -449,13 +516,26 @@ func _execute(step: Dictionary) -> void:
 			# web: an unserviced request FAILS the step (see _touch_at).
 			await _touch_at(Vector2(float(step["pos"][0]), float(step["pos"][1])), "screen")
 		"touch_cell":
-			var touch_cell := Vector2i(int(step["cell"][0]), int(step["cell"][1]))
-			var touch_world := Vector2(touch_cell) * float(CELL) + Vector2(CELL, CELL) * 0.5
-			var touch_screen_pos: Variant = _world_to_screen(touch_world)
-			if touch_screen_pos == null:
-				_fail("touch_cell: could not resolve Main.world_to_screen")
-			else:
-				await _touch_at(touch_screen_pos as Vector2, "cell")
+			await _touch_cell(Vector2i(int(step["cell"][0]), int(step["cell"][1])))
+		"touch_walk":
+			var direction := Vector2i(int(step["direction"][0]), int(step["direction"][1]))
+			var until: Array = step.get("until_cell", [])
+			var goal := Vector2i(int(until[0]), int(until[1])) if until.size() == 2 else Vector2i.ZERO
+			for i in int(step.get("steps", 1)):
+				if until.size() == 2 and Game.sim.player_cell == goal:
+					break
+				var target: Vector2i = Game.sim.player_cell + direction
+				await _touch_cell(target)
+				var deadline := Time.get_ticks_msec() + 3000
+				while Game.sim.player_cell != target and Time.get_ticks_msec() < deadline:
+					await get_tree().process_frame
+				if Game.sim.player_cell != target:
+					_fail("touch_walk: did not reach " + str(target))
+					break
+			if until.size() == 2 and Game.sim.player_cell != goal:
+				_fail("touch_walk: did not reach stopping cell " + str(goal))
+		"touch_combat_finish":
+			await _touch_combat_finish(int(step.get("max_actions", 200)), String(step.get("skill", "")))
 		"touch_hotbar_slot":
 			var hotbar := _resolve_hotbar_node()
 			if hotbar == null:
@@ -468,6 +548,32 @@ func _execute(step: Dictionary) -> void:
 					await _touch_at(rect.get_center(), "touch_hotbar_slot")
 		"touch_title_row":
 			await _touch_rect_of("TitleScreen", "row_rect", int(step["row"]) - 1, "touch_title_row")
+		"touch_creation_card":
+			await _touch_rect_of("CharCreation", "card_rect", int(step["card"]) - 1, "touch_creation_card")
+		"touch_creation_back", "touch_creation_begin":
+			var creation := get_tree().root.find_child("CharCreation", true, false)
+			var method := "back_button_rect" if String(step["action"]) == "touch_creation_back" else "begin_button_rect"
+			if creation == null:
+				_fail("touch_creation: no character creation screen")
+			else:
+				var rect: Rect2 = creation.call(method)
+				if rect.size == Vector2.ZERO:
+					_fail("touch_creation: control has no rendered rect")
+				else:
+					await _touch_at(rect.get_center(), String(step["action"]))
+		"touch_field_skill":
+			var field := get_tree().root.find_child("FieldHotbar", true, false)
+			var skill_id := String(step["skill"])
+			var index: int = (Game.sim.field_hotbar_loadout() as Array).find(skill_id)
+			if index < 0 or field == null:
+				_fail("touch_field_skill: skill is not on the live bar: " + skill_id)
+			else:
+				await _touch_field_page_to(field, index)
+				var rect: Rect2 = field.hotbar_node().slot_rect(index)
+				if rect.size == Vector2.ZERO:
+					_fail("touch_field_skill: skill has no rendered control")
+				else:
+					await _touch_at(rect.get_center(), "touch_field_skill")
 		"touch_dialogue_option":
 			await _touch_rect_of("DialoguePanel", "option_rect", int(step["option"]) - 1, "touch_dialogue_option", step.get("gesture", {}))
 		"touch_field_chip":
@@ -486,8 +592,38 @@ func _execute(step: Dictionary) -> void:
 			await _touch_field_pages()
 		"touch_scroll_field_to_end":
 			await _touch_scroll_field_to_end()
+		"wheel_scroll_field_to_end":
+			await _wheel_scroll_field_to_end()
+		"assert_field_readout_selection_visible":
+			await _assert_field_readout_selection_visible()
+		"touch_inventory_item":
+			await _touch_inventory_item(String(step["item"]))
+		"wait_item_use_ready":
+			var presenter := get_tree().get_first_node_in_group("wi_item_use_presenter")
+			var deadline := Time.get_ticks_msec() + int(float(step.get("timeout_sec", 15)) * 1000.0)
+			if presenter == null:
+				_fail("wait_item_use_ready: item-use presenter is absent")
+			else:
+				while presenter.item_use_busy() and Time.get_ticks_msec() < deadline:
+					await get_tree().process_frame
+				if presenter.item_use_busy():
+					_fail("wait_item_use_ready: receipt/input guard did not release")
+		"touch_inventory_use":
+			await _touch_rect_of("Inventory", "item_use_rect", null, "touch_inventory_use", step.get("gesture", {}))
+		"touch_inventory_bar":
+			await _touch_rect_of("Inventory", "item_bar_rect", null, "touch_inventory_bar", step.get("gesture", {}))
+		"touch_item_warning_cancel", "touch_item_warning_confirm", "touch_item_receipt_close":
+			var action := String(step["action"])
+			var presenter := get_tree().get_first_node_in_group("wi_item_use_presenter")
+			if presenter == null:
+				_fail("%s: item-use presenter is absent" % action)
+			else:
+				var method: String = {"touch_item_warning_cancel": "item_warning_cancel_rect", "touch_item_warning_confirm": "item_warning_confirm_rect", "touch_item_receipt_close": "item_receipt_close_rect"}[action]
+				await _touch_rect_of(String(presenter.name), method, null, action, step.get("gesture", {}))
 		"touch_inventory_row":
-			await _touch_rect_of("Inventory", "item_row_rect", int(step["row"]) - 1, "touch_inventory_row")
+			await _touch_rect_of("Inventory", "item_row_rect", int(step["row"]) - 1, "touch_inventory_row", step.get("gesture", {}))
+		"touch_journal_skill":
+			await _touch_rect_of("Journal", "skill_row_rect", String(step["skill"]), "touch_journal_skill", step.get("gesture", {}))
 		"touch_journal_tab":
 			await _touch_rect_of("Journal", "tab_rect", String(step["tab"]), "touch_journal_tab")
 		"touch_inventory_equipment":
@@ -505,7 +641,7 @@ func _execute(step: Dictionary) -> void:
 				var rect: Rect2 = inventory.visible_content_rect() if action == "touch_scroll_equipment" else inventory.list_rect()
 				var start := rect.position + rect.size * Vector2(0.5, 0.8)
 				var end := rect.position + rect.size * Vector2(0.5, 0.2)
-				var window_end := get_viewport().get_screen_transform() * end
+				var window_end := WIResponsiveLayout.css_transform(get_viewport()) * end
 				await _touch_at(start, action, {"drag": true, "end_x": window_end.x, "end_y": window_end.y})
 		"assert_equipment_bottom_visible":
 			await _settle_for_capture()
@@ -519,6 +655,41 @@ func _execute(step: Dictionary) -> void:
 					_fail("assert_equipment_bottom_visible: last accessory is clipped")
 		"touch_settings_row":
 			await _touch_rect_of("SettingsPanel", "row_rect", int(step["row"]) - 1, "touch_settings_row")
+		"touch_reference_back":
+			await _touch_rect_of("SettingsPanel", "reference_back_rect", null, "touch_reference_back")
+		"scroll_reference":
+			var panel := get_tree().root.find_child("SettingsPanel", true, false)
+			if panel == null or panel.reference_scroll_rect().size == Vector2.ZERO:
+				_fail("scroll_reference: no visible reference page")
+			else:
+				var before: Dictionary = panel.reference_layout_snapshot()
+				var rect: Rect2 = panel.reference_scroll_rect()
+				var end := WIResponsiveLayout.css_transform(get_viewport()) * (rect.position + rect.size * Vector2(0.5, 0.2))
+				await _touch_at(rect.position + rect.size * Vector2(0.5, 0.8), "scroll_reference", {"drag": true, "end_x": end.x, "end_y": end.y})
+				await _settle_for_capture()
+				var after: Dictionary = panel.reference_layout_snapshot()
+				if float(before.scroll_max) > 0.5 and int(after.scroll_y) <= int(before.scroll_y):
+					_fail("scroll_reference: content did not scroll")
+				if before.back_rect != after.back_rect:
+					_fail("scroll_reference: Back moved with the content")
+		"assert_reference_layout":
+			await _assert_reference_layout()
+		"touch_combat_banner":
+			await _settle_for_capture()
+			var screen := get_tree().root.find_child("CombatScreen", true, false)
+			var banner: Control = screen.get("_hud").get("_banner_panel") if screen != null else null
+			if banner == null or not banner.is_visible_in_tree():
+				_fail("touch_combat_banner: no visible result ribbon")
+			else:
+				await _touch_at(banner.get_global_rect().get_center(), "combat_banner")
+		"assert_combat_banner":
+			await _settle_for_capture()
+			var combat_screen := get_tree().root.find_child("CombatScreen", true, false)
+			var label: Label = combat_screen.get("_hud").get("_banner_label") if combat_screen != null else null
+			if label == null or not label.is_visible_in_tree() or not label.text.contains(String(step["text_contains"])):
+				_fail("assert_combat_banner: expected visible result text")
+			elif not WIResponsiveLayout.safe_rect(get_viewport()).encloses(label.get_global_rect()) or label.get_theme_font("font").get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, label.get_theme_font_size("font_size")).x > label.size.x + 0.1:
+				_fail("assert_combat_banner: result text is clipped")
 		"touch_purchase_row":
 			await _touch_rect_of("PurchaseConfirm", "row_rect", 1 if String(step["row"]) == "buy" else 0, "touch_purchase_row", step.get("gesture", {}))
 		"click_purchase_row":
@@ -729,15 +900,17 @@ func _execute(step: Dictionary) -> void:
 		"assert_message_layout":
 			await _assert_message_layout(String(step.get("kind", "dialogue")))
 		"assert_dialogue_layout":
-			await _assert_dialogue_layout()
+			await _assert_dialogue_layout(step)
 		"assert_dialogue_displayed":
 			await _assert_dialogue_displayed(step)
 		"assert_field_layout":
-			await _assert_field_layout()
+			await _assert_field_layout(step)
 		"assert_combat_layout":
 			await _assert_combat_layout(step)
 		"assert_panel_layout":
 			await _assert_panel_layout(String(step["panel"]))
+		"assert_creation_layout":
+			await _assert_creation_layout()
 		"assert_state":
 			_assert_state(step)
 		"assert_field_skill_absent":
@@ -817,6 +990,10 @@ func _execute(step: Dictionary) -> void:
 					settings_got = WISettings.combat_speed_step()
 				"field_readout_expanded":
 					settings_got = WISettings.field_readout_expanded()
+				"difficulty_step":
+					settings_got = WISettings.difficulty_step()
+				"show_quest_hints":
+					settings_got = WISettings.show_quest_hints()
 				_:
 					_fail("assert_settings_value: unknown path " + settings_path)
 					settings_got = null
@@ -903,6 +1080,9 @@ func _execute(step: Dictionary) -> void:
 			# GH#435: authoring scaffolding, never shipped inside a script.
 			_dump_checkpoint(String(step.get("slot", "checkpoint")))
 			await get_tree().process_frame
+		"stage_sprite":
+			_stage_sprite(step)
+			await get_tree().process_frame
 		_:
 			_fail("unknown action: " + String(step["action"]))
 
@@ -967,6 +1147,58 @@ func _inject_diag(a: String, b: String) -> void:
 	Input.parse_input_event(release_b)
 
 
+## Art proof for a rig no map row wears yet: draws `sprite` at `cell` of the
+## live map through World's own entity-visual path (anchor, render_scale,
+## shadow, mood tint). Presentation only, with no sim entity; the next map
+## build frees it. `qa_sprite_staged` reports the resolved art and where the
+## first frame's opaque feet row lands relative to the cell's bottom edge
+## (0 = standing on the cell, the padded-sprite trap's measure).
+func _stage_sprite(step: Dictionary) -> void:
+	var sprite_id := String(step["sprite"])
+	var world := get_tree().root.find_child("World", true, false)
+	if world == null or not world.has_method("_make_entity_visual"):
+		_fail("stage_sprite: no live World")
+		return
+	if not WISpriteRegistry.has_sprite(sprite_id):
+		_fail("stage_sprite: unknown sprite " + sprite_id)
+		return
+	var raw_cell: Array = step["cell"]
+	var cell := Vector2i(int(raw_cell[0]), int(raw_cell[1]))
+	var facing := String(step.get("facing", "down"))
+	var holder: Node2D = world.call("_make_entity_visual", cell, sprite_id, [], Color.MAGENTA, facing)
+	var spr: AnimatedSprite2D = null
+	for child: Node in holder.get_children():
+		if child is AnimatedSprite2D:
+			spr = child as AnimatedSprite2D
+	if spr == null:
+		_fail("stage_sprite: %s drew no sprite" % sprite_id)
+		return
+	var anim := WIEntityVisualFactory.anim_for(spr.sprite_frames, String(step.get("anim", "idle")), facing)
+	spr.flip_h = WIEntityVisualFactory.flip_for(facing) and anim.ends_with("_side")
+	spr.play(anim)
+	var resolved := WISpriteRegistry.resolved_id(sprite_id)
+	var placeholder := false
+	for anim_rec: Dictionary in (WISpriteRegistry.entry_for(sprite_id)["animations"] as Dictionary).values():
+		for key: String in anim_rec:
+			if key.begins_with("sheet") and WISpriteRegistry.is_fallback_sheet(String(anim_rec[key])):
+				placeholder = true
+	var used := spr.sprite_frames.get_frame_texture(anim, 0).get_image().get_used_rect()
+	var feet_y := holder.position.y + spr.position.y + float(used.end.y) * spr.scale.y
+	# TRAP: naming WIWorld here breaks the tests' autoload-stubbed driver copy.
+	var cell_px := float(world.get_script().get_script_constant_map()["CELL"])
+	var cell_bottom := float(cell.y + 1) * cell_px
+	ObservableBus.emit_domain_event("qa_sprite_staged", {
+		"sprite": sprite_id,
+		"resolved": resolved,
+		"cell": [cell.x, cell.y],
+		"anim": anim,
+		"frames": spr.sprite_frames.get_frame_count(anim),
+		"placeholder": placeholder,
+		"visible_h_px": roundi(float(used.size.y) * spr.scale.y),
+		"feet_offset_px": roundi(feet_y - cell_bottom),
+	})
+
+
 func _world_to_screen(world_pos: Vector2) -> Variant:
 	var main := get_tree().root.find_child("Main", true, false)
 	if main == null or not main.has_method("world_to_screen"):
@@ -1009,18 +1241,175 @@ func _inject_drag(from: Vector2, to: Vector2, steps: int) -> void:
 
 ## #503: resolve a node's rendered rect and touch its centre (real on web,
 ## emulated natively). `arg` is the rect method's single argument.
+func _touch_cell(cell: Vector2i) -> void:
+	await _settle_for_capture()
+	var screen_pos: Variant = _world_to_screen(Vector2(cell) * float(CELL) + Vector2(CELL, CELL) * 0.5)
+	if screen_pos == null:
+		_fail("touch_cell: could not resolve Main.world_to_screen")
+	else:
+		var main := get_tree().root.find_child("Main", true, false)
+		var bounds: Rect2 = main.world_view_rect()
+		ObservableBus.emit_domain_event("qa_cell_touch_target", {
+			"cell": [cell.x, cell.y], "screen": [screen_pos.x, screen_pos.y],
+			"world_rect": [bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y],
+			"within_world": bounds.has_point(screen_pos),
+		})
+		await _touch_at(screen_pos as Vector2, "cell")
+
+
+# The planner only reads live state. Every change must follow a browser touch
+# through the real hotbar, board, Confirm or End turn control.
+func _touch_combat_finish(max_actions: int, first_skill: String = "") -> void:
+	var screen := get_tree().root.find_child("CombatScreen", true, false)
+	var combat: WICombat = Game.sim.combat
+	if screen == null or combat == null:
+		_fail("touch_combat_finish: no live combat")
+		return
+	var skill_done := first_skill.is_empty()
+	for i in max_actions:
+		var deadline := Time.get_ticks_msec() + 20000
+		while not combat.finished and (combat.get_active() != "pc" or not screen.is_resting()) and Time.get_ticks_msec() < deadline:
+			await get_tree().process_frame
+		if combat.finished:
+			if not skill_done:
+				_fail("touch_combat_finish: requested aimed skill was not exercised")
+			if not bool(combat.outcome.get("victory", false)):
+				_fail("touch_combat_finish: touch route lost the fight")
+			return
+		if combat.get_active() != "pc" or not screen.is_resting():
+			_fail("touch_combat_finish: player controls did not recover")
+			return
+		var player: Dictionary = combat.combatants["pc"]
+		var enemies := combat.alive_enemies_of("pc")
+		var target := ""
+		for id: String in enemies:
+			if combat.in_weapon_range("pc", id) and combat.has_los("pc", id):
+				target = id
+				break
+		if target != "" and not first_skill.is_empty() and combat.skill_available("pc", first_skill) and not combat.skill_spent("pc", first_skill) and int(player["ap"]) >= int(combat.skills[first_skill].get("ap_cost", 0)):
+			var slots: Array = screen.get("_bar_slots")
+			var skill_index := -1
+			for slot_index in slots.size():
+				if String(slots[slot_index].get("id", "")) == first_skill:
+					skill_index = slot_index
+			if skill_index < 0:
+				_fail("touch_combat_finish: requested skill is not on the bar")
+				return
+			if not skill_done:
+				var ap_before := int(player["ap"])
+				await _touch_combat_slot(screen, skill_index, "combat_aimed_skill")
+				if screen.is_resting():
+					_fail("touch_combat_finish: aimed skill did not open targeting")
+					return
+				await _touch_rect_of("CombatScreen", "mobile_control_rect", "back", "combat_cancel")
+				if not screen.is_resting() or int(player["ap"]) != ap_before:
+					_fail("touch_combat_finish: cancel changed AP or left targeting open")
+					return
+				ObservableBus.emit_domain_event("qa_touch_target_cancel_checked", {"skill": first_skill, "ap_unchanged": true})
+			var skill_event_start := _events_seen.size()
+			await _touch_combat_slot(screen, skill_index, "combat_aimed_skill")
+			await _touch_cell(combat.combatants[target]["cell"])
+			if not screen.is_resting() and not combat.finished:
+				await _touch_rect_of("CombatScreen", "mobile_control_rect", "confirm", "combat_confirm")
+			if _find_event_since("skill_resolved", {"actor": "pc", "skill": first_skill}, skill_event_start) < 0:
+				_fail("touch_combat_finish: aimed touch produced no skill resolution")
+				return
+			skill_done = true
+		elif target != "" and int(player["ap"]) >= WICombat.ATTACK_COST:
+			await _touch_combat_slot(screen, 0, "combat_attack")
+			await _touch_cell(combat.combatants[target]["cell"])
+			# Tapping the already selected target confirms immediately.
+			if not screen.is_resting() and not combat.finished:
+				await _touch_rect_of("CombatScreen", "mobile_control_rect", "confirm", "combat_confirm")
+		elif not enemies.is_empty() and int(player["ap"]) >= WICombat.ATTACK_COST and int(player["move_pool"]) >= WICombat.MOVE_COST:
+			var direction := _touch_combat_path_step(combat, player, enemies)
+			if direction == Vector2i.ZERO:
+				await _touch_combat_end_turn(screen)
+			else:
+				await _touch_cell((player["cell"] as Vector2i) + direction)
+		else:
+			await _touch_combat_end_turn(screen)
+	_fail("touch_combat_finish: action limit exceeded")
+
+
+func _touch_inventory_item(item_id: String) -> void:
+	var panel := get_tree().root.find_child("Inventory", true, false)
+	var index: int = Game.sim.inventory.find(item_id)
+	if panel == null or index < 0:
+		_fail("touch_inventory_item: item is not carried or panel is absent")
+		return
+	for attempt in 20:
+		var rect: Rect2 = panel.item_row_rect(index)
+		var content: Rect2 = panel.visible_content_rect()
+		if rect.size != Vector2.ZERO and content.encloses(rect):
+			await _touch_at(rect.get_center(), "touch_inventory_item")
+			return
+		var movement := -minf(80.0, content.size.y * 0.4) if rect.end.y > content.end.y else minf(80.0, content.size.y * 0.4)
+		var endpoint := WIResponsiveLayout.css_transform(get_viewport()) * (content.get_center() + Vector2(0.0, movement))
+		await _touch_at(content.get_center(), "scroll_inventory", {"drag": true, "end_x": endpoint.x, "end_y": endpoint.y})
+	_fail("touch_inventory_item: item remained outside the visible list")
+
+
+func _touch_combat_path_step(combat: WICombat, player: Dictionary, enemies: Array) -> Vector2i:
+	var from: Vector2i = player["cell"]
+	var reach := int(player.get("weapon_range", 1))
+	var best_length := 9999
+	var best := Vector2i.ZERO
+	for id: String in enemies:
+		var target: Vector2i = combat.combatants[id]["cell"]
+		for dx in range(-reach, reach + 1):
+			for dy in range(-reach, reach + 1):
+				var candidate := target + Vector2i(dx, dy)
+				if not combat.is_cell_free(candidate):
+					continue
+				var clear := true
+				for cell: Vector2i in combat._supercover(candidate, target):
+					if cell != candidate and cell != target and combat.blocked.has(cell):
+						clear = false
+				if not clear:
+					continue
+				var distance: int = WICombatAI._path_len(combat, from, candidate, 0)
+				if distance > 0 and distance < best_length:
+					best_length = distance
+					best = WICombatAI._path_step(combat, from, candidate, 0)
+	return best
+
+
+func _touch_combat_slot(screen: Node, index: int, label: String) -> void:
+	var hotbar: Node = screen.hotbar_node()
+	for page in 10:
+		var rect: Rect2 = hotbar.slot_rect(index)
+		if rect.size != Vector2.ZERO:
+			await _touch_at(rect.get_center(), label)
+			return
+		var current_page := int(screen.responsive_layout_snapshot().get("action_page", 0))
+		var page_size := WICombatMobileLayout.PAGE_SIZE
+		var direction := "page_next" if index >= (current_page + 1) * maxi(page_size, 1) else "page_previous"
+		await _touch_rect_of("CombatScreen", "mobile_control_rect", direction, "combat_change_page")
+	_fail("%s: hotbar slot is unreachable" % label)
+
+
+func _touch_combat_end_turn(screen: Node) -> void:
+	var slots: Array = screen.get("_bar_slots")
+	for i in slots.size():
+		if String((slots[i] as Dictionary).get("type", "")) == "end_turn":
+			await _touch_combat_slot(screen, i, "combat_end_turn")
+			return
+	_fail("touch_combat_end_turn: End turn is unreachable")
+
+
 func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label: String, gesture: Dictionary = {}) -> void:
 	var node := get_tree().root.find_child(node_name, true, false)
 	if node == null:
 		_fail("%s: %s node not found" % [label, node_name])
 		return
-	var rect: Rect2 = node.call(rect_method, arg)
+	var rect: Rect2 = node.call(rect_method) if arg == null else node.call(rect_method, arg)
 	if rect.size == Vector2.ZERO:
 		_fail("%s: %s has no rendered rect" % [label, str(arg)])
 		return
 	if node_name == "PurchaseConfirm":
 		var buy_rect: Rect2 = node.call("row_rect", 1)
-		_last_purchase_buy_pos = get_viewport().get_screen_transform() * buy_rect.get_center()
+		_last_purchase_buy_pos = WIResponsiveLayout.css_transform(get_viewport()) * buy_rect.get_center()
 	if bool(gesture.get("follow_purchase_buy", false)):
 		if _last_purchase_buy_pos == Vector2.ZERO:
 			_fail("follow_purchase_buy needs a prior rendered modal touch at this viewport")
@@ -1028,12 +1417,20 @@ func _touch_rect_of(node_name: String, rect_method: String, arg: Variant, label:
 		gesture = gesture.duplicate()
 		gesture["follow_x"] = _last_purchase_buy_pos.x
 		gesture["follow_y"] = _last_purchase_buy_pos.y
+	if gesture.has("delta"):
+		gesture = gesture.duplicate()
+		var delta: Array = gesture["delta"]
+		var end := WIResponsiveLayout.css_transform(get_viewport()) * (rect.get_center() + Vector2(float(delta[0]), float(delta[1])))
+		gesture.erase("delta")
+		gesture["drag"] = true
+		gesture["end_x"] = end.x
+		gesture["end_y"] = end.y
 	await _touch_at(rect.get_center(), label, gesture)
 
 
 ## The one seam every touch_* step rides. Web: publish the request in WINDOW
-## pixels (the root viewport's screen transform folds in canvas_items
-## stretch + letterbox offset, so the runner taps exactly where a finger
+## CSS pixels (including canvas density, stretch and letterboxing), so
+## the runner taps exactly where a finger
 ## would), then wait for the runner to report the tap performed. A runner
 ## not in --touch mode never answers, so the step FAILS rather than falling
 ## back -- that absence of fallback is the contract #503 asks for.
@@ -1041,9 +1438,9 @@ const TOUCH_SERVICE_DEADLINE_MSEC := 4000
 
 func _touch_at(pos: Vector2, label: String, gesture: Dictionary = {}) -> void:
 	if OS.has_feature("web"):
-		var window_pos: Vector2 = get_viewport().get_screen_transform() * pos
-		JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = {x: %f, y: %f, label: %s, gesture: %s}" % [window_pos.x, window_pos.y, JSON.stringify(label), JSON.stringify(gesture)], true)
+		var window_pos: Vector2 = WIResponsiveLayout.css_transform(get_viewport()) * pos
 		var before := int(JavaScriptBridge.eval("window.__WI_QA_TOUCH_DONE__ || 0", true))
+		JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = {x: %f, y: %f, coordinate_space: 'css', issued_at_ms: performance.now(), label: %s, gesture: %s}" % [window_pos.x, window_pos.y, JSON.stringify(label), JSON.stringify(gesture)], true)
 		var deadline := Time.get_ticks_msec() + TOUCH_SERVICE_DEADLINE_MSEC
 		var serviced := false
 		while Time.get_ticks_msec() < deadline:
@@ -1055,7 +1452,7 @@ func _touch_at(pos: Vector2, label: String, gesture: Dictionary = {}) -> void:
 			JavaScriptBridge.eval("window.__WI_QA_TOUCH_REQ__ = null", true)
 			_fail("%s: real touch at (%d,%d) was never performed by the runner (not in --touch mode?) -- no fallback" % [label, int(pos.x), int(pos.y)])
 			return
-		ObservableBus.emit_domain_event("qa_touch", {"label": label, "x": pos.x, "y": pos.y, "window_x": window_pos.x, "window_y": window_pos.y, "real": true, "mode": "browser_touch", "gesture": gesture})
+		ObservableBus.emit_domain_event("qa_touch", {"label": label, "x": pos.x, "y": pos.y, "window_x": window_pos.x, "window_y": window_pos.y, "coordinate_space": "css", "real": true, "mode": "browser_touch", "gesture": gesture})
 	else:
 		if not gesture.is_empty():
 			_fail("timed touch gestures require the browser runner with --touch")
@@ -1192,6 +1589,26 @@ func _settle_for_capture() -> void:
 	await get_tree().process_frame
 
 
+func _assert_message_visible(step: Dictionary) -> void:
+	var layer := get_tree().root.find_child("MessageLayer", true, false)
+	var kind := String(step.get("kind", "toast"))
+	var method := "toast_display_state" if kind == "toast" else "dialogue_display_state"
+	if layer == null or not layer.has_method(method):
+		_fail("assert_message_visible: %s probe is unavailable" % kind)
+		return
+	var state: Dictionary = layer.call(method)
+	var expected := bool(step.get("visible", true))
+	if bool(state["visible"]) != expected:
+		_fail("assert_message_visible: expected visible=%s, got %s" % [expected, state])
+	if expected and not String(state["text"]).contains(String(step.get("text_contains", ""))):
+		_fail("assert_message_visible: text mismatch: " + str(state))
+	if step.has("min_elapsed_msec") and int(state["elapsed_msec"]) < int(step["min_elapsed_msec"]):
+		_fail("assert_message_visible: message read too briefly: " + str(state))
+	if step.has("max_elapsed_msec") and int(state["elapsed_msec"]) > int(step["max_elapsed_msec"]):
+		_fail("assert_message_visible: missed early observation: " + str(state))
+	ObservableBus.emit_domain_event("qa_message_visibility_measured", {"kind": kind, "state": state})
+
+
 func _assert_message_layout(kind: String) -> void:
 	_capture_depth += 1
 	await _settle_for_capture()
@@ -1205,11 +1622,18 @@ func _assert_message_layout(kind: String) -> void:
 		if not WIResponsiveLayout.safe_rect(get_viewport()).encloses(bounds):
 			_fail("assert_message_layout: message is outside safe viewport")
 		var font_size := label.get_theme_font_size("font_size")
-		if font_size * WIResponsiveLayout.css_scale(get_viewport()) + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
+		if WIResponsiveLayout.uses_touch_layout() and font_size * WIResponsiveLayout.css_scale(get_viewport()) + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
 			_fail("assert_message_layout: message text is too small")
 		var field := get_tree().root.find_child("FieldHotbar", true, false)
-		if field != null and field.visible and bounds.end.y > field.world_bottom() + 0.01:
-			_fail("assert_message_layout: message overlaps field controls or details")
+		if field != null and field.visible:
+			if WIResponsiveLayout.uses_touch_layout():
+				if bounds.end.y > field.world_bottom() + 0.01:
+					_fail("assert_message_layout: message overlaps field controls or details")
+			else:
+				for property: String in ["_hotbar", "_toggle", "_readout_panel", "_selection_label_backing", "_page_previous", "_page_next"]:
+					var control: Control = field.get(property)
+					if control != null and control.is_visible_in_tree() and bounds.intersects(control.get_global_rect()):
+						_fail("assert_message_layout: message overlaps field controls or details")
 		ObservableBus.emit_domain_event("qa_message_layout_measured", {"kind": kind, "font_css": font_size * WIResponsiveLayout.css_scale(get_viewport()), "text_scale": WISettings.text_scale_label()})
 	_capture_depth -= 1
 
@@ -1230,7 +1654,7 @@ func _resize_browser(step: Dictionary) -> void:
 	_fail("resize_browser: viewport request was not acknowledged")
 
 
-func _assert_dialogue_layout() -> void:
+func _assert_dialogue_layout(step: Dictionary = {}) -> void:
 	await _settle_for_capture()
 	var panel := get_tree().root.find_child("DialoguePanel", true, false)
 	if panel == null or not bool(panel.get("_shown")):
@@ -1245,13 +1669,15 @@ func _assert_dialogue_layout() -> void:
 	if toast != null and toast.is_visible_in_tree() and toast.get_global_rect().intersects(bounds):
 		_fail("assert_dialogue_layout: toast overlaps conversation")
 	var body: Label = panel.get("_text_label")
+	if step.has("contains") and not body.text.contains(String(step["contains"])):
+		_fail("assert_dialogue_layout: rendered page does not contain requested text")
 	var font := body.get_theme_font("font")
 	var font_size := body.get_theme_font_size("font_size")
 	var text_height := font.get_multiline_string_size(body.text, HORIZONTAL_ALIGNMENT_LEFT, body.size.x, font_size).y
 	if text_height > body.size.y + 1.0 or not bounds.encloses(body.get_global_rect()):
 		_fail("assert_dialogue_layout: body text is clipped")
 	var css_font := font_size * WIResponsiveLayout.css_scale(get_viewport())
-	if css_font + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
+	if WIResponsiveLayout.uses_touch_layout() and css_font + 0.01 < WIResponsiveLayout.MIN_TEXT_CSS * WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]:
 		_fail("assert_dialogue_layout: body text is too small")
 	var scroll: ScrollContainer = panel.get("_options_scroll")
 	var options: Array = panel.get("_option_controls")
@@ -1263,7 +1689,7 @@ func _assert_dialogue_layout() -> void:
 		if visible_rect.intersects(body.get_global_rect()):
 			_fail("assert_dialogue_layout: option overlaps dialogue text")
 		var css := WIResponsiveLayout.css_rect(get_viewport(), rect)
-		if minf(css.size.x, css.size.y) + 0.01 < WIResponsiveLayout.MIN_TOUCH_CSS:
+		if WIResponsiveLayout.uses_touch_layout() and minf(css.size.x, css.size.y) + 0.01 < WIResponsiveLayout.MIN_TOUCH_CSS:
 			_fail("assert_dialogue_layout: option is smaller than 44 CSS pixels")
 	ObservableBus.emit_domain_event("qa_dialogue_layout_measured", {"text_scale": WISettings.text_scale_label(), "font_css": css_font, "panel_height": bounds.size.y})
 
@@ -1343,6 +1769,22 @@ func _touch_combat_pages(step: Dictionary) -> void:
 	ObservableBus.emit_domain_event("qa_combat_pages_read", {"mode": "tutor" if tutor else "details", "pages": count, "text": text})
 
 
+## A paged bar shows the target slot only after real page-control touches.
+func _touch_field_page_to(field: Node, index: int) -> void:
+	for attempt in 30:
+		if field.hotbar_node().slot_rect(index).size != Vector2.ZERO:
+			return
+		var shown: Array[int] = []
+		for child: Control in field.hotbar_node().get_children():
+			shown.append(int(child.get_meta("slot_index")))
+		var direction := "next" if shown.is_empty() or index > shown.max() else "previous"
+		var control: Rect2 = field.page_control_rect(direction)
+		if not control.has_area():
+			return
+		await _touch_at(control.get_center(), "touch_field_pages")
+		await _wait_for_event("ui_field_hotbar_rendered", 5.0, {"reason": "page"})
+
+
 func _touch_field_pages() -> void:
 	var field := get_tree().root.find_child("FieldHotbar", true, false)
 	if field == null:
@@ -1387,12 +1829,68 @@ func _touch_scroll_field_to_end() -> void:
 			break
 		var rect := scroll.get_global_rect()
 		var end := rect.position + rect.size * Vector2(0.5, 0.15)
-		var window_end := get_viewport().get_screen_transform() * end
+		var window_end := WIResponsiveLayout.css_transform(get_viewport()) * end
 		await _touch_at(rect.position + rect.size * Vector2(0.5, 0.85), "touch_scroll_field", {"drag": true, "end_x": window_end.x, "end_y": window_end.y})
 		await _settle_for_capture()
 	if scroll.scroll_vertical < bar.max_value - bar.page - 1.0 or label.get_global_rect().end.y > scroll.get_global_rect().end.y + 1.0:
 		_fail("touch_scroll_field_to_end: final readout line remains clipped")
 	ObservableBus.emit_domain_event("qa_field_readout_end_visible", {"scroll": scroll.scroll_vertical, "text": label.text})
+
+
+## Keyboard/gamepad parity: the selected Skill's readout line is in view.
+func _assert_field_readout_selection_visible() -> void:
+	await _settle_for_capture()
+	var field := get_tree().root.find_child("FieldHotbar", true, false)
+	if field == null or not bool(field.get("_expanded")):
+		_fail("assert_field_readout_selection_visible: details must be expanded")
+		return
+	var index := int(field.get("_last_selected_index"))
+	var lines: Array = field.get("_readout_lines")
+	var label := field.get("_readout_label") as Label
+	var view := (field.get("_readout_scroll") as ScrollContainer).get_global_rect().grow(1.0)
+	if index < 0 or index >= lines.size():
+		_fail("assert_field_readout_selection_visible: no selected readout line")
+		return
+	# Engine glyph bounds, independent of the presenter's own line measurement.
+	var start := 0
+	for i in index:
+		start += String(lines[i]).length() + 1
+	var first := label.get_character_bounds(start)
+	var last := label.get_character_bounds(start + String(lines[index]).length() - 1)
+	var line := Rect2(label.global_position + first.position, first.size).merge(Rect2(label.global_position + last.position, last.size))
+	if first.size == Vector2.ZERO or last.size == Vector2.ZERO or not view.encloses(line):
+		_fail("assert_field_readout_selection_visible: line %d %s outside %s" % [index, line, view])
+	ObservableBus.emit_domain_event("qa_field_readout_selection_visible", {"index": index})
+
+
+## Desktop counterpart: real mouse-wheel input over the bounded readout.
+func _wheel_scroll_field_to_end() -> void:
+	var field := get_tree().root.find_child("FieldHotbar", true, false)
+	if field == null or not bool(field.get("_expanded")):
+		_fail("wheel_scroll_field_to_end: details must be expanded")
+		return
+	var scroll := field.get("_readout_scroll") as ScrollContainer
+	var label := field.get("_readout_label") as Label
+	var bar := scroll.get_v_scroll_bar()
+	if bar.max_value <= bar.page:
+		_fail("wheel_scroll_field_to_end: fixture does not overflow")
+		return
+	var pos := scroll.get_global_rect().get_center()
+	for attempt in 80:
+		if scroll.scroll_vertical >= bar.max_value - bar.page - 1.0:
+			break
+		for pressed: bool in [true, false]:
+			var wheel := InputEventMouseButton.new()
+			wheel.button_index = MOUSE_BUTTON_WHEEL_DOWN
+			wheel.pressed = pressed
+			wheel.factor = 1.0
+			wheel.position = pos
+			wheel.global_position = pos
+			get_tree().root.push_input(wheel, true)
+		await _settle_for_capture()
+	if scroll.scroll_vertical < bar.max_value - bar.page - 1.0 or label.get_global_rect().end.y > scroll.get_global_rect().end.y + 1.0:
+		_fail("wheel_scroll_field_to_end: final readout line remains clipped")
+	ObservableBus.emit_domain_event("qa_field_readout_end_visible", {"scroll": scroll.scroll_vertical, "text": label.text, "input": "mouse_wheel"})
 
 
 func _assert_combat_layout(step: Dictionary) -> void:
@@ -1401,6 +1899,9 @@ func _assert_combat_layout(step: Dictionary) -> void:
 	var main := get_tree().root.find_child("Main", true, false)
 	if screen == null or main == null or Game.sim.combat == null:
 		_fail("assert_combat_layout: no live combat")
+		return
+	if bool(step.get("desktop", false)):
+		_assert_desktop_combat_layout(screen, main)
 		return
 	var snapshot: Dictionary = screen.responsive_layout_snapshot()
 	if not bool(snapshot.get("mobile", false)):
@@ -1459,7 +1960,124 @@ func _assert_combat_layout(step: Dictionary) -> void:
 	ObservableBus.emit_domain_event("qa_combat_layout_measured", snapshot)
 
 
-func _assert_field_layout() -> void:
+func _assert_desktop_combat_layout(screen: Node, main: Node) -> void:
+	var reserved: Rect2 = screen.board_view_rect()
+	var board: Rect2 = main.world_view_rect()
+	if not reserved.has_area() or not reserved.grow(1.0).encloses(board):
+		_fail("assert_combat_layout: desktop board exceeds HUD-free rectangle")
+		return
+	var renderer := screen.get_node("BoardRenderer")
+	for id: String in Game.sim.combat.combatants:
+		if int(Game.sim.combat.combatants[id]["hp"]) <= 0:
+			continue
+		var holder: Node2D = renderer.visual_for(id)
+		if holder == null:
+			_fail("assert_combat_layout: missing live fighter %s" % id)
+			continue
+		for child: Node in holder.get_children():
+			if not child is AnimatedSprite2D:
+				continue
+			var sprite := child as AnimatedSprite2D
+			var texture := sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+			var pixels := Rect2(texture.get_image().get_used_rect())
+			var shift := sprite.offset - texture.get_size() * 0.5 if sprite.centered else sprite.offset
+			var visible := Rect2()
+			var first := true
+			for corner: Vector2 in [pixels.position, Vector2(pixels.end.x, pixels.position.y), pixels.end, Vector2(pixels.position.x, pixels.end.y)]:
+				if sprite.flip_h:
+					corner.x = texture.get_width() - corner.x
+				if sprite.flip_v:
+					corner.y = texture.get_height() - corner.y
+				var point: Vector2 = main.world_to_screen(sprite.to_global(corner + shift))
+				visible = Rect2(point, Vector2.ZERO) if first else visible.expand(point)
+				first = false
+			if not board.grow(2.0).encloses(visible):
+				_fail("assert_combat_layout: desktop fighter %s clipped: %s outside %s" % [id, visible, board])
+	ObservableBus.emit_domain_event("qa_combat_layout_measured", {"mobile": false, "board": board})
+
+
+func _assert_reference_layout() -> void:
+	await _settle_for_capture()
+	var panel := get_tree().root.find_child("SettingsPanel", true, false)
+	var snapshot: Dictionary = panel.reference_layout_snapshot() if panel != null else {}
+	if snapshot.is_empty():
+		_fail("assert_reference_layout: no visible reference page")
+		return
+	var bounds_data: Array = snapshot.panel_rect
+	var bounds := Rect2(bounds_data[0], bounds_data[1], bounds_data[2], bounds_data[3])
+	var safe := WIResponsiveLayout.safe_rect(get_viewport())
+	var back: Rect2 = panel.reference_back_rect()
+	var scroll: Rect2 = panel.reference_scroll_rect()
+	if not safe.grow(0.1).encloses(bounds) or not bounds.grow(0.1).encloses(back) or not bounds.grow(0.1).encloses(scroll) or back.intersects(scroll):
+		_fail("assert_reference_layout: panel, content or fixed Back is outside safe bounds")
+	var touch := WIResponsiveLayout.uses_touch_layout()
+	if touch and minf(back.size.x, back.size.y) * WIResponsiveLayout.css_scale(get_viewport()) < WIResponsiveLayout.MIN_TOUCH_CSS - 0.01:
+		_fail("assert_reference_layout: Back is smaller than 44 CSS pixels")
+	if snapshot.page == "controls" and int(snapshot.columns) != (2 if touch else 4):
+		_fail("assert_reference_layout: wrong input columns")
+	for text: Dictionary in snapshot.texts:
+		var rect_data: Array = text.rect
+		var rect := Rect2(rect_data[0], rect_data[1], rect_data[2], rect_data[3])
+		if rect.position.x < scroll.position.x - 0.1 or rect.end.x > scroll.end.x + 0.1:
+			_fail("assert_reference_layout: text overflows content width")
+		if touch and float(text.font_css) < WIResponsiveLayout.MIN_TEXT_CSS * float(snapshot.text_scale) - 0.01:
+			_fail("assert_reference_layout: reference text is too small")
+	ObservableBus.emit_domain_event("qa_reference_layout_measured", snapshot)
+
+
+func _assert_creation_layout() -> void:
+	await _settle_for_capture()
+	var screen := get_tree().root.find_child("CharCreation", true, false)
+	if screen == null:
+		_fail("assert_creation_layout: creation is not visible")
+		return
+	var safe := WIResponsiveLayout.safe_rect(get_viewport())
+	var css_scale := WIResponsiveLayout.css_scale(get_viewport())
+	var scale: float = WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()]
+	var controls: Array[Control] = [screen.get("_back_button")]
+	for key: String in ["_name_edit", "_begin_button"]:
+		var control: Control = screen.get(key)
+		if control.is_visible_in_tree():
+			controls.append(control)
+	for key: String in ["_cards", "_choice_rows"]:
+		for control: Control in screen.get(key):
+			if control.is_visible_in_tree():
+				controls.append(control)
+	var rectangles: Array[Rect2] = []
+	for control: Control in controls:
+		var rect := control.get_global_rect()
+		if not safe.grow(0.1).encloses(rect):
+			_fail("assert_creation_layout: control is outside safe bounds")
+		if WIResponsiveLayout.uses_touch_layout() and minf(rect.size.x, rect.size.y) * css_scale < WIResponsiveLayout.MIN_TOUCH_CSS - 0.01:
+			_fail("assert_creation_layout: control is smaller than 44 CSS pixels")
+		for other: Rect2 in rectangles:
+			if rect.intersects(other):
+				_fail("assert_creation_layout: controls overlap")
+		rectangles.append(rect)
+	var text_rects: Array[Rect2] = []
+	var measurements: Array = []
+	for key: String in ["_prompt_label", "_identity_label", "_difficulty_label", "_caption_label", "_hint_label"]:
+		var label: Label = screen.get(key)
+		if not label.is_visible_in_tree():
+			continue
+		var rect := label.get_global_rect()
+		var font_size := label.get_theme_font_size("font_size")
+		var font := label.get_theme_font("font")
+		if label.text.is_empty() or not safe.grow(0.1).encloses(rect):
+			_fail("assert_creation_layout: %s is empty or outside safe bounds: %s" % [key, rect])
+		if font.get_height(font_size) * label.get_line_count() > rect.size.y + 0.1:
+			_fail("assert_creation_layout: %s lines are clipped" % key)
+		if WIResponsiveLayout.uses_touch_layout() and font_size * css_scale < WIResponsiveLayout.MIN_TEXT_CSS * scale - 0.01:
+			_fail("assert_creation_layout: required text is too small")
+		for other: Rect2 in rectangles + text_rects:
+			if rect.intersects(other):
+				_fail("assert_creation_layout: %s overlaps %s" % [key, other])
+		text_rects.append(rect)
+		measurements.append({"key": key, "text": label.text, "rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y], "font_css": font_size * css_scale, "lines": label.get_line_count()})
+	ObservableBus.emit_domain_event("qa_creation_layout_measured", {"text_scale": scale, "text": measurements, "controls": controls.size()})
+
+
+func _assert_field_layout(step: Dictionary = {}) -> void:
 	await _settle_for_capture()
 	var main := get_tree().root.find_child("Main", true, false)
 	var field := get_tree().root.find_child("FieldHotbar", true, false)
@@ -1499,9 +2117,35 @@ func _assert_field_layout() -> void:
 		if world_rect.intersects(rects[id]):
 			_fail("assert_field_layout: world view overlaps %s" % id)
 	var readout := field.find_child("FieldReadout", true, false) as Control
-	if readout != null and readout.visible and world_rect.intersects(readout.get_global_rect()):
+	var readout_open := readout != null and readout.visible
+	# Phone reserves the world view above the Skills readout; desktop overlays
+	# it so the world never re-centres on a toggle (`world_view: unchanged` proves that)
+	# and stops it below the cell a following camera holds the player on.
+	if readout_open and WIResponsiveLayout.uses_touch_layout() and world_rect.intersects(readout.get_global_rect()):
 		_fail("assert_field_layout: expanded details cover the world view")
-	ObservableBus.emit_domain_event("qa_field_layout_measured", {"controls_css": measurements, "touch_layout": WIResponsiveLayout.uses_touch_layout(), "text_scale": WISettings.text_scale_label(), "player": [player_position.x, player_position.y]})
+	if readout_open and not WIResponsiveLayout.uses_touch_layout():
+		var focus_bottom := float(main.world_focus_bottom())
+		if not is_equal_approx(float(field.get("_world_focus_bottom")), focus_bottom):
+			_fail("assert_field_layout: details cap is stale (%s, live %s)" % [field.get("_world_focus_bottom"), focus_bottom])
+		var readout_rect := readout.get_global_rect()
+		if readout_rect.position.y < focus_bottom - 0.5 and readout_rect.size.y > float(field.readout_min_height()) + 0.5:
+			_fail("assert_field_layout: expanded details cover the followed player cell (top %s, cell bottom %s)" % [readout_rect.position.y, focus_bottom])
+	var world_view := String(step.get("world_view", ""))
+	match world_view:
+		"":
+			pass
+		"record":
+			_recorded_world_view = world_rect
+		"unchanged":
+			if not _recorded_world_view.has_area() or not world_rect.is_equal_approx(_recorded_world_view):
+				_fail("assert_field_layout: world view moved from %s to %s" % [_recorded_world_view, world_rect])
+		_:
+			_fail("assert_field_layout: unknown world_view %s" % world_view)
+	if readout_open:
+		for id: String in rects:
+			if readout.get_global_rect().intersects(rects[id]):
+				_fail("assert_field_layout: expanded details overlap %s" % id)
+	ObservableBus.emit_domain_event("qa_field_layout_measured", {"controls_css": measurements, "touch_layout": WIResponsiveLayout.uses_touch_layout(), "text_scale": WISettings.text_scale_label(), "player": [player_position.x, player_position.y], "world": [world_rect.position.x, world_rect.position.y, world_rect.size.x, world_rect.size.y], "player_under_details": readout_open and readout.get_global_rect().has_point(player_position), "focus_bottom": float(main.world_focus_bottom()), "details": [readout.get_global_rect().position.y, readout.get_global_rect().end.y] if readout_open else []})
 
 
 ## GH#324 DISPLAY PROOF. `ui_dialogue_rendered` is a bus confirmation that the

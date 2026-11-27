@@ -1,5 +1,7 @@
 {
  "biome": "street",
+ "camera": {"offset": [0, 0], "margins": [0, 1, 0, 1]},
+ "_kits_recompose": "#629 — Liscor identity rebuild: tan brick city wall and gate, earth base floor with a worn kerb, brick-footed facades, bread oven, stall counter and dressing from the allocation, wood yard",
  "interior_flavor": [
   "Nothing there. A Drake shoulders past you without slowing.",
   "Nothing there. Gutter runoff and market noise two streets over, off a wall repointed twice.",
@@ -34,13 +36,47 @@
    "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
   ]
  },
- "blocked": [
+ "cover_skip": [
   [
-   2,
+   10,
    1
   ],
   [
-   7,
+   11,
+   1
+  ],
+  [
+   12,
+   1
+  ],
+  [
+   14,
+   1
+  ],
+  [
+   15,
+   1
+  ],
+  [
+   9,
+   1
+  ],
+  [
+   23,
+   10
+  ],
+  [
+   25,
+   10
+  ]
+ ],
+ "blocked": [
+  [
+   6,
+   1
+  ],
+  [
+   2,
    1
   ],
   [
@@ -50,14 +86,6 @@
   [
    6,
    10
-  ],
-  [
-   25,
-   8
-  ],
-  [
-   8,
-   17
   ],
   [
    24,
@@ -76,19 +104,11 @@
    1
   ],
   [
-   13,
-   1
-  ],
-  [
    14,
    1
   ],
   [
    15,
-   1
-  ],
-  [
-   16,
    1
   ],
   [
@@ -310,10 +330,79 @@
   [
    24,
    19
+  ],
+  [
+   7,
+   17
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   8,
+   1
+  ],
+  [
+   9,
+   1
+  ],
+  [
+   16,
+   1
+  ],
+  [
+   19,
+   1
+  ],
+  [
+   20,
+   1
+  ],
+  [
+   24,
+   10
+  ],
+  [
+   23,
+   10
+  ],
+  [
+   25,
+   10
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   31,
+   1
+  ],
+  [
+   24,
+   8
+  ],
+  [
+   13,
+   16
+  ],
+  [
+   31,
+   6
+  ],
+  [
+   31,
+   13
   ]
  ],
  "_comment": "Liscor gate district, grown from the 10x6 street (per accepted Floodplains sec.5).",
  "floor_layers": [
+  {
+   "_pick": "#629 N6: seam-free packed-earth base under the whole street (kit material).",
+   "material": "@floor_earth",
+   "cells": "all"
+  },
   {
    "_pick": "Main street cobble band, full width (existing street pick, extended)",
    "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
@@ -333,8 +422,32 @@
      0,
      2,
      32,
-     3
+     4
     ]
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+    "tile_px": 16,
+    "coords": [
+     0,
+     3
+    ],
+    "tone": {
+     "base": [
+      0.55,
+      0.44,
+      0.32
+     ],
+     "detail": 0.3
+    }
+   },
+   "tone": {
+    "base": [
+     0.74,
+     0.58,
+     0.38
+    ],
+    "detail": 0.45
    }
   },
   {
@@ -362,6 +475,30 @@
      8,
      5
     ]
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+    "tile_px": 16,
+    "coords": [
+     0,
+     3
+    ],
+    "tone": {
+     "base": [
+      0.55,
+      0.44,
+      0.32
+     ],
+     "detail": 0.3
+    }
+   },
+   "tone": {
+    "base": [
+     0.74,
+     0.58,
+     0.38
+    ],
+    "detail": 0.45
    }
   },
   {
@@ -389,6 +526,30 @@
      8,
      5
     ]
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+    "tile_px": 16,
+    "coords": [
+     0,
+     3
+    ],
+    "tone": {
+     "base": [
+      0.55,
+      0.44,
+      0.32
+     ],
+     "detail": 0.3
+    }
+   },
+   "tone": {
+    "base": [
+     0.74,
+     0.58,
+     0.38
+    ],
+    "detail": 0.45
    }
   },
   {
@@ -438,12 +599,91 @@
      [
       19,
       1
+     ],
+     [
+      9,
+      1
      ]
     ]
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+    "tile_px": 16,
+    "coords": [
+     0,
+     3
+    ],
+    "tone": {
+     "base": [
+      0.55,
+      0.44,
+      0.32
+     ],
+     "detail": 0.3
+    }
+   },
+   "tone": {
+    "base": [
+     0.74,
+     0.58,
+     0.38
+    ],
+    "detail": 0.45
    }
   },
   {
-   "_pick": "South-district square where the side street widens",
+   "_pick": "#629 r2: kerb. The earth blob's ragged top-edge cells over the band's last row, so paving meets earth along a worn lip (r1's cell-square teeth read as notches). Toned down to the base earth's darker row.",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     11,
+     4
+    ],
+    [
+     12,
+     4
+    ],
+    [
+     13,
+     4
+    ]
+   ],
+   "cells": {
+    "rect": [
+     0,
+     5,
+     32,
+     1
+    ]
+   },
+   "tone": {
+    "base": [
+     0.29,
+     0.195,
+     0.115
+    ],
+    "detail": 0.8
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+    "tile_px": 16,
+    "coords": [
+     2,
+     1
+    ],
+    "tone": {
+     "base": [
+      0.45,
+      0.31,
+      0.19
+     ],
+     "detail": 0.3
+    }
+   }
+  },
+  {
+   "_pick": "South-district square where the side street widens (Watch-fire plaza; restored in #629 r3, toned with the street band)",
    "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
    "tile_px": 16,
    "variants": [
@@ -463,6 +703,192 @@
      5,
      3
     ]
+   },
+   "tone": {
+    "base": [
+     0.74,
+     0.58,
+     0.38
+    ],
+    "detail": 0.45
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+    "tile_px": 16,
+    "coords": [
+     0,
+     3
+    ],
+    "tone": {
+     "base": [
+      0.55,
+      0.44,
+      0.32
+     ],
+     "detail": 0.3
+    }
+   }
+  },
+  {
+   "_pick": "#629 r3: wall-base shadow, the earth a step darker along the city wall's foot.",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     11,
+     11
+    ],
+    [
+     12,
+     11
+    ],
+    [
+     13,
+     11
+    ]
+   ],
+   "cells": {
+    "rect": [
+     9,
+     1,
+     15,
+     1
+    ]
+   },
+   "tone": {
+    "base": [
+     0.3,
+     0.2,
+     0.1
+    ],
+    "detail": 0.55
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+    "tile_px": 16,
+    "coords": [
+     2,
+     1
+    ],
+    "tone": {
+     "base": [
+      0.36,
+      0.25,
+      0.15
+     ],
+     "detail": 0.3
+    }
+   }
+  },
+  {
+   "_pick": "#629 r3: wall-base shadow over the plaza and forecourt slabs.",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     2
+    ],
+    [
+     18,
+     2
+    ]
+   ],
+   "cells": {
+    "list": [
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      1
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      5,
+      1
+     ],
+     [
+      6,
+      1
+     ],
+     [
+      7,
+      1
+     ],
+     [
+      8,
+      1
+     ],
+     [
+      24,
+      1
+     ],
+     [
+      25,
+      1
+     ],
+     [
+      26,
+      1
+     ],
+     [
+      27,
+      1
+     ],
+     [
+      28,
+      1
+     ],
+     [
+      29,
+      1
+     ],
+     [
+      30,
+      1
+     ],
+     [
+      31,
+      1
+     ]
+    ]
+   },
+   "tone": {
+    "base": [
+     0.56,
+     0.43,
+     0.28
+    ],
+    "detail": 0.45
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/cobble_over_dirt_v1.png",
+    "tile_px": 16,
+    "coords": [
+     0,
+     3
+    ],
+    "tone": {
+     "base": [
+      0.44,
+      0.35,
+      0.26
+     ],
+     "detail": 0.3
+    }
    }
   }
  ],
@@ -479,16 +905,7 @@
      31,
      0
     ],
-    "cap": [
-     0,
-     0
-    ],
-    "face": [
-     1,
-     0
-    ],
-    "sheet": "res://assets/tiles/city_wall/Tiles.png",
-    "tile_px": 32
+    "material": "@wall_city"
    },
    {
     "from": [
@@ -499,12 +916,7 @@
      0,
      2
     ],
-    "cap": [
-     1,
-     0
-    ],
-    "sheet": "res://assets/tiles/city_wall/Tiles.png",
-    "tile_px": 32
+    "material": "@wall_city_side"
    },
    {
     "from": [
@@ -515,19 +927,14 @@
      0,
      19
     ],
-    "cap": [
-     1,
-     0
-    ],
-    "sheet": "res://assets/tiles/city_wall/Tiles.png",
-    "tile_px": 32
+    "material": "@wall_city_side"
    }
   ]
  },
  "decor": [
   {
    "_comment": "was unlit, read as a second fake sewer_grate near the gate plaza.",
-   "sprite": "campfire",
+   "sprite": "owned_fallback_campfire",
    "cell": [
     3,
     5
@@ -544,7 +951,7 @@
    }
   },
   {
-   "sprite": "crate",
+   "sprite": "@barrel",
    "cell": [
     1,
     5
@@ -559,308 +966,142 @@
    ]
   },
   {
-   "_comment": "#408 prop variety: was `crate`. Woven market baskets read as Liscor's own trade rather than generic storage. Cell stays in `blocked` (basket_stack is solid).",
-   "sprite": "basket_stack",
-   "cell": [
-    7,
-    1
-   ]
-  },
-  {
-   "sprite": "library_desk",
-   "cell": [
-    10,
-    1
-   ]
-  },
-  {
-   "sprite": "library_desk",
-   "cell": [
-    11,
-    1
-   ]
-  },
-  {
-   "sprite": "library_shelf",
-   "cell": [
-    12,
-    1
-   ]
-  },
-  {
-   "_comment": "#408 prop variety: was `barrel`. Second basket stack mid-row: repetition is diegetic in a market, a third barrel was not. Cell stays in `blocked`.",
-   "sprite": "basket_stack",
-   "cell": [
-    13,
-    1
-   ]
-  },
-  {
-   "sprite": "library_desk",
-   "cell": [
-    14,
-    1
-   ]
-  },
-  {
-   "sprite": "library_desk",
-   "cell": [
-    15,
-    1
-   ]
-  },
-  {
-   "sprite": "library_shelf",
-   "cell": [
-    16,
-    1
-   ]
-  },
-  {
    "_comment": "#408 prop variety: was `crate`. Split firewood at the row's far end. Cell stays in `blocked` (firewood_stack is solid).",
-   "sprite": "firewood_stack",
+   "sprite": "liscor_produce_pale",
    "cell": [
     17,
     1
    ]
   },
   {
-   "sprite": "library_desk",
+   "sprite": "liscor_clay_jar_tall",
    "cell": [
     18,
     1
    ]
   },
   {
-   "sprite": "food_basket",
-   "cell": [
-    10,
-    1
-   ]
-  },
-  {
-   "sprite": "food_bread",
-   "cell": [
-    14,
-    1
-   ]
-  },
-  {
-   "sprite": "food_ham",
-   "cell": [
-    15,
-    1
-   ]
-  },
-  {
-   "sprite": "food_basket",
-   "cell": [
-    18,
-    1
-   ]
-  },
-  {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     22,
     1
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     22,
     2
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     27,
     1
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     29,
     1
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     27,
     2
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     29,
     2
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "library_desk",
+   "sprite": "liscor_bench",
    "cell": [
     26,
     3
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     10,
     8
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     10,
     9
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     19,
     8
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     19,
     9
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     12,
     14
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     12,
     15
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     19,
     15
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
-   "sprite": "inn_roof",
+   "sprite": "city_roof_owned",
    "cell": [
     21,
     15
-   ],
-   "tint": [
-    2.6,
-    0.5,
-    0.45
    ]
   },
   {
    "_comment": "Realigned to the guild building's own precedent (26-30,1-3: two roof/facade pairs at matching x, spaced 2 apart)",
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     19,
     16
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     21,
     16
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
-   "sprite": "campfire",
+   "sprite": "owned_fallback_campfire",
    "cell": [
     13,
     10
@@ -877,7 +1118,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "liscor_sconce_copper",
    "cell": [
     14,
     7
@@ -894,7 +1135,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "liscor_bracket_lantern",
    "cell": [
     15,
     12
@@ -911,7 +1152,7 @@
    }
   },
   {
-   "sprite": "sconce",
+   "sprite": "liscor_sconce_copper",
    "cell": [
     14,
     17
@@ -928,46 +1169,24 @@
    }
   },
   {
-   "sprite": "tree_round",
-   "cell": [
-    23,
-    12
-   ]
-  },
-  {
-   "sprite": "tree_round",
-   "cell": [
-    6,
-    13
-   ]
-  },
-  {
-   "sprite": "crate",
+   "sprite": "@barrel",
    "cell": [
     5,
     10
    ]
   },
   {
-   "sprite": "barrel",
+   "sprite": "@sack",
    "cell": [
     6,
     10
    ]
   },
   {
-   "_comment": "#408 prop variety: was `crate`. Cell stays in `blocked`.",
-   "sprite": "firewood_stack",
-   "cell": [
-    25,
-    8
-   ]
-  },
-  {
    "_comment": "#408 prop variety: was `barrel`. Cell stays in `blocked`.",
-   "sprite": "basket_stack",
+   "sprite": "liscor_basket_stack",
    "cell": [
-    8,
+    7,
     17
    ]
   },
@@ -980,7 +1199,7 @@
    ]
   },
   {
-   "sprite": "boulder",
+   "sprite": "liscor_scatter_broadleaf",
    "cell": [
     3,
     16
@@ -988,80 +1207,249 @@
   },
   {
    "_comment": "Repositioned to the valid (6,19) and added to `blocked` (wall-family, same facade_plaster-is-a-wall contract).",
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     6,
     19
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
    "_comment": "was y=20 (one past the grid's last valid row), repositioned to (15,19) and blocked.",
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     15,
     19
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
    "_comment": "was y=20 (one past the grid's last valid row), repositioned to (24,19) and blocked.",
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     24,
     19
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
    "_comment": "Repositioned to the valid (31,7) and added to `blocked` below (a wall face, same facade_plaster-is-a-wall contract every other freestanding segment on this map follows).",
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     31,
     7
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
    "_comment": "was x=32 (one past the grid's last valid column), repositioned to (31,14) and blocked.",
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     31,
     14
-   ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
    ]
   },
   {
    "_comment": "TRAP: keep facade cell (11,17) blocked; scripted-route checks miss free-roam traversal.",
-   "sprite": "facade_plaster",
+   "sprite": "liscor_facade_brick",
    "cell": [
     11,
     17
+   ]
+  },
+  {
+   "sprite": "liscor_water_barrel",
+   "cell": [
+    1,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_bread_oven",
+   "cell": [
+    8,
+    1
    ],
-   "tint": [
-    1.28,
-    1.14,
-    0.9
+   "light": {
+    "color": [
+     1.0,
+     0.55,
+     0.25
+    ],
+    "energy": 0.8,
+    "radius": 30,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "liscor_produce_greens",
+   "cell": [
+    16,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_clay_jar",
+   "cell": [
+    19,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_clay_jar_slim",
+   "cell": [
+    20,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_banner_watch",
+   "cell": [
+    23,
+    2
+   ]
+  },
+  {
+   "sprite": "liscor_window_arch",
+   "cell": [
+    27,
+    2
+   ],
+   "night_glow": {
+    "sprite": "liscor_window_glow"
+   }
+  },
+  {
+   "sprite": "liscor_window_arch",
+   "cell": [
+    29,
+    2
+   ],
+   "night_glow": {
+    "sprite": "liscor_window_glow"
+   }
+  },
+  {
+   "sprite": "liscor_window_shutter",
+   "cell": [
+    10,
+    9
+   ]
+  },
+  {
+   "sprite": "liscor_window_shutter",
+   "cell": [
+    19,
+    16
+   ]
+  },
+  {
+   "sprite": "liscor_window_shutter",
+   "cell": [
+    12,
+    15
+   ]
+  },
+  {
+   "sprite": "liscor_window_grille",
+   "cell": [
+    21,
+    2
+   ]
+  },
+  {
+   "sprite": "liscor_stall_counter",
+   "cell": [
+    24,
+    10
+   ]
+  },
+  {
+   "sprite": "liscor_stall_tray",
+   "cell": [
+    23,
+    10
+   ]
+  },
+  {
+   "sprite": "liscor_loaf",
+   "cell": [
+    23,
+    10
+   ]
+  },
+  {
+   "sprite": "liscor_carrot",
+   "cell": [
+    25,
+    10
+   ]
+  },
+  {
+   "sprite": "liscor_planter_herbs",
+   "cell": [
+    3,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_planter_beets",
+   "cell": [
+    31,
+    1
+   ]
+  },
+  {
+   "sprite": "liscor_planter_seedlings",
+   "cell": [
+    24,
+    8
+   ]
+  },
+  {
+   "sprite": "liscor_planter_trough",
+   "cell": [
+    13,
+    16
+   ]
+  },
+  {
+   "sprite": "liscor_banner_runners",
+   "cell": [
+    21,
+    16
+   ]
+  },
+  {
+   "sprite": "liscor_scatter_bush_low",
+   "cell": [
+    1,
+    8
+   ]
+  },
+  {
+   "sprite": "city_roof_owned",
+   "cell": [
+    31,
+    6
+   ]
+  },
+  {
+   "sprite": "city_roof_owned",
+   "cell": [
+    31,
+    13
+   ]
+  },
+  {
+   "_pick": "#629 r2: the south-row house had a blank front.",
+   "sprite": "liscor_window_shutter",
+   "cell": [
+    19,
+    9
+   ]
+  },
+  {
+   "sprite": "basket_stack",
+   "cell": [
+    6,
+    1
    ]
   }
  ],
@@ -1072,17 +1460,35 @@
     "pebble",
     "flower_tiny"
    ],
-   "density": 0.06,
+   "density": 0.03,
    "cluster": 0.7,
-   "seed": 5
+   "seed": 5,
+   "cells": {
+    "rect": [
+     0,
+     6,
+     32,
+     14
+    ]
+   }
   },
   {
    "pool": [
-    "flower_purple"
+    "liscor_scatter_sawdust",
+    "liscor_scatter_log_round",
+    "liscor_scatter_stakes"
    ],
-   "density": 0.012,
-   "cluster": 0.9,
-   "seed": 11
+   "density": 0.05,
+   "cluster": 0.3,
+   "seed": 11,
+   "cells": {
+    "rect": [
+     22,
+     12,
+     9,
+     7
+    ]
+   }
   }
  ],
  "entities": [
@@ -1094,7 +1500,7 @@
     3
    ],
    "display_name": "To the Floodplains",
-   "sprite": "city_gate_arch",
+   "sprite": "liscor_gate_arch",
    "to_map": "floodplains",
    "to_cell": [
     31,
@@ -1110,7 +1516,7 @@
    ],
    "display_name": "Watch Guard",
    "person": true,
-   "sprite": "royal_soldier",
+   "sprite": "liscor_watch_guard",
    "observe": "Watch armor, kept. He stands the post properly: weight even, eyes on the gap in the wall. Twice while you stand there, he checks the same empty stretch of road.",
    "friendly_line": "The guard's eyes leave the road for a moment and settle on you. Hah. You'll do. Go on through, and I'll know your face next time.",
    "facing": "up",
@@ -1336,7 +1742,7 @@
     2
    ],
    "display_name": "Watch Barracks",
-   "sprite": "door",
+   "sprite": "liscor_door_barracks",
    "to_map": "barracks",
    "to_cell": [
     2,
@@ -1353,7 +1759,7 @@
     2
    ],
    "display_name": "Bread Stall",
-   "sprite": "market_stall_wood",
+   "sprite": "liscor_bread_stall",
    "tint": [
     0.9,
     0.75,
@@ -1367,12 +1773,12 @@
    "id": "peddler",
    "kind": "npc",
    "cell": [
-    18,
+    19,
     2
    ],
    "display_name": "A Road-Peddler",
    "person": true,
-   "sprite": "human_laborer",
+   "sprite": "road_peddler",
    "observe": "A road-peddler behind a folding stall, half his stock still roped for travel. Everything he sells says somewhere else.",
    "facing": "down",
    "conversation": "peddler_stall",
@@ -1381,11 +1787,6 @@
      "speaker": "Peddler",
      "text": "Watch gear, mostly honest."
     }
-   ],
-   "tint": [
-    0.85,
-    0.78,
-    0.62
    ],
    "_comment": "Finding 13: he wore `hired_blade`, a COMBATANT rig, forbidden on a friendly. Shares `human_laborer` with the drayman (anonymous extras may); dusty tint keeps the two distinct."
   },
@@ -1397,7 +1798,7 @@
     2
    ],
    "display_name": "Krshia's Stall",
-   "sprite": "market_stall_silverfang",
+   "sprite": "silverfang_stall_cutout",
    "observe": "A card propped against the near stack warns that the seller remembers faces. Silverfang goods: cheap tin and cord at the front edge. Bolts of plains wool set back behind them.",
    "variants": [
     {
@@ -1420,7 +1821,7 @@
     2
    ],
    "display_name": "Adventurer's Guild",
-   "sprite": "door",
+   "sprite": "door__alt2",
    "to_map": "guild",
    "to_cell": [
     8,
@@ -1437,7 +1838,7 @@
     16
    ],
    "display_name": "Runner's Guild",
-   "sprite": "door",
+   "sprite": "door__alt2",
    "to_map": "runners_guild",
    "to_cell": [
     5,
@@ -1779,7 +2180,7 @@
     16
    ],
    "display_name": "Crate Scavengers",
-   "sprite": "goblin_base",
+   "sprite": "liscor_goblin_lurker",
    "arena": "goblin_ambush",
    "enemies": [
     "goblin_raider",
@@ -1811,7 +2212,7 @@
     16
    ],
    "display_name": "Supplier's Scavengers",
-   "sprite": "goblin_base",
+   "sprite": "liscor_goblin_lurker",
    "arena": "goblin_ambush",
    "enemies": [
     "goblin_raider",
@@ -1867,7 +2268,7 @@
    "facing": "left",
    "display_name": "A Frazzled Drayman",
    "person": true,
-   "sprite": "human_laborer",
+   "sprite": "frazzled_drayman",
    "conversation": "drayman_dispute",
    "observe": "A dray cart, a missing axle-pin, and a man about one shout from tipping the whole day over."
   },
@@ -1881,12 +2282,7 @@
    ],
    "display_name": "Watch Sergeant",
    "person": true,
-   "sprite": "royal_soldier",
-   "tint": [
-    0.62,
-    0.55,
-    0.72
-   ],
+   "sprite": "watch_sergeant",
    "observe": "Stripes on the sleeve, ink on the fingers. He would send the crate problem down the chain if the chain had not already sent it back up to him.",
    "facing": "down",
    "conversation": "watch_crate",
@@ -1906,12 +2302,7 @@
     10
    ],
    "display_name": "The Weathered Stone",
-   "sprite": "anchor_waystone",
-   "tint": [
-    0.55,
-    0.58,
-    0.62
-   ],
+   "sprite": "liscor_waystone",
    "observe": "A worn marker stone, older than the buildings that grew up around it. Nobody living remembers who set it, or why it sits exactly here.",
    "_comment_task_2_4": "Task 2.4: portal_menu_when and the lit-waystone visual_state both moved door_awakened -> door_mounted, in lockstep with inn.json's `pantry_door` (the pair's other end) and portals.json's two Liscor rows. This stone is the Liscor-side carrier, so gating it later would have stranded the return leg. Sight and passage still flip together, the garden_door contract. Old saves reach door_mounted through Task 2.6's backfill.",
    "portal_menu": true,
@@ -1928,7 +2319,7 @@
       "counter": "door_mounted",
       "at": 1
      },
-     "sprite": "anchor_waystone",
+     "sprite": "liscor_waystone",
      "tint": [
       1.05,
       0.9,
@@ -1956,7 +2347,7 @@
    ],
    "display_name": "Antinium Worker",
    "person": true,
-   "sprite": "antinium_worker",
+   "sprite": "antinium_worker_owned",
    "facing": "down",
    "observe": "An Antinium Worker — dark chitin, four arms, a crate balanced with unreasonable precision. It does not fidget. It does not need to.",
    "dialogue": [
@@ -1975,7 +2366,7 @@
    ],
    "display_name": "Antinium Worker",
    "person": true,
-   "sprite": "antinium_worker",
+   "sprite": "antinium_worker_owned",
    "facing": "up",
    "observe": "Another Worker, identical to the first in the way coins from one mint are identical. It sweeps the same three cobbles until they answer for something.",
    "dialogue": [

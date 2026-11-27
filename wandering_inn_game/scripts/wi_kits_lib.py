@@ -1,0 +1,438 @@
+#!/usr/bin/env python3
+"""wi_kits_lib.py -- Python mirror of src/core/kit_resolver.gd (#607, index C3-C5).
+
+Lint never chooses art: this module only reproduces the picks Godot makes so
+data_lint and fill_kit can report them. Any change to a pick rule must land in
+both runtimes together; tests/test_wi_kits_lib.py pins the shared outcomes.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import math
+import re
+from pathlib import Path
+from types import MappingProxyType
+
+MATERIAL_FIELDS = ["sheet", "tile_px", "coords", "variants", "tone", "wang_corners", "cap", "face", "trim", "fallback_render"]
+TWO_32 = 4294967296.0
+NON_PERSON_HEADINGS = {"The PC", "Antinium", "Horns roster note", "Invrisil civilian rigs"}
+# Title/race words that open a heading ("Master Ilvriss", "Gnoll Tribe") but
+# name no one: adding them as canon would ban every "Master"/"Gnoll" NPC.
+GENERIC_FIRST_WORDS = {"Master", "Grand", "Tier", "Recruit", "Frazzled", "Gnoll", "Garuda", "Dullahan",
+                       "Drake", "Human", "Den-Shop", "Forge-Tier"}
+# Closed kind vocabulary (spec 4.1): slice labels, role "kind" values and WIRED_KINDS.
+KINDS = ("crate", "barrel", "sack", "door", "window", "lamp", "table", "seat", "shelf", "bed",
+         "plant", "rock", "debris", "tool", "sign", "wall_module", "container", "other",
+         "station", "food", "vessel", "pipe", "book", "decor", "grave", "fence", "resource",
+         "item", "rug", "structure", "fx")
+# #623 (user 2026-10-09): _common holds only the utility Tier A. Its placements leave G2's
+# numerator and denominator, and may be at most COMMON_CAP_PCT of a region's converted maps.
+COMMON_KINDS = ("crate", "barrel", "sack", "container")
+COMMON_CAP_PCT = 30
+# #623 review I1: region rows on one sheet at this IoU or more are one picture. Today's catalog
+# tops out at 0.26 between distinct art; slicer twins of hand-cut legacy rows run 0.72-0.98.
+NEAR_IOU = 0.7
+# Kind of every data/sprites.json `region` animation at 7155db91: the label check's
+# ground truth (tools/label_slices.py) and data_lint's known kinds for wired ids. Ids on
+# sheets the slicer skips (tiles, -Sheet strips, Admurin, owned) are excluded by the label
+# check at run time, so listing them here is harmless. An id missing here has no known kind.
+# Read-only (review M8): data_lint and the label check share it; label_slices copies it.
+WIRED_KINDS = MappingProxyType({
+    "crate": "crate", "barrel": "barrel", "door": "door", "window_blue": "window",
+    "unlit_lantern": "lamp", "sconce": "lamp", "campfire": "lamp",
+    "table_brown": "table", "bar_counter": "table", "counter_left": "table", "counter_mid": "table",
+    "counter_right": "table", "library_desk": "table", "stool": "seat",
+    "shelf_bottles": "shelf", "library_shelf": "shelf", "bed": "bed",
+    "plant_pot": "plant", "bush_green": "plant", "grass_tuft": "plant", "flower_purple": "plant",
+    "flower_tiny": "plant", "pond_reeds": "plant", "tree_big": "plant", "tree_round": "plant",
+    "tree_autumn_orange": "plant", "tree_autumn_red": "plant", "crop_row_orange": "plant",
+    "crop_row_green": "plant", "crop_row_dark_green": "plant", "mushroom": "plant",
+    "mushroom_purple_l": "plant", "mushroom_purple_m": "plant", "mushroom_purple_s": "plant",
+    "hollow_mushroom_cluster": "plant", "hollow_canopy_tree": "plant", "hollow_small_tree": "plant",
+    "hollow_bent_tree": "plant",
+    "pebble": "rock", "boulder": "rock", "scree_spill": "rock", "hollow_glow_stone": "rock",
+    "dungeon_rubble": "debris", "grill": "station",
+    "chest": "container", "chest_open": "container",
+    "facade_plaster": "wall_module", "inn_roof": "wall_module", "pallass_rail_post": "wall_module",
+    "dungeon_statue": "decor", "pedestal": "decor", "sewer_grate": "pipe", "dusty_scroll": "book",
+    "food_bread": "food", "food_ham": "food", "food_basket": "container",
+    "garden_fountain_basin": "structure", "garden_fountain_statue": "decor",
+})
+
+
+def kind_of(sprite_id: str, entry) -> str | None:
+    """The kind on record for a wired id: its sprites.json "kind" (wire_asset records the
+    slice's label), else WIRED_KINDS; None when unknown."""
+    recorded = entry.get("kind") if isinstance(entry, dict) else None
+    return recorded if isinstance(recorded, str) else WIRED_KINDS.get(sprite_id)
+
+
+_HEADING_NAME = re.compile(r"^[A-Z][A-Za-z'\-]*( [A-Za-z'\-]+)*$")
+
+
+class KitResolveError(ValueError):
+    pass
+
+
+def hash32(key: str) -> int:
+    # djb2 is linear and correlates variants across cells; SHA-256 prefix must match the GD side.
+    return int(hashlib.sha256(key.encode("utf-8")).hexdigest()[:8], 16)
+
+
+godot_string_hash = hash32
+
+
+def score(key: str, weight: float) -> float:
+    return -math.log((hash32(key) + 0.5) / TWO_32) / weight
+
+
+def subset_size(n_placements: int, pool_size: int) -> int:
+    return min(max(2, min(4, 2 + n_placements // 6)), pool_size)
+
+
+def load_kits(game_root: Path) -> dict:
+    p = Path(game_root) / "data" / "kits.json"
+    return json.loads(p.read_text()) if p.exists() else {}
+
+
+def map_region(map_path: Path) -> str:
+    return Path(map_path).parent.name
+
+
+def map_kit(map_doc: dict, map_path: Path) -> str:
+    return str(map_doc.get("kit", map_region(map_path)))
+
+
+def lookup(kits: dict, region: str, section: str, name: str):
+    for scope in (region, "_common"):
+        table = (kits.get(scope) or {}).get(section) or {}
+        if name in table:
+            return table[name]
+    return None
+
+
+def pool_of(role) -> list:
+    if isinstance(role, str):
+        return [[role, 1.0]]
+    return [[str(e[0]), float(e[1])] if isinstance(e, list) else [str(e), 1.0] for e in role.get("pool", [])]
+
+
+def subset(map_key: str, role_name: str, pool: list, k: int) -> list:
+    scored = sorted((score(f"{map_key}|{role_name}|{vid}", w), vid) for vid, w in pool)
+    return [vid for _, vid in scored[:k]]
+
+
+def rank_for(map_id: str, role_name: str, variants: list, cell) -> list:
+    x, y = int(cell[0]), int(cell[1])
+    return [v for _, v in sorted((score(f"{map_id}|{role_name}|{v}|{x},{y}", 1.0), v) for v in variants)]
+
+
+def radius_for(role) -> int:
+    if isinstance(role, dict):
+        if "radius" in role:  # #608: a role's own radius overrides the defaults below
+            return int(role["radius"])
+        if str(role.get("pick", "cell")) == "door":
+            return 0
+        if bool(role.get("module", False)):
+            return 1
+    return 2
+
+
+def _apply(row: dict, role_name: str, role, variant: str) -> None:
+    row["sprite"] = variant
+    row["sprite_role"] = role_name
+    if isinstance(role, dict) and "light" in role and "light" not in row:
+        row["light"] = json.loads(json.dumps(role["light"]))
+
+
+def _resolve_materials(out: dict, map_id: str, region: str, kits: dict, errors: list) -> None:
+    targets = [(f"floor_layers[{i}]", r) for i, r in enumerate(out.get("floor_layers") or [])]
+    walls = out.get("walls")
+    if isinstance(walls, dict):
+        targets.append(("walls", walls))
+        targets += [(f"walls.segments[{i}]", s) for i, s in enumerate(walls.get("segments") or [])]
+    for label, row in targets:
+        if not isinstance(row, dict) or "material" not in row:
+            continue
+        ref = str(row["material"])
+        if not ref.startswith("@"):
+            errors.append(f"maps/{map_id}: {label} material '{ref}' must be an @reference")
+            continue
+        mat = lookup(kits, region, "materials", ref[1:])
+        if not isinstance(mat, dict):
+            errors.append(f"maps/{map_id}: {label} material '{ref}' does not resolve (region {region}, _common)")
+            continue
+        for key in MATERIAL_FIELDS:
+            if key in mat and key not in row:
+                row[key] = json.loads(json.dumps(mat[key]))
+        del row["material"]
+        row["material_ref"] = ref[1:]
+
+
+def resolve_map(map: dict, map_id: str, region: str, kits: dict, errors: list | None = None) -> dict:
+    collected: list = [] if errors is None else errors
+    out = json.loads(json.dumps(map))
+    _resolve_materials(out, map_id, region, kits, collected)
+    by_role: dict = {}
+    for layer in ("decor", "entities"):
+        for i, row in enumerate(out.get(layer) or []):
+            if not isinstance(row, dict):
+                continue
+            spr = str(row.get("sprite", ""))
+            if not spr.startswith("@"):
+                continue
+            cell = row.get("cell")
+            if not isinstance(cell, list) or len(cell) < 2:
+                collected.append(f"maps/{map_id}: {layer}[{i}] sprite '{spr}' has no cell")
+                continue
+            by_role.setdefault(spr[1:], []).append({"layer": layer, "index": i, "row": row,
+                                                    "cell": (int(cell[0]), int(cell[1]))})
+    for role_name, placements in by_role.items():
+        role = lookup(kits, region, "roles", role_name)
+        if role is None:
+            for p in placements:
+                collected.append(f"maps/{map_id}: {p['layer']}[{p['index']}] sprite '@{role_name}' does not resolve (region {region}, _common)")
+            continue
+        if not pool_of(role):
+            for p in placements:
+                collected.append(f"maps/{map_id}: {p['layer']}[{p['index']}] role '{role_name}' has an empty pool")
+            continue
+        placements.sort(key=lambda p: (p["cell"][1], p["cell"][0], p["layer"], p["index"]))
+        _resolve_role(placements, role_name, role, map_id, collected)
+    if errors is None and collected:
+        raise KitResolveError("; ".join(collected))
+    return out
+
+
+def _resolve_role(placements: list, role_name: str, role, map_id: str, errors: list) -> None:
+    pool = pool_of(role)
+    pick = str(role.get("pick", "cell")) if isinstance(role, dict) else "fixed"
+    if pick == "door":
+        for p in placements:
+            row = p["row"]
+            if str(row.get("kind", "")) != "door" or "to_map" not in row:
+                errors.append(f"maps/{map_id}: {p['layer']}[{p['index']}] '@{role_name}' is a door pick on a row that is not a door with to_map")
+                continue
+            to_map = str(row["to_map"])
+            pair = f"{min(map_id, to_map)}<>{max(map_id, to_map)}"
+            _apply(row, role_name, role, subset(pair, role_name, pool, 1)[0])
+        return
+    sub = subset(map_id, role_name, pool, subset_size(len(placements), len(pool)))
+    if pick in ("map", "fixed"):
+        for p in placements:
+            _apply(p["row"], role_name, role, sub[0])
+        return
+    r = radius_for(role)
+    # #608: a module role uses each variant at most ceil(n/k) times per map, on top of the radius;
+    # when the radius excludes every variant under the cap, the cap wins, then rank_p[0].
+    cap = -(-len(placements) // len(sub)) if isinstance(role, dict) and bool(role.get("module", False)) else None
+    uses: dict = {}
+    chosen: list = []
+    for p in placements:
+        cx, cy = p["cell"]
+        rank = rank_for(map_id, role_name, sub, p["cell"])
+        taken = {v for (ox, oy), v in chosen if max(abs(ox - cx), abs(oy - cy)) <= r}
+        if cap is None:
+            variant = next((v for v in rank if v not in taken), rank[0])
+        else:
+            under = [v for v in rank if uses.get(v, 0) < cap]
+            variant = next((v for v in under if v not in taken), under[0] if under else rank[0])
+        uses[variant] = uses.get(variant, 0) + 1
+        chosen.append(((cx, cy), variant))
+        _apply(p["row"], role_name, role, variant)
+
+
+class SheetHasher:
+    """sha256 of a game-root-relative sheet ('assets/...'), cached. An absent file (a public
+    checkout without the overlay) hashes to None and is listed in `missing`."""
+
+    def __init__(self, game_root: Path, overrides: dict | None = None):
+        self.game_root = Path(game_root)
+        self.cache: dict = dict(overrides or {})
+        self.missing: set = set()
+
+    def __call__(self, path: str):
+        if path not in self.cache:
+            f = self.game_root / path
+            self.cache[path] = hashlib.sha256(f.read_bytes()).hexdigest() if f.is_file() else None
+            if self.cache[path] is None:
+                self.missing.add(path)
+        return self.cache[path]
+
+
+def _identity_anim(entry) -> dict | None:
+    anims = entry.get("animations") if isinstance(entry, dict) else None
+    if not isinstance(anims, dict):
+        return None
+    anim = anims.get("idle") or next(iter(anims.values()), None)
+    return anim if isinstance(anim, dict) else None
+
+
+def art_identity(sprite_id: str, entry, sheet_sha) -> tuple:
+    """#623: the art a sprites.json entry draws, so two ids of one picture count as one.
+    Region rows key on ("R", sheet path, rect); frame sheets on ("S", sheet sha256, frame
+    size), or the path when `sheet_sha` returns None. Only the entry's own idle (else first)
+    animation counts: never its fallback_sprite, and render_scale, tint and anchor do not."""
+    anim = _identity_anim(entry)
+    sheet = None
+    if anim is not None:
+        sheet = anim.get("sheet") or anim.get("sheet_down") or next(
+            (v for k, v in anim.items() if k.startswith("sheet") and isinstance(v, str)), None)
+    if not isinstance(sheet, str) or not sheet:
+        return ("id", sprite_id)
+    path = sheet.removeprefix("res://")
+    rect = anim.get("region") or anim.get("region_down")
+    if rect:
+        return ("R", path, tuple(int(v) for v in rect))
+    return ("S", sheet_sha(path) or "path:" + path, tuple(int(v) for v in anim.get("frame_size") or ()))
+
+
+def rect_iou(a, b) -> float:
+    ix = min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0])
+    iy = min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1])
+    inter = max(0, ix) * max(0, iy)
+    union = a[2] * a[3] + b[2] * b[3] - inter
+    return inter / union if union > 0 else 0.0
+
+
+def merge_near_regions(keys) -> dict:
+    """{identity: canonical identity}. Region rows on one sheet whose rects overlap at IoU >=
+    NEAR_IOU are one picture (a tight slice vs a padded hand cut), chained into connected
+    components whose canonical key is the component's minimum, so the result is independent
+    of input order. Containment alone never merges: a small prop inside a big one is its own."""
+    uniq = sorted(set(keys))
+    parent = {k: k for k in uniq}
+
+    def find(k):
+        while parent[k] != k:
+            parent[k] = parent[parent[k]]
+            k = parent[k]
+        return k
+
+    by_sheet: dict = {}
+    for k in uniq:
+        if k[0] == "R":
+            by_sheet.setdefault(k[1], []).append(k)
+    for rows in by_sheet.values():
+        for i, a in enumerate(rows):
+            for b in rows[i + 1:]:
+                if rect_iou(a[2], b[2]) >= NEAR_IOU:
+                    ra, rb = find(a), find(b)
+                    parent[max(ra, rb)] = min(ra, rb)
+    return {k: find(k) for k in uniq}
+
+
+def art_identities(sprites: dict, sheet_sha) -> dict:
+    raw = {sid: art_identity(sid, e, sheet_sha) for sid, e in sprites.items() if not sid.startswith("_")}
+    canon = merge_near_regions(raw.values())
+    return {sid: canon[k] for sid, k in raw.items()}
+
+
+def identity_label(ident: tuple) -> str:
+    if ident[0] == "R":
+        return f"{ident[1]} region {list(ident[2])}"
+    if ident[0] == "S":
+        digest = ident[1] if ident[1].startswith("path:") else "sha256 " + ident[1][:12]
+        return f"frame sheet {digest} at {'x'.join(map(str, ident[2]))}"
+    return f"id {ident[1]}"
+
+
+def rows_of(resolved: dict) -> list:
+    out = []
+    for layer in ("decor", "entities"):
+        for row in resolved.get(layer) or []:
+            if isinstance(row, dict) and "sprite_role" in row:
+                out.append({"layer": layer, "cell": [int(row["cell"][0]), int(row["cell"][1])],
+                            "sprite_role": row["sprite_role"], "sprite": row["sprite"]})
+    return out
+
+
+def materials_of(resolved: dict) -> list:
+    out = []
+    walls = resolved.get("walls")
+    targets = [(f"floor_layers[{i}]", r) for i, r in enumerate(resolved.get("floor_layers") or [])]
+    if isinstance(walls, dict):
+        targets.append(("walls", walls))
+        targets += [(f"walls.segments[{i}]", s) for i, s in enumerate(walls.get("segments") or [])]
+    for label, row in targets:
+        if isinstance(row, dict) and "material_ref" in row:
+            out.append({"layer": label, "material_ref": row["material_ref"],
+                        "fields": {k: row[k] for k in MATERIAL_FIELDS if k in row}})
+    return out
+
+
+def parity_of(resolved: dict) -> dict:
+    """What both runtimes must agree on: rows (with their effective light) and merged materials."""
+    rows = rows_of(resolved)
+    by_key = {}
+    for layer in ("decor", "entities"):
+        for row in resolved.get(layer) or []:
+            if isinstance(row, dict) and "sprite_role" in row:
+                by_key.setdefault(layer, []).append(row)
+    for r in rows:
+        r["light"] = None
+    flat = [row for layer in ("decor", "entities") for row in by_key.get(layer, [])]
+    for r, row in zip(rows, flat):
+        r["light"] = row.get("light")
+    return {"rows": rows, "materials": materials_of(resolved)}
+
+
+def resolve_tree_parity(maps_dir: Path, kits: dict) -> dict:
+    result: dict = {}
+    for path in sorted(Path(maps_dir).glob("*/*.json")):
+        doc = json.loads(path.read_text())
+        result[path.stem] = parity_of(resolve_map(doc, path.stem, map_kit(doc, path), kits))
+    return result
+
+
+def resolve_tree(maps_dir: Path, kits: dict) -> dict:
+    result: dict = {}
+    for path in sorted(Path(maps_dir).glob("*/*.json")):
+        doc = json.loads(path.read_text())
+        result[path.stem] = rows_of(resolve_map(doc, path.stem, map_kit(doc, path), kits))
+    return result
+
+
+def resolve_all(game_root: Path, kits: dict | None = None) -> dict:
+    game_root = Path(game_root)
+    return resolve_tree(game_root / "data" / "maps", load_kits(game_root) if kits is None else kits)
+
+
+def canon_names(repo_root: Path) -> set:
+    """Canon character names: character-profiles.md '## ' headings (parenthetical
+    stripped; non-person headings excluded) as full name and first word, plus any
+    npc whose sprite id equals its lowercased first name."""
+    names: set = set()
+    profile = Path(repo_root) / "docs" / "design" / "character-profiles.md"
+    for line in profile.read_text().splitlines():
+        if not line.startswith("## "):
+            continue
+        name = line[3:].split("(")[0].split(":")[0].strip().rstrip(",")
+        if not name or name in NON_PERSON_HEADINGS or not _HEADING_NAME.match(name):
+            continue
+        names.add(name)
+        if name.split(" ")[0] not in GENERIC_FIRST_WORDS:
+            names.add(name.split(" ")[0])
+    for path in sorted((Path(repo_root) / "wandering_inn_game" / "data" / "maps").glob("*/*.json")):
+        for e in json.loads(path.read_text()).get("entities") or []:
+            dn = str(e.get("display_name", ""))
+            if e.get("kind") == "npc" and dn and str(e.get("sprite", "")) == dn.split(" ")[0].lower():
+                names.add(dn)
+                names.add(dn.split(" ")[0])
+    return names
+
+
+if __name__ == "__main__":
+    import argparse, sys
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--maps", type=Path, help="maps root (default data/maps)")
+    ap.add_argument("--kits", type=Path, help="kits.json (default data/kits.json)")
+    ap.add_argument("--parity", action="store_true", help="emit rows+light+materials (the cross-runtime parity shape)")
+    ap.add_argument("--out", type=Path, help="write the resolution JSON here (stdout otherwise)")
+    a = ap.parse_args()
+    game = Path(__file__).resolve().parent.parent
+    kits = json.loads(a.kits.read_text()) if a.kits else load_kits(game)
+    result = (resolve_tree_parity if a.parity else resolve_tree)(a.maps or game / "data" / "maps", kits)
+    text = json.dumps(result, indent=1, sort_keys=True) + "\n"
+    (a.out.write_text(text) if a.out else sys.stdout.write(text))

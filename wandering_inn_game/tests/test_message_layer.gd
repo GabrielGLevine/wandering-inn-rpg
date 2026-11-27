@@ -3,9 +3,8 @@ extends SceneTree
 ## v0.15 A3 (GH#304): the toast queue is LOSSLESS. Map change and dialogue
 ## defer the visible toast without touching the queue (drain-after); combat
 ## BANKS the queue and re-queues it when the board closes. This suite proves
-## both halves without a live scene: the queue helpers are node-free by
-## design, and source tripwires keep any future transition from re-growing a
-## drop path (the VISUAL-LOG UI/QUEST-START + TOAST/QUEUE-DROP class).
+## the queue helpers without a live scene. test_message_lifetime_runtime
+## exercises the actual coroutine with production holds and modal events.
 
 const MESSAGE_LAYER_PATH := "res://src/ui/message_layer.gd"
 
@@ -177,8 +176,8 @@ func _texts(entries: Variant) -> Array:
 
 ## #509 acceptance 2: a step before the readable floor retires the toast AT
 ## the floor, never before; a step after it retires now; the floor never
-## extends a toast past its own hold. Pure rule, so it is tested at REAL
-## timings (1.2s floor) rather than the collapsed QA ones.
+## extends a toast past its own hold. This is the arithmetic contract only;
+## test_message_lifetime_runtime and message_production_timing exercise delivery.
 func _check_readable_floor(raw: String) -> void:
 	assert(raw.find("const TOAST_MIN_READ_SECONDS := 1.2") != -1, "the readable floor is 1.2s")
 	var layer := _stubbed_instance(raw)

@@ -46,7 +46,23 @@
      22
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+    "fallback_render": {
+     "sheet": "res://assets/tiles/harvest/inn_floor.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      3
+     ],
+     "tone": {
+      "base": [
+       0.33,
+       0.27,
+       0.2
+      ],
+      "detail": 0.65
+     }
+    }
   }
  ],
  "walls": {
@@ -69,7 +85,27 @@
     "face": [
      14,
      7
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "face": [
+                          4,
+                          3
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -83,7 +119,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -97,7 +149,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -111,7 +179,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    },
    {
     "from": [
@@ -125,7 +209,23 @@
     "cap": [
      14,
      6
-    ]
+    ],
+     "fallback_render": {
+                         "sheet": "res://assets/tiles/harvest/plaster_wall.png",
+                         "tile_px": 16,
+                         "cap": [
+                          4,
+                          2
+                         ],
+                         "tone": {
+                          "base": [
+                           0.4,
+                           0.34,
+                           0.26
+                          ],
+                          "detail": 0.55
+                         }
+                        }
    }
   ]
  },
@@ -148,49 +248,14 @@
    }
   },
   {
-   "sprite": "table_brown",
+   "sprite": "longhouse_communal_table_owned",
    "cell": [
     2,
     3
    ]
   },
   {
-   "sprite": "table_brown",
-   "cell": [
-    3,
-    3
-   ]
-  },
-  {
-   "sprite": "stool",
-   "cell": [
-    2,
-    2
-   ]
-  },
-  {
-   "sprite": "stool",
-   "cell": [
-    3,
-    2
-   ]
-  },
-  {
-   "sprite": "stool",
-   "cell": [
-    2,
-    4
-   ]
-  },
-  {
-   "sprite": "stool",
-   "cell": [
-    3,
-    4
-   ]
-  },
-  {
-   "sprite": "barrel",
+   "sprite": "mill_high_shelf_owned",
    "cell": [
     1,
     2
@@ -211,7 +276,7 @@
    ]
   },
   {
-   "sprite": "table_brown",
+   "sprite": "owned_fallback_table_brown",
    "cell": [
     8,
     1
@@ -306,5 +371,11 @@
    "on_interact_accomplishment": "observed_headman_ledger",
    "toast": "Grain against debts, and the debts keep winning most years. Best not to read it over his shoulder."
   }
+ ],
+ "cover_skip": [
+  [
+   3,
+   3
+  ]
  ]
 }

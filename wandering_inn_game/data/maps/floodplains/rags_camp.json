@@ -1,38 +1,403 @@
 {
- "_comment": "v0.16 F1 (#308) the camp hollow. TRAP: rim boulders and the supply crate are decor AND blocked; bush_green stays walkable per the floodplains precedent. Walk-in only, no portals.json row.",
+ "_comment": "Walk-in only. Tent, rack, lookout and supply feet are blocked; bush decor remains walkable.",
  "biome": "floodplains",
+ "cover_skip": [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [9, 0], [10, 0], [11, 0]],
  "grid": {
   "width": 12,
   "height": 9
  },
  "blocked": [
-  [0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0],[11,0],
-  [0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],
-  [11,1],[11,2],[11,3],[11,4],[11,5],[11,6],[11,7],
-  [0,8],[1,8],[2,8],[3,8],[4,8],[6,8],[7,8],[8,8],[9,8],[10,8],[11,8],
-  [1,1],[10,1],[1,7],[10,7],[3,6]
+  [
+   0,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   7,
+   0
+  ],
+  [
+   8,
+   0
+  ],
+  [
+   9,
+   0
+  ],
+  [
+   10,
+   0
+  ],
+  [
+   11,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   0,
+   3
+  ],
+  [
+   0,
+   4
+  ],
+  [
+   0,
+   5
+  ],
+  [
+   0,
+   6
+  ],
+  [
+   0,
+   7
+  ],
+  [
+   11,
+   1
+  ],
+  [
+   11,
+   2
+  ],
+  [
+   11,
+   3
+  ],
+  [
+   11,
+   4
+  ],
+  [
+   11,
+   5
+  ],
+  [
+   11,
+   6
+  ],
+  [
+   11,
+   7
+  ],
+  [
+   0,
+   8
+  ],
+  [
+   1,
+   8
+  ],
+  [
+   2,
+   8
+  ],
+  [
+   3,
+   8
+  ],
+  [
+   4,
+   8
+  ],
+  [
+   6,
+   8
+  ],
+  [
+   7,
+   8
+  ],
+  [
+   8,
+   8
+  ],
+  [
+   9,
+   8
+  ],
+  [
+   10,
+   8
+  ],
+  [
+   11,
+   8
+  ],
+  [
+   3,
+   6
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   8,
+   2
+  ],
+  [
+   10,
+   4
+  ],
+  [
+   7,
+   1
+  ]
  ],
  "floor_layers": [
   {
-   "sheet": "res://assets/tiles/floor_tiles_12/grass_01.png",
-   "tile_px": 540,
-   "variants": [
-    [0,0]
+   "sheet": "res://assets/tiles/harvest/meadow_paths.png",
+   "tile_px": 16,
+   "wang_corners": [
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     0,
+     3
+    ]
    ],
-   "cells": "all"
+   "terrain_lower_cells": {
+    "list": [
+     [
+      2,
+      5
+     ],
+     [
+      2,
+      6
+     ],
+     [
+      3,
+      3
+     ],
+     [
+      3,
+      5
+     ],
+     [
+      4,
+      3
+     ],
+     [
+      4,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      3
+     ],
+     [
+      5,
+      4
+     ],
+     [
+      5,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      5,
+      7
+     ],
+     [
+      5,
+      8
+     ],
+     [
+      6,
+      4
+     ],
+     [
+      7,
+      4
+     ],
+     [
+      8,
+      3
+     ],
+     [
+      8,
+      4
+     ],
+     [
+      8,
+      5
+     ],
+     [
+      9,
+      4
+     ]
+    ]
+   },
+   "tone": {
+    "base": [
+     0.29,
+     0.3,
+     0.19
+    ],
+    "detail": 0.65
+   }
   }
  ],
  "decor": [
-  { "sprite": "boulder", "cell": [1,1] },
-  { "sprite": "boulder", "cell": [10,1] },
-  { "sprite": "boulder", "cell": [1,7] },
-  { "sprite": "boulder", "cell": [10,7] },
+
+
+
+
   { "sprite": "crate", "cell": [3,6] },
   { "sprite": "bush_green", "cell": [2,4] },
   { "sprite": "bush_green", "cell": [9,4] },
   { "sprite": "bush_green", "cell": [7,7] },
-  { "sprite": "tree_round", "cell": [3,1] }
- ],
+  {
+   "sprite": "camp_hide_tent_owned",
+   "cell": [
+    3,
+    2
+   ]
+  },
+  {
+   "sprite": "camp_hide_tent_owned",
+   "cell": [
+    8,
+    2
+   ]
+  },
+  {
+   "sprite": "camp_weapon_rack_owned",
+   "cell": [
+    7,
+    1
+   ]
+  },
+  {
+   "sprite": "camp_lookout_owned",
+   "cell": [
+    10,
+    4
+   ]
+  },
+  {
+   "sprite": "camp_palisade_owned",
+   "cell": [
+    2,
+    0
+   ]
+  },
+  {
+   "sprite": "camp_palisade_owned",
+   "cell": [
+    6,
+    0
+   ]
+  },
+  {
+   "sprite": "camp_palisade_owned",
+   "cell": [
+    10,
+    0
+   ]
+  }],
  "ambience": [
   {
    "preset": "dust_motes",
@@ -68,7 +433,7 @@
     4
    ],
    "display_name": "The Fire Pit",
-   "sprite": "campfire",
+   "sprite": "camp_cooking_spit_owned",
    "_light_comment": "v0.17 R2: the card claimed firelight and the map owned no light. One notch under the floodplains campfire -- kept small on purpose.",
    "light": {
     "color": [

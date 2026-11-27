@@ -65,9 +65,12 @@ var _use_skill: Callable
 var _encounter_gate_met: Callable
 var _start_combat: Callable
 var _pickup: Callable
+var _can_change_items: Callable
+var _begin_items: Callable
+var _end_items: Callable
 
 
-func _init(event_sink: Callable, accomplishment_gate_met_cb: Callable, record_accomplishment_cb: Callable, break_sneak_cb: Callable, talk_pool_line_cb: Callable, start_dialogue_cb: Callable, sleep_cb: Callable, interact_board_cb: Callable, interact_delivery_board_cb: Callable, interact_portal_menu_cb: Callable, interact_fence_menu_cb: Callable, transition_cb: Callable, current_map_cb: Callable, resolve_skill_use_effect_cb: Callable, holds_weapon_family_cb: Callable, known_skills_cb: Callable, apply_gold_effect_cb: Callable, use_skill_cb: Callable, encounter_gate_met_cb: Callable, start_combat_cb: Callable, pickup_cb: Callable, has_items_cb: Callable = Callable()) -> void:
+func _init(event_sink: Callable, accomplishment_gate_met_cb: Callable, record_accomplishment_cb: Callable, break_sneak_cb: Callable, talk_pool_line_cb: Callable, start_dialogue_cb: Callable, sleep_cb: Callable, interact_board_cb: Callable, interact_delivery_board_cb: Callable, interact_portal_menu_cb: Callable, interact_fence_menu_cb: Callable, transition_cb: Callable, current_map_cb: Callable, resolve_skill_use_effect_cb: Callable, holds_weapon_family_cb: Callable, known_skills_cb: Callable, apply_gold_effect_cb: Callable, use_skill_cb: Callable, encounter_gate_met_cb: Callable, start_combat_cb: Callable, pickup_cb: Callable, has_items_cb: Callable = Callable(), can_change_items_cb: Callable = Callable(), begin_items_cb: Callable = Callable(), end_items_cb: Callable = Callable()) -> void:
 	_event_sink = event_sink
 	_accomplishment_gate_met = accomplishment_gate_met_cb
 	_record_accomplishment = record_accomplishment_cb
@@ -84,6 +87,9 @@ func _init(event_sink: Callable, accomplishment_gate_met_cb: Callable, record_ac
 	_resolve_skill_use_effect = resolve_skill_use_effect_cb
 	_holds_weapon_family = holds_weapon_family_cb
 	_has_items = has_items_cb
+	_can_change_items = can_change_items_cb
+	_begin_items = begin_items_cb
+	_end_items = end_items_cb
 	_known_skills = known_skills_cb
 	_apply_gold_effect = apply_gold_effect_cb
 	_use_skill = use_skill_cb
@@ -164,9 +170,6 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 						var spent_toast := String(target.get("once_per_waking_toast", "Nothing more to carry out right now. Come back another day."))
 						_emit(WIEvents.TOAST, {"text": spent_toast})
 						return {"once_per_waking_spent": true}
-					# Bank precedes effect resolution: never combine with a met-gated
-					# locked variant, or its flavor read burns the waking use/wage.
-					entity_first_use[waking_key] = true
 				# GH#330 R2/R5: `item` joins the resolved set so a plain-interact
 				# prop can hand over a real thing, the way the use_skill arm
 				# already does. Absent key = "" = no pickup, so every shipped
@@ -180,6 +183,13 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 					"item": target.get("item", ""),
 					"variants": target.get("variants", []),
 				})
+				var yielded := String(resolved.get("item", ""))
+				if _can_change_items.is_valid() and not bool(_can_change_items.call([yielded])):
+					return {"inventory_refused": true}
+				if _begin_items.is_valid():
+					_begin_items.call()
+				if bool(target.get("once_per_waking", false)):
+					entity_first_use["serve:%s" % String(target[WIKeys.ID])] = true
 				var accomplishment_id := String(resolved["accomplishment"])
 				_record_accomplishment.call(accomplishment_id, 1)
 				var toast_text := String(resolved.get("toast", ""))
@@ -190,9 +200,10 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 					if bool(target.get("once_per_waking", false)) and (_known_skills.call() as Array).has("perfect_hospitality"):
 						wage += 1
 					_apply_gold_effect.call(wage, String(target[WIKeys.ID]))
-				var yielded := String(resolved.get("item", ""))
 				if yielded != "":
 					_pickup.call(yielded, String(target[WIKeys.ID]))
+				if _end_items.is_valid():
+					_end_items.call()
 				return {"accomplishment": accomplishment_id}
 			# Props with no action arm are readable scenery. Their authored Observe
 			# line is plain interaction flavor, not a reason to cast Appraise Foe.
@@ -269,6 +280,10 @@ func _interact_container(target: Dictionary, container_state: Dictionary) -> Dic
 	if bool(container_state.get(id, false)):
 		_emit(WIEvents.TOAST, {"text": "Empty."})
 		return {"container": id, "empty": true}
+	if _can_change_items.is_valid() and not bool(_can_change_items.call(target["contains"])):
+		return {"container": id, "inventory_refused": true}
+	if _begin_items.is_valid():
+		_begin_items.call()
 	var granted: Array[String] = []
 	for raw: Variant in target["contains"]:
 		var item_id := String(raw)
@@ -316,6 +331,8 @@ func _interact_container(target: Dictionary, container_state: Dictionary) -> Dic
 		_record_accomplishment.call(String(counter), 1)
 	if open_toast != "":
 		_emit(WIEvents.TOAST, {"text": open_toast, "lore": open_lore})
+	if _end_items.is_valid():
+		_end_items.call()
 	return {"container": id, "items": granted}
 
 

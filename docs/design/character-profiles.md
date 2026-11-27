@@ -450,6 +450,11 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
 - v1 role: the market-tier arrival stamp + the forge-tier permit chain
   (8e v1 scope; no name — a civic role, not an individual, matching
   the city-identity bible's "uniformed everything" population read).
+- #513: only the market-tier stamp stays paperwork. The forge-tier
+  window ("Forge-Tier Clerk", speaker name unchanged) books Grimalkin's
+  exam floor and cuts the lift token to the load class he writes: same
+  T3 procedural register, subject matter is the floor, chalk and
+  classes.
 - **Generation prompt** (PixelLab v2 `create-character-pro`,
   `method: create_with_style`, `template_id: mannequin`, `view:
   low top-down`, 108×108, `no_background: true`): "trim Drake
@@ -511,6 +516,10 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   to someone who shows they know what a thing costs — courtesy earns
   nothing, competence earns everything.
 - Never: banter, apology, exclamation. At most one dash per line.
+- #513 (smiths and alchemists): the examiner is a Dullahan blade-tester
+  with a bend jig; she taught her apprentice "harder" and had Xif blend a
+  fast quench, so her blades never come back to the second notch. She folds
+  the lead wrap for the regulator in "The Crate the Cage Refuses".
 
 ## Grand Lift Attendant (profile added 2026-07-28; v0.15 Lane B population)
 - OUR INVENTION (no canon figure) — the Drake who works the forge-tier
@@ -526,8 +535,11 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   (3) kindness arrives as practical information, never as sentiment —
   he will not say he is sorry, he will say which window is still open.
 - Never: gossip, sarcasm, a rule bent without saying it is being bent.
-
-## Forge Hall Apprentice (profile added 2026-07-28; v0.16 #307 Pallass depth)
+- #513: the late crate is a rune-set oven regulator whose runes make the
+  cage's feather-fall runes flicker; he will not send a flickering cage
+  down. His one recursive-bureaucracy gag retired with the queue (the
+  bible's budget is a ceiling). His traffic now includes a Garuda runner
+  who takes the shaft on his own wings. (profile added 2026-07-28; v0.16 #307 Pallass depth)
 - OUR INVENTION (no canon figure) — entity `forge_apprentice`, a young
   Drake in her third year on the Pallass forge tier, working the hall
   behind the smith's public bench. Same civic-role convention as the
@@ -563,6 +575,55 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   in the bureaucracy she resents.
 - Never: sentimentality about the family, an apology for charging, a
   word about the forge tier's business. At most one dash per line.
+- #513: the crate she waits on is an oven regulator the lift cage
+  refuses, and she offers a cleared shelf to the Gnoll wool trader
+  ("Room on the Row" help route). Her texture stays bread, shelves,
+  hatchlings and the house slate.
+
+## Gnoll Wool Trader (profile added 2026-10-08; #513 "Room on the Row")
+- OUR INVENTION (no canon figure) — entity `wool_trader`, display
+  "Gnoll Wool Trader", an unnamed Plains Gnoll who came up through the
+  Magical Door with six bales of plains wool and her grandmother's Liscor
+  brass weights. Canon frame within Book 17: City Gnolls and Gnoll–Drake
+  households in Pallass (Xif, Rufelt and Lasica, 6.09), the Plains–City
+  divide (6.09, 7.01), tribes "accused of thievery" (7.10 K). The stall
+  row's grievance (a hollow weight, eight years ago) is invented.
+- Silhouette: the owned `wool_trader` rig (#603): a Plains Gnoll with a
+  bale strapped on her back and a red cord at the waist, faced down in a
+  stationary idle by the arrival plinth, her bale stack beside her.
+- Voice, plain trade register (T2), the 3 notes: (1) facts about the
+  goods first, washed twice and baled tight, never a plea; (2) the
+  insult is reported, not argued ("They say my weights are Gnoll
+  weights"); (3) Gnoll texture is sparse: ", yes?" at most once a node,
+  "Hrr." once in her file, standalone.
+- Never: a speech about prejudice, a named tribe, anything past the
+  Book 17 bar (no Meeting of Tribes, no Plain's Eye). At most one dash
+  per line.
+
+## Dullahan Examiner (profile added 2026-10-08; #513 Pallass themes)
+- OUR INVENTION in a canon frame — entity `forge_hall_examiner`, the
+  forge tier's blade examiner, an unnamed Dullahan at his bend jig in the
+  forge hall. Canon: Dullahan smiths in Pallass (Maughin, Lorent, 6.09;
+  "a growing minority", 6.31). No canon name is used.
+- Silhouette: the owned `dullahan_examiner` rig (#603): dark plate, head
+  carried at the hip under one arm, blade point-down. Faced down (or up)
+  because his side view hides the head.
+- Voice, formal and exact: he states procedure and asks for distance;
+  he holds his head out level with an edge to sight along it and says so
+  without embarrassment. Never: a joke about heads, an opinion of the
+  smith, a reading argued twice.
+
+## Garuda Runner (profile added 2026-10-08; #513 Pallass themes)
+- OUR INVENTION in a canon frame — entity `garuda_runner`, an unnamed
+  Garuda runner on the forge-tier landing who takes the lift shaft on his
+  own wings. Canon: Garuda Street Runners and Garuda flying in Pallass
+  (7.02, 7.03; "more common here than Humans", 6.31). No canon name.
+- Silhouette: the owned `garuda_runner` rig (#603): brown feathers,
+  wing-arms, blue sash, yellow talons. He stands at (24,8), south-east of
+  the Grand Lift's base, because the lift sprite hides anything above and
+  east of it.
+- Voice: quick, young, pleased with himself about the cage, short
+  sentences. Never: lore about Garuda, a delivery anyone could act on.
 
 ## Hedault (profile added 2026-07-28; v0.16 I1 lane, #306)
 - Canon (wiki + `docs/design/hedault-enchanting-spec.md:8-11`): human

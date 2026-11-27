@@ -16,8 +16,8 @@
   {"action": "screenshot", "name": "00_cauldron_with_yarrow"},
 
   {"_comment": "Cast 1 -- the ingredient gate is MET, so the arm resolves and CONSUMES.", "action": "press_field_skill", "skill": "hedge_remedy"},
-  {"action": "wait_for_event", "type": "item_gained", "payload_contains": {"item": "remedy_draught"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "item_lost", "payload_contains": {"item": "dried_yarrow_bundle", "source": "eloise_cauldron"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "item_lost", "payload_contains": {"item": "dried_yarrow_bundle", "source": "eloise_cauldron", "count_before": 1, "count_after": 0 }, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "item_gained", "payload_contains": {"item": "remedy_draught", "source": "eloise_cauldron", "count_before": 0, "count_after": 1 }, "timeout_sec": 5},
   {"action": "assert_state", "path": "accomplishments.witch_craft_used", "equals": 1},
   {"action": "assert_state", "path": "inventory", "contains": "remedy_draught"},
   {"action": "screenshot", "name": "01_brewed_once"},

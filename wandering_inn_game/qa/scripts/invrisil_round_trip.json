@@ -154,7 +154,7 @@
    "path": "player_cell",
    "equals": [
     4,
-    8
+    4
    ]
   },
   {
@@ -162,8 +162,39 @@
    "frames": 10
   },
   {
+   "_comment": "#608 kits: the boulevard's nine upper windows are @facade_window rows (radius 3, the facade pitch), resolved at compose time; the decor build reports the role with the variants it drew (sorted). Exact pin of the resolver's picks: a pool or pick-rule change moves it on purpose.",
+   "action": "assert_event_logged",
+   "type": "ui_decor_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "roles": {
+     "facade_window": [
+      "invrisil_facade_window_1",
+      "invrisil_facade_window_3",
+      "invrisil_upper_window"
+     ]
+    }
+   }
+  },
+  {
+   "_comment": "#608 kits: the cross-street door is an @door_street row; it draws the variant seeded on the {invrisil_boulevard, invrisil_cross_street} portal pair and its visual payload carries the role.",
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "entity": "boulevard_to_cross_street",
+    "sprite": "invrisil_door_street_3",
+    "sprite_role": "door_street"
+   }
+  },
+  {
    "action": "screenshot",
    "name": "01_boulevard_arrival"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
   },
   {
    "_comment": "== WALK THE BOULEVARD: east along row 8 to the alley door (26,8), stepping up to row 7 around the (14,8) blocker and back down. ==",
@@ -260,6 +291,44 @@
    "frames": 10
   },
   {
+   "_comment": "#608 kits: the alleys' loose cargo and wall lamps are @cargo / @lamp_wall rows, resolved at compose time; the decor build reports each role with the variants it drew (sorted; lamp_wall picks one per map). Exact pin of the resolver's picks: a pool or pick-rule change moves it on purpose.",
+   "action": "assert_event_logged",
+   "type": "ui_decor_rendered",
+   "payload_contains": {
+    "map": "mercantile_alleys",
+    "roles": {
+     "cargo": [
+      "invrisil_cargo_1",
+      "invrisil_cargo_2"
+     ],
+     "lamp_wall": [
+      "invrisil_lamp_wall_1"
+     ],
+     "barrel": [
+      "common_keg"
+     ],
+     "crate": [
+      "common_crate_braced",
+      "common_crate_lowwide"
+     ],
+     "sack": [
+      "common_sack_pair"
+     ]
+    }
+   }
+  },
+  {
+   "_comment": "#608 kits: the door just walked through draws the {invrisil_boulevard, mercantile_alleys} pair's @door_street variant, the same one its hide_sprite twin boulevard_to_alleys resolves to.",
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "mercantile_alleys",
+    "entity": "alleys_to_boulevard",
+    "sprite": "door_street_townhouse_owned",
+    "sprite_role": "door_street"
+   }
+  },
+  {
    "action": "screenshot",
    "name": "02_alleys_crossing"
   },
@@ -323,9 +392,12 @@
    "steps": 6
   },
   {
-   "action": "move",
-   "direction": "left",
-   "steps": 10
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    25,
+    8
+   ]
   },
   {
    "_comment": "== THE WAY HOME: retrace west to the anchor's approach (4,8) -- the row's own arrival cell -- and bump west into the stone's blocked cell (3,8) to face it. The picker opens on door_mounted (NOT door_awakened: this fixture has both, but the gate is the one every arrival implies), and the menu excludes Invrisil itself. ==",
@@ -379,6 +451,11 @@
   },
   {
    "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
    "direction": "left",
    "steps": 1
   },
@@ -388,7 +465,7 @@
    "payload_contains": {
     "cell": [
      3,
-     8
+     4
     ]
    }
   },
@@ -397,7 +474,7 @@
    "path": "player_cell",
    "equals": [
     4,
-    8
+    4
    ]
   },
   {

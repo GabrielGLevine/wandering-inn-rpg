@@ -1,0 +1,349 @@
+{
+ "_comment": "#453 P5 through real input. Checkpoint fixture: steel_thread step 1405 (the guardian defeat rollback, ruin_surface (18,8), 35/49 HP, 0/14 MP). Sleep on the dig-camp bedroll 15 steps away (full refill, autosave) instead of walking to the Inn, then win the guardian rested. Inherited kit is setup only.",
+ "fixture_save": "rest_dig_camp_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 30
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 30
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "ruin_surface"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.hp",
+   "equals": 35
+  },
+  {
+   "action": "assert_state",
+   "path": "vitals.mp",
+   "equals": 0
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "ruin_surface",
+    "entity": "dig_camp_bedroll",
+    "sprite": "bed",
+    "hidden": false
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 13
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "00_dig_bedroll_in_context"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_comment": "Bump the bedroll (1,4) to face it."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_affordance_rendered",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "entity": "dig_camp_bedroll",
+    "cell": [
+     1,
+     4
+    ],
+    "showing": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "text": "A thin bedroll over packed earth, the banked fire ticking a few strides off."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slept": true
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_saved",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "slot": "auto"
+   },
+   "_comment": "SLEEP_SETTLED autosave (nested in its dispatch, so seen first); the Saved pill is suppressed under the sleep veil by design (message_layer _show_save_status)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sleep_settled",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "vitals": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "slept"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "timeout_sec": 20
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "resources_changed",
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 35,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_recovery_rendered",
+   "timeout_sec": 120,
+   "payload_contains": {
+    "reason": "sleep",
+    "source": "bed",
+    "before": {
+     "hp": 35,
+     "max_hp": 49,
+     "mp": 0,
+     "max_mp": 14,
+     "mp_potion_doses": 0
+    },
+    "after": {
+     "hp": 49,
+     "max_hp": 49,
+     "mp": 15,
+     "max_mp": 15,
+     "mp_potion_doses": 0
+    }
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_dig_bedroll_slept"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1,
+   "_comment": "Bump ruin_guardian (17,8)."
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "The ledger's own retry, now from the camp bedroll instead of the Inn."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 49
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 15
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300,
+   "policy": "competent"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 60,
+   "payload_contains": {
+    "victory": true,
+    "rounds": 3
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.hp",
+   "equals": 49,
+   "_comment": "Exit pin: the same 49/49 HP, 1/15 MP win the ledger's Inn-rested retry records, reached 54 steps sooner."
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.mp",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.ruin_guardian.hp",
+   "equals": 0
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleared_ruin_guardian"
+   }
+  }
+ ]
+}

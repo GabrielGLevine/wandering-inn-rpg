@@ -1,5 +1,5 @@
 {
- "_comment": "#508 diagnostic: reproduces the unresolved fight-first / force-crate loss of both Rogue entries. PASS means the reported defect was reproduced, not recovery acceptance. Fresh creation, real victories, ordinary return to the drainage cut and sleep.",
+ "_comment": "Historical pre-repair defect probe: its absent-credit pins are expected to fail after approved #508 recovery. Acceptance routes are rogue_recovery_force and rogue_recovery_guile. Never register this defect-reproduction script as a green gate.",
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [
@@ -228,7 +228,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN — NO KILLING GOBLINS."
+    "text": "A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN \u2014 NO KILLING GOBLINS."
    },
    "timeout_sec": 5
   },
@@ -771,7 +771,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Warrior] class gained! — [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
+    "text": "[Warrior] class gained! \u2014 [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
    },
    "timeout_sec": 5
   },
@@ -787,7 +787,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Warrior] class gained! — [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
+    "text": "[Warrior] class gained! \u2014 [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
    },
    "from_start": true,
    "timeout_sec": 10

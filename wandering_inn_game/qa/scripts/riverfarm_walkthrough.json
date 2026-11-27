@@ -4298,6 +4298,27 @@
     11,
     8
    ]
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "riverfarm_village",
+    "floor_cells": 384,
+    "blocked_cells": 95,
+    "ground_transitions": 1
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "riverfarm_village",
+    "entity": "riverfarm_well",
+    "sprite": "riverfarm_well_owned",
+    "resolved_sprite": "riverfarm_well_owned",
+    "hidden": false
+   }
   }
  ]
 }

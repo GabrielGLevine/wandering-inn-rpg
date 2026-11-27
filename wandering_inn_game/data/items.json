@@ -336,6 +336,8 @@
     {
       "_comment": "GH#378 arm 1: signposts the cooking gate at all 21 Serve options at once. TRAP: test_copy_fit measures the option row at fs14 ONLY (22px spare); at 115%/130% scale every row ran 59-162px over until dialogue_panel gained autowrap. No wording fits fs18.",
       "id": "hot_meal",
+      "stackable": true,
+      "consumable_family": "food",
       "name": "Hot Meal",
       "kind": "meal",
       "weapon_family": "none",
@@ -347,7 +349,8 @@
       "abilities": [],
       "source_hint": "the stew pot, if you cook",
       "description": "A bowl of stew and a heel of bread, still steaming from the pot. Someone's waiting on this.",
-      "lore": "The stew pot doesn't care who it's for — Watch, patron, or the cook themselves. It only cares that it's stirred."
+      "lore": "The stew pot doesn't care who it's for — Watch, patron, or the cook themselves. It only cares that it's stirred.",
+      "use_effect": { "restore_hp": 6, "restore_mp": 0 }
     },
     {
       "_comment": "kind:\"parcel\" reused verbatim from the delivery precedent below -- inert carried flavor, no price (never sold), no weapon/armor/accessory kind so equip() structurally refuses it.",
@@ -616,6 +619,9 @@
     {
       "_comment": "Heal amount (8) matches second_wind's own self-heal skill for a consistent 'a solid partial heal' feel across the two surfaces.",
       "id": "mending_draught",
+      "stackable": true,
+      "consumable_family": "hp_potion",
+      "usable_in_combat": true,
       "name": "Mending Draught",
       "kind": "tool",
       "weapon_family": "none",
@@ -627,7 +633,8 @@
       "abilities": [],
       "price": 10,
       "use_effect": {
-        "heal": 8
+        "heal": 8,
+        "restore_hp": 8
       },
       "description": "A corked vial of something dark red, thick as syrup, that smells faintly of yarrow and copper.",
       "lore": "The witch keeps a shelf of these behind the tea things — not magic, she says, just knowing which roots do what. Drink it mid-fight and the wound closes slower than a real healer's work, but it closes."
@@ -825,6 +832,9 @@
     {
       "_comment": "Heal shape and 8-HP band mirror mending_draught verbatim; 10g placeholder price mirrors that precedent, with final pricing deferred to open issue #92.",
       "id": "remedy_draught",
+      "stackable": true,
+      "consumable_family": "hp_potion",
+      "usable_in_combat": true,
       "name": "Remedy Draught",
       "kind": "tool",
       "weapon_family": "none",
@@ -836,7 +846,8 @@
       "abilities": [],
       "price": 10,
       "use_effect": {
-        "heal": 8
+        "heal": 8,
+        "restore_hp": 8
       },
       "description": "A squat green-glass bottle, stoppered warm, smelling of mint, bitterroot, and woodsmoke.",
       "lore": "A hedge remedy does not promise miracles. It promises that the bleeding slows, the swelling settles, and morning remains possible."
@@ -844,6 +855,8 @@
     {
       "_comment": "The +2 HP next-fight payload anchors on the shipped well_fed combat-build bonus. NO `price` KEY (GH#334 ruling 7): hot_meal's precedent -- a meal is served or eaten, never merchandise. Cooking plates it free, so a price was a gold spigot. GH#432 CAP, and this entry is the anchor every other next_fight payload cites: ARMED MEAL MODS NEVER SUM. `_merge_pending_meal` keeps the MAXIMUM per key, so a second plate REFRESHES the armed +2 instead of making it +4, a stronger meal REPLACES it, and a weaker one is a no-op on the number (the item still spends; the use toast reports the real armed total). The cap is PER KEY, so a Tempering Oil's damage still rides beside this HP -- GH#334 ruling 5 (pay twice, get both) is untouched, and only same-key restacking is bounded. That is what lets the produce-only inn props stay unbounded: the loop still costs the walk, and it buys exactly one meal's worth.",
       "id": "fine_meal",
+      "stackable": true,
+      "consumable_family": "food",
       "name": "Fine Meal",
       "kind": "meal",
       "weapon_family": "none",
@@ -854,6 +867,8 @@
       "tier": "mundane",
       "abilities": [],
       "use_effect": {
+        "restore_hp": 8,
+        "restore_mp": 4,
         "next_fight": {
           "hp_mod": 2
         }
@@ -864,6 +879,8 @@
     {
       "_comment": "The +2 HP/+1 damage next-fight payload is the controller-ruled chef-tier step above well_fed. No `price` key (GH#334 ruling 7): see fine_meal. GH#432 cap applies PER KEY (full rule on fine_meal): this plate REPLACES a weaker armed hp_mod and refreshes an equal one, and its damage_mod does not add to an armed cudgel's or oil's -- it never sums with anything.",
       "id": "signature_meal",
+      "stackable": true,
+      "consumable_family": "food",
       "name": "Signature Meal",
       "kind": "meal",
       "weapon_family": "none",
@@ -874,6 +891,8 @@
       "tier": "mundane",
       "abilities": [],
       "use_effect": {
+        "restore_hp": 10,
+        "restore_mp": 6,
         "next_fight": {
           "hp_mod": 2,
           "damage_mod": 1
@@ -1013,6 +1032,8 @@
     {
       "_comment": "GH#165 [Supplies: Flarepepper Powder] output. Meal-buff consumable (tempering_oil next_fight {damage_mod:1} shape). Restocked one-per-rest by the Chef's [Supplies:] sleep hook (wi_game.gd), never sold -- price carried for economy-validator parity + any future shop.",
       "id": "flarepepper_powder",
+      "stackable": true,
+      "consumable_family": "food",
       "name": "Flarepepper Powder",
       "kind": "meal",
       "weapon_family": "none",
@@ -1032,7 +1053,7 @@
       "lore": "Flarepepper grows wild on the Floodplains, hot enough to make a Drake blink. A good Chef keeps a supply put by; a great one knows exactly how much is too much."
     },
     {
-      "_comment": "GH#142 Hedault enchant variant of traveler_charm (base 5g + 20g fee; validator: price > base + fee/2). dangersense fold, +1 hp over base, res 1.",
+      "_comment": "GH#142 Hedault enchant variant of traveler_charm (base 5g + 20g fee; validator: price > base + fee/2). dangersense fold, +1 hp over base. #514 trueing: resonance 0, one under its power-budget price of 1 (the craft discount), never more than the charm it consumes.",
       "id": "hedaults_traveler_charm",
       "name": "Warded Traveler Charm",
       "kind": "accessory",
@@ -1040,17 +1061,18 @@
       "damage_mod": 0,
       "hp_mod": 3,
       "damage_reduction": 0,
-      "resonance": 1,
+      "resonance": 0,
+      "trued_from": "traveler_charm",
       "tier": "enchanted",
       "price": 18,
       "abilities": [
         "dangersense"
       ],
-      "description": "The same worn charm, reworked in a fastidious hand: the old knots redone, one thread of real warding braided through.",
+      "description": "The same worn charm, reworked in a fastidious hand: the old knots redone, one thread of real warding braided through. Whatever used to hum in it has gone quiet.",
       "lore": "Hedault does not gild things. He corrects them. The charm is what it always should have been, which he will tell you at length."
     },
     {
-      "_comment": "GH#142 Hedault enchant variant of hunters_fang_talisman (base 14g + 35g fee). eagle_eyes fold -- NEW id, so the t3/t4 gated sim builds that bake the BASE talisman are untouched (the #92 D5 lesson).",
+      "_comment": "GH#142 Hedault enchant variant of hunters_fang_talisman (base 14g + 35g fee). eagle_eyes fold -- NEW id, so the t3/t4 gated sim builds that bake the BASE talisman are untouched (the #92 D5 lesson). #514 trueing: resonance 0, one under its power-budget price of 1.",
       "id": "hedaults_hunters_fang",
       "name": "Keen-Set Hunters Fang",
       "kind": "accessory",
@@ -1058,17 +1080,18 @@
       "damage_mod": 1,
       "hp_mod": 0,
       "damage_reduction": 0,
-      "resonance": 1,
+      "resonance": 0,
+      "trued_from": "hunters_fang_talisman",
       "tier": "enchanted",
       "price": 45,
       "abilities": [
         "eagle_eyes"
       ],
-      "description": "The fang reset in silver wire, point-first, angled like a compass needle that has chosen its prey.",
+      "description": "The fang reset in silver wire, point-first, angled like a compass needle that has chosen its prey. The other charms on your cord no longer bristle at it.",
       "lore": "An enchanter who hates waste, given a trophy that was mostly ornament. Now it is mostly not."
     },
     {
-      "_comment": "GH#142 Hedault enchant variant of witch_wardstone_bead (base 16g + 40g fee). mana_shield fold.",
+      "_comment": "GH#142 Hedault enchant variant of witch_wardstone_bead (base 16g + 40g fee). mana_shield fold. #514 trueing: resonance 1, one under its power-budget price of 2 and no more than the bead it consumes.",
       "id": "hedaults_wardstone",
       "name": "True-Set Wardstone",
       "kind": "accessory",
@@ -1076,13 +1099,14 @@
       "damage_mod": 0,
       "hp_mod": 2,
       "damage_reduction": 0,
-      "resonance": 2,
+      "resonance": 1,
+      "trued_from": "witch_wardstone_bead",
       "tier": "enchanted",
       "price": 50,
       "abilities": [
         "mana_shield"
       ],
-      "description": "The bead re-cut along its true grain, the witch-warding inside finally facing outward.",
+      "description": "The bead re-cut along its true grain, the witch-warding inside finally facing outward, and no longer pushing at its neighbours.",
       "lore": "Riverfarm work finished Invrisil-style. Neither place would admit the pairing improves them both."
     },
     {
@@ -1146,6 +1170,7 @@
       "lore": "Certain doors in certain cities were opened by certain coins. The doors are gone. The coins kept their manners."
     },
     {
+      "_comment": "Hedault's fragment trade. #514 trueing: resonance 0, one under its power-budget price of 1.",
       "id": "hedaults_warded_setting",
       "name": "Hedault's Warded Setting",
       "kind": "accessory",
@@ -1153,11 +1178,12 @@
       "damage_mod": 0,
       "hp_mod": 2,
       "damage_reduction": 1,
-      "resonance": 1,
+      "resonance": 0,
+      "trued_from": "guardian_ward_fragment",
       "tier": "enchanted",
       "price": 45,
       "abilities": [],
-      "description": "A plain silver mount holding nothing, which is the point: the warding is in the setting itself, laid in Hedault's exact hand.",
+      "description": "A plain silver mount holding nothing, which is the point: the warding is in the setting itself, laid in Hedault's exact hand. You could forget you were wearing it, which he says is the standard.",
       "lore": "He kept the fragment. What he handed back holds the same discipline without the grief of the original — his phrase, delivered like an invoice."
     },
     {
@@ -1231,6 +1257,8 @@
     {
       "_comment": "[Flame Jet] carcass yield. hp_mod 2 = fine_meal parity, flavor not power. No price (hot_meal precedent).",
       "id": "seared_venison",
+      "stackable": true,
+      "consumable_family": "food",
       "name": "Seared Venison",
       "kind": "meal",
       "weapon_family": "none",
@@ -1241,6 +1269,8 @@
       "tier": "mundane",
       "abilities": [],
       "use_effect": {
+        "restore_hp": 6,
+        "restore_mp": 0,
         "next_fight": {
           "hp_mod": 2
         }
@@ -1394,7 +1424,7 @@
       "lore": "The forge tier turns these out by the rack and sells the overrun to anyone whose papers are in order. Drakes have drilled with this length since before Liscor had walls worth the name."
     },
     {
-      "_comment": "#438 EQUIPMENT GAPS, spear T2.5 -- the Hedault upgrade of relcs_spare_spear, and the first WEAPON the enchant-commerce loop touches (every prior hedaults_* product is an accessory). Keeps the gift's identity: the arm consumes relcs_spare_spear rather than replacing it from stock. damage_mod 2 is the first rung above the shipped universal +1 ceiling. Price 45 = hedaults_hunters_fang 45 exactly, the same fee band (item + 35g) at the same product tier.",
+      "_comment": "#438 EQUIPMENT GAPS, spear T2.5 -- the Hedault upgrade of relcs_spare_spear, and the first WEAPON the enchant-commerce loop touches (every prior hedaults_* product is an accessory). Keeps the gift's identity: the arm consumes relcs_spare_spear rather than replacing it from stock. damage_mod 2 is the first rung above the shipped universal +1 ceiling. Price 45 = hedaults_hunters_fang 45 exactly, the same fee band (item + 35g) at the same product tier. #514: trued_from marks the trueing; a mundane spear has no resonance to discount.",
       "id": "hedault_trued_spear",
       "name": "Hedault-Trued Spear",
       "kind": "weapon",
@@ -1403,6 +1433,7 @@
       "hp_mod": 0,
       "damage_reduction": 0,
       "resonance": 0,
+      "trued_from": "relcs_spare_spear",
       "tier": "mundane",
       "abilities": [],
       "price": 45,
@@ -1457,12 +1488,13 @@
       "lore": "A bow this long is a farmer's whole winter of shaping and a hunter's whole year of pulling. It was in the den because whoever drew it last did not walk out."
     },
     {
-      "_comment": "#438 EQUIPMENT GAPS, death-implement T2. ACCESSORY, not weapon, and the kind is forced by the engine rather than chosen: WICombatBuild.equipment_mods (combat_build.gd:19) reads ONLY damage_mod off a weapon, and fold_abilities (combat_build.gd:30) folds abilities from ACCESSORIES ONLY -- an implement authored as a weapon could carry no ability at all. Worse, a new `weapon_family` would send weapon_gated_kit stripping the necromantic lineage's own grants: [Grave Edge] is sword-gated, so a deathknight holding an implement would lose its marquee Skill. Held in the off hand beside a blade is both the correct fiction and the only shape that works. NAME: canon implement vocabulary is WAND and STAFF (the wiki's artifact list carries no 'rod' and no 'focus'; Pisces' Waisrabbit Bone Wand, Vol 4 Ch 4.10, is the pattern), so the sketch's 'Focus' is retired here rather than shipped. WHY THE WEIGHT IS IN hp_mod: damage_mod is added only under `if melee:` (combat/wi_combat.gd:785), and the arms this implement's spines fight through call `_resolve_hit` with melee=false (combat/skill_effects.gd:63/185/245), so the damage line does not reach them. That is a deliberate pin on main, not a finding of this lane. DEFECT FIXED (audit): the first draft shipped hp_mod 0, which left this row losing outright to hunters_fang_talisman -- the same damage_mod 1 for 14g catalog and 20g at the very fence node that sells this one -- so the spine it exists for was better off ignoring it. hp_mod 3 is what separates the two rows.",
+      "_comment": "#438 EQUIPMENT GAPS, death-implement T2. ACCESSORY, not weapon, and the kind is forced by the engine rather than chosen: WICombatBuild.equipment_mods (combat_build.gd:19) reads ONLY damage_mod off a weapon, and fold_abilities (combat_build.gd:30) folds abilities from ACCESSORIES ONLY -- an implement authored as a weapon could carry no ability at all. Worse, a new `weapon_family` would send weapon_gated_kit stripping the necromantic lineage's own grants: [Grave Edge] is sword-gated, so a deathknight holding an implement would lose its marquee Skill. Held in the off hand beside a blade is both the correct fiction and the only shape that works. NAME: canon implement vocabulary is WAND and STAFF (the wiki's artifact list carries no 'rod' and no 'focus'; Pisces' Waisrabbit Bone Wand, Vol 4 Ch 4.10, is the pattern), so the sketch's 'Focus' is retired here rather than shipped. #514 (#495 ruling): the wand's damage point is SPELL_POWER, which every non-weapon spell, line and blast arm adds; a damage_mod point would sharpen sword swings instead. DEFECT FIXED (audit): the first draft shipped hp_mod 0, which left this row losing outright to hunters_fang_talisman -- the same damage_mod 1 for 14g catalog and 20g at the very fence node that sells this one -- so the spine it exists for was better off ignoring it. hp_mod 3 is what separates the two rows.",
       "id": "graveflame_wand",
       "name": "Graveflame Wand",
       "kind": "accessory",
       "weapon_family": "none",
-      "damage_mod": 1,
+      "damage_mod": 0,
+      "spell_power": 1,
       "hp_mod": 3,
       "damage_reduction": 0,
       "resonance": 2,
@@ -1473,12 +1505,13 @@
       "lore": "He keeps it under the counter and does not display it, which he will tell you is a matter of shop policy rather than of law. The distinction matters to him."
     },
     {
-      "_comment": "#438 EQUIPMENT GAPS, death-implement T3 -- crypt_lich_mouth loot. NAME: the sketch's working name was 'Femur Rod', which the sketch itself flagged for replacement. This one is built from the canon naming pattern instead -- [material]bone + implement, after Pisces' Waisrabbit Bone Wand (Vol 4, Ch. 4.10) -- on [Lich], a canon undead type cited Vol 6, Ch. 6.51 A. Both hooks are pre-bar, the compound names no character's unique artifact, and it says exactly what the drop is. Accessory for the same engine reason as graveflame_wand, and its weight sits in hp_mod for the same reason recorded there. resonance 3 puts it past the base capacity of 2 (wi_game.gd:47), the same reach as anchor_sliver. DEFECT FIXED (audit): the first draft shipped hp_mod 2 / damage_reduction 0, which the T2 row above then matched or beat on every stat; damage_reduction 1 is what separates this row from graveflame_wand. Unpriced: unique drop, the moon_bone_amulet convention.",
+      "_comment": "#438 EQUIPMENT GAPS, death-implement T3 -- crypt_lich_mouth loot. NAME: the sketch's working name was 'Femur Rod', which the sketch itself flagged for replacement. This one is built from the canon naming pattern instead -- [material]bone + implement, after Pisces' Waisrabbit Bone Wand (Vol 4, Ch. 4.10) -- on [Lich], a canon undead type cited Vol 6, Ch. 6.51 A. Both hooks are pre-bar, the compound names no character's unique artifact, and it says exactly what the drop is. Accessory for the same engine reason as graveflame_wand. #514: spell_power 2, the T3 rung of graveflame's 1, in place of the old inert damage_mod. resonance 3 puts it past the base capacity of 2 (wi_game.gd:47), the same reach as anchor_sliver. DEFECT FIXED (audit): the first draft shipped hp_mod 2 / damage_reduction 0, which the T2 row above then matched or beat on every stat; damage_reduction 1 is what separates this row from graveflame_wand. Unpriced: unique drop, the moon_bone_amulet convention.",
       "id": "lichbone_wand",
       "name": "Lichbone Wand",
       "kind": "accessory",
       "weapon_family": "none",
-      "damage_mod": 1,
+      "damage_mod": 0,
+      "spell_power": 2,
       "hp_mod": 3,
       "damage_reduction": 1,
       "resonance": 3,
@@ -1519,6 +1552,43 @@
       ],
       "description": "Flat running sandals, re-strapped more than once, the soles worn to the shape of somebody else's stride.",
       "lore": "A Runner who stopped running gave them up rather than sell them, on the theory that a road owes something to whoever takes it next. They are lighter on than they look in the hand."
+    },
+    {
+     "id": "mana_potion",
+     "stackable": true,
+     "consumable_family": "mp_potion",
+     "usable_in_combat": true,
+     "name": "Mana Potion",
+     "kind": "tool",
+     "weapon_family": "none",
+     "damage_mod": 0,
+     "hp_mod": 0,
+     "damage_reduction": 0,
+     "resonance": 0,
+     "tier": "mundane",
+     "abilities": [],
+     "price": 10,
+     "use_effect": {
+      "restore_mp": 6
+     },
+     "description": "A small, stoppered bottle of mana potion.",
+     "lore": "Kept beside the healing draughts, with a warning to count your doses. Another bottle cannot do everything a night's sleep can."
+    },
+    {
+     "_comment": "#513 Room on the Row reward. A mundane trade good, not gear: every combat modifier 0, resonance 0, no use_effect. price 16 sells for floor(16 * 0.5 * (1 + trade_bonus)) = 8 at the market-tier stallkeeper with no trade-bonus Skill, so the quest pays 12g + 8g of value, under every Invrisil one-shot (25/25/30).",
+     "id": "plains_wool_bale",
+     "name": "Bale of Plains Wool",
+     "kind": "tool",
+     "weapon_family": "none",
+     "damage_mod": 0,
+     "hp_mod": 0,
+     "damage_reduction": 0,
+     "resonance": 0,
+     "tier": "mundane",
+     "abilities": [],
+     "price": 16,
+     "description": "A bale of washed plains wool, tied with twine. It smells of lanolin and dry grass.",
+     "lore": "Plains wool, washed twice and baled tight, carried up to Pallass through the Door alongside a set of Liscor brass weights."
     }
   ]
 }

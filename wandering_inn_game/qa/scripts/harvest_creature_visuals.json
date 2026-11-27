@@ -1,0 +1,233 @@
+{
+ "_comment": "#564: actual chieftain encounter and razorbeak consent trigger two mixed/paired combat boards. Renderer confirmations pin the loaded complete rig; windowed captures and unchanged legibility bounds supply visual proof. Existing full-tier bounty fixture, no balance edits.",
+ "fixture_save": "floodplains_bestiary_loop_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    31,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_arena_rendered",
+   "payload_contains": {
+    "arena": "cave_mouth"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_combatant_visual_rendered",
+   "payload_contains": {
+    "id": "cave_spider",
+    "sprite": "cave_bat_harvest",
+    "resolved_sprite": "cave_bat_harvest",
+    "animation": "idle"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_combat_layout",
+   "desktop": true
+  },
+  {
+   "action": "screenshot",
+   "name": "01_cave_bat_mixed_board"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    5,
+    18
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    19
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "razorbeak_nest",
+    "entity": "razorbeak_nest"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_arena_rendered",
+   "payload_contains": {
+    "arena": "boulder_flats"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_combatant_visual_rendered",
+   "payload_contains": {
+    "id": "razorbeak_a",
+    "sprite": "razorbeak_harvest",
+    "resolved_sprite": "razorbeak_harvest",
+    "animation": "idle"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_combatant_visual_rendered",
+   "payload_contains": {
+    "id": "razorbeak_b",
+    "sprite": "razorbeak_harvest",
+    "resolved_sprite": "razorbeak_harvest",
+    "animation": "idle"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_combat_layout",
+   "desktop": true
+  },
+  {
+   "action": "screenshot",
+   "name": "02_razorbeak_pair_board"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  }
+ ]
+}

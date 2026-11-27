@@ -39,15 +39,15 @@
   },
   {
    "id": "invrisil",
-   "display_name": "Invrisil \u2014 the City of Adventurers",
+   "display_name": "Invrisil — the City of Adventurers",
    "map": "invrisil_boulevard",
    "cell": [
     4,
-    8
+    4
    ],
    "requires_accomplishment": "invrisil_attuned",
    "arrival_toast": "The light turns pale and cool, and the noise of a much bigger city rushes in to fill the silence. Invrisil, same as the letter promised.",
-   "_comment": "Arrival cell (4,8), one east of invrisil_anchor_stone (3,8) at the boulevard's own end of the pair; open and off every blocked/decor/entity cell (blast-radius checked)."
+   "_comment": "Arrival (4,4) stands east of the return stone (3,4); the northern shopfronts and plaza fountain share the arrival frame."
   },
   {
    "id": "pallass",

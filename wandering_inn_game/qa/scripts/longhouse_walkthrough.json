@@ -75,6 +75,26 @@
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "riverfarm_village", "cell": [11, 8] }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "riverfarm_village" },
   { "action": "assert_state", "path": "player_cell", "equals": [11, 8] },
-  { "action": "screenshot", "name": "05_round_trip_village" }
+  { "action": "screenshot", "name": "05_round_trip_village" },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "riverfarm_longhouse",
+    "floor_cells": 70,
+    "blocked_cells": 36,
+    "ground_transitions": 0
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entity_visual_rendered",
+   "payload_contains": {
+    "map": "riverfarm_longhouse",
+    "entity": "riverfarm_guest_cot",
+    "sprite": "bed",
+    "hidden": false
+   }
+  }
  ]
 }

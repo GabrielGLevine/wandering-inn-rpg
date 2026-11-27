@@ -1,0 +1,57 @@
+{
+ "_comment": "Prepared icon audition with coherent Warrior 3 and Mage 5 prerequisites.",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   2,
+   3
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 3,
+   "mage": 5
+  },
+  "accomplishments": {
+                      "met_relc": 1,
+                      "sparred_with_relc": 1,
+                      "given_spear_by_relc": 1,
+                      "studied_the_cellar": 1,
+                      "chess_with_olesm": 1,
+                      "won_combat": 1,
+                      "melee_hit": 6,
+                      "learned_magic_from_pisces": 1,
+                      "spell_cast": 13
+                     },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear",
+   "training_bow",
+   "hunting_bow",
+   "guardsmans_pike",
+   "lichbone_wand",
+   "graveflame_wand",
+   "mending_draught",
+   "remedy_draught",
+   "sleeproot_draught"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

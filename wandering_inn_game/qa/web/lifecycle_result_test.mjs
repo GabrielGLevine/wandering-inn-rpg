@@ -17,3 +17,19 @@ assert.equal(isKnownRendererDiagnostic({...known,text:known.text+' ERROR: unexpe
 assert.equal(isKnownRendererDiagnostic({type:'warning',text:'unknown warning'}),false);
 assert.equal(isKnownRendererDiagnostic({type:'log',text:'WARNING: ImageLoaderSVG: Target canvas dimensions 51500×51500 (with scale 1.00) exceed the max supported dimensions 16384×16384. The target canvas will be scaled down.'}),true);
 console.log('PASS: only exact known renderer diagnostics are exempt');
+
+const { browserResultFailures } = await import('./lifecycle_result.mjs');
+assert.deepEqual(browserResultFailures(valid,'lifecycle_reload',12),[]);
+for (const patch of [{passed:false},{aborted:true},{failures:['bad']},{failures:null},{script:'res://qa/scripts/other.json'},{steps_run:0,steps_total:0},{steps_run:11},{steps_total:13}]) {
+ assert.ok(browserResultFailures({...valid,...patch},'lifecycle_reload',12).length);
+}
+for (const type of ['error','pageerror','warning']) {
+ assert.ok(browserResultFailures(valid,'lifecycle_reload',12,[{type,text:'unrelated diagnostic'}]).length);
+}
+for (const text of ['SCRIPT ERROR: broken','Parse Error: broken','ERROR: broken','WARNING: broken']) {
+ assert.ok(browserResultFailures(valid,'lifecycle_reload',12,[{type:'log',text}]).length);
+}
+assert.deepEqual(browserResultFailures(valid,'lifecycle_reload',12,[known]),[]);
+assert.ok(browserResultFailures(valid,'lifecycle_reload',12,[{...known,type:'error'}]).length);
+assert.ok(browserResultFailures(valid,'lifecycle_reload',12,[{...known,text:known.text+' ERROR: unexpected'}]).length);
+console.log('PASS: shared browser verdict rejects errors, warnings and incomplete or wrong-script results');

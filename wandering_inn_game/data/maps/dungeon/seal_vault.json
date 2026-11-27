@@ -29,7 +29,6 @@
  ],
  "floor_layers": [
   {
-   "_pick": "Castle Environment stone-floor block ([4,11]/[5,11]/[6,11]/[4,12], flat warm-grey rgb~104,97,81) -- the barracks/pallass pick, already manifest-wired (bundle:true). Chosen over the dungeon biome's cemetery floor on purpose: this chamber never fell in, and the warmer, cleaner stone is the only thing that says so before Pisces does.",
    "sheet": "res://assets/tiles/castle/Tiles.png",
    "tile_px": 16,
    "variants": [
@@ -50,7 +49,31 @@
      12
     ]
    ],
-   "cells": "all"
+   "cells": "all",
+   "tone": {
+    "base": [
+     0.48,
+     0.46,
+     0.42
+    ],
+    "detail": 0.68
+   },
+   "fallback_render": {
+    "sheet": "res://assets/tiles/harvest/wall_over_flagstone_v1.png",
+    "tile_px": 16,
+    "coords": [
+     2,
+     1
+    ],
+    "tone": {
+     "base": [
+      0.48,
+      0.46,
+      0.42
+     ],
+     "detail": 0.68
+    }
+   }
   }
  ],
  "decor": [

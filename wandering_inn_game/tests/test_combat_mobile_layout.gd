@@ -42,6 +42,9 @@ func _run() -> void:
 		for line: String in page.split("\n"):
 			assert(font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 28).x <= 280.01)
 	_check_uncapped_bar()
+	if not await _check_item_cost_layout():
+		quit(1)
+		return
 	var focus := WICameraController.combat_focus(Vector2i(12, 8), Vector2(152, 128), 16.0, [Vector2i(2, 3), Vector2i(9, 4)])
 	var view := Rect2(focus - Vector2(76, 64), Vector2(152, 128))
 	assert(view.has_point(Vector2(2.5, 3.5) * 16.0) and view.has_point(Vector2(9.5, 4.5) * 16.0), "active and nearby target share the reserved board view")
@@ -83,3 +86,33 @@ func _check_uncapped_bar() -> void:
 	bar.render(slots.slice(0, 3), -1)
 	assert(bar.get_child_count() == 3 and bar.slot_rect(2).has_area(), "desktop row still renders normally after a touch page")
 	bar.free()
+
+
+func _check_item_cost_layout() -> bool:
+	var bar := WIHotbar.new()
+	root.add_child(bar)
+	for css_height: float in [390.0, 412.0, 360.0]:
+		var scale := css_height / 720.0
+		for text_scale: float in [1.0, 1.15, 1.3]:
+			var font_size := ceili(14.0 * text_scale / scale)
+			var line_height := bar.get_theme_font("font").get_height(font_size)
+			var layout := WICombatMobileLayout.regions(Rect2(12, 0, 1256, 720), scale, line_height, 1, 0)
+			for mp_cost: int in [0, 2]:
+				bar.render_page([{"label": "Mana Potion ×2", "ap_cost": 1, "mp_cost": mp_cost}], -1, layout.slot_size, 0, 4, font_size)
+				await process_frame
+				var labels: Array[Label] = []
+				var slot: Control = bar.get_child(0)
+				for child: Node in slot.get_children():
+					if child is Label:
+						labels.append(child)
+				if labels.size() != 2 or labels[0].get_rect().intersects(labels[1].get_rect()):
+					print("FAIL: phone item name and AP/MP cost overlap")
+					bar.free()
+					return false
+				for label: Label in labels:
+					if not Rect2(Vector2.ZERO, slot.size).encloses(label.get_rect()):
+						print("FAIL: phone item label or cost escapes its slot: ", label.text, " ", label.get_rect(), " slot ", slot.size, " font ", font_size)
+						bar.free()
+						return false
+	bar.free()
+	return true

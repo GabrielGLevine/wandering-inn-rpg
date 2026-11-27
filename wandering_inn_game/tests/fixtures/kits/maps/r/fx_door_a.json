@@ -1,0 +1,30 @@
+{
+ "grid": {
+  "width": 7,
+  "height": 7
+ },
+ "blocked": [],
+ "decor": [],
+ "entities": [
+  {
+   "id": "d1",
+   "kind": "door",
+   "sprite": "@door_x",
+   "to_map": "fx_door_b",
+   "cell": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "d2",
+   "kind": "door",
+   "sprite": "@door_x",
+   "to_map": "fx_door_b",
+   "cell": [
+    5,
+    1
+   ]
+  }
+ ]
+}

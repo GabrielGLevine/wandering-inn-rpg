@@ -2,13 +2,11 @@ class_name WIEconomy
 extends RefCounted
 
 var _event_sink: Callable
-var _pickup: Callable
 var _set_gold: Callable
 
 
-func _init(event_sink: Callable, pickup_cb: Callable, set_gold_cb: Callable) -> void:
+func _init(event_sink: Callable, set_gold_cb: Callable) -> void:
 	_event_sink = event_sink
-	_pickup = pickup_cb
 	_set_gold = set_gold_cb
 
 
@@ -44,11 +42,11 @@ func apply_gold_effect(gold: int, amount: int, source: String) -> int:
 	return gold
 
 
-func roll_loot(gold: int, run_seed: int, entity: Dictionary) -> int:
+func roll_loot(run_seed: int, entity: Dictionary) -> Dictionary:
 	# Loot uses its own run-seed/entity-id stream; never consume combat or world RNG.
 	var loot_table: Array = entity.get("loot", [])
 	if loot_table.is_empty():
-		return gold
+		return {}
 	var loot_rng := RandomNumberGenerator.new()
 	loot_rng.seed = hash("%d:%s" % [run_seed, String(entity.get(WIKeys.ID, ""))])
 	var dropped: Array[String] = []
@@ -63,19 +61,13 @@ func roll_loot(gold: int, run_seed: int, entity: Dictionary) -> int:
 		if loot_rng.randf() < chance:
 			dropped.append(item_id)
 	if dropped.is_empty() and gold_dropped <= 0:
-		return gold
+		return {}
 	var payload: Dictionary = {}
 	if not dropped.is_empty():
 		payload["items"] = dropped.duplicate()
 	if gold_dropped > 0:
 		payload["gold"] = gold_dropped
-	_emit(WIEvents.LOOT_DROPPED, payload)
-	for item_id: String in dropped:
-		_pickup.call(item_id, String(entity.get(WIKeys.ID, "")))
-	var new_gold := gold
-	if gold_dropped > 0:
-		new_gold = earn(gold, gold_dropped, String(entity.get(WIKeys.ID, "")))
-	return new_gold
+	return payload
 
 
 func _emit(type: String, payload: Dictionary) -> void:

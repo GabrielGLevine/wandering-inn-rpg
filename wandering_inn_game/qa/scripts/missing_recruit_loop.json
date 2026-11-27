@@ -314,10 +314,11 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "#453: 15 -> 16, the unconditional grate_crew_pail (4,6) renders on the sewers landing.",
    "action": "wait_for_event",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 15,
+    "sprites": 16,
     "fallbacks": 0
    },
    "timeout_sec": 5

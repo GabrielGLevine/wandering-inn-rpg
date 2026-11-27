@@ -8,6 +8,8 @@ Read `docs/dialogue-voice-bible.md` first. This file is already close to human �
 
 **FORCED:** Add one self-repair or trailing thought — market small-talk does not arrive pre-edited. Concrete stall nouns (lamps, queues, windows, stamps). Avg 9–13 words/sentence. PEAK: no button.
 
+**#513 (2026-10-08):** appended hidden `row_wool` and its three reply nodes ("Room on the Row"): the stall-row grievance about a hollow weight, impatient and concrete, with one self-repair ("Level, was it. Fine.").
+
 **CANON-VOICE:** A Pallass market-tier regular: Drake city pride, mild curiosity about the rare Human this deep in, gossip calibrated to what sells. Friendly the way locals are friendly — half welcome, half appraisal.
 
 **SAMPLE:** node `hub`, tv[0] —

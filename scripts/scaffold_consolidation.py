@@ -533,8 +533,9 @@ def _checklist(target, parents, baseline, floor, twins, fixture_name, script_nam
 		f"({', '.join(twin_ids) or 'none'}); passives pin [].",
 		"tests/test_combat_data.gd -- combat-context skills need ap_cost AND effect (hidden boon "
 		"carriers pin ap_cost: 0).",
-		"tests/test_sprite_registry.gd::_build_expected_counts -- a frame-count pin per new "
-		"sprites.json entry, and the icon PNG must exist (tools/sync_assets.py::_draw_placeholder "
+		"qa/fixtures/sprite_frame_counts.json -- a frame-count pin per new sprites.json "
+		"entry (tools/wire_asset.py appends it; tests/test_sprite_registry.gd fails on a "
+		"missing key), and the icon PNG must exist (tools/sync_assets.py::_draw_placeholder "
 		"needs a NEW shape, not a recolour).",
 		f"tests/test_fixture_coherence.gd -- {fixture_name}.json needs a DERIVED rng_state "
 		"(tests/_derive_rng_state.gd; a hand-typed small int fails the magnitude check) and the "

@@ -74,6 +74,11 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 		effect = (_view.skill(_targeting_skill_id) as Dictionary).get("effect", {}) as Dictionary
 	var spell_range := int(effect.get("range", 0))
 	var melee := _targeting_skill_id == "" or not effect.has("range")
+	# Attack and damage_mult Skills resolve through WICombat.in_weapon_range, so
+	# they list exactly what it accepts: at reach 1 any adjacent foe, even past a
+	# blocked corner (#591); a reach > 1 weapon still needs LoS. Every other
+	# Skill keeps its LoS gate.
+	var weapon_strike := _targeting_skill_id == "" or String(effect.get("type", "")) == "damage_mult"
 	var weapon_range := int((_view.combatant(me) as Dictionary).get("weapon_range", 1))
 	var in_range: Array = []
 	for foe: String in _view.alive_enemies_of(me):
@@ -83,7 +88,8 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 			continue
 		in_range.append(foe)
 	for foe: String in in_range:
-		if _view.has_los(me, foe):
+		var reachable: bool = _view.in_weapon_range(me, foe) if weapon_strike else _view.has_los(me, foe)
+		if reachable:
 			_targets.append(foe)
 	_targets_los_blocked = not in_range.is_empty() and _targets.is_empty()
 	_targets_out_of_range = in_range.is_empty() and not melee and spell_range > 0 \

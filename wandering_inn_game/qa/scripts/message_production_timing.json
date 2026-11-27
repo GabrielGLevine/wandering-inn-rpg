@@ -1,0 +1,264 @@
+{
+ "_comment": "#509 production timing: real prop interactions and world movement, real autosave contention. No screenshot or capture hold precedes the decisive early-dismiss checks. qa_real_message_timing retains the shipped hold loop and floor and disables capture extensions. Runtime suite separately proves first-frame movement and unread transition replay.",
+ "qa_real_message_timing": true,
+ "fixture_save": "invrisil_hat_quiet_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Title's default row is New Game -- down 1 to Continue, which loads the fixture-seeded manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "adventurers_rest"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    7
+   ]
+  },
+  {
+   "_comment": "== THE CAN-FAIL FIRST. The corner table alone banks handoff_mistimed and hands the package back; only its hat_hook_set variant banks handoff_quiet. Route east along row 7, up the east side to (11,3), bump north into the table at (11,2). ==",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "id": "hat_hook_set"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "text": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "text": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you."
+   }
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you.",
+   "visible": true,
+   "max_elapsed_msec": 450
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    7
+   ]
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.65
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you.",
+   "visible": true,
+   "max_elapsed_msec": 1150
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.65
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you.",
+   "visible": false,
+   "min_elapsed_msec": 1200,
+   "max_elapsed_msec": 1900
+  },
+  {
+   "action": "assert_recent_message_count",
+   "text_contains": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you.",
+   "count": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "id": "handoff_quiet"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "text": "Your coat goes over the chair back with the package folded into it, beside the one already hanging, and the other coat is over your arm two steps from the door."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Your coat goes over the chair back with the package folded into it, beside the one already hanging, and the other coat is over your arm two steps from the door."
+   },
+   "timeout_sec": 25
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "game_saved",
+   "payload_contains": {
+    "slot": "auto"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_save_status_rendered",
+   "payload_contains": {
+    "slot": "auto"
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 1.8
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "Your coat goes over the chair back with the package folded into it, beside the one already hanging, and the other coat is over your arm two steps from the door.",
+   "visible": true,
+   "min_elapsed_msec": 1750
+  },
+  {
+   "action": "assert_message_layout",
+   "kind": "toast"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_long_authored_receipt_after_save"
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "Your coat goes over the chair back with the package folded into it, beside the one already hanging, and the other coat is over your arm two steps from the door.",
+   "visible": true,
+   "min_elapsed_msec": 1750
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_message_visible",
+   "kind": "toast",
+   "text_contains": "Your coat goes over the chair back with the package folded into it, beside the one already hanging, and the other coat is over your arm two steps from the door.",
+   "visible": false
+  },
+  {
+   "action": "assert_recent_message_count",
+   "text_contains": "Your coat goes over the chair back with the package folded into it, beside the one already hanging, and the other coat is over your arm two steps from the door.",
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_toast_rendered",
+   "count": 1,
+   "payload_contains": {
+    "text": "Your hat goes onto the third peg, brim out \u2014 nine hats on the rail now; across the room a man lowers his cup an inch and holds it there, watching you."
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_toast_rendered",
+   "count": 1,
+   "payload_contains": {
+    "text": "Your coat goes over the chair back with the package folded into it, beside the one already hanging, and the other coat is over your arm two steps from the door."
+   }
+  }
+ ]
+}

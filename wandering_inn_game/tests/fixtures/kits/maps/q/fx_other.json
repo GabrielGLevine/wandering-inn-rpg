@@ -1,0 +1,17 @@
+{
+ "grid": {
+  "width": 7,
+  "height": 7
+ },
+ "blocked": [],
+ "entities": [],
+ "decor": [
+  {
+   "sprite": "@common_lamp",
+   "cell": [
+    1,
+    1
+   ]
+  }
+ ]
+}

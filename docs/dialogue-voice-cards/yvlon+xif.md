@@ -22,6 +22,8 @@ The quip-deflect dies; the same hardness arrives as a drill correction and a cou
 
 **FORCED:** T4 discipline: no contractions (file already complies — preserve), posted prices invoked at least twice, transactions closed with next-step facts. PEAK: `banter` — "or are we only flattering me?" stays as the file's one button.
 
+**#513 (2026-10-08):** appended hidden `regulator`/`regulator_done` nodes (the talk route of "The Crate the Cage Refuses"): he names his own rune-ink and prices the advice at nothing because it is not on the board. Zero contractions kept; antithesis stays zero ("Two. Not one." was cut for that reason).
+
 **CANON-VOICE:** Xif, Gnoll [Alchemist] of Pallass, proudly City Gnoll. Commercial confidence backed by real skill; vanity worn openly and priced accordingly. Repeat customers are his favorite data.
 
 **SAMPLE:** node `bought` —

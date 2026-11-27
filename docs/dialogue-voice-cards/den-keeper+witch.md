@@ -8,6 +8,8 @@ Read `docs/dialogue-voice-bible.md` first. **The den keeper loses BOTH recursive
 
 **FORCED:** Her texture is the den: hatchlings, shelves, bread, the dock. Every deleted loop is replaced with that texture (move 1). Exhaustion reads as shopkeeping specifics, not as wit about systems. PEAK: `carried` — "That is not how it is done and I am not going to say another word about it. Take the small jar. No, take it." is the file's landed moment; no other button.
 
+**#513 (2026-10-08):** the crate is her oven regulator (bread, a burnt-bottomed loaf, the oven wall), and a new appended `wool`/`wool_shelved` pair offers the Gnoll trader a shelf. `carried` stays the PEAK; its reply now reads "It's just a crate."
+
 **CANON-VOICE:** A Drake den-shop keeper on Pallass' market tier — corner store plus nursery, the tier's actual life happening under the bureaucracy. Patience worn to the rind but never at the customers. Gratitude expressed in goods, immediately, before she can be argued with.
 
 **SAMPLE:** node `month` —

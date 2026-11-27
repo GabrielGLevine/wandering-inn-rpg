@@ -1,6 +1,6 @@
 # Rogue recovery after the gate-road fight
 
-Decision for #508 acceptance 3. No acquisition change has been implemented.
+Approved by the user 2026-10-04 for #508 acceptance 3. Implementation preserves defeated enemies and grants Rogue only at sleep.
 
 The unregistered fresh-character diagnostic `probe_rogue_recovery_exhausted` at base `a1716c4e`
 creates a character, earns Warrior and a spear, defeats the road goblins,
@@ -14,7 +14,7 @@ entry counter. This analogous branch is source-inspected; the fresh diagnostic
 above exercises force. The drainage lead points at an exhausted producer in
 both histories when the road encounter was already defeated.
 
-## Proposed decision
+## Approved decision
 
 Allow the existing drainage-cover crossing to earn `crossed_under_cover`
 after the road encounter has been defeated. Treat the deliberate covered
@@ -32,7 +32,7 @@ traversal as the qualifying act, even on the cleared road.
 
 This changes the August 13 cover ruling from a live-threat crossing to an
 intentional terrain traversal. #508 explicitly reserves acquisition-rule
-changes for the owner, so this proposal needs a decision before implementation.
+changes for the owner, and the user approved this narrow change on 2026-10-04.
 The code should derive the crossing geometry from the authored encounter even
 when its runtime entity has been removed, without making it targetable again.
 

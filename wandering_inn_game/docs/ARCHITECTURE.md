@@ -75,7 +75,7 @@ byte-identical at extraction):
 | `save_migration.gd` | WISaveMigration | legacy-project-dir → fresh `user://` copy at boot |
 | `economy.gd` / `shop.gd` / `fence.gd` | WIEconomy/WIShop/WIFence | gold, shops; fence = code-built rotating stock (`fence_stock.json`) |
 | `social.gd` | WISocial | talk pools, `chatted_with_<id>` rotation, gossip |
-| `bounties.gd` | WIBounties | board/delivery slates (`active_slate` on `times_slept`), delta-since-accept `condition_met`, code-built picker/turn-in graphs |
+| `bounties.gd` | WIBounties | board/delivery slates (`active_slate` on `times_slept`; `delivery_slate` adds a standing slip when the window has none), delta-since-accept `condition_met`, code-built picker/turn-in graphs |
 | `bounty_scaling.gd` | WIBountyScaling | rank-scaled repeatable cull encounters (shared with harness) |
 | `portals.gd` | WIPortals | static; attuned destinations + code-built portal menu; portal travel is `transition()` ONLY, never `move_player` |
 | `field_skills.gd` | WIFieldSkills | overworld skill dispatch; property-table interactions (`data/interactions.json`, first-match-wins row order) |

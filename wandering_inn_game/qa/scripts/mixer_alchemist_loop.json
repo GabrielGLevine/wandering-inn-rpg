@@ -59,7 +59,7 @@
   { "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 4, "slot_numbers": ["1", "2", "3", "4"], "fallback_labels": ["TS", "LS", "MS", "MD"] } },
   { "action": "screenshot", "name": "02_evolved_to_alchemist" },
 
-  { "_comment": "== PHASE C: back to the true bench (8,7). [True Synthesis] is now slot 1 (the alchemist's own grant sorts ahead of the inherited mixer skills). Bump up to face the bench, cast slot 1: it consumes BOTH solvent_phial and mineral_salts (String|Array remove_item) and yields tonic_of_the_clear_eye. Pickup (tonic) fires BEFORE the two item_lost removals.", "action": "teleport", "map": "pallass_market", "cell": [8, 8] },
+  { "_comment": "== PHASE C: back to the true bench (8,7). [True Synthesis] is now slot 1 (the alchemist's own grant sorts ahead of the inherited mixer skills). Bump up to face the bench, cast slot 1: it consumes BOTH solvent_phial and mineral_salts (String|Array remove_item) and yields tonic_of_the_clear_eye. The settled item batch publishes both ingredient removals before tonic pickup.", "action": "teleport", "map": "pallass_market", "cell": [8, 8] },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "pallass_market" }, "timeout_sec": 5 },
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [8, 8] },
@@ -67,9 +67,9 @@
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "true_synthesis", "context": "exploration", "target": "alchemy_bench_true" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "synthesized_draught" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[True Synthesis] — Solvent into salts, in the one order that holds. What settles in the vial is clearer than either half went in." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "tonic_of_the_clear_eye" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "solvent_phial" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "mineral_salts" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "solvent_phial", "source": "alchemy_bench_true", "count_before": 1, "count_after": 0 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "mineral_salts", "source": "alchemy_bench_true", "count_before": 1, "count_after": 0 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "tonic_of_the_clear_eye", "source": "alchemy_bench_true", "count_before": 0, "count_after": 1 }, "timeout_sec": 5 },
 
   { "action": "assert_state", "path": "inventory", "equals": ["crude_draught", "tonic_of_the_clear_eye"] },
   { "action": "screenshot", "name": "03_true_synthesis_tonic" },

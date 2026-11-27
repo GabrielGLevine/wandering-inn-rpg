@@ -23,24 +23,23 @@ owned surfaces, and verification. Assign a named implementer and branch at
 dispatch. `successor-ready` marks work that can start; `roadmap:blocked` marks
 delivery prerequisites; `taste-gate` retains explicit user-held rulings.
 
+## Recovery and capacity change (2026-10-05)
+
+[Program #565](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/565) adds persistent HP/MP, actual-sleep refill, Inn/Skill-made/inventory food recovery, inventory/combat potions with AP and mana poisoning, and world vitals. [Plan](design/2026-10-05-persistent-vitals-recovery-plan.md) records lifecycle, save compatibility, proposed tuning and cutover evidence.
+
+M2 now delivers #566 resource/saves → #567 world HUD and #568 potions/quantities/poisoning → #569 Inn/cooking recovery, with independent #570 capacity expansion. #512/#513/#453/#515 then validate earned attrition, economy, numerical balance and routine regressions. #571 activates the composed software loop; #516 retains human acceptance and selected gear-semantic delivery. No player build loses battle refills before readable vitals and reachable recovery exist.
+
+M3 retains homecoming stories over the M2 services; M4 tactics consume the carried-resource/AP/poisoning baseline; M5 verifies resource/count/exposure migration and changed-build device/save-transfer evidence. Scope is expanded and final generic pacing/gear/journey verification follows recovery; no dates or new milestone are invented.
+
 ## Start here
 
-Follow the [execution contract](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502#execution-contract) and live dispatch order in #502.
+Follow [#502's execution contract and current dispatch](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/502#immediate-dispatch-order). Preserve the active #564 art ownership and finish a safe checkpoint before conflicting writers. M1 software is merged through #551; #507/#508/#509 are closed. Remaining #511 and #504/#505/#506/#510/#253 observations stay attached to their original candidate. Independent M2 preparation can proceed while physical/user gates are unavailable.
 
-1. Reopened [Rogue #508](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/508), [purchases #504](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/504), and [import #253](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/253): complete recovery/acquisition, actual browser-touch, and target-environment evidence while preserving shipped implementations.
-2. Layout #505, touch #506, and lifecycle #510 are ready for scoped audits/repairs: diagnostic #503 is complete. #477's schema fix remains delivered.
-3. Reopened message timing/modal proof #509 and independent opening guidance #507; isolate only genuinely unresolved presentation choices.
-4. #511 collects shared physical-phone and unfamiliar-player evidence before the composed acceptance verdict.
-5. Compiler evidence corrections [#542](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/542) and [#543](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/543) precede further equivalence claims; a new compiler expansion wave does not displace actionable M1 work.
-
-Real-phone checks require actual devices. Unavailable hardware does not block
-diagnostics or repairs, but does block claiming mobile parity. Critical
-background/resume, audio, keyboard, rotation, input and save defects belong to
-M1; sustained performance optimization follows in M5.
+Start staged #566 and independent #570, then #567/#568/#569, followed by earned-route/balance/economy/regression owners and #571. Bound compiler work to its existing golden exits; no new expansion is required for this recovery change. Browser emulation proves only its exercised route; physical-phone and human verdicts remain open until observed on the changed build.
 
 ## Preserved scope and decisions
 
-- #494 and #495 decide equipment/resonance semantics; #514 implements the recorded rulings.
+- #494/#495 still decide equipment semantics; #514 implements them using #566 resources and #570 capacity. Capacity expansion is separately authorized and does not wait for the semantic model. Initial recommendation is 4→5 with three accessory positions; potion proposal is three safe doses per waking, fourth onward 4 HP loss. These values are tuning proposals, not additional user rulings.
 - #485's six-set coverage and first-order name proposal already received GO. Reconcile remaining approved work; preserve specific canon/post-bar exceptions. Completion of all #452 tooling is not a prerequisite.
 - #434 keeps its existing M3.6 golden gate and needs #542/#543's evidence corrections. Compiler M4 cannot dispatch until that exit is honestly met. #438 remains the compiler/caster acceptance umbrella. Continuous route authoring can proceed using existing tools.
 - #524/#528 are dependency-ready but remain M4/M5 work. Readiness is not priority.

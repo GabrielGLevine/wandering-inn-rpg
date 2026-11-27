@@ -38,6 +38,10 @@ var _more_hint: Label
 var _option_labels: Array[Label] = []
 var _option_controls: Array[Control] = []
 var _options: Array = []
+## #513: lockstep with `_options` (DIALOGUE_NODE `gold_shortfall`); the rendered
+## hint rows ride `ui_dialogue_page_rendered.shortfall_rows`.
+var _gold_shortfall: Array = []
+var _shortfall_rows: Array = []
 var _cursor := 0
 var _shown := false
 var _conversation_id := ""
@@ -180,9 +184,12 @@ func _render_node(payload: Dictionary) -> void:
 	WIResponsiveLayout.apply_readable_theme(_root, get_viewport(), WISettings.TEXT_SCALE_STEPS[WISettings.text_scale_step()])
 	_speaker_label.text = String(payload["speaker"])
 	_options = payload.get("options", [])
+	_gold_shortfall = payload.get("gold_shortfall", [])
 	_cursor = 0
+	# Picker cards have no shortfall line, so a gold-short row keeps the list.
 	_picker_active = PICKER_CONVERSATIONS.has(StringName(_conversation_id)) \
-		and WIPickerPresenter.is_picker_payload(String(payload["text"]), _options)
+		and WIPickerPresenter.is_picker_payload(String(payload["text"]), _options) \
+		and not _gold_shortfall.any(func(short: Variant) -> bool: return int(short) > 0)
 	if _picker_active:
 		var picker := WIPickerPresenter.derive(String(payload["text"]), _options)
 		_picker_rows = picker["rows"]
@@ -258,6 +265,7 @@ func _render_page() -> void:
 			child.queue_free()
 		_option_labels.clear()
 		_option_controls.clear()
+		_shortfall_rows = []
 	_fit_panel_height.call_deferred()
 
 
@@ -323,7 +331,8 @@ func _fit_panel_height() -> void:
 		ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_PAGE_RENDERED,
 			{"page": int(pc["page"]), "pages": int(pc["pages"]),
 			"panel_height": h,
-			"panel_capped": needed > _height_cap()})
+			"panel_capped": needed > _height_cap(),
+			"shortfall_rows": _shortfall_rows.duplicate(true)})
 	if _picker_active:
 		_emit_picker_rendered.call_deferred()
 
@@ -347,6 +356,7 @@ func _rebuild_options() -> void:
 	_picker_title_labels.clear()
 	_picker_reward_labels.clear()
 	_picker_detail_labels.clear()
+	_shortfall_rows = []
 	_options_box.add_theme_constant_override("separation", 6 if _picker_active else 1)
 	if _picker_active:
 		_rebuild_picker_options()
@@ -354,16 +364,8 @@ func _rebuild_options() -> void:
 	for i in _options.size():
 		var opt: Dictionary = _options[i]
 		var locked := bool(opt.get("locked", false))
-		var mark := "> " if i == _cursor else "  "
-		var text: String
-		if locked:
-			var opt_text := String(opt["text"])
-			var suffix := _requirement_suffix(opt_text, String(opt.get("requirement", "")))
-			text = "%s%d. %s%s" % [mark, i + 1, opt_text, suffix]
-		else:
-			text = "%s%d. %s" % [mark, i + 1, String(opt["text"])]
 		var l := UIChrome.make_label()
-		l.text = text
+		l.text = _row_text(i)
 		# v0.19 integration: option rows wrap instead of clipping. GH#378's
 		# `source_hint` pushed all 21 signposted Serve rows past the panel's
 		# 664px no-autowrap width at BOTH accessibility text scales (115% by
@@ -379,6 +381,8 @@ func _rebuild_options() -> void:
 		_options_box.add_child(l)
 		_option_labels.append(l)
 		_option_controls.append(l)
+		if locked and _shortfall_hint(i) != "":
+			_shortfall_rows.append({"row": i + 1, "text": _shortfall_hint(i)})
 		for effect_line: String in opt.get("effect_lines", []):
 			var sub := UIChrome.make_label("      %s" % effect_line, "Small")
 			sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -507,19 +511,29 @@ func _requirement_suffix(option_text: String, requirement: String) -> String:
 	return "  (%s)" % requirement
 
 
+## A locked row adds its reason; a gold-short row also names the missing gold.
+func _row_text(i: int) -> String:
+	var opt: Dictionary = _options[i]
+	var opt_text := String(opt["text"])
+	var text := "%s%d. %s" % ["> " if i == _cursor else "  ", i + 1, opt_text]
+	if not bool(opt.get("locked", false)):
+		return text
+	text += _requirement_suffix(opt_text, String(opt.get("requirement", "")))
+	var hint := _shortfall_hint(i)
+	return text + ("  (%s)" % hint if hint != "" else "")
+
+
+func _shortfall_hint(i: int) -> String:
+	var short := int(_gold_shortfall[i]) if i < _gold_shortfall.size() else 0
+	return "needs %d more gold" % short if short > 0 else ""
+
+
 func _refresh_cursor() -> void:
 	if _picker_active:
 		_refresh_picker_cards()
 		return
 	for i in _options.size():
-		var opt: Dictionary = _options[i]
-		var mark := "> " if i == _cursor else "  "
-		if bool(opt.get("locked", false)):
-			var opt_text := String(opt["text"])
-			var suffix := _requirement_suffix(opt_text, String(opt.get("requirement", "")))
-			(_option_labels[i] as Label).text = "%s%d. %s%s" % [mark, i + 1, opt_text, suffix]
-		else:
-			(_option_labels[i] as Label).text = "%s%d. %s" % [mark, i + 1, String(opt["text"])]
+		(_option_labels[i] as Label).text = _row_text(i)
 	# Keep the keyboard cursor visible inside the scrolling options region --
 	# without this, arrowing below the fold moves the selection off-screen and
 	# the fold reads as the end of the list.

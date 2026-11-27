@@ -110,35 +110,6 @@ r3–r5 playtest waves — gone from this file.
   the payoff line renders behind it, past this script's last step. And the
   `PLAYER_MOVED` half is untouched — an unsticky authored toast is still
   dismissed by the next step, which is the shipped "I have read it" rule.
-- [ ] **(P2)** Field-skill readout eats world's bottom rows — ships
-  EXPANDED until first sleep (`field_hotbar.gd:220-222`), covers y≈480–600
-  across x 285–1000, which in 8–9-row interiors = bottom two rows: PC
-  half-buried (`adventurers_rest_loop/02`), exit doors hidden
-  (`flood_ledger_talk/01`, `thicket_keeps_talk/01`), riverfarm rows 12–13 props
-  (`winter_teeth_talk/01`, `winter_teeth_work/00`), and on `ruin_surface`
-  whole briar-arch pocket incl. PC and coffer whose reward toast fires
-  over frame that never showed it (`l398-playtest-evidence/briar_arch_fire/00`,
-  `01`; same on `deep_tunnels`). Fix: world-clearance rule like hotbar's
-  `HINT_BAND_CLEARANCE`, not per-map prop moves.
-  LEFT OPEN (fix/hud-copy-loss). MEASURED: a world-clearance rule cannot close
-  this on its own, and the arithmetic says why. The world renders into a
-  320x180 SubViewport at `WORLD_SCALE` 4 (`main.gd`), so a cell is 64 screen px
-  and 11.25 rows are visible in 720. `camera_controller.gd axis()` centres any
-  map shorter than the view, so an 8-row interior (512px) sits y 72–648 — and
-  the readout band alone is y≈445–572, with the slot row and toggle under it to
-  712. There is no camera offset that puts 512px of content above 445px of
-  clear screen: the reserve would have to be smaller than the content is tall.
-  A real clearance therefore needs either a smaller world scale on short maps
-  or the legend not shipping EXPANDED, and both are product calls, not layout
-  bugs. The one honest lever inside the HUD is the default: `_expanded` comes
-  from `WISettings.field_readout_expanded()` and only flips false at the first
-  waking (`field_hotbar.gd` `WORLD_READY` / `UI_SLEEP_VEIL_FINISHED` arms), and
-  only TWO QA scripts pin `expanded` at all (`field_skills_loop`,
-  `hotbar_tab_loop`) — so flipping the boot default is cheap in pins and
-  expensive in intent. Not taken unilaterally on a tag night.
-  PARTIAL RELIEF this branch: the legend now sits x 80–800 instead of 280–1000
-  (see the overdraw row below), so the world's bottom-RIGHT rows are clear —
-  the covered AREA is unchanged, only which cells it covers.
 - [x] **(P2)** Legend ↔ toast mutual overdraw still LOSES COPY at length —
   v0.17 fix moved short toasts to own band, but 4-line toast still
   clips legend mid-word ("…old timber in momen", "You have learned h";
@@ -179,22 +150,6 @@ r3–r5 playtest waves — gone from this file.
   readout degrades to "hard left" (strictly less overlap than centring) rather
   than excluding. `canvas_items` stretch keeps the shipped game at a 1280x720
   logical viewport, so only the mobile safe-area rows reach that branch.
-- [ ] **(P2)** PC drawn under field chips on bottom-row cells — no HUD-safe
-  area (`invrisil_house_name_talk/03`). `src/ui/**`; no sprite change can move
-  chip off player.
-  LEFT OPEN (fix/hud-copy-loss) — same missing model as the readout row above,
-  and it fails for the same arithmetic. Confirmed there is no HUD-safe area at
-  all: `field_hotbar_layout.viewport_safe_rect` is the DISPLAY notch inset
-  (mobile/true-fullscreen only — `_current_safe_rect` returns the whole viewport
-  otherwise) and nothing publishes an occupied-band rect to the world renderer,
-  so `world.gd`/`camera_controller.gd` have no input to clear. The slot row is
-  pinned to the viewport bottom (`offset_top = -SLOT_SIZE.y -
-  CONTROLS_BOTTOM_MARGIN - safe_bottom`), i.e. y 658–712 at 1280x720, which is
-  inside the last world row on every map. Closing it needs the same
-  world-clearance model as the row above and should be taken with it, not
-  separately.
-- [ ] **(P2)** "Inventory" nav pill overflows at 115/130% text scale — sibling of
-  shipped hint-ribbon fix, same cure (font-derived rect).
 - [ ] **(P2)** "[Mixer] has become [Alchemist]!" enqueued, never rendered
   (15 enqueued / 10 rendered, shared FIFO with loot in `src/ui/message_layer.gd`).
   Class evolution's moment has no photograph; wants own lane or beat.
@@ -215,23 +170,6 @@ r3–r5 playtest waves — gone from this file.
   exactly the failure `QA_TOAST_HOLD_HEADLESS_SECONDS`' own doc comment
   records. Wants the deliberate lane the row asks for, on a day with room to
   re-gate all 125.
-- [ ] **(P2)** Difficulty + Quest Hints ship with no in-game explanation
-  (`settings_loop/01_settings_help_panel` has 6 sections, neither is one;
-  `00_settings_panel_rows` reads bare "Difficulty: Silver"). Knob's best
-  property — damage TAKEN only, enemy stats/accuracy/fight shape identical at
-  every rung — stated only in code comment. RESOLVED-BY-#447 route: the Help page's
-  "Difficulty & Quest Hints" section now carries the explanation and the
-  descriptor tails were deliberately removed (one-voice ruling) — verify the
-  Help section suffices in an eye pass, then close this row.
-- [ ] **(P2)** Settings row order buries gameplay knobs — #338/#345 appended
-  after Export/Import Save to honour `settings_panel.gd`'s append-only index
-  contract, so "Quest Thread" (row 11) and "Quest Hints" (row 15) split by
-  four unrelated rows in 17 flat ungrouped rows. Re-order + section headers,
-  re-pin `settings_loop`'s indices in same commit.
-- [ ] **(P2)** Settings parchment fills 708 of 720 px (`PANEL_SIZE` 648→716 for
-  two new rows) vs journal's y=82..635. Nothing clips, but bleeds off
-  both edges with no room for own ornament. Next row needs scrolling list
-  or second page — take it with row-order rework.
 - [ ] **(P3)** Toast band's left parchment roller eats hotbar key numbers at 8+
   slots — `TOAST_BAND_RESERVE` honoured by READOUT rect only, so every
   slot inside x 808–1256 loses top of its coin and one under roller
@@ -257,9 +195,6 @@ r3–r5 playtest waves — gone from this file.
   (`combat_hud.gd:613-637`): when cooldown clause + description would wrap,
   description yields, never returns at readiness. Deliberate; logged so
   trade visible when readout budget next revisited.
-- [ ] **(P3)** Character-creation pick step is only unlabelled step (six
-  sprites, `options:[]`), and new steps' footer mixes casing
-  ("…Esc to go back • change it any time in Settings").
 - [ ] **(P3)** Bottom HUD cluster jumps ~25 px left, grows ~4% after Reduce
   Motion round trip (`feel_peek_night/01` vs `/03`) — every other 2-slot frame
   sits at 512/570/667 positions. Likely scale/anchor reduce_motion resets.
@@ -523,10 +458,71 @@ r3–r5 playtest waves — gone from this file.
   whether flavor prose is history, then re-derive `mobile_tap_check`'s count in
   the same commit — or give the line a minimum-visible-span floor instead and
   leave GH#202 standing.
-- [ ] **(P3)** Character-creation difficulty choices explain rank names but
-  not their effect. `qa/run_qa.sh char_creation windowed` →
-  `02_creation_difficulty.png` shows only Bronze Rank / Silver Rank / Gold
-  Rank and the change-later footer. A new player cannot tell what changes
-  or which experience each offers. Fix direction: add a short description
-  for the selected rank, consistent with the damage-taken multipliers in
-  `src/ui/wi_settings.gd`; keep the canon rank names.
+- [ ] **(P3)** Repeated grass seams dominate Riverfarm and Rags's camp —
+  fresh baseline `f35270f0`, `qa/run_qa.sh riverfarm_walkthrough windowed --seed=9`
+  → `01_arrived_riverfarm_village_day.png`; disposable all-map framing survey
+  → `rags_camp__center.png`. Both show long horizontal bands across ordinary
+  grass. Evidence retained in `potential_assets/art_direction_review_2026-10-05/`.
+  Fix direction: quieter base tile variants and connected path/yard materials;
+  compare harvested grass v2 in the actual scenes before selecting it.
+- [ ] **(P3)** Garden's landmark composition is sparse —
+  `qa/run_qa.sh garden_walkthrough windowed --seed=9` →
+  `02_garden_day_bright_identity.png`, `03_memorial_hill_dusk_no_darkness.png`:
+  rectangular lawn, straight path, fountain and bed carry almost the whole
+  environment. Fix direction: planted shelter, fountain/rest and quiet memorial
+  pockets within the current extent first. Taste proposal and preserved shots:
+  `docs/design/2026-10-05-holistic-art-review.md` and the local review directory.
+- [ ] **(P3)** City architecture underdelivers its intended scale —
+  `qa/run_qa.sh invrisil_walkthrough windowed --seed=9` →
+  `00_scale_shock_arrival.png` / `06_facade_scale_shock.png`: arrival lacks
+  building mass; later facade remains a low strip. `qa/run_qa.sh pallass_peek
+  windowed --seed=9` → `00_pallass_market_arrival_corner.png`: isolated wall
+  panels and a dark border imply little of the stacked city. Fix direction:
+  arrival-framed Invrisil structures and Pallass lower-terrace backdrop;
+  substantial changes are authorized by the user-approved #564 review.
+- [ ] **(P2)** #453 camp bedrolls draw a carved bed frame —
+  `qa/run_qa.sh rest_delve_camp windowed --seed=9` → `00_delve_camp_in_context.png`,
+  `02_camp_after_dig.png`; `qa/run_qa.sh rest_dig_camp windowed --seed=9` →
+  `00_dig_bedroll_in_context.png`. `horns_delve_camp` (dungeon_approach (14,4))
+  and `dig_camp_bedroll` (ruin_surface (1,4)) use the shipped `bed` sprite as
+  the only in-hand sleep silhouette, so a quilted bedstead stands in a dungeon
+  staging chamber and a ruin dig camp, and the delve camp's two looks (four
+  laid-out bedrolls during the delve; one rolled against the wall after
+  `horns_dig_started`) differ only in copy. Fix direction: a ground bedroll pair
+  (laid out, rolled and strapped), about one cell, wired as the base sprite and
+  a `visual_states` arm on `horns_dig_started`; keep a strong sleep read.
+- [ ] **(P3)** #453 gate-road tell is a dropped quiver, not arrows in turf —
+  `qa/run_qa.sh gate_road_arrows_read windowed --seed=9` →
+  `00_arrows_from_the_road.png`. `gate_road_arrows` (floodplains (32,19)) uses
+  the owned `arrow_quiver` art; the observe copy names the quiver to match.
+  Opened one-shot containers (`gnoll_hunters_satchel`, `grate_crew_pail`) also
+  keep their closed look. Fix direction: a small arrows-standing-in-turf sprite
+  for the tell, and opened `visual_states` for the satchel and pail.
+- [ ] **(P2)** pallass_forge_hall `forge_hall_standard_notice` (#513) — the
+  examiner's bend jig still draws as `price_board`, a chalkboard on a stand.
+  Its observe was reworded to "a test board on a stand" with a steel arm and
+  two notches, but the arm and notches are not drawn. Evidence:
+  `qa/run_qa.sh pallass_standards_talk windowed --seed=9` → `01_bend_jig.png`.
+  Fix direction: an owned bend-jig prop (stand, bolted steel arm, two notch
+  marks), swapped in with the observe kept.
+- [ ] **(P3)** pallass_den_shop `den_shop_wool_shelf` (#513) — the two wool
+  bales set on the cleared shelf have no visual state, so the shelf still
+  draws empty after the help route. Evidence: `qa/run_qa.sh pallass_row_help
+  windowed --seed=9` → `03_den_shop_shelf.png`. Fix direction: a stocked-shelf
+  sprite (`mill_high_shelf_owned` with two cream bales) as a `visual_states`
+  arm at `wool_bales_carried` 2.
+- [ ] **(P3)** pallass_forge_hall `forge_hall_examiner` (#513) — talked to from
+  (8,3), the canonical's approach, the player sprite covers the Dullahan while
+  his line shows (the 10px dialogue separation is too small for a
+  north-south pair). Evidence: `qa/run_qa.sh pallass_standards_talk windowed
+  --seed=9` → `00_dullahan_examiner.png`. Fix direction: a larger vertical
+  separation in `world.gd` `_begin_dialogue_separation`, or take his line
+  from (8,1), north of him, where the player draws behind.
+- [ ] **(P3)** Invrisil streets, #608 pilot 1a art read — the FIX loop's
+  deferrals were not opened as rows here (plan Task 6 Step 5). They live in
+  #610 (deferred art, generation batch), #611 (alley lantern falloff and
+  side-wall door placement), #612 (pack NPC rigs at ~60% player height,
+  oversized courier shadow), #613 (Liscor street magenta placeholder by the
+  gate-side stall) and the `invrisil` rows of `docs/art-generation-list.md`.
+  Evidence: #608 final review M7. Fix direction: close this row when
+  #610–#613 close; generation-list rows close in their batch PR.

@@ -73,6 +73,21 @@
       }
      },
      "goto": "commission_report"
+    },
+    {
+     "_comment": "#513 ledger_eats_first TALK route, moved here from pallass_forge_clerk (gates and effects unchanged). APPENDED LAST and requires-hidden on queue_notice_endorsed (Xif's product), so pallass_walkthrough's 3-row hub pin and every index route hold.",
+     "text": "Xif says two fingers of lead around the regulator.",
+     "requires": {
+      "accomplishment": {
+       "queue_notice_endorsed": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "queue_notice_countersigned": 1
+      }
+     },
+     "goto": "lead_wrap"
     }
    ]
   },
@@ -92,10 +107,10 @@
   },
   "standard": {
    "speaker": "Forge-Tier Smith",
-   "text": "The city sets the spec. I hold it. That's the arrangement, and it's better than it sounds. A failure on this tier means an inquest with my name in the file.",
+   "text": "The examiner puts every blade off this tier on his jig before it rides the lift. His seal goes on the tag, or the blade goes in the bin. I've held this bench to his seal for six years.",
    "options": [
     {
-     "text": "Things fail loudly instead?",
+     "text": "Six years is a long time.",
      "goto": "hub"
     },
     {
@@ -120,7 +135,7 @@
   },
   "commission": {
    "speaker": "Forge-Tier Smith",
-   "text": "You counted them. Good. My apprentice has the steadiest hand on this tier. The examiner has failed her nine times running. I taught those hands myself. Go and find out which of us the standard agrees with.",
+   "text": "You counted them. Good. My apprentice has the steadiest hand on this tier, and the examiner has bent nine of her blades back into that bin. He's a Dullahan, the one at the jig. He holds his head out level with the edge to sight down it. I taught those hands myself. Go and find out which of us the bend agrees with.",
    "options": [
     {
      "text": "I'll take the commission.",
@@ -142,7 +157,7 @@
   },
   "commission_brief": {
    "speaker": "Forge-Tier Smith",
-   "text": "Hall's through the door past the second bench. Run the temper yourself if you have the eye for it, or read the examiner's own notice on my wall and come tell me what it says. Watch the calibration rig either way. It has been drifting.",
+   "text": "Hall's through the door past the second bench. Run the temper yourself if you have the eye for it, or look at his bend jig by the hall wall and tell me what it measures. Watch the calibration rig either way. It has been drifting.",
    "options": [
     {
      "text": "I'll look at the hall.",
@@ -170,7 +185,7 @@
    "options": [
     {
      "_comment": "TALK arm. Banks standards_brokered and goes on to the resolution -- brokering is a separate act from reporting it, which is why it does not bank the terminal itself.",
-     "text": "[The standard measures recovery. It's printed on his own notice.]",
+     "text": "[The jig's second notch is where it springs back.]",
      "requires": {
       "accomplishment": {
        "read_the_examination_standard": 1
@@ -238,10 +253,10 @@
   },
   "broker": {
    "speaker": "Forge-Tier Smith",
-   "text": "Recovery. It is printed on his own notice, the one that has hung on my wall six years. Take it down and read me the standard clause, line by line. She kept bringing him harder steel because that is what I taught her. Nine fails, and the answer hanging on my own wall the whole time. Read me the clause.",
+   "text": "Recovery. Two notches on his jig, one for the bend and one for the spring. Six years at this bench and I never once asked him about the second notch. She kept bringing him harder steel. Harder is what I taught her. I had Xif blend her a fast quench to get it. Nine fails.",
    "options": [
     {
-     "text": "She'll hear it from the file before she hears it from either of you.",
+     "text": "She'll hear it from the jig before she hears it from either of you.",
      "goto": "commission_report"
     },
     {
@@ -252,7 +267,7 @@
   },
   "commission_settled": {
    "speaker": "Forge-Tier Smith",
-   "text": "Then it is filed and it is finished. The bench is mine again until second bell.",
+   "text": "Then it is settled. The bench is mine again until second bell.",
    "text_variants": [
     {
      "requires": {
@@ -268,7 +283,7 @@
        "temper_run": 1
       }
      },
-     "text": "You ran it once and it came back. She has run it forty-one times and it came back too. Now the file says so. Pull the vent chain on your way past. I have a billet in and she will want the bench."
+     "text": "You ran it once and it came back. She has run it forty-one times and it came back too. Now the jig says so. Pull the vent chain on your way past. I have a billet in and she will want the bench."
     },
     {
      "requires": {
@@ -276,12 +291,41 @@
        "standards_brokered": 1
       }
      },
-     "text": "I have been arguing with that man for six years and it turns out we agreed all six years. It is in the file now. She will read it in the morning."
+     "text": "Six years I argued with that man, and we were reading the same jig all six years. She quenches slow from tomorrow."
     }
    ],
    "options": [
     {
      "text": "She earned it.",
+     "end": true
+    }
+   ]
+  },
+  "lead_wrap": {
+   "speaker": "Forge-Tier Smith",
+   "text": "Two fingers. I cast that case, so I know its size. Apron offcuts, lead in the hem. Hold this end while I fold.",
+   "options": [
+    {
+     "text": "Holding it.",
+     "effects": [
+      {
+       "accomplishment": "queue_notice_countersigned"
+      }
+     ],
+     "goto": "lead_wrapped"
+    },
+    {
+     "text": "Not now.",
+     "end": true
+    }
+   ]
+  },
+  "lead_wrapped": {
+   "speaker": "Forge-Tier Smith",
+   "text": "There. Wrap it round the case and the cage can stop flickering. Bench is mine again.",
+   "options": [
+    {
+     "text": "I'll take it to the landing.",
      "end": true
     }
    ]

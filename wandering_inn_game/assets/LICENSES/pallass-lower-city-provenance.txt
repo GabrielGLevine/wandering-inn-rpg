@@ -1,0 +1,10 @@
+Pallass lower-city vista — owned generated art
+
+Public asset: assets/sprites/pallass_lower_city/Idle-Sheet.png
+Source: OpenAI built-in imagegen, 2026-10-05, generation exec-74a9c675-2710-4287-80ac-cc71eb674892.
+Original generated PNG copied unchanged; canvas 2172x724, opaque.
+Display: 416px wide beyond the playable terrace, nearest filtering, local cool tint.
+No licensed pack pixels or third-party image input used.
+
+Final prompt:
+Use case: stylized-concept. Asset type: production pixel-art background panorama beneath a top-down RPG terrace, lower city of Pallass, a massive tiered stone city populated by Drakes and Gnolls. No people needed. Composition: VERY WIDE horizontal image, 3:1 aspect, view looking obliquely DOWN from a higher terrace onto successively lower broad warm beige sandstone terraces, slate tile roofs, tiny bridges and stout industrial stone buildings; brass pipe runs, a few soft forge-smoke plumes and warm forge windows. Upper edge begins with distant rooftops below the viewer, NO foreground parapet (the game draws it), NO sky, NO horizon, NO castle or fairy-tale spires, NO floating islands, NO tall cathedral. Clear stacked city geometry and separated building masses with convincing depth. Style: restrained readable authentic game pixel art, simple hard pixel clusters on an approximately 416x128 logical pixel grid, no fine painterly texture, no antialiased outlines, no tiny line noise, low contrast distant detail. Palette: cool dusty blue-grey atmospheric shadows, warm beige structural stone, slate roofs, sparse brass and forge orange accents. Light from upper left, desaturated distance. Preserve simple broad silhouette hierarchy and quiet enough detail to stay below player-facing terrace art. Opaque background, no lettering, no labels, no watermark. It will be displayed only beyond the playable terrace edge with nearest filtering.
