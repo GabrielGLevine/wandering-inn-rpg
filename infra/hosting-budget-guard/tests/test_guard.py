@@ -715,3 +715,70 @@ def test_entry_point_refuses_to_import_with_a_foreign_site(monkeypatch):
     with pytest.raises(guard.ConfigError):
         _load("main", "main.py")
     sys.modules.pop("main", None)
+
+
+# ------------------------------------- owner scripts against a scripted gcloud
+_FAKE_GCLOUD = r"""#!/bin/sh
+echo "$*" >> "$GCLOUD_LOG"
+case "$*" in
+  "services enable"*) exit 0 ;;
+  "billing budgets list"*) printf '%s' "$FAKE_BUDGETS"; exit 0 ;;
+  *describe*) [ -n "$FAKE_DESCRIBE" ] && { echo "$FAKE_DESCRIBE"; exit 0; }; exit 1 ;;
+esac
+exit 0
+"""
+
+
+def _run_script(tmp_path, script, *args, describe="", budgets=""):
+    if shutil.which("bash") is None:
+        pytest.skip("bash unavailable")
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir(exist_ok=True)
+    (fake_bin / "gcloud").write_text(_FAKE_GCLOUD)
+    (fake_bin / "gcloud").chmod(0o755)
+    log = tmp_path / "gcloud.log"
+    env = {
+        **os.environ,
+        "PATH": f"{fake_bin}{os.pathsep}{os.environ.get('PATH', '')}",
+        "GCLOUD_LOG": str(log),
+        "FAKE_DESCRIBE": describe,
+        "FAKE_BUDGETS": budgets,
+    }
+    proc = subprocess.run(
+        ["bash", str(GUARD_DIR / script), "--billing-account", BILLING, *args],
+        capture_output=True, text=True, env=env,
+    )
+    calls = log.read_text().splitlines() if log.exists() else []
+    return proc, calls
+
+
+def test_deploy_refuses_to_adopt_an_unmarked_topic(tmp_path):
+    proc, calls = _run_script(tmp_path, "deploy.sh", "--guard-mode", "observe", describe="someone-else")
+    assert proc.returncode != 0
+    assert "Refusing to adopt" in proc.stderr
+    assert not any(" create" in c or "deploy" in c for c in calls), calls
+
+
+def test_teardown_deletes_nothing_unmarked(tmp_path):
+    proc, calls = _run_script(tmp_path, "teardown.sh", describe="someone-else")
+    assert proc.returncode != 0
+    assert "REFUSED" in proc.stderr
+    assert not any("delete" in c or "remove-iam" in c for c in calls), calls
+
+
+def test_teardown_deletes_marked_resources(tmp_path):
+    proc, calls = _run_script(tmp_path, "teardown.sh", describe="x [managed-by=wi-hosting-budget-guard]")
+    assert proc.returncode == 0, proc.stderr
+    assert any(c.startswith("pubsub topics delete") for c in calls)
+    assert sum(c.startswith("iam service-accounts delete") for c in calls) == 3
+
+
+def test_more_than_one_matching_budget_is_an_error(tmp_path):
+    budgets = (
+        f"billingAccounts/{BILLING}/budgets/a\t{BUDGET_NAME}\n"
+        f"billingAccounts/{BILLING}/budgets/b\t{BUDGET_NAME}\n"
+    )
+    proc, calls = _run_script(tmp_path, "teardown.sh", budgets=budgets)
+    assert proc.returncode != 0
+    assert "2 budgets are named" in proc.stderr
+    assert not any("delete" in c for c in calls), calls

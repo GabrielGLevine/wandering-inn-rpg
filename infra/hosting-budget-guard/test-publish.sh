@@ -28,7 +28,7 @@ while [ $# -gt 0 ]; do
 		--amount) AMOUNT="${2:?}"; shift 2 ;;
 		--live-yes-disable-the-site) LIVE=1; shift ;;
 		--dry-run) _DRY=1; shift ;;
-		-h | --help) sed -n '2,16p' "$0"; exit 0 ;;
+		-h | --help) awk 'NR > 1 && /^set -e/ { exit } NR > 1' "$0"; exit 0 ;;
 		*) die "unknown argument: $1" ;;
 	esac
 done
