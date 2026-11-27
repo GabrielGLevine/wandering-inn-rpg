@@ -653,6 +653,48 @@ func _execute(step: Dictionary) -> void:
 				var last: Label = labels.back()
 				if not inventory.visible_content_rect().encloses(last.get_global_rect()):
 					_fail("assert_equipment_bottom_visible: last accessory is clipped")
+		"offer_save_transfer":
+			# Old-site hand-off through Game.offer_transfer, the entry the web
+			# boot calls with the URL fragment. `raw` sends a payload verbatim;
+			# `mutate` edits a fixture's parsed save before it is packed.
+			var payload := String(step.get("raw", ""))
+			if not step.has("raw"):
+				var slots := {}
+				for slot: String in (step.get("slots", {}) as Dictionary):
+					var text := FileAccess.get_file_as_string("res://qa/fixtures/%s.json" % String(step["slots"][slot]))
+					var change: Dictionary = (step.get("mutate", {}) as Dictionary).get(slot, {})
+					if not change.is_empty():
+						var save: Dictionary = JSON.parse_string(text)
+						if change.has("version"):
+							save["version"] = int(change["version"]) if change["version"] is float else WISave.VERSION + 1
+						if change.has("current_map"):
+							save["state"]["current_map"] = String(change["current_map"])
+						text = JSON.stringify(save)
+					slots[slot] = {"text": text, "t": int((step.get("times", {}) as Dictionary).get(slot, 1700000000))}
+				payload = WISaveTransfer.encode(slots, String(step.get("settings", "")), bool(step.get("gzip", true)))
+			Game.offer_transfer(payload)
+			await get_tree().process_frame
+		"touch_save_transfer_button":
+			await _touch_rect_of("SaveTransferPrompt", "button_rect", String(step["button"]), "touch_save_transfer_button")
+		"assert_save_transfer_layout":
+			var prompt := get_tree().root.find_child("SaveTransferPrompt", true, false)
+			var shown: Dictionary = prompt.call("display_state") if prompt != null else {}
+			if String(shown.get("page", "")) != String(step["page"]) or not bool(shown.get("body_fits", false)) or not bool(shown.get("panel_in_view", false)):
+				_fail("save transfer prompt not readable on page %s: %s" % [step["page"], shown])
+			elif bool(shown.get("touch", false)):
+				if float(shown["font_css"]) < WIResponsiveLayout.MIN_TEXT_CSS - 0.5:
+					_fail("save transfer text is %.1f CSS px" % float(shown["font_css"]))
+				for id: String in shown["button_css"]:
+					if float(shown["button_css"][id][3]) < WIResponsiveLayout.MIN_TOUCH_CSS - 0.5:
+						_fail("save transfer button %s is %.1f CSS px tall" % [id, float(shown["button_css"][id][3])])
+		"assert_save_slot":
+			# `fixture`: slot bytes equal that fixture file; `absent`: no file.
+			var slot_path := "user://saves/%s.json" % String(step["slot"])
+			if bool(step.get("absent", false)):
+				if FileAccess.file_exists(slot_path):
+					_fail("expected no save in slot %s" % step["slot"])
+			elif not FileAccess.file_exists(slot_path) or FileAccess.get_file_as_string(slot_path) != FileAccess.get_file_as_string("res://qa/fixtures/%s.json" % String(step["fixture"])):
+				_fail("slot %s is not byte-identical to fixture %s" % [step["slot"], step["fixture"]])
 		"touch_settings_row":
 			await _touch_rect_of("SettingsPanel", "row_rect", int(step["row"]) - 1, "touch_settings_row")
 		"touch_reference_back":

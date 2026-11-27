@@ -26,6 +26,7 @@ var _conflicts: Array[Dictionary] = []
 var _conflict_index := 0
 var _replace: Array[String] = []
 var _layout_key: Array = []
+var _menu_live := false
 
 
 func _ready() -> void:
@@ -73,13 +74,16 @@ func _ready() -> void:
 
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
-	if type == WIEvents.UI_TITLE_RENDERED and not _shown:
-		_open()
+	# A boot-time offer waits for the title menu; a later one opens at once.
+	if type == WIEvents.UI_TITLE_RENDERED:
+		_menu_live = true
+	if _menu_live and not _shown and type in [WIEvents.UI_TITLE_RENDERED, WIEvents.SAVE_TRANSFER_OFFERED, WIEvents.SAVE_TRANSFER_REFUSED]:
+		_open.call_deferred()
 
 
 func _open() -> void:
 	var pending: Dictionary = Game.pending_transfer()
-	if pending.is_empty():
+	if pending.is_empty() or _shown:
 		return
 	_replace = []
 	_conflicts = []

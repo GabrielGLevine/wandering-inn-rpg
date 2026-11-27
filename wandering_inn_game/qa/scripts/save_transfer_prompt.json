@@ -1,0 +1,562 @@
+{
+ "_comment": "Old-site save hand-off on the new site: offer -> prompt -> confirmed slot writes, never overwriting without an explicit choice, re-runs a no-op, hostile and unreadable payloads refused. Native runs enter through Game.offer_transfer (the function the web boot calls with the URL fragment); the fragment itself is proven by the browser case save_transfer_web.",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "Fresh site: three old-site saves offered before the menu exists; nothing may be written until the player confirms.",
+   "action": "offer_save_transfer",
+   "slots": {
+    "manual": "near_pallass",
+    "manual_2": "gear_loop_start",
+    "auto": "d2_shop"
+   },
+   "times": {
+    "manual": 1700000300,
+    "manual_2": 1700000200,
+    "auto": 1700000100
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "save_transfer_offered",
+   "payload_contains": {
+    "new": 3,
+    "conflict": 0,
+    "unreadable": 0
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "continue_enabled": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "offer",
+    "cursor": "later"
+   }
+  },
+  {
+   "action": "assert_save_transfer_layout",
+   "page": "offer"
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "manual",
+   "absent": true
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "auto",
+   "absent": true
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "_comment": "Native: emulated click on the Import button rect. The browser case save_transfer_web performs this tap as a real touch.",
+   "action": "touch_save_transfer_button",
+   "button": "import"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_applied",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "imported": [
+     "auto",
+     "manual",
+     "manual_2"
+    ],
+    "replaced": [],
+    "kept": [],
+    "unreadable": [],
+    "failed": []
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "done"
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_hidden",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "done"
+   }
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "manual",
+   "fixture": "near_pallass"
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "manual_2",
+   "fixture": "gear_loop_start"
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "auto",
+   "fixture": "d2_shop"
+  },
+  {
+   "_comment": "Same payload again: nothing to do, no prompt, no event beyond the skip.",
+   "action": "offer_save_transfer",
+   "slots": {
+    "manual": "near_pallass",
+    "manual_2": "gear_loop_start",
+    "auto": "d2_shop"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_skipped",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "same": 3,
+    "new": 0,
+    "conflict": 0
+   }
+  },
+  {
+   "action": "assert_event_count",
+   "type": "save_transfer_offered",
+   "count": 1
+  },
+  {
+   "_comment": "Occupied slot: a different old-site save for Save 1 plus a new Save 3. Keyboard route; the conflict page opens on Keep and Keep is chosen.",
+   "action": "offer_save_transfer",
+   "slots": {
+    "manual": "garden_quiet",
+    "manual_3": "mobile_tap_start"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_offered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "new": 1,
+    "conflict": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "offer",
+    "cursor": "later"
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "conflict",
+    "cursor": "keep"
+   }
+  },
+  {
+   "action": "assert_save_transfer_layout",
+   "page": "conflict"
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "manual_3",
+   "absent": true
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_applied",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "imported": [
+     "manual_3"
+    ],
+    "replaced": [],
+    "kept": [
+     "manual"
+    ]
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "done"
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_hidden",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "done"
+   }
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "manual",
+   "fixture": "near_pallass"
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "manual_3",
+   "fixture": "mobile_tap_start"
+  },
+  {
+   "_comment": "The kept choice is remembered: the same payload is a no-op afterwards.",
+   "action": "offer_save_transfer",
+   "slots": {
+    "manual": "garden_quiet",
+    "manual_3": "mobile_tap_start"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_skipped",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "seen": 1,
+    "same": 1
+   }
+  },
+  {
+   "_comment": "Explicit replace: only the player's own Use old-site save choice replaces an occupied slot.",
+   "action": "offer_save_transfer",
+   "slots": {
+    "manual": "economy_loop_start"
+   },
+   "times": {
+    "manual": 1700009999
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_offered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "new": 0,
+    "conflict": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "offer"
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "action": "touch_save_transfer_button",
+   "button": "import"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "conflict",
+    "cursor": "keep"
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "action": "touch_save_transfer_button",
+   "button": "use_old"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_applied",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "imported": [],
+    "replaced": [
+     "manual"
+    ],
+    "kept": []
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "done"
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_hidden",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "done"
+   }
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "manual",
+   "fixture": "economy_loop_start"
+  },
+  {
+   "_comment": "A future-version save and one that fails WISave.apply are reported and skipped; no file appears.",
+   "action": "offer_save_transfer",
+   "slots": {
+    "auto_prev": "near_pallass",
+    "auto_pre_combat": "near_pallass"
+   },
+   "mutate": {
+    "auto_prev": {
+     "version": "future"
+    },
+    "auto_pre_combat": {
+     "current_map": "no_such_map"
+    }
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_offered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "new": 0,
+    "conflict": 0,
+    "unreadable": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "unreadable"
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_applied",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "imported": [],
+    "unreadable": [
+     "auto_prev",
+     "auto_pre_combat"
+    ]
+   }
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "auto_prev",
+   "absent": true
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "auto_pre_combat",
+   "absent": true
+  },
+  {
+   "_comment": "Hostile fragment: quiet refusal page, nothing written.",
+   "action": "offer_save_transfer",
+   "raw": "wi1.p.eyJ2IjoxLCJzbG90cyI6eyIuLi9zZXR0aW5ncyI6eyJ0IjoxLCJkIjoieCJ9fX0"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_refused",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "reason": "slot_name"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "refused",
+    "body": "That link's save data can't be read. Nothing was changed."
+   }
+  },
+  {
+   "action": "assert_save_transfer_layout",
+   "page": "refused"
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_hidden",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "refused"
+   }
+  },
+  {
+   "_comment": "Not now: declined offers write nothing and stay available for a later visit.",
+   "action": "offer_save_transfer",
+   "slots": {
+    "auto_prev": "horns_dig_start"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_offered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "new": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "page": "offer",
+    "cursor": "later"
+   }
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_declined",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "auto_prev",
+   "absent": true
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "game_loaded"
+  },
+  {
+   "_comment": "Continue follows the old site's own last-played time (Save 1, replaced above with the newest stamp), not the import moment; the version-5 fixture loads through the normal migration path.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  }
+ ]
+}
