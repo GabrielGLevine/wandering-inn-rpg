@@ -93,6 +93,14 @@ var _new_game_confirm_cursor := 0
 
 func _ready() -> void:
 	_build_ui()
+	ObservableBus.domain_event.connect(_on_transfer_event)
+
+
+func _on_transfer_event(type: String, _payload: Dictionary) -> void:
+	if type == WIEvents.SAVE_TRANSFER_APPLIED and _state == State.MENU:
+		_refresh_continue_state()
+		_cursor = 0 if _row_selectable(0) else _first_selectable_row()
+		_refresh_rows()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -684,7 +692,7 @@ func _newest_save_slot() -> String:
 			if not _save_slot_readable(slot):
 				_unreadable_save_found = true
 				continue
-			var modified_time: int = FileAccess.get_modified_time(path)
+			var modified_time: int = Game.slot_last_played(slot)
 			if modified_time > best_time:
 				best_time = modified_time
 				best_slot = slot

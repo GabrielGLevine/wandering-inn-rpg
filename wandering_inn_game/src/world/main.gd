@@ -22,6 +22,7 @@ const SLEEP_VEIL_SCRIPT := preload("res://src/ui/sleep_veil.gd")
 const TITLE_SCREEN_SCRIPT := preload("res://src/ui/title_screen.gd")
 const CHAR_CREATION_SCRIPT := preload("res://src/ui/char_creation.gd")
 const SETTINGS_PANEL_SCRIPT := preload("res://src/ui/settings_panel.gd")
+const SAVE_TRANSFER_PROMPT_SCRIPT := preload("res://src/ui/save_transfer_prompt.gd")
 
 var _container: SubViewportContainer
 var _sub_viewport: SubViewport
@@ -382,6 +383,10 @@ func _spawn_title() -> void:
 	_settings_panel.name = "SettingsPanel"
 	add_child(_settings_panel)
 	_title_screen.settings_ref = _settings_panel
+	# Latest child: while shown it takes input before the title and settings.
+	var transfer_prompt := SAVE_TRANSFER_PROMPT_SCRIPT.new()
+	transfer_prompt.name = "SaveTransferPrompt"
+	add_child(transfer_prompt)
 
 
 func _spawn_ui_layers() -> void:

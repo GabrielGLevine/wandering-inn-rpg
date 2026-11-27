@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- wi-save-migration-page v1 -->
+<title>The Wandering Inn RPG has moved</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://wandering-inn-rpg.web.app/">
+<noscript><meta http-equiv="refresh" content="0; url=https://wandering-inn-rpg.web.app/"></noscript>
+<style>
+body{margin:0;background:#0d0906;color:#e8ddc8;font:18px/1.5 Georgia,serif}
+main{max-width:34em;margin:0 auto;padding:12vh 1.2em 2em}
+h1{font-size:1.5em;margin:0 0 .6em}
+a{color:#f0c674}
+.button{display:inline-block;margin:.4em .6em .4em 0;padding:.75em 1.2em;min-height:44px;box-sizing:border-box;background:#f0c674;color:#1b120a;border-radius:6px;text-decoration:none;font-weight:bold}
+.plain{background:none;color:#f0c674;border:1px solid #f0c674}
+[hidden]{display:none}
+</style>
+</head>
+<body>
+<main>
+<h1>The Wandering Inn RPG has moved</h1>
+<p id="status">The game now lives at <a class="new-site" href="https://wandering-inn-rpg.web.app/">wandering-inn-rpg.web.app</a>.</p>
+<div id="fallback" hidden>
+<p id="fallback-text"></p>
+<p id="downloads"></p>
+<p><a class="button plain new-site" href="https://wandering-inn-rpg.web.app/">Go to the new site</a></p>
+</div>
+</main>
+<script>
+/* Moves a player's saves from this (old) origin to the new one.
+   Reads this origin's IndexedDB only -- never writes or deletes (it is the
+   player's backup) -- and makes no network request. The saves travel in the
+   URL fragment, which browsers do not send to any server.
+
+   Storage layout, observed on the live v0.20.0 build and a current build
+   (Godot web export, Emscripten IDBFS): database "/userfs", object store
+   "FILE_DATA", key = absolute file path, value = {timestamp: Date,
+   mode: Number, contents: Int8Array}; directories have no `contents`. */
+(function () {
+	"use strict";
+	var NEW_SITE = "https://wandering-inn-rpg.web.app/";
+	/* Whole-URL budget. Far under every current engine's limit (Chromium 2 MB,
+	   Firefox 1 MB+, WebKit undocumented but larger) and under the 64 KB
+	   address-bar display limits; a full set of six saves gzips to well
+	   under a third of it. The game refuses payloads over 64000 characters. */
+	var MAX_URL_CHARS = 60000;
+	var SLOTS = ["auto", "auto_prev", "auto_pre_combat", "manual", "manual_2", "manual_3"];
+	var LABELS = {auto: "Autosave", auto_prev: "Earlier autosave", auto_pre_combat: "Before last fight", manual: "Save 1", manual_2: "Save 2", manual_3: "Save 3"};
+	/* Current user dir first, then the pre-rename one the game itself still copies from. */
+	var DIRS = ["/userfs/godot/app_userdata/Wandering Inn RPG/", "/userfs/godot/app_userdata/Wandering Inn RPG v4/"];
+	var LOOPBACK = /^(localhost|127\.0\.0\.1)$/;
+
+	/* Test switch: honoured ONLY when this page itself is served from
+	   loopback, and only for a loopback http target. On the public site the
+	   query string is never read, so a crafted link cannot redirect saves. */
+	var target = NEW_SITE;
+	if (LOOPBACK.test(location.hostname)) {
+		try {
+			var wanted = new URL(new URLSearchParams(location.search).get("wi_target"));
+			if (wanted.protocol === "http:" && LOOPBACK.test(wanted.hostname)) target = wanted.origin + "/";
+		} catch (ignored) {}
+	}
+	var links = document.querySelectorAll("a.new-site");
+	for (var i = 0; i < links.length; i++) links[i].href = target;
+
+	var settled = false;
+	var found = [];
+
+	function go(url) {
+		if (settled) return;
+		settled = true;
+		location.replace(url);
+	}
+
+	function fail(reason) {
+		if (settled) return;
+		settled = true;
+		document.documentElement.setAttribute("data-wi-migration", "fallback:" + reason);
+		document.getElementById("status").textContent = "We could not move your saves automatically.";
+		var text = document.getElementById("fallback-text");
+		var box = document.getElementById("downloads");
+		if (!found.length) {
+			text.textContent = "If you played here before, open this page in the same browser you played in. Private windows and blocked site data hide saves.";
+		} else {
+			text.textContent = "Download your save, open the new site, then choose Settings and Import Save.";
+			var newest = found.slice().sort(function (a, b) { return b.t - a.t; });
+			for (var n = 0; n < newest.length; n++) {
+				var a = document.createElement("a");
+				a.className = n === 0 ? "button" : "button plain";
+				a.textContent = n === 0 ? "Download my save" : "Download " + LABELS[newest[n].slot];
+				a.download = "wandering-inn-save-" + newest[n].slot + ".json";
+				a.href = URL.createObjectURL(new Blob([newest[n].text], {type: "application/json"}));
+				box.appendChild(a);
+			}
+		}
+		document.getElementById("fallback").hidden = false;
+	}
+
+	function request(req) {
+		return new Promise(function (resolve, reject) {
+			req.onsuccess = function () { resolve(req.result); };
+			req.onerror = function () { reject(req.error || new Error("request failed")); };
+		});
+	}
+
+	function openDatabase() {
+		return new Promise(function (resolve, reject) {
+			var req = indexedDB.open("/userfs");
+			/* No database yet: abort so this page never creates one. */
+			req.onupgradeneeded = function () { req.transaction.abort(); };
+			req.onsuccess = function () { resolve(req.result); };
+			req.onerror = function (event) { event.preventDefault(); resolve(null); };
+			req.onblocked = function () { reject(new Error("blocked")); };
+		});
+	}
+
+	function fileText(value) {
+		if (!value || typeof value !== "object" || !ArrayBuffer.isView(value.contents)) throw new Error("layout");
+		var view = value.contents;
+		return new TextDecoder("utf-8", {fatal: true}).decode(new Uint8Array(view.buffer, view.byteOffset, view.byteLength));
+	}
+
+	function readSaves(db) {
+		if (!db.objectStoreNames.contains("FILE_DATA")) throw new Error("layout");
+		var store = db.transaction("FILE_DATA", "readonly").objectStore("FILE_DATA");
+		var jobs = [];
+		var out = {slots: [], settings: ""};
+		SLOTS.forEach(function (slot) {
+			jobs.push(Promise.all(DIRS.map(function (dir) { return request(store.get(dir + "saves/" + slot + ".json")); })).then(function (values) {
+				for (var d = 0; d < values.length; d++) {
+					if (values[d] === undefined) continue;
+					var text = fileText(values[d]);
+					var parsed = JSON.parse(text);
+					if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("layout");
+					var stamp = values[d].timestamp instanceof Date ? Math.floor(values[d].timestamp.getTime() / 1000) : 0;
+					out.slots.push({slot: slot, text: text, t: stamp > 0 ? stamp : 0});
+					return;
+				}
+			}));
+		});
+		jobs.push(Promise.all(DIRS.map(function (dir) { return request(store.get(dir + "settings.cfg")); })).then(function (values) {
+			for (var d = 0; d < values.length; d++) {
+				if (values[d] === undefined) continue;
+				try { out.settings = fileText(values[d]).slice(0, 16000); } catch (ignored) {}
+				return;
+			}
+		}));
+		return Promise.all(jobs).then(function () { return out; });
+	}
+
+	function base64url(bytes) {
+		var binary = "";
+		for (var at = 0; at < bytes.length; at += 0x8000) binary += String.fromCharCode.apply(null, bytes.subarray(at, at + 0x8000));
+		return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+	}
+
+	function pack(saves) {
+		var body = {v: 1, slots: {}};
+		saves.slots.forEach(function (row) { body.slots[row.slot] = {t: row.t, d: row.text}; });
+		if (saves.settings) body.settings = saves.settings;
+		var bytes = new TextEncoder().encode(JSON.stringify(body));
+		var plain = "wi1.p." + base64url(bytes);
+		if (typeof CompressionStream !== "function") return Promise.resolve(plain);
+		return new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream("gzip"))).arrayBuffer().then(function (zipped) {
+			return "wi1.g." + base64url(new Uint8Array(zipped));
+		}).catch(function () { return plain; });
+	}
+
+	/* A stuck IndexedDB open (some private modes never answer) still ends on the plain page. */
+	setTimeout(function () { fail("timeout"); }, 6000);
+	try {
+		if (!window.indexedDB) throw new Error("unavailable");
+		openDatabase().then(function (db) {
+			if (!db) return null;
+			return readSaves(db).then(function (saves) { db.close(); return saves; }, function (error) { db.close(); throw error; });
+		}).then(function (saves) {
+			if (!saves || !saves.slots.length) { go(target); return null; }
+			found = saves.slots;
+			document.getElementById("status").textContent = "Moving your saves to the new site…";
+			return pack(saves).then(function (payload) {
+				var url = target + "#migrate=" + payload;
+				if (url.length > MAX_URL_CHARS) { fail("too_large"); return; }
+				go(url);
+			});
+		}).catch(function (error) { fail(error && error.message === "layout" ? "layout" : "storage"); });
+	} catch (error) {
+		fail("storage");
+	}
+})();
+</script>
+</body>
+</html>

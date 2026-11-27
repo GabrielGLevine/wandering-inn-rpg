@@ -17,6 +17,16 @@ const GAME_SAVED := &"game_saved"
 const SAVE_IMPORT_REQUESTED := &"save_import_requested"
 const SAVE_IMPORT_CANCELLED := &"save_import_cancelled"
 const SAVE_MIGRATED := &"save_migrated"  ## #111: legacy user:// dir carried over after the project rename
+## Old-site save hand-off (URL fragment -> prompt -> slot files). OFFERED
+## carries the per-slot plan; REFUSED a hostile/corrupt payload; SKIPPED a
+## payload with nothing left to do (the re-run no-op).
+const SAVE_TRANSFER_OFFERED := &"save_transfer_offered"
+const SAVE_TRANSFER_REFUSED := &"save_transfer_refused"
+const SAVE_TRANSFER_SKIPPED := &"save_transfer_skipped"
+const SAVE_TRANSFER_APPLIED := &"save_transfer_applied"
+const SAVE_TRANSFER_DECLINED := &"save_transfer_declined"
+const UI_SAVE_TRANSFER_RENDERED := &"ui_save_transfer_rendered"
+const UI_SAVE_TRANSFER_HIDDEN := &"ui_save_transfer_hidden"
 const GAME_OVER := &"game_over"
 const TOAST := &"toast"
 

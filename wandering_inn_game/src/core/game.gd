@@ -8,6 +8,10 @@ const MANUAL_SLOTS: Array[String] = ["manual", "manual_2", "manual_3"]
 ## is strictly one-time. Pure copy logic lives in WISaveMigration; this
 ## autoload owns the trigger, the event, and the marker.
 const MIGRATION_MARKER := "user://migrated_from_v4"
+## Old-site hand-off ledger: hashes already settled (so a repeat visit is a
+## no-op) and, per imported slot, when that save was really last played.
+const TRANSFER_LEDGER := "user://save_transfer.json"
+const TRANSFER_SEEN_MAX := 64
 
 var sim: WIGame
 ## a9 #246 (review F1): true only while a world session is live (set by
@@ -21,12 +25,14 @@ var last_autosave_trigger := ""
 var _autosave_announced := false
 var _rotate_auto_pending := false
 var _choice_snapshot_armed := false
+var _transfer: Dictionary = {}
 
 
 func _ready() -> void:
 	_migrate_legacy_userdir()
 	_build_sim()
 	ObservableBus.domain_event.connect(_on_domain_event)
+	_read_transfer_fragment.call_deferred()
 
 
 ## #111: one-time first-boot carry-over of the pre-rename user:// dir. Runs
@@ -183,6 +189,169 @@ func import_save_text(text: String) -> bool:
 	return true
 
 
+## Web boot: the head script in export_presets.cfg already lifted
+## `#migrate=...` out of the address bar into window.__wi_migrate ('!' when
+## oversized). The JS here is constant; payload text is only ever returned.
+func _read_transfer_fragment() -> void:
+	if not OS.has_feature("web"):
+		return
+	var raw: Variant = JavaScriptBridge.eval("(function(){var v=window.__wi_migrate;window.__wi_migrate=null;return typeof v==='string'?v:'';})()", true)
+	if raw is String and not (raw as String).is_empty():
+		offer_transfer(raw)
+
+
+## Entry for an old-site payload (ATTACKER-CONTROLLED). Decodes, trial-loads
+## each new slot on a fresh sim and stores a plan; nothing is written until
+## apply_transfer. Emits OFFERED, REFUSED or SKIPPED.
+func offer_transfer(payload: String) -> void:
+	_transfer = {}
+	var decoded := WISaveTransfer.decode(payload)
+	if not decoded.ok:
+		_transfer = {"refused": true}
+		ObservableBus.emit_domain_event(WIEvents.SAVE_TRANSFER_REFUSED, {"reason": decoded.reason})
+		return
+	var incoming: Dictionary = decoded.slots
+	var existing := {}
+	var readable := {}
+	var seen: Array = _transfer_ledger().seen
+	for slot: String in incoming:
+		var path := "%s/%s.json" % [SAVE_DIR, slot]
+		if FileAccess.file_exists(path):
+			existing[slot] = FileAccess.get_file_as_string(path)
+		var text := String(incoming[slot].text)
+		if String(existing.get(slot, "")) != text and not seen.has(text.sha256_text()):
+			readable[slot] = _save_text_loads(text)
+	var rows := WISaveTransfer.plan(incoming, existing, seen, readable)
+	var counts := {"new": 0, "conflict": 0, "same": 0, "seen": 0, "unreadable": 0}
+	for row: Dictionary in rows:
+		counts[row.status] += 1
+		row["label"] = String(WISaveTransfer.SLOT_LABELS[row.slot])
+		if row.status in ["new", "conflict"]:
+			row["summary"] = _transfer_summary(String(incoming[row.slot].text))
+		if row.status == "conflict":
+			row["current"] = _transfer_summary(String(existing[row.slot]))
+			row["current_t"] = slot_last_played(String(row.slot))
+	var summary := {"slots": rows.map(func(r: Dictionary) -> String: return "%s:%s" % [r.slot, r.status])}
+	summary.merge(counts)
+	if counts["new"] + counts["conflict"] + counts["unreadable"] == 0:
+		ObservableBus.emit_domain_event(WIEvents.SAVE_TRANSFER_SKIPPED, summary)
+		return
+	_transfer = {"rows": rows, "incoming": incoming, "settings": decoded.settings}
+	ObservableBus.emit_domain_event(WIEvents.SAVE_TRANSFER_OFFERED, summary)
+
+
+## The pending offer for the prompt: {} | {refused} | {rows}.
+func pending_transfer() -> Dictionary:
+	return _transfer
+
+
+## Writes the confirmed plan. New slots are written; a conflicting slot is
+## replaced ONLY when `replace` names it (the player's explicit choice) and
+## is otherwise kept. Every settled hash joins the ledger.
+func apply_transfer(replace: Array = []) -> Dictionary:
+	if not _transfer.has("rows"):
+		_transfer = {}
+		return {}
+	var ledger := _transfer_ledger()
+	var result := {"imported": [], "replaced": [], "kept": [], "unreadable": [], "failed": []}
+	var now := int(Time.get_unix_time_from_system())
+	# Settings cross only onto an origin that has none yet; the prompt applies
+	# these allowlisted scalars through the normal clamping setters.
+	var fresh_origin := not FileAccess.file_exists("user://settings.cfg")
+	for row: Dictionary in _transfer.rows:
+		var slot := String(row.slot)
+		var wanted: bool = row.status == "new" or (row.status == "conflict" and replace.has(slot))
+		if wanted:
+			# Re-checked at write time: a slot that filled since the offer is kept.
+			var occupied := FileAccess.file_exists("%s/%s.json" % [SAVE_DIR, slot])
+			if occupied and row.status == "new":
+				result.kept.append(slot)
+				continue
+			if not _write_slot_text(slot, String(_transfer.incoming[slot].text)):
+				result.failed.append(slot)
+				continue
+			ledger.slots[slot] = {"sha": row.sha, "t": clampi(int(row.t), 0, now)}
+			result["replaced" if row.status == "conflict" else "imported"].append(slot)
+		elif row.status == "conflict":
+			result.kept.append(slot)
+		elif row.status == "unreadable":
+			result.unreadable.append(slot)
+		if not ledger.seen.has(row.sha):
+			ledger.seen.append(row.sha)
+	while ledger.seen.size() > TRANSFER_SEEN_MAX:
+		ledger.seen.pop_front()
+	_write_file_text(TRANSFER_LEDGER, JSON.stringify(ledger))
+	result["settings"] = WISaveTransfer.parse_settings(String(_transfer.settings)) if fresh_origin else {}
+	_transfer = {}
+	ObservableBus.emit_domain_event(WIEvents.SAVE_TRANSFER_APPLIED, result)
+	return result
+
+
+func decline_transfer() -> void:
+	var refused := _transfer.has("refused")
+	_transfer = {}
+	if not refused:
+		ObservableBus.emit_domain_event(WIEvents.SAVE_TRANSFER_DECLINED, {})
+
+
+## When a slot's save was last played: the old site's own timestamp while the
+## file is still the imported bytes (its mtime is only the import moment),
+## else the file's mtime. Keeps Continue on the truly newest save.
+func slot_last_played(slot: String) -> int:
+	var path := "%s/%s.json" % [SAVE_DIR, slot]
+	if not FileAccess.file_exists(path):
+		return -1
+	var entry: Variant = _transfer_ledger().slots.get(slot)
+	if entry is Dictionary and String(entry.get("sha", "")) == FileAccess.get_file_as_string(path).sha256_text():
+		return int(entry.get("t", 0))
+	return FileAccess.get_modified_time(path)
+
+
+func _save_text_loads(text: String) -> bool:
+	var parser := JSON.new()
+	if parser.parse(text) != OK or not (parser.data is Dictionary):
+		return false
+	return WISave.apply(_make_sim(), parser.data)
+
+
+func _transfer_summary(text: String) -> String:
+	var parser := JSON.new()
+	if parser.parse(text) != OK or not (parser.data is Dictionary):
+		return ""
+	var meta := WISave.metadata(parser.data)
+	if meta.is_empty():
+		return ""
+	var parts: Array[String] = [WISaveTransfer.display_text(String(meta.get("pc_name", "")))]
+	if not String(meta.get("top_class", "")).is_empty():
+		parts.append("%s Lv%d" % [WISaveTransfer.display_text(String(meta.top_class)).capitalize(), int(meta.get("top_level", 0))])
+	parts.append(WISaveTransfer.display_text(String(meta.get("map", ""))).capitalize())
+	return ", ".join(parts)
+
+
+func _transfer_ledger() -> Dictionary:
+	var ledger := {"v": 1, "seen": [], "slots": {}}
+	if not FileAccess.file_exists(TRANSFER_LEDGER):
+		return ledger
+	var parser := JSON.new()
+	if parser.parse(FileAccess.get_file_as_string(TRANSFER_LEDGER)) != OK or not (parser.data is Dictionary):
+		return ledger
+	if parser.data.get("seen") is Array:
+		ledger.seen = (parser.data.seen as Array).filter(func(v: Variant) -> bool: return v is String)
+	if parser.data.get("slots") is Dictionary:
+		ledger.slots = parser.data.slots
+	return ledger
+
+
+func _write_slot_text(slot: String, text: String) -> bool:
+	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
+	var file := FileAccess.open("%s/%s.json" % [SAVE_DIR, slot], FileAccess.WRITE)
+	if file == null:
+		return false
+	file.store_string(text)
+	file.close()
+	return true
+
+
 ## GH#278: dev/QA live data reload -- rebuild the sim from the CURRENT
 ## disk JSON through the save round-trip (serialize live sim -> fresh
 ## _make_sim -> WISave.apply), then let the GAME_LOADED handler rebuild
@@ -223,7 +392,7 @@ func slot_metadata(slot: String) -> Dictionary:
 	var meta := WISave.metadata(parsed)
 	if meta.is_empty():
 		return {}
-	meta["mtime"] = FileAccess.get_modified_time(path)
+	meta["mtime"] = slot_last_played(slot)
 	return meta
 
 
