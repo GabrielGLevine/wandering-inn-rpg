@@ -210,7 +210,7 @@ func _init() -> void:
 		# GH#277: `pending: true` marks a slot merged ahead of its file --
 		# existence is waived HERE only; ship_asset_scan.py FAILS the
 		# release cut on any pending row, so a pending slot can live on
-		# main but can never reach itch. Every other shape rule still
+		# main but can never ship. Every other shape rule still
 		# applies (prefix, extension, bus).
 		if entry.has("pending") and typeof(entry["pending"]) != TYPE_BOOL:
 			_fail("pending must be a bool: %s" % id)

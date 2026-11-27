@@ -1,7 +1,7 @@
 # Browser Controls — driving the web build as an agent
 
 How an agent with browser tools plays the game at
-<https://gabrielglevine.github.io/wandering-inn-rpg/>.
+<https://wandering-inn-rpg.web.app/>.
 
 The whole game is a single `<canvas>`. Screenshots are the only way to read it;
 clicks and synthetic keyboard events are the only way to drive it. Everything
@@ -27,7 +27,7 @@ coord x 1.6.**
 ## 1. Open and size the pane
 
 ```
-mcp__Claude_Browser__preview_start  { url: "https://gabrielglevine.github.io/wandering-inn-rpg/" }
+mcp__Claude_Browser__preview_start  { url: "https://wandering-inn-rpg.web.app/" }
 mcp__Claude_Browser__resize_window  { width: 1280, height: 720 }
 ```
 

@@ -1,0 +1,8 @@
+{
+  "name": "wi-firebase-hosting-deploy",
+  "private": true,
+  "description": "Locked firebase-tools for the Hosting deploy action. Install with `npm ci --ignore-scripts`.",
+  "dependencies": {
+    "firebase-tools": "15.37.0"
+  }
+}

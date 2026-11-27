@@ -1,0 +1,51 @@
+{
+  "hosting": {
+    "target": "wandering-inn-rpg",
+    "public": "wandering_inn_game/build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "**/*.import"
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "**/*.wasm",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/wasm"
+          }
+        ]
+      },
+      {
+        "source": "**/*.pck",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/octet-stream"
+          }
+        ]
+      }
+    ]
+  },
+  "emulators": {
+    "hosting": {
+      "port": 5055,
+      "host": "127.0.0.1"
+    },
+    "ui": {
+      "enabled": false
+    },
+    "singleProjectMode": true
+  }
+}

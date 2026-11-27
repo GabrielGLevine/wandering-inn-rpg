@@ -6,7 +6,6 @@ CI job 1) enforces this.
 ## Local key files (gitignored `docs/*_api_key.txt` — recreate by hand)
 | File | What | Where to get it |
 |---|---|---|
-| `docs/butler_api_key.txt` | itch.io butler push (local use) | itch.io → account → API keys |
 | `docs/pixellab_api_key.txt` | PixelLab sprite generation | pixellab.ai account |
 | `docs/siliconflow_api_key.txt` | SiliconFlow cheap-delegate LLM | siliconflow account |
 | `docs/retrodiffusion_api_key.txt` | RetroDiffusion (barely used) | retrodiffusion account |
@@ -14,15 +13,21 @@ CI job 1) enforces this.
 One key per file, raw string, no quotes/newline decoration.
 
 ## Repo Actions secrets (Settings → Secrets → Actions)
-- `BUTLER_API_KEY` — release.yml's itch deploy.
+- `BUTLER_API_KEY` — unused since itch.io left the deploy train
+  (2026-11-27); no workflow reads it. Safe to delete.
 - `PRIVATE_ASSETS_TOKEN` — fine-grained PAT with read access to
   `GabrielGLevine/wandering-inn-rpg-assets`; user-minted (agents cannot
-  create PATs). Used by release.yml's bundle fetch.
+  create PATs). Used by release.yml's and hosting.yml's bundle fetch.
 - `PIXELLAB_API_KEY` / `SILICONFLOW_API_KEY` / `RETRODIFFUSION_API_KEY`
   — mirrors of the local `docs/*_api_key.txt` files (added 2026-07-20)
   so remote/cloud dev sessions can reach the same services; no workflow
   consumes them yet. Rotate by re-running `gh secret set` from the
   local file.
+- release.yml and hosting.yml (Firebase Hosting deploys) hold no Google
+  credential: they authenticate by keyless Workload Identity Federation
+  and read two repo VARIABLES, `GCP_WIF_PROVIDER` (the provider resource name) and
+  `GCP_DEPLOY_SA` (the deploy service account email). Both are identifiers,
+  not secrets; the trust lives in the cloud-side IAM binding to this repo.
 - ci.yml uses NO secrets by design (fork-PR safe); fork PRs never see
   Actions secrets regardless.
 

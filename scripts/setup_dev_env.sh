@@ -115,7 +115,7 @@ fi
 # ------------------------------------------------------------- 5. key files
 # Gitignored by design; leak_check.sh (CI job 1) fails if one is ever tracked.
 step "Local API keys (docs/SECRETS-SETUP.md)"
-for key in butler pixellab siliconflow retrodiffusion; do
+for key in pixellab siliconflow retrodiffusion; do
 	f="$ROOT/docs/${key}_api_key.txt"
 	if [ -s "$f" ]; then
 		ok "docs/${key}_api_key.txt"
