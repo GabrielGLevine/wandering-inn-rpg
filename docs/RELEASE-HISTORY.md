@@ -6,6 +6,13 @@ current rulings under its size cap.
 Issue/PRs and `git show 1aee127d:docs/CHOICE-LOG.md` retain alternatives and
 review measurements; current rulings are above.
 
+- **v0.21 / #504, #549, #578, #592, #598, #601, #602, #604, #606:** touch and
+  phone layouts, purchase confirmation, carried HP/MP with recovery, gear rules,
+  Room on the Row, regional art for Invrisil and Liscor. Save version 9 → 12
+  migrates in `WISave._migrated`; no shipped id was removed or renamed.
+- **v0.20 / #449, #450, #460, #472, #486, #496:** automatic consolidation and
+  its three class families plus [Spellspear], the crypt Lich, nine equipment
+  items, the continuous steel thread; a consolidated class keeps every Skill.
 - **v0.19 / #398, #400, #403, #404, #412–#414, #417, #421, #423, #424,
   #429:** field/martial/danger/lock/rope, steel-thread QA, reachability/orphans.
 - **#397:** round one failed blind prose reading despite green engineering;
