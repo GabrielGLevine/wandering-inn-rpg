@@ -49,7 +49,8 @@ func _ready() -> void:
 	var stack := VBoxContainer.new()
 	stack.add_theme_constant_override("separation", 8)
 	margin.add_child(stack)
-	_title = UIChrome.make_label("", "Header")
+	_title = UIChrome.make_label("", "MenuInk")
+	_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stack.add_child(_title)
 	_body = UIChrome.make_label("", "MenuInk")
@@ -68,6 +69,13 @@ func _ready() -> void:
 		button.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		button.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var frame := StyleBoxFlat.new()
+		frame.bg_color = Color(0.86, 0.76, 0.56)
+		frame.border_color = Color(0.18, 0.105, 0.045)
+		frame.set_border_width_all(2)
+		frame.set_corner_radius_all(6)
+		frame.set_content_margin_all(8)
+		button.add_theme_stylebox_override("normal", frame)
 		_button_row.add_child(button)
 		_buttons.append(button)
 	ObservableBus.domain_event.connect(_on_domain_event)

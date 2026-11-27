@@ -1,0 +1,169 @@
+{
+ "_comment": "BROWSER ONLY. Old-site save hand-off end to end: the runner seeds a second loopback origin's IndexedDB in the observed IDBFS layout, enters through the real web/pages-redirect page, and the game boots from that page's #migrate= navigation. Prompt confirmed by real touch; slot bytes, address bar and Continue asserted. Run: run_web_qa.sh save_transfer_web 9 --skip-export --touch --device=iphone.",
+ "web_old_site_saves": {
+  "manual": "near_pallass",
+  "auto": "gear_loop_start"
+ },
+ "starts_at_title": true,
+ "steps": [
+  {
+   "_comment": "The offer was produced at boot from the URL fragment the old-site page navigated here with.",
+   "action": "wait_for_event",
+   "type": "save_transfer_offered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "new": 2,
+    "conflict": 0,
+    "unreadable": 0
+   },
+   "from_start": true
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 15,
+   "from_start": true
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "continue_enabled": false
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "page": "offer",
+    "cursor": "later",
+    "touch": true
+   }
+  },
+  {
+   "action": "assert_save_transfer_layout",
+   "page": "offer"
+  },
+  {
+   "action": "screenshot",
+   "name": "save_transfer_offer"
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "manual",
+   "absent": true
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "auto",
+   "absent": true
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "_comment": "Real browser touch on the Import button.",
+   "action": "touch_save_transfer_button",
+   "button": "import"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "save_transfer_applied",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "imported": [
+     "auto",
+     "manual"
+    ],
+    "replaced": [],
+    "kept": [],
+    "unreadable": [],
+    "failed": []
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_rendered",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "page": "done",
+    "body": "2 saves imported. Choose Continue to play."
+   }
+  },
+  {
+   "action": "assert_save_transfer_layout",
+   "page": "done"
+  },
+  {
+   "action": "screenshot",
+   "name": "save_transfer_done"
+  },
+  {
+   "action": "wait_seconds",
+   "seconds": 0.45
+  },
+  {
+   "action": "touch_save_transfer_button",
+   "button": "ok"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_save_transfer_hidden",
+   "timeout_sec": 15,
+   "payload_contains": {
+    "page": "done"
+   }
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "manual",
+   "fixture": "near_pallass"
+  },
+  {
+   "action": "assert_save_slot",
+   "slot": "auto",
+   "fixture": "gear_loop_start"
+  },
+  {
+   "_comment": "Continue = the old site's most recently played save (auto), loaded through the normal migration path.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 15
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_event_count",
+   "type": "qa_touch",
+   "count": 2
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "save_transfer_refused"
+  }
+ ]
+}

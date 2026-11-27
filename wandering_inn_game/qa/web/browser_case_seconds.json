@@ -16,6 +16,7 @@
 		"creation_explanations_touch": 38,
 		"touch_reference_pages": 66,
 		"consumable_repeat_touch": 29,
-		"inventory_recovery_equipment_touch": 33
+		"inventory_recovery_equipment_touch": 33,
+		"save_transfer_web": 30
 	}
 }

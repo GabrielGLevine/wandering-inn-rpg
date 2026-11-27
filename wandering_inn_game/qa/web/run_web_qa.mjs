@@ -296,7 +296,59 @@ await page.addInitScript(() => {
 		return origConnect.apply(this, args);
 	};
 });
-const landing = await page.goto(`${BASE_URL}index.html`);
+// Old-site save hand-off (script field `web_old_site_saves: {slot: fixture}`):
+// a SECOND loopback server -- a different port is a different origin -- serves
+// the real web/pages-redirect page. Its IndexedDB is seeded in the layout
+// observed on the v0.20.0 build (IDBFS: db /userfs, store FILE_DATA, absolute
+// path keys, Int8Array contents), then the run ENTERS through that page, so
+// the game under test boots from the page's own #migrate= navigation.
+const oldSiteSaves = scriptDefinition.web_old_site_saves ?? null;
+let oldSite = null;
+let landing;
+if (oldSiteSaves) {
+	const oldPage = await readFile(join(projRoot, "../web/pages-redirect/index.html"));
+	const oldServer = createServer((req, response) => {
+		const path = new URL(req.url, "http://localhost").pathname;
+		response.writeHead(path === "/favicon.ico" ? 204 : 200, {"Content-Type": "text/html"});
+		response.end(path === "/" || path === "/index.html" ? oldPage : path === "/favicon.ico" ? "" : "<!doctype html><title>seed</title>");
+	});
+	await new Promise((ok) => oldServer.listen(0, "127.0.0.1", ok));
+	const oldBase = `http://127.0.0.1:${oldServer.address().port}/`;
+	const files = {};
+	for (const [slot, fixture] of Object.entries(oldSiteSaves)) files[slot] = await readFile(join(projRoot, "qa/fixtures", `${fixture}.json`), "utf8");
+	await page.goto(`${oldBase}seed-origin`);
+	await page.evaluate(async (saves) => {
+		const db = await new Promise((ok, no) => {
+			const open = indexedDB.open("/userfs", 21);
+			open.onupgradeneeded = () => open.result.createObjectStore("FILE_DATA").createIndex("timestamp", "timestamp", {unique: false});
+			open.onsuccess = () => ok(open.result);
+			open.onerror = () => no(open.error);
+		});
+		const store = db.transaction("FILE_DATA", "readwrite").objectStore("FILE_DATA");
+		const dir = "/userfs/godot/app_userdata/Wandering Inn RPG";
+		for (const path of ["/userfs/godot", "/userfs/godot/app_userdata", dir, `${dir}/saves`]) store.put({timestamp: new Date(), mode: 16893}, path);
+		let stamp = Date.UTC(2026, 9, 1);
+		for (const [slot, text] of Object.entries(saves)) {
+			store.put({timestamp: new Date(stamp), mode: 33206, contents: new Int8Array(new TextEncoder().encode(text))}, `${dir}/saves/${slot}.json`);
+			stamp += 3600000;
+		}
+		await new Promise((ok) => { store.transaction.oncomplete = ok; });
+		db.close();
+	}, files);
+	// Requests never carry the fragment; read the entry URL before the page's own scripts run.
+	await page.addInitScript(() => { window.__WI_QA_ENTRY__ = {length: location.href.length, codec: (/#migrate=wi1\.([gp])\./.exec(location.href) ?? [])[1] ?? null}; });
+	const handoff = page.waitForRequest((request) => request.isNavigationRequest() && request.url().startsWith(BASE_URL));
+	await page.goto(`${oldBase}index.html?wi_target=${encodeURIComponent(BASE_URL)}`, {waitUntil: "commit"});
+	landing = await (await handoff).response();
+	await page.waitForURL((url) => url.href.startsWith(BASE_URL), {waitUntil: "domcontentloaded"});
+	const entry = await page.evaluate(() => window.__WI_QA_ENTRY__);
+	oldSite = {origin: oldBase, slots: Object.keys(oldSiteSaves), handoffUrlLength: entry.length, handoffCodec: entry.codec,
+		addressAfterBoot: await page.evaluate(() => location.href)};
+	console.log(`[old-site] ${oldBase} handed ${oldSite.slots.length} slots to ${BASE_URL} in a ${oldSite.handoffUrlLength}-char URL (codec ${oldSite.handoffCodec}); address bar now ${oldSite.addressAfterBoot}`);
+	oldServer.close();
+} else {
+	landing = await page.goto(`${BASE_URL}index.html`);
+}
 // A missing export (no build/web/index.html) used to surface only as a
 // "no result within 120s" two minutes later; fail at the door instead.
 if (!landing || landing.status() !== 200) {
@@ -527,6 +579,15 @@ for (const request of touchRequests) {
 	timedTouchOk = timedTouchOk && !!passed;
 }
 browserEvidence.timedTouchPassed = timedTouchOk;
+if (oldSite) {
+	oldSite.addressAtEnd = await page.evaluate(() => location.href);
+	browserEvidence.oldSite = oldSite;
+	// The payload must leave the address bar before the game can be shared or reloaded.
+	if (result && (oldSite.handoffCodec === null || [oldSite.addressAfterBoot, oldSite.addressAtEnd].some((href) => href !== BASE_URL))) {
+		result.passed = false;
+		result.failures.push(`old-site hand-off did not arrive as #migrate= or stayed in the address bar: ${JSON.stringify(oldSite)}`);
+	}
+}
 if (result && !timedTouchOk) {
 	result.passed = false;
 	result.failures.push("browser touch timing/target evidence failed; see browser-evidence.json");

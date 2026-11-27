@@ -2,7 +2,7 @@
 
 > Generated from `qa/manifest.json` by `scripts/render_qa_notes.py`; do not edit by hand.
 
-This is the human index for 300 native canonical QA scripts. The manifest is the
+This is the human index for 301 native canonical QA scripts. The manifest is the
 source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 `qa/scripts/<name>.json` is the source of truth for its exact route and assertions.
 
@@ -308,6 +308,7 @@ source of truth for seed, tier, fixture, purpose, and derived surfaces; each
 | `rest_dig_camp` | 9 | full | `rest_dig_camp_start` | #453 P5 checkpoint-based (steel_thread step 1405, guardian defeat rollback 35/49 HP, 0/14 MP): sleep on the dig-camp bedroll (full refill, autosave), then win the guardian rested at the ledger's own 49/49, 1/15 exit. Inherited kit is setup only. |
 | `gate_road_arrows_read` | 9 | full | `near_ambush_sneak` | #453 P6: the gate-road quiver read from the road outside the ambush band; scenery only, nothing granted, no fight (windowed reads: 00_arrows_from_the_road, 01_arrows_read). |
 | `pallass_resident_art_peek` | 9 | full | `near_pallass_drake` | #513 art proof: QA-only stage_sprite draws the unplaced owned rigs wool_trader, garuda_runner and dullahan_examiner through World's entity-visual path beside Pallass Drake NPCs; pins resolved art, frame counts, feet on the cell edge and idle figure heights; windowed captures include the trader-vs-gnoll_traveler A/B and idle/walk facing lineups |
+| `save_transfer_prompt` | 9 | full | `—` | Old-site save hand-off prompt (native arm via Game.offer_transfer): confirm-before-write, new slots byte-identical, re-run no-op, occupied slot kept by default and replaced only by explicit choice, future-version/unloadable saves and a path-traversal payload refused with nothing written, Continue follows the old site's last-played time. The URL-fragment trigger itself is browser case save_transfer_web. |
 
 ## Browser-only QA
 
@@ -333,3 +334,4 @@ CI shards them with `--shard K/N` and re-verifies with `--merge`; renaming or re
 | `touch_reference_pages` | 9 | iphone, android | `None` | Fresh Settings Controls/Help real browser contacts, readable measured geometry at100/115/130, actual scrolling/fixed Back and live narrow resize. |
 | `consumable_repeat_touch` | 9 | iphone, android | `consumable_repeat_start` | #568 Chromium touch only: three fixture-owned potions and two viable uses; rapid Use contacts consume once, later deliberate contact consumes next. Stock/HP/MP/exposure explicitly fixture setup; no earned/device claim. |
 | `inventory_recovery_equipment_touch` | 9 | iphone, android | `vitals_lifecycle_start` | #571 mixed-input browser inventory: keyboard title/open, actual gear/Use touch. Fixture-owned depleted Mage/food/armor; repeated equip toggles do not heal and final-meal receipt remains readable after armor changes. No combat, acquisition, title-touch timing or device verdict. |
+| `save_transfer_web` | 9 | iphone, android | `None` | Old-site save hand-off END TO END: second loopback origin seeded in the observed IDBFS layout, entered through the real web/pages-redirect page, game boots from its #migrate= navigation; real touch on Import/OK, slot bytes, fragment gone from the address bar, Continue loads. Chromium emulation only; real-build two-origin proof is qa/web/save_transfer_e2e.mjs. |

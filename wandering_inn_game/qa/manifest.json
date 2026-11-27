@@ -9054,6 +9054,23 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "save_transfer_prompt",
+   "seed": 9,
+   "note": "Old-site save hand-off prompt (native arm via Game.offer_transfer): confirm-before-write, new slots byte-identical, re-run no-op, occupied slot kept by default and replaced only by explicit choice, future-version/unloadable saves and a path-traversal payload refused with nothing written, Continue follows the old site's last-played time. The URL-fragment trigger itself is browser case save_transfer_web.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": []
+   }
   }
  ],
  "browser_scripts": [
@@ -9556,6 +9573,28 @@
      "economy",
      "exploration"
     ]
+   }
+  },
+  {
+   "script": "save_transfer_web",
+   "seed": 9,
+   "fixture": null,
+   "profiles": [
+    "iphone",
+    "android"
+   ],
+   "required_touch_proofs": [
+    "tap"
+   ],
+   "note": "Old-site save hand-off END TO END: second loopback origin seeded in the observed IDBFS layout, entered through the real web/pages-redirect page, game boots from its #migrate= navigation; real touch on Import/OK, slot bytes, fragment gone from the address bar, Continue loads. Chromium emulation only; real-build two-origin proof is qa/web/save_transfer_e2e.mjs.",
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": []
    }
   }
  ]
