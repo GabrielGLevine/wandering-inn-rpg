@@ -5,7 +5,8 @@
 #
 # This workflow publishes the tracked, self-contained directory
 # web/pages-redirect/ exactly as it is: no game build, no build step, no
-# secrets. Browser saves are per origin, so this origin is where pre-move
+# secrets. It refuses to run until that directory holds the save-migration
+# page (sentinel comment) and the dispatcher types the confirm phrase. Browser saves are per origin, so this origin is where pre-move
 # saves live; Pages must stay up indefinitely as the place they can be
 # migrated from. Changing what the old address serves means editing
 # web/pages-redirect/, not this file.
@@ -17,6 +18,11 @@ name: Publish GitHub Pages (former address)
 
 on:
   workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Replaces the game at the old address. Type: publish-save-migration-page"
+        type: string
+        required: true
 
 permissions:
   contents: read
@@ -40,8 +46,22 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Guard — the page exists
-        run: test -s web/pages-redirect/index.html
+      # Publishing takes the old game offline at the origin where pre-move
+      # saves live, so only the save-migration page may go out: it alone
+      # carries the sentinel. The placeholder page does not.
+      - name: Guard — confirmed, and the save-migration page is in place
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+        run: |
+          set -euo pipefail
+          if [ "$CONFIRM" != "publish-save-migration-page" ]; then
+            echo "::error::confirm must be exactly 'publish-save-migration-page'."
+            exit 1
+          fi
+          if ! grep -qF '<!-- wi-save-migration-page v1 -->' web/pages-redirect/index.html; then
+            echo "::error::web/pages-redirect/index.html is not the save-migration page (sentinel '<!-- wi-save-migration-page v1 -->' missing). Publishing now would strand players' saves on this origin. Merge the migration PR first."
+            exit 1
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

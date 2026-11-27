@@ -84,13 +84,20 @@ runs:
       with:
         node-version: "20"
 
-    # Exact pin, same discipline as the Godot pin.
-    - name: Install pinned firebase-tools
+    # firebase-tools and every transitive dependency are locked by the
+    # package-lock.json beside this file (integrity-checked by npm ci).
+    # --ignore-scripts: no dependency install script runs while the licensed
+    # .pck is on disk. Installed outside the workspace and the deploy dir.
+    - name: Install locked firebase-tools
       shell: bash
       run: |
         set -euo pipefail
-        npm install --global --no-fund --no-audit firebase-tools@15.37.0
-        firebase --version
+        tools="$RUNNER_TEMP/firebase-tools"
+        mkdir -p "$tools"
+        cp "$GITHUB_ACTION_PATH/package.json" "$GITHUB_ACTION_PATH/package-lock.json" "$tools/"
+        (cd "$tools" && npm ci --ignore-scripts --no-fund --no-audit)
+        "$tools/node_modules/.bin/firebase" --version
+        echo "FIREBASE_BIN=$tools/node_modules/.bin/firebase" >>"$GITHUB_ENV"
 
     # The GCP identity is minted only here, after every repo script has run.
     - name: Authenticate to Google Cloud (keyless WIF)
@@ -108,38 +115,36 @@ runs:
         PREVIEW_EXPIRES: ${{ inputs.preview_expires }}
       run: |
         set -euo pipefail
+        ref="$(printf '%s' "$GITHUB_REF_NAME" | tr -cd 'A-Za-z0-9._/-')"
         if [ "$CHANNEL" = "live" ]; then
-          firebase deploy --non-interactive --project gpt-development \
+          "$FIREBASE_BIN" deploy --non-interactive --project gpt-development \
             --only hosting:wandering-inn-rpg \
-            --message "${GITHUB_REF_NAME} @ ${GITHUB_SHA::12}"
+            --message "${ref} @ ${GITHUB_SHA::12}"
           url="https://wandering-inn-rpg.web.app"
           expires="never (live channel)"
         else
           # One fixed channel id: each preview replaces the last.
-          firebase hosting:channel:deploy preview --non-interactive \
+          "$FIREBASE_BIN" hosting:channel:deploy preview --non-interactive \
             --project gpt-development --only wandering-inn-rpg \
             --expires "$PREVIEW_EXPIRES" --json >"$RUNNER_TEMP/channel.json"
           url="$(jq -r '.result | to_entries[0].value.url // empty' "$RUNNER_TEMP/channel.json")"
           expires="$(jq -r '.result | to_entries[0].value.expireTime // empty' "$RUNNER_TEMP/channel.json")"
-          if [ -z "$url" ]; then
-            echo "::error::channel deploy returned no URL"
-            cat "$RUNNER_TEMP/channel.json"
-            exit 1
-          fi
+          case "$url" in
+            "https://wandering-inn-rpg--preview-"*".web.app") ;;
+            *)
+              echo "::error::channel deploy returned '$url', not a preview URL on Hosting site wandering-inn-rpg"
+              cat "$RUNNER_TEMP/channel.json"
+              exit 1
+              ;;
+          esac
         fi
-        case "$url" in
-          "https://wandering-inn-rpg.web.app"|"https://wandering-inn-rpg--"*) ;;
-          *)
-            echo "::error::deployed URL $url is not on Hosting site wandering-inn-rpg"
-            exit 1
-            ;;
-        esac
         echo "url=$url" >>"$GITHUB_OUTPUT"
         echo "expires=$expires" >>"$GITHUB_OUTPUT"
 
-    # Proves what the CDN actually serves: status, revalidating cache policy,
-    # wasm MIME, and the transfer encoding/size a player really downloads.
-    - name: Verify served headers and write the job summary
+    # Proves the URL serves THIS build, byte for byte (a stale or wrong site
+    # fails here), plus the revalidating cache policy and the wasm MIME. The
+    # table records the encoding and size a player really downloads.
+    - name: Verify the served build and write the job summary
       shell: bash
       env:
         CHANNEL: ${{ inputs.channel }}
@@ -148,24 +153,36 @@ runs:
       run: |
         set -euo pipefail
         fail=0
+        web=wandering_inn_game/build/web
+        ref="$(printf '%s' "$GITHUB_REF_NAME" | tr -cd 'A-Za-z0-9._/-')"
         {
           echo "## Firebase Hosting deploy: $CHANNEL"
           echo
           echo "**URL:** <$DEPLOY_URL>"
           echo
           echo "- Expires: $DEPLOY_EXPIRES"
-          echo "- Source: \`$GITHUB_REF_NAME\` @ \`$GITHUB_SHA\`"
-          echo "- index.pck sha256: \`$(sha256sum wandering_inn_game/build/web/index.pck | cut -d' ' -f1)\`"
+          echo "- Source: \`$ref\` @ \`$GITHUB_SHA\`"
           echo
-          echo "| file | status | cache-control | content-type | content-encoding | content-length |"
+          echo "| file | served sha256 = built | cache-control | content-type | content-encoding | content-length |"
           echo "|---|---|---|---|---|---|"
         } >>"$GITHUB_STEP_SUMMARY"
         for f in index.html index.js index.wasm index.pck; do
+          want="$(sha256sum "$web/$f" | cut -d' ' -f1)"
+          match="MISMATCH"
+          # The CDN is purged on deploy; allow a short settle before failing.
+          for attempt in 1 2 3 4 5 6; do
+            got="$(curl -fsS --retry 2 "$DEPLOY_URL/$f?verify=$GITHUB_RUN_ID-$attempt" | sha256sum | cut -d' ' -f1)" || got="fetch-failed"
+            if [ "$got" = "$want" ]; then match="yes ${want:0:12}"; break; fi
+            sleep 10
+          done
+          if [ "$match" = "MISMATCH" ]; then
+            echo "::error::$DEPLOY_URL/$f does not serve this build (built sha256 $want, served $got)"
+            fail=1
+          fi
           hdr="$(curl -fsS --head -H 'Accept-Encoding: br, gzip' "$DEPLOY_URL/$f" | tr -d '\r')" || { echo "::error::$f not served from $DEPLOY_URL"; fail=1; continue; }
           get() { printf '%s\n' "$hdr" | awk -v k="$1" 'tolower($1)==k":" {sub(/^[^:]*: */,""); v=$0} END{print v}'; }
-          status="$(printf '%s\n' "$hdr" | awk 'NR==1{print $2}')"
           cc="$(get cache-control)"; ct="$(get content-type)"; ce="$(get content-encoding)"; cl="$(get content-length)"
-          echo "| $f | $status | $cc | $ct | ${ce:-identity} | ${cl:-chunked} |" >>"$GITHUB_STEP_SUMMARY"
+          echo "| $f | $match | $cc | $ct | ${ce:-identity} | ${cl:-chunked} |" >>"$GITHUB_STEP_SUMMARY"
           case "$cc" in
             *no-cache*) ;;
             *) echo "::error::$f served with Cache-Control '$cc' — expected no-cache (fixed file names must revalidate)"; fail=1 ;;

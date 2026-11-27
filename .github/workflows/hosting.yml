@@ -10,7 +10,8 @@
 # no credentials, and the only upload is `firebase deploy` of
 # wandering_inn_game/build/web.
 #
-# Trigger: workflow_dispatch ONLY (preview channel, or live). A release tag
+# Trigger: workflow_dispatch ONLY (preview channel, or live), from main or a
+# v* tag — the `hosting` environment refuses every other ref. A release tag
 # does NOT run this file: release.yml deploys live after its full gate, so a
 # tag causes exactly one live deploy. No pull_request trigger, so neither the
 # asset PAT nor the GCP identity is reachable from a fork PR.
@@ -45,7 +46,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: hosting-${{ inputs.channel }}
+  # Shared with release.yml's release job: live deploys never interleave.
+  group: firebase-hosting-${{ inputs.channel }}
   cancel-in-progress: false
 
 env:
@@ -59,6 +61,10 @@ jobs:
     name: Build web (real assets) and deploy
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    # GitHub-enforced: environment `hosting` only admits main and v* tags, and
+    # the WIF provider only trusts tokens carrying this environment. The ref
+    # guard below is defence in depth.
+    environment: hosting
     steps:
       - name: Preconditions (fail before the long build)
         env:

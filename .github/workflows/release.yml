@@ -55,11 +55,20 @@ jobs:
     name: Build + deploy tagged release
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    # GitHub-enforced: environment `hosting` only admits main and v* tags, and
+    # the WIF provider only trusts tokens carrying this environment.
+    environment: hosting
+    # Shared with hosting.yml's live channel: live deploys never interleave.
+    concurrency:
+      group: firebase-hosting-live
+      cancel-in-progress: false
     permissions:
       contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Preconditions (fail before the long gate)
         env:

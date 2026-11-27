@@ -36,7 +36,9 @@
 // WI_WEB_BASE_URL=<origin> drives an ALREADY-RUNNING host (the Firebase
 // Hosting emulator, a preview channel) instead of serving build/web here.
 // That host's access log is out of reach, so the worklet 200s and the .pck
-// hash come from this runner fetching those URLs itself.
+// hash come from this runner fetching those URLs itself. Only loopback hosts
+// are accepted unless WI_WEB_ALLOW_REMOTE=1; result.json and the last log
+// line name the tested origin, so a remote run never reads as a local pass.
 import { browserResultFailures, isKnownRendererDiagnostic } from "./lifecycle_result.mjs";
 import { readFile } from "node:fs/promises";
 import { join, dirname, extname, resolve, sep } from "node:path";
@@ -159,7 +161,15 @@ const requestLog = [];
 const externalBase = process.env.WI_WEB_BASE_URL ? process.env.WI_WEB_BASE_URL.replace(/\/*$/, "/") : "";
 const server = externalBase ? null : await startServer(webRoot, requestLog);
 const BASE_URL = externalBase || `http://127.0.0.1:${server.address().port}/`;
-if (externalBase) console.log(`external host: ${BASE_URL} (not serving build/web locally)`);
+if (externalBase) {
+	const host = new URL(externalBase).hostname;
+	if (!["127.0.0.1", "localhost", "[::1]"].includes(host) && process.env.WI_WEB_ALLOW_REMOTE !== "1") {
+		console.error(`FAIL: WI_WEB_BASE_URL host ${host} is not loopback; set WI_WEB_ALLOW_REMOTE=1 to test a remote host on purpose.`);
+		process.exit(2);
+	}
+	console.log(`external host: ${BASE_URL} (not serving build/web locally)`);
+}
+const testedOrigin = externalBase ? `EXTERNAL ${BASE_URL} (not this checkout's build/web)` : `local build/web via ${BASE_URL}`;
 
 const browser = await chromium.launch({ args: ["--single-process"] });
 // Phone contexts exercise high-density canvas backing independently of CSS targets.
@@ -551,6 +561,7 @@ if (verdictFailures.length) {
  result.passed = false;
  result.failures = [...(Array.isArray(result.failures) ? result.failures : []), ...verdictFailures];
 }
+result.testedOrigin = testedOrigin;
 await writeFile(join(outDir, "result.json"), JSON.stringify(result, null, 2));
 console.log(`result: ${JSON.stringify(result, null, 2)}`);
 console.log(`outputs in: ${outDir}`);
@@ -601,6 +612,7 @@ if (rotationProbe) {
 	console.log(`rotation probe: ${rotationOk ? "OK" : "FAIL"} (overlay shown in portrait, hidden after rotation, no reload)`);
 }
 console.log(`audio smoke: ${audioSmokePassed ? "PASS" : "FAIL"}`);
+console.log(`tested origin: ${testedOrigin}`);
 
 const overallPassed = result.passed && audioSmokePassed && rotationOk && timedTouchOk;
 if (!rotationOk) {
