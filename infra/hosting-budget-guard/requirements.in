@@ -1,0 +1,3 @@
+functions-framework==3.10.2
+# zoneinfo data for America/Los_Angeles even if the base image lacks tzdata
+tzdata==2025.2

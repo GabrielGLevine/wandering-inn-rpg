@@ -1,0 +1,9 @@
+# Only the function itself is uploaded: main.py, guard.py, requirements.txt.
+.gcloudignore
+tests/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.sh
+*.md
+requirements.in
